@@ -8,7 +8,10 @@ gem "mysql2"
 
 gem "httparty"
 
-#gem 'puma'
+group :production do
+	gem 'rails_12factor'
+	gem 'unicorn'
+end
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.0'
@@ -47,3 +50,5 @@ end
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]
+
+ruby "2.0.0"
