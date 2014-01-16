@@ -10,7 +10,7 @@ class MessagesController < ApplicationController
 					["api_secret", "b4f769d8"],
 					["from", "<redacted_phone_number>"],
 					["to", "<redacted_phone_number>"],
-					["text", "hello checking 2"],
+					["text", "are u eddy?"],
 
 				])
 		@response = HTTParty.post('https://rest.nexmo.com/sms/json?'+ url, :headers => {"Content-Type" => "application/x-www-form-urlencoded"} )
