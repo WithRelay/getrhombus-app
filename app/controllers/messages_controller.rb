@@ -4,12 +4,12 @@ class MessagesController < ApplicationController
 	end
  
 	def receive_text_message
-		if params[:text] = "Sign UP"
+		if params[:text] == "Sign UP"
 			text = params[:text].downcase.strip
 			if text == "sign up" 
 				#@text = text
-				@message = Message.new
-				@message.send_signup_text
+				Message.send_signup_text
+				#@message.send_signup_text
 			elsif "#{text}" == "pay"
 
 			end
