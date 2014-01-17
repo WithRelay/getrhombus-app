@@ -7,7 +7,8 @@ class MessagesController < ApplicationController
 		text = params[:text].downcase.strip
 			if text == "sign up" 
 				#@text = text
-				Message.send_signup_text(params[:msisdn])
+				@message = Message.new
+				@message.send_signup_text(params[:msisdn])
 				#@message.send_signup_text
 			elsif "#{text}" == "pay"
 			end
