@@ -13,15 +13,17 @@ class Message < ActiveRecord::Base
 		@response = HTTParty.post('https://rest.nexmo.com/sms/json?'+ url, :headers => {"Content-Type" => "application/x-www-form-urlencoded"} )
 	end
 
-	def send_signup_text
+	def send_signup_text(number)
+
 		url = URI.encode_www_form([["api_key", "0ed6ecb8"],
 					["api_secret", "b4f769d8"],
 					["from", "<redacted_phone_number>"],
-					["to", "<redacted_phone_number>"],
-					["text", "www.getrhombus.com/signup"],
+					["to", number],
+					["text", "www.getrhombus.com/signup?" + "#{number}"],
 
 				])
 		@response = HTTParty.post('https://rest.nexmo.com/sms/json?'+ url, :headers => {"Content-Type" => "application/x-www-form-urlencoded"} )
+		return url
 	end
 
 	def save_text_from_user
