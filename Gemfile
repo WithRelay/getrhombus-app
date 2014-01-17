@@ -6,7 +6,14 @@ gem 'rails', '4.0.1'
 # Use sqlite3 as the database for Active Record
 gem "mysql2"
 
+# For http request (Nexmo & co)
 gem "httparty"
+
+# For authentication
+gem "devise"
+
+# For Authorization
+gem "cancan"
 
 group :production do
 	gem 'rails_12factor'
