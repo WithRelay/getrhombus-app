@@ -10,7 +10,9 @@ class Message < ActiveRecord::Base
 					["text", "we sent payment"],
 
 				])
-		@response = HTTParty.post('https://rest.nexmo.com/sms/json?'+ url, :headers => {"Content-Type" => "application/x-www-form-urlencoded"} )
+		response = HTTParty.post('https://rest.nexmo.com/sms/json?'+ url, :headers => {"Content-Type" => "application/x-www-form-urlencoded"} )
+		###### Check response
+		###### Then save fields
 	end
 
 	# For signing up users
@@ -23,6 +25,7 @@ class Message < ActiveRecord::Base
 
 				])
 		response = HTTParty.post('https://rest.nexmo.com/sms/json?'+ url, :headers => {"Content-Type" => "application/x-www-form-urlencoded"} )
+		##### Check response
 	end
 
 	# Search and buy a number to assign to a new merchant
