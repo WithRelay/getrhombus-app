@@ -1,18 +1,20 @@
 class MessagesController < ApplicationController
 
 	def index
+		message = Message.new
+		#@uri = message.balanced_associate_token_with_user
+		#@uri = message.nexmo_search_and_buy_number("US")
 	end
  
 	def receive_text_message
-		text = params[:text].downcase.strip
-			if text == "sign up" 
-				#@text = text
+		text = params[:text].downcase.gsub(/\s+/, "")
+			if text == "sign up" || text == "sign-up"
 				@message = Message.new
-				@message.send_signup_text(params[:msisdn])
-				#@message.send_signup_text
+				@message.nexmo_send_signup_text(params[:msisdn])
 			elsif "#{text}" == "pay"
-			end
+			end #throw an error???
 	end
+
 
 
 	private

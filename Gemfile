@@ -12,6 +12,9 @@ gem "httparty"
 # For authentication
 gem "devise"
 
+# For payment api
+gem "balanced"
+
 # For Authorization
 gem "cancan"
 
