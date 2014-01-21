@@ -1,5 +1,7 @@
 class MessagesController < ApplicationController
 
+	require "uri"
+
 	def index
 		message = Message.new
 		#@uri = message.balanced_associate_token_with_user
@@ -7,20 +9,20 @@ class MessagesController < ApplicationController
 	end
  
 	def receive_text_message
-		##### escape params needed here
-
+		# rails already unescapes params @url = URI.escape(request.original_url.to_s)
+		
 		# Code below can be more efficient
 		text = params[:text]
-		if text.downcase.gsub(/\s+/, "") == "signup" || text.downcase.gsub(/\s+/, "") == "sign-up"
+		if text.chr == "$" and is_number(text.split(/, */, 2).first.gsub(/\s+/, "")[1..-1])
 			@message = Message.new
-			@message.nexmo_send_signup_text(params[:msisdn])
-		elsif text.chr == "$"
+			@message.nexmo_send_text_message(params[:msisdn])
+		elsif text.downcase.gsub(/\s+/, "") == "signup" || text.downcase.gsub(/\s+/, "") == "sign-up"
 			@message = Message.new
 			@message.nexmo_send_signup_text(params[:msisdn])
 		end #throw an error???
 	end
 
-
+	
 
 	private
     # Use callbacks to share common setup or constraints between actions.
@@ -32,6 +34,10 @@ class MessagesController < ApplicationController
     def message_params
       params.require(:message).permit(:text)
     end
+
+    def is_number(obj)
+  	   obj.to_f.to_s == obj.to_s || obj.to_i.to_s == obj.to_s
+	end
 
 
 end
