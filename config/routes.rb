@@ -2,7 +2,8 @@ Rhombus::Application.routes.draw do
 
   devise_for :users
   #resources :messages
-  root 'messages#index'
+  #root 'messages#index'
+  root 'users#index'
   get "/receive_text_message" => 'messages#receive_text_message'
   
 

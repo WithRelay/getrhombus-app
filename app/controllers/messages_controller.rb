@@ -7,12 +7,14 @@ class MessagesController < ApplicationController
 	end
  
 	def receive_text_message
-		text = params[:text].downcase.gsub(/\s+/, "")
-			if text == "signup" || text == "sign-up"
-				@message = Message.new
-				@message.nexmo_send_signup_text(params[:msisdn])
-			elsif "#{text}" == "pay"
-			end #throw an error???
+		##### escape params needed here
+		if text.downcase.gsub(/\s+/, "") == "signup" || text.downcase.gsub(/\s+/, "") == "sign-up"
+			@message = Message.new
+			@message.nexmo_send_signup_text(params[:msisdn])
+		elsif text.chr == "$"
+			@message = Message.new
+			@message.nexmo_send_signup_text(params[:msisdn])
+		end #throw an error???
 	end
 
 
