@@ -9,12 +9,8 @@ class MessagesController < ApplicationController
 	end
  
 	def receive_text_message
-		# rails already unescapes params 
-		#uri = URI.unescape(request.original_url.to_s)
-		# Code below can be more efficient
-		text = URI.unescape(params[:text].strip)
-		#if text.chr == "$" and is_number(text.split[0][1..-1]) future use maybe
-		if text.chr == "$" and is_number(text.split(/, */, 2).first.gsub(/\s+/, "")[1..-1])
+		text = URI.unescape(params[:text].strip)		
+		if text.chr == URI.decode("%C2%A4") and is_number(text.split(/, */, 2).first.gsub(/\s+/, "")[1..-1])
 			#@message = Message.new
 			#@message.nexmo_send_text_message(params[:msisdn])
 			@url = "yea"
@@ -22,6 +18,10 @@ class MessagesController < ApplicationController
 			@message = Message.new
 			@message.nexmo_send_signup_text(params[:msisdn])
 		end #throw an error???
+
+		# rails already unescapes params #uri = URI.unescape(request.original_url.to_s)
+		# Code above can be more efficient
+		#if text.chr == "$" and is_number(text.split[0][1..-1]) future use maybe
 	end
 
 	
