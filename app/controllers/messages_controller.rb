@@ -8,7 +8,7 @@ class MessagesController < ApplicationController
  
 	def receive_text_message
 		text = params[:text].downcase.gsub(/\s+/, "")
-			if text == "sign up" || text == "sign-up"
+			if text == "signup" || text == "sign-up"
 				@message = Message.new
 				@message.nexmo_send_signup_text(params[:msisdn])
 			elsif "#{text}" == "pay"
