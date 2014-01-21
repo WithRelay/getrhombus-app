@@ -11,9 +11,9 @@ class MessagesController < ApplicationController
 	def receive_text_message
 		text = URI.unescape(params[:text].strip)		
 		if text.chr == URI.decode("%C2%A4") and is_number(text.split(/, */, 2).first.gsub(/\s+/, "")[1..-1])
-			#@message = Message.new
-			#@message.nexmo_send_text_message(params[:msisdn])
-			@url = "yea"
+			@message = Message.new
+			@message.nexmo_send_text_message(params[:msisdn])
+			#@url = "yea"
 		elsif text.downcase.gsub(/\s+/, "") == "signup" || text.downcase.gsub(/\s+/, "") == "sign-up"
 			@message = Message.new
 			@message.nexmo_send_signup_text(params[:msisdn])
