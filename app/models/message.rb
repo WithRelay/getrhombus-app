@@ -8,10 +8,10 @@ class Message < ActiveRecord::Base
 					["from", "<redacted_phone_number>"],
 					["to", number],
 					["text", "we sent payment"],
-
+					["status-report-req", "1"]
 				])
 		response = HTTParty.post('https://rest.nexmo.com/sms/json?'+ url, :headers => {"Content-Type" => "application/x-www-form-urlencoded"} )
-		###### Check response
+		###### Check response then add delivery receipt logic around message id
 		###### Then save fields
 	end
 
@@ -22,10 +22,11 @@ class Message < ActiveRecord::Base
 					["from", "<redacted_phone_number>"],
 					["to", number],
 					["text", "www.getrhombus.com/signup?num=" + "#{number}"],
-
+					["status-report-req", "1"]
 				])
 		response = HTTParty.post('https://rest.nexmo.com/sms/json?'+ url, :headers => {"Content-Type" => "application/x-www-form-urlencoded"} )
-		##### Check response
+		##### Check response then add delivery receipt logic around message id
+		##### Then save fields
 	end
 
 	# Search and buy a number to assign to a new merchant
@@ -45,7 +46,6 @@ class Message < ActiveRecord::Base
 		@message = Message.new
 		@message.text = params[:text]
 		@message.save
-		render status: 200
 	end
 
 end

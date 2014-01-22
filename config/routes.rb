@@ -5,6 +5,7 @@ Rhombus::Application.routes.draw do
   #root 'messages#index'
   root 'users#index'
   get "/receive_text_message" => 'messages#receive_text_message'
+  get "/receive_delivery_report" => 'messages#receive_delivery_report'
   
 
   # The priority is based upon order of creation: first created -> highest priority.
