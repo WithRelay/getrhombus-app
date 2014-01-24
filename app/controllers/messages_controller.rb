@@ -6,29 +6,65 @@ class MessagesController < ApplicationController
 		message = Message.new
 		#@uri = message.balanced_associate_token_with_user
 		#@uri = message.nexmo_search_and_buy_number("US")
+		#@uri = message.nexmo_send_text_message(<redacted_phone_number>,<redacted_phone_number>, "yes")
+		@uri = message.nexmo_search_and_buy_number("US")
 	end
 
 	def receive_delivery_report
+		# Do a test here like below
 		@message = Message.new
 		@message.text = params[:scts]
-		@message.save
-		#render status: 200      # Probably no point to this so commented
+		
 	end
  
-	def receive_text_message
-		text = params[:text].strip
-		if text.chr == URI.decode("%C2%A4") and is_number(text.split(/, */, 2).first.gsub(/\s+/, "")[1..-1])
-			@message = Message.new
-			@message.nexmo_send_text_message(params[:msisdn])
-			#@url = "yea"
-		elsif text.downcase.gsub(/\s+/, "") == "signup" || text.downcase.gsub(/\s+/, "") == "sign-up"
-			@message = Message.new
-			@message.nexmo_send_signup_text(params[:msisdn])
-		end #throw an error???
 
-		#render status: 200      # Probably no point to this so commented
-		# rails already unescapes params #uri = URI.unescape(request.original_url.to_s)
-		# Code above can be more efficient
+
+	def receive_text_message
+		#params[:to] = "<redacted_phone_number>"
+		#params[:msisdn] = "<redacted_phone_number>" #"<redacted_phone_number>"
+
+		if params[:text] != ""        				# Ensure there is a text query string
+			text = params[:text].strip
+			amount = (text.split(/, */, 2).first.gsub(/\s+/, "")[1..-1])
+			# for making payments
+			if text.chr == "$" || text.chr == URI.decode("%C2%A4") and is_number?(amount)
+				# to cents per Balanced   
+				amount = ((amount.to_f.round(2).abs)*100).to_i
+				if amount >= 50 and amount <= 1500000
+					##### Save message
+					###### Add payment logic here
+					#@url = request.original_url
+					@message = Message.new
+					@message.save_text(text: params[:text], sure: "me")
+					@message.nexmo_send_text_message(params[:to], params[:msisdn], "we sent payment")
+				elsif amount > 1500000
+					##### Save message
+					@message = Message.new
+					@message.save_text(text: params[:text], sure: "me")
+					@message.nexmo_send_text_message(params[:to], params[:msisdn], "Sorry, we are unable to make payments above 15,000 dollars :(. But you can send in smaller amounts. Thanks!")
+					##### Save message
+				else
+					##### Save message
+					@message = Message.new
+					@message.nexmo_send_text_message(params[:to], 
+						params[:msisdn], "Sorry, we are unable to make payments below 50 cents. :(")
+					######## Save message
+				end	
+			# for signing up
+			elsif text.downcase.gsub(/\s+/, "") == "signup" || text.downcase.gsub(/\s+/, "") == "sign-up"
+				##### Save message
+				@message = Message.new
+				@message.nexmo_send_text_message(params[:to], 
+					params[:msisdn], "Welcome to rhombus! Save this number to your phone for future payments. Follow the link to complete your signup: www.getrhombus.com/signup?num=#{params[:msisdn]}")
+				######## Save message
+			else 	# for messages we cant parse sucessfully
+				##### Save message
+				@message = Message.new
+				@message.nexmo_send_text_message(params[:to], 
+					params[:msisdn], 'We did not understand your text message. You can signup by texting "signup" or make payments by texting "amount, description". Thanks!')
+				######## Save message
+			end
+		end
 	end
 
 	
@@ -45,9 +81,9 @@ class MessagesController < ApplicationController
       params.require(:message).permit(:text)
     end
 
-    def is_number(obj)
-  	   obj.to_f.to_s == obj.to_s || obj.to_i.to_s == obj.to_s
+    # As the name implies
+    def is_number?(var)
+  	   	true if Float(var) rescue false
 	end
-
 
 end

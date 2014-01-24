@@ -12,7 +12,7 @@ $(document).ready(function () {
     //var responseTarget = 'http://localhost';  
     //var marketplaceUri = '/v1/marketplaces/TEST-MP6bP0y8O10lBsBfh8oMGhE4';
 
-    var responseTarget = 'http://requestb.in/yfrzmiyf';  
+    var responseTarget = 'http://requestb.in/y6bbyry6';  
     var marketplaceUri = '/v1/marketplaces/TEST-MP6bP0y8O10lBsBfh8oMGhE4';
     
     balanced.init(marketplaceUri);

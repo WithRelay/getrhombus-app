@@ -6,7 +6,8 @@ class UsersController < ApplicationController
 
   def index
      #@users = User.all #paginate(:page => params[:page], :per_page => 10)
-     
+     user = User.new
+     @response = user.balanced_associate_token_with_customer
   end
 
   def new
@@ -19,8 +20,8 @@ class UsersController < ApplicationController
   def create
     @user = User.new(user_params)
     respond_to do |format|
-    	if @user.save
-       		format.html { redirect_to @user, notice: 'Welcome!' }
+    	if @user.save 
+          format.html { redirect_to @user, notice: 'Welcome!' }
         	format.json { render action: 'show', status: :created, location: @user }
     	else
         	format.html { render action: 'new' }

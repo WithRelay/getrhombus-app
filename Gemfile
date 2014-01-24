@@ -13,6 +13,8 @@ gem "httparty"
 gem "devise"
 
 # For payment api
+#gem "faraday", "~> 0.9.0"
+#gem "balanced", "~> 0.7.4"
 gem "balanced"
 
 # For Authorization
