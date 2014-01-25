@@ -63,7 +63,7 @@ class Message < ActiveRecord::Base
 		#self.text = options[:text] if options[:text]
 		#self.text = options[:text] if options[:text]
 		#self.text = options[:text] if options[:text]
-		#self.save
+		self.save
 		#if @message.save
 		#	return 200
 		#else
