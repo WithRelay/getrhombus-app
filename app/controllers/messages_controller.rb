@@ -51,6 +51,7 @@ class MessagesController < ApplicationController
 					params[:msisdn], "Welcome to rhombus! Save this number to your phone for future payments :). Follow the link to complete your signup: www.getrhombus.com/signup?num=#{params[:msisdn]}")
 			else 	# for messages we cant parse sucessfully
 				query_hash = Rack::Utils.parse_nested_query(request.query_string)
+				@message = Message.new
 				@message.save_text(type: params[:type], from: params[:msisdn], to: params[:msisdn], 
 					network_code: query_hash["network-code"], messageId: params[:messageId], message_timestamp: query_hash["message-timestamp"],
 					text: params[:text])
