@@ -21,61 +21,44 @@ class MessagesController < ApplicationController
 
 
 	def receive_text_message
-		params[:to] = "<redacted_phone_number>"
-		params[:msisdn] = "<redacted_phone_number>" #"<redacted_phone_number>"
-
+		#params[:to] = "<redacted_phone_number>"
+		#params[:msisdn] = "<redacted_phone_number>" #"<redacted_phone_number>"
 		if params[:text] != ""        				# Ensure there is a text query string
-			if params[:text].length <= 160 			# Ensure it is less than 160 chars
-				text = params[:text].strip
-				amount = get_number(text)
-				# for making payments
-				if text.chr == "$" || text.chr == URI.decode("%C2%A4") and is_number?(amount)					
-					amount = to_cents(amount)
-					if amount >= 50 and amount <= 1500000
-						##### Save message
-						###### Add payment logic here
-						@message = Message.new
-						@message.save_text(text: params[:text], sure: "me")
-						@message.nexmo_send_text_message(params[:to], params[:msisdn], "we sent payment")
-					elsif amount > 1500000
-						##### Save message
-						@message = Message.new
-						@message.save_text(text: params[:text], sure: "me")
-						@message.nexmo_send_text_message(params[:to], params[:msisdn], "Sorry, we are unable to make payments above 15,000 dollars :(. But you can send in smaller amounts. Thanks!")
-						##### Save message
-					else
-						##### Save message
-						@message = Message.new
-						@message.nexmo_send_text_message(params[:to], 
-							params[:msisdn], "Sorry, we are unable to make payments below 50 cents. :(")
-						######## Save message
-					end	
+			text = params[:text].strip
+			amount = get_number(text)
+			# for making payments
+			if text.chr == "$" || text.chr == URI.decode("%C2%A4") and is_number?(amount)					
+				amount = to_cents(amount)
+				if amount >= 50 and amount <= 1500000
+					##### Save message
+					###### Add payment logic here
+					@message = Message.new
+					@message.save_text(text: params[:text], sure: "me")
+					@message.nexmo_send_text_message(params[:to], params[:msisdn], "we sent payment")
+				elsif amount > 1500000
+					@message = Message.new
+					@message.save_text(text: params[:text], sure: "me")
+					@message.nexmo_send_text_message(params[:to], params[:msisdn], "Sorry, we are unable to make payments above 15,000 dollars :(. But you can send in smaller amounts. Thanks!")
+				else
+					@message = Message.new
+					@message.nexmo_send_text_message(params[:to], 
+						params[:msisdn], "Sorry, we are unable to make payments below 50 cents. :(")
+				end	
 				# for signing up
-				elsif text.downcase.gsub(/\s+/, "") == "signup" || text.downcase.gsub(/\s+/, "") == "sign-up"
-					##### Save message
-					@message = Message.new
-					@message.nexmo_send_text_message(params[:to], 
-						params[:msisdn], "Welcome to rhombus! Save this number to your phone for future payments :). Follow the link to complete your signup: www.getrhombus.com/signup?num=#{params[:msisdn]}")
-					######## Save message
-				else 	# for messages we cant parse sucessfully
-					##### Save message
-					@message = Message.new
-					@message.nexmo_send_text_message(params[:to], 
-						params[:msisdn], 'Sorry we did not understand your text message :(. You can signup by texting "signup" or make payments by texting "amount, description". Thanks!')
-					######## Save message
-				end
-			else
+			elsif text.downcase.gsub(/\s+/, "") == "signup" || text.downcase.gsub(/\s+/, "") == "sign-up"
 				@message = Message.new
 				@message.nexmo_send_text_message(params[:to], 
-					params[:msisdn], "We are sorry, but your text message exceeded 160 characters :(. Please send a shorter message. Thanks!")
+					params[:msisdn], "Welcome to rhombus! Save this number to your phone for future payments :). Follow the link to complete your signup: www.getrhombus.com/signup?num=#{params[:msisdn]}")
+			else 	# for messages we cant parse sucessfully
 				query_hash = Rack::Utils.parse_nested_query(request.query_string)
 				@message.save_text(type: params[:type], from: params[:msisdn], to: params[:msisdn], 
 					network_code: query_hash["network-code"], messageId: params[:messageId], message_timestamp: query_hash["message-timestamp"],
 					text: params[:text])
-				
-				#@url = @url["text"]
-				#@url = #params["network-code"]
+				@message = Message.new
+				@message.nexmo_send_text_message(params[:to], 
+					params[:msisdn], 'Sorry we did not understand your text message :(. You can signup by texting "signup" or make payments by texting "amount, description". Thanks!')
 			end
+
 		end
 	end
 
@@ -109,3 +92,20 @@ class MessagesController < ApplicationController
 	end
 
 end
+
+#if params[:text].length <= 160 			# Ensure it is less than 160 chars
+
+=begin
+			else
+				@message = Message.new
+				@message.nexmo_send_text_message(params[:to], 
+					params[:msisdn], "We are sorry, but your text message exceeded 160 characters :(. Please send a shorter message. Thanks!")
+				query_hash = Rack::Utils.parse_nested_query(request.query_string)
+				@message.save_text(type: params[:type], from: params[:msisdn], to: params[:msisdn], 
+					network_code: query_hash["network-code"], messageId: params[:messageId], message_timestamp: query_hash["message-timestamp"],
+					text: params[:text])
+				
+				#@url = @url["text"]
+				#@url = #params["network-code"]
+			end
+=end
