@@ -4,67 +4,93 @@ class MessagesController < ApplicationController
 	require 'rack/utils'
 
 	def index
-		message = Message.new
-		#@uri = message.balanced_associate_token_with_user
-		#@uri = message.nexmo_search_and_buy_number("US")
-		#@uri = message.nexmo_send_text_message(<redacted_phone_number>,<redacted_phone_number>, "yes")
-		@uri = message.nexmo_search_and_buy_number("US")
+		@message = Message.new
+		@url = @message.nexmo_send_text_message(<redacted_phone_number>, <redacted_phone_number>, "yea")
 	end
 
 	def receive_delivery_report
-		# Do a test here like below
-		#@message = Message.new
-		#@message.save_text(text: params[:text], sure: "me")
-		
+		@message = Message.new
+		save_delivery_receipts(request.query_string)		
 	end
- 
-
 
 	def receive_text_message
 		#params[:to] = "<redacted_phone_number>"
 		#params[:msisdn] = "<redacted_phone_number>" #"<redacted_phone_number>"
 		if params[:text] != ""        				# Ensure there is a text query string
+
 			text = params[:text].strip
 			amount = get_number(text)
-			# for making payments
-			if text.chr == "$" || text.chr == URI.decode("%C2%A4") and is_number?(amount)					
+			
+			if text.chr == "$" || text.chr == URI.decode("%C2%A4") and is_number?(amount)			# for making payments			
 				amount = to_cents(amount)
 				if amount >= 50 and amount <= 1500000
-					##### Save message
-					###### Add payment logic here
-					@message = Message.new
-					@message.save_text(text: params[:text], sure: "me")
-					@message.nexmo_send_text_message(params[:to], params[:msisdn], "we sent payment")
+
+					begin
+						# find the user
+						@user = User.find_by(phone_number: params[:msisdn])
+					rescue
+						# if user doesnt exist
+						# save in messages and send a response
+						save_inbound_text(request.query_string, msg_code = 7)
+						@message = Message.new
+						@message.nexmo_send_text_message(params[:to], params[:msisdn], "Thank you for your interest in rhombus :). Please sign up at the link to send payment: www.getrhombus.com/signup?num=#{params[:msisdn]}")
+					else
+						# if user exist, proceed to payment
+						@customer_transaction = Transaction.new
+
+						# could have returned merchant object here...another option to avoid search again in merchant credit call
+						debit_data = @customer_transaction.balanced_debit_customer_card(amount, @user, params[:to], text)
+						save_inbound_text(request.query_string, msg_code = 1, debit_data[0])
+						
+						# proceed to send credit to merchant
+						@merchant_transaction = Transaction.new
+						transaction_id = @merchant_transaction.balanced_credit_merchant_bank_account(debit_data, @user, params[:to], text)
+						
+						# set the merchant transaction id in the customer referenced transaction id
+						@customer_transaction.referenced_user_id = transaction_id
+						@customer_transaction.save
+
+						# cash out, and set the customer transaction id and the merchant transaction id
+						@marketplace_transaction = Transaction.new
+						@marketplace_transaction = balanced_payout_to_marketplace_bank_account(debit_data, @merchant_transaction.id, @user, text)
+					end
+
 				elsif amount > 1500000
-					@message = Message.new
-					@message.save_text(text: params[:text], sure: "me")
-					@message.nexmo_send_text_message(params[:to], params[:msisdn], "Sorry, we are unable to make payments above 15,000 dollars :(. But you can send in smaller amounts. Thanks!")
+
+					# save in messages and send a response
+					save_inbound_text(request.query_string, msg_code = 2)
+					@message = Message.new 							
+					@message.nexmo_send_text_message(params[:to], params[:msisdn], 
+						"Sorry, we are unable to make payments above 15,000 dollars :(. But you can send in smaller amounts. Thanks!")
+				
 				else
-					@message = Message.new
+					
+					# save in messages and send a response
+					save_inbound_text(request.query_string, msg_code = 3)
+					@message = Message.new 											
 					@message.nexmo_send_text_message(params[:to], 
 						params[:msisdn], "Sorry, we are unable to make payments below 50 cents. :(")
+				
 				end	
 			
 			elsif text.downcase.gsub(/\s+/, "") == "signup" || text.downcase.gsub(/\s+/, "") == "sign-up"		# for signing up
 
-				query_hash = Rack::Utils.parse_nested_query(request.query_string)     # deal with some weird params from nexmo
-				# save text message 
-				@message = Message.new
-				@message.save_text(type: params[:type], from: params[:msisdn], to: params[:to], 
-					network_code: query_hash["network-code"], messageId: params[:messageId], message_timestamp: query_hash["message-timestamp"],
-					text: params[:text])
-				# send response and save message in model
-				@message = Message.new
-				@message.nexmo_send_text_message(params[:to], 
-					params[:msisdn], "Welcome to rhombus! Save this number to your phone for future payments :). Follow the link to complete your signup: www.getrhombus.com/signup?num=#{params[:msisdn]}")
+				# save in messages and send a response
+				save_inbound_text(request.query_string, msg_code = 4)
+				@message = Message.new 				
+				@message.nexmo_send_text_message(params[:to], params[:msisdn], 
+					"Welcome to rhombus! Save this number to your phone for future payments :). Follow the link to complete your signup: www.getrhombus.com/signup?num=#{params[:msisdn]}")
 			
-			else 	# for messages we cant parse sucessfully
-			
-				call_save_text(params, request.query_string)
-				# send response and save message in model
-				@message = Message.new
-				@message.nexmo_send_text_message(params[:to], 
-					params[:msisdn], 'Sorry we did not understand your text message :(. You can signup by texting "signup" or make payments by texting "amount, description". Thanks!')
+			else 	
+				
+				# for messages we cant parse sucessfully
+				# save in messages
+				save_inbound_text(request.query_string, msg_code = 5)
+				# until nexmo can give use concatenated messages
+				
+				#@message = Message.new        		
+				#@message.nexmo_send_text_message(params[:to], params[:msisdn], 
+				#	'Sorry we did not understand your text message :(. You can signup by texting "signup" or make payments by texting "amount, description". Thanks!')
 			
 			end
 		end
@@ -73,15 +99,6 @@ class MessagesController < ApplicationController
 	
 
 	private
-
-	def call_save_text(params, query)
-		query_hash = Rack::Utils.parse_nested_query(query)     # deal with some weird params from nexmo
-		# save text message 
-		@message = Message.new
-		@message.save_text(type: params[:type], from: params[:msisdn], to: params[:to], 
-			network_code: query_hash["network-code"], messageId: params[:messageId], message_timestamp: query_hash["message-timestamp"],
-			text: params[:text])
-	end
 	
     # Use callbacks to share common setup or constraints between actions.
     def set_message
@@ -108,21 +125,33 @@ class MessagesController < ApplicationController
 		return (var.split(/, */, 2).first.gsub(/\s+/, "")[1..-1])
 	end
 
+	# save text message 
+	def save_inbound_text(query, msg_code, transaction_id = 0)						# if not for payment, transaction_id = 0
+		query_hash = Rack::Utils.parse_nested_query(query)      # deal with some weird params from nexmo
+		@message = Message.new 									
+		@message.save_text(type: query_hash["type"], from: query_hash['msisdn'], to: query_hash['to'], 
+			network_code: query_hash["network-code"], messageId: query_hash['messageId'], message_timestamp: query_hash["message-timestamp"],
+			text: query_hash['text'], message_code: msg_code, message_type: 2, transaction_id: transaction_id)
+	end
+
+	def save_delivery_receipts(query)
+		query_hash = Rack::Utils.parse_nested_query(query)      # deal with some weird params from nexmo
+		begin
+			@message = Message.find_by(id: query_hash["client-ref"]) 
+		rescue
+			@message = Message.new
+			@message.save_text(from: query_hash["to"], network_code: query_hash['network-code'], messageId: query_hash['messageId'], 
+				to: query_hash["msisdn"], status_delivery: query_hash["status"], err_code: query_hash['err-code'], message_price: query_hash["price"], 
+				scts: query_hash['scts'], message_timestamp: query_hash["message-timestamp"], 
+				client_ref: query_hash['client-ref'], message_code: 6, message_type: 3)
+		else
+			@message.save_text(status_delivery: query_hash["status"], err_code: query_hash['err-code'],
+				scts: query_hash['scts'], message_timestamp: query_hash["message-timestamp"], message_code: 6)
+		end
+	end
 end
 
-#if params[:text].length <= 160 			# Ensure it is less than 160 chars
 
-=begin
-			else
-				@message = Message.new
-				@message.nexmo_send_text_message(params[:to], 
-					params[:msisdn], "We are sorry, but your text message exceeded 160 characters :(. Please send a shorter message. Thanks!")
-				query_hash = Rack::Utils.parse_nested_query(request.query_string)
-				@message.save_text(type: params[:type], from: params[:msisdn], to: params[:msisdn], 
-					network_code: query_hash["network-code"], messageId: params[:messageId], message_timestamp: query_hash["message-timestamp"],
-					text: params[:text])
-				
-				#@url = @url["text"]
-				#@url = #params["network-code"]
-			end
-=end
+#if !query_hash.has_key?("network-code")				# Looks like nexmo doesnt always provide this...not sure
+	#query_hash['network-code'] = ""
+#end

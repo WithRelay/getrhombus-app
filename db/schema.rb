@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140125034315) do
+ActiveRecord::Schema.define(version: 20140125204351) do
 
   create_table "messages", force: true do |t|
     t.string   "text"
@@ -22,7 +22,7 @@ ActiveRecord::Schema.define(version: 20140125034315) do
     t.integer  "status_report_req"
     t.string   "message_timestamp"
     t.integer  "message_type"
-    t.decimal  "message_price",     precision: 10, scale: 0
+    t.string   "message_price"
     t.string   "scts"
     t.string   "client_ref"
     t.string   "status"
@@ -45,8 +45,8 @@ ActiveRecord::Schema.define(version: 20140125034315) do
     t.datetime "updated_at"
     t.string   "transaction_uri"
     t.integer  "transaction_type"
-    t.decimal  "amount",                    precision: 10, scale: 0
-    t.decimal  "amount_less_fees",          precision: 10, scale: 0
+    t.decimal  "amount",                             precision: 8, scale: 2
+    t.decimal  "amount_less_fees",                   precision: 8, scale: 2
     t.string   "transaction_number"
     t.string   "description"
     t.string   "from"
@@ -67,12 +67,17 @@ ActiveRecord::Schema.define(version: 20140125034315) do
     t.string   "account_name"
     t.string   "routing_number"
     t.integer  "referenced_user_id"
-    t.string   "referenced_transaction_id"
+    t.string   "referenced_customer_transaction_id"
     t.string   "receipt_sent_at"
     t.string   "refund_reason"
     t.integer  "user_id"
+    t.text     "notes"
+    t.decimal  "amount_with_taxes",                  precision: 8, scale: 2
+    t.integer  "referenced_merchant_transaction_id"
+    t.integer  "referenced_merchant_id"
   end
 
+  add_index "transactions", ["referenced_customer_transaction_id"], name: "index_transactions_on_referenced_customer_transaction_id", using: :btree
   add_index "transactions", ["user_id"], name: "index_transactions_on_user_id", using: :btree
 
   create_table "users", force: true do |t|
