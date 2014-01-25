@@ -13,8 +13,8 @@ class MessagesController < ApplicationController
 
 	def receive_delivery_report
 		# Do a test here like below
-		@message = Message.new
-		@message.save_text(text: params[:text], sure: "me")
+		#@message = Message.new
+		#@message.save_text(text: params[:text], sure: "me")
 		
 	end
  
@@ -52,7 +52,7 @@ class MessagesController < ApplicationController
 			else 	# for messages we cant parse sucessfully
 				query_hash = Rack::Utils.parse_nested_query(request.query_string)
 				@message = Message.new
-				@message.save_text(type: params[:type], from: params[:msisdn], to: params[:msisdn], 
+				@message.save_text(type: params[:type], from: params[:msisdn], to: params[:to], 
 					network_code: query_hash["network-code"], messageId: params[:messageId], message_timestamp: query_hash["message-timestamp"],
 					text: params[:text])
 				@message = Message.new
