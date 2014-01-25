@@ -1,6 +1,9 @@
 class Message < ActiveRecord::Base
 	
 	require 'uri'
+
+	belongs_to :transaction
+	#belongs_to :user, counter_cache: true
 	
 	# For sending any text message
 	def nexmo_send_text_message(from, to, message)
@@ -49,15 +52,24 @@ class Message < ActiveRecord::Base
 	# For saving any text received or sent
 	def save_text(options = {})
 		self.text = options[:text] if options[:text]
-		self.save
+		self.from = options[:from] if options[:from]
+		self.to = options[:to] if options[:to]
+		self.network_code = options[:network_code] if options[:network_code]
+		self.messageId = options[:messageId] if options[:messageId]
+		self.message_timestamp = options[:message_timestamp] if options[:message_timestamp]
+		self.type = options[:type] if options[:type]
+		#self.text = options[:text] if options[:text]
+		#self.text = options[:text] if options[:text]
+		#self.text = options[:text] if options[:text]
+		#self.text = options[:text] if options[:text]
+		#self.text = options[:text] if options[:text]
+		#self.save
 		#if @message.save
 		#	return 200
 		#else
 			#return 500
 		#end
-		return options[:sure]
-
-
+		#return options[:sure]
 	end
 
 end

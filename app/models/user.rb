@@ -1,6 +1,9 @@
 class User < ActiveRecord::Base 	
 
-	Balanced.configure('cb51061889c511e2ac81026ba7cd33d0')   	
+	Balanced.configure('cb51061889c511e2ac81026ba7cd33d0')   
+
+  has_many :transactions, dependent: :destroy
+  #has_many :messages, dependent: :destroy	
 
   	# Include default devise modules. Others available are:
   	# :token_authenticatable, :lockable, :timeoutable and :omniauthable

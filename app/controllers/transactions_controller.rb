@@ -2,6 +2,6 @@ class TransactionsController < ApplicationController
 
 	def index
 		trans = Transaction.new
-		@response = trans.balanced_issue_refund_to_customer
+		@response = trans.balanced_credit_merchant_bank_account
 	end
 end
