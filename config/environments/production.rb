@@ -14,8 +14,7 @@ Rhombus::Application.configure do
     port: 587,
     domain: "getrhombus.com",
     user_name: <redacted_username>
-    password: "<redacted_password>"  #ENV["GMAIL_PASSWORD"]
-  }
+    password: "<redacted_password>" }
 
   # Code is not reloaded between requests.
   config.cache_classes = true
