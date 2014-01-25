@@ -44,28 +44,44 @@ class MessagesController < ApplicationController
 					@message.nexmo_send_text_message(params[:to], 
 						params[:msisdn], "Sorry, we are unable to make payments below 50 cents. :(")
 				end	
-				# for signing up
-			elsif text.downcase.gsub(/\s+/, "") == "signup" || text.downcase.gsub(/\s+/, "") == "sign-up"
-				@message = Message.new
-				@message.nexmo_send_text_message(params[:to], 
-					params[:msisdn], "Welcome to rhombus! Save this number to your phone for future payments :). Follow the link to complete your signup: www.getrhombus.com/signup?num=#{params[:msisdn]}")
-			else 	# for messages we cant parse sucessfully
-				query_hash = Rack::Utils.parse_nested_query(request.query_string)
+			
+			elsif text.downcase.gsub(/\s+/, "") == "signup" || text.downcase.gsub(/\s+/, "") == "sign-up"		# for signing up
+
+				query_hash = Rack::Utils.parse_nested_query(request.query_string)     # deal with some weird params from nexmo
+				# save text message 
 				@message = Message.new
 				@message.save_text(type: params[:type], from: params[:msisdn], to: params[:to], 
 					network_code: query_hash["network-code"], messageId: params[:messageId], message_timestamp: query_hash["message-timestamp"],
 					text: params[:text])
+				# send response and save message in model
+				@message = Message.new
+				@message.nexmo_send_text_message(params[:to], 
+					params[:msisdn], "Welcome to rhombus! Save this number to your phone for future payments :). Follow the link to complete your signup: www.getrhombus.com/signup?num=#{params[:msisdn]}")
+			
+			else 	# for messages we cant parse sucessfully
+			
+				call_save_text(params, request.query_string)
+				# send response and save message in model
 				@message = Message.new
 				@message.nexmo_send_text_message(params[:to], 
 					params[:msisdn], 'Sorry we did not understand your text message :(. You can signup by texting "signup" or make payments by texting "amount, description". Thanks!')
+			
 			end
-
 		end
 	end
 
 	
 
 	private
+
+	def call_save_text(params, query)
+		query_hash = Rack::Utils.parse_nested_query(query)     # deal with some weird params from nexmo
+		# save text message 
+		@message = Message.new
+		@message.save_text(type: params[:type], from: params[:msisdn], to: params[:to], 
+			network_code: query_hash["network-code"], messageId: params[:messageId], message_timestamp: query_hash["message-timestamp"],
+			text: params[:text])
+	end
 	
     # Use callbacks to share common setup or constraints between actions.
     def set_message
