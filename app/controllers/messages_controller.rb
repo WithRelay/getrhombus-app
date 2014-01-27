@@ -42,17 +42,24 @@ class MessagesController < ApplicationController
 						debit_data = @customer_transaction.balanced_debit_customer_card(amount, @user, params[:to], text)
 						save_inbound_text(request.query_string, msg_code = 1, debit_data[0])
 						
-						# proceed to send credit to merchant
-						@merchant_transaction = Transaction.new
-						transaction_id = @merchant_transaction.balanced_credit_merchant_bank_account(debit_data, @user, params[:to], text)
-						
-						# set the merchant transaction id in the customer referenced transaction id
-						@customer_transaction.referenced_user_id = transaction_id
-						@customer_transaction.save
+						# proceed to send credit to merchant if no error
+						if debit_data != "failed"
+							@merchant_transaction = Transaction.new
+							@merchant_transaction.balanced_credit_merchant_bank_account(debit_data, @user, params[:to], text)
+							
+							if @merchant_transaction_id != "failed"
+								# set the merchant transaction id in the customer referenced transaction id
+								@customer_transaction.referenced_user_id = @merchant_transaction.id
+								@customer_transaction.save
 
-						# cash out, and set the customer transaction id and the merchant transaction id
-						@marketplace_transaction = Transaction.new
-						@marketplace_transaction = balanced_payout_to_marketplace_bank_account(debit_data, @merchant_transaction.id, @user, text)
+								# cash out, and set the customer transaction id and the merchant transaction id
+								@marketplace_transaction = Transaction.new
+								@marketplace_transaction.balanced_payout_to_marketplace_bank_account(debit_data, @merchant_transaction.id, @user, text)
+							end
+						end
+
+
+						
 					end
 
 				elsif amount > 1500000

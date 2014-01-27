@@ -13,4 +13,14 @@
 //= require jquery
 //= require jquery_ujs
 //= require turbolinks
-//= require_tree .
+
+//= require bootstrap.min.js
+//= require pace.min.js
+//= require jquery.validate.min.js
+//= require jquery.lazyload.min.js
+//= require login_v2
+//= require tokenize.js
+
+
+
+    

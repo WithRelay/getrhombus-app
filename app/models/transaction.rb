@@ -48,19 +48,19 @@ class Transaction < ActiveRecord::Base
          	# Notify marketplace owner of failed debit
          	# return e.response[:body], failure_reason, status_code, e.response[:body]["description"]
          	Notification.payment_failure_notification(e.response[:body]).deliver
-
+          return "failed"
       	else
 
          	# Else proceed to save data and notify customer via text and email (plus tax and merchant name)
          	# return "#{response.uri}, #{response.transaction_number}, #{response.source.last_four}, #{response.on_behalf_of.customer_uri}"
-            @message = Message.new
-            if merchant.tax_rate != "0"
-            	@message.nexmo_send_text_message(rhombus_number, user.phone_number, 
-            		"A payment of #{amount/100} dollars was sent to #{merchant_business_name}. Thanks! :)")
-            else
-            	@message.nexmo_send_text_message(rhombus_number, user.phone_number, 
-            		"A payment of #{amount_with_taxes/100} dollars including taxes set by #{merchant_business_name} was sent. Thanks! :)")
-            end
+          @message = Message.new
+          if merchant.tax_rate != "0"
+          	@message.nexmo_send_text_message(rhombus_number, user.phone_number, 
+           		"A payment of #{amount/100} dollars was sent to #{merchant_business_name}. Thanks! :)")
+          else
+          	@message.nexmo_send_text_message(rhombus_number, user.phone_number, 
+           		"A payment of #{amount_with_taxes/100} dollars including taxes set by #{merchant_business_name} was sent. Thanks! :)")
+          end
 
             # save transaction
       		self.save_transaction(transaction_uri: response.uri, transaction_type: 1, amount: response.amount/100, 
@@ -69,13 +69,13 @@ class Transaction < ActiveRecord::Base
       			last_four: response.customer.last_four, expiration_month: response.source.expiration_month, 
       			expiration_year: response.source.expiration_year, zip_code: response.source.postal_code, card_type: response.source.card_type, 
       			card_name: response.source.card_name, appears_on_statement_as: response.appears_on_statement_as, tax_rate: merchant.tax_rate,
-				on_behalf_of_uri: response.on_behalf_of.customer_uri, referenced_merchant_id: merchant.id, user_id: user.id,
-				notes: message, amount_with_taxes: response.amount_with_taxes/100)
-      		# send receipt
-      		Notification.send_receipt(response, tax_rate, merchant.business_name).deliver
-      		self.receipt_sent_at = Time.now							# change this later
-      		self.save												# Put a save check here later
-      		return self.id, amount, amount_with_taxes
+				    on_behalf_of_uri: response.on_behalf_of.customer_uri, referenced_merchant_id: merchant.id, user_id: user.id,
+				    notes: message, amount_with_taxes: response.amount_with_taxes/100)
+      		  # send receipt
+      		  Notification.send_receipt(response, tax_rate, merchant.business_name).deliver
+      		  self.receipt_sent_at = Time.now							# change this later
+      		  self.save												# Put a save check here later
+      		  return self.id, amount, amount_with_taxes
       	end
    end
 
@@ -102,18 +102,17 @@ class Transaction < ActiveRecord::Base
         	# Handle bad response, Notify merchant and marketplace owner of failure
         	#return e, e.response[:body]["category_code"], e.response[:body]["status_code"], e.response[:body]["description"]
          	Notification.payment_failure_notification(e.response[:body], merchant.email).deliver
-         	
+         	return "failed"
       	else
         	# Else proceed to save data, return id
          	#return "#{response.uri}, #{response.transaction_number}, #{response.source.last_four}, #{response.on_behalf_of.customer_uri}"
-        	transaction_id = self.save_transaction(transaction_uri: response.uri, transaction_type: 2, amount: (response.amount)/100, 
+        	self.save_transaction(transaction_uri: response.uri, transaction_type: 2, amount: (response.amount)/100, 
         		amount_less_fees: amount_less_fees/100, transaction_number: response.transaction_number, description: response.description, 
         		from: user.phone_number, to: merchant.rhombus_number, status: response.status, transaction_available_at: response.available_at,
         		appears_on_statement_as: response.appears_on_statement_as, tax_rate: merchant.tax_rate,
         		account_number: response.destination.account_number, account_type: response.destination.type,
         		account_name: response.destination.name, routing_number: response.destination.routing_number, referenced_user_id: user.id, 
-        		referenced_customer_transaction_id: debit_data[0], user_id: merchant.id,	notes: message, amount_with_taxes: debit_data[2]/100)
-        	return transaction_id			
+        		referenced_customer_transaction_id: debit_data[0], user_id: merchant.id,	notes: message, amount_with_taxes: debit_data[2]/100)	
       	end
    end
 
@@ -192,8 +191,6 @@ class Transaction < ActiveRecord::Base
       	self.referenced_merchant_id = options[:referenced_merchant_id] if options[:referenced_merchant_id]
 
       	self.save 										# add a check here later
-
-      	return self.id
    end
 
 end

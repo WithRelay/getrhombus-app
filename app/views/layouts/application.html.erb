@@ -4,13 +4,13 @@
   <title>Rhombus</title>
   <%= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true %>
   <LINK href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+  <%= yield :head %>
   <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
   <%= csrf_meta_tags %>
 </head>
 <body>
-		 <p class="notice"><%= notice %></p>
-       <p class="alert"><%= alert %></p>
 
+       <%= render 'layouts/messages' %>
 <%= yield %>
 
 </body>

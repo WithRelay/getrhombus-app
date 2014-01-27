@@ -15,27 +15,26 @@ class User < ActiveRecord::Base
       #uri = "/v1/marketplaces/TEST-MP6bP0y8O10lBsBfh8oMGhE4/cards/CC1hYzxVE1aDLmo18kPpptks"
       uri = "/v1/marketplaces/TEST-MP6bP0y8O10lBsBfh8oMGhE4/cards/CC4MoQPn9NP4fe5lyjA1OV1"
       begin
-     		# Create or update customer on Balanced
-     		######## if current user has a uri, get uri, update card info and uri
-        #customer_uri = "/v1/customers/CU16RllrJB2nxgdxhn23k68U "
-     		#customer = Balanced::Customer.find(uri)
-     		######## else create new customer on balanced and add uri to db
-     		customer = Balanced::Customer.new.save
-     		######## end
-     		######## Add response check and save info before proceeding
+       		# Create or update customer on Balanced
+       		######## if current user has a uri, get uri, update card info and uri
+          #customer_uri = "/v1/customers/CU16RllrJB2nxgdxhn23k68U "
+       		#customer = Balanced::Customer.find(uri)
+       		######## else create new customer on balanced and add uri to db
+       		customer = Balanced::Customer.new.save
+       		######## end
+       		######## Add response check and save info before proceeding
 
-   		  ######## if it is regular user => a credit card
-   		    response = customer.add_card(uri)
-   		  ######## elsif it is a merchant => bank account
-   		    #response = customer.add_bank_account(uri)
-        ###### end
+     		  ######## if it is regular user => a credit card
+     		    response = customer.add_card(uri)
+     		  ######## elsif it is a merchant => bank account
+     		    #response = customer.add_bank_account(uri)
+          ###### end
       rescue Exception => e
-        # Handle bad response
-        # Notify marketplace owner of error
-        return e.response[:body]["status"], e.response[:body]["category_code"],
-            e.response[:body]["description"], e.response[:body]["status_code"]
+          # Handle bad response and notify marketplace owner of error
+          #return e.response[:body]["status"], e.response[:body]["category_code"], e.response[:body]["description"], e.response[:body]["status_code"]
+          Notification.payment_failure_notification(e.response[:body]).deliver
       else
-        # Else save customer uri only. Card/Account uri not needed 1:1
+        # Else save customer uri only. Card/Account uri not needed cos 1:1
         return response.uri    
       end		
    	end
