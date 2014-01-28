@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140125204351) do
+ActiveRecord::Schema.define(version: 20140128160106) do
 
   create_table "messages", force: true do |t|
     t.string   "text"
@@ -110,7 +110,6 @@ ActiveRecord::Schema.define(version: 20140125204351) do
     t.string   "business_name"
     t.string   "business_type"
     t.string   "street_address"
-    t.string   "apt_suite"
     t.string   "city"
     t.string   "state_province"
     t.string   "business_phone"

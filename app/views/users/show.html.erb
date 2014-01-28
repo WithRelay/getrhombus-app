@@ -1,0 +1,18 @@
+
+<% if current_user.user_level == 0 and current_user.customer_uri.blank? %>
+	<%= provide(:title, "#{current_user.email}"" - card information") %>
+
+	<%= content_for :head do %>
+  	<%= stylesheet_link_tag "style_home.css", "data-turbolinks-track" => true %>
+  	<%= stylesheet_link_tag "responsive_home.css", "data-turbolinks-track" => true %>
+  	<%= stylesheet_link_tag "custom_home.css", "data-turbolinks-track" => true %>
+  	<% end %>
+
+  	<body class="error-body no-top lazy"> 
+
+
+		<%= redirect_to 'shared/header' %>
+
+	</body>
+
+<% end %>

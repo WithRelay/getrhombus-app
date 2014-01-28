@@ -6,8 +6,8 @@ class User < ActiveRecord::Base
   #has_many :messages, dependent: :destroy	
 
   	# Include default devise modules. Others available are:
-  	# :token_authenticatable, :lockable, :timeoutable and :omniauthable
-  	devise :database_authenticatable, :registerable, :confirmable,
+  	# :token_authenticatable, :lockable, :timeoutable and :omniauthable, :confirmable,
+  	devise :database_authenticatable, :registerable,
     	    :recoverable, :rememberable, :trackable, :validatable
 
     def balanced_associate_token_with_customer

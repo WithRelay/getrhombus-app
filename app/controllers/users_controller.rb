@@ -14,7 +14,10 @@ class UsersController < ApplicationController
     @user = User.new
   end
 
-  def show    
+  def show
+    if current_user.customer_uri.blank? 
+        redirect_to "/profile"
+    end
   end  
   
   def create
@@ -37,7 +40,7 @@ class UsersController < ApplicationController
   # PATCH/PUT /users/1.json
   def update
     respond_to do |format|
-      if @user.update(user_params)
+      if @user.update_with_password(params)
         format.html { redirect_to @user, notice: 'Profile updated!' }
         format.json { head :no_content }
       else

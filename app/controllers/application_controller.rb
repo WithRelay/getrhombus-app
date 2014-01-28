@@ -6,16 +6,22 @@ class ApplicationController < ActionController::Base
 
   rescue_from ActiveRecord::RecordNotUnique, with: :record_not_unique   # capture phone number duplicates on sign up page
   
-  #def after_sign_in_path_for(user)
-   #   current_user
-  #end
+  def after_sign_in_path_for(user)
+     current_user
+  end
 
   protected
 
   def configure_permitted_parameters
-    devise_parameter_sanitizer.for(:sign_up) { |u| u.permit(:email, :phone_number, :password, :password_confirmation) }
+    devise_parameter_sanitizer.for(:sign_up) { |u| u.permit(:email, :phone_number, 
+        :password, :password_confirmation, :user_level) }
     devise_parameter_sanitizer.for(:sign_in) { |u| u.permit(:email, :password) }
-    devise_parameter_sanitizer.for(:account_update) { |u| u.permit(:email, :password, :password_confirmation, :current_password) }
+    devise_parameter_sanitizer.for(:account_update) { |u| u.permit(:email, :current_password, 
+      :name, :customer_uri, :last_four, :expiration_month,
+     :expiration_year, :zip_code, :card_name, :card_type, :phone_number, :business_name, 
+     :business_type, :street_address, :city, :state_province, :business_phone, 
+     :country, :routing_number, :account_name, :account_number, :account_type, 
+     :approve_payments_immediately, :country, :tax_rate) }
   end
 
   def record_not_unique

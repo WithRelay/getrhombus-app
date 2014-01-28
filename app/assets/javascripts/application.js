@@ -19,7 +19,7 @@
 //= require jquery.validate.min.js
 //= require jquery.lazyload.min.js
 //= require login_v2
-//= require tokenize.js
+//= require custom.js
 
 
 

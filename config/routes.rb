@@ -2,7 +2,7 @@ Rhombus::Application.routes.draw do
 
   #resources :messages
   #root 'messages#index'
-  root 'users#index'
+  root 'static_pages#home'
   #root 'transactions#index'
   get "/receive_text_message" => 'messages#receive_text_message'
   get "/receive_delivery_report" => 'messages#receive_delivery_report'
@@ -10,15 +10,18 @@ Rhombus::Application.routes.draw do
   #root 'static_pages#home' 
   get '/about' => 'static_pages#about'
   get '/storeowners' => 'static_pages#storeowners'
+  get '/contact' => 'static_pages#contact'
   #match 'contact' => 'messages#new', :as => 'contact', :via => :get
   #match 'contact' => 'messages#create', :as => 'contact', :via => :post
 
-  devise_for :users#, :controllers => { :registrations => "registrations" }
+  devise_for :users#, :controllers => {:registrations => "registrations"}
   devise_scope :user do
     get "signup", :to => "devise/registrations#new"
-    get "login", :to => "devise/sessions#new"
+    get "profile", :to => "devise/registrations#edit"
+    get "profile_update", :to => "devise/registrations#update", :via => :post
+    get "signin", :to => "devise/sessions#new"
   end
-  #resources :users
+  resources :users
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

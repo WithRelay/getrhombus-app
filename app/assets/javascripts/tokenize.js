@@ -1,14 +1,4 @@
 $(document).ready(function () {
-    
-    // Add coode to make this run only on signup pages
-    if (window.location.search.substring(1) != "")
-    {
-        document.getElementById('num').value = window.location.search.substring(1).split("=")[1];
-    }
-    else
-    {
-        document.getElementById('num').value = ""
-    }
     ////
     // Initalize balanced.js
     //
@@ -19,10 +9,9 @@ $(document).ready(function () {
     // For example purposes, create a bin at http://requestb.in/
     // Make sure it doesn't end in ?inspect and set it as responseTarget.
     // e.g. var responseTarget = http://requestb.in/nyqkn8ny
-    //var responseTarget = 'http://localhost';  
-    //var marketplaceUri = '/v1/marketplaces/TEST-MP6bP0y8O10lBsBfh8oMGhE4';
-
-    var responseTarget = 'http://requestb.in/y6bbyry6';  
+    //var responseTarget = 'http://localhost:3000/profile_update';  
+    //var responseTarget = 'http://requestb.in/189z3371';
+    var responseTarget = 'http://www.getrhombus.com/profile_update';
     var marketplaceUri = '/v1/marketplaces/TEST-MP6bP0y8O10lBsBfh8oMGhE4';
     
     balanced.init(marketplaceUri);
@@ -42,21 +31,22 @@ $(document).ready(function () {
             expiration_year: $('#cc-ex-year').val(),
             security_code: $('#ex-csc').val()
         };
-        
+        //= require custom.js
         // Tokenize credit card
         balanced.card.create(payload, function (response) {
             // Successful tokenization
             if(response.status === 201 && response.href) {
-                // Send to your backend
-                jQuery.post(responseTarget, {
-                    uri: response.href
-                }, function(r) {
-                    // Check your backend response
-                    if (r.status === 201) {
-                        // Your successful logic here from backend
-                    } else {
-                        // Your failure logic here from backend
-                    }
+                // Send to your backend                
+                $.ajax({ 
+                    type: 'POST', 
+                    url: responseTarget, 
+                    data: {'card_name' : "me", 'last_four' : "2312", 
+                            "current_password" : $('#current_password').val()  }, 
+                    success: function(data){
+                        alert("yay")
+                    //data is whatever you RETURN from your controller. 
+                    //an array, string, object...something 
+                    } 
                 });
             } else {
                 // Failed to tokenize, your error logic here
@@ -124,5 +114,4 @@ $(document).ready(function () {
         $('#ba-number').val('<redacted_phone_number>');
         $('#ba-routing').val('321174851');
     });
-
 });
