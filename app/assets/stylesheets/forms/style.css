@@ -5875,7 +5875,7 @@ border-bottom-left-radius: 2px;
 .input-append .add-on, .input-prepend .add-on{
 	position:absolute;
 	background-color:#D1DADE;
-	color:##5E5E5E;
+	color:#5E5E5E;
 	text-shadow:none;
 	border:#D1DADE;
 	border-radius: 0 2px 2px 0;
