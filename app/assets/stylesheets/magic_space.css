@@ -90,7 +90,7 @@
 		padding-right:50px;
 	}
 	.xs-p-r-60{
-		padding-right:60PX;
+		padding-right:60px;
 	}
 	/** Padding top **/
 	.xs-m-t-10{
@@ -156,7 +156,7 @@
   }
 
   /* Large desktop */
-  /*@media (min-width: 1200px) {  }*/
+  
 @media (min-width: 1600px) {
 .container {
     width: 1170px;
