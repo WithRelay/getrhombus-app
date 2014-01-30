@@ -21,10 +21,12 @@ $(document).ready(function () {
         e.preventDefault();
     }
     
-    $("form").bind("submit", preventDefault);
+    $("#user-form").bind("submit", preventDefault);
+
     $('#response').hide();
 
     $( "#cc-submit" ).click(function() {
+        //$("#user-form").bind("submit", preventDefault);
             
         $('#response').hide();
         $( ".panel-body" ).html('');
@@ -53,8 +55,8 @@ $(document).ready(function () {
                 $('#cc-type').val(response.data.card_type);
 
                 // unbind prevent default and submit form
-                $("form").unbind("submit", preventDefault);
-                $("form").submit();
+                $("#user-form").unbind("submit", preventDefault);
+                $("#user-form").submit();
                 
             } else {
                // Failed to tokenize, your error logic here
