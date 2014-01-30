@@ -33,13 +33,18 @@
                     </div>
 
             <% if current_user.user_level == 0 %>
+
                <div class="p-t-30 p-l-40 p-b-20 xs-p-t-10 xs-p-l-10 xs-p-b-10"> 
                   <h4 class="normal">Card Information</h4>
                </div>                   
+
                    <%= render :partial => "card_form", :locals=>{:f=>f}  %>
+
             <% else %>
+
                 <div class="p-t-30 p-l-40 p-b-20 xs-p-t-10 xs-p-l-10 xs-p-b-10"> 
                   <h4 class="normal">Business Information</h4>
+                  
                </div>  
                     <%= render :partial => "business_information", :locals=>{:f=>f}  %>
 
