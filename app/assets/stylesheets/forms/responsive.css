@@ -309,7 +309,7 @@ and (orientation : portrait) {
 	.page-sidebar {
 	    position: fixed;
 		width: 260px;
-		background-color:#1b1e24 !important
+		background-color:#1b1e24 !important;
 	}
 
 	.page-sidebar .user-info{
@@ -393,7 +393,7 @@ and (orientation : portrait) {
 	.widget{
 		margin-right:0px;
 	}
-	.row-fluid .2col [class*="span"]{
+	.row-fluid.col [class*="span"]{
 		width:48% !important;
 		margin:0px;
 		margin-bottom:10px;
@@ -682,7 +682,7 @@ and (orientation : portrait) {
 	.table-flip-scroll * html .cf { zoom: 1; }
 	.table-flip-scroll *:first-child+html .cf { zoom: 1; }
 	.table-flip-scroll table { width: 100%; border-collapse: collapse; border-spacing: 0; }
-	 .table-flip-scroll th{ width:auto !important;border-radius:0px !important}
+	 .table-flip-scroll th{ width:auto !important;border-radius:0px !important;}
 	.table-flip-scroll th,
 	.table-flip-scroll td { margin: 0; vertical-align: top; }
 	.table-flip-scroll th { text-align: left; }
@@ -698,7 +698,7 @@ and (orientation : portrait) {
 	/* sort out borders */
 	 
 	.table-flip-scroll th { border-bottom: 0; border-left: 0; }
-	.table-flip-scroll td { border-left: 0; border-right: 0; border-bottom: 0; border-radius:0px !important }
+	.table-flip-scroll td { border-left: 0; border-right: 0; border-bottom: 0; border-radius:0px !important; }
 	.table-flip-scroll tbody tr { border-left: 1px solid #babcbf; }
 	.table-flip-scroll th:last-child,
 	.table-flip-scroll td:last-child {  }
@@ -713,7 +713,7 @@ and (orientation : portrait) {
 	
 	/** email **/
 	.email-body{
-		padding:8px !important
+		padding:8px !important;
 	}
 	/** lockscreen **/
 	.lockscreen-wrapper .profile-wrapper{
