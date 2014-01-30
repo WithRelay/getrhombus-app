@@ -2,10 +2,11 @@
 
 
 <%= content_for :head do %>
-  <%= stylesheet_link_tag "style.css", "data-turbolinks-track" => true %>
-  <%= stylesheet_link_tag "responsive.css", "data-turbolinks-track" => true %>
-  <%= stylesheet_link_tag "magic_space.css", "data-turbolinks-track" => true %>
-  <%= stylesheet_link_tag "custom-icon-set.css", "data-turbolinks-track" => true %>
+  <%#= stylesheet_link_tag "style.css", "data-turbolinks-track" => true %>
+  <%#= stylesheet_link_tag "responsive.css", "data-turbolinks-track" => true %>
+  <%#= stylesheet_link_tag "magic_space.css", "data-turbolinks-track" => true %>
+  <%#= stylesheet_link_tag "custom-icon-set.css", "data-turbolinks-track" => true %>
+  <%= stylesheet_link_tag "forms.css", "data-turbolinks-track" => true %>
 <% end %>
 
 
@@ -14,6 +15,8 @@
 <body class="error-body no-top lazy" style="background-image: url('/assets/bg.jpg')"> 
 
   <%= render 'shared/header' %>
+
+  <%= render 'shared/messages' %>
 
 <div class="container">
   <div class="row login-container animated fadeInUp">  

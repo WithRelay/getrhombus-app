@@ -1,32 +1,32 @@
-
-
-
+<%= render "balanced_error" %>
 
 	    <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10">
                       <div class="col-md-6 col-sm-6 ">
 
-                        <%= f.text_field :account_name, type: "text", class: "form-control", placeholder: "Account Name" %>
+                        <%= f.text_field :account_name, type: "text", class: "form-control", placeholder: "Account Name", id: "ba-name" %>
 
                       </div>
                       <div class="col-md-6 col-sm-6">
             
-                        <%= f.text_field :account_number, type: "text", class: "form-control", placeholder: "Account Number" %>
+                        <%= f.text_field :account_number, type: "text", class: "form-control", placeholder: "Account Number", id: "ba-number" %>
                       </div>
                     </div>
 
            <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10">
                       <div class="col-md-6 col-sm-6 ">
 
-                        <%= f.text_field :routing_number, type: "text", class: "form-control", placeholder: "Routing Number" %>
+                        <%= f.text_field :routing_number, type: "text", class: "form-control", placeholder: "Routing Number", id: "ba-routing" %>
 
                       </div>
                       <div class="col-md-6 col-sm-6">
             
-                           <select id="" name="" class="form-control">
+                           <select id="" name="" class="form-control" id="ba-type">
                         <option value="Checking">Checking</option>
                         <option value="Savings">Savings</option>
                     </select>
 
+                       <%= f.hidden_field :customer_uri, id: "ba-uri" %>
+                            
                       </div>
                     </div>
 
@@ -39,7 +39,7 @@
                       </div>
                       <div class="col-md-6 col-sm-6">
             
-                         <%= f.submit "Save", :class => "btn btn-primary btn-cons btn-block" %>  
+                         <%= f.submit "Save", :class => "btn btn-primary btn-cons btn-block", id: "ba-submit" %>  
 
                       </div>
                     </div>

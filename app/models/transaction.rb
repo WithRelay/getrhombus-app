@@ -36,13 +36,13 @@ class Transaction < ActiveRecord::Base
         	message = Message.new
          	if amount > 100 and status_code == 402                   			# How about 409???
             	message.nexmo_send_text_message(<redacted_phone_number>, <redacted_phone_number>, 
-            		"Your payment of #{amount/100} dollars to #{merchant_name} failed because: #{failure_reason}.")
+            		"Your payment of $#{amount/100} to #{merchant_name} failed because: #{failure_reason}.")
          	elsif amount < 100 and status_code == 402
             	message.nexmo_send_text_message(<redacted_phone_number>, <redacted_phone_number>, 
               		"Your payment of #{amount} cents to #{merchant_name} failed because: #{failure_reason}.")
          	elsif amount == 100 and status_code == 402
             	message.nexmo_send_text_message(<redacted_phone_number>, <redacted_phone_number>, 
-              		"Your payment of #{amount/100} dollar to #{merchant_name} failed because: #{failure_reason}.")
+              		"Your payment of $#{amount/100} to #{merchant_name} failed because: #{failure_reason}.")
          	end
 
          	# Notify marketplace owner of failed debit
@@ -56,10 +56,10 @@ class Transaction < ActiveRecord::Base
           @message = Message.new
           if merchant.tax_rate != "0"
           	@message.nexmo_send_text_message(rhombus_number, user.phone_number, 
-           		"Your payment of #{amount/100} dollars was sent to #{merchant_business_name}. Thanks! :)")
+           		"Your payment of $#{amount/100} was sent to #{merchant_business_name}. Thanks! :)")
           else
           	@message.nexmo_send_text_message(rhombus_number, user.phone_number, 
-           		"Your payment of #{amount_with_taxes/100} dollars including taxes set by #{merchant_business_name} was sent. Thanks! :)")
+           		"Your payment of $#{amount_with_taxes/100} including taxes set by #{merchant_business_name} was sent. Thanks! :)")
           end
 
             # save transaction

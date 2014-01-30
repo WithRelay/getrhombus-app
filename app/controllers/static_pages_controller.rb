@@ -4,25 +4,25 @@ class StaticPagesController < ApplicationController
 	def home
 	end
 
-	def about
+	def aboutus
 	end
 
-	def terms
-	end
-
-	def contact
-	end
-	
 	def privacy
 	end
+	
+	def sellwithrhombus
+	end
 
-	def howitworks
+	def takedonations
 	end
 
 	def faqs
 	end
 
-	def storeowners
+	def paywithrhombus
+	end
+
+	def legal
 	end
 
 	def to_404

@@ -1,0 +1,92 @@
+/********************************
+added quick styles to home
+******************************/
+.navbar{
+	margin-bottom: 0px;
+}
+
+.ha-header{
+	height: 0px;	
+}
+
+.navbar-default .navbar-brand{
+	color: black;
+	font-size: 20px;
+	margin-left: 10px;   
+}
+
+.image { 
+   position: relative; 
+   width: 100%; /* for IE 6 */
+   text-align: center;
+}
+
+.image h3, .image h2 { 
+   position: absolute; 
+   top: 200px; 
+   left: 0; 
+   width: 100%; 
+}   
+.image h3 span, .image h2 span { 
+   color: white; 
+   font-weight: bold;
+   font-size: 30px;
+   letter-spacing: -1px;  
+   margin-top: 20px;
+} 
+
+.image h3 span .tagline2, .image h2 span .tagline2 {
+   font-weight: normal;
+   font-size: 17px;
+}
+
+.image h3 span .spacer, .image h2 span .spacer {
+ 	padding:0 5px;
+}  
+
+
+.prompt_button{
+	margin-top: 30px;
+	font-size: 20px;
+	font-family: "Open Sans","Helvetica","Arial";
+	padding: 25px;
+	padding-top: 20px;
+	padding-bottom: 20px;
+}
+
+.value_prop{
+	font-size: 15px;
+	text-align: center;
+	margin-left: 15px;
+	margin-right: 15px;
+}
+
+.p-b-60{
+	padding-bottom: 0px;
+}
+
+.p-b-60{
+	padding-top: 20px;
+}
+
+.call_to_action_btn{
+	margin-left: 15px;
+	margin-right: 15px;
+}
+
+.pricing{
+   text-align: center;
+   margin-top: 20px;
+   margin-bottom: 20px;
+   font-weight: bold;
+}
+
+.aboutus{
+   font-size: 18px;
+   text-align: center;
+   margin-bottom: 15px;
+}
+
+
+
+/*****************************/

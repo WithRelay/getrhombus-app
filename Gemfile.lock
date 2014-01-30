@@ -71,6 +71,9 @@ GEM
     mail (2.5.4)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
+    mail_form (1.5.0)
+      actionmailer (>= 3.2, < 5)
+      activemodel (>= 3.2, < 5)
     mailcatcher (0.2.4)
       eventmachine
       haml
@@ -178,6 +181,7 @@ DEPENDENCIES
   httparty
   jbuilder (~> 1.2)
   jquery-rails
+  mail_form
   mailcatcher
   mysql2
   rails (= 4.0.1)

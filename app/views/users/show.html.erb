@@ -1,18 +1,23 @@
+	
+<%# if current_user.user_level == 1 %>
+<%= provide(:title, "Rhombus - Dashboard") %>
 
-<% if current_user.user_level == 0 and current_user.customer_uri.blank? %>
-	<%= provide(:title, "#{current_user.email}"" - card information") %>
+<%= content_for :head do %>
+	<%= stylesheet_link_tag "style_home.css", "data-turbolinks-track" => true %>
+	<%= stylesheet_link_tag "responsive_home.css", "data-turbolinks-track" => true %>
+	<%= stylesheet_link_tag "custom_home.css", "data-turbolinks-track" => true %>
+<% end %>
 
-	<%= content_for :head do %>
-  	<%= stylesheet_link_tag "style_home.css", "data-turbolinks-track" => true %>
-  	<%= stylesheet_link_tag "responsive_home.css", "data-turbolinks-track" => true %>
-  	<%= stylesheet_link_tag "custom_home.css", "data-turbolinks-track" => true %>
-  	<% end %>
-
-  	<body class="error-body no-top lazy"> 
+<body class="error-body no-top lazy"> 
+	<%= render 'shared/header' %>
+	<%= render 'shared/full_messages' %>
 
 
-		<%= redirect_to 'shared/header' %>
+
+		<div class="container"> 
+		<div class="row">sdadddddddddddddddddddddd <%#= @uri %></div></div>
+		
 
 	</body>
 
-<% end %>
+<%# end %>

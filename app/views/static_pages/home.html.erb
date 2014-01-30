@@ -1,9 +1,10 @@
 <% provide(:title, 'Rhombus - Home') %>
 
 <%= content_for :head do %>
-  <%= stylesheet_link_tag "style_home.css", "data-turbolinks-track" => true %>
-  <%= stylesheet_link_tag "responsive_home.css", "data-turbolinks-track" => true %>
-  <%= stylesheet_link_tag "custom_home.css", "data-turbolinks-track" => true %>
+  <%#= stylesheet_link_tag "style_home.css", "data-turbolinks-track" => true %>
+  <%#= stylesheet_link_tag "responsive_home.css", "data-turbolinks-track" => true %>
+  <%#= stylesheet_link_tag "custom_home.css", "data-turbolinks-track" => true %>
+  <%= stylesheet_link_tag "mainly_static_pages.css", "data-turbolinks-track" => true %>
 <% end %>
 
 <body>
@@ -14,7 +15,7 @@
 		<div class="image">
       	<img src="/assets/bg4.jpg" alt="img-responsive" style="height: 600px" width="100%"/>
          <h3><span>The best way to receive payments via SMS. <span class='spacer'></span><br /><span class='spacer'></span><span class="tagline2">No carrier billing. No setup or monthly fees. Just 2% per transaction + card processing fees.</span></span>
-         <p><a class="btn btn-danger prompt_button">GET A FREE RHOMBUS NUMBER</a></p>
+         <p><a href="/signup" class="btn btn-danger prompt_button">GET A FREE RHOMBUS NUMBER</a></p>
          </h3>
 		</div>
 	
@@ -74,18 +75,8 @@
 			</div>
 </div>
 
-<div class="section grey">
-		<div class="container">
-			<div class="p-t-60 p-b-60">
-				<div class="row">
-					<div class="col-md-8 col-md-offset-2">
-						<h2 class="text-center m-b-30">Get your free Rhombus number <a class="btn btn-primary btn-cons call_to_action_btn" href="/signin">Sign up</a></h2>				
-					</div>					
-				</div>
-				
-			</div>
-		</div>
-</div>
+
+<%= render "shared/call_to_action" %>
 
 <%= render "shared/footer" %>
 

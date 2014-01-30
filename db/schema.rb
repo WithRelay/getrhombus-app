@@ -11,10 +11,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140128160106) do
+ActiveRecord::Schema.define(version: 20140129054623) do
 
   create_table "messages", force: true do |t|
-    t.string   "text"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "from"
@@ -35,7 +34,7 @@ ActiveRecord::Schema.define(version: 20140128160106) do
     t.integer  "user_id_to"
     t.integer  "transaction_id"
     t.string   "messageId"
-    t.string   "type"
+    t.string   "text"
   end
 
   add_index "messages", ["transaction_id"], name: "index_messages_on_transaction_id", using: :btree

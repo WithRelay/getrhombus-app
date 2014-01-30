@@ -1,15 +1,11 @@
 
 <% provide(:title, 'Rhombus - Profile') %>
-
-
-<%= devise_error_messages! %>
-
-
 <%= content_for :head do %>
-  <%= stylesheet_link_tag "style.css", "data-turbolinks-track" => true %>
-  <%= stylesheet_link_tag "responsive.css", "data-turbolinks-track" => true %>
-  <%= stylesheet_link_tag "magic_space.css", "data-turbolinks-track" => true %>
-  <%= stylesheet_link_tag "custom-icon-set.css", "data-turbolinks-track" => true %>
+  <%#= stylesheet_link_tag "style.css", "data-turbolinks-track" => true %>
+  <%#= stylesheet_link_tag "responsive.css", "data-turbolinks-track" => true %>
+  <%#= stylesheet_link_tag "magic_space.css", "data-turbolinks-track" => true %>
+  <%#= stylesheet_link_tag "custom-icon-set.css", "data-turbolinks-track" => true %>
+  <%= stylesheet_link_tag "forms.css", "data-turbolinks-track" => true %>
 <% end %>
 
 <%= content_for :head_script do %>
@@ -21,15 +17,18 @@
 
 
 <%= render 'shared/header' %>
+
+
+  <%= devise_error_messages! %>
   
   <button type="button" id="populate" class="btn btn-default pull-right" style="margin-bottom: 20px;">Populate Test Data</button>
   
   <% if current_user.user_level == 0 and current_user.customer_uri.blank? %>
-    <%= render "card_information" %>
+        <%= render "user_information" %>
   <% elsif current_user.user_level == 1 and current_user.customer_uri.blank? %>
-    <%= render "business_information" %>
+        <%= render "merchant_information" %>
   <% else %>
-    <%= render "entire_profile" %>
+        <%= render "entire_profile" %>
   <% end %>
 
 

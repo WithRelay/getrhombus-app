@@ -5,7 +5,7 @@ class MessagesController < ApplicationController
 
 	def index
 		@message = Message.new
-		@url = @message.nexmo_send_text_message(<redacted_phone_number>, <redacted_phone_number>, "yea")
+		@url = @message.nexmo_send_text_message(<redacted_phone_number>, <redacted_phone_number>, "$$$$ yea")
 	end
 
 	def receive_delivery_report
@@ -21,8 +21,10 @@ class MessagesController < ApplicationController
 			text = params[:text].strip
 			amount = get_number(text)
 			
-			if text.chr == "$" || text.chr == URI.decode("%C2%A4") and is_number?(amount)			# for making payments			
+			if text.chr == "$" and is_number?(amount)	# Ensure text is valid for making payments
+
 				amount = to_cents(amount)
+
 				if amount >= 50 and amount <= 1500000
 
 					begin
@@ -33,33 +35,37 @@ class MessagesController < ApplicationController
 						# save in messages and send a response
 						save_inbound_text(request.query_string, msg_code = 7)
 						@message = Message.new
-						@message.nexmo_send_text_message(params[:to], params[:msisdn], "Thank you for your interest in rhombus :). Please sign up at the link to send payment: www.getrhombus.com/signup?num=#{params[:msisdn]}")
+						@message.nexmo_send_text_message(params[:to], params[:msisdn], "Thank you for sending a payment with rhombus. Please follow the link below to create an account, and resend your payment. Thanks! => www.getrhombus.com/signup?num=#{params[:msisdn]}")
 					else
-						# if user exist, proceed to payment
-						@customer_transaction = Transaction.new
 
-						# could have returned merchant object here...another option to avoid search again in merchant credit call
-						debit_data = @customer_transaction.balanced_debit_customer_card(amount, @user, params[:to], text)
-						save_inbound_text(request.query_string, msg_code = 1, debit_data[0])
-						
-						# proceed to send credit to merchant if no error
-						if debit_data != "failed"
-							@merchant_transaction = Transaction.new
-							@merchant_transaction.balanced_credit_merchant_bank_account(debit_data, @user, params[:to], text)
+						if @user.customer_uri.blank?
+							save_inbound_text(request.query_string, msg_code = 8)
+							@message = Message.new
+							@message.nexmo_send_text_message(params[:to], params[:msisdn], "Thank you for sending a payment with rhombus. Please follow the link below to complete your account, and resend your payment. Thanks! => www.getrhombus.com/signin")
+						else
+							# if user and uri exist, proceed to payment
+							@customer_transaction = Transaction.new
+
+							# could have returned merchant object here...another option to avoid search again in merchant credit call
+							debit_data = @customer_transaction.balanced_debit_customer_card(amount, @user, params[:to], text)
+							save_inbound_text(request.query_string, msg_code = 1, debit_data[0])
 							
-							if @merchant_transaction_id != "failed"
-								# set the merchant transaction id in the customer referenced transaction id
-								@customer_transaction.referenced_user_id = @merchant_transaction.id
-								@customer_transaction.save
+							# proceed to send credit to merchant if no error
+							if debit_data != "failed"
+								@merchant_transaction = Transaction.new
+								@merchant_transaction.balanced_credit_merchant_bank_account(debit_data, @user, params[:to], text)
+								
+								if @merchant_transaction_id != "failed"
+									# set the merchant transaction id in the customer referenced transaction id
+									@customer_transaction.referenced_user_id = @merchant_transaction.id
+									@customer_transaction.save
 
-								# cash out, and set the customer transaction id and the merchant transaction id
-								@marketplace_transaction = Transaction.new
-								@marketplace_transaction.balanced_payout_to_marketplace_bank_account(debit_data, @merchant_transaction.id, @user, text)
-							end
-						end
-
-
-						
+									# cash out, and set the customer transaction id and the merchant transaction id
+									@marketplace_transaction = Transaction.new
+									@marketplace_transaction.balanced_payout_to_marketplace_bank_account(debit_data, @merchant_transaction.id, @user, text)
+								end
+							end	
+						end					
 					end
 
 				elsif amount > 1500000
@@ -136,7 +142,7 @@ class MessagesController < ApplicationController
 	def save_inbound_text(query, msg_code, transaction_id = 0)						# if not for payment, transaction_id = 0
 		query_hash = Rack::Utils.parse_nested_query(query)      # deal with some weird params from nexmo
 		@message = Message.new 									
-		@message.save_text(type: query_hash["type"], from: query_hash['msisdn'], to: query_hash['to'], 
+		@message.save_text(from: query_hash['msisdn'], to: query_hash['to'], 
 			network_code: query_hash["network-code"], messageId: query_hash['messageId'], message_timestamp: query_hash["message-timestamp"],
 			text: query_hash['text'], message_code: msg_code, message_type: 2, transaction_id: transaction_id)
 	end

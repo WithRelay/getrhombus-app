@@ -5,6 +5,8 @@ class User < ActiveRecord::Base
   has_many :transactions, dependent: :destroy
   #has_many :messages, dependent: :destroy	
 
+ # before_create :set_merchant_business_phone
+
   	# Include default devise modules. Others available are:
   	# :token_authenticatable, :lockable, :timeoutable and :omniauthable, :confirmable,
   	devise :database_authenticatable, :registerable,
@@ -39,7 +41,33 @@ class User < ActiveRecord::Base
       end		
    	end
 
+    private
+
+    def set_merchant_business_phone
+      # If a merchant is signing up
+      if self.user_level == 1
+        self.busines_phone = self.phone_number
+      end
+    end
+
 end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

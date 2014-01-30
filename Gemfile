@@ -18,6 +18,9 @@ gem "balanced"
 # For Authorization
 gem "cancan"
 
+# For Authorization
+gem "mail_form"
+
 group :production do
 	gem 'rails_12factor'
 	gem 'unicorn'

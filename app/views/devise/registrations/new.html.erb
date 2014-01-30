@@ -1,14 +1,11 @@
 <% provide(:title, 'Rhombus - Sign up') %>
 
-
-<%= devise_error_messages! %>
-
-
 <%= content_for :head do %>
-  <%= stylesheet_link_tag "style.css", "data-turbolinks-track" => true %>
-  <%= stylesheet_link_tag "responsive.css", "data-turbolinks-track" => true %>
-  <%= stylesheet_link_tag "magic_space.css", "data-turbolinks-track" => true %>
-  <%= stylesheet_link_tag "custom-icon-set.css", "data-turbolinks-track" => true %>
+  <%#= stylesheet_link_tag "style.css", "data-turbolinks-track" => true %>
+  <%#= stylesheet_link_tag "responsive.css", "data-turbolinks-track" => true %>
+  <%#= stylesheet_link_tag "magic_space.css", "data-turbolinks-track" => true %>
+  <%#= stylesheet_link_tag "custom-icon-set.css", "data-turbolinks-track" => true %>
+  <%= stylesheet_link_tag "forms.css", "data-turbolinks-track" => true %>
 <% end %>
 
   
@@ -16,6 +13,8 @@
 
 
 <%= render 'shared/header' %>
+
+    <%= devise_error_messages! %>
 
 
 <div class="container">
@@ -76,7 +75,7 @@
 
                     <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10">
                         <div class="col-md-12">
-                          <%= f.submit "Sign up", :class => "btn btn-primary btn-cons btn-block" %>     <p>By signing up I agree to Rhombus <a href="http://www.yahoo.com">terms and conditions</a>.</p>
+                          <%= f.submit "Sign up", :class => "btn btn-primary btn-cons btn-block" %> <p>By signing up I agree to Rhombus <a href="/legal">terms and conditions</a>.</p>
                       </div>
                     </div>  
 

@@ -1,0 +1,107 @@
+<% provide(:title, 'Rhombus - Contact us') %>
+
+
+<%= content_for :head do %>
+  <%#= stylesheet_link_tag "style_home.css", "data-turbolinks-track" => true %>
+  <%#= stylesheet_link_tag "responsive_home.css", "data-turbolinks-track" => true %>
+  <%#= stylesheet_link_tag "custom_home.css", "data-turbolinks-track" => true %>
+  <%= stylesheet_link_tag "mainly_static_pages", "data-turbolinks-track" => true %>
+<% end %>
+
+<body>	
+
+<%= render "shared/header" %>
+
+
+<div class="main-wrapper">
+
+<div class="section first">
+<%= render 'shared/full_messages' %>
+<%= render 'contact_form_errors' %>
+	<div class="container">
+		
+	<div class=" p-b-60" style="padding-top: 0px;">
+		<div class="row">
+		<div class="col-md-6 col-sm-6">		
+		<h2 class="p-t-40">We would love to <span class="text-success semi-bold">hear from you</span></h2>
+		<p class="">Why not drop us a line or pick up the phone and give us a shout. Our team would love to talk to you and find ways of Making Business Easy.</p>
+		</div>
+		</div>
+		<%= form_for @contact_form do |f| %>
+		<div class="row p-t-30" style="margin-bottom: 30px;">
+			<div class="col-md-6 col-sm-6">
+			<div class="row form-row">
+                      <div class="col-md-10">
+                        <%= f.text_field :name, id: "textName", type: "text", class: "form-control", placeholder: "Full Name"  %>
+                      </div>
+            </div>
+			<div class="row form-row">
+                      <div class="col-md-10">
+                        
+                        <%= f.text_field :organization, id: "txtCompany", type: "text", class: "form-control", placeholder: "Company/Organization"  %>
+                      </div>
+            </div>
+			<div class="row form-row">
+                      <div class="col-md-10">
+                        <%= f.text_field :email, id: "textEmailAddress", type: "text", class: "form-control", placeholder: "Email Address"  %>
+                      </div>
+            </div>
+			<div class="row form-row">
+                      <div class="col-md-10">
+						
+						<%= f.text_area :message, id: "txtDesc", type: "text", class: "form-control", placeholder: "Message", :rows => "8"  %>
+						
+						</textarea>
+                      </div>
+                      <%= f.hidden_field :nickname %> 
+                  </div>	
+			<div class="row form-row">
+				 <div class="col-md-10">
+				
+				<%= f.submit "Send", class: "btn btn-primary btn-cons btn-block" %>
+				</div>
+			</div>
+			</div>
+		<% end %>
+			<div class="col-md-6 feature-list">
+				<h4 class="title custom-font text-black no-margin p-b-10">TELEPHONE</h4>
+				<p class="no-margin"><i class="fa fa-phone fa-lg p-r-10 "></i> Washington, DC</p>
+				<h2 class="custom-font text-black no-margin p-l-20">+1 202 403 9524</h2>
+				<p class="no-margin"><i class="fa fa-phone fa-lg  p-r-10"></i> Toronto, ON</p>
+				<h2 class="custom-font text-black no-margin p-l-20 ">+1 647 539 2005</h2>
+				<section class="p-t-20 p-b-20">
+					<h4 class="title custom-font text-black">ADDRESS</h4>
+					<address>
+					  200 Balliol St., Suite 1210<br>
+					  Toronto, ON M4S1C6<br>
+					  Canada<br>
+					</address>
+				</section>
+				<section>
+					<h4 class="title custom-font text-black">BUSINESS HOURS</h4>
+					<p>
+					Monday - Friday 8am to 5pm<br>
+					Saturday - 9am to 5pm<br>
+					Sunday- Closed<br>
+					</p>
+				</section>
+			</div>
+		</div>
+	</div>
+	</div>	
+	
+</div>
+<div class="section white" style="height:350px" id="map">
+<iframe width="100%" height="350" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=200+Balliol+Street,+Toronto,+ON,+Canada&amp;aq=0&amp;oq=200+ballio&amp;sll=35.675147,-95.625&amp;sspn=42.192037,86.572266&amp;ie=UTF8&amp;hq=&amp;hnear=200+Balliol+St,+Toronto,+Toronto+Division,+Ontario+M4S+1C6,+Canada&amp;t=m&amp;ll=43.698907,-79.390039&amp;spn=0.029786,0.054932&amp;z=14&amp;output=embed"></iframe>
+
+	
+	<%= render "shared/call_to_action" %>
+
+	<%= render "shared/footer" %>
+
+</div>
+
+
+</body>
+
+

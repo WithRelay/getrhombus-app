@@ -1,21 +1,21 @@
 class Message < ActiveRecord::Base
 	
-	require 'uri'
-	api_key: '<redacted_api_key>'
-	api_secret: '<redacted_api_secret>'
+	require 'uri'	
 
 	belongs_to :transaction
 	#belongs_to :user, counter_cache: true
 	
 	# For sending all text messages
 	def nexmo_send_text_message(from, to, message)
+		api_key: '<redacted_api_key>'
+		api_secret: '<redacted_api_secret>'
 		
 		# save the outbound message
 		@message = Message.new 											
-		client_ref = @message.save_text(from: from, to: to, type: "text", text: message, status_report_req: 1, message_type: 1)
+		client_ref = @message.save_text(from: from, to: to, text: message, status_report_req: 1, message_type: 1)
 		
 		# encode the nexmo uri
-		uri = URI.encode_www_form([["api_key", api_key], ["api_secret", api_secret], ["from", from], ["to", to], 
+		uri = URI.encode_www_form([["api_key",api_key], ["api_secret", api_secret], ["from", from], ["to", to], 
 			["text", message], ["status-report-req", "1"], ["client-ref", client_ref]])		
 		
 		# call nexmo api
@@ -38,6 +38,8 @@ class Message < ActiveRecord::Base
 
 
 	def nexmo_search_and_buy_number(country)
+		api_key: '<redacted_api_key>'
+		api_secret: '<redacted_api_secret>'
 
 		# search for a number on nexmo
 		response = HTTParty.get('https://rest.nexmo.com/number/search/'+ api_key + "/" + api_secret + "/" + country + "?features=SMS,VOICE&size=1")
@@ -89,7 +91,7 @@ class Message < ActiveRecord::Base
 		self.network_code = options[:network_code] if options[:network_code]
 		self.messageId = options[:messageId] if options[:messageId]
 		self.message_timestamp = options[:message_timestamp] if options[:message_timestamp]
-		self.type = options[:type] if options[:type]
+		#self.type = options[:type] if options[:type]
 		self.status_report_req = options[:status_report_req] if options[:status_report_req]
 		self.message_type = options[:message_type] if options[:message_type]
 		self.message_price = options[:message_price] if options[:message_price]

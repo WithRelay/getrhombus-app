@@ -1,33 +1,58 @@
-<h2>Edit <%= resource_name.to_s.humanize %></h2>
 
-<%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put }) do |f| %>
-  <%= devise_error_messages! %>
+<div class="container">
+  <div class="row login-container animated fadeInUp">  
+        <div class="col-md-7 col-md-offset-2 tiles white no-padding">
+     <div class="p-t-30 p-l-40 p-b-20 xs-p-t-10 xs-p-l-10 xs-p-b-10"> 
+          <h2 class="normal">Edit Profile</h2>
+        </div>
+    <div class="tiles grey p-t-20 p-b-20 text-black">
 
-  <div><%= f.label :email %><br />
-  <%= f.email_field :email, :autofocus => true %></div>
+<%= form_for(resource, class: "animated fadeIn", :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put }) do |f| %>  
+                    <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10">
+                      <div class="col-md-6 col-sm-6 ">
+                        <%= f.email_field :email, id: "login_username", placeholder: "Email", class: "form-control", :autofocus => true %>
+                      </div>
 
-  <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
-    <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
-  <% end %>
+                      
+                        <div class="col-md-6 col-sm-6">
+                        <% if current_user.user_level == 0 %>
+                          <%= f.text_field :phone_number, class: "form-control", placeholder: "Phone number" %>
+                          <% elsif current_user.user_level == 1 %>
+                            <%= f.text_field :business_phone, class: "form-control", placeholder: "Business Phone Number" %>
+                            <% end %>
+                        </div>
+                    </div>
 
-  <div><%= f.label :password %> <i>(leave blank if you don't want to change it)</i><br />
-  <%= f.password_field :password, :autocomplete => "off" %></div>
+                  <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10">
+                      <div class="col-md-6 col-sm-6 ">
+                        <%= f.password_field :password, :autocomplete => "off", placeholder: "New Password", class: "form-control" %>
+                      </div>
+                      <div class="col-md-6 col-sm-6">
+                      <%= f.password_field :password_confirmation, placeholder: "Confirm new password", class: "form-control" %>
+                      </div>
+                    </div>
 
-  <div><%= f.label :password_confirmation %><br />
-  <%= f.password_field :password_confirmation %></div>
+            <% if current_user.user_level == 0 %>
+               <div class="p-t-30 p-l-40 p-b-20 xs-p-t-10 xs-p-l-10 xs-p-b-10"> 
+                  <h4 class="normal">Card Information</h4>
+               </div>                   
+                   <%= render :partial => "card_form", :locals=>{:f=>f}  %>
+            <% else %>
+                <div class="p-t-30 p-l-40 p-b-20 xs-p-t-10 xs-p-l-10 xs-p-b-10"> 
+                  <h4 class="normal">Business Information</h4>
+               </div>  
+                    <%= render :partial => "business_information", :locals=>{:f=>f}  %>
 
-  <div><%= f.label :current_password %> <i>(we need your current password to confirm your changes)</i><br />
-  <%= f.password_field :current_password %></div>
+              <div class="p-t-30 p-l-40 p-b-20 xs-p-t-10 xs-p-l-10 xs-p-b-10"> 
+                  <h4 class="normal">Bank Information</h4>
+               </div> 
+                    <%= render :partial => "bank_information", :locals=>{:f=>f}  %>
+            <% end %>
+                    
+      <% end %>
+    </div>   
+      </div>   
+  </div>
+</div>
 
-  <div><%= f.label :phone_number %>
-  <%= f.text_field :phone_number %></div>
 
-
-  <div><%= f.submit "Update" %></div>
-<% end %>
-
-<h3>Cancel my account</h3>
-
-<p>Unhappy? <%= button_to "Cancel my account", registration_path(resource_name), :data => { :confirm => "Are you sure?" }, :method => :delete %></p>
-
-<%= link_to "Back", :back %>

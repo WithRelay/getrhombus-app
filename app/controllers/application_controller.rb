@@ -10,6 +10,10 @@ class ApplicationController < ActionController::Base
      current_user
   end
 
+  def after_update_path_for(user)
+      current_user
+  end
+
   protected
 
   def configure_permitted_parameters
@@ -17,8 +21,8 @@ class ApplicationController < ActionController::Base
         :password, :password_confirmation, :user_level) }
     devise_parameter_sanitizer.for(:sign_in) { |u| u.permit(:email, :password) }
     devise_parameter_sanitizer.for(:account_update) { |u| u.permit(:email, :current_password, 
-      :name, :customer_uri, :last_four, :expiration_month,
-     :expiration_year, :zip_code, :card_name, :card_type, :phone_number, :business_name, 
+      :name, :customer_uri, :last_four, :expiration_month,  :expiration_year, 
+      :zip_code, :card_name, :card_type, :phone_number, :business_name, 
      :business_type, :street_address, :city, :state_province, :business_phone, 
      :country, :routing_number, :account_name, :account_number, :account_type, 
      :approve_payments_immediately, :country, :tax_rate) }
