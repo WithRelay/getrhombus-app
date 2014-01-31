@@ -2,66 +2,92 @@ class User < ActiveRecord::Base
 
 	Balanced.configure('cb51061889c511e2ac81026ba7cd33d0')   
 
+  # Include default devise modules. Others available are:
+    # :token_authenticatable, :lockable, :timeoutable and :omniauthable, :confirmable,
+  devise :database_authenticatable, :registerable,
+         :recoverable, :rememberable, :trackable, :validatable
+
+  #has_many :messages, dependent: :destroy
   has_many :transactions, dependent: :destroy
-  #has_many :messages, dependent: :destroy	
+  before_create :set_merchant_business_phone                         # only create, cos they can change this in edit
+  before_save :the_titleizer
+  # Find a way to change this cos they run on signing in
+  after_save :balanced_get_merchant_token
+  after_save :balanced_associate_token_with_customer
 
- # before_create :set_merchant_business_phone
+  # Validations => mainly for businesses
+  validates :phone_number, presence: true
+  validates_uniqueness_of :phone_number, :message => "you entered is already registered on Rhombus"
+  validates_presence_of :user_level, :message => "Please select what you want to do with Rhombus"  
+  
+  private
 
-  	# Include default devise modules. Others available are:
-  	# :token_authenticatable, :lockable, :timeoutable and :omniauthable, :confirmable,
-  	devise :database_authenticatable, :registerable,
-    	    :recoverable, :rememberable, :trackable, :validatable
+  # Create or update customer on Balanced
+  def balanced_associate_token_with_customer
+    begin            
+      if self.customer_uri.blank?                             # Doesnt have a customer uri => first time    
+        customer = Balanced::Customer.new.save                        # Here self.customer_uri is the token from Balanced        
+      else                                                            # Not blank 
+        # so Balanced always retokenizes same card/bank info
+        # the hash in the api can be used to check if info has already been tokenized
+        # can add that later...for now info is retokenized
+        customer = Balanced::Customer.find(self.customer_uri)       
+      end
 
-    def balanced_associate_token_with_customer
-   		# Pass in this uri from client
-      #uri = "/v1/marketplaces/TEST-MP6bP0y8O10lBsBfh8oMGhE4/cards/CC1hYzxVE1aDLmo18kPpptks"
-      uri = "/v1/marketplaces/TEST-MP6bP0y8O10lBsBfh8oMGhE4/cards/CC4MoQPn9NP4fe5lyjA1OV1"
+      if self.user_level == 0                                 # if it is a regular user => only cards
+        response = customer.add_card(self.instrument_uri)
+      elsif self.user_level == 1                              # if it is a merchant => only bank account
+        response = customer.add_bank_account(self.instrument_uri)
+      end
+
+    rescue Exception => e
+        # handle bad response and notify marketplace owner of error
+        # return e.response[:body]["status"], e.response[:body]["category_code"], e.response[:body]["description"], e.response[:body]["status_code"]
+       # Notification.token_failure_notification(e.response[:body], self.email).deliver
+    else
+       # else save customer uri only.
+       update_column(:customer_uri, response.uri)
+    end   
+  end
+
+  def balanced_get_merchant_token
+    if self.user_level == 1
       begin
-       		# Create or update customer on Balanced
-       		######## if current user has a uri, get uri, update card info and uri
-          #customer_uri = "/v1/customers/CU16RllrJB2nxgdxhn23k68U "
-       		#customer = Balanced::Customer.find(uri)
-       		######## else create new customer on balanced and add uri to db
-       		customer = Balanced::Customer.new.save
-       		######## end
-       		######## Add response check and save info before proceeding
-
-     		  ######## if it is regular user => a credit card
-     		    response = customer.add_card(uri)
-     		  ######## elsif it is a merchant => bank account
-     		    #response = customer.add_bank_account(uri)
-          ###### end
+        bank_account = Balanced::BankAccount.new(:account_number => self.account_number, :name => self.account_name,
+              :routing_number => self.routing_number, :type => self.account_type).save
       rescue Exception => e
-          # Handle bad response and notify marketplace owner of error
-          #return e.response[:body]["status"], e.response[:body]["category_code"], e.response[:body]["description"], e.response[:body]["status_code"]
-          Notification.payment_failure_notification(e.response[:body]).deliver
+         # handle bad response and notify marketplace owner of error
+          # return e.response[:body]["status"], e.response[:body]["category_code"], e.response[:body]["description"], e.response[:body]["status_code"]
+          #Notification.token_failure_notification(e.response[:body], self.email).deliver
       else
-        # Else save customer uri only. Card/Account uri not needed cos 1:1
-        return response.uri    
-      end		
-   	end
-
-    private
-
-    def set_merchant_business_phone
-      # If a merchant is signing up
-      if self.user_level == 1
-        self.busines_phone = self.phone_number
+        # else assign the account uri to the instrument uri
+        update_column(:instrument_uri, bank_account.uri)
       end
     end
+  end
+
+  def set_merchant_business_phone
+    # If a merchant is signing up, make the business number the phone number
+    # Would be useful when merchants can become regular users and vice versa
+    if self.user_level == 1
+      self.business_phone = self.phone_number
+      self.phone_number = ""
+    end 
+  end
+
+  def the_titleizer       #remove leading and trailing whitespaces
+    self.name = self.name.strip.titleize unless self.name.blank?
+    self.card_name = self.card_name.strip.titleize unless self.card_name.blank?
+    self.business_name = self.business_name.strip.titleize unless self.business_name.blank?
+    self.business_type = self.business_type.strip.titleize unless self.business_type.blank?
+    self.street_address = self.street_address.strip.titleize unless self.street_address.blank?
+    self.city = self.city.strip.titleize unless self.city.blank?
+    self.state_province = self.state_province.strip.titleize unless self.state_province.blank?
+    self.country = self.country.strip.titleize unless self.country.blank?
+    self.account_name = self.account_name.strip.titleize unless self.account_name.blank?
+  end
 
 end
-
-
-
-
-
-
-
-
-
-
-
 
 
 

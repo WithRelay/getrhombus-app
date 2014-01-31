@@ -73,54 +73,7 @@ $(document).ready(function () {
             $('#response').slideDown(300);
         });
     });
-    
-    
-    ////
-    // Click event for tokenize bank account
-    ////
-    $('#ba-submit').click(function (e) {
-        e.preventDefault();
-
-        $('#response').hide();
-        $( ".panel-body" ).html('');
-
-        var payload = {
-            name: $('#ba-name').val(),
-            account_number: $('#ba-number').val(),
-            routing_number: $('#ba-routing').val(),
-            //type: $('#ba-type').val()
-        };
-
-        // Tokenize bank account
-        balanced.bankAccount.create(payload, function (response) {
-            // Successful tokenization
-            if(response.status === 201 && response.data.uri) {
-                //set form fields with Balanced data
-
-                $('#ba-name').val(response.data.name);
-                $('#ba-number').val(response.data.account_number);
-                $('#ba-routing').val(response.data.routing_number);
-                $('#ba-type').val(response.data.type);
-
-                $('#ba-uri').val(response.data.uri);                
-
-                // unbind prevent default and submit form
-                $("form").unbind("submit", preventDefault);
-                $("form").submit();
-            } else {
-                // Failed to tokenize, your error logic here
-               var errorJSON = JSON.stringify(response, false, 4);
-               var obj = jQuery.parseJSON(errorJSON);
-
-                $.each(obj.error, function(key, value){
-                   //alert(key);
-                  $('.panel-body').append('=> ' + value + "<br>");
-                });
-            }
-            $('#response').slideDown(300);
-        });
-    });
-    
+  
     
     ////
     // Simply populates credit card and bank account fields with test data
@@ -133,6 +86,8 @@ $(document).ready(function () {
         $('#cc-ex-month').val('12');
         $('#cc-ex-year').val('2020');
         $('#ex-csc').val('123');
+
+        // For test, but not using JS for getting token
         $('#ba-name').val('John Doe');
         $('#ba-number').val('<redacted_phone_number>');
         $('#ba-routing').val('321174851');

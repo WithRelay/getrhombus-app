@@ -43,6 +43,22 @@
                       </div>
                       <div class="col-md-6 col-sm-6">
             
-                        <%= f.text_field :zip_code, type: "text", class: "form-control", placeholder: "Zip/Postal Code" %>
+                        <%= f.text_field :business_zip_code, type: "text", class: "form-control", placeholder: "Zip/Postal Code" %>
+                      </div>
+                    </div>
+
+                    
+                     <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10">
+                      <div class="col-md-6 col-sm-6 ">
+                          <p>Tax rate to be applied to customer debits</p>
+                        <%= f.text_field :tax_rate, type: "text", class: "form-control", placeholder: "Default is 0" %>
+
+                      </div>
+                      <div class="col-md-6 col-sm-6">
+            
+                    
+          <%#= f.select(:account_type, [['Checking', "checking"], ['Savings', "savings"]], {}, :class => "form-control") %>
+
+                            
                       </div>
                     </div>

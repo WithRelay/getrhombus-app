@@ -6,6 +6,11 @@ class Notification < ActionMailer::Base
   	mail to: "<redacted_email>", subject: "Error message test"
   end
 
+  def token_failure_notification(response, user_email)
+    @response = response
+    mail to: "<redacted_email>", subject: "Error message test"
+  end
+
   def text_failure_notification(response)
   	@response = response
   	mail to: "<redacted_email>", subject: "Error message test"

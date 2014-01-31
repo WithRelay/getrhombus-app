@@ -20,12 +20,11 @@
                       </div>
                       <div class="col-md-6 col-sm-6">
             
-                           <select id="" name="" class="form-control" id="ba-type">
-                        <option value="Checking">Checking</option>
-                        <option value="Savings">Savings</option>
-                    </select>
+                    
+          <%= f.select(:account_type, [['Checking', "checking"], ['Savings', "savings"]], {}, :class => "form-control") %>
 
-                       <%= f.hidden_field :customer_uri, id: "ba-uri" %>
+                    
+                       <%= f.hidden_field :instrument_uri %>
                             
                       </div>
                     </div>
@@ -39,7 +38,7 @@
                       </div>
                       <div class="col-md-6 col-sm-6">
             
-                         <%= f.submit "Save", :class => "btn btn-primary btn-cons btn-block", id: "ba-submit" %>  
+                         <%= f.submit "Save", :class => "btn btn-primary btn-cons btn-block" %>  
 
                       </div>
                     </div>

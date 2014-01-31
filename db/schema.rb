@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140129054623) do
+ActiveRecord::Schema.define(version: 20140130181859) do
 
   create_table "messages", force: true do |t|
     t.datetime "created_at"
@@ -121,6 +121,8 @@ ActiveRecord::Schema.define(version: 20140129054623) do
     t.boolean  "approve_payments_immediately", default: false
     t.string   "tax_rate",                     default: "0"
     t.integer  "transactions_count"
+    t.string   "instrument_uri"
+    t.string   "business_zip_code"
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree

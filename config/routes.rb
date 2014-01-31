@@ -28,7 +28,7 @@ Rhombus::Application.routes.draw do
     get "signin", :to => "devise/sessions#new"
   end
   
-  resources :users
+  resources :users, :only => :show
   resources :contact_forms
 
   # The priority is based upon order of creation: first created -> highest priority.
