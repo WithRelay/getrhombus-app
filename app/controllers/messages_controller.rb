@@ -14,8 +14,8 @@ class MessagesController < ApplicationController
 	end
 
 	def receive_text_message
-		#params[:to] = "<redacted_phone_number>"
-		#params[:msisdn] = "<redacted_phone_number>" #"<redacted_phone_number>"
+		params[:to] = "<redacted_phone_number>"#<redacted_phone_number>"
+		params[:msisdn] = "<redacted_phone_number>"#"<redacted_phone_number>"
 		if params[:text] != ""        				# Ensure there is a text query string
 
 			text = params[:text].strip
@@ -36,6 +36,7 @@ class MessagesController < ApplicationController
 						save_inbound_text(request.query_string, msg_code = 7)
 						@message = Message.new
 						@message.nexmo_send_text_message(params[:to], params[:msisdn], "Thank you for sending a payment with rhombus. Please follow the link below to create an account, and resend your payment. Thanks! => www.getrhombus.com/signup?num=#{params[:msisdn]}")
+						return
 					else
 
 						if @user.customer_uri.blank?
@@ -57,7 +58,7 @@ class MessagesController < ApplicationController
 								
 								if @merchant_transaction_id != "failed"
 									# set the merchant transaction id in the customer referenced transaction id
-									@customer_transaction.referenced_user_id = @merchant_transaction.id
+									@customer_transaction.referenced_merchant_transaction_id = @merchant_transaction.id
 									@customer_transaction.save
 
 									# cash out, and set the customer transaction id and the merchant transaction id

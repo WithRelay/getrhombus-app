@@ -21,10 +21,10 @@
                       <div class="col-md-6 col-sm-6">
             
                     
-          <%= f.select(:account_type, [['Checking', "checking"], ['Savings', "savings"]], {}, :class => "form-control") %>
+          <%= f.select(:account_type, [['Checking', "checking"], ['Savings', "savings"]], {}, :class => "form-control", id: "ba-type") %>
 
                     
-                       <%= f.hidden_field :instrument_uri %>
+                       <%= f.hidden_field :instrument_uri, id: "ba-uri" %>
                             
                       </div>
                     </div>
@@ -38,7 +38,7 @@
                       </div>
                       <div class="col-md-6 col-sm-6">
             
-                         <%= f.submit "Save", :class => "btn btn-primary btn-cons btn-block" %>  
+                         <%= f.submit "Save", id: "ba-submit", :class => "btn btn-primary btn-cons btn-block" %>  
 
                       </div>
                     </div>

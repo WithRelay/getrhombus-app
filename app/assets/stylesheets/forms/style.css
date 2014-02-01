@@ -1,5 +1,5 @@
 /* Font Import */
-@import url('http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700');
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700);
 :-moz-placeholder { /* Mozilla Firefox 4 to 18 */
     color:#333843! important;
 }
@@ -55,7 +55,7 @@ Page header
 	
 }
 .header .navbar-inner {
-  filter: none !important;
+  filter:none !important;
   background-image: none !important;
   background-color: #ffffff !important;
 }
@@ -177,7 +177,7 @@ Page sidebar
   color:#fff !important;
 }
 .page-sidebar > ul > li.active {
-	border-left:4px solid #fff !important;
+	border-left:4px solid #ff !important;
  
 }
 .page-sidebar > ul > li > a.open {
@@ -695,7 +695,7 @@ span.iconset{
 	padding-right:50px;
 }
 .p-r-60{
-	padding-right:60px;
+	padding-right:60PX;
 }
 
 /** Margins **/
@@ -812,7 +812,7 @@ span.iconset{
   padding-top:10px;
   padding-bottom: 6px; 
   background-image: none;
-  filter: none;
+  filter:none;
   box-shadow: none;
   color: #fff;
   border: 0;
@@ -1251,7 +1251,7 @@ span.iconset{
   list-style: none;
   clear: both;
   margin: 0px 0px 0px 0px;
-  padding-left:0px;
+  padding-left:0
 }
 
 .page-sidebar > ul > li > ul.sub-menu  li > a > .arrow:before   {  
@@ -1739,7 +1739,7 @@ display:none;
 	width: 200px;
 	font-family: 'Open Sans';
 	background-color:#1b1e24;
-	height:100%;
+	height:100%
 }
 
 .inner-menu  .inner-wrapper{
@@ -2092,7 +2092,7 @@ input[type="tel"],
 input[type="color"] {
   font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
   -webkit-appearance: none !important;   
-	color: #282323;
+	color: #282323 
   outline: 0;
   height: 16px;
   padding: 6px 11px !important;
@@ -2163,7 +2163,7 @@ input[type="radio"],
 input[type="checkbox"] {
   	margin: 4px 0 0;
   	margin-top: 1px \9;
-  	margin-top: 0px;
+  	*margin-top: 0;
   	line-height: normal;
 	  cursor: pointer;		
   	-webkit-box-sizing: border-box;
@@ -2175,7 +2175,7 @@ select,
 input[type="file"] {
   height: 34px !important;
   /* In IE7, the height of the select element cannot be changed by height, only font-size */
-  margin-top: 4px;
+  *margin-top: 4px;
   /* For IE7, add top margin to align select with labels */
   line-height: 30px;
 }
@@ -2187,7 +2187,7 @@ select {
   filter: none !important;
   border: 1px solid #e5e5e5;
   outline: none;
-  min-height:35px;
+	min-height:35px;
 }
 
 select[multiple],
@@ -2230,7 +2230,7 @@ textarea[class*="span"]
 }
 .input-sm{
     font-size: 13px !important;
-	min-height: 20px !important
+	min-height:20!important
 }
 
 /** Input Prepends/Appends **/
@@ -2959,7 +2959,7 @@ form legend,
 
 .grid:after, .grid:before {
   display: table;
-  /*color: "";*/
+  color: "";
 }
 
 .grid-title {  
@@ -3323,7 +3323,7 @@ form legend,
 
 /*** Box grid ***/
 .grid.box {
-   padding:0px !important;
+   padding:0px !important
 }
 
 .grid.box .grid-title {  
@@ -4210,11 +4210,11 @@ background-position: -95px -40px;
 /* Buttons Overwride */
 .btn {
     display: inline-block;
-    display: inline;
+    *display: inline;
      padding: 9px 12px;
 	 padding-top:7px ;
     margin-bottom: 0;
-    margin-left: .3em;
+    *margin-left: .3em;
     font-size: 14px;
     line-height: 20px;
     color: #5e5e5e;
@@ -4222,7 +4222,7 @@ background-position: -95px -40px;
     vertical-align: middle;
     cursor: pointer;
     background-color: #d1dade;
-    border: 0;
+    *border: 0;
     -webkit-border-radius: 3px;
      -webkit-border-radius: 3px;
      -webkit-border-radius: 3px; 
@@ -4231,15 +4231,14 @@ background-position: -95px -40px;
 	text-shadow: none;
 	box-shadow:none;	
     transition: all 0.12s linear 0s !important;
-	font: 14px/20px "Helvetica Neue","Helvetica","Arial","sans-serif";	
+	font: 14px/20px "Helvetica Neue",Helvetica,Arial,sans-serif;	
 }
-
 .btn:focus{
 	outline:none;
 }
 .btn:hover, .btn:focus, .btn:active, .btn.active, .btn.disabled, .btn[disabled] {
     background-color: #c1cace;
-    background-color: #c1cace;
+    *background-color: #c1cace;
 }
 .btn-cons{	
 	margin-right: 5px;
@@ -4270,7 +4269,7 @@ background-position: -95px -40px;
 }
 .btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active, .btn-primary.disabled, .btn-primary[disabled] {
     background-color: #0b9c8f;
-    background-color: #0b9c8f;
+    *background-color: #0b9c8f;
 }
 .btn-success{
 	color: #fff;
@@ -4278,7 +4277,7 @@ background-position: -95px -40px;
 }
 .btn-success:hover, .btn-success:focus, .btn-success:active, .btn-success.active, .btn-success.disabled, .btn-success[disabled] {
     background-color: #1285d1;
-    background-color: #1285d1;
+    *background-color: #1285d1;
 }
 .btn-info{
 	color: #fff;
@@ -4286,7 +4285,7 @@ background-position: -95px -40px;
 }
 .btn-info:hover, .btn-info:focus, .btn-info:active, .btn-info.active, .btn-info.disabled, .btn-info[disabled] {
     background-color: #152639;
-    background-color: #152639;
+    *background-color: #152639;
 }
 .btn-warning{
 	color: #fff;
@@ -4294,7 +4293,7 @@ background-position: -95px -40px;
 }
 .btn-warning:hover, .btn-warning:focus, .btn-warning:active, .btn-warning.active, .btn-warning.disabled, .btn-warning[disabled] {
     background-color: #f8a142;
-    background-color: #f8a142;
+    *background-color: #f8a142;
 }
 
 .btn-danger{
@@ -4303,7 +4302,7 @@ background-position: -95px -40px;
 }
 .btn-danger:hover, .btn-danger:focus, .btn-danger:active, .btn-danger.active, .btn-danger.disabled, .btn-danger[disabled] {
     background-color: #e94847;
-    background-color: #e94847;
+    *background-color: #e94847;
 }
 
 .btn-danger-dark{
@@ -4312,7 +4311,7 @@ background-position: -95px -40px;
 }
 .btn-danger-dark:hover, .btn-danger-dark:focus, .btn-danger-dark:active, .btn-danger-dark.active, .btn-danger-dark.disabled, .btn-danger-dark[disabled] {
     background-color: #e94847;
-    background-color: #e94847;
+    *background-color: #e94847;
 	color: #fff;
 }
 .btn-dark{
@@ -4326,7 +4325,7 @@ background-position: -95px -40px;
 }
 .btn-white:hover, .btn-white:focus, .btn-white:active, .btn-white.active, .btn-white.disabled, .btn-white[disabled] {
     background-color: #fbfcfd;
-    background-color: #fbfcfd;
+    *background-color: #fbfcfd;
 	border:1px solid #b4b9be;
 }
 .btn-link{
@@ -4344,7 +4343,7 @@ background-position: -95px -40px;
 
 .btn-link:hover, .btn-link:focus, .btn-link:active, .btn-link.active, .btn-link.disabled, .btn-link[disabled] {
     background-color: transparent;
-    background-color: transparent;
+    *background-color: transparent;
 }
 .btn-large [class^="icon-"], .btn-large [class*=" icon-"] {
     margin-top: 4px;
@@ -4674,12 +4673,12 @@ code:hover{
 	background-color:#d1dade;
 }
 
-.nav-tabs > li > a {
-	border-radius: none;
-	border: 0px;
-	padding: 15px 20px;
-	color: #8e9aa2;
-	min-width: 70px;
+.nav-tabs > li > a{
+	border-radius:none;
+	border:0px;
+	padding:15px 20px;
+		color:#8e9aa2;
+		min-width:70px;
 		
 }
 .nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus{
@@ -4982,9 +4981,9 @@ background: -ms-linear-gradient(top,  rgba(248,249,250,1) 13%,rgba(255,255,255,1
 background: linear-gradient(to bottom,  rgba(248,249,250,1) 13%,rgba(255,255,255,1) 97%); /* W3C */
 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f8f9fa', endColorstr='#ffffff',GradientType=0 ); /* IE6-9 */
 
-	-webkit-box-shadow:inset 0px 2px 1px -1px #fff, 0px 1px 3px rgba(0, 0, 0, 0.39);
--moz-box-shadow:inset 0px 2px 1px -1px #fff, 0px 1px 3px rgba(0, 0, 0, 0.39);
-box-shadow:inset 0px 2px 1px -1px #fff,0px 1px 3px rgba(0, 0, 0, 0.39);
+	-webkit-box-shadow:inset 0 2px 1px -1px #fff, 0px 1px 3px rgba(0, 0, 0, 0.39);
+-moz-box-shadow:inset 0 2px 1px -1px #fff, 0px 1px 3px rgba(0, 0, 0, 0.39);
+box-shadow:inset 0 2px 1px -1px #fff,0px 1px 3px rgba(0, 0, 0, 0.39);
 	width: 26px;
 	height: 26px;
 }
@@ -5044,8 +5043,6 @@ box-shadow: inset 0px 1px 2px 0px rgba(0,0,0,0.11)!important;
 	border-radius: 3px 3px 3px 3px;
 	 border: 1px solid #F0DBB4;
 	 transition: all 0.2s linear 0s;
-	 text-align: center;
-	 margin-bottom: 0px;
 }
 
 .alert-success{
@@ -5665,7 +5662,7 @@ ul.progress-list li  .progress{
 	border: 1px solid #e5e9ec;
 	padding: 3px 9px;
 	transition: border 0.2s linear 0s;	 
-	height:35px;
+	height:35px 
 }
 
 .select2-container .select2-choice .select2-arrow{
@@ -5876,7 +5873,7 @@ border-bottom-left-radius: 2px;
 .input-append .add-on, .input-prepend .add-on{
 	position:absolute;
 	background-color:#D1DADE;
-	color:#5E5E5E;
+	color:##5E5E5E;
 	text-shadow:none;
 	border:#D1DADE;
 	border-radius: 0 2px 2px 0;
@@ -6447,51 +6444,51 @@ input.error{
 }
 .no-margin-grid > .row-fluid >.span12 {
     width: 99.99999999999999% ;
-    width: 99.93055555555554% ;
+    *width: 99.93055555555554% ;
 }
 .no-margin-grid > .row-fluid > .span11 {
     width: 91.66666666666666% ;
-    width: 91.59722222222221% ;
+    *width: 91.59722222222221% ;
 }
 .no-margin-grid > .row-fluid > .span10 {
     width: 83.33333333333331% ;
-    width: 83.26388888888887% ;
+    *width: 83.26388888888887% ;
 }
 .no-margin-grid > .row-fluid > .span9 {
     width: 74.99999999999999% ;
-    width: 74.93055555555554% ;
+    *width: 74.93055555555554% ;
 }
 .no-margin-grid > .row-fluid > .span8 {
     width: 66.66666666666666% ;
-    width: 66.59722222222221% ;
+    *width: 66.59722222222221% ;
 }
 .no-margin-grid > .row-fluid > .span7 {
     width: 58.33333333333333% ;
-    width: 58.263888888888886% ;
+    *width: 58.263888888888886% ;
 }
 .no-margin-grid > .row-fluid > .span6 {
     width: 49.99999999999999% ;
-    width: 49.93055555555555% ;
+    *width: 49.93055555555555% ;
 }
 .no-margin-grid > .row-fluid > .span5 {
     width: 41.66666666666666% ;
-    width: 41.597222222222214% ;
+    *width: 41.597222222222214% ;
 }
 .no-margin-grid > .row-fluid > .span4 {
     width: 33.33333333333333%;
-    width: 33.263888888888886%;
+    *width: 33.263888888888886%;
 }
 .no-margin-grid > .row-fluid > .span3 {
     width: 24.999999999999996%;
-    width: 24.930555555555554%;
+    *width: 24.930555555555554%;
 }
 .no-margin-grid > .row-fluid > .span2 {
     width: 16.666666666666664%;
-    width: 16.59722222222222%;
+    *width: 16.59722222222222%;
 }
 .no-margin-grid > .row-fluid > .span1 {
     width: 8.333333333333332%;
-    width: 8.263888888888888%;
+    *width: 8.263888888888888%;
 }
 
 /* Wrapper for page content to push down footer */
@@ -7544,7 +7541,6 @@ ul.my-friends li .profile-pic{
 		margin: -55px 5px 0 0px;
 	}	
 }
-
 
 /*Added styles */
 .biz_form {display:none;}

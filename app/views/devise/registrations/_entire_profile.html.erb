@@ -69,7 +69,7 @@
 
 
 
-              <%= form_for(resource, class: "animated fadeIn", :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put }) do |f| %>  
+              <%= form_for(resource, class: "animated fadeIn", :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put, id: "user-form" }) do |f| %>  
                     <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10">
                       <div class="col-md-6 col-sm-6 ">
                         <%= f.email_field :email, id: "login_username", placeholder: "Email", class: "form-control", :autofocus => true %>

@@ -55,7 +55,7 @@ class Message < ActiveRecord::Base
 			if response.code == 200
 
 				# Save number to merchant
-				msisdn
+				return msisdn
 			else
 
 				# Notify marketplace owner of failure

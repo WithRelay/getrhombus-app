@@ -18,6 +18,8 @@ gem "balanced"
 # For Authorization
 gem "cancan"
 
+gem "debugger"
+
 group :production do
 	gem 'rails_12factor'
 	gem 'unicorn'

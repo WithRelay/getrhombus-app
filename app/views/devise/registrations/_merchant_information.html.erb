@@ -8,7 +8,7 @@
         </div>
     <div class="tiles grey p-t-20 p-b-20 text-black">
 
-      <%= form_for(resource, :as => resource_name, class: "animated fadeIn", :url => registration_path(resource_name), :html => { :method => :put }) do |f| %> 
+      <%= form_for(resource, :as => resource_name, class: "animated fadeIn", :url => registration_path(resource_name), :html => { :method => :put, id: "user-form" }) do |f| %> 
 
 
         <div class="biz_form show">

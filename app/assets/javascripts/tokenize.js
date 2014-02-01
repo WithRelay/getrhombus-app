@@ -11,6 +11,16 @@ $(document).ready(function () {
     // e.g. var responseTarget = http://requestb.in/nyqkn8ny
     //var responseTarget = 'http://localhost';
     //var responseTarget = 'http://requestb.in/189z3371';
+
+     $('#next').click(function() {
+        $('.biz_form').toggleClass('show');
+    });
+
+    $('#Prev').click(function() {
+        $('.biz_form').toggleClass('show');
+    });
+
+    
     var marketplaceUri = '/v1/marketplaces/TEST-MP6bP0y8O10lBsBfh8oMGhE4';
     
     balanced.init(marketplaceUri);    
@@ -73,7 +83,52 @@ $(document).ready(function () {
             $('#response').slideDown(300);
         });
     });
-  
+    
+    ////
+    // Click event for tokenize bank account
+    ////
+    $('#ba-submit').click(function (e) {
+        e.preventDefault();
+
+        $('#response').hide();
+        $( ".panel-body" ).html('');
+
+        var payload = {
+            name: $('#ba-name').val(),
+            account_number: $('#ba-number').val(),
+            routing_number: $('#ba-routing').val(),
+            type: $('#ba-type').val()
+        };
+
+        // Tokenize bank account
+        balanced.bankAccount.create(payload, function (response) {
+            // Successful tokenization
+            if(response.status === 201 && response.data.uri) {
+                //set form fields with Balanced data
+                $('#ba-name').val(response.data.name);
+                $('#ba-routing').val(response.data.routing_number);
+                $('#ba-type').val(response.data.type);
+                $('#ba-uri').val(response.data.uri);
+                // unbind prevent default and submit form
+                $("#user-form").unbind("submit", preventDefault);
+                $("#user-form").submit();
+            } else {
+                // Failed to tokenize, your error logic here
+                   // Failed to tokenize, your error logic here
+               var errorJSON = JSON.stringify(response, false, 4);
+               var obj = jQuery.parseJSON(errorJSON);
+
+                $.each(obj.error, function(key, value){
+                   //alert(key);
+                  $('.panel-body').append('=> ' + value + "<br>");
+                });
+               
+            }
+            
+            $('#response').slideDown(300);
+        });
+    });
+    
     
     ////
     // Simply populates credit card and bank account fields with test data

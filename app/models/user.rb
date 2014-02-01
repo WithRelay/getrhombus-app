@@ -10,20 +10,15 @@ class User < ActiveRecord::Base
   #has_many :messages, dependent: :destroy
   has_many :transactions, dependent: :destroy
   before_create :set_merchant_business_phone                         # only create, cos they can change this in edit
+  before_create :set_rhombus_number
   before_save :the_titleizer
-  # Find a way to change this cos they run on signing in
-  after_save :balanced_get_merchant_token
-  after_save :balanced_associate_token_with_customer
 
-  # Validations => mainly for businesses
-  validates :phone_number, presence: true
-  validates_uniqueness_of :phone_number, :message => "you entered is already registered on Rhombus"
-  validates_presence_of :user_level, :message => "Please select what you want to do with Rhombus"  
-  
-  private
+  # still need a validation for edit
+  validates :phone_number, presence: true, :on => :create
+  validates_presence_of :user_level, :message => "Please select what you want to do with Rhombus"
 
-  # Create or update customer on Balanced
-  def balanced_associate_token_with_customer
+   # Create or update customer on Balanced
+  def balanced_associate_token_with_customer(params)
     begin            
       if self.customer_uri.blank?                             # Doesnt have a customer uri => first time    
         customer = Balanced::Customer.new.save                        # Here self.customer_uri is the token from Balanced        
@@ -35,9 +30,9 @@ class User < ActiveRecord::Base
       end
 
       if self.user_level == 0                                 # if it is a regular user => only cards
-        response = customer.add_card(self.instrument_uri)
+        response = customer.add_card(params[:instrument_uri])
       elsif self.user_level == 1                              # if it is a merchant => only bank account
-        response = customer.add_bank_account(self.instrument_uri)
+        response = customer.add_bank_account(params[:instrument_uri])
       end
 
     rescue Exception => e
@@ -46,23 +41,17 @@ class User < ActiveRecord::Base
        # Notification.token_failure_notification(e.response[:body], self.email).deliver
     else
        # else save customer uri only.
-       update_column(:customer_uri, response.uri)
+       self.customer_uri = response.uri
+       self.save
     end   
   end
 
-  def balanced_get_merchant_token
+  private
+
+  def set_rhombus_number
     if self.user_level == 1
-      begin
-        bank_account = Balanced::BankAccount.new(:account_number => self.account_number, :name => self.account_name,
-              :routing_number => self.routing_number, :type => self.account_type).save
-      rescue Exception => e
-         # handle bad response and notify marketplace owner of error
-          # return e.response[:body]["status"], e.response[:body]["category_code"], e.response[:body]["description"], e.response[:body]["status_code"]
-          #Notification.token_failure_notification(e.response[:body], self.email).deliver
-      else
-        # else assign the account uri to the instrument uri
-        update_column(:instrument_uri, bank_account.uri)
-      end
+      @rhombus_number = Message.new
+      self.rhombus_number = @rhombus_number.nexmo_search_and_buy_number("US")
     end
   end
 
@@ -99,6 +88,21 @@ end
 
 
 =begin
+     def balanced_get_merchant_token(params)
+        begin
+          bank_account = Balanced::BankAccount.new(:account_number => params[:account_number], :name => params[:account_name],
+                :routing_number => params[:routing_number], :type => params[:account_type]).save
+        rescue Exception => e
+           # handle bad response and notify marketplace owner of error
+            # return e.response[:body]["status"], e.response[:body]["category_code"], e.response[:body]["description"], e.response[:body]["status_code"]
+            #Notification.token_failure_notification(e.response[:body], self.email).deliver
+        else
+          # else assign the account uri to the instrument uri
+          self.instrument_uri = bank_account.uri
+          params[:instrument_uri] = bank_account.uri
+        end
+    end
+
     def balanced_verify_bank_account            # Only on account_uri attached to customers
       # call above function and pass account uri from above
       #account_uri = "/v1/marketplaces/TEST-MP6bP0y8O10lBsBfh8oMGhE4/bank_accounts/BA4HQALDlDDJrjvU9boIzfsY"

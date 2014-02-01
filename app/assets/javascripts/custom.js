@@ -11,15 +11,5 @@ $(document).ready(function () {
         }
     }
     
-    $('#next').click(function() {
-        $('.biz_form').toggleClass('show');
-    });
-
-    $('#Prev').click(function() {
-        $('.biz_form').toggleClass('show');
-    });
-
-
-    
 
 });
