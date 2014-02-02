@@ -1628,7 +1628,7 @@ input[type="tel"],
 input[type="color"] {
   font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
   -webkit-appearance: none !important;   
-	color: #282323 
+	color: #282323;
   outline: 0;
   height: 16px;
   padding: 6px 9px !important;
@@ -2338,7 +2338,7 @@ form legend,
 #pricing-section{
 	background-image: url(../img/pricing.jpg);
 	height: 300px;
-	background-attachment:fixed;url
+	background-attachment:fixed;
 }
 #green{
 	background-image: url(../img/bg/green.png);
