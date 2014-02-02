@@ -13,9 +13,12 @@
 	<%= render 'shared/full_messages' %>
 
 
-
-		<div class="container"> 
-		<div class="row">sdadddddddddddddddddddddd <%#= @uri %></div></div>
+<br><br><br><br>
+<br><br>		<div class="container"> your rhombus number => 
+			<% if current_user.user_level == 1 %>
+				<%= current_user.rhombus_number %>
+				<% end %>
+		<div class="row">yea!!! <%#= @uri %></div></div>
 		
 
 	</body>

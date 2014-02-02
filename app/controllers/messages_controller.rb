@@ -14,8 +14,8 @@ class MessagesController < ApplicationController
 	end
 
 	def receive_text_message
-		params[:to] = "<redacted_phone_number>"#<redacted_phone_number>"
-		params[:msisdn] = "<redacted_phone_number>"#"<redacted_phone_number>"
+		#params[:to] = "<redacted_phone_number>"#<redacted_phone_number>"
+		#params[:msisdn] = "<redacted_phone_number>"#"<redacted_phone_number>"
 		if params[:text] != ""        				# Ensure there is a text query string
 
 			text = params[:text].strip
@@ -62,8 +62,8 @@ class MessagesController < ApplicationController
 									@customer_transaction.save
 
 									# cash out, and set the customer transaction id and the merchant transaction id
-									@marketplace_transaction = Transaction.new
-									@marketplace_transaction.balanced_payout_to_marketplace_bank_account(debit_data, @merchant_transaction.id, @user, text)
+									#@marketplace_transaction = Transaction.new
+									#@marketplace_transaction.balanced_payout_to_marketplace_bank_account(debit_data, @merchant_transaction.id, @user, text)
 								end
 							end	
 						end					
