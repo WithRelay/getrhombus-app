@@ -18,7 +18,9 @@ gem "balanced"
 # For Authorization
 gem "cancan"
 
-gem "debugger"
+# For contact us form
+gem "mail_form"
+
 
 group :production do
 	gem 'rails_12factor'
@@ -27,7 +29,7 @@ end
 
 group :development do
 	gem 'mailcatcher'
-	gem "mail_form"
+	gem "debugger"
 end
 
 # Use SCSS for stylesheets
