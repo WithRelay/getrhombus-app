@@ -5,7 +5,7 @@ class Transaction < ActiveRecord::Base
    	has_one :message
    	belongs_to :user, counter_cache: true
 
-   	#rhombus_fee = 0.02				# :)
+   	# rhombus_fee = 0.02				# :)
 	
    	def balanced_debit_customer_card(amount, user, rhombus_number, message)
    
@@ -26,8 +26,7 @@ class Transaction < ActiveRecord::Base
           
           amount_in_hundreds = sprintf("%.2f", amount.to_f/100)
           
-
-      	rescue Exception => e        
+      	rescue Exception => e   
         	# Handle bad response
 
          	failure_reason = e.response[:body]["category_code"]
@@ -35,7 +34,7 @@ class Transaction < ActiveRecord::Base
 
          	# Notify customer on failed debit
           message = Message.new
-         	if amount > 100# and status_code == 402     # How about 409???
+         	if amount > 100 and status_code == 402     # How about 409???
             	message.nexmo_send_text_message(rhombus_number, user.phone_number, 
             		"Your payment of $#{amount_in_hundreds} to #{merchant.name} failed because: #{failure_reason}.")
          	elsif amount < 100 and status_code == 402
@@ -50,6 +49,7 @@ class Transaction < ActiveRecord::Base
          	# return e.response[:body], failure_reason, status_code, e.response[:body]["description"]
          	#Notification.payment_failure_notification(e.response[:body]).deliver
           return "failed"
+
       	else
 
           amount_with_taxes_in_hundreds = sprintf("%.2f", amount_with_taxes.to_f/100)
@@ -79,10 +79,12 @@ class Transaction < ActiveRecord::Base
     				    on_behalf_of_uri: response.on_behalf_of.customer_uri,
                 referenced_merchant_id: merchant.id, user_id: user.id, notes: message,
                 amount_with_taxes: sprintf("%.2f", response.amount.to_f/100))
-      		  # send receipt
+      		  
+            # send receipt
       		  #Notification.send_receipt(response, tax_rate, merchant.business_name).deliver
+
       		  self.receipt_sent_at = Time.now							# change this later
-      		  self.save												# Put a save check here later
+      		  self.save											            	# Put a save check here later
       		  return self.id, amount, amount_with_taxes
       	end
    end
@@ -93,12 +95,16 @@ class Transaction < ActiveRecord::Base
    	 	   	
   	  # find merchant with rhombus number
       merchant = User.find_by(rhombus_number: rhombus_number)
-      # rhombus fee
-      amount_less_fees = (debit_data[1] * 0.98).round(0) # Merchant 
+
+      # rhombus fee & Balanced fee = 2% + 2.9% + 30c
+      # set globally later
+
+      amount_less_fees = ((debit_data[1] * 0.951).round(0)) - 30 # Merchant 
       tax = debit_data[2] - debit_data[1] # tax if any
-      amount = amount_less_fees + tax # Payout = Merchant + tax
+      amount = amount_less_fees + tax  # Payout = Merchant (less fees) + tax
 
    		customer = Balanced::Customer.find(merchant.customer_uri)           # Add a check here later
+      
       begin
     		
     	response = customer.credit(:amount => amount,
@@ -137,8 +143,9 @@ class Transaction < ActiveRecord::Base
 
    def balanced_payout_to_marketplace_bank_account(debit_data, merchant_transaction_id, user, message)
         
-        # set owner here ****************
+        # ************** set owner here ****************
       	owner = User.find_by(id: 22)
+
         # can pass this from above instead
       	merchant_id = Transaction.find_by(id: merchant_transaction_id).user_id
       	merchant = User.find_by(id: merchant_id)

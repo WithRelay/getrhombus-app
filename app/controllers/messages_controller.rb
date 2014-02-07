@@ -21,7 +21,7 @@ class MessagesController < ApplicationController
 			text = params[:text].strip
 			amount = get_number(text)
 			
-			if text.chr == "$" and is_number?(amount)	# Ensure text is valid for making payments
+			if text.chr == "$" || URI.escape(text.chr) == "%C2%A4" and is_number?(amount)	# Ensure text is valid for making payments
 
 				amount = to_cents(amount)
 
