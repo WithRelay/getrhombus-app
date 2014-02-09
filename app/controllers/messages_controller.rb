@@ -16,6 +16,9 @@ class MessagesController < ApplicationController
 	def receive_text_message
 		#params[:to] = "<redacted_phone_number>"#<redacted_phone_number>"
 		#params[:msisdn] = "<redacted_phone_number>"#"<redacted_phone_number>"
+
+		head :ok     								# for nexmo
+
 		if params[:text] != ""        				# Ensure there is a text query string
 
 			text = params[:text].strip
@@ -25,7 +28,7 @@ class MessagesController < ApplicationController
 
 				amount = to_cents(amount)
 
-				if amount >= 50 and amount <= 1500000
+				if amount >= 100 and amount <= 1500000
 
 					begin
 						# find the user
@@ -61,9 +64,9 @@ class MessagesController < ApplicationController
 									@customer_transaction.referenced_merchant_transaction_id = @merchant_transaction.id
 									@customer_transaction.save
 
-									# cash out, and set the customer transaction id and the merchant transaction id
-									#@marketplace_transaction = Transaction.new
-									#@marketplace_transaction.balanced_payout_to_marketplace_bank_account(debit_data, @merchant_transaction.id, @user, text)
+									# for cash out, save customer and merchant transaction ids
+									@marketplace_transaction = Transaction.new
+									@marketplace_transaction.owner_transaction_info(debit_data, @merchant_transaction.id, @user, text)
 								end
 							end	
 						end					
@@ -83,7 +86,7 @@ class MessagesController < ApplicationController
 					save_inbound_text(request.query_string, msg_code = 3)
 					@message = Message.new 											
 					@message.nexmo_send_text_message(params[:to], 
-						params[:msisdn], "Sorry, we are unable to make payments below 50 cents. :(")
+						params[:msisdn], "Sorry, we are unable to make payments below 1 dollar. :(")
 				
 				end	
 			
@@ -102,9 +105,9 @@ class MessagesController < ApplicationController
 				save_inbound_text(request.query_string, msg_code = 5)
 				# until nexmo can give use concatenated messages
 				
-				#@message = Message.new        		
-				#@message.nexmo_send_text_message(params[:to], params[:msisdn], 
-				#	'Sorry we did not understand your text message :(. You can signup by texting "signup" or make payments by texting "amount, description". Thanks!')
+				@message = Message.new        		
+				@message.nexmo_send_text_message(params[:to], params[:msisdn], 
+					'Sorry we did not understand your text message :(. You can signup by texting "signup" or make payments by texting "amount, description". Thanks!')
 			
 			end
 		end

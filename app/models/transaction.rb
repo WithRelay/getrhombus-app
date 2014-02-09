@@ -99,9 +99,9 @@ class Transaction < ActiveRecord::Base
       # rhombus fee & Balanced fee = 2% + 2.9% + 30c
       # set globally later
 
-      amount_less_fees = ((debit_data[1] * 0.951).round(0)) - 30 # Merchant 
-      tax = debit_data[2] - debit_data[1] # tax if any
-      amount = amount_less_fees + tax  # Payout = Merchant (less fees) + tax
+      amount_less_fees = ((debit_data[1] * 0.951).round(0)) - 30      # Amount (no tax) - fees
+      tax = debit_data[2] - debit_data[1]                             # Tax amount if any
+      amount = amount_less_fees + tax                                 # Payout = amount_less_fees + tax
 
    		customer = Balanced::Customer.find(merchant.customer_uri)           # Add a check here later
       
@@ -141,56 +141,37 @@ class Transaction < ActiveRecord::Base
 
 
 
-   def balanced_payout_to_marketplace_bank_account(debit_data, merchant_transaction_id, user, message)
-        
-        # ************** set owner here ****************
-      	owner = User.find_by(id: 22)
+   def owner_transaction_info(debit_data, merchant_transaction_id, user, message)
+      
+      # ************** set owner here ****************
+      #owner = User.find_by(id: 22)
+      owner = User.find_by(email: '<redacted_email>')
 
-        # can pass this from above instead
-      	merchant_id = Transaction.find_by(id: merchant_transaction_id).user_id
-      	merchant = User.find_by(id: merchant_id)
+      # can pass this from above instead...should probably change this!!!
+      merchant_id = Transaction.find_by(id: merchant_transaction_id).user_id
+      merchant = User.find_by(id: merchant_id)
 
-      	# rhombus fee
-      	fee = (debit_data[1] * 0.02).round(0)
-      	amount_less_fees = debit_data[1] - fee
+      # rhombus fee & Balanced fee = 2% + 2.9% + 30c
+      # set globally later
 
-      	marketplace = Balanced::Marketplace.mine                           # Add a check here later
+      amount_less_fees = ((debit_data[1] * 0.951).round(0)) - 30      # Amount (no tax) - fees 
 
-      	begin
-   	   		response = marketplace.owner_customer.credit(:amount => fee, 
-            	:description => "Payment from #{user.email}. Name on card: #{user.card_name}. Last four: #{user.last_four} to #{merchant.email}",
-            	:appears_on_statement_as => "#{user.card_name}_#{user.last_four}")
-   		  
-          amount_with_taxes = sprintf("%.2f", debit_data[2].to_f/100)
-          amount_less_fees = sprintf("%.2f", amount_less_fees.to_f/100)
-          amount_in_hundreds = sprintf("%.2f", response.amount.to_f/100)
+      # Cashout or fees = Amount user sent - amount_less_fees...which is rhombus + Balanced fee
 
-        rescue Exception => e
-        	# Handle bad response and Notify marketplace owner of failed credit
-        	#return e.response[:body]["category_code"], e.response[:body]["status"], e.response[:body]["status_code"], e.response[:body]["description"]
-        	#Notification.payment_failure_notification(e.response[:body]).deliver
-          self.appear_on_statement_as = e.response[:body]
-          self.save
-     	  else
-        	# Else process to save data #also returns credit_uri so save it
-        	#return "#{response.uri}, #{response.status}" 
-        	self.save_transaction(transaction_uri: response.uri, 
-            transaction_type: 2, amount: amount_in_hundreds, 
-        		amount_less_fees: amount_less_fees, 
-            transaction_number: response.transaction_number, 
-        		description: response.description, from: user.phone_number, 
-            to: merchant.rhombus_number, status: response.status, 
-        		transaction_available_at: response.available_at, 
-            appear_on_statement_as: response.appears_on_statement_as, 
-        		tax_rate: merchant.tax_rate, account_number: response.destination.account_number,
-             account_type: response.destination.type, 
-        		account_name: response.destination.name, 
-            routing_number: response.destination.routing_number, 
-        		referenced_user_id: user.id, referenced_customer_transaction_id: debit_data[0], 
-            user_id: owner.id, notes: message, amount_with_taxes: amount_with_taxes, 
-            referenced_merchant_transaction_id: merchant_transaction_id,
+      amount = debit_data[1] - amount_less_fees                      
+
+      amount_in_hundreds = sprintf("%.2f", amount.to_f/100)
+      amount_less_fees = sprintf("%.2f", amount_less_fees.to_f/100)
+      amount_with_taxes = sprintf("%.2f", debit_data[2].to_f/100)
+
+      description = "Payment from #{user.email}. Name on card: #{user.card_name}. Last four: #{user.last_four} to #{merchant.email}"
+      
+      self.save_transaction(transaction_type: 0, amount: amount_in_hundreds, 
+        		amount_less_fees: amount_less_fees, description: description, from: user.phone_number, 
+            to: merchant.rhombus_number, tax_rate: merchant.tax_rate, referenced_user_id: user.id, 
+            referenced_customer_transaction_id: debit_data[0], user_id: owner.id, notes: message, 
+            amount_with_taxes: amount_with_taxes, referenced_merchant_transaction_id: merchant_transaction_id,
         		referenced_merchant_id: merchant_id)
-      	end
    	end
 
    def save_transaction(options = {})
@@ -226,17 +207,60 @@ class Transaction < ActiveRecord::Base
 
       	self.referenced_user_id = options[:referenced_user_id] if options[:referenced_user_id]
       	self.referenced_customer_transaction_id = options[:referenced_customer_transaction_id] if options[:referenced_customer_transaction_id]
-		    self.refund_reason = options[:refund_reason] if options[:refund_reason]
-      	self.user_id = options[:user_id] if options[:user_id]
+		   	self.user_id = options[:user_id] if options[:user_id]
       	self.notes = options[:notes] if options[:notes]
       	self.amount_with_taxes = options[:amount_with_taxes] if options[:amount_with_taxes]
       	self.referenced_merchant_transaction_id = options[:referenced_merchant_transaction_id] if options[:referenced_merchant_transaction_id]
       	self.referenced_merchant_id = options[:referenced_merchant_id] if options[:referenced_merchant_id]
 
+        #self.refund_reason = options[:refund_reason] if options[:refund_reason]
+
       	self.save 										# add a check here later
    end
 
 end
+
+=begin
+        marketplace = Balanced::Marketplace.mine                           # Add a check here later
+
+        begin
+          response = marketplace.owner_customer.credit(:amount => fee, 
+              :description => "Payment from #{user.email}. Name on card: #{user.card_name}. Last four: #{user.last_four} to #{merchant.email}",
+              :appears_on_statement_as => "#{user.card_name}_#{user.last_four}")
+        
+          amount_with_taxes = sprintf("%.2f", debit_data[2].to_f/100)
+          amount_less_fees = sprintf("%.2f", amount_less_fees.to_f/100)
+          amount_in_hundreds = sprintf("%.2f", response.amount.to_f/100)
+
+        rescue Exception => e
+          # Handle bad response and Notify marketplace owner of failed credit
+          #return e.response[:body]["category_code"], e.response[:body]["status"], e.response[:body]["status_code"], e.response[:body]["description"]
+          #Notification.payment_failure_notification(e.response[:body]).deliver
+          self.appear_on_statement_as = e.response[:body]
+          self.save
+        else
+          # Else process to save data #also returns credit_uri so save it
+          #return "#{response.uri}, #{response.status}" 
+
+            self.save_transaction(transaction_uri: response.uri, 
+            transaction_type: 2, amount: amount_in_hundreds, 
+            amount_less_fees: amount_less_fees, 
+            transaction_number: response.transaction_number, 
+            description: response.description, from: user.phone_number, 
+            to: merchant.rhombus_number, status: response.status, 
+            transaction_available_at: response.available_at, 
+            appear_on_statement_as: response.appears_on_statement_as, 
+            tax_rate: merchant.tax_rate, account_number: response.destination.account_number,
+             account_type: response.destination.type, 
+            account_name: response.destination.name, 
+            routing_number: response.destination.routing_number, 
+            referenced_user_id: user.id, referenced_customer_transaction_id: debit_data[0], 
+            user_id: owner.id, notes: message, amount_with_taxes: amount_with_taxes, 
+            referenced_merchant_transaction_id: merchant_transaction_id,
+            referenced_merchant_id: merchant_id)
+=end
+
+
 
 =begin
 	   # For refunds
