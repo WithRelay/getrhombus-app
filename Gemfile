@@ -21,7 +21,7 @@ gem "cancan"
 gem "mail_form"
 
 group :production do
-	#gem 'rails_12factor'
+	gem 'rails_12factor'
 	gem "passenger"
 end
 
