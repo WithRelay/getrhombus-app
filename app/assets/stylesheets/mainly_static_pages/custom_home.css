@@ -156,7 +156,7 @@ added quick styles to home
    top: 8px;
 }
 .alert .close{
-   background: url("/assets/noti-cross.png") no-repeat scroll 0 0 transparent;
+   background: url(<%= asset_path 'noti-cross.png' %>) no-repeat scroll 0 0 transparent;
    background-position: -9px -10px;
    width: 10px; height: 9px;
     position: relative;
