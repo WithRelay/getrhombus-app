@@ -97,7 +97,7 @@ class Transaction < ActiveRecord::Base
       merchant = User.find_by(rhombus_number: rhombus_number)
 
       # rhombus fee, Balanced fee = 2%, 2.9% + 30c. set globally later
-      amount_less_fees = ((debit_data[1] * 0.951).round(0)) - 30
+      amount_less_fees = ((debit_data[2] * 0.951).round(0)) - 30
       amount = amount_less_fees + (debit_data[2] - debit_data[1])    
 
    		customer = Balanced::Customer.find(merchant.customer_uri)           # Add a check here later
@@ -151,7 +151,7 @@ class Transaction < ActiveRecord::Base
       merchant = User.find_by(id: merchant_id)
 
       # rhombus fee, Balanced fee = 2%, 2.9% + 30c. set globally later
-      amount_less_fees = ((debit_data[1] * 0.951).round(0)) - 30
+      amount_less_fees = ((debit_data[2] * 0.951).round(0)) - 30
       amount = debit_data[1] - amount_less_fees
 
       description = "Payment from #{user.email}. Name on card: #{user.card_name}. Last four: #{user.last_four} to #{merchant.email}"
