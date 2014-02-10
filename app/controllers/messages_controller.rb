@@ -58,16 +58,16 @@ class MessagesController < ApplicationController
 							# proceed to send credit to merchant if no error
 							if debit_data != "failed"
 								@merchant_transaction = Transaction.new
-								@merchant_transaction.balanced_credit_merchant_bank_account(debit_data, @user, params[:to], text)
+								credit_data = @merchant_transaction.balanced_credit_merchant_bank_account(debit_data, @user, params[:to], text)
 								
 								if @merchant_transaction_id != "failed"
 									# set the merchant transaction id in the customer referenced transaction id
-									@customer_transaction.referenced_merchant_transaction_id = @merchant_transaction.id
+									@customer_transaction.referenced_merchant_transaction_id = credit_data[0]#@merchant_transaction.id
 									@customer_transaction.save
 
 									# for cash out, save customer and merchant transaction ids
 									@marketplace_transaction = Transaction.new
-									@marketplace_transaction.owner_transaction_info(debit_data, @merchant_transaction.id, @user, text)
+									@marketplace_transaction.owner_transaction_info(debit_data, credit_data, @user, text)#@merchant_transaction.id, @user, text)
 								end
 							end	
 						end					

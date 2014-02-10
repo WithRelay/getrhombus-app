@@ -94,7 +94,8 @@ class Transaction < ActiveRecord::Base
    def balanced_credit_merchant_bank_account(debit_data, user, rhombus_number, message)
    	 	   	
   	  # find merchant with rhombus number
-      merchant = debit_data[3]#User.find_by(rhombus_number: rhombus_number)
+      # User.find_by(rhombus_number: rhombus_number)
+      merchant = debit_data[3]
 
       # rhombus fee, Balanced fee = 2%, 2.9% + 30c. set globally later
       amount_less_fees = ((debit_data[2] * 0.951).round(0)) - 30
@@ -134,38 +135,39 @@ class Transaction < ActiveRecord::Base
         	referenced_customer_transaction_id: debit_data[0], 
           user_id: merchant.id,	notes: message, 
           amount_with_taxes: sprintf("%.2f", debit_data[2].to_f/100))	
+          
+          return self.id, amount_less_fees
       end
    end
 
 
 
-   def owner_transaction_info(debit_data, merchant_transaction_id, user, message)
+   def owner_transaction_info(debit_data, credit_data, user, message)#merchant_transaction_id, user, message)
       
       # ************** set owner here ****************
       #owner = User.find_by(id: 22)
       owner = User.find_by(email: '<redacted_email>')
 
       # can pass most of these from above instead...should probably change this!!!
-      merchant_id = Transaction.find_by(id: merchant_transaction_id).user_id
-      merchant = User.find_by(id: merchant_id)
+      #merchant_id = Transaction.find_by(id: merchant_transaction_id).user_id
+      merchant = debit_data[3]#User.find_by(id: merchant_id)
 
-      # rhombus fee, Balanced fee = 2%, 2.9% + 30c. set globally later
-      amount_less_fees = ((debit_data[2] * 0.951).round(0)) - 30
-      amount = debit_data[2] - amount_less_fees
+      amount = debit_data[2] - credit_data[1]
 
       description = "Payment from #{user.email}. Name on card: #{user.card_name}. Last four: #{user.last_four} to #{merchant.email}"
       
       self.save_transaction(transaction_type: 0,
         amount: sprintf("%.2f", amount.to_f/100), 
-        amount_less_fees: sprintf("%.2f", amount_less_fees.to_f/100),
+        amount_less_fees: sprintf("%.2f", credit_data[1].to_f/100),
         description: description, from: user.phone_number, 
         to: merchant.rhombus_number, tax_rate: merchant.tax_rate, 
         referenced_user_id: user.id, 
         referenced_customer_transaction_id: debit_data[0],
         user_id: owner.id, notes: message, 
         amount_with_taxes: sprintf("%.2f", debit_data[2].to_f/100), 
-        referenced_merchant_transaction_id: merchant_transaction_id,
-        referenced_merchant_id: merchant_id)
+        referenced_merchant_transaction_id: credit_data[0],
+        referenced_merchant_id: merchant.id)
+        #merchant_transaction_id, merchant_id
    	end
 
    def save_transaction(options = {})
