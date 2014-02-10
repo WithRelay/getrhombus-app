@@ -85,7 +85,8 @@ class Transaction < ActiveRecord::Base
 
       		  self.receipt_sent_at = Time.now							# change this later
       		  self.save											            	# Put a save check here later
-      		  return self.id, amount, amount_with_taxes, merchant
+      		  # should limit data carried in merchant...memory
+            return self.id, amount, amount_with_taxes, merchant
       	end
    end
 
@@ -145,12 +146,13 @@ class Transaction < ActiveRecord::Base
    def owner_transaction_info(debit_data, credit_data, user, message)#merchant_transaction_id, user, message)
       
       # ************** set owner here ****************
-      #owner = User.find_by(id: 22)
+      # owner = User.find_by(id: 22)
       owner = User.find_by(email: '<redacted_email>')
 
-      # can pass most of these from above instead...should probably change this!!!
-      #merchant_id = Transaction.find_by(id: merchant_transaction_id).user_id
-      merchant = debit_data[3]#User.find_by(id: merchant_id)
+      # If i choose to user sql queries to get data
+      # merchant_id = Transaction.find_by(id: merchant_transaction_id).user_id
+      # User.find_by(id: merchant_id)
+      merchant = debit_data[3]
 
       amount = debit_data[2] - credit_data[1]
 
