@@ -3,7 +3,6 @@ source 'https://rubygems.org'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.0.1'
 
-# Use sqlite3 as the database for Active Record
 gem "mysql2"
 
 # For http request (Nexmo & co)
@@ -21,10 +20,9 @@ gem "cancan"
 # For contact us form
 gem "mail_form"
 
-
 group :production do
 	gem 'rails_12factor'
-	gem 'unicorn'
+	gem "passenger"
 end
 
 group :development do
