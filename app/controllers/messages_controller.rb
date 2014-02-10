@@ -10,7 +10,8 @@ class MessagesController < ApplicationController
 
 	def receive_delivery_report
 		@message = Message.new
-		save_delivery_receipts(request.query_string)		
+		save_delivery_receipts(request.query_string)
+		head :ok  	
 	end
 
 	def receive_text_message
