@@ -96,30 +96,17 @@ class Transaction < ActiveRecord::Base
   	  # find merchant with rhombus number
       merchant = User.find_by(rhombus_number: rhombus_number)
 
-      # rhombus fee, Balanced fee = 2%, 2.9% + 30c
-      # set globally later
-
-      balanced_fee =  ((debit_data[2] * 0.029).round(0)) + 30
-      rhombus_fee = ((debit_data[1] * 0.02).round(0))
-      
-      total_fees = balanced_fee + rhombus_fee
-      tax = debit_data[2] - debit_data[1]                      # Tax amount if any
-
-      amount_less_fees = debit_data[1] - total_fees            # Amount (no tax) - fees      
-      amount = amount_less_fees + tax                          # Payout = amount_less_fees + tax
+      # rhombus fee, Balanced fee = 2%, 2.9% + 30c. set globally later
+      amount_less_fees = ((debit_data[1] * 0.951).round(0)) - 30
+      amount = amount_less_fees + (debit_data[2] - debit_data[1])    
 
    		customer = Balanced::Customer.find(merchant.customer_uri)           # Add a check here later
       
       begin
     		
-    	response = customer.credit(:amount => amount,
+    	  response = customer.credit(:amount => amount,
             	:description => "Payment from #{user.email}. Name on card: #{user.card_name}. Last four: #{user.last_four}.",
             	:appears_on_statement_as => "#{user.card_name}_#{user.last_four}")
-
-      # Conversion for saving as decimal
-      amount_with_taxes = sprintf("%.2f", debit_data[2].to_f/100)
-      amount_less_fees = sprintf("%.2f", amount_less_fees.to_f/100)
-      amount_in_hundreds = sprintf("%.2f", response.amount.to_f/100)
 
       rescue Exception => e        	
        	# Handle bad response, Notify merchant and marketplace owner of failure
@@ -130,18 +117,24 @@ class Transaction < ActiveRecord::Base
      	else
        	# Else proceed to save data, return id
        	#return "#{response.uri}, #{response.transaction_number}, #{response.source.last_four}, #{response.on_behalf_of.customer_uri}"
-       	self.save_transaction(transaction_uri: response.uri, transaction_type: 2, 
-            amount: amount_in_hundreds, amount_less_fees: amount_less_fees, 
-            transaction_number: response.transaction_number, description: response.description, 
-        		from: user.phone_number, to: merchant.rhombus_number, status: response.status, 
-            transaction_available_at: response.available_at, 
-            appear_on_statement_as: response.appears_on_statement_as,
-            tax_rate: merchant.tax_rate,
-        		account_number: response.destination.account_number, 
-            account_type: response.destination.type, account_name: response.destination.name, 
-            routing_number: response.destination.routing_number, referenced_user_id: user.id, 
-        		referenced_customer_transaction_id: debit_data[0], user_id: merchant.id,	
-            notes: message, amount_with_taxes: amount_with_taxes)	
+       	self.save_transaction(transaction_uri: response.uri, 
+          transaction_type: 2, 
+          amount: sprintf("%.2f", response.amount.to_f/100),
+          amount_less_fees: sprintf("%.2f", amount_less_fees.to_f/100), 
+          transaction_number: response.transaction_number, 
+          description: response.description, from: user.phone_number, 
+          to: merchant.rhombus_number, status: response.status, 
+          transaction_available_at: response.available_at, 
+          appear_on_statement_as: response.appears_on_statement_as,
+          tax_rate: merchant.tax_rate,
+        	account_number: response.destination.account_number, 
+          account_type: response.destination.type, 
+          account_name: response.destination.name, 
+          routing_number: response.destination.routing_number, 
+          referenced_user_id: user.id, 
+        	referenced_customer_transaction_id: debit_data[0], 
+          user_id: merchant.id,	notes: message, 
+          amount_with_taxes: sprintf("%.2f", debit_data[2].to_f/100))	
       end
    end
 
@@ -158,27 +151,22 @@ class Transaction < ActiveRecord::Base
       merchant = User.find_by(id: merchant_id)
 
       # rhombus fee, Balanced fee = 2%, 2.9% + 30c. set globally later
-      balanced_fee =  ((debit_data[2] * 0.029).round(0)) + 30
-      rhombus_fee = ((debit_data[1] * 0.02).round(0))      
-      total_fees = balanced_fee + rhombus_fee
-      amount_less_fees = debit_data[1] - total_fees            # Amount (no tax) - fees
-      
-      # Cashout or fees = Amount user sent - amount_less_fees...which is rhombus + Balanced fee
+      amount_less_fees = ((debit_data[1] * 0.951).round(0)) - 30
       amount = debit_data[1] - amount_less_fees
-
-      # Conversion for saving as decimal
-      amount_in_hundreds = sprintf("%.2f", amount.to_f/100)
-      amount_less_fees = sprintf("%.2f", amount_less_fees.to_f/100)
-      amount_with_taxes = sprintf("%.2f", debit_data[2].to_f/100)
 
       description = "Payment from #{user.email}. Name on card: #{user.card_name}. Last four: #{user.last_four} to #{merchant.email}"
       
-      self.save_transaction(transaction_type: 0, amount: amount_in_hundreds, 
-        		amount_less_fees: amount_less_fees, description: description, from: user.phone_number, 
-            to: merchant.rhombus_number, tax_rate: merchant.tax_rate, referenced_user_id: user.id, 
-            referenced_customer_transaction_id: debit_data[0], user_id: owner.id, notes: message, 
-            amount_with_taxes: amount_with_taxes, referenced_merchant_transaction_id: merchant_transaction_id,
-        		referenced_merchant_id: merchant_id)
+      self.save_transaction(transaction_type: 0,
+        amount: sprintf("%.2f", amount.to_f/100), 
+        amount_less_fees: sprintf("%.2f", amount_less_fees.to_f/100),
+        description: description, from: user.phone_number, 
+        to: merchant.rhombus_number, tax_rate: merchant.tax_rate, 
+        referenced_user_id: user.id, 
+        referenced_customer_transaction_id: debit_data[0],
+        user_id: owner.id, notes: message, 
+        amount_with_taxes: sprintf("%.2f", debit_data[2].to_f/100), 
+        referenced_merchant_transaction_id: merchant_transaction_id,
+        referenced_merchant_id: merchant_id)
    	end
 
    def save_transaction(options = {})
