@@ -93,5 +93,5 @@ Rhombus::Application.configure do
   # Use default logging formatter so that PID and timestamp are not suppressed.
   config.log_formatter = ::Logger::Formatter.new
 
-  config.static_cache_control = "public, max-age=31536000"
+  #config.static_cache_control = "public, max-age=31536000"
 end

@@ -63,6 +63,8 @@ GEM
       faraday (>= 0.7.4, < 0.9)
     haml (4.0.4)
       tilt
+    heroku-deflater (0.5.3)
+      rack (>= 1.4.5)
     hike (1.2.3)
     httparty (0.12.0)
       json (~> 1.8)
@@ -183,6 +185,7 @@ DEPENDENCIES
   coffee-rails (~> 4.0.0)
   debugger
   devise
+  heroku-deflater
   httparty
   jbuilder (~> 1.2)
   jquery-rails
