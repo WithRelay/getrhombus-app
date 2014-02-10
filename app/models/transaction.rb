@@ -59,10 +59,10 @@ class Transaction < ActiveRecord::Base
           @message = Message.new
           if merchant.tax_rate == "0"
           	@message.nexmo_send_text_message(rhombus_number, user.phone_number, 
-           		"Your payment of $#{amount_in_hundreds} was sent to #{merchant.business_name}. Thanks! :)")
+           		"A payment of $#{amount_in_hundreds} was sent to #{merchant.business_name}. Thanks! :)")
           else
           	@message.nexmo_send_text_message(rhombus_number, user.phone_number, 
-           		"Your payment of $#{amount_with_taxes_in_hundreds} including taxes set by #{merchant.business_name} was sent. Thanks! :)")
+           		"A payment of $#{amount_with_taxes_in_hundreds} including taxes set by #{merchant.business_name} was sent. Thanks! :)")
           end
 
             # save transaction
@@ -96,12 +96,17 @@ class Transaction < ActiveRecord::Base
   	  # find merchant with rhombus number
       merchant = User.find_by(rhombus_number: rhombus_number)
 
-      # rhombus fee & Balanced fee = 2% + 2.9% + 30c
+      # rhombus fee, Balanced fee = 2%, 2.9% + 30c
       # set globally later
 
-      amount_less_fees = ((debit_data[1] * 0.951).round(0)) - 30      # Amount (no tax) - fees
-      tax = debit_data[2] - debit_data[1]                             # Tax amount if any
-      amount = amount_less_fees + tax                                 # Payout = amount_less_fees + tax
+      balanced_fee =  ((debit_data[2] * 0.029).round(0)) + 30
+      rhombus_fee = ((debit_data[1] * 0.02).round(0))
+      
+      total_fees = balanced_fee + rhombus_fee
+      tax = debit_data[2] - debit_data[1]                      # Tax amount if any
+
+      amount_less_fees = debit_data[1] - total_fees            # Amount (no tax) - fees      
+      amount = amount_less_fees + tax                          # Payout = amount_less_fees + tax
 
    		customer = Balanced::Customer.find(merchant.customer_uri)           # Add a check here later
       
@@ -111,6 +116,7 @@ class Transaction < ActiveRecord::Base
             	:description => "Payment from #{user.email}. Name on card: #{user.card_name}. Last four: #{user.last_four}.",
             	:appears_on_statement_as => "#{user.card_name}_#{user.last_four}")
 
+      # Conversion for saving as decimal
       amount_with_taxes = sprintf("%.2f", debit_data[2].to_f/100)
       amount_less_fees = sprintf("%.2f", amount_less_fees.to_f/100)
       amount_in_hundreds = sprintf("%.2f", response.amount.to_f/100)
@@ -147,19 +153,20 @@ class Transaction < ActiveRecord::Base
       #owner = User.find_by(id: 22)
       owner = User.find_by(email: '<redacted_email>')
 
-      # can pass this from above instead...should probably change this!!!
+      # can pass most of these from above instead...should probably change this!!!
       merchant_id = Transaction.find_by(id: merchant_transaction_id).user_id
       merchant = User.find_by(id: merchant_id)
 
-      # rhombus fee & Balanced fee = 2% + 2.9% + 30c
-      # set globally later
-
-      amount_less_fees = ((debit_data[1] * 0.951).round(0)) - 30      # Amount (no tax) - fees 
-
+      # rhombus fee, Balanced fee = 2%, 2.9% + 30c. set globally later
+      balanced_fee =  ((debit_data[2] * 0.029).round(0)) + 30
+      rhombus_fee = ((debit_data[1] * 0.02).round(0))      
+      total_fees = balanced_fee + rhombus_fee
+      amount_less_fees = debit_data[1] - total_fees            # Amount (no tax) - fees
+      
       # Cashout or fees = Amount user sent - amount_less_fees...which is rhombus + Balanced fee
+      amount = debit_data[1] - amount_less_fees
 
-      amount = debit_data[1] - amount_less_fees                      
-
+      # Conversion for saving as decimal
       amount_in_hundreds = sprintf("%.2f", amount.to_f/100)
       amount_less_fees = sprintf("%.2f", amount_less_fees.to_f/100)
       amount_with_taxes = sprintf("%.2f", debit_data[2].to_f/100)
