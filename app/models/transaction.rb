@@ -152,7 +152,7 @@ class Transaction < ActiveRecord::Base
 
       # rhombus fee, Balanced fee = 2%, 2.9% + 30c. set globally later
       amount_less_fees = ((debit_data[2] * 0.951).round(0)) - 30
-      amount = debit_data[1] - amount_less_fees
+      amount = debit_data[2] - amount_less_fees
 
       description = "Payment from #{user.email}. Name on card: #{user.card_name}. Last four: #{user.last_four} to #{merchant.email}"
       
