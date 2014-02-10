@@ -85,7 +85,7 @@ class Transaction < ActiveRecord::Base
 
       		  self.receipt_sent_at = Time.now							# change this later
       		  self.save											            	# Put a save check here later
-      		  return self.id, amount, amount_with_taxes
+      		  return self.id, amount, amount_with_taxes, merchant
       	end
    end
 
@@ -94,7 +94,7 @@ class Transaction < ActiveRecord::Base
    def balanced_credit_merchant_bank_account(debit_data, user, rhombus_number, message)
    	 	   	
   	  # find merchant with rhombus number
-      merchant = User.find_by(rhombus_number: rhombus_number)
+      merchant = debit_data[3]#User.find_by(rhombus_number: rhombus_number)
 
       # rhombus fee, Balanced fee = 2%, 2.9% + 30c. set globally later
       amount_less_fees = ((debit_data[2] * 0.951).round(0)) - 30
