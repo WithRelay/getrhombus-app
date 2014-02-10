@@ -23,7 +23,6 @@ gem "mail_form"
 group :production do
 	gem 'rails_12factor'
 	gem "passenger"
-	gem 'heroku-deflater'
 end
 
 group :development do
