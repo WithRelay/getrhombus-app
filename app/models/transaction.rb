@@ -26,7 +26,7 @@ class Transaction < ActiveRecord::Base
           
           amount_in_hundreds = sprintf("%.2f", amount.to_f/100)
           
-      	rescue Exception => e   
+      	rescue Balanced::Exception => e   
         	# Handle bad response
 
          	failure_reason = e.response[:body]["category_code"]
@@ -109,7 +109,7 @@ class Transaction < ActiveRecord::Base
             	:description => "Payment from #{user.email}. Name on card: #{user.card_name}. Last four: #{user.last_four}.",
             	:appears_on_statement_as => "#{user.card_name}_#{user.last_four}")
 
-      rescue Exception => e        	
+      rescue Balanced::Exception => e   
        	# Handle bad response, Notify merchant and marketplace owner of failure
        	#return e, e.response[:body]["category_code"], e.response[:body]["status_code"], e.response[:body]["description"]
        	#Notification.payment_failure_notification(e.response[:body], merchant.email).deliver
