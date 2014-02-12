@@ -6,6 +6,9 @@ Devise.setup do |config|
   # note that it will be overwritten if you use your own mailer class with default "from" parameter.
   config.mailer_sender = "<redacted_email>"
 
+  config.secret_key = ENV.fetch('DEVISE_SECRET_KEY')
+
+
   # Configure the class responsible to send e-mails.
   # config.mailer = "Devise::Mailer"
 
