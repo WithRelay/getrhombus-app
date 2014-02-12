@@ -23,6 +23,7 @@ gem "mail_form"
 group :production do
 	gem 'rails_12factor'
 	gem "passenger"
+	gem 'therubyracer'
 end
 
 group :development do
