@@ -38,9 +38,9 @@ Rhombus::Application.configure do
   config.serve_static_assets = false
 
   # Compress JavaScripts and CSS.
-  config.assets.enabled = true
+  #config.assets.enabled = true
   config.assets.compress = true
-  config.assets.js_compressor = :uglifier
+  #config.assets.js_compressor = :uglifier
   config.assets.css_compressor = :sass
 
   # Do not fallback to assets pipeline if a precompiled asset is missed.
@@ -95,5 +95,5 @@ Rhombus::Application.configure do
   # Use default logging formatter so that PID and timestamp are not suppressed.
   config.log_formatter = ::Logger::Formatter.new
 
-  config.static_cache_control = "public, max-age=31536000"
+  #config.static_cache_control = "public, max-age=31536000"
 end
