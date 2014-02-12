@@ -38,6 +38,7 @@ Rhombus::Application.configure do
   config.serve_static_assets = false
 
   # Compress JavaScripts and CSS.
+  config.assets.enabled = true
   config.assets.compress = true
   config.assets.js_compressor = :uglifier
   config.assets.css_compressor = :sass
@@ -49,7 +50,7 @@ Rhombus::Application.configure do
   config.assets.digest = true
 
   # Version of your assets, change this if you want to expire all your assets.
-  #config.assets.version = '1.0'
+  config.assets.version = '1.0'
 
   # Specifies the header that your server uses for sending files.
   # config.action_dispatch.x_sendfile_header = "X-Sendfile" # for apache
@@ -94,5 +95,5 @@ Rhombus::Application.configure do
   # Use default logging formatter so that PID and timestamp are not suppressed.
   config.log_formatter = ::Logger::Formatter.new
 
-  #config.static_cache_control = "public, max-age=31536000"
+  config.static_cache_control = "public, max-age=31536000"
 end
