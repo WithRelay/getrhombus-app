@@ -9,7 +9,8 @@ gem "mysql2"
 gem "httparty"
 
 # For authentication
-gem "devise"
+#gem "devise"
+gem "devise", "~> 3.2.2"
 
 # For payment api
 gem "balanced"
@@ -21,7 +22,6 @@ gem "cancan"
 gem "mail_form"
 
 group :production do
-	gem 'rails_12factor'
 	gem "passenger"
 	gem 'therubyracer'
 end

@@ -188,7 +188,7 @@ DEPENDENCIES
   cancan
   coffee-rails (~> 4.0.0)
   debugger
-  devise
+  devise (~> 3.2.2)
   httparty
   jbuilder (~> 1.2)
   jquery-rails
