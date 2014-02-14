@@ -9,8 +9,7 @@ gem "mysql2"
 gem "httparty"
 
 # For authentication
-#gem "devise"
-gem "devise", "~> 3.2.2"
+gem "devise"
 
 # For payment api
 gem "balanced"
@@ -23,7 +22,6 @@ gem "mail_form"
 
 group :production do
 	gem "passenger"
-	gem 'therubyracer'
 end
 
 group :development do
