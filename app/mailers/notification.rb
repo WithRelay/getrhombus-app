@@ -24,7 +24,7 @@ class Notification < ActionMailer::Base
     @merchant_business_name = merchant_business_name
     @merchant_phone_numer = merchant_phone_numebr
     @merchant_email = merchant_email
-  	mail to: user_email, subject: "Rhombus payment to #{merchant_business_name}"
+  	mail to: user_email, subject: "Payment Confirmation - #{transaction_number}"
   end
 
 end
