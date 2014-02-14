@@ -16,6 +16,10 @@ class StaticPagesController < ApplicationController
 	def takedonations
 	end
 
+	def receipt
+		#Notification.send_receipt().deliver #response, tax_rate, merchant.business_name
+	end
+
 	def faqs
 	end
 

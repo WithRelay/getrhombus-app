@@ -34,22 +34,29 @@
                                                     <tr>
                                                         <th>Date</th>
                                                         <th>Amount</th>
-                                                        <th>Paid</th>
-                                                        <th>From</th>
+                                                        <% if current_user.user_level == 1 %>
+                                                        	<th>Paid</th>
+                                                        	<th>From</th>
+                                                        <% end %>
                                                         <th>Description</th>                                                
                                                     </tr>
                                                 </thead>                                                
                                                 <tbody>
                                                 <% @current_user.transactions.each do |t| %>
                                                       <tr>
+
                                                         <td>
                                                         	<%= link_to transaction_path(t) do %>
                                                         	<%= t.created_at.strftime("%e %b %y %H:%m %p") %>&nbsp;&nbsp;<span class="label label-important">ALERT!</span>
                                                         	<% end %>
                                                         </td>
+
                                                         <td><%= number_to_currency(t.amount_with_taxes) %></td>
-                                                        <td><%= number_to_currency(t.amount) %></td>
-                                                        <td><%= t.card_name %></td>
+                                                        
+                                                        <% if current_user.user_level == 1 %>
+                                                        	<td><%= number_to_currency(t.amount) %></td>
+                                                        	<td><%= t.card_name %></td>
+                                                        <% end %>
                                                         <td style="word-wrap: break-word"><%= t.notes %></td>
                                                     </tr>
                                                     <% end %>

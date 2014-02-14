@@ -17,6 +17,8 @@ Rhombus::Application.routes.draw do
   get '/privacy' => 'static_pages#privacy'
   get '/legal' => 'static_pages#legal'
 
+  get '/receipt' => 'static_pages#receipt'
+
   #match 'contact' => 'messages#new', :as => 'contact', :via => :get
   #match 'contact' => 'messages#create', :as => 'contact', :via => :post
 

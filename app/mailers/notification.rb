@@ -16,8 +16,16 @@ class Notification < ActionMailer::Base
   	mail to: "<redacted_email>", subject: "Error message test"
   end
 
-  def send_receipt(response, tax_rate, merchant_business_name)
-  	mail to: "<redacted_email>", subject: "Payment, tax rate #{tax_rate}, merchant biz name: #{merchant_business_name}"
+  def send_receipt(notes, transaction_number, amount_with_taxes, amount, user_email, 
+    merchant_business_name, merchant_phone_number, merchant_email)
+    @notes = notes
+    @transaction_number = transaction_number
+    @amount_with_taxes = amount_with_taxes
+    @amount = amount
+    @merchant_business_name = merchant_business_name
+    @merchant_phone_numer = merchant_phone_numebr
+    @merchant_email = merchant_email
+  	mail to: user_email, subject: "Rhombus payment to #{merchant_business_name}"
   end
 
 end

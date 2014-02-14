@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+<meta charset="utf-8" />
+<title>Rhombus - Receipt</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta content='Make payments via text messages' name="description" />
+<%= stylesheet_link_tag "application", media: "all" %>
+<%= stylesheet_link_tag "forms.css" %>
+</head>
+<body>
+    <div class="container">
+	 <div class="row">
+      <div class="col-md-11">
+        <div class="grid simple">
+          <div class="grid-body no-border invoice-body"> <br>
+            <div class="pull-left">
+              <a href="http://www.getrhombus.com"><strong>Rhombus</strong></a><br>
+            </div>
+            <div class="pull-right">
+              <h2>receipt</h2>
+            </div>
+            <div class="clearfix"></div>
+            <br>
+            <br>
+            <br>
+            <div class="row">
+              <div class="col-md-9">
+                <h4 class="semi-bold">Payment to <%= @merchant_business_name %></h4>
+              </div>
+              <div class="col-md-3"> <br>
+                <div>
+                  <div class="pull-left"> Transaction # : </div>
+                  <div class="pull-right"><%= @transaction_number %></div>
+                  <div class="clearfix"></div>
+                </div>
+                <div>
+                  <div class="pull-left"> Transaction Date : </div>
+                  <div class="pull-right"><%= Time.now.strftime("%m/%d/%y") %></div>
+                  <div class="clearfix"></div>
+                </div>
+                <br>
+              </div>
+            </div>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th style="width:60px" class="unseen text-center">QTY</th>
+                  <th class="text-left">DESCRIPTION</th>
+                  <th style="width:140px" class="text-right">AMOUNT</th>
+                  <th style="width:90px" class="text-right">TOTAL</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="unseen text-center">1</td>
+                  <td><%= @notes %></td>
+                  <td class="text-right"><%= @amount %></td>
+                  <td class="text-right"><%= @amount_with_taxes %></td>
+                </tr>
+                             <tr>
+                  <td colspan="2" rowspan="4" >
+                    <p>If you have questions about your order please contact <%= @merchant_business_name %> at <%= @merchant_business_phone %> or email <%= @merchant_email %>. Please include your email address and transaction number in any communication to help them serve you more quickly.</td>
+                  <td class="text-right"><strong></strong></td>
+                  <td class="text-right"></td>
+                </tr>
+              </tbody>
+            </table>
+            <br>
+            <h5 class="text-right semi-bold text-black">Rhombus Inc</h5>
+            <h5 class="text-right text-black">6225 Gothic Ln, Bowie, MD 20720</h5>
+            <h5 class="text-right text-black"><redacted_email></h5>
+            <h5 class="text-right text-black">+1 202-403-9524</h5>
+            <br>
+          </div>
+        </div>
+      </div>
+      </div>
+    </div>
+
+</body>
+</html>

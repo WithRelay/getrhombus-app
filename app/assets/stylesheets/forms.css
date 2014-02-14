@@ -12,4 +12,5 @@
  *= require ./forms/responsive
  *= require ./forms/custom-icon-set
  *= require ./forms/custom_form
+ *= require ./forms/print
  */
