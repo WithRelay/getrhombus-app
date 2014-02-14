@@ -6,13 +6,13 @@ class Message < ActiveRecord::Base
 	#belongs_to :user, counter_cache: true
 	
 	# For sending all text messages
-	def nexmo_send_text_message(from, to, message)
+	def nexmo_send_text_message(msg_code, from, to, message)
 		api_key: '<redacted_api_key>'
 		api_secret: '<redacted_api_secret>'
 		
 		# save the outbound message
 		@message = Message.new 											
-		client_ref = @message.save_text(from: from, to: to, text: message, status_report_req: 1, message_type: 1)
+		client_ref = @message.save_text(message_code: msg_code, from: from, to: to, text: message, status_report_req: 1, message_type: 1)
 		
 		# encode the nexmo uri
 		uri = URI.encode_www_form([["api_key",api_key], ["api_secret", api_secret], ["from", from], ["to", to], 

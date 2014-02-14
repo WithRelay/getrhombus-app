@@ -35,13 +35,13 @@ class Transaction < ActiveRecord::Base
          	# Notify customer on failed debit
           message = Message.new
          	if amount > 100 and status_code == 402     # How about 409???
-            	message.nexmo_send_text_message(rhombus_number, user.phone_number, 
+            	message.nexmo_send_text_message(18, rhombus_number, user.phone_number, 
             		"Your payment of $#{amount_in_hundreds} to #{merchant.name} failed because: #{failure_reason}.")
          	elsif amount < 100 and status_code == 402
-            	message.nexmo_send_text_message(rhombus_number, user.phone_number, 
+            	message.nexmo_send_text_message(18, rhombus_number, user.phone_number, 
               		"Your payment of #{amount_in_hundreds} cents to #{merchant.name} failed because: #{failure_reason}.")
          	elsif amount == 100 and status_code == 402
-            	message.nexmo_send_text_message(rhombus_number, user.phone_number, 
+            	message.nexmo_send_text_message(18, rhombus_number, user.phone_number, 
               		"Your payment of $#{amount_in_hundreds} to #{merchant.name} failed because: #{failure_reason}.")
          	end
 
@@ -58,10 +58,10 @@ class Transaction < ActiveRecord::Base
          	# return "#{response.uri}, #{response.transaction_number}, #{response.source.last_four}, #{response.on_behalf_of.customer_uri}"
           @message = Message.new
           if merchant.tax_rate == "0"
-          	@message.nexmo_send_text_message(rhombus_number, user.phone_number, 
+          	@message.nexmo_send_text_message(11, rhombus_number, user.phone_number, 
            		"A payment of $#{amount_in_hundreds} was sent to #{merchant.business_name}. Thanks! :)")
           else
-          	@message.nexmo_send_text_message(rhombus_number, user.phone_number, 
+          	@message.nexmo_send_text_message(11, rhombus_number, user.phone_number, 
            		"A payment of $#{amount_with_taxes_in_hundreds} including taxes set by #{merchant.business_name} was sent. Thanks! :)")
           end
 

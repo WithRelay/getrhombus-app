@@ -4,8 +4,8 @@ class MessagesController < ApplicationController
 	require 'rack/utils'
 
 	def index
-		@message = Message.new
-		@url = @message.nexmo_send_text_message(<redacted_phone_number>, <redacted_phone_number>, "$$$$ yea")
+		#@message = Message.new
+		#@url = @message.nexmo_send_text_message(<redacted_phone_number>, <redacted_phone_number>, "$$$$ yea")
 	end
 
 	def receive_delivery_report
@@ -17,9 +17,7 @@ class MessagesController < ApplicationController
 	def receive_text_message
 		#params[:to] = "<redacted_phone_number>"#<redacted_phone_number>"
 		#params[:msisdn] = "<redacted_phone_number>"#"<redacted_phone_number>"
-
 		head :ok, :content_type => 'text/html'		# for nexmo
-
 		if params[:text] != ""        				# Ensure there is a text query string
 
 			text = params[:text].strip
@@ -37,16 +35,16 @@ class MessagesController < ApplicationController
 					rescue
 						# if user doesnt exist
 						# save in messages and send a response
-						save_inbound_text(request.query_string, msg_code = 7)
+						save_inbound_text(request.query_string, msg_code = 6)
 						@message = Message.new
-						@message.nexmo_send_text_message(params[:to], params[:msisdn], "Thank you for sending a payment with rhombus. Please follow the link below to create an account, and resend your payment. Thanks! => www.getrhombus.com/signup?num=#{params[:msisdn]}")
+						@message.nexmo_send_text_message(16, params[:to], params[:msisdn], "Thank you for sending a payment with rhombus. Please follow the link below to create an account, and resend your payment. Thanks! => www.getrhombus.com/signup?num=#{params[:msisdn]}")
 						return
 					else
 
 						if @user.customer_uri.blank?
-							save_inbound_text(request.query_string, msg_code = 8)
+							save_inbound_text(request.query_string, msg_code = 7)
 							@message = Message.new
-							@message.nexmo_send_text_message(params[:to], params[:msisdn], "Thank you for sending a payment with rhombus. Please follow the link below to complete your account, and resend your payment. Thanks! => www.getrhombus.com/signin")
+							@message.nexmo_send_text_message(17, params[:to], params[:msisdn], "Thank you for sending a payment with rhombus. Please follow the link below to complete your account, and resend your payment. Thanks! => www.getrhombus.com/signin")
 						else
 							# if user and uri exist, proceed to payment
 							@customer_transaction = Transaction.new
@@ -78,7 +76,7 @@ class MessagesController < ApplicationController
 					# save in messages and send a response
 					save_inbound_text(request.query_string, msg_code = 2)
 					@message = Message.new 							
-					@message.nexmo_send_text_message(params[:to], params[:msisdn], 
+					@message.nexmo_send_text_message(12, params[:to], params[:msisdn], 
 						"Sorry, we are unable to make payments above 15,000 dollars :(. But you can send in smaller amounts. Thanks!")
 				
 				else
@@ -86,7 +84,7 @@ class MessagesController < ApplicationController
 					# save in messages and send a response
 					save_inbound_text(request.query_string, msg_code = 3)
 					@message = Message.new 											
-					@message.nexmo_send_text_message(params[:to], 
+					@message.nexmo_send_text_message(13, params[:to], 
 						params[:msisdn], "Sorry, we are unable to make payments below 1 dollar. :(")
 				
 				end	
@@ -96,7 +94,7 @@ class MessagesController < ApplicationController
 				# save in messages and send a response
 				save_inbound_text(request.query_string, msg_code = 4)
 				@message = Message.new 				
-				@message.nexmo_send_text_message(params[:to], params[:msisdn], 
+				@message.nexmo_send_text_message(14, params[:to], params[:msisdn], 
 					"Welcome to rhombus! Save this number to your phone for future payments :). Follow the link to complete your signup: www.getrhombus.com/signup?num=#{params[:msisdn]}")
 			
 			else 	
@@ -107,7 +105,7 @@ class MessagesController < ApplicationController
 				# until nexmo can give use concatenated messages
 				
 				@message = Message.new        		
-				@message.nexmo_send_text_message(params[:to], params[:msisdn], 
+				@message.nexmo_send_text_message(15, params[:to], params[:msisdn], 
 					'Sorry we did not understand your text message :(. You can signup by texting "signup" or make payments by texting "amount, description". Thanks!')
 			
 			end
@@ -164,7 +162,7 @@ class MessagesController < ApplicationController
 				client_ref: query_hash['client-ref'], message_code: 6, message_type: 3)
 		else
 			@message.save_text(status_delivery: query_hash["status"], err_code: query_hash['err-code'],
-				scts: query_hash['scts'], message_timestamp: query_hash["message-timestamp"], message_code: 6)
+				scts: query_hash['scts'], message_timestamp: query_hash["message-timestamp"])
 		end
 	end
 end
