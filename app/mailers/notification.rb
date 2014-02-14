@@ -22,7 +22,7 @@ class Notification < ActionMailer::Base
     @amount_with_taxes = amount_with_taxes
     @amount = amount
     @merchant_business_name = merchant_business_name
-    @merchant_phone_numer = merchant_phone_numebr
+    @merchant_phone_number = merchant_phone_number
     @merchant_email = merchant_email
   	mail to: user_email, subject: "Payment Confirmation - #{transaction_number}"
   end
