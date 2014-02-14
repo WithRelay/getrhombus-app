@@ -3,23 +3,63 @@
 <%= provide(:title, "Rhombus - Dashboard") %>
 
 <%= content_for :head do %>
-	<%= stylesheet_link_tag "mainly_static_pages.css", "data-turbolinks-track" => true %>
-	<%#= stylesheet_link_tag "responsive_home.css", "data-turbolinks-track" => true %>
-	<%#= stylesheet_link_tag "custom_home.css", "data-turbolinks-track" => true %>
+	<%= stylesheet_link_tag "forms.css" %>
 <% end %>
 
 <body class="error-body no-top lazy"> 
 	<%= render 'shared/header' %>
 	<%= render 'shared/full_messages' %>
 
+	<div class="container"> 
 
-<br><br><br><br>
-<br><br>		<div class="container"> your rhombus number => 
+			<div class="row spacing-bottom 2col">	
 			<% if current_user.user_level == 1 %>
-				<%= current_user.rhombus_number %>
-				<% end %>
-		<div class="row">yea!!! <%#= @uri %></div></div>
-		
+				<%= render "rhombus_number" %>
+			<% end %>
+	
+				<%= render "tiles" %>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="grid simple ">
+                                    <div class="grid-body no-border">
+                                    <br>
+                                           <h3>Transactions</h3>
+                                            <p>Your transactions will be displayed here as they come in.
+											</p>
+                                            <br>
+
+                                            <table class="table table-hover table-flip-scroll cf" style="table-layout: fixed; width: 100%">
+                                                <thead class="cf">
+                                                    <tr>
+                                                        <th>Date</th>
+                                                        <th>Amount</th>
+                                                        <th>Paid</th>
+                                                        <th>From</th>
+                                                        <th>Description</th>                                                
+                                                    </tr>
+                                                </thead>                                                
+                                                <tbody>
+                                                <% @current_user.transactions.each do |t| %>
+                                                      <tr>
+                                                        <td>
+                                                        	<%= link_to transaction_path(t) do %>
+                                                        	<%= t.created_at.strftime("%e %b %y %H:%m %p") %>&nbsp;&nbsp;<span class="label label-important">ALERT!</span>
+                                                        	<% end %>
+                                                        </td>
+                                                        <td><%= number_to_currency(t.amount_with_taxes) %></td>
+                                                        <td><%= number_to_currency(t.amount) %></td>
+                                                        <td><%= t.card_name %></td>
+                                                        <td style="word-wrap: break-word"><%= t.notes %></td>
+                                                    </tr>
+                                                    <% end %>
+                                                </tbody>
+                                            </table>
+                                    </div>
+                                </div>
+                            </div>
+                	</div>
+	</div>	
 
 	</body>
 

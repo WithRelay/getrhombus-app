@@ -1,0 +1,39 @@
+                  <tr>
+                        	       <td>From:</td>
+                            	   <td><%= @transaction.card_name %>&nbsp;&nbsp;<span class="label label-important">ALERT!</span></td>
+                               </tr>
+                               <tr><tr>
+                                    <td>Description:</td>
+                                    <td><%= @transaction.notes %></td>
+                                </tr>
+                                    <td>Customer Description:</td>
+                                    <td><%= @transaction.description %></td>
+                                </tr>
+                                <tr>
+                                    <td>Date:</td>
+                                    <td><%= @transaction.created_at.strftime("%e %b %y %H:%m %p") %>&nbsp;&nbsp;<span class="label label-important">ALERT!</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Description:</td>
+                                    <td><%= @transaction.notes %></td>
+                                </tr>
+                                <tr>
+                                    <td>Amount:</td>
+                                    <td><%= number_to_currency(@transaction.amount_with_taxes) %></td>
+                                </tr>
+                                <tr>
+                                    <td>Paid:</td>
+                                    <td><%= number_to_currency(@transaction.amount) %></td>
+                                </tr>
+                                 <tr>
+                                    <td>Account Number:</td>
+                                    <td><%= @transaction.account_number %></td>
+                                </tr>
+                                 <tr>
+                                    <td>Status:</td>
+                                    <td><%= @transaction.status %></td>
+                                </tr>
+                                 <tr>
+                                    <td>Tax Rate:</td>
+                                    <td><%= @transaction.tax_rate %>%</td>
+                                </tr>

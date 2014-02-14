@@ -29,6 +29,7 @@ Rhombus::Application.routes.draw do
   end
   
   resources :users, :only => :show
+  resources :transactions, :only => :show
   resources :contact_forms
 
   # The priority is based upon order of creation: first created -> highest priority.
