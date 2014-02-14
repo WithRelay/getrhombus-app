@@ -81,8 +81,7 @@ class Transaction < ActiveRecord::Base
                 amount_with_taxes: sprintf("%.2f", response.amount.to_f/100))
       		  
             # send receipt
-      		  Notification.send_receipt(notes, response.transaction_number, response.amount, amount, 
-                      user.email, merchant.business_name, merchant.business_phone, merchant.email).deliver
+      		  Notification.send_receipt(message, response.transaction_number, response.amount, amount, user.email, merchant.business_name, merchant.business_phone, merchant.email).deliver
 
       		  self.receipt_sent_at = Time.now							# change this later
       		  self.save											            	# Put a save check here later
