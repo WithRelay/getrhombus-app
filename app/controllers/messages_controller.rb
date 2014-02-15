@@ -16,8 +16,8 @@ class MessagesController < ApplicationController
 	end
 
 	def receive_text_message
-		params[:to] = "<redacted_phone_number>"#<redacted_phone_number>"
-		params[:msisdn] = "<redacted_phone_number>"#"<redacted_phone_number>"
+		#params[:to] = "<redacted_phone_number>"#<redacted_phone_number>"
+		#params[:msisdn] = "<redacted_phone_number>"#"<redacted_phone_number>"
 		head :ok, :content_type => 'text/html'		# for nexmo
 		if params[:text] != ""        				# Ensure there is a text query string
 
