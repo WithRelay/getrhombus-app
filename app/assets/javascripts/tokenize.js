@@ -1,18 +1,6 @@
 $(document).ready(function () {
-    ////
-    // Initalize balanced.js
-    //
-    // server: The backend Balanced server to tokenize with
-    // revision: The specific revision of the Balanced API to tokenize with
-    ////
-    
-    // For example purposes, create a bin at http://requestb.in/
-    // Make sure it doesn't end in ?inspect and set it as responseTarget.
-    // e.g. var responseTarget = http://requestb.in/nyqkn8ny
-    //var responseTarget = 'http://localhost';
-    //var responseTarget = 'http://requestb.in/189z3371';
 
-     $('#next').click(function() {
+    $('#next').click(function() {
         $('.biz_form').toggleClass('show');
     });
 

@@ -7,7 +7,6 @@ Rhombus::Application.routes.draw do
   get "/receive_text_message" => 'messages#receive_text_message'
   get "/receive_delivery_report" => 'messages#receive_delivery_report'
 
-  #root 'static_pages#home' 
   get '/aboutus' => 'static_pages#aboutus'
   get '/sellwithrhombus' => 'static_pages#sellwithrhombus'
   get '/contactus' => 'contact_forms#new'
@@ -31,6 +30,8 @@ Rhombus::Application.routes.draw do
   resources :users, :only => :show
   resources :transactions, :only => :show
   resources :contact_forms
+
+  get "/*other", to: 'static_pages#to_404'      #all non-existent routes go to 404
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

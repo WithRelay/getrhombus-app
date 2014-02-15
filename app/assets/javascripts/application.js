@@ -17,10 +17,9 @@
 
 //= require bootstrap.min.js
 //= require pace.min.js
-//= require jquery.validate.min.js
 //= require jquery.lazyload.min.js
 //= require login_v2
-//= require custom.js
+//= require custom.min.js
 
 
 
