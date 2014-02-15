@@ -1,59 +1,44 @@
 class Transaction < ActiveRecord::Base
 
+  default_scope order('created_at DESC')
+
 	Balanced.configure('cb51061889c511e2ac81026ba7cd33d0') 
 
    	has_one :message
    	belongs_to :user, counter_cache: true
 
-   	# rhombus_fee = 0.02				# :)
+   	# rhombus_fee = 0.015				# :)
 	
    	def balanced_debit_customer_card(amount, user, rhombus_number, message)
    
       	# find merchant with rhombus number
-      	merchant = User.find_by(rhombus_number: rhombus_number)
-      
-      	# apply tax, default is 0
-      	tax_rate = (((merchant.tax_rate.to_f)/100) + 1)
-      	amount_with_taxes = (amount * tax_rate).round(0)					
+      	merchant = User.find_by(rhombus_number: rhombus_number)      
+      	tax_rate = (((merchant.tax_rate.to_f)/100) + 1)                     # apply tax, default is 0
+      	amount_with_taxes = (amount * tax_rate).round(0)			
 
-      	customer = Balanced::Customer.find(user.customer_uri)            		# Add a check here later
-      	
+      	customer = Balanced::Customer.find(user.customer_uri)            		# Add a check here later 
+
         begin
-
    	   		response = customer.debit(:amount => amount_with_taxes,
                 :on_behalf_of_uri => merchant.customer_uri, :appears_on_statement_as => merchant.business_name,
                 :description => "Payment from #{user.email} to #{merchant.email}. Business name: #{merchant.business_name}. rhombus number: #{rhombus_number}")
           
-          amount_in_hundreds = sprintf("%.2f", amount.to_f/100)
-          
-      	rescue Balanced::Exception => e   
-        	# Handle bad response
+          amount_in_hundreds = sprintf("%.2f", amount.to_f/100) 
 
-         	failure_reason = e.response[:body]["category_code"]
-         	status_code = e.response[:body]["status_code"]
-
+      	rescue Balanced::Error => e                        	# Handle bad response
          	# Notify customer on failed debit
+          text = message
           message = Message.new
-         	if amount > 100 and status_code == 402     # How about 409???
+         	if e.response[:body]["status_code"] == 402     # How about 409???
             	message.nexmo_send_text_message(18, rhombus_number, user.phone_number, 
-            		"Your payment of $#{amount_in_hundreds} to #{merchant.name} failed because: #{failure_reason}.")
-         	elsif amount < 100 and status_code == 402
-            	message.nexmo_send_text_message(18, rhombus_number, user.phone_number, 
-              		"Your payment of #{amount_in_hundreds} cents to #{merchant.name} failed because: #{failure_reason}.")
-         	elsif amount == 100 and status_code == 402
-            	message.nexmo_send_text_message(18, rhombus_number, user.phone_number, 
-              		"Your payment of $#{amount_in_hundreds} to #{merchant.name} failed because: #{failure_reason}.")
+            		"Your payment of $#{amount_in_hundreds} to #{merchant.name} failed because: #{e.response[:body]["category_code"]}.")
          	end
-
          	# Notify marketplace owner of failed debit
-         	# return e.response[:body], failure_reason, status_code, e.response[:body]["description"]
-         	#Notification.payment_failure_notification(e.response[:body]).deliver
+         	Notification.payment_failure_notification(e.response[:body], user, merchant, text).deliver
           return "failed"
-
       	else
 
           amount_with_taxes_in_hundreds = sprintf("%.2f", amount_with_taxes.to_f/100)
-
          	# Else proceed to save data and notify customer via text and email (plus tax and merchant name)
          	# return "#{response.uri}, #{response.transaction_number}, #{response.source.last_four}, #{response.on_behalf_of.customer_uri}"
           @message = Message.new
@@ -81,7 +66,7 @@ class Transaction < ActiveRecord::Base
                 amount_with_taxes: sprintf("%.2f", response.amount.to_f/100))
       		  
             # send receipt
-      		  Notification.send_receipt(message, response.transaction_number, response.amount, amount, user.email, merchant.business_name, merchant.business_phone, merchant.email).deliver
+      		  Notification.send_receipt(message, response.transaction_number, amount_with_taxes_in_hundreds, amount_in_hundreds, user.email, merchant.business_name, merchant.business_phone, merchant.email).deliver
       		  self.receipt_sent_at = Time.now							# change this later
       		  self.save											            	# Put a save check here later
       		  # should limit data carried in merchant...memory
@@ -97,8 +82,8 @@ class Transaction < ActiveRecord::Base
       # User.find_by(rhombus_number: rhombus_number)
       merchant = debit_data[3]
 
-      # rhombus fee, Balanced fee = 2%, 2.9% + 30c. set globally later
-      amount_less_fees = ((debit_data[2] * 0.951).round(0)) - 30
+      # rhombus fee, Balanced fee, credit fee = 1.5%, 2.9% + 30c, 25c set globally later
+      amount_less_fees = ((debit_data[2] * 0.956).round(0)) - 50
 
    		customer = Balanced::Customer.find(merchant.customer_uri)           # Add a check here later
       
@@ -108,10 +93,10 @@ class Transaction < ActiveRecord::Base
             	:description => "Payment from #{user.email}. Name on card: #{user.card_name}. Last four: #{user.last_four}.",
             	:appears_on_statement_as => "#{user.card_name}_#{user.last_four}")
 
-      rescue Balanced::Exception => e   
+      rescue Balanced::Error => e   
        	# Handle bad response, Notify merchant and marketplace owner of failure
-       	#return e, e.response[:body]["category_code"], e.response[:body]["status_code"], e.response[:body]["description"]
-       	#Notification.payment_failure_notification(e.response[:body], merchant.email).deliver
+       	# return e, e.response[:body]["category_code"], e.response[:body]["status_code"], e.response[:body]["description"]
+        Notification.payment_failure_notification(e.response[:body], user, merchant, message, credit = "yes").deliver
        	return "failed"
      
      	else
@@ -327,4 +312,20 @@ end
       end
    end
 	
+=end
+
+=begin
+            
+  if amount > 100 and status_code == 402     # How about 409???
+              message.nexmo_send_text_message(18, rhombus_number, user.phone_number, 
+                "Your payment of $#{amount_in_hundreds} to #{merchant.name} failed because: #{failure_reason}.")
+          elsif amount < 100 and status_code == 402
+              message.nexmo_send_text_message(18, rhombus_number, user.phone_number, 
+                  "Your payment of #{amount_in_hundreds} cents to #{merchant.name} failed because: #{failure_reason}.")
+          elsif amount == 100 and status_code == 402
+              message.nexmo_send_text_message(18, rhombus_number, user.phone_number, 
+                  "Your payment of $#{amount_in_hundreds} to #{merchant.name} failed because: #{failure_reason}.")
+          end
+
+    # return e.response[:body], failure_reason, status_code, e.response[:body]["description"]
 =end

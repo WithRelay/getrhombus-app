@@ -9,9 +9,10 @@ class User < ActiveRecord::Base
 
   #has_many :messages, dependent: :destroy
   has_many :transactions, dependent: :destroy
+  before_save :the_titleizer
   before_create :set_merchant_business_phone                         # only create, cos they can change this in edit
   before_create :set_rhombus_number
-  before_save :the_titleizer
+  after_create :send_welcome_email  
 
   # still need a validation for edit
   validates :phone_number, presence: true, :on => :create
@@ -35,15 +36,48 @@ class User < ActiveRecord::Base
         response = customer.add_bank_account(params[:instrument_uri])
       end
 
-    rescue Exception => e
+    rescue Balanced::Error => e
         # handle bad response and notify marketplace owner of error
         # return e.response[:body]["status"], e.response[:body]["category_code"], e.response[:body]["description"], e.response[:body]["status_code"]
-       # Notification.token_failure_notification(e.response[:body], self.email).deliver
+        Notification.token_failure_notification(e.response[:body], self.email).deliver
     else
        # else save customer uri only.
        self.customer_uri = response.uri
        self.save
     end   
+  end
+
+  # needs optimization
+  def todays_stuff
+    all_payments = self.transactions#.where('DATE(created_at) = ?', Date.today)
+    total = 0
+    if self.user_level == 0
+      all_payments.each do |p|
+        total = total + p.amount_with_taxes
+      end
+    elsif self.user_level == 1
+      all_payments.each do |p|
+        total = total + p.amount
+      end
+    end
+    all_payments_total = total
+
+    todays_payments = all_payments.where('DATE(created_at) = ?', Date.today)
+    total = 0
+    if self.user_level == 0
+      todays_payments.each do |p|
+        total = total + p.amount_with_taxes
+      end
+    elsif self.user_level == 1
+      todays_payments.each do |p|
+        total = total + p.amount
+      end
+    end
+    todays_payments_total = total
+
+    todays_payments_count = todays_payments.count
+
+    return all_payments_total, todays_payments_total, todays_payments_count
   end
 
   private
@@ -74,6 +108,14 @@ class User < ActiveRecord::Base
     self.state_province = self.state_province.strip.titleize unless self.state_province.blank?
     self.country = self.country.strip.titleize unless self.country.blank?
     self.account_name = self.account_name.strip.titleize unless self.account_name.blank?
+  end
+
+  def send_welcome_email
+    if self.user_level == 1
+      Notification.welcome_email(self.email, self.user_level, self.name).deliver
+    elsif self.user_level == 0
+      Notification.welcome_email(self.email, self.user_level).deliver
+    end
   end
 
 end

@@ -2,9 +2,6 @@
 
 
 <%= content_for :head do %>
-  <%#= stylesheet_link_tag "style_home.css", "data-turbolinks-track" => true %>
-  <%#= stylesheet_link_tag "responsive_home.css", "data-turbolinks-track" => true %>
-  <%#= stylesheet_link_tag "custom_home.css", "data-turbolinks-track" => true %>
   <%= stylesheet_link_tag "mainly_static_pages" %>
 <% end %>
 
@@ -16,7 +13,6 @@
 <div class="main-wrapper contact_fix">
 
 <div class="section first">
-<%= render 'shared/full_messages' %>
 <%= render 'contact_form_errors' %>
 	<div class="container">
 		

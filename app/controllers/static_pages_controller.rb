@@ -2,6 +2,8 @@ class StaticPagesController < ApplicationController
 
 
 	def home
+      #Notification.welcome_email("<redacted_email>", 1, "Taiwo Oyeniyi").deliver    
+      #Notification.welcome_email("<redacted_email>", 0).deliver    
 	end
 
 	def aboutus
@@ -14,10 +16,6 @@ class StaticPagesController < ApplicationController
 	end
 
 	def takedonations
-	end
-
-	def receipt
-		#Notification.send_receipt().deliver #response, tax_rate, merchant.business_name
 	end
 
 	def faqs

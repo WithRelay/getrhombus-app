@@ -12,7 +12,7 @@ class Message < ActiveRecord::Base
 		
 		# save the outbound message
 		@message = Message.new 											
-		client_ref = @message.save_text(message_code: msg_code, from: from, to: to, text: message, status_report_req: 1, message_type: 1)
+		client_ref = @message.save_text(message_code: msg_code, from: from, to: to, text: message, status_report_req: 1)
 		
 		# encode the nexmo uri
 		uri = URI.encode_www_form([["api_key",api_key], ["api_secret", api_secret], ["from", from], ["to", to], 
@@ -30,9 +30,9 @@ class Message < ActiveRecord::Base
 				client_ref: response['messages'].first['client-ref'], message_price: response['messages'].first['message-price'], 
 				network_code: response['messages'].first['network'])
 		else
-		
+			
 			# Notify marketplace owner of failure
-			Notification.text_failure_notification(response["messages"].first).deliver
+			Notification.text_failure_notification(response["messages"].first, from, to, message).deliver
 		end
 	end
 
@@ -45,7 +45,7 @@ class Message < ActiveRecord::Base
 		response = HTTParty.get('https://rest.nexmo.com/number/search/'+ api_key + "/" + api_secret + "/" + country + "?features=SMS,VOICE&size=1")
 		
 		# check the response
-		if response.code == 200 and response["numbers"].first["msisdn"] != ""
+		if response.code == 200 and response["numbers"] != nil #.first["msisdn"] != ""
 			msisdn = response["numbers"].first["msisdn"]
 
 			# buy number
@@ -53,18 +53,14 @@ class Message < ActiveRecord::Base
 			
 			# check response
 			if response.code == 200
-
-				# Save number to merchant
 				return msisdn
 			else
-
 				# Notify marketplace owner of failure
-				Notification.text_failure_notification(response["messages"].first).deliver
-				#return response
+				Notification.text_failure_notification(response, from = "", to = "", message = "Rhombus number purchase failed with response code #{response.code}").deliver
 			end
 		else
 			# Notify marketplace owner of failure
-			Notification.text_failure_notification(response["messages"].first).deliver
+			Notification.text_failure_notification(response, from = "", to = "", message = "Rhombus number search failed").deliver
 			#return response
 		end
 	end
@@ -73,7 +69,6 @@ class Message < ActiveRecord::Base
 	# for saving any text received or sent
 	def save_text(options = {})
 
-		# 20 fields
 		self.text = options[:text] if options[:text]
 
 		if options[:from]
@@ -93,7 +88,6 @@ class Message < ActiveRecord::Base
 		self.message_timestamp = options[:message_timestamp] if options[:message_timestamp]
 		#self.type = options[:type] if options[:type]
 		self.status_report_req = options[:status_report_req] if options[:status_report_req]
-		self.message_type = options[:message_type] if options[:message_type]
 		self.message_price = options[:message_price] if options[:message_price]
 		self.scts = options[:scts] if options[:scts]
 		self.client_ref = options[:client_ref] if options[:client_ref]

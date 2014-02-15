@@ -7,8 +7,9 @@
 <% end %>
 
 <body class="error-body no-top lazy"> 
+<%= render 'shared/full_messages' %>
 	<%= render 'shared/header' %>
-	<%= render 'shared/full_messages' %>
+	
 
 	<div class="container"> 
 
@@ -43,22 +44,42 @@
                                                 </thead>                                                
                                                 <tbody>
                                                 <% @current_user.transactions.each do |t| %>
-                                                      <tr>
 
+                                                    <tr>
+                                                      
                                                         <td>
                                                         	<%= link_to transaction_path(t) do %>
                                                         	<%= t.created_at.strftime("%e %b %y %H:%m %p") %>&nbsp;&nbsp;<span class="label label-important">ALERT!</span>
                                                         	<% end %>
                                                         </td>
 
-                                                        <td><%= number_to_currency(t.amount_with_taxes) %></td>
+                                                        <td>
+                                                            <%= link_to transaction_path(t) do %>
+                                                                <%= number_to_currency(t.amount_with_taxes) %>
+                                                            <% end %>
+                                                        </td>
                                                         
                                                         <% if current_user.user_level == 1 %>
-                                                        	<td><%= number_to_currency(t.amount) %></td>
-                                                        	<td><%= t.card_name %></td>
+                                                        	<td>
+                                                                <%= link_to transaction_path(t) do %>
+                                                                    <%= number_to_currency(t.amount) %>
+                                                                <% end %>
+                                                            </td>
+                                                        	<td>
+                                                                <%= link_to transaction_path(t) do %>
+                                                                    <%= t.card_name %>
+                                                                <% end %>
+                                                            </td>
                                                         <% end %>
-                                                        <td style="word-wrap: break-word"><%= t.notes %></td>
-                                                    </tr>
+
+                                                        <td style="word-wrap: break-word">
+                                                            <%= link_to transaction_path(t) do %>
+                                                                <%= t.notes %>
+                                                            <% end %>
+                                                        </td>                                                        
+                                                    
+                                                        </tr>
+
                                                     <% end %>
                                                 </tbody>
                                             </table>

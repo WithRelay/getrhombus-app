@@ -5,7 +5,8 @@ class MessagesController < ApplicationController
 
 	def index
 		#@message = Message.new
-		#@url = @message.nexmo_send_text_message(<redacted_phone_number>, <redacted_phone_number>, "$$$$ yea")
+		#@url = @message.nexmo_send_text_message(1,<redacted_phone_number>, <redacted_phone_number>, "$$$$ yea")
+		#@url = @message.nexmo_search_and_buy_number("US")
 	end
 
 	def receive_delivery_report
@@ -15,8 +16,8 @@ class MessagesController < ApplicationController
 	end
 
 	def receive_text_message
-		#params[:to] = "<redacted_phone_number>"#<redacted_phone_number>"
-		#params[:msisdn] = "<redacted_phone_number>"#"<redacted_phone_number>"
+		params[:to] = "<redacted_phone_number>"#<redacted_phone_number>"
+		params[:msisdn] = "<redacted_phone_number>"#"<redacted_phone_number>"
 		head :ok, :content_type => 'text/html'		# for nexmo
 		if params[:text] != ""        				# Ensure there is a text query string
 
@@ -58,7 +59,7 @@ class MessagesController < ApplicationController
 								@merchant_transaction = Transaction.new
 								credit_data = @merchant_transaction.balanced_credit_merchant_bank_account(debit_data, @user, params[:to], text)
 								
-								if @merchant_transaction_id != "failed"
+								if credit_data != "failed"
 									# set the merchant transaction id in the customer referenced transaction id
 									@customer_transaction.referenced_merchant_transaction_id = credit_data[0]#@merchant_transaction.id
 									@customer_transaction.save
@@ -147,7 +148,7 @@ class MessagesController < ApplicationController
 		@message = Message.new 									
 		@message.save_text(from: query_hash['msisdn'], to: query_hash['to'], 
 			network_code: query_hash["network-code"], messageId: query_hash['messageId'], message_timestamp: query_hash["message-timestamp"],
-			text: query_hash['text'], message_code: msg_code, message_type: 2, transaction_id: transaction_id)
+			text: query_hash['text'], message_code: msg_code, transaction_id: transaction_id)
 	end
 
 	def save_delivery_receipts(query)
@@ -159,7 +160,7 @@ class MessagesController < ApplicationController
 			@message.save_text(from: query_hash["to"], network_code: query_hash['network-code'], messageId: query_hash['messageId'], 
 				to: query_hash["msisdn"], status_delivery: query_hash["status"], err_code: query_hash['err-code'], message_price: query_hash["price"], 
 				scts: query_hash['scts'], message_timestamp: query_hash["message-timestamp"], 
-				client_ref: query_hash['client-ref'], message_code: 6, message_type: 3)
+				client_ref: query_hash['client-ref'], message_code: 8)
 		else
 			@message.save_text(status_delivery: query_hash["status"], err_code: query_hash['err-code'],
 				scts: query_hash['scts'], message_timestamp: query_hash["message-timestamp"])

@@ -1,8 +1,8 @@
 Rhombus::Application.routes.draw do
 
+  root 'static_pages#home'
   #resources :messages
   #root 'messages#index'
-  root 'static_pages#home'
   #root 'transactions#index'
   get "/receive_text_message" => 'messages#receive_text_message'
   get "/receive_delivery_report" => 'messages#receive_delivery_report'
@@ -16,8 +16,6 @@ Rhombus::Application.routes.draw do
   get '/faqs' => 'static_pages#faqs'
   get '/privacy' => 'static_pages#privacy'
   get '/legal' => 'static_pages#legal'
-
-  get '/receipt' => 'static_pages#receipt'
 
   #match 'contact' => 'messages#new', :as => 'contact', :via => :get
   #match 'contact' => 'messages#create', :as => 'contact', :via => :post

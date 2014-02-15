@@ -10,10 +10,12 @@
 <body>
 
 	<div class="main-wrapper">
+	<%= render 'shared/full_messages' %>
 		<%= render 'shared/header' %>
+		
 
 		<div class="image">
-      	<img src="<%= asset_path 'bg1.jpg' %>" alt="img-responsive" style="height: 600px" width="100%"/>
+      	<img src="<%= asset_path 'bg2.png' %>" alt="img-responsive" style="height: 600px" width="100%"/>
          <h3><span>The best way to receive payments via SMS. <span class='spacer'></span><br /><span class='spacer'></span><span class="tagline2">No carrier billing. No setup or monthly fees. Just 2% per transaction + card processing fees.</span></span>
          <p><a href="/signup" class="btn btn-danger prompt_button">GET A FREE RHOMBUS NUMBER</a></p>
          </h3>

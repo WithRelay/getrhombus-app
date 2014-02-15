@@ -17,6 +17,13 @@ gem "balanced"
 # For Authorization
 gem "cancan"
 
+# For later
+#gem 'will_paginate'
+#gem 'bootstrap-will_paginate'
+
+# For messaging users
+gem 'intercom-rails', '~> 0.2.24'
+
 # For contact us form
 gem "mail_form"
 
