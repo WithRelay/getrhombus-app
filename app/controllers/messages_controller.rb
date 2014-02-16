@@ -11,7 +11,6 @@ class MessagesController < ApplicationController
 
 	def receive_delivery_report
 		head :ok, :content_type => 'text/html'
-		#@message = Message.new
 		save_delivery_receipts(request.query_string)
 	end
 
