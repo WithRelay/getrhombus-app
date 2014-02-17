@@ -29,7 +29,7 @@ class Transaction < ActiveRecord::Base
          	# Notify customer on failed debit
           text = message
           message = Message.new
-         	if e.response[:body]["status_code"] == 402     # How about 409???
+         	if e.response[:body]["status_code"] == 402     # How about 409 => card-not-valid???
             	message.nexmo_send_text_message(18, rhombus_number, user.phone_number, 
             		"Your payment of $#{amount_in_hundreds} to #{merchant.name} failed because: #{e.response[:body]["category_code"]}.")
          	end
