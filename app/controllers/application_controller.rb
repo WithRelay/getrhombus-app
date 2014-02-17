@@ -1,8 +1,6 @@
 class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
-
-  asdasda
   protect_from_forgery with: :exception
   before_filter :configure_permitted_parameters, if: :devise_controller?
 
@@ -17,7 +15,8 @@ class ApplicationController < ActionController::Base
   end
 
  rescue_from CanCan::AccessDenied do |exception|
-    redirect_to "/404.html"#, :alert => exception.message
+    #redirect_to "/404.html"#, :alert => exception.message
+    render :template => "static_pages/to_404"
   end
 
   protected
