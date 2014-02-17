@@ -74,7 +74,10 @@ Rhombus::Application.configure do
 
   # Precompile additional assets.
   # application.js, application.css, and all non-JS/CSS in app/assets folder are already added.
-   config.assets.precompile += %w( tokenize.js forms.css mainly_static_pages.css )
+  config.assets.paths << "#{Rails.root}/app/assets/html"
+  config.assets.precompile += %w(404.html 500.html)
+  config.assets.precompile += %w( tokenize.js forms.css mainly_static_pages.css )
+
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
