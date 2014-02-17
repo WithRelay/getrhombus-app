@@ -19,9 +19,6 @@
 //= require pace.min.js
 //= require jquery.validate.min.js
 //= require jquery.lazyload.min.js
+//= require jquery.parallax-1.1.3.js
 //= require login_v2
-//= require custom.min.js
-
-
-
-    
+//= require custom.js

@@ -10,7 +10,11 @@
 					<div class="progress transparent progress-small no-radius">
 							<div class="progress-bar progress-bar-white animate-progress-bar" data-percentage="79%" ></div>
 					</div>				
-					<div class="description"><i class="icon-custom-up"></i><span class="text-white mini-description ">&nbsp; 2% higher <span class="blend">than last month</span></span></div>	
+					<div class="description"><i class="icon-custom-up"></i>
+					
+					<span class="text-white mini-description ">&nbsp; Today's count</span>						
+
+					</div>	
 				 </div>
 				</div>
 			</div>
@@ -26,7 +30,14 @@
 					<div class="progress transparent progress-white progress-small no-radius">
 						<div class="progress-bar progress-bar-white animate-progress-bar" data-percentage="45%" ></div>
 					</div>
-					<div class="description"><i class="icon-custom-up"></i><span class="text-white mini-description ">&nbsp; 5% higher <span class="blend">than last month</span></span></div>	
+					<div class="description"><i class="icon-custom-up"></i>
+
+					<% if current_user.user_level == 0 %>
+					<span class="text-white mini-description ">&nbsp; Includes taxes (if any)</span>
+					<% elsif current_user.user_level == 1 %>
+					<span class="text-white mini-description ">&nbsp; Less rhombus fess</span>
+					<% end %>			
+					</div>	
 				</div>
 				</div>
 		
@@ -45,7 +56,15 @@
 							<div class="progress-bar progress-bar-white animate-progress-bar" data-percentage="12%"></div>
 						</div>
 					</div>
-					<div class="description"><i class="icon-custom-up"></i><span class="text-white mini-description ">&nbsp; 3% higher <span class="blend">than last month</span></span></div>
+					<div class="description"><i class="icon-custom-up"></i>
+
+					<% if current_user.user_level == 0 %>
+					<span class="text-white mini-description ">&nbsp; Includes taxes (if any)</span>
+					<% elsif current_user.user_level == 1 %>
+					<span class="text-white mini-description ">&nbsp; Less rhombus fess</span>
+					<% end %>	
+
+					</div>
 					
 				 </div>
 				</div>

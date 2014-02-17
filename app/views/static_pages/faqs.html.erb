@@ -1,24 +1,28 @@
 <% provide(:title, 'Rhombus - faqs') %>
 
 <%= content_for :head do %>
-  <%#= stylesheet_link_tag "style_home.css", "data-turbolinks-track" => true %>
-  <%#= stylesheet_link_tag "responsive_home.css", "data-turbolinks-track" => true %>
-  <%#= stylesheet_link_tag "custom_home.css", "data-turbolinks-track" => true %>
   <%= stylesheet_link_tag "mainly_static_pages" %>
 <% end %>
 
 <body>
 
 	<div class="main-wrapper">
-	<%= render 'shared/full_messages' %>
+	
 		<%= render 'shared/header' %>
-		
+	<%= render 'shared/full_messages' %>	
 
 <div class="section white ha-waypoint">
 		<div class="container">
 		<div class="p-t-60">
 		<div class="row">
 		<div class="col-md-12 feature-list ">
+			<div class="col-md-4">
+			<h4 class="title">WHAT IS RHOMBUS?</h4>
+			<p>
+			Rhombus takes the hassle out of collecting payments or donations from your customers, members or group of friends on any mobile device, using the most ubiquitous messaging system – SMS. The friction-free process lets users make a purchase or donation instantly by texting an amount and description to your Rhombus number!
+			</p>
+			</div>
+
 			<div class="col-md-4">
 			<h4 class="title">HOW DO I SEND A PAYMENT WITH RHOMBUS?</h4>
 			<p>
@@ -31,15 +35,16 @@
 		You will receive a payment confirmation by text immediately after. You will also receive an electronic receipt by email for every payment you make.
 			</p>
 			</div>
+			<div class="clearfix"></div>
+		</div>
+
+			<div class="col-md-12 feature-list ">
 			<div class="col-md-4">
 			<h4 class="title">IS THERE A LIMIT TO HOW MANY CHARACTERS I CAN SEND?</h4>
 			<p>
 Yes. There is a 160 character limit for each individual payment you send using Rhombus.
 			</p>
-			</div><div class="clearfix"></div>
-		</div>
-
-			<div class="col-md-12 feature-list ">
+			</div>
 			<div class="col-md-4">
 			<h4 class="title">IS THERE A MINIMUM OR MAXIMUM AMOUNT i CAN SEND THROUGH RHOMBUS?</h4>
 			<p>
@@ -52,16 +57,19 @@ Yes. There is a 160 character limit for each individual payment you send using R
 Sending a payment with Rhombus is completely free as long as you use a bank account, a supported debit card or credit card to fund your payments. To receive payments with Rhombus, we only charge 2% per transaction + card processing fees (2.9% + $0.30) to receive payments or donations. Please contact us for volume pricing.
 			</p>
 			</div>
-			<div class="col-md-4">
-			<h4 class="title">WHAT BANKS DO YOUR WORK WITH?</h4>
-			<p>
-Your Rhombus account works with all the major banks in the United States.
-			</p>
-			</div><div class="clearfix"></div>
+
+			<div class="clearfix"></div>
 		</div>
 
 
 			<div class="col-md-12 feature-list ">
+						<div class="col-md-4">
+			<h4 class="title">WHAT BANKS DO YOUR WORK WITH?</h4>
+			<p>
+Your Rhombus account works with all the major banks in the United States.
+			</p>
+			</div>
+
 			<div class="col-md-4">
 			<h4 class="title">WHEN ARE FUNDS DEPOSITED INTO MY ACCOUNT?</h4>
 			<p>
@@ -74,15 +82,18 @@ Your Rhombus account works with all the major banks in the United States.
 Rhombus is currently only available in the U.S. We are adding support for other countries soon.
 			</p>
 			</div>
-			<div class="col-md-4">
+			
+			<div class="clearfix"></div>
+		</div>
+
+					<div class="col-md-12 feature-list ">
+
+					<div class="col-md-4">
 			<h4 class="title">WHAT PHONES DOES RHOMBUS WORK ON?</h4>
 			<p>
 Rhombus works on any phone with text messaging capability.
 			</p>
-			</div><div class="clearfix"></div>
-		</div>
-
-					<div class="col-md-12 feature-list ">
+			</div>
 			<div class="col-md-4">
 			<h4 class="title">
 WHAT IF MY PHONE IS LOST OR STOLEN</h4>
@@ -128,7 +139,7 @@ In the event that your phone is stolen or misplaced, simply log into your Rhombu
 			<div class="p-t-60 p-b-60">
 				<div class="row">
 					<div class="col-md-8 col-md-offset-2">
-						<h2 class="text-center m-b-30">We'd love to hear from you<a class="btn btn-primary btn-cons call_to_action_btn" href="/contactus">Contact Us</a></h2>				
+						<h2 class="text-center m-b-30">We'd love to hear from you<a class="btn btn-danger btn-cons call_to_action_btn2" href="/contactus">Contact Us</a></h2>				
 					</div>					
 				</div>
 				

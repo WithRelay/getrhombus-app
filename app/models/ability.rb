@@ -4,7 +4,7 @@ class Ability
   def initialize(user)
 
     user ||= User.new # guest user (not logged in)
-    if user.user_level == 2  #Admins
+    if user.user_level == 2  # Change this to admin?
        can :manage, :all
     else
        can :manage, user

@@ -22,15 +22,13 @@ class Message < ActiveRecord::Base
 		response = HTTParty.post('https://rest.nexmo.com/sms/json?'+ uri, :headers => {"Content-Type" => "application/x-www-form-urlencoded"} )
 		
 		# check response
-		if response.code == 200 and response["messages"].first["status"] == "0"
-		
+		if response.code == 200 and response["messages"].first["status"] == "0"		
 			# Fetch the saved outbound message and attach nexmo's response to it
 			@message = Message.find_by(id: response['messages'].first["client-ref"])
 			@message.save_text(status: response['messages'].first['status'], messageId: response['messages'].first['messageId'],
 				client_ref: response['messages'].first['client-ref'], message_price: response['messages'].first['message-price'], 
 				network_code: response['messages'].first['network'])
-		else
-			
+		else			
 			# Notify marketplace owner of failure
 			Notification.text_failure_notification(response["messages"].first, from, to, message).deliver
 		end
@@ -40,7 +38,7 @@ class Message < ActiveRecord::Base
 	def nexmo_search_and_buy_number(country)
 		api_key: '<redacted_api_key>'
 		api_secret: '<redacted_api_secret>'
-
+		
 		# search for a number on nexmo
 		response = HTTParty.get('https://rest.nexmo.com/number/search/'+ api_key + "/" + api_secret + "/" + country + "?features=SMS,VOICE&size=1")
 		

@@ -1,30 +1,30 @@
 <% provide(:title, 'Rhombus - Home') %>
 
 <%= content_for :head do %>
-  <%#= stylesheet_link_tag "style_home.css", "data-turbolinks-track" => true %>
-  <%#= stylesheet_link_tag "responsive_home.css", "data-turbolinks-track" => true %>
-  <%#= stylesheet_link_tag "custom_home.css", "data-turbolinks-track" => true %>
   <%= stylesheet_link_tag "mainly_static_pages.css" %>
 <% end %>
 
 <body>
 
 	<div class="main-wrapper">
-	<%= render 'shared/full_messages' %>
+	
 		<%= render 'shared/header' %>
+
+		<%= render 'shared/full_messages' %>
 		
-
-		<div class="image">
-      	<img src="<%= asset_path 'bg2.png' %>" alt="img-responsive" style="height: 600px" width="100%"/>
-         <h3><span>The best way to receive payments via SMS. <span class='spacer'></span><br /><span class='spacer'></span><span class="tagline2">No carrier billing. No setup or monthly fees. Just 1.5% per transaction + card processing fees.</span></span>
-         <p><a href="/signup" class="btn btn-danger prompt_button">GET A FREE RHOMBUS NUMBER</a></p>
-         </h3>
+		<div class="tp-banner-container">
+		<div class="tp-banner" id="home" >
+			<div class="image">
+	      	<img src="<%= asset_path 'bg2.png' %>" alt="img-responsive" style="height: 600px" width="100%"/>
+	         <h3><span>The best way to receive payments via SMS.<span class='spacer'></span><br /><span class='spacer'></span><span class="tagline2">No carrier billing. No setup or monthly fees. Just 1.5% per transaction + card processing fees.</span></span>
+	         <p><a href="/signup" class="btn btn-danger prompt_button">GET A FREE RHOMBUS NUMBER</a></p>
+	         </h3>
+			</div>
+			<div class="tp-bannertimer"></div>
 		</div>
-	
+		</div>
 
-	
-
-<div class="section white ha-waypoint" >
+<div class="section white ha-waypoint">
 		<div class="container">
 		<div class="p-t-60">
 		<div class="row">
@@ -59,15 +59,12 @@
 <div class="section grey">
 	<div class="container">
 	  <div class="p-t-40 p-b-50 ">
-
-		<div class="row feature-list value_prop">		
- 	     	<div>
+		<div class="row feature-list value_prop">	 	     	
 			Rhombus takes the hassle out of collecting payments or donations from your customers, members or group of friends on any mobile device, using the most ubiquitous messaging system – SMS. The friction-free process lets users make a purchase or donation instantly by texting an amount and description to your Rhombus number!
-			</div>
-
 		</div>
 	</div>
 </div>	
+</div>
 
 <div class="section table-layout">	
 			<div id="working-section" class="table-cell v-middle">	

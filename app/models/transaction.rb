@@ -129,11 +129,10 @@ class Transaction < ActiveRecord::Base
 
    def owner_transaction_info(debit_data, credit_data, user, message)#merchant_transaction_id, user, message)
       
-      # ************** set owner here ****************
       # owner = User.find_by(id: 22)
       owner = User.find_by(email: '<redacted_email>')
 
-      # If i choose to user sql queries to get data
+      # I can use sql queries to get data rather than carry it over
       # merchant_id = Transaction.find_by(id: merchant_transaction_id).user_id
       # User.find_by(id: merchant_id)
       merchant = debit_data[3]

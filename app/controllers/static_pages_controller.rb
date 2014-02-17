@@ -2,8 +2,6 @@ class StaticPagesController < ApplicationController
 
 
 	def home
-      #Notification.welcome_email("<redacted_email>", 1, "Taiwo Oyeniyi").deliver    
-      #Notification.welcome_email("<redacted_email>", 0).deliver    
 	end
 
 	def aboutus

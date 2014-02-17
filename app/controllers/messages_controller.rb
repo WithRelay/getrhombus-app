@@ -5,19 +5,21 @@ class MessagesController < ApplicationController
 
 	def index
 		#@message = Message.new
-		#@url = @message.nexmo_send_text_message(1,<redacted_phone_number>, <redacted_phone_number>, "$$$$ yea")
+		#@url = @message.nexmo_send_text_message(1, <redacted_phone_number>, <redacted_phone_number>, "$$$$ yea")
 		#@url = @message.nexmo_search_and_buy_number("US")
 	end
 
 	def receive_delivery_report
-		head :ok, :content_type => 'text/html'
+		render :status => 200						# head :ok, :content_type => 'text/html'
 		save_delivery_receipts(request.query_string)
 	end
 
 	def receive_text_message
-		#params[:to] = "<redacted_phone_number>"#<redacted_phone_number>"
-		#params[:msisdn] = "<redacted_phone_number>"#"<redacted_phone_number>"
-		head :ok, :content_type => 'text/html'		# for nexmo
+		#params[:to] = "<redacted_phone_number>"
+		#params[:msisdn] = "<redacted_phone_number>" 			# "<redacted_phone_number>"
+		#head :ok, :content_type => 'text/html'		
+		render :status => 200						# for nexmo
+
 		if params[:text] != ""        				# Ensure there is a text query string
 
 			text = params[:text].strip
