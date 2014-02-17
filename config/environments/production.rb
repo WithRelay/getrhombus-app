@@ -75,7 +75,7 @@ Rhombus::Application.configure do
   # Precompile additional assets.
   # application.js, application.css, and all non-JS/CSS in app/assets folder are already added.
   config.assets.paths << "#{Rails.root}/app/assets/html"
-  config.assets.precompile += %w(404.html 500.html)
+  config.assets.precompile += %w(500.html)
   config.assets.precompile += %w( tokenize.js forms.css mainly_static_pages.css )
 
 
