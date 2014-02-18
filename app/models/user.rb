@@ -10,7 +10,7 @@ class User < ActiveRecord::Base
   #has_many :messages, dependent: :destroy
   has_many :transactions, dependent: :destroy
   before_save :the_titleizer
-  before_create :set_merchant_business_phone                         # only create, cos they can change this in edit
+  before_create :set_merchant_business_phone                          # only create, cos they can change this in edit
   before_create :set_rhombus_number
   after_create :send_welcome_email  
 
@@ -21,7 +21,7 @@ class User < ActiveRecord::Base
    # Create or update customer on Balanced
   def balanced_associate_token_with_customer(params)
     begin            
-      if self.customer_uri.blank?                             # Doesnt have a customer uri => first time    
+      if self.customer_uri.blank?                                     # Doesnt have a customer uri => first time    
         customer = Balanced::Customer.new.save                        # Here self.customer_uri is the token from Balanced        
       else                                                            # Not blank 
         # so Balanced always retokenizes same card/bank info
@@ -30,9 +30,11 @@ class User < ActiveRecord::Base
         customer = Balanced::Customer.find(self.customer_uri)       
       end
 
-      if self.user_level == 0                                 # if it is a regular user => only cards
+      if self.user_level == 0                                         # if it is a regular user => only cards
         response = customer.add_card(params[:instrument_uri])
-      elsif self.user_level == 1                              # if it is a merchant => only bank account
+      elsif self.user_level == 1                                      # if it is a merchant => only bank account
+        # only bank accounts have unnecessary retokenization
+        # cos edit form is the same for all fields
         response = customer.add_bank_account(params[:instrument_uri])
       end
 

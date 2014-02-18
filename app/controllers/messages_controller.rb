@@ -10,15 +10,14 @@ class MessagesController < ApplicationController
 	end
 
 	def receive_delivery_report
-		render :status => 200						# head :ok, :content_type => 'text/html'
+		head :ok, :content_type => 'text/html'		# render :status => 200	
 		save_delivery_receipts(request.query_string)
 	end
 
 	def receive_text_message
 		#params[:to] = "<redacted_phone_number>"
 		#params[:msisdn] = "<redacted_phone_number>" 			# "<redacted_phone_number>"
-		#head :ok, :content_type => 'text/html'		
-		render :status => 200						# for nexmo
+		head :ok, :content_type => 'text/html'		 #render :status => 200						# for nexmo
 
 		if params[:text] != ""        				# Ensure there is a text query string
 
