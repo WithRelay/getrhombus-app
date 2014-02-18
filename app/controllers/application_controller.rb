@@ -5,7 +5,7 @@ class ApplicationController < ActionController::Base
   before_filter :configure_permitted_parameters, if: :devise_controller?
 
   rescue_from ActiveRecord::RecordNotUnique, with: :record_not_unique   # capture phone number duplicates on sign up page
-sdasds  
+  
   def after_sign_in_path_for(user)
      current_user
   end
