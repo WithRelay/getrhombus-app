@@ -51,6 +51,10 @@ class User < ActiveRecord::Base
 
   # needs optimization
   def todays_stuff
+
+    rhombus_number = self.rhombus_number
+    rhombus_number = "#{rhombus_number[0]}" + " " + "(#{rhombus_number[1..3]})" + " " + "#{rhombus_number[4..6]}-#{rhombus_number[7..10]}"
+
     all_payments = self.transactions#.where('DATE(created_at) = ?', Date.today)
     total = 0
     if self.user_level == 0
@@ -79,7 +83,7 @@ class User < ActiveRecord::Base
 
     todays_payments_count = todays_payments.count
 
-    return all_payments_total, todays_payments_total, todays_payments_count
+    return all_payments_total, todays_payments_total, todays_payments_count, rhombus_number
   end
 
   private

@@ -16,9 +16,10 @@ class UsersController < ApplicationController
 
   def show
     if current_user.customer_uri.blank? 
-        redirect_to "/profile"
-    end
-    @todays_stuff = current_user.todays_stuff    
+       redirect_to "/profile"
+    else
+      @todays_stuff = current_user.todays_stuff      
+    end    
   end  
   
   def create
