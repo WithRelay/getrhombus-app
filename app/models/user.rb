@@ -96,7 +96,7 @@ class User < ActiveRecord::Base
     # Would be useful when merchants can become regular users and vice versa
     if self.user_level == 1
       self.business_phone = self.phone_number
-      self.phone_number = ""
+      self.phone_number = nil
     end 
   end
 
