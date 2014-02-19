@@ -11,8 +11,7 @@ class User < ActiveRecord::Base
   has_many :transactions, dependent: :destroy
   before_save :the_titleizer
   before_create :set_merchant_business_phone                          # only create, cos they can change this in edit
-  before_create :set_rhombus_number
-  after_create :send_welcome_email  
+  after_create :set_rhombus_number, :send_welcome_email  
 
   # still need a validation for edit
   validates :phone_number, presence: true, :on => :create
@@ -42,6 +41,7 @@ class User < ActiveRecord::Base
         # handle bad response and notify marketplace owner of error
         # return e.response[:body]["status"], e.response[:body]["category_code"], e.response[:body]["description"], e.response[:body]["status_code"]
         Notification.token_failure_notification(e.response[:body], self.email).deliver
+        return
     else
        # else save customer uri only.
        self.customer_uri = response.uri
@@ -88,6 +88,7 @@ class User < ActiveRecord::Base
     if self.user_level == 1
       @rhombus_number = Message.new
       self.rhombus_number = @rhombus_number.nexmo_search_and_buy_number("US")
+      self.save
     end
   end
 

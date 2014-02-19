@@ -31,6 +31,7 @@ class Message < ActiveRecord::Base
 		else			
 			# Notify marketplace owner of failure
 			Notification.text_failure_notification(response["messages"].first, from, to, message).deliver
+			return
 		end
 	end
 
@@ -55,11 +56,12 @@ class Message < ActiveRecord::Base
 			else
 				# Notify marketplace owner of failure
 				Notification.text_failure_notification(response, from = "", to = "", message = "Rhombus number purchase failed with response code #{response.code}").deliver
+				return "-"
 			end
 		else
 			# Notify marketplace owner of failure
 			Notification.text_failure_notification(response, from = "", to = "", message = "Rhombus number search failed").deliver
-			#return response
+			return "-"
 		end
 	end
 
