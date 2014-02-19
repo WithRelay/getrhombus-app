@@ -52,9 +52,8 @@ class User < ActiveRecord::Base
   # needs optimization
   def todays_stuff
 
-    rhombus_number = self.rhombus_number
-    rhombus_number = "#{rhombus_number[0]}" + " " + "(#{rhombus_number[1..3]})" + " " + "#{rhombus_number[4..6]}-#{rhombus_number[7..10]}"
-
+    rhombus_number = self.rhombus_number    
+      
     all_payments = self.transactions#.where('DATE(created_at) = ?', Date.today)
     total = 0
     if self.user_level == 0
@@ -62,6 +61,7 @@ class User < ActiveRecord::Base
         total = total + p.amount_with_taxes
       end
     elsif self.user_level == 1
+      rhombus_number = "#{rhombus_number[0]}" + " " + "(#{rhombus_number[1..3]})" + " " + "#{rhombus_number[4..6]}-#{rhombus_number[7..10]}"
       all_payments.each do |p|
         total = total + p.amount
       end
