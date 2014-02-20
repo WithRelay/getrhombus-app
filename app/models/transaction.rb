@@ -67,7 +67,7 @@ class Transaction < ActiveRecord::Base
       		  
             # send receipt
       		  Notification.send_receipt(message, response.transaction_number, amount_with_taxes_in_hundreds, amount_in_hundreds, user.email, merchant.business_name, merchant.business_phone, merchant.email).deliver
-      		  self.receipt_sent_at = Time.now							# change this later
+      		  self.receipt_sent_at = Time.zone.now							# change this later
       		  self.save											            	# Put a save check here later
       		  # should limit data carried in merchant...memory
             return self.id, amount, amount_with_taxes, merchant
