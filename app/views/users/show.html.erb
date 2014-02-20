@@ -56,7 +56,8 @@
                                                       
                                                         <td>
                                                         	<%= link_to transaction_path(t) do %>
-                                                        	<%= t.created_at.strftime("%e %b %y %H:%m %p") %>
+                                                        	<%#= t.created_at.strftime("%e %b %y %H:%m %p") %>
+                                                            <%= Time.strptime(t.created_at.to_s, '%Y %m %d %H %M %S %z').in_time_zone(Time.zone) %>
                                                         	<% end %>
                                                         </td>
 
