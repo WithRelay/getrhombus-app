@@ -37,6 +37,11 @@ class Transaction < ActiveRecord::Base
          	# Notify marketplace owner of failed debit
          	Notification.payment_failure_notification(e.response[:body], user, merchant, text).deliver
           return "failed"
+        
+        rescue Balanced::Forbidden => e
+
+          Notification.payment_failure_notification(e.response[:body], user, merchant, text).deliver
+
       	else
 
           amount_with_taxes_in_hundreds = sprintf("%.2f", amount_with_taxes.to_f/100)
@@ -99,7 +104,11 @@ class Transaction < ActiveRecord::Base
        	# return e, e.response[:body]["category_code"], e.response[:body]["status_code"], e.response[:body]["description"]
         Notification.payment_failure_notification(e.response[:body], user, merchant, message, credit = "yes").deliver
        	return "failed"
-     
+        
+      rescue Balanced::Forbidden => e
+
+          Notification.payment_failure_notification(e.response[:body], user, merchant, message, credit = "yes").deliver
+
      	else
        	# Else proceed to save data, return id
        	#return "#{response.uri}, #{response.transaction_number}, #{response.source.last_four}, #{response.on_behalf_of.customer_uri}"
