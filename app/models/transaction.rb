@@ -166,8 +166,8 @@ class Transaction < ActiveRecord::Base
       	self.transaction_number = options[:transaction_number] if options[:transaction_number]
       	
       	self.description = options[:description] if options[:description]
-      	self.from = options[:phone_number] if options[:phone_number]
-      	self.to = options[:rhombus_number] if options[:rhombus_number]
+      	self.from = options[:from] if options[:from]
+      	self.to = options[:to] if options[:to]
       	self.status = options[:status] if options[:status]
       	self.transaction_available_at = options[:transaction_available_at] if options[:transaction_available_at]
       	

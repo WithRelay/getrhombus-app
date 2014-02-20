@@ -69,12 +69,12 @@
                                                         <% if current_user.user_level == 1 %>
                                                         	<td>
                                                                 <%= link_to transaction_path(t) do %>
-                                                                    <%= number_to_currency(t.amount) %>
+                                                                    <%= number_to_currency(t.amount_less_fees) %>
                                                                 <% end %>
                                                             </td>
-                                                        	<td>
+                                                        	<td style="word-wrap: break-word">
                                                                 <%= link_to transaction_path(t) do %>
-                                                                    <%= t.card_name %>
+                                                                    <%= t.description %>
                                                                 <% end %>
                                                             </td>
                                                         <% end %>
