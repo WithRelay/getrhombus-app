@@ -14,7 +14,7 @@ Rhombus::Application.routes.draw do
   get '/paywithrhombus' => 'static_pages#paywithrhombus'
   get '/faqs' => 'static_pages#faqs'
   get '/privacy' => 'static_pages#privacy'
-  get '/legal' => 'static_pages#legal'
+  #get '/legal' => 'static_pages#legal'
 
   #match 'contact' => 'messages#new', :as => 'contact', :via => :get
   #match 'contact' => 'messages#create', :as => 'contact', :via => :post
