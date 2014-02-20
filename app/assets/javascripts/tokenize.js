@@ -9,7 +9,8 @@ $(document).ready(function () {
     });
 
     
-    var marketplaceUri = '/v1/marketplaces/TEST-MP6bP0y8O10lBsBfh8oMGhE4';
+    //var marketplaceUri = '/v1/marketplaces/TEST-MP6bP0y8O10lBsBfh8oMGhE4';             //for test
+    var marketplaceUri = '/v1/marketplaces/MP3pb864RzCtOjX4rGSdUfoj';
     
     balanced.init(marketplaceUri);    
     ////
@@ -117,7 +118,8 @@ $(document).ready(function () {
         });
     });
     
-    
+
+/*
     ////
     // Simply populates credit card and bank account fields with test data
     ////
@@ -135,12 +137,7 @@ $(document).ready(function () {
         $('#ba-number').val('<redacted_phone_number>');
         $('#ba-routing').val('321174851');
     });
-
-
-
-
-
-
+*/
 
 
 

@@ -2,7 +2,8 @@ class Transaction < ActiveRecord::Base
 
   default_scope order('created_at DESC')
 
-	Balanced.configure('cb51061889c511e2ac81026ba7cd33d0') 
+	#Balanced.configure('cb51061889c511e2ac81026ba7cd33d0')     # for test
+  Balanced.configure('6fcf1ddc89c711e2b7d4026ba7cac9da')       # for production
 
    	has_one :message
    	belongs_to :user, counter_cache: true

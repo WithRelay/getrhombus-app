@@ -18,7 +18,7 @@
   <%= devise_error_messages! %>
   <%= render 'shared/full_messages' %>
 
-  <button type="button" id="populate" class="btn btn-default pull-right" style="margin-bottom: 20px;">Populate Test Data</button>
+  <%#<button type="button" id="populate" class="btn btn-default pull-right" style="margin-bottom: 20px;">Populate Test Data</button>%>
   
   <% if current_user.user_level == 0 and current_user.customer_uri.blank? %>
         <%= render "user_information" %>
