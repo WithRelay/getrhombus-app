@@ -4,7 +4,7 @@ $(document).ready(function () {
             document.getElementById('num').value = window.location.search.substring(1).split("=")[1];
         }
         else  {
-            document.getElementById('num').value = ""
+            document.getElementById('num').value = "";
         }
     }
 	if ($.fn.parallax){
