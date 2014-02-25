@@ -89,8 +89,8 @@ class MessagesController < ApplicationController
 						params[:msisdn], "Sorry, we are unable to make payments below 5 dollars. :(")
 				
 				end	
-			
-			elsif text.downcase.gsub(/\s+/, "") == "signup" || text.downcase.gsub(/\s+/, "") == "sign-up"		# for signing up
+			# for signing up
+			elsif text.downcase.gsub(/\s+/, "") == "signup" || text.downcase.gsub(/\s+/, "") == "sign-up" || text.downcase.gsub(/\s+/, "") == "give" || text.downcase.gsub(/\s+/, "") == "pay"
 
 				# save in messages and send a response
 				save_inbound_text(request.query_string, msg_code = 4)

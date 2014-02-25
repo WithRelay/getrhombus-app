@@ -10,7 +10,7 @@ $(document).ready(function () {
 
     
     //var marketplaceUri = '/v1/marketplaces/TEST-MP6bP0y8O10lBsBfh8oMGhE4';             //for test
-    var marketplaceUri = '/v1/marketplaces/MP3pb864RzCtOjX4rGSdUfoj';
+    var marketplaceUri = '/v1/marketplaces/MP3pb864RzCtOjX4rGSdUfoj';                 // for production
     
     balanced.init(marketplaceUri);    
     ////
