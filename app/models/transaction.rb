@@ -88,7 +88,7 @@ class Transaction < ActiveRecord::Base
       # User.find_by(rhombus_number: rhombus_number)
       merchant = debit_data[3]
 
-      # rhombus fee, Balanced fee, credit fee = 1.5%, 2.9% + 30c, 25c set globally later
+      # rhombus fee, Balanced fee, credit fee = 1.5%, 2.9% + 30c, 25c (payout fee) set globally later
       amount_less_fees = ((debit_data[2] * 0.956).round(0)) - 55
 
    		customer = Balanced::Customer.find(merchant.customer_uri)           # Add a check here later
@@ -96,7 +96,7 @@ class Transaction < ActiveRecord::Base
       begin
     		
     	  response = customer.credit(:amount => amount_less_fees,
-            	:description => "Payment from #{user.email}. Name on card: #{user.card_name}. Last four: #{user.last_four}.",
+            	:description => "Payment from #{user.email}. Card name: #{user.card_name}. Last four: #{user.last_four}.",
             	:appears_on_statement_as => "#{user.card_name}_#{user.last_four}")
 
       rescue Balanced::Error => e   

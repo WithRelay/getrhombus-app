@@ -1,6 +1,6 @@
-class User < ActiveRecord::Base 	
+class User < ActiveRecord::Base
 
-	Balanced.configure('6fcf1ddc89c711e2b7d4026ba7cac9da')        # Production
+  Balanced.configure('6fcf1ddc89c711e2b7d4026ba7cac9da')        # Production
   #Balanced.configure('cb51061889c511e2ac81026ba7cd33d0')        # Test
 
   # Include default devise modules. Others available are:
