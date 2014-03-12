@@ -8,7 +8,7 @@ class Transaction < ActiveRecord::Base
    	has_one :message
    	belongs_to :user, counter_cache: true
 
-   	# rhombus_fee = 0.015				# :)
+   	# rhombus_fee = 0.006				# :)
 	
    	def balanced_debit_customer_card(amount, user, rhombus_number, message)
    
@@ -88,8 +88,8 @@ class Transaction < ActiveRecord::Base
       # User.find_by(rhombus_number: rhombus_number)
       merchant = debit_data[3]
 
-      # rhombus fee, Balanced fee, credit fee = 1.5%, 2.9% + 30c, 25c (payout fee) set globally later
-      amount_less_fees = ((debit_data[2] * 0.956).round(0)) - 55
+      # rhombus fee, Balanced fee, credit fee = 0.6%, 2.9% + 30c, 25c (payout fee) set globally later
+      amount_less_fees = ((debit_data[2] * 0.965).round(0)) - 55
 
    		customer = Balanced::Customer.find(merchant.customer_uri)           # Add a check here later
       
