@@ -11,7 +11,7 @@ class Message < ActiveRecord::Base
 		api_secret: '<redacted_api_secret>'
 		
 		# save the outbound message
-		@message = Message.new 											
+		@message = Message.new 		################## can i reuse this object...note that i already create one in messages_controller									
 		client_ref = @message.save_text(message_code: msg_code, from: from, to: to, text: message, status_report_req: 1)
 		
 		# encode the nexmo uri

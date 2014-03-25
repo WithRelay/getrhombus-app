@@ -32,7 +32,8 @@ class MessagesController < ApplicationController
 
 					begin
 						# find the user
-						@user = User.find_by(phone_number: params[:msisdn])
+						# change this to if statement##################################################
+						@user = User.find_by!(phone_number: params[:msisdn])
 					rescue
 						# if user doesnt exist
 						# save in messages and send a response
@@ -47,6 +48,7 @@ class MessagesController < ApplicationController
 							@message = Message.new
 							@message.nexmo_send_text_message(17, params[:to], params[:msisdn], "Thank you for sending a payment with rhombus. Please follow the link below to complete your account, and resend your payment. Thanks! => www.getrhombus.com/signin")
 						else
+=begin
 							# if user and uri exist, proceed to payment
 							@customer_transaction = Transaction.new
 
@@ -69,6 +71,10 @@ class MessagesController < ApplicationController
 									@marketplace_transaction.owner_transaction_info(debit_data, credit_data, @user, text)#@merchant_transaction.id, @user, text)
 								end
 							end	
+=end
+							@message = Message.new
+							# see number 19 for payment system outage
+						    @message.nexmo_send_text_message(19, params[:to], params[:msisdn], "Thank you for sending a payment with rhombus. We're currently experiencing a system outage. We will notify you once the outage is resolved. Thanks!")
 						end					
 					end
 
