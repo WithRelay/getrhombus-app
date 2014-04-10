@@ -1,7 +1,7 @@
 class User < ActiveRecord::Base
 
-  Stripe.api_key: '<redacted_api_key>'       # for test
-  #Stripe.api_key: '<redacted_api_key>'       # for production
+  #Stripe.api_key: '<redacted_api_key>'       # for test
+  Stripe.api_key: '<redacted_api_key>'       # for production
 
   # Include default devise modules. Others available are:
     # :token_authenticatable, :lockable, :timeoutable and :confirmable,
@@ -39,7 +39,7 @@ class User < ActiveRecord::Base
     if self.user_level == 0 and !params[:instrument_uri].blank?
       begin 
         if self.customer_uri.blank?                                     # Doesnt have a customer uri => first time
-          response = Stripe::Customer.create(:email => "self.email", :card => params[:instrument_uri])         
+          response = Stripe::Customer.create(:email => "#{self.email}", :card => params[:instrument_uri])         
           self.customer_uri = response.id
           self.stripe_livemode = response.livemode
           self.save
@@ -54,9 +54,8 @@ class User < ActiveRecord::Base
         body = e.json_body
         err  = body[:error]
 
-        #owner = User.find_by(email: '<redacted_email>')                        # for development
-        owner = User.find_by(email: '<redacted_email>')                        # for prod test
-        #owner = User.find_by(email: '<redacted_email>')                # for production
+        #owner = User.find_by(email: '<redacted_email>')                   # for development
+        owner = User.find_by(email: '<redacted_email>')                # for production
 
         @message = Message.new
         @message.nexmo_send_text_message(18, owner.rhombus_number, self.phone_number, 

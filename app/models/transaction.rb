@@ -106,8 +106,7 @@ class Transaction < ActiveRecord::Base
    def owner_transaction_details(debit_data, credit_data, user, message)  # merchant_transaction_id, user, message)
       
       #owner = User.find_by(email: '<redacted_email>')                        # for development
-      owner = User.find_by(email: '<redacted_email>')                        # test production
-      #owner = User.find_by(email: '<redacted_email>')                # for production
+      owner = User.find_by(email: '<redacted_email>')                # for production
 
       # or db query to retreive data rather than passing it
       # merchant_id = Transaction.find_by(id: merchant_transaction_id).user_id

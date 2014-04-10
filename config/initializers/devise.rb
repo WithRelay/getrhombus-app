@@ -229,11 +229,12 @@ Devise.setup do |config|
   # up on your models and hooks.
   # config.omniauth :github, 'APP_ID', 'APP_SECRET', :scope => 'user,public_repo'
   
-  config.omniauth :stripe_connect, 'ca_3p20NvE1aexHzBEEduzif1gw6g8a874y', 'sk_test_lhZFl7b8z76isiiUT5dwFJOP', :scope => 'read_write'
+  # For development
+  #config.omniauth :stripe_connect, 'ca_3p20NvE1aexHzBEEduzif1gw6g8a874y', 'sk_test_lhZFl7b8z76isiiUT5dwFJOP', :scope => 'read_write'
    # or :scope => 'read_only'  :stripe_landing => 'register' # or :stripe_landing => 'login'
 
   # For production
-  #config.omniauth :stripe_connect, ENV['ca_3p20NvE1aexHzBEEduzif1gw6g8a874y'], ENV['sk_live_REDACTED'], :scope => 'read_write'
+  config.omniauth :stripe_connect, 'ca_3p20HxB40mKgJ0NUidkfUCOQabOSl7wH', 'sk_live_REDACTED', :scope => 'read_write'
   # or :scope => 'read_only' :stripe_landing => 'register' # or :stripe_landing => 'login'
 
 

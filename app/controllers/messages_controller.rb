@@ -34,7 +34,7 @@ class MessagesController < ApplicationController
 						# find the user
 						# change this to if statement##################################################
 						@user = User.find_by!(phone_number: params[:msisdn])
-					rescue
+					rescue StandardError => e
 						# if user doesnt exist
 						# save in messages and send a response
 						save_inbound_text(request.query_string, msg_code = 6)
