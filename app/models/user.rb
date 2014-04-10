@@ -123,7 +123,8 @@ class User < ActiveRecord::Base
   end
 
   def the_titleizer       #remove leading and trailing whitespaces
-    self.name = self.name.strip.titleize unless self.name.blank?
+    self.first_name = self.first_name.strip.titleize unless self.first_name.blank?
+    self.last_name = self.last_name.strip.titleize unless self.last_name.blank?
     self.card_name = self.card_name.strip.titleize unless self.card_name.blank?
     self.business_name = self.business_name.strip.titleize unless self.business_name.blank?
     self.business_type = self.business_type.strip.titleize unless self.business_type.blank?
@@ -136,7 +137,7 @@ class User < ActiveRecord::Base
 
   def send_welcome_email
     if self.user_level == 1
-      Notification.welcome_email(self.email, self.user_level, self.name).deliver
+      Notification.welcome_email(self.email, self.user_level, self.first_name).deliver
     elsif self.user_level == 0
       Notification.welcome_email(self.email, self.user_level).deliver
     end
