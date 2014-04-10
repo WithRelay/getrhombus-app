@@ -1,12 +1,13 @@
 class User < ActiveRecord::Base
 
-  Balanced.configure('6fcf1ddc89c711e2b7d4026ba7cac9da')        # Production
-  #Balanced.configure('cb51061889c511e2ac81026ba7cd33d0')        # Test
+  Stripe.api_key: '<redacted_api_key>'       # for test
+  #Stripe.api_key: '<redacted_api_key>'       # for production
 
   # Include default devise modules. Others available are:
-    # :token_authenticatable, :lockable, :timeoutable and :omniauthable, :confirmable,
+    # :token_authenticatable, :lockable, :timeoutable and :confirmable,
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
+  devise :omniauthable, :omniauth_providers => [:stripe_connect]
 
   #has_many :messages, dependent: :destroy
   has_many :transactions, dependent: :destroy
@@ -18,36 +19,63 @@ class User < ActiveRecord::Base
   validates :phone_number, presence: true, :on => :create
   validates_presence_of :user_level, :message => "Please select what you want to do with Rhombus"
 
-   # Create or update customer on Balanced
-  def balanced_associate_token_with_customer(params)
-    begin            
-      if self.customer_uri.blank?                                     # Doesnt have a customer uri => first time    
-        customer = Balanced::Customer.new.save                        # Here self.customer_uri is the token from Balanced        
-      else                                                            # Not blank 
-        # so Balanced always retokenizes same card/bank info
-        # the hash in the api can be used to check if info has already been tokenized
-        # can add that later...for now info is retokenized
-        customer = Balanced::Customer.find(self.customer_uri)       
-      end
-
-      if self.user_level == 0                                         # if it is a regular user => only cards
-        response = customer.add_card(params[:instrument_uri])
-      elsif self.user_level == 1                                      # if it is a merchant => only bank account
-        # only bank accounts have unnecessary retokenization
-        # cos edit form is the same for all fields
-        response = customer.add_bank_account(params[:instrument_uri])
-      end
-
-    rescue Balanced::Error => e
-        # handle bad response and notify marketplace owner of error
-        # return e.response[:body]["status"], e.response[:body]["category_code"], e.response[:body]["description"], e.response[:body]["status_code"]
-        Notification.token_failure_notification(e.response[:body], self.email).deliver
-        return
+  # saves merchant info from stripe
+  def from_omniauth(auth)
+    self.provider = auth.provider
+    self.uid = auth.uid
+    self.stripe_access_token = auth.credentials.token
+    self.stripe_publishable_key = auth.info.stripe_publishable_key
+    self.stripe_scope = auth.info.scope
+    self.stripe_livemode = auth.info.livemode
+    if self.save
+      return true
     else
-       # else save customer uri only.
-       self.customer_uri = response.uri
-       self.save
-    end   
+      return false
+    end
+  end
+
+  # Create or update customer on Stripe
+  def add_token_to_stripe_customer(params)
+    if self.user_level == 0 and !params[:instrument_uri].blank?
+      begin 
+        if self.customer_uri.blank?                                     # Doesnt have a customer uri => first time
+          response = Stripe::Customer.create(:email => "self.email", :card => params[:instrument_uri])         
+          self.customer_uri = response.id
+          self.stripe_livemode = response.livemode
+          self.save
+        else
+          response = Stripe::Customer.retrieve(self.customer_uri)  
+          response.email = self.email
+          response.card = params[:instrument_uri]
+          response.save   
+        end
+      rescue Stripe::CardError => e
+        # Since it's a decline, Stripe::CardError will be caught
+        body = e.json_body
+        err  = body[:error]
+
+        owner = User.find_by(email: '<redacted_email>')                        # for development
+        #owner = User.find_by(email: '<redacted_email>')                # for production
+
+        @message = Message.new
+        @message.nexmo_send_text_message(18, owner.rhombus_number, self.phone_number, 
+              "We were unable to update your card info on Rhombus because: #{err[:message]} Your previous card would still be used." )
+
+        Notification.token_failure_notification(err, self.email).deliver
+        return false
+      rescue Stripe::StripeError => e
+        body = e.json_body
+        err  = body[:error]
+        Notification.token_failure_notification(err, self.email).deliver
+        return false
+      rescue StandardError => e
+        Notification.token_failure_notification(e, self.email).deliver
+        return false
+      else
+         return true                # we gat this
+      end      
+    end
+    return true
   end
 
   # needs optimization
@@ -101,8 +129,8 @@ class User < ActiveRecord::Base
     self.business_type = self.business_type.strip.titleize unless self.business_type.blank?
     self.street_address = self.street_address.strip.titleize unless self.street_address.blank?
     self.city = self.city.strip.titleize unless self.city.blank?
-    self.state_province = self.state_province.strip.titleize unless self.state_province.blank?
-    self.country = self.country.strip.titleize unless self.country.blank?
+    self.state_province = self.state_province.strip.upcase unless self.state_province.blank?
+    self.country = self.country.strip.upcase unless self.country.blank?
     self.account_name = self.account_name.strip.titleize unless self.account_name.blank?
   end
 
@@ -115,56 +143,3 @@ class User < ActiveRecord::Base
   end
 
 end
-
-
-
-
-
-
-
-
-
-
-=begin
-     def balanced_get_merchant_token(params)
-        begin
-          bank_account = Balanced::BankAccount.new(:account_number => params[:account_number], :name => params[:account_name],
-                :routing_number => params[:routing_number], :type => params[:account_type]).save
-        rescue Exception => e
-           # handle bad response and notify marketplace owner of error
-            # return e.response[:body]["status"], e.response[:body]["category_code"], e.response[:body]["description"], e.response[:body]["status_code"]
-            #Notification.token_failure_notification(e.response[:body], self.email).deliver
-        else
-          # else assign the account uri to the instrument uri
-          self.instrument_uri = bank_account.uri
-          params[:instrument_uri] = bank_account.uri
-        end
-    end
-
-    def balanced_verify_bank_account            # Only on account_uri attached to customers
-      # call above function and pass account uri from above
-      #account_uri = "/v1/marketplaces/TEST-MP6bP0y8O10lBsBfh8oMGhE4/bank_accounts/BA4HQALDlDDJrjvU9boIzfsY"
-      #bank_account = Balanced::BankAccount.find(account_uri)
-      #verification = bank_account.verify
-      #return verification.uri
-      ###### Process response...verification uri
-    end
-
-    def balanced_confirm_bank_account#(amount_1, amount_2)
-      ###### Get user and then verification uri
-      #verification_uri = "/v1/bank_accounts/BA4HQALDlDDJrjvU9boIzfsY/verifications/BZ4ABnWct4YS7XI62bjeJH1o"
-      #verification = Balanced::Verification.find(verification_uri)
-      #verification.amount_1 = 1#amount_1
-      #verification.amount_2 = 1#amount_2
-      #response = verification.save
-      #return response.state
-      ###### Process response
-    end
-
-    # Leave this for later. Unnecessary since it is already set in Balanced Dashboard
-    # Pass in admin uri here
-    #def balanced_add_account_to_marketplace_owner
-      #marketplace.owner_customer.add_bank_account(uri)
-      ##### handle response and save uri
-    #end
-=end

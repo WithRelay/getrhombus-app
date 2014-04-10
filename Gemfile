@@ -1,3 +1,4 @@
+source 'https://code.stripe.com'
 source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
@@ -10,12 +11,12 @@ gem "httparty"
 
 # For authentication
 gem "devise"
-
-# For payment api
-gem "balanced"
+gem 'omniauth-stripe-connect'
 
 # For Authorization
 gem "cancan"
+
+gem "stripe"
 
 # For later
 #gem 'will_paginate'
@@ -28,7 +29,7 @@ gem 'intercom-rails', '~> 0.2.24'
 gem "mail_form"
 
 group :production do
-	gem "rails_12factor"
+	# gem "rails_12factor"
 	gem "passenger"
 end
 

@@ -18,10 +18,6 @@
                                     <td>Charged:</td>
                                     <td><%= number_to_currency(@transaction.amount_with_taxes) %></td>
                                 </tr>
-                                <tr>
-                                    <td>Appears on Statement:</td>
-                                    <td><%= @transaction.appear_on_statement_as %></td>
-                                </tr>
                                  <tr>
                                     <td>Transaction Number:</td>
                                     <td><%= @transaction.transaction_number %></td>

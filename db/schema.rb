@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140215024239) do
+ActiveRecord::Schema.define(version: 20140410135700) do
 
   create_table "messages", force: true do |t|
     t.datetime "created_at"
@@ -57,7 +57,6 @@ ActiveRecord::Schema.define(version: 20140215024239) do
     t.string   "zip_code"
     t.string   "card_type"
     t.string   "card_name"
-    t.string   "appear_on_statement_as"
     t.string   "tax_rate"
     t.string   "on_behalf_of_uri"
     t.string   "account_number"
@@ -95,7 +94,6 @@ ActiveRecord::Schema.define(version: 20140215024239) do
     t.string   "unconfirmed_email"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "name"
     t.integer  "user_level"
     t.string   "customer_uri"
     t.string   "last_four"
@@ -122,6 +120,15 @@ ActiveRecord::Schema.define(version: 20140215024239) do
     t.integer  "transactions_count"
     t.string   "instrument_uri"
     t.string   "business_zip_code"
+    t.string   "provider"
+    t.string   "uid"
+    t.string   "stripe_access_token"
+    t.string   "stripe_publishable_key"
+    t.string   "stripe_scope"
+    t.string   "stripe_livemode"
+    t.string   "stripe_refresh_token"
+    t.string   "first_name"
+    t.string   "last_name"
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree

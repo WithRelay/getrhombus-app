@@ -7,123 +7,50 @@ $(document).ready(function () {
     $('#Prev').click(function() {
         $('.biz_form').toggleClass('show');
     });
+    
+    Stripe.setPublishableKey('pk_test_hQV92i1Ip5Blrrvh7ivixlRY');     //for test
+    //Stripe.setPublishableKey('pk_live_REDACTED');     //for production
 
-    
-    //var marketplaceUri = '/v1/marketplaces/TEST-MP6bP0y8O10lBsBfh8oMGhE4';             //for test
-    var marketplaceUri = '/v1/marketplaces/MP3pb864RzCtOjX4rGSdUfoj';                 // for production
-    
-    balanced.init(marketplaceUri);    
-    ////
     // Click event for tokenize credit card
-    ////
     function preventDefault(e) {
         e.preventDefault();
     }
     
     $("#user-form").bind("submit", preventDefault);
-
     $('#response').hide();
 
     $( "#cc-submit" ).click(function() {
-        //$("#user-form").bind("submit", preventDefault);
-            
+                    
         $('#response').hide();
-        $( ".panel-body" ).html('');
-
-        var payload = {
-            name: $('#cc-name').val(),
-            card_number: $('#cc-number').val(),
-            expiration_month: $('#cc-ex-month').val(),
-            expiration_year: $('#cc-ex-year').val(),
-            security_code: $('#ex-csc').val(),
-            postal_code: $('#cc-zip').val()
-        };
+        $(".panel-body").html('');
         
-        // Tokenize credit card
-        balanced.card.create(payload, function (response) {
-            // Successful tokenization
-            if(response.status === 201 && response.data.uri) {
-                
-                //set form fields with Balanced data
-                $('#cc-name').val(response.data.name);
-                $('#cc-number').val(response.data.last_four);
-                $('#cc-ex-month').val(response.data.expiration_month);
-                $('#cc-ex-year').val(response.data.expiration_year);
-                $('#cc-zip').val(response.data.postal_code);
-                $('#cc-uri').val(response.data.uri);
-                $('#cc-type').val(response.data.card_type);
-
+        Stripe.card.createToken({
+            name: $('#cc-name').val(),
+            number: $('#cc-number').val(),
+            exp_month: $('#cc-ex-month').val(),
+            exp_year: $('#cc-ex-year').val(),
+            cvc: $('#ex-csc').val()
+        }, stripeResponseHandler);
+        
+        function stripeResponseHandler(status, response) {
+            if (response.error) {
+                // show the errors on the form
+                $('.panel-body').append('=> ' + response.error.message + "<br>");
+                $('#response').slideDown(300);
+            } else {
+                               
+                $('#cc-number').val(response["card"]["last4"]);
+                $('#cc-uri').val(response['id']);
+                $('#cc-type').val(response["card"]["type"]);              
                 // unbind prevent default and submit form
                 $("#user-form").unbind("submit", preventDefault);
                 $("#user-form").submit();
-                
-            } else {
-               // Failed to tokenize, your error logic here
-               var errorJSON = JSON.stringify(response, false, 4);
-               var obj = jQuery.parseJSON(errorJSON);
-
-                $.each(obj.error, function(key, value){
-                   //alert(key);
-                  $('.panel-body').append('=> ' + value + "<br>");
-                });
-               
             }
-
-            $('#response').slideDown(300);
-        });
+        }
     });
     
-    ////
-    // Click event for tokenize bank account
-    ////
-    $('#ba-submit').click(function (e) {
-        e.preventDefault();
-
-        $('#response').hide();
-        $( ".panel-body" ).html('');
-
-        var payload = {
-            name: $('#ba-name').val(),
-            account_number: $('#ba-number').val(),
-            routing_number: $('#ba-routing').val(),
-            type: $('#ba-type').val()
-        };
-
-        // Tokenize bank account
-        balanced.bankAccount.create(payload, function (response) {
-            // Successful tokenization
-            if(response.status === 201 && response.data.uri) {
-                //set form fields with Balanced data
-                $('#ba-name').val(response.data.name);
-                $('#ba-routing').val(response.data.routing_number);
-                $('#ba-type').val(response.data.type);
-                $('#ba-uri').val(response.data.uri);
-                // unbind prevent default and submit form
-                $("#user-form").unbind("submit", preventDefault);
-                $("#user-form").submit();
-            } else {
-                // Failed to tokenize, your error logic here
-                   // Failed to tokenize, your error logic here
-               var errorJSON = JSON.stringify(response, false, 4);
-               var obj = jQuery.parseJSON(errorJSON);
-
-                $.each(obj.error, function(key, value){
-                   //alert(key);
-                  $('.panel-body').append('=> ' + value + "<br>");
-                });
-               
-            }
-            
-            $('#response').slideDown(300);
-        });
-    });
-    
-
-/*
-    ////
     // Simply populates credit card and bank account fields with test data
-    ////
-    $('#populate').click(function () {
+/*    $('#populate').click(function () {
         $(this).attr("disabled", true);
 
         $('#cc-name').val('John Doe');
@@ -131,15 +58,7 @@ $(document).ready(function () {
         $('#cc-ex-month').val('12');
         $('#cc-ex-year').val('2020');
         $('#ex-csc').val('123');
-
-        // For test, but not using JS for getting token
-        $('#ba-name').val('John Doe');
-        $('#ba-number').val('<redacted_phone_number>');
-        $('#ba-routing').val('321174851');
     });
 */
-
-
-
 
 });

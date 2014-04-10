@@ -4,13 +4,14 @@
   <%= stylesheet_link_tag "forms.css" %>
 <% end %>
 
-<%= content_for :head_script do %>
-  <script type="text/javascript" src="https://js.balancedpayments.com/v1/balanced.js"></script>
-  <%= javascript_include_tag "tokenize.js" %>
+<% if current_user.user_level == 0 %>
+    <%= content_for :head_script do %>
+      <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+      <%= javascript_include_tag "tokenize.js" %>
+    <% end %>
 <% end %>
-  
-<body class="error-body no-top lazy" style="background-color: gray"> 
 
+<body class="error-body no-top lazy" style="background-color: gray"> 
 
 <%= render 'shared/header' %>
 
@@ -21,13 +22,32 @@
   <%#<button type="button" id="populate" class="btn btn-default pull-right" style="margin-bottom: 20px;">Populate Test Data</button>%>
   
   <% if current_user.user_level == 0 and current_user.customer_uri.blank? %>
-        <%= render "user_information" %>
-  <% elsif current_user.user_level == 1 and current_user.customer_uri.blank? %>
+          <%= render "user_information" %>        
+  <% elsif current_user.user_level == 1 and current_user.business_name.blank? %>
         <%= render "merchant_information" %>
+  <% elsif current_user.user_level == 1 and current_user.stripe_access_token.blank? %>
+
+    <div class="container">
+    <div class="row login-container animated fadeInUp">  
+        <div class="col-md-7 col-md-offset-2 tiles white no-padding">
+     <div class="p-t-30 p-l-40 p-b-20 xs-p-t-10 xs-p-l-10 xs-p-b-10"> 
+          <h3 class="normal">Payment Information</h3>
+          <p class="normal">To start receiving payments, please create and connect your Rhombus account to <a href="https://www.stripe.com">Stripe Payments</a></p>
+          <p class="normal">This generally needs to be done once.</p> <br>
+          <%= link_to "Connect with Stripe", user_omniauth_authorize_path(:stripe_connect), class: "btn btn-primary btn-large" %><br><br>
+          <br>
+                        <p>
+                          <img src="<%= asset_path 'outline.png' %>" align="middle" />   
+                          </p>
+          
+        </div>        
+        </div>
+      </div>
+    </div>
+
   <% else %>
         <%= render "entire_profile" %>
   <% end %>
-
 
 </body>
 

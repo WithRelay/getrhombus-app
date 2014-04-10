@@ -1,4 +1,4 @@
-<%= render "balanced_error" %>
+<%= render "error" %>
 
 
    <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10">
@@ -20,7 +20,7 @@
                       </div>
 
                       <div class="col-md-6 col-sm-6">
-      <%= f.select(:expiration_year, [['2013', "2013"], ['2014', "2014"], ['2015', "2015"], ['2016', "2016"], ['2017', "2017"], ['2018', "2018"], ['2019', "2019"], ['2020', "2020"], ['2021', "2021"], ['2022', "2022"], ['2023', "2023"]], {}, :class => "form-control", :id => "cc-ex-year") %>
+      <%= f.select(:expiration_year, [['2014', "2014"], ['2015', "2015"], ['2016', "2016"], ['2017', "2017"], ['2018', "2018"], ['2019', "2019"], ['2020', "2020"], ['2021', "2021"], ['2022', "2022"], ['2023', "2023"]], {}, :class => "form-control", :id => "cc-ex-year") %>
                       </div>
                       </div>
                     
@@ -30,10 +30,6 @@
 
                         <input name="" type="text"  id="ex-csc" class="form-control" placeholder="Security Code">
 
-                      </div>
-                      <div class="col-md-6 col-sm-6">
-            
-                     <%= f.text_field :zip_code, type: "text", class: "form-control", placeholder: "Zip code", id: "cc-zip" %>                       
                       </div>
                     </div>
 
@@ -60,4 +56,10 @@
                         <div class="col-md-6 col-sm-6" style="margin-bottom:15px; margin-top: 10px;">
                           <a id="Prev" class="btn btn-default btn-block">Edit Login Info</a>      
                           </div>
+
+
+                        <div class="col-md-6 col-sm-6" style="margin-bottom:15px; margin-top: 10px;">
+                          <img src="<%= asset_path 'outline.png' %>" align="middle" />   
+                          </div>
+                      
                     </div>  

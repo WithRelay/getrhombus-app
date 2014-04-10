@@ -15,8 +15,8 @@ class MessagesController < ApplicationController
 	end
 
 	def receive_text_message
-		#params[:to] = "<redacted_phone_number>"
-		#params[:msisdn] = "<redacted_phone_number>" 			# "<redacted_phone_number>"
+		params[:to] = "<redacted_phone_number>"
+		params[:msisdn] = "<redacted_phone_number>" 			# "<redacted_phone_number>"
 		head :ok, :content_type => 'text/html'		 #render :status => 200						# for nexmo
 
 		if params[:text] != ""        				# Ensure there is a text query string
@@ -48,33 +48,31 @@ class MessagesController < ApplicationController
 							@message = Message.new
 							@message.nexmo_send_text_message(17, params[:to], params[:msisdn], "Thank you for sending a payment with rhombus. Please follow the link below to complete your account, and resend your payment. Thanks! => www.getrhombus.com/signin")
 						else
-=begin
+
 							# if user and uri exist, proceed to payment
 							@customer_transaction = Transaction.new
-
-							# could have returned merchant object here...another option to avoid search again in merchant credit call
-							debit_data = @customer_transaction.balanced_debit_customer_card(amount, @user, params[:to], text)
+							debit_data = @customer_transaction.charge_customer_card(amount, @user, params[:to], text)
 							save_inbound_text(request.query_string, msg_code = 1, debit_data[0])
 							
-							# proceed to send credit to merchant if no error
+							# if no error from api or saving process, proceed to save transaction details for merchant
 							if debit_data != "failed"
 								@merchant_transaction = Transaction.new
-								credit_data = @merchant_transaction.balanced_credit_merchant_bank_account(debit_data, @user, params[:to], text)
+								credit_data = @merchant_transaction.merchant_transaction_details(debit_data, @user, text)
 								
-								if credit_data != "failed"
+								# if credit_data != "failed"					# saved successfully that is
 									# set the merchant transaction id in the customer referenced transaction id
-									@customer_transaction.referenced_merchant_transaction_id = credit_data[0]#@merchant_transaction.id
+									@customer_transaction.referenced_merchant_transaction_id = credit_data[0] # or @merchant_transaction.id
 									@customer_transaction.save
 
-									# for cash out, save customer and merchant transaction ids
+									# Facilitation info. Save customer and merchant transaction ids
 									@marketplace_transaction = Transaction.new
-									@marketplace_transaction.owner_transaction_info(debit_data, credit_data, @user, text)#@merchant_transaction.id, @user, text)
-								end
+									@marketplace_transaction.owner_transaction_details(debit_data, credit_data, @user, text)#@merchant_transaction.id, @user, text)
+								# end
 							end	
-=end
-							@message = Message.new
-							# see number 19 for payment system outage
-						    @message.nexmo_send_text_message(19, params[:to], params[:msisdn], "Thank you for sending a payment with rhombus. We're currently experiencing a system outage. We will notify you once the outage is resolved. Thanks!")
+
+							# see number 19. Used for payment system outage
+							#@message = Message.new							
+						    # @message.nexmo_send_text_message(19, params[:to], params[:msisdn], "Thank you for sending a payment with rhombus. We're currently experiencing a system outage. We will notify you once the outage is resolved. Thanks!")
 						end					
 					end
 

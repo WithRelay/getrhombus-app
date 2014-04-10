@@ -19,7 +19,7 @@ Rhombus::Application.routes.draw do
   #match 'contact' => 'messages#new', :as => 'contact', :via => :get
   #match 'contact' => 'messages#create', :as => 'contact', :via => :post
 
-  devise_for :users, :controllers => {:registrations => "registrations"}
+  devise_for :users, :controllers => {:registrations => "registrations", :omniauth_callbacks => "omniauth_callbacks" }
   
   devise_scope :user do
     get "signup", :to => "devise/registrations#new"
