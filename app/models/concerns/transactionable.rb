@@ -11,4 +11,5 @@ module Transactionable
       break unless Transaction.unscoped.exists?(transaction_number: random_token)
     end
     random_number
+  end
 end
