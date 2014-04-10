@@ -54,7 +54,8 @@ class User < ActiveRecord::Base
         body = e.json_body
         err  = body[:error]
 
-        owner = User.find_by(email: '<redacted_email>')                        # for development
+        #owner = User.find_by(email: '<redacted_email>')                        # for development
+        owner = User.find_by(email: '<redacted_email>')                        # for prod test
         #owner = User.find_by(email: '<redacted_email>')                # for production
 
         @message = Message.new
