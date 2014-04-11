@@ -6,33 +6,31 @@ class Transaction < ActiveRecord::Base
   has_one :message
   belongs_to :user, counter_cache: true
 
-  def charge_customer_card(amount, user, rhombus_number, message) 
+  def charge_customer_card(amount, merchant, user, message) 
   	
     begin
     
-    # find merchant with rhombus number
-  	merchant = User.find_by(rhombus_number: rhombus_number)
-  	tax_rate = (((merchant.tax_rate.to_f)/100) + 1)                     # apply tax, default is 0
-  	amount_with_taxes = (amount * tax_rate).round(0)			
-    rhombus_fee = (0.006 * amount_with_taxes).round(0)
+    	tax_rate = (((merchant.tax_rate.to_f)/100) + 1)                     # apply tax, default is 0
+    	amount_with_taxes = (amount * tax_rate).round(0)			
+      rhombus_fee = (0.006 * amount_with_taxes).round(0)
 
-    # Create the charge on Stripe's servers
-    tkn = Stripe::Token.create(
-          {:customer => user.customer_uri},
-          merchant.stripe_access_token  # user's access token from the Stripe Connect flow
-    )
+      # Create the charge on Stripe's servers
+      tkn = Stripe::Token.create(
+            {:customer => user.customer_uri},
+            merchant.stripe_access_token  # user's access token from the Stripe Connect flow
+      )
 
-    response = Stripe::Charge.create({
-          :amount => amount_with_taxes, # in cents
-          :currency => "usd",
-          :card => tkn.id,
-          :description => "Payment from #{user.email}. Card name: #{user.card_name}. Last four: #{user.last_four}.",
-          :application_fee => rhombus_fee
-        },
-        merchant.stripe_access_token                    # merchants's access token from the Stripe Connect flow
-    )
+      response = Stripe::Charge.create({
+            :amount => amount_with_taxes, # in cents
+            :currency => "usd",
+            :card => tkn.id,
+            :description => "Payment from #{user.email}. Card name: #{user.card_name}. Last four: #{user.last_four}.",
+            :application_fee => rhombus_fee
+          },
+          merchant.stripe_access_token                    # merchants's access token from the Stripe Connect flow
+      )
 
-      amount_in_hundreds = sprintf("%.2f", amount.to_f/100) 
+        amount_in_hundreds = sprintf("%.2f", amount.to_f/100) 
 
     rescue Stripe::CardError => e
       # Since it's a decline, Stripe::CardError will be caught
@@ -85,35 +83,29 @@ class Transaction < ActiveRecord::Base
       self.receipt_sent_at = Time.zone.now                       # change this later
       self.save                                                  # Put a save check here later
       # should limit data carried in merchant...memory
-      return self.id, amount_in_hundreds, amount_with_taxes_in_hundreds, merchant, sprintf("%.2f", rhombus_fee.to_f/100), response.id
+      return self.id, amount_in_hundreds, amount_with_taxes_in_hundreds, sprintf("%.2f", rhombus_fee.to_f/100), response.id
     end
   end
    
-  def merchant_transaction_details(debit_data, user, message)
-    # can find merchant if I pass rhombus number => User.find_by(rhombus_number: rhombus_number)
-    merchant = debit_data[3]
-    self.save_transaction(transaction_uri: debit_data[5], transaction_type: 2, amount: debit_data[1],
-     amount_less_fees: debit_data[2].to_f - debit_data[4].to_f, 
+  def merchant_transaction_details(debit_data, merchant, user, message)
+    self.save_transaction(transaction_uri: debit_data[4], transaction_type: 2, amount: debit_data[1],
+     amount_less_fees: debit_data[2].to_f - debit_data[3].to_f, 
         description: "Payment from #{user.email}. Card name: #{user.card_name}. Last four: #{user.last_four}.", 
         from: user.phone_number, to: merchant.rhombus_number, tax_rate: merchant.tax_rate,
-        transaction_number: debit_data[5],
+        transaction_number: debit_data[4],
         # need to grab this info from balanced ?? #account_number: "", account_type: "", account_name: "", routing_number: ""
         referenced_user_id: user.id, referenced_customer_transaction_id: debit_data[0], last_four: user.last_four,
         user_id: merchant.id, notes: message, amount_with_taxes: debit_data[2])          
     return self.id                                              # Put a save check here later
   end
 
-   def owner_transaction_details(debit_data, credit_data, user, message)  # merchant_transaction_id, user, message)
+   def owner_transaction_details(debit_data, credit_data, merchant, user, message)  
       
       #owner = User.find_by(email: '<redacted_email>')                        # for development
-      owner = User.find_by(email: '<redacted_email>')                # for production
+      owner = User.find_by(email: '<redacted_email>')                  # for production
 
-      # or db query to retreive data rather than passing it
-      # merchant_id = Transaction.find_by(id: merchant_transaction_id).user_id
-      # User.find_by(id: merchant_id)
-      merchant = debit_data[3]      
-      self.save_transaction(transaction_uri: debit_data[5], transaction_type: 0,
-        amount: debit_data[4], amount_less_fees: debit_data[2].to_f - debit_data[4].to_f, transaction_number: debit_data[5],
+      self.save_transaction(transaction_uri: debit_data[4], transaction_type: 0,
+        amount: debit_data[3], amount_less_fees: debit_data[2].to_f - debit_data[3].to_f, transaction_number: debit_data[4],
         description: "Payment from #{user.email}. Name on card: #{user.card_name}. Last four: #{user.last_four} to #{merchant.email}", 
         from: user.phone_number, to: merchant.rhombus_number, tax_rate: merchant.tax_rate, last_four: user.last_four,
         referenced_user_id: user.id, referenced_customer_transaction_id: debit_data[0], user_id: owner.id, notes: message, 
