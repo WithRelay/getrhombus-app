@@ -21,7 +21,8 @@ div {
 }
 
 .navbar-default .navbar-brand {
-   color: #449bb5;
-   font-family: Raleway;
+  color: black;
+  
+   font-family: Montserrat;
    font-weight:bold
 }
