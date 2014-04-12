@@ -48,7 +48,7 @@ class MessagesController < ApplicationController
 							@message = Message.new
 							@message.nexmo_send_text_message(17, params[:to], params[:msisdn], "Thank you for sending a payment with Rhombus. Please follow the link below to complete your account, and resend your payment. Thanks! => www.getrhombus.com/signin")
 						else 
-							
+							# change this to if statement##################################################
 							@merchant = User.find_by(rhombus_number: params[:to])
 
 							if @merchant.stripe_access_token.blank?
