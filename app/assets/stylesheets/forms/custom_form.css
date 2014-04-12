@@ -19,3 +19,9 @@ div {
 {
     border: none;/*1px solid #FAAFBA !important;*/
 }
+
+.navbar-default .navbar-brand {
+   color: #449bb5;
+   font-family: Raleway;
+   font-weight:bold
+}
