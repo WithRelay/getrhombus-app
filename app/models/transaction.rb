@@ -88,6 +88,9 @@ class Transaction < ActiveRecord::Base
   end
    
   def merchant_transaction_details(debit_data, merchant, user, message)
+
+    amount_less_fees = debit_data[2] - debit_data[3].to_f - (((debit_data[2] * 0.029) - 0.3).round(2))
+
     self.save_transaction(transaction_uri: debit_data[4], transaction_type: 2, amount: debit_data[1],
      amount_less_fees: debit_data[2].to_f - debit_data[3].to_f, 
         description: "Payment from #{user.email}. Card name: #{user.card_name}. Last four: #{user.last_four}.", 
@@ -100,12 +103,14 @@ class Transaction < ActiveRecord::Base
   # need to grab this info from balanced ?? #account_number: "", account_type: "", account_name: "", routing_number: ""
 
    def owner_transaction_details(debit_data, credit_data, merchant, user, message)  
+
+        amount_less_fees = debit_data[2] - debit_data[3].to_f - (((debit_data[2] * 0.029) - 0.3).round(2))
       
       #owner = User.find_by(email: '<redacted_email>')                        # for development
       owner = User.find_by(email: '<redacted_email>')                  # for production
 
       self.save_transaction(transaction_uri: debit_data[4], transaction_type: 0,
-        amount: debit_data[3], amount_less_fees: debit_data[2].to_f - debit_data[3].to_f, transaction_number: debit_data[4],
+        amount: debit_data[3], amount_less_fees: amount_less_fees, transaction_number: debit_data[4],
         description: "Payment from #{user.email}. Name on card: #{user.card_name}. Last four: #{user.last_four} to #{merchant.email}", 
         from: user.phone_number, to: merchant.rhombus_number, tax_rate: merchant.tax_rate, last_four: user.last_four,
         referenced_user_id: user.id, referenced_customer_transaction_id: debit_data[0], user_id: owner.id, notes: message, 

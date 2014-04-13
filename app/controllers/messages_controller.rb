@@ -77,7 +77,7 @@ class MessagesController < ApplicationController
 										@marketplace_transaction.owner_transaction_details(debit_data, credit_data, @merchant, @user, text)#@merchant_transaction.id, @user, text)
 									# end
 								else
-									#return
+									return
 								end	
 								# see number 20. Used for payment system outage
 								# @message = Message.new							
