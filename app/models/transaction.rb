@@ -92,12 +92,12 @@ class Transaction < ActiveRecord::Base
      amount_less_fees: debit_data[2].to_f - debit_data[3].to_f, 
         description: "Payment from #{user.email}. Card name: #{user.card_name}. Last four: #{user.last_four}.", 
         from: user.phone_number, to: merchant.rhombus_number, tax_rate: merchant.tax_rate,
-        transaction_number: debit_data[4],
-        # need to grab this info from balanced ?? #account_number: "", account_type: "", account_name: "", routing_number: ""
-        referenced_user_id: user.id, referenced_customer_transaction_id: debit_data[0], last_four: user.last_four,
+        transaction_number: debit_data[4], referenced_user_id: user.id, referenced_customer_transaction_id: debit_data[0], 
+        last_four: user.last_four,
         user_id: merchant.id, notes: message, amount_with_taxes: debit_data[2])          
     return self.id                                              # Put a save check here later
   end
+  # need to grab this info from balanced ?? #account_number: "", account_type: "", account_name: "", routing_number: ""
 
    def owner_transaction_details(debit_data, credit_data, merchant, user, message)  
       
@@ -109,7 +109,7 @@ class Transaction < ActiveRecord::Base
         description: "Payment from #{user.email}. Name on card: #{user.card_name}. Last four: #{user.last_four} to #{merchant.email}", 
         from: user.phone_number, to: merchant.rhombus_number, tax_rate: merchant.tax_rate, last_four: user.last_four,
         referenced_user_id: user.id, referenced_customer_transaction_id: debit_data[0], user_id: owner.id, notes: message, 
-        amount_with_taxes: debit_data[2], referenced_merchant_transaction_id: credit_data[0], 
+        amount_with_taxes: debit_data[2], referenced_merchant_transaction_id: credit_data, 
         referenced_merchant_id: merchant.id)                                         # Put a save check here later
     end
 

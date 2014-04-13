@@ -69,7 +69,7 @@ class MessagesController < ApplicationController
 									
 									# if credit_data != "failed"					# saved successfully that is
 										# set the merchant transaction id in the customer referenced transaction id
-										@customer_transaction.referenced_merchant_transaction_id = credit_data[0] # or @merchant_transaction.id
+										@customer_transaction.referenced_merchant_transaction_id = credit_data # or @merchant_transaction.id
 										@customer_transaction.save
 
 										# Facilitation info. Save customer and merchant transaction ids
@@ -77,7 +77,7 @@ class MessagesController < ApplicationController
 										@marketplace_transaction.owner_transaction_details(debit_data, credit_data, @merchant, @user, text)#@merchant_transaction.id, @user, text)
 									# end
 								else
-									return
+									#return
 								end	
 								# see number 20. Used for payment system outage
 								# @message = Message.new							
