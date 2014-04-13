@@ -11,8 +11,8 @@ class Transaction < ActiveRecord::Base
     begin
     
     	tax_rate = (((merchant.tax_rate.to_f)/100) + 1)                     # apply tax, default is 0
-    	amount_with_taxes = (amount * tax_rate).round(0)			
-      rhombus_fee = (0.006 * amount_with_taxes).round(0)
+    	amount_with_taxes = (amount.to_f * tax_rate).round(0)			
+      rhombus_fee = (0.006 * amount_with_taxes.to_f).round(0)
 
       # Create the charge on Stripe's servers
       tkn = Stripe::Token.create(
@@ -89,7 +89,7 @@ class Transaction < ActiveRecord::Base
    
   def merchant_transaction_details(debit_data, merchant, user, message)
 
-    amount_less_fees = debit_data[2] - debit_data[3].to_f - (((debit_data[2] * 0.029) - 0.3).round(2))
+    amount_less_fees = debit_data[2].to_f - debit_data[3].to_f - (((debit_data[2].to_f * 0.029) - 0.3).round(2))
 
     self.save_transaction(transaction_uri: debit_data[4], transaction_type: 2, amount: debit_data[1],
      amount_less_fees: amount_less_fees, 
@@ -104,7 +104,7 @@ class Transaction < ActiveRecord::Base
 
    def owner_transaction_details(debit_data, credit_data, merchant, user, message)  
 
-        amount_less_fees = debit_data[2] - debit_data[3].to_f - (((debit_data[2] * 0.029) - 0.3).round(2))
+        amount_less_fees = debit_data[2].to_f - debit_data[3].to_f - (((debit_data[2].to_f * 0.029) - 0.3).round(2))
       
       #owner = User.find_by(email: '<redacted_email>')                        # for development
       owner = User.find_by(email: '<redacted_email>')                  # for production
