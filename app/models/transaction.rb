@@ -92,7 +92,7 @@ class Transaction < ActiveRecord::Base
     amount_less_fees = debit_data[2] - debit_data[3].to_f - (((debit_data[2] * 0.029) - 0.3).round(2))
 
     self.save_transaction(transaction_uri: debit_data[4], transaction_type: 2, amount: debit_data[1],
-     amount_less_fees: debit_data[2].to_f - debit_data[3].to_f, 
+     amount_less_fees: amount_less_fees, 
         description: "Payment from #{user.email}. Card name: #{user.card_name}. Last four: #{user.last_four}.", 
         from: user.phone_number, to: merchant.rhombus_number, tax_rate: merchant.tax_rate,
         transaction_number: debit_data[4], referenced_user_id: user.id, referenced_customer_transaction_id: debit_data[0], 
