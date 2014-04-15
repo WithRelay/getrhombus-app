@@ -89,7 +89,7 @@ class Transaction < ActiveRecord::Base
    
   def merchant_transaction_details(debit_data, merchant, user, message)
 
-    amount_less_fees = debit_data[2].to_f - debit_data[3].to_f - (((debit_data[2].to_f * 0.029) - 0.3).round(2))
+    amount_less_fees = debit_data[2].to_f - debit_data[3].to_f - (((debit_data[2].to_f * 0.029) + 0.3).round(2))
 
     self.save_transaction(transaction_uri: debit_data[4], transaction_type: 2, amount: debit_data[1],
      amount_less_fees: amount_less_fees, 
@@ -104,7 +104,7 @@ class Transaction < ActiveRecord::Base
 
    def owner_transaction_details(debit_data, credit_data, merchant, user, message)  
 
-        amount_less_fees = debit_data[2].to_f - debit_data[3].to_f - (((debit_data[2].to_f * 0.029) - 0.3).round(2))
+        amount_less_fees = debit_data[2].to_f - debit_data[3].to_f - (((debit_data[2].to_f * 0.029) + 0.3).round(2))
       
       #owner = User.find_by(email: '<redacted_email>')                        # for development
       owner = User.find_by(email: '<redacted_email>')                  # for production

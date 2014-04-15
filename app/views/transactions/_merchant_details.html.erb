@@ -1,36 +1,32 @@
                                 <tr>
-                        	       <td>From:</td>
-                            	   <td><%= @transaction.card_name %></td>
+                        	       <td>From: </td>
+                            	   <td><%= @transaction.from %></td>
                                </tr>
                                <tr>
-                                    <td>Description:</td>
+                                    <td>Text Description: </td>
                                     <td><%= @transaction.notes %></td>
                                 </tr>
                                 <tr>
-                                    <td>Customer Description:</td>
+                                    <td>Payment Description: </td>
                                     <td><%= @transaction.description %></td>
                                 </tr>
                                 <tr>
-                                    <td>Date:</td>
+                                    <td>Date: </td>
                                     <td><%= @transaction.created_at %> <%#.strftime("%e %b %y %H:%m %p") %></td>
                                 </tr>
                                 <tr>
-                                    <td>Description:</td>
-                                    <td><%= @transaction.notes %></td>
-                                </tr>
-                                <tr>
-                                    <td>Amount:</td>
+                                    <td>Amount Charged: </td>
                                     <td><%= number_to_currency(@transaction.amount_with_taxes) %></td>
                                 </tr>
                                 <tr>
-                                    <td>Paid:</td>
-                                    <td><%= number_to_currency(@transaction.amount) %></td>
+                                    <td>Amount Paid: </td>
+                                    <td><%= number_to_currency(@transaction.amount_less_fees) %></td>
                                 </tr>
                                 <tr>
-                                    <td>Transaction Number:</td>
+                                    <td>Customer Txn Number: </td>
                                     <td><%= @transaction.transaction_number %></td>
                                 </tr>
                                  <tr>
-                                    <td>Tax Rate:</td>
+                                    <td>Tax Rate Applied: </td>
                                     <td><%= @transaction.tax_rate %>%</td>
                                 </tr>
