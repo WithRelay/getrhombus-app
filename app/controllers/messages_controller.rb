@@ -39,14 +39,14 @@ class MessagesController < ApplicationController
 						# save in messages and send a response
 						save_inbound_text(request.query_string, msg_code = 6)
 						@message = Message.new
-						@message.nexmo_send_text_message(16, params[:to], params[:msisdn], "Thank you for sending a payment with Rhombus. Please follow the link below to create an account, and resend your payment. Thanks! => www.getrhombus.com/signup?num=#{params[:msisdn]}")
+						@message.nexmo_send_text_message(16, params[:to], params[:msisdn], "Thank you for sending a payment with Rhombus. Please follow the link below to create an account, and resend your payment. Thanks! => https://www.getrhombus.com/signup?num=#{params[:msisdn]}")
 						return
 					else						
 						
 						if @user.customer_uri.blank?
 							save_inbound_text(request.query_string, msg_code = 7)
 							@message = Message.new
-							@message.nexmo_send_text_message(17, params[:to], params[:msisdn], "Thank you for sending a payment with Rhombus. Please follow the link below to complete your account, and resend your payment. Thanks! => www.getrhombus.com/signin")
+							@message.nexmo_send_text_message(17, params[:to], params[:msisdn], "Thank you for sending a payment with Rhombus. Please follow the link below to complete your account, and resend your payment. Thanks! => https://www.getrhombus.com/signin")
 						else 
 							# change this to if statement##################################################
 							@merchant = User.find_by(rhombus_number: params[:to])
@@ -109,7 +109,7 @@ class MessagesController < ApplicationController
 				save_inbound_text(request.query_string, msg_code = 4)
 				@message = Message.new 				
 				@message.nexmo_send_text_message(14, params[:to], params[:msisdn], 
-					"Welcome to rhombus! Save this number to your phone for future payments :). Follow the link to complete your signup: https://www.getrhombus.com/signup?num=#{params[:msisdn]}")
+					"Welcome to rhombus! Save this number to your phone for future payments. Click the link to complete your signup: https://www.getrhombus.com/signup?num=#{params[:msisdn]}")
 			
 			else 	
 				
@@ -120,7 +120,7 @@ class MessagesController < ApplicationController
 				
 				@message = Message.new        		
 				@message.nexmo_send_text_message(15, params[:to], params[:msisdn], 
-					'Sorry we did not understand your text message :(. You can signup by texting "signup" or make payments by texting "amount, description". Thanks!')
+					'Sorry we did not understand your text message :(. You can signup by texting "signup" or make payments by texting "$amount, description". Thanks!')
 			
 			end
 		end
