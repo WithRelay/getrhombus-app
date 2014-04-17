@@ -109,7 +109,7 @@ class MessagesController < ApplicationController
 				save_inbound_text(request.query_string, msg_code = 4)
 				@message = Message.new 				
 				@message.nexmo_send_text_message(14, params[:to], params[:msisdn], 
-					"Welcome to rhombus! Save this number to your phone for future payments :). Follow the link to complete your signup: www.getrhombus.com/signup?num=#{params[:msisdn]}")
+					"Welcome to rhombus! Save this number to your phone for future payments :). Follow the link to complete your signup: https://www.getrhombus.com/signup?num=#{params[:msisdn]}")
 			
 			else 	
 				

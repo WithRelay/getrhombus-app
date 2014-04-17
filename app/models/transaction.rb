@@ -62,7 +62,7 @@ class Transaction < ActiveRecord::Base
               "A payment of $#{amount_in_hundreds} was sent to #{merchant.business_name}. Thanks! :)")
       else
         @message.nexmo_send_text_message(11, merchant.rhombus_number, user.phone_number, 
-          "A payment of $#{amount_with_taxes_in_hundreds} including taxes set by #{merchant.business_name} was sent. Thanks! :)")
+          "A payment of $#{amount_with_taxes_in_hundreds} including taxes and fees set by #{merchant.business_name} was sent. Thanks! :)")
       end
 
         # save transaction
