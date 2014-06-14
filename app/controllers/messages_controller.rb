@@ -20,7 +20,7 @@ class MessagesController < ApplicationController
 		render :text => ""							# for nexmo
 
 		if params[:text] != ""        				# Ensure there is a text query string
-
+var.split(/, */, 2).first.gsub(/\s+/, "")[1..-1]
 			text = params[:text].strip
 			amount = get_number(text)
 			
