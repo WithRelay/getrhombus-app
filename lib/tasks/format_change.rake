@@ -4,11 +4,12 @@ task :format_change => :environment do
 
 	require 'uri'	
 	api_key: '<redacted_api_key>'
-	api_secret: '<redacted_api_secret>'
+	api_secret: '<redacted_api_secret>'	
+    message = "Hi there! We've updated our payment format to make it more intuitive. You can now send a payment without including a comma! For example '$50 for offering' or '$20 2 cheese burgers and a diet coke'. Thank you for using Rhombus!"
+
+=begin
+	# RCCG NWA and WOLC
 	from: '<redacted_phone_number>'
-	
-	# message = "Hi there, pls sign in and update your card info on Rhombus getrhombus.com/signin - Also do save this number as NWA updated rhombus number. Then you can give your tithe (or offering) anytime by simply texting '$100, tithe'. Thanks! :)"
-	
 	numbers = [ "<redacted_phone_number>", "<redacted_phone_number>", "<redacted_phone_number>", "<redacted_phone_number>", '<redacted_phone_number>', '<redacted_phone_number>', 
 		        "<redacted_phone_number>", "<redacted_phone_number>", "<redacted_phone_number>", "<redacted_phone_number>", "<redacted_phone_number>", "<redacted_phone_number>", 
 		        "<redacted_phone_number>", "<redacted_phone_number>", "<redacted_phone_number>", "<redacted_phone_number>", "<redacted_phone_number>", "<redacted_phone_number>", 
@@ -17,11 +18,14 @@ task :format_change => :environment do
 		        "<redacted_phone_number>", "<redacted_phone_number>", "<redacted_phone_number>", "<redacted_phone_number>", "<redacted_phone_number>", "<redacted_phone_number>",
 		        "<redacted_phone_number>", "<redacted_phone_number>", "<redacted_phone_number>", "<redacted_phone_number>", "<redacted_phone_number>", "<redacted_phone_number>",
 		        "<redacted_phone_number>", "<redacted_phone_number>", "<redacted_phone_number>", "<redacted_phone_number>", "<redacted_phone_number>", "<redacted_phone_number>" ]
+=end
 
-    # RCCGNA # <redacted_phone_number>
+    # RCCGNA 
+    # from: '<redacted_phone_number>'
 	# numbers = ["<redacted_phone_number>", "<redacted_phone_number>", "<redacted_phone_number>"]
 	
-	# Salvation center # <redacted_phone_number>
+	# Salvation center 
+	# from: '<redacted_phone_number>'
 	# numbers = ["<redacted_phone_number>", "<redacted_phone_number>", "<redacted_phone_number>"]
 
 	numbers.each do |to|
