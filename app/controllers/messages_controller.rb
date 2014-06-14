@@ -152,7 +152,8 @@ class MessagesController < ApplicationController
 
 	# get the amount for payment
 	def get_number(var)
-		return var.split(" ", 2).first[1..-1]
+		#return var.split(" ", 2).first[1..-1]
+		return (var.split(/, */, 2).first.gsub(/\s+/, "")[1..-1]
 	end
 
 	# save text message 
