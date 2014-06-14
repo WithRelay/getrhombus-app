@@ -20,7 +20,7 @@ class MessagesController < ApplicationController
 		render :text => ""							# for nexmo
 
 		if params[:text] != ""        				# Ensure there is a text query string
-var.split(/, */, 2).first.gsub(/\s+/, "")[1..-1]
+
 			text = params[:text].strip
 			amount = get_number(text)
 			
@@ -152,14 +152,13 @@ var.split(/, */, 2).first.gsub(/\s+/, "")[1..-1]
 
 	# get the amount for payment
 	def get_number(var)
-		#return var.split(" ", 2).first[1..-1]
-		return (var.split(/, */, 2).first.gsub(/\s+/, "")[1..-1])
+		return var.split(" ", 2).first[1..-1]
 	end
 
 	# save text message 
 	def save_inbound_text(query, msg_code, transaction_id = 0)						# if not for payment, transaction_id = 0
 		query_hash = Rack::Utils.parse_nested_query(query)      # deal with some weird params from nexmo
-		@message = Message.new 							split(" ", 2).first[1..-1]		
+		@message = Message.new 
 		@message.save_text(from: query_hash['msisdn'], to: query_hash['to'], 
 			network_code: query_hash["network-code"], messageId: query_hash['messageId'], message_timestamp: query_hash["message-timestamp"],
 			text: query_hash['text'], message_code: msg_code, transaction_id: transaction_id)
