@@ -59,7 +59,7 @@ class User < ActiveRecord::Base
 
         @message = Message.new
         @message.nexmo_send_text_message(18, owner.rhombus_number, self.phone_number, 
-              "We were unable to update your card info on Rhombus because: #{err[:message]} Your previous card would still be used." )
+              "We were unable to update your card info on Rhombus because: #{err[:message]}.")
 
         Notification.token_failure_notification(err, self.email).deliver
         return false

@@ -512,7 +512,8 @@ span.iconset{
 }
 
 .iconset{
-	background: url('../img/icon/top-tray.png') no-repeat;
+	background: url(<%= asset_path "top-tray.png" %>) no-repeat;
+	top-trayx2
 	position: relative;
 	top: 1px;
 }
@@ -1178,7 +1179,8 @@ span.iconset{
   display: block;
   width: 8px;
   height: 25px;
-  background-image: url("../img/sidebar-menu-arrow.png");
+  /*
+  background-image: url("../img/sidebar-menu-arrow.png");*/
   float: right;
   position: absolute;
   right:-8px;
@@ -1339,7 +1341,7 @@ span.iconset{
 
 /*** Scroll to top *****/
 .scrollup{
-	background: url('../img/pullup.png') no-repeat;
+	/*background: url('../img/pullup.png') no-repeat;*/
 	background-position:0px 0px;
     width: 27px; height: 27px;
     position:fixed;
@@ -3202,7 +3204,7 @@ form legend,
 }
  .grid.simple .grid-title .tools a,.grid.solid .grid-title .tools a{
   	position:relative;
-	background: url('../img/icon/portlet-tray.png') no-repeat;
+  	background: url(<%= asset_path "portlet-tray.png" %>) no-repeat;
 	transition: all 0.1s linear 0s;
 }
 .grid.simple .grid-title .tools > a.remove, 
@@ -3340,7 +3342,7 @@ form legend,
   margin-top: 3px;
 }
 .grid.box .grid-title .tools a{
-  background:url(../img/icon/portlet-tray.png) no-repeat;
+  background: url(<%= asset_path "portlet-tray.png" %>) no-repeat;
   width:23px;
   height:23px
 }
@@ -3558,7 +3560,8 @@ form legend,
           transition: width 30.0s ease !important;
 }
 .status-icon{
-	background: url('../img/icon/status.png') no-repeat;
+	/*
+	background: url('../img/icon/status.png') no-repeat;*/
 	position: relative;
 	display:inline-block;
 	margin-right:10px;
@@ -3740,7 +3743,7 @@ div.DTTT_print_info p {
  
  .tiles .controller a{
   	position:relative;
-	background: url('../img/icon/portlet-tray.png') no-repeat;
+	background: url(<%= asset_path "portlet-tray.png" %>) no-repeat;
 	transition: all 0.1s linear 0s;	
 	display:inline-block;
 }
@@ -4091,7 +4094,7 @@ background-position: -95px -40px;
  
  .widget .controller a{
   	position:relative;
-	background: url('../img/icon/portlet-tray.png') no-repeat;
+	background: url(<%= asset_path "portlet-tray.png" %>) no-repeat;
 	transition: all 0.1s linear 0s;	
 	display:inline-block;
 }
@@ -4730,7 +4733,7 @@ border-bottom-right-radius: 3px;
 
 .nav .tools a{
   	position:relative;
-	background: url('../img/icon/portlet-tray.png') no-repeat;
+	background: url(<%= asset_path "portlet-tray.png" %>) no-repeat;
 	transition: all 0.1s linear 0s;
 }
 .nav .tools > a.remove, 

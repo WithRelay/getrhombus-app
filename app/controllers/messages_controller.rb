@@ -10,7 +10,7 @@ class MessagesController < ApplicationController
 	end
 
 	def receive_delivery_report
-		head :ok, :content_type => 'text/html'		# render :status => 200	
+		render :text => ""							# for nexmo
 		save_delivery_receipts(request.query_string)
 	end
 
@@ -39,14 +39,14 @@ class MessagesController < ApplicationController
 						# save in messages and send a response
 						save_inbound_text(request.query_string, msg_code = 6)
 						@message = Message.new
-						@message.nexmo_send_text_message(16, params[:to], params[:msisdn], "Thank you for sending a payment with Rhombus. Please follow the link below to create an account, and resend your payment. Thanks! => https://www.getrhombus.com/signup?num=#{params[:msisdn]}")
+						@message.nexmo_send_text_message(16, params[:to], params[:msisdn], "Please follow the link below to create an account and then resend your payment. Thanks! => https://www.getrhombus.com/signup?num=#{params[:msisdn]}")
 						return
 					else						
 						
 						if @user.customer_uri.blank?
 							save_inbound_text(request.query_string, msg_code = 7)
 							@message = Message.new
-							@message.nexmo_send_text_message(17, params[:to], params[:msisdn], "Thank you for sending a payment with Rhombus. Please follow the link below to complete your account, and resend your payment. Thanks! => https://www.getrhombus.com/signin")
+							@message.nexmo_send_text_message(17, params[:to], params[:msisdn], "Please follow the link below to complete your account and then resend your payment. Thanks! => https://www.getrhombus.com/signin")
 						else 
 							# change this to if statement##################################################
 							@merchant = User.find_by(rhombus_number: params[:to])
@@ -91,7 +91,7 @@ class MessagesController < ApplicationController
 					save_inbound_text(request.query_string, msg_code = 2)
 					@message = Message.new 							
 					@message.nexmo_send_text_message(12, params[:to], params[:msisdn], 
-						"Sorry, we are unable to make payments above 15,000 dollars :(. But you can send in smaller amounts. Thanks!")
+						"Sorry, we are unable to make payments above 15,000 dollars. But you can send in smaller amounts. Thanks!")
 				
 				else
 					
@@ -99,7 +99,7 @@ class MessagesController < ApplicationController
 					save_inbound_text(request.query_string, msg_code = 3)
 					@message = Message.new 											
 					@message.nexmo_send_text_message(13, params[:to], 
-						params[:msisdn], "Sorry, we are unable to make payments below 2 dollars. :(")
+						params[:msisdn], "Sorry, we are unable to make payments below 2 dollars.")
 				
 				end	
 			# for signing up
@@ -109,18 +109,18 @@ class MessagesController < ApplicationController
 				save_inbound_text(request.query_string, msg_code = 4)
 				@message = Message.new 				
 				@message.nexmo_send_text_message(14, params[:to], params[:msisdn], 
-					"Welcome to rhombus! Save this number to your phone for future payments. Click the link to complete your signup: https://www.getrhombus.com/signup?num=#{params[:msisdn]}")
+					"To start using Rhombus, follow the link to complete your signup: https://www.getrhombus.com/signup?num=#{params[:msisdn]}")
 			
 			else 	
 				
 				# for messages we cant parse sucessfully
 				# save in messages
 				save_inbound_text(request.query_string, msg_code = 5)
-				# until nexmo can give use concatenated messages
+				# until nexmo can give use concatenated messages..i think they do now (06/14/14)
 				
 				@message = Message.new        		
 				@message.nexmo_send_text_message(15, params[:to], params[:msisdn], 
-					'Sorry we did not understand your text message :(. You can signup by texting "signup" or make payments by texting "$amount, description". Thanks!')
+					'Sorry we did not understand your text. You can signup by texting "signup" or make payments by texting "$Amount Description". Thanks!')
 			
 			end
 		end
@@ -152,13 +152,13 @@ class MessagesController < ApplicationController
 
 	# get the amount for payment
 	def get_number(var)
-		return (var.split(/, */, 2).first.gsub(/\s+/, "")[1..-1])
+		return var.split(" ", 2).first[1..-1]
 	end
 
 	# save text message 
 	def save_inbound_text(query, msg_code, transaction_id = 0)						# if not for payment, transaction_id = 0
 		query_hash = Rack::Utils.parse_nested_query(query)      # deal with some weird params from nexmo
-		@message = Message.new 									
+		@message = Message.new 							split(" ", 2).first[1..-1]		
 		@message.save_text(from: query_hash['msisdn'], to: query_hash['to'], 
 			network_code: query_hash["network-code"], messageId: query_hash['messageId'], message_timestamp: query_hash["message-timestamp"],
 			text: query_hash['text'], message_code: msg_code, transaction_id: transaction_id)
