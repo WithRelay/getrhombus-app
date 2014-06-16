@@ -85,7 +85,7 @@ class User < ActiveRecord::Base
   def todays_stuff
     rhombus_number = self.rhombus_number          
     all_payments = self.transactions
-    todays_payments = all_payments.where(created_at: Time.zone.today)
+    todays_payments = all_payments.where("created_at >= ?", Time.zone.now.beginning_of_day)
     total_1, total_2 = 0, 0
     if self.user_level == 0      
       all_payments.each do |p|

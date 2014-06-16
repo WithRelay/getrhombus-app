@@ -14,7 +14,7 @@
                 <h4>Payment to <%= @merchant_business_name %></h4>
  
                 <p>Transaction # : <%= @transaction_number %><br>
-                Transaction Date : <%= Time.now.strftime("%m/%d/%y") %></p>
+                Transaction Date : <%= Time.now.strftime("%m/%d/%y") %></p><br>
             <table class="table">
               <thead>
                 <tr>
@@ -37,10 +37,9 @@
                 </tr>
               </tbody>
             </table>
-            <h5 class="text-right semi-bold text-black">Rhombus Payments<br>
-              6225 Gothic Ln, Bowie, MD 20720<br>
-              <redacted_email><br>
-              +1 202-403-9524</h5>
+            
+            <p>Yours,</p>
+            <h5 class="text-right semi-bold text-black">The Rhombus Team</h5>
             <br>
 
 
