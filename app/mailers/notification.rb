@@ -68,6 +68,7 @@ class Notification < ActionMailer::Base
     @user_phone_number = user.phone_number
     @card_name = user.card_name
     @last_four = user.last_four    
+    @card_type = user.card_type
 
     @merchant_rhombus_number = merchant.rhombus_number
     mail to: merchant.email, subject: "#{user.card_name} sent you a payment via Rhombus"
