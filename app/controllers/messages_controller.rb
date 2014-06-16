@@ -28,7 +28,7 @@ class MessagesController < ApplicationController
 
 				amount = to_cents(amount)
 
-				if amount >= 500 and amount <= 1500000
+				if amount >= 100 and amount <= 1500000
 
 					begin
 						# find the user
@@ -99,7 +99,7 @@ class MessagesController < ApplicationController
 					save_inbound_text(request.query_string, msg_code = 3)
 					@message = Message.new 											
 					@message.nexmo_send_text_message(13, params[:to], 
-						params[:msisdn], "Sorry, we are unable to make payments below 5 dollars.")
+						params[:msisdn], "Sorry, we are unable to make payments below a dollar.") #5 dollars.")
 				
 				end	
 			# for signing up
