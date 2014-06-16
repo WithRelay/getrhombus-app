@@ -54,7 +54,24 @@ class Notification < ActionMailer::Base
     @merchant_business_name = merchant_business_name
     @merchant_phone_number = merchant_phone_number
     @merchant_email = merchant_email
-  	mail to: user_email, subject: "Payment Confirmation - #{transaction_number}"
+  	mail to: user_email, subject: "Payment Confirmation - #{merchant_business_name}"
+  end
+
+  def send_merchant_receipt(debit_data, merchant, user, message, amount_less_fees)
+
+    @message = message
+    @transaction_number = debit_data[4]
+    @amount_with_taxes = debit_data[2]
+    @amount_less_fees = amount_less_fees
+
+    @user_email = user.email
+    @user_phone_number = user.phone_number
+    @card_name = user.card_name
+    @last_four = user.last_four    
+
+    @merchant_rhombus_number = merchant.rhombus_number
+    mail to: merchant.email, subject: "#{user.card_name} sent you a payment via Rhombus"
+
   end
 
 end

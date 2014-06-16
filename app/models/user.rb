@@ -1,6 +1,6 @@
 class User < ActiveRecord::Base
 
-  #Stripe.api_key: '<redacted_api_key>'       # for test
+  #Stripe.api_key: '<redacted_api_key>'      # for test
   Stripe.api_key: '<redacted_api_key>'       # for production
 
   # Include default devise modules. Others available are:
@@ -11,13 +11,16 @@ class User < ActiveRecord::Base
 
   #has_many :messages, dependent: :destroy
   has_many :transactions, dependent: :destroy
-  before_save :the_titleizer
-  before_create :set_merchant_business_phone                          # only create, cos they can change this in edit
+  before_save :the_titleizer, :check_phone_number_length
+  before_create :set_merchant_business_phone                   # only create, cos they can change this in edit
   after_create :set_rhombus_number, :send_welcome_email  
 
-  # still need a validation for edit
-  validates :phone_number, presence: true, :on => :create
   validates_presence_of :user_level, :message => "Please select what you want to do with Rhombus"
+  # still need a validation for edit
+  validates :phone_number, presence: true, 
+            numericality: { only_integer: true }, 
+            length: { minimum: 10 }, 
+            :on => :create
 
   # saves merchant info from stripe
   def from_omniauth(auth)
@@ -105,6 +108,13 @@ class User < ActiveRecord::Base
 
   private
 
+  def check_phone_number_length
+    # temp fix for users who leave US code out. would need to change this eventually
+    if self.user_level == 0 and self.phone_number.length == 10
+      self.phone_number = "1" + self.phone_number
+    end
+  end
+
   def set_rhombus_number
     if self.user_level == 1
       @rhombus_number = Message.new
@@ -114,7 +124,7 @@ class User < ActiveRecord::Base
   end
 
   def set_merchant_business_phone
-    # If a merchant is signing up, make the business number the phone number
+    # If a merchant is signing up, make business number the phone number
     # Would be useful when merchants can become regular users and vice versa
     if self.user_level == 1
       self.business_phone = self.phone_number
@@ -126,13 +136,10 @@ class User < ActiveRecord::Base
     self.first_name = self.first_name.strip.titleize unless self.first_name.blank?
     self.last_name = self.last_name.strip.titleize unless self.last_name.blank?
     self.card_name = self.card_name.strip.titleize unless self.card_name.blank?
-    self.business_name = self.business_name.strip.titleize unless self.business_name.blank?
     self.business_type = self.business_type.strip.titleize unless self.business_type.blank?
-    self.street_address = self.street_address.strip.titleize unless self.street_address.blank?
     self.city = self.city.strip.titleize unless self.city.blank?
     self.state_province = self.state_province.strip.upcase unless self.state_province.blank?
     self.country = self.country.strip.upcase unless self.country.blank?
-    self.account_name = self.account_name.strip.titleize unless self.account_name.blank?
   end
 
   def send_welcome_email

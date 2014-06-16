@@ -28,7 +28,7 @@ class MessagesController < ApplicationController
 
 				amount = to_cents(amount)
 
-				if amount >= 200 and amount <= 1500000
+				if amount >= 100 and amount <= 1500000
 
 					begin
 						# find the user
@@ -140,22 +140,20 @@ class MessagesController < ApplicationController
       params.require(:message).permit(:text)
     end
 
-    # As the name implies
     def is_number?(var)
   	   	true if Float(var) rescue false
 	end
 
-	# to cents per Balanced
 	def to_cents(var)
-		return ((var.to_f.round(2).abs)*100).to_i
+		#return ((var.to_f.round(2).abs)*100).to_i
+		# returns integer
+		return ((var.to_f.round(2).abs)*100).round
 	end
 
-	# get the amount for payment
 	def get_number(var)
 		return (var.split(" ", 2).first[1..-1])
 	end
 
-	# save text message 
 	def save_inbound_text(query, msg_code, transaction_id = 0)						# if not for payment, transaction_id = 0
 		query_hash = Rack::Utils.parse_nested_query(query)      # deal with some weird params from nexmo
 		@message = Message.new 

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+</head>
+<body>
+        <br>
+              <a href="https://www.getrhombus.com"><strong>Rhombus</strong></a><br>
+              
+              <h2>Payment Details</h2>
+
+                <p>Card Name : <%= @card_name %><br>
+                   Last Four : <%= @last_four %><br>
+                   Email : <%= @user_email %><br>
+                   Phone : <%= @user_phone_number %><br>
+                   Message : <%= @message %>
+                </p>         
+ 
+                <p>Transaction # : <%= @transaction_number %><br>
+                   Transaction Date : <%#= Time.now.strftime("%m/%d/%y") %> <%= Time.zone.now %>
+                </p>
+
+                <p>
+                   Amount paid out : <%= number_to_currency(@amount_less_fees) %> <br>           
+                   Amount with taxes (if applicable) : <%= number_to_currency(@amount_with_taxes) %>
+                </p>
+                
+                <p>
+                  Your Rhombus number : <%= @merchant_rhombus_number %>
+                </p>
+
+                <p>To see details of this transaction, log into your <a href="https://www.getrhombus.com/signin">dashboard</a>.If you have any questions regarding this transaction do not hesitate to contact us at <redacted_email>.
+                </p>
+
+
+            <h5 class="text-right semi-bold text-black">Rhombus Inc<br>
+              6225 Gothic Ln, Bowie, MD 20720<br>
+              <redacted_email><br>
+              +1 202-403-9524</h5>
+            <br>
+</body>
+</html>
