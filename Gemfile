@@ -16,7 +16,11 @@ gem 'omniauth-stripe-connect'
 # For Authorization
 gem "cancan"
 
+# bread & butter
 gem "stripe"
+
+# App monitoring
+gem 'newrelic_rpm'
 
 # For later
 #gem 'will_paginate'
