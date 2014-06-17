@@ -16,7 +16,9 @@ class User < ActiveRecord::Base
   after_create :set_rhombus_number, :send_welcome_email  
 
   validates_presence_of :user_level, :message => "Please select what you want to do with Rhombus"
-  # still need a validation for edit
+  validates_presence_of :card_name, :on => :update
+  
+  # still need a validation errors for edit
   validates :phone_number, presence: true, 
             numericality: { only_integer: true }, 
             length: { minimum: 10 }, 
@@ -78,7 +80,7 @@ class User < ActiveRecord::Base
          return true                # we gat this
       end      
     end
-    return true
+    return true                     # why is this here??
   end
 
   # needs optimization
