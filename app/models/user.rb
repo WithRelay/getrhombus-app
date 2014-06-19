@@ -13,10 +13,10 @@ class User < ActiveRecord::Base
   has_many :transactions, dependent: :destroy
   before_save :the_titleizer, :check_phone_number_length
   before_create :set_merchant_business_phone                   # only create, cos they can change this in edit
-  after_create :set_rhombus_number, :send_welcome_email  
+  after_create :send_welcome_email, :set_rhombus_number
 
   validates_presence_of :user_level, :message => "Please select what you want to do with Rhombus"
-  #validates_presence_of :card_name, :on => :update
+  validates_presence_of :card_name, :on => :update, :if => lambda { self.user_level == 0 }
   
   # still need a validation errors for edit
   validates :phone_number, presence: true, 
