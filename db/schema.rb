@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140410135700) do
+ActiveRecord::Schema.define(version: 20140620164046) do
 
   create_table "messages", force: true do |t|
     t.datetime "created_at"
@@ -74,7 +74,9 @@ ActiveRecord::Schema.define(version: 20140410135700) do
     t.integer  "referenced_merchant_id"
   end
 
+  add_index "transactions", ["created_at"], name: "index_transactions_on_created_at", using: :btree
   add_index "transactions", ["referenced_customer_transaction_id"], name: "index_transactions_on_referenced_customer_transaction_id", using: :btree
+  add_index "transactions", ["transaction_number"], name: "index_transactions_on_transaction_number", using: :btree
   add_index "transactions", ["user_id"], name: "index_transactions_on_user_id", using: :btree
 
   create_table "users", force: true do |t|

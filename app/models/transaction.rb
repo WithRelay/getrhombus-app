@@ -1,6 +1,6 @@
 class Transaction < ActiveRecord::Base
 
-  #include Transactionable
+  include Transactionable
   # scope :ordering, -> { order(:DESC) }
 
   has_one :message
@@ -65,9 +65,11 @@ class Transaction < ActiveRecord::Base
           "Thanks #{user.card_name.split.first}. A payment of $#{amount_with_taxes_in_hundreds} plus taxes and fees set by #{merchant.business_name} was sent.")
       end
 
-        # save transaction
+      # assign txn num and save txn
+      transaction_number = self.generate_number
+
       self.save_transaction(transaction_uri: response.id, transaction_type: 1, 
-          amount: amount_in_hundreds, transaction_number: response.id, 
+          amount: amount_in_hundreds, transaction_number: transaction_number, 
           description: "Payment to #{merchant.email}. #{merchant.business_name}. rhombus number: #{merchant.rhombus_number}", 
           from: user.phone_number, to: merchant.rhombus_number, status: response.paid, transaction_available_at: response.created, 
           last_four: response.card.last4, expiration_month: response.card.exp_month, expiration_year: response.card.exp_year, 
@@ -75,11 +77,11 @@ class Transaction < ActiveRecord::Base
           on_behalf_of_uri: merchant.stripe_access_token, referenced_merchant_id: merchant.id, user_id: user.id, notes: message,
           amount_with_taxes: sprintf("%.2f", response.amount.to_f/100))
         
-      Notification.send_receipt(message, response.id, amount_with_taxes_in_hundreds, amount_in_hundreds, user.email, merchant.business_name, merchant.business_phone, merchant.email).deliver
+      Notification.send_receipt(message, transaction_number, amount_with_taxes_in_hundreds, amount_in_hundreds, user.email, merchant.business_name, merchant.business_phone, merchant.email).deliver
       self.receipt_sent_at = Time.zone.now                       # change this later
       self.save                                                  # Put a save check here later
       # should limit data carried in merchant...memory
-      return self.id, amount_in_hundreds, amount_with_taxes_in_hundreds, sprintf("%.2f", rhombus_fee.to_f/100), response.id
+      return self.id, amount_in_hundreds, amount_with_taxes_in_hundreds, sprintf("%.2f", rhombus_fee.to_f/100), transaction_number, response.id
     end
   end
    
@@ -89,7 +91,7 @@ class Transaction < ActiveRecord::Base
 
     Notification.send_merchant_receipt(debit_data, merchant, user, message, amount_less_fees).deliver      
 
-    self.save_transaction(transaction_uri: debit_data[4], transaction_type: 2, amount: debit_data[1], amount_less_fees: amount_less_fees, 
+    self.save_transaction(transaction_uri: debit_data[5], transaction_type: 2, amount: debit_data[1], amount_less_fees: amount_less_fees, 
         description: "Payment from #{user.email}. Card name: #{user.card_name}. Last four: #{user.last_four}.", 
         from: user.phone_number, to: merchant.rhombus_number, tax_rate: merchant.tax_rate,
         transaction_number: debit_data[4], referenced_user_id: user.id, referenced_customer_transaction_id: debit_data[0], 
@@ -105,7 +107,7 @@ class Transaction < ActiveRecord::Base
       #owner = User.find_by(email: '<redacted_email>')                        # for development
       owner = User.find_by(email: '<redacted_email>')                  # for production
 
-      self.save_transaction(transaction_uri: debit_data[4], transaction_type: 0,
+      self.save_transaction(transaction_uri: debit_data[5], transaction_type: 0,
         amount: debit_data[3], amount_less_fees: amount_less_fees, transaction_number: debit_data[4],
         description: "Payment from #{user.email}. Name on card: #{user.card_name}. Last four: #{user.last_four} to #{merchant.email}", 
         from: user.phone_number, to: merchant.rhombus_number, tax_rate: merchant.tax_rate, last_four: user.last_four,
@@ -146,6 +148,7 @@ class Transaction < ActiveRecord::Base
      	self.amount_with_taxes = options[:amount_with_taxes] if options[:amount_with_taxes]
      	self.referenced_merchant_transaction_id = options[:referenced_merchant_transaction_id] if options[:referenced_merchant_transaction_id]
      	self.referenced_merchant_id = options[:referenced_merchant_id] if options[:referenced_merchant_id]        
+
      	self.save 										# add a check here later
    end
 end

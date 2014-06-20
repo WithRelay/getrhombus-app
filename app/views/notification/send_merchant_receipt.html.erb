@@ -20,6 +20,7 @@
                 </p>         
  
                 <p>Transaction # : <%= @transaction_number %><br>
+                   Stripe Txn Number : <%= @transaction.transaction_uri %> <br>
                    Transaction Date : <%#= Time.now.strftime("%m/%d/%y") %> <%= Time.zone.now %>
                 </p>
 

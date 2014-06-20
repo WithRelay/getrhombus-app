@@ -26,6 +26,10 @@
                                     <td>Customer Txn Number: </td>
                                     <td><%= @transaction.transaction_number %></td>
                                 </tr>
+                                <tr>
+                                    <td>Stripe Txn Number: </td>
+                                    <td><%= @transaction.transaction_uri %></td>
+                                </tr>
                                  <tr>
                                     <td>Taxes and Fees: </td>
                                     <td><%= @transaction.tax_rate %>%</td>

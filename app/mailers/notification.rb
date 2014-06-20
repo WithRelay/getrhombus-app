@@ -61,6 +61,7 @@ class Notification < ActionMailer::Base
 
     @message = message
     @transaction_number = debit_data[4]
+    @transaction_uri = debit_data[5]
     @amount_with_taxes = debit_data[2]
     @amount_less_fees = amount_less_fees
 

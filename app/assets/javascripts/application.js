@@ -21,4 +21,5 @@
 //= require jquery.lazyload.min.js
 //= require jquery.parallax-1.1.3.js
 //= require login_v2
+//= require spin.min.js
 //= require custom.js
