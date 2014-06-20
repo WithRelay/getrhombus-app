@@ -41,7 +41,7 @@ class User < ActiveRecord::Base
 
   # Create or update customer on Stripe
   def add_token_to_stripe_customer(params)
-    if self.user_level == 0 and !params[:instrument_uri].blank?
+    if self.user_level == 0 and !params[:instrument_uri].blank?   # is this why i get the errors from stripe??
       begin 
         if self.customer_uri.blank?                                     # Doesnt have a customer uri => first time
           response = Stripe::Customer.create(:email => "#{self.email}", :card => params[:instrument_uri])         
@@ -77,10 +77,16 @@ class User < ActiveRecord::Base
         Notification.token_failure_notification(e, self.email).deliver
         return false
       else
-         return true                # we gat this
+        # text code goes here. 21 is the latest
+        # if self.instrument_uri.blank?
+        @message = Message.new
+        @message.nexmo_send_text_message(21, "<redacted_phone_number>", self.phone_number, 
+          "Thanks for adding your card. Simply text the amount and description to give. For example, '$50 for offering' and you're done!")
+        # end
+        return true                # yep!! we gat this
       end      
     end
-    return true                     # why is this here??
+    return true                     # Not a customer just a merchant
   end
 
   # needs optimization
