@@ -79,9 +79,9 @@ class User < ActiveRecord::Base
       else
         # text code goes here. 21 is the latest
         # if self.instrument_uri.blank?
-        @message = Message.new
-        @message.nexmo_send_text_message(21, "<redacted_phone_number>", self.phone_number, 
-          "Thanks for adding your card. Simply text the amount and description to give. For example, '$50 for offering' and you're done!")
+        # @message = Message.new
+        # @message.nexmo_send_text_message(21, "<redacted_phone_number>", self.phone_number, 
+         # "Thanks for adding your card. Simply text the amount and description to give. For example, '$50 for offering' and you're done!")
         # end
         return true                # yep!! we gat this
       end      
@@ -90,6 +90,8 @@ class User < ActiveRecord::Base
   end
 
   # needs optimization
+  # https://www.coffeepowered.net/2009/01/23/mass-inserting-data-in-rails-without-killing-your-performance/
+  # change to raw sql ?
   def todays_stuff
     rhombus_number = self.rhombus_number          
     all_payments = self.transactions
