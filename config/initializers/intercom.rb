@@ -37,8 +37,8 @@ IntercomRails.config do |config|
   # user object, or a Proc which will be passed the current user.
   #
   config.user.custom_data = {
-     #:user_level => Proc.new { |current_user| current_user.user_level }#,
-     #:last_four => Proc.new { |current_user| current_user.last_four }#,
+     :user_level => Proc.new { |current_user| current_user.user_level },
+     :last_four => Proc.new { |current_user| current_user.last_four },
      :stripe => Proc.new { |current_user| current_user.provider }#,
      #:plan => Proc.new { |current_user| current_user.plan.name },
      #:favorite_color => :favorite_color
