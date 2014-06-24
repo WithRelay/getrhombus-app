@@ -116,6 +116,15 @@ class User < ActiveRecord::Base
     return total_1, total_2, todays_payments.count, rhombus_number
   end
 
+  def user_last_four
+    if self.user_level == 0
+      if self.last_four != nil
+        self.last_four
+      else
+        return "N/A"
+    end
+  end
+
   private
 
   def check_phone_number_length
@@ -159,5 +168,6 @@ class User < ActiveRecord::Base
       Notification.welcome_email(self.email, self.user_level).deliver
     end
   end
+
 
 end
