@@ -122,6 +122,9 @@ class User < ActiveRecord::Base
         self.last_four
       else
         return "N/A"
+      end
+    else
+      return "A Merchant"
     end
   end
 
