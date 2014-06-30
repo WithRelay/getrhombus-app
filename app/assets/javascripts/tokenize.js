@@ -20,7 +20,8 @@ $(document).ready(function () {
     $('#response').hide();
 
     $( "#cc-submit" ).click(function() {
-                    
+
+        $("#cc-submit").attr("disabled", true);                    
         $('#response').hide();
         $(".panel-body").html('');
         
@@ -37,6 +38,7 @@ $(document).ready(function () {
                 // show the errors on the form
                 $('.panel-body').append('=> ' + response.error.message + "<br>");
                 $('#response').slideDown(300);
+                $("#cc-submit").removeAttr("disabled");
             } else {
                                
                 $('#cc-number').val(response["card"]["last4"]);
