@@ -1,16 +1,71 @@
-<h2>Change your password</h2>
+<% provide(:title, 'Rhombus - Change password') %>
 
-<%= form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :put }) do |f| %>
-  <%= devise_error_messages! %>
-  <%= f.hidden_field :reset_password_token %>
-
-  <div><%= f.label :password, "New password" %><br />
-  <%= f.password_field :password, :autofocus => true %></div>
-
-  <div><%= f.label :password_confirmation, "Confirm new password" %><br />
-  <%= f.password_field :password_confirmation %></div>
-
-  <div><%= f.submit "Change my password" %></div>
+<%= content_for :head do %>
+  <%= stylesheet_link_tag "forms.css" %>
 <% end %>
 
-<%= render "devise/shared/links" %>
+
+<body class="error-body no-top lazy"> 
+  
+
+  <%= devise_error_messages! %>
+  <%= render 'shared/full_messages' %>
+<div class="container">
+  <div class="row login-container animated fadeInUp">  
+        <div class="col-md-7 col-md-offset-2 tiles white no-padding">
+		 <div class="p-t-30 p-l-40 p-b-20 xs-p-t-10 xs-p-l-10 xs-p-b-10"> 
+          <h3 class="normal">Change your password</h3>	  
+        </div>
+		<div class="tiles grey p-t-20 p-b-20 text-black">
+			
+	<%= form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :put }) do |f| %>
+				<%= f.hidden_field :reset_password_token %>
+                    <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10">
+
+                      <div class="col-md-6 col-sm-6 ">                    
+                        <%= f.password_field :password, :autofocus => true, :class => "form-control", placeholder: "Enter new password" %>
+                      </div>
+                     </div>
+
+                     <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10">
+                     <div class="col-md-6 col-sm-6 ">                    
+                        <%= f.password_field :password_confirmation, :class => "form-control", placeholder: "Confirm new password" %>
+                      </div>
+                      </div>
+
+                      <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10">
+                         <div class="col-md-6 col-sm-6">
+             				 <%= f.submit "Change my password",  :class => "btn btn-primary btn-cons btn-block"  %>
+             			 </div>
+                    </div>
+
+                 <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10">
+                        <div class="col-md-12">
+                          <p><a href="/signin">Back to Sign in</a></p>
+                      </div>
+                    </div>  
+                    
+  			<% end %>
+			
+		</div>   
+      </div>   
+  </div>
+</div>
+
+</body>
+
+
+<%#= form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :put }) do |f| %>
+  <%#= devise_error_messages! %>
+  <%#= f.hidden_field :reset_password_token %>
+
+  <%#= f.label :password, "New password" %>
+  <%#= f.password_field :password, :autofocus => true %>
+
+  <%#= f.label :password_confirmation, "Confirm new password" %>
+  <%#= f.password_field :password_confirmation %>
+
+  <%#= f.submit "Change my password" %>
+<%# end %>
+
+<%#= render "devise/shared/links" %>
