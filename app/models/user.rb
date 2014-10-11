@@ -16,7 +16,9 @@ class User < ActiveRecord::Base
   after_create :send_welcome_email, :set_rhombus_number
 
   validates_presence_of :user_level, :message => "Please select what you want to do with Rhombus"
-  validates_presence_of :card_name, :on => :update, :if => lambda { self.user_level == 0 }
+  validates_presence_of :card_name, :on => :update, :if => lambda { self.user_level == 0 } 
+
+  # and self.password_confirmation.blank? }
   
   # still need a validation errors for edit
   validates :phone_number, presence: true, 

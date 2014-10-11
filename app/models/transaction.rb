@@ -12,7 +12,7 @@ class Transaction < ActiveRecord::Base
     
     	tax_rate = (((merchant.tax_rate.to_f)/100) + 1)                     # apply tax, default is 0
     	amount_with_taxes = (amount.to_f * tax_rate).round(0)			
-      rhombus_fee = (0.006 * amount_with_taxes.to_f).round(0)
+      rhombus_fee = 0 #(0.006 * amount_with_taxes.to_f).round(0)
 
       # Create the charge on Stripe's servers
       tkn = Stripe::Token.create(
@@ -24,8 +24,8 @@ class Transaction < ActiveRecord::Base
             :amount => amount_with_taxes, # in cents
             :currency => "usd",
             :card => tkn.id,
-            :description => "Payment from #{user.email}. Card name: #{user.card_name}. Last four: #{user.last_four}.",
-            :application_fee => rhombus_fee
+            :description => "Payment from #{user.email}. Card name: #{user.card_name}. Last four: #{user.last_four}."
+            #:application_fee => rhombus_fee
           },
           merchant.stripe_access_token                    # merchants's access token from the Stripe Connect flow
       )

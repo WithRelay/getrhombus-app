@@ -109,7 +109,7 @@ class MessagesController < ApplicationController
 				save_inbound_text(request.query_string, msg_code = 4)
 				@message = Message.new 				
 				@message.nexmo_send_text_message(14, params[:to], params[:msisdn], 
-					"To start donating, follow the link to complete your signup: https://www.getrhombus.com/signup?num=#{params[:msisdn]}")
+					"To start using Rhombus, follow the link to complete your signup: https://www.getrhombus.com/signup?num=#{params[:msisdn]}")
 			
 			else 	
 				
@@ -118,7 +118,7 @@ class MessagesController < ApplicationController
 				save_inbound_text(request.query_string, msg_code = 5)
 				# until nexmo can give use concatenated messages..i think they do now (06/14/14)
 				
-				@message = Message.new        		
+				@message = Message.new
 				@message.nexmo_send_text_message(15, params[:to], params[:msisdn], 
 					'Sorry we did not understand your text. You can signup by texting "signup" or make payments by texting "$Amount Description". Thanks!')
 			
