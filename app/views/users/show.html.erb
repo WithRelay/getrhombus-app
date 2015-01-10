@@ -1,0 +1,101 @@
+	
+<%# if current_user.user_level == 1 %>
+<%= provide(:title, "Rhombus - Dashboard") %>
+
+<%= content_for :head do %>
+	<%= stylesheet_link_tag "forms.css" %>
+<% end %>
+
+<body class="error-body no-top lazy"> 
+
+	<%= render 'shared/header' %>
+<%= render 'shared/full_messages' %>	
+
+	<div class="container"> 
+
+                        <div class="row">
+                            <div class="col-md-12">                                
+                                    
+                                           <h3>Dashboard</h3>
+                            </div>
+                        </div>
+
+			<div class="row spacing-bottom 2col">	
+			<% if current_user.user_level == 1 %>
+				<%= render "rhombus_number" %>
+			<% end %>
+	
+				<%= render "tiles" %>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="grid simple ">
+                                    <div class="grid-body no-border">
+                                    <br>
+                                           <h3>Transactions</h3>
+                                            <p>Your transactions will be displayed here. You can refresh the page to see new transactions.
+											</p>
+                                            <br>
+
+                                            <table class="table table-hover cf" style="table-layout: fixed; width: 100%">
+                                                <thead class="cf">
+                                                    <tr>
+                                                        <th>Date</th>
+                                                        <th>Amount</th>
+                                                        <% if current_user.user_level == 1 %>
+                                                        	<th>Paid</th>
+                                                        	<th>From</th>
+                                                        <% end %>
+                                                        <th>Description</th>                                                
+                                                    </tr>
+                                                </thead>                                                
+                                                <tbody>
+                                                <% @current_user.transactions.order("created_at desc").each do |t| %>
+
+                                                    <tr>
+                                                      
+                                                        <td>
+                                                        	<%= link_to transaction_path(t) do %>
+                                                        	<%= t.created_at %> <%#("%e %b %y %H:%m %p") %>
+                                                        	<% end %>
+                                                        </td>
+
+                                                        <td>
+                                                            <%= link_to transaction_path(t) do %>
+                                                                <%= number_to_currency(t.amount_with_taxes) %>
+                                                            <% end %>
+                                                        </td>
+                                                        
+                                                        <% if current_user.user_level == 1 %>
+                                                        	<td>
+                                                                <%= link_to transaction_path(t) do %>
+                                                                    <%= number_to_currency(t.amount_less_fees) %>
+                                                                <% end %>
+                                                            </td>
+                                                        	<td style="word-wrap: break-word">
+                                                                <%= link_to transaction_path(t) do %>
+                                                                    <%= t.description %>
+                                                                <% end %>
+                                                            </td>
+                                                        <% end %>
+
+                                                        <td style="word-wrap: break-word">
+                                                            <%= link_to transaction_path(t) do %>
+                                                                <%= t.notes %>
+                                                            <% end %>
+                                                        </td>                                                        
+                                                    
+                                                        </tr>
+
+                                                    <% end %>
+                                                </tbody>
+                                            </table>
+                                    </div>
+                                </div>
+                            </div>
+                	</div>
+	</div>	
+
+	</body>
+
+<%# end %>

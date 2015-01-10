@@ -1,0 +1,44 @@
+	<header id="ha-header" class="ha-header ha-header-hide">
+				<div class="ha-header-perspective">
+			<div class="ha-header-front navbar navbar-default navbar-static-top" style="padding-right: 15px; padding-left: 10px;">
+
+					  <div class="compressed">
+						<div class="navbar-header">
+						  <button data-target=".navbar-collapse" data-toggle="collapse" class="navbar-toggle" type="button">
+							<span class="sr-only">Toggle navigation</span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+						  </button>
+						  <a href="/" class="navbar-brand compressed">Rhombus</a>
+						</div>
+						<div class="navbar-collapse collapse">
+						  <ul class="nav navbar-nav navbar-right" >
+
+							
+				<% if user_signed_in? and params[:controller] != "contact_forms" %>
+
+      		         <li><%= link_to "Hi, #{current_user.email}", current_user %></li>
+      		         <li><%= link_to "Help", "/contactus" %></li>
+      		         <li> <%= link_to "Settings", "/profile" %></li>
+          			<li><%= link_to "Logout", destroy_user_session_path, method: :delete %></li>
+
+				<% else %> 
+							<li ><a href="/sellwithrhombus">SELL WITH RHOMBUS</a></li>
+							<li ><a href="/takedonations">TAKE DONATIONS</a></li>
+							<li><a href="/paywithrhombus">PAY WITH RHOMBUS</a></li>
+							<li ><a href="/signin">SIGN IN</a></li>
+							<li ><a href="/signup">SIGN UP</a></li>
+					<% end %>
+
+						  </ul>
+						</div><!--/.nav-collapse -->
+						
+					  </div>
+			
+					</div>
+				</div>
+			</header>
+
+
+			

@@ -1,0 +1,72 @@
+
+<%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put, id: "user-form", :autocomplete => "off" }) do |f| %>
+
+<div class="container">
+  <div class="row login-container animated fadeInUp">  
+        <div class="col-md-7 col-md-offset-2 tiles white no-padding">
+     <div class="p-t-30 p-l-40 p-b-20 xs-p-t-10 xs-p-l-10 xs-p-b-10"> 
+          <h3 class="normal">Payment Information</h3>
+          <p class="normal">We only need to collect this information once.</p>
+        </div>
+    <div class="tiles grey p-t-20 p-b-20 text-black">
+        
+          <%= render "error" %>
+
+
+   <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10">
+                      <div class="col-md-6 col-sm-6 ">
+
+                        <%= f.text_field :card_name, id: 'cc-name', type: "text", :class => "form-control", placeholder: "Name on Card" %>
+
+                      </div>
+                      <div class="col-md-6 col-sm-6">
+            
+                        <%= f.number_field :last_four, id: "cc-number", type: "text", class: "form-control", placeholder: "Card Number" %>
+                      </div>
+                    </div>
+
+                  <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10">
+                      <div class="col-md-6 col-sm-6 ">
+
+ <%= f.select(:expiration_month, [['01 - Jan', "01"], ['02 - Feb', "02"], ['03 - Mar', "03"], ['04 - Apr', "04"], ['05 - May', "05"], ['06 - Jun', "06"], ['07 - Jul', "07"], ['08 - Aug', "08"], ['09 - Sep', "09"], ['10 - Oct', "10"], ['11 - Nov', "11"], ['12 - Dec', "12"]], {}, :class => "form-control", :id => "cc-ex-month") %>
+                      </div>
+
+                      <div class="col-md-6 col-sm-6">
+      <%= f.select(:expiration_year, [['2014', "2014"], ['2015', "2015"], ['2016', "2016"], ['2017', "2017"], ['2018', "2018"], ['2019', "2019"], ['2020', "2020"], ['2021', "2021"], ['2022', "2022"], ['2023', "2023"]], {}, :class => "form-control", :id => "cc-ex-year") %>
+                      </div>
+                      </div>
+                    
+
+                    <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10">
+                      <div class="col-md-6 col-sm-6 ">
+                        <input type="text" id="ex-csc" class="form-control" placeholder="Security Code" autocomplete="off" >
+                      </div>
+                    </div>
+
+                    <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10" style="margin-top: 25px;">
+                      <div class="col-md-6 col-sm-6 ">
+
+                        <%= f.password_field :current_password, type: "Password", class: "form-control", placeholder: "Re-enter current password", id: "current_password" %>
+                        <p>For account protection, your password is required to save changes to your settings.</p>
+
+                           <%= f.hidden_field :instrument_uri, id: "cc-uri" %>
+                            <%= f.hidden_field :card_type, id: "cc-type" %>
+
+                      </div>
+                      <div class="col-md-6 col-sm-6">
+            
+                       <%= f.submit "Save", id: "cc-submit", :class => "btn btn-primary btn-cons btn-block" %>  
+                      </div>
+                    </div>  
+                     
+                    <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10" style="margin-top: 15px;">
+                        <div class="col-md-12" style="margin-bottom:15px; margin-top: 10px;">
+                          <img src="<%= asset_path 'outline.png' %>" align="middle" />   
+                          </div>
+                    </div>     
+    </div>   
+      </div>   
+  </div>
+</div>
+<% end %>
+

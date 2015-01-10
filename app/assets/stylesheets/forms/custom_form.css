@@ -1,0 +1,28 @@
+.alert {
+   text-align: center;
+   margin-bottom: 0px;
+}
+
+div {
+  &.field, &.actions {
+    margin-bottom: 10px;
+  }
+}
+
+.field_with_errors {
+  /*padding: 2px;
+  background-color: red;*/
+ /*display: inline-block;*/
+}
+
+.field_with_errors input, .field_with_errors textarea, .field_with_errors select
+{
+    border: none;/*1px solid #FAAFBA !important;*/
+}
+
+.navbar-default .navbar-brand {
+  color: black;
+  
+   font-family: Montserrat;
+   font-weight:bold
+}

@@ -1,0 +1,103 @@
+
+<div class="container">
+  <div class="row login-container animated fadeInUp" >  
+        <div class="col-md-7 col-md-offset-2 tiles white no-padding">
+     <div class="p-t-30 p-l-40 p-b-20 xs-p-t-10 xs-p-l-10 xs-p-b-10"> 
+          <h3 class="normal">Business Information</h3>
+          <p class="normal">Tell us about your business or organization.</p>
+        </div>
+    <div class="tiles grey p-t-20 p-b-20 text-black">
+
+      <%= form_for(resource, :as => resource_name, class: "animated fadeIn", :url => registration_path(resource_name), :html => { :method => :put, id: "user-form", :autocomplete => "off" }) do |f| %> 
+   
+
+    <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10">
+                      <div class="col-md-6 col-sm-6 ">
+
+                        <%= f.text_field :first_name, type: "text", class: "form-control", placeholder: "First Name" %>
+
+                      </div>
+                      <div class="col-md-6 col-sm-6">
+            
+                        <%= f.text_field :last_name, type: "text", class: "form-control", placeholder: "Last Name" %>
+                      </div>
+                    </div>
+               <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10">
+                      <div class="col-md-6 col-sm-6 ">
+
+                        <%= f.text_field :business_name, type: "text", class: "form-control", placeholder: "Business Name" %>
+
+                      </div>
+                      <div class="col-md-6 col-sm-6">
+            
+                        <%= f.text_field :business_type, type: "text", class: "form-control", placeholder: "Ex. Individual, Food, Non-Profit" %>
+                      </div>
+                    </div>
+
+                  <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10">
+                      <div class="col-md-12">
+                    <%= f.text_field :street_address, type: "text", :class => "form-control", placeholder: "Street Address, Suite or Apartment #" %>
+                      </div>
+                    </div>
+
+
+                  <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10">
+                      <div class="col-md-6 col-sm-6 ">
+
+                        <%= f.text_field :city, type: "text", class: "form-control", placeholder: "City" %>
+
+                      </div>
+                      <div class="col-md-6 col-sm-6">
+            
+                        <%= f.text_field :state_province, type: "text", class: "form-control", placeholder: "State or Province. Ex. NY or AB", :maxlength => 2 %>
+                      </div>
+                    </div>
+
+                    <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10">
+                      <div class="col-md-6 col-sm-6 ">
+
+                        <%= f.text_field :country, type: "text", class: "form-control", placeholder: "Country. Ex. US or CA", :maxlength => 2 %>
+
+                      </div>
+                      <div class="col-md-6 col-sm-6">
+            
+                        <%= f.text_field :business_zip_code, type: "text", class: "form-control", placeholder: "Zip/Postal Code" %>
+                      </div>
+                    </div>
+
+                    
+                     <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10">
+                      <div class="col-md-6 col-sm-6 ">
+                          <p>Tax rate to be applied to customer debits</p>
+                        <%= f.text_field :tax_rate, type: "text", class: "form-control", placeholder: "Without %. Default is 0" %>
+                      </div>
+                    </div>
+
+                     <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10" style="margin-top: 25px;">
+                      <div class="col-md-6 col-sm-6 ">
+
+                        <%= f.password_field :current_password, type: "Password", class: "form-control", placeholder: "Re-enter current password" %>
+                         <p>For account protection, your password is required to save changes to your settings.</p>
+
+                      </div>
+                      <div class="col-md-6 col-sm-6">
+            
+                         <%= f.submit "Save", id: "ba-submit", :class => "btn btn-primary btn-cons btn-block" %>  
+
+                      </div>
+                    </div>
+
+         
+                 
+        <% end %>
+      
+    </div>   
+      </div>   
+  </div>
+</div>
+
+
+
+
+
+

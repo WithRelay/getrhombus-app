@@ -1,0 +1,72 @@
+			<div class="col-md-3 col-sm-6 spacing-bottom-sm spacing-bottom">
+				<div class="tiles green added-margin">
+				 <div class="tiles-body">	
+					<div class="tiles-title">
+						TODAY’S TRANSACTIONS
+					</div>	
+					<div class="heading">
+						<span class="animate-number" data-value="2545665" data-animation-duration="1000"><%= @todays_stuff[2] %></span>	
+					</div>
+					<div class="progress transparent progress-small no-radius">
+							<div class="progress-bar progress-bar-white animate-progress-bar" data-percentage="79%" ></div>
+					</div>				
+					<div class="description"><i class="icon-custom-up"></i>
+					
+					<span class="text-white mini-description ">&nbsp; Today's count</span>						
+
+					</div>	
+				 </div>
+				</div>
+			</div>
+			<div class="col-md-3 col-sm-6 spacing-bottom">
+				<div class="tiles red added-margin">
+				<div class="tiles-body">
+					<div class="tiles-title">
+						TODAY’S PAYMENTS
+					</div>	
+					<div class="heading">
+						<span class="animate-number" data-value="14500" data-animation-duration="1200"><%= number_to_currency(@todays_stuff[1]) %></span>	
+					</div>
+					<div class="progress transparent progress-white progress-small no-radius">
+						<div class="progress-bar progress-bar-white animate-progress-bar" data-percentage="45%" ></div>
+					</div>
+					<div class="description"><i class="icon-custom-up"></i>
+
+					<% if current_user.user_level == 0 %>
+					<span class="text-white mini-description ">&nbsp; Includes taxes (if any)</span>
+					<% elsif current_user.user_level == 1 %>
+					<span class="text-white mini-description ">&nbsp; Less rhombus fees</span>
+					<% end %>			
+					</div>	
+				</div>
+				</div>
+		
+			</div> 
+			<div class="col-md-3 col-sm-6">
+				<div class="tiles purple added-margin">
+				  <div class="tiles-body">		
+					<div class="tiles-title">
+						TOTAL PAYMENTS TO DATE
+					</div>	
+					<div class="row-fluid">
+						<div class="heading">
+							<span class="animate-number" data-value="1600" data-animation-duration="700"><%= number_to_currency(@todays_stuff[0]) %></span>	
+						</div>
+						<div class="progress transparent progress-white progress-small no-radius">
+							<div class="progress-bar progress-bar-white animate-progress-bar" data-percentage="12%"></div>
+						</div>
+					</div>
+					<div class="description"><i class="icon-custom-up"></i>
+
+					<% if current_user.user_level == 0 %>
+					<span class="text-white mini-description ">&nbsp; Includes taxes (if any)</span>
+					<% elsif current_user.user_level == 1 %>
+					<span class="text-white mini-description ">&nbsp; Less rhombus fees</span>
+					<% end %>	
+
+					</div>
+					
+				 </div>
+				</div>
+			</div>			
+		</div>  	

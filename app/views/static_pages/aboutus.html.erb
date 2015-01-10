@@ -1,0 +1,70 @@
+<% provide(:title, 'Rhombus - About Us') %>
+
+	<%= content_for :head do %>
+  <%#= stylesheet_link_tag "style_home.css", "data-turbolinks-track" => true %>
+  <%#= stylesheet_link_tag "responsive_home.css", "data-turbolinks-track" => true %>
+  <%#= stylesheet_link_tag "custom_home.css", "data-turbolinks-track" => true %>
+  <%= stylesheet_link_tag "mainly_static_pages" %>
+<% end %>
+
+<body>
+
+	<div class="main-wrapper">
+	
+		<%= render 'shared/header' %>
+		
+<%= render 'shared/full_messages' %>
+		<div class="image">
+      	<img src="<%= asset_path 'bg2.png' %>" alt="img-responsive" style="height: 500px" width="100%"/>
+         <h3><span>Rhombus – Frictionless Payments Company.<span class='spacer'></span><br /><span class='spacer'></span><span class="tagline2"></span></span>
+         </h3>
+		</div>
+	
+
+	
+
+<div class="section white ha-waypoint" >
+		<div class="container">
+		<div class="p-t-60">
+		<div class="row">
+	<div class="col-md-12 feature-list aboutus">
+	<h4 class="title">ABOUT US</h4>
+We started with a simple idea: to create a non-intrusive way for people to pay using the most readily available medium – text messaging. Our deliberate design allows our technology to disappear in the background, making it easy for businesses to efficiently grow sales and reduce checkout abandonment.  We are constantly rethinking commerce and payments, and our goal is to use simple technology to help businesses connect with their customers seamlessly.
+		<div class="clearfix"></div>
+		</div>
+		</div>
+		<br>
+
+
+		</div>
+		</div>
+		</div>
+
+<div class="section grey">
+	<div class="container">
+	  <div class="p-t-40 p-b-50 ">
+
+		<div class="row feature-list value_prop">		
+ 	     	<div>
+			Rhombus takes the hassle out of collecting payments or donations from your customers, members or group of friends on any mobile device, using the most ubiquitous messaging system – SMS. The friction-free process lets users make a purchase or donation instantly by texting an amount and description to your Rhombus number!
+			</div>
+
+		</div>
+	</div>
+</div>	
+
+<div class="section table-layout">	
+			<div id="working-section" class="table-cell v-middle">	
+				<div >
+				<h3 class="text-white text-center custom-font no-margin">JOIN A GROWING LIST OF BUSINESSES USING RHOMBUS</h3>
+				</div>
+			</div>
+</div>
+
+
+<%= render "shared/call_to_action" %>
+
+<%= render "shared/footer" %>
+
+<%= render "olark" %>
+</body>

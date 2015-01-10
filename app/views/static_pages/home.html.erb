@@ -1,0 +1,83 @@
+<% provide(:title, 'Rhombus - Home') %>
+
+<%= content_for :head do %>
+  <%= stylesheet_link_tag "mainly_static_pages.css" %>
+<% end %>
+
+<body>
+
+	<div class="main-wrapper">
+	
+		<%= render 'shared/header' %>
+
+		<%= render 'shared/full_messages' %>
+
+		<div class="tp-banner-container">
+		<div class="tp-banner" id="home" >
+			<div class="image">
+	      	<img src="<%= asset_path 'bg2.png' %>" alt="img-responsive" style="height: 600px" width="100%"/>
+	         <h3><span>The best way to receive payments via SMS.<span class='spacer'></span><br /><span class='spacer'></span><span class="tagline2">No carrier billing. No setup or monthly fees. Just 2.9% + 30c per transaction to receive payments. Sending money is always free.</span></span>
+	         <p><a href="/signup" class="btn btn-danger prompt_button">GET A FREE RHOMBUS NUMBER</a></p>
+	         </h3>
+			</div>
+			<div class="tp-bannertimer"></div>
+		</div>
+		</div>
+
+<div class="section white ha-waypoint">
+		<div class="container">
+		<div class="p-t-60">
+		<div class="row">
+		<div class="col-md-12 feature-list ">
+			<div class="col-md-4">
+			<h4 class="title">SELL WITH RHOMBUS</h4>
+			<p>
+			Sell more with Rhombus. We provide the fastest way for your customers to pay instantly using simple text messages on any mobile device. This is Friction-free payments.
+			</p>
+			</div>
+			<div class="col-md-4">
+			<h4 class="title">TAKE CONTRIBUTIONS</h4>
+			<p>
+			Shorten the distance between your donors’ hearts and wallets with Rhombus. Donors can contribute instantly using simple text messages on any mobile device. The results? The best fundraising conversion rate ever.
+			</p>
+			</div>
+			<div class="col-md-4">
+			<h4 class="title">PAY WITH RHOMBUS</h4>
+			<p>
+			Send payments seamlessly to your favorite take-out restaurants, dry-cleaner, non-profits, etc. using simple text messages on any device. No app downloads required.
+			</p>
+			</div><div class="clearfix"></div>
+		</div>
+		</div>
+		<br>
+
+
+		</div>
+		</div>
+		</div>
+
+<div class="section grey">
+	<div class="container">
+	  <div class="p-t-40 p-b-50 ">
+		<div class="row feature-list value_prop">	 	     	
+			Rhombus takes the hassle out of collecting payments or donations from your customers, members or group of friends on any mobile device, using the most ubiquitous messaging system – SMS. The friction-free process lets users make a purchase or donation instantly by texting an amount and description to your Rhombus number!
+		</div>
+	</div>
+</div>	
+</div>
+
+<div class="section table-layout">	
+			<div id="working-section" class="table-cell v-middle">	
+				<div >
+				<h3 class="text-white text-center custom-font no-margin">JOIN A GROWING LIST OF BUSINESSES USING RHOMBUS</h3>
+				</div>
+			</div>
+</div>
+
+
+<%= render "shared/call_to_action" %>
+
+<%= render "shared/footer" %>
+
+<%= render "olark" %>
+</body>

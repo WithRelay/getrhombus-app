@@ -1,0 +1,25 @@
+
+<br>
+<% if @credit == "" %>
+This debit charge failed:
+<% else %>
+This credit payment failed:
+<% end %>
+<br><br>
+Customer Email: <%= @user_email %> <br>
+Customer Phone Number: <%= @user_phone_number %><br>
+Customer Card Name: <%= @card_name %><br>
+Customer last four: <%= @last_four %><br>
+Message: <%= @text %><br>
+
+<br>
+
+
+Merchant Email: <%= @merchant_email %><br>
+Merchant Phone Number: <%= @merchant_phone_number %><br>
+Rhombus Number: <%= @rhombus_number %><br><br>
+
+Stripe Payments Reason: <%= @response %> <%#["description"] %>
+
+<br>
+<br>
