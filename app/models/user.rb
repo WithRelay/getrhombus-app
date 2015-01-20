@@ -12,7 +12,7 @@ class User < ActiveRecord::Base
   #has_many :messages, dependent: :destroy
   has_many :transactions, dependent: :destroy
   before_save :the_titleizer, :check_phone_number_length
-  before_create :set_merchant_business_phone                   # only create, cos they can change this in edit
+  before_create :set_merchant_business_phone, :deactivate_merchant_account          # only create, cos they can change this in edit
   after_create :send_welcome_email, :set_rhombus_number
 
   validates_presence_of :user_level, :message => "Please select what you want to do with Rhombus"
@@ -129,8 +129,8 @@ class User < ActiveRecord::Base
 
   def set_rhombus_number
     if self.user_level == 1
-      @rhombus_number = Message.new
-      self.rhombus_number = @rhombus_number.nexmo_search_and_buy_number("US")
+      #@rhombus_number = Message.new
+      self.rhombus_number = "-"  #@rhombus_number.nexmo_search_and_buy_number("US")
       self.save
     end
   end
@@ -142,6 +142,12 @@ class User < ActiveRecord::Base
       self.business_phone = self.phone_number
       self.phone_number = nil
     end 
+  end
+
+  def deactivate_merchant_account
+      if self.user_level == 1
+          self.is_active = false
+      end 
   end
 
   def the_titleizer       #remove leading and trailing whitespaces
@@ -157,8 +163,12 @@ class User < ActiveRecord::Base
   def send_welcome_email
     if self.user_level == 1
       Notification.welcome_email(self.email, self.user_level, self.first_name).deliver
+      # notify team email
+      Notification.welcome_email("<redacted_email>", self.user_level, self.first_name).deliver
     elsif self.user_level == 0
       Notification.welcome_email(self.email, self.user_level).deliver
+      # notify team email
+      Notification.welcome_email("<redacted_email>", self.user_level, self.first_name).deliver
     end
   end
 

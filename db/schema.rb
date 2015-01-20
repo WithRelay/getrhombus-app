@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140620164046) do
+ActiveRecord::Schema.define(version: 20150120173712) do
 
   create_table "messages", force: true do |t|
     t.datetime "created_at"
@@ -131,6 +131,7 @@ ActiveRecord::Schema.define(version: 20140620164046) do
     t.string   "stripe_refresh_token"
     t.string   "first_name"
     t.string   "last_name"
+    t.boolean  "is_active",                    default: true
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
