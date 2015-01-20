@@ -1,6 +1,6 @@
 class Notification < ActionMailer::Base
   #default from: "<redacted_email>"
-  default from: %("Rhombus" <<redacted_email>>)
+    default from: %("Rhombus" <<redacted_email>>)
 
   def welcome_email(email, user_level, name = "")
     @name = name
