@@ -49,7 +49,11 @@ class MessagesController < ApplicationController
 							@message.nexmo_send_text_message(17, params[:to], params[:msisdn], "Please follow the link below to complete your account and then resend your payment. Thanks! => https://www.getrhombus.com/signin")
 						else 
 							# change this to if statement##################################################
+
+							##### this needs to be in an exception block or use if statement
+							# find_by  returns nil...find throws exception
 							@merchant = User.find_by(rhombus_number: params[:to])
+							####
 							if @merchant.is_active
 								if @merchant.stripe_access_token.blank?
 									save_inbound_text(request.query_string, msg_code = 9)
