@@ -43,7 +43,7 @@ class User < ActiveRecord::Base
 
   # Create or update customer on Stripe
   def add_token_to_stripe_customer(params)
-    if self.user_level == 0 and !params[:instrument_uri].blank?   # is this why i get the errors from stripe??
+    if self.user_level == 0 && !params[:instrument_uri].blank?   # is this why i get the errors from stripe??
       begin 
         if self.customer_uri.blank?                                     # Doesnt have a customer uri => first time
           response = Stripe::Customer.create(:email => "#{self.email}", :card => params[:instrument_uri])         
@@ -122,7 +122,7 @@ class User < ActiveRecord::Base
 
   def check_phone_number_length
     # temp fix for users who leave US code out. would need to change this eventually
-    if self.user_level == 0 and self.phone_number.length == 10
+    if self.user_level == 0 && self.phone_number.length == 10
       self.phone_number = "1" + self.phone_number
     end
   end
@@ -146,7 +146,7 @@ class User < ActiveRecord::Base
 
   def deactivate_merchant_account
       if self.user_level == 1
-          self.is_active = false
+          self.is_active = 0
       end 
   end
 
@@ -161,6 +161,9 @@ class User < ActiveRecord::Base
   end
 
   def send_welcome_email
+    ###  we dont collect first name
+    ### => fix this!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11
+    ###
     if self.user_level == 1
       Notification.welcome_email(self.email, self.user_level, self.first_name).deliver
       # notify team email
