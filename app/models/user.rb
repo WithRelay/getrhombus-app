@@ -13,6 +13,10 @@ class User < ActiveRecord::Base
   has_many :transactions, dependent: :destroy
   before_save :the_titleizer, :check_phone_number_length
   before_create :set_merchant_business_phone, :deactivate_merchant_account          # only create, cos they can change this in edit
+
+    ### => fix this!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11
+    ### should be after commit...serious bug here with db rolling back but emails being sent
+    ### cos of crappy db uniqueness
   after_create :send_welcome_email, :set_rhombus_number
 
   validates_presence_of :user_level, :message => "Please select what you want to do with Rhombus"
@@ -21,10 +25,22 @@ class User < ActiveRecord::Base
   # and self.password_confirmation.blank? }
   
   # still need a validation errors for edit
+  #### this is messed up...what of on edit??
   validates :phone_number, presence: true, 
             numericality: { only_integer: true }, 
             length: { minimum: 10 }, 
             :on => :create
+
+  #validate :phone_number_uniquenesss
+
+
+  # it is only necessary for regular users...merchants don't need this since phone_number become business_phone
+  def phone_number_uniquenesss
+    if self.user_level == 0
+      validates_uniqueness_of :phone_number, :allow_nil => true
+    end
+  end
+
 
   # saves merchant info from stripe
   def from_omniauth(auth)
@@ -122,6 +138,8 @@ class User < ActiveRecord::Base
 
   def check_phone_number_length
     # temp fix for users who leave US code out. would need to change this eventually
+
+    ## consider fixing this too!!!!!!!!!!!!!!!!!!!!...needs a view portion
     if self.user_level == 0 && self.phone_number.length == 10
       self.phone_number = "1" + self.phone_number
     end
