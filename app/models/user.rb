@@ -31,15 +31,7 @@ class User < ActiveRecord::Base
             length: { minimum: 10 }, 
             :on => :create
 
-  #validate :phone_number_uniquenesss
-
-
-  # it is only necessary for regular users...merchants don't need this since phone_number become business_phone
-  def phone_number_uniquenesss
-    if self.user_level == 0
-      validates_uniqueness_of :phone_number, :allow_nil => true
-    end
-  end
+  validates_uniqueness_of :phone_number, :allow_nil => true, :if => lambda { self.user_level == 0 } 
 
 
   # saves merchant info from stripe
@@ -111,7 +103,9 @@ class User < ActiveRecord::Base
   # https://www.coffeepowered.net/2009/01/23/mass-inserting-data-in-rails-without-killing-your-performance/
   # change to raw sql ?
   def todays_stuff
-    rhombus_number = self.rhombus_number          
+    ### should not need to return rhombus number for non-merchant...change this
+    ###
+    rhombus_number = self.rhombus_number ? self.rhombus_number : "-"  
     all_payments = self.transactions
     todays_payments = all_payments.where("created_at >= ?", Time.zone.now.beginning_of_day)
     total_1, total_2 = 0, 0
@@ -122,8 +116,11 @@ class User < ActiveRecord::Base
       todays_payments.each do |p|
         total_2 = total_2 + p.amount_with_taxes
       end
-    elsif self.user_level == 1      
-      rhombus_number = "#{rhombus_number[0]}" + " " + "(#{rhombus_number[1..3]})" + " " + "#{rhombus_number[4..6]}-#{rhombus_number[7..10]}"
+    elsif self.user_level == 1
+      # change this to concat...it is faster
+      if rhombus_number != "-"
+        rhombus_number = "#{rhombus_number[0]}" + " " + "(#{rhombus_number[1..3]})" + " " + "#{rhombus_number[4..6]}-#{rhombus_number[7..10]}"
+      end
       all_payments.each do |p|
         total_1 = total_1 + p.amount_less_fees
       end
@@ -140,6 +137,10 @@ class User < ActiveRecord::Base
     # temp fix for users who leave US code out. would need to change this eventually
 
     ## consider fixing this too!!!!!!!!!!!!!!!!!!!!...needs a view portion
+    ### problem with validation...this "1" is added after validation...means users without
+    ### 1 in number will pass validation even when they shouldnt
+    ### actually it will fail db validation...uniqiuness...cos index will fail...indexing happens with "1" remember
+    ### a better ui is needed
     if self.user_level == 0 && self.phone_number.length == 10
       self.phone_number = "1" + self.phone_number
     end
@@ -148,7 +149,7 @@ class User < ActiveRecord::Base
   def set_rhombus_number
     if self.user_level == 1
       #@rhombus_number = Message.new
-      self.rhombus_number = "-"  #@rhombus_number.nexmo_search_and_buy_number("US")
+      self.rhombus_number = nil #@rhombus_number.nexmo_search_and_buy_number("US")
       self.save
     end
   end

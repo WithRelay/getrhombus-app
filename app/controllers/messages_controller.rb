@@ -52,6 +52,7 @@ class MessagesController < ApplicationController
 
 							##### this needs to be in an exception block or use if statement
 							# find_by  returns nil...find throws exception
+							# no more uniquesness check for this...nexmo should return unique numbers
 							@merchant = User.find_by(rhombus_number: params[:to])
 							####
 							if @merchant.is_active
