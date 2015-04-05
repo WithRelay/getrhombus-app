@@ -51,11 +51,7 @@ class User < ActiveRecord::Base
 
   # Create or update customer on Stripe
   def add_token_to_stripe_customer(params)
-<<<<<<< HEAD
-    if self.user_level == 0 and !params[:instrument_uri].blank?   # is this why i get the errors from stripe??
-=======
     if self.user_level == 0 && !params[:instrument_uri].blank?   # is this why i get the errors from stripe??
->>>>>>> master
       begin 
         if self.customer_uri.blank?                                     # Doesnt have a customer uri => first time
           response = Stripe::Customer.create(:email => "#{self.email}", :card => params[:instrument_uri])         
@@ -80,26 +76,15 @@ class User < ActiveRecord::Base
         @message.nexmo_send_text_message(18, owner.rhombus_number, self.phone_number, 
               "We were unable to update your card info on Rhombus because: #{err[:message]}.")
 
-<<<<<<< HEAD
         Notification.token_failure_notification(err, self.email).deliver_now
-=======
-        Notification.token_failure_notification(err, self.email).deliver
->>>>>>> master
         return false
       rescue Stripe::StripeError => e
         body = e.json_body
         err  = body[:error]
-<<<<<<< HEAD
         Notification.token_failure_notification(err, self.email).deliver_now
         return false
       rescue StandardError => e
         Notification.token_failure_notification(e, self.email).deliver_now
-=======
-        Notification.token_failure_notification(err, self.email).deliver
-        return false
-      rescue StandardError => e
-        Notification.token_failure_notification(e, self.email).deliver
->>>>>>> master
         return false
       else
         # text code goes here. 21 is the latest
@@ -118,13 +103,9 @@ class User < ActiveRecord::Base
   # https://www.coffeepowered.net/2009/01/23/mass-inserting-data-in-rails-without-killing-your-performance/
   # change to raw sql ?
   def todays_stuff
-<<<<<<< HEAD
-    rhombus_number = self.rhombus_number          
-=======
     ### should not need to return rhombus number for non-merchant...change this
     ###
     rhombus_number = self.rhombus_number ? self.rhombus_number : "-"  
->>>>>>> master
     all_payments = self.transactions
     todays_payments = all_payments.where("created_at >= ?", Time.zone.now.beginning_of_day)
     total_1, total_2 = 0, 0
@@ -135,16 +116,11 @@ class User < ActiveRecord::Base
       todays_payments.each do |p|
         total_2 = total_2 + p.amount_with_taxes
       end
-<<<<<<< HEAD
-    elsif self.user_level == 1      
-      rhombus_number = "#{rhombus_number[0]}" + " " + "(#{rhombus_number[1..3]})" + " " + "#{rhombus_number[4..6]}-#{rhombus_number[7..10]}"
-=======
     elsif self.user_level == 1
       # change this to concat...it is faster
       if rhombus_number != "-"
         rhombus_number = "#{rhombus_number[0]}" + " " + "(#{rhombus_number[1..3]})" + " " + "#{rhombus_number[4..6]}-#{rhombus_number[7..10]}"
       end
->>>>>>> master
       all_payments.each do |p|
         total_1 = total_1 + p.amount_less_fees
       end
@@ -159,9 +135,6 @@ class User < ActiveRecord::Base
 
   def check_phone_number_length
     # temp fix for users who leave US code out. would need to change this eventually
-<<<<<<< HEAD
-    if self.user_level == 0 and self.phone_number.length == 10
-=======
 
     ## consider fixing this too!!!!!!!!!!!!!!!!!!!!...needs a view portion
     ### problem with validation...this "1" is added after validation...means users without
@@ -169,20 +142,14 @@ class User < ActiveRecord::Base
     ### actually it will fail db validation...uniqiuness...cos index will fail...indexing happens with "1" remember
     ### a better ui is needed
     if self.user_level == 0 && self.phone_number.length == 10
->>>>>>> master
       self.phone_number = "1" + self.phone_number
     end
   end
 
   def set_rhombus_number
     if self.user_level == 1
-<<<<<<< HEAD
-      @rhombus_number = Message.new
-      self.rhombus_number = @rhombus_number.nexmo_search_and_buy_number("US")
-=======
       #@rhombus_number = Message.new
       self.rhombus_number = nil #@rhombus_number.nexmo_search_and_buy_number("US")
->>>>>>> master
       self.save
     end
   end
@@ -196,15 +163,12 @@ class User < ActiveRecord::Base
     end 
   end
 
-<<<<<<< HEAD
-=======
   def deactivate_merchant_account
       if self.user_level == 1
           self.is_active = 0
       end 
   end
 
->>>>>>> master
   def the_titleizer       #remove leading and trailing whitespaces
     self.first_name = self.first_name.strip.titleize unless self.first_name.blank?
     self.last_name = self.last_name.strip.titleize unless self.last_name.blank?
@@ -216,12 +180,6 @@ class User < ActiveRecord::Base
   end
 
   def send_welcome_email
-<<<<<<< HEAD
-    if self.user_level == 1
-      Notification.welcome_email(self.email, self.user_level, self.first_name).deliver_now
-    elsif self.user_level == 0
-      Notification.welcome_email(self.email, self.user_level).deliver_now
-=======
     ###  we dont collect first name
     ### => fix this!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11
     ###
@@ -233,7 +191,6 @@ class User < ActiveRecord::Base
       Notification.welcome_email(self.email, self.user_level).deliver
       # notify team email
       Notification.welcome_email("<redacted_email>", self.user_level, self.first_name).deliver
->>>>>>> master
     end
   end
 
