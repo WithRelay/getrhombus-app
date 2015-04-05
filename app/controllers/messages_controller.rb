@@ -49,40 +49,48 @@ class MessagesController < ApplicationController
 							@message.nexmo_send_text_message(17, params[:to], params[:msisdn], "Please follow the link below to complete your account and then resend your payment. Thanks! => https://www.getrhombus.com/signin")
 						else 
 							# change this to if statement##################################################
-							@merchant = User.find_by(rhombus_number: params[:to])
 
-							if @merchant.stripe_access_token.blank?
+							##### this needs to be in an exception block or use if statement
+							# find_by  returns nil...find throws exception
+							# no more uniquesness check for this...nexmo should return unique numbers
+							@merchant = User.find_by(rhombus_number: params[:to])
+							####
+							if @merchant.is_active
+								if @merchant.stripe_access_token.blank?
+									save_inbound_text(request.query_string, msg_code = 9)
+									@message = Message.new
+									@message.nexmo_send_text_message(19, params[:to], params[:msisdn], "Thank you for sending a payment with Rhombus, but the merchant hasn't completed the account to receive payments.")
+								else
+									@customer_transaction = Transaction.new
+									debit_data = @customer_transaction.charge_customer_card(amount, @merchant, @user, text)
+									save_inbound_text(request.query_string, msg_code = 1, debit_data[0])
+									
+									# if no error from api or saving process, proceed to save transaction details for merchant
+									if debit_data != "failed"
+										@merchant_transaction = Transaction.new
+										credit_data = @merchant_transaction.merchant_transaction_details(debit_data, @merchant, @user, text)
+										
+										# if credit_data != "failed"					# saved successfully that is
+											# set the merchant transaction id in the customer referenced transaction id
+											@customer_transaction.referenced_merchant_transaction_id = credit_data # or @merchant_transaction.id
+											@customer_transaction.save
+
+											# Facilitation info. Save customer and merchant transaction ids
+											@marketplace_transaction = Transaction.new
+											@marketplace_transaction.owner_transaction_details(debit_data, credit_data, @merchant, @user, text)#@merchant_transaction.id, @user, text)
+										# end
+									else
+										return
+									end	
+									# see number 20. Used for payment system outage
+									# @message = Message.new							
+							    	# @message.nexmo_send_text_message(20, params[:to], params[:msisdn], "Thank you for sending a payment with rhombus. We're currently experiencing a system outage. We will notify you once the outage is resolved. Thanks!")
+								end	
+							else
 								save_inbound_text(request.query_string, msg_code = 9)
 								@message = Message.new
 								@message.nexmo_send_text_message(19, params[:to], params[:msisdn], "Thank you for sending a payment with Rhombus, but the merchant hasn't completed the account to receive payments.")
-
-							else
-
-								@customer_transaction = Transaction.new
-								debit_data = @customer_transaction.charge_customer_card(amount, @merchant, @user, text)
-								save_inbound_text(request.query_string, msg_code = 1, debit_data[0])
-								
-								# if no error from api or saving process, proceed to save transaction details for merchant
-								if debit_data != "failed"
-									@merchant_transaction = Transaction.new
-									credit_data = @merchant_transaction.merchant_transaction_details(debit_data, @merchant, @user, text)
-									
-									# if credit_data != "failed"					# saved successfully that is
-										# set the merchant transaction id in the customer referenced transaction id
-										@customer_transaction.referenced_merchant_transaction_id = credit_data # or @merchant_transaction.id
-										@customer_transaction.save
-
-										# Facilitation info. Save customer and merchant transaction ids
-										@marketplace_transaction = Transaction.new
-										@marketplace_transaction.owner_transaction_details(debit_data, credit_data, @merchant, @user, text)#@merchant_transaction.id, @user, text)
-									# end
-								else
-									return
-								end	
-								# see number 20. Used for payment system outage
-								# @message = Message.new							
-						    	# @message.nexmo_send_text_message(20, params[:to], params[:msisdn], "Thank you for sending a payment with rhombus. We're currently experiencing a system outage. We will notify you once the outage is resolved. Thanks!")
-							end							
+							end						
 						end				
 					end
 				elsif amount > 1500000

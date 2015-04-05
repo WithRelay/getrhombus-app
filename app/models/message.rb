@@ -55,6 +55,7 @@ class Message < ActiveRecord::Base
 				return msisdn
 			else
 				# Notify marketplace owner of failure
+<<<<<<< HEAD
 				Notification.text_failure_notification(response, from = "", to = "", message = "Rhombus number purchase failed with response code #{response.code}").deliver_now
 				# cos if it breaks I dont want crap return to function call in User model
 				return "-"
@@ -63,6 +64,16 @@ class Message < ActiveRecord::Base
 			# Notify marketplace owner of failure
 			Notification.text_failure_notification(response, from = "", to = "", message = "Rhombus number search failed").deliver_now
 			return "-"
+=======
+				Notification.text_failure_notification(response, from = "", to = "", message = "Rhombus number purchase failed with response code #{response.code}").deliver
+				# cos if it breaks I dont want crap return to function call in User model
+				return nil
+			end
+		else
+			# Notify marketplace owner of failure
+			Notification.text_failure_notification(response, from = "", to = "", message = "Rhombus number search failed").deliver
+			return nil
+>>>>>>> master
 		end
 	end
 
