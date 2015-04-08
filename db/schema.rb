@@ -13,65 +13,65 @@
 
 ActiveRecord::Schema.define(version: 20150207051653) do
 
-  create_table "messages", force: true do |t|
+  create_table "messages", force: :cascade do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "from"
-    t.string   "to"
-    t.integer  "status_report_req"
-    t.string   "message_timestamp"
-    t.string   "message_price"
-    t.string   "scts"
-    t.string   "client_ref"
-    t.string   "status"
-    t.string   "status_delivery"
-    t.string   "network_code"
-    t.string   "error_text"
-    t.string   "err_code"
-    t.integer  "message_code"
-    t.integer  "user_id_from"
-    t.integer  "user_id_to"
-    t.integer  "transaction_id"
-    t.string   "messageId"
-    t.string   "text"
+    t.string   "from",              limit: 255
+    t.string   "to",                limit: 255
+    t.integer  "status_report_req", limit: 4
+    t.string   "message_timestamp", limit: 255
+    t.string   "message_price",     limit: 255
+    t.string   "scts",              limit: 255
+    t.string   "client_ref",        limit: 255
+    t.string   "status",            limit: 255
+    t.string   "status_delivery",   limit: 255
+    t.string   "network_code",      limit: 255
+    t.string   "error_text",        limit: 255
+    t.string   "err_code",          limit: 255
+    t.integer  "message_code",      limit: 4
+    t.integer  "user_id_from",      limit: 4
+    t.integer  "user_id_to",        limit: 4
+    t.integer  "transaction_id",    limit: 4
+    t.string   "messageId",         limit: 255
+    t.string   "text",              limit: 255
   end
 
   add_index "messages", ["transaction_id"], name: "index_messages_on_transaction_id", using: :btree
 
-  create_table "transactions", force: true do |t|
+  create_table "transactions", force: :cascade do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "transaction_uri"
-    t.integer  "transaction_type"
-    t.decimal  "amount",                             precision: 8, scale: 2
-    t.decimal  "amount_less_fees",                   precision: 8, scale: 2
-    t.string   "transaction_number"
-    t.string   "description"
-    t.string   "from"
-    t.string   "to"
-    t.string   "status"
-    t.string   "transaction_available_at"
-    t.string   "last_four"
-    t.string   "expiration_month"
-    t.string   "expiration_year"
-    t.string   "zip_code"
-    t.string   "card_type"
-    t.string   "card_name"
-    t.string   "tax_rate"
-    t.string   "on_behalf_of_uri"
-    t.string   "account_number"
-    t.string   "account_type"
-    t.string   "account_name"
-    t.string   "routing_number"
-    t.integer  "referenced_user_id"
-    t.string   "referenced_customer_transaction_id"
-    t.string   "receipt_sent_at"
-    t.string   "refund_reason"
-    t.integer  "user_id"
-    t.text     "notes"
-    t.decimal  "amount_with_taxes",                  precision: 8, scale: 2
-    t.integer  "referenced_merchant_transaction_id"
-    t.integer  "referenced_merchant_id"
+    t.string   "transaction_uri",                    limit: 255
+    t.integer  "transaction_type",                   limit: 4
+    t.decimal  "amount",                                           precision: 8, scale: 2
+    t.decimal  "amount_less_fees",                                 precision: 8, scale: 2
+    t.string   "transaction_number",                 limit: 255
+    t.string   "description",                        limit: 255
+    t.string   "from",                               limit: 255
+    t.string   "to",                                 limit: 255
+    t.string   "status",                             limit: 255
+    t.string   "transaction_available_at",           limit: 255
+    t.string   "last_four",                          limit: 255
+    t.string   "expiration_month",                   limit: 255
+    t.string   "expiration_year",                    limit: 255
+    t.string   "zip_code",                           limit: 255
+    t.string   "card_type",                          limit: 255
+    t.string   "card_name",                          limit: 255
+    t.string   "tax_rate",                           limit: 255
+    t.string   "on_behalf_of_uri",                   limit: 255
+    t.string   "account_number",                     limit: 255
+    t.string   "account_type",                       limit: 255
+    t.string   "account_name",                       limit: 255
+    t.string   "routing_number",                     limit: 255
+    t.integer  "referenced_user_id",                 limit: 4
+    t.string   "referenced_customer_transaction_id", limit: 255
+    t.string   "receipt_sent_at",                    limit: 255
+    t.string   "refund_reason",                      limit: 255
+    t.integer  "user_id",                            limit: 4
+    t.text     "notes",                              limit: 65535
+    t.decimal  "amount_with_taxes",                                precision: 8, scale: 2
+    t.integer  "referenced_merchant_transaction_id", limit: 4
+    t.integer  "referenced_merchant_id",             limit: 4
   end
 
   add_index "transactions", ["created_at"], name: "index_transactions_on_created_at", using: :btree
@@ -79,59 +79,59 @@ ActiveRecord::Schema.define(version: 20150207051653) do
   add_index "transactions", ["transaction_number"], name: "index_transactions_on_transaction_number", using: :btree
   add_index "transactions", ["user_id"], name: "index_transactions_on_user_id", using: :btree
 
-  create_table "users", force: true do |t|
-    t.string   "email",                        default: "",    null: false
-    t.string   "encrypted_password",           default: "",    null: false
-    t.string   "reset_password_token"
+  create_table "users", force: :cascade do |t|
+    t.string   "email",                        limit: 255, default: "",    null: false
+    t.string   "encrypted_password",           limit: 255, default: "",    null: false
+    t.string   "reset_password_token",         limit: 255
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",                default: 0
+    t.integer  "sign_in_count",                limit: 4,   default: 0
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
-    t.string   "current_sign_in_ip"
-    t.string   "last_sign_in_ip"
-    t.string   "confirmation_token"
+    t.string   "current_sign_in_ip",           limit: 255
+    t.string   "last_sign_in_ip",              limit: 255
+    t.string   "confirmation_token",           limit: 255
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
-    t.string   "unconfirmed_email"
+    t.string   "unconfirmed_email",            limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "user_level"
-    t.string   "customer_uri"
-    t.string   "last_four"
-    t.string   "expiration_month"
-    t.string   "expiration_year"
-    t.string   "zip_code"
-    t.string   "card_name"
-    t.string   "card_type"
-    t.string   "phone_number"
-    t.string   "business_name"
-    t.string   "business_type"
-    t.string   "street_address"
-    t.string   "city"
-    t.string   "state_province"
-    t.string   "business_phone"
-    t.string   "country"
-    t.string   "rhombus_number"
-    t.string   "routing_number"
-    t.string   "account_name"
-    t.string   "account_number"
-    t.string   "account_type"
-    t.boolean  "approve_payments_immediately", default: false
-    t.string   "tax_rate",                     default: "0"
-    t.integer  "transactions_count"
-    t.string   "instrument_uri"
-    t.string   "business_zip_code"
-    t.string   "provider"
-    t.string   "uid"
-    t.string   "stripe_access_token"
-    t.string   "stripe_publishable_key"
-    t.string   "stripe_scope"
-    t.string   "stripe_livemode"
-    t.string   "stripe_refresh_token"
-    t.string   "first_name"
-    t.string   "last_name"
-    t.boolean  "is_active",                    default: true
+    t.integer  "user_level",                   limit: 4
+    t.string   "customer_uri",                 limit: 255
+    t.string   "last_four",                    limit: 255
+    t.string   "expiration_month",             limit: 255
+    t.string   "expiration_year",              limit: 255
+    t.string   "zip_code",                     limit: 255
+    t.string   "card_name",                    limit: 255
+    t.string   "card_type",                    limit: 255
+    t.string   "phone_number",                 limit: 255
+    t.string   "business_name",                limit: 255
+    t.string   "business_type",                limit: 255
+    t.string   "street_address",               limit: 255
+    t.string   "city",                         limit: 255
+    t.string   "state_province",               limit: 255
+    t.string   "business_phone",               limit: 255
+    t.string   "country",                      limit: 255
+    t.string   "rhombus_number",               limit: 255
+    t.string   "routing_number",               limit: 255
+    t.string   "account_name",                 limit: 255
+    t.string   "account_number",               limit: 255
+    t.string   "account_type",                 limit: 255
+    t.boolean  "approve_payments_immediately", limit: 1,   default: false
+    t.string   "tax_rate",                     limit: 255, default: "0"
+    t.integer  "transactions_count",           limit: 4
+    t.string   "instrument_uri",               limit: 255
+    t.string   "business_zip_code",            limit: 255
+    t.string   "provider",                     limit: 255
+    t.string   "uid",                          limit: 255
+    t.string   "stripe_access_token",          limit: 255
+    t.string   "stripe_publishable_key",       limit: 255
+    t.string   "stripe_scope",                 limit: 255
+    t.string   "stripe_livemode",              limit: 255
+    t.string   "stripe_refresh_token",         limit: 255
+    t.string   "first_name",                   limit: 255
+    t.string   "last_name",                    limit: 255
+    t.boolean  "is_active",                    limit: 1,   default: true
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
