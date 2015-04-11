@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
 
-  before_action :set_user, only: [:show, :edit, :update, :destroy]
+  before_action :set_user, only: [:show, :edit, :update, :destroy, :messaging]
 
   load_and_authorize_resource
 
@@ -25,6 +25,10 @@ class UsersController < ApplicationController
       @todays_stuff = current_user.todays_stuff      
     end    
   end  
+  
+  def messaging
+    render layout: 'application_dashboard_messaging'
+  end
   
   def create
     @user = User.new(user_params)

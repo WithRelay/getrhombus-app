@@ -28,6 +28,8 @@ Rails.application.routes.draw  do
   end
   
   resources :users, :only => :show
+  get '/users/:id/messaging' => 'users#messaging', :as => 'dashboard_messaging'
+  
   resources :transactions, :only => :show
   resources :contact_forms
 
