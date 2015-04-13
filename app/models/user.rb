@@ -130,6 +130,31 @@ class User < ActiveRecord::Base
     end
     return total_1, total_2, todays_payments.count, rhombus_number
   end
+  
+  # Returns hash with user ids who sent a message to the given merchant in the last "num_days" days
+  def self.get_latest_active_messaging(merchant_id, num_days)
+    users = Message.select('`users`.`id`, `users`.`email`').where('`messages`.`user_id_to` = ? AND `messages`.`created_at` >= ?', merchant_id, Time.zone.now - num_days.days).joins('INNER JOIN `users` ON (`users`.`id` = `messages`.`user_id_from`)').group('user_id_from')
+    latest_active = Array.new
+    users.each do |user|
+      latest_active.push({
+        :id => user.id,
+        :email => user.email
+      })
+    end
+    latest_active
+  end
+  
+  # Sends a message to the given merchant's channel
+  def send_pubnub_message(merchant_id, message)
+    $pubnub.subscribe(
+      :channel  => 'messaging_' + merchant_id.to_s
+    ) { |envelope| puts("\nchannel: #{envelope.channel}: \nmsg: #{envelope.message}")}
+    
+    $pubnub.publish(
+      :channel  => 'messaging_' + merchant_id.to_s,
+      :message => message
+    ) { |data| puts data.response }
+  end
 
   private
 
@@ -193,6 +218,5 @@ class User < ActiveRecord::Base
       Notification.welcome_email("<redacted_email>", self.user_level, self.first_name).deliver
     end
   end
-
-
+  
 end

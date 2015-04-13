@@ -28,7 +28,10 @@ Rails.application.routes.draw  do
   end
   
   resources :users, :only => :show
+  get '/users/:id/json_get_latest_active_messaging' => 'users#json_get_latest_active_messaging'
   get '/users/:id/messaging' => 'users#messaging', :as => 'dashboard_messaging'
+  
+  get '/json_get_current_user' => 'application#json_get_current_user'
   
   resources :transactions, :only => :show
   resources :contact_forms

@@ -5,7 +5,6 @@
 var messagingApp = angular.module('PubNubAngularMessagingApp', [
   'ngRoute',
   'templates',
-  'pubnub.angular.service',
   'messagingControllers'
 ]);
 
@@ -19,3 +18,4 @@ messagingApp.config(['$routeProvider',
     });
   }
 ]);
+

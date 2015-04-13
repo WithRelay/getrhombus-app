@@ -2,7 +2,7 @@ class Message < ActiveRecord::Base
 	
 	require 'uri'	
 
-	belongs_to :transaction
+	belongs_to :txn, :foreign_key => :transaction_id, :class_name => :Transaction
 	#belongs_to :user, counter_cache: true
 	
 	# For sending all text messages

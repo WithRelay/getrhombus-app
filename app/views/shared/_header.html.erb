@@ -19,7 +19,7 @@
 				<% if user_signed_in? and params[:controller] != "contact_forms" %>
 
       		         <li><%= link_to "Hi, #{current_user.email}", current_user %></li>
-      		         <li><%= link_to "Messaging", :dashboard_messaging, :id => current_user.id %></li>
+      		         <li><%= link_to "Messaging", dashboard_messaging_path(current_user.id) %></li>
       		         <li><%= link_to "Help", "/contactus" %></li>
       		         <li> <%= link_to "Settings", "/profile" %></li>
           			<li><%= link_to "Logout", destroy_user_session_path, method: :delete %></li>

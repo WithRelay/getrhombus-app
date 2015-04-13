@@ -69,6 +69,11 @@ class UsersController < ApplicationController
       format.json { head :no_content }
     end
   end
+  
+  # Returns JSON object with user ids who sent a message to the given merchant in the last CONFIG[:dashboard]['messaging']['num_days_history'] days
+  def json_get_latest_active_messaging
+    render :json => Hash['success' => true, 'users' => User.get_latest_active_messaging(params[:id], CONFIG[:dashboard]['messaging']['num_days_history'])].to_json 
+  end
 
 private
     # Use callbacks to share common setup or constraints between actions.

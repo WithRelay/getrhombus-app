@@ -1,0 +1,21 @@
+shared: &shared
+  dashboard:
+    messaging:
+      num_days_history: 2
+
+development: &development
+  <<: *shared
+  services:
+    pubnub:
+      publish_key: 'pub-c-7a936c17-6420-48f2-be00-f63b3291b65a'
+      subscribe_key: 'sub-c-54cbb0a2-d34b-11e4-b585-0619f8945a4f'
+
+test:
+  <<: *development
+
+production:
+  <<: *shared
+  services:
+    pubnub:
+      publish_key: ''
+      subscribe_key: ''

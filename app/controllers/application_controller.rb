@@ -14,6 +14,16 @@ class ApplicationController < ActionController::Base
   def after_update_path_for(user)
       current_user
   end
+  
+  # Returns JSON object with the current user id
+  def json_get_current_user
+    render :json => Hash[
+      'success' => !current_user.blank?, 
+      'id' => !current_user.blank? ? current_user.id : nil,
+      'pubnub_publish_key' => CONFIG[:services]['pubnub']['publish_key'],
+      'pubnub_subscribe_key' => CONFIG[:services]['pubnub']['subscribe_key']
+    ].to_json
+  end
 
  rescue_from CanCan::AccessDenied do |exception|
     #redirect_to "/404.html"#, :alert => exception.message
