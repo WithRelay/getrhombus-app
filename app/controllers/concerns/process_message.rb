@@ -6,8 +6,8 @@ module ProcessMessage
 
 
 	def process_message(request, params)
+		return if params[:text].blank?
 		text = params[:text].strip
-		return if text.empty?
 
 		user = User.find_by(phone_number: params[:msisdn])		
 		amount = is_payment?(text)
@@ -143,7 +143,7 @@ module ProcessMessage
 
 
 	def get_number(text)
-		return (var.split(" ", 2).first[1..-1])
+		return (text.split(" ", 2).first[1..-1])
 	end
 
 
