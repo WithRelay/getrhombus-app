@@ -8,8 +8,8 @@ $(document).ready(function () {
         $('.biz_form').toggleClass('show');
     });
     
-    //Stripe.setPublishableKey('pk_test_hQV92i1Ip5Blrrvh7ivixlRY');     //for test
-    Stripe.setPublishableKey('pk_live_REDACTED');     //for production
+    Stripe.setPublishableKey('pk_test_hQV92i1Ip5Blrrvh7ivixlRY');     //for test
+    //Stripe.setPublishableKey('pk_live_REDACTED');     //for production
 
     // Click event for tokenize credit card
     function preventDefault(e) {
