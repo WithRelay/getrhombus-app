@@ -12,7 +12,6 @@
 //
 //= require jquery
 //= require jquery_ujs
-// require turbolinks
 //= require bootstrap.min.js
 //= require pace.min.js
 //= require jquery.validate.min.js
