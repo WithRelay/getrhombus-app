@@ -7,6 +7,7 @@ module ProcessMessage
 
 	def process_message(request, params)
 		return if params[:text].blank?
+
 		text = params[:text].strip
 
 		user = User.find_by(phone_number: params[:msisdn])		
@@ -190,8 +191,10 @@ module ProcessMessage
 				scts: query_hash['scts'], message_timestamp: query_hash["message-timestamp"], 
 				client_ref: query_hash['client-ref'], message_code: 8)
 		else
-			@message.save_text(status_delivery: query_hash["status"], err_code: query_hash['err-code'],
+			if @message
+				@message.save_text(status_delivery: query_hash["status"], err_code: query_hash['err-code'],
 				scts: query_hash['scts'], message_timestamp: query_hash["message-timestamp"])
+			end
 		end
 		#if !query_hash.has_key?("network-code")				# Looks like nexmo doesnt always provide this...not sure
 			#query_hash['network-code'] = ""
