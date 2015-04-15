@@ -1,7 +1,6 @@
 class User < ActiveRecord::Base
 
-  Stripe.api_key: '<redacted_api_key>'      # for test
-  #Stripe.api_key: '<redacted_api_key>'       # for production
+  Stripe.api_key = Rails.application.secrets.stripe["secret_key"]
 
   # Include default devise modules. Others available are:
     # :token_authenticatable, :lockable, :timeoutable and :confirmable,

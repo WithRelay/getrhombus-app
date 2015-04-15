@@ -2,12 +2,12 @@ class TextingService
 
   require 'uri'
 
+  NEXMO_API_KEY = Rails.application.secrets.nexmo["key"]
+  NEXMO_API_SECRET = Rails.application.secrets.nexmo["secret"]
+
   def send_sms(from, to, message)
-    # change to test keys and move to secrets.rb
-    api_key: '<redacted_api_key>' #8e2e5cab
-    api_secret: '<redacted_api_secret>'
     # encode the nexmo uri
-    uri = URI.encode_www_form([["api_key",api_key], ["api_secret", api_secret], ["from", from], ["to", to], 
+    uri = URI.encode_www_form([["api_key",NEXMO_API_KEY], ["api_secret", NEXMO_API_SECRET], ["from", from], ["to", to], 
                     ["text", message], ["status-report-req", "1"], ["client-ref", client_ref]])   
     # call nexmo api
     response = HTTParty.post('https://rest.nexmo.com/sms/json?'+ uri, :headers => {"Content-Type" => "application/x-www-form-urlencoded"} )
@@ -15,16 +15,12 @@ class TextingService
   end
 
   def buy_number(country)
-    # change to test keys and move to secrets.rb
-    api_key: '<redacted_api_key>' #8e2e5cab
-    api_secret: '<redacted_api_secret>'
-    
     # search for a number on nexmo
-    response = HTTParty.get('https://rest.nexmo.com/number/search/'+ api_key + "/" + api_secret + "/" + country + "?features=SMS,VOICE&size=1")
+    response = HTTParty.get('https://rest.nexmo.com/number/search/'+ NEXMO_API_KEY + "/" + NEXMO_API_SECRET + "/" + country + "?features=SMS,VOICE&size=1")
     # check the response
     if response.code == 200 and response["numbers"] != nil #.first["msisdn"] != ""
       msisdn = response["numbers"].first["msisdn"]
-      response = HTTParty.post('https://rest.nexmo.com/number/buy/'+ api_key + "/" + api_secret + "/" + country + "/" + msisdn)
+      response = HTTParty.post('https://rest.nexmo.com/number/buy/'+ NEXMO_API_KEY + "/" + NEXMO_API_SECRET + "/" + country + "/" + msisdn)
       
       # check response
       if response.code == 200

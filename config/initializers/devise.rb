@@ -232,13 +232,8 @@ Devise.setup do |config|
   # config.omniauth :github, 'APP_ID', 'APP_SECRET', :scope => 'user,public_repo'
   
   # For development
-  config.omniauth :stripe_connect, 'ca_3p20NvE1aexHzBEEduzif1gw6g8a874y', 'sk_test_lhZFl7b8z76isiiUT5dwFJOP', :scope => 'read_write'
+  config.omniauth :stripe_connect, Rails.application.secrets.stripe["oauth"], Rails.application.secrets.stripe["secret_key"], :scope => 'read_write'
    # or :scope => 'read_only'  :stripe_landing => 'register' # or :stripe_landing => 'login'
-
-  # For production
-  #config.omniauth :stripe_connect, 'ca_3p20HxB40mKgJ0NUidkfUCOQabOSl7wH', 'sk_live_REDACTED', :scope => 'read_write'
-  # or :scope => 'read_only' :stripe_landing => 'register' # or :stripe_landing => 'login'
-
 
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or
