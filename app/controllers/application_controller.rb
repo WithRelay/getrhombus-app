@@ -20,8 +20,8 @@ class ApplicationController < ActionController::Base
     render :json => Hash[
       'success' => !current_user.blank?, 
       'id' => !current_user.blank? ? current_user.id : nil,
-      'pubnub_publish_key' => CONFIG[:services]['pubnub']['publish_key'],
-      'pubnub_subscribe_key' => CONFIG[:services]['pubnub']['subscribe_key']
+      'pubnub_publish_key' => Rails.application.secrets.pubnub["publish_key"],
+      'pubnub_subscribe_key' => Rails.application.secrets.pubnub["subscribe_key"]
     ].to_json
   end
 
