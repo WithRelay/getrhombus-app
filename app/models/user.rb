@@ -1,7 +1,6 @@
 class User < ActiveRecord::Base
 
-  #Stripe.api_key: '<redacted_api_key>'      # for test
-  Stripe.api_key: '<redacted_api_key>'       # for production
+  Stripe.api_key = Rails.application.secrets.stripe["secret_key"]
 
   # Include default devise modules. Others available are:
     # :token_authenticatable, :lockable, :timeoutable and :confirmable,
@@ -73,7 +72,7 @@ class User < ActiveRecord::Base
         owner = User.find_by(email: '<redacted_email>')                # for production
 
         @message = Message.new
-        @message.nexmo_send_text_message(18, owner.rhombus_number, self.phone_number, 
+        @message.send_and_save_message(18, owner.rhombus_number, self.phone_number, 
               "We were unable to update your card info on Rhombus because: #{err[:message]}.")
 
         Notification.token_failure_notification(err, self.email).deliver_now
@@ -90,7 +89,7 @@ class User < ActiveRecord::Base
         # text code goes here. 21 is the latest
         # if self.instrument_uri.blank?
         # @message = Message.new
-        # @message.nexmo_send_text_message(21, "<redacted_phone_number>", self.phone_number, 
+        # @message.send_and_save_message(21, "<redacted_phone_number>", self.phone_number, 
          # "Thanks for adding your card. Simply text the amount and description to give. For example, '$50 for offering' and you're done!")
         # end
         return true                # yep!! we gat this
@@ -173,8 +172,8 @@ class User < ActiveRecord::Base
 
   def set_rhombus_number
     if self.user_level == 1
-      #@rhombus_number = Message.new
-      self.rhombus_number = nil #@rhombus_number.nexmo_search_and_buy_number("US")
+      #@rhombus_number = TextingService.buy_number("US")
+      self.rhombus_number = nil # @rhombus_number
       self.save
     end
   end

@@ -1,27 +1,16 @@
 class Message < ActiveRecord::Base
-	
-	require 'uri'	
 
 	belongs_to :txn, :foreign_key => :transaction_id, :class_name => :Transaction
 	#belongs_to :user, counter_cache: true
 	
 	# For sending all text messages
-	def nexmo_send_text_message(msg_code, from, to, message)
-		api_key: '<redacted_api_key>'
-		api_secret: '<redacted_api_secret>'
-		
+	def send_and_save_message(msg_code, from, to, message)		
 		# save the outbound message
-		@message = Message.new 		################## can i reuse this object...note that i already create one in messages_controller									
-		client_ref = @message.save_text(message_code: msg_code, from: from, to: to, text: message, status_report_req: 1)
-		
-		# encode the nexmo uri
-		uri = URI.encode_www_form([["api_key",api_key], ["api_secret", api_secret], ["from", from], ["to", to], 
-			["text", message], ["status-report-req", "1"], ["client-ref", client_ref]])		
-		
-		# call nexmo api
-		response = HTTParty.post('https://rest.nexmo.com/sms/json?'+ uri, :headers => {"Content-Type" => "application/x-www-form-urlencoded"} )
-		
-		# check response
+		#@message = Message.new 		################## can i reuse this object...note that i already create one in messages_controller									
+		client_ref = self.save_text(message_code: msg_code, from: from, to: to, text: message, status_report_req: 1)
+
+		response = TextingService.send_sms(from, to, message)		
+		# check response		
 		if response.code == 200 and response["messages"].first["status"] == "0"		
 			# Fetch the saved outbound message and attach nexmo's response to it
 			@message = Message.find_by(id: response['messages'].first["client-ref"])
@@ -34,38 +23,6 @@ class Message < ActiveRecord::Base
 			return
 		end
 	end
-
-
-	def nexmo_search_and_buy_number(country)
-		api_key: '<redacted_api_key>'
-		api_secret: '<redacted_api_secret>'
-		
-		# search for a number on nexmo
-		response = HTTParty.get('https://rest.nexmo.com/number/search/'+ api_key + "/" + api_secret + "/" + country + "?features=SMS,VOICE&size=1")
-		
-		# check the response
-		if response.code == 200 and response["numbers"] != nil #.first["msisdn"] != ""
-			msisdn = response["numbers"].first["msisdn"]
-
-			# buy number
-			response = HTTParty.post('https://rest.nexmo.com/number/buy/'+ api_key + "/" + api_secret + "/" + country + "/" + msisdn)
-			
-			# check response
-			if response.code == 200
-				return msisdn
-			else
-				# Notify marketplace owner of failure
-				Notification.text_failure_notification(response, from = "", to = "", message = "Rhombus number purchase failed with response code #{response.code}").deliver_now
-				# cos if it breaks I dont want crap return to function call in User model
-				return "-"
-			end
-		else
-			# Notify marketplace owner of failure
-			Notification.text_failure_notification(response, from = "", to = "", message = "Rhombus number search failed").deliver_now
-			return "-"
-		end
-	end
-
 	
 	# for saving any text received or sent
 	def save_text(options = {})

@@ -1,6 +1,6 @@
 
 
-<% if !user_signed_in? and params[:controller] != "contact_forms" %>
+<% if Rails.env.production? && !user_signed_in? && params[:controller] != "contact_forms" %>
 
 	<!-- begin olark code -->
 	<script data-cfasync="false" type='text/javascript'>/*<![CDATA[*/window.olark||(function(c){var f=window,d=document,l=f.location.protocol=="https:"?"https:":"http:",z=c.name,r="load";var nt=function(){

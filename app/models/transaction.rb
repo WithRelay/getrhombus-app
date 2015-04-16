@@ -38,7 +38,7 @@ class Transaction < ActiveRecord::Base
       err  = body[:error]
 
       @message = Message.new
-      @message.nexmo_send_text_message(18, merchant.rhombus_number, user.phone_number, 
+      @message.send_and_save_message(18, merchant.rhombus_number, user.phone_number, 
             "Your payment of $#{amount_in_hundreds} to #{merchant.business_name} failed because: #{err[:message]}.")
 
       Notification.payment_failure_notification(err, user, merchant, message).deliver_now
@@ -58,10 +58,10 @@ class Transaction < ActiveRecord::Base
       # return "#{response.uri}, #{response.transaction_number}, #{response.source.last_four}, #{response.on_behalf_of.customer_uri}"
       @message = Message.new
       if merchant.tax_rate == "0"
-        @message.nexmo_send_text_message(11, merchant.rhombus_number, user.phone_number, 
+        @message.send_and_save_message(11, merchant.rhombus_number, user.phone_number, 
               "Thanks #{user.card_name.split.first}. A payment of $#{amount_in_hundreds} was sent to #{merchant.business_name}.")
       else
-        @message.nexmo_send_text_message(11, merchant.rhombus_number, user.phone_number, 
+        @message.send_and_save_message(11, merchant.rhombus_number, user.phone_number, 
           "Thanks #{user.card_name.split.first}. A payment of $#{amount_with_taxes_in_hundreds} plus taxes and fees set by #{merchant.business_name} was sent.")
       end
 
