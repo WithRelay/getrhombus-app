@@ -1429,6 +1429,11 @@ Mailbox
   padding: 20px;
   background: #fff;
   margin-bottom: 0;
+  /* EDITED */
+  height: -webkit-calc(100vh - 360px);
+  height: -moz-calc(100vh - 360px);
+  height: calc(100vh - 360px);
+  overflow-y: auto;
 }
 .chat .conv li {
   display: block;

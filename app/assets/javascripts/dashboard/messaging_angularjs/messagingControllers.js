@@ -39,7 +39,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'PubNub
         });
         
         $scope.getUserMessages = function(user) {
-          $http.get('/users/' + merchant_id + '/json_get_user_messages_by_merchant/' + user.id)
+          $http.get('/users/' + merchant_id + '/json_get_user_messages_by_merchant/' + user.id + '?limit=' + (user.unread_count + 3))
           .success(function(data) {
             $scope.selected_user = user;
             $scope.selected_user_messages = data.messages;
