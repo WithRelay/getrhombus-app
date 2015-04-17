@@ -70,9 +70,19 @@ class UsersController < ApplicationController
     end
   end
   
-  # Returns JSON object with user ids who sent a message to the given merchant in the last CONFIG[:dashboard]['messaging']['num_days_history'] days
+  # Returns JSON object with user hash who sent a message to the given merchant in the last CONFIG[:dashboard]['messaging']['num_days_history'] days
   def json_get_latest_active_messaging
     render :json => Hash['success' => true, 'users' => User.get_latest_active_messaging(params[:id], CONFIG[:dashboard]['messaging']['num_days_history'])].to_json 
+  end
+  
+  # Returns JSON object with the last x messages a user has sent to the given merchant
+  def json_get_user_messages_by_merchant
+    if params[:limit]
+      limit = params[:limit]
+    else
+      limit = CONFIG[:dashboard]['messaging']['num_messages_per_user_default']
+    end
+    render :json => Hash['success' => true, 'messages' => Message.get_user_messages_by_merchant(params[:sender_id], params[:id], limit)].to_json 
   end
 
 private

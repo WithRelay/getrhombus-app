@@ -130,14 +130,22 @@ class User < ActiveRecord::Base
     return total_1, total_2, todays_payments.count, rhombus_number
   end
   
-  # Returns hash with user ids who sent a message to the given merchant in the last "num_days" days
+  # Returns hash with users who sent a message to the given merchant in the last "num_days" days
   def self.get_latest_active_messaging(merchant_id, num_days)
-    users = Message.select('`users`.`id`, `users`.`email`').where('`messages`.`user_id_to` = ? AND `messages`.`created_at` >= ?', merchant_id, Time.zone.now - num_days.days).joins('INNER JOIN `users` ON (`users`.`id` = `messages`.`user_id_from`)').group('user_id_from')
+    users = Message.select('`users`.`id`, `users`.`first_name`, `users`.`last_name`, `users`.`email`')
+                   .joins('INNER JOIN `users` ON (`users`.`id` = `messages`.`user_id_from`)')
+                   .where('`messages`.`user_id_to` = ? AND `messages`.`created_at` >= ?', merchant_id, Time.zone.now - num_days.days)
+                   .group('`messages`.`user_id_from`')
     latest_active = Array.new
     users.each do |user|
       latest_active.push({
         :id => user.id,
-        :email => user.email
+        :first_name => user.first_name,
+        :last_name => user.last_name,
+        :email => user.email,
+        :image_url => ActionController::Base.helpers.asset_path('user_icon_50x50.png'),
+        :last_message => Message.where('user_id_from = ? AND user_id_to = ?', user.id, merchant_id).order('created_at DESC').limit(1).pluck(:text).first,
+        :unread_count => Message.where('user_id_from = ? AND user_id_to = ? AND unread = ?', user.id, merchant_id, true).count
       })
     end
     latest_active

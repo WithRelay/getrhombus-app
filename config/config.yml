@@ -2,6 +2,7 @@ shared: &shared
   dashboard:
     messaging:
       num_days_history: 2
+      num_messages_per_user_default: 5
 
 development: &development
   <<: *shared

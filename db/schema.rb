@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150207051653) do
+ActiveRecord::Schema.define(version: 20150417044123) do
 
   create_table "messages", force: :cascade do |t|
     t.datetime "created_at"
@@ -34,6 +34,7 @@ ActiveRecord::Schema.define(version: 20150207051653) do
     t.integer  "transaction_id",    limit: 4
     t.string   "messageId",         limit: 255
     t.string   "text",              limit: 255
+    t.boolean  "unread",            limit: 1,   default: true
   end
 
   add_index "messages", ["transaction_id"], name: "index_messages_on_transaction_id", using: :btree
