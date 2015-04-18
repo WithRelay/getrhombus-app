@@ -151,18 +151,6 @@ class User < ActiveRecord::Base
     latest_active
   end
   
-  # Sends a message to the given merchant's channel
-  def send_pubnub_message(merchant_id, message)
-    $pubnub.subscribe(
-      :channel  => 'messaging_' + merchant_id.to_s
-    ) { |envelope| puts("\nchannel: #{envelope.channel}: \nmsg: #{envelope.message}")}
-    
-    $pubnub.publish(
-      :channel  => 'messaging_' + merchant_id.to_s,
-      :message => message
-    ) { |data| puts data.response }
-  end
-
   private
 
   def check_phone_number_length

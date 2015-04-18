@@ -32,16 +32,12 @@ module ProcessMessage
 					"Please follow the link below to create an account and then resend your payment. Thanks! => https://www.getrhombus.com/signup?num=#{params[:msisdn]}")
 				return
 			end
-		elsif is_signup?(text) 
-			if user
-				# save and pubnub
-			else
-				# how will view handle retrieving system message? does it matter?
-				# save in messages and send a response
-				save_inbound_text(request.query_string, msg_code = 4)
-				send_response(14, params[:to], params[:msisdn], 
-					"To start using Rhombus, follow the link to complete your signup: https://www.getrhombus.com/signup?num=#{params[:msisdn]}")
-			end			
+		elsif !user && is_signup?(text)
+			# how will view handle retrieving system message? does it matter?
+			# save in messages and send a response
+			save_inbound_text(request.query_string, msg_code = 4)
+			send_response(14, params[:to], params[:msisdn], 
+				"To start using Rhombus, follow the link to complete your signup: https://www.getrhombus.com/signup?num=#{params[:msisdn]}")
 		else
 			# save and pubnub
 			# save in messages
@@ -199,6 +195,15 @@ module ProcessMessage
 		#if !query_hash.has_key?("network-code")				# Looks like nexmo doesnt always provide this...not sure
 			#query_hash['network-code'] = ""
 		#end
+	end
+	
+	def send_message_to_merchant_realtime_stream(user_number, merchant_number, message)
+	  user = User.find_by_phone_number(user_number)
+	  merchant = User.find_by_rhombus_number(merchant_number)
+	  
+	  if !user.blank? && !merchant.blank?
+	    RealtimeStreamService.send_message(user.id, merchant.id, message)
+	  end
 	end
 
 end
