@@ -173,6 +173,9 @@ module ProcessMessage
 		@message.save_text(from: query_hash['msisdn'], to: query_hash['to'], 
 			network_code: query_hash["network-code"], messageId: query_hash['messageId'], message_timestamp: query_hash["message-timestamp"],
 			text: query_hash['text'], message_code: msg_code, transaction_id: transaction_id)
+			
+    # Send to merchant's messaging channel
+    send_message_to_merchant_realtime_stream(query_hash['msisdn'], query_hash['to'], query_hash['text'])
 	end
 
 	

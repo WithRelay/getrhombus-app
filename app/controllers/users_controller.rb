@@ -84,6 +84,12 @@ class UsersController < ApplicationController
     end
     render :json => Hash['success' => true, 'messages' => Message.get_user_messages_by_merchant(params[:sender_id], params[:id], limit)].to_json 
   end
+  
+  # Marks all user messages sent to a merchant as read
+  def mark_user_messages_for_merchant_as_read
+    Message.mark_user_messages_for_merchant_as_read(params[:sender_id], params[:id])
+    render :json => Hash['success' => true].to_json 
+  end
 
 private
     # Use callbacks to share common setup or constraints between actions.

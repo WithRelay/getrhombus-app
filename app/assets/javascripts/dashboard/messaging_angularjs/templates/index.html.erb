@@ -3,10 +3,10 @@
   <div class="page-header">
     <!--<h1 class="title">Messaging</h1>-->
     <ol class="breadcrumb">
-      <li ng-if="users.length > 0" class="active">
-        You have <span class="label label-danger">{{global_unread_count}}</span> unread messages
+      <li ng-if="active_user_count > 0" class="active">
+        You have <span ng-class="{'label label-danger': global_unread_count > 0 , '': global_unread_count == 0}" class="">{{global_unread_count}}</span> unread messages
       </li>
-      <li ng-if="users.length == 0" class="active">
+      <li ng-if="active_user_count == 0" class="active">
         No messages in the last <%= CONFIG[:dashboard]['messaging']['num_days_history'] %> days.
       </li>
     </ol>
@@ -14,7 +14,7 @@
   <!-- End Page Header -->
   <!-- //////////////////////////////////////////////////////////////////////////// -->
   <!-- START CONTAINER -->
-  <div ng-if="users.length > 0" class="container-mail">
+  <div ng-if="active_user_count > 0" class="container-mail">
     <!-- Start Mailbox -->
     <div class="mailbox clearfix">
       <!-- Start Mailbox Menu -->
@@ -31,12 +31,12 @@
                 <span class="searchbutton"><i class="fa fa-search"></i></span>
               </form>
             </li>
-            <li ng-repeat="user in users | filter:query">
+            <li ng-repeat="(user_id, user) in users | filter:query">
               <a class="item clearfix" ng-click="getUserMessages(user)"> 
                 <img ng-src="{{user.image_url}}" alt="img" class="img" /> 
                 <span class="from">{{user.first_name}} {{user.last_name}}</span> 
                 {{user.last_message}}
-                <span class="date">{{user.unread_count}}</span> 
+                <span ng-if="user.unread_count > 0" class="unread">{{user.unread_count}}</span> 
               </a>
             </li>
           </ul>
@@ -54,12 +54,15 @@
           <!-- End Title -->
           <!-- Start Conv -->
           <ul class="conv">
-            <li ng-repeat="message in selected_user_messages track by $index">
-              <img ng-if="($index == 0) || (selected_user_messages[$index - 1].user_level != message.user_level)" ng-src="{{message.image_url}}" alt="img" class="img">
-              <p ng-class="{'ballon color1': message.user_level == 0 , 'ballon color2': message.user_level != 0}">
-                {{message.text}}
-              </p>
-            <li>
+            <div ng-repeat="message in selected_user_messages track by $index">
+              <li ng-if="($index != 0) && !selected_user_messages[$index - 1].unread && selected_user_messages[$index].unread" class="date">New Messages</li>
+              <li>
+                <img ng-if="($index == 0) || (selected_user_messages[$index - 1].user_level != message.user_level)" ng-src="{{message.image_url}}" alt="img" class="img">
+                <p ng-class="{'ballon color1': message.user_level == 0 , 'ballon color2': message.user_level != 0}">
+                  {{message.text}}
+                </p>
+              <li>
+            </div>
           </ul>
           <!-- End Conv -->
           <div class="write">

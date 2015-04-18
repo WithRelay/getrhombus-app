@@ -30,6 +30,7 @@ Rails.application.routes.draw  do
   resources :users, :only => :show
   get '/users/:id/json_get_latest_active_messaging' => 'users#json_get_latest_active_messaging'
   get '/users/:id/json_get_user_messages_by_merchant/:sender_id' => 'users#json_get_user_messages_by_merchant'
+  get '/users/:id/mark_user_messages_for_merchant_as_read/:sender_id' => 'users#mark_user_messages_for_merchant_as_read'
   get '/users/:id/messaging' => 'users#messaging', :as => 'dashboard_messaging'
   
   get '/json_get_current_user' => 'application#json_get_current_user'

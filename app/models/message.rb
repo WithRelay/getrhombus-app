@@ -73,13 +73,14 @@ class Message < ActiveRecord::Base
 	
 	# Returns hash with the last "num_messages" messages that the given user has sent to the given merchant
   def self.get_user_messages_by_merchant(user_id, merchant_id, num_messages)
-    messages = Message.select('`messages`.`text`, `messages`.`unread`, `users`.`user_level`')
+    messages = Message.select('`messages`.`user_id_from`,`messages`.`text`,`messages`.`unread`,`users`.`user_level`')
                    .joins('INNER JOIN `users` ON (`users`.`id` = `messages`.`user_id_from`)')
                    .where('(`messages`.`user_id_from` = ? AND `messages`.`user_id_to` = ?) OR (`messages`.`user_id_from` = ? AND `messages`.`user_id_to` = ?)', user_id, merchant_id, merchant_id, user_id)
                    .order('`messages`.`created_at` DESC').limit(num_messages)
     latest_messages = Array.new
     messages.reverse.each do |message|
       latest_messages.push({
+        :user_id => message.user_id_from,
         :user_level => message.user_level,
         :image_url => message.user_level == 0 ? ActionController::Base.helpers.asset_path('user_icon_50x50.png') : ActionController::Base.helpers.asset_path('rhombus_icon_50x50.png'),
         :text => message.text,
@@ -87,6 +88,11 @@ class Message < ActiveRecord::Base
       })
     end
     latest_messages
+  end
+  
+  # Marks all user messages sent to a merchant as read
+  def self.mark_user_messages_for_merchant_as_read(user_id, merchant_id)
+    Message.where('user_id_from = ? AND user_id_to = ? AND unread = ?', user_id, merchant_id, true).update_all(unread: false)
   end
 
 end
