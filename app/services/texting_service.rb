@@ -7,7 +7,7 @@ class TextingService
 
   class << self
 
-    def send_sms(from, to, message)
+    def send_sms(from, to, client_ref, message)
       # encode the nexmo uri
       uri = URI.encode_www_form([["api_key",NEXMO_API_KEY], ["api_secret", NEXMO_API_SECRET], ["from", from], ["to", to], 
                       ["text", message], ["status-report-req", "1"], ["client-ref", client_ref]])   

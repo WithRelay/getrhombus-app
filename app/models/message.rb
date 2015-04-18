@@ -6,10 +6,16 @@ class Message < ActiveRecord::Base
 	# For sending all text messages
 	def send_and_save_message(msg_code, from, to, message)		
 		# save the outbound message
-		#@message = Message.new 		################## can i reuse this object...note that i already create one in messages_controller									
-		client_ref = self.save_text(message_code: msg_code, from: from, to: to, text: message, status_report_req: 1)
+		#@message = Message.new 		################## can i reuse this object...note that i already create one in messages_controller
+		merchant = User.find_by_rhombus_number(from)
+		user = User.find_by_phone_number(to)
+		if merchant.blank? || user.blank?
+		  client_ref = self.save_text(message_code: msg_code, from: from, to: to, text: message, status_report_req: 1)
+		else
+		  client_ref = self.save_text(message_code: msg_code, from: from, to: to, user_id_from: merchant.id, user_id_to: user.id, text: message, status_report_req: 1)
+		end
 
-		response = TextingService.send_sms(from, to, message)		
+		response = TextingService.send_sms(from, to, client_ref, message)		
 		# check response		
 		if response.code == 200 and response["messages"].first["status"] == "0"		
 			# Fetch the saved outbound message and attach nexmo's response to it
