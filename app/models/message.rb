@@ -38,7 +38,7 @@ class Message < ActiveRecord::Base
 		if options[:to]
 			# Attached the phone number and user id
 			self.to = options[:to] 
-			self.user_id_to =  User.find_by(phone_number: "#{options[:to]}").id rescue 0
+			self.user_id_to =  User.find_by(rhombus_number: "#{options[:to]}").id rescue 0
 		end
 		
 		self.network_code = options[:network_code] if options[:network_code]
