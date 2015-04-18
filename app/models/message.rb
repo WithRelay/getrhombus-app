@@ -6,14 +6,8 @@ class Message < ActiveRecord::Base
 	# For sending all text messages
 	def send_and_save_message(msg_code, from, to, message)		
 		# save the outbound message
-		#@message = Message.new 		################## can i reuse this object...note that i already create one in messages_controller
-		merchant = User.find_by_rhombus_number(from)
-		user = User.find_by_phone_number(to)
-		if merchant.blank? || user.blank?
-		  client_ref = self.save_text(message_code: msg_code, from: from, to: to, text: message, status_report_req: 1)
-		else
-		  client_ref = self.save_text(message_code: msg_code, from: from, to: to, user_id_from: merchant.id, user_id_to: user.id, text: message, status_report_req: 1)
-		end
+		#@message = Message.new 		################## can i reuse this object...note that i already create one in messages_controller									
+		client_ref = self.save_text(message_code: msg_code, from: from, to: to, text: message, status_report_req: 1)
 
 		response = TextingService.send_sms(from, to, client_ref, message)		
 		# check response		
@@ -37,14 +31,20 @@ class Message < ActiveRecord::Base
 
 		if options[:from]
 			# Attached the phone number and user id
-			self.from = options[:from] 
-			self.user_id_from = User.find_by(phone_number: "#{options[:from]}").id rescue 0
+			self.from = options[:from]
+			self.user_id_from = User.find_by(rhombus_number: "#{options[:from]}").id rescue 0
+			if self.user_id_from == 0
+        self.user_id_from = User.find_by(phone_number: "#{options[:from]}").id rescue 0
+			end
 		end
 
 		if options[:to]
 			# Attached the phone number and user id
 			self.to = options[:to] 
 			self.user_id_to =  User.find_by(rhombus_number: "#{options[:to]}").id rescue 0
+			if self.user_id_to == 0
+        self.user_id_to =  User.find_by(phone_number: "#{options[:to]}").id rescue 0
+			end
 		end
 		
 		self.network_code = options[:network_code] if options[:network_code]
