@@ -80,7 +80,15 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'PubNub
         $scope.sendMessage = function(message) {
           $http.get('/users/' + merchant_id + '/send_message_from_merchant/' + $scope.selected_user.id + '?message=' + encodeURI(message.text))
           .success(function(data) {
-            $scope.selected_user_messages.push({user_id: merchant_id, user_level: data.user_level, image_url: data.image_url, text: message.text, unread: false});
+            if (data.success) {
+              $scope.selected_user_messages.push({user_id: merchant_id, user_level: data.user_level, image_url: data.image_url, text: message.text, unread: false});
+              message.text = '';
+            } else {
+              alert('The message could not be sent, please try again.');
+            }
+          }).
+          error(function(data, status, headers, config) {
+            alert('The message could not be sent, please try again.');
           });
         };
       }).
