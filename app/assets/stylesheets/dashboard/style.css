@@ -909,10 +909,10 @@ Page Header
   position: relative;
 }
 .page-header .title {
-  padding: 0;
+  padding: 0 0 0 6px;
   margin: 0;
   font-family: 'Montserrat', sans-serif;
-  font-size: 20px;
+  font-size: 16px;
   line-height: normal;
   font-weight: normal;
   color: #37363e;
@@ -1443,9 +1443,9 @@ Mailbox
   background: #fff;
   margin-bottom: 0;
   /* EDITED */
-  height: -webkit-calc(100vh - 360px);
-  height: -moz-calc(100vh - 360px);
-  height: calc(100vh - 360px);
+  height: -webkit-calc(100vh - 385px);
+  height: -moz-calc(100vh - 385px);
+  height: calc(100vh - 385px);
   overflow-y: auto;
 }
 .chat .conv li {
@@ -2872,7 +2872,7 @@ select {
 /* breadcrumb */
 .breadcrumb {
   background: none;
-  padding: 0;
+  padding: 0 0 0 6px;
   margin: 0;
   font-weight: 600;
 }

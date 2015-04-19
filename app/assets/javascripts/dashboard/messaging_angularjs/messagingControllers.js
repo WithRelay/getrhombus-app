@@ -29,19 +29,23 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'PubNub
         message: function(m){
           var json_response = JSON.parse(m[0]);
           
-          if (json_response.user_id == $scope.active_user_id) {
-            $scope.$apply(function() {
-              $scope.selected_user_messages.push(json_response);
-              $scope.users[json_response.user_id].last_message = json_response.text;
+          $scope.$apply(function() {
+            if (json_response.user_id == $scope.active_user_id) {
+              $scope.selected_user_messages.push({user_id: json_response.user_id, user_level: json_response.user_level, image_url: json_response.image_url, text: json_response.message, unread: false});
+              $scope.users[json_response.user_id].last_message = json_response.message;
+              $scope.users[json_response.user_id].last_message_ts = parseInt(json_response.message_ts);
               $http.get('/users/' + merchant_id + '/mark_user_messages_for_merchant_as_read/' + $scope.active_user_id);
-            });
-          } else {
-            $scope.$apply(function() {
+            } else {
+              if (!$scope.users[json_response.user_id]) {
+                $scope.users[json_response.user_id] = {id: json_response.user_id, first_name: json_response.first_name, last_name: json_response.last_name, email: json_response.email, image_url: json_response.image_url, last_message: json_response.message, last_message_ts: json_response.message_ts, unread_count: 0};
+                $scope.active_user_count += 1;
+              }
               $scope.global_unread_count += 1;
               $scope.users[json_response.user_id].unread_count += 1;
-              $scope.users[json_response.user_id].last_message = json_response.text;
-            });
-          }
+              $scope.users[json_response.user_id].last_message = json_response.message;
+              $scope.users[json_response.user_id].last_message_ts = parseInt(json_response.message_ts);
+            }
+          });
         }
       });
       
@@ -67,9 +71,16 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'PubNub
             $scope.selected_user_messages = data.messages;
             
             // Mark messages as read
-            $scope.global_unread_count -= $scope.users[user.id].unread_count;
+            $scope.global_unread_count = (($scope.global_unread_count - $scope.users[user.id].unread_count) > 0) ? $scope.global_unread_count - $scope.users[user.id].unread_count : 0;
             $scope.users[user.id].unread_count = 0;
             $http.get('/users/' + merchant_id + '/mark_user_messages_for_merchant_as_read/' + user.id);
+          });
+        };
+        
+        $scope.sendMessage = function(message) {
+          $http.get('/users/' + merchant_id + '/send_message_from_merchant/' + $scope.selected_user.id + '?message=' + encodeURI(message.text))
+          .success(function(data) {
+            $scope.selected_user_messages.push({user_id: merchant_id, user_level: data.user_level, image_url: data.image_url, text: message.text, unread: false});
           });
         };
       }).

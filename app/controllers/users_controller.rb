@@ -82,13 +82,30 @@ class UsersController < ApplicationController
     else
       limit = CONFIG[:dashboard]['messaging']['num_messages_per_user_default']
     end
-    render :json => Hash['success' => true, 'messages' => Message.get_user_messages_by_merchant(params[:sender_id], params[:id], limit)].to_json 
+    render :json => Hash['success' => true, 'messages' => Message.get_user_messages_by_merchant(params[:user_id], params[:id], limit)].to_json 
   end
   
   # Marks all user messages sent to a merchant as read
   def mark_user_messages_for_merchant_as_read
-    Message.mark_user_messages_for_merchant_as_read(params[:sender_id], params[:id])
+    Message.mark_user_messages_for_merchant_as_read(params[:user_id], params[:id])
     render :json => Hash['success' => true].to_json 
+  end
+  
+  # Sends a message to user on behalf of merchant
+  def send_message_from_merchant
+    if !params[:message].blank?
+      user = User.find_by_id(params[:user_id])
+      merchant = User.find_by_id(params[:id])
+      if !user.blank? && !merchant.blank?
+        @message = Message.new
+        @message.send_and_save_message(5, merchant.rhombus_number, user.phone_number, params[:message])
+        if !@message.id.blank?
+          render :json => Hash['success' => true, 'user_level' => merchant.user_level, 'image_url' => ActionController::Base.helpers.asset_path('rhombus_icon_50x50.png')].to_json
+          return
+        end
+      end
+    end
+    render :json => Hash['success' => false].to_json
   end
 
 private

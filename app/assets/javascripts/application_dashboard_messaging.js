@@ -20,4 +20,5 @@
 //= require pubnub/pubnub-angular.js
 //= require dashboard/messaging_angularjs/messagingApp.js
 //= require dashboard/messaging_angularjs/messagingControllers.js
+//= require dashboard/messaging_angularjs/messagingFilters.js
 //= require_tree ./dashboard/messaging_angularjs/templates

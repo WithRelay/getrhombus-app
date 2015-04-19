@@ -1,7 +1,7 @@
 <div class="content">
   <!-- Start Page Header -->
   <div class="page-header">
-    <!--<h1 class="title">Messaging</h1>-->
+    <h1 class="title">Messaging</h1>
     <ol class="breadcrumb">
       <li ng-if="active_user_count > 0" class="active">
         You have <span ng-class="{'label label-danger': global_unread_count > 0 , '': global_unread_count == 0}" class="">{{global_unread_count}}</span> unread messages
@@ -31,7 +31,7 @@
                 <span class="searchbutton"><i class="fa fa-search"></i></span>
               </form>
             </li>
-            <li ng-repeat="(user_id, user) in users | filter:query">
+            <li ng-repeat="(user_id, user) in users | filterUserList:query | orderObjectBy:'last_message_ts':true">
               <a class="item clearfix" ng-click="getUserMessages(user)"> 
                 <img ng-src="{{user.image_url}}" alt="img" class="img" /> 
                 <span class="from">{{user.first_name}} {{user.last_name}}</span> 
@@ -68,9 +68,9 @@
           <div class="write">
             <form class="margin-b-20">
               <p>
-                <textarea class="textarea form-control" placeholder="Enter text ..."  style="height:60px; width:100%;"></textarea>
+                <textarea class="textarea form-control" placeholder="Enter text ..." style="height:60px; width:100%;" ng-model="new_message.text"></textarea>
               </p>
-              <button class="btn btn-default">
+              <button class="btn btn-default" ng-click="sendMessage(new_message)">
                 Send
               </button>
               <button type="reset" class="btn margin-l-5">

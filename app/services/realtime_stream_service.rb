@@ -3,7 +3,7 @@ class RealtimeStreamService
   class << self
     
     # Sends a message to the given merchant's channel
-    def send_message(user_id, merchant_id, message)
+    def send_message(user_id, merchant_id, message, message_ts)
       $pubnub.subscribe(
         :channel  => 'messaging_' + merchant_id.to_s
       ) {}
@@ -14,9 +14,13 @@ class RealtimeStreamService
         :channel  => 'messaging_' + merchant_id.to_s,
         :message => Hash[
           'user_id' => user_id,
+          'first_name' => user.first_name,
+          'last_name' => user.last_name,
+          'email' => user.email,
           'user_level' => user.user_level,
           'image_url' => user.user_level == 0 ? ActionController::Base.helpers.asset_path('user_icon_50x50.png') : ActionController::Base.helpers.asset_path('rhombus_icon_50x50.png'),
-          'text' => message,
+          'message' => message,
+          'message_ts' => message_ts,
           'unread' => false
         ].to_json
       ) {}
