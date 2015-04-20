@@ -6,7 +6,8 @@ var messagingApp = angular.module('PubNubAngularMessagingApp', [
   'ngRoute',
   'templates',
   'messagingControllers',
-  'messagingFilters'
+  'messagingFilters',
+  'luegg.directives' // Auto scroll module
 ]);
 
 messagingApp.config(['$routeProvider',

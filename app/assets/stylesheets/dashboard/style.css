@@ -1330,6 +1330,8 @@ Mailbox
   left: 0;
   top: 0;
   color: #76747A;
+  /* EDITED */
+  margin-bottom: 0;
 }
 .mailbox-inbox li {
   display: block;
@@ -1380,6 +1382,12 @@ Mailbox
   padding: 0 6px;
   color: #ffffff;
   border-radius: 4px;
+}
+.mailbox-inbox .user-list {
+  height: -webkit-calc(100vh - 218px);
+  height: -moz-calc(100vh - 218px);
+  height: calc(100vh - 218px);
+  overflow-y: auto;
 }
 /* ... */
 .mailbox-inbox .search {
@@ -1443,9 +1451,9 @@ Mailbox
   background: #fff;
   margin-bottom: 0;
   /* EDITED */
-  height: -webkit-calc(100vh - 385px);
-  height: -moz-calc(100vh - 385px);
-  height: calc(100vh - 385px);
+  height: -webkit-calc(100vh - 362px);
+  height: -moz-calc(100vh - 362px);
+  height: calc(100vh - 362px);
   overflow-y: auto;
 }
 .chat .conv li {

@@ -31,14 +31,16 @@
                 <span class="searchbutton"><i class="fa fa-search"></i></span>
               </form>
             </li>
-            <li ng-repeat="(user_id, user) in users | filterUserList:query | orderObjectBy:'last_message_ts':true">
-              <a class="item clearfix" ng-click="getUserMessages(user)"> 
-                <img ng-src="{{user.image_url}}" alt="img" class="img" /> 
-                <span class="from">{{user.first_name}} {{user.last_name}}</span> 
-                {{user.last_message}}
-                <span ng-if="user.unread_count > 0" class="unread">{{user.unread_count}}</span> 
-              </a>
-            </li>
+            <div class="user-list">
+              <li ng-repeat="(user_id, user) in users | filterUserList:query | orderObjectBy:'last_message_ts':true">
+                <a class="item clearfix" ng-click="getUserMessages(user)"> 
+                  <img ng-src="{{user.image_url}}" alt="img" class="img" /> 
+                  <span class="from">{{user.first_name}} {{user.last_name}}</span> 
+                  {{user.last_message}}
+                  <span ng-if="user.unread_count > 0" class="unread">{{user.unread_count}}</span> 
+                </a>
+              </li>
+            </div>
           </ul>
         </div>
         <!-- End Mailbox Inbox -->
@@ -53,7 +55,7 @@
           </div>
           <!-- End Title -->
           <!-- Start Conv -->
-          <ul class="conv">
+          <ul class="conv" scroll-glue-bottom="true">
             <div ng-repeat="message in selected_user_messages track by $index">
               <li ng-if="($index != 0) && !selected_user_messages[$index - 1].unread && selected_user_messages[$index].unread" class="date">New Messages</li>
               <li>
@@ -66,7 +68,7 @@
           </ul>
           <!-- End Conv -->
           <div class="write">
-            <form class="margin-b-20">
+            <form>
               <p>
                 <textarea class="textarea form-control" placeholder="Enter text ..." style="height:60px; width:100%;" ng-model="new_message.text"></textarea>
               </p>

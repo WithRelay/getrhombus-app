@@ -13,6 +13,7 @@
 //= require pubnub/pubnub.min.js
 //= require angularjs/angular.min.js
 //= require angularjs/angular-route.min.js
+//= require angularjs/angular-scrollglue.js
 //= require angular-rails-templates
 //= require jquery
 //= require jquery_ujs

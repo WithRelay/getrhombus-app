@@ -77,19 +77,21 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'PubNub
           });
         };
         
-        $scope.sendMessage = function(message) {
-          $http.get('/users/' + merchant_id + '/send_message_from_merchant/' + $scope.selected_user.id + '?message=' + encodeURI(message.text))
-          .success(function(data) {
-            if (data.success) {
-              $scope.selected_user_messages.push({user_id: merchant_id, user_level: data.user_level, image_url: data.image_url, text: message.text, unread: false});
-              message.text = '';
-            } else {
+        $scope.sendMessage = function(new_message) {
+          if ((new_message != undefined) && (new_message.text != '')) {
+            $http.get('/users/' + merchant_id + '/send_message_from_merchant/' + $scope.selected_user.id + '?message=' + encodeURI(new_message.text))
+            .success(function(data) {
+              if (data.success) {
+                $scope.selected_user_messages.push({user_id: merchant_id, user_level: data.user_level, image_url: data.image_url, text: new_message.text, unread: false});
+                new_message.text = '';
+              } else {
+                alert('The message could not be sent, please try again.');
+              }
+            }).
+            error(function(data, status, headers, config) {
               alert('The message could not be sent, please try again.');
-            }
-          }).
-          error(function(data, status, headers, config) {
-            alert('The message could not be sent, please try again.');
-          });
+            });
+          }
         };
       }).
       error(function(data, status, headers, config) {
