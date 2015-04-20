@@ -53,7 +53,6 @@ module ProcessMessage
 		
 		# save and pubnub
 		save_inbound_text(request.query_string, msg_code = 1, debit_data[0])
-		#pubnub
 
 		# if no error from api or saving process, proceed to save transaction details for merchant
 		if debit_data != "failed"

@@ -32,8 +32,9 @@
   width: 20px;
   height: 20px;
   border: solid 2px transparent;
-  border-top-color: #0aa699;
-  border-left-color: #0aa699;
+  /* EDITED */
+  /*border-top-color: #0aa699;
+  border-left-color: #0aa699;*/
   border-radius: 20px;
   -webkit-animation: pace-spinner 400ms linear infinite;
   -moz-animation: pace-spinner 400ms linear infinite;
