@@ -27,6 +27,9 @@ class UsersController < ApplicationController
   end  
   
   def messaging
+    if @user.user_level != 1
+      redirect_to :root and return
+    end
     render layout: 'application_dashboard_messaging'
   end
   
