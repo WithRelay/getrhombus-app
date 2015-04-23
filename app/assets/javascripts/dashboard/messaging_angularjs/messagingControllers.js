@@ -82,7 +82,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'PubNub
             $http.get('/users/' + merchant_id + '/send_message_from_merchant/' + $scope.selected_user.id + '?message=' + encodeURI(new_message.text))
             .success(function(data) {
               if (data.success) {
-                $scope.selected_user_messages.push({user_id: merchant_id, user_level: data.user_level, image_url: data.image_url, text: new_message.text, ts_day_of_the_week: new_message.ts_day_of_the_week, ts_time: new_message.ts_time, unread: false});
+                $scope.selected_user_messages.push({user_id: merchant_id, user_level: data.user_level, image_url: data.image_url, text: new_message.text, ts_day_of_the_week: data.ts_day_of_the_week, ts_time: data.ts_time, unread: false});
                 new_message.text = '';
               } else {
                 alert('The message could not be sent, please try again.');

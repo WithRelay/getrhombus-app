@@ -7,8 +7,7 @@ class Message < ActiveRecord::Base
 	def send_and_save_message(msg_code, from, to, message)		
 		# save the outbound message
 		#@message = Message.new 		################## can i reuse this object...note that i already create one in messages_controller									
-		new_message = self.save_text(message_code: msg_code, from: from, to: to, text: message, unread: false, status_report_req: 1)
-    client_ref = new_message.id
+		client_ref = self.save_text(message_code: msg_code, from: from, to: to, text: message, unread: false, status_report_req: 1)
 
 		response = TextingService.send_sms(from, to, client_ref, message)		
 		# check response		
@@ -64,7 +63,7 @@ class Message < ActiveRecord::Base
 		self.transaction_id = options[:transaction_id] if options[:transaction_id]
 		self.unread = options[:unread] unless options[:unread].nil?
 		self.save
-		return self
+		return self.id
 		#if @message.save
 		#	return 200
 		#else
