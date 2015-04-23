@@ -58,11 +58,16 @@
           <ul class="conv" scroll-glue-bottom="true">
             <div ng-repeat="message in selected_user_messages track by $index">
               <li ng-if="($index != 0) && !selected_user_messages[$index - 1].unread && selected_user_messages[$index].unread" class="date">New Messages</li>
+              <li ng-if="($index == 0) || (selected_user_messages[$index - 1].ts_day_of_the_week != selected_user_messages[$index].ts_day_of_the_week)" class="date">{{message.ts_day_of_the_week}}</li>
               <li>
                 <img ng-if="($index == 0) || (selected_user_messages[$index - 1].user_level != message.user_level)" ng-src="{{message.image_url}}" alt="img" class="img">
                 <p ng-class="{'ballon color1': message.user_level == 0 , 'ballon color2': message.user_level != 0}">
                   {{message.text}}
                 </p>
+                <p class="ts">
+                  {{message.ts_time}}
+                </p>
+                <div class="separator">&nbsp;</div>
               <li>
             </div>
           </ul>

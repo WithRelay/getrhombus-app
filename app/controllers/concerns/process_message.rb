@@ -174,7 +174,7 @@ module ProcessMessage
 			text: query_hash['text'], message_code: msg_code, transaction_id: transaction_id)
 			
     # Send to merchant's messaging channel
-    send_message_to_merchant_realtime_stream(query_hash['msisdn'], query_hash['to'], query_hash['text'], @message.created_at.to_i)
+    send_message_to_merchant_realtime_stream(query_hash['msisdn'], query_hash['to'], query_hash['text'], @message.created_at)
 	end
 
 	

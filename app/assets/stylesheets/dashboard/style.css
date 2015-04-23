@@ -1474,7 +1474,16 @@ Mailbox
   display: inline-table;
   padding: 14px 20px;
   border-radius: 20px;
-  margin-bottom: 14px;
+  /* EDITED */
+  /* margin-bottom: 14px; */
+  float:left;
+}
+.chat .conv .ts {
+  float:right;
+}
+.chat .conv .separator {
+  clear: both;
+  height: 0px;
 }
 .chat .conv .color1 {
   background: #B9F98E;

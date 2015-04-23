@@ -74,7 +74,7 @@ class Message < ActiveRecord::Base
 	
 	# Returns hash with the last "num_messages" messages that the given user has sent to the given merchant
   def self.get_user_messages_by_merchant(user_id, merchant_id, num_messages)
-    messages = Message.select('`messages`.`user_id_from`,`messages`.`text`,`messages`.`unread`,`users`.`user_level`')
+    messages = Message.select('`messages`.`user_id_from`,`messages`.`text`,`messages`.`unread`,`messages`.`created_at`,`users`.`user_level`')
                    .joins('INNER JOIN `users` ON (`users`.`id` = `messages`.`user_id_from`)')
                    .where('(`messages`.`user_id_from` = ? AND `messages`.`user_id_to` = ?) OR (`messages`.`user_id_from` = ? AND `messages`.`user_id_to` = ?)', user_id, merchant_id, merchant_id, user_id)
                    .order('`messages`.`created_at` DESC').limit(num_messages)
@@ -85,6 +85,8 @@ class Message < ActiveRecord::Base
         :user_level => message.user_level,
         :image_url => message.user_level == 0 ? ActionController::Base.helpers.asset_path('user_icon_50x50.png') : ActionController::Base.helpers.asset_path('rhombus_icon_50x50.png'),
         :text => message.text,
+        :ts_day_of_the_week => message.created_at.strftime('%A'),
+        :ts_time => message.created_at.strftime('%l:%M %P'),
         :unread => message.unread
       })
     end
