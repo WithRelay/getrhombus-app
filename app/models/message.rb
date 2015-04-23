@@ -63,7 +63,7 @@ class Message < ActiveRecord::Base
 		self.transaction_id = options[:transaction_id] if options[:transaction_id]
 		self.unread = options[:unread] unless options[:unread].nil?
 		self.save
-		return self.id
+		return self
 		#if @message.save
 		#	return 200
 		#else
