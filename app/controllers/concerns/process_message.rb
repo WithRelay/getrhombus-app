@@ -165,7 +165,7 @@ module ProcessMessage
 		@message.send_and_save_message(msg_code, to, from, message)
 		
 		# Send to merchant's messaging channel
-    send_message_to_merchant_realtime_stream(from, to, message, @message.created_at)
+    RealtimeStreamService.send_message_via_number(to, from, message, @message.created_at)
 	end
 
 	
@@ -177,7 +177,7 @@ module ProcessMessage
 			text: query_hash['text'], message_code: msg_code, transaction_id: transaction_id)
 			
     # Send to merchant's messaging channel
-    send_message_to_merchant_realtime_stream(query_hash['msisdn'], query_hash['to'], query_hash['text'], @message.created_at)
+    RealtimeStreamService.send_message_via_number(query_hash['msisdn'], query_hash['to'], query_hash['text'], @message.created_at)
 	end
 
 	
@@ -202,15 +202,6 @@ module ProcessMessage
 		#end
 	end
 	
-	def send_message_to_merchant_realtime_stream(user_number, merchant_number, message, message_ts)
-	  user = User.find_by_phone_number(user_number)
-	  merchant = User.find_by_rhombus_number(merchant_number)
-	  
-	  if !user.blank? && !merchant.blank?
-	    RealtimeStreamService.send_message(user.id, merchant.id, message, message_ts)
-	  end
-	end
-
 end
 
 =begin

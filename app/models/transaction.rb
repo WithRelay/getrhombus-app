@@ -64,6 +64,9 @@ class Transaction < ActiveRecord::Base
         @message.send_and_save_message(11, merchant.rhombus_number, user.phone_number, 
           "Thanks #{user.card_name.split.first}. A payment of $#{amount_with_taxes_in_hundreds} plus taxes and fees set by #{merchant.business_name} was sent.")
       end
+      
+      # Send to merchant's messaging channel
+      RealtimeStreamService.send_message_via_number(user.phone_number, merchant.rhombus_number, @message.text, @message.created_at)
 
       # assign txn num and save txn
       transaction_number = self.generate_number

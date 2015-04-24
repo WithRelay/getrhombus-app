@@ -2,8 +2,18 @@ class RealtimeStreamService
 
   class << self
     
-    # Sends a message to the given merchant's channel
-    def send_message(user_id, merchant_id, message, message_ts)
+    # Sends a message to the given merchant's channel, provided user and merchant numbers
+    def send_message_via_number(user_number, merchant_number, message, message_ts)
+      user = User.find_by_phone_number(user_number)
+      merchant = User.find_by_rhombus_number(merchant_number)
+      
+      if !user.blank? && !merchant.blank?
+        send_message_via_id(user.id, merchant.id, message, message_ts)
+      end
+    end
+    
+    # Sends a message to the given merchant's channel, provided user and merchant ids
+    def send_message_via_id(user_id, merchant_id, message, message_ts)
       $pubnub.subscribe(
         :channel  => 'messaging_' + Rails.env + '_' + merchant_id.to_s
       ) {}
