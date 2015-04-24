@@ -14,12 +14,12 @@ module ProcessMessage
 		amount = is_payment?(text)
 		if amount
 			if user
-				if is_customer_account_complete?(request, user)
+				if is_customer_account_complete?(request, params, user)
 					amount = to_cents(amount)
-					if is_amount_under_limit?(request, amount)
+					if is_amount_under_limit?(request, params, amount)
 						merchant = User.find_by(rhombus_number: params[:to])
-						if is_merchant_active?(request, merchant)
-							if is_merchant_account_complete?(request, merchant)
+						if is_merchant_active?(request, params, merchant)
+							if is_merchant_account_complete?(request, params, merchant)
 								process_payment(amount, merchant, user, text, request)
 							end
 						end
@@ -76,7 +76,7 @@ module ProcessMessage
 	end
 
 
-	def is_customer_account_complete?(request, user)
+	def is_customer_account_complete?(request, params, user)
 		return true if user.customer_uri
 		save_inbound_text(request.query_string, msg_code = 7)
 		# notify user
@@ -89,7 +89,7 @@ module ProcessMessage
 	end
 
 
-	def is_merchant_active?(request, merchant)
+	def is_merchant_active?(request, params, merchant)
 		return true if merchant.is_active
 		save_inbound_text(request.query_string, msg_code = 9)
 
@@ -102,7 +102,7 @@ module ProcessMessage
 	end
 
 
-	def is_merchant_account_complete?(request, merchant)
+	def is_merchant_account_complete?(request, params, merchant)
 		return true if !merchant.stripe_access_token.blank?
 		save_inbound_text(request.query_string, msg_code = 9)
 
@@ -115,7 +115,7 @@ module ProcessMessage
 	end
 
 
-	def is_amount_under_limit?(request, amount)
+	def is_amount_under_limit?(request, params, amount)
 		return true if amount <= 1500000
 		# send message over limit
 		# save in messages and send a response
@@ -162,7 +162,10 @@ module ProcessMessage
 
 	def send_response(msg_code, to, from, message) 
 		@message = Message.new 				
-		@message.send_and_save_message(msg_code, to, from, message) 
+		@message.send_and_save_message(msg_code, to, from, message)
+		
+		# Send to merchant's messaging channel
+    send_message_to_merchant_realtime_stream(from, to, message, @message.created_at)
 	end
 
 	
