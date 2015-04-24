@@ -165,7 +165,7 @@ module ProcessMessage
 		@message.send_and_save_message(msg_code, to, from, message)
 		
 		# Send to merchant's messaging channel
-    RealtimeStreamService.send_message_via_number(to, from, message, @message.created_at, true)
+    RealtimeStreamService.send_message_via_number(from, to, message, @message.created_at, true)
 	end
 
 	
