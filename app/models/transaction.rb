@@ -66,7 +66,7 @@ class Transaction < ActiveRecord::Base
       end
       
       # Send to merchant's messaging channel
-      RealtimeStreamService.send_message_via_number(user.phone_number, merchant.rhombus_number, @message.text, @message.created_at)
+      RealtimeStreamService.send_message_via_number(user.phone_number, merchant.rhombus_number, @message.text, @message.created_at, true)
 
       # assign txn num and save txn
       transaction_number = self.generate_number
