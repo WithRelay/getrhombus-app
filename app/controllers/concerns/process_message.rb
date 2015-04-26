@@ -48,12 +48,17 @@ module ProcessMessage
 
 	# refactor Transaction model
 	def process_payment(amount, merchant, user, text, request)
+		# save and pubnub
+    new_message = save_inbound_text(request.query_string, msg_code = 1)
+		
 		@customer_transaction = Transaction.new
 		debit_data = @customer_transaction.charge_customer_card(amount, merchant, user, text)
 		
-		# save and pubnub
-		save_inbound_text(request.query_string, msg_code = 1, debit_data[0])
-
+		# Save transaction id
+		if (!new_message.id.blank?)
+		  new_message.update(transaction_id: debit_data[0])
+		end
+		
 		# if no error from api or saving process, proceed to save transaction details for merchant
 		if debit_data != "failed"
 			@merchant_transaction = Transaction.new
@@ -178,6 +183,8 @@ module ProcessMessage
 			
     # Send to merchant's messaging channel
     RealtimeStreamService.send_message_via_number(query_hash['msisdn'], query_hash['to'], query_hash['text'], @message.created_at)
+    
+    @message
 	end
 
 	
