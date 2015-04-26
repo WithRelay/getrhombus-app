@@ -8,6 +8,7 @@ var messagingControllers = angular.module('messagingControllers', [
 
 messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'PubNub',
   function($scope, $http, PubNub) {
+    $scope.char_limit = 250;
     $scope.active_user_id = 0;
     $scope.active_user_count = 0;
     $scope.global_unread_count = 0;
@@ -82,7 +83,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'PubNub
         };
         
         $scope.sendMessage = function(new_message) {
-          if ((new_message != undefined) && (new_message.text != '')) {
+          if ((new_message != undefined) && (new_message.text != '') && (new_message.text.length <= $scope.char_limit)) {
             $http.get('/users/' + merchant_id + '/send_message_from_merchant/' + $scope.selected_user.id + '?message=' + encodeURI(new_message.text))
             .success(function(data) {
               if (data.success) {
@@ -95,6 +96,8 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'PubNub
             error(function(data, status, headers, config) {
               alert('The message could not be sent, please try again.');
             });
+          } else if (new_message.text.length > $scope.char_limit) {
+            alert('Maximum ' + $scope.char_limit + ' characters.');
           }
         };
       }).

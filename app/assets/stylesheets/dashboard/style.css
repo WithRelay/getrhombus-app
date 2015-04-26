@@ -1286,6 +1286,11 @@ Mailbox
   padding: 20px;
   background: #fff;
 }
+/* EDITED */
+.mailbox .char-counter {
+  margin-left: 10px;
+}
+/* ... */
 .mailbox-menu {
   background: #fff;
   overflow: hidden;
