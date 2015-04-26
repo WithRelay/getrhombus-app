@@ -129,7 +129,30 @@ class User < ActiveRecord::Base
     end
     return total_1, total_2, todays_payments.count, rhombus_number
   end
-
+  
+  # Returns hash with users who sent a message to the given merchant in the last "num_days" days
+  def self.get_latest_active_messaging(merchant_id, num_days)
+    users = Message.select('`users`.`id`, `users`.`first_name`, `users`.`last_name`, `users`.`email`')
+                   .joins('INNER JOIN `users` ON (`users`.`id` = `messages`.`user_id_from`)')
+                   .where('(`messages`.`user_id_to` = ? AND `messages`.`created_at` >= ?) OR (`messages`.`user_id_to` = ? AND `messages`.`unread` = ?)', merchant_id, Time.zone.now - num_days.days, merchant_id, true)
+                   .group('`messages`.`user_id_from`')
+    latest_active = Array.new
+    users.each do |user|
+      last_message = Message.select('text, created_at').where('user_id_from = ? AND user_id_to = ?', user.id, merchant_id).order('created_at DESC').limit(1).first
+      latest_active.push({
+        :id => user.id,
+        :first_name => user.first_name,
+        :last_name => user.last_name,
+        :email => user.email,
+        :image_url => ActionController::Base.helpers.asset_path('user_icon_50x50.png'),
+        :last_message => last_message.blank? ? '' : last_message.text,
+        :last_message_ts => last_message.blank? ? 0 : last_message.created_at.to_i,
+        :unread_count => Message.where('user_id_from = ? AND user_id_to = ? AND unread = ?', user.id, merchant_id, true).count
+      })
+    end
+    latest_active
+  end
+  
   private
 
   def check_phone_number_length
@@ -192,6 +215,5 @@ class User < ActiveRecord::Base
       Notification.welcome_email("<redacted_email>", self.user_level, self.first_name).deliver
     end
   end
-
-
+  
 end

@@ -14,12 +14,12 @@ module ProcessMessage
 		amount = is_payment?(text)
 		if amount
 			if user
-				if is_customer_account_complete?(request, user)
+				if is_customer_account_complete?(request, params, user)
 					amount = to_cents(amount)
-					if is_amount_under_limit?(request, amount)
+					if is_amount_under_limit?(request, params, amount)
 						merchant = User.find_by(rhombus_number: params[:to])
-						if is_merchant_active?(request, merchant)
-							if is_merchant_account_complete?(request, merchant)
+						if is_merchant_active?(request, params, merchant)
+							if is_merchant_account_complete?(request, params, merchant)
 								process_payment(amount, merchant, user, text, request)
 							end
 						end
@@ -32,16 +32,12 @@ module ProcessMessage
 					"Please follow the link below to create an account and then resend your payment. Thanks! => https://www.getrhombus.com/signup?num=#{params[:msisdn]}")
 				return
 			end
-		elsif is_signup?(text) 
-			if user
-				# save and pubnub
-			else
-				# how will view handle retrieving system message? does it matter?
-				# save in messages and send a response
-				save_inbound_text(request.query_string, msg_code = 4)
-				send_response(14, params[:to], params[:msisdn], 
-					"To start using Rhombus, follow the link to complete your signup: https://www.getrhombus.com/signup?num=#{params[:msisdn]}")
-			end			
+		elsif !user && is_signup?(text)
+			# how will view handle retrieving system message? does it matter?
+			# save in messages and send a response
+			save_inbound_text(request.query_string, msg_code = 4)
+			send_response(14, params[:to], params[:msisdn], 
+				"To start using Rhombus, follow the link to complete your signup: https://www.getrhombus.com/signup?num=#{params[:msisdn]}")
 		else
 			# save and pubnub
 			# save in messages
@@ -52,13 +48,17 @@ module ProcessMessage
 
 	# refactor Transaction model
 	def process_payment(amount, merchant, user, text, request)
+		# save and pubnub
+    new_message = save_inbound_text(request.query_string, msg_code = 1)
+		
 		@customer_transaction = Transaction.new
 		debit_data = @customer_transaction.charge_customer_card(amount, merchant, user, text)
 		
-		# save and pubnub
-		save_inbound_text(request.query_string, msg_code = 1, debit_data[0])
-		#pubnub
-
+		# Save transaction id
+		if (!new_message.id.blank?)
+		  new_message.update(transaction_id: debit_data[0])
+		end
+		
 		# if no error from api or saving process, proceed to save transaction details for merchant
 		if debit_data != "failed"
 			@merchant_transaction = Transaction.new
@@ -81,7 +81,7 @@ module ProcessMessage
 	end
 
 
-	def is_customer_account_complete?(request, user)
+	def is_customer_account_complete?(request, params, user)
 		return true if user.customer_uri
 		save_inbound_text(request.query_string, msg_code = 7)
 		# notify user
@@ -94,7 +94,7 @@ module ProcessMessage
 	end
 
 
-	def is_merchant_active?(request, merchant)
+	def is_merchant_active?(request, params, merchant)
 		return true if merchant.is_active
 		save_inbound_text(request.query_string, msg_code = 9)
 
@@ -107,7 +107,7 @@ module ProcessMessage
 	end
 
 
-	def is_merchant_account_complete?(request, merchant)
+	def is_merchant_account_complete?(request, params, merchant)
 		return true if !merchant.stripe_access_token.blank?
 		save_inbound_text(request.query_string, msg_code = 9)
 
@@ -120,7 +120,7 @@ module ProcessMessage
 	end
 
 
-	def is_amount_under_limit?(request, amount)
+	def is_amount_under_limit?(request, params, amount)
 		return true if amount <= 1500000
 		# send message over limit
 		# save in messages and send a response
@@ -167,7 +167,10 @@ module ProcessMessage
 
 	def send_response(msg_code, to, from, message) 
 		@message = Message.new 				
-		@message.send_and_save_message(msg_code, to, from, message) 
+		@message.send_and_save_message(msg_code, to, from, message)
+		
+		# Send to merchant's messaging channel
+    RealtimeStreamService.send_message_via_number(from, to, message, @message.created_at, true)
 	end
 
 	
@@ -177,6 +180,11 @@ module ProcessMessage
 		@message.save_text(from: query_hash['msisdn'], to: query_hash['to'], 
 			network_code: query_hash["network-code"], messageId: query_hash['messageId'], message_timestamp: query_hash["message-timestamp"],
 			text: query_hash['text'], message_code: msg_code, transaction_id: transaction_id)
+			
+    # Send to merchant's messaging channel
+    RealtimeStreamService.send_message_via_number(query_hash['msisdn'], query_hash['to'], query_hash['text'], @message.created_at)
+    
+    @message
 	end
 
 	
@@ -200,7 +208,7 @@ module ProcessMessage
 			#query_hash['network-code'] = ""
 		#end
 	end
-
+	
 end
 
 =begin

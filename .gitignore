@@ -16,6 +16,7 @@
 !/log/.keep
 /tmp
 .env
+/pubnub.log
 
 # Project files
 .project
