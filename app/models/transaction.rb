@@ -24,8 +24,11 @@ class Transaction < ActiveRecord::Base
             :amount => amount_with_taxes, # in cents
             :currency => "usd",
             :card => tkn.id,
-            :description => "Payment from #{user.email}. Card name: #{user.card_name}. Last four: #{user.last_four}."
             #:application_fee => rhombus_fee
+            :description => "Payment from #{user.email}. Card name: #{user.card_name}. Last four: #{user.last_four}.",
+            :metadata => {
+              "message" => message
+            }            
           },
           merchant.stripe_access_token                    # merchants's access token from the Stripe Connect flow
       )
