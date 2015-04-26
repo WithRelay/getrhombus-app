@@ -75,7 +75,7 @@
           <div class="write">
             <form>
               <p>
-                <textarea class="textarea form-control" placeholder="Enter text ..." style="height:60px; width:100%;" ng-model="new_message.text"></textarea>
+                <textarea class="textarea form-control" placeholder="Enter text ..." style="height:60px; width:100%;" ng-model="new_message.text" ng-enter="sendMessage(new_message)"></textarea>
               </p>
               <button class="btn btn-default" ng-click="sendMessage(new_message)">
                 Send
