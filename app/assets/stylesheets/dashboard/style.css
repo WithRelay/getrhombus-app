@@ -1372,6 +1372,12 @@ Mailbox
   opacity: 0.7;
 }
 /* EDITED */
+.mailbox-inbox .last-message {
+  width: 75%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .mailbox-inbox .unread {
   position: absolute;
   font-size: 10px;

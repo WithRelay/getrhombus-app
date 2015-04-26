@@ -36,7 +36,7 @@
                 <a class="item clearfix" ng-click="getUserMessages(user)"> 
                   <img ng-src="{{user.image_url}}" alt="img" class="img" /> 
                   <span class="from">{{user.first_name}} {{user.last_name}}</span> 
-                  {{user.last_message}}
+                  <div class="last-message">{{user.last_message}}</div>
                   <span ng-if="user.unread_count > 0" class="unread">{{user.unread_count}}</span> 
                 </a>
               </li>
