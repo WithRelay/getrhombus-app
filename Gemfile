@@ -19,8 +19,7 @@ gem "stripe"
 # App monitoring
 gem 'newrelic_rpm'
 
-# For later
-#gem 'will_paginate'
+gem 'will_paginate', '~> 3.0.6'
 #gem 'bootstrap-will_paginate'
 
 # For messaging users

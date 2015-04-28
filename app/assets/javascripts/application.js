@@ -18,4 +18,5 @@
 //= require jquery.lazyload.min.js
 //= require jquery.parallax-1.1.3.js
 //= require login_v2
+//= require intlTelInput.min
 //= require custom.js

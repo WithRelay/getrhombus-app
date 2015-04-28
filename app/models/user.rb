@@ -18,10 +18,7 @@ class User < ActiveRecord::Base
     ### cos of crappy db uniqueness
   after_create :send_welcome_email, :set_rhombus_number
 
-  validates_presence_of :user_level, :message => "Please select what you want to do with Rhombus"
-  validates_presence_of :card_name, :on => :update, :if => lambda { self.user_level == 0 } 
-
-  # and self.password_confirmation.blank? }
+  validates_presence_of :user_level, :message => "Please select an account type"
   
   # still need a validation errors for edit
   #### this is messed up...what of on edit??
@@ -31,7 +28,6 @@ class User < ActiveRecord::Base
             :on => :create
 
   validates_uniqueness_of :phone_number, :allow_nil => true, :if => lambda { self.user_level == 0 } 
-
 
   # saves merchant info from stripe
   def from_omniauth(auth)
@@ -206,13 +202,13 @@ class User < ActiveRecord::Base
     ### => fix this!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11
     ###
     if self.user_level == 1
-      Notification.welcome_email(self.email, self.user_level, self.first_name).deliver
+      Notification.welcome_email(self.email, self.user_level, self.first_name).deliver_now
       # notify team email
-      Notification.welcome_email("<redacted_email>", self.user_level, self.first_name).deliver
+      Notification.welcome_email("<redacted_email>", self.user_level, self.first_name).deliver_now
     elsif self.user_level == 0
-      Notification.welcome_email(self.email, self.user_level).deliver
+      Notification.welcome_email(self.email, self.user_level).deliver_now
       # notify team email
-      Notification.welcome_email("<redacted_email>", self.user_level, self.first_name).deliver
+      Notification.welcome_email("<redacted_email>", self.user_level, self.first_name).deliver_now
     end
   end
   

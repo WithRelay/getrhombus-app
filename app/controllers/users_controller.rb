@@ -22,7 +22,8 @@ class UsersController < ApplicationController
     elsif current_user.user_level == 1 and current_user.stripe_access_token.blank? 
       redirect_to "/profile"
     else
-      @todays_stuff = current_user.todays_stuff      
+      #@todays_stuff = current_user.todays_stuff      
+      @todays_stuff = current_user.transactions.paginate(:page => params[:page], :per_page => 2).order('created_at DESC')
     end    
   end  
   
