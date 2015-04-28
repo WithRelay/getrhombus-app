@@ -1,0 +1,35 @@
+ 	
+<%# if current_user.user_level == 1 %>
+<%= provide(:title, "Rhombus - Dashboard") %>
+
+<%= content_for :head do %>
+	<%= stylesheet_link_tag "application_dashboard_messaging", media: "all" %>
+<% end %>
+
+<body class="error-body no-top lazy"> 
+
+	<%= render 'shared/header_new' %>
+	<%#= render 'shared/full_messages' %>	
+
+	<div class="container"> 
+
+                        <div class="row">
+                            <div class="col-md-12">                                
+                                    
+                                           <h3>Dashboard</h3>
+                            </div>
+                        </div>
+
+			<div class="row spacing-bottom 2col">	
+			<%# if current_user.user_level == 1 %>
+				<%#= render "rhombus_number" %>
+			<%# end %>
+	
+
+                                                
+            <div>	
+        </div>
+
+	</body>
+
+<%# end %>

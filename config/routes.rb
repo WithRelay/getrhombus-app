@@ -16,6 +16,10 @@ Rails.application.routes.draw  do
   get '/privacy' => 'static_pages#privacy'
   #get '/legal' => 'static_pages#legal'
 
+  get '/x' => 'static_pages#x'
+  get '/y' => 'static_pages#y'
+  get '/z' => 'static_pages#z'
+
   #match 'contact' => 'messages#new', :as => 'contact', :via => :get
   #match 'contact' => 'messages#create', :as => 'contact', :via => :post
 
