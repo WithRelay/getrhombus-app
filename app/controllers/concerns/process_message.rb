@@ -30,7 +30,7 @@ module ProcessMessage
 				save_inbound_text(request.query_string, msg_code = 6)
 				short_link = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?num=#{params[:msisdn]}&referrer_number=#{params[:to]}")
 				send_response(16, params[:to], params[:msisdn],
-					"Please follow the link below to create an account and then resend your payment. 
+					"Hi there, thanks for reaching out...to chat with us or send a payment, sign up here. 
 						Thanks! => #{short_link}")
 				return
 			end
@@ -40,7 +40,7 @@ module ProcessMessage
 			save_inbound_text(request.query_string, msg_code = 4)
 			short_link = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?num=#{params[:msisdn]}&referrer_number=#{params[:to]}")
 			send_response(14, params[:to], params[:msisdn], 
-				"To start using Rhombus, follow the link to complete your signup: #{short_link}")
+				"Hi there, thanks for reaching out...to chat with us or send a payment, sign up here: #{short_link}")
 		else
 			# save and pubnub
 			# save in messages
