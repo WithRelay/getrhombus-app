@@ -1,4 +1,4 @@
-class UrlShortnerService
+class UrlShortenerService
 
   class << self
     
