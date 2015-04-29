@@ -8,8 +8,8 @@ class UrlShortenerService
       rescue StandardError => error
         url = nil
       ensure
-        return link if url == nil  
-        url.short_url
+        return url.short_url unless url == nil  
+        link
       end    
     end
 
