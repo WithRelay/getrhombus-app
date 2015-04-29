@@ -28,7 +28,7 @@ module ProcessMessage
 			else
 				# if user doesnt exist. save in messages and send a response
 				save_inbound_text(request.query_string, msg_code = 6)
-				short_link = UrlShortnerService.shorten_link("https://www.getrhombus.com/signup?num=#{params[:msisdn]}&referrer_number=#{params[:to]}")
+				short_link = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?num=#{params[:msisdn]}&referrer_number=#{params[:to]}")
 				send_response(16, params[:to], params[:msisdn],
 					"Please follow the link below to create an account and then resend your payment. 
 						Thanks! => #{short_link}")
