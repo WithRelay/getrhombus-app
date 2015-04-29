@@ -166,8 +166,7 @@ class User < ActiveRecord::Base
 
   def set_rhombus_number
     if self.user_level == 1
-      #@rhombus_number = TextingService.buy_number("US")
-      self.rhombus_number = nil # @rhombus_number
+      self.rhombus_number = nil # TextingService.buy_number("US")
       self.save
     end
   end

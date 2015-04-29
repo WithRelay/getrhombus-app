@@ -1,20 +1,17 @@
 Rails.application.routes.draw  do
 
   root 'static_pages#home'
-  #resources :messages
-  #root 'messages#index'
-  #root 'transactions#index'
+  
   get "/receive_text_message" => 'messages#receive_text_message'
   get "/receive_delivery_report" => 'messages#receive_delivery_report'
 
-  get '/aboutus' => 'static_pages#aboutus'
-  get '/sellwithrhombus' => 'static_pages#sellwithrhombus'
-  get '/contactus' => 'contact_forms#new'
-  get '/takedonations' => 'static_pages#takedonations'
-  get '/paywithrhombus' => 'static_pages#paywithrhombus'
+  get '/about' => 'static_pages#about'
+  get '/contact' => 'contact_forms#new'
+  get '/customers' => 'static_pages#customers'  
   get '/faqs' => 'static_pages#faqs'
   get '/privacy' => 'static_pages#privacy'
-  #get '/legal' => 'static_pages#legal'
+  get '/terms' => 'static_pages#terms'
+  get '/pricing' => 'static_pages#pricing'
 
   get '/x' => 'static_pages#x'
   get '/y' => 'static_pages#y'

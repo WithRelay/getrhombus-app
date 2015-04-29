@@ -1,20 +1,32 @@
 $(document).ready(function () {  
     
+    // to prefill signup form
     if (window.location.pathname == "/signup") {
-        if (window.location.search.substring(1) != "" && window.location.search.substring(1).split("=")[0] == "num") {
-            document.getElementById('num').value = window.location.search.substring(1).split("=")[1];
-        }
-        else  {
-            document.getElementById('num').value = "";
+        var page_params = window.location.search.substring(1);
+        if (page_params != "") {
+            document.getElementById('phone').value = GetURLParameter(page_params, 'num');
+            document.getElementById('referrer_number').value = GetURLParameter(page_params, 'referrer_number');
         }
     }
+
+    function GetURLParameter(page_params, sParam) {
+        var sPageURL = page_params;
+        var sURLVariables = sPageURL.split('&');
+        for (var i = 0; i < sURLVariables.length; i++) {
+            var sParameterName = sURLVariables[i].split('=');
+            if (sParameterName[0] == sParam) return sParameterName[1];
+        }
+    }
+
+    //
+
 
 	if ($.fn.parallax){
 	   $('#working-section').parallax("50%", 0.1,false);
 	}
 
 
-    // For form input
+    // For phone number input field
     var input = $("#phone"),
     output = $("#output");
 

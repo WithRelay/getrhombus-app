@@ -9,8 +9,7 @@ module ProcessMessage
 		return if params[:text].blank?
 
 		text = params[:text].strip
-
-		user = User.find_by(phone_number: params[:msisdn])		
+		user = User.find_by(phone_number: params[:msisdn])
 		amount = is_payment?(text)
 		if amount
 			if user
@@ -26,24 +25,19 @@ module ProcessMessage
 					end
 				end
 			else
-				# if user doesnt exist. save in messages and send a response
+				# payement message but user doesnt exist. save in messages and send a response
 				save_inbound_text(request.query_string, msg_code = 6)
 				short_link = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?num=#{params[:msisdn]}&referrer_number=#{params[:to]}")
-				send_response(16, params[:to], params[:msisdn],
-					"Hi there, thanks for reaching out...to chat with us or send a payment, sign up here. 
-						Thanks! => #{short_link}")
+				send_response(16, params[:to], params[:msisdn], "Hi there, thanks for reaching out...to chat with us or send a payment, sign up here. Thanks! => #{short_link}")
 				return
 			end
-		elsif !user && is_signup?(text)
-			# how will view handle retrieving system message? does it matter?
-			# save in messages and send a response
+		elsif !user
+			# user doesnt exist at all...save in messages and send a response
 			save_inbound_text(request.query_string, msg_code = 4)
 			short_link = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?num=#{params[:msisdn]}&referrer_number=#{params[:to]}")
-			send_response(14, params[:to], params[:msisdn], 
-				"Hi there, thanks for reaching out...to chat with us or send a payment, sign up here: #{short_link}")
+			send_response(14, params[:to], params[:msisdn], "Hi there, thanks for reaching out...to chat with us or send a payment, sign up here: #{short_link}")
 		else
-			# save and pubnub
-			# save in messages
+			# user exist, but not a payment message...save in messages
 			save_inbound_text(request.query_string, msg_code = 5)
 			# until nexmo can give use concatenated messages..i think they do now (06/14/14)
 		end
