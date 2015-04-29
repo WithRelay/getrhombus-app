@@ -9,7 +9,7 @@ class UrlShortenerService
         url = nil
       ensure
         return link if url == nil  
-        url
+        url.short_url
       end    
     end
 
