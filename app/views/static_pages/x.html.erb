@@ -9,26 +9,40 @@
 <body class="error-body no-top lazy"> 
 
 	<%= render 'shared/header_new' %>
+	<%= render 'shared/sidebar' %>
 	<%#= render 'shared/full_messages' %>	
 
-	<div class="container"> 
 
-                        <div class="row">
-                            <div class="col-md-12">                                
-                                    
-                                           <h3>Dashboard</h3>
-                            </div>
-                        </div>
+	<!-- //////////////////////////////////////////////////////////////////////////// --> 
+	<!-- START CONTENT -->
+	<div class="content">
 
-			<div class="row spacing-bottom 2col">	
-			<%# if current_user.user_level == 1 %>
-				<%#= render "rhombus_number" %>
-			<%# end %>
-	
+	  <!-- Start Page Header -->
+	  <div class="page-header">
+	    <h1 class="title">Dashboard</h1>
+	      <ol class="breadcrumb">
+	        <li class="active">This is a quick overview of some features</li>
+	    </ol>
 
-                                                
-            <div>	
-        </div>
+	    <!-- Start Page Header Right Div -->
+	    <div class="right">
+	      <div class="btn-group" role="group" aria-label="...">
+	        <a href="index.html" class="btn btn-light">Dashboard</a>
+	        <a href="#" class="btn btn-light"><i class="fa fa-refresh"></i></a>
+	        <a href="#" class="btn btn-light"><i class="fa fa-search"></i></a>
+	        <a href="#" class="btn btn-light" id="topstats"><i class="fa fa-line-chart"></i></a>
+	      </div>
+	    </div>
+	    <!-- End Page Header Right Div -->
+
+	  </div>
+	  <!-- End Page Header -->
+
+
+	 <!-- //////////////////////////////////////////////////////////////////////////// --> 
+
+
+
 
 	</body>
 

@@ -15,11 +15,11 @@ class UsersController < ApplicationController
   end
 
   def show
-    if current_user.user_level == 0 and current_user.customer_uri.blank? 
+    if current_user.user_level == 0 && current_user.customer_uri.blank? 
       redirect_to "/profile"
-    elsif current_user.user_level == 1 and current_user.business_name.blank? 
+    elsif current_user.user_level == 1 && current_user.business_name.blank? 
       redirect_to "/profile"
-    elsif current_user.user_level == 1 and current_user.stripe_access_token.blank? 
+    elsif current_user.user_level == 1 && current_user.stripe_access_token.blank? 
       redirect_to "/profile"
     else
       #@todays_stuff = current_user.todays_stuff      
