@@ -29,7 +29,8 @@ module ProcessMessage
 				# if user doesnt exist. save in messages and send a response
 				save_inbound_text(request.query_string, msg_code = 6)
 				send_response(16, params[:to], params[:msisdn], 
-					"Please follow the link below to create an account and then resend your payment. Thanks! => https://www.getrhombus.com/signup?num=#{params[:msisdn]}")
+					"Please follow the link below to create an account and then resend your payment. 
+						Thanks! => https://www.getrhombus.com/signup?num=#{params[:msisdn]}&referrer_number=#{params[:to]}")
 				return
 			end
 		elsif !user && is_signup?(text)
@@ -37,7 +38,7 @@ module ProcessMessage
 			# save in messages and send a response
 			save_inbound_text(request.query_string, msg_code = 4)
 			send_response(14, params[:to], params[:msisdn], 
-				"To start using Rhombus, follow the link to complete your signup: https://www.getrhombus.com/signup?num=#{params[:msisdn]}")
+				"To start using Rhombus, follow the link to complete your signup: https://www.getrhombus.com/signup?num=#{params[:msisdn]}&referrer_number=#{params[:to]}")
 		else
 			# save and pubnub
 			# save in messages
@@ -49,7 +50,7 @@ module ProcessMessage
 	# refactor Transaction model
 	def process_payment(amount, merchant, user, text, request)
 		# save and pubnub
-    new_message = save_inbound_text(request.query_string, msg_code = 1)
+    	new_message = save_inbound_text(request.query_string, msg_code = 1)
 		
 		@customer_transaction = Transaction.new
 		debit_data = @customer_transaction.charge_customer_card(amount, merchant, user, text)
@@ -154,7 +155,7 @@ module ProcessMessage
 
 
 	def is_signup?(text)
-		words = ['signup', 'sign-up', 'give', 'pay']
+		words = ['signup', 'sign-up', 'give', 'pay', 'buy']
 		return true if words.include? text.downcase.gsub(/\s+/, "")  
 		return false
 	end
@@ -170,7 +171,7 @@ module ProcessMessage
 		@message.send_and_save_message(msg_code, to, from, message)
 		
 		# Send to merchant's messaging channel
-    RealtimeStreamService.send_message_via_number(from, to, message, @message.created_at, true)
+    	RealtimeStreamService.send_message_via_number(from, to, message, @message.created_at, true)
 	end
 
 	
@@ -181,10 +182,10 @@ module ProcessMessage
 			network_code: query_hash["network-code"], messageId: query_hash['messageId'], message_timestamp: query_hash["message-timestamp"],
 			text: query_hash['text'], message_code: msg_code, transaction_id: transaction_id)
 			
-    # Send to merchant's messaging channel
-    RealtimeStreamService.send_message_via_number(query_hash['msisdn'], query_hash['to'], query_hash['text'], @message.created_at)
-    
-    @message
+	    # Send to merchant's messaging channel
+	    RealtimeStreamService.send_message_via_number(query_hash['msisdn'], query_hash['to'], query_hash['text'], @message.created_at)
+	    
+	    @message
 	end
 
 	

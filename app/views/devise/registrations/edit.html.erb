@@ -34,7 +34,7 @@
           <h3 class="normal">Payment Information</h3>
           <p class="normal">To start receiving payments, please create and connect your Rhombus account to <a href="https://www.stripe.com">Stripe Payments</a></p>
           <p class="normal">This generally needs to be done once.</p> <br>
-          <%= link_to "Connect with Stripe", user_omniauth_authorize_path(:stripe_connect), class: "btn btn-primary btn-large" %><br><br>
+          <%= link_to "Connect with Stripe", user_omniauth_authorize_path(:stripe_connect, "stripe_user[country]" => "US"), class: "btn btn-primary btn-large" %><br><br>
           <br>
                         <p>
                           <img src="<%= asset_path 'outline.png' %>" align="middle" />   
