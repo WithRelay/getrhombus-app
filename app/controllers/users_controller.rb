@@ -19,8 +19,7 @@ class UsersController < ApplicationController
       redirect_to "/profile"
     elsif current_user.user_level == 1 && current_user.business_name.blank? 
       redirect_to "/profile"
-    elsif current_user.user_level == 1 && current_user.stripe_access_token.blank? 
-      @me = "/users/auth/stripe"
+    elsif current_user.user_level == 1 && current_user.stripe_access_token.blank?
       redirect_to "/profile"
     else
       #@todays_stuff = current_user.todays_stuff      

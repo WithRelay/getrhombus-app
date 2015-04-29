@@ -16,6 +16,9 @@ gem "cancan"
 # bread & butter
 gem "stripe"
 
+# url shortner
+gem 'bitly'
+
 # App monitoring
 gem 'newrelic_rpm'
 
