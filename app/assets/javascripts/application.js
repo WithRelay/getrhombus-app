@@ -22,5 +22,4 @@
 //= require intlTelInput.min.js
 //= require bootstrap-select
 //= require chartist
-//= require chartist-plugin
 // require custom.js
