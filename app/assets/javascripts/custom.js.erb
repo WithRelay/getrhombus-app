@@ -1,11 +1,17 @@
 $(document).ready(function () {  
     
     // to prefill signup form
-    if (window.location.pathname == "/signup") {
+    if (window.location.pathname == "/a") {
         var page_params = window.location.search.substring(1);
         if (page_params != "") {
-            document.getElementById('phone').value = GetURLParameter(page_params, 'num');
-            document.getElementById('referrer_number').value = GetURLParameter(page_params, 'referrer_number');
+            //document.getElementById('phone').value = GetURLParameter(page_params, 'num');
+            //document.getElementById('referrer_number').value = GetURLParameter(page_params, 'referrer_number');
+            var merchant = GetURLParameter(page_params, 'merchant');
+            if (merchant) {
+                var x = $("#signup_logo");
+                $("<h2>" + merchant + "</h2>").insertAfter(x);
+                x.remove();
+            }
         }
     }
 
@@ -18,6 +24,42 @@ $(document).ready(function () {
         }
     }
 
+    // /* Sidebar Menu*/!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!REUSE!!!!!!!!!!!reuse
+    $('.nav > li > a').click(function(){
+        if ($(this).attr('class') != 'active') {
+            $('.nav li ul').slideUp();
+            $(this).next().slideToggle();
+            $('.nav li a').removeClass('active');
+            $(this).addClass('active');
+        }
+    });
+
+    /* Top Stats Show Hide */
+    $("#topstats").click(function(){
+        $(".topstats").slideToggle(100);
+    });
+
+
+    /* Sidebar Show-Hide On Mobile */
+    $(".sidebar-open-button-mobile").click(function(){
+        $(".sidebar").toggle(150);
+    });
+
+
+    /* Sidebar Show-Hide */
+    $('.sidebar-open-button').on('click', function(){
+        if($('.sidebar').hasClass('hidden')){
+            $('.sidebar').removeClass('hidden');
+            $('.content').css({
+                'marginLeft' : 250
+            });  
+        }else{
+            $('.sidebar').addClass('hidden');
+            $('.content').css({
+                'marginLeft' : 0
+            });    
+        }
+    });
     //
 
 

@@ -10,6 +10,7 @@
 <%= stylesheet_link_tag "application_dashboard_messaging", media: "all" %>
 <%= yield :head %>
 <%= javascript_include_tag "application_dashboard_messaging" %>
+<%= javascript_include_tag "custom" %>
 <%= yield :head_script %>
 <%= csrf_meta_tags %>
 <script>
@@ -21,7 +22,7 @@
   ga('send', 'pageview');
 </script>
 </head>
-<body style="background:#f5f5f5;">
+<body >
   <%= render 'shared/header_new' %>
   <%= render 'shared/sidebar' %>
   <%= yield %>

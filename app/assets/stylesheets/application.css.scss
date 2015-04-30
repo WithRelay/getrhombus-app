@@ -12,13 +12,15 @@
  *
  * require_tree .
  *= require_self
- *= require bootstrap.min
- *= require bootstrap-theme.min
- *= require pace-theme-flash
- *= require font-awesome
- *= require animate.min
- *= require magic_space
+ * require bootstrap.min
+ * require bootstrap-theme.min
+ *= require intlTelInput.css
+ * require pace-theme-flash
+ * require font-awesome
+ * require animate.min
+ * require magic_space
  */
+
 
 .logo.footer{
 	font-size: 22px;

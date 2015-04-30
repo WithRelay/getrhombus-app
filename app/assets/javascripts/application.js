@@ -12,11 +12,13 @@
 //
 //= require jquery
 //= require jquery_ujs
+// require jquery-ui.min
 //= require bootstrap.min.js
-//= require pace.min.js
-//= require jquery.validate.min.js
-//= require jquery.lazyload.min.js
-//= require jquery.parallax-1.1.3.js
-//= require login_v2
-//= require intlTelInput.min
-//= require custom.js
+// require pace.min.js
+// require jquery.validate.min.js
+// require jquery.lazyload.min.js
+// require jquery.parallax-1.1.3.js
+// require login_v2
+//= require intlTelInput.min.js
+//= require bootstrap-select
+// require custom.js

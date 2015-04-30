@@ -11,7 +11,7 @@
  *= require ./forms/style
  *= require ./forms/responsive
  *= require ./forms/custom-icon-set
- *= require ./forms/intlTelInput
+ * require ./forms/intlTelInput
  *= require ./forms/custom_form
  *= require ./forms/print
 

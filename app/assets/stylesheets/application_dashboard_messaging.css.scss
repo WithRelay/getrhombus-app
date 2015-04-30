@@ -11,11 +11,16 @@
  * file per style scope
  *
  *= require_self
- *= require font-awesome
+ *= require font-awesome.min
  *= require bootstrap.min
- *= require bootstrap-theme.min
- *= require forms
+ * require bootstrap-theme.min
+ * require forms
  *= require dashboard/style
  *= require dashboard/responsive
- e*= require dashboard/shortcuts
+ *= require dashboard/shortcuts
+ *= require awesome-bootstrap-checkbox
+ *= require bootstrap-select
  */
+
+@import url('http://fonts.googleapis.com/css?family=Montserrat:400,700');
+@import url('http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,600,700,800,300');
