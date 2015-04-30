@@ -21,5 +21,5 @@
 // require login_v2
 //= require intlTelInput.min.js
 //= require bootstrap-select
-//= require chartist
+// require chartist
 // require custom.js

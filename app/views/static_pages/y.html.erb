@@ -6,6 +6,7 @@
 	<%= stylesheet_link_tag "application_dashboard_messaging", media: "all" %>
 <% end %>
 <%= content_for :head_script do %>
+    <%= javascript_include_tag "chartist.js" %>
     <%= javascript_include_tag "custom.js" %>
 <% end %>
 
