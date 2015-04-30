@@ -28,6 +28,9 @@ class StaticPagesController < ApplicationController
 	def x
 	end
 
+	def c
+	end
+
 	def a
 	end
 

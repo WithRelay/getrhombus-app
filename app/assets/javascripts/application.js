@@ -20,6 +20,6 @@
 // require jquery.parallax-1.1.3.js
 // require login_v2
 //= require intlTelInput.min.js
-// require bootstrap-select
+//= require bootstrap-select
 // require chartist
 // require custom.js

@@ -6,10 +6,6 @@
     <%= stylesheet_link_tag "application_dashboard_messaging", media: "all" %>
   <% end %>
 
-  <%= content_for :head_script do %>
-  <%#= javascript_include_tag "bootstrap-select.js" %>
-    <%= javascript_include_tag "custom.js" %>
-  <% end %>
 
   <style type="text/css">
     body{background: #F5F5F5;}
@@ -45,12 +41,16 @@
             <i class="fa fa-key"></i>
           </div>
           <div class="group">
-            <select class="selectpicker">
-                <%#<option value="" disabled selected style='display:none;'>Select your option</option>%>
-                <option>Graphicriver</option>
-                <option>Activeden</option>
-            </select>                    
-          </div>
+                  
+                  
+                    <select class="selectpicker">
+                        <option>Themeforest</option>
+                        <option>Codecanyon</option>
+                        <option>Photodune</option>
+                        <option>Graphicriver</option>
+                        <option>Activeden</option>
+                      </select>                  
+                </div>
           
           
                                 
@@ -65,14 +65,8 @@
       </div>
     </div>
 
-<%= javascript_include_tag "bootstrap-select.js" %>
-<script type="text/javascript">
-$(document).ready(function () {  
-   $('.selectpicker').selectpicker({
-      style: 'btn-info',
-      size: 4
-    });  
-  });
-</script>
+
+
+
 </body>
 </html>
