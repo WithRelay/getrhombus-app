@@ -2,8 +2,12 @@
 <%# if current_user.user_level == 1 %>
 <%= provide(:title, "Rhombus - Dashboard") %>
 
-<%= content_for :head do %>
+<%#= content_for :head do %>
 	<%= stylesheet_link_tag "forms.css" %>
+<%# end %>
+
+<%= content_for :head do %>
+    <%= stylesheet_link_tag "application_dashboard_messaging", media: "all" %>
 <% end %>
 
 <body class="error-body no-top lazy"> 
@@ -32,7 +36,15 @@
 
                                                     <% end %>
                                                     <br>
-                                                    <%= will_paginate @todays_stuff %>
+                                                    <%= will_paginate @todays_stuff, :page_links => false %>
+
+
+                                                      <nav>
+                                                        <ul class="pager">
+                                                          <li><a href="#"><span aria-hidden="true">&larr;</span> Previous</a></li>
+                                                          <li><a href="#">Next <span aria-hidden="true">&rarr;</span></a></li>
+                                                        </ul>
+                                                      </nav>
             <div>	
         </div>
 
