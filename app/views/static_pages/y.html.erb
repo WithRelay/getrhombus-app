@@ -10,6 +10,9 @@
 <% end %>
 
 <body>
+<!-- Start Page Loading -->
+  <div class="loading"><img src="<%= asset_path 'loading.gif' %>" alt="loading-img"></div>
+  <!-- End Page Loading -->
   
 <%= render 'shared/header_new' %>
 <%= render 'shared/sidebar' %>
@@ -66,6 +69,71 @@
     </li>
     <li class="col-xs-6 col-lg-2">
       <span class="title"><i class="fa fa-eye"></i># of Messages</span>
+      <h3 class="color-down">1000</h3>
+    </li>
+  </ul>
+  </div>
+  <!-- End Top Stats -->
+  <!-- Start Chartist -->
+  <div class="row">
+
+    <!-- Start Chart -->
+    <div class="col-lg-4 col-md-6">
+      <div class="panel panel-default">
+        <div class="panel-title">
+          Simple Line Chart - Weekly Sales
+        </div>
+            <div class="panel-body">
+              <div id="chartist-line" class="ct-chart ct-perfect-fourth"></div>
+              <svg xmlns:ct="http://gionkunz.github.com/chartist-js/ct" width="100%" height="100%" class="ct-chart-line" style="width: 100%; height: 100%;"></svg>
+            </div>
+      </div>  
+    </div>
+    <!-- End Chart -->
+    
+    <!-- Start Chart -->
+    <div class="col-lg-4 col-md-6">
+      <div class="panel panel-default">
+        <div class="panel-title">
+          Line Chart with Area - Monthly Sales
+        </div>
+            <div class="panel-body">
+              <div id="chartist-line-area" class="ct-chart ct-perfect-fourth"></div>
+            </div>
+      </div>
+    </div>
+    <!-- End Chart -->
+
+  </div>
+  <!-- End Chartist -->
+
+
+  <!-- Start Top Stats -->
+  <div class="col-md-12">
+  <ul class="topstats clearfix">
+    <li class="arrow"></li>
+    <li class="col-xs-6 col-lg-2">
+      <span class="title"><i class="fa fa-dot-circle-o"></i> Rhombus Number</span>
+      <h3>1 202 403 9524</h3>
+    </li>
+    <li class="col-xs-6 col-lg-2">
+      <span class="title"><i class="fa fa-calendar-o"></i>Today's Sales</span>
+      <h3>$96.25</h3>
+    </li>
+    <li class="col-xs-6 col-lg-2">
+      <span class="title"><i class="fa fa-shopping-cart"></i> Todays Transactions</span>
+      <h3 class="color-up">696</h3>
+    </li>
+    <li class="col-xs-6 col-lg-2">
+      <span class="title"><i class="fa fa-users"></i>Sales to Date</span>
+      <h3>$9060</h3>
+    </li>
+    <li class="col-xs-6 col-lg-2">
+      <span class="title"><i class="fa fa-eye"></i>Your Customers</span>
+      <h3>90</h3>
+    </li>
+    <li class="col-xs-6 col-lg-2">
+      <span class="title"><i class="fa fa-eye"></i># of Messages</span>
       <h3>1000</h3>
     </li>
   </ul>
@@ -73,122 +141,19 @@
   <!-- End Top Stats -->
 
 
-  <!-- Start First Row -->
-  <div class="row">
-
-    <!-- Start Chart Daily -->
-    <div class="col-md-12 col-lg-7">
-      <div class=" panel-widget widget chart-with-stats clearfix" style="height:450px;">
-
-        <div class="col-sm-12" style="height:450px;">
-          <h4 class="title">TODAY SALES<small>Last update: 1 Hours ago</small></h4>
-          <div class="top-label"><h2>11.291</h2><h4>Today Total</h4></div>
-          <div class="bigchart" id="todaysales"></div>
-        </div>
-        <div class="right" style="height:450px;">
-          <h4 class="title">PAGE VIEW</h4>
-          <!-- start stats -->
-          <ul class="widget-inline-list clearfix">
-            <li class="col-12"><span>962</span>Themeforest<i class="chart sparkline-green"></i></li>
-            <li class="col-12"><span>367</span>Codecanyon<i class="chart sparkline-blue"></i></li>
-            <li class="col-12"><span>92</span>Photodune<i class="chart sparkline-red"></i></li>
-          </ul>
-          <!-- end stats -->
-        </div>
-
-
-      </div>
-    </div>
-    <!-- End Chart Daily -->
-
-
-
-  </div>  
-  <!-- End First Row -->
-
-
-
-  <!-- Start Third Row -->
-  <div class="row">
-
-
-    <!-- Start General Stats -->
-    <div class="col-md-12 col-lg-6">
-      <div class="panel panel-widget" style="height:205px;">
-        <div class="panel-title">
-          General Stats
-        </div>
-        <div class="panel-body">
-
-          <div class="easypie margin-b-50" data-percent="82"><span>82%</span>New Visit</div>
-          <div class="easypie margin-b-50" data-percent="30"><span>30%</span>Order</div>
-          <div class="easypie margin-b-50 margin-b-40" data-percent="62"><span>62%</span>Page View</div>
-          <div class="easypie margin-b-50" data-percent="15"><span>15%</span>Client</div>
-          <div class="easypie margin-b-50" data-percent="45"><span>45%</span>Storage</div>
-          <div class="easypie margin-b-50" data-percent="75"><span>76%</span>Comments</div>
-
-        </div>
-      </div>
-    </div>
-    <!-- End General Stats -->
-
-    <!-- Start TwitterBox -->
-    <div class="col-md-6 col-lg-3">
-      <div class="widget socialbox" style="background:#02A8F3; height:205px;">
-
-        <p class="text">
-          Never in all their history have men been able truly...
-        </p>
-        <p class="text-info">22 May, 2015 via mobile</p>
-
-        <div class="logo"><i class="fa fa-twitter"></i></div>
-
-        <ul class="info">
-          <li><i class="fa fa-retweet"></i>694</li>
-          <li><i class="fa fa-star-o"></i>2.192</li>
-        </ul>
-
-      </div>
-    </div>
-    <!-- End TwitterBox -->
-
-    <!-- Start FacebookBox -->
-    <div class="col-md-6 col-lg-3">
-      <div class="widget socialbox" style="background:#47639E; height:205px;">
-
-        <p class="text">
-          Science has not yet mastered prophecy.
-        </p>
-        <p class="text-info">22 May, 2015 via mobile</p>
-
-        <div class="logo"><i class="fa fa-facebook"></i></div>
-
-        <ul class="info">
-          <li><i class="fa fa-thumbs-up"></i>694</li>
-          <li><i class="fa fa-comment"></i>2.192</li>
-        </ul>
-
-      </div>
-    </div>
-    <!-- End FacebookBox -->
-
-  </div>
-  <!-- End Third Row -->
-
-
   <!-- Start Fourth Row -->
   <div class="row">
 
     <!-- Start Orders -->
-    <div class="col-md-12 col-lg-6">
+    <div class="col-md-12">
       <div class="panel panel-widget">
         <div class="panel-title">
-          LAST ORDERS <span class="label label-warning">196</span>
+          RECENT TRANSACTIONS
           <ul class="panel-tools">
-            <li><a class="icon search-tool"><i class="fa fa-search"></i></a></li>
+            <%#<li><a class="icon search-tool"><i class="fa fa-search"></i></a></li>%>
             <li><a class="icon minimise-tool"><i class="fa fa-minus"></i></a></li>
             <li><a class="icon expand-tool"><i class="fa fa-expand"></i></a></li>
-            <li><a class="icon closed-tool"><i class="fa fa-times"></i></a></li>
+            <%#<li><a class="icon closed-tool"><i class="fa fa-times"></i></a></li>%>
           </ul>
         </div>
 

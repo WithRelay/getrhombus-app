@@ -75,14 +75,14 @@
           <div class="write">
             <form>
               <p>
-                <textarea class="textarea form-control" placeholder="Enter text ..." style="height:60px; width:100%;" ng-model="new_message.text" ng-trim="false" ng-enter="sendMessage(new_message)"></textarea>
+                <textarea class="textarea form-control" placeholder="Type a message here..." style="height:60px; width:100%;" ng-model="new_message.text" ng-trim="false" ng-enter="sendMessage(new_message)"></textarea>
               </p>
               <button class="btn btn-default" ng-click="sendMessage(new_message)">
                 Send
               </button>
-              <button type="reset" class="btn margin-l-5">
+              <%#<button type="reset" class="btn margin-l-5">
                 Clear
-              </button>
+              </button>%>
               <span class="char-counter">{{char_limit - new_message.text.length}} characters left</span>
             </form>
           </div>

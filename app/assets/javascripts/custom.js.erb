@@ -62,6 +62,43 @@ $(document).ready(function () {
     });
     //
 
+    /* ===========================================================
+    PANEL TOOLS
+    ===========================================================*/
+    /* Minimize */
+    $(".panel-tools .minimise-tool").click(function(event){
+        $(this).parents(".panel").find(".panel-body").slideToggle(100);
+        return false;
+    });  
+
+    /* Close */
+    /* $(".panel-tools .closed-tool").click(function(event){
+        $(this).parents(".panel").fadeToggle(400);
+        return false;
+    }); */
+ 
+
+    /* Search */
+    $(".panel-tools .search-tool").click(function(event){
+        $(this).parents(".panel").find(".panel-search").toggle(100);
+    }); 
+
+    /* expand */
+    $('.panel-tools .expand-tool').on('click', function(){
+        if($(this).parents(".panel").hasClass('panel-fullsize'))
+        {
+            $(this).parents(".panel").removeClass('panel-fullsize');
+        }
+        else
+        {
+            $(this).parents(".panel").addClass('panel-fullsize');
+ 
+        }
+    });
+    /* ===========================================================
+    ===========================================================*/
+
+
 
 	if ($.fn.parallax){
 	   $('#working-section').parallax("50%", 0.1,false);
@@ -91,3 +128,9 @@ $(document).ready(function () {
 
     
 });
+
+
+/* Page Loading */
+$(window).load(function() {
+  $(".loading").fadeOut(750);
+})

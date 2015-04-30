@@ -23,6 +23,9 @@
 </script>
 </head>
 <body >
+   <!-- Start Page Loading -->
+  <div class="loading"><img src="<%= asset_path 'loading.gif' %>" alt="loading-img"></div>
+  <!-- End Page Loading -->
   <%= render 'shared/header_new' %>
   <%= render 'shared/sidebar' %>
   <%= yield %>

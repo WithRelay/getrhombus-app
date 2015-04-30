@@ -31,6 +31,9 @@ class StaticPagesController < ApplicationController
 	def a
 	end
 
+	def b
+	end
+
 	def y
 	end
 
