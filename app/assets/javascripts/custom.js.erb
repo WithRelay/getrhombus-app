@@ -1,7 +1,5 @@
 $(document).ready(function () {  
-
-    
-    
+  
     // to prefill signup form
     if (window.location.pathname == "/a") {
         var page_params = window.location.search.substring(1);
@@ -103,7 +101,7 @@ $(document).ready(function () {
     /* ======================================================================
     Line Chart with Area
     ====================================================================== */
-    /*new Chartist.Line('#chartist-line-area', {
+    new Chartist.Line('#chartist-line-area', {
       labels: [1, 2, 3, 4, 5, 6, 7, 8],
       series: [
         [5, 9, 7, 8, 5, 3, 5, 4]
@@ -117,7 +115,7 @@ $(document).ready(function () {
     /* ======================================================================
     Simple Line Chart
     ====================================================================== */
-    /*new Chartist.Line('#chartist-line', {
+    new Chartist.Line('#chartist-line', {
       labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
       series: [
         [12, 9, 7, 8, 5],
@@ -131,7 +129,7 @@ $(document).ready(function () {
         right: 40
       }
 
-    });*/
+    });
 
    
 

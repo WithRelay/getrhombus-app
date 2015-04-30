@@ -13,7 +13,7 @@
 //= require jquery
 //= require jquery_ujs
 // require jquery-ui.min
-//= require bootstrap.min.js
+// require bootstrap.min.js
 // require pace.min.js
 // require jquery.validate.min.js
 // require jquery.lazyload.min.js
@@ -21,5 +21,5 @@
 // require login_v2
 //= require intlTelInput.min.js
 //= require bootstrap-select
-// require chartist
-// require custom.js
+//= require chartist
+//= require custom.js
