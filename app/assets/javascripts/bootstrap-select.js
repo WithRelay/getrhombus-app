@@ -1,3 +1,9 @@
+/*!
+ * Bootstrap-select v1.6.3 (http://silviomoreto.github.io/bootstrap-select/)
+ *
+ * Copyright 2013-2014 bootstrap-select
+ * Licensed under MIT (https://github.com/silviomoreto/bootstrap-select/blob/master/LICENSE)
+ */
 (function ($) {
   'use strict';
 
@@ -123,7 +129,7 @@
     selectAllText: 'Select All',
     deselectAllText: 'Deselect All',
     multipleSeparator: ', ',
-    style: 'btn-default',
+    style: 'btn-light',
     size: 'auto',
     title: null,
     selectedTextFormat: 'values',
@@ -137,8 +143,8 @@
     header: false,
     liveSearch: false,
     actionsBox: false,
-    iconBase: 'glyphicon',
-    tickIcon: 'glyphicon-ok',
+    iconBase: 'fa',
+    tickIcon: 'fa-check',
     maxOptions: false,
     mobile: false,
     selectOnTab: false,
@@ -289,7 +295,7 @@
         var optionClass = $this.attr('class') || '',
             inline = $this.attr('style'),
             text = $this.data('content') ? $this.data('content') : $this.html(),
-            subtext = typeof $this.data('subtext') !== 'undefined' ? '<small class="muted text-muted">' + $this.data('subtext') + '</small>' : '',
+            subtext = typeof $this.data('subtext') !== 'undefined' ? '<small class="text-st">' + $this.data('subtext') + '</small>' : '',
             icon = typeof $this.data('icon') !== 'undefined' ? '<span class="' + that.options.iconBase + ' ' + $this.data('icon') + '"></span> ' : '',
             isDisabled = $this.is(':disabled') || $this.parent().is(':disabled'),
             index = $this[0].index;

@@ -5,6 +5,7 @@
  * Licensed under MIT (https://github.com/silviomoreto/bootstrap-select/blob/master/LICENSE)
  */
 
+
 .bootstrap-select {
   /*width: 220px\9; IE8 and below*/
   width: 220px \0;
@@ -28,8 +29,8 @@
 }
 .bootstrap-select .btn:focus {
   outline: thin dotted #333333 !important;
-  outline: 5px auto -webkit-focus-ring-color !important;
-  outline-offset: -2px;
+  outline: 0px auto -webkit-focus-ring-color !important;
+  outline-offset: 0px;
 }
 .bootstrap-select.form-control {
   margin-bottom: 0;
@@ -91,9 +92,14 @@
 .bootstrap-select.btn-group[class*="col-"] .btn {
   width: 100%;
 }
+
+.bootstrap-select .dropdown-menu small{
+  color: inherit;
+}
 .bootstrap-select.btn-group .dropdown-menu {
   min-width: 100%;
   z-index: 1035;
+  box-shadow: 0  0px 0px 2px rgba(0, 0, 0, .0.5);
   -webkit-box-sizing: border-box;
      -moz-box-sizing: border-box;
           box-sizing: border-box;
@@ -113,8 +119,6 @@
 .bootstrap-select.btn-group .dropdown-menu li:not(.disabled) a:hover small,
 .bootstrap-select.btn-group .dropdown-menu li:not(.disabled) a:focus small,
 .bootstrap-select.btn-group .dropdown-menu li.active:not(.disabled) a small {
-  color: #64b1d8;
-  color: rgba(100, 177, 216, 0.4);
 }
 .bootstrap-select.btn-group .dropdown-menu li.disabled a {
   cursor: not-allowed;
