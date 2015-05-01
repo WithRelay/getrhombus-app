@@ -154,14 +154,11 @@ function format ( d ) {
 
 
     var table = $('#mesa').DataTable({ 
-           'dom' : 't'//false
-           //'bFilter' : false,
-           //'bInfo': false
+           'dom' : 't'
         });
 
 
        // Add event listener for opening and closing details
-    //$('#example tbody').on('click', 'td.details-control', function () {
         $('#mesa tbody').on('click', 'td > i.fa-trash', function () {
             
         var tr = $(this).closest('tr');
