@@ -27,3 +27,33 @@
 	font-size: 22px;
 	padding-left: 0px;
 }
+
+ 
+
+  .pagination > .previous_page {
+    background-color: transparent;
+    padding: 10px;
+    border: 1px solid white;
+    border-radius: 25px;
+    &:hover {
+    	background-color: white;
+    }
+  }
+
+  .pagination > .previous_page.disabled {
+    background-color: transparent;
+    padding: 10px;
+    border: 1px solid white;
+    border-radius: 25px;
+  }
+
+
+  .pagination > .next_page {
+    background-color: transparent;
+    padding: 10px;
+    border: 1px solid white;
+    border-radius: 25px;
+    &:hover {
+    	background-color: white;
+    }
+  }
