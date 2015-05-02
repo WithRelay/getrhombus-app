@@ -1,0 +1,162 @@
+  
+
+    <!-- ========== Css Files ========== -->
+  <% provide(:title, 'Rhombus - Sign Up') %>
+  <%= content_for :head do %>
+    <%= stylesheet_link_tag "application_dashboard_messaging", media: "all" %>
+  <% end %>
+  
+  <style type="text/css">
+    body{background: #F5F5F5;}
+  </style>
+  
+  <body>
+
+  <div style="margin: 10px;">
+<p id="output">Please enter a number below</p>
+<input id="referrer_number" type="text" <%#= hidden %> >
+</div>
+
+
+    <div class="col-md-12">
+      <div class="panel panel-default" style="max-width: 1000px;">
+
+        <div class="panel-title">
+          Inline Form without Label
+        </div>
+
+            <div class="panel-body">
+              <form>
+                
+
+
+                 <div class="form-inline">
+                  <div class="form-group">
+                    <input type="text" class="form-control" id="exampleInputName2" placeholder="Jane Doe">
+                  </div>
+                  <div class="form-group">
+                    <input type="email" class="form-control" id="exampleInputEmail2" placeholder="<redacted_email>">
+                  </div>
+                </div>
+
+                 <div class="form-inline">
+                  <div class="form-group">
+                    <input type="text" class="form-control" id="exampleInputName2" placeholder="Jane Doe">
+                  </div>
+                  <div class="form-group">
+                    <input type="email" class="form-control" id="exampleInputEmail2" placeholder="<redacted_email>">
+                  </div>
+                </div>
+
+
+                <div style="padding: 30px;">Business Information</div>
+
+
+                <div class="form-inline">
+                  <div class="form-group">
+                    <input type="text" class="form-control" id="exampleInputName2" placeholder="Jane Doe">
+                  </div>
+                  <div class="form-group">
+                    <input type="email" class="form-control" id="exampleInputEmail2" placeholder="<redacted_email>">
+                  </div>
+                </div>
+
+                 <div class="form-inline">
+                  <div class="form-group">
+                    <input type="text" class="form-control" id="exampleInputName2" placeholder="Jane Doe">
+                  </div>
+                  <div class="form-group">
+                    <input type="email" class="form-control" id="exampleInputEmail2" placeholder="<redacted_email>">
+                  </div>
+                </div>
+
+
+
+                <div class="form-area">
+                  <div class="group">
+                    <input type="text" class="form-control" id="exampleInputName2" placeholder="Jane Doe">
+                  </div>  
+                   <div class="group">
+                    <input type="text" class="form-control" id="exampleInputName2" placeholder="Jane Doe">
+                  </div>                  
+                </div>
+
+                 <div class="form-inline">
+                  <div class="form-group">
+                    <input type="text" class="form-control" id="exampleInputName2" placeholder="Jane Doe">
+                  </div>
+                  <div class="form-group">
+                    <input type="email" class="form-control" id="exampleInputEmail2" placeholder="<redacted_email>">
+                  </div>
+                </div>
+
+                <div class="form-inline">
+                  <div class="form-group">
+                    <input type="text" class="form-control" id="exampleInputName2" placeholder="Jane Doe">
+                  </div>
+                  <div class="form-group">
+                    <input type="email" class="form-control" id="exampleInputEmail2" placeholder="<redacted_email>">
+                  </div>
+                </div>
+
+
+
+
+
+
+              </form>
+
+
+
+
+
+
+
+          </div>
+      </div>
+    </div>
+
+    <%#<div class="login-form">
+      <form action="index.html" id="signupForm" >
+        <div class="top">
+          <img src="<%= asset_path 'logo.jpg' %><%#" alt="icon" id="signup_logo" class="icon">
+          <h4>Create an account.</h4>
+        </div>
+        <div class="form-area">
+          <div class="group">
+            <input type="email" name="email" class="form-control" placeholder="E-mail">
+            <i class="fa fa-envelope-o"></i>
+          </div>
+          <div class="group phoneNumber" style="width: 100% !important;">
+            <input type="tel" id="phone" name="phone" class="form-control" style="padding-left: 43px;">
+          </div>
+          <div class="group">
+            <input type="password" class="form-control" name="password" placeholder="Password">
+            <i class="fa fa-key"></i>
+          </div>
+          <div class="group">
+            <input type="password" class="form-control" name="confirmPassword" placeholder="Password again">
+            <i class="fa fa-key"></i>
+          </div>
+          <div class="group" style="width: 100%;">         
+              <select class="selectpicker" name="accountType" title="">
+                <option value='' disabled selected style='display:none;'>Please select account type</option>
+                <option value="0">I'm a customer</option>
+                <option value="1">I'm a merchant</option>
+                <option value="1">I'm a non-profit</option>
+              </select>                  
+          </div>          
+          <button type="submit" class="btn btn-default btn-block">REGISTER NOW</button>
+          <p>By signing up I agree to Rhombus terms and conditions.</p>
+        </div>
+      </form>
+      <div class="footer-links row">
+        <div class="col-xs-6"><a href="/z"><i class="fa fa-sign-in"></i> Login</a></div>
+        <div class="col-xs-6 text-right"><a href="#"><i class="fa fa-lock"></i> Forgot password</a></div>
+      </div>
+    </div>%>
+
+<%#= javascript_include_tag "bootstrap-select" %>
+
+</body>
+</html>
