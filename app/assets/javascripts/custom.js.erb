@@ -1,5 +1,5 @@
 $(document).ready(function () {  
-  
+
     var url = window.location;
     // to prefill signup form
     if (url.pathname == "/a") {
@@ -187,7 +187,10 @@ $(document).ready(function () {
     });
 
 
-
+    $('.selectpicker').selectpicker({
+        mobile: true,
+        title: "Please select an account type"
+    });
 
 
 
@@ -218,23 +221,45 @@ $(document).ready(function () {
 
 
     // For phone number input field
-    var input = $("#phone"),
-    output = $("#output");
+    var telInput = $("#phone"),
+        output = $("#output"),
+        errorMsg = $("#error-msg"),
+        validMsg = $("#valid-msg");
 
-    input.intlTelInput({
+    telInput.intlTelInput({
         nationalMode: true,
         defaultCountry: "auto",
         utilsScript: "<%= asset_path 'utils.js' %>" // just for formatting/placeholders etc
     });
 
     // listen to "keyup", but also "change" to update when the user selects a country
-    input.on("keyup change", function() {
-        var intlNumber = input.intlTelInput("getNumber");
+    telInput.on("keyup change", function() {
+        var intlNumber = telInput.intlTelInput("getNumber");
         if (intlNumber) {
             output.text("International: " + intlNumber);
         } else {    
             output.text("Please enter a number below");
         }
+    });
+
+    // on blur: validate
+    telInput.blur(function() {
+      if ($.trim(telInput.val())) {
+        if (telInput.intlTelInput("isValidNumber")) {
+          validMsg.removeClass("hide");
+        } else {
+          telInput.addClass("error");
+          errorMsg.removeClass("hide");
+          validMsg.addClass("hide");
+        }
+      }
+    });
+
+    // on keydown: reset
+    telInput.keydown(function() {
+      telInput.removeClass("error");
+      errorMsg.addClass("hide");
+      validMsg.addClass("hide");
     });
     //
 
@@ -249,11 +274,11 @@ $(document).ready(function () {
             live: 'disabled',
 
             // Feedback icons
-            icon: {
+            /*icon: {
                 valid: 'fa fa-check',
                 invalid: 'fa fa-times',
                 validating: 'fa fa-refresh'
-            },
+            },*/
 
             // List of fields and their validation rules
             fields: {
@@ -317,10 +342,189 @@ $(document).ready(function () {
             }
         });
 
-    
+
+    $('#ForgotPassword')
+        .formValidation({
+            // I am validating Bootstrap form
+            framework: 'bootstrap',
+            live: 'disabled',
+
+            // Feedback icons
+            /*icon: {
+                valid: 'fa fa-check',
+                invalid: 'fa fa-times',
+                validating: 'fa fa-refresh'
+            },*/
+
+            // List of fields and their validation rules
+            fields: {
+                email: {
+                    verbose: false,
+                    row: '.group',
+                    validators: {
+                        notEmpty: {
+                            message: 'The username is required and cannot be empty'
+                        },
+                        emailAddress: {
+                            message: 'The input is not a valid email address'
+                        },
+                        remote: {
+                            type: 'GET',
+                            url: 'https://api.mailgun.net/v2/address/validate?callback=?',
+                            crossDomain: true,
+                            name: 'address',
+                            data: {
+                                // Registry a Mailgun account and get a free API key
+                                // at https://mailgun.com/signup
+                                api_key: '<redacted_api_key>'
+                            },
+                            dataType: 'jsonp',
+                            validKey: 'is_valid',
+                            message: 'The email is not valid'
+                        }
+                    }
+                }
+            }
+        })
+        .on('success.validator.fv', function(e, data) {
+            if (data.field === 'email' && data.validator === 'remote') {
+                var response = data.result;  // response is the result returned by MailGun API
+                if (response.did_you_mean) {
+                    // Update the message
+                    data.element                    // The field element
+                        .data('fv.messages')        // The message container
+                        .find('[data-fv-validator="remote"][data-fv-for="email"]')
+                        .html('Did you mean ' + response.did_you_mean + '?')
+                        .show();
+                }
+            }
+        })
+        .on('err.validator.fv', function(e, data) {
+            if (data.field === 'email' && data.validator === 'remote') {
+                // We need to reset the error message
+                data.element                // The field element
+                    .data('fv.messages')    // The message container
+                    .find('[data-fv-validator="remote"][data-fv-for="email"]')
+                    .html('The email is not valid')
+                    .show();
+            }
+        });
+
+
+    $('#signupForm')
+        .find('[name="accountType"]')
+            .selectpicker()
+            .change(function(e) {
+                // revalidate the color when it is changed
+                $('#signupForm').formValidation('revalidateField', 'accountType');
+            })
+            .end()
+        .formValidation({
+            // I am validating Bootstrap form
+            framework: 'bootstrap',
+            live: 'disabled',
+
+            // Feedback icons
+            /*icon: {
+                valid: 'fa fa-check',
+                invalid: 'fa fa-times',
+                validating: 'fa fa-refresh'
+            },*/
+
+            // List of fields and their validation rules
+            fields: {
+                email: {
+                    verbose: false,
+                    row: '.group',
+                    validators: {
+                        notEmpty: {
+                            message: 'The username is required and cannot be empty'
+                        },
+                        emailAddress: {
+                            message: 'The input is not a valid email address'
+                        },
+                        remote: {
+                            type: 'GET',
+                            url: 'https://api.mailgun.net/v2/address/validate?callback=?',
+                            crossDomain: true,
+                            name: 'address',
+                            data: {
+                                // Registry a Mailgun account and get a free API key
+                                // at https://mailgun.com/signup
+                                api_key: '<redacted_api_key>'
+                            },
+                            dataType: 'jsonp',
+                            validKey: 'is_valid',
+                            message: 'The email is not valid'
+                        }
+                    }
+                },
+                password: {
+                    row: '.group',
+                    validators: {
+                        notEmpty: {
+                            message: 'The password is required and cannot be empty'
+                        }
+                    }
+                },
+                confirmPassword: {
+                    row: '.group',
+                    validators: {
+                        notEmpty: {
+                            message: 'The password confirm is required and cannot be empty'
+                        },
+                        identical: {
+                            field: 'password',
+                            message: 'The password and its confirm are not the same'
+                        }
+                    }
+                },
+                phone: {
+                    row: '.group',
+                    validators: {
+                        notEmpty: {
+                            message: 'Your phone number is required and cannot be empty'
+                        }
+                    }
+                },
+                accountType: {
+                    row: '.group',
+                    validators: {
+                        notEmpty: {
+                            message: 'Please select an account'
+                        }
+                    }
+                }
+            }
+        })
+        .on('success.validator.fv', function(e, data) {
+            if (data.field === 'email' && data.validator === 'remote') {
+                var response = data.result;  // response is the result returned by MailGun API
+                if (response.did_you_mean) {
+                    // Update the message
+                    data.element                    // The field element
+                        .data('fv.messages')        // The message container
+                        .find('[data-fv-validator="remote"][data-fv-for="email"]')
+                        .html('Did you mean ' + response.did_you_mean + '?')
+                        .show();
+                }
+            }
+        })
+        .on('err.validator.fv', function(e, data) {
+            if (data.field === 'email' && data.validator === 'remote') {
+                // We need to reset the error message
+                data.element                // The field element
+                    .data('fv.messages')    // The message container
+                    .find('[data-fv-validator="remote"][data-fv-for="email"]')
+                    .html('The email is not valid')
+                    .show();
+            }
+        });
+
+
+
+
 });
-
-
 
 
 /* Page Loading */

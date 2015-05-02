@@ -18,32 +18,34 @@
 </div>
 
     <div class="login-form">
-      <form action="index.html">
+      <form action="index.html" id="signupForm" >
         <div class="top">
           <img src="<%= asset_path 'logo.jpg' %>" alt="icon" id="signup_logo" class="icon">
           <h4>Create an account.</h4>
         </div>
         <div class="form-area">
           <div class="group">
-            <input type="text" class="form-control" placeholder="E-mail">
+            <input type="email" name="email" class="form-control" placeholder="E-mail">
             <i class="fa fa-envelope-o"></i>
           </div>
-          <div class="group">
-            <input type="tel" id="phone" class="form-control">
+          <div class="group" style="width: 100% !important;">
+            <input type="tel" id="phone" name="phone" class="form-control">
+            <span id="valid-msg" class="hide">✓ Valid</span>
+            <span id="error-msg" class="hide">Invalid number</span>
           </div>
           <div class="group">
-            <input type="password" class="form-control" placeholder="Password">
+            <input type="password" class="form-control" name="password" placeholder="Password">
             <i class="fa fa-key"></i>
           </div>
           <div class="group">
-            <input type="password" class="form-control" placeholder="Password again">
+            <input type="password" class="form-control" name="confirmPassword" placeholder="Password again">
             <i class="fa fa-key"></i>
           </div>
           <div class="group">         
-              <select class="selectpicker">
-                <option value='' disabled selected style='display:none;'>Choose account type</option>
-                <option>I'm a customer</option>
-                <option>I'm a merchant</option>
+              <select class="selectpicker" name="accountType" >
+                <option value=''></option>
+                <option value="a">I'm a customer</option>
+                <option value="b">I'm a merchant</option>
               </select>                  
           </div>          
           <button type="submit" class="btn btn-default btn-block">REGISTER NOW</button>
@@ -56,7 +58,7 @@
       </div>
     </div>
 
-<%= javascript_include_tag "bootstrap-select" %>
+<%#= javascript_include_tag "bootstrap-select" %>
 
 </body>
 </html>
