@@ -187,9 +187,14 @@ $(document).ready(function () {
     });
 
 
-    $('.selectpicker').selectpicker({
+    $('#signupForm .selectpicker').selectpicker({
         mobile: true,
         width: "inherit"
+    });
+
+    $('#merchantProfile .selectpicker').selectpicker({
+        mobile: true,
+        width: "100%"
     });
 
 
@@ -439,15 +444,16 @@ $(document).ready(function () {
                     validators: {
                         notEmpty: {
                             message: 'The password is required and cannot be empty'
+                        },
+                        stringLength: {
+                            min: 8,
+                            message: 'Your password should be at least 8 characters'
                         }
                     }
                 },
                 confirmPassword: {
                     row: '.group',
                     validators: {
-                        notEmpty: {
-                            message: 'The password confirm is required and cannot be empty'
-                        },
                         identical: {
                             field: 'password',
                             message: 'The password and its confirm are not the same'
