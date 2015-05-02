@@ -395,7 +395,6 @@ $(document).ready(function () {
         .find('[name="accountType"]')
             .selectpicker()
             .change(function(e) {
-                // revalidate the color when it is changed
                 $('#signupForm').formValidation('revalidateField', 'accountType');
             })
             .end()
@@ -454,6 +453,10 @@ $(document).ready(function () {
                 confirmPassword: {
                     row: '.group',
                     validators: {
+                        verbose: false,
+                        notEmpty: {
+                            message: 'The password confirmation is required and cannot be empty'
+                        },
                         identical: {
                             field: 'password',
                             message: 'The password and its confirm are not the same'
@@ -514,6 +517,195 @@ $(document).ready(function () {
             }
         });
 
+
+
+    $('#merchantProfile')
+        .find('[name="businessType"]')
+            .selectpicker()
+            .change(function(e) {
+                $('#signupForm').formValidation('revalidateField', 'businessType');
+            })
+            .end()
+        .find('[name="country"]')
+            .selectpicker()
+            .change(function(e) {
+                $('#signupForm').formValidation('revalidateField', 'country');
+            })
+            .end()
+        .formValidation({
+            // I am validating Bootstrap form
+            framework: 'bootstrap',
+            live: 'disabled',
+            // List of fields and their validation rules!
+            fields: {
+                email: {
+                    verbose: false,
+                    row: '.form-group',
+                    validators: {
+                        notEmpty: {
+                            message: 'The username is required'
+                        },
+                        emailAddress: {
+                            message: 'The email is not valid'
+                        },
+                        remote: {
+                            type: 'GET',
+                            url: 'https://api.mailgun.net/v2/address/validate?callback=?',
+                            crossDomain: true,
+                            name: 'address',
+                            data: {
+                                // Registry a Mailgun account and get a free API key
+                                // at https://mailgun.com/signup
+                                api_key: '<redacted_api_key>'
+                            },
+                            dataType: 'jsonp',
+                            validKey: 'is_valid',
+                            message: 'The email is not valid'
+                        }
+                    }
+                },
+                password: {
+                    row: '.form-group',
+                    validators: {
+                        notEmpty: {
+                            message: 'The password is required'
+                        },
+                        stringLength: {
+                            min: 8,
+                            message: 'Your password should be at least 8 characters'
+                        }
+                    }
+                },
+                confirmPassword: {
+                    row: '.form-group',
+                    validators: {
+                        verbose: false,
+                        notEmpty: {
+                            message: 'The password confirmation is required'
+                        },
+                        identical: {
+                            field: 'password',
+                            message: "The passwords don't match"
+                        }
+                    }
+                },
+                phone: {
+                    row: '.form-group',
+                    validators: {
+                        callback: {
+                            callback: function (value, validator, $field) {
+                                if (telInput.intlTelInput("isValidNumber")) {
+                                    return {
+                                        valid: true,    // or false
+                                        message: 'Valid number'
+                                    }
+                                } else {
+                                    return {
+                                        valid: false,    // or false
+                                        message: 'Enter a valid number'
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                firstName: {
+                    row: '.form-group',
+                    validators: {
+                        notEmpty: {
+                            message: 'Your first name is required'
+                        }
+                    }
+                },
+                lastName: {
+                    row: '.form-group',
+                    validators: {
+                        notEmpty: {
+                            message: 'Your last name is required'
+                        }
+                    }
+                },
+                businessName: {
+                    row: '.form-group',
+                    validators: {
+                        notEmpty: {
+                            message: 'Your business name is required'
+                        }
+                    }
+                },
+                websiteLink: {
+                    row: '.form-group',
+                    validators: {
+                        notEmpty: {
+                            message: 'Your website or social profile link is required'
+                        }
+                    }
+                },
+                businessType: {
+                    row: '.form-group',
+                    validators: {
+                        notEmpty: {
+                            message: 'Please select a business type'
+                        }
+                    }
+                },
+                address: {
+                    row: '.form-group',
+                    validators: {
+                        notEmpty: {
+                            message: 'Your address is required'
+                        }
+                    }
+                },
+                country: {
+                    row: '.form-group',
+                    validators: {
+                        notEmpty: {
+                            message: 'Please select your country'
+                        }
+                    }
+                },
+                zipCode: {
+                    row: '.form-group',
+                    validators: {
+                        notEmpty: {
+                            message: 'Please enter your zip code'
+                        }
+                    }
+                },
+                reenterPassword: {
+                    row: '.form-group',
+                    validators: {
+                        notEmpty: {
+                            message: 'Please re-enter your account password'
+                        }
+                    }
+                },
+            }
+        })
+        .on('success.validator.fv', function(e, data) {
+            if (data.field === 'email' && data.validator === 'remote') {
+                var response = data.result;  // response is the result returned by MailGun API
+                if (response.did_you_mean) {
+                    // Update the message
+                    data.element                    // The field element
+                        .data('fv.messages')        // The message container
+                        .find('[data-fv-validator="remote"][data-fv-for="email"]')
+                        .html('Did you mean ' + response.did_you_mean + '?')
+                        .show();
+                }
+            }
+        })
+        .on('err.validator.fv', function(e, data) {
+            if (data.field === 'email' && data.validator === 'remote') {
+                // We need to reset the error message
+                data.element                // The field element
+                    .data('fv.messages')    // The message container
+                    .find('[data-fv-validator="remote"][data-fv-for="email"]')
+                    .html('The email is not valid')
+                    .show();
+            }
+        });
 
 
 

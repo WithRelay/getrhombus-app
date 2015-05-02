@@ -49,8 +49,8 @@
                       <div class="form-group fix-margin">
                         <input type="email" name="email" class="form-control" placeholder="Email">
                       </div>
-                      <div class="form-group fix-margin">
-                        <input type="tel" class="form-control" placeholder="Business Phone" name="phone">
+                      <div class="form-group fix-margin" style="width: inherit !important;">
+                        <input type="tel" class="form-control" id="phone" placeholder="Business Phone" name="phone">
                       </div>
                     </div>
 
@@ -72,7 +72,7 @@
                         <input type="text" class="form-control" placeholder="First Name" name="firstName">
                       </div>
                       <div class="form-group fix-margin">
-                        <input type="text" class="form-control" name="lastname" placeholder="lastName">
+                        <input type="text" class="form-control" name="lastName" placeholder="Last Name">
                       </div>
                     </div>
 
@@ -81,7 +81,7 @@
                         <input type="text" class="form-control" name="businessName" placeholder="Business Name">
                       </div>
                       <div class="form-group fix-margin">
-                        <input type="text" class="form-control" name="websiteLink" placeholder="Website link">
+                        <input type="text" class="form-control" name="websiteLink" placeholder="Website or social profile link">
                       </div>
                     </div>
 
@@ -113,7 +113,7 @@
 
                      <div class="form-inline">
                         <div class="form-group fix-margin">
-                        <select class="selectpicker" name="accountType">
+                        <select class="selectpicker" name="country">
                           <option value='' disabled selected style='display:none;'>Select country</option>
                            <option value="AU">Australia</option>    
                             <option value="AT">Austria</option>   
@@ -151,12 +151,12 @@
 
                     <div class="form-inline">
                       <div class="form-group fix-margin">
-                        <input type="password" class="form-control" placeholder="Re-enter password">
-                        For account protection, your password is required to save changes to your settings.
+                        For account protection, please re-enter your password to save changes.
+                        <input type="password" class="form-control" name="reenterPassword" placeholder="Re-enter password">
                       </div>
                       <div class="form-group fix-margin">
+                      <span style="visibility: hidden;">For account protection, please re-enter your password to save changes.</span>
                         <button type="submit" class="btn btn-default btn-block">Save</button>
-                        <span style="visibility: hidden;">For account protection, your password is required to save changes to your settings.</span>
                       </div>
                     </div>
                     
