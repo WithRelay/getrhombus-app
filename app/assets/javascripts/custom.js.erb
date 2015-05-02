@@ -267,10 +267,10 @@ $(document).ready(function () {
                     row: '.group',
                     validators: {
                         notEmpty: {
-                            message: 'The username is required and cannot be empty'
+                            message: 'Your email is required'
                         },
                         emailAddress: {
-                            message: 'The input is not a valid email address'
+                            message: "The email isn't valid"
                         },
                         remote: {
                             type: 'GET',
@@ -284,7 +284,7 @@ $(document).ready(function () {
                             },
                             dataType: 'jsonp',
                             validKey: 'is_valid',
-                            message: 'The email is not valid'
+                            message: "The email isn't valid"
                         }
                     }
                 },
@@ -292,7 +292,7 @@ $(document).ready(function () {
                     row: '.group',
                     validators: {
                         notEmpty: {
-                            message: 'The password is required and cannot be empty'
+                            message: 'Your password is required'
                         }
                     }
                 }
@@ -317,7 +317,7 @@ $(document).ready(function () {
                 data.element                // The field element
                     .data('fv.messages')    // The message container
                     .find('[data-fv-validator="remote"][data-fv-for="email"]')
-                    .html('The email is not valid')
+                    .html("The email isn't valid")
                     .show();
             }
         });
@@ -343,10 +343,10 @@ $(document).ready(function () {
                     row: '.group',
                     validators: {
                         notEmpty: {
-                            message: 'The username is required and cannot be empty'
+                            message: 'Your email is required'
                         },
                         emailAddress: {
-                            message: 'The input is not a valid email address'
+                            message: "The email isn't valid"
                         },
                         remote: {
                             type: 'GET',
@@ -360,7 +360,7 @@ $(document).ready(function () {
                             },
                             dataType: 'jsonp',
                             validKey: 'is_valid',
-                            message: 'The email is not valid'
+                            message: "The email isn't valid"
                         }
                     }
                 }
@@ -385,7 +385,7 @@ $(document).ready(function () {
                 data.element                // The field element
                     .data('fv.messages')    // The message container
                     .find('[data-fv-validator="remote"][data-fv-for="email"]')
-                    .html('The email is not valid')
+                    .html("The email isn't valid")
                     .show();
             }
         });
@@ -417,10 +417,10 @@ $(document).ready(function () {
                     row: '.group',
                     validators: {
                         notEmpty: {
-                            message: 'The username is required and cannot be empty'
+                            message: 'Your email is required'
                         },
                         emailAddress: {
-                            message: 'The input is not a valid email address'
+                            message: "The email isn't valid"
                         },
                         remote: {
                             type: 'GET',
@@ -434,7 +434,7 @@ $(document).ready(function () {
                             },
                             dataType: 'jsonp',
                             validKey: 'is_valid',
-                            message: 'The email is not valid'
+                            message: "The email is'nt valid"
                         }
                     }
                 },
@@ -442,7 +442,7 @@ $(document).ready(function () {
                     row: '.group',
                     validators: {
                         notEmpty: {
-                            message: 'The password is required and cannot be empty'
+                            message: 'The password is required'
                         },
                         stringLength: {
                             min: 8,
@@ -455,11 +455,11 @@ $(document).ready(function () {
                     validators: {
                         verbose: false,
                         notEmpty: {
-                            message: 'The password confirmation is required and cannot be empty'
+                            message: 'The password confirmation is required'
                         },
                         identical: {
                             field: 'password',
-                            message: 'The password and its confirm are not the same'
+                            message: "The passwords don't match"
                         }
                     }
                 },
@@ -512,7 +512,7 @@ $(document).ready(function () {
                 data.element                // The field element
                     .data('fv.messages')    // The message container
                     .find('[data-fv-validator="remote"][data-fv-for="email"]')
-                    .html('The email is not valid')
+                    .html("The email isn't valid")
                     .show();
             }
         });
@@ -523,13 +523,13 @@ $(document).ready(function () {
         .find('[name="businessType"]')
             .selectpicker()
             .change(function(e) {
-                $('#signupForm').formValidation('revalidateField', 'businessType');
+                $('#merchantProfile').formValidation('revalidateField', 'businessType');
             })
             .end()
         .find('[name="country"]')
             .selectpicker()
             .change(function(e) {
-                $('#signupForm').formValidation('revalidateField', 'country');
+                $('#merchantProfile').formValidation('revalidateField', 'country');
             })
             .end()
         .formValidation({
@@ -543,10 +543,10 @@ $(document).ready(function () {
                     row: '.form-group',
                     validators: {
                         notEmpty: {
-                            message: 'The username is required'
+                            message: 'Your email is required'
                         },
                         emailAddress: {
-                            message: 'The email is not valid'
+                            message: "The email isn't valid"
                         },
                         remote: {
                             type: 'GET',
@@ -560,7 +560,7 @@ $(document).ready(function () {
                             },
                             dataType: 'jsonp',
                             validKey: 'is_valid',
-                            message: 'The email is not valid'
+                            message: "The email isn't valid"
                         }
                     }
                 },
@@ -702,7 +702,7 @@ $(document).ready(function () {
                 data.element                // The field element
                     .data('fv.messages')    // The message container
                     .find('[data-fv-validator="remote"][data-fv-for="email"]')
-                    .html('The email is not valid')
+                    .html("The email isn't valid")
                     .show();
             }
         });
