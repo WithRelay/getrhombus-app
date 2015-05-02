@@ -67,3 +67,8 @@
   width: 45%;
 }
 
+@media (min-width: 768px) {
+  .form-inline .form-group {
+    max-width: 100%;
+  }
+}
