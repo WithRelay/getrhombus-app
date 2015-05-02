@@ -32,30 +32,38 @@
   width: inherit;
 }
 
-  .pagination > .previous_page {
-    background-color: transparent;
-    padding: 10px;
-    border: 1px solid white;
-    border-radius: 25px;
-    &:hover {
-    	background-color: white;
-    }
-  }
+#error-msg {
+  color: red;
+}
 
-  .pagination > .previous_page.disabled {
-    background-color: transparent;
-    padding: 10px;
-    border: 1px solid white;
-    border-radius: 25px;
+#valid-msg {
+  color: green;
+}
+
+.pagination > .previous_page {
+  background-color: transparent;
+  padding: 10px;
+  border: 1px solid white;
+  border-radius: 25px;
+  &:hover {
+  	background-color: white;
   }
+}
+
+.pagination > .previous_page.disabled {
+  background-color: transparent;
+  padding: 10px;
+  border: 1px solid white;
+  border-radius: 25px;
+}
 
 
-  .pagination > .next_page {
-    background-color: transparent;
-    padding: 10px;
-    border: 1px solid white;
-    border-radius: 25px;
-    &:hover {
-    	background-color: white;
-    }
+.pagination > .next_page {
+  background-color: transparent;
+  padding: 10px;
+  border: 1px solid white;
+  border-radius: 25px;
+  &:hover {
+  	background-color: white;
   }
+}

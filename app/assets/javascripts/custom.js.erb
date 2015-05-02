@@ -247,8 +247,10 @@ $(document).ready(function () {
       if ($.trim(telInput.val())) {
         if (telInput.intlTelInput("isValidNumber")) {
           validMsg.removeClass("hide");
+          $('.phoneNumber').addClass("has-success");
         } else {
           telInput.addClass("error");
+          $('.phoneNumber').addClass("has-error");
           errorMsg.removeClass("hide");
           validMsg.addClass("hide");
         }
