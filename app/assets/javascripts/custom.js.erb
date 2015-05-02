@@ -222,9 +222,7 @@ $(document).ready(function () {
 
     // For phone number input field
     var telInput = $("#phone"),
-        output = $("#output"),
-        errorMsg = $("#error-msg"),
-        validMsg = $("#valid-msg");
+        output = $("#output");
 
     telInput.intlTelInput({
         nationalMode: true,
@@ -241,31 +239,6 @@ $(document).ready(function () {
             output.text("Please enter a number below");
         }
     });
-
-    // on blur: validate
-    telInput.blur(function() {
-      if ($.trim(telInput.val())) {
-        if (telInput.intlTelInput("isValidNumber")) {
-          validMsg.removeClass("hide");
-          $('.phoneNumber').addClass("has-success");
-        } else {
-          telInput.addClass("error");
-          $('.phoneNumber').addClass("has-error");
-          errorMsg.removeClass("hide");
-          validMsg.addClass("hide");
-        }
-      }
-    });
-
-    // on keydown: reset
-    telInput.keydown(function() {
-      telInput.removeClass("error");
-      errorMsg.addClass("hide");
-      validMsg.addClass("hide");
-    });
-    //
-
-
 
 
 
@@ -484,8 +457,20 @@ $(document).ready(function () {
                 phone: {
                     row: '.group',
                     validators: {
-                        notEmpty: {
-                            message: 'Your phone number is required and cannot be empty'
+                        callback: {
+                            callback: function (value, validator, $field) {
+                                if (telInput.intlTelInput("isValidNumber")) {
+                                    return {
+                                        valid: true,    // or false
+                                        message: 'Valid number'
+                                    }
+                                } else {
+                                    return {
+                                        valid: false,    // or false
+                                        message: 'Enter a valid number'
+                                    }
+                                }
+                            }
                         }
                     }
                 },
