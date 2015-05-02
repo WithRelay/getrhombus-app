@@ -13,18 +13,18 @@
   <body>
 
     <div class="login-form">
-      <form action="index.html">
+      <form action="index.html" id="signinForm">
         <div class="top">
           <img src="<%= asset_path 'logo.jpg' %>" alt="icon" class="icon">
           <h4>Welcome Back!</h4>
         </div>
         <div class="form-area">
           <div class="group">
-            <input type="text" class="form-control" placeholder="Email">
+            <input type="text" class="form-control" name="email" placeholder="Email">
             <i class="fa fa-user"></i>
           </div>
           <div class="group">
-            <input type="password" class="form-control" placeholder="Password">
+            <input type="password" class="form-control" name="password" placeholder="Password">
             <i class="fa fa-key"></i>
           </div>
           <div class="checkbox checkbox-primary">

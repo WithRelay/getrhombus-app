@@ -1,8 +1,9 @@
 $(document).ready(function () {  
   
+    var url = window.location;
     // to prefill signup form
-    if (window.location.pathname == "/a") {
-        var page_params = window.location.search.substring(1);
+    if (url.pathname == "/a") {
+        var page_params = url.search.substring(1);
         if (page_params != "") {
             //document.getElementById('phone').value = GetURLParameter(page_params, 'num');
             //document.getElementById('referrer_number').value = GetURLParameter(page_params, 'referrer_number');
@@ -132,39 +133,36 @@ $(document).ready(function () {
     });
 
    
-function format ( d ) {
-    // `d` is the original data object for the row
-    return '<div class="slider">'+
-        '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
-            '<tr>'+
-                '<td>Full name:</td>'+
-                '<td>'+ "adsasdsa" +'</td>'+
-            '</tr>'+
-            '<tr>'+
-                '<td>Extension number:</td>'+
-                '<td>'+ "dasdsa" +'</td>'+
-            '</tr>'+
-            '<tr>'+
-                '<td>Extra info:</td>'+
-                '<td>And any further details here (images etc)...</td>'+
-            '</tr>'+
-        '</table>'+
-    '</div>';
-}
+    function format ( d ) {
+        // `d` is the original data object for the row
+        return '<div class="slider">'+
+            '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
+                '<tr>'+
+                    '<td>Full name:</td>'+
+                    '<td>'+ "adsasdsa" +'</td>'+
+                '</tr>'+
+                '<tr>'+
+                    '<td>Extension number:</td>'+
+                    '<td>'+ "dasdsa" +'</td>'+
+                '</tr>'+
+                '<tr>'+
+                    '<td>Extra info:</td>'+
+                    '<td>And any further details here (images etc)...</td>'+
+                '</tr>'+
+            '</table>'+
+        '</div>';
+    }
 
 
     var table = $('#mesa').DataTable({ 
-           'dom' : 't'
-        });
+        'dom' : 't'
+    });
 
 
-       // Add event listener for opening and closing details
-        $('#mesa tbody').on('click', 'td > i.fa-trash', function () {
-            
+    // Add event listener for opening and closing details
+    $('#mesa tbody').on('click', 'td > i.fa-trash', function () {
         var tr = $(this).closest('tr');
-
         var row = table.row( tr );
- 
         if ( row.child.isShown() ) {
             // This row is already open - close it
             $('div.slider', row.child()).slideUp( function () {
@@ -182,6 +180,11 @@ function format ( d ) {
         }
     } );
 
+
+    // refresh page
+    $('#refresh').click( function() {
+        url.reload(true);
+    });
 
 
 
@@ -229,14 +232,96 @@ function format ( d ) {
         var intlNumber = input.intlTelInput("getNumber");
         if (intlNumber) {
             output.text("International: " + intlNumber);
-        } else {
+        } else {    
             output.text("Please enter a number below");
         }
     });
     //
 
+
+
+
+
+    $('#signinForm')
+        .formValidation({
+            // I am validating Bootstrap form
+            framework: 'bootstrap',
+            live: 'disabled',
+
+            // Feedback icons
+            icon: {
+                valid: 'fa fa-check',
+                invalid: 'fa fa-times',
+                validating: 'fa fa-refresh'
+            },
+
+            // List of fields and their validation rules
+            fields: {
+                email: {
+                    verbose: false,
+                    row: '.group',
+                    validators: {
+                        notEmpty: {
+                            message: 'The username is required and cannot be empty'
+                        },
+                        emailAddress: {
+                            message: 'The input is not a valid email address'
+                        },
+                        remote: {
+                            type: 'GET',
+                            url: 'https://api.mailgun.net/v2/address/validate?callback=?',
+                            crossDomain: true,
+                            name: 'address',
+                            data: {
+                                // Registry a Mailgun account and get a free API key
+                                // at https://mailgun.com/signup
+                                api_key: '<redacted_api_key>'
+                            },
+                            dataType: 'jsonp',
+                            validKey: 'is_valid',
+                            message: 'The email is not valid'
+                        }
+                    }
+                },
+                password: {
+                    row: '.group',
+                    validators: {
+                        notEmpty: {
+                            message: 'The password is required and cannot be empty'
+                        }
+                    }
+                }
+            }
+        })
+        .on('success.validator.fv', function(e, data) {
+            if (data.field === 'email' && data.validator === 'remote') {
+                var response = data.result;  // response is the result returned by MailGun API
+                if (response.did_you_mean) {
+                    // Update the message
+                    data.element                    // The field element
+                        .data('fv.messages')        // The message container
+                        .find('[data-fv-validator="remote"][data-fv-for="email"]')
+                        .html('Did you mean ' + response.did_you_mean + '?')
+                        .show();
+                }
+            }
+        })
+        .on('err.validator.fv', function(e, data) {
+            if (data.field === 'email' && data.validator === 'remote') {
+                // We need to reset the error message
+                data.element                // The field element
+                    .data('fv.messages')    // The message container
+                    .find('[data-fv-validator="remote"][data-fv-for="email"]')
+                    .html('The email is not valid')
+                    .show();
+            }
+        });
+
     
 });
+
+
+
 
 /* Page Loading */
 $(window).load(function() {
