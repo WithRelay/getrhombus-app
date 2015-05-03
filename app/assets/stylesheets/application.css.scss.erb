@@ -23,6 +23,21 @@
  */
 
 
+@font-face {
+  font-family: 'ProximaNovaSoft-Regular';
+  src:url(<%= asset_path 'ProximaNovaSoft-Regular.eot' %>);
+  src:url(<%= asset_path 'ProximaNovaSoft-Regular.eot?#iefix' %>) format('embedded-opentype'),
+    url(<%= asset_path 'ProximaNovaSoft-Regular.woff2' %>) format('woff2'),
+    url(<%= asset_path 'ProximaNovaSoft-Regular.woff' %>) format('woff'),
+    url(<%= asset_path 'ProximaNovaSoft-Regular.ttf' %>) format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.proxima {
+  font-family: ProximaNovaSoft-Regular !important;
+}
+
 .logo.footer{
 	font-size: 22px;
 	padding-left: 0px;
