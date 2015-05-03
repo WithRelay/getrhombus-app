@@ -1,0 +1,72 @@
+  
+
+    <!-- ========== Css Files ========== -->
+  <% provide(:title, 'Rhombus - Sign Up') %>
+  <%= content_for :head do %>
+    <%= stylesheet_link_tag "application_dashboard_messaging", media: "all" %>
+  <% end %>
+
+  <%= content_for :head_script do %>
+      <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+  <% end %>
+  
+
+  <body>
+  <!-- Start Page Loading -->
+  <div class="loading"><img src="<%= asset_path 'loading.gif' %>" alt="loading-img"></div>
+  <!-- End Page Loading -->
+
+ <%= render 'shared/header_new' %>
+  <%= render 'shared/sidebar' %>
+
+
+
+
+
+  <div class="content" id="userProfile1">
+
+
+    <!-- Start Page Header -->
+    <div class="page-header">
+      <h1 class="title">Stripe Connect</h1>
+
+      <!-- Start Page Header Right Div -->
+      <div class="right">
+        <div class="btn-group" role="group" aria-label="...">
+          <a href="index.html" class="btn btn-light">Dashboard</a>
+          <a href="#" id="refresh" class="btn btn-light"><i class="fa fa-refresh"></i></a>
+        </div>
+      </div>
+    </div>
+      <!-- End Page Header Right Div -->
+
+
+    <div class="container-padding">
+
+
+      <!-- Start Row -->
+      <div class="row">
+
+        <!-- Start Panel -->
+        <div class="col-md-6 col-lg-4">
+          <div class="panel panel-default">
+
+            <div class="panel-title">
+              Basic
+            </div>
+            <div class="panel-heading">This is Panel Heading</div>
+
+            <div class="panel-body">
+              We choose to go to the moon in this decade and do the other things, not because they are easy, but because they are hard, because that goal will serve to organize...
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+        <!-- End Panel -->
+
+
+ </div>
+
+</body>
+</html>
