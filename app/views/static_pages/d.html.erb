@@ -13,60 +13,63 @@
   <!-- End Page Loading -->
 
  <%= render 'shared/header_new' %>
-  <%= render 'shared/sidebar' %>
+  <%#= render 'shared/sidebar' %>
+
+  <div style="margin: 20px;">
+<p id="output">Please enter a number below</p>
+<input id="referrer_number" type="text" <%#= hidden %> >
+</div>
+
 
   <div class="">
-    <!-- Start Page Header -->
-    <div class="page-header">
-      <h1 class="title">Payment Info</h1>
-      <!-- Start Page Header Right Div -->
-      <div class="right">
-        <div class="btn-group" role="group" aria-label="...">
-          <a href="index.html" class="btn btn-light">Dashboard</a>
-          <a href="#" class="btn btn-light"><i class="fa fa-refresh"></i></a>
+   <div class="login-form" style="padding-top: 40px;max-width: 360px !important;">
+      <form action="index.html" id="ccForm" >
+        <div class="top" style="padding-bottom: 15px;">
+          <h4>Enter Payment Info.</h4>
+          <img src="<%= asset_path 'stripe.png' %>" alt="icon" style="margin-top: 10px;">
         </div>
-      </div>
-      <!-- End Page Header Right Div -->
-    </div>
-    <!-- End Page Header -->
-
-    <div class="login-form">
-      <form action="index.html" id="signupForm" >
-        <div class="top">
-          <img src="<%= asset_path 'logo.jpg' %>" alt="icon" id="signup_logo" class="icon">
-          <h4>Create an account.</h4>
-        </div>
+        
         <div class="form-area">
+          
           <div class="group">
-            <input type="email" name="email" class="form-control" placeholder="E-mail">
-            <i class="fa fa-envelope-o"></i>
-          </div>
-          <div class="group" style="width: 100% !important;">
-            <input type="tel" id="phone" name="phone" class="form-control" style="padding-left: 43px;">
-          </div>
-          <div class="group">
-            <input type="password" class="form-control" name="password" placeholder="Password">
-            <i class="fa fa-key"></i>
-          </div>
-          <div class="group">
-            <input type="password" class="form-control" name="confirmPassword" placeholder="Password again">
-            <i class="fa fa-key"></i>
-          </div>
-          <div class="group" style="width: 100%;">         
-              <select class="selectpicker" name="accountType" title="">
-                <option value='' disabled selected style='display:none;'>Please select account type</option>
-                <option value="0">I'm a customer</option>
-                <option value="1">I'm a merchant</option>
-                <option value="1">I'm a non-profit</option>
-              </select>                  
+            <input type="text" name="cardName" class="form-control" placeholder="Card name" x-autocompletetype="off" autocompletetype="off" autocorrect="off" spellcheck="off" autocapitalize="off" autocomplete="off">
+            <i class="fa fa-user"></i>
           </div>          
-          <button type="submit" class="btn btn-default btn-block">REGISTER NOW</button>
-          <p>By signing up I agree to Rhombus terms and conditions.</p>
+
+          <div class="group" style="margin-bottom: 0px;">
+            <input type="tel" name="creditCard" class="form-control" placeholder="Card number" style="border-bottom-left-radius: 0; border-bottom-right-radius: 0;" x-autocompletetype="off" autocompletetype="off" autocorrect="off" spellcheck="off" autocapitalize="off" autocomplete="off">
+            <i class="fa fa-credit-card"></i>
+          </div>
+
+          <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10" style="margin-bottom: 15px;margin-top: -1px;">
+            
+            <div class="col-md-6 col-sm-6 padding-fix1" style="padding-right: 0px;">
+              <input id="cc-exp" type="text" class="form-control" placeholder="MM / YY" value="" name="exp" 
+                  style="border-top-color: transparent; border-top-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 0;">
+                  <i class="fa fa-calendar" style="top: 13px;left: 27px;" x-autocompletetype="off" autocompletetype="off" autocorrect="off" spellcheck="off" autocapitalize="off" autocomplete="off"></i>
+            </div>
+
+            <div class="col-md-6 col-sm-6 padding-fix2" style="padding-left: 0px;">
+              <input id="cc-csc" type="tel" class="form-control" placeholder="CVC" value="" name="cvc" 
+                style="border-top-color: transparent; border-top-right-radius: 0; border-left-color: transparent; border-bottom-left-radius: 0;">
+                <i class="fa fa-lock" style="top: 14px;left: 9px;" x-autocompletetype="off" autocompletetype="off" autocorrect="off" spellcheck="off" autocapitalize="off" autocomplete="off" maxlength="4"></i>
+            </div>
+
+          </div>
+
+          
+          <div class="group">
+            <input type="password" class="form-control" name="password" placeholder="Re-enter current password">
+            <i class="fa fa-key"></i>
+            <div style="line-height: 15px; margin-top: 10px;">For account protection, enter your password to save info.</div>
+          </div>
+
+          <button type="submit" class="btn btn-default btn-block">Save</button>
         </div>
       </form>
       <div class="footer-links row">
-        <div class="col-xs-6"><a href="/z"><i class="fa fa-sign-in"></i> Login</a></div>
-        <div class="col-xs-6 text-right"><a href="#"><i class="fa fa-lock"></i> Forgot password</a></div>
+        <div class="col-xs-6"><a href="#"></a></div>
+        <div class="col-xs-6 text-right"><a href="#"></a></div>
       </div>
     </div>
 
