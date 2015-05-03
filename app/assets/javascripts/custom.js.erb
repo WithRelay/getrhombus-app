@@ -623,6 +623,44 @@ $(document).ready(function () {
             }
         });
 
+     // validate sign up form
+    
+    $('#changePasswordForm')
+        .formValidation({
+            // I am validating Bootstrap form
+            framework: 'bootstrap',
+            live: 'disabled',
+
+            // List of fields and their validation rules!
+            fields: {
+                password: {
+                    row: '.group',
+                    validators: {
+                        notEmpty: {
+                            message: 'The password is required'
+                        },
+                        stringLength: {
+                            min: 8,
+                            message: 'Your password should be at least 8 characters'
+                        }
+                    }
+                },
+                confirmPassword: {
+                    row: '.group',
+                    validators: {
+                        verbose: false,
+                        notEmpty: {
+                            message: 'The password confirmation is required'
+                        },
+                        identical: {
+                            field: 'password',
+                            message: "The passwords don't match"
+                        }
+                    }
+                }
+            }
+        });
+
     // validate merchant profile
     $('#merchantProfile')
         .find('[name="businessType"]')

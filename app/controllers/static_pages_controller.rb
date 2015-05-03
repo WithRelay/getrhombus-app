@@ -25,6 +25,9 @@ class StaticPagesController < ApplicationController
 	def to_404
 	end
 
+	def h
+	end
+
 	def x
 	end
 
