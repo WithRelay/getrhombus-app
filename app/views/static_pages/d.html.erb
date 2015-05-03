@@ -6,11 +6,6 @@
     <%= stylesheet_link_tag "application_dashboard_messaging", media: "all" %>
   <% end %>
 
-  <%= content_for :head_script do %>
-      <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
-  <% end %>
-  
-
   <body>
   <!-- Start Page Loading -->
   <div class="loading"><img src="<%= asset_path 'loading.gif' %>" alt="loading-img"></div>
@@ -28,7 +23,6 @@
 
     <!-- Start Page Header -->
     <div class="page-header">
-      <h1 class="title proxima">Payment Info</h1>
       <h1 class="title">Payment Info</h1>
 
       <!-- Start Page Header Right Div -->
