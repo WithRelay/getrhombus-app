@@ -982,6 +982,32 @@ $(document).ready(function () {
         $('#ex-csc').val('123');
     });*/
 
+    /*var zip = $("#zip");
+    var c = $('#country');
+    var a = $('#address');
+    zip.blur(function() {
+        $('#city, #state').val('');
+        var x = (a.val()) ? a.val() : ''; 
+        var y = (c.val()) ? c.val() : ''; 
+        var z = (zip.val()) ? zip.val() : ''; 
+        var param = x.trim() + ", " + z.trim() + ", " + y.trim();
+        if (param) {
+            var jqxhr = $.getJSON('https://maps.googleapis.com/maps/api/geocode/json?address=' + param, function() {
+            })
+              .done(function(res) {
+                $('#city').val('');
+                $('#state').val('');
+                
+                console.log(res.results[0]['address_components'][1]["long_name"]);
+                console.log(res.results[0]['address_components'][2]["short_name"]);
+                $('.city-state').val(res.results[0]['formatted_address']);
+              })
+              .fail(function() {
+                $('#city, #state').val('');
+              })
+        }
+    });*/
+
 });
 
 
