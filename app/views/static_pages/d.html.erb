@@ -5,6 +5,10 @@
   <%= content_for :head do %>
     <%= stylesheet_link_tag "application_dashboard_messaging", media: "all" %>
   <% end %>
+
+  <%= content_for :head_script do %>
+      <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+  <% end %>
   
 
   <body>
@@ -46,6 +50,10 @@
         </div>
         
         <div class="form-area">
+
+         <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10" style="margin-top: -41px;  color: rgb(233, 72, 71); display: block;padding: 16px; text-align: center;" id="response">
+            <div class="panel-body" ></div>                
+        </div>   
           
           
           <div class="group">
@@ -82,7 +90,7 @@
             <div style="line-height: 15px; margin-top: 10px;">For account protection, enter your password to save info.</div>
           </div>
 
-          <button type="submit" class="btn btn-default btn-block">Save</button>
+          <button type="submit" id="cc-submit" class="btn btn-default btn-block">Save</button>
         </div>
       </form>
       <div class="footer-links row">
@@ -91,7 +99,7 @@
       </div>
     </div>
 
-<%= javascript_include_tag "tokenize.js" %>
+<%#= javascript_include_tag "tokenize.js" %>
 
 
  </div>

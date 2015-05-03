@@ -1,6 +1,8 @@
 $(document).ready(function () {  
 
     var url = window.location;
+    Stripe.setPublishableKey('<%= Rails.application.secrets.stripe["publishable_key"] %>');
+
     // to prefill signup form
     if (url.pathname == "/a") {
         var page_params = url.search.substring(1);
@@ -15,6 +17,18 @@ $(document).ready(function () {
             }
         }
     }
+
+
+    /////
+    $('#next').click(function() {
+        $('.biz_form').toggleClass('show');
+    });
+
+    $('#Prev').click(function() {
+        $('.biz_form').toggleClass('show');
+    });
+    /////
+
 
     function GetURLParameter(page_params, sParam) {
         var sPageURL = page_params;
@@ -132,7 +146,7 @@ $(document).ready(function () {
 
     });
 
-   
+    // for table slide dowm
     function format ( d ) {
         // `d` is the original data object for the row
         return '<div class="slider">'+
@@ -153,11 +167,10 @@ $(document).ready(function () {
         '</div>';
     }
 
-
+    // for table slide dowm
     var table = $('#mesa').DataTable({ 
         'dom' : 't'
     });
-
 
     // Add event listener for opening and closing details
     $('#mesa tbody').on('click', 'td > i.fa-trash', function () {
@@ -179,38 +192,31 @@ $(document).ready(function () {
             $('div.slider', row.child()).slideDown();
         }
     } );
-
+    //// end table slide down
 
     // refresh page
     $('#refresh').click( function() {
         url.reload(true);
     });
 
-
+    // bootstrap -select plugin
     $('#signupForm .selectpicker').selectpicker({
         mobile: true,
         width: "inherit"
     });
 
+    // bootstrap -select plugin
     $('#merchantProfile .selectpicker').selectpicker({
         mobile: true,
         width: "100%"
     });
 
-
+    // for 404 page...go back
     $('#go-back').click(function(event) {
         event.preventDefault();
         window.history.back();
     });
-
-
-
-
-
-	if ($.fn.parallax){
-	   $('#working-section').parallax("50%", 0.1,false);
-	}
-
+    //
 
     // For phone number input field
     var telInput = $("#phone"),
@@ -233,7 +239,7 @@ $(document).ready(function () {
     });
 
 
-
+    // validate signin form
     $('#signinForm')
         .formValidation({
             // I am validating Bootstrap form
@@ -309,6 +315,7 @@ $(document).ready(function () {
             }
         });
 
+    // validate forgot password form
     $('#ForgotPassword')
         .formValidation({
             // I am validating Bootstrap form
@@ -376,6 +383,7 @@ $(document).ready(function () {
             }
         });
 
+    // validate sign up form
     $('#signupForm')
         .find('[name="accountType"]')
             .selectpicker()
@@ -502,6 +510,7 @@ $(document).ready(function () {
             }
         });
 
+    // validate merchant profile
     $('#merchantProfile')
         .find('[name="businessType"]')
             .selectpicker()
@@ -691,7 +700,8 @@ $(document).ready(function () {
     $('input#cc-exp').payment('formatCardExpiry');
     $('input#cc-csc').payment('formatCardCVC');
 
-     $('#user-form')
+    // validate credit card form
+    $('#user-form')
         .formValidation({
             // I am validating Bootstrap form
             framework: 'bootstrap',
@@ -792,7 +802,61 @@ $(document).ready(function () {
             data.element
                 .data('fv.messages')
                 .find('.help-block[data-fv-for="' + data.field + '"]').hide();
+        })
+        .on('success.form.fv', function(e, data) {
+            preventDefault(e);
+            submitToStripe();
         });
+
+    // Click event for tokenize credit card
+    function preventDefault(e) {
+        e.preventDefault();
+    }
+    
+    // tokenize card details
+    function submitToStripe() {        
+        $("#cc-submit").attr("disabled", true);     
+        $('#response').hide();
+        $(".panel-body").html('');
+            
+        Stripe.card.createToken({
+            name: $('#cc-name').val(),
+            number: $('#cc-number').val(),
+            exp_month: $('input#cc-exp').payment('cardExpiryVal').month,
+            exp_year: $('input#cc-exp').payment('cardExpiryVal').year,
+            cvc: $('#cc-csc').val()
+        }, stripeResponseHandler);
+
+              
+        function stripeResponseHandler(status, response) {
+            if (response.error) {
+                // show the errors on the form
+                $("#cc-submit").removeAttr("disabled");
+                $('.panel-body').append(response.error.message);
+                $('#response').slideDown(300);
+            } else {
+                $("#cc-submit").removeAttr("disabled");
+                $("#cc-submit").text("Submitting...");
+                $('#cc-number').val(response["card"]["last4"]);
+                $('#cc-uri').val(response['id']);
+                $('#cc-type').val(response["card"]["type"]);              
+                // unbind prevent default and submit form
+                $("#user-form").unbind("submit", preventDefault);
+                //$("#user-form").submit();
+            }
+        }
+    }    
+    
+    // Simply populates credit card and bank account fields with test data
+    /*$('#populate').click(function () {
+        $(this).attr("disabled", true);
+
+        $('#cc-name').val('John Doe');
+        $('#cc-number').val('<redacted_phone_number>');
+        $('#cc-ex-month').val('12');
+        $('#cc-ex-year').val('2020');
+        $('#ex-csc').val('123');
+    });*/
 
 });
 
