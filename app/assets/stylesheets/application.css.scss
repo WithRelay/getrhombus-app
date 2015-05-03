@@ -72,3 +72,13 @@
     max-width: 100% !important;
   }
 }*/
+
+@media screen and (max-width: 768px) {
+  .padding-fix1 {
+      padding-left: 15px;
+      padding-right: 15px;
+  }
+  .padding-fix2 {
+      padding-left: 15px;
+  }
+}
