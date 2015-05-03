@@ -198,7 +198,8 @@ $(document).ready(function () {
     });
 
 
-    $('#go-back').click(function() {
+    $('#go-back').click(function(event) {
+        event.preventDefault();
         window.history.back();
     });
 
