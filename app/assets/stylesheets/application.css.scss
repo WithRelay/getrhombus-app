@@ -73,12 +73,22 @@
   }
 }*/
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 769 px) {
   .padding-fix1 {
       padding-left: 15px !important;
       padding-right: 15px !important;
   }
   .padding-fix2 {
       padding-left: 15px !important;
+  }
+
+  #id-csc {
+    border-left: 1px solid #BDC4C9;
+    margin-top: -1px;
+  }
+  
+  .fa.fa-lock {
+    top: 10px;
+    left: 28px;
   }
 }
