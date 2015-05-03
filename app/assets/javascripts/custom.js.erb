@@ -207,22 +207,6 @@ $(document).ready(function () {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	if ($.fn.parallax){
 	   $('#working-section').parallax("50%", 0.1,false);
 	}
@@ -706,6 +690,44 @@ $(document).ready(function () {
             }
         });
 
+
+     $('#ccForm')
+        .formValidation({
+            // I am validating Bootstrap form
+            framework: 'bootstrap',
+            live: 'disabled',
+
+            // List of fields and their validation rules
+            fields: {
+                cardName: { 
+                    row: '.group',
+                    validators: {
+                        notEmpty: {
+                            message: ''
+                        }
+                    }
+                },
+                password: {
+                    row: '.group',
+                    validators: {
+                        notEmpty: {
+                            message: 'Your password is required'
+                        }
+                    }
+                }
+            }
+        })
+        .on('err.field.fv', function(e, data) {
+            // $(e.target)  --> The field element
+            // data.fv      --> The FormValidation instance
+            // data.field   --> The field name
+            // data.element --> The field element
+
+            // Hide the messages
+            data.element
+                .data('fv.messages')
+                .find('.help-block[data-fv-for="' + data.field + '"]').hide();
+        });
 
 
 });
