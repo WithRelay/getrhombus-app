@@ -4,6 +4,7 @@ $(document).ready(function () {
     $('.user-list .item').click(function() {
         $('.user-list .item.chat_highlight').removeClass('chat_highlight'); 
         $(this).addClass('chat_highlight');   
+        alert('ads');
     });
 
 
