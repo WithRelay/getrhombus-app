@@ -74,11 +74,11 @@
 }*/
 
 @media screen and (max-width: 769 px) {
-  .padding-fix1 {
+  .col-md-6.col-sm-6.padding-fix1 {
       padding-left: 15px !important;
       padding-right: 15px !important;
   }
-  .padding-fix2 {
+  .col-md-6.col-sm-6.padding-fix2 {
       padding-left: 15px !important;
   }
 
@@ -86,7 +86,7 @@
     border-left: 1px solid #BDC4C9;
     margin-top: -1px;
   }
-  
+
   .fa.fa-lock {
     top: 10px;
     left: 28px;
