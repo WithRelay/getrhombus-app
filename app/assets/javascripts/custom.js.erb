@@ -691,6 +691,11 @@ $(document).ready(function () {
         });
 
 
+
+    $('input#card_number').payment('formatCardNumber');
+    $('input#cc-exp').payment('formatCardExpiry');
+    $('input#cc-csc').payment('formatCardCVC');
+
      $('#ccForm')
         .formValidation({
             // I am validating Bootstrap form
