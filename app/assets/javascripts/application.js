@@ -24,6 +24,7 @@
 
 //= require intlTelInput.min.js
 //= require chartist
+//= require jquery.payment.js
 
 // add in prod
 // require bootstrap-select
