@@ -75,10 +75,10 @@
 
 @media screen and (max-width: 768px) {
   .padding-fix1 {
-      padding-left: 15px;
-      padding-right: 15px;
+      padding-left: 15px !important;
+      padding-right: 15px !important;
   }
   .padding-fix2 {
-      padding-left: 15px;
+      padding-left: 15px !important;
   }
 }
