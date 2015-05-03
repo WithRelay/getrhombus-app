@@ -13,15 +13,25 @@
   <!-- End Page Loading -->
 
  <%= render 'shared/header_new' %>
-  <%#= render 'shared/sidebar' %>
-
-  <div style="margin: 20px;">
-<p id="output">Please enter a number below</p>
-<input id="referrer_number" type="text" <%#= hidden %> >
-</div>
+  <%= render 'shared/sidebar' %>
 
 
-  <div class="">
+<!-- Start Page Header -->
+  <div class="page-header">
+    <h1 class="title">Dashboard</h1>
+
+    <!-- Start Page Header Right Div -->
+    <div class="right">
+      <div class="btn-group" role="group" aria-label="...">
+        <a href="index.html" class="btn btn-light">Dashboard</a>
+        <a href="#" id="refresh" class="btn btn-light"><i class="fa fa-refresh"></i></a>
+        <a href="#" class="btn btn-light" id="topstats"><i class="fa fa-line-chart"></i></a>
+      </div>
+    </div>
+    <!-- End Page Header Right Div -->
+
+
+  <div class="content">
    <div class="login-form" style="padding-top: 40px;max-width: 360px !important;">
       <form action="index.html" id="ccForm" >
         <div class="top" style="padding-bottom: 15px;">
@@ -39,7 +49,7 @@
 
           
           <div class="group" style="margin-bottom: 0px;">
-            <input type="tel" name="creditCard" class="form-control" placeholder="Card number" style="border-bottom-left-radius: 0; border-bottom-right-radius: 0;" x-autocompletetype="off" autocompletetype="off" autocorrect="off" spellcheck="off" autocapitalize="off" autocomplete="off">
+            <input type="tel" name="creditCard" id="card_number" class="form-control" placeholder="Card number" style="border-bottom-left-radius: 0; border-bottom-right-radius: 0;" x-autocompletetype="cc-number" autocompletetype="cc-number" autocorrect="off" spellcheck="off" autocapitalize="off">
             <i class="fa fa-credit-card"></i>
           </div>
 
@@ -48,12 +58,12 @@
             
             <div class="col-md-6 col-sm-6 padding-fix1" style="padding-right: 0px;">
               <input id="cc-exp" type="text" class="form-control" placeholder="MM / YY" value="" name="exp">
-                  <i class="fa fa-calendar" style="top: 13px;left: 27px;" x-autocompletetype="off" autocompletetype="off" autocorrect="off" spellcheck="off" autocapitalize="off" autocomplete="off"></i>
+                  <i class="fa fa-calendar" style="top: 13px;left: 27px;" x-autocompletetype="off" autocompletetype="off" autocorrect="off" spellcheck="off" autocapitalize="off"></i>
             </div>
 
             <div class="col-md-6 col-sm-6 padding-fix2" style="padding-left: 0px;">
-              <input id="cc-csc" type="tel" class="form-control" placeholder="CVC" value="" name="cvc">
-                <i class="fa fa-lock" style="top: 14px;left: 9px;" x-autocompletetype="off" autocompletetype="off" autocorrect="off" spellcheck="off" autocapitalize="off" autocomplete="off" maxlength="4"></i>
+              <input id="cc-csc" type="tel" class="form-control" placeholder="CVC" value="" name="cvc" 
+                  autocorrect="off" spellcheck="off" autocapitalize="off" autocomplete="off" maxlength="4"><  <i class="fa fa-lock" style="top: 14px;left: 9px;"></i>
             </div>
 
           </div>
