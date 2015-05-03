@@ -39,7 +39,7 @@
 
 
    <div class="login-form" style="padding-top: 40px;max-width: 360px !important;">
-      <form action="index.html" id="ccForm" >
+      <form action="index.html" id="user-form" >
         <div class="top" style="padding-bottom: 15px;">
           <h4>Enter Payment Info.</h4>
           <img src="<%= asset_path 'stripe.png' %>" alt="icon" style="margin-top: 10px;">
@@ -49,26 +49,26 @@
           
           
           <div class="group">
-            <input type="text" name="cardName" class="form-control" placeholder="Card name" x-autocompletetype="off" autocompletetype="off" autocorrect="off" spellcheck="off" autocapitalize="off" autocomplete="off">
+            <input type="text" class="form-control" placeholder="Card name" x-autocompletetype="off" autocompletetype="off" autocorrect="off" spellcheck="off" autocapitalize="off" autocomplete="off" id="cc-name">
             <i class="fa fa-user"></i>
           </div>          
 
           
           <div class="group" style="margin-bottom: 0px;">
-            <input type="tel" name="creditCard" id="card_number" class="form-control" placeholder="Card number" style="border-bottom-left-radius: 0; border-bottom-right-radius: 0;" x-autocompletetype="cc-number" autocompletetype="cc-number" autocorrect="off" spellcheck="off" autocapitalize="off">
+            <input type="tel" id="cc-number" class="form-control" placeholder="Card number" style="border-bottom-left-radius: 0; border-bottom-right-radius: 0;" x-autocompletetype="cc-number" autocompletetype="cc-number" autocorrect="off" spellcheck="off" autocapitalize="off">
             <i class="fa fa-credit-card"></i>
           </div>
 
           
           <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10" style="margin-bottom: 15px;margin-top: -1px;">
             
-            <div class="col-md-6 col-sm-6 padding-fix1" style="padding-right: 0px;">
-              <input id="cc-exp" type="text" class="form-control" placeholder="MM / YY" value="" name="exp">
+            <div class="col-md-6 col-sm-6 padding-fix1" id="exp-div" style="padding-right: 0px;">
+              <input id="cc-exp" type="text" class="form-control" placeholder="MM / YY" value="">
                   <i class="fa fa-calendar" style="top: 13px;left: 27px;" x-autocompletetype="off" autocompletetype="off" autocorrect="off" spellcheck="off" autocapitalize="off"></i>
             </div>
 
-            <div class="col-md-6 col-sm-6 padding-fix2" style="padding-left: 0px;">
-              <input id="cc-csc" type="tel" class="form-control" placeholder="CVC" value="" name="cvc" 
+            <div class="col-md-6 col-sm-6 padding-fix2" style="padding-left: 0px;" id="csc-div">
+              <input id="cc-csc" type="tel" class="form-control" placeholder="CVC" value="" 
                   autocorrect="off" spellcheck="off" autocapitalize="off" autocomplete="off" maxlength="4"> <i class="fa fa-lock" style="top: 14px;left: 9px;"></i>
             </div>
 
@@ -91,7 +91,7 @@
       </div>
     </div>
 
-<%#= javascript_include_tag "bootstrap-select" %>
+<%= javascript_include_tag "tokenize.js" %>
 
 
  </div>

@@ -686,11 +686,12 @@ $(document).ready(function () {
             }
         });
 
-    $('input#card_number').payment('formatCardNumber');
+    // Stripe form validator for CC form
+    $('input#cc-number').payment('formatCardNumber');
     $('input#cc-exp').payment('formatCardExpiry');
     $('input#cc-csc').payment('formatCardCVC');
 
-     $('#ccForm')
+     $('#user-form')
         .formValidation({
             // I am validating Bootstrap form
             framework: 'bootstrap',
@@ -698,7 +699,8 @@ $(document).ready(function () {
 
             // List of fields and their validation rules
             fields: {
-                cardName: { 
+                'cc-name': { 
+                    selector: '#cc-name',
                     row: '.group',
                     validators: {
                         notEmpty: {
@@ -714,7 +716,70 @@ $(document).ready(function () {
                         }
                     }
                 },
-                
+                'cc-number': {
+                    selector: '#cc-number',
+                    row: '.group',
+                    validators: {
+                        callback: {
+                            callback: function (value, validator, $field) {
+                                if ($.payment.validateCardNumber(value)) {
+                                    return {
+                                        valid: true,    // or false
+                                        message: 'Valid number'
+                                    }
+                                } else {
+                                    return {
+                                        valid: false,    // or false
+                                        message: 'Enter a valid number'
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                'cc-exp': {
+                    selector: '#cc-exp',
+                    row: '#exp-div',
+                    validators: {
+                        callback: {
+                            callback: function (value, validator, $field) {
+                                var x = $('input#cc-exp').payment('cardExpiryVal');
+                                if ($.payment.validateCardExpiry(x.month, x.year)) {
+                                    return {
+                                        valid: true,    // or false
+                                        message: 'Valid date'
+                                    }
+                                } else {
+                                    return {
+                                        valid: false,    // or false
+                                        message: 'Enter a valid date'
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                'cc-csc': {
+                    selector: '#cc-csc',
+                    row: '#csc-div',
+                    validators: {
+                        callback: {
+                            callback: function (value, validator, $field) {
+                                if ($.payment.validateCardCVC(value)) {
+                                    return {
+                                        valid: true,    // or false
+                                        message: 'Valid csc'
+                                    }
+                                } else {
+                                    return {
+                                        valid: false,    // or false
+                                        message: 'Enter a valid csc'
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         })
         .on('err.field.fv', function(e, data) {
@@ -728,7 +793,6 @@ $(document).ready(function () {
                 .data('fv.messages')
                 .find('.help-block[data-fv-for="' + data.field + '"]').hide();
         });
-
 
 });
 
