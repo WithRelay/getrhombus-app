@@ -309,7 +309,6 @@ $(document).ready(function () {
             }
         });
 
-
     $('#ForgotPassword')
         .formValidation({
             // I am validating Bootstrap form
@@ -376,7 +375,6 @@ $(document).ready(function () {
                     .show();
             }
         });
-
 
     $('#signupForm')
         .find('[name="accountType"]')
@@ -503,8 +501,6 @@ $(document).ready(function () {
                     .show();
             }
         });
-
-
 
     $('#merchantProfile')
         .find('[name="businessType"]')
@@ -690,8 +686,6 @@ $(document).ready(function () {
             }
         });
 
-
-
     $('input#card_number').payment('formatCardNumber');
     $('input#cc-exp').payment('formatCardExpiry');
     $('input#cc-csc').payment('formatCardCVC');
@@ -708,7 +702,7 @@ $(document).ready(function () {
                     row: '.group',
                     validators: {
                         notEmpty: {
-                            message: ''
+                            message: 'Your card name is required'
                         }
                     }
                 },
@@ -719,7 +713,8 @@ $(document).ready(function () {
                             message: 'Your password is required'
                         }
                     }
-                }
+                },
+                
             }
         })
         .on('err.field.fv', function(e, data) {
