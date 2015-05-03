@@ -19,7 +19,7 @@ $(document).ready(function () {
     }
 
 
-    /////
+    ///// toggle card/login info for user's profile
     $('#next').click(function() {
         $('#user-form').toggleClass('show');
         $('#user-profile-form').toggleClass('show');
@@ -210,7 +210,7 @@ $(document).ready(function () {
     // bootstrap -select plugin
     $('#merchantProfile .selectpicker').selectpicker({
         mobile: true,
-        width: "100%"
+       // style: "merchant-country"
     });
 
     // for 404 page...go back
@@ -385,7 +385,6 @@ $(document).ready(function () {
             }
         });
 
-
      // validate sign up form
     $('#user-profile-form')
         .formValidation({
@@ -496,7 +495,6 @@ $(document).ready(function () {
                     .show();
             }
         });
-
 
     // validate sign up form
     $('#signupForm')
@@ -645,7 +643,7 @@ $(document).ready(function () {
             live: 'disabled',
             // List of fields and their validation rules!
             fields: {
-                email: {
+               /* email: {
                     verbose: false,
                     row: '.form-group',
                     validators: {
@@ -673,6 +671,9 @@ $(document).ready(function () {
                 },
                 password: {
                     row: '.form-group',
+                    notEmpty: {
+                        message: 'Your password is required'
+                    },
                     validators: {
                         stringLength: {
                             min: 8,
@@ -688,7 +689,7 @@ $(document).ready(function () {
                             message: "The passwords don't match"
                         }
                     }
-                },
+                },*/
                 phone: {
                     row: '.form-group',
                     validators: {
@@ -717,6 +718,14 @@ $(document).ready(function () {
                         }
                     }
                 },
+                taxRate: {
+                    row: '.form-group',
+                    validators: {
+                        numeric: {
+                            message: 'Tax rate should be number'
+                        }
+                    }
+                },
                 lastName: {
                     row: '.form-group',
                     validators: {
@@ -733,7 +742,7 @@ $(document).ready(function () {
                         }
                     }
                 },
-                websiteLink: {
+                website: {
                     row: '.form-group',
                     validators: {
                         notEmpty: {
@@ -768,7 +777,7 @@ $(document).ready(function () {
                         }
                     }
                 },
-                zipCode: {
+                zip: {
                     row: '.form-group',
                     validators: {
                         notEmpty: {

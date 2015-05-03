@@ -103,6 +103,10 @@
   #userProfile1 {
     padding: 0px;
   }
+
+  .merchant-input {
+    width: 100% !important;
+  }
 }
 
 .error-pages {
@@ -117,3 +121,21 @@
 .hide {
   display: none;
 }
+
+@media (min-width: 768px) {
+  .form-horizontal .control-label {
+    text-align: left !important;
+  }
+}
+
+.dropdowm-menu, .merchant-country {
+   margin-left: 15px !important;
+   margin-right: 15px !important;
+}
+
+.merchant-form-line {
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 30px;
+  margin-top: 20px;
+}
+
