@@ -21,11 +21,13 @@ $(document).ready(function () {
 
     /////
     $('#next').click(function() {
-        $('.biz_form').toggleClass('show');
+        $('#user-form').toggleClass('show');
+        $('#user-profile-form').toggleClass('show');
     });
 
     $('#Prev').click(function() {
-        $('.biz_form').toggleClass('show');
+        $('#user-profile-form').toggleClass('show');
+        $('#user-form').toggleClass('show');
     });
     /////
 
@@ -383,6 +385,119 @@ $(document).ready(function () {
             }
         });
 
+
+     // validate sign up form
+    $('#user-profile-form')
+        .formValidation({
+            // I am validating Bootstrap form
+            framework: 'bootstrap',
+            live: 'disabled',
+
+            // List of fields and their validation rules!
+            fields: {
+                email: {
+                    verbose: false,
+                    row: '.group',
+                    validators: {
+                        notEmpty: {
+                            message: 'Your email is required'
+                        },
+                        emailAddress: {
+                            message: "The email isn't valid"
+                        },
+                        remote: {
+                            type: 'GET',
+                            url: 'https://api.mailgun.net/v2/address/validate?callback=?',
+                            crossDomain: true,
+                            name: 'address',
+                            data: {
+                                // Registry a Mailgun account and get a free API key
+                                // at https://mailgun.com/signup
+                                api_key: '<redacted_api_key>'
+                            },
+                            dataType: 'jsonp',
+                            validKey: 'is_valid',
+                            message: "The email isn't valid"
+                        }
+                    }
+                },
+                newPassword: {
+                    row: '.group',
+                    validators: {
+                        stringLength: {
+                            min: 8,
+                            message: 'Your password should be at least 8 characters'
+                        }
+                    }
+                },
+                confirmNewPassword: {
+                    row: '.group',
+                    validators: {
+                        identical: {
+                            field: 'newPassword',
+                            message: "The passwords don't match"
+                        }
+                    }
+                },
+                phone: {
+                    row: '.group',
+                    validators: {
+                        callback: {
+                            callback: function (value, validator, $field) {
+                                if (telInput.intlTelInput("isValidNumber")) {
+                                    return {
+                                        valid: true,    // or false
+                                        message: 'Valid number'
+                                    }
+                                } else {
+                                    return {
+                                        valid: false,    // or false
+                                        message: 'Enter a valid number'
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                password: {
+                    row: '.group',
+                    validators: {
+                        notEmpty: {
+                            message: 'The password is required'
+                        },
+                        stringLength: {
+                            min: 8,
+                            message: 'Your password should be at least 8 characters'
+                        }
+                    }
+                },
+            }
+        })
+        .on('success.validator.fv', function(e, data) {
+            if (data.field === 'email' && data.validator === 'remote') {
+                var response = data.result;  // response is the result returned by MailGun API
+                if (response.did_you_mean) {
+                    // Update the message
+                    data.element                    // The field element
+                        .data('fv.messages')        // The message container
+                        .find('[data-fv-validator="remote"][data-fv-for="email"]')
+                        .html('Did you mean ' + response.did_you_mean + '?')
+                        .show();
+                }
+            }
+        })
+        .on('err.validator.fv', function(e, data) {
+            if (data.field === 'email' && data.validator === 'remote') {
+                // We need to reset the error message
+                data.element                // The field element
+                    .data('fv.messages')    // The message container
+                    .find('[data-fv-validator="remote"][data-fv-for="email"]')
+                    .html("The email isn't valid")
+                    .show();
+            }
+        });
+
+
     // validate sign up form
     $('#signupForm')
         .find('[name="accountType"]')
@@ -427,7 +542,7 @@ $(document).ready(function () {
                             },
                             dataType: 'jsonp',
                             validKey: 'is_valid',
-                            message: "The email is'nt valid"
+                            message: "The email isn't valid"
                         }
                     }
                 },

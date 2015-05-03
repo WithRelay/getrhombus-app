@@ -20,7 +20,7 @@ Rails.application.routes.draw  do
   get '/b' => 'static_pages#b'
   get '/c' => 'static_pages#c'
   get '/d' => 'static_pages#d'
-  get '/e' => 'static_pages#e'
+  get '/f' => 'static_pages#f'
 
   #match 'contact' => 'messages#new', :as => 'contact', :via => :get
   #match 'contact' => 'messages#create', :as => 'contact', :via => :post

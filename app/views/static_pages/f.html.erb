@@ -28,7 +28,7 @@
 
     <!-- Start Page Header -->
     <div class="page-header">
-      <h1 class="title">Payment Info</h1>
+      <h1 class="title">Account Settings</h1>
 
       <!-- Start Page Header Right Div -->
       <div class="right">
@@ -42,7 +42,7 @@
 
 
    <div class="login-form" style="padding-top: 40px;max-width: 360px !important;">
-      <form action="index.html" id="user-form" >
+      <form action="index.html" class="userForm hide show" id="user-form" >
         <div class="top" style="padding-bottom: 15px;">
           <h4>Enter Payment Info.</h4>
           <img src="<%= asset_path 'stripe.png' %>" alt="icon" style="margin-top: 10px;">
@@ -90,7 +90,39 @@
           </div>
 
           <button type="submit" id="cc-submit" class="btn btn-default btn-block">Save</button>
+          <div href="#" id="next" class="btn btn-default btn-block btn-info">or update login info&nbsp;&nbsp;&#10140;</div>
         </div>
+      </form>
+
+
+      <form action="index.html" class="userForm hide" id="user-profile-form" >
+        <div class="top" style="padding-bottom: 15px;">
+          <h4>Update Login Info.</h4>
+        </div>
+        <div class="form-area">
+          <div class="group">
+            <input type="email" name="email" class="form-control" placeholder="E-mail">
+            <i class="fa fa-envelope-o"></i>
+          </div>
+          <div class="group" style="width: 100% !important;">
+            <input type="tel" id="phone" name="phone" class="form-control" style="padding-left: 43px;">
+          </div>
+          <div class="group">
+            <input type="password" class="form-control" name="newPassword" placeholder="New Password">
+            <i class="fa fa-key"></i>
+          </div>
+          <div class="group">
+            <input type="password" class="form-control" name="confirmNewPassword" placeholder="Confirm new password">
+            <i class="fa fa-key"></i>
+          </div>
+          <div class="group">
+            <input type="password" class="form-control" name="password" placeholder="Enter current password">
+            <i class="fa fa-key"></i>
+            <div style="line-height: 15px; margin-top: 10px;">For account protection, enter your password to save info.</div>
+          </div>
+          <button type="submit" class="btn btn-default btn-block">Save</button>
+          <div id="Prev" class="btn btn-default btn-block btn-info">or edit card info &nbsp;&nbsp;&#10140;</div>
+        </div>      
       </form>
 
 
