@@ -1042,6 +1042,15 @@ $(document).ready(function () {
         }
     });*/
 
+
+    // highlight chat box
+    var user_chat = $('.mailbox-inbox .item');
+    $(user_chat).click(function() {
+        $('.mailbox-inbox .item.chat_highlight').removeClass('chat_highlight'); 
+        $(this).addClass('chat_highlight');   
+    });
+
+
 });
 
 
