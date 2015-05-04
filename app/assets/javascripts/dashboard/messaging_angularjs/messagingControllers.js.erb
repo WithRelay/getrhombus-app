@@ -13,6 +13,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'PubNub
     $scope.active_user_id = 0;
     $scope.active_user_count = 0;
     $scope.global_unread_count = 0;
+    $scope.current_chat_user = false;
     
     // Get logged in merchant id
     $http.get('/json_get_current_user')
@@ -69,16 +70,14 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'PubNub
         
         $scope.users = user_list;
         
-        $scope.getUserMessages = function(user, event) {
+        $scope.getUserMessages = function(user) {
           $http.get('/users/' + merchant_id + '/json_get_user_messages_by_merchant/' + user.id + '?limit=' + (user.unread_count + $scope.num_message_history))
           .success(function(data) {
             $scope.active_user_id = user.id;
             $scope.selected_user = user;
             $scope.selected_user_messages = data.messages;
-            
-            $('.user-list .item.chat_highlight').removeClass('chat_highlight'); 
-            $(event.currentTarget).addClass('chat_highlight'); 
-            
+            $scope.current_chat_user = user;
+                       
             // Mark messages as read
             $scope.global_unread_count = (($scope.global_unread_count - $scope.users[user.id].unread_count) > 0) ? $scope.global_unread_count - $scope.users[user.id].unread_count : 0;
             $scope.users[user.id].unread_count = 0;
