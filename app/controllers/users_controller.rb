@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
 
-  before_action :set_user, only: [:show, :edit, :update, :destroy, :messaging]
+  before_action :set_user, only: [:show, :edit, :update, :destroy, :messaging, :contacts, :customers, :transactions]
 
   load_and_authorize_resource
 
@@ -108,6 +108,21 @@ class UsersController < ApplicationController
       end
     end
     render :json => Hash['success' => false].to_json
+  end
+
+  def contacts
+    if @user.user_level == 0
+     # redirect_to "/profile"
+     
+    elsif current_user.user_level == 1
+     # redirect_to "/profile"
+    end
+  end
+
+  def customers
+  end
+
+  def transactions
   end
 
 private

@@ -11,7 +11,7 @@
   <!-- Start Page Loading -->
   <div class="loading"><img src="<%= asset_path 'loading.gif' %>" alt="loading-img"></div>
   <!-- End Page Loading -->
-
+  <%= render 'shared/no_header' %>
  
   <style type="text/css">
     body{background: #F5F5F5;}
@@ -25,12 +25,9 @@
 
   <!-- Start Row -->
   <div class="row">
-      <div id="signout1">Log out</div>
-      <div class="panel panel-default" id="merchantprofilepage">
+      <div id="profileLogo"><img src="<%= asset_path 'logo.jpg' %>" alt="icon" id="signup_logo" class="icon"></div>
 
-              <div class="panel-title text-center">
-                <img src="<%= asset_path 'logo_grey.jpg' %>" alt="icon" id="signup_logo" class="icon">
-              </div>
+      <div class="panel panel-default" id="merchantprofilepage">
             
             <div class="panel-body">
               <form class="form-horizontal" id="merchantProfile">
