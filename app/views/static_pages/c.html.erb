@@ -12,11 +12,12 @@
   <div class="loading"><img src="<%= asset_path 'loading.gif' %>" alt="loading-img"></div>
   <!-- End Page Loading -->
 
- <%= render 'shared/header_new' %>
-  <%= render 'shared/sidebar' %>
+ 
+  <style type="text/css">
+    body{background: #F5F5F5;}
+  </style>
 
-
-  <div class="content">
+  <div class="completeAccount">
 
     <!-- //////////////////////////////////////////////////////////////////////////// --> 
 <!-- START CONTAINER -->
@@ -24,14 +25,17 @@
 
   <!-- Start Row -->
   <div class="row">
-    
-    <div class="">
+      <div id="signout1">Log out</div>
       <div class="panel panel-default" id="merchantprofilepage">
 
+              <div class="panel-title text-center">
+                <img src="<%= asset_path 'logo_grey.jpg' %>" alt="icon" id="signup_logo" class="icon">
+              </div>
+            
             <div class="panel-body">
               <form class="form-horizontal" id="merchantProfile">
 
-              <div class="merchant-form-line">Where are you based?</div>
+              <div class="merchant-form-line" style="margin-top: 10px;">Where are you based?</div>
 
                 <div class="form-group" >
                   <label class="col-sm-2 control-label form-label">Country</label>
@@ -180,8 +184,6 @@
             </div>
 
       </div>
-    </div>
-
   </div>
   <!-- End Row -->
 

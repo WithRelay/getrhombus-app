@@ -48,7 +48,31 @@ input.rhombusFocus, select.rhombusFocus, textarea.rhombusFocus {
   	border: 1px solid #357b9e;
   	&:hover {
   		background-color: #357b9e;	
+  		transition: all 300ms linear;
   	}
+}
+
+.checkbox-primary input[type="checkbox"]:checked + label::before {
+ 	background-color: #357b9e;
+ 	border-color: #357b9e;
+}
+
+.completeAccount {
+	margin-top: 50px;
+}
+
+#signout1 {
+	max-width: 750px;
+  	margin: 0px auto;
+  	text-align: right;
+}
+
+#signout2 {
+  	text-align: right;
+}
+
+.text-center {
+	text-align: center;
 }
 
 /* UTILITY */
@@ -142,7 +166,7 @@ input.rhombusFocus, select.rhombusFocus, textarea.rhombusFocus {
 
 	#response {
 		margin-top: -41px;
-		color: rgb(233, 72, 71); 
+		color: #e74c3c; 
 		display: block;
 		padding: 16px; 
 		text-align: center;

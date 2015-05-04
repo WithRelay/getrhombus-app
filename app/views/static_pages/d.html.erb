@@ -5,20 +5,20 @@
   <%= content_for :head do %>
     <%= stylesheet_link_tag "application_dashboard_messaging", media: "all" %>
   <% end %>
-
+<style type="text/css">
+    body{background: #F5F5F5;}
+  </style>
   <body>
   <!-- Start Page Loading -->
   <div class="loading"><img src="<%= asset_path 'loading.gif' %>" alt="loading-img"></div>
   <!-- End Page Loading -->
 
- <%= render 'shared/header_new' %>
-  <%= render 'shared/sidebar' %>
-
-  <div class="content" id="userProfile1">
+  <div class="" id="userProfile1">
 
 
 
    <div class="login-form">
+    <div id="signout2">Log out</div>
       <form action="index.html" id="user-form" >
         <div class="top">
           <h4>Enter Payment Info.</h4>

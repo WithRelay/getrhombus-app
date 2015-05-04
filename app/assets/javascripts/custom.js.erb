@@ -916,7 +916,7 @@ $(document).ready(function () {
                         }
                     }
                 },
-                'cc-number': {
+                /*'cc-number': {
                     selector: '#cc-number',
                     row: '.group',
                     validators: {
@@ -936,7 +936,7 @@ $(document).ready(function () {
                             }
                         }
                     }
-                },
+                },*/
                 'cc-exp': {
                     selector: '#cc-exp',
                     row: '#exp-div',
@@ -995,7 +995,7 @@ $(document).ready(function () {
         })
         .on('success.form.fv', function(e, data) {
             preventDefault(e);
-            //submitToStripe();
+            submitToStripe();
         });
     ///
 
