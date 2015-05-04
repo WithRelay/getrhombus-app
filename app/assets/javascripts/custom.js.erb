@@ -13,6 +13,9 @@ $(document).ready(function () {
                 var x = $("#signup_logo");
                 $("<h2>" + merchant + "</h2>").insertAfter(x);
                 x.remove();
+                $("#rhombusPower").removeClass('hide');
+            } else {
+                $("#rhombusPower").addClass('hide');
             }
         }
     }
