@@ -93,12 +93,10 @@ $(document).ready(function () {
         $(this).parents(".panel").fadeToggle(400);
         return false;
     }); */
- 
-
     /* Search */
-    $(".panel-tools .search-tool").click(function(event){
+    /*$(".panel-tools .search-tool").click(function(event){
         $(this).parents(".panel").find(".panel-search").toggle(100);
-    }); 
+    }); */
 
     /* expand */
     $('.panel-tools .expand-tool').on('click', function(){
@@ -112,6 +110,7 @@ $(document).ready(function () {
  
         }
     });
+
     /* ===========================================================
     ===========================================================*/
 
@@ -145,7 +144,6 @@ $(document).ready(function () {
       chartPadding: {
         right: 40
       }
-
     });
 
     // for table slide dowm
@@ -170,12 +168,14 @@ $(document).ready(function () {
     }
 
     // for table slide dowm
-    var table = $('#mesa').DataTable({ 
+    var table = $('#transactions-table').DataTable({ 
         'dom' : 't'
     });
 
+
     // Add event listener for opening and closing details
-    $('#mesa tbody').on('click', 'td > i.fa-trash', function () {
+    $('#transactions-table tbody').on('click', 'td.details-control', function () {
+        //$(this).addClass('');
         var tr = $(this).closest('tr');
         var row = table.row( tr );
         if ( row.child.isShown() ) {
@@ -193,31 +193,34 @@ $(document).ready(function () {
  
             $('div.slider', row.child()).slideDown();
         }
-    } );
+    });
     //// end table slide down
+
 
     // refresh page
     $('#refresh').click( function() {
         url.reload(true);
     });
 
+
     // bootstrap -select plugin
     $('#signupForm .selectpicker').selectpicker({
         mobile: true,
         width: "inherit"
     });
-
-    // bootstrap -select plugin
     $('#merchantProfile .selectpicker').selectpicker({
         mobile: true
     });
+    // bootstrap -select plugin
+
 
     // for 404 page...go back
     $('#go-back').click(function(event) {
         event.preventDefault();
         window.history.back();
     });
-    //
+    /////
+
 
     // For phone number input field
     var telInput = $("#phone"),
@@ -238,6 +241,7 @@ $(document).ready(function () {
             output.text("Please enter a number below");
         }
     });
+
 
 
     // validate signin form
@@ -315,6 +319,9 @@ $(document).ready(function () {
                     .show();
             }
         });
+    ////
+
+
 
     // validate forgot password form
     $('#ForgotPassword')
@@ -383,8 +390,10 @@ $(document).ready(function () {
                     .show();
             }
         });
+    // validate forgot password form
 
-     // validate sign up form
+
+    // user profile forms
     $('#user-profile-form')
         .formValidation({
             // I am validating Bootstrap form
@@ -494,6 +503,8 @@ $(document).ready(function () {
                     .show();
             }
         });
+    ///
+
 
     // validate sign up form
     $('#signupForm')
@@ -589,7 +600,7 @@ $(document).ready(function () {
                     }
                 },
                 accountType: {
-                    row: '.group',
+                    row: '.form-group',
                     validators: {
                         notEmpty: {
                             message: 'Please select an account'
@@ -619,11 +630,16 @@ $(document).ready(function () {
                     .find('[data-fv-validator="remote"][data-fv-for="email"]')
                     .html("The email isn't valid")
                     .show();
-            }
+            }            
+        })
+        .on('success.form.fv', function(e, data) {
+            console.log(telInput.intlTelInput("getNumber"));
+            $("#phoneNumber").val(telInput.intlTelInput("getNumber"));
         });
+    // validate sign up form
 
-     // validate sign up form
-    
+
+    // validate password change form    
     $('#changePasswordForm')
         .formValidation({
             // I am validating Bootstrap form
@@ -659,6 +675,8 @@ $(document).ready(function () {
                 }
             }
         });
+
+
 
     // validate merchant profile
     $('#merchantProfile')
@@ -783,7 +801,7 @@ $(document).ready(function () {
                             message: 'Your website or social profile link is required'
                         },
                         uri: {
-                            message: 'The website address is not valid'
+                            message: 'The website address is not valid (you might need to add http://)'
                         }
                     }
                 },
@@ -852,11 +870,15 @@ $(document).ready(function () {
                     .show();
             }
         });
+    // validate merchant profile form
+
+   
 
     // Stripe form validator for CC form
     $('input#cc-number').payment('formatCardNumber');
     $('input#cc-exp').payment('formatCardExpiry');
     $('input#cc-csc').payment('formatCardCVC');
+
 
     // validate credit card form
     $('#user-form')
@@ -965,6 +987,7 @@ $(document).ready(function () {
             preventDefault(e);
             submitToStripe();
         });
+    ///
 
     // Click event for tokenize credit card
     function preventDefault(e) {
@@ -1003,7 +1026,8 @@ $(document).ready(function () {
                 //$("#user-form").submit();
             }
         }
-    }    
+    }   
+    ///// 
     
     // Simply populates credit card and bank account fields with test data
     /*$('#populate').click(function () {

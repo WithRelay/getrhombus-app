@@ -1,15 +1,11 @@
   
 
     <!-- ========== Css Files ========== -->
-  <% provide(:title, 'Rhombus - Sign Up') %>
+  <% provide(:title, 'Rhombus - Account Settings') %>
   <%= content_for :head do %>
     <%= stylesheet_link_tag "application_dashboard_messaging", media: "all" %>
   <% end %>
 
-  <%= content_for :head_script do %>
-      <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
-  <% end %>
-  
 
   <body>
   <!-- Start Page Loading -->
@@ -34,23 +30,23 @@
       <div class="right">
         <div class="btn-group" role="group" aria-label="...">
           <a href="index.html" class="btn btn-light">Dashboard</a>
-          <a href="#" id="refresh" class="btn btn-light"><i class="fa fa-refresh"></i></a>
+          <a href="" id="refresh" class="btn btn-light"><i class="fa fa-refresh"></i></a>
         </div>
       </div>
     </div>
       <!-- End Page Header Right Div -->
 
 
-   <div class="login-form" style="padding-top: 40px;max-width: 360px !important;">
+   <div class="login-form">
       <form action="index.html" class="userForm hide show" id="user-form" >
-        <div class="top" style="padding-bottom: 15px;">
+        <div class="top">
           <h4>Enter Payment Info.</h4>
-          <img src="<%= asset_path 'stripe.png' %>" alt="icon" style="margin-top: 10px;">
+          <img src="<%= asset_path 'stripe.png' %>" alt="icon" id="stripe-logo">
         </div>
         
         <div class="form-area">
 
-         <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10" style="margin-top: -41px;  color: rgb(233, 72, 71); display: block;padding: 16px; text-align: center;" id="response">
+         <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10" id="response">
             <div class="panel-body" ></div>                
         </div>   
           
@@ -61,22 +57,22 @@
           </div>          
 
           
-          <div class="group" style="margin-bottom: 0px;">
-            <input type="tel" id="cc-number" class="form-control" placeholder="Card number" style="border-bottom-left-radius: 0; border-bottom-right-radius: 0;" x-autocompletetype="cc-number" autocompletetype="cc-number" autocorrect="off" spellcheck="off" autocapitalize="off">
+          <div class="group ccn-group">
+            <input type="tel" id="cc-number" class="form-control" placeholder="Card number" x-autocompletetype="cc-number" autocompletetype="cc-number" autocorrect="off" spellcheck="off" autocapitalize="off">
             <i class="fa fa-credit-card"></i>
           </div>
 
           
-          <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10" style="margin-bottom: 15px;margin-top: -1px;">
+          <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10 exp-row">
             
-            <div class="col-md-6 col-sm-6 padding-fix1" id="exp-div" style="padding-right: 0px;">
+            <div class="col-md-6 col-sm-6 padding-fix1" id="exp-div">
               <input id="cc-exp" type="text" class="form-control" placeholder="MM / YY" value="">
-                  <i class="fa fa-calendar" style="top: 13px;left: 27px;" x-autocompletetype="off" autocompletetype="off" autocorrect="off" spellcheck="off" autocapitalize="off"></i>
+                  <i class="fa fa-calendar" id="fa-Calendar" x-autocompletetype="off" autocompletetype="off" autocorrect="off" spellcheck="off" autocapitalize="off"></i>
             </div>
 
-            <div class="col-md-6 col-sm-6 padding-fix2" style="padding-left: 0px;" id="csc-div">
+            <div class="col-md-6 col-sm-6 padding-fix2" id="csc-div">
               <input id="cc-csc" type="tel" class="form-control" placeholder="CVC" value="" 
-                  autocorrect="off" spellcheck="off" autocapitalize="off" autocomplete="off" maxlength="4"> <i class="fa fa-lock" style="top: 14px;left: 9px;"></i>
+                  autocorrect="off" spellcheck="off" autocapitalize="off" autocomplete="off" maxlength="4"> <i class="fa fa-lock"></i>
             </div>
 
           </div>
@@ -86,7 +82,7 @@
           <div class="group">
             <input type="password" class="form-control" name="password" placeholder="Re-enter current password">
             <i class="fa fa-key"></i>
-            <div style="line-height: 15px; margin-top: 10px;">For account protection, enter your password to save info.</div>
+            <div id="pwdnote">For account protection, enter your password to save info.</div>
           </div>
 
           <button type="submit" id="cc-submit" class="btn btn-default btn-block">Save</button>
@@ -96,7 +92,7 @@
 
 
       <form action="index.html" class="userForm hide" id="user-profile-form" >
-        <div class="top" style="padding-bottom: 15px;">
+        <div class="top">
           <h4>Update Login Info.</h4>
         </div>
         <div class="form-area">
@@ -104,8 +100,8 @@
             <input type="email" name="email" class="form-control" placeholder="E-mail">
             <i class="fa fa-envelope-o"></i>
           </div>
-          <div class="group" style="width: 100% !important;">
-            <input type="tel" id="phone" name="phone" class="form-control" style="padding-left: 43px;">
+          <div class="group phonegroup">
+            <input type="tel" id="phone" name="phone" class="form-control">
           </div>
           <div class="group">
             <input type="password" class="form-control" name="newPassword" placeholder="New Password">
@@ -118,7 +114,7 @@
           <div class="group">
             <input type="password" class="form-control" name="password" placeholder="Enter current password">
             <i class="fa fa-key"></i>
-            <div style="line-height: 15px; margin-top: 10px;">For account protection, enter your password to save info.</div>
+            <div id="pwdnote">For account protection, enter your password to save info.</div>
           </div>
           <button type="submit" class="btn btn-default btn-block">Save</button>
           <div id="Prev" class="btn btn-default btn-block btn-info">or edit card info &nbsp;&nbsp;&#10140;</div>

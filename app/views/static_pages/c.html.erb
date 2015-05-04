@@ -1,7 +1,7 @@
   
 
     <!-- ========== Css Files ========== -->
-  <% provide(:title, 'Rhombus - Sign Up') %>
+  <% provide(:title, 'Rhombus - Merchant Profile') %>
   <%= content_for :head do %>
     <%= stylesheet_link_tag "application_dashboard_messaging", media: "all" %>
   <% end %>
@@ -24,7 +24,7 @@
       <div class="right">
         <div class="btn-group" role="group" aria-label="...">
           <a href="index.html" class="btn btn-light">Dashboard</a>
-          <a href="#" class="btn btn-light"><i class="fa fa-refresh"></i></a>
+          <a href="" class="btn btn-light"><i class="fa fa-refresh" id="refresh"></i></a>
         </div>
       </div>
       <!-- End Page Header Right Div -->
@@ -34,15 +34,12 @@
 
     <!-- //////////////////////////////////////////////////////////////////////////// --> 
 <!-- START CONTAINER -->
-<div class="container-padding">
-
-
-  
+<div class="container-padding">  
   <!-- Start Row -->
   <div class="row">
     
     <div class="">
-      <div class="panel panel-default" style="max-width: 750px; margin: 0px auto;margin-bottom: 100px;">
+      <div class="panel panel-default" id="merchantprofilepage">
 
         <div class="panel-title">
           Horizontal Form
@@ -55,9 +52,9 @@
 
                 <div class="form-group" >
                   <label class="col-sm-2 control-label form-label">Country</label>
-                  <div class="col-sm-10" style="margin-left: 0px;margin-right: 0px;">   
+                  <div class="col-sm-10 countrygroup">   
                         <select class="selectpicker" name="country" id="country">
-                          <option value='' disabled selected style='display:none;'>Select country</option>
+                          <option value='' disabled selected class="hide">Select country</option>
                            <option value="AU">Australia</option>    
                             <option value="AT">Austria</option>   
                             <option value="BE">Belgium</option>   
@@ -92,7 +89,7 @@
                   <label class="col-sm-2 control-label form-label">Type</label>
                   <div class="col-sm-10">
                      <select class="selectpicker" name="businessType">
-                          <option value='' disabled selected style='display:none;'>Select business type</option>
+                          <option value='' disabled selected class='hide'>Select business type</option>
                             <option value="Beauty Professional">Beauty Professional</option> 
                             <option value="Cleaning Services">Cleaning Services</option>     
                             <option value="Coffee Shop">Coffee Shop</option>    
@@ -114,21 +111,21 @@
                 <div class="form-group">
                   <label class="col-sm-2 control-label form-label">Phone</label>
                   <div class="col-sm-10">
-                    <input type="tel" class="form-control" id="phone" name="phone" style="max-width: 220px;">
+                    <input type="tel" class="form-control" id="phone" name="phone">
                   </div>
                 </div>
 
                 <div class="form-group">
                   <label class="col-sm-2 control-label form-label">Address</label>
                   <div class="col-sm-10">
-                    <input type="text" class="form-control" id="address" name="address" Placeholder="123 Main St, Ste 3" style="max-width: 460px;">
+                    <input type="text" class="form-control" id="address" name="address" Placeholder="123 Main St, Ste 3">
                   </div>
                 </div>
 
                  <div class="form-group">
                   <label class="col-sm-2 control-label form-label">Postal Code</label>
                   <div class="col-sm-10">
-                    <input type="text" class="form-control" id="zip" name="zip" Placeholder="Zip" style="max-width: 100px;">
+                    <input type="text" class="form-control" id="zip" name="zip" Placeholder="Zip">
                   </div>
                 </div>
 
@@ -145,7 +142,7 @@
                 <div class="form-group">
                   <label class="col-sm-2 control-label form-label">Tax rate</label>
                   <div class="col-sm-10">
-                      <input type="text" class="form-control" id="" name="taxRate" Placeholder="5 " style="max-width: 60px;">
+                      <input type="text" class="form-control" id="taxrate" name="taxRate" Placeholder="5">
                       <span>Default is 0. To be applied to transactions</span>
                   </div>
                 </div>
@@ -157,14 +154,14 @@
                 <div class="form-group">
                   <label class="col-sm-2 control-label form-label">Name</label>
                   <div class="col-sm-10">
-                    <input type="text" class="form-control" id="" name="firstName" Placeholder="First" style="max-width: 220px;">
+                    <input type="text" class="form-control" id="firstName" name="firstName" Placeholder="First">
                   </div>
                 </div>
 
                 <div class="form-group">
                   <label class="col-sm-2 control-label form-label"></label>
                   <div class="col-sm-10">
-                    <input type="text" class="form-control" id="" name="lastName" Placeholder="Last" style="max-width: 220px;">
+                    <input type="text" class="form-control" id="lastName" name="lastName" Placeholder="Last">
                   </div>
                 </div>
 
@@ -173,7 +170,7 @@
                 <div class="form-group">
                   <label class="col-sm-2 control-label form-label">Password</label>
                   <div class="col-sm-10">
-                    <input type="password" class="form-control" placeholder="Enter your password to save info." name="reenterPassword" style="max-width: 220px;">
+                    <input type="password" class="form-control" id="reenterPassword" placeholder="Enter your password to save info." name="reenterPassword">
                   </div>
                 </div>
                 
@@ -198,13 +195,7 @@
 <!-- END CONTAINER -->
  <!-- //////////////////////////////////////////////////////////////////////////// --> 
 
-
-
-
-
  </div>
-
-<%#= javascript_include_tag "bootstrap-select" %>
 
 </body>
 </html>

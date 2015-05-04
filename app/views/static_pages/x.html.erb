@@ -26,7 +26,7 @@
     <div class="right">
       <div class="btn-group" role="group" aria-label="...">
         <a href="index.html" class="btn btn-light">Dashboard</a>
-        <a href="#" class="btn btn-light"><i class="fa fa-refresh"></i></a>
+        <a href="" id="refresh" class="btn btn-light"><i class="fa fa-refresh"></i></a>
       </div>
     </div>
     <!-- End Page Header Right Div -->
@@ -36,27 +36,7 @@
 
  <!-- //////////////////////////////////////////////////////////////////////////// --> 
 <!-- START CONTAINER -->
-<div class="container-padding">
-
-  <style type="text/css">
-    td.details-control {
-        
-        cursor: pointer;
-    }
-     
-    tr.shown td.details-control {
-        
-    }
-     
-    div.slider {
-        display: none;
-    }
-     
-    table.dataTable tbody td.no-padding {
-        padding: 0;
-    }
-  </style>
-
+<div class="container-padding" id="transactions-column">
 
  <!-- Start Row -->
   <div class="row">
@@ -74,10 +54,10 @@
         </div>
 
         <div class="panel-body table-responsive">
-          <table id="mesa" class="table table-striped dataTable">
+          <table id="transactions-table" class="table table-striped dataTable">
             <thead>
               <tr role="row">
-                <td class="text-center"><i class="fa fa-trash"></i></td>
+                <td class="text-center"><i class="fa fa-trash" style="visibility: hidden;"></i></td>
                 <th>Order ID</th>
                 <th>Product</th>
                 <th>Buyer</th>
@@ -88,7 +68,7 @@
             </thead>
             <tbody>
               <tr role="row">
-                <td class="text-center"><i class="fa fa-trash"></i></td>
+                <td class="details-control"></td>
                 <td># <b>9652</b></td>
                 <td>Kode Gaming Laptop</td>
                 <td>John Doe</td>
@@ -97,7 +77,7 @@
                 <td>Credit Card</td>
               </tr>
               <tr role="row">
-              <td class="text-center"><i class="fa fa-trash"></i></td>
+              <td class="details-control"></td>
                 <td># <b>1963</b></td>
                 <td>New Season Jacket</td>
                 <td>Jane Doe</td>
@@ -106,7 +86,7 @@
                 <td>Paypal</td>
               </tr>
               <tr>
-              <td class="text-center"><i class="fa fa-trash"></i></td>
+              <td class="details-control"></td>
                 <td># <b>9652</b></td>
                 <td>IO Mouse</td>
                 <td>Jonathan Doe</td>
@@ -115,7 +95,7 @@
                 <td>Credit Card</td>
               </tr>
               <tr>
-              <td class="text-center"><i class="fa fa-trash"></i></td>
+              <td class="details-control"></td>
                 <td># <b>9651</b></td>
                 <td>Doe Bike</td>
                 <td>Jonathan Doe</td>
@@ -124,7 +104,7 @@
                 <td>Credit Card</td>
               </tr>
               <tr>
-              <td class="text-center"><i class="fa fa-trash"></i></td>
+              <td class="details-control"></td>
                 <td># <b>6962</b></td>
                 <td>Zets Baseball Bat</td>
                 <td>Jonathan Doe</td>
