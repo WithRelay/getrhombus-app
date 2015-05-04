@@ -8,7 +8,7 @@ $(document).ready(function () {
     if (url.pathname == "/a") {
         if (page_params != "") {
             //document.getElementById('phone').value = GetURLParameter(page_params, 'num');
-            var merchant = GetURLParameter('page_params', 'merchant');
+            var merchant = GetURLParameter(page_params, 'merchant');
             if (merchant) {
                 var x = $("#signup_logo");
                 $("<h2>" + merchant + "</h2>").insertAfter(x);
