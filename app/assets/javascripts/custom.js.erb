@@ -127,7 +127,7 @@ $(document).ready(function () {
         [5, 9, 7, 8, 5, 3, 5, 4]
       ]
     }, {
-      height: '420px',
+      //height: '420px',
       low: 0,
       showArea: true
     });
@@ -899,6 +899,14 @@ $(document).ready(function () {
 
             // List of fields and their validation rules
             fields: {
+                'fullname': { 
+                    row: '.group',
+                    validators: {
+                        notEmpty: {
+                            message: 'Your full name is required'
+                        }
+                    }
+                },
                 'cc-name': { 
                     selector: '#cc-name',
                     row: '.group',
