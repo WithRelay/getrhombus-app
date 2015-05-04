@@ -16,4 +16,5 @@
 //= require intlTelInput.min.js
 //= require chartist
 //= require jquery.payment.js
+//= require jquery.charactercounter.js
 

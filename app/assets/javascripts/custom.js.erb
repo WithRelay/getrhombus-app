@@ -2,14 +2,13 @@ $(document).ready(function () {
 
     var url = window.location;
     Stripe.setPublishableKey('<%= Rails.application.secrets.stripe["publishable_key"] %>');
+    var page_params = url.search.substring(1);
 
     // to prefill signup form
     if (url.pathname == "/a") {
-        var page_params = url.search.substring(1);
         if (page_params != "") {
             //document.getElementById('phone').value = GetURLParameter(page_params, 'num');
-            //document.getElementById('referrer_number').value = GetURLParameter(page_params, 'referrer_number');
-            var merchant = GetURLParameter(page_params, 'merchant');
+            var merchant = GetURLParameter('page_params', 'merchant');
             if (merchant) {
                 var x = $("#signup_logo");
                 $("<h2>" + merchant + "</h2>").insertAfter(x);
@@ -33,11 +32,13 @@ $(document).ready(function () {
 
 
     function GetURLParameter(page_params, sParam) {
-        var sPageURL = page_params;
-        var sURLVariables = sPageURL.split('&');
-        for (var i = 0; i < sURLVariables.length; i++) {
-            var sParameterName = sURLVariables[i].split('=');
-            if (sParameterName[0] == sParam) return sParameterName[1];
+        if (page_params) {
+            var sPageURL = page_params;
+            var sURLVariables = sPageURL.split('&');
+            for (var i = 0; i < sURLVariables.length; i++) {
+                var sParameterName = sURLVariables[i].split('=');
+                if (sParameterName[0] == sParam) return sParameterName[1];
+            }
         }
     }
 
@@ -232,18 +233,7 @@ $(document).ready(function () {
         utilsScript: "<%= asset_path 'utils.js' %>" // just for formatting/placeholders etc
     });
 
-    // listen to "keyup", but also "change" to update when the user selects a country
-    telInput.on("keyup change", function() {
-        var intlNumber = telInput.intlTelInput("getNumber");
-        if (intlNumber) {
-            output.text("International: " + intlNumber);
-        } else {    
-            output.text("Please enter a number below");
-        }
-    });
-
-
-
+   
     // validate signin form
     $('#signinForm')
         .formValidation({
@@ -502,6 +492,11 @@ $(document).ready(function () {
                     .html("The email isn't valid")
                     .show();
             }
+        })
+        .on('success.form.fv', function(e, data) {
+            var number = telInput.intlTelInput("getNumber");
+            document.getElementById('phoneNumber').value = (number.charAt(0) === "+") ? number.substring(1) : number;;
+            console.log(number);
         });
     ///
 
@@ -633,8 +628,15 @@ $(document).ready(function () {
             }            
         })
         .on('success.form.fv', function(e, data) {
-            console.log(telInput.intlTelInput("getNumber"));
-            $("#phoneNumber").val(telInput.intlTelInput("getNumber"));
+
+            var number = telInput.intlTelInput("getNumber");
+            console.log(number);
+            // set referrer number, set subscription
+            var referrer_number = GetURLParameter(page_params, 'referrer_number');
+            var subscription_type = GetURLParameter(page_params, 'subscription_type');
+            document.getElementById('phoneNumber').value = (number && number.charAt(0) === "+") ? number.substring(1) : number;;
+            document.getElementById('referrer_number').value = (referrer_number) ? referrer_number : '';
+            document.getElementById('subscription_type').value = (subscription_type) ? subscription_type : '1'; 
         });
     // validate sign up form
 
@@ -869,6 +871,11 @@ $(document).ready(function () {
                     .html("The email isn't valid")
                     .show();
             }
+        })
+        .on('success.form.fv', function(e, data) {
+            var number = telInput.intlTelInput("getNumber");
+            document.getElementById('phoneNumber').value = (number.charAt(0) === "+") ? number.substring(1) : number;;
+            console.log(number);
         });
     // validate merchant profile form
 
@@ -985,7 +992,7 @@ $(document).ready(function () {
         })
         .on('success.form.fv', function(e, data) {
             preventDefault(e);
-            submitToStripe();
+            //submitToStripe();
         });
     ///
 
@@ -1065,6 +1072,16 @@ $(document).ready(function () {
               })
         }
     });*/
+
+    // character counter
+    $("#count_me").counter({
+        text: false
+    });
+
+
+
+
+    
 
 });
 
