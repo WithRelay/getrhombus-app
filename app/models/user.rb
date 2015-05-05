@@ -1,5 +1,6 @@
 class User < ActiveRecord::Base
 
+  include DashboardQueries
   Stripe.api_key = Rails.application.secrets.stripe["secret_key"]
 
   # Include default devise modules. Others available are:

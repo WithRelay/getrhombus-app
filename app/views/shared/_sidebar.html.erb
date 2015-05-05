@@ -4,23 +4,47 @@
 
 <ul class="sidebar-panel nav">
   <li class="sidetitle">MAIN</li>
-  <li><a href="index.html"><span class="icon color5"><i class="fa fa-sliders"></i></span>Dashboard</a></li>
-  <li><a href="mailbox.html"><span class="icon color6"><i class="fa fa-send-o"></i></span>Messaging</a></li>
-  <li><a href="mailbox.html"><span class="icon color6"><i class="fa fa-credit-card"></i></span>Transactions</a></li>
+  
+  <li>
+     <%= link_to current_user do %>
+        <span class="icon color6"><i class="fa fa-sliders"></i></span>Dashbord
+    <% end %>    
+  </li>
+  
+  <% if current_user.user_level == 1  %>
+   <li>
+    <%= link_to dashboard_messaging_path(current_user.id) do %>
+        <span class="icon color6"><i class="fa fa-send-o"></i></span>Messaging
+    <% end %>
+  </li>
+  <% end %>
+
+  <li>
+    <%= link_to user_transactions_path(current_user.id) do %>
+        <span class="icon color6"><i class="fa fa-credit-card"></i></span>Transactions
+    <% end %>
+  </li>
+
+  <%#= (current_user.user_level == 0) ? "Businesses" : "Customers" %>
   <li><a href="mailbox.html"><span class="icon color6"><i class="fa fa-user"></i></span>Customers</a></li>
   <li><a href="mailbox.html"><span class="icon color6"><i class="fa fa-envelope-o"></i></span>Contacts</a></li>
 </ul>
 
 <ul class="sidebar-panel nav">
-  <li class="sidetitle">RHOMBUS NUMBER</li>
-  <li><a href="grid.html"><span class="icon color15"><i class="fa fa-phone-square"></i></span>+1 202 22233333</a></li>
+  <li class="sidetitle"><%= (current_user.user_level == 0) ? "PHONE NUMBER" : "RHOMBUS NUMBER" %></li>
+  <li><a href="#"><span class="icon color15"><i class="fa fa-phone-square"></i></span>
+  +<%= (current_user.user_level == 0) ? current_user.phone_number : current_user.rhombus_number %></a></li>
 </ul>
 
 <ul class="sidebar-panel nav">
   <li class="sidetitle">MORE</li>
-  <li><a href="grid.html"><span class="icon color15"><i class="fa fa-wrench"></i></span>Settings</a></li>
-  <li><a href="maps.html"><span class="icon color7"><i class="fa fa-lightbulb-o"></i></span>Help</a></li>
-  <li><a href="maps.html"><span class="icon color7"><i class="fa fa-sign-out"></i></span>Logout</a></li>
+  <li><a href="/profile"><span class="icon color15"><i class="fa fa-wrench"></i></span>Settings</a></li>
+  <li><a href="/contact"><span class="icon color7"><i class="fa fa-lightbulb-o"></i></span>Help</a></li>
+  <li>
+      <%= link_to destroy_user_session_path, method: :delete do %>
+        <span class="icon color7"><i class="fa fa-sign-out"></i></span>Logout
+      <% end %>
+  </li>
 </ul>
 
 
