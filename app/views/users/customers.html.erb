@@ -68,7 +68,7 @@
             <% @customers.each do |c| %>
               <tr role="row">
                 <td class="details-control"></td>
-                <td><%= c.card_name %></td>
+                <td><%= (current_user.user_level == 0) ? c.business_name : c.card_name %></td>
                 <td><%= c.first_visit.strftime("%m/%d/%Y") %></td>
                 <td><%= c.last_visit.strftime("%m/%d/%Y") %></td>
                 <td><%= number_to_currency(c.avg_spend) %></td>

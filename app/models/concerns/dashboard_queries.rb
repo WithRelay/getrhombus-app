@@ -11,7 +11,7 @@ module DashboardQueries
 				FROM transactions 
 				INNER JOIN users on
 				transactions.user_id=users.id
-				where referenced_user_id = ? and transaction_type = ? ORDER BY created_at DESC", self.id, 2])
+				where referenced_user_id = ? and transaction_type = ? ORDER BY transactions.created_at DESC", self.id, 2])
 		elsif self.user_level == 1
 			transactions = Transaction.find_by_sql([
 				"SELECT users.card_name, users.email, transactions.created_at, 
@@ -21,7 +21,7 @@ module DashboardQueries
 				FROM transactions 
 				INNER JOIN users on
 				transactions.user_id=users.id
-				where referenced_merchant_id = ? and transaction_type = ? ORDER BY created_at DESC", self.id, 1])
+				where referenced_merchant_id = ? and transaction_type = ? ORDER BY transactions.created_at DESC", self.id, 1])
 		end
 	end	
 
@@ -29,15 +29,15 @@ module DashboardQueries
 	def get_user_customers
 		if self.user_level == 0
 			businesses = Transaction.find_by_sql([
-				"SELECT transactions.user_id, users.card_name, users.email, MIN(transactions.created_at) AS first_transaction, 
-				SUM(transactions.amount) AS total_spend, AVG(transactions.amount) AS avg_spend, 
-				users.phone_number, max(transactions.created_at) AS last_transaction,
-				SUM(transactions.created_at BETWEEN DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW()) AS last_30 
-				FROM transactions 
-				INNER JOIN users ON
-				transactions.user_id = users.id
-				WHERE referenced_merchant_id = ? AND transaction_type = ? 
-				GROUP BY transactions.user_id ORDER BY users.created_at DESC", self.id, 2]);
+				"SELECT users.business_name, users.email, MIN(transactions.created_at) AS first_visit, 
+					SUM(transactions.amount) AS total_spend, AVG(transactions.amount) AS avg_spend, 
+					users.business_phone, max(transactions.created_at) AS last_visit,
+					SUM(transactions.created_at BETWEEN DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW()) AS last_30 
+					FROM transactions
+					INNER JOIN users ON
+					transactions.user_id = users.id
+					WHERE referenced_user_id = ? AND transaction_type = ?
+					GROUP BY transactions.referenced_user_id ORDER BY transactions.created_at DESC", self.id, 2]);
 		elsif self.user_level == 1
 			customers = Transaction.find_by_sql([
 				"SELECT transactions.user_id, users.card_name, users.email, MIN(transactions.created_at) AS first_visit, 
@@ -48,7 +48,7 @@ module DashboardQueries
 				INNER JOIN users ON
 				transactions.user_id = users.id
 				WHERE referenced_merchant_id = ? AND transaction_type = ? 
-				GROUP BY transactions.user_id ORDER BY users.created_at DESC", self.id, 1]);
+				GROUP BY transactions.user_id ORDER BY transactions.created_at DESC", self.id, 1]);
 		end
 	end	
 
