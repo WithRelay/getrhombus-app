@@ -26,11 +26,15 @@
       </a>
         <ul class="dropdown-menu dropdown-menu-list dropdown-menu-right">
           <li role="presentation" class="dropdown-header">Profile</li>
+          
+          <% if current_user.user_level == 1  %>
           <li>
             <%= link_to dashboard_messaging_path(current_user.id) do %>
                 <i class="fa falist fa-send-o"></i>Messaging<%#<span class="badge label-danger">4</span>%>
             <% end %>
           </li>
+          <% end %>
+          
           <li>
              <%= link_to user_contacts_path(current_user.id) do %>
                 <i class="fa falist fa-envelope-o"></i>Contacts
