@@ -121,7 +121,7 @@ class UsersController < ApplicationController
   end
 
   def transactions
-    @transactions = @user.get_user_transactions.paginate(:page => params[:page], :per_page => 20)
+    @transactions = @user.get_user_transactions.paginate(:page => params[:page], :per_page => 3)
   end
 
 private
