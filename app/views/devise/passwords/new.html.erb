@@ -1,52 +1,39 @@
-<% provide(:title, 'Rhombus - Reset password') %>
-
-<%= content_for :head do %>
-  <%= stylesheet_link_tag "forms.css" %>
-<% end %>
-
-
-<%#= render 'shared/header' %>
-
-<body class="error-body no-top lazy"> 
+ <% provide(:title, 'Rhombus - Reset Password') %>
+  <%= content_for :head do %>
+    <%= stylesheet_link_tag "application_dashboard_messaging", media: "all" %>
+  <% end %>
+  <!-- ========== Css Files ========== -->
   
+  <style type="text/css">
+    body{background: #F5F5F5;}
+  </style>
+  <body>
 
   <%= devise_error_messages! %>
   <%= render 'shared/full_messages' %>
-<div class="container">
-  <div class="row login-container animated fadeInUp">  
-        <div class="col-md-7 col-md-offset-2 tiles white no-padding">
-		 <div class="p-t-30 p-l-40 p-b-20 xs-p-t-10 xs-p-l-10 xs-p-b-10"> 
-          <h3 class="normal">Reset Rhombus password</h3>	  
+
+  <div class="login-form">
+    <%= form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :post, :id => 'ForgotPassword' }) do |f| %>
+        <div class="top">
+        <img src="<%= asset_path 'logo_grey.jpg' %>" alt="icon" id="signup_logo" class="icon">
+          <h4>You can reset your password</h4>
         </div>
-		<div class="tiles grey p-t-20 p-b-20 text-black">
-			<%# <form id="frm_login" class="animated fadeIn">  %>
-	<%= form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :post }) do |f| %>
-                    <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10">
-
-                      <div class="col-md-6 col-sm-6 ">                    
-                        <%= f.email_field :email, :class => "form-control", placeholder: "Email", :autofocus => true %>
-                      </div>
-
-                         <div class="col-md-6 col-sm-6">
-             <%# </form> %> <%= f.submit "Reset password",  :class => "btn btn-primary btn-cons btn-block"  %>
-
-                    </div>
-                    </div>
-                 <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10">
-                        <div class="col-md-12">
-                          <p><a href="/signin">Back to Sign in</a></p>
-                      </div>
-                    </div>  
-                    
-  			<% end %>
-			
-		</div>   
-      </div>   
-  </div>
-</div>
+        <div class="form-area">
+          <div class="group">
+          <%= f.email_field :email, :class => "form-control rhombusFocus", type: "email", placeholder: "Email", :autofocus => true %>
+            <i class="fa fa-envelope-o"></i>
+          </div>
+          <%= f.submit "RESET PASSWORD",  :class => "btn btn-default btn-block btn-rhombus" %>
+        </div>
+      <% end %>
+      <div class="footer-links row">
+        <div class="col-xs-6"><a href="/signin"><i class="fa fa-sign-in"></i> Login</a></div>
+        <div class="col-xs-6 text-right"><a href="/signup"><i class="fa fa-external-link"></i> Register Now</a></div>
+      </div>
+    </div>
 
 </body>
-
+</html>
  
 
 <%#= render "devise/shared/links" %>

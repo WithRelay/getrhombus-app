@@ -261,7 +261,7 @@ $(document).ready(function () {
 
             // List of fields and their validation rules
             fields: {
-                email: {
+                'user[email]': {
                     verbose: false,
                     row: '.group',
                     validators: {
@@ -287,7 +287,7 @@ $(document).ready(function () {
                         }
                     }
                 },
-                password: {
+                'user[password]': {
                     row: '.group',
                     validators: {
                         notEmpty: {
@@ -330,17 +330,9 @@ $(document).ready(function () {
             // I am validating Bootstrap form
             framework: 'bootstrap',
             live: 'disabled',
-
-            // Feedback icons
-            /*icon: {
-                valid: 'fa fa-check',
-                invalid: 'fa fa-times',
-                validating: 'fa fa-refresh'
-            },*/
-
             // List of fields and their validation rules
             fields: {
-                email: {
+                'user[email]': {
                     verbose: false,
                     row: '.group',
                     validators: {
@@ -514,27 +506,19 @@ $(document).ready(function () {
 
     // validate sign up form
     $('#signupForm')
-        .find('[name="accountType"]')
+        .find('[name="user[user_level]"]')
             .selectpicker()
             .change(function(e) {
-                $('#signupForm').formValidation('revalidateField', 'accountType');
+                $('#signupForm').formValidation('revalidateField', 'user[user_level]');
             })
             .end()
         .formValidation({
             // I am validating Bootstrap form
             framework: 'bootstrap',
             live: 'disabled',
-
-            // Feedback icons
-            /*icon: {
-                valid: 'fa fa-check',
-                invalid: 'fa fa-times',
-                validating: 'fa fa-refresh'
-            },*/
-
             // List of fields and their validation rules!
             fields: {
-                email: {
+                'user[email]': {
                     verbose: false,
                     row: '.group',
                     validators: {
@@ -560,7 +544,7 @@ $(document).ready(function () {
                         }
                     }
                 },
-                password: {
+                'user[password]': {
                     row: '.group',
                     validators: {
                         notEmpty: {
@@ -572,7 +556,7 @@ $(document).ready(function () {
                         }
                     }
                 },
-                confirmPassword: {
+                "user[password_confirmation]": {
                     row: '.group',
                     validators: {
                         verbose: false,
@@ -605,7 +589,7 @@ $(document).ready(function () {
                         }
                     }
                 },
-                accountType: {
+                'user[user_level]': {
                     row: '.form-group',
                     validators: {
                         notEmpty: {
@@ -645,9 +629,9 @@ $(document).ready(function () {
             // set referrer number, set subscription
             var referrer_number = GetURLParameter(page_params, 'referrer_number');
             var subscription_type = GetURLParameter(page_params, 'subscription_type');
-            document.getElementById('phoneNumber').value = (number && number.charAt(0) === "+") ? number.substring(1) : number;;
-            document.getElementById('referrer_number').value = (referrer_number) ? referrer_number : '';
-            document.getElementById('subscription_type').value = (subscription_type) ? subscription_type : '1'; 
+            //document.getElementById('phoneNumber').value = (number && number.charAt(0) === "+") ? number.substring(1) : number;;
+            //document.getElementById('referrer_number').value = (referrer_number) ? referrer_number : '';
+            //document.getElementById('subscription_type').value = (subscription_type) ? subscription_type : '1'; 
         });
     // validate sign up form
 
@@ -661,7 +645,7 @@ $(document).ready(function () {
 
             // List of fields and their validation rules!
             fields: {
-                password: {
+                'user[password]': {
                     row: '.group',
                     validators: {
                         notEmpty: {
@@ -673,7 +657,7 @@ $(document).ready(function () {
                         }
                     }
                 },
-                confirmPassword: {
+                'user[password_confirmation]': {
                     row: '.group',
                     validators: {
                         verbose: false,

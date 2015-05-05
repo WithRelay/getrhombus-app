@@ -30,11 +30,6 @@ class StaticPagesController < ApplicationController
 
 	def t
 	end
-	def w
-	end
-
-	def x
-	end
 
 	def c
 	end
@@ -57,9 +52,4 @@ class StaticPagesController < ApplicationController
 	def g
 	end
 
-	def y
-	end
-
-	def z
-	end
 end

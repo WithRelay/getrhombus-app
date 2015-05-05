@@ -1,60 +1,57 @@
-<% provide(:title, 'Rhombus - Sign in') %>
-<%= content_for :head do %>
-  <%= stylesheet_link_tag "forms.css" %>
-<% end %>
+ <!-- ========== Css Files ========== -->
+  <% provide(:title, 'Rhombus - Sign In') %>
+  <%= content_for :head do %>
+    <%= stylesheet_link_tag "application_dashboard_messaging", media: "all" %>
+  <% end %>
+  
+  <style type="text/css">
+    body{background: #F5F5F5;}
+  </style>
 
-<body class="error-body no-top lazy"> 
+  <body>
+      <%= render 'shared/full_messages' %>
 
-  <%= render 'shared/full_messages' %>
-
-<div class="container">
-  <div class="row login-container animated fadeInUp">  
-        <div class="col-md-7 col-md-offset-2 tiles white no-padding">
-		 <div class="p-t-30 p-l-40 p-b-20 xs-p-t-10 xs-p-l-10 xs-p-b-10"> 
-          <h3 class="normal">Sign in to Rhombus</h3>	  
+    <div class="login-form">
+      <%= form_for(resource, :as => resource_name, :html=> {:id => 'signinForm'} , :url => session_path(resource_name)) do |f| %> 
+        <div class="top">
+          <img src="<%= asset_path 'logo_grey.jpg' %>" alt="icon" class="icon" id="signup_logo">
+          <h4>Welcome Back!</h4>
         </div>
-		<div class="tiles grey p-t-20 p-b-20 text-black">
-			<%# <form id="frm_login" class="animated fadeIn">  %>
-			<%= form_for(resource, :as => resource_name, :id => "frm_login", :class => "animated fadeIn", :url => session_path(resource_name)) do |f| %> 
-                    <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10">
+        <div class="form-area">
+          <div class="group">
+            <%= f.email_field :email, type: "email", :class => "form-control rhombusFocus", placeholder: "Email" %>
+            <i class="fa fa-envelope-o"></i>
+          </div>
+          <div class="group">
+            <%= f.password_field :password, type: "password", :class => "form-control rhombusFocus", placeholder: "Password" %>
 
-                      <div class="col-md-6 col-sm-6 ">                    
-                        <%= f.email_field :email, id: "email", type: "text", :class => "form-control", placeholder: "Email" %>
-                      </div>
+            <i class="fa fa-key"></i>
 
-                      <div class="col-md-6 col-sm-6">                        
-                        <%= f.password_field :password, id: "password", type: "password", :class => "form-control", placeholder: "Password" %>
-                      </div>
+          </div>
+          <div class="checkbox checkbox-primary">
+            <input id="checkbox101" type="checkbox" checked>
+            <%#<label for="checkbox101"> Remember Me</label>%>
+            <% if devise_mapping.rememberable? -%>
+                <%= f.check_box :remember_me, id: "checkbox1", checked: "checked" %> <label for="checkbox1"> Remember Me</label>
+              <% end -%>
+          </div>
+          <%= f.submit "LOGIN", :class => "btn btn-default btn-block btn-rhombus" %>
+        </div>
+      <% end %>
+      <div class="footer-links row">
+        <div class="col-xs-6"><a href="/signup"><i class="fa fa-external-link"></i> Sign Up</a></div>
+        <%- if devise_mapping.recoverable? && controller_name != 'passwords' %>
+          <div class="col-xs-6 text-right">
+              <%= link_to new_password_path(resource_name) do %>            
+                <i class="fa fa-lock"></i> Forgot password
+              <% end %>
+          </div>
+        <% end -%>
+      </div>
+    </div>
 
-                    </div>
-
-                 <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10">
-                   <div class="col-md-6 col-sm-6" style="margin-top: 3px">
-             <%# </form> %> <%= f.submit "Sign in", :class => "btn btn-primary btn-cons" %>
-                    </div>
-                 </div> 
-
-				<div class="row p-t-10 m-l-20 m-r-20 xs-m-l-10 xs-m-r-10">
-				  <div class="control-group  col-md-10">
-					<div class="checkbox checkbox check-success">
-					 <%#<a href="#">Trouble login in?</a>&nbsp;&nbsp;	%>				  
-					 <%- if devise_mapping.recoverable? && controller_name != 'passwords' %>
-  							<%= link_to "Trouble login in?", new_password_path(resource_name) %>&nbsp;&nbsp;
-					<% end -%>
-
-					   <% if devise_mapping.rememberable? -%>
-    						<%= f.check_box :remember_me, id: "checkbox1", value: "1" %> <label for="checkbox1">Keep me reminded </label>
-  						<% end -%>
-					</div>
-				  </div>
-				</div>		  	 
-
-			<% end %>
-			
-		</div>   
-      </div>   
-  </div>
-</div>
+</body>
+</html>
 
 </body>
 

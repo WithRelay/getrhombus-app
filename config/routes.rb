@@ -13,18 +13,14 @@ Rails.application.routes.draw  do
   get '/terms' => 'static_pages#terms'
   get '/pricing' => 'static_pages#pricing'
 
-  get '/x' => 'static_pages#x'
   get '/y' => 'static_pages#y'
-  get '/z' => 'static_pages#z'
   get '/a' => 'static_pages#a'
   get '/b' => 'static_pages#b'
   get '/c' => 'static_pages#c'
   get '/d' => 'static_pages#d'
   get '/f' => 'static_pages#f'
   get '/g' => 'static_pages#g'
-  get '/h' => 'static_pages#h'
   get '/v' => 'static_pages#v'
-  get '/w' => 'static_pages#w'
   get '/t' => 'static_pages#t'
 
   #match 'contact' => 'messages#new', :as => 'contact', :via => :get

@@ -1,54 +1,45 @@
-<% provide(:title, 'Rhombus - Change password') %>
 
-<%= content_for :head do %>
-  <%= stylesheet_link_tag "forms.css" %>
-<% end %>
-
-
-<body class="error-body no-top lazy"> 
+  <!-- ========== Css Files ========== -->
+  <% provide(:title, 'Rhombus - Change Password') %>
+  <%= content_for :head do %>
+    <%= stylesheet_link_tag "application_dashboard_messaging", media: "all" %>
+  <% end %>
   
+  <style type="text/css">
+    body{background: #F5F5F5;}
+  </style>
+
+
+<body> 
 
   <%= devise_error_messages! %>
   <%= render 'shared/full_messages' %>
-<div class="container">
-  <div class="row login-container animated fadeInUp">  
-        <div class="col-md-7 col-md-offset-2 tiles white no-padding">
-		 <div class="p-t-30 p-l-40 p-b-20 xs-p-t-10 xs-p-l-10 xs-p-b-10"> 
-          <h3 class="normal">Change your password</h3>	  
+
+  
+    <div class="login-form">
+    <%= form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :put, :id => 'changePasswordForm'}) do |f| %>
+    <%= f.hidden_field :reset_password_token %>
+        <div class="top">
+          <img src="<%= asset_path 'logo_grey.jpg' %>" alt="icon" id="signup_logo" class="icon">
+          <h4>Change your password.</h4>
         </div>
-		<div class="tiles grey p-t-20 p-b-20 text-black">
-			
-	<%= form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :put }) do |f| %>
-				<%= f.hidden_field :reset_password_token %>
-                    <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10">
-
-                      <div class="col-md-6 col-sm-6 ">                    
-                        <%= f.password_field :password, :autofocus => true, :class => "form-control", placeholder: "Enter new password" %>
-                      </div>
-                     
-                     <div class="col-md-6 col-sm-6 ">                    
-                        <%= f.password_field :password_confirmation, :class => "form-control", placeholder: "Confirm new password" %>
-                      </div>
-                      </div>
-
-                      <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10">
-                         <div class="col-md-6 col-sm-6">
-             				 <%= f.submit "Change my password",  :class => "btn btn-primary btn-cons btn-block"  %>
-             			 </div>
-                    </div>
-
-                 <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10">
-                        <div class="col-md-12">
-                          <p><a href="/signin">Back to Sign in</a></p>
-                      </div>
-                    </div>  
-                    
-  			<% end %>
-			
-		</div>   
-      </div>   
-  </div>
-</div>
+        <div class="form-area">
+          <div class="group">
+          <%= f.password_field :password, :autofocus => true, :type => 'password', :class => "form-control rhombusFocus", placeholder: "New password" %>
+            <i class="fa fa-key"></i>
+          </div>
+          <div class="group">
+          <%= f.password_field :password_confirmation, type: "password", :class => "form-control rhombusFocus", placeholder: "Confirm password" %>
+            <i class="fa fa-key"></i>
+          </div>
+          <%= f.submit "Reset",  :class => "btn btn-default btn-block btn-rhombus" %>
+        </div>
+      <% end %>
+      <div class="footer-links row">
+        <div class="col-xs-6"><a href="/signin"><i class="fa fa-external-link"></i>Back to Login</a></div>
+        <div class="col-xs-6 text-right"><a href="#"></a></div>
+      </div>
+    </div>
 
 </body>
 

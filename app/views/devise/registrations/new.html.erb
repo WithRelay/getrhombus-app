@@ -1,90 +1,61 @@
-<% provide(:title, 'Rhombus - Sign up') %>
+    <!-- ========== Css Files ========== -->
+  <% provide(:title, 'Rhombus - Sign Up') %>
+  <%= content_for :head do %>
+    <%= stylesheet_link_tag "application_dashboard_messaging", media: "all" %>
+  <% end %>
+<style type="text/css">
+    body{background: #F5F5F5;}
+  </style>
 
-<%= content_for :head do %>
-  <%= stylesheet_link_tag "forms.css" %>
-<% end %>  
-<body class="error-body no-top lazy"> 
+<body> 
 
     <%= devise_error_messages! %>
     <%= render 'shared/full_messages' %>
-<div style="margin: 50px;">
-<p id="output">Please enter a number below</p>
-<input id="phone" type="tel">
-<input id="referrer_number" type="text" <%#= hidden %> >
-</div>
-
-<div class="container">
-  <div class="row login-container animated fadeInUp">  
-        <div class="col-md-7 col-md-offset-2 tiles white no-padding">
-     <div class="p-t-30 p-l-40 p-b-20 xs-p-t-10 xs-p-l-10 xs-p-b-10"> 
-          <h3 class="normal">Create your Rhombus account</h3>
+    
+    <div class="login-form">
+    <%= form_for(resource, :id => "frm_register", :as => resource_name, :url => registration_path(resource_name), :html=> {:id => 'signupForm'} ) do |f| %>
+        <div class="top">
+          <img src="<%= asset_path 'logo_grey.jpg' %>" alt="icon" id="signup_logo" class="icon">
+          <h4>Create an account.</h4>
         </div>
-    <div class="tiles grey p-t-20 p-b-20 text-black">
-        <%#<form id="frm_register">%>
-
-        <%= form_for(resource, :id => "frm_register", :as => resource_name, :url => registration_path(resource_name)) do |f| %>
-
-                    <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10">
-                      <div class="col-md-6 col-sm-6">   
-                        
-                        <%= f.email_field :email, id: "email", type: "text", :class => "form-control", placeholder: "Email" %>
-
-                      </div>
-                      <div class="col-md-6 col-sm-6">                       
-                        
-                          <%= f.text_field :phone_number, :id => "num", :class => "form-control", placeholder: "Ex. <redacted_phone_number>", type: "text" %>
-
-                      </div>
-                    </div>  
-                    
-                    <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10">
-
-                      <div class="col-md-6 col-sm-6">                        
-                        <%= f.password_field :password, id: "password", type: "password", :class => "form-control", placeholder: "Password" %>
-                      </div>
-
-                      <div class="col-md-6 col-sm-6">
-
-                      <%= f.password_field :password_confirmation, id: "password_confirm", type: "password", :class => "form-control", placeholder: "Confirm Password" %>
-                      </div>
-                    </div>  
-
-                    <div class="row p-t-10 m-l-20 m-r-20 xs-m-l-10 xs-m-r-10">
-          <div class="control-group  col-md-12">
-                 <div class="radio radio-primary for_radio">
-                        
-                       <%= f.radio_button :user_level, '0', id: "radio1", type: "radio" %>
-                        <label for="radio1">I want to send payments</label>
-                        <br>
-                        <%= f.radio_button :user_level, '1', id: "radio2", type: "radio" %>
-                        <label for="radio2">I want to receive payments (merchants)</label>
-                      </div>
+        <div class="form-area">
+          <div class="group">
+          <%= f.email_field :email, id: "email", type: "email", :class => "form-control rhombusFocus", placeholder: "E-mail" %>
+            <i class="fa fa-envelope-o"></i>
           </div>
+          <div class="group phonegroup">
+            <%#= f.hidden_field :phone_number, :id => "phoneNumber"%>
+            <%#= f.hidden_field :referrer_number, :id => "referrer_number"%>
+            <%#= f.hidden_field :subscription_type, :id => "subscription_type"%>
+            <input type="tel" id="phone" name="phone" class="form-control rhombusFocus">
+          </div>
+          <div class="group">
+           <%= f.password_field :password, type: "password", :class => "form-control rhombusFocus", placeholder: "Password" %>
+            <i class="fa fa-key"></i>
+          </div>
+          <div class="group">
+          <%= f.password_field :password_confirmation, type: "password", :class => "form-control rhombusFocus", placeholder: "Confirm Password" %>
+            <i class="fa fa-key"></i>
+          </div>
+          <div class="form-group accountTypegroup"> 
+            <%= f.select :user_level, "<option value='' disabled selected class='hide'>Please select account type</option> <option value='0'>I'm a customer</option><option value='1'>I'm a merchant</option><option value='1'>I'm a non-profit</option>".html_safe, {}, :class => 'selectpicker rhombusFocus' %>
+          </div>  
+
+          <%= f.submit "SIGN UP", :class => "btn btn-default btn-block btn-rhombus" %>
+          <p id="termsNote">By signing up, I agree to Rhombus <a href="/terms">terms and conditions.</a></p>
+        
+
         </div>
-
-  <div class="row">
-                    <div class="col-md-12">
-            
-                    </div>
-                  </div>
-
-
-                    <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10">
-                        <div class="col-md-12" style="margin-top: 7px;">
-                          <%= f.submit "Sign up", :class => "btn btn-primary btn-cons" %> <p></p> <p>By signing up I agree to Rhombus <a href="#">terms and conditions</a>.</p>
-                      </div>
-                    </div>  
-
-      <%#</form>%><% end %>
-    </div>   
-      </div>   
-  </div>
-</div>
-
-
-
+      <% end %>
+      <div class="footer-links row">
+        <div class="col-xs-6"><a href="/signin"><i class="fa fa-sign-in"></i> Login</a></div>
+        <div class="col-xs-6 text-right"><a href="/users/password/new"><i class="fa fa-lock"></i> Forgot password</a></div>
+        <div class="col-md-12 hide" id="rhombusPower"><img src="<%= asset_path 'poweredbyR.jpg' %>" style="width: 140px; margin: 20px auto;"></div>
+      </div>
+    </div>
 
 </body>
+</html>
 
 <%#= form_for(resource, :as => resource_name, :url => registration_path(resource_name)) do |f| %>
 
