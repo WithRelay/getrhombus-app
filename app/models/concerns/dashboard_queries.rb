@@ -10,7 +10,7 @@ module DashboardQueries
 				transactions.transaction_uri, transactions.tax_rate
 				FROM transactions 
 				INNER JOIN users on
-				transactions.merchant_id=users.id
+				transactions.user_id=users.id
 				where referenced_merchant_id = ? and transaction_type = ? ORDER BY created_at DESC", self.id, 2])
 		elsif self.user_level == 1
 			transactions = Transaction.find_by_sql([
