@@ -27,7 +27,12 @@
 
   <%#= (current_user.user_level == 0) ? "Businesses" : "Customers" %>
   <li><a href="mailbox.html"><span class="icon color6"><i class="fa fa-user"></i></span>Customers</a></li>
-  <li><a href="mailbox.html"><span class="icon color6"><i class="fa fa-envelope-o"></i></span>Contacts</a></li>
+
+  <li>
+    <%= link_to user_contacts_path(current_user.id) do %>
+        <span class="icon color6"><i class="fa fa-envelope-o"></i></span>Contacts
+    <% end %>
+  </li>
 </ul>
 
 <ul class="sidebar-panel nav">
