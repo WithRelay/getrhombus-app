@@ -6,7 +6,7 @@
   <%= stylesheet_link_tag "application_dashboard_messaging", media: "all" %>
 <% end %>
 
-  <body>
+<body>
   <!-- Start Page Loading -->
   <div class="loading"><img src="<%= asset_path 'loading.gif' %>" alt="loading-img"></div>
   <!-- End Page Loading -->
@@ -86,18 +86,7 @@
 
   </div>
   <!-- End Row -->
-
-      <nav>
-            <ul class="pager">
-              <li><a href="#">Previous</a></li>
-              <li><a href="#">Next</a></li>
-            </ul>
-          </nav>
-
-
-
-
-
+    <div style="text-align: center; margin-bottom: 40px;"><%= will_paginate @customers, :page_links => false %></div>
 </div>
 <!-- END CONTAINER -->
  <!-- //////////////////////////////////////////////////////////////////////////// --> 

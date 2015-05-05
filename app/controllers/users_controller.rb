@@ -109,20 +109,15 @@ class UsersController < ApplicationController
   end
 
   def contacts
-    if @user.user_level == 0
-     # redirect_to "/profile"
-     
-    elsif current_user.user_level == 1
-     # redirect_to "/profile"
-    end
+     @contacts = @user.get_user_contacts.paginate(:page => params[:page], :per_page => 2)
   end
 
   def customers
-    @customers = @user.get_user_customers.paginate(:page => params[:page], :per_page => 3)
+    @customers = @user.get_user_customers.paginate(:page => params[:page], :per_page => 2)
   end
 
   def transactions
-    @transactions = @user.get_user_transactions.paginate(:page => params[:page], :per_page => 3)
+    @transactions = @user.get_user_transactions.paginate(:page => params[:page], :per_page => 2)
   end
 
 private
@@ -132,15 +127,3 @@ private
     end
 
 end
-
-#  def update
- #   if @user.update_with_password(params[:user])
-  #    flash[:success] = "Profile updated"
-   #   sign_in @user
-    #  redirect_to @user
-    #else
-     # render 'edit'
-    #end
-  #end
-     #@user_books = UserBook.where(:user_id => current_user).paginate(:page => params[:page], :per_page => 10)  #find_all_by_user_id(@user.id, :include => [:book])   #find user's books for shelf view
-    #@user_books_count = @user_books.count      #for shelf Nav count

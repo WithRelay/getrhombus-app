@@ -5,9 +5,9 @@ $(document).ready(function () {
     var page_params = url.search.substring(1);
 
     // to prefill signup form
-    if (url.pathname == "/a") {
+    if (url.pathname == "/signup") {
         if (page_params != "") {
-            //document.getElementById('phone').value = GetURLParameter(page_params, 'num');
+            document.getElementById('phone').value = GetURLParameter(page_params, 'num');
             var merchant = GetURLParameter(page_params, 'merchant');
             if (merchant) {
                 var x = $("#signup_logo");
