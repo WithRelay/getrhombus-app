@@ -51,7 +51,7 @@ Rails.application.routes.draw  do
   get '/users/:id/transactions' => 'users#transactions', :as => 'user_transactions'
   # User customers/merchants
   get '/users/:id/customers' => 'users#customers', :as => 'user_customers'
-  get '/users/:id/recipients' => 'users#customers', :as => 'user_recipients'
+  get '/users/:id/businesses' => 'users#customers', :as => 'user_businesses'
   # User contacts (either customers or merchants)
   get '/users/:id/contacts' => 'users#contacts', :as => 'user_contacts'
 

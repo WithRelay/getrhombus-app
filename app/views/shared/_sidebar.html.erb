@@ -25,8 +25,12 @@
     <% end %>
   </li>
 
-  <%#= (current_user.user_level == 0) ? "Businesses" : "Customers" %>
-  <li><a href="mailbox.html"><span class="icon color6"><i class="fa fa-user"></i></span>Customers</a></li>
+  <li>
+    <%= link_to (current_user.user_level == 0) ? user_businesses_path(current_user.id) : user_customers_path(current_user.id) do %>
+        <span class="icon color6"><i class="fa fa-user"></i></span>
+        <%= (current_user.user_level == 0) ? "Businesses" : "Customers" %>
+    <% end %>
+  </li>
 
   <li>
     <%= link_to user_contacts_path(current_user.id) do %>

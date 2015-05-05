@@ -21,15 +21,29 @@
     <ul class="top-right">
 
     <li class="dropdown link">
-      <a href="#" data-toggle="dropdown" class="dropdown-toggle profilebox"><b>Jonathan Doe</b><span class="caret"></span></a>
+      <a href="#" data-toggle="dropdown" class="dropdown-toggle profilebox">
+          <b><%= (current_user.user_level == 0) ? current_user.email : current_user.business_name %></b><span class="caret"></span>
+      </a>
         <ul class="dropdown-menu dropdown-menu-list dropdown-menu-right">
           <li role="presentation" class="dropdown-header">Profile</li>
-          <li><a href="#"><i class="fa falist fa-send-o"></i>Messaging<%#<span class="badge label-danger">4</span>%></a></li>
-          <li><a href="#"><i class="fa falist fa-envelope-o"></i>Contacts</a></li>
-          <li><a href="#"><i class="fa falist fa-wrench"></i>Settings</a></li>
+          <li>
+            <%= link_to dashboard_messaging_path(current_user.id) do %>
+                <i class="fa falist fa-send-o"></i>Messaging<%#<span class="badge label-danger">4</span>%>
+            <% end %>
+          </li>
+          <li>
+             <%= link_to user_contacts_path(current_user.id) do %>
+                <i class="fa falist fa-envelope-o"></i>Contacts
+              <% end %>
+          </li>
+          <li><a href="/profile"><i class="fa falist fa-wrench"></i>Settings</a></li>
           <li class="divider"></li>
-          <li><a href="#"><i class="fa falist fa-lightbulb-o"></i>Help</a></li>
-          <li><a href="#"><i class="fa falist fa-sign-out"></i>Logout</a></li>
+          <li><a href="/contact"><i class="fa falist fa-lightbulb-o"></i>Help</a></li>
+          <li>
+              <%= link_to destroy_user_session_path, method: :delete do %>
+                <i class="fa falist fa-sign-out"></i>Logout
+              <% end %>
+          </li>
         </ul>
     </li>
 

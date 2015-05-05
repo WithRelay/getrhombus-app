@@ -118,6 +118,8 @@ class UsersController < ApplicationController
   end
 
   def customers
+    # or business in the case of customers
+    @customers = @user.get_user_customers.paginate(:page => params[:page], :per_page => 3)
   end
 
   def transactions
