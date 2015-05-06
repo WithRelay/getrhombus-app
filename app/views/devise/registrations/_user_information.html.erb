@@ -1,72 +1,100 @@
+  
+
+    <!-- ========== Css Files ========== -->
+  <% provide(:title, 'Rhombus - Payment Info') %>
+  <%= content_for :head do %>
+    <%= stylesheet_link_tag "application_dashboard_messaging", media: "all" %>
+  <% end %>
+<style type="text/css">
+    body{background: #F5F5F5;}
+  </style>
+  <body>
+
+  <div class="" id="userProfile1">
+
+   <div class="login-form">
+    <div id="profileLogo"><img src="<%= asset_path 'logo.jpg' %>" alt="icon" id="signup_logo" class="icon"></div>
 
 <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put, id: "user-form", :autocomplete => "off" }) do |f| %>
-
-<div class="container">
-  <div class="row login-container animated fadeInUp">  
-        <div class="col-md-7 col-md-offset-2 tiles white no-padding">
-     <div class="p-t-30 p-l-40 p-b-20 xs-p-t-10 xs-p-l-10 xs-p-b-10"> 
-          <h3 class="normal">Payment Information</h3>
-          <p class="normal">We only need to collect this information once.</p>
+        <div class="top">
+          <h4>Enter Payment Info.</h4>
+          <img src="<%= asset_path 'stripe.png' %>" alt="icon" id="stripe-logo">
         </div>
-    <div class="tiles grey p-t-20 p-b-20 text-black">
         
-          <%= render "error" %>
+        <div class="form-area">
+
+        
+         <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10" id="response">
+            <div class="panel-body" ></div>                
+        </div>   ==>   <%#= render "error" %>
 
 
-   <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10">
-                      <div class="col-md-6 col-sm-6 ">
+          
+          <div class="group">
+          <%#= f.text_field :fullname, type: "text", :class => "form-control rhombusFocus", placeholder: "Full Name" %>
+            <input type="text" class="form-control rhombusFocus" placeholder="Full Name" name="fullname" >
+            <i class="fa fa-user"></i>
+          </div>          
 
-                        <%= f.text_field :card_name, id: 'cc-name', type: "text", :class => "form-control", placeholder: "Name on Card" %>
+          
+          <div class="group">
+          <%= f.text_field :card_name, id: 'cc-name', type: "text", :class => "form-control rhombusFocus", placeholder: "Name on Card", 'x-autocompletetype' => "off", autocompletetype: 'off', :autocorrect => "off", spellcheck: 'off', autocapitalize: "off", autocomplete: "off" %>
+            <i class="fa fa-user"></i>
+          </div>          
 
-                      </div>
-                      <div class="col-md-6 col-sm-6">
-            
-                        <%= f.number_field :last_four, id: "cc-number", type: "text", class: "form-control", placeholder: "Card Number" %>
-                      </div>
-                    </div>
+          
+          <div class="group ccn-group">
+          <%= f.number_field :last_four, id: "cc-number", type: "tel", class: "form-control rhombusFocus", placeholder: "Card number", "x-autocompletetype" => "cc-number", autocompletetype: "cc-number", autocorrect: 'off', spellcheck: 'off', autocapitalize: 'off' %>
+            <i class="fa fa-credit-card"></i>
+          </div>
 
-                  <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10">
-                      <div class="col-md-6 col-sm-6 ">
+          
+          <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10 exp-row">
+            <div class="col-md-6 col-sm-6 padding-fix1" id="exp-div">
 
- <%= f.select(:expiration_month, [['01 - Jan', "01"], ['02 - Feb', "02"], ['03 - Mar', "03"], ['04 - Apr', "04"], ['05 - May', "05"], ['06 - Jun', "06"], ['07 - Jul', "07"], ['08 - Aug', "08"], ['09 - Sep', "09"], ['10 - Oct', "10"], ['11 - Nov', "11"], ['12 - Dec', "12"]], {}, :class => "form-control", :id => "cc-ex-month") %>
-                      </div>
+            <%= f.hidden_field :expiration_month, id: "cc-ex-month" %>
+            <%= f.hidden_field :expiration_year, id: "cc-ex-year" %>
 
-                      <div class="col-md-6 col-sm-6">
-      <%= f.select(:expiration_year, [['2014', "2014"], ['2015', "2015"], ['2016', "2016"], ['2017', "2017"], ['2018', "2018"], ['2019', "2019"], ['2020', "2020"], ['2021', "2021"], ['2022', "2022"], ['2023', "2023"]], {}, :class => "form-control", :id => "cc-ex-year") %>
-                      </div>
-                      </div>
-                    
+             <%= f.hidden_field :instrument_uri, id: "cc-uri" %>
+              <%= f.hidden_field :card_type, id: "cc-type" %>
 
-                    <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10">
-                      <div class="col-md-6 col-sm-6 ">
-                        <input type="text" id="ex-csc" class="form-control" placeholder="Security Code" autocomplete="off" >
-                      </div>
-                    </div>
+              <input id="cc-exp" type="text" class="form-control rhombusFocus" placeholder="MM / YY" value="">
+                  <i class="fa fa-calendar" id="fa-Calendar" x-autocompletetype="off" autocompletetype="off" autocorrect="off" spellcheck="off" autocapitalize="off"></i>
 
-                    <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10" style="margin-top: 25px;">
-                      <div class="col-md-6 col-sm-6 ">
+            </div>
 
-                        <%= f.password_field :current_password, type: "Password", class: "form-control", placeholder: "Re-enter current password", id: "current_password" %>
-                        <p>For account protection, your password is required to save changes to your settings.</p>
+            <div class="col-md-6 col-sm-6 padding-fix2" id="csc-div">
+                <input id="cc-csc" type="tel" class="form-control rhombusFocus" placeholder="CVC" value="" 
+                  autocorrect="off" spellcheck="off" autocapitalize="off" autocomplete="off" maxlength="4"> <i class="fa fa-lock"></i>
+            </div>
 
-                           <%= f.hidden_field :instrument_uri, id: "cc-uri" %>
-                            <%= f.hidden_field :card_type, id: "cc-type" %>
+          </div>
 
-                      </div>
-                      <div class="col-md-6 col-sm-6">
-            
-                       <%= f.submit "Save", id: "cc-submit", :class => "btn btn-primary btn-cons btn-block" %>  
-                      </div>
-                    </div>  
-                     
-                    <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10" style="margin-top: 15px;">
-                        <div class="col-md-12" style="margin-bottom:15px; margin-top: 10px;">
-                          <img src="<%= asset_path 'outline.png' %>" align="middle" />   
-                          </div>
-                    </div>     
-    </div>   
-      </div>   
-  </div>
-</div>
-<% end %>
+          
+          
+          <div class="group">
+           <%= f.password_field :current_password, type: "password", class: "form-control rhombusFocus", placeholder: "Re-enter current password" %>
+            <i class="fa fa-key"></i>
+            <div id="pwdnote">For account protection, enter your password to save info.</div>
+          </div>
 
+           <%= f.submit "Save", id: "cc-submit", :class => "btn btn-default btn-block btn-rhombus" %>  
+        </div>
+      <% end %>
+
+
+      
+      <div class="footer-links row">
+        <div class="col-xs-6"><a href="#"></a></div>
+        <div class="col-xs-6 text-right"><a href="#"></a></div>
+      </div>
+    </div>
+
+    <div id="signout1"><%= link_to "LOG OUT", destroy_user_session_path, method: :delete %></div>
+
+    <br><br><br><br><br>
+    <br><br><br><br><br>
+ </div>
+
+</body>
+</html>

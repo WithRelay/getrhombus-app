@@ -1,0 +1,60 @@
+
+  
+
+    <!-- ========== Css Files ========== -->
+  <% provide(:title, 'Rhombus - Connect to Stripe') %>
+  <%= content_for :head do %>
+    <%= stylesheet_link_tag "application_dashboard_messaging", media: "all" %>
+  <% end %>
+
+  <style type="text/css">
+    body{background: #F5F5F5;}
+  </style>
+
+  <body>
+  
+ <!-- //////////////////////////////////////////////////////////////////////////// --> 
+ <!-- //////////////////////////////////////////////////////////////////////////// --> 
+<!-- START CONTENT -->
+<div class="">
+
+ <!-- //////////////////////////////////////////////////////////////////////////// --> 
+<!-- START CONTAINER -->
+  <div class="container-default">
+
+    <!-- Start Panel -->
+    
+      <div class="panel panel-default" id="connectStripe">
+
+        <div class="panel-title">
+          Account Information
+        </div>
+        <div class="panel-heading" style="font-size: 12px">To receive payments, please create and/or connect a <a href="https://stripe.com" target="_blank">Stripe Payments</a> account. This generally needs to be done once.</div>
+
+        <div class="panel-body">
+          <a class="btn btn-primary btn-rhombus">Connect with Stripe</a>
+        </div>
+
+      </div>
+    <!-- End Panel -->
+
+    <div id="signout2"><%= link_to "LOG OUT", destroy_user_session_path, method: :delete %></div>
+<br><br><br><br><br><br><br><br><br><br><!--<br><br><br><br><br><br><br><br><br><br><br> -->
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
+
+
+</div>
+<!-- END CONTAINER -->
+ <!-- //////////////////////////////////////////////////////////////////////////// --> 
+
+
+</div>
+<!-- End Content -->
+ <!-- //////////////////////////////////////////////////////////////////////////// --> 
+
+
+
+
+</body>
+</html>

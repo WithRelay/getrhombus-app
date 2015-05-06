@@ -14,14 +14,11 @@ Rails.application.routes.draw  do
   get '/pricing' => 'static_pages#pricing'
 
   get '/y' => 'static_pages#y'
-  get '/a' => 'static_pages#a'
-  get '/b' => 'static_pages#b'
   get '/c' => 'static_pages#c'
   get '/d' => 'static_pages#d'
   get '/f' => 'static_pages#f'
   get '/g' => 'static_pages#g'
   get '/v' => 'static_pages#v'
-  get '/t' => 'static_pages#t'
 
   #match 'contact' => 'messages#new', :as => 'contact', :via => :get
   #match 'contact' => 'messages#create', :as => 'contact', :via => :post

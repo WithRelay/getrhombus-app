@@ -8,27 +8,68 @@
   
 
   <body>
- 
-  <style type="text/css">
-    body{background: #F5F5F5;}
-  </style>
+  <!-- Start Page Loading -->
+  <div class="loading"><img src="<%= asset_path 'loading.gif' %>" alt="loading-img"></div>
+  <!-- End Page Loading -->
 
-  <div class="completeAccount">
+ <%= render 'shared/header_new' %>
+  <%= render 'shared/sidebar' %>
+
+  <div class="content">
+    <!-- Start Page Header -->
+    <div class="page-header">
+      <h1 class="title">Account Settings</h1>
+
+      <!-- Start Page Header Right Div -->
+      <div class="right">
+        <div class="btn-group" role="group" aria-label="...">
+          <a href="index.html" class="btn btn-success btn-rhombus-2">Update Stripe Connect</a>
+          <a href="" class="btn btn-light"><i class="fa fa-refresh" id="refresh"></i></a>
+        </div>
+      </div>
+      <!-- End Page Header Right Div -->
+
+    </div>
+    <!-- End Page Header -->
 
     <!-- //////////////////////////////////////////////////////////////////////////// --> 
 <!-- START CONTAINER -->
-<div class="container-padding">  
+<div class="container-padding" id="merchantProfile">
 
+
+  
   <!-- Start Row -->
   <div class="row">
-      <div id="profileLogo"><img src="<%= asset_path 'logo.jpg' %>" alt="icon" id="signup_logo" class="icon"></div>
-
+    
+    <div class="">
       <div class="panel panel-default" id="merchantprofilepage">
-            
-            <div class="panel-body">
-            <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put, id: "merchantProfile", class: "form-horizontal rhombusFocus" }) do |f| %> 
 
-              <div class="merchant-form-line" style="margin-top: 10px;">Where are you based?</div>
+            <div class="panel-body">
+               <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put, id: "merchantProfile", class: "form-horizontal rhombusFocus" }) do |f| %> 
+
+               <div class="merchant-form-line">Email and Password</div>
+                 <div class="form-group">
+                  <label class="col-sm-2 control-label form-label">Email</label>
+                  <div class="col-sm-10">
+                    <input type="email" class="form-control rhombusFocus" id="email" name="email" placeholder="Email">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="col-sm-2 control-label form-label">New Password</label>
+                  <div class="col-sm-10">
+                    <input type="password" class="form-control rhombusFocus" id="newpassword" name="password" Placeholder="Enter new password">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="col-sm-2 control-label form-label">Confirm Password</label>
+                  <div class="col-sm-10">
+                    <input type="password" class="form-control rhombusFocus" id="confirmNewPassword" name="confirmPassword" Placeholder="Confirm">
+                  </div>
+                </div>
+
+              <div class="merchant-form-line">Where are you based?</div>
 
                 <div class="form-group" >
                   <label class="col-sm-2 control-label form-label">Country</label>
@@ -144,7 +185,8 @@
             </div>
 
       </div>
-      <div id="signout1"><%= link_to "LOG OUT", destroy_user_session_path, method: :delete %></div>
+    </div>
+
   </div>
   <!-- End Row -->
 
@@ -153,7 +195,13 @@
 <!-- END CONTAINER -->
  <!-- //////////////////////////////////////////////////////////////////////////// --> 
 
+
+
+
+
  </div>
+
+<%#= javascript_include_tag "bootstrap-select" %>
 
 </body>
 </html>
