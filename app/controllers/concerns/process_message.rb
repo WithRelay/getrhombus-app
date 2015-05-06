@@ -180,7 +180,6 @@ module ProcessMessage
 			
 	    # Send to merchant's messaging channel
 	    RealtimeStreamService.send_message_via_number(query_hash['msisdn'], query_hash['to'], query_hash['text'], @message.created_at)
-	    
 	    @message
 	end
 
@@ -190,6 +189,7 @@ module ProcessMessage
 		begin
 			@message = Message.find_by(id: query_hash["client-ref"]) 
 		rescue
+			# if somehow the message id doesnt exist
 			@message = Message.new
 			@message.save_text(from: query_hash["to"], network_code: query_hash['network-code'], messageId: query_hash['messageId'], 
 				to: query_hash["msisdn"], status_delivery: query_hash["status"], err_code: query_hash['err-code'], message_price: query_hash["price"], 

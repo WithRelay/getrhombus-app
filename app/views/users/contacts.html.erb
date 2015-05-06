@@ -57,23 +57,21 @@
               <tr role="row">
                 <td class="text-center"><i class="fa fa-trash" style="visibility: hidden;"></i></td>
                 <th>Name</th>
-                <th>First Visit (GMT)</th>
-                <th>Last Visit</th>
-                <th>Avg Spend</th>
-                <th>Total Spend</th>
-                <th># of Visit in last 30</th>
+                <th>Phone #</th>
+                <th>Email</th>
+                <th>First Conversation (GMT)</th>
+                <th>Last Conversation</th>    
               </tr>
             </thead>
             <tbody>
             <% @contacts.each do |c| %>
               <tr role="row">
                 <td class="details-control"></td>
-                <td><%= c.card_name %></td>
-                <td><%= c.first_visit.strftime("%m/%d/%Y") %></td>
-                <td><%= c.last_visit.strftime("%m/%d/%Y") %></td>
-                <td><%= number_to_currency(c.avg_spend) %></td>
-                <td><%= number_to_currency(c.total_spend) %></td>
-                <td><%= c.last_30 %></td>
+                <td><%= (current_user == 0) ? c.business_name : c.card_name %></td>
+                <td><%= (current_user == 0) ? c.business_phone : c.phone_number %></td>
+                <td><%= c.email %></td>
+                <td><%= c.first_conversation.strftime("%m/%d/%Y") %></td>
+                <td><%= c.last_conversation.strftime("%m/%d/%Y") %></td>
               </tr>
             <% end %>
             </tbody>
