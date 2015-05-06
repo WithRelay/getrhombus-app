@@ -236,9 +236,7 @@ $(document).ready(function () {
 
 
     // For phone number input field
-    var telInput = $("#phone"),
-        output = $("#output");
-
+    var telInput = $("#phone");
     telInput.intlTelInput({
         nationalMode: true,
         defaultCountry: "auto",
@@ -396,7 +394,7 @@ $(document).ready(function () {
 
             // List of fields and their validation rules!
             fields: {
-                email: {
+                'user[email]': {
                     verbose: false,
                     row: '.group',
                     validators: {
@@ -422,7 +420,7 @@ $(document).ready(function () {
                         }
                     }
                 },
-                newPassword: {
+                'user[password]': {
                     row: '.group',
                     validators: {
                         stringLength: {
@@ -431,7 +429,7 @@ $(document).ready(function () {
                         }
                     }
                 },
-                confirmNewPassword: {
+                'user[password_confirmation]': {
                     row: '.group',
                     validators: {
                         identical: {
@@ -460,7 +458,7 @@ $(document).ready(function () {
                         }
                     }
                 },
-                password: {
+                'user[current_password]': {
                     row: '.group',
                     validators: {
                         notEmpty: {
@@ -694,7 +692,7 @@ $(document).ready(function () {
             live: 'disabled',
             // List of fields and their validation rules!
             fields: {
-                email: {
+                'user[email]': {
                     verbose: false,
                     row: '.form-group',
                     validators: {
@@ -720,7 +718,7 @@ $(document).ready(function () {
                         }
                     }
                 },
-                password: {
+                'user[password]': {
                     row: '.form-group',
                     validators: {
                         stringLength: {
@@ -729,7 +727,7 @@ $(document).ready(function () {
                         }
                     }
                 },
-                confirmPassword: {
+                'user[password_confirmation]': {
                     row: '.form-group',
                     validators: {
                         identical: {

@@ -51,21 +51,21 @@
                  <div class="form-group">
                   <label class="col-sm-2 control-label form-label">Email</label>
                   <div class="col-sm-10">
-                    <input type="email" class="form-control rhombusFocus" id="email" name="email" placeholder="Email">
+                  <%= f.email_field :email, type: "email", id: "email", placeholder: "Email", class: "form-control rhombusFocus", :autofocus => true %>
                   </div>
                 </div>
 
                 <div class="form-group">
                   <label class="col-sm-2 control-label form-label">New Password</label>
                   <div class="col-sm-10">
-                    <input type="password" class="form-control rhombusFocus" id="newpassword" name="password" Placeholder="Enter new password">
+                  <%= f.password_field :password, type: "password", id: "newpassword", :autocomplete => "off", placeholder: "Enter new password", class: "form-control rhombusFocus" %>
                   </div>
                 </div>
 
                 <div class="form-group">
                   <label class="col-sm-2 control-label form-label">Confirm Password</label>
                   <div class="col-sm-10">
-                    <input type="password" class="form-control rhombusFocus" id="confirmNewPassword" name="confirmPassword" Placeholder="Confirm">
+                  <%= f.password_field :password_confirmation, id: "confirmNewPassword", type: "password", placeholder: "Confirm new password", class: "form-control rhombusFocus" %>
                   </div>
                 </div>
 
@@ -96,7 +96,7 @@
                 </div>
 
                 <%# <div class="form-group">
-                  <label class="col-sm-2 control-label form-label">Phone</label>
+                  <label class="col-sm-2 control-label form-label">Business Phone</label>
                   <div class="col-sm-10">
                     <input type="tel" class="form-control rhombusFocus" id="phone" name="phone">
                   </div>
