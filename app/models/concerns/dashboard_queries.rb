@@ -29,26 +29,26 @@ module DashboardQueries
 	def get_user_customers
 		if self.user_level == 0
 			businesses = Transaction.find_by_sql([
-				"SELECT users.business_name, users.email, MIN(transactions.created_at) AS first_visit, 
-					SUM(transactions.amount) AS total_spend, AVG(transactions.amount) AS avg_spend, 
-					users.business_phone, max(transactions.created_at) AS last_visit,
+				"SELECT users.business_name, users.email, users.business_phone, SUM(transactions.amount) AS total_spend,
+					MIN(transactions.created_at) AS first_visit, AVG(transactions.amount) AS avg_spend, 
+					max(transactions.created_at) AS last_visit,
 					SUM(transactions.created_at BETWEEN DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW()) AS last_30 
 					FROM transactions
 					INNER JOIN users ON
-					transactions.user_id = users.id
-					WHERE referenced_user_id = ? AND transaction_type = ?
-					GROUP BY transactions.referenced_user_id ORDER BY transactions.created_at DESC", self.id, 2]);
+					transactions.referenced_merchant_id = users.id
+					WHERE user_id = ? and transaction_type = ?
+					GROUP BY transactions.referenced_merchant_id ORDER BY transactions.created_at DESC", self.id, 1]);
 		elsif self.user_level == 1
 			customers = Transaction.find_by_sql([
-				"SELECT transactions.user_id, users.card_name, users.email, MIN(transactions.created_at) AS first_visit, 
-				SUM(transactions.amount) AS total_spend, AVG(transactions.amount) AS avg_spend, 
-				users.phone_number, max(transactions.created_at) AS last_visit,
+				"SELECT users.card_name, users.email, users.phone_number, SUM(transactions.amount) AS total_spend,
+				MIN(transactions.created_at) AS first_visit, AVG(transactions.amount) AS avg_spend, 
+				max(transactions.created_at) AS last_visit,
 				SUM(transactions.created_at BETWEEN DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW()) AS last_30 
-				FROM transactions 
+				FROM transactions
 				INNER JOIN users ON
-				transactions.user_id = users.id
-				WHERE referenced_merchant_id = ? AND transaction_type = ? 
-				GROUP BY transactions.user_id ORDER BY transactions.created_at DESC", self.id, 1]);
+				transactions.referenced_user_id = users.id
+				WHERE user_id = ? and transaction_type = ?
+				GROUP BY transactions.referenced_user_id ORDER BY transactions.created_at DESC", self.id, 2]);
 		end
 	end	
 
