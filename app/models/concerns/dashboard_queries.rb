@@ -98,8 +98,8 @@ module DashboardQueries
 	end
 
 	def get_total_messages
-		Message.where("user_id_from = ? and created_at BETWEEN DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW()", self.id).count if self.user_level == 0
-		Message.where("user_id_from = ? or user_id_to = ? and created_at BETWEEN DATE_SUB(NOW(), 
+		return Message.where("user_id_from = ? and created_at BETWEEN DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW()", self.id).count if self.user_level == 0
+		return Message.where("user_id_from = ? or user_id_to = ? and created_at BETWEEN DATE_SUB(NOW(), 
 							INTERVAL 30 DAY) AND NOW()", self.id, self.id).count if self.user_level == 1
 	end
 
