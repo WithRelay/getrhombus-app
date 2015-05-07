@@ -55,7 +55,6 @@
           <table id="transactions-table" class="table table-striped dataTable">
             <thead>
               <tr role="row">
-                <td class="text-center"><i class="fa fa-trash" style="visibility: hidden;"></i></td>
                 <th>Name</th>
                 <th>Phone #</th>
                 <th>Email</th>
@@ -66,7 +65,6 @@
             <tbody>
             <% @contacts.each do |c| %>
               <tr role="row">
-                <td class="details-control"></td>
                 <td><%= (current_user.user_level == 0) ? c.business_name : c.card_name %></td>
                 <td><%= (current_user.user_level == 0) ? c.business_phone : c.phone_number %></td>
                 <td><%= c.email %></td>
