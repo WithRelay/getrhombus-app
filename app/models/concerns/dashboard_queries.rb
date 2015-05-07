@@ -3,7 +3,7 @@ module DashboardQueries
 
 	def get_user_transactions
 		if self.user_level == 0
-			transactions = Transaction.find_by_sql([
+			Transaction.find_by_sql([
 				"SELECT users.business_name, users.email, users.rhombus_number, transactions.last_four, 
 					transactions.notes, transactions.amount_less_fees, transactions.created_at,
 					users.business_phone, transactions.transaction_number,
@@ -13,7 +13,7 @@ module DashboardQueries
 					transactions.referenced_merchant_id = users.id
 					where user_id = ? and transaction_type = ? ORDER BY transactions.created_at DESC", self.id, 1])
 		elsif self.user_level == 1
-			transactions = Transaction.find_by_sql([
+			Transaction.find_by_sql([
 				"SELECT users.card_name, users.email, transactions.created_at, 
 					transactions.last_four, transactions.notes, transactions.amount_less_fees, 
 					users.phone_number, transactions.transaction_number,
@@ -27,7 +27,7 @@ module DashboardQueries
 
 	def get_user_customers
 		if self.user_level == 0
-			businesses = Transaction.find_by_sql([
+			Transaction.find_by_sql([
 				"SELECT users.business_name, users.email, users.business_phone, SUM(transactions.amount) AS total_spend,
 					MIN(transactions.created_at) AS first_visit, AVG(transactions.amount) AS avg_spend, 
 					max(transactions.created_at) AS last_visit,
@@ -36,9 +36,9 @@ module DashboardQueries
 					INNER JOIN users ON
 					transactions.referenced_merchant_id = users.id
 					WHERE user_id = ? and transaction_type = ?
-					GROUP BY transactions.referenced_merchant_id ORDER BY transactions.created_at DESC", self.id, 1]);
+					GROUP BY transactions.referenced_merchant_id ORDER BY transactions.created_at DESC", self.id, 1])
 		elsif self.user_level == 1
-			customers = Transaction.find_by_sql([
+			Transaction.find_by_sql([
 				"SELECT users.card_name, users.email, users.phone_number, SUM(transactions.amount) AS total_spend,
 					MIN(transactions.created_at) AS first_visit, AVG(transactions.amount) AS avg_spend, 
 					max(transactions.created_at) AS last_visit,
@@ -47,13 +47,13 @@ module DashboardQueries
 					INNER JOIN users ON
 					transactions.referenced_user_id = users.id
 					WHERE user_id = ? and transaction_type = ?
-					GROUP BY transactions.referenced_user_id ORDER BY transactions.created_at DESC", self.id, 2]);
+					GROUP BY transactions.referenced_user_id ORDER BY transactions.created_at DESC", self.id, 2])
 		end
 	end	
 
 	def get_user_contacts
 		if self.user_level == 0
-			contacts = Message.find_by_sql([
+			Message.find_by_sql([
 				"SELECT count(*) as total, users.business_name, users.email, users.business_phone,
 					MIN(messages.created_at) as first_conversation, 
 					MAX(messages.created_at) as last_conversation
@@ -61,9 +61,9 @@ module DashboardQueries
 					INNER JOIN users ON
 					messages.user_id_to = users.id 
 					WHERE user_id_from = ? GROUP BY messages.user_id_to 
-					ORDER BY messages.created_at DESC", self.id]);
+					ORDER BY messages.created_at DESC", self.id])
 		elsif self.user_level == 1
-			contacts = Message.find_by_sql([
+			Message.find_by_sql([
 				"SELECT count(*) as total, users.card_name, users.email, users.phone_number,
 					MIN(messages.created_at) as first_conversation, 
 					MAX(messages.created_at) as last_conversation
@@ -71,30 +71,40 @@ module DashboardQueries
 					INNER JOIN users ON
 					messages.user_id_to = users.id 
 					WHERE user_id_from = ? GROUP BY messages.user_id_to 
-					ORDER BY messages.created_at DESC", self.id]);
+					ORDER BY messages.created_at DESC", self.id])
 		end
 	end	
 
-	def dashboard_stats(id)
+	def dashboard_stats
 		if self.user_level == 0
-			dashboard_stuff = Transaction.find_by_sql([
-								'SELECT SUM(IF(created_at = CURRENT_DATE(), amount, 0)) AS todays_sales,
-                                    SUM(created_at >= CURRENT_DATE()) AS todays_txn,
-                                    COUNT(DISTINCT referenced_merchant_id) AS count,
-                                    SUM(amount) AS sales_till_date,
-                                    SUM(created_at BETWEEN DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW()) AS txn_last_30days
-                                    from transactions
-                                    WHERE user_id = ? and transaction_type = ?', self.id, 1])
+			Transaction.find_by_sql([
+			'SELECT SUM(IF(created_at = CURRENT_DATE(), amount, 0)) AS todays_sales,
+                SUM(created_at >= CURRENT_DATE()) AS todays_txn,
+                COUNT(DISTINCT referenced_merchant_id) AS count,
+                SUM(amount) AS sales_till_date,
+                SUM(created_at BETWEEN DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW()) AS txn_last_30days
+                from transactions
+                WHERE user_id = ? and transaction_type = ?', self.id, 1])
 		elsif self.user_level == 1
-			dashboard_stuff = Transaction.find_by_sql([
-								'SELECT SUM(IF(created_at = CURRENT_DATE(), amount_less_fees, 0)) AS todays_sales,
-                                    SUM(created_at >= CURRENT_DATE()) AS todays_txn,
-                                    COUNT(DISTINCT referenced_user_id) AS count,
-                                    SUM(amount_less_fees) AS sales_till_date,
-                                    SUM(created_at BETWEEN DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW()) AS txn_last_30days
-                                    FROM transactions
-                                    WHERE user_id = ? and transaction_type = ?', self.id, 2])
+			Transaction.find_by_sql([
+			'SELECT SUM(IF(created_at = CURRENT_DATE(), amount_less_fees, 0)) AS todays_sales,
+                SUM(created_at >= CURRENT_DATE()) AS todays_txn,
+                COUNT(DISTINCT referenced_user_id) AS count,
+                SUM(amount) AS sales_till_date,
+                SUM(created_at BETWEEN DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW()) AS txn_last_30days
+                from transactions
+                WHERE user_id = ? and transaction_type = ?', self.id, 2])
+
+
+
+			#Transaction.find_by_sql(['select SUM(amount_less_fees) as me from transactions where user_id = ? and transaction_type = ?', 23, 2])
 		end
+	end
+
+
+	def get_total_messages
+		Message.where("user_id_to = ?", self.id).count if self.user_level == 0
+		Message.where("user_id_from = ? or user_id_to = ?", self.id, self.id).count if self.user_level == 1
 	end
 
 end
