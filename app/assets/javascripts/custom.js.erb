@@ -139,14 +139,22 @@ $(document).ready(function () {
 
 
     var process_chart_data = function(data, type) {
+        // note month data use this also...so day and day_ is actually week, week_
         chart_labels = [], chart_totals = [], chart_txns = [];
-        for (var i = 0, array_length = data.length; i < array_length; i++) {
-            chart_labels.push(data[i].day);
-            chart_totals.push(data[i].day_total);
-            chart_txns.push(data[i].num_of_txns);
+        if (type === "line") {
+            for (var i = 0, array_length = data.length; i < array_length; i++) {
+                chart_labels.push(data[i].day);
+                chart_totals.push(data[i].day_total);
+                chart_txns.push(data[i].num_of_txns);
+            }
+        } else {
+            for (var i = 0, array_length = data.length; i < array_length; i++) {
+                chart_labels.push(data[i].week_day);
+                chart_totals.push(data[i].week_total);
+            }
         }
         if (chart_labels.length == 0) chart_labels = ['Mon', 'Tue', 'Wed', 'Thur', 'Fri'];
-        (type === "line") ? graph_line_chart() : graph_area_chart;
+        (type === "line") ? graph_line_chart() : graph_area_chart();
     }
 
     
@@ -168,9 +176,9 @@ $(document).ready(function () {
 
     var graph_area_chart = function() {
         new Chartist.Line('#chartist-line-area', {
-          labels: [1, 2, 3, 4, 5, 6, 7, 8],
+          labels: chart_labels,
           series: [
-            [5, 9, 7, 8, 5, 3, 5, 4]
+            chart_totals
           ]
         }, {
           low: 0,
@@ -180,7 +188,7 @@ $(document).ready(function () {
 
     // graphs by chartist.js
     get_graph('line');
-//    get_graph('area');
+    get_graph('area');
 
     // for table slide dowm
     function format ( d ) {

@@ -121,20 +121,20 @@ module DashboardQueries
 		end
 	end
 
-	def get_line_stats
+	def get_area_stats
 		if self.user_level == 0
 			Transaction.find_by_sql([
-				'select count(*) as num_of_txns, sum(amount) as day_total,
-					date_format(date(created_at), "%b %e") as day from transactions where user_id = ? and transaction_type = ?
+				'select sum(amount) as week_total,
+					date_format(date(created_at), "%b %e") as week_day from transactions where user_id = ? and transaction_type = ?
 					
-					GROUP BY DAY(created_at)', self.id, 1])
+					GROUP BY WEEk(created_at)', self.id, 1])
 				#and created_at BETWEEN DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW() 
 		elsif self.user_level == 1
 			Transaction.find_by_sql([
-				'select count(*) as num_of_txns, sum(amount_less_fees) as day_total,
-					date_format(date(created_at), "%b %e") as day from transactions where user_id = ? and transaction_type = ?	
+				'select sum(amount_less_fees) as week_total,
+					date_format(date(created_at), "%b %e") as week_day from transactions where user_id = ? and transaction_type = ?	
 					
-					GROUP BY DAY(created_at)', self.id, 2])
+					GROUP BY WEEK(created_at)', self.id, 2])
 				#and created_at BETWEEN DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW() 
 		end
 	end
