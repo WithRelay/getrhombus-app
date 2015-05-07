@@ -2,7 +2,7 @@ class UsersController < ApplicationController
 
   before_action :set_user, only: [:show, :edit, :update, :destroy, :messaging, :contacts, :customers, :transactions]
 
-  load_and_authorize_resource
+  #load_and_authorize_resource
 
   def index
      @users = User.all #paginate(:page => params[:page], :per_page => 10)
@@ -17,9 +17,10 @@ class UsersController < ApplicationController
       redirect_to "/profile"
     elsif current_user.user_level == 1 && (current_user.business_name.blank? || current_user.stripe_access_token.blank?)
       redirect_to "/profile"
-    else
-      #@todays_stuff = current_user.todays_stuff      
-      @todays_stuff = current_user.transactions.paginate(:page => params[:page], :per_page => 2).order('created_at DESC')
+    else 
+      @last4_transactions = current_user.transactions.select(:created_at, :card_name, :notes, :from).last(4).reverse unless current_user.user_level == 0
+      @last4_transactions = current_user.transactions.select(:created_at, :business_name, :notes, :to).last(4).reverse unless current_user.user_level == 1
+      @dashboard_stuff = @user.dashboard_stats(current_user.id)
     end    
   end  
   

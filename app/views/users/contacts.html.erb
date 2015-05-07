@@ -59,7 +59,8 @@
                 <th>Phone #</th>
                 <th>Email</th>
                 <th>First Conversation (GMT)</th>
-                <th>Last Conversation</th>    
+                <th>Last Conversation</th>   
+                <th># of Messages</th>    
               </tr>
             </thead>
             <tbody>
@@ -70,6 +71,7 @@
                 <td><%= c.email %></td>
                 <td><%= c.first_conversation.strftime("%m/%d/%Y %I:%M %p") %></td>
                 <td><%= c.last_conversation.strftime("%m/%d/%Y %I:%M %p") %></td>
+                <td><%= c.total %></td>
               </tr>
             <% end %>
             </tbody>

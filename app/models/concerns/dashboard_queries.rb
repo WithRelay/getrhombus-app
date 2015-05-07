@@ -54,7 +54,7 @@ module DashboardQueries
 	def get_user_contacts
 		if self.user_level == 0
 			contacts = Message.find_by_sql([
-				"SELECT users.business_name, users.email, users.business_phone,
+				"SELECT count(*) as total, users.business_name, users.email, users.business_phone,
 					MIN(messages.created_at) as first_conversation, 
 					MAX(messages.created_at) as last_conversation
 					FROM messages
@@ -64,7 +64,7 @@ module DashboardQueries
 					ORDER BY messages.created_at DESC", self.id]);
 		elsif self.user_level == 1
 			contacts = Message.find_by_sql([
-				"SELECT users.card_name, users.email, users.phone_number,
+				"SELECT count(*) as total, users.card_name, users.email, users.phone_number,
 					MIN(messages.created_at) as first_conversation, 
 					MAX(messages.created_at) as last_conversation
 					FROM messages
@@ -73,8 +73,29 @@ module DashboardQueries
 					WHERE user_id_from = ? GROUP BY messages.user_id_to 
 					ORDER BY messages.created_at DESC", self.id]);
 		end
-
 	end	
+
+	def dashboard_stats(id)
+		if self.user_level == 0
+			dashboard_stuff = Transaction.find_by_sql([
+								'SELECT SUM(IF(created_at = CURRENT_DATE(), amount, 0)) AS todays_sales,
+                                    SUM(created_at >= CURRENT_DATE()) AS todays_txn,
+                                    COUNT(DISTINCT referenced_merchant_id) AS count,
+                                    SUM(amount) AS sales_till_date,
+                                    SUM(created_at BETWEEN DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW()) AS txn_last_30days
+                                    from transactions
+                                    WHERE user_id = ? and transaction_type = ?', self.id, 1])
+		elsif self.user_level == 1
+			dashboard_stuff = Transaction.find_by_sql([
+								'SELECT SUM(IF(created_at = CURRENT_DATE(), amount_less_fees, 0)) AS todays_sales,
+                                    SUM(created_at >= CURRENT_DATE()) AS todays_txn,
+                                    COUNT(DISTINCT referenced_user_id) AS count,
+                                    SUM(amount_less_fees) AS sales_till_date,
+                                    SUM(created_at BETWEEN DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW()) AS txn_last_30days
+                                    FROM transactions
+                                    WHERE user_id = ? and transaction_type = ?', self.id, 2])
+		end
+	end
 
 end
 
