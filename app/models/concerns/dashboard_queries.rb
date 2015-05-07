@@ -78,34 +78,47 @@ module DashboardQueries
 	def dashboard_stats
 		if self.user_level == 0
 			Transaction.find_by_sql([
-			'SELECT SUM(IF(created_at = CURRENT_DATE(), amount, 0)) AS todays_sales,
-                SUM(created_at >= CURRENT_DATE()) AS todays_txn,
-                COUNT(DISTINCT referenced_merchant_id) AS count,
-                SUM(amount) AS sales_till_date,
-                SUM(created_at BETWEEN DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW()) AS txn_last_30days
-                from transactions
-                WHERE user_id = ? and transaction_type = ?', self.id, 1])
+				'SELECT SUM(IF(created_at = CURRENT_DATE(), amount, 0)) AS todays_sales,
+	                SUM(created_at >= CURRENT_DATE()) AS todays_txn,
+	                COUNT(DISTINCT referenced_merchant_id) AS count,
+	                SUM(amount) AS sales_till_date,
+	                SUM(created_at BETWEEN DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW()) AS txn_last_30days
+	                from transactions
+	                WHERE user_id = ? and transaction_type = ?', self.id, 1])
 		elsif self.user_level == 1
 			Transaction.find_by_sql([
-			'SELECT SUM(IF(created_at = CURRENT_DATE(), amount_less_fees, 0)) AS todays_sales,
-                SUM(created_at >= CURRENT_DATE()) AS todays_txn,
-                COUNT(DISTINCT referenced_user_id) AS count,
-                SUM(amount) AS sales_till_date,
-                SUM(created_at BETWEEN DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW()) AS txn_last_30days
-                from transactions
-                WHERE user_id = ? and transaction_type = ?', self.id, 2])
-
-
-
-			#Transaction.find_by_sql(['select SUM(amount_less_fees) as me from transactions where user_id = ? and transaction_type = ?', 23, 2])
+				'SELECT SUM(IF(created_at = CURRENT_DATE(), amount_less_fees, 0)) AS todays_sales,
+	                SUM(created_at >= CURRENT_DATE()) AS todays_txn,
+	                COUNT(DISTINCT referenced_user_id) AS count,
+	                SUM(amount) AS sales_till_date,
+	                SUM(created_at BETWEEN DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW()) AS txn_last_30days
+	                from transactions
+	                WHERE user_id = ? and transaction_type = ?', self.id, 2])
 		end
 	end
 
-
 	def get_total_messages
-		Message.where("user_id_to = ?", self.id).count if self.user_level == 0
-		Message.where("user_id_from = ? or user_id_to = ?", self.id, self.id).count if self.user_level == 1
+		Message.where("user_id_from = ? and created_at BETWEEN DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW()", self.id).count if self.user_level == 0
+		Message.where("user_id_from = ? or user_id_to = ? and created_at BETWEEN DATE_SUB(NOW(), 
+							INTERVAL 30 DAY) AND NOW()", self.id, self.id).count if self.user_level == 1
 	end
+
+	def get_chart_stats
+		if self.user_level == 0
+			Transaction.find_by_sql([
+				'select count(*) as num_of_txns, sum(amount) as day_total,
+					date_format(date(created_at), "%b %e") as day from transactions where user_id = ? and transaction_type = ?
+					GROUP BY DAY(created_at)', self.id, 1])
+				#and created_at BETWEEN DATE_SUB(NOW(), INTERVAL 7 DAY) AND NOW() 
+		elsif self.user_level == 1
+			Transaction.find_by_sql([
+				'select count(*) as num_of_txns, sum(amount_less_fees) as day_total,
+					date_format(date(created_at), "%b %e") as day from transactions where user_id = ? and transaction_type = ?	
+					GROUP BY DAY(created_at)', self.id, 2])
+				#and created_at BETWEEN DATE_SUB(NOW(), INTERVAL 7 DAY) AND NOW() 
+		end
+	end
+
 
 end
 

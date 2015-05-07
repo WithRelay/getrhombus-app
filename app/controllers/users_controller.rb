@@ -2,7 +2,7 @@ class UsersController < ApplicationController
 
   before_action :set_user, only: [:show, :edit, :update, :destroy, :messaging, :contacts, :customers, :transactions]
 
-  #load_and_authorize_resource
+  load_and_authorize_resource
 
   def index
      @users = User.all #paginate(:page => params[:page], :per_page => 10)
@@ -13,17 +13,24 @@ class UsersController < ApplicationController
   end
 
   def show
-    if current_user.user_level == 0 && current_user.customer_uri.blank? 
-      redirect_to "/profile"
-    elsif current_user.user_level == 1 && (current_user.business_name.blank? || current_user.stripe_access_token.blank?)
-      redirect_to "/profile"
-    else 
-      @last4_transactions = @user.transactions.select(:created_at, :business_name, :notes, :to).last(4).reverse if @user.user_level == 0
-      @last4_transactions = @user.transactions.select(:created_at, :card_name, :notes, :from).last(4).reverse if @user.user_level == 1      
-      
-      @total_msgs = @user.get_total_messages
-      @dashboard_stuff = @user.dashboard_stats
-    end    
+    if params[:graph].present?
+      @stats = @user.get_chart_stats
+    else
+      if current_user.user_level == 0 && current_user.customer_uri.blank? 
+        redirect_to "/profile"
+      elsif current_user.user_level == 1 && (current_user.business_name.blank? || current_user.stripe_access_token.blank?)
+        redirect_to "/profile"
+      else
+        @last4_transactions = @user.transactions.select(:created_at, :description, :notes).last(4).reverse if @user.user_level == 0
+        @last4_transactions = @user.transactions.select(:created_at, :card_name, :notes, :from).last(4).reverse if @user.user_level == 1 
+        @total_msgs = @user.get_total_messages
+        @dashboard_stuff = @user.dashboard_stats
+      end           
+    end
+    respond_to do |format|
+      format.html
+      format.json { render json: @stats.to_json }
+    end
   end  
   
   def messaging
