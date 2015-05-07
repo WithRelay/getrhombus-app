@@ -35,62 +35,68 @@
   <!-- End Page Header -->
 
  <!-- //////////////////////////////////////////////////////////////////////////// --> 
-<!-- START CONTAINER -->
-<div class="" id="transactions-column">
+    <!-- START CONTAINER -->
+    <div class="" id="transactions-column">
 
- <!-- Start Row -->
-  <div class="row">
+     <!-- Start Row -->
+      <div class="row">
 
-    <!-- Start Panel -->
-    <div class="col-md-12">
-      <div class="panel panel-default">
+        <!-- Start Panel -->
+        <div class="col-md-12">
+          <% unless @customers.blank? %>
+              <div class="panel panel-default">
+                <div class="panel-title">
+                  <ul class="panel-tools">
+                    <li><a class="icon expand-tool"><i class="fa fa-expand"></i></a></li>
+                  </ul>
+                </div>
 
-        <div class="panel-title">
-          <ul class="panel-tools">
-            <li><a class="icon expand-tool"><i class="fa fa-expand"></i></a></li>
-          </ul>
+                <div class="panel-body table-responsive">
+                  <table id="transactions-table" class="table table-striped dataTable">
+                    <thead>
+                      <tr role="row">
+                        <td class="text-center"><i class="fa fa-trash" style="visibility: hidden;"></i></td>
+                        <th>Name</th>
+                        <th>First Visit (GMT)</th>
+                        <th>Last Visit</th>
+                        <th>Avg Spend</th>
+                        <th>Total Spend</th>
+                        <th>Visits in last 30 days</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    <% @customers.each do |c| %>
+                      <tr role="row">
+                        <td class="details-control"></td>
+                        <td><%= (current_user.user_level == 0) ? c.business_name : c.card_name %></td>
+                        <td><%= c.first_visit.strftime("%m/%d/%Y") %></td>
+                        <td><%= c.last_visit.strftime("%m/%d/%Y") %></td>
+                        <td><%= number_to_currency(c.avg_spend) %></td>
+                        <td><%= number_to_currency(c.total_spend) %></td>
+                        <td><%= c.last_30 %></td>
+                      </tr>
+                    <% end %>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            <% else %>
+            <div class="center">
+                <img src="<%= asset_path 'no-user.png' %>" alt="no user">
+                <div class="no-user"><%= (current_user.user_level == 0) ? "You have no businesses :(" : "You have no customers :(" %></div>
+            </div>
+          <% end %>
         </div>
-
-        <div class="panel-body table-responsive">
-          <table id="transactions-table" class="table table-striped dataTable">
-            <thead>
-              <tr role="row">
-                <td class="text-center"><i class="fa fa-trash" style="visibility: hidden;"></i></td>
-                <th>Name</th>
-                <th>First Visit (GMT)</th>
-                <th>Last Visit</th>
-                <th>Avg Spend</th>
-                <th>Total Spend</th>
-                <th>Visits in last 30 days</th>
-              </tr>
-            </thead>
-            <tbody>
-            <% @customers.each do |c| %>
-              <tr role="row">
-                <td class="details-control"></td>
-                <td><%= (current_user.user_level == 0) ? c.business_name : c.card_name %></td>
-                <td><%= c.first_visit.strftime("%m/%d/%Y") %></td>
-                <td><%= c.last_visit.strftime("%m/%d/%Y") %></td>
-                <td><%= number_to_currency(c.avg_spend) %></td>
-                <td><%= number_to_currency(c.total_spend) %></td>
-                <td><%= c.last_30 %></td>
-              </tr>
-            <% end %>
-            </tbody>
-          </table>
-        </div>
-
+        <!-- End Panel -->
+          <div style="text-align: center; margin-bottom: 40px;"><%= will_paginate @customers, :page_links => false %></div>
       </div>
+      <!-- End Row -->
     </div>
-    <!-- End Panel -->
+    <!-- END CONTAINER -->
+     <!-- //////////////////////////////////////////////////////////////////////////// --> 
 
-  </div>
-  <!-- End Row -->
-    <div style="text-align: center; margin-bottom: 40px;"><%= will_paginate @customers, :page_links => false %></div>
-</div>
-<!-- END CONTAINER -->
- <!-- //////////////////////////////////////////////////////////////////////////// --> 
-
+     <br><br><br><br><br><br><br><br><br><br><br><br>
+     <br><br><br><br><br><br>
 
 <!-- Start Footer -->
 <div class="row footer">

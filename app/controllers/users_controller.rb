@@ -16,6 +16,7 @@ class UsersController < ApplicationController
     if params[:graph].present?
       @stats = @user.get_line_stats if params[:graph] == 'line'
       @stats = @user.get_area_stats if params[:graph] == 'area'
+      render json: @stats.to_json
     else
       if current_user.user_level == 0 && current_user.customer_uri.blank? 
         redirect_to "/profile"
@@ -27,10 +28,6 @@ class UsersController < ApplicationController
         @total_msgs = @user.get_total_messages
         @dashboard_stuff = @user.dashboard_stats
       end           
-    end
-    respond_to do |format|
-      format.html
-      format.json { render json: @stats.to_json }
     end
   end  
   
@@ -120,15 +117,15 @@ class UsersController < ApplicationController
   end
 
   def contacts
-     @contacts = @user.get_user_contacts.paginate(:page => params[:page], :per_page => 2)
+     @contacts = @user.get_user_contacts.paginate(:page => params[:page], :per_page => 1)
   end
 
   def customers
-    @customers = @user.get_user_customers.paginate(:page => params[:page], :per_page => 2)
+    @customers = @user.get_user_customers.paginate(:page => params[:page], :per_page => 1)
   end
 
   def transactions
-    @transactions = @user.get_user_transactions.paginate(:page => params[:page], :per_page => 2)
+    @transactions = @user.get_user_transactions.paginate(:page => params[:page], :per_page => 1)
   end
 
 private

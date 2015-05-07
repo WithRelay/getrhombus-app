@@ -16,7 +16,7 @@
   		background-repeat: no-repeat;
   		background-position: center;
         cursor: pointer;
-    }
+}
 
 #signup_logo {
 	width: 50px;
@@ -123,6 +123,12 @@ input.rhombusFocus, select.rhombusFocus, textarea.rhombusFocus {
 /*.page-header {
 	margin: -20px -20px 78px -26px;
 }*/
+
+.no-user {
+	font-size: 15px;
+  	margin-top: 10px;
+  	letter-spacing: 2px;
+}
 
 /* UTILITY */
 
@@ -325,15 +331,20 @@ input.rhombusFocus, select.rhombusFocus, textarea.rhombusFocus {
   border: 1px solid white;
   border-radius: 25px;
   &:hover {
-  	background-color: white;
+	background-color: #357b9e;
+  	color: white;
+  	border: 1px solid #357b9e;
   }
 }
 
-.pagination > .previous_page.disabled {
+.pagination > .previous_page.disabled, .next_page.disabled {
   background-color: transparent;
   padding: 10px;
   border: 1px solid white;
   border-radius: 25px;
+  &:hover {
+  	color: inherit;
+  }
 }
 
 .pagination > .next_page {
@@ -342,7 +353,19 @@ input.rhombusFocus, select.rhombusFocus, textarea.rhombusFocus {
   border: 1px solid white;
   border-radius: 25px;
   &:hover {
-  	background-color: white;
+	background-color: #357b9e;
+  	color: white;
+  	border: 1px solid #357b9e;
+  }
+}
+
+.pagination > .next_page.disabled {
+  background-color: transparent;
+  padding: 10px;
+  border: 1px solid white;
+  border-radius: 25px;
+  &:hover {
+  	color: inherit;
   }
 }
 

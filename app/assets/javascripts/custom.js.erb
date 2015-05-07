@@ -127,19 +127,16 @@ $(document).ready(function () {
                 dataType: "json"     
             })
               .done(function(data, textStatus, response) {
-                console.log( "second success " + response.status );
-                process_chart_data(data, type);
+                   process_chart_data(data, type);
               })
               .fail(function(data, textStatus, response) {
-                console.log( "error" );
-                console.log(response.status);
+                   process_chart_data([], type);
               })        
         }
     };
 
 
     var process_chart_data = function(data, type) {
-        // note month data use this also...so day and day_ is actually week, week_
         chart_labels = [], chart_totals = [], chart_txns = [];
         if (type === "line") {
             for (var i = 0, array_length = data.length; i < array_length; i++) {

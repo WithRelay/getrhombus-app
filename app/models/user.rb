@@ -14,21 +14,19 @@ class User < ActiveRecord::Base
   before_save :the_titleizer, :check_phone_number_length
   before_create :set_merchant_business_phone, :deactivate_merchant_account          # only create, cos they can change this in edit
 
-    ### => fix this!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11
-    ### should be after commit...serious bug here with db rolling back but emails being sent
-    ### cos of crappy db uniqueness
-  after_create :send_welcome_email, :set_rhombus_number
+  after_commit :send_welcome_email, :on => :create
 
   validates_presence_of :user_level, :message => "Please select an account type"
   
-  # still need a validation errors for edit
-  #### this is messed up...what of on edit??
+  # still need validation errors for edit..this is only for create action
   validates :phone_number, presence: true, 
             numericality: { only_integer: true }, 
             length: { minimum: 10 }, 
             :on => :create
 
-  validates_uniqueness_of :phone_number, :allow_nil => true, :if => lambda { self.user_level == 0 } 
+  validates_uniqueness_of :phone_number, :allow_nil => true, :if => lambda { self.user_level == 0 }
+  # Switch this on when rhombus numbers are automatically generated
+  # validates_uniqueness_of :rhombus_number, :allow_nil => true, :if => lambda { self.user_level == 1 } 
 
   # saves merchant info from stripe
   def from_omniauth(auth)
@@ -95,37 +93,6 @@ class User < ActiveRecord::Base
     return true                     # Not a customer just a merchant
   end
 
-  # needs optimization
-  # https://www.coffeepowered.net/2009/01/23/mass-inserting-data-in-rails-without-killing-your-performance/
-  # change to raw sql ?
-  def todays_stuff
-    ### should not need to return rhombus number for non-merchant...change this
-    ###
-    rhombus_number = self.rhombus_number ? self.rhombus_number : "-"  
-    all_payments = self.transactions
-    todays_payments = all_payments.where("created_at >= ?", Time.zone.now.beginning_of_day)
-    total_1, total_2 = 0, 0
-    if self.user_level == 0      
-      all_payments.each do |p|
-        total_1 = total_1 + p.amount_with_taxes
-      end
-      todays_payments.each do |p|
-        total_2 = total_2 + p.amount_with_taxes
-      end
-    elsif self.user_level == 1
-      # change this to concat...it is faster
-      if rhombus_number != "-"
-        rhombus_number = "#{rhombus_number[0]}" + " " + "(#{rhombus_number[1..3]})" + " " + "#{rhombus_number[4..6]}-#{rhombus_number[7..10]}"
-      end
-      all_payments.each do |p|
-        total_1 = total_1 + p.amount_less_fees
-      end
-      todays_payments.each do |p|
-        total_2 = total_2 + p.amount_less_fees
-      end      
-    end
-    return total_1, total_2, todays_payments.count, rhombus_number
-  end
   
   # Returns hash with users who sent a message to the given merchant in the last "num_days" days
   def self.get_latest_active_messaging(merchant_id, num_days)
@@ -165,16 +132,16 @@ class User < ActiveRecord::Base
     end
   end
 
+  # this is to automated assigning rhombus numbers
   def set_rhombus_number
     if self.user_level == 1
-      self.rhombus_number = nil # TextingService.buy_number("US")
+      self.rhombus_number = TextingService.buy_number("US")
       self.save
     end
   end
 
   def set_merchant_business_phone
-    # If a merchant is signing up, make business number the phone number
-    # Would be useful when merchants can become regular users and vice versa
+    # If a merchant is signing up, make business number the phone number. Would be useful when merchants can become regular users and vice versa
     if self.user_level == 1
       self.business_phone = self.phone_number
       self.phone_number = nil

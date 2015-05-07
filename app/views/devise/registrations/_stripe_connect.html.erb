@@ -32,6 +32,7 @@
         <div class="panel-heading" style="font-size: 12px">To receive payments, please create and/or connect a <a href="https://stripe.com" target="_blank">Stripe Payments</a> account. This generally needs to be done once.</div>
 
         <div class="panel-body">
+        <%= link_to "Connect with Stripe", user_omniauth_authorize_path(:stripe_connect, "stripe_user[country]" => "US"), class: "btn btn-primary btn-large" %>
           <a class="btn btn-primary btn-rhombus">Connect with Stripe</a>
         </div>
 

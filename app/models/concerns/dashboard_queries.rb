@@ -23,6 +23,7 @@ module DashboardQueries
 					transactions.referenced_user_id = users.id
 					where user_id = ? and transaction_type = ? ORDER BY transactions.created_at DESC", self.id, 2])
 		end
+		#return []
 	end	
 
 	def get_user_customers
