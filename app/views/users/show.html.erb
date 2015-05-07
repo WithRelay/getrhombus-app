@@ -106,7 +106,7 @@
         </div>
 
         <div class="panel-body panel-font-size">
-          <%= (@total_msgs) ? @total_msgs : "0" %>
+          <%= (@total_msgs.present?) ? @total_msgs : "0" %>
         </div>
 
         <div class="panel-footer wetashphalt white">Count this month</div>
