@@ -48,7 +48,7 @@
       <div class="panel panel-default center">
 
         <div class="panel-title" id="isDashboard" data-dashboard="true">
-          Sales
+          <%= (current_user.user_level == 0) ? "Payments" : "Sales" %>
         </div>
 
         <div class="panel-body panel-font-size">
@@ -203,7 +203,7 @@
         <div class="panel panel-default center">
 
           <div class="panel-title">
-            SALES
+          <%= (current_user.user_level == 0) ? "Payments" : "SALES" %>
           </div>
 
           <div class="panel-body panel-font-size">
