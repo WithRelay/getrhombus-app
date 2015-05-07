@@ -99,25 +99,43 @@ module DashboardQueries
 
 	def get_total_messages
 		return Message.where("user_id_from = ? and created_at BETWEEN DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW()", self.id).count if self.user_level == 0
-		return Message.where("user_id_from = ? or user_id_to = ? and created_at BETWEEN DATE_SUB(NOW(), 
+		Message.where("user_id_from = ? or user_id_to = ? and created_at BETWEEN DATE_SUB(NOW(), 
 							INTERVAL 30 DAY) AND NOW()", self.id, self.id).count if self.user_level == 1
 	end
 
-	def get_chart_stats
+	def get_line_stats
 		if self.user_level == 0
 			Transaction.find_by_sql([
 				'select count(*) as num_of_txns, sum(amount) as day_total,
 					date_format(date(created_at), "%b %e") as day from transactions where user_id = ? and transaction_type = ?
-					and created_at BETWEEN DATE_SUB(NOW(), INTERVAL 7 DAY) AND NOW()
+					
 					GROUP BY DAY(created_at)', self.id, 1])
 				#and created_at BETWEEN DATE_SUB(NOW(), INTERVAL 7 DAY) AND NOW() 
 		elsif self.user_level == 1
 			Transaction.find_by_sql([
 				'select count(*) as num_of_txns, sum(amount_less_fees) as day_total,
 					date_format(date(created_at), "%b %e") as day from transactions where user_id = ? and transaction_type = ?	
-					and created_at BETWEEN DATE_SUB(NOW(), INTERVAL 7 DAY) AND NOW()
+					
 					GROUP BY DAY(created_at)', self.id, 2])
 				#and created_at BETWEEN DATE_SUB(NOW(), INTERVAL 7 DAY) AND NOW() 
+		end
+	end
+
+	def get_line_stats
+		if self.user_level == 0
+			Transaction.find_by_sql([
+				'select count(*) as num_of_txns, sum(amount) as day_total,
+					date_format(date(created_at), "%b %e") as day from transactions where user_id = ? and transaction_type = ?
+					
+					GROUP BY DAY(created_at)', self.id, 1])
+				#and created_at BETWEEN DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW() 
+		elsif self.user_level == 1
+			Transaction.find_by_sql([
+				'select count(*) as num_of_txns, sum(amount_less_fees) as day_total,
+					date_format(date(created_at), "%b %e") as day from transactions where user_id = ? and transaction_type = ?	
+					
+					GROUP BY DAY(created_at)', self.id, 2])
+				#and created_at BETWEEN DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW() 
 		end
 	end
 

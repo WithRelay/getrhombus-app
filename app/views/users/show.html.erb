@@ -84,7 +84,7 @@
       <div class="panel panel-default center">
 
         <div class="panel-title">
-          Customers
+        <%= (current_user.user_level == 0) ? "Businesses" : "Customers" %>
         </div>
 
         <div class="panel-body panel-font-size">

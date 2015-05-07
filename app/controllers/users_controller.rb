@@ -14,7 +14,8 @@ class UsersController < ApplicationController
 
   def show
     if params[:graph].present?
-      @stats = @user.get_chart_stats
+      @stats = @user.get_line_stats if params[:graph] == 'line'
+      @stats = @user.get_area_stats if params[:graph] == 'area'
     else
       if current_user.user_level == 0 && current_user.customer_uri.blank? 
         redirect_to "/profile"
