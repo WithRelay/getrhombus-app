@@ -18,20 +18,3 @@ end
 	#def transaction_params
     # params.require(:transaction).permit(:amount, :tax_rate)
     #end
-
-=begin
-	def index
-		@transactions = current_user.transactions.where("id > ?", params[:after].to_i)
-		if @transactions != nil
-			total = 0
-			@transactions.each do |t|
-				total = total + t.amount_with_taxes
-			end
-			@new_total = total + params[:price][1..-1].to_f
-		else
-			@new_total = params[:price]
-		end
-		#trans = Transaction.new
-		#@response = trans.balanced_credit_merchant_bank_account
-	end
-=end

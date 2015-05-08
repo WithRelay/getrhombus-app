@@ -6,14 +6,14 @@ Rails.application.routes.draw  do
   get "/receive_delivery_report" => 'messages#receive_delivery_report'
 
   get '/about' => 'static_pages#about'
-  get '/contact' => 'contact_forms#new'
   get '/customers' => 'static_pages#customers'  
   get '/faqs' => 'static_pages#faqs'
   get '/privacy' => 'static_pages#privacy'
   get '/terms' => 'static_pages#terms'
   get '/pricing' => 'static_pages#pricing'
-
-
+  get '/contact' => 'contact_forms#new'
+  resources :contact_forms 
+  
   #match 'contact' => 'messages#new', :as => 'contact', :via => :get
   #match 'contact' => 'messages#create', :as => 'contact', :via => :post
 
@@ -43,9 +43,7 @@ Rails.application.routes.draw  do
   # User contacts (either customers or merchants)
   get '/users/:id/contacts' => 'users#contacts', :as => 'user_contacts'
 
-  resources :transactions, :only => :show
-  resources :contact_forms
-
+  #resources :transactions, :only => :show
   get "/*other", to: 'static_pages#to_404'     #all non-existent routes go to 404
 
   # The priority is based upon order of creation: first created -> highest priority.

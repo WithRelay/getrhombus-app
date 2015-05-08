@@ -38,22 +38,20 @@
           <div class="contact-left">
             <div>
               <div class="w-form">
+              <%= form_for @contact_form, :html => { id: "contact-form" } do |f| %>
                 <form id="email-form" name="email-form" data-name="Email Form">
-                  <input class="w-input tex-filed" id="name" type="text" placeholder="Enter your name" name="name" data-name="Name">
-                  <input class="w-input tex-filed" id="Email" type="email" placeholder="Enter your email" name="Email" data-name="Email" required="required">
-                  <input class="w-input tex-filed" id="Company" type="text" placeholder="Organization" name="Company" data-name="Company" required="required">
-                  <input class="w-input tex-filed" id="Subject-3" type="text" placeholder="Subject" name="Subject" data-name="Subject" required="required">
-                  <textarea class="w-input text-area" id="Message" placeholder="Type your message" name="Message" required="required" data-name="Message"></textarea>
+               <%= f.text_field :name, id: "name", type: "text", class: "w-input tex-filed", placeholder: "Enter your name", name: "name", "data-name" => "Name", required: "required"   %>
+               <span class="form-group">  <%= f.text_field :email, id: "Email", type: "email", class: "w-input tex-filed", placeholder: "Enter your email", name: "Email", "data-name" => "Email", required: "required" %></span>
+                  <%= f.text_field :organization, id: "Company", type: "text", class: "w-input tex-filed", placeholder: "Organization", name: "Company", "data-name" => "Company", required: "required"  %>
+                 
+                  <%= f.text_field :subject, id: "Subject-3", type: "text", class: "w-input tex-filed", placeholder: "Subject", name: "Subject", "data-name" => "Subject", required: "required"  %>
+                 
+                  <%= f.text_area :message, id: "Message", type: "text", class: "w-input text-area", placeholder: "Type your message", name: "Message", "data-name" => "Message", required: "required" %>
                   <div class="div-spc">
-                    <input class="w-button button btn-form contact-btn" type="submit" value="Submit your message" data-wait="Please wait...">
-                  </div>
-                </form>
-                <div class="w-form-done succes">
-                  <p class="scc">Thank you! Your submission has been received!</p>
-                </div>
-                <div class="w-form-fail error-msg">
-                  <p class="err">Oops! Something went wrong while submitting the form :(</p>
-                </div>
+                  <%= f.hidden_field :nickname %> 
+                    <%= f.submit "Send", class: "w-button button btn-form contact-btn", id: "contact-form-btn", "data-wait" => "Please wait..." %>
+                  </div>             
+                <% end %>
               </div>
             </div>
           </div>
@@ -85,5 +83,5 @@
       </div>
     </div>
   </div>
-
+<div id="ohsnap"></div>
   <%= render 'shared/static_pages_footer' %>

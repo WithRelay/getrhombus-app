@@ -9,15 +9,10 @@ $(document).ready(function () {
     }
   });
 
-  /* Top Stats Show Hide */
-  $("#topstats").click(function(){
-        $(".topstats").slideToggle(100);
-    });
-
   /* Sidepanel Show-Hide */
-  $(".sidepanel-open-button").click(function(){
+/*  $(".sidepanel-open-button").click(function(){
         $(".sidepanel").toggle(100);
-    });
+    });*/
 
   
     $(".sidebar-open-button-mobile").click(function(){

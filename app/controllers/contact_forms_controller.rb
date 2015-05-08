@@ -1,21 +1,31 @@
 class ContactFormsController < ApplicationController
+  
   def new
   	@contact_form = ContactForm.new
   end
 
   def create
-  	begin
-  		@contact_form = ContactForm.new(params[:contact_form]) 
-  		@contact_form.request = request 
-      respond_to do |format|
-  		  if @contact_form.deliver 
-  			   format.html { redirect_to "/contactus", notice: 'Your message has been sent. We will contact you shortly!' }
-   		  else 
-  			   format.html { render action: 'new' }
-  		  end 
+  	@contact_form = ContactForm.new(contact_forms_params) 
+  	@contact_form.request = request 
+    respond_to do |format|
+      if @contact_form.deliver_now
+        format.html do
+          redirect_to '/'
+        end
+        format.json { render nothing: true, status: :ok }
+      else
+        format.html { render 'new' } 
+        format.json { render nothing: true, :status => :unprocessable_entity } 
       end
-  	rescue ScriptError 
-  		flash[:error] = 'Sorry, this message appears to be spam and was not delivered.'
-  	end
+    end
   end
+
+  private
+  
+    # Never trust parameters from the scary internet, only allow the white list through.
+    def contact_forms_params
+      params.require(:contact_form).permit(:name, :email, :message, :organization, :subject)
+    end
+
+
 end

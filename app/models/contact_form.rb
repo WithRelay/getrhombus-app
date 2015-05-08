@@ -4,6 +4,7 @@ class ContactForm < MailForm::Base
   attribute :name,      :validate => true #:presence_of
   attribute :email,     :validate => /\A([\w\.%\+\-]+)@([\w\-]+\.)+([\w]{2,})\z/i
   attribute :organization
+  attribute :subject
   attribute :message,   :validate => true
   attribute :nickname,  :captcha  => true
 
@@ -11,9 +12,10 @@ class ContactForm < MailForm::Base
   # in ActionMailer accepts.
  def headers
     {
-      :subject => "Contact Us",
+      :subject => "Contact Us Page Message",
       :to => "<redacted_email>",
-      :from => "#{name} <#{email}>"
+      :from => "<redacted_email>",
+      :reply_to => "#{name} <#{email}>"
     }
   end
 
