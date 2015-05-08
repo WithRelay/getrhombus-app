@@ -1154,7 +1154,7 @@ $(document).ready(function () {
 
 
     
-    $("#contact-form-btn").click(function(event){
+    /*$("#contact-form-btn").click(function(event){
         event.preventDefault(); 
         var name = $("#name").val();
         var email = $("#Email").val();
@@ -1179,25 +1179,19 @@ $(document).ready(function () {
 
         }
         return false;
-    });
+    });*/
 
     
-     $('#signupForm')
-        .find('[name="user[user_level]"]')
-            .selectpicker()
-            .change(function(e) {
-                $('#signupForm').formValidation('revalidateField', 'user[user_level]');
-            })
-            .end()
+     /*$('#contact-form')
         .formValidation({
             // I am validating Bootstrap form
             framework: 'bootstrap',
             live: 'disabled',
             // List of fields and their validation rules!
             fields: {
-                'user[email]': {
+                'Email': {
                     verbose: false,
-                    row: '.group',
+                    row: '.form-group',
                     validators: {
                         notEmpty: {
                             message: 'Your email is required'
@@ -1221,84 +1215,18 @@ $(document).ready(function () {
                         }
                     }
                 },
-                'user[password]': {
-                    row: '.group',
-                    validators: {
-                        notEmpty: {
-                            message: 'The password is required'
-                        },
-                        stringLength: {
-                            min: 8,
-                            message: 'Your password should be at least 8 characters'
-                        }
-                    }
-                },
-                "user[password_confirmation]": {
-                    row: '.group',
-                    validators: {
-                        verbose: false,
-                        notEmpty: {
-                            message: 'The password confirmation is required'
-                        },
-                        identical: {
-                            field: 'password',
-                            message: "The passwords don't match"
-                        }
-                    }
-                },
-                phone: {
-                    row: '.group',
-                    validators: {
-                        callback: {
-                            callback: function (value, validator, $field) {
-                                if (telInput.intlTelInput("isValidNumber")) {
-                                    return {
-                                        valid: true,    // or false
-                                        message: 'Valid number'
-                                    }
-                                } else {
-                                    return {
-                                        valid: false,    // or false
-                                        message: 'Enter a valid number'
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                'user[user_level]': {
+                'Company': {
+                    verbose: false,
                     row: '.form-group',
                     validators: {
                         notEmpty: {
-                            message: 'Please select an account'
+                            message: 'Your email is required'
                         }
                     }
                 }
+
             }
-        })
-        .on('success.validator.fv', function(e, data) {
-            if (data.field === 'email' && data.validator === 'remote') {
-                var response = data.result;  // response is the result returned by MailGun API
-                if (response.did_you_mean) {
-                    // Update the message
-                    data.element                    // The field element
-                        .data('fv.messages')        // The message container
-                        .find('[data-fv-validator="remote"][data-fv-for="email"]')
-                        .html('Did you mean ' + response.did_you_mean + '?')
-                        .show();
-                }
-            }
-        })
-        .on('err.validator.fv', function(e, data) {
-            if (data.field === 'email' && data.validator === 'remote') {
-                // We need to reset the error message
-                data.element                // The field element
-                    .data('fv.messages')    // The message container
-                    .find('[data-fv-validator="remote"][data-fv-for="email"]')
-                    .html("The email isn't valid")
-                    .show();
-            }            
-        });
+        });*/
     // validate sign up form
 
     
