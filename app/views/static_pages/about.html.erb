@@ -1,0 +1,54 @@
+<% provide(:title, 'Rhombus - About us') %>
+
+
+  <%#=<div class="social-ico">
+    <a class="w-inline-block social" href="#" data-ix="move-social"></a>
+    <a class="w-inline-block social-1" href="#" data-ix="move-social"></a>
+    <a class="w-inline-block social-2" href="#" data-ix="move-social"></a>
+    <a class="w-inline-block social-3" href="#" data-ix="move-social"></a>
+    <a class="w-inline-block go-top" href="#top" data-ix="move-social"></a>
+  </div>%>
+
+    <%= content_for :head do %>
+    <%= stylesheet_link_tag "normalize" %>
+    <%= stylesheet_link_tag "webflow" %>
+    <%= stylesheet_link_tag "rho.webflow" %>
+  <% end %>
+
+    <style type="text/css">
+    @media screen and (min-width: 1200px) {
+        .w-container {
+          max-width: 1170px;
+        }
+      }
+      .w-slider-nav-invert>div {
+    background-color: #e5e5e5; !important
+}
+  </style>
+  
+  <%= render "shared/static_pages_header" %>
+
+  <%= render 'shared/full_messages' %>
+
+  <div class="w-section banner inner _4 about-hero" id="top" data-ix="show-social-and-nav">
+    <div class="w-container">
+      <div class="div-center" data-ix="show-navigation">
+        <h1 class="h-inner" data-ix="h-inner"><span class="white-1 about-hero-text">About us</span></h1>
+      </div>
+    </div>
+  </div>
+  <div class="w-section section about-section-1">
+    <div class="w-container">
+      <div class="tittle-wrapper about-section-1-text"><img class="about-section-1-img" src="<%= asset_path 'About Icon.png' %>">
+        <h1>RHOMBUS – THE FIRST CONVERSATIONAL COMMERCE PLATFORM</h1>
+        <div class="sub-tittle about-section-1-text">We started with a simple idea: to create a non-intrusive way for people to pay using the most readily available medium – text messaging. Our deliberate design allows our technology to disappear in the background, making it easy for businesses to efficiently grow sales and reduce checkout abandonment. We are constantly rethinking commerce and payments, and our goal is to use simple technology to help businesses connect with their customers seamlessly.</div>
+      </div>
+    </div><img src="<%= asset_path 'About Us Image.png' %>">
+  </div>
+  <div class="w-section paralax _3 about-section-3 section">
+    <div class="w-container"><img src="<%= asset_path 'Rhombus Map About.png' %>">
+    </div>
+  </div>
+<%= render "shared/static_pages_footer" %>
+
+<%= render "olark" %>

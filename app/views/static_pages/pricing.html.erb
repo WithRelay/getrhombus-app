@@ -1,0 +1,200 @@
+<% provide(:title, 'Rhombus - Pricing') %>  
+
+  <%= content_for :head do %>
+    <%= stylesheet_link_tag "normalize" %>
+    <%= stylesheet_link_tag "webflow" %>
+    <%= stylesheet_link_tag "rho.webflow" %>
+  <% end %>
+
+
+
+  <style type="text/css">
+    @media screen and (min-width: 1200px) {
+        .w-container {
+          max-width: 1170px;
+        }
+      }
+      .w-slider-nav-invert>div {
+        background-color: #e5e5e5; !important
+    }
+  </style>
+
+  <%= render 'shared/static_pages_header' %>
+ 
+  <%= render 'shared/full_messages' %>
+
+
+ <div class="w-section banner inner _4 pricing-hero" id="top" data-ix="show-social-and-nav">
+    <div class="w-container">
+      <div class="div-center" data-ix="show-navigation">
+        <h1 class="h-inner" data-ix="h-inner"><span class="white-1 about-hero-text">Simple pricing</span></h1>
+      </div>
+      <div class="sub-inner contact-subtext" data-ix="h-inner-2">Free 14-day trial. No credit card required.</div>
+    </div>
+  </div>
+  <div class="w-section section pricing-section-1">
+    <div class="w-container">
+      <div class="tittle-wrapper pricing-icon"><img src="<%= asset_path 'Pricing.png' %>">
+      </div>
+      <div>
+        <h1 class="pricing-section-3-title">All Plans Include</h1>
+        <div>
+          <ul class="w-list-unstyled standard-feature-list">
+            <li>Free Rhombus number –&nbsp;Email &amp; SMS&nbsp;receipts –&nbsp;Email &amp; Phone support</li>
+          </ul>
+        </div>
+      </div>
+      <div class="w-row pricing-table">
+        <div class="w-col w-col-3 pricing-columns pricing-first-column">
+          <div class="pricing-title-div">
+            <div class="pricing-plan">Free</div>
+            <div class="pricing-price">$0/month</div><a class="button pricing-button customer-text-me" href="#">Sign up</a>
+          </div>
+          <ul class="w-list-unstyled pricing-other-columns">
+            <li>
+              <div class="pricing-lines">500 messages</div>
+            </li>
+            <li>
+              <div class="pricing-lines">Unlimited customers</div>
+            </li>
+            <li>
+              <div class="pricing-lines">2.9% + 30c per transaction</div>
+            </li>
+            <li>
+              <div class="pricing-lines">N/A</div>
+            </li>
+            <li>
+              <div class="pricing-lines">Basic analytics</div>
+            </li>
+          </ul>
+        </div>
+        <div class="w-col w-col-3 pricing-columns pricing-second-column">
+          <div class="pricing-title-div">
+            <div class="pricing-plan">Starter</div>
+            <div class="pricing-price">$49/month</div><a class="button pricing-button customer-text-me" href="#">Sign up</a>
+          </div>
+          <ul class="w-list-unstyled">
+            <li>
+              <div class="pricing-lines">2500 messages</div>
+            </li>
+            <li>
+              <div class="pricing-lines">Unlimited customers</div>
+            </li>
+            <li>
+              <div class="pricing-lines">2.9% + 30c per transaction</div>
+            </li>
+            <li>
+              <div class="pricing-lines">Custom welcome message</div>
+            </li>
+            <li>
+              <div class="pricing-lines">Advanced analytics</div>
+            </li>
+          </ul>
+        </div>
+        <div class="w-col w-col-3 pricing-columns">
+          <div class="pricing-title-div">
+            <div class="pricing-plan">Business</div>
+            <div class="pricing-price">$149/month</div><a class="button pricing-button customer-text-me" href="#">Sign up</a>
+          </div>
+          <ul class="w-list-unstyled">
+            <li>
+              <div class="pricing-lines">7000 messages</div>
+            </li>
+            <li>
+              <div class="pricing-lines">Unlimited customers</div>
+            </li>
+            <li>
+              <div class="pricing-lines">2.9% + 30c per transaction</div>
+            </li>
+            <li>
+              <div class="pricing-lines">Custom welcome message</div>
+            </li>
+            <li>
+              <div class="pricing-lines">Advanced analytics</div>
+            </li>
+          </ul>
+        </div>
+        <div class="w-col w-col-3 pricing-columns pricing-fourth-column">
+          <div class="pricing-title-div">
+            <div class="pricing-plan">Enterprise</div>
+            <div class="pricing-price">Let’s talk</div><a class="button pricing-button customer-text-me" href="#">Sign up</a>
+          </div>
+          <ul class="w-list-unstyled">
+            <li>
+              <div class="pricing-lines">TBD</div>
+            </li>
+            <li>
+              <div class="pricing-lines">Unlimited customers</div>
+            </li>
+            <li>
+              <div class="pricing-lines">TBD</div>
+            </li>
+            <li>
+              <div class="pricing-lines">Custom messages</div>
+            </li>
+            <li>
+              <div class="pricing-lines">TBD</div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="w-section section pricing-section-3">
+    <div class="w-container">
+      <div>
+        <div class="pricing-questions-title">Questions? We’re here to help.</div>
+      </div>
+      <div>
+        <div class="w-row row-spc x2 pricing-section-3-row">
+          <div class="w-col w-col-4">
+            <div class="icon-wrapper">
+              <h4 class="pricing-question-header">How does the 14-day free trial work?</h4>
+              <p class="pricing-section-3-text">No payment information is required to sign up for Rhombus. Your first 14 days are free with 500 messages, including unlimited customers or recipients. Once your trial is up, you’ll need to pay to continue using Rhombus. If you’d like to pay annually, please&nbsp;get in touch&nbsp;with us.</p>
+            </div>
+          </div>
+          <div class="w-col w-col-4">
+            <div class="icon-wrapper">
+              <h4 class="pricing-question-header">Do I have to sign a long-term contract?</h4>
+              <p class="pricing-section-3-text">No contracts – just pay month-to-month, or annually. You can cancel at any time without penalty.</p>
+            </div>
+          </div>
+          <div class="w-col w-col-4">
+            <div class="icon-wrapper">
+              <h4 class="pricing-question-header">What forms of payment can we accept from our customers?</h4>
+              <p class="pricing-section-3-text">You can accept Mastercard, Visa, American Express, and Discover via Rhombus.</p>
+            </div>
+          </div>
+        </div>
+        <div class="w-row row-spc x2 pricing-section-3-row">
+          <div class="w-col w-col-4">
+            <div class="icon-wrapper">
+              <h4 class="pricing-question-header">Do I need to download an app to use Rhombus?</h4>
+              <p class="pricing-section-3-text">No, you don't need to download anything to use Rhombus. You can access your transactions and messages online at any time from any web-enabled device – computers, tablets or smartphones. Easily run your business from anywhere.</p>
+            </div>
+          </div>
+          <div class="w-col w-col-4">
+            <div class="icon-wrapper">
+              <h4 class="pricing-question-header">How do I pay after my free trial?</h4>
+              <p class="pricing-section-3-text">After your free trial is up, we will automatically debit your company bank account each month so you never have to worry about invoicing.</p>
+            </div>
+          </div>
+          <div class="w-col w-col-4">
+            <div class="icon-wrapper">
+              <h4 class="pricing-question-header">Is Rhombus secure?</h4>
+              <p class="pricing-section-3-text">Accepting payments with Rhombus is safer than using a POS, checks or cash. We encrypt and tokenize your customers’ payment information so no one can have access to it. All transmission to our payment processor and on our site is via an encrypted HTTPS connection.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="w-section section faq-section-3">
+    <div class="w-container"><a class="button faqs-btn" href="/contact">I have more questions</a>
+    </div>
+  </div>
+  <div class="w-section section pricing-section-2"></div>
+
+  <%= render "shared/static_pages_footer" %>
+
+  <%= render "olark" %>

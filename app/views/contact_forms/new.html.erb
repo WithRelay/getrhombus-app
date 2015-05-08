@@ -1,98 +1,89 @@
-<% provide(:title, 'Rhombus - Contact us') %>
+  <% provide(:title, 'Rhombus - Contact us') %>
 
+  <%= content_for :head do %>
+    <%= stylesheet_link_tag "normalize" %>
+    <%= stylesheet_link_tag "webflow" %>
+    <%= stylesheet_link_tag "rho.webflow" %>
+  <% end %>
 
-<%= content_for :head do %>
-  <%= stylesheet_link_tag "mainly_static_pages" %>
-<% end %>
+   <style type="text/css">
+    @media screen and (min-width: 1200px) {
+        .w-container {
+          max-width: 1170px;
+        }
+      }
+      .w-slider-nav-invert>div {
+    background-color: #e5e5e5; !important
+}
+  </style>
 
-<body>	
+  <%= render 'shared/static_pages_header' %>
 
-<%= render "shared/header" %>
-
-
-<div class="main-wrapper contact_fix">
-
-<div class="section first">
 <%= render 'contact_form_errors' %>
-	<div class="container">
-		
-	<div class=" p-b-60" style="padding-top: 0px;">
-		<div class="row">
-		<div class="col-md-6 col-sm-6">		
-		<h2 class="p-t-40">We would love to <span class="text-success semi-bold">hear from you</span></h2>
-		<p class="">Why not drop us a line or pick up the phone and give us a shout. Our team would love to talk to you and find ways of Making Business Easy.</p>
-		</div>
-		</div>
-		<%= form_for @contact_form do |f| %>
-		<div class="row p-t-30" style="margin-bottom: 30px;">
-			<div class="col-md-6 col-sm-6">
-			<div class="row form-row">
-                      <div class="col-md-10">
-                        <%= f.text_field :name, id: "textName", type: "text", class: "form-control", placeholder: "Full Name"  %>
-                      </div>
+
+
+<div class="w-section banner inner" id="top" data-ix="show-social-and-nav">
+    <div class="w-container">
+      <div class="div-center" data-ix="show-navigation">
+        <h1 class="h-inner" data-ix="h-inner"><span class="white-1 about-hero-text">Stay in touch</span></h1>
+        <div class="sub-inner contact-subtext" data-ix="h-inner-2">We'd love to hear from you.</div>
+      </div>
+    </div>
+  </div>
+  <div class="w-section section">
+    <div class="w-container">
+      <div>
+        <div class="w-widget w-widget-map" data-widget-latlng="38.907192,-77.036871" data-widget-style="roadmap" data-widget-zoom="14" data-disable-scroll="1"></div>
+        <div class="w-clearfix contact">
+          <div class="contact-left">
+            <div>
+              <div class="w-form">
+                <form id="email-form" name="email-form" data-name="Email Form">
+                  <input class="w-input tex-filed" id="name" type="text" placeholder="Enter your name" name="name" data-name="Name">
+                  <input class="w-input tex-filed" id="Email" type="email" placeholder="Enter your email" name="Email" data-name="Email" required="required">
+                  <input class="w-input tex-filed" id="Company" type="text" placeholder="Organization" name="Company" data-name="Company" required="required">
+                  <input class="w-input tex-filed" id="Subject-3" type="text" placeholder="Subject" name="Subject" data-name="Subject" required="required">
+                  <textarea class="w-input text-area" id="Message" placeholder="Type your message" name="Message" required="required" data-name="Message"></textarea>
+                  <div class="div-spc">
+                    <input class="w-button button btn-form contact-btn" type="submit" value="Submit your message" data-wait="Please wait...">
+                  </div>
+                </form>
+                <div class="w-form-done succes">
+                  <p class="scc">Thank you! Your submission has been received!</p>
+                </div>
+                <div class="w-form-fail error-msg">
+                  <p class="err">Oops! Something went wrong while submitting the form :(</p>
+                </div>
+              </div>
             </div>
-			<div class="row form-row">
-                      <div class="col-md-10">
-                        
-                        <%= f.text_field :organization, id: "txtCompany", type: "text", class: "form-control", placeholder: "Company/Organization"  %>
-                      </div>
+          </div>
+          <div class="contact-left left-2">
+            <div>
+              <h4 class="white-3">Contact info</h4>
             </div>
-			<div class="row form-row">
-                      <div class="col-md-10">
-                        <%= f.text_field :email, id: "textEmailAddress", type: "text", class: "form-control", placeholder: "Email Address"  %>
-                      </div>
+            <div>
+              <p class="p-contact">8600 16th Street, Ste 813
+                <br>Silver Spring, MD 20910
+                <br>Phone: 1.800.555.6789
+                <br>Email:&nbsp;<redacted_email>
+                <br>Web:&nbsp;getrhombus.com</p>
             </div>
-			<div class="row form-row">
-                      <div class="col-md-10">
-						
-						<%= f.text_area :message, id: "txtDesc", type: "text", class: "form-control", placeholder: "Message", :rows => "8"  %>
-						
-						</textarea>
-                      </div>
-                      <%= f.hidden_field :nickname %> 
-                  </div>	
-			<div class="row form-row">
-				 <div class="col-md-10">
-				
-				<%= f.submit "Send", class: "btn btn-danger btn-cons" %>
-				</div>
-			</div>
-			</div>
-		<% end %>
-			<div class="col-md-6 feature-list">
-				<section class="p-t-20 p-b-20">
-					<h4 class="title custom-font text-black">ADDRESS</h4>
-					<address>
-					  6225 Gothic Ln<br>
-					  Bowie, MD 20720<br>
-					  USA<br>
-					</address>
-				</section>
-				<section>
-					<h4 class="title custom-font text-black">BUSINESS HOURS</h4>
-					<p>
-					Monday - Friday 8am to 5pm<br>
-					Saturday - 9am to 5pm<br>
-					Sunday- Closed<br>
-					</p>
-				</section>
-			</div>
-		</div>
-	</div>
-	</div>	
-	
-</div>
-<div class="section white" style="height:350px" id="map">
+            <div>
+              <h4 class="white-3">Office hours</h4>
+            </div>
+            <div>
+              <p class="p-contact">Monday:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;9am-5pm
+                <br>Thursday:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;9am-5pm
+                <br>Wednesday:&nbsp;&nbsp;&nbsp;9am-5pm
+                <br>Monday:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;9am-5pm
+                <br>Tuesday:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;9am-3pm
+                <br>Saturday:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;10am-1pm
+                <br>Sunday:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Closed</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-<iframe width="100%" height="350" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://www.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=6225+Gothic+Lane,+Bowie,+MD&amp;aq=0&amp;oq=6225+Gothi&amp;sll=38.893596,-77.014576&amp;sspn=0.319586,0.676346&amp;ie=UTF8&amp;hq=&amp;hnear=6225+Gothic+Ln,+Bowie,+Maryland+20720&amp;t=m&amp;z=14&amp;ll=38.974824,-76.768511&amp;output=embed"></iframe>
-	
-	<%= render "shared/call_to_action" %>
-
-	<%= render "shared/footer" %>
-
-</div>
-
-
-</body>
-
-
+  <%= render 'shared/static_pages_footer' %>

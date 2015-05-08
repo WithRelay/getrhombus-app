@@ -13,12 +13,6 @@ Rails.application.routes.draw  do
   get '/terms' => 'static_pages#terms'
   get '/pricing' => 'static_pages#pricing'
 
-  get '/y' => 'static_pages#y'
-  get '/c' => 'static_pages#c'
-  get '/d' => 'static_pages#d'
-  get '/f' => 'static_pages#f'
-  get '/g' => 'static_pages#g'
-  get '/v' => 'static_pages#v'
 
   #match 'contact' => 'messages#new', :as => 'contact', :via => :get
   #match 'contact' => 'messages#create', :as => 'contact', :via => :post
@@ -40,6 +34,7 @@ Rails.application.routes.draw  do
   get '/users/:id/send_message_from_merchant/:user_id' => 'users#send_message_from_merchant'
   get '/users/:id/messaging' => 'users#messaging', :as => 'dashboard_messaging'
   get '/json_get_current_user' => 'application#json_get_current_user'
+  
   ## User transactions
   get '/users/:id/transactions' => 'users#transactions', :as => 'user_transactions'
   # User customers/merchants

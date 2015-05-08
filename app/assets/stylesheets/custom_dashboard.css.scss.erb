@@ -11,13 +11,6 @@
 	text-align: center;	
 }
 
-.details-control {
-		background-image: url(/assets/Plus-25.png);	
-  		background-repeat: no-repeat;
-  		background-position: center;
-        cursor: pointer;
-}
-
 #signup_logo {
 	width: 50px;
 	height: 50px;
@@ -295,7 +288,7 @@ input.rhombusFocus, select.rhombusFocus, textarea.rhombusFocus {
 	}
 
 	td.details-control {
-		background-image: url(/assets/Down4-25.png);	
+		background-image: url(<%= asset_path 'Down4-25.png' %>);	
   		background-repeat: no-repeat;
   		background-position: center;
         cursor: pointer;
@@ -303,7 +296,7 @@ input.rhombusFocus, select.rhombusFocus, textarea.rhombusFocus {
     }
      
     tr.shown td.details-control {
-     	background-image: url(/assets/Minus-25.png);	
+     	background-image: url(<%= asset_path 'Minus-25.png' %>);	
   		background-repeat: no-repeat;
   		background-position: center;
         cursor: pointer;   

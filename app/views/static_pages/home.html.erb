@@ -1,83 +1,212 @@
-<% provide(:title, 'Rhombus - Home') %>
+<% provide(:title, 'Rhombus - Conversational Commerce Platform') %>  
 
-<%= content_for :head do %>
-  <%= stylesheet_link_tag "mainly_static_pages.css" %>
-<% end %>
-
-<body>
-
-	<div class="main-wrapper">
-	
-		<%= render 'shared/header' %>
-
-		<%= render 'shared/full_messages' %>
-
-		<div class="tp-banner-container">
-		<div class="tp-banner" id="home" >
-			<div class="image">
-	      	<img src="<%= asset_path 'bg2.png' %>" alt="img-responsive" style="height: 600px" width="100%"/>
-	         <h3><span>The best way to receive payments via SMS.<span class='spacer'></span><br /><span class='spacer'></span><span class="tagline2">No carrier billing. No setup or monthly fees. Just 2.9% + 30c per transaction to receive payments. Sending money is always free.</span></span>
-	         <p><a href="/signup" class="btn btn-danger prompt_button">GET A FREE RHOMBUS NUMBER</a></p>
-	         </h3>
-			</div>
-			<div class="tp-bannertimer"></div>
-		</div>
-		</div>
-
-<div class="section white ha-waypoint">
-		<div class="container">
-		<div class="p-t-60">
-		<div class="row">
-		<div class="col-md-12 feature-list ">
-			<div class="col-md-4">
-			<h4 class="title">SELL WITH RHOMBUS</h4>
-			<p>
-			Sell more with Rhombus. We provide the fastest way for your customers to pay instantly using simple text messages on any mobile device. This is Friction-free payments.
-			</p>
-			</div>
-			<div class="col-md-4">
-			<h4 class="title">TAKE CONTRIBUTIONS</h4>
-			<p>
-			Shorten the distance between your donors’ hearts and wallets with Rhombus. Donors can contribute instantly using simple text messages on any mobile device. The results? The best fundraising conversion rate ever.
-			</p>
-			</div>
-			<div class="col-md-4">
-			<h4 class="title">PAY WITH RHOMBUS</h4>
-			<p>
-			Send payments seamlessly to your favorite take-out restaurants, dry-cleaner, non-profits, etc. using simple text messages on any device. No app downloads required.
-			</p>
-			</div><div class="clearfix"></div>
-		</div>
-		</div>
-		<br>
+  <%= content_for :head do %>
+  	<%= stylesheet_link_tag "normalize" %>
+  	<%= stylesheet_link_tag "webflow" %>
+  	<%= stylesheet_link_tag "rho.webflow" %>
+  <% end %>
 
 
-		</div>
-		</div>
-		</div>
 
-<div class="section grey">
-	<div class="container">
-	  <div class="p-t-40 p-b-50 ">
-		<div class="row feature-list value_prop">	 	     	
-			Rhombus takes the hassle out of collecting payments or donations from your customers, members or group of friends on any mobile device, using the most ubiquitous messaging system – SMS. The friction-free process lets users make a purchase or donation instantly by texting an amount and description to your Rhombus number!
-		</div>
-	</div>
-</div>	
-</div>
+  <style type="text/css">
+    @media screen and (min-width: 1200px) {
+        .w-container {
+          max-width: 1170px;
+        }
+      }
+      .w-slider-nav-invert>div {
+    		background-color: #e5e5e5; !important
+		}
+  </style>
 
-<div class="section table-layout">	
-			<div id="working-section" class="table-cell v-middle">	
-				<div >
-				<h3 class="text-white text-center custom-font no-margin">JOIN A GROWING LIST OF BUSINESSES USING RHOMBUS</h3>
-				</div>
-			</div>
-</div>
+  <%= render 'shared/static_pages_header' %>
+ 
+  <%= render 'shared/full_messages' %>
 
+  <div class="w-section banner" id="top" data-ix="show-social-and-nav">
+    <div class="w-slider big-slider" data-animation="outin" data-duration="500" data-infinite="1" data-nav-spacing="4">
+      <div class="w-slider-mask">
+        <div class="w-slide slide" data-ix="new-interaction">
+          <div class="w-container">
+            <div class="div-center">
+              <div class="slide-wrapper" data-ix="show-navigation">
+                <div class="div-spc x2">
+                  <div class="banner-logo hero-text"><strong>RHOMBUS</strong>
+                  </div>
+                </div>
+                <div class="div-spc x2">
+                  <div class="sub-inner hero-text" data-ix="slide-animation-2">Exchange real-time text messages, and accept payments from your customers – all within the conversation.</div>
+                </div>
+                <div class="div-spc x2" data-ix="slide-amimation-button"><a class="button btn-white" href="signup.html">Get started</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="w-section section hm-section-2" data-ix="show-social-and-nav">
+    <div class="w-container">
+      <div>
+        <div class="w-row">
+          <div class="w-col w-col-3">
+            <div class="icon-wrapper"><img src="<%= asset_path 'Connect With Customers.png' %>">
+              <h5>Connect with your customers</h5>
+              <p>Accept orders for pickup or delivery, take dinner reservations, book hair appointments, and more – all without a phone call.</p>
+            </div>
+          </div>
+          <div class="w-col w-col-3">
+            <div class="icon-wrapper"><img src="<%= asset_path 'Accept Payments.png' %>">
+              <h5>Accept payments</h5>
+              <p>Get paid by a single customer or group of customers simultaneously, all within the SMS conversation.</p>
+            </div>
+          </div>
+          <div class="w-col w-col-3">
+            <div class="icon-wrapper"><img src="<%= asset_path 'Rhombus Analytics.png' %>">
+              <h5>Get feedback</h5>
+              <p>Know how customers feel about your product or service in real-time and provide them with a more personal way to answer questions that come up.</p>
+            </div>
+          </div>
+          <div class="w-col w-col-3">
+            <div class="icon-wrapper"><img src="<%= asset_path 'Simple Pricing.png' %>">
+              <h5>Simple pricing</h5>
+              <p>No carrier billing. Just 2.9% + 30c per transaction to receive payments. Sending payments is always free.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="w-section section">
+    <div class="w-container">
+      <div class="w-row">
+        <div class="w-col w-col-7 w-col-stack">
+          <div data-ix="img-from-left"><img src="<%= asset_path 'Rhombus Android.png' %>">
+          </div>
+        </div>
+        <div class="w-col w-col-5 w-col-stack col-spcae">
+          <div>
+            <div class="div-spc section-3-spacing"></div>
+            <div class="div-spc section-3-spacing"></div>
+            <h1 class="hm-section-3-heading">Messaging + Payments = Bliss</h1>
+          </div>
+          <p class="hm-section-3-text">Accepting payment from your customers has never been easier. Smart phone or not, customers can chat with you via SMS, and complete transactions by simply texting the payment amount to your Rhombus number. Your customers can securely link their debit cards to Rhombus; our bank-grade security keeps their information safe.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="w-section section hm-section-4">
+    <div class="w-container">
+      <div class="w-row">
+        <div class="w-col w-col-7 w-col-stack">
+          <div data-ix="img-from-left">
+            <div class="div-spc section-3-spacing">
+              <div class="div-spc section-3-spacing"></div>
+            </div>
+            <div>
+              <div class="div-spc section-3-spacing"></div>
+              <h1 class="hm-section-4-heading">Reach customers wherever they are.</h1>
+            </div>
+            <p class="hm-section-4-text">You can easily respond to support questions, sales inquiries, schedule appointments, or take orders from the messaging dashboard. Your customers will receive your responses as a text message. We’ve built the best way to provide your customers with a more personal way to answer any questions that come up.</p><a class="button hm-section-4-button" href="signup.html">get started</a>
+          </div>
+        </div>
+        <div class="w-col w-col-5 w-col-stack col-spcae">
+          <div class="div-spc"><img src="<%= asset_path 'Rhombus Iphone 1.png' %>">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="w-section section paralax hm-section-5"></div>
+  <div class="w-section section hm-section-6">
+    <div class="w-container">
+      <div class="hm-section-3-content">
+        <div class="hm-section-6-title">Customer CRM and Transaction Analytics</div>
+        <div class="hm-section-6-text">Get full access to customer &amp; transactional data, showing you who your customers are, how often they visit, as well as a detailed breakdown of your bottom-line.</div>
+        <div class="hm-section-6-img"><img src="<%= asset_path 'Rhombus Dash.png' %>" height="542">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="w-section section gray ask-us">
+    <div class="w-container">
+      <div class="div-center ask-us">You can ask us anything. Just text our number: <a href="#">202 202 2020</a>
+      </div>
+    </div>
+  </div>
+  <div class="w-section section hm-section-7">
+    <div class="w-container">
+      <div>
+        <div class="hm-section-7-title">Businesses that use Rhombus</div>
+      </div>
+      <div class="w-row row-business-icons">
+        <div class="w-col w-col-2"><img src="<%= asset_path 'Taxi-50.png' %>">
+          <div class="business-icons-text">TAXI</div>
+        </div>
+        <div class="w-col w-col-2"><img src="<%= asset_path 'Restaurant-50.png' %>">
+          <div class="business-icons-text">RESTAURANT</div>
+        </div>
+        <div class="w-col w-col-2"><img src="<%= asset_path 'Coffee To Go-50.png' %>">
+          <div class="business-icons-text">COFFEE SHOP</div>
+        </div>
+        <div class="w-col w-col-2"><img src="<%= asset_path 'Hair Dryer-50.png' %>">
+          <div class="business-icons-text">BEAUTY PROFESSIONALS</div>
+        </div>
+        <div class="w-col w-col-2"><img src="<%= asset_path 'Roller Brush-50.png' %>">
+          <div class="business-icons-text">HOME &amp; REPAIR SERVICES</div>
+        </div>
+        <div class="w-col w-col-2"><img src="<%= asset_path 'Money Transfer-50.png' %>">
+          <div class="business-icons-text">ORGS &amp; NONPROFITS</div>
+        </div>
+      </div>
+      <div class="business-icons-spacing"></div>
+      <div class="w-row row-business-icons">
+        <div class="w-col w-col-2"><img src="<%= asset_path 'Delivery-50.png' %>">
+          <div class="business-icons-text">ON-DEMAND DELIVERY</div>
+        </div>
+        <div class="w-col w-col-2"><img src="<%= asset_path 'Price Tag-50.png' %>">
+          <div class="business-icons-text">RETAIL</div>
+        </div>
+        <div class="w-col w-col-2"><img src="<%= asset_path 'Broom-50.png' %>">
+          <div class="business-icons-text">CLEANING SERVICES</div>
+        </div>
+        <div class="w-col w-col-2"><img src="<%= asset_path 'Briefcase-50.png' %>">
+          <div class="business-icons-text">PROFESSIONAL SERVICES</div>
+        </div>
+        <div class="w-col w-col-2"><img src="<%= asset_path 'Dumbbell-50.png' %>">
+          <div class="business-icons-text">HEALTH &amp; FITNESS</div>
+        </div>
+        <div class="w-col w-col-2"><img src="<%= asset_path 'Purchase Order-50.png' %>">
+          <div class="business-icons-text">OTHERS</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="w-section section hm-section-8">
+    <div class="w-container">
+      <div class="hm-section-3-content">
+        <div class="hm-section-3-img"><img src="<%= asset_path 'Rhombus Businesses 2.png' %>" height="542">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="w-section section section-9">
+    <div class="w-container">
+      <div class="hm-stripe-div">
+        <div class="hm-stripe-title">Secure Transactions</div>
+      </div>
+      <div class="w-row">
+        <div class="w-col w-col-3"><img class="hm-stripe-icon" src="<%= asset_path 'big.png' %>">
+        </div>
+        <div class="w-col w-col-9">
+          <div class="hm-stripe-content">Paying with Rhombus is safer than debit cards or checks. We encrypt and tokenize your payment information so no one can have access to it. You will never have to give out sensitive information to businesses.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
 
-<%= render "shared/call_to_action" %>
+  <%= render "shared/static_pages_footer" %>
 
-<%= render "shared/footer" %>
-
-<%= render "olark" %>
-</body>
+  <%= render "olark" %>

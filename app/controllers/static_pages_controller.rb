@@ -25,22 +25,4 @@ class StaticPagesController < ApplicationController
 	def to_404
 	end
 
-	def h
-	end
-
-	def t
-	end
-
-	def c
-	end
-
-	def d
-	end
-
-	def v
-	end
-
-	def g
-	end
-
 end
