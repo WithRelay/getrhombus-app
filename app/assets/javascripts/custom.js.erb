@@ -3,9 +3,10 @@ $(document).ready(function () {
     var url = window.location;
     Stripe.setPublishableKey('<%= Rails.application.secrets.stripe["publishable_key"] %>');
     var page_params = url.search.substring(1);
-    var cc_year, cc_month;
+    var cc_year, cc_month, txn_details;
     var chart_labels = [], chart_totals = [], chart_txns = [];
     $.ajaxSetup({ cache:false });
+   
     // to prefill signup form
     if (url.pathname == "/signup") {
         if (page_params != "") {
@@ -187,33 +188,46 @@ $(document).ready(function () {
     get_graph('line');
     get_graph('area');
 
+    
     // for table slide dowm
-    function format ( d ) {
+    function format ( d, element ) {
         // `d` is the original data object for the row
-        return '<div class="slider">'+
+        var x = '<div class="slider">'+
             '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
                 '<tr>'+
                     '<td>Email:</td>'+
-                    '<td>'+ "adsasdsa" +'</td>'+
-                '</tr>'+
-                '<tr>'+
-                    '<td>Transaction #:</td>'+
-                    '<td>'+ "adsasdsa" +'</td>'+
-                '</tr>'+
-                '<tr>'+
-                    '<td>Time:</td>'+
-                    '<td>'+ "dasdsa" +'</td>'+
-                '</tr>'+
-                '<tr>'+
-                    '<td>Stripe Txn #:</td>'+
-                    '<td>And any further details here (images etc)...</td>'+
-                '</tr>'+
-                '<tr>'+
-                    '<td>Taxes and Fees:</td>'+
-                    '<td>And any further details here (images etc)...</td>'+
-                '</tr>'+
-            '</table>'+
-        '</div>';
+                    '<td>'+ element.attr('data-email') +'</td>'+
+                '</tr>';
+        var x, y;
+        if (element.attr('data-page') === 'transactions') {
+            y = '<tr>' +
+                        '<td>Rhombus Txn #:</td>'+
+                        '<td>'+ element.attr('data-txn-num') +'</td>'+
+                    '</tr>'+
+                    '<tr>'+
+                        '<td>Time:</td>'+
+                        '<td>'+ element.attr('data-time') +'</td>'+
+                    '</tr>'+
+                    '<tr>'+
+                        '<td>Stripe Txn #:</td>'+
+                        '<td>' + element.attr('data-stripe-txn-num') + '</td>'+
+                    '</tr>'+
+                    '<tr>'+
+                        '<td>Taxes and Fees:</td>'+
+                        '<td>' + element.attr('data-tax') + '</td>'+
+                    '</tr>'+
+                '</table>'+
+            '</div>';
+        } else {
+            z = '<tr>'+
+                        '<td>Phone #:</td>'+
+                        '<td>' + element.attr('data-phone') + '</td>'+
+                    '</tr>'+
+                   '</table>'+
+                '</div>';
+        }
+
+        return (element.attr('data-page') === "transactions") ? x + y : x + z;
     }
 
     // for table slide dowm
@@ -236,8 +250,7 @@ $(document).ready(function () {
         }
         else {
             // Open this row
-            //row.child( format(row.data()), 'no-padding' ).show();
-            row.child( format(row.data()), 'no-padding' ).show();
+            row.child(format(row.data(), $(this)), 'no-padding').show();
             tr.addClass('shown');
  
             $('div.slider', row.child()).slideDown();

@@ -58,9 +58,9 @@
                 <tr role="row">
                   <td class="text-center"><i class="fa fa-trash" style="visibility: hidden;"></i></td>
                   <th>Date (GMT)</th>
-                  <th><%= (current_user.user_level == 0) ? "Time" : "Card Name" %></th>
-                  <th><%= (current_user.user_level == 0) ? "Business" : "Description" %></th>
-                  <th><%= (current_user.user_level == 0) ? "Description" : "Phone #" %></th>
+                  <th><%= (current_user.user_level == 0) ? "Business" : "Card Name" %></th>
+                  <th>Message</th>
+                  <th>Phone #</th>
                   <th><%= (current_user.user_level == 0) ? "Rhombus #" : "Amt Paid" %></th>
                   <th>Last Four</th>
                 </tr>
@@ -68,11 +68,17 @@
               <tbody>
               	<% @transactions.each do |t| %>
   	        	  <tr role="row">
-  	                <td class="details-control"></td>
+  	                <td class="details-control" data-txn-num="<%= t.transaction_number %>"
+                        data-time="<%= t.created_at.strftime("%I:%M %p") %>"
+                        data-stripe-txn-num="<%= t.transaction_uri %>"
+                        data-email="<%= t.email %>"
+                        data-tax="<%= t.tax_rate %>"
+                        data-page="transactions"
+                      ></td>
   	                <td><%= t.created_at.strftime("%m/%d/%Y") %></td>
-  	                <td><%= (current_user.user_level == 0) ? t.created_at.strftime("%I:%M %p") : t.card_name %></td>
-  	                <td><%= (current_user.user_level == 0) ? t.business_name : t.notes %></td>
-  	                <td><%= (current_user.user_level == 0) ? t.notes : t.phone_number %></td>
+  	                <td><%= (current_user.user_level == 0) ? t.business_name : t.card_name %></td>
+  	                <td><%= t.notes %></td>
+  	                <td><%= (current_user.user_level == 0) ? t.business_phone : t.phone_number %></td>
   	                <td><%= (current_user.user_level == 0) ? t.rhombus_number : t.amount_less_fees %></td>
   	                <td><%= t.last_four %></td>
   	              </tr>
@@ -99,17 +105,7 @@
   <br><br><br><br><br><br><br><br><br><br><br><br>
      <br><br><br><br><br><br>
 
-<!-- Start Footer -->
-<div class="row footer">
-  <div class="col-md-6 text-left">
-  Copyright © 2015 <a href="http://themeforest.net/user/egemem/portfolio" target="_blank">Egemem</a> All rights reserved.
-  </div>
-  <div class="col-md-6 text-right">
-    Design and Developed by <a href="http://themeforest.net/user/egemem/portfolio" target="_blank">Egemem</a>
-  </div> 
-</div>
-<!-- End Footer -->
-
+  <%= render 'shared/dashboard_footer' %>
 
 </div>
 <!-- End Content -->
