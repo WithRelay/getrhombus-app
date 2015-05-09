@@ -1,10 +1,9 @@
 class ContactForm < MailForm::Base
   append :remote_ip, :user_agent#, :session#  => TMI
 
-  attribute :name,      :validate => true #:presence_of
+  attribute :name,      :validate => true
   attribute :email,     :validate => /\A([\w\.%\+\-]+)@([\w\-]+\.)+([\w]{2,})\z/i
   attribute :organization
-  attribute :subject
   attribute :message,   :validate => true
   attribute :nickname,  :captcha  => true
 
@@ -12,19 +11,11 @@ class ContactForm < MailForm::Base
   # in ActionMailer accepts.
  def headers
     {
-      :subject => "Contact Us Page Message",
+      :subject => "#{name} just contacted us",
       :to => "<redacted_email>",
       :from => "<redacted_email>",
       :reply_to => "#{name} <#{email}>"
     }
   end
-
-=begin
-  def presence_of
-    if name.blank?
-      self.errors.add(:name, "Please enter your full name.")
-    end
-  end
-=end
 
 end

@@ -54,13 +54,14 @@
                   </div>
                 </div>
 
-                <%# <div class="form-group">
+                <%# <div class="form-group"> not needed on this page
                   <label class="col-sm-2 control-label form-label">Phone</label>
                   <div class="col-sm-10">
-                    <input type="tel" class="form-control rhombusFocus" id="phone" name="phone">
-                  </div>
-                </div>%>
-
+                    <%= f.phone_field :business_phone, :id => "phone", class: "form-control rhombusFocus" %>
+                    <%# <input type="tel" class="form-control rhombusFocus" id="phone" name="phone"> %>
+                    <%#= f.hidden_field :phone_number, :id => "phoneNumber" %>
+                  <%#</div>
+                </div> %>
 
                 <div class="form-group">
                   <label class="col-sm-2 control-label form-label">Address</label>
@@ -90,13 +91,10 @@
                   </div>
                 </div>
 
-                <input type="hidden" class="form-control" id="city" name="city" >
-                <input type="hidden" class="form-control" id="state" name="state">
-
                 <div class="form-group">
                   <label class="col-sm-2 control-label form-label">Website</label>
                   <div class="col-sm-10">
-                  <%#= f.text_field :website, type: "text", class: "form-control rhombusFocus", placeholder: "Your website or social profile link" %>
+                  <%= f.text_field :url, type: "text", class: "form-control rhombusFocus", placeholder: "Your website or social profile link" %>
                   </div>
                 </div>
 
@@ -132,7 +130,7 @@
                 <div class="form-group">
                   <label class="col-sm-2 control-label form-label">Welcome Message</label>
                   <div class="col-sm-10"> 
-                  <%#= f.text_area :welcome_message, type: "text", class: "form-control rhombusFocus", id: "count_me", rows: 4 %>
+                  <%= f.text_area :custom_welcome, type: "text", class: "form-control rhombusFocus", id: "count_me", rows: 4 %>
                   </div>
                 </div>
 

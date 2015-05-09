@@ -24,10 +24,12 @@
             <i class="fa fa-envelope-o"></i>
           </div>
           <div class="group phonegroup">
-            <%#= f.hidden_field :phone_number, :id => "phoneNumber"%>
-            <%#= f.hidden_field :referrer_number, :id => "referrer_number"%>
-            <%#= f.hidden_field :subscription_type, :id => "subscription_type"%>
-            <input type="tel" id="phone" name="phone" class="form-control rhombusFocus">
+            <%= f.hidden_field :phone_number, :id => "phoneNumber" %>
+            <%= f.phone_field :phone, :id => "phone", class: "form-control rhombusFocus" %>
+
+            <%= f.hidden_field :referrer_num, :id => "referrer_num" %>
+            <%= f.hidden_field :subscription_type, :id => "subscription_type" %>
+            <%#<input type="tel" id="phone" name="phone" class="form-control rhombusFocus">%>
           </div>
           <div class="group">
            <%= f.password_field :password, type: "password", :class => "form-control rhombusFocus", placeholder: "Password" %>

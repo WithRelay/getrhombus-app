@@ -1,6 +1,7 @@
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
+
   #### added
   config.action_mailer.default_url_options = { :host => 'getrhombus.com' }
   # ActionMailer Config
@@ -16,8 +17,8 @@ Rails.application.configure do
     domain: "getrhombus.com",
     user_name: <redacted_username>
     password: "<redacted_password>" }
-
   #### added
+
 
   # Code is not reloaded between requests.
   config.cache_classes = true

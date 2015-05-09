@@ -19,6 +19,9 @@ gem "stripe"
 # url shortner
 gem 'bitly'
 
+# sending email
+gem 'mandrill-api'
+
 # App monitoring
 gem 'newrelic_rpm'
 

@@ -1,28 +1,28 @@
-  <% provide(:title, 'Rhombus - Contact us') %>
+  <% provide(:title, 'Rhombus - We can help') %>
 
   <%= content_for :head do %>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
     <%= stylesheet_link_tag "normalize" %>
     <%= stylesheet_link_tag "webflow" %>
     <%= stylesheet_link_tag "rho.webflow" %>
+
   <% end %>
 
    <style type="text/css">
-    @media screen and (min-width: 1200px) {
-        .w-container {
-          max-width: 1170px;
-        }
+      @media screen and (min-width: 1200px) {
+          .w-container {
+              max-width: 1170px;
+           }
       }
-      .w-slider-nav-invert>div {
-    background-color: #e5e5e5; !important
-}
+      .w-slider-nav-invert> div {
+          background-color: #e5e5e5; !important
+      }
   </style>
-
   <%= render 'shared/static_pages_header' %>
 
-<%= render 'contact_form_errors' %>
+<%#= render 'contact_form_errors' %>
 
-
-<div class="w-section banner inner" id="top" data-ix="show-social-and-nav">
+  <div class="w-section banner inner" id="top" data-ix="show-social-and-nav">
     <div class="w-container">
       <div class="div-center" data-ix="show-navigation">
         <h1 class="h-inner" data-ix="h-inner"><span class="white-1 about-hero-text">Stay in touch</span></h1>
@@ -31,7 +31,7 @@
     </div>
   </div>
   <div class="w-section section">
-    <div class="w-container">
+      <div class="w-container">
       <div>
         <div class="w-widget w-widget-map" data-widget-latlng="38.907192,-77.036871" data-widget-style="roadmap" data-widget-zoom="14" data-disable-scroll="1"></div>
         <div class="w-clearfix contact">
@@ -39,18 +39,25 @@
             <div>
               <div class="w-form">
               <%= form_for @contact_form, :html => { id: "contact-form" } do |f| %>
-               <%#= f.text_field :name, id: "name", type: "text", class: "w-input tex-filed", placeholder: "Enter your name", name: "name", "data-name" => "Name", required: "required"   %>
-               <div class="form-group">  <%= f.text_field :email, id: "Email", type: "email", class: "w-input tex-filed", placeholder: "Enter your email", name: "Email", "data-name" => "Email", required: "required" %></div>
-                <div class="form-group"><%= f.text_field :organization, id: "Company", type: "text", class: "w-input tex-filed", placeholder: "Organization", name: "Company", "data-name" => "Company", required: "required"  %></div>
-                 
-                  <%#= f.text_field :subject, id: "Subject-3", type: "text", class: "w-input tex-filed", placeholder: "Subject", name: "Subject", "data-name" => "Subject", required: "required"  %>
-                 
-                  <%#= f.text_area :message, id: "Message", type: "text", class: "w-input text-area", placeholder: "Type your message", name: "Message", "data-name" => "Message", required: "required" %>
+                  <div class="form-group">
+                    <%= f.text_field :name, id: "Name", type: "text", class: "w-input tex-filed", placeholder: "Enter your name", "data-name" => "Name" %>
+                    </div>
+                  <div class="form-group">  
+                    <%= f.text_field :email, id: "Email", type: "email", class: "w-input tex-filed", placeholder: "Enter your email", "data-name" => "Email" %>
+                  </div>
+                <div class="form-group"> 
+                  <%= f.text_field :organization, id: "Company", type: "text", class: "w-input tex-filed", placeholder: "Organization", "data-name" => "Company"  %>
+                </div>
+                 <div class="form-group"> 
+                  <%= f.text_area :message, id: "Message", type: "text", class: "w-input text-area", placeholder: "Type your message", "data-name" => "Message" %>
+                  </div>
                   <div class="div-spc">
-                  <%#= f.hidden_field :nickname %> 
+                    <%= f.hidden_field :nickname %> 
                     <%= f.submit "Send", class: "w-button button btn-form contact-btn", id: "contact-form-btn", "data-wait" => "Please wait..." %>
+
                   </div>             
                 <% end %>
+
               </div>
             </div>
           </div>
@@ -80,7 +87,8 @@
           </div>
         </div>
       </div>
-    </div>
+      </div>
+  
   </div>
-<div id="ohsnap"></div>
+  <div id="ohsnap"></div>
   <%= render 'shared/static_pages_footer' %>

@@ -74,6 +74,7 @@ GEM
       warden (~> 1.2.3)
     erubis (2.7.0)
     eventmachine (1.0.7)
+    excon (0.45.3)
     execjs (2.2.2)
     faraday (0.9.1)
       multipart-post (>= 1.2, < 3)
@@ -103,6 +104,9 @@ GEM
     mail_form (1.5.0)
       actionmailer (>= 3.2, < 5)
       activemodel (>= 3.2, < 5)
+    mandrill-api (1.0.53)
+      excon (>= 0.16.0, < 1.0)
+      json (>= 1.7.7, < 2.0)
     mime-types (2.4.3)
     mini_portile (0.6.2)
     minitest (5.5.1)
@@ -232,6 +236,7 @@ DEPENDENCIES
   jbuilder (~> 2.0)
   jquery-rails
   mail_form
+  mandrill-api
   mysql2
   newrelic_rpm
   omniauth-stripe-connect

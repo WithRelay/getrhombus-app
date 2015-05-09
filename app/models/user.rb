@@ -3,6 +3,7 @@ class User < ActiveRecord::Base
   include DashboardQueries
   Stripe.api_key = Rails.application.secrets.stripe["secret_key"]
 
+  attr_accessor :full_name, :phone
   # Include default devise modules. Others available are:
     # :token_authenticatable, :lockable, :timeoutable and :confirmable,
   devise :database_authenticatable, :registerable,
@@ -11,8 +12,10 @@ class User < ActiveRecord::Base
 
   #has_many :messages, dependent: :destroy
   has_many :transactions, dependent: :destroy
-  before_save :the_titleizer, :check_phone_number_length
-  before_create :set_merchant_business_phone, :deactivate_merchant_account          # only create, cos they can change this in edit
+
+  before_validation :get_only_numbers, :the_titleizer
+  # only create, cos they can change this in edit
+  before_create :set_merchant_business_phone, :deactivate_merchant_account          
 
   after_commit :send_welcome_email, :on => :create
 
@@ -70,15 +73,19 @@ class User < ActiveRecord::Base
         @message.send_and_save_message(18, owner.rhombus_number, self.phone_number, 
               "We were unable to update your card info on Rhombus because: #{err[:message]}.")
 
+        #(dump, customer_email, sender)
         Notification.token_failure_notification(err, self.email).deliver_now
+        #EmailingService.token_failure_notification(err, self.email)
         return false
       rescue Stripe::StripeError => e
         body = e.json_body
         err  = body[:error]
         Notification.token_failure_notification(err, self.email).deliver_now
+        #EmailingService.token_failure_notification(err, self.email)
         return false
       rescue StandardError => e
         Notification.token_failure_notification(e, self.email).deliver_now
+        #EmailingService.token_failure_notification(e, self.email)
         return false
       else
         # text code goes here. 21 is the latest
@@ -92,8 +99,7 @@ class User < ActiveRecord::Base
     end
     return true                     # Not a customer just a merchant
   end
-
-  
+ 
   # Returns hash with users who sent a message to the given merchant in the last "num_days" days
   def self.get_latest_active_messaging(merchant_id, num_days)
     users = Message.select('`users`.`id`, `users`.`first_name`, `users`.`last_name`, `users`.`email`')
@@ -116,23 +122,29 @@ class User < ActiveRecord::Base
     end
     latest_active
   end
-  
-  private
 
-  def check_phone_number_length
-    # temp fix for users who leave US code out. would need to change this eventually
-
-    ## consider fixing this too!!!!!!!!!!!!!!!!!!!!...needs a view portion
-    ### problem with validation...this "1" is added after validation...means users without
-    ### 1 in number will pass validation even when they shouldnt
-    ### actually it will fail db validation...uniqiuness...cos index will fail...indexing happens with "1" remember
-    ### a better ui is needed
-    if self.user_level == 0 && self.phone_number.length == 10
-      self.phone_number = "1" + self.phone_number
+  def full_name
+    if self.user_level == 0
+      x = (self.first_name) ? self.first_name : ''
+      y = (self.last_name) ? self.last_name : ''
+      return nil if (x + y) == ""
+      x + " " + y
     end
   end
+  
+  def phone
+    return self.phone_number if self.user_level == 0
+    self.business_phone
+  end
 
-  # this is to automated assigning rhombus numbers
+  private
+
+  def get_only_numbers
+    self.phone_number = self.phone_number.gsub(/\D/, "") unless self.phone_number.blank?
+    self.business_phone = self.business_phone.gsub(/\D/, "") unless self.business_phone.blank?
+  end
+
+  # this is to automate assigning rhombus numbers
   def set_rhombus_number
     if self.user_level == 1
       self.rhombus_number = TextingService.buy_number("US")
@@ -158,24 +170,31 @@ class User < ActiveRecord::Base
     self.first_name = self.first_name.strip.titleize unless self.first_name.blank?
     self.last_name = self.last_name.strip.titleize unless self.last_name.blank?
     self.card_name = self.card_name.strip.titleize unless self.card_name.blank?
-    self.business_type = self.business_type.strip.titleize unless self.business_type.blank?
+
+    self.street_address = self.street_address.strip unless self.street_address.blank?
     self.city = self.city.strip.titleize unless self.city.blank?
     self.state_province = self.state_province.strip.upcase unless self.state_province.blank?
-    self.country = self.country.strip.upcase unless self.country.blank?
+    
+    self.url = self.url.strip unless self.url.blank?
+    self.custom_welcome = self.custom_welcome.strip unless self.custom_welcome.blank?
+    self.referrer_num = self.referrer_num.strip unless self.referrer_num.blank?
+    self.business_name = self.business_name.strip unless self.business_name.blank?
   end
 
   def send_welcome_email
-    ###  we dont collect first name
-    ### => fix this!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11
-    ###
+    #owner = User.find_by(email: '<redacted_email>')
     if self.user_level == 1
-      Notification.welcome_email(self.email, self.user_level, self.first_name).deliver_now
+       Notification.welcome_email(self.email, self.user_level, self.first_name).deliver_now
       # notify team email
-      Notification.welcome_email("<redacted_email>", self.user_level, self.first_name).deliver_now
+       Notification.welcome_email("<redacted_email>", self.user_level, self.first_name).deliver_now
+      #EmailingService.send_welcome_email(self.email, owner.rhombus_number, "merchant")
+      #EmailingService.send_welcome_email(Rails.application.secrets.team_email, owner.rhombus_number, "merchant")
     elsif self.user_level == 0
-      Notification.welcome_email(self.email, self.user_level).deliver_now
+       Notification.welcome_email(self.email, self.user_level).deliver_now
       # notify team email
-      Notification.welcome_email("<redacted_email>", self.user_level, self.first_name).deliver_now
+       Notification.welcome_email("<redacted_email>", self.user_level, self.first_name).deliver_now
+      #EmailingService.send_welcome_email(self.email, owner.rhombus_number, "customer")
+      #EmailingService.send_welcome_email(Rails.application.secrets.team_email, owner.rhombus_number, "customer")
     end
   end
   

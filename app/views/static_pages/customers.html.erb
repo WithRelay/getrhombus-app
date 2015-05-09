@@ -1,6 +1,7 @@
   <% provide(:title, 'Rhombus - Customers') %>
 
   <%= content_for :head do %>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
     <%= stylesheet_link_tag "normalize" %>
     <%= stylesheet_link_tag "webflow" %>
     <%= stylesheet_link_tag "rho.webflow" %>
@@ -20,7 +21,7 @@
   <%= render 'shared/static_pages_header' %>
   
 
-  <%= render 'shared/full_messages' %>
+  <%#= render 'shared/full_messages' %>
 
 
   <div class="w-section banner inner _2" id="top" data-ix="show-social-and-nav">
@@ -32,18 +33,15 @@
   </div>
   <div class="w-section section gray customers-form-section">
     <div class="w-container">
-      <div class="w-form">
-        <form class="customers-form" id="email-form" name="email-form" data-name="Email Form">
-          <input class="w-input customers-phone" id="phone" type="text" placeholder="Enter your phone number" name="phone" data-name="phone">
-          <input class="w-input customers-zip" id="zip" type="email" placeholder="Zip code" name="zip" data-name="zip">
-          <input class="w-button button customer-text-me text-me-btn" type="submit" value="TEXT ME A LIST OF BUSINESSES" data-wait="Please wait...">
+      <div class="<%#w-form%>">
+
+        <form class="customers-form" id="tell-me-form">
+          <div class="form-group"><input class="w-input customers-phone" id="phone" type="tel" placeholder="Enter your phone number" name="phone">
+          <input class="w-input customers-zip" id="zip" type="text" placeholder="Zip code" name="zip">
+          <button class="w-button button customer-text-me text-me-btn" id="text-me-btn" type="submit" value="TEXT ME A LIST OF BUSINESSES">
+            TEXT ME A LIST OF BUSINESSES</button> </div>
         </form>
-        <div class="w-form-done">
-          <p>Thank you! Your submission has been received!</p>
-        </div>
-        <div class="w-form-fail">
-          <p>Oops! Something went wrong while submitting the form</p>
-        </div>
+
       </div>
     </div>
   </div>
@@ -210,5 +208,5 @@
     </div>
   </div>
  <%= render "shared/static_pages_footer" %>
-
+<div id="ohsnap"></div>
  <%= render "olark" %>

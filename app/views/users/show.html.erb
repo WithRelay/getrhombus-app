@@ -45,7 +45,7 @@
         </div>
 
         <div class="panel-body panel-font-size">
-          <%= number_to_currency(@dashboard_stuff.first.todays_sales) %>
+            <%= number_to_currency(@dashboard_stuff.first.todays_sales) || 0 %>
         </div>
 
         <div class="panel-footer nephritis white">Today</div>
@@ -63,7 +63,7 @@
         </div>
 
         <div class="panel-body panel-font-size">
-        <%= @dashboard_stuff.first.todays_txn %>
+            <%= @dashboard_stuff.first.todays_txn || 0 %>
         </div>
 
         <div class="panel-footer peterriver white">Today (GMT)</div>
@@ -99,7 +99,7 @@
         </div>
 
         <div class="panel-body panel-font-size">
-          <%= (@total_msgs.present?) ? @total_msgs : "0" %>
+          <%= @total_msgs || 0 %>
         </div>
 
         <div class="panel-footer wetashphalt white">Count this month</div>
@@ -200,7 +200,7 @@
           </div>
 
           <div class="panel-body panel-font-size">
-            <%= number_to_currency(@dashboard_stuff.first.sales_till_date) %>
+            <%= number_to_currency(@dashboard_stuff.first.sales_till_date) || 0 %>
           </div>
 
           <div class="panel-footer alizarin white">Till Date</div>
@@ -220,7 +220,7 @@
           </div>
 
           <div class="panel-body panel-font-size">
-          <%= @dashboard_stuff.first.txn_last_30days %>
+          <%= @dashboard_stuff.first.txn_last_30days || 0 %>
           </div>
 
           <div class="panel-footer concrete white">Last 30 Days</div>
