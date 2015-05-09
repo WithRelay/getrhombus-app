@@ -977,13 +977,19 @@ $(document).ready(function () {
             //console.log(response)
             document.getElementById('cc-uri').value = response.id;
             //$('#cc-uri').val(response['id']);
+            
             $('#cc-type').val(response['card']['type']);
-            //$("#user-form").submit();
+            $("#user-form").unbind("submit", preventDefault);
+            $("#user-form").submit();
         }
         console.log(response)
         //return false
     }
     ///// ///
+
+      function preventDefault(e) {
+        e.preventDefault();
+    }
 
     // validate credit card form
     $('#user-form')
@@ -1100,10 +1106,11 @@ $(document).ready(function () {
         .on('success.form.fv', function(e, data) {            
             //e.preventDefault();
             console.log("asd");
+             $("#user-form").bind("submit", preventDefault);
             set_names();            
             
             submitToStripe();
-            return true;
+            //return true;
             
             //fv.defaultSubmit();
             //$("#user-form").submit();
