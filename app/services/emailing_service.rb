@@ -6,139 +6,135 @@ class EmailingService
 
   class << self
     
-    def send_welcome_email_with_referral(sender, to, merchant_name, rhombus_number, rhombus_team_number)
+    def send_welcome_email_with_referral(merchant_email, to, merchant_name, rhombus_number, rhombus_team_number)
       begin
         mandrill = Mandrill::API.new MANDRILL_API_KEY
         template_name = "welcome-email-with-referral-customers"
         template_content = []
-        message = { "subject"=>"Welcome to Rhombus",
-         "merge_vars"=>
-            [ { "vars"=> [ { "rhombus_team_number" => rhombus_team_number, "rhombus_number" => rhombus_number,
-                              "merchant_name" => merchant_name } ],
-                "rcpt"=> to } ],
+        message = { "subject" => "Welcome to Rhombus",
+         "global_merge_vars" => [ { "name" => "rhombus_team_number", "content" => rhombus_team_number }, 
+                                  { "name" => "rhombus_number", "content" => rhombus_number },
+                                  { "name" => "merchant_name", "content" => merchant_name } ],
          "merge_language" => "handlebars",
+         "bcc_address"=> SENDER,
          "to"=> [ { "email" => to } ],
          "from_name" => "Rhombus",
-         "from_email" => sender 
+         "from_email" => merchant_email
         }
         result = mandrill.messages.send_template template_name, template_content, message        
-      rescue Mandrill::Error => e
-        # Mandrill errors are thrown as exceptions
+      rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
         puts "A mandrill error occurred: #{e.class} - #{e.message}"
+      rescue StandardError => e
       end  
     end
 
-    def send_welcome_email(to, rhombus_team_number, user)
+    def send_welcome_email(to, rhombus_team_number, user_type)
       begin
         mandrill = Mandrill::API.new MANDRILL_API_KEY
-        template_name = (user == "merchant") ? "welcome-email-merchants" : "welcome-email-customers"
+        template_name = (user_type == "merchant") ? "welcome-email-merchants" : "welcome-email-customers"
         template_content = []
-        message = { "subject"=>"Welcome to Rhombus",
-         "merge_vars"=>
-            [ { "vars"=> [ { "rhombus_team_number" => rhombus_team_number } ],
-                "rcpt"=> to } ],
+        message = { "subject" => "Welcome to Rhombus",
          "merge_language" => "handlebars",
+         "global_merge_vars" => [ { "name" => "rhombus_team_number", "content" => rhombus_team_number } ],
          "to"=> [ { "email" => to } ],
+         "bcc_address"=> SENDER,
          "from_name" => "Rhombus",
          "from_email" => SENDER 
         }
         result = mandrill.messages.send_template template_name, template_content, message        
-      rescue Mandrill::Error => e
-        # Mandrill errors are thrown as exceptions
+      rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
         puts "A mandrill error occurred: #{e.class} - #{e.message}"
+      rescue StandardError => e
       end  
     end
 
-=begin
-    def send_receipt(options)
+    def send_receipt(options = {})
       begin
         mandrill = Mandrill::API.new MANDRILL_API_KEY
         template_name = 'receipt'
         template_content = []
         message = { "subject"=>"You sent a payment with Rhombus",
-         "merge_vars"=>
-            [ { "vars"=> [ { "merchant_name" => options[:merchant_name], "transaction_number" => options[:transaction_number],
-                              'transaction_date' =>  , 'text_message' => options[:text], 'amount' => options[:amount],
-                              'taxes' => options[:taxes], 'amount_with_taxes' => options[:amount_with_taxes],
-                              'business_phone' => options[:business_phone]
-                               } ],
-                "rcpt"=> options[:to] } ],
+         "global_merge_vars"=> [ { "name" => "merchant_name", "content" => options[:merchant_name] }, 
+                                 { "name" => "transaction_number", "content" => options[:transaction_number] },
+                                 { "name" => 'transaction_date', "content" => options[:transaction_date] }, 
+                                 { "name" => 'text_message', "content" => options[:text] }, 
+                                 { "name" => 'amount', "content" => options[:amount] },
+                                 { "name" => 'amount_with_taxes', "content" => options[:amount_with_taxes] }, 
+                                 { "name" => 'business_phone', "content" => options[:business_phone] },
+                                 { "name" => "currency", "content" => options[:currency] } ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => options[:to] } ],
-         "from_email" => options[:sender]
+         "from_name" => options[:merchant_name],
+         "from_email" => options[:merchant_email]
         }
         result = mandrill.messages.send_template template_name, template_content, message        
-      rescue Mandrill::Error => e
-        # Mandrill errors are thrown as exceptions
+      rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
         puts "A mandrill error occurred: #{e.class} - #{e.message}"
-      end  
+      rescue StandardError => e
+      end 
     end
-=end
 
-    def text_failure_notification(dump, from, to, message)
+    def send_payment_notification(options = {})
       begin
         mandrill = Mandrill::API.new MANDRILL_API_KEY
-        template_name = 'nexmo-api-error'
+        template_name = 'payment-notification-merchants'
         template_content = []
-        message = { "subject"=>"Nexmo api error",
-         "merge_vars"=>
-            [ { "vars"=> [ { "dump" => dump, "message_from" => from,
-                              'message_to' => to, 'content' => message } ],
-                "rcpt"=> SENDER } ],
+        message = { "subject"=>"You received a payment with Rhombus",
+         "global_merge_vars"=> [ { "name" => "card_name", "content" => options[:card_name] }, 
+                                 { "name" => "last_four", "content" => options[:last_four] }, 
+                                 { "name" => "card_type", "content" => options[:card_type] }, 
+
+                                 { "name" => "customer_email", "content" => options[:customer_email] }, 
+                                 { "name" => "customer_phone", "content" => options[:customer_phone] },
+                                 { "name" => 'text_message', "content" => options[:text] }, 
+                                 
+                                 { "name" => "transaction_number", "content" => options[:transaction_number] },
+                                 { "name" => "stripe_txn_number", "content" => options[:stripe_txn_number] },
+                                 { "name" => 'transaction_date', "content" => options[:transaction_date] }, 
+                                 
+                                 { "name" => 'amount_less_fees', "content" => options[:amount_less_fees] },
+                                 { "name" => 'amount_with_taxes', "content" => options[:amount_with_taxes] }, 
+                                 { "name" => 'rhombus_number', "content" => options[:rhombus_number] },
+                                 { "name" => "currency", "content" => options[:currency] } ],
          "merge_language" => "handlebars",
-         "to"=> [ { "email" => SENDER } ],
+         "to"=> [ { "email" => options[:to] } ],
+         "from_name" => "Rhombus"
          "from_email" => SENDER
         }
         result = mandrill.messages.send_template template_name, template_content, message        
-      rescue Mandrill::Error => e
-        # Mandrill errors are thrown as exceptions
+      rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
         puts "A mandrill error occurred: #{e.class} - #{e.message}"
-      end  
+      rescue StandardError => e
+      end 
     end
 
-    def token_failure_notification(dump, customer_email)
+    def charge_failure_notification(options = {})
       begin
         mandrill = Mandrill::API.new MANDRILL_API_KEY
-        template_name = 'failed-to-tokenize'
+        template_name = 'payment-notification-merchants'
         template_content = []
-        message = { "subject"=>"Tokenization failure",
-         "merge_vars"=>
-            [ { "vars"=> [ { "customer_email" => customer_email, "dump" => dump } ],
-                "rcpt"=> SENDER } ],
+        message = { "subject"=>"You received a payment with Rhombus",
+         "global_merge_vars"=> [  { "name" => "customer_email", "content" => options[:customer_email] }, 
+                                  { "name" => "customer_phone", "content" => options[:customer_phone] },                                  
+                                  { "name" => "card_name", "content" => options[:card_name] }, 
+                                  { "name" => "last_four", "content" => options[:last_four] }, 
+
+                                  { "name" => 'text_message', "content" => options[:text] }, 
+                                  { "name" => 'merchant_email', "content" => options[:to] }, 
+                                  { "name" => "business_phone", "content" => options[:business_phone] },                                  
+                                  { "name" => 'rhombus_number', "content" => options[:rhombus_number] },
+                                  { "name" => "dump", "content" => options[:dump] } ],
          "merge_language" => "handlebars",
-         "to"=> [ { "email" => SENDER } ],
+         "to"=> [ { "email" => options[:to] } ],
+         "bcc_address"=> SENDER,
+         "from_name" => "Rhombus"
          "from_email" => SENDER
         }
         result = mandrill.messages.send_template template_name, template_content, message        
-      rescue Mandrill::Error => e
-        # Mandrill errors are thrown as exceptions
+      rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
         puts "A mandrill error occurred: #{e.class} - #{e.message}"
-      end  
-    end
-
-    def send_receipt(options)
-      begin
-        mandrill = Mandrill::API.new MANDRILL_API_KEY
-        template_name = 'charge-failure'
-        template_content = []
-        message = { "subject"=>"Charge Failure",
-         "merge_vars"=>
-            [ { "vars"=> [ { "customer_email" => options[:customer_email], "customer_phone" => options[:customer_phone],
-                              'text_message' => options[:text], 'card_name' => options[:card_name],
-                              'last_four' => options[:last_four], 'merchant_email' => options[:merchant_email],
-                              'business_phone' => options[:business_phone], 'rhombus_number' => options[:rhombus_number],
-                                'dump' => options[:dump]
-                               } ],
-                "rcpt"=> options[:to] } ],
-         "merge_language" => "handlebars",
-         "to"=> [ { "email" => options[:to] } ],
-         "from_email" => options[:sender]
-        }
-        result = mandrill.messages.send_template template_name, template_content, message        
-      rescue Mandrill::Error => e
-        # Mandrill errors are thrown as exceptions
-        puts "A mandrill error occurred: #{e.class} - #{e.message}"
-      end  
+      rescue StandardError => e
+      end 
     end
 
   end  

@@ -945,7 +945,7 @@ $(document).ready(function () {
     $('input#cc-exp').payment('formatCardExpiry');
     $('input#cc-csc').payment('formatCardCVC');
 
-     // tokenize card details
+    // tokenize card details
     function submitToStripe() {        
         //console.log($('#cc-number').val())
         $("#cc-submit").attr("disabled", true);     
@@ -958,7 +958,6 @@ $(document).ready(function () {
             exp_year: cc_year,
             cvc: $('#cc-csc').val()
         }, stripeResponseHandler);
-        //return false
     }  
 
     function stripeResponseHandler(status, response) {
@@ -969,25 +968,20 @@ $(document).ready(function () {
             $('#response').slideDown(300);
         } else {
             $("#cc-submit").removeAttr("disabled");
-            $("#cc-submit").text("Submitting...");
-            
+            $("#cc-submit").text("Submitting...");            
             $('#cc-number').val(response['card']['last4']);
-            //$('#cc-ex-month').val(response['card']['exp_month']);
-            //$('#cc-ex-year').val(response['card']['exp_year']);
-            //console.log(response)
-            document.getElementById('cc-uri').value = response.id;
-            //$('#cc-uri').val(response['id']);
-            
+            $('#cc-ex-month').val(response['card']['exp_month']);
+            $('#cc-ex-year').val(response['card']['exp_year']);
+            document.getElementById('cc-uri').value = response.id;            
             $('#cc-type').val(response['card']['type']);
-            $("#user-form").unbind("submit", preventDefault);
-            $("#user-form").submit();
+            $("#user-form").unbind("submit", preventDefault)
+                    .submit();
+            //$("#user-form").submit();
         }
-        console.log(response)
-        //return false
     }
     ///// ///
 
-      function preventDefault(e) {
+    function preventDefault(e) {
         e.preventDefault();
     }
 
@@ -1104,16 +1098,9 @@ $(document).ready(function () {
                 .find('.help-block[data-fv-for="' + data.field + '"]').hide();
         })
         .on('success.form.fv', function(e, data) {            
-            //e.preventDefault();
-            console.log("asd");
-             $("#user-form").bind("submit", preventDefault);
+            $("#user-form").bind("submit", preventDefault);
             set_names();            
-            
             submitToStripe();
-            //return true;
-            
-            //fv.defaultSubmit();
-            //$("#user-form").submit();
         });
     ///
 

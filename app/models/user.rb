@@ -48,7 +48,7 @@ class User < ActiveRecord::Base
 
   # Create or update customer on Stripe
   def add_token_to_stripe_customer(params)
-    if self.user_level == 0 && !params[:instrument_uri].blank?   # is this why i get the errors from stripe??
+    if self.user_level == 0 && params[:instrument_uri].present?   # is this why i get the errors from stripe??
       begin 
         if self.customer_uri.blank?                                     # Doesnt have a customer uri => first time
           response = Stripe::Customer.create(:email => "#{self.email}", :card => params[:instrument_uri])         
@@ -73,27 +73,17 @@ class User < ActiveRecord::Base
         @message.send_and_save_message(18, owner.rhombus_number, self.phone_number, 
               "We were unable to update your card info on Rhombus because: #{err[:message]}.")
 
-        #(dump, customer_email, sender)
         Notification.token_failure_notification(err, self.email).deliver_now
-        #EmailingService.token_failure_notification(err, self.email)
         return false
       rescue Stripe::StripeError => e
         body = e.json_body
         err  = body[:error]
         Notification.token_failure_notification(err, self.email).deliver_now
-        #EmailingService.token_failure_notification(err, self.email)
         return false
       rescue StandardError => e
         Notification.token_failure_notification(e, self.email).deliver_now
-        #EmailingService.token_failure_notification(e, self.email)
         return false
       else
-        # text code goes here. 21 is the latest
-        # if self.instrument_uri.blank?
-        # @message = Message.new
-        # @message.send_and_save_message(21, "<redacted_phone_number>", self.phone_number, 
-         # "Thanks for adding your card. Simply text the amount and description to give. For example, '$50 for offering' and you're done!")
-        # end
         return true                # yep!! we gat this
       end      
     end
@@ -182,19 +172,23 @@ class User < ActiveRecord::Base
   end
 
   def send_welcome_email
-    #owner = User.find_by(email: '<redacted_email>')
+    owner = User.find_by(email: '<redacted_email>')
     if self.user_level == 1
-       Notification.welcome_email(self.email, self.user_level, self.first_name).deliver_now
-      # notify team email
-       Notification.welcome_email("<redacted_email>", self.user_level, self.first_name).deliver_now
-      #EmailingService.send_welcome_email(self.email, owner.rhombus_number, "merchant")
-      #EmailingService.send_welcome_email(Rails.application.secrets.team_email, owner.rhombus_number, "merchant")
+      EmailingService.send_welcome_email(self.email, owner.rhombus_number, "merchant")
     elsif self.user_level == 0
-       Notification.welcome_email(self.email, self.user_level).deliver_now
-      # notify team email
-       Notification.welcome_email("<redacted_email>", self.user_level, self.first_name).deliver_now
-      #EmailingService.send_welcome_email(self.email, owner.rhombus_number, "customer")
-      #EmailingService.send_welcome_email(Rails.application.secrets.team_email, owner.rhombus_number, "customer")
+      @message = Message.new
+      unless self.referrer_num.blank?
+        referrer = User.find_by(rhombus_number: self.referrer_num)
+        EmailingService.send_welcome_email_with_referral(referrer.email, self.email, referrer.business_name, referrer.rhombus_number, owner.rhombus_number)
+        # default for referrer or use merchant welcome
+        text = "Hi there, my name is #{referrer.first_name}, how can I assist you today? If you're looking to send a payment, simply reply with the amount."
+        text = referrer.custom_welcome if referrer.custom_welcome.present?
+        @message.send_and_save_message(22, referrer.rhombus_number, self.phone_number, text)
+        return
+      end
+      EmailingService.send_welcome_email(self.email, owner.rhombus_number, "customer")
+      text = "Hi there, thanks for signing up with Rhombus. You can now chat with or pay your favorite merchants."
+      @message.send_and_save_message(22, owner.rhombus_number, self.phone_number, text)
     end
   end
   

@@ -20,7 +20,7 @@
       <!-- Start Page Header Right Div -->
       <div class="right">
         <div class="btn-group" role="group" aria-label="...">
-          <a href="index.html" class="btn btn-success btn-rhombus-2">Update Stripe Connect</a>
+          <%= link_to "Update Stripe Connect", user_omniauth_authorize_path(:stripe_connect, "stripe_user[country]" => current_user.country, "stripe_user[email]" => current_user.email, "stripe_user[phone_number]" => current_user.business_phone, "stripe_user[business_name]" => current_user.business_name, "stripe_user[first_name]" => current_user.first_name, "stripe_user[last_name]" => current_user.last_name, "stripe_user[street_address]" => current_user.street_address, "stripe_user[city]" => current_user.city, "stripe_user[zip]" => current_user.business_zip_code, "stripe_user[url]" => current_user.url ), class: "btn btn-success btn-rhombus-2" %>
           <a href="" class="btn btn-light"><i class="fa fa-refresh" id="refresh"></i></a>
         </div>
       </div>

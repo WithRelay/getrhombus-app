@@ -30,13 +30,11 @@ class TextingService
         else
           # Notify marketplace owner of failure
           Notification.text_failure_notification(response, from = "", to = "", message = "Rhombus number purchase failed with response code #{response.code}").deliver_now
-          #EmailingService.text_failure_notification(response, "", "", "Rhombus number purchase failed with response code #{response.code}")
           return "-"
         end
       else
         # Notify marketplace owner of failure
         Notification.text_failure_notification(response, from = "", to = "", message = "Rhombus number search failed").deliver_now
-        #EmailingService.text_failure_notification(response, "", "", "Rhombus number search failed")
         return "-"
       end
     end

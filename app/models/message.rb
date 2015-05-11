@@ -18,9 +18,7 @@ class Message < ActiveRecord::Base
 				network_code: response['messages'].first['network'])
 		else			
 			# Notify marketplace owner of failure
-			#(dump, from, to, message)
 			Notification.text_failure_notification(response["messages"].first, from, to, message).deliver_now
-			#EmailingService.text_failure_notification(response["messages"].first, from, to, message)
 			return
 		end
 	end
