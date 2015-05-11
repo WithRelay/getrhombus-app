@@ -187,7 +187,7 @@ class User < ActiveRecord::Base
         return
       end
       EmailingService.send_welcome_email(self.email, owner.rhombus_number, "customer")
-      text = "Hi there, thanks for signing up with Rhombus. You can now chat with or pay your favorite merchants."
+      text = "Hi there, thanks for signing up! You can now chat with or pay your favorite merchants. You can reply with any questions, we'll be happy to help."
       @message.send_and_save_message(22, owner.rhombus_number, self.phone_number, text)
     end
   end
