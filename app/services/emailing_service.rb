@@ -111,7 +111,7 @@ class EmailingService
     def charge_failure_notification(options = {})
       begin
         mandrill = Mandrill::API.new MANDRILL_API_KEY
-        template_name = 'payment-notification-merchants'
+        template_name = 'charge-failure'
         template_content = []
         message = { "subject"=>"You received a payment with Rhombus",
          "global_merge_vars"=> [  { "name" => "customer_email", "content" => options[:customer_email] }, 
