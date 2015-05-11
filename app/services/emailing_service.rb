@@ -98,7 +98,7 @@ class EmailingService
                                  { "name" => "currency", "content" => options[:currency] } ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => options[:to] } ],
-         "from_name" => "Rhombus"
+         "from_name" => "Rhombus",
          "from_email" => SENDER
         }
         result = mandrill.messages.send_template template_name, template_content, message        
