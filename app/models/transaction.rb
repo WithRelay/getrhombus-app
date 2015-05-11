@@ -42,23 +42,23 @@ class Transaction < ActiveRecord::Base
 
       @message = Message.new
       @message.send_and_save_message(18, merchant.rhombus_number, user.phone_number, 
-            "Your payment of $" + amount_in_hundreds + " to #{merchant.business_name} failed because: #{err[:message]}")
+            "Your payment of $#{amount_in_hundreds} to #{merchant.business_name} failed because: #{err[:message]}")
 
       EmailingService.charge_failure_notification(to: merchant.email, customer_email: user.email, customer_phone: user.phone_number,
         card_name: user.card_name, last_four: user.last_four, text: message, business_phone: merchant.business_phone,
-        rhombus_number: merchant.rhombus_number, dump: err)
+        rhombus_number: merchant.rhombus_number, dump: err, to_merchant: true)
       return "failed"
     rescue Stripe::StripeError => e
       body = e.json_body
       err  = body[:error]
       EmailingService.charge_failure_notification(to: merchant.email, customer_email: user.email, customer_phone: user.phone_number,
         card_name: user.card_name, last_four: user.last_four, text: message, business_phone: merchant.business_phone,
-        rhombus_number: merchant.rhombus_number, dump: err)
+        rhombus_number: merchant.rhombus_number, dump: err, to_merchant: false)
       return "failed"
     rescue StandardError => err
       EmailingService.charge_failure_notification(to: merchant.email, customer_email: user.email, customer_phone: user.phone_number,
         card_name: user.card_name, last_four: user.last_four, text: message, business_phone: merchant.business_phone,
-        rhombus_number: merchant.rhombus_number, dump: err)
+        rhombus_number: merchant.rhombus_number, dump: err, to_merchant: false)
       return "failed"
     else
 

@@ -110,6 +110,7 @@ class EmailingService
 
     def charge_failure_notification(options = {})
       begin
+        recipient = (options[:to_merchant]) ? options[:to] : SENDER
         mandrill = Mandrill::API.new MANDRILL_API_KEY
         template_name = 'charge-failure'
         template_content = []
@@ -125,7 +126,7 @@ class EmailingService
                                   { "name" => 'rhombus_number', "content" => options[:rhombus_number] },
                                   { "name" => "dump", "content" => options[:dump].to_s } ],
          "merge_language" => "handlebars",
-         "to"=> [ { "email" => options[:to] } ],
+         "to"=> [ { "email" => recipient } ],
          "bcc_address"=> SENDER,
          "from_name" => "Rhombus",
          "from_email" => SENDER
