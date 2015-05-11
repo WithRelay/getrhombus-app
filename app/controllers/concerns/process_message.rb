@@ -27,14 +27,14 @@ module ProcessMessage
 			else
 				# payement message but user doesnt exist. save in messages and send a response
 				save_inbound_text(request.query_string, msg_code = 6)
-				short_link = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?num=#{params[:msisdn]}&referrer_num=#{params[:to]}&referrer=#{merchant.business_name}")
+				short_link = UrlShortenerService.shorten_link("http://test.getrhombus.com/signup?num=#{params[:msisdn]}&referrer_num=#{params[:to]}&referrer=#{merchant.business_name}")
 				send_response(16, params[:to], params[:msisdn], "Hi there, thanks for reaching out...to chat with us or send a payment, sign up here. Thanks! => #{short_link}")
 				return
 			end
 		elsif !user
 			# user doesnt exist at all...save in messages and send a response
 			save_inbound_text(request.query_string, msg_code = 4)
-			short_link = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?num=#{params[:msisdn]}&referrer_num=#{params[:to]}&referrer=#{merchant.business_name}")
+			short_link = UrlShortenerService.shorten_link("http://test.getrhombus.com/signup?num=#{params[:msisdn]}&referrer_num=#{params[:to]}&referrer=#{merchant.business_name}")
 			send_response(14, params[:to], params[:msisdn], "Hi there, thanks for reaching out...to chat with us or send a payment, sign up here: #{short_link}")
 		else
 			# user exist, but not a payment message...save in messages
