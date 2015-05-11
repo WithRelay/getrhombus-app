@@ -34,15 +34,15 @@ class ApplicationController < ActionController::Base
 
   def configure_permitted_parameters
     devise_parameter_sanitizer.for(:sign_up) { |u| u.permit(:email, :phone_number, 
-        :password, :password_confirmation, :user_level, :is_active) }
+        :password, :password_confirmation, :user_level, :is_active, :referrer_num, :subscription_type) }
     devise_parameter_sanitizer.for(:sign_in) { |u| u.permit(:email, :password) }
     devise_parameter_sanitizer.for(:account_update) { |u| u.permit(:email, :current_password, 
       :password, :password_confirmation, :instrument_uri, :last_four, 
       :expiration_month,  :expiration_year, :card_name, :card_type, 
       :phone_number, :business_name, :business_type, :street_address, :city, 
       :state_province, :business_phone, :country, :approve_payments_immediately, 
-      :tax_rate, :business_zip_code, :first_name, :last_name, :is_active, :url, 
-      :referrer_num, :subscription_type, :custom_welcome ) }
+      :tax_rate, :business_zip_code, :first_name, :last_name, :is_active, :url,
+      :subscription_type, :custom_welcome ) }
   end
 
   def record_not_unique
