@@ -127,7 +127,7 @@ class EmailingService
          "merge_language" => "handlebars",
          "to"=> [ { "email" => options[:to] } ],
          "bcc_address"=> SENDER,
-         "from_name" => "Rhombus"
+         "from_name" => "Rhombus",
          "from_email" => SENDER
         }
         result = mandrill.messages.send_template template_name, template_content, message        
