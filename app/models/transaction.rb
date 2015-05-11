@@ -122,7 +122,7 @@ class Transaction < ActiveRecord::Base
 
   def owner_transaction_details(debit_data, credit_data, merchant, user, message)  
       
-    owner = User.find_by(email: '<redacted_email>')                  # for production
+    owner = User.find_by(email: Rails.application.secrets.dashboard_email)
 
     self.save_transaction(transaction_uri: debit_data[5], transaction_type: 0,
       amount: debit_data[3], amount_less_fees: debit_data[3], transaction_number: debit_data[4],

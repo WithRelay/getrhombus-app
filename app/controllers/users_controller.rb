@@ -116,15 +116,15 @@ class UsersController < ApplicationController
   end
 
   def contacts
-     @contacts = @user.get_user_contacts.paginate(:page => params[:page], :per_page => 1)
+     @contacts = @user.get_user_contacts.paginate(:page => params[:page], :per_page => 25)
   end
 
   def customers
-    @customers = @user.get_user_customers.paginate(:page => params[:page], :per_page => 1)
+    @customers = @user.get_user_customers.paginate(:page => params[:page], :per_page => 25)
   end
 
   def transactions
-    @transactions = @user.get_user_transactions.paginate(:page => params[:page], :per_page => 1)
+    @transactions = @user.get_user_transactions.paginate(:page => params[:page], :per_page => 25)
   end
 
 private

@@ -5,22 +5,26 @@ class Message < ActiveRecord::Base
 	
 	# For sending all text messages
 	def send_and_save_message(msg_code, from, to, message)		
-		# save the outbound message
-		client_ref = self.save_text(message_code: msg_code, from: from, to: to, text: message, unread: false, status_report_req: 1)
+		begin
+			# save the outbound message
+			client_ref = self.save_text(message_code: msg_code, from: from, to: to, text: message, unread: false, status_report_req: 1)
 
-		response = TextingService.send_sms(from, to, client_ref, message)		
-		# check response		
-		if response.code == 200 and response["messages"].first["status"] == "0"		
-			# Fetch the saved outbound message and attach nexmo's response to it
-			@message = Message.find_by(id: response['messages'].first["client-ref"])
-			@message.save_text(status: response['messages'].first['status'], messageId: response['messages'].first['messageId'],
-				client_ref: response['messages'].first['client-ref'], message_price: response['messages'].first['message-price'], 
-				network_code: response['messages'].first['network'])
-		else			
-			# Notify marketplace owner of failure
-			Notification.text_failure_notification(response["messages"].first, from, to, message).deliver_now
+			response = TextingService.send_sms(from, to, client_ref, message)		
+			# check response		
+			if response && response.code == 200 && response["messages"].first["status"] == "0"		
+				# Fetch the saved outbound message and attach nexmo's response to it
+				@message = Message.find_by(id: response['messages'].first["client-ref"])
+				@message.save_text(status: response['messages'].first['status'], messageId: response['messages'].first['messageId'],
+					client_ref: response['messages'].first['client-ref'], message_price: response['messages'].first['message-price'], 
+					network_code: response['messages'].first['network'])
+			else			
+				# Notify marketplace owner of failure
+				Notification.text_failure_notification(response["messages"].first, from, to, message).deliver_now
+				return
+			end
+		rescue StandardError => err
 			return
-		end
+      	end
 	end
 	
 	# for saving any text received or sent

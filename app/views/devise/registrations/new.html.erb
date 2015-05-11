@@ -8,11 +8,9 @@
   </style>
 
 <body> 
-
-    <%= devise_error_messages! %>
-    <%= render 'shared/full_messages' %>
     
     <div class="login-form">
+    <%= render 'alerts' %>
     <%= form_for(resource, :id => "frm_register", :as => resource_name, :url => registration_path(resource_name), :html=> {:id => 'signupForm'} ) do |f| %>
         <div class="top">
           <img src="<%= asset_path 'logo_grey.jpg' %>" alt="icon" id="signup_logo" class="icon">

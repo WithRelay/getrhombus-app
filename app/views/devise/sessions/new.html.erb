@@ -9,9 +9,9 @@
   </style>
 
   <body>
-      <%= render 'shared/full_messages' %>
 
     <div class="login-form">
+    <%= render 'shared/full_messages' %>
       <%= form_for(resource, :as => resource_name, :html=> {:id => 'signinForm'} , :url => session_path(resource_name)) do |f| %> 
         <div class="top">
           <img src="<%= asset_path 'logo_grey.jpg' %>" alt="icon" class="icon" id="signup_logo">

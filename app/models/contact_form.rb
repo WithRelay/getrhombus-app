@@ -12,8 +12,8 @@ class ContactForm < MailForm::Base
  def headers
     {
       :subject => "#{name} just contacted us",
-      :to => "<redacted_email>",
-      :from => "<redacted_email>",
+      :to => Rails.application.secrets.team_email,
+      :from => Rails.application.secrets.team_email,
       :reply_to => "#{name} <#{email}>"
     }
   end

@@ -11,7 +11,8 @@ module DashboardQueries
 					FROM transactions 
 					INNER JOIN users ON
 					transactions.referenced_merchant_id = users.id
-					where user_id = ? and transaction_type = ? ORDER BY transactions.created_at DESC", self.id, 1])
+					where user_id = ? ORDER BY transactions.created_at DESC", self.id])
+			# and transaction_type = ?
 		elsif self.user_level == 1
 			Transaction.find_by_sql([
 				"SELECT users.card_name, users.email, transactions.created_at, 
@@ -21,7 +22,8 @@ module DashboardQueries
 					FROM transactions 
 					INNER JOIN users on
 					transactions.referenced_user_id = users.id
-					where user_id = ? and transaction_type = ? ORDER BY transactions.created_at DESC", self.id, 2])
+					where user_id = ? ORDER BY transactions.created_at DESC", self.id])
+			# and transaction_type = ?
 		end
 		#return []
 	end	
@@ -36,8 +38,9 @@ module DashboardQueries
 					FROM transactions
 					INNER JOIN users ON
 					transactions.referenced_merchant_id = users.id
-					WHERE user_id = ? and transaction_type = ?
-					GROUP BY transactions.referenced_merchant_id ORDER BY transactions.created_at DESC", self.id, 1])
+					WHERE user_id = ?
+					GROUP BY transactions.referenced_merchant_id ORDER BY transactions.created_at DESC", self.id])
+			# and transaction_type = ?
 		elsif self.user_level == 1
 			Transaction.find_by_sql([
 				"SELECT users.card_name, users.email, users.phone_number, SUM(transactions.amount) AS total_spend,
@@ -47,8 +50,9 @@ module DashboardQueries
 					FROM transactions
 					INNER JOIN users ON
 					transactions.referenced_user_id = users.id
-					WHERE user_id = ? and transaction_type = ?
-					GROUP BY transactions.referenced_user_id ORDER BY transactions.created_at DESC", self.id, 2])
+					WHERE user_id = ?
+					GROUP BY transactions.referenced_user_id ORDER BY transactions.created_at DESC", self.id])
+			# and transaction_type = ?
 		end
 	end	
 
@@ -85,7 +89,8 @@ module DashboardQueries
 	                SUM(amount) AS sales_till_date,
 	                SUM(created_at BETWEEN DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW()) AS txn_last_30days
 	                from transactions
-	                WHERE user_id = ? and transaction_type = ?', self.id, 1])
+	                WHERE user_id = ?', self.id])
+			#and transaction_type = ?
 		elsif self.user_level == 1
 			Transaction.find_by_sql([
 				'SELECT SUM(IF(created_at = CURRENT_DATE(), amount_less_fees, 0)) AS todays_sales,
@@ -94,7 +99,8 @@ module DashboardQueries
 	                SUM(amount) AS sales_till_date,
 	                SUM(created_at BETWEEN DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW()) AS txn_last_30days
 	                from transactions
-	                WHERE user_id = ? and transaction_type = ?', self.id, 2])
+	                WHERE user_id = ?', self.id])
+			#and transaction_type = ?
 		end
 	end
 
@@ -108,16 +114,18 @@ module DashboardQueries
 		if self.user_level == 0
 			Transaction.find_by_sql([
 				'select count(*) as num_of_txns, sum(amount) as day_total,
-					date_format(date(created_at), "%b %e") as day from transactions where user_id = ? and transaction_type = ?
+					date_format(date(created_at), "%b %e") as day from transactions where user_id = ?
 					and created_at BETWEEN DATE_SUB(NOW(), INTERVAL 7 DAY) AND NOW() 	
-					GROUP BY DAY(created_at)', self.id, 1])
+					GROUP BY DAY(created_at)', self.id])
+				#and transaction_type = ?
 				#and created_at BETWEEN DATE_SUB(NOW(), INTERVAL 7 DAY) AND NOW() 
 		elsif self.user_level == 1
 			Transaction.find_by_sql([
 				'select count(*) as num_of_txns, sum(amount_less_fees) as day_total,
-					date_format(date(created_at), "%b %e") as day from transactions where user_id = ? and transaction_type = ?	
+					date_format(date(created_at), "%b %e") as day from transactions where user_id = ?
 					and created_at BETWEEN DATE_SUB(NOW(), INTERVAL 7 DAY) AND NOW() 
-					GROUP BY DAY(created_at)', self.id, 2])
+					GROUP BY DAY(created_at)', self.id])
+				#and transaction_type = ?	
 				#and created_at BETWEEN DATE_SUB(NOW(), INTERVAL 7 DAY) AND NOW() 
 		end
 	end
@@ -126,16 +134,18 @@ module DashboardQueries
 		if self.user_level == 0
 			Transaction.find_by_sql([
 				'select sum(amount) as week_total,
-					date_format(date(created_at), "%b %e") as week_day from transactions where user_id = ? and transaction_type = ?
+					date_format(date(created_at), "%b %e") as week_day from transactions where user_id = ?
 					and created_at BETWEEN DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW() 	
-					GROUP BY WEEk(created_at)', self.id, 1])
+					GROUP BY WEEk(created_at)', self.id])
+				#  and transaction_type = ?
 				#and created_at BETWEEN DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW() 
 		elsif self.user_level == 1
 			Transaction.find_by_sql([
 				'select sum(amount_less_fees) as week_total,
-					date_format(date(created_at), "%b %e") as week_day from transactions where user_id = ? and transaction_type = ?	
+					date_format(date(created_at), "%b %e") as week_day from transactions where user_id = ?
 					and created_at BETWEEN DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW() 
-					GROUP BY WEEK(created_at)', self.id, 2])
+					GROUP BY WEEK(created_at)', self.id])
+				#and transaction_type = ?	
 				#and created_at BETWEEN DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW() 
 		end
 	end

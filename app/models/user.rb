@@ -66,8 +66,7 @@ class User < ActiveRecord::Base
         body = e.json_body
         err  = body[:error]
 
-        #owner = User.find_by(email: '<redacted_email>')                   # for development
-        owner = User.find_by(email: '<redacted_email>')                # for production
+        owner = User.find_by(email: Rails.application.secrets.team_email)
 
         @message = Message.new
         @message.send_and_save_message(18, owner.rhombus_number, self.phone_number, 
@@ -172,7 +171,7 @@ class User < ActiveRecord::Base
   end
 
   def send_welcome_email
-    owner = User.find_by(email: '<redacted_email>')
+    owner = User.find_by(email: Rails.application.secrets.team_email)
     if self.user_level == 1
       EmailingService.send_welcome_email(self.email, owner.rhombus_number, "merchant")
     elsif self.user_level == 0

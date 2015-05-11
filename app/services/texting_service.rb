@@ -8,12 +8,15 @@ class TextingService
   class << self
 
     def send_sms(from, to, client_ref, message)
-      # encode the nexmo uri
-      uri = URI.encode_www_form([["api_key",NEXMO_API_KEY], ["api_secret", NEXMO_API_SECRET], ["from", from], ["to", to], 
-                      ["text", message], ["status-report-req", "1"], ["client-ref", client_ref]])   
-      # call nexmo api
-      response = HTTParty.post('https://rest.nexmo.com/sms/json?'+ uri, :headers => {"Content-Type" => "application/x-www-form-urlencoded"} )
-      return response
+      begin
+        # encode the nexmo uri
+        uri = URI.encode_www_form([["api_key",NEXMO_API_KEY], ["api_secret", NEXMO_API_SECRET], ["from", from], ["to", to], 
+                        ["text", message], ["status-report-req", "1"], ["client-ref", client_ref]])   
+        response = HTTParty.post('https://rest.nexmo.com/sms/json?'+ uri, :headers => {"Content-Type" => "application/x-www-form-urlencoded"} )
+        return response
+      rescue StandardError => err
+        return false
+      end
     end
   
     def buy_number(country)
