@@ -150,12 +150,9 @@
             <thead>
               <tr>
                 <th class="text-center"><i class="fa fa-trash" style="visibility: hidden;"></i></th>
-                <th>Date (GMT)</th>
-                <th><%= (current_user.user_level == 0) ? "Description" : "Card Name" %></th>
-                <th>Message</th>
-                <% if current_user.user_level == 1 %> 
-                   <th>Phone #</th>
-                <% end %>              
+                <th>Date</th>
+                <th>Description</th>
+                <th>Message</th>              
               </tr>
             </thead>
             <tbody>
@@ -163,11 +160,8 @@
                   <tr>
                     <td class="text-center"><i class="fa fa-credit-card"></i></td>
                     <td><b><%= t.created_at.strftime("%m/%d/%Y") %></b></td>
-                    <td><%= (current_user.user_level == 0) ? t.description : t.card_name %></td>
+                    <td><%= t.description %></td>
                     <td><%= t.notes %></td>
-                    <% if current_user.user_level == 1 %> 
-                       <td><%= t.from %></td>
-                    <% end %> 
                   </tr>
                 <% end %>
             </tbody>

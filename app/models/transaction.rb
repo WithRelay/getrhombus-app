@@ -109,7 +109,7 @@ class Transaction < ActiveRecord::Base
         description: "Payment from #{user.email}. Card name: #{user.card_name}. Last four: #{user.last_four}.", 
         from: user.phone_number, to: merchant.rhombus_number, tax_rate: merchant.tax_rate,
         transaction_number: debit_data[4], referenced_user_id: user.id, referenced_customer_transaction_id: debit_data[0], 
-        last_four: user.last_four, user_id: merchant.id, notes: message, amount_with_taxes: debit_data[2], 
+        last_four: user.last_four, card_name: user.card_name, card_type: user.card_type, user_id: merchant.id, notes: message, amount_with_taxes: debit_data[2], 
         receipt_sent_at: Time.zone.now)                         # change this later
 
     EmailingService.send_payment_notification(to: merchant.email, card_name: user.card_name, last_four: user.last_four, 

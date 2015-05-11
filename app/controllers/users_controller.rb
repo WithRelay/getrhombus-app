@@ -23,8 +23,7 @@ class UsersController < ApplicationController
       elsif current_user.user_level == 1 && (current_user.business_name.blank? || current_user.stripe_access_token.blank?)
         redirect_to "/profile"
       else
-        @last4_transactions = @user.transactions.select(:created_at, :description, :notes).last(4).reverse if @user.user_level == 0
-        @last4_transactions = @user.transactions.select(:created_at, :card_name, :notes, :from).last(4).reverse if @user.user_level == 1 
+        @last4_transactions = @user.transactions.select(:created_at, :description, :notes).last(4).reverse
         @total_msgs = @user.get_total_messages
         @dashboard_stuff = @user.dashboard_stats
       end           
