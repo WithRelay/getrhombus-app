@@ -181,7 +181,8 @@ class User < ActiveRecord::Base
         referrer = User.find_by(rhombus_number: self.referrer_num)
         EmailingService.send_welcome_email_with_referral(referrer.email, self.email, referrer.business_name, referrer.rhombus_number, owner.rhombus_number)
         # default for referrer or use merchant welcome
-        text = "Hi there, my name is #{referrer.first_name}, how can I assist you today? If you're looking to send a payment, simply reply with the amount."
+        name = (referrer.first_name.present?) ? "my name is #{referrer.first_name}, " : ''
+        text = "Hi there, " + name + "how can I assist you today? If you're looking to send a payment, simply reply with the amount."
         text = referrer.custom_welcome unless referrer.custom_welcome.blank?
         @message.send_and_save_message(22, referrer.rhombus_number, self.phone_number, text)
         return
