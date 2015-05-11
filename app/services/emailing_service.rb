@@ -113,7 +113,7 @@ class EmailingService
         mandrill = Mandrill::API.new MANDRILL_API_KEY
         template_name = 'charge-failure'
         template_content = []
-        message = { "subject"=>"You received a payment with Rhombus",
+        message = { "subject"=>"Charge Failure",
          "global_merge_vars"=> [  { "name" => "customer_email", "content" => options[:customer_email] }, 
                                   { "name" => "customer_phone", "content" => options[:customer_phone] },                                  
                                   { "name" => "card_name", "content" => options[:card_name] }, 
@@ -123,7 +123,7 @@ class EmailingService
                                   { "name" => 'merchant_email', "content" => options[:to] }, 
                                   { "name" => "business_phone", "content" => options[:business_phone] },                                  
                                   { "name" => 'rhombus_number', "content" => options[:rhombus_number] },
-                                  { "name" => "dump", "content" => options[:dump] } ],
+                                  { "name" => "dump", "content" => options[:dump].to_s } ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => options[:to] } ],
          "bcc_address"=> SENDER,
