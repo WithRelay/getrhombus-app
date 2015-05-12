@@ -78,7 +78,7 @@ class Message < ActiveRecord::Base
 	end
 	
 	# Returns hash with the last "num_messages" messages that the given user has sent to the given merchant
-  def self.get_user_messages_by_merchant1(user_id, merchant_id, num_messages)
+  def self.get_user_messages_by_merchant(user_id, merchant_id, num_messages)
     messages = Message.select('`messages`.`user_id_from`,`messages`.`text`,`messages`.`unread`,`messages`.`created_at`,`users`.`user_level`')
                    .joins('INNER JOIN `users` ON (`users`.`id` = `messages`.`user_id_from`)')
                    .where('(`messages`.`user_id_from` = ? AND `messages`.`user_id_to` = ?) OR (`messages`.`user_id_from` = ? AND `messages`.`user_id_to` = ?)', user_id, merchant_id, merchant_id, user_id)
@@ -99,12 +99,12 @@ class Message < ActiveRecord::Base
   end
   
   # Marks all user messages sent to a merchant as read
-  def self.mark_user_messages_for_merchant_as_read1(user_id, merchant_id)
+  def self.mark_user_messages_for_merchant_as_read(user_id, merchant_id)
     Message.where('user_id_from = ? AND user_id_to = ? AND unread = ?', user_id, merchant_id, true).update_all(unread: false)
   end
 
   # Returns hash with the last "num_messages" messages that the given user has sent to the given merchant
-  def self.get_user_messages_by_merchant(user_id, merchant_id, num_messages)
+  def self.get_user_messages_by_merchant1(user_id, merchant_id, num_messages)
   	#user_id is a phone number
     messages = Message.select('`messages`.`from`,`messages`.`text`,`messages`.`unread`,`messages`.`created_at`,`users`.`user_level`')
                    .joins('LEFT JOIN `users` ON (`users`.`id` = `messages`.`user_id_from`)')
@@ -127,7 +127,7 @@ class Message < ActiveRecord::Base
   end
 
    # Marks all user messages sent to a merchant as read
-  def self.mark_user_messages_for_merchant_as_read(user_id, merchant_id)
+  def self.mark_user_messages_for_merchant_as_read1(user_id, merchant_id)
   	# user_id is a phone number
     Message.where('`messages`.`from` = ? AND user_id_to = ? AND unread = ?', user_id, merchant_id, true).update_all(unread: false)
   end

@@ -99,7 +99,7 @@ class UsersController < ApplicationController
   end
   
   # Sends a message to user on behalf of merchant
-  def send_message_from_merchant1
+  def send_message_from_merchant
     if !params[:message].blank?
       user = User.find_by_id(params[:user_id])
       merchant = User.find_by_id(params[:id])
@@ -116,7 +116,7 @@ class UsersController < ApplicationController
   end
 
   # Sends a message to user on behalf of merchant
-  def send_message_from_merchant
+  def send_message_from_merchant1
     if !params[:message].blank?
       #user = User.find_by_id(params[:user_id])
       # user_id is a phone number

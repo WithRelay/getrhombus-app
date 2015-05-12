@@ -90,7 +90,7 @@ class User < ActiveRecord::Base
   end
  
   # Returns hash with users who sent a message to the given merchant in the last "num_days" days
-  def self.get_latest_active_messaging1(merchant_id, num_days)
+  def self.get_latest_active_messaging(merchant_id, num_days)
     users = Message.select('`users`.`id`, `users`.`first_name`, `users`.`last_name`, `users`.`email`')
                    .joins('INNER JOIN `users` ON (`users`.`id` = `messages`.`user_id_from`)')
                    .where('(`messages`.`user_id_to` = ? AND `messages`.`created_at` >= ?) OR (`messages`.`user_id_to` = ? AND `messages`.`unread` = ?)', merchant_id, Time.zone.now - num_days.days, merchant_id, true)
@@ -112,7 +112,7 @@ class User < ActiveRecord::Base
     latest_active
   end
 
-  def self.get_latest_active_messaging(merchant_id, num_days)
+  def self.get_latest_active_messaging1(merchant_id, num_days)
     users = Message.select('`users`.`first_name`, `users`.`last_name`, `users`.`email`, `messages`.`from` AS phone_num')
                    .joins('LEFT JOIN `users` ON (`users`.`id` = `messages`.`user_id_from`)')
                    .where('(`messages`.`user_id_to` = ? AND `messages`.`created_at` >= ?) OR (`messages`.`user_id_to` = ? AND `messages`.`unread` = ?)', merchant_id, Time.zone.now - num_days.days, merchant_id, true)

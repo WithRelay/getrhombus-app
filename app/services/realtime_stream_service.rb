@@ -3,7 +3,7 @@ class RealtimeStreamService
   class << self
     
     # Sends a message to the given merchant's channel, provided user and merchant numbers
-    def send_message_via_number1(user_number, merchant_number, message, message_ts, is_merchant_message = false)
+    def send_message_via_number(user_number, merchant_number, message, message_ts, is_merchant_message = false)
       user = User.find_by_phone_number(user_number)
       merchant = User.find_by_rhombus_number(merchant_number)
       
@@ -13,7 +13,7 @@ class RealtimeStreamService
     end
 
     # Sends a message to the given merchant's channel, provided user and merchant ids
-    def send_message_via_id1(user_id, merchant_id, message, message_ts, is_merchant_message = false)
+    def send_message_via_id(user_id, merchant_id, message, message_ts, is_merchant_message = false)
       $pubnub.subscribe(
         :channel  => 'messaging_' + Rails.env + '_' + merchant_id.to_s
       ) {}
@@ -39,7 +39,7 @@ class RealtimeStreamService
       ) {}
     end
 
-    def send_message_via_number(user_number, merchant_number, message, message_ts, is_merchant_message = false)
+    def send_message_via_number1(user_number, merchant_number, message, message_ts, is_merchant_message = false)
       merchant = User.find_by_rhombus_number(merchant_number)
       if !merchant.blank?
         send_message_via_id(user_number, merchant.id, message, message_ts, is_merchant_message)
@@ -47,7 +47,7 @@ class RealtimeStreamService
     end
     
     # Sends a message to the given merchant's channel, provided user and merchant ids
-    def send_message_via_id(user_number, merchant_id, message, message_ts, is_merchant_message = false)
+    def send_message_via_id1(user_number, merchant_id, message, message_ts, is_merchant_message = false)
       $pubnub.subscribe(
         :channel  => 'messaging_' + Rails.env + '_' + merchant_id.to_s
       ) {}
