@@ -99,13 +99,31 @@ class UsersController < ApplicationController
   end
   
   # Sends a message to user on behalf of merchant
-  def send_message_from_merchant
+  def send_message_from_merchant1
     if !params[:message].blank?
       user = User.find_by_id(params[:user_id])
       merchant = User.find_by_id(params[:id])
       if !user.blank? && !merchant.blank?
         @message = Message.new
         @message.send_and_save_message(5, merchant.rhombus_number, user.phone_number, params[:message])
+        if !@message.id.blank?
+          render :json => Hash['success' => true, 'user_level' => merchant.user_level, 'image_url' => ActionController::Base.helpers.asset_path('rhombus_icon_50x50.png'), 'ts_day_of_the_week' => @message.created_at.strftime('%A'), 'ts_time' => @message.created_at.strftime('%l:%M %P')].to_json
+          return
+        end
+      end
+    end
+    render :json => Hash['success' => false].to_json
+  end
+
+  # Sends a message to user on behalf of merchant
+  def send_message_from_merchant
+    if !params[:message].blank?
+      #user = User.find_by_id(params[:user_id])
+      # user_id is a phone number
+      merchant = User.find_by_id(params[:id])
+      if !merchant.blank?
+        @message = Message.new
+        @message.send_and_save_message(5, merchant.rhombus_number, params[:user_id], params[:message])
         if !@message.id.blank?
           render :json => Hash['success' => true, 'user_level' => merchant.user_level, 'image_url' => ActionController::Base.helpers.asset_path('rhombus_icon_50x50.png'), 'ts_day_of_the_week' => @message.created_at.strftime('%A'), 'ts_time' => @message.created_at.strftime('%l:%M %P')].to_json
           return
