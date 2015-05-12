@@ -38,7 +38,7 @@ class Transaction < ActiveRecord::Base
       amount_with_taxes_in_hundreds = sprintf("%.2f", amount_with_taxes.to_f/100)
       # Else proceed to save data and notify customer via text and email (plus tax and merchant name)
       # return "#{response.uri}, #{response.transaction_number}, #{response.source.last_four}, #{response.on_behalf_of.customer_uri}"
-      @message = Message.new .
+      @message = Message.new
       @name = (user.card_name.present?) ? " " + user.card_name.split.first : ''
       if merchant.tax_rate == "0"
         @message.send_and_save_message(11, merchant.rhombus_number, user.phone_number, 
