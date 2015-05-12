@@ -68,7 +68,7 @@ class Transaction < ActiveRecord::Base
       @message = Message.new
       if merchant.tax_rate == "0"
         @message.send_and_save_message(11, merchant.rhombus_number, user.phone_number, 
-              "Thanks #{user.card_name.split.first}. A payment of $#{amount_in_hundreds} was sent to #{merchant.business_name}.")
+              "Thanks #{user.card_name}. A payment of $#{amount_in_hundreds} was sent to #{merchant.business_name}.")
       else
         @message.send_and_save_message(11, merchant.rhombus_number, user.phone_number, 
           "Thanks #{user.card_name.split.first}. A payment of $#{amount_with_taxes_in_hundreds} plus taxes and fees set by #{merchant.business_name} was sent.")
