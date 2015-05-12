@@ -120,7 +120,7 @@ class User < ActiveRecord::Base
                    .group('`messages`.`from`')
     latest_active = Array.new
     users.each do |user|
-      last_message = Message.select('text, created_at').where('from = ? AND user_id_to = ?', user.phone_num, merchant_id).order('created_at DESC').limit(1).first
+      last_message = Message.select('text, created_at').where('from = ? AND user_id_to = ?', '<redacted_phone_number>', merchant_id).order('created_at DESC').limit(1).first
       latest_active.push({
         :id => user.phone_num,
         :first_name => user.first_name.blank? ? user.phone_num : user.first_name,
