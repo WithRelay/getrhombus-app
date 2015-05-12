@@ -35,43 +35,17 @@ class Transaction < ActiveRecord::Base
 
       amount_in_hundreds = sprintf("%.2f", amount.to_f/100) 
 
-    rescue Stripe::CardError => e
-      # Since it's a decline, Stripe::CardError will be caught
-      body = e.json_body
-      err  = body[:error]
-
-      @message = Message.new
-      @message.send_and_save_message(18, merchant.rhombus_number, user.phone_number, 
-            "Your payment to #{merchant.business_name} failed because: #{err[:message]}")
-
-      EmailingService.charge_failure_notification(to: merchant.email, customer_email: user.email, customer_phone: user.phone_number,
-        card_name: user.card_name, last_four: user.last_four, text: message, business_phone: merchant.business_phone,
-        rhombus_number: merchant.rhombus_number, dump: err, to_merchant: true)
-      return "failed"
-    rescue Stripe::StripeError => e
-      body = e.json_body
-      err  = body[:error]
-      EmailingService.charge_failure_notification(to: merchant.email, customer_email: user.email, customer_phone: user.phone_number,
-        card_name: user.card_name, last_four: user.last_four, text: message, business_phone: merchant.business_phone,
-        rhombus_number: merchant.rhombus_number, dump: err, to_merchant: false)
-      return "failed"
-    rescue StandardError => err
-      EmailingService.charge_failure_notification(to: merchant.email, customer_email: user.email, customer_phone: user.phone_number,
-        card_name: user.card_name, last_four: user.last_four, text: message, business_phone: merchant.business_phone,
-        rhombus_number: merchant.rhombus_number, dump: err, to_merchant: false)
-      return "failed"
-    else
-
       amount_with_taxes_in_hundreds = sprintf("%.2f", amount_with_taxes.to_f/100)
       # Else proceed to save data and notify customer via text and email (plus tax and merchant name)
       # return "#{response.uri}, #{response.transaction_number}, #{response.source.last_four}, #{response.on_behalf_of.customer_uri}"
       @message = Message.new
+      @name = (user.card_name.present?) ? " " + user.card_name.split.first : ''
       if merchant.tax_rate == "0"
         @message.send_and_save_message(11, merchant.rhombus_number, user.phone_number, 
-              "Thanks #{user.card_name}. A payment of $#{amount_in_hundreds} was sent to #{merchant.business_name}.")
+              "Thanks" + @name + ". A payment of $#{amount_in_hundreds} was sent to #{merchant.business_name}.")
       else
         @message.send_and_save_message(11, merchant.rhombus_number, user.phone_number, 
-          "Thanks #{user.card_name.split.first}. A payment of $#{amount_with_taxes_in_hundreds} plus taxes and fees set by #{merchant.business_name} was sent.")
+          "Thanks" + @name + ". A payment of $#{amount_with_taxes_in_hundreds} plus taxes and fees set by #{merchant.business_name} was sent.")
       end
       
       # Send to merchant's messaging channel
@@ -100,6 +74,31 @@ class Transaction < ActiveRecord::Base
       self.save                                                  # Put a save check here later
 
       return self.id, amount_in_hundreds, amount_with_taxes_in_hundreds, amount_less_fees, transaction_number, response.id
+    rescue Stripe::CardError => e
+      # Since it's a decline, Stripe::CardError will be caught
+      body = e.json_body
+      err  = body[:error]
+
+      @message = Message.new
+      @message.send_and_save_message(18, merchant.rhombus_number, user.phone_number, 
+            "Your payment to #{merchant.business_name} failed because: #{err[:message]}")
+
+      EmailingService.charge_failure_notification(to: merchant.email, customer_email: user.email, customer_phone: user.phone_number,
+        card_name: user.card_name, last_four: user.last_four, text: message, business_phone: merchant.business_phone,
+        rhombus_number: merchant.rhombus_number, dump: err, to_merchant: true)
+      return "failed"
+    rescue Stripe::StripeError => e
+      body = e.json_body
+      err  = body[:error]
+      EmailingService.charge_failure_notification(to: merchant.email, customer_email: user.email, customer_phone: user.phone_number,
+        card_name: user.card_name, last_four: user.last_four, text: message, business_phone: merchant.business_phone,
+        rhombus_number: merchant.rhombus_number, dump: err, to_merchant: false)
+      return "failed"
+    rescue StandardError => err
+      EmailingService.charge_failure_notification(to: merchant.email, customer_email: user.email, customer_phone: user.phone_number,
+        card_name: user.card_name, last_four: user.last_four, text: message, business_phone: merchant.business_phone,
+        rhombus_number: merchant.rhombus_number, dump: err, to_merchant: false)
+      return "failed"
     end
   end
    
