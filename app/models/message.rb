@@ -136,7 +136,7 @@ class Message < ActiveRecord::Base
    # Marks all user messages sent to a merchant as read
   def self.mark_user_messages_for_merchant_as_read(user_id, merchant_id)
   	# user_id is a phone number
-    Message.where('from = ? AND user_id_to = ? AND unread = ?', user_id, merchant_id, true).update_all(unread: false)
+    Message.where('`messages`.`from` = ? AND user_id_to = ? AND unread = ?', user_id, merchant_id, true).update_all(unread: false)
   end
 
 end

@@ -129,7 +129,7 @@ class User < ActiveRecord::Base
         :image_url => ActionController::Base.helpers.asset_path('user_icon_50x50.png'),
         :last_message => last_message.blank? ? '' : last_message.text,
         :last_message_ts => last_message.blank? ? 0 : last_message.created_at.to_i,
-        :unread_count => Message.where('from = ? AND user_id_to = ? AND unread = ?', user.phone_num, merchant_id, true).count
+        :unread_count => Message.where('`messages`.`from` = ? AND user_id_to = ? AND unread = ?', user.phone_num, merchant_id, true).count
       })
     end
     latest_active
