@@ -112,7 +112,6 @@ class User < ActiveRecord::Base
     latest_active
   end
 
-
   def self.get_latest_active_messaging(merchant_id, num_days)
     users = Message.select('`users`.`first_name`, `users`.`last_name`, `users`.`email`, `messages`.`from` AS phone_num')
                    .joins('LEFT JOIN `users` ON (`users`.`id` = `messages`.`user_id_from`)')

@@ -103,13 +103,6 @@ class Message < ActiveRecord::Base
     Message.where('user_id_from = ? AND user_id_to = ? AND unread = ?', user_id, merchant_id, true).update_all(unread: false)
   end
 
-
-
-
-
-
-
-
   # Returns hash with the last "num_messages" messages that the given user has sent to the given merchant
   def self.get_user_messages_by_merchant(user_id, merchant_id, num_messages)
   	#user_id is a phone number
