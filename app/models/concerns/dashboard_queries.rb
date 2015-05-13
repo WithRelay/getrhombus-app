@@ -84,20 +84,20 @@ module DashboardQueries
 		if self.user_level == 0
 			Transaction.find_by_sql([
 				'SELECT SUM(IF(DATE(created_at) >= CURRENT_DATE(), amount, 0)) AS todays_sales,
-	                SUM(created_at >= CURRENT_DATE()) AS todays_txn,
+	                SUM(DATE(created_at) >= CURRENT_DATE()) AS todays_txn,
 	                COUNT(DISTINCT referenced_merchant_id) AS count,
 	                SUM(amount) AS sales_till_date,
-	                SUM(created_at BETWEEN DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW()) AS txn_last_30days
+	                SUM(DATE(created_at) BETWEEN DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW()) AS txn_last_30days
 	                from transactions
 	                WHERE user_id = ?', self.id])
 			#and transaction_type = ?
 		elsif self.user_level == 1
 			Transaction.find_by_sql([
 				'SELECT SUM(IF(DATE(created_at) >= CURRENT_DATE(), amount_less_fees, 0)) AS todays_sales,
-	                SUM(created_at >= CURRENT_DATE()) AS todays_txn,
+	                SUM(DATE(created_at) >= CURRENT_DATE()) AS todays_txn,
 	                COUNT(DISTINCT referenced_user_id) AS count,
 	                SUM(amount) AS sales_till_date,
-	                SUM(created_at BETWEEN DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW()) AS txn_last_30days
+	                SUM(DATE(created_at) BETWEEN DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW()) AS txn_last_30days
 	                from transactions
 	                WHERE user_id = ?', self.id])
 			#and transaction_type = ?
@@ -105,8 +105,8 @@ module DashboardQueries
 	end
 
 	def get_total_messages
-		return Message.where("user_id_from = ? and created_at BETWEEN DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW()", self.id).count if self.user_level == 0
-		Message.where("user_id_from = ? or user_id_to = ? and created_at BETWEEN DATE_SUB(NOW(), 
+		return Message.where("user_id_from = ? and DATE(created_at) BETWEEN DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW()", self.id).count if self.user_level == 0
+		Message.where("user_id_from = ? or user_id_to = ? and DATE(created_at) BETWEEN DATE_SUB(NOW(), 
 							INTERVAL 30 DAY) AND NOW()", self.id, self.id).count if self.user_level == 1
 	end
 
@@ -115,7 +115,7 @@ module DashboardQueries
 			Transaction.find_by_sql([
 				'select count(*) as num_of_txns, sum(amount) as day_total,
 					date_format(date(created_at), "%b %e") as day from transactions where user_id = ?
-					and created_at BETWEEN DATE_SUB(NOW(), INTERVAL 7 DAY) AND NOW() 	
+					and DATE(created_at) BETWEEN DATE_SUB(NOW(), INTERVAL 7 DAY) AND NOW() 	
 					GROUP BY DAY(created_at)', self.id])
 				#and transaction_type = ?
 				#and created_at BETWEEN DATE_SUB(NOW(), INTERVAL 7 DAY) AND NOW() 
