@@ -83,7 +83,7 @@ module DashboardQueries
 	def dashboard_stats
 		if self.user_level == 0
 			Transaction.find_by_sql([
-				'SELECT SUM(IF(DATE(created_at) = CURRENT_DATE(), amount, 0)) AS todays_sales,
+				'SELECT SUM(IF(DATE(created_at) >= CURRENT_DATE(), amount, 0)) AS todays_sales,
 	                SUM(created_at >= CURRENT_DATE()) AS todays_txn,
 	                COUNT(DISTINCT referenced_merchant_id) AS count,
 	                SUM(amount) AS sales_till_date,
@@ -93,7 +93,7 @@ module DashboardQueries
 			#and transaction_type = ?
 		elsif self.user_level == 1
 			Transaction.find_by_sql([
-				'SELECT SUM(IF(DATE(created_at) = CURRENT_DATE(), amount_less_fees, 0)) AS todays_sales,
+				'SELECT SUM(IF(DATE(created_at) >= CURRENT_DATE(), amount_less_fees, 0)) AS todays_sales,
 	                SUM(created_at >= CURRENT_DATE()) AS todays_txn,
 	                COUNT(DISTINCT referenced_user_id) AS count,
 	                SUM(amount) AS sales_till_date,
