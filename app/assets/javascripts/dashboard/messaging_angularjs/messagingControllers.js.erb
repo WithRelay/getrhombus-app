@@ -20,10 +20,11 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'PubNub
     .success(function(data) {
       var merchant_id = data.id;
       
-      // Initialize PubNub
+      // Initialize PubNub with SSL
       PubNub.init({
         publish_key: data.pubnub_publish_key,
-        subscribe_key: data.pubnub_subscribe_key
+        subscribe_key: data.pubnub_subscribe_key,
+        ssl: true
       });
       
       // Subscribe to merchant channel
