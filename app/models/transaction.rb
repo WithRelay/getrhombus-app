@@ -73,7 +73,7 @@ class Transaction < ActiveRecord::Base
       self.receipt_sent_at = Time.zone.now                       # change this later to use timezone??
       self.save                                                  # Put a save check here later
 
-      return self.id, amount_in_hundreds, amount_with_taxes_in_hundreds, amount_less_fees, transaction_number, response.id
+      return self.id, amount_in_hundreds, amount_with_taxes_in_hundreds, amount_less_fees, transaction_number, response.id, rhombus_fee_amt
     rescue Stripe::CardError => e
       # Since it's a decline, Stripe::CardError will be caught
       body = e.json_body
@@ -124,7 +124,7 @@ class Transaction < ActiveRecord::Base
     owner = User.find_by(email: Rails.application.secrets.dashboard_email)
 
     self.save_transaction(transaction_uri: debit_data[5], transaction_type: 0,
-      amount: debit_data[3], amount_less_fees: debit_data[3], transaction_number: debit_data[4],
+      amount: debit_data[6], amount_less_fees: debit_data[3], transaction_number: debit_data[4],
       description: "Payment from #{user.email}. Name on card: #{user.card_name}. Last four: #{user.last_four} to #{merchant.email}", 
       from: user.phone_number, to: merchant.rhombus_number, tax_rate: merchant.tax_rate, last_four: user.last_four,
       referenced_user_id: user.id, referenced_customer_transaction_id: debit_data[0], user_id: owner.id, notes: message, 
