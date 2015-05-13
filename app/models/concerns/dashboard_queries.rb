@@ -34,7 +34,7 @@ module DashboardQueries
 				"SELECT users.business_name, users.email, users.business_phone, SUM(transactions.amount) AS total_spend,
 					MIN(transactions.created_at) AS first_visit, AVG(transactions.amount) AS avg_spend, 
 					max(transactions.created_at) AS last_visit, users.rhombus_number,
-					SUM(transactions.created_at BETWEEN DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW()) AS last_30 
+					SUM(DATE(transactions.created_at) BETWEEN DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW()) AS last_30 
 					FROM transactions
 					INNER JOIN users ON
 					transactions.referenced_merchant_id = users.id
@@ -46,7 +46,7 @@ module DashboardQueries
 				"SELECT users.card_name, users.email, users.phone_number, SUM(transactions.amount) AS total_spend,
 					MIN(transactions.created_at) AS first_visit, AVG(transactions.amount) AS avg_spend, 
 					max(transactions.created_at) AS last_visit,
-					SUM(transactions.created_at BETWEEN DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW()) AS last_30 
+					SUM(DATE(transactions.created_at) BETWEEN DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW()) AS last_30 
 					FROM transactions
 					INNER JOIN users ON
 					transactions.referenced_user_id = users.id
