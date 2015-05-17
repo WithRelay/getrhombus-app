@@ -28,7 +28,7 @@ module ProcessMessage
 				# payement message but user doesnt exist. save in messages and send a response
 				save_inbound_text(request.query_string, msg_code = 6)
 				short_link = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?num=#{params[:msisdn]}&referrer_num=#{params[:to]}&referrer=#{merchant.business_name}")
-				send_response(16, params[:to], params[:msisdn], "Hi there, thanks for reaching out...to chat with us or send a payment, sign up here. Thanks! => #{short_link}")
+				send_response(16, params[:to], params[:msisdn], "Hi there, thanks for reaching out...to send a payment, sign up here. Thanks! => #{short_link}")
 				return
 			end
 		elsif !user
