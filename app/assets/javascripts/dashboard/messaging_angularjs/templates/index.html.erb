@@ -32,9 +32,9 @@
               </form>
             </li>
             <div class="user-list">
-              <li ng-repeat="(user_id, user) in users | filterUserList:query | orderObjectBy:'last_message_ts':true">
+              <li ng-repeat="(user_number, user) in users | filterUserList:query | orderObjectBy:'last_message_ts':true">
                 
-                <a ng-class="{chat_highlight : current_chat_user === user, item : true, clearfix : true }" ng-click="getUserMessages(user)"> 
+                <a ng-class="{ chat_highlight : current_chat_user === user, item : true, clearfix : true }" ng-click="getUserMessages(user)"> 
                   <img ng-src="{{user.image_url}}" alt="img" class="img" /> 
                   <span class="from">{{user.first_name}} {{user.last_name}}</span> 
                   <div class="last-message">{{user.last_message}}</div>

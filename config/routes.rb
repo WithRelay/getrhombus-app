@@ -29,9 +29,9 @@ Rails.application.routes.draw  do
   
   # messaging
   get '/users/:id/json_get_latest_active_messaging' => 'users#json_get_latest_active_messaging'
-  get '/users/:id/json_get_user_messages_by_merchant/:user_id' => 'users#json_get_user_messages_by_merchant'
-  get '/users/:id/mark_user_messages_for_merchant_as_read/:user_id' => 'users#mark_user_messages_for_merchant_as_read'
-  get '/users/:id/send_message_from_merchant/:user_id' => 'users#send_message_from_merchant'
+  get '/users/:id/json_get_user_messages_by_merchant/:user_number' => 'users#json_get_user_messages_by_merchant'
+  get '/users/:id/mark_user_messages_for_merchant_as_read/:user_number' => 'users#mark_user_messages_for_merchant_as_read'
+  get '/users/:id/send_message_from_merchant/:user_number' => 'users#send_message_from_merchant'
   get '/users/:id/messaging' => 'users#messaging', :as => 'dashboard_messaging'
   get '/json_get_current_user' => 'application#json_get_current_user'
   

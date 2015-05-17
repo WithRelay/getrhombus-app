@@ -78,17 +78,17 @@ class Message < ActiveRecord::Base
 	end
 	
 	# Returns hash with the last "num_messages" messages that the given user has sent to the given merchant
-  def self.get_user_messages_by_merchant(user_id, merchant_id, num_messages)
+  def self.get_user_messages_by_merchant(user_number, merchant_id, num_messages)
     messages = Message.select('`messages`.`user_id_from`,`messages`.`text`,`messages`.`unread`,`messages`.`created_at`,`users`.`user_level`')
-                   .joins('INNER JOIN `users` ON (`users`.`id` = `messages`.`user_id_from`)')
-                   .where('(`messages`.`user_id_from` = ? AND `messages`.`user_id_to` = ?) OR (`messages`.`user_id_from` = ? AND `messages`.`user_id_to` = ?)', user_id, merchant_id, merchant_id, user_id)
+                   .joins('LEFT JOIN `users` ON (`users`.`id` = `messages`.`user_id_from`)')
+                   .where('(`messages`.`from` = ? AND `messages`.`user_id_to` = ?) OR (`messages`.`user_id_from` = ? AND `messages`.`to` = ?)', user_number, merchant_id, merchant_id, user_number)
                    .order('`messages`.`created_at` DESC').limit(num_messages)
     latest_messages = Array.new
     messages.reverse.each do |message|
       latest_messages.push({
-        :user_id => message.user_id_from,
-        :user_level => message.user_level,
-        :image_url => message.user_level == 0 ? ActionController::Base.helpers.asset_path('user_icon_50x50.png') : ActionController::Base.helpers.asset_path('rhombus_icon_50x50.png'),
+        :user_number => message.user_id_from,
+        :user_level => message.user_level.blank? ? 0 : message.user_level,
+        :image_url => (message.user_level.blank? || (message.user_level == 0)) ? ActionController::Base.helpers.asset_path('user_icon_50x50.png') : ActionController::Base.helpers.asset_path('rhombus_icon_50x50.png'),
         :text => message.text,
         :ts_day_of_the_week => message.created_at.strftime('%A'),
         :ts_time => message.created_at.strftime('%l:%M %P'),
@@ -99,37 +99,8 @@ class Message < ActiveRecord::Base
   end
   
   # Marks all user messages sent to a merchant as read
-  def self.mark_user_messages_for_merchant_as_read(user_id, merchant_id)
-    Message.where('user_id_from = ? AND user_id_to = ? AND unread = ?', user_id, merchant_id, true).update_all(unread: false)
-  end
-
-  # Returns hash with the last "num_messages" messages that the given user has sent to the given merchant
-  def self.get_user_messages_by_merchant1(user_id, merchant_id, num_messages)
-  	#user_id is a phone number
-    messages = Message.select('`messages`.`from`,`messages`.`text`,`messages`.`unread`,`messages`.`created_at`,`users`.`user_level`')
-                   .joins('LEFT JOIN `users` ON (`users`.`id` = `messages`.`user_id_from`)')
-                   .where('(`messages`.`from` = ? AND `messages`.`user_id_to` = ?) OR (`messages`.`user_id_from` = ? AND `messages`.`to` = ?)', user_id, merchant_id, merchant_id, user_id)
-                   .order('`messages`.`created_at` DESC').limit(num_messages)
-    latest_messages = Array.new
-    messages.reverse.each do |message|
-      user_level = (message.user_level.blank?) ? 0 : message.user_level
-      latest_messages.push({
-        :user_id => message.from,
-        :user_level => user_level,
-        :image_url => user_level == 0 ? ActionController::Base.helpers.asset_path('user_icon_50x50.png') : ActionController::Base.helpers.asset_path('rhombus_icon_50x50.png'),
-        :text => message.text,
-        :ts_day_of_the_week => message.created_at.strftime('%A'),
-        :ts_time => message.created_at.strftime('%l:%M %P'),
-        :unread => message.unread
-      })
-    end
-    latest_messages
-  end
-
-   # Marks all user messages sent to a merchant as read
-  def self.mark_user_messages_for_merchant_as_read1(user_id, merchant_id)
-  	# user_id is a phone number
-    Message.where('`messages`.`from` = ? AND user_id_to = ? AND unread = ?', user_id, merchant_id, true).update_all(unread: false)
+  def self.mark_user_messages_for_merchant_as_read(user_number, merchant_id)
+    Message.where('`from` = ? AND `user_id_to` = ? AND `unread` = ?', user_number, merchant_id, true).update_all(unread: false)
   end
 
 end

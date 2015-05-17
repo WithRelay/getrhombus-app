@@ -91,44 +91,22 @@ class User < ActiveRecord::Base
  
   # Returns hash with users who sent a message to the given merchant in the last "num_days" days
   def self.get_latest_active_messaging(merchant_id, num_days)
-    users = Message.select('`users`.`id`, `users`.`first_name`, `users`.`last_name`, `users`.`email`')
-                   .joins('INNER JOIN `users` ON (`users`.`id` = `messages`.`user_id_from`)')
-                   .where('(`messages`.`user_id_to` = ? AND `messages`.`created_at` >= ?) OR (`messages`.`user_id_to` = ? AND `messages`.`unread` = ?)', merchant_id, Time.zone.now - num_days.days, merchant_id, true)
-                   .group('`messages`.`user_id_from`')
-    latest_active = Array.new
-    users.each do |user|
-      last_message = Message.select('text, created_at').where('user_id_from = ? AND user_id_to = ?', user.id, merchant_id).order('created_at DESC').limit(1).first
-      latest_active.push({
-        :id => user.id,
-        :first_name => user.first_name,
-        :last_name => user.last_name,
-        :email => user.email,
-        :image_url => ActionController::Base.helpers.asset_path('user_icon_50x50.png'),
-        :last_message => last_message.blank? ? '' : last_message.text,
-        :last_message_ts => last_message.blank? ? 0 : last_message.created_at.to_i,
-        :unread_count => Message.where('user_id_from = ? AND user_id_to = ? AND unread = ?', user.id, merchant_id, true).count
-      })
-    end
-    latest_active
-  end
-
-  def self.get_latest_active_messaging1(merchant_id, num_days)
-    users = Message.select('`users`.`first_name`, `users`.`last_name`, `users`.`email`, `messages`.`from` AS phone_num')
+    users = Message.select('`users`.`id`, `users`.`first_name`, `users`.`last_name`, `users`.`email`, `messages`.`from`')
                    .joins('LEFT JOIN `users` ON (`users`.`id` = `messages`.`user_id_from`)')
                    .where('(`messages`.`user_id_to` = ? AND `messages`.`created_at` >= ?) OR (`messages`.`user_id_to` = ? AND `messages`.`unread` = ?)', merchant_id, Time.zone.now - num_days.days, merchant_id, true)
                    .group('`messages`.`from`')
     latest_active = Array.new
     users.each do |user|
-      last_message = Message.select('text, created_at').where('`messages`.`from` = ? AND user_id_to = ?', user.phone_num, merchant_id).order('created_at DESC').limit(1).first
+      last_message = user.id.blank? ? Message.select('text, created_at').where('`from` = ? AND `user_id_to` = ?', user.from, merchant_id).order('created_at DESC').limit(1).first : Message.select('text, created_at').where('user_id_from = ? AND user_id_to = ?', user.id, merchant_id).order('created_at DESC').limit(1).first
       latest_active.push({
-        :id => user.phone_num,
-        :first_name => user.first_name.blank? ? user.phone_num : user.first_name,
+        :user_number => user.from,
+        :first_name => user.first_name.blank? ? user.from : user.first_name,
         :last_name => user.last_name.blank? ? '' : user.last_name,
-        :email => user.email.blank? ? "user isn't signed up :(" : user.email,
+        :email => user.email.blank? ? '' : user.email,
         :image_url => ActionController::Base.helpers.asset_path('user_icon_50x50.png'),
         :last_message => last_message.blank? ? '' : last_message.text,
         :last_message_ts => last_message.blank? ? 0 : last_message.created_at.to_i,
-        :unread_count => Message.where('`messages`.`from` = ? AND user_id_to = ? AND unread = ?', user.phone_num, merchant_id, true).count
+        :unread_count =>  user.id.blank? ? Message.where('`from` = ? AND `user_id_to` = ? AND `unread` = ?', user.from, merchant_id, true).count : Message.where('user_id_from = ? AND user_id_to = ? AND unread = ?', user.id, merchant_id, true).count
       })
     end
     latest_active
