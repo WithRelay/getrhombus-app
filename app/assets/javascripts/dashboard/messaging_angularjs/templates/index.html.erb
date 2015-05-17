@@ -1,15 +1,26 @@
 <div class="content">
   <!-- Start Page Header -->
   <div class="page-header">
-    <h1 class="title">Messaging</h1>
-    <ol class="breadcrumb">
-      <li ng-if="active_user_count > 0" class="active">
-        You have <span ng-class="{'label label-danger': global_unread_count > 0 , '': global_unread_count == 0}" class="">{{global_unread_count}}</span> unread messages
-      </li>
-      <li ng-if="active_user_count == 0" class="active">
-        No messages in the last <%= CONFIG[:dashboard]['messaging']['num_days_history'] %> days.
-      </li>
-    </ol>
+    <div style="float:left;">
+      <h1 class="title">Messaging</h1>
+      <ol class="breadcrumb">
+        <li ng-if="active_user_count > 0" class="active">
+          You have <span ng-class="{'label label-danger': global_unread_count > 0 , '': global_unread_count == 0}" class="">{{global_unread_count}}</span> unread messages
+        </li>
+        <li ng-if="active_user_count == 0" class="active">
+          No messages in the last <%= CONFIG[:dashboard]['messaging']['num_days_history'] %> days.
+        </li>
+      </ol>
+    </div>
+    <div style="float:right;">
+      <h1 ng-if="merchant_short_url" class="title" style="font-size:14px;">My Rhombus Link</h1>
+      <ol ng-if="merchant_short_url" class="breadcrumb">
+        <li class="active">
+          {{merchant_short_url}}
+        </li>
+      </ol>
+    </div>
+    <div class="clearfix"></div>
   </div>
   <!-- End Page Header -->
   <!-- //////////////////////////////////////////////////////////////////////////// -->
@@ -32,9 +43,9 @@
               </form>
             </li>
             <div class="user-list">
-              <li ng-repeat="(user_id, user) in users | filterUserList:query | orderObjectBy:'last_message_ts':true">
+              <li ng-repeat="(user_number, user) in users | filterUserList:query | orderObjectBy:'last_message_ts':true">
                 
-                <a ng-class="{chat_highlight : current_chat_user === user, item : true, clearfix : true }" ng-click="getUserMessages(user)"> 
+                <a ng-class="{ chat_highlight : current_chat_user === user, item : true, clearfix : true }" ng-click="getUserMessages(user)"> 
                   <img ng-src="{{user.image_url}}" alt="img" class="img" /> 
                   <span class="from">{{user.first_name}} {{user.last_name}}</span> 
                   <div class="last-message">{{user.last_message}}</div>

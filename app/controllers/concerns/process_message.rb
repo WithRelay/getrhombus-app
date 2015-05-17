@@ -26,16 +26,16 @@ module ProcessMessage
 				end
 			else
 				# payement message but user doesnt exist. save in messages and send a response
-				save_inbound_text(request.query_string, msg_code = 6)
 				short_link = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?num=#{params[:msisdn]}&referrer_num=#{params[:to]}&referrer=#{merchant.business_name}")
-				send_response(16, params[:to], params[:msisdn], "Hi there, thanks for reaching out...to chat with us or send a payment, sign up here. Thanks! => #{short_link}")
+				send_response(16, params[:to], params[:msisdn], "Hi there, thanks for reaching out...to send a payment, sign up here. Thanks! => #{short_link}")
+				save_inbound_text(request.query_string, msg_code = 6)
 				return
 			end
 		elsif !user
 			# user doesnt exist at all...save in messages and send a response
 			save_inbound_text(request.query_string, msg_code = 4)
-			short_link = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?num=#{params[:msisdn]}&referrer_num=#{params[:to]}&referrer=#{merchant.business_name}")
-			send_response(14, params[:to], params[:msisdn], "Hi there, thanks for reaching out...to chat with us or send a payment, sign up here: #{short_link}")
+			#short_link = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?num=#{params[:msisdn]}&referrer_num=#{params[:to]}&referrer=#{merchant.business_name}")
+			#send_response(14, params[:to], params[:msisdn], "Hi there, thanks for reaching out...to chat with us or send a payment, sign up here: #{short_link}")
 		else
 			# user exist, but not a payment message...save in messages
 			save_inbound_text(request.query_string, msg_code = 5)
@@ -168,7 +168,7 @@ module ProcessMessage
 		@message.send_and_save_message(msg_code, to, from, message)
 		
 		# Send to merchant's messaging channel
-    	RealtimeStreamService.send_message_via_number(from, to, message, @message.created_at, true)
+    RealtimeStreamService.send_message_via_number(from, to, message, @message.created_at, true)
 	end
 
 	
@@ -179,9 +179,9 @@ module ProcessMessage
 			network_code: query_hash["network-code"], messageId: query_hash['messageId'], message_timestamp: query_hash["message-timestamp"],
 			text: query_hash['text'], message_code: msg_code, transaction_id: transaction_id)
 			
-	    # Send to merchant's messaging channel
-	    RealtimeStreamService.send_message_via_number(query_hash['msisdn'], query_hash['to'], query_hash['text'], @message.created_at)
-	    @message
+	  # Send to merchant's messaging channel
+	  RealtimeStreamService.send_message_via_number(query_hash['msisdn'], query_hash['to'], query_hash['text'], @message.created_at)
+	  @message
 	end
 
 	
