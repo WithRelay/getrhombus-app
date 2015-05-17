@@ -34,6 +34,11 @@ class UsersController < ApplicationController
     if @user.user_level != 1
       redirect_to :root and return
     end
+    # Generate bitly if blank
+    if @user.short_url.blank?
+      @user.short_url = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?referrer_num=#{@user.rhombus_number}&referrer=#{@user.business_name}")
+      @user.save
+    end
     render layout: 'application_dashboard_messaging'
   end
   

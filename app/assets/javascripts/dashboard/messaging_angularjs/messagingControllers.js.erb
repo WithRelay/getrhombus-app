@@ -19,6 +19,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'PubNub
     $http.get(window.location.origin + '/json_get_current_user')
     .success(function(data) {
       var merchant_id = data.id;
+      $scope.merchant_short_url = data.short_url;
       
       // Initialize PubNub with SSL
       PubNub.init({
