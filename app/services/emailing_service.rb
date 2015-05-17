@@ -19,7 +19,7 @@ class EmailingService
          "bcc_address"=> SENDER,
          "to"=> [ { "email" => to } ],
          "from_name" => "Rhombus",
-         "from_email" => merchant_email # SENDER
+         "from_email" => SENDER
         }
         result = mandrill.messages.send_template template_name, template_content, message        
       rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
@@ -65,7 +65,7 @@ class EmailingService
          "merge_language" => "handlebars",
          "to"=> [ { "email" => options[:to] } ],
          "from_name" => options[:merchant_name],
-         "from_email" => options[:merchant_email] # SENDER
+         "from_email" => SENDER
         }
         result = mandrill.messages.send_template template_name, template_content, message        
       rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
