@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150509011123) do
+ActiveRecord::Schema.define(version: 20150517045932) do
 
   create_table "messages", force: :cascade do |t|
     t.datetime "created_at"
@@ -137,6 +137,7 @@ ActiveRecord::Schema.define(version: 20150509011123) do
     t.integer  "subscription_type",            limit: 4,     default: 0
     t.string   "url",                          limit: 255
     t.text     "custom_welcome",               limit: 65535
+    t.string   "short_url",                    limit: 150
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
