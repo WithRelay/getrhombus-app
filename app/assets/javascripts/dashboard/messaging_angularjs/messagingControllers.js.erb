@@ -8,7 +8,7 @@ var messagingControllers = angular.module('messagingControllers', [
 
 messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'PubNub',
   function($scope, $http, PubNub) {
-    $scope.num_message_history = 10;
+    $scope.num_message_history = 200;
     $scope.char_limit = 150;
     $scope.active_user_number = 0;
     $scope.active_user_count = 0;
