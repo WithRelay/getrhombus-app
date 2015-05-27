@@ -134,9 +134,10 @@ module ProcessMessage
 
 	def is_payment?(text)
 		amount = get_number(text)
-		#currencies = ["€", "£", "$"] 		# USD, AUD, CAD; EUR; GBP;
-		#return amount if currencies.include? text.chr
-		return amount if text.chr == "$" || URI.escape(text.chr) == "%C2%A4" && is_number?(amount)
+		#currencies = ["$", "+"]
+		#return amount if currencies.include? text.chr && is_number?(amount)
+		#return amount if text.chr == "$" || URI.escape(text.chr) == "%C2%A4" && is_number?(amount)
+		return amount if text.chr == "$" || URI.escape(text.chr) == "%C2%A4" || text.chr == "+" && is_number?(amount)
 		return false
 	end
 

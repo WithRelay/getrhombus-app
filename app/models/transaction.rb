@@ -22,7 +22,7 @@ class Transaction < ActiveRecord::Base
 
       response = Stripe::Charge.create({
             :amount => amount_with_taxes, # in cents
-            :currency => "usd",
+            :currency => merchant.currency ? merchant.currency : "usd",
             :card => tkn.id,
             #:application_fee => rhombus_fee
             :description => "Payment from #{user.email}. Card name: #{user.card_name}. Last four: #{user.last_four}.",
@@ -42,10 +42,10 @@ class Transaction < ActiveRecord::Base
       @name = (user.card_name.present?) ? " " + user.card_name.split.first : ''
       if merchant.tax_rate == "0"
         @message.send_and_save_message(11, merchant.rhombus_number, user.phone_number, 
-              "Thanks" + @name + ". A payment of $#{amount_in_hundreds} was sent to #{merchant.business_name}.")
+              "Thanks" + @name + ". A payment of #{amount_in_hundreds} (#{response.currency}) was sent to #{merchant.business_name}.")
       else
         @message.send_and_save_message(11, merchant.rhombus_number, user.phone_number, 
-          "Thanks" + @name + ". A payment of $#{amount_with_taxes_in_hundreds} plus taxes and fees set by #{merchant.business_name} was sent.")
+          "Thanks" + @name + ". A payment of #{amount_with_taxes_in_hundreds} (#{response.currency}) plus taxes and fees set by #{merchant.business_name} was sent.")
       end
       
       # Send to merchant's messaging channel
@@ -64,16 +64,16 @@ class Transaction < ActiveRecord::Base
           last_four: response.card.last4, expiration_month: response.card.exp_month, expiration_year: response.card.exp_year, 
           card_type: response.card.type, card_name: response.card.name, tax_rate: merchant.tax_rate, 
           on_behalf_of_uri: merchant.stripe_access_token, referenced_merchant_id: merchant.id, user_id: user.id, notes: message,
-          amount_with_taxes: sprintf("%.2f", response.amount.to_f/100))
+          amount_with_taxes: sprintf("%.2f", response.amount.to_f/100), currency: response.currency)
     
       EmailingService.send_receipt( merchant_email: merchant.email, to: user.email, merchant_name: merchant.business_name, 
             transaction_number: transaction_number, transaction_date: self.created_at, text: message, amount: amount_in_hundreds,
-            amount_with_taxes: amount_with_taxes_in_hundreds, currency: "$", business_phone: merchant.business_phone )
+            amount_with_taxes: amount_with_taxes_in_hundreds, business_phone: merchant.business_phone, currency: response.currency)
 
       self.receipt_sent_at = Time.zone.now                       # change this later to use timezone??
       self.save                                                  # Put a save check here later
 
-      return self.id, amount_in_hundreds, amount_with_taxes_in_hundreds, amount_less_fees, transaction_number, response.id, rhombus_fee_amt
+      return self.id, amount_in_hundreds, amount_with_taxes_in_hundreds, amount_less_fees, transaction_number, response.id, rhombus_fee_amt, response.currency
     rescue Stripe::CardError => e
       # Since it's a decline, Stripe::CardError will be caught
       body = e.json_body
@@ -109,12 +109,12 @@ class Transaction < ActiveRecord::Base
         from: user.phone_number, to: merchant.rhombus_number, tax_rate: merchant.tax_rate,
         transaction_number: debit_data[4], referenced_user_id: user.id, referenced_customer_transaction_id: debit_data[0], 
         last_four: user.last_four, card_name: user.card_name, card_type: user.card_type, user_id: merchant.id, notes: message, amount_with_taxes: debit_data[2], 
-        receipt_sent_at: Time.zone.now)                         # change this later
+        receipt_sent_at: Time.zone.now, currency: debit_data[7])                         # change this time thing later
 
     EmailingService.send_payment_notification(to: merchant.email, card_name: user.card_name, last_four: user.last_four, 
         card_type: user.card_type, customer_email: user.email, customer_phone: user.phone_number, text: message, 
         transaction_number: debit_data[4], stripe_txn_number: debit_data[5], transaction_date: self.created_at, 
-        amount_less_fees: debit_data[3], amount_with_taxes: debit_data[2], rhombus_number: merchant.rhombus_number, currency: "$")
+        amount_less_fees: debit_data[3], amount_with_taxes: debit_data[2], rhombus_number: merchant.rhombus_number, currency: debit_data[7])
 
     return self.id                                              # Put a save check here later
   end  
@@ -129,7 +129,7 @@ class Transaction < ActiveRecord::Base
       from: user.phone_number, to: merchant.rhombus_number, tax_rate: merchant.tax_rate, last_four: user.last_four,
       referenced_user_id: user.id, referenced_customer_transaction_id: debit_data[0], user_id: owner.id, notes: message, 
       amount_with_taxes: debit_data[2], referenced_merchant_transaction_id: credit_data, 
-      referenced_merchant_id: merchant.id)                                   # Put a save check here later
+      referenced_merchant_id: merchant.id, currency: debit_data[7])                                   # Put a save check here later
   end
 
   def save_transaction(options = {})
@@ -162,7 +162,8 @@ class Transaction < ActiveRecord::Base
    	self.notes = options[:notes] if options[:notes]
    	self.amount_with_taxes = options[:amount_with_taxes] if options[:amount_with_taxes]
    	self.referenced_merchant_transaction_id = options[:referenced_merchant_transaction_id] if options[:referenced_merchant_transaction_id]
-   	self.referenced_merchant_id = options[:referenced_merchant_id] if options[:referenced_merchant_id]        
+   	self.referenced_merchant_id = options[:referenced_merchant_id] if options[:referenced_merchant_id]    
+    self.currency = options[:currency] if options[:currency]        
 
    	self.save 										# add a check here later
    end
