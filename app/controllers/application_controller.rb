@@ -41,7 +41,7 @@ class ApplicationController < ActionController::Base
       :password, :password_confirmation, :instrument_uri, :last_four, 
       :expiration_month,  :expiration_year, :card_name, :card_type, 
       :phone_number, :business_name, :business_type, :street_address, :city, 
-      :state_province, :business_phone, :country, :approve_payments_immediately, 
+      :state_province, :business_phone, :country, :currency, :approve_payments_immediately, 
       :tax_rate, :business_zip_code, :first_name, :last_name, :is_active, :url,
       :subscription_type, :custom_welcome ) }
   end

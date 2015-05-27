@@ -38,6 +38,13 @@
                     </div>
                 </div>
 
+                <div class="form-group" >
+                  <label class="col-sm-2 control-label form-label">Currency</label>
+                  <div class="col-sm-10">   
+                      <%= f.select :currency, "<option value='' disabled selected class='hide'>Select currency</option><option value='aud'>AUD</option><option value='cad'>CAD</option><option value='crc'>CRC</option><option value='dkk'>DKK</option><option value='eur'>EUR</option><option value='gbp'>GBP</option><option value='nok'>NOK</option><option value='sek'>SEK</option><option value='usd'>USD</option>".html_safe, {}, :class => 'selectpicker rhombusFocus', id: 'currency' %> 
+                    </div>
+                </div>
+
                 <div class="merchant-form-line">Tell us about your business</div>
 
                 <div class="form-group">

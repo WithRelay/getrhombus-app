@@ -741,6 +741,12 @@ $(document).ready(function () {
                 $('#merchantProfile').formValidation('revalidateField', 'user[country]');
             })
             .end()
+        .find('[name="user[currency]"]')
+            .selectpicker()
+            .change(function(e) {
+                $('#merchantProfile').formValidation('revalidateField', 'user[currency]');
+            })
+            .end()
         .formValidation({
             // I am validating Bootstrap form
             framework: 'bootstrap',
@@ -875,6 +881,14 @@ $(document).ready(function () {
                     validators: {
                         notEmpty: {
                             message: 'Please select your country'
+                        }
+                    }
+                },
+                'user[currency]': {
+                    row: '.form-group',
+                    validators: {
+                        notEmpty: {
+                            message: 'Please select a currency'
                         }
                     }
                 },
