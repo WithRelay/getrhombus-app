@@ -34,7 +34,7 @@ module ProcessMessage
 			end
 		elsif !user
 			save_inbound_text(request.query_string, msg_code = 4)
-			if is_signup(text)
+			if is_signup?(text)
 				merchant_name = merchant.business_name ? merchant.business_name : "Rhombus"
 				short_link = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?num=#{params[:msisdn]}&referrer_num=#{params[:to]}&referrer=#{merchant_name}")
 				send_response(14, params[:to], params[:msisdn], "Hi there, thanks for reaching out...to chat with us or send a payment, sign up here: #{short_link}")
