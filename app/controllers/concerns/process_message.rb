@@ -25,17 +25,20 @@ module ProcessMessage
 					end
 				end
 			else
-				# payement message but user doesnt exist. save in messages and send a response
-				short_link = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?num=#{params[:msisdn]}&referrer_num=#{params[:to]}&referrer=#{merchant.business_name}")
+				# paymennt message but user doesnt exist. save in messages and send a response
+				merchant_name = merchant.business_name ? merchant.business_name : "Rhombus"
+				short_link = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?num=#{params[:msisdn]}&referrer_num=#{params[:to]}&referrer=#{merchant_name}")
 				send_response(16, params[:to], params[:msisdn], "Hi there, thanks for reaching out...to send a payment, sign up here. Thanks! => #{short_link}")
 				save_inbound_text(request.query_string, msg_code = 6)
 				return
 			end
 		elsif !user
-			# user doesnt exist at all...save in messages and send a response
+			if is_signup(text)
+				merchant_name = merchant.business_name ? merchant.business_name : "Rhombus"
+				short_link = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?num=#{params[:msisdn]}&referrer_num=#{params[:to]}&referrer=#{merchant_name}")
+				send_response(14, params[:to], params[:msisdn], "Hi there, thanks for reaching out...to chat with us or send a payment, sign up here: #{short_link}")
+			end
 			save_inbound_text(request.query_string, msg_code = 4)
-			#short_link = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?num=#{params[:msisdn]}&referrer_num=#{params[:to]}&referrer=#{merchant.business_name}")
-			#send_response(14, params[:to], params[:msisdn], "Hi there, thanks for reaching out...to chat with us or send a payment, sign up here: #{short_link}")
 		else
 			# user exist, but not a payment message...save in messages
 			save_inbound_text(request.query_string, msg_code = 5)
@@ -153,7 +156,7 @@ module ProcessMessage
 
 
 	def is_signup?(text)
-		words = ['signup', 'sign-up', 'give', 'pay', 'buy']
+		words = ['signup', 'sign-up', 'give', 'pay', 'buy', 'donate']
 		return true if words.include? text.downcase.gsub(/\s+/, "")  
 		return false
 	end
