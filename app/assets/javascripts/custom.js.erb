@@ -1417,7 +1417,7 @@ $(document).ready(function () {
         var e = document.getElementById("searchNumberType");
         var searchNumberType = e.options[e.selectedIndex].value.toString();
         $.ajax({
-            url: "/search-number",
+            url: "/v1/numbers/search.json",
             type: "GET",
             data: 'search_number=' + str + "&type=" + searchNumberType,
             dataType: "json"     

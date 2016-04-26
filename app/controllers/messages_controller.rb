@@ -34,11 +34,6 @@ class MessagesController < ApplicationController
     process_message(params)
   end
 
-
-  def search_number
-    render json: { number: TextingService.search_number(params[:search_number], params[:type], current_user.country) } if current_user
-  end
-
   def receive_voice_twilio
     render xml: TextingService.receive_call.to_xml
   end

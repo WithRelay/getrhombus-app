@@ -21,7 +21,6 @@ Rails.application.routes.draw  do
   get "/receive_voice_twilio" => 'messages#receive_voice_twilio'
   get "/receive_delivery_report" => 'messages#receive_delivery_report'
   get "/receive_delivery_report_twilio" => 'messages#receive_delivery_report_twilio'
-  get "/search-number" => 'messages#search_number'
   match "/send_mms_from_dashboard" => 'messages#dashboard_mms', via: [:post]
   
   # devise routes
@@ -57,6 +56,7 @@ Rails.application.routes.draw  do
     match '/users/find' => 'users#find', via: :get
     match '/hashtags/find' => 'hashtags#find', via: :get
     match '/transactions/:charge_id/refund' => 'transactions#refund', via: :post
+    match '/numbers/search' => 'numbers#search', via: :get
     #match '/hashtags/create' => 'hashtags#create', via: :post
   end
 
