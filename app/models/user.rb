@@ -3,7 +3,7 @@ class User < ActiveRecord::Base
   include DashboardQueries
   include MakeSpreadsheet
 
-  attr_accessor :full_name, :phone, :captured_amt, :msg_id
+  attr_accessor :full_name, :phone, :captured_amt, :msg_id, :update_rhombus_number
   
   # include default devise modules. Others available are:
   # :token_authenticatable, :lockable, :timeoutable and :confirmable,

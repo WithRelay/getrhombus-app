@@ -20,9 +20,7 @@
 <div class="container-padding">  
 
   <!-- Start Row -->
-<%
-=begin %>
-  <div class="row">
+ <div class="row">
       <div id="profileLogo"><img src="<%= asset_path 'logo.jpg' %>" alt="icon" id="signup_logo" class="icon"></div>
 
       <div class="panel panel-default" id="merchantprofilepage">
@@ -70,19 +68,7 @@
   </div>
 
   <!-- End Row -->
-<%
-=end 
-%>
-<%= form_for(@image, multipart: true) do |f| %>
 
-  <div class="field">
-    <%= f.label :avatar %>
-    <%= f.file_field :avatar %>
-  </div>
-  <div class="actions">
-    <%= f.submit 'Make a friend' %>
-  </div>
-<% end %>
 
 </div>
 <!-- END CONTAINER -->

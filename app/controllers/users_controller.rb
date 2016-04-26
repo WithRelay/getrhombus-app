@@ -22,14 +22,13 @@ class UsersController < ApplicationController
         # in case it includes a captured payment
         link = params[:amt].present? ? "/profile?amt=#{params[:amt]}&referrer_num=#{params[:referrer_num]}&msg_id=#{params[:msg_id]}" : "/profile"  
         redirect_to link
-      elsif current_user.user_level == 1 && (current_user.business_name.blank? || current_user.stripe_access_token.blank?) # incomplete merchant account
+      elsif current_user.user_level == 1 && (current_user.business_name.blank? || current_user.stripe_access_token.blank? || current_user.rhombus_number.blank?) # incomplete merchant account
         redirect_to "/profile"
       else
-        if current_user.user_level == 0 && params[:amt].present? && params[:referrer_num].present? && params[:mid].present?
+        if current_user.user_level == 0 && params[:amt].present? && params[:referrer_num].present? && params[:msg_id].present?
           #Transaction.process_captured_payment(@user, params[:amt], params[:referrer_num], params[:mid]) 
         elsif @user.user_level == 1 && @user.short_url.blank? && @user.rhombus_number.present? 
-          # generate bitly link for merchant if blank and rhombus number exist
-          ## should remove this after twilio migration ###
+          # generate bitly link for merchant if blank and rhombus number exist...should remove this after twilio migration ###
           @user.short_url = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?referrer_num=#{@user.rhombus_number}&referrer=#{@user.business_name}")
           @user.save
         end
