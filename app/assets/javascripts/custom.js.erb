@@ -5,9 +5,8 @@ $(document).ready(function () {
         page_params = url.search.substring(1),
         cc_year, cc_month, txn_details, CARD_BTN_TEXT, REFUND_TXN_LINK, REFUND_BOX = $('#refundFormBox'),
         chart_labels = [], chart_totals = [], chart_txns = [],
-        contact_url = '/contact_forms.json', cc_submit = $('#cc-submit');
-
-    var searchNumBtn = document.getElementById('searchNumberBtn');
+        contact_url = '/contact_forms.json', cc_submit = $('#cc-submit'),
+        searchNumBtn = document.getElementById('searchNumberBtn');
     
     $.ajaxSetup({ cache:false });
        
@@ -1407,10 +1406,12 @@ $(document).ready(function () {
 
 
     // for searching for rhombus number
-    searchNumBtn.addEventListener('click', function() {
-        searchNumBtn.disabled = true; 
-        get_number(document.getElementById('searchNumberField').value)
-    })
+    if (searchNumBtn) {
+        searchNumBtn.addEventListener('click', function() {
+            searchNumBtn.disabled = true; 
+            get_number(document.getElementById('searchNumberField').value)
+        });
+    }
 
     var get_number = function(str) {
         var e = document.getElementById("searchNumberType");
