@@ -1,6 +1,6 @@
 Rails.application.routes.draw  do
 
-  # static pages routes
+  ## static pages routes
   root 'static_pages#home'
   get '/about' => 'static_pages#about'
   get '/customers' => 'static_pages#customers'  
@@ -15,7 +15,7 @@ Rails.application.routes.draw  do
   get '/customer_info_xls_template' => "static_pages#customer_info_xls_template"
   get '/transactions/spreadsheet' => 'transactions#spreadsheet'
   
-  # messaging related routes
+  ## messaging related routes
   get "/receive_text_message" => 'messages#receive_text_message'
   get "/receive_text_message_twilio" => 'messages#receive_text_message_twilio'
   get "/receive_voice_twilio" => 'messages#receive_voice_twilio'
@@ -23,7 +23,7 @@ Rails.application.routes.draw  do
   get "/receive_delivery_report_twilio" => 'messages#receive_delivery_report_twilio'
   match "/send_mms_from_dashboard" => 'messages#dashboard_mms', via: [:post]
   
-  # devise routes
+  ## devise routes
   devise_for :users, :controllers => { registrations: "registrations", omniauth_callbacks: "omniauth_callbacks" }
   devise_scope :user do
     get "signup", :to => "devise/registrations#new"
@@ -35,24 +35,25 @@ Rails.application.routes.draw  do
   resources :users, :only => :show do
     resources :hashtags
   end
-  # scope this like above???
-  # messaging
+
+  ## scope routes below like above??
+  ## messaging
   get '/users/:id/json_get_latest_active_messaging' => 'users#json_get_latest_active_messaging'
   get '/users/:id/json_get_user_messages_by_merchant/:user_number' => 'users#json_get_user_messages_by_merchant'
   get '/users/:id/mark_user_messages_for_merchant_as_read/:user_number' => 'users#mark_user_messages_for_merchant_as_read'
   get '/users/:id/send_message_from_merchant/:user_number' => 'users#send_message_from_merchant'
   get '/users/:id/messaging' => 'users#messaging', :as => 'dashboard_messaging'
   get '/json_get_current_user' => 'application#json_get_current_user'
-  ## User transactions
+  ## user transactions
   get '/users/:id/transactions' => 'users#transactions', :as => 'user_transactions'
-  # User customers/merchants
+  ## user customers/merchants
   get '/users/:id/customers' => 'users#customers', :as => 'user_customers'
   get '/users/:id/businesses' => 'users#customers', :as => 'user_businesses'
-  # User contacts (either customers or merchants)
+  ## user contacts (either customers or merchants)
   get '/users/:id/contacts' => 'users#contacts', :as => 'user_contacts'
 
-  # api
-  api_version(:module => "Api::V1", :path => {:value => "v1"}, :constraints => {:subdomain => "api"}, :defaults => {:format => "json"}) do
+  ## api
+  api_version(module: "Api::V1", path: {value: "v1"}, constraints: { subdomain: "api" }, defaults: { format: "json" }) do
     match '/users/find' => 'users#find', via: :get
     match '/hashtags/find' => 'hashtags#find', via: :get
     match '/transactions/:charge_id/refund' => 'transactions#refund', via: :post
@@ -60,11 +61,8 @@ Rails.application.routes.draw  do
     #match '/hashtags/create' => 'hashtags#create', via: :post
   end
 
-  # catch all other to 404
+  ## catch all other to 404
   get "/*other", to: 'static_pages#to_404'     #all non-existent routes go to 404
-
-
-
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

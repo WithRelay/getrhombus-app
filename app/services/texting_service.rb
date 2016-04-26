@@ -73,7 +73,7 @@ class TextingService
       # Thorough implementation needed per doc above
       client = Twilio::REST::Client.new TWILIO_API_KEY, TWILIO_API_SECRET
       begin  
-        search_params = { }#voice_enabled: "true", sms_enabled: "true", exclude_all_address_required: "true" }
+        search_params = { voice_enabled: "true", sms_enabled: "true", exclude_all_address_required: "true" }
         search_params[:mms_enabled] = "true" if ["US", "CA"].include? country
         search_params[type] = str
 

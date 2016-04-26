@@ -28,9 +28,9 @@ class MessagesController < ApplicationController
 
   def receive_text_message_twilio
     message_body = params["Body"]
-      from_number = params["From"]
+    from_number = params["From"]
 
-      render :text => ""              # return 200 to twilio
+    render :text => ""              # return 200 to twilio
     process_message(params)
   end
 
