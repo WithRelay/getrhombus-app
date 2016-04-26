@@ -48,7 +48,6 @@ class Utf8mb4 < ActiveRecord::Migration
         {'transactions' => 'routing_number' },
         {'transactions' => 'referenced_customer_transaction_id' },
         {'transactions' => 'receipt_sent_at' },
-        {'transactions' => 'refund_reason' },
         {'transactions' => 'currency' },
         {'users' => 'email' },
         {'users' => 'encrypted_password' },
