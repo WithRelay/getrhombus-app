@@ -5,7 +5,7 @@ class UsersController < ApplicationController
   load_and_authorize_resource
 
   def index
-     @users = User.all #paginate(:page => params[:page], :per_page => 10)
+     @users = User.all  # paginate(:page => params[:page], :per_page => 10)
   end
 
   def new
@@ -13,19 +13,30 @@ class UsersController < ApplicationController
   end
 
   def show
-    if params[:graph].present?
+    if params[:graph].present?  # for graphs in user account
       @stats = @user.get_line_stats if params[:graph] == 'line'
       @stats = @user.get_area_stats if params[:graph] == 'area'
       render json: @stats.to_json
     else
-      if current_user.user_level == 0 && current_user.customer_uri.blank? 
-        redirect_to "/profile"
-      elsif current_user.user_level == 1 && (current_user.business_name.blank? || current_user.stripe_access_token.blank?)
+      if current_user.user_level == 0 && current_user.customer_uri.blank? # incomplete customer account
+        # in case it includes a captured payment
+        link = params[:amt].present? ? "/profile?amt=#{params[:amt]}&referrer_num=#{params[:referrer_num]}&msg_id=#{params[:msg_id]}" : "/profile"  
+        redirect_to link
+      elsif current_user.user_level == 1 && (current_user.business_name.blank? || current_user.stripe_access_token.blank?) # incomplete merchant account
         redirect_to "/profile"
       else
+        if current_user.user_level == 0 && params[:amt].present? && params[:referrer_num].present? && params[:mid].present?
+          #Transaction.process_captured_payment(@user, params[:amt], params[:referrer_num], params[:mid]) 
+        elsif @user.user_level == 1 && @user.short_url.blank? && @user.rhombus_number.present? 
+          # generate bitly link for merchant if blank and rhombus number exist
+          ## should remove this after twilio migration ###
+          @user.short_url = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?referrer_num=#{@user.rhombus_number}&referrer=#{@user.business_name}")
+          @user.save
+        end
         @last4_transactions = @user.transactions.select(:created_at, :description, :notes).last(4).reverse
         @total_msgs = @user.get_total_messages
-        @dashboard_stuff = @user.dashboard_stats
+        @dashboard_stuff = @user.dashboard_stats 
+        @token = TextingService.get_twilio_capibility_token if current_user.user_level == 1       
       end           
     end
   end  
@@ -82,6 +93,9 @@ class UsersController < ApplicationController
     end
   end
   
+  # Need to dry up this view...move out these methods? some methods might not be needed
+  # like transactions...usnt that already in the relations
+
   # Returns JSON object with user hash who sent a message to the given merchant in the last CONFIG[:dashboard]['messaging']['num_days_history'] days
   def json_get_latest_active_messaging
     render :json => Hash['success' => true, 'users' => User.get_latest_active_messaging(params[:id], CONFIG[:dashboard]['messaging']['num_days_history'])].to_json 
@@ -111,7 +125,7 @@ class UsersController < ApplicationController
         @message = Message.new
         @message.send_and_save_message(5, merchant.rhombus_number, params[:user_number], params[:message])
         if !@message.id.blank?
-          render :json => Hash['success' => true, 'user_level' => merchant.user_level, 'image_url' => ActionController::Base.helpers.asset_path('rhombus_icon_50x50.png'), 'ts_day_of_the_week' => @message.created_at.strftime('%A'), 'ts_time' => @message.created_at.strftime('%l:%M %P')].to_json
+          render :json => Hash['success' => true, 'user_level' => merchant.user_level, 'profile_image' => ActionController::Base.helpers.asset_path('rhombus_icon_50x50.png'), 'ts_day_of_the_week' => @message.created_at.strftime('%A'), 'ts_time' => @message.created_at.strftime('%l:%M %P')].to_json
           return
         end
       end

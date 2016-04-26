@@ -3,22 +3,18 @@
   <div class="page-header">
     <div style="float:left;">
       <h1 class="title">Messaging</h1>
-      <ol class="breadcrumb">
+      <!--<ol class="breadcrumb">
         <li ng-if="active_user_count > 0" class="active">
           You have <span ng-class="{'label label-danger': global_unread_count > 0 , '': global_unread_count == 0}" class="">{{global_unread_count}}</span> unread messages
         </li>
         <li ng-if="active_user_count == 0" class="active">
           No messages in the last <%= CONFIG[:dashboard]['messaging']['num_days_history'] %> days.
         </li>
-      </ol>
+      </ol>-->
     </div>
+
     <div style="float:right;">
-      <h1 ng-if="merchant_short_url" class="title" style="font-size:14px;">My Rhombus Link</h1>
-      <ol ng-if="merchant_short_url" class="breadcrumb">
-        <li class="active">
-          {{merchant_short_url}}
-        </li>
-      </ol>
+      <button ng-click="displayChargeForm()">Charge a customer</button>    
     </div>
     <div class="clearfix"></div>
   </div>
@@ -46,7 +42,7 @@
               <li ng-repeat="(user_number, user) in users | filterUserList:query | orderObjectBy:'last_message_ts':true">
                 
                 <a ng-class="{ chat_highlight : current_chat_user === user, item : true, clearfix : true }" ng-click="getUserMessages(user)"> 
-                  <img ng-src="{{user.image_url}}" alt="img" class="img" /> 
+                  <img ng-src="{{user.profile_image}}" alt="img" class="img" /> 
                   <span class="from">{{user.first_name}} {{user.last_name}}</span> 
                   <div class="last-message">{{user.last_message}}</div>
                   <span ng-if="user.unread_count > 0" class="unread">{{user.unread_count}}</span> 
@@ -72,9 +68,14 @@
               <li ng-if="($index != 0) && !selected_user_messages[$index - 1].unread && selected_user_messages[$index].unread" class="date">New Messages</li>
               <li ng-if="($index == 0) || (selected_user_messages[$index - 1].ts_day_of_the_week != selected_user_messages[$index].ts_day_of_the_week)" class="date">{{message.ts_day_of_the_week}}</li>
               <li>
-                <img ng-if="(message.user_level == 0) && (($index == 0) || (selected_user_messages[$index - 1].user_level != message.user_level))" ng-src="{{message.image_url}}" alt="img" class="img">
+                <img ng-if="(message.user_level == 0) && (($index == 0) || (selected_user_messages[$index - 1].user_level != message.user_level))" ng-src="{{message.profile_image}}" alt="img" class="img">
                 <p ng-class="{'ballon color1': message.user_level == 0 , 'ballon color2': message.user_level != 0}">
-                  {{message.text}}
+                  
+                  
+
+                  <!--{{message.text}}-->
+                  <span ng-if="message.text">{{message.text}}</span>
+                  <span ng-if="message.image_url"><img src="{{message.image_url}}"/></span>
                 </p>
                 <p class="ts">
                   {{message.ts_time}}
@@ -87,15 +88,30 @@
           <div class="write">
             <form>
               <p>
+                <span class="char-counter">{{char_limit - new_message.text.length}} characters left</span>
                 <textarea class="textarea form-control" placeholder="Type a message here..." style="height:60px; width:100%;" ng-model="new_message.text" ng-trim="false" ng-enter="sendMessage(new_message)"></textarea>
               </p>
-              <button class="btn btn-default" ng-click="sendMessage(new_message)">
-                Send
+              <button class="btn btn-default btn-rhombus" id="send_msg_btn" ng-click="sendMessage(new_message)" style="height: 32px;" ng-disabled='is_sending'>
+                {{send_msg_btn}}
               </button>
-              <%#<button type="reset" class="btn margin-l-5">
-                Clear
-              </button>%>
-              <span class="char-counter">{{char_limit - new_message.text.length}} characters left</span>
+              
+              <button type="file" ngf-select="uploadFiles($file, $invalidFiles)"
+                  accept="image/*" ngf-max-height="1000" ngf-max-size="1MB">
+              Select File</button>
+              <br><br>
+          File:
+          <div style="font:smaller">{{f.name}} {{errFile.name}} {{errFile.$error}} {{errFile.$errorParam}}
+              <span class="progress" ng-show="f.progress >= 0">
+                  <div style="width:{{f.progress}}%"  
+                       ng-bind="f.progress + '%'"></div>
+              </span>
+          </div>     
+          {{errorMsg}}
+                      <%#<button type="reset" class="btn margin-l-5">
+                        Clear
+                      </button>%>
+                      <span class="char-counter">{{char_limit - new_message.text.length}} characters left</span>
+                      
             </form>
           </div>
         </div>
@@ -106,4 +122,70 @@
     <!-- End Mailbox -->
   </div>
   <!-- END CONTAINER -->
+</div>
+
+
+<div style="display: none;" id="chargeFormBox" class="newForms">
+  <div id="chargeFormDiv" class="parent_div">
+    <div class="center_div">      
+      <div id="chargeCustomer">Charge Customer</div>
+      <p id="chargeCustomerLine">____</p>      
+      <form id="chargeForm" name="chargeForm" ng-submit="submitChargeForm(chargeForm.$valid)" novalidate>
+         
+        <label>
+          <angucomplete-alt id="find-customer"
+            placeholder="Customer name or number"
+            pause="400"
+            minlength="3" 
+            selected-object="customerSelected"
+            remote-url="<%= (Rails.env == 'development' ? "http://localhost:3000" : "https://www.getrhombus.com")  +  "/v1/users/find?query=" %>"
+            remote-url-data-field="users"
+            title-field="card_name"
+            text-no-results="We couldn't find any customer"
+            match-class='highlight'
+            input-name='number'
+            description-field='phone_number'
+            text-searching="Finding your customer..." 
+            field-required="is_true"
+             />
+        </label>
+
+<%
+=begin %>
+        <label>
+          <angucomplete-alt id="find-hashtag"
+            placeholder="Hashtag or item name"
+            pause="400"
+            minlength="3" 
+            selected-object="hashtagSelected"
+            remote-url="<%#= (Rails.env == 'development' ? "http://localhost:3000" : "https://www.getrhombus.com")  +  "/v1/hashtags/find?query=" %>"
+            remote-url-data-field="hashtags"
+            title-field="tag"
+            text-no-results="We couldn't find any tag/item"
+            match-class='highlight'
+            description-field='name'
+            text-searching="Finding your tag/item..." />
+        </label>
+<%
+=end %>
+
+        <label class="left">
+          <input type="number" min="1" max='15000' required ng-model='amount' name="amount" placeholder="Amount" style="width: 150px">        
+          <p ng-show="chargeForm.amount.$invalid && !chargeForm.amount.$pristine">Amount is required.</p>
+        </label>
+      
+        <label>
+          <textarea type="text" ng-model='notes' name="notes" placeholder="Description" style="height: 100px;" class="rhombusFocus"></textarea>
+        </label>
+
+        <label>
+          <input type="checkbox" name="authorize" value="authorize">Authorize only
+        </label>
+
+        <footer>
+          <button class="btn btn-default btn-block btn-rhombus" id="chargeButton" ng-disabled="chargeForm.$invalid || is_sending" type="submit">{{charge_btn}}</button>
+        </footer>
+      </form>
+    </div>
+  </div>
 </div>

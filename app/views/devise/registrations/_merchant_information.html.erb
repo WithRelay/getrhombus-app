@@ -34,14 +34,14 @@
                 <div class="form-group" >
                   <label class="col-sm-2 control-label form-label">Country</label>
                   <div class="col-sm-10 countrygroup">   
-                      <%= f.select :country, "<option value='' disabled selected class='hide'>Select country</option><option value='AU'>Australia</option><option value='AU'>Austria</option><option value='BE'>Belgium</option><option value='CA'>Canada</option><option value='DK'>Denmark</option><option value='FI'>Finland</option><option value='FR'>France</option><option value='DE'>Germany</option><option value='IE'>Ireland</option><option value='IT'>Italy</option><option value='LU'>Luxembourg</option><option value='NL'>Netherlands</option><option value='NO'>Norway</option><option value='ES'>Spain</option><option value='SE'>Sweden</option><option value='GB'>United Kingdom</option><option value='US'>United States</option>".html_safe, {}, :class => 'selectpicker rhombusFocus', id: 'country' %> 
+                      <%= f.select :country, options_for_select({ "Select country" => "Select country", "Australia" => "AU", "Austria" => 'AT', "Belgium" => "BE", "Canada" => "CA", "Denmark" => "DK", "Finland" => "FI", "France" => "FR", "Germany" => "DE", "Ireland" => "IE", "Italy" => "IT", "Luxembourg" => "LU", "Netherlands" => "NL", "Norway" => "NO", "Spain" => "ES", "Sweden" => "SE", "United Kingdom" => "GB", "United States" => "US" }, selected: "Select country", disabled: "Select country"), {}, :class => 'selectpicker rhombusFocus', id: 'country' %>
                     </div>
                 </div>
 
                 <div class="form-group" >
                   <label class="col-sm-2 control-label form-label">Currency</label>
                   <div class="col-sm-10">   
-                      <%= f.select :currency, "<option value='' disabled selected class='hide'>Select currency</option><option value='aud'>AUD</option><option value='cad'>CAD</option><option value='crc'>CRC</option><option value='dkk'>DKK</option><option value='eur'>EUR</option><option value='gbp'>GBP</option><option value='nok'>NOK</option><option value='sek'>SEK</option><option value='usd'>USD</option>".html_safe, {}, :class => 'selectpicker rhombusFocus', id: 'currency' %> 
+                      <%= f.select :currency, options_for_select({ "Select currency" => "Select currency", "AUD" => "aud", "CAD" => 'cad', "CRC" => "crc", "DKK" => "dkk", "EUR" => "eur", "GBP" => "gbp", "NOK" => "nok", "SEK" => "sek", "USD" => "usd" }, selected: "Select currency", disabled: "Select currency"), {}, :class => 'selectpicker rhombusFocus', id: 'currency' %>
                     </div>
                 </div>
 
@@ -58,7 +58,7 @@
                 <div class="form-group">
                   <label class="col-sm-2 control-label form-label">Type</label>
                   <div class="col-sm-10">
-                    <%= f.select :business_type, "<option value='' disabled selected class='hide'>Select business type</option><option value='Beauty Professional'>Beauty Professional</option><option value='Cleaning Services'>Cleaning Services</option><option value='Coffee Shop'>Coffee Shop</option><option value='Concierge Services'>Concierge Services</option><option value='Home and Repair Services'>Home and Repair Services</option><option value='Health and Fitness'>Health and Fitness</option><option value='Individual'>Individual</option><option value='On-Demand Delivery'>On-Demand Delivery</option><option value='Orgs and Non-Profits'>Orgs and Non-Profits</option><option value='Professional Services'>Professional Services</option><option value='Restaurant'>Restaurant</option><option value='Retail'>Retail</option><option value='Taxi'>Taxi</option><option value='Others'>Others</option>".html_safe, {}, :class => 'selectpicker rhombusFocus' %>
+                    <%= f.select :business_type, options_for_select({ "Select business type" => "Select business type", "Beauty Professional" => "Beauty Professional", "Cleaning Services" => 'Cleaning Services', "Coffee Shop" => "Coffee Shop", "Concierge Services" => "Concierge Services", "Home and Repair Services" => "Home and Repair Services", "Health and Fitness" => "Health and Fitness", "Individual" => "Individual", "On-Demand Delivery" => "On-Demand Delivery", "Orgs and Non-Profits" => "Orgs and Non-Profits", "Professional Services" => "Professional Services", "Restaurant" => "Restaurant", "Retail" => "Retail", "Taxi" => "Taxi", "Others" => "Others" }, selected: "Select business type", disabled: "Select business type"), {}, :class => 'selectpicker rhombusFocus' %>
                   </div>
                 </div>
 
@@ -147,17 +147,17 @@
 
                 <div class="merchant-form-line">You're almost set</div>
 
-
-                <div class="form-group">
+                <%# if you need merchant's to confirm password %>
+                <%#<div class="form-group">
                   <label class="col-sm-2 control-label form-label">Password</label>
                   <div class="col-sm-10">
                   <%= f.password_field :current_password, type: "password", class: "form-control rhombusFocus", placeholder: "Re-enter current password", id: "reenterPassword" %>
-                  </div>
-                </div>
+                  <%#</div>
+                </div>%>
                 
                 <div class="form-group">
                   <div class="col-sm-offset-2 col-sm-10">
-                  <%= f.submit "Submit", id: "ba-submit", :class => "btn btn-default btn-rhombus" %> 
+                  <%= f.submit "Save", id: "ba-submit", :class => "btn btn-default btn-rhombus" %> 
                   </div>
                 </div>
 

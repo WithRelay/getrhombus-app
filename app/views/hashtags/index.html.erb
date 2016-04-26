@@ -1,0 +1,108 @@
+<%= provide(:title, "Rhombus - Hashtags") %>
+
+<%#= notice %>
+<!-- ========== Css Files ========== -->
+  
+<%= content_for :head do %>
+  <%= stylesheet_link_tag "application_dashboard_messaging", media: "all" %>
+<% end %>
+
+<body>
+  <!-- Start Page Loading -->
+  <div class="loading"><img src="<%= asset_path 'loading.gif' %>" alt="loading-img"></div>
+  <!-- End Page Loading -->
+
+ <%= render 'shared/header_new' %>
+  <%= render 'shared/sidebar' %>
+
+ <!-- //////////////////////////////////////////////////////////////////////////// --> 
+<!-- START CONTENT -->
+<div class="content">
+
+  <!-- Start Page Header -->
+  <div class="page-header" style="background: transparent; margin-bottom: 0px;">
+    <div class="title">
+      <%= link_to 'Create Hashtag', new_user_hashtag_path, id: 'createHashTag', class: "hashtagBtns" %>
+    </div>
+
+    <%= render 'shared/dashboard_shortcut' %>
+
+  </div>
+  <!-- End Page Header -->
+
+ <!-- //////////////////////////////////////////////////////////////////////////// --> 
+<!-- START CONTAINER -->
+<div class="" id="transactions-column">
+
+ <!-- Start Row -->
+  <div class="row">
+
+    <!-- Start Panel -->
+    <div class="col-md-12">
+      <% unless @hashtags.blank? %>
+        <div class="panel panel-default">
+
+          <div class="panel-title">
+            <ul class="panel-tools">
+              <li><a class="icon expand-tool"><i class="fa fa-expand"></i></a></li>
+            </ul>
+          </div>
+
+          <div class="panel-body table-responsive">
+            <table id="transactions-table" class="table table-striped dataTable">
+              <thead>
+                <tr role="row">
+                  <th>Hash tag</th>
+                  <th>Item/Campaign Name</th>
+                  <th>Created</th>
+                  <th># Txns</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+              <% @hashtags.each do |h| %>
+                <tr role="row">
+                  <td><%= h.tag %></td>
+                  <td><%= h.name %></td>
+                  <td><%= h.created_at.strftime("%m/%d/%Y %I:%M %p") %></td>
+                  <td><%= h.updated_at.strftime("%m/%d/%Y %I:%M %p") %></td>
+                  <td>
+                      <%= link_to 'Details', user_hashtag_path(current_user, h), id: "showHashTag", class: "hashtagBtns" %>
+                      <%= link_to 'Edit', edit_user_hashtag_path(current_user, h), id: "editHashTag", class: "hashtagBtns" %>
+                      <%= link_to 'Delete', user_hashtag_path(current_user, h), id: "deleteHashTag", class: "hashtagBtns", method: :delete, data: { confirm: 'Are you sure?' } %>
+                  </td>
+                </tr>
+              <% end %>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      <% else %>
+        <div class="center">
+          <div class="no-user">You have no hashtags :(</div>
+        </div>
+      <% end %>
+    </div>
+    <!-- End Panel -->
+      <div style="text-align: center; margin-bottom: 40px;"><%#= will_paginate @hashtags, :page_links => false %></div>
+  </div>
+  <!-- End Row -->
+</div>
+<!-- END CONTAINER -->
+ <!-- //////////////////////////////////////////////////////////////////////////// --> 
+
+          <br><br><br><br><br><br><br><br><br><br><br><br>
+     <br><br><br><br><br><br>
+
+<%= render 'shared/dashboard_footer' %>
+
+
+</div>
+<!-- End Content -->
+ <!-- //////////////////////////////////////////////////////////////////////////// --> 
+
+
+</body>
+</html>
+

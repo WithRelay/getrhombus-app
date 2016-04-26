@@ -1,28 +1,24 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
-<meta charset="utf-8" />
-<title><%= content_for?(:title) ? yield(:title) : "Rhombus" %></title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<meta content='Make payments via text messages' name="description" />
-<%= favicon_link_tag "favicon.ico" %>
-<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
-<%= stylesheet_link_tag "application_dashboard_messaging", media: "all" %>
-<%= yield :head %>
-<%= javascript_include_tag "application_dashboard_messaging" %>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-<%= javascript_include_tag "plugins" %>
-<%= yield :head_script %>
-<%= csrf_meta_tags %>
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-  ga('create', 'UA-48086680-1', 'getrhombus.com');
-  ga('send', 'pageview');
-</script>
+  <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+  <meta charset="utf-8" />
+  <title><%= content_for?(:title) ? yield(:title) : "Rhombus" %></title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta content='Make payments via text messages' name="description" />
+  <%= favicon_link_tag "favicon.ico" %>
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  <%= stylesheet_link_tag "application_dashboard_messaging", media: "all" %>
+  <%= yield :head %>
+  <%= javascript_include_tag "application_dashboard_messaging" %>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/danialfarid-angular-file-upload/12.0.4/ng-file-upload-all.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.1/clipboard.min.js"></script> -->
+  
+  <%= javascript_include_tag "plugins" %>
+  <%= yield :head_script %>
+  <%= csrf_meta_tags %>
 </head>
 <body >
    <!-- Start Page Loading -->
@@ -31,5 +27,8 @@
   <%= render 'shared/header_new' %>
   <%= render 'shared/sidebar' %>
   <%= yield %>
+
+  <%= render 'shared/smooch' %>
+  <%= render 'shared/google_analytics' %>
 </body>
 </html>

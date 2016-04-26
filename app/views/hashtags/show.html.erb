@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @hashtag.name %>
+</p>
+
+<p>
+  <strong>Amount:</strong>
+  <%= @hashtag.amount %>
+</p>
+
+<p>
+  <strong>Response:</strong>
+  <%= @hashtag.response %>
+</p>
+
+<p>
+  <strong>Tag:</strong>
+  <%= @hashtag.tag %>
+</p>
+
+<p>
+  <strong>Isprecedent:</strong>
+  <%= @hashtag.is_precedent %>
+</p>
+
+<%= link_to 'Edit', edit_user_hashtag_path(current_user, @hashtag) %> |
+<%= link_to 'Back', user_hashtags_path %>

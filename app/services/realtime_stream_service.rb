@@ -22,7 +22,7 @@ class RealtimeStreamService
             'last_name' => user.blank? ? '' : user.last_name,
             'email' => user.blank? ? '' : user.email,
             'user_level' => user_level,
-            'image_url' => user_level == 0 ? ActionController::Base.helpers.asset_path('user_icon_50x50.png') : ActionController::Base.helpers.asset_path('rhombus_icon_50x50.png'),
+            'profile_image' => user_level == 0 ? ActionController::Base.helpers.asset_path('user_icon_50x50.png') : ActionController::Base.helpers.asset_path('rhombus_icon_50x50.png'),
             'message' => message,
             'ts_day_of_the_week' => message_ts.strftime('%A'),
             'ts_time' => message_ts.strftime('%l:%M %P'),

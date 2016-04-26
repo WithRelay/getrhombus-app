@@ -1,10 +1,7 @@
 Rails.application.routes.draw  do
 
+  # static pages routes
   root 'static_pages#home'
-
-  get "/receive_text_message" => 'messages#receive_text_message'
-  get "/receive_delivery_report" => 'messages#receive_delivery_report'
-
   get '/about' => 'static_pages#about'
   get '/customers' => 'static_pages#customers'  
   get '/faqs' => 'static_pages#faqs'
@@ -12,21 +9,34 @@ Rails.application.routes.draw  do
   get '/terms' => 'static_pages#terms'
   get '/pricing' => 'static_pages#pricing'
   get '/contact' => 'contact_forms#new'
+  
   resources :contact_forms 
   
-  #match 'contact' => 'messages#new', :as => 'contact', :via => :get
-  #match 'contact' => 'messages#create', :as => 'contact', :via => :post
-
-  devise_for :users, :controllers => {:registrations => "registrations", :omniauth_callbacks => "omniauth_callbacks" }
+  get '/customer_info_xls_template' => "static_pages#customer_info_xls_template"
+  get '/transactions/spreadsheet' => 'transactions#spreadsheet'
   
+  # messaging related routes
+  get "/receive_text_message" => 'messages#receive_text_message'
+  get "/receive_text_message_twilio" => 'messages#receive_text_message_twilio'
+  get "/receive_voice_twilio" => 'messages#receive_voice_twilio'
+  get "/receive_delivery_report" => 'messages#receive_delivery_report'
+  get "/receive_delivery_report_twilio" => 'messages#receive_delivery_report_twilio'
+  get "/search-number" => 'messages#search_number'
+  match "/send_mms_from_dashboard" => 'messages#dashboard_mms', via: [:post]
+  
+  # devise routes
+  devise_for :users, :controllers => { registrations: "registrations", omniauth_callbacks: "omniauth_callbacks" }
   devise_scope :user do
     get "signup", :to => "devise/registrations#new"
     get "profile", :to => "devise/registrations#edit"
     get "signin", :to => "devise/sessions#new"
   end
   
-  resources :users, :only => :show
-  
+  # user routes
+  resources :users, :only => :show do
+    resources :hashtags
+  end
+  # scope this like above???
   # messaging
   get '/users/:id/json_get_latest_active_messaging' => 'users#json_get_latest_active_messaging'
   get '/users/:id/json_get_user_messages_by_merchant/:user_number' => 'users#json_get_user_messages_by_merchant'
@@ -34,7 +44,6 @@ Rails.application.routes.draw  do
   get '/users/:id/send_message_from_merchant/:user_number' => 'users#send_message_from_merchant'
   get '/users/:id/messaging' => 'users#messaging', :as => 'dashboard_messaging'
   get '/json_get_current_user' => 'application#json_get_current_user'
-  
   ## User transactions
   get '/users/:id/transactions' => 'users#transactions', :as => 'user_transactions'
   # User customers/merchants
@@ -43,8 +52,19 @@ Rails.application.routes.draw  do
   # User contacts (either customers or merchants)
   get '/users/:id/contacts' => 'users#contacts', :as => 'user_contacts'
 
-  #resources :transactions, :only => :show
+  # api
+  api_version(:module => "Api::V1", :path => {:value => "v1"}, :constraints => {:subdomain => "api"}, :defaults => {:format => "json"}) do
+    match '/users/find' => 'users#find', via: :get
+    match '/hashtags/find' => 'hashtags#find', via: :get
+    match '/transactions/:charge_id/refund' => 'transactions#refund', via: :post
+    #match '/hashtags/create' => 'hashtags#create', via: :post
+  end
+
+  # catch all other to 404
   get "/*other", to: 'static_pages#to_404'     #all non-existent routes go to 404
+
+
+
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

@@ -19,10 +19,7 @@
     <div class="login-form">
     <%= form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :put, :id => 'changePasswordForm'}) do |f| %>
     <%= f.hidden_field :reset_password_token %>
-        <div class="top">
-          <img src="<%= asset_path 'logo_grey.jpg' %>" alt="icon" id="signup_logo" class="icon">
-          <h4>Change your password.</h4>
-        </div>
+		<img src="<%= asset_path 'logo.jpg' %>" alt="icon" id="signup_logo" class="icon">
         <div class="form-area">
           <div class="group">
           <%= f.password_field :password, :autofocus => true, :type => 'password', :class => "form-control rhombusFocus", placeholder: "New password" %>

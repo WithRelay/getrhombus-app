@@ -1,4 +1,9 @@
 /* UTILITY */
+
+.selectpicker {
+	background-color: rgba(33, 41, 63, 0.1);	
+}
+
 .hide {
 	display: none;
 }
@@ -15,18 +20,13 @@
 	text-align: center;	
 }
 
+.left {
+	text-align: left;	
+}
+
 #signup_logo {
 	width: 50px;
 	height: 50px;
-}
-
-.chat .conv {
-	.color1 {
-		background: #6fd2e5 !important; 
-	}
-	.color2 {
-		background: #AEEEEE !important; 
-	}
 }
 
 input.rhombusFocus, select.rhombusFocus, textarea.rhombusFocus {
@@ -35,12 +35,38 @@ input.rhombusFocus, select.rhombusFocus, textarea.rhombusFocus {
 	}
 }
 
+::-moz-placeholder {
+ 	color: #999;
+ 	font-family: 'Open Sans', sans-serif;
+ 	font-weight: normal;
+}
+:-moz-placeholder {
+ 	color: #999;
+ 	font-family: 'Open Sans', sans-serif;
+ 	font-weight: normal;
+}
+:-ms-input-placeholder {
+    color: #999;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: normal;
+}
+::-webkit-input-placeholder {
+	color: #999;
+	font-family: 'Open Sans', sans-serif;
+	font-weight: normal;
+}
+
 .country-list {
 	font-size: smaller;
 }
 
 .btn-rhombus {
 	background-color: #357b9e !important;
+	height: 51px;
+	font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
 }
 
 .btn-rhombus-2 {
@@ -127,6 +153,17 @@ input.rhombusFocus, select.rhombusFocus, textarea.rhombusFocus {
   	letter-spacing: 2px;
 }
 
+.parent_div {
+	position: relative;
+}
+.center_div {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: 0 !important;
+    transform: translate(-50%, -50%) 
+}
+
 /* UTILITY */
 
 #rhombusPower {
@@ -140,7 +177,7 @@ input.rhombusFocus, select.rhombusFocus, textarea.rhombusFocus {
 
 /* SIGN UP FORM */
 .login-form form .top {
-	padding: 20px 0;
+  padding: 20px 0;
 }
 
 .login-form {
@@ -217,9 +254,9 @@ input.rhombusFocus, select.rhombusFocus, textarea.rhombusFocus {
 		max-width: 360px !important;
 	}
 
-	.top {
-		padding-bottom: 15px;
-	}	
+  .top {
+    padding-bottom: 15px;
+  } 
 
 	#response {
 		margin-top: -41px;
@@ -237,15 +274,15 @@ input.rhombusFocus, select.rhombusFocus, textarea.rhombusFocus {
 		margin-bottom: 0px;
 	}
 
-	#cc-number {
-		border-bottom-left-radius: 0; 
-		border-bottom-right-radius: 0;
-	}
+  #cc-number {
+    border-bottom-left-radius: 0; 
+    border-bottom-right-radius: 0;
+  }
 
-	.exp-row {
-		margin-bottom: 15px;
-		margin-top: -1px;
-	}
+  .exp-row {
+    margin-bottom: 15px;
+    margin-top: -1px;
+  }
 
 	#fa-Calendar {
 		top: 13px;
@@ -311,6 +348,10 @@ input.rhombusFocus, select.rhombusFocus, textarea.rhombusFocus {
   cursor: pointer;
 }*/
 
+.table > thead > tr > th {
+  border-bottom: 0;
+}
+
 /* Tables */
 
 /* TRANSACTIONS */
@@ -321,7 +362,7 @@ input.rhombusFocus, select.rhombusFocus, textarea.rhombusFocus {
 	}
 
 	td.details-control {
-		background-image: url(<%= asset_path 'Down4-25.png' %>);	
+		background-image: url(<%= asset_path 'imgpsh_fullsize.png' %>);	
   		background-repeat: no-repeat;
   		background-position: center;
         cursor: pointer;
@@ -341,7 +382,7 @@ input.rhombusFocus, select.rhombusFocus, textarea.rhombusFocus {
      
     table.dataTable tbody td.no-padding {
         padding: 0;
-    }	
+    }
 }
 
 /* TRANSACTIONS */
@@ -510,5 +551,306 @@ a:hover, a:focus {
   	margin-bottom: 10px;
 }
 
+/* new forms styles 
+   use newForms class to scope to login, signup and customer forms, also remove #merchantProfile below
+*/
+
+/*.newForms {*/
+
+/* remove some styles KODE template */
+.login-form form {
+	background: none;
+	border: none;
+	border-radius: 0px;
+}
+/* remove some styles for KODE template */
+
+#userProfile1 form, .login-form form {
+    position: relative;
+    text-align: center;
+    margin: 0 auto;
+    padding-bottom: 30px;
+    width: 330px;
+    max-width: 100%;
+}
+
+#userProfile1 form label, .login-form form label {
+    display: block;
+    margin: 0 16px;
+}
+
+form textarea, form input[type=text], form input[type=email], form input[type=password], form input[type=tel] {
+    width: 100%;
+    padding: 15px 14px 13px 14px;
+    height: 52px;
+    margin-bottom: 18px;
+    font-size: 18px;
+    font-family: 'Open Sans', sans-serif;
+    color: #2f3148;
+    border: 1px solid #f3f5f7;
+    background-color: rgba(33, 41, 63, 0.1);
+    -moz-box-shadow: inset rgba(0, 0, 0, 0.1) 0 1px 2px, inset rgba(0, 0, 0, 0.45) 0 0 1px;
+    -webkit-box-shadow: inset rgba(0, 0, 0, 0.1) 0 1px 2px, inset rgba(0, 0, 0, 0.45) 0 0 1px;
+    box-shadow: inset rgba(0, 0, 0, 0.1) 0 1px 2px, inset rgba(0, 0, 0, 0.45) 0 0 1px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    -moz-transition-property: border-color, background-color;
+    -o-transition-property: border-color, background-color;
+    -webkit-transition-property: border-color, background-color;
+    transition-property: border-color, background-color;
+    -moz-transition-duration: 0.2s;
+    -o-transition-duration: 0.2s;
+    -webkit-transition-duration: 0.2s;
+    transition-duration: 0.2s;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+}
+
+#merchantProfile form textarea {
+    font-size: 18px;
+    font-family: 'Open Sans', sans-serif;
+    color: #2f3148;
+    border: 1px solid #f3f5f7;
+    background-color: rgba(33, 41, 63, 0.1);
+    -moz-box-shadow: inset rgba(0, 0, 0, 0.1) 0 1px 2px, inset rgba(0, 0, 0, 0.45) 0 0 1px;
+    -webkit-box-shadow: inset rgba(0, 0, 0, 0.1) 0 1px 2px, inset rgba(0, 0, 0, 0.45) 0 0 1px;
+    box-shadow: inset rgba(0, 0, 0, 0.1) 0 1px 2px, inset rgba(0, 0, 0, 0.45) 0 0 1px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    -moz-transition-property: border-color, background-color;
+    -o-transition-property: border-color, background-color;
+    -webkit-transition-property: border-color, background-color;
+    transition-property: border-color, background-color;
+    -moz-transition-duration: 0.2s;
+    -o-transition-duration: 0.2s;
+    -webkit-transition-duration: 0.2s;
+    transition-duration: 0.2s;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+}
+
+#merchantProfile form textarea:focus, form textarea:focus, form input[type=text]:focus, form input[type=email]:focus, form input[type=password]:focus, form input[type=tel]:focus {
+    outline: none;
+    border-color: #357b9e;
+    background-color: #fff;
+}
+
+/* Not necessary at this point
+.paymentInput.identified{
+  border-color:#2ecc71;
+}
+
+.paymentInput.identified:focus{
+  border-color:#2ecc71;
+  box-shadow: 0 0 .1875em #2ecc71;
+} 
+*/
+
+.cc-num__wrap{
+  position:relative;
+}
+
+.card{
+  position:absolute;
+  display:block;
+  left: 9px;
+  top: 11px;
+  width: 19px;
+  height:19px;
+  background:url(http://lagra.gosseti.com/assets/demos/card-d28d8ba2f0ddf6fb4b060ffd7405b5e2.svg) no-repeat center center;
+  background-size: 100%;
+}
+
+.cardInfo__cc-exp,
+.cardInfo__cc-cvc{
+  float:left;
+  max-width:9.875em;
+}
+
+.cardInfo__cc-exp{
+  /*margin-right:.75em;*/
+}
+
+.cc-num.visa + .card{
+  background:url(http://lagra.gosseti.com/assets/demos/visa-1f269c25268b35b8123d0993b0fc54f4.png) no-repeat center center;
+}
+
+.cc-num.amex + .card{
+  background:url(http://lagra.gosseti.com/assets/demos/amex-a5814df4364af30063e05c3882679cbe.png) no-repeat center center;
+}
+
+.cc-num.mastercard + .card{
+  background:url(http://lagra.gosseti.com/assets/demos/mastercard-a80c8f6c5904aaa4cdb748c641a4f7dc.png) no-repeat center center;
+}
+
+.cc-num.dinersclub + .card{
+  background:url(http://lagra.gosseti.com/assets/demos/diners-96f6108fc92672d3de20de814c804a98.png) no-repeat center center;
+}
+
+.cc-num.discover + .card{
+  background:url(http://lagra.gosseti.com/assets/demos/discover-e1bae9604ad8ce4256802d537a936651.png) no-repeat center center;
+}
+
+/*}*/
+/* End new forms styles */
 
 
+/* Charge and Refund Form */
+
+#chargeFormDiv {
+ 	width: 500px; 
+ 	height: 535px; 
+ 	border: 1px solid #f3f5f7; 
+ 	background-color: #f3f5f7;
+ }
+
+ #refundFormDiv {
+  width: 400px; 
+  height: 250px; 
+  border: 1px solid #f3f5f7; 
+  background-color: #f3f5f7;
+ }
+
+#chargeCustomer, #refundCustomer {
+	font-size: 20px;
+    text-align: center;
+    color: black;
+}
+
+#chargeCustomerLine, #refundCustomerLine {
+	margin-bottom: 15px;
+    text-align: center;
+}
+
+#refund_reason {
+  width: 300px;
+  margin-bottom: 15px;
+}
+
+.refund_link {
+    &:hover {
+      cursor: pointer;
+    }
+}
+
+/* End Charge Form */
+
+/* Messaging page override */
+.chat .conv .ballon {
+    border-radius: 2px;
+}
+
+.chat {
+	background: #f0f4f7;
+	.title {
+		background: none;
+	}
+}
+
+.mailbox .write {
+    background: none;
+    padding-top: 0px;
+}
+
+.chat .conv {
+	background: none;
+	.color1 {
+		background: white !important; 
+		color: #37474f;
+	}
+	.color2 {
+		background: #edf9ff !important; 
+		color: #37474f;
+	}
+}
+
+.container-mail {
+	background-color: #f0f4f7
+}
+/* End Messaging page override */
+
+/* HASHTAG */
+
+#editHashTag {
+	margin-left: 10px;
+    margin-right: 10px;
+    border: 1px solid #f39c12;
+    color: #f39c12;
+}
+
+.hashtagBtns {
+	background-color: transparent;
+   	font-size: 11px;
+   	padding: 3px 6px;
+   	margin-top: 5px;
+   	margin-bottom: 5px;
+}
+
+#createHashTag {
+	padding: 8px;
+    margin-left: 5px;
+    border: 1px solid #357b9e;
+    color: #357b9e;
+}	
+
+#showHashTag {
+	border: 1px solid #357b9e;
+	color: #357b9e;
+}
+
+#deleteHashTag {
+	border: 1px solid #e74c3c;
+	color: #e74c3c;
+}
+
+/* END HASHTAG */
+
+/* Oh Snap */
+
+#ohsnap {
+  position: fixed;
+  top: 60px;
+  right: 20px;
+  z-index: 99;
+}
+
+.alert {
+  text-align: right;
+  margin-top: 10px;
+  padding: 15px;
+  border: none;/*1px solid #eed3d7;*/
+  border-radius: 4px;
+  float: right;
+  clear: right;
+}
+
+.alert-red {
+  color: white;
+  background-color: #ef4836;
+}
+.alert-green {
+  color: white;
+  background-color: #26a65b;
+}
+.alert-blue {
+  color: white;
+  background-color: #4A89DC;
+}
+.alert-yellow {
+  color: white;
+  background-color: #F6BB42;
+}
+.alert-orange {
+  color:white;
+  background-color: #E9573F;
+}
+
+#ohsnap { text-shadow: none; }
+
+/* Oh Snap */

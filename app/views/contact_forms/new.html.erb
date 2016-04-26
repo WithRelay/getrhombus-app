@@ -53,7 +53,7 @@
                   </div>
                   <div class="div-spc">
                     <%= f.hidden_field :nickname %> 
-                    <%= f.submit "Send", class: "w-button button btn-form contact-btn", id: "contact-form-btn", "data-wait" => "Please wait..." %>
+                    <%= f.submit "Send", class: "w-button button btn-form contact-btn", id: "contact-form-btn", data: { disable_with: "Please wait..." } %>
 
                   </div>             
                 <% end %>

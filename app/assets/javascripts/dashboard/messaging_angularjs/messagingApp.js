@@ -7,6 +7,8 @@ var messagingApp = angular.module('PubNubAngularMessagingApp', [
   'templates',
   'messagingControllers',
   'messagingFilters',
+  "angucomplete-alt",
+  "ngFileUpload",
   'luegg.directives' // Auto scroll module
 ]);
 

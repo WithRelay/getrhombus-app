@@ -23,5 +23,18 @@ module Rhombus
 
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true
+
+    GC::Profiler.enable                         # added
+
+    # config/environments/production.rb
+    config.paperclip_defaults = {
+      :storage => :s3,
+      :s3_region => 'us-east-1',
+      :s3_credentials => {
+        :bucket: <redacted_s3_bucket>
+        :access_key_id: <redacted_access_key_id>
+        :secret_access_key: <redacted_secret_access_key>
+      }
+    }
   end
 end

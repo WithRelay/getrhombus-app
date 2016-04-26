@@ -1,7 +1,10 @@
 class EmailingService
-  require 'mandrill'
+  
+  require 'mandrill' # dont think i need to require here again...check
+
   MANDRILL_API_KEY = Rails.application.secrets.mandrill["key"]
-  # Note there are a number of global settings for these emails in the mandrill account
+  
+  # Note there are a number of global settings for this email in the mandrill account
   SENDER = Rails.application.secrets.team_email
 
   class << self
@@ -21,7 +24,8 @@ class EmailingService
          "from_name" => "Rhombus",
          "from_email" => SENDER
         }
-        result = mandrill.messages.send_template template_name, template_content, message        
+        async = true
+        result = mandrill.messages.send_template template_name, template_content, message, async       
       rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
         puts "A mandrill error occurred: #{e.class} - #{e.message}"
       rescue StandardError => e
@@ -41,7 +45,8 @@ class EmailingService
          "from_name" => "Rhombus",
          "from_email" => SENDER 
         }
-        result = mandrill.messages.send_template template_name, template_content, message        
+        async = true
+        result = mandrill.messages.send_template template_name, template_content, message, async        
       rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
         puts "A mandrill error occurred: #{e.class} - #{e.message}"
       rescue StandardError => e
@@ -55,6 +60,7 @@ class EmailingService
         template_content = []
         message = { "subject"=>"You sent a payment with Rhombus",
          "global_merge_vars"=> [ { "name" => "merchant_name", "content" => options[:merchant_name] }, 
+                                 { "name" => 'merchant_email', "content" => options[:merchant_email] }, 
                                  { "name" => "transaction_number", "content" => options[:transaction_number] },
                                  { "name" => 'transaction_date', "content" => options[:transaction_date] }, 
                                  { "name" => 'text_message', "content" => options[:text] }, 
@@ -67,7 +73,8 @@ class EmailingService
          "from_name" => options[:merchant_name],
          "from_email" => SENDER
         }
-        result = mandrill.messages.send_template template_name, template_content, message        
+        async = true
+        result = mandrill.messages.send_template template_name, template_content, message, async        
       rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
         puts "A mandrill error occurred: #{e.class} - #{e.message}"
       rescue StandardError => e
@@ -101,7 +108,8 @@ class EmailingService
          "from_name" => "Rhombus",
          "from_email" => SENDER
         }
-        result = mandrill.messages.send_template template_name, template_content, message        
+        async = true
+        result = mandrill.messages.send_template template_name, template_content, message, async       
       rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
         puts "A mandrill error occurred: #{e.class} - #{e.message}"
       rescue StandardError => e
@@ -118,8 +126,7 @@ class EmailingService
          "global_merge_vars"=> [  { "name" => "customer_email", "content" => options[:customer_email] }, 
                                   { "name" => "customer_phone", "content" => options[:customer_phone] },                                  
                                   { "name" => "card_name", "content" => options[:card_name] }, 
-                                  { "name" => "last_four", "content" => options[:last_four] }, 
-
+                                  { "name" => "last_four", "content" => options[:last_four] },
                                   { "name" => 'text_message', "content" => options[:text] }, 
                                   { "name" => 'merchant_email', "content" => options[:to] }, 
                                   { "name" => "business_phone", "content" => options[:business_phone] },                                  
@@ -131,7 +138,8 @@ class EmailingService
          "from_name" => "Rhombus",
          "from_email" => SENDER
         }
-        result = mandrill.messages.send_template template_name, template_content, message        
+        async = true
+        result = mandrill.messages.send_template template_name, template_content, message, async      
       rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
         puts "A mandrill error occurred: #{e.class} - #{e.message}"
       rescue StandardError => e

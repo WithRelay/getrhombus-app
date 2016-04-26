@@ -17,6 +17,8 @@
               <%= render "merchant_information" %>       
         <% elsif current_user.stripe_access_token.blank? %>
               <%= render "stripe_connect" %>
+		<% elsif current_user.rhombus_number.blank? %>
+              <%= render "merchant_number" %>			
         <% else %>       
               <%= render "merchant_profile" %>
         <% end %>

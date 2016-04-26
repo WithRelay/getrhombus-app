@@ -1,23 +1,27 @@
 class User < ActiveRecord::Base
 
   include DashboardQueries
-  Stripe.api_key = Rails.application.secrets.stripe["secret_key"]
+  include MakeSpreadsheet
 
-  attr_accessor :full_name, :phone
-  # Include default devise modules. Others available are:
-    # :token_authenticatable, :lockable, :timeoutable and :confirmable,
+  attr_accessor :full_name, :phone, :captured_amt, :msg_id
+  
+  # include default devise modules. Others available are:
+  # :token_authenticatable, :lockable, :timeoutable and :confirmable,
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable
-  devise :omniauthable, :omniauth_providers => [:stripe_connect]
+         :recoverable, :rememberable, :trackable, :validatable, :omniauthable
 
   #has_many :messages, dependent: :destroy
   has_many :transactions, dependent: :destroy
+  has_many :hashtags, dependent: :destroy
+  has_one :twitter_cred, dependent: :destroy
 
   before_validation :get_only_numbers, :the_titleizer
+  
   # only create, cos they can change this in edit
   before_create :set_merchant_business_phone, :deactivate_merchant_account          
 
-  after_commit :send_welcome_email, :on => :create
+  # Just to prevent sending emails locally for now
+  # after_commit :send_welcome_email, :on => :create
 
   validates_presence_of :user_level, :message => "Please select an account type"
   
@@ -39,22 +43,18 @@ class User < ActiveRecord::Base
     self.stripe_publishable_key = auth.info.stripe_publishable_key
     self.stripe_scope = auth.info.scope
     self.stripe_livemode = auth.info.livemode
-    if self.save
-      return true
-    else
-      return false
-    end
+    return true if self.save
+    return false
   end
 
   # Create or update customer on Stripe
   def add_token_to_stripe_customer(params)
-    if self.user_level == 0 && params[:instrument_uri].present?   # is this why i get the errors from stripe??
+    if self.user_level == 0 && params[:instrument_uri].present?  # is this why i get the errors from stripe??
       begin 
         if self.customer_uri.blank?                                     # Doesnt have a customer uri => first time
           response = Stripe::Customer.create(:email => "#{self.email}", :card => params[:instrument_uri])         
           self.customer_uri = response.id
           self.stripe_livemode = response.livemode
-          self.save
         else
           response = Stripe::Customer.retrieve(self.customer_uri)  
           response.email = self.email
@@ -103,7 +103,7 @@ class User < ActiveRecord::Base
         :first_name => user.first_name.blank? ? user.from : user.first_name,
         :last_name => user.last_name.blank? ? '' : user.last_name,
         :email => user.email.blank? ? '' : user.email,
-        :image_url => ActionController::Base.helpers.asset_path('user_icon_50x50.png'),
+        :profile_image => ActionController::Base.helpers.asset_path('user_icon_50x50.png'),
         :last_message => last_message.blank? ? '' : last_message.text,
         :last_message_ts => last_message.blank? ? 0 : last_message.created_at.to_i,
         :unread_count =>  user.id.blank? ? Message.where('`from` = ? AND `user_id_to` = ? AND `unread` = ?', user.from, merchant_id, true).count : Message.where('user_id_from = ? AND user_id_to = ? AND unread = ?', user.id, merchant_id, true).count
@@ -126,19 +126,23 @@ class User < ActiveRecord::Base
     self.business_phone
   end
 
+  def update_merchant_account(params)
+    if params.key? :update_rhombus_number
+      number = TextingService.buy_number(params[:rhombus_number])
+      return false if !number
+      self.rhombus_number = number
+    end
+    return true
+  end
+
   private
+
+  # can reduce all these self calls here ###############
+
 
   def get_only_numbers
     self.phone_number = self.phone_number.gsub(/\D/, "") unless self.phone_number.blank?
     self.business_phone = self.business_phone.gsub(/\D/, "") unless self.business_phone.blank?
-  end
-
-  # this is to automate assigning rhombus numbers
-  def set_rhombus_number
-    if self.user_level == 1
-      self.rhombus_number = TextingService.buy_number("US")
-      self.save
-    end
   end
 
   def set_merchant_business_phone
@@ -179,15 +183,15 @@ class User < ActiveRecord::Base
       unless self.referrer_num.blank?
         referrer = User.find_by(rhombus_number: self.referrer_num)
         EmailingService.send_welcome_email_with_referral(referrer.email, self.email, referrer.business_name, referrer.rhombus_number, owner.rhombus_number)
-        # default for referrer or use merchant welcome
-        name = (referrer.first_name.present?) ? "my name is #{referrer.first_name}, " : ''
-        text = "Hi there, " + name + "how can I assist you today? If you're looking to send a payment, simply reply with the amount."
-        text = referrer.custom_welcome unless referrer.custom_welcome.blank?
+        text = "Thanks for signing up! Please add a payment card to your Rhombus profile (if you haven't done so). 
+        You can chat with us anytime via sms or to make a payment, just text the amount & description/hashtag. Ex. +10 #donut"
         @message.send_and_save_message(22, referrer.rhombus_number, self.phone_number, text)
         return
       end
       EmailingService.send_welcome_email(self.email, owner.rhombus_number, "customer")
-      text = "Hi there, thanks for signing up! You can now chat with or pay your favorite merchants. You can reply with any questions, we'll be happy to help."
+      text = "Thanks for signing up! Please add a payment card to your Rhombus profile (if you haven't done so). 
+      You can chat with a local business anytime by texting their Rhombus number or to make a payment, just text the amount & 
+      description/hashtag. Ex. +10 #donut"
       @message.send_and_save_message(22, owner.rhombus_number, self.phone_number, text)
     end
   end

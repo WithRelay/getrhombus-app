@@ -46,13 +46,13 @@
 
           
           <div class="group ccn-group">
-            <%= f.number_field :last_four, id: "cc-number", type: "tel", class: "form-control rhombusFocus", placeholder: "Card number", "x-autocompletetype" => "cc-number", autocompletetype: "cc-number", autocorrect: 'off', spellcheck: 'off', autocapitalize: 'off' %>
-            <i class="fa fa-credit-card"></i>
+            <%= f.number_field :last_four, id: "cc-number", type: "tel", class: "form-control cc-num rhombusFocus", placeholder: "Card number", "x-autocompletetype" => "cc-number", autocompletetype: "cc-number", autocorrect: 'off', spellcheck: 'off', autocapitalize: 'off' %>
+            <span class="card" aria-hidden="true"></span>
           </div>
 
           
-          <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10 exp-row">
-            <div class="col-md-6 col-sm-6 padding-fix1" id="exp-div">
+          <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10">
+            <div class="col-md-6 col-sm-6" id="exp-div">
 
             <%= f.hidden_field :expiration_month, id: "cc-ex-month" %>
             <%= f.hidden_field :expiration_year, id: "cc-ex-year" %>
@@ -60,25 +60,24 @@
              <%= f.hidden_field :instrument_uri, id: "cc-uri" %>
               <%= f.hidden_field :card_type, id: "cc-type" %>
 
-              <input id="cc-exp" type="text" class="form-control rhombusFocus" placeholder="MM / YY" value="">
-                  <i class="fa fa-calendar" id="fa-Calendar" x-autocompletetype="off" autocompletetype="off" autocorrect="off" spellcheck="off" autocapitalize="off"></i>
-
+              <input id="cc-exp" type="text" class="form-control rhombusFocus" placeholder="MM / YY" value="" x-autocompletetype="off" autocompletetype="off" autocorrect="off" spellcheck="off" autocapitalize="off">
+                  <i class="fa fa-calendar" id="fa-Calendar"></i>
             </div>
 
-            <div class="col-md-6 col-sm-6 padding-fix2" id="csc-div">
-                <input id="cc-csc" type="tel" class="form-control rhombusFocus" placeholder="CVC" value="" 
-                  autocorrect="off" spellcheck="off" autocapitalize="off" autocomplete="off" maxlength="4"> <i class="fa fa-lock"></i>
+            <div class="col-md-6 col-sm-6" id="csc-div">
+                <input id="cc-csc" type="tel" class="form-control rhombusFocus" placeholder="CVC" value="" autocorrect="off" spellcheck="off" autocapitalize="off" autocomplete="off" maxlength="4">
+                <i class="fa fa-lock"></i>
             </div>
 
           </div>
 
           
           
-          <div class="group">
+          <%#<div class="group">
              <%= f.password_field :current_password, type: "password", class: "form-control rhombusFocus", placeholder: "Re-enter current password" %>
-            <i class="fa fa-key"></i>
+            <%#<i class="fa fa-key"></i>
             <div id="pwdnote">For account protection, enter your password to save info.</div>
-          </div>
+          </div>%>
 
           <%= f.submit "Save", id: "cc-submit", :class => "btn btn-default btn-block btn-rhombus" %>  
           <div href="#" id="next" class="btn btn-default btn-block btn-info btn-rhombus-2">or update login info</div>
@@ -115,11 +114,11 @@
            <%= f.password_field :password_confirmation, type: "password", placeholder: "Confirm new password", class: "form-control rhombusFocus", :autocomplete => "off" %>
             <i class="fa fa-key"></i>
           </div>
-          <div class="group">
+          <%#<div class="group">
           <%= f.password_field :current_password, type: "password", class: "form-control rhombusFocus", placeholder: "Enter current password" %>
-            <i class="fa fa-key"></i>
+            <%#<i class="fa fa-key"></i>
             <div id="pwdnote">For account protection, enter your password to save info.</div>
-          </div>
+          </div>%>
           <%= f.submit "Save", :class => "btn btn-default btn-block btn-rhombus" %>  
           <div id="Prev" class="btn btn-default btn-block btn-info btn-rhombus-2">or edit card info</div>
         </div>      

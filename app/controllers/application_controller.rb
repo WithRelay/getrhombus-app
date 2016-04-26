@@ -8,13 +8,13 @@ class ApplicationController < ActionController::Base
   rescue_from ActiveRecord::RecordNotUnique, with: :record_not_unique   # capture phone number duplicates on sign up page
   
   def after_sign_in_path_for(user)
-     current_user
+    current_user
   end
 
   def after_update_path_for(user)
-      current_user
+    current_user
   end
-  
+
   # Returns JSON object with the current user id
   def json_get_current_user
     render :json => Hash[
@@ -26,7 +26,7 @@ class ApplicationController < ActionController::Base
     ].to_json
   end
 
- rescue_from CanCan::AccessDenied do |exception|
+  rescue_from CanCan::AccessDenied do |exception|
     #redirect_to "/404.html"#, :alert => exception.message
     render :template => "static_pages/to_404"
   end
@@ -35,11 +35,12 @@ class ApplicationController < ActionController::Base
 
   def configure_permitted_parameters
     devise_parameter_sanitizer.for(:sign_up) { |u| u.permit(:email, :phone_number, 
-        :password, :password_confirmation, :user_level, :is_active, :referrer_num, :subscription_type) }
+        :password, :user_level, :is_active, :referrer_num, :subscription_type, :captured_amt, :msg_id) }
     devise_parameter_sanitizer.for(:sign_in) { |u| u.permit(:email, :password) }
-    devise_parameter_sanitizer.for(:account_update) { |u| u.permit(:email, :current_password, 
+    devise_parameter_sanitizer.for(:account_update) { |u| u.permit(:email, #:current_password, 
       :password, :password_confirmation, :instrument_uri, :last_four, 
       :expiration_month,  :expiration_year, :card_name, :card_type, 
+      :rhombus_number, :update_rhombus_number,
       :phone_number, :business_name, :business_type, :street_address, :city, 
       :state_province, :business_phone, :country, :currency, :approve_payments_immediately, 
       :tax_rate, :business_zip_code, :first_name, :last_name, :is_active, :url,

@@ -231,9 +231,11 @@ Devise.setup do |config|
   # up on your models and hooks.
   # config.omniauth :github, 'APP_ID', 'APP_SECRET', :scope => 'user,public_repo'
   
-  # For development
-  config.omniauth :stripe_connect, Rails.application.secrets.stripe["oauth"], Rails.application.secrets.stripe["secret_key"], :scope => 'read_write'
-   # or :scope => 'read_only'  :stripe_landing => 'register' # or :stripe_landing => 'login'
+  # Added
+  config.omniauth :stripe_connect, Rails.application.secrets.stripe["oauth"], Rails.application.secrets.stripe["secret_key"], :scope => 'read_write' 
+  # or :scope => 'read_only'  :stripe_landing => 'register' # or :stripe_landing => 'login'
+
+  config.omniauth :twitter, Rails.application.secrets.twitter["key"], Rails.application.secrets.twitter["secret"], :scope => 'write', force_login: true
 
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or
@@ -257,7 +259,4 @@ Devise.setup do |config|
   # When using omniauth, Devise cannot automatically set Omniauth path,
   # so you need to do it manually. For the users scope, it would be:
   # config.omniauth_path_prefix = "/my_engine/users/auth"
-
-
-
 end

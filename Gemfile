@@ -8,6 +8,8 @@ gem "httparty"
 
 # For authentication
 gem "devise"
+
+# Stripe oauth
 gem 'omniauth-stripe-connect'
 
 # For Authorization
@@ -16,11 +18,27 @@ gem "cancan"
 # bread & butter
 gem "stripe"
 
+gem 'paperclip', :git=> 'https://github.com/thoughtbot/paperclip', :ref => '523bd46c768226893f23889079a7aa9c73b57d68'
+gem 'aws-sdk'
+
 # url shortner
 gem 'bitly'
 
+# api versioning
+gem 'versionist'
+
+# number and email intelligence apis
+gem 'opencnam'
+gem 'fullcontact'
+
+gem 'twitter'
+gem 'omniauth-twitter'
+
 # sending email
 gem 'mandrill-api'
+
+# creating transaction csv
+gem "spreadsheet"
 
 # App monitoring
 gem 'newrelic_rpm'
@@ -28,16 +46,15 @@ gem 'newrelic_rpm'
 gem 'will_paginate', '~> 3.0.6'
 #gem 'bootstrap-will_paginate'
 
-# For messaging users
-gem 'intercom-rails', '~> 0.2.24'
-
 # For contact us form
 gem "mail_form"
+
+# remove this
+gem "intercom-rails"
 
 gem 'responders', '~> 2.0'
 
 group :production do
-	# gem "rails_12factor"
 	gem "passenger"
 end
 
@@ -68,7 +85,10 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'angular-rails-templates'
 
 # Pubnub
-gem 'pubnub'
+gem 'pubnub', '3.7.9'
+
+#Twilio
+gem 'twilio-ruby', '~> 4.2.1'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.1.7'
@@ -88,4 +108,4 @@ group :development, :test do
     gem 'spring'
 end
 
-ruby "2.0.0"
+ruby "2.2.3"

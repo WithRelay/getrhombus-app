@@ -1,0 +1,94 @@
+  
+
+    <!-- ========== Css Files ========== -->
+  <% provide(:title, 'Rhombus - Merchant Profile') %>
+  <%= content_for :head do %>
+    <%= stylesheet_link_tag "application_dashboard_messaging", media: "all" %>
+  <% end %>
+  
+
+  <body>
+ 
+  <style type="text/css">
+    body{background: #F5F5F5;}
+  </style>
+
+  <div class="completeAccount">
+
+    <!-- //////////////////////////////////////////////////////////////////////////// --> 
+<!-- START CONTAINER -->
+<div class="container-padding">  
+
+  <!-- Start Row -->
+<%
+=begin %>
+  <div class="row">
+      <div id="profileLogo"><img src="<%= asset_path 'logo.jpg' %>" alt="icon" id="signup_logo" class="icon"></div>
+
+      <div class="panel panel-default" id="merchantprofilepage">
+            
+            <div class="panel-body">
+            <%= render 'alerts' %>
+
+            <select id="searchNumberType">
+              <option value="area_code">Area code</option>
+              <option value="contains">By pattern</option>
+              <option value="in_postal_code">Postal code</option>
+            </select>  
+            <input id="searchNumberField" type="text" style="margin-bottom: 30px;margin-left: 112px;" />
+              <button id="searchNumberBtn">find number</button>
+
+            <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put, class: "form-horizontal rhombusFocus" }) do |f| %> 
+
+
+              <div class="form-group">
+                  <label class="col-sm-2 control-label form-label">Rhombus Number</label>
+                  <div class="col-sm-10">
+                    <%= f.text_field :rhombus_number, type: "text", class: "form-control rhombusFocus", placeholder: "Rhombus Number", id: "rhombus_number", readonly: "true" %>
+                  </div>
+              </div>
+                    <%= f.text_field :update_rhombus_number, type: "text", hidden: "true" %>
+                <div class="form-group">
+                  <label class="col-sm-2 control-label form-label">Password</label>
+                  <div class="col-sm-10">
+                  <%= f.password_field :current_password, type: "password", class: "form-control rhombusFocus", placeholder: "Re-enter current password", id: "reenterPassword" %>
+                  </div>
+                </div>
+                
+                <div class="form-group">
+                  <div class="col-sm-offset-2 col-sm-10">
+                  <%= f.submit "Submit", id: "ba-submit", :class => "btn btn-default btn-rhombus" %> 
+                  </div>
+                </div>
+
+              <% end %>
+
+            </div>
+
+      </div>
+      <div id="signout1"><%= link_to "LOG OUT", destroy_user_session_path, method: :delete %></div>
+  </div>
+
+  <!-- End Row -->
+<%
+=end 
+%>
+<%= form_for(@image, multipart: true) do |f| %>
+
+  <div class="field">
+    <%= f.label :avatar %>
+    <%= f.file_field :avatar %>
+  </div>
+  <div class="actions">
+    <%= f.submit 'Make a friend' %>
+  </div>
+<% end %>
+
+</div>
+<!-- END CONTAINER -->
+ <!-- //////////////////////////////////////////////////////////////////////////// --> 
+
+ </div>
+
+</body>
+</html>

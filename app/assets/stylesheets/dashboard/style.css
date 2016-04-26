@@ -1286,10 +1286,13 @@ Mailbox
   padding: 20px;
   background: #fff;
 }
-/* EDITED */
+
+/* EDITED */ 
 .mailbox .char-counter {
-  margin-left: 10px;
+  float: right;
+  font-size: 11px;
 }
+
 /* ... */
 .mailbox-menu {
   background: #fff;

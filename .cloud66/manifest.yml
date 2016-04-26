@@ -1,4 +1,7 @@
 production:
     ruby:
         configuration:
-            version: 2.0.0
+            version: 2.2.3
+    load_balancer:
+        configuration:
+            balance: leastconn

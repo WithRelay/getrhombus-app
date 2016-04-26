@@ -1,13 +1,16 @@
 $(document).ready(function () {  
 
-    var url = window.location;
     Stripe.setPublishableKey('<%= Rails.application.secrets.stripe["publishable_key"] %>');
-    var page_params = url.search.substring(1);
-    var cc_year, cc_month, txn_details;
-    var chart_labels = [], chart_totals = [], chart_txns = [];
+    var url = window.location,    
+        page_params = url.search.substring(1),
+        cc_year, cc_month, txn_details, CARD_BTN_TEXT, REFUND_TXN_LINK, REFUND_BOX = $('#refundFormBox'),
+        chart_labels = [], chart_totals = [], chart_txns = [],
+        contact_url = '/contact_forms.json', cc_submit = $('#cc-submit');
+
+    var searchNumBtn = document.getElementById('searchNumberBtn');
+    
     $.ajaxSetup({ cache:false });
-    var contact_url = '/contact_forms.json';
-   
+       
     // to prefill signup form
     if (url.pathname == "/signup") {
         if (page_params != "") {
@@ -18,12 +21,24 @@ $(document).ready(function () {
                 $("<h2 class='referrer'>" + referrer + "</h2>").insertAfter(x);
                 x.remove();
                 $("#rhombusPower").removeClass('hide');
-            } else {
-                $("#rhombusPower").addClass('hide');
-            }
+                $('#signupForm .selectpicker').val('0');
+                $('#signupForm .accountTypegroup').hide();
+            } else $("#rhombusPower").addClass('hide');
+            var amt = GetURLParameter(page_params, 'amt');
+            var msg_id = GetURLParameter(page_params, 'msg_id');
+            document.getElementById('captured_amt').value = amt ? amt : ""; 
+            document.getElementById('msg_id').value = msg_id ? msg_id : ""; 
         }
     }
 
+    // for initial payment capture, this shows the amt in the button
+    if (url.pathname == "/profile") {
+        if (page_params != "") {
+            var amt = GetURLParameter(page_params, 'amt');
+            if (amt) cc_submit.prop('value', 'Save & Pay ' + amt);
+        }
+    }
+    
 
     ///// toggle card/login info for user's profile
     $('#next').click(function() {
@@ -193,15 +208,15 @@ $(document).ready(function () {
     // for table slide dowm
     function format ( d, element ) {
         // `d` is the original data object for the row
-        var x = '<div class="slider">'+
-            '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
-                '<tr>'+
-                    '<td>Email:</td>'+
-                    '<td>'+ element.attr('data-email') +'</td>'+
-                '</tr>';
-        var x, y;
+        var v, w, x, y, z;
+        x = '<div class="slider" style="padding: 0px 20px;">'+
+                '<table cellpadding="5" cellspacing="0" border="0">'+
+                    '<tr>'+
+                        '<td>Email:</td>'+
+                        '<td>'+ element.attr('data-email') +'</td>'+
+                    '</tr>';
         if (element.attr('data-page') === 'transactions') {
-            y = '<tr>' +
+            y =     '<tr>' +
                         '<td>Rhombus Txn #:</td>'+
                         '<td>'+ element.attr('data-txn-num') +'</td>'+
                     '</tr>'+
@@ -211,29 +226,39 @@ $(document).ready(function () {
                     '</tr>'+
                     '<tr>'+
                         '<td>Stripe Txn #:</td>'+
-                        '<td>' + element.attr('data-stripe-txn-num') + '</td>'+
+                        '<td>' + element[0].id + '</td>'+
                     '</tr>'+
                     '<tr>'+
                         '<td>Taxes and Fees:</td>'+
                         '<td>' + element.attr('data-tax') + '</td>'+
-                    '</tr>'+
-                '</table>'+
-            '</div>';
+                    '</tr>';
+            var level = $("#transactions-column").attr('data-level');
+            if (level === "0" || (level !== "0" && element.attr('data-status') === "Refunded")) {
+                v ='<tr>'+
+                        '<td>Status:</td>'+
+                        '<td>' + element.attr('data-status') + '</td>'+
+                    '</tr>';
+            } else {
+                v = '<tr>'+
+                        '<td><a class="refund_link" data-stripe-txn-num=' + element[0].id + ' >Refund transaction</a></td>'+
+                    '</tr>'
+            } 
         } else {
-            z = '<tr>'+
+            z =     '<tr>'+
                         '<td>Phone #:</td>'+
                         '<td>' + element.attr('data-phone') + '</td>'+
-                    '</tr>'+
-                   '</table>'+
-                '</div>';
+                    '</tr>'
         }
 
-        return (element.attr('data-page') === "transactions") ? x + y : x + z;
+        w = '</table>' + '</div>';
+        return (element.attr('data-page') === "transactions") ? x + y + v + w : x + z + w;
     }
 
     // for table slide dowm
     var table = $('#transactions-table').DataTable({ 
-        'dom' : 't'
+        'dom' : 't',
+        'order' : [],
+        "pageLength": 25
     });
 
 
@@ -516,6 +541,8 @@ $(document).ready(function () {
                         }
                     }
                 },
+                /// why did i put this here?????
+                /*
                 'user[current_password]': {
                     row: '.group',
                     validators: {
@@ -527,7 +554,7 @@ $(document).ready(function () {
                             message: 'Your password should be at least 8 characters'
                         }
                     }
-                },
+                },*/
             }
         })
         .on('success.validator.fv', function(e, data) {
@@ -555,7 +582,7 @@ $(document).ready(function () {
         })
         .on('success.form.fv', function(e, data) {
             set_number();
-            set_names();
+            set_names("settingsPage");
         });
     ///
 
@@ -899,7 +926,7 @@ $(document).ready(function () {
                             message: 'Please enter your zip code'
                         }
                     }
-                },
+                },/* if you need merchants to confirm password
                 'user[current_password]': {
                     row: '.form-group',
                     validators: {
@@ -907,7 +934,7 @@ $(document).ready(function () {
                             message: 'Please re-enter your account password'
                         }
                     }
-                },
+                },*/
                 'user[city]': {
                     row: '.form-group',
                     validators: {
@@ -963,7 +990,8 @@ $(document).ready(function () {
     // tokenize card details
     function submitToStripe() {        
         //console.log($('#cc-number').val())
-        $("#cc-submit").attr("disabled", true);     
+        CARD_BTN_TEXT = cc_submit.val(); 
+        cc_submit.attr("disabled", true).val("Please wait...");     
         $('#response').hide();
         $(".panel-body").html('');
         Stripe.card.createToken({
@@ -978,19 +1006,17 @@ $(document).ready(function () {
     function stripeResponseHandler(status, response) {
         if (response.error) {
             // show the errors on the form
-            $("#cc-submit").removeAttr("disabled");
+            cc_submit.removeAttr("disabled").val(CARD_BTN_TEXT);
             $('.panel-body').append(response.error.message);
             $('#response').slideDown(300);
         } else {
-            $("#cc-submit").removeAttr("disabled");
-            $("#cc-submit").text("Submitting...");            
+            cc_submit.val("Please wait...");            
             $('#cc-number').val(response['card']['last4']);
             $('#cc-ex-month').val(response['card']['exp_month']);
             $('#cc-ex-year').val(response['card']['exp_year']);
             document.getElementById('cc-uri').value = response.id;            
             $('#cc-type').val(response['card']['type']);
-            $("#user-form").unbind("submit", preventDefault)
-                    .submit();
+            $("#user-form").unbind("submit", preventDefault).submit();
             //$("#user-form").submit();
         }
     }
@@ -1025,7 +1051,7 @@ $(document).ready(function () {
                             message: 'Your card name is required'
                         }
                     }
-                },
+                },/* if you need to validate current password
                 'user[current_password]': {
                     row: '.group',
                     validators: {
@@ -1033,7 +1059,7 @@ $(document).ready(function () {
                             message: 'Your password is required'
                         }
                     }
-                },
+                },*/
                 'cc-number': {
                     selector: '#cc-number',
                     row: '.group',
@@ -1114,14 +1140,14 @@ $(document).ready(function () {
         })
         .on('success.form.fv', function(e, data) {            
             $("#user-form").bind("submit", preventDefault);
-            set_names();            
+            set_names("ccPage");            
             submitToStripe();
         });
     ///
 
 
-    function set_names() {
-        var fullname = (document.getElementById('user_full_name').value).trim();
+    function set_names(page) {
+        var fullname = (page == "ccPage") ? (document.getElementById('cc-name').value).trim() : (document.getElementById('user_full_name').value).trim();
         var firstName = fullname.substr(0, fullname.indexOf(' '));
         var lastName = fullname.substr(fullname.indexOf(' ')+1);
         if (!firstName && lastName) {
@@ -1188,7 +1214,6 @@ $(document).ready(function () {
             data: json
         })  
             .done(function(data, response) {
-                console.log(response);
                 ohSnap('Yes! Your message has been sent!', 'green');
             })
             .fail(function( data ) {
@@ -1340,10 +1365,133 @@ $(document).ready(function () {
         });
         // validate text me form    
 
+    // if hashtag isn't for payment, remove amount and precedence fields
+    $('#hashtag_not_payment_tag').change(function(){
+        if (this.checked) {
+            $('#hashtag_amount_field, #hashtag_precedence_field').slideUp(300);
+        } else {
+            $('#hashtag_amount_field, #hashtag_precedence_field').slideDown(300);
+        }
+    });
+
+    $('#transactions-column').on("click", ".refund_link", function() {
+        REFUND_TXN_LINK = this;
+        REFUND_BOX.lightbox_me({
+            centered: true, 
+            onLoad: function() { $('#refundForm').find('input:first').focus(); }
+        });
+    });
+
+    $('#refundButton').click(function(e) {
+        e.preventDefault();
+        this.disabled = true; this.textContent = "Please wait...";
+        var charge_id = REFUND_TXN_LINK.getAttribute('data-stripe-txn-num');
+        $.ajax({
+            url: "/v1/transactions/" + charge_id + "/refund.json",
+            beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
+            type: "POST",
+            data: { "type" : "card",
+                    "reason" : document.getElementById('refund_reason').value }       
+        })
+            .done(function(data, textStatus, response) {
+                document.getElementById(charge_id).setAttribute("data-status", "Refunded");
+                ohSnap(data.message, 'green');
+                $(REFUND_TXN_LINK)[0].parentNode.parentNode.innerHTML = "<tr><td>Status: </td><td> Refunded</td></tr>";
+            })
+            .fail(function(data, textStatus, response) { ohSnap(data.responseJSON["message"], "red"); })
+            .always(function(data, textStatus, response) {
+                this.disabled = false; this.textContent = "Submit";
+                REFUND_BOX.trigger('close');
+            })
+    });
+
+
+    // for searching for rhombus number
+    searchNumBtn.addEventListener('click', function() {
+        searchNumBtn.disabled = true; 
+        get_number(document.getElementById('searchNumberField').value)
+    })
+
+    var get_number = function(str) {
+        var e = document.getElementById("searchNumberType");
+        var searchNumberType = e.options[e.selectedIndex].value.toString();
+        $.ajax({
+            url: "/search-number",
+            type: "GET",
+            data: 'search_number=' + str + "&type=" + searchNumberType,
+            dataType: "json"     
+        })
+            .done(function(data, textStatus, jqXHR) {
+                console.log(data.number);
+                document.getElementById("rhombus_number").value = data.number.slice(1)
+            })
+            .fail(function(data, textStatus, errorThrown) {
+                console.log(data);
+            })   
+            .always(function(data, textStatus, response) {
+                searchNumBtn.disabled = false; 
+            }); 
+    }
+    // search for rhombus number
+
 });
 
 
+
+
+
 /* Page Loading */
-$(window).load(function() {
-  $(".loading").fadeOut(750);
-})
+$(window).load(function() { $(".loading").fadeOut(600); });
+
+function get_unread_messages() {
+    // getting unread messages and subcribing to messaging channel
+    var global_unread_count = 0;
+    var url = window.location;
+    $.ajax({
+        url: url.origin + '/json_get_current_user',
+        type: "GET",
+        dataType: "json"     
+    })
+        .done(function(data, textStatus, response) {
+            var merchant_id = data.id;
+            // Initialize PubNub with SSL
+            var pubnub = PUBNUB({
+                publish_key: data.pubnub_publish_key,
+                subscribe_key: data.pubnub_subscribe_key,
+                ssl: true
+            });
+
+            // Subscribe to merchant channel
+            pubnub.subscribe({
+                channel: 'messaging_<%= Rails.env %>_' + merchant_id,
+                message: function(m){
+                    var json_response = JSON.parse(m[0]);                  
+                    if (json_response.user_level == 0) {
+                        global_unread_count += 1;
+                        document.getElementById('unreadCount').textContent = (global_unread_count > 0) ? global_unread_count : '';
+                    }
+                }
+            });
+
+            // Get latest messages for this merchant
+            $.ajax({
+                url: url.origin + '/users/' + merchant_id + '/json_get_latest_active_messaging',
+                type: "GET",
+                dataType: "json"     
+            })
+                .done(function(data, textStatus, response) {
+                    $.each(data.users, function( index, value ){
+                        global_unread_count += value.unread_count;
+                    });
+                    document.getElementById('unreadCount').textContent = (global_unread_count > 0) ? global_unread_count : '';
+                })
+                .fail(function(data, textStatus, response) {
+                    console.log('Error while trying to connect to the messaging system.');
+                    document.getElementById('unreadCount').textContent = '';
+                }) 
+        })
+        .fail(function(data, textStatus, response) {
+            console.log('Error while trying to connect to the messaging system.');
+            document.getElementById('unreadCount').textContent = '';
+        }) 
+}

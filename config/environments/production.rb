@@ -16,7 +16,8 @@ Rails.application.configure do
     port: 587,
     domain: "getrhombus.com",
     user_name: <redacted_username>
-    password: "<redacted_password>" }
+    password: "<redacted_password>" 
+  }
   #### added
 
 

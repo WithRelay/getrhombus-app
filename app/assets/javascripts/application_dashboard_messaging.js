@@ -17,8 +17,17 @@
 //= require angular-rails-templates
 //= require jquery
 //= require jquery_ujs
+
+//= require jquery.lightbox_me
+
 //= require pubnub/pubnub-angular.js
+
+//= require formValidation.min
+//= require bootstrap-formvalidator.min
+//= require angucomplete-alt.js
+
 //= require dashboard/messaging_angularjs/messagingApp.js
 //= require dashboard/messaging_angularjs/messagingControllers.js
 //= require dashboard/messaging_angularjs/messagingFilters.js
 //= require_tree ./dashboard/messaging_angularjs/templates
+

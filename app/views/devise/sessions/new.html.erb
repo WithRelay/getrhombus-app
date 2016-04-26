@@ -13,10 +13,8 @@
     <div class="login-form">
     <%= render 'shared/full_messages' %>
       <%= form_for(resource, :as => resource_name, :html=> {:id => 'signinForm'} , :url => session_path(resource_name)) do |f| %> 
-        <div class="top">
-          <img src="<%= asset_path 'logo_grey.jpg' %>" alt="icon" class="icon" id="signup_logo">
-          <h4>Welcome Back!</h4>
-        </div>
+        
+        <img src="<%= asset_path 'logo.jpg' %>" alt="icon" class="icon" id="signup_logo">
         <div class="form-area">
           <div class="group">
             <%= f.email_field :email, type: "email", :class => "form-control rhombusFocus", placeholder: "Email" %>

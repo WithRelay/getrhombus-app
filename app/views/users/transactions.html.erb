@@ -18,6 +18,8 @@
 <!-- START CONTENT -->
 <div class="content">
 
+  <div id="ohsnap"></div>
+  
   <!-- Start Page Header -->
   <div class="page-header" style="background: transparent; margin-bottom: 0px;">
     <div class="title" style="font-weight: normal;">Transactions</div>
@@ -27,81 +29,142 @@
   <!-- End Page Header -->
 
  <!-- //////////////////////////////////////////////////////////////////////////// --> 
-<!-- START CONTAINER -->
-<div class="" id="transactions-column">
+  
+  <!-- START CONTAINER -->
+  <div class="" id="transactions-column" data-level="<%= current_user.user_level %>">
 
- <!-- Start Row -->
-  <div class="row">
+   <!-- Start Row -->
+    <div class="row">
 
-    <!-- Start Panel -->
-    <div class="col-md-12">
-      <% unless @transactions.blank? %>
-        <div class="panel panel-default">
+      <!-- Start Panel -->
+      <div class="col-md-12">
+        <% unless @transactions.blank? %>
+          <div class="panel panel-default">
 
-          <div class="panel-title">
-            <ul class="panel-tools">
-              <li><a class="icon expand-tool"><i class="fa fa-expand"></i></a></li>
-            </ul>
-          </div>
+            <div class="panel-title">
+              <ul class="panel-tools">
+                <li><a class="icon expand-tool"><i class="fa fa-expand"></i></a></li>
+              </ul>
+            </div>
 
-          <div class="panel-body table-responsive">
-            <table id="transactions-table" class="table table-striped dataTable">
-              <thead>
-                <tr role="row">
-                  <td class="text-center"><i class="fa fa-trash" style="visibility: hidden;"></i></td>
-                  <th>Date (ET)</th>
-                  <th><%= (current_user.user_level == 0) ? "Business" : "Card Name" %></th>
-                  <th>Message</th>
-                  <th>Phone #</th>
-                  <th><%= (current_user.user_level == 0) ? "Rhombus #" : "Amt Paid" %></th>
-                  <th>Last Four</th>
-                </tr>
-              </thead>
-              <tbody>
-              	<% @transactions.each do |t| %>
-  	        	  <tr role="row">
-  	                <td class="details-control" data-txn-num="<%= t.transaction_number %>"
+            <div class="panel-body table-responsive">
+              <table id="transactions-table" class="table table-striped dataTable">
+                <thead>
+                  <tr role="row">
+                    <td class="text-center"><i class="fa fa-trash" style="visibility: hidden;"></i></td>
+                    <th>Date (ET)</th>
+                    <th><%= (current_user.user_level == 0) ? "Business" : "Card Name" %></th>
+                    <th>Message</th>
+                    <th>Phone #</th>
+                    <th><%= (current_user.user_level == 0) ? "Rhombus #" : "Amt Paid" %></th>
+                    <th>Last Four</th>
+                  </tr>
+                </thead>
+                <tbody>
+                	<% @transactions.each do |t| %>
+    	        	  <tr role="row">
+    	                <td class="details-control" data-txn-num="<%= t.transaction_number %>"
                         data-time="<%= t.created_at.strftime("%I:%M %p") %>"
-                        data-stripe-txn-num="<%= t.transaction_uri %>"
+                        id="<%= t.transaction_uri %>"
                         data-email="<%= t.email %>"
                         data-tax="<%= t.tax_rate %>"
+                        data-status="<%= (t.refund_id) ? "Refunded" : "Charged" %>"
                         data-page="transactions"
                       ></td>
-  	                <td><%= t.created_at.strftime("%m/%d/%Y") %></td>
-  	                <td><%= (current_user.user_level == 0) ? t.business_name : t.card_name %></td>
-  	                <td><%= t.notes %></td>
-  	                <td><%= (current_user.user_level == 0) ? t.business_phone : t.phone_number %></td>
-  	                <td><%= (current_user.user_level == 0) ? t.rhombus_number : t.amount_less_fees %></td>
-  	                <td><%= t.last_four %></td>
-  	              </tr>
-  	            <% end %>
-              </tbody>
-            </table>
+    	                <td><%= t.created_at.strftime("%m/%d/%Y") %></td>
+    	                <td><%= (current_user.user_level == 0) ? t.business_name : t.card_name %></td>
+    	                <td><%= t.notes %></td>
+    	                <td><%= (current_user.user_level == 0) ? t.business_phone : t.phone_number %></td>
+    	                <td><%= (current_user.user_level == 0) ? t.rhombus_number : t.amount_less_fees %></td>
+    	                <td><%= t.last_four %></td>
+    	              </tr>
+    	            <% end %>
+                </tbody>
+              </table>
+            </div>
+
           </div>
-
-        </div>
-      <% else %>
-        <div class="center">
-          <img src="<%= asset_path 'no-transactions.png' %>" alt="no transaction">
-          <div class="no-user"><%= (current_user.user_level == 0) ? "You have no payments :(" : "You have no transactions :(" %></div>
-        </div>
-      <% end %>
+        <% else %>
+          <div class="center">
+          	<img src="<%= asset_path 'no-transactions.png' %>" alt="no transaction">
+            <div class="no-user"><%= (current_user.user_level == 0) ? "You have no payments :(" : "You have no transactions :(" %></div>
+          </div>
+        <% end %>
+      </div>
+      <!-- End Panel -->
+      	<div style="text-align: center; margin-bottom: 40px;"><%= will_paginate @transactions, :page_links => false %></div>
     </div>
-    <!-- End Panel -->
-    	<div style="text-align: center; margin-bottom: 40px;"><%= will_paginate @transactions, :page_links => false %></div>
+    <!-- End Row -->
   </div>
-  <!-- End Row -->
-</div>
-<!-- END CONTAINER -->
- <!-- //////////////////////////////////////////////////////////////////////////// --> 
-  <br><br><br><br><br><br><br><br><br><br><br><br>
-     <br><br><br><br><br><br>
+  <!-- END CONTAINER -->
+   <!-- //////////////////////////////////////////////////////////////////////////// --> 
+    <br><br><br><br><br><br><br><br><br><br><br><br>
+       <br><br><br><br><br><br>
 
-  <%= render 'shared/dashboard_footer' %>
+    <%= render 'shared/dashboard_footer' %>
 
 </div>
 <!-- End Content -->
  <!-- //////////////////////////////////////////////////////////////////////////// --> 
+
+<div style="display: none;" id="refundFormBox" class="newForms">
+  <div id="refundFormDiv" class="parent_div">
+    <div class="center_div">      
+      <div id="refundCustomer">Refund Transaction</div>
+      <p id="refundCustomerLine">____</p>      
+      <form id="refundForm" name="refundForm">          
+           <label>
+              <select class="form-control rhombusFocus" id="refund_reason" name="refund_reason">
+                <option value="duplicate">Duplicate</option>
+                <option value="fraudulent">Fraudulent</option>
+                <option value="requested_by_customer">Customer Request</option>
+              </select>
+            </label>
+
+          <footer>
+            <button class="btn btn-default btn-block btn-rhombus" id="refundButton">Submit</button>
+          </footer>
+      </form>
+    </div>
+  </div>
+</div>
+
+<form id="txn_history_form" method="get" action="/transactions/spreadsheet.xls">
+  <input type="hidden" id="txn_start_date" name="txn_start_date" />
+  <input type="hidden" id="txn_end_date" name="txn_end_date" />
+  <input type="hidden" id="txn_todays_date" name="txn_todays_date" />
+</form>
+
+<!-- Date picker stuff -->
+<!-- Include Required Prerequisites -->
+<script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<!-- Include Date Range Picker -->
+<script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
+<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
+<script type="text/javascript">
+  $(function() {
+      $('.title').daterangepicker({
+        cancelClass: 'hide',
+        linkedCalendars: true,
+        ranges: {
+           'Today': [moment(), moment()],
+           'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+           'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+           'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+           'This Month': [moment().startOf('month'), moment().endOf('month')],
+           'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+        },
+        alwaysShowCalendars: false,
+        maxDate: new Date
+      })
+        .on('apply.daterangepicker', function(ev, picker) {
+          document.getElementById('txn_start_date').value = picker.startDate.format('YYYY-MM-DD HH:mm:ss');
+          document.getElementById('txn_end_date').value = picker.endDate.format('YYYY-MM-DD HH:mm:ss');
+          document.getElementById('txn_todays_date').value = moment().format('YYYYMMDD')
+          $('#txn_history_form').submit();
+        });
+  });
+</script>
 
 
 </body>

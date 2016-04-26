@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  amount: 9.99
+  response: MyText
+  tag: MyString
+  is_precedent: false
+  not_payment_tag: false
+
+two:
+  name: MyString
+  amount: 9.99
+  response: MyText
+  tag: MyString
+  is_precedent: false
+  not_payment_tag: false
