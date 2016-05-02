@@ -1,13 +1,15 @@
 class PaymentService
 
+  Stripe.api_key = Rails.application.secrets.stripe["secret_key"]
+
   class << self
     
-    def charge(amount_with_taxes, user, merchant, message)
+    def charge(amount_with_taxes, merchant, user, message)
 
       begin
         # Create the charge on Stripe's servers
         tkn = Stripe::Token.create(
-              {:customer => user.customer_uri},
+              { :customer => user.customer_uri },
               merchant.stripe_access_token  # user's access token from the Stripe Connect flow
         )
 

@@ -39,10 +39,9 @@ module AdditionalUserActions
     if !params[:message].blank?
       merchant = User.find_by_id(params[:id])
       if !merchant.blank?
-        @message = Message.new
-        @message.send_and_save_message(5, merchant.rhombus_number, params[:user_number], params[:message])
-        if !@message.id.blank?
-          render :json => Hash['success' => true, 'user_level' => merchant.user_level, 'profile_image' => ActionController::Base.helpers.asset_path('rhombus_icon_50x50.png'), 'ts_day_of_the_week' => @message.created_at.strftime('%A'), 'ts_time' => @message.created_at.strftime('%l:%M %P')].to_json
+        message = Message.send_and_save_message(merchant.rhombus_number, params[:user_number], params[:message])
+        if message
+          render :json => Hash['success' => true, 'user_level' => merchant.user_level, 'profile_image' => ActionController::Base.helpers.asset_path('rhombus_icon_50x50.png'), 'ts_day_of_the_week' => message.created_at.strftime('%A'), 'ts_time' => message.created_at.strftime('%l:%M %P')].to_json
           return
         end
       end
@@ -60,6 +59,11 @@ module AdditionalUserActions
 
   def transactions
     @transactions = @user.get_user_transactions.paginate(:page => params[:page], :per_page => 25)
+  end
+
+  def build_user_link
+    # in case it includes a captured payment
+    params[:amt].present? ? "/profile?amt=#{params[:amt]}&referrer_num=#{params[:referrer_num]}&msg_id=#{params[:msg_id]}" : "/profile"  
   end
 
 

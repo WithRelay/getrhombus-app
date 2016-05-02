@@ -19,10 +19,8 @@ class UsersController < ApplicationController
       render json: @stats.to_json
     else
       if current_user.user_level == 0 && current_user.customer_uri.blank? # incomplete customer account
-        # in case it includes a captured payment
-        link = params[:amt].present? ? "/profile?amt=#{params[:amt]}&referrer_num=#{params[:referrer_num]}&msg_id=#{params[:msg_id]}" : "/profile"  
-        redirect_to link
-      elsif current_user.user_level == 1 && (current_user.business_name.blank? || current_user.stripe_access_token.blank? || current_user.rhombus_number.blank?) # incomplete merchant account
+        redirect_to build_user_link
+      elsif current_user.user_level == 1 && (current_user.business_name.blank? || current_user.rhombus_number.blank?) # incomplete merchant account
         redirect_to "/profile"
       else
         if current_user.user_level == 0 && params[:amt].present? && params[:referrer_num].present? && params[:msg_id].present?
@@ -35,7 +33,7 @@ class UsersController < ApplicationController
         @last4_transactions = @user.transactions.select(:created_at, :description, :notes).last(4).reverse
         @total_msgs = @user.get_total_messages
         @dashboard_stuff = @user.dashboard_stats 
-        @token = TextingService.get_twilio_capibility_token if current_user.user_level == 1       
+        # @token = TextingService.get_twilio_capibility_token if current_user.user_level == 1       
       end           
     end
   end  

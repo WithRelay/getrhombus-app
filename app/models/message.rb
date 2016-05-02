@@ -3,47 +3,50 @@ class Message < ActiveRecord::Base
 	belongs_to :txn, :foreign_key => :transaction_id, :class_name => :Transaction
 	belongs_to :image, dependent: :destroy
 
-	#belongs_to :user, counter_cache: true
+	# belongs_to :user, counter_cache: true
 	
 	# For sending all text messages
-	def send_and_save_message(msg_code, from, to, message, media_url = "")		
+	def self.send_and_save_message(from, to, message, media_url = "")		
 		begin
 			# save the outbound message
-			# client_ref = self.save_text(message_code: msg_code, from: from, to: to, text: message, unread: false, status_report_req: 1)
-
-			#response = TextingService.send_sms(from, to, client_ref, message)		
-			response = TextingService.send_sms_twilio(from, to, message, media_url)
-
-
-			# we shouldnt need status_report_req anymore for twilio? since they provide sid
-			# we need to start tracking number of message segments ############		
-			self.save_text(message_code: response.sid, from: from, to: to, text: message, unread: false, status_report_req: 1)
-
-=begin
-			# check response		
-			if response && response.code == 200 && response["messages"].first["status"] == "0"		
-				# Fetch the saved outbound message and attach nexmo's response to it
-				@message = Message.find_by(id: response['messages'].first["client-ref"])
-				@message.save_text(status: response['messages'].first['status'], messageId: response['messages'].first['messageId'],
-					message_price: response['messages'].first['message-price'], 
-					network_code: response['messages'].first['network'])
-			else			
-				# Notify marketplace owner of failure
-				Notification.text_failure_notification(response["messages"].first, from, to, message).deliver_now
-				return
-			end
-=end
+			save_text(from: from, to: to, text: message, unread: false)			
+			response = TextingService.send_sms(from, to, message, media_url)
+			if response
+				save_text(status: response.status, message_id: response.sid, message_timestamp: response.date_updated, message_price: response.price, 
+					error_code: response.error_code, error_text: response.error_message, price_unit: response.price_unit, num_segments: response.num_segments)	
+			else
+				Notification.text_failure_notification(response, from, to, message).deliver_now           				# Notify marketplace owner of failure
+				return false
+			end		
 		rescue StandardError => err
-			return
-      	end
+			return false
+    end
+	end
+
+	def self.send_and_save_message_nexmo(from, to, message)		
+		begin
+			# save the outbound message
+			save_text(from: from, to: to, text: message, unread: false)
+			response = TextingService.send_sms_nexmo(from, to, message)
+
+			if response && response.code == 200 && response["messages"].first["status"] == "0"		
+				save_text(status: response['messages'].first['status'], message_id: response['messages'].first['message-id'],
+					message_price: response['messages'].first['message-price'], error_text: response['messages'].first['error-text'])
+			else			
+				Notification.text_failure_notification(response["messages"].first, from, to, message).deliver_now 				# Notify marketplace owner of failure
+				return false
+			end
+		rescue StandardError => err
+			return false
+    end
 	end
 	
 	# for saving any text received or sent
 	def self.save_text(options = {})
-
-		begin
-
-			self.text = options[:text] if options[:text]
+		begin			
+			options.each do |k,v|
+				self[k] = v if ![:to, :from].include? k 
+			end
 
 			if options[:from]
 				# Attached the phone number and user id
@@ -51,7 +54,7 @@ class Message < ActiveRecord::Base
 				self.user_id_from = User.find_by(rhombus_number: "#{options[:from]}").id rescue 0
 				# when guests message us
 				if self.user_id_from == 0
-	       			self.user_id_from = User.find_by(phone_number: "#{options[:from]}").id rescue 0
+	       	self.user_id_from = User.find_by(phone_number: "#{options[:from]}").id rescue 0
 				end
 			end
 
@@ -61,45 +64,15 @@ class Message < ActiveRecord::Base
 				self.user_id_to =  User.find_by(rhombus_number: "#{options[:to]}").id rescue 0
 				# when we message guests
 				if self.user_id_to == 0
-	        		self.user_id_to =  User.find_by(phone_number: "#{options[:to]}").id rescue 0
+	        self.user_id_to =  User.find_by(phone_number: "#{options[:to]}").id rescue 0
 				end
 			end
 
-			###########
-
-			#### can i refactor below? do i need all these?
-			# some fields are already set in other places...see above
-
-
-			##########
-			
-			self.network_code = options[:network_code] if options[:network_code]
-			self.messageId = options[:messageId] if options[:messageId]
-			self.message_timestamp = options[:message_timestamp] if options[:message_timestamp]
-			#self.type = options[:type] if options[:type]
-			self.status_report_req = options[:status_report_req] if options[:status_report_req]
-			self.message_price = options[:message_price] if options[:message_price]
-			self.scts = options[:scts] if options[:scts]
-			self.status = options[:status] if options[:status]
-			self.status_delivery = options[:status_delivery] if options[:status_delivery]
-			self.err_code = options[:err_code] if options[:err_code]
-			self.error_text = options[:error_text] if options[:error_text]
-			self.message_code = options[:message_code] if options[:message_code]		
-			self.transaction_id = options[:transaction_id] if options[:transaction_id]
-			self.unread = options[:unread] unless options[:unread].nil?
 			self.save
-			
-			#if @message.save
-			#	return 200
-			#else
-				#return 500
-			#end
-			#return options[:sure]
+			self
 		rescue StandardError => err
-			return
-		else
-			return self.id
-      	end
+			nil
+		end
 	end
 	
 	# Returns hash with the last "num_messages" messages that the given user has sent to the given merchant

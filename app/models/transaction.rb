@@ -9,24 +9,26 @@ class Transaction < ActiveRecord::Base
   belongs_to :refund, inverse_of: :transactions
 
 
-  def self.charge_customer_card(amount, merchant, user, message) 
+  def self.charge_customer_card(amt_ary, merchant, user, message) 
   	
     begin
     
+      amount = amt_ary[0]
     	tax_rate = (((merchant.tax_rate.to_f)/100) + 1)                     # apply tax, default is 0
     	amount_with_taxes = (amount.to_f * tax_rate).round(0)			
-      rhombus_fee = 0                                                     #(0.006 * amount_with_taxes.to_f).round(0)
+      rhombus_fee = 0                                                     # (0.006 * amount_with_taxes.to_f).round(0)
 
       payment_response_array = PaymentService.charge(amount_with_taxes, merchant, user, message)
       response = payment_response_array[0]
 
       unless response
         if payment_response_array[2]
-          @message = Message.new
-          @message.send_and_save_message(18, merchant.rhombus_number, user.phone_number, 
+          message = Message.send_and_save_message(merchant.rhombus_number, user.phone_number, 
               "Your payment to #{merchant.business_name} failed because: #{err[:message]}")
           # Send to merchant's messaging channel
-          RealtimeStreamService.send_message_via_number(user.phone_number, merchant.rhombus_number, @message.text, @message.created_at, true)
+          if message
+            RealtimeStreamService.send_message_via_number(user.phone_number, merchant.rhombus_number, message.text, message.created_at, true)
+          end
         end
         EmailingService.charge_failure_notification(to: merchant.email, customer_email: user.email, customer_phone: user.phone_number,
         card_name: user.card_name, last_four: user.last_four, text: message, business_phone: merchant.business_phone,
@@ -81,13 +83,13 @@ class Transaction < ActiveRecord::Base
 
 
   def send_text_receipt(user, merchant, response, amount_in_hundreds, amount_with_taxes_in_hundreds)
-    @message = Message.new
+    message = Message.new
     name = (user.card_name.present?) ? " " + user.card_name.split.first : ''
     if merchant.tax_rate == "0"
-      @message.send_and_save_message(11, merchant.rhombus_number, user.phone_number, 
+      message.send_and_save_message(merchant.rhombus_number, user.phone_number, 
         "Thanks" + name + ". A payment of #{amount_in_hundreds} (#{response.currency}) was sent to #{merchant.business_name}.")
     else
-      @message.send_and_save_message(11, merchant.rhombus_number, user.phone_number, 
+      message.send_and_save_message(merchant.rhombus_number, user.phone_number, 
         "Thanks" + name + ". A payment of #{amount_with_taxes_in_hundreds} (#{response.currency}) plus taxes and fees set by #{merchant.business_name} was sent.")
     end
     # Send to merchant's messaging channel

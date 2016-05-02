@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160423033206) do
+ActiveRecord::Schema.define(version: 20160429044435) do
 
   create_table "full_contact_data", force: :cascade do |t|
     t.string   "likelihood",    limit: 191
@@ -73,23 +73,20 @@ ActiveRecord::Schema.define(version: 20160423033206) do
     t.datetime "updated_at"
     t.string   "from",              limit: 191
     t.string   "to",                limit: 191
-    t.integer  "status_report_req", limit: 4
     t.string   "message_timestamp", limit: 191
     t.string   "message_price",     limit: 191
-    t.string   "scts",              limit: 191
     t.string   "status",            limit: 191
-    t.string   "status_delivery",   limit: 191
-    t.string   "network_code",      limit: 191
     t.string   "error_text",        limit: 191
-    t.string   "err_code",          limit: 191
-    t.integer  "message_code",      limit: 4
+    t.string   "error_code",        limit: 191
     t.integer  "user_id_from",      limit: 4
     t.integer  "user_id_to",        limit: 4
     t.integer  "transaction_id",    limit: 4
-    t.string   "messageId",         limit: 191
+    t.string   "message_id",        limit: 191
     t.text     "text",              limit: 65535
     t.boolean  "unread",            limit: 1,     default: true
     t.integer  "image_id",          limit: 4
+    t.string   "num_segments",      limit: 191
+    t.string   "price_unit",        limit: 191
   end
 
   add_index "messages", ["transaction_id"], name: "index_messages_on_transaction_id", using: :btree

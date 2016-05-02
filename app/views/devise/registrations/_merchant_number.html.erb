@@ -37,16 +37,35 @@
             <input id="searchNumberField" type="text" style="margin-bottom: 30px;margin-left: 112px;" />
               <button id="searchNumberBtn">find number</button>
 
-            <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put, class: "form-horizontal rhombusFocus" }) do |f| %> 
 
+<style type="text/css">
+#search_number_form input[type=radio] {
+   display: none;
+ }
+
+#search_number_form input[type="radio"]:checked + label {
+   background-color: yellow;
+ }
+
+#search_number_form label {
+   display: block;
+   width: 40%;
+   text-align: center;
+}
+</style>
+
+            <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put, class: "form-horizontal rhombusFocus", id: "search_number_form" }) do |f| %> 
 
               <div class="form-group">
-                  <label class="col-sm-2 control-label form-label">Rhombus Number</label>
-                  <div class="col-sm-10">
-                    <%= f.text_field :rhombus_number, type: "text", class: "form-control rhombusFocus", placeholder: "Rhombus Number", id: "rhombus_number", readonly: "true" %>
-                  </div>
+                <div class="col-sm-10" id="search_number_radios">
+                  <%#= f.text_field :rhombus_number, type: "text", class: "form-control rhombusFocus", placeholder: "Rhombus Number", id: "rhombus_number", readonly: "true" %>
+                  <input type="radio" id="rhombus_number1" name="user[rhombus_number]"></input>
+                  <label for="rhombus_number1">Number 1</label>
+                  <input type="radio" id="rhombus_number2" name="user[rhombus_number]"></input>
+                  <label for="rhombus_number2">Number 2</label>
+                  <%= f.text_field :update_rhombus_number, type: "text", hidden: "true" %>
               </div>
-              <%= f.text_field :update_rhombus_number, type: "text", hidden: "true" %>
+              </div>
 <%
 =begin %> 
                 <div class="form-group">
@@ -57,7 +76,6 @@
                 </div>
 <%
 =end %>
-
                 <div class="form-group">
                   <div class="col-sm-offset-2 col-sm-10">
                   <%= f.submit "Submit", id: "ba-submit", :class => "btn btn-default btn-rhombus" %> 

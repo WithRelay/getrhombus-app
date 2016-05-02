@@ -1,35 +1,25 @@
 class MessagesController < ApplicationController
 
-  #include ProcessMessage
-  include ProcessMessageTwilio
+  # help remove delivery report from nexmo...no longer needed
+  # help change links in nexmo and twilio
+  # help in dasboard_mms...need params from and params to from dashboard
 
 	def index
-		#@message = Message.new
-		#@url = @message.send_and_save_message(1, <redacted_phone_number>, <redacted_phone_number>, "$$$$ yea")
-		#@url = TextingService.buy_number("US")
 	end
 
-	def receive_delivery_report
-		render :text => ""											# return 200 to nexmo
-		save_delivery_receipts(request.query_string)
-	end
-
-  def receive_delivery_report_twilio
+  def receive_delivery_report
     render :text => ""                      # return 200 to nexmo
-    save_delivery_receipts(params)      # save delivery receipts twilio
+    save_delivery_receipts(params)          # save delivery receipts twilio
   end
 
-	def receive_text_message
+	def receive_text_message_nexmo
 		#params[:to] = "<redacted_phone_number>"
 		#params[:msisdn] = "<redacted_phone_number>" 			# "<redacted_phone_number>"
 		render :text => ""							# return 200 to nexmo
 		process_message(request, params)
 	end
 
-  def receive_text_message_twilio
-    message_body = params["Body"]
-    from_number = params["From"]
-
+  def receive_text_message
     render :text => ""              # return 200 to twilio
     process_message(params)
   end
@@ -40,13 +30,11 @@ class MessagesController < ApplicationController
 
   def dashboard_mms
     begin
-      # twilio supports only gif, png and jpeg though it accepts other types
-      @image = Image.create(avatar: params[:file])
-      @message = Message.new
-      @message.image_id = @image.id
-      # need code for MMS here instead of 5  *************
-      @message.send_and_save_message("5","<redacted_phone_number>","<redacted_phone_number>", "", @image.avatar.url)      
-      render json: { message: "uploaded file" }, status: :created
+      image = Image.create(avatar: params[:file])                 # twilio supports only gif, png and jpeg though it accepts other types
+      message = Message.new
+      message.image_id = image.id
+      message.send_and_save_message("<redacted_phone_number>","<redacted_phone_number>", "", image.avatar.url)      
+      render json: { message: "File uploaded and sent" }, status: :created
     rescue StandardError => e
       render json: { message: "Unable to upload file" }, status: 500
     end

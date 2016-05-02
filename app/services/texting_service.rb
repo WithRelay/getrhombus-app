@@ -1,4 +1,6 @@
 require 'uri'
+  
+  # help thorough implementation needed per doc above
 
 class TextingService
 
@@ -12,27 +14,24 @@ class TextingService
 
   class << self
 
-    def send_sms(from, to, client_ref, message)
+    def send_sms_nexmo(from, to, message)
       begin
         # encode the nexmo uri
-        uri = URI.encode_www_form([["api_key",NEXMO_API_KEY], ["api_secret", NEXMO_API_SECRET], ["from", from], ["to", to], 
-                        ["text", message], ["status-report-req", "1"], ["client-ref", client_ref]])   
+        uri = URI.encode_www_form([["api_key",NEXMO_API_KEY], ["api_secret", NEXMO_API_SECRET], ["from", from], ["to", to], ["text", message]])   
         response = HTTParty.post('https://rest.nexmo.com/sms/json?'+ uri, :headers => {"Content-Type" => "application/x-www-form-urlencoded"} )
-        return response
       rescue StandardError => err
-        return false
+        return err
       end
     end
   
-     # we dont need client_ref here cos we have to use webhooks to listen to delivery??
-    def send_sms_twilio(from, to, body, media_url = nil)
+    def send_sms(from, to, body, media_url = nil)
       begin
         client = Twilio::REST::Client.new TWILIO_API_KEY, TWILIO_API_SECRET
-        data = { :from => from, :to => to, :body => body } 
+        data = { From: from, To: to, Body: body, ApplicationSid: TWILIO_RHOMBUS_APP_SID } 
         data[:media_url] = media_url if media_url  # US and canadian phone numbers can make use of an image as well.
         message = client.account.messages.create(data)
       rescue StandardError => err
-        return false
+        return err
       end
     end
 
@@ -60,32 +59,28 @@ class TextingService
       begin  
         client = Twilio::REST::Client.new TWILIO_API_KEY, TWILIO_API_SECRET
         number = client.account.incoming_phone_numbers.create(:phone_number => num, :VoiceApplicationSid => TWILIO_RHOMBUS_APP_SID,
-         :SmsApplicationSid => TWILIO_RHOMBUS_APP_SID)        
+         :SmsApplicationSid => TWILIO_RHOMBUS_APP_SID)    
+        return true    
       rescue StandardError => e
         return false
-      else
-        return true
       end
     end
 
     def search_number(str, type, country)
       # https://www.twilio.com/help/faq/phone-numbers/which-countries-does-twilio-have-phone-numbers-in-and-what-are-their-capabilities
-      # Thorough implementation needed per doc above
       client = Twilio::REST::Client.new TWILIO_API_KEY, TWILIO_API_SECRET
       begin  
         search_params = { voice_enabled: "true", sms_enabled: "true", exclude_all_address_required: "true" }
         search_params[:mms_enabled] = "true" if ["US", "CA"].include? country
         search_params[type] = str
 
-        local_numbers = client.account.available_phone_numbers.get(country).local.list(search_params)
-        return local_numbers[0].phone_number unless local_numbers.empty?
-        return []
+        local_numbers = client.account.available_phone_numbers.get(country).local.list(search_params)[0..4]
+        return local_numbers.map { |p| p.phone_number } 
       rescue StandardError => e
           return e.message #[]
       end
     end
     
   end
-
 end
 

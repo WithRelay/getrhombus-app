@@ -1,18 +1,26 @@
 $(document).ready(function () {  
 
+    // help wrap this up...need to tie in saving this referrer_num to db for sign in
+    // help change user controller to handle captured payments for signin
+    // help add tag_id to captured payments in signin and signup and in the forms
+
     Stripe.setPublishableKey('<%= Rails.application.secrets.stripe["publishable_key"] %>');
     var url = window.location,    
         page_params = url.search.substring(1),
-        cc_year, cc_month, txn_details, CARD_BTN_TEXT, REFUND_TXN_LINK, REFUND_BOX = $('#refundFormBox'),
+        cc_year, cc_month, txn_details, REFUND_TXN_LINK, REFUND_BOX = $('#refundFormBox'),
         chart_labels = [], chart_totals = [], chart_txns = [],
         contact_url = '/contact_forms.json', cc_submit = $('#cc-submit'),
         searchNumBtn = document.getElementById('searchNumberBtn');
     
     $.ajaxSetup({ cache:false });
-       
-    // to prefill signup form
-    if (url.pathname == "/signup") {
-        if (page_params != "") {
+
+    // to prefill signup form or handle captured payments
+    if (page_params != "" && ["/signup", "/signin", "/users/sign_in", "/profile"].indexOf(url.pathname) != -1) {
+        var amt = GetURLParameter(page_params, 'amt');
+        console.log(amt)
+        console.log("asdsa")
+        
+        if (url.pathname == "/signup") {
             document.getElementById('phone').value = GetURLParameter(page_params, 'num');
             var referrer = GetURLParameter(page_params, 'referrer');
             if (referrer) {
@@ -23,20 +31,16 @@ $(document).ready(function () {
                 $('#signupForm .selectpicker').val('0');
                 $('#signupForm .accountTypegroup').hide();
             } else $("#rhombusPower").addClass('hide');
-            var amt = GetURLParameter(page_params, 'amt');
-            var msg_id = GetURLParameter(page_params, 'msg_id');
-            document.getElementById('captured_amt').value = amt ? amt : ""; 
-            document.getElementById('msg_id').value = msg_id ? msg_id : ""; 
-        }
-    }
+        } else if (url.pathname == "/profile" && amt) {
+            cc_submit.prop('value', 'Save & Pay ' + amt);    // for payment capture, this shows the amt in the button
+            return
+        }        
 
-    // for initial payment capture, this shows the amt in the button
-    if (url.pathname == "/profile") {
-        if (page_params != "") {
-            var amt = GetURLParameter(page_params, 'amt');
-            if (amt) cc_submit.prop('value', 'Save & Pay ' + amt);
-        }
+        var msg_id = GetURLParameter(page_params, 'msg_id');
+        document.getElementById('captured_amt').value = amt ? amt : ""; 
+        document.getElementById('msg_id').value = msg_id ? msg_id : ""; 
     }
+    // to prefill signup form or handle captured payments
     
 
     ///// toggle card/login info for user's profile
@@ -393,6 +397,12 @@ $(document).ready(function () {
                     .html("The email isn't valid")
                     .show();
             }
+        })
+        .on('success.form.fv', function(e, data) {
+            // set referrer number.
+
+            var referrer_num = GetURLParameter(page_params, 'referrer_num');
+            document.getElementById('referrer_num').value = (referrer_num) ? referrer_num : '';
         });
     ////
 
@@ -989,7 +999,7 @@ $(document).ready(function () {
     // tokenize card details
     function submitToStripe() {        
         //console.log($('#cc-number').val())
-        CARD_BTN_TEXT = cc_submit.val(); 
+        var card_btn_text = cc_submit.val(); 
         cc_submit.attr("disabled", true).val("Please wait...");     
         $('#response').hide();
         $(".panel-body").html('');
@@ -1000,23 +1010,21 @@ $(document).ready(function () {
             exp_year: cc_year,
             cvc: $('#cc-csc').val()
         }, stripeResponseHandler);
+        cc_submit.attr("disabled", false).val(card_btn_text);     
     }  
 
     function stripeResponseHandler(status, response) {
         if (response.error) {
             // show the errors on the form
-            cc_submit.removeAttr("disabled").val(CARD_BTN_TEXT);
             $('.panel-body').append(response.error.message);
             $('#response').slideDown(300);
         } else {
-            cc_submit.val("Please wait...");            
             $('#cc-number').val(response['card']['last4']);
             $('#cc-ex-month').val(response['card']['exp_month']);
             $('#cc-ex-year').val(response['card']['exp_year']);
             document.getElementById('cc-uri').value = response.id;            
             $('#cc-type').val(response['card']['type']);
             $("#user-form").unbind("submit", preventDefault).submit();
-            //$("#user-form").submit();
         }
     }
     ///// ///
@@ -1416,6 +1424,7 @@ $(document).ready(function () {
     var get_number = function(str) {
         var e = document.getElementById("searchNumberType");
         var searchNumberType = e.options[e.selectedIndex].value.toString();
+        document.getElementById("search_number_radios").innerHTML = '';
         $.ajax({
             url: "/v1/numbers/search.json",
             type: "GET",
@@ -1423,8 +1432,17 @@ $(document).ready(function () {
             dataType: "json"     
         })
             .done(function(data, textStatus, jqXHR) {
-                console.log(data.number);
-                document.getElementById("rhombus_number").value = data.number.slice(1)
+                var str = '';
+                if(data.numbers.length > 0) { 
+                    $.each( data.numbers, function( key, value ) {
+                      str += '<input id="rhombus_number' + key + '" name="user[rhombus_number]" type="radio" value="' + value.slice(1) + '" />' 
+                            + '<label class="radio" for="rhombus_number' + key + '" >' + value.slice(1) + '</label>';
+                    });
+                    document.getElementById("search_number_radios").innerHTML = str;
+                }
+                else {
+
+                }
             })
             .fail(function(data, textStatus, errorThrown) {
                 console.log(data);
