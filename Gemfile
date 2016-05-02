@@ -9,6 +9,10 @@ gem "httparty"
 # For authentication
 gem "devise"
 
+#resque
+gem "resque"
+gem "resque-scheduler"
+
 # Stripe oauth
 gem 'omniauth-stripe-connect'
 
