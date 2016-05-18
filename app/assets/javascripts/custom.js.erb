@@ -1416,19 +1416,22 @@ $(document).ready(function () {
     // for searching for rhombus number
     if (searchNumBtn) {
         searchNumBtn.addEventListener('click', function() {
-            searchNumBtn.disabled = true; 
+            searchNumBtn.disabled = true;
+            searchNumBtn.innerHTML = "Searching..."; 
             get_number(document.getElementById('searchNumberField').value)
         });
     }
 
     var get_number = function(str) {
-        var e = document.getElementById("searchNumberType");
-        var searchNumberType = e.options[e.selectedIndex].value.toString();
+        var w = document.getElementById("searchNumberWith");
+        w = w.options[w.selectedIndex].value.toString();
+        var c = document.getElementById("searchNumberCountry");
+        c = c.options[c.selectedIndex].value.toString();
         document.getElementById("search_number_radios").innerHTML = '';
         $.ajax({
             url: "/v1/numbers/search.json",
             type: "GET",
-            data: 'search_number=' + str + "&type=" + searchNumberType,
+            data: 'search_number=' + str + "&with=" + w + "&country=" + c,
             dataType: "json"     
         })
             .done(function(data, textStatus, jqXHR) {
@@ -1449,6 +1452,7 @@ $(document).ready(function () {
             })   
             .always(function(data, textStatus, response) {
                 searchNumBtn.disabled = false; 
+                searchNumBtn.innerHTML = "Search"; 
             }); 
     }
     // search for rhombus number

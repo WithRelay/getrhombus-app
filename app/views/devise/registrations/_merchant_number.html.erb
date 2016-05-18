@@ -28,14 +28,33 @@
             <div class="panel-body">
             <%= render 'alerts' %>
 
-            <select id="searchNumberType">
+            <% countries = TextingService.twilio_list %>
+            <select id="searchNumberCountry">
+              <% countries.keys.each do |k| %>
+                <option value="<%= k %>"><%= TextingService.twilio_list[k][:name] %></option>
+              <% end %>                
+            </select> 
+
+            <br> <br>
+
+             <select id="searchNumberWith">
               <option value="area_code">Area code</option>
               <option value="contains">By pattern</option>
               <option value="in_postal_code">Postal code</option>
             </select>  
-            we already search with your signup country 
+
+            <br><br>
+            
+            <select id="searchNumberType">
+              <%# number_types[:types].keys.each do |k| %>
+                <option value="<%#= k %>"><%#= k.to_s.humanize %></option>
+              <%# end %>                
+            </select>
+
+            <br> <br>
+
             <input id="searchNumberField" type="text" style="margin-bottom: 30px;margin-left: 112px;" />
-              <button id="searchNumberBtn">find number</button>
+            <button id="searchNumberBtn">Search</button>
 
 
 <style type="text/css">

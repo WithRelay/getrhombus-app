@@ -11,3 +11,5 @@ $pubnub = Pubnub.new(
   :subscribe_key => Rails.application.secrets.pubnub["subscribe_key"],
   :logger => pubnub_logger
 )
+
+
