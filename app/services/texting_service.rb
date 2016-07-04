@@ -69,21 +69,25 @@ class TextingService
     def search_number(str, with, country)
       # https://www.twilio.com/help/faq/phone-numbers/which-countries-does-twilio-have-phone-numbers-in-and-what-are-their-capabilities
       client = Twilio::REST::Client.new TWILIO_API_KEY, TWILIO_API_SECRET
-      begin
+      #begin
+        search_params = {}
         search_params[with] = str
-        twilio_list[country.to_sym][:types][type.to_sym][:capabilities].each do |c|
+        #twilio_list[country.to_sym][:types][type.to_sym][:capabilities].each do |c|
 
-        end
+        #end
 
-        search_params = { sms_enabled: "true" }    
-        search_params = { voice_enabled: "true", mms_enabled: "true", exclude_all_address_required: "true" }
-        
+        search_params[:sms_enabled] = "true"
+        #search_params[:voice_enabled] = "true"
+        #search_params[:mms_enabled] = "true"
+        #search_params[:exclude_all_address_required] = "true"
 
-        numbers = client.account.available_phone_numbers.get(country).local.list(search_params)[0..4]
+        #numbers = client.account.available_phone_numbers.get(country).local.list(search_params)[0..4]
+        numbers = client.account.available_phone_numbers.get(country).toll_free.list(search_params)[0..4]
+        #numbers = client.account.available_phone_numbers.get("GB").local.list(search_params)[0..4]
         return numbers.map { |p| p.phone_number } 
-      rescue StandardError => e
+      #rescue StandardError => e
           return e.message #[]
-      end
+      #end
     end
 
     def twilio_list
@@ -223,6 +227,7 @@ class TextingService
             },
           }
         },
+=begin
         MX: {
           name: "Mexico",
           types: {
@@ -233,6 +238,7 @@ class TextingService
             },
           }
         },
+=end
         NO: {
           name: "Norway",
           types: {
@@ -263,6 +269,7 @@ class TextingService
             },
           }
         },
+=begin
         ES: {
           name: "Spain",
           types: {  
@@ -273,6 +280,7 @@ class TextingService
             },
           }
         },
+=end
         SE: {
           name: "Sweden",
           types: {
@@ -301,6 +309,7 @@ class TextingService
               reach: "domestic",
               address_required: ""
             },
+=begin
             mobile: {
               capabilities: ["sms"],
               reach: "global",
@@ -316,6 +325,7 @@ class TextingService
               reach: "domestic",
               address_required: ""
             },
+=end
           }
         },
         US: {

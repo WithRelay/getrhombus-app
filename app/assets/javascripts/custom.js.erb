@@ -1413,6 +1413,8 @@ $(document).ready(function () {
     });
 
 
+    //// for number search
+
     // for searching for rhombus number
     if (searchNumBtn) {
         searchNumBtn.addEventListener('click', function() {
@@ -1422,12 +1424,14 @@ $(document).ready(function () {
         });
     }
 
-    var get_number = function(str) {
-        var w = document.getElementById("searchNumberWith");
-        w = w.options[w.selectedIndex].value.toString();
-        var c = document.getElementById("searchNumberCountry");
-        c = c.options[c.selectedIndex].value.toString();
+    var searchNumberWith = document.getElementById("searchNumberWith");
+    var searchNumberCountry = document.getElementById("searchNumberCountry");
+    var searchNumberType = document.getElementById("searchNumberType");
+    var get_number = function(str) {        
+        var w = searchNumberWith.options[searchNumberWith.selectedIndex].value.toString();
+        var c = searchNumberCountry.options[searchNumberCountry.selectedIndex].value.toString();
         document.getElementById("search_number_radios").innerHTML = '';
+        
         $.ajax({
             url: "/v1/numbers/search.json",
             type: "GET",
@@ -1456,6 +1460,36 @@ $(document).ready(function () {
             }); 
     }
     // search for rhombus number
+
+    var country_num_types = {
+        US: ["Local","Toll Free"],
+        CA: ["Local","Toll Free"],
+    };
+
+    var country_num_with = {
+
+    };
+
+    searchNumberCountry.addEventListener('change', function() {
+        var x = country_num_types[searchNumberCountry.options[searchNumberCountry.selectedIndex].value.toString()];
+        if (x) {
+            for (i = 0, len = x.length; i < len; i++) { 
+                var newOption = document.createElement("option");
+                newOption.value = x[i].toLowerCase().replace(/ /g, '_');
+                newOption.innerHTML = x[i];
+                searchNumberType.options.add(newOption);    
+            }
+            searchNumberType.style.display = "inline";
+            searchNumberWith.style.display = "inline"; 
+            searchNumberWith.value = "area_code";            
+        } else {
+           searchNumberType.style.display = "none"; 
+           searchNumberWith.style.display = "none"; 
+           searchNumberWith.value = "contains";
+        }
+    });
+
+    //// for number search
 
 });
 
