@@ -66,28 +66,29 @@ class TextingService
       end
     end
 
-    def search_number(str, with, country)
-      # https://www.twilio.com/help/faq/phone-numbers/which-countries-does-twilio-have-phone-numbers-in-and-what-are-their-capabilities
-      client = Twilio::REST::Client.new TWILIO_API_KEY, TWILIO_API_SECRET
-      #begin
+    def search_number(params)
+      begin
+        # https://www.twilio.com/help/faq/phone-numbers/which-countries-does-twilio-have-phone-numbers-in-and-what-are-their-capabilities
+        client = Twilio::REST::Client.new TWILIO_API_KEY, TWILIO_API_SECRET
+        
         search_params = {}
-        search_params[with] = str
-        #twilio_list[country.to_sym][:types][type.to_sym][:capabilities].each do |c|
+        search_params[['US', 'CA'].include? params[:country] ? 'area_code' : 'contains'] = params[:query]
+        data = twilio_list[params[:country].to_sym][:types][params[:type].to_sym]
+        data[:capabilities].each { |c| search_params[c + '_enabled'] = "true" }
+        search_params[:exclude_all_address_required] = "true" if data[:address_required] == ""
 
-        #end
+        if params[:type] == 'local'
+          number = client.account.available_phone_numbers.get(params[:country]).local.list(search_params).first
+        elsif params[:type] == 'toll_free'
+          number = client.account.available_phone_numbers.get(params[:country]).toll_free.list(search_params).first
+        elsif params[:type] == 'mobile'
+          number = client.account.available_phone_numbers.get(params[:country]).mobile.list(search_params).first
+        end
 
-        search_params[:sms_enabled] = "true"
-        #search_params[:voice_enabled] = "true"
-        #search_params[:mms_enabled] = "true"
-        #search_params[:exclude_all_address_required] = "true"
-
-        #numbers = client.account.available_phone_numbers.get(country).local.list(search_params)[0..4]
-        numbers = client.account.available_phone_numbers.get(country).toll_free.list(search_params)[0..4]
-        #numbers = client.account.available_phone_numbers.get("GB").local.list(search_params)[0..4]
-        return numbers.map { |p| p.phone_number } 
-      #rescue StandardError => e
-          return e.message #[]
-      #end
+        return { number: number.nil? ? '' : number.phone_number  }
+      rescue StandardError => e
+        return { error: e.message }
+      end
     end
 
     def twilio_list
@@ -207,6 +208,16 @@ class TextingService
             },
           }
         },
+        ID: {
+          name: "Indonesia",
+          types: {
+            mobile: {
+              capabilities: ["sms", 'voice'],
+              reach: "global",
+              address_required: ""
+            },
+          }
+        },
         IL: {
           name: "Israel",
           types: {
@@ -227,18 +238,16 @@ class TextingService
             },
           }
         },
-=begin
         MX: {
           name: "Mexico",
           types: {
             mobile: {
               capabilities: ["sms"],
-              reach: "domestic",
-              address_required: "foreign address"
+              reach: "global",
+              address_required: ""
             },
           }
         },
-=end
         NO: {
           name: "Norway",
           types: {
@@ -309,23 +318,6 @@ class TextingService
               reach: "domestic",
               address_required: ""
             },
-=begin
-            mobile: {
-              capabilities: ["sms"],
-              reach: "global",
-              address_required: ""
-            },
-            national: {
-              capabilities: ["voice"],
-              reach: "domestic",
-              address_required: ""
-            },
-            toll_free: {
-              capabilities: ["voice"],
-              reach: "domestic",
-              address_required: ""
-            },
-=end
           }
         },
         US: {

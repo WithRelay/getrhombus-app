@@ -1418,41 +1418,36 @@ $(document).ready(function () {
     // for searching for rhombus number
     if (searchNumBtn) {
         searchNumBtn.addEventListener('click', function() {
-            searchNumBtn.disabled = true;
-            searchNumBtn.innerHTML = "Searching..."; 
-            get_number(document.getElementById('searchNumberField').value)
+            this.disabled = true;
+            this.innerHTML = "Searching..."; 
+            get_number();
         });
     }
 
-    var searchNumberWith = document.getElementById("searchNumberWith");
-    var searchNumberCountry = document.getElementById("searchNumberCountry");
-    var searchNumberType = document.getElementById("searchNumberType");
-    var get_number = function(str) {        
-        var w = searchNumberWith.options[searchNumberWith.selectedIndex].value.toString();
-        var c = searchNumberCountry.options[searchNumberCountry.selectedIndex].value.toString();
-        document.getElementById("search_number_radios").innerHTML = '';
-        
+    var searchNumberCountry = $('#searchNumberCountry'),
+        searchNumberType = $('#searchNumberType'),
+        searchNumberField = $('#searchNumberField');
+
+    var get_number = function(str) {                
         $.ajax({
             url: "/v1/numbers/search.json",
             type: "GET",
-            data: 'search_number=' + str + "&with=" + w + "&country=" + c,
+            data: 'query=' + searchNumberField.val() + "&country=" + searchNumberCountry.val() 
+                    + "&type=" + searchNumberType.val(),
             dataType: "json"     
         })
             .done(function(data, textStatus, jqXHR) {
                 var str = '';
-                if(data.numbers.length > 0) { 
-                    $.each( data.numbers, function( key, value ) {
-                      str += '<input id="rhombus_number' + key + '" name="user[rhombus_number]" type="radio" value="' + value.slice(1) + '" />' 
-                            + '<label class="radio" for="rhombus_number' + key + '" >' + value.slice(1) + '</label>';
-                    });
-                    document.getElementById("search_number_radios").innerHTML = str;
-                }
-                else {
-
+                if(data.error) { 
+                    alert('something went wrong');
+                } else if (data.number == '') {
+                    alert(':( we dont have any number');
+                } else {
+                    alert(data.number);
                 }
             })
             .fail(function(data, textStatus, errorThrown) {
-                console.log(data);
+                alert('something went wrong'); console.log(data);
             })   
             .always(function(data, textStatus, response) {
                 searchNumBtn.disabled = false; 
@@ -1462,33 +1457,25 @@ $(document).ready(function () {
     // search for rhombus number
 
     var country_num_types = {
-        US: ["Local","Toll Free"],
-        CA: ["Local","Toll Free"],
+      US: { types: ["Local","Toll Free"], show: true },
+      CA: { types: ["Local","Toll Free"], show: true },
+      PR: { types: ["Local"] },
+      GB: { types: ["Local"] },
+      // else mobile and don't show
     };
 
-    var country_num_with = {
-
-    };
-
-    searchNumberCountry.addEventListener('change', function() {
-        var x = country_num_types[searchNumberCountry.options[searchNumberCountry.selectedIndex].value.toString()];
-        if (x) {
-            for (i = 0, len = x.length; i < len; i++) { 
-                var newOption = document.createElement("option");
-                newOption.value = x[i].toLowerCase().replace(/ /g, '_');
-                newOption.innerHTML = x[i];
-                searchNumberType.options.add(newOption);    
-            }
-            searchNumberType.style.display = "inline";
-            searchNumberWith.style.display = "inline"; 
-            searchNumberWith.value = "area_code";            
-        } else {
-           searchNumberType.style.display = "none"; 
-           searchNumberWith.style.display = "none"; 
-           searchNumberWith.value = "contains";
+    searchNumberCountry.change(function() {
+        var x = country_num_types[this.options[this.selectedIndex].value.toString()], html = '';
+        
+        x = (x) ? x : { types: ["mobile"] };    
+        for (i = 0, len = x.types.length; i < len; i++) { 
+            html += '<option value="' + x.types[i].toLowerCase().replace(/ /g, '_') + '">' + x.types[i] + '</option>'
         }
+            
+        var display = (x.show) ? 'inline' : 'none';
+        searchNumberType.html(html).css('display', display);
+        searchNumberField.val('').css('display', display)        
     });
-
     //// for number search
 
 });
