@@ -10,7 +10,7 @@ $(document).ready(function () {
         cc_year, cc_month, txn_details, REFUND_TXN_LINK, REFUND_BOX = $('#refundFormBox'),
         chart_labels = [], chart_totals = [], chart_txns = [],
         contact_url = '/contact_forms.json', cc_submit = $('#cc-submit'),
-        searchNumBtn = document.getElementById('searchNumberBtn');
+        searchNumBtn = $('#searchNumberBtn');
     
     $.ajaxSetup({ cache:false });
 
@@ -1414,20 +1414,15 @@ $(document).ready(function () {
 
 
     //// for number search
-
-    // for searching for rhombus number
-    if (searchNumBtn) {
-        searchNumBtn.addEventListener('click', function() {
-            this.disabled = true;
-            this.innerHTML = "Searching..."; 
-            get_number();
-        });
-    }
+    searchNumBtn.click(function() {
+        this.disabled = true;
+        this.innerHTML = "Searching..."; 
+        get_number();
+    });
 
     var searchNumberCountry = $('#searchNumberCountry'),
         searchNumberType = $('#searchNumberType'),
         searchNumberField = $('#searchNumberField');
-
     var get_number = function(str) {                
         $.ajax({
             url: "/v1/numbers/search.json",
@@ -1450,12 +1445,10 @@ $(document).ready(function () {
                 alert('something went wrong'); console.log(data);
             })   
             .always(function(data, textStatus, response) {
-                searchNumBtn.disabled = false; 
-                searchNumBtn.innerHTML = "Search"; 
+                searchNumBtn.html('Search').prop("disabled", false); 
             }); 
     }
-    // search for rhombus number
-
+    
     var country_num_types = {
       US: { types: ["Local","Toll Free"], show: true },
       CA: { types: ["Local","Toll Free"], show: true },
