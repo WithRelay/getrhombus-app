@@ -72,7 +72,7 @@ class TextingService
         client = Twilio::REST::Client.new TWILIO_API_KEY, TWILIO_API_SECRET
         
         search_params = {}
-        search_params[['US', 'CA'].include? params[:country] ? 'area_code' : 'contains'] = params[:query]
+        search_params[ (['US', 'CA'].include? params[:country]) ? 'area_code' : 'contains' ] = params[:query]
         data = twilio_list[params[:country].to_sym][:types][params[:type].to_sym]
         data[:capabilities].each { |c| search_params[c + '_enabled'] = "true" }
         search_params[:exclude_all_address_required] = "true" if data[:address_required] == ""

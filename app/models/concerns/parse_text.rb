@@ -110,10 +110,10 @@ module ParseText
       merchant_name = @this_merchant.business_name ? @this_merchant.business_name : "Rhombus"
       # payment based messages
       if @amt_ary[1] == "precedent_tag_amt"
-        send_response  send_sign_up_link if @saved_message && @saved_message.id.present? 
+        send_sign_up_link if @saved_message && @saved_message.id.present? 
         return []
       elsif @amt_ary[1] != "precedent_tag_amt"
-        send_response  send_sign_up_link if @saved_message && @saved_message.id.present?
+        send_sign_up_link if @saved_message && @saved_message.id.present?
         return []
       else 
         # not payment related messages
