@@ -37,7 +37,8 @@ class RegistrationsController < Devise::RegistrationsController
       if resource.active_for_authentication?
         set_flash_message :notice, :signed_up if is_flashing_format?
         sign_up(resource_name, resource)
-        # added this line
+        
+        # added this line, needs tag_id here too
         respond_with resource, location: after_sign_up_path_for(resource, params[:user][:captured_amt], 
         				params[:user][:referrer_num], params[:user][:msg_id])
       else

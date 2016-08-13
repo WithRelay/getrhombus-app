@@ -16,7 +16,7 @@ $(document).ready(function () {
 
     // to prefill signup form or handle captured payments
     if (page_params != "" && ["/signup", "/signin", "/users/sign_in", "/profile"].indexOf(url.pathname) != -1) {
-        var amt = GetURLParameter(page_params, 'amt');
+        var amt =  GetURLParameter(page_params, 'amt');
         console.log(amt)
         console.log("asdsa")
         
