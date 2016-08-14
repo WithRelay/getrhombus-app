@@ -31,53 +31,50 @@ class Transaction < ActiveRecord::Base
             card_name: user.card_name, last_four: user.last_four, text: message, business_phone: merchant.business_phone,
             rhombus_number: merchant.rhombus_number, dump: err, to_merchant: payment_response_array[2])
         return
-      else
-
-        amount_in_hundreds = sprintf("%.2f", amount.to_f/100)
-        amount_with_taxes_in_hundreds = sprintf("%.2f", amount_with_taxes.to_f/100)
-        
-        send_text_receipt(user, merchant, response, amount_in_hundreds, amount_with_taxes_in_hundreds)
-        
-        transaction_number = generate_number
-        rhombus_fee_amt = sprintf("%.2f", rhombus_fee.to_f/100)
-        amount_less_fees = amount_with_taxes_in_hundreds.to_f - rhombus_fee_amt.to_f - (((amount_with_taxes_in_hundreds.to_f * 0.029) + 0.3).round(2))
-
-        # Note since relationship between user and card is one to one, when merchant and owner info is saved,
-        # it is pulled from user profile and not transaction data. This changes with x to many relationships.
-        create(transaction_uri: response.id, transaction_type: 1, 
-            amount: amount_in_hundreds, transaction_number: transaction_number, amount_less_fees: amount_less_fees,
-            description: "Payment to #{merchant.email}. #{merchant.business_name}. rhombus number: #{merchant.rhombus_number}", 
-            from: user.phone_number, to: merchant.rhombus_number, status: response.status, transaction_available_at: response.created, 
-            last_four: response.source.last4, expiration_month: response.source.exp_month, expiration_year: response.source.exp_year, 
-            card_type: response.source.brand, card_name: response.source.name, tax_rate: merchant.tax_rate, 
-            on_behalf_of_uri: merchant.stripe_access_token, referenced_merchant_id: merchant.id, user_id: user.id, notes: message,
-            amount_with_taxes: sprintf("%.2f", response.amount.to_f/100), currency: response.currency)
-      
-        EmailingService.send_receipt( merchant_email: merchant.email, to: user.email, merchant_name: merchant.business_name, 
-              transaction_number: transaction_number, transaction_date: self.created_at, text: message, amount: amount_in_hundreds,
-              amount_with_taxes: amount_with_taxes_in_hundreds, business_phone: merchant.business_phone, currency: response.currency)
-
-        # change this later to use timezone??, Put a save check here later
-        self.receipt_sent_at = Time.zone.now                      
-        debit_data = [self.id, amount_in_hundreds, amount_with_taxes_in_hundreds, amount_less_fees, transaction_number, 
-                        response.id, rhombus_fee_amt, response.currency]
-        
-        merchant_txn_id = merchant_transaction_details(debit_data, merchant, user, message)
-        owner_transaction_details(debit_data, merchant_txn_id, merchant, user, message)
-        
-        self.referenced_merchant_transaction_id = merchant_txn_id
-        self.save
-
-        return self.id
       end
 
+      amount_in_hundreds = sprintf("%.2f", amount.to_f/100)
+      amount_with_taxes_in_hundreds = sprintf("%.2f", amount_with_taxes.to_f/100)
+      
+      send_text_receipt(user, merchant, response, amount_in_hundreds, amount_with_taxes_in_hundreds)
+      
+      transaction_number = generate_number
+      rhombus_fee_amt = sprintf("%.2f", rhombus_fee.to_f/100)
+      amount_less_fees = amount_with_taxes_in_hundreds.to_f - rhombus_fee_amt.to_f - (((amount_with_taxes_in_hundreds.to_f * 0.029) + 0.3).round(2))
+
+      # Note since relationship between user and card is one to one, when merchant and owner info is saved,
+      # it is pulled from user profile and not transaction data. This changes with x to many relationships.
+      create(transaction_uri: response.id, transaction_type: 1, 
+          amount: amount_in_hundreds, transaction_number: transaction_number, amount_less_fees: amount_less_fees,
+          description: "Payment to #{merchant.email}. #{merchant.business_name}. rhombus number: #{merchant.rhombus_number}", 
+          from: user.phone_number, to: merchant.rhombus_number, status: response.status, transaction_available_at: response.created, 
+          last_four: response.source.last4, expiration_month: response.source.exp_month, expiration_year: response.source.exp_year, 
+          card_type: response.source.brand, card_name: response.source.name, tax_rate: merchant.tax_rate, 
+          on_behalf_of_uri: merchant.stripe_access_token, referenced_merchant_id: merchant.id, user_id: user.id, notes: message,
+          amount_with_taxes: sprintf("%.2f", response.amount.to_f/100), currency: response.currency)
+    
+      EmailingService.send_receipt( merchant_email: merchant.email, to: user.email, merchant_name: merchant.business_name, 
+            transaction_number: transaction_number, transaction_date: self.created_at, text: message, amount: amount_in_hundreds,
+            amount_with_taxes: amount_with_taxes_in_hundreds, business_phone: merchant.business_phone, currency: response.currency)
+
+      # change this later to use timezone??, Put a save check here later
+      self.receipt_sent_at = Time.zone.now                      
+      debit_data = [self.id, amount_in_hundreds, amount_with_taxes_in_hundreds, amount_less_fees, transaction_number, 
+                      response.id, rhombus_fee_amt, response.currency]
+      
+      merchant_txn_id = merchant_transaction_details(debit_data, merchant, user, message)
+      owner_transaction_details(debit_data, merchant_txn_id, merchant, user, message)
+      
+      self.referenced_merchant_transaction_id = merchant_txn_id
+      self.save
+
+      return self.id
     rescue StandardError => err
       EmailingService.charge_failure_notification(to: merchant.email, customer_email: user.email, customer_phone: user.phone_number,
         card_name: user.card_name, last_four: user.last_four, text: message, business_phone: merchant.business_phone,
         rhombus_number: merchant.rhombus_number, dump: err, to_merchant: false)
       return
     end
-
   end
 
 
@@ -97,6 +94,7 @@ class Transaction < ActiveRecord::Base
 
    
   def merchant_transaction_details(debit_data, merchant, user, message)  
+    # Put a save check here later
     transaction = create(transaction_uri: debit_data[5], transaction_type: 2, amount: debit_data[1], amount_less_fees: debit_data[3], 
         description: "Payment from #{user.email}. Card name: #{user.card_name}. Last four: #{user.last_four}.", 
         from: user.phone_number, to: merchant.rhombus_number, tax_rate: merchant.tax_rate,
@@ -109,21 +107,21 @@ class Transaction < ActiveRecord::Base
         transaction_number: debit_data[4], stripe_txn_number: debit_data[5], transaction_date: transaction.created_at, 
         amount_less_fees: debit_data[3], amount_with_taxes: debit_data[2], rhombus_number: merchant.rhombus_number, currency: debit_data[7])
 
-    return transaction.id                                              # Put a save check here later
+    transaction.id                                              
   end  
 
 
   def owner_transaction_details(debit_data, merchant_txn_id, merchant, user, message)        
     owner = User.find_by(email: Rails.application.secrets.dashboard_email)
     
+    # Put a save check here later
     create(transaction_uri: debit_data[5], transaction_type: 0,
       amount: debit_data[6], amount_less_fees: debit_data[3], transaction_number: debit_data[4],
       description: "Payment from #{user.email}. Name on card: #{user.card_name}. Last four: #{user.last_four} to #{merchant.email}", 
       from: user.phone_number, to: merchant.rhombus_number, tax_rate: merchant.tax_rate, last_four: user.last_four,
       referenced_user_id: user.id, referenced_customer_transaction_id: debit_data[0], user_id: owner.id, notes: message, 
       amount_with_taxes: debit_data[2], referenced_merchant_transaction_id: merchant_txn_id, 
-      referenced_merchant_id: merchant.id, currency: debit_data[7])                                   # Put a save check here later
-    return
+      referenced_merchant_id: merchant.id, currency: debit_data[7])                                   
   end
 
   def self.process_captured_payment()
