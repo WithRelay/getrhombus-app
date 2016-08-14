@@ -4,41 +4,38 @@ $(document).ready(function () {
     // help change user controller to handle captured payments for signin
     // help add tag_id to captured payments in signin and signup and in the forms
 
-    Stripe.setPublishableKey('<%= Rails.application.secrets.stripe["publishable_key"] %>');
     var url = window.location,    
-        page_params = url.search.substring(1),
-        cc_year, cc_month, txn_details, REFUND_TXN_LINK, REFUND_BOX = $('#refundFormBox'),
-        chart_labels = [], chart_totals = [], chart_txns = [],
-        contact_url = '/contact_forms.json', cc_submit = $('#cc-submit'),
-        searchNumBtn = $('#searchNumberBtn');
+        global_page_params = { num: '', amt: '' },
+        cc_year, cc_month, txn_details, 
+        REFUND_TXN_LINK, REFUND_BOX = $('#refundFormBox'),
+        chart_labels = [], chart_totals = [], 
+        chart_txns = [], contact_url = '/contact_forms.json', 
+        cc_submit = $('#cc-submit'), searchNumBtn = $('#searchNumberBtn');
     
+    GetURLParameter();
     $.ajaxSetup({ cache:false });
+    Stripe.setPublishableKey('<%= Rails.application.secrets.stripe["publishable_key"] %>');
 
     // to prefill signup form or handle captured payments
-    if (page_params != "" && ["/signup", "/signin", "/users/sign_in", "/profile"].indexOf(url.pathname) != -1) {
-        var amt =  GetURLParameter(page_params, 'amt');
-        console.log(amt)
-        console.log("asdsa")
-        
+    // signin is included for when user texts payment and is prompted to sign in to complete account
+    if (["/signup", "/signin", "/profile"].indexOf(url.pathname) != -1) {
+        var amt = global_page_params['amt'];
         if (url.pathname == "/signup") {
-            document.getElementById('phone').value = GetURLParameter(page_params, 'num');
-            var referrer = GetURLParameter(page_params, 'referrer');
+            document.getElementById('phone').value = global_page_params['num'];
+            var referrer = global_page_params['referrer'];
             if (referrer) {
-                var x = $("#signup_logo");
-                $("<h2 class='referrer'>" + referrer + "</h2>").insertAfter(x);
-                x.remove();
+                $("#signup_logo").replaceWith("<h2 class='referrer'>" + referrer + "</h2>");
                 $("#rhombusPower").removeClass('hide');
                 $('#signupForm .selectpicker').val('0');
                 $('#signupForm .accountTypegroup').hide();
             } else $("#rhombusPower").addClass('hide');
         } else if (url.pathname == "/profile" && amt) {
-            cc_submit.prop('value', 'Save & Pay ' + amt);    // for payment capture, this shows the amt in the button
-            return
-        }        
+            cc_submit.prop('value', 'Save & Pay ' + amt);   // on profile page show the amt in button
+        }
 
-        var msg_id = GetURLParameter(page_params, 'msg_id');
-        document.getElementById('captured_amt').value = amt ? amt : ""; 
-        document.getElementById('msg_id').value = msg_id ? msg_id : ""; 
+        if (amt) document.getElementById('captured_amt').value = amt;
+        if (global_page_params['msg_id']) document.getElementById('msg_id').value = global_page_params['msg_id']; 
+        if (global_page_params['tag_id']) document.getElementById('tag_id').value = global_page_params['tag_id'];
     }
     // to prefill signup form or handle captured payments
     
@@ -56,13 +53,13 @@ $(document).ready(function () {
     /////
 
 
-    function GetURLParameter(page_params, sParam) {
-        if (page_params) {
-            var sPageURL = page_params;
-            var sURLVariables = sPageURL.split('&');
-            for (var i = 0; i < sURLVariables.length; i++) {
-                var sParameterName = sURLVariables[i].split('=');
-                if (sParameterName[0] == sParam) return decodeURIComponent(sParameterName[1]);
+    function GetURLParameter() {
+        var params = url.search.substring(1), param_str; 
+        if (params) {
+            params = params.split('&');
+            for (var i = 0, l = params.length; i < l; i++) {
+                param_str = params[i].split('=');
+                global_page_params[param_str[0]] = param_str[1];
             }
         }
     }
@@ -399,10 +396,8 @@ $(document).ready(function () {
             }
         })
         .on('success.form.fv', function(e, data) {
-            // set referrer number.
-
-            var referrer_num = GetURLParameter(page_params, 'referrer_num');
-            document.getElementById('referrer_num').value = (referrer_num) ? referrer_num : '';
+            // set referrer number
+            if (global_page_params['referrer_num']) document.getElementById('referrer_num').value = global_page_params['referrer_num'];
         });
     ////
 
@@ -716,11 +711,9 @@ $(document).ready(function () {
         })
         .on('success.form.fv', function(e, data) {
             set_number();
-            // set referrer number, set subscription
-            var referrer_num = GetURLParameter(page_params, 'referrer_num');
-            var subscription_type = GetURLParameter(page_params, 'subscription_type');
-            document.getElementById('referrer_num').value = (referrer_num) ? referrer_num : '';
-            document.getElementById('subscription_type').value = (subscription_type) ? subscription_type : 0; 
+            // set referrer number & subscription
+            if (global_page_params['referrer_num']) document.getElementById('referrer_num').value = global_page_params['referrer_num'];
+            if (global_page_params['subscription_type']) document.getElementById('subscription_type').value = global_page_params['subscription_type'];
         });
     // validate sign up form
 
@@ -1166,8 +1159,7 @@ $(document).ready(function () {
     }
 
     function set_number() {
-        var number = telInput.intlTelInput("getNumber");
-        document.getElementById('phoneNumber').value = (number.charAt(0) === "+") ? number.substring(1) : number;
+        document.getElementById('phone_number').value = telInput.intlTelInput("getNumber").replace("+", '');
     }
     
     // Simply populates credit card and bank account fields with test data

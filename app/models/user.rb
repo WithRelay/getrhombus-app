@@ -3,7 +3,7 @@ class User < ActiveRecord::Base
   include DashboardQueries
   include MakeSpreadsheet
 
-  attr_accessor :full_name, :phone, :captured_amt, :msg_id, 
+  attr_accessor :full_name, :phone, :captured_amt, :msg_id, :tag_id,
                 # used to identify what type of action in user's controller update action
                 :update_rhombus_number  
   
@@ -53,6 +53,7 @@ class User < ActiveRecord::Base
 
   # Create or update customer on Stripe
   def add_token_to_stripe_customer(params)
+    #return false
     if self.user_level == 0 && params[:instrument_uri].present?  # is this why i get the errors from stripe??
       begin 
         if self.customer_uri.blank?                                     # Doesnt have a customer uri => first time
@@ -177,6 +178,7 @@ class User < ActiveRecord::Base
   end
 
   def send_welcome_email
+=begin
     owner = User.find_by(email: Rails.application.secrets.team_email)
     if self.user_level == 1
       EmailingService.send_welcome_email(self.email, owner.rhombus_number, "merchant")
@@ -196,6 +198,7 @@ class User < ActiveRecord::Base
       description/hashtag. Ex. +10 #donut"
       message.send_and_save_message(owner.rhombus_number, self.phone_number, text)
     end
+=end
   end
   
 end

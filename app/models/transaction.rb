@@ -169,8 +169,7 @@ class Transaction < ActiveRecord::Base
 
 
   def self.process_captured_payment()
-      #Transaction.process_captured_payment(@user, params[:amt], params[:referrer_num], params[:mid]) 
-
+    #Transaction.process_captured_payment(@user, params[:amt], params[:referrer_num], params[:mid]) 
   end
 
 end

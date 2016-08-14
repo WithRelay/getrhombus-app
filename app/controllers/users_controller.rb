@@ -21,10 +21,11 @@ class UsersController < ApplicationController
       if current_user.user_level == 0 && current_user.customer_uri.blank? # incomplete customer account
         redirect_to build_user_link
       elsif current_user.user_level == 1 && (current_user.business_name.blank? || current_user.rhombus_number.blank?) # incomplete merchant account
+        # does this empty forms? check
         redirect_to "/profile"
       else
-        if current_user.user_level == 0 && params[:amt].present? && params[:referrer_num].present? && params[:msg_id].present?
-          #Transaction.process_captured_payment(@user, params[:amt], params[:referrer_num], params[:mid]) 
+        if current_user.user_level == 0 && params[:captured_amt].present?
+          #Transaction.process_captured_payment(@user, params) 
         elsif @user.user_level == 1 && @user.short_url.blank? && @user.rhombus_number.present? 
           # generate bitly link for merchant if blank and rhombus number exist...should remove this after twilio migration ###
           @user.short_url = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?referrer_num=#{@user.rhombus_number}&referrer=#{@user.business_name}")
@@ -36,6 +37,7 @@ class UsersController < ApplicationController
         # @token = TextingService.get_twilio_capibility_token if current_user.user_level == 1       
       end           
     end
+    delete_captured_payment_session
   end  
   
   def create
