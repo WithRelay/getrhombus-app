@@ -3,7 +3,7 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
   def stripe_connect
     # raise request.env["omniauth.auth"].to_yaml
     if current_user && current_user.user_level == 1
-      if current_user.from_omniauth(request.env["omniauth.auth"]) == true
+      if current_user.save_stripe_omniauth_data(request.env["omniauth.auth"]) == true
         redirect_to user_path(current_user)
         set_flash_message(:notice, :success, :kind => "Stripe Connect") if is_navigational_format?
         return

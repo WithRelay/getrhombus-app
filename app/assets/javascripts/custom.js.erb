@@ -18,27 +18,30 @@ $(document).ready(function () {
 
     // to prefill signup form or handle captured payments
     // signin is included for when user texts payment and is prompted to sign in to complete account
-    if (["/signup", "/signin", "/profile"].indexOf(url.pathname) != -1) {
-        var amt = global_page_params['amt'];
+    if (["/signup", "/signin", '/users', "/profile"].indexOf(url.pathname) != -1) {
+        var amt = global_page_params['amt'],
+            referrer = global_page_params['referrer'];
         if (url.pathname == "/signup") {
             document.getElementById('phone').value = global_page_params['num'];
-            var referrer = global_page_params['referrer'];
             if (referrer) {
                 $("#signup_logo").replaceWith("<h2 class='referrer'>" + referrer + "</h2>");
                 $("#rhombusPower").removeClass('hide');
-                $('#signupForm .selectpicker').val('0');
-                $('#signupForm .accountTypegroup').hide();
             } else $("#rhombusPower").addClass('hide');
         } else if (url.pathname == "/profile" && amt) {
             cc_submit.prop('value', 'Save & Pay ' + amt);   // on profile page show the amt in button
         }
 
+        if (referrer || document.getElementById('referrer').value) hide_account_type();
         if (amt) document.getElementById('captured_amt').value = amt;
         if (global_page_params['msg_id']) document.getElementById('msg_id').value = global_page_params['msg_id']; 
         if (global_page_params['tag_id']) document.getElementById('tag_id').value = global_page_params['tag_id'];
     }
     // to prefill signup form or handle captured payments
     
+    function hide_account_type() {
+        $('#signupForm .selectpicker').val('0');
+        $('#signupForm .accountTypegroup').hide();
+    }
 
     ///// toggle card/login info for user's profile
     $('#next').click(function() {
@@ -712,6 +715,7 @@ $(document).ready(function () {
         .on('success.form.fv', function(e, data) {
             set_number();
             // set referrer number & subscription
+            if (global_page_params['referrer']) document.getElementById('referrer').value = global_page_params['referrer'];
             if (global_page_params['referrer_num']) document.getElementById('referrer_num').value = global_page_params['referrer_num'];
             if (global_page_params['subscription_type']) document.getElementById('subscription_type').value = global_page_params['subscription_type'];
         });

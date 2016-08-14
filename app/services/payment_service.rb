@@ -1,36 +1,29 @@
 class PaymentService
-
-  Stripe.api_key = Rails.application.secrets.stripe["secret_key"]
-
+  
   class << self
     
-    def charge(amount_with_taxes, merchant, user, message)
+    def charge(amount_with_taxes, merchant, user, message, capture)
 
       begin
-        # Create the charge on Stripe's servers
-        tkn = Stripe::Token.create(
-              { :customer => user.customer_uri },
-              merchant.stripe_access_token  # user's access token from the Stripe Connect flow
-        )
-
         response = Stripe::Charge.create({
-              :amount => amount_with_taxes, # in cents
-              :currency => merchant.currency ? merchant.currency : "usd",
-              :card => tkn.id,
+              amount: amount_with_taxes, # in cents
+              currency: merchant.currency ? merchant.currency : "usd",
+              source: user.instrument_uri,
+              capture: capture,
+              description: "Payment from #{user.email}. Card name: #{user.card_name}. Last four: #{user.last_four}.",
+              destination: merchant.stripe_access_token
+              #statement_descriptor: '',
               #:application_fee => rhombus_fee
-              :description => "Payment from #{user.email}. Card name: #{user.card_name}. Last four: #{user.last_four}.",
-              :metadata => {
+              metadata: {
                 "message" => message
               }            
-            },
-            merchant.stripe_access_token                    # merchants's access token from the Stripe Connect flow
-        )
+            })
 
         return [response]
       rescue Stripe::CardError => e               # Since it's a decline, Stripe::CardError will be caught
         body = e.json_body
         err  = body[:error]
-        # txn successful, error object, notify customer/merchant
+        # txn status, error object, notify customer/merchant
         return false, err, true
       rescue Stripe::StripeError => e
           body = e.json_body

@@ -65,7 +65,7 @@ module AdditionalUserActions
     # if it includes a captured payment, also check if msg_id is present, tag_id is optional
     # referrer_num is the merchant the payment is going to
     link = session[:captured_amt].present? ? "/profile?amt=#{session[:captured_amt]}&referrer_num=#{session[:referrer_num]}" + 
-                                          "&msg_id=#{session[:msg_id]}&msg_id=#{session[:tag_id]}" : "/profile" 
+                                          "&msg_id=#{session[:msg_id]}&tag_id=#{session[:tag_id]}" : "/profile" 
     delete_captured_payment_session
     link
   end

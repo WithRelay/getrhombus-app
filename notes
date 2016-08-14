@@ -1,2 +1,7 @@
+Payment Capture
+- check that amount texts in is valid
 - check if /profile affect forms for merchants
 - plug in charge into payment capture workflow
+
+Charges
+- Test all data saves correctly

@@ -40,7 +40,7 @@ class User < ActiveRecord::Base
   # validates_uniqueness_of :rhombus_number, :allow_nil => true, :if => lambda { self.user_level == 1 } 
 
   # saves merchant info from stripe
-  def from_omniauth(auth)
+  def save_stripe_omniauth_data(auth)
     self.provider = auth.provider
     self.uid = auth.uid
     self.stripe_access_token = auth.credentials.token
@@ -57,14 +57,14 @@ class User < ActiveRecord::Base
     if self.user_level == 0 && params[:instrument_uri].present?  # is this why i get the errors from stripe??
       begin 
         if self.customer_uri.blank?                                     # Doesnt have a customer uri => first time
-          response = Stripe::Customer.create(:email => "#{self.email}", :card => params[:instrument_uri])         
-          self.customer_uri = response.id
-          self.stripe_livemode = response.livemode
+          cu = Stripe::Customer.create(email: self.email, source: params[:instrument_uri])         
+          self.customer_uri = cu.id
+          self.stripe_livemode = cu.livemode
         else
-          response = Stripe::Customer.retrieve(self.customer_uri)  
-          response.email = self.email
-          response.card = params[:instrument_uri]
-          response.save   
+          cu = Stripe::Customer.retrieve(self.customer_uri)  
+          cu.email = self.email
+          cu.source = params[:instrument_uri]
+          cu.save   
         end
       rescue Stripe::CardError => e
         # Since it's a decline, Stripe::CardError will be caught
@@ -72,9 +72,7 @@ class User < ActiveRecord::Base
         err  = body[:error]
 
         owner = User.find_by(email: Rails.application.secrets.team_email)
-
         Message.send_and_save_message(owner.rhombus_number, self.phone_number, "We were unable to update your card info on Rhombus because: #{err[:message]}.")
-
         Notification.token_failure_notification(err, self.email).deliver_now
         return false
       rescue Stripe::StripeError => e

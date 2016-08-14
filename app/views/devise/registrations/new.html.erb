@@ -28,6 +28,7 @@
             <%= f.hidden_field :msg_id, :id => "msg_id", value: params[:user] ? params[:user][:msg_id] : '' %>
             <%= f.hidden_field :tag_id, :id => "tag_id", value: params[:user] ? params[:user][:tag_id] : '' %>
             <%= f.hidden_field :referrer_num, :id => "referrer_num", value: params[:user] ? params[:user][:referrer_num] : '' %>
+            <%= f.hidden_field :referrer, :id => "referrer", value: params[:user] ? params[:user][:referrer] : '' %>
             <%= f.hidden_field :subscription_type, :id => "subscription_type", value: params[:user] ? params[:user][:subscription_type] : '' %>
 
           </div>
