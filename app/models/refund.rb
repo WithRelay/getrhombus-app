@@ -10,8 +10,7 @@ class Refund < ActiveRecord::Base
 
   # return response text and http code
   def self.refund_card_txn(charge_id, merchant_id, reason, admin)
-    begin
-      
+    begin     
       txns = Transaction.where("transaction_uri = ? and refund_id is NULL", charge_id) 
       if txns.empty? || ( !txns.find_by(referenced_merchant_id: merchant_id) && !admin )  # check if merchant created this txn
         send_refund_failure_notification
@@ -21,8 +20,7 @@ class Refund < ActiveRecord::Base
       re = PaymentService.refund_charge(charge_id)   # else proceed to refund on Stripe
       if re[0]
         ref_id = Refund.create(uri: re[0].id, time: re[0].created, reason: reason).id
-        sql = ActiveRecord::Base.send(:sanitize_sql_array, ["UPDATE transactions SET refund_id = ? WHERE transaction_uri = ? ", ref_id, charge_id ])
-        Refund.connection.execute(sql)
+        ActiveRecord::Base.connection.execute("UPDATE transactions SET refund_id = #{ref_id} WHERE transaction_uri = #{charge_id}") 
 =begin
         # Refund notification
         EmailingService.charge_failure_notification(to: merchant.email, customer_email: user.email, customer_phone: user.phone_number,
