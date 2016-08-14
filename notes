@@ -5,3 +5,7 @@ Payment Capture
 
 Charges
 - Test all data saves correctly
+
+Subscriptions
+- even if I use stripe's, i still need jobs for stuff like notifications and drip
+- every user is set up as a rhombus customer with their credit card
