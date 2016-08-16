@@ -180,6 +180,8 @@ GEM
     omniauth (1.2.2)
       hashie (>= 1.2, < 4)
       rack (~> 1.0)
+    omniauth-facebook (4.0.0)
+      omniauth-oauth2 (~> 1.2)
     omniauth-oauth (1.1.0)
       oauth
       omniauth (~> 1.0)
@@ -356,6 +358,7 @@ DEPENDENCIES
   mandrill-api
   mysql2
   newrelic_rpm
+  omniauth-facebook
   omniauth-stripe-connect
   omniauth-twitter
   opencnam
@@ -378,5 +381,8 @@ DEPENDENCIES
   web-console (~> 2.0)
   will_paginate (~> 3.0.6)
 
+RUBY VERSION
+   ruby 2.2.3p173
+
 BUNDLED WITH
-   1.11.2
+   1.12.5

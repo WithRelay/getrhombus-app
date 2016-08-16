@@ -39,6 +39,7 @@ class User < ActiveRecord::Base
   # Switch this on when rhombus numbers are automatically generated
   # validates_uniqueness_of :rhombus_number, :allow_nil => true, :if => lambda { self.user_level == 1 } 
 
+  @@data = ''
   # saves merchant info from stripe
   def save_stripe_omniauth_data(auth)
     self.provider = auth.provider
@@ -49,6 +50,14 @@ class User < ActiveRecord::Base
     self.stripe_livemode = auth.info.livemode
     return true if self.save
     return false
+  end
+
+  def testt(data)
+    @@data = data
+  end
+
+  def print_testt
+    @@data
   end
 
   # Create or update customer on Stripe

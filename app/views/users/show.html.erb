@@ -23,6 +23,7 @@
   <div class="page-header" style="background: transparent; margin: -20px -24px 78px -32px; margin-bottom: 0px;">
     <h1 class="title">Dashboard</h1>
     <%= link_to "Connect my Twitter Account", user_omniauth_authorize_path(:twitter), class: "btn btn-primary btn-rhombus" %>
+    <%= link_to "Connect my Facebook Account", user_omniauth_authorize_path(:facebook), class: "btn btn-primary btn-rhombus" %>
 
     <div id="customer-info-csv-template">empty template</div>
     <form id="customer-info-xls-template-form" method="get" action="/customer_info_xls_template.xls">

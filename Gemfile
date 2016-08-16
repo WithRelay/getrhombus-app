@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.0'
 
-gem "mysql2"
+gem 'mysql2'
 gem "httparty"
 
 # For authentication
@@ -58,6 +58,9 @@ gem "intercom-rails"
 
 gem 'responders', '~> 2.0'
 
+#OmniAuth Facebook
+gem 'omniauth-facebook'
+
 group :production do
 	gem "passenger"
 end
@@ -93,6 +96,8 @@ gem 'pubnub', '3.7.9'
 
 #Twilio
 gem 'twilio-ruby', '~> 4.2.1'
+
+
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.1.7'
