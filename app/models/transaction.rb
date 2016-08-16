@@ -11,6 +11,7 @@ class Transaction < ActiveRecord::Base
 
   # why am I passing an array in here?
   # capture can change transaction status and date
+  # Each transaction generates 3 rows. This will be normalized in future updates
   def self.charge_customer_card(amt_ary, merchant, user, message, capture=true) 
     begin    
       amount = amt_ary[0]
