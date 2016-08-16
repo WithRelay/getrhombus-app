@@ -19,28 +19,32 @@ $(document).ready(function () {
     // to prefill signup form or handle captured payments
     // signin is included for when user texts payment and is prompted to sign in to complete account
     if (["/signup", "/signin", '/users', "/profile"].indexOf(url.pathname) != -1) {
-        var amt = global_page_params['amt'],
-            referrer = global_page_params['referrer'];
+        var amt = global_page_params['amt'];
+        
         if (url.pathname == "/signup") {
             document.getElementById('phone').value = global_page_params['num'];
-            if (referrer) {
-                $("#signup_logo").replaceWith("<h2 class='referrer'>" + referrer + "</h2>");
-                $("#rhombusPower").removeClass('hide');
-            } else $("#rhombusPower").addClass('hide');
+            hide_account_type(global_page_params['referrer']);
         } else if (url.pathname == "/profile" && amt) {
             cc_submit.prop('value', 'Save & Pay ' + amt);   // on profile page show the amt in button
+        } else if (url.pathname == '/users') {
+            hide_account_type(document.getElementById('referrer').value);
         }
 
-        if (referrer || document.getElementById('referrer').value) hide_account_type();
         if (amt) document.getElementById('captured_amt').value = amt;
         if (global_page_params['msg_id']) document.getElementById('msg_id').value = global_page_params['msg_id']; 
         if (global_page_params['tag_id']) document.getElementById('tag_id').value = global_page_params['tag_id'];
     }
     // to prefill signup form or handle captured payments
     
-    function hide_account_type() {
-        $('#signupForm .selectpicker').val('0');
-        $('#signupForm .accountTypegroup').hide();
+    function hide_account_type(referrer) {
+        if (referrer) {
+            $('#signupForm .selectpicker').val('0');
+            $('#signupForm .accountTypegroup').hide();
+            $("#signup_logo").replaceWith("<h2 class='referrer'>" + referrer + "</h2>");
+            $("#rhombusPower").removeClass('hide');
+        } else {
+            $("#rhombusPower").addClass('hide');
+        }
     }
 
     ///// toggle card/login info for user's profile

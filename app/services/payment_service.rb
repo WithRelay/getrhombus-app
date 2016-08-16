@@ -1,46 +1,58 @@
 class PaymentService
-  
+
   class << self
     
+    # return array with txn status, error object, notify customer/merchant
     def charge(amount_with_taxes, merchant, user, message, capture)
-
       begin
-        response = Stripe::Charge.create({
-              amount: amount_with_taxes, # in cents
+
+        # need to backward support merchant's with old connect account
+        if x
+          response = Stripe::Charge.create({
+              amount: amount_with_taxes,
               currency: merchant.currency ? merchant.currency : "usd",
               source: user.instrument_uri,
               capture: capture,
               description: "Payment from #{user.email}. Card name: #{user.card_name}. Last four: #{user.last_four}.",
-              destination: merchant.stripe_access_token
-              #statement_descriptor: '',
-              #:application_fee => rhombus_fee
               metadata: {
                 "message" => message
-              }            
-            })
+              }  
+            }, { stripe_account: merchant.stripe_access_token })
+        else
+          response = Stripe::Charge.create({
+            amount: amount_with_taxes, # in cents
+            currency: merchant.currency ? merchant.currency : "usd",
+            source: user.instrument_uri,
+            capture: capture,
+            description: "Payment from #{user.email}. Card name: #{user.card_name}. Last four: #{user.last_four}.",
+            destination: merchant.stripe_access_token
+            # statement_descriptor: '',
+            # application_fee: rhombus_fee
+            metadata: {
+              "message" => message
+            }            
+          })
+        end
 
-        return [response]
+        [response]
       rescue Stripe::CardError => e               # Since it's a decline, Stripe::CardError will be caught
-        body = e.json_body
-        err  = body[:error]
-        # txn status, error object, notify customer/merchant
-        return false, err, true
+        false, e.json_body[:error], true
       rescue Stripe::StripeError => e
-          body = e.json_body
-          err  = body[:error]
-          return false, err
+        false, e.json_body[:error]
       rescue StandardError => err
-          return false, err
+        false, err
       end
-
     end
 
+    # returns array with refund status, error object
     def refund_charge(charge_id)
       begin
         re = Stripe::Refund.create(charge: charge_id)
-        return [re]
+        [re]
+      rescue Stripe::StripeError => e
+        false, e.json_body[:error]
       rescue StandardError => err
-        return false, err
+        false, err
       end 
     end
 
