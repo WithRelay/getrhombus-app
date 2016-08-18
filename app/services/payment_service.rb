@@ -14,6 +14,7 @@ class PaymentService
               source: user.instrument_uri,
               capture: capture,
               description: "Payment from #{user.email}. Card name: #{user.card_name}. Last four: #{user.last_four}.",
+              # application_fee: rhombus_fee
               metadata: {
                 "message" => message
               }  

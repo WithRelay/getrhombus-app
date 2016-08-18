@@ -1,45 +1,33 @@
 module MakeSpreadsheet
   extend ActiveSupport::Concern
 
-  def create_spreadsheet(user_id, user_level, start_date, end_date)
-		begin
-			txn = Transaction.where("user_id = ? AND created_at BETWEEN ? AND ?", user_id, start_date, end_date)
+  def get_transactions_csv(user_id, user_level, start_date, end_date)
+  	begin
+	  	column_names = get_csv_columns(user_level)
+	  	CSV.generate(headers: true) do |csv|
+	      csv << column_names.map.with_index(0) { |e,i| (i == 0) ? e : e.titleize } 
+	      column_names[0] = 'created_at'
+		    Transaction.where("user_id = ? AND created_at BETWEEN ? AND ?", user_id, start_date, end_date).each do |t|
+		      csv.add_row t.attributes.slice(*column_names).values
+		    end
+	    end
+	  rescue StandardError => e
+	  	false
+	  end
+	end
 
-		  book = Spreadsheet::Workbook.new
-		  sheet1 = book.create_worksheet :name => 'Transactions'
-			sheet1.row(0).default_format = Spreadsheet::Format.new :horizontal_align => :centre, :weight => :bold
-		  sheet1.row(0).concat ["Date (GMT)", "Transaction ID", "From", "To", "Amount", "Amount Less Fees", "Currency"] if user_level == 1
-		  sheet1.row(0).concat ["Date (GMT)", "Transaction ID", "From", "To", "Amount", "Currency"] if user_level == 0
-			
-			format = Spreadsheet::Format.new :horizontal_align => :left
-			txn.each.with_index(1) do |t,i|
-				sheet1.row(i).push t.created_at, t.transaction_number, t.from, t.to, t.amount.to_f, t.amount_less_fees.to_f, t.currency if user_level == 1
-				sheet1.row(i).push t.created_at, t.transaction_number, t.from, t.to, t.amount.to_f, t.currency if user_level == 0
-				sheet1.row(i).default_format = format
-			end
-
-			file_contents = StringIO.new
-			book.write file_contents
-			return file_contents.string
-		rescue StandardError => err
-			# email us here
-			return false
-		end
+  def get_csv_columns(user_level)
+  	return ["Date (ET)", "transaction_number", "from", "to", "amount", "amount_less_fees", "currency"] if user_level == 1
+  	["Date (ET)", "transaction_number", "from", "to", "amount", "currency"]
   end
 
-  def customer_info_xls_template
-  	begin
-		  book = Spreadsheet::Workbook.new
-		  sheet1 = book.create_worksheet :name => 'Customer Info'
-			sheet1.row(0).default_format = Spreadsheet::Format.new :horizontal_align => :centre, :weight => :bold
-		  sheet1.row(0).concat ["Email", "Phone (Ex. <redacted_phone_number>)", "First Name", "Last Name"]
-			file_contents = StringIO.new
-			book.write file_contents
-			return file_contents.string
-		rescue StandardError => err
-			# email us here
-			return false
-		end
+  def get_customer_csv_template
+    attributes = ['first_name', 'last_name', 'email', 'phone_number', 'street_address', 'city', 'state_province', 'country', 'zip_code']
+    default_text = ['John', 'Smith', '<redacted_email>', '<redacted_phone_number>', '2 Neverland Place', 'Boston', 'MA', 'US', '12345']
+    CSV.generate(headers: true) do |csv|
+      csv << attributes
+      csv << default_text
+    end
   end
 
 

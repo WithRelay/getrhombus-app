@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
 
   before_action :set_user, only: [:show, :edit, :update, :destroy, :messaging, :contacts, :customers, :transactions]
-  load_and_authorize_resource
+  load_and_authorize_resource except: [:customer_csv_template]
   include AdditionalUserActions
 
   def index

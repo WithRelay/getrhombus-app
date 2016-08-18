@@ -5,7 +5,7 @@ class TwitterCred < ActiveRecord::Base
   # saves merchant twitter info
   def self.from_omniauth(auth, id)
     begin
-      where(user_id: id).first_or_create do |row|
+      where(user_id: id).first_or_initialize.tap do |row|
         row.uid = auth.uid
         row.token = auth.credentials.token
         row.secret = auth.credentials.secret
@@ -23,11 +23,13 @@ class TwitterCred < ActiveRecord::Base
         row.image_url = auth.extra.raw_info.profile_image_url_https
 
         row.user_id = id
+
+        row.save
       end
-      return true
+      true
     rescue StandardError => err
       false
     end
   end
-
+  
 end

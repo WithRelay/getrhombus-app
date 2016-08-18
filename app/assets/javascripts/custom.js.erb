@@ -1472,6 +1472,54 @@ $(document).ready(function () {
     });
     //// for number search
 
+  // http://blog.teamtreehouse.com/uploading-files-ajax
+  var form = document.getElementById('file-form');
+  var fileSelect = document.getElementById('file-select');
+  var uploadButton = document.getElementById('upload-button');
+  
+  form.onsubmit = function(event) {
+    event.preventDefault();
+    uploadButton.innerHTML = 'Uploading...';
+    uploadButton.disabled = true;
+
+    var files = fileSelect.files;            // Get the selected files from the input.
+    var formData = new FormData();           // Create a new FormData object.
+    // Loop through each of the selected files.
+    for (var i = 0; i < files.length; i++) {
+      var file = files[i];          
+      if (!file.type.match('csv')) {             // Check the file type.
+        console.log("Can't upload file type");
+        continue;
+      }
+
+      formData.append('csv', file, file.name);    // Add the file to the request.
+      var xhr = new XMLHttpRequest();             // Set up the request.
+      xhr.open('POST', '/v1/users/add_customers.csv', true);    // Open the connection.
+      xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+      xhr.onload = function () {
+         if (xhr.readyState === 4) {
+          if (xhr.status === 200) {
+          } else {
+            console.log('Something went wrong on our end.')
+          }
+          console.log(JSON.parse(xhr.responseText));
+        }
+      };
+
+      xhr.onerror = function (e) {
+        console.log(xhr.statusText);
+      };
+
+      xhr.send(formData);        // Send the Data.
+    }
+
+    uploadButton.innerHTML = 'Upload';
+    uploadButton.disabled = false;
+  }
+
+    
+
+
 });
 
 

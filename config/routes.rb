@@ -12,8 +12,8 @@ Rails.application.routes.draw  do
   
   resources :contact_forms 
   
-  get '/customer_info_xls_template' => "static_pages#customer_info_xls_template"
-  get '/transactions/spreadsheet' => 'transactions#spreadsheet'
+  get '/customer_template' => "users#customer_csv_template", constraints: { format: 'csv' }
+  get '/transactions/download' => 'transactions#download_csv', constraints: { format: 'csv' }
   
   ## messaging related routes
   get "/receive_text_message" => 'messages#receive_text_message'
@@ -55,6 +55,7 @@ Rails.application.routes.draw  do
   ## api
   api_version(module: "Api::V1", path: {value: "v1"}, constraints: { subdomain: "api" }, defaults: { format: "json" }) do
     match '/users/find' => 'users#find', via: :get
+    match '/users/add_customers' => 'users#add_customers', via: :post
     match '/hashtags/find' => 'hashtags#find', via: :get
     match '/transactions/:charge_id/refund' => 'transactions#refund', via: :post
     match '/numbers/search' => 'numbers#search', via: :get

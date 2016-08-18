@@ -24,6 +24,14 @@
   <div class="page-header" style="background: transparent; margin-bottom: 0px;">
     <div class="title" style="font-weight: normal;">Transactions</div>
 
+
+  <form id="file-form" action="handler.php" method="POST">
+  <input type="file" id="file-select" name="csv" accept=".csv"/>
+  <button type="submit" id="upload-button">Upload</button>
+</form>
+
+
+
     <%= render 'shared/dashboard_shortcut' %>
   </div>
   <!-- End Page Header -->
@@ -129,7 +137,12 @@
   </div>
 </div>
 
-<form id="txn_history_form" method="get" action="/transactions/spreadsheet.xls">
+
+
+
+
+<!-- should move out of here -->
+<form id="txn_history_form" method="get" action="/transactions/download.csv">
   <input type="hidden" id="txn_start_date" name="txn_start_date" />
   <input type="hidden" id="txn_end_date" name="txn_end_date" />
   <input type="hidden" id="txn_todays_date" name="txn_todays_date" />
@@ -165,6 +178,13 @@
         });
   });
 </script>
+
+
+
+
+
+
+
 
 
 </body>
