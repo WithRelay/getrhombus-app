@@ -1,7 +1,13 @@
+Messaging Page
+- explore moving to twilio
+- else explore upgrading pubnub and integrating cleanly into rails...not on a separate page
+
 Payment Capture
-- check that amount texts in is valid
 - check if /profile affect forms for merchants
 - plug in charge into payment capture workflow
+- let parse_text return cents i guess and just divide by two to show
+  - check that amount text is valid - remove zero from front of string...and check if decimal and positive...abs
+  - take abs ... check if integer, and less than 1500000 or (less than miminum), divide by 100 and enter
 
 Charges
 - stripe service for charge needs to be backward compatible

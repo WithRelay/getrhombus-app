@@ -126,6 +126,7 @@ class Transaction < ActiveRecord::Base
   end
 
   def self.process_captured_payment()
+    # check that amount is valid
     #Transaction.process_captured_payment(@user, params[:amt], params[:referrer_num], params[:mid]) 
   end
 
