@@ -1474,23 +1474,15 @@ $(document).ready(function () {
 
 
   // http://blog.teamtreehouse.com/uploading-files-ajax
+  // but modified to send just one file.
   var csv_upload_button = document.getElementById('csv-upload-button'); 
   document.getElementById('csv-upload-form').onsubmit = function(e) {
-    e.preventDefault();
-    
-    set_button_attr("Uploading...", true);
-    var files = document.getElementById('csv-file-select').files;            // Get the selected files from the input.
-    var formData = new FormData();                                            // Create a new FormData object.
-    
-    // Loop through each of the selected files.
-    for (var i = 0; i < files.length; i++) {
-      var file = files[i];          
-      if (!file.type.match('csv')) {             // Check the file type.
-        console.log("Can't upload file type");
-        continue;
-      }
+    function set_button_attr(innerhtml, disabled) {
+      csv_upload_button.innerHTML = innerhtml;
+      csv_upload_button.disabled = disabled;
+    } 
 
-      formData.append('csv', file, file.name);    // Add the file to the request.
+    function send_payload(payload) {
       var xhr = new XMLHttpRequest();             // Set up the request.
       xhr.open('POST', '/v1/users/add_customers.csv', true);    // Open the connection.
       xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
@@ -1509,14 +1501,30 @@ $(document).ready(function () {
         console.log(xhr.statusText);
         set_button_attr("Upload", false);
       };
-      xhr.send(formData);        // Send the Data.
+      xhr.send(payload);        // Send the Data.
     }
 
-    function set_button_attr(innerhtml, disabled) {
-      csv_upload_button.innerHTML = innerhtml;
-      csv_upload_button.disabled = disabled;
-    }
+    e.preventDefault();
+    var files = document.getElementById('csv-file-select').files;            // Get the selected files from the input.
+    var length = files.length;
+    var formData = new FormData();                                            // Create a new FormData object.
     
+    // Loop through each of the selected files.
+    for (var i = 0; i < length; i++) {
+      set_button_attr("Uploading...", true);
+
+      var file = files[i];          
+      if (!file.type.match('csv')) {             // Check the file type.
+        console.log("Can't upload file type");
+        continue;
+      }
+
+      formData.append('csv', file, file.name);    // Add the file to the request.
+    }
+
+    if (length > 0) {
+      send_payload(formData);   
+    }
   }
   // end csv file upload
 
