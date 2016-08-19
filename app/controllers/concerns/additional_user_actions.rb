@@ -84,4 +84,17 @@ module AdditionalUserActions
     session.delete(:msg_id)
   end
 
+  def customer_csv_template
+    render :template => "static_pages/to_404.html" and return if !current_user && current_user.user_level != 1
+    response = current_user.get_customer_csv_template
+    if response
+      respond_to do |format|
+        format.csv { send_data response, filename: "customer_template.csv" } 
+      end
+    else
+      # use 500 page after it is built
+      render :template => "static_pages/to_404.html"
+    end
+  end
+
 end

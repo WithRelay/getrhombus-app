@@ -41,9 +41,6 @@ gem 'omniauth-twitter'
 # sending email
 gem 'mandrill-api'
 
-# creating transaction csv
-gem "spreadsheet"
-
 # App monitoring
 gem 'newrelic_rpm'
 

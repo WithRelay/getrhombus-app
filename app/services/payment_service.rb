@@ -14,6 +14,7 @@ class PaymentService
               source: user.instrument_uri,
               capture: capture,
               description: "Payment from #{user.email}. Card name: #{user.card_name}. Last four: #{user.last_four}.",
+              # application_fee: rhombus_fee
               metadata: {
                 "message" => message
               }  
@@ -25,7 +26,7 @@ class PaymentService
             source: user.instrument_uri,
             capture: capture,
             description: "Payment from #{user.email}. Card name: #{user.card_name}. Last four: #{user.last_four}.",
-            destination: merchant.stripe_access_token
+            destination: merchant.stripe_access_token,
             # statement_descriptor: '',
             # application_fee: rhombus_fee
             metadata: {
@@ -36,11 +37,11 @@ class PaymentService
 
         [response]
       rescue Stripe::CardError => e               # Since it's a decline, Stripe::CardError will be caught
-        false, e.json_body[:error], true
+        [false, e.json_body[:error], true]
       rescue Stripe::StripeError => e
-        false, e.json_body[:error]
+        [false, e.json_body[:error]]
       rescue StandardError => err
-        false, err
+        [false, err]
       end
     end
 
@@ -50,9 +51,10 @@ class PaymentService
         re = Stripe::Refund.create(charge: charge_id)
         [re]
       rescue Stripe::StripeError => e
-        false, e.json_body[:error]
+        # might need to specify that this is a stripe error
+        [false, e.json_body[:error]]
       rescue StandardError => err
-        false, err
+        [false, err]
       end 
     end
 

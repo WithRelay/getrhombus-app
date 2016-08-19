@@ -60,9 +60,9 @@ class TextingService
         client = Twilio::REST::Client.new TWILIO_API_KEY, TWILIO_API_SECRET
         number = client.account.incoming_phone_numbers.create(:phone_number => num, :VoiceApplicationSid => TWILIO_RHOMBUS_APP_SID,
          :SmsApplicationSid => TWILIO_RHOMBUS_APP_SID)    
-        return true    
+        true    
       rescue StandardError => e
-        return false
+        false
       end
     end
 
@@ -85,9 +85,19 @@ class TextingService
           number = client.account.available_phone_numbers.get(params[:country]).mobile.list(search_params).first
         end
 
-        return { number: number.nil? ? '' : number.phone_number  }
+        { number: number.nil? ? '' : number.phone_number  }
       rescue StandardError => e
-        return { error: e.message }
+        { error: e.message }
+      end
+    end
+
+    def number_lookup(num)
+      begin
+        client = Twilio::REST::LookupsClient.new TWILIO_API_KEY, TWILIO_API_SECRET
+        number = client.phone_numbers.get(num)
+        [number.phone_number[1..-1], number.country_code]
+      rescue StandardError => e
+        false
       end
     end
 

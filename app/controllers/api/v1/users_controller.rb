@@ -24,4 +24,21 @@ class Api::V1::UsersController < API::V1::BaseController
 	end
 
 
+	def add_customers
+		# need to start storing number type in user model and change below
+		# add zip_code to db
+		
+		begin
+			num_reach = TextingService.twilio_list[current_user.country.to_sym][:types][:local][:reach]
+	    if params[:format] == 'csv'
+		    render json: { response: current_user.upload_customer_csv(params['csv'].tempfile, num_reach) }, status: 200
+		  else
+		  	render json: { response: 'Request is not supported.' }, status: 405
+		  end
+		rescue StandardError => e
+			render json: { response: 'Something went wrong on our end.' }, status: 500
+		end
+  end
+
+
 end

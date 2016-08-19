@@ -1,7 +1,7 @@
 class User < ActiveRecord::Base
 
   include DashboardQueries
-  include MakeSpreadsheet
+  include CSVHandler
 
   attr_accessor :full_name, :phone, :captured_amt, :msg_id, :tag_id,
                 # used to identify what type of action in user's controller update action
@@ -24,22 +24,19 @@ class User < ActiveRecord::Base
   # remove this soon
   before_create :set_merchant_business_phone, :deactivate_merchant_account          
 
-  # Just to prevent sending emails locally for now
+  # Just to prevent sending emails locally for now...remove comment later
   # after_commit :send_welcome_email, :on => :create
 
   validates_presence_of :user_level, :message => "Please select an account type"
+  validates :country, length: {is: 2}, allow_blank: true
   
-  # still need validation errors for edit..this is only for create action
-  validates :phone_number, presence: true, 
-            numericality: { only_integer: true }, 
-            length: { minimum: 10 }, 
-            :on => :create
-
+  # why allow nil?
   validates_uniqueness_of :phone_number, :allow_nil => true, :if => lambda { self.user_level == 0 }
-  # Switch this on when rhombus numbers are automatically generated
-  # validates_uniqueness_of :rhombus_number, :allow_nil => true, :if => lambda { self.user_level == 1 } 
 
-  @@data = ''
+  # still need validation errors for edit..this is only for create action
+  validates :phone_number, presence: true, numericality: { only_integer: true }, length: { minimum: 10 }, on: :create
+
+
   # saves merchant info from stripe
   def save_stripe_omniauth_data(auth)
     self.provider = auth.provider
@@ -50,14 +47,6 @@ class User < ActiveRecord::Base
     self.stripe_livemode = auth.info.livemode
     return true if self.save
     return false
-  end
-
-  def testt(data)
-    @@data = data
-  end
-
-  def print_testt
-    @@data
   end
 
   # Create or update customer on Stripe
@@ -185,7 +174,6 @@ class User < ActiveRecord::Base
   end
 
   def send_welcome_email
-=begin
     owner = User.find_by(email: Rails.application.secrets.team_email)
     if self.user_level == 1
       EmailingService.send_welcome_email(self.email, owner.rhombus_number, "merchant")
@@ -205,7 +193,6 @@ class User < ActiveRecord::Base
       description/hashtag. Ex. +10 #donut"
       message.send_and_save_message(owner.rhombus_number, self.phone_number, text)
     end
-=end
   end
   
 end
