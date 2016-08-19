@@ -35,7 +35,7 @@ module CSVHandler
       
       headers_checked = false
     	response = []
-      headers = [:first_name, :last_name, :email, :phone_number, :street_address, :city, :state_province, :country, :business_zip_code]
+      headers = [:first_name, :last_name, :email, :phone_number, :street_address, :city, :state_province, :country, :zip_code]
       
       CSV.foreach(file, headers: true, skip_blanks: true, header_converters: :symbol, skip_lines: /^(?:[,:]\s*)+$/) do |row|
         error = false

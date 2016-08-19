@@ -99,8 +99,6 @@ gem 'pubnub', '3.7.9'
 #Twilio
 gem 'twilio-ruby', '~> 4.2.1'
 
-
-
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.1.7'
 
@@ -120,4 +118,3 @@ group :development, :test do
 end
 
 ruby "2.3.1"
-# ruby "2.2.3"

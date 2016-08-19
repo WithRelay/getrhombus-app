@@ -3,9 +3,9 @@ class Api::V1::UsersController < API::V1::BaseController
 	def find
 		sql = ActiveRecord::Base.send(:sanitize_sql_array, 
 				["SELECT users.card_name, users.phone_number FROM 
-					( SELECT user_id_from as usersID FROM messages where messages.user_id_to = ?
+					( SELECT user_id as usersID FROM messages where messages.user_id_to = ?
     				  union
-					  SELECT user_id_to as usersID FROM messages where messages.user_id_from = ? 
+					  SELECT user_id_to as usersID FROM messages where messages.user_id = ? 
 					) t1
 					inner join users on t1.usersID = users.id where lower(card_name) LIKE concat('%', ?, '%') or 
 					phone_number like concat('%', ?, '%')", current_user.id, current_user.id, params[:query].downcase, params[:query] ])
@@ -24,10 +24,7 @@ class Api::V1::UsersController < API::V1::BaseController
 	end
 
 
-	def add_customers
-		# need to start storing number type in user model and change below
-		# add zip_code to db
-		
+	def add_customers		
 		begin
 			num_reach = TextingService.twilio_list[current_user.country.to_sym][:types][:local][:reach]
 	    if params[:format] == 'csv'

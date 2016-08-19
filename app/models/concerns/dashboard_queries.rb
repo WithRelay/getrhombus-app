@@ -64,7 +64,7 @@ module DashboardQueries
 					FROM messages
 					INNER JOIN users ON
 					messages.user_id_to = users.id 
-					WHERE user_id_from = ? GROUP BY messages.user_id_to 
+					WHERE user_id = ? GROUP BY messages.user_id_to 
 					ORDER BY messages.created_at DESC", self.id])
 		elsif self.user_level == 1
 			Message.find_by_sql([
@@ -74,7 +74,7 @@ module DashboardQueries
 					FROM messages
 					INNER JOIN users ON
 					messages.user_id_to = users.id 
-					WHERE user_id_from = ? GROUP BY messages.user_id_to 
+					WHERE user_id = ? GROUP BY messages.user_id_to 
 					ORDER BY messages.created_at DESC", self.id])
 		end
 	end	
@@ -104,8 +104,8 @@ module DashboardQueries
 	end
 
 	def get_total_messages
-		return Message.where("user_id_from = ? and DATE(created_at) BETWEEN DATE_SUB(curdate(), INTERVAL 30 DAY) AND curdate()", self.id).count if self.user_level == 0
-		Message.where("user_id_from = ? or user_id_to = ? and DATE(created_at) BETWEEN DATE_SUB(curdate(), 
+		return Message.where("user_id = ? and DATE(created_at) BETWEEN DATE_SUB(curdate(), INTERVAL 30 DAY) AND curdate()", self.id).count if self.user_level == 0
+		Message.where("user_id = ? or user_id_to = ? and DATE(created_at) BETWEEN DATE_SUB(curdate(), 
 							INTERVAL 30 DAY) AND curdate()", self.id, self.id).count if self.user_level == 1
 	end
 

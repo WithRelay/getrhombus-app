@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160429044435) do
+ActiveRecord::Schema.define(version: 20160819052806) do
 
   create_table "full_contact_data", force: :cascade do |t|
     t.string   "likelihood",    limit: 191
@@ -59,6 +59,17 @@ ActiveRecord::Schema.define(version: 20160429044435) do
     t.boolean  "enable_tweet",    limit: 1
   end
 
+  create_table "image_refs", force: :cascade do |t|
+    t.integer  "imageable_id",   limit: 4
+    t.string   "imageable_type", limit: 191
+    t.integer  "image_id",       limit: 4
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "image_refs", ["image_id"], name: "index_image_refs_on_image_id", using: :btree
+  add_index "image_refs", ["imageable_type", "imageable_id"], name: "index_image_refs_on_imageable_type_and_imageable_id", using: :btree
+
   create_table "images", force: :cascade do |t|
     t.string   "avatar_file_name",    limit: 191
     t.string   "avatar_content_type", limit: 191
@@ -78,18 +89,18 @@ ActiveRecord::Schema.define(version: 20160429044435) do
     t.string   "status",            limit: 191
     t.string   "error_text",        limit: 191
     t.string   "error_code",        limit: 191
-    t.integer  "user_id_from",      limit: 4
+    t.integer  "user_id",           limit: 4
     t.integer  "user_id_to",        limit: 4
     t.integer  "transaction_id",    limit: 4
     t.string   "message_id",        limit: 191
     t.text     "text",              limit: 65535
     t.boolean  "unread",            limit: 1,     default: true
-    t.integer  "image_id",          limit: 4
     t.string   "num_segments",      limit: 191
     t.string   "price_unit",        limit: 191
   end
 
   add_index "messages", ["transaction_id"], name: "index_messages_on_transaction_id", using: :btree
+  add_index "messages", ["user_id"], name: "index_messages_on_user_id", using: :btree
 
   create_table "open_cnam_data", force: :cascade do |t|
     t.string   "name",         limit: 191
@@ -182,64 +193,59 @@ ActiveRecord::Schema.define(version: 20160429044435) do
   add_index "twitter_creds", ["user_id"], name: "index_twitter_creds_on_user_id", unique: true, using: :btree
 
   create_table "users", force: :cascade do |t|
-    t.string   "email",                        limit: 191
-    t.string   "encrypted_password",           limit: 191
-    t.string   "reset_password_token",         limit: 191
+    t.string   "email",                  limit: 191
+    t.string   "encrypted_password",     limit: 191
+    t.string   "reset_password_token",   limit: 191
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",                limit: 4,     default: 0
+    t.integer  "sign_in_count",          limit: 4,     default: 0
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
-    t.string   "current_sign_in_ip",           limit: 191
-    t.string   "last_sign_in_ip",              limit: 191
-    t.string   "confirmation_token",           limit: 191
+    t.string   "current_sign_in_ip",     limit: 191
+    t.string   "last_sign_in_ip",        limit: 191
+    t.string   "confirmation_token",     limit: 191
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
-    t.string   "unconfirmed_email",            limit: 191
+    t.string   "unconfirmed_email",      limit: 191
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "user_level",                   limit: 4
-    t.string   "customer_uri",                 limit: 191
-    t.string   "last_four",                    limit: 191
-    t.string   "expiration_month",             limit: 191
-    t.string   "expiration_year",              limit: 191
-    t.string   "zip_code",                     limit: 191
-    t.string   "card_name",                    limit: 191
-    t.string   "card_type",                    limit: 191
-    t.string   "phone_number",                 limit: 191
-    t.string   "business_name",                limit: 191
-    t.string   "business_type",                limit: 191
-    t.string   "street_address",               limit: 191
-    t.string   "city",                         limit: 191
-    t.string   "state_province",               limit: 191
-    t.string   "business_phone",               limit: 191
-    t.string   "country",                      limit: 191
-    t.string   "rhombus_number",               limit: 191
-    t.string   "routing_number",               limit: 191
-    t.string   "account_name",                 limit: 191
-    t.string   "account_number",               limit: 191
-    t.string   "account_type",                 limit: 191
-    t.boolean  "approve_payments_immediately", limit: 1,     default: false
-    t.string   "tax_rate",                     limit: 191
-    t.integer  "transactions_count",           limit: 4
-    t.string   "instrument_uri",               limit: 191
-    t.string   "business_zip_code",            limit: 191
-    t.string   "provider",                     limit: 191
-    t.string   "uid",                          limit: 191
-    t.string   "stripe_access_token",          limit: 191
-    t.string   "stripe_publishable_key",       limit: 191
-    t.string   "stripe_scope",                 limit: 191
-    t.string   "stripe_livemode",              limit: 191
-    t.string   "stripe_refresh_token",         limit: 191
-    t.string   "first_name",                   limit: 191
-    t.string   "last_name",                    limit: 191
-    t.boolean  "is_active",                    limit: 1,     default: true
-    t.string   "referrer_num",                 limit: 191
-    t.integer  "subscription_type",            limit: 4,     default: 0
-    t.string   "url",                          limit: 191
-    t.text     "custom_welcome",               limit: 65535
-    t.string   "short_url",                    limit: 191
-    t.string   "currency",                     limit: 191
+    t.integer  "user_level",             limit: 4
+    t.string   "customer_uri",           limit: 191
+    t.string   "last_four",              limit: 191
+    t.string   "expiration_month",       limit: 191
+    t.string   "expiration_year",        limit: 191
+    t.string   "card_name",              limit: 191
+    t.string   "card_type",              limit: 191
+    t.string   "phone_number",           limit: 191
+    t.string   "business_name",          limit: 191
+    t.string   "business_type",          limit: 191
+    t.string   "street_address",         limit: 191
+    t.string   "city",                   limit: 191
+    t.string   "state_province",         limit: 191
+    t.string   "business_phone",         limit: 191
+    t.string   "country",                limit: 191
+    t.string   "rhombus_number",         limit: 191
+    t.string   "rhombus_number_type",    limit: 191
+    t.string   "tax_rate",               limit: 191
+    t.integer  "transactions_count",     limit: 4
+    t.string   "instrument_uri",         limit: 191
+    t.string   "zip_code",               limit: 191
+    t.string   "provider",               limit: 191
+    t.string   "uid",                    limit: 191
+    t.string   "stripe_access_token",    limit: 191
+    t.string   "stripe_publishable_key", limit: 191
+    t.string   "stripe_scope",           limit: 191
+    t.string   "stripe_livemode",        limit: 191
+    t.string   "stripe_refresh_token",   limit: 191
+    t.string   "first_name",             limit: 191
+    t.string   "last_name",              limit: 191
+    t.boolean  "is_active",              limit: 1,     default: true
+    t.string   "referrer_num",           limit: 191
+    t.integer  "subscription_type",      limit: 4,     default: 0
+    t.string   "url",                    limit: 191
+    t.text     "custom_welcome",         limit: 65535
+    t.string   "short_url",              limit: 191
+    t.string   "currency",               limit: 191
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree

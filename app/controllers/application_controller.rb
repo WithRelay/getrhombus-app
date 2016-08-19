@@ -43,7 +43,7 @@ class ApplicationController < ActionController::Base
       :rhombus_number, :update_rhombus_number,
       :phone_number, :business_name, :business_type, :street_address, :city, 
       :state_province, :business_phone, :country, :currency, :approve_payments_immediately, 
-      :tax_rate, :business_zip_code, :first_name, :last_name, :is_active, :url,
+      :tax_rate, :zip_code, :first_name, :last_name, :is_active, :url,
       :subscription_type, :custom_welcome )}
   end
 
