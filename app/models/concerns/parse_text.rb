@@ -101,7 +101,7 @@ module ParseText
         return []
       elsif !@this_user.customer_uri
         # notify user and send to merchant dashboard
-        send_response notify and send sign in link
+        # send_response notify and send sign in link
         return []  
       elsif @this_user.customer_uri
         return @amt_ary

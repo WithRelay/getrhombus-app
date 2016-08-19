@@ -61,6 +61,11 @@ gem 'responders', '~> 2.0'
 #OmniAuth Facebook
 gem 'omniauth-facebook'
 
+gem "messenger_platform_rails"
+
+#For Facebook Send API
+gem 'message_quickly'
+
 group :production do
 	gem "passenger"
 end
@@ -117,4 +122,5 @@ group :development, :test do
     gem 'spring'
 end
 
-ruby "2.2.3"
+ruby "2.3.1"
+# ruby "2.2.3"
