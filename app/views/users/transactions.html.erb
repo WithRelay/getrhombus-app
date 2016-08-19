@@ -25,10 +25,11 @@
     <div class="title" style="font-weight: normal;">Transactions</div>
 
 
-  <form id="file-form" action="handler.php" method="POST">
-  <input type="file" id="file-select" name="csv" accept=".csv"/>
-  <button type="submit" id="upload-button">Upload</button>
-</form>
+  <!-- CSV upload -->
+  <form id="csv-upload-form" action="/v1/users/add_customers.csv" method="POST">
+    <input type="file" id="csv-file-select" name="csv" accept=".csv"/>
+    <button type="submit" id="csv-upload-button">Upload</button>
+  </form>
 
 
 

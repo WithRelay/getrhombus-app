@@ -1,6 +1,7 @@
 require File.expand_path('../boot', __FILE__)
 
 require 'csv'
+require "./lib/toolbox.rb"
 
 require 'rails/all'
 

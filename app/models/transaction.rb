@@ -1,7 +1,7 @@
 class Transaction < ActiveRecord::Base
 
   include Transactionable
-  include MakeSpreadsheet
+  include CSVHandler
   # scope :ordering, -> { order(:DESC) }
 
   has_one :message

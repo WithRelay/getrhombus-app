@@ -1,7 +1,7 @@
 class User < ActiveRecord::Base
 
   include DashboardQueries
-  include MakeSpreadsheet
+  include CSVHandler
 
   attr_accessor :full_name, :phone, :captured_amt, :msg_id, :tag_id,
                 # used to identify what type of action in user's controller update action

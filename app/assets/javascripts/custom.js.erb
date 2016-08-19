@@ -1381,109 +1381,107 @@ $(document).ready(function () {
         }
     });
 
-    $('#transactions-column').on("click", ".refund_link", function() {
-        REFUND_TXN_LINK = this;
-        REFUND_BOX.lightbox_me({
-            centered: true, 
-            onLoad: function() { $('#refundForm').find('input:first').focus(); }
-        });
-    });
+  $('#transactions-column').on("click", ".refund_link", function() {
+      REFUND_TXN_LINK = this;
+      REFUND_BOX.lightbox_me({
+          centered: true, 
+          onLoad: function() { $('#refundForm').find('input:first').focus(); }
+      });
+  });
 
-    $('#refundButton').click(function(e) {
-        e.preventDefault();
-        this.disabled = true; this.textContent = "Please wait...";
-        var charge_id = REFUND_TXN_LINK.getAttribute('data-stripe-txn-num');
-        $.ajax({
-            url: "/v1/transactions/" + charge_id + "/refund.json",
-            beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
-            type: "POST",
-            data: { "type" : "card",
-                    "reason" : document.getElementById('refund_reason').value }       
-        })
-            .done(function(data, textStatus, response) {
-                document.getElementById(charge_id).setAttribute("data-status", "Refunded");
-                ohSnap(data.message, 'green');
-                $(REFUND_TXN_LINK)[0].parentNode.parentNode.innerHTML = "<tr><td>Status: </td><td> Refunded</td></tr>";
-            })
-            .fail(function(data, textStatus, response) { ohSnap(data.responseJSON["message"], "red"); })
-            .always(function(data, textStatus, response) {
-                this.disabled = false; this.textContent = "Submit";
-                REFUND_BOX.trigger('close');
-            })
-    });
+  $('#refundButton').click(function(e) {
+      e.preventDefault();
+      this.disabled = true; this.textContent = "Please wait...";
+      var charge_id = REFUND_TXN_LINK.getAttribute('data-stripe-txn-num');
+      $.ajax({
+          url: "/v1/transactions/" + charge_id + "/refund.json",
+          beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
+          type: "POST",
+          data: { "type" : "card",
+                  "reason" : document.getElementById('refund_reason').value }       
+      })
+          .done(function(data, textStatus, response) {
+              document.getElementById(charge_id).setAttribute("data-status", "Refunded");
+              ohSnap(data.message, 'green');
+              $(REFUND_TXN_LINK)[0].parentNode.parentNode.innerHTML = "<tr><td>Status: </td><td> Refunded</td></tr>";
+          })
+          .fail(function(data, textStatus, response) { ohSnap(data.responseJSON["message"], "red"); })
+          .always(function(data, textStatus, response) {
+              this.disabled = false; this.textContent = "Submit";
+              REFUND_BOX.trigger('close');
+          })
+  });
 
 
-    //// for number search
-    searchNumBtn.click(function() {
-        this.disabled = true;
-        this.innerHTML = "Searching..."; 
-        get_number();
-    });
+  //// for number search
+  searchNumBtn.click(function() {
+      this.disabled = true;
+      this.innerHTML = "Searching..."; 
+      get_number();
+  });
 
-    var searchNumberCountry = $('#searchNumberCountry'),
-        searchNumberType = $('#searchNumberType'),
-        searchNumberField = $('#searchNumberField');
-    var get_number = function(str) {                
-        $.ajax({
-            url: "/v1/numbers/search.json",
-            type: "GET",
-            data: 'query=' + searchNumberField.val() + "&country=" + searchNumberCountry.val() 
-                    + "&type=" + searchNumberType.val(),
-            dataType: "json"     
-        })
-            .done(function(data, textStatus, jqXHR) {
-                var str = '';
-                if(data.error) { 
-                    alert('something went wrong');
-                } else if (data.number == '') {
-                    alert(':( we dont have any number');
-                } else {
-                    alert(data.number);
-                }
-            })
-            .fail(function(data, textStatus, errorThrown) {
-                alert('something went wrong'); 
-                 console.log(data);
-            })   
-            .always(function(data, textStatus, response) {
-                searchNumBtn.html('Search').prop("disabled", false); 
-            }); 
-    }
-    
-    var country_num_types = {
-      US: { types: ["Local","Toll Free"], show: true },
-      CA: { types: ["Local","Toll Free"], show: true },
-      PR: { types: ["Local"] },
-      GB: { types: ["Local"] },
-      // else mobile and don't show
-    };
+  var searchNumberCountry = $('#searchNumberCountry'),
+      searchNumberType = $('#searchNumberType'),
+      searchNumberField = $('#searchNumberField');
+  var get_number = function(str) {                
+      $.ajax({
+          url: "/v1/numbers/search.json",
+          type: "GET",
+          data: 'query=' + searchNumberField.val() + "&country=" + searchNumberCountry.val() 
+                  + "&type=" + searchNumberType.val(),
+          dataType: "json"     
+      })
+          .done(function(data, textStatus, jqXHR) {
+              var str = '';
+              if(data.error) { 
+                  alert('something went wrong');
+              } else if (data.number == '') {
+                  alert(':( we dont have any number');
+              } else {
+                  alert(data.number);
+              }
+          })
+          .fail(function(data, textStatus, errorThrown) {
+              alert('something went wrong'); 
+               console.log(data);
+          })   
+          .always(function(data, textStatus, response) {
+              searchNumBtn.html('Search').prop("disabled", false); 
+          }); 
+  }
+  
+  var country_num_types = {
+    US: { types: ["Local","Toll Free"], show: true },
+    CA: { types: ["Local","Toll Free"], show: true },
+    PR: { types: ["Local"] },
+    GB: { types: ["Local"] },
+    // else mobile and don't show
+  };
 
-    searchNumberCountry.change(function() {
-        var x = country_num_types[this.options[this.selectedIndex].value.toString()], html = '';
-        
-        x = (x) ? x : { types: ["mobile"] };    
-        for (i = 0, len = x.types.length; i < len; i++) { 
-            html += '<option value="' + x.types[i].toLowerCase().replace(/ /g, '_') + '">' + x.types[i] + '</option>'
-        }
-            
-        var display = (x.show) ? 'inline' : 'none';
-        searchNumberType.html(html).css('display', display);
-        searchNumberField.val('').css('display', display)        
-    });
-    //// for number search
+  searchNumberCountry.change(function() {
+      var x = country_num_types[this.options[this.selectedIndex].value.toString()], html = '';
+      
+      x = (x) ? x : { types: ["mobile"] };    
+      for (i = 0, len = x.types.length; i < len; i++) { 
+          html += '<option value="' + x.types[i].toLowerCase().replace(/ /g, '_') + '">' + x.types[i] + '</option>'
+      }
+          
+      var display = (x.show) ? 'inline' : 'none';
+      searchNumberType.html(html).css('display', display);
+      searchNumberField.val('').css('display', display)        
+  });
+  //// for number search
+
 
   // http://blog.teamtreehouse.com/uploading-files-ajax
-  var form = document.getElementById('file-form');
-  var fileSelect = document.getElementById('file-select');
-  var uploadButton = document.getElementById('upload-button');
-  
-  form.onsubmit = function(event) {
-    event.preventDefault();
-    uploadButton.innerHTML = 'Uploading...';
-    uploadButton.disabled = true;
-
-    var files = fileSelect.files;            // Get the selected files from the input.
-    var formData = new FormData();           // Create a new FormData object.
+  var csv_upload_button = document.getElementById('csv-upload-button'); 
+  document.getElementById('csv-upload-form').onsubmit = function(e) {
+    e.preventDefault();
+    
+    set_button_attr("Uploading...", true);
+    var files = document.getElementById('csv-file-select').files;            // Get the selected files from the input.
+    var formData = new FormData();                                            // Create a new FormData object.
+    
     // Loop through each of the selected files.
     for (var i = 0; i < files.length; i++) {
       var file = files[i];          
@@ -1497,25 +1495,30 @@ $(document).ready(function () {
       xhr.open('POST', '/v1/users/add_customers.csv', true);    // Open the connection.
       xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
       xhr.onload = function () {
-         if (xhr.readyState === 4) {
+        if (xhr.readyState === 4) {
           if (xhr.status === 200) {
           } else {
             console.log('Something went wrong on our end.')
           }
           console.log(JSON.parse(xhr.responseText));
+          set_button_attr("Upload", false);
         }
       };
 
       xhr.onerror = function (e) {
         console.log(xhr.statusText);
+        set_button_attr("Upload", false);
       };
-
       xhr.send(formData);        // Send the Data.
     }
 
-    uploadButton.innerHTML = 'Upload';
-    uploadButton.disabled = false;
+    function set_button_attr(innerhtml, disabled) {
+      csv_upload_button.innerHTML = innerhtml;
+      csv_upload_button.disabled = disabled;
+    }
+    
   }
+  // end csv file upload
 
     
 
