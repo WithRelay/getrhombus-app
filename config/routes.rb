@@ -12,6 +12,7 @@ Rails.application.routes.draw  do
   
   resources :contact_forms 
   
+  # review routes
   get '/customer_template' => "users#customer_csv_template", constraints: { format: 'csv' }
   get '/transactions/download' => 'transactions#download_csv', constraints: { format: 'csv' }
   

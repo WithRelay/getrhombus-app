@@ -26,6 +26,12 @@
 //= require bootstrap-formvalidator.min
 //= require angucomplete-alt.js
 
+// remove these lines
+//= require intlTelInput.min.js
+//= require jquery.payment.js
+//= require jquery.charactercounter.js
+
+
 //= require dashboard/messaging_angularjs/messagingApp.js
 //= require dashboard/messaging_angularjs/messagingControllers.js
 //= require dashboard/messaging_angularjs/messagingFilters.js
