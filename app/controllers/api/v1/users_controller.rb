@@ -26,9 +26,8 @@ class Api::V1::UsersController < API::V1::BaseController
 
 	def add_customers		
 		begin
-			num_reach = TextingService.twilio_list[current_user.country.to_sym][:types][:local][:reach]
 	    if params[:format] == 'csv'
-		    render json: { response: current_user.upload_customer_csv(params['csv'].tempfile, num_reach) }, status: 200
+		    render json: { response: current_user.upload_customer_csv(params['csv'].tempfile) }, status: 200
 		  else
 		  	render json: { response: 'Request is not supported.' }, status: 405
 		  end

@@ -15,7 +15,16 @@ Subscriptions
 - even if I use stripe's, i still need jobs for stuff like notifications and drip
 - every user is set up as a rhombus customer with their credit card
 
-- IP messaging with twilio
-- move time to ten mins
+Hashtags
+- sms only, mms with optional sms, recurring and payment with auto sms.... cool on these?
 
+
+- add a customer
+- clean up angular stuff
+- charge a customer
+
+- managed accounts
+- background jobs
+- notifications
+- subscriptions
 

@@ -30,7 +30,7 @@ module CSVHandler
     end
   end
 
-  def upload_customer_csv(file, num_reach)
+  def upload_customer_csv(file)
   	begin
       
       headers_checked = false
@@ -60,10 +60,6 @@ module CSVHandler
             valid_num = TextingService.number_lookup(row[:phone_number])
             if valid_num.present?
               row[:phone_number] = valid_num[0]
-              if num_reach == 'domestic' && self.country != valid_num[1]
-                response.push(error_message + " your rhombus number has only domestic reach.")
-                error = true
-              end
             else
               response.push(error_message + " phone_number is invalid.")
               error = true

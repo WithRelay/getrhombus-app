@@ -152,18 +152,18 @@ $(document).ready(function () {
     var get_graph = function(type) {
         // run only on dashboard
         if ($("#isDashboard").attr('data-dashboard') === "true") {
-            $.ajax({
-                url: url.href,
-                type: "GET",
-                data: 'graph=' + type, 
-                dataType: "json"     
+          $.ajax({
+              url: url.href,
+              type: "GET",
+              data: graph: type, 
+              dataType: "json"     
+          })
+            .done(function(data, textStatus, response) {
+                 process_chart_data(data, type);
             })
-              .done(function(data, textStatus, response) {
-                   process_chart_data(data, type);
-              })
-              .fail(function(data, textStatus, response) {
-                   process_chart_data([], type);
-              })        
+            .fail(function(data, textStatus, response) {
+                 process_chart_data([], type);
+            })        
         }
     };
 
@@ -1004,14 +1004,11 @@ $(document).ready(function () {
     $('input#cc-number').payment('formatCardNumber');
     $('input#cc-exp').payment('formatCardExpiry');
     $('input#cc-csc').payment('formatCardCVC');
-
     // tokenize card details
-    function submitToStripe() {        
+    function submit_to_stripe() {        
         //console.log($('#cc-number').val())
-        var card_btn_text = cc_submit.val(); 
-        cc_submit.attr("disabled", true).val("Please wait...");     
-        $('#response').hide();
-        $(".panel-body").html('');
+        var btn_text = button.val(); 
+        button.attr("disabled", true).val("Please wait...");     
         Stripe.card.createToken({
             name: $('#cc-name').val(),
             number: $('#cc-number').val(),
@@ -1019,7 +1016,7 @@ $(document).ready(function () {
             exp_year: cc_year,
             cvc: $('#cc-csc').val()
         }, stripeResponseHandler);
-        cc_submit.attr("disabled", false).val(card_btn_text);     
+        button.attr("disabled", false).val(btn_text);     
     }  
 
     function stripeResponseHandler(status, response) {
@@ -1036,7 +1033,7 @@ $(document).ready(function () {
             $("#user-form").unbind("submit", preventDefault).submit();
         }
     }
-    ///// ///
+    ///// End stripe form stuff
 
     function preventDefault(e) {
         e.preventDefault();
@@ -1156,8 +1153,10 @@ $(document).ready(function () {
         })
         .on('success.form.fv', function(e, data) {            
             $("#user-form").bind("submit", preventDefault);
-            set_names("ccPage");            
-            submitToStripe();
+            set_names("ccPage");
+            $('#response').hide();
+            $(".panel-body").html('');            
+            submit_to_stripe(cc_submit);
         });
     ///
 
@@ -1223,17 +1222,17 @@ $(document).ready(function () {
 
 
     var submit_contact_form = function(json) {
-        $.ajax({ url: contact_url,
-            type: 'POST',
-            beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
-            data: json
-        })  
-            .done(function(data, response) {
-                ohSnap('Yes! Your message has been sent!', 'green');
-            })
-            .fail(function( data ) {
-                ohSnap('Oh no! We were unable to send your message...', 'red');                
-            })
+      $.ajax({ url: contact_url,
+          type: 'POST',
+          beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
+          data: json
+      })  
+          .done(function(data, response) {
+              ohSnap('Yes! Your message has been sent!', 'green');
+          })
+          .fail(function( data ) {
+              ohSnap('Oh no! We were unable to send your message...', 'red');                
+          })
     }
 
     // validate contact form
@@ -1398,26 +1397,26 @@ $(document).ready(function () {
   });
 
   $('#refundButton').click(function(e) {
-      e.preventDefault();
-      this.disabled = true; this.textContent = "Please wait...";
-      var charge_id = REFUND_TXN_LINK.getAttribute('data-stripe-txn-num');
-      $.ajax({
-          url: "/v1/transactions/" + charge_id + "/refund.json",
-          beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
-          type: "POST",
-          data: { "type" : "card",
-                  "reason" : document.getElementById('refund_reason').value }       
-      })
-          .done(function(data, textStatus, response) {
-              document.getElementById(charge_id).setAttribute("data-status", "Refunded");
-              ohSnap(data.message, 'green');
-              $(REFUND_TXN_LINK)[0].parentNode.parentNode.innerHTML = "<tr><td>Status: </td><td> Refunded</td></tr>";
-          })
-          .fail(function(data, textStatus, response) { ohSnap(data.responseJSON["message"], "red"); })
-          .always(function(data, textStatus, response) {
-              this.disabled = false; this.textContent = "Submit";
-              REFUND_BOX.trigger('close');
-          })
+    e.preventDefault();
+    this.disabled = true; 
+    this.textContent = "Please wait...";
+    $.ajax({
+        url: "/v1/transactions/" + REFUND_TXN_LINK.getAttribute('data-stripe-txn-num') + "/refund.json",
+        beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
+        type: "POST",
+        data: { type: "card", reason: document.getElementById('refund_reason').value }       
+    })
+        .done(function(data, textStatus, response) {
+            document.getElementById(charge_id).setAttribute("data-status", "Refunded");
+            ohSnap(data.message, 'green');
+            $(REFUND_TXN_LINK)[0].parentNode.parentNode.innerHTML = "<tr><td>Status: </td><td> Refunded</td></tr>";
+        })
+        .fail(function(data, textStatus, response) { ohSnap(data.responseJSON["message"], "red"); })
+        .always(function(data, textStatus, response) {
+            this.disabled = false; 
+            this.textContent = "Submit";
+            REFUND_BOX.trigger('close');
+        })
   });
 
 
@@ -1432,30 +1431,29 @@ $(document).ready(function () {
       searchNumberType = $('#searchNumberType'),
       searchNumberField = $('#searchNumberField');
   var get_number = function(str) {                
-      $.ajax({
-          url: "/v1/numbers/search.json",
-          type: "GET",
-          data: 'query=' + searchNumberField.val() + "&country=" + searchNumberCountry.val() 
-                  + "&type=" + searchNumberType.val(),
-          dataType: "json"     
-      })
-          .done(function(data, textStatus, jqXHR) {
-              var str = '';
-              if(data.error) { 
-                  alert('something went wrong');
-              } else if (data.number == '') {
-                  alert(':( we dont have any number');
-              } else {
-                  alert(data.number);
-              }
-          })
-          .fail(function(data, textStatus, errorThrown) {
-              alert('something went wrong'); 
-               console.log(data);
-          })   
-          .always(function(data, textStatus, response) {
-              searchNumBtn.html('Search').prop("disabled", false); 
-          }); 
+    $.ajax({
+        url: "/v1/numbers/search.json",
+        type: "GET",
+        data: { query: searchNumberField.val(), country: searchNumberCountry.val(), type: searchNumberType.val() }
+        dataType: "json"     
+    })
+        .done(function(data, textStatus, jqXHR) {
+            var str = '';
+            if(data.error) { 
+                alert('something went wrong');
+            } else if (data.number == '') {
+                alert(':( we dont have any number');
+            } else {
+                alert(data.number);
+            }
+        })
+        .fail(function(data, textStatus, errorThrown) {
+            alert('something went wrong'); 
+             console.log(data);
+        })   
+        .always(function(data, textStatus, response) {
+            searchNumBtn.html('Search').prop("disabled", false); 
+        }); 
   }
   
   var country_num_types = {
@@ -1483,8 +1481,8 @@ $(document).ready(function () {
 
   // http://blog.teamtreehouse.com/uploading-files-ajax
   // but modified to send just one file.
-  var csv_upload_button = document.getElementById('csv-upload-button'); 
-  var csv_upload_form = document.getElementById('csv-upload-form'); 
+  var csv_upload_button = document.getElementById('csv-upload-button'),
+      csv_upload_form = document.getElementById('csv-upload-form'); 
   if (csv_upload_form) {
     csv_upload_form.onsubmit = function(e) {
       function set_button_attr(innerhtml, disabled) {
@@ -1541,7 +1539,31 @@ $(document).ready(function () {
 
 
   ///// add a customer
+  $('create-user-form').submit(function(e){
+    e.preventDefault();
 
+    // run validations for email and phone number...have variable for fail
+    // if good above and card number is present, send card details to stripe if...set fail variable
+    // no validations for address or lists
+    // if all pass, submit
+    
+/*
+    $.ajax({
+        url: "/v1/numbers/search.json",
+        type: "GET",
+        data: {},
+        dataType: "json"     
+    })
+      .done(function(data, textStatus, jqXHR) {
+        console.log(data);    
+      })
+      .fail(function(data, textStatus, errorThrown) {
+        console.log(data);
+      })   
+      .always(function(data, textStatus, response) {
+      }); 
+*/
+  })
 
   ///// add a customer
     
