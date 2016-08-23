@@ -155,7 +155,7 @@ $(document).ready(function () {
           $.ajax({
               url: url.href,
               type: "GET",
-              data: graph: type, 
+              data: { graph: type }, 
               dataType: "json"     
           })
             .done(function(data, textStatus, response) {
@@ -1434,7 +1434,7 @@ $(document).ready(function () {
     $.ajax({
         url: "/v1/numbers/search.json",
         type: "GET",
-        data: { query: searchNumberField.val(), country: searchNumberCountry.val(), type: searchNumberType.val() }
+        data: { query: searchNumberField.val(), country: searchNumberCountry.val(), type: searchNumberType.val() },
         dataType: "json"     
     })
         .done(function(data, textStatus, jqXHR) {
@@ -1545,7 +1545,7 @@ $(document).ready(function () {
     // run validations for email and phone number...have variable for fail
     // if good above and card number is present, send card details to stripe if...set fail variable
     // no validations for address or lists
-    // if all pass, submit
+    // if all pass, submit_contact_form
     
 /*
     $.ajax({

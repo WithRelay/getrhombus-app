@@ -69,8 +69,8 @@
 
                         ></td>
                         <td><%= (current_user.user_level == 0) ? c.business_name : c.card_name %></td>
-                        <td><%= c.first_visit.strftime("%m/%d/%Y") %></td>
-                        <td><%= c.last_visit.strftime("%m/%d/%Y") %></td>
+                        <td><%= (c.first_visit) ? c.first_visit.strftime("%m/%d/%Y") : '--' %></td>
+                        <td><%= (c.last_visit) ? c.last_visit.strftime("%m/%d/%Y") : "--" %></td>
                         <td><%= number_to_currency(c.avg_spend) %></td>
                         <td><%= number_to_currency(c.total_spend) %></td>
                         <td><%= c.last_30 %></td>
