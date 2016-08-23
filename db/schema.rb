@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160819052806) do
+ActiveRecord::Schema.define(version: 20160823035003) do
 
   create_table "full_contact_data", force: :cascade do |t|
     t.string   "likelihood",    limit: 191
@@ -77,6 +77,16 @@ ActiveRecord::Schema.define(version: 20160819052806) do
     t.datetime "avatar_updated_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "lists", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "lists_users", id: false, force: :cascade do |t|
+    t.integer "list_id", limit: 4, null: false
+    t.integer "user_id", limit: 4, null: false
   end
 
   create_table "messages", force: :cascade do |t|

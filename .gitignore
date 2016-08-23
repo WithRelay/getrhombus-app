@@ -20,3 +20,6 @@
 
 # Project files
 .project
+
+# Database yml
+/config/database.yml

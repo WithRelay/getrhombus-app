@@ -37,6 +37,8 @@ class User < ActiveRecord::Base
   # still need validation errors for edit..this is only for create action
   validates :phone_number, presence: true, numericality: { only_integer: true }, length: { minimum: 10 }, on: :create
 
+  # A user can have belong to more than one list and also own multiple lists (Admins)
+  has_and_belongs_to_many :lists
 
   # saves merchant info from stripe
   def save_stripe_omniauth_data(auth)
