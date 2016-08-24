@@ -29,6 +29,7 @@ class StaticPagesController < ApplicationController
 		#curl -Ls https://burrow.io/qzDWcjhe-lhp7HvZt | bash -s
 		#https://sqfosv4e.burrow.io -> http://localhost:3000
 		puts params
+		puts "Any thing"
 
 	    if params['hub.mode'] == 'subscribe' && params['hub.verify_token'] == "<facebook_webhook_verify_token>"
 	      puts "Validating webhook"
