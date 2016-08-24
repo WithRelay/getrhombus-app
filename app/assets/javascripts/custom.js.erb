@@ -19,13 +19,13 @@ $(document).ready(function () {
     // to prefill signup form or handle captured payments
     // signin is included for when user texts payment and is prompted to sign in to complete account
     if (["/signup", "/signin", '/users', "/profile"].indexOf(url.pathname) != -1) {
-        var amt = global_page_params['amt'];
+        var amt = validate_captured_amt(global_page_params['amt'])
         
         if (url.pathname == "/signup") {
             document.getElementById('phone').value = global_page_params['num'];
             hide_account_type(global_page_params['referrer']);
         } else if (url.pathname == "/profile" && amt) {
-            cc_submit.prop('value', 'Save & Pay ' + amt);   // on profile page show the amt in button
+            cc_submit.prop('value', 'Save & Pay ' + (amt/100));   // on profile page show the amt in button
         } else if (url.pathname == '/users') {
             hide_account_type(document.getElementById('referrer').value);
         }
@@ -45,6 +45,14 @@ $(document).ready(function () {
         } else {
             $("#rhombusPower").addClass('hide');
         }
+    }
+
+    function validate_captured_amt(str) {
+      if (str.match(/^\d+$/)) {
+        str = parseInt(str);
+        if (str < 1500000) return str;
+      }
+      return false;
     }
 
     ///// toggle card/login info for user's profile
@@ -929,7 +937,7 @@ $(document).ready(function () {
                         }
                     }
                 },
-                'user[business_zip_code]': {
+                'user[zip_code]': {
                     row: '.form-group',
                     validators: {
                         notEmpty: {
@@ -1476,58 +1484,66 @@ $(document).ready(function () {
   // http://blog.teamtreehouse.com/uploading-files-ajax
   // but modified to send just one file.
   var csv_upload_button = document.getElementById('csv-upload-button'); 
-  document.getElementById('csv-upload-form').onsubmit = function(e) {
-    function set_button_attr(innerhtml, disabled) {
-      csv_upload_button.innerHTML = innerhtml;
-      csv_upload_button.disabled = disabled;
-    } 
+  var csv_upload_form = document.getElementById('csv-upload-form'); 
+  if (csv_upload_form) {
+    csv_upload_form.onsubmit = function(e) {
+      function set_button_attr(innerhtml, disabled) {
+        csv_upload_button.innerHTML = innerhtml;
+        csv_upload_button.disabled = disabled;
+      } 
 
-    function send_payload(payload) {
-      var xhr = new XMLHttpRequest();             // Set up the request.
-      xhr.open('POST', '/v1/users/add_customers.csv', true);    // Open the connection.
-      xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
-      xhr.onload = function () {
-        if (xhr.readyState === 4) {
-          if (xhr.status === 200) {
-          } else {
-            console.log('Something went wrong on our end.')
+      function send_payload(payload) {
+        var xhr = new XMLHttpRequest();             // Set up the request.
+        xhr.open('POST', '/v1/users/add_customers.csv', true);    // Open the connection.
+        xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+        xhr.onload = function () {
+          if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+            } else {
+              console.log('Something went wrong on our end.')
+            }
+            console.log(JSON.parse(xhr.responseText));
+            set_button_attr("Upload", false);
           }
-          console.log(JSON.parse(xhr.responseText));
+        };
+
+        xhr.onerror = function (e) {
+          console.log(xhr.statusText);
           set_button_attr("Upload", false);
-        }
-      };
-
-      xhr.onerror = function (e) {
-        console.log(xhr.statusText);
-        set_button_attr("Upload", false);
-      };
-      xhr.send(payload);        // Send the Data.
-    }
-
-    e.preventDefault();
-    var files = document.getElementById('csv-file-select').files;            // Get the selected files from the input.
-    var length = files.length;
-    var formData = new FormData();                                            // Create a new FormData object.
-    
-    // Loop through each of the selected files.
-    for (var i = 0; i < length; i++) {
-      set_button_attr("Uploading...", true);
-
-      var file = files[i];          
-      if (!file.type.match('csv')) {             // Check the file type.
-        console.log("Can't upload file type");
-        continue;
+        };
+        xhr.send(payload);        // Send the Data.
       }
 
-      formData.append('csv', file, file.name);    // Add the file to the request.
-    }
+      e.preventDefault();
+      var files = document.getElementById('csv-file-select').files;            // Get the selected files from the input.
+      var length = files.length;
+      var formData = new FormData();                                            // Create a new FormData object.
+      
+      // Loop through each of the selected files.
+      for (var i = 0; i < length; i++) {
+        set_button_attr("Uploading...", true);
 
-    if (length > 0) {
-      send_payload(formData);   
+        var file = files[i];          
+        if (!file.type.match('csv')) {             // Check the file type.
+          console.log("Can't upload file type");
+          continue;
+        }
+
+        formData.append('csv', file, file.name);    // Add the file to the request.
+      }
+
+      if (length > 0) {
+        send_payload(formData);   
+      }
     }
   }
   // end csv file upload
 
+
+  ///// add a customer
+
+
+  ///// add a customer
     
 
 

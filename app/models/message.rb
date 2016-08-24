@@ -1,7 +1,9 @@
 class Message < ActiveRecord::Base
 
 	belongs_to :txn, :foreign_key => :transaction_id, :class_name => :Transaction
-	belongs_to :image, dependent: :destroy
+
+	has_many :image_refs, as: :imageable, dependent: :destroy
+  has_many :images, through: :image_refs, dependent: :destroy
 
 	# belongs_to :user, counter_cache: true
 	
@@ -51,10 +53,10 @@ class Message < ActiveRecord::Base
 			if options[:from]
 				# Attached the phone number and user id
 				self.from = options[:from]
-				self.user_id_from = User.find_by(rhombus_number: "#{options[:from]}").id rescue 0
+				self.user_id = User.find_by(rhombus_number: "#{options[:from]}").id rescue 0
 				# when guests message us
-				if self.user_id_from == 0
-	       	self.user_id_from = User.find_by(phone_number: "#{options[:from]}").id rescue 0
+				if self.user_id == 0
+	       	self.user_id = User.find_by(phone_number: "#{options[:from]}").id rescue 0
 				end
 			end
 
@@ -78,14 +80,14 @@ class Message < ActiveRecord::Base
 	# Returns hash with the last "num_messages" messages that the given user has sent to the given merchant
  	def self.get_user_messages_by_merchant(user_number, merchant_id, num_messages)
 	    messages = Message.includes(:image)
-	    									.select('`messages`.`user_id_from`,`messages`.`text`,`messages`.`unread`,`messages`.`created_at`,`users`.`user_level`, `messages`.`image_id`')
-		                   	.joins('LEFT JOIN `users` ON (`users`.`id` = `messages`.`user_id_from`)')
-		                   	.where('(`messages`.`from` = ? AND `messages`.`user_id_to` = ?) OR (`messages`.`user_id_from` = ? AND `messages`.`to` = ?)', user_number, merchant_id, merchant_id, user_number)
+	    									.select('`messages`.`user_id`,`messages`.`text`,`messages`.`unread`,`messages`.`created_at`,`users`.`user_level`, `messages`.`image_id`')
+		                   	.joins('LEFT JOIN `users` ON (`users`.`id` = `messages`.`user_id`)')
+		                   	.where('(`messages`.`from` = ? AND `messages`.`user_id_to` = ?) OR (`messages`.`user_id` = ? AND `messages`.`to` = ?)', user_number, merchant_id, merchant_id, user_number)
 		                   	.order('`messages`.`created_at` DESC').limit(num_messages)
 	    latest_messages = Array.new
 	    messages.reverse.each do |message|
 	      latest_messages.push({
-	        :user_number => message.user_id_from,
+	        :user_number => message.user_id,
 	        :user_level => message.user_level.blank? ? 0 : message.user_level,
 	        :profile_image => (message.user_level.blank? || (message.user_level == 0)) ? ActionController::Base.helpers.asset_path('user_icon_50x50.png') : ActionController::Base.helpers.asset_path('rhombus_icon_50x50.png'),
 	        :text => (message.text) ? message.text : nil,

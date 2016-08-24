@@ -35,9 +35,10 @@ module CSVHandler
       
       headers_checked = false
     	response = []
-      headers = [:first_name, :last_name, :email, :phone_number, :street_address, :city, :state_province, :country, :business_zip_code]
+      headers = [:first_name, :last_name, :email, :phone_number, :street_address, :city, :state_province, :country, :zip_code]
       
       CSV.foreach(file, headers: true, skip_blanks: true, header_converters: :symbol, skip_lines: /^(?:[,:]\s*)+$/) do |row|
+        
         error = false
         if !headers_checked
         	headers_ary = row.map { |v| v[0] }
@@ -48,50 +49,54 @@ module CSVHandler
         end
         
         row = row.to_hash
-        
-        # don't process the dummy data we put in the template file
-        unless row[:email] == '<redacted_email>'
-          error_message = "Unable to add customer with email: #{row[:email]} because"
-  			      		   		
-  	   		# Validate number
-  	      valid_num = TextingService.number_lookup(row[:phone_number])
-  	      if valid_num.present?
-  	      	row[:phone_number] = valid_num[0]
-  	      	if num_reach == 'domestic' && self.country != valid_num[1]
-  	      		response.push(error_message + " your rhombus number has only domestic reach.")
-  	      		error = true
-  	      	end
-  	      else
-  	      	response.push(error_message + " phone_number is invalid.")
-  	      	error = true
-  	      end
+        user = User.where(email: row[:email])
 
-  	      # set user_level and password
-  				row[:user_level] = 0
-  				row[:password] = Toolbox::StringGen.generate_random_string(8)
-  				row[:referrer_num] = self.rhombus_number
-  				row[:country].present? && row[:country] = row[:country].upcase
+        if user.empty?
+          # don't process the dummy data we put in the template file
+          unless row[:email] == '<redacted_email>'
+            error_message = "Unable to add customer with email: #{row[:email]} because"
+                          
+            # Validate number
+            valid_num = TextingService.number_lookup(row[:phone_number])
+            if valid_num.present?
+              row[:phone_number] = valid_num[0]
+              if num_reach == 'domestic' && self.country != valid_num[1]
+                response.push(error_message + " your rhombus number has only domestic reach.")
+                error = true
+              end
+            else
+              response.push(error_message + " phone_number is invalid.")
+              error = true
+            end
 
-  				# validate user data against db
-  				if error
-  					user = User.new(row)
-  					user.valid?
-  				else 
-  					user = User.create(row)
-  				end
-  				
-  				# check for errors
-  				if user.errors.messages.present?
-  					user.errors.messages.each do |k,v|
-  						v.each do |r|
-  							response.push(error_message + " #{k} #{r}.")
-  						end
-  					end
-  				else
-  					# send email or text here
-  				end	
+            # set user_level and password
+            row[:user_level] = 0
+            row[:password] = Toolbox::StringGen.generate_random_string(8)
+            row[:referrer_num] = self.rhombus_number
+            row[:country].present? && row[:country] = row[:country].upcase
 
-  			end
+            # validate user data against db
+            if error
+              user = User.new(row)
+              user.valid?
+            else 
+              user = User.create(row)
+            end
+            
+            # check for errors
+            if user.errors.messages.present? || error
+              user.errors.messages.each do |k,v|
+                v.each do |r|
+                  response.push(error_message + " #{k} #{r}.")
+                end
+              end
+            else
+              # send email or text here
+            end 
+          end  
+        else
+          # send text here
+        end     
       end
       response
     rescue StandardError => e

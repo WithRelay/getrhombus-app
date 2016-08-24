@@ -10,7 +10,8 @@ module AdditionalUserActions
       @user.short_url = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?referrer_num=#{@user.rhombus_number}&referrer=#{@user.business_name}")
       @user.save
     end
-    render layout: 'application_dashboard_messaging'
+    # change back
+    render layout: 'xxx'
   end
 
   # Returns JSON object with user hash who sent a message to the given merchant in the last CONFIG[:dashboard]['messaging']['num_days_history'] days
@@ -59,6 +60,9 @@ module AdditionalUserActions
 
   def transactions
     @transactions = @user.get_user_transactions.paginate(:page => params[:page], :per_page => 25)
+      # remove
+        render layout: 'xxx'
+
   end
 
   def build_user_link
