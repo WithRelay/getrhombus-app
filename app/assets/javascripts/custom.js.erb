@@ -4,13 +4,11 @@ $(document).ready(function () {
     // help change user controller to handle captured payments for signin
     // help add tag_id to captured payments in signin and signup and in the forms
 
-    var url = window.location,    
-        global_page_params = { num: '', amt: '' },
-        cc_year, cc_month, txn_details, 
+    var url = window.location, global_page_params = { num: '', amt: '' },
+        cc_year, cc_month, cc_submit_btn, cc_error, cc_submit_text,
         REFUND_TXN_LINK, REFUND_BOX = $('#refundFormBox'),
-        chart_labels = [], chart_totals = [], 
-        chart_txns = [], contact_url = '/contact_forms.json', 
-        cc_submit = $('#cc-submit'), searchNumBtn = $('#searchNumberBtn');
+        chart_labels = [], chart_totals = [], chart_txns = [], 
+        contact_url = '/contact_forms.json', searchNumBtn = $('#searchNumberBtn');
     
     GetURLParameter();
     $.ajaxSetup({ cache:false });
@@ -601,7 +599,7 @@ $(document).ready(function () {
         })
         .on('success.form.fv', function(e, data) {
             set_number();
-            set_names("settingsPage");
+            set_names();
         });
     ///
 
@@ -1000,44 +998,41 @@ $(document).ready(function () {
     // validate merchant profile form
 
    
-    // Stripe form validator for CC form
-    $('input#cc-number').payment('formatCardNumber');
-    $('input#cc-exp').payment('formatCardExpiry');
-    $('input#cc-csc').payment('formatCardCVC');
-    // tokenize card details
-    function submit_to_stripe() {        
-        //console.log($('#cc-number').val())
-        var btn_text = button.val(); 
-        button.attr("disabled", true).val("Please wait...");     
-        Stripe.card.createToken({
-            name: $('#cc-name').val(),
-            number: $('#cc-number').val(),
-            exp_month: cc_month,
-            exp_year: cc_year,
-            cvc: $('#cc-csc').val()
-        }, stripeResponseHandler);
-        button.attr("disabled", false).val(btn_text);     
-    }  
+  // Stripe form validator for CC form
+  $('input#cc-number').payment('formatCardNumber');
+  $('input#cc-exp').payment('formatCardExpiry');
+  $('input#cc-csc').payment('formatCardCVC');
+  // tokenize card details
+  function submit_to_stripe() {        
+    Stripe.card.createToken({
+        name: $('#cc-name').val(),
+        number: $('#cc-number').val(),
+        exp_month: cc_month,
+        exp_year: cc_year,
+        cvc: $('#cc-csc').val()
+    }, stripeResponseHandler);        
+  }  
 
-    function stripeResponseHandler(status, response) {
-        if (response.error) {
-            // show the errors on the form
-            $('.panel-body').append(response.error.message);
-            $('#response').slideDown(300);
-        } else {
-            $('#cc-number').val(response['card']['last4']);
-            $('#cc-ex-month').val(response['card']['exp_month']);
-            $('#cc-ex-year').val(response['card']['exp_year']);
-            document.getElementById('cc-uri').value = response.id;            
-            $('#cc-type').val(response['card']['type']);
-            $("#user-form").unbind("submit", preventDefault).submit();
-        }
+  function stripeResponseHandler(status, response) {
+    if (response.error) {
+      // show the errors on the form
+      $('.panel-body').append(response.error.message);
+      $('#response').slideDown(300);
+    } else {
+      $('#cc-number').val(response['card']['last4']);
+      $('#cc-ex-month').val(response['card']['exp_month']);
+      $('#cc-ex-year').val(response['card']['exp_year']);
+      $('#cc-uri').val(response.id);
+      $('#cc-type').val(response['card']['brand']);
+      //cc_form.unbind("submit", preventDefault).submit();
     }
-    ///// End stripe form stuff
+    cc_submit_btn.attr("disabled", false).val(cc_btn_text);
+  }
+  ///// End stripe form stuff
 
-    function preventDefault(e) {
-        e.preventDefault();
-    }
+  function preventDefault(e) {
+    e.preventDefault();
+  }
 
     // validate credit card form
     $('#user-form')
@@ -1100,7 +1095,7 @@ $(document).ready(function () {
                     validators: {
                         callback: {
                             callback: function (value, validator, $field) {
-                                var y = $('input#cc-exp').payment('cardExpiryVal');
+                                var y = get_expiry_date_data();
                                 cc_month = y.month; cc_year = y.year;
                                 if ($.payment.validateCardExpiry(cc_month, cc_year)) {
                                     return {
@@ -1152,26 +1147,31 @@ $(document).ready(function () {
                 .find('.help-block[data-fv-for="' + data.field + '"]').hide();
         })
         .on('success.form.fv', function(e, data) {            
-            $("#user-form").bind("submit", preventDefault);
-            set_names("ccPage");
+            set_names("ccPage");         
+
+            cc_form = $("#user-form").bind("submit", preventDefault);
             $('#response').hide();
-            $(".panel-body").html('');            
-            submit_to_stripe(cc_submit);
+            $(".panel-body").html('');
+            cc_btn_text = $('#cc-submit').val();
+            cc_submit_btn = $('#cc-submit').attr("disabled", true).val("Please wait...");
+            submit_to_stripe();
         });
     ///
 
 
     function set_names(page) {
-        var fullname = (page == "ccPage") ? (document.getElementById('cc-name').value).trim() : (document.getElementById('user_full_name').value).trim();
-        var firstName = fullname.substr(0, fullname.indexOf(' '));
-        var lastName = fullname.substr(fullname.indexOf(' ')+1);
+        var fullName = (page == "ccPage") ? (document.getElementById('cc-name').value).trim() : (document.getElementById('user_full_name').value).trim();
+        var firstName = fullName.substr(0, fullName.indexOf(' ')),
+            lastName = fullName.substr(fullName.indexOf(' ')+1);
         if (!firstName && lastName) {
             firstName = lastName;
             lastName = "";
         }            
-        document.getElementById('firstName').value = firstName;
-        document.getElementById('lastName').value = lastName;         
+        $('#firstName').val(firstName);
+        $('#lastName').val(lastName);
     }
+
+    function get_expiry_date_data() { return $('input#cc-exp').payment('cardExpiryVal'); }
 
     function set_number() {
         document.getElementById('phone_number').value = telInput.intlTelInput("getNumber").replace("+", '');
@@ -1539,20 +1539,35 @@ $(document).ready(function () {
 
 
   ///// add a customer
-  $('create-user-form').submit(function(e){
+  $('#create-user-form').submit(function(e){
     e.preventDefault();
 
     // run validations for email and phone number...have variable for fail
     // if good above and card number is present, send card details to stripe if...set fail variable
     // no validations for address or lists
     // if all pass, submit_contact_form
-    
-/*
+
+    var y = get_expiry_date_data();
+    cc_month = y.month; cc_year = y.year; 
+    //cc_form = $("#create-user-form").bind("submit", preventDefault);
+    cc_btn_text = $('#create-user-submit').val();
+    cc_submit_btn = $('#create-user-submit').attr("disabled", true).val("Please wait...");  
+    set_names();
+    set_number();
+    submit_to_stripe();  
+
+
+    // added accept nested attributes for lists
+    // hashes of hashes or array of hashes for lists
+    console.log($(this).serialize())
+  
+///*
     $.ajax({
-        url: "/v1/numbers/search.json",
-        type: "GET",
-        data: {},
-        dataType: "json"     
+        url: "/v1/users/add_customers.json",
+        beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
+        type: "POST",
+        data: $(this).serialize(),
+        dataType: "json"   
     })
       .done(function(data, textStatus, jqXHR) {
         console.log(data);    
@@ -1562,7 +1577,7 @@ $(document).ready(function () {
       })   
       .always(function(data, textStatus, response) {
       }); 
-*/
+//*/
   })
 
   ///// add a customer
