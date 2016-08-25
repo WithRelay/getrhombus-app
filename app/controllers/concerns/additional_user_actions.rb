@@ -53,21 +53,28 @@ module AdditionalUserActions
   end
 
   def contacts
-     @contacts = @user.get_user_contacts.paginate(:page => params[:page], :per_page => 25)
+    if current_user.user_level == 0
+      @contacts = @user.get_customer_contacts.paginate(:page => params[:page], :per_page => 25)
+    else
+      @contacts = @user.get_merchant_contacts.paginate(:page => params[:page], :per_page => 25)
+    end
   end
 
   def customers
-    @customers = @user.get_user_customers.paginate(:page => params[:page], :per_page => 25)
+    @customers = @user.get_merchant_customers.paginate(:page => params[:page], :per_page => 25)
   end
 
   def businesses
-    @businesses = @user.get_user_customers.paginate(:page => params[:page], :per_page => 25)
+    @businesses = @user.get_customer_businesses.paginate(:page => params[:page], :per_page => 25)
   end
 
   def transactions
-    @transactions = @user.get_user_transactions.paginate(:page => params[:page], :per_page => 25)
-    # remove
-    render layout: 'xxx'
+    if current_user.user_level == 0
+      @transactions = @user.get_customer_transactions.paginate(:page => params[:page], :per_page => 25)
+    else
+      @transactions = @user.get_merchant_transactions.paginate(:page => params[:page], :per_page => 25)
+    end   
+    render layout: 'xxx' # remove
   end
 
   def build_user_link

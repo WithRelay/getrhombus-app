@@ -1,0 +1,144 @@
+module DashboardMerchantQueries
+	extend ActiveSupport::Concern
+
+	# Customers who have paid
+	@@customers_query_txns = "(SELECT transactions.created_at, @users_ids := users.id, users.card_name, users.email, 
+		users.phone_number, SUM(transactions.amount) AS total_spend, MIN(transactions.created_at) AS first_visit, 
+		AVG(transactions.amount) AS avg_spend, max(transactions.created_at) AS last_visit,
+		SUM(transactions.created_at BETWEEN NOW() - INTERVAL 30 DAY AND NOW()) AS last_30 
+		FROM transactions INNER JOIN users ON transactions.referenced_user_id = users.id
+		WHERE user_id = ? "
+
+	# Customers who have the referrer_num set
+	@@customers_query_referrer = "(select created_at, id, users.card_name, users.email, users.phone_number, 0 as total_spend, 
+																	null as first_visit, 0 as avg_spend, null AS last_visit, 0 AS last_30 
+																	from users where referrer_num = ? "
+
+	@@num_of_days_txns = " and (transactions.created_at BETWEEN NOW() - INTERVAL "
+	@@num_of_days_referrer = " and (created_at BETWEEN NOW() - INTERVAL "
+
+	def get_merchant_transactions
+		Transaction.find_by_sql([
+			"SELECT users.card_name, users.email, transactions.created_at, transactions.last_four, transactions.notes, 
+			 transactions.amount_less_fees, users.phone_number, transactions.transaction_number, transactions.transaction_uri, 
+			  transactions.tax_rate, transactions.refund_id
+				FROM transactions 
+				INNER JOIN users on transactions.referenced_user_id = users.id
+				where user_id = ? ORDER BY transactions.created_at DESC", self.id])
+		# and transaction_type = ?
+	end	
+
+	# active + new with active having the higher precedence in the intersect
+	def get_merchant_customers(num_of_days='')
+		num_of_days_txns = ''
+		num_of_days_referrer = ''
+		
+		if num_of_days.present?
+			num_of_days_txns = @@num_of_days_txns + num_of_days.to_s + " DAY AND NOW()) " 
+			num_of_days_referrer = @@num_of_days_referrer + num_of_days.to_s + " DAY AND NOW()) " 
+		end
+		
+		query = "#{@@customers_query_txns} #{num_of_days_txns} GROUP BY transactions.referenced_user_id) UNION #{@@customers_query_referrer} 
+							and id NOT IN (@users_ids) #{num_of_days_referrer}) ORDER BY created_at DESC" 
+		Transaction.find_by_sql([query, self.id, self.rhombus_number])		
+		# and transaction_type = ?
+	end	
+
+	# whoever paid you in the last num_of_days
+	def get_active_customers(num_of_days=14)
+		Transaction.find_by_sql(["#{@@customers_query_txns} #{@@num_of_days_txns} #{num_of_days.to_s} DAY AND NOW()) HAVING COUNT(*) > 0)", self.id])
+	end
+
+	# whoever signed up with your link in the last num_of_days
+	def get_new_customers(num_of_days=30)
+		Transaction.find_by_sql(["#{@@customers_query_referrer} #{@@num_of_days_referrer} #{num_of_days.to_s} DAY AND NOW()))", self.rhombus_number])
+	end
+
+	def get_merchant_contacts_without_signups
+		Message.find_by_sql([
+			"SELECT count(*) as total, users.card_name, users.email, users.phone_number,
+				MIN(messages.created_at) as first_conversation, 
+				MAX(messages.created_at) as last_conversation
+				FROM messages
+				INNER JOIN users ON
+				messages.user_id_to = users.id 
+				WHERE user_id = ? GROUP BY messages.user_id_to 
+				ORDER BY messages.created_at DESC", self.id])
+	end	
+
+	def get_merchant_contacts_with_signups
+
+	end
+
+	def get_merchant_contacts
+
+	end
+
+	def dashboard_stats
+		if self.user_level == 0
+			Transaction.find_by_sql([
+				'SELECT SUM(IF(DATE(created_at) >= curdate(), amount, 0)) AS todays_sales,
+	                SUM(DATE(created_at) >= curdate()) AS todays_txn,
+	                COUNT(DISTINCT referenced_merchant_id) AS count,
+	                SUM(amount) AS sales_till_date,
+	                SUM(DATE(created_at) BETWEEN DATE_SUB(curdate(), INTERVAL 30 DAY) AND curdate()) AS txn_last_30days
+	                from transactions
+	                WHERE user_id = ? and refund_id is NULL', self.id])
+			#and transaction_type = ?
+		elsif self.user_level == 1
+			Transaction.find_by_sql([
+				'SELECT SUM(IF(DATE(created_at) >= curdate(), amount_less_fees, 0)) AS todays_sales,
+	                SUM(DATE(created_at) >= curdate()) AS todays_txn,
+	                COUNT(DISTINCT referenced_user_id) AS count,
+	                SUM(amount) AS sales_till_date,
+	                SUM(DATE(created_at) BETWEEN DATE_SUB(curdate(), INTERVAL 30 DAY) AND curdate()) AS txn_last_30days
+	                from transactions
+	                WHERE user_id = ? and refund_id is NULL', self.id])
+			#and transaction_type = ?
+		end
+	end
+
+	def get_total_messages
+		return Message.where("user_id = ? and DATE(created_at) BETWEEN DATE_SUB(curdate(), INTERVAL 30 DAY) AND curdate()", self.id).count if self.user_level == 0
+		Message.where("user_id = ? or user_id_to = ? and DATE(created_at) BETWEEN DATE_SUB(curdate(), 
+							INTERVAL 30 DAY) AND curdate()", self.id, self.id).count if self.user_level == 1
+	end
+
+	def get_line_stats
+		if self.user_level == 0
+			Transaction.find_by_sql([
+				'select count(*) as num_of_txns, sum(amount) as day_total,
+					date_format(date(created_at), "%b %e") as day from transactions where user_id = ?
+					and refund_id is NULL and DATE(created_at) BETWEEN DATE_SUB(curdate(), INTERVAL 7 DAY) AND curdate() 	
+					GROUP BY DAY(created_at)', self.id])
+				#and transaction_type = ?
+		elsif self.user_level == 1
+			Transaction.find_by_sql([
+				'select count(*) as num_of_txns, sum(amount_less_fees) as day_total,
+					date_format(date(created_at), "%b %e") as day from transactions where user_id = ?
+					and refund_id is NULL and DATE(created_at) BETWEEN DATE_SUB(curdate(), INTERVAL 7 DAY) AND curdate() 
+					GROUP BY DAY(created_at)', self.id])
+				#and transaction_type = ?	
+		end
+	end
+
+	def get_area_stats
+		if self.user_level == 0
+			Transaction.find_by_sql([
+				'select sum(amount) as week_total,
+					date_format(date(created_at), "%b %e") as week_day from transactions where user_id = ?
+					and refund_id is NULL and DATE(created_at) BETWEEN DATE_SUB(curdate(), INTERVAL 30 DAY) AND curdate() 	
+					GROUP BY WEEk(created_at)', self.id])
+				#  and transaction_type = ?
+		elsif self.user_level == 1
+			Transaction.find_by_sql([
+				'select sum(amount_less_fees) as week_total,
+					date_format(date(created_at), "%b %e") as week_day from transactions where user_id = ?
+					and refund_id is NULL and DATE(created_at) BETWEEN DATE_SUB(curdate(), INTERVAL 30 DAY) AND curdate() 
+					GROUP BY WEEK(created_at)', self.id])
+				#and transaction_type = ?	
+		end
+	end
+
+end
+

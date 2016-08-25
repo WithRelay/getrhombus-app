@@ -34,7 +34,7 @@ Rails.application.routes.draw  do
   end
   
   # user routes
-  resources :users, :only => :show, param: :id do
+  resources :users, :only => :show do
     resources :hashtags
     
     member do
