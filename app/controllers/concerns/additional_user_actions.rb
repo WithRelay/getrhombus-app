@@ -60,11 +60,14 @@ module AdditionalUserActions
     @customers = @user.get_user_customers.paginate(:page => params[:page], :per_page => 25)
   end
 
+  def businesses
+    @businesses = @user.get_user_customers.paginate(:page => params[:page], :per_page => 25)
+  end
+
   def transactions
     @transactions = @user.get_user_transactions.paginate(:page => params[:page], :per_page => 25)
-      # remove
-        render layout: 'xxx'
-
+    # remove
+    render layout: 'xxx'
   end
 
   def build_user_link
@@ -91,7 +94,7 @@ module AdditionalUserActions
   end
 
   def customer_csv_template
-    render :template => "static_pages/to_404.html" and return if !current_user && current_user.user_level != 1
+    render :template => "static_pages/to_404.html" and return if !current_user
     response = current_user.get_customer_csv_template
     if response
       respond_to do |format|

@@ -46,7 +46,7 @@ Rails.application.routes.draw  do
       get 'send_message_from_merchant/:user_number' => 'users#send_message_from_merchant'
       get 'transactions' => 'users#transactions'
       get 'customers' => 'users#customers'
-      get 'businesses' => 'users#customers'
+      get 'businesses' => 'users#businesses'
     end
   end 
   

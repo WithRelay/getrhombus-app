@@ -1,4 +1,4 @@
-<%= provide(:title, "Rhombus - Customers") %>
+<%= provide(:title, "Rhombus - Businesses") %>
 
 <!-- ========== Css Files ========== -->
   
@@ -22,7 +22,7 @@
 
   <!-- Start Page Header -->
   <div class="page-header" style="background: transparent; margin-bottom: 0px;">
-    <div class="title" style="font-weight: normal;">Customers</div>
+    <div class="title" style="font-weight: normal;">Businesses</div>
 
     <%= render 'shared/dashboard_shortcut' %>
   </div>
@@ -36,7 +36,7 @@
 
         <!-- Start Panel -->
         <div class="col-md-12">
-          <% unless @customers.blank? %>
+          <% unless @businesses.blank? %>
               <div class="panel panel-default">
                 <div class="panel-title">
                   <ul class="panel-tools">
@@ -58,22 +58,22 @@
                       </tr>
                     </thead>
                     <tbody>
-                    <% @customers.each do |c| %>
+                    <% @businesses.each do |b| %>
                       <tr role="row">
-                        <td class="details-control" data-page="users" data-email="<%= c.email %>"
-                          data-phone="<%= c.phone_number %>"
+                        <td class="details-control" data-page="users" data-email="<%= b.email %>"
+                          data-phone="<%= b.business_phone %>"
 
                           <%# if current_user.user_level == 0 %>
-                             <%# data-rhombus-number= <%= c.rhombus_number %>
+                             <%# data-rhombus-number= <%= b.rhombus_number %>
                           <%# end %>
 
                         ></td>
-                        <td><%= c.card_name %></td>
-                        <td><%= (c.first_visit) ? c.first_visit.strftime("%m/%d/%Y") : '--' %></td>
-                        <td><%= (c.last_visit) ? c.last_visit.strftime("%m/%d/%Y") : "--" %></td>
-                        <td><%= number_to_currency(c.avg_spend) %></td>
-                        <td><%= number_to_currency(c.total_spend) %></td>
-                        <td><%= c.last_30 %></td>
+                        <td><%= b.business_name %></td>
+                        <td><%= (b.first_visit) ? b.first_visit.strftime("%m/%d/%Y") : '--' %></td>
+                        <td><%= (b.last_visit) ? b.last_visit.strftime("%m/%d/%Y") : "--" %></td>
+                        <td><%= number_to_currency(b.avg_spend) %></td>
+                        <td><%= number_to_currency(b.total_spend) %></td>
+                        <td><%= b.last_30 %></td>
                       </tr>
                     <% end %>
                     </tbody>
@@ -83,12 +83,12 @@
             <% else %>
             <div class="center">
                 <img src="<%= asset_path 'no-user.png' %>" alt="no user">
-                <div class="no-user">You have no customers :(</div>
+                <div class="no-user">You have no businesses :(</div>
             </div>
           <% end %>
         </div>
         <!-- End Panel -->
-          <div style="text-align: center; margin-bottom: 40px;"><%= will_paginate @customers, :page_links => false %></div>
+          <div style="text-align: center; margin-bottom: 40px;"><%= will_paginate @businesses, :page_links => false %></div>
       </div>
       <!-- End Row -->
     </div>
