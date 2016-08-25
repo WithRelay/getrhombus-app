@@ -21,7 +21,9 @@
   <!-- Start Page Header -->
   <div class="page-header" style="background: transparent; margin-bottom: 0px;">
     <div class="title" style="font-weight: normal;"><%= (current_user.user_level == 0) ? "Businesses" : "Customers" %></div>
-
+    <% if (current_user.user_level == 1) %>
+        <%= submit_tag 'Create List', :type => 'button', disabled: true %>
+    <% end %>
     <%= render 'shared/dashboard_shortcut' %>
   </div>
 
