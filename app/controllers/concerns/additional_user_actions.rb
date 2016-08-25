@@ -6,12 +6,14 @@ module AdditionalUserActions
       redirect_to :root and return
     end
     # Generate bitly if blank
+    # this should go ....should never happen again in v 1.5 upward
     if @user.short_url.blank?
       @user.short_url = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?referrer_num=#{@user.rhombus_number}&referrer=#{@user.business_name}")
       @user.save
     end
     # change back
-    render layout: 'xxx'
+    render layout: 'application_dashboard_messaging'
+    #render layout: 'xxx'
   end
 
   # Returns JSON object with user hash who sent a message to the given merchant in the last CONFIG[:dashboard]['messaging']['num_days_history'] days

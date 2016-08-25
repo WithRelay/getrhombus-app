@@ -30,6 +30,7 @@ class MessagesController < ApplicationController
 
   def dashboard_mms
     begin
+      raise StandardError if !current_user
       image = Image.create(avatar: params[:file])                 # twilio supports only gif, png and jpeg though it accepts other types
       message = Message.new
       message.image_id = image.id
