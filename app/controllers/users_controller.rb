@@ -81,9 +81,15 @@ class UsersController < ApplicationController
   end
 
 private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_user
-      @user = current_user #User.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_user
+    @user = current_user #User.find(params[:id])
+  end
+
+  def user_params
+    params.require(:user).permit(:email, :password, :first_name, :last_name, :phone_number,
+      :card_name, :expiration_month, :expiration_year, :instrument_uri, :card_type, :street_address,
+      :state_province, :country, :user_level)
+  end
 
 end

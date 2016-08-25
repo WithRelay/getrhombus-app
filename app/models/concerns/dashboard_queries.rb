@@ -30,27 +30,36 @@ module DashboardQueries
 	def get_user_customers
 		if self.user_level == 0
 			Transaction.find_by_sql([
-				"SELECT users.business_name, users.email, users.business_phone, SUM(transactions.amount) AS total_spend,
+				"(SELECT transactions.created_at, @users_ids := users.id, users.business_name, users.email, users.business_phone, SUM(transactions.amount) AS total_spend,
 					MIN(transactions.created_at) AS first_visit, AVG(transactions.amount) AS avg_spend, 
 					max(transactions.created_at) AS last_visit, users.rhombus_number,
 					SUM(DATE(transactions.created_at) BETWEEN DATE_SUB(curdate(), INTERVAL 30 DAY) AND curdate()) AS last_30 
-					FROM transactions
-					INNER JOIN users ON
-					transactions.referenced_merchant_id = users.id
-					WHERE user_id = ?
-					GROUP BY transactions.referenced_merchant_id ORDER BY transactions.created_at DESC", self.id])
+					FROM transactions INNER JOIN users ON transactions.referenced_merchant_id = users.id
+					WHERE user_id = ? GROUP BY transactions.referenced_merchant_id)
+
+					UNION
+
+					(select null, id, users.business_name, users.email, users.business_phone, 0 as total_spend, null as first_visit, 
+					0 as avg_spend, null AS last_visit, users.rhombus_number, 0 AS last_30 
+					from users where rhombus_number = ? and id NOT IN (@users_ids))
+
+					ORDER BY created_at DESC", self.id, self.referrer_num])
 			# and transaction_type = ?
 		elsif self.user_level == 1
 			Transaction.find_by_sql([
-				"SELECT users.card_name, users.email, users.phone_number, SUM(transactions.amount) AS total_spend,
-					MIN(transactions.created_at) AS first_visit, AVG(transactions.amount) AS avg_spend, 
-					max(transactions.created_at) AS last_visit,
+				"(SELECT transactions.created_at, @users_ids := users.id, users.card_name, users.email, users.phone_number, SUM(transactions.amount) AS total_spend,
+					MIN(transactions.created_at) AS first_visit, AVG(transactions.amount) AS avg_spend, max(transactions.created_at) AS last_visit,
 					SUM(DATE(transactions.created_at) BETWEEN DATE_SUB(curdate(), INTERVAL 30 DAY) AND curdate()) AS last_30 
-					FROM transactions
-					INNER JOIN users ON
-					transactions.referenced_user_id = users.id
-					WHERE user_id = ?
-					GROUP BY transactions.referenced_user_id ORDER BY transactions.created_at DESC", self.id])
+					FROM transactions INNER JOIN users ON transactions.referenced_user_id = users.id
+					WHERE user_id = ? GROUP BY transactions.referenced_user_id)
+
+					UNION
+
+					(select null, id, users.card_name, users.email, users.phone_number, 0 as total_spend, 
+					null as first_visit, 0 as avg_spend, null AS last_visit, 0 AS last_30 
+					from users where referrer_num = ? and id NOT IN (@users_ids))
+
+					ORDER BY created_at DESC", self.id, self.rhombus_number])
 			# and transaction_type = ?
 		end
 	end	

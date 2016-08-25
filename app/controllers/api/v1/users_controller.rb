@@ -23,18 +23,36 @@ class Api::V1::UsersController < API::V1::BaseController
 		render json: { "users" => users_array }
 	end
 
-
 	def add_customers		
 		begin
-			num_reach = TextingService.twilio_list[current_user.country.to_sym][:types][:local][:reach]
+			status = 500   
 	    if params[:format] == 'csv'
-		    render json: { response: current_user.upload_customer_csv(params['csv'].tempfile, num_reach) }, status: 200
-		  else
-		  	render json: { response: 'Request is not supported.' }, status: 405
+		    response = current_user.upload_customer_csv(params['csv'].tempfile)
+		    status = 200
+		  elsif params[:format] == 'json'		  	
+		  	if User.where(email: params[:user][:email]).present?
+		  		response = "User already exists."	
+		  		status = 409	  	
+		  	else 
+		  		params[:user][:password] = Toolbox::StringGen.generate_random_string(8)
+		  		params[:user][:user_level] = 0
+		  		User.create(api_v1_user_params)
+		  		response = 'User created'
+		  		status = 200
+		  	end		  	
 		  end
 		rescue StandardError => e
-			render json: { response: 'Something went wrong on our end.' }, status: 500
+			 response = 'Something went wrong on our end.'
 		end
+		render json: { response: response }, status: status
+  end
+
+  private
+
+  def api_v1_user_params
+    params.require(:user).permit(:email, :password, :first_name, :last_name, :phone_number,
+      :card_name, :expiration_month, :expiration_year, :instrument_uri, :card_type, :street_address,
+      :state_province, :country, :user_level)
   end
 
 
