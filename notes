@@ -1,7 +1,3 @@
-Messaging Page
-- explore moving to twilio
-- else explore upgrading pubnub and integrating cleanly into rails...not on a separate page
-
 Payment Capture
 - check if /profile affect forms for merchants
 - plug in charge into payment capture workflow
@@ -22,11 +18,16 @@ Hashtags
 - add a customer
 - clean up routes 
 - ovo's task
-- dashboard queries
+- dashboard queries, user_id_to in messages ...no longer saving zero
+
 - charge customer
-- clean up angular stuff
+- clean up angular stuff and upgrade pubnup
+- add organization type
 - Tags
 
+Contact
+- sent u a text doesnt have an account 
+- have an account, sent u a text but ref link isnt yours 
 
 - managed accounts
 - background jobs
