@@ -23,8 +23,7 @@
   <!-- Start Page Header -->
   <div class="page-header" style="background: transparent; margin-bottom: 0px;">
     <div class="title" style="font-weight: normal;">Customers</div>
-        <%= submit_tag 'Create List', :type => 'button', disabled: true %>
-    <% end %>
+        <%= submit_tag 'Create List', :id=>'create_list', :name => 'create_list', :type => 'button', disabled: true %>
     <%= render 'shared/dashboard_shortcut' %>
   </div>
 
@@ -46,10 +45,12 @@
                 </div>
 
                 <div class="panel-body table-responsive">
-                  <table id="transactions-table" class="table table-striped dataTable">
+                  <form id="all_customers">
+                    <table id="transactions-table" class="table table-striped dataTable">
                     <thead>
                       <tr role="row">
                         <td class="text-center"><i class="fa fa-trash" style="visibility: hidden;"></i></td>
+                        <th></th>
                         <th>Name</th>
                         <th>First Visit (ET)</th>
                         <th>Last Visit</th>
@@ -59,26 +60,24 @@
                       </tr>
                     </thead>
                     <tbody>
+                    <% count = 0 %>
                     <% @customers.each do |c| %>
                       <tr role="row">
                         <td class="details-control" data-page="users" data-email="<%= c.email %>"
-                          data-phone="<%= c.phone_number %>"
-
-                          <%# if current_user.user_level == 0 %>
-                             <%# data-rhombus-number= <%= c.rhombus_number %>
-                          <%# end %>
-
-                        ></td>
+                          data-phone="<%= c.phone_number %>"></td>
+                        <td><input type="checkbox" id="checkbox_<%= count %>" class="customer_checkboxes"></input></td>
                         <td><%= c.card_name %></td>
                         <td><%= (c.first_visit) ? c.first_visit.strftime("%m/%d/%Y") : '--' %></td>
                         <td><%= (c.last_visit) ? c.last_visit.strftime("%m/%d/%Y") : "--" %></td>
                         <td><%= number_to_currency(c.avg_spend) %></td>
                         <td><%= number_to_currency(c.total_spend) %></td>
                         <td><%= c.last_30 %></td>
+                        <% count +=1 %>
                       </tr>
                     <% end %>
                     </tbody>
-                  </table>
+                    </table>
+                  </form>
                 </div>
               </div>
             <% else %>
@@ -108,4 +107,30 @@
 
 
 </body>
-</html>
+<!--
+Temporary script for enabling the create list button based on whether something a customer is selected or not
+-->
+<script>
+  $("#create_list").click(function(){
+    alert("I work");
+  })
+  num_checkboxes_selected = 0;
+  $(".customer_checkboxes" ).change(function() {
+    var input = $(this);
+    var state = (input.prop("checked"))
+    if (state == true){
+      num_checkboxes_selected +=1;
+  
+    } else{
+      num_checkboxes_selected -=1;
+    }
+    
+  if (num_checkboxes_selected > 0){
+    console.log("There is a selected checkbox.");
+    $("#create_list").prop('disabled', false);
+  }else{
+    console.log("No selected checkboxes");
+    $("#create_list").prop('disabled', true);
+  }
+})
+</script>
