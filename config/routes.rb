@@ -25,7 +25,7 @@ Rails.application.routes.draw  do
   match "/send_mms_from_dashboard" => 'messages#dashboard_mms', via: [:post]
 
   get "/facebook_webhook" => 'static_pages#fb_webhook'
-  # post "/facebook_webhook" => 'static_pages#fb_webhook'
+  post "/facebook_webhook" => 'static_pages#receive_message'
   # mount MessageQuickly::Engine, at: "/facebook_webhook"
 
 
