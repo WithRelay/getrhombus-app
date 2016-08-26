@@ -27,7 +27,8 @@ class UsersController < ApplicationController
         if current_user.user_level == 0 && params[:captured_amt].present?
           #Transaction.process_captured_payment(@user, params) 
         elsif @user.user_level == 1 && @user.short_url.blank? && @user.rhombus_number.present? 
-          # generate bitly link for merchant if blank and rhombus number exist...should remove this after twilio migration ###
+          # generate bitly link for merchant if blank and rhombus number exist...
+          ###should remove this after twilio migration ###
           @user.short_url = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?referrer_num=#{@user.rhombus_number}&referrer=#{@user.business_name}")
           @user.save
         end
@@ -81,9 +82,15 @@ class UsersController < ApplicationController
   end
 
 private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_user
-      @user = current_user #User.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_user
+    @user = current_user #User.find(params[:id])
+  end
+
+  def user_params
+    params.require(:user).permit(:email, :password, :first_name, :last_name, :phone_number,
+      :card_name, :expiration_month, :expiration_year, :instrument_uri, :card_type, :street_address,
+      :state_province, :country, :user_level)
+  end
 
 end

@@ -1,6 +1,7 @@
 class User < ActiveRecord::Base
 
-  include DashboardQueries
+  include DashboardMerchantQueries
+  include DashboardCustomerQueries
   include CSVHandler
 
   attr_accessor :full_name, :phone, :captured_amt, :msg_id, :tag_id,

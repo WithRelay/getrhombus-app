@@ -6,12 +6,14 @@ module AdditionalUserActions
       redirect_to :root and return
     end
     # Generate bitly if blank
+    # this should go ....should never happen again in v 1.5 upward
     if @user.short_url.blank?
       @user.short_url = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?referrer_num=#{@user.rhombus_number}&referrer=#{@user.business_name}")
       @user.save
     end
     # change back
-    render layout: 'xxx'
+    render layout: 'application_dashboard_messaging'
+    #render layout: 'xxx'
   end
 
   # Returns JSON object with user hash who sent a message to the given merchant in the last CONFIG[:dashboard]['messaging']['num_days_history'] days
@@ -51,18 +53,28 @@ module AdditionalUserActions
   end
 
   def contacts
-     @contacts = @user.get_user_contacts.paginate(:page => params[:page], :per_page => 25)
+    if current_user.user_level == 0
+      @contacts = @user.get_customer_contacts.paginate(:page => params[:page], :per_page => 25)
+    else
+      @contacts = @user.get_merchant_contacts.paginate(:page => params[:page], :per_page => 25)
+    end
   end
 
   def customers
-    @customers = @user.get_user_customers.paginate(:page => params[:page], :per_page => 25)
+    @customers = @user.get_merchant_customers.paginate(:page => params[:page], :per_page => 25)
+  end
+
+  def businesses
+    @businesses = @user.get_customer_businesses.paginate(:page => params[:page], :per_page => 25)
   end
 
   def transactions
-    @transactions = @user.get_user_transactions.paginate(:page => params[:page], :per_page => 25)
-      # remove
-        render layout: 'xxx'
-
+    if current_user.user_level == 0
+      @transactions = @user.get_customer_transactions.paginate(:page => params[:page], :per_page => 25)
+    else
+      @transactions = @user.get_merchant_transactions.paginate(:page => params[:page], :per_page => 25)
+    end   
+    render layout: 'xxx' # remove
   end
 
   def build_user_link
@@ -89,7 +101,7 @@ module AdditionalUserActions
   end
 
   def customer_csv_template
-    render :template => "static_pages/to_404.html" and return if !current_user && current_user.user_level != 1
+    render :template => "static_pages/to_404.html" and return if !current_user
     response = current_user.get_customer_csv_template
     if response
       respond_to do |format|

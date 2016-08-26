@@ -1,7 +1,3 @@
-Messaging Page
-- explore moving to twilio
-- else explore upgrading pubnub and integrating cleanly into rails...not on a separate page
-
 Payment Capture
 - check if /profile affect forms for merchants
 - plug in charge into payment capture workflow
@@ -15,7 +11,28 @@ Subscriptions
 - even if I use stripe's, i still need jobs for stuff like notifications and drip
 - every user is set up as a rhombus customer with their credit card
 
-- IP messaging with twilio
-- move time to ten mins
+Hashtags
+- sms only, mms with optional sms, recurring and payment with auto sms.... cool on these?
+
+
+- add a customer
+- clean up routes 
+- ovo's task
+- dashboard queries, user_id_to in messages ...no longer saving zero
+
+- charge customer
+- clean up angular stuff and upgrade pubnup
+- add organization type
+- Tags
+
+Contact
+- sent u a text doesnt have an account 
+- have an account, sent u a text but ref link isnt yours 
+
+- managed accounts
+- background jobs
+- server notifications
+- drip campaigns
+- subscriptions
 
 

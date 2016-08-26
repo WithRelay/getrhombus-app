@@ -4,13 +4,14 @@ $(document).ready(function () {
     // help change user controller to handle captured payments for signin
     // help add tag_id to captured payments in signin and signup and in the forms
 
-    var url = window.location,    
-        global_page_params = { num: '', amt: '' },
-        cc_year, cc_month, txn_details, 
+    var url = window.location, global_page_params = { num: '', amt: '' },
+
+        cc_year, cc_month, cc_submit_btn, cc_btn_text, form_submission_handler,
+        create_user_submit = $('#create-user-submit'), create_user_form = $('#create-user-form'),
+
         REFUND_TXN_LINK, REFUND_BOX = $('#refundFormBox'),
-        chart_labels = [], chart_totals = [], 
-        chart_txns = [], contact_url = '/contact_forms.json', 
-        cc_submit = $('#cc-submit'), searchNumBtn = $('#searchNumberBtn');
+        chart_labels = [], chart_totals = [], chart_txns = [], 
+        contact_url = '/contact_forms.json', searchNumBtn = $('#searchNumberBtn');
     
     GetURLParameter();
     $.ajaxSetup({ cache:false });
@@ -152,18 +153,18 @@ $(document).ready(function () {
     var get_graph = function(type) {
         // run only on dashboard
         if ($("#isDashboard").attr('data-dashboard') === "true") {
-            $.ajax({
-                url: url.href,
-                type: "GET",
-                data: 'graph=' + type, 
-                dataType: "json"     
+          $.ajax({
+              url: url.href,
+              type: "GET",
+              data: { graph: type }, 
+              dataType: "json"     
+          })
+            .done(function(data, textStatus, response) {
+                 process_chart_data(data, type);
             })
-              .done(function(data, textStatus, response) {
-                   process_chart_data(data, type);
-              })
-              .fail(function(data, textStatus, response) {
-                   process_chart_data([], type);
-              })        
+            .fail(function(data, textStatus, response) {
+                 process_chart_data([], type);
+            })        
         }
     };
 
@@ -601,7 +602,7 @@ $(document).ready(function () {
         })
         .on('success.form.fv', function(e, data) {
             set_number();
-            set_names("settingsPage");
+            set_names();
         });
     ///
 
@@ -1000,394 +1001,393 @@ $(document).ready(function () {
     // validate merchant profile form
 
    
-    // Stripe form validator for CC form
-    $('input#cc-number').payment('formatCardNumber');
-    $('input#cc-exp').payment('formatCardExpiry');
-    $('input#cc-csc').payment('formatCardCVC');
+  // Stripe form validator for CC form
+  $('input#cc-number').payment('formatCardNumber');
+  $('input#cc-exp').payment('formatCardExpiry');
+  $('input#cc-csc').payment('formatCardCVC');
+  // tokenize card details
+  function submit_to_stripe() {        
+    Stripe.card.createToken({
+        name: $('#cc-name').val(),
+        number: $('#cc-number').val(),
+        exp_month: cc_month,
+        exp_year: cc_year,
+        cvc: $('#cc-csc').val()
+    }, stripeResponseHandler);        
+  }  
 
-    // tokenize card details
-    function submitToStripe() {        
-        //console.log($('#cc-number').val())
-        var card_btn_text = cc_submit.val(); 
-        cc_submit.attr("disabled", true).val("Please wait...");     
-        $('#response').hide();
-        $(".panel-body").html('');
-        Stripe.card.createToken({
-            name: $('#cc-name').val(),
-            number: $('#cc-number').val(),
-            exp_month: cc_month,
-            exp_year: cc_year,
-            cvc: $('#cc-csc').val()
-        }, stripeResponseHandler);
-        cc_submit.attr("disabled", false).val(card_btn_text);     
-    }  
-
-    function stripeResponseHandler(status, response) {
-        if (response.error) {
-            // show the errors on the form
-            $('.panel-body').append(response.error.message);
-            $('#response').slideDown(300);
-        } else {
-            $('#cc-number').val(response['card']['last4']);
-            $('#cc-ex-month').val(response['card']['exp_month']);
-            $('#cc-ex-year').val(response['card']['exp_year']);
-            document.getElementById('cc-uri').value = response.id;            
-            $('#cc-type').val(response['card']['type']);
-            $("#user-form").unbind("submit", preventDefault).submit();
-        }
+  function stripeResponseHandler(status, response) {
+    if (response.error) {
+      $('.panel-body').append(response.error.message);
+      $('#response').slideDown(300);
+      cc_submit_btn.attr("disabled", false).val(cc_btn_text);
+    } else {
+      $('#cc-number').val(response['card']['last4']);
+      $('#cc-ex-month').val(response['card']['exp_month']);
+      $('#cc-ex-year').val(response['card']['exp_year']);
+      $('#cc-uri').val(response.id);
+      $('#cc-type').val(response['card']['brand']);
+      form_submission_handler();
     }
-    ///// ///
+  }
+  ///// End stripe form stuff
 
-    function preventDefault(e) {
-        e.preventDefault();
-    }
+  function preventDefault(e) {
+    e.preventDefault();
+  }
 
-    // validate credit card form
-    $('#user-form')
-        .formValidation({
-            // I am validating Bootstrap form
-            framework: 'bootstrap',
-            live: 'disabled',
+  // validate credit card form
+  $('#user-form')
+    .formValidation({
+        // I am validating Bootstrap form
+        framework: 'bootstrap',
+        live: 'disabled',
 
-            // List of fields and their validation rules
-            fields: {
-                'user[full_name]': { 
-                    row: '.group',
-                    validators: {
-                        notEmpty: {
-                            message: 'Your full name is required'
-                        }
+        // List of fields and their validation rules
+        fields: {
+            'user[full_name]': { 
+                row: '.group',
+                validators: {
+                    notEmpty: {
+                        message: 'Your full name is required'
                     }
-                },
-                'cc-name': { 
-                    selector: '#cc-name',
-                    row: '.group',
-                    validators: {
-                        notEmpty: {
-                            message: 'Your card name is required'
-                        }
+                }
+            },
+            'cc-name': { 
+                selector: '#cc-name',
+                row: '.group',
+                validators: {
+                    notEmpty: {
+                        message: 'Your card name is required'
                     }
-                },/* if you need to validate current password
-                'user[current_password]': {
-                    row: '.group',
-                    validators: {
-                        notEmpty: {
-                            message: 'Your password is required'
-                        }
+                }
+            },/* if you need to validate current password
+            'user[current_password]': {
+                row: '.group',
+                validators: {
+                    notEmpty: {
+                        message: 'Your password is required'
                     }
-                },*/
-                'cc-number': {
-                    selector: '#cc-number',
-                    row: '.group',
-                    validators: {
-                        callback: {
-                            callback: function (value, validator, $field) {
-                                if ($.payment.validateCardNumber(value)) {
-                                    return {
-                                        valid: true,    // or false
-                                        message: 'Valid number'
-                                    }
-                                } else {
-                                    return {
-                                        valid: false,    // or false
-                                        message: 'Enter a valid number'
-                                    }
+                }
+            },*/
+            'cc-number': {
+                selector: '#cc-number',
+                row: '.group',
+                validators: {
+                    callback: {
+                        callback: function (value, validator, $field) {
+                            if ($.payment.validateCardNumber(value)) {
+                                return {
+                                    valid: true,    // or false
+                                    message: 'Valid number'
+                                }
+                            } else {
+                                return {
+                                    valid: false,    // or false
+                                    message: 'Enter a valid number'
                                 }
                             }
                         }
                     }
-                },
-                'cc-exp': {
-                    selector: '#cc-exp',
-                    row: '#exp-div',
-                    validators: {
-                        callback: {
-                            callback: function (value, validator, $field) {
-                                var y = $('input#cc-exp').payment('cardExpiryVal');
-                                cc_month = y.month; cc_year = y.year;
-                                if ($.payment.validateCardExpiry(cc_month, cc_year)) {
-                                    return {
-                                        valid: true,    // or false
-                                        message: 'Valid date'
-                                    }
-                                } else {
-                                    return {
-                                        valid: false,    // or false
-                                        message: 'Enter a valid date'
-                                    }
+                }
+            },
+            'cc-exp': {
+                selector: '#cc-exp',
+                row: '#exp-div',
+                validators: {
+                    callback: {
+                        callback: function (value, validator, $field) {
+                            var y = get_expiry_date_data();
+                            cc_month = y.month; cc_year = y.year;
+                            if ($.payment.validateCardExpiry(cc_month, cc_year)) {
+                                return {
+                                    valid: true,    // or false
+                                    message: 'Valid date'
+                                }
+                            } else {
+                                return {
+                                    valid: false,    // or false
+                                    message: 'Enter a valid date'
                                 }
                             }
                         }
                     }
-                },
-                'cc-csc': {
-                    selector: '#cc-csc',
-                    row: '#csc-div',
-                    validators: {
-                        callback: {
-                            callback: function (value, validator, $field) {
-                                if ($.payment.validateCardCVC(value)) {
-                                    return {
-                                        valid: true,    // or false
-                                        message: 'Valid csc'
-                                    }
-                                } else {
-                                    return {
-                                        valid: false,    // or false
-                                        message: 'Enter a valid csc'
-                                    }
+                }
+            },
+            'cc-csc': {
+                selector: '#cc-csc',
+                row: '#csc-div',
+                validators: {
+                    callback: {
+                        callback: function (value, validator, $field) {
+                            if ($.payment.validateCardCVC(value)) {
+                                return {
+                                    valid: true,    // or false
+                                    message: 'Valid csc'
+                                }
+                            } else {
+                                return {
+                                    valid: false,    // or false
+                                    message: 'Enter a valid csc'
                                 }
                             }
                         }
                     }
                 }
             }
-        })
-        .on('err.field.fv', function(e, data) {
-            // $(e.target)  --> The field element
-            // data.fv      --> The FormValidation instance
-            // data.field   --> The field name
-            // data.element --> The field element
+        }
+    })
+    .on('err.field.fv', function(e, data) {
+        // $(e.target)  --> The field element
+        // data.fv      --> The FormValidation instance
+        // data.field   --> The field name
+        // data.element --> The field element
 
-            // Hide the messages
-            data.element
-                .data('fv.messages')
-                .find('.help-block[data-fv-for="' + data.field + '"]').hide();
-        })
-        .on('success.form.fv', function(e, data) {            
-            $("#user-form").bind("submit", preventDefault);
-            set_names("ccPage");            
-            submitToStripe();
-        });
+        // Hide the messages
+        data.element
+            .data('fv.messages')
+            .find('.help-block[data-fv-for="' + data.field + '"]').hide();
+    })
+    .on('success.form.fv', function(e, data) {            
+        set_names("ccPage");
+        $("#user-form").bind("submit", preventDefault);
+        $('#response').hide();
+        $(".panel-body").html('');
+        // So the button can be reset on fail
+        cc_btn_text = $('#cc-submit').val();
+        cc_submit_btn = $('#cc-submit').attr("disabled", true).val("Please wait...");
+        form_submission_handler = submit_cc_form
+        submit_to_stripe();
+    });
     ///
 
 
-    function set_names(page) {
-        var fullname = (page == "ccPage") ? (document.getElementById('cc-name').value).trim() : (document.getElementById('user_full_name').value).trim();
-        var firstName = fullname.substr(0, fullname.indexOf(' '));
-        var lastName = fullname.substr(fullname.indexOf(' ')+1);
-        if (!firstName && lastName) {
-            firstName = lastName;
-            lastName = "";
-        }            
-        document.getElementById('firstName').value = firstName;
-        document.getElementById('lastName').value = lastName;         
-    }
+  function set_names(page) {
+      var fullName = (document.getElementById( (page == "ccPage") ? 'cc-name' : 'user_full_name' ).value).trim();
+      var firstName = fullName.substr(0, fullName.indexOf(' ')),
+          lastName = fullName.substr(fullName.indexOf(' ')+1);
+      if (!firstName && lastName) {
+          firstName = lastName;
+          lastName = "";
+      }            
+      $('#firstName').val(firstName);
+      $('#lastName').val(lastName);
+  }
 
-    function set_number() {
-        document.getElementById('phone_number').value = telInput.intlTelInput("getNumber").replace("+", '');
-    }
-    
-    // Simply populates credit card and bank account fields with test data
-    /*$('#populate').click(function () {
-        $(this).attr("disabled", true);
+  function get_expiry_date_data() { return $('input#cc-exp').payment('cardExpiryVal'); }
+  function set_number() { $('#phone_number').val(telInput.intlTelInput("getNumber").replace("+", '')); }
+  function submit_cc_form() { $("#user-form").unbind("submit", preventDefault).submit(); }
 
-        $('#cc-name').val('John Doe');
-        $('#cc-number').val('<redacted_phone_number>');
-        $('#cc-ex-month').val('12');
-        $('#cc-ex-year').val('2020');
-        $('#ex-csc').val('123');
-    });*/
+  // Simply populates credit card and bank account fields with test data
+  /*$('#populate').click(function () {
+      $(this).attr("disabled", true);
 
-    /*var zip = $("#zip");
-    var c = $('#country');
-    var a = $('#address');
-    zip.blur(function() {
-        $('#city, #state').val('');
-        var x = (a.val()) ? a.val() : ''; 
-        var y = (c.val()) ? c.val() : ''; 
-        var z = (zip.val()) ? zip.val() : ''; 
-        var param = x.trim() + ", " + z.trim() + ", " + y.trim();
-        if (param) {
-            var jqxhr = $.getJSON('https://maps.googleapis.com/maps/api/geocode/json?address=' + param, function() {
+      $('#cc-name').val('John Doe');
+      $('#cc-number').val('<redacted_phone_number>');
+      $('#cc-ex-month').val('12');
+      $('#cc-ex-year').val('2020');
+      $('#ex-csc').val('123');
+  });*/
+
+  /*var zip = $("#zip");
+  var c = $('#country');
+  var a = $('#address');
+  zip.blur(function() {
+      $('#city, #state').val('');
+      var x = (a.val()) ? a.val() : ''; 
+      var y = (c.val()) ? c.val() : ''; 
+      var z = (zip.val()) ? zip.val() : ''; 
+      var param = x.trim() + ", " + z.trim() + ", " + y.trim();
+      if (param) {
+          var jqxhr = $.getJSON('https://maps.googleapis.com/maps/api/geocode/json?address=' + param, function() {
+          })
+            .done(function(res) {
+              $('#city').val('');
+              $('#state').val('');
+              
+              console.log(res.results[0]['address_components'][1]["long_name"]);
+              console.log(res.results[0]['address_components'][2]["short_name"]);
+              $('.city-state').val(res.results[0]['formatted_address']);
             })
-              .done(function(res) {
-                $('#city').val('');
-                $('#state').val('');
-                
-                console.log(res.results[0]['address_components'][1]["long_name"]);
-                console.log(res.results[0]['address_components'][2]["short_name"]);
-                $('.city-state').val(res.results[0]['formatted_address']);
-              })
-              .fail(function() {
-                $('#city, #state').val('');
-              })
-        }
-    });*/
-
-    // character counter
-    $("#count_me").counter({
-        text: false,
-        goal: 150
-    });
-
-
-    var submit_contact_form = function(json) {
-        $.ajax({ url: contact_url,
-            type: 'POST',
-            beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
-            data: json
-        })  
-            .done(function(data, response) {
-                ohSnap('Yes! Your message has been sent!', 'green');
+            .fail(function() {
+              $('#city, #state').val('');
             })
-            .fail(function( data ) {
-                ohSnap('Oh no! We were unable to send your message...', 'red');                
-            })
-    }
+      }
+  });*/
 
-    // validate contact form
-    $('#contact-form')
-        .formValidation({
-            // I am validating Bootstrap form
-            framework: 'bootstrap',
-            live: 'disabled',
-            // List of fields and their validation rules!
-            fields: {
-                'contact_form[email]': {
-                    verbose: false,
-                    row: '.form-group',
-                    validators: {
-                        notEmpty: {
-                            message: 'Your email is required'
-                        },
-                        emailAddress: {
-                            message: "The email isn't valid"
-                        },
-                        remote: {
-                            type: 'GET',
-                            url: 'https://api.mailgun.net/v2/address/validate?callback=?',
-                            crossDomain: true,
-                            name: 'address',
-                            data: {
-                                // Registry a Mailgun account and get a free API key
-                                // at https://mailgun.com/signup
-                                api_key: '<redacted_api_key>'
-                            },
-                            dataType: 'jsonp',
-                            validKey: 'is_valid',
-                            message: "The email isn't valid"
-                        }
-                    }
-                },
-                'contact_form[name]': {
-                    verbose: false,
-                    row: '.form-group',
-                    validators: {
-                        notEmpty: {
-                            message: 'Please enter your name'
-                        }
-                    }
-                },
-                'contact_form[organization]': {
-                    verbose: false,
-                    row: '.form-group',
-                    validators: {
-                        notEmpty: {
-                            message: 'Please enter your company'
-                        }
-                    }
-                },
-                'contact_form[message]': {
-                    verbose: false,
-                    row: '.form-group',
-                    validators: {
-                        notEmpty: {
-                            message: 'Please enter a message'
-                        }
-                    }
-                }
-            }
-        })
-        .on('success.validator.fv', function(e, data) {
-            if (data.field === 'contact_form[email]' && data.validator === 'remote') {
-                var response = data.result;  // response is the result returned by MailGun API
-                if (response.did_you_mean) {
-                    // Update the message
-                    data.element                    // The field element
-                        .data('fv.messages')        // The message container
-                        .find('[data-fv-validator="remote"][data-fv-for="contact_form[email]"]')
-                        .html('Did you mean ' + response.did_you_mean + '?')
-                        .show();
-                }
-            }
-        })
-        .on('err.validator.fv', function(e, data) {
-            if (data.field === 'contact_form[email]' && data.validator === 'remote') {
-                // We need to reset the error message
-                data.element                // The field element
-                    .data('fv.messages')    // The message container
-                    .find('[data-fv-validator="remote"][data-fv-for="contact_form[email]"]')
-                    .html("The email isn't valid")
-                    .show();
-            }            
-        })
-        .on('success.form.fv', function(e, data) {
-            e.preventDefault;
-            submit_contact_form($('#contact-form').serialize());
-            $(this).trigger("reset");
-            return false;
-        });
-        // validate contact form
+  // character counter
+  $("#count_me").counter({
+      text: false,
+      goal: 150
+  });
 
-    
-     // validate text me form
-    $('#tell-me-form')
-        .formValidation({
-            // I am validating Bootstrap form
-            framework: 'bootstrap',
-            live: 'disabled',
-            // List of fields and their validation rules!
-            fields: {
-                'phone': {
-                    row: '.form-group',
-                    validators: {
-                        callback: {
-                            callback: function (value, validator, $field) {
-                                if (telInput.intlTelInput("isValidNumber")) {
-                                    return {
-                                        valid: true,    // or false
-                                        message: 'Valid number'
-                                    }
-                                } else {
-                                    return {
-                                        valid: false,    // or false
-                                        message: 'Enter a valid number'
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                'zip': {
-                    verbose: false,
-                    row: '.form-group',
-                    validators: {
-                        notEmpty: {
-                            message: 'Please enter your zip code'
-                        }
-                    }
-                }
-            }
-        })
-        .on('success.form.fv', function(e, data) {
-            e.preventDefault;
-            var number = telInput.intlTelInput("getNumber"), zip = $('#zip').val();            
-            var json = { "contact_form" : { "email" : "<redacted_email>", "message" : number + " - " + zip, "name" : "Text me"  } }
-            submit_contact_form(json);
-            $(this).trigger("reset");
-            return false;
-        });
-        // validate text me form    
 
-    // if hashtag isn't for payment, remove amount and precedence fields
-    $('#hashtag_not_payment_tag').change(function(){
-        if (this.checked) {
-            $('#hashtag_amount_field, #hashtag_precedence_field').slideUp(300);
-        } else {
-            $('#hashtag_amount_field, #hashtag_precedence_field').slideDown(300);
-        }
-    });
+  var submit_contact_form = function(json) {
+    $.ajax({ url: contact_url,
+        type: 'POST',
+        beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
+        data: json
+    })  
+        .done(function(data, response) {
+            ohSnap('Yes! Your message has been sent!', 'green');
+        })
+        .fail(function( data ) {
+            ohSnap('Oh no! We were unable to send your message...', 'red');                
+        })
+  }
+
+  // validate contact form
+  $('#contact-form')
+      .formValidation({
+          // I am validating Bootstrap form
+          framework: 'bootstrap',
+          live: 'disabled',
+          // List of fields and their validation rules!
+          fields: {
+              'contact_form[email]': {
+                  verbose: false,
+                  row: '.form-group',
+                  validators: {
+                      notEmpty: {
+                          message: 'Your email is required'
+                      },
+                      emailAddress: {
+                          message: "The email isn't valid"
+                      },
+                      remote: {
+                          type: 'GET',
+                          url: 'https://api.mailgun.net/v2/address/validate?callback=?',
+                          crossDomain: true,
+                          name: 'address',
+                          data: {
+                              // Registry a Mailgun account and get a free API key
+                              // at https://mailgun.com/signup
+                              api_key: '<redacted_api_key>'
+                          },
+                          dataType: 'jsonp',
+                          validKey: 'is_valid',
+                          message: "The email isn't valid"
+                      }
+                  }
+              },
+              'contact_form[name]': {
+                  verbose: false,
+                  row: '.form-group',
+                  validators: {
+                      notEmpty: {
+                          message: 'Please enter your name'
+                      }
+                  }
+              },
+              'contact_form[organization]': {
+                  verbose: false,
+                  row: '.form-group',
+                  validators: {
+                      notEmpty: {
+                          message: 'Please enter your company'
+                      }
+                  }
+              },
+              'contact_form[message]': {
+                  verbose: false,
+                  row: '.form-group',
+                  validators: {
+                      notEmpty: {
+                          message: 'Please enter a message'
+                      }
+                  }
+              }
+          }
+      })
+      .on('success.validator.fv', function(e, data) {
+          if (data.field === 'contact_form[email]' && data.validator === 'remote') {
+              var response = data.result;  // response is the result returned by MailGun API
+              if (response.did_you_mean) {
+                  // Update the message
+                  data.element                    // The field element
+                      .data('fv.messages')        // The message container
+                      .find('[data-fv-validator="remote"][data-fv-for="contact_form[email]"]')
+                      .html('Did you mean ' + response.did_you_mean + '?')
+                      .show();
+              }
+          }
+      })
+      .on('err.validator.fv', function(e, data) {
+          if (data.field === 'contact_form[email]' && data.validator === 'remote') {
+              // We need to reset the error message
+              data.element                // The field element
+                  .data('fv.messages')    // The message container
+                  .find('[data-fv-validator="remote"][data-fv-for="contact_form[email]"]')
+                  .html("The email isn't valid")
+                  .show();
+          }            
+      })
+      .on('success.form.fv', function(e, data) {
+          e.preventDefault;
+          submit_contact_form($('#contact-form').serialize());
+          $(this).trigger("reset");
+          return false;
+      });
+      // validate contact form
+
+  
+   // validate text me form
+  $('#tell-me-form')
+      .formValidation({
+          // I am validating Bootstrap form
+          framework: 'bootstrap',
+          live: 'disabled',
+          // List of fields and their validation rules!
+          fields: {
+              'phone': {
+                  row: '.form-group',
+                  validators: {
+                      callback: {
+                          callback: function (value, validator, $field) {
+                              if (telInput.intlTelInput("isValidNumber")) {
+                                  return {
+                                      valid: true,    // or false
+                                      message: 'Valid number'
+                                  }
+                              } else {
+                                  return {
+                                      valid: false,    // or false
+                                      message: 'Enter a valid number'
+                                  }
+                              }
+                          }
+                      }
+                  }
+              },
+              'zip': {
+                  verbose: false,
+                  row: '.form-group',
+                  validators: {
+                      notEmpty: {
+                          message: 'Please enter your zip code'
+                      }
+                  }
+              }
+          }
+      })
+      .on('success.form.fv', function(e, data) {
+          e.preventDefault;
+          var number = telInput.intlTelInput("getNumber"), zip = $('#zip').val();            
+          var json = { "contact_form" : { "email" : "<redacted_email>", "message" : number + " - " + zip, "name" : "Text me"  } }
+          submit_contact_form(json);
+          $(this).trigger("reset");
+          return false;
+      });
+      // validate text me form    
+
+  // if hashtag isn't for payment, remove amount and precedence fields
+  $('#hashtag_not_payment_tag').change(function(){
+      if (this.checked) {
+          $('#hashtag_amount_field, #hashtag_precedence_field').slideUp(300);
+      } else {
+          $('#hashtag_amount_field, #hashtag_precedence_field').slideDown(300);
+      }
+  });
 
   $('#transactions-column').on("click", ".refund_link", function() {
       REFUND_TXN_LINK = this;
@@ -1398,28 +1398,27 @@ $(document).ready(function () {
   });
 
   $('#refundButton').click(function(e) {
-      e.preventDefault();
-      this.disabled = true; this.textContent = "Please wait...";
-      var charge_id = REFUND_TXN_LINK.getAttribute('data-stripe-txn-num');
-      $.ajax({
-          url: "/v1/transactions/" + charge_id + "/refund.json",
-          beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
-          type: "POST",
-          data: { "type" : "card",
-                  "reason" : document.getElementById('refund_reason').value }       
-      })
-          .done(function(data, textStatus, response) {
-              document.getElementById(charge_id).setAttribute("data-status", "Refunded");
-              ohSnap(data.message, 'green');
-              $(REFUND_TXN_LINK)[0].parentNode.parentNode.innerHTML = "<tr><td>Status: </td><td> Refunded</td></tr>";
-          })
-          .fail(function(data, textStatus, response) { ohSnap(data.responseJSON["message"], "red"); })
-          .always(function(data, textStatus, response) {
-              this.disabled = false; this.textContent = "Submit";
-              REFUND_BOX.trigger('close');
-          })
+    e.preventDefault();
+    this.disabled = true; 
+    this.textContent = "Please wait...";
+    $.ajax({
+        url: "/v1/transactions/" + REFUND_TXN_LINK.getAttribute('data-stripe-txn-num') + "/refund.json",
+        beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
+        type: "POST",
+        data: { type: "card", reason: document.getElementById('refund_reason').value }       
+    })
+        .done(function(data, textStatus, response) {
+            document.getElementById(charge_id).setAttribute("data-status", "Refunded");
+            ohSnap(data.message, 'green');
+            $(REFUND_TXN_LINK)[0].parentNode.parentNode.innerHTML = "<tr><td>Status: </td><td> Refunded</td></tr>";
+        })
+        .fail(function(data, textStatus, response) { ohSnap(data.responseJSON["message"], "red"); })
+        .always(function(data, textStatus, response) {
+            this.disabled = false; 
+            this.textContent = "Submit";
+            REFUND_BOX.trigger('close');
+        })
   });
-
 
   //// for number search
   searchNumBtn.click(function() {
@@ -1432,30 +1431,29 @@ $(document).ready(function () {
       searchNumberType = $('#searchNumberType'),
       searchNumberField = $('#searchNumberField');
   var get_number = function(str) {                
-      $.ajax({
-          url: "/v1/numbers/search.json",
-          type: "GET",
-          data: 'query=' + searchNumberField.val() + "&country=" + searchNumberCountry.val() 
-                  + "&type=" + searchNumberType.val(),
-          dataType: "json"     
+    $.ajax({
+      url: "/v1/numbers/search.json",
+      type: "GET",
+      data: { query: searchNumberField.val(), country: searchNumberCountry.val(), type: searchNumberType.val() },
+      dataType: "json"     
+    })
+      .done(function(data, textStatus, jqXHR) {
+          var str = '';
+          if(data.error) { 
+              alert('something went wrong');
+          } else if (data.number == '') {
+              alert(':( we dont have any number');
+          } else {
+              alert(data.number);
+          }
       })
-          .done(function(data, textStatus, jqXHR) {
-              var str = '';
-              if(data.error) { 
-                  alert('something went wrong');
-              } else if (data.number == '') {
-                  alert(':( we dont have any number');
-              } else {
-                  alert(data.number);
-              }
-          })
-          .fail(function(data, textStatus, errorThrown) {
-              alert('something went wrong'); 
-               console.log(data);
-          })   
-          .always(function(data, textStatus, response) {
-              searchNumBtn.html('Search').prop("disabled", false); 
-          }); 
+      .fail(function(data, textStatus, errorThrown) {
+          alert('something went wrong'); 
+           console.log(data);
+      })   
+      .always(function(data, textStatus, response) {
+          searchNumBtn.html('Search').prop("disabled", false); 
+      }); 
   }
   
   var country_num_types = {
@@ -1467,13 +1465,11 @@ $(document).ready(function () {
   };
 
   searchNumberCountry.change(function() {
-      var x = country_num_types[this.options[this.selectedIndex].value.toString()], html = '';
-      
+      var x = country_num_types[this.options[this.selectedIndex].value.toString()], html = '';      
       x = (x) ? x : { types: ["mobile"] };    
       for (i = 0, len = x.types.length; i < len; i++) { 
           html += '<option value="' + x.types[i].toLowerCase().replace(/ /g, '_') + '">' + x.types[i] + '</option>'
-      }
-          
+      }          
       var display = (x.show) ? 'inline' : 'none';
       searchNumberType.html(html).css('display', display);
       searchNumberField.val('').css('display', display)        
@@ -1483,15 +1479,8 @@ $(document).ready(function () {
 
   // http://blog.teamtreehouse.com/uploading-files-ajax
   // but modified to send just one file.
-  var csv_upload_button = document.getElementById('csv-upload-button'); 
-  var csv_upload_form = document.getElementById('csv-upload-form'); 
-  if (csv_upload_form) {
-    csv_upload_form.onsubmit = function(e) {
-      function set_button_attr(innerhtml, disabled) {
-        csv_upload_button.innerHTML = innerhtml;
-        csv_upload_button.disabled = disabled;
-      } 
-
+  $('#csv-upload-form').submit(function( event ) {
+      
       function send_payload(payload) {
         var xhr = new XMLHttpRequest();             // Set up the request.
         xhr.open('POST', '/v1/users/add_customers.csv', true);    // Open the connection.
@@ -1503,13 +1492,13 @@ $(document).ready(function () {
               console.log('Something went wrong on our end.')
             }
             console.log(JSON.parse(xhr.responseText));
-            set_button_attr("Upload", false);
+            $('#csv_upload_button').text("Upload").prop('disabled', false);
           }
         };
 
         xhr.onerror = function (e) {
           console.log(xhr.statusText);
-          set_button_attr("Upload", false);
+          $('#csv_upload_button').text("Upload").prop('disabled', false);
         };
         xhr.send(payload);        // Send the Data.
       }
@@ -1521,7 +1510,7 @@ $(document).ready(function () {
       
       // Loop through each of the selected files.
       for (var i = 0; i < length; i++) {
-        set_button_attr("Uploading...", true);
+        $('#csv_upload_button').text("Uploading...").prop('disabled', true);
 
         var file = files[i];          
         if (!file.type.match('csv')) {             // Check the file type.
@@ -1532,17 +1521,53 @@ $(document).ready(function () {
         formData.append('csv', file, file.name);    // Add the file to the request.
       }
 
-      if (length > 0) {
-        send_payload(formData);   
-      }
-    }
-  }
+      if (length > 0) send_payload(formData);   
+  });
   // end csv file upload
 
 
   ///// add a customer
+  create_user_form.submit(function(e){
+    e.preventDefault();
 
+    // run validations for email and phone number...have variable for fail
+    // if good above and card number is present, send card details to stripe if...set fail variable
+    // no validations for address or lists
+    // if all pass, submit_contact_form
 
+    var y = get_expiry_date_data();
+    cc_month = y.month; cc_year = y.year; 
+    // So the button can be reset on fail
+    cc_btn_text = create_user_submit.val();
+    cc_submit_btn = create_user_submit.attr("disabled", true).val("Please wait...");  
+    set_names();
+    set_number();
+    form_submission_handler = submit_create_user_form;
+    submit_to_stripe();  
+
+    // added accept nested attributes for lists
+    // hashes of hashes or array of hashes for lists
+    console.log($(this).serialize())
+  })
+
+  function submit_create_user_form() {
+    $.ajax({
+        url: "/v1/users/add_customers.json",
+        beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
+        type: "POST",
+        data: create_user_form.serialize(),
+        dataType: "json"   
+    })
+      .done(function(data, textStatus, jqXHR) {
+        console.log(data);    
+      })
+      .fail(function(data, textStatus, errorThrown) {
+        console.log(data);
+      })   
+      .always(function(data, textStatus, response) {
+        cc_submit_btn.attr("disabled", false).val(cc_btn_text);
+      }); 
+  }
   ///// add a customer
     
 

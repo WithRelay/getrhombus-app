@@ -29,14 +29,14 @@
           
           <% if current_user.user_level == 1  %>
           <li>
-            <%= link_to dashboard_messaging_path(current_user.id) do %>
+            <%= link_to messaging_user_path(current_user.id) do %>
                 <i class="fa falist fa-send-o"></i>Messaging<%#<span class="badge label-danger">4</span>%>
             <% end %>
           </li>
           <% end %>
           
           <li>
-             <%= link_to user_contacts_path(current_user.id) do %>
+             <%= link_to contacts_user_path(current_user.id) do %>
                 <i class="fa falist fa-envelope-o"></i>Contacts
               <% end %>
           </li>
