@@ -26,7 +26,7 @@ class User < ActiveRecord::Base
 
   # Just to prevent sending emails locally for now...remove comment later
   # after_commit :send_welcome_email, on: :create
-  #after_commit :update_phone_in_db on: :edit
+  after_commit :update_phone_in_db, on: :update
 
   #validates_presence_of :user_level, :message => "Please select an account type"
   #validates :country, length: {is: 2}, allow_blank: true  
@@ -184,8 +184,9 @@ class User < ActiveRecord::Base
   def update_phone_in_db
     x = self.previous_changes['phone_number']
     if x && self.user_level == 0
+      # move to background job
       ActiveRecord::Base.connection.execute("UPDATE messages SET messages.from = #{x[1]} WHERE messages.from = #{x[0]}")
-      ActiveRecord::Base.connection.execute("UPDATE messages SET messages.from = #{x[1]} WHERE messages.from = #{x[0]}")
+      ActiveRecord::Base.connection.execute("UPDATE messages SET messages.to = #{x[1]} WHERE messages.to = #{x[0]}")
       ActiveRecord::Base.connection.execute("UPDATE transactions SET transactions.from = #{x[1]} WHERE transactions.from = #{x[0]}") 
     end
   end
