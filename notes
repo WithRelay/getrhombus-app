@@ -16,7 +16,7 @@ Hashtags
 
 
 - dashboard queries
-- clean up angular stuff and upgrade pubnup
+- clean up angular stuff and upgrade pubnub
 - add organization type
 - on rhombus number change, update user messages and transactions from and to, user_id_to in messages ...no longer saving zero
 - does antonio pull only with user id and falls back to number
