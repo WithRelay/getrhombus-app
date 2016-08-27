@@ -15,13 +15,16 @@ Hashtags
 - sms only, mms with optional sms, recurring and payment with auto sms.... cool on these?
 
 
+- review user_id_to, user_if_from, transaction_id in messages ...saving zero 
+- on phone number change, update user messages and transactions from and to, with rake task
+- update used_id_to, when user signs up with number that exists - will this change my queries with rake task
+
 - dashboard queries
 - clean up angular stuff and upgrade pubnub
 - add organization type
-- on rhombus number change, update user messages and transactions from and to, 
-- user_id_to in messages ...no longer saving zero - IT IS UNNECESSARY
 - does antonio pull only with user id and falls back to number
 
+Sunday/Monday
 - MMS
 - charge customer
 - Tags
