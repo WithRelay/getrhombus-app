@@ -12,22 +12,7 @@ Rails.application.routes.draw  do
   
   resources :contact_forms 
   
-<<<<<<< HEAD
-  # review routes
-  get '/customer_template' => "users#customer_csv_template", constraints: { format: 'csv' }
-  get '/transactions/download' => 'transactions#download_csv', constraints: { format: 'csv' }
-  
-  ## messaging related routes
-  get "/receive_text_message" => 'messages#receive_text_message'
-  get "/receive_text_message_twilio" => 'messages#receive_text_message_twilio'
-  get "/receive_voice_twilio" => 'messages#receive_voice_twilio'
-  get "/receive_delivery_report" => 'messages#receive_delivery_report'
-  get "/receive_delivery_report_twilio" => 'messages#receive_delivery_report_twilio'
-  match "/send_mms_from_dashboard" => 'messages#dashboard_mms', via: [:post]
 
-  get "/facebook_webhook" => 'static_pages#fb_webhook'
-  post "/facebook_webhook" => 'static_pages#receive_message'
-=======
   get 'customer_template' => "users#customer_csv_template", constraints: { format: 'csv' }
   get 'transactions/download' => 'transactions#download_csv', constraints: { format: 'csv' }
   match "send_mms_from_dashboard" => 'messages#dashboard_mms', via: [:post]
@@ -38,8 +23,7 @@ Rails.application.routes.draw  do
   get "receive_delivery_report" => 'messages#receive_delivery_report'
   get "receive_delivery_report_twilio" => 'messages#receive_delivery_report_twilio'
   get "facebook_webhook" => 'static_pages#fb_webhook'
-  # post "/facebook_webhook" => 'static_pages#fb_webhook'
->>>>>>> 6fec8d546eafb7c7d38a6e8a20b8f4be1101809a
+  post "/facebook_webhook" => 'static_pages#receive_message'
   # mount MessageQuickly::Engine, at: "/facebook_webhook"
 
   ## devise routes
