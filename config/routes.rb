@@ -12,6 +12,7 @@ Rails.application.routes.draw  do
   
   resources :contact_forms 
   
+
   get 'customer_template' => "users#customer_csv_template", constraints: { format: 'csv' }
   get 'transactions/download' => 'transactions#download_csv', constraints: { format: 'csv' }
   match "send_mms_from_dashboard" => 'messages#dashboard_mms', via: [:post]
@@ -22,7 +23,7 @@ Rails.application.routes.draw  do
   get "receive_delivery_report" => 'messages#receive_delivery_report'
   get "receive_delivery_report_twilio" => 'messages#receive_delivery_report_twilio'
   get "facebook_webhook" => 'static_pages#fb_webhook'
-  # post "/facebook_webhook" => 'static_pages#fb_webhook'
+  post "/facebook_webhook" => 'static_pages#receive_message'
   # mount MessageQuickly::Engine, at: "/facebook_webhook"
 
   ## devise routes

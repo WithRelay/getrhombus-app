@@ -1,8 +1,19 @@
 class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
-  protect_from_forgery with: :exception
+  unless Proc.new {|c| c.request.original_url == root_url + "/facebook_webhook"}
+    protect_from_forgery with: :exception
+  end
+
   before_filter :configure_permitted_parameters, if: :devise_controller?
+
+  # skip_before_filter :authenticate_user!, :if => lambda { 
+  #   if params[:object] && params[:object] == "page"
+  #     false
+  #   else
+  #     true
+  #   end
+  # }
 
   # for uniquness check...can it be more specific...cos email, phone numbers are caught
   rescue_from ActiveRecord::RecordNotUnique, with: :record_not_unique   # capture phone number duplicates on sign up page
