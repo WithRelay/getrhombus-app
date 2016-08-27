@@ -775,10 +775,10 @@ $(document).ready(function () {
 
     // validate merchant profile
     $('#merchantProfile')
-        .find('[name="user[business_type]"]')
+        .find('[name="user[org_category]"]')
             .selectpicker()
             .change(function(e) {
-                $('#merchantProfile').formValidation('revalidateField', 'user[business_type]');
+                $('#merchantProfile').formValidation('revalidateField', 'user[org_category]');
             })
             .end()
         .find('[name="user[country]"]')
@@ -887,7 +887,7 @@ $(document).ready(function () {
                         }
                     }
                 },
-                'user[business_name]': {
+                'user[org_name]': {
                     row: '.form-group',
                     validators: {
                         notEmpty: {
@@ -906,7 +906,7 @@ $(document).ready(function () {
                         }
                     }
                 },
-                'user[business_type]': {
+                'user[org_category]': {
                     row: '.form-group',
                     validators: {
                         notEmpty: {

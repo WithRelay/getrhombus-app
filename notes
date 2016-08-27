@@ -14,24 +14,22 @@ Subscriptions
 Hashtags
 - sms only, mms with optional sms, recurring and payment with auto sms.... cool on these?
 
+Contact - Inbound
+- sent u a text doesnt have an account 
+- have an account, sent u a text but ref link isnt yours 
 
-- review user_id_to, user_id_from, transaction_id in messages ...stop saving zero 
+
+- remove user_id_to, user_id_from, transaction_id savs as zero in messages
 - on phone number change, update user messages and transactions from and to, with rake task
 - update used_id_to, when user signs up with number that exists - will this change my queries with rake task
 
-- dashboard queries
 - clean up angular stuff and upgrade pubnub
-- add organization type
 - does antonio pull only with user id and falls back to number
 
 Sunday/Monday
 - MMS
 - Charge customer
 - Tags
-
-Contact
-- sent u a text doesnt have an account 
-- have an account, sent u a text but ref link isnt yours 
 
 Delaware
 - managed accounts

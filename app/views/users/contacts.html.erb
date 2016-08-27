@@ -108,8 +108,8 @@
               <tbody>
               <% @contacts.each do |c| %>
                 <tr role="row">
-                  <td><%= (current_user.user_level == 0) ? c.business_name : c.card_name %></td>
-                  <td><%= (current_user.user_level == 0) ? c.business_phone : c.phone_number %></td>
+                  <td><%= (current_user.user_level == 0) ? c.org_name : c.card_name %></td>
+                  <td><%= (current_user.user_level == 0) ? c.org_phone : c.phone_number %></td>
                   <td><%= c.email %></td>
                   <td><%= c.first_conversation.strftime("%m/%d/%Y %I:%M %p") %></td>
                   <td><%= c.last_conversation.strftime("%m/%d/%Y %I:%M %p") %></td>

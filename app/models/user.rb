@@ -24,7 +24,7 @@ class User < ActiveRecord::Base
   # only create, cos they can change this in edit
 
   # remove this soon
-  before_create :set_merchant_business_phone, :deactivate_merchant_account          
+  before_create :set_merchant_org_phone, :deactivate_merchant_account          
 
   # Just to prevent sending emails locally for now...remove comment later
   # after_commit :send_welcome_email, :on => :create
@@ -126,7 +126,7 @@ class User < ActiveRecord::Base
   
   def phone
     return self.phone_number if self.user_level == 0
-    self.business_phone
+    self.org_phone
   end
 
   def update_merchant_account(params)
@@ -145,13 +145,13 @@ class User < ActiveRecord::Base
 
   def get_only_numbers
     self.phone_number = self.phone_number.gsub(/\D/, "") unless self.phone_number.blank?
-    self.business_phone = self.business_phone.gsub(/\D/, "") unless self.business_phone.blank?
+    self.org_phone = self.org_phone.gsub(/\D/, "") unless self.org_phone.blank?
   end
 
-  def set_merchant_business_phone
+  def set_merchant_org_phone
     # If a merchant is signing up, make business number the phone number. Would be useful when merchants can become regular users and vice versa
     if self.user_level == 1
-      self.business_phone = self.phone_number
+      self.org_phone = self.phone_number
       self.phone_number = nil
     end 
   end
@@ -174,7 +174,7 @@ class User < ActiveRecord::Base
     self.url = self.url.strip unless self.url.blank?
     self.custom_welcome = self.custom_welcome.strip unless self.custom_welcome.blank?
     self.referrer_num = self.referrer_num.strip unless self.referrer_num.blank?
-    self.business_name = self.business_name.strip unless self.business_name.blank?
+    self.org_name = self.org_name.strip unless self.org_name.blank?
   end
 
   def send_welcome_email
@@ -185,7 +185,7 @@ class User < ActiveRecord::Base
       message = Message.new
       unless self.referrer_num.blank?
         referrer = User.find_by(rhombus_number: self.referrer_num)
-        EmailingService.send_welcome_email_with_referral(referrer.email, self.email, referrer.business_name, referrer.rhombus_number, owner.rhombus_number)
+        EmailingService.send_welcome_email_with_referral(referrer.email, self.email, referrer.org_name, referrer.rhombus_number, owner.rhombus_number)
         text = "Thanks for signing up! Please add a payment card to your Rhombus profile (if you haven't done so). 
         You can chat with us anytime via sms or to make a payment, just text the amount & description/hashtag. Ex. +10 #donut"
         message.send_and_save_message(referrer.rhombus_number, self.phone_number, text)

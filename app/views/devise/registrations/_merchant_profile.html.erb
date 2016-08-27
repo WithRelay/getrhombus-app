@@ -20,7 +20,7 @@
       <!-- Start Page Header Right Div -->
       <div class="right">
         <div class="btn-group" role="group" aria-label="...">
-          <%= link_to "Update Stripe Connect", user_omniauth_authorize_path(:stripe_connect, "stripe_user[country]" => current_user.country, "stripe_user[email]" => current_user.email, "stripe_user[phone_number]" => current_user.business_phone, "stripe_user[business_name]" => current_user.business_name, "stripe_user[first_name]" => current_user.first_name, "stripe_user[last_name]" => current_user.last_name, "stripe_user[street_address]" => current_user.street_address, "stripe_user[city]" => current_user.city, "stripe_user[zip]" => current_user.zip_code, "stripe_user[url]" => current_user.url ), class: "btn btn-success btn-rhombus-2" %>
+          <%= link_to "Update Stripe Connect", user_omniauth_authorize_path(:stripe_connect, "stripe_user[country]" => current_user.country, "stripe_user[email]" => current_user.email, "stripe_user[phone_number]" => current_user.org_phone, "stripe_user[org_name]" => current_user.org_name, "stripe_user[first_name]" => current_user.first_name, "stripe_user[last_name]" => current_user.last_name, "stripe_user[street_address]" => current_user.street_address, "stripe_user[city]" => current_user.city, "stripe_user[zip]" => current_user.zip_code, "stripe_user[url]" => current_user.url ), class: "btn btn-success btn-rhombus-2" %>
           <a href="" class="btn btn-light"><i class="fa fa-refresh" id="refresh"></i></a>
         </div>
       </div>
@@ -88,7 +88,7 @@
                 <div class="form-group">
                   <label class="col-sm-2 control-label form-label">Name</label>
                   <div class="col-sm-10">
-                  <%= f.text_field :business_name, type: "text", class: "form-control rhombusFocus", placeholder: "Business Name" %>
+                  <%= f.text_field :org_name, type: "text", class: "form-control rhombusFocus", placeholder: "Business Name" %>
                   </div>
                 </div>
            
@@ -96,14 +96,14 @@
                 <div class="form-group">
                   <label class="col-sm-2 control-label form-label">Type</label>
                   <div class="col-sm-10">
-                    <%= f.select :business_type, options_for_select({ "Beauty Professional" => "Beauty Professional", "Cleaning Services" => 'Cleaning Services', "Coffee Shop" => "Coffee Shop", "Concierge Services" => "Concierge Services", "Home and Repair Services" => "Home and Repair Services", "Health and Fitness" => "Health and Fitness", "Individual" => "Individual", "On-Demand Delivery" => "On-Demand Delivery", "Orgs and Non-Profits" => "Orgs and Non-Profits", "Professional Services" => "Professional Services", "Restaurant" => "Restaurant", "Retail" => "Retail", "Taxi" => "Taxi", "Others" => "Others" }, selected: current_user.business_type), {}, :class => 'selectpicker rhombusFocus' %>
+                    <%= f.select :org_category, options_for_select({ "Beauty Professional" => "Beauty Professional", "Cleaning Services" => 'Cleaning Services', "Coffee Shop" => "Coffee Shop", "Concierge Services" => "Concierge Services", "Home and Repair Services" => "Home and Repair Services", "Health and Fitness" => "Health and Fitness", "Individual" => "Individual", "On-Demand Delivery" => "On-Demand Delivery", "Orgs and Non-Profits" => "Orgs and Non-Profits", "Professional Services" => "Professional Services", "Restaurant" => "Restaurant", "Retail" => "Retail", "Taxi" => "Taxi", "Others" => "Others" }, selected: current_user.org_category), {}, :class => 'selectpicker rhombusFocus' %>
                   </div>
                 </div>
 
                 <div class="form-group">
                   <label class="col-sm-2 control-label form-label">Business Phone</label>
                   <div class="col-sm-10">
-                      <%= f.hidden_field :business_phone, :id => "phone_number", class: "form-control rhombusFocus" %>
+                      <%= f.hidden_field :org_phone, :id => "phone_number", class: "form-control rhombusFocus" %>
                       <%= f.phone_field :phone, :id => "phone", class: "form-control rhombusFocus" %>
                       
                       <%# <input type="tel" class="form-control rhombusFocus" id="phone" name="phone"> %>

@@ -20,7 +20,7 @@ class UsersController < ApplicationController
     else
       if current_user.user_level == 0 && current_user.customer_uri.blank? # incomplete customer account
         redirect_to build_user_link
-      elsif current_user.user_level == 1 && (current_user.business_name.blank? || current_user.rhombus_number.blank?) # incomplete merchant account
+      elsif current_user.user_level == 1 && (current_user.org_name.blank? || current_user.rhombus_number.blank?) # incomplete merchant account
         # does this empty forms? check
         redirect_to "/profile"
       else
@@ -29,7 +29,7 @@ class UsersController < ApplicationController
         elsif @user.user_level == 1 && @user.short_url.blank? && @user.rhombus_number.present? 
           # generate bitly link for merchant if blank and rhombus number exist...
           ###should remove this after twilio migration ###
-          @user.short_url = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?referrer_num=#{@user.rhombus_number}&referrer=#{@user.business_name}")
+          @user.short_url = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?referrer_num=#{@user.rhombus_number}&referrer=#{@user.org_name}")
           @user.save
         end
         @last4_transactions = @user.transactions.select(:created_at, :description, :notes).last(4).reverse

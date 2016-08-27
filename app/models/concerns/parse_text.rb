@@ -107,7 +107,7 @@ module ParseText
         return @amt_ary
       end
     elsif !@this_user.present? 
-      merchant_name = @this_merchant.business_name ? @this_merchant.business_name : "Rhombus"
+      merchant_name = @this_merchant.org_name ? @this_merchant.org_name : "Rhombus"
       # payment based messages
       if @amt_ary[1] == "precedent_tag_amt"
         send_sign_up_link if @saved_message && @saved_message.id.present? 
@@ -137,7 +137,7 @@ module ParseText
 
   def send_sign_up_link 
     short_link = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?amt=#{amt_ary[0]}&num=#{params[:msisdn]}
-                                      &referrer_num=#{params[:to]}&referrer=#{@this_merchant.business_name}&msg_id=#{@saved_message.id}")
+                                      &referrer_num=#{params[:to]}&referrer=#{@this_merchant.org_name}&msg_id=#{@saved_message.id}")
     send_response("Hi there, thanks for reaching out...to send a payment, sign up here. Thanks! => #{short_link}")
   end
 
