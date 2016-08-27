@@ -15,22 +15,26 @@ Hashtags
 - sms only, mms with optional sms, recurring and payment with auto sms.... cool on these?
 
 
-- add a customer
-- clean up routes 
-- ovo's task
-- dashboard queries, user_id_to in messages ...no longer saving zero
-
-- charge customer
+- dashboard queries
 - clean up angular stuff and upgrade pubnup
 - add organization type
+- on rhombus number change, update user messages and transactions from and to, user_id_to in messages ...no longer saving zero
+- does antonio pull only with user id and falls back to number
+
+- MMS
+- charge customer
 - Tags
 
 Contact
 - sent u a text doesnt have an account 
 - have an account, sent u a text but ref link isnt yours 
 
+Delaware
 - managed accounts
 - background jobs
+  - http://khoapham.me/blog/completely-setup-resque-and-resque-scheduler/
+  - http://tutorials.jumpstartlab.com/topics/performance/background_jobs.html
+  - https://rubyplus.com/articles/531-How-to-Install-and-Configure-Resque-to-Handle-Background-Jobs-in-Rails-4-1
 - server notifications
 - drip campaigns
 - subscriptions

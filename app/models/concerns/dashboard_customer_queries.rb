@@ -35,16 +35,19 @@ module DashboardCustomerQueries
   # Any merchant that was texted without payment and who isnt the referrer
   def get_customer_contacts
     Message.find_by_sql([
-      "SELECT count(*) as total, users.business_name, users.email, users.business_phone,
+      "SELECT count(*) as total,
+        users.business_name, users.email, users.business_phone, rhombus_number,
         MIN(messages.created_at) as first_conversation, 
         MAX(messages.created_at) as last_conversation
         FROM messages
         INNER JOIN users ON
         messages.user_id_to = users.id 
-        WHERE messages.user_id = ? and users.rhombus_number != ? 
-        and users.id not in (select referenced_merchant_id from transactions where user_id = ?)
+        WHERE messages.from = ? 
+        # because they can both be null and this condition will be false...not good
+        and (IFNULL(users.rhombus_number, 'a') != IFNULL(?, 'b'))
+        and users.id not in (select referenced_merchant_id from transactions where user_id = ? group by referenced_merchant_id)
         GROUP BY messages.user_id_to 
-        ORDER BY messages.created_at DESC", self.id, self.referrer_num, self.id])
+        ORDER BY messages.created_at DESC", self.phone_number, self.referrer_num, self.id])
   end 
 
 end

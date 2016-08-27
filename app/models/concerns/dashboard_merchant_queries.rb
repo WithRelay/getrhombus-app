@@ -56,13 +56,11 @@ module DashboardMerchantQueries
 
 	def get_merchant_contacts_without_signups
 		Message.find_by_sql([
-			"SELECT count(*) as total, users.card_name, users.email, users.phone_number,
+			"SELECT count(*) as total, to, 
 				MIN(messages.created_at) as first_conversation, 
 				MAX(messages.created_at) as last_conversation
-				FROM messages
-				INNER JOIN users ON
-				messages.user_id_to = users.id 
-				WHERE user_id = ? GROUP BY messages.user_id_to 
+				FROM messages 
+				WHERE user_id = ? or user_id_to = ? GROUP BY messages.user_id_to 
 				ORDER BY messages.created_at DESC", self.id])
 	end	
 
