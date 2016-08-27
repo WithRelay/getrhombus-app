@@ -5,6 +5,8 @@ module ParseText
   ## help change how i test if merchant can take payments
   ## help captured link for sign in
 
+  # always check if active before continuing
+
   def process_message(params)  
     begin
       return if params[:Body].blank?

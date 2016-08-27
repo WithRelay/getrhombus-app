@@ -19,24 +19,21 @@ class User < ActiveRecord::Base
   has_many :image_refs, as: :imageable, dependent: :destroy
   has_many :images, through: :image_refs, dependent: :destroy
 
-  before_validation :get_only_numbers, :the_titleizer
+  before_validation :the_titleizer
   
-  # only create, cos they can change this in edit
-
-  # remove this soon
-  before_create :set_merchant_org_phone, :deactivate_merchant_account          
+  # only create because the actual org_phone field is used in edit view
+  before_create :set_merchant_org_phone          
 
   # Just to prevent sending emails locally for now...remove comment later
-  # after_commit :send_welcome_email, :on => :create
+  # after_commit :send_welcome_email, on: :create
+  #after_commit :update_phone_in_db on: :edit
 
-  validates_presence_of :user_level, :message => "Please select an account type"
-  validates :country, length: {is: 2}, allow_blank: true
-  
+  #validates_presence_of :user_level, :message => "Please select an account type"
+  #validates :country, length: {is: 2}, allow_blank: true  
   # why allow nil?
-  validates_uniqueness_of :phone_number, :allow_nil => true, :if => lambda { self.user_level == 0 }
-
+  #validates_uniqueness_of :phone_number, :allow_nil => true, :if => lambda { self.user_level == 0 }
   # still need validation errors for edit..this is only for create action
-  validates :phone_number, presence: true, numericality: { only_integer: true }, length: { minimum: 10 }, on: :create
+  #validates :phone_number, presence: true, numericality: { only_integer: true }, length: { minimum: 10 }, on: :create
 
   # A user can have belong to more than one list and also own multiple lists (Admins)
   has_and_belongs_to_many :lists
@@ -140,26 +137,11 @@ class User < ActiveRecord::Base
 
   private
 
-  # can reduce all these self calls here ###############
-
-
-  def get_only_numbers
-    self.phone_number = self.phone_number.gsub(/\D/, "") unless self.phone_number.blank?
-    self.org_phone = self.org_phone.gsub(/\D/, "") unless self.org_phone.blank?
-  end
-
   def set_merchant_org_phone
-    # If a merchant is signing up, make business number the phone number. Would be useful when merchants can become regular users and vice versa
     if self.user_level == 1
       self.org_phone = self.phone_number
       self.phone_number = nil
     end 
-  end
-
-  def deactivate_merchant_account
-      if self.user_level == 1
-          self.is_active = 0
-      end 
   end
 
   def the_titleizer       #remove leading and trailing whitespaces
@@ -196,6 +178,15 @@ class User < ActiveRecord::Base
       You can chat with a local business anytime by texting their Rhombus number or to make a payment, just text the amount & 
       description/hashtag. Ex. +10 #donut"
       message.send_and_save_message(owner.rhombus_number, self.phone_number, text)
+    end
+  end
+
+  def update_phone_in_db
+    x = self.previous_changes['phone_number']
+    if x && self.user_level == 0
+      ActiveRecord::Base.connection.execute("UPDATE messages SET messages.from = #{x[1]} WHERE messages.from = #{x[0]}")
+      ActiveRecord::Base.connection.execute("UPDATE messages SET messages.from = #{x[1]} WHERE messages.from = #{x[0]}")
+      ActiveRecord::Base.connection.execute("UPDATE transactions SET transactions.from = #{x[1]} WHERE transactions.from = #{x[0]}") 
     end
   end
   
