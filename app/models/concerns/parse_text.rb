@@ -261,9 +261,8 @@ module ParseText
  
   def save_inbound_text
     begin  
-      # if not for payment, transaction_id = 0 
       @saved_message = Message.save_text(from: params[:From], to: params[:To], messageId: params[:MessageSid], 
-                              text: params[:Body], transaction_id: 0)    
+                              text: params[:Body])    
     rescue StandardError => err
       @saved_message = nil
     end
