@@ -259,7 +259,7 @@ module ParseTextNexmo
  
   def save_inbound_text
     begin  
-      @saved_msg = Message.save_text(from: params[:From], to: params[:To], messageId: params[:MessageSid], text: params[:Body])    
+      @saved_msg = Message.create(from: params[:From], to: params[:To], messageId: params[:MessageSid], text: params[:Body])    
     rescue StandardError => err
       @saved_msg = nil
     end

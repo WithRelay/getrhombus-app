@@ -112,10 +112,10 @@ module ParseText
       merchant_name = @this_merchant.org_name ? @this_merchant.org_name : "Rhombus"
       # payment based messages
       if @amt_ary[1] == "precedent_tag_amt"
-        send_sign_up_link if @saved_message && @saved_message.id.present? 
+        send_sign_up_link if @saved_msg && @saved_msg.id.present? 
         return []
       elsif @amt_ary[1] != "precedent_tag_amt"
-        send_sign_up_link if @saved_message && @saved_message.id.present?
+        send_sign_up_link if @saved_msg && @saved_msg.id.present?
         return []
       else 
         # not payment related messages
@@ -139,7 +139,7 @@ module ParseText
 
   def send_sign_up_link 
     short_link = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?amt=#{amt_ary[0]}&num=#{params[:msisdn]}
-                                      &referrer_num=#{params[:to]}&referrer=#{@this_merchant.org_name}&msg_id=#{@saved_message.id}")
+                                      &referrer_num=#{params[:to]}&referrer=#{@this_merchant.org_name}&msg_id=#{@saved_msg.id}")
     send_response("Hi there, thanks for reaching out...to send a payment, sign up here. Thanks! => #{short_link}")
   end
 
@@ -239,7 +239,7 @@ module ParseText
   def process_payment
       if not_repeating_payment?
         customer_txn_id = Transaction.charge_customer_card(@amt_ary, @this_merchant, @this_user, @msg_text)
-        @saved_message.update(transaction_id: customer_txn_id) if @saved_message && @saved_message.id.present?   # Save transaction id
+        @saved_msg.update(transaction_id: customer_txn_id) if @saved_msg && @saved_msg.id.present?   # Save transaction id
       end
   end
 
@@ -261,20 +261,21 @@ module ParseText
  
   def save_inbound_text
     begin  
-      @saved_message = Message.save_text(from: params[:From], to: params[:To], messageId: params[:MessageSid], 
-                              text: params[:Body])    
+      @saved_msg = Message.create(from: params[:From], to: params[:To], messageId: params[:MessageSid], text: params[:Body])      
     rescue StandardError => err
-      @saved_message = nil
+      @saved_msg = nil
     end
     # Send to merchant's messaging channel
-    RealtimeStreamService.send_message_via_number(params[:From], params[:To], params[:Body], @saved_message.created_at) if @saved_message
-    @saved_message
+    RealtimeStreamService.send_message_via_number(params[:From], params[:To], params[:Body], @saved_msg.created_at) if @saved_msg
+    @saved_msg
   end
 
   #send delivery reports for twilio (very incomplete)
   def save_delivery_receipts(params)          
     #begin
-    message = Message.find_by(messageId: params[:MessageSid]) 
+    message = Message.where(message_id: params[:MessageSid]) 
+    message.update_attributes(status: query_hash["status"], error_code: query_hash['err-code'], message_timestamp: query_hash["message-timestamp"])
+
     #rescue
 =begin
       # if somehow the message id doesnt exist
@@ -286,15 +287,7 @@ module ParseText
 
       @message.save_text(from: params[:From], messageId: params[:MessageSid], to: params[:To], message_code: 8)
 =end
-    #else
-    if message
-      message.save_text(status_delivery: query_hash["status"], err_code: query_hash['err-code'],
-        scts: query_hash['scts'], message_timestamp: query_hash["message-timestamp"])
-      #end
     end
-    #if !query_hash.has_key?("network-code")        # Looks like nexmo doesnt always provide this...not sure
-      #query_hash['network-code'] = ""
-    #end
   end
 end
 
