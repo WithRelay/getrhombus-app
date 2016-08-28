@@ -39,8 +39,12 @@ class User < ActiveRecord::Base
   validates :phone_number, presence: true, numericality: { only_integer: true }, length: { minimum: 10 }, on: :create
 
   # A user can have belong to more than one list and also own multiple lists (Admins)
-  has_and_belongs_to_many :lists
+  has_many :lists
+  has_many :customers, through: :customer_lists
 
+
+ #has_many :inverse_lists, :class_name => "List", :foreign_key => "customer_id"
+ #has_many :inverse_customers :through => :inverse_lists, :source => :user
   # saves merchant info from stripe
   def save_stripe_omniauth_data(auth)
     self.provider = auth.provider
