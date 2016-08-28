@@ -22,7 +22,7 @@
 
     <li class="dropdown link">
       <a href="#" data-toggle="dropdown" class="dropdown-toggle profilebox">
-          <b><%= (current_user.user_level == 0) ? current_user.email : current_user.business_name %></b><span class="caret"></span>
+          <b><%= (current_user.user_level == 0) ? current_user.email : current_user.org_name %></b><span class="caret"></span>
       </a>
         <ul class="dropdown-menu dropdown-menu-list dropdown-menu-right">
           <li role="presentation" class="dropdown-header">Profile</li>

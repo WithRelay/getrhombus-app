@@ -235,12 +235,13 @@ ActiveRecord::Schema.define(version: 20160828224316) do
     t.string   "card_name",              limit: 191
     t.string   "card_type",              limit: 191
     t.string   "phone_number",           limit: 191
-    t.string   "business_name",          limit: 191
-    t.string   "business_type",          limit: 191
+    t.string   "org_name",               limit: 191
+    t.string   "org_type",               limit: 191
+    t.string   "org_category",           limit: 191
     t.string   "street_address",         limit: 191
     t.string   "city",                   limit: 191
     t.string   "state_province",         limit: 191
-    t.string   "business_phone",         limit: 191
+    t.string   "org_phone",              limit: 191
     t.string   "country",                limit: 191
     t.string   "rhombus_number",         limit: 191
     t.string   "rhombus_number_type",    limit: 191

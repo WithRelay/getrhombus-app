@@ -81,9 +81,9 @@
                         data-page="transactions"
                       ></td>
     	                <td><%= t.created_at.strftime("%m/%d/%Y") %></td>
-    	                <td><%= (current_user.user_level == 0) ? t.business_name : t.card_name %></td>
+    	                <td><%= (current_user.user_level == 0) ? t.org_name : t.card_name %></td>
     	                <td><%= t.notes %></td>
-    	                <td><%= (current_user.user_level == 0) ? t.business_phone : t.phone_number %></td>
+    	                <td><%= (current_user.user_level == 0) ? t.org_phone : t.phone_number %></td>
     	                <td><%= (current_user.user_level == 0) ? t.rhombus_number : t.amount_less_fees %></td>
     	                <td><%= t.last_four %></td>
     	              </tr>

@@ -54,13 +54,15 @@ module DashboardMerchantQueries
 		Transaction.find_by_sql(["#{@@customers_query_referrer} #{@@num_of_days_referrer} #{num_of_days.to_s} DAY AND NOW()))", self.rhombus_number])
 	end
 
+	# only inbound
 	def get_merchant_contacts_without_signups
 		Message.find_by_sql([
 			"SELECT count(*) as total, to, 
 				MIN(messages.created_at) as first_conversation, 
 				MAX(messages.created_at) as last_conversation
 				FROM messages 
-				WHERE user_id = ? or user_id_to = ? GROUP BY messages.user_id_to 
+				WHERE ((user_id = 0 or user_id is null) and user_id_to = ?) 
+				GROUP BY messages.from
 				ORDER BY messages.created_at DESC", self.id])
 	end	
 

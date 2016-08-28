@@ -11,10 +11,10 @@ class Message < ActiveRecord::Base
 	def self.send_and_save_message(from, to, message, media_url = "")		
 		begin
 			# save the outbound message
-			save_text(from: from, to: to, text: message, unread: false)			
+			self.update_attributes(from: from, to: to, text: message, unread: false)			
 			response = TextingService.send_sms(from, to, message, media_url)
 			if response
-				save_text(status: response.status, message_id: response.sid, message_timestamp: response.date_updated, message_price: response.price, 
+				self.update_attributes(status: response.status, message_id: response.sid, message_timestamp: response.date_updated, message_price: response.price, 
 					error_code: response.error_code, error_text: response.error_message, price_unit: response.price_unit, num_segments: response.num_segments)	
 			else
 				Notification.text_failure_notification(response, from, to, message).deliver_now           				# Notify marketplace owner of failure
@@ -28,11 +28,11 @@ class Message < ActiveRecord::Base
 	def self.send_and_save_message_nexmo(from, to, message)		
 		begin
 			# save the outbound message
-			save_text(from: from, to: to, text: message, unread: false)
+			self.update_attributes(from: from, to: to, text: message, unread: false)
 			response = TextingService.send_sms_nexmo(from, to, message)
 
 			if response && response.code == 200 && response["messages"].first["status"] == "0"		
-				save_text(status: response['messages'].first['status'], message_id: response['messages'].first['message-id'],
+				self.update_attributes(status: response['messages'].first['status'], message_id: response['messages'].first['message-id'],
 					message_price: response['messages'].first['message-price'], error_text: response['messages'].first['error-text'])
 			else			
 				Notification.text_failure_notification(response["messages"].first, from, to, message).deliver_now 				# Notify marketplace owner of failure
@@ -43,39 +43,6 @@ class Message < ActiveRecord::Base
     end
 	end
 	
-	# for saving any text received or sent
-	def self.save_text(options = {})
-		begin			
-			options.each do |k,v|
-				self[k] = v if ![:to, :from].include? k 
-			end
-
-			if options[:from]
-				# Attached the phone number and user id
-				self.from = options[:from]
-				self.user_id = User.find_by(rhombus_number: "#{options[:from]}").id rescue 0
-				# when guests message us
-				if self.user_id == 0
-	       	self.user_id = User.find_by(phone_number: "#{options[:from]}").id rescue 0
-				end
-			end
-
-			if options[:to]
-				# Attached the phone number and user id
-				self.to = options[:to] 
-				self.user_id_to =  User.find_by(rhombus_number: "#{options[:to]}").id rescue 0
-				# when we message guests
-				if self.user_id_to == 0
-	        self.user_id_to =  User.find_by(phone_number: "#{options[:to]}").id rescue 0
-				end
-			end
-
-			self.save
-			self
-		rescue StandardError => err
-			nil
-		end
-	end
 	
 	# Returns hash with the last "num_messages" messages that the given user has sent to the given merchant
  	def self.get_user_messages_by_merchant(user_number, merchant_id, num_messages)

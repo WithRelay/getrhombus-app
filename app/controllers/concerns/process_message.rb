@@ -46,7 +46,7 @@ module ProcessMessage
 				else
 					# payment message (raw amt or hashtag) but user doesnt exist. save in messages and send a response with payment captured link
 					saved_message = save_inbound_text(request.query_string, msg_code = 6)
-					merchant_name = merchant.business_name ? merchant.business_name : "Rhombus"
+					merchant_name = merchant.org_name ? merchant.org_name : "Rhombus"
 
 					# what if valid hashtag ??????
 					# modify response to based on amt valid or tag precedent...what if amt invalid...
@@ -66,7 +66,7 @@ module ProcessMessage
 				
 				is_signup = is_signup?(text)
 				if is_signup
-					merchant_name = merchant.business_name ? merchant.business_name : "Rhombus"
+					merchant_name = merchant.org_name ? merchant.org_name : "Rhombus"
 					short_link = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?num=#{params[:msisdn]}&referrer_num=#{params[:to]}&referrer=#{merchant_name}")
 					send_response(14, params[:to], params[:msisdn], "To chat with us or send a payment, sign up here: #{short_link}")
 				end

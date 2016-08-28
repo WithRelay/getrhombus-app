@@ -29,7 +29,7 @@ module ProcessMessageTwilio
         end
       else
         # paymennt message but user doesnt exist. save in messages and send a response
-        merchant_name = merchant.business_name ? merchant.business_name : "Rhombus"
+        merchant_name = merchant.org_name ? merchant.org_name : "Rhombus"
         short_link = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?num=#{params[:From]}&referrer_num=#{params[:To]}&referrer=#{merchant_name}")
         send_response(16, params[:To], params[:From], "Hi there, thanks for reaching out...to send a payment, sign up here. Thanks! => #{short_link}")
         save_inbound_text(params, msg_code = 6)
@@ -38,7 +38,7 @@ module ProcessMessageTwilio
     elsif !user
       save_inbound_text(params, msg_code = 4)
       if is_signup?(text)
-        merchant_name = merchant.business_name ? merchant.business_name : "Rhombus"
+        merchant_name = merchant.org_name ? merchant.org_name : "Rhombus"
         short_link = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?num=#{params[:From]}&referrer_num=#{params[:To]}&referrer=#{merchant_name}")
         send_response(14, params[:To], params[:From], "Hi there, thanks for reaching out...to chat with us or send a payment, sign up here: #{short_link}")
       end
