@@ -1,6 +1,5 @@
 
-# run after migration for user_id_to is changed to user_id
-# run before you remove user_id and user_id_from
+# run before any migrations
 
 # Ensure that messages table have the most current number for customers who changed their
 # numbers. This wasn't done before and could be the case.
@@ -13,9 +12,10 @@
 desc "Update all customer phone number in DB based on user id and vice versa"
 task :update_customer_number_data => :environment do
 
+  # update messages
   Message.all.each do |m|
 
-    u = User.where(id: m['user_id'])
+    u = User.where(id: m['user_id_from'])
     if u.present? && u.user_level == 0
       m.from = u.phone_number 
     elsif u.present? && u.user_level == 1 && u.rhombus_number.present?
@@ -32,4 +32,47 @@ task :update_customer_number_data => :environment do
     m.save
 
   end
+
+  # Update transactions
+  User.all.each do |u|
+    if u.user_level == 0 
+      txns = Transaction.where(user_id: u.id)
+      if t.present
+        txns.each do |t|
+          t.from = u.phone_number
+          t.save
+        end
+      end
+
+      txns = Transaction.where(referenced_user_id: u.id)
+      if t.present
+        txns.each do |t|
+          t.from = u.phone_number
+          t.save
+        end
+      end
+
+    elsif u.user_level == 1
+      txns = Transaction.where(user_id: u.id)
+      if t.present
+        txns.each do |t|
+          t.to = u.rhombus_number
+          t.save
+        end
+      end
+
+      txns = Transaction.where(referenced_merchant_id: u.id)
+      if t.present
+        txns.each do |t|
+          t.from = u.rhombus_number
+          t.save
+        end
+      end
+    end
+
+
+
+  end
+
+
 end
