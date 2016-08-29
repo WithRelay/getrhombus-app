@@ -1385,12 +1385,12 @@ $(document).ready(function () {
     $(this).val(function(_, v) { return v.replace(/\s+/g, ''); });
   });
 
-  // if hashtag isn't for payment, remove amount and precedence fields
-  $('#hashtag_not_payment_tag').change(function(){
-      if (this.checked) {
-          $('#hashtag_precedence_field').slideUp(300);
+  // if hashtag isn't for payment, remove payment settings
+  $('#hashtag_type').change(function(){
+      if (this.value == '1') {
+          $('#hashtag-payment-settings').slideUp(300);
       } else {
-          $('#hashtag_precedence_field').slideDown(300);
+          $('#hashtag-payment-settings').slideDown(300);
       }
   });
 
