@@ -4,9 +4,15 @@ class Hashtag < ActiveRecord::Base
 
 	belongs_to :user
 
+  has_many :image_refs, as: :imageable, dependent: :destroy
+  has_many :images, through: :image_refs, dependent: :destroy
+
 	# validations
 	validates :name, :response, presence: true
 	validates :tag, presence: true, uniqueness: { case_sensitive: false }
-	validates :amount, presence: true, numericality: true, :if => lambda { self.not_payment_tag == 0 }
+	validates :amount, presence: true, numericality: true, :if => lambda { self.type != 1 }
+
+  accepts_nested_attributes_for :images
+
 
 end

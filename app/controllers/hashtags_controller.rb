@@ -14,6 +14,7 @@ class HashtagsController < ApplicationController
 
   def new
     @hashtag = Hashtag.new
+    @hashtag.images.build
     respond_with(@hashtag)
   end
 

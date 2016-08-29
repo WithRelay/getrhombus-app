@@ -1,4 +1,5 @@
-<%= form_for([current_user, @hashtag]) do |f| %>
+<%= form_for [current_user, @hashtag], :html => { :multipart => true } do |f| %>
+ 
   <% if @hashtag.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@hashtag.errors.count, "error") %> prohibited this hashtag from being saved:</h2>
@@ -20,6 +21,11 @@
     <%= f.label :description %><br>
     <%= f.text_area :description %>
   </div>
+
+  <% f.fields_for :images do |i| %>
+    <%= i.label "Image" %>
+    <%= i.file_field :avatar %>
+  <% end %>sd
   
   
   <div class="field">
@@ -35,6 +41,7 @@
 
   <div class="field">
     <%= f.check_box :enable_tweet %> <%= f.label :enable_tweet %>
+
   </div>
 
   <br>
