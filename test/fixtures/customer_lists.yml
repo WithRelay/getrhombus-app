@@ -1,0 +1,9 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  list_references: MyString
+  user_id: 
+
+two:
+  list_references: MyString
+  user_id: 
