@@ -287,7 +287,7 @@ module ParseText
 
       @message.save_text(from: params[:From], messageId: params[:MessageSid], to: params[:To], message_code: 8)
 =end
-    end
+    #end
   end
 end
 

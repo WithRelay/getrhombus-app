@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160827205517) do
+ActiveRecord::Schema.define(version: 20160829031543) do
 
   create_table "full_contact_data", force: :cascade do |t|
     t.string   "likelihood",    limit: 191
@@ -47,16 +47,16 @@ ActiveRecord::Schema.define(version: 20160827205517) do
   add_index "full_contact_social_data", ["full_contact_data_id"], name: "index_full_contact_social_data_on_full_contact_data_id", using: :btree
 
   create_table "hashtags", force: :cascade do |t|
-    t.string   "name",            limit: 191
-    t.decimal  "amount",                        precision: 8, scale: 2
-    t.text     "response",        limit: 65535
-    t.string   "tag",             limit: 191
-    t.boolean  "is_precedent",    limit: 1,                             default: false
-    t.integer  "user_id",         limit: 4
-    t.datetime "created_at",                                                            null: false
-    t.datetime "updated_at",                                                            null: false
-    t.boolean  "not_payment_tag", limit: 1
-    t.boolean  "enable_tweet",    limit: 1
+    t.text     "description",   limit: 65535
+    t.decimal  "amount",                      precision: 8, scale: 2
+    t.text     "response",      limit: 65535
+    t.string   "tag",           limit: 191
+    t.boolean  "charge_amount", limit: 1,                             default: false
+    t.integer  "user_id",       limit: 4
+    t.datetime "created_at",                                                          null: false
+    t.datetime "updated_at",                                                          null: false
+    t.boolean  "enable_tweet",  limit: 1
+    t.integer  "type",          limit: 4
   end
 
   create_table "image_refs", force: :cascade do |t|

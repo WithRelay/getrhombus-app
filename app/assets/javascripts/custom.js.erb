@@ -1380,12 +1380,17 @@ $(document).ready(function () {
       });
       // validate text me form    
 
+
+  $('#hashtag_name').bind('input', function(){
+    $(this).val(function(_, v) { return v.replace(/\s+/g, ''); });
+  });
+
   // if hashtag isn't for payment, remove amount and precedence fields
   $('#hashtag_not_payment_tag').change(function(){
       if (this.checked) {
-          $('#hashtag_amount_field, #hashtag_precedence_field').slideUp(300);
+          $('#hashtag_precedence_field').slideUp(300);
       } else {
-          $('#hashtag_amount_field, #hashtag_precedence_field').slideDown(300);
+          $('#hashtag_precedence_field').slideDown(300);
       }
   });
 
@@ -1456,12 +1461,12 @@ $(document).ready(function () {
       }); 
   }
   
-  var country_num_types = {
-    US: { types: ["Local","Toll Free"], show: true },
-    CA: { types: ["Local","Toll Free"], show: true },
-    PR: { types: ["Local"] },
-    GB: { types: ["Local"] },
-    // else mobile and don't show
+   var country_num_types = {
+        US: { types: ["Local","Toll Free"], show: true },
+        CA: { types: ["Local","Toll Free"], show: true },
+        PR: { types: ["Local"] },
+        GB: { types: ["Local"] },
+        // else mobile and don't show
   };
 
   searchNumberCountry.change(function() {

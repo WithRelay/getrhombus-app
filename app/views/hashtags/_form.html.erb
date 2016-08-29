@@ -12,35 +12,46 @@
   <% end %>
 
   <div class="field">
-    <%= f.label :name %><br>
-    <%= f.text_field :name %>
-  </div>
-  <div class="field">
-    <%= f.label :not_payment_tag %><br>
-    <%= f.check_box :not_payment_tag %>
-  </div>
-  <div class="field" id="hashtag_amount_field">
-    <%= f.label :amount %><br>
-    <%= f.text_field :amount %>
-  </div>
-  <div class="field">
-    <%= f.label :response %><br>
-    <%= f.text_area :response %>
-  </div>
-  <div class="field">
     <%= f.label :tag %><br>
     <%= f.text_field :tag %>
   </div>
 
   <div class="field">
-    <%= f.label :enable_tweet %><br>
-    <%= f.check_box :enable_tweet %>
+    <%= f.label :description %><br>
+    <%= f.text_area :description %>
+  </div>
+  
+  
+  <div class="field">
+    <%= f.select :type, "<option value=1>Non-payment Hashtag</option><option value=2>One-time payment Hashtag</option><option value=3>Recurring payment Hashtag</option>".html_safe %>
   </div>
 
-  <div class="field" id="hashtag_precedence_field">
-    <%= f.label :is_precedent %><br>
-    <%= f.check_box :is_precedent %>
+  <div class="field">
+    <%= f.label :response %><br>
+    <%= f.text_area :response %>
   </div>
+
+  <br>
+
+  <div class="field">
+    <%= f.check_box :enable_tweet %> <%= f.label :enable_tweet %>
+  </div>
+
+  <br>
+
+  <div id="hashtag-payment-settings">
+    <div class="field">
+      <%= f.label :amount %>
+      <%= f.text_field :amount %>
+    </div> <br>
+    <div class="field">
+      <%#= f.label :is_precedent %>
+      <%= f.select :charge_amount, "<option value=0>Allow customers to ovveride amount</option><option value=1>Always charge amount</option>".html_safe %>
+    </div>
+  </div>
+
+  <br>
+
   <div class="actions">
     <%= f.submit %>
   </div>
