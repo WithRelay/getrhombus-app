@@ -14,7 +14,6 @@ class HashtagsController < ApplicationController
 
   def new
     @hashtag = Hashtag.new
-    @hashtag.images.build
     respond_with(@hashtag)
   end
 
@@ -55,6 +54,7 @@ class HashtagsController < ApplicationController
     end
 
     def hashtag_params
-      params.require(:hashtag).permit(:amount, :response, :tag, :charge_amount, :type, :enable_tweet, :description)
+      params.require(:hashtag).permit(:amount, :response, :tag, :charge_amount, :tag_type, 
+        :enable_tweet, :description, images_attributes: [:avatar])
     end
 end

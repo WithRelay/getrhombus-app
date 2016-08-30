@@ -22,14 +22,10 @@
     <%= f.text_area :description %>
   </div>
 
-  <% f.fields_for :images do |i| %>
-    <%= i.label "Image" %>
-    <%= i.file_field :avatar %>
-  <% end %>sd
-  
+  <%= file_field_tag "hashtag[images_attributes][][avatar]", type: :file, multiple: true %>
   
   <div class="field">
-    <%= f.select :type, "<option value=1>Non-payment Hashtag</option><option value=2>One-time payment Hashtag</option><option value=3>Recurring payment Hashtag</option>".html_safe %>
+    <%= f.select :tag_type, options_for_select({ "Non-payment Hashtag" => "1", "One-time payment Hashtag" => '2', "Recurring payment Hashtag" => "3" }, selected: @hashtag.tag_type) %>
   </div>
 
   <div class="field">
@@ -41,19 +37,19 @@
 
   <div class="field">
     <%= f.check_box :enable_tweet %> <%= f.label :enable_tweet %>
-
   </div>
 
   <br>
 
-  <div id="hashtag-payment-settings" style="display:none;">
+  <div id="hashtag-payment-settings">
     <div class="field">
       <%= f.label :amount %>
       <%= f.text_field :amount %>
     </div> <br>
+
     <div class="field">
-      <%#= f.label :is_precedent %>
-      <%= f.select :charge_amount, "<option value=0>Allow customers to ovveride amount</option><option value=1>Always charge amount</option>".html_safe %>
+      <%#= f.label :charge_amount %>
+      <%= f.select :charge_amount, options_for_select({ "Allow customers to ovveride amount" => "0", "Always charge amount" => '1' }, selected: @hashtag.charge_amount) %>
     </div>
   </div>
 

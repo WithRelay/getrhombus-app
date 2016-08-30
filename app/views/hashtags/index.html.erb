@@ -63,7 +63,7 @@
               <% @hashtags.each do |h| %>
                 <tr role="row">
                   <td><%= h.tag %></td>
-                  <td><%= h.name %></td>
+                  <td><%= h.description %></td>
                   <td><%= h.created_at.strftime("%m/%d/%Y %I:%M %p") %></td>
                   <td><%= h.updated_at.strftime("%m/%d/%Y %I:%M %p") %></td>
                   <td>

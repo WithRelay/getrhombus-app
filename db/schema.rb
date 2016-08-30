@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160829031543) do
+ActiveRecord::Schema.define(version: 20160830193508) do
 
   create_table "customer_lists", force: :cascade do |t|
     t.integer  "user_id",    limit: 4
@@ -65,7 +65,7 @@ ActiveRecord::Schema.define(version: 20160829031543) do
     t.datetime "created_at",                                                          null: false
     t.datetime "updated_at",                                                          null: false
     t.boolean  "enable_tweet",  limit: 1
-    t.integer  "type",          limit: 4
+    t.integer  "tag_type",      limit: 4
   end
 
   create_table "image_refs", force: :cascade do |t|
@@ -89,9 +89,8 @@ ActiveRecord::Schema.define(version: 20160829031543) do
   end
 
   create_table "lists", force: :cascade do |t|
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
-    t.string   "name",       limit: 191
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
     t.integer  "user_id",    limit: 4
   end
 
