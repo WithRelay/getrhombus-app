@@ -19,28 +19,29 @@ class User < ActiveRecord::Base
   has_many :image_refs, as: :imageable, dependent: :destroy
   has_many :images, through: :image_refs, dependent: :destroy
 
-  before_validation :get_only_numbers, :the_titleizer
+  before_validation :the_titleizer
   
-  # only create, cos they can change this in edit
-
-  # remove this soon
-  before_create :set_merchant_business_phone, :deactivate_merchant_account          
+  # only create because the actual org_phone field is used in edit view
+  before_create :set_merchant_org_phone          
 
   # Just to prevent sending emails locally for now...remove comment later
-  # after_commit :send_welcome_email, :on => :create
+  # after_commit :send_welcome_email, on: :create
+  after_commit :update_phone_in_db, on: :update
 
-  validates_presence_of :user_level, :message => "Please select an account type"
-  validates :country, length: {is: 2}, allow_blank: true
-  
+  #validates_presence_of :user_level, :message => "Please select an account type"
+  #validates :country, length: {is: 2}, allow_blank: true  
   # why allow nil?
-  validates_uniqueness_of :phone_number, :allow_nil => true, :if => lambda { self.user_level == 0 }
-
+  #validates_uniqueness_of :phone_number, :allow_nil => true, :if => lambda { self.user_level == 0 }
   # still need validation errors for edit..this is only for create action
-  validates :phone_number, presence: true, numericality: { only_integer: true }, length: { minimum: 10 }, on: :create
+  #validates :phone_number, presence: true, numericality: { only_integer: true }, length: { minimum: 10 }, on: :create
 
   # A user can have belong to more than one list and also own multiple lists (Admins)
-  has_and_belongs_to_many :lists
+  has_many :lists
+  has_many :customers, through: :customer_lists
 
+
+ #has_many :inverse_lists, :class_name => "List", :foreign_key => "customer_id"
+ #has_many :inverse_customers :through => :inverse_lists, :source => :user
   # saves merchant info from stripe
   def save_stripe_omniauth_data(auth)
     self.provider = auth.provider
@@ -126,7 +127,7 @@ class User < ActiveRecord::Base
   
   def phone
     return self.phone_number if self.user_level == 0
-    self.business_phone
+    self.org_phone
   end
 
   def update_merchant_account(params)
@@ -140,26 +141,11 @@ class User < ActiveRecord::Base
 
   private
 
-  # can reduce all these self calls here ###############
-
-
-  def get_only_numbers
-    self.phone_number = self.phone_number.gsub(/\D/, "") unless self.phone_number.blank?
-    self.business_phone = self.business_phone.gsub(/\D/, "") unless self.business_phone.blank?
-  end
-
-  def set_merchant_business_phone
-    # If a merchant is signing up, make business number the phone number. Would be useful when merchants can become regular users and vice versa
+  def set_merchant_org_phone
     if self.user_level == 1
-      self.business_phone = self.phone_number
+      self.org_phone = self.phone_number
       self.phone_number = nil
     end 
-  end
-
-  def deactivate_merchant_account
-      if self.user_level == 1
-          self.is_active = 0
-      end 
   end
 
   def the_titleizer       #remove leading and trailing whitespaces
@@ -174,7 +160,7 @@ class User < ActiveRecord::Base
     self.url = self.url.strip unless self.url.blank?
     self.custom_welcome = self.custom_welcome.strip unless self.custom_welcome.blank?
     self.referrer_num = self.referrer_num.strip unless self.referrer_num.blank?
-    self.business_name = self.business_name.strip unless self.business_name.blank?
+    self.org_name = self.org_name.strip unless self.org_name.blank?
   end
 
   def send_welcome_email
@@ -185,7 +171,7 @@ class User < ActiveRecord::Base
       message = Message.new
       unless self.referrer_num.blank?
         referrer = User.find_by(rhombus_number: self.referrer_num)
-        EmailingService.send_welcome_email_with_referral(referrer.email, self.email, referrer.business_name, referrer.rhombus_number, owner.rhombus_number)
+        EmailingService.send_welcome_email_with_referral(referrer.email, self.email, referrer.org_name, referrer.rhombus_number, owner.rhombus_number)
         text = "Thanks for signing up! Please add a payment card to your Rhombus profile (if you haven't done so). 
         You can chat with us anytime via sms or to make a payment, just text the amount & description/hashtag. Ex. +10 #donut"
         message.send_and_save_message(referrer.rhombus_number, self.phone_number, text)
@@ -196,6 +182,16 @@ class User < ActiveRecord::Base
       You can chat with a local business anytime by texting their Rhombus number or to make a payment, just text the amount & 
       description/hashtag. Ex. +10 #donut"
       message.send_and_save_message(owner.rhombus_number, self.phone_number, text)
+    end
+  end
+
+  def update_phone_in_db
+    x = self.previous_changes['phone_number']
+    if x && self.user_level == 0
+      # move to background job
+      ActiveRecord::Base.connection.execute("UPDATE messages SET messages.from = #{x[1]} WHERE messages.from = #{x[0]}")
+      ActiveRecord::Base.connection.execute("UPDATE messages SET messages.to = #{x[1]} WHERE messages.to = #{x[0]}")
+      ActiveRecord::Base.connection.execute("UPDATE transactions SET transactions.from = #{x[1]} WHERE transactions.from = #{x[0]}") 
     end
   end
   

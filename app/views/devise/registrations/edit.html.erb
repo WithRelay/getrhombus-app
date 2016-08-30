@@ -13,7 +13,7 @@
 
   <% elsif current_user.user_level == 1 %>
         
-        <% if current_user.business_name.blank? %>
+        <% if current_user.org_name.blank? %>
               <%= render "merchant_information" %>       
         <%# elsif current_user.stripe_access_token.blank? %>
               <%#= render "stripe_connect" %>

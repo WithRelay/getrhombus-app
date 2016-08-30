@@ -1,10 +1,10 @@
 class Image < ActiveRecord::Base
   # This method associates the attribute ":avatar" with a file attachment
 
-  has_many :image_refs, dependent: :destroy
-
-  has_many :users, through: :image_refs, source: :imageable, source_type: 'User', dependent: :destroy
-  has_many :messages, through: :image_refs, source: :imageable, source_type: 'Message', dependent: :destroy
+  has_one :image_ref, dependent: :destroy
+  has_one :user, through: :image_ref, source: :imageable, source_type: 'User', dependent: :destroy
+  has_one :hashtag, through: :image_ref, source: :imageable, source_type: 'User', dependent: :destroy
+  has_one :message, through: :image_ref, source: :imageable, source_type: 'Message', dependent: :destroy
 
   has_attached_file :avatar, styles: {
     thumb: '100x100>',

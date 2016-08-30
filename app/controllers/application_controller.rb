@@ -29,8 +29,8 @@ class ApplicationController < ActionController::Base
   # Returns JSON object with the current user id
   def json_get_current_user
     render :json => Hash[
-      'success' => !current_user.blank?, 
-      'id' => !current_user.blank? ? current_user.id : nil,
+      'success' => current_user.present?, 
+      'id' => current_user.present? ? current_user.id : nil,
       'pubnub_publish_key' => Rails.application.secrets.pubnub["publish_key"],
       'pubnub_subscribe_key' => Rails.application.secrets.pubnub["subscribe_key"],
       'short_url' => current_user.short_url
@@ -52,8 +52,8 @@ class ApplicationController < ActionController::Base
       :password, :password_confirmation, :instrument_uri, :last_four, 
       :expiration_month,  :expiration_year, :card_name, :card_type, 
       :rhombus_number, :update_rhombus_number,
-      :phone_number, :business_name, :business_type, :street_address, :city, 
-      :state_province, :business_phone, :country, :currency, :approve_payments_immediately, 
+      :phone_number, :org_name, :org_category, :street_address, :city, 
+      :state_province, :org_phone, :country, :currency, :approve_payments_immediately, 
       :tax_rate, :zip_code, :first_name, :last_name, :is_active, :url,
       :subscription_type, :custom_welcome )}
   end

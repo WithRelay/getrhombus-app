@@ -11,7 +11,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160823035003) do
+ActiveRecord::Schema.define(version: 20160829031543) do
+
+  create_table "customer_lists", force: :cascade do |t|
+    t.integer  "user_id",    limit: 4
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
+    t.datetime "time"
+  end
+
+  add_index "customer_lists", ["user_id"], name: "index_customer_lists_on_user_id", using: :btree
 
   create_table "full_contact_data", force: :cascade do |t|
     t.string   "likelihood",    limit: 191
@@ -47,16 +56,16 @@ ActiveRecord::Schema.define(version: 20160823035003) do
   add_index "full_contact_social_data", ["full_contact_data_id"], name: "index_full_contact_social_data_on_full_contact_data_id", using: :btree
 
   create_table "hashtags", force: :cascade do |t|
-    t.string   "name",            limit: 191
-    t.decimal  "amount",                        precision: 8, scale: 2
-    t.text     "response",        limit: 65535
-    t.string   "tag",             limit: 191
-    t.boolean  "is_precedent",    limit: 1,                             default: false
-    t.integer  "user_id",         limit: 4
-    t.datetime "created_at",                                                            null: false
-    t.datetime "updated_at",                                                            null: false
-    t.boolean  "not_payment_tag", limit: 1
-    t.boolean  "enable_tweet",    limit: 1
+    t.text     "description",   limit: 65535
+    t.decimal  "amount",                      precision: 8, scale: 2
+    t.text     "response",      limit: 65535
+    t.string   "tag",           limit: 191
+    t.boolean  "charge_amount", limit: 1,                             default: false
+    t.integer  "user_id",       limit: 4
+    t.datetime "created_at",                                                          null: false
+    t.datetime "updated_at",                                                          null: false
+    t.boolean  "enable_tweet",  limit: 1
+    t.integer  "type",          limit: 4
   end
 
   create_table "image_refs", force: :cascade do |t|
@@ -80,14 +89,13 @@ ActiveRecord::Schema.define(version: 20160823035003) do
   end
 
   create_table "lists", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+    t.string   "name",       limit: 191
+    t.integer  "user_id",    limit: 4
   end
 
-  create_table "lists_users", id: false, force: :cascade do |t|
-    t.integer "list_id", limit: 4, null: false
-    t.integer "user_id", limit: 4, null: false
-  end
+  add_index "lists", ["user_id"], name: "index_lists_on_user_id", using: :btree
 
   create_table "messages", force: :cascade do |t|
     t.datetime "created_at"
@@ -227,12 +235,13 @@ ActiveRecord::Schema.define(version: 20160823035003) do
     t.string   "card_name",              limit: 191
     t.string   "card_type",              limit: 191
     t.string   "phone_number",           limit: 191
-    t.string   "business_name",          limit: 191
-    t.string   "business_type",          limit: 191
+    t.string   "org_name",               limit: 191
+    t.string   "org_type",               limit: 191
+    t.string   "org_category",           limit: 191
     t.string   "street_address",         limit: 191
     t.string   "city",                   limit: 191
     t.string   "state_province",         limit: 191
-    t.string   "business_phone",         limit: 191
+    t.string   "org_phone",              limit: 191
     t.string   "country",                limit: 191
     t.string   "rhombus_number",         limit: 191
     t.string   "rhombus_number_type",    limit: 191
@@ -264,4 +273,6 @@ ActiveRecord::Schema.define(version: 20160823035003) do
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   add_index "users", ["rhombus_number"], name: "index_users_on_rhombus_number", unique: true, using: :btree
 
+  add_foreign_key "customer_lists", "users"
+  add_foreign_key "lists", "users"
 end

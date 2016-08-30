@@ -8,7 +8,7 @@ module AdditionalUserActions
     # Generate bitly if blank
     # this should go ....should never happen again in v 1.5 upward
     if @user.short_url.blank?
-      @user.short_url = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?referrer_num=#{@user.rhombus_number}&referrer=#{@user.business_name}")
+      @user.short_url = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?referrer_num=#{@user.rhombus_number}&referrer=#{@user.org_name}")
       @user.save
     end
     # change back

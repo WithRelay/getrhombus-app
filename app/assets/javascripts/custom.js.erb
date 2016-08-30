@@ -775,10 +775,10 @@ $(document).ready(function () {
 
     // validate merchant profile
     $('#merchantProfile')
-        .find('[name="user[business_type]"]')
+        .find('[name="user[org_category]"]')
             .selectpicker()
             .change(function(e) {
-                $('#merchantProfile').formValidation('revalidateField', 'user[business_type]');
+                $('#merchantProfile').formValidation('revalidateField', 'user[org_category]');
             })
             .end()
         .find('[name="user[country]"]')
@@ -887,7 +887,7 @@ $(document).ready(function () {
                         }
                     }
                 },
-                'user[business_name]': {
+                'user[org_name]': {
                     row: '.form-group',
                     validators: {
                         notEmpty: {
@@ -906,7 +906,7 @@ $(document).ready(function () {
                         }
                     }
                 },
-                'user[business_type]': {
+                'user[org_category]': {
                     row: '.form-group',
                     validators: {
                         notEmpty: {
@@ -1380,14 +1380,26 @@ $(document).ready(function () {
       });
       // validate text me form    
 
-  // if hashtag isn't for payment, remove amount and precedence fields
-  $('#hashtag_not_payment_tag').change(function(){
-      if (this.checked) {
-          $('#hashtag_amount_field, #hashtag_precedence_field').slideUp(300);
-      } else {
-          $('#hashtag_amount_field, #hashtag_precedence_field').slideDown(300);
-      }
+  //  Hashtags
+  $('#hashtag_name').bind('input', function(){
+    $(this).val(function(_, v) { return v.replace(/\s+/g, ''); });
   });
+  $('#hashtag_amount').bind('input', function(){
+    $(this).val(function(_, v) { 
+      if (v.slice(-1) == '.' && (v.match(/[.]/g) || []).length == 1 && v.length > 1) return v
+        // /^\d+(.\d{1,2})?$/
+      // http://stackoverflow.com/questions/30606348/check-if-a-given-value-is-a-positive-number-or-float-with-maximum-two-decimal-pl
+      // http://stackoverflow.com/questions/25053605/regex-to-allow-only-a-single-dot-in-a-textbox
+      else if (v.match(/^\d+(.\d{1,2})?$/)) return v
+      else return v.slice(0, -1);
+    });
+  });
+  // if hashtag isn't for payment, remove payment settings
+  $('#hashtag_type').change(function(){
+    if (this.value == '1') $('#hashtag-payment-settings').slideUp(300);
+    else $('#hashtag-payment-settings').slideDown(300);
+  });
+  ///// Hashtags
 
   $('#transactions-column').on("click", ".refund_link", function() {
       REFUND_TXN_LINK = this;
@@ -1456,12 +1468,12 @@ $(document).ready(function () {
       }); 
   }
   
-  var country_num_types = {
-    US: { types: ["Local","Toll Free"], show: true },
-    CA: { types: ["Local","Toll Free"], show: true },
-    PR: { types: ["Local"] },
-    GB: { types: ["Local"] },
-    // else mobile and don't show
+   var country_num_types = {
+        US: { types: ["Local","Toll Free"], show: true },
+        CA: { types: ["Local","Toll Free"], show: true },
+        PR: { types: ["Local"] },
+        GB: { types: ["Local"] },
+        // else mobile and don't show
   };
 
   searchNumberCountry.change(function() {

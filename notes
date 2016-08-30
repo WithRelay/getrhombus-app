@@ -1,7 +1,7 @@
 Payment Capture
 - check if /profile affect forms for merchants
 - plug in charge into payment capture workflow
-- let parse_text return cents i guess and just divide by two to show
+- let parse_text return cents i guess and just divide by 100 to show
 
 Charges
 - stripe service for charge needs to be backward compatible
@@ -14,24 +14,17 @@ Subscriptions
 Hashtags
 - sms only, mms with optional sms, recurring and payment with auto sms.... cool on these?
 
-
-- review user_id_to, user_id_from, transaction_id in messages ...stop saving zero 
-- on phone number change, update user messages and transactions from and to, with rake task
-- update used_id_to, when user signs up with number that exists - will this change my queries with rake task
-
-- dashboard queries
-- clean up angular stuff and upgrade pubnub
-- add organization type
-- does antonio pull only with user id and falls back to number
-
-Sunday/Monday
-- MMS
-- Charge customer
-- Tags
-
-Contact
+Contact - Inbound
 - sent u a text doesnt have an account 
 - have an account, sent u a text but ref link isnt yours 
+
+
+Sunday/Monday
+- clean up angular stuff
+- upgrade pubnub
+- MMS
+- Charge customer
+- Tags - subscription info
 
 Delaware
 - managed accounts
