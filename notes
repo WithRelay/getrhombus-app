@@ -19,25 +19,27 @@ Contact - Inbound
 - have an account, sent u a text but ref link isnt yours 
 
 
-Tuesday
+Wednesday
 - clean up angular stuff - https://blog.joshsoftware.com/2014/07/17/building-web-apps-with-rails4-and-angularjs-in-15-minutes/
 - upgrade pubnub
 - Charge customer
-- Tags - image edit and display, subscription stuff after doing subscription module
+- Tags - image edit and display
+  - subscription stuff after doing subscription module
+- MMS
 
-Wednesday
+Thursday
 - background jobs
   - http://khoapham.me/blog/completely-setup-resque-and-resque-scheduler/
   - http://tutorials.jumpstartlab.com/topics/performance/background_jobs.html
   - https://rubyplus.com/articles/531-How-to-Install-and-Configure-Resque-to-Handle-Background-Jobs-in-Rails-4-1
 - server notifications
-- MMS
-
-Thursday
-- subscriptions
+- drip campaigns
 
 Friday
+- subscriptions
+
+Saturday
 - managed accounts
-- drip campaigns
+
 
 

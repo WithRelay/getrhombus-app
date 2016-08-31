@@ -18,6 +18,7 @@ class HashtagsController < ApplicationController
   end
 
   def edit
+    #http://www.railscook.com/recipes/multiple-files-upload-with-nested-resource-using-paperclip-in-rails/
   end
 
   def create
