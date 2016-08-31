@@ -17,6 +17,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'PubNub
     $scope.current_chat_user = false;
     $scope.send_msg_btn = "SEND";
     $scope.charge_btn = "CHARGE";
+    $scope.charge_data = {};
     $scope.is_true = true;
     $scope.is_sending = false;
     
@@ -180,17 +181,19 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'PubNub
       $scope.customerToCharge = (selected) ? selected.originalObject.phone_number : null;
     };
 
-    /* later release?
     $scope.hashtagSelected = function(selected) {
-      $scope.charge.hashtagID = (selected) ? selected.originalObject.id : null;
-    }; */
+      // else set to input field?
+      $scope.charge_data.hashtag_id = (selected) ? selected.originalObject.id : null;
+    }; 
 
     // function to submit the form after all validation has occurred            
     $scope.submitChargeForm = function(isValid) {
       if (isValid) {
         $scope.is_sending = true;
         $scope.charge_btn = "Please wait...";
-        //$scope.charge.phone_number = $scope.customerToCharge;
+        $scope.charge_data.phone_number = $scope.customerToCharge;
+        $scope.charge_data.tag = document.getElementById('find-hashtag_value').value;
+        console.log($scope.charge_data)
         alert('our form is amazing');  
         
         /*$http.post("/echo/json/", data)

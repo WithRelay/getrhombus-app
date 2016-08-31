@@ -133,6 +133,22 @@
       <form id="chargeForm" name="chargeForm" ng-submit="submitChargeForm(chargeForm.$valid)" novalidate>
          
         <label>
+          <angucomplete-alt id="find-hashtag"
+            placeholder="Hashtag or item name"
+            pause="400"
+            minlength="3" 
+            selected-object="hashtagSelected"
+            remote-url="<%= (Rails.env == 'development' ? "http://localhost:3000" : "https://www.getrhombus.com")  +  "/v1/hashtags/find?query=" %>"
+            remote-url-data-field="hashtags"
+            title-field="tag"
+            match-class='highlight'
+            input-name='hashtag'
+            description-field='description'
+            text-searching="Finding your tag/item..." />
+        </label>
+
+
+        <label>
           <angucomplete-alt id="find-customer"
             placeholder="Customer name or number"
             pause="400"
@@ -143,31 +159,15 @@
             title-field="card_name"
             text-no-results="We couldn't find any customer"
             match-class='highlight'
-            input-name='number'
+            input-name='customer_number'
             description-field='phone_number'
             text-searching="Finding your customer..." 
             field-required="is_true"
+            <%#= Add this when i add html notifications %>
+            <%#= Add scroll bar option during UI integration and testing %>
+            <%#= remote-url-error-callback="" %>
              />
         </label>
-
-<%
-=begin %>
-        <label>
-          <angucomplete-alt id="find-hashtag"
-            placeholder="Hashtag or item name"
-            pause="400"
-            minlength="3" 
-            selected-object="hashtagSelected"
-            remote-url="<%#= (Rails.env == 'development' ? "http://localhost:3000" : "https://www.getrhombus.com")  +  "/v1/hashtags/find?query=" %>"
-            remote-url-data-field="hashtags"
-            title-field="tag"
-            text-no-results="We couldn't find any tag/item"
-            match-class='highlight'
-            description-field='name'
-            text-searching="Finding your tag/item..." />
-        </label>
-<%
-=end %>
 
         <label class="left">
           <input type="number" min="1" max='15000' required ng-model='amount' name="amount" placeholder="Amount" style="width: 150px">        

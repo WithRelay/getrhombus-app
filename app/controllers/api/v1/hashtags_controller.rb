@@ -2,7 +2,7 @@ class Api::V1::HashtagsController < API::V1::BaseController
 
 	def find
 		sql = ActiveRecord::Base.send(:sanitize_sql_array, 
-				["SELECT id, name, tag FROM hashtags where name LIKE concat('%', ?, '%') or 
+				["SELECT id, description, tag FROM hashtags where description LIKE concat('%', ?, '%') or 
 					tag like concat('%', ?, '%') and user_id = ?", params[:query], params[:query], current_user.id ])
 					#tag like concat('%', ?, '%') and user_id = ?", params[:query], params[:query], '23' ])
 
@@ -16,8 +16,7 @@ class Api::V1::HashtagsController < API::V1::BaseController
 			hashtags_array.push({ name: h["name"], tag: h['tag'], id: h['id'] })
 		end
 
-	    output = { "hashtags" => hashtags_array }
-		render json: output
+	  render json: { "hashtags" => hashtags_array }		
 	end
 
 	def create
