@@ -170,7 +170,8 @@
         </label>
 
         <label class="left">
-          <input type="number" min="1" max='15000' required ng-model='amount' name="amount" placeholder="Amount" style="width: 150px">        
+          <%# http://gsferreira.com/archive/2015/02/angularjs-input-number-with-two-decimal-places %>
+          <input type="number" min="1" max='15000' required ng-model='amount' name="amount" placeholder="Amount" style="width: 150px" step='0.01' ng-pattern="/^\d+(.\d{1,2})?$/">
           <p ng-show="chargeForm.amount.$invalid && !chargeForm.amount.$pristine">Amount is required.</p>
         </label>
       
@@ -179,7 +180,7 @@
         </label>
 
         <label>
-          <input type="checkbox" name="authorize" value="authorize">Authorize only
+          <input type="checkbox" name="authorize" ng-model='authorize' value="authorize">Authorize only
         </label>
 
         <footer>

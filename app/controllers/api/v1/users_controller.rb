@@ -8,10 +8,10 @@ class Api::V1::UsersController < API::V1::BaseController
 					  SELECT user_id_to as usersID FROM messages where messages.user_id = ? 
 					) t1
 					inner join users on t1.usersID = users.id where lower(card_name) LIKE concat('%', ?, '%') or 
-					phone_number like concat('%', ?, '%')", current_user.id, current_user.id, params[:query].downcase, params[:query] ])
+					phone_number like concat('%', ?, '%') and instrument_uri is not null", current_user.id, current_user.id, params[:query].downcase, params[:query] ])
 
 		results = User.connection.select_all(sql)
-		
+
 		render json: { "users" => results } and return if results.empty?
 
 		users_array = []

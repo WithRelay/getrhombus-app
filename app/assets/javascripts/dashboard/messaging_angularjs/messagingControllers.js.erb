@@ -9,6 +9,7 @@ var messagingControllers = angular.module('messagingControllers', [
 messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'PubNub', 'Upload',
   function($scope, $http, PubNub, Upload) {
 
+    // Messages
     $scope.num_message_history = 200;
     $scope.char_limit = 150;
     $scope.active_user_number = 0;
@@ -16,8 +17,11 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'PubNub
     $scope.global_unread_count = 0;
     $scope.current_chat_user = false;
     $scope.send_msg_btn = "SEND";
+
+    // Transactions
     $scope.charge_btn = "CHARGE";
     $scope.charge_data = {};
+    $scope.charge_data.hashtag_id = null;
     $scope.is_true = true;
     $scope.is_sending = false;
     
@@ -193,8 +197,10 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'PubNub
         $scope.charge_btn = "Please wait...";
         $scope.charge_data.phone_number = $scope.customerToCharge;
         $scope.charge_data.tag = document.getElementById('find-hashtag_value').value;
-        console.log($scope.charge_data)
-        alert('our form is amazing');  
+        $scope.charge_data.amount = $scope.amount;
+        $scope.charge_data.notes = $scope.notes;
+        $scope.charge_data.authorize = $scope.authorize;
+        console.log($scope.charge_data);
         
         /*$http.post("/echo/json/", data)
         .success(function(data) {
