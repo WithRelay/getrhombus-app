@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160830193508) do
+ActiveRecord::Schema.define(version: 20160831180011) do
 
   create_table "customer_lists", force: :cascade do |t|
     t.integer  "user_id",    limit: 4
@@ -153,15 +153,10 @@ ActiveRecord::Schema.define(version: 20160830193508) do
     t.string   "last_four",                          limit: 191
     t.string   "expiration_month",                   limit: 191
     t.string   "expiration_year",                    limit: 191
-    t.string   "zip_code",                           limit: 191
     t.string   "card_type",                          limit: 191
     t.string   "card_name",                          limit: 191
     t.string   "tax_rate",                           limit: 191
     t.string   "on_behalf_of_uri",                   limit: 191
-    t.string   "account_number",                     limit: 191
-    t.string   "account_type",                       limit: 191
-    t.string   "account_name",                       limit: 191
-    t.string   "routing_number",                     limit: 191
     t.integer  "referenced_user_id",                 limit: 4
     t.string   "referenced_customer_transaction_id", limit: 191
     t.string   "receipt_sent_at",                    limit: 191
@@ -172,9 +167,12 @@ ActiveRecord::Schema.define(version: 20160830193508) do
     t.integer  "referenced_merchant_id",             limit: 4
     t.string   "currency",                           limit: 191
     t.integer  "refund_id",                          limit: 4
+    t.boolean  "captured",                           limit: 1,                             default: true
+    t.integer  "hashtag_id",                         limit: 4
   end
 
   add_index "transactions", ["created_at"], name: "index_transactions_on_created_at", using: :btree
+  add_index "transactions", ["hashtag_id"], name: "index_transactions_on_hashtag_id", using: :btree
   add_index "transactions", ["referenced_customer_transaction_id"], name: "index_transactions_on_referenced_customer_transaction_id", using: :btree
   add_index "transactions", ["transaction_number"], name: "index_transactions_on_transaction_number", using: :btree
   add_index "transactions", ["user_id"], name: "index_transactions_on_user_id", using: :btree
@@ -274,4 +272,5 @@ ActiveRecord::Schema.define(version: 20160830193508) do
 
   add_foreign_key "customer_lists", "users"
   add_foreign_key "lists", "users"
+  add_foreign_key "transactions", "hashtags"
 end
