@@ -17,7 +17,7 @@ class User < ActiveRecord::Base
   has_many :hashtags, dependent: :destroy
   has_one :twitter_cred, dependent: :destroy
   has_many :image_refs, as: :imageable, dependent: :destroy
-  has_many :images, through: :image_refs, dependent: :destroy
+  has_many :images, through: :image_refs
 
   before_validation :the_titleizer
   

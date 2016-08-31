@@ -3,7 +3,7 @@ class Message < ActiveRecord::Base
 	belongs_to :txn, :foreign_key => :transaction_id, :class_name => :Transaction
 
 	has_many :image_refs, as: :imageable, dependent: :destroy
-  has_many :images, through: :image_refs, dependent: :destroy
+  has_many :images, through: :image_refs
 
 	# belongs_to :user, counter_cache: true
 	
