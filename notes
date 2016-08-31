@@ -21,7 +21,10 @@ Contact - Inbound
 
 Wednesday
 - Add EmailVerify api - Done
-- Charge customer - span red
+- Charge customer - plug in parts of backend
+  - remove account_number, account_type, account_name, routing_number, zip_code
+  - add captured, hashtag_id
+
 
 - Clean up angular - https://blog.joshsoftware.com/2014/07/17/building-web-apps-with-rails4-and-angularjs-in-15-minutes/
 - Upgrade pubnub

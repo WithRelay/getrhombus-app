@@ -20,8 +20,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'PubNub
 
     // Transactions
     $scope.charge_btn = "CHARGE";
-    $scope.charge_data = {};
-    $scope.charge_data.hashtag_id = null;
+    $scope.charge_data = { tag_id: null };
     $scope.is_true = true;
     $scope.is_sending = false;
     
@@ -186,7 +185,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'PubNub
     };
 
     $scope.hashtagSelected = function(selected) {
-      $scope.charge_data.hashtag_id = (selected) ? selected.originalObject.id : null;
+      $scope.charge_data.tag_id = (selected) ? selected.originalObject.id : null;
     }; 
 
      $scope.apiErrorHandler = function(selected) {
@@ -201,8 +200,8 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'PubNub
         $scope.charge_data.phone_number = $scope.customerToCharge;
         $scope.charge_data.tag = document.getElementById('find-hashtag_value').value;
         $scope.charge_data.amount = $scope.amount;
-        $scope.charge_data.notes = $scope.notes;
-        $scope.charge_data.authorize = $scope.authorize;
+        $scope.charge_data.notes = ($scope.notes) ? $scope.notes : '';
+        $scope.charge_data.authorize = ($scope.authorize) ? $scope.authorize : false;
         console.log($scope.charge_data);
         
         /*$http.post("/echo/json/", data)

@@ -11,5 +11,10 @@ class Api::V1::TransactionsController < API::V1::BaseController
       render :json => { message: "Not Implemented" }, status: 501		
 	end
 
+  def charge_customer
+    
+
+  end
+
 
 end

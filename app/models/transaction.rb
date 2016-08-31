@@ -78,7 +78,7 @@ class Transaction < ActiveRecord::Base
     end
   end
 
-
+  # receipts for capture should be different
   def send_text_receipt(user, merchant, response, amount_in_hundreds, amount_with_taxes_in_hundreds)
     message = Message.new
     name = (user.card_name.present?) ? " " + user.card_name.split.first : ''

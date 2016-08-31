@@ -171,11 +171,11 @@
              />
         </label>
 
-       
+        <style type="text/css"> .has-error { border-color: red; }</style>       
 
         <label class="left">
           <%# http://gsferreira.com/archive/2015/02/angularjs-input-number-with-two-decimal-places %>
-          <input type="number" min="1" max='15000' required ng-model='amount' name="amount" placeholder="Amount" style="width: 150px" step='0.01' ng-pattern="/^\d+(.\d{1,2})?$/">
+          <input type="number" min="1" max='15000' required ng-model='amount' name="amount" placeholder="Amount" style="width: 150px" step='0.01' ng-pattern="/^\d+(.\d{1,2})?$/" ng-class="{'has-error': chargeForm.amount.$invalid && !chargeForm.amount.$pristine }">
           <p ng-show="chargeForm.amount.$invalid && !chargeForm.amount.$pristine">Amount is required.</p>
         </label>
       
