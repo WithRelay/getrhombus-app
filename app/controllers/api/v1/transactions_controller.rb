@@ -12,8 +12,8 @@ class Api::V1::TransactionsController < API::V1::BaseController
 	end
 
   def charge_customer
-    
-
+    # check for tag, if it doesnt exist, create one
+    # then call charge customer with array
   end
 
 
