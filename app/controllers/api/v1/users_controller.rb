@@ -11,6 +11,8 @@ class Api::V1::UsersController < API::V1::BaseController
 					phone_number like concat('%', ?, '%')", current_user.id, current_user.id, params[:query].downcase, params[:query] ])
 
 		results = User.connection.select_all(sql)
+		puts results
+		puts "asdsadas"
 
 		render json: { "users" => results } and return if results.empty?
 
