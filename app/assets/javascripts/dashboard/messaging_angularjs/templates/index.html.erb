@@ -136,18 +136,23 @@
           <angucomplete-alt id="find-hashtag"
             placeholder="Hashtag or item name"
             pause="400"
-            minlength="3" 
+            minlength="1" 
             selected-object="hashtagSelected"
             remote-url="<%= (Rails.env == 'development' ? "http://localhost:3000" : "https://www.getrhombus.com")  +  "/v1/hashtags/find?query=" %>"
             remote-url-data-field="hashtags"
             title-field="tag"
+            text-no-results='false'
             match-class='highlight'
             input-name='hashtag'
-            text-searching="Finding your tag/item..." />
+            description-field='description'             
+            text-searching="Finding your tag/item..." 
+            <%#= add html notification during ui integration %>
+            <%#= scroll bar added but test option during UI integration and testing %>
+            remote-url-error-callback='apiErrorHandler' 
+            />
         </label>
 
-
-        <label>
+         <label>
           <angucomplete-alt id="find-customer"
             placeholder="Customer name or number"
             pause="400"
@@ -162,11 +167,11 @@
             description-field='phone_number'
             text-searching="Finding your customer..." 
             field-required="is_true"
-            <%#= Add this when i add html notifications %>
-            <%#= Add scroll bar option during UI integration and testing %>
-            <%#= remote-url-error-callback="" %>
+            remote-url-error-callback='apiErrorHandler' 
              />
         </label>
+
+       
 
         <label class="left">
           <%# http://gsferreira.com/archive/2015/02/angularjs-input-number-with-two-decimal-places %>

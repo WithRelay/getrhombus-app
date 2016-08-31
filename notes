@@ -20,10 +20,11 @@ Contact - Inbound
 
 
 Wednesday
+- Add EmailVerify api - Done
+- Charge customer - span red
+
 - Clean up angular - https://blog.joshsoftware.com/2014/07/17/building-web-apps-with-rails4-and-angularjs-in-15-minutes/
 - Upgrade pubnub
-- add mailgun api
-- Charge customer - span red, call remote function for html alert
 - MMS
 - Tags - image display
 

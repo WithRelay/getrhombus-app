@@ -186,8 +186,11 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'PubNub
     };
 
     $scope.hashtagSelected = function(selected) {
-      // else set to input field?
       $scope.charge_data.hashtag_id = (selected) ? selected.originalObject.id : null;
+    }; 
+
+     $scope.apiErrorHandler = function(selected) {
+      alert('error');
     }; 
 
     // function to submit the form after all validation has occurred            
