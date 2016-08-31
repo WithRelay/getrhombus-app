@@ -50,9 +50,6 @@ gem 'will_paginate', '~> 3.0.6'
 # For contact us form
 gem "mail_form"
 
-# remove this
-gem "intercom-rails"
-
 gem 'responders', '~> 2.0'
 
 #OmniAuth Facebook
@@ -94,10 +91,10 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'angular-rails-templates'
 
 # Pubnub
-gem 'pubnub', '3.7.9'
+gem 'pubnub', '~> 4.0.7'
 
 #Twilio
-gem 'twilio-ruby', '~> 4.2.1'
+gem 'twilio-ruby', '~> 4.11.1'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.1.7'
@@ -117,4 +114,4 @@ group :development, :test do
     gem 'spring'
 end
 
-ruby "2.3.1"
+ruby "2.2.3"
