@@ -65,6 +65,12 @@ module CSVHandler
               error = true
             end
 
+            # Validate email
+            if !EmailValidator.verify_email(row[:email])
+              response.push(error_message + " email is invalid.")
+              error = true
+            end
+
             # set user_level and password
             row[:user_level] = 0
             row[:password] = Toolbox::StringGen.generate_random_string(8)

@@ -20,12 +20,12 @@ Contact - Inbound
 
 
 Wednesday
-- clean up angular stuff - https://blog.joshsoftware.com/2014/07/17/building-web-apps-with-rails4-and-angularjs-in-15-minutes/
-- upgrade pubnub
-- Charge customer
-- Tags - image edit and display
-  - subscription stuff after doing subscription module
+- Clean up angular - https://blog.joshsoftware.com/2014/07/17/building-web-apps-with-rails4-and-angularjs-in-15-minutes/
+- Upgrade pubnub
+- add mailgun api
+- Charge customer - span red, call remote function for html alert
 - MMS
+- Tags - image display
 
 Thursday
 - background jobs
