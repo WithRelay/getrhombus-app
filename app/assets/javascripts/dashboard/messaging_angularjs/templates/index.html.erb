@@ -63,7 +63,7 @@
           </div>
           <!-- End Title -->
           <!-- Start Conv -->
-          <ul class="conv" scroll-glue-bottom="true">
+          <ul class="conv" scroll-glue>
             <div ng-repeat="message in selected_user_messages track by $index">
               <li ng-if="($index != 0) && !selected_user_messages[$index - 1].unread && selected_user_messages[$index].unread" class="date">New Messages</li>
               <li ng-if="($index == 0) || (selected_user_messages[$index - 1].ts_day_of_the_week != selected_user_messages[$index].ts_day_of_the_week)" class="date">{{message.ts_day_of_the_week}}</li>

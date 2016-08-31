@@ -1,3 +1,14 @@
+/* angularjs Scroll Glue
+ * version 2.0.7
+ * https://github.com/Luegg/angularjs-scroll-glue
+ * An AngularJs directive that automatically scrolls to the bottom of an element on changes in it's scope.
+*/
+
+// Allow module to be loaded via require when using common js. e.g. npm
+if(typeof module === "object" && module.exports){
+    module.exports = 'luegg.directives';
+}
+
 (function(angular, undefined){
     'use strict';
 
@@ -51,7 +62,7 @@
     }
 
     function createDirective(module, attrName, direction){
-        module.directive(attrName, ['$parse', '$window', function($parse, $window){
+        module.directive(attrName, ['$parse', '$window', '$timeout', function($parse, $window, $timeout){
             return {
                 priority: 1,
                 restrict: 'A',
@@ -65,11 +76,26 @@
                         }
                     }
 
+                    function onScroll() {
+                        activationState.setValue(direction.isAttached(el));
+                    }
+
                     scope.$watch(scrollIfGlued);
+
+                    $timeout(scrollIfGlued, 0, false);
+
                     $window.addEventListener('resize', scrollIfGlued, false);
 
-                    $el.bind('scroll', function(){
-                        activationState.setValue(direction.isAttached(el));
+                    $el.on('scroll', onScroll);
+
+
+                    // Remove listeners on directive destroy
+                    $el.on('$destroy', function() {
+                        $el.unbind('scroll', onScroll);
+                    });
+
+                    scope.$on('$destroy', function() {
+                        $window.removeEventListener('resize', scrollIfGlued, false);
                     });
                 }
             };

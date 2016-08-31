@@ -20,10 +20,6 @@ Contact - Inbound
 
 
 Wednesday
-- Add EmailVerify api - Done
-- Charge customer - plug in parts of backend
-
-
 - Clean up angular - https://blog.joshsoftware.com/2014/07/17/building-web-apps-with-rails4-and-angularjs-in-15-minutes/
 - Upgrade pubnub
 - MMS
