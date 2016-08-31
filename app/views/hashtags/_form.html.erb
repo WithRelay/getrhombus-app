@@ -22,7 +22,14 @@
     <%= f.text_area :description %>
   </div>
 
-  <%= file_field_tag "hashtag[images_attributes][][avatar]", type: :file, multiple: true %>
+  <a id='select-images-button'>FILE</a>
+  <%= file_field_tag "hashtag[images_attributes][][avatar]", type: :file, multiple: true, id: "select-images" %>
+
+  <style type="text/css">.thumbnail { height: 50px; width: 50px; }</style>
+  <div id='image-previews'>
+
+  </div>
+
   
   <div class="field">
     <%= f.select :tag_type, options_for_select({ "Non-payment Hashtag" => "1", "One-time payment Hashtag" => '2', "Recurring payment Hashtag" => "3" }, selected: @hashtag.tag_type) %>

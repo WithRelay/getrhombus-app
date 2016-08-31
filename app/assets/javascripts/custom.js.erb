@@ -1520,23 +1520,58 @@ $(document).ready(function () {
       var files = document.getElementById('csv-file-select').files;            // Get the selected files from the input.
       var length = files.length;
       var formData = new FormData();                                            // Create a new FormData object.
-      
+      var valid = true;
+
       // Loop through each of the selected files.
       for (var i = 0; i < length; i++) {
         $('#csv_upload_button').text("Uploading...").prop('disabled', true);
 
         var file = files[i];          
         if (!file.type.match('csv')) {             // Check the file type.
-          console.log("Can't upload file type");
+          alert("Can't upload file type");
           continue;
+          valid = false;
         }
 
         formData.append('csv', file, file.name);    // Add the file to the request.
       }
 
-      if (length > 0) send_payload(formData);   
+      if (length > 0 && valid) send_payload(formData);   
   });
   // end csv file upload
+
+
+  $('#select-images-button').click(function() {
+    $('#select-images').trigger('click');
+  });
+
+  $('#select-images').change(function() {
+    readURL(this);
+  });
+
+  function readURL(input) {
+    var files = input.files, image_previews = document.getElementById('image-previews');
+    
+    image_previews.innerHTML = '';    
+    if (files && files.length > 0) {
+
+      for (var i = 0, l = files.length; i < l; i++) {
+        var file = files[i];
+        if (!file.type.match('image')) continue;
+
+        var reader = new FileReader();
+        reader.addEventListener("load", function (event) {
+          var image = event.target;
+          var div = document.createElement("div");
+          div.innerHTML = "<img class='thumbnail' src='" + image.result + "'" + "title='" + image.name + "'/>";
+          image_previews.insertBefore(div, null);
+        });
+        
+        //Read the image
+        reader.readAsDataURL(file);
+      }
+    } 
+  }
 
 
   ///// add a customer

@@ -7,7 +7,8 @@ class Hashtag < ActiveRecord::Base
   # test this again
   has_many :image_refs, as: :imageable, dependent: :destroy
   has_many :images, through: :image_refs
-  has_one :transaction
+  belongs_to :txn, :foreign_key => :hashtag_id, :class_name => :Transaction
+
 
 	# validations
 	validates :tag, presence: true, uniqueness: { case_sensitive: false }

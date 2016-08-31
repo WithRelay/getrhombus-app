@@ -1,5 +1,5 @@
 class ProcessMessengerCallbackJob < ActiveJob::Base
-
+=begin
   queue_as :messaging
 
   def perform(json)
@@ -11,5 +11,5 @@ class ProcessMessengerCallbackJob < ActiveJob::Base
       end
     end
   end
-
+=end
 end
