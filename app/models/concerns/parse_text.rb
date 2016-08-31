@@ -289,5 +289,5 @@ module ParseText
 =end
     end
   end
-end
+#end
 
