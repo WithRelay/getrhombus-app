@@ -19,7 +19,7 @@ class HashtagsController < ApplicationController
   end
 
   def edit
-    @images = @hashtag.images.map { |i| { url: i.avatar.url, id: i.id, name: i.avatar_file_name } }
+    @images = @hashtag.images
   end
 
   def create

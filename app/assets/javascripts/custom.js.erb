@@ -1536,10 +1536,8 @@ $(document).ready(function () {
 
   $('#select-images-button').click(function() { $('#select-images').trigger('click'); });
   $('#select-images').change(function() { read_file_picker(this); });
-
   function read_file_picker(input) {
-    var files = input.files, image_previews = document.getElementById('image-previews');    
-    image_previews.innerHTML = '';    
+    var files = input.files, new_image_previews = $('#new-image-previews').html("");
 
     // http://stackoverflow.com/questions/23402187/multiple-files-upload-and-using-file-reader-to-preview
     if (files && files.length > 0) {
@@ -1549,10 +1547,10 @@ $(document).ready(function () {
 
         var reader = new FileReader();
         reader.addEventListener("load", function (event) {
-          var image = event.target;
-          var div = document.createElement("div");
-          div.innerHTML = "<img class='thumbnail' src='" + image.result + "'" + "title='" + image.filename + "'/><span>" + image.filename + "</span>";
-          image_previews.insertBefore(div, null);
+          var img = event.target;
+          div = "<div class='images'><img class='thumbnail' src='" + img.result + "'" + "title='" + img.filename + "'/>" + 
+                "<span>" + img.filename + "</span></div>";
+          new_image_previews.prepend(div);
         });
         
         //Read the image
@@ -1566,7 +1564,7 @@ $(document).ready(function () {
     e.stopPropagation();
     var span = this;
     span.style.pointerEvents = 'none';    
-    
+
     $.ajax({
         url: "/v1/hashtags/" + $('#image-previews').data("tag-id") + "/image_delete.json",
         beforeSend: function(xhr) { xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content')) },
