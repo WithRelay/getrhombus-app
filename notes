@@ -20,13 +20,14 @@ Contact - Inbound
 
 
 Thursday
-- MMS
-- Clean up angular - https://blog.joshsoftware.com/2014/07/17/building-web-apps-with-rails4-and-angularjs-in-15-minutes/
 - background jobs
   - http://khoapham.me/blog/completely-setup-resque-and-resque-scheduler/
   - http://tutorials.jumpstartlab.com/topics/performance/background_jobs.html
   - https://rubyplus.com/articles/531-How-to-Install-and-Configure-Resque-to-Handle-Background-Jobs-in-Rails-4-1
-- server notifications
+  - https://github.com/resque/resque-scheduler
+- MMS
+- Clean up angular - https://blog.joshsoftware.com/2014/07/17/building-web-apps-with-rails4-and-angularjs-in-15-minutes/
+
 
 Friday
 - subscriptions
@@ -34,6 +35,6 @@ Friday
 
 Saturday
 - managed accounts
-
+- server notifications
 
 

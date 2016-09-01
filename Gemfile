@@ -10,8 +10,9 @@ gem "httparty"
 gem "devise"
 
 #resque
-gem "resque"
-gem "resque-scheduler"
+gem 'resque', :require => "resque/server" 
+gem 'resque-scheduler', :require => "resque/scheduler/server"
+gem 'ar_after_transaction'
 
 # Stripe oauth
 gem 'omniauth-stripe-connect'

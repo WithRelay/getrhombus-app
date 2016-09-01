@@ -31,8 +31,7 @@
     <%= generate_image_thumbnails(@images) %>
   </div>
 
-  
-  
+   
   <div class="field">
     <%= f.select :tag_type, options_for_select({ "Non-payment Hashtag" => "1", "One-time payment Hashtag" => '2', "Recurring payment Hashtag" => "3" }, selected: @hashtag.tag_type) %>
   </div>

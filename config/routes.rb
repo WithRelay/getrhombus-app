@@ -11,7 +11,10 @@ Rails.application.routes.draw  do
   get 'contact' => 'contact_forms#new'
   
   resources :contact_forms 
-  
+
+  get "resque" => Resque::Server, :anchor => false, :constraints => lambda { |req|
+    req.env['warden'].authenticated? and req.env['warden'].user.id == 23
+  }
 
   get 'customer_template' => "users#customer_csv_template", constraints: { format: 'csv' }
   get 'transactions/download' => 'transactions#download_csv', constraints: { format: 'csv' }
