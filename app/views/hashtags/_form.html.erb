@@ -26,17 +26,9 @@
   <%= file_field_tag "hashtag[images_attributes][][avatar]", type: :file, multiple: true, id: "select-images", accept: "image/*" %>
 
   <style type="text/css">.thumbnail { height: 50px; width: 50px; }</style>
-
-  
   <div id='new-image-previews'></div>
   <div id='image-previews' data-tag-id='<%= @hashtag.id %>'>    
-    <% @images.each do |i| %>
-      <div class='images'>
-        <span class='delete-image' id='img_<%= i.id %>'>X</span> <br> 
-        <img src='<%= i.avatar.url %>' width='100' height='100'  />
-        <span><%= i.avatar_file_name %></span>
-      </div>
-    <% end %>
+    <%= generate_image_thumbnails(@images) %>
   </div>
 
   
