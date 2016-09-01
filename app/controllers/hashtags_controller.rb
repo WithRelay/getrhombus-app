@@ -14,11 +14,12 @@ class HashtagsController < ApplicationController
 
   def new
     @hashtag = Hashtag.new
+    @images = []
     respond_with(@hashtag)
   end
 
   def edit
-    #http://www.railscook.com/recipes/multiple-files-upload-with-nested-resource-using-paperclip-in-rails/
+    @images = @hashtag.images.map { |i| { url: i.avatar.url, id: i.id, name: i.avatar_file_name } }
   end
 
   def create

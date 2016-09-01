@@ -23,5 +23,11 @@ class Api::V1::HashtagsController < API::V1::BaseController
 		end 
 	end
 
+	def image_delete
+		image_ref = ImageRef.where(imageable_type: 'Hashtag', imageable_id: params[:id], image_id: params[:img_id]).first
+		image_ref.delete if image_ref
+		render json: { response: "Deleted" }, status: 200
+	end
+
 
 end

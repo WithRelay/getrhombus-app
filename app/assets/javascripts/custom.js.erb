@@ -1492,69 +1492,57 @@ $(document).ready(function () {
 
   // http://blog.teamtreehouse.com/uploading-files-ajax
   // but modified to send just one file.
-  $('#csv-upload-form').submit(function( event ) {
-      
-      function send_payload(payload) {
-        var xhr = new XMLHttpRequest();             // Set up the request.
-        xhr.open('POST', '/v1/users/add_customers.csv', true);    // Open the connection.
-        xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
-        xhr.onload = function () {
-          if (xhr.readyState === 4) {
-            if (xhr.status === 200) {
-            } else {
-              console.log('Something went wrong on our end.')
-            }
-            console.log(JSON.parse(xhr.responseText));
-            $('#csv_upload_button').text("Upload").prop('disabled', false);
+  $('#csv-upload-form').submit(function(e) {      
+    var button = $('#csv-upload-button');
+    button.text("Uploading...").prop('disabled', true);
+    e.preventDefault();
+
+    function send_payload(payload) {
+      var xhr = new XMLHttpRequest();             // Set up the request.
+      xhr.open('POST', '/v1/users/add_customers.csv', true);    // Open the connection.
+      xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+      xhr.onload = function () {
+        if (xhr.readyState === 4) {
+          if (xhr.status === 200) {
+          } else {
+            console.log('Something went wrong on our end.')
           }
-        };
-
-        xhr.onerror = function (e) {
-          console.log(xhr.statusText);
-          $('#csv_upload_button').text("Upload").prop('disabled', false);
-        };
-        xhr.send(payload);        // Send the Data.
-      }
-
-      e.preventDefault();
-      var files = document.getElementById('csv-file-select').files;            // Get the selected files from the input.
-      var length = files.length;
-      var formData = new FormData();                                            // Create a new FormData object.
-      var valid = true;
-
-      // Loop through each of the selected files.
-      for (var i = 0; i < length; i++) {
-        $('#csv_upload_button').text("Uploading...").prop('disabled', true);
-
-        var file = files[i];          
-        if (!file.type.match('csv')) {             // Check the file type.
-          alert("Can't upload file type");
-          continue;
-          valid = false;
+          console.log(JSON.parse(xhr.responseText));
+          button.text("Upload").prop('disabled', false);
         }
+      };
 
-        formData.append('csv', file, file.name);    // Add the file to the request.
+      xhr.onerror = function (e) {
+        console.log(xhr.statusText);
+        button.text("Upload").prop('disabled', false);
+      };
+      xhr.send(payload);        // Send the Data.
+    }
+    
+    var file = document.getElementById('csv-file-select').files;            // Get the selected files from the input.
+    if (file && file.length == 1) {          
+      file = file[0];
+      if (!file.type.match('csv')) {             // Check the file type.
+        alert("Can't upload file type");
+        return;
       }
-
-      if (length > 0 && valid) send_payload(formData);   
+      var formData = new FormData();               // Create a new FormData object.
+      formData.append('csv', file, file.name);    // Add the file to the request.
+      send_payload(formData);
+    }
   });
   // end csv file upload
 
 
-  $('#select-images-button').click(function() {
-    $('#select-images').trigger('click');
-  });
+  $('#select-images-button').click(function() { $('#select-images').trigger('click'); });
+  $('#select-images').change(function() { read_file_picker(this); });
 
-  $('#select-images').change(function() {
-    readURL(this);
-  });
-
-  function readURL(input) {
-    var files = input.files, image_previews = document.getElementById('image-previews');
-    
+  function read_file_picker(input) {
+    var files = input.files, image_previews = document.getElementById('image-previews');    
     image_previews.innerHTML = '';    
-    if (files && files.length > 0) {
 
+    // http://stackoverflow.com/questions/23402187/multiple-files-upload-and-using-file-reader-to-preview
+    if (files && files.length > 0) {
       for (var i = 0, l = files.length; i < l; i++) {
         var file = files[i];
         if (!file.type.match('image')) continue;
@@ -1563,16 +1551,40 @@ $(document).ready(function () {
         reader.addEventListener("load", function (event) {
           var image = event.target;
           var div = document.createElement("div");
-          div.innerHTML = "<img class='thumbnail' src='" + image.result + "'" + "title='" + image.name + "'/>";
+          div.innerHTML = "<img class='thumbnail' src='" + image.result + "'" + "title='" + image.filename + "'/><span>" + image.filename + "</span>";
           image_previews.insertBefore(div, null);
         });
         
         //Read the image
+        reader.filename = file.name;
         reader.readAsDataURL(file);
       }
     } 
   }
 
+  $(".delete-image").click(function(e) {
+    e.stopPropagation();
+    var span = this;
+    span.style.pointerEvents = 'none';    
+    
+    $.ajax({
+        url: "/v1/hashtags/" + $('#image-previews').data("tag-id") + "/image_delete.json",
+        beforeSend: function(xhr) { xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content')) },
+        type: "POST",
+        data: { img_id: this.id.split("_")[1] },
+        dataType: "json"   
+    })
+      .done(function(data, textStatus, jqXHR) {
+        console.log(data.response);    
+        $("#" + span.id).parent().slideUp(400, function() { this.remove(); });
+      })
+      .fail(function(data, textStatus, errorThrown) {
+        console.log(data);
+        //alert('Unable to delete file')
+        span.style.pointerEvents = 'auto';
+      })   
+      .always(function(data, textStatus, response) {}); 
+  });
 
   ///// add a customer
   create_user_form.submit(function(e){

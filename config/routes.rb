@@ -56,6 +56,7 @@ Rails.application.routes.draw  do
     match 'users/find' => 'users#find', via: :get
     match 'users/add_customers' => 'users#add_customers', via: :post
     match 'hashtags/find' => 'hashtags#find', via: :get
+    match 'hashtags/:id/image_delete' => 'hashtags#image_delete', via: :post
     match 'transactions/:charge_id/refund' => 'transactions#refund', via: :post
     match 'transactions/charge_customer' => 'transactions#charge_customer', via: :post
     match 'numbers/search' => 'numbers#search', via: :get
