@@ -29,15 +29,23 @@ class MessagesController < ApplicationController
   end
 
   def dashboard_mms
+    #sleep 3
+    #render json: { res: 'done'}, status: 200
+    #puts params.inspect
     begin
-      raise StandardError if !current_user
-      image = Image.create(avatar: params[:file])                 # twilio supports only gif, png and jpeg though it accepts other types
+      raise StandardError if !current_user || current_user.user_level == 0
+      
+      image = Image.create(avatar: params[:avatar])
       message = Message.new
-      message.image_id = image.id
+      # twilio supports only gif, png and jpeg though it accepts other types
+      message.image_ids = image.id
+      
+      # optional message here
       message.send_and_save_message("<redacted_phone_number>","<redacted_phone_number>", "", image.avatar.url)      
-      render json: { message: "File uploaded and sent" }, status: :created
+      
+      render json: { response: "File uploaded and sent" }, status: :created
     rescue StandardError => e
-      render json: { message: "Unable to upload file" }, status: 500
+      render json: { error: "Unable to upload file" }, status: 500
     end
   end
 

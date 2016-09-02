@@ -28,7 +28,8 @@ class TextingService
       begin
         client = Twilio::REST::Client.new TWILIO_API_KEY, TWILIO_API_SECRET
         data = { From: from, To: to, Body: body, ApplicationSid: TWILIO_RHOMBUS_APP_SID } 
-        data[:media_url] = media_url if media_url  # US and canadian phone numbers can make use of an image as well.
+        # 5MB max size, 10 images max
+        data[:media_url] = media_url.split(",") if media_url.present?  # US and canadian phone numbers can make use of an image as well.
         message = client.account.messages.create(data)
       rescue StandardError => err
         return err

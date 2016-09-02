@@ -89,30 +89,40 @@
             <form>
               <p>
                 <span class="char-counter">{{char_limit - new_message.text.length}} characters left</span>
-                <textarea class="textarea form-control" placeholder="Type a message here..." style="height:60px; width:100%;" ng-model="new_message.text" ng-trim="false" ng-enter="sendMessage(new_message)"></textarea>
+                <textarea class="textarea form-control" placeholder="Type a message here..." style="height:60px; width:100%;" ng-model="new_message.text" ng-trim="true" ng-enter="sendMessage(new_message)"></textarea>
               </p>
               <button class="btn btn-default btn-rhombus" id="send_msg_btn" ng-click="sendMessage(new_message)" style="height: 32px;" ng-disabled='is_sending'>
                 {{send_msg_btn}}
               </button>
               
-              <button type="file" ngf-select="uploadFiles($file, $invalidFiles)"
-                  accept="image/*" ngf-max-height="1000" ngf-max-size="1MB">
-              Select File</button>
-              <br><br>
-          File:
-          <div style="font:smaller">{{f.name}} {{errFile.name}} {{errFile.$error}} {{errFile.$errorParam}}
-              <span class="progress" ng-show="f.progress >= 0">
-                  <div style="width:{{f.progress}}%"  
-                       ng-bind="f.progress + '%'"></div>
-              </span>
-          </div>     
-          {{errorMsg}}
-                      <%#<button type="reset" class="btn margin-l-5">
-                        Clear
-                      </button>%>
-                      <span class="char-counter">{{char_limit - new_message.text.length}} characters left</span>
+              <input type="file" ngf-select="handleFile($file, $invalidFiles)" ng-model="pic_file" ngf-accept="'image/*'" ngf-max-size="1MB">              
+    
+                <%#<button type="reset" class="btn margin-l-5">
+                  Clear
+                </button>%>
+                <span class="char-counter">{{char_limit - new_message.text.length}} characters left</span>
                       
             </form>
+
+
+            <!-- Image Preview -->
+            <div style="display: none; width: 400px; height: 400px; background: white;" id="mms-img-preview">
+              <div style="font:smaller">{{f.name}}</div>    
+              <textarea class="textarea form-control" placeholder="Add a message to this MMS..." style="height:100px; width:70%;" ng-model="mms_text" ng-trim="true"></textarea>
+              <br><br>
+              <style type="text/css"> .thumb { width: 100px; height: 100px; float: none; position: relative; top: 7px; }</style>
+              <img ngf-thumbnail="pic_file" class="thumb">
+              <br><br>
+              <button class="btn btn-default btn-rhombus" id="send_mms_btn" ng-click="sendMMS()" style="height: 32px;" ng-disabled='is_sending_mms'>
+                {{send_mms_btn}}
+              </button>
+              <br>
+              <button class="btn btn-default btn-rhombus" id="cancel_mms_btn" ng-click="cancelMMS()" style="height: 32px;" ng-disabled='is_sending_mms'>
+                Cancel
+              </button>
+            </div>
+            <!-- Image Preview -->
+
           </div>
         </div>
         <!-- End Chat -->
@@ -125,6 +135,7 @@
 </div>
 
 
+<!-- Charge Box -->
 <div style="display: none;" id="chargeFormBox" class="newForms">
   <div id="chargeFormDiv" class="parent_div">
     <div class="center_div">      
@@ -194,3 +205,4 @@
     </div>
   </div>
 </div>
+<!-- Charge Box -->

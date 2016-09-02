@@ -5,7 +5,7 @@
 var messagingControllers = angular.module('messagingControllers', [
   'pubnub.angular.service'
 ]);
-//*/
+
 messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub', 'Upload',
   function($scope, $http, Pubnub, Upload) {
 
@@ -23,6 +23,10 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
     $scope.charge_data = { tag_id: null };
     $scope.is_true = true;
     $scope.is_sending = false;
+
+    // MMS
+    $scope.is_sending_mms = false;
+    $scope.send_mms_btn = "SEND MMS";
     
     // Get logged in merchant id
     $http.get(window.location.origin + '/json_get_current_user')    
@@ -53,7 +57,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
                 $scope.users[json_response.user_number].last_message = json_response.message;
                 $scope.users[json_response.user_number].last_message_ts = parseInt(json_response.ts_int);
               }
-              $http.get(window.location.origin + '/users/' + merchant_id + '/mark_user_messages_for_merchant_as_read/' + $scope.active_user_number);
+              //$http.get(window.location.origin + '/users/' + merchant_id + '/mark_user_messages_for_merchant_as_read/' + $scope.active_user_number);
             } else {
               if (!$scope.users[json_response.user_number]) {
                 $scope.users[json_response.user_number] = {user_number: json_response.user_number, first_name: json_response.first_name, last_name: json_response.last_name, email: json_response.email, profile_image: json_response.profile_image, last_message: json_response.message, last_message_ts: json_response.ts_int, unread_count: 0};
@@ -95,7 +99,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
             console.log(user.user_number);
             $scope.global_unread_count = (($scope.global_unread_count - $scope.users[user.user_number].unread_count) > 0) ? $scope.global_unread_count - $scope.users[user.user_number].unread_count : 0;
             $scope.users[user.user_number].unread_count = 0;
-            $http.get(window.location.origin + '/users/' + merchant_id + '/mark_user_messages_for_merchant_as_read/' + user.user_number);
+            //$http.get(window.location.origin + '/users/' + merchant_id + '/mark_user_messages_for_merchant_as_read/' + user.user_number);
           });
         };
         
@@ -127,43 +131,17 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
         };
      
         // Twilio supports only gif, png and jpeg
-        $scope.uploadFiles = function(file, errFiles) {
-            $scope.f = file;
-            $scope.errFile = errFiles && errFiles[0];
-            
-            if (file) {
-                file.upload = Upload.upload({
-                    url: '/send_mms_from_dashboard',
-                    data: { file: file },
-                    headers: {
-                      'Content-Type': file.type,
-                      'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                    },
-                });
-
-                file.upload.then(function (response) {
-                   /*
-                    $timeout(function () {
-                        file.result = response.data;
-                    });
-                    */
-                    // seeing some errors with timeout???
-                    //$scope.users["<redacted_phone_number>"]
-                    console.log($scope.users)
-                    console.log(response)
-                    $scope.selected_user_messages.push({user_number: merchant_id, user_level: data.user_level, 
-                                                    profile_image: data.profile_image, text: '', 
-                                                    ts_day_of_the_week: data.ts_day_of_the_week, ts_time: data.ts_time, 
-                                                    unread: false, image_url: file.$ngfBlobUrl });
-                
-                }, function (response) {
-                    if (response.status > 0)
-                        $scope.errorMsg = response.status + ': ' + response.data;
-                }, function (evt) {
-                    file.progress = Math.min(100, parseInt(100.0 * 
-                                             evt.loaded / evt.total));
-                });
-            }   
+        $scope.handleFile = function(file, errFiles) {
+          $scope.errFile = errFiles && errFiles[0];            
+          if (file) {
+            if (file.type.match('image')) {
+              $scope.f = file;
+              // show preview
+              $('#mms-img-preview').lightbox_me({ centered: true })
+            } else console.log('unsupported type');
+          } else if (errFiles.length > 0) {
+            if(errFiles[0].$errorMessages.maxSize) console.log('file size is too large');
+          } 
         };
       })  
       .error(function(data, status, headers, config) {
@@ -175,7 +153,45 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
       alert('Error while trying to connect to the messaging system.');
     });
 
-    
+    $scope.cancelMMS = function() { $('#mms-img-preview').trigger('close'); };
+
+    $scope.sendMMS = function() {
+      $scope.is_sending_mms = true;
+      $scope.send_mms_btn = "SENDING MMS";
+      var file = $scope.f;
+
+      file.upload = Upload.upload({
+        url: '/send_mms_from_dashboard',
+        data: { avatar: file },
+        headers: {
+          'Content-Type': file.type,
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+      });
+
+      file.upload.then(function (response) {
+        // seeing some errors with timeout???
+        //$scope.users["<redacted_phone_number>"]
+        //console.log($scope.users)
+        //console.log(response)
+
+        // Push into user message array
+        /*$scope.selected_user_messages.push({user_number: merchant_id, user_level: data.user_level, 
+                                        profile_image: data.profile_image, text: '', 
+                                        ts_day_of_the_week: data.ts_day_of_the_week, ts_time: data.ts_time, 
+                                        unread: false, image_url: file.$ngfBlobUrl });*/
+        
+        console.log('all good');
+      }, function (response) {
+        console.log('unable to send mms');
+      })
+      .finally(function() {
+        $('#mms-img-preview').trigger('close');
+        $scope.is_sending_mms = false;
+        $scope.send_mms_btn = "SEND MMS";
+      });
+    }
+
     $scope.displayChargeForm = function() {
       $('#chargeFormBox').lightbox_me({
         centered: true, 
