@@ -20,14 +20,24 @@ class ModifyTransactionsMessagesRefundsColumns < ActiveRecord::Migration
 
     rename_column :transactions, :tax_rate, :tax_percent
     
-    remove_column :transactions, :from   # redundant
+    remove_column :transactions, :from   # redundant column
     
-    remove_column :transactions, :to
+    remove_column :transactions, :to    # redundant column
     
     add_reference :messages, :hashtag, index: true
     add_foreign_key :messages, :hashtags
     
     add_reference :refunds, :transaction, index: true
     add_foreign_key :refunds, :transactions
+
+
+    remove_column :transactions, :account_number
+    remove_column :transactions, :account_type
+    remove_column :transactions, :account_name
+
+    remove_column :transactions, :routing_number
+    remove_column :transactions, :zip_code
+    add_column :transactions, :captured, :boolean, default: true
+
   end
 end
