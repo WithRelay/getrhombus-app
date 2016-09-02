@@ -18,6 +18,7 @@ class Transaction < ActiveRecord::Base
   # Each transaction generates 3 rows. This will be normalized in future updates
   # This method support captured payment, charge a customer and sms payment
   # does this include hashtag_id
+  # send in a hash instaed to PaymentService
   def self.charge_customer_card(amt_ary, merchant, user, message, capture=true) 
     begin    
       amount = amt_ary[0]

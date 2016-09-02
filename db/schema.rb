@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160902190929) do
+ActiveRecord::Schema.define(version: 20160902231432) do
 
   create_table "coupons", force: :cascade do |t|
     t.string   "name",               limit: 191
@@ -70,16 +70,18 @@ ActiveRecord::Schema.define(version: 20160902190929) do
   add_index "full_contact_social_data", ["full_contact_data_id"], name: "index_full_contact_social_data_on_full_contact_data_id", using: :btree
 
   create_table "hashtags", force: :cascade do |t|
-    t.text     "description",   limit: 65535
-    t.decimal  "amount",                      precision: 8, scale: 2
-    t.text     "response",      limit: 65535
-    t.string   "tag",           limit: 191
-    t.boolean  "charge_amount", limit: 1,                             default: false
-    t.integer  "user_id",       limit: 4
-    t.datetime "created_at",                                                          null: false
-    t.datetime "updated_at",                                                          null: false
-    t.boolean  "enable_tweet",  limit: 1
-    t.integer  "tag_type",      limit: 4
+    t.text     "description",    limit: 65535
+    t.decimal  "amount",                       precision: 8, scale: 2
+    t.text     "response",       limit: 65535
+    t.string   "tag",            limit: 191
+    t.boolean  "charge_amount",  limit: 1,                             default: false
+    t.integer  "user_id",        limit: 4
+    t.datetime "created_at",                                                           null: false
+    t.datetime "updated_at",                                                           null: false
+    t.boolean  "enable_tweet",   limit: 1
+    t.integer  "tag_type",       limit: 4
+    t.string   "interval",       limit: 191
+    t.integer  "interval_count", limit: 4
   end
 
   add_index "hashtags", ["user_id"], name: "index_hashtags_on_user_id", using: :btree

@@ -1,6 +1,4 @@
 class Hashtag < ActiveRecord::Base
-	
-	## help add index to tag together with user_id
 
 	belongs_to :user
 

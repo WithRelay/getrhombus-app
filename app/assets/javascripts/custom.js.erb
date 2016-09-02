@@ -1383,6 +1383,12 @@ $(document).ready(function () {
   $('#hashtag_tag').bind('input', function(){
     $(this).val(function(_, v) { return v.replace(/\s+/g, ''); });
   });
+  $('#interval-count').bind('input', function(){
+   $(this).val(function(_, v) { 
+      if (v.match(/^[1-9]\d*$/)) return v
+      else return v.slice(0, -1);
+    });
+  });
   $('#hashtag_amount').bind('input', function(){
     $(this).val(function(_, v) { 
       if (v.slice(-1) == '.' && (v.match(/[.]/g) || []).length == 1 && v.length > 1) return v
@@ -1395,8 +1401,13 @@ $(document).ready(function () {
   });
   // if hashtag isn't for payment, remove payment settings
   $('#hashtag_tag_type').change(function(){
-    if (this.value == '1') $('#hashtag-payment-settings').slideUp(200);
-    else $('#hashtag-payment-settings').slideDown(200);
+    if (this.value == '1') {
+      $('#hashtag-payment-settings').slideUp(200);
+      $('#interval-settings').slideUp(200);
+    } else {
+      (this.value == '3') ? $('#interval-settings').slideDown(200) : $('#interval-settings').slideUp(200);
+      $('#hashtag-payment-settings').slideDown(200);
+    }
   });
   $('#hashtag_tag_type').change();
   ///// Hashtags

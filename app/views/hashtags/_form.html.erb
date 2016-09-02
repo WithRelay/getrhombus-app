@@ -61,6 +61,18 @@
       <%#= f.label :charge_amount %>
       <%= f.select :charge_amount, options_for_select({ "Allow customers to ovveride amount" => "0", "Always charge amount" => '1' }, selected: @hashtag.charge_amount) %>
     </div>
+
+    <div id='interval-settings'>
+      <div class="field">
+        <%= f.label :interval %>
+        <%= f.select :interval, options_for_select({ "Day" => "day", "Week" => 'week', "Month" => "month" }, selected: @hashtag.interval) %>
+      </div>
+
+      <div class="field">
+        <%= f.label :interval_count %>
+        <%= f.text_field :interval_count, id: 'interval-count' %>
+      </div>
+    </div>
   </div>
 
   <br>
