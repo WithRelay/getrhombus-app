@@ -11,7 +11,6 @@ class Transaction < ActiveRecord::Base
   belongs_to :user, counter_cache: true
   belongs_to :team, class_name: "User", counter_cache: true
 
-
   belongs_to :refund, inverse_of: :transactions
 
   # Why am I passing an array in here?
@@ -24,7 +23,7 @@ class Transaction < ActiveRecord::Base
       amount = amt_ary[0]
     	tax_percent = (((merchant.tax_percent.to_f)/100) + 1)                     # apply tax, default is 0
     	amount_with_taxes = (amount.to_f * tax_percent).round(0)			
-      rhombus_fee = 0                                                     # (0.006 * amount_with_taxes.to_f).round(0)
+      rhombus_fee = ((Rails.application.secrets.application_fee_percent / 100) * amount_with_taxes.to_f).round(0)
 
       payment_response_array = PaymentService.charge(amount_with_taxes, merchant, user, message, capture)
       response = payment_response_array[0]

@@ -9,7 +9,7 @@ schedule = YAML.load_file(Rails.root.join('config', 'resque_schedule.yml'))
 Resque.redis.namespace = "resque:getrhombus"
 # configure redis connection
 Resque.redis = config[Rails.env]
-#Resque.logger = MonoLogger.new(File.open("#{Rails.root}/log/resque.log", "w+"))
+Resque.logger = MonoLogger.new(File.open("#{Rails.root}/log/resque.log", "w+"))
 Resque.logger.formatter = Resque::VerboseFormatter.new
 
 Resque::Failure::Multiple.classes = [Resque::Failure::Redis]

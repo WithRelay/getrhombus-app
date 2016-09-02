@@ -77,28 +77,22 @@ class User < ActiveRecord::Base
           cu.source = params[:instrument_uri]
           cu.save   
         end
+        return true
       rescue Stripe::CardError => e
         # Since it's a decline, Stripe::CardError will be caught
-        body = e.json_body
-        err  = body[:error]
-
+        err  = e.json_body[:error]
         owner = User.find_by(email: Rails.application.secrets.team_email)
         Message.send_and_save_message(owner.rhombus_number, self.phone_number, "We were unable to update your card info on Rhombus because: #{err[:message]}.")
         Notification.token_failure_notification(err, self.email).deliver_now
-        return false
       rescue Stripe::StripeError => e
-        body = e.json_body
-        err  = body[:error]
-        Notification.token_failure_notification(err, self.email).deliver_now
-        return false
+        Notification.token_failure_notification(e.json_body[:error], self.email).deliver_now
       rescue StandardError => e
         Notification.token_failure_notification(e, self.email).deliver_now
-        return false
-      else
-        return true                # yep!! we gat this
-      end      
+      end
+      return false    
     end
-    return true                     # Not a customer just a merchant
+    
+    return true                     # Not a customer just a merchant      
   end
  
   # Returns hash with users who sent a message to the given merchant in the last "num_days" days
