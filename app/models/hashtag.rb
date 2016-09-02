@@ -7,6 +7,8 @@ class Hashtag < ActiveRecord::Base
   # test this again
   has_many :image_refs, as: :imageable, dependent: :destroy
   has_many :images, through: :image_refs
+  
+  has_many :messages
   belongs_to :txn, :foreign_key => :hashtag_id, :class_name => :Transaction
 
 

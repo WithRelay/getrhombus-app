@@ -1,6 +1,7 @@
 class Message < ActiveRecord::Base
 
 	belongs_to :txn, :foreign_key => :transaction_id, :class_name => :Transaction
+	belongs_to :hashtag
 
 	has_many :image_refs, as: :imageable, dependent: :destroy
   has_many :images, through: :image_refs

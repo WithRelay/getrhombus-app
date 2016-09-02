@@ -13,11 +13,17 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable, :omniauthable
 
   has_many :transactions, dependent: :destroy
-  has_many :team_transactions, class_name: 'Transaction', foreign_key: 'team_id', dependent: :destroy
+  has_many :team_transactions, class_name: 'Transaction', foreign_key: 'team_id'
+  
+  has_many :subscriptions, dependent: :destroy
+  has_many :team_subscriptions, class_name: 'Subscription', foreign_key: 'team_id'
 
+  # this goes away with conversation model
   has_many :messages, dependent: :destroy
+  
   has_many :hashtags, dependent: :destroy
   has_one :twitter_cred, dependent: :destroy
+
   has_many :image_refs, as: :imageable, dependent: :destroy
   has_many :images, through: :image_refs
 

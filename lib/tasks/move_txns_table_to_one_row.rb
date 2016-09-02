@@ -3,8 +3,6 @@
 # then run the migration below to remove the unwanted columns afterwards.
 
 #  def change
-#    remove_column :transactions, :from   # redundant
-#    remove_column :transactions, :to
 #    remove_column :transactions, :referenced_customer_transaction_id
 #    remove_column :transactions, :referenced_merchant_transaction_id
 #    remove_column :transactions, :referenced_user_id

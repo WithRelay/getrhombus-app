@@ -47,7 +47,7 @@ class ApplicationController < ActionController::Base
 
   def configure_permitted_parameters
     devise_parameter_sanitizer.for(:sign_up) { |u| u.permit(:email, :phone_number, 
-        :password, :user_level, :is_active, :referrer_num, :subscription_type ) }
+        :password, :user_level, :is_active, :referrer_num ) }
     devise_parameter_sanitizer.for(:sign_in) { |u| u.permit(:email, :password) }
     devise_parameter_sanitizer.for(:account_update) { |u| u.permit(:email, #:current_password, 
       :password, :password_confirmation, :instrument_uri, :last_four, 
@@ -55,8 +55,7 @@ class ApplicationController < ActionController::Base
       :rhombus_number, :update_rhombus_number,
       :phone_number, :org_name, :org_category, :street_address, :city, 
       :state_province, :org_phone, :country, :currency, :approve_payments_immediately, 
-      :tax_rate, :zip_code, :first_name, :last_name, :is_active, :url,
-      :subscription_type, :custom_welcome )}
+      :tax_percent, :zip_code, :first_name, :last_name, :is_active, :url, :custom_welcome )}
   end
 
   def record_not_unique

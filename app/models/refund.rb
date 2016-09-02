@@ -1,26 +1,22 @@
 class Refund < ActiveRecord::Base
   
   validates :uri, :time, presence: true
-
-  # Normally, the transaction foreign key would be here
-  # But reversed it because each transaction has 3 rows for user, merchant and admin, and they all need to be set.
-  # This should change when transaction table is further normalized
-  has_many :transactions, inverse_of: :refund
+  belongs_to :txn, :foreign_key => :transaction_id, :class_name => :Transaction
 
 
   # return response text and http code
   def self.refund_card_txn(charge_id, merchant_id, reason, admin)
     begin     
-      txns = Transaction.where("transaction_uri = ? and refund_id is NULL", charge_id) 
-      if txns.empty? || ( !txns.find_by(referenced_merchant_id: merchant_id) && !admin )  # check if merchant created this txn
+      txn = Transaction.find_by(transaction_uri: charge_id) 
+      
+      if txn.nil? || ( !(txn.team_id == merchant_id) && !admin )  # check if merchant created this txn
         send_refund_failure_notification
         return ["We're unable to refund this transaction. It might already be refunded, doesnt exists or wasn't created by you.", 403]
       end
       
       re = PaymentService.refund_charge(charge_id)   # else proceed to refund on Stripe
       if re[0]
-        ref_id = Refund.create(uri: re[0].id, time: re[0].created, reason: reason).id
-        ActiveRecord::Base.connection.execute("UPDATE transactions SET refund_id = #{ref_id} WHERE transaction_uri = #{charge_id}") 
+        Refund.create(uri: re[0].id, time: re[0].created, reason: reason, transaction_id: txn.id)
 =begin
         # Refund notification
         EmailingService.charge_failure_notification(to: merchant.email, customer_email: user.email, customer_phone: user.phone_number,

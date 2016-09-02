@@ -21,7 +21,7 @@ module DashboardMerchantQueries
 		Transaction.find_by_sql([
 			"SELECT users.card_name, users.email, transactions.created_at, transactions.last_four, transactions.notes, 
 			 transactions.amount_less_fees, users.phone_number, transactions.transaction_number, transactions.transaction_uri, 
-			  transactions.tax_rate, transactions.refund_id
+			  transactions.tax_percent, transactions.refund_id
 				FROM transactions 
 				INNER JOIN users on transactions.referenced_user_id = users.id
 				where user_id = ? ORDER BY transactions.created_at DESC", self.id])
@@ -79,7 +79,7 @@ module DashboardMerchantQueries
 			Transaction.find_by_sql([
 				'SELECT SUM(IF(DATE(created_at) >= curdate(), amount, 0)) AS todays_sales,
 	                SUM(DATE(created_at) >= curdate()) AS todays_txn,
-	                COUNT(DISTINCT referenced_merchant_id) AS count,
+	                COUNT(DISTINCT team_id) AS count,
 	                SUM(amount) AS sales_till_date,
 	                SUM(DATE(created_at) BETWEEN DATE_SUB(curdate(), INTERVAL 30 DAY) AND curdate()) AS txn_last_30days
 	                from transactions

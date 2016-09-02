@@ -871,7 +871,7 @@ $(document).ready(function () {
                         }
                     }
                 },
-                'user[tax_rate]': {
+                'user[tax_percent]': {
                     row: '.form-group',
                     validators: {
                         numeric: {
@@ -1381,7 +1381,7 @@ $(document).ready(function () {
       // validate text me form    
 
   //  Hashtags
-  $('#hashtag_name').bind('input', function(){
+  $('#hashtag_tag').bind('input', function(){
     $(this).val(function(_, v) { return v.replace(/\s+/g, ''); });
   });
   $('#hashtag_amount').bind('input', function(){
