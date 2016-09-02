@@ -163,7 +163,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
 
       file.upload = Upload.upload({
         url: '/send_mms_from_dashboard',
-        data: { avatar: file },
+        data: { avatar: file, text: $scope.mms_text },
         headers: {
           'Content-Type': file.type,
           'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')

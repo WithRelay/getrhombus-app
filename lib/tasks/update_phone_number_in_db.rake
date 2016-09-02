@@ -1,8 +1,15 @@
 
-# run before any migrations
+# run before any migrations since user_id_to is now user_id
 
 # Ensure that messages table have the most current number for customers who changed their
 # numbers. This wasn't done before and could be the case.
+
+# Add this migration
+
+#  def change
+#    remove_column :messages, :user_id
+#    remove_column :messages, :user_id_to
+#  end
 
 # Do this for merchants whose rhombus_number is not null 
 # We don't want to overwrite the messages data to null because they might come back
@@ -14,6 +21,7 @@ task :update_customer_number_data => :environment do
 
   # update messages
   Message.all.each do |m|
+    m.transaction_id = nil if m.transaction_id == 0
 
     u = User.where(id: m['user_id_from'])
     if u.present? && u.user_level == 0
@@ -32,6 +40,8 @@ task :update_customer_number_data => :environment do
     m.save
   end
 
+# no longer necessary since I'm removing this from and to from transactions
+=begin
   # Update transactions
   User.all.each do |u|
     if u.user_level == 0 
@@ -69,6 +79,6 @@ task :update_customer_number_data => :environment do
       end
     end
   end
-
+=end
 
 end

@@ -195,7 +195,6 @@ class User < ActiveRecord::Base
       # move to background job
       ActiveRecord::Base.connection.execute("UPDATE messages SET messages.from = #{x[1]} WHERE messages.from = #{x[0]}")
       ActiveRecord::Base.connection.execute("UPDATE messages SET messages.to = #{x[1]} WHERE messages.to = #{x[0]}")
-      ActiveRecord::Base.connection.execute("UPDATE transactions SET transactions.from = #{x[1]} WHERE transactions.from = #{x[0]}") 
     end
   end
   
