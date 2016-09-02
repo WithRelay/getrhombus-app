@@ -20,9 +20,7 @@ Contact - Inbound
 
 
 Thursday
-- background jobs - Done
-- MMS
-  - add num_media to messages
+- MMS - remove mms button or option in hashtag for non us
 - Clean up angular - https://blog.joshsoftware.com/2014/07/17/building-web-apps-with-rails4-and-angularjs-in-15-minutes/
 
 

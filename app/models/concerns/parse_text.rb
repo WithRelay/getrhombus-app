@@ -1,7 +1,10 @@
 module ParseText
   extend ActiveSupport::Concern
 
-  ## help need to handle media url here                      
+  ## help need to handle media url here  https://www.twilio.com/docs/api/twiml/sms/twilio_request
+  ## after parsing, then download file and save
+  # then publish to dashboard with urls
+
   ## help change how i test if merchant can take payments
   ## help captured link for sign in
 
