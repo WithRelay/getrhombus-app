@@ -1541,18 +1541,17 @@ $(document).ready(function () {
   $('#select-images').change(function() { read_file_picker(this); });
   function read_file_picker(input) {
     var files = input.files, new_image_previews = $('#new-image-previews').html("");
-    var button = $('#create-hashtag-btn').prop('disabled', false);
     
-    function invalid_actions(alert) {
-      alert(alert);
-      button.prop('disabled', true);
+    function invalid_actions(msg) {
+      input.value = "";
       new_image_previews.html("");
+      alert(msg);      
     }
 
     // http://stackoverflow.com/questions/23402187/multiple-files-upload-and-using-file-reader-to-preview
     if (files && files.length > 0) {
       if (files.length > 3) {
-        invalid_actions("Please reselect up to 3 files.")
+        invalid_actions("Please reselect up to 3 files.");
         return;
       }
 
@@ -1560,17 +1559,15 @@ $(document).ready(function () {
         var file = files[i];
 
         if (!file.type.match('image')) {
-          invalid_actions("Please reselect only images")
+          invalid_actions("Please reselect only images");
           return;
         }
 
         // 2 MB max
         if (file.size > 2097152) {
-          invalid_actions("Please reselect only images under 2MB")
+          invalid_actions("Please reselect only images under 2MB");
           return;
         }
-
-        console.log(file)
 
         var reader = new FileReader();
         reader.addEventListener("load", function (event) {
