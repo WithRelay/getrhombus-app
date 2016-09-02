@@ -22,15 +22,17 @@
     <%= f.text_area :description %>
   </div>
 
-  <a id='select-images-button'>FILE</a>
-  <%= file_field_tag "hashtag[images_attributes][][avatar]", type: :file, multiple: true, id: "select-images", accept: "image/*" %>
+  
+  <% if ['CA', 'US'].include? current_user.country %>
+    <a id='select-images-button'>FILE</a>
+    <%= file_field_tag "hashtag[images_attributes][][avatar]", type: :file, multiple: true, id: "select-images", accept: "image/*" %>
 
-  <style type="text/css">.thumbnail { height: 50px; width: 50px; }</style>
-  <div id='new-image-previews'></div>
-  <div id='image-previews' data-tag-id='<%= @hashtag.id %>'>    
-    <%= generate_image_thumbnails(@images) %>
-  </div>
-
+    <style type="text/css">.thumbnail { height: 50px; width: 50px; }</style>
+    <div id='new-image-previews'></div>
+    <div id='image-previews' data-tag-id='<%= @hashtag.id %>'>    
+      <%= generate_image_thumbnails(@images) %>
+    </div>
+  <% end %>
    
   <div class="field">
     <%= f.select :tag_type, options_for_select({ "Non-payment Hashtag" => "1", "One-time payment Hashtag" => '2', "Recurring payment Hashtag" => "3" }, selected: @hashtag.tag_type) %>
