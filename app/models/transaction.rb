@@ -7,12 +7,16 @@ class Transaction < ActiveRecord::Base
   has_one :message
   belongs_to :hashtag
   belongs_to :user, counter_cache: true
+  belongs_to :team, class_name: "User", counter_cache: true
+
+
   belongs_to :refund, inverse_of: :transactions
 
   # Why am I passing an array in here?
   # Capture can change transaction status and date
   # Each transaction generates 3 rows. This will be normalized in future updates
   # This method support captured payment, charge a customer and sms payment
+  # does this include hashtag_id
   def self.charge_customer_card(amt_ary, merchant, user, message, capture=true) 
     begin    
       amount = amt_ary[0]
@@ -46,30 +50,34 @@ class Transaction < ActiveRecord::Base
 
       # Note since relationship between user and card is one to one, when merchant and owner info is saved,
       # it is pulled from user profile and not transaction data. This changes with x to many relationships.
+      # Add hashtag_id option
       create(transaction_uri: response.id, transaction_type: 1, amount: amount_in_hundreds, 
-          transaction_number: transaction_number, amount_less_fees: amount_less_fees,
+          transaction_number: transaction_number, amount_less_fees: amount_less_fees, rhombus_fee: rhombus_fee_amt,
           description: "Payment to #{merchant.email}. #{merchant.org_name}. rhombus number: #{merchant.rhombus_number}", 
           from: user.phone_number, to: merchant.rhombus_number, status: response.status, transaction_available_at: response.created, 
           last_four: response.source.last4, expiration_month: response.source.exp_month, expiration_year: response.source.exp_year, 
           card_type: response.source.brand, card_name: response.source.name, tax_rate: merchant.tax_rate, 
-          on_behalf_of_uri: merchant.stripe_access_token, referenced_merchant_id: merchant.id, user_id: user.id, notes: message,
+          on_behalf_of_uri: merchant.stripe_access_token, team_id: merchant.id, user_id: user.id, notes: message,
           amount_with_taxes: sprintf("%.2f", response.amount.to_f/100), currency: response.currency, captured: response.captured)
     
+      # Also need to email merchant here too
+      # So move this to another method below just like send text receipt
       EmailingService.send_receipt( merchant_email: merchant.email, to: user.email, merchant_name: merchant.org_name, 
             transaction_number: transaction_number, transaction_date: self.created_at, text: message, amount: amount_in_hundreds,
             amount_with_taxes: amount_with_taxes_in_hundreds, org_phone: merchant.org_phone, currency: response.currency)
 
+
       # change this later to use timezone??, Put a save check here later
       self.receipt_sent_at = Time.zone.now                      
-      debit_data = [self.id, amount_in_hundreds, amount_with_taxes_in_hundreds, amount_less_fees, transaction_number, 
-                      response.id, rhombus_fee_amt, response.currency, response.captured]
-      
-      merchant_txn_id = merchant_transaction_details(debit_data, merchant, user, message)
-      owner_transaction_details(debit_data, merchant_txn_id, merchant, user, message)
-      
-      self.referenced_merchant_transaction_id = merchant_txn_id
-      self.save
 
+      # delete these 4 lines
+      #debit_data = [self.id, amount_in_hundreds, amount_with_taxes_in_hundreds, amount_less_fees, transaction_number, 
+       #               response.id, rhombus_fee_amt, response.currency, response.captured]
+      #merchant_txn_id = merchant_transaction_details(debit_data, merchant, user, message)
+      #owner_transaction_details(debit_data, merchant_txn_id, merchant, user, message)      
+      #self.referenced_merchant_transaction_id = merchant_txn_id
+      
+      self.save
       self.id
     rescue StandardError => err
       EmailingService.charge_failure_notification(to: merchant.email, customer_email: user.email, customer_phone: user.phone_number,
@@ -94,7 +102,8 @@ class Transaction < ActiveRecord::Base
     RealtimeStreamService.send_message_via_number(user.phone_number, merchant.rhombus_number, message.text, message.created_at, true)
   end
 
-   
+ 
+=begin  
   def merchant_transaction_details(debit_data, merchant, user, message)  
     # Put a save check here later
     transaction = create(transaction_uri: debit_data[5], transaction_type: 2, amount: debit_data[1], amount_less_fees: debit_data[3], 
@@ -125,7 +134,7 @@ class Transaction < ActiveRecord::Base
       amount_with_taxes: debit_data[2], referenced_merchant_transaction_id: merchant_txn_id, 
       referenced_merchant_id: merchant.id, currency: debit_data[7], captured: debit_data[8])                                   
   end
-
+=end
 
   def self.process_captured_payment()
     # call charge customer here

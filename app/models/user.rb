@@ -12,8 +12,10 @@ class User < ActiveRecord::Base
   # :token_authenticatable, :lockable, :timeoutable and :confirmable,
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable, :omniauthable
 
-  has_many :messages, dependent: :destroy
   has_many :transactions, dependent: :destroy
+  has_many :team_transactions, class_name: 'Transaction', foreign_key: 'team_id', dependent: :destroy
+
+  has_many :messages, dependent: :destroy
   has_many :hashtags, dependent: :destroy
   has_one :twitter_cred, dependent: :destroy
   has_many :image_refs, as: :imageable, dependent: :destroy
