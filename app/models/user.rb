@@ -139,6 +139,10 @@ class User < ActiveRecord::Base
     return true
   end
 
+  def can_send_mms?
+    ['US', 'CA'].include? self.country
+  end
+
   private
 
   def set_merchant_org_phone

@@ -15,11 +15,13 @@ class HashtagsController < ApplicationController
   def new
     @hashtag = Hashtag.new
     @images = []
+    @can_send_mms = current_user.can_send_mms?
     respond_with(@hashtag)
   end
 
   def edit
     @images = @hashtag.images
+    @can_send_mms = current_user.can_send_mms?
   end
 
   def create
