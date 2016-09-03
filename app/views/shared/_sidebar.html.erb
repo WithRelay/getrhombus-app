@@ -45,6 +45,14 @@
     <% end %>
   </li>
 
+  <% if current_user.email == "<redacted_email>" #Rails.application.secrets.dashboard_email %>
+   <li>
+    <%= link_to user_coupons_path(current_user.id) do %>
+        <span class="icon color6"><i class="fa fa-send-o"></i></span>Coupons
+    <% end %>
+  </li>
+  <% end %>
+
    <li>
     <%= link_to notifications_user_path(current_user.id) do %>
         <span class="icon color6"><i class="fa fa-credit-card"></i></span>Notifications

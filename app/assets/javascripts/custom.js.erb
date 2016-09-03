@@ -1379,20 +1379,23 @@ $(document).ready(function () {
       });
       // validate text me form    
 
-  //  Hashtags
-  $('#hashtag_tag').bind('input', function(){
+  //  Hashtags, plans, coupons
+  // no spaces
+  $('#hashtag_tag, #coupon-name').bind('input', function(){
     $(this).val(function(_, v) { return v.replace(/\s+/g, ''); });
   });
-  $('#interval-count').bind('input', function(){
+
+  // Positive integer only
+  $('#interval-count, #amount-off, #duration-in-months, #max-redemptions').bind('input', function(){
    $(this).val(function(_, v) { 
-      if (v.match(/^[1-9]\d*$/)) return v
-      else return v.slice(0, -1);
+      return (v.match(/^[1-9]\d*$/)) ? v : v.slice(0, -1);
     });
   });
+
+  // decimal with two places
   $('#hashtag_amount, #plan_amount').bind('input', function(){
     $(this).val(function(_, v) { 
       if (v.slice(-1) == '.' && (v.match(/[.]/g) || []).length == 1 && v.length > 1) return v
-        // /^\d+(.\d{1,2})?$/
       // http://stackoverflow.com/questions/30606348/check-if-a-given-value-is-a-positive-number-or-float-with-maximum-two-decimal-pl
       // http://stackoverflow.com/questions/25053605/regex-to-allow-only-a-single-dot-in-a-textbox
       else if (v.match(/^\d+(.\d{1,2})?$/)) return v
@@ -1409,9 +1412,26 @@ $(document).ready(function () {
       $('#hashtag-payment-settings').slideDown(200);
     }
   }).change();
-  ///// Hashtags
+  
+  // positve integer less than 100
+  $('#percent-off').bind('input', function(){
+   $(this).val(function(_, v) { 
+      return (v.match(/^[1-9]\d*$/) && parseInt(v) < 101) ? v : v.slice(0, -1);
+    });
+  });
 
-   // Alerts
+  // if coupon isnt repeating. repeating needs length in months
+  $('#coupon-duration').change(function(){
+    if (this.value == 'repeating') {
+      $('#duration-in-months-div').slideDown(200) 
+    } else {
+      $('#duration-in-months-div').slideUp(200);
+      $('duration-in-months').val('');
+    } 
+  }).change();
+  //  Hashtags, plans, coupons
+
+  // Alerts
   $('#alert-include-sms').change(function(){
     (this.checked) ? $('#alert-sms-number').slideDown(200) : $('#alert-sms-number').slideUp(200);
   }).change();
@@ -1565,8 +1585,13 @@ $(document).ready(function () {
 
     // http://stackoverflow.com/questions/23402187/multiple-files-upload-and-using-file-reader-to-preview
     if (files && files.length > 0) {
-      if (files.length > 3) {
-        invalid_actions("Please reselect up to 3 files.");
+      if ($("#image-previews").children().length >= 2) {
+        invalid_actions("you already have 2 images attached");
+        return;
+      }      
+
+      if (files.length > 2) {
+        invalid_actions("Please reselect up to 2 files.");
         return;
       }
 

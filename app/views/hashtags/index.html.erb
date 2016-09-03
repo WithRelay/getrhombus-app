@@ -67,7 +67,7 @@
                   <td><%= h.created_at.strftime("%m/%d/%Y %I:%M %p") %></td>
                   <td><%= h.updated_at.strftime("%m/%d/%Y %I:%M %p") %></td>
                   <td>
-                      <%= link_to 'Details', user_hashtag_path(current_user, h), id: "show-hashtag", class: "hashtag-btns" %>
+                      <%# = link_to 'Details', user_hashtag_path(current_user, h), id: "show-hashtag", class: "hashtag-btns" %>
                       <%= link_to 'Edit', edit_user_hashtag_path(current_user, h), id: "edit-hashtag", class: "hashtag-btns" %>
                       <%#= link_to 'Delete', user_hashtag_path(current_user, h), id: "delete-hashtag", class: "hashtag-btns", method: :delete, data: { confirm: 'Are you sure?' } %>
                   </td>

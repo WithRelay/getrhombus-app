@@ -1,5 +1,6 @@
 
 # run before any migrations since user_id_to is now user_id
+# run after running conversations rake tasks
 
 # Ensure that messages table have the most current number for customers who changed their
 # numbers. This wasn't done before and could be the case.
@@ -39,46 +40,5 @@ task :update_customer_number_data => :environment do
     
     m.save
   end
-
-# no longer necessary since I'm removing this from and to from transactions
-=begin
-  # Update transactions
-  User.all.each do |u|
-    if u.user_level == 0 
-      txns = Transaction.where(user_id: u.id)
-      if t.present?
-        txns.each do |t|
-          t.from = u.phone_number
-          t.save
-        end
-      end
-
-      txns = Transaction.where(referenced_user_id: u.id)
-      if t.present?
-        txns.each do |t|
-          t.from = u.phone_number
-          t.save
-        end
-      end
-
-    elsif u.user_level == 1
-      txns = Transaction.where(user_id: u.id)
-      if t.present?
-        txns.each do |t|
-          t.to = u.rhombus_number
-          t.save
-        end
-      end
-
-      txns = Transaction.where(referenced_merchant_id: u.id)
-      if t.present?
-        txns.each do |t|
-          t.to = u.rhombus_number
-          t.save
-        end
-      end
-    end
-  end
-=end
 
 end

@@ -38,10 +38,13 @@ Rails.application.routes.draw  do
   
   # user routes
   resources :users, :only => :show do
-    resources :hashtags
+    resources :hashtags, except: [:show, :destroy]
     resources :subscriptions, except: [:show, :edit, :update]
     resources :plans, only: [:create, :index, :new]
     resources :alerts, only: [:update]
+    resources :coupons, :constraints => lambda { |req| 
+      req.env['warden'].authenticated? and req.env['warden'].user.email == '<redacted_email>' #Rails.application.secrets.dashboard_email 
+    }
     
     member do
       get 'messaging' => 'users#messaging'

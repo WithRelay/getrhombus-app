@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160903164904) do
+ActiveRecord::Schema.define(version: 20160903215415) do
 
   create_table "alerts", force: :cascade do |t|
     t.boolean  "send_alert",         limit: 1,   default: true
@@ -42,6 +42,8 @@ ActiveRecord::Schema.define(version: 20160903164904) do
   end
 
   create_table "coupons", force: :cascade do |t|
+    t.integer  "user_id",            limit: 4
+    t.integer  "stripe_coupon_id",   limit: 4
     t.string   "name",               limit: 191
     t.integer  "amount_off",         limit: 4
     t.string   "currency",           limit: 191
@@ -54,6 +56,8 @@ ActiveRecord::Schema.define(version: 20160903164904) do
     t.datetime "created_at",                     null: false
     t.datetime "updated_at",                     null: false
   end
+
+  add_index "coupons", ["user_id"], name: "index_coupons_on_user_id", using: :btree
 
   create_table "customer_lists", force: :cascade do |t|
     t.integer  "user_id",    limit: 4
@@ -138,12 +142,12 @@ ActiveRecord::Schema.define(version: 20160903164904) do
     t.string   "tag",            limit: 191
     t.boolean  "charge_amount",  limit: 1,                             default: false
     t.integer  "user_id",        limit: 4
+    t.integer  "interval_count", limit: 4
+    t.string   "interval",       limit: 191
+    t.integer  "tag_type",       limit: 4
+    t.boolean  "enable_tweet",   limit: 1
     t.datetime "created_at",                                                           null: false
     t.datetime "updated_at",                                                           null: false
-    t.boolean  "enable_tweet",   limit: 1
-    t.integer  "tag_type",       limit: 4
-    t.string   "interval",       limit: 191
-    t.integer  "interval_count", limit: 4
   end
 
   add_index "hashtags", ["user_id"], name: "index_hashtags_on_user_id", using: :btree
@@ -221,10 +225,12 @@ ActiveRecord::Schema.define(version: 20160903164904) do
     t.string   "statement_descriptor", limit: 22
     t.integer  "trial_period_days",    limit: 4,   default: 0
     t.integer  "hashtag_id",           limit: 4
-    t.integer  "owner",                limit: 4,   default: 0, null: false
+    t.integer  "user_id",              limit: 4,   default: 0, null: false
     t.datetime "created_at",                                   null: false
     t.datetime "updated_at",                                   null: false
   end
+
+  add_index "plans", ["user_id"], name: "index_plans_on_user_id", using: :btree
 
   create_table "refunds", force: :cascade do |t|
     t.string   "uri",            limit: 255
@@ -241,6 +247,7 @@ ActiveRecord::Schema.define(version: 20160903164904) do
     t.integer  "stripe_subscription_id",  limit: 4
     t.integer  "plan_id",                 limit: 4
     t.integer  "user_id",                 limit: 4
+    t.integer  "team_id",                 limit: 4
     t.integer  "coupon_id",               limit: 4
     t.decimal  "application_fee_percent",             precision: 8, scale: 2
     t.string   "source",                  limit: 191
@@ -254,7 +261,6 @@ ActiveRecord::Schema.define(version: 20160903164904) do
     t.boolean  "stripe_livemode",         limit: 1
     t.datetime "created_at",                                                              null: false
     t.datetime "updated_at",                                                              null: false
-    t.integer  "team_id",                 limit: 4
   end
 
   add_index "subscriptions", ["coupon_id"], name: "fk_rails_56c77d859b", using: :btree
@@ -397,10 +403,12 @@ ActiveRecord::Schema.define(version: 20160903164904) do
   add_index "users", ["rhombus_number"], name: "index_users_on_rhombus_number", unique: true, using: :btree
 
   add_foreign_key "alerts", "users"
+  add_foreign_key "coupons", "users"
   add_foreign_key "customer_lists", "users"
   add_foreign_key "hashtags", "users"
   add_foreign_key "lists", "users"
   add_foreign_key "messages", "hashtags"
+  add_foreign_key "plans", "users"
   add_foreign_key "refunds", "transactions"
   add_foreign_key "subscriptions", "coupons"
   add_foreign_key "subscriptions", "plans"
