@@ -3,8 +3,11 @@ class SubscriptionsController < ApplicationController
 
   respond_to :html
 
+  # seems to be pulling for everyone
   def index
+    #str = current_user.user_level == 1 ? "user_id = " : "team_id = " + current_user.id
     @subscriptions = Subscription.all
+    #@subscriptions = Subscription.where("where " + str)
     respond_with(@subscriptions)
   end
 

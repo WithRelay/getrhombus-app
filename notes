@@ -22,13 +22,15 @@ Contact - Inbound
 Thursday
 - Clean up angular - https://blog.joshsoftware.com/2014/07/17/building-web-apps-with-rails4-and-angularjs-in-15-minutes/
 
-Friday
-- subscriptions
-- drip campaigns
-
 Saturday
-- managed accounts
+- subscriptions
+  - webhooks
+- drip campaigns
 - server notifications
+
+Sunday
+- managed accounts
+
 
 
 
