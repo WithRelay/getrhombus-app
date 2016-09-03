@@ -1379,7 +1379,7 @@ $(document).ready(function () {
       });
       // validate text me form    
 
-  //  Hashtags, plans, coupons
+  //  Hashtags, plans, coupons, Alerts
   // no spaces
   $('#hashtag_tag, #coupon-name').bind('input', function(){
     $(this).val(function(_, v) { return v.replace(/\s+/g, ''); });
@@ -1402,6 +1402,7 @@ $(document).ready(function () {
       else return v.slice(0, -1);
     });
   });
+  
   // if hashtag isn't for payment, remove payment settings
   $('#hashtag_tag_type').change(function(){
     if (this.value == '1') {
@@ -1421,21 +1422,19 @@ $(document).ready(function () {
   });
 
   // if coupon isnt repeating. repeating needs length in months
-  $('#coupon-duration').change(function(){
+  $('#coupon_duration').change(function(){
     if (this.value == 'repeating') {
       $('#duration-in-months-div').slideDown(200) 
     } else {
       $('#duration-in-months-div').slideUp(200);
-      $('duration-in-months').val('');
+      $('#duration-in-months').val('');
     } 
   }).change();
-  //  Hashtags, plans, coupons
-
-  // Alerts
+    
   $('#alert-include-sms').change(function(){
     (this.checked) ? $('#alert-sms-number').slideDown(200) : $('#alert-sms-number').slideUp(200);
   }).change();
-  ///// Alerts
+  //  Hashtags, plans, coupons, Alerts
 
   $('#transactions-column').on("click", ".refund_link", function() {
       REFUND_TXN_LINK = this;

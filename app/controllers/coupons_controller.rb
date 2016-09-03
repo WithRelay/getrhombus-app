@@ -23,7 +23,7 @@ class CouponsController < ApplicationController
   def create
     @coupon = Coupon.new(coupon_params)
     @coupon.user_id = current_user.id
-    if u && @subscription.create_coupon({ team: current_user })  #@coupon.save
+    if @coupon.create_coupon({ team: current_user })  #@coupon.save
       redirect_to user_coupons_path       #respond_with(@coupon)
     else
       respond_with(@subscription)

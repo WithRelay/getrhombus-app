@@ -23,7 +23,7 @@
 
   <div class="field">
     <%= f.label :duration %><br>
-    <%= f.select :duration, options_for_select({ "Once" => "once", "repeating" => 'repeating', "forever" => "forever" }, selected: @coupon.duration), id: 'coupon-duration' %>
+    <%= f.select :duration, options_for_select({ "Once" => "once", "repeating" => 'repeating', "forever" => "forever" }, selected: @coupon.duration) %>
   </div>
 
   <!-- only if repeating -->
