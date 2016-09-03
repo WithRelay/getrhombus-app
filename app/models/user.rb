@@ -4,20 +4,26 @@ class User < ActiveRecord::Base
   include DashboardCustomerQueries
   include CSVHandler
 
-  attr_accessor :full_name, :phone, :captured_amt, :msg_id, :tag_id,
-                # used to identify what type of action in user's controller update action
-                :update_rhombus_number  
-  
+  attr_accessor :full_name, :phone, :captured_amt, :msg_id, :tag_id
+
   # include default devise modules. Others available are:
   # :token_authenticatable, :lockable, :timeoutable and :confirmable,
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable, :omniauthable
 
-  has_many :messages, dependent: :destroy
   has_many :transactions, dependent: :destroy
+  has_many :team_transactions, class_name: 'Transaction', foreign_key: 'team_id'
+  
+  has_many :subscriptions, dependent: :destroy
+  has_many :team_subscriptions, class_name: 'Subscription', foreign_key: 'team_id'
+
+  # this goes away with conversation model
+  has_many :messages, dependent: :destroy
+  
   has_many :hashtags, dependent: :destroy
   has_one :twitter_cred, dependent: :destroy
+
   has_many :image_refs, as: :imageable, dependent: :destroy
-  has_many :images, through: :image_refs, dependent: :destroy
+  has_many :images, through: :image_refs
 
   before_validation :the_titleizer
   
@@ -26,7 +32,7 @@ class User < ActiveRecord::Base
 
   # Just to prevent sending emails locally for now...remove comment later
   # after_commit :send_welcome_email, on: :create
-  after_commit :update_phone_in_db, on: :update
+  after_commit :update_phone_in_db, on: :update, if: lambda { |u| u.previous_changes['phone_number'] && u.user_level == 0 }
 
   #validates_presence_of :user_level, :message => "Please select an account type"
   #validates :country, length: {is: 2}, allow_blank: true  
@@ -39,9 +45,6 @@ class User < ActiveRecord::Base
   has_many :lists
   has_many :customers, through: :customer_lists
 
-
- #has_many :inverse_lists, :class_name => "List", :foreign_key => "customer_id"
- #has_many :inverse_customers :through => :inverse_lists, :source => :user
   # saves merchant info from stripe
   def save_stripe_omniauth_data(auth)
     self.provider = auth.provider
@@ -56,8 +59,7 @@ class User < ActiveRecord::Base
 
   # Create or update customer on Stripe
   def add_token_to_stripe_customer(params)
-    #return false
-    if self.user_level == 0 && params[:instrument_uri].present?  # is this why i get the errors from stripe??
+    if params[:instrument_uri].present?  # is this why i get the errors from stripe??
       begin 
         if self.customer_uri.blank?                                     # Doesnt have a customer uri => first time
           cu = Stripe::Customer.create(email: self.email, source: params[:instrument_uri])         
@@ -69,30 +71,32 @@ class User < ActiveRecord::Base
           cu.source = params[:instrument_uri]
           cu.save   
         end
+        buy_merchant_number if self.user_level == 1 && self.rhombus_number_type == nil
+        return true
       rescue Stripe::CardError => e
         # Since it's a decline, Stripe::CardError will be caught
-        body = e.json_body
-        err  = body[:error]
-
+        err  = e.json_body[:error]
         owner = User.find_by(email: Rails.application.secrets.team_email)
         Message.send_and_save_message(owner.rhombus_number, self.phone_number, "We were unable to update your card info on Rhombus because: #{err[:message]}.")
         Notification.token_failure_notification(err, self.email).deliver_now
-        return false
       rescue Stripe::StripeError => e
-        body = e.json_body
-        err  = body[:error]
-        Notification.token_failure_notification(err, self.email).deliver_now
-        return false
+        Notification.token_failure_notification(e.json_body[:error], self.email).deliver_now
       rescue StandardError => e
         Notification.token_failure_notification(e, self.email).deliver_now
-        return false
-      else
-        return true                # yep!! we gat this
-      end      
+      end
     end
-    return true                     # Not a customer just a merchant
+
+    return false
   end
  
+  def buy_merchant_number
+    # save the area code in rhombus number till a number is bought
+    #number = TextingService.buy_number(self.rhombus_number])
+    #self.rhombus_number_type = number if number
+    self.rhombus_number = number if number
+    return number[0]
+  end
+
   # Returns hash with users who sent a message to the given merchant in the last "num_days" days
   def self.get_latest_active_messaging(merchant_id, num_days)
     users = Message.select('`users`.`id`, `users`.`first_name`, `users`.`last_name`, `users`.`email`, `messages`.`from`')
@@ -130,13 +134,8 @@ class User < ActiveRecord::Base
     self.org_phone
   end
 
-  def update_merchant_account(params)
-    if params.key? :update_rhombus_number
-      #number = TextingService.buy_number(params[:rhombus_number])
-      #return false if !number
-      self.rhombus_number = number
-    end
-    return true
+  def can_send_mms?
+    ['US', 'CA'].include? self.country
   end
 
   private
@@ -186,13 +185,9 @@ class User < ActiveRecord::Base
   end
 
   def update_phone_in_db
-    x = self.previous_changes['phone_number']
-    if x && self.user_level == 0
-      # move to background job
-      ActiveRecord::Base.connection.execute("UPDATE messages SET messages.from = #{x[1]} WHERE messages.from = #{x[0]}")
-      ActiveRecord::Base.connection.execute("UPDATE messages SET messages.to = #{x[1]} WHERE messages.to = #{x[0]}")
-      ActiveRecord::Base.connection.execute("UPDATE transactions SET transactions.from = #{x[1]} WHERE transactions.from = #{x[0]}") 
-    end
+    # move to background job
+    ActiveRecord::Base.connection.execute("UPDATE messages SET messages.from = #{x[1]} WHERE messages.from = #{x[0]}")
+    ActiveRecord::Base.connection.execute("UPDATE messages SET messages.to = #{x[1]} WHERE messages.to = #{x[0]}")
   end
   
 end

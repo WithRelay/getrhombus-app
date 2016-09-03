@@ -21,11 +21,11 @@ module DashboardMerchantQueries
 		Transaction.find_by_sql([
 			"SELECT users.card_name, users.email, transactions.created_at, transactions.last_four, transactions.notes, 
 			 transactions.amount_less_fees, users.phone_number, transactions.transaction_number, transactions.transaction_uri, 
-			  transactions.tax_rate, transactions.refund_id
+			  transactions.tax_percent, refunds.id as refund_id
 				FROM transactions 
 				INNER JOIN users on transactions.referenced_user_id = users.id
+				LEFT JOIN refunds on refunds.transaction_id = transactions.id
 				where user_id = ? ORDER BY transactions.created_at DESC", self.id])
-		# and transaction_type = ?
 	end	
 
 	# active + new with active having the higher precedence in the intersect
@@ -41,7 +41,6 @@ module DashboardMerchantQueries
 		query = "#{@@customers_query_txns} #{num_of_days_txns} GROUP BY transactions.referenced_user_id) UNION #{@@customers_query_referrer} 
 							and id NOT IN (@users_ids) #{num_of_days_referrer}) ORDER BY created_at DESC" 
 		Transaction.find_by_sql([query, self.id, self.rhombus_number])		
-		# and transaction_type = ?
 	end	
 
 	# whoever paid you in the last num_of_days
@@ -77,24 +76,25 @@ module DashboardMerchantQueries
 	def dashboard_stats
 		if self.user_level == 0
 			Transaction.find_by_sql([
-				'SELECT SUM(IF(DATE(created_at) >= curdate(), amount, 0)) AS todays_sales,
-	                SUM(DATE(created_at) >= curdate()) AS todays_txn,
-	                COUNT(DISTINCT referenced_merchant_id) AS count,
+				'SELECT SUM(IF(DATE(t.created_at) >= curdate(), amount, 0)) AS todays_sales,
+	                SUM(DATE(t.created_at) >= curdate()) AS todays_txn,
+	                COUNT(DISTINCT team_id) AS count,
 	                SUM(amount) AS sales_till_date,
-	                SUM(DATE(created_at) BETWEEN DATE_SUB(curdate(), INTERVAL 30 DAY) AND curdate()) AS txn_last_30days
-	                from transactions
-	                WHERE user_id = ? and refund_id is NULL', self.id])
+	                SUM(DATE(t.created_at) BETWEEN DATE_SUB(curdate(), INTERVAL 30 DAY) AND curdate()) AS txn_last_30days
+	                from transactions t
+	                LEFT JOIN refunds on refunds.transaction_id = t.id
+	                WHERE user_id = ? and refunds.id is NULL', self.id])
 			#and transaction_type = ?
 		elsif self.user_level == 1
 			Transaction.find_by_sql([
-				'SELECT SUM(IF(DATE(created_at) >= curdate(), amount_less_fees, 0)) AS todays_sales,
-	                SUM(DATE(created_at) >= curdate()) AS todays_txn,
+				'SELECT SUM(IF(DATE(t.created_at) >= curdate(), amount_less_fees, 0)) AS todays_sales,
+	                SUM(DATE(t.created_at) >= curdate()) AS todays_txn,
 	                COUNT(DISTINCT referenced_user_id) AS count,
 	                SUM(amount) AS sales_till_date,
-	                SUM(DATE(created_at) BETWEEN DATE_SUB(curdate(), INTERVAL 30 DAY) AND curdate()) AS txn_last_30days
-	                from transactions
-	                WHERE user_id = ? and refund_id is NULL', self.id])
-			#and transaction_type = ?
+	                SUM(DATE(t.created_at) BETWEEN DATE_SUB(curdate(), INTERVAL 30 DAY) AND curdate()) AS txn_last_30days
+	                from transactions t
+	                LEFT JOIN refunds on refunds.transaction_id = t.id
+	                WHERE user_id = ? and refunds.id is NULL', self.id])
 		end
 	end
 
@@ -108,17 +108,20 @@ module DashboardMerchantQueries
 		if self.user_level == 0
 			Transaction.find_by_sql([
 				'select count(*) as num_of_txns, sum(amount) as day_total,
-					date_format(date(created_at), "%b %e") as day from transactions where user_id = ?
-					and refund_id is NULL and DATE(created_at) BETWEEN DATE_SUB(curdate(), INTERVAL 7 DAY) AND curdate() 	
-					GROUP BY DAY(created_at)', self.id])
-				#and transaction_type = ?
+					date_format(date(t.created_at), "%b %e") as day 
+					from transactions t 
+					LEFT JOIN refunds on refunds.transaction_id = t.id
+					where user_id = ?
+					and refunds.id is NULL and DATE(t.created_at) BETWEEN DATE_SUB(curdate(), INTERVAL 7 DAY) AND curdate() 	
+					GROUP BY DAY(t.created_at)', self.id])
 		elsif self.user_level == 1
 			Transaction.find_by_sql([
 				'select count(*) as num_of_txns, sum(amount_less_fees) as day_total,
-					date_format(date(created_at), "%b %e") as day from transactions where user_id = ?
-					and refund_id is NULL and DATE(created_at) BETWEEN DATE_SUB(curdate(), INTERVAL 7 DAY) AND curdate() 
-					GROUP BY DAY(created_at)', self.id])
-				#and transaction_type = ?	
+					date_format(date(t.created_at), "%b %e") as day 
+					from transactions t where user_id = ?
+					LEFT JOIN refunds on refunds.transaction_id = t.id
+					and refunds.id is NULL and DATE(t.created_at) BETWEEN DATE_SUB(curdate(), INTERVAL 7 DAY) AND curdate() 
+					GROUP BY DAY(t.created_at)', self.id])
 		end
 	end
 
@@ -126,17 +129,19 @@ module DashboardMerchantQueries
 		if self.user_level == 0
 			Transaction.find_by_sql([
 				'select sum(amount) as week_total,
-					date_format(date(created_at), "%b %e") as week_day from transactions where user_id = ?
-					and refund_id is NULL and DATE(created_at) BETWEEN DATE_SUB(curdate(), INTERVAL 30 DAY) AND curdate() 	
-					GROUP BY WEEk(created_at)', self.id])
-				#  and transaction_type = ?
+					date_format(date(t.created_at), "%b %e") as week_day from transactions t
+					where user_id = ?
+					LEFT JOIN refunds on refunds.transaction_id = t.id
+					and refunds.id is NULL and DATE(t.created_at) BETWEEN DATE_SUB(curdate(), INTERVAL 30 DAY) AND curdate() 	
+					GROUP BY WEEk(t.created_at)', self.id])
 		elsif self.user_level == 1
 			Transaction.find_by_sql([
 				'select sum(amount_less_fees) as week_total,
-					date_format(date(created_at), "%b %e") as week_day from transactions where user_id = ?
-					and refund_id is NULL and DATE(created_at) BETWEEN DATE_SUB(curdate(), INTERVAL 30 DAY) AND curdate() 
-					GROUP BY WEEK(created_at)', self.id])
-				#and transaction_type = ?	
+					date_format(date(t.created_at), "%b %e") as week_day from transactions t
+					where user_id = ?
+					LEFT JOIN refunds on refunds.transaction_id = t.id
+					and refunds.id is NULL and DATE(t.created_at) BETWEEN DATE_SUB(curdate(), INTERVAL 30 DAY) AND curdate() 
+					GROUP BY WEEK(t.created_at)', self.id])
 		end
 	end
 

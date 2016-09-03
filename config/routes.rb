@@ -10,8 +10,11 @@ Rails.application.routes.draw  do
   get 'pricing' => 'static_pages#pricing'
   get 'contact' => 'contact_forms#new'
   
-  resources :contact_forms 
-  
+  resources :contact_forms
+
+  get "resque" => Resque::Server, :anchor => false, :constraints => lambda { |req|
+    req.env['warden'].authenticated? and req.env['warden'].user.id == 23
+  }
 
   get 'customer_template' => "users#customer_csv_template", constraints: { format: 'csv' }
   get 'transactions/download' => 'transactions#download_csv', constraints: { format: 'csv' }
@@ -37,6 +40,8 @@ Rails.application.routes.draw  do
   # user routes
   resources :users, :only => :show do
     resources :hashtags
+    resources :subscriptions, except: [:show, :edit, :update]
+    resources :plans, only: [:create, :index, :new]
     
     member do
       get 'messaging' => 'users#messaging'
@@ -56,7 +61,9 @@ Rails.application.routes.draw  do
     match 'users/find' => 'users#find', via: :get
     match 'users/add_customers' => 'users#add_customers', via: :post
     match 'hashtags/find' => 'hashtags#find', via: :get
+    match 'hashtags/:id/image_delete' => 'hashtags#image_delete', via: :post
     match 'transactions/:charge_id/refund' => 'transactions#refund', via: :post
+    match 'transactions/charge_customer' => 'transactions#charge_customer', via: :post
     match 'numbers/search' => 'numbers#search', via: :get
     #match '/hashtags/create' => 'hashtags#create', via: :post
   end

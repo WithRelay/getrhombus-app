@@ -14,11 +14,14 @@ class HashtagsController < ApplicationController
 
   def new
     @hashtag = Hashtag.new
-    @hashtag.images.build
+    @images = []
+    @can_send_mms = current_user.can_send_mms?
     respond_with(@hashtag)
   end
 
   def edit
+    @images = @hashtag.images
+    @can_send_mms = current_user.can_send_mms?
   end
 
   def create
@@ -55,6 +58,7 @@ class HashtagsController < ApplicationController
     end
 
     def hashtag_params
-      params.require(:hashtag).permit(:amount, :response, :tag, :charge_amount, :type, :enable_tweet, :description)
+      params.require(:hashtag).permit(:amount, :response, :tag, :charge_amount, :tag_type, :interval, :interval_count,
+        :enable_tweet, :description, images_attributes: [:avatar])
     end
 end

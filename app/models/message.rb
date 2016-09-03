@@ -1,12 +1,14 @@
 class Message < ActiveRecord::Base
 
 	belongs_to :txn, :foreign_key => :transaction_id, :class_name => :Transaction
+	belongs_to :hashtag
 
 	has_many :image_refs, as: :imageable, dependent: :destroy
-  	has_many :images, through: :image_refs, dependent: :destroy
-
+	has_many :images, through: :image_refs
+	
   	has_many :conversation_refs, as: :textable, dependent: :destroy
-  	has_many :conversations, through: :conversation_refs, dependent: :destroy
+  	has_many :conversations, through: :conversation_refs
+  
 
 	# belongs_to :user, counter_cache: true
 	
@@ -49,8 +51,8 @@ class Message < ActiveRecord::Base
 	
 	# Returns hash with the last "num_messages" messages that the given user has sent to the given merchant
  	def self.get_user_messages_by_merchant(user_number, merchant_id, num_messages)
-	    messages = Message.includes(:image)
-	    									.select('`messages`.`user_id`,`messages`.`text`,`messages`.`unread`,`messages`.`created_at`,`users`.`user_level`, `messages`.`image_id`')
+	    messages = Message.includes(:images)
+	    									.select('`messages`.`user_id`,`messages`.`text`,`messages`.`unread`,`messages`.`created_at`,`users`.`user_level`')#, `messages`.`image_id`')
 		                   	.joins('LEFT JOIN `users` ON (`users`.`id` = `messages`.`user_id`)')
 		                   	.where('(`messages`.`from` = ? AND `messages`.`user_id_to` = ?) OR (`messages`.`user_id` = ? AND `messages`.`to` = ?)', user_number, merchant_id, merchant_id, user_number)
 		                   	.order('`messages`.`created_at` DESC').limit(num_messages)
@@ -65,7 +67,7 @@ class Message < ActiveRecord::Base
 	        :ts_time => message.created_at.strftime('%l:%M %P'),
 	        :unread => message.unread,
 	        # return small version here??
-	        :image_url => message.image_id? ? message.image.avatar.url : nil 
+	        #:image_url => message.image_id? ? message.image.avatar.url : nil 
 	      })
 	    end
     	latest_messages

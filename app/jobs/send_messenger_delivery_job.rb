@@ -1,5 +1,5 @@
 class SendMessengerDeliveryJob < ActiveJob::Base
-
+=begin
   queue_as :messaging
 
   def perform(hash)
@@ -16,5 +16,5 @@ class SendMessengerDeliveryJob < ActiveJob::Base
   # end
   #
   # SendMessengerDeliveryJob.perform_later(delivery.to_hash)
-
+=end
 end

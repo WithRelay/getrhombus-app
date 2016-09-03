@@ -24,7 +24,6 @@
 
 //= require formValidation.min
 //= require bootstrap-formvalidator.min
-//= require angucomplete-alt.js
 
 // remove these lines
 //= require intlTelInput.min.js

@@ -1,7 +1,10 @@
 module ParseText
   extend ActiveSupport::Concern
 
-  ## help need to handle media url here                      
+  ## help need to handle media url here  https://www.twilio.com/docs/api/twiml/sms/twilio_request
+  ## after parsing, then download file and save
+  # then publish to dashboard with urls
+
   ## help change how i test if merchant can take payments
   ## help captured link for sign in
 
@@ -288,6 +291,18 @@ module ParseText
       @message.save_text(from: params[:From], messageId: params[:MessageSid], to: params[:To], message_code: 8)
 =end
     #end
+  end
+
+  def handle_subscription_through_text
+    # if can override amount, create plan and create subscription
+    # else find the existing plan for tag and create subbscription
+
+    #@plan.owner = 1
+    #if @plan.create_plan({ currency: current_user.currency, team: current_user })
+
+    #u = User.find_by id: self.user_id
+    #@subscription.team_id = current_user.id
+    #if u && @subscription.create_subscription({ team: current_user, customer: u.customer_uri }) 
   end
 end
 
