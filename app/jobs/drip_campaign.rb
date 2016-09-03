@@ -7,7 +7,7 @@ class DripCampaign
     # ActiveRecord::Base.clear_active_connections!
     #puts "dasdas"
     users = User.where(user_level: 0).first
-    puts users.created_at
+    puts (Time.zone.now - users.created_at) <= 3.days.seconds
     
     #users.each do |user|
       
