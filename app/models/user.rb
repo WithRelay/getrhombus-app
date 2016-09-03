@@ -192,7 +192,7 @@ class User < ActiveRecord::Base
 
   def create_user_alert
     # move to background job?
-    Alert.create(user_id: self.id, sms_number: self.org_phone)
+    Alert.create(user_id: self.id, sms_number: self.org_phone, last_alert_sent_at: self.created_at)
   end
   
 end

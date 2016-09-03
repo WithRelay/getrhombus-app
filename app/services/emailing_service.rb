@@ -161,9 +161,11 @@ class EmailingService
       puts user
     end
 
-    def send_unread_message_alert()
-      puts r['email']
-      puts r['unread']
+    def send_unread_message_alert(data)
+      puts data.email
+      puts data.unread_count
+      puts data.sms_number
+      puts "\n"
     end
 
   end  
