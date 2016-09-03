@@ -1,6 +1,6 @@
-complete_profile_reminder:
-  cron: "0 11 * * *"    # every calculates time from moment of deploy...so best for frequent jobs like 10-30 mins else use cron: "30 6 * * 1"
-  class: MyJob
-  queue: user_notifications
+drip_campaign_emails:
+  #cron: "0 11 * * *"    # every: 5s - Calculates time from moment of deploy...so best for frequent jobs like 10-30 mins else use cron: "30 6 * * 1"
+  every: 10s
+  class: "DripCampaign"
   args:
-  description: Runs the perform method in MyJob
+  description: "This job runs our drip campaigns."

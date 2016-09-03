@@ -56,23 +56,7 @@ class StaticPagesController < ApplicationController
 		render :json => {:object => "received"}, :status => 200
 	end
 
-	def send_message
-		# using message quickly
-		# send_api_client = MessageQuickly::Api::Client.new do |client|
-		#   client.page_access_token = '<redacted_facebook_access_token>'
-		#   client.page_id = '<redacted_phone_number>'
-		# end
-
-		# MessageQuickly::Api::UserProfile.new(send_api_client).find('508378145') #use Taiwo's FB id
-
-		# recipient = MessageQuickly::Messaging::Recipient.new(id: '<redacted_phone_number>') #use recipients FB id
-
-		# delivery = MessageQuickly::Api::Messages.create(recipient) do |message|
-  # 			message.text = 'Hello'
-		# end
-
-
-		
+	def send_message		
 		#Using HTTParty
 		options = { body: {
 		  "recipient" => {
