@@ -14,7 +14,7 @@ class PaymentService
               source: user.instrument_uri,
               capture: capture,
               description: "Payment from #{user.email}. Card name: #{user.card_name}. Last four: #{user.last_four}.",
-              application_fee: 0
+              application_fee: 0,
               metadata: {
                 "message" => message
               }  
@@ -78,7 +78,7 @@ class PaymentService
     def create_plan(hash, stripe_account_uid)
       begin
         # will calling it this way for rhombus itself work
-        re = Stripe::Plan.create(hash, { stripe_account: stripe_account_uid })  
+       # re = Stripe::Plan.create(hash, { stripe_account: stripe_account_uid })  
         [re]
       rescue Stripe::StripeError => e
         # Display a very generic error to the user, and maybe send yourself an email
@@ -100,10 +100,10 @@ class PaymentService
       end
     end
 
-    def create_coupon(hash, CONNECTED_STRIPE_ACCOUNT_ID)
+    def create_coupon(hash, stripe_account_uid)
       begin
         # will calling it this way for rhombus itself work
-        re = Stripe::Coupon.create(hash, { stripe_account: CONNECTED_STRIPE_ACCOUNT_ID })  
+        #re = Stripe::Coupon.create(hash, { stripe_account: stripe_account_uid })  
           #:percent_off => hash[:percent],
           #:duration => hash[:duration],
           #:duration_in_months => hash[:duration_in_months],
