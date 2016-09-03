@@ -104,10 +104,6 @@ class PaymentService
       begin
         # will calling it this way for rhombus itself work
         #re = Stripe::Coupon.create(hash, { stripe_account: stripe_account_uid })  
-          #:percent_off => hash[:percent],
-          #:duration => hash[:duration],
-          #:duration_in_months => hash[:duration_in_months],
-          #:id => '25OFF', #hash[:name]
         [re]
       rescue Stripe::StripeError => e
         # Display a very generic error to the user, and maybe send yourself an email

@@ -22,8 +22,8 @@ class PlansController < ApplicationController
 
   def create
     @plan = Plan.new(plan_params)
-    @plan.owner = 1
-    if @plan.create_plan({ currency: current_user.currency, team: current_user })  #@plan.save
+    @plan.user_id = current_user.id
+    if @plan.create_plan({ team: current_user })  #@plan.save
       redirect_to user_plans_path       #respond_with(@plan)
     else
       respond_with(@plan)
