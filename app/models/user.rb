@@ -21,6 +21,7 @@ class User < ActiveRecord::Base
   
   has_many :hashtags, dependent: :destroy
   has_one :twitter_cred, dependent: :destroy
+  has_one :alert, dependent: :destroy
 
   has_many :image_refs, as: :imageable, dependent: :destroy
   has_many :images, through: :image_refs
@@ -32,7 +33,8 @@ class User < ActiveRecord::Base
 
   # Just to prevent sending emails locally for now...remove comment later
   # after_commit :send_welcome_email, on: :create
-  after_commit :update_phone_in_db, on: :update, if: lambda { |u| u.previous_changes['phone_number'] && u.user_level == 0 }
+  after_commit :create_user_alert, on: :create, if: lambda { self.user_level == 1 }
+  after_commit :update_phone_in_db, on: :update, if: lambda { self.previous_changes['phone_number'] && self.user_level == 0 }
 
   #validates_presence_of :user_level, :message => "Please select an account type"
   #validates :country, length: {is: 2}, allow_blank: true  
@@ -124,14 +126,12 @@ class User < ActiveRecord::Base
     if self.user_level == 0
       x = (self.first_name) ? self.first_name : ''
       y = (self.last_name) ? self.last_name : ''
-      return nil if (x + y) == ""
-      x + " " + y
+      (x + y) == "" ? nil : x + " " + y
     end
   end
   
   def phone
-    return self.phone_number if self.user_level == 0
-    self.org_phone
+    self.user_level == 0 ? self.phone_number : self.org_phone
   end
 
   def can_send_mms?
@@ -188,6 +188,11 @@ class User < ActiveRecord::Base
     # move to background job
     ActiveRecord::Base.connection.execute("UPDATE messages SET messages.from = #{x[1]} WHERE messages.from = #{x[0]}")
     ActiveRecord::Base.connection.execute("UPDATE messages SET messages.to = #{x[1]} WHERE messages.to = #{x[0]}")
+  end
+
+  def create_user_alert
+    # move to background job?
+    Alert.create(user_id: self.id, sms_number: self.org_phone)
   end
   
 end

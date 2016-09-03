@@ -41,6 +41,7 @@ Rails.application.routes.draw  do
     resources :hashtags
     resources :subscriptions, except: [:show, :edit, :update]
     resources :plans, only: [:create, :index, :new]
+    resources :alerts, only: [:update]
     
     member do
       get 'messaging' => 'users#messaging'
@@ -52,6 +53,7 @@ Rails.application.routes.draw  do
       get 'transactions' => 'users#transactions'
       get 'customers' => 'users#customers'
       get 'businesses' => 'users#businesses'
+      get 'notifications' => 'alerts#edit'
     end
   end 
   

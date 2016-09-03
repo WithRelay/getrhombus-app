@@ -1408,9 +1408,14 @@ $(document).ready(function () {
       (this.value == '3') ? $('#interval-settings').slideDown(200) : $('#interval-settings').slideUp(200);
       $('#hashtag-payment-settings').slideDown(200);
     }
-  });
-  $('#hashtag_tag_type').change();
+  }).change();
   ///// Hashtags
+
+   // Alerts
+  $('#alert-include-sms').change(function(){
+    (this.checked) ? $('#alert-sms-number').slideDown(200) : $('#alert-sms-number').slideUp(200);
+  }).change();
+  ///// Alerts
 
   $('#transactions-column').on("click", ".refund_link", function() {
       REFUND_TXN_LINK = this;

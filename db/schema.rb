@@ -11,7 +11,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160903043604) do
+ActiveRecord::Schema.define(version: 20160903164904) do
+
+  create_table "alerts", force: :cascade do |t|
+    t.boolean  "send_alert",         limit: 1,   default: true
+    t.integer  "interval",           limit: 4,   default: 15
+    t.boolean  "include_sms",        limit: 1,   default: false
+    t.string   "sms_number",         limit: 191
+    t.integer  "user_id",            limit: 4
+    t.datetime "last_alert_sent_at"
+    t.datetime "created_at",                                     null: false
+    t.datetime "updated_at",                                     null: false
+  end
+
+  add_index "alerts", ["user_id"], name: "fk_rails_6637a8d260", using: :btree
 
   create_table "conversation_refs", force: :cascade do |t|
     t.integer  "textable_id",     limit: 4
@@ -244,10 +257,10 @@ ActiveRecord::Schema.define(version: 20160903043604) do
     t.integer  "team_id",                 limit: 4
   end
 
-  add_index "subscriptions", ["coupon_id"], name: "fk_rails_9228facf68", using: :btree
-  add_index "subscriptions", ["plan_id"], name: "fk_rails_05b97e66c5", using: :btree
-  add_index "subscriptions", ["team_id"], name: "fk_rails_c0440c34a2", using: :btree
-  add_index "subscriptions", ["user_id"], name: "fk_rails_60c3419276", using: :btree
+  add_index "subscriptions", ["coupon_id"], name: "fk_rails_56c77d859b", using: :btree
+  add_index "subscriptions", ["plan_id"], name: "fk_rails_4506bac28d", using: :btree
+  add_index "subscriptions", ["team_id"], name: "fk_rails_0c7fe6165f", using: :btree
+  add_index "subscriptions", ["user_id"], name: "fk_rails_8917c1168b", using: :btree
 
   create_table "transactions", force: :cascade do |t|
     t.datetime "created_at"
@@ -277,16 +290,16 @@ ActiveRecord::Schema.define(version: 20160903043604) do
     t.integer  "referenced_merchant_transaction_id", limit: 4
     t.integer  "team_id",                            limit: 4
     t.string   "currency",                           limit: 191
+    t.boolean  "captured",                           limit: 1,                             default: true
     t.integer  "hashtag_id",                         limit: 4
     t.integer  "subscription_id",                    limit: 4
-    t.boolean  "captured",                           limit: 1,                             default: true
   end
 
   add_index "transactions", ["created_at"], name: "index_transactions_on_created_at", using: :btree
   add_index "transactions", ["hashtag_id"], name: "index_transactions_on_hashtag_id", using: :btree
   add_index "transactions", ["referenced_customer_transaction_id"], name: "index_transactions_on_referenced_customer_transaction_id", using: :btree
   add_index "transactions", ["subscription_id"], name: "index_transactions_on_subscription_id", using: :btree
-  add_index "transactions", ["team_id"], name: "fk_rails_ac54e5fc74", using: :btree
+  add_index "transactions", ["team_id"], name: "fk_rails_669ffc34df", using: :btree
   add_index "transactions", ["transaction_number"], name: "index_transactions_on_transaction_number", using: :btree
   add_index "transactions", ["user_id"], name: "index_transactions_on_user_id", using: :btree
 
@@ -383,6 +396,7 @@ ActiveRecord::Schema.define(version: 20160903043604) do
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   add_index "users", ["rhombus_number"], name: "index_users_on_rhombus_number", unique: true, using: :btree
 
+  add_foreign_key "alerts", "users"
   add_foreign_key "customer_lists", "users"
   add_foreign_key "hashtags", "users"
   add_foreign_key "lists", "users"
