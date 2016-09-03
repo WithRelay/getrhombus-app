@@ -4,7 +4,11 @@ class Message < ActiveRecord::Base
 	belongs_to :hashtag
 
 	has_many :image_refs, as: :imageable, dependent: :destroy
-  has_many :images, through: :image_refs
+	has_many :images, through: :image_refs
+	
+  	has_many :conversation_refs, as: :textable, dependent: :destroy
+  	has_many :conversations, through: :conversation_refs
+  
 
 	# belongs_to :user, counter_cache: true
 	
