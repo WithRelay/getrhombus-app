@@ -24,9 +24,14 @@ class UsersController < ApplicationController
         # does this empty forms? check
         redirect_to "/profile"
       else
+
         if current_user.user_level == 0 && params[:captured_amt].present?
           #Transaction.process_captured_payment(@user, params) 
         elsif @user.user_level == 1 && @user.short_url.blank? && @user.rhombus_number.present? 
+          
+          # for alert object
+          @alert = Alert.find_by id: current_user.id
+
           # generate bitly link for merchant if blank and rhombus number exist...
           ###should remove this after twilio migration ###
           @user.short_url = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?referrer_num=#{@user.rhombus_number}&referrer=#{@user.org_name}")
@@ -36,6 +41,7 @@ class UsersController < ApplicationController
         @total_msgs = @user.get_total_messages
         @dashboard_stuff = @user.dashboard_stats 
         # @token = TextingService.get_twilio_capibility_token if current_user.user_level == 1       
+      
       end           
     end
     delete_captured_payment_session

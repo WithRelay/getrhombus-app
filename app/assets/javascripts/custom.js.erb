@@ -730,7 +730,6 @@ $(document).ready(function () {
             // set referrer number & subscription
             if (global_page_params['referrer']) document.getElementById('referrer').value = global_page_params['referrer'];
             if (global_page_params['referrer_num']) document.getElementById('referrer_num').value = global_page_params['referrer_num'];
-            if (global_page_params['subscription_type']) document.getElementById('subscription_type').value = global_page_params['subscription_type'];
         });
     // validate sign up form
 
@@ -871,7 +870,7 @@ $(document).ready(function () {
                         }
                     }
                 },
-                'user[tax_rate]': {
+                'user[tax_percent]': {
                     row: '.form-group',
                     validators: {
                         numeric: {
@@ -1380,14 +1379,43 @@ $(document).ready(function () {
       });
       // validate text me form    
 
-  // if hashtag isn't for payment, remove amount and precedence fields
-  $('#hashtag_not_payment_tag').change(function(){
-      if (this.checked) {
-          $('#hashtag_amount_field, #hashtag_precedence_field').slideUp(300);
-      } else {
-          $('#hashtag_amount_field, #hashtag_precedence_field').slideDown(300);
-      }
+  //  Hashtags
+  $('#hashtag_tag').bind('input', function(){
+    $(this).val(function(_, v) { return v.replace(/\s+/g, ''); });
   });
+  $('#interval-count').bind('input', function(){
+   $(this).val(function(_, v) { 
+      if (v.match(/^[1-9]\d*$/)) return v
+      else return v.slice(0, -1);
+    });
+  });
+  $('#hashtag_amount, #plan_amount').bind('input', function(){
+    $(this).val(function(_, v) { 
+      if (v.slice(-1) == '.' && (v.match(/[.]/g) || []).length == 1 && v.length > 1) return v
+        // /^\d+(.\d{1,2})?$/
+      // http://stackoverflow.com/questions/30606348/check-if-a-given-value-is-a-positive-number-or-float-with-maximum-two-decimal-pl
+      // http://stackoverflow.com/questions/25053605/regex-to-allow-only-a-single-dot-in-a-textbox
+      else if (v.match(/^\d+(.\d{1,2})?$/)) return v
+      else return v.slice(0, -1);
+    });
+  });
+  // if hashtag isn't for payment, remove payment settings
+  $('#hashtag_tag_type').change(function(){
+    if (this.value == '1') {
+      $('#hashtag-payment-settings').slideUp(200);
+      $('#interval-settings').slideUp(200);
+    } else {
+      (this.value == '3') ? $('#interval-settings').slideDown(200) : $('#interval-settings').slideUp(200);
+      $('#hashtag-payment-settings').slideDown(200);
+    }
+  }).change();
+  ///// Hashtags
+
+   // Alerts
+  $('#alert-include-sms').change(function(){
+    (this.checked) ? $('#alert-sms-number').slideDown(200) : $('#alert-sms-number').slideUp(200);
+  }).change();
+  ///// Alerts
 
   $('#transactions-column').on("click", ".refund_link", function() {
       REFUND_TXN_LINK = this;
@@ -1456,12 +1484,12 @@ $(document).ready(function () {
       }); 
   }
   
-  var country_num_types = {
-    US: { types: ["Local","Toll Free"], show: true },
-    CA: { types: ["Local","Toll Free"], show: true },
-    PR: { types: ["Local"] },
-    GB: { types: ["Local"] },
-    // else mobile and don't show
+   var country_num_types = {
+        US: { types: ["Local","Toll Free"], show: true },
+        CA: { types: ["Local","Toll Free"], show: true },
+        PR: { types: ["Local"] },
+        GB: { types: ["Local"] },
+        // else mobile and don't show
   };
 
   searchNumberCountry.change(function() {
@@ -1479,52 +1507,121 @@ $(document).ready(function () {
 
   // http://blog.teamtreehouse.com/uploading-files-ajax
   // but modified to send just one file.
-  $('#csv-upload-form').submit(function( event ) {
-      
-      function send_payload(payload) {
-        var xhr = new XMLHttpRequest();             // Set up the request.
-        xhr.open('POST', '/v1/users/add_customers.csv', true);    // Open the connection.
-        xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
-        xhr.onload = function () {
-          if (xhr.readyState === 4) {
-            if (xhr.status === 200) {
-            } else {
-              console.log('Something went wrong on our end.')
-            }
-            console.log(JSON.parse(xhr.responseText));
-            $('#csv_upload_button').text("Upload").prop('disabled', false);
+  $('#csv-upload-form').submit(function(e) {      
+    e.preventDefault();
+    var button = $('#csv-upload-button').text("Uploading...").prop('disabled', true);
+
+    function send_payload(payload) {
+      var xhr = new XMLHttpRequest();             // Set up the request.
+      xhr.open('POST', '/v1/users/add_customers.csv', true);    // Open the connection.
+      xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+      xhr.onload = function () {
+        if (xhr.readyState === 4) {
+          if (xhr.status === 200) {
+          } else {
+            console.log('Something went wrong on our end.')
           }
-        };
-
-        xhr.onerror = function (e) {
-          console.log(xhr.statusText);
-          $('#csv_upload_button').text("Upload").prop('disabled', false);
-        };
-        xhr.send(payload);        // Send the Data.
-      }
-
-      e.preventDefault();
-      var files = document.getElementById('csv-file-select').files;            // Get the selected files from the input.
-      var length = files.length;
-      var formData = new FormData();                                            // Create a new FormData object.
-      
-      // Loop through each of the selected files.
-      for (var i = 0; i < length; i++) {
-        $('#csv_upload_button').text("Uploading...").prop('disabled', true);
-
-        var file = files[i];          
-        if (!file.type.match('csv')) {             // Check the file type.
-          console.log("Can't upload file type");
-          continue;
+          console.log(JSON.parse(xhr.responseText));
+          button.text("Upload").prop('disabled', false);
         }
+      };
 
-        formData.append('csv', file, file.name);    // Add the file to the request.
+      xhr.onerror = function (e) {
+        console.log(xhr.statusText);
+        button.text("Upload").prop('disabled', false);
+      };
+      xhr.send(payload);        // Send the Data.
+    }
+    
+    var file = document.getElementById('csv-file-select').files;            // Get the selected files from the input.
+    if (file && file.length == 1) {          
+      file = file[0];
+      if (!file.type.match('csv')) {             // Check the file type.
+        alert("Can't upload file type");
+        button.text("Upload").prop('disabled', false);
+        return;
       }
-
-      if (length > 0) send_payload(formData);   
+      
+      var formData = new FormData();               // Create a new FormData object.
+      formData.append('csv', file, file.name);    // Add the file to the request.
+      send_payload(formData);
+    } else {
+      button.text("Upload").prop('disabled', false);
+    }
   });
   // end csv file upload
 
+
+  $('#select-images-button').click(function() { $('#select-images').trigger('click'); });
+  $('#select-images').change(function() { read_file_picker(this); });
+  function read_file_picker(input) {
+    var files = input.files, new_image_previews = $('#new-image-previews').html("");
+    
+    function invalid_actions(msg) {
+      input.value = "";
+      new_image_previews.html("");
+      alert(msg);      
+    }
+
+    // http://stackoverflow.com/questions/23402187/multiple-files-upload-and-using-file-reader-to-preview
+    if (files && files.length > 0) {
+      if (files.length > 3) {
+        invalid_actions("Please reselect up to 3 files.");
+        return;
+      }
+
+      for (var i = 0, l = files.length; i < l; i++) {
+        var file = files[i];
+
+        if (!file.type.match('image')) {
+          invalid_actions("Please reselect only images");
+          return;
+        }
+
+        // 2 MB max
+        if (file.size > 2097152) {
+          invalid_actions("Please reselect only images under 2MB");
+          return;
+        }
+
+        var reader = new FileReader();
+        reader.addEventListener("load", function (event) {
+          var img = event.target;
+          div = "<div class='images'><img class='thumbnail' src='" + img.result + "'" + "title='" + img.filename + "'/>" + 
+                "<span>" + img.filename + "</span></div>";
+          new_image_previews.prepend(div);
+        });
+        
+        //Read the image
+        reader.filename = file.name;
+        reader.readAsDataURL(file);
+      }
+    }
+  }
+
+  $(".delete-image").click(function(e) {
+    e.stopPropagation();
+    var span = this;
+    span.style.pointerEvents = 'none';    
+
+    $.ajax({
+        url: "/v1/hashtags/" + $('#image-previews').data("tag-id") + "/image_delete.json",
+        beforeSend: function(xhr) { xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content')) },
+        type: "POST",
+        data: { img_id: this.id.split("_")[1] },
+        dataType: "json"   
+    })
+      .done(function(data, textStatus, jqXHR) {
+        console.log(data.response);    
+        $("#" + span.id).parent().slideUp(400, function() { this.remove(); });
+      })
+      .fail(function(data, textStatus, errorThrown) {
+        console.log(data);
+        //alert('Unable to delete file')
+        span.style.pointerEvents = 'auto';
+      })   
+      .always(function(data, textStatus, response) {}); 
+  });
 
   ///// add a customer
   create_user_form.submit(function(e){
@@ -1570,8 +1667,6 @@ $(document).ready(function () {
   }
   ///// add a customer
     
-
-
 });
 
 

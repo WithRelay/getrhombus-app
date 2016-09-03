@@ -76,8 +76,8 @@
                         data-time="<%= t.created_at.strftime("%I:%M %p") %>"
                         id="<%= t.transaction_uri %>"
                         data-email="<%= t.email %>"
-                        data-tax="<%= t.tax_rate %>"
-                        data-status="<%= (t.refund_id) ? "Refunded" : "Charged" %>"
+                        data-tax="<%= t.tax_percent %>"
+                        data-status="<%#= (t.refund_id) ? "Refunded" : "Charged" %>"
                         data-page="transactions"
                       ></td>
     	                <td><%= t.created_at.strftime("%m/%d/%Y") %></td>

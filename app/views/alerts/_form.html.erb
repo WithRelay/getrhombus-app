@@ -1,0 +1,60 @@
+<%= form_for([current_user, @alert]) do |f| %>
+  <% if @alert.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@alert.errors.count, "error") %> prohibited this alert from being saved:</h2>
+
+      <ul>
+      <% @alert.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= notice %>
+
+  <br>
+
+  <div class="field">
+    <%= f.check_box :send_alert %> <%= f.label :send_alert %>
+  </div>
+
+  <br>
+
+  <div class="field">
+    <%= f.select :interval, options_for_select({ "15 minutes" => "15", "30 minutes" => '30', "1 hour" => "60" }, selected: @alert.interval) %>
+  </div>
+
+  <br>
+
+   <div class="field">
+    <%= f.check_box :include_sms, id: 'alert-include-sms' %> <%= f.label :include_sms %>
+  </div>
+
+  <br>
+
+  <div class="field" id='alert-sms-number'>
+    <%= f.label :sms_number %><br>
+    <%= f.hidden_field :sms_number, :id => "phone_number" %>
+    <%= f.phone_field :phone, :id => "phone" %>
+  </div>
+
+  <br>
+
+  <div class="field">
+    last alert sent at: <%= @alert.last_alert_sent_at %>
+  </div>
+
+  <br><br><br>
+
+   <div class="field" id='alert-sms-number'>
+    <%= f.label :custom_welcome %><br>
+    <%= f.text_area :custom_welcome, value: @custom_welcome %>
+  </div>
+
+  <br>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

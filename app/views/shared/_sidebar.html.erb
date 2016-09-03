@@ -39,6 +39,26 @@
   </li>
 
   <li>
+    <%= link_to user_subscriptions_path(current_user.id) do %>
+        <span class="icon color6"><i class="fa fa-user"></i></span>
+        Subscriptions
+    <% end %>
+  </li>
+
+   <li>
+    <%= link_to notifications_user_path(current_user.id) do %>
+        <span class="icon color6"><i class="fa fa-credit-card"></i></span>Notifications
+    <% end %>
+  </li>
+
+  <li>
+    <%= link_to user_plans_path(current_user.id) do %>
+        <span class="icon color6"><i class="fa fa-user"></i></span>
+        Plans
+    <% end %>
+  </li>
+
+  <li>
     <%= link_to contacts_user_path(current_user.id) do %>
         <span class="icon color6"><i class="fa fa-envelope-o"></i></span>Contacts
     <% end %>

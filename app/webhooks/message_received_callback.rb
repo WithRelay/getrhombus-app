@@ -1,3 +1,4 @@
+=begin
 class MessageReceivedCallback < MessageQuickly::Callback
 
   def self.webhook_name
@@ -13,3 +14,4 @@ class MessageReceivedCallback < MessageQuickly::Callback
   end
 
 end
+=end

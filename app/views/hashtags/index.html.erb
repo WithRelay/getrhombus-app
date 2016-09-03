@@ -22,7 +22,7 @@
   <!-- Start Page Header -->
   <div class="page-header" style="background: transparent; margin-bottom: 0px;">
     <div class="title">
-      <%= link_to 'Create Hashtag', new_user_hashtag_path, id: 'createHashTag', class: "hashtagBtns" %>
+      <%= link_to 'Create Hashtag', new_user_hashtag_path, id: 'create-hashtag', class: "hashtagBtns" %>
     </div>
 
     <%= render 'shared/dashboard_shortcut' %>
@@ -63,13 +63,13 @@
               <% @hashtags.each do |h| %>
                 <tr role="row">
                   <td><%= h.tag %></td>
-                  <td><%= h.name %></td>
+                  <td><%= h.description %></td>
                   <td><%= h.created_at.strftime("%m/%d/%Y %I:%M %p") %></td>
                   <td><%= h.updated_at.strftime("%m/%d/%Y %I:%M %p") %></td>
                   <td>
-                      <%= link_to 'Details', user_hashtag_path(current_user, h), id: "showHashTag", class: "hashtagBtns" %>
-                      <%= link_to 'Edit', edit_user_hashtag_path(current_user, h), id: "editHashTag", class: "hashtagBtns" %>
-                      <%= link_to 'Delete', user_hashtag_path(current_user, h), id: "deleteHashTag", class: "hashtagBtns", method: :delete, data: { confirm: 'Are you sure?' } %>
+                      <%= link_to 'Details', user_hashtag_path(current_user, h), id: "show-hashtag", class: "hashtag-btns" %>
+                      <%= link_to 'Edit', edit_user_hashtag_path(current_user, h), id: "edit-hashtag", class: "hashtag-btns" %>
+                      <%#= link_to 'Delete', user_hashtag_path(current_user, h), id: "delete-hashtag", class: "hashtag-btns", method: :delete, data: { confirm: 'Are you sure?' } %>
                   </td>
                 </tr>
               <% end %>

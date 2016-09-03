@@ -1,0 +1,12 @@
+drip_campaign_emails:
+  #cron: "0 11 * * *"    # every: 5s - Calculates time from moment of deploy...so best for frequent jobs like 10-30 mins else use cron: "30 6 * * 1"
+  every: 15s
+  class: "DripCampaignsJob"
+  args:
+  description: "This job runs our drip campaigns."
+alert_emails:
+  #every: 15m
+  every: 15s
+  class: "AlertsJob"
+  args:
+  description: "This job alerts merchants of unread messages."

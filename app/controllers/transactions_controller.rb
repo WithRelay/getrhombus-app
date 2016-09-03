@@ -33,5 +33,5 @@ end
 
 # Never trust parameters from the scary internet, only allow the white list through.
 	#def transaction_params
-    # params.require(:transaction).permit(:amount, :tax_rate)
+    # params.require(:transaction).permit(:amount, :tax_percent)
     #end

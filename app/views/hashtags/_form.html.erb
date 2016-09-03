@@ -1,4 +1,5 @@
-<%= form_for([current_user, @hashtag]) do |f| %>
+<%= form_for [current_user, @hashtag], :html => { :multipart => true } do |f| %>
+ 
   <% if @hashtag.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@hashtag.errors.count, "error") %> prohibited this hashtag from being saved:</h2>
@@ -12,37 +13,72 @@
   <% end %>
 
   <div class="field">
-    <%= f.label :name %><br>
-    <%= f.text_field :name %>
-  </div>
-  <div class="field">
-    <%= f.label :not_payment_tag %><br>
-    <%= f.check_box :not_payment_tag %>
-  </div>
-  <div class="field" id="hashtag_amount_field">
-    <%= f.label :amount %><br>
-    <%= f.text_field :amount %>
-  </div>
-  <div class="field">
-    <%= f.label :response %><br>
-    <%= f.text_area :response %>
-  </div>
-  <div class="field">
     <%= f.label :tag %><br>
     <%= f.text_field :tag %>
   </div>
 
   <div class="field">
-    <%= f.label :enable_tweet %><br>
-    <%= f.check_box :enable_tweet %>
+    <%= f.label :description %><br>
+    <%= f.text_area :description %>
   </div>
 
-  <div class="field" id="hashtag_precedence_field">
-    <%= f.label :is_precedent %><br>
-    <%= f.check_box :is_precedent %>
+  
+  <% if @can_send_mms %>
+    <a id='select-images-button'>FILE</a>
+    <%= file_field_tag "hashtag[images_attributes][][avatar]", type: :file, multiple: true, id: "select-images", accept: "image/*" %>
+
+    <style type="text/css">.thumbnail { height: 50px; width: 50px; }</style>
+    <div id='new-image-previews'></div>
+    <div id='image-previews' data-tag-id='<%= @hashtag.id %>'>    
+      <%= generate_image_thumbnails(@images) %>
+    </div>
+  <% end %>
+   
+  <div class="field">
+    <%= f.select :tag_type, options_for_select({ "Non-payment Hashtag" => "1", "One-time payment Hashtag" => '2', "Recurring payment Hashtag" => "3" }, selected: @hashtag.tag_type) %>
   </div>
+
+  <div class="field">
+    <%= f.label :response %><br>
+    <%= f.text_area :response %>
+  </div>
+
+  <br>
+
+  <div class="field">
+    <%= f.check_box :enable_tweet %> <%= f.label :enable_tweet %>
+  </div>
+
+  <br>
+
+  <div id="hashtag-payment-settings">
+    <div class="field">
+      <%= f.label :amount %>
+      <%= f.text_field :amount %>
+    </div> <br>
+
+    <div class="field">
+      <%#= f.label :charge_amount %>
+      <%= f.select :charge_amount, options_for_select({ "Allow customers to ovveride amount" => "0", "Always charge amount" => '1' }, selected: @hashtag.charge_amount) %>
+    </div>
+
+    <div id='interval-settings'>
+      <div class="field">
+        <%= f.label :interval %>
+        <%= f.select :interval, options_for_select({ "Day" => "day", "Week" => 'week', "Month" => "month" }, selected: @hashtag.interval) %>
+      </div>
+
+      <div class="field">
+        <%= f.label :interval_count %>
+        <%= f.text_field :interval_count, id: 'interval-count' %>
+      </div>
+    </div>
+  </div>
+
+  <br>
+
   <div class="actions">
-    <%= f.submit %>
+    <%= f.submit 'Create Hashtag', id: 'create-hashtag-btn', data: { disable_with: "Please wait..." } %>
   </div>
 <% end %>
 

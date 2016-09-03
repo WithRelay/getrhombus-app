@@ -10,8 +10,11 @@ Rails.application.routes.draw  do
   get 'pricing' => 'static_pages#pricing'
   get 'contact' => 'contact_forms#new'
   
-  resources :contact_forms 
-  
+  resources :contact_forms
+
+  get "resque" => Resque::Server, :anchor => false, :constraints => lambda { |req|
+    req.env['warden'].authenticated? and req.env['warden'].user.id == 23
+  }
 
   get 'customer_template' => "users#customer_csv_template", constraints: { format: 'csv' }
   get 'transactions/download' => 'transactions#download_csv', constraints: { format: 'csv' }
@@ -24,7 +27,6 @@ Rails.application.routes.draw  do
   get "receive_delivery_report_twilio" => 'messages#receive_delivery_report_twilio'
   get "facebook_webhook" => 'static_pages#fb_webhook'
   post "/facebook_webhook" => 'static_pages#receive_message'
-  # mount MessageQuickly::Engine, at: "/facebook_webhook"
 
   ## devise routes
   devise_for :users, :controllers => { registrations: "registrations", omniauth_callbacks: "omniauth_callbacks" }
@@ -37,6 +39,9 @@ Rails.application.routes.draw  do
   # user routes
   resources :users, :only => :show do
     resources :hashtags
+    resources :subscriptions, except: [:show, :edit, :update]
+    resources :plans, only: [:create, :index, :new]
+    resources :alerts, only: [:update]
     
     member do
       get 'messaging' => 'users#messaging'
@@ -48,6 +53,7 @@ Rails.application.routes.draw  do
       get 'transactions' => 'users#transactions'
       get 'customers' => 'users#customers'
       get 'businesses' => 'users#businesses'
+      get 'notifications' => 'alerts#edit'
     end
   end 
   
@@ -56,7 +62,9 @@ Rails.application.routes.draw  do
     match 'users/find' => 'users#find', via: :get
     match 'users/add_customers' => 'users#add_customers', via: :post
     match 'hashtags/find' => 'hashtags#find', via: :get
+    match 'hashtags/:id/image_delete' => 'hashtags#image_delete', via: :post
     match 'transactions/:charge_id/refund' => 'transactions#refund', via: :post
+    match 'transactions/charge_customer' => 'transactions#charge_customer', via: :post
     match 'numbers/search' => 'numbers#search', via: :get
     #match '/hashtags/create' => 'hashtags#create', via: :post
   end
