@@ -4,12 +4,12 @@ module DashboardCustomerQueries
   # Any merchant you have paid or who referred you
   def get_customer_businesses
     Transaction.find_by_sql([
-    "(SELECT transactions.created_at, @users_ids := users.id, users.org_name, users.email, users.org_phone, 
-      SUM(transactions.amount) AS total_spend, MIN(transactions.created_at) AS first_visit, AVG(transactions.amount) AS avg_spend, 
-      max(transactions.created_at) AS last_visit, users.rhombus_number,
-      SUM(DATE(transactions.created_at) BETWEEN DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW()) AS last_30 
-      FROM transactions  INNER JOIN users ON transactions.team_id = users.id
-      WHERE user_id = ? GROUP BY transactions.team_id HAVING COUNT(*) > 0)                   
+    "(SELECT t.created_at, @users_ids := users.id, users.org_name, users.email, users.org_phone, 
+      SUM(t.amount) AS total_spend, MIN(t.created_at) AS first_visit, AVG(transactions.amount) AS avg_spend, 
+      max(t.created_at) AS last_visit, users.rhombus_number,
+      SUM(DATE(t.created_at) BETWEEN DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW()) AS last_30 
+      FROM transactions t INNER JOIN users ON transactions.team_id = users.id
+      WHERE user_id = ? GROUP BY t.team_id HAVING COUNT(*) > 0)                   
 
       UNION
 
@@ -18,18 +18,17 @@ module DashboardCustomerQueries
       from users where rhombus_number = ? and id NOT IN (@users_ids))
 
       ORDER BY created_at DESC ", self.id, self.referrer_num])
-      # and transaction_type = ?
   end
 
   def get_customer_transactions
     Transaction.find_by_sql([
       "SELECT users.org_name, users.email, users.rhombus_number, transactions.last_four, transactions.notes, 
-        transactions.amount_less_fees, transactions.created_at, users.org_phone, transactions.transaction_number,
-        transactions.transaction_uri, transactions.tax_percent, transactions.refund_id
-        FROM transactions 
+        transactions.amount_less_fees, t.created_at, users.org_phone, transactions.transaction_number,
+        transactions.transaction_uri, transactions.tax_percent, refunds.id as refund_id
+        FROM transactions t
         INNER JOIN users ON transactions.team_id = users.id
-        where user_id = ? ORDER BY transactions.created_at DESC", self.id])
-    # and transaction_type = ?
+        LEFT JOIN refunds on refunds.transaction_id = transactions.id
+        where user_id = ? ORDER BY t.created_at DESC", self.id])
   end 
 
   # Any merchant that was texted without payment and who isnt the referrer
@@ -37,17 +36,17 @@ module DashboardCustomerQueries
     Message.find_by_sql([
       "SELECT count(*) as total,
         users.org_name, users.email, users.org_phone, rhombus_number,
-        MIN(messages.created_at) as first_conversation, 
-        MAX(messages.created_at) as last_conversation
-        FROM messages
+        MIN(m.created_at) as first_conversation, 
+        MAX(m.created_at) as last_conversation
+        FROM messages m
         INNER JOIN users ON
-        messages.user_id_to = users.id 
-        WHERE messages.from = ? 
+        m.user_id_to = users.id 
+        WHERE m.from = ? 
         # because they can both be null and this condition will be false...not good
         and (IFNULL(users.rhombus_number, 'a') != IFNULL(?, 'b'))
         and users.id not in (select team_id from transactions where user_id = ? group by team_id)
-        GROUP BY messages.user_id_to 
-        ORDER BY messages.created_at DESC", self.phone_number, self.referrer_num, self.id])
+        GROUP BY m.user_id_to 
+        ORDER BY m.created_at DESC", self.phone_number, self.referrer_num, self.id])
   end 
 
 end

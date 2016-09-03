@@ -1389,7 +1389,7 @@ $(document).ready(function () {
       else return v.slice(0, -1);
     });
   });
-  $('#hashtag_amount').bind('input', function(){
+  $('#hashtag_amount, #plan_amount').bind('input', function(){
     $(this).val(function(_, v) { 
       if (v.slice(-1) == '.' && (v.match(/[.]/g) || []).length == 1 && v.length > 1) return v
         // /^\d+(.\d{1,2})?$/

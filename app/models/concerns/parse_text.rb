@@ -292,5 +292,17 @@ module ParseText
 =end
     #end
   end
+
+  def handle_subscription_through_text
+    # if can override amount, create plan and create subscription
+    # else find the existing plan for tag and create subbscription
+
+    #@plan.owner = 1
+    #if @plan.create_plan({ currency: current_user.currency, team: current_user })
+
+    #u = User.find_by id: self.user_id
+    #@subscription.team_id = current_user.id
+    #if u && @subscription.create_subscription({ team: current_user, customer: u.customer_uri }) 
+  end
 end
 

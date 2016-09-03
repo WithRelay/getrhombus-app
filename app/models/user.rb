@@ -4,10 +4,8 @@ class User < ActiveRecord::Base
   include DashboardCustomerQueries
   include CSVHandler
 
-  attr_accessor :full_name, :phone, :captured_amt, :msg_id, :tag_id,
-                # used to identify what type of action in user's controller update action
-                :update_rhombus_number  
-  
+  attr_accessor :full_name, :phone, :captured_amt, :msg_id, :tag_id
+
   # include default devise modules. Others available are:
   # :token_authenticatable, :lockable, :timeoutable and :confirmable,
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable, :omniauthable
@@ -34,7 +32,7 @@ class User < ActiveRecord::Base
 
   # Just to prevent sending emails locally for now...remove comment later
   # after_commit :send_welcome_email, on: :create
-  after_commit :update_phone_in_db, on: :update
+  after_commit :update_phone_in_db, on: :update, if: lambda { |u| u.previous_changes['phone_number'] && u.user_level == 0 }
 
   #validates_presence_of :user_level, :message => "Please select an account type"
   #validates :country, length: {is: 2}, allow_blank: true  
@@ -47,9 +45,6 @@ class User < ActiveRecord::Base
   has_many :lists
   has_many :customers, through: :customer_lists
 
-
- #has_many :inverse_lists, :class_name => "List", :foreign_key => "customer_id"
- #has_many :inverse_customers :through => :inverse_lists, :source => :user
   # saves merchant info from stripe
   def save_stripe_omniauth_data(auth)
     self.provider = auth.provider
@@ -64,8 +59,7 @@ class User < ActiveRecord::Base
 
   # Create or update customer on Stripe
   def add_token_to_stripe_customer(params)
-    #return false
-    if self.user_level == 0 && params[:instrument_uri].present?  # is this why i get the errors from stripe??
+    if params[:instrument_uri].present?  # is this why i get the errors from stripe??
       begin 
         if self.customer_uri.blank?                                     # Doesnt have a customer uri => first time
           cu = Stripe::Customer.create(email: self.email, source: params[:instrument_uri])         
@@ -77,6 +71,7 @@ class User < ActiveRecord::Base
           cu.source = params[:instrument_uri]
           cu.save   
         end
+        buy_merchant_number if self.user_level == 1 && self.rhombus_number_type == nil
         return true
       rescue Stripe::CardError => e
         # Since it's a decline, Stripe::CardError will be caught
@@ -89,12 +84,19 @@ class User < ActiveRecord::Base
       rescue StandardError => e
         Notification.token_failure_notification(e, self.email).deliver_now
       end
-      return false    
     end
-    
-    return true                     # Not a customer just a merchant      
+
+    return false
   end
  
+  def buy_merchant_number
+    # save the area code in rhombus number till a number is bought
+    #number = TextingService.buy_number(self.rhombus_number])
+    #self.rhombus_number_type = number if number
+    self.rhombus_number = number if number
+    return number[0]
+  end
+
   # Returns hash with users who sent a message to the given merchant in the last "num_days" days
   def self.get_latest_active_messaging(merchant_id, num_days)
     users = Message.select('`users`.`id`, `users`.`first_name`, `users`.`last_name`, `users`.`email`, `messages`.`from`')
@@ -130,15 +132,6 @@ class User < ActiveRecord::Base
   def phone
     return self.phone_number if self.user_level == 0
     self.org_phone
-  end
-
-  def update_merchant_account(params)
-    if params.key? :update_rhombus_number
-      #number = TextingService.buy_number(params[:rhombus_number])
-      #return false if !number
-      self.rhombus_number = number
-    end
-    return true
   end
 
   def can_send_mms?
@@ -192,12 +185,9 @@ class User < ActiveRecord::Base
   end
 
   def update_phone_in_db
-    x = self.previous_changes['phone_number']
-    if x && self.user_level == 0
-      # move to background job
-      ActiveRecord::Base.connection.execute("UPDATE messages SET messages.from = #{x[1]} WHERE messages.from = #{x[0]}")
-      ActiveRecord::Base.connection.execute("UPDATE messages SET messages.to = #{x[1]} WHERE messages.to = #{x[0]}")
-    end
+    # move to background job
+    ActiveRecord::Base.connection.execute("UPDATE messages SET messages.from = #{x[1]} WHERE messages.from = #{x[0]}")
+    ActiveRecord::Base.connection.execute("UPDATE messages SET messages.to = #{x[1]} WHERE messages.to = #{x[0]}")
   end
   
 end

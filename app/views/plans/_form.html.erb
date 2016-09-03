@@ -1,4 +1,4 @@
-<%= form_for(@plan) do |f| %>
+<%= form_for([current_user, @plan]) do |f| %>
   <% if @plan.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@plan.errors.count, "error") %> prohibited this plan from being saved:</h2>
@@ -11,6 +11,28 @@
     </div>
   <% end %>
 
+  <div class="field">
+    <%= f.label :name %><br>
+    <%= f.text_field :name %>
+  </div>
+
+  <div class="field">
+    <%= f.label :amount %><br>
+    <%= f.text_field :amount %>
+  </div>
+
+  <div id='interval-settings'>
+    <div class="field">
+      <%= f.label :interval %>
+      <%= f.select :interval, options_for_select({ "Day" => "day", "Week" => 'week', "Month" => "month" }, selected: @plan.interval) %>
+    </div>
+
+    <div class="field">
+      <%= f.label :interval_count %>
+      <%= f.text_field :interval_count, id: 'interval-count' %>
+    </div>
+  </div>
+  
   <div class="actions">
     <%= f.submit %>
   </div>

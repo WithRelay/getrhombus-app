@@ -22,8 +22,12 @@ class PlansController < ApplicationController
 
   def create
     @plan = Plan.new(plan_params)
-    @plan.save
-    respond_with(@plan)
+    @plan.owner = 1
+    if @plan.create_plan({ currency: current_user.currency, team: current_user })  #@plan.save
+      redirect_to user_plans_path       #respond_with(@plan)
+    else
+      respond_with(@plan)
+    end
   end
 
   def update
@@ -42,6 +46,6 @@ class PlansController < ApplicationController
     end
 
     def plan_params
-      params[:plan]
+      params.require(:plan).permit(:amount, :interval, :interval_count, :name)
     end
 end

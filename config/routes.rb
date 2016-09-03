@@ -10,7 +10,7 @@ Rails.application.routes.draw  do
   get 'pricing' => 'static_pages#pricing'
   get 'contact' => 'contact_forms#new'
   
-  resources :contact_forms 
+  resources :contact_forms
 
   get "resque" => Resque::Server, :anchor => false, :constraints => lambda { |req|
     req.env['warden'].authenticated? and req.env['warden'].user.id == 23
@@ -40,6 +40,8 @@ Rails.application.routes.draw  do
   # user routes
   resources :users, :only => :show do
     resources :hashtags
+    resources :subscriptions, except: [:show, :edit, :update]
+    resources :plans, only: [:create, :index, :new]
     
     member do
       get 'messaging' => 'users#messaging'

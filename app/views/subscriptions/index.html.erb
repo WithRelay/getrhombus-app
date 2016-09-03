@@ -12,9 +12,11 @@
   <tbody>
     <% @subscriptions.each do |subscription| %>
       <tr>
-        <td><%= link_to 'Show', subscription %></td>
-        <td><%= link_to 'Edit', edit_subscription_path(subscription) %></td>
-        <td><%= link_to 'Destroy', subscription, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td>other info here</td>
+        <td><%= subscription.quantity %></td>
+        <td><%#= link_to 'Show', subscription %></td>
+        <td><%#= link_to 'Edit', edit_subscription_path(subscription) %></td>
+        <td><%= link_to 'Destroy', user_subscription_path(current_user, subscription), method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
   </tbody>
@@ -22,4 +24,6 @@
 
 <br>
 
-<%= link_to 'New Subscription', new_subscription_path %>
+<%#= link_to 'New Subscription', new_subscription_path %>
+<%= link_to 'Create Subscription', new_user_subscription_path, id: 'create-subscription' %>
+

@@ -5,7 +5,7 @@ class Refund < ActiveRecord::Base
 
 
   # return response text and http code
-  def self.refund_card_txn(charge_id, merchant_id, reason, admin)
+  def self.refund_card_txn(charge_id, merchant_id, uid, reason, admin)
     begin     
       txn = Transaction.find_by(transaction_uri: charge_id) 
       
@@ -14,7 +14,7 @@ class Refund < ActiveRecord::Base
         return ["We're unable to refund this transaction. It might already be refunded, doesnt exists or wasn't created by you.", 403]
       end
       
-      re = PaymentService.refund_charge(charge_id)   # else proceed to refund on Stripe
+      re = PaymentService.refund_charge(charge_id, uid)   # else proceed to refund on Stripe
       if re[0]
         Refund.create(uri: re[0].id, time: re[0].created, reason: reason, transaction_id: txn.id)
 =begin

@@ -22,8 +22,13 @@ class SubscriptionsController < ApplicationController
 
   def create
     @subscription = Subscription.new(subscription_params)
-    @subscription.save
-    respond_with(@subscription)
+    u = User.find_by id: self.user_id
+    @subscription.team_id = current_user.id
+    if u && @subscription.create_subscription({ team: current_user, customer: u.customer_uri })  #@subscription.save
+      redirect_to user_subscriptions_path       #respond_with(@subscription)
+    else
+      respond_with(@subscription)
+    end
   end
 
   def update
@@ -32,8 +37,10 @@ class SubscriptionsController < ApplicationController
   end
 
   def destroy
-    @subscription.destroy
-    respond_with(@subscription)
+    @subscription.cancel_subscription(true)
+    #@subscription.destroy
+    #flash[:notice] = 'dadadads'
+    redirect_to user_subscriptions_path         #respond_with(@subscription)
   end
 
   private
@@ -42,6 +49,6 @@ class SubscriptionsController < ApplicationController
     end
 
     def subscription_params
-      params[:subscription]
+      params.require(:subscription).permit(:quantity, :plan_id, :user_id)
     end
 end

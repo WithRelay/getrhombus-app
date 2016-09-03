@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160902231432) do
+ActiveRecord::Schema.define(version: 20160903043604) do
 
   create_table "coupons", force: :cascade do |t|
     t.string   "name",               limit: 191
@@ -176,6 +176,7 @@ ActiveRecord::Schema.define(version: 20160902231432) do
   add_index "refunds", ["transaction_id"], name: "index_refunds_on_transaction_id", using: :btree
 
   create_table "subscriptions", force: :cascade do |t|
+    t.integer  "stripe_subscription_id",  limit: 4
     t.integer  "plan_id",                 limit: 4
     t.integer  "user_id",                 limit: 4
     t.integer  "coupon_id",               limit: 4

@@ -48,10 +48,10 @@ class PaymentService
     end
 
     # returns array with refund status, error object
-    def refund_charge(charge_id, CONNECTED_STRIPE_ACCOUNT_ID)
+    def refund_charge(charge_id, stripe_account_uid)
       begin
         # need to check if i can refund transaction created prior to managed accounts    
-        ch = Stripe::Charge.retrieve(charge_id, stripe_account: CONNECTED_STRIPE_ACCOUNT_ID)
+        ch = Stripe::Charge.retrieve(charge_id, stripe_account: stripe_account_uid)
         re = ch.refunds.create(refund_application_fee: true, reverse_transfer: true)
         [re]
       rescue Stripe::StripeError => e
@@ -62,16 +62,10 @@ class PaymentService
       end 
     end
 
-    def create_subscription(hash, CONNECTED_STRIPE_ACCOUNT_ID)
+    def create_subscription(hash, stripe_account_uid)
       begin
         
-        re = Stripe::Subscription.create(hash, { stripe_account: CONNECTED_STRIPE_ACCOUNT_ID })  
-          #application_fee_percent: Rails.application.secrets.application_fee_percent,
-          #coupon: hash[:coupon],
-          #customer: "cus_8ePuK9YNuqOPgz", #hash[:customer]
-          #plan: "quartz-unlimited-003", #hash[:plan]
-          #source: hash[:source],
-          #tax_percent: hash[:tax_percent],
+        re = Stripe::Subscription.create(hash, { stripe_account: stripe_account_uid })  
         [re]
       rescue Stripe::StripeError => e
         # Display a very generic error to the user, and maybe send yourself an email
@@ -81,18 +75,10 @@ class PaymentService
       end
     end
     
-    def create_plan(hash, CONNECTED_STRIPE_ACCOUNT_ID)
+    def create_plan(hash, stripe_account_uid)
       begin
         # will calling it this way for rhombus itself work
-        re = Stripe::Plan.create(hash, { stripe_account: CONNECTED_STRIPE_ACCOUNT_ID })  
-          #amount: hash[:amt],
-          #interval: hash[:interval],  
-          #interval_count: hash[:count],  
-          #name: "Ruby startup", # send hashtag here hash[:name]
-          #currency: hash[:currency],
-          #id: hash[:id], # send plan id in db here
-          #statement_descriptor: hash[:statement_descriptor]
-          #trial_period_days: hash[:trial_period_days]
+        re = Stripe::Plan.create(hash, { stripe_account: stripe_account_uid })  
         [re]
       rescue Stripe::StripeError => e
         # Display a very generic error to the user, and maybe send yourself an email
