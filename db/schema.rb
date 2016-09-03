@@ -11,7 +11,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160829031543) do
+ActiveRecord::Schema.define(version: 20160831051255) do
+
+  create_table "conversation_refs", force: :cascade do |t|
+    t.integer  "textable_id",     limit: 4
+    t.string   "textable_type",   limit: 191
+    t.integer  "conversation_id", limit: 4
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "conversation_refs", ["conversation_id"], name: "index_conversation_refs_on_conversation_id", using: :btree
+  add_index "conversation_refs", ["textable_type", "textable_id"], name: "index_conversation_refs_on_textable_type_and_textable_id", using: :btree
+
+  create_table "conversations", force: :cascade do |t|
+    t.integer "merchant_id", limit: 4
+  end
 
   create_table "customer_lists", force: :cascade do |t|
     t.integer  "user_id",    limit: 4
@@ -21,6 +36,40 @@ ActiveRecord::Schema.define(version: 20160829031543) do
   end
 
   add_index "customer_lists", ["user_id"], name: "index_customer_lists_on_user_id", using: :btree
+
+  create_table "fb_creds", force: :cascade do |t|
+    t.string   "email",      limit: 191
+    t.string   "name",       limit: 191
+    t.string   "image_url",  limit: 191
+    t.string   "u_id",       limit: 191
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+  end
+
+  create_table "fb_messages", force: :cascade do |t|
+    t.text     "text",           limit: 65535
+    t.integer  "time_stamp",     limit: 4
+    t.boolean  "unread",         limit: 1
+    t.integer  "message_id",     limit: 4
+    t.integer  "transaction_id", limit: 4
+    t.integer  "page_id",        limit: 4
+    t.string   "from",           limit: 191
+    t.string   "to",             limit: 191
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+  end
+
+  add_index "fb_messages", ["from"], name: "index_fb_messages_on_from", using: :btree
+  add_index "fb_messages", ["to"], name: "index_fb_messages_on_to", using: :btree
+
+  create_table "fb_pages", force: :cascade do |t|
+    t.string   "page_id",           limit: 191
+    t.integer  "user_id",           limit: 4
+    t.string   "category",          limit: 191
+    t.string   "page_access_token", limit: 191
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+  end
 
   create_table "full_contact_data", force: :cascade do |t|
     t.string   "likelihood",    limit: 191
@@ -89,9 +138,8 @@ ActiveRecord::Schema.define(version: 20160829031543) do
   end
 
   create_table "lists", force: :cascade do |t|
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
-    t.string   "name",       limit: 191
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
     t.integer  "user_id",    limit: 4
   end
 
@@ -265,6 +313,7 @@ ActiveRecord::Schema.define(version: 20160829031543) do
     t.text     "custom_welcome",         limit: 65535
     t.string   "short_url",              limit: 191
     t.string   "currency",               limit: 191
+    t.string   "fb_id",                  limit: 191
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
