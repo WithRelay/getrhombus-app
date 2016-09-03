@@ -146,6 +146,21 @@ class EmailingService
       end 
     end
 
+    def send_founder_welcome_email(user)
+      puts "send founder welcome email"
+      puts user
+    end
+
+    def send_proactive_support_email(user)
+      puts "send founder welcome email"
+      puts user
+    end
+
+    def schedule_demo_email(user)
+      puts "send founder welcome email"
+      puts user
+    end
+
   end  
 
 end
