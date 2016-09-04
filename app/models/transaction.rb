@@ -68,9 +68,7 @@ class Transaction < ActiveRecord::Base
             transaction_number: transaction_number, transaction_date: self.created_at, text: message, amount: amount_in_hundreds,
             amount_with_taxes: amount_with_taxes_in_hundreds, org_phone: merchant.org_phone, currency: response.currency)
 
-
-      # change this later to use timezone??, Put a save check here later
-      self.receipt_sent_at = Time.zone.now                      
+      self.receipt_sent_at = Time.current
 
       # delete these 4 lines
       #debit_data = [self.id, amount_in_hundreds, amount_with_taxes_in_hundreds, amount_less_fees, transaction_number, 
@@ -78,7 +76,8 @@ class Transaction < ActiveRecord::Base
       #merchant_txn_id = merchant_transaction_details(debit_data, merchant, user, message)
       #owner_transaction_details(debit_data, merchant_txn_id, merchant, user, message)      
       #self.referenced_merchant_transaction_id = merchant_txn_id
-      
+  
+      # Put a save check here later      
       self.save
       self.id
     rescue StandardError => err
@@ -113,7 +112,7 @@ class Transaction < ActiveRecord::Base
         from: user.phone_number, to: merchant.rhombus_number, tax_percent: merchant.tax_percent,
         transaction_number: debit_data[4], referenced_user_id: user.id, referenced_customer_transaction_id: debit_data[0], 
         last_four: user.last_four, card_name: user.card_name, card_type: user.card_type, user_id: merchant.id, notes: message, amount_with_taxes: debit_data[2], 
-        receipt_sent_at: Time.zone.now, currency: debit_data[7], captured: debit_data[8])                         # change this time thing later
+        receipt_sent_at: Time.current, currency: debit_data[7], captured: debit_data[8])                         # change this time thing later
 
     EmailingService.send_payment_notification(to: merchant.email, card_name: user.card_name, last_four: user.last_four, 
         card_type: user.card_type, customer_email: user.email, customer_phone: user.phone_number, text: message, 

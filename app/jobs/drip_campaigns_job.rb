@@ -9,7 +9,7 @@ class DripCampaignsJob
     
     User.where(user_level: 0).each do |user|
       
-      time_in_zone = Time.zone.now
+      time_in_zone = Time.current
 
       if (time_in_zone - user.created_at) <= 3.days.seconds.to_f
         EmailingService.send_founder_welcome_email(user.email)

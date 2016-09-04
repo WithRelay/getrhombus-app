@@ -13,16 +13,15 @@ class AlertsJob
              .group('m.to')
 
     results.each do |r|
-      time_zone_now = Time.zone.now      
 
-      if (time_zone_now - r.last_alert_sent_at) >= (r.interval * 60).to_f
+      if (Time.current - r.last_alert_sent_at) >= (r.interval * 60).to_f
         EmailingService.send_unread_message_alert(r)
         if r.include_sms
           #Message.send_and_save_message()
         end
       end     
 
-      r.update_attribute(:last_alert_sent_at, Time.zone.now)
+      r.update_attribute(:last_alert_sent_at, Time.current)
 	  end
   end
 

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160903215415) do
+ActiveRecord::Schema.define(version: 20160904112401) do
 
   create_table "alerts", force: :cascade do |t|
     t.boolean  "send_alert",         limit: 1,   default: true
@@ -394,6 +394,7 @@ ActiveRecord::Schema.define(version: 20160903215415) do
     t.string   "short_url",              limit: 191
     t.string   "currency",               limit: 191
     t.string   "fb_id",                  limit: 191
+    t.string   "time_zone",              limit: 191,   default: "Eastern Time (US & Canada)"
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree

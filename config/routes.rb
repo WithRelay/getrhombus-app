@@ -28,6 +28,10 @@ Rails.application.routes.draw  do
   get "facebook_webhook" => 'static_pages#fb_webhook'
   post "/facebook_webhook" => 'static_pages#receive_message'
 
+  constraints subdomain: "hooks" do
+    post '/events/stripe' => 'webhooks#stripe_events'
+  end
+
   ## devise routes
   devise_for :users, :controllers => { registrations: "registrations", omniauth_callbacks: "omniauth_callbacks" }
   devise_scope :user do

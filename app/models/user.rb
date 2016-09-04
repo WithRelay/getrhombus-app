@@ -103,7 +103,7 @@ class User < ActiveRecord::Base
   def self.get_latest_active_messaging(merchant_id, num_days)
     users = Message.select('`users`.`id`, `users`.`first_name`, `users`.`last_name`, `users`.`email`, `messages`.`from`')
                    .joins('LEFT JOIN `users` ON (`users`.`id` = `messages`.`user_id`)')
-                   .where('(`messages`.`user_id_to` = ? AND `messages`.`created_at` >= ?) OR (`messages`.`user_id_to` = ? AND `messages`.`unread` = ?)', merchant_id, Time.zone.now - num_days.days, merchant_id, true)
+                   .where('(`messages`.`user_id_to` = ? AND `messages`.`created_at` >= ?) OR (`messages`.`user_id_to` = ? AND `messages`.`unread` = ?)', merchant_id, Time.current - num_days.days, merchant_id, true)
                    .group('`messages`.`from`')
     latest_active = Array.new
     users.each do |user|
