@@ -16,5 +16,16 @@ class Hashtag < ActiveRecord::Base
 
   accepts_nested_attributes_for :images
 
+  # You need a new plan if this is the first time
+  # or any recurring hashtag detail changes on update
+  def create_new_plan_and_subscription
+    if true
+
+      
+
+    end
+  end
+
+
 
 end
