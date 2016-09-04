@@ -12,7 +12,8 @@ class StripeEvent
   
   class << self
 
-    # for customer.subscription.updated and is merchant...return twilio number etc
+    # for customer.subscription.updated and is merchant...return twilio number etc??
+    # or is this in deleted?
 
     def process_stripe_event(hash)
       @hash = hash
@@ -30,8 +31,11 @@ class StripeEvent
 
 
     def subscription_trial_will_end
-      puts "\n\n\n\n"
-      puts @hash[:data][:object][:id]
+      puts "\n\n\n"
+      if subscription = Subscription.find_by(stripe_subscription_id: @hash[:data][:object][:id])
+        @hash[:data][:object][:id]
+
+      else
     end
 
     def invoice_payment_succeeded

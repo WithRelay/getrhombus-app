@@ -7,7 +7,7 @@ module CSVHandler
 	  	CSV.generate(headers: true) do |csv|
 	      csv << column_names.map.with_index(0) { |e,i| (i == 0) ? e : e.titleize } 
 	      column_names[0] = 'created_at'
-		    Transaction.where("user_id = ? AND created_at BETWEEN ? AND ?", user_id, start_date, end_date).each do |t|
+		    Transaction.where("user_id = ? AND created_at BETWEEN ? AND ?", user_id, Time.zone.parse(start_date), Time.zone.parse(end_date)).each do |t|
 		      csv.add_row t.attributes.slice(*column_names).values
 		    end
 	    end
@@ -17,7 +17,7 @@ module CSVHandler
 	end
 
   def get_csv_columns(user_level)
-  	return ["Date (ET)", "transaction_number", "from", "to", "amount", "amount_less_fees", "currency"] if user_level == 1
+  	return ["Date #{Time.current.zone}", "transaction_number", "from", "to", "amount", "amount_less_fees", "currency"] if user_level == 1
   	["Date (ET)", "transaction_number", "from", "to", "amount", "currency"]
   end
 

@@ -146,7 +146,6 @@
 <form id="txn_history_form" method="get" action="/transactions/download.csv">
   <input type="hidden" id="txn_start_date" name="txn_start_date" />
   <input type="hidden" id="txn_end_date" name="txn_end_date" />
-  <input type="hidden" id="txn_todays_date" name="txn_todays_date" />
 </form>
 
 <!-- Date picker stuff -->
@@ -160,6 +159,12 @@
       $('.title').daterangepicker({
         cancelClass: 'hide',
         linkedCalendars: true,
+        /*timePicker: true,
+        timePickerIncrement: 30,
+        singleDatePicker: true,
+        locale: {
+            format: 'MM/DD/YYYY h:mm A'
+        },*/
         ranges: {
            'Today': [moment(), moment()],
            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
@@ -172,9 +177,8 @@
         maxDate: new Date
       })
         .on('apply.daterangepicker', function(ev, picker) {
-          document.getElementById('txn_start_date').value = picker.startDate.format('YYYY-MM-DD HH:mm:ss');
-          document.getElementById('txn_end_date').value = picker.endDate.format('YYYY-MM-DD HH:mm:ss');
-          document.getElementById('txn_todays_date').value = moment().format('YYYYMMDD')
+          document.getElementById('txn_start_date').value = picker.startDate.format('YYYY-MM-DD');
+          document.getElementById('txn_end_date').value = picker.endDate.format('YYYY-MM-DD');
           $('#txn_history_form').submit();
         });
   });

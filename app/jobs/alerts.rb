@@ -1,4 +1,4 @@
-class AlertsJob
+class Alerts
 	@queue = :alerts
 
 	def self.perform

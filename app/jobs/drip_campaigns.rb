@@ -1,4 +1,4 @@
-class DripCampaignsJob
+class DripCampaigns
 
   @queue = :drip_campaigns
 

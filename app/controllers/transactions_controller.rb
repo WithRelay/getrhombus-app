@@ -15,7 +15,7 @@ class TransactionsController < ApplicationController
 		response = t.get_transactions_csv(current_user.id, current_user.user_level, params[:txn_start_date], params[:txn_end_date])
 		if response
 		  respond_to do |format|
-		    format.csv { send_data response, filename: "rhombus_transactions_#{params[:txn_todays_date]}.csv" }	
+		    format.csv { send_data response, filename: "rhombus_transactions_#{Time.zone.today.strftime("%d-%b-%y")}.csv" }	
 		  end
 		else
 		  # use 500 page after it is built
