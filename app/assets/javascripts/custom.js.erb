@@ -1381,19 +1381,23 @@ $(document).ready(function () {
 
   //  Hashtags, plans, coupons, Alerts
   // no spaces
-  $('#hashtag_tag, #coupon-name').bind('input', function(){
-    $(this).val(function(_, v) { return v.replace(/\s+/g, ''); });
+  $('#hashtag_tag, #coupon-name').on('input', function(){
+    this.value = this.value.replace(/\s+/g, '');
   });
 
   // Positive integer only
-  $('#interval-count, #amount-off, #duration-in-months, #max-redemptions').bind('input', function(){
-   $(this).val(function(_, v) { 
-      return (v.match(/^[1-9]\d*$/)) ? v : v.slice(0, -1);
-    });
+  $('#interval-count, #amount-off, #duration-in-months, #max-redemptions').on('input', function(){
+    var v = this.value;
+    this.value = (v.match(/^[1-9]\d*$/)) ? v : v.slice(0, -1);
+
+    if (this.id == "amount-off") {
+      $("#percent-off").val('');
+      (this.value == "") ? $("#percent-off-div").slideDown(200) : $("#percent-off-div").slideUp(200);
+    }
   });
 
   // decimal with two places
-  $('#hashtag_amount, #plan_amount').bind('input', function(){
+  $('#hashtag_amount, #plan_amount').on('input', function(){
     $(this).val(function(_, v) { 
       if (v.slice(-1) == '.' && (v.match(/[.]/g) || []).length == 1 && v.length > 1) return v
       // http://stackoverflow.com/questions/30606348/check-if-a-given-value-is-a-positive-number-or-float-with-maximum-two-decimal-pl
@@ -1402,7 +1406,7 @@ $(document).ready(function () {
       else return v.slice(0, -1);
     });
   });
-  
+
   // if hashtag isn't for payment, remove payment settings
   $('#hashtag_tag_type').change(function(){
     if (this.value == '1') {
@@ -1415,10 +1419,11 @@ $(document).ready(function () {
   }).change();
   
   // positve integer less than 100
-  $('#percent-off').bind('input', function(){
-   $(this).val(function(_, v) { 
-      return (v.match(/^[1-9]\d*$/) && parseInt(v) < 101) ? v : v.slice(0, -1);
-    });
+  $('#percent-off').on('input', function(){
+    var v = this.value;
+    $("#amount-off").val('');
+    (v == "") ? $("#amount-off-div").slideDown(200) : $("#amount-off-div").slideUp(200);
+    this.value = (v.match(/^[1-9]\d*$/) && parseInt(v) < 101) ? v : v.slice(0, -1);
   });
 
   // if coupon isnt repeating. repeating needs length in months
