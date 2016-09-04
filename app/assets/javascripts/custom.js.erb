@@ -1421,9 +1421,9 @@ $(document).ready(function () {
   // positve integer less than 100
   $('#percent-off').on('input', function(){
     var v = this.value;
-    $("#amount-off").val('');
-    (v == "") ? $("#amount-off-div").slideDown(200) : $("#amount-off-div").slideUp(200);
     this.value = (v.match(/^[1-9]\d*$/) && parseInt(v) < 101) ? v : v.slice(0, -1);
+    $("#amount-off").val('');
+    (this.value == "") ? $("#amount-off-div").slideDown(200) : $("#amount-off-div").slideUp(200);
   });
 
   // if coupon isnt repeating. repeating needs length in months
