@@ -4,7 +4,7 @@ class User < ActiveRecord::Base
   include DashboardCustomerQueries
   include CSVHandler
 
-  attr_accessor :full_name, :phone, :captured_amt, :msg_id, :tag_id
+  attr_accessor :full_name, :phone, :captured_amt, :msg_id, :tag_id, :referrer_id
 
   # include default devise modules. Others available are:
   # :token_authenticatable, :lockable, :timeoutable and :confirmable,
@@ -36,11 +36,13 @@ class User < ActiveRecord::Base
   after_commit :create_user_alert, on: :create, if: lambda { self.user_level == 1 }
   after_commit :update_phone_in_db, on: :update, if: lambda { self.previous_changes['phone_number'] && self.user_level == 0 }
 
-  #validates_presence_of :user_level, :message => "Please select an account type"
-  #validates :country, length: {is: 2}, allow_blank: true  
-  # why allow nil?
-  #validates_uniqueness_of :phone_number, :allow_nil => true, :if => lambda { self.user_level == 0 }
-  # still need validation errors for edit..this is only for create action
+  validates_presence_of :user_level, message: "Please select an account type"
+  validates :country, length: { is: 2 }, allow_blank: true   # mostly for csv upload
+  
+  # why allow nil? not sure
+  validates_uniqueness_of :phone_number, :allow_nil => true, :if => lambda { self.user_level == 0 }
+  
+  # still need validation errors for edit..this is only for create action....just remove on create?
   #validates :phone_number, presence: true, numericality: { only_integer: true }, length: { minimum: 10 }, on: :create
 
   # A user can have belong to more than one list and also own multiple lists (Admins)
@@ -97,6 +99,8 @@ class User < ActiveRecord::Base
     #self.rhombus_number_type = number if number
     self.rhombus_number = number if number
     return number[0]
+    # if successful create bitly link
+    # @user.short_url = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?referrer_id=#{@user.id}&referrer=#{@user.org_name}")
   end
 
   # Returns hash with users who sent a message to the given merchant in the last "num_days" days
@@ -158,7 +162,6 @@ class User < ActiveRecord::Base
     
     self.url = self.url.strip unless self.url.blank?
     self.custom_welcome = self.custom_welcome.strip unless self.custom_welcome.blank?
-    self.referrer_num = self.referrer_num.strip unless self.referrer_num.blank?
     self.org_name = self.org_name.strip unless self.org_name.blank?
   end
 
@@ -184,15 +187,21 @@ class User < ActiveRecord::Base
     end
   end
 
+  # move to background job
   def update_phone_in_db
-    # move to background job
     ActiveRecord::Base.connection.execute("UPDATE messages SET messages.from = #{x[1]} WHERE messages.from = #{x[0]}")
     ActiveRecord::Base.connection.execute("UPDATE messages SET messages.to = #{x[1]} WHERE messages.to = #{x[0]}")
   end
 
   def create_user_alert
-    # move to background job?
-    Alert.create(user_id: self.id, sms_number: self.org_phone, last_alert_sent_at: self.created_at)
+    Alert.create(user_id: self.id, sms_number: self.org_phone, last_alert_sent_at: self.created_at)   # move to background job?
   end
+
+  def set_referrer
+    puts "referr>???"
+    puts self.inspect
+  end
+
+
   
 end

@@ -1,0 +1,49 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Referrer email:</strong>
+  <%= @referrer.referrer_email %>
+</p>
+
+<p>
+  <strong>Email:</strong>
+  <%= @referrer.email %>
+</p>
+
+<p>
+  <strong>Phone number:</strong>
+  <%= @referrer.phone_number %>
+</p>
+
+<p>
+  <strong>Referrer:</strong>
+  <%= @referrer.referrer_id %>
+</p>
+
+<p>
+  <strong>Referee:</strong>
+  <%= @referrer.referee_id %>
+</p>
+
+<p>
+  <strong>Country:</strong>
+  <%= @referrer.country %>
+</p>
+
+<p>
+  <strong>Link:</strong>
+  <%= @referrer.link %>
+</p>
+
+<p>
+  <strong>Referrer name:</strong>
+  <%= @referrer.referrer_name %>
+</p>
+
+<p>
+  <strong>Business name:</strong>
+  <%= @referrer.business_name %>
+</p>
+
+<%= link_to 'Edit', edit_referrer_path(@referrer) %> |
+<%= link_to 'Back', referrers_path %>

@@ -74,7 +74,9 @@ module CSVHandler
             # set user_level and password
             row[:user_level] = 0
             row[:password] = Toolbox::StringGen.generate_random_string(8)
-            row[:referrer_num] = self.rhombus_number
+            
+            # change this
+            ###row[:referrer_num] = self.rhombus_number
             row[:country].present? && row[:country] = row[:country].upcase
 
             # validate user data against db

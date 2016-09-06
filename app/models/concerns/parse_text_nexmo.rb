@@ -120,7 +120,7 @@ module ParseTextNexmo
 
         is_signup = is_signup?
         if is_signup
-          short_link = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?num=#{params[:From]}&referrer_num=#{params[:To]}&referrer=#{merchant_name}")
+          short_link = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?num=#{params[:From]}&referrer_id=#{@this_merchant.id}&referrer=#{merchant_name}")
           send_response("To chat with us or send a payment, sign up here: #{short_link}")
         end
 
@@ -137,7 +137,7 @@ module ParseTextNexmo
 
   def send_sign_up_link 
     short_link = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?amt=#{amt_ary[0]}&num=#{params[:msisdn]}
-                                      &referrer_num=#{params[:to]}&referrer=#{@this_merchant.org_name}&msg_id=#{@saved_msg.id}")
+                                      &referrer_id=#{@this_merchant.id}&referrer=#{@this_merchant.org_name}&msg_id=#{@saved_msg.id}")
     send_response("Hi there, thanks for reaching out...to send a payment, sign up here. Thanks! => #{short_link}")
   end
 

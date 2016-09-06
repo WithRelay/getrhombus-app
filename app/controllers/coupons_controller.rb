@@ -5,6 +5,7 @@ class CouponsController < ApplicationController
 
   def index
     @coupons = Coupon.all
+    @referrer = Referrer.new
     respond_with(@coupons)
   end
 

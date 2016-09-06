@@ -12,7 +12,7 @@ Rails.application.routes.draw  do
   
   resources :contact_forms
 
-  get "resque" => Resque::Server, :anchor => false, :constraints => lambda { |req|
+  get "resque" => Resque::Server, anchor: false, constraints: lambda { |req|
     req.env['warden'].authenticated? and req.env['warden'].user.id == 23
   }
 
@@ -32,16 +32,17 @@ Rails.application.routes.draw  do
     post '/events/stripe' => 'webhooks#stripe_events'
   end
 
+  resources :referrers, only: [:new, :create]
   ## devise routes
-  devise_for :users, :controllers => { registrations: "registrations", omniauth_callbacks: "omniauth_callbacks" }
+  devise_for :users, controllers: { registrations: "registrations", omniauth_callbacks: "omniauth_callbacks", sessions: 'sessions' }
   devise_scope :user do
-    get "signup", :to => "devise/registrations#new"
-    get "profile", :to => "devise/registrations#edit"
-    get "signin", :to => "devise/sessions#new"
+    get "signup", to: "devise/registrations#new"
+    get "profile", to: "devise/registrations#edit"
+    get "signin", to: "devise/sessions#new"
   end
   
   # user routes
-  resources :users, :only => :show do
+  resources :users, only: :show do
     resources :hashtags, except: [:show, :destroy]
     resources :subscriptions, except: [:show, :edit, :update]
     resources :plans, only: [:create, :index, :new]

@@ -18,6 +18,8 @@ module DashboardCustomerQueries
       from users where rhombus_number = ? and id NOT IN (@users_ids))
 
       ORDER BY created_at DESC ", self.id, self.referrer_num])
+
+    # change referrer num query
   end
 
   def get_customer_transactions

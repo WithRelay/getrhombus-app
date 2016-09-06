@@ -8,7 +8,7 @@ module AdditionalUserActions
     # Generate bitly if blank
     # this should go ....should never happen again in v 1.5 upward
     if @user.short_url.blank?
-      @user.short_url = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?referrer_num=#{@user.rhombus_number}&referrer=#{@user.org_name}")
+      @user.short_url = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?referrer_id=#{@user.id}&referrer=#{@user.org_name}")
       @user.save
     end
     # change back
@@ -80,7 +80,7 @@ module AdditionalUserActions
   def build_user_link
     # if it includes a captured payment, also check if msg_id is present, tag_id is optional
     # referrer_num is the merchant the payment is going to
-    link = session[:captured_amt].present? ? "/profile?amt=#{session[:captured_amt]}&referrer_num=#{session[:referrer_num]}" + 
+    link = session[:captured_amt].present? ? "/profile?amt=#{session[:captured_amt]}&referrer_id=#{session[:referrer_id]}" + 
                                           "&msg_id=#{session[:msg_id]}&tag_id=#{session[:tag_id]}" : "/profile" 
     delete_captured_payment_session
     link
@@ -89,13 +89,15 @@ module AdditionalUserActions
   def set_captured_payment_session
     session[:captured_amt] = params[:user][:captured_amt]
     session[:msg_id] = params[:user][:msg_id]
-    session[:referrer_num] = params[:user][:referrer_num]
+    session[:referrer_id] = params[:user][:referrer_id]
+    session[:referrer_uid] = params[:user][:referrer_uid]
     session[:tag_id] = params[:user][:tag_id]
   end
 
   def delete_captured_payment_session
     session.delete(:captured_amt)
-    session.delete(:referrer_num)
+    session.delete(:referrer_id)
+    session.delete(:referrer_uid)
     session.delete(:tag_id)
     session.delete(:msg_id)
   end

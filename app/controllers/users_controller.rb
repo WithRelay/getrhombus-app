@@ -13,32 +13,18 @@ class UsersController < ApplicationController
   end
 
   def show
-    if params[:graph].present?  # for graphs in user account
-      @stats = @user.get_line_stats if params[:graph] == 'line'
-      @stats = @user.get_area_stats if params[:graph] == 'area'
-      render json: @stats.to_json
+    handle_referrer
+    if current_user.user_level == 0 && current_user.customer_uri.blank? # incomplete customer account
+      redirect_to build_user_link
+    elsif current_user.user_level == 1 && (current_user.org_name.blank? || current_user.rhombus_number.blank?) # incomplete merchant account
+      # does this empty forms? check...i think so
+      redirect_to "/profile"
     else
-      if current_user.user_level == 0 && current_user.customer_uri.blank? # incomplete customer account
-        redirect_to build_user_link
-      elsif current_user.user_level == 1 && (current_user.org_name.blank? || current_user.rhombus_number.blank?) # incomplete merchant account
-        # does this empty forms? check
-        redirect_to "/profile"
-      else
-        if current_user.user_level == 0 && params[:captured_amt].present?
-          #Transaction.process_captured_payment(@user, params) 
-        elsif @user.user_level == 1 && @user.short_url.blank? && @user.rhombus_number.present? 
-      
-          # generate bitly link for merchant if blank and rhombus number exist...
-          ###should remove this after twilio migration ###
-          @user.short_url = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?referrer_num=#{@user.rhombus_number}&referrer=#{@user.org_name}")
-          @user.save
-        end
-        @last4_transactions = @user.transactions.select(:created_at, :description, :notes).last(4).reverse
-        @total_msgs = @user.get_total_messages
-        @dashboard_stuff = @user.dashboard_stats 
-        # @token = TextingService.get_twilio_capibility_token if current_user.user_level == 1       
-      
-      end           
+      Transaction.process_captured_payment(@user, params) if current_user.user_level == 0 && params[:captured_amt].present?
+      @last4_transactions = @user.transactions.select(:created_at, :description, :notes).last(4).reverse
+      @total_msgs = @user.get_total_messages
+      @dashboard_stuff = @user.dashboard_stats 
+      # @token = TextingService.get_twilio_capibility_token if current_user.user_level == 1     
     end
     delete_captured_payment_session
   end  
@@ -93,6 +79,11 @@ private
     params.require(:user).permit(:email, :password, :first_name, :last_name, :phone_number,
       :card_name, :expiration_month, :expiration_year, :instrument_uri, :card_type, :street_address,
       :state_province, :country, :user_level)
+  end
+
+  def handle_referrer
+    Referrrer.save_referrer_with_id(params[:user][:referrer_id], current_user.id) if params[:user][:referrer_id]
+    Referrrer.save_referrer_with_uid(params[:user][:referrer_uid], current_user.id) if params[:user][:referrer_uid]
   end
 
 end

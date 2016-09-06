@@ -28,7 +28,8 @@
             <%# used when user makes payment and is prompted to sign in to complete account %>
             <%# setting value as params so if user create fails, this value stays since devise changes the url %>
             <%= f.hidden_field :captured_amt, :id => "captured_amt", value: params[:user] ? params[:user][:captured_amt] : '' %>
-            <%= f.hidden_field :referrer_num, :id => "referrer_num", value: params[:user] ? params[:user][:referrer_num] : '' %>
+            <%= f.hidden_field :referrer_id, :id => "referrer_id", value: params[:user] ? params[:user][:referrer_id] : '' %>
+            <%= f.hidden_field :referrer_uid, :id => "referrer_uid", value: params[:user] ? params[:user][:referrer_uid] : '' %>
             <%= f.hidden_field :msg_id, :id => "msg_id", value: params[:user] ? params[:user][:msg_id] : '' %>
             <%= f.hidden_field :tag_id, :id => "tag_id", value: params[:user] ? params[:user][:tag_id] : '' %>
 

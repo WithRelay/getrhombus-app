@@ -1,0 +1,43 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Listing Referrers</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Referrer email</th>
+      <th>Email</th>
+      <th>Phone number</th>
+      <th>Referrer</th>
+      <th>Referee</th>
+      <th>Country</th>
+      <th>Link</th>
+      <th>Referrer name</th>
+      <th>Business name</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @referrers.each do |referrer| %>
+      <tr>
+        <td><%= referrer.referrer_email %></td>
+        <td><%= referrer.email %></td>
+        <td><%= referrer.phone_number %></td>
+        <td><%= referrer.referrer_id %></td>
+        <td><%= referrer.referee_id %></td>
+        <td><%= referrer.country %></td>
+        <td><%= referrer.link %></td>
+        <td><%= referrer.referrer_name %></td>
+        <td><%= referrer.business_name %></td>
+        <td><%= link_to 'Show', referrer %></td>
+        <td><%= link_to 'Edit', edit_referrer_path(referrer) %></td>
+        <td><%= link_to 'Destroy', referrer, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Referrer', new_referrer_path %>

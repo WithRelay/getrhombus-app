@@ -1,6 +1,5 @@
 $(document).ready(function () {  
 
-    // help wrap this up...need to tie in saving this referrer_num to db for sign in
     // help change user controller to handle captured payments for signin
     // help add tag_id to captured payments in signin and signup and in the forms
 
@@ -149,78 +148,7 @@ $(document).ready(function () {
  
         }
     });
-
-    var get_graph = function(type) {
-        // run only on dashboard
-        if ($("#isDashboard").attr('data-dashboard') === "true") {
-          $.ajax({
-              url: url.href,
-              type: "GET",
-              data: { graph: type }, 
-              dataType: "json"     
-          })
-            .done(function(data, textStatus, response) {
-                 process_chart_data(data, type);
-            })
-            .fail(function(data, textStatus, response) {
-                 process_chart_data([], type);
-            })        
-        }
-    };
-
-
-    var process_chart_data = function(data, type) {
-        chart_labels = [], chart_totals = [], chart_txns = [];
-        if (type === "line") {
-            for (var i = 0, array_length = data.length; i < array_length; i++) {
-                chart_labels.push(data[i].day);
-                chart_totals.push(data[i].day_total);
-                chart_txns.push(data[i].num_of_txns);
-            }
-        } else {
-            for (var i = 0, array_length = data.length; i < array_length; i++) {
-                chart_labels.push(data[i].week_day);
-                chart_totals.push(data[i].week_total);
-            }
-        }
-        if (chart_labels.length == 0) chart_labels = ['Mon', 'Tue', 'Wed', 'Thur', 'Fri'];
-        (type === "line") ? graph_line_chart() : graph_area_chart();
-    }
-
-    
-    var graph_line_chart = function() {
-        new Chartist.Line('#chartist-line', {
-          labels: chart_labels,
-          series: [
-            chart_txns,
-            chart_totals
-          ]
-        }, {
-          fullWidth: true,
-          chartPadding: {
-            right: 40
-          }
-        }); 
-    }
-
-
-    var graph_area_chart = function() {
-        new Chartist.Line('#chartist-line-area', {
-          labels: chart_labels,
-          series: [
-            chart_totals
-          ]
-        }, {
-          low: 0,
-          showArea: true
-        });
-    }
-
-    // graphs by chartist.js
-    get_graph('line');
-    get_graph('area');
-
-    
+   
     // for table slide dowm
     function format ( d, element ) {
         // `d` is the original data object for the row
@@ -412,8 +340,9 @@ $(document).ready(function () {
             }
         })
         .on('success.form.fv', function(e, data) {
-            // set referrer number
-            if (global_page_params['referrer_num']) document.getElementById('referrer_num').value = global_page_params['referrer_num'];
+            // set referrer
+            if (global_page_params['referrer_id']) document.getElementById('referrer_id').value = global_page_params['referrer_id'];
+            if (global_page_params['referrer_uid']) document.getElementById('referrer_uid').value = global_page_params['referrer_uid'];
         });
     ////
 
@@ -727,9 +656,9 @@ $(document).ready(function () {
         })
         .on('success.form.fv', function(e, data) {
             set_number();
-            // set referrer number & subscription
-            if (global_page_params['referrer']) document.getElementById('referrer').value = global_page_params['referrer'];
-            if (global_page_params['referrer_num']) document.getElementById('referrer_num').value = global_page_params['referrer_num'];
+            // set referrer
+            if (global_page_params['referrer_id']) document.getElementById('referrer_id').value = global_page_params['referrer_id'];
+            if (global_page_params['referrer_uid']) document.getElementById('referrer_uid').value = global_page_params['referrer_uid'];
         });
     // validate sign up form
 
@@ -1696,6 +1625,14 @@ $(document).ready(function () {
   }
   ///// add a customer
     
+  $("#new_referrer").on("ajax:success", function(e, data, status, xhr) {
+    alert('received referral info. pls share the link and refer more');
+    console.log(data.referrer.link)
+  }).on("ajax:error", function(e, xhr, status, error){
+    alert('unable to save referral info');
+  });
+
+
 });
 
 

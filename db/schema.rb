@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160906124831) do
+ActiveRecord::Schema.define(version: 20160906181224) do
 
   create_table "alerts", force: :cascade do |t|
     t.boolean  "send_alert",  limit: 1,   default: true
@@ -278,6 +278,28 @@ ActiveRecord::Schema.define(version: 20160906124831) do
   end
 
   add_index "plans", ["user_id"], name: "index_plans_on_user_id", using: :btree
+
+  create_table "referrers", force: :cascade do |t|
+    t.string   "referrer_email", limit: 191
+    t.string   "email",          limit: 191
+    t.string   "phone_number",   limit: 191
+    t.integer  "referrer_id",    limit: 4
+    t.integer  "referee_id",     limit: 4
+    t.string   "country",        limit: 191
+    t.string   "link",           limit: 191
+    t.string   "referrer_name",  limit: 191
+    t.string   "business_name",  limit: 191
+    t.string   "uid",            limit: 191
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+  end
+
+  add_index "referrers", ["email"], name: "index_referrers_on_email", using: :btree
+  add_index "referrers", ["link"], name: "index_referrers_on_link", using: :btree
+  add_index "referrers", ["referee_id"], name: "index_referrers_on_referee_id", using: :btree
+  add_index "referrers", ["referrer_email"], name: "index_referrers_on_referrer_email", using: :btree
+  add_index "referrers", ["referrer_id"], name: "index_referrers_on_referrer_id", using: :btree
+  add_index "referrers", ["uid"], name: "index_referrers_on_uid", using: :btree
 
   create_table "refunds", force: :cascade do |t|
     t.string   "uri",            limit: 255

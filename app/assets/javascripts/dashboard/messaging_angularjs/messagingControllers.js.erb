@@ -111,7 +111,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
           if ((new_message == undefined) || (new_message.text == '') || (new_message.text.length > $scope.char_limit)) {
             alert('Maximum ' + $scope.char_limit + ' characters.');            
           } else {
-            /*$http.get(window.location.origin + '/users/' + merchant_id + '/send_message_from_merchant/' + $scope.selected_user.user_number + '?message=' + encodeURI(new_message.text))
+            /*$http.get(window.location.origin + '/users/' + merchant_id + '/send_message_from_merchant/' + $scope.selected_user.user_number + '?message=' + encodeURIComponent(new_message.text))
             .success(function(data) {
               if (data.success) {
                 $scope.selected_user_messages.push({user_number: merchant_id, user_level: data.user_level, 
