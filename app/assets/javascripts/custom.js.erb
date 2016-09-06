@@ -1589,7 +1589,7 @@ $(document).ready(function () {
 
     // http://stackoverflow.com/questions/23402187/multiple-files-upload-and-using-file-reader-to-preview
     if (files && files.length > 0) {
-      if (($("#image-previews").children().length + files.length) >= 2) {
+      if (($("#image-previews").children().length + files.length) > 2) {
         invalid_actions("you already have 2 images attached");
         return;
       }      

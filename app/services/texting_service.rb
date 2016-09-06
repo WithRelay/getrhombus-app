@@ -347,7 +347,17 @@ class TextingService
           }
         },      
       }
-    end    
+    end  
+
+    def release_number(num)
+      begin  
+        client = Twilio::REST::Client.new TWILIO_API_KEY, TWILIO_API_SECRET
+        client.account.incoming_phone_numbers.list({phone_number: num}).each { |n| n.delete }
+        true    
+      rescue StandardError => e
+        false
+      end
+    end  
   end
 end
 

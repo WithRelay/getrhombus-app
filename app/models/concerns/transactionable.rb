@@ -1,7 +1,7 @@
 module Transactionable
   extend ActiveSupport::Concern
 
-  def generate_number
+  def generate_txn_number
     random_token = nil
     loop do
       # http://stackoverflow.com/questions/88311/how-best-to-generate-a-random-string-in-ruby?rq=1

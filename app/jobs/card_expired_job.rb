@@ -1,4 +1,4 @@
-class CardExpired
+class CardExpiredJob
 
   @queue = :card_expired
 

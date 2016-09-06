@@ -4,6 +4,7 @@ class Subscription < ActiveRecord::Base
   belongs_to :user
   belongs_to :coupons
   belongs_to :team, class_name: "User"
+  has_many :notification_log, as: :notifiable, dependent: :destroy
 
   def create_subscription(hash)
 
@@ -11,11 +12,14 @@ class Subscription < ActiveRecord::Base
 
     hash[:application_fee_percent] = Rails.application.secrets.application_fee_percent
     hash[:coupon] = Coupon.find_by(id: self.coupon_id).id if self.coupon_id.present?
+    # Using only customer_uri since we support only 1 card and this
+    # way if a customer changes the card on file we don't need to change the subscription source
     hash[:customer] = hash[:customer].customer_uri
-    hash[:plan] = self.plan_id  
     #hash[:source]
+    hash[:plan] = self.plan_id  
     hash[:quantity] = self.quantity
-    hash[:tax_percent] = hash[:team].tax_percent
+    hash[:tax_percent] = hash[:team].tax_percent 
+    # No need to override trial end in plan
     #hash[:trial_end]
 
     hash.delete(:team)

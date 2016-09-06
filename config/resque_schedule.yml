@@ -2,18 +2,18 @@ drip_campaign_emails:
   # every: 5s - Calculates time from moment of deploy...so best for frequent jobs like 10-30 mins else use cron: "30 6 * * 1"
   #cron: "0 11 * * * America/New_York"    
   every: 15s
-  class: "DripCampaigns"
+  class: "DripCampaignJob"
   args:
   description: "This job runs our drip campaigns."
 alert_emails:
   #every: 15m
   every: 15s
-  class: "Alerts"
+  class: "MessageAlertJob"
   args:
   description: "This job alerts merchants of unread messages."
 card_expired_emails:
   #cron: "0 12 * * * America/New_York"    
   every: 15s
-  class: "CardExpired"
+  class: "CardExpiredJob"
   args:
-  description: "This job notifies customers of expired cards."
+  description: "This job notifies customers of expired or soon-to-expire cards."

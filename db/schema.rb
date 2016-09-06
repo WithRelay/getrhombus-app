@@ -11,17 +11,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160904112401) do
+ActiveRecord::Schema.define(version: 20160906124831) do
 
   create_table "alerts", force: :cascade do |t|
-    t.boolean  "send_alert",         limit: 1,   default: true
-    t.integer  "interval",           limit: 4,   default: 15
-    t.boolean  "include_sms",        limit: 1,   default: false
-    t.string   "sms_number",         limit: 191
-    t.integer  "user_id",            limit: 4
-    t.datetime "last_alert_sent_at"
-    t.datetime "created_at",                                     null: false
-    t.datetime "updated_at",                                     null: false
+    t.boolean  "send_alert",  limit: 1,   default: true
+    t.integer  "interval",    limit: 4,   default: 15
+    t.boolean  "include_sms", limit: 1,   default: false
+    t.string   "sms_number",  limit: 191
+    t.integer  "user_id",     limit: 4
+    t.datetime "created_at",                              null: false
+    t.datetime "updated_at",                              null: false
   end
 
   add_index "alerts", ["user_id"], name: "fk_rails_6637a8d260", using: :btree
@@ -43,7 +42,7 @@ ActiveRecord::Schema.define(version: 20160904112401) do
 
   create_table "coupons", force: :cascade do |t|
     t.integer  "user_id",            limit: 4
-    t.integer  "stripe_coupon_id",   limit: 4
+    t.string   "stripe_coupon_id",   limit: 191
     t.string   "name",               limit: 191
     t.integer  "amount_off",         limit: 4
     t.string   "currency",           limit: 191
@@ -172,6 +171,42 @@ ActiveRecord::Schema.define(version: 20160904112401) do
     t.datetime "updated_at"
   end
 
+  create_table "invoices", force: :cascade do |t|
+    t.integer "date",                 limit: 4
+    t.string  "stripe_invoice_id",    limit: 191
+    t.integer "user_id",              limit: 4
+    t.integer "team_id",              limit: 4
+    t.integer "coupon_id",            limit: 4
+    t.integer "subscription_id",      limit: 4
+    t.integer "transaction_id",       limit: 4
+    t.integer "total",                limit: 4
+    t.integer "subtotal",             limit: 4
+    t.integer "tax",                  limit: 4
+    t.string  "tax_percent",          limit: 191
+    t.integer "application_fee",      limit: 4
+    t.integer "amount_due",           limit: 4
+    t.string  "currency",             limit: 191
+    t.integer "starting_balance",     limit: 4
+    t.integer "ending_balance",       limit: 4
+    t.integer "period_start",         limit: 4
+    t.integer "period_end",           limit: 4
+    t.string  "statement_descriptor", limit: 191
+    t.boolean "paid",                 limit: 1
+    t.boolean "closed",               limit: 1
+    t.boolean "attempted",            limit: 1
+    t.integer "attempt_count",        limit: 4
+    t.integer "next_payment_attempt", limit: 4
+    t.boolean "forgiven",             limit: 1
+    t.boolean "livemode",             limit: 1
+  end
+
+  add_index "invoices", ["coupon_id"], name: "fk_rails_d904f32fa0", using: :btree
+  add_index "invoices", ["stripe_invoice_id"], name: "index_invoices_on_stripe_invoice_id", using: :btree
+  add_index "invoices", ["subscription_id"], name: "fk_rails_2fe0fa30e5", using: :btree
+  add_index "invoices", ["team_id"], name: "fk_rails_802b2a5c87", using: :btree
+  add_index "invoices", ["transaction_id"], name: "fk_rails_ca7e31fd1d", using: :btree
+  add_index "invoices", ["user_id"], name: "fk_rails_d981ce0d41", using: :btree
+
   create_table "lists", force: :cascade do |t|
     t.datetime "created_at",           null: false
     t.datetime "updated_at",           null: false
@@ -204,6 +239,18 @@ ActiveRecord::Schema.define(version: 20160904112401) do
   add_index "messages", ["hashtag_id"], name: "index_messages_on_hashtag_id", using: :btree
   add_index "messages", ["transaction_id"], name: "index_messages_on_transaction_id", using: :btree
   add_index "messages", ["user_id"], name: "index_messages_on_user_id", using: :btree
+
+  create_table "notification_logs", force: :cascade do |t|
+    t.integer  "notifiable_id",   limit: 4
+    t.string   "notifiable_type", limit: 191
+    t.string   "notify_type",     limit: 191
+    t.string   "channel",         limit: 191
+    t.string   "reason",          limit: 191
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+  end
+
+  add_index "notification_logs", ["notifiable_type", "notifiable_id"], name: "index_notification_logs_on_notifiable_type_and_notifiable_id", using: :btree
 
   create_table "open_cnam_data", force: :cascade do |t|
     t.string   "name",         limit: 191
@@ -244,7 +291,7 @@ ActiveRecord::Schema.define(version: 20160904112401) do
   add_index "refunds", ["transaction_id"], name: "index_refunds_on_transaction_id", using: :btree
 
   create_table "subscriptions", force: :cascade do |t|
-    t.integer  "stripe_subscription_id",  limit: 4
+    t.string   "stripe_subscription_id",  limit: 191
     t.integer  "plan_id",                 limit: 4
     t.integer  "user_id",                 limit: 4
     t.integer  "team_id",                 limit: 4
@@ -252,9 +299,12 @@ ActiveRecord::Schema.define(version: 20160904112401) do
     t.decimal  "application_fee_percent",             precision: 8, scale: 2
     t.string   "source",                  limit: 191
     t.integer  "quantity",                limit: 4,                           default: 1
-    t.decimal  "tax_percent",                         precision: 8, scale: 2
+    t.string   "tax_percent",             limit: 191
     t.integer  "current_period_start",    limit: 4
     t.integer  "current_period_end",      limit: 4
+    t.integer  "canceled_at",             limit: 4
+    t.boolean  "cancel_at_period_end",    limit: 1
+    t.integer  "ended_at",                limit: 4
     t.integer  "trial_start",             limit: 4
     t.integer  "trial_end",               limit: 4
     t.string   "status",                  limit: 191
@@ -271,23 +321,23 @@ ActiveRecord::Schema.define(version: 20160904112401) do
   create_table "transactions", force: :cascade do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "transaction_uri",                    limit: 191
     t.integer  "transaction_type",                   limit: 4
     t.decimal  "amount",                                           precision: 8, scale: 2
-    t.decimal  "amount_less_fees",                                 precision: 8, scale: 2
     t.decimal  "amount_with_taxes",                                precision: 8, scale: 2
-    t.decimal  "rhombus_fee",                                      precision: 8, scale: 2
-    t.string   "transaction_number",                 limit: 191
+    t.string   "tax_percent",                        limit: 191
+    t.decimal  "application_fee",                                  precision: 8, scale: 2
+    t.decimal  "amount_less_fees",                                 precision: 8, scale: 2
+    t.string   "txn_uri",                            limit: 191
+    t.string   "txn_number",                         limit: 191
     t.string   "description",                        limit: 191
     t.string   "status",                             limit: 191
-    t.string   "transaction_available_at",           limit: 191
+    t.string   "txn_available_at",                   limit: 191
     t.string   "last_four",                          limit: 191
-    t.string   "expiration_month",                   limit: 191
-    t.string   "expiration_year",                    limit: 191
+    t.string   "exp_month",                          limit: 191
+    t.string   "exp_year",                           limit: 191
     t.string   "card_type",                          limit: 191
     t.string   "card_name",                          limit: 191
-    t.string   "tax_percent",                        limit: 191
-    t.string   "on_behalf_of_uri",                   limit: 191
+    t.string   "destination",                        limit: 191
     t.integer  "referenced_user_id",                 limit: 4
     t.string   "referenced_customer_transaction_id", limit: 191
     t.string   "receipt_sent_at",                    limit: 191
@@ -306,7 +356,7 @@ ActiveRecord::Schema.define(version: 20160904112401) do
   add_index "transactions", ["referenced_customer_transaction_id"], name: "index_transactions_on_referenced_customer_transaction_id", using: :btree
   add_index "transactions", ["subscription_id"], name: "index_transactions_on_subscription_id", using: :btree
   add_index "transactions", ["team_id"], name: "fk_rails_669ffc34df", using: :btree
-  add_index "transactions", ["transaction_number"], name: "index_transactions_on_transaction_number", using: :btree
+  add_index "transactions", ["txn_number"], name: "index_transactions_on_txn_number", using: :btree
   add_index "transactions", ["user_id"], name: "index_transactions_on_user_id", using: :btree
 
   create_table "twilio_number_data", force: :cascade do |t|
@@ -407,6 +457,11 @@ ActiveRecord::Schema.define(version: 20160904112401) do
   add_foreign_key "coupons", "users"
   add_foreign_key "customer_lists", "users"
   add_foreign_key "hashtags", "users"
+  add_foreign_key "invoices", "coupons"
+  add_foreign_key "invoices", "subscriptions"
+  add_foreign_key "invoices", "transactions"
+  add_foreign_key "invoices", "users"
+  add_foreign_key "invoices", "users", column: "team_id"
   add_foreign_key "lists", "users"
   add_foreign_key "messages", "hashtags"
   add_foreign_key "plans", "users"

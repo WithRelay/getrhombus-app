@@ -2,7 +2,7 @@ module DashboardMerchantQueries
 	extend ActiveSupport::Concern
 
 	# Customers who have paid
-	@@customers_query_txns = "(SELECT transactions.created_at, @users_ids := users.id, users.card_name, users.email, 
+	@@customers_query_txns = "(SELECT transactions.created_at, @users_ids := users.id as user_id, users.card_name, users.email, 
 		users.phone_number, SUM(transactions.amount) AS total_spend, MIN(transactions.created_at) AS first_visit, 
 		AVG(transactions.amount) AS avg_spend, max(transactions.created_at) AS last_visit,
 		SUM(transactions.created_at BETWEEN NOW() - INTERVAL 30 DAY AND NOW()) AS last_30 

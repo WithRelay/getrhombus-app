@@ -64,7 +64,6 @@ class PaymentService
 
     def create_subscription(hash, stripe_account_uid)
       begin
-        
         re = Stripe::Subscription.create(hash, { stripe_account: stripe_account_uid })  
         [re]
       rescue Stripe::StripeError => e
@@ -88,10 +87,26 @@ class PaymentService
       end
     end
 
-    def cancel_subscription(subscription_id, at_period_end)
+    def cancel_subscription(hash)
       begin 
-        sub = Stripe::Subscription.retrieve(subscription_id)
-        sub.delete(at_period_end: at_period_end)
+        sbtn = Stripe::Subscription.retrieve(hash[:subscription_id])
+        sbtn.delete(at_period_end: hash[:at_period_end])
+      rescue Stripe::StripeError => e
+        # Display a very generic error to the user, and maybe send yourself an email
+        [false, e.json_body[:error]]
+      rescue StandardError => e
+        [false, e]
+      end
+    end
+
+    # This applies to saas fee only
+    # so only coupon changes should call this for now
+    # Stripe prorate charges by default
+    def update_subscription(hash)
+      begin 
+        sbtn = Stripe::Subscription.retrieve(hash[:subscription_id])
+        sbtn.coupon = hash[:stripe_coupon_id]
+        sbtn.save
       rescue Stripe::StripeError => e
         # Display a very generic error to the user, and maybe send yourself an email
         [false, e.json_body[:error]]

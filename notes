@@ -26,6 +26,10 @@ Sunday
 - subscriptions
   - webhooks
 
+  - invoices
+  - idempotency
+
+
 Tuesday
 - managed accounts
 

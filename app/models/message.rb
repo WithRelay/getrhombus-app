@@ -17,8 +17,7 @@ class Message < ActiveRecord::Base
 		begin
 			# save the outbound message
 			self.update_attributes(from: from, to: to, text: message, unread: false)			
-			response = TextingService.send_sms(from, to, message, media_url)
-			if response
+			if response = TextingService.send_sms(from, to, message, media_url)
 				self.update_attributes(status: response.status, message_id: response.sid, message_timestamp: response.date_updated, message_price: response.price, 
 					error_code: response.error_code, error_text: response.error_message, price_unit: response.price_unit, num_segments: response.num_segments)	
 			else
