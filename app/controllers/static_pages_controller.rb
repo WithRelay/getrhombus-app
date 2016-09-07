@@ -3,7 +3,6 @@ class StaticPagesController < ApplicationController
 
 
 	def home
-		# send_message
 	end
 
 	def about

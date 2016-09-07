@@ -20,6 +20,8 @@ Rails.application.routes.draw  do
   get 'transactions/download' => 'transactions#download_csv', constraints: { format: 'csv' }
   match "send_mms_from_dashboard" => 'messages#dashboard_mms', via: [:post]
   get 'json_get_current_user' => 'application#json_get_current_user'
+  get "homepage_referrer" => 'referrers#homepage_referrer'
+  
   get "receive_text_message" => 'messages#receive_text_message'
   get "receive_text_message_twilio" => 'messages#receive_text_message_twilio'
   get "receive_voice_twilio" => 'messages#receive_voice_twilio'

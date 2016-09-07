@@ -1,6 +1,7 @@
 class Referrer < ActiveRecord::Base
 
   include Transactionable
+  has_many :notification_log, as: :notifiable, dependent: :destroy
 
   def get_referrer_link
     begin
@@ -18,12 +19,20 @@ class Referrer < ActiveRecord::Base
 
   def self.save_referrer_with_id(referrer, referee)
     ref = where(referrer_id: referrer, referee_id: referee).first
-    self.update_attributes({ referrer_id: referrer, referee_id: referee }) if !ref
+    create(referrer_id: referrer, referee_id: referee) if !ref
   end
 
   def self.save_referrer_with_uid(referrer, referee)
     ref = where(uid: referrer, referee_id: referee).first
-    self.update_attributes({ uid: referrer, referee_id: referee }) if !ref
+    create(uid: referrer, referee_id: referee) if !ref
+  end
+
+  # we use this on Stripe's website
+  # or anywhere else necessary
+  def self.create_stripe_default
+    ref = create(email: "<redacted_email>", phone_numer: '<redacted_phone_number>', country: 'US', 
+                            referrer_name: 'Stripe', business_name: "Rhombus", uid: generate_uid)
+    ref.update_attribute(:link, "https://www.getrhombus.com?referrer_uid=#{ref.uid}")
   end
 
 end

@@ -16,6 +16,9 @@ class User < ActiveRecord::Base
   has_many :subscriptions, dependent: :destroy
   has_many :team_subscriptions, class_name: 'Subscription', foreign_key: 'team_id'
 
+  has_many :referrers, class_name: 'Referrer', foreign_key: 'referrer_id'
+  has_many :referees, class_name: 'Referrer', foreign_key: 'referee_id'
+
   # this goes away with conversation model
   has_many :messages, dependent: :destroy
   
@@ -194,14 +197,8 @@ class User < ActiveRecord::Base
   end
 
   def create_user_alert
-    Alert.create(user_id: self.id, sms_number: self.org_phone, last_alert_sent_at: self.created_at)   # move to background job?
+    Alert.create(user_id: self.id, sms_number: self.org_phone)   # move to background job?
   end
-
-  def set_referrer
-    puts "referr>???"
-    puts self.inspect
-  end
-
 
   
 end

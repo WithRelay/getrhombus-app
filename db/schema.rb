@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160906181224) do
+ActiveRecord::Schema.define(version: 20160907010940) do
 
   create_table "alerts", force: :cascade do |t|
     t.boolean  "send_alert",  limit: 1,   default: true
@@ -286,6 +286,10 @@ ActiveRecord::Schema.define(version: 20160906181224) do
     t.integer  "referrer_id",    limit: 4
     t.integer  "referee_id",     limit: 4
     t.string   "country",        limit: 191
+    t.string   "postal",         limit: 191
+    t.string   "region",         limit: 191
+    t.string   "city",           limit: 191
+    t.string   "ip",             limit: 191
     t.string   "link",           limit: 191
     t.string   "referrer_name",  limit: 191
     t.string   "business_name",  limit: 191

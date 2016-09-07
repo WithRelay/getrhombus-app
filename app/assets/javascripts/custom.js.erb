@@ -18,6 +18,8 @@ $(document).ready(function () {
 
     // to prefill signup form or handle captured payments
     // signin is included for when user texts payment and is prompted to sign in to complete account
+
+    // use form presence and not url
     if (["/signup", "/signin", '/users', "/profile"].indexOf(url.pathname) != -1) {
         var amt = validate_captured_amt(global_page_params['amt'])
         
@@ -30,9 +32,7 @@ $(document).ready(function () {
             hide_account_type(document.getElementById('referrer').value);
         }
 
-        if (amt) document.getElementById('captured_amt').value = amt;
-        if (global_page_params['msg_id']) document.getElementById('msg_id').value = global_page_params['msg_id']; 
-        if (global_page_params['tag_id']) document.getElementById('tag_id').value = global_page_params['tag_id'];
+        if (amt) document.getElementById('captured_amt').value = amt;      
     }
     // to prefill signup form or handle captured payments
     
@@ -68,16 +68,16 @@ $(document).ready(function () {
     /////
 
 
-    function GetURLParameter() {
-        var params = url.search.substring(1), param_str; 
-        if (params) {
-            params = params.split('&');
-            for (var i = 0, l = params.length; i < l; i++) {
-                param_str = params[i].split('=');
-                global_page_params[param_str[0]] = param_str[1];
-            }
+  function GetURLParameter() {
+    var params = url.search.substring(1), param_str; 
+    if (params) {
+        params = params.split('&');
+        for (var i = 0, l = params.length; i < l; i++) {
+            param_str = params[i].split('=');
+            global_page_params[param_str[0]] = param_str[1];
         }
     }
+  }
 
     // /* Sidebar Menu*/
     $('.nav > li > a').click(function(){
@@ -343,6 +343,8 @@ $(document).ready(function () {
             // set referrer
             if (global_page_params['referrer_id']) document.getElementById('referrer_id').value = global_page_params['referrer_id'];
             if (global_page_params['referrer_uid']) document.getElementById('referrer_uid').value = global_page_params['referrer_uid'];
+            if (global_page_params['msg_id']) document.getElementById('msg_id').value = global_page_params['msg_id']; 
+            if (global_page_params['tag_id']) document.getElementById('tag_id').value = global_page_params['tag_id'];
         });
     ////
 
@@ -659,6 +661,8 @@ $(document).ready(function () {
             // set referrer
             if (global_page_params['referrer_id']) document.getElementById('referrer_id').value = global_page_params['referrer_id'];
             if (global_page_params['referrer_uid']) document.getElementById('referrer_uid').value = global_page_params['referrer_uid'];
+            if (global_page_params['msg_id']) document.getElementById('msg_id').value = global_page_params['msg_id']; 
+            if (global_page_params['tag_id']) document.getElementById('tag_id').value = global_page_params['tag_id'];
         });
     // validate sign up form
 

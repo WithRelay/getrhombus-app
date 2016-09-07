@@ -21,4 +21,5 @@
 //= require jquery.payment.js
 //= require jquery.charactercounter.js
 //= require ohsnap.js
+//= require location
 
