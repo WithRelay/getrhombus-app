@@ -2,8 +2,8 @@ class Referrer < ActiveRecord::Base
 
   include Transactionable
   has_many :notification_log, as: :notifiable, dependent: :destroy
-  belongs_to :referrer, class_name: "User"
-  belongs_to :referee, class_name: "User"
+  belongs_to :referrers, class_name: "User"
+  belongs_to :referees, class_name: "User"
 
 
   def get_referrer_link

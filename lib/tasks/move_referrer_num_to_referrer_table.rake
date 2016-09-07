@@ -18,6 +18,9 @@ task :move_referrer_num_to_referrer_table => :environment do
     end
   end
 
+
+  # change all bitly links to use ids
+
   # Stripe default referral for Stripe
   Referrrer.create_stripe_default  
 end
