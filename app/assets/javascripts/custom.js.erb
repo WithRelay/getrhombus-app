@@ -1,70 +1,70 @@
 $(document).ready(function () {  
 
-    // help change user controller to handle captured payments for signin
-    // help add tag_id to captured payments in signin and signup and in the forms
+  // help change user controller to handle captured payments for signin
+  // help add tag_id to captured payments in signin and signup and in the forms
 
-    var url = window.location, global_page_params = { num: '', amt: '' },
+  var url = window.location, global_page_params = { num: '', amt: '' },
 
-        cc_year, cc_month, cc_submit_btn, cc_btn_text, form_submission_handler,
-        create_user_submit = $('#create-user-submit'), create_user_form = $('#create-user-form'),
+      cc_year, cc_month, cc_submit_btn, cc_btn_text, form_submission_handler,
+      create_user_submit = $('#create-user-submit'), create_user_form = $('#create-user-form'),
 
-        REFUND_TXN_LINK, REFUND_BOX = $('#refundFormBox'),
-        chart_labels = [], chart_totals = [], chart_txns = [], 
-        contact_url = '/contact_forms.json', searchNumBtn = $('#searchNumberBtn');
-    
-    GetURLParameter();
-    $.ajaxSetup({ cache:false });
-    Stripe.setPublishableKey('<%= Rails.application.secrets.stripe["publishable_key"] %>');
+      REFUND_TXN_LINK, REFUND_BOX = $('#refundFormBox'),
+      chart_labels = [], chart_totals = [], chart_txns = [], 
+      contact_url = '/contact_forms.json', searchNumBtn = $('#searchNumberBtn');
+  
+  GetURLParameter();
+  $.ajaxSetup({ cache:false });
+  Stripe.setPublishableKey('<%= Rails.application.secrets.stripe["publishable_key"] %>');
 
-    // to prefill signup form or handle captured payments
-    // signin is included for when user texts payment and is prompted to sign in to complete account
-    // can use use form presence instead
-    if (["/signup", "/signin", "/users/sign_in", '/users', "/profile"].indexOf(url.pathname) != -1) {
-        var amt = validate_captured_amt(global_page_params['amt'])
-        
-        if (url.pathname == "/signup") {
-            document.getElementById('phone').value = global_page_params['num'];
-            hide_account_type(global_page_params['referrer']);
-        } else if (url.pathname == "/profile" && amt) {
-            cc_submit.prop('value', 'Save & Pay ' + (amt/100));   // on profile page show the amt in button
-        } else if (url.pathname == '/users') {
-            hide_account_type(document.getElementById('referrer').value);
-        }
-
-        if (amt) document.getElementById('captured_amt').value = amt;      
-    }
-    // to prefill signup form or handle captured payments
-    
-    function hide_account_type(referrer) {
-        if (referrer) {
-            $('#signupForm .selectpicker').val('0');
-            $('#signupForm .accountTypegroup').hide();
-            $("#signup_logo").replaceWith("<h2 class='referrer'>" + referrer + "</h2>");
-            $("#rhombusPower").removeClass('hide');
-        } else {
-            $("#rhombusPower").addClass('hide');
-        }
-    }
-
-    function validate_captured_amt(str) {
-      if (str.match(/^\d+$/)) {
-        str = parseInt(str);
-        if (str < 1500000) return str;
+  // to prefill signup form or handle captured payments
+  // signin is included for when user texts payment and is prompted to sign in to complete account
+  // can use form presence instead
+  if (["/signup", "/signin", "/users/sign_in", '/users', "/profile"].indexOf(url.pathname) != -1) {
+      var amt = validate_captured_amt(global_page_params['amt'])
+      
+      if (url.pathname == "/signup") {
+          document.getElementById('phone').value = global_page_params['num'];
+          hide_account_type(global_page_params['referrer']);
+      } else if (url.pathname == "/profile" && amt) {
+          cc_submit.prop('value', 'Save & Pay ' + (amt/100));   // on profile page show the amt in button
+      } else if (url.pathname == '/users') {
+          hide_account_type(document.getElementById('referrer').value);
       }
-      return false;
+
+      if (amt) document.getElementById('captured_amt').value = amt;      
+  }
+  // to prefill signup form or handle captured payments
+  
+  function hide_account_type(referrer) {
+      if (referrer) {
+          $('#signupForm .selectpicker').val('0');
+          $('#signupForm .accountTypegroup').hide();
+          $("#signup_logo").replaceWith("<h2 class='referrer'>" + referrer + "</h2>");
+          $("#rhombusPower").removeClass('hide');
+      } else {
+          $("#rhombusPower").addClass('hide');
+      }
+  }
+
+  function validate_captured_amt(str) {
+    if (str.match(/^\d+$/)) {
+      str = parseInt(str);
+      if (str < 1500000) return str;
     }
+    return false;
+  }
 
-    ///// toggle card/login info for user's profile
-    $('#next').click(function() {
-        $('#user-form').toggleClass('show');
-        $('#user-profile-form').toggleClass('show');
-    });
+  ///// toggle card/login info for user's profile
+  $('#next').click(function() {
+      $('#user-form').toggleClass('show');
+      $('#user-profile-form').toggleClass('show');
+  });
 
-    $('#Prev').click(function() {
-        $('#user-profile-form').toggleClass('show');
-        $('#user-form').toggleClass('show');
-    });
-    /////
+  $('#Prev').click(function() {
+      $('#user-profile-form').toggleClass('show');
+      $('#user-form').toggleClass('show');
+  });
+  /////
 
 
   function GetURLParameter() {
@@ -78,864 +78,863 @@ $(document).ready(function () {
     }
   }
 
-    // /* Sidebar Menu*/
-    $('.nav > li > a').click(function(){
-        if ($(this).attr('class') != 'active') {
-            $('.nav li ul').slideUp();
-            $(this).next().slideToggle();
-            $('.nav li a').removeClass('active');
-            $(this).addClass('active');
-        }
-    });
+  // /* Sidebar Menu*/
+  $('.nav > li > a').click(function(){
+      if ($(this).attr('class') != 'active') {
+          $('.nav li ul').slideUp();
+          $(this).next().slideToggle();
+          $('.nav li a').removeClass('active');
+          $(this).addClass('active');
+      }
+  });
 
-    /* Top Stats Show Hide */
-    /*$("#topstats").click(function(){
-        $(".topstats").slideToggle(100);
-    });*/
-
-
-    /* Sidebar Show-Hide On Mobile */
-    $(".sidebar-open-button-mobile").click(function(){
-        $(".sidebar").toggle(150);
-    });
+  /* Top Stats Show Hide */
+  /*$("#topstats").click(function(){
+      $(".topstats").slideToggle(100);
+  });*/
 
 
-    /* Sidebar Show-Hide */
-    $('.sidebar-open-button').on('click', function(){
-        if($('.sidebar').hasClass('hidden')){
-            $('.sidebar').removeClass('hidden');
-            $('.content').css({
-                'marginLeft' : 250
-            });  
-        }else{
-            $('.sidebar').addClass('hidden');
-            $('.content').css({
-                'marginLeft' : 0
-            });    
-        }
-    });
-    //
+  /* Sidebar Show-Hide On Mobile */
+  $(".sidebar-open-button-mobile").click(function(){
+      $(".sidebar").toggle(150);
+  });
 
-    /* ===========================================================
-    PANEL TOOLS
-    ===========================================================*/
-    /* Minimize */
-    $(".panel-tools .minimise-tool").click(function(event){
-        $(this).parents(".panel").find(".panel-body").slideToggle(100);
-        return false;
-    });  
 
-    /* Close */
-    /* $(".panel-tools .closed-tool").click(function(event){
-        $(this).parents(".panel").fadeToggle(400);
-        return false;
-    }); */
-    /* Search */
-    /*$(".panel-tools .search-tool").click(function(event){
-        $(this).parents(".panel").find(".panel-search").toggle(100);
-    }); */
+  /* Sidebar Show-Hide */
+  $('.sidebar-open-button').on('click', function(){
+      if($('.sidebar').hasClass('hidden')){
+          $('.sidebar').removeClass('hidden');
+          $('.content').css({
+              'marginLeft' : 250
+          });  
+      }else{
+          $('.sidebar').addClass('hidden');
+          $('.content').css({
+              'marginLeft' : 0
+          });    
+      }
+  });
+  //
 
-    /* expand */
-    $('.panel-tools .expand-tool').on('click', function(){
-        if($(this).parents(".panel").hasClass('panel-fullsize'))
-        {
-            $(this).parents(".panel").removeClass('panel-fullsize');
-        }
-        else
-        {
-            $(this).parents(".panel").addClass('panel-fullsize');
+  /* ===========================================================
+  PANEL TOOLS
+  ===========================================================*/
+  /* Minimize */
+  $(".panel-tools .minimise-tool").click(function(event){
+      $(this).parents(".panel").find(".panel-body").slideToggle(100);
+      return false;
+  });  
+
+  /* Close */
+  /* $(".panel-tools .closed-tool").click(function(event){
+      $(this).parents(".panel").fadeToggle(400);
+      return false;
+  }); */
+  /* Search */
+  /*$(".panel-tools .search-tool").click(function(event){
+      $(this).parents(".panel").find(".panel-search").toggle(100);
+  }); */
+
+  /* expand */
+  $('.panel-tools .expand-tool').on('click', function(){
+      if($(this).parents(".panel").hasClass('panel-fullsize'))
+      {
+          $(this).parents(".panel").removeClass('panel-fullsize');
+      }
+      else
+      {
+          $(this).parents(".panel").addClass('panel-fullsize');
+
+      }
+  });
  
-        }
-    });
-   
-    // for table slide dowm
-    function format ( d, element ) {
-        // `d` is the original data object for the row
-        var v, w, x, y, z;
-        x = '<div class="slider" style="padding: 0px 20px;">'+
-                '<table cellpadding="5" cellspacing="0" border="0">'+
-                    '<tr>'+
-                        '<td>Email:</td>'+
-                        '<td>'+ element.attr('data-email') +'</td>'+
-                    '</tr>';
-        if (element.attr('data-page') === 'transactions') {
-            y =     '<tr>' +
-                        '<td>Rhombus Txn #:</td>'+
-                        '<td>'+ element.attr('data-txn-num') +'</td>'+
-                    '</tr>'+
-                    '<tr>'+
-                        '<td>Time (ET):</td>'+
-                        '<td>'+ element.attr('data-time') +'</td>'+
-                    '</tr>'+
-                    '<tr>'+
-                        '<td>Stripe Txn #:</td>'+
-                        '<td>' + element[0].id + '</td>'+
-                    '</tr>'+
-                    '<tr>'+
-                        '<td>Taxes and Fees:</td>'+
-                        '<td>' + element.attr('data-tax') + '</td>'+
-                    '</tr>';
-            var level = $("#transactions-column").attr('data-level');
-            if (level === "0" || (level !== "0" && element.attr('data-status') === "Refunded")) {
-                v ='<tr>'+
-                        '<td>Status:</td>'+
-                        '<td>' + element.attr('data-status') + '</td>'+
-                    '</tr>';
-            } else {
-                v = '<tr>'+
-                        '<td><a class="refund_link" data-stripe-txn-num=' + element[0].id + ' >Refund transaction</a></td>'+
-                    '</tr>'
-            } 
-        } else {
-            z =     '<tr>'+
-                        '<td>Phone #:</td>'+
-                        '<td>' + element.attr('data-phone') + '</td>'+
-                    '</tr>'
-        }
+  // for table slide dowm
+  function format ( d, element ) {
+      // `d` is the original data object for the row
+      var v, w, x, y, z;
+      x = '<div class="slider" style="padding: 0px 20px;">'+
+              '<table cellpadding="5" cellspacing="0" border="0">'+
+                  '<tr>'+
+                      '<td>Email:</td>'+
+                      '<td>'+ element.attr('data-email') +'</td>'+
+                  '</tr>';
+      if (element.attr('data-page') === 'transactions') {
+          y =     '<tr>' +
+                      '<td>Rhombus Txn #:</td>'+
+                      '<td>'+ element.attr('data-txn-num') +'</td>'+
+                  '</tr>'+
+                  '<tr>'+
+                      '<td>Time (ET):</td>'+
+                      '<td>'+ element.attr('data-time') +'</td>'+
+                  '</tr>'+
+                  '<tr>'+
+                      '<td>Stripe Txn #:</td>'+
+                      '<td>' + element[0].id + '</td>'+
+                  '</tr>'+
+                  '<tr>'+
+                      '<td>Taxes and Fees:</td>'+
+                      '<td>' + element.attr('data-tax') + '</td>'+
+                  '</tr>';
+          var level = $("#transactions-column").attr('data-level');
+          if (level === "0" || (level !== "0" && element.attr('data-status') === "Refunded")) {
+              v ='<tr>'+
+                      '<td>Status:</td>'+
+                      '<td>' + element.attr('data-status') + '</td>'+
+                  '</tr>';
+          } else {
+              v = '<tr>'+
+                      '<td><a class="refund_link" data-stripe-txn-num=' + element[0].id + ' >Refund transaction</a></td>'+
+                  '</tr>'
+          } 
+      } else {
+          z =     '<tr>'+
+                      '<td>Phone #:</td>'+
+                      '<td>' + element.attr('data-phone') + '</td>'+
+                  '</tr>'
+      }
 
-        w = '</table>' + '</div>';
-        return (element.attr('data-page') === "transactions") ? x + y + v + w : x + z + w;
-    }
+      w = '</table>' + '</div>';
+      return (element.attr('data-page') === "transactions") ? x + y + v + w : x + z + w;
+  }
 
-    // for table slide dowm
-    var table = $('#transactions-table').DataTable({ 
-        'dom' : 't',
-        'order' : [],
-        "pageLength": 25
-    });
+  // for table slide dowm
+  var table = $('#transactions-table').DataTable({ 
+      'dom' : 't',
+      'order' : [],
+      "pageLength": 25
+  });
 
 
-    // Add event listener for opening and closing details
-    $('#transactions-table tbody').on('click', 'td.details-control', function () {
-        //$(this).addClass('');
-        var tr = $(this).closest('tr');
-        var row = table.row( tr );
-        if ( row.child.isShown() ) {
-            // This row is already open - close it
-            $('div.slider', row.child()).slideUp( function () {
-                row.child.hide();
-                tr.removeClass('shown');
-            } );
-        }
-        else {
-            // Open this row
-            row.child(format(row.data(), $(this)), 'no-padding').show();
-            tr.addClass('shown');
- 
-            $('div.slider', row.child()).slideDown();
-        }
-    });
-    //// end table slide down
+  // Add event listener for opening and closing details
+  $('#transactions-table tbody').on('click', 'td.details-control', function () {
+      //$(this).addClass('');
+      var tr = $(this).closest('tr');
+      var row = table.row( tr );
+      if ( row.child.isShown() ) {
+          // This row is already open - close it
+          $('div.slider', row.child()).slideUp( function () {
+              row.child.hide();
+              tr.removeClass('shown');
+          } );
+      }
+      else {
+          // Open this row
+          row.child(format(row.data(), $(this)), 'no-padding').show();
+          tr.addClass('shown');
+
+          $('div.slider', row.child()).slideDown();
+      }
+  });
+  //// end table slide down
 
 
-    // refresh page
-    $('#refresh').click( function() {
-        url.reload(true);
-    });
+  // refresh page
+  $('#refresh').click( function() {
+      url.reload(true);
+  });
 
 
-    // bootstrap -select plugin
-    $('#signupForm .selectpicker').selectpicker({
-        mobile: true,
-        width: "inherit"
-    });
-    $('#merchantProfile .selectpicker').selectpicker({
-        mobile: true
-    });
-    // bootstrap -select plugin
+  // bootstrap -select plugin
+  $('#signupForm .selectpicker').selectpicker({
+      mobile: true,
+      width: "inherit"
+  });
+  $('#merchantProfile .selectpicker').selectpicker({
+      mobile: true
+  });
+  // bootstrap -select plugin
 
 
-    // for 404 page...go back
-    $('#go-back').click(function(event) {
-        event.preventDefault();
-        window.history.back();
-    });
-    /////
+  // for 404 page...go back
+  $('#go-back').click(function(event) {
+      event.preventDefault();
+      window.history.back();
+  });
+  /////
 
 
-    // For phone number input field
-    var telInput = $("#phone");
-    telInput.intlTelInput({
-        nationalMode: true,
-        defaultCountry: "auto",
-        ipinfoToken: "ae79647534348f",
-        utilsScript: "<%= asset_path 'utils.js' %>" // just for formatting/placeholders etc
-    });
+  // For phone number input field
+  var telInput = $("#phone");
+  telInput.intlTelInput({
+      nationalMode: true,
+      defaultCountry: "auto",
+      ipinfoToken: "ae79647534348f",
+      utilsScript: "<%= asset_path 'utils.js' %>" // just for formatting/placeholders etc
+  });
 
    
-    // validate signin form
-    $('#signinForm')
-        .formValidation({
-            // I am validating Bootstrap form
-            framework: 'bootstrap',
-            live: 'disabled',
+  // validate signin form
+  $('#signinForm')
+      .formValidation({
+          // I am validating Bootstrap form
+          framework: 'bootstrap',
+          live: 'disabled',
 
-            // Feedback icons
-            /*icon: {
-                valid: 'fa fa-check',
-                invalid: 'fa fa-times',
-                validating: 'fa fa-refresh'
-            },*/
+          // Feedback icons
+          /*icon: {
+              valid: 'fa fa-check',
+              invalid: 'fa fa-times',
+              validating: 'fa fa-refresh'
+          },*/
 
-            // List of fields and their validation rules
-            fields: {
-                'user[email]': {
-                    verbose: false,
-                    row: '.group',
-                    validators: {
-                        notEmpty: {
-                            message: 'Your email is required'
-                        },
-                        emailAddress: {
-                            message: "The email isn't valid"
-                        },
-                        remote: {
-                            type: 'GET',
-                            url: 'https://api.mailgun.net/v2/address/validate?callback=?',
-                            crossDomain: true,
-                            name: 'address',
-                            data: {
-                                // Registry a Mailgun account and get a free API key
-                                // at https://mailgun.com/signup
-                                api_key: '<redacted_api_key>'
-                            },
-                            dataType: 'jsonp',
-                            validKey: 'is_valid',
-                            message: "The email isn't valid"
-                        }
-                    }
-                },
-                'user[password]': {
-                    row: '.group',
-                    validators: {
-                        notEmpty: {
-                            message: 'Your password is required'
-                        }
-                    }
-                }
-            }
-        })
-        .on('success.validator.fv', function(e, data) {
-            if (data.field === 'email' && data.validator === 'remote') {
-                var response = data.result;  // response is the result returned by MailGun API
-                if (response.did_you_mean) {
-                    // Update the message
-                    data.element                    // The field element
-                        .data('fv.messages')        // The message container
-                        .find('[data-fv-validator="remote"][data-fv-for="email"]')
-                        .html('Did you mean ' + response.did_you_mean + '?')
-                        .show();
-                }
-            }
-        })
-        .on('err.validator.fv', function(e, data) {
-            if (data.field === 'email' && data.validator === 'remote') {
-                // We need to reset the error message
-                data.element                // The field element
-                    .data('fv.messages')    // The message container
-                    .find('[data-fv-validator="remote"][data-fv-for="email"]')
-                    .html("The email isn't valid")
-                    .show();
-            }
-        })
-        .on('success.form.fv', function(e, data) {
-            // set referrer
-            if (global_page_params['referrer_id']) document.getElementById('referrer_id').value = global_page_params['referrer_id'];
-            if (global_page_params['referrer_uid']) document.getElementById('referrer_uid').value = global_page_params['referrer_uid'];
-            if (global_page_params['msg_id']) document.getElementById('msg_id').value = global_page_params['msg_id']; 
-            if (global_page_params['tag_id']) document.getElementById('tag_id').value = global_page_params['tag_id'];
-        });
-    ////
+          // List of fields and their validation rules
+          fields: {
+              'user[email]': {
+                  verbose: false,
+                  row: '.group',
+                  validators: {
+                      notEmpty: {
+                          message: 'Your email is required'
+                      },
+                      emailAddress: {
+                          message: "The email isn't valid"
+                      },
+                      remote: {
+                          type: 'GET',
+                          url: 'https://api.mailgun.net/v2/address/validate?callback=?',
+                          crossDomain: true,
+                          name: 'address',
+                          data: {
+                              // Registry a Mailgun account and get a free API key
+                              // at https://mailgun.com/signup
+                              api_key: '<redacted_api_key>'
+                          },
+                          dataType: 'jsonp',
+                          validKey: 'is_valid',
+                          message: "The email isn't valid"
+                      }
+                  }
+              },
+              'user[password]': {
+                  row: '.group',
+                  validators: {
+                      notEmpty: {
+                          message: 'Your password is required'
+                      }
+                  }
+              }
+          }
+      })
+      .on('success.validator.fv', function(e, data) {
+          if (data.field === 'email' && data.validator === 'remote') {
+              var response = data.result;  // response is the result returned by MailGun API
+              if (response.did_you_mean) {
+                  // Update the message
+                  data.element                    // The field element
+                      .data('fv.messages')        // The message container
+                      .find('[data-fv-validator="remote"][data-fv-for="email"]')
+                      .html('Did you mean ' + response.did_you_mean + '?')
+                      .show();
+              }
+          }
+      })
+      .on('err.validator.fv', function(e, data) {
+          if (data.field === 'email' && data.validator === 'remote') {
+              // We need to reset the error message
+              data.element                // The field element
+                  .data('fv.messages')    // The message container
+                  .find('[data-fv-validator="remote"][data-fv-for="email"]')
+                  .html("The email isn't valid")
+                  .show();
+          }
+      })
+      .on('success.form.fv', function(e, data) {
+          set_hidden_fields();
+      });
+  ////
 
 
-    // validate forgot password form
-    $('#ForgotPassword')
-        .formValidation({
-            // I am validating Bootstrap form
-            framework: 'bootstrap',
-            live: 'disabled',
-            // List of fields and their validation rules
-            fields: {
-                'user[email]': {
-                    verbose: false,
-                    row: '.group',
-                    validators: {
-                        notEmpty: {
-                            message: 'Your email is required'
-                        },
-                        emailAddress: {
-                            message: "The email isn't valid"
-                        },
-                        remote: {
-                            type: 'GET',
-                            url: 'https://api.mailgun.net/v2/address/validate?callback=?',
-                            crossDomain: true,
-                            name: 'address',
-                            data: {
-                                // Registry a Mailgun account and get a free API key
-                                // at https://mailgun.com/signup
-                                api_key: '<redacted_api_key>'
-                            },
-                            dataType: 'jsonp',
-                            validKey: 'is_valid',
-                            message: "The email isn't valid"
-                        }
-                    }
-                }
-            }
-        })
-        .on('success.validator.fv', function(e, data) {
-            if (data.field === 'email' && data.validator === 'remote') {
-                var response = data.result;  // response is the result returned by MailGun API
-                if (response.did_you_mean) {
-                    // Update the message
-                    data.element                    // The field element
-                        .data('fv.messages')        // The message container
-                        .find('[data-fv-validator="remote"][data-fv-for="email"]')
-                        .html('Did you mean ' + response.did_you_mean + '?')
-                        .show();
-                }
-            }
-        })
-        .on('err.validator.fv', function(e, data) {
-            if (data.field === 'email' && data.validator === 'remote') {
-                // We need to reset the error message
-                data.element                // The field element
-                    .data('fv.messages')    // The message container
-                    .find('[data-fv-validator="remote"][data-fv-for="email"]')
-                    .html("The email isn't valid")
-                    .show();
-            }
-        });
-    // validate forgot password form
+  // validate forgot password form
+  $('#ForgotPassword')
+      .formValidation({
+          // I am validating Bootstrap form
+          framework: 'bootstrap',
+          live: 'disabled',
+          // List of fields and their validation rules
+          fields: {
+              'user[email]': {
+                  verbose: false,
+                  row: '.group',
+                  validators: {
+                      notEmpty: {
+                          message: 'Your email is required'
+                      },
+                      emailAddress: {
+                          message: "The email isn't valid"
+                      },
+                      remote: {
+                          type: 'GET',
+                          url: 'https://api.mailgun.net/v2/address/validate?callback=?',
+                          crossDomain: true,
+                          name: 'address',
+                          data: {
+                              // Registry a Mailgun account and get a free API key
+                              // at https://mailgun.com/signup
+                              api_key: '<redacted_api_key>'
+                          },
+                          dataType: 'jsonp',
+                          validKey: 'is_valid',
+                          message: "The email isn't valid"
+                      }
+                  }
+              }
+          }
+      })
+      .on('success.validator.fv', function(e, data) {
+          if (data.field === 'email' && data.validator === 'remote') {
+              var response = data.result;  // response is the result returned by MailGun API
+              if (response.did_you_mean) {
+                  // Update the message
+                  data.element                    // The field element
+                      .data('fv.messages')        // The message container
+                      .find('[data-fv-validator="remote"][data-fv-for="email"]')
+                      .html('Did you mean ' + response.did_you_mean + '?')
+                      .show();
+              }
+          }
+      })
+      .on('err.validator.fv', function(e, data) {
+          if (data.field === 'email' && data.validator === 'remote') {
+              // We need to reset the error message
+              data.element                // The field element
+                  .data('fv.messages')    // The message container
+                  .find('[data-fv-validator="remote"][data-fv-for="email"]')
+                  .html("The email isn't valid")
+                  .show();
+          }
+      });
+  // validate forgot password form
 
 
-    // user profile forms
-    $('#user-profile-form')
-        .formValidation({
-            // I am validating Bootstrap form
-            framework: 'bootstrap',
-            live: 'disabled',
+  // user profile forms
+  $('#user-profile-form')
+      .formValidation({
+          // I am validating Bootstrap form
+          framework: 'bootstrap',
+          live: 'disabled',
 
-            // List of fields and their validation rules!
-            fields: {
-                'user[email]': {
-                    verbose: false,
-                    row: '.group',
-                    validators: {
-                        notEmpty: {
-                            message: 'Your email is required'
-                        },
-                        emailAddress: {
-                            message: "The email isn't valid"
-                        },
-                        remote: {
-                            type: 'GET',
-                            url: 'https://api.mailgun.net/v2/address/validate?callback=?',
-                            crossDomain: true,
-                            name: 'address',
-                            data: {
-                                // Registry a Mailgun account and get a free API key
-                                // at https://mailgun.com/signup
-                                api_key: '<redacted_api_key>'
-                            },
-                            dataType: 'jsonp',
-                            validKey: 'is_valid',
-                            message: "The email isn't valid"
-                        }
-                    }
-                },
-                'user[password]': {
-                    row: '.group',
-                    validators: {
-                        stringLength: {
-                            min: 8,
-                            message: 'Your password should be at least 8 characters'
-                        }
-                    }
-                },
-                'user[password_confirmation]': {
-                    row: '.group',
-                    validators: {
-                        identical: {
-                            field: 'newPassword',
-                            message: "The passwords don't match"
-                        }
-                    }
-                },
-                'user[phone]': {
-                    row: '.group',
-                    validators: {
-                        callback: {
-                            callback: function (value, validator, $field) {
-                                if (telInput.intlTelInput("isValidNumber")) {
-                                    return {
-                                        valid: true,    // or false
-                                        message: 'Valid number'
-                                    }
-                                } else {
-                                    return {
-                                        valid: false,    // or false
-                                        message: 'Enter a valid number'
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                'user[full_name]': { 
-                    row: '.group',
-                    validators: {
-                        notEmpty: {
-                            message: 'Your full name is required'
-                        }
-                    }
-                },
-                /// why did i put this here?????
-                /*
-                'user[current_password]': {
-                    row: '.group',
-                    validators: {
-                        notEmpty: {
-                            message: 'The password is required'
-                        },
-                        stringLength: {
-                            min: 8,
-                            message: 'Your password should be at least 8 characters'
-                        }
-                    }
-                },*/
-            }
-        })
-        .on('success.validator.fv', function(e, data) {
-            if (data.field === 'email' && data.validator === 'remote') {
-                var response = data.result;  // response is the result returned by MailGun API
-                if (response.did_you_mean) {
-                    // Update the message
-                    data.element                    // The field element
-                        .data('fv.messages')        // The message container
-                        .find('[data-fv-validator="remote"][data-fv-for="email"]')
-                        .html('Did you mean ' + response.did_you_mean + '?')
-                        .show();
-                }
-            }
-        })
-        .on('err.validator.fv', function(e, data) {
-            if (data.field === 'email' && data.validator === 'remote') {
-                // We need to reset the error message
-                data.element                // The field element
-                    .data('fv.messages')    // The message container
-                    .find('[data-fv-validator="remote"][data-fv-for="email"]')
-                    .html("The email isn't valid")
-                    .show();
-            }
-        })
-        .on('success.form.fv', function(e, data) {
-            set_number();
-            set_names();
-        });
-    ///
+          // List of fields and their validation rules!
+          fields: {
+              'user[email]': {
+                  verbose: false,
+                  row: '.group',
+                  validators: {
+                      notEmpty: {
+                          message: 'Your email is required'
+                      },
+                      emailAddress: {
+                          message: "The email isn't valid"
+                      },
+                      remote: {
+                          type: 'GET',
+                          url: 'https://api.mailgun.net/v2/address/validate?callback=?',
+                          crossDomain: true,
+                          name: 'address',
+                          data: {
+                              // Registry a Mailgun account and get a free API key
+                              // at https://mailgun.com/signup
+                              api_key: '<redacted_api_key>'
+                          },
+                          dataType: 'jsonp',
+                          validKey: 'is_valid',
+                          message: "The email isn't valid"
+                      }
+                  }
+              },
+              'user[password]': {
+                  row: '.group',
+                  validators: {
+                      stringLength: {
+                          min: 8,
+                          message: 'Your password should be at least 8 characters'
+                      }
+                  }
+              },
+              'user[password_confirmation]': {
+                  row: '.group',
+                  validators: {
+                      identical: {
+                          field: 'newPassword',
+                          message: "The passwords don't match"
+                      }
+                  }
+              },
+              'user[phone]': {
+                  row: '.group',
+                  validators: {
+                      callback: {
+                          callback: function (value, validator, $field) {
+                              if (telInput.intlTelInput("isValidNumber")) {
+                                  return {
+                                      valid: true,    // or false
+                                      message: 'Valid number'
+                                  }
+                              } else {
+                                  return {
+                                      valid: false,    // or false
+                                      message: 'Enter a valid number'
+                                  }
+                              }
+                          }
+                      }
+                  }
+              },
+              'user[full_name]': { 
+                  row: '.group',
+                  validators: {
+                      notEmpty: {
+                          message: 'Your full name is required'
+                      }
+                  }
+              },
+              /// why did i put this here?????
+              /*
+              'user[current_password]': {
+                  row: '.group',
+                  validators: {
+                      notEmpty: {
+                          message: 'The password is required'
+                      },
+                      stringLength: {
+                          min: 8,
+                          message: 'Your password should be at least 8 characters'
+                      }
+                  }
+              },*/
+          }
+      })
+      .on('success.validator.fv', function(e, data) {
+          if (data.field === 'email' && data.validator === 'remote') {
+              var response = data.result;  // response is the result returned by MailGun API
+              if (response.did_you_mean) {
+                  // Update the message
+                  data.element                    // The field element
+                      .data('fv.messages')        // The message container
+                      .find('[data-fv-validator="remote"][data-fv-for="email"]')
+                      .html('Did you mean ' + response.did_you_mean + '?')
+                      .show();
+              }
+          }
+      })
+      .on('err.validator.fv', function(e, data) {
+          if (data.field === 'email' && data.validator === 'remote') {
+              // We need to reset the error message
+              data.element                // The field element
+                  .data('fv.messages')    // The message container
+                  .find('[data-fv-validator="remote"][data-fv-for="email"]')
+                  .html("The email isn't valid")
+                  .show();
+          }
+      })
+      .on('success.form.fv', function(e, data) {
+          set_number();
+          set_names();
+      });
+  ///
 
 
-    // validate sign up form
-    $('#signupForm')
-        .find('[name="user[user_level]"]')
-            .selectpicker()
-            .change(function(e) {
-                $('#signupForm').formValidation('revalidateField', 'user[user_level]');
-            })
-            .end()
-        .formValidation({
-            // I am validating Bootstrap form
-            framework: 'bootstrap',
-            live: 'disabled',
-            // List of fields and their validation rules!
-            fields: {
-                'user[email]': {
-                    verbose: false,
-                    row: '.group',
-                    validators: {
-                        notEmpty: {
-                            message: 'Your email is required'
-                        },
-                        emailAddress: {
-                            message: "The email isn't valid"
-                        },
-                        remote: {
-                            type: 'GET',
-                            url: 'https://api.mailgun.net/v2/address/validate?callback=?',
-                            crossDomain: true,
-                            name: 'address',
-                            data: {
-                                // Registry a Mailgun account and get a free API key
-                                // at https://mailgun.com/signup
-                                api_key: '<redacted_api_key>'
-                            },
-                            dataType: 'jsonp',
-                            validKey: 'is_valid',
-                            message: "The email isn't valid"
-                        }
-                    }
-                },
-                'user[password]': {
-                    row: '.group',
-                    validators: {
-                        notEmpty: {
-                            message: 'The password is required'
-                        },
-                        stringLength: {
-                            min: 8,
-                            message: 'Your password should be at least 8 characters'
-                        }
-                    }
-                },
-                "user[password_confirmation]": {
-                    row: '.group',
-                    validators: {
-                        verbose: false,
-                        notEmpty: {
-                            message: 'The password confirmation is required'
-                        },
-                        identical: {
-                            field: 'password',
-                            message: "The passwords don't match"
-                        }
-                    }
-                },
-                'user[phone]': {
-                    row: '.group',
-                    validators: {
-                        callback: {
-                            callback: function (value, validator, $field) {
-                                if (telInput.intlTelInput("isValidNumber")) {
-                                    return {
-                                        valid: true,    // or false
-                                        message: 'Valid number'
-                                    }
-                                } else {
-                                    return {
-                                        valid: false,    // or false
-                                        message: 'Enter a valid number'
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                'user[user_level]': {
-                    row: '.form-group',
-                    validators: {
-                        notEmpty: {
-                            message: 'Please select an account'
-                        }
-                    }
-                }
-            }
-        })
-        .on('success.validator.fv', function(e, data) {
-            if (data.field === 'user[email]' && data.validator === 'remote') {
-                var response = data.result;  // response is the result returned by MailGun API
-                if (response.did_you_mean) {
-                    // Update the message
-                    data.element                    // The field element
-                        .data('fv.messages')        // The message container
-                        .find('[data-fv-validator="remote"][data-fv-for="user[email]"]')
-                        .html('Did you mean ' + response.did_you_mean + '?')
-                        .show();
-                }
-            }
-        })
-        .on('err.validator.fv', function(e, data) {
-            if (data.field === 'user[email]' && data.validator === 'remote') {
-                // We need to reset the error message
-                data.element                // The field element
-                    .data('fv.messages')    // The message container
-                    .find('[data-fv-validator="remote"][data-fv-for="user[email]"]')
-                    .html("The email isn't valid")
-                    .show();
-            }            
-        })
-        .on('success.form.fv', function(e, data) {
-            set_number();
-            // set referrer
-            if (global_page_params['referrer_id']) document.getElementById('referrer_id').value = global_page_params['referrer_id'];
-            if (global_page_params['referrer_uid']) document.getElementById('referrer_uid').value = global_page_params['referrer_uid'];
-            if (global_page_params['msg_id']) document.getElementById('msg_id').value = global_page_params['msg_id']; 
-            if (global_page_params['tag_id']) document.getElementById('tag_id').value = global_page_params['tag_id'];
-        });
+  // validate sign up form
+  $('#signupForm')
+      .find('[name="user[user_level]"]')
+          .selectpicker()
+          .change(function(e) {
+              $('#signupForm').formValidation('revalidateField', 'user[user_level]');
+          })
+          .end()
+      .formValidation({
+          // I am validating Bootstrap form
+          framework: 'bootstrap',
+          live: 'disabled',
+          // List of fields and their validation rules!
+          fields: {
+              'user[email]': {
+                  verbose: false,
+                  row: '.group',
+                  validators: {
+                      notEmpty: {
+                          message: 'Your email is required'
+                      },
+                      emailAddress: {
+                          message: "The email isn't valid"
+                      },
+                      remote: {
+                          type: 'GET',
+                          url: 'https://api.mailgun.net/v2/address/validate?callback=?',
+                          crossDomain: true,
+                          name: 'address',
+                          data: {
+                              // Registry a Mailgun account and get a free API key
+                              // at https://mailgun.com/signup
+                              api_key: '<redacted_api_key>'
+                          },
+                          dataType: 'jsonp',
+                          validKey: 'is_valid',
+                          message: "The email isn't valid"
+                      }
+                  }
+              },
+              'user[password]': {
+                  row: '.group',
+                  validators: {
+                      notEmpty: {
+                          message: 'The password is required'
+                      },
+                      stringLength: {
+                          min: 8,
+                          message: 'Your password should be at least 8 characters'
+                      }
+                  }
+              },
+              "user[password_confirmation]": {
+                  row: '.group',
+                  validators: {
+                      verbose: false,
+                      notEmpty: {
+                          message: 'The password confirmation is required'
+                      },
+                      identical: {
+                          field: 'password',
+                          message: "The passwords don't match"
+                      }
+                  }
+              },
+              'user[phone]': {
+                  row: '.group',
+                  validators: {
+                      callback: {
+                          callback: function (value, validator, $field) {
+                              if (telInput.intlTelInput("isValidNumber")) {
+                                  return {
+                                      valid: true,    // or false
+                                      message: 'Valid number'
+                                  }
+                              } else {
+                                  return {
+                                      valid: false,    // or false
+                                      message: 'Enter a valid number'
+                                  }
+                              }
+                          }
+                      }
+                  }
+              },
+              'user[user_level]': {
+                  row: '.form-group',
+                  validators: {
+                      notEmpty: {
+                          message: 'Please select an account'
+                      }
+                  }
+              }
+          }
+      })
+      .on('success.validator.fv', function(e, data) {
+          if (data.field === 'user[email]' && data.validator === 'remote') {
+              var response = data.result;  // response is the result returned by MailGun API
+              if (response.did_you_mean) {
+                  // Update the message
+                  data.element                    // The field element
+                      .data('fv.messages')        // The message container
+                      .find('[data-fv-validator="remote"][data-fv-for="user[email]"]')
+                      .html('Did you mean ' + response.did_you_mean + '?')
+                      .show();
+              }
+          }
+      })
+      .on('err.validator.fv', function(e, data) {
+          if (data.field === 'user[email]' && data.validator === 'remote') {
+              // We need to reset the error message
+              data.element                // The field element
+                  .data('fv.messages')    // The message container
+                  .find('[data-fv-validator="remote"][data-fv-for="user[email]"]')
+                  .html("The email isn't valid")
+                  .show();
+          }            
+      })
+      .on('success.form.fv', function(e, data) {
+          set_number();
+          set_hidden_fields();            
+      });
     // validate sign up form
 
+  function set_hidden_fields() {
+    if (global_page_params['referrer_id']) document.getElementById('referrer_id').value = global_page_params['referrer_id'];
+    if (global_page_params['referrer_uid']) document.getElementById('referrer_uid').value = global_page_params['referrer_uid'];
+    if (global_page_params['msg_id']) document.getElementById('msg_id').value = global_page_params['msg_id']; 
+    if (global_page_params['tag_id']) document.getElementById('tag_id').value = global_page_params['tag_id'];
+  }
 
-    // validate password change form    
-    $('#changePasswordForm')
-        .formValidation({
-            // I am validating Bootstrap form
-            framework: 'bootstrap',
-            live: 'disabled',
+  // validate password change form    
+  $('#changePasswordForm')
+      .formValidation({
+          // I am validating Bootstrap form
+          framework: 'bootstrap',
+          live: 'disabled',
 
-            // List of fields and their validation rules!
-            fields: {
-                'user[password]': {
-                    row: '.group',
-                    validators: {
-                        notEmpty: {
-                            message: 'The password is required'
-                        },
-                        stringLength: {
-                            min: 8,
-                            message: 'Your password should be at least 8 characters'
-                        }
-                    }
-                },
-                'user[password_confirmation]': {
-                    row: '.group',
-                    validators: {
-                        verbose: false,
-                        notEmpty: {
-                            message: 'The password confirmation is required'
-                        },
-                        identical: {
-                            field: 'password',
-                            message: "The passwords don't match"
-                        }
-                    }
-                }
-            }
-        });
+          // List of fields and their validation rules!
+          fields: {
+              'user[password]': {
+                  row: '.group',
+                  validators: {
+                      notEmpty: {
+                          message: 'The password is required'
+                      },
+                      stringLength: {
+                          min: 8,
+                          message: 'Your password should be at least 8 characters'
+                      }
+                  }
+              },
+              'user[password_confirmation]': {
+                  row: '.group',
+                  validators: {
+                      verbose: false,
+                      notEmpty: {
+                          message: 'The password confirmation is required'
+                      },
+                      identical: {
+                          field: 'password',
+                          message: "The passwords don't match"
+                      }
+                  }
+              }
+          }
+      });
 
 
-    // validate merchant profile
-    $('#merchantProfile')
-        .find('[name="user[org_category]"]')
-            .selectpicker()
-            .change(function(e) {
-                $('#merchantProfile').formValidation('revalidateField', 'user[org_category]');
-            })
-            .end()
-        .find('[name="user[country]"]')
-            .selectpicker()
-            .change(function(e) {
-                $('#merchantProfile').formValidation('revalidateField', 'user[country]');
-            })
-            .end()
-        .find('[name="user[currency]"]')
-            .selectpicker()
-            .change(function(e) {
-                $('#merchantProfile').formValidation('revalidateField', 'user[currency]');
-            })
-            .end()
-        .formValidation({
-            // I am validating Bootstrap form
-            framework: 'bootstrap',
-            live: 'disabled',
-            // List of fields and their validation rules!
-            fields: {
-                'user[email]': {
-                    verbose: false,
-                    row: '.form-group',
-                    validators: {
-                        notEmpty: {
-                            message: 'Your email is required'
-                        },
-                        emailAddress: {
-                            message: "The email isn't valid"
-                        },
-                        remote: {
-                            type: 'GET',
-                            url: 'https://api.mailgun.net/v2/address/validate?callback=?',
-                            crossDomain: true,
-                            name: 'address',
-                            data: {
-                                // Registry a Mailgun account and get a free API key
-                                // at https://mailgun.com/signup
-                                api_key: '<redacted_api_key>'
-                            },
-                            dataType: 'jsonp',
-                            validKey: 'is_valid',
-                            message: "The email isn't valid"
-                        }
-                    }
-                },
-                'user[password]': {
-                    row: '.form-group',
-                    validators: {
-                        stringLength: {
-                            min: 8,
-                            message: 'Your password should be at least 8 characters'
-                        }
-                    }
-                },
-                'user[password_confirmation]': {
-                    row: '.form-group',
-                    validators: {
-                        identical: {
-                            field: 'password',
-                            message: "The passwords don't match"
-                        }
-                    }
-                },
-                'user[phone]': {
-                    row: '.form-group',
-                    validators: {
-                        callback: {
-                            callback: function (value, validator, $field) {
-                                if (telInput.intlTelInput("isValidNumber")) {
-                                    return {
-                                        valid: true,    // or false
-                                        message: 'Valid number'
-                                    }
-                                } else {
-                                    return {
-                                        valid: false,    // or false
-                                        message: 'Enter a valid number'
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                'user[first_name]': {
-                    row: '.form-group',
-                    validators: {
-                        notEmpty: {
-                            message: 'Your first name is required'
-                        }
-                    }
-                },
-                'user[tax_percent]': {
-                    row: '.form-group',
-                    validators: {
-                        numeric: {
-                            message: 'Tax rate should be number'
-                        }
-                    }
-                },
-                'user[last_name]': {
-                    row: '.form-group',
-                    validators: {
-                        notEmpty: {
-                            message: 'Your last name is required'
-                        }
-                    }
-                },
-                'user[org_name]': {
-                    row: '.form-group',
-                    validators: {
-                        notEmpty: {
-                            message: 'Your business name is required'
-                        }
-                    }
-                },
-                'user[url]': {
-                    row: '.form-group',
-                    validators: {
-                        notEmpty: {
-                            message: 'Your website or social profile url is required'
-                        },
-                        uri: {
-                            message: 'The url is not valid (you might need to add http://)'
-                        }
-                    }
-                },
-                'user[org_category]': {
-                    row: '.form-group',
-                    validators: {
-                        notEmpty: {
-                            message: 'Please select a business type'
-                        }
-                    }
-                },
-                'user[street_address]': {
-                    row: '.form-group',
-                    validators: {
-                        notEmpty: {
-                            message: 'Your address is required'
-                        }
-                    }
-                },
-                'user[country]': {
-                    row: '.form-group',
-                    validators: {
-                        notEmpty: {
-                            message: 'Please select your country'
-                        }
-                    }
-                },
-                'user[currency]': {
-                    row: '.form-group',
-                    validators: {
-                        notEmpty: {
-                            message: 'Please select a currency'
-                        }
-                    }
-                },
-                'user[zip_code]': {
-                    row: '.form-group',
-                    validators: {
-                        notEmpty: {
-                            message: 'Please enter your zip code'
-                        }
-                    }
-                },/* if you need merchants to confirm password
-                'user[current_password]': {
-                    row: '.form-group',
-                    validators: {
-                        notEmpty: {
-                            message: 'Please re-enter your account password'
-                        }
-                    }
-                },*/
-                'user[city]': {
-                    row: '.form-group',
-                    validators: {
-                        notEmpty: {
-                            message: 'Please enter your city'
-                        }
-                    }
-                },
-                'user[state_province]': {
-                    row: '.form-group',
-                    validators: {
-                        notEmpty: {
-                            message: 'Please enter your state or province'
-                        }
-                    }
-                },
-            }
-        })
-        .on('success.validator.fv', function(e, data) {
-            if (data.field === 'email' && data.validator === 'remote') {
-                var response = data.result;  // response is the result returned by MailGun API
-                if (response.did_you_mean) {
-                    // Update the message
-                    data.element                    // The field element
-                        .data('fv.messages')        // The message container
-                        .find('[data-fv-validator="remote"][data-fv-for="email"]')
-                        .html('Did you mean ' + response.did_you_mean + '?')
-                        .show();
-                }
-            }
-        })
-        .on('err.validator.fv', function(e, data) {
-            if (data.field === 'email' && data.validator === 'remote') {
-                // We need to reset the error message
-                data.element                // The field element
-                    .data('fv.messages')    // The message container
-                    .find('[data-fv-validator="remote"][data-fv-for="email"]')
-                    .html("The email isn't valid")
-                    .show();
-            }
-        })
-        .on('success.form.fv', function(e, data) {
-            set_number(); 
-        });
-    // validate merchant profile form
+  // validate merchant profile
+  $('#merchantProfile')
+      .find('[name="user[org_category]"]')
+          .selectpicker()
+          .change(function(e) {
+              $('#merchantProfile').formValidation('revalidateField', 'user[org_category]');
+          })
+          .end()
+      .find('[name="user[country]"]')
+          .selectpicker()
+          .change(function(e) {
+              $('#merchantProfile').formValidation('revalidateField', 'user[country]');
+          })
+          .end()
+      .find('[name="user[currency]"]')
+          .selectpicker()
+          .change(function(e) {
+              $('#merchantProfile').formValidation('revalidateField', 'user[currency]');
+          })
+          .end()
+      .formValidation({
+          // I am validating Bootstrap form
+          framework: 'bootstrap',
+          live: 'disabled',
+          // List of fields and their validation rules!
+          fields: {
+              'user[email]': {
+                  verbose: false,
+                  row: '.form-group',
+                  validators: {
+                      notEmpty: {
+                          message: 'Your email is required'
+                      },
+                      emailAddress: {
+                          message: "The email isn't valid"
+                      },
+                      remote: {
+                          type: 'GET',
+                          url: 'https://api.mailgun.net/v2/address/validate?callback=?',
+                          crossDomain: true,
+                          name: 'address',
+                          data: {
+                              // Registry a Mailgun account and get a free API key
+                              // at https://mailgun.com/signup
+                              api_key: '<redacted_api_key>'
+                          },
+                          dataType: 'jsonp',
+                          validKey: 'is_valid',
+                          message: "The email isn't valid"
+                      }
+                  }
+              },
+              'user[password]': {
+                  row: '.form-group',
+                  validators: {
+                      stringLength: {
+                          min: 8,
+                          message: 'Your password should be at least 8 characters'
+                      }
+                  }
+              },
+              'user[password_confirmation]': {
+                  row: '.form-group',
+                  validators: {
+                      identical: {
+                          field: 'password',
+                          message: "The passwords don't match"
+                      }
+                  }
+              },
+              'user[phone]': {
+                  row: '.form-group',
+                  validators: {
+                      callback: {
+                          callback: function (value, validator, $field) {
+                              if (telInput.intlTelInput("isValidNumber")) {
+                                  return {
+                                      valid: true,    // or false
+                                      message: 'Valid number'
+                                  }
+                              } else {
+                                  return {
+                                      valid: false,    // or false
+                                      message: 'Enter a valid number'
+                                  }
+                              }
+                          }
+                      }
+                  }
+              },
+              'user[first_name]': {
+                  row: '.form-group',
+                  validators: {
+                      notEmpty: {
+                          message: 'Your first name is required'
+                      }
+                  }
+              },
+              'user[tax_percent]': {
+                  row: '.form-group',
+                  validators: {
+                      numeric: {
+                          message: 'Tax rate should be number'
+                      }
+                  }
+              },
+              'user[last_name]': {
+                  row: '.form-group',
+                  validators: {
+                      notEmpty: {
+                          message: 'Your last name is required'
+                      }
+                  }
+              },
+              'user[org_name]': {
+                  row: '.form-group',
+                  validators: {
+                      notEmpty: {
+                          message: 'Your business name is required'
+                      }
+                  }
+              },
+              'user[url]': {
+                  row: '.form-group',
+                  validators: {
+                      notEmpty: {
+                          message: 'Your website or social profile url is required'
+                      },
+                      uri: {
+                          message: 'The url is not valid (you might need to add http://)'
+                      }
+                  }
+              },
+              'user[org_category]': {
+                  row: '.form-group',
+                  validators: {
+                      notEmpty: {
+                          message: 'Please select a business type'
+                      }
+                  }
+              },
+              'user[street_address]': {
+                  row: '.form-group',
+                  validators: {
+                      notEmpty: {
+                          message: 'Your address is required'
+                      }
+                  }
+              },
+              'user[country]': {
+                  row: '.form-group',
+                  validators: {
+                      notEmpty: {
+                          message: 'Please select your country'
+                      }
+                  }
+              },
+              'user[currency]': {
+                  row: '.form-group',
+                  validators: {
+                      notEmpty: {
+                          message: 'Please select a currency'
+                      }
+                  }
+              },
+              'user[zip_code]': {
+                  row: '.form-group',
+                  validators: {
+                      notEmpty: {
+                          message: 'Please enter your zip code'
+                      }
+                  }
+              },/* if you need merchants to confirm password
+              'user[current_password]': {
+                  row: '.form-group',
+                  validators: {
+                      notEmpty: {
+                          message: 'Please re-enter your account password'
+                      }
+                  }
+              },*/
+              'user[city]': {
+                  row: '.form-group',
+                  validators: {
+                      notEmpty: {
+                          message: 'Please enter your city'
+                      }
+                  }
+              },
+              'user[state_province]': {
+                  row: '.form-group',
+                  validators: {
+                      notEmpty: {
+                          message: 'Please enter your state or province'
+                      }
+                  }
+              },
+          }
+      })
+      .on('success.validator.fv', function(e, data) {
+          if (data.field === 'email' && data.validator === 'remote') {
+              var response = data.result;  // response is the result returned by MailGun API
+              if (response.did_you_mean) {
+                  // Update the message
+                  data.element                    // The field element
+                      .data('fv.messages')        // The message container
+                      .find('[data-fv-validator="remote"][data-fv-for="email"]')
+                      .html('Did you mean ' + response.did_you_mean + '?')
+                      .show();
+              }
+          }
+      })
+      .on('err.validator.fv', function(e, data) {
+          if (data.field === 'email' && data.validator === 'remote') {
+              // We need to reset the error message
+              data.element                // The field element
+                  .data('fv.messages')    // The message container
+                  .find('[data-fv-validator="remote"][data-fv-for="email"]')
+                  .html("The email isn't valid")
+                  .show();
+          }
+      })
+      .on('success.form.fv', function(e, data) {
+          set_number(); 
+      });
+  // validate merchant profile form
 
    
   // Stripe form validator for CC form
   $('input#cc-number').payment('formatCardNumber');
   $('input#cc-exp').payment('formatCardExpiry');
   $('input#cc-csc').payment('formatCardCVC');
+  
   // tokenize card details
   function submit_to_stripe() {        
     Stripe.card.createToken({
@@ -963,9 +962,7 @@ $(document).ready(function () {
   }
   ///// End stripe form stuff
 
-  function preventDefault(e) {
-    e.preventDefault();
-  }
+  function preventDefault(e) { e.preventDefault(); }
 
   // validate credit card form
   $('#user-form')
