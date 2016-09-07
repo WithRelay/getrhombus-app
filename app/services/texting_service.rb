@@ -219,16 +219,6 @@ class TextingService
             },
           }
         },
-        ID: {
-          name: "Indonesia",
-          types: {
-            mobile: {
-              capabilities: ["sms", 'voice'],
-              reach: "global",
-              address_required: ""
-            },
-          }
-        },
         IL: {
           name: "Israel",
           types: {
@@ -280,7 +270,7 @@ class TextingService
           }
         },
         PR: {
-          name: "Puerto Rice",
+          name: "Puerto Rico",
           types: {
             local: {
               capabilities: ["sms", "voice"],
@@ -289,18 +279,16 @@ class TextingService
             },
           }
         },
-=begin
         ES: {
           name: "Spain",
           types: {  
             local: {
-              capabilities: ["sms", "voice"],
+              capabilities: ["sms"],
               reach: "domestic",
-              address_required: "local address"
+              address_required: ""
             },
           }
         },
-=end
         SE: {
           name: "Sweden",
           types: {

@@ -76,14 +76,12 @@ private
   end
 
   def user_params
-    params.require(:user).permit(:email, :password, :first_name, :last_name, :phone_number,
-      :card_name, :expiration_month, :expiration_year, :instrument_uri, :card_type, :street_address,
-      :state_province, :country, :user_level)
+    params.require(:user).permit()
   end
 
   def handle_referrer_and_welcome_email
-    Referrrer.save_referrer_with_id(params[:user][:referrer_id], current_user.id) if params[:user][:referrer_id]
-    Referrrer.save_referrer_with_uid(params[:user][:referrer_uid], current_user.id) if params[:user][:referrer_uid]
+    Referrer.save_referrer_with_id(session[:referrer_id], current_user.id) if session[:referrer_id].present?
+    Referrer.save_referrer_with_uid(session[:referrer_uid], current_user.id) if session[:referrer_uid].present?
     # Change this logic at some point
     #current_user.send_welcome_email if current_user.sign_in_count == 1
   end

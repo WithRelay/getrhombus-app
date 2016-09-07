@@ -19,20 +19,21 @@ class User < ActiveRecord::Base
   has_many :referrers, class_name: 'Referrer', foreign_key: 'referrer_id'
   has_many :referees, class_name: 'Referrer', foreign_key: 'referee_id'
 
-  # this goes away with conversation model
-  has_many :messages, dependent: :destroy
-  
+  has_many :messages, dependent: :destroy       # this goes away with conversation model
   has_many :hashtags, dependent: :destroy
+
   has_one :twitter_cred, dependent: :destroy
   has_one :alert, dependent: :destroy
 
   has_many :image_refs, as: :imageable, dependent: :destroy
   has_many :images, through: :image_refs
 
-  before_validation :the_titleizer
-  
-  # only create because the actual org_phone field is used in edit view
-  before_create :set_merchant_org_phone          
+  # A user can have belong to more than one list and also own multiple lists (Admins)
+  has_many :lists
+  has_many :customers, through: :customer_lists
+
+  before_validation :the_titleizer  
+  before_create :set_merchant_org_phone          # only create because the actual org_phone field is used in edit view
 
   after_commit :create_user_alert, on: :create, if: lambda { self.user_level == 1 }
   after_commit :update_phone_in_db, on: :update, if: lambda { self.previous_changes['phone_number'] && self.user_level == 0 }
@@ -42,13 +43,8 @@ class User < ActiveRecord::Base
   
   # why allow nil? not sure
   validates_uniqueness_of :phone_number, :allow_nil => true, :if => lambda { self.user_level == 0 }
-  
   # still need validation errors for edit..this is only for create action....just remove on create?
   #validates :phone_number, presence: true, numericality: { only_integer: true }, length: { minimum: 10 }, on: :create
-
-  # A user can have belong to more than one list and also own multiple lists (Admins)
-  has_many :lists
-  has_many :customers, through: :customer_lists
 
   # saves merchant info from stripe
   def save_stripe_omniauth_data(auth)

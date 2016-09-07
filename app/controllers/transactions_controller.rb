@@ -1,6 +1,6 @@
 class TransactionsController < ApplicationController
 	
-	before_action :set_transaction, only: [:show]	# , :edit, :update, :destroy]
+	before_action :set_transaction, only: [:show, :edit, :update, :destroy]
 
 	# why am I not authorizing user?
 	load_and_authorize_resource :except => [:download_csv]
@@ -28,10 +28,10 @@ class TransactionsController < ApplicationController
     def set_transaction
       @transaction = Transaction.find(params[:id])
     end
+
+    # Never trust parameters from the scary internet, only allow the white list through.
+    def transaction_params
+     params.require(:transaction).permit(:amount, :tax_percent)
+    end
+
 end
-
-
-# Never trust parameters from the scary internet, only allow the white list through.
-	#def transaction_params
-    # params.require(:transaction).permit(:amount, :tax_percent)
-    #end
