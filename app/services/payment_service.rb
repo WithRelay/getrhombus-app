@@ -6,12 +6,13 @@ class PaymentService
     def charge(amount_with_taxes, merchant, user, message, capture)
       begin
 
+
         # need to backward support merchant's with old connect account
         if x
           re = Stripe::Charge.create({
               amount: amount_with_taxes,
               currency: merchant.currency ? merchant.currency : "usd",
-              source: user.instrument_uri,
+              customer: customer_uri,
               capture: capture,
               description: "Payment from #{user.email}. Card name: #{user.card_name}. Last four: #{user.last_four}.",
               application_fee: 0,
@@ -23,17 +24,13 @@ class PaymentService
           re = Stripe::Charge.create({
             amount: amount_with_taxes, # in cents
             currency: merchant.currency ? merchant.currency : "usd",
-            source: user.instrument_uri,
+            customer: customer_uri,
             capture: capture,
-            description: "Payment from #{user.email}. Card name: #{user.card_name}. Last four: #{user.last_four}.",
-            
-            #############
-            destination: account_id,#merchant.stripe_access_token,
-            # statement_descriptor: '',
-            # application_fee: rhombus_fee
-            metadata: {
-              "message" => message
-            }            
+            description: "Payment from #{user.email}. Card name: #{user.card_name}. Last four: #{user.last_four}.",            
+            destination: uid,
+            # statement_descriptor: '', # we will set this here
+            # application_fee: rhombus_fee # from hash
+            metadata: { "message" => message }            
           })
         end
 

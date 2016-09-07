@@ -934,7 +934,7 @@ $(document).ready(function () {
   $('input#cc-number').payment('formatCardNumber');
   $('input#cc-exp').payment('formatCardExpiry');
   $('input#cc-csc').payment('formatCardCVC');
-  
+
   // tokenize card details
   function submit_to_stripe() {        
     Stripe.card.createToken({
@@ -1144,9 +1144,9 @@ $(document).ready(function () {
   });*/
 
   // character counter
-  $("#count_me").counter({
-      text: false,
-      goal: 150
+  $("#count_me").characterCounter({
+    //text: false, from old plugin...is this still in new plugin??
+    limit: '250'  
   });
 
 

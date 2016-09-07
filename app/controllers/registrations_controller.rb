@@ -3,15 +3,10 @@ class RegistrationsController < Devise::RegistrationsController
   include AdditionalUserActions
 
 	def update	
-    set_captured_payment_session
-    
-    if current_user.user_level == 0
-      response = current_user.add_token_to_stripe_customer(account_update_params)
-    else
-      response = current_user.update_merchant_account(account_update_params)
-    end
-
-   	if response == true
+    set_captured_payment_session    
+    re = current_user.add_token_to_stripe_customer(account_update_params)
+      
+   	if re == true
     	if current_user.update_without_password(devise_parameter_sanitizer.sanitize(:account_update))
     		set_flash_message :notice, :updated
     		# Sign in the current user bypassing validation in case his password changed

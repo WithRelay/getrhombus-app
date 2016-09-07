@@ -18,18 +18,15 @@
 //= require jquery
 //= require jquery_ujs
 
-//= require jquery.lightbox_me
-
 //= require pubnub/pubnub-angular.js
 
 //= require formValidation.min
 //= require bootstrap-formvalidator.min
 
-// remove these lines
-//= require intlTelInput.min.js
-//= require jquery.payment.js
+//= require jquery.lightbox_me
+//= require intlTelInput.min
 //= require jquery.charactercounter.js
-
+//= require jquery.payment.js
 
 //= require dashboard/messaging_angularjs/messagingApp.js
 //= require dashboard/messaging_angularjs/messagingControllers.js

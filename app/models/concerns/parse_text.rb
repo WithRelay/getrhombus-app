@@ -241,6 +241,7 @@ module ParseText
 
   def process_payment
       if not_repeating_payment?
+        # scope this to number
         customer_txn_id = Transaction.charge_customer_card(@amt_ary, @this_merchant, @this_user, @msg_text)
         @saved_msg.update(transaction_id: customer_txn_id) if @saved_msg && @saved_msg.id.present?   # Save transaction id
       end

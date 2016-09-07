@@ -223,6 +223,12 @@ class StripeEvent
         # Notify (admin)
       end
     end
+
+    # We supply pretty much all data except for additional_owners and document
+    # So that could be returned here in verification[:fields_needed]
+    # legal_entity.additional_owners legal_entity.verification.document
+    # legal_entity.additional_owners.#.verification.document (where # can be 0, 1, 2, or 3).
+    # external_account
     
   end
 end
