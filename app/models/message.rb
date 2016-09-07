@@ -12,13 +12,13 @@ class Message < ActiveRecord::Base
 
 	# belongs_to :user, counter_cache: true
 	
-	# For sending all text messages
+	# For sending and saving all outbound text messages
 	def self.send_and_save_message(from, to, message, media_url = "")		
 		begin
-			# save the outbound message
-			self.update_attributes(from: from, to: to, text: message, unread: false)			
+      msg = Message.new
+			msg.update_attributes(from: from, to: to, text: message, unread: false)			
 			if response = TextingService.send_sms(from, to, message, media_url)
-				self.update_attributes(status: response.status, message_id: response.sid, message_timestamp: response.date_updated, message_price: response.price, 
+				msg.update_attributes(status: response.status, message_id: response.sid, message_timestamp: response.date_updated, message_price: response.price, 
 					error_code: response.error_code, error_text: response.error_message, price_unit: response.price_unit, num_segments: response.num_segments)	
 			else
 				Notification.text_failure_notification(response, from, to, message).deliver_now           				# Notify marketplace owner of failure
@@ -32,11 +32,12 @@ class Message < ActiveRecord::Base
 	def self.send_and_save_message_nexmo(from, to, message)		
 		begin
 			# save the outbound message
-			self.update_attributes(from: from, to: to, text: message, unread: false)
+      msg = Message.new
+			msg.update_attributes(from: from, to: to, text: message, unread: false)
 			response = TextingService.send_sms_nexmo(from, to, message)
 
 			if response && response.code == 200 && response["messages"].first["status"] == "0"		
-				self.update_attributes(status: response['messages'].first['status'], message_id: response['messages'].first['message-id'],
+				msg.update_attributes(status: response['messages'].first['status'], message_id: response['messages'].first['message-id'],
 					message_price: response['messages'].first['message-price'], error_text: response['messages'].first['error-text'])
 			else			
 				Notification.text_failure_notification(response["messages"].first, from, to, message).deliver_now 				# Notify marketplace owner of failure

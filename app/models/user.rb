@@ -34,8 +34,6 @@ class User < ActiveRecord::Base
   # only create because the actual org_phone field is used in edit view
   before_create :set_merchant_org_phone          
 
-  # Just to prevent sending emails locally for now...remove comment later
-  # after_commit :send_welcome_email, on: :create
   after_commit :create_user_alert, on: :create, if: lambda { self.user_level == 1 }
   after_commit :update_phone_in_db, on: :update, if: lambda { self.previous_changes['phone_number'] && self.user_level == 0 }
 
@@ -173,20 +171,20 @@ class User < ActiveRecord::Base
     if self.user_level == 1
       EmailingService.send_welcome_email(self.email, owner.rhombus_number, "merchant")
     elsif self.user_level == 0
-      message = Message.new
-      unless self.referrer_num.blank?
-        referrer = User.find_by(rhombus_number: self.referrer_num)
-        EmailingService.send_welcome_email_with_referral(referrer.email, self.email, referrer.org_name, referrer.rhombus_number, owner.rhombus_number)
+      ref = self.referrers.first
+      unless ref.blank?
+        referrer = User.find_by(id: ref.referrer_id)
+        EmailingService.send_welcome_email_with_referral(ref.email, self.email, ref.org_name, ref.rhombus_number, owner.rhombus_number)
         text = "Thanks for signing up! Please add a payment card to your Rhombus profile (if you haven't done so). 
         You can chat with us anytime via sms or to make a payment, just text the amount & description/hashtag. Ex. +10 #donut"
-        message.send_and_save_message(referrer.rhombus_number, self.phone_number, text)
+        Message.send_and_save_message(ref.rhombus_number, self.phone_number, text)
         return
       end
       EmailingService.send_welcome_email(self.email, owner.rhombus_number, "customer")
       text = "Thanks for signing up! Please add a payment card to your Rhombus profile (if you haven't done so). 
       You can chat with a local business anytime by texting their Rhombus number or to make a payment, just text the amount & 
       description/hashtag. Ex. +10 #donut"
-      message.send_and_save_message(owner.rhombus_number, self.phone_number, text)
+      Message.send_and_save_message(owner.rhombus_number, self.phone_number, text)
     end
   end
 

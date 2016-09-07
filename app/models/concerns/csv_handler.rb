@@ -73,10 +73,7 @@ module CSVHandler
 
             # set user_level and password
             row[:user_level] = 0
-            row[:password] = Toolbox::StringGen.generate_random_string(8)
-            
-            # change this
-            ###row[:referrer_num] = self.rhombus_number
+            row[:password] = Toolbox::StringGen.generate_random_string(8)            
             row[:country].present? && row[:country] = row[:country].upcase
 
             # validate user data against db
@@ -87,7 +84,7 @@ module CSVHandler
               user = User.create(row)
             end
             
-            # check for errors
+            # check for errors from user.valid?
             if user.errors.messages.present? || error
               user.errors.messages.each do |k,v|
                 v.each do |r|
@@ -95,6 +92,8 @@ module CSVHandler
                 end
               end
             else
+              ref = Referrer.where(referrer_id: self.id, referee_id: user.id).first_or_initialize
+              ref.save
               # send email or text here
             end 
           end  

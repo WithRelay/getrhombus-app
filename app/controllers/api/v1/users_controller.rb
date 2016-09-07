@@ -22,16 +22,17 @@ class Api::V1::UsersController < API::V1::BaseController
 		    response = current_user.upload_customer_csv(params['csv'].tempfile)
 		    status = 200
 		  elsif params[:format] == 'json'		  	
-		  	if User.where(email: params[:user][:email]).present?
+		  	if u = User.where(email: params[:user][:email]).present?
 		  		response = "User already exists."	
 		  		status = 409	  	
 		  	else 
 		  		params[:user][:password] = Toolbox::StringGen.generate_random_string(8)
 		  		params[:user][:user_level] = 0
-		  		User.create(api_v1_user_params)
+		  		u = User.create(api_v1_user_params)
 		  		response = 'User created'
 		  		status = 200
-		  	end		  	
+		  	end
+        Referrer.save_referrer_with_id(current_user.id, u.id)		  	
 		  end
 		rescue StandardError => e
 			 response = 'Something went wrong on our end.'

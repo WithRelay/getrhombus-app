@@ -13,7 +13,7 @@ class UsersController < ApplicationController
   end
 
   def show
-    handle_referrer
+    handle_referrer_and_welcome_email
     if current_user.user_level == 0 && current_user.customer_uri.blank? # incomplete customer account
       redirect_to build_user_link
     elsif current_user.user_level == 1 && (current_user.org_name.blank? || current_user.rhombus_number.blank?) # incomplete merchant account
@@ -81,9 +81,11 @@ private
       :state_province, :country, :user_level)
   end
 
-  def handle_referrer
+  def handle_referrer_and_welcome_email
     Referrrer.save_referrer_with_id(params[:user][:referrer_id], current_user.id) if params[:user][:referrer_id]
     Referrrer.save_referrer_with_uid(params[:user][:referrer_uid], current_user.id) if params[:user][:referrer_uid]
+    # Change this logic at some point
+    #current_user.send_welcome_email if current_user.sign_in_count == 1
   end
 
 end
