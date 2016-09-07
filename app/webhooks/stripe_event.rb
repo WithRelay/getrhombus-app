@@ -30,7 +30,7 @@ class StripeEvent
       if @data = Subscription.includes(:notification_log).includes(:team)
                              .where("stripe_subscription_id = ? and notify_type = ?", @hash[:id], 'subscription_trial_will_end').first  
         
-        set_time_zone(@data.user.time_zone)        
+        set_time_zone(@data.team.time_zone)        
         update_subscription_data
 
         if @data.notification_log
@@ -45,9 +45,9 @@ class StripeEvent
     # Add if deleted and merchant canceled account, return twilio number
     def customer_subscription_deleted
       if false #@data = Subscription.includes(:notification_log).includes(:team)
-                                    .where("stripe_subscription_id = ? and notify_type = ?", @hash[:id], 'subscription_deleted').first  
+                                   # .where("stripe_subscription_id = ? and notify_type = ?", @hash[:id], 'subscription_deleted').first  
         
-        set_time_zone(@data.user.time_zone)        
+        set_time_zone(@data.team.time_zone)        
         update_subscription_data
         
         if @data.notification_log
@@ -131,7 +131,7 @@ class StripeEvent
 
         if subscription = Subscription.includes(:team).where(stripe_subscription_id: @hash[:lines][:data][0][:id]).first
           @data.team_id = subscription.team_id
-          set_time_zone(subscription.user.time_zone)
+          set_time_zone(subscription.team.time_zone)
         end
 
         if @hash[:discount].present? && coupon = Coupon.find_by(stripe_coupon_id: @hash[:discount][:coupon][:id])

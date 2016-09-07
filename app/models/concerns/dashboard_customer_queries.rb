@@ -13,13 +13,13 @@ module DashboardCustomerQueries
 
       UNION
 
-      (SELECT created_at, id, org_name, email, org_phone, 0 as total_spend, null as first_visit, 
+      (SELECT u.created_at, u.id, org_name, u.email, org_phone, 0 as total_spend, null as first_visit, 
       0 as avg_spend, null AS last_visit, rhombus_number, 0 AS last_30 
-      from users where rhombus_number = ? and id NOT IN (@users_ids))
+      from referrers r 
+      inner join users u on u.id = r.referrer_id 
+      where r.referee_id = ? and u.user_level = 1 and u.id NOT IN (@users_ids))
 
-      ORDER BY created_at DESC ", self.id, self.referrer_num])
-
-    # change referrer num query
+      ORDER BY created_at DESC ", self.id, self.id])
   end
 
   def get_customer_transactions
