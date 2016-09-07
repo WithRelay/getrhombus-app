@@ -101,7 +101,7 @@ class User < ActiveRecord::Base
     self.rhombus_number = number if number
     return number[0]
     # if successful create bitly link
-    # @user.short_url = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?referrer_id=#{@user.id}&referrer=#{@user.org_name}")
+    # @user.short_url = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?referrer_id=#{@user.id}")
   end
 
   # Returns hash with users who sent a message to the given merchant in the last "num_days" days

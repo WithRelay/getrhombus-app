@@ -16,10 +16,15 @@ task :move_referrer_num_to_referrer_table => :environment do
         Referrrer.save_referrer_with_id(ref.id, u.id)
       end
     end
+
+    # change all bitly links to use ids
+    # Notify the new mexican guy
+    if u.user_level == 1 && u.short_url.present?
+      u.short_url = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?referrer_id=#{u.id}")
+      u.save
+    end
+
   end
-
-
-  # change all bitly links to use ids
 
   # Stripe default referral for Stripe
   Referrrer.create_stripe_default  

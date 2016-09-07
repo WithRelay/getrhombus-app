@@ -18,9 +18,8 @@ $(document).ready(function () {
 
     // to prefill signup form or handle captured payments
     // signin is included for when user texts payment and is prompted to sign in to complete account
-
-    // use form presence and not url
-    if (["/signup", "/signin", '/users', "/profile"].indexOf(url.pathname) != -1) {
+    // can use use form presence instead
+    if (["/signup", "/signin", "/users/sign_in", '/users', "/profile"].indexOf(url.pathname) != -1) {
         var amt = validate_captured_amt(global_page_params['amt'])
         
         if (url.pathname == "/signup") {
