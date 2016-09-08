@@ -3,35 +3,39 @@ class PaymentService
   class << self
     
     # return array with txn status, error object, notify customer/merchant
-    def charge(amount_with_taxes, merchant, user, message, capture)
+    def charge(amount_with_taxes, merchant, user, message, capture, platform=false)
       begin
-
+        # This also add the customer to the connected account
+        
 
         # need to backward support merchant's with old connect account
-        if x
+        if x          
+          tkn = Stripe::Token.create({ customer: hash[:customer_uri] }, { stripe_account: stripe_account_uid })
           re = Stripe::Charge.create({
               amount: amount_with_taxes,
               currency: merchant.currency ? merchant.currency : "usd",
-              customer: customer_uri,
+              source: tkn,
               capture: capture,
               description: "Payment from #{user.email}. Card name: #{user.card_name}. Last four: #{user.last_four}.",
               application_fee: 0,
-              metadata: {
-                "message" => message
-              }  
-            }, { stripe_account: CONNECTED_STRIPE_ACCOUNT_ID })
+              metadata: { "message" => message }  
+            }, { stripe_account: hash[:uid] })
         else
+
           re = Stripe::Charge.create({
-            amount: amount_with_taxes, # in cents
-            currency: merchant.currency ? merchant.currency : "usd",
-            customer: customer_uri,
-            capture: capture,
-            description: "Payment from #{user.email}. Card name: #{user.card_name}. Last four: #{user.last_four}.",            
-            destination: uid,
-            # statement_descriptor: '', # we will set this here
-            # application_fee: rhombus_fee # from hash
-            metadata: { "message" => message }            
-          })
+              amount: amount_with_taxes, # in cents
+              currency: merchant.currency ? merchant.currency : "usd",
+              customer: hash[:customer_uri],
+              capture: capture,
+              description: "Payment from #{user.email}. Card name: #{user.card_name}. Last four: #{user.last_four}.",            
+              
+              # this should not be here for platform############
+              destination: hash[:uid],    
+
+              # statement_descriptor: '', # we will set this here
+              # application_fee: rhombus_fee # from hash
+              metadata: { "message" => message }            
+            })
         end
 
         [re]
@@ -45,10 +49,15 @@ class PaymentService
     end
 
     # returns array with refund status, error object
-    def refund_charge(charge_id, stripe_account_uid)
+    def refund_charge(charge_id, stripe_account_uid, platform=false)
       begin
         # need to check if i can refund transaction created prior to managed accounts    
-        ch = Stripe::Charge.retrieve(charge_id, stripe_account: stripe_account_uid)
+        if platform
+          ch = Stripe::Charge.retrieve(hash[:charge_id]) 
+        else
+          ch = Stripe::Charge.retrieve(hash[:charge_id], stripe_account: hash[:uid])
+        end
+
         re = ch.refunds.create(refund_application_fee: true, reverse_transfer: true)
         [re]
       rescue Stripe::StripeError => e
@@ -59,9 +68,19 @@ class PaymentService
       end 
     end
 
-    def create_subscription(hash, stripe_account_uid)
+    # must check that customer has a card on file first
+    def create_subscription(hash, stripe_account_uid, platform=false)
       begin
-        re = Stripe::Subscription.create(hash, { stripe_account: stripe_account_uid })  
+        if platform
+          tkn = Stripe::Token.create({ customer: hash[:customer_uri] })
+          hash[:source] = tkn
+          re = Stripe::Subscription.create(hash)  
+        else
+          tkn = Stripe::Token.create({ customer: hash[:customer_uri] }, { stripe_account: stripe_account_uid })
+          hash[:source] = tkn
+          re = Stripe::Subscription.create(hash, { stripe_account: stripe_account_uid })  
+        end
+
         [re]
       rescue Stripe::StripeError => e
         # Display a very generic error to the user, and maybe send yourself an email
@@ -71,10 +90,14 @@ class PaymentService
       end
     end
     
-    def create_plan(hash, stripe_account_uid)
+    def create_plan(hash, stripe_account_uid, platform=false)
       begin
-        # will calling it this way for rhombus itself work
-       # re = Stripe::Plan.create(hash, { stripe_account: stripe_account_uid })  
+        if platform
+          ch = Stripe::Plan.create(hash)   
+        else
+          ch = Stripe::Plan.create(hash, { stripe_account: stripe_account_uid })  
+        end
+
         [re]
       rescue Stripe::StripeError => e
         # Display a very generic error to the user, and maybe send yourself an email
@@ -112,10 +135,9 @@ class PaymentService
       end
     end
 
-    def create_coupon(hash, stripe_account_uid)
+    def create_coupon(hash)
       begin
-        # will calling it this way for rhombus itself work
-        #re = Stripe::Coupon.create(hash, { stripe_account: stripe_account_uid })  
+        re = Stripe::Coupon.create(hash)        # stripe_account param not needed for platform and only platform create coupons for now
         [re]
       rescue Stripe::StripeError => e
         # Display a very generic error to the user, and maybe send yourself an email

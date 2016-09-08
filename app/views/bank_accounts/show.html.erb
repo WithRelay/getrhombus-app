@@ -1,0 +1,44 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Stripe bank account:</strong>
+  <%= @bank_account.stripe_bank_account_id %>
+</p>
+
+<p>
+  <strong>Country:</strong>
+  <%= @bank_account.country %>
+</p>
+
+<p>
+  <strong>Bank name:</strong>
+  <%= @bank_account.bank_name %>
+</p>
+
+<p>
+  <strong>Routing number:</strong>
+  <%= @bank_account.routing_number %>
+</p>
+
+<p>
+  <strong>Last4:</strong>
+  <%= @bank_account.last4 %>
+</p>
+
+<p>
+  <strong>Currency:</strong>
+  <%= @bank_account.currency %>
+</p>
+
+<p>
+  <strong>Status:</strong>
+  <%= @bank_account.status %>
+</p>
+
+<p>
+  <strong>Default for currency:</strong>
+  <%= @bank_account.default_for_currency %>
+</p>
+
+<%= link_to 'Edit', edit_bank_account_path(@bank_account) %> |
+<%= link_to 'Back', bank_accounts_path %>

@@ -60,16 +60,16 @@ class User < ActiveRecord::Base
 
   # Create or update customer on Stripe
   def add_token_to_stripe_customer(params)
-    if params[:instrument_uri].present?  # is this why i get the errors from stripe??
+    if params[:stripe_token].present?  # is this why i get the errors from stripe??
       begin 
         if self.customer_uri.blank?                                     # Doesnt have a customer uri => first time
-          cu = Stripe::Customer.create(email: self.email, source: params[:instrument_uri])         
+          cu = Stripe::Customer.create(email: self.email, source: params[:stripe_token])         
           self.customer_uri = cu.id
           self.stripe_livemode = cu.livemode
         else
           cu = Stripe::Customer.retrieve(self.customer_uri)  
           cu.email = self.email
-          cu.source = params[:instrument_uri]
+          cu.source = params[:stripe_token]
           cu.save   
         end
         buy_merchant_number if self.user_level == 1 && self.rhombus_number_type == nil

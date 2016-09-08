@@ -56,7 +56,7 @@ class ApplicationController < ActionController::Base
           :password, :user_level, :is_active ) }
       devise_parameter_sanitizer.for(:sign_in) { |u| u.permit(:email, :password) }
       devise_parameter_sanitizer.for(:account_update) { |u| u.permit(:email, #:current_password, 
-        :password, :password_confirmation, :instrument_uri, :last_four, 
+        :password, :password_confirmation, :stripe_token, :last_four, 
         :expiration_month,  :expiration_year, :card_name, :card_type, 
         :rhombus_number, :update_rhombus_number,
         :phone_number, :org_name, :org_category, :street_address, :city, 

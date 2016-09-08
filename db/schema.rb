@@ -11,7 +11,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160907010940) do
+ActiveRecord::Schema.define(version: 20160908000706) do
+
+  create_table "addresses", force: :cascade do |t|
+    t.string   "street_address",   limit: 191
+    t.string   "city",             limit: 191
+    t.string   "state_province",   limit: 191
+    t.string   "country",          limit: 191
+    t.string   "postal_code",      limit: 191
+    t.integer  "addressable_id",   limit: 4
+    t.string   "addressable_type", limit: 191
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+  end
+
+  add_index "addresses", ["addressable_type", "addressable_id"], name: "index_addresses_on_addressable_type_and_addressable_id", using: :btree
 
   create_table "alerts", force: :cascade do |t|
     t.boolean  "send_alert",  limit: 1,   default: true
@@ -24,6 +38,24 @@ ActiveRecord::Schema.define(version: 20160907010940) do
   end
 
   add_index "alerts", ["user_id"], name: "fk_rails_6637a8d260", using: :btree
+
+  create_table "bank_accounts", force: :cascade do |t|
+    t.string   "stripe_bank_account_id", limit: 191
+    t.string   "country",                limit: 191
+    t.string   "bank_name",              limit: 191
+    t.string   "routing_number",         limit: 191
+    t.string   "last4",                  limit: 191
+    t.string   "currency",               limit: 191
+    t.string   "status",                 limit: 191
+    t.boolean  "default_for_currency",   limit: 1
+    t.boolean  "livemode",               limit: 1
+    t.string   "fingerprint",            limit: 191
+    t.integer  "user_id",                limit: 4
+    t.datetime "created_at",                         null: false
+    t.datetime "updated_at",                         null: false
+  end
+
+  add_index "bank_accounts", ["stripe_bank_account_id"], name: "index_bank_accounts_on_stripe_bank_account_id", using: :btree
 
   create_table "conversation_refs", force: :cascade do |t|
     t.integer  "textable_id",     limit: 4
@@ -261,6 +293,21 @@ ActiveRecord::Schema.define(version: 20160907010940) do
   end
 
   add_index "open_cnam_data", ["phone_number"], name: "index_open_cnam_data_on_phone_number", unique: true, using: :btree
+
+  create_table "people", force: :cascade do |t|
+    t.string   "first_name",    limit: 191
+    t.string   "last_name",     limit: 191
+    t.string   "role",          limit: 191
+    t.string   "dob",           limit: 191
+    t.string   "last4",         limit: 191
+    t.string   "stripe_pii_id", limit: 191
+    t.boolean  "livemode",      limit: 1
+    t.integer  "user_id",       limit: 4
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+  end
+
+  add_index "people", ["stripe_pii_id"], name: "index_people_on_stripe_pii_id", using: :btree
 
   create_table "plans", force: :cascade do |t|
     t.integer  "amount",               limit: 4
