@@ -8,7 +8,7 @@ class Api::V1::UsersController < API::V1::BaseController
 					  SELECT user_id_to as usersID FROM messages where messages.user_id = ? 
 					) t1
 					inner join users on t1.usersID = users.id where lower(card_name) LIKE concat('%', ?, '%') or 
-					phone_number like concat('%', ?, '%') and stripe_token is not null", current_user.id, current_user.id, params[:query].downcase, params[:query] ])
+					phone_number like concat('%', ?, '%') and card_token is not null", current_user.id, current_user.id, params[:query].downcase, params[:query] ])
 
 		results = User.connection.select_all(sql)
 		results = results.map { |u| { phone_number: u["phone_number"], card_name: u['card_name'] } }
@@ -45,7 +45,7 @@ class Api::V1::UsersController < API::V1::BaseController
 
   def api_v1_user_params
     params.require(:user).permit(:email, :password, :first_name, :last_name, :phone_number,
-      :card_name, :expiration_month, :expiration_year, :stripe_token, :card_type, :street_address,
+      :card_name, :expiration_month, :expiration_year, :card_token, :card_type, :street_address,
       :state_province, :country, :user_level)
   end
 

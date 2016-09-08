@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160908000706) do
+ActiveRecord::Schema.define(version: 20160908002258) do
 
   create_table "addresses", force: :cascade do |t|
     t.string   "street_address",   limit: 191
@@ -405,7 +405,7 @@ ActiveRecord::Schema.define(version: 20160908000706) do
     t.string   "description",                        limit: 191
     t.string   "status",                             limit: 191
     t.string   "txn_available_at",                   limit: 191
-    t.string   "last_four",                          limit: 191
+    t.string   "last4",                              limit: 191
     t.string   "exp_month",                          limit: 191
     t.string   "exp_year",                           limit: 191
     t.string   "card_type",                          limit: 191
@@ -481,32 +481,36 @@ ActiveRecord::Schema.define(version: 20160908000706) do
     t.datetime "updated_at"
     t.integer  "user_level",             limit: 4
     t.string   "customer_uri",           limit: 191
-    t.string   "last_four",              limit: 191
-    t.string   "expiration_month",       limit: 191
-    t.string   "expiration_year",        limit: 191
+    t.string   "card_token",             limit: 191
+    t.string   "livemode",               limit: 191
+    t.string   "last4",                  limit: 191
+    t.string   "exp_month",              limit: 191
+    t.string   "exp_year",               limit: 191
     t.string   "card_name",              limit: 191
     t.string   "card_type",              limit: 191
     t.string   "phone_number",           limit: 191
     t.string   "org_name",               limit: 191
     t.string   "org_type",               limit: 191
     t.string   "org_category",           limit: 191
+    t.string   "org_phone",              limit: 191
+    t.string   "org_tax_id",             limit: 191
     t.string   "street_address",         limit: 191
     t.string   "city",                   limit: 191
     t.string   "state_province",         limit: 191
-    t.string   "org_phone",              limit: 191
     t.string   "country",                limit: 191
+    t.text     "description",            limit: 65535
+    t.string   "use_rhombus_for",        limit: 191
     t.string   "rhombus_number",         limit: 191
-    t.string   "rhombus_number_type",    limit: 191
+    t.string   "rn_type",                limit: 191
+    t.string   "rn_country",             limit: 191
     t.string   "tax_percent",            limit: 191
     t.integer  "transactions_count",     limit: 4
-    t.string   "instrument_uri",         limit: 191
     t.string   "zip_code",               limit: 191
     t.string   "provider",               limit: 191
     t.string   "uid",                    limit: 191
     t.string   "stripe_access_token",    limit: 191
     t.string   "stripe_publishable_key", limit: 191
     t.string   "stripe_scope",           limit: 191
-    t.string   "stripe_livemode",        limit: 191
     t.string   "stripe_refresh_token",   limit: 191
     t.string   "first_name",             limit: 191
     t.string   "last_name",              limit: 191

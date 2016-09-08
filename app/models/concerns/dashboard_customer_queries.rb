@@ -24,7 +24,7 @@ module DashboardCustomerQueries
 
   def get_customer_transactions
     Transaction.find_by_sql([
-      "SELECT users.org_name, users.email, users.rhombus_number, transactions.last_four, transactions.notes, 
+      "SELECT users.org_name, users.email, users.rhombus_number, transactions.last4, transactions.notes, 
         transactions.amount_less_fees, t.created_at, users.org_phone, transactions.transaction_number,
         transactions.transaction_uri, transactions.tax_percent, refunds.id as refund_id
         FROM transactions t

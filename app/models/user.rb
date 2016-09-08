@@ -10,27 +10,31 @@ class User < ActiveRecord::Base
   # :token_authenticatable, :lockable, :timeoutable and :confirmable,
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable, :omniauthable
 
-  has_many :transactions, dependent: :destroy
+  has_many :transactions
   has_many :team_transactions, class_name: 'Transaction', foreign_key: 'team_id'
   
-  has_many :subscriptions, dependent: :destroy
+  has_many :subscriptions
   has_many :team_subscriptions, class_name: 'Subscription', foreign_key: 'team_id'
 
   has_many :referrers, class_name: 'Referrer', foreign_key: 'referrer_id'
   has_many :referees, class_name: 'Referrer', foreign_key: 'referee_id'
 
-  has_many :messages, dependent: :destroy       # this goes away with conversation model
-  has_many :hashtags, dependent: :destroy
+  has_many :messages      # this goes away with conversation model
+  has_many :hashtags
 
-  has_one :twitter_cred, dependent: :destroy
+  has_one :twitter_cred
   has_one :alert, dependent: :destroy
 
-  has_many :image_refs, as: :imageable, dependent: :destroy
+  has_many :image_refs, as: :imageable
   has_many :images, through: :image_refs
 
   # A user can have belong to more than one list and also own multiple lists (Admins)
   has_many :lists
   has_many :customers, through: :customer_lists
+
+  has_many :people
+  has_many :bank_accounts
+  has_one :address, as: :addressable
 
   before_validation :the_titleizer  
   before_create :set_merchant_org_phone          # only create because the actual org_phone field is used in edit view
@@ -53,26 +57,26 @@ class User < ActiveRecord::Base
     self.stripe_access_token = auth.credentials.token
     self.stripe_publishable_key = auth.info.stripe_publishable_key
     self.stripe_scope = auth.info.scope
-    self.stripe_livemode = auth.info.livemode
+    self.livemode = auth.info.livemode
     return true if self.save
     return false
   end
 
   # Create or update customer on Stripe
   def add_token_to_stripe_customer(params)
-    if params[:stripe_token].present?  # is this why i get the errors from stripe??
+    if params[:card_token].present?  # is this why i get the errors from stripe??
       begin 
         if self.customer_uri.blank?                                     # Doesnt have a customer uri => first time
-          cu = Stripe::Customer.create(email: self.email, source: params[:stripe_token])         
+          cu = Stripe::Customer.create(email: self.email, source: params[:card_token])         
           self.customer_uri = cu.id
-          self.stripe_livemode = cu.livemode
+          self.livemode = cu.livemode
         else
           cu = Stripe::Customer.retrieve(self.customer_uri)  
           cu.email = self.email
-          cu.source = params[:stripe_token]
+          cu.source = params[:card_token]
           cu.save   
         end
-        buy_merchant_number if self.user_level == 1 && self.rhombus_number_type == nil
+        buy_merchant_number if self.user_level == 1 && self.rn_type == nil
         return true
       rescue Stripe::CardError => e
         # Since it's a decline, Stripe::CardError will be caught
@@ -93,7 +97,7 @@ class User < ActiveRecord::Base
   def buy_merchant_number
     # save the area code in rhombus number till a number is bought
     #number = TextingService.buy_number(self.rhombus_number])
-    #self.rhombus_number_type = number if number
+    #self.rn_type = number if number
     self.rhombus_number = number if number
     return number[0]
     # if successful create bitly link

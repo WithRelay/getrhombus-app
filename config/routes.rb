@@ -49,12 +49,16 @@ Rails.application.routes.draw  do
     resources :subscriptions, except: [:show, :edit, :update]
     resources :plans, only: [:create, :index, :new]
     resources :alerts, only: [:update]
+    resources :bank_accounts
+    resources :addresses
+    resources :people
     # Only admins can create coupons
     resources :coupons, :constraints => lambda { |req| 
       req.env['warden'].authenticated? and req.env['warden'].user.email == '<redacted_email>' #Rails.application.secrets.dashboard_email 
     }
     
     member do
+      get 'managed-account' => 'users#managed_account'
       get 'messaging' => 'users#messaging'
       get 'contacts' => 'users#contacts' #(both customers or merchants)
       get 'json_get_latest_active_messaging' => 'users#json_get_latest_active_messaging'

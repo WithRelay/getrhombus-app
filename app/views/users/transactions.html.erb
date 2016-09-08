@@ -85,7 +85,7 @@
     	                <td><%= t.notes %></td>
     	                <td><%= (current_user.user_level == 0) ? t.org_phone : t.phone_number %></td>
     	                <td><%= (current_user.user_level == 0) ? t.rhombus_number : t.amount_less_fees %></td>
-    	                <td><%= t.last_four %></td>
+    	                <td><%= t.last4 %></td>
     	              </tr>
     	            <% end %>
                 </tbody>

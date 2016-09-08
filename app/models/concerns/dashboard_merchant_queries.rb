@@ -27,7 +27,7 @@ module DashboardMerchantQueries
 
 	def get_merchant_transactions
 		Transaction.find_by_sql([
-			"SELECT users.card_name, users.email, transactions.created_at, transactions.last_four, transactions.notes, 
+			"SELECT users.card_name, users.email, transactions.created_at, transactions.last4, transactions.notes, 
 			 transactions.amount_less_fees, users.phone_number, transactions.transaction_number, transactions.transaction_uri, 
 			  transactions.tax_percent, refunds.id as refund_id
 				FROM transactions 

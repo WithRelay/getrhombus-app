@@ -86,7 +86,7 @@ class StripeEvent
       @data.trial_start = @hash[:trial_start]
       @data.trial_end = @hash[:trial_end]
       @data.status = @hash[:status]
-      @data.stripe_livemode = @hash[:stripe_livemode]
+      @data.livemode = @hash[:livemode]
       @data.save
     end
 
@@ -185,7 +185,7 @@ class StripeEvent
                       # At the moment, charge will only contain 1 line item, what if there are a couple line items?
                       txn_uri: @hash[:charge], tax_percent: @hash[:tax_percent], amount_less_fees: amount_less_fees, 
                       amount_with_taxes: amount_with_taxes, txn_number: txn_number, 
-                      status: 1, last_four: charge.source.last4, 
+                      status: 1, last4: charge.source.last4, 
                       exp_month: charge.source.exp_month, exp_year: charge.source.exp_year,
                       card_type: charge.source.brand, card_name: charge.source.name,
                       destination: charge.destination, captured: charge.captured )

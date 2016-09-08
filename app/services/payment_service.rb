@@ -16,7 +16,7 @@ class PaymentService
               currency: merchant.currency ? merchant.currency : "usd",
               source: tkn,
               capture: capture,
-              description: "Payment from #{user.email}. Card name: #{user.card_name}. Last four: #{user.last_four}.",
+              description: "Payment from #{user.email}. Card name: #{user.card_name}. Last four: #{user.last4}.",
               application_fee: 0,
               metadata: { "message" => message }  
             }, { stripe_account: hash[:uid] })
@@ -27,7 +27,7 @@ class PaymentService
               currency: merchant.currency ? merchant.currency : "usd",
               customer: hash[:customer_uri],
               capture: capture,
-              description: "Payment from #{user.email}. Card name: #{user.card_name}. Last four: #{user.last_four}.",            
+              description: "Payment from #{user.email}. Card name: #{user.card_name}. Last four: #{user.last4}.",            
               
               # this should not be here for platform############
               destination: hash[:uid],    

@@ -46,7 +46,7 @@
 
           
           <div class="group ccn-group">
-            <%= f.number_field :last_four, id: "cc-number", type: "tel", class: "form-control cc-num rhombusFocus", placeholder: "Card number", "x-autocompletetype" => "cc-number", autocompletetype: "cc-number", autocorrect: 'off', spellcheck: 'off', autocapitalize: 'off' %>
+            <%= f.number_field :last4, id: "cc-number", type: "tel", class: "form-control cc-num rhombusFocus", placeholder: "Card number", "x-autocompletetype" => "cc-number", autocompletetype: "cc-number", autocorrect: 'off', spellcheck: 'off', autocapitalize: 'off' %>
             <span class="card" aria-hidden="true"></span>
           </div>
 
@@ -57,7 +57,7 @@
             <%= f.hidden_field :expiration_month, id: "cc-ex-month" %>
             <%= f.hidden_field :expiration_year, id: "cc-ex-year" %>
 
-             <%= f.hidden_field :stripe_token, id: "cc-uri" %>
+             <%= f.hidden_field :card_token, id: "cc-uri" %>
               <%= f.hidden_field :card_type, id: "cc-type" %>
 
               <input id="cc-exp" type="text" class="form-control rhombusFocus" placeholder="MM / YY" value="" x-autocompletetype="off" autocompletetype="off" autocorrect="off" spellcheck="off" autocapitalize="off">

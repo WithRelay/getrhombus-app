@@ -37,7 +37,7 @@ class Transaction < ActiveRecord::Base
           RealtimeStreamService.send_message_via_number(user.phone_number, merchant.rhombus_number, message.text, message.created_at, true) if message        
         end
         EmailingService.charge_failure_notification(to: merchant.email, customer_email: user.email, customer_phone: user.phone_number,
-            card_name: user.card_name, last_four: user.last_four, text: message, org_phone: merchant.org_phone,
+            card_name: user.card_name, last4: user.last4, text: message, org_phone: merchant.org_phone,
             rhombus_number: merchant.rhombus_number, dump: err, to_merchant: payment_response_array[2])
         return
       end
@@ -58,7 +58,7 @@ class Transaction < ActiveRecord::Base
             amount_less_fees: amount_less_fees, rhombus_fee: rhombus_fee_amt,
             description: "Payment to #{merchant.email}. #{merchant.org_name}. rhombus number: #{merchant.rhombus_number}", 
             status: response.status, txn_available_at: response.created, 
-            last_four: response.source.last4, exp_month: response.source.exp_month, 
+            last4: response.source.last4, exp_month: response.source.exp_month, 
             exp_year: response.source.exp_year, card_type: response.source.brand, 
             card_name: response.source.name, tax_percent: merchant.tax_percent, 
             destination: response.destination, team_id: merchant.id, user_id: user.id, 
@@ -84,7 +84,7 @@ class Transaction < ActiveRecord::Base
       self.id
     rescue StandardError => err
       EmailingService.charge_failure_notification(to: merchant.email, customer_email: user.email, customer_phone: user.phone_number,
-        card_name: user.card_name, last_four: user.last_four, text: message, org_phone: merchant.org_phone,
+        card_name: user.card_name, last4: user.last4, text: message, org_phone: merchant.org_phone,
         rhombus_number: merchant.rhombus_number, dump: err, to_merchant: false)
       return
     end
@@ -110,13 +110,13 @@ class Transaction < ActiveRecord::Base
   def merchant_transaction_details(debit_data, merchant, user, message)  
     # Put a save check here later
     transaction = create(transaction_uri: debit_data[5], transaction_type: 2, amount: debit_data[1], amount_less_fees: debit_data[3], 
-        description: "Payment from #{user.email}. Card name: #{user.card_name}. Last four: #{user.last_four}.", 
+        description: "Payment from #{user.email}. Card name: #{user.card_name}. Last four: #{user.last4}.", 
         from: user.phone_number, to: merchant.rhombus_number, tax_percent: merchant.tax_percent,
         transaction_number: debit_data[4], referenced_user_id: user.id, referenced_customer_transaction_id: debit_data[0], 
-        last_four: user.last_four, card_name: user.card_name, card_type: user.card_type, user_id: merchant.id, notes: message, amount_with_taxes: debit_data[2], 
+        last4: user.last4, card_name: user.card_name, card_type: user.card_type, user_id: merchant.id, notes: message, amount_with_taxes: debit_data[2], 
         receipt_sent_at: Time.current, currency: debit_data[7], captured: debit_data[8])                         # change this time thing later
 
-    EmailingService.send_payment_notification(to: merchant.email, card_name: user.card_name, last_four: user.last_four, 
+    EmailingService.send_payment_notification(to: merchant.email, card_name: user.card_name, last4: user.last4, 
         card_type: user.card_type, customer_email: user.email, customer_phone: user.phone_number, text: message, 
         transaction_number: debit_data[4], stripe_txn_number: debit_data[5], transaction_date: transaction.created_at, 
         amount_less_fees: debit_data[3], amount_with_taxes: debit_data[2], rhombus_number: merchant.rhombus_number, currency: debit_data[7])
@@ -131,8 +131,8 @@ class Transaction < ActiveRecord::Base
     # Put a save check here later
     create(transaction_uri: debit_data[5], transaction_type: 0,
       amount: debit_data[6], amount_less_fees: debit_data[3], transaction_number: debit_data[4],
-      description: "Payment from #{user.email}. Name on card: #{user.card_name}. Last four: #{user.last_four} to #{merchant.email}", 
-      from: user.phone_number, to: merchant.rhombus_number, tax_percent: merchant.tax_percent, last_four: user.last_four,
+      description: "Payment from #{user.email}. Name on card: #{user.card_name}. Last four: #{user.last4} to #{merchant.email}", 
+      from: user.phone_number, to: merchant.rhombus_number, tax_percent: merchant.tax_percent, last4: user.last4,
       referenced_user_id: user.id, referenced_customer_transaction_id: debit_data[0], user_id: owner.id, notes: message, 
       amount_with_taxes: debit_data[2], referenced_merchant_transaction_id: merchant_txn_id, 
       team_id: merchant.id, currency: debit_data[7], captured: debit_data[8])                                   
