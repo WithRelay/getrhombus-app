@@ -125,6 +125,7 @@ module ParseTextNexmo
         end
 
         if Message.where(from: params[:From], to: params[:To]).limit(2).count < 2 && !is_signup
+          # first_name is now through person
           first_name = (@this_merchant.first_name.present?) ? "my name is #{@this_merchant.first_name}, " : ''
           custom_welcome = "Hi there, " + first_name + "how can I assist you today? If you're looking to send a payment, simply reply with the amount. Ex. +10 #donut"
           custom_welcome = @this_merchant.custom_welcome unless @this_merchant.custom_welcome.blank?

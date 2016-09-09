@@ -36,7 +36,7 @@ class ApplicationController < ActionController::Base
       pubnub_publish_key: Rails.application.secrets.pubnub["publish_key"],
       pubnub_subscribe_key: Rails.application.secrets.pubnub["subscribe_key"],
       short_url: current_user.short_url,
-      can_send_mms: current_user.can_send_mms?
+      can_send_mms: UserPresenter.new(current_user).can_send_mms?
     ].to_json
   end
 
@@ -59,9 +59,8 @@ class ApplicationController < ActionController::Base
       devise_parameter_sanitizer.for(:account_update) { |u| u.permit(:email, #:current_password, 
         :password, :password_confirmation, :card_token, :last4, :exp_month,  :exp_year, 
         :card_name, :card_type, :rhombus_number, :update_rhombus_number, :phone_number, :org_name, 
-        :org_category, :street_address, :city, :state_province, :org_phone, :country, :currency, 
-        :approve_payments_immediately, :tax_percent, :zip_code, :first_name, :last_name, :is_active, 
-        :url, :custom_welcome, :time_zone )}
+        :org_category, :org_phone, :currency,  :approve_payments_immediately, :tax_percent, 
+        :is_active, :url, :custom_welcome, :time_zone )}
     end
 
     def record_not_unique

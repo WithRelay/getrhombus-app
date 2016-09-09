@@ -22,7 +22,7 @@ module CSVHandler
   end
 
   def get_customer_csv_template
-    attributes = ['first_name', 'last_name', 'email', 'phone_number', 'street_address', 'city', 'state_province', 'country', 'zip_code']
+    attributes = ['first_name', 'last_name', 'email', 'phone_number', 'street_address', 'city', 'state_province', 'country', 'postal_code']
     default_text = ['John', 'Smith', '<redacted_email>', '<redacted_phone_number>', '2 Neverland Place', 'Boston', 'MA', 'US', '12345']
     CSV.generate(headers: true) do |csv|
       csv << attributes
@@ -35,7 +35,7 @@ module CSVHandler
       
       headers_checked = false
     	response = []
-      headers = [:first_name, :last_name, :email, :phone_number, :street_address, :city, :state_province, :country, :zip_code]
+      headers = [:first_name, :last_name, :email, :phone_number, :street_address, :city, :state_province, :country, :postal_code]
       
       CSV.foreach(file, headers: true, skip_blanks: true, header_converters: :symbol, skip_lines: /^(?:[,:]\s*)+$/) do |row|
         
@@ -81,7 +81,13 @@ module CSVHandler
               user = User.new(row)
               user.valid?
             else 
-              user = User.create(row)
+              ActiveRecord::Base.transaction do
+                user = User.create(email: row[:email], password: row[:password], phone_number: row[:phone_number], user_level: row[:user_level])
+                person = Person.create(first_name: row[:first_name], last_name: row[:last_name])
+                user.persons = person
+                person.address = Address.create(street_address: row[:street_address], city: row[:city], 
+                                  postal_code: row[:postal_code], state_province: row[:state_province], country: row[:country]) 
+              end
             end
             
             # check for errors from user.valid?

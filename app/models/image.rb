@@ -1,6 +1,4 @@
 class Image < ActiveRecord::Base
-  # This method associates the attribute ":avatar" with a file attachment
-  attr_reader :avatar_remote_url
 
   # https://blog.codeship.com/how-to-use-rails-active-job/
   # https://github.com/jrgifford/delayed_paperclip
@@ -19,11 +17,10 @@ class Image < ActiveRecord::Base
   # Validate the attached image is image/jpg, image/png, etc
   validates_attachment_content_type :avatar, :content_type => /\Aimage\/.*\Z/
 
-  def avatar_remote_url=(url_value)
+  def avatar_from_remote_url
     self.avatar = URI.parse(url_value)
     # Assuming url_value is http://example.com/photos/face.png
     # avatar_file_name == "face.png"
     # avatar_content_type == "image/png"
-    @avatar_remote_url = url_value
   end
 end

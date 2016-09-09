@@ -25,14 +25,7 @@
         
          <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10" id="response">
             <div class="panel-body" ></div>                
-        </div>      <%#= render "error" %>
-
-          <!--
-          <div class="group">
-              <%#= f.text_field :full_name, type: "text", :class => "form-control rhombusFocus", placeholder: "Full Name" %>
-                <%#<input type="text" class="form-control rhombusFocus" placeholder="Full Name" name="fullname" >%>
-            <i class="fa fa-user"></i>
-          </div> -->          
+        </div>      <%#= render "error" %>       
           
           <div class="group">
            <%= f.text_field :card_name, id: 'cc-name', type: "text", :class => "form-control rhombusFocus", placeholder: "Name on Card", 'x-autocompletetype' => "off", autocompletetype: 'off', :autocorrect => "off", spellcheck: 'off', autocapitalize: "off", autocomplete: "off" %>
@@ -49,11 +42,9 @@
           
           <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10">
             <div class="col-md-6 col-sm-6" id="exp-div">
-              <%= f.hidden_field :first_name, id: "firstName" %>
-              <%= f.hidden_field :last_name, id: "lastName" %>
 
-              <%= f.hidden_field :expiration_month, id: "cc-ex-month" %>
-              <%= f.hidden_field :expiration_year, id: "cc-ex-year" %>
+              <%= f.hidden_field :exp_month, id: "cc-ex-month" %>
+              <%= f.hidden_field :exp_year, id: "cc-ex-year" %>
 
                <%= f.hidden_field :card_token, id: "cc-uri" %>
                 <%= f.hidden_field :card_type, id: "cc-type" %>

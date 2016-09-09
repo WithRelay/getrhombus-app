@@ -518,18 +518,17 @@ $(document).ready(function () {
           }
       })
       .on('err.validator.fv', function(e, data) {
-          if (data.field === 'email' && data.validator === 'remote') {
-              // We need to reset the error message
-              data.element                // The field element
-                  .data('fv.messages')    // The message container
-                  .find('[data-fv-validator="remote"][data-fv-for="email"]')
-                  .html("The email isn't valid")
-                  .show();
-          }
+        if (data.field === 'email' && data.validator === 'remote') {
+          // We need to reset the error message
+          data.element                // The field element
+              .data('fv.messages')    // The message container
+              .find('[data-fv-validator="remote"][data-fv-for="email"]')
+              .html("The email isn't valid")
+              .show();
+        }
       })
       .on('success.form.fv', function(e, data) {
-          set_number();
-          set_names();
+        set_number();
       });
   ///
 
@@ -1078,7 +1077,6 @@ $(document).ready(function () {
             .find('.help-block[data-fv-for="' + data.field + '"]').hide();
     })
     .on('success.form.fv', function(e, data) {            
-        set_names("ccPage");
         $("#user-form").bind("submit", preventDefault);
         $('#response').hide();
         $(".panel-body").html('');
@@ -1090,18 +1088,6 @@ $(document).ready(function () {
     });
     ///
 
-
-  function set_names(page) {
-      var fullName = (document.getElementById( (page == "ccPage") ? 'cc-name' : 'user_full_name' ).value).trim();
-      var firstName = fullName.substr(0, fullName.indexOf(' ')),
-          lastName = fullName.substr(fullName.indexOf(' ')+1);
-      if (!firstName && lastName) {
-          firstName = lastName;
-          lastName = "";
-      }            
-      $('#firstName').val(firstName);
-      $('#lastName').val(lastName);
-  }
 
   function get_expiry_date_data() { return $('input#cc-exp').payment('cardExpiryVal'); }
   function set_number() { $('#phone_number').val(telInput.intlTelInput("getNumber").replace("+", '')); }
@@ -1596,7 +1582,6 @@ $(document).ready(function () {
     // So the button can be reset on fail
     cc_btn_text = create_user_submit.val();
     cc_submit_btn = create_user_submit.attr("disabled", true).val("Please wait...");  
-    set_names();
     set_number();
     form_submission_handler = submit_create_user_form;
     submit_to_stripe();  

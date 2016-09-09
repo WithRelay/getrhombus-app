@@ -34,7 +34,7 @@ class Referrer < ActiveRecord::Base
   # or anywhere else necessary
   def self.create_stripe_default
     ref = create(email: "<redacted_email>", phone_numer: '<redacted_phone_number>', country: 'US', 
-                            referrer_name: 'Stripe', business_name: "Rhombus", uid: generate_uid)
+                            referrer_name: 'Stripe', org_name: "Rhombus", uid: generate_uid)
     ref.update_attribute(:link, "https://www.getrhombus.com?referrer_uid=#{ref.uid}")
   end
 

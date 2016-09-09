@@ -1,8 +1,8 @@
 class HashtagPresenter < BasePresenter
 
   def images
-    return @model.images if @model.images.present?
-    []
+    return [] if @model.images.empty?
+    @model.images
   end
 
 end

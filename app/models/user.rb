@@ -4,7 +4,7 @@ class User < ActiveRecord::Base
   include DashboardCustomerQueries
   include CSVHandler
 
-  attr_accessor :full_name, :phone, :captured_amt, :msg_id, :tag_id, :referrer_id
+  attr_accessor :phone, :captured_amt, :msg_id, :tag_id, :referrer_id
 
   # include default devise modules. Others available are: :token_authenticatable, :lockable, :timeoutable and :confirmable,
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable, :omniauthable
@@ -105,6 +105,7 @@ class User < ActiveRecord::Base
 
   # Returns hash with users who sent a message to the given merchant in the last "num_days" days
   def self.get_latest_active_messaging(merchant_id, num_days)
+    # name is now thrugh person 
     users = Message.select('`users`.`id`, `users`.`first_name`, `users`.`last_name`, `users`.`email`, `messages`.`from`')
                    .joins('LEFT JOIN `users` ON (`users`.`id` = `messages`.`user_id`)')
                    .where('(`messages`.`user_id_to` = ? AND `messages`.`created_at` >= ?) OR (`messages`.`user_id_to` = ? AND `messages`.`unread` = ?)', merchant_id, Time.current - num_days.days, merchant_id, true)
@@ -124,15 +125,6 @@ class User < ActiveRecord::Base
       })
     end
     latest_active
-  end
-
-  # move to helper
-  def full_name
-    if self.user_level == 0
-      x = self.first_name || ''
-      y = self.last_name || ''
-      (x + y) == "" ? nil : x + " " + y
-    end
   end
 
   # move to helper

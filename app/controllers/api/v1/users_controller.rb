@@ -45,8 +45,10 @@ class Api::V1::UsersController < API::V1::BaseController
 
   def api_v1_user_params
     params.require(:user).permit(:email, :password, :first_name, :last_name, :phone_number,
-      :card_name, :expiration_month, :expiration_year, :card_token, :card_type, :street_address,
-      :state_province, :country, :user_level)
+      :card_name, :exp_month, :exp_year, :card_token, :card_type, , :user_level,
+      # redo relationships here
+      #:people_
+      address_attributes: [:street_address, :state_province, :city, :country])
   end
 
 

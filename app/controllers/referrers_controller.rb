@@ -50,7 +50,7 @@ class ReferrersController < ApplicationController
     end
 
     def referrer_params
-      params.require(:referrer).permit(:referrer_email, :email, :phone_number, :country, :referrer_name, :business_name,
+      params.require(:referrer).permit(:referrer_email, :email, :phone_number, :country, :referrer_name, :org_name,
                                         :ip, :city, :region, :postal, :uid)
     end
 end
