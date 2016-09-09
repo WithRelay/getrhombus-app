@@ -31,7 +31,7 @@
     <div id='new-image-previews'></div>
 
     <div id='image-previews' data-tag-id='<%= @hashtag.id %>'>
-      <%= generate_image_thumbnails(@images) %>
+      <%= generate_image_thumbnails(present(@hashtag).images) %>
     </div>
   <% end %>
    
