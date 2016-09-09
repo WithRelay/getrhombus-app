@@ -22,4 +22,6 @@
 //= require jquery.charactercounter.js
 //= require ohsnap.js
 //= require location
+//= require cocoon
+
 

@@ -58,7 +58,8 @@ Rails.application.routes.draw  do
     }
     
     member do
-      get 'managed-account' => 'users#managed_account'
+      get 'managed-accounts' => 'users#new_managed_acct'
+      match 'managed-accounts' => "users#create_managed_acct", via: :patch
       get 'messaging' => 'users#messaging'
       get 'contacts' => 'users#contacts' #(both customers or merchants)
       get 'json_get_latest_active_messaging' => 'users#json_get_latest_active_messaging'
@@ -81,7 +82,6 @@ Rails.application.routes.draw  do
     match 'transactions/:charge_id/refund' => 'transactions#refund', via: :post
     match 'transactions/charge_customer' => 'transactions#charge_customer', via: :post
     match 'numbers/search' => 'numbers#search', via: :get
-    #match '/hashtags/create' => 'hashtags#create', via: :post
   end
 
   ## catch all other to 404

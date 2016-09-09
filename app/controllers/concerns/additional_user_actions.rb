@@ -2,17 +2,24 @@ module AdditionalUserActions
   extend ActiveSupport::Concern
 
   def messaging
-    if @user.user_level != 1
-      redirect_to :root and return
-    end
+    redirect_to :root and return if @user.user_level != 1
 
     # change back
     render layout: 'application_dashboard_messaging'
     #render layout: 'xxx'
   end
 
-  def managed_account
+  def new_managed_acct
+    @user.address || @user.build_address
+    @user.bank_accounts.present? || @user.bank_accounts.build
+    @user.stripe_cred || @user.build_stripe_cred
+    @user.people.present? || @user.people.build
+    @user.people.each_with_index { |p,i| @user.people[i].address || @user.people[i].build_address }
+  end
 
+  def create_managed_acct
+    current_user.update(user_params)
+    render json: {}
   end
 
   # Returns JSON object with user hash who sent a message to the given merchant in the last CONFIG[:dashboard]['messaging']['num_days_history'] days
@@ -67,6 +74,7 @@ module AdditionalUserActions
     @businesses = @user.get_customer_businesses.paginate(:page => params[:page], :per_page => 25)
   end
 
+  ######### move to transactions controller???
   def transactions
     if current_user.user_level == 0
       @transactions = @user.get_customer_transactions.paginate(:page => params[:page], :per_page => 25)

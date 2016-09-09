@@ -12,7 +12,8 @@ $(document).ready(function () {
       chart_labels = [], chart_totals = [], chart_txns = [], 
       contact_url = '/contact_forms.json', searchNumBtn = $('#searchNumberBtn');
   
-  GetURLParameter();
+
+  get_url_parameters();
   $.ajaxSetup({ cache:false });
   Stripe.setPublishableKey('<%= Rails.application.secrets.stripe["publishable_key"] %>');
 
@@ -67,7 +68,7 @@ $(document).ready(function () {
   /////
 
 
-  function GetURLParameter() {
+  function get_url_parameters() {
     var params = url.search.substring(1), param_str; 
     if (params) {
         params = params.split('&');

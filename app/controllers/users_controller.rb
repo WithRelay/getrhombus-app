@@ -1,7 +1,9 @@
 class UsersController < ApplicationController
 
+  # do I need these here ????
   before_action :set_user, only: [:show, :edit, :update, :destroy, :messaging, :contacts, :customers, :transactions]
   load_and_authorize_resource except: [:customer_csv_template]
+  
   include AdditionalUserActions
 
   def index
@@ -76,14 +78,19 @@ private
   end
 
   def user_params
-    params.require(:user).permit()
+    params.require(:user).permit(:id, :org_type, :org_name, :url, :org_tax_id, :description,
+      address_attributes: [:id, :city, :street_address, :state_province, :country, :postal_code], 
+      bank_accounts_attributes: [:id, :routing_number, :id, :country, :currency, :last4],
+      people_attributes: [:id, :full_name, :dob, :last4, :role, :_destroy,
+      address_attributes: [:street_address, :state_province, :id, :country, :postal_code, :state_province]],
+      stripe_cred_attributes: [:id, :uid_type, :ip, :user_agent])
   end
 
   def handle_referrer_and_welcome_email
     Referrer.save_referrer_with_id(session[:referrer_id], current_user.id) if session[:referrer_id].present?
     Referrer.save_referrer_with_uid(session[:referrer_uid], current_user.id) if session[:referrer_uid].present?
     # Change this logic at some point
-    #current_user.send_welcome_email if current_user.sign_in_count == 1
+    # current_user.send_welcome_email if current_user.sign_in_count == 1
   end
 
 end

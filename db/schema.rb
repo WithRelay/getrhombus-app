@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160908002258) do
+ActiveRecord::Schema.define(version: 20160909031701) do
 
   create_table "addresses", force: :cascade do |t|
     t.string   "street_address",   limit: 191
@@ -47,14 +47,15 @@ ActiveRecord::Schema.define(version: 20160908002258) do
     t.string   "last4",                  limit: 191
     t.string   "currency",               limit: 191
     t.string   "status",                 limit: 191
-    t.boolean  "default_for_currency",   limit: 1
+    t.boolean  "default_for_currency",   limit: 1,   default: true
     t.boolean  "livemode",               limit: 1
     t.string   "fingerprint",            limit: 191
     t.integer  "user_id",                limit: 4
-    t.datetime "created_at",                         null: false
-    t.datetime "updated_at",                         null: false
+    t.datetime "created_at",                                        null: false
+    t.datetime "updated_at",                                        null: false
   end
 
+  add_index "bank_accounts", ["fingerprint"], name: "index_bank_accounts_on_fingerprint", using: :btree
   add_index "bank_accounts", ["stripe_bank_account_id"], name: "index_bank_accounts_on_stripe_bank_account_id", using: :btree
 
   create_table "conversation_refs", force: :cascade do |t|
@@ -362,6 +363,29 @@ ActiveRecord::Schema.define(version: 20160908002258) do
   end
 
   add_index "refunds", ["transaction_id"], name: "index_refunds_on_transaction_id", using: :btree
+
+  create_table "stripe_creds", force: :cascade do |t|
+    t.string   "secret",            limit: 191
+    t.string   "publishable_key",   limit: 191
+    t.string   "uid",               limit: 191
+    t.string   "scope",             limit: 191
+    t.boolean  "livemode",          limit: 1
+    t.string   "refresh_token",     limit: 191
+    t.integer  "user_id",           limit: 4
+    t.integer  "uid_type",          limit: 4
+    t.string   "ip",                limit: 191
+    t.integer  "tos_date",          limit: 4
+    t.string   "user_agent",        limit: 191
+    t.boolean  "charges_enabled",   limit: 1
+    t.boolean  "transfers_enabled", limit: 1
+    t.string   "disabled_reason",   limit: 191
+    t.integer  "due_by",            limit: 4
+    t.string   "fields_needed",     limit: 191
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+  end
+
+  add_index "stripe_creds", ["uid"], name: "index_stripe_creds_on_uid", using: :btree
 
   create_table "subscriptions", force: :cascade do |t|
     t.string   "stripe_subscription_id",  limit: 191

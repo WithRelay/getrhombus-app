@@ -232,11 +232,9 @@ Devise.setup do |config|
   # config.omniauth :github, 'APP_ID', 'APP_SECRET', :scope => 'user,public_repo'
   
   # Added
-  config.omniauth :stripe_connect, Rails.application.secrets.stripe["oauth"], Rails.application.secrets.stripe["secret_key"], :scope => 'read_write' 
+  # config.omniauth :stripe_connect, Rails.application.secrets.stripe["oauth"], Rails.application.secrets.stripe["secret_key"], :scope => 'read_write' 
   # or :scope => 'read_only'  :stripe_landing => 'register' # or :stripe_landing => 'login'
-
   config.omniauth :twitter, Rails.application.secrets.twitter["key"], Rails.application.secrets.twitter["secret"], :scope => 'write', force_login: true
-
   config.omniauth :facebook, Rails.application.secrets.facebook["APP_ID"], Rails.application.secrets.facebook["APP_SECRET"], :scope => 'email, pages_messaging, pages_show_list, public_profile, user_about_me, user_website, manage_pages'
 
   # ==> Warden configuration

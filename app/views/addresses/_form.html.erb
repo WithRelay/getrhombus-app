@@ -32,6 +32,6 @@
     <%= f.text_field :postal_code %>
   </div>
   <div class="actions">
-    <%= f.submit %>
+    <%= f.submit 'Create Address', data: { disable_with: "Please wait..." } %>
   </div>
 <% end %>

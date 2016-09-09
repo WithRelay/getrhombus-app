@@ -27,6 +27,7 @@
 //= require intlTelInput.min
 //= require jquery.charactercounter.js
 //= require jquery.payment.js
+//= require cocoon
 
 //= require dashboard/messaging_angularjs/messagingApp.js
 //= require dashboard/messaging_angularjs/messagingControllers.js

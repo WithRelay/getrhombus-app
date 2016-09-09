@@ -6,8 +6,7 @@ class User < ActiveRecord::Base
 
   attr_accessor :full_name, :phone, :captured_amt, :msg_id, :tag_id, :referrer_id
 
-  # include default devise modules. Others available are:
-  # :token_authenticatable, :lockable, :timeoutable and :confirmable,
+  # include default devise modules. Others available are: :token_authenticatable, :lockable, :timeoutable and :confirmable,
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable, :omniauthable
 
   has_many :transactions
@@ -19,7 +18,8 @@ class User < ActiveRecord::Base
   has_many :referrers, class_name: 'Referrer', foreign_key: 'referrer_id'
   has_many :referees, class_name: 'Referrer', foreign_key: 'referee_id'
 
-  has_many :messages      # this goes away with conversation model
+  # messages goes away with conversation model
+  has_many :messages      
   has_many :hashtags
 
   has_one :twitter_cred
@@ -32,9 +32,17 @@ class User < ActiveRecord::Base
   has_many :lists
   has_many :customers, through: :customer_lists
 
-  has_many :people
   has_many :bank_accounts
+  accepts_nested_attributes_for :bank_accounts
+
+  has_one :stripe_cred
+  accepts_nested_attributes_for :stripe_cred
+
   has_one :address, as: :addressable
+  accepts_nested_attributes_for :address
+  
+  has_many :people
+  accepts_nested_attributes_for :people, allow_destroy: true  # reject_if: ->(attrs) { attrs['city'].blank? || attrs['street'].blank? }
 
   before_validation :the_titleizer  
   before_create :set_merchant_org_phone          # only create because the actual org_phone field is used in edit view
@@ -48,20 +56,9 @@ class User < ActiveRecord::Base
   # why allow nil? not sure
   validates_uniqueness_of :phone_number, :allow_nil => true, :if => lambda { self.user_level == 0 }
   # still need validation errors for edit..this is only for create action....just remove on create?
-  #validates :phone_number, presence: true, numericality: { only_integer: true }, length: { minimum: 10 }, on: :create
+  # validates :phone_number, presence: true, numericality: { only_integer: true }, length: { minimum: 10 }, on: :create
 
-  # saves merchant info from stripe
-  def save_stripe_omniauth_data(auth)
-    self.provider = auth.provider
-    self.uid = auth.uid
-    self.stripe_access_token = auth.credentials.token
-    self.stripe_publishable_key = auth.info.stripe_publishable_key
-    self.stripe_scope = auth.info.scope
-    self.livemode = auth.info.livemode
-    return true if self.save
-    return false
-  end
-
+  ### Methods
   # Create or update customer on Stripe
   def add_token_to_stripe_customer(params)
     if params[:card_token].present?  # is this why i get the errors from stripe??
@@ -127,18 +124,21 @@ class User < ActiveRecord::Base
     latest_active
   end
 
+  # move to presenter
   def full_name
     if self.user_level == 0
-      x = (self.first_name) ? self.first_name : ''
-      y = (self.last_name) ? self.last_name : ''
+      x = self.first_name || ''
+      y = self.last_name || ''
       (x + y) == "" ? nil : x + " " + y
     end
   end
-  
+
+  # move to presenter  
   def phone
     self.user_level == 0 ? self.phone_number : self.org_phone
   end
 
+  # move to helper
   def can_send_mms?
     ['US', 'CA'].include? self.country
   end

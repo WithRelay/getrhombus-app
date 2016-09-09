@@ -29,7 +29,10 @@
 
     <style type="text/css">.thumbnail { height: 50px; width: 50px; }</style>
     <div id='new-image-previews'></div>
-    <div id='image-previews' data-tag-id='<%= @hashtag.id %>'>    
+
+    <div id='image-previews' data-tag-id='<%= @hashtag.id %>'> 
+    The Presenter pattern addresses bloated controllers and views containing logic in concert by creating a class representation of the state of the view. 
+       move to presenters??  presenters are better to capture view logic that might differ based on model state
       <%= generate_image_thumbnails(@images) %>
     </div>
   <% end %>
