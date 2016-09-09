@@ -1,0 +1,5 @@
+class HashtagPresenter < BasePresenter
+
+
+
+end

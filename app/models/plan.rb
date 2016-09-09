@@ -1,8 +1,7 @@
 class Plan < ActiveRecord::Base
 
   has_many :subscriptions 
-
-
+  belongs_to :user
 
   def create_plan(hash)
 

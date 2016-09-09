@@ -4,8 +4,8 @@ class CouponsController < ApplicationController
   respond_to :html
 
   def index
-    @coupons = Coupon.all
-    @referrer = Referrer.new
+    @coupons = current_user.coupons.paginate(:page => params[:page], :per_page => 25).order('updated_at DESC')
+    #@coupons = Coupon.all
     respond_with(@coupons)
   end
 

@@ -22,6 +22,9 @@ class User < ActiveRecord::Base
   has_many :messages      
   has_many :hashtags
 
+  has_many :plans
+  has_many :coupons
+
   has_one :twitter_cred
   has_one :alert, dependent: :destroy
 
@@ -63,7 +66,7 @@ class User < ActiveRecord::Base
   def add_token_to_stripe_customer(params)
     if params[:card_token].present?  # is this why i get the errors from stripe??
       begin 
-        if self.customer_uri.blank?                                     # Doesnt have a customer uri => first time
+        if self.customer_uri.blank?   # Doesnt have a customer uri => first time
           cu = Stripe::Customer.create(email: self.email, source: params[:card_token])         
           self.customer_uri = cu.id
           self.livemode = cu.livemode
@@ -74,7 +77,6 @@ class User < ActiveRecord::Base
           cu.save   
         end
         buy_merchant_number if self.user_level == 1 && self.rn_type == nil
-        return true
       rescue Stripe::CardError => e
         # Since it's a decline, Stripe::CardError will be caught
         err  = e.json_body[:error]
@@ -86,9 +88,9 @@ class User < ActiveRecord::Base
       rescue StandardError => e
         Notification.token_failure_notification(e, self.email).deliver_now
       end
+      false
     end
-
-    return false
+    true
   end
  
   def buy_merchant_number
@@ -124,7 +126,7 @@ class User < ActiveRecord::Base
     latest_active
   end
 
-  # move to presenter
+  # move to helper
   def full_name
     if self.user_level == 0
       x = self.first_name || ''
@@ -133,14 +135,9 @@ class User < ActiveRecord::Base
     end
   end
 
-  # move to presenter  
+  # move to helper
   def phone
     self.user_level == 0 ? self.phone_number : self.org_phone
-  end
-
-  # move to helper
-  def can_send_mms?
-    ['US', 'CA'].include? self.country
   end
 
   private
@@ -178,13 +175,13 @@ class User < ActiveRecord::Base
         text = "Thanks for signing up! Please add a payment card to your Rhombus profile (if you haven't done so). 
         You can chat with us anytime via sms or to make a payment, just text the amount & description/hashtag. Ex. +10 #donut"
         Message.send_and_save_message(ref.rhombus_number, self.phone_number, text)
-        return
+      else
+        EmailingService.send_welcome_email(self.email, owner.rhombus_number, "customer")
+        text = "Thanks for signing up! Please add a payment card to your Rhombus profile (if you haven't done so). 
+        You can chat with a local business anytime by texting their Rhombus number or to make a payment, just text the amount & 
+        description/hashtag. Ex. +10 #donut"
+        Message.send_and_save_message(owner.rhombus_number, self.phone_number, text)
       end
-      EmailingService.send_welcome_email(self.email, owner.rhombus_number, "customer")
-      text = "Thanks for signing up! Please add a payment card to your Rhombus profile (if you haven't done so). 
-      You can chat with a local business anytime by texting their Rhombus number or to make a payment, just text the amount & 
-      description/hashtag. Ex. +10 #donut"
-      Message.send_and_save_message(owner.rhombus_number, self.phone_number, text)
     end
   end
 

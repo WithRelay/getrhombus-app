@@ -4,7 +4,8 @@ class PlansController < ApplicationController
   respond_to :html
 
   def index
-    @plans = Plan.all
+    @plans = current_user.plans.paginate(:page => params[:page], :per_page => 25).order('updated_at DESC')
+    #@plans = Plan.all
     respond_with(@plans)
   end
 
