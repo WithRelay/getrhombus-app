@@ -73,8 +73,7 @@ module CSVHandler
 
             # set user_level and password
             row[:user_level] = 0
-            row[:password] = Toolbox::StringGen.generate_random_string(8)            
-            row[:country].present? && row[:country] = row[:country].upcase
+            row[:password] = Toolbox::StringGen.generate_random_string(8)
 
             # validate user data against db
             if error
@@ -90,7 +89,7 @@ module CSVHandler
               end
             end
             
-            # check for errors from user.valid?
+            # check for user errors
             if user.errors.messages.present? || error
               user.errors.messages.each do |k,v|
                 v.each do |r|

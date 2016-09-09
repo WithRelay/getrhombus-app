@@ -54,14 +54,13 @@ class User < ActiveRecord::Base
   after_commit :update_phone_in_db, on: :update, if: lambda { self.previous_changes['phone_number'] && self.user_level == 0 }
 
   validates_presence_of :user_level, message: "Please select an account type"
-  validates :country, length: { is: 2 }, allow_blank: true   # mostly for csv upload
   
   # why allow nil? not sure
   validates_uniqueness_of :phone_number, :allow_nil => true, :if => lambda { self.user_level == 0 }
   # still need validation errors for edit..this is only for create action....just remove on create?
   # validates :phone_number, presence: true, numericality: { only_integer: true }, length: { minimum: 10 }, on: :create
 
-  ### Methods
+  
   # Create or update customer on Stripe
   def add_token_to_stripe_customer(params)
     if params[:card_token].present?  # is this why i get the errors from stripe??
@@ -127,7 +126,6 @@ class User < ActiveRecord::Base
     latest_active
   end
 
-  # move to helper
   def phone
     self.user_level == 0 ? self.phone_number : self.org_phone
   end
@@ -142,14 +140,7 @@ class User < ActiveRecord::Base
   end
 
   def the_titleizer       #remove leading and trailing whitespaces
-    self.first_name = self.first_name.strip.titleize unless self.first_name.blank?
-    self.last_name = self.last_name.strip.titleize unless self.last_name.blank?
-    self.card_name = self.card_name.strip.titleize unless self.card_name.blank?
-
-    self.street_address = self.street_address.strip unless self.street_address.blank?
-    self.city = self.city.strip.titleize unless self.city.blank?
-    self.state_province = self.state_province.strip.upcase unless self.state_province.blank?
-    
+    self.card_name = self.card_name.strip.titleize unless self.card_name.blank?    
     self.url = self.url.strip unless self.url.blank?
     self.custom_welcome = self.custom_welcome.strip unless self.custom_welcome.blank?
     self.org_name = self.org_name.strip unless self.org_name.blank?

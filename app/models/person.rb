@@ -4,6 +4,7 @@ class Person < ActiveRecord::Base
   has_one :address, as: :addressable, dependent: :destroy
   belongs_to :user
   accepts_nested_attributes_for :address#, reject_if: :all_blank
+  before_validation :the_titleizer  
 
 
   def full_name=(val)
@@ -17,5 +18,14 @@ class Person < ActiveRecord::Base
     y = self.last_name || ''
     (x + y) == "" ? nil : x + " " + y
   end
+
+  private
+
+    def the_titleizer       #remove leading and trailing whitespaces
+      self.first_name = self.first_name.strip.titleize unless self.first_name.blank?
+      self.last_name = self.last_name.strip.titleize unless self.last_name.blank?
+      self.role = self.role.strip.titleize unless self.role.blank?
+    end
+
   
 end
