@@ -58,7 +58,7 @@ Rails.application.routes.draw  do
     }
     
     member do
-      get 'managed-accounts' => 'users#new_managed_acct'
+      get 'managed-accounts' => 'users#managed_acct'
       match 'managed-accounts' => "users#create_managed_acct", via: :patch
       get 'messaging' => 'users#messaging'
       get 'contacts' => 'users#contacts' #(both customers or merchants)

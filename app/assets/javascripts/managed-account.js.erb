@@ -1,0 +1,178 @@
+$(document).ready(function () {  
+
+  var tax_id_formatter = {   
+    AU: { org_tax_id_placeholder: '<redacted_phone_number>', org_tax_id_label: "Company ACN/ABN", with_state: true },
+    AT: { org_tax_id_placeholder: '123456k', org_tax_id_label: 'Company Registration Number' },
+    BE: { org_tax_id_placeholder: "BE0XXXXXXXX", org_tax_id_label: 'TVA / BTW / CBE', with_state: true },
+    CA: { org_tax_id_placeholder: '123123123', org_tax_id_label: "Business Number (Tax ID)", with_state: true },
+    FI: { org_tax_id_placeholder: '1234567-8', org_tax_id_label: "Business ID" },
+    FR: { org_tax_id_placeholder: '<redacted_phone_number>', org_tax_id_label: 'SIRET Number', with_state: true },
+    DE: { org_tax_id_placeholder: 'DE123456789', org_tax_id_label: 'VAT Number' },
+    NO: { org_tax_id_placeholder: '123456789', org_tax_id_label: "Organization Number" },
+    ES: { org_tax_id_placeholder: 'A12345678', org_tax_id_label: 'Tax Identification Number', with_state: true },
+    SE: { org_tax_id_placeholder: '<redacted_phone_number>', org_tax_id_label: 'Corporate Identity Number' },
+    GB: { org_tax_id_placeholder: '12345678', org_tax_id_label: 'Company Number'},
+    US: { org_tax_id_placeholder: '123456789', org_tax_id_label: 'EIN (Tax ID)', with_state: true },
+  }
+
+  var country_currency = {
+    AU: ['AUD'],
+    AT: ['EUR', 'DKK', 'GBP', 'NOK', 'SEK', 'USD'],
+    BE: ['EUR', 'DKK', 'GBP', 'NOK', 'SEK', 'USD'],
+    CA: ['CAD', 'USD'],
+    FI: ['EUR', 'DKK', 'GBP', 'NOK', 'SEK', 'USD'],
+    FR: ['EUR', 'DKK', 'GBP', 'NOK', 'SEK', 'USD'],
+    DE: ['EUR', 'DKK', 'GBP', 'NOK', 'SEK', 'USD'],
+    NO: ['EUR', 'DKK', 'GBP', 'NOK', 'SEK', 'USD'],
+    ES: ['EUR', 'DKK', 'GBP', 'NOK', 'SEK', 'USD'],
+    SE: ['EUR', 'DKK', 'GBP', 'NOK', 'SEK', 'USD'],
+    GB: ['EUR', 'DKK', 'GBP', 'NOK', 'SEK', 'USD'],
+    US: ['USD']
+  }
+
+  var bank_details_formatter = {
+    DKK: { placeholder: 'DK5000400440116243', label: "IBAN" },    
+    CAD: { placeholder: '', label: 'Account Number', routing_placeholder: "12345", routing_label: 'Transit Number' },
+    USD: { placeholder: "", label: 'Account Number', routing_placeholder: "111000000", routing_label: 'Routing Number' },
+    GBP: { placeholder: '', label: "Account Number", routing_placeholder: "12-34-56", routing_label: 'Sort Code' },
+    SEK: { placeholder: 'SE3550000000054910000003', label: "IBAN" },
+    NOK: { placeholder: 'NO9386011117947', label: 'IBAN' },
+    AUD: { placeholder: '12345678', label: "Account Number", routing_placeholder: "123456", routing_label: 'BSB', with_ddr: true },
+    EUR: { placeholder: '', label: 'IBAN' }
+  }
+
+  var country_list_placeholder = {
+    AU: ['Australia', '12345678'], AT: ['Austria', 'AT611904300235473201'], 
+    BE: ['Belgium', 'BE12345678912345'], DK: ['Denmark', 'DK5000400440116243'], 
+    FI: ['Finland', 'FI2112345600000785'], FR: ['France', 'FR1420041010050500013M02606'], 
+    DE: ['Germany', 'DE89370400440532013000'], IE: ['Ireland', 'IE29AIBK93115212345678'], 
+    IT: ['Italy', 'IT60X0542811101000000123456'], LU: ['Luxembourg', 'LU280019400644750000'], 
+    NL: ['Netherlands', 'NL39RABO0300065264'], NO: ['Norway', 'NO9386011117947'], 
+    PT: ['Portugal', 'PT50000201231234567890154'], ES: ['Spain', 'ES9121000418450200051332'], 
+    SE: ['Sweden', 'SE3550000000054910000003'], CH: ['Switzerland', 'CH9300762011623852957'], 
+    GB: ['United Kingdom', 'GB82WEST12345698765432'], US: ['United States', ''],
+    CA: ['Canada', '']
+  }
+
+  var currency_countries = {
+    AU: { AUD: ['AU'] },
+    AT: { EUR: ['AT', 'BE', 'DK', 'FI', 'FR', 'DE', 'IE', 'IT', 'LU', 'NL', 'NO', 'PT', 'ES', 'SE', 'CH', 'GB'], DKK: ['DK'], GBP: ['GB'], NOK: ['NO'], SEK: ['SE'], USD: ['US'] },
+    BE: { EUR: ['AT', 'BE', 'DK', 'FI', 'FR', 'DE', 'IE', 'IT', 'LU', 'NL', 'NO', 'PT', 'ES', 'SE', 'CH', 'GB'], DKK: ['DK'], GBP: ['GB'], NOK: ['NO'], SEK: ['SE'], USD: ['US'] },
+    CA: { CAD: ['CA'], USD: ['CA', 'US'] },
+    FI: { EUR: ['AT', 'BE', 'DK', 'FI', 'FR', 'DE', 'IE', 'IT', 'LU', 'NL', 'NO', 'PT', 'ES', 'SE', 'CH', 'GB'], DKK: ['DK'], GBP: ['GB'], NOK: ['NO'], SEK: ['SE'], USD: ['US'] },
+    FR: { EUR: ['AT', 'BE', 'DK', 'FI', 'FR', 'DE', 'IE', 'IT', 'LU', 'NL', 'NO', 'PT', 'ES', 'SE', 'CH', 'GB'], DKK: ['DK'], GBP: ['GB'], NOK: ['NO'], SEK: ['SE'], USD: ['US'] },
+    DE: { EUR: ['AT', 'BE', 'DK', 'FI', 'FR', 'DE', 'IE', 'IT', 'LU', 'NL', 'NO', 'PT', 'ES', 'SE', 'CH', 'GB'], DKK: ['DK'], GBP: ['GB'], NOK: ['NO'], SEK: ['SE'], USD: ['US'] },
+    NO: { EUR: ['AT', 'BE', 'DK', 'FI', 'FR', 'DE', 'IE', 'IT', 'LU', 'NL', 'NO', 'PT', 'ES', 'SE', 'CH', 'GB'], DKK: ['DK'], GBP: ['GB'], NOK: ['NO'], SEK: ['SE'], USD: ['US'] },
+    ES: { EUR: ['AT', 'BE', 'DK', 'FI', 'FR', 'DE', 'IE', 'IT', 'LU', 'NL', 'NO', 'PT', 'ES', 'SE', 'CH', 'GB'], DKK: ['DK'], GBP: ['GB'], NOK: ['NO'], SEK: ['SE'], USD: ['US'] },
+    SE: { EUR: ['AT', 'BE', 'DK', 'FI', 'FR', 'DE', 'IE', 'IT', 'LU', 'NL', 'NO', 'PT', 'ES', 'SE', 'CH', 'GB'], DKK: ['DK'], GBP: ['GB'], NOK: ['NO'], SEK: ['SE'], USD: ['US'] },
+    GB: { EUR: ['AT', 'BE', 'DK', 'FI', 'FR', 'DE', 'IE', 'IT', 'LU', 'NL', 'NO', 'PT', 'ES', 'SE', 'CH', 'GB'], DKK: ['DK'], GBP: ['GB'], NOK: ['NO'], SEK: ['SE'], USD: ['US'] },
+    US: { USD: ['US'] },
+  }
+
+  $('#bank-currency-select').change(function() {
+    $("#bank-currency").val(this.value);
+    build_account_details(this.value, $("#managed-acct-country").val());
+  }); 
+
+  $('#account-country-select').change(function() {    
+    
+    $("#account-country").val(this.value);
+    $('#account-number').attr("placeholder", country_list_placeholder[this.value][1]);
+
+    if ($('#managed-acct-country').val() == "CA") {    // Canada needs additional handling
+      var cur = (this.value == 'US') ? 'USD' : 'CAD';
+      ($("#bank-currency").val() == "USD" && this.value == 'US') ? hide_institution_number() : $('#institution-number-div').show();
+      $('#routing-number').attr("placeholder", bank_details_formatter[cur].routing_placeholder);
+      $('#routing-number-label').text(bank_details_formatter[cur].routing_label);     
+    } else hide_institution_number();
+  });
+
+  function hide_institution_number() {
+    $('#institution-number-div').hide();
+    $('#institution-number').val('');
+  }
+
+  $('#managed-acct-country').change(function() {
+    
+    var hash = tax_id_formatter[this.value];
+
+    if (hash) {
+
+      $('#org-tax-id').attr("placeholder", hash.org_tax_id_placeholder);
+      $('#org-tax-id-label').text(hash.org_tax_id_label);
+      
+      if (hash.with_state) $('#company-state-div').show();
+      else {
+        $('#company-state-div').hide().val('');
+        $('#company-state').val('');
+      }
+
+      build_currency_details(this.value);
+    }
+  }).change();
+
+  function find_currency_in_array(val, ary) {
+    if (val = '') return ary[0];
+    return (ary.indexOf(val) > -1) ? val : ary[0];
+  };
+
+  function build_currency_details(country) {
+    var cur = country_currency[country];
+       
+    // build currency options
+    var options = '';        
+    $.each(cur, function( index, value ) {
+      options += '<option value="' + value + '">' + value +'</option>';        
+    });
+    $("#bank-currency-select").html(options);
+
+    // set value of currency options
+    if (cur.length == 1) {         // single currency countries
+      $("#bank-currency-select").val(cur[0]).trigger('change').hide();
+    } else {
+      cur = find_currency_in_array( $("#bank-currency").val(), cur );
+      $("#bank-currency-select").val(cur).trigger('change').show();
+    }
+  };
+
+  function build_account_details(cur, country) {
+    var hash = bank_details_formatter[cur];
+
+    $('#account-number').attr("placeholder", hash.placeholder);
+    $('#account-number-label').text(hash.label);
+
+    if (hash.routing_placeholder) {
+      $('#routing-number').attr("placeholder", hash.routing_placeholder);
+      $('#routing-number-label').text(hash.routing_label);
+      $('#routing-number-div').show();
+    } else {
+      $('#routing-number').val('');
+      $('#routing-number-div').hide();
+    }
+
+    (hash.with_ddr) ? $('#ddr-div').show() : $('#ddr-div').hide();
+
+    var x = currency_countries[country][cur];
+    // build currency countries options
+    var options = '';        
+    $.each(x, function( index, value ) {
+      options += '<option value="' + value + '">' + country_list_placeholder[value][0] +'</option>';        
+    });
+    $("#account-country-select").html(options);
+    
+    // set value of currency options
+    var selected_country = $("#account-country").val();
+    if (x.length == 1) $("#account-country-select").val(x[0]).trigger('change').hide();
+    else {
+      x = find_country_in_array(selected_country, x);
+      $("#account-country-select").val(x).trigger('change').show();
+    }  
+  };
+
+  function find_country_in_array(val, ary) {
+    if (val = '') return ary[0];
+    return (ary.indexOf(val) > -1) ? val : ary[0];
+  };
+
+
+});

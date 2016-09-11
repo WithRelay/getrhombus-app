@@ -159,6 +159,17 @@ class PaymentService
 
     end
 
+    def create_customer(hash)
+      cu = Stripe::Customer.create(email: hash[:email], source: hash[:card_token]) 
+    end
+
+    def update_customer(hash)
+      cu = Stripe::Customer.retrieve(hash[:uri])  
+      cu.email = hash[:email]
+      cu.source = params[:card_token]
+      cu.save   
+    end
+
     
 
   end  

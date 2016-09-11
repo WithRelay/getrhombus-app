@@ -3,7 +3,8 @@ $(document).ready(function () {
   // help change user controller to handle captured payments for signin
   // help add tag_id to captured payments in signin and signup and in the forms
 
-  var url = window.location, global_page_params = { num: '', amt: '' },
+  var url = window.location, 
+      global_page_params = PageParameter.get_params(),
 
       cc_year, cc_month, cc_submit_btn, cc_btn_text, form_submission_handler,
       create_user_submit = $('#create-user-submit'), create_user_form = $('#create-user-form'),
@@ -13,8 +14,7 @@ $(document).ready(function () {
       contact_url = '/contact_forms.json', searchNumBtn = $('#searchNumberBtn');
   
 
-  get_url_parameters();
-  $.ajaxSetup({ cache:false });
+  $.ajaxSetup({ cache:false });  
   Stripe.setPublishableKey('<%= Rails.application.secrets.stripe["publishable_key"] %>');
 
   // to prefill signup form or handle captured payments
@@ -66,18 +66,6 @@ $(document).ready(function () {
       $('#user-form').toggleClass('show');
   });
   /////
-
-
-  function get_url_parameters() {
-    var params = url.search.substring(1), param_str; 
-    if (params) {
-        params = params.split('&');
-        for (var i = 0, l = params.length; i < l; i++) {
-            param_str = params[i].split('=');
-            global_page_params[param_str[0]] = param_str[1];
-        }
-    }
-  }
 
   // /* Sidebar Menu*/
   $('.nav > li > a').click(function(){
@@ -229,12 +217,6 @@ $(document).ready(function () {
   //// end table slide down
 
 
-  // refresh page
-  $('#refresh').click( function() {
-      url.reload(true);
-  });
-
-
   // bootstrap -select plugin
   $('#signupForm .selectpicker').selectpicker({
       mobile: true,
@@ -244,14 +226,6 @@ $(document).ready(function () {
       mobile: true
   });
   // bootstrap -select plugin
-
-
-  // for 404 page...go back
-  $('#go-back').click(function(event) {
-      event.preventDefault();
-      window.history.back();
-  });
-  /////
 
 
   // For phone number input field
@@ -1357,6 +1331,9 @@ $(document).ready(function () {
   }).change();
   //  Hashtags, plans, coupons, Alerts
 
+
+
+  // Refunds
   $('#transactions-column').on("click", ".refund_link", function() {
       REFUND_TXN_LINK = this;
       REFUND_BOX.lightbox_me({
@@ -1387,6 +1364,9 @@ $(document).ready(function () {
             REFUND_BOX.trigger('close');
         })
   });
+  // Refunds
+
+
 
   //// for number search
   searchNumBtn.click(function() {
@@ -1424,7 +1404,7 @@ $(document).ready(function () {
       }); 
   }
   
-   var country_num_types = {
+  var country_num_types = {
         US: { types: ["Local","Toll Free"], show: true },
         CA: { types: ["Local","Toll Free"], show: true },
         PR: { types: ["Local"] },
@@ -1443,6 +1423,7 @@ $(document).ready(function () {
       searchNumberField.val('').css('display', display)        
   });
   //// for number search
+
 
 
   // http://blog.teamtreehouse.com/uploading-files-ajax
@@ -1492,6 +1473,8 @@ $(document).ready(function () {
   // end csv file upload
 
 
+
+  // handle images
   $('#select-images-button').click(function() { $('#select-images').trigger('click'); });
   $('#select-images').change(function() { read_file_picker(this); });
   function read_file_picker(input) {
@@ -1568,6 +1551,9 @@ $(document).ready(function () {
       .always(function(data, textStatus, response) {}); 
   });
 
+  // handle images
+
+
   ///// add a customer
   create_user_form.submit(function(e){
     e.preventDefault();
@@ -1610,13 +1596,15 @@ $(document).ready(function () {
       }); 
   }
   ///// add a customer
-    
+  
+  // submit referrer  
   $("#new_referrer").on("ajax:success", function(e, data, status, xhr) {
     alert('received referral info. pls share the link and refer more');
     console.log(data.referrer.link)
   }).on("ajax:error", function(e, xhr, status, error){
     alert('unable to save referral info');
   });
+  // submit referrer
 
 
 });

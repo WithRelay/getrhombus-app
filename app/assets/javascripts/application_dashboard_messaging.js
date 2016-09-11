@@ -34,3 +34,4 @@
 //= require dashboard/messaging_angularjs/messagingFilters.js
 //= require_tree ./dashboard/messaging_angularjs/templates
 
+//= require url-paramaters

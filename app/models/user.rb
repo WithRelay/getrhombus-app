@@ -54,14 +54,21 @@ class User < ActiveRecord::Base
   after_commit :update_phone_in_db, on: :update, if: lambda { self.previous_changes['phone_number'] && self.user_level == 0 }
 
   validates_presence_of :user_level, message: "Please select an account type"
+  # Sign up form uses phone_number field for both user types
+  validates_presence_of :phone_number, numericality: { only_integer: true }, length: { minimum: 10 }, on: :create
   
-  # why allow nil? not sure
+  # Edit pages use the right number field for each user type
+  validates_presence_of :org_number, numericality: { only_integer: true }, length: { minimum: 10 }, on: :update, if: lambda { self.user_level == 1 }
+  validates_presence_of :phone_number, numericality: { only_integer: true }, length: { minimum: 10 }, on: :update, if: lambda { self.user_level == 0 }
+
+  # Allow nil added to db migration because merchants don't have phone number. They have org_phone.
+  # And since mysql indexes this field, it indexes nil and only allows one row with nil.
+  # You run into issues with any additional merchants.
   validates_uniqueness_of :phone_number, :allow_nil => true, :if => lambda { self.user_level == 0 }
-  # still need validation errors for edit..this is only for create action....just remove on create?
-  # validates :phone_number, presence: true, numericality: { only_integer: true }, length: { minimum: 10 }, on: :create
 
   
   # Create or update customer on Stripe
+  # move to stripe service
   def add_token_to_stripe_customer(params)
     if params[:card_token].present?  # is this why i get the errors from stripe??
       begin 
@@ -132,51 +139,89 @@ class User < ActiveRecord::Base
 
   private
 
-  def set_merchant_org_phone
-    if self.user_level == 1
-      self.org_phone = self.phone_number
-      self.phone_number = nil
-    end 
-  end
+    def set_merchant_org_phone
+      if self.user_level == 1
+        self.org_phone = self.phone_number
+        self.phone_number = nil
+      end 
+    end
 
-  def the_titleizer       #remove leading and trailing whitespaces
-    self.card_name = self.card_name.strip.titleize unless self.card_name.blank?    
-    self.url = self.url.strip unless self.url.blank?
-    self.custom_welcome = self.custom_welcome.strip unless self.custom_welcome.blank?
-    self.org_name = self.org_name.strip unless self.org_name.blank?
-  end
+    def the_titleizer  
+      self.card_name = self.card_name.strip.titleize unless self.card_name.blank?    
+      self.url = self.url.strip unless self.url.blank?
+      self.custom_welcome = self.custom_welcome.strip unless self.custom_welcome.blank?
+      self.org_name = self.org_name.strip unless self.org_name.blank?
+    end
 
-  def send_welcome_email
-    owner = User.find_by(email: Rails.application.secrets.team_email)
-    if self.user_level == 1
-      EmailingService.send_welcome_email(self.email, owner.rhombus_number, "merchant")
-    elsif self.user_level == 0
-      ref = self.referrers.first
-      unless ref.blank?
-        referrer = User.find_by(id: ref.referrer_id)
-        EmailingService.send_welcome_email_with_referral(ref.email, self.email, ref.org_name, ref.rhombus_number, owner.rhombus_number)
-        text = "Thanks for signing up! Please add a payment card to your Rhombus profile (if you haven't done so). 
-        You can chat with us anytime via sms or to make a payment, just text the amount & description/hashtag. Ex. +10 #donut"
-        Message.send_and_save_message(ref.rhombus_number, self.phone_number, text)
-      else
-        EmailingService.send_welcome_email(self.email, owner.rhombus_number, "customer")
-        text = "Thanks for signing up! Please add a payment card to your Rhombus profile (if you haven't done so). 
-        You can chat with a local business anytime by texting their Rhombus number or to make a payment, just text the amount & 
-        description/hashtag. Ex. +10 #donut"
-        Message.send_and_save_message(owner.rhombus_number, self.phone_number, text)
+    def send_welcome_email
+      owner = User.find_by(email: Rails.application.secrets.team_email)
+      if self.user_level == 1
+        EmailingService.send_welcome_email(self.email, owner.rhombus_number, "merchant")
+      elsif self.user_level == 0
+        ref = self.referrers.first
+        unless ref.blank?
+          referrer = User.find_by(id: ref.referrer_id)
+          EmailingService.send_welcome_email_with_referral(ref.email, self.email, ref.org_name, ref.rhombus_number, owner.rhombus_number)
+          text = "Thanks for signing up! Please add a payment card to your Rhombus profile (if you haven't done so). 
+          You can chat with us anytime via sms or to make a payment, just text the amount & description/hashtag. Ex. +10 #donut"
+          Message.send_and_save_message(ref.rhombus_number, self.phone_number, text)
+        else
+          EmailingService.send_welcome_email(self.email, owner.rhombus_number, "customer")
+          text = "Thanks for signing up! Please add a payment card to your Rhombus profile (if you haven't done so). 
+          You can chat with a local business anytime by texting their Rhombus number or to make a payment, just text the amount & 
+          description/hashtag. Ex. +10 #donut"
+          Message.send_and_save_message(owner.rhombus_number, self.phone_number, text)
+        end
       end
     end
-  end
 
-  # move to background job
-  def update_phone_in_db
-    ActiveRecord::Base.connection.execute("UPDATE messages SET messages.from = #{x[1]} WHERE messages.from = #{x[0]}")
-    ActiveRecord::Base.connection.execute("UPDATE messages SET messages.to = #{x[1]} WHERE messages.to = #{x[0]}")
-  end
+    # move to background job
+    def update_phone_in_db
+      ActiveRecord::Base.connection.execute("UPDATE messages SET messages.from = #{x[1]} WHERE messages.from = #{x[0]}")
+      ActiveRecord::Base.connection.execute("UPDATE messages SET messages.to = #{x[1]} WHERE messages.to = #{x[0]}")
+    end
 
-  def create_user_alert
-    Alert.create(user_id: self.id, sms_number: self.org_phone)   # move to background job?
-  end
+    def create_user_alert
+      Alert.create(user_id: self.id, sms_number: self.org_phone)   # move to background job?
+    end
 
   
 end
+
+=begin
+  
+def add_token_to_stripe_customer(params)
+    if params[:card_token].present?  # is this why i get the errors from stripe??
+      begin 
+        hash = { email: self.email, card_token: params[:card_token] }
+        if self.customer_uri.blank?   # Doesnt have a customer uri => first time
+          res = PaymentService.create_customer(hash)
+          if res[0]
+            self.customer_uri = cu.id
+            self.livemode = cu.livemode
+          end          
+        else
+          hash[:uri] = self.customer_uri
+          PaymentService.update_customer(hash)
+        end
+
+        buy_merchant_number if self.user_level == 1 && self.rn_type == nil
+      
+        # move out this exception block
+      rescue Stripe::CardError => e
+        # Since it's a decline, Stripe::CardError will be caught
+        err  = e.json_body[:error]
+        owner = User.find_by(email: Rails.application.secrets.team_email)
+        Message.send_and_save_message(owner.rhombus_number, self.phone_number, "We were unable to update your card info on Rhombus because: #{err[:message]}.")
+        Notification.token_failure_notification(err, self.email).deliver_now
+      rescue Stripe::StripeError => e
+        Notification.token_failure_notification(e.json_body[:error], self.email).deliver_now
+      rescue StandardError => e
+        Notification.token_failure_notification(e, self.email).deliver_now
+      end
+      false
+    end
+    true
+  end
+  
+=end

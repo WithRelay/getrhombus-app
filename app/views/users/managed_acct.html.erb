@@ -19,15 +19,15 @@
   <%= f.fields_for :address do |a| %>
     <div>
       <%= a.label :country %>
-      <%= a.text_field :country %>
+      <%= a.select :country, options_for_select({ "Australia" => "AU", "Austria" => 'AT', "Belgium" => "BE", "Canada" => "CA", "Finland" => "FI", "France" => "FR", "Germany" => "DE", "Norway" => "NO", "Spain" => "ES", "Sweden" => "SE", "United Kingdom" => "GB", "United States" => "US" }, selected: a.object.country), {}, class: 'rhombusFocus', id: 'managed-acct-country' %>
     </div>
   <% end %>
 
-  <%= f.select :org_type, options_for_select({ "Individual" => "Individual", "Business" => 'Business' }, selected: @user.org_type), include_blank: 'Select business type' %><br>
+  <%= f.select :org_type, options_for_select({ "Individual" => "Individual", "Business" => 'Business' }, selected: @user.org_type) %><br>
   Legal Name <%= f.text_field :org_name %><br>
 
   URL <%= f.text_field :url %><br>
-  EIN <%= f.text_field :org_tax_id %><br>
+  <span id='org-tax-id-label'>EIN</span> <%= f.text_field :org_tax_id, id: 'org-tax-id' %><br>
   tell us about your organization <%= f.text_area :description %><br>
 
   <%= f.fields_for :address do |a| %>
@@ -39,9 +39,9 @@
       <%= a.label :city %>
       <%= a.text_field :city %>
     </div>
-    <div>
+    <div id='company-state-div'>
       <label>State/Province</label>
-      <%= a.text_field :state_province %>
+      <%= a.text_field :state_province, id: 'company-state' %>
     </div>
     <div>
       <%= a.label :postal_code %>
@@ -52,23 +52,36 @@
   <br><br><br>
   <%= f.fields_for :bank_accounts do |b| %>
     <div>
-      <label>Account Number</label>
-      <%= b.text_field :account_number %>
-      <%= b.hidden_field :last4 %>
+      <label id='account-number-label' >Account Number</label>
+      <%= b.text_field :account_number, id: 'account-number' %>
     </div>
-    <div>
-      <%= b.label :routing_number %>
-      <%= b.text_field :routing_number %>
+    <div id='routing-number-div'>
+      <%= b.label :routing_number, id: 'routing-number-label' %>
+      <%= b.text_field :routing_number, id: 'routing-number' %>
     </div>
-    <div>
-      <label>Country</label>
-      <%= b.text_field :country %>
+
+    <!-- style="display: none;" -->
+    <div id='institution-number-div'  >
+      <%= b.label :institution_number %>
+      <%= b.text_field :institution_number, id: 'institution-number', placeholder: '000' %>
     </div>
-    <div>
+
+    <div id='account-country-div'>
+      <%= b.label :country %>
+      <%= b.text_field :country, id: 'account-country', value: b.object.country %>
+      <select id="account-country-select"></select>
+    </div>
+    <div id='bank-currency-div'>
       <%= b.label :currency %>
-      <%= b.text_field :currency %>
+      <%= b.text_field :currency, id: 'bank-currency', value: b.object.currency %>
+          <!-- style="display: none;" -->
+      <select id="bank-currency-select"></select>
     </div>
   <% end %>
+
+  <br><br>
+
+  <div id='ddr-div'>DDR message for australia only i think</div>
 
   <br><br>
 

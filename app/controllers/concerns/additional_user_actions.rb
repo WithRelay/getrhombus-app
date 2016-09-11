@@ -9,7 +9,7 @@ module AdditionalUserActions
     #render layout: 'xxx'
   end
 
-  def new_managed_acct
+  def managed_acct
     @user.address || @user.build_address
     @user.bank_accounts.present? || @user.bank_accounts.build
     @user.stripe_cred || @user.build_stripe_cred

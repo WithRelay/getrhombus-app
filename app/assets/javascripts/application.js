@@ -18,9 +18,12 @@
 
 //= require intlTelInput.min
 //= require chartist
-//= require jquery.payment.js
-//= require jquery.charactercounter.js
+//= require jquery.payment
+//= require jquery.charactercounter
 //= require ohsnap.js
+
+//= require url-paramaters
+//= require managed-account
 //= require location
 //= require cocoon
 

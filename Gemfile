@@ -57,9 +57,6 @@ gem 'omniauth-facebook'
 
 gem "messenger_platform_rails"
 
-#For Facebook Send API
-#gem 'message_quickly'
-
 group :production do
 	gem "passenger"
 end
