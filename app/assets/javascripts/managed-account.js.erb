@@ -69,6 +69,8 @@ $(document).ready(function () {
     US: { USD: ['US'] },
   }
 
+  var no_owners = ['US', 'CA', 'AU'];
+
   $('#bank-currency-select').change(function() {
     $("#bank-currency").val(this.value);
     build_account_details(this.value, $("#managed-acct-country").val());
@@ -96,8 +98,14 @@ $(document).ready(function () {
     
     var hash = tax_id_formatter[this.value];
 
-    if (hash) {
+    if (no_owners.indexOf(this.value) > -1) {
+      $('#add-owner-link, #owners-title').hide();
+      $(".nested-fields").slice(1).remove();
+    } else {
+      $('#add-owner-link, #owners-title').show();
+    }     
 
+    if (hash) {
       $('#org-tax-id').attr("placeholder", hash.org_tax_id_placeholder);
       $('#org-tax-id-label').text(hash.org_tax_id_label);
       
@@ -138,7 +146,6 @@ $(document).ready(function () {
   function build_account_details(cur, country) {
     var hash = bank_details_formatter[cur];
 
-    $('#account-number').attr("placeholder", hash.placeholder);
     $('#account-number-label').text(hash.label);
 
     if (hash.routing_placeholder) {
@@ -173,6 +180,7 @@ $(document).ready(function () {
     if (val = '') return ary[0];
     return (ary.indexOf(val) > -1) ? val : ary[0];
   };
+
 
 
 });

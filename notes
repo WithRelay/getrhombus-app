@@ -14,19 +14,19 @@ Contact - Inbound
 Thursday
 - Clean up angular - https://blog.joshsoftware.com/2014/07/17/building-web-apps-with-rails4-and-angularjs-in-15-minutes/
 
-Saturday
+Monday/Tuesday
 - plug in front end logic for managed accts
-
-Sunday
 - plug into stripe api for managed accts
 
-Monday
+Wednesday/Thursday
 - pick up fb messenger
 
 - change last4 to account_number
+- do tasks in notes
 - add institution_number for cad, set default to '', remove from accessor, add to permit params
-- tokenize only on backend
-- tokenize ssn though
+- tokenize only on backend so i can get fingerprint
+- tokenize ssn though in front end
+- Add additional countries to country list
 
 
 

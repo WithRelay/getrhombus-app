@@ -70,9 +70,9 @@
                   </tr>
                 </thead>
                 <tbody>
-                	<% @transactions.each do |t| %>
-    	        	  <tr role="row">
-    	                <td class="details-control" data-txn-num="<%= t.txn_number %>"
+                  <% @transactions.each do |t| %>
+                  <tr role="row">
+                      <td class="details-control" data-txn-num="<%= t.txn_number %>"
                         data-time="<%= t.created_at.strftime("%I:%M %p") %>"
                         id="<%= t.txn_uri %>"
                         data-email="<%= t.email %>"
@@ -80,14 +80,14 @@
                         data-status="<%#= (t.refund_id) ? "Refunded" : "Charged" %>"
                         data-page="transactions"
                       ></td>
-    	                <td><%= t.created_at.strftime("%m/%d/%Y") %></td>
-    	                <td><%= (current_user.user_level == 0) ? t.org_name : t.card_name %></td>
-    	                <td><%= t.notes %></td>
-    	                <td><%= (current_user.user_level == 0) ? t.org_phone : t.phone_number %></td>
-    	                <td><%= (current_user.user_level == 0) ? t.rhombus_number : t.amount_less_fees %></td>
-    	                <td><%= t.last4 %></td>
-    	              </tr>
-    	            <% end %>
+                      <td><%= t.created_at.strftime("%m/%d/%Y") %></td>
+                      <td><%= (current_user.user_level == 0) ? t.org_name : t.card_name %></td>
+                      <td><%= t.notes %></td>
+                      <td><%= (current_user.user_level == 0) ? t.org_phone : t.phone_number %></td>
+                      <td><%= (current_user.user_level == 0) ? t.rhombus_number : t.amount_less_fees %></td>
+                      <td><%= t.last4 %></td>
+                    </tr>
+                  <% end %>
                 </tbody>
               </table>
             </div>
@@ -95,13 +95,13 @@
           </div>
         <% else %>
           <div class="center">
-          	<img src="<%= asset_path 'no-transactions.png' %>" alt="no transaction">
+            <img src="<%= asset_path 'no-transactions.png' %>" alt="no transaction">
             <div class="no-user"><%= (current_user.user_level == 0) ? "You have no payments :(" : "You have no transactions :(" %></div>
           </div>
         <% end %>
       </div>
       <!-- End Panel -->
-      	<div style="text-align: center; margin-bottom: 40px;"><%= will_paginate @transactions, :page_links => false %></div>
+        <div style="text-align: center; margin-bottom: 40px;"><%= will_paginate @transactions, :page_links => false %></div>
     </div>
     <!-- End Row -->
   </div>

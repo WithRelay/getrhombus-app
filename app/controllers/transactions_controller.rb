@@ -3,7 +3,18 @@ class TransactionsController < ApplicationController
 	before_action :set_transaction, only: [:show, :edit, :update, :destroy]
 
 	# why am I not authorizing user?
-	load_and_authorize_resource :except => [:download_csv]
+	#load_and_authorize_resource :except => [:download_csv]
+  respond_to :html
+
+  def index
+    if current_user.user_level == 0
+      @transactions = current_user.get_customer_transactions.paginate(:page => params[:page], :per_page => 25)
+    else
+      @transactions = current_user.get_merchant_transactions.paginate(:page => params[:page], :per_page => 25)
+    end   
+    respond_with(@transactions)
+    #render layout: 'xxx' # remove
+  end
 
 	def show
 	end

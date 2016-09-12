@@ -92,9 +92,13 @@
         <%= render "person_fields", f: p %> 
       <% end %>
       <br><br>
-      OWNERS IF ANY <br>
+      <div id='owners-title'>OWNERS IF ANY <br></div>
     </ol>
-    <%= link_to_add_association 'add people', f, :people, 'data-association-insertion-node' => "#user-people ol", 'data-association-insertion-method' => "append", :wrap_object => Proc.new { |p| p.build_address; p } %>
+    
+    <div id='add-owner-link'><%= link_to_add_association 'add people', f, :people, 
+            'data-association-insertion-node' => "#user-people ol", 'data-association-insertion-method' => "append", 
+            :wrap_object => Proc.new { |p| p.build_address; p } %>
+    </div>
   </fieldset>
 
   <br><br>

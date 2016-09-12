@@ -74,16 +74,6 @@ module AdditionalUserActions
     @businesses = @user.get_customer_businesses.paginate(:page => params[:page], :per_page => 25)
   end
 
-  ######### move to transactions controller???
-  def transactions
-    if current_user.user_level == 0
-      @transactions = @user.get_customer_transactions.paginate(:page => params[:page], :per_page => 25)
-    else
-      @transactions = @user.get_merchant_transactions.paginate(:page => params[:page], :per_page => 25)
-    end   
-    render layout: 'xxx' # remove
-  end
-
   def build_user_link
     # if it includes a captured payment, also check if msg_id is present, tag_id is optional
     # referrer_num is the merchant the payment is going to

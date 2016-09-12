@@ -26,7 +26,7 @@
   <% end %>
 
   <li>
-    <%= link_to transactions_user_path(current_user.id) do %>
+    <%= link_to user_transactions_path(current_user.id) do %>
         <span class="icon color6"><i class="fa fa-credit-card"></i></span>Transactions
     <% end %>
   </li>

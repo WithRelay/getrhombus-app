@@ -52,6 +52,7 @@ Rails.application.routes.draw  do
     resources :bank_accounts
     resources :addresses
     resources :people
+    resources :transactions
     # Only admins can create coupons
     resources :coupons, :constraints => lambda { |req| 
       req.env['warden'].authenticated? and req.env['warden'].user.email == '<redacted_email>' #Rails.application.secrets.dashboard_email 
@@ -66,7 +67,6 @@ Rails.application.routes.draw  do
       get 'json_get_user_messages_by_merchant/:user_number' => 'users#json_get_user_messages_by_merchant'
       get 'mark_user_messages_for_merchant_as_read/:user_number' => 'users#mark_user_messages_for_merchant_as_read'
       get 'send_message_from_merchant/:user_number' => 'users#send_message_from_merchant'
-      get 'transactions' => 'users#transactions'
       get 'customers' => 'users#customers'
       get 'businesses' => 'users#businesses'
       get 'notifications' => 'alerts#edit'
