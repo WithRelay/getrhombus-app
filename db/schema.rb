@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160909031701) do
+ActiveRecord::Schema.define(version: 20160913015608) do
 
   create_table "addresses", force: :cascade do |t|
     t.string   "street_address",   limit: 191
@@ -43,8 +43,9 @@ ActiveRecord::Schema.define(version: 20160909031701) do
     t.string   "stripe_bank_account_id", limit: 191
     t.string   "country",                limit: 191
     t.string   "bank_name",              limit: 191
+    t.string   "account_number",         limit: 191
     t.string   "routing_number",         limit: 191
-    t.string   "last4",                  limit: 191
+    t.string   "institution_number",     limit: 191, default: ""
     t.string   "currency",               limit: 191
     t.string   "status",                 limit: 191
     t.boolean  "default_for_currency",   limit: 1,   default: true
@@ -340,7 +341,7 @@ ActiveRecord::Schema.define(version: 20160909031701) do
     t.string   "ip",             limit: 191
     t.string   "link",           limit: 191
     t.string   "referrer_name",  limit: 191
-    t.string   "business_name",  limit: 191
+    t.string   "org_name",       limit: 191
     t.string   "uid",            limit: 191
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false

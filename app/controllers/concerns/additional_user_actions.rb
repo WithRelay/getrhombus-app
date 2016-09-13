@@ -18,6 +18,7 @@ module AdditionalUserActions
   end
 
   def create_managed_acct
+    params[:user][:org_type] = 'Business' if params[:user][:org_type] == 'Company' && current_user.org_type == 'Individual'
     current_user.update(user_params)
     render json: {}
   end

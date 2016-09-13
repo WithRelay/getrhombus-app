@@ -47,6 +47,9 @@ class User < ActiveRecord::Base
   has_many :people
   accepts_nested_attributes_for :people, allow_destroy: true  # reject_if: ->(attrs) { attrs['city'].blank? || attrs['street'].blank? }
 
+  # stripe form only accepts two fields but we have 5 fields for org_type
+  #before_save :set_org_type_from_stripe_form, if: lambda { self.user_level == 1 }
+
   before_validation :the_titleizer  
   before_create :set_merchant_org_phone          # only create because the actual org_phone field is used in edit view
 
@@ -184,7 +187,6 @@ class User < ActiveRecord::Base
     def create_user_alert
       Alert.create(user_id: self.id, sms_number: self.org_phone)   # move to background job?
     end
-
   
 end
 

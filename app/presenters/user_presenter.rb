@@ -11,4 +11,8 @@ class UserPresenter < BasePresenter
     ['US', 'CA'].include? @user.country
   end
 
+  def org_type_on_managed_acct_page
+    @user.org_type == 'Individual' ? 'Individual' : 'Company'
+  end
+
 end

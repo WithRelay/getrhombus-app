@@ -10,23 +10,26 @@ Contact - Inbound
 - sent u a text doesnt have an account 
 - have an account, sent u a text but ref link isnt yours 
 
-
-Thursday
+Others
 - Clean up angular - https://blog.joshsoftware.com/2014/07/17/building-web-apps-with-rails4-and-angularjs-in-15-minutes/
+
 
 Monday/Tuesday
 - plug in front end logic for managed accts
-- plug into stripe api for managed accts
 
-Wednesday/Thursday
+Wednesday
+- plug into stripe api for managed accts - see notes
+
+Thursday/Friday
+- Set up dev server
+
+Saturday/Sunday
 - pick up fb messenger
 
-- change last4 to account_number
-- do tasks in notes
-- add institution_number for cad, set default to '', remove from accessor, add to permit params
-- tokenize only on backend so i can get fingerprint
-- tokenize ssn though in front end
-- Add additional countries to country list
+
+- review org types
+- country for persons..see google api
+
 
 
 

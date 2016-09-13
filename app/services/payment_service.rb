@@ -170,7 +170,19 @@ class PaymentService
       cu.save   
     end
 
-    
+    # Some countries require that the routing num and institition num be concatenated with a specific character
+    # that's in index postion 1
+    def stripe_country_list
+      {
+        AU: ["Australia",''], AT: ["Austria",''], BE: ["Belgium", ''], 
+        CA: ["Canada", ''], DK: ["Denmark", ''], FI: ["Finland", ''], FR: ["France", ''],
+        DE: ["Germany", ''], HK: ["Hong Kong", '-'], IE: ['Ireland', ''],
+        IT: ['Italy', ''], LU: ['Luxembourg', ''], NL: ['Netherlands', ''], NO: ["Norway", ''],
+        PT: ['Portugal', ''], SG: ['Singapore', '-'], #JP: 'Japan',
+        ES: ["Spain", ''], SE: ["Sweden", ''], GB: ["United Kingdom", ''], US: ["United States", '']
+      }
+    end
+      
 
   end  
 end

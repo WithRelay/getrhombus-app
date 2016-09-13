@@ -1,29 +1,70 @@
 $(document).ready(function () {  
+  //https://support.stripe.com/questions/what-bank-account-information-should-platforms-provide-for-managed-accounts-in-different-countries
+  //https://stripe.com/docs/connect/required-verification-information
 
-  var tax_id_formatter = {   
+  var business_country_formatter = {   
     AU: { org_tax_id_placeholder: '<redacted_phone_number>', org_tax_id_label: "Company ACN/ABN", with_state: true },
     AT: { org_tax_id_placeholder: '123456k', org_tax_id_label: 'Company Registration Number' },
     BE: { org_tax_id_placeholder: "BE0XXXXXXXX", org_tax_id_label: 'TVA / BTW / CBE', with_state: true },
     CA: { org_tax_id_placeholder: '123123123', org_tax_id_label: "Business Number (Tax ID)", with_state: true },
+    DK: { org_tax_id_placeholder: 'DK12345678', org_tax_id_label: "VAT Number" },
     FI: { org_tax_id_placeholder: '1234567-8', org_tax_id_label: "Business ID" },
     FR: { org_tax_id_placeholder: '<redacted_phone_number>', org_tax_id_label: 'SIRET Number', with_state: true },
     DE: { org_tax_id_placeholder: 'DE123456789', org_tax_id_label: 'VAT Number' },
+    HK: { org_tax_id_placeholder: '12345678', org_tax_id_label: "Registration Number", with_state: true, without_postal: true },
+    IE: { org_tax_id_placeholder: '123456', org_tax_id_label: "Company Number", with_state: true, without_postal: true },
+    IT: { org_tax_id_placeholder: '123456789', org_tax_id_label: "RI/REA Number", with_state: true },
+    LU: { org_tax_id_placeholder: 'B 123 456', org_tax_id_label: "Company / RCS Number" },
+    NL: { org_tax_id_placeholder: '12345678', org_tax_id_label: "KVK Number",  with_state: true },
     NO: { org_tax_id_placeholder: '123456789', org_tax_id_label: "Organization Number" },
+    PT: { org_tax_id_placeholder: '123456789', org_tax_id_label: "Tax Identification Number", with_state: true },
+    SG: { org_tax_id_placeholder: 'ABC680524P76', org_tax_id_label: "Company UEN", preset_city: 'Singapore' },
     ES: { org_tax_id_placeholder: 'A12345678', org_tax_id_label: 'Tax Identification Number', with_state: true },
     SE: { org_tax_id_placeholder: '<redacted_phone_number>', org_tax_id_label: 'Corporate Identity Number' },
     GB: { org_tax_id_placeholder: '12345678', org_tax_id_label: 'Company Number'},
     US: { org_tax_id_placeholder: '123456789', org_tax_id_label: 'EIN (Tax ID)', with_state: true },
   }
 
+  var business_rep_formatter = {   
+    AU: { rep_pii_placeholder: '', rep_pii_label: "", without_pii: true, without_owners: true, preset_country: true },
+    AT: { rep_pii_placeholder: '<redacted_phone_number>', rep_pii_label: 'Tax Number' },
+    BE: { rep_pii_placeholder: "XX.XX.XX-XXX.XX", rep_pii_label: 'National Registry Number' },
+    CA: { rep_pii_placeholder: "", rep_pii_label: 'SIN (Tax ID)', without_owners: true, without_address: true },
+    DK: { rep_pii_placeholder: '', rep_pii_label: "", without_pii: true },
+    FI: { rep_pii_placeholder: '', rep_pii_label: "", without_pii: true },
+    FR: { rep_pii_placeholder: '18504XX1230001 XX', rep_pii_label: "Social Security Number" },
+    DE: { rep_pii_placeholder: '<redacted_phone_number>', rep_pii_label: "Tax Identification Number" },
+    HK: { rep_pii_placeholder: 'X123456(A)', rep_pii_label: "HKID", without_address: true, without_owners: true },
+    IE: { rep_pii_placeholder: '', rep_pii_label: "", without_pii: true },
+    IT: { rep_pii_placeholder: 'MRTMTT25D09F205Z', rep_pii_label: "Tax Code" },
+    LU: { rep_pii_placeholder: '', rep_pii_label: "", without_pii: true },
+    NL: { rep_pii_placeholder: '123456782', rep_pii_label: "Citizen Service Number" },
+    NO: { rep_pii_placeholder: '', rep_pii_label: "", without_pii: true },
+    PT: { rep_pii_placeholder: '123456789', rep_pii_label: "Tax Identification Number" },
+    SG: { rep_pii_placeholder: 'S1234567A', rep_pii_label: "Individual NRIC/FIN" },
+    ES: { rep_pii_placeholder: '12345678A', rep_pii_label: 'Tax Identification Number' },
+    SE: { rep_pii_placeholder: '', rep_pii_label: "", without_pii: true },
+    GB: { rep_pii_placeholder: '', rep_pii_label: "", without_pii: true },
+    US: { rep_pii_placeholder: '<redacted_phone_number>', rep_pii_label: 'Social Security Number', without_owners: true, without_address: true },
+  } 
+
   var country_currency = {
     AU: ['AUD'],
     AT: ['EUR', 'DKK', 'GBP', 'NOK', 'SEK', 'USD'],
     BE: ['EUR', 'DKK', 'GBP', 'NOK', 'SEK', 'USD'],
     CA: ['CAD', 'USD'],
+    DK: ['EUR', 'DKK', 'GBP', 'NOK', 'SEK', 'USD'],
     FI: ['EUR', 'DKK', 'GBP', 'NOK', 'SEK', 'USD'],
     FR: ['EUR', 'DKK', 'GBP', 'NOK', 'SEK', 'USD'],
     DE: ['EUR', 'DKK', 'GBP', 'NOK', 'SEK', 'USD'],
+    HK: ['HKD'],
+    IE: ['EUR', 'DKK', 'GBP', 'NOK', 'SEK', 'USD'],
+    IT: ['EUR', 'DKK', 'GBP', 'NOK', 'SEK', 'USD'],
+    LU: ['EUR', 'DKK', 'GBP', 'NOK', 'SEK', 'USD'],
+    NL: ['EUR', 'DKK', 'GBP', 'NOK', 'SEK', 'USD'],
     NO: ['EUR', 'DKK', 'GBP', 'NOK', 'SEK', 'USD'],
+    PT: ['EUR', 'DKK', 'GBP', 'NOK', 'SEK', 'USD'],
+    SG: ['SGD'],
     ES: ['EUR', 'DKK', 'GBP', 'NOK', 'SEK', 'USD'],
     SE: ['EUR', 'DKK', 'GBP', 'NOK', 'SEK', 'USD'],
     GB: ['EUR', 'DKK', 'GBP', 'NOK', 'SEK', 'USD'],
@@ -38,20 +79,28 @@ $(document).ready(function () {
     SEK: { placeholder: 'SE3550000000054910000003', label: "IBAN" },
     NOK: { placeholder: 'NO9386011117947', label: 'IBAN' },
     AUD: { placeholder: '12345678', label: "Account Number", routing_placeholder: "123456", routing_label: 'BSB', with_ddr: true },
-    EUR: { placeholder: '', label: 'IBAN' }
+    EUR: { placeholder: '', label: 'IBAN' },
+    HKD: { placeholder: '<redacted_phone_number>', label: "Account Number", routing_placeholder: "123", routing_label: 'Bank Code' },
+    SGD: { placeholder: '<redacted_phone_number>', label: "Account Number", routing_placeholder: "0123", routing_label: 'Bank Code' },
+  }
+
+  var additional_bank_details_formatter = {
+    CAD: { placeholder: "000", label: 'Institution Number' },
+    USD: { placeholder: "000", label: 'Institution Number' },
+    HKD: { placeholder: '456', label: "Branch Code" },
+    SGD: { placeholder: '567', label: "Branch Code" },
   }
 
   var country_list_placeholder = {
     AU: ['Australia', '12345678'], AT: ['Austria', 'AT611904300235473201'], 
-    BE: ['Belgium', 'BE12345678912345'], DK: ['Denmark', 'DK5000400440116243'], 
+    BE: ['Belgium', 'BE12345678912345'], CA: ['Canada', ''], DK: ['Denmark', 'DK5000400440116243'], 
     FI: ['Finland', 'FI2112345600000785'], FR: ['France', 'FR1420041010050500013M02606'], 
-    DE: ['Germany', 'DE89370400440532013000'], IE: ['Ireland', 'IE29AIBK93115212345678'], 
+    DE: ['Germany', 'DE89370400440532013000'], HK: ['Hong Kong', '<redacted_phone_number>'],IE: ['Ireland', 'IE29AIBK93115212345678'], 
     IT: ['Italy', 'IT60X0542811101000000123456'], LU: ['Luxembourg', 'LU280019400644750000'], 
     NL: ['Netherlands', 'NL39RABO0300065264'], NO: ['Norway', 'NO9386011117947'], 
-    PT: ['Portugal', 'PT50000201231234567890154'], ES: ['Spain', 'ES9121000418450200051332'], 
+    PT: ['Portugal', 'PT50000201231234567890154'], SG: ['Singapore', '<redacted_phone_number>'], ES: ['Spain', 'ES9121000418450200051332'], 
     SE: ['Sweden', 'SE3550000000054910000003'], CH: ['Switzerland', 'CH9300762011623852957'], 
-    GB: ['United Kingdom', 'GB82WEST12345698765432'], US: ['United States', ''],
-    CA: ['Canada', '']
+    GB: ['United Kingdom', 'GB82WEST12345698765432'], US: ['United States', ''],    
   }
 
   var currency_countries = {
@@ -59,17 +108,23 @@ $(document).ready(function () {
     AT: { EUR: ['AT', 'BE', 'DK', 'FI', 'FR', 'DE', 'IE', 'IT', 'LU', 'NL', 'NO', 'PT', 'ES', 'SE', 'CH', 'GB'], DKK: ['DK'], GBP: ['GB'], NOK: ['NO'], SEK: ['SE'], USD: ['US'] },
     BE: { EUR: ['AT', 'BE', 'DK', 'FI', 'FR', 'DE', 'IE', 'IT', 'LU', 'NL', 'NO', 'PT', 'ES', 'SE', 'CH', 'GB'], DKK: ['DK'], GBP: ['GB'], NOK: ['NO'], SEK: ['SE'], USD: ['US'] },
     CA: { CAD: ['CA'], USD: ['CA', 'US'] },
+    DK: { EUR: ['AT', 'BE', 'DK', 'FI', 'FR', 'DE', 'IE', 'IT', 'LU', 'NL', 'NO', 'PT', 'ES', 'SE', 'CH', 'GB'], DKK: ['DK'], GBP: ['GB'], NOK: ['NO'], SEK: ['SE'], USD: ['US'] },
     FI: { EUR: ['AT', 'BE', 'DK', 'FI', 'FR', 'DE', 'IE', 'IT', 'LU', 'NL', 'NO', 'PT', 'ES', 'SE', 'CH', 'GB'], DKK: ['DK'], GBP: ['GB'], NOK: ['NO'], SEK: ['SE'], USD: ['US'] },
     FR: { EUR: ['AT', 'BE', 'DK', 'FI', 'FR', 'DE', 'IE', 'IT', 'LU', 'NL', 'NO', 'PT', 'ES', 'SE', 'CH', 'GB'], DKK: ['DK'], GBP: ['GB'], NOK: ['NO'], SEK: ['SE'], USD: ['US'] },
     DE: { EUR: ['AT', 'BE', 'DK', 'FI', 'FR', 'DE', 'IE', 'IT', 'LU', 'NL', 'NO', 'PT', 'ES', 'SE', 'CH', 'GB'], DKK: ['DK'], GBP: ['GB'], NOK: ['NO'], SEK: ['SE'], USD: ['US'] },
+    HK: { HKD: ['HK'] },
+    IE: { EUR: ['AT', 'BE', 'DK', 'FI', 'FR', 'DE', 'IE', 'IT', 'LU', 'NL', 'NO', 'PT', 'ES', 'SE', 'CH', 'GB'], DKK: ['DK'], GBP: ['GB'], NOK: ['NO'], SEK: ['SE'], USD: ['US'] },
+    IT: { EUR: ['AT', 'BE', 'DK', 'FI', 'FR', 'DE', 'IE', 'IT', 'LU', 'NL', 'NO', 'PT', 'ES', 'SE', 'CH', 'GB'], DKK: ['DK'], GBP: ['GB'], NOK: ['NO'], SEK: ['SE'], USD: ['US'] },
+    LU: { EUR: ['AT', 'BE', 'DK', 'FI', 'FR', 'DE', 'IE', 'IT', 'LU', 'NL', 'NO', 'PT', 'ES', 'SE', 'CH', 'GB'], DKK: ['DK'], GBP: ['GB'], NOK: ['NO'], SEK: ['SE'], USD: ['US'] },
+    NL: { EUR: ['AT', 'BE', 'DK', 'FI', 'FR', 'DE', 'IE', 'IT', 'LU', 'NL', 'NO', 'PT', 'ES', 'SE', 'CH', 'GB'], DKK: ['DK'], GBP: ['GB'], NOK: ['NO'], SEK: ['SE'], USD: ['US'] },
     NO: { EUR: ['AT', 'BE', 'DK', 'FI', 'FR', 'DE', 'IE', 'IT', 'LU', 'NL', 'NO', 'PT', 'ES', 'SE', 'CH', 'GB'], DKK: ['DK'], GBP: ['GB'], NOK: ['NO'], SEK: ['SE'], USD: ['US'] },
+    PT: { EUR: ['AT', 'BE', 'DK', 'FI', 'FR', 'DE', 'IE', 'IT', 'LU', 'NL', 'NO', 'PT', 'ES', 'SE', 'CH', 'GB'], DKK: ['DK'], GBP: ['GB'], NOK: ['NO'], SEK: ['SE'], USD: ['US'] },
+    SG: { SGD: ['SG'] },
     ES: { EUR: ['AT', 'BE', 'DK', 'FI', 'FR', 'DE', 'IE', 'IT', 'LU', 'NL', 'NO', 'PT', 'ES', 'SE', 'CH', 'GB'], DKK: ['DK'], GBP: ['GB'], NOK: ['NO'], SEK: ['SE'], USD: ['US'] },
     SE: { EUR: ['AT', 'BE', 'DK', 'FI', 'FR', 'DE', 'IE', 'IT', 'LU', 'NL', 'NO', 'PT', 'ES', 'SE', 'CH', 'GB'], DKK: ['DK'], GBP: ['GB'], NOK: ['NO'], SEK: ['SE'], USD: ['US'] },
     GB: { EUR: ['AT', 'BE', 'DK', 'FI', 'FR', 'DE', 'IE', 'IT', 'LU', 'NL', 'NO', 'PT', 'ES', 'SE', 'CH', 'GB'], DKK: ['DK'], GBP: ['GB'], NOK: ['NO'], SEK: ['SE'], USD: ['US'] },
-    US: { USD: ['US'] },
+    US: { USD: ['US'] },   
   }
-
-  var no_owners = ['US', 'CA', 'AU'];
 
   $('#bank-currency-select').change(function() {
     $("#bank-currency").val(this.value);
@@ -81,12 +136,18 @@ $(document).ready(function () {
     $("#account-country").val(this.value);
     $('#account-number').attr("placeholder", country_list_placeholder[this.value][1]);
 
-    if ($('#managed-acct-country').val() == "CA") {    // Canada needs additional handling
+    // Canada, Hong Kong and Singapore need additional handling
+    if ($('#managed-acct-country').val() == "CA") {    
       var cur = (this.value == 'US') ? 'USD' : 'CAD';
-      ($("#bank-currency").val() == "USD" && this.value == 'US') ? hide_institution_number() : $('#institution-number-div').show();
       $('#routing-number').attr("placeholder", bank_details_formatter[cur].routing_placeholder);
-      $('#routing-number-label').text(bank_details_formatter[cur].routing_label);     
-    } else hide_institution_number();
+      $('#routing-number-label').text(bank_details_formatter[cur].routing_label);    
+      cur = $("#bank-currency").val();
+      (cur == "USD" && this.value == 'US') ? hide_institution_number() : show_institution_number(cur);  
+    } else if (['SG', 'HK'].indexOf($('#managed-acct-country').val()) > -1) {
+      show_institution_number($("#bank-currency").val());
+    } else {
+      hide_institution_number();
+    }
   });
 
   function hide_institution_number() {
@@ -94,16 +155,16 @@ $(document).ready(function () {
     $('#institution-number').val('');
   }
 
+  function show_institution_number(cur) {
+    var hash = additional_bank_details_formatter[cur];
+    $('#institution-number-div').show();
+    $('#institution-number-label').text(hash.label);
+    $('#institution-number').attr("placeholder", hash.placeholder);
+  }
+
   $('#managed-acct-country').change(function() {
     
-    var hash = tax_id_formatter[this.value];
-
-    if (no_owners.indexOf(this.value) > -1) {
-      $('#add-owner-link, #owners-title').hide();
-      $(".nested-fields").slice(1).remove();
-    } else {
-      $('#add-owner-link, #owners-title').show();
-    }     
+    var hash = business_country_formatter[this.value];
 
     if (hash) {
       $('#org-tax-id').attr("placeholder", hash.org_tax_id_placeholder);
@@ -114,6 +175,52 @@ $(document).ready(function () {
         $('#company-state-div').hide().val('');
         $('#company-state').val('');
       }
+
+      if (hash.without_postal) {
+        $('#company-postal-code-div').hide();
+        $('#company-postal-code').val('');
+      } else $('#company-postal-code-div').show();
+
+      (hash.preset_city) ? $('#company-city').val(hash.preset_city).attr('disabled', true) : $('#company-city').val('').attr('disabled', false);
+  
+
+      // Format reps and/or owners
+      hash = business_rep_formatter[this.value];      
+      if (hash.without_owners) {
+        $('#add-owner-link, #owners-title').hide();
+        $(".nested-fields").slice(1).remove();
+      } else $('#add-owner-link, #owners-title').show();
+
+      $('.rep-pii').attr("placeholder", hash.rep_pii_placeholder);
+      $('.rep-pii-label').text(hash.rep_pii_label);
+      if (hash.without_pii) {
+        $('.rep-pii-div').hide();
+        $(".rep-pii").val('');
+      } else $('.rep-pii-div').show();
+
+      var address_details = ['street', 'city', 'state', 'postal', 'country'];
+      if (hash.without_address) {
+        $.each(address_details, function( index, value ) {
+          $('.person-' + value).val('');  
+          $('.person-' + value + '-div').hide();  
+        });
+      } else {
+        $.each(address_details, function( index, value ) {
+          $('.person-' + value + '-div').show();  
+        });
+
+        if (hash.preset_country) {
+          $('.person-country').val(this.value);
+          // this field is always hidden
+          // hid dropdown
+        } else {
+          $('.person-country').val('');
+          // hide field
+          // show dropdown
+          // add event to dropdown
+        }
+      }
+
 
       build_currency_details(this.value);
     }
@@ -180,6 +287,19 @@ $(document).ready(function () {
     if (val = '') return ary[0];
     return (ary.indexOf(val) > -1) ? val : ary[0];
   };
+
+  function get_postal_code_data(country, zip) {
+    $.ajax({
+      type: "GET",
+      beforeSend: function(request) {
+        request.setRequestHeader("x-key", "f4e0fb683447f267a5dbf09f9c6584b704084d2a");
+      },
+      url: "//zip.getziptastic.com/v3/" + country + "/" + zip,
+      success: function(data) {
+        console.log(data);
+      }
+    });
+  }
 
 
 

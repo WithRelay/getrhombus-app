@@ -9,35 +9,39 @@
     <label>DOB</label>
     <%= f.text_field :dob %>
   </div>
-  <div>
-    <label>SSN</label>
-    <%= f.text_field :last4 %>
-  </div>
-  
+
+  <% if f.index == 0 %>
+    <div class='rep-pii-div'>
+      <label class='rep-pii-label'>SSN</label>
+      <%= f.text_field :last4, class: 'rep-pii' %>
+    </div>
+  <% end %>
+
   <%= f.hidden_field :role, value: f.index == 0 ? 'representative' : 'owner' %>
 
   <%= f.fields_for :address do |a| %>
-    <div>
+    <div class='person-street-div'>
       <%= a.label :street_address %>
-      <%= a.text_field :street_address %>
+      <%= a.text_field :street_address, class: 'person-street' %>
     </div>
-    <div>
+    <div class='person-city-div'>
       <%= a.label :city %>
-      <%= a.text_field :city %>
+      <%= a.text_field :city, class: 'person-city' %>
     </div>
-    <div>
+    <div class='person-state-div'>
       <%= a.label :state_province %>
-      <%= a.text_field :state_province %>
+      <%= a.text_field :state_province, class: 'person-state' %>
     </div>
-    <div>
+    <div class='person-postal-div'>
       <%= a.label :postal_code %>
-      <%= a.text_field :postal_code %>
+      <%= a.text_field :postal_code, class: 'person-postal' %>
     </div>
-    <div>
+    <div class="person-country-div">
       <%= a.label :country %>
-      <%= a.text_field :country %>
+      <%= a.text_field :country, class: 'person-country' %>
     </div>
   <% end %>
+
 
   <%# review this %>
   <% if f.object.persisted? %>
