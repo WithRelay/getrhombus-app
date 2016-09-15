@@ -1,54 +1,56 @@
 $(document).ready(function () {  
   //https://support.stripe.com/questions/what-bank-account-information-should-platforms-provide-for-managed-accounts-in-different-countries
   //https://stripe.com/docs/connect/required-verification-information
+  //http://maps.googleapis.com/maps/api/geocode/json?address=92101
+  //http://kovalent.co/blog/zip-code-to-city-state-lookup/
 
-  var business_country_formatter = {   
-    AU: { org_tax_id_placeholder: '<redacted_phone_number>', org_tax_id_label: "Company ACN/ABN", with_state: true },
+  var org_country_formatter = {   
+    AU: { org_tax_id_placeholder: '<redacted_phone_number>', org_tax_id_label: "Company ACN/ABN" },
     AT: { org_tax_id_placeholder: '123456k', org_tax_id_label: 'Company Registration Number' },
-    BE: { org_tax_id_placeholder: "BE0XXXXXXXX", org_tax_id_label: 'TVA / BTW / CBE', with_state: true },
-    CA: { org_tax_id_placeholder: '123123123', org_tax_id_label: "Business Number (Tax ID)", with_state: true },
+    BE: { org_tax_id_placeholder: "BE0XXXXXXXX", org_tax_id_label: 'TVA / BTW / CBE'},
+    CA: { org_tax_id_placeholder: '123123123', org_tax_id_label: "Business Number (Tax ID)"},
     DK: { org_tax_id_placeholder: 'DK12345678', org_tax_id_label: "VAT Number" },
     FI: { org_tax_id_placeholder: '1234567-8', org_tax_id_label: "Business ID" },
-    FR: { org_tax_id_placeholder: '<redacted_phone_number>', org_tax_id_label: 'SIRET Number', with_state: true },
+    FR: { org_tax_id_placeholder: '<redacted_phone_number>', org_tax_id_label: 'SIRET Number'},
     DE: { org_tax_id_placeholder: 'DE123456789', org_tax_id_label: 'VAT Number' },
-    HK: { org_tax_id_placeholder: '12345678', org_tax_id_label: "Registration Number", with_state: true, without_postal: true },
-    IE: { org_tax_id_placeholder: '123456', org_tax_id_label: "Company Number", with_state: true, without_postal: true },
-    IT: { org_tax_id_placeholder: '123456789', org_tax_id_label: "RI/REA Number", with_state: true },
+    HK: { org_tax_id_placeholder: '12345678', org_tax_id_label: "Registration Number" },
+    IE: { org_tax_id_placeholder: '123456', org_tax_id_label: "Company Number" },
+    IT: { org_tax_id_placeholder: '123456789', org_tax_id_label: "RI/REA Number"},
     LU: { org_tax_id_placeholder: 'B 123 456', org_tax_id_label: "Company / RCS Number" },
-    NL: { org_tax_id_placeholder: '12345678', org_tax_id_label: "KVK Number",  with_state: true },
+    NL: { org_tax_id_placeholder: '12345678', org_tax_id_label: "KVK Number"},
     NO: { org_tax_id_placeholder: '123456789', org_tax_id_label: "Organization Number" },
-    PT: { org_tax_id_placeholder: '123456789', org_tax_id_label: "Tax Identification Number", with_state: true },
-    SG: { org_tax_id_placeholder: 'ABC680524P76', org_tax_id_label: "Company UEN", preset_city: 'Singapore' },
-    ES: { org_tax_id_placeholder: 'A12345678', org_tax_id_label: 'Tax Identification Number', with_state: true },
+    PT: { org_tax_id_placeholder: '123456789', org_tax_id_label: "Tax Identification Number" },
+    SG: { org_tax_id_placeholder: 'ABC680524P76', org_tax_id_label: "Company UEN" },
+    ES: { org_tax_id_placeholder: 'A12345678', org_tax_id_label: 'Tax Identification Number' },
     SE: { org_tax_id_placeholder: '<redacted_phone_number>', org_tax_id_label: 'Corporate Identity Number' },
     GB: { org_tax_id_placeholder: '12345678', org_tax_id_label: 'Company Number'},
-    US: { org_tax_id_placeholder: '123456789', org_tax_id_label: 'EIN (Tax ID)', with_state: true },
+    US: { org_tax_id_placeholder: '123456789', org_tax_id_label: 'EIN (Tax ID)' },
   }
 
-  var business_rep_formatter = {   
-    AU: { rep_pii_placeholder: '', rep_pii_label: "", without_pii: true, without_owners: true, preset_country: true },
-    AT: { rep_pii_placeholder: '<redacted_phone_number>', rep_pii_label: 'Tax Number' },
-    BE: { rep_pii_placeholder: "XX.XX.XX-XXX.XX", rep_pii_label: 'National Registry Number' },
+  var rep_formatter = {   
+    AU: { rep_pii_placeholder: '', rep_pii_label: "", without_pii: true, without_owners: true },
+    AT: { rep_pii_placeholder: '<redacted_phone_number>', rep_pii_label: 'Tax Number', use_rep_countries: true },
+    BE: { rep_pii_placeholder: "XX.XX.XX-XXX.XX", rep_pii_label: 'National Registry Number', use_rep_countries: true },
     CA: { rep_pii_placeholder: "", rep_pii_label: 'SIN (Tax ID)', without_owners: true, without_address: true },
-    DK: { rep_pii_placeholder: '', rep_pii_label: "", without_pii: true },
-    FI: { rep_pii_placeholder: '', rep_pii_label: "", without_pii: true },
-    FR: { rep_pii_placeholder: '18504XX1230001 XX', rep_pii_label: "Social Security Number" },
-    DE: { rep_pii_placeholder: '<redacted_phone_number>', rep_pii_label: "Tax Identification Number" },
-    HK: { rep_pii_placeholder: 'X123456(A)', rep_pii_label: "HKID", without_address: true, without_owners: true },
-    IE: { rep_pii_placeholder: '', rep_pii_label: "", without_pii: true },
-    IT: { rep_pii_placeholder: 'MRTMTT25D09F205Z', rep_pii_label: "Tax Code" },
-    LU: { rep_pii_placeholder: '', rep_pii_label: "", without_pii: true },
-    NL: { rep_pii_placeholder: '123456782', rep_pii_label: "Citizen Service Number" },
-    NO: { rep_pii_placeholder: '', rep_pii_label: "", without_pii: true },
-    PT: { rep_pii_placeholder: '123456789', rep_pii_label: "Tax Identification Number" },
+    DK: { rep_pii_placeholder: '', rep_pii_label: "", without_pii: true, use_rep_countries: true },
+    FI: { rep_pii_placeholder: '', rep_pii_label: "", without_pii: true, use_rep_countries: true },
+    FR: { rep_pii_placeholder: '18504XX1230001 XX', rep_pii_label: "Social Security Number", use_rep_countries: true },
+    DE: { rep_pii_placeholder: '<redacted_phone_number>', rep_pii_label: "Tax Identification Number", use_rep_countries: true },
+    HK: { rep_pii_placeholder: 'X123456(A)', rep_pii_label: "HKID" },
+    IE: { rep_pii_placeholder: '', rep_pii_label: "", without_pii: true, use_rep_countries: true },
+    IT: { rep_pii_placeholder: 'MRTMTT25D09F205Z', rep_pii_label: "Tax Code", use_rep_countries: true },
+    LU: { rep_pii_placeholder: '', rep_pii_label: "", without_pii: true, use_rep_countries: true },
+    NL: { rep_pii_placeholder: '123456782', rep_pii_label: "Citizen Service Number", use_rep_countries: true },
+    NO: { rep_pii_placeholder: '', rep_pii_label: "", without_pii: true, use_rep_countries: true },
+    PT: { rep_pii_placeholder: '123456789', rep_pii_label: "Tax Identification Number", use_rep_countries: true },
     SG: { rep_pii_placeholder: 'S1234567A', rep_pii_label: "Individual NRIC/FIN" },
-    ES: { rep_pii_placeholder: '12345678A', rep_pii_label: 'Tax Identification Number' },
-    SE: { rep_pii_placeholder: '', rep_pii_label: "", without_pii: true },
-    GB: { rep_pii_placeholder: '', rep_pii_label: "", without_pii: true },
+    ES: { rep_pii_placeholder: '12345678A', rep_pii_label: 'Tax Identification Number', use_rep_countries: true },
+    SE: { rep_pii_placeholder: '', rep_pii_label: "", without_pii: true, use_rep_countries: true },
+    GB: { rep_pii_placeholder: '', rep_pii_label: "", without_pii: true, use_rep_countries: true },
     US: { rep_pii_placeholder: '<redacted_phone_number>', rep_pii_label: 'Social Security Number', without_owners: true, without_address: true },
   } 
 
-  var country_currency = {
+  var currency_supported_in_countries = {
     AU: ['AUD'],
     AT: ['EUR', 'DKK', 'GBP', 'NOK', 'SEK', 'USD'],
     BE: ['EUR', 'DKK', 'GBP', 'NOK', 'SEK', 'USD'],
@@ -91,11 +93,11 @@ $(document).ready(function () {
     SGD: { placeholder: '567', label: "Branch Code" },
   }
 
-  var country_list_placeholder = {
+  var bank_countries_list_placeholder = {
     AU: ['Australia', '12345678'], AT: ['Austria', 'AT611904300235473201'], 
     BE: ['Belgium', 'BE12345678912345'], CA: ['Canada', ''], DK: ['Denmark', 'DK5000400440116243'], 
     FI: ['Finland', 'FI2112345600000785'], FR: ['France', 'FR1420041010050500013M02606'], 
-    DE: ['Germany', 'DE89370400440532013000'], HK: ['Hong Kong', '<redacted_phone_number>'],IE: ['Ireland', 'IE29AIBK93115212345678'], 
+    DE: ['Germany', 'DE89370400440532013000'], HK: ['Hong Kong', '<redacted_phone_number>'], IE: ['Ireland', 'IE29AIBK93115212345678'], 
     IT: ['Italy', 'IT60X0542811101000000123456'], LU: ['Luxembourg', 'LU280019400644750000'], 
     NL: ['Netherlands', 'NL39RABO0300065264'], NO: ['Norway', 'NO9386011117947'], 
     PT: ['Portugal', 'PT50000201231234567890154'], SG: ['Singapore', '<redacted_phone_number>'], ES: ['Spain', 'ES9121000418450200051332'], 
@@ -103,7 +105,7 @@ $(document).ready(function () {
     GB: ['United Kingdom', 'GB82WEST12345698765432'], US: ['United States', ''],    
   }
 
-  var currency_countries = {
+  var countries_supported_by_currency = {
     AU: { AUD: ['AU'] },
     AT: { EUR: ['AT', 'BE', 'DK', 'FI', 'FR', 'DE', 'IE', 'IT', 'LU', 'NL', 'NO', 'PT', 'ES', 'SE', 'CH', 'GB'], DKK: ['DK'], GBP: ['GB'], NOK: ['NO'], SEK: ['SE'], USD: ['US'] },
     BE: { EUR: ['AT', 'BE', 'DK', 'FI', 'FR', 'DE', 'IE', 'IT', 'LU', 'NL', 'NO', 'PT', 'ES', 'SE', 'CH', 'GB'], DKK: ['DK'], GBP: ['GB'], NOK: ['NO'], SEK: ['SE'], USD: ['US'] },
@@ -126,15 +128,147 @@ $(document).ready(function () {
     US: { USD: ['US'] },   
   }
 
+  var rep_countries = {
+    AL: { name: "Albania" }, AD: { name: "Andorra" }, 
+    AT: { name: "Austria" }, BY: { name: "Belarus" },
+    BE: { name: "Belgium" }, BA: { name: "Bosnia and Herzegovina" }, 
+    BG: { name: "Bulgaria" }, CA: { name: "Canada" }, 
+    HR: { name: "Croatia" }, CY: { name: "Cyprus" }, 
+    CZ: { name: "Czech Republic" }, DK: { name: "Denmark" }, 
+    EE: { name: "Estonia" }, FO: { name: "Faroe Islands" },
+    FI: { name: "Finland" }, FR: { name: "France" }, 
+    DE: { name: "Germany" }, GI: { name: "Gibraltar" },
+    GR: { name: "Greece" }, VA: { name: "Holy See (Vatican City State)" }, 
+    HU: { name: "Hungary" }, IS: { name: "Iceland" }, 
+    IE: { name: "Ireland" }, IM: { name: "Isle of Man" }, 
+    IT: { name: "Italy" }, LV: { name: "Latvia" }, 
+    LI: { name: "Liechtenstein" }, LT: { name: "Lithuania" }, 
+    LU: { name: "Luxembourg" }, MK: { name: "Macedonia, the Former Yugoslav Republic Of" }, 
+    MT: { name: "Malta" }, MD: { name: "Moldova, Republic of" }, 
+    MC: { name: "Monaco" }, ME: { name: "Montenegro" }, 
+    NL: { name: "Netherlands" }, NO: { name: "Norway" }, 
+    PL: { name: "Poland" }, PT: { name: "Portugal" }, 
+    RO: { name: "Romania" }, RU: { name: "Russian Federation" }, 
+    SM: { name: "San Marino" }, RS: { name: "Serbia" }, 
+    SK: { name: "Slovakia" }, SI: { name: "Slovenia" }, 
+    ES: { name: "Spain" }, SE: { name: "Sweden" }, 
+    CH: { name: "Switzerland" }, UA: { name: "Ukraine" }, 
+    GB: { name: "United Kingdom" }, US: { name: "United States" }
+  }
+
+  var countries = {
+    AL: { postcode_label: 'Postcode', city_label: 'City', street_label: 'Street' }, 
+    AD: { postcode_label: 'Postcode', city_label: 'City', street_label: 'Street' }, 
+    AT: { postcode_label: 'Postcode', city_label: 'City', street_label: 'Street' }, 
+    AU: { postcode_label: 'Postcode', city_label: 'Suburb', street_label: '123 Street', with_state: true }, 
+    BY: { postcode_label: 'Postcode', city_label: 'City', street_label: 'Street' },
+    BE: { postcode_label: 'Postal Code', city_label: 'City', street_label: 'Street 123', with_state: true }, 
+    BA: { postcode_label: 'Postcode', city_label: 'City', street_label: 'Street' }, 
+    BG: { postcode_label: 'Postcode', city_label: 'City', street_label: 'Street' }, 
+    CA: { postcode_label: 'Postal', city_label: 'City', street_label: 'Street', with_state: true }, 
+    HR: { postcode_label: 'Postcode', city_label: 'City', street_label: 'Street' }, 
+    CY: { postcode_label: 'Postcode', city_label: 'City', street_label: 'Street' }, 
+    CZ: { postcode_label: 'Postcode', city_label: 'City', street_label: 'Street' }, 
+    DK: { postcode_label: '0000', city_label: 'City', street_label: 'Street' }, 
+    EE: { postcode_label: 'Postcode', city_label: 'City', street_label: 'Street' }, 
+    FO: { postcode_label: 'Postcode', city_label: 'City', street_label: 'Street' },
+    FI: { postcode_label: '00000', city_label: 'District', street_label: 'Street' }, 
+    FR: { postcode_label: 'Postcode', city_label: 'City', street_label: 'Street', with_state: true }, 
+    DE: { postcode_label: '12345', city_label: 'City', street_label: 'Street' }, 
+    GI: { postcode_label: 'Postcode', city_label: 'City', street_label: 'Street' },
+    GR: { postcode_label: 'Postcode', city_label: 'City', street_label: 'Street' }, 
+    HK: { postcode_label: '', city_label: 'Wan Chai', street_label: 'Flat 25, 12/F Acacia Building 150 Kennedy Road', with_state: true, without_postal: true },
+    VA: { postcode_label: 'Postcode', city_label: 'City', street_label: 'Street' }, 
+    HU: { postcode_label: 'Postcode', city_label: 'City', street_label: 'Street' }, 
+    IS: { postcode_label: 'Postcode', city_label: 'City', street_label: 'Street' }, 
+    IE: { postcode_label: 'Postcode', city_label: 'City / Town', street_label: "123 O'Connell Street", with_state: true }, 
+    IM: { postcode_label: 'Postcode', city_label: 'City', street_label: 'Street' }, 
+    IT: { postcode_label: 'Postcode', city_label: 'City', street_label: 'Street', with_state: true }, LV: { }, 
+    LI: { postcode_label: 'Postcode', city_label: 'City', street_label: 'Street' }, 
+    LT: { postcode_label: 'Postcode', city_label: 'City', street_label: 'Street' }, 
+    LU: { postcode_label: 'Postcode', city_label: 'City / Locality', street_label: 'Street' }, MK: { }, 
+    MT: { postcode_label: 'Postcode', city_label: 'City', street_label: 'Street' }, 
+    MD: { postcode_label: 'Postcode', city_label: 'City', street_label: 'Street' }, 
+    MC: { postcode_label: 'Postcode', city_label: 'City', street_label: 'Street' }, 
+    ME: { postcode_label: 'Postcode', city_label: 'City', street_label: 'Street' }, 
+    NL: { postcode_label: 'Postal code', city_label: 'City', street_label: 'Street', with_state: true }, 
+    NO: { postcode_label: '0000', city_label: 'City', street_label: 'Street' }, 
+    PL: { postcode_label: 'Postcode', city_label: 'City', street_label: 'Street' }, 
+    PT: { postcode_label: 'Postcode', city_label: 'City', street_label: 'Street', with_state: true }, 
+    RO: { postcode_label: 'Postcode', city_label: 'City', street_label: 'Street' }, 
+    RU: { postcode_label: 'Postcode', city_label: 'City', street_label: 'Street' }, 
+    SM: { postcode_label: 'Postcode', city_label: 'City', street_label: 'Street' }, 
+    RS: { postcode_label: 'Postcode', city_label: 'City', street_label: 'Street' }, 
+    SK: { postcode_label: 'Postcode', city_label: 'City', street_label: 'Street' }, 
+    SI: { postcode_label: 'Postcode', city_label: 'City', street_label: 'Street' }, 
+    SG: { postcode_label: '123123', city_label: '', street_label: 'Street 123', preset_city: 'Singapore' },
+    ES: { postcode_label: 'Postcode', city_label: 'City', street_label: 'Street', with_state: true }, 
+    SE: { postcode_label: '123 45', city_label: 'City', street_label: 'Street' }, 
+    CH: { postcode_label: '0000', city_label: 'City', street_label: 'Street' }, 
+    UA: { postcode_label: 'Postcode', city_label: 'City', street_label: 'Street' }, 
+    GB: { postcode_label: 'Postcode', city_label: 'City', street_label: 'Street' }, 
+    US: { postcode_label: 'Zip', city_label: 'City', street_label: 'Street', with_state: true }
+  }
+
   $('#bank-currency-select').change(function() {
     $("#bank-currency").val(this.value);
     build_account_details(this.value, $("#managed-acct-country").val());
   }); 
 
+  $('#user-people').on('change', '.person-country-select', function() {
+    $(this).prev().val(this.value)
+    var hash = countries[this.value];
+    var parent = $(this).parent().parent();
+    
+    // handle state 
+    if (hash.with_state) {      
+      parent.find('.person-state-div').show();
+    } else {
+      parent.find('.person-state-div').hide();
+      parent.find('.person-state').val('');
+    }
+
+    // handle postal
+    if (hash.without_postal) {      
+      parent.find('.person-postal-div').hide();
+      parent.find('.person-postal').val('');
+    } else {
+      parent.find('.person-postal-div').show();
+    }
+
+    // handle city
+    (hash.preset_city) ? parent.find('.person-city').val(hash.preset_city).attr('disabled', true) : parent.find('.person-city').val('').attr('disabled', false); 
+
+    // Add placeholders
+    parent.find('.person-street').attr('placeholder', hash.street_label);
+    parent.find('.person-city').attr('placeholder', hash.city_label); 
+    parent.find('.person-postal').attr('placeholder', hash.postcode_label);
+  }); 
+
+  $('#user_org_type').change(function() {
+    var country = $('#managed-acct-country').val(), 
+        options = '<option value="' + country + '">' + bank_countries_list_placeholder[country][0] +'</option>';
+
+    if (this.value == 'Individual') {
+      $('#org-tax-id-req').show() 
+      $('#org-name').val('');
+      $('#org-name-div').hide();
+      hide_owners_info();
+    } else {
+      $('#org-tax-id-req').hide();
+      $('#org-name-div').show();
+      var x = rep_formatter[country];
+      if (x.use_rep_countries) options = build_country_options(rep_countries);
+      if (!x.without_owners) show_owners_info();
+    }
+    
+    if (!rep_formatter[country].without_address) $(".person-country-select").html(options).val(country).trigger('change');
+  }); 
+
   $('#account-country-select').change(function() {    
     
     $("#account-country").val(this.value);
-    $('#account-number').attr("placeholder", country_list_placeholder[this.value][1]);
+    $('#account-number').attr("placeholder", bank_countries_list_placeholder[this.value][1]);
 
     // Canada, Hong Kong and Singapore need additional handling
     if ($('#managed-acct-country').val() == "CA") {    
@@ -150,6 +284,103 @@ $(document).ready(function () {
     }
   });
 
+  $('#managed-acct-country').change(function() {
+    
+    var hash = org_country_formatter[this.value];
+
+    if (hash) {
+
+      // Format company details
+      // org tax id info
+      $('#org-tax-id').attr("placeholder", hash.org_tax_id_placeholder);
+      $('#org-tax-id-label').text(hash.org_tax_id_label);
+      
+      // org address
+      hash = countries[this.value];
+      (hash.with_state) ? show_state() : hide_state();
+      (hash.without_postal) ? hide_postal() : show_postal();
+      (hash.preset_city) ? $('#company-city').val(hash.preset_city).attr('disabled', true) : $('#company-city').val('').attr('disabled', false);
+      $('#company-street').attr('placeholder', hash.street_label);
+      $('#company-city').attr('placeholder', hash.city_label); 
+      $('#company-postal-code').attr('placeholder', hash.postcode_label);
+      
+      // Format reps and/or owners
+      hash = rep_formatter[this.value]; 
+      // owners requirement     
+      (hash.without_owners) ? hide_owners_info() : show_owners_info(); 
+      $('.rep-pii').attr("placeholder", hash.rep_pii_placeholder);
+      $('.rep-pii-label').text(hash.rep_pii_label);
+      (hash.without_pii) ? hide_pii() : show_pii();
+      
+      // End format company details
+
+      // rep/owners address
+      var address_details = ['street', 'city', 'state', 'postal', 'country'];
+
+      // hide all address fields
+      if (hash.without_address) {
+        $.each(address_details, function( index, value ) {
+          $('.person-' + value).val('');  
+          $('.person-' + value + '-div').hide();  
+        });
+      } else {
+        $.each(address_details, function( index, value ) {
+          $('.person-' + value + '-div').show();  
+        });
+      }
+
+      // org type
+      $('#user_org_type').trigger('change');
+
+      build_currency_details(this.value);
+    }
+  }).change();
+
+
+  function build_country_options(hash) {
+    var options = '';
+    $.each(hash, function(k, v) {
+      options += '<option value="' + k + '">' + v.name +'</option>';        
+    });
+    return options;
+  }
+
+  function hide_owners_info() {
+    $('#add-owner-link, #owners-title').hide();
+    $(".nested-fields").slice(1).remove();
+  }
+
+  function show_owners_info() {
+    $('#add-owner-link, #owners-title').show();
+  }
+
+  function hide_state() {
+    $('#company-state-div').hide().val('');
+    $('#company-state').val('');
+  }
+
+  function show_state() {
+    $('#company-state-div').show();
+  }
+
+  function hide_postal() {
+    $('#company-postal-code-div').hide();
+    $('#company-postal-code').val('');
+  }
+
+  function show_postal() {
+    $('#company-postal-code-div').show();
+  }
+
+  function hide_pii() {
+    $('.rep-pii-div').hide();
+    $(".rep-pii").val('');
+  }
+
+  function show_pii() {
+    $('.rep-pii-div').show();
+  }
+
   function hide_institution_number() {
     $('#institution-number-div').hide();
     $('#institution-number').val('');
@@ -162,77 +393,13 @@ $(document).ready(function () {
     $('#institution-number').attr("placeholder", hash.placeholder);
   }
 
-  $('#managed-acct-country').change(function() {
-    
-    var hash = business_country_formatter[this.value];
-
-    if (hash) {
-      $('#org-tax-id').attr("placeholder", hash.org_tax_id_placeholder);
-      $('#org-tax-id-label').text(hash.org_tax_id_label);
-      
-      if (hash.with_state) $('#company-state-div').show();
-      else {
-        $('#company-state-div').hide().val('');
-        $('#company-state').val('');
-      }
-
-      if (hash.without_postal) {
-        $('#company-postal-code-div').hide();
-        $('#company-postal-code').val('');
-      } else $('#company-postal-code-div').show();
-
-      (hash.preset_city) ? $('#company-city').val(hash.preset_city).attr('disabled', true) : $('#company-city').val('').attr('disabled', false);
-  
-
-      // Format reps and/or owners
-      hash = business_rep_formatter[this.value];      
-      if (hash.without_owners) {
-        $('#add-owner-link, #owners-title').hide();
-        $(".nested-fields").slice(1).remove();
-      } else $('#add-owner-link, #owners-title').show();
-
-      $('.rep-pii').attr("placeholder", hash.rep_pii_placeholder);
-      $('.rep-pii-label').text(hash.rep_pii_label);
-      if (hash.without_pii) {
-        $('.rep-pii-div').hide();
-        $(".rep-pii").val('');
-      } else $('.rep-pii-div').show();
-
-      var address_details = ['street', 'city', 'state', 'postal', 'country'];
-      if (hash.without_address) {
-        $.each(address_details, function( index, value ) {
-          $('.person-' + value).val('');  
-          $('.person-' + value + '-div').hide();  
-        });
-      } else {
-        $.each(address_details, function( index, value ) {
-          $('.person-' + value + '-div').show();  
-        });
-
-        if (hash.preset_country) {
-          $('.person-country').val(this.value);
-          // this field is always hidden
-          // hid dropdown
-        } else {
-          $('.person-country').val('');
-          // hide field
-          // show dropdown
-          // add event to dropdown
-        }
-      }
-
-
-      build_currency_details(this.value);
-    }
-  }).change();
-
   function find_currency_in_array(val, ary) {
     if (val = '') return ary[0];
     return (ary.indexOf(val) > -1) ? val : ary[0];
   };
 
   function build_currency_details(country) {
-    var cur = country_currency[country];
+    var cur = currency_supported_in_countries[country];
        
     // build currency options
     var options = '';        
@@ -266,11 +433,11 @@ $(document).ready(function () {
 
     (hash.with_ddr) ? $('#ddr-div').show() : $('#ddr-div').hide();
 
-    var x = currency_countries[country][cur];
+    var x = countries_supported_by_currency[country][cur];
     // build currency countries options
     var options = '';        
     $.each(x, function( index, value ) {
-      options += '<option value="' + value + '">' + country_list_placeholder[value][0] +'</option>';        
+      options += '<option value="' + value + '">' + bank_countries_list_placeholder[value][0] +'</option>';        
     });
     $("#account-country-select").html(options);
     
@@ -288,19 +455,12 @@ $(document).ready(function () {
     return (ary.indexOf(val) > -1) ? val : ary[0];
   };
 
-  function get_postal_code_data(country, zip) {
-    $.ajax({
-      type: "GET",
-      beforeSend: function(request) {
-        request.setRequestHeader("x-key", "f4e0fb683447f267a5dbf09f9c6584b704084d2a");
-      },
-      url: "//zip.getziptastic.com/v3/" + country + "/" + zip,
-      success: function(data) {
-        console.log(data);
-      }
-    });
-  }
-
-
+  $('#user-people').on('cocoon:after-insert', function(e, insertedItem) {
+    var clone = $('.person-country-select:first');
+    var value = clone.val();
+    clone = clone.clone();
+    insertedItem.find('.person-country-select').replaceWith(clone)
+    clone.val(value).trigger('change');
+  });
 
 });

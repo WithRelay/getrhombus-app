@@ -16,6 +16,7 @@
       <%= f.text_field :last4, class: 'rep-pii' %>
     </div>
   <% end %>
+  
 
   <%= f.hidden_field :role, value: f.index == 0 ? 'representative' : 'owner' %>
 
@@ -39,6 +40,7 @@
     <div class="person-country-div">
       <%= a.label :country %>
       <%= a.text_field :country, class: 'person-country' %>
+      <select class="person-country-select"></select>
     </div>
   <% end %>
 
