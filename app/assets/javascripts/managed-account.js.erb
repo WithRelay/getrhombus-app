@@ -1,6 +1,9 @@
 $(document).ready(function () {  
   //https://support.stripe.com/questions/what-bank-account-information-should-platforms-provide-for-managed-accounts-in-different-countries
   //https://stripe.com/docs/connect/required-verification-information
+  //https://stripe.com/docs/stripe.js?#collecting-bank-account-details
+  //https://stripe.com/docs/api#retrieve_token
+  //https://console.developers.google.com/apis/api/geocoding_backend/overview?project=rhombus-143222&duration=PT1H
   //http://maps.googleapis.com/maps/api/geocode/json?address=92101
   //http://kovalent.co/blog/zip-code-to-city-state-lookup/
 
@@ -335,7 +338,6 @@ $(document).ready(function () {
       build_currency_details(this.value);
     }
   }).change();
-
 
   function build_country_options(hash) {
     var options = '';

@@ -10,31 +10,30 @@ Rails.application.routes.draw  do
   get 'pricing' => 'static_pages#pricing'
   get 'contact' => 'contact_forms#new'
   
-  resources :contact_forms
 
+  get 'json_get_current_user' => 'application#json_get_current_user'
+  get "homepage_referrer" => 'referrers#homepage_referrer'
   get "resque" => Resque::Server, anchor: false, constraints: lambda { |req|
     req.env['warden'].authenticated? and req.env['warden'].user.id == 23
   }
-
-  get 'customer_template' => "users#customer_csv_template", constraints: { format: 'csv' }
-  get 'transactions/download' => 'transactions#download_csv', constraints: { format: 'csv' }
-  match "send_mms_from_dashboard" => 'messages#dashboard_mms', via: [:post]
-  get 'json_get_current_user' => 'application#json_get_current_user'
-  get "homepage_referrer" => 'referrers#homepage_referrer'
   
-  get "receive_text_message" => 'messages#receive_text_message'
-  get "receive_text_message_twilio" => 'messages#receive_text_message_twilio'
-  get "receive_voice_twilio" => 'messages#receive_voice_twilio'
-  get "receive_delivery_report" => 'messages#receive_delivery_report'
-  get "receive_delivery_report_twilio" => 'messages#receive_delivery_report_twilio'
-  get "facebook_webhook" => 'static_pages#fb_webhook'
-  post "/facebook_webhook" => 'static_pages#receive_message'
 
+  match "send_mms_from_dashboard" => 'messages#dashboard_mms', via: [:post]
+  
+
+  ## events/hooks routes
   constraints subdomain: "hooks" do
-    post '/events/stripe' => 'webhooks#stripe_events'
+    post 'events/stripe' => 'webhooks#stripe_events'
+    match "events/facebook" => "webhooks#facebook_events", via: [:get, :post]
+
+    get "receive_text_message" => 'messages#receive_text_message'
+    get "receive_text_message_twilio" => 'messages#receive_text_message_twilio'
+    get "receive_voice_twilio" => 'messages#receive_voice_twilio'
+    get "receive_delivery_report" => 'messages#receive_delivery_report'
+    get "receive_delivery_report_twilio" => 'messages#receive_delivery_report_twilio'
   end
 
-  resources :referrers, only: [:new, :create]
+
   ## devise routes
   devise_for :users, controllers: { registrations: "registrations", omniauth_callbacks: "omniauth_callbacks", sessions: 'sessions' }
   devise_scope :user do
@@ -43,6 +42,11 @@ Rails.application.routes.draw  do
     get "signin", to: "devise/sessions#new"
   end
   
+  
+  resources :contact_forms
+  resources :referrers, only: [:new, :create]
+  
+
   # user routes
   resources :users, only: :show do
     resources :hashtags, except: [:show, :destroy]
@@ -52,7 +56,17 @@ Rails.application.routes.draw  do
     resources :bank_accounts
     resources :addresses
     resources :people
-    resources :transactions
+    resources :transactions do
+      
+      collection do
+        get 'download' => 'transactions#download_csv', constraints: { format: 'csv' }
+      end
+    end
+
+    collection do
+      get 'customer_template' => "users#customer_csv_template", constraints: { format: 'csv' }
+    end
+
     # Only admins can create coupons
     resources :coupons, :constraints => lambda { |req| 
       req.env['warden'].authenticated? and req.env['warden'].user.email == '<redacted_email>' #Rails.application.secrets.dashboard_email 
@@ -73,6 +87,7 @@ Rails.application.routes.draw  do
     end
   end 
   
+
   ## api
   api_version(module: "Api::V1", path: {value: "v1"}, constraints: { subdomain: "api" }, defaults: { format: "json" }) do
     match 'users/find' => 'users#find', via: :get

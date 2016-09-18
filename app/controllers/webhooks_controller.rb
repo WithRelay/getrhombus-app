@@ -7,7 +7,7 @@ class WebhooksController < ApplicationController
       # Verify the event by fetching it from Stripe
       #event = Stripe::Event.retrieve(params[:id]) 
       #if params[:id] == event[:id]
-        StripeEvent.process_stripe_event(params) 
+        StripeEvent.process_event(params) 
       #end    
     #rescue StandardError => e
       # email platform
@@ -15,8 +15,12 @@ class WebhooksController < ApplicationController
     render nothing: true
   end
 
-  # set timezone for this request since we do duplicate payment check
+  # set timezone for this request since we do duplicate payment check??
   def twilio_events
 
+  end
+
+  def facebook_events
+    render json: FacebookEvent.process_event(params) 
   end
 end

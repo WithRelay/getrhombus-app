@@ -4,7 +4,7 @@ class StripeEvent
 
     # Methods sending emails out to merchant/customers must be idempotent except for invoice failed
 
-    def process_stripe_event(hash)
+    def process_event(hash)
       @hash = hash[:data][:object]
       puts JSON.pretty_generate(hash)
       case hash[:type]

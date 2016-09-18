@@ -1,4 +1,4 @@
-class EmailValidator
+class EmailValidatorService
 
   class << self
     

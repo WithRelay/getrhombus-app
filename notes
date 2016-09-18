@@ -10,29 +10,14 @@ Contact - Inbound
 - sent u a text doesnt have an account 
 - have an account, sent u a text but ref link isnt yours 
 
-Others
-- Clean up angular - https://blog.joshsoftware.com/2014/07/17/building-web-apps-with-rails4-and-angularjs-in-15-minutes/
 
-
-
-Thursday
-- plug into stripe api for managed accts - see notes
-
-Friday
+Friday/Saturday/Sunday
+- Plug into stripe api for managed accts - see notes
+- Create Seeds
 - Set up dev server - with rake task
-
-Saturday/Sunday
-- pick up fb messenger
-
-http://maps.googleapis.com/maps/api/geocode/json?address=92101
-http://kovalent.co/blog/zip-code-to-city-state-lookup/
-https://stripe.com/docs/stripe.js?#collecting-bank-account-details
-https://stripe.com/docs/api#retrieve_token
-https://stripe.com/docs/connect/required-verification-information
-https://console.developers.google.com/apis/api/geocoding_backend/overview?project=rhombus-143222&duration=PT1H
-
-- renew license
-
+- Access to Jira, bitbucket, cloud66 - use team?, burrow, slack
+   - twilio, stripe, mailchimp, facebook - based on tasks
+- Clean up angular - https://blog.joshsoftware.com/2014/07/17/building-web-apps-with-rails4-and-angularjs-in-15-minutes/
 
 
 

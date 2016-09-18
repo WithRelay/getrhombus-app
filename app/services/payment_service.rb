@@ -159,17 +159,7 @@ class PaymentService
 
     end
 
-    def create_customer(hash)
-      cu = Stripe::Customer.create(email: hash[:email], source: hash[:card_token]) 
-    end
-
-    def update_customer(hash)
-      cu = Stripe::Customer.retrieve(hash[:uri])  
-      cu.email = hash[:email]
-      cu.source = params[:card_token]
-      cu.save   
-    end
-
+    
     # Some countries require that the routing num and institition num be concatenated with a specific character
     # that's in index postion 1
     def stripe_country_list
@@ -186,4 +176,17 @@ class PaymentService
 
   end  
 end
+
+=begin
+    def create_customer(hash)
+      cu = Stripe::Customer.create(email: hash[:email], source: hash[:card_token]) 
+    end
+
+    def update_customer(hash)
+      cu = Stripe::Customer.retrieve(hash[:uri])  
+      cu.email = hash[:email]
+      cu.source = params[:card_token]
+      cu.save   
+    end
+=end
 

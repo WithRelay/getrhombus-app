@@ -116,34 +116,16 @@
 <!-- End Content -->
  <!-- //////////////////////////////////////////////////////////////////////////// --> 
 
-<div style="display: none;" id="refundFormBox" class="newForms">
-  <div id="refundFormDiv" class="parent_div">
-    <div class="center_div">      
-      <div id="refundCustomer">Refund Transaction</div>
-      <p id="refundCustomerLine">____</p>      
-      <form id="refundForm" name="refundForm">          
-           <label>
-              <select class="form-control rhombusFocus" id="refund_reason" name="refund_reason">
-                <option value="duplicate">Duplicate</option>
-                <option value="fraudulent">Fraudulent</option>
-                <option value="requested_by_customer">Customer Request</option>
-              </select>
-            </label>
 
-          <footer>
-            <button class="btn btn-default btn-block btn-rhombus" id="refundButton">Submit</button>
-          </footer>
-      </form>
-    </div>
-  </div>
-</div>
+
+<% render 'refund_box' %>
 
 
 
 
 
 <!-- should move out of here -->
-<form id="txn_history_form" method="get" action="/transactions/download.csv">
+<form id="txn_history_form" method="get" action="transactions/download.csv">
   <input type="hidden" id="txn_start_date" name="txn_start_date" />
   <input type="hidden" id="txn_end_date" name="txn_end_date" />
 </form>

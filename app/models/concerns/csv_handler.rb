@@ -66,7 +66,7 @@ module CSVHandler
             end
 
             # Validate email
-            if !EmailValidator.verify_email(row[:email])
+            if !EmailValidatorService.verify_email(row[:email])
               response.push(error_message + " email is invalid.")
               error = true
             end
