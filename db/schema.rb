@@ -11,6 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema.define(version: 20160909045046) do
 
   create_table "alerts", force: :cascade do |t|
@@ -176,12 +177,28 @@ ActiveRecord::Schema.define(version: 20160909045046) do
   end
 
   add_index "lists", ["user_id"], name: "index_lists_on_user_id", using: :btree
+=======
+ActiveRecord::Schema.define(version: 20151203073139) do
+
+  create_table "hashtags", force: :cascade do |t|
+    t.string   "name",            limit: 191
+    t.decimal  "amount",                        precision: 8, scale: 2
+    t.text     "response",        limit: 65535
+    t.string   "tag",             limit: 191
+    t.boolean  "is_precedent",    limit: 1,                             default: false
+    t.integer  "user_id",         limit: 4
+    t.datetime "created_at",                                                            null: false
+    t.datetime "updated_at",                                                            null: false
+    t.boolean  "not_payment_tag", limit: 1
+  end
+>>>>>>> f63f52b9b2dd659ebe2b0707f6a21db258a7113e
 
   create_table "messages", force: :cascade do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "from",              limit: 191
     t.string   "to",                limit: 191
+<<<<<<< HEAD
     t.string   "message_timestamp", limit: 191
     t.string   "message_price",     limit: 191
     t.string   "status",            limit: 191
@@ -196,6 +213,24 @@ ActiveRecord::Schema.define(version: 20160909045046) do
     t.string   "num_segments",      limit: 191
     t.string   "price_unit",        limit: 191
     t.integer  "hashtag_id",        limit: 4
+=======
+    t.integer  "status_report_req", limit: 4
+    t.string   "message_timestamp", limit: 191
+    t.string   "message_price",     limit: 191
+    t.string   "scts",              limit: 191
+    t.string   "status",            limit: 191
+    t.string   "status_delivery",   limit: 191
+    t.string   "network_code",      limit: 191
+    t.string   "error_text",        limit: 191
+    t.string   "err_code",          limit: 191
+    t.integer  "message_code",      limit: 4
+    t.integer  "user_id_from",      limit: 4
+    t.integer  "user_id_to",        limit: 4
+    t.integer  "transaction_id",    limit: 4
+    t.string   "messageId",         limit: 191
+    t.text     "text",              limit: 65535
+    t.boolean  "unread",            limit: 1,     default: true
+>>>>>>> f63f52b9b2dd659ebe2b0707f6a21db258a7113e
   end
 
   add_index "messages", ["hashtag_id"], name: "index_messages_on_hashtag_id", using: :btree
@@ -263,6 +298,14 @@ ActiveRecord::Schema.define(version: 20160909045046) do
   add_index "subscriptions", ["team_id"], name: "fk_rails_188d475f30", using: :btree
   add_index "subscriptions", ["user_id"], name: "fk_rails_268c3ec308", using: :btree
 
+  create_table "refunds", force: :cascade do |t|
+    t.string   "uri",        limit: 255
+    t.string   "time",       limit: 255
+    t.string   "reason",     limit: 255
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "transactions", force: :cascade do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -270,30 +313,55 @@ ActiveRecord::Schema.define(version: 20160909045046) do
     t.integer  "transaction_type",                   limit: 4
     t.decimal  "amount",                                           precision: 8, scale: 2
     t.decimal  "amount_less_fees",                                 precision: 8, scale: 2
+<<<<<<< HEAD
     t.decimal  "amount_with_taxes",                                precision: 8, scale: 2
     t.decimal  "rhombus_fee",                                      precision: 8, scale: 2
     t.string   "transaction_number",                 limit: 191
     t.string   "description",                        limit: 191
+=======
+    t.string   "transaction_number",                 limit: 191
+    t.string   "description",                        limit: 191
+    t.string   "from",                               limit: 191
+    t.string   "to",                                 limit: 191
+>>>>>>> f63f52b9b2dd659ebe2b0707f6a21db258a7113e
     t.string   "status",                             limit: 191
     t.string   "transaction_available_at",           limit: 191
     t.string   "last_four",                          limit: 191
     t.string   "expiration_month",                   limit: 191
     t.string   "expiration_year",                    limit: 191
+<<<<<<< HEAD
     t.string   "card_type",                          limit: 191
     t.string   "card_name",                          limit: 191
     t.string   "tax_percent",                        limit: 191
     t.string   "on_behalf_of_uri",                   limit: 191
+=======
+    t.string   "zip_code",                           limit: 191
+    t.string   "card_type",                          limit: 191
+    t.string   "card_name",                          limit: 191
+    t.string   "tax_rate",                           limit: 191
+    t.string   "on_behalf_of_uri",                   limit: 191
+    t.string   "account_number",                     limit: 191
+    t.string   "account_type",                       limit: 191
+    t.string   "account_name",                       limit: 191
+    t.string   "routing_number",                     limit: 191
+>>>>>>> f63f52b9b2dd659ebe2b0707f6a21db258a7113e
     t.integer  "referenced_user_id",                 limit: 4
     t.string   "referenced_customer_transaction_id", limit: 191
     t.string   "receipt_sent_at",                    limit: 191
     t.integer  "user_id",                            limit: 4
     t.text     "notes",                              limit: 65535
     t.integer  "referenced_merchant_transaction_id", limit: 4
+<<<<<<< HEAD
     t.integer  "team_id",                            limit: 4
     t.string   "currency",                           limit: 191
     t.integer  "hashtag_id",                         limit: 4
     t.integer  "subscription_id",                    limit: 4
     t.boolean  "captured",                           limit: 1,                             default: true
+=======
+    t.integer  "referenced_merchant_id",             limit: 4
+    t.string   "currency",                           limit: 191
+    t.integer  "refund_id",                          limit: 4
+>>>>>>> f63f52b9b2dd659ebe2b0707f6a21db258a7113e
   end
 
   add_index "transactions", ["created_at"], name: "index_transactions_on_created_at", using: :btree
@@ -335,14 +403,21 @@ ActiveRecord::Schema.define(version: 20160909045046) do
   add_index "twitter_creds", ["user_id"], name: "index_twitter_creds_on_user_id", unique: true, using: :btree
 
   create_table "users", force: :cascade do |t|
+<<<<<<< HEAD
     t.string   "email",                  limit: 191
     t.string   "encrypted_password",     limit: 191
     t.string   "reset_password_token",   limit: 191
+=======
+    t.string   "email",                        limit: 191
+    t.string   "encrypted_password",           limit: 191
+    t.string   "reset_password_token",         limit: 191
+>>>>>>> f63f52b9b2dd659ebe2b0707f6a21db258a7113e
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
     t.integer  "sign_in_count",          limit: 4,     default: 0
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
+<<<<<<< HEAD
     t.string   "current_sign_in_ip",     limit: 191
     t.string   "last_sign_in_ip",        limit: 191
     t.string   "confirmation_token",     limit: 191
@@ -389,6 +464,58 @@ ActiveRecord::Schema.define(version: 20160909045046) do
     t.string   "short_url",              limit: 191
     t.string   "currency",               limit: 191
     t.string   "fb_id",                  limit: 191
+=======
+    t.string   "current_sign_in_ip",           limit: 191
+    t.string   "last_sign_in_ip",              limit: 191
+    t.string   "confirmation_token",           limit: 191
+    t.datetime "confirmed_at"
+    t.datetime "confirmation_sent_at"
+    t.string   "unconfirmed_email",            limit: 191
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "user_level",                   limit: 4
+    t.string   "customer_uri",                 limit: 191
+    t.string   "last_four",                    limit: 191
+    t.string   "expiration_month",             limit: 191
+    t.string   "expiration_year",              limit: 191
+    t.string   "zip_code",                     limit: 191
+    t.string   "card_name",                    limit: 191
+    t.string   "card_type",                    limit: 191
+    t.string   "phone_number",                 limit: 191
+    t.string   "business_name",                limit: 191
+    t.string   "business_type",                limit: 191
+    t.string   "street_address",               limit: 191
+    t.string   "city",                         limit: 191
+    t.string   "state_province",               limit: 191
+    t.string   "business_phone",               limit: 191
+    t.string   "country",                      limit: 191
+    t.string   "rhombus_number",               limit: 191
+    t.string   "routing_number",               limit: 191
+    t.string   "account_name",                 limit: 191
+    t.string   "account_number",               limit: 191
+    t.string   "account_type",                 limit: 191
+    t.boolean  "approve_payments_immediately", limit: 1,     default: false
+    t.string   "tax_rate",                     limit: 191
+    t.integer  "transactions_count",           limit: 4
+    t.string   "instrument_uri",               limit: 191
+    t.string   "business_zip_code",            limit: 191
+    t.string   "provider",                     limit: 191
+    t.string   "uid",                          limit: 191
+    t.string   "stripe_access_token",          limit: 191
+    t.string   "stripe_publishable_key",       limit: 191
+    t.string   "stripe_scope",                 limit: 191
+    t.string   "stripe_livemode",              limit: 191
+    t.string   "stripe_refresh_token",         limit: 191
+    t.string   "first_name",                   limit: 191
+    t.string   "last_name",                    limit: 191
+    t.boolean  "is_active",                    limit: 1,     default: true
+    t.string   "referrer_num",                 limit: 191
+    t.integer  "subscription_type",            limit: 4,     default: 0
+    t.string   "url",                          limit: 191
+    t.text     "custom_welcome",               limit: 65535
+    t.string   "short_url",                    limit: 191
+    t.string   "currency",                     limit: 191
+>>>>>>> f63f52b9b2dd659ebe2b0707f6a21db258a7113e
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree

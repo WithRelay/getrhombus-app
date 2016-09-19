@@ -5,7 +5,12 @@ class Transaction < ActiveRecord::Base
   # scope :ordering, -> { order(:DESC) }
 
   has_one :message
+<<<<<<< HEAD
   has_one :refund, inverse_of: :refund
+=======
+  belongs_to :user, counter_cache: true
+  belongs_to :refund, inverse_of: :transactions
+>>>>>>> f63f52b9b2dd659ebe2b0707f6a21db258a7113e
 
   belongs_to :hashtag
   belongs_to :user, counter_cache: true
@@ -138,9 +143,49 @@ class Transaction < ActiveRecord::Base
   end
 =end
 
+<<<<<<< HEAD
   def self.process_captured_payment()
     # call charge customer here
   end
+=======
+  def save_transaction(options = {})
+    #debugger   		
+ 	  self.transaction_uri = options[:transaction_uri] if options[:transaction_uri]
+   	self.transaction_type = options[:transaction_type] if options[:transaction_type]
+   	self.amount = options[:amount] if options[:amount]
+   	self.amount_less_fees = options[:amount_less_fees] if options[:amount_less_fees]
+   	self.transaction_number = options[:transaction_number] if options[:transaction_number]
+    	
+   	self.description = options[:description] if options[:description]
+   	self.from = options[:from] if options[:from]
+   	self.to = options[:to] if options[:to]
+   	self.status = options[:status] if options[:status]
+   	self.transaction_available_at = options[:transaction_available_at] if options[:transaction_available_at]
+    self.receipt_sent_at  = options[:receipt_sent_at] if options[:receipt_sent_at]
+   	
+   	self.last_four = options[:last_four] if options[:last_four]
+   	self.expiration_month = options[:expiration_month] if options[:expiration_month]
+   	self.expiration_year = options[:expiration_year] if options[:expiration_year]
+   	self.card_type = options[:card_type] if options[:card_type]
+   	self.card_name	= options[:card_name] if options[:card_name]
+   	
+   	self.tax_rate = options[:tax_rate] if options[:tax_rate]
+   	self.on_behalf_of_uri = options[:on_behalf_of_uri] if options[:on_behalf_of_uri]
+   	self.referenced_user_id = options[:referenced_user_id] if options[:referenced_user_id]
+  	self.referenced_customer_transaction_id = options[:referenced_customer_transaction_id] if options[:referenced_customer_transaction_id]
+  	self.user_id = options[:user_id] if options[:user_id]
+
+   	self.notes = options[:notes] if options[:notes]
+   	self.amount_with_taxes = options[:amount_with_taxes] if options[:amount_with_taxes]
+   	self.referenced_merchant_transaction_id = options[:referenced_merchant_transaction_id] if options[:referenced_merchant_transaction_id]
+   	self.referenced_merchant_id = options[:referenced_merchant_id] if options[:referenced_merchant_id]    
+    self.currency = options[:currency] if options[:currency]        
+
+   	self.save 										# add a check here later
+  end
+
+end
+>>>>>>> f63f52b9b2dd659ebe2b0707f6a21db258a7113e
 
 end
 

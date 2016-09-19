@@ -27,6 +27,7 @@ module Rhombus
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true
 
+<<<<<<< HEAD
     GC::Profiler.enable                         # added
 
     # config/environments/production.rb
@@ -39,5 +40,8 @@ module Rhombus
         :secret_access_key: <redacted_secret_access_key>
       }
     }
+=======
+    GC::Profiler.enable
+>>>>>>> f63f52b9b2dd659ebe2b0707f6a21db258a7113e
   end
 end

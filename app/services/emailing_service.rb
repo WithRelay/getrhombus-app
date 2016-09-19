@@ -25,7 +25,11 @@ class EmailingService
          "from_email" => SENDER
         }
         async = true
+<<<<<<< HEAD
         result = mandrill.messages.send_template template_name, template_content, message, async       
+=======
+        result = mandrill.messages.send_template template_name, template_content, message, async     
+>>>>>>> f63f52b9b2dd659ebe2b0707f6a21db258a7113e
       rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
         puts "A mandrill error occurred: #{e.class} - #{e.message}"
       rescue StandardError => e
@@ -46,7 +50,11 @@ class EmailingService
          "from_email" => SENDER 
         }
         async = true
+<<<<<<< HEAD
         result = mandrill.messages.send_template template_name, template_content, message, async        
+=======
+        result = mandrill.messages.send_template template_name, template_content, message, true   
+>>>>>>> f63f52b9b2dd659ebe2b0707f6a21db258a7113e
       rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
         puts "A mandrill error occurred: #{e.class} - #{e.message}"
       rescue StandardError => e
@@ -74,7 +82,11 @@ class EmailingService
          "from_email" => SENDER
         }
         async = true
+<<<<<<< HEAD
         result = mandrill.messages.send_template template_name, template_content, message, async        
+=======
+        result = mandrill.messages.send_template template_name, template_content, message, async      
+>>>>>>> f63f52b9b2dd659ebe2b0707f6a21db258a7113e
       rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
         puts "A mandrill error occurred: #{e.class} - #{e.message}"
       rescue StandardError => e
@@ -109,7 +121,11 @@ class EmailingService
          "from_email" => SENDER
         }
         async = true
+<<<<<<< HEAD
         result = mandrill.messages.send_template template_name, template_content, message, async       
+=======
+        result = mandrill.messages.send_template template_name, template_content, message, async    
+>>>>>>> f63f52b9b2dd659ebe2b0707f6a21db258a7113e
       rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
         puts "A mandrill error occurred: #{e.class} - #{e.message}"
       rescue StandardError => e

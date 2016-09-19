@@ -43,6 +43,7 @@ Rails.application.routes.draw  do
     get "signin", :to => "devise/sessions#new"
   end
   
+<<<<<<< HEAD
   # user routes
   resources :users, :only => :show do
     resources :hashtags
@@ -64,6 +65,10 @@ Rails.application.routes.draw  do
       get 'lists' => 'users#lists'
     end
   end 
+=======
+  resources :users, :only => :show
+  resources :refunds, :only => :create
+>>>>>>> f63f52b9b2dd659ebe2b0707f6a21db258a7113e
   
   ## api
   api_version(module: "Api::V1", path: {value: "v1"}, constraints: { subdomain: "api" }, defaults: { format: "json" }) do

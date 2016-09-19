@@ -1,4 +1,5 @@
 class Refund < ActiveRecord::Base
+<<<<<<< HEAD
   
   validates :uri, :time, presence: true
   belongs_to :txn, :foreign_key => :transaction_id, :class_name => :Transaction
@@ -38,6 +39,6 @@ class Refund < ActiveRecord::Base
     EmailingService.charge_failure_notification(to: merchant.email, customer_email: user.email, customer_phone: user.phone_number,
       card_name: user.card_name, last_four: user.last_four, text: message, org_phone: merchant.org_phone,
       rhombus_number: merchant.rhombus_number, dump: err, to_merchant: true)
-  end
+  end	
 
 end

@@ -15,6 +15,7 @@ module ProcessMessage
 			text = params[:text].strip
 			user = User.find_by(phone_number: params[:msisdn])
 			merchant = User.find_by(rhombus_number: params[:to])
+<<<<<<< HEAD
 			
 			amount_array = check_for_payment(text)
 			amount_array = check_for_tag(amount_array, merchant.id)
@@ -38,6 +39,19 @@ module ProcessMessage
 						elsif (!amount_array[0] && !amount_array[2])
 							# response here
 
+=======
+			amount = is_payment?(text)
+			if amount
+				if user
+					if is_customer_account_complete?(request, params, user)
+						amount = to_cents(amount)
+						if is_amount_under_limit?(request, params, amount)
+							if is_merchant_active?(request, params, merchant)
+								if is_merchant_account_complete?(request, params, merchant)
+									process_payment(amount, merchant, user, text, request)
+								end
+							end
+>>>>>>> f63f52b9b2dd659ebe2b0707f6a21db258a7113e
 						end
 
 						deprecation_warning(params[:to], params[:msisdn]) if amount_array[1] == "+"
@@ -58,7 +72,33 @@ module ProcessMessage
 					else
 						# something went wrong
 					end
+<<<<<<< HEAD
 					return
+=======
+				else
+					# payment message but user doesnt exist. save in messages and send a response
+					merchant_name = merchant.business_name ? merchant.business_name : "Rhombus"
+					merchant_name_prompt = merchant.business_name ? "to " + merchant.business_name : "through Rhombus"
+					short_link = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?num=#{params[:msisdn]}&referrer_num=#{params[:to]}&referrer=#{merchant_name}")
+					send_response(16, params[:to], params[:msisdn], "Hi there! You're really close to sending a payment #{merchant_name_prompt} in the simplest way. Follow the link to get set up: #{short_link}")
+					save_inbound_text(request.query_string, msg_code = 6)
+					return
+				end
+			elsif !user
+				save_inbound_text(request.query_string, msg_code = 4)
+				if is_signup?(text)
+					merchant_name = merchant.business_name ? merchant.business_name : "Rhombus"
+					merchant_name_prompt = merchant.business_name ? "to " + merchant.business_name : "through Rhombus"
+					short_link = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?num=#{params[:msisdn]}&referrer_num=#{params[:to]}&referrer=#{merchant_name}")
+					send_response(14, params[:to], params[:msisdn], "Hi there! You're really close to sending a payment #{merchant_name_prompt} in the simplest way. Follow the link to get set up: #{short_link}")
+				end
+			elsif user && is_signup?(text)  #### for rccgna only. maybe not
+				save_inbound_text(request.query_string, msg_code = 4)
+				if user.instrument_uri
+					send_response(14, params[:to], params[:msisdn], "You are all set up, just text the amount and description to complete your payment. Ex: $20 for donuts.")
+				else
+					send_response(14, params[:to], params[:msisdn], "To complete your payment by text, please sign in here to add your card information: https://www.getrhombus.com/signin")
+>>>>>>> f63f52b9b2dd659ebe2b0707f6a21db258a7113e
 				end
 
 			elsif !user
@@ -81,9 +121,15 @@ module ProcessMessage
 				send_wrong_format_message(params[:to], params[:msisdn]) if amount_array[1]
 
 			else
+<<<<<<< HEAD
 				save_inbound_text(request.query_string, msg_code = 5)	# user exist, but not a payment message...save in messages
 				# until nexmo can give use concatenated messages..i think they do now (06/14/14) #remove			
 				send_wrong_format_message(params[:to], params[:msisdn]) if amount_array[1]		
+=======
+				# user exist, but not a payment message...save in messages
+				save_inbound_text(request.query_string, msg_code = 5)
+				# until nexmo can give use concatenated messages..i think they do now (06/14/14)
+>>>>>>> f63f52b9b2dd659ebe2b0707f6a21db258a7113e
 			end
 		rescue StandardError => err
 			logger.error err.message
@@ -92,6 +138,7 @@ module ProcessMessage
 		end
 	end
 
+<<<<<<< HEAD
 	def check_for_tag(amount_array, merchant_id)
 		tag = nil		
     	tag = Hashtag.where('user_id = ? and lower(tag) = ?', merchant_id, amount_array[2].downcase) if amount_array[2]
@@ -105,9 +152,53 @@ module ProcessMessage
     	if not_repeating_payment?(user.id, text)
 			customer_txn_id = Transaction.charge_customer_card(amount, merchant, user, text)
 			saved_message.update(transaction_id: customer_txn_id) if saved_message && saved_message.id.present?	# Save transaction id
+=======
+	# refactor Transaction model
+	def process_payment(amount, merchant, user, text, request)
+		# save and pubnub
+    	new_message = save_inbound_text(request.query_string, msg_code = 1)
+		
+		# has this payment already happened?
+		if not_repeating_payment?(user.id, text)
+			@customer_transaction = Transaction.new
+			debit_data = @customer_transaction.charge_customer_card(amount, merchant, user, text)
+			
+			# Save transaction id
+			if (!new_message.id.blank?)
+			  new_message.update(transaction_id: debit_data[0])
+			end
+			
+			# if no error from api or saving process, proceed to save transaction details for merchant
+			if debit_data != "failed"
+				@merchant_transaction = Transaction.new
+				credit_data = @merchant_transaction.merchant_transaction_details(debit_data, merchant, user, text)
+											
+				# if credit_data != "failed"					# saved successfully that is
+				# set the merchant transaction id in the customer referenced transaction id
+				@customer_transaction.referenced_merchant_transaction_id = credit_data # or @merchant_transaction.id
+				@customer_transaction.save
+
+				#Facilitation info. Save customer and merchant transaction ids
+				@marketplace_transaction = Transaction.new
+				@marketplace_transaction.owner_transaction_details(debit_data, credit_data, merchant, user, text)#@merchant_transaction.id, @user, text)
+				# end
+			else
+				return
+			end	
+>>>>>>> f63f52b9b2dd659ebe2b0707f6a21db258a7113e
 		end
 		# see number 20. Used for payment system outage
 		# send_response(20, params[:to], params[:msisdn], "Thank you for sending a payment with rhombus. We're currently experiencing a system outage. We will notify you once the outage is resolved. Thanks!")
+	end
+
+	def not_repeating_payment?(id, text)
+		# if necessary, you could modify the query to return a text sent to a specific merchant..so add user_id_to
+		last_messages = Message.where("user_id_from = ? and created_at >= ?", id, Time.now.utc - 10.minutes).order(created_at: :desc)[1..-1]
+		return true if last_messages == nil
+		last_messages.each do |m|
+			return false if m.text.strip == text
+		end
+ 		return true
 	end
 
 
@@ -228,13 +319,21 @@ module ProcessMessage
 
 
 	def is_number?(var)
+<<<<<<< HEAD
 		#bad way to rescue
   	   	true if Float(var) rescue false
+=======
+  	true if Float(var) rescue false
+>>>>>>> f63f52b9b2dd659ebe2b0707f6a21db258a7113e
 	end
 
 
 	def is_signup?(text)
+<<<<<<< HEAD
 		words = ['signup', 'sign-up', "#signup", "#sign-up", 'give', "#give", 'pay', "#pay", 'buy', '#buy', 'donate', "#donate"]
+=======
+		words = ['signup', 'sign-up', 'give', 'pay', 'buy', 'donate', '"give"', '"pay"', "'pay'", "'give'", "'donate'", '"donate"']
+>>>>>>> f63f52b9b2dd659ebe2b0707f6a21db258a7113e
 		return true if words.include? text.downcase.gsub(/\s+/, "")  
 		return false
 	end
@@ -248,7 +347,13 @@ module ProcessMessage
 	def send_response(msg_code, to, from, message) 
 		@message = Message.new 				
 		@message.send_and_save_message(msg_code, to, from, message)
+<<<<<<< HEAD
    		RealtimeStreamService.send_message_via_number(from, to, message, @message.created_at, true)		# Send to merchant's messaging channel
+=======
+		
+		# Send to merchant's messaging channel
+    	RealtimeStreamService.send_message_via_number(from, to, message, @message.created_at, true)
+>>>>>>> f63f52b9b2dd659ebe2b0707f6a21db258a7113e
 	end
 
 	

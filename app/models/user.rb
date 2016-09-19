@@ -1,8 +1,12 @@
 class User < ActiveRecord::Base
 
+<<<<<<< HEAD
   include DashboardMerchantQueries
   include DashboardCustomerQueries
   include CSVHandler
+=======
+  include DashboardQueries
+>>>>>>> f63f52b9b2dd659ebe2b0707f6a21db258a7113e
 
   attr_accessor :full_name, :phone, :captured_amt, :msg_id, :tag_id
 
@@ -64,6 +68,7 @@ class User < ActiveRecord::Base
     if params[:instrument_uri].present?  # is this why i get the errors from stripe??
       begin 
         if self.customer_uri.blank?                                     # Doesnt have a customer uri => first time
+<<<<<<< HEAD
           cu = Stripe::Customer.create(email: self.email, source: params[:instrument_uri])         
           self.customer_uri = cu.id
           self.stripe_livemode = cu.livemode
@@ -72,6 +77,19 @@ class User < ActiveRecord::Base
           cu.email = self.email
           cu.source = params[:instrument_uri]
           cu.save   
+=======
+          response = Stripe::Customer.create(:email => "#{self.email}", :card => params[:instrument_uri])         
+          self.customer_uri = response.id
+          self.stripe_livemode = response.livemode
+          self.save
+          return [true, "new_customer"]
+        else
+          response = Stripe::Customer.retrieve(self.customer_uri)  
+          response.email = self.email
+          response.card = params[:instrument_uri]
+          response.save 
+          return [true]  
+>>>>>>> f63f52b9b2dd659ebe2b0707f6a21db258a7113e
         end
         buy_merchant_number if self.user_level == 1 && self.rhombus_number_type == nil
         return true
@@ -81,6 +99,7 @@ class User < ActiveRecord::Base
         owner = User.find_by(email: Rails.application.secrets.team_email)
         Message.send_and_save_message(owner.rhombus_number, self.phone_number, "We were unable to update your card info on Rhombus because: #{err[:message]}.")
         Notification.token_failure_notification(err, self.email).deliver_now
+<<<<<<< HEAD
       rescue Stripe::StripeError => e
         Notification.token_failure_notification(e.json_body[:error], self.email).deliver_now
       rescue StandardError => e
@@ -89,6 +108,20 @@ class User < ActiveRecord::Base
     end
 
     return false
+=======
+        return [false]
+      rescue Stripe::StripeError => e
+        body = e.json_body
+        err  = body[:error]
+        Notification.token_failure_notification(err, self.email).deliver_now
+        return [false]
+      rescue StandardError => e
+        Notification.token_failure_notification(e, self.email).deliver_now
+        return [false]
+      end
+    end
+    return [true]                     # Not a customer just a merchant
+>>>>>>> f63f52b9b2dd659ebe2b0707f6a21db258a7113e
   end
  
   def buy_merchant_number
@@ -163,6 +196,7 @@ class User < ActiveRecord::Base
   end
 
   def send_welcome_email
+<<<<<<< HEAD
     owner = User.find_by(email: Rails.application.secrets.team_email)
     if self.user_level == 1
       EmailingService.send_welcome_email(self.email, owner.rhombus_number, "merchant")
@@ -181,6 +215,29 @@ class User < ActiveRecord::Base
       You can chat with a local business anytime by texting their Rhombus number or to make a payment, just text the amount & 
       description/hashtag. Ex. +10 #donut"
       message.send_and_save_message(owner.rhombus_number, self.phone_number, text)
+=======
+    begin
+      owner = User.find_by(email: Rails.application.secrets.team_email)
+      if self.user_level == 1
+        EmailingService.send_welcome_email(self.email, owner.rhombus_number, "merchant")
+      elsif self.user_level == 0
+        @message = Message.new
+        unless self.referrer_num.blank?
+          referrer = User.find_by(rhombus_number: self.referrer_num)
+          EmailingService.send_welcome_email_with_referral(referrer.email, self.email, referrer.business_name, referrer.rhombus_number, owner.rhombus_number)
+          # default for referrer or use merchant welcome
+          name = (referrer.first_name.present?) ? "my name is #{referrer.first_name}, " : ''
+          text = "Hi there, I'll be happy to answer any questions via text. Don't forget to add your card info if you'd like to text a payment."
+          text = referrer.custom_welcome unless referrer.custom_welcome.blank?
+          @message.send_and_save_message(22, referrer.rhombus_number, self.phone_number, text)
+          return
+        end
+        EmailingService.send_welcome_email(self.email, owner.rhombus_number, "customer")
+        text = "Thanks for signing up! To chat with a business, simply send a text message to their Rhombus phone number. Don't forget to add your card info if you'd like to text a payment to the business."
+        @message.send_and_save_message(22, owner.rhombus_number, self.phone_number, text)
+      end
+    rescue StandardError => e
+>>>>>>> f63f52b9b2dd659ebe2b0707f6a21db258a7113e
     end
   end
 

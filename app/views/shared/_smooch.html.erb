@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+=======
+<% 
+=begin %>
+>>>>>>> f63f52b9b2dd659ebe2b0707f6a21db258a7113e
 <% if !current_user %>
 	<script src="https://cdn.smooch.io/smooch.min.js"></script>
 	<script> 
@@ -6,9 +11,15 @@
 		});
 	</script>
 <% end %>
+<<<<<<< HEAD
 
 <% 
 =begin %>
+=======
+<% 
+=end %>
+
+>>>>>>> f63f52b9b2dd659ebe2b0707f6a21db258a7113e
 <script src="https://cdn.smooch.io/smooch.min.js"></script>
 <script> 
 	Smooch.init({
@@ -22,9 +33,17 @@
 			phone_number: "<%= current_user.phone_number %>",
 			last_sign_in: "<%= current_user.last_sign_in_at %>",
 			is_active: "<%= current_user.is_active %>",
+<<<<<<< HEAD
 			org_name: "<%= current_user.org_name %>"
 		<% end %>
 	});
 </script>
 <% 
 =end %>
+=======
+			business_name: "<%= current_user.business_name %>"
+		<% end %>
+	});
+</script>
+
+>>>>>>> f63f52b9b2dd659ebe2b0707f6a21db258a7113e
