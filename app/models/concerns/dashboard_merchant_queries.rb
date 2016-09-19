@@ -2,7 +2,7 @@ module DashboardMerchantQueries
 	extend ActiveSupport::Concern
 
 	# Customers who have paid
-	@@customers_query_txns = "(SELECT transactions.created_at, @users_ids := users.id, users.card_name, users.email, 
+	@@customers_query_txns = "(SELECT transactions.created_at, @users_ids := users.id as user_id, users.card_name, users.email, 
 		users.phone_number, SUM(transactions.amount) AS total_spend, MIN(transactions.created_at) AS first_visit, 
 		AVG(transactions.amount) AS avg_spend, max(transactions.created_at) AS last_visit,
 		SUM(transactions.created_at BETWEEN NOW() - INTERVAL 30 DAY AND NOW()) AS last_30 
@@ -19,7 +19,7 @@ module DashboardMerchantQueries
 
 	def get_merchant_transactions
 		Transaction.find_by_sql([
-			"SELECT users.card_name, users.email, transactions.created_at, transactions.last_four, transactions.notes, 
+			"SELECT users.card_name, users.email, transactions.last_four, transactions.notes, 
 			 transactions.amount_less_fees, users.phone_number, transactions.transaction_number, transactions.transaction_uri, 
 			  transactions.tax_percent, refunds.id as refund_id
 				FROM transactions 

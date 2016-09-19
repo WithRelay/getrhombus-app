@@ -43,7 +43,7 @@ class User < ActiveRecord::Base
   # still need validation errors for edit..this is only for create action
   #validates :phone_number, presence: true, numericality: { only_integer: true }, length: { minimum: 10 }, on: :create
 
-  # A user can have belong to more than one list and also own multiple lists (Admins)
+  # A user can belong to more than one list and also own multiple lists (Admins)
   has_many :lists
   has_many :customers, through: :customer_lists
 

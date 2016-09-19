@@ -10,7 +10,14 @@ Rails.application.routes.draw  do
   get 'pricing' => 'static_pages#pricing'
   get 'contact' => 'contact_forms#new'
   
-  resources :contact_forms
+  post 'lists/create_new_list' => 'lists#create_new_list'
+  get 'customer_lists/remove_user' => 'customer_lists#remove_user'
+
+  
+  resources :lists do
+    resources :customer_lists
+  end
+
 
   get "resque" => Resque::Server, :anchor => false, :constraints => lambda { |req|
     req.env['warden'].authenticated? and req.env['warden'].user.id == 23
@@ -54,6 +61,7 @@ Rails.application.routes.draw  do
       get 'customers' => 'users#customers'
       get 'businesses' => 'users#businesses'
       get 'notifications' => 'alerts#edit'
+      get 'lists' => 'users#lists'
     end
   end 
   

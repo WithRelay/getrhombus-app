@@ -1,4 +1,46 @@
 <p id="notice"><%= notice %></p>
+<div id="list_info">
+<strong>List name:</strong> <%= @list.name %></br>
+<strong>List owner:</strong> <%= User.find(@list.user_id).first_name  %> </br>
+<strong>List created at:</strong> <%= @list.created_at %> </br>
 
-<%= link_to 'Edit', edit_list_path(@list) %> |
-<%= link_to 'Back', lists_path %>
+</div>
+
+
+<div id= "customers"> 
+	<strong> Customers in list </strong>
+<table style="width:50%">
+<tr>
+	<th>First name</th>
+	<th>Last name</th>
+	<th>Email </th>
+	<th>Action </th>
+</tr>
+
+<% @users.each do |c| %>
+<tr>
+	<td><%= c.first_name %> </td>
+	<td><%= c.last_name %> </td>
+	<td><%= c.email %> </td>
+	<% customer_list = CustomerList.where(list_id:@list.id,user_id:c.id) %>
+	<td><%= link_to 'Remove user from list' %></td>
+</tr>
+
+<% end %>
+
+</table>
+
+<%= link_to 'Edit List', edit_list_path(@list) %>
+<%= link_to 'Back', lists_path %> </br>
+</div>
+
+<style>
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+th, td {
+    padding: 5px;
+    text-align: left;
+}
+</style>

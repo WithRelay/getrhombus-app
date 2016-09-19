@@ -23,7 +23,7 @@
   <!-- Start Page Header -->
   <div class="page-header" style="background: transparent; margin-bottom: 0px;">
     <div class="title" style="font-weight: normal;">Customers</div>
-        <%= submit_tag 'Create List', :id=>'create_list', :name => 'create_list', :type => 'button', disabled: true %>
+        <%= submit_tag 'Create List', :id=>'create_list_button', :name => 'create_list', :type => 'button', disabled: true %>
     <%= render 'shared/dashboard_shortcut' %>
   </div>
 
@@ -60,19 +60,17 @@
                       </tr>
                     </thead>
                     <tbody>
-                    <% count = 0 %>
                     <% @customers.each do |c| %>
                       <tr role="row">
                         <td class="details-control" data-page="users" data-email="<%= c.email %>"
                           data-phone="<%= c.phone_number %>"></td>
-                        <td><input type="checkbox" id="checkbox_<%= count %>" class="customer_checkboxes"></input></td>
+                        <td><input type="checkbox" value="<%=c.user_id %>"  class="customer_checkboxes"></input></td>
                         <td><%= c.card_name %></td>
                         <td><%= (c.first_visit) ? c.first_visit.strftime("%m/%d/%Y") : '--' %></td>
                         <td><%= (c.last_visit) ? c.last_visit.strftime("%m/%d/%Y") : "--" %></td>
                         <td><%= number_to_currency(c.avg_spend) %></td>
                         <td><%= number_to_currency(c.total_spend) %></td>
                         <td><%= c.last_30 %></td>
-                        <% count +=1 %>
                       </tr>
                     <% end %>
                     </tbody>
@@ -105,32 +103,64 @@
 <!-- End Content -->
  <!-- //////////////////////////////////////////////////////////////////////////// --> 
 
-
+<!-- Create List form -->
+<div id="list_create_modal">
+    <span>Create your list of customers</span>
+    <div id="create_list_form">
+        <div id="list_form_errors"> </div>
+        <div id="list_form_items">
+          <%= form_tag("/lists/create_new_list", method: "post", remote: true) do %>
+            <%= label_tag(:list_name, "List name") %>
+            <%= hidden_field_tag(:selected_users) %>
+            <%= text_field_tag(:list_name) %>
+            <%= submit_tag("Submit list") %>
+          </div>
+            <%= button_tag("cancel") %>
+          <% end %>
+    </div>
+  </div>
+<!-- -->
 </body>
+
+
 <!--
-Temporary script for enabling the create list button based on whether something a customer is selected or not
+Temporary script for enabling the create list button based on whether a customer is selected or not
 -->
 <script>
-  $("#create_list").click(function(){
-    $this.modal();
-  })
+  var selected_users = [] 
+  $("#create_list_button").click(function(e){
+    $("#list_create_modal").lightbox_me({
+      closeClick: true,
+      closeEsc: true,
+      centered: true,
+      onLoad: function() {
+        $("#list_create_modal").find('input:first')
+        $("#selected_users").val(selected_users)
+      }
+      });
+     e.preventDefault();
+  });
   num_checkboxes_selected = 0;
   $(".customer_checkboxes" ).change(function() {
     var input = $(this);
     var state = (input.prop("checked"))
     if (state == true){
       num_checkboxes_selected +=1;
+      selected_users.push(input.val());
+      console.log("Input checked is : ", input.val());
   
     } else{
       num_checkboxes_selected -=1;
+      element_index = selected_users.indexOf(input.val())
+      selected_users.splice(element_index, 1);
     }
     
-  if (num_checkboxes_selected > 0){
-    console.log("There is a selected checkbox.");
-    $("#create_list").prop('disabled', false);
+  if (selected_users.length > 0){
+    console.log("There is a selected checkbox.", selected_users);
+    $("#create_list_button").prop('disabled', false);
   }else{
     console.log("No selected checkboxes");
-    $("#create_list").prop('disabled', true);
+    $("#create_list_button").prop('disabled', true);
   }
 })
 </script>
