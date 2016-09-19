@@ -21,6 +21,14 @@ class WebhooksController < ApplicationController
   end
 
   def facebook_events
-    render json: FacebookEvent.process_event(params) 
+    res = {}
+    
+    begin
+      res = FacebookEvent.process_event(params)
+    rescue StandardError => e
+      # email platform
+    end
+
+    render json: res
   end
 end
