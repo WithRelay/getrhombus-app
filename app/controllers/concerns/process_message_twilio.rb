@@ -88,7 +88,7 @@ module ProcessMessageTwilio
   def not_repeating_payment?(id, text)
     last_message = Message.where("user_id = ? AND transaction_id > ?", id, 0).order('created_at DESC').limit(1)[0]
     return true if last_message == nil
-    diff = Time.now.utc - last_message.created_at.utc
+    diff = Time.current - last_message.created_at
     return true if text != last_message.text.strip || diff >= 300
     return false
   end

@@ -21,7 +21,7 @@ class Refund < ActiveRecord::Base
 =begin
         # Refund notification
         EmailingService.charge_failure_notification(to: merchant.email, customer_email: user.email, customer_phone: user.phone_number,
-          card_name: user.card_name, last_four: user.last_four, text: message, org_phone: merchant.org_phone,
+          card_name: user.card_name, last4: user.last4, text: message, org_phone: merchant.org_phone,
           rhombus_number: merchant.rhombus_number, dump: err, to_merchant: true)
 =end
         return ["Payment has been refunded.", 200]
@@ -37,7 +37,7 @@ class Refund < ActiveRecord::Base
   # Refund failure notification
   def send_refund_failure_notification
     EmailingService.charge_failure_notification(to: merchant.email, customer_email: user.email, customer_phone: user.phone_number,
-      card_name: user.card_name, last_four: user.last_four, text: message, org_phone: merchant.org_phone,
+      card_name: user.card_name, last4: user.last4, text: message, org_phone: merchant.org_phone,
       rhombus_number: merchant.rhombus_number, dump: err, to_merchant: true)
   end	
 

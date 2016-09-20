@@ -229,16 +229,6 @@ class TextingService
             },
           }
         },
-        ID: {
-          name: "Indonesia",
-          types: {
-            mobile: {
-              capabilities: ["sms", 'voice'],
-              reach: "global",
-              address_required: ""
-            },
-          }
-        },
         IL: {
           name: "Israel",
           types: {
@@ -290,7 +280,7 @@ class TextingService
           }
         },
         PR: {
-          name: "Puerto Rice",
+          name: "Puerto Rico",
           types: {
             local: {
               capabilities: ["sms", "voice"],
@@ -299,18 +289,16 @@ class TextingService
             },
           }
         },
-=begin
         ES: {
           name: "Spain",
           types: {  
             local: {
-              capabilities: ["sms", "voice"],
+              capabilities: ["sms"],
               reach: "domestic",
-              address_required: "local address"
+              address_required: ""
             },
           }
         },
-=end
         SE: {
           name: "Sweden",
           types: {
@@ -357,7 +345,17 @@ class TextingService
           }
         },      
       }
-    end    
+    end  
+
+    def release_number(num)
+      begin  
+        client = Twilio::REST::Client.new TWILIO_API_KEY, TWILIO_API_SECRET
+        client.account.incoming_phone_numbers.list({phone_number: num}).each { |n| n.delete }
+        true    
+      rescue StandardError => e
+        false
+      end
+    end  
   end
 end
 

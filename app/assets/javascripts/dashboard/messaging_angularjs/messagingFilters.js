@@ -7,6 +7,7 @@ angular.module('messagingFilters', [])
     return function(items, query) {
       var filtered = [];
       angular.forEach(items, function(item) {
+        // first_name now in person model
         if ((query == undefined) || ((item.first_name.toLowerCase().indexOf(query) != -1) || (item.last_name.toLowerCase().indexOf(query) != -1) || (item.email.toLowerCase().indexOf(query) != -1))) {
           filtered.push(item);
         }

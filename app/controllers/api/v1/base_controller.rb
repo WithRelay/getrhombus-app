@@ -1,10 +1,10 @@
 class API::V1::BaseController < ApplicationController
 
-  #before_filter :http_basic_authentication
+  # before_action :http_basic_authentication
   # do current_user or token test here and set as current_user
 
-  before_filter :cors_preflight_check
-  after_filter :cors_set_access_control_headers
+  before_action :cors_preflight_check
+  after_action :cors_set_access_control_headers
 
   def cors_set_access_control_headers
     headers['Access-Control-Allow-Origin'] = '*'

@@ -4,7 +4,8 @@ class CouponsController < ApplicationController
   respond_to :html
 
   def index
-    @coupons = Coupon.all
+    @coupons = current_user.coupons.paginate(:page => params[:page], :per_page => 25).order('updated_at DESC')
+    #@coupons = Coupon.all
     respond_with(@coupons)
   end
 
@@ -22,8 +23,12 @@ class CouponsController < ApplicationController
 
   def create
     @coupon = Coupon.new(coupon_params)
-    @coupon.save
-    respond_with(@coupon)
+    @coupon.user_id = current_user.id
+    if @coupon.create_coupon({ team: current_user })  #@coupon.save
+      redirect_to user_coupons_path       #respond_with(@coupon)
+    else
+      respond_with(@subscription)
+    end
   end
 
   def update
@@ -42,6 +47,7 @@ class CouponsController < ApplicationController
     end
 
     def coupon_params
-      params[:coupon]
+      params.require(:coupon).permit(:name, :amount_off, :duration, :duration_in_months, :max_redemptions,
+            :percent_off, :redeem_by)
     end
 end

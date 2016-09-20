@@ -39,11 +39,6 @@
     <%= f.phone_field :phone, :id => "phone" %>
   </div>
 
-  <br>
-
-  <div class="field">
-    last alert sent at: <%= @alert.last_alert_sent_at %>
-  </div>
 
   <br><br><br>
 
@@ -55,6 +50,6 @@
   <br>
 
   <div class="actions">
-    <%= f.submit %>
+    <%= f.submit 'Create Alert', data: { disable_with: "Please wait..." } %>
   </div>
 <% end %>

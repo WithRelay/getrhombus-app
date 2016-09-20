@@ -17,14 +17,7 @@
     <div class="page-header">
       <h1 class="title">Account Settings</h1>
 
-      <!-- Start Page Header Right Div -->
-      <div class="right">
-        <div class="btn-group" role="group" aria-label="...">
-          <%= link_to "Update Stripe Connect", user_omniauth_authorize_path(:stripe_connect, "stripe_user[country]" => current_user.country, "stripe_user[email]" => current_user.email, "stripe_user[phone_number]" => current_user.org_phone, "stripe_user[org_name]" => current_user.org_name, "stripe_user[first_name]" => current_user.first_name, "stripe_user[last_name]" => current_user.last_name, "stripe_user[street_address]" => current_user.street_address, "stripe_user[city]" => current_user.city, "stripe_user[zip]" => current_user.zip_code, "stripe_user[url]" => current_user.url ), class: "btn btn-success btn-rhombus-2" %>
-          <a href="" class="btn btn-light"><i class="fa fa-refresh" id="refresh"></i></a>
-        </div>
-      </div>
-      <!-- End Page Header Right Div -->
+
 
     </div>
     <!-- End Page Header -->
@@ -74,6 +67,13 @@
                   <div class="col-sm-10 countrygroup">
                       <%= f.select :country, options_for_select({ "Australia" => "AU", "Austria" => 'AT', "Belgium" => "BE", "Canada" => "CA", "Denmark" => "DK", "Finland" => "FI", "France" => "FR", "Germany" => "DE", "Ireland" => "IE", "Italy" => "IT", "Luxembourg" => "LU", "Netherlands" => "NL", "Norway" => "NO", "Spain" => "ES", "Sweden" => "SE", "United Kingdom" => "GB", "United States" => "US" }, selected: current_user.country), {}, :class => 'selectpicker rhombusFocus', id: 'country' %>
                     </div>
+                </div>
+
+                <div class="form-group" >
+                  <label class="col-sm-2 control-label form-label">Time Zone</label>
+                  <div class="col-sm-10 countrygroup">
+                    <%= time_zone_select(:user, :time_zone) %>
+                  </div>
                 </div>
 
                 <div class="form-group" >
@@ -132,6 +132,9 @@
                   </div>
                 </div>
 
+                                <!-- Addresses now has it own model      -->
+
+
                  <div class="form-group">
                   <label class="col-sm-2 control-label form-label">Postal Code</label>
                   <div class="col-sm-10">
@@ -161,16 +164,12 @@
                 <div class="form-group">
                   <label class="col-sm-2 control-label form-label">Name</label>
                   <div class="col-sm-10">
-                  <%= f.text_field :first_name, type: "text", class: "form-control rhombusFocus", placeholder: "First", id: "firstName" %>
+                  <!-- now thru person -->
+                  <%= f.text_field :full_name, type: "text", class: "form-control rhombusFocus", placeholder: "First", id: "fullName" %>
                   </div>
                 </div>
 
-                <div class="form-group">
-                  <label class="col-sm-2 control-label form-label"></label>
-                  <div class="col-sm-10">
-                  <%= f.text_field :last_name, type: "text", class: "form-control rhombusFocus", placeholder: "Last", id: "lastName" %>
-                  </div>
-                </div>
+                
 
               <div class="merchant-form-line">Optional SMS message sent to customers the first time they text you</div>
 

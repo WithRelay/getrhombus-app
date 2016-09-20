@@ -100,7 +100,7 @@ class EmailingService
         template_content = []
         message = { "subject"=>"You received a payment with Rhombus",
          "global_merge_vars"=> [ { "name" => "card_name", "content" => options[:card_name] }, 
-                                 { "name" => "last_four", "content" => options[:last_four] }, 
+                                 { "name" => "last_four", "content" => options[:last4] }, 
                                  { "name" => "card_type", "content" => options[:card_type] }, 
 
                                  { "name" => "customer_email", "content" => options[:customer_email] }, 
@@ -142,7 +142,7 @@ class EmailingService
          "global_merge_vars"=> [  { "name" => "customer_email", "content" => options[:customer_email] }, 
                                   { "name" => "customer_phone", "content" => options[:customer_phone] },                                  
                                   { "name" => "card_name", "content" => options[:card_name] }, 
-                                  { "name" => "last_four", "content" => options[:last_four] },
+                                  { "name" => "last_four", "content" => options[:last4] },
                                   { "name" => 'text_message', "content" => options[:text] }, 
                                   { "name" => 'merchant_email', "content" => options[:to] }, 
                                   { "name" => "business_phone", "content" => options[:org_phone] },                                  
@@ -165,16 +165,19 @@ class EmailingService
     def send_founder_welcome_email(user)
       puts "send founder welcome email"
       puts user
+      puts "\n"
     end
 
     def send_proactive_support_email(user)
-      puts "send founder welcome email"
+      puts "send proactive support email"
       puts user
+      puts "\n"
     end
 
     def schedule_demo_email(user)
-      puts "send founder welcome email"
+      puts "send demo email"
       puts user
+      puts "\n"
     end
 
     def send_unread_message_alert(data)

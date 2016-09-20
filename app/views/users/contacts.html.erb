@@ -14,6 +14,11 @@
  <%= render 'shared/header_new' %>
   <%= render 'shared/sidebar' %>
 
+
+
+  
+
+
  <!-- //////////////////////////////////////////////////////////////////////////// --> 
 <!-- START CONTENT -->
 <div class="content">
@@ -50,16 +55,16 @@
 
             <input type="text" id='cc-name' class="form-control rhombusFocus" name="user[card_name]" placeholder="Name on Card" x-autocompletetype="off" autocompletetype='off' autocorrect="off" spellcheck='off' autocapitalize="off" autocomplete="off">       
 
-             <input type="tel" id='cc-number' class="form-control cc-num rhombusFocus" name="user[last_four]" placeholder="Card Number" x-autocompletetype="cc-number" autocompletetype='cc-number' autocorrect="off" spellcheck='off' autocapitalize="off" autocomplete="off"> 
+             <input type="tel" id='cc-number' class="form-control cc-num rhombusFocus" name="user[last4]" placeholder="Card Number" x-autocompletetype="cc-number" autocompletetype='cc-number' autocorrect="off" spellcheck='off' autocapitalize="off" autocomplete="off"> 
 
           
             <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10">
               <div class="col-md-6 col-sm-6" id="exp-div">
                 
-                <input type="hidden" name="user[expiration_month]" id="cc-ex-month">
-                <input type="hidden" name="user[expiration_year]" id="cc-ex-year">
+                <input type="hidden" name="user[exp_month]" id="cc-ex-month">
+                <input type="hidden" name="user[exp_year]" id="cc-ex-year">
 
-                <input type="hidden" name="user[instrument_uri]" id="cc-uri">
+                <input type="hidden" name="user[card_token]" id="cc-uri">
                 <input type="hidden" name="user[card_type]" id="cc-type">
 
                 <input id="cc-exp" type="text" class="form-control rhombusFocus" placeholder="MM / YY" value="" x-autocompletetype="off" autocompletetype="off" autocorrect="off" spellcheck="off" autocapitalize="off">

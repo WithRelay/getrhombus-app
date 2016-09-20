@@ -10,6 +10,7 @@ Rails.application.routes.draw  do
   get 'pricing' => 'static_pages#pricing'
   get 'contact' => 'contact_forms#new'
   
+<<<<<<< HEAD
   post 'lists/create_new_list' => 'lists#create_new_list'
   get 'customer_lists/remove_user' => 'customer_lists#remove_user'
 
@@ -18,47 +19,83 @@ Rails.application.routes.draw  do
     resources :customer_lists
   end
 
+=======
+>>>>>>> 59cf6f20de19642b6eda053584c1128df125aa87
 
-  get "resque" => Resque::Server, :anchor => false, :constraints => lambda { |req|
+  get 'json_get_current_user' => 'application#json_get_current_user'
+  get "homepage_referrer" => 'referrers#homepage_referrer'
+  get "resque" => Resque::Server, anchor: false, constraints: lambda { |req|
     req.env['warden'].authenticated? and req.env['warden'].user.id == 23
   }
+  
 
-  get 'customer_template' => "users#customer_csv_template", constraints: { format: 'csv' }
-  get 'transactions/download' => 'transactions#download_csv', constraints: { format: 'csv' }
   match "send_mms_from_dashboard" => 'messages#dashboard_mms', via: [:post]
-  get 'json_get_current_user' => 'application#json_get_current_user'
-  get "receive_text_message" => 'messages#receive_text_message'
-  get "receive_text_message_twilio" => 'messages#receive_text_message_twilio'
-  get "receive_voice_twilio" => 'messages#receive_voice_twilio'
-  get "receive_delivery_report" => 'messages#receive_delivery_report'
-  get "receive_delivery_report_twilio" => 'messages#receive_delivery_report_twilio'
-  get "facebook_webhook" => 'static_pages#fb_webhook'
-  post "/facebook_webhook" => 'static_pages#receive_message'
+  
+
+  ## events/hooks routes
+  constraints subdomain: "hooks" do
+    post 'events/stripe' => 'webhooks#stripe_events'
+    match "events/facebook" => "webhooks#facebook_events", via: [:get, :post]
+
+    get "receive_text_message" => 'messages#receive_text_message'
+    get "receive_text_message_twilio" => 'messages#receive_text_message_twilio'
+    get "receive_voice_twilio" => 'messages#receive_voice_twilio'
+    get "receive_delivery_report" => 'messages#receive_delivery_report'
+    get "receive_delivery_report_twilio" => 'messages#receive_delivery_report_twilio'
+  end
+
 
   ## devise routes
-  devise_for :users, :controllers => { registrations: "registrations", omniauth_callbacks: "omniauth_callbacks" }
+  devise_for :users, controllers: { registrations: "registrations", omniauth_callbacks: "omniauth_callbacks", sessions: 'sessions' }
   devise_scope :user do
-    get "signup", :to => "devise/registrations#new"
-    get "profile", :to => "devise/registrations#edit"
-    get "signin", :to => "devise/sessions#new"
+    get "signup", to: "devise/registrations#new"
+    get "profile", to: "devise/registrations#edit"
+    get "signin", to: "devise/sessions#new"
   end
   
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+  
+  resources :contact_forms
+  resources :referrers, only: [:new, :create]
+  
+
+>>>>>>> 59cf6f20de19642b6eda053584c1128df125aa87
   # user routes
-  resources :users, :only => :show do
-    resources :hashtags
+  resources :users, only: :show do
+    resources :hashtags, except: [:show, :destroy]
     resources :subscriptions, except: [:show, :edit, :update]
     resources :plans, only: [:create, :index, :new]
     resources :alerts, only: [:update]
+    resources :bank_accounts
+    resources :addresses
+    resources :people
+    resources :transactions do
+      
+      collection do
+        get 'download' => 'transactions#download_csv', constraints: { format: 'csv' }
+      end
+    end
+
+    collection do
+      get 'customer_template' => "users#customer_csv_template", constraints: { format: 'csv' }
+    end
+
+    # Only admins can create coupons
+    resources :coupons, :constraints => lambda { |req| 
+      req.env['warden'].authenticated? and req.env['warden'].user.email == '<redacted_email>' #Rails.application.secrets.dashboard_email 
+    }
     
     member do
+      get 'managed-accounts' => 'users#managed_acct'
+      match 'managed-accounts' => "users#create_managed_acct", via: :patch
       get 'messaging' => 'users#messaging'
       get 'contacts' => 'users#contacts' #(both customers or merchants)
       get 'json_get_latest_active_messaging' => 'users#json_get_latest_active_messaging'
       get 'json_get_user_messages_by_merchant/:user_number' => 'users#json_get_user_messages_by_merchant'
       get 'mark_user_messages_for_merchant_as_read/:user_number' => 'users#mark_user_messages_for_merchant_as_read'
       get 'send_message_from_merchant/:user_number' => 'users#send_message_from_merchant'
-      get 'transactions' => 'users#transactions'
       get 'customers' => 'users#customers'
       get 'businesses' => 'users#businesses'
       get 'notifications' => 'alerts#edit'
@@ -70,6 +107,7 @@ Rails.application.routes.draw  do
   resources :refunds, :only => :create
 >>>>>>> f63f52b9b2dd659ebe2b0707f6a21db258a7113e
   
+
   ## api
   api_version(module: "Api::V1", path: {value: "v1"}, constraints: { subdomain: "api" }, defaults: { format: "json" }) do
     match 'users/find' => 'users#find', via: :get
@@ -79,7 +117,6 @@ Rails.application.routes.draw  do
     match 'transactions/:charge_id/refund' => 'transactions#refund', via: :post
     match 'transactions/charge_customer' => 'transactions#charge_customer', via: :post
     match 'numbers/search' => 'numbers#search', via: :get
-    #match '/hashtags/create' => 'hashtags#create', via: :post
   end
 
   ## catch all other to 404

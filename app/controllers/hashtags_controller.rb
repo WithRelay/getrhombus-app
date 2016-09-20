@@ -14,19 +14,18 @@ class HashtagsController < ApplicationController
 
   def new
     @hashtag = Hashtag.new
-    @images = []
-    @can_send_mms = current_user.can_send_mms?
     respond_with(@hashtag)
   end
 
   def edit
-    @images = @hashtag.images
-    @can_send_mms = current_user.can_send_mms?
   end
 
   def create
     @hashtag = Hashtag.new(hashtag_params)
     @hashtag.user_id = current_user.id
+
+    # create a plan and subscription if tag is recurring
+    
     if @hashtag.save
       redirect_to user_hashtags_path       #respond_with(@hashtag)
     else
@@ -35,6 +34,9 @@ class HashtagsController < ApplicationController
   end
 
   def update
+
+    # create a new plan and subscription and delete old one on stripe if tag is recurring and key details change
+
     if @hashtag.update(hashtag_params)
       redirect_to user_hashtags_path
     end

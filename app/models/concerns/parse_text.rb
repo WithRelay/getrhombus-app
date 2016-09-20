@@ -101,12 +101,12 @@ module ParseText
   def parse_user
     if @this_user.present? 
       if @amt_ary[1] == "precedent_tag_amt"
-        # notify user and send to merchant dashboard
+        # notify user and send to merchant dashboard and send sign in link with payment capture???
         send_response notify of precedent_tag_amt
         return []
       elsif !@this_user.customer_uri
         # notify user and send to merchant dashboard
-        # send_response notify and send sign in link
+        # send_response notify and send sign in link with payment capture???
         return []  
       elsif @this_user.customer_uri
         return @amt_ary
@@ -125,11 +125,12 @@ module ParseText
 
         is_signup = is_signup?
         if is_signup
-          short_link = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?num=#{params[:From]}&referrer_num=#{params[:To]}&referrer=#{merchant_name}")
+          short_link = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?num=#{params[:From]}&referrer_id=#{@this_merchant.id}&referrer=#{merchant_name}")
           send_response("To chat with us or send a payment, sign up here: #{short_link}")
         end
 
         if Message.where(from: params[:From], to: params[:To]).limit(2).count < 2 && !is_signup
+          # merchant name is now through person
           first_name = (@this_merchant.first_name.present?) ? "my name is #{@this_merchant.first_name}, " : ''
           custom_welcome = "Hi there, " + first_name + "how can I assist you today? If you're looking to send a payment, simply reply with the amount. Ex. +10 #donut"
           custom_welcome = @this_merchant.custom_welcome unless @this_merchant.custom_welcome.blank?
@@ -142,7 +143,7 @@ module ParseText
 
   def send_sign_up_link 
     short_link = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?amt=#{amt_ary[0]}&num=#{params[:msisdn]}
-                                      &referrer_num=#{params[:to]}&referrer=#{@this_merchant.org_name}&msg_id=#{@saved_msg.id}")
+                                      &referrer_id=#{@this_merchant.id}&referrer=#{@this_merchant.org_name}&msg_id=#{@saved_msg.id}")
     send_response("Hi there, thanks for reaching out...to send a payment, sign up here. Thanks! => #{short_link}")
   end
 
@@ -226,7 +227,7 @@ module ParseText
   end
 
   def is_signup?
-    words = ['signup', 'sign-up', "#signup", "#sign-up", 'give', "#give", 'pay', "#pay", 'buy', '#buy', 'donate', "#donate"]
+    words = ['signup', 'sign-up', 'give', 'pay', 'buy', 'donate']
     return true if words.include? @msg_text.downcase.gsub(/\s+/, "")  
     return false
   end
@@ -241,6 +242,7 @@ module ParseText
 
   def process_payment
       if not_repeating_payment?
+        # scope this to number
         customer_txn_id = Transaction.charge_customer_card(@amt_ary, @this_merchant, @this_user, @msg_text)
         @saved_msg.update(transaction_id: customer_txn_id) if @saved_msg && @saved_msg.id.present?   # Save transaction id
       end
@@ -248,7 +250,7 @@ module ParseText
 
   def not_repeating_payment?
     # if necessary, you could modify the query to return a text sent to a specific merchant..so add user_id_to
-    last_messages = Message.where("user_id = ? and created_at >= ?", @this_user.id, Time.now.utc - 5.minutes).order(created_at: :desc)[1..-1]
+    last_messages = Message.where("user_id = ? and created_at >= ?", @this_user.id, Time.current.utc - 5.minutes).order(created_at: :desc)[1..-1]
     return true if last_messages == nil
     last_messages.each do |m|
       return false if m.text.strip == @msg_text

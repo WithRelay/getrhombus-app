@@ -1,36 +1,24 @@
-Payment Capture
+Payment Capture - should be for only customers....capture in logic
 - check if /profile affect forms for merchants
 - plug in charge into payment capture workflow
 - let parse_text return cents i guess and just divide by 100 to show
 
-Charges
-- stripe service for charge needs to be backward compatible
+All APIs especially Stripe, Twilio
 - Test all data saves correctly
-
-Subscriptions
-- even if I use stripe's, i still need jobs for stuff like notifications and drip
-- every user is set up as a rhombus customer with their credit card
-
-Hashtags
-- sms only, mms with optional sms, recurring and payment with auto sms.... cool on these?
 
 Contact - Inbound
 - sent u a text doesnt have an account 
 - have an account, sent u a text but ref link isnt yours 
 
 
-Thursday
+Friday/Saturday/Sunday
+- Plug into stripe api for managed accts - see notes
+- Create Seeds
+- Set up dev server - with rake task
+- Access to Jira, bitbucket, cloud66 - use team?, burrow, slack
+   - twilio, stripe, mailchimp, facebook - based on tasks
 - Clean up angular - https://blog.joshsoftware.com/2014/07/17/building-web-apps-with-rails4-and-angularjs-in-15-minutes/
 
-Saturday
-- subscriptions
-  - webhooks
-  - coupons view for admin?
-- drip campaigns - done
-- server notifications - done
-
-Sunday
-- managed accounts
 
 
 

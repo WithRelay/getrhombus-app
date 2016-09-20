@@ -1,14 +1,12 @@
 class Plan < ActiveRecord::Base
 
-  enum owner: [ :platform, :team, :customer ]
   has_many :subscriptions 
-
-
+  belongs_to :user
 
   def create_plan(hash)
 
     uid = hash[:team].uid
-    self.currency = hash[:currency]
+    hash[:currency] = hash[:team].currency
     self.statement_descriptor = (self.name + "-" + hash[:team].org_name)[0..21]
     self.save
 
@@ -19,7 +17,7 @@ class Plan < ActiveRecord::Base
     hash[:amount] = self.amount
     hash[:id] = self.id
     hash[:name] = self.name
-    hash[:name] = self.trial_period_days
+    hash[:trial_period_days] = self.trial_period_days
     hash[:statement_descriptor] = self.statement_descriptor
 
     #re = PaymentService(hash, uid)

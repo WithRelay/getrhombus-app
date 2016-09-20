@@ -7,7 +7,7 @@ module CSVHandler
 	  	CSV.generate(headers: true) do |csv|
 	      csv << column_names.map.with_index(0) { |e,i| (i == 0) ? e : e.titleize } 
 	      column_names[0] = 'created_at'
-		    Transaction.where("user_id = ? AND created_at BETWEEN ? AND ?", user_id, start_date, end_date).each do |t|
+		    Transaction.where("user_id = ? AND created_at BETWEEN ? AND ?", user_id, Time.zone.parse(start_date), Time.zone.parse(end_date)).each do |t|
 		      csv.add_row t.attributes.slice(*column_names).values
 		    end
 	    end
@@ -17,12 +17,12 @@ module CSVHandler
 	end
 
   def get_csv_columns(user_level)
-  	return ["Date (ET)", "transaction_number", "from", "to", "amount", "amount_less_fees", "currency"] if user_level == 1
+  	return ["Date #{Time.current.zone}", "transaction_number", "from", "to", "amount", "amount_less_fees", "currency"] if user_level == 1
   	["Date (ET)", "transaction_number", "from", "to", "amount", "currency"]
   end
 
   def get_customer_csv_template
-    attributes = ['first_name', 'last_name', 'email', 'phone_number', 'street_address', 'city', 'state_province', 'country', 'zip_code']
+    attributes = ['first_name', 'last_name', 'email', 'phone_number', 'street_address', 'city', 'state_province', 'country', 'postal_code']
     default_text = ['John', 'Smith', '<redacted_email>', '<redacted_phone_number>', '2 Neverland Place', 'Boston', 'MA', 'US', '12345']
     CSV.generate(headers: true) do |csv|
       csv << attributes
@@ -35,7 +35,7 @@ module CSVHandler
       
       headers_checked = false
     	response = []
-      headers = [:first_name, :last_name, :email, :phone_number, :street_address, :city, :state_province, :country, :zip_code]
+      headers = [:first_name, :last_name, :email, :phone_number, :street_address, :city, :state_province, :country, :postal_code]
       
       CSV.foreach(file, headers: true, skip_blanks: true, header_converters: :symbol, skip_lines: /^(?:[,:]\s*)+$/) do |row|
         
@@ -66,7 +66,7 @@ module CSVHandler
             end
 
             # Validate email
-            if !EmailValidator.verify_email(row[:email])
+            if !EmailValidatorService.verify_email(row[:email])
               response.push(error_message + " email is invalid.")
               error = true
             end
@@ -74,18 +74,22 @@ module CSVHandler
             # set user_level and password
             row[:user_level] = 0
             row[:password] = Toolbox::StringGen.generate_random_string(8)
-            row[:referrer_num] = self.rhombus_number
-            row[:country].present? && row[:country] = row[:country].upcase
 
             # validate user data against db
             if error
               user = User.new(row)
               user.valid?
             else 
-              user = User.create(row)
+              ActiveRecord::Base.transaction do
+                user = User.create(email: row[:email], password: row[:password], phone_number: row[:phone_number], user_level: row[:user_level])
+                person = Person.create(first_name: row[:first_name], last_name: row[:last_name])
+                user.persons = person
+                person.address = Address.create(street_address: row[:street_address], city: row[:city], 
+                                  postal_code: row[:postal_code], state_province: row[:state_province], country: row[:country]) 
+              end
             end
             
-            # check for errors
+            # check for user errors
             if user.errors.messages.present? || error
               user.errors.messages.each do |k,v|
                 v.each do |r|
@@ -93,6 +97,8 @@ module CSVHandler
                 end
               end
             else
+              ref = Referrer.where(referrer_id: self.id, referee_id: user.id).first_or_initialize
+              ref.save
               # send email or text here
             end 
           end  

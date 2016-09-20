@@ -120,11 +120,12 @@ module ParseTextNexmo
 
         is_signup = is_signup?
         if is_signup
-          short_link = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?num=#{params[:From]}&referrer_num=#{params[:To]}&referrer=#{merchant_name}")
+          short_link = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?num=#{params[:From]}&referrer_id=#{@this_merchant.id}&referrer=#{merchant_name}")
           send_response("To chat with us or send a payment, sign up here: #{short_link}")
         end
 
         if Message.where(from: params[:From], to: params[:To]).limit(2).count < 2 && !is_signup
+          # first_name is now through person
           first_name = (@this_merchant.first_name.present?) ? "my name is #{@this_merchant.first_name}, " : ''
           custom_welcome = "Hi there, " + first_name + "how can I assist you today? If you're looking to send a payment, simply reply with the amount. Ex. +10 #donut"
           custom_welcome = @this_merchant.custom_welcome unless @this_merchant.custom_welcome.blank?
@@ -137,7 +138,7 @@ module ParseTextNexmo
 
   def send_sign_up_link 
     short_link = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?amt=#{amt_ary[0]}&num=#{params[:msisdn]}
-                                      &referrer_num=#{params[:to]}&referrer=#{@this_merchant.org_name}&msg_id=#{@saved_msg.id}")
+                                      &referrer_id=#{@this_merchant.id}&referrer=#{@this_merchant.org_name}&msg_id=#{@saved_msg.id}")
     send_response("Hi there, thanks for reaching out...to send a payment, sign up here. Thanks! => #{short_link}")
   end
 
@@ -243,7 +244,7 @@ module ParseTextNexmo
 
   def not_repeating_payment?
     # if necessary, you could modify the query to return a text sent to a specific merchant..so add user_id_to
-    last_messages = Message.where("user_id = ? and created_at >= ?", @this_user.id, Time.now.utc - 5.minutes).order(created_at: :desc)[1..-1]
+    last_messages = Message.where("user_id = ? and created_at >= ?", @this_user.id, Time.current.utc - 5.minutes).order(created_at: :desc)[1..-1]
     return true if last_messages == nil
     last_messages.each do |m|
       return false if m.text.strip == @msg_text

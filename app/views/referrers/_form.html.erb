@@ -1,0 +1,53 @@
+<%= form_for(@referrer, remote: true, format: :json) do |f| %>
+  <% if @referrer.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@referrer.errors.count, "error") %> prohibited this referrer from being saved:</h2>
+
+      <ul>
+      <% @referrer.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :referrer_email %><br>
+    <%= f.text_field :referrer_email %>
+  </div>
+  <div class="field">
+    <%= f.label :email %><br>
+    <%= f.text_field :email %>
+  </div>
+  <div class="field">
+    <%= f.label :phone_number %><br>
+    <%= f.text_field :phone_number %>
+  </div>
+  <div class="field">
+    <%#= f.label :referrer_id %><br>
+    <%#= f.number_field :referrer_id %>
+  </div>
+  <div class="field">
+    <%#= f.label :referee_id %><br>
+    <%#= f.number_field :referee_id %>
+  </div>
+  <div class="field">
+    <%= f.label :country %><br>
+    <%= f.text_field :country %>
+  </div>
+  <div class="field">
+    <%#= f.label :link %><br>
+    <%#= f.text_field :link %>
+  </div>
+  <div class="field">
+    <%= f.label :referrer_name %><br>
+    <%= f.text_field :referrer_name %>
+  </div>
+  <div class="field">
+    <%= f.label :org_name %><br>
+    <%= f.text_field :org_name %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

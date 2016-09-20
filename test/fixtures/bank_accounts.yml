@@ -1,0 +1,21 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  stripe_bank_account_id: MyString
+  country: MyString
+  bank_name: MyString
+  routing_number: MyString
+  last4: MyString
+  currency: MyString
+  status: MyString
+  default_for_currency: false
+
+two:
+  stripe_bank_account_id: MyString
+  country: MyString
+  bank_name: MyString
+  routing_number: MyString
+  last4: MyString
+  currency: MyString
+  status: MyString
+  default_for_currency: false

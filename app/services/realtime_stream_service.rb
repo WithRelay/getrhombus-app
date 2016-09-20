@@ -14,6 +14,7 @@ class RealtimeStreamService
         user = User.find_by_phone_number(user_number)
         user_level = is_merchant_message ? 1 : 0
         
+        # name is now through person
         $pubnub.publish(
           :channel  => 'messaging_' + Rails.env + '_' + merchant.id.to_s,
           :message => Hash[

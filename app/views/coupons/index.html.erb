@@ -12,9 +12,16 @@
   <tbody>
     <% @coupons.each do |coupon| %>
       <tr>
-        <td><%= link_to 'Show', coupon %></td>
-        <td><%= link_to 'Edit', edit_coupon_path(coupon) %></td>
-        <td><%= link_to 'Destroy', coupon, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= coupon.name %></td>
+        <td><%= coupon.amount_off %></td>
+        <td><%= coupon.currency %></td>
+        <td><%= coupon.duration %></td>
+        <td><%= coupon.duration_in_months %></td>
+        <td><%= coupon.max_redemptions %></td>
+        <td><%= coupon.percent_off %></td>
+        <td><%= coupon.redeem_by %></td>
+        <td><%= link_to 'Edit', edit_user_coupon_path(current_user, coupon) %></td>
+        <td><%#= link_to 'Destroy', coupon, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
   </tbody>
@@ -22,4 +29,10 @@
 
 <br>
 
-<%= link_to 'New Coupon', new_coupon_path %>
+<%= link_to 'New Coupon', new_user_coupon_path %>
+
+<br><br><br>
+
+
+
+ <%= render :partial => '/referrers/form' %>

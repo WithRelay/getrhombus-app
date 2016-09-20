@@ -1,6 +1,11 @@
 module DashboardMerchantQueries
 	extend ActiveSupport::Concern
 
+  #################
+  # These queries need to be tmezone aware and need to use conversation model and need
+  # to use referrers table where necessary
+
+
 	# Customers who have paid
 	@@customers_query_txns = "(SELECT transactions.created_at, @users_ids := users.id as user_id, users.card_name, users.email, 
 		users.phone_number, SUM(transactions.amount) AS total_spend, MIN(transactions.created_at) AS first_visit, 
@@ -9,18 +14,26 @@ module DashboardMerchantQueries
 		FROM transactions INNER JOIN users ON transactions.referenced_user_id = users.id
 		WHERE user_id = ? "
 
-	# Customers who have the referrer_num set
-	@@customers_query_referrer = "(select created_at, id, users.card_name, users.email, users.phone_number, 0 as total_spend, 
+  # this string might need grouping since we now have one to many in referrers
+	@@customers_query_referrer = "(select u.created_at, u.id, u.card_name, u.email, u.phone_number, 0 as total_spend, 
 																	null as first_visit, 0 as avg_spend, null AS last_visit, 0 AS last_30 
-																	from users where referrer_num = ? "
+																	from referrers r
+                                  inner join users u on u.id = r.referrer_id
+                                  where r.referee_id = ? and u.user_level = 0 "
+
 
 	@@num_of_days_txns = " and (transactions.created_at BETWEEN NOW() - INTERVAL "
 	@@num_of_days_referrer = " and (created_at BETWEEN NOW() - INTERVAL "
 
 	def get_merchant_transactions
 		Transaction.find_by_sql([
+<<<<<<< HEAD
 			"SELECT users.card_name, users.email, transactions.last_four, transactions.notes, 
 			 transactions.amount_less_fees, users.phone_number, transactions.transaction_number, transactions.transaction_uri, 
+=======
+			"SELECT users.card_name, users.email, transactions.created_at, transactions.last4, transactions.notes, 
+			 transactions.amount_less_fees, users.phone_number, transactions.txn_number, transactions.txn_uri, 
+>>>>>>> 59cf6f20de19642b6eda053584c1128df125aa87
 			  transactions.tax_percent, refunds.id as refund_id
 				FROM transactions 
 				INNER JOIN users on transactions.referenced_user_id = users.id
@@ -39,7 +52,7 @@ module DashboardMerchantQueries
 		end
 		
 		query = "#{@@customers_query_txns} #{num_of_days_txns} GROUP BY transactions.referenced_user_id) UNION #{@@customers_query_referrer} 
-							and id NOT IN (@users_ids) #{num_of_days_referrer}) ORDER BY created_at DESC" 
+							and u.id NOT IN (@users_ids) #{num_of_days_referrer}) ORDER BY created_at DESC" 
 		Transaction.find_by_sql([query, self.id, self.rhombus_number])		
 	end	
 
@@ -50,10 +63,11 @@ module DashboardMerchantQueries
 
 	# whoever signed up with your link in the last num_of_days
 	def get_new_customers(num_of_days=30)
-		Transaction.find_by_sql(["#{@@customers_query_referrer} #{@@num_of_days_referrer} #{num_of_days.to_s} DAY AND NOW()))", self.rhombus_number])
+		Transaction.find_by_sql(["#{@@customers_query_referrer} #{@@num_of_days_referrer} #{num_of_days.to_s} DAY AND NOW()))", self.id])
 	end
 
 	# only inbound
+  # user_id_to and user_id are going away so don't use them
 	def get_merchant_contacts_without_signups
 		Message.find_by_sql([
 			"SELECT count(*) as total, to, 

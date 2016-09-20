@@ -13,16 +13,18 @@ module DashboardCustomerQueries
 
       UNION
 
-      (SELECT created_at, id, org_name, email, org_phone, 0 as total_spend, null as first_visit, 
+      (SELECT u.created_at, u.id, org_name, u.email, org_phone, 0 as total_spend, null as first_visit, 
       0 as avg_spend, null AS last_visit, rhombus_number, 0 AS last_30 
-      from users where rhombus_number = ? and id NOT IN (@users_ids))
+      from referrers r 
+      inner join users u on u.id = r.referrer_id 
+      where r.referee_id = ? and u.user_level = 1 and u.id NOT IN (@users_ids))
 
-      ORDER BY created_at DESC ", self.id, self.referrer_num])
+      ORDER BY created_at DESC ", self.id, self.id])
   end
 
   def get_customer_transactions
     Transaction.find_by_sql([
-      "SELECT users.org_name, users.email, users.rhombus_number, transactions.last_four, transactions.notes, 
+      "SELECT users.org_name, users.email, users.rhombus_number, transactions.last4, transactions.notes, 
         transactions.amount_less_fees, t.created_at, users.org_phone, transactions.transaction_number,
         transactions.transaction_uri, transactions.tax_percent, refunds.id as refund_id
         FROM transactions t
@@ -35,18 +37,18 @@ module DashboardCustomerQueries
   def get_customer_contacts
     Message.find_by_sql([
       "SELECT count(*) as total,
-        users.org_name, users.email, users.org_phone, rhombus_number,
+        u.org_name, u.email, u.org_phone, rhombus_number,
         MIN(m.created_at) as first_conversation, 
         MAX(m.created_at) as last_conversation
         FROM messages m
-        INNER JOIN users ON
-        m.user_id_to = users.id 
-        WHERE m.from = ? 
-        # because they can both be null and this condition will be false...not good
-        and (IFNULL(users.rhombus_number, 'a') != IFNULL(?, 'b'))
-        and users.id not in (select team_id from transactions where user_id = ? group by team_id)
+        INNER JOIN users u ON m.user_id_to = u.id 
+        LEFT JOIN referrers r on r.referrer_id = u.id and r.referee_id = ?
+        LEFT JOIN transactions t on u.id = t.team_id and t.user_id = ?
+        WHERE m.from = ?         
+        and r.referrer_id is null 
+        and t.team_id is null 
         GROUP BY m.user_id_to 
-        ORDER BY m.created_at DESC", self.phone_number, self.referrer_num, self.id])
+        ORDER BY m.created_at DESC", self.id, self.id, self.phone_number])
   end 
 
 end

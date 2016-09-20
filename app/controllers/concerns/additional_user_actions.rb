@@ -2,18 +2,25 @@ module AdditionalUserActions
   extend ActiveSupport::Concern
 
   def messaging
-    if @user.user_level != 1
-      redirect_to :root and return
-    end
-    # Generate bitly if blank
-    # this should go ....should never happen again in v 1.5 upward
-    if @user.short_url.blank?
-      @user.short_url = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?referrer_num=#{@user.rhombus_number}&referrer=#{@user.org_name}")
-      @user.save
-    end
+    redirect_to :root and return if @user.user_level != 1
+
     # change back
     render layout: 'application_dashboard_messaging'
     #render layout: 'xxx'
+  end
+
+  def managed_acct
+    @user.address || @user.build_address
+    @user.bank_accounts.present? || @user.bank_accounts.build
+    @user.stripe_cred || @user.build_stripe_cred
+    @user.people.present? || @user.people.build
+    @user.people.each_with_index { |p,i| @user.people[i].address || @user.people[i].build_address }
+  end
+
+  def create_managed_acct
+    params[:user][:org_type] = 'Business' if params[:user][:org_type] == 'Company' && current_user.org_type == 'Individual'
+    current_user.update(user_params)
+    render json: {}
   end
 
   # Returns JSON object with user hash who sent a message to the given merchant in the last CONFIG[:dashboard]['messaging']['num_days_history'] days
@@ -68,19 +75,10 @@ module AdditionalUserActions
     @businesses = @user.get_customer_businesses.paginate(:page => params[:page], :per_page => 25)
   end
 
-  def transactions
-    if current_user.user_level == 0
-      @transactions = @user.get_customer_transactions.paginate(:page => params[:page], :per_page => 25)
-    else
-      @transactions = @user.get_merchant_transactions.paginate(:page => params[:page], :per_page => 25)
-    end   
-    render layout: 'xxx' # remove
-  end
-
   def build_user_link
     # if it includes a captured payment, also check if msg_id is present, tag_id is optional
     # referrer_num is the merchant the payment is going to
-    link = session[:captured_amt].present? ? "/profile?amt=#{session[:captured_amt]}&referrer_num=#{session[:referrer_num]}" + 
+    link = session[:captured_amt].present? ? "/profile?amt=#{session[:captured_amt]}&referrer_id=#{session[:referrer_id]}" + 
                                           "&msg_id=#{session[:msg_id]}&tag_id=#{session[:tag_id]}" : "/profile" 
     delete_captured_payment_session
     link
@@ -89,13 +87,15 @@ module AdditionalUserActions
   def set_captured_payment_session
     session[:captured_amt] = params[:user][:captured_amt]
     session[:msg_id] = params[:user][:msg_id]
-    session[:referrer_num] = params[:user][:referrer_num]
+    session[:referrer_id] = params[:user][:referrer_id]
+    session[:referrer_uid] = params[:user][:referrer_uid]
     session[:tag_id] = params[:user][:tag_id]
   end
 
   def delete_captured_payment_session
     session.delete(:captured_amt)
-    session.delete(:referrer_num)
+    session.delete(:referrer_id)
+    session.delete(:referrer_uid)
     session.delete(:tag_id)
     session.delete(:msg_id)
   end
