@@ -31,13 +31,9 @@ module Rhombus
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-    GC::Profiler.enable                         # added
-=======
+
     # added
     GC::Profiler.enable
->>>>>>> 59cf6f20de19642b6eda053584c1128df125aa87
 
     # added
     config.paperclip_defaults = {
@@ -49,8 +45,5 @@ module Rhombus
         :secret_access_key: <redacted_secret_access_key>
       }
     }
-=======
-    GC::Profiler.enable
->>>>>>> f63f52b9b2dd659ebe2b0707f6a21db258a7113e
   end
 end
