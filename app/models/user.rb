@@ -26,6 +26,7 @@ class User < ActiveRecord::Base
   has_many :coupons
 
   has_one :twitter_cred
+  has_one :fb_cred
   has_one :alert, dependent: :destroy
 
   has_many :image_refs, as: :imageable
