@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160913015608) do
+ActiveRecord::Schema.define(version: 20160921111854) do
 
   create_table "addresses", force: :cascade do |t|
     t.string   "street_address",   limit: 191
@@ -108,7 +108,10 @@ ActiveRecord::Schema.define(version: 20160913015608) do
     t.string   "u_id",       limit: 191
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
+    t.string   "auth_token", limit: 191
   end
+
+  add_index "fb_creds", ["id"], name: "index_fb_creds_on_id", unique: true, using: :btree
 
   create_table "fb_messages", force: :cascade do |t|
     t.text     "text",           limit: 65535
