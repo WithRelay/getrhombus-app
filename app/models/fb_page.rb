@@ -5,10 +5,9 @@ class FbPage < ActiveRecord::Base
   def self.store_page(current_user)
     response = Koala::Facebook::API.new(current_user.fb_cred.auth_token)
     page_array = response.get_object('me/accounts/page')
-
     page_array.each do |page|
       begin
-        where(user_id: current_user.id).first_or_initialize.tap do |row|
+        where(page_id: page["id"]).first_or_initialize.tap do |row|
           row.page_id = page["id"]
           row.user_id = current_user.id
           row.category = page["category"]

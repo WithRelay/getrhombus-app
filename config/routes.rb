@@ -8,18 +8,15 @@ Rails.application.routes.draw  do
   get 'privacy' => 'static_pages#privacy'
   get 'terms' => 'static_pages#terms'
   get 'pricing' => 'static_pages#pricing'
-  get 'contact' => 'contact_forms#new'
-  
+  get 'contact' => 'contact_forms#new'  
 
   get 'json_get_current_user' => 'application#json_get_current_user'
   get "homepage_referrer" => 'referrers#homepage_referrer'
   get "resque" => Resque::Server, anchor: false, constraints: lambda { |req|
     req.env['warden'].authenticated? and req.env['warden'].user.id == 23
-  }
-  
+  }  
 
   match "send_mms_from_dashboard" => 'messages#dashboard_mms', via: [:post]
-  
 
   ## events/hooks routes
   constraints subdomain: "hooks" do
@@ -33,23 +30,21 @@ Rails.application.routes.draw  do
     get "receive_delivery_report_twilio" => 'messages#receive_delivery_report_twilio'
   end
 
-
   ## devise routes
   devise_for :users, controllers: { registrations: "registrations", omniauth_callbacks: "omniauth_callbacks", sessions: 'sessions' }
   devise_scope :user do
     get "signup", to: "devise/registrations#new"
     get "profile", to: "devise/registrations#edit"
     get "signin", to: "devise/sessions#new"
-  end
-  
+  end  
   
   resources :contact_forms
-  resources :referrers, only: [:new, :create]
-  
+  resources :referrers, only: [:new, :create]  
 
   # user routes
   resources :users, only: :show do
     resources :fb_pages, only: [:index]
+    patch 'update_fb_page' => 'fb_pages#update_user_fb_page'
     resources :hashtags, except: [:show, :destroy]
     resources :subscriptions, except: [:show, :edit, :update]
     resources :plans, only: [:create, :index, :new]
@@ -102,8 +97,6 @@ Rails.application.routes.draw  do
 
   ## catch all other to 404
   get "/*other", to: 'static_pages#to_404'     #all non-existent routes go to 404
-
-  
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

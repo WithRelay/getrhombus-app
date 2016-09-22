@@ -20,7 +20,7 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
     if current_user && current_user.user_level == 1
       if FbCred.from_omniauth(request.env["omniauth.auth"], current_user.id) == true
         FbPage.store_page(current_user)
-        redirect_to user_path(current_user)
+        redirect_to user_fb_pages_path(current_user)
         set_flash_message(:notice, :success, :kind => "Facebook") if is_navigational_format?
         return
       end
