@@ -306,5 +306,5 @@ module ParseText
     #@subscription.team_id = current_user.id
     #if u && @subscription.create_subscription({ team: current_user, customer: u.customer_uri }) 
   end
-end
+#end
 

@@ -92,15 +92,6 @@ ActiveRecord::Schema.define(version: 20160922063934) do
 
   add_index "coupons", ["user_id"], name: "index_coupons_on_user_id", using: :btree
 
-  create_table "customer_lists", force: :cascade do |t|
-    t.integer  "user_id",    limit: 4
-    t.datetime "created_at",           null: false
-    t.datetime "updated_at",           null: false
-    t.datetime "time"
-  end
-
-  add_index "customer_lists", ["user_id"], name: "index_customer_lists_on_user_id", using: :btree
-
   create_table "fb_creds", force: :cascade do |t|
     t.string   "email",      limit: 191
     t.string   "name",       limit: 191
@@ -494,6 +485,15 @@ ActiveRecord::Schema.define(version: 20160922063934) do
 
   add_index "twitter_creds", ["user_id"], name: "index_twitter_creds_on_user_id", unique: true, using: :btree
 
+  create_table "user_lists", force: :cascade do |t|
+    t.integer  "user_id",    limit: 4
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
+    t.integer  "list_id",    limit: 4
+  end
+
+  add_index "user_lists", ["user_id"], name: "index_user_lists_on_user_id", using: :btree
+
   create_table "users", force: :cascade do |t|
     t.string   "email",                  limit: 191
     t.string   "encrypted_password",     limit: 191
@@ -563,7 +563,6 @@ ActiveRecord::Schema.define(version: 20160922063934) do
 
   add_foreign_key "alerts", "users"
   add_foreign_key "coupons", "users"
-  add_foreign_key "customer_lists", "users"
   add_foreign_key "hashtags", "users"
   add_foreign_key "invoices", "coupons"
   add_foreign_key "invoices", "subscriptions"
@@ -581,4 +580,5 @@ ActiveRecord::Schema.define(version: 20160922063934) do
   add_foreign_key "transactions", "hashtags"
   add_foreign_key "transactions", "subscriptions"
   add_foreign_key "transactions", "users", column: "team_id"
+  add_foreign_key "user_lists", "users"
 end

@@ -348,4 +348,3 @@ class TextingService
     end  
   end
 end
-

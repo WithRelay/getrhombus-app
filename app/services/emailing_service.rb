@@ -174,4 +174,3 @@ class EmailingService
   end  
 
 end
-

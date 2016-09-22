@@ -11,7 +11,7 @@ class User < ActiveRecord::Base
 
   has_many :transactions
   has_many :team_transactions, class_name: 'Transaction', foreign_key: 'team_id'
-  
+
   has_many :subscriptions
   has_many :team_subscriptions, class_name: 'Subscription', foreign_key: 'team_id'
 
@@ -19,7 +19,7 @@ class User < ActiveRecord::Base
   has_many :referees, class_name: 'Referrer', foreign_key: 'referee_id'
 
   # messages goes away with conversation model
-  has_many :messages      
+  has_many :messages
   has_many :hashtags
 
   has_many :plans
@@ -35,7 +35,7 @@ class User < ActiveRecord::Base
 
   # A user can have belong to more than one list and also own multiple lists (Admins)
   has_many :lists
-  has_many :customers, through: :customer_lists
+  has_many :user_lists
 
   has_many :bank_accounts
   accepts_nested_attributes_for :bank_accounts
@@ -45,11 +45,11 @@ class User < ActiveRecord::Base
 
   has_one :address, as: :addressable
   accepts_nested_attributes_for :address
-  
+
   has_many :people
   accepts_nested_attributes_for :people, allow_destroy: true  # reject_if: ->(attrs) { attrs['city'].blank? || attrs['street'].blank? }
 
-  before_validation :the_titleizer  
+  before_validation :the_titleizer
   before_create :set_merchant_org_phone          # only create because the actual org_phone field is used in edit view
 
   after_commit :create_user_alert, on: :create, if: lambda { self.user_level == 1 }
@@ -58,7 +58,7 @@ class User < ActiveRecord::Base
   validates_presence_of :user_level, message: "Please select an account type"
   # Sign up form uses phone_number field for both user types
   validates_presence_of :phone_number, numericality: { only_integer: true }, length: { minimum: 10 }, on: :create
-  
+
   # Edit pages use the right number field for each user type
   validates_presence_of :org_number, numericality: { only_integer: true }, length: { minimum: 10 }, on: :update, if: lambda { self.user_level == 1 }
   validates_presence_of :phone_number, numericality: { only_integer: true }, length: { minimum: 10 }, on: :update, if: lambda { self.user_level == 0 }
@@ -68,21 +68,24 @@ class User < ActiveRecord::Base
   # You run into issues with any additional merchants.
   validates_uniqueness_of :phone_number, :allow_nil => true, :if => lambda { self.user_level == 0 }
 
-  
+  def is_merchant?
+    user_level == 1
+  end
+
   # Create or update customer on Stripe
   # move to stripe service
   def add_token_to_stripe_customer(params)
     if params[:card_token].present?  # is this why i get the errors from stripe??
-      begin 
+      begin
         if self.customer_uri.blank?   # Doesnt have a customer uri => first time
-          cu = Stripe::Customer.create(email: self.email, source: params[:card_token])         
+          cu = Stripe::Customer.create(email: self.email, source: params[:card_token])
           self.customer_uri = cu.id
           self.livemode = cu.livemode
         else
-          cu = Stripe::Customer.retrieve(self.customer_uri)  
+          cu = Stripe::Customer.retrieve(self.customer_uri)
           cu.email = self.email
           cu.source = params[:card_token]
-          cu.save   
+          cu.save
         end
         buy_merchant_number if self.user_level == 1 && self.rn_type == nil
       rescue Stripe::CardError => e
@@ -100,7 +103,7 @@ class User < ActiveRecord::Base
     end
     true
   end
- 
+
   def buy_merchant_number
     # save the area code in rhombus number till a number is bought
     #number = TextingService.buy_number(self.rhombus_number])
@@ -113,7 +116,7 @@ class User < ActiveRecord::Base
 
   # Returns hash with users who sent a message to the given merchant in the last "num_days" days
   def self.get_latest_active_messaging(merchant_id, num_days)
-    # name is now thrugh person 
+    # name is now thrugh person
     users = Message.select('`users`.`id`, `users`.`first_name`, `users`.`last_name`, `users`.`email`, `messages`.`from`')
                    .joins('LEFT JOIN `users` ON (`users`.`id` = `messages`.`user_id`)')
                    .where('(`messages`.`user_id_to` = ? AND `messages`.`created_at` >= ?) OR (`messages`.`user_id_to` = ? AND `messages`.`unread` = ?)', merchant_id, Time.current - num_days.days, merchant_id, true)
@@ -145,11 +148,11 @@ class User < ActiveRecord::Base
       if self.user_level == 1
         self.org_phone = self.phone_number
         self.phone_number = nil
-      end 
+      end
     end
 
-    def the_titleizer  
-      self.card_name = self.card_name.strip.titleize unless self.card_name.blank?    
+    def the_titleizer
+      self.card_name = self.card_name.strip.titleize unless self.card_name.blank?
       self.url = self.url.strip unless self.url.blank?
       self.custom_welcome = self.custom_welcome.strip unless self.custom_welcome.blank?
       self.org_name = self.org_name.strip unless self.org_name.blank?
@@ -164,13 +167,13 @@ class User < ActiveRecord::Base
         unless ref.blank?
           referrer = User.find_by(id: ref.referrer_id)
           EmailingService.send_welcome_email_with_referral(ref.email, self.email, ref.org_name, ref.rhombus_number, owner.rhombus_number)
-          text = "Thanks for signing up! Please add a payment card to your Rhombus profile (if you haven't done so). 
+          text = "Thanks for signing up! Please add a payment card to your Rhombus profile (if you haven't done so).
           You can chat with us anytime via sms or to make a payment, just text the amount & description/hashtag. Ex. +10 #donut"
           Message.send_and_save_message(ref.rhombus_number, self.phone_number, text)
         else
           EmailingService.send_welcome_email(self.email, owner.rhombus_number, "customer")
-          text = "Thanks for signing up! Please add a payment card to your Rhombus profile (if you haven't done so). 
-          You can chat with a local business anytime by texting their Rhombus number or to make a payment, just text the amount & 
+          text = "Thanks for signing up! Please add a payment card to your Rhombus profile (if you haven't done so).
+          You can chat with a local business anytime by texting their Rhombus number or to make a payment, just text the amount &
           description/hashtag. Ex. +10 #donut"
           Message.send_and_save_message(owner.rhombus_number, self.phone_number, text)
         end
@@ -186,28 +189,28 @@ class User < ActiveRecord::Base
     def create_user_alert
       Alert.create(user_id: self.id, sms_number: self.org_phone)   # move to background job?
     end
-  
+
 end
 
 =begin
-  
+
 def add_token_to_stripe_customer(params)
     if params[:card_token].present?  # is this why i get the errors from stripe??
-      begin 
+      begin
         hash = { email: self.email, card_token: params[:card_token] }
         if self.customer_uri.blank?   # Doesnt have a customer uri => first time
           res = PaymentService.create_customer(hash)
           if res[0]
             self.customer_uri = cu.id
             self.livemode = cu.livemode
-          end          
+          end
         else
           hash[:uri] = self.customer_uri
           PaymentService.update_customer(hash)
         end
 
         buy_merchant_number if self.user_level == 1 && self.rn_type == nil
-      
+
         # move out this exception block
       rescue Stripe::CardError => e
         # Since it's a decline, Stripe::CardError will be caught
@@ -224,5 +227,4 @@ def add_token_to_stripe_customer(params)
     end
     true
   end
-  
 =end

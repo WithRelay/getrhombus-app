@@ -3,12 +3,20 @@ Rails.application.routes.draw  do
   ## static pages routes
   root 'static_pages#home'
   get 'about' => 'static_pages#about'
-  get 'customers' => 'static_pages#customers'  
+  get 'customers' => 'static_pages#customers'
   get 'faqs' => 'static_pages#faqs'
   get 'privacy' => 'static_pages#privacy'
   get 'terms' => 'static_pages#terms'
   get 'pricing' => 'static_pages#pricing'
-  get 'contact' => 'contact_forms#new'  
+
+  get 'contact' => 'contact_forms#new'
+
+  post 'lists/create_new_list' => 'lists#create_new_list'
+  get 'customer_lists/remove_user' => 'customer_lists#remove_user'
+
+  resources :lists do
+    resources :customer_lists
+  end
 
   get 'json_get_current_user' => 'application#json_get_current_user'
   get "homepage_referrer" => 'referrers#homepage_referrer'
@@ -36,10 +44,10 @@ Rails.application.routes.draw  do
     get "signup", to: "devise/registrations#new"
     get "profile", to: "devise/registrations#edit"
     get "signin", to: "devise/sessions#new"
-  end  
-  
+  end
+
   resources :contact_forms
-  resources :referrers, only: [:new, :create]  
+  resources :referrers, only: [:new, :create]
 
   # user routes
   resources :users, only: :show do
@@ -53,7 +61,7 @@ Rails.application.routes.draw  do
     resources :addresses
     resources :people
     resources :transactions do
-      
+
       collection do
         get 'download' => 'transactions#download_csv', constraints: { format: 'csv' }
       end
@@ -64,10 +72,10 @@ Rails.application.routes.draw  do
     end
 
     # Only admins can create coupons
-    resources :coupons, :constraints => lambda { |req| 
-      req.env['warden'].authenticated? and req.env['warden'].user.email == '<redacted_email>' #Rails.application.secrets.dashboard_email 
+    resources :coupons, :constraints => lambda { |req|
+      req.env['warden'].authenticated? and req.env['warden'].user.email == '<redacted_email>' #Rails.application.secrets.dashboard_email
     }
-    
+
     member do
       get 'managed-accounts' => 'users#managed_acct'
       match 'managed-accounts' => "users#create_managed_acct", via: :patch
@@ -80,9 +88,17 @@ Rails.application.routes.draw  do
       get 'customers' => 'users#customers'
       get 'businesses' => 'users#businesses'
       get 'notifications' => 'alerts#edit'
+      get 'lists' => 'users#lists'
     end
-  end 
-  
+  end
+
+  resources :users, :only => :show
+  resources :refunds, :only => :create
+
+  # authenticate campaigns resources if a user is merchant
+  authenticate :user, -> (user) { user.is_merchant? } do
+    resources :campaigns, except: [:show]
+  end
 
   ## api
   api_version(module: "Api::V1", path: {value: "v1"}, constraints: { subdomain: "api" }, defaults: { format: "json" }) do
@@ -97,6 +113,7 @@ Rails.application.routes.draw  do
 
   ## catch all other to 404
   get "/*other", to: 'static_pages#to_404'     #all non-existent routes go to 404
+
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
