@@ -87,10 +87,10 @@ Rails.application.routes.draw  do
     end
   end
 
+  # authenticate campaigns resources if a user is merchant
   authenticate :user, -> (user) { user.is_merchant? } do
     resources :campaigns, except: [:show]
   end
-
 
   ## api
   api_version(module: "Api::V1", path: {value: "v1"}, constraints: { subdomain: "api" }, defaults: { format: "json" }) do
