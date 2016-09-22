@@ -57,6 +57,9 @@ gem 'omniauth-facebook'
 
 gem "messenger_platform_rails"
 
+# Accessing Facebook Graph API
+gem "koala"
+
 group :production do
 	gem "passenger"
 end

@@ -192,6 +192,10 @@ GEM
     json (1.8.2)
     json_pure (1.8.3)
     jwt (1.2.0)
+    koala (2.4.0)
+      addressable
+      faraday
+      multi_json (>= 1.3.0)
     loofah (2.0.1)
       nokogiri (>= 1.5.9)
     mail (2.6.3)
@@ -402,6 +406,7 @@ DEPENDENCIES
   httparty
   jbuilder (~> 2.0)
   jquery-rails
+  koala
   mail_form
   mandrill-api
   messenger_platform_rails
