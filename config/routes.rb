@@ -49,6 +49,7 @@ Rails.application.routes.draw  do
 
   # user routes
   resources :users, only: :show do
+    resources :fb_pages, only: [:index]
     resources :hashtags, except: [:show, :destroy]
     resources :subscriptions, except: [:show, :edit, :update]
     resources :plans, only: [:create, :index, :new]
