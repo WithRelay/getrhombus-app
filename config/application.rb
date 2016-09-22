@@ -17,8 +17,18 @@ module Rhombus
 
     # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
-    
+
     # added
+
+    config.generators do |generators|
+      generators.javascripts false
+      generators.helper false
+      generators.view_specs false
+      generators.helper_specs false
+      generators.controller_specs false
+      generators.model_specs false
+      generators.stylesheets false
+    end
     config.time_zone = 'Eastern Time (US & Canada)'
 
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
@@ -26,7 +36,7 @@ module Rhombus
     # config.i18n.default_locale = :de
 
     # added
-    I18n.enforce_available_locales = true               
+    I18n.enforce_available_locales = true
 
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true
