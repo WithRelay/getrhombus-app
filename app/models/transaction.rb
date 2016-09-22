@@ -23,8 +23,8 @@ class Transaction < ActiveRecord::Base
   def self.charge_customer_card(amt_ary, merchant, user, message, capture=true) 
     begin    
       amount = amt_ary[0]
-    	tax_percent = (((merchant.tax_percent.to_f)/100) + 1)                     # apply tax, default is 0
-    	amount_with_taxes = (amount.to_f * tax_percent).round(0)			
+      tax_percent = (((merchant.tax_percent.to_f)/100) + 1)                     # apply tax, default is 0
+      amount_with_taxes = (amount.to_f * tax_percent).round(0)      
       rhombus_fee = ((Rails.application.secrets.application_fee_percent / 100) * amount_with_taxes.to_f).round(0)
 
       payment_response_array = PaymentService.charge(amount_with_taxes, merchant, user, message, capture)
@@ -144,5 +144,4 @@ class Transaction < ActiveRecord::Base
   end
 
 end
-
 

@@ -1,0 +1,15 @@
+
+var error_div = $("#list_form_errors")
+<% if @list.valid? %>
+	 $('#list_form_items').html("List created successfully")
+<%else %>
+	<% @list.errors.full_messages.each do |error| %>
+		error_div.html(" ").append("<%=j error %>").css('color', 'red')
+	<% end %>
+<% end %>
+<% if !@customer_list_errors.empty? %>
+	<% @customer_list_errors.each do |error| %>
+		error_div.html("").append("<%=j error %>").css('color', 'red')
+	<% end %>
+<% end %>
+
