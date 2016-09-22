@@ -1,4 +1,4 @@
-class CustomerList < ActiveRecord::Base
+class UserList < ActiveRecord::Base
   belongs_to :user
   belongs_to :list
 

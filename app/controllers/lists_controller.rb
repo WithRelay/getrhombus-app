@@ -9,7 +9,7 @@ class ListsController < ApplicationController
   end
 
   def show
-    customers = CustomerList.where(:list_id => @list.id)
+    customers = UserList.where(:list_id => @list.id)
     @users = Array.new
     customers.each do |c|
       @users.push(User.find(c.user_id))
@@ -19,7 +19,7 @@ class ListsController < ApplicationController
   end
 
   def remove_user_from_list(user_id)
-    CustomerList.where(:user_id => params[:user_id]).delete
+    UserList.where(:user_id => params[:user_id]).delete
     puts "Completed"
   end
 
@@ -46,7 +46,7 @@ class ListsController < ApplicationController
     # Now save each customer on that list
     @customer_list_errors = Array.new
     user_list.each do |u|
-      u = CustomerList.new(list_id:@list.id, user_id:u)
+      u = UserList.new(list_id:@list.id, user_id:u)
       @customer_list_errors.push(u.errors.full_messages) if !u.save
     end
     respond_to do |format|
