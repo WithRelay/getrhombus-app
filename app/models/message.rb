@@ -1,45 +1,44 @@
 class Message < ActiveRecord::Base
 
 	belongs_to :txn, :foreign_key => :transaction_id, :class_name => :Transaction
-	belongs_to :hashtag
-
-	has_many :image_refs, as: :imageable, dependent: :destroy
+  belongs_to :hashtag
+  belongs_to :campaign
+  # for image table relation
+  has_many :image_refs, as: :imageable, dependent: :destroy
 	has_many :images, through: :image_refs
-	
-  	has_many :conversation_refs, as: :textable, dependent: :destroy
-  	has_many :conversations, through: :conversation_refs
-  
+  # for conversation
+  has_many :conversation_refs, as: :textable, dependent: :destroy
+  has_many :conversations, through: :conversation_refs
 
 	# belongs_to :user, counter_cache: true
-	
 	# For sending and saving all outbound text messages
-	def self.send_and_save_message(from, to, message, media_url = "")		
+	def self.send_and_save_message(from, to, message, media_url = "")
 		begin
       msg = Message.new
-			msg.update_attributes(from: from, to: to, text: message, unread: false)			
+			msg.update_attributes(from: from, to: to, text: message, unread: false)
 			if response = TextingService.send_sms(from, to, message, media_url)
-				msg.update_attributes(status: response.status, message_id: response.sid, message_timestamp: response.date_updated, message_price: response.price, 
-					error_code: response.error_code, error_text: response.error_message, price_unit: response.price_unit, num_segments: response.num_segments)	
+				msg.update_attributes(status: response.status, message_id: response.sid, message_timestamp: response.date_updated, message_price: response.price,
+					error_code: response.error_code, error_text: response.error_message, price_unit: response.price_unit, num_segments: response.num_segments)
 			else
 				Notification.text_failure_notification(response, from, to, message).deliver_now           				# Notify marketplace owner of failure
 				return false
-			end		
+			end
 		rescue StandardError => err
 			return false
     end
 	end
 
-	def self.send_and_save_message_nexmo(from, to, message)		
+	def self.send_and_save_message_nexmo(from, to, message)
 		begin
 			# save the outbound message
       msg = Message.new
 			msg.update_attributes(from: from, to: to, text: message, unread: false)
 			response = TextingService.send_sms_nexmo(from, to, message)
 
-			if response && response.code == 200 && response["messages"].first["status"] == "0"		
+			if response && response.code == 200 && response["messages"].first["status"] == "0"
 				msg.update_attributes(status: response['messages'].first['status'], message_id: response['messages'].first['message-id'],
 					message_price: response['messages'].first['message-price'], error_text: response['messages'].first['error-text'])
-			else			
+			else
 				Notification.text_failure_notification(response["messages"].first, from, to, message).deliver_now 				# Notify marketplace owner of failure
 				return false
 			end
@@ -47,7 +46,7 @@ class Message < ActiveRecord::Base
 			return false
     end
 	end
-	
+
 	# Returns hash with the last "num_messages" messages that the given user has sent to the given merchant
  	def self.get_user_messages_by_merchant(user_number, merchant_id, num_messages)
 	    messages = Message.includes(:images)
@@ -66,12 +65,12 @@ class Message < ActiveRecord::Base
 	        :ts_time => message.created_at.strftime('%l:%M %P'),
 	        :unread => message.unread,
 	        # return small version here??
-	        #:image_url => message.image_id? ? message.image.avatar.url : nil 
+	        #:image_url => message.image_id? ? message.image.avatar.url : nil
 	      })
 	    end
     	latest_messages
   end
-  
+
 	# Marks all user messages sent to a merchant as read
 	def self.mark_user_messages_for_merchant_as_read(user_number, merchant_id)
 		Message.where('`from` = ? AND `user_id_to` = ? AND `unread` = ?', user_number, merchant_id, true).update_all(unread: false)
