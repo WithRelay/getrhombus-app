@@ -1,12 +1,8 @@
 class User < ActiveRecord::Base
 
-<<<<<<< HEAD
   include DashboardMerchantQueries
   include DashboardCustomerQueries
   include CSVHandler
-=======
-  include DashboardQueries
->>>>>>> f63f52b9b2dd659ebe2b0707f6a21db258a7113e
 
   attr_accessor :phone, :captured_amt, :msg_id, :tag_id, :referrer_id
 
@@ -57,18 +53,6 @@ class User < ActiveRecord::Base
   after_commit :create_user_alert, on: :create, if: lambda { self.user_level == 1 }
   after_commit :update_phone_in_db, on: :update, if: lambda { self.previous_changes['phone_number'] && self.user_level == 0 }
 
-<<<<<<< HEAD
-  #validates_presence_of :user_level, :message => "Please select an account type"
-  #validates :country, length: {is: 2}, allow_blank: true  
-  # why allow nil?
-  #validates_uniqueness_of :phone_number, :allow_nil => true, :if => lambda { self.user_level == 0 }
-  # still need validation errors for edit..this is only for create action
-  #validates :phone_number, presence: true, numericality: { only_integer: true }, length: { minimum: 10 }, on: :create
-
-  # A user can belong to more than one list and also own multiple lists (Admins)
-  has_many :lists
-  has_many :customers, through: :customer_lists
-=======
   validates_presence_of :user_level, message: "Please select an account type"
   # Sign up form uses phone_number field for both user types
   validates_presence_of :phone_number, numericality: { only_integer: true }, length: { minimum: 10 }, on: :create
@@ -76,7 +60,6 @@ class User < ActiveRecord::Base
   # Edit pages use the right number field for each user type
   validates_presence_of :org_number, numericality: { only_integer: true }, length: { minimum: 10 }, on: :update, if: lambda { self.user_level == 1 }
   validates_presence_of :phone_number, numericality: { only_integer: true }, length: { minimum: 10 }, on: :update, if: lambda { self.user_level == 0 }
->>>>>>> 59cf6f20de19642b6eda053584c1128df125aa87
 
   # Allow nil added to db migration because merchants don't have phone number. They have org_phone.
   # And since mysql indexes this field, it indexes nil and only allows one row with nil.
@@ -89,14 +72,8 @@ class User < ActiveRecord::Base
   def add_token_to_stripe_customer(params)
     if params[:card_token].present?  # is this why i get the errors from stripe??
       begin 
-<<<<<<< HEAD
-        if self.customer_uri.blank?                                     # Doesnt have a customer uri => first time
-<<<<<<< HEAD
-          cu = Stripe::Customer.create(email: self.email, source: params[:instrument_uri])         
-=======
         if self.customer_uri.blank?   # Doesnt have a customer uri => first time
           cu = Stripe::Customer.create(email: self.email, source: params[:card_token])         
->>>>>>> 59cf6f20de19642b6eda053584c1128df125aa87
           self.customer_uri = cu.id
           self.livemode = cu.livemode
         else
@@ -104,19 +81,6 @@ class User < ActiveRecord::Base
           cu.email = self.email
           cu.source = params[:card_token]
           cu.save   
-=======
-          response = Stripe::Customer.create(:email => "#{self.email}", :card => params[:instrument_uri])         
-          self.customer_uri = response.id
-          self.stripe_livemode = response.livemode
-          self.save
-          return [true, "new_customer"]
-        else
-          response = Stripe::Customer.retrieve(self.customer_uri)  
-          response.email = self.email
-          response.card = params[:instrument_uri]
-          response.save 
-          return [true]  
->>>>>>> f63f52b9b2dd659ebe2b0707f6a21db258a7113e
         end
         buy_merchant_number if self.user_level == 1 && self.rn_type == nil
       rescue Stripe::CardError => e
@@ -125,7 +89,6 @@ class User < ActiveRecord::Base
         owner = User.find_by(email: Rails.application.secrets.team_email)
         Message.send_and_save_message(owner.rhombus_number, self.phone_number, "We were unable to update your card info on Rhombus because: #{err[:message]}.")
         Notification.token_failure_notification(err, self.email).deliver_now
-<<<<<<< HEAD
       rescue Stripe::StripeError => e
         Notification.token_failure_notification(e.json_body[:error], self.email).deliver_now
       rescue StandardError => e
@@ -133,26 +96,7 @@ class User < ActiveRecord::Base
       end
       false
     end
-<<<<<<< HEAD
-
-    return false
-=======
-        return [false]
-      rescue Stripe::StripeError => e
-        body = e.json_body
-        err  = body[:error]
-        Notification.token_failure_notification(err, self.email).deliver_now
-        return [false]
-      rescue StandardError => e
-        Notification.token_failure_notification(e, self.email).deliver_now
-        return [false]
-      end
-    end
-    return [true]                     # Not a customer just a merchant
->>>>>>> f63f52b9b2dd659ebe2b0707f6a21db258a7113e
-=======
     true
->>>>>>> 59cf6f20de19642b6eda053584c1128df125aa87
   end
  
   def buy_merchant_number
@@ -209,51 +153,6 @@ class User < ActiveRecord::Base
       self.org_name = self.org_name.strip unless self.org_name.blank?
     end
 
-<<<<<<< HEAD
-  def send_welcome_email
-<<<<<<< HEAD
-    owner = User.find_by(email: Rails.application.secrets.team_email)
-    if self.user_level == 1
-      EmailingService.send_welcome_email(self.email, owner.rhombus_number, "merchant")
-    elsif self.user_level == 0
-      message = Message.new
-      unless self.referrer_num.blank?
-        referrer = User.find_by(rhombus_number: self.referrer_num)
-        EmailingService.send_welcome_email_with_referral(referrer.email, self.email, referrer.org_name, referrer.rhombus_number, owner.rhombus_number)
-        text = "Thanks for signing up! Please add a payment card to your Rhombus profile (if you haven't done so). 
-        You can chat with us anytime via sms or to make a payment, just text the amount & description/hashtag. Ex. +10 #donut"
-        message.send_and_save_message(referrer.rhombus_number, self.phone_number, text)
-        return
-      end
-      EmailingService.send_welcome_email(self.email, owner.rhombus_number, "customer")
-      text = "Thanks for signing up! Please add a payment card to your Rhombus profile (if you haven't done so). 
-      You can chat with a local business anytime by texting their Rhombus number or to make a payment, just text the amount & 
-      description/hashtag. Ex. +10 #donut"
-      message.send_and_save_message(owner.rhombus_number, self.phone_number, text)
-=======
-    begin
-      owner = User.find_by(email: Rails.application.secrets.team_email)
-      if self.user_level == 1
-        EmailingService.send_welcome_email(self.email, owner.rhombus_number, "merchant")
-      elsif self.user_level == 0
-        @message = Message.new
-        unless self.referrer_num.blank?
-          referrer = User.find_by(rhombus_number: self.referrer_num)
-          EmailingService.send_welcome_email_with_referral(referrer.email, self.email, referrer.business_name, referrer.rhombus_number, owner.rhombus_number)
-          # default for referrer or use merchant welcome
-          name = (referrer.first_name.present?) ? "my name is #{referrer.first_name}, " : ''
-          text = "Hi there, I'll be happy to answer any questions via text. Don't forget to add your card info if you'd like to text a payment."
-          text = referrer.custom_welcome unless referrer.custom_welcome.blank?
-          @message.send_and_save_message(22, referrer.rhombus_number, self.phone_number, text)
-          return
-        end
-        EmailingService.send_welcome_email(self.email, owner.rhombus_number, "customer")
-        text = "Thanks for signing up! To chat with a business, simply send a text message to their Rhombus phone number. Don't forget to add your card info if you'd like to text a payment to the business."
-        @message.send_and_save_message(22, owner.rhombus_number, self.phone_number, text)
-      end
-    rescue StandardError => e
->>>>>>> f63f52b9b2dd659ebe2b0707f6a21db258a7113e
-=======
     def send_welcome_email
       owner = User.find_by(email: Rails.application.secrets.team_email)
       if self.user_level == 1
@@ -274,7 +173,6 @@ class User < ActiveRecord::Base
           Message.send_and_save_message(owner.rhombus_number, self.phone_number, text)
         end
       end
->>>>>>> 59cf6f20de19642b6eda053584c1128df125aa87
     end
 
     # move to background job

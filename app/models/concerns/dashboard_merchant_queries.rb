@@ -27,13 +27,8 @@ module DashboardMerchantQueries
 
 	def get_merchant_transactions
 		Transaction.find_by_sql([
-<<<<<<< HEAD
-			"SELECT users.card_name, users.email, transactions.last_four, transactions.notes, 
-			 transactions.amount_less_fees, users.phone_number, transactions.transaction_number, transactions.transaction_uri, 
-=======
 			"SELECT users.card_name, users.email, transactions.created_at, transactions.last4, transactions.notes, 
 			 transactions.amount_less_fees, users.phone_number, transactions.txn_number, transactions.txn_uri, 
->>>>>>> 59cf6f20de19642b6eda053584c1128df125aa87
 			  transactions.tax_percent, refunds.id as refund_id
 				FROM transactions 
 				INNER JOIN users on transactions.referenced_user_id = users.id

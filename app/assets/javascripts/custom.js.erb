@@ -1,14 +1,7 @@
 $(document).ready(function () {  
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-    // help wrap this up...need to tie in saving this referrer_num to db for sign in
-    // help change user controller to handle captured payments for signin
-    // help add tag_id to captured payments in signin and signup and in the forms
-=======
   // help change user controller to handle captured payments for signin
   // help add tag_id to captured payments in signin and signup and in the forms
->>>>>>> 59cf6f20de19642b6eda053584c1128df125aa87
 
   var url = window.location, 
       global_page_params = PageParameter.get_params(),
@@ -16,41 +9,10 @@ $(document).ready(function () {
       cc_year, cc_month, cc_submit_btn, cc_btn_text, form_submission_handler,
       create_user_submit = $('#create-user-submit'), create_user_form = $('#create-user-form'),
 
-<<<<<<< HEAD
-        REFUND_TXN_LINK, REFUND_BOX = $('#refundFormBox'),
-        chart_labels = [], chart_totals = [], chart_txns = [], 
-        contact_url = '/contact_forms.json', searchNumBtn = $('#searchNumberBtn');
-    
-    GetURLParameter();
-=======
-    var url = window.location;
-    Stripe.setPublishableKey('<%= Rails.application.secrets.stripe["publishable_key"] %>');
-    var page_params = url.search.substring(1);
-    var cc_year, cc_month, txn_details, REFUND_TXN_LINK, REFUND_BOX = $('#refundFormBox');
-    var chart_labels = [], chart_totals = [], chart_txns = [];
->>>>>>> f63f52b9b2dd659ebe2b0707f6a21db258a7113e
-    $.ajaxSetup({ cache:false });
-    Stripe.setPublishableKey('<%= Rails.application.secrets.stripe["publishable_key"] %>');
-
-    // to prefill signup form or handle captured payments
-    // signin is included for when user texts payment and is prompted to sign in to complete account
-    if (["/signup", "/signin", '/users', "/profile"].indexOf(url.pathname) != -1) {
-        var amt = validate_captured_amt(global_page_params['amt'])
-        
-        if (url.pathname == "/signup") {
-            document.getElementById('phone').value = global_page_params['num'];
-            hide_account_type(global_page_params['referrer']);
-        } else if (url.pathname == "/profile" && amt) {
-            cc_submit.prop('value', 'Save & Pay ' + (amt/100));   // on profile page show the amt in button
-        } else if (url.pathname == '/users') {
-            hide_account_type(document.getElementById('referrer').value);
-        }
-=======
       REFUND_TXN_LINK, REFUND_BOX = $('#refundFormBox'),
       chart_labels = [], chart_totals = [], chart_txns = [], 
       contact_url = '/contact_forms.json', searchNumBtn = $('#searchNumberBtn');
   
->>>>>>> 59cf6f20de19642b6eda053584c1128df125aa87
 
   $.ajaxSetup({ cache:false });  
   Stripe.setPublishableKey('<%= Rails.application.secrets.stripe["publishable_key"] %>');
@@ -232,18 +194,6 @@ $(document).ready(function () {
   });
 
 
-<<<<<<< HEAD
-        w = '</table>' + '</div>';
-        return (element.attr('data-page') === "transactions") ? x + y + v + w : x + z + w;
-    }
-    
-    // for table slide dowm
-    var table = $('#transactions-table').DataTable({ 
-        'dom' : 't',
-        'order' : [],
-        "pageLength": 25
-    });
-=======
   // Add event listener for opening and closing details
   $('#transactions-table tbody').on('click', 'td.details-control', function () {
       //$(this).addClass('');
@@ -265,7 +215,6 @@ $(document).ready(function () {
       }
   });
   //// end table slide down
->>>>>>> 59cf6f20de19642b6eda053584c1128df125aa87
 
 
   // bootstrap -select plugin
@@ -1549,24 +1498,8 @@ $(document).ready(function () {
         return;
       }
 
-<<<<<<< HEAD
       for (var i = 0, l = files.length; i < l; i++) {
         var file = files[i];
-=======
-    var submit_contact_form = function(json) {
-        $.ajax({ url: contact_url,
-            type: 'POST',
-            beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
-            data: json
-        })  
-            .done(function(data, response) {
-                ohSnap('Yes! Your message has been sent!', 'green');
-            })
-            .fail(function( data ) {
-                ohSnap('Oh no! We were unable to send your message...', 'red');                
-            })
-    }
->>>>>>> f63f52b9b2dd659ebe2b0707f6a21db258a7113e
 
         if (!file.type.match('image')) {
           invalid_actions("Please reselect only images");
@@ -1579,7 +1512,6 @@ $(document).ready(function () {
           return;
         }
 
-<<<<<<< HEAD
         var reader = new FileReader();
         reader.addEventListener("load", function (event) {
           var img = event.target;
@@ -1664,45 +1596,6 @@ $(document).ready(function () {
       }); 
   }
   ///// add a customer
-<<<<<<< HEAD
-    
-=======
-    $('#transactions-column').on("click", ".refund_link", function() {
-        REFUND_TXN_LINK = this;
-        REFUND_BOX.lightbox_me({
-            centered: true, 
-            onLoad: function() { 
-                $('#refundForm').find('input:first').focus()
-            }
-        });
-    });
-
-    $('#refundButton').click(function(e) {
-        e.preventDefault();
-        var button = this; button.disabled = true; button.textContent = "Please wait...";
-        var charge_id = REFUND_TXN_LINK.getAttribute('data-stripe-txn-num');
-        $.ajax({
-            url: "/refunds.json",
-            beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
-            type: "POST",
-            data: { "type" : "card", 
-                    "charge_id" : charge_id,
-                    "reason" : document.getElementById('refund_reason').value }       
-        })
-            .done(function(data, textStatus, response) {
-                document.getElementById(charge_id).setAttribute("data-status", "Refunded");
-                ohSnap(data.message, 'green');
-                $(REFUND_TXN_LINK).replaceWith("<tr><td>Status: </td><td>Refunded</td></tr>");
-            })
-            .fail(function(data, textStatus, response) { ohSnap(data.responseJSON["message"], "red"); })
-            .always(function(data, textStatus, response) {
-                button.disabled = false; button.textContent = "Submit";
-                REFUND_BOX.trigger('close');
-            })
-    });
-
->>>>>>> f63f52b9b2dd659ebe2b0707f6a21db258a7113e
-=======
   
   // submit referrer  
   $("#new_referrer").on("ajax:success", function(e, data, status, xhr) {
@@ -1714,7 +1607,6 @@ $(document).ready(function () {
   // submit referrer
 
 
->>>>>>> 59cf6f20de19642b6eda053584c1128df125aa87
 });
 
 

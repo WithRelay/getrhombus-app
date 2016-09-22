@@ -24,7 +24,6 @@ class TextingService
       end
     end
   
-<<<<<<< HEAD
     def send_sms(from, to, body, media_url = nil)
       begin
         client = Twilio::REST::Client.new TWILIO_API_KEY, TWILIO_API_SECRET
@@ -72,15 +71,6 @@ class TextingService
       begin
         # https://www.twilio.com/help/faq/phone-numbers/which-countries-does-twilio-have-phone-numbers-in-and-what-are-their-capabilities
         client = Twilio::REST::Client.new TWILIO_API_KEY, TWILIO_API_SECRET
-=======
-    def buy_number(country)
-      # search for a number on nexmo
-      response = HTTParty.get('https://rest.nexmo.com/number/search/'+ NEXMO_API_KEY + "/" + NEXMO_API_SECRET + "/" + country + "?features=SMS,VOICE&size=1")
-      # check the response
-      if response.code == 200 && response["numbers"] != nil #.first["msisdn"] != ""
-        msisdn = response["numbers"].first["msisdn"]
-        response = HTTParty.post('https://rest.nexmo.com/number/buy/'+ NEXMO_API_KEY + "/" + NEXMO_API_SECRET + "/" + country + "/" + msisdn)
->>>>>>> f63f52b9b2dd659ebe2b0707f6a21db258a7113e
         
         search_params = {}
         search_params[ (['US', 'CA'].include? params[:country]) ? 'area_code' : 'contains' ] = params[:query]
@@ -358,4 +348,3 @@ class TextingService
     end  
   end
 end
-

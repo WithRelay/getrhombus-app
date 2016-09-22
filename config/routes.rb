@@ -10,7 +10,6 @@ Rails.application.routes.draw  do
   get 'pricing' => 'static_pages#pricing'
   get 'contact' => 'contact_forms#new'
   
-<<<<<<< HEAD
   post 'lists/create_new_list' => 'lists#create_new_list'
   get 'customer_lists/remove_user' => 'customer_lists#remove_user'
 
@@ -18,9 +17,6 @@ Rails.application.routes.draw  do
   resources :lists do
     resources :customer_lists
   end
-
-=======
->>>>>>> 59cf6f20de19642b6eda053584c1128df125aa87
 
   get 'json_get_current_user' => 'application#json_get_current_user'
   get "homepage_referrer" => 'referrers#homepage_referrer'
@@ -53,15 +49,12 @@ Rails.application.routes.draw  do
     get "signin", to: "devise/sessions#new"
   end
   
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
+
   
   resources :contact_forms
   resources :referrers, only: [:new, :create]
   
 
->>>>>>> 59cf6f20de19642b6eda053584c1128df125aa87
   # user routes
   resources :users, only: :show do
     resources :hashtags, except: [:show, :destroy]
@@ -102,10 +95,9 @@ Rails.application.routes.draw  do
       get 'lists' => 'users#lists'
     end
   end 
-=======
+
   resources :users, :only => :show
   resources :refunds, :only => :create
->>>>>>> f63f52b9b2dd659ebe2b0707f6a21db258a7113e
   
 
   ## api

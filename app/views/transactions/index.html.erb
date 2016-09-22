@@ -17,11 +17,7 @@
  <!-- //////////////////////////////////////////////////////////////////////////// --> 
 <!-- START CONTENT -->
 <div class="content">
-<<<<<<< HEAD
 
-=======
-  
->>>>>>> f63f52b9b2dd659ebe2b0707f6a21db258a7113e
   <div id="ohsnap"></div>
   
   <!-- Start Page Header -->
@@ -29,17 +25,11 @@
     <div class="title" style="font-weight: normal;">Transactions</div>
 
 
-<<<<<<< HEAD
   <!-- CSV upload -->
   <form id="csv-upload-form" action="/v1/users/add_customers.csv" method="POST">
     <input type="file" id="csv-file-select" name="csv" accept=".csv"/>
     <button type="submit" id="csv-upload-button">Upload</button>
   </form>
-=======
- <!-- //////////////////////////////////////////////////////////////////////////// --> 
-<!-- START CONTAINER -->
-<div class="" id="transactions-column" data-level="<%= current_user.user_level %>">
->>>>>>> f63f52b9b2dd659ebe2b0707f6a21db258a7113e
 
 
 
@@ -86,13 +76,8 @@
                         data-time="<%= t.created_at.strftime("%I:%M %p") %>"
                         id="<%= t.txn_uri %>"
                         data-email="<%= t.email %>"
-<<<<<<< HEAD
                         data-tax="<%= t.tax_percent %>"
                         data-status="<%#= (t.refund_id) ? "Refunded" : "Charged" %>"
-=======
-                        data-tax="<%= t.tax_rate %>"
-                        data-status="<%= (t.refund_id) ? "Refunded" : "Charged" %>"
->>>>>>> f63f52b9b2dd659ebe2b0707f6a21db258a7113e
                         data-page="transactions"
                       ></td>
                       <td><%= t.created_at.strftime("%m/%d/%Y") %></td>
@@ -127,53 +112,13 @@
 
     <%= render 'shared/dashboard_footer' %>
 
-
 </div>
 <!-- End Content -->
  <!-- //////////////////////////////////////////////////////////////////////////// --> 
 
-<<<<<<< HEAD:app/views/users/transactions.html.erb
-<div style="display: none;" id="refundFormBox" class="newForms">
-  <div id="refundFormDiv" class="parent_div">
-    <div class="center_div">      
-      <div id="refundCustomer">Refund Transaction</div>
-      <p id="refundCustomerLine">____</p>      
-      <form id="refundForm" name="refundForm">          
-<<<<<<< HEAD
-           <label>
-              <select class="form-control rhombusFocus" id="refund_reason" name="refund_reason">
-                <option value="duplicate">Duplicate</option>
-                <option value="fraudulent">Fraudulent</option>
-                <option value="requested_by_customer">Customer Request</option>
-              </select>
-            </label>
-
-          <footer>
-            <button class="btn btn-default btn-block btn-rhombus" id="refundButton">Submit</button>
-          </footer>
-=======
-        <label>
-          <select class="form-control rhombusFocus" id="refund_reason" name="refund_reason">
-            <option value="duplicate">Duplicate</option>
-            <option value="fraudulent">Fraudulent</option>
-            <option value="requested_by_customer">Customer Request</option>
-          </select>
-        </label>
-
-        <footer>
-          <button class="btn btn-default btn-block btn-rhombus" id="refundButton">Submit</button>
-        </footer>
->>>>>>> f63f52b9b2dd659ebe2b0707f6a21db258a7113e
-      </form>
-    </div>
-  </div>
-</div>
-<<<<<<< HEAD
-=======
 
 
 <% render 'refund_box' %>
->>>>>>> 59cf6f20de19642b6eda053584c1128df125aa87:app/views/transactions/index.html.erb
 
 
 
@@ -228,8 +173,6 @@
 
 
 
-=======
->>>>>>> f63f52b9b2dd659ebe2b0707f6a21db258a7113e
 
 </body>
 </html>
