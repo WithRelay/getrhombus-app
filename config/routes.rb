@@ -25,6 +25,8 @@ Rails.application.routes.draw  do
 
   match "send_mms_from_dashboard" => 'messages#dashboard_mms', via: [:post]
 
+  match "send_mms_from_dashboard" => 'messages#dashboard_mms', via: [:post]
+
   ## events/hooks routes
   constraints subdomain: "hooks" do
     post 'events/stripe' => 'webhooks#stripe_events'
@@ -44,6 +46,9 @@ Rails.application.routes.draw  do
     get "profile", to: "devise/registrations#edit"
     get "signin", to: "devise/sessions#new"
   end
+
+  resources :contact_forms
+  resources :referrers, only: [:new, :create]
 
   resources :contact_forms
   resources :referrers, only: [:new, :create]
