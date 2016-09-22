@@ -3,17 +3,16 @@ Rails.application.routes.draw  do
   ## static pages routes
   root 'static_pages#home'
   get 'about' => 'static_pages#about'
-  get 'customers' => 'static_pages#customers'  
+  get 'customers' => 'static_pages#customers'
   get 'faqs' => 'static_pages#faqs'
   get 'privacy' => 'static_pages#privacy'
   get 'terms' => 'static_pages#terms'
   get 'pricing' => 'static_pages#pricing'
   get 'contact' => 'contact_forms#new'
-  
+
   post 'lists/create_new_list' => 'lists#create_new_list'
   get 'customer_lists/remove_user' => 'customer_lists#remove_user'
 
-  
   resources :lists do
     resources :customer_lists
   end
@@ -23,10 +22,8 @@ Rails.application.routes.draw  do
   get "resque" => Resque::Server, anchor: false, constraints: lambda { |req|
     req.env['warden'].authenticated? and req.env['warden'].user.id == 23
   }
-  
 
   match "send_mms_from_dashboard" => 'messages#dashboard_mms', via: [:post]
-  
 
   ## events/hooks routes
   constraints subdomain: "hooks" do
@@ -40,7 +37,6 @@ Rails.application.routes.draw  do
     get "receive_delivery_report_twilio" => 'messages#receive_delivery_report_twilio'
   end
 
-
   ## devise routes
   devise_for :users, controllers: { registrations: "registrations", omniauth_callbacks: "omniauth_callbacks", sessions: 'sessions' }
   devise_scope :user do
@@ -48,12 +44,9 @@ Rails.application.routes.draw  do
     get "profile", to: "devise/registrations#edit"
     get "signin", to: "devise/sessions#new"
   end
-  
 
-  
   resources :contact_forms
   resources :referrers, only: [:new, :create]
-  
 
   # user routes
   resources :users, only: :show do
@@ -65,7 +58,7 @@ Rails.application.routes.draw  do
     resources :addresses
     resources :people
     resources :transactions do
-      
+
       collection do
         get 'download' => 'transactions#download_csv', constraints: { format: 'csv' }
       end
@@ -76,10 +69,10 @@ Rails.application.routes.draw  do
     end
 
     # Only admins can create coupons
-    resources :coupons, :constraints => lambda { |req| 
-      req.env['warden'].authenticated? and req.env['warden'].user.email == '<redacted_email>' #Rails.application.secrets.dashboard_email 
+    resources :coupons, :constraints => lambda { |req|
+      req.env['warden'].authenticated? and req.env['warden'].user.email == '<redacted_email>' #Rails.application.secrets.dashboard_email
     }
-    
+
     member do
       get 'managed-accounts' => 'users#managed_acct'
       match 'managed-accounts' => "users#create_managed_acct", via: :patch
@@ -94,11 +87,14 @@ Rails.application.routes.draw  do
       get 'notifications' => 'alerts#edit'
       get 'lists' => 'users#lists'
     end
-  end 
+  end
 
   resources :users, :only => :show
   resources :refunds, :only => :create
-  
+
+  authenticate :user, -> (user) { user.is_merchant? } do
+    resources :campaigns, except: [:show]
+  end
 
   ## api
   api_version(module: "Api::V1", path: {value: "v1"}, constraints: { subdomain: "api" }, defaults: { format: "json" }) do
@@ -114,7 +110,7 @@ Rails.application.routes.draw  do
   ## catch all other to 404
   get "/*other", to: 'static_pages#to_404'     #all non-existent routes go to 404
 
-  
+
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
