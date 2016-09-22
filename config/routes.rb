@@ -92,6 +92,7 @@ Rails.application.routes.draw  do
   resources :users, :only => :show
   resources :refunds, :only => :create
 
+  # authenticate campaigns resources if a user is merchant
   authenticate :user, -> (user) { user.is_merchant? } do
     resources :campaigns, except: [:show]
   end
