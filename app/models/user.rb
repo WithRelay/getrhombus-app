@@ -18,6 +18,8 @@ class User < ActiveRecord::Base
   has_many :referrers, class_name: 'Referrer', foreign_key: 'referrer_id'
   has_many :referees, class_name: 'Referrer', foreign_key: 'referee_id'
 
+  has_many :campaigns
+
   # messages goes away with conversation model
   has_many :messages
   has_many :hashtags
