@@ -1,6 +1,7 @@
 class FbPage < ActiveRecord::Base
   belongs_to :user
   belongs_to :fb_cred
+  has_many :fb_masseges
 
   def self.store_page(current_user)
     response = Koala::Facebook::API.new(current_user.fb_cred.auth_token)
@@ -12,7 +13,8 @@ class FbPage < ActiveRecord::Base
           row.user_id = current_user.id
           row.category = page["category"]
           row.page_access_token = page["access_token"]
-          row.page_name = page["name"] 
+          row.page_name = page["name"]
+          row.fb_cred_id = current_user.fb_cred.id
           row.save
         end
       rescue StandardError => err
