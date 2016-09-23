@@ -1,7 +1,7 @@
 class FbPage < ActiveRecord::Base
   belongs_to :user
   belongs_to :fb_cred
-  has_many :fb_masseges
+  has_many :fb_messages
 
   def self.store_page(current_user)
     response = Koala::Facebook::API.new(current_user.fb_cred.auth_token)
