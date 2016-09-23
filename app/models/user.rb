@@ -26,7 +26,9 @@ class User < ActiveRecord::Base
   has_many :coupons
 
   has_one :twitter_cred
+  has_one :fb_cred
   has_one :alert, dependent: :destroy
+  has_many :fb_pages
 
   has_many :image_refs, as: :imageable
   has_many :images, through: :image_refs
@@ -225,5 +227,4 @@ def add_token_to_stripe_customer(params)
     end
     true
   end
-
 =end

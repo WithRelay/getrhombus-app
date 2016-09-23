@@ -8,6 +8,7 @@ Rails.application.routes.draw  do
   get 'privacy' => 'static_pages#privacy'
   get 'terms' => 'static_pages#terms'
   get 'pricing' => 'static_pages#pricing'
+
   get 'contact' => 'contact_forms#new'
 
   post 'lists/create_new_list' => 'lists#create_new_list'
@@ -21,9 +22,7 @@ Rails.application.routes.draw  do
   get "homepage_referrer" => 'referrers#homepage_referrer'
   get "resque" => Resque::Server, anchor: false, constraints: lambda { |req|
     req.env['warden'].authenticated? and req.env['warden'].user.id == 23
-  }
-
-  match "send_mms_from_dashboard" => 'messages#dashboard_mms', via: [:post]
+  }  
 
   match "send_mms_from_dashboard" => 'messages#dashboard_mms', via: [:post]
 
@@ -50,11 +49,10 @@ Rails.application.routes.draw  do
   resources :contact_forms
   resources :referrers, only: [:new, :create]
 
-  resources :contact_forms
-  resources :referrers, only: [:new, :create]
-
   # user routes
   resources :users, only: :show do
+    resources :fb_pages, only: [:index]
+    patch 'update_fb_page' => 'fb_pages#update_user_fb_page'
     resources :hashtags, except: [:show, :destroy]
     resources :subscriptions, except: [:show, :edit, :update]
     resources :plans, only: [:create, :index, :new]
@@ -115,7 +113,6 @@ Rails.application.routes.draw  do
 
   ## catch all other to 404
   get "/*other", to: 'static_pages#to_404'     #all non-existent routes go to 404
-
 
 
   # The priority is based upon order of creation: first created -> highest priority.

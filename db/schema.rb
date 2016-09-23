@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160922055245) do
+ActiveRecord::Schema.define(version: 20160922063934) do
 
   create_table "addresses", force: :cascade do |t|
     t.string   "street_address",   limit: 191
@@ -99,7 +99,12 @@ ActiveRecord::Schema.define(version: 20160922055245) do
     t.string   "u_id",       limit: 191
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
+    t.string   "auth_token", limit: 191
+    t.integer  "user_id",    limit: 4
   end
+
+  add_index "fb_creds", ["id"], name: "index_fb_creds_on_id", unique: true, using: :btree
+  add_index "fb_creds", ["user_id"], name: "index_fb_creds_on_user_id", unique: true, using: :btree
 
   create_table "fb_messages", force: :cascade do |t|
     t.text     "text",           limit: 65535
@@ -118,12 +123,14 @@ ActiveRecord::Schema.define(version: 20160922055245) do
   add_index "fb_messages", ["to"], name: "index_fb_messages_on_to", using: :btree
 
   create_table "fb_pages", force: :cascade do |t|
-    t.string   "page_id",           limit: 191
-    t.integer  "user_id",           limit: 4
-    t.string   "category",          limit: 191
-    t.string   "page_access_token", limit: 191
-    t.datetime "created_at",                    null: false
-    t.datetime "updated_at",                    null: false
+    t.string   "page_id",             limit: 191
+    t.integer  "user_id",             limit: 4
+    t.string   "category",            limit: 191
+    t.string   "page_access_token",   limit: 191
+    t.datetime "created_at",                                      null: false
+    t.datetime "updated_at",                                      null: false
+    t.string   "page_name",           limit: 191
+    t.boolean  "subscription_status", limit: 1,   default: false
   end
 
   create_table "full_contact_data", force: :cascade do |t|
@@ -545,7 +552,6 @@ ActiveRecord::Schema.define(version: 20160922055245) do
     t.text     "custom_welcome",         limit: 65535
     t.string   "short_url",              limit: 191
     t.string   "currency",               limit: 191
-    t.string   "fb_id",                  limit: 191
     t.string   "time_zone",              limit: 191,   default: "Eastern Time (US & Canada)"
   end
 
