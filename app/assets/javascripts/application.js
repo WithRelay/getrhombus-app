@@ -25,5 +25,5 @@
 //= require managed-account
 //= require location
 //= require cocoon
-
+//= require fb_page
 
