@@ -1,0 +1,37 @@
+<%= form_for campaign do |f| %>
+
+  <%= f.label :Choose_a_list %>
+  <%= f.collection_select :list_id, lists, :id, :name %>
+
+  <%= f.label :Channel %>
+  <%= f.select :channel, [ ['sms and mms', 0], ['Facebook Messenger', 1], ['Email', 2] ] %>
+
+  <%= link_to 'Create new list', '#' %>
+
+  <%= f.label :Delivery_Settings %>
+
+  <%= f.label :One_Time %>
+  <%= f.radio_button :frequency_type, 0 %>
+
+  <%= f.label :Recurring %>
+  <%= f.radio_button :frequency_type, 1 %>
+
+  <%= f.label :deliver_now %>
+  <%= f.radio_button :delivery_type, 0, id: 'deliverNow' %>
+
+  <%= f.label :delivery_later %>
+  <%= f.radio_button :delivery_type, 1, id: 'deliverLater' %>
+
+  <div class = 'scheduleOption'>
+
+    <%= f.select :repeat_days, [ 'Repeat every', '7 days', '14 days', '30 days', '60 days', '90 days' ] %>
+
+    <%= f.text_field :date, class: 'daterange' %>
+
+    <%= f.select :time, list_of_time %>
+
+  </div>
+
+  <%= f.submit 'Create Campaign' %>
+
+<% end %>

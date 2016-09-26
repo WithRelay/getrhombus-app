@@ -1,2 +1,5 @@
-<h1>Campaigns#new</h1>
-<p>Find me in app/views/campaigns/new.html.erb</p>
+<div class = 'editor side-bar'>
+  <h5 class="left-nav signup-box-subheading">NEW CAMPAIGN</h5>
+  <%= render 'shared/flash_messages' %>
+  <%= render partial: @campaign, locals: { lists: @lists } %>
+</div>

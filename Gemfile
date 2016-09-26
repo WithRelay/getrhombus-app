@@ -8,9 +8,13 @@ gem "httparty"
 
 # For authentication
 gem "devise"
-
-#resque
-gem 'resque', :require => "resque/server" 
+# bootstrap date range picker dependency gem
+# for more info https://github.com/jordanbrock/bootstrap-daterangepicker-rails
+gem 'momentjs-rails'
+# Date Range Picker for Twitter Bootstrap
+gem 'bootstrap-daterangepicker-rails'
+# resque
+gem 'resque', :require => "resque/server"
 gem 'resque-scheduler', :require => "resque/scheduler/server"
 gem 'ar_after_transaction'
 
@@ -112,7 +116,7 @@ group :development, :test do
     gem 'web-console', '~> 2.0'
     # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
     gem 'spring'
-    # debugging 
+    # debugging
     gem 'pry'
 end
 

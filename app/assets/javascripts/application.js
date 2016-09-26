@@ -20,10 +20,11 @@
 //= require jquery.payment
 //= require jquery.charactercounter
 //= require ohsnap.js
-
+//= require moment
+//= require daterangepicker
 //= require url-paramaters
 //= require managed-account
 //= require location
 //= require cocoon
 //= require fb_page
-
+//= require campaigns
