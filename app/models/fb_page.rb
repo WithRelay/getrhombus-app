@@ -17,6 +17,7 @@ class FbPage < ActiveRecord::Base
           row.save
         end
       rescue StandardError => err
+        nil
       end
     end
   end
