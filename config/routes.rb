@@ -13,6 +13,7 @@ Rails.application.routes.draw  do
 
   post 'lists/create_new_list' => 'lists#create_new_list'
   get 'customer_lists/remove_user' => 'customer_lists#remove_user'
+  get 'fb_pages/remove_integration' => 'fb_pages#remove_integration'
 
   resources :lists do
     resources :customer_lists
@@ -169,4 +170,5 @@ Rails.application.routes.draw  do
   #     # (app/controllers/admin/products_controller.rb)
   #     resources :products
   #   end
+
 end
