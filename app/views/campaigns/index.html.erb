@@ -1,32 +1,28 @@
-<div class="container">
-  <table class="table table-striped">
-    <thead>
+<table>
+  <thead>
+    <tr>
+     <th>Channel Name</th>
+     <th>Status</th>
+     <th>Delivery Type</th>
+     <th>Date</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @campaigns.each do |campaign| %>
       <tr>
-       <th>Channel Name</th>
-       <th>Status</th>
-       <th>Delivery Type</th>
-       <th>Date</th>
-       <th>Time</th>
+        <td>
+          <%= campaign.channel %>
+        </td>
+        <td>
+          <%= campaign.status %>
+        </td>
+        <td>
+          <%= campaign.delivery_type %>
+        </td>
+        <td>
+          <%= campaign.date_time %>
+        </td>
       </tr>
-    </thead>
-    <tbody>
-      <% @campaigns.each do |campaign| %>
-        <tr>
-          <td>
-            <%= campaign.channel %>
-          </td>
-          <td>
-            <%= campaign.status %>
-          </td>
-            <%= campaign.delivery_type %>
-          <td>
-            <%= campaign.date %>
-          </td>
-          <td>
-            <%= campaign.time %>
-          </td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-</div>
+    <% end %>
+  </tbody>
+</table>

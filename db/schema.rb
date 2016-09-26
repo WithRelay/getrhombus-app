@@ -11,8 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160928104220) do
-
+ActiveRecord::Schema.define(version: 20160926091602) do
   create_table "addresses", force: :cascade do |t|
     t.string   "street_address",   limit: 191
     t.string   "city",             limit: 191
@@ -171,6 +170,7 @@ ActiveRecord::Schema.define(version: 20160928104220) do
     t.datetime "updated_at",                   null: false
     t.integer  "campaign_id",    limit: 4
     t.integer  "seq",            limit: 4
+    t.integer  "campaign_id",    limit: 4
   end
 
   add_index "fb_messages", ["campaign_id"], name: "index_fb_messages_on_campaign_id", using: :btree

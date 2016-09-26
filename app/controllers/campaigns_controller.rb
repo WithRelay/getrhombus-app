@@ -4,12 +4,14 @@ class CampaignsController < ApplicationController
 
   def new
     @campaign = current_user.campaigns.build
+    message = @campaign.messages.build
+    message.images.build
     @lists = current_user.lists
   end
 
   def create
-    @campaign = current_user.campaigns.build(campagin_params)
-    @campaign.campaign_lists.build(Hash[*campagin_params.first])
+    @campaign = current_user.campaigns.build(campaign_params)
+    @campaign.campaign_lists.build(Hash[*campaign_params.first])
     if @campaign.save
       flash[:notice] = 'Campaign Saved successfully'
     else
@@ -33,7 +35,8 @@ class CampaignsController < ApplicationController
 
   private
 
-  def campagin_params
-    params.require(:campaign).permit(:list_id, :channel, :repeat_days, :date, :time)
+  def campaign_params
+    params.require(:campaign).permit(:list_id, :channel, :repeat_days, :date_time, :delivery_type,
+                                     :frequency_type, messages_attributes: [:text])
   end
 end
