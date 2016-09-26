@@ -29,11 +29,14 @@
     <div class="page-header">
       <p>Connected to Facebook as: </p>
       <span style="background: aliceblue;"> <%= current_user.fb_cred.name %></span>
-
-      <p> Select page: </p>
-      <%= form_for :fb_page, url: user_update_fb_page_path(current_user), method: :patch do |f| %>
-        <%= select_tag 'select_page', options_for_select(@user_fb_pages.map{|p| ["#{p.page_name}", p.id] }) %>
-        <%= f.submit 'Select' %>
+      <%if @user_fb_pages.count == 0%>
+        <p> Please Make some facebook page before proceed</p>
+      <%else%>
+        <p> Select page: </p>
+        <%= form_for :fb_page, url: user_update_fb_page_path(current_user), method: :patch do |f| %>
+          <%= select_tag 'select_page', options_for_select(@user_fb_pages.map{|p| ["#{p.page_name}", p.id] }) %>
+          <%= f.submit 'Select' %>
+        <%end%>
       <%end%>
     </div>
   </div>
