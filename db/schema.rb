@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160922055245) do
+ActiveRecord::Schema.define(version: 20160926022812) do
 
   create_table "addresses", force: :cascade do |t|
     t.string   "street_address",   limit: 191
@@ -357,6 +357,14 @@ ActiveRecord::Schema.define(version: 20160922055245) do
 
   add_index "refunds", ["transaction_id"], name: "index_refunds_on_transaction_id", using: :btree
 
+  create_table "segments", force: :cascade do |t|
+    t.string  "name",    limit: 191
+    t.string  "query",   limit: 191
+    t.integer "user_id", limit: 4
+  end
+
+  add_index "segments", ["user_id"], name: "index_segments_on_user_id", using: :btree
+
   create_table "stripe_creds", force: :cascade do |t|
     t.string   "secret",            limit: 191
     t.string   "publishable_key",   limit: 191
@@ -568,6 +576,7 @@ ActiveRecord::Schema.define(version: 20160922055245) do
   add_foreign_key "messages", "hashtags"
   add_foreign_key "plans", "users"
   add_foreign_key "refunds", "transactions"
+  add_foreign_key "segments", "users"
   add_foreign_key "subscriptions", "coupons"
   add_foreign_key "subscriptions", "plans"
   add_foreign_key "subscriptions", "users"
