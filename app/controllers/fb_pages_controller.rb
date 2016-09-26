@@ -8,8 +8,7 @@ class FbPagesController < ApplicationController
   def update_user_fb_page
     page = FbPage.find_by_id params["select_page"]
     if page.present?
-      subscribe_page = Koala::Facebook::API.new page.page_access_token
-      response = subscribe_page.put_connections("me","subscribed_apps")
+      response = FacebookMessengerService.subscribe(page.page_access_token)
       if(response["success"])
         page.update_attributes(subscription_status: true)
       end

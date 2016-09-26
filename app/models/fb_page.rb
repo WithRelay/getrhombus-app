@@ -4,8 +4,7 @@ class FbPage < ActiveRecord::Base
   has_many :fb_messages
 
   def self.store_page(current_user)
-    response = Koala::Facebook::API.new(current_user.fb_cred.auth_token)
-    page_array = response.get_object('me/accounts/page')
+    page_array = FacebookMessengerService.get_page(current_user.fb_cred.auth_token)
     page_array.each do |page|
       begin
         where(page_id: page["id"]).first_or_initialize.tap do |row|
