@@ -44,7 +44,14 @@ class FbPagesController < ApplicationController
     fb_cred = current_user.fb_cred
     fb_pages = fb_cred.fb_pages
     fb_cred.destroy
-    fb_pages.each{|page| page.destroy}
+    if fb_pages.present?
+      fb_pages.each do |page|
+        if page.subscription_status
+          FacebookMessengerService.unsubscribe(page.page_access_token)
+        end
+        page.destroy
+      end
+    end
     redirect_to user_path(current_user), notice: 'success'
   end
 end
