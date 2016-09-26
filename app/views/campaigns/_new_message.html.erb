@@ -1,0 +1,13 @@
+<div class='newMessage'>
+  <%= f.fields_for :messages do |ff| %>
+
+    <%= ff.text_area :text, cols: 100, rows: 15, id: 'jodit' %>
+
+    <%= ff.fields_for :images do |fff| %>
+
+      <%= fff.file_field :avatar_file_name, id: 'campaignMessageAttachment' %>
+
+    <% end %>
+  <% end %>
+</div>
+<%= image_tag 's', id: 'imagePreview'%>
