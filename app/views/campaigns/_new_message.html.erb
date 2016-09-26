@@ -5,7 +5,7 @@
 
     <%= ff.fields_for :images do |fff| %>
 
-      <%= fff.file_field :avatar_file_name, id: 'campaignMessageAttachment' %>
+      <%= fff.file_field :avatar_file_name, id: 'campaignMessageAttachment',  multiple: true, accept: "image/jpeg, image/jpg, image/gif, image/png" %>
 
     <% end %>
   <% end %>
