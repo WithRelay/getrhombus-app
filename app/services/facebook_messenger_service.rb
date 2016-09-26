@@ -41,7 +41,7 @@ class FacebookMessengerService
     def unsubscribe(page_access_token)
       begin
         subscribe_page = Koala::Facebook::API.new page_access_token
-        response = subscribe_page.delete_connections("<redacted_phone_number>","subscribed_apps")
+        response = subscribe_page.delete_connections("me","subscribed_apps")
         response
       rescue Koala::Facebook::APIError => err
         nil
