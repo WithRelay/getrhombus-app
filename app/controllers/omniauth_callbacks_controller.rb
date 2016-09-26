@@ -1,9 +1,7 @@
 class OmniauthCallbacksController < Devise::OmniauthCallbacksController
   protect_from_forgery
-  require 'pp'
 
   def twitter
-    # raise request.env["omniauth.auth"].to_yaml
     if current_user && current_user.user_level == 1
       if TwitterCred.from_omniauth(request.env["omniauth.auth"], current_user.id) == true
         redirect_to user_path(current_user)
