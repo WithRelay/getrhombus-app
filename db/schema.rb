@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160923061501) do
+ActiveRecord::Schema.define(version: 20160927061305) do
 
   create_table "addresses", force: :cascade do |t|
     t.string   "street_address",   limit: 191
@@ -66,11 +66,11 @@ ActiveRecord::Schema.define(version: 20160923061501) do
     t.datetime "updated_at",            null: false
   end
 
-  add_index "campaign_lists", ["campaign_id"], name: "fk_rails_09c9dd741b", using: :btree
+  add_index "campaign_lists", ["campaign_id"], name: "fk_rails_532bd3c61a", using: :btree
   add_index "campaign_lists", ["list_id", "campaign_id"], name: "index_campaign_lists_on_list_id_and_campaign_id", using: :btree
 
   create_table "campaigns", force: :cascade do |t|
-    t.string   "channel",        limit: 191
+    t.integer  "channel",        limit: 4
     t.integer  "status",         limit: 4,   default: 1
     t.datetime "created_at",                             null: false
     t.datetime "updated_at",                             null: false
@@ -117,15 +117,6 @@ ActiveRecord::Schema.define(version: 20160923061501) do
 
   add_index "coupons", ["user_id"], name: "index_coupons_on_user_id", using: :btree
 
-  create_table "customer_lists", force: :cascade do |t|
-    t.integer  "user_id",    limit: 4
-    t.datetime "created_at",           null: false
-    t.datetime "updated_at",           null: false
-    t.integer  "list_id",    limit: 4
-  end
-
-  add_index "customer_lists", ["user_id"], name: "index_customer_lists_on_user_id", using: :btree
-
   create_table "fb_creds", force: :cascade do |t|
     t.string   "email",      limit: 191
     t.string   "name",       limit: 191
@@ -134,21 +125,25 @@ ActiveRecord::Schema.define(version: 20160923061501) do
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
     t.string   "auth_token", limit: 191
+    t.integer  "user_id",    limit: 4
   end
 
   add_index "fb_creds", ["id"], name: "index_fb_creds_on_id", unique: true, using: :btree
+  add_index "fb_creds", ["user_id"], name: "index_fb_creds_on_user_id", unique: true, using: :btree
 
   create_table "fb_messages", force: :cascade do |t|
     t.text     "text",           limit: 65535
-    t.integer  "time_stamp",     limit: 4
+    t.datetime "time_stamp"
     t.boolean  "unread",         limit: 1
-    t.integer  "message_id",     limit: 4
+    t.string   "message_id",     limit: 191
     t.integer  "transaction_id", limit: 4
-    t.integer  "page_id",        limit: 4
+    t.string   "page_id",        limit: 191
     t.string   "from",           limit: 191
     t.string   "to",             limit: 191
     t.datetime "created_at",                   null: false
     t.datetime "updated_at",                   null: false
+    t.integer  "fb_page_id",     limit: 4
+    t.integer  "seq",            limit: 4
   end
 
   add_index "fb_messages", ["from"], name: "index_fb_messages_on_from", using: :btree
@@ -163,6 +158,7 @@ ActiveRecord::Schema.define(version: 20160923061501) do
     t.datetime "updated_at",                                      null: false
     t.string   "page_name",           limit: 191
     t.boolean  "subscription_status", limit: 1,   default: false
+    t.integer  "fb_cred_id",          limit: 4
   end
 
   create_table "full_contact_data", force: :cascade do |t|
@@ -280,6 +276,19 @@ ActiveRecord::Schema.define(version: 20160923061501) do
 
   add_index "lists", ["user_id"], name: "index_lists_on_user_id", using: :btree
 
+  create_table "message_frequencies", force: :cascade do |t|
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+    t.datetime "date"
+    t.datetime "time"
+    t.string   "repeat_days",    limit: 191
+    t.integer  "frequency_type", limit: 4
+    t.string   "delivery_type",  limit: 191
+    t.integer  "campaign_id",    limit: 4
+  end
+
+  add_index "message_frequencies", ["campaign_id"], name: "index_message_frequencies_on_campaign_id", using: :btree
+
   create_table "messages", force: :cascade do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -299,8 +308,10 @@ ActiveRecord::Schema.define(version: 20160923061501) do
     t.string   "num_segments",      limit: 191
     t.string   "price_unit",        limit: 191
     t.integer  "hashtag_id",        limit: 4
+    t.integer  "campaign_id",       limit: 4
   end
 
+  add_index "messages", ["campaign_id"], name: "index_messages_on_campaign_id", using: :btree
   add_index "messages", ["hashtag_id"], name: "index_messages_on_hashtag_id", using: :btree
   add_index "messages", ["transaction_id"], name: "index_messages_on_transaction_id", using: :btree
   add_index "messages", ["user_id"], name: "index_messages_on_user_id", using: :btree
@@ -606,7 +617,6 @@ ActiveRecord::Schema.define(version: 20160923061501) do
   add_foreign_key "campaign_lists", "campaigns"
   add_foreign_key "campaign_lists", "lists"
   add_foreign_key "coupons", "users"
-  add_foreign_key "customer_lists", "users"
   add_foreign_key "hashtags", "users"
   add_foreign_key "invoices", "coupons"
   add_foreign_key "invoices", "subscriptions"
@@ -614,6 +624,7 @@ ActiveRecord::Schema.define(version: 20160923061501) do
   add_foreign_key "invoices", "users"
   add_foreign_key "invoices", "users", column: "team_id"
   add_foreign_key "lists", "users"
+  add_foreign_key "message_frequencies", "campaigns"
   add_foreign_key "messages", "hashtags"
   add_foreign_key "plans", "users"
   add_foreign_key "refunds", "transactions"

@@ -29,13 +29,22 @@
     <div class="page-header">
       <p>Connected to Facebook as: </p>
       <span style="background: aliceblue;"> <%= current_user.fb_cred.name %></span>
-
-      <p> Select page: </p>
-      <%= form_for :fb_page, url: user_update_fb_page_path(current_user), method: :patch do |f| %>
-        <%= select_tag 'select_page', options_for_select(@user_fb_pages.map{|p| ["#{p.page_name}", p.id] }) %>
-        <%= f.submit 'Select' %>
+      <% if present(current_user).page_count %>
+        <p> Select page: </p>
+        <%= form_for :fb_page, url: user_update_fb_page_path(current_user), method: :patch do |f| %>
+          <%= select_tag 'select_page', options_for_select(@user_fb_pages.map{|p| ["#{p.page_name}", "#{p.id} #{p.subscription_status}"] }) %>
+          <%= f.submit '' , class: 'submit_page'%>
+        <%end%>
+      <% else %>
+        <p> Please Make some facebook page before proceed</p>
+      <%end%> 
+      <br/>
+      <%= link_to fb_pages_remove_integration_path do%>
+        <i class="fa fa-trash fa-2x" aria-hidden="true"> Remove Facebook Integration </i>
       <%end%>
     </div>
+    </div>
+
   </div>
   <!-- End Page Loading -->
   <%= render 'shared/header_new' %>
@@ -46,4 +55,5 @@
   <%= render 'shared/google_analytics' %>
 </body>
 </html>
+
     

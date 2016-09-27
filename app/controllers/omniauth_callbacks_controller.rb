@@ -1,10 +1,8 @@
 class OmniauthCallbacksController < Devise::OmniauthCallbacksController
   protect_from_forgery
-  require 'pp'
 
   def twitter
-    # raise request.env["omniauth.auth"].to_yaml
-    if current_user && current_user.user_level == 1
+    if current_user.is_merchant?
       if TwitterCred.from_omniauth(request.env["omniauth.auth"], current_user.id) == true
         redirect_to user_path(current_user)
         set_flash_message(:notice, :success, :kind => "Twitter") if is_navigational_format?
@@ -17,7 +15,7 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
   end
 
   def facebook
-    if current_user && current_user.user_level == 1
+    if current_user.is_merchant?
       if FbCred.from_omniauth(request.env["omniauth.auth"], current_user.id) == true
         FbPage.store_page(current_user)
         redirect_to user_fb_pages_path(current_user)

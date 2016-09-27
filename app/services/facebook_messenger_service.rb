@@ -18,8 +18,34 @@ class FacebookMessengerService
       HTTParty.post(url, options)
     end
 
+    def get_page(access_token)
+      begin
+        response = Koala::Facebook::API.new(access_token)
+        page_array = response.get_object('me/accounts/page')
+        page_array
+      rescue Koala::Facebook::APIError => err
+        nil
+      end
+    end
+
+    def subscribe(page_access_token)
+      begin
+        subscribe_page = Koala::Facebook::API.new page_access_token
+        response = subscribe_page.put_connections("me","subscribed_apps")
+        response
+      rescue Koala::Facebook::APIError => err
+        nil
+      end
+    end
+
+    def unsubscribe(page_access_token)
+      begin
+        subscribe_page = Koala::Facebook::API.new page_access_token
+        response = subscribe_page.delete_connections("me","subscribed_apps")
+        response
+      rescue Koala::Facebook::APIError => err
+        nil
+      end
+    end
   end
-
-
-
 end
