@@ -23,7 +23,7 @@ Rails.application.routes.draw  do
   get "homepage_referrer" => 'referrers#homepage_referrer'
   get "resque" => Resque::Server, anchor: false, constraints: lambda { |req|
     req.env['warden'].authenticated? and req.env['warden'].user.id == 23
-  }  
+  }
 
   match "send_mms_from_dashboard" => 'messages#dashboard_mms', via: [:post]
 
@@ -98,7 +98,11 @@ Rails.application.routes.draw  do
 
   # authenticate campaigns resources if a user is merchant
   authenticate :user, -> (user) { user.is_merchant? } do
-    resources :campaigns, except: [:show]
+    resources :campaigns, except: [:show] do
+      member do
+        put 'change_status'
+      end
+    end
   end
 
   ## api
@@ -107,6 +111,7 @@ Rails.application.routes.draw  do
     match 'users/add_customers' => 'users#add_customers', via: :post
     match 'hashtags/find' => 'hashtags#find', via: :get
     match 'hashtags/:id/image_delete' => 'hashtags#image_delete', via: :post
+    match 'campaigns/:id/image_delete' => 'campaigns#image_delete', via: :post
     match 'transactions/:charge_id/refund' => 'transactions#refund', via: :post
     match 'transactions/charge_customer' => 'transactions#charge_customer', via: :post
     match 'numbers/search' => 'numbers#search', via: :get
