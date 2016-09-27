@@ -1,13 +1,24 @@
-<div class='newMessage'>
-  <%= f.fields_for :messages do |ff| %>
+<div class="row">
+  <div class='newMessage'>
 
-    <%= ff.text_area :text, cols: 100, rows: 15, id: 'jodit' %>
+    <%= f.fields_for :messages do |ff| %>
 
-    <%= ff.fields_for :images do |fff| %>
+      <%= ff.text_area :text, id: 'jodit', cols: 100, rows: 5 %>
 
-      <%= fff.file_field :avatar_file_name, id: 'campaignMessageAttachment',  multiple: true, accept: "image/jpeg, image/jpg, image/gif, image/png" %>
+      <%= ff.fields_for :images do |fff| %>
 
+        <%= fff.file_field :avatar, id: 'select-images', multiple: true, accept: 'image/jpeg, image/jpg, image/gif, image/png' %>
+
+      <% end %>
     <% end %>
-  <% end %>
+    <div class='characters' >
+    </div>
+  </div>
 </div>
-<%= image_tag 's', id: 'imagePreview'%>
+<div id='new-image-previews'></div>
+<% campaign.messages.each do |message| %>
+  <% message.images.each do |image| %>
+    <%= image_tag image.avatar.url, id: 'image-previews', data: { 'tag-id'=> image.id } %>
+    <%= link_to 'Delete Image', '#', class: 'delete-image' %>
+  <% end %>
+<% end %>
