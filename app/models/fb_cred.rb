@@ -19,4 +19,17 @@ class FbCred < ActiveRecord::Base
       false
     end
   end
+
+  def self.add_fb_user_from_massenger(page_id, new_user_id)
+    begin
+      page_access_token = (FbPage.find_by_page_id page_id)['page_access_token']
+      user_data = FacebookMessengerService.get_user_info(page_access_token, new_user_id)
+      name = user_data['first_name'] + ' ' + user_data['last_name']
+      url = user_data['profile_pic']
+      uid = new_user_id
+      FbCred.create(name: name, image_url: url, u_id: uid)
+    rescue StandardError => err
+    end
+  end
+
 end
