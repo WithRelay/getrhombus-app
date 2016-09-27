@@ -46,6 +46,11 @@ class FacebookEvent
       current_page = FbPage.find_by_page_id message_to
       fb_page_id = current_page.id
 
+      # Add new user from massenger to FbCred table
+      unless (FbCred.find_by_u_id message_from).present?
+        FbCred.add_fb_user_from_massenger(message_to, message_from)
+      end
+
       fb_message = FbMessage.new(text: text, seq: seq, time_stamp: timestamp, message_id: message_id, 
         page_id: message_to, from: message_from, to: message_to, fb_page_id: fb_page_id)
 
@@ -59,7 +64,6 @@ class FacebookEvent
 
       # send_message
 			# render :json => {:object => "received"}, :status => 200
-		end
-    
+		end    
   end
 end
