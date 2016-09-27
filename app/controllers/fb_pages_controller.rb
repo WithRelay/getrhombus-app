@@ -49,7 +49,6 @@ class FbPagesController < ApplicationController
         if page.subscription_status
           FacebookMessengerService.unsubscribe(page.page_access_token)
         end
-        # page.destroy
       end
     end
     fb_cred.destroy
