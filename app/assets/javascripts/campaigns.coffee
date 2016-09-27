@@ -21,9 +21,10 @@ class Campaign
   EMAIL_CHANNEL = '3'
   CHECK = ':checked'
 
-  constructor: (element) ->
-    @joEdit = new Jodit('#jodit', 'toolbar': false)
-    @element = element
+  constructor: (emojiConfig)->
+    @textArea = '#jodit'
+    @emojiConfig = emojiConfig
+    @joEdit = new Jodit(@textArea, 'toolbar': false)
     @oneTime = '#oneTimeFrequency'; @deliverNow = '#deliverNow'; @schedule = '.scheduleOption'
 
   showHideEditor: (element)->
@@ -54,49 +55,30 @@ class Campaign
   deliverNowOneTime_isChecked = (oneTime, deliverNow) ->
     $(oneTime).is(CHECK) && $(deliverNow).is(CHECK)
 
-class ImageValidater
-  constructor: ->
-   @maxSizeKb = 4000
-   @allowedExtension = [ 'jpg', 'jpeg', 'png', 'PNG', 'JPG', 'JPEG' ]
-   @imageObj
 
-  validateImage: ->
-   imageName = @imageObj.name.split('.').pop()
-   if imageName in @allowedExtension
-    return true
-   else
-    return false
+  textAreaEmojis: ->
+    $(@textArea).emojioneArea ->
+      @emojiConfig
 
-  validateSize: ->
-   imgSize = @imageObj.size
-   imgSizeKb = Math.round(imgSize / 1024)
-   if imgSizeKb < @maxSizeKb
-    return true
-   else
-    return false
-
-  previewImage: (element) ->
-    if element.files && element.files[0]
-      reader = new FileReader()
-      reader.onload = (e)->
-        $('#imagePreview').attr('src', e.target.result)
-      reader.readAsDataURL(element.files[0]);
-
+  countCharacters: ->
+    debugger;
+    $('.characters').html this.joEdit.$area.val().length
 
 
 $( document ).on 'ready page:load', ->
-  campaign = new Campaign()
+  campaign = new Campaign( { pickerPosition: 'right', tonesStyle: 'bullet' })
   campaign.datePicker(new DatePicker( '.daterange' ))
+  $('.jodit_workflow').hide()
+  campaign.textAreaEmojis()
   $( '#campaign_channel' ).change ->
     campaign.showHideEditor(this)
+
+  $( '#oneTimeFrequency' ).click ->
+    $('#campaign_repeat_days').hide()
+
+  $('#recurringFrequency').click ->
+    $('#campaign_repeat_days').show()
+    campaign.hideShowScheduler()
+
   $( '#oneTimeFrequency, #deliverNow' ).click ->
     campaign.hideShowScheduler()
-  $('#campaignMessageAttachment').change ->
-    uploadedImage = new ImageValidater
-    uploadedImage.imageObj = this.files[0]
-    if !uploadedImage.validateImage()
-      alert 'Only image file formats with extension: jpg, jpeg, png, PNG, JPG, JPEG are allowed.'
-    else if !uploadedImage.validateSize()
-      alert 'invalid upload size. Please upload image of size less then 4 MB'
-    else
-      uploadedImage.previewImage(this)
