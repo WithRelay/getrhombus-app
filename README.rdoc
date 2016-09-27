@@ -23,6 +23,10 @@ Things you may want to cover:
 
 * ...
 
+Add below lines in database.yml:
+ - encoding: utf8mb4
+ - collation: utf8mb4_bin
+
 
 Please feel free to use a different markup language if you do not plan to run
 <tt>rake doc:app</tt>.
