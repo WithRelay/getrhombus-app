@@ -18,6 +18,14 @@ class FacebookMessengerService
       HTTParty.post(url, options)
     end
 
+    def get_user_info(page_token, user_id)
+      begin
+        page_graph = Koala::Facebook::API.new(page_token)
+        page_graph.get_object(user_id)
+      rescue Koala::Facebook::APIError => err
+      end
+    end
+
     def get_page(access_token)
       begin
         response = Koala::Facebook::API.new(access_token)
