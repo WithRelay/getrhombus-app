@@ -1,20 +1,45 @@
 class FacebookMessengerService
 
   class << self
-    
-   
-    def send_message   
+
+    def send_text_message(page_access_token, recipient_id, text)  
       #Using HTTParty
+      # page_access_token = "<redacted_facebook_access_token>"
+      # recipient_id = "<redacted_phone_number>"
+      # text = "welcome!!"
       options = { body: {
         "recipient" => {
-          "id" => "<redacted_phone_number>"
+          "id" => recipient_id
         },
         "message" => {
-          "text" => "hello, world!"
+          "text" => text
         }
       }.to_json,
       headers: { 'Content-Type' => 'application/json' }}
-      url = "https://graph.facebook.com/v2.6/me/messages?access_token=<redacted_facebook_access_token>"
+      url = "https://graph.facebook.com/v2.7/me/messages?access_token=#{page_access_token}"
+      HTTParty.post(url, options)
+    end
+
+    def send_attachment(page_access_token, recipient_id, attachment_type, file_url) 
+      # page_access_token = "<redacted_facebook_access_token>"
+      # recipient_id = "<redacted_phone_number>"
+      # attachment_type = "image"
+      # file_url = "http://v.img.com.ua/b/orig/b/b1/b91937118c0414fda58d5f020b518b1b.jpg" 
+      options = { body: {
+        "recipient":{
+          "id": recipient_id
+        },
+        "message":{
+          "attachment":{
+            "type": attachment_type,
+            "payload":{
+              "url": file_url
+            }
+          }
+        }
+      }.to_json,
+      headers: { 'Content-Type' => 'application/json' }}
+      url = "https://graph.facebook.com/v2.7/me/messages?access_token=#{page_access_token}"
       HTTParty.post(url, options)
     end
 
