@@ -1,7 +1,7 @@
 class FbCred < ActiveRecord::Base
 
   belongs_to :user
-  has_many :fb_pages
+  has_many :fb_pages, dependent: :destroy
 
   def self.from_omniauth(auth, id)
     begin
