@@ -1,4 +1,4 @@
-<%= form_for campaign do |f| %>
+<%= form_for campaign, html: { multipart: true } do |f| %>
 
   <%= f.label :Choose_a_list %>
   <%= f.collection_select :list_id, lists, :id, :name %>
@@ -16,7 +16,7 @@
   <%= f.label :Recurring %>
   <%= f.radio_button :frequency_type, 1, id: 'recurringFrequency' %>
 
-  <%= f.label :delivery_option %>
+  <%= f.label :send_campaign_now, class: 'deliveryNow' %>
   <%= f.check_box :delivery_type, id: 'deliverNow' %>
 
   <div class = 'scheduleOption'>
@@ -25,8 +25,8 @@
 
     <%= f.text_field :date_time, class: 'daterange' %>
 
-    <%= render partial: 'new_message', locals: { f: f } %>
-
   </div>
+    <%= render partial: 'new_message', locals: { f: f, campaign: campaign } %>
+
   <%= f.submit 'Create Campaign' %>
 <% end %>
