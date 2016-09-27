@@ -3,8 +3,8 @@ class FacebookEvent
   class << self
 
   	def process_event(params)
-  		@params = params
-  		
+      message_params = params['entry'].last
+      receive_message(message_params)
   		if params['hub.mode'].present?
   			verify_webhook
   		else
@@ -31,10 +31,34 @@ class FacebookEvent
 	  	{}
 		end
 
-		def receive_message
-			message = params[:entry][0][:messaging][0][:message][:text]
-			# send_message
-			render :json => {:object => "received"}, :status => 200
+		def receive_message(params)
+      messaging = params['messaging'].last
+      message = messaging['message']
+      attachment = message['attachments']
+      seq = message['seq']
+      text = message['text']
+      text = 'Attachment Added!!' if message['attachments'].present?
+      sec = (messaging['timestamp'].to_f / 1000).to_s
+      timestamp = DateTime.strptime(sec,'%s')
+      message_id =  message['mid']
+      message_from = messaging['sender']['id']
+      message_to = messaging['recipient']['id']
+      current_page = FbPage.find_by_page_id message_to
+      fb_page_id = current_page.id
+
+      fb_message = FbMessage.new(text: text, seq: seq, time_stamp: timestamp, message_id: message_id, 
+        page_id: message_to, from: message_from, to: message_to, fb_page_id: fb_page_id)
+
+			if attachment.present?
+        attachment.each do |a|
+          attachment_url = open(a['payload']['url'])
+          fb_message.images.build(avatar: attachment_url)
+        end
+      end
+      fb_message.save!
+
+      # send_message
+			# render :json => {:object => "received"}, :status => 200
 		end
     
   end
