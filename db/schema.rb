@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160927061305) do
+ActiveRecord::Schema.define(version: 20160928073444) do
 
   create_table "addresses", force: :cascade do |t|
     t.string   "street_address",   limit: 191
@@ -96,7 +96,9 @@ ActiveRecord::Schema.define(version: 20160927061305) do
   add_index "conversation_refs", ["textable_type", "textable_id"], name: "index_conversation_refs_on_textable_type_and_textable_id", using: :btree
 
   create_table "conversations", force: :cascade do |t|
-    t.integer "merchant_id", limit: 4
+    t.integer  "merchant_id", limit: 4
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "coupons", force: :cascade do |t|
@@ -120,12 +122,13 @@ ActiveRecord::Schema.define(version: 20160927061305) do
   create_table "fb_creds", force: :cascade do |t|
     t.string   "email",      limit: 191
     t.string   "name",       limit: 191
-    t.string   "image_url",  limit: 191
     t.string   "u_id",       limit: 191
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
     t.string   "auth_token", limit: 191
     t.integer  "user_id",    limit: 4
+    t.string   "time_zone",  limit: 191
+    t.string   "gender",     limit: 191
   end
 
   add_index "fb_creds", ["id"], name: "index_fb_creds_on_id", unique: true, using: :btree
