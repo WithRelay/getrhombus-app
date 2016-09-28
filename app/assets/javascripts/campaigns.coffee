@@ -22,26 +22,29 @@ class Campaign
   CHECK = ':checked'
 
   constructor: (emojiConfig)->
-    @textArea = '#jodit'
+    @textArea = '#ckEditor'
     @emojiConfig = emojiConfig
-    @joEdit = new Jodit(@textArea, 'toolbar': false)
     @oneTime = '#oneTimeFrequency'; @deliverNow = '#deliverNow'; @schedule = '.scheduleOption'
+    @emojiHtml
 
   showHideEditor: (element)->
     if isEmailChecked(element)
-      joEditToolbarSetting(@joEdit, true)
+      ckeditorSetting(true)
     else
-      joEditToolbarSetting(@joEdit, false)
-
+      ckeditorSetting(false)
 
   isEmailChecked = (channel) ->
     $(channel).val() == EMAIL_CHANNEL
 
-  joEditToolbarSetting = (joEdit, status)->
+  ckeditorSetting = (status)->
+    emojiArea = '.emojionearea'
     if status
-      joEdit.$toolbar.show()
+      CKEDITOR.replace 'ckEditor', 'language': 'uk'
+      $(emojiArea).hide()
     else
-      joEdit.$toolbar.hide()
+      $(emojiArea).show()
+      CKEDITOR.instances.ckEditor.destroy() unless CKEDITOR.instances.ckEditor == undefined
+      $('#ckEditor').hide()
 
   datePicker: (campaignDate)->
     campaignDate.datePicker()
@@ -61,14 +64,12 @@ class Campaign
       @emojiConfig
 
   countCharacters: ->
-    debugger;
-    $('.characters').html this.joEdit.$area.val().length
+    $('.characters').html()
 
 
 $( document ).on 'ready page:load', ->
   campaign = new Campaign( { pickerPosition: 'right', tonesStyle: 'bullet' })
   campaign.datePicker(new DatePicker( '.daterange' ))
-  $('.jodit_workflow').hide()
   campaign.textAreaEmojis()
   $( '#campaign_channel' ).change ->
     campaign.showHideEditor(this)
