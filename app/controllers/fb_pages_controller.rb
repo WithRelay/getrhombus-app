@@ -1,5 +1,6 @@
 # User can select facebook pages 
 class FbPagesController < ApplicationController
+  before_filter :check_user_present
 
   def index
     @user_fb_pages = current_user.fb_pages
@@ -43,15 +44,20 @@ class FbPagesController < ApplicationController
   def remove_integration
     fb_cred = current_user.fb_cred
     fb_pages = fb_cred.fb_pages
-    fb_cred.destroy
     if fb_pages.present?
       fb_pages.each do |page|
         if page.subscription_status
           FacebookMessengerService.unsubscribe(page.page_access_token)
         end
-        page.destroy
       end
     end
+    fb_cred.destroy
     redirect_to user_path(current_user), notice: 'success'
+  end
+
+  private def check_user_present
+    unless current_user.present?
+      redirect_to signin_path
+    end
   end
 end

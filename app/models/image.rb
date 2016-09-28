@@ -3,10 +3,12 @@ class Image < ActiveRecord::Base
   # https://blog.codeship.com/how-to-use-rails-active-job/
   # https://github.com/jrgifford/delayed_paperclip
 
-  has_many :image_ref, dependent: :destroy
-  has_many :user, through: :image_ref, source: :imageable, source_type: 'User', dependent: :destroy
-  has_many :hashtag, through: :image_ref, source: :imageable, source_type: 'Hashtag', dependent: :destroy
-  has_many :message, through: :image_ref, source: :imageable, source_type: 'Message', dependent: :destroy
+  has_many :image_refs, dependent: :destroy
+  has_many :users, through: :image_refs, source: :imageable, source_type: 'User', dependent: :destroy
+  has_many :hashtags, through: :image_refs, source: :imageable, source_type: 'Hashtag', dependent: :destroy
+  has_many :messages, through: :image_refs, source: :imageable, source_type: 'Message', dependent: :destroy
+  has_many :fb_messages, through: :image_refs, source: :imageable, source_type: 'FbMessage', dependent: :destroy
+  has_many :fb_creds, through: :image_refs, source: :imageable, source_type: 'FbCred', dependent: :destroy
 
   has_attached_file :avatar, styles: {
     thumb: '100x100>',

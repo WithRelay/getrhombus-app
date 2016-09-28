@@ -32,34 +32,43 @@ class FacebookEvent
 		end
 
 		def receive_message(params)
-      messaging = params['messaging'].last
-      message = messaging['message']
-      attachment = message['attachments']
-      seq = message['seq']
-      text = message['text']
-      text = 'Attachment Added!!' if message['attachments'].present?
-      sec = (messaging['timestamp'].to_f / 1000).to_s
-      timestamp = DateTime.strptime(sec,'%s')
-      message_id =  message['mid']
-      message_from = messaging['sender']['id']
-      message_to = messaging['recipient']['id']
-      current_page = FbPage.find_by_page_id message_to
-      fb_page_id = current_page.id
-
-      fb_message = FbMessage.new(text: text, seq: seq, time_stamp: timestamp, message_id: message_id, 
-        page_id: message_to, from: message_from, to: message_to, fb_page_id: fb_page_id)
-
-			if attachment.present?
-        attachment.each do |a|
-          attachment_url = open(a['payload']['url'])
-          fb_message.images.build(avatar: attachment_url)
+      begin
+        messaging = params['messaging'].last
+        message = messaging['message']
+        attachment = message['attachments']
+        seq = message['seq']
+        text = message['text']
+        text = 'Attachment File!!' if text.nil?
+        sec = (messaging['timestamp'].to_f / 1000).to_s
+        timestamp = DateTime.strptime(sec,'%s')
+        message_id =  message['mid']
+        message_from = messaging['sender']['id']
+        message_to = messaging['recipient']['id']
+        if message['is_echo']
+          current_page = FbPage.find_by_page_id message_from
+        else
+          current_page = FbPage.find_by_page_id message_to
         end
-      end
-      fb_message.save!
+        fb_page_id = current_page.id
 
-      # send_message
-			# render :json => {:object => "received"}, :status => 200
-		end
-    
+        # Add new user from massenger to FbCred table
+        unless (FbCred.find_by_u_id message_from).present?
+          FbCred.add_fb_user_from_massenger(message_to, message_from)
+        end
+
+        fb_message = FbMessage.new(text: text, seq: seq, time_stamp: timestamp, unread: true, message_id: message_id, 
+          page_id: message_to, from: message_from, to: message_to, fb_page_id: fb_page_id)
+
+  			if attachment.present?
+          attachment.each do |a|
+            attachment_url = open(a['payload']['url'])
+            fb_message.images.build(avatar: attachment_url)
+          end
+        end
+        fb_message.save!
+      rescue StandardError => err
+        nil
+      end
+		end  
   end
 end
