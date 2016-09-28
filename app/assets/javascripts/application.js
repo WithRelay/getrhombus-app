@@ -28,3 +28,6 @@
 //= require cocoon
 //= require fb_page
 //= require campaigns
+//= require ckeditor/init
+//= require ckeditor/plugins/plugin
+//= require ckeditor/config
