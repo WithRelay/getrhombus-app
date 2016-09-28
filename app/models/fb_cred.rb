@@ -3,6 +3,9 @@ class FbCred < ActiveRecord::Base
   belongs_to :user
   has_many :fb_pages, dependent: :destroy
 
+  has_many :image_refs, as: :imageable
+  has_many :images, through: :image_refs
+
   def self.from_omniauth(auth, id)
     begin
       where(user_id: id).first_or_initialize.tap do |user|
@@ -10,8 +13,10 @@ class FbCred < ActiveRecord::Base
         user.auth_token = auth.credentials.token
         user.email = auth.info.email
         user.name = auth.info.name        
-        user.image_url = auth.info.image
+        image_url = auth.info.image
+        build_image(user, image_url)
         user.user_id = id
+        user.time_zone = (User.find id).time_zone
         user.save
       end
       true
@@ -27,8 +32,32 @@ class FbCred < ActiveRecord::Base
       name = user_data['first_name'] + ' ' + user_data['last_name']
       url = user_data['profile_pic']
       uid = new_user_id
-      FbCred.create(name: name, image_url: url, u_id: uid)
+      timezone = ActiveSupport::TimeZone.new(user_data['timezone']).tzinfo.name
+      gender = user_data['gender']
+      welcome_text = "Welcome #{name} to Rhombus-The Message Commerce platform"
+      FacebookMessengerService.send_text_message(page_access_token, uid, welcome_text)
+      user = FbCred.new(name: name, u_id: uid, time_zone: timezone, gender: gender)
+      build_image(user, url)
+      user.save   
     rescue StandardError => err
+    end
+  end
+
+  private
+
+  def self.process_uri(uri)
+    require 'open-uri'
+    require 'open_uri_redirections'
+    open(uri, :allow_redirections => :safe) do |r|
+      r.base_uri.to_s
+    end
+  end  
+
+  def self.build_image(user, url)
+    if url.present?
+      avatar_url = process_uri(url)
+      attachment_url = open(avatar_url)
+      user.images.build(avatar: attachment_url)
     end
   end
 
