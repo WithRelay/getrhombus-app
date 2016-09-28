@@ -1,6 +1,6 @@
 # User can select facebook pages 
 class FbPagesController < ApplicationController
-  before_filter :check_user_fb_pages
+  before_filter :check_user_present
 
   def index
     @user_fb_pages = current_user.fb_pages
@@ -55,9 +55,9 @@ class FbPagesController < ApplicationController
     redirect_to user_path(current_user), notice: 'success'
   end
 
-  private def check_user_fb_pages
-    unless current_user.fb_pages.present?
-      redirect_to user_path(current_user)
+  private def check_user_present
+    unless current_user.present?
+      redirect_to signin_path
     end
   end
 end
