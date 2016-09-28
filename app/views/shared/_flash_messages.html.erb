@@ -2,6 +2,6 @@
   <small class="help-block">
     <%= flash[:notice] %>
   </small>
-<% else %>
+<% elsif flash[:error].present? %>
   <%= flash[:error] %>
 <% end %>

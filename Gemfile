@@ -6,6 +6,8 @@ gem 'rails', '4.2.0'
 gem 'mysql2'
 gem "httparty"
 
+gem 'ckeditor'
+
 # For authentication
 gem "devise"
 # bootstrap date range picker dependency gem

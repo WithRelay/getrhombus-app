@@ -2,8 +2,7 @@
   <div class='newMessage'>
 
     <%= f.fields_for :messages do |ff| %>
-
-      <%= ff.text_area :text, id: 'jodit', cols: 100, rows: 5 %>
+      <%= ff.text_area :text, id: 'ckEditor' %>
 
       <%= ff.fields_for :images do |fff| %>
 
@@ -12,13 +11,14 @@
       <% end %>
     <% end %>
     <div class='characters' >
+      0 characters
     </div>
   </div>
 </div>
 <div id='new-image-previews'></div>
 <% campaign.messages.each do |message| %>
   <% message.images.each do |image| %>
-    <%= image_tag image.avatar.url, id: 'image-previews', data: { 'tag-id'=> image.id } %>
-    <%= link_to 'Delete Image', '#', class: 'delete-image' %>
+    <%= present(image).image_url %>
+    <%= present(image).image_delete_url %>
   <% end %>
 <% end %>

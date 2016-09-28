@@ -95,6 +95,9 @@ GEM
       timers (>= 4.1.1)
     celluloid-supervision (0.20.6)
       timers (>= 4.1.1)
+    ckeditor (4.2.0)
+      cocaine
+      orm_adapter (~> 0.5.0)
     climate_control (0.0.3)
       activesupport (>= 3.0)
     cocaine (0.5.8)
@@ -405,6 +408,7 @@ DEPENDENCIES
   bootstrap-daterangepicker-rails
   byebug
   cancan
+  ckeditor
   cocoon
   coffee-rails (~> 4.1.0)
   devise

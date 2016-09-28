@@ -17,7 +17,8 @@ class CampaignsController < ApplicationController
   def create
     @campaign = current_user.campaigns.build(campaign_params)
     @campaign.campaign_lists.build(Hash[*campaign_params.first])
-    if @campaign.save && save_message_images(@campaign.messages)
+    save_message_images(@campaign.messages)
+    if @campaign.save
       flash[:notice] = 'Campaign Saved successfully'
     else
       flash[:error] = 'Sorry Campaign could not save please try again'

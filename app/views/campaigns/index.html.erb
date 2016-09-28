@@ -26,7 +26,7 @@
           <%= campaign.delivery_type %>
         </td>
         <td>
-          <%= campaign.date_time %>
+          <%= present(campaign).format_date_time %>
         </td>
         <td>
           <% campaign.messages.each do |message| %>
