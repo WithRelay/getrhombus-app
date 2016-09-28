@@ -59,8 +59,6 @@ class FacebookEvent
         fb_message = FbMessage.new(text: text, seq: seq, time_stamp: timestamp, unread: true, message_id: message_id, 
           page_id: message_to, from: message_from, to: message_to, fb_page_id: fb_page_id)
 
-        # fb_message.conversation_refs.create(conversation_id: fb_page_id)
-
   			if attachment.present?
           attachment.each do |a|
             attachment_url = open(a['payload']['url'])
@@ -71,8 +69,6 @@ class FacebookEvent
       rescue StandardError => err
         nil
       end
-      # send_message
-			# render :json => {:object => "received"}, :status => 200
 		end  
   end
 end
