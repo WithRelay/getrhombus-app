@@ -4,12 +4,12 @@ class Campaign < ActiveRecord::Base
   has_many :campaign_lists, dependent: :destroy
   has_many :messages, dependent: :destroy
   belongs_to :user
-  # enums for campaign
-  enum channel: { sms: '0', mms: '1', facebook_messenger: '2', email: '3' }
+  # enums for campaign's class attributes channel, status, frequency_type and delivery_type
+  enum channel: { SMS: '0', MMS: '1', Facebook_Messenger: '2', Email: '3' }
   enum status: { active: 1, paused: 2, inactive: 3 }
   enum frequency_type: { one_time: '0', recurring: '1' }
   enum delivery_type: { now: '0', later: '1' }
-  accepts_nested_attributes_for :messages
+  accepts_nested_attributes_for :messages, reject_if: proc { |message| message[:text].blank? }
   # validation of campaign attributes
   validates_presence_of :channel, :repeat_days, :frequency_type
 end
