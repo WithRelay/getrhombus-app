@@ -12,10 +12,10 @@
   <%= f.label :Delivery_Settings %>
 
   <%= f.label :One_Time %>
-  <%= f.radio_button :frequency_type, 0, id: 'oneTimeFrequency' %>
+  <%= f.radio_button :frequency_type, 0, id: 'oneTimeFrequency', checked: is_one_time_checked?(campaign)   %>
 
   <%= f.label :Recurring %>
-  <%= f.radio_button :frequency_type, 1, id: 'recurringFrequency' %>
+  <%= f.radio_button :frequency_type, 1, id: 'recurringFrequency',  checked: is_recurring_checked?(campaign)  %>
 
   <%= f.label :send_campaign_now, class: 'deliveryNow' %>
   <%= f.check_box :delivery_type, id: 'deliverNow' %>
