@@ -13,6 +13,8 @@
 
 //= require pubnub/pubnub.min.js
 //= require jquery
+//= require toastr
+//= require sweetalert
 //= require jquery_ujs
 //= require jquery.lightbox_me
 //= require intlTelInput.min
@@ -26,5 +28,4 @@
 //= require managed-account
 //= require location
 //= require cocoon
-//= require fb_page
 //= require campaigns
