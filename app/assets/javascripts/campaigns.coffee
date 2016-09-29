@@ -22,29 +22,31 @@ class Campaign
   CHECK = ':checked'
 
   constructor: (emojiConfig)->
-    @textArea = '#ckEditor'
+    @textArea = '#trumbowyg'
     @emojiConfig = emojiConfig
     @oneTime = '#oneTimeFrequency'; @deliverNow = '#deliverNow'; @schedule = '.scheduleOption'
     @emojiHtml
 
   showHideEditor: (element)->
     if isEmailChecked(element)
-      ckeditorSetting(true)
+      trumbowygSetting(true, @textArea)
     else
-      ckeditorSetting(false)
+      trumbowygSetting(false, @textArea)
 
   isEmailChecked = (channel) ->
     $(channel).val() == EMAIL_CHANNEL
 
-  ckeditorSetting = (status)->
+  trumbowygSetting = (status, area)->
     emojiArea = '.emojionearea'
     if status
-      CKEDITOR.replace('ckEditor', language: 'en')
+      new CustomTrumbowygPlugin(area)
+      countCharacters()
       $(emojiArea).hide()
     else
+      $(area).trumbowyg('destroy');
+      $(area).emojioneArea({pickerPosition:'right',tonesStyle:'bullet'})
       $(emojiArea).show()
-      CKEDITOR.instances.ckEditor.destroy() unless CKEDITOR.instances.ckEditor == undefined
-      $('#ckEditor').hide()
+      $(area).hide()
 
   datePicker: (campaignDate)->
     campaignDate.datePicker()
@@ -63,14 +65,21 @@ class Campaign
     $(@textArea).emojioneArea ->
       @emojiConfig
 
-  countCharacters: ->
-    $('.characters').html()
-
+  countCharacters = ->
+    $('.trumbowyg-editor').counter
+      append: true
 
 $( document ).on 'ready page:load', ->
   campaign = new Campaign( { pickerPosition: 'right', tonesStyle: 'bullet' })
   campaign.datePicker(new DatePicker( '.daterange' ))
-  campaign.textAreaEmojis()
+
+  if $('#campaign_channel').val()=='3'
+    new CustomTrumbowygPlugin('#trumbowyg')
+    $('.trumbowyg-editor').counter
+      append: true
+  else
+    campaign.textAreaEmojis()
+
   $( '#campaign_channel' ).change ->
     campaign.showHideEditor(this)
 
