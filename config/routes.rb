@@ -112,6 +112,7 @@ Rails.application.routes.draw  do
     match 'hashtags/find' => 'hashtags#find', via: :get
     match 'hashtags/:id/image_delete' => 'hashtags#image_delete', via: :post
     match 'campaigns/:id/image_delete' => 'campaigns#image_delete', via: :post
+    match 'campaigns/upload_images' => 'campaigns#upload_images', via: :post
     match 'transactions/:charge_id/refund' => 'transactions#refund', via: :post
     match 'transactions/charge_customer' => 'transactions#charge_customer', via: :post
     match 'numbers/search' => 'numbers#search', via: :get
