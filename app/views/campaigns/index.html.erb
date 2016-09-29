@@ -30,7 +30,7 @@
         </td>
         <td>
           <% campaign.messages.each do |message| %>
-            <%= message.text.html_safe %>
+            <%= message.text.html_safe if message.text.present? %>
             <% message.images.each do |image| %>
               <%= image_tag image.avatar.url %>
             <% end %>
