@@ -39,7 +39,7 @@ class Campaign
   ckeditorSetting = (status)->
     emojiArea = '.emojionearea'
     if status
-      CKEDITOR.replace 'ckEditor', 'language': 'uk'
+      CKEDITOR.replace('ckEditor', language: 'en')
       $(emojiArea).hide()
     else
       $(emojiArea).show()

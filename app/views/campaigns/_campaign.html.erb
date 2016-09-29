@@ -4,7 +4,8 @@
   <%= f.collection_select :list_id, lists, :id, :name %>
 
   <%= f.label :Channel %>
-  <%= f.select :channel, [ ['SMS', 0], ['MMS', 1], ['Facebook Messenger', 2], ['Email', 3] ] %>
+
+  <%= f.select :channel, channel_list(campaign) %>
 
   <%= link_to 'Create new list', '#' %>
 

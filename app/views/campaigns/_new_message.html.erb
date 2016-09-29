@@ -2,7 +2,7 @@
   <div class='newMessage'>
 
     <%= f.fields_for :messages do |ff| %>
-      <%= ff.text_area :text, id: 'ckEditor' %>
+      <%= ff.text_area :text %>
 
       <%= ff.fields_for :images do |fff| %>
 

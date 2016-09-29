@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160928104220) do
+ActiveRecord::Schema.define(version: 20160929044323) do
 
   create_table "addresses", force: :cascade do |t|
     t.string   "street_address",   limit: 191
@@ -82,23 +82,6 @@ ActiveRecord::Schema.define(version: 20160928104220) do
   end
 
   add_index "campaigns", ["id", "user_id"], name: "index_campaigns_on_id_and_user_id", using: :btree
-
-  create_table "ckeditor_assets", force: :cascade do |t|
-    t.string   "data_file_name",    limit: 191, null: false
-    t.string   "data_content_type", limit: 191
-    t.integer  "data_file_size",    limit: 4
-    t.string   "data_fingerprint",  limit: 191
-    t.integer  "assetable_id",      limit: 4
-    t.string   "assetable_type",    limit: 30
-    t.string   "type",              limit: 30
-    t.integer  "width",             limit: 4
-    t.integer  "height",            limit: 4
-    t.datetime "created_at",                    null: false
-    t.datetime "updated_at",                    null: false
-  end
-
-  add_index "ckeditor_assets", ["assetable_type", "assetable_id"], name: "idx_ckeditor_assetable", using: :btree
-  add_index "ckeditor_assets", ["assetable_type", "type", "assetable_id"], name: "idx_ckeditor_assetable_type", using: :btree
 
   create_table "conversation_refs", force: :cascade do |t|
     t.integer  "textable_id",     limit: 4
@@ -186,6 +169,7 @@ ActiveRecord::Schema.define(version: 20160928104220) do
     t.datetime "updated_at",                                      null: false
     t.string   "page_name",           limit: 191
     t.boolean  "subscription_status", limit: 1,   default: false
+    t.integer  "fb_cred_id",          limit: 4
   end
 
   create_table "full_contact_data", force: :cascade do |t|
@@ -317,8 +301,8 @@ ActiveRecord::Schema.define(version: 20160928104220) do
     t.integer  "user_id_to",        limit: 4
     t.integer  "transaction_id",    limit: 4
     t.string   "message_id",        limit: 191
-    t.string   "text",              limit: 191
-    t.boolean  "unread",            limit: 1,   default: true
+    t.text     "text",              limit: 65535
+    t.boolean  "unread",            limit: 1,     default: true
     t.string   "num_segments",      limit: 191
     t.string   "price_unit",        limit: 191
     t.integer  "hashtag_id",        limit: 4

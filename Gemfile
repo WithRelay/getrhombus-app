@@ -6,7 +6,7 @@ gem 'rails', '4.2.0'
 gem 'mysql2'
 gem "httparty"
 
-gem 'ckeditor'
+gem 'trumbowyg_rails'
 
 # For authentication
 gem "devise"
