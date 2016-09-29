@@ -27,13 +27,12 @@ class FbCred < ActiveRecord::Base
       user_data = FacebookMessengerService.get_user_info(page_access_token, new_user_id)
       full_name = user_data['first_name'] + ' ' + user_data['last_name']
       url = user_data['profile_pic']
-      uid = new_user_id
       timezone = ActiveSupport::TimeZone.new(user_data['timezone']).tzinfo.name
       gender = user_data['gender']
       welcome_text = "Welcome #{full_name} to Rhombus-The Message Commerce platform"
-      FacebookMessengerService.send_text_message(page_access_token, uid, welcome_text)
-      FacebookMessengerService.send_attachment(page_access_token, uid, 'image', 'http://www.compustarltd.com/wp-content/uploads/2015/11/welcome.png')
-      fb_cred = FbCred.new(name: full_name, u_id: uid, time_zone: timezone, gender: gender, profile_pic_url: url)
+      FacebookMessengerService.send_text_message(page_access_token, new_user_id, welcome_text)
+      FacebookMessengerService.send_attachment(page_access_token, new_user_id, 'image', 'http://www.compustarltd.com/wp-content/uploads/2015/11/welcome.png')
+      fb_cred = FbCred.new(name: full_name, u_id: new_user_id, time_zone: timezone, gender: gender, profile_pic_url: url)
       fb_cred.save   
     rescue StandardError => err
     end

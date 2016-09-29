@@ -44,11 +44,8 @@ class FacebookEvent
         message_id =  message['mid']
         message_from = messaging['sender']['id']
         message_to = messaging['recipient']['id']
-        if message['is_echo']
-          current_page = FbPage.find_by_page_id message_from
-        else
-          current_page = FbPage.find_by_page_id message_to
-        end
+
+        current_page = FbPage.find_by_page_id params['id']
         fb_page_id = current_page.id
 
         # Add new user from massenger to FbCred table
@@ -56,7 +53,8 @@ class FacebookEvent
           FbCred.add_fb_user_from_massenger(message_to, message_from)
         end
 
-        fb_message = FbMessage.new(text: text, seq: seq, time_stamp: timestamp, unread: true, message_id: message_id, 
+        conversation = Conversation.find_by_merchant_id current_page.user_id
+        fb_message = conversation.fb_messages.create(text: text, seq: seq, time_stamp: timestamp, unread: true, message_id: message_id, 
           page_id: message_to, from: message_from, to: message_to, fb_page_id: fb_page_id)
 
   			if attachment.present?
