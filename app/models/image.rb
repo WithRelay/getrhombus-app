@@ -8,7 +8,6 @@ class Image < ActiveRecord::Base
   has_many :hashtags, through: :image_refs, source: :imageable, source_type: 'Hashtag', dependent: :destroy
   has_many :messages, through: :image_refs, source: :imageable, source_type: 'Message', dependent: :destroy
   has_many :fb_messages, through: :image_refs, source: :imageable, source_type: 'FbMessage', dependent: :destroy
-  has_many :fb_creds, through: :image_refs, source: :imageable, source_type: 'FbCred', dependent: :destroy
 
   has_attached_file :avatar, styles: {
     thumb: '100x100>',
