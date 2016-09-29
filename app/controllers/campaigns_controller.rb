@@ -2,6 +2,7 @@
 # MMS/SMS, email and facebook messeger
 class CampaignsController < ApplicationController
   before_action :find_campaign, only: [ :update, :destroy, :change_status ]
+  layout 'campaign'
 
   def index
     @campaigns = current_user.campaigns.includes(messages: [:images])
@@ -17,8 +18,8 @@ class CampaignsController < ApplicationController
   def create
     @campaign = current_user.campaigns.build(campaign_params)
     @campaign.campaign_lists.build(Hash[*campaign_params.first])
-    save_message_images(@campaign.messages)
     if @campaign.save
+      save_message_images(@campaign.messages)
       flash[:notice] = 'Campaign Saved successfully'
     else
       flash[:error] = 'Sorry Campaign could not save please try again'
@@ -32,7 +33,12 @@ class CampaignsController < ApplicationController
   end
 
   def update
-    @campaign.update_attributes(campaign_params)
+    if @campaign.update_attributes(campaign_params)
+      flash[:notice] = 'Campaign updated successfully'
+    else
+      flash[:error] = 'Sorry campaign could not update'
+    end
+    redirect_to edit_campaign_path(@campaign)
   end
 
   def destroy
@@ -48,7 +54,7 @@ class CampaignsController < ApplicationController
     if @campaign.update_attributes(status: 2)
       flash[:notice] = 'Campaign paused'
     else
-      flash[:notice] = 'sorry campaign could not paused'
+      flash[:notice] = 'Sorry campaign could not paused'
     end
     redirect_to campaigns_path
   end
@@ -70,7 +76,7 @@ class CampaignsController < ApplicationController
 
   def campaign_params
     params.require(:campaign).permit(:list_id, :channel, :repeat_days, :date_time, :delivery_type,
-                                     :frequency_type, messages_attributes: [:text])
+                                     :frequency_type, messages_attributes: [:text, :id])
   end
 
   def image_params
