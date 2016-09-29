@@ -7,7 +7,7 @@ $( document ).ready(function() {
           showMethod: 'slideDown',
           timeOut: 4000
       };
-      toastr.success(' The Message Commerse Platform', 'Welcome to GETRHOMBUS');
+      toastr.success('A Message Commerse Platform', 'Welcome to GETRHOMBUS');
 
   }, 1300);
 
@@ -34,9 +34,9 @@ $( document ).ready(function() {
       text: "Your will not be able to see conversation on page!",
       type: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#DD6B55",
+      confirmButtonColor: "#dd1c06",
       confirmButtonText: "Yes, delete it!",
-      cancelButtonText: "No, cancel plx!",
+      cancelButtonText: "No, cancel it!",
       closeOnConfirm: false,
       closeOnCancel: false },
       function (isConfirm) {
