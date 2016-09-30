@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160929091326) do
+ActiveRecord::Schema.define(version: 20160930102709) do
 
   create_table "addresses", force: :cascade do |t|
     t.string   "street_address",   limit: 191
@@ -122,16 +122,17 @@ ActiveRecord::Schema.define(version: 20160929091326) do
   add_index "coupons", ["user_id"], name: "index_coupons_on_user_id", using: :btree
 
   create_table "fb_creds", force: :cascade do |t|
-    t.string   "email",           limit: 191
-    t.string   "name",            limit: 191
-    t.string   "u_id",            limit: 191
-    t.datetime "created_at",                    null: false
-    t.datetime "updated_at",                    null: false
-    t.string   "auth_token",      limit: 191
-    t.string   "time_zone",       limit: 191
-    t.string   "gender",          limit: 191
-    t.integer  "user_id",         limit: 4
-    t.text     "profile_pic_url", limit: 65535
+    t.string   "email",            limit: 191
+    t.string   "name",             limit: 191
+    t.string   "fb_id",            limit: 191
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
+    t.string   "auth_token",       limit: 191
+    t.string   "time_zone",        limit: 191
+    t.string   "gender",           limit: 191
+    t.integer  "user_id",          limit: 4
+    t.text     "profile_pic_url",  limit: 65535
+    t.string   "page_specific_id", limit: 191
   end
 
   add_index "fb_creds", ["id"], name: "index_fb_creds_on_id", unique: true, using: :btree
