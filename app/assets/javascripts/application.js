@@ -29,3 +29,8 @@
 //= require location
 //= require cocoon
 //= require campaigns
+//= require jquery_word_counter
+//= require custom_trumbowyg_plugin
+//= require trumbowyg.min
+//= require trumbowyg.upload.min
+//= require emojionearea

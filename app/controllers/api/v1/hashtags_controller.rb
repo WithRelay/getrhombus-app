@@ -2,13 +2,13 @@ class Api::V1::HashtagsController < API::V1::BaseController
 
 	def find
 		begin
-			sql = ActiveRecord::Base.send(:sanitize_sql_array, 
-					["SELECT id, description, tag FROM hashtags where description LIKE concat('%', ?, '%') or 
+			sql = ActiveRecord::Base.send(:sanitize_sql_array,
+					["SELECT id, description, tag FROM hashtags where description LIKE concat('%', ?, '%') or
 						tag like concat('%', ?, '%') and user_id = ?", params[:query], params[:query], current_user.id ])
 						#tag like concat('%', ?, '%') and user_id = ?", params[:query], params[:query], '23' ])
 
 			results = Hashtag.connection.select_all(sql)
-			results = results.map { |h| { description: h["description"], tag: h['tag'], id: h['id'] } }		
+			results = results.map { |h| { description: h["description"], tag: h['tag'], id: h['id'] } }
 		  render json: { "hashtags" => results }, status: 200
 		rescue StandardError => e
 			render json: { error: "Unable to find your hashtags" }, status: 500
@@ -20,14 +20,12 @@ class Api::V1::HashtagsController < API::V1::BaseController
 			render json: output
 		else
 			render json: { "error": "unable to create hashtag" }, status: 500
-		end 
+		end
 	end
 
 	def image_delete
-		image_ref = ImageRef.where(imageable_type: 'Hashtag', imageable_id: params[:id], image_id: params[:img_id]).first
+    image_ref = find_image(imageable_type: 'Hashtag', imageable_id: params[:id], image_id: params[:img_id])
 		image_ref.delete if image_ref
 		render json: { response: "Deleted" }, status: 200
 	end
-
-
 end

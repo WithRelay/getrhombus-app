@@ -1,0 +1,21 @@
+<div class="row">
+  <div class='newMessage'>
+
+    <%= f.fields_for :messages do |ff| %>
+      <%= ff.text_area :text, id: 'trumbowyg' %>
+
+      <%= ff.fields_for :images do |fff| %>
+
+        <%= fff.file_field :avatar, id: 'select-images', multiple: true, accept: 'image/jpeg, image/jpg, image/gif, image/png' %>
+
+      <% end %>
+    <% end %>
+  </div>
+</div>
+<div id='new-image-previews'></div>
+<% campaign.messages.each do |message| %>
+  <% message.images.each do |image| %>
+    <%= present(image).image_url %>
+    <%= present(image).image_delete_url %>
+  <% end %>
+<% end %>

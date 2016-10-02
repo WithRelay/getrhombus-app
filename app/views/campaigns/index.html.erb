@@ -1,32 +1,54 @@
-<div class="container">
-  <table class="table table-striped">
-    <thead>
+<%= render 'shared/flash_messages' %>
+<table>
+  <thead>
+    <tr>
+     <th>Channel Name</th>
+     <th>Status</th>
+     <th>Delivery Type</th>
+     <th>Image</th>
+     <th>Date</th>
+     <th>Edit</th>
+     <th>Delete</th>
+     <th>Pause</th>
+     <th>Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @campaigns.each do |campaign| %>
       <tr>
-       <th>Channel Name</th>
-       <th>Status</th>
-       <th>Delivery Type</th>
-       <th>Date</th>
-       <th>Time</th>
+        <td>
+          <%= campaign.channel %>
+        </td>
+        <td>
+          <%= campaign.status %>
+        </td>
+        <td>
+          <%= campaign.delivery_type %>
+        </td>
+        <td>
+          <%= present(campaign).format_date_time %>
+        </td>
+        <td>
+          <% campaign.messages.each do |message| %>
+            <%= message.text.html_safe if message.text.present? %>
+            <% message.images.each do |image| %>
+              <%= image_tag image.avatar.url %>
+            <% end %>
+          <% end %>
+        </td>
+        <td>
+          <%= link_to 'Edit', edit_campaign_path(campaign) %>
+        </td>
+        <td>
+          <%= link_to 'Delete', campaign_path(campaign), method: :delete %>
+        </td>
+        <td>
+          <%= link_to 'Pause Campaign', change_status_campaign_path(campaign), method: :put %>
+        </td>
+        <td>
+          <%= campaign.status %>
+        </td>
       </tr>
-    </thead>
-    <tbody>
-      <% @campaigns.each do |campaign| %>
-        <tr>
-          <td>
-            <%= campaign.channel %>
-          </td>
-          <td>
-            <%= campaign.status %>
-          </td>
-            <%= campaign.delivery_type %>
-          <td>
-            <%= campaign.date %>
-          </td>
-          <td>
-            <%= campaign.time %>
-          </td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-</div>
+    <% end %>
+  </tbody>
+</table>

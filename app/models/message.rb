@@ -9,7 +9,7 @@ class Message < ActiveRecord::Base
   # for conversation
   has_many :conversation_refs, as: :textable, dependent: :destroy
   has_many :conversations, through: :conversation_refs
-
+  accepts_nested_attributes_for :images
 	# belongs_to :user, counter_cache: true
 	# For sending and saving all outbound text messages
 	def self.send_and_save_message(from, to, message, media_url = "")

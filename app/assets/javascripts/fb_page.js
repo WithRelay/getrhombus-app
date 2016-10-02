@@ -49,8 +49,6 @@ $( document ).ready(function() {
       }
     });
   });
-    
-
 });
 
 function check_status(val){

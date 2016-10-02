@@ -1,20 +1,20 @@
-$(document).ready(function () {  
+$(document).ready(function () {
 
   // help change user controller to handle captured payments for signin
   // help add tag_id to captured payments in signin and signup and in the forms
 
-  var url = window.location, 
+  var url = window.location,
       global_page_params = PageParameter.get_params(),
 
       cc_year, cc_month, cc_submit_btn, cc_btn_text, form_submission_handler,
       create_user_submit = $('#create-user-submit'), create_user_form = $('#create-user-form'),
 
       REFUND_TXN_LINK, REFUND_BOX = $('#refundFormBox'),
-      chart_labels = [], chart_totals = [], chart_txns = [], 
+      chart_labels = [], chart_totals = [], chart_txns = [],
       contact_url = '/contact_forms.json', searchNumBtn = $('#searchNumberBtn');
-  
 
-  $.ajaxSetup({ cache:false });  
+
+  $.ajaxSetup({ cache:false });
   Stripe.setPublishableKey('<%= Rails.application.secrets.stripe["publishable_key"] %>');
 
   // to prefill signup form or handle captured payments
@@ -22,7 +22,7 @@ $(document).ready(function () {
   // can use form presence instead
   if (["/signup", "/signin", "/users/sign_in", '/users', "/profile"].indexOf(url.pathname) != -1) {
       var amt = validate_captured_amt(global_page_params['amt'])
-      
+
       if (url.pathname == "/signup") {
           document.getElementById('phone').value = global_page_params['num'];
           hide_account_type(global_page_params['referrer']);
@@ -32,10 +32,10 @@ $(document).ready(function () {
           hide_account_type(document.getElementById('referrer').value);
       }
 
-      if (amt) document.getElementById('captured_amt').value = amt;      
+      if (amt) document.getElementById('captured_amt').value = amt;
   }
   // to prefill signup form or handle captured payments
-  
+
   function hide_account_type(referrer) {
       if (referrer) {
           $('#signupForm .selectpicker').val('0');
@@ -95,12 +95,12 @@ $(document).ready(function () {
           $('.sidebar').removeClass('hidden');
           $('.content').css({
               'marginLeft' : 250
-          });  
+          });
       }else{
           $('.sidebar').addClass('hidden');
           $('.content').css({
               'marginLeft' : 0
-          });    
+          });
       }
   });
   //
@@ -112,7 +112,7 @@ $(document).ready(function () {
   $(".panel-tools .minimise-tool").click(function(event){
       $(this).parents(".panel").find(".panel-body").slideToggle(100);
       return false;
-  });  
+  });
 
   /* Close */
   /* $(".panel-tools .closed-tool").click(function(event){
@@ -136,7 +136,7 @@ $(document).ready(function () {
 
       }
   });
- 
+
   // for table slide dowm
   function format ( d, element ) {
       // `d` is the original data object for the row
@@ -174,7 +174,7 @@ $(document).ready(function () {
               v = '<tr>'+
                       '<td><a class="refund_link" data-stripe-txn-num=' + element[0].id + ' >Refund transaction</a></td>'+
                   '</tr>'
-          } 
+          }
       } else {
           z =     '<tr>'+
                       '<td>Phone #:</td>'+
@@ -187,7 +187,7 @@ $(document).ready(function () {
   }
 
   // for table slide dowm
-  var table = $('#transactions-table').DataTable({ 
+  var table = $('#transactions-table').DataTable({
       'dom' : 't',
       'order' : [],
       "pageLength": 25
@@ -237,7 +237,7 @@ $(document).ready(function () {
       utilsScript: "<%= asset_path 'utils.js' %>" // just for formatting/placeholders etc
   });
 
-   
+
   // validate signin form
   $('#signinForm')
       .formValidation({
@@ -454,7 +454,7 @@ $(document).ready(function () {
                       }
                   }
               },
-              'user[full_name]': { 
+              'user[full_name]': {
                   row: '.group',
                   validators: {
                       notEmpty: {
@@ -623,22 +623,22 @@ $(document).ready(function () {
                   .find('[data-fv-validator="remote"][data-fv-for="user[email]"]')
                   .html("The email isn't valid")
                   .show();
-          }            
+          }
       })
       .on('success.form.fv', function(e, data) {
           set_number();
-          set_hidden_fields();            
+          set_hidden_fields();
       });
     // validate sign up form
 
   function set_hidden_fields() {
     if (global_page_params['referrer_id']) document.getElementById('referrer_id').value = global_page_params['referrer_id'];
     if (global_page_params['referrer_uid']) document.getElementById('referrer_uid').value = global_page_params['referrer_uid'];
-    if (global_page_params['msg_id']) document.getElementById('msg_id').value = global_page_params['msg_id']; 
+    if (global_page_params['msg_id']) document.getElementById('msg_id').value = global_page_params['msg_id'];
     if (global_page_params['tag_id']) document.getElementById('tag_id').value = global_page_params['tag_id'];
   }
 
-  // validate password change form    
+  // validate password change form
   $('#changePasswordForm')
       .formValidation({
           // I am validating Bootstrap form
@@ -899,26 +899,26 @@ $(document).ready(function () {
           }
       })
       .on('success.form.fv', function(e, data) {
-          set_number(); 
+          set_number();
       });
   // validate merchant profile form
 
-   
+
   // Stripe form validator for CC form
   $('input#cc-number').payment('formatCardNumber');
   $('input#cc-exp').payment('formatCardExpiry');
   $('input#cc-csc').payment('formatCardCVC');
 
   // tokenize card details
-  function submit_to_stripe() {        
+  function submit_to_stripe() {
     Stripe.card.createToken({
         name: $('#cc-name').val(),
         number: $('#cc-number').val(),
         exp_month: cc_month,
         exp_year: cc_year,
         cvc: $('#cc-csc').val()
-    }, stripeResponseHandler);        
-  }  
+    }, stripeResponseHandler);
+  }
 
   function stripeResponseHandler(status, response) {
     if (response.error) {
@@ -947,7 +947,7 @@ $(document).ready(function () {
 
         // List of fields and their validation rules
         fields: {
-            'user[full_name]': { 
+            'user[full_name]': {
                 row: '.group',
                 validators: {
                     notEmpty: {
@@ -955,7 +955,7 @@ $(document).ready(function () {
                     }
                 }
             },
-            'cc-name': { 
+            'cc-name': {
                 selector: '#cc-name',
                 row: '.group',
                 validators: {
@@ -1050,7 +1050,7 @@ $(document).ready(function () {
             .data('fv.messages')
             .find('.help-block[data-fv-for="' + data.field + '"]').hide();
     })
-    .on('success.form.fv', function(e, data) {            
+    .on('success.form.fv', function(e, data) {
         $("#user-form").bind("submit", preventDefault);
         $('#response').hide();
         $(".panel-body").html('');
@@ -1083,9 +1083,9 @@ $(document).ready(function () {
   var a = $('#address');
   zip.blur(function() {
       $('#city, #state').val('');
-      var x = (a.val()) ? a.val() : ''; 
-      var y = (c.val()) ? c.val() : ''; 
-      var z = (zip.val()) ? zip.val() : ''; 
+      var x = (a.val()) ? a.val() : '';
+      var y = (c.val()) ? c.val() : '';
+      var z = (zip.val()) ? zip.val() : '';
       var param = x.trim() + ", " + z.trim() + ", " + y.trim();
       if (param) {
           var jqxhr = $.getJSON('https://maps.googleapis.com/maps/api/geocode/json?address=' + param, function() {
@@ -1093,7 +1093,7 @@ $(document).ready(function () {
             .done(function(res) {
               $('#city').val('');
               $('#state').val('');
-              
+
               console.log(res.results[0]['address_components'][1]["long_name"]);
               console.log(res.results[0]['address_components'][2]["short_name"]);
               $('.city-state').val(res.results[0]['formatted_address']);
@@ -1107,7 +1107,7 @@ $(document).ready(function () {
   // character counter
   $("#count_me").characterCounter({
     //text: false, from old plugin...is this still in new plugin??
-    limit: '250'  
+    limit: '250'
   });
 
 
@@ -1116,12 +1116,12 @@ $(document).ready(function () {
         type: 'POST',
         beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
         data: json
-    })  
+    })
         .done(function(data, response) {
             ohSnap('Yes! Your message has been sent!', 'green');
         })
         .fail(function( data ) {
-            ohSnap('Oh no! We were unable to send your message...', 'red');                
+            ohSnap('Oh no! We were unable to send your message...', 'red');
         })
   }
 
@@ -1209,7 +1209,7 @@ $(document).ready(function () {
                   .find('[data-fv-validator="remote"][data-fv-for="contact_form[email]"]')
                   .html("The email isn't valid")
                   .show();
-          }            
+          }
       })
       .on('success.form.fv', function(e, data) {
           e.preventDefault;
@@ -1219,7 +1219,7 @@ $(document).ready(function () {
       });
       // validate contact form
 
-  
+
    // validate text me form
   $('#tell-me-form')
       .formValidation({
@@ -1261,13 +1261,13 @@ $(document).ready(function () {
       })
       .on('success.form.fv', function(e, data) {
           e.preventDefault;
-          var number = telInput.intlTelInput("getNumber"), zip = $('#zip').val();            
+          var number = telInput.intlTelInput("getNumber"), zip = $('#zip').val();
           var json = { "contact_form" : { "email" : "<redacted_email>", "message" : number + " - " + zip, "name" : "Text me"  } }
           submit_contact_form(json);
           $(this).trigger("reset");
           return false;
       });
-      // validate text me form    
+      // validate text me form
 
   //  Hashtags, plans, coupons, Alerts
   // no spaces
@@ -1288,7 +1288,7 @@ $(document).ready(function () {
 
   // decimal with two places
   $('#hashtag_amount, #plan_amount').on('input', function(){
-    $(this).val(function(_, v) { 
+    $(this).val(function(_, v) {
       if (v.slice(-1) == '.' && (v.match(/[.]/g) || []).length == 1 && v.length > 1) return v
       // http://stackoverflow.com/questions/30606348/check-if-a-given-value-is-a-positive-number-or-float-with-maximum-two-decimal-pl
       // http://stackoverflow.com/questions/25053605/regex-to-allow-only-a-single-dot-in-a-textbox
@@ -1307,7 +1307,7 @@ $(document).ready(function () {
       $('#hashtag-payment-settings').slideDown(200);
     }
   }).change();
-  
+
   // positve integer less than 100
   $('#percent-off').on('input', function(){
     var v = this.value;
@@ -1319,13 +1319,13 @@ $(document).ready(function () {
   // if coupon isnt repeating. repeating needs length in months
   $('#coupon_duration').change(function(){
     if (this.value == 'repeating') {
-      $('#duration-in-months-div').slideDown(200) 
+      $('#duration-in-months-div').slideDown(200)
     } else {
       $('#duration-in-months-div').slideUp(200);
       $('#duration-in-months').val('');
-    } 
+    }
   }).change();
-    
+
   $('#alert-include-sms').change(function(){
     (this.checked) ? $('#alert-sms-number').slideDown(200) : $('#alert-sms-number').slideUp(200);
   }).change();
@@ -1337,20 +1337,20 @@ $(document).ready(function () {
   $('#transactions-column').on("click", ".refund_link", function() {
       REFUND_TXN_LINK = this;
       REFUND_BOX.lightbox_me({
-          centered: true, 
+          centered: true,
           onLoad: function() { $('#refundForm').find('input:first').focus(); }
       });
   });
 
   $('#refundButton').click(function(e) {
     e.preventDefault();
-    this.disabled = true; 
+    this.disabled = true;
     this.textContent = "Please wait...";
     $.ajax({
         url: "/v1/transactions/" + REFUND_TXN_LINK.getAttribute('data-stripe-txn-num') + "/refund.json",
         beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
         type: "POST",
-        data: { type: "card", reason: document.getElementById('refund_reason').value }       
+        data: { type: "card", reason: document.getElementById('refund_reason').value }
     })
         .done(function(data, textStatus, response) {
             document.getElementById(charge_id).setAttribute("data-status", "Refunded");
@@ -1359,7 +1359,7 @@ $(document).ready(function () {
         })
         .fail(function(data, textStatus, response) { ohSnap(data.responseJSON["message"], "red"); })
         .always(function(data, textStatus, response) {
-            this.disabled = false; 
+            this.disabled = false;
             this.textContent = "Submit";
             REFUND_BOX.trigger('close');
         })
@@ -1371,23 +1371,23 @@ $(document).ready(function () {
   //// for number search
   searchNumBtn.click(function() {
       this.disabled = true;
-      this.innerHTML = "Searching..."; 
+      this.innerHTML = "Searching...";
       get_number();
   });
 
   var searchNumberCountry = $('#searchNumberCountry'),
       searchNumberType = $('#searchNumberType'),
       searchNumberField = $('#searchNumberField');
-  var get_number = function(str) {                
+  var get_number = function(str) {
     $.ajax({
       url: "/v1/numbers/search.json",
       type: "GET",
       data: { query: searchNumberField.val(), country: searchNumberCountry.val(), type: searchNumberType.val() },
-      dataType: "json"     
+      dataType: "json"
     })
       .done(function(data, textStatus, jqXHR) {
           var str = '';
-          if(data.error) { 
+          if(data.error) {
               alert('something went wrong');
           } else if (data.number == '') {
               alert(':( we dont have any number');
@@ -1396,14 +1396,14 @@ $(document).ready(function () {
           }
       })
       .fail(function(data, textStatus, errorThrown) {
-          alert('something went wrong'); 
+          alert('something went wrong');
            console.log(data);
-      })   
+      })
       .always(function(data, textStatus, response) {
-          searchNumBtn.html('Search').prop("disabled", false); 
-      }); 
+          searchNumBtn.html('Search').prop("disabled", false);
+      });
   }
-  
+
   var country_num_types = {
         US: { types: ["Local","Toll Free"], show: true },
         CA: { types: ["Local","Toll Free"], show: true },
@@ -1413,14 +1413,14 @@ $(document).ready(function () {
   };
 
   searchNumberCountry.change(function() {
-      var x = country_num_types[this.options[this.selectedIndex].value.toString()], html = '';      
-      x = (x) ? x : { types: ["mobile"] };    
-      for (i = 0, len = x.types.length; i < len; i++) { 
+      var x = country_num_types[this.options[this.selectedIndex].value.toString()], html = '';
+      x = (x) ? x : { types: ["mobile"] };
+      for (i = 0, len = x.types.length; i < len; i++) {
           html += '<option value="' + x.types[i].toLowerCase().replace(/ /g, '_') + '">' + x.types[i] + '</option>'
-      }          
+      }
       var display = (x.show) ? 'inline' : 'none';
       searchNumberType.html(html).css('display', display);
-      searchNumberField.val('').css('display', display)        
+      searchNumberField.val('').css('display', display)
   });
   //// for number search
 
@@ -1428,7 +1428,7 @@ $(document).ready(function () {
 
   // http://blog.teamtreehouse.com/uploading-files-ajax
   // but modified to send just one file.
-  $('#csv-upload-form').submit(function(e) {      
+  $('#csv-upload-form').submit(function(e) {
     e.preventDefault();
     var button = $('#csv-upload-button').text("Uploading...").prop('disabled', true);
 
@@ -1453,16 +1453,16 @@ $(document).ready(function () {
       };
       xhr.send(payload);        // Send the Data.
     }
-    
+
     var file = document.getElementById('csv-file-select').files;            // Get the selected files from the input.
-    if (file && file.length == 1) {          
+    if (file && file.length == 1) {
       file = file[0];
       if (!file.type.match('csv')) {             // Check the file type.
         alert("Can't upload file type");
         button.text("Upload").prop('disabled', false);
         return;
       }
-      
+
       var formData = new FormData();               // Create a new FormData object.
       formData.append('csv', file, file.name);    // Add the file to the request.
       send_payload(formData);
@@ -1479,11 +1479,11 @@ $(document).ready(function () {
   $('#select-images').change(function() { read_file_picker(this); });
   function read_file_picker(input) {
     var files = input.files, new_image_previews = $('#new-image-previews').html("");
-    
+
     function invalid_actions(msg) {
       input.value = "";
       new_image_previews.html("");
-      alert(msg);      
+      alert(msg);
     }
 
     // http://stackoverflow.com/questions/23402187/multiple-files-upload-and-using-file-reader-to-preview
@@ -1491,7 +1491,7 @@ $(document).ready(function () {
       if (($("#image-previews").children().length + files.length) > 2) {
         invalid_actions("you already have 2 images attached");
         return;
-      }      
+      }
 
       if (files.length > 2) {
         invalid_actions("Please reselect up to 2 files.");
@@ -1515,11 +1515,11 @@ $(document).ready(function () {
         var reader = new FileReader();
         reader.addEventListener("load", function (event) {
           var img = event.target;
-          div = "<div class='images'><img class='thumbnail' src='" + img.result + "'" + "title='" + img.filename + "'/>" + 
+          div = "<div class='images'><img class='thumbnail' src='" + img.result + "'" + "title='" + img.filename + "'/>" +
                 "<span>" + img.filename + "</span></div>";
           new_image_previews.prepend(div);
         });
-        
+
         //Read the image
         reader.filename = file.name;
         reader.readAsDataURL(file);
@@ -1527,31 +1527,38 @@ $(document).ready(function () {
     }
   }
 
-
-
+  function getUrl(element){
+    var controller;
+    if (element.id == 'campaign'){
+      controller = 'campaigns/';
+    }
+    else{
+      controller = 'hashtags/';
+    }
+    return "/v1/" + controller + $('#image-previews').data("tag-id") + "/image_delete.json"
+  }
 
   $(".delete-image").click(function(e) {
     e.stopPropagation();
     var span = this;
-    span.style.pointerEvents = 'none';    
-
+    span.style.pointerEvents = 'none';
     $.ajax({
-        url: "/v1/hashtags/" + $('#image-previews').data("tag-id") + "/image_delete.json",
+        url: getUrl(span),
         beforeSend: function(xhr) { xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content')) },
         type: "POST",
         data: { img_id: this.id.split("_")[1] },
-        dataType: "json"   
+        dataType: "json"
     })
       .done(function(data, textStatus, jqXHR) {
-        console.log(data.response);    
+        console.log(data.response);
         $("#" + span.id).parent().slideUp(400, function() { this.remove(); });
       })
       .fail(function(data, textStatus, errorThrown) {
         console.log(data);
         //alert('Unable to delete file')
         span.style.pointerEvents = 'auto';
-      })   
-      .always(function(data, textStatus, response) {}); 
+      })
+      .always(function(data, textStatus, response) {});
   });
 
   // handle images
@@ -1567,13 +1574,13 @@ $(document).ready(function () {
     // if all pass, submit_contact_form
 
     var y = get_expiry_date_data();
-    cc_month = y.month; cc_year = y.year; 
+    cc_month = y.month; cc_year = y.year;
     // So the button can be reset on fail
     cc_btn_text = create_user_submit.val();
-    cc_submit_btn = create_user_submit.attr("disabled", true).val("Please wait...");  
+    cc_submit_btn = create_user_submit.attr("disabled", true).val("Please wait...");
     set_number();
     form_submission_handler = submit_create_user_form;
-    submit_to_stripe();  
+    submit_to_stripe();
 
     // added accept nested attributes for lists
     // hashes of hashes or array of hashes for lists
@@ -1586,21 +1593,21 @@ $(document).ready(function () {
         beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
         type: "POST",
         data: create_user_form.serialize(),
-        dataType: "json"   
+        dataType: "json"
     })
       .done(function(data, textStatus, jqXHR) {
-        console.log(data);    
+        console.log(data);
       })
       .fail(function(data, textStatus, errorThrown) {
         console.log(data);
-      })   
+      })
       .always(function(data, textStatus, response) {
         cc_submit_btn.attr("disabled", false).val(cc_btn_text);
-      }); 
+      });
   }
   ///// add a customer
-  
-  // submit referrer  
+
+  // submit referrer
   $("#new_referrer").on("ajax:success", function(e, data, status, xhr) {
     alert('received referral info. pls share the link and refer more');
     console.log(data.referrer.link)
@@ -1626,7 +1633,7 @@ function get_unread_messages() {
     $.ajax({
         url: url.origin + '/json_get_current_user',
         type: "GET",
-        dataType: "json"     
+        dataType: "json"
     })
         .done(function(data, textStatus, response) {
             var merchant_id = data.id;
@@ -1641,7 +1648,7 @@ function get_unread_messages() {
             pubnub.subscribe({
                 channel: 'messaging_<%= Rails.env %>_' + merchant_id,
                 message: function(m){
-                    var json_response = JSON.parse(m[0]);                  
+                    var json_response = JSON.parse(m[0]);
                     if (json_response.user_level == 0) {
                         global_unread_count += 1;
                         document.getElementById('unreadCount').textContent = (global_unread_count > 0) ? global_unread_count : '';
@@ -1653,7 +1660,7 @@ function get_unread_messages() {
             $.ajax({
                 url: url.origin + '/users/' + merchant_id + '/json_get_latest_active_messaging',
                 type: "GET",
-                dataType: "json"     
+                dataType: "json"
             })
                 .done(function(data, textStatus, response) {
                     $.each(data.users, function( index, value ){
@@ -1664,10 +1671,10 @@ function get_unread_messages() {
                 .fail(function(data, textStatus, response) {
                     console.log('Error while trying to connect to the messaging system.');
                     document.getElementById('unreadCount').textContent = '';
-                }) 
+                })
         })
         .fail(function(data, textStatus, response) {
             console.log('Error while trying to connect to the messaging system.');
             document.getElementById('unreadCount').textContent = '';
-        }) 
+        })
 }
