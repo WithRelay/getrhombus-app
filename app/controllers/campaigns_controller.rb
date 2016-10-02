@@ -20,6 +20,7 @@ class CampaignsController < ApplicationController
     @campaign.campaign_lists.build(Hash[*campaign_params.first])
     if @campaign.save
       save_message_images(@campaign.messages)
+      CampaignService.new(@campaign).set_background_jobs
       flash[:notice] = 'Campaign Saved successfully'
     else
       flash[:error] = 'Sorry Campaign could not save please try again'
@@ -76,7 +77,11 @@ class CampaignsController < ApplicationController
 
   def campaign_params
     params.require(:campaign).permit(:list_id, :channel, :repeat_days, :date_time, :delivery_type,
-                                     :frequency_type, messages_attributes: [:text, :id])
+                                     :frequency_type, messages_attributes: [:text, :id]).tap do |c|
+                                      c[:channel] = c[:channel].to_i;
+                                      c[:frequency_type] = c[:frequency_type].to_i;
+                                      c[:delivery_type] = c[:delivery_type].to_i;
+                                     end
   end
 
   def image_params
