@@ -1,4 +1,4 @@
-class FacebookEvent
+  class FacebookEvent
     
   class << self
 
@@ -38,7 +38,7 @@ class FacebookEvent
         attachment = message['attachments']
         seq = message['seq']
         text = message['text']
-        text = 'Attachment File!!' if text.nil?
+        text = '' if text.nil?
         sec = (messaging['timestamp'].to_f / 1000).to_s
         timestamp = DateTime.strptime(sec,'%s')
         message_id =  message['mid']
