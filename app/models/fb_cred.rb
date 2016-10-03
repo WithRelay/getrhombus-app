@@ -49,7 +49,7 @@ class FbCred < ActiveRecord::Base
   private
   
   # extract user identifier from profile picture
-  def self.extract_profile_pic_identification(pic_url)
+  def self.extract_profile_pic_identifier(pic_url)
     url = pic_url.match(/^.+\/[\w:]+\.(jpe?g|png|gif)/i).to_a.first
     name = url.split('/').last
     name_array = name.split('_')
@@ -62,11 +62,11 @@ class FbCred < ActiveRecord::Base
   #link facebook page specific user to Merchant
   def self.link_page_specific_user(pic_url)
     response = {}
-    user_identifier = extract_profile_pic_identification(pic_url)
+    user_identifier = extract_profile_pic_identifier(pic_url)
     all_user_fb_cred = FbCred.where.not('user_id' => nil)
     all_user_fb_cred.each do |cred|
 
-      if extract_profile_pic_identification(cred.profile_pic_url) == user_identifier
+      if extract_profile_pic_identifier(cred.profile_pic_url) == user_identifier
         response = { fb_id: cred.fb_id, email: cred.email }
       end      
     end  
