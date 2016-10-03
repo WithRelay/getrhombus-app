@@ -1,6 +1,6 @@
 # User can select facebook pages 
 class FbPagesController < ApplicationController
-  before_filter :check_user_present
+  before_action :check_user_present
 
   def index
     @user_fb_pages = current_user.fb_pages
