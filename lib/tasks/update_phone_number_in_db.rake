@@ -7,6 +7,7 @@
 
 # Add this migration
 
+  # do i remove this? not sure i need to do this
 #  def change
 #    remove_column :messages, :user_id
 #    remove_column :messages, :user_id_to
