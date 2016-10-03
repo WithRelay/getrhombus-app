@@ -3,12 +3,21 @@
   class << self
 
   	def process_event(params)
-      message_params = params['entry'].last
-      receive_message(message_params)
+      required_params = params['entry'].last
+      event = required_params['messaging'].last
+      read_event = event['read']
+      message_event = event['message']
+      # delivery_event = event['delivery']
+
   		if params['hub.mode'].present?
   			verify_webhook
-  		else
+      elsif read_event.present?
+        set_message_unread(event)
+      elsif 
+        receive_message(required_params['id'], event)
+      else 
   		end
+
   	end
 
     def verify_webhook
@@ -31,46 +40,46 @@
 	  	{}
 		end
 
-		def receive_message(params)
+		def receive_message(page_id, params)
       begin
-        messaging = params['messaging'].last
-        message = messaging['message']
+        message = params['message']
         attachments = message['attachments']
         seq = message['seq']
         text = message['text']
         text = '' if text.nil?
-        timestamp = set_timestamp(messaging['timestamp'])
+        timestamp = set_timestamp(params['timestamp'])
         message_id =  message['mid']
-        message_from = messaging['sender']['id']
-        message_to = messaging['recipient']['id']
-        current_page = FbPage.find_by_page_id params['id']
+        message_from = params['sender']['id']
+        message_to = params['recipient']['id']
+        current_page = FbPage.find_by_page_id page_id
         fb_page_id = current_page.id
 
-        add_page_user(message_from)        
+        add_page_user(fb_page_id, message_to)        
 
-        fb_message = FbMessage.create(text: text, seq: seq, time_stamp: timestamp, unread: true, 
-          message_id: message_id, page_id: message_to, from: message_from, to: message_to, fb_page_id: fb_page_id)
+        fb_message = FbMessage.create(text: text, seq: seq, time_stamp: timestamp, unread: false, 
+          message_id: message_id, page_id: params['id'], from: message_from, to: message_to, fb_page_id: fb_page_id)
   			
-        save_attachment(attachments, fb_message)
+        save_attachments(attachments, fb_message)
         fb_message.save!
       rescue StandardError => err
         nil
       end
 		end 
 
+    # set datetime in utc
     def set_timestamp(timestamp)
       sec = (timestamp.to_f / 1000).to_s
       DateTime.strptime(sec,'%s')
     end
         
     # Add new user from massenger to FbCred table
-    def add_page_user(uid)
-      unless (FbCred.find_by_page_specific_id uid).present?
-        FbCred.add_fb_user_from_massenger(fb_page_id, message_from)
+    def add_page_user(page_id, message_from)
+      unless (FbCred.find_by_page_specific_id message_from).present?
+        FbCred.add_fb_user_from_massenger(page_id, message_from)
       end
     end
 
-    def save_attachment(attachments, fb_message)
+    def save_attachments(attachments, fb_message)
       if attachments.present?
         attachments.each do |a|
           url = a['payload']['url']
@@ -78,6 +87,11 @@
           image.avatar_from_remote_url(url)
         end
       end
+    end
+
+    def set_message_unread(params)
+      messages = FbMessage.all.where(to: params['sender']['id'], unread: false)
+      messages.update_all(unread: true)
     end
 
   end
