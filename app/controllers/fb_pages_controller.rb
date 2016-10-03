@@ -1,6 +1,6 @@
 # User can select facebook pages 
 class FbPagesController < ApplicationController
-  before_filter :check_user_present
+  before_action :check_user_present
 
   def index
     @user_fb_pages = current_user.fb_pages
@@ -21,6 +21,7 @@ class FbPagesController < ApplicationController
       response = FacebookMessengerService.subscribe(page.page_access_token)
       if(response["success"])
         page.update_attributes(subscription_status: true)
+        Conversation.create(merchant_id: current_user.id, page_id: page_id, resolution: true)
       end
       redirect_to user_path(current_user), notice: 'success'
     else
