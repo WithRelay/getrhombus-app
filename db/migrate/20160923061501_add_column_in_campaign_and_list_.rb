@@ -1,6 +1,7 @@
 # migration for adding column in campaign and list as below
 class AddColumnInCampaignAndList < ActiveRecord::Migration
   def change
+    add_column :lists, :name, :string
     add_column :campaigns, :delivery_type, :string
     add_column :campaigns, :repeat_days, :string
     add_column :campaigns, :frequency_type, :integer
