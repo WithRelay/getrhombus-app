@@ -1,7 +1,7 @@
 class FbMessage < ActiveRecord::Base
   # for conversation
-	has_many :conversation_refs, as: :textable, dependent: :destroy
-  has_many :conversations, through: :conversation_refs
+	has_one :conversation_ref, as: :textable, dependent: :destroy
+  has_one :conversation, through: :conversation_refs
   
   belongs_to :fb_page
 
