@@ -32,7 +32,7 @@ class FbPagesController < ApplicationController
     page = FbPage.find_by_id page_id
     if page.present?
       response = FacebookMessengerService.unsubscribe(page.page_access_token)
-      if(response["success"])
+      if(response['success'])
         page.update_attributes(subscription_status: false)
       end
       redirect_to user_path(current_user), notice: 'success'
@@ -44,14 +44,15 @@ class FbPagesController < ApplicationController
   def remove_integration
     fb_cred = current_user.fb_cred
     fb_pages = fb_cred.fb_pages
+    res = {}
     if fb_pages.present?
       fb_pages.each do |page|
         if page.subscription_status
-          FacebookMessengerService.unsubscribe(page.page_access_token)
+          res = FacebookMessengerService.unsubscribe(page.page_access_token)
         end
       end
     end
-    fb_cred.destroy
+    fb_cred.destroy if res['success']
     redirect_to user_path(current_user), notice: 'success'
   end
 
