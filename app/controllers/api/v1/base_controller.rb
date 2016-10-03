@@ -24,4 +24,7 @@ class API::V1::BaseController < ApplicationController
     end
   end
 
+  def find_image(find_by_hash)
+     ImageRef.where(find_by_hash).first
+  end
 end

@@ -69,6 +69,8 @@ GEM
       httparty (>= 0.7.6)
       multi_json (~> 1.3)
       oauth2 (>= 0.5.0, < 2.0)
+    bootstrap-daterangepicker-rails (0.1.5)
+      railties (>= 4.0, < 5.1)
     buftok (0.2.0)
     builder (3.2.2)
     byebug (3.5.1)
@@ -98,6 +100,7 @@ GEM
     cocaine (0.5.8)
       climate_control (>= 0.0.3, < 1.0)
     cocoon (1.2.9)
+    coderay (1.1.1)
     coffee-rails (4.1.0)
       coffee-script (>= 2.2.0)
       railties (>= 4.0.0, < 5.0)
@@ -191,6 +194,10 @@ GEM
     json (1.8.2)
     json_pure (1.8.3)
     jwt (1.2.0)
+    koala (2.4.0)
+      addressable
+      faraday
+      multi_json (>= 1.3.0)
     loofah (2.0.1)
       nokogiri (>= 1.5.9)
     mail (2.6.3)
@@ -206,10 +213,13 @@ GEM
     messenger_platform_rails (0.5.1)
       faraday (~> 0.9)
       rails (~> 4.2)
+    method_source (0.8.2)
     mime-types (2.4.3)
     mimemagic (0.3.0)
     mini_portile (0.6.2)
     minitest (5.5.1)
+    momentjs-rails (2.15.1)
+      railties (>= 3.1)
     mono_logger (1.1.0)
     multi_json (1.10.1)
     multi_xml (0.5.5)
@@ -243,6 +253,7 @@ GEM
     omniauth-twitter (1.2.1)
       json (~> 1.3)
       omniauth-oauth (~> 1.1)
+    open_uri_redirections (0.2.1)
     opencnam (1.0.1)
       json (~> 1.7)
     orm_adapter (0.5.0)
@@ -250,6 +261,10 @@ GEM
       daemon_controller (>= 1.2.0)
       rack
       rake (>= 0.8.1)
+    pry (0.10.4)
+      coderay (~> 1.1.0)
+      method_source (~> 0.8.1)
+      slop (~> 3.4)
     pubnub (4.0.7)
       celluloid (~> 0.17)
       dry-validation (~> 0.8)
@@ -387,6 +402,7 @@ DEPENDENCIES
   ar_after_transaction
   aws-sdk
   bitly
+  bootstrap-daterangepicker-rails
   byebug
   cancan
   cocoon
@@ -396,16 +412,20 @@ DEPENDENCIES
   httparty
   jbuilder (~> 2.0)
   jquery-rails
+  koala
   mail_form
   mandrill-api
   messenger_platform_rails
+  momentjs-rails
   mysql2
   newrelic_rpm
   omniauth-facebook
   omniauth-twitter
+  open_uri_redirections
   opencnam
   paperclip!
   passenger
+  pry
   pubnub (~> 4.0.7)
   rails (= 4.2.0)
   responders (~> 2.0)
@@ -426,4 +446,4 @@ RUBY VERSION
    ruby 2.2.3p173
 
 BUNDLED WITH
-   1.12.5
+   1.13.1

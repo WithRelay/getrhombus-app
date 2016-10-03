@@ -20,10 +20,16 @@
 //= require jquery.payment
 //= require jquery.charactercounter
 //= require ohsnap.js
-
+//= require moment
+//= require daterangepicker
 //= require url-paramaters
 //= require managed-account
 //= require location
 //= require cocoon
-
-
+//= require fb_page
+//= require campaigns
+//= require jquery_word_counter
+//= require custom_trumbowyg_plugin
+//= require trumbowyg.min
+//= require trumbowyg.upload.min
+//= require emojionearea

@@ -15,4 +15,7 @@ class UserPresenter < BasePresenter
     @user.org_type == 'Individual' ? 'Individual' : 'Company'
   end
 
+  def page_count
+    @model.fb_pages.count > 0
+  end
 end
