@@ -53,8 +53,8 @@
         message_to = params['recipient']['id']
         current_page = FbPage.find_by_page_id page_id
         fb_page_id = current_page.id
-
-        add_page_user(fb_page_id, message_to)        
+        new_user_id = (current_page.page_id == message_to)? message_from : message_to
+        add_page_user(fb_page_id, new_user_id)        
 
         fb_message = FbMessage.create(text: text, seq: seq, time_stamp: timestamp, unread: false, 
           message_id: message_id, page_id: params['id'], from: message_from, to: message_to, fb_page_id: fb_page_id)
