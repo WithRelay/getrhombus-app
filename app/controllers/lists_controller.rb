@@ -18,11 +18,6 @@ class ListsController < ApplicationController
 
   end
 
-  def remove_user_from_list(user_id)
-    UserList.where(:user_id => params[:user_id]).delete
-    puts "Completed"
-  end
-
   def new
     @list = List.new
     respond_with(@list)
