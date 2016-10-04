@@ -49,6 +49,7 @@ Rails.application.routes.draw  do
 
   resources :contact_forms
   resources :referrers, only: [:new, :create]
+  resources :refunds, :only => :create
 
   # user routes
   resources :users, only: :show do
@@ -86,15 +87,13 @@ Rails.application.routes.draw  do
       get 'json_get_user_messages_by_merchant/:user_number' => 'users#json_get_user_messages_by_merchant'
       get 'mark_user_messages_for_merchant_as_read/:user_number' => 'users#mark_user_messages_for_merchant_as_read'
       get 'send_message_from_merchant/:user_number' => 'users#send_message_from_merchant'
-      get 'customers' => 'users#customers'
+      get 'customers' => 'users#cusomers'
       get 'businesses' => 'users#businesses'
       get 'notifications' => 'alerts#edit'
       get 'lists' => 'users#lists'
     end
   end
 
-  resources :users, :only => :show
-  resources :refunds, :only => :create
 
   # authenticate campaigns resources if a user is merchant
   authenticate :user, -> (user) { user.is_merchant? } do
