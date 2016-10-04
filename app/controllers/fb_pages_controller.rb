@@ -44,15 +44,15 @@ class FbPagesController < ApplicationController
   def remove_integration
     fb_cred = current_user.fb_cred
     fb_pages = fb_cred.fb_pages
-    res = {}
+    response = {}
     if fb_pages.present?
       fb_pages.each do |page|
         if page.subscription_status
-          res = FacebookMessengerService.unsubscribe(page.page_access_token)
+          response = FacebookMessengerService.unsubscribe(page.page_access_token)
         end
       end
     end
-    if res['success']
+    if response['success']
       FbCred.all.where(fb_id: fb_cred.fb_id).destroy_all
     end
     redirect_to user_path(current_user), notice: 'success'

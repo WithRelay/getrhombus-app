@@ -8,17 +8,32 @@
       read_event = event['read']
       message_event = event['message']
       # delivery_event = event['delivery']
+      create_conversation(required_params)
 
   		if params['hub.mode'].present?
   			verify_webhook
       elsif read_event.present?
         set_message_unread(event)
-      elsif 
+      elsif message_event.present?
         receive_message(required_params['id'], event)
       else 
   		end
 
   	end
+
+    def create_conversation(params)
+      current_page = FbPage.find_by_page_id params['id']
+      current_user = current_page.fb_cred.user
+      merchant_id = current_page.id
+      sender = params['messaging'][0]['sender']
+      recipient = params['messaging'][0]['recipient']
+      sender_id = sender['id']
+      recipient_id = recipient['id'] 
+      uid = (current_page.page_id == sender_id)? recipient_id : sender_id
+      unless (Conversation.find_by_uid uid).present?
+        Conversation.create(merchant_id: merchant_id, uid: uid, resolution: false)
+      end
+    end
 
     def verify_webhook
 			# verify_token: <facebook_webhook_verify_token> #use in verifying webhooks. Generated randomly by us
@@ -56,8 +71,10 @@
         new_user_id = (page_id == message_to)? message_from : message_to
         add_page_user(fb_page_id, new_user_id)        
 
-        fb_message = FbMessage.create(text: text, seq: seq, time_stamp: timestamp, unread: false, 
-          message_id: message_id, page_id: page_id, from: message_from, to: message_to, fb_page_id: fb_page_id)
+        conversation = Conversation.find_by_uid new_user_id
+        fb_message = conversation.fb_messages.create(text: text, seq: seq, time_stamp: timestamp, unread: false, 
+          message_id: message_id, page_id: page_id, from: message_from, to: message_to, 
+          fb_page_id: fb_page_id)
   			
         save_attachments(attachments, fb_message)
         fb_message.save!
