@@ -107,7 +107,7 @@
     end
 
     def set_message_unread(params)
-      messages = FbMessage.all.where(to: params['sender']['id'], unread: false)
+      messages = FbMessage.where(to: params['sender']['id'], unread: false)
       messages.update_all(unread: true)
     end
 
