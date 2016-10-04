@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161003102810) do
+ActiveRecord::Schema.define(version: 20161004063752) do
 
   create_table "addresses", force: :cascade do |t|
     t.string   "street_address",   limit: 191
@@ -98,8 +98,8 @@ ActiveRecord::Schema.define(version: 20161003102810) do
     t.integer  "merchant_id", limit: 4
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "page_id",     limit: 4
     t.boolean  "resolution",  limit: 1
+    t.string   "uid",         limit: 191
   end
 
   create_table "coupons", force: :cascade do |t|

@@ -52,11 +52,15 @@ class FbPagesController < ApplicationController
         end
       end
     end
-    fb_cred.destroy if res['success']
+    if res['success']
+      FbCred.all.where(fb_id: fb_cred.fb_id).destroy_all
+    end
     redirect_to user_path(current_user), notice: 'success'
   end
 
-  private def check_user_present
+  private 
+
+  def check_user_present
     unless current_user.present?
       redirect_to signin_path
     end
