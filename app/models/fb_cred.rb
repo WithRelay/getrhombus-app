@@ -2,7 +2,7 @@ class FbCred < ActiveRecord::Base
 
   belongs_to :user
   has_many :fb_pages, dependent: :destroy
-  validates :user_id, uniqueness: true
+  validates :user_id, uniqueness: true, :allow_nil => true
 
   def self.from_omniauth(auth, id)
     begin
@@ -42,7 +42,7 @@ class FbCred < ActiveRecord::Base
         fb_cred = FbCred.new(name: full_name, page_specific_id: new_user_id, time_zone: timezone, gender: gender, profile_pic_url: url)
       end
       
-      fb_cred.save   
+      fb_cred.save    
     rescue StandardError => err
     end
   end
