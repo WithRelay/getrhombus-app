@@ -24,7 +24,7 @@
     def create_conversation(params)
       current_page = FbPage.find_by_page_id params['id']
       current_user = current_page.fb_cred.user
-      merchant_id = current_page.id
+      merchant_id = current_user.id
       sender = params['messaging'][0]['sender']
       recipient = params['messaging'][0]['recipient']
       sender_id = sender['id']

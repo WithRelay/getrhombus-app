@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161004063752) do
+ActiveRecord::Schema.define(version: 20161005154118) do
 
   create_table "addresses", force: :cascade do |t|
     t.string   "street_address",   limit: 191
@@ -37,7 +37,7 @@ ActiveRecord::Schema.define(version: 20161004063752) do
     t.datetime "updated_at",                              null: false
   end
 
-  add_index "alerts", ["user_id"], name: "fk_rails_e6c88af678", using: :btree
+  add_index "alerts", ["user_id"], name: "fk_rails_cb1cc5bd26", using: :btree
 
   create_table "bank_accounts", force: :cascade do |t|
     t.string   "stripe_bank_account_id", limit: 191
@@ -66,7 +66,7 @@ ActiveRecord::Schema.define(version: 20161004063752) do
     t.datetime "updated_at",            null: false
   end
 
-  add_index "campaign_lists", ["campaign_id"], name: "fk_rails_4fedb81d1d", using: :btree
+  add_index "campaign_lists", ["campaign_id"], name: "fk_rails_b6b8255e7b", using: :btree
   add_index "campaign_lists", ["list_id", "campaign_id"], name: "index_campaign_lists_on_list_id_and_campaign_id", using: :btree
 
   create_table "campaigns", force: :cascade do |t|
@@ -138,7 +138,7 @@ ActiveRecord::Schema.define(version: 20161004063752) do
   add_index "fb_creds", ["user_id"], name: "index_fb_creds_on_user_id", unique: true, using: :btree
 
   create_table "fb_messages", force: :cascade do |t|
-    t.text     "text",           limit: 65535
+    t.string   "text",           limit: 191
     t.datetime "time_stamp"
     t.boolean  "unread",         limit: 1
     t.string   "message_id",     limit: 191
@@ -146,8 +146,8 @@ ActiveRecord::Schema.define(version: 20161004063752) do
     t.string   "page_id",        limit: 191
     t.string   "from",           limit: 191
     t.string   "to",             limit: 191
-    t.datetime "created_at",                   null: false
-    t.datetime "updated_at",                   null: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
     t.integer  "campaign_id",    limit: 4
     t.integer  "seq",            limit: 4
     t.integer  "fb_page_id",     limit: 4
@@ -269,12 +269,12 @@ ActiveRecord::Schema.define(version: 20161004063752) do
     t.boolean "livemode",             limit: 1
   end
 
-  add_index "invoices", ["coupon_id"], name: "fk_rails_51e50ebbef", using: :btree
+  add_index "invoices", ["coupon_id"], name: "fk_rails_fedcce6109", using: :btree
   add_index "invoices", ["stripe_invoice_id"], name: "index_invoices_on_stripe_invoice_id", using: :btree
-  add_index "invoices", ["subscription_id"], name: "fk_rails_0395d05810", using: :btree
-  add_index "invoices", ["team_id"], name: "fk_rails_7cb1624d42", using: :btree
-  add_index "invoices", ["transaction_id"], name: "fk_rails_3c8a259e1b", using: :btree
-  add_index "invoices", ["user_id"], name: "fk_rails_86df459bb7", using: :btree
+  add_index "invoices", ["subscription_id"], name: "fk_rails_308812f4ad", using: :btree
+  add_index "invoices", ["team_id"], name: "fk_rails_f5a696ef0a", using: :btree
+  add_index "invoices", ["transaction_id"], name: "fk_rails_e778afc996", using: :btree
+  add_index "invoices", ["user_id"], name: "fk_rails_c750c41601", using: :btree
 
   create_table "lists", force: :cascade do |t|
     t.datetime "created_at",             null: false
@@ -308,7 +308,7 @@ ActiveRecord::Schema.define(version: 20161004063752) do
     t.integer  "campaign_id",       limit: 4
   end
 
-  add_index "messages", ["campaign_id"], name: "fk_rails_662997caa2", using: :btree
+  add_index "messages", ["campaign_id"], name: "fk_rails_0c05b00761", using: :btree
   add_index "messages", ["hashtag_id"], name: "index_messages_on_hashtag_id", using: :btree
   add_index "messages", ["transaction_id"], name: "index_messages_on_transaction_id", using: :btree
   add_index "messages", ["user_id"], name: "index_messages_on_user_id", using: :btree
@@ -458,10 +458,10 @@ ActiveRecord::Schema.define(version: 20161004063752) do
     t.datetime "updated_at",                                                              null: false
   end
 
-  add_index "subscriptions", ["coupon_id"], name: "fk_rails_8c1125b4ad", using: :btree
-  add_index "subscriptions", ["plan_id"], name: "fk_rails_327b45de4f", using: :btree
-  add_index "subscriptions", ["team_id"], name: "fk_rails_eb7063f97d", using: :btree
-  add_index "subscriptions", ["user_id"], name: "fk_rails_aedd48cdc2", using: :btree
+  add_index "subscriptions", ["coupon_id"], name: "fk_rails_471a5a04bc", using: :btree
+  add_index "subscriptions", ["plan_id"], name: "fk_rails_b4a6bbe477", using: :btree
+  add_index "subscriptions", ["team_id"], name: "fk_rails_964e33f8f8", using: :btree
+  add_index "subscriptions", ["user_id"], name: "fk_rails_a471731a89", using: :btree
 
   create_table "transactions", force: :cascade do |t|
     t.datetime "created_at"
@@ -500,7 +500,7 @@ ActiveRecord::Schema.define(version: 20161004063752) do
   add_index "transactions", ["hashtag_id"], name: "index_transactions_on_hashtag_id", using: :btree
   add_index "transactions", ["referenced_customer_transaction_id"], name: "index_transactions_on_referenced_customer_transaction_id", using: :btree
   add_index "transactions", ["subscription_id"], name: "index_transactions_on_subscription_id", using: :btree
-  add_index "transactions", ["team_id"], name: "fk_rails_83b3b3c0bb", using: :btree
+  add_index "transactions", ["team_id"], name: "fk_rails_aefef7a649", using: :btree
   add_index "transactions", ["txn_number"], name: "index_transactions_on_txn_number", using: :btree
   add_index "transactions", ["user_id"], name: "index_transactions_on_user_id", using: :btree
 
@@ -536,8 +536,9 @@ ActiveRecord::Schema.define(version: 20161004063752) do
 
   create_table "user_lists", force: :cascade do |t|
     t.integer  "user_id",    limit: 4
-    t.datetime "created_at",           null: false
-    t.datetime "updated_at",           null: false
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+    t.string   "list_name",  limit: 191
     t.integer  "list_id",    limit: 4
   end
 
