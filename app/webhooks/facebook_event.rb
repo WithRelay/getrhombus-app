@@ -2,7 +2,7 @@
     
   class << self
 
-  	def process_event(params)
+    def process_event(params)
       required_params = params['entry'].last
       event = required_params['messaging'].last
       read_event = event['read']
@@ -10,16 +10,16 @@
       # delivery_event = event['delivery']
       create_conversation(required_params)
 
-  		if params['hub.mode'].present?
-  			verify_webhook
+      if params['hub.mode'].present?
+        verify_webhook
       elsif read_event.present?
         set_message_unread(event)
       elsif message_event.present?
         receive_message(required_params['id'], event)
       else 
-  		end
+      end
 
-  	end
+    end
 
     def create_conversation(params)
       current_page = FbPage.find_by_page_id params['id']
@@ -36,26 +36,26 @@
     end
 
     def verify_webhook
-			# verify_token: <facebook_webhook_verify_token> #use in verifying webhooks. Generated randomly by us
+      # verify_token: <facebook_webhook_verify_token> #use in verifying webhooks. Generated randomly by us
 
-			#access token below is the page access token unique to an app(Rhombus) an admin(Taiwo) and a FB page(shelflet)
-			#It is gotten as part the response to calling the /me/accounts?access_token (see below) using the access token gotten during
-			#fb authentication
-			# subscription request: curl -ik -X POST "https://graph.facebook.com/v2.6/me/subscribed_apps?access_token="
+      #access token below is the page access token unique to an app(Rhombus) an admin(Taiwo) and a FB page(shelflet)
+      #It is gotten as part the response to calling the /me/accounts?access_token (see below) using the access token gotten during
+      #fb authentication
+      # subscription request: curl -ik -X POST "https://graph.facebook.com/v2.6/me/subscribed_apps?access_token="
 
 
-			#access token below is the token given as part
-			#of credentials during after successful authentication if requesting permissions for  pages_show_list or manage_pages
-			# to get page access tokens for all the user's pages : https://graph.facebook.com/v2.6/me/accounts?access_token= 
+      #access token below is the token given as part
+      #of credentials during after successful authentication if requesting permissions for  pages_show_list or manage_pages
+      # to get page access tokens for all the user's pages : https://graph.facebook.com/v2.6/me/accounts?access_token= 
 
-	    if @params['hub.mode'] == 'subscribe' && @params['hub.verify_token'] == "<facebook_webhook_verify_token>"
-	      return @params['hub.challenge']
-	    end	  	
-	  	
-	  	{}
-		end
+      if @params['hub.mode'] == 'subscribe' && @params['hub.verify_token'] == "<facebook_webhook_verify_token>"
+        return @params['hub.challenge']
+      end     
+      
+      {}
+    end
 
-		def receive_message(page_id, params)
+    def receive_message(page_id, params)
       begin
         message = params['message']
         attachments = message['attachments']
@@ -75,13 +75,13 @@
         fb_message = conversation.fb_messages.create(text: text, seq: seq, time_stamp: timestamp, unread: false, 
           message_id: message_id, page_id: page_id, from: message_from, to: message_to, 
           fb_page_id: fb_page_id)
-  			
+        
         save_attachments(attachments, fb_message)
         fb_message.save!
       rescue StandardError => err
         nil
       end
-		end 
+    end 
 
     # set datetime in utc
     def set_timestamp(timestamp)
@@ -97,12 +97,22 @@
     end
 
     def save_attachments(attachments, fb_message)
+      invalid_file = ""
       if attachments.present?
         attachments.each do |a|
           url = a['payload']['url']
-          image = fb_message.images.new
-          image.avatar_from_remote_url(url)
+          file_extension = File.extname(URI.parse(url).path).downcase
+          if %w{.jpg .png .jpeg .gif .bmp}.include?(file_extension)
+            image = fb_message.images.new
+            image.avatar_from_remote_url(url)
+          else
+            invalid_file = file_extension
+          end
         end
+      end
+
+      if invalid_file.present?
+        notify_invalid_attachment(fb_message.page_id, fb_message.from, fb_message.to)
       end
     end
 
@@ -111,5 +121,19 @@
       messages.update_all(unread: true)
     end
 
+    def notify_invalid_attachment(page_id, sender_id, recipient_id)
+      page = FbPage.find_by_page_id page_id
+      if page_id != sender_id
+        user = FbCred.find_by_page_specific_id sender_id
+        to = sender_id
+      else
+        user = page.fb_cred
+        to = recipient_id
+      end
+      user_name = user.name.split.first
+      page_access_token = page.page_access_token
+      text = "Sorry #{user_name}, currently we only support image file attachments"
+      FacebookMessengerService.send_text_message(page_access_token, to, text)      
+    end
   end
 end
