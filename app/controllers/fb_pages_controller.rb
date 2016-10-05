@@ -52,8 +52,8 @@ class FbPagesController < ApplicationController
         end
       end
     end
-    if response['success']
-      FbCred.all.where(fb_id: fb_cred.fb_id).destroy_all
+    if response['success'] || fb_pages.empty? || FbPage.where(subscription_status: true).empty?
+      FbCred.where(fb_id: fb_cred.fb_id).destroy_all
     end
     redirect_to user_path(current_user), notice: 'success'
   end
@@ -64,5 +64,9 @@ class FbPagesController < ApplicationController
     unless current_user.present?
       redirect_to signin_path
     end
+    unless current_user.fb_cred.present?
+      redirect_to user_path(current_user)
+    end
   end
+
 end
