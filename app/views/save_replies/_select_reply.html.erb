@@ -6,12 +6,12 @@
   <hr>
   <% @options = saved_replies_list.keys %>
   <%= bootstrap_form_tag do |f|%>
-    <%= f.select  :title, options_for_select(@options), class: "title_select", prompt: "Select saved reply..." %>
+    <%= f.select  :title, options_for_select(@options), class: "title_select", prompt: "Select saved reply" %>
     <br>
-    <%= f.text_area :body, class: 'select_body', placeholder: 'View saved reply...', param: @replies %>
+    <%= f.text_area :body, id: 'trumbowyg', class: 'select_body', placeholder: 'View saved reply', param: @replies %>
     <br>
     <%= f.button "Cancel", type: :reset %>
-    <%= f.submit :submit, label: "Save", class: 'reply_submit' %>
+    <%= f.submit 'Send Reply', class: 'reply_submit' %>
   <% end %>
 
 </div>
