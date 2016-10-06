@@ -2,14 +2,12 @@ class Message < ActiveRecord::Base
 
 	belongs_to :txn, :foreign_key => :transaction_id, :class_name => :Transaction
   belongs_to :hashtag
-  belongs_to :campaign
   # for image table relation
   has_many :image_refs, as: :imageable, dependent: :destroy
 	has_many :images, through: :image_refs
   # for conversation
   has_many :conversation_refs, as: :textable, dependent: :destroy
   has_many :conversations, through: :conversation_refs
-  accepts_nested_attributes_for :images
 	# belongs_to :user, counter_cache: true
 	# For sending and saving all outbound text messages
 	def self.send_and_save_message(from, to, message, media_url = "")
