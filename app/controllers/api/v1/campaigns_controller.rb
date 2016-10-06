@@ -6,14 +6,16 @@ class Api::V1::CampaignsController < API::V1::BaseController
 	end
 
   def upload_images
-    image = Image.new(avatar: params[:image])
-    if image.save
-      render json: {
-        href: image.avatar.url, type: image.avatar_content_type.split('/').first,
-        name: image.avatar_file_name
-      }
+    if valid_uploaded_images(params[:image])
+      image = Image.new(avatar: params[:image])
+      if image.save
+        render json: { type: image.avatar_content_type.split('/').first,
+                       name: image.avatar_file_name, id: image.id }
+      else
+        render json: { status: 401, message: 'sorry file could not upload' }
+      end
     else
-      render json: { status: 401, message: 'sorry file could not upload' }
+      render json: { status: 401, message: 'sorry file type/size is not supported' }
     end
   end
 end
