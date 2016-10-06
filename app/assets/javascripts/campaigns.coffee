@@ -92,6 +92,9 @@ $( document ).on 'ready page:load', ->
     if window.invalid_image
       alert 'Please upload image format with jpg/jpef/png less than 4.5 mb'
       e.preventDefault()
+    else
+      getBase64FromImageUrl($('input[name=url]').val())
+
 
   if $('#campaign_channel').val()=='3'
     new CustomTrumbowygPlugin('#trumbowyg')
@@ -112,3 +115,18 @@ $( document ).on 'ready page:load', ->
 
   $( '#oneTimeFrequency, #deliverNow' ).click ->
     campaign.hideShowScheduler()
+
+  getBase64FromImageUrl = (url) ->
+    img = new Image
+    img.setAttribute 'crossOrigin', 'anonymous'
+    img.onload = ->
+      canvas = document.createElement('canvas')
+      canvas.width = this.width
+      canvas.height = this.height
+      ctx = canvas.getContext('2d')
+      ctx.drawImage this, 0, 0
+      dataURL = canvas.toDataURL('image/png')
+      $('.trumbowyg-editor img').last().attr('src', dataURL)
+      return
+    img.src = url
+    return
