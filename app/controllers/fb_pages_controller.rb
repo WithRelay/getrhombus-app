@@ -22,9 +22,9 @@ class FbPagesController < ApplicationController
       if(response["success"])
         page.update_attributes(subscription_status: true)
       end
-      redirect_to user_path(current_user), notice: 'success'
+      redirect_to user_fb_pages_path(current_user), notice: 'success'
     else
-      redirect_to user_path(current_user), error: 'fail'
+      redirect_to user_fb_pages_path(current_user), error: 'fail'
     end
   end
 
@@ -35,9 +35,9 @@ class FbPagesController < ApplicationController
       if(response['success'])
         page.update_attributes(subscription_status: false)
       end
-      redirect_to user_path(current_user), notice: 'success'
+      redirect_to user_fb_pages_path(current_user), notice: 'success'
     else
-      redirect_to user_path(current_user), error: 'fail'
+      redirect_to user_fb_pages_path(current_user), error: 'fail'
     end
   end
 
@@ -61,12 +61,10 @@ class FbPagesController < ApplicationController
   private 
 
   def check_user_present
-    unless current_user.present?
+    if current_user.nil?
       redirect_to signin_path
-    end
-    unless current_user.fb_cred.present?
+    elsif current_user.fb_cred.nil?
       redirect_to user_path(current_user)
     end
   end
-
 end
