@@ -15,13 +15,13 @@ class SaveRepliesController < ApplicationController
     else
       flash[:error] = 'Can not save Reply'   
     end
-    redirect_to user_path(current_user)
+    redirect_to user_save_replies_path
   end
 
   def destroy
     save_reply = current_user.save_replies.find_by_id params[:id]
     save_reply.destroy
-    redirect_to user_path(current_user)
+    redirect_to user_save_replies_path
   end
 
   private

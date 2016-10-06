@@ -2,15 +2,15 @@
 
 <%= form_for save_reply, url: user_save_replies_path(current_user) do |f| %>
 
-  <%= f.label :Title %>
-  <%= f.text_field :title %>
+  <%= f.label :Title, class: 'title' %>
+  <%= f.text_field :title, required: true%>
   
   <br>
   <br>
 
-  <%= f.label :Body %>
+  <%= f.label :Body, class: 'body' %>
 
-  <%= f.text_area :body %>
-
-  <%= f.submit 'Create' %>
+  <%= f.text_area :body, :required => true %>
+  <%= f.button "Cancel", type: :reset %>
+  <%= f.submit :submit, class: "btn btn-warning btn-small", label: "Save" %>
 <% end %>
