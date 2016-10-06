@@ -18,10 +18,9 @@ class @CustomTrumbowygPlugin
         fileFieldName: 'image'
         urlPropertyName: 'data.link'
         success: (data, trumbowyg, modal)->
-          if data.name
-            if data.type == 'image'
+          if data.status == 200
+            if data.message == 'success'
               trumbowyg.execCmd 'insertImage', window.target_result
-              $('#new_campaign').append("<input type='hidden' name='campaign[image_id][]' value='"+ data.id + "'>")
             else
               link = $(['<a href="' + data.href +'">' + data.name + '</a>'].join(''))
               trumbowyg.range.insertNode link[0]
