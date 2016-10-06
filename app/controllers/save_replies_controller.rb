@@ -1,16 +1,17 @@
 class SaveRepliesController < ApplicationController
+  before_action :check_user_present
+
   def new
     @save_reply = current_user.save_replies.build
   end
 
   def index
     @save_replies = current_user.save_replies
-    @save_reply = current_user.save_replies.build
   end
 
   def create
     @save_reply = current_user.save_replies.build(save_reply_params)
-     if @save_reply.save
+    if @save_reply.save
       flash[:notice] = 'Saves successfully'
     else
       flash[:error] = 'Can not save Reply'   
@@ -27,5 +28,11 @@ class SaveRepliesController < ApplicationController
   private
   def save_reply_params
     params.require(:save_reply).permit(:title, :body)
+  end
+
+  def check_user_present
+    if current_user.nil?
+      redirect_to signin_path
+    end
   end
 end

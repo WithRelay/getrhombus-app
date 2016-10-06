@@ -1,6 +1,5 @@
-
 <h1>Saved Replies</h1>
-
+<% saved_replies_hash = saved_replies_list %>
 <table>
   <tr>
     <th>Id</th>
@@ -9,14 +8,12 @@
     <th></th>    
   </tr>
 <% @save_replies.each do |reply| %>
-  <% if reply.id.present? %>
-    <tr>
-      <td><%= reply.id %></td>
-      <td><%= reply.title %></td>
-      <td><%= reply.body %></td>
-      <td><%= link_to 'Destroy',[reply.user, reply], confirm: 'Are you sure?', method: :delete %></td>
-    </tr>
-  <% end %>
+  <tr>
+    <td><%= reply.id %></td>
+    <td><%= reply.title %></td>
+    <td><%= reply.body %></td>
+    <td><%= link_to 'Destroy',[reply.user, reply], confirm: 'Are you sure?', method: :delete %></td>
+  </tr>
 <% end %>
 </table>
 

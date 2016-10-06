@@ -13,6 +13,8 @@ gem "devise"
 gem 'momentjs-rails'
 # Date Range Picker for Twitter Bootstrap
 gem 'bootstrap-daterangepicker-rails'
+gem 'bootstrap_form'
+
 # resque
 gem 'resque', :require => "resque/server"
 gem 'resque-scheduler', :require => "resque/scheduler/server"

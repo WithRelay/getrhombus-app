@@ -1,6 +1,6 @@
 <h1>Save new Reply</h1>
 
-<%= form_for save_reply, url: user_save_replies_path(current_user) do |f| %>
+<%= form_for SaveReply.new, url: user_save_replies_path(current_user) do |f| %>
 
   <%= f.label :Title, class: 'title' %>
   <%= f.text_field :title, required: true%>
@@ -12,5 +12,5 @@
 
   <%= f.text_area :body, :required => true %>
   <%= f.button "Cancel", type: :reset %>
-  <%= f.submit :submit, class: "btn btn-warning btn-small", label: "Save" %>
+  <%= f.submit   :submit, class: "btn btn-warning btn-small", label: "Save" %>
 <% end %>
