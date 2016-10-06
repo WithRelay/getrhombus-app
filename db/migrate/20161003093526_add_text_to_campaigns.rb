@@ -1,6 +1,6 @@
 class AddTextToCampaigns < ActiveRecord::Migration
   def up
-    add_column :campaigns, :text, :text
+    add_column :campaigns, :text, :longtext
     remove_column :messages, :campaign_id, :integer
   end
 
