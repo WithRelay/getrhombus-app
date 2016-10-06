@@ -29,11 +29,9 @@
           <%= present(campaign).format_date_time %>
         </td>
         <td>
-          <% campaign.messages.each do |message| %>
-            <%= message.text.html_safe if message.text.present? %>
-            <% message.images.each do |image| %>
+          <%= campaign.text.html_safe %>
+            <% campaign.images.each do |image| %>
               <%= image_tag image.avatar.url %>
-            <% end %>
           <% end %>
         </td>
         <td>
