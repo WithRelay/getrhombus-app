@@ -64,9 +64,6 @@ class CampaignsController < ApplicationController
   end
 
   def save_campaign_images(campaign)
-    image_params[:image_id].each do |image_id|
-      campaign.image_refs.build(image_id: image_id)
-    end if image_params[:image_id].present?
     image_params[:avatar].each do |image|
       campaign.images.build(avatar: image)
     end if image_params[:avatar].present?
@@ -82,6 +79,6 @@ class CampaignsController < ApplicationController
   end
 
   def image_params
-    params.require(:campaign).permit(image_id: [], avatar:[])
+    params.require(:campaign).permit(avatar:[])
   end
 end
