@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161005154118) do
+ActiveRecord::Schema.define(version: 20161006083854) do
 
   create_table "addresses", force: :cascade do |t|
     t.string   "street_address",   limit: 191
@@ -404,6 +404,16 @@ ActiveRecord::Schema.define(version: 20161005154118) do
 
   add_index "refunds", ["transaction_id"], name: "index_refunds_on_transaction_id", using: :btree
 
+  create_table "save_replies", force: :cascade do |t|
+    t.string   "title",      limit: 191
+    t.text     "body",       limit: 65535
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
+    t.integer  "user_id",    limit: 4
+  end
+
+  add_index "save_replies", ["user_id"], name: "index_save_replies_on_user_id", using: :btree
+
   create_table "segments", force: :cascade do |t|
     t.string  "name",    limit: 191
     t.string  "query",   limit: 191
@@ -628,6 +638,7 @@ ActiveRecord::Schema.define(version: 20161005154118) do
   add_foreign_key "messages", "hashtags"
   add_foreign_key "plans", "users"
   add_foreign_key "refunds", "transactions"
+  add_foreign_key "save_replies", "users"
   add_foreign_key "segments", "users"
   add_foreign_key "subscriptions", "coupons"
   add_foreign_key "subscriptions", "plans"
