@@ -6,7 +6,8 @@ class CampaignJob < ActiveJob::Base
     campaign = Campaign.find_by_id(campaign_id)
     if campaign.present?
       campaign.update_attributes(status: 3)
-      # TODO task remain to integrate with mandrill for sending emails
+      email_list = Campaign.first.lists.map{|list| {email: list.user.email } if list.user.present? }
+      EmailingService.send_email_campaign({ html: campaign.text, to: email_list }) if email_list.present?
     end
   end
 end
