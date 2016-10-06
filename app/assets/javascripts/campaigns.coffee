@@ -72,6 +72,26 @@ class Campaign
 $( document ).on 'ready page:load', ->
   campaign = new Campaign( { pickerPosition: 'right', tonesStyle: 'bullet' })
   campaign.datePicker(new DatePicker( '.daterange' ))
+  $(document).on 'change', 'input[name=file]', ->
+    uploadedImage = new ImageValidator
+    uploadedImage.imageObj = this.files[0]
+    if !uploadedImage.validateImage()
+      alert 'Only image file formats with extension: jpg, jpeg, png, PNG, JPG, JPEG are allowed.'
+      window.invalid_image = true
+    else if !uploadedImage.validateSize()
+      alert 'invalid upload size. Please upload image of size less then 4 MB'
+      window.invalid_image = true
+    else
+      reader = new FileReader
+      reader.onload = (e) ->
+        window.target_result = e.target.result
+        window.invalid_image = false
+      reader.readAsDataURL this.files[0]
+
+  $(document).on 'click', 'form .trumbowyg-modal-submit',(e) ->
+    if window.invalid_image
+      alert 'Please upload image format with jpg/jpef/png less than 4.5 mb'
+      e.preventDefault()
 
   if $('#campaign_channel').val()=='3'
     new CustomTrumbowygPlugin('#trumbowyg')
