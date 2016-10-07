@@ -12,7 +12,7 @@ Rails.application.routes.draw  do
   get 'contact' => 'contact_forms#new'
 
   post 'lists/create_new_list' => 'lists#create_new_list'
-  get 'customer_lists/remove_user' => 'customer_lists#remove_user'
+  get 'user_lists/remove_user' => 'user_lists#remove_user'
   get 'fb_pages/remove_integration' => 'fb_pages#remove_integration'
   # get 'link_facebook' => 'link_fb_accounts#link_facebook'
 

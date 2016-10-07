@@ -66,7 +66,6 @@ ActiveRecord::Schema.define(version: 20161007034014) do
     t.datetime "updated_at",            null: false
   end
 
-  add_index "campaign_lists", ["campaign_id"], name: "fk_rails_dbbd16d754", using: :btree
   add_index "campaign_lists", ["list_id", "campaign_id"], name: "index_campaign_lists_on_list_id_and_campaign_id", using: :btree
 
   create_table "campaigns", force: :cascade do |t|
@@ -281,8 +280,8 @@ ActiveRecord::Schema.define(version: 20161007034014) do
   create_table "lists", force: :cascade do |t|
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
-    t.integer  "user_id",    limit: 4
     t.string   "name",       limit: 191
+    t.integer  "user_id",    limit: 4
     t.boolean  "segment",    limit: 1
   end
 
@@ -630,7 +629,6 @@ ActiveRecord::Schema.define(version: 20161007034014) do
   add_foreign_key "invoices", "coupons"
   add_foreign_key "invoices", "subscriptions"
   add_foreign_key "invoices", "transactions"
-  add_foreign_key "invoices", "users"
   add_foreign_key "invoices", "users", column: "team_id"
   add_foreign_key "lists", "users"
   add_foreign_key "messages", "hashtags"
@@ -640,7 +638,6 @@ ActiveRecord::Schema.define(version: 20161007034014) do
   add_foreign_key "segments", "users"
   add_foreign_key "subscriptions", "coupons"
   add_foreign_key "subscriptions", "plans"
-  add_foreign_key "subscriptions", "users"
   add_foreign_key "subscriptions", "users", column: "team_id"
   add_foreign_key "transactions", "hashtags"
   add_foreign_key "transactions", "subscriptions"
