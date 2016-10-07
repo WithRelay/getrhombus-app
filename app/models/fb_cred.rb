@@ -2,6 +2,7 @@ class FbCred < ActiveRecord::Base
 
   belongs_to :user
   has_many :fb_pages, dependent: :destroy
+  validates :user_id, uniqueness: true, :allow_nil => true
 
   def self.from_omniauth(auth, id)
     begin
@@ -30,18 +31,18 @@ class FbCred < ActiveRecord::Base
       timezone = ActiveSupport::TimeZone.new(user_data['timezone']).tzinfo.name
       gender = user_data['gender']
       link_response = link_page_specific_user(url)
-
+      # welcome_text = "Welcome #{full_name} to Rhombus-Message Commerce platform"
       if link_response.present?
+        # FacebookMessengerService.send_text_message(page_access_token, new_user_id, welcome_text)
+        # FacebookMessengerService.send_attachment(page_access_token, new_user_id, 'image', 'http://www.compustarltd.com/wp-content/uploads/2015/11/welcome.png')
         fb_cred = FbCred.new(name: full_name, page_specific_id: new_user_id, email: link_response[:email], fb_id: link_response[:fb_id],
           time_zone: timezone, gender: gender, profile_pic_url: url)
       else 
+        # FacebookMessengerService.send_auth_link(page_access_token, new_user_id, welcome_text, 'route')
         fb_cred = FbCred.new(name: full_name, page_specific_id: new_user_id, time_zone: timezone, gender: gender, profile_pic_url: url)
       end
-      # welcome_text = "Welcome #{full_name} to Rhombus-The Message Commerce platform"
-      # FacebookMessengerService.send_text_message(page_access_token, new_user_id, welcome_text)
-      # FacebookMessengerService.send_attachment(page_access_token, new_user_id, 'image', 'http://www.compustarltd.com/wp-content/uploads/2015/11/welcome.png')
-      # FacebookMessengerService.send_auth_link(page_access_token, new_user_id, welcome_text)
-      fb_cred.save   
+      
+      fb_cred.save    
     rescue StandardError => err
     end
   end
@@ -49,7 +50,7 @@ class FbCred < ActiveRecord::Base
   private
   
   # extract user identifier from profile picture
-  def self.extract_profile_pic_identification(pic_url)
+  def self.extract_profile_pic_identifier(pic_url)
     url = pic_url.match(/^.+\/[\w:]+\.(jpe?g|png|gif)/i).to_a.first
     name = url.split('/').last
     name_array = name.split('_')
@@ -62,11 +63,10 @@ class FbCred < ActiveRecord::Base
   #link facebook page specific user to Merchant
   def self.link_page_specific_user(pic_url)
     response = {}
-    user_identifier = extract_profile_pic_identification(pic_url)
+    user_identifier = extract_profile_pic_identifier(pic_url)
     all_user_fb_cred = FbCred.where.not('user_id' => nil)
     all_user_fb_cred.each do |cred|
-
-      if extract_profile_pic_identification(cred.profile_pic_url) == user_identifier
+      if extract_profile_pic_identifier(cred.profile_pic_url) == user_identifier
         response = { fb_id: cred.fb_id, email: cred.email }
       end      
     end  

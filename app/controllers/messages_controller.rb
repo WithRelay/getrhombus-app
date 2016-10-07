@@ -49,6 +49,8 @@ class MessagesController < ApplicationController
     end
   end
 
+  def message_dashboard
+  end
 
 	private
 	

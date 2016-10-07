@@ -14,6 +14,7 @@ Rails.application.routes.draw  do
   post 'lists/create_new_list' => 'lists#create_new_list'
   get 'user_lists/remove_user' => 'user_lists#remove_user'
   get 'fb_pages/remove_integration' => 'fb_pages#remove_integration'
+  # get 'link_facebook' => 'link_fb_accounts#link_facebook'
 
   resources :lists do
     resources :customer_lists
@@ -26,6 +27,7 @@ Rails.application.routes.draw  do
   }
 
   match "send_mms_from_dashboard" => 'messages#dashboard_mms', via: [:post]
+  get 'messaging-dashboard' => 'messages#message_dashboard'
 
   ## events/hooks routes
   constraints subdomain: "hooks" do
@@ -59,6 +61,7 @@ Rails.application.routes.draw  do
     resources :subscriptions, except: [:show, :edit, :update]
     resources :plans, only: [:create, :index, :new]
     resources :alerts, only: [:update]
+    resources :save_replies, only: [:new, :create, :index, :destroy]
     resources :bank_accounts
     resources :addresses
     resources :people
