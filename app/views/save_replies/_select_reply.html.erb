@@ -22,8 +22,10 @@
     var title = $(this).val();
     var replies = JSON.parse($('.select_body').attr('param'));
     var body = replies[title];
+    $('.select_body#trumbowyg').val('');
+    $('.emojionearea-editor').empty()
     $('.select_body#trumbowyg').val(body);
-    $('.emojionearea-editor').append(body)
+    $('.emojionearea-editor').append(body);
 
   });
 
