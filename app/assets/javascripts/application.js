@@ -34,5 +34,5 @@
 //= require trumbowyg.min
 //= require trumbowyg.upload.min
 //= require emojionearea
-//= require jquery.atwho.min
+//= require jquery.atwho
 //= require jquery.caret
