@@ -1,16 +1,5 @@
 $( document ).ready(function() {
   "use strict";
-  setTimeout(function() {
-      toastr.options = {
-          closeButton: true,
-          progressBar: true,
-          showMethod: 'slideDown',
-          timeOut: 4000
-      };
-      toastr.success('A Message Commerse Platform', 'Welcome to GETRHOMBUS');
-
-  }, 1300);
-
   var index = 1;
   if ($('#select_page').length > 0){
     check_status($('#select_page').val().split(' ')[index]);
