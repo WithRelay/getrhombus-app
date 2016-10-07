@@ -3,6 +3,9 @@ class API::V1::BaseController < ApplicationController
   # before_action :http_basic_authentication
   # do current_user or token test here and set as current_user
 
+  ALLOWED_MIME_TYPE = %w(image/jpg, image/png, image/jpeg)
+  ALLOWED_SIZE_IN_BYTES  = 4718592
+
   before_action :cors_preflight_check
   after_action :cors_set_access_control_headers
 
@@ -19,7 +22,6 @@ class API::V1::BaseController < ApplicationController
       headers['Access-Control-Allow-Methods'] = 'POST, GET, PUT, DELETE, OPTIONS'
       headers['Access-Control-Allow-Headers'] = 'X-Requested-With, X-Prototype-Version, Token'
       headers['Access-Control-Max-Age'] = '1728000'
-
       render :text => '', :content_type => 'text/plain'
     end
   end
@@ -27,4 +29,11 @@ class API::V1::BaseController < ApplicationController
   def find_image(find_by_hash)
      ImageRef.where(find_by_hash).first
   end
+
+  def valid_uploaded_images(image)
+    (ALLOWED_MIME_TYPE.include?(image.content_type) && (image.size < ALLOWED_SIZE_IN_BYTES))
+  end
+
+
+
 end

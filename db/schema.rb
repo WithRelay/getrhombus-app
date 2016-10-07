@@ -10,7 +10,6 @@
 # you'll amass, the slower it'll run and the greater likelihood for issues).
 #
 # It's strongly recommended that you check this file into your version control system.
-
 ActiveRecord::Schema.define(version: 20161007034014) do
 
   create_table "addresses", force: :cascade do |t|
@@ -66,19 +65,19 @@ ActiveRecord::Schema.define(version: 20161007034014) do
     t.datetime "updated_at",            null: false
   end
 
-  add_index "campaign_lists", ["campaign_id"], name: "fk_rails_0c38374478", using: :btree
   add_index "campaign_lists", ["list_id", "campaign_id"], name: "index_campaign_lists_on_list_id_and_campaign_id", using: :btree
 
   create_table "campaigns", force: :cascade do |t|
     t.integer  "channel",        limit: 4
-    t.integer  "status",         limit: 4,   default: 1
-    t.datetime "created_at",                             null: false
-    t.datetime "updated_at",                             null: false
+    t.integer  "status",         limit: 4,          default: 1
+    t.datetime "created_at",                                    null: false
+    t.datetime "updated_at",                                    null: false
     t.integer  "user_id",        limit: 4
     t.string   "delivery_type",  limit: 191
     t.string   "repeat_days",    limit: 191
-    t.string   "frequency_type", limit: 191
+    t.integer  "frequency_type", limit: 4
     t.datetime "date_time"
+    t.text     "text",           limit: <redacted_phone_number>
   end
 
   add_index "campaigns", ["id", "user_id"], name: "index_campaigns_on_id_and_user_id", using: :btree
@@ -305,10 +304,12 @@ ActiveRecord::Schema.define(version: 20161007034014) do
     t.string   "num_segments",      limit: 191
     t.string   "price_unit",        limit: 191
     t.integer  "hashtag_id",        limit: 4
-    t.integer  "campaign_id",       limit: 4
   end
 
+<<<<<<< HEAD
   add_index "messages", ["campaign_id"], name: "fk_rails_2ee3dbcd82", using: :btree
+=======
+>>>>>>> 2db2887d6499544d1b5400057c75e6a398bdaab4
   add_index "messages", ["hashtag_id"], name: "index_messages_on_hashtag_id", using: :btree
   add_index "messages", ["transaction_id"], name: "index_messages_on_transaction_id", using: :btree
   add_index "messages", ["user_id"], name: "index_messages_on_user_id", using: :btree
@@ -633,7 +634,6 @@ ActiveRecord::Schema.define(version: 20161007034014) do
   add_foreign_key "invoices", "users"
   add_foreign_key "invoices", "users", column: "team_id"
   add_foreign_key "lists", "users"
-  add_foreign_key "messages", "campaigns"
   add_foreign_key "messages", "hashtags"
   add_foreign_key "plans", "users"
   add_foreign_key "refunds", "transactions"

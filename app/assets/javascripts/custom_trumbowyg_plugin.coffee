@@ -5,27 +5,10 @@ class @CustomTrumbowygPlugin
     $(element).trumbowyg
       svgPath: root_url + '/assets/icons.svg'
       btnsDef: image:
-        dropdown: [
-          'insertImage'
-          'upload'
-        ]
+        dropdown: [ 'insertImage', 'upload' ]
         ico: 'insertImage'
-      btns: [
-        [ 'viewHTML' ]
-        [
-          'undo'
-          'redo'
-        ]
-        [ 'formatting' ]
-        'btnGrp-design'
-        [ 'link' ]
-        [ 'image' ]
-        'btnGrp-justify'
-        'btnGrp-lists'
-        [
-          'foreColor'
-          'backColor'
-        ]
+      btns: [ [ 'viewHTML' ], [ 'undo', 'redo'], [ 'formatting' ], 'btnGrp-design', [ 'link' ]
+        [ 'image' ], 'btnGrp-justify', 'btnGrp-lists', [ 'foreColor', 'backColor']
         [ 'preformatted' ]
         [ 'horizontalRule' ]
         [ 'fullscreen' ]
@@ -35,18 +18,11 @@ class @CustomTrumbowygPlugin
         fileFieldName: 'image'
         urlPropertyName: 'data.link'
         success: (data, trumbowyg, modal)->
-          if data.name
-            if data.type == 'image'
-              trumbowyg.execCmd 'insertImage', data.href
-              $('img[src="' + data.href + '"]:not([alt])', trumbowyg.$box).attr 'alt', data.name
+          if data.status == 200
+            if data.message == 'success'
+              trumbowyg.execCmd 'insertImage', window.target_result
             else
-              link = $([
-                '<a href="'
-                data.href
-                '">'
-                data.name
-                '</a>'
-              ].join(''))
+              link = $(['<a href="' + data.href +'">' + data.name + '</a>'].join(''))
               trumbowyg.range.insertNode link[0]
             setTimeout (->
               trumbowyg.closeModal()
