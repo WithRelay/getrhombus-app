@@ -10,7 +10,7 @@
     <br>
     <%= f.text_area :body, id: 'trumbowyg', class: 'select_body', placeholder: 'View saved reply', param: @replies %>
     <br>
-    <%= f.button "Cancel", type: :reset %>
+    <%= f.button "Cancel", type: :reset, class: 'reply_cancel' %>
     <%= f.submit 'Send Reply', class: 'reply_submit' %>
   <% end %>
 
@@ -22,7 +22,13 @@
     var title = $(this).val();
     var replies = JSON.parse($('.select_body').attr('param'));
     var body = replies[title];
-    $('.select_body').val(body);
+    $('.select_body#trumbowyg').val(body);
+    $('.emojionearea-editor').append(body)
+
+  });
+
+  $('.reply_cancel').click(function() {
+    $('.emojionearea-editor').empty()   
   });
 
   $(document).on('click', '.reply_submit', function() { 
