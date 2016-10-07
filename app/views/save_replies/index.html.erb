@@ -11,11 +11,13 @@
   <tr>
     <td><%= reply.id %></td>
     <td><%= reply.title %></td>
-    <td><%= reply.body %></td>
+    <td style="white-space: pre-line;"><%= reply.body %></td>
     <td><%= link_to 'Destroy',[reply.user, reply], confirm: 'Are you sure?', method: :delete %></td>
   </tr>
 <% end %>
 </table>
 
+<!-- form for create new save reply -->
 <%= render partial: 'form', locals: { save_reply: @save_reply } %>
-<%= render partial: 'select_reply' %>
+<!-- for select saved reply form-->
+<%#= render partial: 'select_reply' %>

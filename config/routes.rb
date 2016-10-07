@@ -27,6 +27,7 @@ Rails.application.routes.draw  do
   }
 
   match "send_mms_from_dashboard" => 'messages#dashboard_mms', via: [:post]
+  get 'messaging-dashboard' => 'messages#message_dashboard'
 
   ## events/hooks routes
   constraints subdomain: "hooks" do
