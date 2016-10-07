@@ -95,7 +95,6 @@ $( document ).on 'ready page:load', ->
     else
       getBase64FromImageUrl($('input[name=url]').val())
 
-
   if $('#campaign_channel').val()=='3'
     new CustomTrumbowygPlugin('#trumbowyg')
     $('.trumbowyg-editor').counter
@@ -119,14 +118,18 @@ $( document ).on 'ready page:load', ->
   getBase64FromImageUrl = (url) ->
     img = new Image
     img.setAttribute 'crossOrigin', 'anonymous'
-    img.onload = ->
+    img.onload = (e)->
       canvas = document.createElement('canvas')
       canvas.width = this.width
       canvas.height = this.height
       ctx = canvas.getContext('2d')
       ctx.drawImage this, 0, 0
-      dataURL = canvas.toDataURL('image/png')
-      $('.trumbowyg-editor img').last().attr('src', dataURL)
+      dataURL = canvas.toDataURL("image/png");
+      new_url = dataURL.replace(/^data:image\/(png|jpg);base64,/, "data:image/jpeg;base64,");
+      trumbowygHtml =  $('#trumbowyg').trumbowyg('html')
+      lastSrc = $('#trumbowyg').trumbowyg('html').split('src=').pop()
+      newHtml = trumbowygHtml.replace(lastSrc, new_url + '>');
+      $('#trumbowyg').trumbowyg('html', newHtml)
       return
     img.src = url
     return
