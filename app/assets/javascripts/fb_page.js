@@ -12,13 +12,14 @@ $( document ).ready(function() {
   }, 1300);
 
   var index = 1;
-  check_status($('#select_page').val().split(' ')[index]);
+  if ($('#select_page').length > 0){
+    check_status($('#select_page').val().split(' ')[index]);
+    $( '#select_page' ).change(function() {
+      check_status($(this).val().split(' ')[index]);
+    });
+  }
 
-  $( '#select_page' ).change(function() {
-    check_status($(this).val().split(' ')[index]);
-  });
-
-  $(document).on('click', '.submit_page', function() { 
+  $(document).on('click', '.submit_page', function() {
     var name = $(this).attr('param');
     if ($(this).val() === "Subscribe"){
       toastr.success( name + ', page has been successfully subscribed.');
@@ -41,8 +42,8 @@ $( document ).ready(function() {
       closeOnCancel: false },
       function (isConfirm) {
       if (isConfirm) {
-        swal("Removed!", "Your facebook integration has been removed.", "success");    
-        window.location = $('#delete_integration').attr('href');  
+        swal("Removed!", "Your facebook integration has been removed.", "success");
+        window.location = $('#delete_integration').attr('href');
       } else {
         swal("Cancelled", "Your Facebook messages are safe :)", "error");
         return false;

@@ -10,6 +10,7 @@
 # you'll amass, the slower it'll run and the greater likelihood for issues).
 #
 # It's strongly recommended that you check this file into your version control system.
+
 ActiveRecord::Schema.define(version: 20161007034014) do
 
   create_table "addresses", force: :cascade do |t|
@@ -36,7 +37,7 @@ ActiveRecord::Schema.define(version: 20161007034014) do
     t.datetime "updated_at",                              null: false
   end
 
-  add_index "alerts", ["user_id"], name: "fk_rails_02f5a05769", using: :btree
+  add_index "alerts", ["user_id"], name: "fk_rails_a4db95c162", using: :btree
 
   create_table "bank_accounts", force: :cascade do |t|
     t.string   "stripe_bank_account_id", limit: 191
@@ -65,6 +66,7 @@ ActiveRecord::Schema.define(version: 20161007034014) do
     t.datetime "updated_at",            null: false
   end
 
+  add_index "campaign_lists", ["campaign_id"], name: "fk_rails_98c7cf7ca4", using: :btree
   add_index "campaign_lists", ["list_id", "campaign_id"], name: "index_campaign_lists_on_list_id_and_campaign_id", using: :btree
 
   create_table "campaigns", force: :cascade do |t|
@@ -268,12 +270,12 @@ ActiveRecord::Schema.define(version: 20161007034014) do
     t.boolean "livemode",             limit: 1
   end
 
-  add_index "invoices", ["coupon_id"], name: "fk_rails_a54e908969", using: :btree
+  add_index "invoices", ["coupon_id"], name: "fk_rails_7aa1e153d5", using: :btree
   add_index "invoices", ["stripe_invoice_id"], name: "index_invoices_on_stripe_invoice_id", using: :btree
-  add_index "invoices", ["subscription_id"], name: "fk_rails_1c353f0d44", using: :btree
-  add_index "invoices", ["team_id"], name: "fk_rails_4b4a03cb65", using: :btree
-  add_index "invoices", ["transaction_id"], name: "fk_rails_7a1c1cd115", using: :btree
-  add_index "invoices", ["user_id"], name: "fk_rails_fdd1b6ee27", using: :btree
+  add_index "invoices", ["subscription_id"], name: "fk_rails_46381ea356", using: :btree
+  add_index "invoices", ["team_id"], name: "fk_rails_7b215ec4ad", using: :btree
+  add_index "invoices", ["transaction_id"], name: "fk_rails_4ccc1b83a0", using: :btree
+  add_index "invoices", ["user_id"], name: "fk_rails_fed22d6f3e", using: :btree
 
   create_table "lists", force: :cascade do |t|
     t.datetime "created_at",             null: false
@@ -306,10 +308,6 @@ ActiveRecord::Schema.define(version: 20161007034014) do
     t.integer  "hashtag_id",        limit: 4
   end
 
-<<<<<<< HEAD
-  add_index "messages", ["campaign_id"], name: "fk_rails_2ee3dbcd82", using: :btree
-=======
->>>>>>> 2db2887d6499544d1b5400057c75e6a398bdaab4
   add_index "messages", ["hashtag_id"], name: "index_messages_on_hashtag_id", using: :btree
   add_index "messages", ["transaction_id"], name: "index_messages_on_transaction_id", using: :btree
   add_index "messages", ["user_id"], name: "index_messages_on_user_id", using: :btree
@@ -469,10 +467,10 @@ ActiveRecord::Schema.define(version: 20161007034014) do
     t.datetime "updated_at",                                                              null: false
   end
 
-  add_index "subscriptions", ["coupon_id"], name: "fk_rails_94e8134dcf", using: :btree
-  add_index "subscriptions", ["plan_id"], name: "fk_rails_158d5cc6a8", using: :btree
-  add_index "subscriptions", ["team_id"], name: "fk_rails_691552b121", using: :btree
-  add_index "subscriptions", ["user_id"], name: "fk_rails_6d84e69100", using: :btree
+  add_index "subscriptions", ["coupon_id"], name: "fk_rails_ddc53c9490", using: :btree
+  add_index "subscriptions", ["plan_id"], name: "fk_rails_fc223f21da", using: :btree
+  add_index "subscriptions", ["team_id"], name: "fk_rails_c4c7bfe675", using: :btree
+  add_index "subscriptions", ["user_id"], name: "fk_rails_d9752b176b", using: :btree
 
   create_table "transactions", force: :cascade do |t|
     t.datetime "created_at"
@@ -511,7 +509,7 @@ ActiveRecord::Schema.define(version: 20161007034014) do
   add_index "transactions", ["hashtag_id"], name: "index_transactions_on_hashtag_id", using: :btree
   add_index "transactions", ["referenced_customer_transaction_id"], name: "index_transactions_on_referenced_customer_transaction_id", using: :btree
   add_index "transactions", ["subscription_id"], name: "index_transactions_on_subscription_id", using: :btree
-  add_index "transactions", ["team_id"], name: "fk_rails_f8bf622ddc", using: :btree
+  add_index "transactions", ["team_id"], name: "fk_rails_0e0853dbc8", using: :btree
   add_index "transactions", ["txn_number"], name: "index_transactions_on_txn_number", using: :btree
   add_index "transactions", ["user_id"], name: "index_transactions_on_user_id", using: :btree
 
