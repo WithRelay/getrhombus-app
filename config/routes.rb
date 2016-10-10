@@ -90,7 +90,7 @@ Rails.application.routes.draw  do
       get 'json_get_user_messages_by_merchant/:user_number' => 'users#json_get_user_messages_by_merchant'
       get 'mark_user_messages_for_merchant_as_read/:user_number' => 'users#mark_user_messages_for_merchant_as_read'
       get 'send_message_from_merchant/:user_number' => 'users#send_message_from_merchant'
-      get 'customers' => 'users#cusomers'
+      get 'customers' => 'users#customers'
       get 'businesses' => 'users#businesses'
       get 'notifications' => 'alerts#edit'
       get 'lists' => 'users#lists'
