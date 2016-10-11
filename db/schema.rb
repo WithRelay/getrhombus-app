@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161007034014) do
+ActiveRecord::Schema.define(version: 20161011043115) do
 
   create_table "addresses", force: :cascade do |t|
     t.string   "street_address",   limit: 191
@@ -429,8 +429,10 @@ ActiveRecord::Schema.define(version: 20161007034014) do
   add_index "save_replies", ["user_id"], name: "index_save_replies_on_user_id", using: :btree
 
   create_table "segments", force: :cascade do |t|
-    t.string  "query",   limit: 191
-    t.integer "list_id", limit: 4
+    t.string   "query",      limit: 191
+    t.integer  "list_id",    limit: 4
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "segments", ["list_id"], name: "index_segments_on_list_id", using: :btree
