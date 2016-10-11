@@ -21,11 +21,10 @@ class FbPagesController < ApplicationController
       response = FacebookMessengerService.subscribe(page.page_access_token)
       if(response["success"])
         page.update_attributes(subscription_status: true)
-        Conversation.create(merchant_id: current_user.id, page_id: page_id, resolution: true)
       end
-      redirect_to user_path(current_user), notice: 'success'
+      redirect_to user_fb_pages_path(current_user), notice: 'success'
     else
-      redirect_to user_path(current_user), error: 'fail'
+      redirect_to user_fb_pages_path(current_user), error: 'fail'
     end
   end
 
@@ -33,32 +32,39 @@ class FbPagesController < ApplicationController
     page = FbPage.find_by_id page_id
     if page.present?
       response = FacebookMessengerService.unsubscribe(page.page_access_token)
-      if(response["success"])
+      if(response['success'])
         page.update_attributes(subscription_status: false)
       end
-      redirect_to user_path(current_user), notice: 'success'
+      redirect_to user_fb_pages_path(current_user), notice: 'success'
     else
-      redirect_to user_path(current_user), error: 'fail'
+      redirect_to user_fb_pages_path(current_user), error: 'fail'
     end
   end
 
   def remove_integration
     fb_cred = current_user.fb_cred
     fb_pages = fb_cred.fb_pages
+    response = {}
     if fb_pages.present?
       fb_pages.each do |page|
         if page.subscription_status
-          FacebookMessengerService.unsubscribe(page.page_access_token)
+          response = FacebookMessengerService.unsubscribe(page.page_access_token)
         end
       end
     end
-    fb_cred.destroy
+    if response['success'] || fb_pages.empty? || FbPage.where(subscription_status: true).empty?
+      FbCred.where(fb_id: fb_cred.fb_id).destroy_all
+    end
     redirect_to user_path(current_user), notice: 'success'
   end
 
-  private def check_user_present
-    unless current_user.present?
+  private 
+
+  def check_user_present
+    if current_user.nil?
       redirect_to signin_path
+    elsif current_user.fb_cred.nil?
+      redirect_to user_path(current_user)
     end
   end
 end

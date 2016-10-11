@@ -1,5 +1,6 @@
 class OmniauthCallbacksController < Devise::OmniauthCallbacksController
   protect_from_forgery
+  before_action :check_user_present
 
   def twitter
     if current_user.is_merchant?
@@ -15,7 +16,7 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
   end
 
   def facebook
-    if current_user.is_merchant?
+    if current_user && current_user.is_merchant?
       if FbCred.from_omniauth(request.env["omniauth.auth"], current_user.id) == true
         FbPage.store_page(current_user)
         redirect_to user_fb_pages_path(current_user)
@@ -30,6 +31,14 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
   def failure
     redirect_to user_path(current_user), alert: "We were unable to connect your account. Please try again"
+  end
+
+  private 
+
+  def check_user_present
+    unless current_user.present?
+      redirect_to signin_path
+    end
   end
 
 end

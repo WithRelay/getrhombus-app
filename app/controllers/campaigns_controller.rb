@@ -5,31 +5,28 @@ class CampaignsController < ApplicationController
   layout 'campaign'
 
   def index
-    @campaigns = current_user.campaigns.includes(messages: [:images])
+    @campaigns = current_user.campaigns.includes(:images)
   end
 
   def new
     @campaign = current_user.campaigns.build
-    message = @campaign.messages.build
-    message.images.build
     @lists = current_user.lists
   end
 
   def create
     @campaign = current_user.campaigns.build(campaign_params)
-    @campaign.campaign_lists.build(Hash[*campaign_params.first])
+    @campaign.campaign_lists.build(list_id: campaign_params[:list_id]) if campaign_params[:list_id].present?
+    save_campaign_images(@campaign)
     if @campaign.save
-      save_message_images(@campaign.messages)
-      CampaignService.new(@campaign).set_background_jobs
       flash[:notice] = 'Campaign Saved successfully'
     else
-      flash[:error] = 'Sorry Campaign could not save please try again'
+      flash[:error] = @campaign.errors.mesages
     end
     redirect_to new_campaign_path
   end
 
   def edit
-    @campaign = current_user.campaigns.includes(messages: [:images]).find(params[:id])
+    @campaign = current_user.campaigns.includes(:images).find(params[:id])
     @lists = @campaign.lists
   end
 
@@ -66,18 +63,15 @@ class CampaignsController < ApplicationController
     @campaign = current_user.campaigns.find(params[:id])
   end
 
-  def save_message_images(message)
-    if image_params[:messages_attributes]["0"][:images_attributes].present?
-      image_params[:messages_attributes]["0"][:images_attributes]["0"][:avatar].each do |image|
-        message[0].images.build(avatar: image)
-      end
-      message[0].save
-    end
+  def save_campaign_images(campaign)
+    image_params[:avatar].each do |image|
+      campaign.images.build(avatar: image)
+    end if image_params[:avatar].present?
   end
 
   def campaign_params
     params.require(:campaign).permit(:list_id, :channel, :repeat_days, :date_time, :delivery_type,
-                                     :frequency_type, messages_attributes: [:text, :id]).tap do |c|
+                                     :frequency_type, :text).tap do |c|
                                       c[:channel] = c[:channel].to_i;
                                       c[:frequency_type] = c[:frequency_type].to_i;
                                       c[:delivery_type] = c[:delivery_type].to_i;
@@ -85,6 +79,6 @@ class CampaignsController < ApplicationController
   end
 
   def image_params
-    params.require(:campaign).permit(messages_attributes: [:text, images_attributes: [avatar: []]])
+    params.require(:campaign).permit(avatar:[])
   end
 end

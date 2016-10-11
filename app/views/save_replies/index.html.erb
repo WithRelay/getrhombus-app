@@ -1,0 +1,23 @@
+<h1>Saved Replies</h1>
+<% saved_replies_hash = saved_replies_list %>
+<table>
+  <tr>
+    <th>Id</th>
+    <th>Title</th>
+    <th>Body</th>
+    <th></th>    
+  </tr>
+<% @save_replies.each do |reply| %>
+  <tr>
+    <td><%= reply.id %></td>
+    <td><%= reply.title %></td>
+    <td style="white-space: pre-line;"><%= reply.body %></td>
+    <td><%= link_to 'Destroy',[reply.user, reply], confirm: 'Are you sure?', method: :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<!-- form for create new save reply -->
+<%= render partial: 'form', locals: { save_reply: @save_reply } %>
+<!-- for select saved reply form-->
+<%#= render partial: 'select_reply' %>

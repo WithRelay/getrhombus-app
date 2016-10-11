@@ -12,8 +12,9 @@ Rails.application.routes.draw  do
   get 'contact' => 'contact_forms#new'
 
   post 'lists/create_new_list' => 'lists#create_new_list'
-  get 'customer_lists/remove_user' => 'customer_lists#remove_user'
+  get 'user_lists/remove_user' => 'user_lists#remove_user'
   get 'fb_pages/remove_integration' => 'fb_pages#remove_integration'
+  # get 'link_facebook' => 'link_fb_accounts#link_facebook'
 
   resources :lists do
     resources :customer_lists
@@ -26,6 +27,7 @@ Rails.application.routes.draw  do
   }
 
   match "send_mms_from_dashboard" => 'messages#dashboard_mms', via: [:post]
+  get 'messaging-dashboard' => 'messages#message_dashboard'
 
   ## events/hooks routes
   constraints subdomain: "hooks" do
@@ -59,6 +61,7 @@ Rails.application.routes.draw  do
     resources :subscriptions, except: [:show, :edit, :update]
     resources :plans, only: [:create, :index, :new]
     resources :alerts, only: [:update]
+    resources :save_replies, only: [:new, :create, :index, :destroy]
     resources :bank_accounts
     resources :addresses
     resources :people
@@ -87,7 +90,7 @@ Rails.application.routes.draw  do
       get 'json_get_user_messages_by_merchant/:user_number' => 'users#json_get_user_messages_by_merchant'
       get 'mark_user_messages_for_merchant_as_read/:user_number' => 'users#mark_user_messages_for_merchant_as_read'
       get 'send_message_from_merchant/:user_number' => 'users#send_message_from_merchant'
-      get 'customers' => 'users#cusomers'
+      get 'customers' => 'users#customers'
       get 'businesses' => 'users#businesses'
       get 'notifications' => 'alerts#edit'
       get 'lists' => 'users#lists'

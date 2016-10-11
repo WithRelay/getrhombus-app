@@ -1,0 +1,16 @@
+<% @data_array = saved_replies_list.values.to_json %>
+<%= bootstrap_form_tag url: '/users' do |f|%>
+  <%= f.text_area :fb_message, class: 'inputor ', param: @data_array, placeholder: 'Type a message...', skip_label: true %>
+  <br>
+  <%= f.submit 'Send Message', class: 'reply_submit' %>
+<% end %>
+
+<script type = "text/javascript">
+
+  var data_array = JSON.parse($('.inputor').attr('param'));
+  $('.inputor').atwho({   
+    at: "/",
+    data: data_array
+  });
+
+</script>

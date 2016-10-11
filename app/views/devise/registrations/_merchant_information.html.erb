@@ -122,10 +122,18 @@
 
 
                 <div class="form-group">
-                  <label class="col-sm-2 control-label form-label">Name</label>
+                  <label class="col-sm-2 control-label form-label">first_nameName</label>
                   <div class="col-sm-10">
                   <!-- now thru person -->
-                  <%= f.text_field :full_name, type: "text", class: "form-control rhombusFocus", placeholder: "First", id: "fullName" %>
+                  <%= f.text_field :first_name, type: "text", class: "form-control rhombusFocus", placeholder: "First", id: "firstName" %>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="col-sm-2 control-label form-label">LastName</label>
+                  <div class="col-sm-10">
+                  <!-- now thru person -->
+                  <%= f.text_field :last_name, type: "text", class: "form-control rhombusFocus", placeholder: "Last", id: "lastName" %>
                   </div>
                 </div>
 

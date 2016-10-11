@@ -28,9 +28,14 @@
 //= require managed-account
 //= require location
 //= require cocoon
+//= require fb_page
+//= require image_validator
 //= require campaigns
+//= require custom.js.erb
 //= require jquery_word_counter
 //= require custom_trumbowyg_plugin
 //= require trumbowyg.min
 //= require trumbowyg.upload.min
 //= require emojionearea
+//= require jquery.atwho
+//= require jquery.caret
