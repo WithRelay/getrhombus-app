@@ -6,6 +6,9 @@ Payment Capture - should be for only customers....capture in logic
 All APIs especially Stripe, Twilio
 - Test all data saves correctly
 
+Campaigns
+- fail safely for audio and video files
+
 Contact - Inbound
 - sent u a text doesnt have an account 
 - have an account, sent u a text but ref link isnt yours 
