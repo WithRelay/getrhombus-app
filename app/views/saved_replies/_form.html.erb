@@ -1,15 +1,20 @@
-<h1>Save new Reply</h1>
 
-<%= form_for SavedReply.new, url: user_saved_replies_path(current_user) do |f| %>
+<%= form_for([current_user, saved_reply], :html => { :id => "saved-reply-form" } ) do |f| %>
 
-  <%= f.text_field :title, required: true, placeholder: 'Saved reply title' %>
+  <%= f.text_field :title, placeholder: 'Saved reply title', id: 'saved-reply-title-field' %>
   
   <br>
   <br>
 
-  <%= f.text_area :body, id: 'trumbowyg', :required => true, placeholder: 'Start typing...' %>
+  <%= f.text_area :body, placeholder: 'Start typing...', id: 'saved-reply-body-field' %>
+
+  <% if action_name == 'index' %>
+  	<%= link_to 'Destroy', [current_user, saved_reply],  method: :delete, data: { confirm: 'Are you sure?' }, id: 'delete-saved-reply' %>
+
+  	<%= f.button "Cancel", id: 'saved-reply-cancel' %>
+  <% end %>
+
   
-  <%= f.button "Cancel", type: :reset %>
-  
-  <%= f.submit "Save Reply", class: "btn btn-warning btn-small", label: "Save" %>
+  <%= f.submit "Save", class: "btn btn-warning btn-small" %>
+
 <% end %>

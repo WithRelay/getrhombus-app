@@ -70,7 +70,7 @@ class Campaign
       append: true
 
 $( document ).on 'ready page:load', ->
-  campaign = new Campaign( { pickerPosition: 'right', tonesStyle: 'bullet' })
+  campaign = new Campaign( { pickerPosition: 'right' })
   campaign.datePicker(new DatePicker( '.daterange' ))
   $(document).on 'change', 'input[name=file]', ->
     uploadedImage = new ImageValidator

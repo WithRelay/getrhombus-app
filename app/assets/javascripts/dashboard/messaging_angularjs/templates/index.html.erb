@@ -1,6 +1,9 @@
 <div class="content">
   <!-- Start Page Header -->
   <div class="page-header">
+
+  <textarea class="textarea form-control" placeholder="Type a message here..."  id='standalone'></textarea>
+
     <div style="float:left;">
       <h1 class="title">Messaging</h1>
       <!--<ol class="breadcrumb">
@@ -12,6 +15,7 @@
         </li>
       </ol>-->
     </div>
+
 
     <div style="float:right;">
       <button ng-click="displayChargeForm()">Charge a customer</button>    
@@ -89,11 +93,14 @@
             <form>
               <p>
                 <span class="char-counter">{{char_limit - new_message.text.length}} characters left</span>
-                <textarea class="textarea form-control" placeholder="Type a message here..." style="height:60px; width:100%;" ng-model="new_message.text" ng-trim="true" ng-enter="sendMessage(new_message)"></textarea>
+                <textarea class="textarea form-control" placeholder="Type a message here..." style="height:60px; width:100%;" ng-model="new_message.text" ng-trim="true" ng-enter="sendMessage(new_message)" id='message_box'></textarea>
               </p>
               <button class="btn btn-default btn-rhombus" id="send_msg_btn" ng-click="sendMessage(new_message)" style="height: 32px;" ng-disabled='is_sending'>
                 {{send_msg_btn}}
               </button>
+
+
+                   <br><br><br><br>
               
               <input type="file" id="file-picker" ngf-select="handleFile($file, $invalidFiles)" ng-model="pic_file" ngf-accept="'image/*'" ngf-max-size="1MB">              
     
@@ -101,7 +108,13 @@
                   Clear
                 </button>%>
                 <span class="char-counter">{{char_limit - new_message.text.length}} characters left</span>
-                      
+                   
+
+                   <br>
+
+                   <br>
+
+                   <br>   
             </form>
 
 

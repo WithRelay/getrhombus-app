@@ -1,3 +1,6 @@
+- add at.js and emojione to messaging box
+
+
 Payment Capture - should be for only customers....capture in logic
 - check if /profile affect forms for merchants
 - plug in charge into payment capture workflow
@@ -29,6 +32,9 @@ Notes
 - Clean up your code if you no longer use it. Don't leave unused code in the repo.
 - Please ask me before adding a gem to the project to reduce confusion and unnecessaory work. we arent using bootstrap form since edwin is designing all the pages. the toastr...we are using pnotify.
 - Even though we arent writing tests yet, pls adequately hand test your code.
+- migration names should be clear
+- is text in messages text or string type? check with the guys
+   - messages text became string cos of the utf8mb4 execution string
 
 
 

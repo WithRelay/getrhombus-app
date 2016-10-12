@@ -1,5 +1,5 @@
 class SavedRepliesController < ApplicationController
-  before_action :check_user_present
+  before_action :set_saved_reply, only: [:update, :destroy]
 
   def new
     @saved_reply = current_user.saved_replies.build
@@ -19,21 +19,23 @@ class SavedRepliesController < ApplicationController
     redirect_to user_saved_replies_path
   end
 
+  def update
+    @saved_reply.update(saved_reply_params)
+    redirect_to user_saved_replies_path, notice: "Updated" 
+  end
+
   def destroy
-    saved_reply = current_user.saved_replies.find_by_id params[:id]
-    saved_reply.destroy
+    @saved_reply.destroy
     redirect_to user_saved_replies_path
   end
 
   private
-  
+
     def saved_reply_params
       params.require(:saved_reply).permit(:title, :body)
     end
 
-    def check_user_present
-      if current_user.nil?
-        redirect_to signin_path
-      end
+    def set_saved_reply
+      @saved_reply = SavedReply.find params[:id]
     end
 end

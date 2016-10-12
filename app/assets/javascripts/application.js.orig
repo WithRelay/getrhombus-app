@@ -21,7 +21,7 @@
 //= require jquery.charactercounter
 //= require ohsnap.js
 
-//= require url-paramaters
+//= require url-parameters
 //= require managed-account
 //= require location
 //= require cocoon

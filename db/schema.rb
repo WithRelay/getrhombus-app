@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161012103517) do
+ActiveRecord::Schema.define(version: 20161012171413) do
 
   create_table "addresses", force: :cascade do |t|
     t.string   "street_address",   limit: 191
@@ -139,7 +139,7 @@ ActiveRecord::Schema.define(version: 20161012103517) do
   add_index "fb_creds", ["user_id"], name: "index_fb_creds_on_user_id", unique: true, using: :btree
 
   create_table "fb_messages", force: :cascade do |t|
-    t.string   "text",           limit: 191
+    t.text     "text",           limit: 65535
     t.datetime "time_stamp"
     t.boolean  "unread",         limit: 1
     t.string   "message_id",     limit: 191
@@ -147,8 +147,8 @@ ActiveRecord::Schema.define(version: 20161012103517) do
     t.string   "page_id",        limit: 191
     t.string   "from",           limit: 191
     t.string   "to",             limit: 191
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
     t.integer  "campaign_id",    limit: 4
     t.integer  "seq",            limit: 4
     t.integer  "fb_page_id",     limit: 4
@@ -405,9 +405,9 @@ ActiveRecord::Schema.define(version: 20161012103517) do
 
   create_table "saved_replies", force: :cascade do |t|
     t.string   "title",      limit: 191
-    t.string   "body",       limit: 191
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
+    t.text     "body",       limit: 65535
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
     t.integer  "user_id",    limit: 4
   end
 

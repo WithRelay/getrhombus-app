@@ -24,7 +24,7 @@
 //= require ohsnap.js
 //= require moment
 //= require daterangepicker
-//= require url-paramaters
+//= require url-parameters
 //= require managed-account
 //= require location
 //= require cocoon
@@ -39,3 +39,4 @@
 //= require emojionearea
 //= require jquery.atwho
 //= require jquery.caret
+//= require saved_replies
