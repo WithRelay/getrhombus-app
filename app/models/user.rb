@@ -31,7 +31,7 @@ class User < ActiveRecord::Base
   has_one :fb_cred
   has_one :alert, dependent: :destroy
   has_many :fb_pages
-  has_many :save_replies
+  has_many :saved_replies
 
   has_many :image_refs, as: :imageable
   has_many :images, through: :image_refs

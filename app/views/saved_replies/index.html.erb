@@ -1,0 +1,31 @@
+
+
+<%# display in a toastr...use pnotify  %>
+<%= flash[:error] %> <!-- You need to make errors explicit...show each error -->
+<%= flash[:notice] %>
+
+<h1>Saved Replies</h1>
+
+<% saved_replies_hash = saved_replies_list %>
+
+
+<table>
+  <tr>
+    <th>Id</th>
+    <th>Title</th>
+    <th>Body</th>
+    <th></th>    
+  </tr>
+
+  <% @saved_replies.each do |reply| %>
+    <tr>
+      <td><%= reply.id %></td>
+      <td><%= reply.title %></td>
+      <td><%= reply.body %></td>
+      <td><%= link_to 'Destroy', [reply.user, reply],  method: :delete, data: { confirm: 'Are you sure?' } %></td>
+    </tr>
+  <% end %>
+</table>
+
+<!-- form for create new save reply -->
+<%= render partial: 'form', locals: { saved_reply: @saved_reply } %>

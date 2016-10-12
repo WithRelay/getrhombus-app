@@ -25,5 +25,12 @@ Friday/Saturday/Sunday
 
 
 
+Notes
+- Clean up your code if you no longer use it. Don't leave unused code in the repo.
+- Please ask me before adding a gem to the project to reduce confusion and unnecessaory work. we arent using bootstrap form since edwin is designing all the pages. the toastr...we are using pnotify.
+- Even though we arent writing tests yet, pls adequately hand test your code.
+
+
+
 
 

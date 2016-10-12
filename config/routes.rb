@@ -61,7 +61,7 @@ Rails.application.routes.draw  do
     resources :subscriptions, except: [:show, :edit, :update]
     resources :plans, only: [:create, :index, :new]
     resources :alerts, only: [:update]
-    resources :save_replies, only: [:new, :create, :index, :destroy]
+    resources :saved_replies, only: [:new, :create, :index, :destroy]
     resources :bank_accounts
     resources :addresses
     resources :people

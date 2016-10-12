@@ -1,16 +1,15 @@
 <h1>Save new Reply</h1>
 
-<%= form_for SaveReply.new, url: user_save_replies_path(current_user) do |f| %>
+<%= form_for SavedReply.new, url: user_saved_replies_path(current_user) do |f| %>
 
-  <%= f.label :Title, class: 'title' %>
   <%= f.text_field :title, required: true, placeholder: 'Saved reply title' %>
   
   <br>
   <br>
 
-  <%= f.label :Body, class: 'body' %>
-
-  <%= f.text_area :body, id: 'trumbowyg', :required => true,placeholder: 'Start typing...' %>
+  <%= f.text_area :body, id: 'trumbowyg', :required => true, placeholder: 'Start typing...' %>
+  
   <%= f.button "Cancel", type: :reset %>
+  
   <%= f.submit "Save Reply", class: "btn btn-warning btn-small", label: "Save" %>
 <% end %>
