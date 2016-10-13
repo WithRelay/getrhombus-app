@@ -9,15 +9,13 @@
 
   <table>
     <tr>
-      <th>Title</th>
-      <th>Body</th>
-      <th></th>    
+      <th>Title</th>    
     </tr>
 
     <% @saved_replies.each do |reply| %>
       <tr>
         <td id="saved-reply-title-<%= reply.id %>" class='saved-reply-title'><%= reply.title %></td>
-        <td id="saved-reply-body-<%= reply.id %>"><%= reply.body %></td>
+        <div id="saved-reply-body-<%= reply.id %>" style='display: none;'><%= reply.body %></div>
       </tr>
     <% end %>
   </table>
