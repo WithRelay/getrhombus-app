@@ -1,6 +1,3 @@
-- add at.js and emojione to messaging box
-
-
 Payment Capture - should be for only customers....capture in logic
 - check if /profile affect forms for merchants
 - plug in charge into payment capture workflow
@@ -21,8 +18,6 @@ Friday/Saturday/Sunday
 - Plug into stripe api for managed accts - see notes
 - Create Seeds
 - Set up dev server - with rake task
-- Access to Jira, bitbucket, cloud66 - use team?, burrow, slack
-   - twilio, stripe, mailchimp, facebook - based on tasks
 - Clean up angular - https://blog.joshsoftware.com/2014/07/17/building-web-apps-with-rails4-and-angularjs-in-15-minutes/
 
 

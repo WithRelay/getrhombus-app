@@ -1105,11 +1105,7 @@ $(document).ready(function () {
   });*/
 
   // character counter
-  $("#count_me").characterCounter({
-    //text: false, from old plugin...is this still in new plugin??
-    limit: '250'
-  });
-
+  $("#count_me").counter();
 
   var submit_contact_form = function(json) {
     $.ajax({ url: contact_url,

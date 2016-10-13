@@ -18,7 +18,6 @@
 //= require intlTelInput.min
 //= require chartist
 //= require jquery.payment
-//= require jquery.charactercounter
 //= require ohsnap.js
 
 //= require url-parameters

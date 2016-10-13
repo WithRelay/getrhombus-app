@@ -25,7 +25,6 @@
 
 //= require jquery.lightbox_me
 //= require intlTelInput.min
-//= require jquery.charactercounter.js
 //= require jquery.payment.js
 //= require cocoon
 
@@ -36,6 +35,8 @@
 
 //= require url-parameters
 //= require fb_page
+
+//= require tribute
 
 //= require emojionearea
 //= require dashboard/messaging_angularjs/messaging.js

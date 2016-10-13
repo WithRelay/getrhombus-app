@@ -18,26 +18,26 @@ $(document).ready(function () {
 		form.attr('action', action);
 		$('#delete-saved-reply').attr('href', action)
 
-		set_title_and_text();
+		set_title_and_body();
 	});
 
 
 	// return saved reply to original state
 	$("#saved-reply-cancel").click(function(e) {
 		e.preventDefault();
-		set_title_and_text();
+		set_title_and_body();
 	});
 
 
 	// bind emoji to textarea
-	$('#saved-reply-body-field').emojioneArea({
+	var reply_body_emoji_box = $('#saved-reply-body-field').emojioneArea({
 		pickerPosition: "bottom",
 	});
 
 
-	function set_title_and_text() {
+	function set_title_and_body() {
 		$('#saved-reply-title-field').val( $('#saved-reply-title-' + id).text() );
-		$('#saved-reply-body-field').val( $('#saved-reply-body-' + id).text() )
+		reply_body_emoji_box[0].emojioneArea.setText( $('#saved-reply-body-' + id).text() );
 	}
 
 

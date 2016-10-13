@@ -6,14 +6,17 @@ gem 'rails', '4.2.0'
 gem 'mysql2'
 
 gem "httparty"
+
 # For authentication
 gem "devise"
+
 # bootstrap date range picker dependency gem
 # for more info https://github.com/jordanbrock/bootstrap-daterangepicker-rails
 gem 'momentjs-rails'
 # Date Range Picker for Twitter Bootstrap
 gem 'bootstrap-daterangepicker-rails'
-gem 'bootstrap_form'
+
+gem 'tribute'
 
 # resque
 gem 'resque', :require => "resque/server"

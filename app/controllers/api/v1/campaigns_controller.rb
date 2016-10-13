@@ -1,4 +1,5 @@
 class Api::V1::CampaignsController < API::V1::BaseController
+ 
   def image_delete
     image_ref = find_image(imageable_type: 'Message', image_id: params[:id])
     image_ref.delete if image_ref
@@ -12,4 +13,5 @@ class Api::V1::CampaignsController < API::V1::BaseController
       render json: { status: 401, message: 'sorry file type/size is not supported' }
     end
   end
+
 end

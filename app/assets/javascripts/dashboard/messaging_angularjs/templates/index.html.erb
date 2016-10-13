@@ -1,9 +1,6 @@
 <div class="content">
   <!-- Start Page Header -->
   <div class="page-header">
-
-  <textarea class="textarea form-control" placeholder="Type a message here..."  id='standalone'></textarea>
-
     <div style="float:left;">
       <h1 class="title">Messaging</h1>
       <!--<ol class="breadcrumb">
@@ -15,7 +12,6 @@
         </li>
       </ol>-->
     </div>
-
 
     <div style="float:right;">
       <button ng-click="displayChargeForm()">Charge a customer</button>    
@@ -90,32 +86,38 @@
           </ul>
           <!-- End Conv -->
           <div class="write">
+
+
+
             <form>
               <p>
-                <span class="char-counter">{{char_limit - new_message.text.length}} characters left</span>
-                <textarea class="textarea form-control" placeholder="Type a message here..." style="height:60px; width:100%;" ng-model="new_message.text" ng-trim="true" ng-enter="sendMessage(new_message)" id='message_box'></textarea>
+                <textarea class="textarea form-control" placeholder="Type a message here..." style="width:100%; height: 60px;" id='message_box'></textarea>
               </p>
+
+              <style type="text/css">
+                .emojionearea, .emojionearea.form-control {
+                  height: 60px !important;
+                  margin-bottom: 18px;
+                }
+                .emojionearea .emojionearea-editor {
+                  padding-left: 10px !important;
+                }
+              </style>
+
+              <textarea ng-model="new_message.text" ng-trim="true" id='aaa' style="display: none;"></textarea>
+              
+              <span class="char-counter">{{char_limit - new_message.text.length}} characters left</span>
+
+              <br><br><br><br>
               <button class="btn btn-default btn-rhombus" id="send_msg_btn" ng-click="sendMessage(new_message)" style="height: 32px;" ng-disabled='is_sending'>
                 {{send_msg_btn}}
               </button>
-
-
-                   <br><br><br><br>
               
-              <input type="file" id="file-picker" ngf-select="handleFile($file, $invalidFiles)" ng-model="pic_file" ngf-accept="'image/*'" ngf-max-size="1MB">              
-    
-                <%#<button type="reset" class="btn margin-l-5">
-                  Clear
-                </button>%>
-                <span class="char-counter">{{char_limit - new_message.text.length}} characters left</span>
-                   
+              <input type="file" id="file-picker" ngf-select="handleFile($file, $invalidFiles)" ng-model="pic_file" ngf-accept="'image/*'" ngf-max-size="1MB">
 
-                   <br>
-
-                   <br>
-
-                   <br>   
             </form>
+
+
 
 
             <!-- Image Preview -->

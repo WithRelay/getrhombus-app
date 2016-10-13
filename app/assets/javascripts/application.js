@@ -20,7 +20,6 @@
 //= require intlTelInput.min
 //= require chartist
 //= require jquery.payment
-//= require jquery.charactercounter
 //= require ohsnap.js
 //= require moment
 //= require daterangepicker
@@ -31,12 +30,9 @@
 //= require fb_page
 //= require image_validator
 //= require campaigns
-//= require custom.js.erb
 //= require jquery_word_counter
 //= require custom_trumbowyg_plugin
 //= require trumbowyg.min
 //= require trumbowyg.upload.min
 //= require emojionearea
-//= require jquery.atwho
-//= require jquery.caret
 //= require saved_replies

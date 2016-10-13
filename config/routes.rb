@@ -27,7 +27,6 @@ Rails.application.routes.draw  do
   }
 
   match "send_mms_from_dashboard" => 'messages#dashboard_mms', via: [:post]
-  get 'messaging-dashboard' => 'messages#message_dashboard'
 
   ## events/hooks routes
   constraints subdomain: "hooks" do
@@ -61,7 +60,7 @@ Rails.application.routes.draw  do
     resources :subscriptions, except: [:show, :edit, :update]
     resources :plans, only: [:create, :index, :new]
     resources :alerts, only: [:update]
-    resources :saved_replies#, only: [:new, :create, :index, :destroy]
+    resources :saved_replies
     resources :bank_accounts
     resources :addresses
     resources :people
@@ -108,11 +107,12 @@ Rails.application.routes.draw  do
   end
 
   ## api
-  api_version(module: "Api::V1", path: {value: "v1"}, constraints: { subdomain: "api" }, defaults: { format: "json" }) do
+  api_version(module: "Api::V1", path: { value: "v1"}, constraints: { subdomain: "api" }, defaults: { format: "json" }) do
     match 'users/find' => 'users#find', via: :get
     match 'users/add_customers' => 'users#add_customers', via: :post
     match 'hashtags/find' => 'hashtags#find', via: :get
     match 'hashtags/:id/image_delete' => 'hashtags#image_delete', via: :post
+    match 'saved_replies' => 'saved_replies#index', via: :get
     match 'campaigns/:id/image_delete' => 'campaigns#image_delete', via: :post
     match 'campaigns/upload_images' => 'campaigns#upload_images', via: :post
     match 'transactions/:charge_id/refund' => 'transactions#refund', via: :post

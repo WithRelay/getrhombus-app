@@ -98,16 +98,20 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
             $scope.current_chat_user = user;
                        
             // Mark messages as read
-            console.log(user.user_number);
             $scope.global_unread_count = (($scope.global_unread_count - $scope.users[user.user_number].unread_count) > 0) ? $scope.global_unread_count - $scope.users[user.user_number].unread_count : 0;
             $scope.users[user.user_number].unread_count = 0;
             //$http.get(window.location.origin + '/users/' + merchant_id + '/mark_user_messages_for_merchant_as_read/' + user.user_number);
+            
+            // Bind plugins to textbox
+            // should only bind once...add check
+            setTimeout(function(){ BindPlugins.now() }, 0);    
           });
         };
         
         $scope.sendMessage = function(new_message) {
           $scope.is_sending = true;
           $scope.send_msg_btn = "Sending...";
+          console.log(new_message)
           // twilio allow 1600 characters
           if ((new_message == undefined) || (new_message.text == '') || (new_message.text.length > $scope.char_limit)) {
             alert('Maximum ' + $scope.char_limit + ' characters.');            
