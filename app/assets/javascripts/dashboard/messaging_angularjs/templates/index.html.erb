@@ -164,7 +164,7 @@
             pause="400"
             minlength="1" 
             selected-object="hashtagSelected"
-            remote-url="<%= (Rails.env == 'development' ? "http://localhost:3000" : "https://www.getrhombus.com")  +  "/v1/hashtags/find?query=" %>"
+            remote-url="<%= (Rails.env == 'development' ? "http://localhost:3000" : "https://www.getrhombus.com")  +  "/v1/hashtags?query=" %>"
             remote-url-data-field="hashtags"
             title-field="tag"
             text-no-results='false'

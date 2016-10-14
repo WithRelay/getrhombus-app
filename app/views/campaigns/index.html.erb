@@ -35,13 +35,13 @@
           <% end %>
         </td>
         <td>
-          <%= link_to 'Edit', edit_campaign_path(campaign) %>
+          <%= link_to 'Edit', edit_user_campaign_path(campaign) %>
         </td>
         <td>
-          <%= link_to 'Delete', campaign_path(campaign), method: :delete %>
+          <%= link_to 'Delete', user_campaign_path(campaign), method: :delete %>
         </td>
         <td>
-          <%= link_to 'Pause Campaign', change_status_campaign_path(campaign), method: :put %>
+          <%= link_to 'Pause Campaign', change_status_user_campaign(campaign), method: :put %>
         </td>
         <td>
           <%= campaign.status %>

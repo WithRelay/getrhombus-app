@@ -35,7 +35,7 @@ class ListsController < ApplicationController
   # This function creates a new lists and associates all customers that are on the list to it
   def create_new_list
     name = params[:list_name]
-    if params[:list_type] == 'segment') 
+    if params[:list_type] == 'segment'
       @list = save_list(name:name, user_id:current_user.id, segment:false)
       user_list = params[:selected_users].split(",")
       # Now save each customer on that list
@@ -51,6 +51,7 @@ class ListsController < ApplicationController
     else
       @list = save_list(name:name, user_id:current_user.id, segment:true)
       segment.new(list_id:@list.id, query:params[:segment_query])
+    end
   end
 
 

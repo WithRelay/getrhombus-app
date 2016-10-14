@@ -1,15 +1,18 @@
-<%= form_for campaign, html: { multipart: true } do |f| %>
+<%= form_for [current_user, campaign], html: { multipart: true } do |f| %>
 
   <%= f.label :Choose_a_list %>
-  <%= f.collection_select :list_id, lists, :id, :id %>
+  <input name="" id='campaign-select-lists' placeholder="select 1 or more lists">
+  <div id='click-me'>click me to see values</div>
+
+  <br><br>
 
   <%= f.label :Channel %>
-
   <%= f.select :channel, channel_list(campaign) %>
 
-  <%= link_to 'Create new list', '#' %>
-
+  <br><br>
   <%= f.label :Delivery_Settings %>
+
+  <br>
 
   <%= f.label :One_Time %>
   <%= f.radio_button :frequency_type, 0, id: 'oneTimeFrequency', checked: is_one_time_checked?(campaign)   %>
@@ -17,29 +20,35 @@
   <%= f.label :Recurring %>
   <%= f.radio_button :frequency_type, 1, id: 'recurringFrequency',  checked: is_recurring_checked?(campaign)  %>
 
+  <br><br>
   <%= f.label :send_campaign_now, class: 'deliveryNow' %>
   <%= f.check_box :delivery_type, id: 'deliverNow' %>
 
   <div class = 'scheduleOption'>
-
     <%= f.select :repeat_days, [ 'Repeat every', '7 days', '14 days', '30 days', '60 days', '90 days' ] %>
-
     <%= f.text_field :date_time, class: 'daterange' %>
-
   </div>
+
+  <br><br>
+
   <div class="row">
     <div class='newMessage'>
         <%= f.text_area :text, id: 'trumbowyg' %>
       </div>
   </div>
 
-<div class="upload_image">
-  <%= f.file_field :avatar, multiple: true, id: 'select-images' %>
-</div>
-<div id='new-image-previews'></div>
-<% campaign.images.each do |image| %>
-  <%= present(image).image_url %>
-  <%= present(image).image_delete_url %>
-<% end %>
+  <br><br>
+  
+  <div class="upload_image">
+    <%= f.file_field :avatar, multiple: true, id: 'select-images' %>
+  </div>
+ 
+  <div id='new-image-previews'></div>
+    <% campaign.images.each do |image| %>
+      <%= present(image).image_url %>
+      <%= present(image).image_delete_url %>
+  <% end %>
+  
   <%= f.submit 'Create Campaign' %>
+
 <% end %>

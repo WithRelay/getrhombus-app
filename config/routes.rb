@@ -50,7 +50,6 @@ Rails.application.routes.draw  do
 
   resources :contact_forms
   resources :referrers, only: [:new, :create]
-  resources :refunds, :only => :create
 
   # user routes
   resources :users, only: :show do
@@ -71,6 +70,15 @@ Rails.application.routes.draw  do
       end
     end
 
+    # authenticate campaigns resources if a user is merchant
+    authenticate :user, -> (user) { user.is_merchant? } do
+      resources :campaigns, except: [:show] do
+        member do
+          put 'change_status'
+        end
+      end
+    end
+
     collection do
       get 'customer_template' => "users#customer_csv_template", constraints: { format: 'csv' }
     end
@@ -83,7 +91,6 @@ Rails.application.routes.draw  do
     member do
       get 'managed-accounts' => 'users#managed_acct'
       match 'managed-accounts' => "users#create_managed_acct", via: :patch
-      get 'messaging' => 'users#messaging'
       get 'contacts' => 'users#contacts' #(both customers or merchants)
       get 'json_get_latest_active_messaging' => 'users#json_get_latest_active_messaging'
       get 'json_get_user_messages_by_merchant/:user_number' => 'users#json_get_user_messages_by_merchant'
@@ -97,20 +104,11 @@ Rails.application.routes.draw  do
   end
 
 
-  # authenticate campaigns resources if a user is merchant
-  authenticate :user, -> (user) { user.is_merchant? } do
-    resources :campaigns, except: [:show] do
-      member do
-        put 'change_status'
-      end
-    end
-  end
-
   ## api
   api_version(module: "Api::V1", path: { value: "v1"}, constraints: { subdomain: "api" }, defaults: { format: "json" }) do
     match 'users/find' => 'users#find', via: :get
     match 'users/add_customers' => 'users#add_customers', via: :post
-    match 'hashtags/find' => 'hashtags#find', via: :get
+    match 'hashtags' => 'hashtags#index', via: :get
     match 'hashtags/:id/image_delete' => 'hashtags#image_delete', via: :post
     match 'saved_replies' => 'saved_replies#index', via: :get
     match 'campaigns/:id/image_delete' => 'campaigns#image_delete', via: :post
@@ -118,6 +116,7 @@ Rails.application.routes.draw  do
     match 'transactions/:charge_id/refund' => 'transactions#refund', via: :post
     match 'transactions/charge_customer' => 'transactions#charge_customer', via: :post
     match 'numbers/search' => 'numbers#search', via: :get
+    match 'lists' => 'lists#index', via: :get
   end
 
   ## catch all other to 404
