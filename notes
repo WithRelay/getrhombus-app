@@ -30,6 +30,7 @@ Notes
 - migration names should be clear
 - is text in messages text or string type? check with the guys
    - messages text became string cos of the utf8mb4 execution string
+- comment your code
 
 
 

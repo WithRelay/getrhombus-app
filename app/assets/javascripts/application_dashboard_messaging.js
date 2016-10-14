@@ -36,7 +36,9 @@
 //= require url-parameters
 //= require fb_page
 
-//= require tribute
-
 //= require emojionearea
+
+//= require jquery.caret.js
+//= require jquery.atwho.js
+
 //= require dashboard/messaging_angularjs/messaging.js
