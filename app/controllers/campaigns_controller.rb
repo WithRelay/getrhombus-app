@@ -1,4 +1,4 @@
-# campaigns controller handles merchant's campagins with different channels like
+# campaigns controller handles merchant's campaigns with different channels like
 # MMS/SMS, email and facebook messeger
 class CampaignsController < ApplicationController
   before_action :find_campaign, only: [ :update, :destroy, :change_status ]
@@ -9,20 +9,19 @@ class CampaignsController < ApplicationController
   end
 
   def new
-    @campaign = current_user.campaigns.build
-    @lists = current_user.lists
+    @campaign = Campaign.new
   end
 
   def create
     @campaign = current_user.campaigns.build(campaign_params)
-    @campaign.campaign_lists.build(list_id: campaign_params[:list_id]) if campaign_params[:list_id].present?
-    save_campaign_images(@campaign)
+    campaign_params[:list_ids].split(',').each { |list_id| @campaign.campaign_lists.build(list_id: list_id) }
+    #save_campaign_images(@campaign)
     if @campaign.save
       flash[:notice] = 'Campaign Saved successfully'
     else
-      flash[:error] = @campaign.errors.mesages
+      flash[:error] = @campaign.errors.messages
     end
-    redirect_to new_campaign_path
+    redirect_to new_user_campaign_path
   end
 
   def edit
@@ -34,9 +33,9 @@ class CampaignsController < ApplicationController
     if @campaign.update_attributes(campaign_params)
       flash[:notice] = 'Campaign updated successfully'
     else
-      flash[:error] = 'Sorry campaign could not update'
+      flash[:error] = @campaign.errors.messages
     end
-    redirect_to edit_campaign_path(@campaign)
+    redirect_to edit_user_campaign_path
   end
 
   def destroy
@@ -45,7 +44,7 @@ class CampaignsController < ApplicationController
     else
       flash[:error] = 'Sorry campaign could not delete please try again'
     end
-    redirect_to campaigns_path
+    redirect_to user_campaigns_path
   end
 
   def change_status
@@ -54,7 +53,7 @@ class CampaignsController < ApplicationController
     else
       flash[:notice] = 'Sorry campaign could not paused'
     end
-    redirect_to campaigns_path
+    redirect_to user_campaigns_path
   end
 
   private
@@ -70,12 +69,12 @@ class CampaignsController < ApplicationController
   end
 
   def campaign_params
-    params.require(:campaign).permit(:list_id, :channel, :repeat_days, :date_time, :delivery_type,
-                                     :frequency_type, :text).tap do |c|
-                                      c[:channel] = c[:channel].to_i;
-                                      c[:frequency_type] = c[:frequency_type].to_i;
-                                      c[:delivery_type] = c[:delivery_type].to_i;
-                                     end
+    params.require(:campaign)
+          .permit(:list_ids, :channel, :repeat_days, :date_time, :deliver_now, :frequency_type, :text)
+          .tap do |c| # because they are enums
+            c[:channel] = c[:channel].to_i
+            c[:frequency_type] = c[:frequency_type].to_i
+          end
   end
 
   def image_params

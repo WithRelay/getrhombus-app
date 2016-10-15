@@ -1,5 +1,6 @@
 $(document).ready(function () {  
 
+  // this is actyally for campaigns not lists but uses lists
   // http://selectize.github.io/selectize.js/
   var campaign_lists = $('#campaign-select-lists').selectize({
     valueField: 'id',
@@ -17,7 +18,7 @@ $(document).ready(function () {
         }
     },
     load: function(query, callback) {
-      if (query.length < 2) return callback();
+      if (query.length < 3) return callback();
       $.ajax({
         url: window.location.protocol + "//" + window.location.host + "/v1/lists.json?query=" + encodeURIComponent(query),
         error: function() { callback(); },

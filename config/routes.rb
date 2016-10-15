@@ -91,6 +91,7 @@ Rails.application.routes.draw  do
     member do
       get 'managed-accounts' => 'users#managed_acct'
       match 'managed-accounts' => "users#create_managed_acct", via: :patch
+      get 'messaging' => 'users#messaging'
       get 'contacts' => 'users#contacts' #(both customers or merchants)
       get 'json_get_latest_active_messaging' => 'users#json_get_latest_active_messaging'
       get 'json_get_user_messages_by_merchant/:user_number' => 'users#json_get_user_messages_by_merchant'
