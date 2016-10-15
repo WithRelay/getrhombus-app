@@ -20,12 +20,12 @@ class Campaign
 
   EMAIL_CHANNEL = '3'
   CHECK = ':checked'
+  TEXTAREA_COUNTER = false         # track if counter already exists except for trumbowyg
 
   constructor: (emojiConfig)->
     @textArea = '#trumbowyg'
     @emojiConfig = emojiConfig
     @oneTime = '#oneTimeFrequency'; @deliverNow = '#deliverNow'; @schedule = '.scheduleOption'
-    @emojiHtml
 
   showHideEditor: (element)->
     if isEmailChecked(element)
@@ -40,11 +40,13 @@ class Campaign
     emojiArea = '.emojionearea'
     if status
       new CustomTrumbowygPlugin(area)
-      countCharacters()
+      countCharacters('.trumbowyg-editor')
       $(emojiArea).hide()
     else
       $(area).trumbowyg('destroy');
-      $(area).emojioneArea({pickerPosition:'right',tonesStyle:'bullet'})
+      $(area).emojioneArea ->
+        @emojiConfig
+      console.log(@emojiConfig)
       $(emojiArea).show()
       $(area).hide()
 
@@ -65,12 +67,16 @@ class Campaign
     $(@textArea).emojioneArea ->
       @emojiConfig
 
-  countCharacters = ->
-    $('.trumbowyg-editor').counter
-      append: true
+  countCharacters = (div) ->
+    $(div).counter()
+
 
 $( document ).on 'ready page:load', ->
-  campaign = new Campaign( { pickerPosition: 'right' })
+  campaign = new Campaign({ 
+    pickerPosition: 'right',
+    events: { focus: (editor, event) -> alert('asdas') }
+  })
+
   campaign.datePicker(new DatePicker( '.daterange' ))
   $(document).on 'change', 'input[name=file]', ->
     uploadedImage = new ImageValidator
@@ -95,10 +101,9 @@ $( document ).on 'ready page:load', ->
     else
       getBase64FromImageUrl($('input[name=url]').val())
 
-  if $('#campaign_channel').val()=='3'
+  if $('#campaign_channel').val() == '3'
     new CustomTrumbowygPlugin('#trumbowyg')
-    $('.trumbowyg-editor').counter
-      append: true
+    $('.trumbowyg-editor').counter()
   else
     campaign.textAreaEmojis()
 
@@ -111,6 +116,10 @@ $( document ).on 'ready page:load', ->
   $('#recurringFrequency').click ->
     $('#campaign_repeat_days').show()
     campaign.hideShowScheduler()
+
+  # Mainly for edit actions so the view shows properly
+  frequency_type = if $('#oneTimeFrequency').is(':checked') then '#oneTimeFrequency' else '#recurringFrequency'
+  $(frequency_type).trigger('click')
 
   $( '#oneTimeFrequency, #deliverNow' ).click ->
     campaign.hideShowScheduler()

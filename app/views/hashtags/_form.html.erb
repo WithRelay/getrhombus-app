@@ -23,7 +23,7 @@
   </div>
 
   
-  <% if present(current_user).can_send_mms? %>
+  <% if current_user.can_send_mms? %>
     <a id='select-images-button'>FILE</a>
     <%= file_field_tag "hashtag[images_attributes][][avatar]", type: :file, multiple: true, id: "select-images", accept: "image/*" %>
 

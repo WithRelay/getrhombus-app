@@ -75,6 +75,10 @@ class User < ActiveRecord::Base
     user_level == 1
   end
 
+  def can_send_mms?
+    ['US', 'CA'].include? self.country
+  end
+
   # Create or update customer on Stripe
   # move to stripe service
   def add_token_to_stripe_customer(params)

@@ -4,4 +4,5 @@ class CampaignPresenter < BasePresenter
   def format_date_time
     @model.date_time.strftime('%Y/%m/%d %I:%H %p') if @model.date_time.present?
   end
+
 end

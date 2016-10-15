@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161012171413) do
+ActiveRecord::Schema.define(version: 20161015120419) do
 
   create_table "addresses", force: :cascade do |t|
     t.string   "street_address",   limit: 191
@@ -70,14 +70,15 @@ ActiveRecord::Schema.define(version: 20161012171413) do
   add_index "campaign_lists", ["list_id", "campaign_id"], name: "index_campaign_lists_on_list_id_and_campaign_id", using: :btree
 
   create_table "campaigns", force: :cascade do |t|
+    t.string   "name",           limit: 191
     t.integer  "channel",        limit: 4
     t.integer  "status",         limit: 4,          default: 1
     t.datetime "created_at",                                    null: false
     t.datetime "updated_at",                                    null: false
     t.integer  "user_id",        limit: 4
-    t.string   "delivery_type",  limit: 191
-    t.string   "repeat_days",    limit: 191
-    t.string   "frequency_type", limit: 191
+    t.boolean  "deliver_now",    limit: 1
+    t.integer  "repeat_days",    limit: 4
+    t.integer  "frequency_type", limit: 4
     t.datetime "date_time"
     t.text     "text",           limit: <redacted_phone_number>
   end

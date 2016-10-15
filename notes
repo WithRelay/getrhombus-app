@@ -1,3 +1,16 @@
+- what happens when u send image in countries that don't support it. link?
+
+- clean up image/hashtag presenters
+- link in list ids in edit view
+- update update,destroy etc...to change campaign_lists when necessary
+- JS hide for one time on page load
+- check trumbowyg working
+- counter
+
+
+
+
+
 Payment Capture - should be for only customers....capture in logic
 - check if /profile affect forms for merchants
 - plug in charge into payment capture workflow
@@ -24,7 +37,7 @@ Friday/Saturday/Sunday
 
 
 Notes
-- Clean up your code if you no longer use it. Don't leave unused code in the repo.
+- Clean up your code if you no longer use it. Don't leave unused code in the repo. PLEASE!
 - Please ask me before adding a gem to the project to reduce confusion and unnecessaory work. we arent using bootstrap form since edwin is designing all the pages. the toastr...we are using pnotify.
 - Even though we arent writing tests yet, pls adequately hand test your code.
 - migration names should be clear
@@ -32,6 +45,27 @@ Notes
    - messages text became string cos of the utf8mb4 execution string
 - comment your code
 - let's stick to javascript..
+
+
+- is this in use
+getBase64FromImageUrl = (url) ->
+    img = new Image
+    img.setAttribute 'crossOrigin', 'anonymous'
+    img.onload = (e)->
+      canvas = document.createElement('canvas')
+      canvas.width = this.width
+      canvas.height = this.height
+      ctx = canvas.getContext('2d')
+      ctx.drawImage this, 0, 0
+      dataURL = canvas.toDataURL("image/png");
+      new_url = dataURL.replace(/^data:image\/(png|jpg);base64,/, "data:image/jpeg;base64,");
+      trumbowygHtml =  $('#trumbowyg').trumbowyg('html')
+      lastSrc = $('#trumbowyg').trumbowyg('html').split('src=').pop()
+      newHtml = trumbowygHtml.replace(lastSrc, new_url + '>');
+      $('#trumbowyg').trumbowyg('html', newHtml)
+      return
+    img.src = url
+    return
 
 
 
