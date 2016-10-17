@@ -1,7 +1,12 @@
 <%= form_for [current_user, @campaign], html: { multipart: true } do |f| %>
+  
+  <%= f.label :Name %>
+  <%= f.text_field :name %>
+
+  <br><br>
 
   <%= f.label :Choose_a_list %>
-  <%= f.text_field :list_ids, id: 'campaign-select-lists', placeholder: "Select 1 or more lists" %>
+  <%= f.text_field :list_ids, id: 'campaign-select-lists', 'data-lists_data' => "#{@lists_json}", placeholder: "Select 1 or more lists" %>
 
   <!-- please remove this eventually -->
   <div id='click-me'>click me to see values</div>

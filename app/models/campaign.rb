@@ -3,7 +3,7 @@ class Campaign < ActiveRecord::Base
   attr_accessor :list_ids
   has_many :lists, through: :campaign_lists
   has_many :campaign_lists, dependent: :destroy
-  has_many :messages, dependent: :destroy
+  has_many :messages
   belongs_to :user
   has_many :image_refs, as: :imageable, dependent: :destroy
   has_many :images, through: :image_refs
@@ -14,7 +14,7 @@ class Campaign < ActiveRecord::Base
   enum status: { active: 1, paused: 2, inactive: 3 }
 
   # validation of campaign attributes
-  validates_presence_of :text
+  validates_presence_of :text, :name
   validates_presence_of :repeat_days, if: lambda { self.frequency_type == "recurring" }
   
 end

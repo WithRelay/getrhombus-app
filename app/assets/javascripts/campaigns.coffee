@@ -21,6 +21,7 @@ class Campaign
   EMAIL_CHANNEL = '3'
   CHECK = ':checked'
   TEXTAREA_COUNTER = false         # track if counter already exists except for trumbowyg
+  EMOJIONEAREA = false
 
   constructor: (emojiConfig)->
     @textArea = '#trumbowyg'
@@ -44,8 +45,9 @@ class Campaign
       $(emojiArea).hide()
     else
       $(area).trumbowyg('destroy');
-      $(area).emojioneArea ->
-        @emojiConfig
+      if !EMOJIONEAREA 
+        EMOJIONEAREA = $(area).emojioneArea ->
+          @emojiConfig
       console.log(@emojiConfig)
       $(emojiArea).show()
       $(area).hide()
@@ -64,18 +66,20 @@ class Campaign
 
 
   textAreaEmojis: ->
-    $(@textArea).emojioneArea ->
-      @emojiConfig
+    if !EMOJIONEAREA 
+      EMOJIONEAREA = $(@textArea).emojioneArea ->
+        @emojiConfig
+      #EMOJIONEAREA[0].emojioneArea.on("emojibtn.click", function(button, event) {
+      #  console.log('event:emojibtn.click, emoji=' + button.children().data("name"));
+      #});
+
 
   countCharacters = (div) ->
     $(div).counter()
 
 
 $( document ).on 'ready page:load', ->
-  campaign = new Campaign({ 
-    pickerPosition: 'right',
-    events: { focus: (editor, event) -> alert('asdas') }
-  })
+  campaign = new Campaign({ pickerPosition: 'right' })
 
   campaign.datePicker(new DatePicker( '.daterange' ))
   $(document).on 'change', 'input[name=file]', ->

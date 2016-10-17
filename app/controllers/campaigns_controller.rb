@@ -15,6 +15,7 @@ class CampaignsController < ApplicationController
   def create
     @campaign = current_user.campaigns.build(campaign_params)
     campaign_params[:list_ids].split(',').each { |list_id| @campaign.campaign_lists.build(list_id: list_id) }
+    # comment out for now
     #save_campaign_images(@campaign)
     if @campaign.save
       flash[:notice] = 'Campaign Saved successfully'
@@ -26,7 +27,7 @@ class CampaignsController < ApplicationController
 
   def edit
     @campaign = current_user.campaigns.includes(:images).find(params[:id])
-    @lists = @campaign.lists
+    @lists_json = @campaign.lists.to_json
   end
 
   def update
@@ -48,10 +49,11 @@ class CampaignsController < ApplicationController
   end
 
   def change_status
-    if @campaign.update_attributes(status: 2)
+    status = params[:new_status] == 'pause' ? 2 : 1
+    if @campaign.update_attributes(status: status)
       flash[:notice] = 'Campaign paused'
     else
-      flash[:notice] = 'Sorry campaign could not paused'
+      flash[:notice] = 'Sorry campaign could not be paused'
     end
     redirect_to user_campaigns_path
   end
@@ -70,7 +72,7 @@ class CampaignsController < ApplicationController
 
   def campaign_params
     params.require(:campaign)
-          .permit(:list_ids, :channel, :repeat_days, :date_time, :deliver_now, :frequency_type, :text)
+          .permit(:name, :list_ids, :channel, :repeat_days, :date_time, :deliver_now, :frequency_type, :text, :new_status)
           .tap do |c| # because they are enums
             c[:channel] = c[:channel].to_i
             c[:frequency_type] = c[:frequency_type].to_i

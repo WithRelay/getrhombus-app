@@ -2,20 +2,22 @@
 <table>
   <thead>
     <tr>
-     <th>Channel Name</th>
+     <th>Name</th>
+     <th>Channel</th>
      <th>Status</th>
-     <th>Delivery Type</th>
-     <th>Image</th>
+     <th>Frequency Type</th>
      <th>Date</th>
      <th>Edit</th>
      <th>Delete</th>
      <th>Pause</th>
-     <th>Status</th>
     </tr>
   </thead>
   <tbody>
     <% @campaigns.each do |campaign| %>
       <tr>
+        <td>
+          <%= campaign.name %>
+        </td>
         <td>
           <%= campaign.channel %>
         </td>
@@ -23,28 +25,20 @@
           <%= campaign.status %>
         </td>
         <td>
-          <%= campaign.delivery_type %>
+          <%= present(campaign).format_frequency_type  %>
         </td>
         <td>
           <%= present(campaign).format_date_time %>
         </td>
+        
         <td>
-          <%= campaign.text.html_safe %>
-            <% campaign.images.each do |image| %>
-              <%= image_tag image.avatar.url %>
-          <% end %>
+          <%= link_to 'Edit', edit_user_campaign_path(current_user, campaign) %>
         </td>
         <td>
-          <%= link_to 'Edit', edit_user_campaign_path(campaign) %>
+          <%= link_to 'Delete', user_campaign_path(current_user, campaign), method: :delete %>
         </td>
         <td>
-          <%= link_to 'Delete', user_campaign_path(campaign), method: :delete %>
-        </td>
-        <td>
-          <%= link_to 'Pause Campaign', change_status_user_campaign(campaign), method: :put %>
-        </td>
-        <td>
-          <%= campaign.status %>
+          <%= present(campaign).generate_status_link %>
         </td>
       </tr>
     <% end %>
