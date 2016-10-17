@@ -140,7 +140,6 @@ $( document ).on 'ready page:load', ->
 
   if $("#deliverNow").is(":checked")
     $('.scheduleOption').hide()
-
   # Mainly for edit actions so the view shows properly
   frequency_type = if $('#oneTimeFrequency').is(':checked') then '#oneTimeFrequency' else '#recurringFrequency'
   $(frequency_type).trigger('click')
