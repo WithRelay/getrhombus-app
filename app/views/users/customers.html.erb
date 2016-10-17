@@ -110,9 +110,10 @@
     <div id="create_list_form">
         <div id="list_form_errors"> </div>
         <div id="list_form_items">
-          <%= form_tag("/lists/create_new_list", method: "post", remote: true) do %>
+          <%= form_tag("/v1/lists/create", id: "create_user_list", method: "post") do %>
             <%= label_tag(:list_name, "List name") %>
             <%= hidden_field_tag(:selected_users) %>
+            <%= hidden_field_tag(:list_type) %>
             <%= text_field_tag(:list_name) %>
             <%= submit_tag("Submit list") %>
           </div>
@@ -122,51 +123,3 @@
   </div>
 <!-- -->
 </body>
-
-
-<!--
-Temporary script for enabling the create list button based on whether a customer is selected or not
--->
-<script>
- $("#select_all_checkboxes").click(function(){
-      console.log("Select all checkboxes was clicked")
-     $(".customer_checkboxes" ).prop('checked', $(this).prop('checked'));
- })
- 
-  var selected_users = [] 
-  $("#create_list_button").click(function(e){
-    $("#list_create_modal").lightbox_me({
-      closeClick: true,
-      closeEsc: true,
-      centered: true,
-      onLoad: function() {
-        $("#list_create_modal").find('input:first')
-        $("#selected_users").val(selected_users)
-      }
-      });
-     e.preventDefault();
-  });
-  num_checkboxes_selected = 0;
-  $(".customer_checkboxes" ).change(function() {
-    var input = $(this);
-    var state = (input.prop("checked"))
-    if (state == true){
-      num_checkboxes_selected +=1;
-      selected_users.push(input.val());
-      console.log("Input checked is : ", input.val());
-  
-    } else{
-      num_checkboxes_selected -=1;
-      element_index = selected_users.indexOf(input.val())
-      selected_users.splice(element_index, 1);
-    }
-    
-  if (selected_users.length > 0){
-    console.log("There is a selected checkbox.", selected_users);
-    $("#create_list_button").prop('disabled', false);
-  }else{
-    console.log("No selected checkboxes");
-    $("#create_list_button").prop('disabled', true);
-  }
-})
-</script>
