@@ -20,8 +20,8 @@ class Campaign
 
   EMAIL_CHANNEL = '3'
   CHECK = ':checked'
-  TEXTAREA_COUNTER = false         # track if counter already exists except for trumbowyg
-  EMOJIONEAREA = false
+  TRUMBOWYG = false
+  MAXIMUM_VALUE = 1500
 
   constructor: (emojiConfig)->
     @textArea = '#trumbowyg'
@@ -41,14 +41,9 @@ class Campaign
     emojiArea = '.emojionearea'
     if status
       new CustomTrumbowygPlugin(area)
-      countCharacters('.trumbowyg-editor')
       $(emojiArea).hide()
     else
       $(area).trumbowyg('destroy');
-      if !EMOJIONEAREA 
-        EMOJIONEAREA = $(area).emojioneArea ->
-          @emojiConfig
-      console.log(@emojiConfig)
       $(emojiArea).show()
       $(area).hide()
 
@@ -66,22 +61,17 @@ class Campaign
 
 
   textAreaEmojis: ->
-    if !EMOJIONEAREA 
-      EMOJIONEAREA = $(@textArea).emojioneArea ->
-        @emojiConfig
-      #EMOJIONEAREA[0].emojioneArea.on("emojibtn.click", function(button, event) {
-      #  console.log('event:emojibtn.click, emoji=' + button.children().data("name"));
-      #});
-
-
-  countCharacters = (div) ->
-    $(div).counter()
-
+    divText = this.textArea
+    txtEmoji = $(@textArea).emojioneArea ->
+                 @emojiConfig
+    txtEmoji[0].emojioneArea.on 'keyUp', (btn, event) ->
+      $('#undefined_counter').html('')
+      $('.emojionearea-editor').counter({ count: 'up', goal: MAXIMUM_VALUE })
 
 $( document ).on 'ready page:load', ->
   campaign = new Campaign({ pickerPosition: 'right' })
-
   campaign.datePicker(new DatePicker( '.daterange' ))
+
   $(document).on 'change', 'input[name=file]', ->
     uploadedImage = new ImageValidator
     uploadedImage.imageObj = this.files[0]
@@ -94,8 +84,19 @@ $( document ).on 'ready page:load', ->
     else
       reader = new FileReader
       reader.onload = (e) ->
-        window.target_result = e.target.result
-        window.invalid_image = false
+        img = new Image();
+        img.onload = (e)->
+          canvas = document.createElement("canvas");
+          canvas.width = this.width
+          canvas.height = this.height
+          ctx = canvas.getContext('2d')
+          ctx.drawImage this, 0, 0
+          if e.target.src.split(';')[0]=="data:image/jpeg"
+            window.target_result = e.target.src
+          else
+            canvas.toDataURL("image/jpeg");
+          window.invalid_image = false
+        img.src = this.result;
       reader.readAsDataURL this.files[0]
 
   $(document).on 'click', 'form .trumbowyg-modal-submit',(e) ->
@@ -107,7 +108,6 @@ $( document ).on 'ready page:load', ->
 
   if $('#campaign_channel').val() == '3'
     new CustomTrumbowygPlugin('#trumbowyg')
-    $('.trumbowyg-editor').counter()
   else
     campaign.textAreaEmojis()
 
@@ -132,17 +132,15 @@ $( document ).on 'ready page:load', ->
     img = new Image
     img.setAttribute 'crossOrigin', 'anonymous'
     img.onload = (e)->
-      canvas = document.createElement('canvas')
-      canvas.width = this.width
-      canvas.height = this.height
-      ctx = canvas.getContext('2d')
-      ctx.drawImage this, 0, 0
-      dataURL = canvas.toDataURL("image/png");
-      new_url = dataURL.replace(/^data:image\/(png|jpg);base64,/, "data:image/jpeg;base64,");
-      trumbowygHtml =  $('#trumbowyg').trumbowyg('html')
-      lastSrc = $('#trumbowyg').trumbowyg('html').split('src=').pop()
-      newHtml = trumbowygHtml.replace(lastSrc, new_url + '>');
-      $('#trumbowyg').trumbowyg('html', newHtml)
-      return
+      $.ajax(
+        url: 'http://' + window.location.host + '/v1/campaigns/upload_from_url'
+        type: 'POST'
+        data: img_url: e.target.src
+        dataType: 'json').done (data) ->
+          trumbowygHtml = $('#trumbowyg').trumbowyg('html')
+          dataUrl = 'data:image/jpeg;base64,' + data.encoded_image
+          lastSrc = $('#trumbowyg').trumbowyg('html').split('src="').pop()
+          newHtml = trumbowygHtml.replace(lastSrc, dataUrl + '">');
+          $('#trumbowyg').trumbowyg('html', newHtml)
     img.src = url
     return
