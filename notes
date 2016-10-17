@@ -1,12 +1,42 @@
 - what happens when u send image in countries that don't support it. link?
+- check trumbowyg working
 
 - clean up image/hashtag presenters
-- link in list ids in edit view
-- update update,destroy etc...to change campaign_lists when necessary
-- JS hide for one time on page load
-- check trumbowyg working
-- counter
+- update update...to change campaign_lists when necessary
 
+Notes for Edwin
+- what if you have campaigns with different statuses
+
+Notes for Surya
+- You need to bind emojionearea only once so use a variable to keep track
+- You need to bind counter to all fields....you will need to do that on focus though since
+	we can't tell when emojionearea is done.
+- if it is a one time, you need to mark inactive
+
+
+Notes for Ovo
+- You can't delete a list attached to active/paused campaign
+
+
+- is this in use
+getBase64FromImageUrl = (url) ->
+    img = new Image
+    img.setAttribute 'crossOrigin', 'anonymous'
+    img.onload = (e)->
+      canvas = document.createElement('canvas')
+      canvas.width = this.width
+      canvas.height = this.height
+      ctx = canvas.getContext('2d')
+      ctx.drawImage this, 0, 0
+      dataURL = canvas.toDataURL("image/png");
+      new_url = dataURL.replace(/^data:image\/(png|jpg);base64,/, "data:image/jpeg;base64,");
+      trumbowygHtml =  $('#trumbowyg').trumbowyg('html')
+      lastSrc = $('#trumbowyg').trumbowyg('html').split('src=').pop()
+      newHtml = trumbowygHtml.replace(lastSrc, new_url + '>');
+      $('#trumbowyg').trumbowyg('html', newHtml)
+      return
+    img.src = url
+    return
 
 
 
@@ -47,25 +77,6 @@ Notes
 - let's stick to javascript..
 
 
-- is this in use
-getBase64FromImageUrl = (url) ->
-    img = new Image
-    img.setAttribute 'crossOrigin', 'anonymous'
-    img.onload = (e)->
-      canvas = document.createElement('canvas')
-      canvas.width = this.width
-      canvas.height = this.height
-      ctx = canvas.getContext('2d')
-      ctx.drawImage this, 0, 0
-      dataURL = canvas.toDataURL("image/png");
-      new_url = dataURL.replace(/^data:image\/(png|jpg);base64,/, "data:image/jpeg;base64,");
-      trumbowygHtml =  $('#trumbowyg').trumbowyg('html')
-      lastSrc = $('#trumbowyg').trumbowyg('html').split('src=').pop()
-      newHtml = trumbowygHtml.replace(lastSrc, new_url + '>');
-      $('#trumbowyg').trumbowyg('html', newHtml)
-      return
-    img.src = url
-    return
 
 
 

@@ -1,13 +1,22 @@
 $(document).ready(function () {  
 
-  // this is actyally for campaigns not lists but uses lists
+  // this is actually for campaigns not lists but uses lists
   // http://selectize.github.io/selectize.js/
-  var campaign_lists = $('#campaign-select-lists').selectize({
+
+  // For edit action, get lists data for preloading text input
+  var x = $('#campaign-select-lists'),
+      campaign_lists = x.data("lists_data");
+  
+  // Can be undefined for new action
+  campaign_lists = (campaign_lists) ? campaign_lists : [];
+  
+  var lists_selectize = x.selectize({
     valueField: 'id',
     labelField: 'name',
     searchField: 'name',
     openOnFocus: false,
     maxOptions: 5,
+    options: undefined,
     closeAfterSelect: true,
     render: {
         item: function(item, escape) {
@@ -18,7 +27,7 @@ $(document).ready(function () {
         }
     },
     load: function(query, callback) {
-      if (query.length < 3) return callback();
+      if (query.length < 2) return callback();
       $.ajax({
         url: window.location.protocol + "//" + window.location.host + "/v1/lists.json?query=" + encodeURIComponent(query),
         error: function() { callback(); },
@@ -28,7 +37,12 @@ $(document).ready(function () {
   });
 
   $( "#click-me" ).click(function() {
-    alert(campaign_lists[0].selectize.getValue())
+    alert(lists_selectize[0].selectize.getValue())
+  });  
+  
+  // prefill form with previous lists
+  $.each(campaign_lists, function (index, val) { 
+    lists_selectize[0].selectize.addItem(val['id']);
   });
   
 });
