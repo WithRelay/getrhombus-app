@@ -15,8 +15,7 @@ class CampaignsController < ApplicationController
   def create
     @campaign = current_user.campaigns.build(campaign_params)
     campaign_params[:list_ids].split(',').each { |list_id| @campaign.campaign_lists.build(list_id: list_id) }
-    # comment out for now
-    #save_campaign_images(@campaign)
+    # save_campaign_images(@campaign) this is comment for now.
     if @campaign.save
       flash[:notice] = 'Campaign Saved successfully'
     else
@@ -71,12 +70,12 @@ class CampaignsController < ApplicationController
   end
 
   def campaign_params
-    params.require(:campaign)
-          .permit(:name, :list_ids, :channel, :repeat_days, :date_time, :deliver_now, :frequency_type, :text, :new_status)
-          .tap do |c| # because they are enums
-            c[:channel] = c[:channel].to_i
-            c[:frequency_type] = c[:frequency_type].to_i
-          end
+    # enums are define as integer but params are in string and rails is not converting string to integer
+    params.require(:campaign).permit(:name, :list_ids, :channel, :repeat_days, :date_time, :deliver_now,
+                                     :frequency_type, :text, :new_status).tap do |c|
+                                      c[:channel] = c[:channel].to_i
+                                      c[:frequency_type] = c[:frequency_type].to_i
+                                    end
   end
 
   def image_params
