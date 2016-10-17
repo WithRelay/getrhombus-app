@@ -3,19 +3,6 @@
 - clean up image/hashtag presenters
 - I will get test server working and seeds by tuesday night
 
-Notes
-- Clean up your code if you no longer use it. Don't leave unused code in the repo. PLEASE!
-- Please ask me before adding a gem to the project to reduce confusion and unnecessaory work. we arent using bootstrap form since edwin is designing all the pages. the toastr...we are using pnotify.
-- Even though we arent writing tests yet, pls adequately hand test your code.
-- migration names should be clear
-- is text in messages text or string type? check with the guys
-   - messages text became string cos of the utf8mb4 execution string
-- comment your code
-- let's stick to javascript..
-
-
-Notes for Edwin
-- what if you have campaigns with different statuses
 
 Notes for Surya
 - You need to bind emojionearea only once so use a variable to keep track
