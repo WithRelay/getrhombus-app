@@ -110,9 +110,10 @@
     <div id="create_list_form">
         <div id="list_form_errors"> </div>
         <div id="list_form_items">
-          <%= form_tag("/lists/create_new_list", method: "post", remote: true) do %>
+          <%= form_tag("/v1/lists/create", id: "create_user_list", method: "post") do %>
             <%= label_tag(:list_name, "List name") %>
             <%= hidden_field_tag(:selected_users) %>
+            <%= hidden_field_tag(:list_type) %>
             <%= text_field_tag(:list_name) %>
             <%= submit_tag("Submit list") %>
           </div>
@@ -142,6 +143,7 @@ Temporary script for enabling the create list button based on whether a customer
       onLoad: function() {
         $("#list_create_modal").find('input:first')
         $("#selected_users").val(selected_users)
+        $("#list_type").val("list")
       }
       });
      e.preventDefault();
