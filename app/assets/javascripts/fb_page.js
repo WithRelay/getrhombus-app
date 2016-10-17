@@ -8,15 +8,6 @@ $( document ).ready(function() {
     });
   }
 
-  $(document).on('click', '.submit_page', function() {
-    var name = $(this).attr('param');
-    if ($(this).val() === "Subscribe"){
-      toastr.success( name + ', page has been successfully subscribed.');
-    } else {
-      toastr.warning( name + ', your page has been unsubscribed.');
-    }
-  });
-
   $('#delete_integration').click(function (evt) {
     evt.preventDefault();
     swal({

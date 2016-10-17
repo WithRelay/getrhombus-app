@@ -13,7 +13,6 @@
 
 //= require pubnub/pubnub.min.js
 //= require jquery
-//= require toastr
 //= require sweetalert
 //= require jquery_ujs
 //= require jquery.lightbox_me
