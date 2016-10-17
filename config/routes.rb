@@ -113,6 +113,7 @@ Rails.application.routes.draw  do
     match 'saved_replies' => 'saved_replies#index', via: :get
     match 'campaigns/:id/image_delete' => 'campaigns#image_delete', via: :post
     match 'campaigns/upload_images' => 'campaigns#upload_images', via: :post
+    match 'campaigns/upload_from_url' => 'campaigns#upload_from_url', via: :post
     match 'transactions/:charge_id/refund' => 'transactions#refund', via: :post
     match 'transactions/charge_customer' => 'transactions#charge_customer', via: :post
     match 'numbers/search' => 'numbers#search', via: :get
