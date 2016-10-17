@@ -78,7 +78,7 @@ class CampaignsController < ApplicationController
   end
 
   def save_campaign_images(campaign)
-    # comment for attrachment for now later on it is needed
+    # comment for attrachment for now later on it is needed.
     # image_params[:avatar].each do |image|
     #   campaign.images.build(avatar: image)
     # end if image_params[:avatar].present?
