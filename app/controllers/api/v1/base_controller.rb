@@ -3,7 +3,7 @@ class API::V1::BaseController < ApplicationController
   # before_action :http_basic_authentication
   # do current_user or token test here and set as current_user
 
-  ALLOWED_MIME_TYPE = %w(image/jpg, image/png, image/jpeg)
+  ALLOWED_MIME_TYPE = %w(image/jpg image/png image/jpeg)
   ALLOWED_SIZE_IN_BYTES = 4718592
 
   before_action :cors_preflight_check
@@ -26,6 +26,8 @@ class API::V1::BaseController < ApplicationController
     end
   end
 
+  private
+
   def find_image(find_by_hash)
      ImageRef.where(find_by_hash).first
   end
@@ -34,6 +36,11 @@ class API::V1::BaseController < ApplicationController
     (ALLOWED_MIME_TYPE.include?(image.content_type) && (image.size < ALLOWED_SIZE_IN_BYTES))
   end
 
-
-
+  def validation_messages(image)
+    if valid_uploaded_images(image)
+      { status: 200, message: 'success', image_type: image.content_type  }
+    else
+      { status: 401, message: 'sorry file type/size is not supported', image_type: image.content_type }
+    end
+  end
 end
