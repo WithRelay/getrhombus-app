@@ -16,7 +16,7 @@ $(document).ready(function () {
     searchField: 'name',
     openOnFocus: false,
     maxOptions: 5,
-    options: undefined,
+    options: campaign_lists,
     closeAfterSelect: true,
     render: {
         item: function(item, escape) {
