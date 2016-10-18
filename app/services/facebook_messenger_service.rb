@@ -31,7 +31,8 @@ class FacebookMessengerService
     # update new user from messenger's email from account linking
     def update_user_fb_cred(params)
       account_linking_token = params['account_linking_token']
-      token_array = FbPage.pluck('page_access_token')
+      subscribed_page = FbPage.where(subscription_status: true)
+      token_array = subscribed_page.pluck('page_access_token')
       token_array.each do |token|
         response = JSON.parse get_page_scope_id(account_linking_token, token)
         if response
