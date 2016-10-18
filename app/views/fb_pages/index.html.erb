@@ -29,8 +29,10 @@
   <div class="content">
     <div class="page-header">
       <%= render 'shared/flash_messages'%>
-      <p>Connected to Facebook as: </p>
-      <span style="background: aliceblue;"> <%= current_user.fb_cred.name %></span>
+      <p>Connected to Facebook with: 
+        <span style="background: blue; color: white"> <%= current_user.fb_cred.name %></span>
+      </p>
+      
       <% if present(current_user).page_count %>
         <p> Select page: </p>
         <%= form_for :fb_page, url: user_update_fb_page_path(current_user), method: :patch do |f| %>
