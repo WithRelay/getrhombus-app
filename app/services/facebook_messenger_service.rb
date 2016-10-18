@@ -2,7 +2,8 @@ class FacebookMessengerService
 
   class << self
 
-    def send_auth_link(page_access_token, recipient_id, welcome_text, route)
+    # for messenger_account_linking 
+    def send_auth_link(page_access_token, recipient_id, welcome_text)
       body = {
         "recipient":{
           "id": recipient_id

@@ -1,0 +1,11 @@
+<%= form_tag redirect_path(redirect_uri: @params['redirect_uri']), :method => :post do %>
+  <p>
+    <%= label_tag :email, "Email" %><br />
+    <%= text_field_tag :email, params[:email] %>
+  </p>
+  <p>
+    <%= label_tag :password %><br />
+    <%= password_field_tag :password %>
+  </p>
+  <p><%= submit_tag "Log In", data: { confirm: "Are you sure?" } %></p>
+<% end %>
