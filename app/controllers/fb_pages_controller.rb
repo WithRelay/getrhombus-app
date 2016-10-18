@@ -55,7 +55,7 @@ class FbPagesController < ApplicationController
     if response['success'] || fb_pages.empty? || FbPage.where(subscription_status: true).empty?
       FbCred.where(fb_id: fb_cred.fb_id).destroy_all
     end
-    redirect_to user_path(current_user), flash: { notice: 'Removed facebok integration' }
+    redirect_to user_path(current_user), flash: { notice: 'You have disconnected Facebook Messenger from Rhombus.' }
   end
 
   private 

@@ -1,4 +1,4 @@
-$( document ).ready(function() {
+  $( document ).ready(function() {
   "use strict";
   var index = 1;
   if ($('#select_page').length > 0){
@@ -11,21 +11,21 @@ $( document ).ready(function() {
   $('#delete_integration').click(function (evt) {
     evt.preventDefault();
     swal({
-      title: "Are you sure?",
-      text: "Your will not be able to see conversation on page!",
+      title: "Rhombus Facebook Messenger Integration",
+      text: "Are you sure you want to remove the Facebook Messenger integration from this app?",
       type: "warning",
       showCancelButton: true,
       confirmButtonColor: "#dd1c06",
-      confirmButtonText: "Yes, delete it!",
-      cancelButtonText: "No, cancel it!",
+      confirmButtonText: "Remove",
+      cancelButtonText: "Cancel",
       closeOnConfirm: false,
       closeOnCancel: false },
       function (isConfirm) {
       if (isConfirm) {
-        swal("Removed!", "Your facebook integration has been removed.", "success");
+        swal("Removed!", "You have disconnected Facebook Messenger from Rhombus.", "success");
         window.location = $('#delete_integration').attr('href');
       } else {
-        swal("Cancelled", "Your Facebook messages are safe :)", "error");
+        swal("Cancelled", "You are still connected with Rhombus", "error");
         return false;
       }
     });

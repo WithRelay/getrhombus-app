@@ -45,10 +45,14 @@ class FacebookMessengerService
     end
 
     def get_page_scope_id(account_linking_token, page_access_token)
-      url = "https://graph.facebook.com/v2.6/me?access_token=#{page_access_token}\
-            &fields=recipient\
-            &account_linking_token=#{account_linking_token}"
-      HTTParty.get(url)
+      begin
+        url = "https://graph.facebook.com/v2.6/me?access_token=#{page_access_token}\
+              &fields=recipient\
+              &account_linking_token=#{account_linking_token}"
+        HTTParty.get(url)
+      rescue HTTParty::Error => err
+        nil
+      end
     end
 
     def send_text_message(page_access_token, recipient_id, text)  
