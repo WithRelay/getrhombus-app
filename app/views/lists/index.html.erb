@@ -17,7 +17,11 @@
         <td><%= list.name %>
         <td><%= link_to 'Show details', list %></td>
         <td><%= link_to 'Edit', edit_list_path(list) %></td>
-        <td><%= link_to 'Destroy', list, method: :get, data: { confirm: 'Are you sure?' } %></td>
+        <td>
+        <%= 
+        link_to 'Destroy', list, method: :delete, data: {confirm: 'Are you sure?'} 
+        %>
+      </td>
       </tr>
     <% end %>
   </tbody>
