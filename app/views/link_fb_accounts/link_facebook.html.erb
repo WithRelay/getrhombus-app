@@ -1,3 +1,4 @@
+<%= render 'shared/flash_messages'%>
 <%= form_tag redirect_path(redirect_uri: @params['redirect_uri'], account_linking_token: @params['account_linking_token']), :method => :post do %>
   <p>
     <%= label_tag :email, "Email" %><br />
