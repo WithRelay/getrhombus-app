@@ -32,38 +32,32 @@ class ListsController < ApplicationController
     respond_with(@list)
   end
 
-  # This function creates a new lists and associates all customers that are on the list to it
-  def create_new_list
-    name = params[:list_name]
-    if params[:list_type] == 'segment'
-      @list = save_list(name:name, user_id:current_user.id, segment:false)
-      user_list = params[:selected_users].split(",")
-      # Now save each customer on that list
-      @customer_list_errors = Array.new
-      user_list.each do |u|
-        u = UserList.new(list_id:@list.id, user_id:u)
-        @customer_list_errors.push(u.errors.full_messages) if !u.save
-      end
-      respond_to do |format|
-        format.html
-        format.js
-      end
-    else
-      @list = save_list(name:name, user_id:current_user.id, segment:true)
-      segment.new(list_id:@list.id, query:params[:segment_query])
-    end
-  end
-
-
  
   def update
     flash[:notice] = 'List was successfully updated.' if @list.update(list_params)
     respond_with(@list)
   end
 
+  # Deletes only lists that are not in an active campaign
+  # Begins by checking to see if a campaign list exists with the list id
+  # If not, deletes the list as usual
+  # else if the list is associated with an active campaign, the delete operation
+  # is aborted
   def destroy
-    @list.destroy
-    respond_with(@list)
+    if CampaignList.where(:list_id => @list.id).any?
+      if CampaignList.where(list_id:@list.id).first.campaign.status == "active"
+        flash[:notice] = "This list cannot be deleted as it is part of an active campaign"
+        respond_with(@list)
+      else 
+        @list.destroy
+        flash[:notice] = "List was successfully deleted"
+        respond_with(@list)
+      end
+    else
+      @list.destroy
+      flash[:notice] = "List was successfully deleted"
+      respond_with(@list)
+    end
   end
 
   private
@@ -78,16 +72,4 @@ class ListsController < ApplicationController
     def find_user
       @list = List.find_by(user_id:current_user.id)
     end
-
-    # Default method for creating lists
-    # @param name The name of the list
-    # @param user_id The user_id
-    # @param segment A boolean indicating if this list is a segment
-    # default is false (i.e. list)
-    def save_list(name:, user_id:, segment:false)
-      l = List.new(name, user_id, segment)
-      l.save
-      return l
-    end
-
 end

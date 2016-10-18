@@ -119,6 +119,8 @@ Rails.application.routes.draw  do
     match 'transactions/charge_customer' => 'transactions#charge_customer', via: :post
     match 'numbers/search' => 'numbers#search', via: :get
     match 'lists' => 'lists#index', via: :get
+    match 'lists/create' => 'lists#create', via: :post
+
   end
 
   ## catch all other to 404
