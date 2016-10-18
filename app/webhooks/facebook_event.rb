@@ -7,7 +7,6 @@
       event = required_params['messaging'].last
       read_event = event['read']
       message_event = event['message']
-      # delivery_event = event['delivery']
       create_conversation(required_params)
 
       if params['hub.mode'].present?
