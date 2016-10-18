@@ -7,7 +7,8 @@ class LinkFbAccountsController < ApplicationController
     @params = params
     user = User.find_by_email(@params[:email])
     if user && user.valid_password?(@params[:password])
-      redirect_to @params[:redirect_uri]
+      url = @params[:redirect_uri] + '&authorization_code=' + @params[:authenticity_token]
+      redirect_to url
     else
       redirect_to link_facebook_path(@params), flash: { :error => "Invalid email/password" }
     end
