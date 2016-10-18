@@ -9,3 +9,8 @@
   </p>
   <p><%= submit_tag "Log In", data: { confirm: "Are you sure?" } %></p>
 <% end %>
+<br>
+<p> Sign up to Rhombus: </p>
+<%= link_to signup_path, id: 'signup', target: "_blank", onClick: "javascript:window.close()" do%>
+  <i class="fa fa-sign-in" aria-hidden="true">Sign Up</i>
+<%end%>
