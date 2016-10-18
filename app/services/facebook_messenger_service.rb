@@ -38,7 +38,7 @@ class FacebookMessengerService
         if response
           psid = response['recipient']
           fb_user = FbCred.find_by_page_specific_id psid
-          fb_user.update(email: params['email'])
+          fb_user.update(email: params['email']) if fb_user
           break
         end
       end
