@@ -20,6 +20,7 @@
   <%= javascript_include_tag "plugins" %>
   <%= yield :head_script %>
   <%= csrf_meta_tags %>
+
 </head>
 <body style = "background: #f4f4f4">
    <!-- Start Page Loading -->
@@ -27,6 +28,7 @@
 
   <div class="content">
     <div class="page-header">
+      <%= render 'shared/flash_messages'%>
       <p>Connected to Facebook as: </p>
       <span style="background: aliceblue;"> <%= current_user.fb_cred.name %></span>
       <% if present(current_user).page_count %>
@@ -49,6 +51,7 @@
   <!-- End Page Loading -->
   <%= render 'shared/header_new' %>
   <%= render 'shared/sidebar' %>
+
   <%= yield %>
 
   <%= render 'shared/smooch' %>
