@@ -1,4 +1,6 @@
 class LinkFbAccountsController < ApplicationController
+  protect_from_forgery with: :exception
+
   def link_facebook
     @params = params
   end
@@ -11,7 +13,7 @@ class LinkFbAccountsController < ApplicationController
       url = @params[:redirect_uri] + '&authorization_code=' + @params[:authenticity_token]
       redirect_to url
     else
-      redirect_to link_facebook_path(@params), flash: { :error => "Invalid email/password" }
+      redirect_to link_facebook_path(@params), flash: { :error => "Invalid email or password" }
     end
   end
 end
