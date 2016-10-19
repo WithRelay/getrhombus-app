@@ -35,6 +35,9 @@ class FacebookMessengerService
       token_array = subscribed_page.pluck('page_access_token')
       token_array.each do |token|
         response = get_page_scope_id(account_linking_token, token)
+        if response.is_a? String
+          response = JSON.parse response
+        end
         if response
           psid = response['recipient']
           fb_user = FbCred.find_by_page_specific_id psid
