@@ -9,7 +9,8 @@
   </p>
   <p>
     <%= label_tag :password %><br />
-    <%= password_field_tag :password, id: 'password', required: true %>
+    <%= password_field_tag :password, params[:password], type: 'password', 
+          required: true %>
   </p>
   <p><%= submit_tag 'Log In' %></p>
 <% end %>
