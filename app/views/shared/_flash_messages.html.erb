@@ -1,7 +1,24 @@
 <% if flash[:notice].present? %>
-  <small class="help-block">
-    <%= flash[:notice] %>
-  </small>
+  <script type="text/javascript">
+    $(window).load(function(){ 
+      new PNotify({
+          title: 'Success!!',
+          text: "<%= flash[:notice] %>",
+          type: 'success',
+          hide: true
+      });
+    })
+  </script>
 <% elsif flash[:error].present? %>
-  <%= flash[:error] %>
+  <script type="text/javascript">
+    $(window).load(function(){
+      new PNotify({
+          title: 'Error!!',
+          text: "<%= flash[:error] %>",
+          type: 'error',
+          hide: true
+      });
+    })
+  </script>
 <% end %>
+

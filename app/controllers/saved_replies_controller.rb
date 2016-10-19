@@ -21,12 +21,12 @@ class SavedRepliesController < ApplicationController
 
   def update
     @saved_reply.update(saved_reply_params)
-    redirect_to user_saved_replies_path, notice: "Updated" 
+    redirect_to user_saved_replies_path, flash: { notice: 'Reply was updated'}
   end
 
   def destroy
     @saved_reply.destroy
-    redirect_to user_saved_replies_path
+    redirect_to user_saved_replies_path, flash: { notice: 'Reply was deleted'}
   end
 
   private

@@ -9,7 +9,7 @@
   <%= f.text_area :body, placeholder: 'Start typing...', id: 'saved-reply-body-field' %>
 
   <% if action_name == 'index' %>
-  	<%= link_to 'Destroy', [current_user, saved_reply],  method: :delete, data: { confirm: 'Are you sure?' }, id: 'delete-saved-reply' %>
+  	<%= link_to 'Destroy', [current_user, saved_reply],  method: :delete, id: 'delete-saved-reply' %>
 
   	<%= f.button "Cancel", id: 'saved-reply-cancel' %>
   <% end %>

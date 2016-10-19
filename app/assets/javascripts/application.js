@@ -14,6 +14,7 @@
 //= require pubnub/pubnub.min.js
 //= require jquery
 //= require sweetalert
+//= require pnotify
 //= require jquery_ujs
 //= require jquery.lightbox_me
 //= require intlTelInput.min

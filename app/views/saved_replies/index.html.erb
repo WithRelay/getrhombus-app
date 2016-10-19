@@ -1,8 +1,4 @@
-
-
-<%# display in a toastr...use pnotify  %>
-<%= flash[:error] %> <!-- You need to make errors explicit...show each error -->
-<%= flash[:notice] %>
+<%= render 'shared/flash_messages'%>
 
 <% if @saved_replies.present? %>
   <h1>Saved Replies</h1>
