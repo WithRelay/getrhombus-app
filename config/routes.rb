@@ -119,6 +119,7 @@ Rails.application.routes.draw  do
     match 'numbers/search' => 'numbers#search', via: :get
     match 'lists' => 'lists#index', via: :get
     match 'lists/create' => 'lists#create', via: :post
+    match  'lists/search' => 'lists#search', via: :get
 
   end
 
