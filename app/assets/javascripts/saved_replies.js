@@ -40,6 +40,7 @@ $(document).ready(function() {
     reply_body_emoji_box[0].emojioneArea.setText($('#saved-reply-body-' + id).text());
   }
 
+  // Confirmation dialog box for destroy saved reply
   $("#delete-saved-reply").click(function(evt) {
     if (!$("#delete-saved-reply").attr('isDestroy')) {
       (new PNotify({

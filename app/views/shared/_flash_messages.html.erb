@@ -9,6 +9,7 @@
       });
     })
   </script>
+
 <% elsif flash[:error].present? %>
   <script type="text/javascript">
     $(window).load(function(){
@@ -20,5 +21,22 @@
       });
     })
   </script>
-<% end %>
 
+<% elsif flash[:alert].present? || alert.present? %>
+  <% message = flash[:alert].present? flash[:alert] : alert %>
+  <script type="text/javascript">
+    var message = "<%= message %>";
+
+    var notice = new PNotify({
+      title: 'Alert!!',
+      text: message,
+      buttons: {
+          closer: false,
+          sticker: false
+      }
+    });
+    notice.get().click(function() {
+        notice.remove();
+    });
+  </script>
+<% end %>

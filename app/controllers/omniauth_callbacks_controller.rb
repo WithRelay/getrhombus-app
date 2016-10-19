@@ -19,7 +19,7 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
     if current_user && current_user.is_merchant?
       if FbCred.from_omniauth(request.env["omniauth.auth"], current_user.id) == true
         FbPage.store_page(current_user)
-        redirect_to user_fb_pages_path(current_user), flash: { :notice => "You have connected Messenger to Rhombus" }
+        redirect_to user_fb_pages_path(current_user), flash: { notice: "You have connected Messenger to Rhombus" }
         return
       end
       redirect_to user_path(current_user), flash: { error: "We were unable to connect your account to Facebook account. Please try again" }
