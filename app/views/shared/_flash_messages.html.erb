@@ -22,14 +22,11 @@
     })
   </script>
 
-<% elsif flash[:alert].present? || alert.present? %>
-  <% message = flash[:alert].present? flash[:alert] : alert %>
+<% elsif flash[:alert].present?  %>
   <script type="text/javascript">
-    var message = "<%= message %>";
-
     var notice = new PNotify({
       title: 'Alert!!',
-      text: message,
+      text: <%= flash[:alert] %>,
       buttons: {
           closer: false,
           sticker: false
