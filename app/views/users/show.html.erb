@@ -22,6 +22,7 @@
   <!-- Start Page Header -->
   <div class="page-header" style="background: transparent; margin: -20px -24px 78px -32px; margin-bottom: 0px;">
     <h1 class="title">Dashboard</h1>
+    <%= render 'shared/flash_messages'%>
     <%= link_to "Connect my Twitter Account", user_omniauth_authorize_path(:twitter), class: "btn btn-primary btn-rhombus" %>
     <% if current_user.fb_cred.present? %>
       <%= link_to "Connected to Facebook with #{current_user.fb_cred.name}", user_fb_pages_path(current_user), class: "btn btn-primary btn-rhombus" %>

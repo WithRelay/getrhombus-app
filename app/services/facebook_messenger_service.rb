@@ -2,7 +2,8 @@ class FacebookMessengerService
 
   class << self
 
-    def send_auth_link(page_access_token, recipient_id, welcome_text, route)
+    # for messenger_account_linking 
+    def send_auth_link(page_access_token, recipient_id, welcome_text)
       body = {
         "recipient":{
           "id": recipient_id
@@ -25,6 +26,33 @@ class FacebookMessengerService
         }
       }
       httparty_post(body, page_access_token) 
+    end
+
+    # update new user from messenger's email from account linking
+    def update_user_fb_cred(params)
+      account_linking_token = params['account_linking_token']
+      subscribed_page = FbPage.where(subscription_status: true)
+      token_array = subscribed_page.pluck('page_access_token')
+      token_array.each do |token|
+        response = get_page_scope_id(account_linking_token, token)
+        if response
+          psid = response['recipient']
+          fb_user = FbCred.find_by_page_specific_id psid
+          fb_user.update(email: params['email']) if fb_user
+          break
+        end
+      end
+    end
+
+    def get_page_scope_id(account_linking_token, page_access_token)
+      begin
+        url = "https://graph.facebook.com/v2.6/me?access_token=#{page_access_token}\
+              &fields=recipient\
+              &account_linking_token=#{account_linking_token}"
+        HTTParty.get(url)
+      rescue HTTParty::Error => err
+        nil
+      end
     end
 
     def send_text_message(page_access_token, recipient_id, text)  

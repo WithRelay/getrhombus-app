@@ -22,9 +22,9 @@ class FbPagesController < ApplicationController
       if(response["success"])
         page.update_attributes(subscription_status: true)
       end
-      redirect_to user_fb_pages_path(current_user), notice: 'success'
+      redirect_to user_fb_pages_path(current_user), flash: { notice: 'Page has been successfully subscribed' }
     else
-      redirect_to user_fb_pages_path(current_user), error: 'fail'
+      redirect_to user_fb_pages_path(current_user), flash: { error: 'Something went wrong' }
     end
   end
 
@@ -35,9 +35,9 @@ class FbPagesController < ApplicationController
       if(response['success'])
         page.update_attributes(subscription_status: false)
       end
-      redirect_to user_fb_pages_path(current_user), notice: 'success'
+      redirect_to user_fb_pages_path(current_user), flash: { notice: 'Page has been successfully unsubscribed' }
     else
-      redirect_to user_fb_pages_path(current_user), error: 'fail'
+      redirect_to user_fb_pages_path(current_user), flash: { error: 'Something went wrong' }
     end
   end
 
@@ -55,7 +55,7 @@ class FbPagesController < ApplicationController
     if response['success'] || fb_pages.empty? || FbPage.where(subscription_status: true).empty?
       FbCred.where(fb_id: fb_cred.fb_id).destroy_all
     end
-    redirect_to user_path(current_user), notice: 'success'
+    redirect_to user_path(current_user), flash: { notice: 'You have disconnected Facebook Messenger from Rhombus.' }
   end
 
   private 

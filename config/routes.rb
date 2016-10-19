@@ -14,7 +14,8 @@ Rails.application.routes.draw  do
   post 'lists/create_new_list' => 'lists#create_new_list'
   get 'user_lists/remove_user' => 'user_lists#remove_user'
   get 'fb_pages/remove_integration' => 'fb_pages#remove_integration'
-  # get 'link_facebook' => 'link_fb_accounts#link_facebook'
+  get 'link_facebook' => 'link_fb_accounts#link_facebook'
+  post 'redirect' => 'link_fb_accounts#redirect'  
 
   resources :lists do
     resources :customer_lists

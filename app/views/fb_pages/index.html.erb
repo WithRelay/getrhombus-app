@@ -20,6 +20,7 @@
   <%= javascript_include_tag "plugins" %>
   <%= yield :head_script %>
   <%= csrf_meta_tags %>
+
 </head>
 <body style = "background: #f4f4f4">
    <!-- Start Page Loading -->
@@ -27,8 +28,11 @@
 
   <div class="content">
     <div class="page-header">
-      <p>Connected to Facebook as: </p>
-      <span style="background: aliceblue;"> <%= current_user.fb_cred.name %></span>
+      <%= render 'shared/flash_messages'%>
+      <p>Connected to Facebook with: 
+        <span style="background: blue; color: white"> <%= current_user.fb_cred.name %></span>
+      </p>
+      
       <% if present(current_user).page_count %>
         <p> Select page: </p>
         <%= form_for :fb_page, url: user_update_fb_page_path(current_user), method: :patch do |f| %>
@@ -49,6 +53,7 @@
   <!-- End Page Loading -->
   <%= render 'shared/header_new' %>
   <%= render 'shared/sidebar' %>
+
   <%= yield %>
 
   <%= render 'shared/smooch' %>
