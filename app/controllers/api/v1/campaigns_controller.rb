@@ -7,12 +7,7 @@ class Api::V1::CampaignsController < API::V1::BaseController
 	end
 
   def upload_images
-    render json:  validation_messages(params[:image])
-  end
-
-  def upload_from_url
-    image = open(params[:img_url])
-    encoded_image = Base64.encode64(open(params[:img_url]) { |io| io.read })
-    render json: validation_messages(image).merge(encoded_image: encoded_image)
+    image = params[:img_url].present? ? open(params[:img_url]) : params[:image]
+    render json:  validation_messages(image)
   end
 end
