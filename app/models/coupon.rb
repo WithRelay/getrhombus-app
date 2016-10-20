@@ -3,7 +3,7 @@ class Coupon < ActiveRecord::Base
   has_many :subscriptions
   belongs_to :user
 
-
+  attr_accessor :coupon_type
   validates :name, uniqueness: { scope: :user_id }
 
   def create_coupon(hash)

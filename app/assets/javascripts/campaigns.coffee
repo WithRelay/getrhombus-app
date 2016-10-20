@@ -62,11 +62,12 @@ class Campaign
 
   textAreaEmojis: ->
     divText = this.textArea
-    txtEmoji = $(@textArea).emojioneArea ->
-                 @emojiConfig
-    txtEmoji[0].emojioneArea.on 'keyUp', (btn, event) ->
-      $('#undefined_counter').html('')
-      $('.emojionearea-editor').counter({ count: 'up', goal: MAXIMUM_VALUE })
+    if $(@textArea).length > 1
+      txtEmoji = $(@textArea).emojioneArea ->
+                  @emojiConfig
+      txtEmoji[0].emojioneArea.on 'keyUp', (btn, event) ->
+        $('#undefined_counter').html('')
+        $('.emojionearea-editor').counter({ count: 'up', goal: MAXIMUM_VALUE })
 
 $( document ).on 'ready page:load', ->
   campaign = new Campaign({ pickerPosition: 'right' })

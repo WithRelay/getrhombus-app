@@ -16,9 +16,19 @@
     <%= f.text_field :name, id: 'coupon-name' %>
   </div>
 
-   <div class="field" id='amount-off-div'>
-    <%= f.label :amount_off %><br>
-    <%= f.text_field :amount_off, id: "amount-off" %>
+  <div class="field">
+    <%= f.label :coupon_type %><br>
+    <%= f.select :coupon_type, options_for_select({ "Amount Off" => "amount_off", "Percent Off" => 'percent_off' }, selected: get_selected_coupon_type(@coupon)), {}, id: 'coupon-type' %>
+  </div>
+
+  <div class="field">
+    <% if f.object.new_record? || (f.object.persisted? && f.object.amount_off.present?)%>
+      <%= f.label :amount_off, id: 'coupon-type-value-label' %><br>
+      <%= f.text_field :amount_off, id: "coupon-type-value" %>
+    <% else %>
+      <%= f.label :percent_off, id: 'coupon-type-value-label' %><br>
+      <%= f.text_field :percent_off, id: "coupon-type-value" %>
+    <% end %>
   </div>
 
   <div class="field">
@@ -35,12 +45,6 @@
   <div class="field">
     <%= f.label :max_redemptions %><br>
     <%= f.text_field :max_redemptions, id: 'max-redemptions' %>
-  </div>
-
-
-  <div class="field" id='percent-off-div'>
-    <%= f.label :percent_off %><br>
-    <%= f.text_field :percent_off, id: 'percent-off' %>
   </div>
 
    <div class="field">
