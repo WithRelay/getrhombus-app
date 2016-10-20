@@ -7,12 +7,12 @@
   <br>
 
   <%= f.text_area :body, placeholder: 'Start typing...', id: 'saved-reply-body-field' %>
-
+  <br>
   <% if action_name == 'index' %>
   	<%= link_to 'Destroy', [current_user, saved_reply],  method: :delete, id: 'delete-saved-reply' %>
+    <%= f.button "Cancel", id: 'saved-reply-cancel' %>
   <% end %>
-
-  <%= f.button "Cancel", id: 'saved-reply-cancel' %>
+  
   <%= f.submit "Save", class: "btn btn-warning btn-small" %>
 
 <% end %>
