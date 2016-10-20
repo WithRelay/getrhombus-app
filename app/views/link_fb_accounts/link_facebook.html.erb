@@ -1,4 +1,3 @@
-<%= render 'shared/flash_messages'%>
 
 <h1>Log In to Rhombus</h1>
 <%= form_tag redirect_path(redirect_uri: @params['redirect_uri'], account_linking_token: @params['account_linking_token']), :method => :post, 
