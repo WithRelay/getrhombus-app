@@ -15,8 +15,8 @@ class CampaignsController < ApplicationController
   def create
     @campaign = current_user.campaigns.build(campaign_params)
     campaign_params[:list_ids].split(',').each { |list_id| @campaign.campaign_lists.build(list_id: list_id) }
-    # save_campaign_images(@campaign) this is comment for now.
     if @campaign.save
+      save_campaign_images(@campaign)
       flash[:notice] = 'Campaign Saved successfully'
     else
       flash[:error] = @campaign.errors.messages
@@ -57,6 +57,11 @@ class CampaignsController < ApplicationController
     redirect_to user_campaigns_path
   end
 
+  def filter_campaign
+    @campaigns = current_user.campaigns.where('status = ?', Campaign.statuses[params[:status]])
+    render 'index'
+  end
+
   private
 
   def find_campaign
@@ -64,9 +69,13 @@ class CampaignsController < ApplicationController
   end
 
   def save_campaign_images(campaign)
-    image_params[:avatar].each do |image|
-      campaign.images.build(avatar: image)
-    end if image_params[:avatar].present?
+    # comment for attrachment for now later on it is needed
+    # image_params[:avatar].each do |image|
+    #   campaign.images.build(avatar: image)
+    # end if image_params[:avatar].present?
+    image_params[:image_id].each do |avatar_id|
+      campaign.image_refs.build(image_id: avatar_id).save;
+    end if image_params[:image_id].present?
   end
 
   def campaign_params
@@ -79,6 +88,6 @@ class CampaignsController < ApplicationController
   end
 
   def image_params
-    params.require(:campaign).permit(avatar:[])
+    params.require(:campaign).permit(avatar:[], image_id:[])
   end
 end
