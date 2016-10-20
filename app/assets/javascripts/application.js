@@ -32,14 +32,12 @@
 //= require image_validator
 //= require campaigns
 //= require jquery_word_counter
-
 //= require custom_trumbowyg_plugin
 //= require trumbowyg.min
+//= require emojify
+//= require trumbowyg_emoji_plugin
 //= require trumbowyg.upload.min
-
 //= require emojionearea
-
 //= require saved_replies
-
 //= require selectize
 //= require lists

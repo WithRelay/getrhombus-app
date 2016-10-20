@@ -73,11 +73,7 @@ Rails.application.routes.draw  do
 
     # authenticate campaigns resources if a user is merchant
     authenticate :user, -> (user) { user.is_merchant? } do
-      resources :campaigns, except: [:show] do
-        member do
-          put 'change_status'
-        end
-      end
+      resources :campaigns, except: [:show] { member { put 'change_status' }; collection { get 'filter_campaign' } }
     end
 
     collection do
@@ -120,7 +116,6 @@ Rails.application.routes.draw  do
     match 'numbers/search' => 'numbers#search', via: :get
     match 'lists' => 'lists#index', via: :get
     match 'lists/create' => 'lists#create', via: :post
-
   end
 
   ## catch all other to 404
