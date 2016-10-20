@@ -48,6 +48,6 @@ class CouponsController < ApplicationController
 
     def coupon_params
       params.require(:coupon).permit(:name, :amount_off, :duration, :duration_in_months, :max_redemptions,
-            :percent_off, :redeem_by)
+            :percent_off, :redeem_by, :coupon_type)
     end
 end

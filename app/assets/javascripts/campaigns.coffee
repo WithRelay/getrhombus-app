@@ -75,18 +75,18 @@ class Campaign
     $(".upload_image").hide()
 
   textAreaEmojis: ->
-    divText = this.textArea
-    txtEmoji = $(@textArea).emojioneArea ->
-                 @emojiConfig
+    if $(@textArea).length > 1
+      txtEmoji = $(@textArea).emojioneArea ->
+                   @emojiConfig
 
-    txtEmoji[0].emojioneArea.on 'keyUp', (btn, event) ->
-      $('#undefined_counter').each ->
-        $(this).remove()
-      if $("#campaign_channel :selected").val() == "2"
-        value = 320
-      else
-        value = 1500
-      $('.emojionearea-editor').counter({ type: 'char', count: 'up', goal: value })
+      txtEmoji[0].emojioneArea.on 'keyUp', (btn, event) ->
+        $('#undefined_counter').each ->
+          $(this).remove()
+        if $("#campaign_channel :selected").val() == "2"
+          value = 320
+        else
+          value = 1500
+        $('.emojionearea-editor').counter({ type: 'char', count: 'up', goal: value })
 
 $( document ).on 'ready page:load', ->
   campaign = new Campaign({ pickerPosition: 'right' })
