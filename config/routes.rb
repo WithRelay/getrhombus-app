@@ -73,7 +73,7 @@ Rails.application.routes.draw  do
 
     # authenticate campaigns resources if a user is merchant
     authenticate :user, -> (user) { user.is_merchant? } do
-      resources :campaigns, except: [:show] { member { put 'change_status' } }
+      resources :campaigns, except: [:show] { member { put 'change_status' }; collection { get 'filter_campaign' } }
     end
 
     collection do
@@ -111,13 +111,11 @@ Rails.application.routes.draw  do
     match 'saved_replies' => 'saved_replies#index', via: :get
     match 'campaigns/:id/image_delete' => 'campaigns#image_delete', via: :post
     match 'campaigns/upload_images' => 'campaigns#upload_images', via: :post
-    match 'campaigns/upload_from_url' => 'campaigns#upload_from_url', via: :post
     match 'transactions/:charge_id/refund' => 'transactions#refund', via: :post
     match 'transactions/charge_customer' => 'transactions#charge_customer', via: :post
     match 'numbers/search' => 'numbers#search', via: :get
     match 'lists' => 'lists#index', via: :get
     match 'lists/create' => 'lists#create', via: :post
-
   end
 
   ## catch all other to 404
