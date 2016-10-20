@@ -2,17 +2,17 @@
 <%= form_for([current_user, saved_reply], :html => { :id => "saved-reply-form" } ) do |f| %>
 
   <%= f.text_field :title, placeholder: 'Saved reply title', id: 'saved-reply-title-field' %>
-  
+
   <br>
   <br>
 
   <%= f.text_area :body, placeholder: 'Start typing...', id: 'saved-reply-body-field' %>
   <br>
   <% if action_name == 'index' %>
-  	<%= link_to 'Destroy', [current_user, saved_reply],  method: :delete, id: 'delete-saved-reply' %>
-    <%= f.button "Cancel", id: 'saved-reply-cancel' %>
+  	<%= link_to 'Delete', [current_user, saved_reply],  method: :delete, id: 'delete-saved-reply', class: "btn btn-danger" %>
+    <%= f.button "Cancel", id: 'saved-reply-cancel', class: "btn btn-default " %>
   <% end %>
-  
-  <%= f.submit "Save", class: "btn btn-warning btn-small" %>
+
+  <%= f.submit "Save", class: "btn btn-primary  pull-right" %>
 
 <% end %>
