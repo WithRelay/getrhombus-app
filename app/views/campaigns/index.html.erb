@@ -1,15 +1,15 @@
+<%= render 'shared/campaign_header' %>
 <%= render 'shared/flash_messages' %>
+<%= link_to 'New Campaign', new_user_campaign_path(current_user), method: :get %>
+<%= button_to 'Resend' %>
 <table>
   <thead>
     <tr>
-     <th>Name</th>
+     <th>Title</th>
+     <th>From</th>
+     <th>Created</th>
      <th>Channel</th>
-     <th>Status</th>
-     <th>Frequency Type</th>
-     <th>Date</th>
-     <th>Edit</th>
-     <th>Delete</th>
-     <th>Pause</th>
+     <th>Recipients</th>
     </tr>
   </thead>
   <tbody>
@@ -19,26 +19,16 @@
           <%= campaign.name %>
         </td>
         <td>
-          <%= campaign.channel %>
+          <%= campaign.from_user %>
         </td>
         <td>
-          <%= campaign.status %>
+          <%= present(campaign).format_created_at %>
         </td>
         <td>
-          <%= present(campaign).format_frequency_type  %>
+          <%= "#{campaign.channel} (#{present(campaign).format_frequency_type}) " %>
         </td>
         <td>
-          <%= present(campaign).format_date_time %>
-        </td>
-        
-        <td>
-          <%= link_to 'Edit', edit_user_campaign_path(current_user, campaign) %>
-        </td>
-        <td>
-          <%= link_to 'Delete', user_campaign_path(current_user, campaign), method: :delete %>
-        </td>
-        <td>
-          <%= present(campaign).generate_status_link %>
+          <%= present(campaign).count_recipient %>
         </td>
       </tr>
     <% end %>

@@ -1,7 +1,7 @@
 class @ImageValidator
   constructor: ->
    @maxSizeKb = 4000
-   @allowedExtension = [ 'jpg', 'jpeg', 'png', 'PNG', 'JPG', 'JPEG' ]
+   @allowedExtension = ['jpeg', 'png', 'PNG', 'JPEG', 'jpg', 'JPG' ]
    @imageObj
 
   validateImage: ->

@@ -7,6 +7,7 @@ class CampaignJob < ActiveJob::Base
     if campaign.present?
       campaign.update_attributes(status: 3)
       email_list = campaign.lists.map{ |list| {email: list.user.email } if list.user.present? }
+      campaign.images.each{|c| campaign.text.gsub!(c.avatar.url, "cid:#{c.avatar_file_name}")}
       image_params = campaign.images.map{ |image|  if image.avatar.present?
                                                     { type: image.avatar_content_type,
                                                       name: image.avatar_file_name,
