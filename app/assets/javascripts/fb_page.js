@@ -35,8 +35,10 @@
 function check_status(val){
   if (val === 'false'){
     $('.submit_page').val('Subscribe');
+    $('.submit_page').attr('class', 'btn btn-success');
   }
   else{
     $('.submit_page').val('Unsubscribe');
+    $('.submit_page').attr('class', 'btn btn-default');
   }
 }

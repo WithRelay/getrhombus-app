@@ -57,7 +57,9 @@ $(document).ready(function() {
         },
         history: {
           history: false
-        }
+        },
+        addclass: 'stack-modal',
+        stack: {'dir1': 'down', 'dir2': 'right', 'modal': true}
       })).get().on('pnotify.confirm', function() {
         $("#delete-saved-reply").attr('isDestroy', true);
         $("#delete-saved-reply").click();
