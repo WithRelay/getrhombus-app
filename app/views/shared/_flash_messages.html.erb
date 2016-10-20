@@ -1,24 +1,14 @@
 <% if flash[:notice].present? %>
   <script type="text/javascript">
-    $(window).load(function(){ 
-      new PNotify({
-          title: 'Success!!',
-          text: "<%= flash[:notice] %>",
-          type: 'success',
-          hide: true
-      });
+    $(window).load(function(){
+      flashSuccess( "<%= flash[:notice] %>")
     })
   </script>
 
 <% elsif flash[:error].present? %>
   <script type="text/javascript">
     $(window).load(function(){
-      new PNotify({
-          title: 'Error!!',
-          text: "<%= flash[:error] %>",
-          type: 'error',
-          hide: true
-      });
+      flashSuccess( "<%= flash[:notice] %>")
     })
   </script>
 
@@ -26,7 +16,7 @@
   <script type="text/javascript">
     var notice = new PNotify({
       title: 'Alert!!',
-      text: <%= flash[:alert] %>,
+      text: "<%= flash[:alert] %>",
       buttons: {
           closer: false,
           sticker: false
