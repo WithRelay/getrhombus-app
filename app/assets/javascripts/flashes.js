@@ -13,7 +13,7 @@ function flashError(errorMsg){
   new PNotify({
     title: 'Error!!',
     text: errorMsg,
-    type: 'success',
+    type: 'error',
     hide: true
   });
 }
