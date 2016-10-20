@@ -41,6 +41,8 @@ class Campaign
     emojiArea = '.emojionearea'
     if status
       new CustomTrumbowygPlugin(area)
+      emojify.setConfig( { emojify_tag_type:'div' } );
+      emojify.run();
       $(emojiArea).hide()
     else
       $(area).trumbowyg('destroy');
@@ -73,6 +75,7 @@ $( document ).on 'ready page:load', ->
   campaign.datePicker(new DatePicker( '.daterange' ))
 
   $(document).on 'change', 'input[name=file]', ->
+    # this is for client side validation of locally uploaded images
     uploadedImage = new ImageValidator
     uploadedImage.imageObj = this.files[0]
     if !uploadedImage.validateImage()
@@ -85,23 +88,14 @@ $( document ).on 'ready page:load', ->
       reader = new FileReader
       reader.onload = (e) ->
         img = new Image();
-        img.onload = (e)->
-          canvas = document.createElement("canvas");
-          canvas.width = this.width
-          canvas.height = this.height
-          ctx = canvas.getContext('2d')
-          ctx.drawImage this, 0, 0
-          if e.target.src.split(';')[0]=="data:image/jpeg"
-            window.target_result = e.target.src
-          else
-            canvas.toDataURL("image/jpeg");
+        img.onload = (g)->
           window.invalid_image = false
         img.src = this.result;
       reader.readAsDataURL this.files[0]
 
   $(document).on 'click', 'form .trumbowyg-modal-submit',(e) ->
     if window.invalid_image
-      alert 'Please upload image format with jpg/jpef/png less than 4.5 mb'
+      alert 'Please upload image format with jpg/jpeg/png less than 4.5 mb'
       e.preventDefault()
     else
       getBase64FromImageUrl($('input[name=url]').val())
@@ -129,18 +123,27 @@ $( document ).on 'ready page:load', ->
     campaign.hideShowScheduler()
 
   getBase64FromImageUrl = (url) ->
+    # this function is for uploading image via direct url
     img = new Image
     img.setAttribute 'crossOrigin', 'anonymous'
     img.onload = (e)->
+      trumbowygHtml = $('#trumbowyg').trumbowyg('html')
       $.ajax(
-        url: 'http://' + window.location.host + '/v1/campaigns/upload_from_url'
+        url: 'http://'+window.location.host+'/v1/campaigns/upload_images'
         type: 'POST'
         data: img_url: e.target.src
         dataType: 'json').done (data) ->
-          trumbowygHtml = $('#trumbowyg').trumbowyg('html')
-          dataUrl = 'data:image/jpeg;base64,' + data.encoded_image
-          lastSrc = $('#trumbowyg').trumbowyg('html').split('src="').pop()
-          newHtml = trumbowygHtml.replace(lastSrc, dataUrl + '">');
-          $('#trumbowyg').trumbowyg('html', newHtml)
+          if data.status == 200
+            lastSrc = $('#trumbowyg').trumbowyg('html').split('src="').pop()
+            newHtml = trumbowygHtml.replace(lastSrc, data.image_url + '">');
+            imageIdHtml = '<input type="hidden" name="campaign[image_id][]" value="'+data.image_id+'">'
+            $('.newMessage').append(imageIdHtml)
+            $('#trumbowyg').trumbowyg('html', newHtml)
+          else
+            splitHtml = trumbowygHtml.split('src=').pop()
+            imageTag = '<img src=' + splitHtml
+            newHtml = trumbowygHtml.replace(imageTag, '');
+            $('#trumbowyg').trumbowyg('html', newHtml);
+            alert 'sorry only jpeg and png images are supported with less than 5 mb'
     img.src = url
     return
