@@ -17,3 +17,13 @@ function flashError(errorMsg){
     hide: true
   });
 }
+
+// flash info
+function flashInfo(infoMsg){
+  new PNotify({
+    title: 'Info!!',
+    text: infoMsg,
+    type: 'info',
+    hide: true
+  });
+}
