@@ -1,7 +1,6 @@
 // flash success for ajax response
 function flashSuccess(successMsg){
-  PNotify.desktop.permission();
-  (new PNotify({
+  new PNotify({
     title: 'Success!!',
     text: successMsg,
     type: 'success',
@@ -9,15 +8,12 @@ function flashSuccess(successMsg){
     desktop: {
       desktop: true
     }
-  })).get().click(function(e) {
-    if ($('.ui-pnotify-closer, .ui-pnotify-sticker, .ui-pnotify-closer *, .ui-pnotify-sticker *').is(e.target)) return;
   });
 }
 
 // flash success for ajax response
 function flashError(errorMsg){
-  PNotify.desktop.permission();
-  (new PNotify({
+  new PNotify({
     title: 'Error!!',
     text: errorMsg,
     type: 'error',
@@ -25,12 +21,10 @@ function flashError(errorMsg){
     desktop: {
       desktop: true
     }
-  })).get().click(function(e) {
-    if ($('.ui-pnotify-closer, .ui-pnotify-sticker, .ui-pnotify-closer *, .ui-pnotify-sticker *').is(e.target)) return;
   });
 }
 
-// flash info
+// flash info with desktop notification permission
 function flashInfo(infoMsg){
   PNotify.desktop.permission();
   (new PNotify({
