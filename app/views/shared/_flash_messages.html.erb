@@ -8,7 +8,13 @@
 <% elsif flash[:error].present? %>
   <script type="text/javascript">
     $(window).load(function(){
-      flashError( "<%= flash[:error] %>")
+      <% if flash[:error].is_a? String %> 
+        flashError( "<%= flash[:error] %>")
+      <% elsif flash[:error].is_a? Hash %> 
+        <% flash[:error].each do |k, v| %>
+          flashError( "<%= k %> <%= v %>")
+        <% end %>
+      <% end %>
     })
   </script>
 
