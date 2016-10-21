@@ -49,9 +49,6 @@ $(document).ready(function(){
             trumbowyg.addBtnDef(btn, btnDef);
             dropdown.push(btn);
         });
-        function getTemplate(template, unicode, shortname) {
-
-        };
         return dropdown;
     }
 });
