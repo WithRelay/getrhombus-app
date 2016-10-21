@@ -1,5 +1,6 @@
 class EmailingService
 
+  require 'mandrill' # it is need to run QUEUE=* rake resque:work
   MANDRILL = Mandrill::API.new Rails.application.secrets.mandrill["key"]
 
   # Note there are a number of global settings for this email in the mandrill account
@@ -8,7 +9,7 @@ class EmailingService
   class << self
 
     def send_email_campaign(campaign_hash)
-      message = { subject: 'Email Campaign' }.merge(FROM_EMAIL, from_name: 'Rhombus').merge(campaign_hash)
+      message = campaign_hash.merge({ subject: 'Email Campaign', from_name: 'Rhombus'}).merge(FROM_EMAIL)
       response = MANDRILL.messages.send(message)
       response[0]['status'] == ('sent' || 'queued') ? true : false
     end
