@@ -1,8 +1,10 @@
 class ChannelJob
   @queue = :send_email
 
-  def self.perform(class_name = 'campaign')
-    model = class_name.capitalize.constantize
-    model.each { |obj|  "#{class_name}Service ".new(obj).set_background_jobs }
+  def self.perform
+    campaign = Campaign.recurring
+    campaign.all.each do |campaign|
+      CampaignService.new(campaign).schedule_in_background
+    end if campaign.present?
   end
 end
