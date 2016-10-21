@@ -39,6 +39,6 @@ function check_status(val){
   }
   else{
     $('.submit_page').val('Unsubscribe');
-    $('.submit_page').attr('class', 'btn btn-default');
+    $('.submit_page').attr('class', 'btn btn-primary');
   }
 }

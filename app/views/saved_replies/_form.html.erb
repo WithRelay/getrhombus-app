@@ -9,10 +9,10 @@
   <%= f.text_area :body, placeholder: 'Start typing...', id: 'saved-reply-body-field' %>
   <br>
   <% if action_name == 'index' %>
-  	<%= link_to 'Delete', [current_user, saved_reply],  method: :delete, id: 'delete-saved-reply', class: "btn btn-danger" %>
+  	<%= link_to 'Delete', [current_user, saved_reply],  method: :delete, id: 'delete-saved-reply', class: "btn btn-danger", data: { disable_with: "Please wait..." } %>
     <%= f.button "Cancel", id: 'saved-reply-cancel', class: "btn btn-default " %>
   <% end %>
 
-  <%= f.submit "Save", class: "btn btn-primary  pull-right" %>
+  <%= f.submit "Save", class: "btn btn-primary  pull-right", data: { disable_with: "Please wait..." } %>
 
 <% end %>
