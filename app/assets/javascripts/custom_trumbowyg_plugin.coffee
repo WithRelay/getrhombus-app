@@ -24,9 +24,6 @@ class @CustomTrumbowygPlugin
             if data.message == 'success'
               url = data.image_url
               trumbowyg.execCmd('insertImage', url)
-              $('img', trumbowyg.$box).attr('src', url)
-              $('img', trumbowyg.$box).attr('alt', 'image')
-              $('img', trumbowyg.$box).attr('text', 'image')
               imageIdHtml = '<input type="hidden" name="campaign[image_id][]" value="'+data.image_id+'">'
               $('.newMessage').append(imageIdHtml)
             setTimeout (->
