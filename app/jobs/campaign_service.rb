@@ -6,6 +6,7 @@ class CampaignService < ScheduleService
   end
 
   def schedule_in_background
-    @job.set(wait_until: @object.date_time).perform_later(@object.id)
+    utc_date_time = @object.date_time(@object.user.time_zone).utc
+    @job.set(wait_until: utc_date_time).perform_later(@object.id)
   end
 end
