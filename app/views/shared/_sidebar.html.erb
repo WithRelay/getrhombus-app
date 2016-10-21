@@ -1,25 +1,28 @@
-<!-- //////////////////////////////////////////////////////////////////////////// --> 
+<!-- //////////////////////////////////////////////////////////////////////////// -->
 <!-- START SIDEBAR -->
 <div class="sidebar clearfix">
 
 <ul class="sidebar-panel nav">
   <li class="sidetitle">MAIN</li>
-  
+
   <li>
      <%= link_to current_user do %>
         <span class="icon color6"><i class="fa fa-sliders"></i></span>Dashboard
-    <% end %>    
+    <% end %>
   </li>
-  
-  <% if current_user.user_level == 1  %>
+
+  <% if current_user.is_merchant? %>
    <li>
-    <%= link_to messaging_user_path(current_user.id) do %>
+    <%= link_to messaging_user_path(current_user) do %>
         <span class="icon color6"><i class="fa fa-send-o"></i></span>Messaging
         <span class="label label-danger" id="unreadCount"></span>
     <% end %>
   </li>
   <li>
-    <%= link_to user_hashtags_path(current_user.id) do %>
+   <%= link_to 'Campaign', user_campaigns_path(current_user) %>
+  </li>
+  <li>
+    <%= link_to user_hashtags_path(current_user) do %>
         <span class="icon color6"><i class="fa fa-send-o"></i></span>Hashtags
     <% end %>
   </li>
@@ -102,8 +105,8 @@
     </script>
   <% end %>
 <% end %>
-  
+
 
 </div>
 <!-- END SIDEBAR -->
-<!-- //////////////////////////////////////////////////////////////////////////// --> 
+<!-- //////////////////////////////////////////////////////////////////////////// -->
