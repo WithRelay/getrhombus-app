@@ -29,13 +29,13 @@
   <div class="content">
     <div class="page-header">
       <p>Connected to Facebook with: 
-        <span style="background: blue; color: white"> <%= current_user.fb_cred.name %></span>
+        <span style="color: blue"> <%= current_user.fb_cred.name %></span>
       </p>
       
       <% if present(current_user).page_count %>
         <p> Select page: </p>
         <%= form_for :fb_page, url: user_update_fb_page_path(current_user), method: :patch do |f| %>
-          <%= select_tag 'select_page', options_for_select(@user_fb_pages.map{|p| ["#{p.page_name}", "#{p.id} #{p.subscription_status}"] }) %>
+          <%= select_tag 'select_page', options_for_select(@user_fb_pages.map{|p| ["#{p.page_name}", "#{p.id} #{p.subscription_status}"] }), class: "btn dropdown-toggle" %>
           <%= f.submit '' , class: 'submit_page', param: "#{current_user.fb_cred.name}", data: { disable_with: "Please wait..." } %>
         <%end%>
       <% else %>
