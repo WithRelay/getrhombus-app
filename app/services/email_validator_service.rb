@@ -1,7 +1,7 @@
 class EmailValidatorService
 
   class << self
-    
+
     def verify_email(email)
       begin
         secret = Rails.application.secrets.emaillistverify["secret"]
@@ -11,9 +11,5 @@ class EmailValidatorService
       end
       false
     end
-
   end
-
-
-
 end

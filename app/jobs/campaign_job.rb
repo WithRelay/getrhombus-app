@@ -5,7 +5,6 @@ class CampaignJob < ActiveJob::Base
   def perform(campaign_id)
     campaign = Campaign.find_by_id(campaign_id)
     if campaign.present?
-      campaign.update_attributes(status: 3)
       email_list = campaign.lists.map{ |list| {email: list.user.email } if list.user.present? }
       campaign.images.each{|c| campaign.text.gsub!(c.avatar.url, "cid:#{c.avatar_file_name}")}
       image_params = campaign.images.map{ |image|  if image.avatar.present?
@@ -14,7 +13,9 @@ class CampaignJob < ActiveJob::Base
                                                       content: Base64.encode64(open(image.avatar.url) { |image| image.read }) }
                                                     end
                                                     }
-      EmailingService.send_email_campaign({ html: campaign.text, to: email_list }) if email_list.present?
+      message_hash = { html: campaign.text, to: email_list }
+      email_campaign_hash = image_params.present? ? message_hash.merge({ images: image_params }) : message_hash
+      EmailingService.send_email_campaign(email_campaign_hash)
     end
   end
 end

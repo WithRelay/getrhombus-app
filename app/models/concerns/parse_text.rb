@@ -10,16 +10,16 @@ module ParseText
 
   # always check if active before continuing
 
-  def process_message(params)  
+  def process_message(params)
     begin
       return if params[:Body].blank?
 
       @msg_text = params[:Body].strip
       params[:From] = params[:From][1..-1] if params[:From].chr == "+"
-      params[:To] = params[:To][1..-1] if params[:To].chr == "+"  
+      params[:To] = params[:To][1..-1] if params[:To].chr == "+"
 
       save_inbound_text
-      
+
       @amt_ary = check_for_payment
       is_old_format = @amt_ary[0] && @amt_ary[1] == "$"
 
@@ -45,10 +45,10 @@ module ParseText
         if @amt_ary.empty?
         else
           # No test for active accounts, they are now active by default but can be turned on as needed
-          if merchant_supports_payment             
+          if merchant_supports_payment
             process_payment
           else
-            # notify user and send to merchant dashboard            
+            # notify user and send to merchant dashboard
             # send_response("Thank you for sending a payment with Rhombus, but the merchant hasn't completed the account to receive payments.")
             # notify merchant via Email?
           end
@@ -66,14 +66,14 @@ module ParseText
   def parse_amount_and_tag
     ## A valid payment intent is when amt and sign are valid/true
     valid_payment_intent = @amt_ary[0] && @amt_ary[1]
-    # tag doesnt exists 
+    # tag doesnt exists
     if !@amt_ary[2]
       if !valid_payment_intent                  # and if no payment intent - do nothing
         return []
       elsif valid_payment_intent                # but with payment intent - so charge amt user texted, set parse/outcome type, tag id, tag name
         return [@amt_ary[0], "no_tag", nil, nil]
-      end     
-    elsif @amt_ary[2]                                         # tag exists 
+      end
+    elsif @amt_ary[2]                                         # tag exists
       if !@amt_ary[4]                                         # but not a payment tag
         if !valid_payment_intent                              # and no payment intent - do nothing
           return []
@@ -99,7 +99,7 @@ module ParseText
   end
 
   def parse_user
-    if @this_user.present? 
+    if @this_user.present?
       if @amt_ary[1] == "precedent_tag_amt"
         # notify user and send to merchant dashboard and send sign in link with payment capture???
         send_response notify of precedent_tag_amt
@@ -107,20 +107,20 @@ module ParseText
       elsif !@this_user.customer_uri
         # notify user and send to merchant dashboard
         # send_response notify and send sign in link with payment capture???
-        return []  
+        return []
       elsif @this_user.customer_uri
         return @amt_ary
       end
-    elsif !@this_user.present? 
+    elsif !@this_user.present?
       merchant_name = @this_merchant.org_name ? @this_merchant.org_name : "Rhombus"
       # payment based messages
       if @amt_ary[1] == "precedent_tag_amt"
-        send_sign_up_link if @saved_msg && @saved_msg.id.present? 
+        send_sign_up_link if @saved_msg && @saved_msg.id.present?
         return []
       elsif @amt_ary[1] != "precedent_tag_amt"
         send_sign_up_link if @saved_msg && @saved_msg.id.present?
         return []
-      else 
+      else
         # not payment related messages
 
         is_signup = is_signup?
@@ -135,13 +135,13 @@ module ParseText
           custom_welcome = "Hi there, " + first_name + "how can I assist you today? If you're looking to send a payment, simply reply with the amount. Ex. +10 #donut"
           custom_welcome = @this_merchant.custom_welcome unless @this_merchant.custom_welcome.blank?
           send_response(custom_welcome)
-        end   
-        return []     
+        end
+        return []
       end
     end
   end
 
-  def send_sign_up_link 
+  def send_sign_up_link
     short_link = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?amt=#{amt_ary[0]}&num=#{params[:msisdn]}
                                       &referrer_id=#{@this_merchant.id}&referrer=#{@this_merchant.org_name}&msg_id=#{@saved_msg.id}")
     send_response("Hi there, thanks for reaching out...to send a payment, sign up here. Thanks! => #{short_link}")
@@ -157,14 +157,14 @@ module ParseText
     # if user sends in a valid payment or made a mistake by sending $ sign with invalid number
     # $ sign payments have higher priority
     # if they are both false, user is either not paying with format $20 or not trying to make a payment at all
-    if amt_ary[0] || amt_ary[1] 
+    if amt_ary[0] || amt_ary[1]
       amt_ary[2] = amount_plus_array[2]
       return amt_ary
     end
-    return amount_plus_array    
+    return amount_plus_array
   end
 
-  # check for payment with this format. Ex: $20 fee 
+  # check for payment with this format. Ex: $20 fee
   def is_payment_dollar?
     amount = get_number
     dollar_present = @msg_text.chr == "$" ? "$" : false
@@ -188,8 +188,8 @@ module ParseText
     return ((var.to_f.round(2).abs)*100).round
   end
 
-  # scan for hashtag and + sign and amt. 
-  # amt could be invalid, so still track if + was present so user can be notified of payment format. 
+  # scan for hashtag and + sign and amt.
+  # amt could be invalid, so still track if + was present so user can be notified of payment format.
   def is_payment_plus?
     t = @msg_text.scan(/[+#]\S+/)
     amt = false
@@ -228,7 +228,7 @@ module ParseText
 
   def is_signup?
     words = ['signup', 'sign-up', 'give', 'pay', 'buy', 'donate']
-    return true if words.include? @msg_text.downcase.gsub(/\s+/, "")  
+    return true if words.include? @msg_text.downcase.gsub(/\s+/, "")
     return false
   end
 
@@ -263,10 +263,10 @@ module ParseText
     # Send to merchant's messaging channel
     RealtimeStreamService.send_message_via_number(params[:From], params[:To], msg, message.created_at, true) if message
   end
- 
+
   def save_inbound_text
-    begin  
-      @saved_msg = Message.create(from: params[:From], to: params[:To], messageId: params[:MessageSid], text: params[:Body])      
+    begin
+      @saved_msg = Message.create(from: params[:From], to: params[:To], messageId: params[:MessageSid], text: params[:Body])
     rescue StandardError => err
       @saved_msg = nil
     end
@@ -276,18 +276,18 @@ module ParseText
   end
 
   #send delivery reports for twilio (very incomplete)
-  def save_delivery_receipts(params)          
+  def save_delivery_receipts(params)
     #begin
-    message = Message.where(message_id: params[:MessageSid]) 
+    message = Message.where(message_id: params[:MessageSid])
     message.update_attributes(status: query_hash["status"], error_code: query_hash['err-code'], message_timestamp: query_hash["message-timestamp"])
 
     #rescue
 =begin
       # if somehow the message id doesnt exist
       @message = Message.new
-      # @message.save_text(from: query_hash["to"], network_code: query_hash['network-code'], messageId: query_hash['messageId'], 
-      #   to: query_hash["msisdn"], status_delivery: query_hash["status"], err_code: query_hash['err-code'], message_price: query_hash["price"], 
-      #   scts: query_hash['scts'], message_timestamp: query_hash["message-timestamp"], 
+      # @message.save_text(from: query_hash["to"], network_code: query_hash['network-code'], messageId: query_hash['messageId'],
+      #   to: query_hash["msisdn"], status_delivery: query_hash["status"], err_code: query_hash['err-code'], message_price: query_hash["price"],
+      #   scts: query_hash['scts'], message_timestamp: query_hash["message-timestamp"],
       #   client_ref: query_hash['client-ref'], message_code: 8)
 
       @message.save_text(from: params[:From], messageId: params[:MessageSid], to: params[:To], message_code: 8)
@@ -304,7 +304,6 @@ module ParseText
 
     #u = User.find_by id: self.user_id
     #@subscription.team_id = current_user.id
-    #if u && @subscription.create_subscription({ team: current_user, customer: u.customer_uri }) 
+    #if u && @subscription.create_subscription({ team: current_user, customer: u.customer_uri })
   end
-#end
-
+end
