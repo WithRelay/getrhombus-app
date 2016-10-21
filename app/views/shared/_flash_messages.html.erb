@@ -11,9 +11,11 @@
       <% if flash[:error].is_a? String %> 
         flashError( "<%= flash[:error] %>")
       <% elsif flash[:error].is_a? Hash %> 
+        var errors = "";
         <% flash[:error].each do |k, v| %>
-          flashError( "<%= k %> <%= v %>")
+          errors += "<%= k %> <%= v %>\n" ;
         <% end %>
+        flashError(errors);
       <% end %>
     })
   </script>
