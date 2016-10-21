@@ -2,6 +2,7 @@ class Image < ActiveRecord::Base
 
   # https://blog.codeship.com/how-to-use-rails-active-job/
   # https://github.com/jrgifford/delayed_paperclip
+  IMAGE_VERSIONS = { thumb: '100x100>', square: '200x200#', medium: '300x300>' }
 
   has_many :image_refs, dependent: :destroy
   has_many :users, through: :image_refs, source: :imageable, source_type: 'User', dependent: :destroy
@@ -9,12 +10,9 @@ class Image < ActiveRecord::Base
   has_many :messages, through: :image_refs, source: :imageable, source_type: 'Message', dependent: :destroy
   has_many :fb_messages, through: :image_refs, source: :imageable, source_type: 'FbMessage', dependent: :destroy
 
-  has_attached_file :avatar, styles: {
-    thumb: '100x100>',
-    square: '200x200#',
-    medium: '300x300>'
-  }
-
+  has_attached_file :avatar, styles: lambda { |i| i.instance.upload_from.present? ?
+                                              IMAGE_VERSIONS : Hash[*Image::IMAGE_VERSIONS.first]
+                                            }
   # Validate the attached image is image/jpg, image/png, etc
   validates_attachment_content_type :avatar, :content_type => /\Aimage\/.*\Z/
 
