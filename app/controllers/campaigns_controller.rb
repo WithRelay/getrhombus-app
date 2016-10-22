@@ -17,6 +17,7 @@ class CampaignsController < ApplicationController
     campaign_params[:list_ids].split(',').each { |list_id| @campaign.campaign_lists.build(list_id: list_id) }
     if @campaign.save
       save_campaign_images(@campaign)
+      CampaignService.new(@campaign).send_now if @campaign.deliver_now
       flash[:notice] = 'Campaign Saved successfully'
     else
       flash[:error] = @campaign.errors.messages
@@ -84,6 +85,7 @@ class CampaignsController < ApplicationController
                                      :frequency_type, :text, :new_status).tap do |c|
                                       c[:channel] = c[:channel].to_i
                                       c[:frequency_type] = c[:frequency_type].to_i
+                                      c[:deliver_now]=='1' ? c[:deliver_now] = true : c[:deliver_now] = false
                                     end
   end
 

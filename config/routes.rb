@@ -1,5 +1,7 @@
 Rails.application.routes.draw  do
 
+  require 'resque/server'
+  mount Resque::Server, at: '/jobs'
   ## static pages routes
   root 'static_pages#home'
   get 'about' => 'static_pages#about'
@@ -15,7 +17,7 @@ Rails.application.routes.draw  do
   get 'user_lists/remove_user' => 'user_lists#remove_user'
   get 'fb_pages/remove_integration' => 'fb_pages#remove_integration'
   get 'link_facebook' => 'link_fb_accounts#link_facebook'
-  post 'redirect' => 'link_fb_accounts#redirect'  
+  post 'redirect' => 'link_fb_accounts#redirect'
 
   resources :lists do
     resources :customer_lists
