@@ -1,0 +1,16 @@
+<% if @plans %>    
+   
+    <% @plans.each do |plan| %>
+      <tr>
+        <td colspan="3"><%= plan.name %></td>
+        <td colspan="3"><%= plan.amount %></td>
+        <td colspan="3"><%= plan.interval %></td>
+        <td colspan="3"><%= plan.interval_count %></td>
+        <!-- <td><%= plan.currency %></td>
+        <td><%#= link_to 'Show', user_plan_path(current_user, plan) %></td>
+        <td><%#= link_to 'Edit', edit_user_plan_path(current_user, plan) %></td>
+        <td><%#= link_to 'Destroy', plan, method: :delete, data: { confirm: 'Are you sure?' } %></td> -->
+      </tr>
+    <% end %>
+
+<% end %>
