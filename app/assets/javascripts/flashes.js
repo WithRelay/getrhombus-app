@@ -4,10 +4,7 @@ function flashSuccess(successMsg){
     title: 'Success!!',
     text: successMsg,
     type: 'success',
-    hide: true,
-    desktop: {
-      desktop: true
-    }
+    hide: true
   });
 }
 
@@ -17,10 +14,7 @@ function flashError(errorMsg){
     title: 'Error!!',
     text: errorMsg,
     type: 'error',
-    hide: true,
-    desktop: {
-      desktop: true
-    }
+    hide: true
   });
 }
 
