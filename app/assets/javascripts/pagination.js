@@ -1,3 +1,4 @@
+// js for show more feature with will_paginate gem
 jQuery(function() {
   var loading_views;
 

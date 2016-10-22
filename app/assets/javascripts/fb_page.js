@@ -12,7 +12,7 @@
     evt.preventDefault();
     swal({
       title: "Rhombus Facebook Messenger Integration",
-      text: "Are you sure you want to remove the Facebook Messenger integration from this app?",
+      text: "Are you sure, you want to remove the integration?",
       type: "warning",
       showCancelButton: true,
       confirmButtonColor: "#dd1c06",
