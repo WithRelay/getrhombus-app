@@ -39,8 +39,11 @@
         <p> Choose the Facebook page that you will use to receive messages </p>
         <h3>Facebook Page</h3>
         <%= form_for :fb_page, url: user_update_fb_page_path(current_user), method: :patch do |f| %>
-          <%= select_tag 'select_page', options_for_select(@user_fb_pages.map{|p| ["#{p.page_name}", "#{p.id} #{p.subscription_status}"] }), class: "btn dropdown-toggle", prompt: 'Select a Facebook Page' %>
-          <%= f.submit '' , class: 'submit_page', param: "#{current_user.fb_cred.name}", data: { disable_with: "Please wait..." } %>
+          <div class="dropdown">
+            <%= select_tag 'select_page', options_for_select(@user_fb_pages.map{|p| ["#{p.page_name}", "#{p.id} #{p.subscription_status}"] }), class: "btn dropdown-toggle", prompt: 'Select a Facebook Page' %>
+            <%= f.submit '' , class: 'submit_page', param: "#{current_user.fb_cred.name}", data: { disable_with: "Please wait..." } %>
+          </div>
+
         <%end%>
       <% else %>
         <p> Please Make some facebook page before proceed</p>
@@ -50,7 +53,7 @@
       <% flag = false %>
       <% current_user.fb_cred.fb_pages.each do |page| %>         
         <%if page.subscription_status%>
-          <span style="color: blue"> 
+          <span style="color: green">
             <i class="fa fa-file" aria-hidden="true"></i> <%= page.page_name %>
           </span>
           <% flag = true %>
@@ -61,7 +64,6 @@
       <% end %>
       </p> 
 
-      
       <br/>
       <%= link_to fb_pages_remove_integration_path, id: 'delete_integration', class: 'pull-right' do%>
         <i class="fa fa-trash" aria-hidden="true"> Remove Integration </i>

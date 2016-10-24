@@ -5,20 +5,20 @@ class FacebookMessengerService
     # for messenger_account_linking 
     def send_auth_link(page_access_token, recipient_id, welcome_text)
       body = {
-        "recipient":{
-          "id": recipient_id
+        recipient:{
+          id: recipient_id
         },
-        "message": {
-          "attachment": {
-            "type": "template",
-            "payload": {
-              "template_type": "generic",
-              "elements": [{
-                "title": welcome_text,
-                "image_url": "https://www.getrhombus.com/assets/imgo-252069578bf9441f8f0cf59bc8660170.jpg",
-                "buttons": [{
-                  "type": "account_link",
-                  "url": "<redacted_webhook_url>"
+        message: {
+          attachment: {
+            type: "template",
+            payload: {
+              template_type: "generic",
+              elements: [{
+                title: welcome_text,
+                image_url: "https://www.getrhombus.com/assets/imgo-252069578bf9441f8f0cf59bc8660170.jpg",
+                buttons: [{
+                  type: "account_link",
+                  url: "<redacted_webhook_url>"
                 }]
               }]
             }
@@ -64,11 +64,11 @@ class FacebookMessengerService
       # recipient_id = "<redacted_phone_number>"
       # text = "welcome!!"
       body = {
-        "recipient" => {
-          "id" => recipient_id
+        recipient: {
+          id: recipient_id
         },
-        "message" => {
-          "text" => text
+        message: {
+          text: text
         }
       }
       httparty_post(body, page_access_token)
@@ -80,14 +80,14 @@ class FacebookMessengerService
       # attachment_type = "image"
       # file_url = "http://v.img.com.ua/b/orig/b/b1/b91937118c0414fda58d5f020b518b1b.jpg" 
       body = {
-        "recipient":{
-          "id": recipient_id
+        recipient:{
+          id: recipient_id
         },
-        "message":{
-          "attachment":{
-            "type": attachment_type,
-            "payload":{
-              "url": file_url
+        message:{
+          attachment:{
+            type: attachment_type,
+            payload:{
+              url: file_url
             }
           }
         }

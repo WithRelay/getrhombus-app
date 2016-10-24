@@ -64,3 +64,8 @@
     -webkit-border-radius: 50%;
     border-radius: 50%;
 }
+
+#delete_integration
+{
+    color: red;
+}
