@@ -19,9 +19,10 @@
         <% end %>
       </div>
       <br>
-      <b> Create an Account </b>
-      <%= link_to signup_path, id: 'signup', target: '_blank', onClick: 'javascript:window.close()' do%>
-      <i class='fa fa-sign-in' aria-hidden='true'>Sign Up</i>
+      <div class="pull-right">
+        <%= link_to signup_path, id: 'signup', target: '_blank', onClick: 'javascript:window.close()' do%>
+        <i class='fa fa-sign-in' aria-hidden='true'>Sign Up</i>
+      </div>
       <%end%>
     </div>
   </div>

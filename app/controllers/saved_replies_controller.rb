@@ -13,10 +13,12 @@ class SavedRepliesController < ApplicationController
     @saved_reply = current_user.saved_replies.build(saved_reply_params)
     if @saved_reply.save
       flash[:notice] = 'Reply was saved'
+      redirect_to user_saved_replies_path
     else
-      flash[:error] = 'Reply cannot be saved'   
+      flash[:error] = 'Reply cannot be saved'
+      render :new
     end
-    redirect_to user_saved_replies_path
+    
   end
 
   def update
