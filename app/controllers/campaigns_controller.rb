@@ -15,9 +15,9 @@ class CampaignsController < ApplicationController
   def create
     @campaign = current_user.campaigns.build(campaign_params)
     campaign_params[:list_ids].split(',').each { |list_id| @campaign.campaign_lists.build(list_id: list_id) }
-    # comment out for now
-    #save_campaign_images(@campaign)
     if @campaign.save
+      save_campaign_images(@campaign)
+      CampaignService.new(@campaign).send_now if @campaign.deliver_now
       flash[:notice] = 'Campaign Saved successfully'
     else
       flash[:error] = @campaign.errors.messages
@@ -58,6 +58,11 @@ class CampaignsController < ApplicationController
     redirect_to user_campaigns_path
   end
 
+  def filter_campaign
+    @campaigns = current_user.campaigns.where('status = ?', Campaign.statuses[params[:status]])
+    render 'index'
+  end
+
   private
 
   def find_campaign
@@ -65,21 +70,26 @@ class CampaignsController < ApplicationController
   end
 
   def save_campaign_images(campaign)
-    image_params[:avatar].each do |image|
-      campaign.images.build(avatar: image)
-    end if image_params[:avatar].present?
+    # comment for attrachment for now later on it is needed
+    # image_params[:avatar].each do |image|
+    #   campaign.images.build(avatar: image)
+    # end if image_params[:avatar].present?
+    image_params[:image_id].each do |avatar_id|
+      campaign.image_refs.build(image_id: avatar_id).save;
+    end if image_params[:image_id].present?
   end
 
   def campaign_params
-    params.require(:campaign)
-          .permit(:name, :list_ids, :channel, :repeat_days, :date_time, :deliver_now, :frequency_type, :text, :new_status)
-          .tap do |c| # because they are enums
-            c[:channel] = c[:channel].to_i
-            c[:frequency_type] = c[:frequency_type].to_i
-          end
+    # enums are define as integer but params are in string and rails is not converting string to integer
+    params.require(:campaign).permit(:name, :list_ids, :channel, :repeat_days, :date_time, :deliver_now,
+                                     :frequency_type, :text, :new_status).tap do |c|
+                                      c[:channel] = c[:channel].to_i
+                                      c[:frequency_type] = c[:frequency_type].to_i
+                                      c[:deliver_now]=='1' ? c[:deliver_now] = true : c[:deliver_now] = false
+                                    end
   end
 
   def image_params
-    params.require(:campaign).permit(avatar:[])
+    params.require(:campaign).permit(avatar:[], image_id:[])
   end
 end

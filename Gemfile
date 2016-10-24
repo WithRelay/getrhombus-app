@@ -71,6 +71,9 @@ group :production do
 	gem "passenger"
 end
 
+# Rails flash integration with PNotify
+gem 'pnotify-rails'
+
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
 

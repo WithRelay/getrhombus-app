@@ -12,7 +12,7 @@
     evt.preventDefault();
     swal({
       title: "Rhombus Facebook Messenger Integration",
-      text: "Are you sure you want to remove the Facebook Messenger integration from this app?",
+      text: "Are you sure, you want to remove the integration?",
       type: "warning",
       showCancelButton: true,
       confirmButtonColor: "#dd1c06",
@@ -33,10 +33,17 @@
 });
 
 function check_status(val){
-  if (val === 'false'){
+  if (!val) {
+    $('.submit_page').hide();
+  }
+  else if (val === 'false'){
+    $('.submit_page').show();
     $('.submit_page').val('Subscribe');
+    $('.submit_page').attr('class', 'submit_page btn btn-success');
   }
   else{
+    $('.submit_page').show();
     $('.submit_page').val('Unsubscribe');
+    $('.submit_page').attr('class', 'submit_page btn btn-warning');
   }
 }

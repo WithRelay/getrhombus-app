@@ -1,5 +1,5 @@
 <%= form_for [current_user, @campaign], html: { multipart: true } do |f| %>
-  
+
   <%= f.label :Name %>
   <%= f.text_field :name %>
 
@@ -8,14 +8,11 @@
   <%= f.label :Choose_a_list %>
   <%= f.text_field :list_ids, id: 'campaign-select-lists', 'data-lists_data' => "#{@lists_json}", placeholder: "Select 1 or more lists" %>
 
-  <!-- please remove this eventually -->
-  <div id='click-me'>click me to see values</div>
-
-  <br><br>
+  <br>
 
   <%= f.label :Channel %>
   <%= f.select :channel, channel_list(@campaign), selected: get_channel_enum_value(@campaign) %>
-  
+
   <br><br>
 
   <%= f.label :Delivery_Settings %>
@@ -34,7 +31,7 @@
   <%= f.check_box :deliver_now, id: 'deliverNow' %>
 
   <div class='scheduleOption'>
-    <%= f.select :repeat_days, repeat_days_options, selected: @campaign.repeat_days, include_blank: 'Repeat every' %>
+    <%= f.select :repeat_days, repeat_days_options, selected: @campaign.repeat_days %>
     <%= f.text_field :date_time, class: 'daterange' %>
   </div>
 
@@ -47,17 +44,17 @@
   </div>
 
   <br><br>
-  
+
   <div class="upload_image">
     <%= f.file_field :avatar, multiple: true, id: 'select-images' %>
   </div>
- 
+
   <div id='new-image-previews'></div>
     <% @campaign.images.each do |image| %>
       <%= present(image).image_url %>
       <%= present(image).image_delete_url %>
   <% end %>
-  
+
   <%= f.submit 'Save Campaign' %>
 
 <% end %>

@@ -1,5 +1,7 @@
 Rails.application.routes.draw  do
 
+  require 'resque/server'
+  mount Resque::Server, at: '/jobs'
   ## static pages routes
   root 'static_pages#home'
   get 'about' => 'static_pages#about'
@@ -15,7 +17,7 @@ Rails.application.routes.draw  do
   get 'user_lists/remove_user' => 'user_lists#remove_user'
   get 'fb_pages/remove_integration' => 'fb_pages#remove_integration'
   get 'link_facebook' => 'link_fb_accounts#link_facebook'
-  post 'redirect' => 'link_fb_accounts#redirect'  
+  post 'redirect' => 'link_fb_accounts#redirect'
 
   resources :lists do
     resources :customer_lists
@@ -73,11 +75,7 @@ Rails.application.routes.draw  do
 
     # authenticate campaigns resources if a user is merchant
     authenticate :user, -> (user) { user.is_merchant? } do
-      resources :campaigns, except: [:show] do
-        member do
-          put 'change_status'
-        end
-      end
+      resources :campaigns, except: [:show] { member { put 'change_status' }; collection { get 'filter_campaign' } }
     end
 
     collection do
@@ -120,9 +118,7 @@ Rails.application.routes.draw  do
     match 'numbers/search' => 'numbers#search', via: :get
     match 'lists' => 'lists#index', via: :get
     match 'lists/create' => 'lists#create', via: :post
-    match  'lists/search' => 'lists#search', via: :get
 
-  end
 
   ## catch all other to 404
   get "/*other", to: 'static_pages#to_404'     #all non-existent routes go to 404

@@ -28,23 +28,43 @@
 
   <div class="content">
     <div class="page-header">
-      <%= render 'shared/flash_messages'%>
-      <p>Connected to Facebook with: 
-        <span style="background: blue; color: white"> <%= current_user.fb_cred.name %></span>
+      <p>Connected to Facebook as
+        <span style="color: blue"> 
+          <i class="fa fa-user"></i> <%= current_user.fb_cred.name %>
+        </span>
       </p>
       
+      <h1>Facebook Messenger</h1>
       <% if present(current_user).page_count %>
-        <p> Select page: </p>
+        <p> Choose the Facebook page that you will use to receive messages </p>
+        <h3>Facebook Page</h3>
         <%= form_for :fb_page, url: user_update_fb_page_path(current_user), method: :patch do |f| %>
-          <%= select_tag 'select_page', options_for_select(@user_fb_pages.map{|p| ["#{p.page_name}", "#{p.id} #{p.subscription_status}"] }) %>
-          <%= f.submit '' , class: 'submit_page', param: "#{current_user.fb_cred.name}"%>
+          <%= select_tag 'select_page', options_for_select(@user_fb_pages.map{|p| ["#{p.page_name}", "#{p.id} #{p.subscription_status}"] }), class: "btn dropdown-toggle", prompt: 'Select a Facebook Page' %>
+          <%= f.submit '' , class: 'submit_page', param: "#{current_user.fb_cred.name}", data: { disable_with: "Please wait..." } %>
         <%end%>
       <% else %>
         <p> Please Make some facebook page before proceed</p>
       <%end%> 
+      <br>
+      <p>Subscribed Page:
+      <% flag = false %>
+      <% current_user.fb_cred.fb_pages.each do |page| %>         
+        <%if page.subscription_status%>
+          <span style="color: blue"> 
+            <i class="fa fa-file" aria-hidden="true"></i> <%= page.page_name %>
+          </span>
+          <% flag = true %>
+        <% end %>        
+      <% end %>
+      <% unless flag%>
+        <b>No page is subscribed yet</b>
+      <% end %>
+      </p> 
+
+      
       <br/>
-      <%= link_to fb_pages_remove_integration_path, id: 'delete_integration' do%>
-        <i class="fa fa-trash fa-2x" aria-hidden="true"> Remove Facebook Integration </i>
+      <%= link_to fb_pages_remove_integration_path, id: 'delete_integration', class: 'pull-right' do%>
+        <i class="fa fa-trash" aria-hidden="true"> Remove Integration </i>
       <%end%>
     </div>
     </div>

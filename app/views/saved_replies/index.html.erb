@@ -1,31 +1,28 @@
+<div class = 'container' >
+  <% if @saved_replies.present? %>
+    <h1>Saved Replies</h1>
 
-
-<%# display in a toastr...use pnotify  %>
-<%= flash[:error] %> <!-- You need to make errors explicit...show each error -->
-<%= flash[:notice] %>
-
-<% if @saved_replies.present? %>
-  <h1>Saved Replies</h1>
-
-  <table>
-    <tr>
-      <th>Title</th>    
-    </tr>
-
-    <% @saved_replies.each do |reply| %>
+    <table class="table table-condensed table-hover table-bordered">
       <tr>
-        <td id="saved-reply-title-<%= reply.id %>" class='saved-reply-title'><%= reply.title %></td>
-        <div id="saved-reply-body-<%= reply.id %>" style='display: none;'><%= reply.body %></div>
+        <th>Title</th>    
       </tr>
-    <% end %>
-  </table>
 
-  <%= render partial: 'form', locals: { saved_reply: @saved_replies.first } %>
+      <% @saved_replies.each do |reply| %>
+        <tr>
+          <td id="saved-reply-title-<%= reply.id %>" class='saved-reply-title'><%= reply.title %></td>
+          <div id="saved-reply-body-<%= reply.id %>" style='display: none;'><%= reply.body %></div>
+        </tr>
+      <% end %>
+    </table>
+    <br> 
+    
+    <%= render partial: 'form', locals: { saved_reply: @saved_replies.first } %>
 
-<% else %>
- 
- You don't have any saved replies
+  <% else %>
+   
+   You don't have any saved replies
 
-<% end %>
-
-<%= link_to 'New Saved Reply', new_user_saved_reply_path %>
+  <% end %>
+  <br>
+  <%= link_to 'New Saved Reply', new_user_saved_reply_path %>
+</div>

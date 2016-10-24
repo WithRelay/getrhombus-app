@@ -1,5 +1,7 @@
-<h1>New Saved Reply</h1>
+<div class = 'container'>
+  <h1>New Saved Reply</h1>
 
-<%= render partial: 'form', locals: { saved_reply: @saved_reply } %>
-
-<%= link_to 'Back', user_saved_replies_path %>
+  <%= render partial: 'form', locals: { saved_reply: @saved_reply } %>
+  <br>
+  <%= link_to 'Back', user_saved_replies_path %>
+</div>

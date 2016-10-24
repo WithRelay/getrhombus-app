@@ -62,9 +62,9 @@ class FbPagesController < ApplicationController
 
   def check_user_present
     if current_user.nil?
-      redirect_to signin_path
+      redirect_to signin_path,  flash: { error: 'You are not Signed In' }
     elsif current_user.fb_cred.nil?
-      redirect_to user_path(current_user)
+      redirect_to user_path(current_user),  flash: { error: 'Your messenger account is not connected with Rhombus' }
     end
   end
 end

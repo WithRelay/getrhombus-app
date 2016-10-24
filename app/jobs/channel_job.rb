@@ -1,8 +1,10 @@
 class ChannelJob
   @queue = :send_email
 
-  def self.perform(class_name = 'campaign')
-    model = class_name.capitalize.constantize
-    model.each { |obj|  "#{class_name}Service ".new(obj).set_background_jobs }
+  def self.perform
+    Campaign.recurring.active.each do |campaign|
+      utc_date_time = campaign.date_time.in_time_zone(campaign.user.time_zone).utc
+      CampaignJob.set(wait_until: utc_date_time).perform_later(campaign.id)
+    end
   end
 end
