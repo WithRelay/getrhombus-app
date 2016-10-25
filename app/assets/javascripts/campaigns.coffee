@@ -116,6 +116,7 @@ $( document ).on 'ready page:load', ->
       alert 'Please upload image format with jpg/jpeg/png less than 4.5 mb'
       e.preventDefault()
     else
+      $('body').addClass('loading')
       getBase64FromImageUrl($('input[name=url]').val())
 
   if $('#campaign_channel').val() == '3'
@@ -152,6 +153,7 @@ $( document ).on 'ready page:load', ->
     img = new Image
     img.setAttribute 'crossOrigin', 'anonymous'
     img.onload = (e)->
+      $('body').addClass('loading')
       trumbowygHtml = $('#trumbowyg').trumbowyg('html')
       $.ajax(
         url: 'http://'+window.location.host+'/v1/campaigns/upload_images'
@@ -164,7 +166,9 @@ $( document ).on 'ready page:load', ->
             imageIdHtml = '<input type="hidden" name="campaign[image_id][]" value="'+data.image_id+'">'
             $('.newMessage').append(imageIdHtml)
             $('#trumbowyg').trumbowyg('html', newHtml)
+            $('body').removeClass('loading')
           else
+            $('body').removeClass('loading')
             splitHtml = trumbowygHtml.split('src=').pop()
             imageTag = '<img src=' + splitHtml
             newHtml = trumbowygHtml.replace(imageTag, '');
