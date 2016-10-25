@@ -96,12 +96,16 @@ class FacebookMessengerService
     end
 
     def send_campaign(campaign)
-      subscribed_page = campaign.user.fb_pages.subscribed
+      subscribed_page = campaign.user.fb_pages.subscribed # get merchant fb pages which are subscribed
+      # currently we support only one subscription but the relation is as has_many
       page_access_token = subscribed_page[0].page_access_token if subscribed_page.present?
       campaign.lists.each do |list|
+        # get list user fb_cred
         user_fb_cred = list.user.fb_cred
+        # get credentital page_specific_id i.e. recipient_id
         user_fb_cred_id = user_fb_cred.page_specific_id if user_fb_cred.present?
-        send_text_message(page_access_token, user_fb_cred_id, campaign.text) if user_fb_cred_id.present?
+        # calls a function send_text_message with parameter page_access_token page_access_token, text
+        send_text_message(page_access_token, page_access_token, campaign.text) if user_fb_cred_id.present?
       end if page_access_token.present?
     end
 
