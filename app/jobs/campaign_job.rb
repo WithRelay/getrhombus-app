@@ -13,7 +13,7 @@ class CampaignJob < ActiveJob::Base
     {
       'sms'=>'SmsService', 'mms'=>'MmsService',
       'facebook_messenger'=>'FacebookMessengerService',
-      'email'=>'EmailingService'
+      'email'=>'EmailService'
     }
   end
 end

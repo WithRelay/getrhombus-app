@@ -12,7 +12,7 @@ class EmailService
 
   def self.campaign_image_params(campaign)
     campaign.images.map do |image|
-      campaign.text.gsub!(image.avatar.url, "cid:#{c.image_file_name}")
+      campaign.text.gsub!(image.avatar.url, "cid:#{image.avatar_file_name}")
       { type: image.avatar_content_type,
         name: image.avatar_file_name,
         content: Base64.encode64(open(image.avatar.url) { |image| image.read })
