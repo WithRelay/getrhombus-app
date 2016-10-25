@@ -25,7 +25,7 @@ class Campaign < ActiveRecord::Base
 
   def channel_text_validate
     # the below key in the hash is the channel and the value represent the channel maximum text length
-    channel_text_size = { "sms" => 1500, "facebook_messenger" => 320 }
+    channel_text_size = { 'sms' => 1500, 'facebook_messenger' => 320 }
     # get the text length by its key i.e. from params
     max_text_length = channel_text_size[channel]
     # add errors to text
