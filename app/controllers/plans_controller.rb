@@ -3,7 +3,7 @@ class PlansController < ApplicationController
   respond_to :html, :js
 
   def index
-    @plans = current_user.plans.paginate(page: params[:page], per_page: 25).order('updated_at DESC')
+    @plans = current_user.plans.paginate(page: params[:page], per_page: 5).order('updated_at DESC')
     # @plans = Plan.all
     respond_with(@plans)
   end

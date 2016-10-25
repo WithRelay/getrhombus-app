@@ -41,7 +41,7 @@
         <%= form_for :fb_page, url: user_update_fb_page_path(current_user), method: :patch do |f| %>
           <div class="dropdown">
             <%= select_tag 'select_page', options_for_select(@user_fb_pages.map{|p| ["#{p.page_name}", "#{p.id} #{p.subscription_status}"] }), class: "btn dropdown-toggle", prompt: 'Select a Facebook Page' %>
-            <%= f.submit '' , class: 'submit_page', param: "#{current_user.fb_cred.name}", data: { disable_with: "Please wait..." } %>
+            <%= f.submit '' , class: 'submit_page', param: "#{current_user.fb_cred.name}", data: { disable_with: "Please wait..." }, subscribed_page: "#{subscribed_page}" %>
           </div>
 
         <%end%>
@@ -50,16 +50,11 @@
       <%end%> 
       <br>
       <p>Subscribed Page:
-      <% flag = false %>
-      <% current_user.fb_cred.fb_pages.each do |page| %>         
-        <%if page.subscription_status%>
-          <span style="color: green">
-            <i class="fa fa-file" aria-hidden="true"></i> <%= page.page_name %>
-          </span>
-          <% flag = true %>
-        <% end %>        
-      <% end %>
-      <% unless flag%>
+      <% if subscribed_page.present? %>
+        <span style="color: green">
+          <i class="fa fa-file" aria-hidden="true"></i> <%= subscribed_page %>
+        </span>
+      <% else %>
         <b>No page is subscribed yet</b>
       <% end %>
       </p> 

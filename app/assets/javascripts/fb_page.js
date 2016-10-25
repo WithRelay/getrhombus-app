@@ -8,6 +8,67 @@
     });
   }
 
+  $('.submit_page').click(function (evt) {
+    if (($(this).val() === 'Subscribe') && ($(this).attr('subscribed_page'))) {
+      if (!$(".submit_page").attr('canSubscribe')) {
+        evt.stopImmediatePropagation();
+        (new PNotify({
+          title: 'Change Facebook Page',
+          text: 'Existing conversations linked to your previous Facebook page will stop being synced to your business app integrations. Continue?',
+          icon: 'glyphicon glyphicon-question-sign',
+          hide: false,
+          confirm: {
+            confirm: true
+          },
+          buttons: {
+            closer: false,
+            sticker: false
+          },
+          history: {
+            history: false
+          },
+          addclass: 'stack-modal',
+          stack: {'dir1': 'down', 'dir2': 'right', 'modal': true}
+          })).get().on('pnotify.confirm', function() {
+            $('.submit_page').attr('canSubscribe', true);
+            $('.submit_page').click();
+          }).on('pnotify.cancel', function() {
+            return false;
+        });
+        return false;
+      }
+    }
+    else if(($(this).val() === 'Unsubscribe')){
+      if (!$(".submit_page").attr('canUnsubscribe')) {
+        evt.stopImmediatePropagation();
+        (new PNotify({
+          title: 'Are you sure?',
+          text: 'Existing conversations linked to this Facebook page will stop being synced to your business app integrations. Continue?',
+          icon: 'glyphicon glyphicon-question-sign',
+          hide: false,
+          confirm: {
+            confirm: true
+          },
+          buttons: {
+            closer: false,
+            sticker: false
+          },
+          history: {
+            history: false
+          },
+          addclass: 'stack-modal',
+          stack: {'dir1': 'down', 'dir2': 'right', 'modal': true}
+          })).get().on('pnotify.confirm', function() {
+            $('.submit_page').attr('canUnsubscribe', true);
+            $('.submit_page').click();
+          }).on('pnotify.cancel', function() {
+            return false;
+        });
+        return false;
+      }
+    }
+  });
+
   $('#delete_integration').click(function (evt) {
     evt.preventDefault();
     swal({

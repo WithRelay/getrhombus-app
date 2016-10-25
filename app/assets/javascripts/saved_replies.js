@@ -47,7 +47,7 @@ $(document).ready(function() {
         title: 'Confirmation Needed',
         text: 'Are you sure?',
         icon: 'glyphicon glyphicon-question-sign',
-        hide: true,
+        hide: false,
         confirm: {
           confirm: true
         },
