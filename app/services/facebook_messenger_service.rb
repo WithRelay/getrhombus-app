@@ -105,7 +105,7 @@ class FacebookMessengerService
         # get credentital page_specific_id i.e. recipient_id
         user_fb_cred_id = user_fb_cred.page_specific_id if user_fb_cred.present?
         # calls a function send_text_message with parameter page_access_token page_access_token, text
-        send_text_message(page_access_token, page_access_token, campaign.text) if user_fb_cred_id.present?
+        send_text_message(page_access_token, user_fb_cred_id, campaign.text) if user_fb_cred_id.present?
       end if page_access_token.present?
     end
 
