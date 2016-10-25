@@ -6,7 +6,7 @@ module CampaignsHelper
     if campaign.persisted?
       { campaign.channel => get_channel_enum_value(campaign) }
     else
-      channels = Campaign.channels
+      channels = { SMS: 0, MMS: 1, "Facebook Messenger" => 2, Email: 3}
       channels.delete('MMS') if !current_user.can_send_mms?   # Twilio MMS support only in US, CA
       channels
     end
