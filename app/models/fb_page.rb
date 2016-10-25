@@ -3,6 +3,7 @@ class FbPage < ActiveRecord::Base
   belongs_to :fb_cred
   has_many :fb_messages, dependent: :destroy
   validates_presence_of :page_access_token
+  scope :subscribed, -> { where(subscription_status: true) }
 
   def self.store_page(current_user)
     page_array = FacebookMessengerService.get_page(current_user.fb_cred.auth_token)
