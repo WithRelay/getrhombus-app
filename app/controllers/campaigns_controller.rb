@@ -17,7 +17,7 @@ class CampaignsController < ApplicationController
     campaign_params[:list_ids].split(',').each { |list_id| @campaign.campaign_lists.build(list_id: list_id) }
     if @campaign.save
       save_campaign_images(@campaign)
-      CampaignService.new(@campaign).send_now if @campaign.deliver_now
+      CampaignJob.new(@campaign).perform_now if @campaign.deliver_now
       flash[:notice] = 'Campaign Saved successfully'
     else
       flash[:error] = @campaign.errors.messages
