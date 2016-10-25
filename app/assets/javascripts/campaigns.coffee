@@ -18,7 +18,7 @@ class DatePicker
 
 class Campaign
 
-  EMAIL_CHANNEL = '3'
+  EMAIL_CHANNEL = '3'; MMS_CHANNEL = '1'
   CHECK = ':checked'
   TRUMBOWYG = false
   MAXIMUM_VALUE = 1500
@@ -30,12 +30,19 @@ class Campaign
 
   showHideEditor: (element)->
     if isEmailChecked(element)
+      this.showFileBrowser()
       trumbowygSetting(true, @textArea)
+    else if isMmsChecked(element)
+      this.showFileBrowser()
     else
+      this.hideFileBrowser()
       trumbowygSetting(false, @textArea)
 
   isEmailChecked = (channel) ->
     $(channel).val() == EMAIL_CHANNEL
+
+  isMmsChecked = (channel) ->
+    $(channel).val() == MMS_CHANNEL
 
   trumbowygSetting = (status, area)->
     emojiArea = '.emojionearea'
@@ -61,6 +68,11 @@ class Campaign
   deliverNowOneTime_isChecked = (oneTime, deliverNow) ->
     $(oneTime).is(CHECK) && $(deliverNow).is(CHECK)
 
+  showFileBrowser: ->
+    $(".upload_image").show()
+
+  hideFileBrowser: ->
+    $(".upload_image").hide()
 
   textAreaEmojis: ->
     divText = this.textArea
@@ -108,7 +120,11 @@ $( document ).on 'ready page:load', ->
 
   if $('#campaign_channel').val() == '3'
     new CustomTrumbowygPlugin('#trumbowyg')
+    campaign.showFileBrowser()
+  else if $('#campaign_channel').val() == '1'
+    campaign.showFileBrowser()
   else
+    campaign.hideFileBrowser()
     campaign.textAreaEmojis()
 
   $( '#campaign_channel' ).change ->
