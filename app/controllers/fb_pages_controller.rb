@@ -1,6 +1,6 @@
 # User can select facebook pages 
 class FbPagesController < ApplicationController
-  before_action :check_user_present
+  before_action :check_user_present, :update_page
   respond_to :html, :js
 
   def index
@@ -94,6 +94,41 @@ class FbPagesController < ApplicationController
       redirect_to signin_path,  flash: { error: 'You are not Signed In' }
     elsif current_user.fb_cred.nil?
       redirect_to user_path(current_user),  flash: { error: 'Your messenger account is not connected with Rhombus' }
+    end
+  end
+
+  def update_page
+    begin
+      page_array = FacebookMessengerService.get_page(current_user.fb_cred.auth_token)
+      stored_pages = current_user.fb_cred.fb_pages
+      remove_deleted_page(stored_pages, page_array)
+      page_array.each do |page|
+        if stored_pages.find_by_page_id page['id']
+          stored_page = stored_pages.find_by_page_id page['id']
+          stored_page.update(page_access_token: page['access_token'])
+        else
+          FbPage.create(page_id: page['id'],
+            user_id: current_user.id,
+            category: page['category'],
+            page_access_token: page['access_token'],
+            page_name: page['name'],
+            fb_cred_id: current_user.fb_cred.id)
+        end
+      end
+    rescue Exception => e
+    end
+  end
+
+  def remove_deleted_page(stored_pages, page_array)
+    begin
+      page_ids = []
+      page_array.each{|p| page_ids << p['id']}
+      stored_pages.each do |page|
+        unless page_ids.include? page.page_id
+          page.destroy
+        end
+      end
+    rescue Exception => e
     end
   end
 end
