@@ -67,8 +67,13 @@ class Campaign
     txtEmoji = $(@textArea).emojioneArea ->
                  @emojiConfig
     txtEmoji[0].emojioneArea.on 'keyUp', (btn, event) ->
+      if $("#campaign_channel :selected").val() == "2"
+        value = 320
+      else
+        value = MAXIMUM_VALUE
       $('#undefined_counter').html('')
-      $('.emojionearea-editor').counter({ count: 'up', goal: MAXIMUM_VALUE })
+      $('.emojionearea-editor').counter({ count: 'up', goal: value })
+
 
 $( document ).on 'ready page:load', ->
   campaign = new Campaign({ pickerPosition: 'right' })
@@ -114,6 +119,9 @@ $( document ).on 'ready page:load', ->
   $('#recurringFrequency').click ->
     $('#campaign_repeat_days').show()
     campaign.hideShowScheduler()
+
+  if $("#deliverNow").is(":checked")
+    $('.scheduleOption').hide()
 
   # Mainly for edit actions so the view shows properly
   frequency_type = if $('#oneTimeFrequency').is(':checked') then '#oneTimeFrequency' else '#recurringFrequency'
