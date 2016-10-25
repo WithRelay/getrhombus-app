@@ -2,7 +2,7 @@ class FacebookMessengerService
 
   class << self
 
-    # for messenger_account_linking 
+    # for messenger_account_linking
     def send_auth_link(page_access_token, recipient_id, welcome_text)
       body = {
         recipient:{
@@ -25,7 +25,7 @@ class FacebookMessengerService
           }
         }
       }
-      httparty_post(body, page_access_token) 
+      httparty_post(body, page_access_token)
     end
 
     # update new user from messenger's email from account linking
@@ -58,7 +58,7 @@ class FacebookMessengerService
       end
     end
 
-    def send_text_message(page_access_token, recipient_id, text)  
+    def send_text_message(page_access_token, recipient_id, text)
       #Using HTTParty
       # page_access_token = "<redacted_facebook_access_token>"
       # recipient_id = "<redacted_phone_number>"
@@ -74,11 +74,11 @@ class FacebookMessengerService
       httparty_post(body, page_access_token)
     end
 
-    def send_attachment(page_access_token, recipient_id, attachment_type, file_url) 
+    def send_attachment(page_access_token, recipient_id, attachment_type, file_url)
       # page_access_token = "<redacted_facebook_access_token>"
       # recipient_id = "<redacted_phone_number>"
       # attachment_type = "image"
-      # file_url = "http://v.img.com.ua/b/orig/b/b1/b91937118c0414fda58d5f020b518b1b.jpg" 
+      # file_url = "http://v.img.com.ua/b/orig/b/b1/b91937118c0414fda58d5f020b518b1b.jpg"
       body = {
         recipient:{
           id: recipient_id
@@ -93,6 +93,16 @@ class FacebookMessengerService
         }
       }
       httparty_post(body, page_access_token)
+    end
+
+    def send_campaign(campaign)
+      subscribed_page = campaign.user.fb_pages.subscribed
+      page_access_token = subscribed_page[0].page_access_token if subscribed_page.present?
+      campaign.lists.each do |list|
+        user_fb_cred = list.user.fb_cred
+        user_fb_cred_id = user_fb_cred.page_specific_id if user_fb_cred.present?
+        send_text_message(page_access_token, user_fb_cred_id, campaign.text) if user_fb_cred_id.present?
+      end if page_access_token.present?
     end
 
     def httparty_post(post_body, access_token)
