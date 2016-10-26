@@ -4,6 +4,7 @@ class FacebookMessengerService
 
     # for messenger_account_linking
     def send_auth_link(page_access_token, recipient_id, welcome_text)
+      link_url = (Rails.env == 'production')? "https://www.getrhombus.com/link_facebook" : "<redacted_webhook_url>"
       body = {
         recipient:{
           id: recipient_id
@@ -18,7 +19,7 @@ class FacebookMessengerService
                 image_url: "https://www.getrhombus.com/assets/imgo-252069578bf9441f8f0cf59bc8660170.jpg",
                 buttons: [{
                   type: "account_link",
-                  url: "<redacted_webhook_url>"
+                  url: link_url
                 }]
               }]
             }
