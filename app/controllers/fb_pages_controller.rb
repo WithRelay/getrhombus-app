@@ -103,10 +103,7 @@ class FbPagesController < ApplicationController
       stored_pages = current_user.fb_cred.fb_pages
       remove_deleted_page(stored_pages, page_array)
       page_array.each do |page|
-        if stored_pages.find_by_page_id page['id']
-          stored_page = stored_pages.find_by_page_id page['id']
-          stored_page.update(page_access_token: page['access_token'])
-        else
+        unless stored_pages.find_by_page_id page['id']
           FbPage.create(page_id: page['id'],
             user_id: current_user.id,
             category: page['category'],
