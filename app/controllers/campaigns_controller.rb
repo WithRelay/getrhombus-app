@@ -21,10 +21,11 @@ class CampaignsController < ApplicationController
       Resque.enqueue_at_with_queue('default', utc_date_time, ChannelJob, @campaign.id) if is_campaign_date_selected?(@campaign)
       CampaignJob.new(@campaign).perform_now if @campaign.deliver_now
       flash[:notice] = 'Campaign Saved successfully'
+      redirect_to new_user_campaign_path
     else
+      render :new
       flash[:error] = @campaign.errors.messages
     end
-    redirect_to new_user_campaign_path
   end
 
   def edit
