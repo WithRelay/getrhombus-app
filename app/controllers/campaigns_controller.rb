@@ -17,12 +17,15 @@ class CampaignsController < ApplicationController
     campaign_params[:list_ids].split(',').each { |list_id| @campaign.campaign_lists.build(list_id: list_id) }
     if @campaign.save
       save_campaign_images(@campaign)
+      utc_date_time = @campaign.date_time.in_time_zone(@campaign.user.time_zone).utc
+      Resque.enqueue_at_with_queue('default', utc_date_time, ChannelJob, @campaign.id) if is_campaign_date_selected?(@campaign)
       CampaignJob.new(@campaign).perform_now if @campaign.deliver_now
       flash[:notice] = 'Campaign Saved successfully'
+      redirect_to new_user_campaign_path
     else
+      render :new
       flash[:error] = @campaign.errors.messages
     end
-    redirect_to new_user_campaign_path
   end
 
   def edit
@@ -49,8 +52,9 @@ class CampaignsController < ApplicationController
   end
 
   def change_status
-    status = params[:new_status] == 'pause' ? 2 : 1
-    if @campaign.update_attributes(status: status)
+    status = @campaign.status == 'active' ? 2 : 1
+    if @campaign.update_attribute('status', status)
+      Resque.remove_delayed_selection { |args| args[0] == @campaign.id }
       flash[:notice] = 'Campaign paused'
     else
       flash[:notice] = 'Sorry campaign could not be paused'
@@ -67,6 +71,10 @@ class CampaignsController < ApplicationController
 
   def find_campaign
     @campaign = current_user.campaigns.find(params[:id])
+  end
+
+  def is_campaign_date_selected?(campaign)
+    (campaign.one_time? && !campaign.deliver_now?)
   end
 
   def save_campaign_images(campaign)

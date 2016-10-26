@@ -10,6 +10,7 @@
      <th>Created</th>
      <th>Channel</th>
      <th>Recipients</th>
+     <th>Action</th>
     </tr>
   </thead>
   <tbody>
@@ -29,6 +30,9 @@
         </td>
         <td>
           <%= present(campaign).count_recipient %>
+        </td>
+        <td>
+          <%= link_to(set_campaign_status(campaign), change_status_user_campaign_path(current_user, campaign), method: :put) %>
         </td>
       </tr>
     <% end %>

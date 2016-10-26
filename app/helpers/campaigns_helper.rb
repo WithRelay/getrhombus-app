@@ -7,7 +7,7 @@ module CampaignsHelper
       { campaign.channel => get_channel_enum_value(campaign) }
     else
       channels = { SMS: 0, MMS: 1, "Facebook Messenger" => 2, Email: 3}
-      channels.delete('MMS') if !current_user.can_send_mms?   # Twilio MMS support only in US, CA
+      channels.delete(:MMS) if !current_user.can_send_mms?   # Twilio MMS support only in US, CA
       channels
     end
   end
@@ -19,6 +19,10 @@ module CampaignsHelper
 
   def is_one_time_checked?(campaign)
     campaign.frequency_type.blank? || campaign.frequency_type == 'one_time'
+  end
+
+  def set_campaign_status(campaign)
+    campaign.active? ? 'pause' : 'start'
   end
 
   def is_recurring_checked?(campaign)
