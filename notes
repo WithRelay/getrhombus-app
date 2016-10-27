@@ -1,54 +1,11 @@
 - what happens when u send image in countries that don't support it. link?
 - check trumbowyg working
 - clean up image/hashtag presenters
-- I will get test server working and seeds by tuesday night
-
-Notes
-- Clean up your code if you no longer use it. Don't leave unused code in the repo. PLEASE!
-- Please ask me before adding a gem to the project to reduce confusion and unnecessaory work. we arent using bootstrap form since edwin is designing all the pages. the toastr...we are using pnotify.
-- Even though we arent writing tests yet, pls adequately hand test your code.
-- migration names should be clear
-- is text in messages text or string type? check with the guys
-   - messages text became string cos of the utf8mb4 execution string
-- comment your code
-- let's stick to javascript..
-
-
-Notes for Edwin
-- what if you have campaigns with different statuses
-
-Notes for Surya
-- You need to bind emojionearea only once so use a variable to keep track
-- You need to bind counter to all fields....you will need to do that on focus though since
-	we can't tell when emojionearea is done.
-- if it is a one time, you need to mark inactive
-- update action needs to update campaign_lists
-
-Notes for Ovo
-- You can't delete a list attached to active/paused campaign
-
-
-- is this in use
-getBase64FromImageUrl = (url) ->
-    img = new Image
-    img.setAttribute 'crossOrigin', 'anonymous'
-    img.onload = (e)->
-      canvas = document.createElement('canvas')
-      canvas.width = this.width
-      canvas.height = this.height
-      ctx = canvas.getContext('2d')
-      ctx.drawImage this, 0, 0
-      dataURL = canvas.toDataURL("image/png");
-      new_url = dataURL.replace(/^data:image\/(png|jpg);base64,/, "data:image/jpeg;base64,");
-      trumbowygHtml =  $('#trumbowyg').trumbowyg('html')
-      lastSrc = $('#trumbowyg').trumbowyg('html').split('src=').pop()
-      newHtml = trumbowygHtml.replace(lastSrc, new_url + '>');
-      $('#trumbowyg').trumbowyg('html', newHtml)
-      return
-    img.src = url
-    return
-
-
+- Plug into stripe api for managed accts - see notes
+- Create Seeds
+- Set up dev server - with rake task
+- Clean up angular - https://blog.joshsoftware.com/2014/07/17/building-web-apps-with-rails4-and-angularjs-in-15-minutes/
+- remmove thread profiler in prod
 
 
 Payment Capture - should be for only customers....capture in logic
@@ -59,21 +16,18 @@ Payment Capture - should be for only customers....capture in logic
 All APIs especially Stripe, Twilio
 - Test all data saves correctly
 
-Campaigns
-- fail safely for audio and video files
-
 Contact - Inbound
 - sent u a text doesnt have an account 
 - have an account, sent u a text but ref link isnt yours 
 
+Notes for Surya
+- You need to bind emojionearea only once so use a variable to keep track
+- You need to bind counter to all fields....you will need to do that on focus though since
+	we can't tell when emojionearea is done.
+- if it is a one time, you need to mark inactive
+- update action needs to update campaign_lists
 
-Friday/Saturday/Sunday
-- Plug into stripe api for managed accts - see notes
-- Create Seeds
-- Set up dev server - with rake task
-- Clean up angular - https://blog.joshsoftware.com/2014/07/17/building-web-apps-with-rails4-and-angularjs-in-15-minutes/
-
-
-
+Campaigns and Facebook
+- fail safely for audio and video files
 
 

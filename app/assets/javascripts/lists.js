@@ -59,7 +59,7 @@ $(document).ready(function () {
       method: method,
       url: action,
       data: data,
-      daaType: 'json'
+      dataType: 'json'
     }).done(function(msg){
       $('#list_form_items').html("List created successfully")
       })

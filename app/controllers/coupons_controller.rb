@@ -27,7 +27,7 @@ class CouponsController < ApplicationController
     if @coupon.create_coupon({ team: current_user })  #@coupon.save
       redirect_to user_coupons_path       #respond_with(@coupon)
     else
-      respond_with(@subscription)
+      respond_with(@coupon)
     end
   end
 

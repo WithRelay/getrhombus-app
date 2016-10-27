@@ -6,7 +6,8 @@ class Api::V1::CampaignsController < API::V1::BaseController
     render json: { response: "Deleted" }, status: 200
 	end
 
-  def upload_from_url
+  # uplaoding image from local and url
+  def upload_images
     image = params[:img_url].present? ? open(params[:img_url]) : params[:image]
     render json:  validation_messages(image)
   end
