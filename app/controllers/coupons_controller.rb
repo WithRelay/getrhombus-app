@@ -23,7 +23,7 @@ class CouponsController < ApplicationController
     hash = prepare_coupon_hash(coupon_params.to_h)
     res = PaymentService.create_coupon(hash)
     if (res[0].class == Stripe::Coupon) && @coupon.create_coupon({ team: current_user })  #@coupon.save
-       @coupon.update(stripe_coupon_id: res[0].id)
+       @coupon.update(stripe_coupon_id: res[0].id, stripe_livemode: res[0].livemode)
       redirect_to user_coupons_path, flash: { notice: 'Coupon was created'}
     else
       redirect_to user_coupons_path, flash: { error: 'Something went wrong'}
