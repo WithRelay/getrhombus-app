@@ -1,4 +1,4 @@
-  $( document ).ready(function() {
+$( document ).ready(function() {
   "use strict";
   var index = 1;
   if ($('#select_page').length > 0){
