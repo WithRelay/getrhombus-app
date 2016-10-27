@@ -31,7 +31,7 @@
   <%= f.check_box :deliver_now, id: 'deliverNow' %>
 
   <div class='scheduleOption'>
-    <%= f.select :repeat_days, repeat_days_options, selected: @campaign.repeat_days, include_blank: 'Repeat every' %>
+    <%= f.select :repeat_days, repeat_days_options, selected: @campaign.repeat_days %>
     <%= f.text_field :date_time, class: 'daterange' %>
   </div>
 

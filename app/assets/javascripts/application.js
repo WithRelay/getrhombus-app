@@ -13,8 +13,10 @@
 
 //= require pubnub/pubnub.min.js
 //= require jquery
-//= require toastr
 //= require sweetalert
+//= require pnotify
+//= require flashes
+//= require pagination
 //= require jquery_ujs
 //= require jquery.lightbox_me
 //= require intlTelInput.min
@@ -31,15 +33,13 @@
 //= require image_validator
 //= require campaigns
 //= require jquery_word_counter
-
 //= require custom_trumbowyg_plugin
 //= require trumbowyg.min
-//= require trumbowyg.upload.min
-
+//= require emojify
 //= require emojionearea
-
+//= require trumbowyg_emoji_plugin
+//= require trumbowyg.upload.min
 //= require saved_replies
-
 //= require selectize
 //= require lists
 //= require hashtags_plans_coupons_alerts

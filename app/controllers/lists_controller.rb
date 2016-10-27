@@ -38,9 +38,26 @@ class ListsController < ApplicationController
     respond_with(@list)
   end
 
+  # Deletes only lists that are not in an active campaign
+  # Begins by checking to see if a campaign list exists with the list id
+  # If not, deletes the list as usual
+  # else if the list is associated with an active campaign, the delete operation
+  # is aborted
   def destroy
-    @list.destroy
-    respond_with(@list)
+    if CampaignList.where(:list_id => @list.id).any?
+      if CampaignList.where(list_id:@list.id).first.campaign.status == "active"
+        flash[:notice] = "This list cannot be deleted as it is part of an active campaign"
+        respond_with(@list)
+      else 
+        @list.destroy
+        flash[:notice] = "List was successfully deleted"
+        respond_with(@list)
+      end
+    else
+      @list.destroy
+      flash[:notice] = "List was successfully deleted"
+      respond_with(@list)
+    end
   end
 
   private

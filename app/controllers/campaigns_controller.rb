@@ -15,13 +15,17 @@ class CampaignsController < ApplicationController
   def create
     @campaign = current_user.campaigns.build(campaign_params)
     campaign_params[:list_ids].split(',').each { |list_id| @campaign.campaign_lists.build(list_id: list_id) }
-    # save_campaign_images(@campaign) this is comment for now.
     if @campaign.save
+      save_campaign_images(@campaign)
+      utc_date_time = @campaign.date_time.in_time_zone(@campaign.user.time_zone).utc
+      Resque.enqueue_at_with_queue('default', utc_date_time, ChannelJob, @campaign.id) if is_campaign_date_selected?(@campaign)
+      CampaignJob.new(@campaign).perform_now if @campaign.deliver_now
       flash[:notice] = 'Campaign Saved successfully'
+      redirect_to new_user_campaign_path
     else
+      render :new
       flash[:error] = @campaign.errors.messages
     end
-    redirect_to new_user_campaign_path
   end
 
   def edit
@@ -48,13 +52,19 @@ class CampaignsController < ApplicationController
   end
 
   def change_status
-    status = params[:new_status] == 'pause' ? 2 : 1
-    if @campaign.update_attributes(status: status)
+    status = @campaign.status == 'active' ? 2 : 1
+    if @campaign.update_attribute('status', status)
+      Resque.remove_delayed_selection { |args| args[0] == @campaign.id }
       flash[:notice] = 'Campaign paused'
     else
       flash[:notice] = 'Sorry campaign could not be paused'
     end
     redirect_to user_campaigns_path
+  end
+
+  def filter_campaign
+    @campaigns = current_user.campaigns.where('status = ?', Campaign.statuses[params[:status]])
+    render 'index'
   end
 
   private
@@ -63,10 +73,18 @@ class CampaignsController < ApplicationController
     @campaign = current_user.campaigns.find(params[:id])
   end
 
+  def is_campaign_date_selected?(campaign)
+    (campaign.one_time? && !campaign.deliver_now?)
+  end
+
   def save_campaign_images(campaign)
-    image_params[:avatar].each do |image|
-      campaign.images.build(avatar: image)
-    end if image_params[:avatar].present?
+    # comment for attrachment for now later on it is needed
+    # image_params[:avatar].each do |image|
+    #   campaign.images.build(avatar: image)
+    # end if image_params[:avatar].present?
+    image_params[:image_id].each do |avatar_id|
+      campaign.image_refs.build(image_id: avatar_id).save;
+    end if image_params[:image_id].present?
   end
 
   def campaign_params
@@ -75,10 +93,11 @@ class CampaignsController < ApplicationController
                                      :frequency_type, :text, :new_status).tap do |c|
                                       c[:channel] = c[:channel].to_i
                                       c[:frequency_type] = c[:frequency_type].to_i
+                                      c[:deliver_now]=='1' ? c[:deliver_now] = true : c[:deliver_now] = false
                                     end
   end
 
   def image_params
-    params.require(:campaign).permit(avatar:[])
+    params.require(:campaign).permit(avatar:[], image_id:[])
   end
 end

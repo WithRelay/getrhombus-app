@@ -1,8 +1,19 @@
 class ChannelJob
-  @queue = :send_email
+  @queue = :default
 
-  def self.perform(class_name = 'campaign')
-    model = class_name.capitalize.constantize
-    model.each { |obj|  "#{class_name}Service ".new(obj).set_background_jobs }
+  def self.perform(campaign_id)
+    campaign = Campaign.find_by_id(campaign_id)
+    channel_class = channel_hash[campaign.channel].constantize
+    channel_class.send_campaign(campaign)
+  end
+
+  private_class_method
+
+  def self.channel_hash
+    {
+      'sms'=>'SmsService', 'mms'=>'MmsService',
+      'facebook_messenger'=>'FacebookMessengerService',
+      'email'=>'EmailService'
+    }
   end
 end

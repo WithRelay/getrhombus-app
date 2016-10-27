@@ -4,12 +4,14 @@ class @CustomTrumbowygPlugin
     root_url = 'http://' + window.location.host
     $(element).trumbowyg
       svgPath: root_url + '/assets/icons.svg'
+      autogrow: true
       btnsDef: image:
         dropdown: [ 'insertImage', 'upload' ]
         ico: 'insertImage'
       btns: [ [ 'viewHTML' ], [ 'undo', 'redo'], [ 'formatting' ], 'btnGrp-design', [ 'link' ]
         [ 'image' ], 'btnGrp-justify', 'btnGrp-lists', [ 'foreColor', 'backColor']
         [ 'preformatted' ]
+        [ 'emoji' ]
         [ 'horizontalRule' ]
         [ 'fullscreen' ]
       ]
@@ -20,13 +22,14 @@ class @CustomTrumbowygPlugin
         success: (data, trumbowyg, modal)->
           if data.status == 200
             if data.message == 'success'
-              trumbowyg.execCmd 'insertImage', window.target_result
-            else
-              link = $(['<a href="' + data.href +'">' + data.name + '</a>'].join(''))
-              trumbowyg.range.insertNode link[0]
+              url = data.image_url
+              trumbowyg.execCmd('insertImage', url)
+              imageIdHtml = '<input type="hidden" name="campaign[image_id][]" value="'+data.image_id+'">'
+              $('.newMessage').append(imageIdHtml)
             setTimeout (->
               trumbowyg.closeModal()
               return
             ), 250
           else
             trumbowyg.addErrorOnModalField $('input[type=file]', modal), trumbowyg.lang.uploadError or data.message
+          $('body').removeClass('loading')

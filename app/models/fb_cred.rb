@@ -2,7 +2,7 @@ class FbCred < ActiveRecord::Base
 
   belongs_to :user
   has_many :fb_pages, dependent: :destroy
-  validates :user_id, uniqueness: true, :allow_nil => true
+  validates :user_id, uniqueness: true, allow_nil: true
 
   def self.from_omniauth(auth, id)
     begin
@@ -31,14 +31,14 @@ class FbCred < ActiveRecord::Base
       timezone = ActiveSupport::TimeZone.new(user_data['timezone']).tzinfo.name
       gender = user_data['gender']
       link_response = link_page_specific_user(url)
-      # welcome_text = "Welcome #{full_name} to Rhombus-Message Commerce platform"
+      welcome_text = "Welcome #{full_name} to Rhombus-Message Commerce platform"
       if link_response.present?
         # FacebookMessengerService.send_text_message(page_access_token, new_user_id, welcome_text)
         # FacebookMessengerService.send_attachment(page_access_token, new_user_id, 'image', 'http://www.compustarltd.com/wp-content/uploads/2015/11/welcome.png')
         fb_cred = FbCred.new(name: full_name, page_specific_id: new_user_id, email: link_response[:email], fb_id: link_response[:fb_id],
           time_zone: timezone, gender: gender, profile_pic_url: url)
       else 
-        # FacebookMessengerService.send_auth_link(page_access_token, new_user_id, welcome_text, 'route')
+        FacebookMessengerService.send_auth_link(page_access_token, new_user_id, welcome_text)
         fb_cred = FbCred.new(name: full_name, page_specific_id: new_user_id, time_zone: timezone, gender: gender, profile_pic_url: url)
       end
       
