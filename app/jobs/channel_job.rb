@@ -4,7 +4,7 @@ class ChannelJob
   def self.perform(campaign_id)
     campaign = Campaign.find_by_id(campaign_id)
     channel_class = channel_hash[campaign.channel].constantize
-    channel_class.send_campaign(campaign)
+    campaign.channel == 'email' ? channel_class.new(campaign).send_campaign : channel_class.send_campaign(campaign)
   end
 
   private_class_method
