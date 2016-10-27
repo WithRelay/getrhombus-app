@@ -20,6 +20,7 @@
   <%= javascript_include_tag "plugins" %>
   <%= yield :head_script %>
   <%= csrf_meta_tags %>
+
 </head>
 <body style = "background: #f4f4f4">
    <!-- Start Page Loading -->
@@ -27,20 +28,41 @@
 
   <div class="content">
     <div class="page-header">
-      <p>Connected to Facebook as: </p>
-      <span style="background: aliceblue;"> <%= current_user.fb_cred.name %></span>
+      <p>Connected to Facebook as
+        <span style="color: blue"> 
+          <i class="fa fa-user"></i> <%= current_user.fb_cred.name %>
+        </span>
+      </p>
+      
+      <h1>Facebook Messenger</h1>
       <% if present(current_user).page_count %>
-        <p> Select page: </p>
+        <p> Choose the Facebook page that you will use to receive messages </p>
+        <h3>Facebook Page</h3>
         <%= form_for :fb_page, url: user_update_fb_page_path(current_user), method: :patch do |f| %>
-          <%= select_tag 'select_page', options_for_select(@user_fb_pages.map{|p| ["#{p.page_name}", "#{p.id} #{p.subscription_status}"] }) %>
-          <%= f.submit '' , class: 'submit_page', param: "#{current_user.fb_cred.name}"%>
+          <div class="dropdown">
+            <%= select_tag 'select_page', options_for_select(@user_fb_pages.map{|p| ["#{p.page_name}", "#{p.id} #{p.subscription_status}"] }), class: "btn dropdown-toggle", prompt: 'Select a Facebook Page' %>
+            <%= f.submit '' , class: 'submit_page', param: "#{current_user.fb_cred.name}", data: { disable_with: "Please wait..." }, subscribed_page: "#{subscribed_page}" %>
+          </div>
+
+          <br>
+          <p>Subscribed Page:
+          <% if subscribed_page.present? %>
+            <span style="color: green">
+              <i class="fa fa-file" aria-hidden="true"></i> <%= subscribed_page %>
+            </span>
+          <% else %>
+            <b>No page is subscribed yet</b>
+          <% end %>
+          </p>
+
         <%end%>
       <% else %>
-        <p> Please Make some facebook page before proceed</p>
-      <%end%> 
+        <p> Please make some facebook page before proceed</p>
+      <%end%>
+
       <br/>
-      <%= link_to fb_pages_remove_integration_path, id: 'delete_integration' do%>
-        <i class="fa fa-trash fa-2x" aria-hidden="true"> Remove Facebook Integration </i>
+      <%= link_to fb_pages_remove_integration_path, id: 'delete_integration', class: 'pull-right' do%>
+        <i class="fa fa-trash" aria-hidden="true"> Remove Integration </i>
       <%end%>
     </div>
     </div>
@@ -49,6 +71,7 @@
   <!-- End Page Loading -->
   <%= render 'shared/header_new' %>
   <%= render 'shared/sidebar' %>
+
   <%= yield %>
 
   <%= render 'shared/smooch' %>

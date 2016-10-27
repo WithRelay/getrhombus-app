@@ -1,7 +1,37 @@
 <% if flash[:notice].present? %>
-  <small class="help-block">
-    <%= flash[:notice] %>
-  </small>
+  <script type="text/javascript">
+    $(window).load(function(){
+      flashSuccess( "<%= flash[:notice] %>")
+    })
+  </script>
+
 <% elsif flash[:error].present? %>
-  <%= flash[:error] %>
+  <script type="text/javascript">
+    $(window).load(function(){
+      <% if flash[:error].is_a? String %> 
+        flashError( "<%= flash[:error] %>")
+      <% elsif flash[:error].is_a? Hash %> 
+        var errors = "";
+        <% flash[:error].each do |k, v| %>
+          errors += "<%= k %> <%= v %>\n" ;
+        <% end %>
+        flashError(errors);
+      <% end %>
+    })
+  </script>
+
+<% elsif flash[:alert].present?  %>
+  <script type="text/javascript">
+    var notice = new PNotify({
+      title: 'Alert!!',
+      text: "<%= flash[:alert] %>",
+      buttons: {
+          closer: false,
+          sticker: false
+      }
+    });
+    notice.get().click(function() {
+        notice.remove();
+    });
+  </script>
 <% end %>

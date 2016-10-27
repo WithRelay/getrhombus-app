@@ -71,6 +71,9 @@ group :production do
 	gem "passenger"
 end
 
+# Rails flash integration with PNotify
+gem 'pnotify-rails'
+
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
 
@@ -85,8 +88,6 @@ gem 'coffee-rails', '~> 4.1.0'
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
-gem 'toastr-rails'
-
 
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
 # gem 'turbolinks'

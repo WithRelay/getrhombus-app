@@ -1,5 +1,5 @@
 class Api::V1::CampaignsController < API::V1::BaseController
- 
+
   def image_delete
     image_ref = find_image(imageable_type: 'Message', image_id: params[:id])
     image_ref.delete if image_ref
@@ -7,11 +7,7 @@ class Api::V1::CampaignsController < API::V1::BaseController
 	end
 
   def upload_images
-    if valid_uploaded_images(params[:image])
-      render json: { status: 200, message: 'success' }
-    else
-      render json: { status: 401, message: 'sorry file type/size is not supported' }
-    end
+    image = params[:img_url].present? ? open(params[:img_url]) : params[:image]
+    render json:  validation_messages(image)
   end
-
 end

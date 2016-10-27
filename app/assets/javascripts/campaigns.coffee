@@ -18,10 +18,10 @@ class DatePicker
 
 class Campaign
 
-  EMAIL_CHANNEL = '3'
+  EMAIL_CHANNEL = '3'; MMS_CHANNEL = '1'
   CHECK = ':checked'
-  TEXTAREA_COUNTER = false         # track if counter already exists except for trumbowyg
-  EMOJIONEAREA = false
+  TRUMBOWYG = false
+  MAXIMUM_VALUE = 1500
 
   constructor: (emojiConfig)->
     @textArea = '#trumbowyg'
@@ -30,25 +30,29 @@ class Campaign
 
   showHideEditor: (element)->
     if isEmailChecked(element)
+      this.showFileBrowser()
       trumbowygSetting(true, @textArea)
+    else if isMmsChecked(element)
+      this.showFileBrowser()
     else
+      this.hideFileBrowser()
       trumbowygSetting(false, @textArea)
 
   isEmailChecked = (channel) ->
     $(channel).val() == EMAIL_CHANNEL
 
+  isMmsChecked = (channel) ->
+    $(channel).val() == MMS_CHANNEL
+
   trumbowygSetting = (status, area)->
     emojiArea = '.emojionearea'
     if status
       new CustomTrumbowygPlugin(area)
-      countCharacters('.trumbowyg-editor')
+      emojify.setConfig( { emojify_tag_type:'div' } );
+      emojify.run();
       $(emojiArea).hide()
     else
       $(area).trumbowyg('destroy');
-      if !EMOJIONEAREA 
-        EMOJIONEAREA = $(area).emojioneArea ->
-          @emojiConfig
-      console.log(@emojiConfig)
       $(emojiArea).show()
       $(area).hide()
 
@@ -64,25 +68,32 @@ class Campaign
   deliverNowOneTime_isChecked = (oneTime, deliverNow) ->
     $(oneTime).is(CHECK) && $(deliverNow).is(CHECK)
 
+  showFileBrowser: ->
+    $(".upload_image").show()
+
+  hideFileBrowser: ->
+    $(".upload_image").hide()
 
   textAreaEmojis: ->
-    if !EMOJIONEAREA 
-      EMOJIONEAREA = $(@textArea).emojioneArea ->
-        @emojiConfig
-      #EMOJIONEAREA[0].emojioneArea.on("emojibtn.click", function(button, event) {
-      #  console.log('event:emojibtn.click, emoji=' + button.children().data("name"));
-      #});
+    divText = this.textArea
+    txtEmoji = $(@textArea).emojioneArea ->
+                 @emojiConfig
 
-
-  countCharacters = (div) ->
-    $(div).counter()
-
+    txtEmoji[0].emojioneArea.on 'keyUp', (btn, event) ->
+      $('#undefined_counter').each ->
+        $(this).remove()
+      if $("#campaign_channel :selected").val() == "2"
+        value = 320
+      else
+        value = 1500
+      $('.emojionearea-editor').counter({ type: 'char', count: 'up', goal: value })
 
 $( document ).on 'ready page:load', ->
   campaign = new Campaign({ pickerPosition: 'right' })
-
   campaign.datePicker(new DatePicker( '.daterange' ))
+
   $(document).on 'change', 'input[name=file]', ->
+    # this is for client side validation of locally uploaded images
     uploadedImage = new ImageValidator
     uploadedImage.imageObj = this.files[0]
     if !uploadedImage.validateImage()
@@ -94,21 +105,27 @@ $( document ).on 'ready page:load', ->
     else
       reader = new FileReader
       reader.onload = (e) ->
-        window.target_result = e.target.result
-        window.invalid_image = false
+        img = new Image();
+        img.onload = (g)->
+          window.invalid_image = false
+        img.src = this.result;
       reader.readAsDataURL this.files[0]
 
   $(document).on 'click', 'form .trumbowyg-modal-submit',(e) ->
     if window.invalid_image
-      alert 'Please upload image format with jpg/jpef/png less than 4.5 mb'
+      alert 'Please upload image format with jpg/jpeg/png less than 4.5 mb'
       e.preventDefault()
     else
+      $('body').addClass('loading')
       getBase64FromImageUrl($('input[name=url]').val())
 
   if $('#campaign_channel').val() == '3'
     new CustomTrumbowygPlugin('#trumbowyg')
-    $('.trumbowyg-editor').counter()
+    campaign.showFileBrowser()
+  else if $('#campaign_channel').val() == '1'
+    campaign.showFileBrowser()
   else
+    campaign.hideFileBrowser()
     campaign.textAreaEmojis()
 
   $( '#campaign_channel' ).change ->
@@ -121,6 +138,9 @@ $( document ).on 'ready page:load', ->
     $('#campaign_repeat_days').show()
     campaign.hideShowScheduler()
 
+  if $("#deliverNow").is(":checked")
+    $('.scheduleOption').hide()
+
   # Mainly for edit actions so the view shows properly
   frequency_type = if $('#oneTimeFrequency').is(':checked') then '#oneTimeFrequency' else '#recurringFrequency'
   $(frequency_type).trigger('click')
@@ -129,20 +149,30 @@ $( document ).on 'ready page:load', ->
     campaign.hideShowScheduler()
 
   getBase64FromImageUrl = (url) ->
+    # this function is for uploading image via direct url
     img = new Image
     img.setAttribute 'crossOrigin', 'anonymous'
     img.onload = (e)->
-      canvas = document.createElement('canvas')
-      canvas.width = this.width
-      canvas.height = this.height
-      ctx = canvas.getContext('2d')
-      ctx.drawImage this, 0, 0
-      dataURL = canvas.toDataURL("image/png");
-      new_url = dataURL.replace(/^data:image\/(png|jpg);base64,/, "data:image/jpeg;base64,");
-      trumbowygHtml =  $('#trumbowyg').trumbowyg('html')
-      lastSrc = $('#trumbowyg').trumbowyg('html').split('src=').pop()
-      newHtml = trumbowygHtml.replace(lastSrc, new_url + '>');
-      $('#trumbowyg').trumbowyg('html', newHtml)
-      return
+      $('body').addClass('loading')
+      trumbowygHtml = $('#trumbowyg').trumbowyg('html')
+      $.ajax(
+        url: 'http://'+window.location.host+'/v1/campaigns/upload_images'
+        type: 'POST'
+        data: img_url: e.target.src
+        dataType: 'json').done (data) ->
+          if data.status == 200
+            lastSrc = $('#trumbowyg').trumbowyg('html').split('src="').pop()
+            newHtml = trumbowygHtml.replace(lastSrc, data.image_url + '">');
+            imageIdHtml = '<input type="hidden" name="campaign[image_id][]" value="'+data.image_id+'">'
+            $('.newMessage').append(imageIdHtml)
+            $('#trumbowyg').trumbowyg('html', newHtml)
+            $('body').removeClass('loading')
+          else
+            $('body').removeClass('loading')
+            splitHtml = trumbowygHtml.split('src=').pop()
+            imageTag = '<img src=' + splitHtml
+            newHtml = trumbowygHtml.replace(imageTag, '');
+            $('#trumbowyg').trumbowyg('html', newHtml);
+            alert 'sorry only jpeg and png images are supported with less than 5 mb'
     img.src = url
     return
