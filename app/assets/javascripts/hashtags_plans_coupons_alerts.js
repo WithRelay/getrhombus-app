@@ -10,7 +10,7 @@ $(document).ready(function () {
   });
 
   // Positive integer only
-  $('#interval-count, #amount-off, #duration-in-months, #max-redemptions').on('input', function(){
+  $('#interval-count, #duration-in-months, #max-redemptions').on('input', function(){
     this.value = positive_integer_only(this.value);
   });
 
