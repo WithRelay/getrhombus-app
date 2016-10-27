@@ -1,5 +1,8 @@
+
+<%
+=begin %>
 <%= form_for(@referrer, remote: true, format: :json) do |f| %>
-  <% if @referrer.errors.any? %>
+  <%# if @referrer.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@referrer.errors.count, "error") %> prohibited this referrer from being saved:</h2>
 
@@ -51,3 +54,5 @@
     <%= f.submit %>
   </div>
 <% end %>
+<%
+=end %>

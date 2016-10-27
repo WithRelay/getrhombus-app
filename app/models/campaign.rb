@@ -16,7 +16,7 @@ class Campaign < ActiveRecord::Base
   # validation of campaign attributes
   validates_presence_of :name, :list_ids, :text
   validate :channel_text_validate, if: proc { |c| c.text.present? && !c.email? }
-  validate :date_time_validate, if: proc { |c| (c.deliver_now && (!c.one_time? || c.recurring?)) }
+  validate :date_time_validate, if: proc { |c| (c.deliver_now? && c.recurring?) || (c.one_time? && !c.deliver_now?) }
   # validation for repeat days if recurring is selected.
   validates_presence_of :repeat_days, if: lambda { recurring? }
 

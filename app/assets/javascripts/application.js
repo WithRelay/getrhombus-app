@@ -42,3 +42,4 @@
 //= require saved_replies
 //= require selectize
 //= require lists
+//= require hashtags_plans_coupons_alerts

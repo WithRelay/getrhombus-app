@@ -21,4 +21,4 @@ send_campaigns: # send email for campaign list
   every: 1d # refer to 1 day
   class: 'SendCampaignJob' # class ChannelJob is present in app/jobs which represents campaign jobs
   args:
-  description: 'Sends email to lists of users selected for campaign'
+  description: 'Sends campaign to lists of users selected for campaign'
