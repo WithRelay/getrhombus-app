@@ -147,6 +147,18 @@ class PaymentService
       end
     end
 
+    def delete_coupon(id)
+      begin
+        coupon = Stripe::Coupon.retrieve(id)
+        coupon.delete
+      rescue Stripe::StripeError => e
+        # Display a very generic error to the user, and maybe send yourself an email
+        [false, e.json_body[:error]]
+      rescue StandardError => e
+        [false, e]
+      end
+    end
+
     def create_managed_account()
       begin
         re = Stripe::Account.create({ country: hash[:country], managed: true } )

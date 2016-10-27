@@ -4,7 +4,9 @@ class Coupon < ActiveRecord::Base
   belongs_to :user
 
   attr_accessor :coupon_type
-  validates :name, uniqueness: { scope: :user_id }
+  validates_presence_of :name
+  validates :name, uniqueness: { case_sensitive: false, scope: :user_id }
+  validate :persent_or_amount
 
   def create_coupon(hash)
 
@@ -26,5 +28,12 @@ class Coupon < ActiveRecord::Base
 
     self.save
     self.id
+  end
+
+  # Must provide percent_off or amount_off.
+  def persent_or_amount
+    if percent_off.blank? && amount_off.blank?
+      errors[:base] = "Must provide percent_off or amount_off."
+    end
   end
 end

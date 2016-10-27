@@ -1,3 +1,5 @@
+<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
+
 <%= form_for([current_user, @coupon]) do |f| %>
   <% if @coupon.errors.any? %>
     <div id="error_explanation">
@@ -49,7 +51,8 @@
 
    <div class="field">
     <%= f.label :redeem_by %><br>
-    <%= f.text_field :redeem_by %>
+    <i id='calIcon' class="fa fa-calendar" aria-hidden="true"></i>
+    <%= f.text_field :redeem_by, id: 'redeemField' %>
   </div>
 
   
