@@ -10,11 +10,15 @@ $(document).ready(function () {
   });
 
   // Positive integer only
+<<<<<<< 5d128e9ddce52e8634c25887956473a3c1532ae3
 <<<<<<< 8eae175802a3025763b4b07e8f0d7a7ac9f40dba
   $('#interval-count, #duration-in-months, #max-redemptions').on('input', function(){
 =======
   $('#interval-count, #amount-off, #duration-in-months, #max-redemptions').on('input', function(){
 >>>>>>> RHOMBUSV1-93 update coupon view, add check to emojionearea so it doesnt try to bind when div isnt available
+=======
+  $('#interval-count, #duration-in-months, #max-redemptions').on('input', function(){
+>>>>>>> minor changes
     this.value = positive_integer_only(this.value);
   });
 
