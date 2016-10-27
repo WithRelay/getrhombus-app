@@ -75,7 +75,7 @@ class Campaign
     $(".upload_image").hide()
 
   textAreaEmojis: ->
-    if $(@textArea).length > 1
+    if $(@textArea).length > 0
       txtEmoji = $(@textArea).emojioneArea ->
                    @emojiConfig
 
@@ -140,6 +140,7 @@ $( document ).on 'ready page:load', ->
 
   if $("#deliverNow").is(":checked")
     $('.scheduleOption').hide()
+
   # Mainly for edit actions so the view shows properly
   frequency_type = if $('#oneTimeFrequency').is(':checked') then '#oneTimeFrequency' else '#recurringFrequency'
   $(frequency_type).trigger('click')
