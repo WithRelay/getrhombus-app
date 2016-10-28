@@ -20,7 +20,7 @@ module CampaignsHelper
   def is_one_time_checked?(campaign)
     campaign.frequency_type.blank? || campaign.frequency_type == 'one_time'
   end
-  
+
   def is_recurring_checked?(campaign)
     campaign.frequency_type == 'recurring'
   end
