@@ -21,10 +21,6 @@ module CampaignsHelper
     campaign.frequency_type.blank? || campaign.frequency_type == 'one_time'
   end
 
-  def set_campaign_status(campaign)
-    campaign.active? ? 'pause' : 'start'
-  end
-
   def is_recurring_checked?(campaign)
     campaign.frequency_type == 'recurring'
   end

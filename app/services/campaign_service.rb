@@ -16,10 +16,10 @@ class CampaignService
     @campaign.send_count = @campaign.send_count + 1
     @campaign.lists.each { |list| @campaign.campaign_user_lists.build(@user_id_list) }
     @campaign.save(validate: false)
-    @campaign.update_attribute('status', 3) if is_recurring_campaign_completed?
+    @campaign.update_attribute('status', 3) if is_recurring_campaign_completed? || @campaign.one_time?
   end
 
   def is_recurring_campaign_completed?
-     @campaign.repeat_days == @campaign.send_count
+    @campaign.repeat_days == @campaign.send_count if @campaign.recurring?
   end
 end

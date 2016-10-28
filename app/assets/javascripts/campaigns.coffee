@@ -18,7 +18,7 @@ class DatePicker
 
 class Campaign
 
-  EMAIL_CHANNEL = '3'; MMS_CHANNEL = '1'
+  EMAIL_CHANNEL = '3'; MMS_CHANNEL = '1'; MESSENGER_CHANNEL = '2'
   CHECK = ':checked'
   TRUMBOWYG = false
   MAXIMUM_VALUE = 1500
@@ -32,14 +32,18 @@ class Campaign
     if isEmailChecked(element)
       this.showFileBrowser()
       trumbowygSetting(true, @textArea)
-    else if isMmsChecked(element)
+    else if isMmsChecked(element) || isFacebookMessengerChecked(element)
       this.showFileBrowser()
+      trumbowygSetting(false, @textArea)
     else
       this.hideFileBrowser()
       trumbowygSetting(false, @textArea)
 
   isEmailChecked = (channel) ->
     $(channel).val() == EMAIL_CHANNEL
+
+  isFacebookMessengerChecked = (channel) ->
+    $(channel).val() == MESSENGER_CHANNEL
 
   isMmsChecked = (channel) ->
     $(channel).val() == MMS_CHANNEL
