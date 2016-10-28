@@ -25,7 +25,7 @@ class Campaign < ActiveRecord::Base
   end
 
   def date_time_validate
-    errors.add(:date_time, 'date time should be greater than current date time') if date_time <= DateTime.now
+    errors.add(:date_time, 'date time should be greater than current date time') if date_time.utc < Time.now.utc
   end
 
   def channel_text_validate
