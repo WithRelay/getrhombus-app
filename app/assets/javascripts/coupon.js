@@ -1,10 +1,9 @@
 $(document).ready(function () {
-
   RAILS_DATE_FORMAT = 'DD/MM/YYYY h:mm A'
   var date = new Date();
   var tomorrow = new Date(date.getFullYear(), date.getMonth(), date.getDate()+1);
   $('input[name="coupon[redeem_by]"]').daterangepicker({
-    autoUpdateInput: true,
+    autoUpdateInput: false,
     timePickerIncrement: 1,
     showDropdowns: true,
     singleDatePicker: true,
@@ -12,13 +11,22 @@ $(document).ready(function () {
     todayHighlight: true,
     timePicker: true,
     timePickerIncrement: 1,
-    locale: { format: RAILS_DATE_FORMAT },
+    locale: {
+      format: RAILS_DATE_FORMAT,
+      cancelLabel: 'Clear'
+   },
     weekStart: 0,
     opens: "left",
     drops: 'up'
- });
+  });
 
-  $('#redeemField').val('');
+  $('input[name="coupon[redeem_by]"]').on('apply.daterangepicker', function(ev, picker) {
+    $(this).val(picker.startDate.format(RAILS_DATE_FORMAT));
+  });
+
+  $('input[name="coupon[redeem_by]"]').on('cancel.daterangepicker', function(ev, picker) {
+    $(this).val('');
+  });
 
   $('.delete-coupon').click(function(evt) {
     if (!$('.delete-coupon').attr('isDestroy')) {
