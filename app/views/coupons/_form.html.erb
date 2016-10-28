@@ -1,18 +1,7 @@
 <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
 
 <%= form_for([current_user, @coupon]) do |f| %>
-  <% if @coupon.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@coupon.errors.count, "error") %> prohibited this coupon from being saved:</h2>
-
-      <ul>
-      <% @coupon.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
-
+  
   <div class="field">
     <%= f.label :name %><br>
     <%= f.text_field :name, id: 'coupon-name' %>
@@ -55,7 +44,6 @@
     <%= f.text_field :redeem_by, id: 'redeemField' %>
   </div>
 
-  
   <div class="actions">
     <%= f.submit 'Create Coupon', data: { disable_with: "Please wait..." } %>
   </div>

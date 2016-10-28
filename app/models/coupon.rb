@@ -4,7 +4,6 @@ class Coupon < ActiveRecord::Base
   belongs_to :user
 
   attr_accessor :coupon_type
-  validates_presence_of :name
   validates :name, uniqueness: { case_sensitive: false, scope: :user_id }
   validate :persent_or_amount
 
