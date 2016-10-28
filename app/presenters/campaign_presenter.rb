@@ -19,11 +19,10 @@ class CampaignPresenter < BasePresenter
     @model.lists.count
   end
 
-  def generate_status_link
-    return "- " if @model.status == 'inactive'
-    text = @model.status == 'paused' ? 'Unpause' : 'Pause'
-    link = change_status_user_campaign_path(@user, @model, new_status: text.downcase)
-    "<a rel='nofollow' data-method='put' href='#{link}'>#{text} Campaign</a>".html_safe
+  def campaign_change_status_link
+    return 'Inactive' if @model.inactive?
+    text = @model.paused? ? 'Unpause' : 'Pause'
+    h.link_to(text, change_status_user_campaign_path(@user, @model), method: :put)
   end
 
 end

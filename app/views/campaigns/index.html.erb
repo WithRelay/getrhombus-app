@@ -17,7 +17,9 @@
     <% @campaigns.each do |campaign| %>
       <tr>
         <td>
-          <%= campaign.name %>
+          <%= link_to edit_user_campaign_path(current_user, campaign) do %>
+            <%= campaign.name %>
+          <% end %>
         </td>
         <td>
           <%= campaign.from_user %>
@@ -32,7 +34,7 @@
           <%= present(campaign).count_recipient %>
         </td>
         <td>
-          <%= link_to(set_campaign_status(campaign), change_status_user_campaign_path(current_user, campaign), method: :put) %>
+          <%= present(campaign).campaign_change_status_link %>
         </td>
       </tr>
     <% end %>

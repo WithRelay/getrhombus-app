@@ -4,7 +4,7 @@ class CampaignJob < ActiveJob::Base
 
   def perform(campaign)
     channel_class = channel_hash[campaign.channel].constantize
-    channel_class.send_campaign(campaign)
+    campaign.channel == 'email' ? channel_class.new(campaign).send_campaign : channel_class.send_campaign(campaign)
   end
 
   def channel_hash
