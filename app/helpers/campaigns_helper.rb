@@ -30,7 +30,7 @@ module CampaignsHelper
   end
 
   def repeat_days_options
-    { 'Repeat every'=>'repeat everyday', '7 days' => 7, '14 days' => 14, '30 days' => 30,
+    { 'Repeat every'=> 0, '7 days' => 7, '14 days' => 14, '30 days' => 30,
       '60 days' => 60, '90 days' => 90
     }
   end
