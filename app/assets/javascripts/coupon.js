@@ -31,7 +31,10 @@ $(document).ready(function () {
 
   $('.delete-coupon').click(function(evt) {
     if (!$('.delete-coupon').attr('isDestroy')) {
-      flashConfirm('.delete-coupon','Confirmation Needed', 'Are you sure?', 'isDestroy' );
+      flashConfirm('.delete-coupon','Delete coupon',
+       'Deleting this coupon will not affect discounts for customers who have already redeemed the coupon, but new redemptions of the coupon won\'t be allowed.',
+       'isDestroy'
+      );
       return false;
     }
   });
@@ -60,10 +63,10 @@ $(document).ready(function () {
                 row: '.field',
                 validators: {
                     notEmpty: {
-                        message: 'Amount or Percent off  is required'
+                        message: 'Either Amount off or Percent off  is required'
                     }
                 }
-            }
+              }
           }
         })
       .on('err.validator.fv', function(e, data) {
@@ -85,4 +88,5 @@ $(document).ready(function () {
           .removeClass('has-success')
           .addClass('has-warning')
       });
+
 })
