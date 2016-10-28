@@ -1461,7 +1461,7 @@ $(document).ready(function () {
 
   function getUrl(element){
     var controller;
-    if (element.id == 'campaign'){
+    if (span_id[0] == 'campaign'){
       controller = 'campaigns/';
     }
     else{
@@ -1473,17 +1473,18 @@ $(document).ready(function () {
   $(".delete-image").click(function(e) {
     e.stopPropagation();
     var span = this;
+    span_id = this.id.split("_")
     span.style.pointerEvents = 'none';
     $.ajax({
-        url: getUrl(span),
+        url: getUrl(span, span_id),
         beforeSend: function(xhr) { xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content')) },
         type: "POST",
-        data: { img_id: this.id.split("_")[1] },
+        data: { img_id: span_id[1] },
         dataType: "json"
     })
       .done(function(data, textStatus, jqXHR) {
         console.log(data.response);
-        $("#" + span.id).parent().slideUp(400, function() { this.remove(); });
+        $(span).parent().slideUp(400, function() { span.remove(); });
       })
       .fail(function(data, textStatus, errorThrown) {
         console.log(data);
