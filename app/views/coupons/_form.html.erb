@@ -1,6 +1,6 @@
 <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
 
-<%= form_for([current_user, @coupon]) do |f| %>
+<%= form_for([current_user, @coupon], :html=> {:id => 'couponForm'}) do |f| %>
   
   <div class="field">
     <%= f.label :name %><br>
@@ -44,7 +44,7 @@
     <%= f.text_field :redeem_by, id: 'redeemField' %>
   </div>
 
-  <div class="actions">
-    <%= f.submit 'Create Coupon', data: { disable_with: "Please wait..." } %>
+  <div class="actions field">
+    <%= f.submit 'Create Coupon', id: 'commit' %>
   </div>
 <% end %>
