@@ -1,12 +1,12 @@
 class DatePicker
 
-  RAILS_DATE_FORMAT = 'DD/MM/YYYY h:mm A'
+  RAILS_DATE_FORMAT = 'YYYY-MM-DD h:mm A'
   YES = true
 
   constructor: (element)->
     @element = element
-    nowDate = new Date();
-    @today = new Date(nowDate.getFullYear(), nowDate.getMonth(), nowDate.getDate(), 0, 0, 0, 0);
+    date = new Date();
+    @today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
 
   datePicker: ->
     $(@element).daterangepicker
@@ -14,7 +14,7 @@ class DatePicker
       timePickerIncrement: 30,
       singleDatePicker: YES,
       locale: { format: RAILS_DATE_FORMAT },
-      startDate: @today
+      minDate: @today
 
 class Campaign
 

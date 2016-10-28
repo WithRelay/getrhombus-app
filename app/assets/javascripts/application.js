@@ -33,6 +33,7 @@
 //= require fb_page
 //= require image_validator
 //= require campaigns
+//= require custom.js
 //= require jquery_word_counter
 //= require custom_trumbowyg_plugin
 //= require trumbowyg.min

@@ -24,5 +24,4 @@ class CampaignPresenter < BasePresenter
     text = @model.paused? ? 'Unpause' : 'Pause'
     h.link_to(text, change_status_user_campaign_path(@user, @model), method: :put)
   end
-
 end
