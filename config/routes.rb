@@ -119,6 +119,7 @@ Rails.application.routes.draw  do
     match 'numbers/search' => 'numbers#search', via: :get
     match 'lists' => 'lists#index', via: :get
     match 'lists/create' => 'lists#create', via: :post
+    match 'coupons/check_coupon_name' => 'coupons#check_coupon_name', via: :post
   end
 
   ## catch all other to 404

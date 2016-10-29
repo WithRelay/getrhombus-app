@@ -53,9 +53,14 @@ $(document).ready(function () {
             'coupon[name]': {
                 row: '.field',
                 validators: {
-                    notEmpty: {
+                  notEmpty: {
                         message: 'Coupon name is required'
-                    }
+                  },
+                  remote: {
+                      message: 'Coupon name must be unique.',
+                      url: '/v1/coupons/check_coupon_name',
+                      type: 'POST'
+                  }
                 }
             },
             'coupon[amount_off]': {
@@ -78,7 +83,9 @@ $(document).ready(function () {
           // Hide the messages
           data.element
               .data('fv.messages')
-              .find('.help-block[data-fv-for="' + data.field + '"]').show();
+              .find('small[data-fv-validator="remote"][data-fv-for="coupon[name]"]')
+                        .show();
+              // .find('.help-block[data-fv-for="' + data.field + '"]').show();
       })
       .on('success.validator.fv', function(e, data) {
           data.element // Get the field element
