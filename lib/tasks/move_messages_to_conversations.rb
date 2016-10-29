@@ -20,10 +20,15 @@ task :move_messages_to_conversations => :environment do
         uid = m.to
         uid_type = 'phone_number'
       end
-      c = Conversation.new(merchant_id: m.user_id, uid: uid, uid_type: uid_type)
+
+      if c = Conversation.find_by(merchant_id: m.user_id, uid: uid, uid_type: uid_type)
+      else
+        c = Conversation.new(merchant_id: m.user_id, uid: uid, uid_type: uid_type)
+      end
       c.message_ids = m.id
       c.save
     else
+      
       u = User.find_by(id: m.user_id_to)
       # if merchant
       if u && u.user_level == 1
@@ -35,7 +40,11 @@ task :move_messages_to_conversations => :environment do
           uid = m.from
           uid_type = 'phone_number'
         end
-        c = Conversation.new(merchant_id: m.user_id_to, uid: uid, uid_type: uid_type)
+
+        if c = Conversation.find_by(merchant_id: m.user_id_to, uid: uid, uid_type: uid_type)
+        else
+          c = Conversation.new(merchant_id: m.user_id_to, uid: uid, uid_type: uid_type)
+        end
         c.message_ids = m.id
         c.save
       end
