@@ -6,6 +6,6 @@ task :test_task => :environment do
   
   User.all.each do |t|
     puts t.email
-    puts '\n'
+    puts "\n"
   end
 end
