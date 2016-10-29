@@ -16,6 +16,8 @@ class MessageAlertJob
 
       if r.notification_log.present? || ((Time.current - r.notification_log.updated_at) >= (r.interval * 60).to_f)
         EmailingService.send_unread_message_alert(r)
+
+        # need to check that number is valid???
         Message.send_and_save_message() if r.include_sms
         time = Time.now.in_zone(r.time_zone)
         if r.notification_log

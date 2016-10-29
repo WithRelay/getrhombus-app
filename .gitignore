@@ -21,8 +21,5 @@
 # Project files
 .project
 
-# Database yml
-/config/database.yml
-
 # generate by rescue
 dump.rdb

@@ -8,7 +8,9 @@
   end
 =end
 
-# This should run after all modifications to transaction table
+# This should run after all modifications to transactions table
+# Since we shrink transactions across 3 rows into 1...we only want to run this after
+# the shrinking is done
 
 desc "Move receipt sent at"
 task :move_receipt_sent_at_to_notifications_log => :environment do

@@ -1,0 +1,47 @@
+
+# run after migrations to create/rename the columns, since table need to be redone first
+
+desc "move messages to conversations"
+task :move_messages_to_conversations => :environment do
+
+  Message.all.each do |m|
+
+    # Conversation must have merchant_id 
+    # but can have different types of uids
+
+    u = User.find_by(id: m.user_id)
+    # if merchant
+    if u && u.user_level == 1
+      # find user
+      if User.find_by(id: user_id_to)
+        uid = m.user_id_to
+        uid_type = 'user'
+      else  # if no user, use phone number
+        uid = m.to
+        uid_type = 'phone_number'
+      end
+      c = Conversation.new(merchant_id: m.user_id, uid: uid, uid_type: uid_type)
+      c.message_ids = m.id
+      c.save
+    else
+      u = User.find_by(id: m.user_id_to)
+      # if merchant
+      if u && u.user_level == 1
+        # find user
+        if User.find_by(id: user_id)
+          uid = m.user_id
+          uid_type = 'user'
+        else  # if no user, use phone number
+          uid = m.from
+          uid_type = 'phone_number'
+        end
+        c = Conversation.new(merchant_id: m.user_id_to, uid: uid, uid_type: uid_type)
+        c.message_ids = m.id
+        c.save
+      end
+
+      # else orphaned message
+    end
+  end
+
+end
