@@ -2,7 +2,7 @@ Review
 - campaign_user_list (can better track failures) or notification_log or add an email model??
 - notification_log used for transaction, referrer and alert notifications logging
 - fb_messages... page_id, from, to, fb_page_id?
-
+- remove first_name and last_name assignment in custom.js...no longer used
 
 
 
@@ -48,14 +48,14 @@ Migration Plan
 3. Review each task below
 4. Run each rake task (in order) to modify db and run the associated migration to clean up table if needed
     a. create_alerts_for_teams - task ready for deploy, no order dependency
-    b. move_referrer_num_to_referrer_table - Run some cleanup sql first. Add a sample referrer_num to test db. No order dependency.
-    c. move_stripe_connect_details_to_stripe_cred - ready for deploy
-    d. move_txns_table_to_one_row
-    e. move_receipt_sent_at_to_notifications_log - task ready for deploy - includes cleanup migration. Order dependency. Run after d.
-    f. switch_all_bitly_links_to_relay_and_referrer_id - referrer_id part ready. relay part after we buy new domain (just switch url and run again).
-    g. move_user_address_to_address_table - ready for deploy
-    h. update_phone_number_in_dbs - ready for deploy.
-    i. conversations. run after h above.
-    j. people - ready for deploy
+    b. people - ready for deploy
+    c. move_referrer_num_to_referrer_table - Run some cleanup sql first. Add a sample referrer_num to test db. No order dependency.
+    d. move_stripe_connect_details_to_stripe_cred - ready for deploy
+    e. move_txns_table_to_one_row
+    f. move_receipt_sent_at_to_notifications_log - task ready for deploy - includes cleanup migration. Order dependency. Run after d.
+    g. switch_all_bitly_links_to_relay_and_referrer_id - referrer_id part ready. relay part after we buy new domain (just switch url and run again).
+    h. move_user_address_to_address_table - ready for deploy
+    i. update_phone_number_in_dbs - ready for deploy.
+    j. conversations. run after h above.
     k. update_on_behalf_of_uri_to_destination_account - not critical...do at some point
     
