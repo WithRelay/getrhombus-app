@@ -42,6 +42,8 @@ task :move_referrer_num_to_referrer_table => :environment do
   end
 
   # Stripe default referral for Stripe
+  # for prod change in referrer.rb
+  # ref.update_attribute(:link, "https://www.relay.com?referrer_uid=#{ref.uid}")
   Referrer.create_stripe_default  
 end
 
