@@ -1,50 +1,68 @@
 <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
 
-<%= form_for([current_user, @coupon], :html=> {:id => 'couponForm'}) do |f| %>
+<%= form_for([current_user, @coupon], :html=> { id: 'couponForm', class: 'form-horizontal' }) do |f| %>
   
-  <div class="field">
-    <%= f.label :name %><br>
-    <%= f.text_field :name, id: 'coupon-name' %>
+  <div class="form-group">
+      <%= f.label :name, class: 'col-xs-3 control-label' %>
+      <div class="col-xs-5">
+        <%= f.text_field :name, id: 'coupon-name', class: 'form-control', class: 'form-control' %>
+      </div>
   </div>
 
-  <div class="field">
-    <%= f.label :coupon_type %><br>
-    <%= f.select :coupon_type, options_for_select({ "Amount Off" => "amount_off", "Percent Off" => 'percent_off' }, selected: get_selected_coupon_type(@coupon)), {}, id: 'coupon-type' %>
+  <div class="form-group">
+    <%= f.label :coupon_type, class: 'col-xs-3 control-label' %>
+    <div class="col-xs-5">
+      <%= f.select :coupon_type, options_for_select({ "Amount Off" => "amount_off", "Percent Off" => 'percent_off' }, selected: get_selected_coupon_type(@coupon)), {}, id: 'coupon-type', class: 'form-control' %>
+    </div>
   </div>
 
-  <div class="field">
+  <div class="form-group">
     <% if f.object.new_record? || (f.object.persisted? && f.object.amount_off.present?)%>
-      <%= f.label :amount_off, id: 'coupon-type-value-label' %><br>
-      <%= f.text_field :amount_off, id: "coupon-type-value" %>
+      <%= f.label :amount_off, class: 'col-xs-3 control-label', id: 'coupon-type-value-label' %>
+      <div class="col-xs-5">
+        <%= f.text_field :amount_off, id: "coupon-type-value", class: 'form-control' %>
+      </div>
     <% else %>
-      <%= f.label :percent_off, id: 'coupon-type-value-label' %><br>
-      <%= f.text_field :percent_off, id: "coupon-type-value" %>
+      <%= f.label :percent_off, class: 'col-xs-3 control-label', id: 'coupon-type-value-label' %>
+      <div class="col-xs-5">
+        <%= f.text_field :percent_off, id: "coupon-type-value", class: 'form-control' %>
+      </div>
     <% end %>
   </div>
 
-  <div class="field">
-    <%= f.label :duration %><br>
-    <%= f.select :duration, options_for_select({ "Once" => "once", "repeating" => 'repeating', "forever" => "forever" }, selected: @coupon.duration) %>
+  <div class="form-group">
+    <%= f.label :duration, class: 'col-xs-3 control-label' %>
+    <div class="col-xs-5">
+      <%= f.select :duration, options_for_select({ "Once" => "once", "repeating" => 'repeating', "forever" => "forever" }, selected: @coupon.duration), {}, class: 'form-control' %>
+      </div>
   </div>
 
   <!-- only if repeating -->
-  <div class="field" id='duration-in-months-div'>
-    <%= f.label :duration_in_months %><br>
-    <%= f.text_field :duration_in_months, id: "duration-in-months" %>
+  <div class="form-group" id='duration-in-months-div'>
+    <%= f.label :duration_in_months, class: 'col-xs-3 control-label' %>
+    <div class="col-xs-5">
+      <%= f.text_field :duration_in_months, id: "duration-in-months", class: 'form-control' %>
+    </div>
   </div>
 
-  <div class="field">
-    <%= f.label :max_redemptions %><br>
-    <%= f.text_field :max_redemptions, id: 'max-redemptions' %>
+  <div class="form-group">
+    <%= f.label :max_redemptions, class: 'col-xs-3 control-label' %>
+    <div class="col-xs-5">
+      <%= f.text_field :max_redemptions, id: 'max-redemptions', class: 'form-control' %>
+    </div>
   </div>
 
-   <div class="field">
-    <%= f.label :redeem_by %><br>
-    <i id='calIcon' class="fa fa-calendar" aria-hidden="true"></i>
-    <%= f.text_field :redeem_by, id: 'redeemField' %>
+   <div class="form-group">
+    <%= f.label :redeem_by, class: 'col-xs-3 control-label', id: 'redeemLabel' %>
+    <div class="col-xs-5">
+       <i id='calIcon' class="fa fa-calendar" aria-hidden="true"></i>
+      <%= f.text_field :redeem_by, id: 'redeemField', class: 'form-control' %>
+    </div>
   </div>
 
-  <div class="actions field">
-    <%= f.submit 'Create Coupon', id: 'commit' %>
+  <div class="actions field form-group">
+    <div class="col-xs-9 col-xs-offset-3">
+      <%= f.submit 'Create Coupon', id: 'commit',class: 'btn btn-default' %>
+    </div>
   </div>
 <% end %>
