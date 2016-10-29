@@ -4,9 +4,9 @@ class Api::V1::HashtagsController < API::V1::BaseController
     begin
       if params[:query]
         q = params[:query].downcase
-        res = Hashtag.where("lower(description) like ? or lower(tag) like ? and user_id = ?", "%#{q}%", "%#{q}%", current_user.id)
+        res = current_user.hashtags.where("lower(description) like ? or lower(tag) like ?", "%#{q}%", "%#{q}%")
       else
-        res = Hashtag.where(user_id: current_user.id)
+        res = current_user.hashtags
       end
 
       render json: { "hashtags" => res }, status: 200
