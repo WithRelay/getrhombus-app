@@ -91,6 +91,59 @@ $( document ).ready(function() {
       }
     });
   });
+
+  // validate link_facebook form
+    $('#user_login_form')
+      .formValidation({
+        framework: 'bootstrap',
+        fields: {
+            'email': {
+                  verbose: false,
+                  row: '.group',
+                  validators: {
+                      notEmpty: {
+                          message: 'Your email is required'
+                      },
+                      emailAddress: {
+                          message: "The email isn't valid"
+                      },
+                      remote: {
+                          type: 'GET',
+                          url: 'https://api.mailgun.net/v2/address/validate?callback=?',
+                          crossDomain: true,
+                          name: 'address',
+                          data: {
+                              // Registry a Mailgun account and get a free API key
+                              // at https://mailgun.com/signup
+                              api_key: '<redacted_api_key>'
+                          },
+                          dataType: 'jsonp',
+                          validKey: 'is_valid',
+                          message: "The email isn't exists"
+                      }
+                  }
+              },
+            'password': {
+                row: '.group',
+                validators: {
+                    notEmpty: {
+                        message: 'Password  is required'
+                    }
+                }
+              }
+          }
+        })
+       .on('err.validator.fv', function(e, data) {
+          if (data.field === 'email' && data.validator === 'remote') {
+              // We need to reset the error message
+              data.element                // The field element
+                  .data('fv.messages')    // The message container
+                  .find('[data-fv-validator="remote"][data-fv-for="email"]')
+                  .html("The email isn't valid")
+                  .show();
+          }
+      });
+
 });
 
 function check_status(val){
