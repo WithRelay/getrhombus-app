@@ -32,7 +32,8 @@ task :move_user_address_to_address_table => :environment do
   	if u.street_address.present? || u.city.present? || u.state_province.present? || u.country.present? || u.zip_code.present?
     	
     	Address.create(street_address: u.street_address, city: u.city, state_province: u.state_province, 
-                    country: u.country, postal_code: u.zip_code, addressable_id: u.id)
+                    country: u.country, postal_code: u.zip_code, addressable_id: u.id,
+                    addressable_type: 'User')
 	end
   end
 end
