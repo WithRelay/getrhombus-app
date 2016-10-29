@@ -15,8 +15,9 @@ task :switch_all_bitly_links_to_relay_and_referrer_id => :environment do
     if u.user_level == 1 && u.short_url.present?
       #u.short_url = UrlShortenerService.shorten_link("test.getrhombus.com/signup?referrer_id=#{u.id}")
       #u.short_url = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?referrer_id=#{u.id}")
-      #u.save
+    else
+      u.short_url = nil
     end
-
+    u.save
   end
 end
