@@ -1,3 +1,25 @@
+Migration Plan
+1. Run Migrations successfully
+2. Run each rake task to modify db
+    - 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 - what happens when u send image in countries that don't support it. link?
 - check trumbowyg working
 - clean up image/hashtag presenters
