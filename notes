@@ -52,11 +52,15 @@ Migration Plan
     c. move_stripe_connect_details_to_stripe_cred - ready for deploy
     
     d. move_referrer_num_to_referrer_table - Run some cleanup sql first. Added a sample referrer_num to test db. No order dependency.
-    e. move_txns_table_to_one_row
-    f. move_receipt_sent_at_to_notifications_log - task ready for deploy - includes cleanup migration. Order dependency. Run after d.
-    g. switch_all_bitly_links_to_relay_and_referrer_id - referrer_id part ready. relay part after we buy new domain (just switch url and run again).
-    h. move_user_address_to_address_table - ready for deploy
-    i. update_phone_number_in_dbs - ready for deploy.
-    j. conversations. run after h above.
+    e. move_user_address_to_address_table - ready for deploy
+    
+    f. move_txns_table_to_one_row
+    g. move_receipt_sent_at_to_notifications_log - task ready for deploy - includes cleanup migration. Order dependency. Run after f.
+    
+    h. update_phone_number_in_dbs - ready for deploy.
+    i. conversations. run after h above.
+    
+    For Later
+    j. switch_all_bitly_links_to_relay_and_referrer_id - referrer_id part ready. relay part after we buy new domain (just switch url and run again).
     k. update_on_behalf_of_uri_to_destination_account - not critical...do at some point
     
