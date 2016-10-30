@@ -23,8 +23,9 @@ task :move_messages_to_conversations => :environment do
 
       if c = Conversation.find_by(merchant_id: m.user_id, uid: uid, uid_type: uid_type)
       else
-        c = Conversation.new(merchant_id: m.user_id, uid: uid, uid_type: uid_type)
+        c = Conversation.create(merchant_id: m.user_id, uid: uid, uid_type: uid_type)
       end
+      c.save
       ConversationRef.create(textable_id: m.id, textable_type: 'Message', conversation_id: c.id)
     else
       
@@ -42,7 +43,7 @@ task :move_messages_to_conversations => :environment do
 
         if c = Conversation.find_by(merchant_id: m.user_id_to, uid: uid, uid_type: uid_type)
         else
-          c = Conversation.new(merchant_id: m.user_id_to, uid: uid, uid_type: uid_type)
+          c = Conversation.create(merchant_id: m.user_id_to, uid: uid, uid_type: uid_type)
         end
         ConversationRef.create(textable_id: m.id, textable_type: 'Message', conversation_id: c.id)  
       end
