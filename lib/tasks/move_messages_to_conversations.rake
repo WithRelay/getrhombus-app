@@ -13,7 +13,7 @@ task :move_messages_to_conversations => :environment do
     # if merchant
     if u && u.user_level == 1
       # find user
-      if User.find_by(id: user_id_to)
+      if User.find_by(id: m.user_id_to)
         uid = m.user_id_to
         uid_type = 'User'
       else  # if no user, use phone number
