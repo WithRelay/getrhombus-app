@@ -29,7 +29,7 @@ task :move_messages_to_conversations => :environment do
       puts 'first block'
       puts m.user_id
         puts m.user_id_to
-        puts c.inspect
+        puts c.to_json
         puts "\n\n"
     else
       
@@ -53,7 +53,7 @@ task :move_messages_to_conversations => :environment do
         puts 'second block'
         puts m.user_id_to
         puts m.user_id
-        puts c.inspect
+        puts c.to_json
         puts "\n\n"
         ConversationRef.create(textable_id: m.id, textable_type: 'Message', conversation_id: c.id)  
       end
