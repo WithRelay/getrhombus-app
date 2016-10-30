@@ -15,10 +15,10 @@ task :move_messages_to_conversations => :environment do
       # find user
       if User.find_by(id: user_id_to)
         uid = m.user_id_to
-        uid_type = 'user'
+        uid_type = 'User'
       else  # if no user, use phone number
         uid = m.to
-        uid_type = 'phone_number'
+        uid_type = 'PhoneNumber'
       end
 
       if c = Conversation.find_by(merchant_id: m.user_id, uid: uid, uid_type: uid_type)
@@ -33,12 +33,12 @@ task :move_messages_to_conversations => :environment do
       # if merchant
       if u && u.user_level == 1
         # find user
-        if User.find_by(id: user_id)
+        if User.find_by(id: m.user_id)
           uid = m.user_id
-          uid_type = 'user'
+          uid_type = 'User'
         else  # if no user, use phone number
           uid = m.from
-          uid_type = 'phone_number'
+          uid_type = 'PhoneNumber'
         end
 
         if c = Conversation.find_by(merchant_id: m.user_id_to, uid: uid, uid_type: uid_type)
@@ -46,7 +46,7 @@ task :move_messages_to_conversations => :environment do
           c = Conversation.new(merchant_id: m.user_id_to, uid: uid, uid_type: uid_type)
         end
         c.message_ids = m.id
-        c.save
+        c.save  
       end
 
       # else orphaned message
