@@ -25,15 +25,14 @@ task :move_messages_to_conversations => :environment do
       if c
         puts "find"
       else
-        c = Conversation.new(merchant_id: m.user_id, uid: uid, uid_type: uid_type)
+        c = Conversation.create(merchant_id: m.user_id, uid: uid, uid_type: uid_type)
         puts "create"
       end
-      c.save
       #ConversationRef.create(textable_id: m.id, textable_type: 'Message', conversation_id: c.id)
       #puts 'first block'
       #puts m.user_id
        # puts m.user_id_to
-        puts c.to_json
+        puts c.errors.to_json
         puts "\n"
     else
       
@@ -53,14 +52,13 @@ task :move_messages_to_conversations => :environment do
         if c
           puts "find"
         else
-          c = Conversation.new(merchant_id: m.user_id_to, uid: uid, uid_type: uid_type)
+          c = Conversation.create(merchant_id: m.user_id_to, uid: uid, uid_type: uid_type)
           puts "create"
         end
-        c.save
         #puts 'second block'
         #puts m.user_id_to
         #puts m.user_id
-        puts c.to_json
+        puts c.errors.to_json
         puts "\n"
         #ConversationRef.create(textable_id: m.id, textable_type: 'Message', conversation_id: c.id)  
       end
