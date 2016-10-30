@@ -9,8 +9,8 @@
       <table class="table table-inverse table-hover table-bordered">
         <thead>
           <tr>
+            <th colspan="3">Name</th>
             <th colspan="3">Amount</th>
-            <th colspan="3">Currency</th>
             <th colspan="3">Interval</th>
             <th colspan="3">Interval Count</th>
           </tr>
@@ -24,12 +24,12 @@
 
   <br>
   <!-- will_paginate gem for infinite scrolling with show more button with class show_more -->
-  <div id="with-button">
+  <div id="with-button" class="hidden">
       <%= will_paginate %>
   </div>
 
   <% if @plans.next_page %>
-      <div id="load_more_plans" class="show_more btn btn-primary " data-loading-text="<i class='fa fa-spinner fa-spin '></i> Loding more Plans">Show More </div>
+      <div id="load_more_plans" class="show_more btn btn-primary " data-loading-text="<i class='fa fa-spinner fa-spin '></i> Loding more Plans" title="Click here to load more plans">Show More </div>
   <% end %>
   <%= link_to 'New Plan', new_user_plan_path %>
 

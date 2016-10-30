@@ -1,0 +1,83 @@
+$(document).ready(function () {
+
+  RAILS_DATE_FORMAT = 'DD/MM/YYYY h:mm A'
+  var date = new Date();
+  var tomorrow = new Date(date.getFullYear(), date.getMonth(), date.getDate()+1);
+  $('input[name="coupon[redeem_by]"]').daterangepicker({
+    autoUpdateInput: false,
+    timePickerIncrement: 1,
+    showDropdowns: true,
+    singleDatePicker: true,
+    minDate: tomorrow,
+    todayHighlight: true,
+    timePicker: true,
+    timePickerIncrement: 1,
+    locale: {
+      format: RAILS_DATE_FORMAT,
+      cancelLabel: 'Clear'
+   },
+    weekStart: 0,
+    opens: "right",
+    drops: 'down'
+  });
+
+  $('input[name="coupon[redeem_by]"]').on('apply.daterangepicker', function(ev, picker) {
+    $(this).val(picker.startDate.format(RAILS_DATE_FORMAT));
+  });
+
+  $('input[name="coupon[redeem_by]"]').on('cancel.daterangepicker', function(ev, picker) {
+    $(this).val('');
+  });
+
+  $('.delete-coupon').click(function(evt) {
+    if (!$('.delete-coupon').attr('isDestroy')) {
+      flashConfirm('.delete-coupon','Delete coupon',
+       'Deleting this coupon will not affect discounts for customers who have already redeemed the coupon, but new redemptions of the coupon won\'t be allowed.',
+       'isDestroy'
+      );
+      return false;
+    }
+  });
+
+  // validate coupon form
+    $('#couponForm')
+      .formValidation({
+        framework: 'bootstrap',
+        // List of fields and their validation rules
+        fields: {
+            'coupon[name]': {
+                validators: {
+                  notEmpty: {
+                        message: 'Coupon name is required'
+                  },
+                  remote: {
+                      message: 'This coupon name has already used.',
+                      url: '/v1/coupons/check_coupon_name',
+                      type: 'POST'
+                  }
+                }
+            },
+            'coupon[amount_off]': {
+                selector: '#coupon-type-value',
+                validators: {
+                    notEmpty: {
+                        message: 'Either Amount off or Percent off  is required'
+                    }
+                }
+              }
+          }
+        })
+      .on('err.validator.fv', function(e, data) {
+          data.element
+              .data('fv.messages')
+              .find('small[data-fv-validator="remote"][data-fv-for="coupon[name]"]')
+              .show();
+      })
+      .on('success.validator.fv', function(e, data) {
+          data.element // Get the field element
+          .closest('.form-group') // Get the field parent
+          .removeClass('has-warning')
+          .addClass('has-success')
+      });
+
+})

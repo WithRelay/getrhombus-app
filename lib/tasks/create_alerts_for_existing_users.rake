@@ -1,7 +1,8 @@
 
 # run after all migrations to create alerts for users
+# SELECT * FROM users where business_phone = '' and user_level = 1
 
-desc "Create alerts for every user"
+desc "Create alerts for every teams"
 task :create_alerts_for_teams => :environment do
   
   User.where(user_level: 1).each do |t|

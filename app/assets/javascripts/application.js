@@ -17,6 +17,7 @@
 //= require pnotify
 //= require flashes
 //= require pagination
+//= require coupon
 //= require jquery_ujs
 //= require jquery.lightbox_me
 //= require intlTelInput.min
@@ -32,6 +33,7 @@
 //= require fb_page
 //= require image_validator
 //= require campaigns
+//= require custom.js
 //= require jquery_word_counter
 //= require custom_trumbowyg_plugin
 //= require trumbowyg.min
@@ -42,3 +44,4 @@
 //= require saved_replies
 //= require selectize
 //= require lists
+//= require hashtags_plans_coupons_alerts

@@ -2,6 +2,7 @@
 # MMS/SMS, email and facebook messeger
 class CampaignsController < ApplicationController
   before_action :find_campaign, only: [ :update, :destroy, :change_status ]
+  before_action :check_campaign_status, only: [ :update, :destroy, :change_status]
   layout 'campaign'
 
   def index
@@ -15,14 +16,17 @@ class CampaignsController < ApplicationController
   def create
     @campaign = current_user.campaigns.build(campaign_params)
     campaign_params[:list_ids].split(',').each { |list_id| @campaign.campaign_lists.build(list_id: list_id) }
+    save_campaign_images(@campaign)
     if @campaign.save
-      save_campaign_images(@campaign)
-      CampaignService.new(@campaign).send_now if @campaign.deliver_now
+      utc_date_time = @campaign.date_time.in_time_zone(@campaign.user.time_zone).utc
+      Resque.enqueue_at_with_queue('default', utc_date_time, ChannelJob, @campaign.id) if is_campaign_date_selected?(@campaign)
+      CampaignJob.perform_now(@campaign) if @campaign.deliver_now
       flash[:notice] = 'Campaign Saved successfully'
+      redirect_to new_user_campaign_path
     else
+      render :new
       flash[:error] = @campaign.errors.messages
     end
-    redirect_to new_user_campaign_path
   end
 
   def edit
@@ -32,6 +36,7 @@ class CampaignsController < ApplicationController
 
   def update
     if @campaign.update_attributes(campaign_params)
+      change_campaign_job
       flash[:notice] = 'Campaign updated successfully'
     else
       flash[:error] = @campaign.errors.messages
@@ -41,6 +46,7 @@ class CampaignsController < ApplicationController
 
   def destroy
     if @campaign.destroy
+      destroy_campaign_jobs
       flash[:notice] = 'Campaign is being succesfully deleted'
     else
       flash[:error] = 'Sorry campaign could not delete please try again'
@@ -49,9 +55,10 @@ class CampaignsController < ApplicationController
   end
 
   def change_status
-    status = params[:new_status] == 'pause' ? 2 : 1
-    if @campaign.update_attributes(status: status)
-      flash[:notice] = 'Campaign paused'
+    status = @campaign.active? ? 2 : 1
+    if @campaign.update_attribute('status', status)
+      change_campaign_job
+      flash[:notice] = "Campaign #{@campaign.status}"
     else
       flash[:notice] = 'Sorry campaign could not be paused'
     end
@@ -65,15 +72,40 @@ class CampaignsController < ApplicationController
 
   private
 
+  def change_campaign_job
+    date_today = Date.today.strftime("%Y/%m/%d")
+    utc_date_time = @campaign.date_time.in_time_zone(@campaign.user.time_zone).utc
+    today_campaign = utc_date_time.strftime("%Y/%m/%d") == date_today
+    if @campaign.active? && today_campaign
+      Resque.enqueue_at_with_queue('default', utc_date_time, ChannelJob, @campaign.id)
+    else
+      destroy_campaign_jobs
+    end
+  end
+
+  def destroy_campaign_jobs
+    Resque.remove_delayed_selection { |args| args[0] == @campaign.id }
+  end
+
   def find_campaign
     @campaign = current_user.campaigns.find(params[:id])
   end
 
+  def check_campaign_status
+    if @campaign.inactive?
+      flash[:alert] = 'sorry inactive campaign cannot be updated'
+      redirect_to user_campaigns_path(current_user)
+    end
+  end
+
+  def is_campaign_date_selected?(campaign)
+    (campaign.one_time? && !campaign.deliver_now?)
+  end
+
   def save_campaign_images(campaign)
-    # comment for attrachment for now later on it is needed
-    # image_params[:avatar].each do |image|
-    #   campaign.images.build(avatar: image)
-    # end if image_params[:avatar].present?
+    image_params[:avatar].each do |image|
+      campaign.images.build(avatar: image)
+    end if (!campaign.sms? && image_params[:avatar].present?)
     image_params[:image_id].each do |avatar_id|
       campaign.image_refs.build(image_id: avatar_id).save;
     end if image_params[:image_id].present?

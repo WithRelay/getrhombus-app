@@ -2,7 +2,7 @@ class FbCred < ActiveRecord::Base
 
   belongs_to :user
   has_many :fb_pages, dependent: :destroy
-  validates :user_id, uniqueness: true, :allow_nil => true
+  validates :user_id, uniqueness: true, allow_nil: true
 
   def self.from_omniauth(auth, id)
     begin

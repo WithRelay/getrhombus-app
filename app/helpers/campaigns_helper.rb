@@ -6,8 +6,8 @@ module CampaignsHelper
     if campaign.persisted?
       { campaign.channel => get_channel_enum_value(campaign) }
     else
-      channels = Campaign.channels
-      channels.delete('MMS') if !current_user.can_send_mms?   # Twilio MMS support only in US, CA
+      channels = { SMS: 0, MMS: 1, "Facebook Messenger" => 2, Email: 3}
+      channels.delete(:MMS) if !current_user.can_send_mms?   # Twilio MMS support only in US, CA
       channels
     end
   end
@@ -26,7 +26,7 @@ module CampaignsHelper
   end
 
   def repeat_days_options
-    { 'Repeat every'=>'repeat everyday', '7 days' => 7, '14 days' => 14, '30 days' => 30,
+    { 'Repeat every'=> 0, '7 days' => 7, '14 days' => 14, '30 days' => 30,
       '60 days' => 60, '90 days' => 90
     }
   end

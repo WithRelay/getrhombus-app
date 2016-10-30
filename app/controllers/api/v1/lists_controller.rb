@@ -1,13 +1,12 @@
 class Api::V1::ListsController < API::V1::BaseController
- 
+
   def index
     begin
       if params[:query]
-        res = List.where("lower(name) like ? and user_id = ?", "%#{params[:query].downcase}%", current_user.id)
+        res = current_user.lists.where("lower(name) like ?", "%#{params[:query].downcase}%")
       else
-        res = List.where(user_id: current_user.id)
+        res = current_user.lists
       end
-
       render json: { "lists" => res }, status: 200
     rescue StandardError => e
       render json: { error: "Unable to find your lists" }, status: 500
@@ -52,7 +51,7 @@ class Api::V1::ListsController < API::V1::BaseController
       end
     rescue StandardError => e
       puts e
-      render json: { 
+      render json: {
         error: e.message,
          }, status: 500
     end

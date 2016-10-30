@@ -1,12 +1,12 @@
 class DatePicker
 
-  RAILS_DATE_FORMAT = 'DD/MM/YYYY h:mm A'
+  RAILS_DATE_FORMAT = 'YYYY-MM-DD h:mm A'
   YES = true
 
   constructor: (element)->
     @element = element
-    nowDate = new Date();
-    @today = new Date(nowDate.getFullYear(), nowDate.getMonth(), nowDate.getDate(), 0, 0, 0, 0);
+    date = new Date();
+    @today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
 
   datePicker: ->
     $(@element).daterangepicker
@@ -14,11 +14,11 @@ class DatePicker
       timePickerIncrement: 30,
       singleDatePicker: YES,
       locale: { format: RAILS_DATE_FORMAT },
-      startDate: @today
+      minDate: @today
 
 class Campaign
 
-  EMAIL_CHANNEL = '3'
+  EMAIL_CHANNEL = '3'; MMS_CHANNEL = '1'; MESSENGER_CHANNEL = '2'
   CHECK = ':checked'
   TRUMBOWYG = false
   MAXIMUM_VALUE = 1500
@@ -30,12 +30,23 @@ class Campaign
 
   showHideEditor: (element)->
     if isEmailChecked(element)
+      this.showFileBrowser()
       trumbowygSetting(true, @textArea)
+    else if isMmsChecked(element) || isFacebookMessengerChecked(element)
+      this.showFileBrowser()
+      trumbowygSetting(false, @textArea)
     else
+      this.hideFileBrowser()
       trumbowygSetting(false, @textArea)
 
   isEmailChecked = (channel) ->
     $(channel).val() == EMAIL_CHANNEL
+
+  isFacebookMessengerChecked = (channel) ->
+    $(channel).val() == MESSENGER_CHANNEL
+
+  isMmsChecked = (channel) ->
+    $(channel).val() == MMS_CHANNEL
 
   trumbowygSetting = (status, area)->
     emojiArea = '.emojionearea'
@@ -61,14 +72,25 @@ class Campaign
   deliverNowOneTime_isChecked = (oneTime, deliverNow) ->
     $(oneTime).is(CHECK) && $(deliverNow).is(CHECK)
 
+  showFileBrowser: ->
+    $(".upload_image").show()
+
+  hideFileBrowser: ->
+    $(".upload_image").hide()
 
   textAreaEmojis: ->
-    divText = this.textArea
-    txtEmoji = $(@textArea).emojioneArea ->
-                 @emojiConfig
-    txtEmoji[0].emojioneArea.on 'keyUp', (btn, event) ->
-      $('#undefined_counter').html('')
-      $('.emojionearea-editor').counter({ count: 'up', goal: MAXIMUM_VALUE })
+    if $(@textArea).length > 0
+      txtEmoji = $(@textArea).emojioneArea ->
+                   @emojiConfig
+
+      txtEmoji[0].emojioneArea.on 'keyUp', (btn, event) ->
+        $('#undefined_counter').each ->
+          $(this).remove()
+        if $("#campaign_channel :selected").val() == "2"
+          value = 320
+        else
+          value = 1500
+        $('.emojionearea-editor').counter({ type: 'char', count: 'up', goal: value })
 
 $( document ).on 'ready page:load', ->
   campaign = new Campaign({ pickerPosition: 'right' })
@@ -98,11 +120,16 @@ $( document ).on 'ready page:load', ->
       alert 'Please upload image format with jpg/jpeg/png less than 4.5 mb'
       e.preventDefault()
     else
+      $('body').addClass('loading')
       getBase64FromImageUrl($('input[name=url]').val())
 
   if $('#campaign_channel').val() == '3'
     new CustomTrumbowygPlugin('#trumbowyg')
+    campaign.showFileBrowser()
+  else if $('#campaign_channel').val() == '1'
+    campaign.showFileBrowser()
   else
+    campaign.hideFileBrowser()
     campaign.textAreaEmojis()
 
   $( '#campaign_channel' ).change ->
@@ -114,6 +141,9 @@ $( document ).on 'ready page:load', ->
   $('#recurringFrequency').click ->
     $('#campaign_repeat_days').show()
     campaign.hideShowScheduler()
+
+  if $("#deliverNow").is(":checked")
+    $('.scheduleOption').hide()
 
   # Mainly for edit actions so the view shows properly
   frequency_type = if $('#oneTimeFrequency').is(':checked') then '#oneTimeFrequency' else '#recurringFrequency'
@@ -127,6 +157,7 @@ $( document ).on 'ready page:load', ->
     img = new Image
     img.setAttribute 'crossOrigin', 'anonymous'
     img.onload = (e)->
+      $('body').addClass('loading')
       trumbowygHtml = $('#trumbowyg').trumbowyg('html')
       $.ajax(
         url: 'http://'+window.location.host+'/v1/campaigns/upload_images'
@@ -139,7 +170,9 @@ $( document ).on 'ready page:load', ->
             imageIdHtml = '<input type="hidden" name="campaign[image_id][]" value="'+data.image_id+'">'
             $('.newMessage').append(imageIdHtml)
             $('#trumbowyg').trumbowyg('html', newHtml)
+            $('body').removeClass('loading')
           else
+            $('body').removeClass('loading')
             splitHtml = trumbowygHtml.split('src=').pop()
             imageTag = '<img src=' + splitHtml
             newHtml = trumbowygHtml.replace(imageTag, '');

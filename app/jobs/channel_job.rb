@@ -1,10 +1,19 @@
 class ChannelJob
-  @queue = :send_email
+  @queue = :default
 
-  def self.perform
-    Campaign.recurring.active.each do |campaign|
-      utc_date_time = campaign.date_time.in_time_zone(campaign.user.time_zone).utc
-      CampaignJob.set(wait_until: utc_date_time).perform_later(campaign.id)
-    end
+  def self.perform(campaign_id)
+    campaign = Campaign.includes([:images, lists:[:user_lists]]).where(id: campaign_id)[0]
+    channel_class = channel_hash[campaign.channel].constantize
+    campaign.channel == 'email' ? channel_class.new(campaign).send_campaign : channel_class.send_campaign(campaign)
+  end
+
+  private_class_method
+
+  def self.channel_hash
+    {
+      'sms'=>'SmsService', 'mms'=>'MmsService',
+      'facebook_messenger'=>'FacebookMessengerService',
+      'email'=>'EmailService'
+    }
   end
 end

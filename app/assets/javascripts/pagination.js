@@ -3,7 +3,6 @@ jQuery(function() {
   var loading_views;
 
   if ($('#with-button').size() > 0) {
-    $('.pagination').hide();
     loading_views = false;
     $('.show_more').show().click(function() {
       var $this, more_plans_url;
@@ -16,6 +15,7 @@ jQuery(function() {
             $this.button('reset');
             $.getScript(more_plans_url, function() {
               if ($this) {
+                $("html, body").animate({ scrollTop: $(document).height() }, 5000);
                 $this.text('Show More').removeClass('disabled');
               }
               return loading_views = false;

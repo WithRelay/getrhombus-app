@@ -6,6 +6,7 @@
   <br><br>
 
   <%= f.label :Choose_a_list %>
+
   <%= f.text_field :list_ids, id: 'campaign-select-lists', 'data-lists_data' => "#{@lists_json}", placeholder: "Select 1 or more lists" %>
 
   <br>
@@ -50,7 +51,7 @@
   </div>
 
   <div id='new-image-previews'></div>
-    <% @campaign.images.each do |image| %>
+    <%= div_for @campaign.images do |image| %>
       <%= present(image).image_url %>
       <%= present(image).image_delete_url %>
   <% end %>

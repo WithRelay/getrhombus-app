@@ -64,3 +64,26 @@
     -webkit-border-radius: 50%;
     border-radius: 50%;
 }
+
+#delete_integration
+{
+    color: red;
+}
+
+#calIcon {
+  position: relative;
+  z-index: 1;
+  right: -10px;
+  top: 28px;
+  color: #7B7B7B;
+  cursor: pointer;
+  width: 0;
+}
+
+#redeemField{
+  text-indent: 25px;
+}
+
+#redeemLabel{
+    top: 16px;
+}

@@ -6,22 +6,24 @@
         <img class="profile-img" src="https://www.getrhombus.com/assets/imgo-252069578bf9441f8f0cf59bc8660170.jpg"
           alt="">
         <%= form_tag redirect_path(redirect_uri: @params['redirect_uri'], account_linking_token: @params['account_linking_token']), :method => :post, id: 'user_login_form', class: 'form-signin' do %>
-        <p>
+        <p class = 'group'>
           <%= label_tag :email, 'Email' %><br />
-          <%= text_field_tag :email, params[:email], type:'email', required: true, class: 'form-control' %>
+          <%= text_field_tag :email, params[:email], type:'email', class: 'form-control' %>
         </p>
-        <p>
+        <p class = 'group'>
           <%= label_tag :password %><br />
-          <%= password_field_tag :password, params[:password], type: 'password', class: 'form-control', 
-            required: true %>
+          <%= password_field_tag :password, params[:password], type: 'password', class: 'form-control' %>
         </p>
-        <p><%= button_tag 'Log In', class: 'btn btn-primary btn-block', data: { disable_with: "<i class='fa fa-spinner fa-pulse fa-fw'></i>Logging In...".html_safe } %></p>
+        <p class="group">
+          <%= button_tag 'Log In', class: 'btn btn-primary btn-block' %>
+          </p>
         <% end %>
       </div>
       <br>
-      <b> Create an Account </b>
-      <%= link_to signup_path, id: 'signup', target: '_blank', onClick: 'javascript:window.close()' do%>
-      <i class='fa fa-sign-in' aria-hidden='true'>Sign Up</i>
+      <div class="pull-right">
+        <%= link_to signup_path, id: 'signup', target: '_blank', onClick: 'javascript:window.close()' do%>
+        <i class='fa fa-sign-in' aria-hidden='true'>Sign Up</i>
+      </div>
       <%end%>
     </div>
   </div>

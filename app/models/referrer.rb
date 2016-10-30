@@ -30,12 +30,11 @@ class Referrer < ActiveRecord::Base
     create(uid: referrer, referee_id: referee) if !ref
   end
 
-  # we use this on Stripe's website
-  # or anywhere else necessary
+  # we use this on Stripe's website or anywhere else necessary
   def self.create_stripe_default
-    ref = create(email: "<redacted_email>", phone_numer: '<redacted_phone_number>', country: 'US', 
-                            referrer_name: 'Stripe', org_name: "Rhombus", uid: generate_uid)
+    ref = create(referrer_email: '<redacted_email>', referrer_name: 'Stripe', uid: Transactionable.generate_uid)
     ref.update_attribute(:link, "https://www.getrhombus.com?referrer_uid=#{ref.uid}")
+    #ref.update_attribute(:link, "https://www.relay.com?referrer_uid=#{ref.uid}")
   end
 
 end

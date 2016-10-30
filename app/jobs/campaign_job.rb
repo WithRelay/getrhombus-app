@@ -2,22 +2,18 @@
 class CampaignJob < ActiveJob::Base
   queue_as :default
 
-  def perform(campaign_id)
-    campaign = Campaign.find_by_id(campaign_id)
-    if campaign.present?
-      email_list = campaign.lists.map{ |list| {email: list.user.email } if list.user.present? }
-      message_hash = { html: campaign.text, to: email_list }
-      email_campaign_hash = campaign_image_params.present? ? message_hash.merge({ images: campaign_image_params }) : message_hash
-      EmailingService.send_email_campaign(email_campaign_hash)
-    end
+  def perform(campaign)
+    channel_class = channel_hash[campaign.channel].constantize
+    campaign.channel == 'email' ? channel_class.new(campaign).send_campaign : channel_class.send_campaign(campaign)
   end
 
-  def campaign_image_params(campaign)
-    campaign.images.map do |image|
-      campaign.text.gsub!(image.avatar.url, "cid:#{c.image_file_name}")
-      { type: image.avatar_content_type,
-        name: image.avatar_file_name,
-        content: Base64.encode64(open(image.avatar.url) { |image| image.read })
-      }
+  def channel_hash
+    # this hash is because no need to use lots of conditional statement, if you have a
+    # differenct class associate with channel please provide the appropriate class name
+    {
+      'sms'=>'SmsService', 'mms'=>'MmsService',
+      'facebook_messenger'=>'FacebookMessengerService',
+      'email'=>'EmailService'
+    }
   end
 end

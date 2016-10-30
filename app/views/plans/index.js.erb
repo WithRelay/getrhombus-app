@@ -2,7 +2,6 @@
 $('#my-plans').append("<%= escape_javascript(render partial: 'plans') %>");
 <% if @plans.next_page %>
     $('.pagination').replaceWith('<%= j will_paginate @plans %>');
-    $('.pagination').hide();
 <% else %>
     $('.pagination, #load_more_plans').remove();
 <% end %>
