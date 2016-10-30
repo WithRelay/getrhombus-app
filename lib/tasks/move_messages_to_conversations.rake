@@ -25,8 +25,7 @@ task :move_messages_to_conversations => :environment do
       else
         c = Conversation.new(merchant_id: m.user_id, uid: uid, uid_type: uid_type)
       end
-      c.message_ids = m.id
-      c.save
+      ConversationRef.create(textable_id: m.id, textable_type: 'Message', conversation_id: c.id)
     else
       
       u = User.find_by(id: m.user_id_to)
@@ -45,8 +44,7 @@ task :move_messages_to_conversations => :environment do
         else
           c = Conversation.new(merchant_id: m.user_id_to, uid: uid, uid_type: uid_type)
         end
-        c.message_ids = m.id
-        c.save  
+        ConversationRef.create(textable_id: m.id, textable_type: 'Message', conversation_id: c.id)  
       end
 
       # else orphaned message
