@@ -25,12 +25,12 @@ task :move_messages_to_conversations => :environment do
       if !c
         c = Conversation.create(merchant_id: m.user_id, uid: uid, uid_type: uid_type)
       end
-      ConversationRef.create(textable_id: m.id, textable_type: 'Message', conversation_id: c.id)
-      puts 'first block'
-      puts m.user_id
-        puts m.user_id_to
+      #ConversationRef.create(textable_id: m.id, textable_type: 'Message', conversation_id: c.id)
+      #puts 'first block'
+      #puts m.user_id
+       # puts m.user_id_to
         puts c.to_json
-        puts "\n\n"
+        puts "\n"
     else
       
       u = User.find_by(id: m.user_id_to)
@@ -50,12 +50,12 @@ task :move_messages_to_conversations => :environment do
         if !c
           c = Conversation.create(merchant_id: m.user_id_to, uid: uid, uid_type: uid_type)
         end
-        puts 'second block'
-        puts m.user_id_to
-        puts m.user_id
+        #puts 'second block'
+        #puts m.user_id_to
+        #puts m.user_id
         puts c.to_json
-        puts "\n\n"
-        ConversationRef.create(textable_id: m.id, textable_type: 'Message', conversation_id: c.id)  
+        puts "\n"
+        #ConversationRef.create(textable_id: m.id, textable_type: 'Message', conversation_id: c.id)  
       end
 
       # else orphaned message
