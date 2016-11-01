@@ -32,6 +32,7 @@ class User < ActiveRecord::Base
   has_one :alert, dependent: :destroy
   has_many :fb_pages
   has_many :saved_replies
+  has_many :message_resolutions
 
   has_many :image_refs, as: :imageable
   has_many :images, through: :image_refs

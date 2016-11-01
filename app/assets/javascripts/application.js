@@ -13,7 +13,6 @@
 
 //= require pubnub/pubnub.min.js
 //= require jquery
-//= require sweetalert
 //= require pnotify
 //= require flashes
 //= require pagination
@@ -42,6 +41,7 @@
 //= require trumbowyg_emoji_plugin
 //= require trumbowyg.upload.min
 //= require saved_replies
+//= require message_resolutions
 //= require selectize
 //= require lists
 //= require hashtags_plans_coupons_alerts

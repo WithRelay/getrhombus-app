@@ -3,16 +3,15 @@ Review
 - notification_log used for transaction, referrer and alert notifications logging
 - fb_messages... page_id, from, to, fb_page_id?
 - remove first_name and last_name assignment in custom.js...no longer used
+- when user logs in through messenger, indicate in referrers
 
-
-
+- resolutions, 
 
 - what happens when u send image in countries that don't support it. link?
 - check trumbowyg working
 - clean up image/hashtag presenters
 - Plug into stripe api for managed accts - see notes
 - Create Seeds
-- Set up dev server - with rake task
 - Clean up angular - https://blog.joshsoftware.com/2014/07/17/building-web-apps-with-rails4-and-angularjs-in-15-minutes/
 - remove thread profiler in prod
 - keeling's server
@@ -42,25 +41,17 @@ Campaigns and Facebook
 - fail safely for audio and video files
 
 
-Migration Plan
-1. Take DB Dump
-2. Run Migrations successfully
-3. Review each task below - Data sanitization done on Test and Prod Servers
-4. Run each rake task (in order) to modify db and run the associated migration to clean up table if needed
-    a. create_alerts_for_teams - task ready for deploy, no order dependency
-    b. people - ready for deploy
-    c. move_stripe_connect_details_to_stripe_cred - ready for deploy
-    
-    d. move_referrer_num_to_referrer_table - Run some cleanup sql first. Added a sample referrer_num to test db. No order dependency.
-    e. move_user_address_to_address_table - ready for deploy
-    
-    f. move_txns_table_to_one_row
-    g. move_receipt_sent_at_to_notifications_log - task ready for deploy - includes cleanup migration. Order dependency. Run after f.
-    
-    h. update_phone_number_in_dbs - ready for deploy.
-    i. conversations. run after h above.
-    
-    For Later
-    j. switch_all_bitly_links_to_relay_and_referrer_id - referrer_id part ready. relay part after we buy new domain (just switch url and run again).
-    k. update_on_behalf_of_uri_to_destination_account - not critical...do at some point
-    
+  a. create_alerts_for_teams - task ready for deploy, no order dependency 
+  b. move_some_user_data_to_people_table - ready for deploy
+  c. move_stripe_connect_details_to_stripe_cred - ready for deploy
+  d. move_referrer_num_to_referrer_table - Run some cleanup sql first. Added a sample referrer_num to test db. No order dependency.
+  e. move_user_address_to_address_table - ready for deploy
+  f. move_txns_table_to_one_row
+  g. move_receipt_sent_at_to_notifications_log - task ready for deploy - includes cleanup migration. Order dependency. Run after f.
+  h. update_phone_number_in_dbs - ready for deploy.
+  i. conversations. run after h above.
+
+
+  For Later
+  j. switch_all_bitly_links_to_relay_and_referrer_id - referrer_id part ready. relay part after we buy new domain (just switch url and run again).
+  k. update_on_behalf_of_uri_to_destination_account - not critical...do at some point

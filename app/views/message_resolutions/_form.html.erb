@@ -1,0 +1,16 @@
+<%= form_for([current_user, message_resolution], :html => { :id => "message-resolution-form" } ) do |f| %>
+
+  <%= f.text_field :title, placeholder: 'New Order', id: 'message-resolution-title-field', class: 'col-xs-12' %>
+
+  <br>
+  <br>
+
+  <% if action_name == 'index' %>
+    <%= link_to 'Delete', [current_user, message_resolution],  method: :delete, id: 'delete-message-resolution', class: "btn btn-danger", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i>Please wait...".html_safe }, 
+    	disabled: f.object.c_id ? true : false %>
+    <%= f.button "Cancel", id: 'message-resolution-cancel', class: "btn btn-default " %>
+  <% end %>
+
+  <%= f.button "Save", class: "btn btn-primary  pull-right", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i>Please wait...".html_safe } %>
+
+<% end %>
