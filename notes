@@ -5,7 +5,18 @@ Review
 - remove first_name and last_name assignment in custom.js...no longer used
 - when user logs in through messenger, indicate in referrers
 
-- resolutions, 
+To Dos
+
+For Bhisma
+- Subscriptions
+- Some stripe events
+- alerts from stripe cc form
+
+For Surya
+- You can't delete campaign that has run
+
+For Ovo
+- You can't delete list attached to a campaign
 
 - what happens when u send image in countries that don't support it. link?
 - check trumbowyg working
@@ -15,7 +26,6 @@ Review
 - Clean up angular - https://blog.joshsoftware.com/2014/07/17/building-web-apps-with-rails4-and-angularjs-in-15-minutes/
 - remove thread profiler in prod
 - keeling's server
-- prevent users from signing up with rhombus numbers...
 
 
 Payment Capture - should be for only customers....capture in logic
@@ -39,19 +49,3 @@ Notes for Surya
 
 Campaigns and Facebook
 - fail safely for audio and video files
-
-
-  a. create_alerts_for_teams - task ready for deploy, no order dependency 
-  b. move_some_user_data_to_people_table - ready for deploy
-  c. move_stripe_connect_details_to_stripe_cred - ready for deploy
-  d. move_referrer_num_to_referrer_table - Run some cleanup sql first. Added a sample referrer_num to test db. No order dependency.
-  e. move_user_address_to_address_table - ready for deploy
-  f. move_txns_table_to_one_row
-  g. move_receipt_sent_at_to_notifications_log - task ready for deploy - includes cleanup migration. Order dependency. Run after f.
-  h. update_phone_number_in_dbs - ready for deploy.
-  i. conversations. run after h above.
-
-
-  For Later
-  j. switch_all_bitly_links_to_relay_and_referrer_id - referrer_id part ready. relay part after we buy new domain (just switch url and run again).
-  k. update_on_behalf_of_uri_to_destination_account - not critical...do at some point
