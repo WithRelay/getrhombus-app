@@ -59,7 +59,7 @@ class User < ActiveRecord::Base
   before_create :set_merchant_org_phone          # only create because the actual org_phone field is used in edit view
 
   after_commit :create_user_alert, on: :create, if: lambda { self.user_level == 1 }
-  after_commit :update_phone_in_db, on: :update, if: lambda { self.previous_changes['phone_number'] && self.user_level == 0 }
+  after_commit :update_phone_in_db, on: :update
 
   validates_presence_of :user_level, message: "Please select an account type"
   # Sign up form uses phone_number field for both user types
@@ -158,7 +158,7 @@ class User < ActiveRecord::Base
     # Some users sign up with Rhombus numbers
     def phone_number_cannot_be_rhombus_number
       if User.exists?(rhombus_number: self.phone_number)
-        errors.add(:phone_number, "can't be in the past")
+        errors.add(:phone_number, "can't be a Rhombus number. Please enter your phone number.")
       end
     end
 
@@ -200,8 +200,12 @@ class User < ActiveRecord::Base
 
     # move to background job
     def update_phone_in_db
-      ActiveRecord::Base.connection.execute("UPDATE messages SET messages.from = #{x[1]} WHERE messages.from = #{x[0]}")
-      ActiveRecord::Base.connection.execute("UPDATE messages SET messages.to = #{x[1]} WHERE messages.to = #{x[0]}")
+      if self.user_level == 0
+        if x = self.previous_changes['phone_number']
+          ActiveRecord::Base.connection.execute("UPDATE messages SET messages.from = #{x[1]} WHERE messages.from = #{x[0]}")
+          ActiveRecord::Base.connection.execute("UPDATE messages SET messages.to = #{x[1]} WHERE messages.to = #{x[0]}")
+        end
+      end
     end
 
     def create_user_alert
