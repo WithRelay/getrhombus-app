@@ -18,7 +18,7 @@
         <td><%= coupon.max_redemptions %></td>
         <td><%= coupon.percent_off %></td>
         <td><%= coupon.redeem_by %></td>
-        <td><%= link_to 'Destroy', user_coupon_path(current_user, coupon), method: :delete, class: 'delete-coupon' %></td>
+        <td><%= link_to 'Destroy', user_coupon_path(current_user, coupon), method: :delete, class: "delete-coupon coupon#{coupon.id}" %></td>
       </tr>
     <% end %>
   </tbody>

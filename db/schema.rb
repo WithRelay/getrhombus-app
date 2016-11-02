@@ -312,7 +312,7 @@ ActiveRecord::Schema.define(version: 20161101014303) do
     t.datetime "updated_at",             null: false
   end
 
-  add_index "message_resolutions", ["user_id"], name: "fk_rails_fe68d0f806", using: :btree
+  add_index "message_resolutions", ["user_id"], name: "fk_rails_44af1f6e44", using: :btree
 
   create_table "messages", force: :cascade do |t|
     t.datetime "created_at"
