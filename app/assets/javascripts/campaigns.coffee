@@ -86,10 +86,7 @@ class Campaign
       txtEmoji[0].emojioneArea.on 'keyUp', (btn, event) ->
         $('#undefined_counter').each ->
           $(this).remove()
-        if $("#campaign_channel :selected").val() == "2"
-          value = 320
-        else
-          value = 1500
+        value = $("#campaign_channel :selected").val() == "2" ? 320 : 1500
         $('.emojionearea-editor').counter({ type: 'char', count: 'up', goal: value })
 
 $( document ).on 'ready page:load', ->

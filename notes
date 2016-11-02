@@ -2,10 +2,12 @@ Review
 - campaign_user_list (can better track failures) or notification_log or add an email model??
 - notification_log used for transaction, referrer and alert notifications logging
 - fb_messages... page_id, from, to, fb_page_id?
-- remove first_name and last_name assignment in custom.js...no longer used
+- remove first_name and last_name assignment in angular code
 - when user logs in through messenger, indicate in referrers
+- change all emails in test db dump
 
 To Dos
+- keep controllers lean
 
 For Bhisma
 - Subscriptions
@@ -14,9 +16,14 @@ For Bhisma
 
 For Surya
 - You can't delete campaign that has run
+- You need to bind emojionearea only once so use a variable to keep track
+- You need to bind counter to all fields once except email....you will need to do that on focus...use variable to keep track
+- if it is a one time, you need to mark inactive
+- update action needs to update campaign_lists
 
 For Ovo
 - You can't delete list attached to a campaign
+- first_name access doesnt work anymore...use card_name
 
 - what happens when u send image in countries that don't support it. link?
 - check trumbowyg working
@@ -39,13 +46,6 @@ All APIs especially Stripe, Twilio
 Contact - Inbound
 - sent u a text doesnt have an account 
 - have an account, sent u a text but ref link isnt yours 
-
-Notes for Surya
-- You need to bind emojionearea only once so use a variable to keep track
-- You need to bind counter to all fields....you will need to do that on focus though since
-	we can't tell when emojionearea is done.
-- if it is a one time, you need to mark inactive
-- update action needs to update campaign_lists
 
 Campaigns and Facebook
 - fail safely for audio and video files
