@@ -1,0 +1,41 @@
+$(document).ready(function () {
+  // validate plan form
+    $('#planForm')
+      .formValidation({
+        framework: 'bootstrap',
+        // List of fields and their validation rules
+        fields: {
+            'plan[name]': {
+                validators: {
+                  notEmpty: {
+                        message: 'Name is required'
+                  },
+                  remote: {
+                      message: 'This Plan name has already been used.',
+                      url: '/v1/plans/check_plan_name',
+                      type: 'POST'
+                  }
+                }
+            },
+            'plan[amount]': {
+                validators: {
+                    notEmpty: {
+                      message: 'Amount  is required'
+                    },
+                    regexp: {
+                      regexp: /^(?:[1-9]\d*|0)?(?:\.\d+)?$/gm,
+                      message: 'Amount is not valid'
+                   }
+                }
+              }
+            }
+        })
+      .on('success.validator.fv', function(e, data) {
+          data.element // Get the field element
+          .closest('.form-group') // Get the field parent
+          .removeClass('has-warning')
+          .addClass('has-success')
+      });
+
+  
+})
