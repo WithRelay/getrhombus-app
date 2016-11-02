@@ -66,6 +66,7 @@ Rails.application.routes.draw  do
     resources :bank_accounts
     resources :addresses
     resources :people
+    resources :message_resolutions
     resources :transactions do
 
       collection do
