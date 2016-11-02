@@ -9,8 +9,8 @@ class EmailService
   def send_campaign
     @campaign.lists.each do |list|
       list.user_lists.each do |customer|
-        @campaign_service.email_list.push({ email: list.user.email })
-        @campaign_service.user_id_list.push({ user_id: list.user.id })
+        @campaign_service.email_list.push({ email: customer.user.email })
+        @campaign_service.user_id_list.push({ user_id: customer.user.id })
       end
     end
     @campaign_service.send_email(email_hash_params)
