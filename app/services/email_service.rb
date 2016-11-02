@@ -9,8 +9,8 @@ class EmailService
   def send_campaign
     @campaign.lists.each do |list|
       list.user_lists.each do |customer|
-        @campaign_service.email_list.push({ email: customer.user.email })
-        @campaign_service.user_id_list.push({ user_id: customer.user.id })
+        @campaign_service.email_list.push({ email: list.user.email })
+        @campaign_service.user_id_list.push({ user_id: list.user.id })
       end
     end
     @campaign_service.send_email(email_hash_params)
@@ -19,18 +19,28 @@ class EmailService
   private
 
   def email_hash_params
-    image_params = campaign_image_params
     message_hash = { html: @campaign.text, to: @campaign_service.email_list }
-    return image_params.present? ? message_hash.merge({ images: image_params }) : message_hash
+    message_hash.merge!({ images: inline_images }) if inline_images.present?
+    message_hash.merge!({ attachments: attachment_images }) if attachment_images.present?
   end
 
-  def campaign_image_params
-    @campaign.images.map do |image|
+  def inline_images
+    @campaign.images.inline.map do |image|
       @campaign.text.gsub!(image.avatar.url, "cid:#{image.avatar_file_name}")
-      { type: image.avatar_content_type,
-        name: image.avatar_file_name,
-        content: Base64.encode64(open(image.avatar.url) { |image| image.read })
-      }
+      create_image_params(image)
     end
+  end
+
+  def attachment_images
+    @campaign.images.attachment.map do |image|
+      create_image_params(image)
+    end
+  end
+
+  def create_image_params(image)
+    { type: image.avatar_content_type,
+      name: image.avatar_file_name,
+      content: Base64.encode64(open(image.avatar.url) { |image| image.read })
+    }
   end
 end
