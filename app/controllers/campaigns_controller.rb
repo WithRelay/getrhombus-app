@@ -35,6 +35,9 @@ class CampaignsController < ApplicationController
   end
 
   def update
+    @campaign.campaign_lists.delete_all
+    campaign_params[:list_ids].split(',').each { |list_id| @campaign.campaign_lists.build(list_id: list_id).save }
+    save_campaign_images(@campaign)
     if @campaign.update_attributes(campaign_params)
       change_campaign_job
       flash[:notice] = 'Campaign updated successfully'
@@ -73,7 +76,7 @@ class CampaignsController < ApplicationController
   private
 
   def change_campaign_job
-    date_today = Date.today.strftime("%Y/%m/%d")
+    date_today = Date.today.strftime("%Y-%m-%d")
     utc_date_time = @campaign.date_time.in_time_zone(@campaign.user.time_zone).utc
     today_campaign = utc_date_time.strftime("%Y/%m/%d") == date_today
     if @campaign.active? && today_campaign
@@ -104,7 +107,7 @@ class CampaignsController < ApplicationController
 
   def save_campaign_images(campaign)
     image_params[:avatar].each do |image|
-      campaign.images.build(avatar: image)
+      campaign.images.build(avatar: image, uploaded_as: 1)
     end if (!campaign.sms? && image_params[:avatar].present?)
     image_params[:image_id].each do |avatar_id|
       campaign.image_refs.build(image_id: avatar_id).save;
