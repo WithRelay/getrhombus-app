@@ -22,6 +22,7 @@ class EmailService
     message_hash = { html: @campaign.text, to: @campaign_service.email_list }
     message_hash.merge!({ images: inline_images }) if inline_images.present?
     message_hash.merge!({ attachments: attachment_images }) if attachment_images.present?
+    return message_hash
   end
 
   def inline_images
