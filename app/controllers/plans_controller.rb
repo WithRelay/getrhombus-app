@@ -32,12 +32,12 @@ class PlansController < ApplicationController
 
   def update
     @plan.update(plan_params)
-    respond_with(@plan)
+    redirect_to user_plans_path, flash: { notice: 'Plan was updated'}
   end
 
   def destroy
     @plan.destroy
-    respond_with(@plan)
+    redirect_to user_plans_path, flash: { notice: 'Plan was deleted'}
   end
 
   private

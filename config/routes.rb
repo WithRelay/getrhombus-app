@@ -60,7 +60,7 @@ Rails.application.routes.draw  do
     patch 'update_fb_page' => 'fb_pages#update_user_fb_page'
     resources :hashtags, except: [:show, :destroy]
     resources :subscriptions, except: [:show, :edit, :update]
-    resources :plans, only: [:create, :index, :new]
+    resources :plans, only: [:create, :index, :new, :edit, :update, :destroy]
     resources :alerts, only: [:update]
     resources :saved_replies
     resources :bank_accounts
