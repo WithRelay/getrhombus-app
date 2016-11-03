@@ -31,13 +31,15 @@ class PlansController < ApplicationController
   end
 
   def update
-    @plan.update(plan_params)
-    respond_with(@plan)
+    # res = PaymentService.update_plan(@plan.id, plan_params[:name])
+    @plan.update(params.require(:plan).permit(:name))
+    redirect_to user_plans_path, flash: { notice: 'Plan was updated'}
   end
 
   def destroy
+    # res = PaymentService.delete_plan(@plan.id)
     @plan.destroy
-    respond_with(@plan)
+    redirect_to user_plans_path, flash: { notice: 'Plan was deleted'}
   end
 
   private
@@ -46,6 +48,17 @@ class PlansController < ApplicationController
     end
 
     def plan_params
-      params.require(:plan).permit(:amount, :interval, :interval_count, :name)
+      params.require(:plan).permit(:amount, :interval, :name).tap{ |plan|
+        if params[:plan][:interval_month]
+          plan['interval_count'] = params[:plan][:interval_month]
+        elsif params[:plan][:interval_week]
+          plan['interval_count'] = params[:plan][:interval_week]
+        else
+          plan['interval_count'] = params[:plan][:interval_count]
+        end
+        # since amount is in cent
+        plan['amount'] = 100 * plan['amount'].to_f
+        plan['currency'] = current_user.currency
+      }
     end
 end

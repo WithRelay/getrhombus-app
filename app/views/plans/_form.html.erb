@@ -1,39 +1,48 @@
-<%= form_for([current_user, @plan]) do |f| %>
-  <% if @plan.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@plan.errors.count, "error") %> prohibited this plan from being saved:</h2>
+<%= form_for([current_user, @plan], :html=> { id: 'planForm', class: 'form-horizontal' }) do |f| %>
 
-      <ul>
-      <% @plan.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-      </ul>
+  <div class="form-group">
+    <%= f.label :name, class: 'col-xs-3 control-label' %>
+    <div class="col-xs-5">
+      <%= f.text_field :name, class: 'form-control' %>
     </div>
+  </div>
+
+  <% if action_name == 'new' %>
+    <div class="form-group">
+      <%= f.label :amount, class: 'col-xs-3 control-label' %>
+      <div class="col-xs-5">
+        <%= f.text_field :amount, class: 'form-control' %>
+      </div>
+    </div>
+
+    <div id='interval-settings'>
+      <div class="form-group">
+        <%= f.label :interval, class: 'col-xs-3 control-label' %>
+        <div class="col-xs-2">
+          <%= f.select :interval, options_for_select({ "Day" => "day", "Week" => 'week', "Month" => "month" }, selected: @plan.interval),{}, class: 'form-control' %>
+        </div>
+      </div>
+    </div>
+
+      <div class="form-group">
+        <%= f.label :interval_count, class: 'col-xs-3 control-label' %>
+        <div class="col-xs-5 dynamic-count">
+          <%= f.text_field :interval_count, id: 'interval-count', class: 'form-control' %>
+        </div>
+      </div>
+    </div>
+
+    <div class="actions field form-group">
+      <div class="col-xs-9 col-xs-offset-3">
+        <%= f.submit 'Create Plan', class: 'btn btn-primary' %>
+      </div>
+    </div>
+  <% elsif action_name == 'edit' %>
+    <div class="actions field form-group">
+    <div class="col-xs-9 col-xs-offset-3">
+      <%= f.submit 'Update Plan', class: 'btn btn-primary' %>
+    </div>
+  </div>
   <% end %>
 
-  <div class="field">
-    <%= f.label :name %><br>
-    <%= f.text_field :name %>
-  </div>
-
-  <div class="field">
-    <%= f.label :amount %><br>
-    <%= f.text_field :amount %>
-  </div>
-
-  <div id='interval-settings'>
-    <div class="field">
-      <%= f.label :interval %>
-      <%= f.select :interval, options_for_select({ "Day" => "day", "Week" => 'week', "Month" => "month" }, selected: @plan.interval) %>
-    </div>
-
-    <div class="field">
-      <%= f.label :interval_count %>
-      <%= f.text_field :interval_count, id: 'interval-count' %>
-    </div>
-  </div>
-  
-  <div class="actions">
-    <%= f.submit 'Create Plan', data: { disable_with: "Please wait..." } %>
-  </div>
 <% end %>

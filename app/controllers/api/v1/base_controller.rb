@@ -37,8 +37,7 @@ class API::V1::BaseController < ApplicationController
   end
 
   def validation_messages(image)
-    upload_from = params[:uploaded_from].nil? ? 'local' : param[:uploaded_from]
-    image_avatar = Image.new({avatar: image, upload_from: upload_from})
+    image_avatar = Image.new({ avatar: image, uploaded_as: 0 })
     if valid_image_upload(image) && image_avatar.save
       { status: 200, message: 'success', image_id: image_avatar.id, image_url: image_avatar.avatar.url }
     else

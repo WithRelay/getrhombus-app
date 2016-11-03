@@ -1,0 +1,106 @@
+$(document).ready(function () {
+  // validate plan form
+    $('#planForm')
+      .formValidation({
+        framework: 'bootstrap',
+        // List of fields and their validation rules
+        fields: {
+            'plan[name]': {
+                validators: {
+                  notEmpty: {
+                        message: 'Name is required'
+                  },
+                  remote: {
+                      message: 'This Plan name has already been used.',
+                      url: '/v1/plans/check_plan_name',
+                      type: 'POST'
+                  }
+                }
+            },
+            'plan[amount]': {
+                validators: {
+                    notEmpty: {
+                      message: 'Amount  is required'
+                    },
+                    regexp: {
+                      regexp: /^[+]?([0-9]+(?:[\.][0-9]*)?|\.[0-9]+)$/,
+                      message: 'Amount is not valid'
+                    }
+                }
+              },
+              'plan[interval_count]':{
+                validators: {
+                    notEmpty: {
+                      message: 'Interval count  is required'
+                    },
+                    between: {
+                      min: 1,
+                      max: 365,
+                      message: 'Interval count for dailly plans can\'t be greater than 365'
+                    }
+                  }
+               },
+               'plan[interval_week]':{
+                validators: {
+                    notEmpty: {
+                      message: 'Interval count  is required'
+                    },
+                    between: {
+                      min: 1,
+                      max: 52,
+                      message: 'Interval count for weekly plans can\'t be greater than 52'
+                    }
+                  }
+               },
+               'plan[interval_month]':{
+                validators: {
+                    notEmpty: {
+                      message: 'Interval count  is required'
+                    },
+                    between: {
+                      min: 1,
+                      max: 12,
+                      message: 'Interval count for monthly plans can\'t be greater than 12'
+                    }
+                  }
+               }
+            }
+        })
+        .on('success.validator.fv', function(e, data) {
+          data.element // Get the field element
+          .closest('.form-group') // Get the field parent
+          .removeClass('has-warning')
+          .addClass('has-success')
+      });
+
+  $('.delete-plan').click(function(evt) {
+    var selector = '.' + evt.target.classList[evt.target.classList.length - 1 ];
+    debugger
+    if (!$(selector).attr('isDestroy')) {
+      flashConfirm(selector,'Delete Plan',
+       'If you delete this plan, you won\'t be able to add new subscriptions. However, existing subscribers will continue to be charged on a recurring basis until their subscriptions are canceled.',
+       'isDestroy'
+      );
+      return false;
+    }
+  });
+
+  $('#plan_interval').change(function(){
+    if ($('#plan_interval').val() === 'day'){
+      $('#interval-count').attr('name', 'plan[interval_count]');
+      $('#interval-count').attr('data-fv-field', 'plan[interval_count]');
+      $('.dynamic-count').find('small').attr('data-fv-for','plan[interval_count]')
+    }
+    if ($('#plan_interval').val() === 'week'){
+     $('#interval-count').attr('name', 'plan[interval_week]');
+     $('#interval-count').attr('data-fv-field', 'plan[interval_week]');
+     $('.dynamic-count').find('small').attr('data-fv-for','plan[interval_week]')
+    }
+    if ($('#plan_interval').val() === 'month'){
+       $('#interval-count').attr('name', 'plan[interval_month]');
+       $('#interval-count').attr('data-fv-field', 'plan[interval_month]');
+       $('.dynamic-count').find('small').attr('data-fv-for','plan[interval_month]')
+    }
+  });
+
+})

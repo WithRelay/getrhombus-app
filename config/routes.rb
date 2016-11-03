@@ -60,7 +60,7 @@ Rails.application.routes.draw  do
     patch 'update_fb_page' => 'fb_pages#update_user_fb_page'
     resources :hashtags, except: [:show, :destroy]
     resources :subscriptions, except: [:show, :edit, :update]
-    resources :plans, only: [:create, :index, :new]
+    resources :plans, only: [:create, :index, :new, :edit, :update, :destroy]
     resources :alerts, only: [:update]
     resources :saved_replies
     resources :bank_accounts
@@ -121,6 +121,7 @@ Rails.application.routes.draw  do
     match 'lists' => 'lists#index', via: :get
     match 'lists/create' => 'lists#create', via: :post
     match 'coupons/check_coupon_name' => 'coupons#check_coupon_name', via: :post
+    match 'plans/check_plan_name' => 'plans#check_plan_name', via: :post
   end
 
   ## catch all other to 404

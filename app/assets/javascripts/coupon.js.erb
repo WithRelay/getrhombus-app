@@ -30,8 +30,10 @@ $(document).ready(function () {
   });
 
   $('.delete-coupon').click(function(evt) {
-    if (!$('.delete-coupon').attr('isDestroy')) {
-      flashConfirm('.delete-coupon','Delete coupon',
+    var selector = '.' + evt.target.classList[evt.target.classList.length - 1 ];
+
+    if (!$(selector).attr('isDestroy')) {
+      flashConfirm(selector,'Delete coupon',
        'Deleting this coupon will not affect discounts for customers who have already redeemed the coupon, but new redemptions of the coupon won\'t be allowed.',
        'isDestroy'
       );
@@ -51,7 +53,7 @@ $(document).ready(function () {
                         message: 'Coupon name is required'
                   },
                   remote: {
-                      message: 'This coupon name has already used.',
+                      message: 'This coupon name has already been used.',
                       url: '/v1/coupons/check_coupon_name',
                       type: 'POST'
                   }

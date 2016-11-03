@@ -9,8 +9,9 @@
         <td colspan="3"><%= plan.interval_count %></td>
         <!-- <td><%= plan.currency %></td>
         <td><%#= link_to 'Show', user_plan_path(current_user, plan) %></td>
-        <td><%#= link_to 'Edit', edit_user_plan_path(current_user, plan) %></td>
-        <td><%#= link_to 'Destroy', plan, method: :delete, data: { confirm: 'Are you sure?' } %></td> -->
+        -->
+        <td><%= link_to 'Update', edit_user_plan_path(current_user, plan) %></td>
+        <td><%= link_to 'Destroy', user_plan_path(current_user, plan), method: :delete, class: "delete-plan plan#{plan.id}" %></td> 
       </tr>
     <% end %>
 

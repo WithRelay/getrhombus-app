@@ -5,13 +5,13 @@
   <div class="form-group">
       <%= f.label :name, class: 'col-xs-3 control-label' %>
       <div class="col-xs-5">
-        <%= f.text_field :name, id: 'coupon-name', class: 'form-control', class: 'form-control' %>
+        <%= f.text_field :name, id: 'coupon-name', class: 'form-control' %>
       </div>
   </div>
 
   <div class="form-group">
     <%= f.label :coupon_type, class: 'col-xs-3 control-label' %>
-    <div class="col-xs-5">
+    <div class="col-xs-2">
       <%= f.select :coupon_type, options_for_select({ "Amount Off" => "amount_off", "Percent Off" => 'percent_off' }, selected: get_selected_coupon_type(@coupon)), {}, id: 'coupon-type', class: 'form-control' %>
     </div>
   </div>
@@ -32,7 +32,7 @@
 
   <div class="form-group">
     <%= f.label :duration, class: 'col-xs-3 control-label' %>
-    <div class="col-xs-5">
+    <div class="col-xs-2">
       <%= f.select :duration, options_for_select({ "Once" => "once", "repeating" => 'repeating', "forever" => "forever" }, selected: @coupon.duration), {}, class: 'form-control' %>
       </div>
   </div>
@@ -62,7 +62,7 @@
 
   <div class="actions field form-group">
     <div class="col-xs-9 col-xs-offset-3">
-      <%= f.submit 'Create Coupon', id: 'commit',class: 'btn btn-default' %>
+      <%= f.submit 'Create Coupon', id: 'commit',class: 'btn btn-primary' %>
     </div>
   </div>
 <% end %>
