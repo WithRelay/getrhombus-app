@@ -92,7 +92,7 @@ class PaymentService
     
     def create_plan(hash, stripe_account_uid, platform=false)
       begin
-        unless platform
+        if platform
           ch = Stripe::Plan.create(hash)
         else
           ch = Stripe::Plan.create(hash,{stripe_account: stripe_account_uid})
