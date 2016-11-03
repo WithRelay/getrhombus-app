@@ -5,20 +5,23 @@ class CampaignsController < ApplicationController
   before_action :check_campaign_status, only: [ :update, :destroy, :change_status]
   layout 'campaign'
 
+  # eager loading images while showing campaign in /user/user_id/campaigns due to n+1
   def index
     @campaigns = current_user.campaigns.includes(:images)
   end
 
+  # initializing campaign as association way using build method.
   def new
-    @campaign = current_user.campaigns.new
+    @campaign = current_user.campaigns.build
   end
 
+  # creates a campaigns, campaign_lists, images if params available, associate inline image with campaign
   def create
     @campaign = current_user.campaigns.build(campaign_params)
     campaign_params[:list_ids].split(',').each { |list_id| @campaign.campaign_lists.build(list_id: list_id) }
     save_campaign_images(@campaign)
     if @campaign.save
-      enqueue_jobs(@campaign)
+      enqueue_jobs(@campaign) # enque jobs if there is send now checked or one time is checked
       flash[:notice] = 'Campaign Saved successfully'
       redirect_to new_user_campaign_path
     else
@@ -37,8 +40,7 @@ class CampaignsController < ApplicationController
     save_campaign_images(@campaign)
     if @campaign.update_attributes(campaign_params)
       campaign_params[:list_ids].split(',').each { |list_id| @campaign.campaign_lists.build(list_id: list_id).save }
-      destroy_campaign_jobs
-      enqueue_jobs(@campaign)
+      destroy_campaign_jobs; change_campaign_job; enqueue_jobs(@campaign);
       flash[:notice] = 'Campaign updated successfully'
     else
       flash[:error] = @campaign.errors.messages
