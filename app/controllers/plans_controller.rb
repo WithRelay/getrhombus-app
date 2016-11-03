@@ -48,9 +48,16 @@ class PlansController < ApplicationController
     end
 
     def plan_params
-      params.require(:plan).permit(:amount, :interval, :interval_count, :name).tap{ |plan|
+      params.require(:plan).permit(:amount, :interval, :name).tap{ |plan|
+        if params[:plan][:interval_month]
+          plan['interval_count'] = params[:plan][:interval_month]
+        elsif params[:plan][:interval_week]
+          plan['interval_count'] = params[:plan][:interval_week]
+        else
+          plan['interval_count'] = params[:plan][:interval_count]
+        end
         # since amount is in cent
-        # plan['amount'] = 100 * plan['amount'].to_i
+        plan['amount'] = 100 * plan['amount'].to_f
         plan['currency'] = current_user.currency
       }
     end

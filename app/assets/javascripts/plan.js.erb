@@ -23,9 +23,9 @@ $(document).ready(function () {
                       message: 'Amount  is required'
                     },
                     regexp: {
-                      regexp: /^(?:[1-9]\d*|0)?(?:\.\d+)?$/gm,
+                      regexp: /^[+]?([0-9]+(?:[\.][0-9]*)?|\.[0-9]+)$/,
                       message: 'Amount is not valid'
-                   }
+                    }
                 }
               },
               'plan[interval_count]':{
