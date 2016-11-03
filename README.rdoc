@@ -27,6 +27,11 @@ Add below lines in database.yml:
  - encoding: utf8mb4
  - collation: utf8mb4_bin
 
+Background jobs running:
+ - run redis server with the command `redis-server`
+ - run all queue includes default `QUEUE=* rake resque:work`
+ - run rescue scheduler `rake resque:scheduler`
+
 
 Please feel free to use a different markup language if you do not plan to run
 <tt>rake doc:app</tt>.
