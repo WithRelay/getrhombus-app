@@ -6,6 +6,7 @@ class MessageAlertJob
     # ActiveRecord::Base.clear_active_connections!
   
     # Add FB messages here
+    # needs a rewrite
     results = Alert.includes(:notification_log).select('alerts.id as id, u.email, u.time_zone, count(*) as unread_count, sms_number, include_sms, alerts.interval')
              .joins('INNER JOIN users u on alerts.user_id = u.id')
              .joins('INNER JOIN messages m on m.to = u.rhombus_number')

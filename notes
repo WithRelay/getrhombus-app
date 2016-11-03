@@ -24,6 +24,10 @@ For Bhisma
 - Clean up angular - https://blog.joshsoftware.com/2014/07/17/building-web-apps-with-rails4-and-angularjs-in-15-minutes/
 - remove thread profiler in prod
 - keeling's server
+- notificationlog for transactions should be split into email and sms....dont concatenate string
+   - Add channel, channel_id - for the models used to send the notification
+   - notifiable, notifiable_type are the models issuing the notification
+
 
 Payment Capture - should be for only customers....capture in logic
 - check if /profile affect forms for merchants
