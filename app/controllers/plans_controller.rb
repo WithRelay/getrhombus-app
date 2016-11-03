@@ -51,7 +51,7 @@ class PlansController < ApplicationController
   end
 
   def destroy
-    if Subscription.exists?(plan_id: @plan.id)
+    unless Subscription.exists?(plan_id: @plan.id)
       delete_response = @plan.delete_plan
       if delete_response[0]
         @plan.delete
