@@ -18,7 +18,7 @@ card_expired_emails:
   args:
   description: "This job notifies customers of expired or soon-to-expire cards."
 send_campaigns: # send email for campaign list
-  every: 1d # refer to 1 day
+  every: 24h # refer to 1 day
   class: 'SendCampaignJob' # class ChannelJob is present in app/jobs which represents campaign jobs
   args:
   description: 'Sends campaign to lists of users selected for campaign'
