@@ -4,8 +4,8 @@ class Plan < ActiveRecord::Base
   belongs_to :user
 
   def create_plan(hash)
-
-    uid = hash[:team].uid
+    # uid = '<redacted_stripe_account_id>' #use this for testing
+    uid = hash[:team].uid #use this for real use
     hash[:currency] = hash[:team].currency
     self.statement_descriptor = (self.name + "-" + hash[:team].org_name)[0..21]
     self.save
@@ -14,19 +14,26 @@ class Plan < ActiveRecord::Base
 
     hash[:interval] = self.interval
     hash[:interval_count] = self.interval_count
-    hash[:amount] = self.amount
+    # since amount is in cent
+    hash[:amount] = self.amount * 100
     hash[:id] = self.id
     hash[:name] = self.name
     hash[:trial_period_days] = self.trial_period_days
     hash[:statement_descriptor] = self.statement_descriptor
-
-    #re = PaymentService(hash, uid)
-
+    PaymentService.create_plan(hash, uid)
     # save data
     # send emails
 
-    self.id
   end
 
+  def update_plan(params, current_user)
+    hash = params.require(:plan).permit(:name)
+    hash[:statement_descriptor] = ( hash[:name] + "-" + current_user[:team].org_name)[0..21]
+    [PaymentService.update_plan(self.id.to_s, hash),hash]
+  end
+
+  def delete_plan
+    PaymentService.delete_plan(self.id.to_s)
+  end
 
 end

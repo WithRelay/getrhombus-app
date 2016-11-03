@@ -93,12 +93,11 @@ class PaymentService
     def create_plan(hash, stripe_account_uid, platform=false)
       begin
         if platform
-          ch = Stripe::Plan.create(hash)   
+          ch = Stripe::Plan.create(hash)
         else
-          ch = Stripe::Plan.create(hash, { stripe_account: stripe_account_uid })  
+          ch = Stripe::Plan.create(hash,{stripe_account: stripe_account_uid})
         end
-
-        [re]
+        [ch]
       rescue Stripe::StripeError => e
         # Display a very generic error to the user, and maybe send yourself an email
         [false, e.json_body[:error]]
@@ -110,7 +109,8 @@ class PaymentService
     def delete_plan(plan_id)
       begin
         plan = Stripe::Plan.retrieve(plan_id)
-        plan.delete
+        res = plan.delete
+        [res]
       rescue Stripe::StripeError => e
         [false, e.json_body[:error]]
       rescue StandardError => e
@@ -118,10 +118,11 @@ class PaymentService
       end
     end
 
-    def update_plan(plan_id, name)
+    def update_plan(plan_id, params)
       begin
         p = Stripe::Plan.retrieve(plan_id)
-        p.name = name
+        p.name = params[:name]
+        p.statement_descriptor = params[:statement_descriptor]
         p.save
       rescue Stripe::StripeError => e
         [false, e.json_body[:error]]
