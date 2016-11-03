@@ -34,9 +34,9 @@ class CampaignsController < ApplicationController
 
   def update
     @campaign.campaign_lists.delete_all
-    campaign_params[:list_ids].split(',').each { |list_id| @campaign.campaign_lists.build(list_id: list_id).save }
     save_campaign_images(@campaign)
     if @campaign.update_attributes(campaign_params)
+      campaign_params[:list_ids].split(',').each { |list_id| @campaign.campaign_lists.build(list_id: list_id).save }
       destroy_campaign_jobs
       enqueue_jobs(@campaign)
       flash[:notice] = 'Campaign updated successfully'
