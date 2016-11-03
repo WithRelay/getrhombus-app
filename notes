@@ -6,6 +6,7 @@ Review
 - when user logs in through messenger, indicate in referrers
 - change all emails in test db dump
 
+
 To Dos
 - keep controllers lean
 
@@ -14,17 +15,6 @@ For Bhisma
 - Some stripe events
 - alerts from stripe cc form
 
-For Surya
-- You can't delete campaign that has run
-- You need to bind emojionearea only once so use a variable to keep track
-- You need to bind counter to all fields once except email....you will need to do that on focus...use variable to keep track
-- if it is a one time, you need to mark inactive
-- update action needs to update campaign_lists
-- counter should be outside the box....not needed for email
-
-For Ovo
-- You can't delete list attached to a campaign
-- first_name access doesnt work anymore...use card_name
 
 - what happens when u send image in countries that don't support it. link?
 - check trumbowyg working
@@ -34,7 +24,6 @@ For Ovo
 - Clean up angular - https://blog.joshsoftware.com/2014/07/17/building-web-apps-with-rails4-and-angularjs-in-15-minutes/
 - remove thread profiler in prod
 - keeling's server
-
 
 Payment Capture - should be for only customers....capture in logic
 - check if /profile affect forms for merchants
@@ -50,3 +39,20 @@ Contact - Inbound
 
 Campaigns and Facebook
 - fail safely for audio and video files
+
+
+
+
+
+
+
+
+
+For Surya
+- You can't delete campaign that has run
+- You need to bind emojionearea only once so use a variable to keep track
+- You need to bind counter to all fields once except email....you will need to do that on focus...use variable to keep track
+- if it is a one time, you need to mark inactive
+- update action needs to update campaign_lists
+- counter should be outside the box....not needed for email...should count down...
+- scroll bar in emoji isnt clickable/draggable, can we group the emojis
