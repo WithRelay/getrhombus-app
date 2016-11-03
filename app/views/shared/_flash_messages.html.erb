@@ -5,6 +5,13 @@
     })
   </script>
 
+<% elsif flash[:warning].present? %>
+  <script type="text/javascript">
+    $(window).load(function(){
+      flashWarning( "<%= flash[:warning] %>")
+    })
+  </script>
+
 <% elsif flash[:error].present? %>
   <script type="text/javascript">
     $(window).load(function(){

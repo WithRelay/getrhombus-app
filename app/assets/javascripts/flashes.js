@@ -8,6 +8,15 @@ function flashSuccess(successMsg){
   });
 }
 
+// flash success for warning
+function flashWarning(warningMsg){
+  new PNotify({
+    title: 'Info!!',
+    text: warningMsg,
+    type: 'info',
+    hide: true
+  });
+}
 // flash success for ajax response
 function flashError(errorMsg){
   new PNotify({
