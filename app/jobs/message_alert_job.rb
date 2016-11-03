@@ -11,7 +11,7 @@ class MessageAlertJob
              .joins('INNER JOIN users u on alerts.user_id = u.id')
              .joins('INNER JOIN messages m on m.to = u.rhombus_number')
              .where('m.unread = 1 and alerts.send_alert = 1')
-             .group('m.to')
+             .group('m.to') #this should be m.from??
 
     results.each do |r|
 
