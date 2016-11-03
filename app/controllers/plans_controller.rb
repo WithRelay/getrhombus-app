@@ -32,7 +32,7 @@ class PlansController < ApplicationController
 
   def update
     # res = PaymentService.update_plan(@plan.id, plan_params[:name])
-    @plan.update(plan_params)
+    @plan.update(params.require(:plan).permit(:name))
     redirect_to user_plans_path, flash: { notice: 'Plan was updated'}
   end
 
