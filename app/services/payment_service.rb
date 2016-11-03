@@ -107,6 +107,29 @@ class PaymentService
       end
     end
 
+    def delete_plan(plan_id)
+      begin
+        plan = Stripe::Plan.retrieve(plan_id)
+        plan.delete
+      rescue Stripe::StripeError => e
+        [false, e.json_body[:error]]
+      rescue StandardError => e
+        [false, e]
+      end
+    end
+
+    def update_plan(plan_id, name)
+      begin
+        p = Stripe::Plan.retrieve(plan_id)
+        p.name = name
+        p.save
+      rescue Stripe::StripeError => e
+        [false, e.json_body[:error]]
+      rescue StandardError => e
+        [false, e]
+      end
+    end
+
     def cancel_subscription(hash)
       begin 
         sbtn = Stripe::Subscription.retrieve(hash[:subscription_id])
