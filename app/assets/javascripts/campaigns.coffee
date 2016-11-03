@@ -55,7 +55,7 @@ class Campaign
       emojify.setConfig( { emojify_tag_type:'div' } );
       emojify.run();
       $(emojiArea).hide()
-      $('#textBoxCounter').remove()
+      $('#textBoxCounter').html('')
     else
       $(area).trumbowyg('destroy');
       $(emojiArea).show()
@@ -91,7 +91,7 @@ class Campaign
           value = 320
         else
           value = 1500
-        $('.emojionearea-editor').counter({ type: 'char', count: 'up', goal: value, append: false, target: '#textBoxCounter' })
+        $('.emojionearea-editor').counter({ type: 'char', goal: value, append: false, target: '#textBoxCounter' })
 
 $( document ).on 'ready page:load', ->
   campaign = new Campaign({ pickerPosition: 'right' })
