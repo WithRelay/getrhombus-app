@@ -99,8 +99,7 @@ class PaymentService
         end
         [ch]
       rescue Stripe::StripeError => e
-        # Display a very generic error to the user, and maybe send yourself an email
-        [false, e.json_body[:error]]
+        [false]
       rescue StandardError => e
         [false, e]
       end
@@ -116,7 +115,7 @@ class PaymentService
         res = plan.delete
         [res]
       rescue Stripe::StripeError => e
-        [false, e.json_body[:error]]
+        [false, e]
       rescue StandardError => e
         [false, e]
       end
@@ -133,7 +132,7 @@ class PaymentService
         p.statement_descriptor = params[:statement_descriptor]
         p.save
       rescue Stripe::StripeError => e
-        [false, e.json_body[:error]]
+        [false, e]
       rescue StandardError => e
         [false, e]
       end
