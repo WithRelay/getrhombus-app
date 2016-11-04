@@ -39,6 +39,8 @@ class Campaign
       trumbowygSetting(false, @textArea)
     else
       $('.emailSubject').hide()
+      $('#select-images').val('')
+      $('.images').html('')
       this.hideFileBrowser()
       trumbowygSetting(false, @textArea)
 
@@ -134,10 +136,17 @@ $( document ).on 'ready page:load', ->
   else if $('#campaign_channel').val() == '1'
     campaign.showFileBrowser()
     $('.emailSubject').hide()
-  else
-    $('.emailSubject').hide()
-    campaign.hideFileBrowser()
     campaign.textAreaEmojis()
+  else if $('#campaign_channel').val() == '2'
+    $('.emailSubject').hide()
+    campaign.showFileBrowser()
+    campaign.textAreaEmojis()
+  else
+    campaign.textAreaEmojis()
+    campaign.hideFileBrowser()
+    $('.emailSubject').hide()
+    $('#select-images').val('')
+    $('.images').html('')
 
   $( '#campaign_channel' ).change ->
     campaign.showHideEditor(this)

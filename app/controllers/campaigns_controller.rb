@@ -36,9 +36,9 @@ class CampaignsController < ApplicationController
   end
 
   def update
-    @campaign.campaign_lists.delete_all
     save_campaign_images(@campaign)
     if @campaign.update_attributes(campaign_params)
+      @campaign.campaign_lists.delete_all
       campaign_params[:list_ids].split(',').each { |list_id| @campaign.campaign_lists.build(list_id: list_id).save }
       destroy_campaign_jobs; change_campaign_job; enqueue_jobs(@campaign);
       flash[:notice] = 'Campaign updated successfully'
@@ -124,7 +124,7 @@ class CampaignsController < ApplicationController
   def campaign_params
     # enums are define as integer but params are in string and rails is not converting string to integer
     params.require(:campaign).permit(:name, :list_ids, :channel, :repeat_days, :date_time, :deliver_now,
-                                     :frequency_type, :text, :new_status).tap do |c|
+                                     :frequency_type, :text, :new_status, :subject).tap do |c|
                                       c[:channel] = c[:channel].to_i
                                       c[:frequency_type] = c[:frequency_type].to_i
                                       c[:deliver_now]=='1' ? c[:deliver_now] = true : c[:deliver_now] = false
