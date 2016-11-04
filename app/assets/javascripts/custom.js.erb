@@ -1278,8 +1278,8 @@ $(document).ready(function () {
 
         var reader = new FileReader();
         reader.onload = function(e) {
-          var img = event.target;
-          counter.push(event.target.filename)
+          var img = e.target;
+          counter.push(e.target.filename)
           if (counter.length < 2){
             div = "<div class='images'><a href='#' class='deleteImagePreview' title='"+img.filename+"'>Delete Image</a><img class='thumbnail' src='" + img.result + "'" + "title='" + img.filename + "'/>" +
                   "<span>" + img.filename + "</span></div>";
