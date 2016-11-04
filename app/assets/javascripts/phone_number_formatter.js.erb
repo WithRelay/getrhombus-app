@@ -1,0 +1,32 @@
+var PhoneNumberFormatter = new function() {
+  
+  // For phone number input field
+  var telInput;
+
+  this.new = function() {
+    alert('ss')
+    telInput = $("#phone");
+    telInput.intlTelInput({
+      nationalMode: true,
+      defaultCountry: "auto",
+      ipinfoToken: "ae79647534348f",
+      utilsScript: "<%= asset_path 'utils.js' %>" // just for formatting/placeholders etc
+    });
+    return telInput
+  }
+  
+  this.isValid = function() {
+    return telInput.intlTelInput("isValidNumber")
+  };
+
+  this.getNumber = function() {
+    return telInput.intlTelInput("getNumber");
+  }
+}
+
+$(document).ready(function () {
+  
+  var p = PhoneNumberFormatter.new()
+  console.log(p.intlTelInput("getNumber"))
+
+});
