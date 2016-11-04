@@ -71,7 +71,8 @@ class Transaction < ActiveRecord::Base
             transaction_number: txn_number, transaction_date: self.created_at, text: message, amount: amount_in_hundreds,
             amount_with_taxes: amount_with_taxes_in_hundreds, org_phone: merchant.org_phone, currency: response.currency)
 
-      self.notification_log = Notification.create(notify_type: 'new_transaction', reason: 'receipt', channel: 'sms,email')
+      # Log email notification
+      self.notification_logs.create(notify_type: 'new_transaction', reason: 'receipt', channel: 'Email')
 
       # delete these 4 lines
       #debit_data = [self.id, amount_in_hundreds, amount_with_taxes_in_hundreds, amount_less_fees, transaction_number, 
@@ -92,17 +93,21 @@ class Transaction < ActiveRecord::Base
 
   # receipts for capture should be different
   def send_text_receipt(user, merchant, response, amount_in_hundreds, amount_with_taxes_in_hundreds)
-    message = Message.new
-    name = (user.card_name.present?) ? " " + user.card_name.split.first : ''
+    msg = Message.new
+    first_name = (user.card_name.present?) ? " " + user.card_name.split.first : ''
     if merchant.tax_percent == "0"
-      message.send_and_save_message(merchant.rhombus_number, user.phone_number, 
-        "Thanks" + name + ". A payment of #{amount_in_hundreds} (#{response.currency}) was sent to #{merchant.org_name}.")
+      msg.send_and_save_message(merchant.rhombus_number, user.phone_number, 
+        "Thanks" + first_name + ". A payment of #{amount_in_hundreds} (#{response.currency}) was sent to #{merchant.org_name}.")
     else
-      message.send_and_save_message(merchant.rhombus_number, user.phone_number, 
-        "Thanks" + name + ". A payment of #{amount_with_taxes_in_hundreds} (#{response.currency}) plus taxes and fees set by #{merchant.org_name} was sent.")
+      msg.send_and_save_message(merchant.rhombus_number, user.phone_number, 
+        "Thanks" + first_name + ". A payment of #{amount_with_taxes_in_hundreds} (#{response.currency}) plus taxes and fees set by #{merchant.org_name} was sent.")
     end
+    
+    # Log sms notification
+    self.notification_logs.create(notify_type: 'new_transaction', reason: 'receipt', channel: 'Message', channel_id: msg.id)
+    
     # Send to merchant's messaging channel
-    RealtimeStreamService.send_message_via_number(user.phone_number, merchant.rhombus_number, message.text, message.created_at, true)
+    RealtimeStreamService.send_message_via_number(user.phone_number, merchant.rhombus_number, msg.text, msg.created_at, true)
   end
 
  
