@@ -30,12 +30,15 @@ class Campaign
 
   showHideEditor: (element)->
     if isEmailChecked(element)
+      $('.emailSubject').show()
       this.showFileBrowser()
       trumbowygSetting(true, @textArea)
     else if isMmsChecked(element) || isFacebookMessengerChecked(element)
       this.showFileBrowser()
+      $('.emailSubject').hide()
       trumbowygSetting(false, @textArea)
     else
+      $('.emailSubject').hide()
       this.hideFileBrowser()
       trumbowygSetting(false, @textArea)
 
@@ -125,11 +128,14 @@ $( document ).on 'ready page:load', ->
       getBase64FromImageUrl($('input[name=url]').val())
 
   if $('#campaign_channel').val() == '3'
+    $('.emailSubject').show()
     new CustomTrumbowygPlugin('#trumbowyg')
     campaign.showFileBrowser()
   else if $('#campaign_channel').val() == '1'
     campaign.showFileBrowser()
+    $('.emailSubject').hide()
   else
+    $('.emailSubject').hide()
     campaign.hideFileBrowser()
     campaign.textAreaEmojis()
 

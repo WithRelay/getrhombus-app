@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161102055352) do
+ActiveRecord::Schema.define(version: 20161104045724) do
 
   create_table "addresses", force: :cascade do |t|
     t.string   "street_address",   limit: 191
@@ -66,6 +66,7 @@ ActiveRecord::Schema.define(version: 20161102055352) do
     t.datetime "updated_at",            null: false
   end
 
+  add_index "campaign_lists", ["campaign_id"], name: "fk_rails_98c7cf7ca4", using: :btree
   add_index "campaign_lists", ["list_id", "campaign_id"], name: "index_campaign_lists_on_list_id_and_campaign_id", using: :btree
 
   create_table "campaign_user_lists", force: :cascade do |t|
@@ -92,6 +93,7 @@ ActiveRecord::Schema.define(version: 20161102055352) do
     t.datetime "date_time"
     t.text     "text",           limit: <redacted_phone_number>
     t.integer  "send_count",     limit: 4,          default: 0
+    t.text     "subject",        limit: 65535
   end
 
   add_index "campaigns", ["id", "user_id"], name: "index_campaigns_on_id_and_user_id", using: :btree
@@ -311,7 +313,7 @@ ActiveRecord::Schema.define(version: 20161102055352) do
     t.datetime "updated_at",             null: false
   end
 
-  add_index "message_resolutions", ["user_id"], name: "fk_rails_44af1f6e44", using: :btree
+  add_index "message_resolutions", ["user_id"], name: "fk_rails_f8c7615aa7", using: :btree
 
   create_table "messages", force: :cascade do |t|
     t.datetime "created_at"
@@ -536,7 +538,7 @@ ActiveRecord::Schema.define(version: 20161102055352) do
   add_index "transactions", ["hashtag_id"], name: "index_transactions_on_hashtag_id", using: :btree
   add_index "transactions", ["referenced_customer_transaction_id"], name: "index_transactions_on_referenced_customer_transaction_id", using: :btree
   add_index "transactions", ["subscription_id"], name: "index_transactions_on_subscription_id", using: :btree
-  add_index "transactions", ["team_id"], name: "fk_rails_d35e6755db", using: :btree
+  add_index "transactions", ["team_id"], name: "fk_rails_0e0853dbc8", using: :btree
   add_index "transactions", ["txn_number"], name: "index_transactions_on_txn_number", using: :btree
   add_index "transactions", ["user_id"], name: "index_transactions_on_user_id", using: :btree
 
