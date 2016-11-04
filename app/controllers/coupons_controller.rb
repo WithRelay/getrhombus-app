@@ -28,9 +28,11 @@ class CouponsController < ApplicationController
       @coupon.update(stripe_coupon_id: res[0].id, stripe_livemode: res[0].livemode)
       redirect_to user_coupons_path, flash: { notice: 'Coupon was created'}
     elsif res[0] == false
-      redirect_to new_user_coupon_path, flash: { error: 'We couldn\'t create the coupon' }
+       flash[:error] = 'We couldn\'t create the coupon'
+       render :new
     else
-      redirect_to new_user_coupon_path, flash: { error: 'Something went wrong'}
+       flash[:error] = 'Something went wrong'
+       render :new
     end
   end
 

@@ -193,15 +193,24 @@ class PaymentService
         coupon = Stripe::Coupon.retrieve(id)
         res = coupon.delete
         [res]
-      rescue Stripe::StripeError => e
-        # Display a very generic error to the user, and maybe send yourself an email
-        [false, e.json_body[:error]]
-      rescue StandardError => e
-        [false, e]
-      end
+      rescue Stripe::CardError => e
+         [false,  e.json_body[:error]]
+       rescue Stripe::InvalidRequestError => e
+         [false, e]
+       rescue Stripe::AuthenticationError => e
+         [false, e]
+       rescue Stripe::APIConnectionError => e
+         [false, e]
+       rescue Stripe::StripeError => e
+         # Display a very generic error to the user, and maybe send
+         # yourself an email
+         [false,  e.json_body[:error]]
+       rescue StandardError => e
+         [false, e]
+       end
     end
 
-    def create_managed_account()
+    def create_managed_account(hash)
       begin
         re = Stripe::Account.create({ country: hash[:country], managed: true } )
       rescue Stripe::StripeError => e
