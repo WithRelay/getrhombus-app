@@ -45,12 +45,19 @@
                 </div>
 
                 <div class="panel-body table-responsive">
+                  <a href="#transactions-table" data-toggle="checkboxes" data-action="uncheck">
+                          Uncheck all
+                  </a>
                   <form id="all_customers">
                     <table id="transactions-table" class="table table-striped dataTable">
                     <thead>
                       <tr role="row">
                         <td class="text-center"><i class="fa fa-trash" style="visibility: hidden;"></i></td>
-                        <th><input type="checkbox" id="select_all_checkboxes"></input></th>
+                        <th>
+                          <a href="#transactions-table" data-toggle="checkboxes"
+                           data-action="check">Check all
+                         </a>
+                        </th>
                         <th>Name</th>
                         <th>First Visit (ET)</th>
                         <th>Last Visit</th>
