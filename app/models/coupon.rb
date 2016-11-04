@@ -23,9 +23,6 @@ class Coupon < ActiveRecord::Base
 
     # save data including stripe id
     # send emails
-
-    self.save
-    self.id
   end
 
 end
