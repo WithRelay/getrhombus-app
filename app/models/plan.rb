@@ -4,26 +4,36 @@ class Plan < ActiveRecord::Base
   belongs_to :user
 
   def create_plan(hash)
-    # uid = '<redacted_stripe_account_id>' #use this for testing
-    uid = hash[:team].uid #use this for real use
-    hash[:currency] = hash[:team].currency
-    is_platform = hash[:team].is_platform?
-    self.statement_descriptor = (self.name + "-" + hash[:team].org_name)[0..21]
-    self.save
+    begin
 
-    hash.delete(:team)
+      # uid = '<redacted_stripe_account_id>' #use this for testing
+      uid = hash[:team].uid #use this for real use
+      hash[:currency] = hash[:team].currency
+      is_platform = hash[:team].is_platform?
+      self.statement_descriptor = (self.name + "-" + hash[:team].org_name)[0..21]
+      self.save
 
-    hash[:interval] = self.interval
-    hash[:interval_count] = self.interval_count
-    hash[:amount] = self.amount
-    hash[:id] = self.id
-    hash[:name] = self.name
-    hash[:trial_period_days] = self.trial_period_days
-    hash[:statement_descriptor] = self.statement_descriptor
-    PaymentService.create_plan(hash, uid, is_platform)
-    # save data
-    # send emails
+      # dont send team data in hash
+      hash.delete(:team)
 
+      hash[:interval] = self.interval
+      hash[:interval_count] = self.interval_count
+      hash[:amount] = self.amount
+      hash[:id] = self.id
+      hash[:name] = self.name
+      hash[:trial_period_days] = self.trial_period_days
+      hash[:statement_descriptor] = self.statement_descriptor
+
+      if res = PaymentService.create_plan(hash, uid, is_platform).first
+        self.update_attribute(stripe_livemode: res.second.livemode)
+      else
+        # notify team via email
+      end
+
+      res.first
+    rescue StandardError => e
+      false
+    end
   end
 
   def update_plan(params, current_user)

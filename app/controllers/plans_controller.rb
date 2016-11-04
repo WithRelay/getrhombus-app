@@ -4,7 +4,6 @@ class PlansController < ApplicationController
 
   def index
     @plans = current_user.plans.paginate(page: params[:page], per_page: 25).order('updated_at DESC')
-    # @plans = Plan.all
     respond_with(@plans)
   end
 
@@ -22,7 +21,8 @@ class PlansController < ApplicationController
 
   def create
     @plan = Plan.new(plan_params)
-    create_response =  @plan.create_plan({ team: current_user })
+    response =  @plan.create_plan({ team: current_user })
+    
     if create_response[0]
       @plan.update(currency: create_response[0].currency,
         stripe_livemode: create_response[0].livemode)
