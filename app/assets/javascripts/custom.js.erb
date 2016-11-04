@@ -1253,7 +1253,7 @@ $(document).ready(function () {
   $('#select-images').change(function() { read_file_picker(this); });
   function read_file_picker(input) {
     var files = input.files, new_image_previews = $('#new-image-previews').html("");
-
+    var counter = []
     function invalid_actions(msg) {
       input.value = "";
       new_image_previews.html("");
@@ -1289,8 +1289,17 @@ $(document).ready(function () {
         var reader = new FileReader();
         reader.addEventListener("load", function (event) {
           var img = event.target;
-          div = "<div class='images'><a href='#' class='deleteImagePreview' title='"+img.filename+"'>Delete Image</a><img class='thumbnail' src='" + img.result + "'" + "title='" + img.filename + "'/>" +
-                "<span>" + img.filename + "</span></div>";
+          counter.push(event.target.filename)
+          debugger;
+          if (counter.length < 2){
+            div = "<div class='images'><a href='#' class='deleteImagePreview' title='"+img.filename+"'>Delete Image</a><img class='thumbnail' src='" + img.result + "'" + "title='" + img.filename + "'/>" +
+                  "<span>" + img.filename + "</span></div>";
+          }
+          else {
+            $('.deleteImagePreview').remove()
+              div = "<div class='images'><a href='#' class='deleteImagePreviews' title='"+img.filename+"'>Delete "+ counter.length +" Images</a><img class='thumbnail' src='" + img.result + "'" + "title='" + img.filename + "'/>" +
+                    "<span>" + img.filename + "</span></div>";
+            }
           new_image_previews.prepend(div);
         });
 
@@ -1307,8 +1316,13 @@ $(document).ready(function () {
   }
 
   $(document).on('click', '.deleteImagePreview', function(e) {
+    $(this).parent().slideUp(400, function() {
+      this.remove();
+     });
+  });
+  $(document).on('click', '.deleteImagePreviews', function(e) {
+    $('#new-image-previews').html('')
     $('#select-images').val('')
-    $(this).parent().slideUp(400, function() { this.remove(); });
   });
 
   $(".delete-image").click(function(e) {
