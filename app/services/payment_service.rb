@@ -106,9 +106,13 @@ class PaymentService
       end
     end
 
-    def delete_plan(plan_id)
+    def delete_plan(plan_id, stripe_account_uid,platform=false)
       begin
-        plan = Stripe::Plan.retrieve(plan_id)
+        if platform
+          plan = Stripe::Plan.retrieve(plan_id)
+        else
+          plan = Stripe::Plan.retrieve(plan_id, {stripe_account: stripe_account_uid})
+        end
         res = plan.delete
         [res]
       rescue Stripe::StripeError => e
@@ -118,9 +122,13 @@ class PaymentService
       end
     end
 
-    def update_plan(plan_id, params)
+    def update_plan(plan_id, params,stripe_account_uid, platform=false)
       begin
-        p = Stripe::Plan.retrieve(plan_id)
+        if platform
+          p = Stripe::Plan.retrieve(plan_id)
+        else
+          p = Stripe::Plan.retrieve(plan_id, {stripe_account: stripe_account_uid})
+        end
         p.name = params[:name]
         p.statement_descriptor = params[:statement_descriptor]
         p.save
@@ -174,7 +182,8 @@ class PaymentService
     def delete_coupon(id)
       begin
         coupon = Stripe::Coupon.retrieve(id)
-        coupon.delete
+        res = coupon.delete
+        [res]
       rescue Stripe::StripeError => e
         # Display a very generic error to the user, and maybe send yourself an email
         [false, e.json_body[:error]]

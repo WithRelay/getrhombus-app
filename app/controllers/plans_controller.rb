@@ -24,10 +24,12 @@ class PlansController < ApplicationController
     @plan = Plan.new(plan_params)
     create_response =  @plan.create_plan({ team: current_user })
     if create_response[0]  #@plan.save
+      @plan.update(currency: create_response[0].currency,
+        stripe_livemode: create_response[0].livemode)
       redirect_to user_plans_path,  flash: { notice: 'Plan was created'}      #respond_with(@plan)
     elsif create_response[0] == false
       @plan.delete
-      flash[:error] =  create_response[1][:message]
+      flash[:error] = 'We couldn\'t create the plan'
       render :new
     else
       @plan.delete
@@ -37,32 +39,32 @@ class PlansController < ApplicationController
   end
 
   def update
-    update_response = @plan.update_plan(params, { team: current_user })
+    update_response = @plan.update_plan(params,current_user)
     if update_response[0].class == Stripe::Plan
       @plan.update(update_response[1])
       redirect_to user_plans_path, flash: { notice: 'Plan was updated'}
     elsif update_response[0][0] == false
-      flash[:error] =  update_response[0][1][:message]
-      render :new
+      flash[:error] =  'We couldn\'t update the plan'
+      redirect_to edit_user_plan_path
     else
       flash[:error] =  'Something went wrong'
-      render :new
+      redirect_to edit_user_plan_path
     end
   end
 
   def destroy
     unless Subscription.exists?(plan_id: @plan.id)
-      delete_response = @plan.delete_plan
+      delete_response = @plan.delete_plan(current_user)
       if delete_response[0]
         @plan.delete
         redirect_to user_plans_path, flash: { notice: 'Plan was deleted'}
       elsif delete_response[0] == false
-        redirect_to user_plans_path, flash: { error: delete_response[1][:message] }
+        redirect_to user_plans_path, flash: { error: 'We couldn\'t delete the plan' }
       else
         redirect_to user_plans_path, flash: { error: 'Something went wrong'}
       end
     else
-      redirect_to user_plans_path, flash: { warning: 'You can\'t delete this plan...'}
+      redirect_to user_plans_path, flash: { warning: 'You can\'t delete  plan with subscription...'}
     end
   end
 
@@ -72,7 +74,7 @@ class PlansController < ApplicationController
     end
 
     def plan_params
-      params.require(:plan).permit(:amount, :interval, :name).tap{ |plan|
+      params.require(:plan).permit(:interval, :name).tap{ |plan|
         if params[:plan][:interval_month]
           plan['interval_count'] = params[:plan][:interval_month]
         elsif params[:plan][:interval_week]
@@ -80,6 +82,8 @@ class PlansController < ApplicationController
         else
           plan['interval_count'] = params[:plan][:interval_count]
         end
+        # since amount is in cent
+        plan['amount'] = 100 * params[:plan][:amount].to_f
         plan['user_id'] = current_user.id
       }
     end

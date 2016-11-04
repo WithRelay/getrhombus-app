@@ -228,16 +228,6 @@ $(document).ready(function () {
   // bootstrap -select plugin
 
 
-  // For phone number input field
-  /* var telInput = $("#phone");
-  telInput.intlTelInput({
-      nationalMode: true,
-      defaultCountry: "auto",
-      ipinfoToken: "ae79647534348f",
-      utilsScript: "<%= asset_path 'utils.js' %>" // just for formatting/placeholders etc
-  });*/
-
-
   // validate signin form
   $('#signinForm')
       .formValidation({
@@ -439,7 +429,7 @@ $(document).ready(function () {
                   validators: {
                       callback: {
                           callback: function (value, validator, $field) {
-                              if (telInput.intlTelInput("isValidNumber")) {
+                              if (PhoneNumberFormatter.isValid()) {
                                   return {
                                       valid: true,    // or false
                                       message: 'Valid number'
@@ -577,7 +567,7 @@ $(document).ready(function () {
                   validators: {
                       callback: {
                           callback: function (value, validator, $field) {
-                              if (telInput.intlTelInput("isValidNumber")) {
+                              if (PhoneNumberFormatter.isValid()) {
                                   return {
                                       valid: true,    // or false
                                       message: 'Valid number'
@@ -751,7 +741,7 @@ $(document).ready(function () {
                   validators: {
                       callback: {
                           callback: function (value, validator, $field) {
-                              if (telInput.intlTelInput("isValidNumber")) {
+                              if (PhoneNumberFormatter.isValid()) {
                                   return {
                                       valid: true,    // or false
                                       message: 'Valid number'
@@ -1064,7 +1054,7 @@ $(document).ready(function () {
 
 
   function get_expiry_date_data() { return $('input#cc-exp').payment('cardExpiryVal'); }
-  function set_number() { $('#phone_number').val(telInput.intlTelInput("getNumber").replace("+", '')); }
+  function set_number() { $('#phone_number').val(PhoneNumberFormatter.getNumber().replace("+", '')); }
   function submit_cc_form() { $("#user-form").unbind("submit", preventDefault).submit(); }
 
   // Simply populates credit card and bank account fields with test data

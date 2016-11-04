@@ -4,7 +4,4 @@ class Alert < ActiveRecord::Base
   attr_accessor :custom_welcome, :phone
   has_many :notification_logs, as: :notifiable
   
-  def phone
-    self.sms_number
-  end
 end

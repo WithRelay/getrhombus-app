@@ -79,6 +79,10 @@ class User < ActiveRecord::Base
     user_level == 1
   end
 
+  def is_platform?
+    email != '<redacted_email>' && email != '<redacted_email>'
+  end
+
   def can_send_mms?
     ['US', 'CA'].include? self.country
   end

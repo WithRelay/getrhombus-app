@@ -8,9 +8,13 @@ class Message < ActiveRecord::Base
   # for conversation
   has_many :conversation_refs, as: :textable, dependent: :destroy
   has_many :conversations, through: :conversation_refs
+
+  has_many :notification_logs, as: :notifiable
   
   # belongs_to :user, counter_cache: true
   # For sending and saving all outbound text messages
+
+  # combine into one method with below
   def self.send_and_save_message(from, to, message, media_url = "")
     begin
       msg = Message.new
@@ -27,6 +31,7 @@ class Message < ActiveRecord::Base
     end
   end
 
+  # combine into one method with above
   def self.send_and_save_message_nexmo(from, to, message)
     begin
       # save the outbound message

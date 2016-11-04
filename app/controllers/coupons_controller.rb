@@ -19,16 +19,16 @@ class CouponsController < ApplicationController
   end
 
   def create
-    @coupon = current_user.coupons.build(coupon_params)
-    hash = prepare_coupon_hash(coupon_params.to_h)
+    @coupon = Coupon.new(coupon_params)
+    res =  @coupon.create_coupon({ team: current_user })
 
-    res = PaymentService.create_coupon(hash)
-
-    if (res[0].class == Stripe::Coupon) && @coupon.create_coupon({ team: current_user })  #@coupon.save
-       @coupon.update(stripe_coupon_id: res[0].id, stripe_livemode: res[0].livemode)
+    if res
+      @coupon.user_id = current_user.id
+      @coupon.save
+      @coupon.update(stripe_coupon_id: res[0].id, stripe_livemode: res[0].livemode)
       redirect_to user_coupons_path, flash: { notice: 'Coupon was created'}
     elsif res[0] == false
-      redirect_to new_user_coupon_path, flash: { error: res[1][:message] }
+      redirect_to new_user_coupon_path, flash: { error: 'We couldn\'t create the coupon' }
     else
       redirect_to new_user_coupon_path, flash: { error: 'Something went wrong'}
     end
@@ -36,11 +36,11 @@ class CouponsController < ApplicationController
 
   def destroy
     res = PaymentService.delete_coupon( @coupon.stripe_coupon_id)
-    if res.deleted
+    if res[0]
       @coupon.destroy
       redirect_to user_coupons_path, flash: { notice: 'Coupon was deleted'}
     elsif res[0] == false
-      redirect_to user_coupons_path, flash: { error: res[1][:message] }
+      redirect_to user_coupons_path, flash: { error: 'We couldn\'t delete the coupon' }
     else
       redirect_to user_coupons_path, flash: { error: 'Something went wrong'}
     end
@@ -60,16 +60,6 @@ class CouponsController < ApplicationController
         end
         coupon['currency'] = current_user.currency
       }
-    end
-
-    def prepare_coupon_hash(hash)
-      hash.delete('name')
-      hash.delete('coupon_type')
-      hash.each do |k,v|
-        unless v.present?
-          hash.delete(k)
-        end
-      end
     end
 
 end

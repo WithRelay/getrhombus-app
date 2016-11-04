@@ -1,3 +1,5 @@
+2014-03-28 api version
+
 Review
 - campaign_user_list (can better track failures) or notification_log or add an email model??
 - notification_log used for transaction, referrer and alert notifications logging
@@ -15,7 +17,6 @@ For Bhisma
 - Some stripe events
 - alerts from stripe cc form
 
-
 - what happens when u send image in countries that don't support it. link?
 - check trumbowyg working
 - clean up image/hashtag presenters
@@ -23,10 +24,12 @@ For Bhisma
 - Create Seeds
 - Clean up angular - https://blog.joshsoftware.com/2014/07/17/building-web-apps-with-rails4-and-angularjs-in-15-minutes/
 - remove thread profiler in prod
-- keeling's server
-- notificationlog for transactions should be split into email and sms....dont concatenate string
-   - Add channel, channel_id - for the models used to send the notification
-   - notifiable, notifiable_type are the models issuing the notification
+- keeling's server   
+- when you need to access the underlying object....use instance method else use class method
+- notifications platform to merchants should have a single conversation and should not be pulled - mark as read too
+- conversations....need origin...cos system to customers should not open conversation....
+
+https://www.getrhombus.com/receive_delivery_report
 
 
 Payment Capture - should be for only customers....capture in logic
@@ -43,13 +46,6 @@ Contact - Inbound
 
 Campaigns and Facebook
 - fail safely for audio and video files
-
-
-
-
-
-
-
 
 
 For Surya
