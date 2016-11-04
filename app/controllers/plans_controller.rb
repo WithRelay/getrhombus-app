@@ -29,7 +29,7 @@ class PlansController < ApplicationController
       redirect_to user_plans_path,  flash: { notice: 'Plan was created'}      #respond_with(@plan)
     elsif create_response[0] == false
       @plan.delete
-      flash[:error] =  create_response[1][:message]
+      flash[:error] = 'We couldn\'t create the plan'
       render :new
     else
       @plan.delete
@@ -44,7 +44,7 @@ class PlansController < ApplicationController
       @plan.update(update_response[1])
       redirect_to user_plans_path, flash: { notice: 'Plan was updated'}
     elsif update_response[0][0] == false
-      flash[:error] =  update_response[0][1][:message]
+      flash[:error] =  'We couldn\'t update the plan'
       redirect_to edit_user_plan_path
     else
       flash[:error] =  'Something went wrong'
@@ -59,12 +59,12 @@ class PlansController < ApplicationController
         @plan.delete
         redirect_to user_plans_path, flash: { notice: 'Plan was deleted'}
       elsif delete_response[0] == false
-        redirect_to user_plans_path, flash: { error: delete_response[1][:message] }
+        redirect_to user_plans_path, flash: { error: 'We couldn\'t delete the plan' }
       else
         redirect_to user_plans_path, flash: { error: 'Something went wrong'}
       end
     else
-      redirect_to user_plans_path, flash: { warning: 'You can\'t delete this plan...'}
+      redirect_to user_plans_path, flash: { warning: 'You can\'t delete  plan with subscription...'}
     end
   end
 

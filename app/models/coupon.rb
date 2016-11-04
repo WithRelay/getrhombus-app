@@ -13,13 +13,14 @@ class Coupon < ActiveRecord::Base
     hash.delete(:team)
 
     hash[:duration] = self.duration
-    hash[:amount_off] = self.amount_off
+    # amount_off is in cent
+    hash[:amount_off] = 100 * self.amount_off
     hash[:duration_in_months] = self.duration_in_months
     hash[:max_redemptions] = self.max_redemptions
     hash[:percent_off] = self.percent_off
     hash[:redeem_by] = self.redeem_by
 
-    #re = PaymentService.create_coupon(hash, uid)
+    PaymentService.create_coupon(hash)
 
     # save data including stripe id
     # send emails

@@ -182,7 +182,8 @@ class PaymentService
     def delete_coupon(id)
       begin
         coupon = Stripe::Coupon.retrieve(id)
-        coupon.delete
+        res = coupon.delete
+        [res]
       rescue Stripe::StripeError => e
         # Display a very generic error to the user, and maybe send yourself an email
         [false, e.json_body[:error]]
