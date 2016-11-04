@@ -14,7 +14,7 @@ class Coupon < ActiveRecord::Base
 
     hash[:duration] = self.duration
     # amount_off is in cent
-    hash[:amount_off] = 100 * self.amount_off
+    hash[:amount_off] = 100 * self.amount_off if  self.amount_off
     hash[:duration_in_months] = self.duration_in_months
     hash[:max_redemptions] = self.max_redemptions
     hash[:percent_off] = self.percent_off
