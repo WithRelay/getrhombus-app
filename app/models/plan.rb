@@ -7,6 +7,7 @@ class Plan < ActiveRecord::Base
     # uid = '<redacted_stripe_account_id>' #use this for testing
     uid = hash[:team].uid #use this for real use
     hash[:currency] = hash[:team].currency
+    is_platform = hash[:team].is_platform?
     self.statement_descriptor = (self.name + "-" + hash[:team].org_name)[0..21]
     self.save
 
@@ -14,12 +15,12 @@ class Plan < ActiveRecord::Base
 
     hash[:interval] = self.interval
     hash[:interval_count] = self.interval_count
-    hash[:amount] = self.amount * 100
+    hash[:amount] = self.amount
     hash[:id] = self.id
     hash[:name] = self.name
     hash[:trial_period_days] = self.trial_period_days
     hash[:statement_descriptor] = self.statement_descriptor
-    PaymentService.create_plan(hash, uid, )
+    PaymentService.create_plan(hash, uid, is_platform)
     # save data
     # send emails
 

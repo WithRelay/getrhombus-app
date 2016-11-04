@@ -23,16 +23,18 @@ class PlansController < ApplicationController
   def create
     @plan = Plan.new(plan_params)
     create_response =  @plan.create_plan({ team: current_user })
-    if create_response[0]  #@plan.save
+    if create_response[0]
       @plan.update(currency: create_response[0].currency,
         stripe_livemode: create_response[0].livemode)
       redirect_to user_plans_path,  flash: { notice: 'Plan was created'}      #respond_with(@plan)
     elsif create_response[0] == false
-      @plan.delete
+      @plan.amount = @plan.amount.to_f / 100 #change cent amount
+      @plan.delete # revoke created plan on error
       flash[:error] = 'We couldn\'t create the plan'
       render :new
     else
-      @plan.delete
+      @plan.amount = @plan.amount.to_f / 100 #change cent amount
+      @plan.delete # revoke created plan on error
       flash[:error] = 'Something went wrong'
       render :new
     end

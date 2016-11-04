@@ -99,8 +99,7 @@ class PaymentService
         end
         [ch]
       rescue Stripe::StripeError => e
-        # Display a very generic error to the user, and maybe send yourself an email
-        [false, e.json_body[:error]]
+        [false, e]
       rescue StandardError => e
         [false, e]
       end
@@ -116,7 +115,7 @@ class PaymentService
         res = plan.delete
         [res]
       rescue Stripe::StripeError => e
-        [false, e.json_body[:error]]
+        [false, e]
       rescue StandardError => e
         [false, e]
       end
@@ -133,7 +132,7 @@ class PaymentService
         p.statement_descriptor = params[:statement_descriptor]
         p.save
       rescue Stripe::StripeError => e
-        [false, e.json_body[:error]]
+        [false, e]
       rescue StandardError => e
         [false, e]
       end
@@ -171,18 +170,10 @@ class PaymentService
       begin
         re = Stripe::Coupon.create(hash)        # stripe_account param not needed for platform and only platform create coupons for now
         [re]
-     rescue Stripe::CardError => e
-        [false,  e.json_body[:error]]
-      rescue Stripe::InvalidRequestError => e
-        [false, e]
-      rescue Stripe::AuthenticationError => e
-        [false, e]
-      rescue Stripe::APIConnectionError => e
-        [false, e]
       rescue Stripe::StripeError => e
         # Display a very generic error to the user, and maybe send
         # yourself an email
-        [false,  e.json_body[:error]]
+        [false,  e]
       rescue StandardError => e
         [false, e]
       end
@@ -193,18 +184,10 @@ class PaymentService
         coupon = Stripe::Coupon.retrieve(id)
         res = coupon.delete
         [res]
-      rescue Stripe::CardError => e
-         [false,  e.json_body[:error]]
-       rescue Stripe::InvalidRequestError => e
-         [false, e]
-       rescue Stripe::AuthenticationError => e
-         [false, e]
-       rescue Stripe::APIConnectionError => e
-         [false, e]
        rescue Stripe::StripeError => e
          # Display a very generic error to the user, and maybe send
          # yourself an email
-         [false,  e.json_body[:error]]
+         [false,  e]
        rescue StandardError => e
          [false, e]
        end
@@ -215,7 +198,7 @@ class PaymentService
         re = Stripe::Account.create({ country: hash[:country], managed: true } )
       rescue Stripe::StripeError => e
         # Display a very generic error to the user, and maybe send yourself an email
-        [false, e.json_body[:error]]
+        [false, e]
       rescue StandardError => e
         [false, e]
       end
