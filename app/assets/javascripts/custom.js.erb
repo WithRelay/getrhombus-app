@@ -1307,6 +1307,7 @@ $(document).ready(function () {
   }
 
   $(document).on('click', '.deleteImagePreview', function(e) {
+    $('#select-images').val('')
     $(this).parent().slideUp(400, function() { this.remove(); });
   });
 
