@@ -7,7 +7,7 @@ $(document).ready(function () {
       live: 'disabled',
       // List of fields and their validation rules!
       fields: {
-        'phone': {
+        'alert[phone]': {
             row: '.form-group',
             validators: {
                 callback: {
