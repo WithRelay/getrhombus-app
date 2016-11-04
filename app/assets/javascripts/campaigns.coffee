@@ -143,6 +143,8 @@ $( document ).on 'ready page:load', ->
     campaign.textAreaEmojis()
   else
     campaign.textAreaEmojis()
+    campaign.hideFileBrowser()
+    $('.emailSubject').hide()
     $('#select-images').val('')
     $('.images').html('')
 

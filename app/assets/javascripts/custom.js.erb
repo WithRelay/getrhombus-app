@@ -1277,10 +1277,9 @@ $(document).ready(function () {
         }
 
         var reader = new FileReader();
-        reader.addEventListener("load", function (event) {
+        reader.onload = function(e) {
           var img = event.target;
           counter.push(event.target.filename)
-          debugger;
           if (counter.length < 2){
             div = "<div class='images'><a href='#' class='deleteImagePreview' title='"+img.filename+"'>Delete Image</a><img class='thumbnail' src='" + img.result + "'" + "title='" + img.filename + "'/>" +
                   "<span>" + img.filename + "</span></div>";
@@ -1291,7 +1290,7 @@ $(document).ready(function () {
                     "<span>" + img.filename + "</span></div>";
             }
           new_image_previews.prepend(div);
-        });
+        };
 
         //Read the image
         reader.filename = file.name;
@@ -1308,6 +1307,7 @@ $(document).ready(function () {
   $(document).on('click', '.deleteImagePreview', function(e) {
     $(this).parent().slideUp(400, function() {
       this.remove();
+      $('#select-images').val('')
      });
   });
   $(document).on('click', '.deleteImagePreviews', function(e) {
