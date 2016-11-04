@@ -92,6 +92,11 @@ $(document).on('ready page:load', function() {
   // a new list
   var selected_users = [] // An array for storing selected users
 
+
+  // Fired when the user wants to select checkboxes that fall in a range
+  jQuery(function($) {
+    $('#merchant_customers').checkboxes('range', true);
+  });
   // Fired on click on create list button
   $("#create_list_button").click(function(e){
     $("#list_create_modal").lightbox_me({

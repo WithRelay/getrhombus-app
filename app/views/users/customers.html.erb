@@ -45,16 +45,16 @@
                 </div>
 
                 <div class="panel-body table-responsive">
-                  <a href="#transactions-table" data-toggle="checkboxes" data-action="uncheck">
+                  <a href="#merchant_customers" data-toggle="checkboxes" data-action="uncheck">
                           Uncheck all
                   </a>
                   <form id="all_customers">
-                    <table id="transactions-table" class="table table-striped dataTable">
+                    <table id="merchant_customers" class="table table-striped dataTable">
                     <thead>
                       <tr role="row">
                         <td class="text-center"><i class="fa fa-trash" style="visibility: hidden;"></i></td>
                         <th>
-                          <a href="#transactions-table" data-toggle="checkboxes"
+                          <a href="#merchant_customers" data-toggle="checkboxes"
                            data-action="check">Check all
                          </a>
                         </th>
@@ -67,19 +67,18 @@
                       </tr>
                     </thead>
                     <tbody>
-
-                    <% @customers.each do |c| %>
-                      <tr role="row">
-                        <td class="details-control" data-page="users" data-email="<%= c.email %>"
-                          data-phone="<%= c.phone_number %>"></td>
-                        <td><input type="checkbox" value="<%=c.user_id %>"  class="customer_checkboxes"></input></td>
-                        <td><%= c.card_name %></td>
-                        <td><%= (c.first_visit) ? c.first_visit.strftime("%m/%d/%Y") : '--' %></td>
-                        <td><%= (c.last_visit) ? c.last_visit.strftime("%m/%d/%Y") : "--" %></td>
-                        <td><%= number_to_currency(c.avg_spend) %></td>
-                        <td><%= number_to_currency(c.total_spend) %></td>
-                        <td><%= c.last_30 %></td>
-                      </tr>
+                      <% @customers.each do |c| %>
+                        <tr role="row">
+                          <td class="details-control" data-page="users" data-email="<%= c.email %>"
+                            data-phone="<%= c.phone_number %>"></td>
+                          <td><input type="checkbox" value="<%=c.user_id %>"  class="customer_checkboxes"></input></td>
+                          <td><%= c.card_name %></td>
+                          <td><%= (c.first_visit) ? c.first_visit.strftime("%m/%d/%Y") : '--' %></td>
+                          <td><%= (c.last_visit) ? c.last_visit.strftime("%m/%d/%Y") : "--" %></td>
+                          <td><%= number_to_currency(c.avg_spend) %></td>
+                          <td><%= number_to_currency(c.total_spend) %></td>
+                          <td><%= c.last_30 %></td>
+                        </tr>
                     <% end %>
                     </tbody>
                     </table>
