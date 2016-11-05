@@ -113,7 +113,7 @@ class PaymentService
         else
           plan = Stripe::Plan.retrieve(plan_id, { stripe_account: stripe_account_uid })
         end
-        res = plan.delete
+        plan.delete
         [true]
       rescue Stripe::StripeError => e
         [false, e]
@@ -173,11 +173,10 @@ class PaymentService
 
     def create_coupon(hash)
       begin
-        re = Stripe::Coupon.create(hash)        # stripe_account param not needed for platform and only platform create coupons for now
-        [re]
+        # stripe_account param not needed for platform and only platform create coupons for now
+        re = Stripe::Coupon.create(hash)
+        [true, re]
       rescue Stripe::StripeError => e
-        # Display a very generic error to the user, and maybe send
-        # yourself an email
         [false,  e]
       rescue StandardError => e
         [false, e]
@@ -187,15 +186,13 @@ class PaymentService
     def delete_coupon(id)
       begin
         coupon = Stripe::Coupon.retrieve(id)
-        res = coupon.delete
-        [res]
-       rescue Stripe::StripeError => e
-         # Display a very generic error to the user, and maybe send
-         # yourself an email
-         [false,  e]
-       rescue StandardError => e
-         [false, e]
-       end
+        coupon.delete
+        [true]
+      rescue Stripe::StripeError => e
+        [false,  e]
+      rescue StandardError => e
+        [false, e]
+      end
     end
 
     def create_managed_account(hash)

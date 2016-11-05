@@ -46,7 +46,7 @@ class User < ActiveRecord::Base
   has_many :bank_accounts
   accepts_nested_attributes_for :bank_accounts
 
-  has_one :stripe_cred
+  has_many :stripe_cred
   accepts_nested_attributes_for :stripe_cred
 
   has_one :address, as: :addressable

@@ -25,8 +25,6 @@
 //= require chartist
 //= require jquery.payment
 //= require ohsnap.js
-//= require moment
-//= require daterangepicker
 //= require url-parameters
 //= require managed-account
 //= require location

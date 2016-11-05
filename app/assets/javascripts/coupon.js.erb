@@ -3,6 +3,7 @@ $(document).ready(function () {
   RAILS_DATE_FORMAT = 'DD/MM/YYYY h:mm A'
   var date = new Date();
   var tomorrow = new Date(date.getFullYear(), date.getMonth(), date.getDate()+1);
+
   $('input[name="coupon[redeem_by]"]').daterangepicker({
     autoUpdateInput: false,
     timePickerIncrement: 1,
@@ -11,7 +12,6 @@ $(document).ready(function () {
     minDate: tomorrow,
     todayHighlight: true,
     timePicker: true,
-    timePickerIncrement: 1,
     locale: {
       format: RAILS_DATE_FORMAT,
       cancelLabel: 'Clear'
@@ -28,6 +28,8 @@ $(document).ready(function () {
   $('input[name="coupon[redeem_by]"]').on('cancel.daterangepicker', function(ev, picker) {
     $(this).val('');
   });
+
+
 
   $('.delete-coupon').click(function(evt) {
     var selector = '.' + evt.target.classList[evt.target.classList.length - 1 ];

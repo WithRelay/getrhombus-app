@@ -9,7 +9,7 @@ class PlansController < ApplicationController
               .select('plans.id, amount, plans.name, currency, plans.interval, interval_count, s.id as subscription_id')
               .paginate(page: params[:page], per_page: 1)
               .order('plans.created_at DESC')
-              
+
     respond_with(@plans)
   end
 
@@ -31,7 +31,7 @@ class PlansController < ApplicationController
     if @plan.create_plan({ team: current_user })
       redirect_to user_plans_path,  flash: { notice: 'Plan was created' }      #respond_with(@plan)
     else
-      @plan.delete     # revoke created plan on error
+      @plan.destroy     # revoke created plan on error
       flash[:error] = "We couldn't create the plan" 
       render :new  
     end
@@ -50,7 +50,7 @@ class PlansController < ApplicationController
   def destroy
     unless Subscription.exists?(plan_id: @plan.id)
       if @plan.delete_plan(current_user)
-        @plan.delete
+        @plan.destroy
         redirect_to user_plans_path, flash: { notice: 'Plan was deleted' }
       else
         redirect_to user_plans_path, flash: { error: "We couldn't delete the plan" }

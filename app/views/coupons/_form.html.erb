@@ -1,3 +1,8 @@
+<!-- Date picker stuff -->
+<!-- Include Required Prerequisites -->
+<script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<!-- Include Date Range Picker -->
+<script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
 <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
 
 <%= form_for([current_user, @coupon], :html=> { id: 'couponForm', class: 'form-horizontal' }) do |f| %>
@@ -56,7 +61,7 @@
     <%= f.label :redeem_by, class: 'col-xs-3 control-label', id: 'redeemLabel' %>
     <div class="col-xs-5">
        <i id='calIcon' class="fa fa-calendar" aria-hidden="true"></i>
-      <%= f.text_field :redeem_by, id: 'redeemField', class: 'form-control' %>
+      <%= f.text_field :redeem_by, id: 'redeemField', class: 'form-control', value: present(@coupon).format_time %>
     </div>
   </div>
 
@@ -65,4 +70,5 @@
       <%= f.submit 'Create Coupon', id: 'commit',class: 'btn btn-primary' %>
     </div>
   </div>
+
 <% end %>

@@ -10,12 +10,6 @@ gem "httparty"
 # For authentication
 gem "devise"
 
-# bootstrap date range picker dependency gem
-# for more info https://github.com/jordanbrock/bootstrap-daterangepicker-rails
-gem 'momentjs-rails'
-# Date Range Picker for Twitter Bootstrap
-gem 'bootstrap-daterangepicker-rails'
-
 # resque
 gem 'resque', :require => "resque/server"
 gem 'resque-scheduler', :require => "resque/scheduler/server"

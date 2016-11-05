@@ -7,16 +7,21 @@ Review
 - remove first_name and last_name assignment in angular code
 - when user logs in through messenger, indicate in referrers
 - change all emails in test db dump
-- Surya.....is email content sanitized?
 
 To Dos
 - keep controllers lean
+- must be timezone aware time.current or time.zone.now
+
+Surya
+- Surya.....is email content sanitized?
+- I see Time.now...should be timezone aware...use Time.current
 
 For Bhisma
 - show validation errors else show generic error
 - please pay attention to my code format...we need clean code
 - Load more...if you dont get any data or something fails...fail gracefully...show toastr - this is expected from you
 - Load more button should stay disabled until data comes back...dont settimeout...done.fail
+- Test the validations
 
 - what happens when u send image in countries that don't support it. link?
 - check trumbowyg working
