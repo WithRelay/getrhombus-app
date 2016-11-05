@@ -13,7 +13,7 @@ class Plan < ActiveRecord::Base
       res = []
       team = hash[:team]
       # uid = '<redacted_stripe_account_id>' #use this for testing
-      uid = team.stripe_cred.where(uid_type: 'managed').first.uid #use this for real use
+      uid = team.stripe_creds.where(uid_type: 'managed').first.uid #use this for real use
       is_platform = team.is_platform?
       
       descriptor = (self.name + "-" + team.org_name)[0..21]
@@ -59,7 +59,8 @@ class Plan < ActiveRecord::Base
       # Update so validations run before calling Stripe api
       self.update(name: hash[:name], statement_descriptor: new_descriptor)
       hash[:statement_descriptor] = new_descriptor
-      res = PaymentService.update_plan(self.id, hash, team.stripe_cred.uid, team.is_platform?)
+      uid = team.stripe_creds.where(uid_type: 'managed').first.uid
+      res = PaymentService.update_plan(self.id, hash, uid, team.is_platform?)
       
       unless res.first
         # notify team via email        
@@ -76,7 +77,7 @@ class Plan < ActiveRecord::Base
 
   def delete_plan(team)
     begin
-      uid = team.stripe_cred.where(uid_type: 'managed').first.uid
+      uid = team.stripe_creds.where(uid_type: 'managed').first.uid
       PaymentService.delete_plan(self.id, uid, team.is_platform?).first
     rescue StandardError => e
       # notify team via email
