@@ -9,12 +9,13 @@ class DatePicker
     @today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
 
   datePicker: ->
-    $(@element).daterangepicker
-      timePicker: YES,
-      timePickerIncrement: 30,
-      singleDatePicker: YES,
-      locale: { format: RAILS_DATE_FORMAT },
-      minDate: @today
+    if $(@element).length > 0
+      $(@element).daterangepicker
+        timePicker: YES,
+        timePickerIncrement: 30,
+        singleDatePicker: YES,
+        locale: { format: RAILS_DATE_FORMAT },
+        minDate: @today
 
 class Campaign
 

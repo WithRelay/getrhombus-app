@@ -4,33 +4,33 @@ $(document).ready(function () {
   var date = new Date();
   var tomorrow = new Date(date.getFullYear(), date.getMonth(), date.getDate()+1);
 
-  $('input[name="coupon[redeem_by]"]').daterangepicker({
-    autoUpdateInput: false,
-    timePickerIncrement: 1,
-    showDropdowns: true,
-    singleDatePicker: true,
-    minDate: tomorrow,
-    todayHighlight: true,
-    timePicker: true,
-    locale: {
-      format: RAILS_DATE_FORMAT,
-      cancelLabel: 'Clear'
-   },
-    weekStart: 0,
-    opens: "right",
-    drops: 'down'
-  });
+  var redeem_by_input = $('input[name="coupon[redeem_by]"]');
+  if (redeem_by_input.length > 0) {
+    redeem_by_input.daterangepicker({
+      autoUpdateInput: false,
+      timePickerIncrement: 1,
+      showDropdowns: true,
+      singleDatePicker: true,
+      minDate: tomorrow,
+      todayHighlight: true,
+      timePicker: true,
+      locale: {
+        format: RAILS_DATE_FORMAT,
+        cancelLabel: 'Clear'
+     },
+      weekStart: 0,
+      opens: "right",
+      drops: 'down'
+    });
 
-  $('input[name="coupon[redeem_by]"]').on('apply.daterangepicker', function(ev, picker) {
-    $(this).val(picker.startDate.format(RAILS_DATE_FORMAT));
-  });
-
-  $('input[name="coupon[redeem_by]"]').on('cancel.daterangepicker', function(ev, picker) {
-    $(this).val('');
-  });
-
-
-
+    redeem_by_input.on('apply.daterangepicker', function(ev, picker) {
+      $(this).val(picker.startDate.format(RAILS_DATE_FORMAT));
+    })
+    .on('cancel.daterangepicker', function(ev, picker) {
+      $(this).val('');
+    });  
+  }
+  
   $('.delete-coupon').click(function(evt) {
     var selector = '.' + evt.target.classList[evt.target.classList.length - 1 ];
 
