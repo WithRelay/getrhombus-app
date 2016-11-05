@@ -30,7 +30,6 @@ $(document).ready(function () {
       }
     })
     .on('success.form.fv', function(e, data) {
-        e.preventDefault;
         var number = PhoneNumberFormatter.getNumber(); 
         $('#phone_number').val( (number.charAt(0) === "+") ? number.substring(1) : number );           
     });
