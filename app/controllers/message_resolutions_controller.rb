@@ -7,7 +7,7 @@ class MessageResolutionsController < ApplicationController
 
   def index
     # With c_id, we know the resolution is in use and so should not be deleted
-    @message_resolutions = MessageResolution.where(user_id: current_user.id)
+    @message_resolutions = current_user.message_resolutions
                             .joins("LEFT JOIN conversations c ON message_resolutions.id = c.message_resolution_id")
                             .select('message_resolutions.id as id, title, c.id as c_id')
   end

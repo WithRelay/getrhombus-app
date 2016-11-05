@@ -3,18 +3,28 @@ class Plan < ActiveRecord::Base
   has_many :subscriptions 
   belongs_to :user
 
+  validates_presence_of :name, :interval, :interval_count, :amount
+  validates_numericality_of :interval_count, greater_than: 0, only_integer: true
+  validates_numericality_of :amount, greater_than_or_equal_to: 1
+
+
   def create_plan(hash)
     begin
 
       # uid = '<redacted_stripe_account_id>' #use this for testing
-      uid = hash[:team].uid #use this for real use
+      uid = hash[:team].stripe_cred.uid #use this for real use
       hash[:currency] = hash[:team].currency
       is_platform = hash[:team].is_platform?
-      self.statement_descriptor = (self.name + "-" + hash[:team].org_name)[0..21]
-      self.save
+      
+      # a customer or a team/merchant can create a plan
+      _user_id = hash.has_key? :customer ? customer.id : team.id
+      descriptor = (self.name + "-" + hash[:team].org_name)[0..21]
 
-      # dont send team data in hash
-      hash.delete(:team)
+      # Update so validations run before calling Stripe
+      self.update(user_id: _user_id, statement_descriptor: descriptor)
+
+      # dont send team/merchant or customer data in hash
+      [:team, :customer].each { |k| hash.delete(k) }
 
       hash[:interval] = self.interval
       hash[:interval_count] = self.interval_count
@@ -24,26 +34,52 @@ class Plan < ActiveRecord::Base
       hash[:trial_period_days] = self.trial_period_days
       hash[:statement_descriptor] = self.statement_descriptor
 
-      if res = PaymentService.create_plan(hash, uid, is_platform).first
-        self.update_attribute(stripe_livemode: res.second.livemode)
+      res = PaymentService.create_plan(hash, uid, is_platform)
+      if res.first
+        self.update(stripe_livemode: res.second.livemode)
       else
-        # notify team via email
+        #notify team via email
       end
 
       res.first
     rescue StandardError => e
+      # notify team via email
       false
     end
   end
 
-  def update_plan(params, current_user)
-    hash = params.require(:plan).permit(:name)
-    hash[:statement_descriptor] = ( hash[:name] + "-" + current_user.org_name)[0..21]
-    [PaymentService.update_plan(self.id.to_s, hash, current_user.uid,current_user.is_platform?),hash]
+  def update_plan(hash, user)
+    begin
+
+      old_name = self.name
+      old_descriptor = self.statement_descriptor      
+      new_descriptor = (hash[:name] + "-" + current_user.org_name)[0..21]
+      
+      # Update so validations run before calling Stripe api
+      self.update(name: hash[:name], statement_descriptor: new_descriptor)
+      hash[:statement_descriptor] = new_descriptor
+      res = PaymentService.update_plan(self.id, hash, user.stripe_cred.uid, user.is_platform?)
+      
+      unless res.first
+        # notify team via email        
+        # reverse data
+        self.update(name: old_name, statement_descriptor: old_descriptor)
+      end
+
+      res.first
+    rescue StandardError => e
+      # notify team via email
+      false
+    end
   end
 
-  def delete_plan(current_user)
-    PaymentService.delete_plan(self.id.to_s, current_user.uid,current_user.is_platform?)
+  def delete_plan(user)
+    begin
+      PaymentService.delete_plan(self.id, user.stripe_cred.uid, user.is_platform?).first
+    rescue StandardError => e
+      # notify team via email
+      false
+    end
   end
 
 end

@@ -1,19 +1,23 @@
 <!-- partials for plans index for show more feature support -->
 <% if @plans %>    
    
-    <% @plans.each do |plan| %>
-      <tr>
-        <td colspan="3"><%= plan.name %></td>
-        <!-- show amount like $12.33, $10.00 -->
-        <td colspan="3"><%= "%.2f" %(plan.amount.to_f/100) %></td>  
-        <td colspan="3"><%= plan.interval %></td>
-        <td colspan="3"><%= plan.interval_count %></td>
-        <!-- <td><%= plan.currency %></td>
-        <td><%#= link_to 'Show', user_plan_path(current_user, plan) %></td>
-        -->
-        <td><%= link_to 'Update', edit_user_plan_path(current_user, plan) %></td>
-        <td><%= link_to 'Destroy', user_plan_path(current_user, plan), method: :delete, class: "delete-plan plan#{plan.id}" %></td> 
-      </tr>
-    <% end %>
+  <% @plans.each do |plan| %>
+    <tr>
+      <td colspan="3"><%= plan.name %></td>
+      <!-- show amount like $12.33, $10.00 -->
+      <td colspan="3"><%= "%.2f" %(plan.amount.to_f/100) %></td>  
+      <td colspan="3"><%= plan.interval %></td>
+      <td colspan="3"><%= plan.interval_count %></td>
+      <!-- <td><%= plan.currency %></td>
+      <td><%#= link_to 'Show', user_plan_path(current_user, plan) %></td>
+      -->
+      <td><%= link_to 'Update', edit_user_plan_path(current_user, plan) %></td>
+      <td>
+        <% if plan.subscription_id.blank? %>
+          <%= link_to 'Destroy', user_plan_path(current_user, plan), method: :delete, class: "delete-plan plan#{plan.id}" %>
+        <% end %>
+      </td> 
+    </tr>
+  <% end %>
 
 <% end %>
