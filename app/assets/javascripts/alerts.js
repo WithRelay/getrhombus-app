@@ -12,6 +12,7 @@ $(document).ready(function () {
             validators: {
                 callback: {
                     callback: function (value, validator, $field) {
+                      if ($("#alert-include-sms").is(':checked')) {
                         if (PhoneNumberFormatter.isValid()) {
                             return {
                                 valid: true,    // or false
@@ -23,6 +24,13 @@ $(document).ready(function () {
                                 message: 'Enter a valid sms-enabled number.'
                             }
                         }
+                      } else {
+                        $("#phone_number").val('');
+                        $("#phone").val('');
+                        return { 
+                            valid: true 
+                        }
+                      }
                     }
                 }
             }
@@ -36,3 +44,5 @@ $(document).ready(function () {
         
 
 })
+
+                          
