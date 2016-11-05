@@ -27,13 +27,13 @@ class CouponsController < ApplicationController
   def create
     @coupon = Coupon.new(coupon_params)
 
-    #if @coupon.create_coupon({ team: current_user })
-     # redirect_to user_coupons_path, flash: { notice: 'Coupon was created' }
-    #else
-     # @coupon.destroy     # revoke created coupon on error
+    if @coupon.create_coupon({ team: current_user })
+      redirect_to user_coupons_path, flash: { notice: 'Coupon was created' }
+    else
+      @coupon.destroy     # revoke created coupon on error
       flash[:error] = "We couldn't create the coupon"
       render :new
-    #end
+    end
   end
 
   def destroy
