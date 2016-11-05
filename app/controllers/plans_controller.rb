@@ -3,7 +3,7 @@ class PlansController < ApplicationController
   respond_to :html, :js
 
   def index
-    # get subscription id to use to determing if destroy link should show up
+    # get subscription id to use to determine if destroy link should show up
     @plans = current_user.plans
               .joins("LEFT JOIN subscriptions s ON s.plan_id = plans.id")
               .select('plans.id, amount, plans.name, currency, plans.interval, interval_count, s.id as subscription_id')
