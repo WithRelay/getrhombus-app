@@ -18,7 +18,7 @@ class Plan < ActiveRecord::Base
       
       descriptor = (self.name + "-" + team.org_name)[0..21]
       # a customer or a team/merchant can create a plan
-      _user_id = hash.has_key? :customer ? hash[:customer].id : hash[:team].id
+      _user_id = (hash.has_key? :customer )? hash[:customer].id : hash[:team].id
       # dont send team/merchant or customer data in hash
       [:team, :customer].each { |k| hash.delete(k) } 
       # Update so validations run before calling Stripe
@@ -26,7 +26,8 @@ class Plan < ActiveRecord::Base
 
       hash[:interval] = self.interval
       hash[:interval_count] = self.interval_count
-      hash[:amount] = self.amount
+      # amount should pass in cent
+      hash[:amount] = 100 * self.amount
       hash[:id] = self.id
       hash[:name] = self.name
       hash[:trial_period_days] = self.trial_period_days
@@ -75,7 +76,8 @@ class Plan < ActiveRecord::Base
   end
 
   def get_team_uid(team)
-    team.stripe_creds.where(uid_type: 'managed').first.uid
+    t = team.stripe_creds.where(uid_type: 0).first
+    t.uid if t
   end
 
   def delete_plan(team)
