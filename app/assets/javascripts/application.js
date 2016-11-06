@@ -21,6 +21,7 @@
 //= require jquery_ujs
 //= require jquery.lightbox_me
 //= require intlTelInput.min
+//= require phone_number_formatter
 //= require chartist
 //= require jquery.payment
 //= require ohsnap.js
@@ -45,5 +46,4 @@
 //= require lists
 //= require alerts
 //= require hashtags_plans_coupons_alerts
-//= require phone_number_formatter
 
