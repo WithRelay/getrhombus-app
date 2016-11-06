@@ -31,6 +31,7 @@ class MessageAlertJob
               platform_number = User.find_by(email: Rails.application.secrets.team_email).rhombus_number
               msg = Message.new
               msg.send_and_save_message(platform_number, r.sms_number, "Rhombus Notification: You have #{messages.length} unread messages on your dashboard.")
+              m.update(unread: false, unread_notification_sent: true)
               r.notification_logs.create(notify_type: 'new_alert', channel: 'Message', channel_id: msg.id, reason: 'unread_messages')
             end
 
