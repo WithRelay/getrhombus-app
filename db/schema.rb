@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161104045724) do
+ActiveRecord::Schema.define(version: 20161105202553) do
 
   create_table "addresses", force: :cascade do |t|
     t.string   "street_address",   limit: 191
@@ -318,22 +318,23 @@ ActiveRecord::Schema.define(version: 20161104045724) do
   create_table "messages", force: :cascade do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "from",              limit: 191
-    t.string   "to",                limit: 191
-    t.string   "message_timestamp", limit: 191
-    t.string   "message_price",     limit: 191
-    t.string   "status",            limit: 191
-    t.string   "error_text",        limit: 191
-    t.string   "error_code",        limit: 191
-    t.integer  "user_id",           limit: 4
-    t.integer  "user_id_to",        limit: 4
-    t.integer  "transaction_id",    limit: 4
-    t.string   "message_id",        limit: 191
-    t.text     "text",              limit: 65535
-    t.boolean  "unread",            limit: 1,     default: true
-    t.string   "num_segments",      limit: 191
-    t.string   "price_unit",        limit: 191
-    t.integer  "hashtag_id",        limit: 4
+    t.string   "from",                     limit: 191
+    t.string   "to",                       limit: 191
+    t.string   "message_timestamp",        limit: 191
+    t.string   "message_price",            limit: 191
+    t.string   "status",                   limit: 191
+    t.string   "error_text",               limit: 191
+    t.string   "error_code",               limit: 191
+    t.integer  "user_id",                  limit: 4
+    t.integer  "user_id_to",               limit: 4
+    t.integer  "transaction_id",           limit: 4
+    t.string   "message_id",               limit: 191
+    t.text     "text",                     limit: 65535
+    t.boolean  "unread",                   limit: 1,     default: true
+    t.string   "num_segments",             limit: 191
+    t.string   "price_unit",               limit: 191
+    t.integer  "hashtag_id",               limit: 4
+    t.boolean  "unread_notification_sent", limit: 1,     default: false
   end
 
   add_index "messages", ["hashtag_id"], name: "index_messages_on_hashtag_id", using: :btree
