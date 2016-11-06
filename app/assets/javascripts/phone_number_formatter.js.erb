@@ -13,6 +13,7 @@ var PhoneNumberFormatter = new function() {
   }
 
   this.isValid = function() {
+    // I think it throws an error if it can't determine country code
     try { return input.intlTelInput("isValidNumber"); }
     catch(err) { return false; }
   };
