@@ -25,8 +25,7 @@ $(document).ready(function () {
                             }
                         }
                       } else {
-                        $("#phone_number").val('');
-                        $("#phone").val('');
+                        $("#phone_number, #phone").val('');
                         return { 
                             valid: true 
                         }
@@ -37,10 +36,19 @@ $(document).ready(function () {
           }
       }
     })
-    .on('success.form.fv', function(e, data) {
-        var number = PhoneNumberFormatter.getNumber(); 
-        $('#phone_number').val( (number.charAt(0) === "+") ? number.substring(1) : number );           
+    .on('success.form.fv', function(e, data) { 
+      $('#phone_number').val(PhoneNumberFormatter.getNumber().replace("+", ''));          
     });
+
+  $('#alert-include-sms').change(function() {
+    if (!this.checked) $('.edit_alert').data('formValidation').resetForm();
+  });
+
+  $('.country-list').click(function() {
+    if ($("#alert-include-sms").is(':checked') && $("#phone").val() != "") {
+      $('.edit_alert').formValidation('revalidateField', "alert[phone]");
+    }
+  });
         
 
 })
