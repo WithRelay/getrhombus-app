@@ -42,6 +42,7 @@ class MessageAlertJob
         
       end
     rescue StandardError => e
+      # Notify team of failed job
     end
   end
 
