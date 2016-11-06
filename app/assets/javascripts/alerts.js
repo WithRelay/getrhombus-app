@@ -41,15 +41,19 @@ $(document).ready(function () {
     });
 
   $('#alert-include-sms').change(function() {
-    if (!this.checked) $('.edit_alert').data('formValidation').resetForm();
-  });
+    if (this.checked) {
+      $('#alert-sms-number').slideDown(200);
+    } else {
+      $('#alert-sms-number').slideUp(200);
+      $('.edit_alert').data('formValidation').resetForm();
+    }
+  }).change();
 
   $('.country-list').click(function() {
     if ($("#alert-include-sms").is(':checked') && $("#phone").val() != "") {
       $('.edit_alert').formValidation('revalidateField', "alert[phone]");
     }
   });
-        
 
 })
 

@@ -4,9 +4,7 @@ class Plan < ActiveRecord::Base
   belongs_to :user
 
   validates_presence_of :name, :interval, :interval_count, :amount
-  validates_numericality_of :interval_count, greater_than: 0, only_integer: true
-  validates_numericality_of :amount, greater_than_or_equal_to: 1
-
+  validates_numericality_of :amount, :interval_count, greater_than: 0, only_integer: true
 
   def create_plan(hash)
     begin
@@ -18,7 +16,7 @@ class Plan < ActiveRecord::Base
       
       descriptor = (self.name + "-" + team.org_name)[0..21]
       # a customer or a team/merchant can create a plan
-      _user_id = (hash.has_key? :customer )? hash[:customer].id : hash[:team].id
+      _user_id = (hash.has_key? :customer) ? hash[:customer].id : hash[:team].id
       # dont send team/merchant or customer data in hash
       [:team, :customer].each { |k| hash.delete(k) } 
       # Update so validations run before calling Stripe

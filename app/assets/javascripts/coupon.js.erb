@@ -21,9 +21,8 @@ $(document).ready(function () {
       weekStart: 0,
       opens: "right",
       drops: 'down'
-    });
-
-    redeem_by_input.on('apply.daterangepicker', function(ev, picker) {
+    })
+    .on('apply.daterangepicker', function(ev, picker) {
       $(this).val(picker.startDate.format(RAILS_DATE_FORMAT));
     })
     .on('cancel.daterangepicker', function(ev, picker) {
@@ -100,5 +99,15 @@ $(document).ready(function () {
           .removeClass('has-warning')
           .addClass('has-success')
       });
+
+  // if coupon isnt repeating. repeating needs length in months
+  $('#coupon_duration').change(function(){
+    if (this.value == 'repeating') {
+      $('#duration-in-months-div').slideDown(200)
+    } else {
+      $('#duration-in-months-div').slideUp(200);
+      $('#duration-in-months').val('');
+    }
+  }).change();
 
 })

@@ -1,8 +1,8 @@
 $(document).ready(function () {
   //  Hashtags, plans, coupons, Alerts
+  var coupon_type_value  = $('#coupon-type-value');
+  var coupon_type = $('#coupon-type');
 
-  var coupon_type_value  = $('#coupon-type-value'),
-      coupon_type = $('#coupon-type');
 
   // no spaces
   $('#hashtag_tag, #coupon-name').on('input', function(){
@@ -12,17 +12,6 @@ $(document).ready(function () {
   // Positive integer only
   $('#interval-count, #duration-in-months, #max-redemptions').on('input', function(){
     this.value = positive_integer_only(this.value);
-  });
-
-  coupon_type.on('change', function() {
-    var name_value = (this.value == 'amount_off') ? "coupon[amount_off]" : "coupon[percent_off]"
-    coupon_type_value.val('').attr('name', name_value);
-    $('#coupon-type-value-label').text(this.options[this.selectedIndex].text);
-  });
-
-  coupon_type_value.on('input', function(){
-    var v = this.value;
-    this.value = (coupon_type.val() == 'amount_off') ? positive_integer_only(v) : positive_integer_less_than_100(v);
   });
 
   function positive_integer_only(v) {
@@ -55,18 +44,16 @@ $(document).ready(function () {
     }
   }).change();
 
-  // if coupon isnt repeating. repeating needs length in months
-  $('#coupon_duration').change(function(){
-    if (this.value == 'repeating') {
-      $('#duration-in-months-div').slideDown(200)
-    } else {
-      $('#duration-in-months-div').slideUp(200);
-      $('#duration-in-months').val('');
-    }
-  }).change();
+  coupon_type_value.on('input', function(){
+    var v = this.value;
+    this.value = (coupon_type.val() == 'amount_off') ? positive_integer_only(v) : positive_integer_less_than_100(v);
+  });
 
-  $('#alert-include-sms').change(function(){
-    (this.checked) ? $('#alert-sms-number').slideDown(200) : $('#alert-sms-number').slideUp(200);
-  }).change();
+  coupon_type.on('change', function() {
+    var name_value = (this.value == 'amount_off') ? "coupon[amount_off]" : "coupon[percent_off]"
+    coupon_type_value.val('').attr('name', name_value);
+    $('#coupon-type-value-label').text(this.options[this.selectedIndex].text);
+  });
+
 
 });

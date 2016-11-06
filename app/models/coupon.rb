@@ -7,7 +7,6 @@ class Coupon < ActiveRecord::Base
   validates :name, uniqueness: { case_sensitive: false, scope: :user_id }
   
   validates_presence_of :duration
-  validates :max_redemptions, numericality: { allow_blank: true, greater_than: 0, only_integer: true }
   
   validates_presence_of :duration_in_months, if: lambda { self.duration == "repeating" }
   validates :duration_in_months, numericality: { allow_blank: true, greater_than: 0, only_integer: true }
@@ -16,8 +15,7 @@ class Coupon < ActiveRecord::Base
   validates :percent_off, numericality: { allow_blank: true, greater_than: 0, less_than: 101, only_integer: true }
 
   validates_presence_of :amount_off, if: lambda { self.percent_off.blank? }
-  validates :amount_off, numericality: { allow_blank: true, greater_than: 0, only_integer: true }
-
+  validates :amount_off, :max_redemptions, numericality: { allow_blank: true, greater_than: 0, only_integer: true }
 
   def create_coupon(hash)
     begin
