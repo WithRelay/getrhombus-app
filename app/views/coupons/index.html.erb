@@ -11,7 +11,7 @@
     <% @coupons.each do |coupon| %>
       <tr>
         <td><%= coupon.name %></td>
-        <td><%= coupon.amount_off %></td>
+        <td><%= "%.2f" %(coupon.amount_off.to_f) %></td>
         <td><%= coupon.currency %></td>
         <td><%= coupon.duration %></td>
         <td><%= coupon.duration_in_months %></td>

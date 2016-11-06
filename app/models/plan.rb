@@ -26,7 +26,8 @@ class Plan < ActiveRecord::Base
 
       hash[:interval] = self.interval
       hash[:interval_count] = self.interval_count
-      hash[:amount] = self.amount
+      # amount should pass in cent
+      hash[:amount] = 100 * self.amount
       hash[:id] = self.id
       hash[:name] = self.name
       hash[:trial_period_days] = self.trial_period_days
