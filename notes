@@ -21,7 +21,7 @@ For Bhisma
 - please pay attention to my code format...we need clean code
 - Load more...if you dont get any data or something fails...fail gracefully...show toastr - this is expected from you
 - Load more button should stay disabled until data comes back...dont settimeout...i think u can use .done .fail
-- validate...only plan/coupon name on the fly if possible...but don't validate on the fly..amount in plans allows decimal...see my validations
+- validate...only plan/coupon name on the fly if possible...but don't validate on the fly..amount in coupons/plans allows decimal...see my validations
 - on interval/duration change, revalidate associate field...or just wipe the count field or just remove validation errors and set to nor validated or both...i think both...will decide
 - no need to check for uid...a merchant must have one for plans to even show up...if you want to do a check...then handle when it isnt present and return false immediately
 - only one validation message at a time per field
