@@ -20,13 +20,18 @@ class User < ActiveRecord::Base
 
   # this block is for customizing build method for user.campaign which allow also to save list
   has_many :campaigns do
+    # overiding association build function like user.campaigns.build will hit here
     def build(*args)
+      # calls parent build action and send arguments first from the splat operator
       campaign = super(args[0])
       unless args.blank?
+        # build campaign lists of campaign
         args[0][:list_ids].split(',').each{ |l| campaign.campaign_lists.build(list_id: l) }
+        # build avatar of campaigns
         args[1][:avatar].each do |image|
           campaign.images.build(avatar: image, uploaded_as: 1)
         end if (!campaign.sms? && args[1][:avatar].present?)
+        # build image refs for inline images of campaigns
         args[1][:image_id].each do |avatar_id|
           campaign.image_refs.build(image_id: avatar_id).save;
         end if args[1][:image_id].present?
