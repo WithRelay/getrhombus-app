@@ -13,17 +13,21 @@ class Api::V1::ListsController < API::V1::BaseController
     end
   end
 
+
+  # Handles creation of a list via Ajax
   def create
     begin
       name = params[:list_name]
       if params[:list_type] == 'list'
         @list = save_list(name:name, user_id:current_user.id)
         user_list = params[:selected_users].split(",")
-        # Now save each customer on that list
-        list_errors = Array.new
+        list_errors = Array.new # Gather list errors
+        # If there were any errors with saving the list 
+        # add them to the array
         if !@list.errors.empty?
           list_errors.push(@list.errors.full_messages)
         end
+        # Create user_lists and and errors as well.
         user_list.each do |u|
           u = UserList.new(list_id:@list.id, user_id:u)
           list_errors.push(u.errors.full_messages) if !u.save
@@ -42,8 +46,7 @@ class Api::V1::ListsController < API::V1::BaseController
             }, status: 200
           end
       else
-        @list = save_list(name:name, user_id:current_user.id, segment:true)
-        segment.new(list_id:@list.id, query:params[:segment_query])
+        @list = save_list(name:name, user_id:current_user.id, segment:params[:segment_query])
       end
     rescue StandardError => e
       puts e
