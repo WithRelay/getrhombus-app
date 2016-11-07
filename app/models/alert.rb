@@ -3,5 +3,9 @@ class Alert < ActiveRecord::Base
 
   attr_accessor :custom_welcome, :phone
   has_many :notification_logs, as: :notifiable
-  
+
+  # Because empty should save as nil
+  def sms_number=(v)
+    write_attribute(:sms_number, v.present? ? v : nil)
+  end  
 end

@@ -3,8 +3,13 @@ class PlansController < ApplicationController
   respond_to :html, :js
 
   def index
-    @plans = current_user.plans.paginate(page: params[:page], per_page: 25).order('updated_at DESC')
-    # @plans = Plan.all
+    # get subscription id to use to determine if destroy link should show up
+    @plans = current_user.plans
+              .joins("LEFT JOIN subscriptions s ON s.plan_id = plans.id")
+              .select('plans.id, amount, plans.name, currency, plans.interval, interval_count, s.id as subscription_id')
+              .paginate(page: params[:page], per_page: 1)
+              .order('plans.created_at DESC')
+
     respond_with(@plans)
   end
 
@@ -22,51 +27,36 @@ class PlansController < ApplicationController
 
   def create
     @plan = Plan.new(plan_params)
-    create_response =  @plan.create_plan({ team: current_user })
-    if create_response[0]
-      @plan.update(currency: create_response[0].currency,
-        stripe_livemode: create_response[0].livemode)
-      redirect_to user_plans_path,  flash: { notice: 'Plan was created'}      #respond_with(@plan)
-    elsif create_response[0] == false
-      @plan.amount = @plan.amount.to_f / 100 #change cent amount
-      @plan.delete # revoke created plan on error
-      flash[:error] = 'We couldn\'t create the plan'
-      render :new
+
+    if @plan.create_plan({ team: current_user })
+      redirect_to user_plans_path,  flash: { notice: 'Plan was created' }      #respond_with(@plan)
     else
-      @plan.amount = @plan.amount.to_f / 100 #change cent amount
-      @plan.delete # revoke created plan on error
-      flash[:error] = 'Something went wrong'
-      render :new
+      @plan.destroy     # revoke created plan on error
+      flash[:error] = "We couldn't create the plan" 
+      render :new  
     end
   end
 
   def update
-    update_response = @plan.update_plan(params,current_user)
-    if update_response[0].class == Stripe::Plan
-      @plan.update(update_response[1])
-      redirect_to user_plans_path, flash: { notice: 'Plan was updated'}
-    elsif update_response[0][0] == false
-      flash[:error] =  'We couldn\'t update the plan'
-      redirect_to edit_user_plan_path
+    hash = params.require(:plan).permit(:name)
+    if @plan.update_plan(hash, current_user)
+      redirect_to user_plans_path, flash: { notice: 'Plan was updated' }
     else
-      flash[:error] =  'Something went wrong'
+      flash[:error] =  "We couldn't update the plan"
       redirect_to edit_user_plan_path
     end
   end
 
   def destroy
     unless Subscription.exists?(plan_id: @plan.id)
-      delete_response = @plan.delete_plan(current_user)
-      if delete_response[0]
-        @plan.delete
-        redirect_to user_plans_path, flash: { notice: 'Plan was deleted'}
-      elsif delete_response[0] == false
-        redirect_to user_plans_path, flash: { error: 'We couldn\'t delete the plan' }
+      if @plan.delete_plan(current_user)
+        @plan.destroy
+        redirect_to user_plans_path, flash: { notice: 'Plan was deleted' }
       else
-        redirect_to user_plans_path, flash: { error: 'Something went wrong'}
+        redirect_to user_plans_path, flash: { error: "We couldn't delete the plan" }
       end
     else
-      redirect_to user_plans_path, flash: { warning: 'You can\'t delete  plan with subscription...'}
+      redirect_to user_plans_path, flash: { warning: "You can't delete plan with subscription..." }
     end
   end
 
@@ -76,7 +66,7 @@ class PlansController < ApplicationController
     end
 
     def plan_params
-      params.require(:plan).permit(:interval, :name).tap{ |plan|
+      params.require(:plan).permit(:interval, :name, :amount).tap{ |plan|
         if params[:plan][:interval_month]
           plan['interval_count'] = params[:plan][:interval_month]
         elsif params[:plan][:interval_week]
@@ -84,9 +74,6 @@ class PlansController < ApplicationController
         else
           plan['interval_count'] = params[:plan][:interval_count]
         end
-        # since amount is in cent
-        plan['amount'] = 100 * params[:plan][:amount].to_f
-        plan['user_id'] = current_user.id
       }
     end
 end

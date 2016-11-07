@@ -1,8 +1,8 @@
 $(document).ready(function () {
   //  Hashtags, plans, coupons, Alerts
+  var coupon_type_value  = $('#coupon-type-value');
+  var coupon_type = $('#coupon-type');
 
-  var coupon_type_value  = $('#coupon-type-value'),
-      coupon_type = $('#coupon-type');
 
   // no spaces
   $('#hashtag_tag, #coupon-name').on('input', function(){
@@ -14,17 +14,6 @@ $(document).ready(function () {
     this.value = positive_integer_only(this.value);
   });
 
-  coupon_type.on('change', function() {
-    var name_value = (this.value == 'amount_off') ? "coupon[amount_off]" : "coupon[percent_off]"
-    coupon_type_value.val('').attr('name', name_value);
-    $('#coupon-type-value-label').text(this.options[this.selectedIndex].text);
-  });
-
-  coupon_type_value.on('input', function(){
-    var v = this.value;
-    this.value = (coupon_type.val() == 'amount_off') ? positive_integer_only(v) : positive_integer_less_than_100(v);
-  });
-
   function positive_integer_only(v) {
     return (v.match(/^[1-9]\d*$/)) ? v : v.slice(0, -1);
   }
@@ -33,14 +22,18 @@ $(document).ready(function () {
     return (v.match(/^[1-9]\d*$/) && parseInt(v) < 101) ? v : v.slice(0, -1);
   }
 
+  function decimal_with_up_to_two_places(v) {
+    if (v.slice(-1) == '.' && (v.match(/[.]/g) || []).length == 1 && v.length > 1) return v
+    // http://stackoverflow.com/questions/30606348/check-if-a-given-value-is-a-positive-number-or-float-with-maximum-two-decimal-pl
+    // http://stackoverflow.com/questions/25053605/regex-to-allow-only-a-single-dot-in-a-textbox
+    else if (v.match(/^\d+(.\d{1,2})?$/)) return v
+    else return v.slice(0, -1);
+  }
+
   // decimal with two places
   $('#hashtag_amount, #plan_amount').on('input', function(){
     $(this).val(function(_, v) {
-      if (v.slice(-1) == '.' && (v.match(/[.]/g) || []).length == 1 && v.length > 1) return v
-      // http://stackoverflow.com/questions/30606348/check-if-a-given-value-is-a-positive-number-or-float-with-maximum-two-decimal-pl
-      // http://stackoverflow.com/questions/25053605/regex-to-allow-only-a-single-dot-in-a-textbox
-      else if (v.match(/^\d+(.\d{1,2})?$/)) return v
-      else return v.slice(0, -1);
+      return decimal_with_two_places(v);
     });
   });
 
@@ -55,18 +48,16 @@ $(document).ready(function () {
     }
   }).change();
 
-  // if coupon isnt repeating. repeating needs length in months
-  $('#coupon_duration').change(function(){
-    if (this.value == 'repeating') {
-      $('#duration-in-months-div').slideDown(200)
-    } else {
-      $('#duration-in-months-div').slideUp(200);
-      $('#duration-in-months').val('');
-    }
-  }).change();
+  coupon_type_value.on('input', function(){
+    var v = this.value;
+    this.value = (coupon_type.val() == 'amount_off') ? decimal_with_up_to_two_places(v) : positive_integer_less_than_100(v);
+  });
 
-  $('#alert-include-sms').change(function(){
-    (this.checked) ? $('#alert-sms-number').slideDown(200) : $('#alert-sms-number').slideUp(200);
-  }).change();
+  coupon_type.on('change', function() {
+    var name_value = (this.value == 'amount_off') ? "coupon[amount_off]" : "coupon[percent_off]"
+    coupon_type_value.val('').attr('name', name_value);
+    $('#coupon-type-value-label').text(this.options[this.selectedIndex].text);
+  });
+
 
 });

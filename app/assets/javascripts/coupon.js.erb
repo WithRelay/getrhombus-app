@@ -3,32 +3,33 @@ $(document).ready(function () {
   RAILS_DATE_FORMAT = 'DD/MM/YYYY h:mm A'
   var date = new Date();
   var tomorrow = new Date(date.getFullYear(), date.getMonth(), date.getDate()+1);
-  $('input[name="coupon[redeem_by]"]').daterangepicker({
-    autoUpdateInput: false,
-    timePickerIncrement: 1,
-    showDropdowns: true,
-    singleDatePicker: true,
-    minDate: tomorrow,
-    todayHighlight: true,
-    timePicker: true,
-    timePickerIncrement: 1,
-    locale: {
-      format: RAILS_DATE_FORMAT,
-      cancelLabel: 'Clear'
-   },
-    weekStart: 0,
-    opens: "right",
-    drops: 'down'
-  });
 
-  $('input[name="coupon[redeem_by]"]').on('apply.daterangepicker', function(ev, picker) {
-    $(this).val(picker.startDate.format(RAILS_DATE_FORMAT));
-  });
-
-  $('input[name="coupon[redeem_by]"]').on('cancel.daterangepicker', function(ev, picker) {
-    $(this).val('');
-  });
-
+  var redeem_by_input = $('input[name="coupon[redeem_by]"]');
+  if (redeem_by_input.length > 0) {
+    redeem_by_input.daterangepicker({
+      autoUpdateInput: false,
+      timePickerIncrement: 1,
+      showDropdowns: true,
+      singleDatePicker: true,
+      minDate: tomorrow,
+      todayHighlight: true,
+      timePicker: true,
+      locale: {
+        format: RAILS_DATE_FORMAT,
+        cancelLabel: 'Clear'
+     },
+      weekStart: 0,
+      opens: "right",
+      drops: 'down'
+    })
+    .on('apply.daterangepicker', function(ev, picker) {
+      $(this).val(picker.startDate.format(RAILS_DATE_FORMAT));
+    })
+    .on('cancel.daterangepicker', function(ev, picker) {
+      $(this).val('');
+    });  
+  }
+  
   $('.delete-coupon').click(function(evt) {
     var selector = '.' + evt.target.classList[evt.target.classList.length - 1 ];
 
@@ -59,27 +60,54 @@ $(document).ready(function () {
                   }
                 }
             },
-            'coupon[amount_off]': {
-                selector: '#coupon-type-value',
-                validators: {
-                    notEmpty: {
-                        message: 'Either Amount off or Percent off  is required'
+              'coupon[percent_off]': {
+                  validators: {
+                    between:  {
+                      min: 1,
+                      max: 100,
+                      message: 'Must be between 1 and 100'
                     }
                 }
+              },
+              'coupon[amount_off]': {
+                  validators: {
+                      notEmpty: {
+                          message: 'Amount off/ Percent off is required'
+                      },
+                      regexp: {
+                        regexp:  /^\+?(0|[1-9]\d*)$/,
+                        message: 'Enter a positive value'
+                      }
+                  }
+                },
+              'coupon[duration_in_months]':{
+                  validators: {
+                    notEmpty: {
+                      message: 'Required when creating a coupon with a repeating duration'
+                    },
+                    regexp: {
+                      regexp:  /^\+?(0|[1-9]\d*)$/,
+                      message: 'Enter a positive value'
+                    }
+                  }
               }
           }
         })
-      .on('err.validator.fv', function(e, data) {
-          data.element
-              .data('fv.messages')
-              .find('small[data-fv-validator="remote"][data-fv-for="coupon[name]"]')
-              .show();
-      })
       .on('success.validator.fv', function(e, data) {
           data.element // Get the field element
           .closest('.form-group') // Get the field parent
           .removeClass('has-warning')
           .addClass('has-success')
       });
+
+  // if coupon isnt repeating. repeating needs length in months
+  $('#coupon_duration').change(function(){
+    if (this.value == 'repeating') {
+      $('#duration-in-months-div').slideDown(200)
+    } else {
+      $('#duration-in-months-div').slideUp(200);
+      $('#duration-in-months').val('');
+    }
+  }).change();
 
 })

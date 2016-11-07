@@ -8,14 +8,29 @@ Review
 - when user logs in through messenger, indicate in referrers
 - change all emails in test db dump
 
-
 To Dos
+- comment code
 - keep controllers lean
+- must be timezone aware time.current or time.zone.now - assume user sends in time in the timezone they have set on dashboard
+
+Surya
+- Surya.....is email content sanitized?
+- I see Time.now...should be timezone aware...use Time.current
+- date_today = Date.today.strftime("%Y-%m-%d")
+- validate :date_time_validate, if: proc { |c| (c.deliver_now? && c.recurring?) || (c.one_time? && !c.deliver_now?) }
+- channel_text_size = { 'sms' => 1500, 'facebook_messenger' => 320 }
+- if one-time and deliver now...set date_time to blank
 
 For Bhisma
-- Subscriptions
-- Some stripe events
-- alerts from stripe cc form
+- Test serverside validations - show validation errors else show generic error
+- please pay attention to my code format...we need clean code
+- Load more...if you dont get any data or something fails...fail gracefully...show toastr - this is expected from you
+- Load more button should stay disabled until data comes back...dont settimeout...i think u can use .done .fail
+- validate...only plan/coupon name on the fly if possible...but don't validate on the fly..amount in coupons/plans allows decimal...see my validations
+- on interval/duration change, revalidate associate field...or just wipe the count field or just remove validation errors and set to nor validated or both...i think both...will decide
+- no need to check for uid...a merchant must have one for plans to even show up...if you want to do a check...then handle when it isnt present and return false immediately
+- only one validation message at a time per field
+- separate amount_off/percent_off validations...separate messages
 
 - what happens when u send image in countries that don't support it. link?
 - check trumbowyg working

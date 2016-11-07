@@ -25,8 +25,6 @@
 //= require chartist
 //= require jquery.payment
 //= require ohsnap.js
-//= require moment
-//= require daterangepicker
 //= require url-parameters
 //= require managed-account
 //= require location
@@ -48,3 +46,5 @@
 //= require lists
 //= require alerts
 //= require hashtags_plans_coupons_alerts
+//= require jquery.checkboxes-1.2.0.min.js
+
