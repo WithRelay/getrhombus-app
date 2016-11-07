@@ -25,7 +25,6 @@ Bhisma
 - Create Seeds
 - Clean up angular - https://blog.joshsoftware.com/2014/07/17/building-web-apps-with-rails4-and-angularjs-in-15-minutes/
 - remove thread profiler in prod
-- keeling's server   
 - when you need to access the underlying object....use instance method else use class method
 - notifications platform to merchants should have a single conversation and should not be pulled - mark as read too
 - conversations....need origin...cos system to customers should not open conversation....
@@ -55,5 +54,4 @@ For Surya
 - You need to bind counter to all fields once except email....you will need to do that on focus...use variable to keep track
 - if it is a one time, you need to mark inactive
 - update action needs to update campaign_lists
-- counter should be outside the box....not needed for email...should count down...
 - scroll bar in emoji isnt clickable/draggable, can we group the emojis
