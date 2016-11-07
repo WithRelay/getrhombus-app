@@ -8,15 +8,11 @@ Review
 - when user logs in through messenger, indicate in referrers
 - change all emails in test db dump
 - check how we save platform stripe cred...does stripe connect still work?
-
-To Dos
-- comment code
-- keep controllers lean
-- must be timezone aware time.current or time.zone.now - assume user sends in time in the timezone they have set on dashboard
+- add index to coupon/plan names
 
 Surya
-
 Bhisma
+Ovo
 
 - what happens when u send image in countries that don't support it. link?
 - check trumbowyg working
@@ -37,16 +33,12 @@ Payment Capture - should be for only customers....capture in logic
 - plug in charge into payment capture workflow
 - let parse_text return cents i guess and just divide by 100 to show
 
-All APIs especially Stripe, Twilio
-- Test all data saves correctly
-
 Contact - Inbound
 - sent u a text doesnt have an account 
 - have an account, sent u a text but ref link isnt yours 
 
 Campaigns and Facebook
 - fail safely for audio and video files
-
 
 For Surya
 - You can't delete campaign that has run
