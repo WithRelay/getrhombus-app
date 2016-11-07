@@ -12,8 +12,8 @@ class StripeEvent
         subscription_trial_will_end
       when "customer.subscription.deleted"
         customer_subscription_deleted
-      when "customer.subscription.updated"
-        customer_subscription_updated
+      #when "customer.subscription.updated"
+        #customer_subscription_updated
       when "invoice.payment_failed"
         invoice_payment_failed
       when "invoice.payment_succeeded"
@@ -59,6 +59,7 @@ class StripeEvent
       end
     end
 
+=begin
     # At the moment, Subscription only changes if a coupon is added.
     # Else to change a subscription, cancel and create a new one
     # It also notifies us of changes from trial to active
@@ -70,6 +71,7 @@ class StripeEvent
         # Notify (admin)
       end
     end
+=end
 
     # Most fields aren't important but we can resave data
     def update_subscription_data

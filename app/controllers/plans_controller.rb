@@ -10,6 +10,7 @@ class PlansController < ApplicationController
               .paginate(page: params[:page], per_page: 1)
               .order('plans.created_at DESC')
 
+    sleep 10
     respond_with(@plans)
   end
 

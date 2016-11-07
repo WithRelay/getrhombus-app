@@ -20,7 +20,7 @@ jQuery(function() {
               }
               return loading_views = false;
             });
-         }, 2000);
+         }, 10);
       }
     });
   }
