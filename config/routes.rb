@@ -122,6 +122,7 @@ Rails.application.routes.draw  do
     match 'lists/create' => 'lists#create', via: :post
     match 'coupons/check_coupon_name' => 'coupons#check_coupon_name', via: :post
     match 'plans/check_plan_name' => 'plans#check_plan_name', via: :post
+  end
 
   ## catch all other to 404
   get "/*other", to: 'static_pages#to_404'     #all non-existent routes go to 404
