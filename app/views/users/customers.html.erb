@@ -137,7 +137,7 @@
           <%= form_tag("/v1/lists/create", id: "create_user_list", method: "post") do %>
             <%= label_tag(:list_name, "List name") %>
             <%= hidden_field_tag(:selected_users) %>
-            <%= hidden_field_tag(:list_type) %>
+            <%= hidden_field_tag(:list_type, 'list') %>
             <%= text_field_tag(:list_name) %>
             <%= submit_tag("Submit list") %>
           </div>
