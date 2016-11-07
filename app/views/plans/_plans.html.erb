@@ -5,7 +5,7 @@
     <tr>
       <td colspan="3"><%= plan.name %></td>
       <!-- show amount like $12.33, $10.00 -->
-      <td colspan="3"><%= "%.2f" %(plan.amount.to_f) %></td>
+      <td colspan="3"><%= "%.2f" %(plan.amount.to_f/100) %></td>
       <td colspan="3"><%= plan.interval %></td>
       <td colspan="3"><%= plan.interval_count %></td>
       <!-- <td><%= plan.currency %></td>

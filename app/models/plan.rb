@@ -20,7 +20,7 @@ class Plan < ActiveRecord::Base
       # dont send team/merchant or customer data in hash
       [:team, :customer].each { |k| hash.delete(k) } 
       # Update so validations run before calling Stripe
-      self.amount = self.amount * 100
+      self.amount = self.amount
       self.update(user_id: _user_id, statement_descriptor: descriptor)
 
       hash[:interval] = self.interval

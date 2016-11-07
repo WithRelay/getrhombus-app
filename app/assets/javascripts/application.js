@@ -16,8 +16,9 @@
 //= require pnotify
 //= require flashes
 //= require pagination
-//= require coupon
 //= require plan
+//= require coupon
+//= require subscription
 //= require jquery_ujs
 //= require jquery.lightbox_me
 //= require intlTelInput.min
@@ -47,4 +48,3 @@
 //= require alerts
 //= require hashtags_plans_coupons_alerts
 //= require jquery.checkboxes-1.2.0.min.js
-

@@ -30,8 +30,15 @@ class CouponsController < ApplicationController
     if @coupon.create_coupon({ team: current_user })
       redirect_to user_coupons_path, flash: { notice: 'Coupon was created' }
     else
+      # revoke amount_off from cent
+      @coupon.amount_off = @coupon.amount_off/100.to_f if  @coupon.amount_off
       @coupon.destroy     # revoke created coupon on error
-      flash[:error] = "We couldn't create the coupon"
+      if @coupon.errors.messages
+        error = @coupon.errors.messages
+        flash[:error] = error
+      else
+        flash[:error] = "We couldn't create the coupon"
+      end
       render :new
     end
   end
@@ -56,7 +63,9 @@ class CouponsController < ApplicationController
 
     def coupon_params
       params.require(:coupon).permit(:name, :amount_off, :duration, :duration_in_months, :max_redemptions,
-        :percent_off, :redeem_by).tap{ |coupon| 
+        :percent_off, :redeem_by).tap{ |coupon|
+        # amount_off should be in cent
+        coupon[:amount_off] = (100 * coupon[:amount_off].to_f).to_i if coupon[:amount_off].present?
         coupon[:redeem_by] = Time.zone.parse(coupon[:redeem_by]).to_i if coupon[:redeem_by].present?
       }
     end
