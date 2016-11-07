@@ -20,7 +20,7 @@
       <% elsif flash[:error].is_a? Hash %> 
         var errors = "";
         <% flash[:error].each do |k, v| %>
-          errors += "<%= k %> <%= v %>\n" ;
+          errors += "<%= k %> <%= v.first %>\n" ;
         <% end %>
         flashError(errors);
       <% end %>

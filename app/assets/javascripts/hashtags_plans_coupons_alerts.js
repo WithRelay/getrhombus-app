@@ -10,7 +10,7 @@ $(document).ready(function () {
   });
 
   // Positive integer only
-  $('#interval-count, #duration-in-months, #max-redemptions').on('input', function(){
+  $('#interval-count, #duration-in-months, #max-redemptions, #subscription_quantity').on('input', function(){
     this.value = positive_integer_only(this.value);
   });
 
@@ -33,7 +33,7 @@ $(document).ready(function () {
   // decimal with two places
   $('#hashtag_amount, #plan_amount').on('input', function(){
     $(this).val(function(_, v) {
-      return decimal_with_two_places(v);
+      return decimal_with_up_to_two_places(v);
     });
   });
 
@@ -57,6 +57,11 @@ $(document).ready(function () {
     var name_value = (this.value == 'amount_off') ? "coupon[amount_off]" : "coupon[percent_off]"
     coupon_type_value.val('').attr('name', name_value);
     $('#coupon-type-value-label').text(this.options[this.selectedIndex].text);
+    var text = (name_value === 'coupon[percent_off]')?
+      "Percent off is required" : "Amount off is required";
+    if ($('.dynamic-coupon').find('small')){
+      $('.dynamic-coupon').find('small').text(text);
+    }
   });
 
 

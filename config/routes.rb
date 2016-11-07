@@ -59,7 +59,7 @@ Rails.application.routes.draw  do
     resources :fb_pages, only: [:index]
     patch 'update_fb_page' => 'fb_pages#update_user_fb_page'
     resources :hashtags, except: [:show, :destroy]
-    resources :subscriptions, except: [:show, :edit, :update]
+    resources :subscriptions, except: [:edit, :update]
     resources :plans, only: [:create, :index, :new, :edit, :update, :destroy]
     resources :alerts, only: [:update]
     resources :saved_replies
@@ -85,7 +85,7 @@ Rails.application.routes.draw  do
 
     # Only admins can create coupons
     resources :coupons, :constraints => lambda { |req|
-      req.env['warden'].authenticated? and req.env['warden'].user.email == '<redacted_email>' #Rails.application.secrets.dashboard_email
+      req.env['warden'].authenticated? #and req.env['warden'].user.email == '<redacted_email>' #Rails.application.secrets.dashboard_email
     }
 
     member do

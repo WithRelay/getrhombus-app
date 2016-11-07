@@ -1,0 +1,30 @@
+$(document).ready(function () {
+  $('#subscriptionForm')
+    .formValidation({
+      framework: 'bootstrap',
+      // List of fields and their validation rules
+      fields: {
+        'subscription[plan_id]':{
+           validators: {
+             notEmpty: {
+               message: 'Plan is required'
+             }
+           }
+        },
+        'subscription[user_id]':{
+           validators: {
+             notEmpty: {
+               message: 'Customer is required'
+             }
+           }
+        }
+      }
+    })
+    .on('success.validator.fv', function(e, data) {
+      data.element // Get the field element
+      .closest('.form-group') // Get the field parent
+      .removeClass('has-warning')
+      .addClass('has-success')
+    });
+
+})

@@ -31,9 +31,15 @@ class PlansController < ApplicationController
     if @plan.create_plan({ team: current_user })
       redirect_to user_plans_path,  flash: { notice: 'Plan was created' }      #respond_with(@plan)
     else
+      @plan.amount = @plan.amount/100.to_f if  @plan.amount
       @plan.destroy     # revoke created plan on error
-      flash[:error] = "We couldn't create the plan" 
-      render :new  
+      if @plan.errors.messages
+        error = @plan.errors.messages
+        flash[:error] = error
+      else
+        flash[:error] = "We couldn't create the plan"
+      end
+      render :new
     end
   end
 
@@ -67,6 +73,7 @@ class PlansController < ApplicationController
 
     def plan_params
       params.require(:plan).permit(:interval, :name, :amount).tap{ |plan|
+        plan[:amount] = (100 * plan[:amount].to_f).to_i if plan[:amount].present?
         if params[:plan][:interval_month]
           plan['interval_count'] = params[:plan][:interval_month]
         elsif params[:plan][:interval_week]

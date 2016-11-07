@@ -155,22 +155,6 @@ class PaymentService
       end
     end
 
-    # This applies to saas fee only
-    # so only coupon changes should call this for now
-    # Stripe prorate charges by default
-    def update_subscription(hash)
-      begin 
-        sbtn = Stripe::Subscription.retrieve(hash[:subscription_id])
-        sbtn.coupon = hash[:stripe_coupon_id]
-        sbtn.save
-      rescue Stripe::StripeError => e
-        # Display a very generic error to the user, and maybe send yourself an email
-        [false, e.json_body[:error]]
-      rescue StandardError => e
-        [false, e]
-      end
-    end
-
     def create_coupon(hash)
       begin
         # stripe_account param not needed for platform and only platform create coupons for now
@@ -226,15 +210,31 @@ class PaymentService
 end
 
 =begin
-    def create_customer(hash)
-      cu = Stripe::Customer.create(email: hash[:email], source: hash[:card_token]) 
-    end
+  def create_customer(hash)
+    cu = Stripe::Customer.create(email: hash[:email], source: hash[:card_token]) 
+  end
 
-    def update_customer(hash)
-      cu = Stripe::Customer.retrieve(hash[:uri])  
-      cu.email = hash[:email]
-      cu.source = params[:card_token]
-      cu.save   
+  def update_customer(hash)
+    cu = Stripe::Customer.retrieve(hash[:uri])  
+    cu.email = hash[:email]
+    cu.source = params[:card_token]
+    cu.save   
+  end
+
+  # This applies to saas fee only
+  # so only coupon changes should call this for now
+  # Stripe prorate charges by default
+  def update_subscription(hash)
+    begin 
+      sbtn = Stripe::Subscription.retrieve(hash[:subscription_id])
+      sbtn.coupon = hash[:stripe_coupon_id]
+      sbtn.save
+    rescue Stripe::StripeError => e
+      # Display a very generic error to the user, and maybe send yourself an email
+      [false, e.json_body[:error]]
+    rescue StandardError => e
+      [false, e]
     end
+  end
 =end
 

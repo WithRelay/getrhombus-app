@@ -60,23 +60,11 @@ $(document).ready(function () {
                   }
                 }
             },
-              'coupon[percent_off]': {
-                  validators: {
-                    between:  {
-                      min: 1,
-                      max: 100,
-                      message: 'Must be between 1 and 100'
-                    }
-                }
-              },
               'coupon[amount_off]': {
-                  validators: {
+                 selector: '#coupon-type-value',
+                 validators: {
                       notEmpty: {
-                          message: 'Amount off/ Percent off is required'
-                      },
-                      regexp: {
-                        regexp:  /^\+?(0|[1-9]\d*)$/,
-                        message: 'Enter a positive value'
+                          message: 'Amount off is required'
                       }
                   }
                 },
@@ -109,5 +97,12 @@ $(document).ready(function () {
       $('#duration-in-months').val('');
     }
   }).change();
+
+  $('#coupon_duration').change(function(){
+    if ($(this).val() !== 'repeating'){
+      $('#commit').removeAttr('disabled');
+      $('#commit').attr('class', 'btn btn-primary');
+    }
+  })
 
 })
