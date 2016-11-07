@@ -17,9 +17,7 @@ class CampaignsController < ApplicationController
 
   # creates a campaigns, campaign_lists, images if params available, associate inline image with campaign
   def create
-    @campaign = current_user.campaigns.build(campaign_params)
-    campaign_params[:list_ids].split(',').each { |list_id| @campaign.campaign_lists.build(list_id: list_id) }
-    save_campaign_images(@campaign)
+    @campaign = current_user.campaigns.build(campaign_params, image_params)
     if @campaign.save
       enqueue_jobs(@campaign) # enque jobs if there is send now checked or one time is checked
       flash[:notice] = 'Campaign Saved successfully'
@@ -36,10 +34,7 @@ class CampaignsController < ApplicationController
   end
 
   def update
-    save_campaign_images(@campaign)
-    if @campaign.update_attributes(campaign_params)
-      @campaign.campaign_lists.delete_all
-      campaign_params[:list_ids].split(',').each { |list_id| @campaign.campaign_lists.build(list_id: list_id).save }
+    if @campaign.update_attributes(campaign_params, image_params)
       destroy_campaign_jobs; change_campaign_job; enqueue_jobs(@campaign);
       flash[:notice] = 'Campaign updated successfully'
     else
@@ -78,7 +73,7 @@ class CampaignsController < ApplicationController
 
   def change_campaign_job
     date_today = Date.today.strftime("%Y-%m-%d")
-    utc_date_time = @campaign.date_time.in_time_zone(@campaign.user.time_zone).utc
+    utc_date_time = @campaign.date_time.utc
     today_campaign = utc_date_time.strftime("%Y-%m-%d") == date_today
     if @campaign.active? && today_campaign
       Resque.enqueue_at_with_queue('default', utc_date_time, ChannelJob, @campaign.id)
@@ -107,18 +102,8 @@ class CampaignsController < ApplicationController
   end
 
   def enqueue_jobs(campaign)
-    utc_date_time = campaign.date_time.in_time_zone(campaign.user.time_zone).utc
-    Resque.enqueue_at_with_queue('default', utc_date_time, ChannelJob, campaign.id) if is_campaign_date_selected?(campaign)
+    Resque.enqueue_at_with_queue('default', campaign.date_time, ChannelJob, campaign.id) if is_campaign_date_selected?(campaign)
     CampaignJob.perform_now(campaign) if campaign.deliver_now
-  end
-
-  def save_campaign_images(campaign)
-    image_params[:avatar].each do |image|
-      campaign.images.build(avatar: image, uploaded_as: 1)
-    end if (!campaign.sms? && image_params[:avatar].present?)
-    image_params[:image_id].each do |avatar_id|
-      campaign.image_refs.build(image_id: avatar_id).save;
-    end if image_params[:image_id].present?
   end
 
   def campaign_params

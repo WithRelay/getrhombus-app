@@ -48,4 +48,3 @@
 //= require alerts
 //= require hashtags_plans_coupons_alerts
 //= require jquery.checkboxes-1.2.0.min.js
-
