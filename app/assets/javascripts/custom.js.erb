@@ -1289,6 +1289,7 @@ $(document).ready(function () {
               div = "<div class='images'><a href='#' class='deleteImagePreviews' title='"+img.filename+"'>Delete "+ counter.length +" Images</a><img class='thumbnail' src='" + img.result + "'" + "title='" + img.filename + "'/>" +
                     "<span>" + img.filename + "</span></div>";
             }
+          console.log(div)
           new_image_previews.prepend(div);
         };
 
