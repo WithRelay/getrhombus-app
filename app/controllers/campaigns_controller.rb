@@ -16,6 +16,7 @@ class CampaignsController < ApplicationController
   end
 
   # creates a campaigns, campaign_lists, images if params available, associate inline image with campaign
+  # note : build method is being overide please go through user model has_many :campaigns relationship
   def create
     @campaign = current_user.campaigns.build(campaign_params, image_params)
     if @campaign.save
@@ -33,6 +34,7 @@ class CampaignsController < ApplicationController
     @lists_json = @campaign.lists.to_json
   end
 
+  # note : update_attributes method is being overide please go through campaign model
   def update
     if @campaign.update_attributes(campaign_params, image_params)
       destroy_campaign_jobs; change_campaign_job; enqueue_jobs(@campaign);
@@ -102,7 +104,9 @@ class CampaignsController < ApplicationController
   end
 
   def enqueue_jobs(campaign)
-    Resque.enqueue_at_with_queue('default', campaign.date_time, ChannelJob, campaign.id) if is_campaign_date_selected?(campaign)
+    # rescue enqueue_at_with_queue accpets four parameter 1 name of queue, 2 date_time(provided as utc)
+    # 3 class name 4 the parameter send for class method perform
+    Resque.enqueue_at_with_queue('default', campaign.date_time.utc, ChannelJob, campaign.id) if is_campaign_date_selected?(campaign)
     CampaignJob.perform_now(campaign) if campaign.deliver_now
   end
 
