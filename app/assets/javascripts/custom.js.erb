@@ -1240,7 +1240,7 @@ $(document).ready(function () {
 
   // handle images
   $('#select-images-button').click(function() { $('#select-images').trigger('click'); });
-  $('#select-images').change(function() { read_file_picker(this); });
+  $(document).on('change', '#select-images', function() {read_file_picker(this); });
   function read_file_picker(input) {
     var files = input.files, new_image_previews = $('#new-image-previews').html("");
     var counter = []
@@ -1289,6 +1289,7 @@ $(document).ready(function () {
               div = "<div class='images'><a href='#' class='deleteImagePreviews' title='"+img.filename+"'>Delete "+ counter.length +" Images</a><img class='thumbnail' src='" + img.result + "'" + "title='" + img.filename + "'/>" +
                     "<span>" + img.filename + "</span></div>";
             }
+          console.log(div)
           new_image_previews.prepend(div);
         };
 

@@ -18,7 +18,22 @@ class User < ActiveRecord::Base
   has_many :referrers, class_name: 'Referrer', foreign_key: 'referrer_id'
   has_many :referees, class_name: 'Referrer', foreign_key: 'referee_id'
 
-  has_many :campaigns
+  # this block is for customizing build method for user.campaign which allow also to save list
+  has_many :campaigns do
+    def build(*args)
+      campaign = super(args[0])
+      unless args.blank?
+        args[0][:list_ids].split(',').each{ |l| campaign.campaign_lists.build(list_id: l) }
+        args[1][:avatar].each do |image|
+          campaign.images.build(avatar: image, uploaded_as: 1)
+        end if (!campaign.sms? && args[1][:avatar].present?)
+        args[1][:image_id].each do |avatar_id|
+          campaign.image_refs.build(image_id: avatar_id).save;
+        end if args[1][:image_id].present?
+      end
+      return campaign
+    end
+  end
   has_many :hashtags
 
   has_many :messages
@@ -32,7 +47,7 @@ class User < ActiveRecord::Base
 
   has_one :alert, dependent: :destroy
   has_many :fb_pages
-  
+
   has_many :saved_replies
   has_many :message_resolutions
 
@@ -74,7 +89,7 @@ class User < ActiveRecord::Base
   # You run into issues with any additional merchants.
   validates_uniqueness_of :phone_number, :allow_nil => true, :if => lambda { self.user_level == 0 }
   validate :phone_number_cannot_be_rhombus_number
- 
+
   def is_merchant?
     user_level == 1
   end
