@@ -20,7 +20,6 @@ class Campaign < ActiveRecord::Base
   # validation for repeat days if recurring is selected.
   validates_presence_of :repeat_days, if: lambda { recurring? }
   validates_presence_of :subject, if: lambda { email? }
-  accepts_nested_attributes_for :campaign_lists
 
   def from_user
     "#{first_name} #{last_name}"
