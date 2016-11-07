@@ -9,12 +9,17 @@ Review
 - change all emails in test db dump
 
 To Dos
+- comment code
 - keep controllers lean
-- must be timezone aware time.current or time.zone.now
+- must be timezone aware time.current or time.zone.now - assume user sends in time in the timezone they have set on dashboard
 
 Surya
 - Surya.....is email content sanitized?
 - I see Time.now...should be timezone aware...use Time.current
+- date_today = Date.today.strftime("%Y-%m-%d")
+- validate :date_time_validate, if: proc { |c| (c.deliver_now? && c.recurring?) || (c.one_time? && !c.deliver_now?) }
+- channel_text_size = { 'sms' => 1500, 'facebook_messenger' => 320 }
+- if one-time and deliver now...set date_time to blank
 
 For Bhisma
 - Test serverside validations - show validation errors else show generic error
