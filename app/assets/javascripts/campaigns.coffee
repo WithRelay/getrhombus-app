@@ -9,12 +9,13 @@ class DatePicker
     @today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
 
   datePicker: ->
-    $(@element).daterangepicker
-      timePicker: YES,
-      timePickerIncrement: 30,
-      singleDatePicker: YES,
-      locale: { format: RAILS_DATE_FORMAT },
-      minDate: @today
+    if $(@element).length > 0
+      $(@element).daterangepicker
+        timePicker: YES,
+        timePickerIncrement: 30,
+        singleDatePicker: YES,
+        locale: { format: RAILS_DATE_FORMAT },
+        minDate: @today
 
 class Campaign
 
@@ -30,12 +31,17 @@ class Campaign
 
   showHideEditor: (element)->
     if isEmailChecked(element)
+      $('.emailSubject').show()
       this.showFileBrowser()
       trumbowygSetting(true, @textArea)
     else if isMmsChecked(element) || isFacebookMessengerChecked(element)
       this.showFileBrowser()
+      $('.emailSubject').hide()
       trumbowygSetting(false, @textArea)
     else
+      $('.emailSubject').hide()
+      $('#select-images').val('')
+      $('.images').html('')
       this.hideFileBrowser()
       trumbowygSetting(false, @textArea)
 
@@ -55,6 +61,7 @@ class Campaign
       emojify.setConfig( { emojify_tag_type:'div' } );
       emojify.run();
       $(emojiArea).hide()
+      $('#textBoxCounter').html('')
     else
       $(area).trumbowyg('destroy');
       $(emojiArea).show()
@@ -83,14 +90,14 @@ class Campaign
       txtEmoji = $(@textArea).emojioneArea ->
                    @emojiConfig
 
-      txtEmoji[0].emojioneArea.on 'keyUp', (btn, event) ->
+      txtEmoji[0].emojioneArea.on 'focus', (btn, event) ->
         $('#undefined_counter').each ->
           $(this).remove()
         if $("#campaign_channel :selected").val() == "2"
           value = 320
         else
           value = 1500
-        $('.emojionearea-editor').counter({ type: 'char', count: 'up', goal: value })
+        $('.emojionearea-editor').counter({ type: 'char', goal: value, append: false, target: '#textBoxCounter' })
 
 $( document ).on 'ready page:load', ->
   campaign = new Campaign({ pickerPosition: 'right' })
@@ -124,13 +131,23 @@ $( document ).on 'ready page:load', ->
       getBase64FromImageUrl($('input[name=url]').val())
 
   if $('#campaign_channel').val() == '3'
+    $('.emailSubject').show()
     new CustomTrumbowygPlugin('#trumbowyg')
     campaign.showFileBrowser()
   else if $('#campaign_channel').val() == '1'
     campaign.showFileBrowser()
-  else
-    campaign.hideFileBrowser()
+    $('.emailSubject').hide()
     campaign.textAreaEmojis()
+  else if $('#campaign_channel').val() == '2'
+    $('.emailSubject').hide()
+    campaign.showFileBrowser()
+    campaign.textAreaEmojis()
+  else
+    campaign.textAreaEmojis()
+    campaign.hideFileBrowser()
+    $('.emailSubject').hide()
+    $('#select-images').val('')
+    $('.images').html('')
 
   $( '#campaign_channel' ).change ->
     campaign.showHideEditor(this)

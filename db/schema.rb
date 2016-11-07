@@ -11,7 +11,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema.define(version: 20161107005349) do
+=======
+ActiveRecord::Schema.define(version: 20161105202553) do
+>>>>>>> 35c4ef28655e02890c1b581affdd86ddab0dad50
 
   create_table "addresses", force: :cascade do |t|
     t.string   "street_address",   limit: 191
@@ -93,6 +97,7 @@ ActiveRecord::Schema.define(version: 20161107005349) do
     t.datetime "date_time"
     t.text     "text",           limit: <redacted_phone_number>
     t.integer  "send_count",     limit: 4,          default: 0
+    t.text     "subject",        limit: 65535
   end
 
   add_index "campaigns", ["id", "user_id"], name: "index_campaigns_on_id_and_user_id", using: :btree
@@ -109,13 +114,16 @@ ActiveRecord::Schema.define(version: 20161107005349) do
   add_index "conversation_refs", ["textable_type", "textable_id"], name: "index_conversation_refs_on_textable_type_and_textable_id", using: :btree
 
   create_table "conversations", force: :cascade do |t|
-    t.integer  "merchant_id", limit: 4
+    t.integer  "merchant_id",           limit: 4
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "resolution",  limit: 191
-    t.string   "uid",         limit: 191
-    t.string   "uid_type",    limit: 191
+    t.text     "notes",                 limit: 65535
+    t.string   "uid",                   limit: 191
+    t.string   "uid_type",              limit: 191
+    t.integer  "message_resolution_id", limit: 4
   end
+
+  add_index "conversations", ["message_resolution_id"], name: "index_conversations_on_message_resolution_id", using: :btree
 
   create_table "coupons", force: :cascade do |t|
     t.integer  "user_id",            limit: 4
@@ -253,7 +261,7 @@ ActiveRecord::Schema.define(version: 20161107005349) do
     t.datetime "avatar_updated_at"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "upload_from",         limit: 191
+    t.integer  "uploaded_as",         limit: 4
   end
 
   create_table "invoices", force: :cascade do |t|
@@ -302,6 +310,7 @@ ActiveRecord::Schema.define(version: 20161107005349) do
 
   add_index "lists", ["user_id"], name: "index_lists_on_user_id", using: :btree
 
+<<<<<<< HEAD
   create_table "message_frequencies", force: :cascade do |t|
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false
@@ -314,26 +323,37 @@ ActiveRecord::Schema.define(version: 20161107005349) do
   end
 
   add_index "message_frequencies", ["campaign_id"], name: "index_message_frequencies_on_campaign_id", using: :btree
+=======
+  create_table "message_resolutions", force: :cascade do |t|
+    t.string   "title",      limit: 191
+    t.integer  "user_id",    limit: 4
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+  end
+
+  add_index "message_resolutions", ["user_id"], name: "fk_rails_fe68d0f806", using: :btree
+>>>>>>> 35c4ef28655e02890c1b581affdd86ddab0dad50
 
   create_table "messages", force: :cascade do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "from",              limit: 191
-    t.string   "to",                limit: 191
-    t.string   "message_timestamp", limit: 191
-    t.string   "message_price",     limit: 191
-    t.string   "status",            limit: 191
-    t.string   "error_text",        limit: 191
-    t.string   "error_code",        limit: 191
-    t.integer  "user_id",           limit: 4
-    t.integer  "user_id_to",        limit: 4
-    t.integer  "transaction_id",    limit: 4
-    t.string   "message_id",        limit: 191
-    t.text     "text",              limit: 65535
-    t.boolean  "unread",            limit: 1,     default: true
-    t.string   "num_segments",      limit: 191
-    t.string   "price_unit",        limit: 191
-    t.integer  "hashtag_id",        limit: 4
+    t.string   "from",                     limit: 191
+    t.string   "to",                       limit: 191
+    t.string   "message_timestamp",        limit: 191
+    t.string   "message_price",            limit: 191
+    t.string   "status",                   limit: 191
+    t.string   "error_text",               limit: 191
+    t.string   "error_code",               limit: 191
+    t.integer  "user_id",                  limit: 4
+    t.integer  "user_id_to",               limit: 4
+    t.integer  "transaction_id",           limit: 4
+    t.string   "message_id",               limit: 191
+    t.text     "text",                     limit: 65535
+    t.boolean  "unread",                   limit: 1,     default: true
+    t.string   "num_segments",             limit: 191
+    t.string   "price_unit",               limit: 191
+    t.integer  "hashtag_id",               limit: 4
+    t.boolean  "unread_notification_sent", limit: 1,     default: false
   end
 
   add_index "messages", ["hashtag_id"], name: "index_messages_on_hashtag_id", using: :btree
@@ -654,7 +674,11 @@ ActiveRecord::Schema.define(version: 20161107005349) do
   add_foreign_key "invoices", "users"
   add_foreign_key "invoices", "users", column: "team_id"
   add_foreign_key "lists", "users"
+<<<<<<< HEAD
   add_foreign_key "message_frequencies", "campaigns"
+=======
+  add_foreign_key "message_resolutions", "users"
+>>>>>>> 35c4ef28655e02890c1b581affdd86ddab0dad50
   add_foreign_key "messages", "hashtags"
   add_foreign_key "plans", "users"
   add_foreign_key "refunds", "transactions"

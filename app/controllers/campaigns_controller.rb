@@ -5,22 +5,23 @@ class CampaignsController < ApplicationController
   before_action :check_campaign_status, only: [ :update, :destroy, :change_status]
   layout 'campaign'
 
+  # eager loading images while showing campaign in /user/user_id/campaigns due to n+1
   def index
     @campaigns = current_user.campaigns.includes(:images)
   end
 
+  # initializing campaign as association way using build method.
   def new
-    @campaign = Campaign.new
+    @campaign = current_user.campaigns.build
   end
 
+  # creates a campaigns, campaign_lists, images if params available, associate inline image with campaign
   def create
     @campaign = current_user.campaigns.build(campaign_params)
     campaign_params[:list_ids].split(',').each { |list_id| @campaign.campaign_lists.build(list_id: list_id) }
     save_campaign_images(@campaign)
     if @campaign.save
-      utc_date_time = @campaign.date_time.in_time_zone(@campaign.user.time_zone).utc
-      Resque.enqueue_at_with_queue('default', utc_date_time, ChannelJob, @campaign.id) if is_campaign_date_selected?(@campaign)
-      CampaignJob.perform_now(@campaign) if @campaign.deliver_now
+      enqueue_jobs(@campaign) # enque jobs if there is send now checked or one time is checked
       flash[:notice] = 'Campaign Saved successfully'
       redirect_to new_user_campaign_path
     else
@@ -35,8 +36,11 @@ class CampaignsController < ApplicationController
   end
 
   def update
+    save_campaign_images(@campaign)
     if @campaign.update_attributes(campaign_params)
-      change_campaign_job
+      @campaign.campaign_lists.delete_all
+      campaign_params[:list_ids].split(',').each { |list_id| @campaign.campaign_lists.build(list_id: list_id).save }
+      destroy_campaign_jobs; change_campaign_job; enqueue_jobs(@campaign);
       flash[:notice] = 'Campaign updated successfully'
     else
       flash[:error] = @campaign.errors.messages
@@ -73,9 +77,9 @@ class CampaignsController < ApplicationController
   private
 
   def change_campaign_job
-    date_today = Date.today.strftime("%Y/%m/%d")
+    date_today = Date.today.strftime("%Y-%m-%d")
     utc_date_time = @campaign.date_time.in_time_zone(@campaign.user.time_zone).utc
-    today_campaign = utc_date_time.strftime("%Y/%m/%d") == date_today
+    today_campaign = utc_date_time.strftime("%Y-%m-%d") == date_today
     if @campaign.active? && today_campaign
       Resque.enqueue_at_with_queue('default', utc_date_time, ChannelJob, @campaign.id)
     else
@@ -102,9 +106,15 @@ class CampaignsController < ApplicationController
     (campaign.one_time? && !campaign.deliver_now?)
   end
 
+  def enqueue_jobs(campaign)
+    utc_date_time = campaign.date_time.in_time_zone(campaign.user.time_zone).utc
+    Resque.enqueue_at_with_queue('default', utc_date_time, ChannelJob, campaign.id) if is_campaign_date_selected?(campaign)
+    CampaignJob.perform_now(campaign) if campaign.deliver_now
+  end
+
   def save_campaign_images(campaign)
     image_params[:avatar].each do |image|
-      campaign.images.build(avatar: image)
+      campaign.images.build(avatar: image, uploaded_as: 1)
     end if (!campaign.sms? && image_params[:avatar].present?)
     image_params[:image_id].each do |avatar_id|
       campaign.image_refs.build(image_id: avatar_id).save;
@@ -114,7 +124,7 @@ class CampaignsController < ApplicationController
   def campaign_params
     # enums are define as integer but params are in string and rails is not converting string to integer
     params.require(:campaign).permit(:name, :list_ids, :channel, :repeat_days, :date_time, :deliver_now,
-                                     :frequency_type, :text, :new_status).tap do |c|
+                                     :frequency_type, :text, :new_status, :subject).tap do |c|
                                       c[:channel] = c[:channel].to_i
                                       c[:frequency_type] = c[:frequency_type].to_i
                                       c[:deliver_now]=='1' ? c[:deliver_now] = true : c[:deliver_now] = false

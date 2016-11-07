@@ -70,26 +70,11 @@ $( document ).ready(function() {
   });
 
   $('#delete_integration').click(function (evt) {
-    evt.preventDefault();
-    swal({
-      title: "Rhombus Facebook Messenger Integration",
-      text: "Are you sure, you want to remove the integration?",
-      type: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#dd1c06",
-      confirmButtonText: "Remove",
-      cancelButtonText: "Cancel",
-      closeOnConfirm: false,
-      closeOnCancel: false },
-      function (isConfirm) {
-      if (isConfirm) {
-        swal("Removed!", "You have disconnected Facebook Messenger from Rhombus.", "success");
-        window.location = $('#delete_integration').attr('href');
-      } else {
-        swal("Cancelled", "You are still connected with Rhombus", "error");
-        return false;
-      }
-    });
+    if (!$('#delete_integration').attr('isDestroy')) {
+      flashConfirm('#delete_integration','Rhombus Facebook Messenger Integration',
+        'Are you sure, you want to remove the integration?', 'isDestroy' )
+      return false;
+    }
   });
 
   // validate link_facebook form

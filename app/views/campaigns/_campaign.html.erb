@@ -1,5 +1,7 @@
 <%= form_for [current_user, @campaign], html: { multipart: true } do |f| %>
 
+<div class="row">
+
   <%= f.label :Name %>
   <%= f.text_field :name %>
 
@@ -37,11 +39,15 @@
   </div>
 
   <br><br>
-
-  <div class="row">
     <div class='newMessage'>
+      <div class='emailSubject'>
+        <%= f.label :subject %>
+        <%= f.text_field :subject %>
+      </div>
+      <br>
         <%= f.text_area :text, id: 'trumbowyg' %>
       </div>
+      <div id="textBoxCounter"> </div>
   </div>
 
   <br><br>

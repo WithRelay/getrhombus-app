@@ -19,19 +19,22 @@ class User < ActiveRecord::Base
   has_many :referees, class_name: 'Referrer', foreign_key: 'referee_id'
 
   has_many :campaigns
-
-  # messages goes away with conversation model
-  has_many :messages
   has_many :hashtags
+
+  has_many :messages
+  has_many :team_conversations, class_name: 'Conversation', foreign_key: 'merchant_id'
 
   has_many :plans
   has_many :coupons
 
   has_one :twitter_cred
   has_one :fb_cred
+
   has_one :alert, dependent: :destroy
   has_many :fb_pages
+  
   has_many :saved_replies
+  has_many :message_resolutions
 
   has_many :image_refs, as: :imageable
   has_many :images, through: :image_refs
@@ -43,8 +46,8 @@ class User < ActiveRecord::Base
   has_many :bank_accounts
   accepts_nested_attributes_for :bank_accounts
 
-  has_one :stripe_cred
-  accepts_nested_attributes_for :stripe_cred
+  has_many :stripe_creds
+  accepts_nested_attributes_for :stripe_creds
 
   has_one :address, as: :addressable
   accepts_nested_attributes_for :address
@@ -56,7 +59,7 @@ class User < ActiveRecord::Base
   before_create :set_merchant_org_phone          # only create because the actual org_phone field is used in edit view
 
   after_commit :create_user_alert, on: :create, if: lambda { self.user_level == 1 }
-  after_commit :update_phone_in_db, on: :update, if: lambda { self.previous_changes['phone_number'] && self.user_level == 0 }
+  after_commit :update_phone_in_db, on: :update
 
   validates_presence_of :user_level, message: "Please select an account type"
   # Sign up form uses phone_number field for both user types
@@ -70,9 +73,14 @@ class User < ActiveRecord::Base
   # And since mysql indexes this field, it indexes nil and only allows one row with nil.
   # You run into issues with any additional merchants.
   validates_uniqueness_of :phone_number, :allow_nil => true, :if => lambda { self.user_level == 0 }
-
+  validate :phone_number_cannot_be_rhombus_number
+ 
   def is_merchant?
     user_level == 1
+  end
+
+  def is_platform?
+    email != '<redacted_email>' && email != '<redacted_email>'
   end
 
   def can_send_mms?
@@ -151,6 +159,13 @@ class User < ActiveRecord::Base
 
   private
 
+    # Some users sign up with Rhombus numbers
+    def phone_number_cannot_be_rhombus_number
+      if User.exists?(rhombus_number: self.phone_number)
+        errors.add(:phone_number, "can't be a Rhombus number. Please enter your phone number.")
+      end
+    end
+
     def set_merchant_org_phone
       if self.user_level == 1
         self.org_phone = self.phone_number
@@ -189,12 +204,16 @@ class User < ActiveRecord::Base
 
     # move to background job
     def update_phone_in_db
-      ActiveRecord::Base.connection.execute("UPDATE messages SET messages.from = #{x[1]} WHERE messages.from = #{x[0]}")
-      ActiveRecord::Base.connection.execute("UPDATE messages SET messages.to = #{x[1]} WHERE messages.to = #{x[0]}")
+      if self.user_level == 0
+        if x = self.previous_changes['phone_number']
+          ActiveRecord::Base.connection.execute("UPDATE messages SET messages.from = #{x[1]} WHERE messages.from = #{x[0]}")
+          ActiveRecord::Base.connection.execute("UPDATE messages SET messages.to = #{x[1]} WHERE messages.to = #{x[0]}")
+        end
+      end
     end
 
     def create_user_alert
-      Alert.create(user_id: self.id, sms_number: self.org_phone)   # move to background job?
+      Alert.create_with(user_id: self.id, sms_number: self.org_phone).find_or_create_by(user_id: self.id)
     end
 
 end

@@ -228,16 +228,6 @@ $(document).ready(function () {
   // bootstrap -select plugin
 
 
-  // For phone number input field
-  var telInput = $("#phone");
-  telInput.intlTelInput({
-      nationalMode: true,
-      defaultCountry: "auto",
-      ipinfoToken: "ae79647534348f",
-      utilsScript: "<%= asset_path 'utils.js' %>" // just for formatting/placeholders etc
-  });
-
-
   // validate signin form
   $('#signinForm')
       .formValidation({
@@ -439,7 +429,7 @@ $(document).ready(function () {
                   validators: {
                       callback: {
                           callback: function (value, validator, $field) {
-                              if (telInput.intlTelInput("isValidNumber")) {
+                              if (PhoneNumberFormatter.isValid()) {
                                   return {
                                       valid: true,    // or false
                                       message: 'Valid number'
@@ -577,7 +567,7 @@ $(document).ready(function () {
                   validators: {
                       callback: {
                           callback: function (value, validator, $field) {
-                              if (telInput.intlTelInput("isValidNumber")) {
+                              if (PhoneNumberFormatter.isValid()) {
                                   return {
                                       valid: true,    // or false
                                       message: 'Valid number'
@@ -751,7 +741,7 @@ $(document).ready(function () {
                   validators: {
                       callback: {
                           callback: function (value, validator, $field) {
-                              if (telInput.intlTelInput("isValidNumber")) {
+                              if (PhoneNumberFormatter.isValid()) {
                                   return {
                                       valid: true,    // or false
                                       message: 'Valid number'
@@ -1064,7 +1054,7 @@ $(document).ready(function () {
 
 
   function get_expiry_date_data() { return $('input#cc-exp').payment('cardExpiryVal'); }
-  function set_number() { $('#phone_number').val(telInput.intlTelInput("getNumber").replace("+", '')); }
+  function set_number() { $('#phone_number').val(PhoneNumberFormatter.getNumber().replace("+", '')); }
   function submit_cc_form() { $("#user-form").unbind("submit", preventDefault).submit(); }
 
   // Simply populates credit card and bank account fields with test data
@@ -1107,165 +1097,7 @@ $(document).ready(function () {
   // character counter
   $("#count_me").counter();
 
-  var submit_contact_form = function(json) {
-    $.ajax({ url: contact_url,
-        type: 'POST',
-        beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
-        data: json
-    })
-        .done(function(data, response) {
-            ohSnap('Yes! Your message has been sent!', 'green');
-        })
-        .fail(function( data ) {
-            ohSnap('Oh no! We were unable to send your message...', 'red');
-        })
-  }
-
-  // validate contact form
-  $('#contact-form')
-      .formValidation({
-          // I am validating Bootstrap form
-          framework: 'bootstrap',
-          live: 'disabled',
-          // List of fields and their validation rules!
-          fields: {
-              'contact_form[email]': {
-                  verbose: false,
-                  row: '.form-group',
-                  validators: {
-                      notEmpty: {
-                          message: 'Your email is required'
-                      },
-                      emailAddress: {
-                          message: "The email isn't valid"
-                      },
-                      remote: {
-                          type: 'GET',
-                          url: 'https://api.mailgun.net/v2/address/validate?callback=?',
-                          crossDomain: true,
-                          name: 'address',
-                          data: {
-                              // Registry a Mailgun account and get a free API key
-                              // at https://mailgun.com/signup
-                              api_key: '<redacted_api_key>'
-                          },
-                          dataType: 'jsonp',
-                          validKey: 'is_valid',
-                          message: "The email isn't valid"
-                      }
-                  }
-              },
-              'contact_form[name]': {
-                  verbose: false,
-                  row: '.form-group',
-                  validators: {
-                      notEmpty: {
-                          message: 'Please enter your name'
-                      }
-                  }
-              },
-              'contact_form[organization]': {
-                  verbose: false,
-                  row: '.form-group',
-                  validators: {
-                      notEmpty: {
-                          message: 'Please enter your company'
-                      }
-                  }
-              },
-              'contact_form[message]': {
-                  verbose: false,
-                  row: '.form-group',
-                  validators: {
-                      notEmpty: {
-                          message: 'Please enter a message'
-                      }
-                  }
-              }
-          }
-      })
-      .on('success.validator.fv', function(e, data) {
-          if (data.field === 'contact_form[email]' && data.validator === 'remote') {
-              var response = data.result;  // response is the result returned by MailGun API
-              if (response.did_you_mean) {
-                  // Update the message
-                  data.element                    // The field element
-                      .data('fv.messages')        // The message container
-                      .find('[data-fv-validator="remote"][data-fv-for="contact_form[email]"]')
-                      .html('Did you mean ' + response.did_you_mean + '?')
-                      .show();
-              }
-          }
-      })
-      .on('err.validator.fv', function(e, data) {
-          if (data.field === 'contact_form[email]' && data.validator === 'remote') {
-              // We need to reset the error message
-              data.element                // The field element
-                  .data('fv.messages')    // The message container
-                  .find('[data-fv-validator="remote"][data-fv-for="contact_form[email]"]')
-                  .html("The email isn't valid")
-                  .show();
-          }
-      })
-      .on('success.form.fv', function(e, data) {
-          e.preventDefault;
-          submit_contact_form($('#contact-form').serialize());
-          $(this).trigger("reset");
-          return false;
-      });
-      // validate contact form
-
-
-   // validate text me form
-  $('#tell-me-form')
-      .formValidation({
-          // I am validating Bootstrap form
-          framework: 'bootstrap',
-          live: 'disabled',
-          // List of fields and their validation rules!
-          fields: {
-              'phone': {
-                  row: '.form-group',
-                  validators: {
-                      callback: {
-                          callback: function (value, validator, $field) {
-                              if (telInput.intlTelInput("isValidNumber")) {
-                                  return {
-                                      valid: true,    // or false
-                                      message: 'Valid number'
-                                  }
-                              } else {
-                                  return {
-                                      valid: false,    // or false
-                                      message: 'Enter a valid number'
-                                  }
-                              }
-                          }
-                      }
-                  }
-              },
-              'zip': {
-                  verbose: false,
-                  row: '.form-group',
-                  validators: {
-                      notEmpty: {
-                          message: 'Please enter your zip code'
-                      }
-                  }
-              }
-          }
-      })
-      .on('success.form.fv', function(e, data) {
-          e.preventDefault;
-          var number = telInput.intlTelInput("getNumber"), zip = $('#zip').val();
-          var json = { "contact_form" : { "email" : "<redacted_email>", "message" : number + " - " + zip, "name" : "Text me"  } }
-          submit_contact_form(json);
-          $(this).trigger("reset");
-          return false;
-      });
-      // validate text me form
-
-  // Refunds
+    // Refunds
   $('#transactions-column').on("click", ".refund_link", function() {
       REFUND_TXN_LINK = this;
       REFUND_BOX.lightbox_me({
@@ -1411,7 +1243,7 @@ $(document).ready(function () {
   $('#select-images').change(function() { read_file_picker(this); });
   function read_file_picker(input) {
     var files = input.files, new_image_previews = $('#new-image-previews').html("");
-
+    var counter = []
     function invalid_actions(msg) {
       input.value = "";
       new_image_previews.html("");
@@ -1445,12 +1277,20 @@ $(document).ready(function () {
         }
 
         var reader = new FileReader();
-        reader.addEventListener("load", function (event) {
-          var img = event.target;
-          div = "<div class='images'><img class='thumbnail' src='" + img.result + "'" + "title='" + img.filename + "'/>" +
-                "<span>" + img.filename + "</span></div>";
+        reader.onload = function(e) {
+          var img = e.target;
+          counter.push(e.target.filename)
+          if (counter.length < 2){
+            div = "<div class='images'><a href='#' class='deleteImagePreview' title='"+img.filename+"'>Delete Image</a><img class='thumbnail' src='" + img.result + "'" + "title='" + img.filename + "'/>" +
+                  "<span>" + img.filename + "</span></div>";
+          }
+          else {
+            $('.deleteImagePreview').remove()
+              div = "<div class='images'><a href='#' class='deleteImagePreviews' title='"+img.filename+"'>Delete "+ counter.length +" Images</a><img class='thumbnail' src='" + img.result + "'" + "title='" + img.filename + "'/>" +
+                    "<span>" + img.filename + "</span></div>";
+            }
           new_image_previews.prepend(div);
-        });
+        };
 
         //Read the image
         reader.filename = file.name;
@@ -1460,15 +1300,20 @@ $(document).ready(function () {
   }
 
   function getUrl(element){
-    var controller;
-    if (span_id[0] == 'campaign'){
-      controller = 'campaigns/';
-    }
-    else{
-      controller = 'hashtags/';
-    }
+    var controller = (span_id[0] == 'campaign') ? 'campaigns/' : 'hashtags/';
     return "/v1/" + controller + $('#image-previews').data("tag-id") + "/image_delete.json"
   }
+
+  $(document).on('click', '.deleteImagePreview', function(e) {
+    $(this).parent().slideUp(400, function() {
+      this.remove();
+      $('#select-images').val('')
+     });
+  });
+  $(document).on('click', '.deleteImagePreviews', function(e) {
+    $('#new-image-previews').html('')
+    $('#select-images').val('')
+  });
 
   $(".delete-image").click(function(e) {
     e.stopPropagation();

@@ -123,7 +123,7 @@
   </fieldset>
 
   <br><br>
-  <%= f.fields_for :stripe_cred do |c| %>
+  <%= f.fields_for :stripe_creds do |c| %>
     <div>
       <%= c.hidden_field :uid_type, value: 'managed' %>
       <%= c.hidden_field :ip %>

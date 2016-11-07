@@ -35,10 +35,11 @@
 
   <div class="field" id='alert-sms-number'>
     <%= f.label :sms_number %><br>
-    <%= f.hidden_field :sms_number, :id => "phone_number" %>
-    <%= f.phone_field :phone, :id => "phone" %>
+    <%= f.hidden_field :sms_number, id: "phone_number" %>
+    <div class="form-group"><%= f.phone_field :phone, id: "phone", type: 'tel' %></div>
   </div>
 
+  <div id="ada">adas</div>
 
   <br><br><br>
 
@@ -50,6 +51,6 @@
   <br>
 
   <div class="actions">
-    <%= f.submit 'Create Alert', data: { disable_with: "Please wait..." } %>
+    <%= f.submit 'Update Alert Settings' %>
   </div>
 <% end %>

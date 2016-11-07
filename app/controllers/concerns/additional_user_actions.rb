@@ -12,7 +12,7 @@ module AdditionalUserActions
   def managed_acct
     @user.address || @user.build_address
     @user.bank_accounts.present? || @user.bank_accounts.build
-    @user.stripe_cred || @user.build_stripe_cred
+    @user.stripe_creds.present? || @user.stripe_creds.build
     @user.people.present? || @user.people.build
     @user.people.each_with_index { |p,i| @user.people[i].address || @user.people[i].build_address }
   end

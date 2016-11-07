@@ -10,11 +10,12 @@ class Image < ActiveRecord::Base
   has_many :messages, through: :image_refs, source: :imageable, source_type: 'Message', dependent: :destroy
   has_many :fb_messages, through: :image_refs, source: :imageable, source_type: 'FbMessage', dependent: :destroy
 
-  has_attached_file :avatar, styles: lambda { |i| i.instance.upload_from.present? ?
+  has_attached_file :avatar, styles: lambda { |i| i.instance.uploaded_as.present? ?
                                               IMAGE_VERSIONS : Hash[*Image::IMAGE_VERSIONS.first]
                                             }
   # Validate the attached image is image/jpg, image/png, etc
   validates_attachment_content_type :avatar, :content_type => /\Aimage\/.*\Z/
+  enum uploaded_as: [:inline,  :attachment]
 
   def avatar_from_remote_url(url_value)
     self.avatar = URI.parse(url_value)

@@ -3,8 +3,13 @@ class PlansController < ApplicationController
   respond_to :html, :js
 
   def index
-    @plans = current_user.plans.paginate(page: params[:page], per_page: 25).order('updated_at DESC')
-    # @plans = Plan.all
+    # get subscription id to use to determine if destroy link should show up
+    @plans = current_user.plans
+              .joins("LEFT JOIN subscriptions s ON s.plan_id = plans.id")
+              .select('plans.id, amount, plans.name, currency, plans.interval, interval_count, s.id as subscription_id')
+              .paginate(page: params[:page], per_page: 1)
+              .order('plans.created_at DESC')
+
     respond_with(@plans)
   end
 
@@ -22,22 +27,37 @@ class PlansController < ApplicationController
 
   def create
     @plan = Plan.new(plan_params)
-    @plan.user_id = current_user.id
-    if @plan.create_plan({ team: current_user })  #@plan.save
-      redirect_to user_plans_path       #respond_with(@plan)
+
+    if @plan.create_plan({ team: current_user })
+      redirect_to user_plans_path,  flash: { notice: 'Plan was created' }      #respond_with(@plan)
     else
-      respond_with(@plan)
+      @plan.destroy     # revoke created plan on error
+      flash[:error] = "We couldn't create the plan" 
+      render :new  
     end
   end
 
   def update
-    @plan.update(plan_params)
-    respond_with(@plan)
+    hash = params.require(:plan).permit(:name)
+    if @plan.update_plan(hash, current_user)
+      redirect_to user_plans_path, flash: { notice: 'Plan was updated' }
+    else
+      flash[:error] =  "We couldn't update the plan"
+      redirect_to edit_user_plan_path
+    end
   end
 
   def destroy
-    @plan.destroy
-    respond_with(@plan)
+    unless Subscription.exists?(plan_id: @plan.id)
+      if @plan.delete_plan(current_user)
+        @plan.destroy
+        redirect_to user_plans_path, flash: { notice: 'Plan was deleted' }
+      else
+        redirect_to user_plans_path, flash: { error: "We couldn't delete the plan" }
+      end
+    else
+      redirect_to user_plans_path, flash: { warning: "You can't delete plan with subscription..." }
+    end
   end
 
   private
@@ -46,6 +66,14 @@ class PlansController < ApplicationController
     end
 
     def plan_params
-      params.require(:plan).permit(:amount, :interval, :interval_count, :name)
+      params.require(:plan).permit(:interval, :name, :amount).tap{ |plan|
+        if params[:plan][:interval_month]
+          plan['interval_count'] = params[:plan][:interval_month]
+        elsif params[:plan][:interval_week]
+          plan['interval_count'] = params[:plan][:interval_week]
+        else
+          plan['interval_count'] = params[:plan][:interval_count]
+        end
+      }
     end
 end

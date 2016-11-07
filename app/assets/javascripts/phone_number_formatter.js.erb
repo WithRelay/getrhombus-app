@@ -1,0 +1,31 @@
+var PhoneNumberFormatter = new function() {
+
+  var input = "";
+
+  this.init = function(selector) {
+    input = $(selector)
+    input.intlTelInput({
+      nationalMode: true,
+      defaultCountry: "auto",
+      ipinfoToken: "ae79647534348f",
+      utilsScript: "<%= asset_path 'utils.js' %>" // just for formatting/placeholders etc
+    });
+  }
+
+  this.isValid = function() {
+    // I think it throws an error if it can't determine country code
+    try { return input.intlTelInput("isValidNumber"); }
+    catch(err) { return false; }
+  };
+
+  this.getNumber = function() {
+    return input.intlTelInput("getNumber");
+  };
+
+}
+ 
+
+$(document).ready(function () {
+  PhoneNumberFormatter.init('#phone');
+  $('#phone').val($('#phone_number').val())
+});

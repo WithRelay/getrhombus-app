@@ -29,8 +29,11 @@
       sender_id = sender['id']
       recipient_id = recipient['id'] 
       uid = (current_page.page_id == sender_id)? recipient_id : sender_id
+      uid_type = 'fb_page'
+
       unless (Conversation.find_by_uid uid).present?
-        Conversation.create(merchant_id: merchant_id, uid: uid, resolution: false)
+        Conversation.create(merchant_id: merchant_id, uid: uid,
+          uid_type: uid_type, message_resolution_id: 0) #message_resolution_id is bydefault 0
       end
     end
 

@@ -1,4 +1,4 @@
-	// This is a manifest file that'll be compiled into application.js, which will include all the files
+// This is a manifest file that'll be compiled into application.js, which will include all the files
 // listed below.
 //
 // Any JavaScript/Coffee file within this directory, lib/assets/javascripts, vendor/assets/javascripts,
@@ -13,19 +13,18 @@
 
 //= require pubnub/pubnub.min.js
 //= require jquery
-//= require sweetalert
 //= require pnotify
 //= require flashes
 //= require pagination
 //= require coupon
+//= require plan
 //= require jquery_ujs
 //= require jquery.lightbox_me
 //= require intlTelInput.min
+//= require phone_number_formatter
 //= require chartist
 //= require jquery.payment
 //= require ohsnap.js
-//= require moment
-//= require daterangepicker
 //= require url-parameters
 //= require managed-account
 //= require location
@@ -42,7 +41,10 @@
 //= require trumbowyg_emoji_plugin
 //= require trumbowyg.upload.min
 //= require saved_replies
+//= require message_resolutions
 //= require selectize
 //= require lists
+//= require alerts
 //= require hashtags_plans_coupons_alerts
 //= require jquery.checkboxes-1.2.0.min.js
+

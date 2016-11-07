@@ -19,6 +19,7 @@ class Campaign < ActiveRecord::Base
   validate :date_time_validate, if: proc { |c| (c.deliver_now? && c.recurring?) || (c.one_time? && !c.deliver_now?) }
   # validation for repeat days if recurring is selected.
   validates_presence_of :repeat_days, if: lambda { recurring? }
+  validates_presence_of :subject, if: lambda { email? }
 
   def from_user
     "#{first_name} #{last_name}"

@@ -1,0 +1,30 @@
+<div class = 'container' >
+  <% if @message_resolutions.present? %>
+    <h1>message resolutions</h1>
+
+    <table class="table table-condensed table-hover table-bordered">
+      <tr>
+        <th>Title</th>    
+      </tr>
+
+      <% @message_resolutions.each do |r| %>
+        <tr>
+          <td id="message-resolution-title-<%= r.id %>" class="message-resolution-title" 
+              data-has-conversation=<%= r.c_id ? true : false %> >
+            <%= r.title %>
+          </td>
+        </tr>
+      <% end %>
+    </table>
+    <br> 
+    
+    <%= render partial: 'form', locals: { message_resolution: @message_resolutions.first } %>
+
+  <% else %>
+   
+   You don't have any message resolutions
+
+  <% end %>
+  <br>
+  <%= link_to 'New message resolution', new_user_message_resolution_path %>
+</div>
