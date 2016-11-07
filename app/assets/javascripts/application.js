@@ -16,8 +16,9 @@
 //= require pnotify
 //= require flashes
 //= require pagination
-//= require coupon
 //= require plan
+//= require coupon
+//= require subscription
 //= require jquery_ujs
 //= require jquery.lightbox_me
 //= require intlTelInput.min
