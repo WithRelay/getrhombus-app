@@ -11,11 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-<<<<<<< HEAD
 ActiveRecord::Schema.define(version: 20161107005349) do
-=======
-ActiveRecord::Schema.define(version: 20161105202553) do
->>>>>>> 35c4ef28655e02890c1b581affdd86ddab0dad50
 
   create_table "addresses", force: :cascade do |t|
     t.string   "street_address",   limit: 191
@@ -310,7 +306,6 @@ ActiveRecord::Schema.define(version: 20161105202553) do
 
   add_index "lists", ["user_id"], name: "index_lists_on_user_id", using: :btree
 
-<<<<<<< HEAD
   create_table "message_frequencies", force: :cascade do |t|
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false
@@ -323,7 +318,7 @@ ActiveRecord::Schema.define(version: 20161105202553) do
   end
 
   add_index "message_frequencies", ["campaign_id"], name: "index_message_frequencies_on_campaign_id", using: :btree
-=======
+
   create_table "message_resolutions", force: :cascade do |t|
     t.string   "title",      limit: 191
     t.integer  "user_id",    limit: 4
@@ -331,8 +326,7 @@ ActiveRecord::Schema.define(version: 20161105202553) do
     t.datetime "updated_at",             null: false
   end
 
-  add_index "message_resolutions", ["user_id"], name: "fk_rails_fe68d0f806", using: :btree
->>>>>>> 35c4ef28655e02890c1b581affdd86ddab0dad50
+  add_index "message_resolutions", ["user_id"], name: "fk_rails_e84e23eea0", using: :btree
 
   create_table "messages", force: :cascade do |t|
     t.datetime "created_at"
@@ -674,11 +668,8 @@ ActiveRecord::Schema.define(version: 20161105202553) do
   add_foreign_key "invoices", "users"
   add_foreign_key "invoices", "users", column: "team_id"
   add_foreign_key "lists", "users"
-<<<<<<< HEAD
   add_foreign_key "message_frequencies", "campaigns"
-=======
   add_foreign_key "message_resolutions", "users"
->>>>>>> 35c4ef28655e02890c1b581affdd86ddab0dad50
   add_foreign_key "messages", "hashtags"
   add_foreign_key "plans", "users"
   add_foreign_key "refunds", "transactions"
