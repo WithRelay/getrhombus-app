@@ -83,9 +83,14 @@ $(document).on('ready page:load', function() {
     })
    }
 
- $("#select_all_checkboxes").click(function(){
+  // Toggles between checking or unchecking all checkboxes
+ $("#check_or_uncheck_all").click(function(e){
       console.log("Select all checkboxes was clicked")
-     $(".customer_checkboxes" ).prop('checked', $(this).prop('checked'));
+      if(this.checked){
+          $("#merchant_customers").checkboxes('check');
+      } else{
+         $("#merchant_customers").checkboxes('uncheck');
+      }
  })
 
   // This chunk of code handles the lightbox pop up behavior for creating
@@ -97,6 +102,7 @@ $(document).on('ready page:load', function() {
   jQuery(function($) {
     $('#merchant_customers').checkboxes('range', true);
   });
+
   // Fired on click on create list button
   $("#create_list_button").click(function(e){
     $("#list_create_modal").lightbox_me({
@@ -111,6 +117,31 @@ $(document).on('ready page:load', function() {
       });
      e.preventDefault();
   });
+
+  // Fired on click of the segment button
+  // Still under development
+  $("form#create_segment").submit(function(e){
+    e.preventDefault();
+    var action = $(this).attr('action');
+    var method = $(this).attr('method');
+
+    var data = $(this).serializeArray();
+
+    // Submit form via Ajax
+    $.ajax({
+      method: method,
+      url: action,
+      data: data,
+      dataType: 'json'
+    }).done(function(msg){
+      $('#list_form_items').html("List created successfully")
+      })
+     .fail(function(msg){
+      console.log("An error occured")
+      process_list_error(msg)
+     })
+   //debugger;
+  })
 
   num_checkboxes_selected = 0;
   $(".customer_checkboxes" ).change(function() {

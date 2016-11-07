@@ -44,19 +44,18 @@
                   </ul>
                 </div>
 
+
                 <div class="panel-body table-responsive">
-                  <a href="#merchant_customers" data-toggle="checkboxes" data-action="uncheck">
-                          Uncheck all
-                  </a>
-                  <form id="all_customers">
+                    <form id="all_customers">
                     <table id="merchant_customers" class="table table-striped dataTable">
                     <thead>
                       <tr role="row">
-                        <td class="text-center"><i class="fa fa-trash" style="visibility: hidden;"></i></td>
+                        <td class="text-center">
+                          <i class="fa fa-trash" style="visibility: hidden;"></i>
+                        </td>
                         <th>
-                          <a href="#merchant_customers" data-toggle="checkboxes"
-                           data-action="check">Check all
-                         </a>
+                         <input type="checkbox" id="check_or_uncheck_all">
+                        </input>
                         </th>
                         <th>Name</th>
                         <th>First Visit (ET)</th>
@@ -91,6 +90,25 @@
                 <div class="no-user">You have no customers :(</div>
             </div>
           <% end %>
+        </div>
+        <div id="segments_test">
+          This is for testing the segments functionality
+          <p>
+          <form id="create_segment" action="/v1/lists/create", method="post">
+            <input type="hidden" id="list_type" value="segment"></input>
+            <select id="segment_option">
+              <option value ="all_customers">All Customers</option>
+              <option value ="new_customers">New customers</option>
+              <option value ="active_customers" selected>Active customers
+              </option>
+              <option value ="inactive_customers">Inactive customers
+              </option>
+            </select>
+          within the last 
+            <input type="text" id="num_days" placeholder="Enter number of days" size="5"> days</input>
+            <input type ="submit" id="create_segment">Create segment</input>
+            </form>
+        </p>
         </div>
         <!-- End Panel -->
           <div style="text-align: center; margin-bottom: 40px;"><%= will_paginate @customers, :page_links => false %></div>

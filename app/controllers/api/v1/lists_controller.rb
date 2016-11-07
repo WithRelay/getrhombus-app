@@ -46,8 +46,7 @@ class Api::V1::ListsController < API::V1::BaseController
             }, status: 200
           end
       else
-        @list = save_list(name:name, user_id:current_user.id, segment:true)
-        segment.new(list_id:@list.id, query:params[:segment_query])
+        @list = save_list(name:name, user_id:current_user.id, segment:params[:segment_query])
       end
     rescue StandardError => e
       puts e
