@@ -1,3 +1,9 @@
+1- Add your JIRA keys to your tasks 
+2- Create JIRA tasks for bug fixes and tasks.
+
+      $('#couponForm').data('formValidation').resetField('coupon[duration_in_months]');
+
+
 2014-03-28 api version
 
 Review
