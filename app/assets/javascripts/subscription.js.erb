@@ -39,7 +39,6 @@ $(document).ready(function () {
               callback: {
                 message: 'Please select one or more Plans',
                 callback: function(value, validator, $field) {
-                    // Get the frameworks separated by a comma
                     var plans = validator.getFieldElements('subscription[plan_id]').val();
                     return (plans !== '');
                 }
@@ -48,9 +47,9 @@ $(document).ready(function () {
         },
         'subscription[user_id]':{
            validators: {
-             notEmpty: {
-               message: 'Customer is required'
-             }
+              notEmpty: {
+                message: 'Please select one or more Customers'
+            }
            }
         }
       }
@@ -82,9 +81,42 @@ $(document).ready(function () {
         });
       }
     })
-      .on('change', function(e) {
-          $('#subscriptionForm').formValidation('revalidateField', 'subscription[plan_id]');
-      })
-      .end();
-      $('.form-control').css('height', 'auto')
+    .on('change', function(e) {
+        $('#subscriptionForm').formValidation('revalidateField', 'subscription[plan_id]');
+    })
+
+  $('[name="subscription[user_id]"]')
+      .selectize({
+      valueField: 'id',
+      labelField: 'email',
+      searchField: 'email',
+      plugins: ['remove_button'],
+      create: false,
+      options: [],
+      closeAfterSelect: true,
+     load: function(query, callback) {
+        if (!query.length) return callback();
+        $.ajax({
+            url: '/v1/customers/customer_data',
+            type: 'GET',
+            dataType: 'json',
+            data: {
+                name: query,
+                page_limit: 10,
+            },
+            error: function() {
+                callback();
+            },
+            success: function(res) {
+                callback(res['customers']);
+            }
+        });
+      }
+    })
+    .on('change', function(e) {
+        $('#subscriptionForm').formValidation('revalidateField', 'subscription[user_id]');
+    })
+
+  $('.form-control').css('height', 'auto');
+
 })
