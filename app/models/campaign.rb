@@ -49,10 +49,7 @@ class Campaign < ActiveRecord::Base
   end
 
   def change_campaign_job
-    date_today = Date.today.strftime("%Y-%m-%d")
-    utc_date_time = date_time.utc
-    today_campaign = utc_date_time.strftime("%Y-%m-%d") == date_today
-    if active? && today_campaign
+    if active? && is_today_campaign?
       Resque.enqueue_at_with_queue('default', utc_date_time, ChannelJob, id)
     else
       destroy_campaign_jobs
@@ -66,11 +63,17 @@ class Campaign < ActiveRecord::Base
   def enqueue_jobs
     # rescue enqueue_at_with_queue accpets four parameter 1 name of queue, 2 date_time(provided as utc)
     # 3 class name 4 the parameter send for class method perform
-    Resque.enqueue_at_with_queue('default', date_time.utc, ChannelJob, id) if is_campaign_date_selected?
+    Resque.enqueue_at_with_queue('default', date_time.utc, ChannelJob, id) if is_campaign_date_selected? || is_today_campaign?
     CampaignJob.perform_now(self) if deliver_now?
   end
 
   private
+
+  def is_today_campaign?
+    date_today = Time.now.in_time_zone(current_user.time_zone).strftime("%Y-%m-%d")
+    utc_date_time = date_time.utc
+    utc_date_time.strftime("%Y-%m-%d") == date_today
+  end
 
   def date_time_validate
     # date_time.utc will convert date_time to utc and Time.now is current time and .utc will convert to utc
