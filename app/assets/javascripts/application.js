@@ -38,6 +38,7 @@
 //= require custom_trumbowyg_plugin
 //= require trumbowyg.min
 //= require emojify
+//= require form_validator
 //= require emojionearea
 //= require trumbowyg_emoji_plugin
 //= require trumbowyg.upload.min
