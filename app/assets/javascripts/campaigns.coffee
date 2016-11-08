@@ -73,6 +73,7 @@ class Campaign
   hideShowScheduler: ->
     if deliverNowOneTime_isChecked(@oneTime, @deliverNow)
       $(@schedule).hide()
+      $('.daterange').val('')
     else
       $(@schedule).show()
 
@@ -161,6 +162,7 @@ $( document ).on 'ready page:load', ->
 
   if $("#deliverNow").is(":checked")
     $('.scheduleOption').hide()
+    $('.daterange').val('')
 
   # Mainly for edit actions so the view shows properly
   frequency_type = if $('#oneTimeFrequency').is(':checked') then '#oneTimeFrequency' else '#recurringFrequency'
