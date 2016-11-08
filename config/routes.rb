@@ -122,6 +122,8 @@ Rails.application.routes.draw  do
     match 'lists/create' => 'lists#create', via: :post
     match 'coupons/check_coupon_name' => 'coupons#check_coupon_name', via: :post
     match 'plans/check_plan_name' => 'plans#check_plan_name', via: :post
+    match 'subscriptions/get_coupon' => 'subscriptions#get_coupon', via: :get
+    match 'subscriptions/get_plan' => 'subscriptions#get_plan', via: :get
   end
 
   ## catch all other to 404

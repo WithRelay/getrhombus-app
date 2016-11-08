@@ -34,7 +34,7 @@ class CouponsController < ApplicationController
       @coupon.amount_off = @coupon.amount_off/100.to_f if @coupon.amount_off
       @coupon.destroy     # revoke created coupon on error
       if @coupon.errors.messages
-        error = @coupon.errors.messages
+        error = @coupon.errors.full_messages
         flash[:error] = error
       else
         flash[:error] = "We couldn't create the coupon"

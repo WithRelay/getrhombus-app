@@ -35,7 +35,7 @@ class PlansController < ApplicationController
       @plan.amount = @plan.amount/100.to_f if @plan.amount
       @plan.destroy     # revoke created plan on error
       if @plan.errors.messages
-        error = @plan.errors.messages
+        error = @plan.errors.full_messages
         flash[:error] = error
       else
         flash[:error] = "We couldn't create the plan"

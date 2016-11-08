@@ -20,7 +20,7 @@ jQuery(function() {
             }
             return loading_views = false;
           })
-        .fail(function( jqxhr, settings, exception ) {
+        .fail(function() {
           flashError('Sorry we couldn\'t load more plans');
         });
       }

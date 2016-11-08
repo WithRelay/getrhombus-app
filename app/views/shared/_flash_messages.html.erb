@@ -15,12 +15,18 @@
 <% elsif flash[:error].present? %>
   <script type="text/javascript">
     $(window).load(function(){
-      <% if flash[:error].is_a? String %> 
+      <% if flash[:error].is_a? String %>
         flashError( "<%= flash[:error] %>")
       <% elsif flash[:error].is_a? Hash %> 
         var errors = "";
         <% flash[:error].each do |k, v| %>
           errors += "<%= k %> <%= v.first %>\n" ;
+        <% end %>
+        flashError(errors);
+      <% elsif flash[:error].is_a? Array %> 
+        var errors = "";
+        <% flash[:error].each do |err| %>
+          errors += "<%= err %> \n" ;
         <% end %>
         flashError(errors);
       <% end %>

@@ -1,7 +1,7 @@
 class @CustomTrumbowygPlugin
 
   constructor:(element) ->
-    root_url = 'http://' + window.location.host
+    root_url = window.location.protocol + '//' + window.location.host
     $(element).trumbowyg
       svgPath: root_url + '/assets/icons.svg'
       autogrow: true
