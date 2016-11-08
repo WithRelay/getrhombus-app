@@ -48,11 +48,37 @@ class Campaign < ActiveRecord::Base
     end
   end
 
+  def change_campaign_job
+    date_today = Date.today.strftime("%Y-%m-%d")
+    utc_date_time = date_time.utc
+    today_campaign = utc_date_time.strftime("%Y-%m-%d") == date_today
+    if active? && today_campaign
+      Resque.enqueue_at_with_queue('default', utc_date_time, ChannelJob, id)
+    else
+      destroy_campaign_jobs
+    end
+  end
+
+  def destroy_campaign_jobs
+    Resque.remove_delayed_selection { |args| args[0] == id }
+  end
+
+  def enqueue_jobs
+    # rescue enqueue_at_with_queue accpets four parameter 1 name of queue, 2 date_time(provided as utc)
+    # 3 class name 4 the parameter send for class method perform
+    Resque.enqueue_at_with_queue('default', date_time.utc, ChannelJob, id) if is_campaign_date_selected?
+    CampaignJob.perform_now(self) if deliver_now?
+  end
+
   private
 
   def date_time_validate
     # date_time.utc will convert date_time to utc and Time.now is current time and .utc will convert to utc
     errors.add(:date_time, 'date time should be greater than current date time') if date_time.utc < Time.now.utc
+  end
+
+  def is_campaign_date_selected?
+    (one_time? && !deliver_now?)
   end
 
   def channel_text_validate

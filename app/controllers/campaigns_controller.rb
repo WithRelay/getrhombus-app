@@ -20,7 +20,7 @@ class CampaignsController < ApplicationController
   def create
     @campaign = current_user.campaigns.build(campaign_params, image_params)
     if @campaign.save
-      enqueue_jobs(@campaign) # enque jobs if there is send now checked or one time is checked
+      @campaign.enqueue_jobs # enque jobs if there is send now checked or one time is checked
       flash[:notice] = 'Campaign Saved successfully'
       redirect_to new_user_campaign_path
     else
@@ -37,7 +37,7 @@ class CampaignsController < ApplicationController
   # note : update_attributes method is being overide please go through campaign model
   def update
     if @campaign.update_attributes(campaign_params, image_params)
-      destroy_campaign_jobs; change_campaign_job; enqueue_jobs(@campaign);
+      @campaign.destroy_campaign_jobs; @campaign.enqueue_jobs;
       flash[:notice] = 'Campaign updated successfully'
     else
       flash[:error] = @campaign.errors.messages
@@ -47,7 +47,7 @@ class CampaignsController < ApplicationController
 
   def destroy
     if @campaign.destroy
-      destroy_campaign_jobs
+      @campaign.destroy_campaign_jobs
       flash[:notice] = 'Campaign is being succesfully deleted'
     else
       flash[:error] = 'Sorry campaign could not delete please try again'
@@ -58,7 +58,7 @@ class CampaignsController < ApplicationController
   def change_status
     status = @campaign.active? ? 2 : 1
     if @campaign.update_attribute('status', status)
-      change_campaign_job
+      @campaign.change_campaign_job
       flash[:notice] = "Campaign #{@campaign.status}"
     else
       flash[:notice] = 'Sorry campaign could not be paused'
@@ -73,21 +73,6 @@ class CampaignsController < ApplicationController
 
   private
 
-  def change_campaign_job
-    date_today = Date.today.strftime("%Y-%m-%d")
-    utc_date_time = @campaign.date_time.utc
-    today_campaign = utc_date_time.strftime("%Y-%m-%d") == date_today
-    if @campaign.active? && today_campaign
-      Resque.enqueue_at_with_queue('default', utc_date_time, ChannelJob, @campaign.id)
-    else
-      destroy_campaign_jobs
-    end
-  end
-
-  def destroy_campaign_jobs
-    Resque.remove_delayed_selection { |args| args[0] == @campaign.id }
-  end
-
   def find_campaign
     @campaign = current_user.campaigns.find(params[:id])
   end
@@ -99,17 +84,6 @@ class CampaignsController < ApplicationController
     end
   end
 
-  def is_campaign_date_selected?(campaign)
-    (campaign.one_time? && !campaign.deliver_now?)
-  end
-
-  def enqueue_jobs(campaign)
-    # rescue enqueue_at_with_queue accpets four parameter 1 name of queue, 2 date_time(provided as utc)
-    # 3 class name 4 the parameter send for class method perform
-    Resque.enqueue_at_with_queue('default', campaign.date_time.utc, ChannelJob, campaign.id) if is_campaign_date_selected?(campaign)
-    CampaignJob.perform_now(campaign) if campaign.deliver_now
-  end
-
   def campaign_params
     # enums are define as integer but params are in string and rails is not converting string to integer
     params.require(:campaign).permit(:name, :list_ids, :channel, :repeat_days, :date_time, :deliver_now,
@@ -117,6 +91,7 @@ class CampaignsController < ApplicationController
                                       c[:channel] = c[:channel].to_i
                                       c[:frequency_type] = c[:frequency_type].to_i
                                       c[:deliver_now]=='1' ? c[:deliver_now] = true : c[:deliver_now] = false
+                                      c[:date_time] = nil if c[:date_time].empty?
                                     end
   end
 
