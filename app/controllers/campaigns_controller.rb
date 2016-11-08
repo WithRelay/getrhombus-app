@@ -25,7 +25,7 @@ class CampaignsController < ApplicationController
       redirect_to new_user_campaign_path
     else
       render :new
-      flash[:error] = @campaign.errors.messages
+      flash[:error] = @campaign.errors.full_messages
     end
   end
 
@@ -40,7 +40,7 @@ class CampaignsController < ApplicationController
       @campaign.destroy_campaign_jobs; @campaign.enqueue_jobs;
       flash[:notice] = 'Campaign updated successfully'
     else
-      flash[:error] = @campaign.errors.messages
+      flash[:error] = @campaign.errors.full_messages
     end
     redirect_to edit_user_campaign_path
   end
