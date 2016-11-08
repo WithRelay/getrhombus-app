@@ -179,7 +179,7 @@ $( document ).on 'ready page:load', ->
       $('body').addClass('loading')
       trumbowygHtml = $('#trumbowyg').trumbowyg('html')
       $.ajax(
-        url: 'http://'+window.location.host+'/v1/campaigns/upload_images'
+        url: window.location.protocol + '//'+window.location.host+'/v1/campaigns/upload_images'
         type: 'POST'
         data: img_url: e.target.src
         dataType: 'json').done (data) ->
