@@ -1,18 +1,16 @@
 <%= form_for [current_user, @campaign], html: { multipart: true } do |f| %>
 
 <div class="row">
-
-  <%= f.label :Name %>
-  <%= f.text_field :name %>
+  <div class="col-xs-5">
+    <%= f.label :Name %>
+    <%= f.text_field :name %>
+  </div>
 
   <br><br>
-
-  <%= f.label :Choose_a_list %>
-
-  <%= f.text_field :list_ids, id: 'campaign-select-lists', 'data-lists_data' => "#{@lists_json}", placeholder: "Select 1 or more lists" %>
-
+    <%= f.label :Choose_a_list %>
+    <%= f.text_field :list_ids, id: 'campaign-select-lists', 'data-lists_data' => "#{@lists_json}", placeholder: "Select 1 or more lists" %>
   <br>
-
+  <br><br><br>
   <%= f.label :Channel %>
   <%= f.select :channel, channel_list(@campaign), selected: get_channel_enum_value(@campaign) %>
 
@@ -35,16 +33,19 @@
 
   <div class='scheduleOption'>
     <%= f.select :repeat_days, repeat_days_options, selected: @campaign.repeat_days %>
-    <%= f.text_field :date_time, class: 'daterange' %>
+    <%= f.text_field :date_time, class: 'daterange', value: present(@campaign).to_user_date_time %>
   </div>
 
   <br><br>
     <div class='newMessage'>
       <div class='emailSubject'>
-        <%= f.label :subject %>
-        <%= f.text_field :subject %>
+        <div class="col-xs-5">
+          <%= f.label :subject %>
+          <%= f.text_field :subject %>
+        </div>
       </div>
       <br>
+      <br><br>
         <%= f.text_area :text, id: 'trumbowyg' %>
       </div>
       <div id="textBoxCounter"> </div>
