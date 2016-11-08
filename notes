@@ -1,8 +1,7 @@
 1- Add your JIRA keys to your tasks 
 2- Create JIRA tasks for bug fixes and tasks.
 
-      $('#couponForm').data('formValidation').resetField('coupon[duration_in_months]');
-
+$('#couponForm').data('formValidation').resetField('coupon[duration_in_months]');
 
 2014-03-28 api version
 
@@ -21,7 +20,6 @@ Bhisma
 Ovo
 
 - what happens when u send image in countries that don't support it. link?
-- check trumbowyg working
 - clean up image/hashtag presenters
 - Plug into stripe api for managed accts - see notes
 - Create Seeds

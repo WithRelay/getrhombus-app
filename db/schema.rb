@@ -306,22 +306,6 @@ ActiveRecord::Schema.define(version: 20161107005349) do
 
   add_index "lists", ["user_id"], name: "index_lists_on_user_id", using: :btree
 
-<<<<<<< HEAD
-  create_table "message_frequencies", force: :cascade do |t|
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
-    t.datetime "date"
-    t.datetime "time"
-    t.string   "repeat_days",    limit: 191
-    t.integer  "frequency_type", limit: 4
-    t.string   "delivery_type",  limit: 191
-    t.integer  "campaign_id",    limit: 4
-  end
-
-  add_index "message_frequencies", ["campaign_id"], name: "index_message_frequencies_on_campaign_id", using: :btree
-
-=======
->>>>>>> 2d7636b363f895f923b7e6ab1a1ff1da013f69cc
   create_table "message_resolutions", force: :cascade do |t|
     t.string   "title",      limit: 191
     t.integer  "user_id",    limit: 4
@@ -329,11 +313,7 @@ ActiveRecord::Schema.define(version: 20161107005349) do
     t.datetime "updated_at",             null: false
   end
 
-<<<<<<< HEAD
-  add_index "message_resolutions", ["user_id"], name: "fk_rails_e84e23eea0", using: :btree
-=======
   add_index "message_resolutions", ["user_id"], name: "fk_rails_fe68d0f806", using: :btree
->>>>>>> 2d7636b363f895f923b7e6ab1a1ff1da013f69cc
 
   create_table "messages", force: :cascade do |t|
     t.datetime "created_at"
