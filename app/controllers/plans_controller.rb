@@ -75,7 +75,7 @@ class PlansController < ApplicationController
     def plan_params
       params.require(:plan).permit(:interval, :name, :amount).tap{ |plan|
         # round - deal with inaccurate floating point math. see 100 * 1.1
-        plan[:amount] = (100 * plan[:amount]).round if plan[:amount].present?
+        plan[:amount] = (100 * plan[:amount]).round.abs if plan[:amount].present?
         if params[:plan][:interval_month]
           plan['interval_count'] = params[:plan][:interval_month]
         elsif params[:plan][:interval_week]
