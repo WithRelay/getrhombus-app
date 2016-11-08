@@ -18,7 +18,6 @@
 //= require pagination
 //= require plan
 //= require coupon
-//= require subscription
 //= require jquery_ujs
 //= require jquery.lightbox_me
 //= require intlTelInput.min
@@ -44,6 +43,7 @@
 //= require saved_replies
 //= require message_resolutions
 //= require selectize
+//= require subscription
 //= require lists
 //= require alerts
 //= require hashtags_plans_coupons_alerts

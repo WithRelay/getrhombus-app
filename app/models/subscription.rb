@@ -6,6 +6,8 @@ class Subscription < ActiveRecord::Base
   belongs_to :team, class_name: "User"
   has_many :notification_log, as: :notifiable, dependent: :destroy
 
+  validates_presence_of :plan, :user_id
+
   def create_subscription(hash)
 
     uid = hash[:team].uid

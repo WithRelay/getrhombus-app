@@ -1,14 +1,49 @@
 $(document).ready(function () {
+
+  $('#subscription-select-coupon').selectize({
+      maxItems: 1,
+      valueField: 'id',
+      labelField: 'name',
+      searchField: 'name',
+      create: false,
+      options: [],
+      closeAfterSelect: true,
+     load: function(query, callback) {
+        if (!query.length) return callback();
+        $.ajax({
+            url: '/v1/subscriptions/get_coupon',
+            type: 'GET',
+            dataType: 'json',
+            data: {
+                name: query,
+                page_limit: 10,
+            },
+            error: function() {
+                callback();
+            },
+            success: function(res) {
+                callback(res['coupons']);
+            }
+        });
+      }
+    }).selectize();
+
   $('#subscriptionForm')
     .formValidation({
       framework: 'bootstrap',
+      excluded: ':disabled',
       // List of fields and their validation rules
       fields: {
         'subscription[plan_id]':{
            validators: {
-             notEmpty: {
-               message: 'Plan is required'
-             }
+              callback: {
+                message: 'Please select one or more Plans',
+                callback: function(value, validator, $field) {
+                    // Get the frameworks separated by a comma
+                    var plans = validator.getFieldElements('subscription[plan_id]').val();
+                    return (plans !== '');
+                }
+            }
            }
         },
         'subscription[user_id]':{
@@ -20,11 +55,36 @@ $(document).ready(function () {
         }
       }
     })
-    .on('success.validator.fv', function(e, data) {
-      data.element // Get the field element
-      .closest('.form-group') // Get the field parent
-      .removeClass('has-warning')
-      .addClass('has-success')
-    });
-
+    .find('[name="subscription[plan_id]"]')
+      .selectize({
+      valueField: 'id',
+      labelField: 'name',
+      searchField: 'name',
+      create: false,
+      options: [],
+      closeAfterSelect: true,
+     load: function(query, callback) {
+        if (!query.length) return callback();
+        $.ajax({
+            url: '/v1/subscriptions/get_plan',
+            type: 'GET',
+            dataType: 'json',
+            data: {
+                name: query,
+                page_limit: 10,
+            },
+            error: function() {
+                callback();
+            },
+            success: function(res) {
+                callback(res['plans']);
+            }
+        });
+      }
+    })
+      .on('change', function(e) {
+          $('#subscriptionForm').formValidation('revalidateField', 'subscription[plan_id]');
+      })
+      .end();
+      $('.form-control').css('height', 'auto')
 })
