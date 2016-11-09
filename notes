@@ -1,5 +1,3 @@
-1- Add your JIRA keys to your tasks 
-2- Create JIRA tasks for bug fixes and tasks.
 
 $('#couponForm').data('formValidation').resetField('coupon[duration_in_months]');
 
@@ -15,9 +13,6 @@ Review
 - check how we save platform stripe cred...does stripe connect still work?
 - add index to coupon/plan names
 
-Surya
-- reinitialize counter when type is changed
-- dont validate subject on the fly
 
 - what happens when u send image in countries that don't support it. link?
 - clean up image/hashtag presenters
@@ -28,9 +23,9 @@ Surya
 - when you need to access the underlying object....use instance method else use class method
 - notifications platform to merchants should have a single conversation and should not be pulled - mark as read too
 - conversations....need origin...cos system to customers should not open conversation....
+- rewrite refundds
 
 https://www.getrhombus.com/receive_delivery_report
-
 
 Payment Capture - should be for only customers....capture in logic
 - check if /profile affect forms for merchants
@@ -43,8 +38,3 @@ Contact - Inbound
 
 Campaigns and Facebook
 - fail safely for audio and video files
-
-For Surya
-- You can't delete campaign that has run
-- if it is a one time, you need to mark inactive
-- scroll bar in emoji isnt clickable/draggable, can we group the emojis

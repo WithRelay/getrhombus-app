@@ -9,8 +9,7 @@ class PlansController < ApplicationController
               .select('plans.id, amount, plans.name, currency, plans.interval, interval_count, s.id as subscription_id')
               .paginate(page: params[:page], per_page: 1)
               .order('plans.created_at DESC')
-              #sleep 5
-              #as
+              
     respond_with(@plans)
   end
 

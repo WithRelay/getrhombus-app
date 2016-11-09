@@ -34,11 +34,16 @@ class Campaign
       $('.emailSubject').show()
       this.showFileBrowser()
       trumbowygSetting(true, @textArea)
+      removeDiv()
     else if isMmsChecked(element) || isFacebookMessengerChecked(element)
       this.showFileBrowser()
       $('.emailSubject').hide()
       trumbowygSetting(false, @textArea)
+      removeDiv()
+      $('.emojionearea-editor').counter({ type: 'char', append: false, target: '#textBoxCounter' })
     else
+      removeDiv()
+      $('.emojionearea-editor').counter({ type: 'char', append: false, target: '#textBoxCounter' })
       $('.emailSubject').hide()
       $('#select-images').val('')
       $('.images').html('')
@@ -91,18 +96,16 @@ class Campaign
       txtEmoji = $(@textArea).emojioneArea ->
                    @emojiConfig
 
-      txtEmoji[0].emojioneArea.on 'focus', (btn, event) ->
-        $('#undefined_counter').each ->
-          $(this).remove()
-        if $("#campaign_channel :selected").val() == "2"
-          value = 320
-        else
-          value = 1500
-        $('.emojionearea-editor').counter({ type: 'char', goal: value, append: false, target: '#textBoxCounter' })
+  removeDiv = ->
+    $('#undefined_counter').each ->
+      $(this).remove()
+
 
 $( document ).on 'ready page:load', ->
   campaign = new Campaign({ pickerPosition: 'right' })
   campaign.datePicker(new DatePicker( '.daterange' ))
+  window.onload = ->
+    $('.emojionearea-editor').counter({ type: 'char', append: false, target: '#textBoxCounter' })
 
   $(document).on 'change', 'input[name=file]', ->
     # this is for client side validation of locally uploaded images
