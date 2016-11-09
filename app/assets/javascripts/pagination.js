@@ -2,10 +2,10 @@
 jQuery(function() {
 
   if ($('#with-button').size() > 0) {
-    $('.show_more').show().click(function() {
-      var $this = $(this),
-          more_plans_url = $('.next_page').attr('href');
+    var $this, more_plans_url = $('.next_page').attr('href');
 
+    $('.show_more').show().click(function() {
+      $this = $(this); 
       $this.button('loading');        
       
       $.getScript(more_plans_url)
