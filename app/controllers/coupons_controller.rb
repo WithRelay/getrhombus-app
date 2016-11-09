@@ -66,7 +66,7 @@ class CouponsController < ApplicationController
         :percent_off, :redeem_by).tap{ |coupon|
         # amount_off should be in cent
         # round to take care of inaccurate floating point math. see 100 * 1.1
-        coupon[:amount_off] = (100 * coupon[:amount_off]).round.abs if coupon[:amount_off].present?
+        coupon[:amount_off] = (100 * coupon[:amount_off].to_f).round if coupon[:amount_off].present?
         coupon[:redeem_by] = Time.zone.parse(coupon[:redeem_by]).to_i if coupon[:redeem_by].present?
       }
     end

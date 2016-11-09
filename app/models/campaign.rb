@@ -50,7 +50,7 @@ class Campaign < ActiveRecord::Base
 
   def change_campaign_job
     if active? && is_today_campaign?
-      Resque.enqueue_at_with_queue('default', utc_date_time, ChannelJob, id)
+      enqueue_jobs
     else
       destroy_campaign_jobs
     end
@@ -70,9 +70,9 @@ class Campaign < ActiveRecord::Base
   private
 
   def is_today_campaign?
-    date_today = Time.now.in_time_zone(current_user.time_zone).strftime("%Y-%m-%d")
-    utc_date_time = date_time.utc
-    utc_date_time.strftime("%Y-%m-%d") == date_today
+    user_date_today = Time.now.in_time_zone(user.time_zone).strftime("%Y-%m-%d")
+    user_date_time = date_time.in_time_zone(user.time_zone)
+    user_date_time.strftime("%Y-%m-%d") == user_date_today
   end
 
   def date_time_validate

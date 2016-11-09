@@ -18,6 +18,9 @@ class User < ActiveRecord::Base
   has_many :referrers, class_name: 'Referrer', foreign_key: 'referrer_id'
   has_many :referees, class_name: 'Referrer', foreign_key: 'referee_id'
 
+  has_many :merchant, class_name: 'MerchantCustomer', foreign_key: 'merchant_id'
+  has_many :customer, class_name: 'MerchantCustomer', foreign_key: 'customer_id'
+
   # this block is for customizing build method for user.campaign which allow also to save list
   has_many :campaigns do
     # overiding association build function like user.campaigns.build will hit here

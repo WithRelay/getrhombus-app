@@ -37,7 +37,7 @@ class CampaignsController < ApplicationController
   # note : update_attributes method is being overide please go through campaign model
   def update
     if @campaign.update_attributes(campaign_params, image_params)
-      @campaign.destroy_campaign_jobs; @campaign.enqueue_jobs;
+      @campaign.change_campaign_job
       flash[:notice] = 'Campaign updated successfully'
     else
       flash[:error] = @campaign.errors.full_messages
