@@ -87,12 +87,12 @@ class CampaignsController < ApplicationController
   def campaign_params
     # enums are define as integer but params are in string and rails is not converting string to integer
     params.require(:campaign).permit(:name, :list_ids, :channel, :repeat_days, :date_time, :deliver_now,
-                                     :frequency_type, :text, :new_status, :subject).tap do |c|
-                                      c[:channel] = c[:channel].to_i
-                                      c[:frequency_type] = c[:frequency_type].to_i
-                                      c[:deliver_now]=='1' ? c[:deliver_now] = true : c[:deliver_now] = false
-                                      c[:date_time] = nil if c[:date_time].empty?
-                                    end
+                         :frequency_type, :text, :new_status, :subject).tap do |c|
+                          c[:channel] = c[:channel].to_i
+                          c[:frequency_type] = c[:frequency_type].to_i
+                          c[:deliver_now] = c[:deliver_now] == '1' ? true : false
+                          c[:date_time] = c[:date_time].present? ? c[:date_time].in_time_zone(current_user.time_zone) : nil
+                        end
   end
 
   def image_params
