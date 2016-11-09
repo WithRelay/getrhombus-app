@@ -20,8 +20,7 @@ class Plan < ActiveRecord::Base
       # dont send team/merchant or customer data in hash
       [:team, :customer].each { |k| hash.delete(k) } 
       # Update so validations run before calling Stripe
-      self.amount = self.amount
-      self.update(user_id: _user_id, statement_descriptor: descriptor)
+      self.update(user_id: _user_id, statement_descriptor: descriptor, currency: team.currency)
 
       hash[:interval] = self.interval
       hash[:interval_count] = self.interval_count
@@ -31,7 +30,7 @@ class Plan < ActiveRecord::Base
       hash[:name] = self.name
       hash[:trial_period_days] = self.trial_period_days
       hash[:statement_descriptor] = self.statement_descriptor
-      hash[:currency] = team.currency
+      hash[:currency] = self.currency
 
       res = PaymentService.create_plan(hash, uid, is_platform)
       if res.first

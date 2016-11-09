@@ -3,6 +3,7 @@ $(document).ready(function () {
   $('#planForm')
     .formValidation({
       framework: 'bootstrap',
+      live: 'disabled',
       // List of fields and their validation rules
       fields: {
           'plan[name]': {
@@ -28,35 +29,6 @@ $(document).ready(function () {
               validators: {
                   notEmpty: {
                     message: 'Interval count  is required'
-                  },
-                  between: {
-                    min: 1,
-                    max: 365,
-                    message: 'Interval count for dailly plans can\'t be greater than 365'
-                  }
-                }
-             },
-             'plan[interval_week]':{
-              validators: {
-                  notEmpty: {
-                    message: 'Interval count  is required'
-                  },
-                  between: {
-                    min: 1,
-                    max: 52,
-                    message: 'Interval count for weekly plans can\'t be greater than 52'
-                  }
-                }
-             },
-             'plan[interval_month]':{
-              validators: {
-                  notEmpty: {
-                    message: 'Interval count  is required'
-                  },
-                  between: {
-                    min: 1,
-                    max: 12,
-                    message: 'Interval count for monthly plans can\'t be greater than 12'
                   }
                 }
              }
@@ -69,30 +41,47 @@ $(document).ready(function () {
         .addClass('has-success')
     });
 
-  $('.delete-plan').click(function(evt) {
-    var selector = '.' + evt.target.classList[evt.target.classList.length - 1 ];
-    if (!$(selector).attr('isDestroy')) {
-      flashConfirm(selector,'Delete Plan',
-       'If you delete this plan, you won\'t be able to add new subscriptions.',
-       'isDestroy'
-      );
-      return false;
-    }
+  $('#plan_name').keyup(function(e){
+    $('#planForm').formValidation('revalidateField', 'plan[name]');
   });
 
   $('#plan_interval').change(function(){
-    var x = 'interval_month';
-    if ($('#plan_interval').val() === 'day') {
-      x = 'interval_count';
-    } else if ($('#plan_interval').val() === 'week') {
-      x = 'interval_week';
-    }
-
-    $('#interval-count').attr({
-      'name': 'plan[' + x + ']',
-      'data-fv-field': 'plan[' + x + ']'
-    });
-    $('.dynamic-count').find('small').attr('data-fv-for','plan[' + x + ']');
+    $('#interval-count').val('');
+    $('#planForm').formValidation('resetField', 'plan[interval_count]');
   });
 
-})
+  // dynamic  interval-count
+  $('#interval-count').on('input', function(){
+    debugger
+    if ($('#plan_interval').val()  === 'day'){
+      this.value = day_only(this.value);
+    } else if($('#plan_interval').val()  === 'week'){
+      this.value = week_only(this.value);
+    } else {
+      this.value = month_only(this.value);
+    }
+  });
+
+  function day_only(v) {
+    return (v.match(/^[1-9]\d*$/) && parseInt(v) < 366) ? v : v.slice(0, -1);
+  }
+  function week_only(v) {
+    return (v.match(/^[1-9]\d*$/) && parseInt(v) < 53) ? v : v.slice(0, -1);
+  }
+  function month_only(v) {
+    return (v.match(/^[1-9]\d*$/) && parseInt(v) < 13) ? v : v.slice(0, -1);
+  }
+
+});
+
+$(document).on('click', '.delete-plan', function(evt) {
+      var selector = '.' + evt.target.classList[evt.target.classList.length - 1 ];
+      if (!$(selector).attr('isDestroy')) {
+        evt.stopImmediatePropagation();
+        flashConfirm(selector,'Delete Plan',
+         'If you delete this plan, you won\'t be able to add new subscriptions.',
+         'isDestroy'
+        );
+        return false;
+      }
+    });

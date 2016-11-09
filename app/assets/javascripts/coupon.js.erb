@@ -29,23 +29,12 @@ $(document).ready(function () {
       $(this).val('');
     });  
   }
-  
-  $('.delete-coupon').click(function(evt) {
-    var selector = '.' + evt.target.classList[evt.target.classList.length - 1 ];
-
-    if (!$(selector).attr('isDestroy')) {
-      flashConfirm(selector,'Delete coupon',
-       'Deleting this coupon will not affect discounts for customers who have already redeemed the coupon, but new redemptions of the coupon won\'t be allowed.',
-       'isDestroy'
-      );
-      return false;
-    }
-  });
 
   // validate coupon form
     $('#couponForm')
       .formValidation({
         framework: 'bootstrap',
+        live: 'disabled',
         // List of fields and their validation rules
         fields: {
             'coupon[name]': {
@@ -72,10 +61,6 @@ $(document).ready(function () {
                   validators: {
                     notEmpty: {
                       message: 'Required when creating a coupon with a repeating duration'
-                    },
-                    regexp: {
-                      regexp:  /^\+?(0|[1-9]\d*)$/,
-                      message: 'Enter a positive value'
                     }
                   }
               }
@@ -88,21 +73,32 @@ $(document).ready(function () {
           .addClass('has-success')
       });
 
+      $('#coupon-name').keyup(function(e){
+        $('#couponForm').formValidation('revalidateField', 'coupon[name]');
+      });
+
   // if coupon isnt repeating. repeating needs length in months
   $('#coupon_duration').change(function(){
     if (this.value == 'repeating') {
-      $('#duration-in-months-div').slideDown(200)
+      $('#duration-in-months-div').slideDown(200);
     } else {
+      $('#couponForm').formValidation('resetField', 'coupon[duration_in_months]');
       $('#duration-in-months-div').slideUp(200);
       $('#duration-in-months').val('');
     }
   }).change();
 
-  $('#coupon_duration').change(function(){
-    if ($(this).val() !== 'repeating'){
-      $('#commit').removeAttr('disabled');
-      $('#commit').attr('class', 'btn btn-primary');
-    }
-  })
+});
 
-})
+$(document).on('click', '.delete-coupon', function(evt) {
+    var selector = '.' + evt.target.classList[evt.target.classList.length - 1 ];
+
+    if (!$(selector).attr('isDestroy')) {
+      evt.stopImmediatePropagation();
+      flashConfirm(selector,'Delete coupon',
+       'Deleting this coupon will not affect discounts for customers who have already redeemed the coupon, but new redemptions of the coupon won\'t be allowed.',
+       'isDestroy'
+      );
+      return false;
+    }
+  });

@@ -34,7 +34,7 @@ class PlansController < ApplicationController
     else
       @plan.amount = @plan.amount/100.to_f if @plan.amount
       @plan.destroy     # revoke created plan on error
-      if @plan.errors.messages
+      if @plan.errors.messages.present?
         error = @plan.errors.full_messages
         flash[:error] = error
       else
@@ -73,16 +73,9 @@ class PlansController < ApplicationController
     end
 
     def plan_params
-      params.require(:plan).permit(:interval, :name, :amount).tap{ |plan|
+      params.require(:plan).permit(:interval, :name, :amount, :interval_count).tap{ |plan|
         # round - deal with inaccurate floating point math. see 100 * 1.1
         plan[:amount] = (100 * plan[:amount].to_f).round if plan[:amount].present?
-        if params[:plan][:interval_month]
-          plan['interval_count'] = params[:plan][:interval_month]
-        elsif params[:plan][:interval_week]
-          plan['interval_count'] = params[:plan][:interval_week]
-        else
-          plan['interval_count'] = params[:plan][:interval_count]
-        end
       }
     end
 end
