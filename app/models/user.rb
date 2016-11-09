@@ -18,6 +18,9 @@ class User < ActiveRecord::Base
   has_many :referrers, class_name: 'Referrer', foreign_key: 'referrer_id'
   has_many :referees, class_name: 'Referrer', foreign_key: 'referee_id'
 
+  has_many :merchant, class_name: 'MerchantCustomer', foreign_key: 'merchant_id'
+  has_many :customer, class_name: 'MerchantCustomer', foreign_key: 'customer_id'
+  
   has_many :campaigns
   has_many :hashtags
 
