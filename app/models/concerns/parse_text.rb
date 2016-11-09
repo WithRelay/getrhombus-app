@@ -185,6 +185,7 @@ module ParseText
   end
 
   def to_cents(var)
+    return ((var.abs)*100).round # use this
     return ((var.to_f.round(2).abs)*100).round
   end
 

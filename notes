@@ -1,3 +1,8 @@
+1- Add your JIRA keys to your tasks 
+2- Create JIRA tasks for bug fixes and tasks.
+
+$('#couponForm').data('formValidation').resetField('coupon[duration_in_months]');
+
 2014-03-28 api version
 
 Review
@@ -8,18 +13,13 @@ Review
 - when user logs in through messenger, indicate in referrers
 - change all emails in test db dump
 - check how we save platform stripe cred...does stripe connect still work?
-
-To Dos
-- comment code
-- keep controllers lean
-- must be timezone aware time.current or time.zone.now - assume user sends in time in the timezone they have set on dashboard
+- add index to coupon/plan names
 
 Surya
-
-Bhisma
+- reinitialize counter when type is changed
+- dont validate subject on the fly
 
 - what happens when u send image in countries that don't support it. link?
-- check trumbowyg working
 - clean up image/hashtag presenters
 - Plug into stripe api for managed accts - see notes
 - Create Seeds
@@ -37,9 +37,6 @@ Payment Capture - should be for only customers....capture in logic
 - plug in charge into payment capture workflow
 - let parse_text return cents i guess and just divide by 100 to show
 
-All APIs especially Stripe, Twilio
-- Test all data saves correctly
-
 Contact - Inbound
 - sent u a text doesnt have an account 
 - have an account, sent u a text but ref link isnt yours 
@@ -47,11 +44,7 @@ Contact - Inbound
 Campaigns and Facebook
 - fail safely for audio and video files
 
-
 For Surya
 - You can't delete campaign that has run
-- You need to bind emojionearea only once so use a variable to keep track
-- You need to bind counter to all fields once except email....you will need to do that on focus...use variable to keep track
 - if it is a one time, you need to mark inactive
-- update action needs to update campaign_lists
 - scroll bar in emoji isnt clickable/draggable, can we group the emojis

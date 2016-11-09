@@ -9,7 +9,8 @@ class PlansController < ApplicationController
               .select('plans.id, amount, plans.name, currency, plans.interval, interval_count, s.id as subscription_id')
               .paginate(page: params[:page], per_page: 1)
               .order('plans.created_at DESC')
-
+              #sleep 5
+              #as
     respond_with(@plans)
   end
 
@@ -31,7 +32,7 @@ class PlansController < ApplicationController
     if @plan.create_plan({ team: current_user })
       redirect_to user_plans_path,  flash: { notice: 'Plan was created' }      #respond_with(@plan)
     else
-      @plan.amount = @plan.amount/100.to_f if  @plan.amount
+      @plan.amount = @plan.amount/100.to_f if @plan.amount
       @plan.destroy     # revoke created plan on error
       if @plan.errors.messages
         error = @plan.errors.full_messages
@@ -48,7 +49,7 @@ class PlansController < ApplicationController
     if @plan.update_plan(hash, current_user)
       redirect_to user_plans_path, flash: { notice: 'Plan was updated' }
     else
-      flash[:error] =  "We couldn't update the plan"
+      flash[:error] = "We couldn't update the plan"
       redirect_to edit_user_plan_path
     end
   end
@@ -73,7 +74,8 @@ class PlansController < ApplicationController
 
     def plan_params
       params.require(:plan).permit(:interval, :name, :amount).tap{ |plan|
-        plan[:amount] = (100 * plan[:amount].to_f).to_i if plan[:amount].present?
+        # round - deal with inaccurate floating point math. see 100 * 1.1
+        plan[:amount] = (100 * plan[:amount].to_f).round if plan[:amount].present?
         if params[:plan][:interval_month]
           plan['interval_count'] = params[:plan][:interval_month]
         elsif params[:plan][:interval_week]
