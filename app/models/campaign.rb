@@ -70,8 +70,8 @@ class Campaign < ActiveRecord::Base
   private
 
   def is_today_campaign?
-    user_date_today = Time.now.in_time_zone(current_user.time_zone).strftime("%Y-%m-%d")
-    user_date_time = date_time.in_time_zone(current_user.time_zone)
+    user_date_today = Time.now.in_time_zone(user.time_zone).strftime("%Y-%m-%d")
+    user_date_time = date_time.in_time_zone(user.time_zone)
     user_date_time.strftime("%Y-%m-%d") == user_date_today
   end
 
