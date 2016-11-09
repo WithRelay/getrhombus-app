@@ -1,8 +1,7 @@
 1- Add your JIRA keys to your tasks 
 2- Create JIRA tasks for bug fixes and tasks.
 
-      $('#couponForm').data('formValidation').resetField('coupon[duration_in_months]');
-
+$('#couponForm').data('formValidation').resetField('coupon[duration_in_months]');
 
 2014-03-28 api version
 
@@ -17,11 +16,10 @@ Review
 - add index to coupon/plan names
 
 Surya
-Bhisma
-Ovo
+- reinitialize counter when type is changed
+- dont validate subject on the fly
 
 - what happens when u send image in countries that don't support it. link?
-- check trumbowyg working
 - clean up image/hashtag presenters
 - Plug into stripe api for managed accts - see notes
 - Create Seeds
@@ -48,8 +46,5 @@ Campaigns and Facebook
 
 For Surya
 - You can't delete campaign that has run
-- You need to bind emojionearea only once so use a variable to keep track
-- You need to bind counter to all fields once except email....you will need to do that on focus...use variable to keep track
 - if it is a one time, you need to mark inactive
-- update action needs to update campaign_lists
 - scroll bar in emoji isnt clickable/draggable, can we group the emojis
