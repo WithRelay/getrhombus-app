@@ -20,8 +20,29 @@ class User < ActiveRecord::Base
 
   has_many :merchant, class_name: 'MerchantCustomer', foreign_key: 'merchant_id'
   has_many :customer, class_name: 'MerchantCustomer', foreign_key: 'customer_id'
-  
-  has_many :campaigns
+
+  # this block is for customizing build method for user.campaign which allow also to save list
+  has_many :campaigns do
+    # overiding association build function like user.campaigns.build will hit here
+    def build(*args)
+      # calls parent build action and send arguments first from the splat operator
+      campaign = super(args[0])
+      unless args.blank?
+        # build campaign lists of campaign
+        args[0][:list_ids].split(',').each{ |l| campaign.campaign_lists.build(list_id: l) }
+        # build avatar of campaigns
+        args[1][:avatar].each do |image|
+          campaign.images.build(avatar: image, uploaded_as: 1)
+        end if (!campaign.sms? && args[1][:avatar].present?)
+        # build image refs for inline images of campaigns
+        args[1][:image_id].each do |avatar_id|
+          campaign.image_refs.build(image_id: avatar_id).save;
+        end if args[1][:image_id].present?
+      end
+      return campaign
+    end
+  end
+
   has_many :hashtags
 
   has_many :messages
@@ -35,7 +56,7 @@ class User < ActiveRecord::Base
 
   has_one :alert, dependent: :destroy
   has_many :fb_pages
-  
+
   has_many :saved_replies
   has_many :message_resolutions
 
@@ -77,13 +98,13 @@ class User < ActiveRecord::Base
   # You run into issues with any additional merchants.
   validates_uniqueness_of :phone_number, :allow_nil => true, :if => lambda { self.user_level == 0 }
   validate :phone_number_cannot_be_rhombus_number
- 
+
   def is_merchant?
     user_level == 1
   end
 
   def is_platform?
-    email != '<redacted_email>' && email != '<redacted_email>'
+    email == '<redacted_email>' || email == '<redacted_email>'
   end
 
   def can_send_mms?
@@ -162,68 +183,68 @@ class User < ActiveRecord::Base
 
   private
 
-    # Some users sign up with Rhombus numbers
-    def phone_number_cannot_be_rhombus_number
-      if User.exists?(rhombus_number: self.phone_number)
-        errors.add(:phone_number, "can't be a Rhombus number. Please enter your phone number.")
+  # Some users sign up with Rhombus numbers
+  def phone_number_cannot_be_rhombus_number
+    if User.exists?(rhombus_number: self.phone_number)
+      errors.add(:phone_number, "can't be a Rhombus number. Please enter your phone number.")
+    end
+  end
+
+  def set_merchant_org_phone
+    if self.user_level == 1
+      self.org_phone = self.phone_number
+      self.phone_number = nil
+    end
+  end
+
+  def the_titleizer
+    self.card_name = self.card_name.strip.titleize unless self.card_name.blank?
+    self.url = self.url.strip unless self.url.blank?
+    self.custom_welcome = self.custom_welcome.strip unless self.custom_welcome.blank?
+    self.org_name = self.org_name.strip unless self.org_name.blank?
+  end
+
+  def send_welcome_email
+    owner = User.find_by(email: Rails.application.secrets.team_email)
+    if self.user_level == 1
+      EmailingService.send_welcome_email(self.email, owner.rhombus_number, "merchant")
+    elsif self.user_level == 0
+      ref = self.referrers.first
+      unless ref.blank?
+        referrer = User.find_by(id: ref.referrer_id)
+        EmailingService.send_welcome_email_with_referral(ref.email, self.email, ref.org_name, ref.rhombus_number, owner.rhombus_number)
+        text = "Thanks for signing up! Please add a payment card to your Rhombus profile (if you haven't done so).
+        You can chat with us anytime via sms or to make a payment, just text the amount & description/hashtag. Ex. +10 #donut"
+        Message.send_and_save_message(ref.rhombus_number, self.phone_number, text)
+      else
+        EmailingService.send_welcome_email(self.email, owner.rhombus_number, "customer")
+        text = "Thanks for signing up! Please add a payment card to your Rhombus profile (if you haven't done so).
+        You can chat with a local business anytime by texting their Rhombus number or to make a payment, just text the amount &
+        description/hashtag. Ex. +10 #donut"
+        Message.send_and_save_message(owner.rhombus_number, self.phone_number, text)
       end
     end
+  end
 
-    def set_merchant_org_phone
-      if self.user_level == 1
-        self.org_phone = self.phone_number
-        self.phone_number = nil
+  # move to background job
+  def update_phone_in_db
+    if self.user_level == 0
+      if x = self.previous_changes['phone_number']
+        ActiveRecord::Base.connection.execute("UPDATE messages SET messages.from = #{x[1]} WHERE messages.from = #{x[0]}")
+        ActiveRecord::Base.connection.execute("UPDATE messages SET messages.to = #{x[1]} WHERE messages.to = #{x[0]}")
       end
     end
+  end
 
-    def the_titleizer
-      self.card_name = self.card_name.strip.titleize unless self.card_name.blank?
-      self.url = self.url.strip unless self.url.blank?
-      self.custom_welcome = self.custom_welcome.strip unless self.custom_welcome.blank?
-      self.org_name = self.org_name.strip unless self.org_name.blank?
-    end
-
-    def send_welcome_email
-      owner = User.find_by(email: Rails.application.secrets.team_email)
-      if self.user_level == 1
-        EmailingService.send_welcome_email(self.email, owner.rhombus_number, "merchant")
-      elsif self.user_level == 0
-        ref = self.referrers.first
-        unless ref.blank?
-          referrer = User.find_by(id: ref.referrer_id)
-          EmailingService.send_welcome_email_with_referral(ref.email, self.email, ref.org_name, ref.rhombus_number, owner.rhombus_number)
-          text = "Thanks for signing up! Please add a payment card to your Rhombus profile (if you haven't done so).
-          You can chat with us anytime via sms or to make a payment, just text the amount & description/hashtag. Ex. +10 #donut"
-          Message.send_and_save_message(ref.rhombus_number, self.phone_number, text)
-        else
-          EmailingService.send_welcome_email(self.email, owner.rhombus_number, "customer")
-          text = "Thanks for signing up! Please add a payment card to your Rhombus profile (if you haven't done so).
-          You can chat with a local business anytime by texting their Rhombus number or to make a payment, just text the amount &
-          description/hashtag. Ex. +10 #donut"
-          Message.send_and_save_message(owner.rhombus_number, self.phone_number, text)
-        end
-      end
-    end
-
-    # move to background job
-    def update_phone_in_db
-      if self.user_level == 0
-        if x = self.previous_changes['phone_number']
-          ActiveRecord::Base.connection.execute("UPDATE messages SET messages.from = #{x[1]} WHERE messages.from = #{x[0]}")
-          ActiveRecord::Base.connection.execute("UPDATE messages SET messages.to = #{x[1]} WHERE messages.to = #{x[0]}")
-        end
-      end
-    end
-
-    def create_user_alert
-      Alert.create_with(user_id: self.id, sms_number: self.org_phone).find_or_create_by(user_id: self.id)
-    end
+  def create_user_alert
+    Alert.create_with(user_id: self.id).find_or_create_by(user_id: self.id)
+  end
 
 end
 
 =begin
 
-def add_token_to_stripe_customer(params)
+  def add_token_to_stripe_customer(params)
     if params[:card_token].present?  # is this why i get the errors from stripe??
       begin
         hash = { email: self.email, card_token: params[:card_token] }

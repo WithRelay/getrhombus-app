@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161109044813) do
+ActiveRecord::Schema.define(version: 20161107005349) do
 
   create_table "addresses", force: :cascade do |t|
     t.string   "street_address",   limit: 191
@@ -305,11 +305,6 @@ ActiveRecord::Schema.define(version: 20161109044813) do
   end
 
   add_index "lists", ["user_id"], name: "index_lists_on_user_id", using: :btree
-
-  create_table "merchant_customers", force: :cascade do |t|
-    t.integer "merchant_id", limit: 4
-    t.integer "customer_id", limit: 4
-  end
 
   create_table "message_frequencies", force: :cascade do |t|
     t.datetime "created_at",                 null: false

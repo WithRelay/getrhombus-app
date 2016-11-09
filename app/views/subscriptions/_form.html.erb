@@ -1,33 +1,36 @@
-<%= form_for([current_user, @subscription]) do |f| %>
-  <% if @subscription.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@subscription.errors.count, "error") %> prohibited this subscription from being saved:</h2>
+<%= form_for([current_user, @subscription], :html=> { id: 'subscriptionForm', class: 'form-horizontal' }) do |f| %>
 
-      <ul>
-      <% @subscription.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-      </ul>
+   <div class="form-group">
+    <%= f.label :plan, class: 'col-xs-3 control-label' %>
+    <div class="col-xs-5">
+      <%= f.text_field :plan_id, class: 'form-control', placeholder: "Select 1 or more plans" %>
     </div>
-  <% end %>
-
-
-   <div class="field">
-    <%= f.label :plan %><br>
-    <%= f.text_field :plan_id %>
   </div>
 
-  <div class="field">
-    <%= f.label :customer %><br>
-    <%= f.text_field :user_id %>
+  <div class="form-group">
+    <%= f.label :coupon, class: 'col-xs-3 control-label' %>
+    <div class="col-xs-5">
+      <%= f.text_field :coupon_id, class: 'form-control', id: 'subscription-select-coupon', placeholder: "Select a coupon" %>
+    </div>
   </div>
 
-  <div class="field">
-    <%= f.label :quantity %><br>
-    <%= f.text_field :quantity %>
+  <div class="form-group">
+    <%= f.label :customer, class: 'col-xs-3 control-label' %>
+    <div class="col-xs-5">
+      <%= f.text_field :user_id, class: 'form-control', placeholder: "Select 1 or more customers" %>
+    </div>
   </div>
 
-  <div class="actions">
-    <%= f.submit 'Create Subscription', data: { disable_with: "Please wait..." } %>
+  <div class="form-group">
+    <%= f.label :quantity, class: 'col-xs-3 control-label' %>
+    <div class="col-xs-5">
+      <%= f.text_field :quantity, class: 'form-control' %>
+    </div>
+  </div>
+
+  <div class="actions field form-group">
+    <div class="col-xs-9 col-xs-offset-3">
+      <%= f.submit 'Create Subscription', class: 'btn btn-primary' %>
+    </div>
   </div>
 <% end %>

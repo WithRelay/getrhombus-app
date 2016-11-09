@@ -1,4 +1,4 @@
 <%= link_to 'Active', filter_campaign_user_campaigns_path(current_user, status: 'active') %>
 <%= link_to 'Inactive', filter_campaign_user_campaigns_path(current_user, status: 'inactive') %>
-<%= link_to 'Sent', filter_campaign_user_campaigns_path(current_user), status: 'sent' %>
-<%= link_to 'Paused', filter_campaign_user_campaigns_path(current_user), status: 'paused' %>
+<%= link_to 'Sent', filter_campaign_user_campaigns_path(current_user, status: 'sent') %>
+<%= link_to 'Paused', filter_campaign_user_campaigns_path(current_user, status: 'paused') %>

@@ -27,6 +27,7 @@ class SubscriptionsController < ApplicationController
     @subscription = Subscription.new(subscription_params)
     u = User.find_by id: self.user_id
     @subscription.team_id = current_user.id
+
     if u && @subscription.create_subscription({ team: current_user, customer: u.customer_uri })  #@subscription.save
       redirect_to user_subscriptions_path       #respond_with(@subscription)
     else
@@ -42,7 +43,7 @@ class SubscriptionsController < ApplicationController
   def destroy
     @subscription.cancel_subscription(true)
     #@subscription.destroy
-    #flash[:notice] = 'dadadads'
+    flash[:notice] = 'Canceled'
     redirect_to user_subscriptions_path         #respond_with(@subscription)
   end
 

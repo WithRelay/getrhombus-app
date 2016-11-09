@@ -16,17 +16,16 @@ class CampaignsController < ApplicationController
   end
 
   # creates a campaigns, campaign_lists, images if params available, associate inline image with campaign
+  # note : build method is being overide please go through user model has_many :campaigns relationship
   def create
-    @campaign = current_user.campaigns.build(campaign_params)
-    campaign_params[:list_ids].split(',').each { |list_id| @campaign.campaign_lists.build(list_id: list_id) }
-    save_campaign_images(@campaign)
+    @campaign = current_user.campaigns.build(campaign_params, image_params)
     if @campaign.save
-      enqueue_jobs(@campaign) # enque jobs if there is send now checked or one time is checked
+      @campaign.enqueue_jobs # enque jobs if there is send now checked or one time is checked
       flash[:notice] = 'Campaign Saved successfully'
       redirect_to new_user_campaign_path
     else
       render :new
-      flash[:error] = @campaign.errors.messages
+      flash[:error] = @campaign.errors.full_messages
     end
   end
 
@@ -35,22 +34,20 @@ class CampaignsController < ApplicationController
     @lists_json = @campaign.lists.to_json
   end
 
+  # note : update_attributes method is being overide please go through campaign model
   def update
-    save_campaign_images(@campaign)
-    if @campaign.update_attributes(campaign_params)
-      @campaign.campaign_lists.delete_all
-      campaign_params[:list_ids].split(',').each { |list_id| @campaign.campaign_lists.build(list_id: list_id).save }
-      destroy_campaign_jobs; change_campaign_job; enqueue_jobs(@campaign);
+    if @campaign.update_attributes(campaign_params, image_params)
+      @campaign.destroy_campaign_jobs; @campaign.enqueue_jobs;
       flash[:notice] = 'Campaign updated successfully'
     else
-      flash[:error] = @campaign.errors.messages
+      flash[:error] = @campaign.errors.full_messages
     end
     redirect_to edit_user_campaign_path
   end
 
   def destroy
     if @campaign.destroy
-      destroy_campaign_jobs
+      @campaign.destroy_campaign_jobs
       flash[:notice] = 'Campaign is being succesfully deleted'
     else
       flash[:error] = 'Sorry campaign could not delete please try again'
@@ -61,7 +58,7 @@ class CampaignsController < ApplicationController
   def change_status
     status = @campaign.active? ? 2 : 1
     if @campaign.update_attribute('status', status)
-      change_campaign_job
+      @campaign.change_campaign_job
       flash[:notice] = "Campaign #{@campaign.status}"
     else
       flash[:notice] = 'Sorry campaign could not be paused'
@@ -76,21 +73,6 @@ class CampaignsController < ApplicationController
 
   private
 
-  def change_campaign_job
-    date_today = Date.today.strftime("%Y-%m-%d")
-    utc_date_time = @campaign.date_time.in_time_zone(@campaign.user.time_zone).utc
-    today_campaign = utc_date_time.strftime("%Y-%m-%d") == date_today
-    if @campaign.active? && today_campaign
-      Resque.enqueue_at_with_queue('default', utc_date_time, ChannelJob, @campaign.id)
-    else
-      destroy_campaign_jobs
-    end
-  end
-
-  def destroy_campaign_jobs
-    Resque.remove_delayed_selection { |args| args[0] == @campaign.id }
-  end
-
   def find_campaign
     @campaign = current_user.campaigns.find(params[:id])
   end
@@ -102,25 +84,6 @@ class CampaignsController < ApplicationController
     end
   end
 
-  def is_campaign_date_selected?(campaign)
-    (campaign.one_time? && !campaign.deliver_now?)
-  end
-
-  def enqueue_jobs(campaign)
-    utc_date_time = campaign.date_time.in_time_zone(campaign.user.time_zone).utc
-    Resque.enqueue_at_with_queue('default', utc_date_time, ChannelJob, campaign.id) if is_campaign_date_selected?(campaign)
-    CampaignJob.perform_now(campaign) if campaign.deliver_now
-  end
-
-  def save_campaign_images(campaign)
-    image_params[:avatar].each do |image|
-      campaign.images.build(avatar: image, uploaded_as: 1)
-    end if (!campaign.sms? && image_params[:avatar].present?)
-    image_params[:image_id].each do |avatar_id|
-      campaign.image_refs.build(image_id: avatar_id).save;
-    end if image_params[:image_id].present?
-  end
-
   def campaign_params
     # enums are define as integer but params are in string and rails is not converting string to integer
     params.require(:campaign).permit(:name, :list_ids, :channel, :repeat_days, :date_time, :deliver_now,
@@ -128,6 +91,7 @@ class CampaignsController < ApplicationController
                                       c[:channel] = c[:channel].to_i
                                       c[:frequency_type] = c[:frequency_type].to_i
                                       c[:deliver_now]=='1' ? c[:deliver_now] = true : c[:deliver_now] = false
+                                      c[:date_time] = nil if c[:date_time].empty?
                                     end
   end
 

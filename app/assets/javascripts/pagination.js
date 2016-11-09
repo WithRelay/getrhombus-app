@@ -11,16 +11,18 @@ jQuery(function() {
         more_plans_url = $('.next_page').attr('href');
         $this = $(this);
         $this.button('loading');
-          setTimeout(function() {
-            $this.button('reset');
-            $.getScript(more_plans_url, function() {
-              if ($this) {
-                $("html, body").animate({ scrollTop: $(document).height() }, 5000);
-                $this.text('Show More').removeClass('disabled');
-              }
-              return loading_views = false;
-            });
-         }, 2000);
+        $this.button('reset');
+
+        $.getScript(more_plans_url)
+          .done(function( script){
+            if ($this) {
+              $this.text('Show More').removeClass('disabled');
+            }
+            return loading_views = false;
+          })
+        .fail(function() {
+          flashError('Sorry we couldn\'t load more plans');
+        });
       }
     });
   }

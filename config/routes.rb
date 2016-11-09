@@ -59,7 +59,7 @@ Rails.application.routes.draw  do
     resources :fb_pages, only: [:index]
     patch 'update_fb_page' => 'fb_pages#update_user_fb_page'
     resources :hashtags, except: [:show, :destroy]
-    resources :subscriptions, except: [:show, :edit, :update]
+    resources :subscriptions, except: [:edit, :update]
     resources :plans, only: [:create, :index, :new, :edit, :update, :destroy]
     resources :alerts, only: [:update]
     resources :saved_replies
@@ -85,7 +85,7 @@ Rails.application.routes.draw  do
 
     # Only admins can create coupons
     resources :coupons, :constraints => lambda { |req|
-      req.env['warden'].authenticated? and req.env['warden'].user.email == '<redacted_email>' #Rails.application.secrets.dashboard_email
+      req.env['warden'].authenticated? #and req.env['warden'].user.email == '<redacted_email>' #Rails.application.secrets.dashboard_email
     }
 
     member do
@@ -122,6 +122,9 @@ Rails.application.routes.draw  do
     match 'lists/create' => 'lists#create', via: :post
     match 'coupons/check_coupon_name' => 'coupons#check_coupon_name', via: :post
     match 'plans/check_plan_name' => 'plans#check_plan_name', via: :post
+    match 'subscriptions/get_coupon' => 'subscriptions#get_coupon', via: :get
+    match 'subscriptions/get_plan' => 'subscriptions#get_plan', via: :get
+    match 'customers/customer_data' => 'customers#customer_data', via: :get
   end
 
   ## catch all other to 404

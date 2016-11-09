@@ -73,6 +73,7 @@ class Campaign
   hideShowScheduler: ->
     if deliverNowOneTime_isChecked(@oneTime, @deliverNow)
       $(@schedule).hide()
+      $('.daterange').val('')
     else
       $(@schedule).show()
 
@@ -161,6 +162,7 @@ $( document ).on 'ready page:load', ->
 
   if $("#deliverNow").is(":checked")
     $('.scheduleOption').hide()
+    $('.daterange').val('')
 
   # Mainly for edit actions so the view shows properly
   frequency_type = if $('#oneTimeFrequency').is(':checked') then '#oneTimeFrequency' else '#recurringFrequency'
@@ -177,7 +179,7 @@ $( document ).on 'ready page:load', ->
       $('body').addClass('loading')
       trumbowygHtml = $('#trumbowyg').trumbowyg('html')
       $.ajax(
-        url: 'http://'+window.location.host+'/v1/campaigns/upload_images'
+        url: window.location.protocol + '//'+window.location.host+'/v1/campaigns/upload_images'
         type: 'POST'
         data: img_url: e.target.src
         dataType: 'json').done (data) ->

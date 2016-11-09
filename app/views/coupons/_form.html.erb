@@ -21,7 +21,7 @@
     </div>
   </div>
 
-  <div class="form-group">
+  <div class="form-group dynamic-coupon">
     <% if f.object.new_record? || (f.object.persisted? && f.object.amount_off.present?)%>
       <%= f.label :amount_off, class: 'col-xs-3 control-label', id: 'coupon-type-value-label' %>
       <div class="col-xs-5">

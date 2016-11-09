@@ -10,9 +10,9 @@ class Plan < ActiveRecord::Base
     begin
       res = []
       team = hash[:team]
+      is_platform = team.is_platform?
       # uid = '<redacted_stripe_account_id>' #use this for testing
       uid = get_team_uid(team) #use this for real use
-      is_platform = team.is_platform?
       
       descriptor = (self.name + "-" + team.org_name)[0..21]
       # a customer or a team/merchant can create a plan
@@ -20,12 +20,13 @@ class Plan < ActiveRecord::Base
       # dont send team/merchant or customer data in hash
       [:team, :customer].each { |k| hash.delete(k) } 
       # Update so validations run before calling Stripe
+      self.amount = self.amount
       self.update(user_id: _user_id, statement_descriptor: descriptor)
 
       hash[:interval] = self.interval
       hash[:interval_count] = self.interval_count
       # amount should pass in cent
-      hash[:amount] = 100 * self.amount
+      hash[:amount] = self.amount
       hash[:id] = self.id
       hash[:name] = self.name
       hash[:trial_period_days] = self.trial_period_days
@@ -74,7 +75,11 @@ class Plan < ActiveRecord::Base
   end
 
   def get_team_uid(team)
-    t = team.stripe_creds.where(uid_type: 0).first
+    if team.is_platform?
+      t = team.stripe_creds.first
+    else
+      t = team.stripe_creds.where(uid_type: 0).first
+    end
     t.uid if t
   end
 

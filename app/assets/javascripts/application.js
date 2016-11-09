@@ -16,8 +16,8 @@
 //= require pnotify
 //= require flashes
 //= require pagination
-//= require coupon
 //= require plan
+//= require coupon
 //= require jquery_ujs
 //= require jquery.lightbox_me
 //= require intlTelInput.min
@@ -37,14 +37,15 @@
 //= require custom_trumbowyg_plugin
 //= require trumbowyg.min
 //= require emojify
+//= require form_validator
 //= require emojionearea
 //= require trumbowyg_emoji_plugin
 //= require trumbowyg.upload.min
 //= require saved_replies
 //= require message_resolutions
 //= require selectize
+//= require subscription
 //= require lists
 //= require alerts
 //= require hashtags_plans_coupons_alerts
 //= require jquery.checkboxes-1.2.0.min.js
-

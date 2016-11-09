@@ -9,7 +9,7 @@ class EmailingService
   class << self
 
     def send_email_campaign(campaign_hash)
-      message = campaign_hash.merge({ subject: 'Email Campaign', from_name: 'Rhombus'}).merge(FROM_EMAIL)
+      message = campaign_hash.merge({ from_name: 'Rhombus'}).merge(FROM_EMAIL)
       response = MANDRILL.messages.send(message)
       response[0]['status'] == ('sent' || 'queued') ? true : false
     end

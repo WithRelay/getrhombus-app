@@ -19,6 +19,10 @@ class CampaignPresenter < BasePresenter
     @model.lists.count
   end
 
+  def to_user_date_time
+    @model.date_time.in_time_zone(@user.time_zone) if @model.date_time.present?
+  end
+
   def campaign_change_status_link
     return 'Inactive' if @model.inactive?
     text = @model.paused? ? 'Unpause' : 'Pause'
