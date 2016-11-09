@@ -50,7 +50,7 @@ class Campaign < ActiveRecord::Base
 
   def change_campaign_job
     if active? && is_today_campaign?
-      Resque.enqueue_at_with_queue('default', utc_date_time, ChannelJob, id)
+      enqueue_jobs
     else
       destroy_campaign_jobs
     end
