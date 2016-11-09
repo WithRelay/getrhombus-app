@@ -160,7 +160,6 @@
           }
         },
         updateCounter: function (e) {
-
           // If the element has the contentedtiable attribute, use the text value.
           // Otherwise use an input value
           var $value = ($(this).attr("contentEditable") == "true") ? $(this).text() : $(this).val();
@@ -175,7 +174,19 @@
 
             // ...down
             if (options.count === defaults.count) {
-              countIndex = options.goal - $value.length;
+              if ($('#campaign_channel').length > 0){
+                if ($('#campaign_channel').val()=="0")  {
+                  countIndex = 1500 - $value.length;
+                }else if (($('#campaign_channel').val()=="2")){
+                  countIndex = 320 - $value.length;
+                }
+                else {
+                  countIndex = options.goal - $value.length;
+                }
+              }
+              else {
+                countIndex = options.goal - $value.length;
+              }
 
               // Prevent negative counter
               if (countIndex <= 0) {
@@ -218,9 +229,11 @@
             }
           }
         },
+        updateNewCounter: function(e, value){
+          countIndex = 400
+        },
         /* Stops the ability to type */
         doStopTyping: function (e) {
-
           // backspace, delete, tab, left, up, right, down, end, home, spacebar
           var keys = [46, 8, 9, 35, 36, 37, 38, 39, 40, 32];
           if (methods.isGoalReached(e)) {
@@ -246,18 +259,12 @@
           if (noLimit) {
             return false;
           }
-
           // Counting down
           if (options.count === defaults.count) {
             _goal = 0;
             return (countIndex <= _goal);
           } else {
             // Counting up
-            if ($("#campaign_channel :selected").val() === "2") {
-                _goal = 320;
-              } else {
-                _goal = 1500;
-              }
             return (countIndex >= _goal);
           }
         },
