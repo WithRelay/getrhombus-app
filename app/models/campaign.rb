@@ -44,16 +44,13 @@ class Campaign < ActiveRecord::Base
 
   def create_image_refs(campaign_image)
     args[1][:image_id].each do |avatar_id|
-      image_refs.build(image_id: avatar_id).save;
+      image_refs.build(image_id: avatar_id).save
     end
   end
 
   def change_campaign_job
-    if active? && is_today_campaign?
-      enqueue_jobs
-    else
-      destroy_campaign_jobs
-    end
+    destroy_campaign_jobs
+    enqueue_jobs if active? && is_today_campaign?
   end
 
   def destroy_campaign_jobs
@@ -70,14 +67,16 @@ class Campaign < ActiveRecord::Base
   private
 
   def is_today_campaign?
-    user_date_today = Time.now.in_time_zone(user.time_zone).strftime("%Y-%m-%d")
+    user_date_today = Time.current.in_time_zone(user.time_zone).strftime("%Y-%m-%d")
     user_date_time = date_time.in_time_zone(user.time_zone)
     user_date_time.strftime("%Y-%m-%d") == user_date_today
   end
 
   def date_time_validate
     # date_time.utc will convert date_time to utc and Time.now is current time and .utc will convert to utc
-    errors.add(:date_time, 'date time should be greater than current date time') if date_time.utc < Time.now.utc
+    # no need to convert to datetime object because rails tries to save date time by storing to date time format
+    # so the self object date_time attribute returns the date time which is formatted in rails date time
+    errors.add(:date_time, 'date time should be greater than current date time') if date_time.utc < Time.current.utc
   end
 
   def is_campaign_date_selected?
@@ -90,6 +89,6 @@ class Campaign < ActiveRecord::Base
     # get the text length by its key i.e. from params
     max_text_length = channel_text_size[channel]
     # add errors to text
-    errors.add(:text, "text length should no more than #{max_text_length}") if max_text_length <= text.to_i
+    errors.add(:text, "text length should no more than #{max_text_length}") if max_text_length <= text.length
   end
 end

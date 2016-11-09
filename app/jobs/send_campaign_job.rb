@@ -16,7 +16,7 @@ class SendCampaignJob
 
   def self.check_date(date)
     date_campaign = Time.parse(date.strftime("%Y-%m-%d"))
-    date_today_utc = Time.now.utc
+    date_today_utc = Time.current.utc
     date_today = Time.parse(date_today_utc.strftime("%Y-%m-%d"))
     return date_today >= date_campaign
   end
