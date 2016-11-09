@@ -72,13 +72,15 @@ class PaymentService
     def create_subscription(hash, stripe_account_uid, platform=false)
       begin
         if platform
-          tkn = Stripe::Token.create({ customer: hash[:customer_uri] })
+          # tkn = Stripe::Token.create({ customer: hash[:customer] }, { stripe_account: stripe_account_uid })
+          tkn = Stripe::Token.create({ customer: hash[:customer] })
           hash[:source] = tkn
-          re = Stripe::Subscription.create(hash)  
+          # hash.delete(:application_fee_percent)
+          re = Stripe::Subscription.create(hash)
         else
-          tkn = Stripe::Token.create({ customer: hash[:customer_uri] }, { stripe_account: stripe_account_uid })
+          tkn = Stripe::Token.create({ customer: hash[:customer] }, { stripe_account: stripe_account_uid })
           hash[:source] = tkn
-          re = Stripe::Subscription.create(hash, { stripe_account: stripe_account_uid })  
+          re = Stripe::Subscription.create(hash, { stripe_account: stripe_account_uid })
         end
 
         [re]
