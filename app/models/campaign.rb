@@ -60,7 +60,7 @@ class Campaign < ActiveRecord::Base
   def enqueue_jobs
     # rescue enqueue_at_with_queue accpets four parameter 1 name of queue, 2 date_time(provided as utc)
     # 3 class name 4 the parameter send for class method perform
-    Resque.enqueue_at_with_queue('default', date_time.utc, ChannelJob, id) if is_campaign_date_selected? || is_today_campaign?
+    Resque.enqueue_at_with_queue('campaign', date_time.utc, ChannelJob, id) if is_campaign_date_selected? || is_today_campaign?
     CampaignJob.perform_now(self) if deliver_now?
   end
 
@@ -76,7 +76,11 @@ class Campaign < ActiveRecord::Base
     # date_time.utc will convert date_time to utc and Time.now is current time and .utc will convert to utc
     # no need to convert to datetime object because rails tries to save date time by storing to date time format
     # so the self object date_time attribute returns the date time which is formatted in rails date time
-    errors.add(:date_time, 'date time should be greater than current date time') if date_time.utc < Time.current.utc
+    errors.add(:date_time, 'date time should be greater than current date time') if is_time_greater_than_now?
+  end
+
+  def is_time_greater_than_now?
+    date_time < Time.current
   end
 
   def is_campaign_date_selected?
