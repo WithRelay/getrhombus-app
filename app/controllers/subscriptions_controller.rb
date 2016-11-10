@@ -43,9 +43,11 @@ class SubscriptionsController < ApplicationController
          @subscription = Subscription.new(subscription_param)
          # u = User.find_by id: self.user_id
          u = {}
+         #for testing
          dummy_customer.each do |h|
           u = h if h[:id] == @subscription.user_id
-        end #for testing
+        end
+
          @subscription.team_id = current_user.id
 
          if u && @subscription.create_subscription({ team: current_user, customer: u[:customer_uri] })  #@subscription.save
@@ -60,7 +62,7 @@ class SubscriptionsController < ApplicationController
     if res
       redirect_to user_subscriptions_path, flash: {notice: 'Subscriptions are created successfully'}
     else
-      flash[:error] = 'Something went wrong'
+      flash[:error] = 'We couldn\'t create the coupon'
       redirect_to new_user_subscription_path
     end
 
