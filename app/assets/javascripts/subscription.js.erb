@@ -125,4 +125,16 @@ $(document).ready(function () {
 
   $('.form-control').css('height', 'auto');
 
-})
+});
+
+$(document).on('click', '.cancel-subscription', function(evt) {
+  var selector = '.' + evt.target.classList[evt.target.classList.length - 1];
+  if (!$(selector).attr('isCancel')) {
+    evt.stopImmediatePropagation();
+    flashConfirm(selector, 'Cancel Subscription',
+      'Your subscription is going to cancelled',
+      'isCancel'
+    );
+    return false;
+  }
+});

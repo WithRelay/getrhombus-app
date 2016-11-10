@@ -11,10 +11,10 @@
       <!-- <td><%= plan.currency %></td>
       <td><%#= link_to 'Show', user_plan_path(current_user, plan) %></td>
       -->
-      <td><%= link_to 'Update', edit_user_plan_path(current_user, plan) %></td>
+      <td><%= link_to 'Update', edit_user_plan_path(current_user, plan), class: 'btn btn-info' %></td>
       <td>
         <% if plan.subscription_id.blank? %>
-          <%= link_to 'Destroy', user_plan_path(current_user, plan), method: :delete, class: "delete-plan plan#{plan.id}" %>
+          <%= link_to 'Delete Plan', user_plan_path(current_user, plan), method: :delete, class: "btn btn-danger delete-plan plan#{plan.id}", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i>Please wait...".html_safe } %>
         <% end %>
       </td> 
     </tr>

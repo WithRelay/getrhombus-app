@@ -73,9 +73,9 @@ class PaymentService
       begin
         if platform
           # tkn = Stripe::Token.create({ customer: hash[:customer] }, { stripe_account: stripe_account_uid })
-          tkn = Stripe::Token.create({ customer: hash[:customer] })
-          hash[:source] = tkn
-          # hash.delete(:application_fee_percent)
+          # tkn = Stripe::Token.create({ customer: hash[:customer] })
+          # hash[:source] = tkn
+          hash.delete(:application_fee_percent)
           re = Stripe::Subscription.create(hash)
         else
           tkn = Stripe::Token.create({ customer: hash[:customer] }, { stripe_account: stripe_account_uid })
@@ -83,15 +83,32 @@ class PaymentService
           re = Stripe::Subscription.create(hash, { stripe_account: stripe_account_uid })
         end
 
-        [re]
+        [true, re]
       rescue Stripe::StripeError => e
         # Display a very generic error to the user, and maybe send yourself an email
-        [false, e.json_body[:error]]
+        [false, e]
       rescue StandardError => e
         [false, e]
       end
     end
-    
+
+    def cancel_subscription(subscription_id, period_end)
+      begin
+        sbtn = Stripe::Subscription.retrieve(subscription_id)
+        if period_end.present?
+          sbtn.delete(period_end)
+        else
+         sbtn.delete
+        end
+        [true]
+      rescue Stripe::StripeError => e
+        # Display a very generic error to the user, and maybe send yourself an email
+        [false, e]
+      rescue StandardError => e
+        [false, e]
+      end
+    end
+
     def create_plan(hash, stripe_account_uid, platform)
       begin
         if platform
@@ -140,18 +157,6 @@ class PaymentService
         [true]
       rescue Stripe::StripeError => e
         [false, e]
-      rescue StandardError => e
-        [false, e]
-      end
-    end
-
-    def cancel_subscription(hash)
-      begin 
-        sbtn = Stripe::Subscription.retrieve(hash[:subscription_id])
-        sbtn.delete(at_period_end: hash[:at_period_end])
-      rescue Stripe::StripeError => e
-        # Display a very generic error to the user, and maybe send yourself an email
-        [false, e.json_body[:error]]
       rescue StandardError => e
         [false, e]
       end

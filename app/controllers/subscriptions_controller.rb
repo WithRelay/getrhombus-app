@@ -26,12 +26,12 @@ class SubscriptionsController < ApplicationController
   def create
 
     dummy_customer = [
-      {id: 1, customer_uri: 'cus_9K8ztWi3nEDOJQ', email: '<redacted_email>'},
-      {id: 2, customer_uri: 'cus_9J62zWAfp3cHCf', email: '<redacted_email>'},
-      {id: 3, customer_uri: 'cus_8ePuK9YNuqOPgz', email: '<redacted_email>'},
-      {id: 4, customer_uri: 'cus_7IEL0v1L6XB3Mc', email: '<redacted_email>'},
-      {id: 5, customer_uri: 'cus_8MCWRO4CGwCEvo', email: '<redacted_email>'},
-      {id: 6, customer_uri: 'cus_6gcoumphxCETya', email: '<redacted_email>'}
+      {id: 23, customer_uri: 'cus_9K8ztWi3nEDOJQ', email: '<redacted_email>'},
+      {id: 64, customer_uri: 'cus_9J62zWAfp3cHCf', email: '<redacted_email>'},
+      {id: 63, customer_uri: 'cus_8ePuK9YNuqOPgz', email: '<redacted_email>'},
+      {id: 62, customer_uri: 'cus_7IEL0v1L6XB3Mc', email: '<redacted_email>'},
+      {id: 61, customer_uri: 'cus_8MCWRO4CGwCEvo', email: '<redacted_email>'},
+      {id: 60, customer_uri: 'cus_6gcoumphxCETya', email: '<redacted_email>'}
     ]
 
     res = false
@@ -68,16 +68,19 @@ class SubscriptionsController < ApplicationController
 
   end
 
-  def update
-    @subscription.update(subscription_params)
-    respond_with(@subscription)
-  end
+  # def update
+  #   @subscription.update(subscription_params)
+  #   respond_with(@subscription)
+  # end
 
   def destroy
-    @subscription.cancel_subscription(true)
-    #@subscription.destroy
-    flash[:notice] = 'Canceled'
-    redirect_to user_subscriptions_path         #respond_with(@subscription)
+    if (@subscription.cancel_subscription)
+      @subscription.destroy
+      flash[:notice] = 'Canceled'
+      redirect_to user_subscriptions_path         #respond_with(@subscription)
+    else
+      flash[:error] = 'We could\'t cancel your subscription'
+    end
   end
 
   private
