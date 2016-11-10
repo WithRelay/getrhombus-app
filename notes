@@ -1,6 +1,4 @@
 
-$('#couponForm').data('formValidation').resetField('coupon[duration_in_months]');
-
 2014-03-28 api version
 
 Review
@@ -24,6 +22,7 @@ Review
 - notifications platform to merchants should have a single conversation and should not be pulled - mark as read too
 - conversations....need origin...cos system to customers should not open conversation....
 - rewrite refundds
+- return omniauth stripe connect for dashboard account
 
 https://www.getrhombus.com/receive_delivery_report
 
