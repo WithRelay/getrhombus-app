@@ -174,12 +174,17 @@
 
             // ...down
             if (options.count === defaults.count) {
+             // this do not effects other place we have used. I have check the campaign_channel id
               if ($('#campaign_channel').length > 0){
-                if ($('#campaign_channel').val()=="0")  {
-                  countIndex = 1500 - $value.length;
-                }else if (($('#campaign_channel').val()=="2")){
+                // 0 represents for sms and 1 for mms
+                if ($('#campaign_channel').val()=="0" || $('#campaign_channel').val()=="1"){
+                  countIndex = 1600 - $value.length;
+                }
+                // value 2 represent for facebook messenger
+                else if (($('#campaign_channel').val()=="2")){
                   countIndex = 320 - $value.length;
                 }
+                // else conditions is for other values like email
                 else {
                   countIndex = options.goal - $value.length;
                 }
@@ -187,14 +192,13 @@
               else {
                 countIndex = options.goal - $value.length;
               }
-
-              // Prevent negative counter
-              if (countIndex <= 0) {
-                $countObj.text("0");
-              } else {
-                $countObj.text(countIndex);
-              }
-
+              // we need negative count so comment the original code and customize
+              // if (countIndex <= 0) {
+              //   $countObj.text(countIndex);
+              // } else {
+              //   $countObj.text(countIndex);
+              // }
+             $countObj.text(countIndex);
               // ...up
             } else if (options.count === "up") {
               countIndex = $value.length;
