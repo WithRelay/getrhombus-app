@@ -58,7 +58,7 @@ class Campaign < ActiveRecord::Base
   end
 
   def enqueue_jobs
-    # rescue enqueue_at_with_queue accpets four parameter 1 name of queue, 2 date_time(provided as utc)
+    # rescue enqueue_at_with_queue accepts four parametera 1 name of queue, 2 date_time(provided as utc)
     # 3 class name 4 the parameter send for class method perform
     Resque.enqueue_at_with_queue('default', date_time.utc, ChannelJob, id) if is_campaign_date_selected? || is_today_campaign?
     CampaignJob.perform_now(self) if deliver_now?
@@ -67,16 +67,14 @@ class Campaign < ActiveRecord::Base
   private
 
   def is_today_campaign?
-    user_date_today = Time.current.in_time_zone(user.time_zone).strftime("%Y-%m-%d")
-    user_date_time = date_time.in_time_zone(user.time_zone)
-    user_date_time.strftime("%Y-%m-%d") == user_date_today
+    date_time.strftime("%Y-%m-%d") == Time.current.strftime("%Y-%m-%d")
   end
 
   def date_time_validate
     # date_time.utc will convert date_time to utc and Time.now is current time and .utc will convert to utc
     # no need to convert to datetime object because rails tries to save date time by storing to date time format
     # so the self object date_time attribute returns the date time which is formatted in rails date time
-    errors.add(:date_time, 'date time should be greater than current date time') if date_time.utc < Time.current.utc
+    errors.add(:date_time, 'Time should be at least 30 minutes from the current time.') if date_time - 30.minutes >= Time.current
   end
 
   def is_campaign_date_selected?
