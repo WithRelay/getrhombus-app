@@ -30,24 +30,38 @@ class Subscription < ActiveRecord::Base
       hash.delete(:team)
 
       res = PaymentService.create_subscription(hash, uid, is_platform)
+      if res.first
+        self.update(
+          stripe_subscription_id: res.second.id,
+          status: res.second.status,
+          stripe_livemode: res.second.livemode,
+          trial_end: res.second.trial_end,
+          trial_start: res.second.trial_start,
+          current_period_start: res.second.current_period_start,
+          current_period_end: res.second.current_period_end,
+          canceled_at: res.second.canceled_at,
+          cancel_at_period_end: res.second.cancel_at_period_end,
+          ended_at: res.second.ended_at
+        )
+      else
+        #notify team via email
+      end
 
-      # save data
-      # send emails
-
-      self.save
-      self.id
+      res.first
     rescue StandardError => e
-
+      # if StandardError happened after Stripe was called, delete plan on Stripe
+      self.cancel_subscription if res.length > 0
+      # notify team via email
     end
   end
 
-  def cancel_subscription(at_trial_end)
-    
-    #re = PaymentService(self.stripe_subscription_id, at_trial_end)
-
-    # save data
-    # send emails    
-
+  def cancel_subscription
+    begin
+      re = PaymentService.cancel_subscription(self.stripe_subscription_id, self.trial_end)
+    rescue StandardError => e
+      # notify team via email
+      false
+    end
   end
 
 

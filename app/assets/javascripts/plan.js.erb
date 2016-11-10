@@ -52,7 +52,6 @@ $(document).ready(function() {
 
   // dynamic  interval-count
   $('#interval-count').on('input', function() {
-    debugger
     if ($('#plan_interval').val() === 'day') {
       this.value = dynamic_interval(this.value, 366);
     } else if ($('#plan_interval').val() === 'week') {
