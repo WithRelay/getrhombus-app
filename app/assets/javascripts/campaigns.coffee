@@ -172,6 +172,8 @@ $( document ).on 'ready page:load', ->
   $(frequency_type).trigger('click')
 
   $( '#oneTimeFrequency, #deliverNow' ).click ->
+    if !$("#deliverNow").is(":checked")
+      campaign.datePicker(new DatePicker( '.daterange' ))
     campaign.hideShowScheduler()
 
   getBase64FromImageUrl = (url) ->

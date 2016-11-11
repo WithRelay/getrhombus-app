@@ -50,7 +50,7 @@ class Campaign < ActiveRecord::Base
 
   def change_campaign_job
     destroy_campaign_jobs
-    enqueue_jobs if active? && is_today_campaign?
+    enqueue_jobs if active? || one_time? && deliver_now?
   end
 
   def destroy_campaign_jobs
@@ -67,11 +67,7 @@ class Campaign < ActiveRecord::Base
   private
 
   def is_today_campaign?
-    if one_time? && deliver_now?
-      return true
-    else
-      date_time.strftime("%Y-%m-%d") == Time.current.strftime("%Y-%m-%d")
-    end
+    date_time.strftime("%Y-%m-%d") == Time.current.strftime("%Y-%m-%d") if date_time.present?
   end
 
   def date_time_validate
