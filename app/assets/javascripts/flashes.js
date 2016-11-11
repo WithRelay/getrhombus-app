@@ -1,32 +1,15 @@
-// flash success for ajax response
-function flashSuccess(successMsg){
-  new PNotify({
-    title: 'Success!!',
-    text: arrayToString(successMsg),
-    type: 'success',
-    hide: true
-  });
-}
 
 // flash success for warning
-function flashWarning(warningMsg){
+function setFlashMessage(msg, type){
+  var typeObj = { 'Notice': 'Success', 'Warning': 'info', 'Error':'error' }
+  var messageToSet = typeObj[type]
   new PNotify({
-    title: 'Info!!',
-    text: arrayToString(warningMsg),
-    type: 'info',
+    title: messageToSet,
+    text: arrayToString(msg),
+    type: messageToSet,
     hide: true
   });
 }
-// flash success for ajax response
-function flashError(errorMsg){
-  new PNotify({
-    title: 'Error!!',
-    text: arrayToString(errorMsg),
-    type: 'error',
-    hide: true
-  });
-}
-
 function arrayToString(value){
   if ($.isArray(value)){
     messageString = ''
@@ -36,15 +19,6 @@ function arrayToString(value){
     else {
       return value
     }
-}
-// flash info with desktop notification permission
-function flashNotice(infoMsg){
-  new PNotify({
-    title: 'Info!!',
-    text: arrayToString(infoMsg),
-    type: 'info',
-    hide: true
-  });
 }
 function flashAlert(alertMsg){
   var notice = new PNotify({
