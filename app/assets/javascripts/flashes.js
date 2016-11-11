@@ -2,7 +2,7 @@
 function flashSuccess(successMsg){
   new PNotify({
     title: 'Success!!',
-    text: successMsg,
+    text: arrayToString(successMsg),
     type: 'success',
     hide: true
   });
@@ -12,7 +12,7 @@ function flashSuccess(successMsg){
 function flashWarning(warningMsg){
   new PNotify({
     title: 'Info!!',
-    text: warningMsg,
+    text: arrayToString(warningMsg),
     type: 'info',
     hide: true
   });
@@ -21,28 +21,44 @@ function flashWarning(warningMsg){
 function flashError(errorMsg){
   new PNotify({
     title: 'Error!!',
-    text: errorMsg,
+    text: arrayToString(errorMsg),
     type: 'error',
     hide: true
   });
 }
 
-// flash info with desktop notification permission
-function flashInfo(infoMsg){
-  PNotify.desktop.permission();
-  (new PNotify({
-    title: 'Info!!',
-    text: infoMsg,
-    type: 'info',
-    hide: true,
-    desktop: {
-      desktop: true
+function arrayToString(value){
+  if ($.isArray(value)){
+    messageString = ''
+    $.each(value, function(index, value){ messageString += value + "\n"; })
+    return messageString
+  }
+    else {
+      return value
     }
-  })).get().click(function(e) {
-    if ($('.ui-pnotify-closer, .ui-pnotify-sticker, .ui-pnotify-closer *, .ui-pnotify-sticker *').is(e.target)) return;
+}
+// flash info with desktop notification permission
+function flashNotice(infoMsg){
+  new PNotify({
+    title: 'Info!!',
+    text: arrayToString(infoMsg),
+    type: 'info',
+    hide: true
   });
 }
-
+function flashAlert(alertMsg){
+  var notice = new PNotify({
+     title: 'Alert!!',
+     text: arrayToString(infoMsg),
+     buttons: {
+         closer: false,
+         sticker: false
+     }
+   });
+   notice.get().click(function() {
+       notice.remove();
+   });
+}
 // Confirmation
 function flashConfirm(selector, title, confirmText, isConfirm){
   (new PNotify({
