@@ -5,7 +5,8 @@
       // The eval() function executes in a string
       var flashMethod = eval('flash' + '<%= flashKey.capitalize %>')
       // to set arrayMessage as flash error array as verbatism
-      var arrayMessage = <%== flash[flashKey] %>
+      // .to_json is sometime flash message can contain string
+      var arrayMessage = <%== flash[flashKey].to_json %>
       // flashMethod is a method availabel in flashes.js
       flashMethod( arrayMessage )
       });
