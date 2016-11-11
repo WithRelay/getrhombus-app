@@ -1,29 +1,36 @@
-<p id="notice"><%= notice %></p>
+<div class="container">
+  <h1>Listing Subscriptions</h1>
 
-<h1>Listing Subscriptions</h1>
-
-<table>
-  <thead>
-    <tr>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @subscriptions.each do |subscription| %>
+  <table class="table">
+    <thead>
       <tr>
-        <td>other info here</td>
-        <td><%= subscription.quantity %></td>
-        <td><%#= link_to 'Show', subscription %></td>
-        <td><%#= link_to 'Edit', edit_subscription_path(subscription) %></td>
-        <td><%= link_to 'Destroy', user_subscription_path(current_user, subscription), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <th>Customer</th>
+        <th>Status</th>
+        <th>Plan</th>
+        <th>Quantity</th>
+        <th></th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
 
-<br>
+    <tbody>
+      <% @subscriptions.each do |subscription| %>
+        <tr>
+          <td>Customer info here</td>
+          <td><span class="btn btn-success"><%= subscription.status %></span></td>
+          <td>Plan Info here</td>
+          <td><%= subscription.quantity %></td>
+          <!-- <td><%#= link_to 'Show', subscription %></td> -->
+          <!-- <td><%#= link_to 'Edit', edit_subscription_path(subscription) %></td> -->
+          <td><%= link_to 'Cancel Subscription', user_subscription_path(current_user, subscription), method: :delete, class: "btn btn-danger cancel-subscription subscription#{subscription.id}", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i>Please wait...".html_safe } %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
 
-<%#= link_to 'New Subscription', new_subscription_path %>
-<%= link_to 'Create Subscription', new_user_subscription_path, id: 'create-subscription' %>
+  <br>
 
+  <%#= link_to 'New Subscription', new_subscription_path %>
+  <%= link_to 'Create Subscription', new_user_subscription_path, id: 'create-subscription' %>
+
+
+</div>

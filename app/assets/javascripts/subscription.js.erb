@@ -82,6 +82,9 @@ $(document).ready(function () {
       }
     })
     .on('change', function(e) {
+        $('#subscriptionForm').formValidation('resetField', 'subscription[plan_id]');
+    })
+    .on('submit', function(e) {
         $('#subscriptionForm').formValidation('revalidateField', 'subscription[plan_id]');
     })
 
@@ -114,9 +117,24 @@ $(document).ready(function () {
       }
     })
     .on('change', function(e) {
+        $('#subscriptionForm').formValidation('resetField', 'subscription[user_id]');
+    })
+    .on('submit', function(e) {
         $('#subscriptionForm').formValidation('revalidateField', 'subscription[user_id]');
     })
 
   $('.form-control').css('height', 'auto');
 
-})
+});
+
+$(document).on('click', '.cancel-subscription', function(evt) {
+  var selector = '.' + evt.target.classList[evt.target.classList.length - 1];
+  if (!$(selector).attr('isCancel')) {
+    evt.stopImmediatePropagation();
+    flashConfirm(selector, 'Cancel Subscription',
+      'Your subscription is going to cancelled',
+      'isCancel'
+    );
+    return false;
+  }
+});

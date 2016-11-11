@@ -54,6 +54,7 @@ $(document).ready(function () {
   });
 
   coupon_type.on('change', function() {
+    $('#couponForm').formValidation('resetField', 'coupon[amount_off]');
     var name_value = (this.value == 'amount_off') ? "coupon[amount_off]" : "coupon[percent_off]"
     coupon_type_value.val('').attr('name', name_value);
     $('#coupon-type-value-label').text(this.options[this.selectedIndex].text);
@@ -62,6 +63,7 @@ $(document).ready(function () {
     if ($('.dynamic-coupon').find('small')){
       $('.dynamic-coupon').find('small').text(text);
     }
+
   });
 
 

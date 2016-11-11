@@ -1,38 +1,43 @@
-<h1>Listing Coupons</h1>
+<div class="container">
+  <h1>Listing Coupons</h1>
 
-<table>
-  <thead>
-    <tr>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @coupons.each do |coupon| %>
+  <table class= 'table'>
+    <thead>
       <tr>
-        <td><%= coupon.name %></td>
-        <td><%= "%.2f" %(coupon.amount_off.to_f/100) %></td>
-        <td><%= coupon.currency %></td>
-        <td><%= coupon.duration %></td>
-        <td><%= coupon.duration_in_months %></td>
-        <td><%= coupon.max_redemptions %></td>
-        <td><%= coupon.percent_off %></td>
-        <td><%= coupon.redeem_by %></td>
-        <td>
-          <% if coupon.subscription_id.blank? %> 
-            <%= link_to 'Destroy', user_coupon_path(current_user, coupon), method: :delete, class: "delete-coupon coupon#{coupon.id}" %></td>
-          <% end %>
+        <th>Coupon name</th>
+        <th>Amount off</th>
+        <th>Currency</th>
+        <th>duration</th>
+        <th>Duration in months</th>
+        <th>Max Redemption</th>
+        <th>Percent off</th>
+        <th>Redeem by</th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
 
-<br>
+    <tbody>
+      <% @coupons.each do |coupon| %>
+        <tr>
+          <td><%= coupon.name %></td>
+          <td><%= "%.2f" %(coupon.amount_off.to_f/100) %></td>
+          <td><%= coupon.currency %></td>
+          <td><%= coupon.duration %></td>
+          <td><%= coupon.duration_in_months %></td>
+          <td><%= coupon.max_redemptions %></td>
+          <td><%= coupon.percent_off %></td>
+          <td><%= coupon.redeem_by %></td>
+          <td>
+            <% if coupon.subscription_id.blank? %>
+              <%= link_to 'Delete Coupon', user_coupon_path(current_user, coupon), method: :delete, class: "btn btn-danger delete-coupon coupon#{coupon.id}", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i>Please wait...".html_safe } %></td>
+            <% end %>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
 
-<%= link_to 'New Coupon', new_user_coupon_path %>
+  <br>
 
-<br><br><br>
+  <%= link_to 'New Coupon', new_user_coupon_path %>
+   <%#= render :partial => '/referrers/form' %>
 
-
-
- <%#= render :partial => '/referrers/form' %>
+</div>
