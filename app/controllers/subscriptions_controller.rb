@@ -6,7 +6,7 @@ class SubscriptionsController < ApplicationController
   # seems to be pulling for everyone
   def index
     #str = current_user.user_level == 1 ? "user_id = " : "team_id = " + current_user.id
-    @subscriptions = Subscription.all
+    @subscriptions = Subscription.where(team_id: current_user.id)
     #@subscriptions = Subscription.where("where " + str)
     respond_with(@subscriptions)
   end
@@ -29,17 +29,17 @@ class SubscriptionsController < ApplicationController
       {id: 23, customer_uri: 'cus_9K8ztWi3nEDOJQ', email: '<redacted_email>'},
       {id: 64, customer_uri: 'cus_9J62zWAfp3cHCf', email: '<redacted_email>'},
       {id: 63, customer_uri: 'cus_8ePuK9YNuqOPgz', email: '<redacted_email>'},
-      {id: 62, customer_uri: 'cus_7IEL0v1L6XB3Mc', email: '<redacted_email>'},
       {id: 61, customer_uri: 'cus_8MCWRO4CGwCEvo', email: '<redacted_email>'},
-      {id: 60, customer_uri: 'cus_6gcoumphxCETya', email: '<redacted_email>'}
+      {id: 60, customer_uri: 'cus_6gcoumphxCETya', email: '<redacted_email>'},
+      {id: 62, customer_uri: 'cus_9XiWUXYm5I72Bw', email: '<redacted_email>'}
     ]
 
     res = false
-    subscription_params[:user_id].each do |user|
-      subscription_params[:plan_id].each do |plan|
+    subscription_params[:user_id].each do |uid|
+      subscription_params[:plan_id].each do |pid|
         subscription_param = subscription_params
-        subscription_param[:user_id] = user
-        subscription_param[:plan_id] = plan
+        subscription_param[:user_id] = uid
+        subscription_param[:plan_id] = pid
          @subscription = Subscription.new(subscription_param)
          # u = User.find_by id: self.user_id
          u = {}
@@ -62,7 +62,7 @@ class SubscriptionsController < ApplicationController
     if res
       redirect_to user_subscriptions_path, flash: {notice: 'Subscriptions are created successfully'}
     else
-      flash[:error] = 'We couldn\'t create the coupon'
+      flash[:error] = 'Something went wrong'
       redirect_to new_user_subscription_path
     end
 
@@ -76,7 +76,7 @@ class SubscriptionsController < ApplicationController
   def destroy
     if (@subscription.cancel_subscription)
       @subscription.destroy
-      flash[:notice] = 'Canceled'
+      flash[:notice] = 'Your subscription has been canceled.'
       redirect_to user_subscriptions_path         #respond_with(@subscription)
     else
       flash[:error] = 'We could\'t cancel your subscription'

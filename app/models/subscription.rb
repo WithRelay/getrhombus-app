@@ -15,7 +15,7 @@ class Subscription < ActiveRecord::Base
       is_platform = team.is_platform?
       uid = team.uid
 
-      hash[:application_fee_percent] = Rails.application.secrets.application_fee_percent
+      hash[:application_fee_percent] = Rails.application.secrets.application_fee_percent unless is_platform
       hash[:coupon] = Coupon.find_by(id: self.coupon_id).stripe_coupon_id if self.coupon_id.present?
       # Using only customer_uri since we support only 1 card and this
       # way if a customer changes the card on file we don't need to change the subscription source
@@ -63,6 +63,5 @@ class Subscription < ActiveRecord::Base
       false
     end
   end
-
 
 end
