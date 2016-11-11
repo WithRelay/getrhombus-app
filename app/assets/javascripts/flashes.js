@@ -1,7 +1,7 @@
-
-// flash success for warning
+// flash success for all types of flash messages
+// the first parameter is message and second parameter is type eg: success
 function setFlashMessage(msg, type){
-  var typeObj = { 'Notice': 'Success', 'Warning': 'info', 'Error':'error' }
+  var typeObj = { 'Notice': 'success', 'Warning': 'info', 'Error':'error' }
   var messageToSet = typeObj[type]
   new PNotify({
     title: messageToSet,
