@@ -1,6 +1,8 @@
 $(document).ready(function() {
   $('#new_campaign').formValidation({
         framework: 'bootstrap',
+        live: 'disabled',
+        excluded: [ ':hidden', ':not(:visible)' ],
         fields: {
             'campaign[name]': {
                 validators: {
@@ -18,11 +20,6 @@ $(document).ready(function() {
                 'campaign[subject]': {
                   enable: $('#campaign_channel').val() == 3,
                     validators: {
-                      callback: {
-                            callback: function(value, validator, $field) {
-                                return $('#campaign_channel').val() == 3
-                            }
-                        },
                         notEmpty: {
                             message: 'Subject is required'
                         }
@@ -30,9 +27,4 @@ $(document).ready(function() {
                 }
         }
     })
-    .on('change', '[name="campaign[channel]"]', function(e) {
-      if ($('#campaign_channel').val() == 3){
-          $('#new_campaign').formValidation('revalidateField', 'campaign[subject]');
-      }
-      })
 });
