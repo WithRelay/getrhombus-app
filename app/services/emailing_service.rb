@@ -9,6 +9,9 @@ class EmailingService
   class << self
 
     def send_email_campaign(campaign_hash)
+      # Email camapign is not only used to send email campaign but also facebook messenger camapign
+      # and facebook messenger camapaign do not contain subject
+      campaign_hash[:subject] = "Rhombus Campaign" if campaign_hash[:subject].blank?
       message = campaign_hash.merge({ from_name: 'Rhombus'}).merge(FROM_EMAIL)
       response = MANDRILL.messages.send(message)
       response[0]['status'] == ('sent' || 'queued') ? true : false

@@ -8,7 +8,7 @@ class ApplicationController < ActionController::Base
   before_action :configure_permitted_parameters, if: :devise_controller?
   around_action :set_time_zone, if: :current_user
 
-  # skip_before_action :authenticate_user!, :if => lambda { 
+  # skip_before_action :authenticate_user!, :if => lambda {
   #   if params[:object] && params[:object] == "page"
   #     false
   #   else
@@ -18,8 +18,8 @@ class ApplicationController < ActionController::Base
 
   # for uniquness check...can it be more specific...cos email, phone numbers are caught
   # capture phone number duplicates on sign up page
-  rescue_from ActiveRecord::RecordNotUnique, with: :record_not_unique   
-  
+  rescue_from ActiveRecord::RecordNotUnique, with: :record_not_unique
+
   def after_sign_in_path_for(user)
     current_user
   end
@@ -31,7 +31,7 @@ class ApplicationController < ActionController::Base
   # Returns JSON object with the current user id
   def json_get_current_user
     render :json => Hash[
-      success: current_user.present?, 
+      success: current_user.present?,
       id: current_user.present? ? current_user.id : nil,
       pubnub_publish_key: Rails.application.secrets.pubnub["publish_key"],
       pubnub_subscribe_key: Rails.application.secrets.pubnub["subscribe_key"],
@@ -56,9 +56,9 @@ class ApplicationController < ActionController::Base
       devise_parameter_sanitizer.for(:sign_in) { |u| u.permit(:email, :password) }
 
       ### do we need these parameters here or in users_controller when updating account from settings page??
-      devise_parameter_sanitizer.for(:account_update) { |u| u.permit(:email, #:current_password, 
-        :password, :password_confirmation, :card_token, :last4, :exp_month,  :exp_year, 
-        :card_name, :card_type, :rhombus_number, :update_rhombus_number, :phone_number, :org_name, 
+      devise_parameter_sanitizer.for(:account_update) { |u| u.permit(:email, #:current_password,
+        :password, :password_confirmation, :card_token, :last4, :exp_month,  :exp_year,
+        :card_name, :card_type, :rhombus_number, :update_rhombus_number, :phone_number, :org_name,
         :org_category, :org_phone, :currency, :tax_percent, :url, :custom_welcome, :time_zone )}
     end
 

@@ -24,8 +24,8 @@ class CampaignsController < ApplicationController
       flash[:notice] = 'Campaign Saved successfully'
       redirect_to new_user_campaign_path
     else
-      render :new
       flash[:error] = @campaign.errors.full_messages
+      render :new
     end
   end
 

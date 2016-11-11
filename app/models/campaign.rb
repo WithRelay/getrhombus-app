@@ -50,7 +50,7 @@ class Campaign < ActiveRecord::Base
 
   def change_campaign_job
     destroy_campaign_jobs
-    enqueue_jobs if active? && is_today_campaign?
+    enqueue_jobs if active? || one_time? && deliver_now?
   end
 
   def destroy_campaign_jobs
@@ -67,14 +67,14 @@ class Campaign < ActiveRecord::Base
   private
 
   def is_today_campaign?
-    date_time.strftime("%Y-%m-%d") == Time.current.strftime("%Y-%m-%d")
+    date_time.strftime("%Y-%m-%d") == Time.current.strftime("%Y-%m-%d") if date_time.present?
   end
 
   def date_time_validate
     # date_time.utc will convert date_time to utc and Time.now is current time and .utc will convert to utc
     # no need to convert to datetime object because rails tries to save date time by storing to date time format
     # so the self object date_time attribute returns the date time which is formatted in rails date time
-    errors.add(:date_time, 'date time should be greater than current date time') if is_time_greater_than_now?
+    errors.add(:date_time, 'date time should be 30 minutes greater than current date time') if is_time_greater_than_now?
   end
 
   def is_time_greater_than_now?

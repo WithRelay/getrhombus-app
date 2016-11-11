@@ -1,50 +1,13 @@
-<% if flash[:notice].present? %>
+<% if flash.present? %>
   <script type="text/javascript">
-    $(window).load(function(){
-      flashSuccess( "<%= flash[:notice] %>")
-    })
-  </script>
-
-<% elsif flash[:warning].present? %>
-  <script type="text/javascript">
-    $(window).load(function(){
-      flashWarning( "<%= flash[:warning] %>")
-    })
-  </script>
-
-<% elsif flash[:error].present? %>
-  <script type="text/javascript">
-    $(window).load(function(){
-      <% if flash[:error].is_a? String %>
-        flashError( "<%= flash[:error] %>")
-      <% elsif flash[:error].is_a? Hash %> 
-        var errors = "";
-        <% flash[:error].each do |k, v| %>
-          errors += "<%= k %> <%= v.first %>\n" ;
-        <% end %>
-        flashError(errors);
-      <% elsif flash[:error].is_a? Array %> 
-        var errors = "";
-        <% flash[:error].each do |err| %>
-          errors += "<%= err %> \n" ;
-        <% end %>
-        flashError(errors);
-      <% end %>
-    })
-  </script>
-
-<% elsif flash[:alert].present?  %>
-  <script type="text/javascript">
-    var notice = new PNotify({
-      title: 'Alert!!',
-      text: "<%= flash[:alert] %>",
-      buttons: {
-          closer: false,
-          sticker: false
-      }
-    });
-    notice.get().click(function() {
-        notice.remove();
-    });
+    $(document).on('ready page:load', function() {
+      <% flash_key = flash.keys[0] %>
+      var flashTitle= '<%= flash_key %>'
+      // to set arrayMessage as flash error array as verbatism
+      // .to_json is sometime flash message can contain string
+      var arrayMessage = <%== flash[flash_key].to_json %>
+      // flashMethod is a method availabel in flashes.js
+      setFlashMessage( arrayMessage, flashTitle )
+      });
   </script>
 <% end %>

@@ -72,15 +72,24 @@ class PaymentService
     def create_subscription(hash, stripe_account_uid, platform=false)
       begin
         if platform
-          # tkn = Stripe::Token.create({ customer: hash[:customer] }, { stripe_account: stripe_account_uid })
-          # tkn = Stripe::Token.create({ customer: hash[:customer] })
-          # hash[:source] = tkn
-          hash.delete(:application_fee_percent)
-          re = Stripe::Subscription.create(hash)
+          if retrieve_customer(hash[:customer],stripe_account_uid, platform)
+            re = Stripe::Subscription.create(hash)
+          else
+            # create customer
+            # tkn = Stripe::Token.create({ customer: hash[:customer] }, { stripe_account: stripe_account_uid })
+            # tkn = Stripe::Token.create({ customer: hash[:customer] })
+            # hash[:source] = tkn
+            # subscribe customer
+          end
         else
-          tkn = Stripe::Token.create({ customer: hash[:customer] }, { stripe_account: stripe_account_uid })
-          hash[:source] = tkn
-          re = Stripe::Subscription.create(hash, { stripe_account: stripe_account_uid })
+          if retrieve_customer(hash[:customer], stripe_account_uid, platform)
+            re = Stripe::Subscription.create(hash, { stripe_account: stripe_account_uid })
+          else
+            # create customer
+            # tkn = Stripe::Token.create({ customer: hash[:customer] }, { stripe_account: stripe_account_uid })
+            # hash[:source] = tkn
+            # subscribe customer
+          end
         end
 
         [true, re]
@@ -106,6 +115,22 @@ class PaymentService
         [false, e]
       rescue StandardError => e
         [false, e]
+      end
+    end
+
+    #  method for retrieve customer information
+    def retrieve_customer(customer_id, stripe_account_uid  , is_platform = false)
+      begin
+        if is_platform
+          Stripe::Customer.retrieve(customer_id)
+        else
+          Stripe::Customer.retrieve(customer_id, {stripe_account: stripe_account_uid})
+        end
+        true
+      rescue Stripe::StripeError => e
+        false
+      rescue StandardError => e
+        false
       end
     end
 

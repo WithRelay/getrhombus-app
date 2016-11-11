@@ -85,7 +85,7 @@ Rails.application.routes.draw  do
 
     # Only admins can create coupons
     resources :coupons, :constraints => lambda { |req|
-      req.env['warden'].authenticated? #and req.env['warden'].user.email == '<redacted_email>' #Rails.application.secrets.dashboard_email
+      req.env['warden'].user.is_platform? #and req.env['warden'].user.email == '<redacted_email>' #Rails.application.secrets.dashboard_email
     }
 
     member do

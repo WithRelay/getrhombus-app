@@ -1,48 +1,38 @@
-// flash success for ajax response
-function flashSuccess(successMsg){
+// flash success for all types of flash messages
+// the first parameter is message and second parameter is type eg: success
+function setFlashMessage(msg, type){
+  var typeObj = { 'notice': 'success', 'warning': 'info', 'error':'error' }
+  var messageToSet = typeObj[type]
   new PNotify({
-    title: 'Success!!',
-    text: successMsg,
-    type: 'success',
+    title: messageToSet + '!!',
+    text: arrayToString(msg),
+    type: messageToSet,
     hide: true
   });
 }
-
-// flash success for warning
-function flashWarning(warningMsg){
-  new PNotify({
-    title: 'Info!!',
-    text: warningMsg,
-    type: 'info',
-    hide: true
-  });
-}
-// flash success for ajax response
-function flashError(errorMsg){
-  new PNotify({
-    title: 'Error!!',
-    text: errorMsg,
-    type: 'error',
-    hide: true
-  });
-}
-
-// flash info with desktop notification permission
-function flashInfo(infoMsg){
-  PNotify.desktop.permission();
-  (new PNotify({
-    title: 'Info!!',
-    text: infoMsg,
-    type: 'info',
-    hide: true,
-    desktop: {
-      desktop: true
+function arrayToString(value){
+  if ($.isArray(value)){
+    messageString = ''
+    $.each(value, function(index, value){ messageString += value + "\n"; })
+    return messageString
+  }
+    else {
+      return value
     }
-  })).get().click(function(e) {
-    if ($('.ui-pnotify-closer, .ui-pnotify-sticker, .ui-pnotify-closer *, .ui-pnotify-sticker *').is(e.target)) return;
-  });
 }
-
+function flashAlert(alertMsg){
+  var notice = new PNotify({
+     title: 'Alert!!',
+     text: arrayToString(infoMsg),
+     buttons: {
+         closer: false,
+         sticker: false
+     }
+   });
+   notice.get().click(function() {
+       notice.remove();
+   });
+}
 // Confirmation
 function flashConfirm(selector, title, confirmText, isConfirm){
   (new PNotify({
