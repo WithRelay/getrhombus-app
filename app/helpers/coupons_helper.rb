@@ -6,6 +6,8 @@ module CouponsHelper
 
   def zone_timestamp(timestamp)
     # Format the string output with #strftime method => "March 23, 2013 at 09:48 AM"
-    Time.at(timestamp).in_time_zone(current_user.time_zone).strftime("%B %e, %Y at %I:%M %p")
+    if timestamp
+      Time.at(timestamp).in_time_zone(current_user.time_zone).strftime("%B %e, %Y at %I:%M %p")
+    end
   end
 end
