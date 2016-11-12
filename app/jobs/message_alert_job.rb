@@ -24,19 +24,21 @@ class MessageAlertJob
           messages = Message.where(to: r.rhombus_number, unread: true, unread_notification_sent: false)
 
           if messages.present?
-            EmailingService.send_unread_message_alert({ unread_count: messages.length, to: r.email })
+            pluralize_msg = "message".pluralize(messages.length) 
+                   
+            EmailingService.send_unread_message_alert({ unread_count: messages.length, to: r.email, pluralize_msg: pluralize_msg })
             r.notification_logs.create(notify_type: 'new_alert', channel: 'Email', reason: 'unread_messages')
 
             if r.include_sms && r.sms_number.present?
               platform_number = User.find_by(email: Rails.application.secrets.team_email).rhombus_number
               msg = Message.new
-              msg_to_send = "Rhombus Notification: You have #{messages.length} new unread " + "message".pluralize(messages.length) + " on your dashboard."
+              msg_to_send = "Rhombus Notification: You have #{messages.length} new unread " + pluralize_msg + " on your dashboard."
               msg.send_and_save_message(31, platform_number, r.sms_number, msg_to_send)
               msg.update(unread: false, unread_notification_sent: true)
               r.notification_logs.create(notify_type: 'new_alert', channel: 'Message', channel_id: msg.id, reason: 'unread_messages')
             end 
 
-            # CHANGE - This should only happen if messages/emails return true
+            # CHANGE - This should only happen if messages/emails return true...maybe only message
             messages.update_all(unread_notification_sent: true)
           end
         end  

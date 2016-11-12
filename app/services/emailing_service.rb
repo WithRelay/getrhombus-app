@@ -171,11 +171,26 @@ class EmailingService
       puts "\n"
     end
 
-    def send_unread_message_alert(data)
-      puts data.email
-      puts data.unread_count
-      puts data.sms_number
-      puts "\n"
+    def send_unread_message_alert(options = {})
+      begin
+        mandrill = Mandrill::API.new MANDRILL_API_KEY
+        template_name = 'unread-messages'
+        template_content = []
+        message = { "subject"=>"Unread Message Notification",
+         "global_merge_vars"=> [ { "name" => "unread_count", "content" => options[:unread_count] },
+                                 { "name" => "pluralize_msg", "content" => options[:pluralize_msg] } ],
+         "merge_language" => "handlebars",
+         "to"=> [ { "email" => options[:to] } ],
+         "bcc_address"=> SENDER,
+         "from_name" => "Rhombus",
+         "from_email" => SENDER
+        }
+        async = true
+        result = mandrill.messages.send_template template_name, template_content, message, async      
+      rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
+        puts "A mandrill error occurred: #{e.class} - #{e.message}"
+      rescue StandardError => e
+      end 
     end
 
   end
