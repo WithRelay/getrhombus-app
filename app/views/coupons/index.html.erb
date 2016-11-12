@@ -25,7 +25,7 @@
           <td><%= coupon.duration_in_months %></td>
           <td><%= coupon.max_redemptions %></td>
           <td><%= coupon.percent_off %></td>
-          <td><%= coupon.redeem_by %></td>
+          <td><%= zone_timestamp(coupon.redeem_by) %></td>
           <td>
             <% if coupon.subscription_id.blank? %>
               <%= link_to 'Delete Coupon', user_coupon_path(current_user, coupon), method: :delete, class: "btn btn-danger delete-coupon coupon#{coupon.id}", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i>Please wait...".html_safe } %></td>
