@@ -78,14 +78,6 @@ module DashboardMerchantQueries
 				ORDER BY messages.created_at DESC", self.id])
 	end	
 
-	def get_merchant_contacts_with_signups
-
-	end
-
-	def get_merchant_contacts
-
-	end
-
 	def dashboard_stats
 		if self.user_level == 0
 			Transaction.find_by_sql([
