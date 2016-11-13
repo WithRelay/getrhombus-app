@@ -38,9 +38,6 @@ module DashboardMerchantQueries
 
 	# active + new with active having the higher precedence in the intersect
 	def get_merchant_customers(num_of_days='')
-		num_of_days_txns = ''
-		num_of_days_referrer = ''
-		
 		if num_of_days.present?
 			num_of_days_txns = @@num_of_days_txns + num_of_days.to_s + " DAY AND NOW()) " 
 			num_of_days_referrer = @@num_of_days_referrer + num_of_days.to_s + " DAY AND NOW()) " 
@@ -57,8 +54,15 @@ module DashboardMerchantQueries
 	end
 
 	# whoever signed up with your link in the last num_of_days
-	def get_new_customers(num_of_days=30)
-		Transaction.find_by_sql(["#{@@customers_query_referrer} #{@@num_of_days_referrer} #{num_of_days.to_s} DAY AND NOW()))", self.id])
+	def get_new_customers(num_of_days=7)
+		if num_of_days.present?
+			return MerchantCustomer.where(
+				"merchant_id = :merchant AND created_at >= :start_time",
+				{merchant: self.id, start_time: Time.now - num_of_days.days})
+				.to_sql
+		else
+			return MerchantCustomer.where(:merchant_id => self.id).to_sql
+		end	
 	end
 
 	# only inbound
