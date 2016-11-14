@@ -5,9 +5,9 @@ class CampaignsController < ApplicationController
   before_action :check_campaign_status, only: [ :update, :destroy, :change_status]
   layout 'campaign'
 
-  # eager loading images while showing campaign in /user/user_id/campaigns due to n+1
+  # @campaigns contains array of campaign of the associated users
   def index
-    @campaigns = current_user.campaigns.includes(:images)
+    @campaigns = current_user.campaigns
   end
 
   # initializing campaign as association way using build method.
