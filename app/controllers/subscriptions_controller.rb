@@ -37,13 +37,14 @@ class SubscriptionsController < ApplicationController
     res = false
     subscription_params[:user_id].each do |uid|
       subscription_params[:plan_id].each do |pid|
+
         subscription_param = subscription_params
         subscription_param[:user_id] = uid
         subscription_param[:plan_id] = pid
          @subscription = Subscription.new(subscription_param)
-         # u = User.find_by id: self.user_id
-         customer = {}
+         # customer = User.find_by id: self.user_id
          #for testing
+         customer = {}
          dummy_customer.each do |h|
           customer = h if h[:id] == @subscription.user_id
         end
@@ -60,7 +61,7 @@ class SubscriptionsController < ApplicationController
     end
 
     if res
-      redirect_to user_subscriptions_path, flash: {notice: 'Subscriptions are created successfully'}
+      redirect_to user_subscriptions_path, flash: {notice: 'Subscriptions created successfully'}
     else
       flash[:error] = 'Something went wrong'
       redirect_to new_user_subscription_path
