@@ -30,6 +30,7 @@ class Subscription < ActiveRecord::Base
       hash.delete(:team)
 
       res = PaymentService.create_subscription(hash, uid, is_platform)
+
       if res.first
         self.update(
           stripe_subscription_id: res.second.id,

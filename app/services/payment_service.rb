@@ -72,29 +72,24 @@ class PaymentService
     def create_subscription(hash, stripe_account_uid, platform=false)
       begin
         if platform
-          if retrieve_customer(hash[:customer],stripe_account_uid, platform)
-            re = Stripe::Subscription.create(hash)
-          else
-            # create customer
-            # tkn = Stripe::Token.create({ customer: hash[:customer] }, { stripe_account: stripe_account_uid })
-            # tkn = Stripe::Token.create({ customer: hash[:customer] })
-            # hash[:source] = tkn
-            # subscribe customer
-          end
+          hash[:customer] = hash[:customer][:customer_uri]
+          re = Stripe::Subscription.create(hash)
         else
-          if retrieve_customer(hash[:customer], stripe_account_uid, platform)
-            re = Stripe::Subscription.create(hash, { stripe_account: stripe_account_uid })
-          else
-            # create customer
-            # tkn = Stripe::Token.create({ customer: hash[:customer] }, { stripe_account: stripe_account_uid })
-            # hash[:source] = tkn
-            # subscribe customer
-          end
+          tkn = Stripe::Token.create({ customer: hash[:customer][:customer_uri] }, { stripe_account: stripe_account_uid })
+          hash[:source] = tkn.id
+          customer = Stripe::Customer.create(
+            {email: hash[:customer][:email],
+            source: tkn.id},
+            { stripe_account: stripe_account_uid }
+          )
+          # save customer
+          hash[:customer] = customer.id
+          hash.delete(:source)
+          re = Stripe::Subscription.create(hash, { stripe_account: stripe_account_uid })
         end
 
         [true, re]
       rescue Stripe::StripeError => e
-        # Display a very generic error to the user, and maybe send yourself an email
         [false, e]
       rescue StandardError => e
         [false, e]
@@ -115,22 +110,6 @@ class PaymentService
         [false, e]
       rescue StandardError => e
         [false, e]
-      end
-    end
-
-    #  method for retrieve customer information
-    def retrieve_customer(customer_id, stripe_account_uid  , is_platform = false)
-      begin
-        if is_platform
-          Stripe::Customer.retrieve(customer_id)
-        else
-          Stripe::Customer.retrieve(customer_id, {stripe_account: stripe_account_uid})
-        end
-        true
-      rescue Stripe::StripeError => e
-        false
-      rescue StandardError => e
-        false
       end
     end
 

@@ -42,15 +42,15 @@ class SubscriptionsController < ApplicationController
         subscription_param[:plan_id] = pid
          @subscription = Subscription.new(subscription_param)
          # u = User.find_by id: self.user_id
-         u = {}
+         customer = {}
          #for testing
          dummy_customer.each do |h|
-          u = h if h[:id] == @subscription.user_id
+          customer = h if h[:id] == @subscription.user_id
         end
 
          @subscription.team_id = current_user.id
 
-         if u && @subscription.create_subscription({ team: current_user, customer: u[:customer_uri] })  #@subscription.save
+         if customer && @subscription.create_subscription({ team: current_user, customer: customer })  #@subscription.save
            res = true# redirect_to user_subscriptions_path       #respond_with(@subscription)
          else
            res = false
