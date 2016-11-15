@@ -26,7 +26,7 @@ class SubscriptionsController < ApplicationController
   def create
 
     dummy_customer = [
-      {id: 23, customer_uri: 'cus_9K8ztWi3nEDOJQ', email: '<redacted_email>'},
+      {id: 23, customer_uri: 'cus_9ZBBnoG8jv2ABe', email: '<redacted_email>'},
       {id: 64, customer_uri: 'cus_9J62zWAfp3cHCf', email: '<redacted_email>'},
       {id: 63, customer_uri: 'cus_8ePuK9YNuqOPgz', email: '<redacted_email>'},
       {id: 61, customer_uri: 'cus_8MCWRO4CGwCEvo', email: '<redacted_email>'},
@@ -75,8 +75,12 @@ class SubscriptionsController < ApplicationController
   # end
 
   def destroy
-    if (@subscription.cancel_subscription(current_user))
-      @subscription.destroy
+    res = @subscription.cancel_subscription(current_user)
+    if (res.first)
+      @subscription.update(
+        status: res.second.status,
+        cancel_at_period_end: res.second.cancel_at_period_end
+      )
       flash[:notice] = 'Your subscription has been canceled.'
       redirect_to user_subscriptions_path         #respond_with(@subscription)
     else

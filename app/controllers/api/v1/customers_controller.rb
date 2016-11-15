@@ -1,7 +1,7 @@
 class Api::V1::CustomersController < API::V1::BaseController
   def customer_data
     dummy_customer = [
-      {id: 23, customer_uri: 'cus_9K8ztWi3nEDOJQ', email: '<redacted_email>'},
+      {id: 23, customer_uri: 'cus_9ZBBnoG8jv2ABe', email: '<redacted_email>'},
       {id: 64, customer_uri: 'cus_9J62zWAfp3cHCf', email: '<redacted_email>'},
       {id: 63, customer_uri: 'cus_8ePuK9YNuqOPgz', email: '<redacted_email>'},
       {id: 61, customer_uri: 'cus_8MCWRO4CGwCEvo', email: '<redacted_email>'},

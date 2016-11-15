@@ -26,4 +26,14 @@ class SubscriptionPresenter < BasePresenter
     end
   end
 
+  def status
+    if @model.status == 'active'
+      "<span class='label label-success'>#{ @model.status}</span>".html_safe
+    elsif @model.status == 'canceled'
+      "<span class='label label-danger'>#{ @model.status}</span>".html_safe
+    else
+      "<span class='label label-warning'>#{ @model.status}</span>".html_safe
+    end
+  end
+
 end
