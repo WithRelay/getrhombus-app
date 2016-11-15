@@ -7,6 +7,7 @@
         <th>Customer</th>
         <th>Status</th>
         <th>Plan</th>
+        <th>Discount</th>
         <th>Quantity</th>
         <th></th>
       </tr>
@@ -18,6 +19,7 @@
           <td>Customer info here</td>
           <td><span class="label label-success"><%= subscription.status %></span></td>
           <td><%= present(subscription).get_plan_info %></td>
+          <td><%= present(subscription).get_coupon_info %></td>
           <td><%= subscription.quantity %></td>
           <!-- <td><%#= link_to 'Show', subscription %></td> -->
           <!-- <td><%#= link_to 'Edit', edit_subscription_path(subscription) %></td> -->

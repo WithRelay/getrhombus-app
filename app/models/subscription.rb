@@ -16,7 +16,13 @@ class Subscription < ActiveRecord::Base
       uid = team.uid
 
       hash[:application_fee_percent] = Rails.application.secrets.application_fee_percent unless is_platform
-      hash[:coupon] = Coupon.find_by(id: self.coupon_id).stripe_coupon_id if self.coupon_id.present?
+
+      coupon = Coupon.find_by(id: self.coupon_id) if self.coupon_id.present?
+      # check coupon validity
+      # only use coupons for subscription if coupon is not_expired/valid
+      if coupon && PaymentService.is_valid_coupon(coupon.stripe_coupon_id)
+        hash[:coupon] = coupon.stripe_coupon_id
+      end
       # Using only customer_uri since we support only 1 card and this
       # way if a customer changes the card on file we don't need to change the subscription source
       hash[:customer] = hash[:customer]
@@ -28,10 +34,11 @@ class Subscription < ActiveRecord::Base
       #hash[:trial_end]
 
       hash.delete(:team)
-
       res = PaymentService.create_subscription(hash, uid, is_platform)
 
       if res.first
+        # save customer data to MerchantCustomer
+        MerchantCustomer.create(merchant_id: team.id , customer_id: res.last)
         self.update(
           stripe_subscription_id: res.second.id,
           status: res.second.status,
@@ -56,9 +63,9 @@ class Subscription < ActiveRecord::Base
     end
   end
 
-  def cancel_subscription
+  def cancel_subscription(team)
     begin
-      re = PaymentService.cancel_subscription(self.stripe_subscription_id, self.trial_end)
+      PaymentService.cancel_subscription(self.stripe_subscription_id, team.uid, team.is_platform?).first
     rescue StandardError => e
       # notify team via email
       false

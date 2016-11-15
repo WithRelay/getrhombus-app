@@ -9,7 +9,7 @@ class PaymentService
         
 
         # need to backward support merchant's with old connect account
-        if x          
+        if x
           tkn = Stripe::Token.create({ customer: hash[:customer_uri] }, { stripe_account: stripe_account_uid })
           re = Stripe::Charge.create({
               amount: amount_with_taxes,
@@ -72,23 +72,35 @@ class PaymentService
     def create_subscription(hash, stripe_account_uid, platform=false)
       begin
         if platform
-          hash[:customer] = hash[:customer][:customer_uri]
+          # token create using card for testing
+          tkn = Stripe::Token.create(
+            :card => {
+              :number => "<redacted_phone_number>",
+              :exp_month => 11,
+              :exp_year => 2017,
+              :cvc => "314"
+            }
+          )
+          customer = Stripe::Customer.create(
+            {email: hash[:customer][:email],
+            source: tkn.id}
+          )
+
+          hash[:customer] = customer.id
           re = Stripe::Subscription.create(hash)
+
         else
           tkn = Stripe::Token.create({ customer: hash[:customer][:customer_uri] }, { stripe_account: stripe_account_uid })
-          hash[:source] = tkn.id
           customer = Stripe::Customer.create(
             {email: hash[:customer][:email],
             source: tkn.id},
             { stripe_account: stripe_account_uid }
           )
-          # save customer
           hash[:customer] = customer.id
-          hash.delete(:source)
           re = Stripe::Subscription.create(hash, { stripe_account: stripe_account_uid })
         end
 
-        [true, re]
+        [true, re, customer.id]
       rescue Stripe::StripeError => e
         [false, e]
       rescue StandardError => e
@@ -96,17 +108,17 @@ class PaymentService
       end
     end
 
-    def cancel_subscription(subscription_id, period_end)
+    def cancel_subscription(subscription_id,stripe_account_uid, platform)
       begin
-        sbtn = Stripe::Subscription.retrieve(subscription_id)
-        if period_end.present?
-          sbtn.delete(period_end)
+        if platform
+          sbtn = Stripe::Subscription.retrieve(subscription_id)
+          sbtn.delete #cancel subscription immediately
         else
-         sbtn.delete
+          sbtn = Stripe::Subscription.retrieve(subscription_id, {stripe_account: stripe_account_uid})
+          sbtn.delete #delete subscription immediately
         end
         [true]
       rescue Stripe::StripeError => e
-        # Display a very generic error to the user, and maybe send yourself an email
         [false, e]
       rescue StandardError => e
         [false, e]
@@ -187,6 +199,18 @@ class PaymentService
         [false,  e]
       rescue StandardError => e
         [false, e]
+      end
+    end
+
+    def is_valid_coupon(coupon_id)
+      begin
+        re = Stripe::Coupon.retrieve(coupon_id)
+        re.valid
+      rescue Stripe::StripeError => e
+        # Display a very generic error to the user, and maybe send yourself an email
+        false
+      rescue StandardError => e
+        false
       end
     end
 
