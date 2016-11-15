@@ -88,7 +88,7 @@
     top: 16px;
 }
 
-.selectize-input{
+.form-group .selectize-input{
     padding: 0 !important;
     border: none !important;
     width: 100% !important;
@@ -96,6 +96,6 @@
     background: none !important;
 }
 
-.selectize-control{
+.form-group .selectize-control{
     height: auto !important;
 }

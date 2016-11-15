@@ -22,6 +22,8 @@ class Subscription < ActiveRecord::Base
       # only use coupons for subscription if coupon is not_expired/valid
       if coupon && PaymentService.is_valid_coupon(coupon.stripe_coupon_id)
         hash[:coupon] = coupon.stripe_coupon_id
+      else
+        self.update(coupon_id: nil)
       end
       # Using only customer_uri since we support only 1 card and this
       # way if a customer changes the card on file we don't need to change the subscription source
@@ -65,10 +67,10 @@ class Subscription < ActiveRecord::Base
 
   def cancel_subscription(team)
     begin
-      PaymentService.cancel_subscription(self.stripe_subscription_id, team.uid, team.is_platform?).first
+      PaymentService.cancel_subscription(self.stripe_subscription_id, team.uid, team.is_platform?, self.cancel_at_period_end)
     rescue StandardError => e
       # notify team via email
-      false
+      [false, e]
     end
   end
 
