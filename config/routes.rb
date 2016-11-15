@@ -31,8 +31,8 @@ Rails.application.routes.draw  do
 
   match "send_mms_from_dashboard" => 'messages#dashboard_mms', via: [:post]
 
-  ## events/hooks routes
-  constraints subdomain: "hooks" do
+  ## events/hooks routegs
+  constraints subdomain: 'test' do
     post 'events/stripe' => 'webhooks#stripe_events'
     match "events/facebook" => "webhooks#facebook_events", via: [:get, :post]
 
@@ -129,7 +129,7 @@ Rails.application.routes.draw  do
 
   ## catch all other to 404
   get "/*other", to: 'static_pages#to_404'     #all non-existent routes go to 404
-  
+
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

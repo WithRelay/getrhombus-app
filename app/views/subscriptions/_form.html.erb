@@ -3,7 +3,7 @@
    <div class="form-group">
     <%= f.label :plan, class: 'col-xs-3 control-label' %>
     <div class="col-xs-5">
-      <%= f.text_field :plan_id, class: 'form-control', placeholder: "Select 1 or more plans" %>
+      <%= f.text_field :plan_id, class: 'form-control auto-height', placeholder: "Select 1 or more plans" %>
     </div>
   </div>
 
@@ -11,7 +11,7 @@
     <div class="form-group">
       <%= f.label :coupon, class: 'col-xs-3 control-label' %>
       <div class="col-xs-5">
-        <%= f.text_field :coupon_id, class: 'form-control', id: 'subscription-select-coupon', placeholder: "Select a coupon" %>
+        <%= f.text_field :coupon_id, class: 'form-control auto-height', id: 'subscription-select-coupon', placeholder: "Select a coupon" %>
       </div>
     </div>
   <% end %>
@@ -19,7 +19,7 @@
   <div class="form-group">
     <%= f.label :customer, class: 'col-xs-3 control-label' %>
     <div class="col-xs-5">
-      <%= f.text_field :user_id, class: 'form-control', placeholder: "Select 1 or more customers" %>
+      <%= f.text_field :user_id, class: 'form-control auto-height', placeholder: "Select 1 or more customers" %>
     </div>
   </div>
 

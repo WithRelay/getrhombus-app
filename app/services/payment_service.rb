@@ -108,17 +108,25 @@ class PaymentService
       end
     end
 
-    def cancel_subscription(subscription_id, period_end)
+    def cancel_subscription(subscription_id,stripe_account_uid, platform, period_end)
       begin
-        sbtn = Stripe::Subscription.retrieve(subscription_id)
-        if period_end.present?
-          sbtn.delete(period_end)
+        if platform
+          sbtn = Stripe::Subscription.retrieve(subscription_id)
+          res = if period_end
+            sbtn.delete(at_period_end: true)# cancel at period end
+          else
+            sbtn.delete #cancel subscription immediately
+          end
         else
-         sbtn.delete
+          sbtn = Stripe::Subscription.retrieve(subscription_id, {stripe_account: stripe_account_uid})
+          res = if period_end
+            sbtn.delete(at_period_end: true)# cancel at period end
+          else
+            sbtn.delete #cancel subscription immediately
+          end
         end
-        [true]
+        [true, res]
       rescue Stripe::StripeError => e
-        # Display a very generic error to the user, and maybe send yourself an email
         [false, e]
       rescue StandardError => e
         [false, e]

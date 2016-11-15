@@ -17,13 +17,17 @@
       <% @subscriptions.each do |subscription| %>
         <tr>
           <td>Customer info here</td>
-          <td><span class="label label-success"><%= subscription.status %></span></td>
+          <td><%= present(subscription).status %></td>
           <td><%= present(subscription).get_plan_info %></td>
           <td><%= present(subscription).get_coupon_info %></td>
           <td><%= subscription.quantity %></td>
           <!-- <td><%#= link_to 'Show', subscription %></td> -->
           <!-- <td><%#= link_to 'Edit', edit_subscription_path(subscription) %></td> -->
-          <td><%= link_to 'Cancel Subscription', user_subscription_path(current_user, subscription), method: :delete, class: "btn btn-danger cancel-subscription subscription#{subscription.id}", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i>Please wait...".html_safe } %></td>
+          <% unless subscription.status == 'canceled'%>
+            <td>
+              <%= link_to 'Cancel Subscription', user_subscription_path(current_user, subscription), method: :delete, class: "btn btn-danger cancel-subscription subscription#{subscription.id}", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i>Please wait...".html_safe } %>
+              </td>
+          <% end %>
         </tr>
       <% end %>
     </tbody>
