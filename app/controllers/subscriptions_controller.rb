@@ -75,7 +75,7 @@ class SubscriptionsController < ApplicationController
   # end
 
   def destroy
-    if (@subscription.cancel_subscription)
+    if (@subscription.cancel_subscription(current_user))
       @subscription.destroy
       flash[:notice] = 'Your subscription has been canceled.'
       redirect_to user_subscriptions_path         #respond_with(@subscription)
