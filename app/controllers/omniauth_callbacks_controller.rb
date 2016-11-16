@@ -29,7 +29,7 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
   end
 
   def failure
-    redirect_to user_path(current_user), alert: "We were unable to connect your account. Please try again"
+    redirect_to user_path(current_user), flash: { error: "We were unable to connect your account. Please try again" }
   end
 
   private 

@@ -3,21 +3,22 @@
   class << self
 
     def process_event(params)
-      required_params = params['entry'].last
-      event = required_params['messaging'].last
-      read_event = event['read']
-      message_event = event['message']
-      create_conversation(required_params)
-
-      if params['hub.mode'].present?
+      @params = params
+      if params['hub.mode'].present? #for verify webhook
         verify_webhook
-      elsif read_event.present?
-        set_message_unread(event)
-      elsif message_event.present?
-        receive_message(required_params['id'], event)
-      else 
+      else #after verification for message event
+        required_params = params['entry'].last
+        event = required_params['messaging'].last
+        read_event = event['read']
+        message_event = event['message']
+        create_conversation(required_params)
+        if read_event.present?
+          set_message_unread(event)
+        elsif message_event.present?
+          receive_message(required_params['id'], event)
+        else
+        end
       end
-
     end
 
     def create_conversation(params)
