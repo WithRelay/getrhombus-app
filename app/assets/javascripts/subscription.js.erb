@@ -88,7 +88,7 @@ $(document).ready(function () {
         $('#subscriptionForm').formValidation('revalidateField', 'subscription[plan_id]');
     })
 
-  $('[name="subscription[user_id]"]')
+  $('[name = "subscription[merchant_customer_id]"]')
       .selectize({
       valueField: 'id',
       labelField: 'email',

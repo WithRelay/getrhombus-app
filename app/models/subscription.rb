@@ -6,7 +6,7 @@ class Subscription < ActiveRecord::Base
   belongs_to :team, class_name: "User"
   has_many :notification_log, as: :notifiable, dependent: :destroy
 
-  validates_presence_of :plan_id, :user_id
+  validates_presence_of :plan_id, :merchant_customer_id
 
   def create_subscription(hash)
     begin
@@ -37,11 +37,15 @@ class Subscription < ActiveRecord::Base
 
       hash.delete(:team)
       res = PaymentService.create_subscription(hash, uid, is_platform)
-
       if res.first
         # save customer data to MerchantCustomer
-        MerchantCustomer.create(merchant_id: team.id , customer_id: res.last)
+        merchant_customer = MerchantCustomer.create(
+          merchant_id: team.id ,
+          customer_id: self.merchant_customer_id,
+          stripe_customer_id: res.second.customer
+         )
         self.update(
+          merchant_customer_id: merchant_customer.id,
           stripe_subscription_id: res.second.id,
           status: res.second.status,
           stripe_livemode: res.second.livemode,
@@ -53,6 +57,7 @@ class Subscription < ActiveRecord::Base
           cancel_at_period_end: res.second.cancel_at_period_end,
           ended_at: res.second.ended_at
         )
+
       else
         #notify team via email
       end
@@ -60,7 +65,7 @@ class Subscription < ActiveRecord::Base
       res.first
     rescue StandardError => e
       # if StandardError happened after Stripe was called, delete plan on Stripe
-      self.cancel_subscription if res.length > 0
+      self.cancel_subscription(team) if res.length > 0
       # notify team via email
     end
   end

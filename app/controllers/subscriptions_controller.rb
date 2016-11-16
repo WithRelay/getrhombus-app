@@ -6,7 +6,8 @@ class SubscriptionsController < ApplicationController
   # seems to be pulling for everyone
   def index
     #str = current_user.user_level == 1 ? "user_id = " : "team_id = " + current_user.id
-    @subscriptions = Subscription.where(team_id: current_user.id)
+    merchant_customer = current_user.merchant.pluck(:id)
+    @subscriptions = Subscription.where(merchant_customer_id: merchant_customer)
     #@subscriptions = Subscription.where("where " + str)
     respond_with(@subscriptions)
   end
@@ -27,29 +28,24 @@ class SubscriptionsController < ApplicationController
 
     dummy_customer = [
       {id: 23, customer_uri: 'cus_9ZBBnoG8jv2ABe', email: '<redacted_email>'},
-      {id: 64, customer_uri: 'cus_9J62zWAfp3cHCf', email: '<redacted_email>'},
-      {id: 63, customer_uri: 'cus_8ePuK9YNuqOPgz', email: '<redacted_email>'},
-      {id: 61, customer_uri: 'cus_8MCWRO4CGwCEvo', email: '<redacted_email>'},
-      {id: 60, customer_uri: 'cus_6gcoumphxCETya', email: '<redacted_email>'},
-      {id: 62, customer_uri: 'cus_9XiWUXYm5I72Bw', email: '<redacted_email>'}
+      {id: 63, customer_uri: 'cus_6D3r30LunmvQXk', email: '<redacted_email>'},
+      {id: 60, customer_uri: 'cus_9Z9nHEqdsRbbpZ', email: '<redacted_email>'}
     ]
 
     res = false
-    subscription_params[:user_id].each do |uid|
+    subscription_params[:merchant_customer_id].each do |cid|
       subscription_params[:plan_id].each do |pid|
 
         subscription_param = subscription_params
-        subscription_param[:user_id] = uid
+        subscription_param[:merchant_customer_id] = cid
         subscription_param[:plan_id] = pid
          @subscription = Subscription.new(subscription_param)
          # customer = User.find_by id: self.user_id
          #for testing
          customer = {}
          dummy_customer.each do |h|
-          customer = h if h[:id] == @subscription.user_id
+          customer = h if h[:id] == @subscription.merchant_customer_id
         end
-
-         @subscription.team_id = current_user.id
 
          if customer && @subscription.create_subscription({ team: current_user, customer: customer })  #@subscription.save
            res = true# redirect_to user_subscriptions_path       #respond_with(@subscription)
@@ -94,9 +90,9 @@ class SubscriptionsController < ApplicationController
     end
 
     def subscription_params
-      params.require(:subscription).permit(:quantity, :plan_id, :coupon_id, :user_id).tap{ |subscription|
+      params.require(:subscription).permit(:quantity, :plan_id, :coupon_id, :merchant_customer_id).tap{ |subscription|
         subscription[:plan_id] = subscription[:plan_id].split(',') if subscription[:plan_id]
-        subscription[:user_id] = subscription[:user_id].split(',') if subscription[:user_id]
+        subscription[:merchant_customer_id] = subscription[:merchant_customer_id].split(',') if subscription[:merchant_customer_id]
       }
     end
 end
