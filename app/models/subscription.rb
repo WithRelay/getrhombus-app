@@ -25,10 +25,10 @@ class Subscription < ActiveRecord::Base
       else
         self.update(coupon_id: nil)
       end
-      # Using only customer_uri since we support only 1 card and this
-      # way if a customer changes the card on file we don't need to change the subscription source
-      hash[:customer] = hash[:customer]
-      #hash[:source]
+      # # Using only customer_uri since we support only 1 card and this
+      # # way if a customer changes the card on file we don't need to change the subscription source
+      # hash[:customer] = hash[:customer]
+      # #hash[:source]
       hash[:plan] = self.plan_id
       hash[:quantity] = self.quantity
       hash[:tax_percent] = hash[:team].tax_percent
