@@ -12,13 +12,15 @@ module ParseText
 
   def process_message(params)
     begin
-      return if params[:Body].blank?
+      
+      #return if params[:Body].blank?
 
       @msg_text = params[:Body].strip
-      params[:From] = params[:From][1..-1] if params[:From].chr == "+"
-      params[:To] = params[:To][1..-1] if params[:To].chr == "+"
 
-      save_inbound_text
+      #params[:From] = params[:From][1..-1] if params[:From].chr == "+"
+      #params[:To] = params[:To][1..-1] if params[:To].chr == "+"
+
+      #save_inbound_text
 
       @amt_ary = check_for_payment
       is_old_format = @amt_ary[0] && @amt_ary[1] == "$"
