@@ -23,11 +23,13 @@
           <td><%= subscription.quantity %></td>
           <!-- <td><%#= link_to 'Show', subscription %></td> -->
           <!-- <td><%#= link_to 'Edit', edit_subscription_path(subscription) %></td> -->
-          <% unless subscription.status == 'canceled'%>
-            <td>
+          <td>
+            <% if subscription.cancel_at_period_end  %>
+              <span class="label label-info">Cancel at period end</span>
+            <% elsif subscription.status != 'canceled' %>
               <%= link_to 'Cancel Subscription', user_subscription_path(current_user, subscription), method: :delete, class: "btn btn-danger cancel-subscription subscription#{subscription.id}", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i>Please wait...".html_safe } %>
-              </td>
-          <% end %>
+            <% end %>
+          </td>
         </tr>
       <% end %>
     </tbody>

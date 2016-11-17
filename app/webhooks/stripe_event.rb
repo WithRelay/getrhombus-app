@@ -34,12 +34,11 @@ class StripeEvent
         
         # set_time_zone(@data.merchant_customer.merchant.time_zone)
         update_subscription_data
-
         if @data.notification_log
           # find merchant and admin
           # Email merchant of time left(merchant)
           # Notify us too (admin) 
-          @data.notification_log = NotificationLog.create(notify_type: 'subscription_trial_will_end', channel: 'email', reason: 'Subscription trial is about to end.')
+          @data.notification_log << NotificationLog.create(notify_type: 'subscription_trial_will_end', channel: 'email', reason: 'Subscription trial is about to end.')
         end
       end
     end
@@ -50,12 +49,11 @@ class StripeEvent
                                    # .where("stripe_subscription_id = ? and notify_type = ?", @hash[:id], 'subscription_deleted').first  
         # set_time_zone(@data.merchant_customer.merchant.time_zone)
         update_subscription_data
-        
-        if @data.notification_log
+        if @data.cancel_at_period_end && @data.notification_log
           # find merchant or user and admin
           # Email about cancellation
           # Notify us too (admin)
-          @data.notification_log = NotificationLog.create(notify_type: 'subscription_deleted', channel: 'email', reason: 'Subscription has been deleted.')
+          @data.notification_log << NotificationLog.create(notify_type: 'subscription_deleted', channel: 'email', reason: 'Subscription has been deleted.')
         end
       end
     end

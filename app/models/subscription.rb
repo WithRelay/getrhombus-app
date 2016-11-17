@@ -71,7 +71,7 @@ class Subscription < ActiveRecord::Base
 
   def cancel_subscription(team)
     begin
-      PaymentService.cancel_subscription(self.stripe_subscription_id, team.uid, team.is_platform?, self.cancel_at_period_end)
+      PaymentService.cancel_subscription(self.stripe_subscription_id, team.uid, team.is_platform?)
     rescue StandardError => e
       # notify team via email
       [false, e]
