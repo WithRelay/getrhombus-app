@@ -100,7 +100,7 @@ class PaymentService
           re = Stripe::Subscription.create(hash, { stripe_account: stripe_account_uid })
         end
 
-        [true, re, customer.id]
+        [true, re]
       rescue Stripe::StripeError => e
         [false, e]
       rescue StandardError => e

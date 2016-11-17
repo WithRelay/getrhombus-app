@@ -2,11 +2,8 @@ class Api::V1::CustomersController < API::V1::BaseController
   def customer_data
     dummy_customer = [
       {id: 23, customer_uri: 'cus_9ZBBnoG8jv2ABe', email: '<redacted_email>'},
-      {id: 64, customer_uri: 'cus_9J62zWAfp3cHCf', email: '<redacted_email>'},
-      {id: 63, customer_uri: 'cus_8ePuK9YNuqOPgz', email: '<redacted_email>'},
-      {id: 61, customer_uri: 'cus_8MCWRO4CGwCEvo', email: '<redacted_email>'},
-      {id: 60, customer_uri: 'cus_6gcoumphxCETya', email: '<redacted_email>'},
-      {id: 62, customer_uri: 'cus_9XiWUXYm5I72Bw', email: '<redacted_email>'}#managed customer
+      {id: 63, customer_uri: 'cus_6D3r30LunmvQXk', email: '<redacted_email>'},
+      {id: 60, customer_uri: 'cus_9Z9nHEqdsRbbpZ', email: '<redacted_email>'}
     ]
     begin
       if params[:email]

@@ -54,7 +54,7 @@ function flashConfirm(selector, title, confirmText, isConfirm){
     stack: {'dir1': 'down', 'dir2': 'right', 'modal': true}
   })).get().on('pnotify.confirm', function() {
     $(selector).attr(isConfirm, true);
-    $(selector).click();
+    $(selector)[0].click();
   }).on('pnotify.cancel', function() {
     return false;
   });

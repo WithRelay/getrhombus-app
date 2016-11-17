@@ -32,7 +32,7 @@ Rails.application.routes.draw  do
   match "send_mms_from_dashboard" => 'messages#dashboard_mms', via: [:post]
 
   ## events/hooks routegs
-  constraints subdomain: 'test' do
+  constraints subdomain: 'hooks' do
     post 'events/stripe' => 'webhooks#stripe_events'
     match "events/facebook" => "webhooks#facebook_events", via: [:get, :post]
 
