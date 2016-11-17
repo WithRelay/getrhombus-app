@@ -1,9 +1,8 @@
 class Subscription < ActiveRecord::Base
 
   belongs_to :plans
-  belongs_to :user
   belongs_to :coupons
-  belongs_to :team, class_name: "User"
+  belongs_to :merchant_customer
   has_many :notification_log, as: :notifiable, dependent: :destroy
 
   validates_presence_of :plan_id, :merchant_customer_id
