@@ -31,7 +31,6 @@ class PlansController < ApplicationController
     if @plan.create_plan({ team: current_user })
       redirect_to user_plans_path,  flash: { notice: 'Plan was created' }      #respond_with(@plan)
     else
-      @plan.amount = @plan.amount/100.to_f if @plan.amount
       @plan.destroy     # revoke created plan on error
       if @plan.errors.messages.present?
         error = @plan.errors.full_messages
