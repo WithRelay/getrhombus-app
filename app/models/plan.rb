@@ -4,6 +4,7 @@ class Plan < ActiveRecord::Base
   belongs_to :user
 
   validates_presence_of :name, :interval, :interval_count, :amount
+  validates :name, uniqueness: { case_sensitive: false, scope: :user_id }
   validates_numericality_of :amount, :interval_count, greater_than: 0, only_integer: true
 
   def create_plan(hash)
@@ -36,10 +37,10 @@ class Plan < ActiveRecord::Base
       if res.first
         self.update(stripe_livemode: res.second.livemode)
       else
+        false
         #notify team via email
       end
 
-      res.first
     rescue StandardError => e
       # if StandardError happened after Stripe was called, delete plan on Stripe
       self.delete_plan(team) if res.length > 0

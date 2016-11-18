@@ -26,12 +26,10 @@ class CouponsController < ApplicationController
 
   def create
     @coupon = Coupon.new(coupon_params)
-
     if @coupon.create_coupon({ team: current_user })
       redirect_to user_coupons_path, flash: { notice: 'Coupon was created' }
     else
       # revoke amount_off from cent
-      @coupon.amount_off = @coupon.amount_off/100.to_f if @coupon.amount_off
       @coupon.destroy     # revoke created coupon on error
       if @coupon.errors.messages.present?
         error = @coupon.errors.full_messages

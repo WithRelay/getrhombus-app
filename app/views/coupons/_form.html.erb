@@ -17,7 +17,7 @@
   <div class="form-group">
     <%= f.label :coupon_type, class: 'col-xs-3 control-label' %>
     <div class="col-xs-2">
-      <%= f.select :coupon_type, options_for_select({ "Amount Off" => "amount_off", "Percent Off" => 'percent_off' }, selected: get_selected_coupon_type(@coupon)), {}, id: 'coupon-type', class: 'form-control' %>
+      <%= f.select :coupon_type, options_for_select({ "Amount Off" => "amount_off", "Percent Off" => 'percent_off' }, selected: present(@coupon).get_selected_coupon_type), {}, id: 'coupon-type', class: 'form-control' %>
     </div>
   </div>
 
@@ -25,7 +25,7 @@
     <% if f.object.new_record? || (f.object.persisted? && f.object.amount_off.present?)%>
       <%= f.label :amount_off, class: 'col-xs-3 control-label', id: 'coupon-type-value-label' %>
       <div class="col-xs-5">
-        <%= f.text_field :amount_off, id: "coupon-type-value", class: 'form-control' %>
+        <%= f.text_field :amount_off, id: "coupon-type-value", class: 'form-control', value: present(@coupon).format_amount %>
       </div>
     <% else %>
       <%= f.label :percent_off, class: 'col-xs-3 control-label', id: 'coupon-type-value-label' %>
@@ -61,7 +61,7 @@
     <%= f.label :redeem_by, class: 'col-xs-3 control-label', id: 'redeemLabel' %>
     <div class="col-xs-5">
        <i id='calIcon' class="fa fa-calendar" aria-hidden="true"></i>
-      <%= f.text_field :redeem_by, id: 'redeemField', class: 'form-control', value: present(@coupon).format_time %>
+      <%= f.text_field :redeem_by, id: 'redeemField', class: 'form-control', value: present(@coupon).zone_timestamp %>
     </div>
   </div>
 

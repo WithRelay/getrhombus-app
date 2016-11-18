@@ -12,7 +12,7 @@
     <div class="form-group">
       <%= f.label :amount, class: 'col-xs-3 control-label' %>
       <div class="col-xs-5">
-        <%= f.text_field :amount, class: 'form-control' %>
+        <%= f.text_field :amount, class: 'form-control', value: present(@plan).format_amount %>
       </div>
     </div>
 
