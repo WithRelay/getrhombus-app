@@ -4,7 +4,7 @@ class RegistrationsController < Devise::RegistrationsController
 
   def update  
     set_captured_payment_session    
-    re = current_user.add_token_to_stripe_customer(account_update_params)
+    re = PaymentService.add_token_to_stripe_customer(current_user, account_update_params)
       
     if re
       if current_user.update_without_password(devise_parameter_sanitizer.sanitize(:account_update))
@@ -15,12 +15,12 @@ class RegistrationsController < Devise::RegistrationsController
       else
         clean_up_passwords resource
         #render "edit", notice: "We were unable to update your information"
-        redirect_to build_user_link, notice: "We were unable to update your information. Please retry."
+        redirect_to build_user_link, flash: { error: "We were unable to update your information. Please retry." }
       end
     else
       clean_up_passwords resource
       #render "edit", notice: "We were unable to update your card information"
-      redirect_to build_user_link , notice: "We were unable to update your card information. Please check the details entered."
+      redirect_to build_user_link , flash: { error: "We were unable to update your card information. Please check the details entered." }
     end
   end 
 

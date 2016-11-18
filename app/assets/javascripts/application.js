@@ -16,6 +16,7 @@
 //= require pnotify
 //= require flashes
 //= require pagination
+//= require stripe
 //= require plan
 //= require coupon
 //= require subscription

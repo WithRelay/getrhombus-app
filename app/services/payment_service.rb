@@ -1,6 +1,37 @@
 class PaymentService
 
   class << self
+
+    # Create or update customer on Stripe
+    def add_token_to_stripe_customer(current_user, params)
+      if params[:card_token].present?  # is this why i get the errors from stripe??
+        begin
+          if current_user.customer_uri.blank?   # Doesnt have a customer uri => first time
+            cu = Stripe::Customer.create(email: current_user.email, source: params[:card_token])
+            current_user.customer_uri = cu.id
+            current_user.livemode = cu.livemode
+          else
+            cu = Stripe::Customer.retrieve(current_user.customer_uri)
+            cu.email = current_user.email
+            cu.source = params[:card_token]
+            cu.save
+          end
+          #buy_merchant_number if self.user_level == 1 && self.rn_type == nil
+        rescue Stripe::CardError => e
+          # Since it's a decline, Stripe::CardError will be caught
+          err  = e.json_body[:error]
+          owner = User.find_by(email: Rails.application.secrets.team_email)
+          Message.send_and_save_message(owner.rhombus_number, current_user.phone_number, "We were unable to update your card info on Rhombus because: #{err[:message]}.")
+          Notification.token_failure_notification(err, current_user.email).deliver_now
+        rescue Stripe::StripeError => e
+          Notification.token_failure_notification(e.json_body[:error], current_user.email).deliver_now
+        rescue StandardError => e
+          Notification.token_failure_notification(e, current_user.email).deliver_now
+        end
+        false
+      end
+      true
+    end
     
     # return array with txn status, error object, notify customer/merchant
     def charge(amount_with_taxes, merchant, user, message, capture, platform=false)

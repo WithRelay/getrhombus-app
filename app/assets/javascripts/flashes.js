@@ -2,7 +2,7 @@
 // the first parameter is message and second parameter is type eg: success
 function setFlashMessage(msg, type){
   var typeObj = { 'notice': 'success', 'warning': 'info', 'error':'error' }
-  var messageToSet = typeObj[type]
+  var messageToSet = typeObj[type] || 'Attention'
   new PNotify({
     title: messageToSet + '!!',
     text: arrayToString(msg),

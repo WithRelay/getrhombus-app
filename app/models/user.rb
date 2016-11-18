@@ -111,38 +111,6 @@ class User < ActiveRecord::Base
     ['US', 'CA'].include? self.country
   end
 
-  # Create or update customer on Stripe
-  # move to stripe service
-  def add_token_to_stripe_customer(params)
-    if params[:card_token].present?  # is this why i get the errors from stripe??
-      begin
-        if self.customer_uri.blank?   # Doesnt have a customer uri => first time
-          cu = Stripe::Customer.create(email: self.email, source: params[:card_token])
-          self.customer_uri = cu.id
-          self.livemode = cu.livemode
-        else
-          cu = Stripe::Customer.retrieve(self.customer_uri)
-          cu.email = self.email
-          cu.source = params[:card_token]
-          cu.save
-        end
-        #buy_merchant_number if self.user_level == 1 && self.rn_type == nil
-      rescue Stripe::CardError => e
-        # Since it's a decline, Stripe::CardError will be caught
-        err  = e.json_body[:error]
-        owner = User.find_by(email: Rails.application.secrets.team_email)
-        Message.send_and_save_message(owner.rhombus_number, self.phone_number, "We were unable to update your card info on Rhombus because: #{err[:message]}.")
-        Notification.token_failure_notification(err, self.email).deliver_now
-      rescue Stripe::StripeError => e
-        Notification.token_failure_notification(e.json_body[:error], self.email).deliver_now
-      rescue StandardError => e
-        Notification.token_failure_notification(e, self.email).deliver_now
-      end
-      false
-    end
-    true
-  end
-
   def buy_merchant_number
     # save the area code in rhombus number till a number is bought
     #number = TextingService.buy_number(self.rhombus_number])
