@@ -1,4 +1,4 @@
-class Api::V1::CustomersController < API::V1::BaseController
+class Api::V1::MerchantCustomersController < API::V1::BaseController
   def customer_data
     dummy_customer = [
       {id: 23, customer_uri: 'cus_9ZBBnoG8jv2ABe', email: '<redacted_email>'},

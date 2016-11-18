@@ -100,7 +100,7 @@ $(document).ready(function () {
      load: function(query, callback) {
         if (!query.length) return callback();
         $.ajax({
-            url: '/v1/customers/customer_data',
+            url: '/v1/merchant_customers/customer_data',
             type: 'GET',
             dataType: 'json',
             data: {
