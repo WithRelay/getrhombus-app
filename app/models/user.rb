@@ -126,7 +126,7 @@ class User < ActiveRecord::Base
           cu.source = params[:card_token]
           cu.save
         end
-        buy_merchant_number if self.user_level == 1 && self.rn_type == nil
+        #buy_merchant_number if self.user_level == 1 && self.rn_type == nil
       rescue Stripe::CardError => e
         # Since it's a decline, Stripe::CardError will be caught
         err  = e.json_body[:error]

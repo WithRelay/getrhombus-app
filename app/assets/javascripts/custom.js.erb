@@ -894,11 +894,13 @@ $(document).ready(function () {
   // validate merchant profile form
 
 
+
+
+  /// stripe stuff
   // Stripe form validator for CC form
   $('input#cc-number').payment('formatCardNumber');
   $('input#cc-exp').payment('formatCardExpiry');
   $('input#cc-csc').payment('formatCardCVC');
-
   // tokenize card details
   function submit_to_stripe() {
     Stripe.card.createToken({
@@ -909,8 +911,8 @@ $(document).ready(function () {
         cvc: $('#cc-csc').val()
     }, stripeResponseHandler);
   }
-
   function stripeResponseHandler(status, response) {
+    console.log(response)
     if (response.error) {
       $('.panel-body').append(response.error.message);
       $('#response').slideDown(300);
@@ -921,10 +923,13 @@ $(document).ready(function () {
       $('#cc-ex-year').val(response['card']['exp_year']);
       $('#cc-uri').val(response.id);
       $('#cc-type').val(response['card']['brand']);
-      form_submission_handler();
+      //form_submission_handler();
     }
   }
   ///// End stripe form stuff
+  // stripe stuff
+
+
 
   function preventDefault(e) { e.preventDefault(); }
 
