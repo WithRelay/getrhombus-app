@@ -914,8 +914,7 @@ $(document).ready(function () {
   function stripeResponseHandler(status, response) {
     console.log(response)
     if (response.error) {
-      $('.panel-body').append(response.error.message);
-      $('#response').slideDown(300);
+      setFlashMessage(response.error.message, 'error');
       cc_submit_btn.attr("disabled", false).val(cc_btn_text);
     } else {
       $('#cc-number').val(response['card']['last4']);

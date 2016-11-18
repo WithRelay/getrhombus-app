@@ -11,6 +11,7 @@
 
   <div class="" id="userProfile1">
    <div class="login-form newForms">
+
    <%= render 'alerts' %>
     <div id="profileLogo"><img src="<%= asset_path 'logo.jpg' %>" alt="icon" id="signup_logo" class="icon"></div>
 
@@ -24,8 +25,8 @@
 
         
          <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10" id="response">
-            <div class="panel-body" ></div>                
-        </div>      <%#= render "error" %>       
+            <div class="panel-body" ></div>
+        </div>      <%#= render "error" %>
           
           <div class="group">
            <%= f.text_field :card_name, id: 'cc-name', type: "text", :class => "form-control rhombusFocus", placeholder: "Name on Card", 'x-autocompletetype' => "off", autocompletetype: 'off', :autocorrect => "off", spellcheck: 'off', autocapitalize: "off", autocomplete: "off" %>

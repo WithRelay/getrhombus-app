@@ -90,7 +90,7 @@ class User < ActiveRecord::Base
   validates_presence_of :phone_number, numericality: { only_integer: true }, length: { minimum: 10 }, on: :create
 
   # Edit pages use the right number field for each user type
-  validates_presence_of :org_number, numericality: { only_integer: true }, length: { minimum: 10 }, on: :update, if: lambda { self.user_level == 1 }
+  validates_presence_of :org_phone, numericality: { only_integer: true }, length: { minimum: 10 }, on: :update, if: lambda { self.user_level == 1 }
   validates_presence_of :phone_number, numericality: { only_integer: true }, length: { minimum: 10 }, on: :update, if: lambda { self.user_level == 0 }
 
   # Allow nil added to db migration because merchants don't have phone number. They have org_phone.
