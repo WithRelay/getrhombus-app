@@ -1,3 +1,22 @@
+$(document).ready(function () {
+    Stripe.setPublishableKey('<%= Rails.application.secrets.stripe["publishable_key"] %>');
+
+    /// stripe stuff
+    // Stripe form validator for CC form
+    $('input#cc-number').payment('formatCardNumber');
+    $('input#cc-exp').payment('formatCardExpiry');
+    $('input#cc-csc').payment('formatCardCVC');
+    ///// End stripe form stuff
+    // stripe stuff
+
+    // validate credit card form
+    $('#cc-submit').click(function(){
+      // get form id when submit button is clicked of credit card form
+      var selector = $(this).parents('form:first').attr('id');
+      validateCreditCardForm('#' + selector);
+    });
+});
+
 // tokenize card details
 function submit_to_stripe() {
   Stripe.card.createToken({
