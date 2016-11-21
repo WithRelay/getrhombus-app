@@ -47,12 +47,12 @@ class SubscriptionsController < ApplicationController
           customer = h if h[:id] == @subscription.merchant_customer_id
         end
 
-         if customer && @subscription.create_subscription({ team: current_user, customer: customer })  #@subscription.save
-           res = true# redirect_to user_subscriptions_path       #respond_with(@subscription)
-         else
-           res = false
-           break
-         end
+        if customer && @subscription.create_subscription({ team: current_user, customer: customer })  #@subscription.save
+          res = true 
+        else
+         res = false
+         break
+        end
       end
     end
 

@@ -102,8 +102,15 @@ class PaymentService
 
     # must check that customer has a card on file first
     def create_subscription(hash, stripe_account_uid, platform=false)
+      # using only customer_uri only since we support only 1 card and this
+      # way if a customer changes the card on file we don't need to change the subscription source   
+      
       begin
         if platform
+
+          #### this code will go away....user will already be added to platform with card when 
+          # they sign up with card
+
           # token create using card for testing
           tkn = Stripe::Token.create(
             :card => {
@@ -113,21 +120,16 @@ class PaymentService
               :cvc => "314"
             }
           )
-          customer = Stripe::Customer.create(
-            {email: hash[:customer][:email],
-            source: tkn.id}
-          )
+          customer = Stripe::Customer.create({ email: hash[:customer][:email], source: tkn.id } )
+
+          #### this code will go away....user will already be added to platform with card when 
+          # they sign up with card          
 
           hash[:customer] = customer.id
           re = Stripe::Subscription.create(hash)
-
         else
           tkn = Stripe::Token.create({ customer: hash[:customer][:customer_uri] }, { stripe_account: stripe_account_uid })
-          customer = Stripe::Customer.create(
-            {email: hash[:customer][:email],
-            source: tkn.id},
-            { stripe_account: stripe_account_uid }
-          )
+          customer = Stripe::Customer.create({ email: hash[:customer][:email], source: tkn.id }, { stripe_account: stripe_account_uid })
           hash[:customer] = customer.id
           re = Stripe::Subscription.create(hash, { stripe_account: stripe_account_uid })
         end
