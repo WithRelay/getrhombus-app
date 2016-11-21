@@ -1177,6 +1177,14 @@ $(document).ready(function () {
 
   // handle images
 
+  /// stripe stuff
+    // Stripe form validator for CC form
+    $('input#cc-number').payment('formatCardNumber');
+    $('input#cc-exp').payment('formatCardExpiry');
+    $('input#cc-csc').payment('formatCardCVC');
+    ///// End stripe form stuff
+    // stripe stuff
+
   ///// add a customer
   create_user_form.submit(function(e){
     e.preventDefault();
@@ -1187,7 +1195,8 @@ $(document).ready(function () {
     // if all pass, submit_contact_form
 
     var y = get_expiry_date_data();
-    cc_month = y.month; cc_year = y.year;
+    cc_month = y.month;
+    cc_year = y.year;
     // So the button can be reset on fail
     cc_btn_text = create_user_submit.val();
     cc_submit_btn = create_user_submit.attr("disabled", true).val("Please wait...");
@@ -1286,3 +1295,8 @@ function get_unread_messages() {
             document.getElementById('unreadCount').textContent = '';
         })
 }
+
+function preventDefault(e) { e.preventDefault(); }
+
+function get_expiry_date_data() { return $('input#cc-exp').payment('cardExpiryVal'); }
+function set_number() { $('#phone_number').val(PhoneNumberFormatter.getNumber().replace("+", '')); }
