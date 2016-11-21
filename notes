@@ -7,7 +7,8 @@ Surya
 
 - merchant on add user - add customer to platform
 - on subscription - check if user already belongs to merchant
-- 
+- customers can create subscriptions over messaging...not dashboard, but can cancel subscription
+- on card update...update for merchant customer
 
 
 
@@ -35,8 +36,6 @@ Review
 - rewrite refundds
 - return omniauth stripe connect for dashboard account - check how we save platform stripe cred...does stripe connect still work?
 
-
-https://www.getrhombus.com/receive_delivery_report
 
 Payment Capture - should be for only customers....capture in logic
 - check if /profile affect forms for merchants
