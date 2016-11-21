@@ -128,7 +128,7 @@ class StripeEvent
 
       # Ensure all these exists else it isnt ours. They should.
       if user = User.find_by(customer_uri: @hash[:customer])
-        @data.user_id = user.id        
+        @data.user_id = user.id
 
         if subscription = Subscription.includes(:team).where(stripe_subscription_id: @hash[:lines][:data][0][:id]).first
           @data.team_id = subscription.team_id
