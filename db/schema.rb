@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161121004846) do
+ActiveRecord::Schema.define(version: 20161121141028) do
 
   create_table "addresses", force: :cascade do |t|
     t.string   "street_address",   limit: 191
@@ -137,7 +137,7 @@ ActiveRecord::Schema.define(version: 20161121004846) do
     t.datetime "updated_at",                     null: false
   end
 
-  add_index "coupons", ["name"], name: "index_coupons_on_name", unique: true, using: :btree
+  add_index "coupons", ["user_id", "name"], name: "index_coupons_on_user_id_and_name", unique: true, using: :btree
   add_index "coupons", ["user_id"], name: "index_coupons_on_user_id", using: :btree
 
   create_table "fb_creds", force: :cascade do |t|
@@ -405,7 +405,7 @@ ActiveRecord::Schema.define(version: 20161121004846) do
     t.datetime "updated_at",                                   null: false
   end
 
-  add_index "plans", ["name"], name: "index_plans_on_name", unique: true, using: :btree
+  add_index "plans", ["user_id", "name"], name: "index_plans_on_user_id_and_name", unique: true, using: :btree
   add_index "plans", ["user_id"], name: "index_plans_on_user_id", using: :btree
 
   create_table "referrers", force: :cascade do |t|
