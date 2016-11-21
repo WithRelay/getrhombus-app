@@ -1,3 +1,13 @@
+$(document).ready(function () {
+    Stripe.setPublishableKey('<%= Rails.application.secrets.stripe["publishable_key"] %>');
+    // validate credit card form
+    $('#cc-submit').click(function(){
+      // get form id when submit button is clicked of credit card form
+      var selector = $(this).parents('form:first').attr('id');
+      validateCreditCardForm('#' + selector);
+    });
+});
+
 // tokenize card details
 function submit_to_stripe() {
   Stripe.card.createToken({
@@ -24,8 +34,6 @@ function stripeResponseHandler(status, response) {
   }
 }
 
-function preventDefault(e) { e.preventDefault(); }
-
 function validateCreditCardForm(form_selector) {
   // validate credit card form
   $(form_selector)
@@ -36,14 +44,14 @@ function validateCreditCardForm(form_selector) {
 
         // List of fields and their validation rules
         fields: {
-            'user[full_name]': {
-                row: '.group',
-                validators: {
-                    notEmpty: {
-                        message: 'Your full name is required'
-                    }
-                }
-            },
+            // 'user[full_name]': {
+            //     row: '.group',
+            //     validators: {
+            //         notEmpty: {
+            //             message: 'Your full name is required'
+            //         }
+            //     }
+            // },
             'cc-name': {
                 selector: '#cc-name',
                 row: '.group',
@@ -89,7 +97,8 @@ function validateCreditCardForm(form_selector) {
                     callback: {
                         callback: function (value, validator, $field) {
                             var y = get_expiry_date_data();
-                            cc_month = y.month; cc_year = y.year;
+                            cc_month = y.month;
+                            cc_year = y.year;
                             if ($.payment.validateCardExpiry(cc_month, cc_year)) {
                                 return {
                                     valid: true,    // or false
@@ -152,6 +161,4 @@ function validateCreditCardForm(form_selector) {
     ///
 }
 
-function get_expiry_date_data() { return $('input#cc-exp').payment('cardExpiryVal'); }
-function set_number() { $('#phone_number').val(PhoneNumberFormatter.getNumber().replace("+", '')); }
 function submit_cc_form() { $("#user-form").unbind("submit", preventDefault).submit(); }

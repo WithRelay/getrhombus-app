@@ -15,7 +15,6 @@ $(document).ready(function () {
 
 
   $.ajaxSetup({ cache:false });
-  Stripe.setPublishableKey('<%= Rails.application.secrets.stripe["publishable_key"] %>');
 
   // to prefill signup form or handle captured payments
   // signin is included for when user texts payment and is prompted to sign in to complete account
@@ -893,17 +892,6 @@ $(document).ready(function () {
       });
   // validate merchant profile form
 
-  /// stripe stuff
-  // Stripe form validator for CC form
-  $('input#cc-number').payment('formatCardNumber');
-  $('input#cc-exp').payment('formatCardExpiry');
-  $('input#cc-csc').payment('formatCardCVC');
-  ///// End stripe form stuff
-  // stripe stuff
-
-  // validate credit card form
-  validateCreditCardForm('#user-form');
-
   // Simply populates credit card and bank account fields with test data
   /*$('#populate').click(function () {
       $(this).attr("disabled", true);
@@ -1189,6 +1177,13 @@ $(document).ready(function () {
 
   // handle images
 
+  /// stripe stuff
+    // Stripe form validator for CC form
+    $('input#cc-number').payment('formatCardNumber');
+    $('input#cc-exp').payment('formatCardExpiry');
+    $('input#cc-csc').payment('formatCardCVC');
+    ///// End stripe form stuff
+    // stripe stuff
 
   ///// add a customer
   create_user_form.submit(function(e){
@@ -1200,7 +1195,8 @@ $(document).ready(function () {
     // if all pass, submit_contact_form
 
     var y = get_expiry_date_data();
-    cc_month = y.month; cc_year = y.year;
+    cc_month = y.month;
+    cc_year = y.year;
     // So the button can be reset on fail
     cc_btn_text = create_user_submit.val();
     cc_submit_btn = create_user_submit.attr("disabled", true).val("Please wait...");
@@ -1214,7 +1210,6 @@ $(document).ready(function () {
   })
 
   function submit_create_user_form() {
-    debugger
     $.ajax({
         url: "/v1/users/add_customers.json",
         beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
@@ -1243,12 +1238,7 @@ $(document).ready(function () {
   });
   // submit referrer
 
-
 });
-
-
-
-
 
 /* Page Loading */
 $(window).load(function() { $(".loading").fadeOut(600); });
@@ -1305,3 +1295,8 @@ function get_unread_messages() {
             document.getElementById('unreadCount').textContent = '';
         })
 }
+
+function preventDefault(e) { e.preventDefault(); }
+
+function get_expiry_date_data() { return $('input#cc-exp').payment('cardExpiryVal'); }
+function set_number() { $('#phone_number').val(PhoneNumberFormatter.getNumber().replace("+", '')); }
