@@ -3,7 +3,7 @@ class Subscription < ActiveRecord::Base
   belongs_to :plans
   belongs_to :coupons
   belongs_to :merchant_customer
-  has_many :notification_log, as: :notifiable, dependent: :destroy
+  has_many :notification_logs, as: :notifiable, dependent: :destroy
 
   validates_presence_of :plan_id, :merchant_customer_id
 
@@ -15,27 +15,18 @@ class Subscription < ActiveRecord::Base
       uid = team.uid
 
       hash[:application_fee_percent] = Rails.application.secrets.application_fee_percent unless is_platform
-
+      
       coupon = Coupon.find_by(id: self.coupon_id) if self.coupon_id.present?
-      # check coupon validity
-      # only use coupons for subscription if coupon is not_expired/valid
-      if coupon && PaymentService.is_valid_coupon(coupon.stripe_coupon_id)
-        hash[:coupon] = coupon.stripe_coupon_id
-      else
-        self.update(coupon_id: nil)
-      end
-      # # Using only customer_uri since we support only 1 card and this
-      # # way if a customer changes the card on file we don't need to change the subscription source
-      # hash[:customer] = hash[:customer]
-      # #hash[:source]
+      # check coupon validity - only use coupons for subscription if coupon is not_expired/valid      
+      hash[:coupon] = coupon.stripe_coupon_id if coupon && PaymentService.is_valid_coupon(coupon.stripe_coupon_id)   
+      
       hash[:plan] = self.plan_id
       hash[:quantity] = self.quantity
-      hash[:tax_percent] = hash[:team].tax_percent
-      # No need to override trial end in plan
-      #hash[:trial_end]
-
+      hash[:tax_percent] = hash[:team].tax_percent      
       hash.delete(:team)
+
       res = PaymentService.create_subscription(hash, uid, is_platform)
+      
       if res.first
         # save customer data to MerchantCustomer
         merchant_customer = MerchantCustomer.create(
