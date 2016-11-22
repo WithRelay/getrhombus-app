@@ -48,20 +48,42 @@ module DashboardMerchantQueries
 		Transaction.find_by_sql([query, self.id, self.rhombus_number])		
 	end	
 
+	def DashboardMerchantQueries.get_last_active_transactions(num_of_days='', filter='')
+		query =  "SELECT t.created_at, t.referenced_user_id as user_id, " \
+				 "u.card_name, u.email, " \
+				 "u.phone_number, SUM(t.amount) AS total_spend, " \
+				 "MIN(t.created_at) AS first_transaction, " \
+				 "AVG(t.amount) AS avg_spend, "  \
+				 "MAX(t.created_at) AS last_transaction " \
+				 "FROM transactions t INNER JOIN users u ON t.referenced_user_id = u.id " \
+				 "WHERE t.team_id = ? " \
+				 "AND t.created_at #{symbol} DATE_SUB(now(), INTERVAL #{num_of_days} DAY)"
+		return query
+	end
+
 	# whoever paid you in the last num_of_days
 	def get_active_customers(num_of_days=14)
 		Transaction.find_by_sql(["#{@@customers_query_txns} #{@@num_of_days_txns} #{num_of_days.to_s} DAY AND NOW()) HAVING COUNT(*) > 0)", self.id])
 	end
 
-	# whoever signed up with your link in the last num_of_days
-	def get_new_customers(num_of_days=7)
+	# New referres within the last 7 days
+	def DashboardMerchantQueries.get_new_customers(num_of_days=7, filter='')
 		if num_of_days.present?
-			return MerchantCustomer.where(
-				"merchant_id = :merchant AND created_at >= :start_time",
-				{merchant: self.id, start_time: Time.now - num_of_days.days})
-				.to_sql
+			query =  "SELECT u.id, u.email " \
+					 "FROM users u, merchant_customers m " \
+					 "WHERE u.id= m.customer_id " \
+					 "AND m.merchant_id = ? " \
+					 "AND m.created_at #{
+					 	DashboardMerchantQueries.convert_filter(filter)
+					 } " \
+					 "DATE_SUB(now(), INTERVAL #{num_of_days} DAY)"
+			return query
 		else
-			return MerchantCustomer.where(:merchant_id => self.id).to_sql
+			query = "SELECT u.id, u.email " \
+					"FROM users u, merchant_customers m " \
+					"WHERE u.id= m.customer_id " \
+					"AND m.merchant_id = ?"
+			return query
 		end	
 	end
 
@@ -149,6 +171,19 @@ module DashboardMerchantQueries
 					GROUP BY WEEK(t.created_at)', self.id])
 		end
 	end
+
+	private
+	def DashboardMerchantQueries.convert_filter(filter)
+		symbol = ''
+		if filter == "more_than"
+			symbol = "<"
+		elsif filter == "exactly"
+			symbol = "="
+		elsif filter == "less_than"
+			symbol = ">"
+		end
+		return symbol
+	end	
 
 end
 

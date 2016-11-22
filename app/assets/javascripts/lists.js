@@ -46,6 +46,33 @@ $(document).on('ready page:load', function() {
   });
 
 
+  $("form#create_segment").submit(function(e){
+    e.preventDefault();
+    var action = $(this).attr('action');
+    var method = $(this).attr('method');
+    var data = $(this).serializeArray();    
+    console.log("Action: " + action)
+    console.log("Method: " + method)
+    console.log(data)
+    //debugger;
+
+    // Submit form via Ajax
+    $.ajax({
+      method: method,
+      url: action,
+      data: data,
+      dataType: 'json'
+    }).done(function(msg){
+      console.log("Segment created successfully")
+      $('#segment_create_msg').html("Segment created successfully")
+      })
+     .fail(function(msg){
+      console.log("Segment could not be created")
+      $('#segment_create_msg').html("Segment could not be created")
+     })
+  })
+
+
   // Submission of the create list form
   $("form#create_user_list").submit(function(e){
     e.preventDefault();
@@ -117,6 +144,32 @@ $(document).on('ready page:load', function() {
       });
      e.preventDefault();
   });
+
+  // On click of the cancel button close out the lightbox
+  $(".cancel").click(function(e){
+    $("#list_create_modal").hide();
+    $("#segment_create_modal").hide();
+  });
+
+
+  // Fired on click of create segment button
+    $("#name_segment").click(function(e){
+    $("#segment_create_modal").lightbox_me({
+      closeClick: true,
+      closeEsc: true,
+      centered: true,
+      onLoad: function() {
+        $("#segment_create_modal").find('input:first')
+        $("#list_type").val("segment")
+        $("#segment_type").val($("#segment_option").val())
+        $("#segment_num_days").val($("#num_days").val())
+        $("#segment_filter").val($("#range").val())
+      }
+      });
+     e.preventDefault();
+  });
+  
+
 
   // Fired on click of the segment button
   // Still under development
