@@ -1,5 +1,5 @@
 
-<div class='nested-fields'>     
+<div class='nested-fields'>
   <div>
     <label>Full name</label>
     <%= f.text_field :full_name %>
@@ -7,7 +7,7 @@
   <div>
     <!-- use input masking here -->
     <label>DOB</label>
-    <%= f.text_field :dob %>
+    <%= f.text_field :dob, class: 'userDateOfBirth' %>
   </div>
 
   <% if f.index == 0 %>
@@ -16,7 +16,7 @@
       <%= f.text_field :last4, class: 'rep-pii' %>
     </div>
   <% end %>
-  
+
 
   <%= f.hidden_field :role, value: f.index == 0 ? 'representative' : 'owner' %>
 
@@ -48,10 +48,9 @@
   <%# review this %>
   <% if f.object.persisted? %>
     <% if f.index != 0 %>
-      <%= link_to_remove_association "remove", f %>  
-    <% end %>  
+      <%= link_to_remove_association "remove", f %>
+    <% end %>
   <% else %>
-    <%= link_to_remove_association "remove", f %>   
-  <% end %>  
+    <%= link_to_remove_association "remove", f %>
+  <% end %>
 </div>
-
