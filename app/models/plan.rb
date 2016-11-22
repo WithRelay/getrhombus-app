@@ -4,6 +4,7 @@ class Plan < ActiveRecord::Base
   belongs_to :user
 
   validates_presence_of :name, :interval, :interval_count, :amount
+  validates :name, uniqueness: { case_sensitive: false, scope: :user_id }
   validates_numericality_of :amount, :interval_count, greater_than: 0, only_integer: true
 
   def create_plan(hash)
@@ -15,10 +16,13 @@ class Plan < ActiveRecord::Base
       uid = get_team_uid(team) #use this for real use
       
       descriptor = (self.name + "-" + team.org_name)[0..21]
+      
       # a customer or a team/merchant can create a plan
       _user_id = (hash.has_key? :customer) ? hash[:customer].id : hash[:team].id
+      
       # dont send team/merchant or customer data in hash
       [:team, :customer].each { |k| hash.delete(k) } 
+      
       # Update so validations run before calling Stripe
       self.update(user_id: _user_id, statement_descriptor: descriptor, currency: team.currency)
 
@@ -36,10 +40,10 @@ class Plan < ActiveRecord::Base
       if res.first
         self.update(stripe_livemode: res.second.livemode)
       else
+        false
         #notify team via email
       end
 
-      res.first
     rescue StandardError => e
       # if StandardError happened after Stripe was called, delete plan on Stripe
       self.delete_plan(team) if res.length > 0

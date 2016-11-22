@@ -5,8 +5,9 @@ class StripeEvent
     # Methods sending emails out to merchant/customers must be idempotent except for invoice failed
 
     def process_event(hash)
+
       @hash = hash[:data][:object]
-      puts JSON.pretty_generate(hash)
+      # puts JSON.pretty_generate(hash)
       case hash[:type]
       when "customer.subscription.trial_will_end"
         subscription_trial_will_end
@@ -27,34 +28,32 @@ class StripeEvent
 
     # So we can notify merchant of time left to active subscription
     def subscription_trial_will_end
-      if @data = Subscription.includes(:notification_log).includes(:team)
-                             .where("stripe_subscription_id = ? and notify_type = ?", @hash[:id], 'subscription_trial_will_end').first  
+      # if @data = Subscription.includes(:notification_log).includes(:team)
+      if @data = Subscription.includes(:notification_log).where(stripe_subscription_id: @hash[:id]).first
+                             # .where("stripe_subscription_id = ? and notify_type = ?", @hash[:id], 'subscription_trial_will_end').first
         
-        set_time_zone(@data.team.time_zone)        
+        # set_time_zone(@data.merchant_customer.merchant.time_zone)
         update_subscription_data
-
         if @data.notification_log
           # find merchant and admin
           # Email merchant of time left(merchant)
           # Notify us too (admin) 
-          @data.notification_log = NotificationLog.create(notify_type: 'subscription_trial_will_end', channel: 'email', reason: 'Subscription trial is about to end.')
+          @data.notification_log << NotificationLog.create(notify_type: 'subscription_trial_will_end', channel: 'email', reason: 'Subscription trial is about to end.')
         end
       end
     end
 
     # Add if deleted and merchant canceled account, return twilio number
     def customer_subscription_deleted
-      if false #@data = Subscription.includes(:notification_log).includes(:team)
+      if @data = Subscription.includes(:notification_log).where(stripe_subscription_id: @hash[:id]).first
                                    # .where("stripe_subscription_id = ? and notify_type = ?", @hash[:id], 'subscription_deleted').first  
-        
-        set_time_zone(@data.team.time_zone)        
+        # set_time_zone(@data.merchant_customer.merchant.time_zone)
         update_subscription_data
-        
-        if @data.notification_log
+        if @data.cancel_at_period_end && @data.notification_log
           # find merchant or user and admin
           # Email about cancellation
           # Notify us too (admin)
-          @data.notification_log = NotificationLog.create(notify_type: 'subscription_deleted', channel: 'email', reason: 'Subscription has been deleted.')
+          @data.notification_log << NotificationLog.create(notify_type: 'subscription_deleted', channel: 'email', reason: 'Subscription has been deleted.')
         end
       end
     end
@@ -88,7 +87,7 @@ class StripeEvent
       @data.trial_start = @hash[:trial_start]
       @data.trial_end = @hash[:trial_end]
       @data.status = @hash[:status]
-      @data.livemode = @hash[:livemode]
+      @data.stripe_livemode = @hash[:livemode]
       @data.save
     end
 
@@ -129,7 +128,7 @@ class StripeEvent
 
       # Ensure all these exists else it isnt ours. They should.
       if user = User.find_by(customer_uri: @hash[:customer])
-        @data.user_id = user.id        
+        @data.user_id = user.id
 
         if subscription = Subscription.includes(:team).where(stripe_subscription_id: @hash[:lines][:data][0][:id]).first
           @data.team_id = subscription.team_id
@@ -205,6 +204,7 @@ class StripeEvent
 
     def set_time_zone(zone)
       Time.use_zone(zone)
+      # Time.use_zone(zone) { yield }
     end
 
     def invoice_payment_failed

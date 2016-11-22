@@ -1,3 +1,16 @@
+Bhishma
+- Dont move forms into stripe js
+
+Surya
+- move campaign/email service into classes
+
+
+- merchant on add user - add customer to platform
+- on subscription - check if user already belongs to merchant
+- customers can create subscriptions over messaging...not dashboard, but can cancel subscription
+- on card update...update for merchant customer
+
+
 
 2014-03-28 api version
 
@@ -8,8 +21,7 @@ Review
 - remove first_name and last_name assignment in angular code
 - when user logs in through messenger, indicate in referrers
 - change all emails in test db dump
-- check how we save platform stripe cred...does stripe connect still work?
-- add index to coupon/plan names
+- Rake - migrate customer uri to merchant_customer
 
 
 - what happens when u send image in countries that don't support it. link?
@@ -22,9 +34,8 @@ Review
 - notifications platform to merchants should have a single conversation and should not be pulled - mark as read too
 - conversations....need origin...cos system to customers should not open conversation....
 - rewrite refundds
-- return omniauth stripe connect for dashboard account
+- return omniauth stripe connect for dashboard account - check how we save platform stripe cred...does stripe connect still work?
 
-https://www.getrhombus.com/receive_delivery_report
 
 Payment Capture - should be for only customers....capture in logic
 - check if /profile affect forms for merchants

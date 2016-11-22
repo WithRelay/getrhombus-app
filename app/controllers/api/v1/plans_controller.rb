@@ -4,7 +4,8 @@ class Api::V1::PlansController < API::V1::BaseController
     res = current_user.plans.where("lower(name) = ?", params[:plan][:name].downcase)
     if res.empty?
       render json: { valid: true }.to_json
+    else
+      render json: { valid: false }.to_json
     end
-    # need to still render json response if res isn't empty
   end
 end

@@ -1,26 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
-  <meta charset="utf-8" />
-  <title><%= content_for?(:title) ? yield(:title) : "Rhombus" %></title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <meta content='Make payments via text messages' name="description" />
-  <%= favicon_link_tag "favicon.ico" %>
-  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
   <%= stylesheet_link_tag "application_dashboard_messaging", media: "all" %>
-  <%= yield :head %>
-  <%= javascript_include_tag "application_dashboard_messaging" %>
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/danialfarid-angular-file-upload/12.2.5/ng-file-upload-all.min.js" integrity="sha256-B9ZVWi/bArdi6DbU13iqW3h9Ry/4ppA8190Sx/j4G10=" crossorigin="anonymous"></script>
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angucomplete-alt/2.4.2/angucomplete-alt.min.js" integrity="sha256-kqrOgJ8akBtAzdlPGWemWNHttiYHTvWZn/pksZGikZU=" crossorigin="anonymous"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-
-  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.1/clipboard.min.js"></script> -->
-  
   <%= javascript_include_tag "plugins" %>
-  <%= yield :head_script %>
-  <%= csrf_meta_tags %>
-
 </head>
 <body style = "background: #f4f4f4">
    <!-- Start Page Loading -->
@@ -71,9 +53,6 @@
   <!-- End Page Loading -->
   <%= render 'shared/header_new' %>
   <%= render 'shared/sidebar' %>
-
-  <%= yield %>
-
   <%= render 'shared/smooch' %>
   <%= render 'shared/google_analytics' %>
 </body>

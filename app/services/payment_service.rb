@@ -1,6 +1,38 @@
 class PaymentService
 
   class << self
+
+    # Create or update customer on Stripe
+    def add_token_to_stripe_customer(current_user, params)
+      merchant = current_user.merchant.last
+      if params[:card_token].present?  # is this why i get the errors from stripe??
+        begin
+          if merchant.stripe_customer_id.blank?   # Doesnt have a customer uri => first time
+            cu = Stripe::Customer.create(email: current_user.email, source: params[:card_token])
+            merchant.update(stripe_customer_id: cu.id)
+            current_user.livemode = cu.livemode
+          else
+            cu = Stripe::Customer.retrieve(merchant.stripe_customer_id)
+            cu.email = current_user.email
+            cu.source = params[:card_token]
+            cu.save
+          end
+          #buy_merchant_number if self.user_level == 1 && self.rn_type == nil
+        rescue Stripe::CardError => e
+          # Since it's a decline, Stripe::CardError will be caught
+          err  = e.json_body[:error]
+          owner = User.find_by(email: Rails.application.secrets.team_email)
+          Message.send_and_save_message(owner.rhombus_number, current_user.phone_number, "We were unable to update your card info on Rhombus because: #{err[:message]}.")
+          Notification.token_failure_notification(err, current_user.email).deliver_now
+        rescue Stripe::StripeError => e
+          Notification.token_failure_notification(e.json_body[:error], current_user.email).deliver_now
+        rescue StandardError => e
+          Notification.token_failure_notification(e, current_user.email).deliver_now
+        end
+        false
+      end
+      true
+    end
     
     # return array with txn status, error object, notify customer/merchant
     def charge(amount_with_taxes, merchant, user, message, capture, platform=false)
@@ -9,7 +41,7 @@ class PaymentService
         
 
         # need to backward support merchant's with old connect account
-        if x          
+        if x
           tkn = Stripe::Token.create({ customer: hash[:customer_uri] }, { stripe_account: stripe_account_uid })
           re = Stripe::Charge.create({
               amount: amount_with_taxes,
@@ -70,67 +102,60 @@ class PaymentService
 
     # must check that customer has a card on file first
     def create_subscription(hash, stripe_account_uid, platform=false)
+      # using only customer_uri only since we support only 1 card and this
+      # way if a customer changes the card on file we don't need to change the subscription source   
+      
       begin
         if platform
-          if retrieve_customer(hash[:customer],stripe_account_uid, platform)
-            re = Stripe::Subscription.create(hash)
-          else
-            # create customer
-            # tkn = Stripe::Token.create({ customer: hash[:customer] }, { stripe_account: stripe_account_uid })
-            # tkn = Stripe::Token.create({ customer: hash[:customer] })
-            # hash[:source] = tkn
-            # subscribe customer
-          end
+
+          #### this code will go away....user will already be added to platform with card when 
+          # they sign up with card
+
+          # token create using card for testing
+          tkn = Stripe::Token.create(
+            :card => {
+              :number => "<redacted_phone_number>",
+              :exp_month => 11,
+              :exp_year => 2017,
+              :cvc => "314"
+            }
+          )
+          customer = Stripe::Customer.create({ email: hash[:customer][:email], source: tkn.id } )
+
+          #### this code will go away....user will already be added to platform with card when 
+          # they sign up with card          
+
+          hash[:customer] = customer.id
+          re = Stripe::Subscription.create(hash)
         else
-          if retrieve_customer(hash[:customer], stripe_account_uid, platform)
-            re = Stripe::Subscription.create(hash, { stripe_account: stripe_account_uid })
-          else
-            # create customer
-            # tkn = Stripe::Token.create({ customer: hash[:customer] }, { stripe_account: stripe_account_uid })
-            # hash[:source] = tkn
-            # subscribe customer
-          end
+          tkn = Stripe::Token.create({ customer: hash[:customer][:customer_uri] }, { stripe_account: stripe_account_uid })
+          customer = Stripe::Customer.create({ email: hash[:customer][:email], source: tkn.id }, { stripe_account: stripe_account_uid })
+          hash[:customer] = customer.id
+          re = Stripe::Subscription.create(hash, { stripe_account: stripe_account_uid })
         end
 
         [true, re]
       rescue Stripe::StripeError => e
-        # Display a very generic error to the user, and maybe send yourself an email
         [false, e]
       rescue StandardError => e
         [false, e]
       end
     end
 
-    def cancel_subscription(subscription_id, period_end)
+    def cancel_subscription(subscription_id,stripe_account_uid, platform)
       begin
-        sbtn = Stripe::Subscription.retrieve(subscription_id)
-        if period_end.present?
-          sbtn.delete(period_end)
+        res = if platform
+          sbtn = Stripe::Subscription.retrieve(subscription_id)
+          sbtn.delete(at_period_end: true)# cancel at period end
         else
-         sbtn.delete
+          sbtn = Stripe::Subscription.retrieve(subscription_id, {stripe_account: stripe_account_uid})
+          sbtn.delete #cancel subscription immediately
         end
-        [true]
+        [true, res]
       rescue Stripe::StripeError => e
-        # Display a very generic error to the user, and maybe send yourself an email
         [false, e]
       rescue StandardError => e
         [false, e]
-      end
-    end
-
-    #  method for retrieve customer information
-    def retrieve_customer(customer_id, stripe_account_uid  , is_platform = false)
-      begin
-        if is_platform
-          Stripe::Customer.retrieve(customer_id)
-        else
-          Stripe::Customer.retrieve(customer_id, {stripe_account: stripe_account_uid})
-        end
-        true
-      rescue Stripe::StripeError => e
-        false
-      rescue StandardError => e
-        false
       end
     end
 
@@ -208,6 +233,18 @@ class PaymentService
         [false,  e]
       rescue StandardError => e
         [false, e]
+      end
+    end
+
+    def is_valid_coupon(coupon_id)
+      begin
+        re = Stripe::Coupon.retrieve(coupon_id)
+        re.valid
+      rescue Stripe::StripeError => e
+        # Display a very generic error to the user, and maybe send yourself an email
+        false
+      rescue StandardError => e
+        false
       end
     end
 

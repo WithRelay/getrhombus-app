@@ -45,7 +45,7 @@ $(document).ready(function () {
             }
            }
         },
-        'subscription[user_id]':{
+        'subscription[merchant_customer_id]':{
            validators: {
               notEmpty: {
                 message: 'Please select one or more Customers'
@@ -88,7 +88,7 @@ $(document).ready(function () {
         $('#subscriptionForm').formValidation('revalidateField', 'subscription[plan_id]');
     })
 
-  $('[name="subscription[user_id]"]')
+  $('[name = "subscription[merchant_customer_id]"]')
       .selectize({
       valueField: 'id',
       labelField: 'email',
@@ -100,7 +100,7 @@ $(document).ready(function () {
      load: function(query, callback) {
         if (!query.length) return callback();
         $.ajax({
-            url: '/v1/customers/customer_data',
+            url: '/v1/merchant_customers/customer_data',
             type: 'GET',
             dataType: 'json',
             data: {
@@ -117,13 +117,13 @@ $(document).ready(function () {
       }
     })
     .on('change', function(e) {
-        $('#subscriptionForm').formValidation('resetField', 'subscription[user_id]');
+        $('#subscriptionForm').formValidation('resetField', 'subscription[merchant_customer_id]');
     })
     .on('submit', function(e) {
-        $('#subscriptionForm').formValidation('revalidateField', 'subscription[user_id]');
+        $('#subscriptionForm').formValidation('revalidateField', 'subscription[merchant_customer_id]');
     })
 
-  $('.form-control').css('height', 'auto');
+  $('.auto-height').css('height', 'auto');
 
 });
 

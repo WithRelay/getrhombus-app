@@ -3,21 +3,22 @@
   class << self
 
     def process_event(params)
-      required_params = params['entry'].last
-      event = required_params['messaging'].last
-      read_event = event['read']
-      message_event = event['message']
-      create_conversation(required_params)
-
-      if params['hub.mode'].present?
+      @params = params
+      if params['hub.mode'].present? #for verify webhook
         verify_webhook
-      elsif read_event.present?
-        set_message_unread(event)
-      elsif message_event.present?
-        receive_message(required_params['id'], event)
-      else 
+      else #after verification for message event
+        required_params = params['entry'].last
+        event = required_params['messaging'].last
+        read_event = event['read']
+        message_event = event['message']
+        create_conversation(required_params)
+        if read_event.present?
+          set_message_unread(event)
+        elsif message_event.present?
+          receive_message(required_params['id'], event)
+        else
+        end
       end
-
     end
 
     def create_conversation(params)
@@ -78,8 +79,9 @@
           message_id: message_id, page_id: page_id, from: message_from, to: message_to, 
           fb_page_id: fb_page_id)
         
-        save_attachments(attachments, fb_message)
-        fb_message.save!
+        res = save_attachments(attachments, fb_message)
+        # message destroy if attachment is not valid
+        res ? fb_message.save! : fb_message.destroy
       rescue StandardError => err
         nil
       end
@@ -99,7 +101,7 @@
     end
 
     def save_attachments(attachments, fb_message)
-      invalid_file = ""
+      valid_file = true
       if attachments.present?
         attachments.each do |a|
           url = a['payload']['url']
@@ -108,14 +110,15 @@
             image = fb_message.images.new
             image.avatar_from_remote_url(url)
           else
-            invalid_file = file_extension
+            valid_file = false
           end
         end
       end
-
-      if invalid_file.present?
+      # if invalid file attachment is send then it notify with default message
+      unless valid_file
         notify_invalid_attachment(fb_message.page_id, fb_message.from, fb_message.to)
       end
+      valid_file
     end
 
     def set_message_unread(params)
@@ -135,7 +138,7 @@
       user_name = user.name.split.first
       page_access_token = page.page_access_token
       text = "Sorry #{user_name}, currently we only support image file attachments"
-      FacebookMessengerService.send_text_message(page_access_token, to, text)      
+      FacebookMessengerService.send_text_message(page_access_token, to, text)
     end
   end
 end

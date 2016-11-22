@@ -2,7 +2,7 @@
 // the first parameter is message and second parameter is type eg: success
 function setFlashMessage(msg, type){
   var typeObj = { 'notice': 'success', 'warning': 'info', 'error':'error' }
-  var messageToSet = typeObj[type]
+  var messageToSet = typeObj[type] || 'Attention'
   new PNotify({
     title: messageToSet + '!!',
     text: arrayToString(msg),
@@ -54,7 +54,7 @@ function flashConfirm(selector, title, confirmText, isConfirm){
     stack: {'dir1': 'down', 'dir2': 'right', 'modal': true}
   })).get().on('pnotify.confirm', function() {
     $(selector).attr(isConfirm, true);
-    $(selector).click();
+    $(selector)[0].click();
   }).on('pnotify.cancel', function() {
     return false;
   });

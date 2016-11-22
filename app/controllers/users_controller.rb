@@ -18,7 +18,10 @@ class UsersController < ApplicationController
 
   def show
     handle_referrer_and_welcome_email
-    if current_user.user_level == 0 && current_user.customer_uri.blank? # incomplete customer account
+    merchant = current_user.merchant.last
+    customer_id = merchant.stripe_customer_id if merchant.present?
+
+    if current_user.user_level == 0 && customer_id.blank? # incomplete customer account
       redirect_to build_user_link
     elsif current_user.user_level == 1 && (current_user.org_name.blank? || current_user.rhombus_number.blank?) # incomplete merchant account
       # does this empty forms? check...i think so

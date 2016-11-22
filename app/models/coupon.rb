@@ -4,6 +4,7 @@ class Coupon < ActiveRecord::Base
   belongs_to :user
 
   attr_accessor :coupon_type
+  validates_presence_of :name
   validates :name, uniqueness: { case_sensitive: false, scope: :user_id }
   
   validates_presence_of :duration
@@ -38,10 +39,10 @@ class Coupon < ActiveRecord::Base
       if res.first
         self.update(stripe_livemode: res.second.livemode, stripe_coupon_id: res.second.id)
       else
+        false
         #notify team via email
       end
 
-      res.first
     rescue StandardError => e
       # if StandardError happened after Stripe was called, delete plan on Stripe
       self.delete_coupon if res.length > 0
