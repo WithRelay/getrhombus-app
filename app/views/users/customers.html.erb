@@ -92,22 +92,37 @@
           <% end %>
         </div>
         <div id="segments_test">
-          This is for testing the segments functionality
           <p>
-          <form id="create_segment" action="/v1/lists/create", method="post">
-            <input type="hidden" id="list_type" value="segment"></input>
             <select id="segment_option">
               <option value ="all_customers">All Customers</option>
               <option value ="new_customers">New customers</option>
-              <option value ="active_customers" selected>Active customers
+              <option value="last_purchase"> Last purchase made
+              </option>
+              <option value ="active_customers" selected>
+                Active customers
               </option>
               <option value ="inactive_customers">Inactive customers
               </option>
+              <option value ="all_contacts">All Contacts</option>
+              <option value ="contacts_with_accounts">
+                Contacts with accounts
+              </option>
+              <option value="contacts_without_accounts"> 
+                Contacts without accounts
+              </option>
             </select>
-          within the last 
-            <input type="text" id="num_days" placeholder="Enter number of days" size="5"> days</input>
-            <input type ="submit" id="create_segment">Create segment</input>
-            </form>
+          <p></p>
+            <select id="range">
+              <option value="less_than">Less than</option>
+              <option value="more_than">More than</option>
+              <option value="exactly">Exactly</option>
+              <option value="between">Between</option>
+            </select>
+          <p></p>
+           <input type="text" id="num_days" style="width: 10%" 
+             size="5" value="7" placeholder="Days ago"> 
+            <p></p>
+            <input id="name_segment" type ="button" value="Create segment"></input>
         </p>
         </div>
         <!-- End Panel -->
@@ -129,7 +144,7 @@
  <!-- //////////////////////////////////////////////////////////////////////////// --> 
 
 <!-- Create List form -->
-<div id="list_create_modal">
+<div id="list_create_modal" class="list_modal">
     <span>Create your list of customers</span>
     <div id="create_list_form">
         <div id="list_form_errors"> </div>
@@ -140,9 +155,35 @@
             <%= hidden_field_tag(:list_type, 'list') %>
             <%= text_field_tag(:list_name) %>
             <%= submit_tag("Submit list") %>
-          </div>
-            <%= button_tag("cancel") %>
+           <%= button_tag(type: 'button', class: 'cancel') do 
+                content_tag(:strong, "Cancel")
+              end 
+          %>         
           <% end %>
+        </div>
+    </div>
+  </div>
+
+
+  <div id="segment_create_modal" class="list_modal">
+    <span>Create segment</span>
+    <div id="create_segment_form">
+        <span id="segment_create_msg"> </span>
+        <div id="segment_form_items">
+          <%= form_tag("/v1/lists/create", id: "create_segment", method: "post") do %>
+            <%= label_tag(:segment_name, "Segment name") %>
+            <%= hidden_field_tag(:list_type, 'segment') %>
+            <%= hidden_field_tag(:segment_type) %>
+            <%= hidden_field_tag(:segment_num_days) %>
+            <%= hidden_field_tag(:segment_filter) %>
+            <%= text_field_tag(:segment_name) %>
+            <%= submit_tag("Create segment") %>
+            <%= button_tag(type: 'button', class: 'cancel') do 
+                content_tag(:strong, "Cancel")
+              end 
+            %>
+          <% end %>
+      </div>
     </div>
   </div>
 <!-- -->

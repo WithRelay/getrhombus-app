@@ -25,7 +25,6 @@ class SubscriptionsController < ApplicationController
   end
 
   def create
-
     dummy_customer = [
       {id: 23, customer_uri: 'cus_9ZBBnoG8jv2ABe', email: '<redacted_email>'},
       {id: 63, customer_uri: 'cus_6D3r30LunmvQXk', email: '<redacted_email>'},

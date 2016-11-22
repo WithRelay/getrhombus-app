@@ -17,36 +17,42 @@ class Api::V1::ListsController < API::V1::BaseController
   # Handles creation of a list via Ajax
   def create
     begin
-      name = params[:list_name]
       if params[:list_type] == 'list'
+        name = params[:list_name]
         @list = save_list(name:name, user_id:current_user.id)
         user_list = params[:selected_users].split(",")
-        list_errors = Array.new # Gather list errors
-        # If there were any errors with saving the list 
-        # add them to the array
-        if !@list.errors.empty?
-          list_errors.push(@list.errors.full_messages)
-        end
-        # Create user_lists and and errors as well.
+        list_errors = get_list_errors(@list)
         user_list.each do |u|
           u = UserList.new(list_id:@list.id, user_id:u)
           list_errors.push(u.errors.full_messages) if !u.save
         end
-          # If there are errors, show the errors
-          if !list_errors.empty?
-            puts "Errors occured: #{list_errors}"
-            render json: {
-               "list_error" => list_errors.to_json,
-            }, status: 400
-          # no errors, show the created list and users
-          else
+          if list_errors.empty?
             render json: {
               "list" => @list,
               "list_users" => user_list,
             }, status: 200
+          else
+            render json: {
+               "list_error" => list_errors.to_json,
+            }, status: 400
           end
       else
-        @list = save_list(name:name, user_id:current_user.id, segment:params[:segment_query])
+        name = params[:segment_name]
+        segment_query = get_segment_query(params)
+        print "Segment query is: #{segment_query}"
+        @list = save_list(name:name, 
+                          user_id:current_user.id, 
+                          segment:segment_query)
+        list_errors = get_list_errors(@list)
+        if list_errors.empty?
+           render json: {
+              "list" => @list,
+            }, status: 200
+        else
+          render json: {
+               "list_error" => list_errors.to_json,
+            }, status: 400
+        end
       end
     rescue StandardError => e
       puts e
@@ -61,11 +67,30 @@ class Api::V1::ListsController < API::V1::BaseController
     # @param name The name of the list
     # @param user_id The user_id
     # @param segment A boolean indicating if this list is a segment
-    # default is false (i.e. list)
-    def save_list(name:, user_id:, segment:false)
+    # default is nil (i.e. list)
+    def save_list(name:, user_id:, segment:nil)
       l = List.new(name:name, user_id:user_id, segment:segment)
       l.save
+      print "List created is: #{l}"
       return l
     end
 
+    def get_segment_query(params)
+      print "Segment type is: #{params[:segment_type]}"
+      if params[:segment_type] == "new_customers"
+        return DashboardMerchantQueries.get_new_customers(
+          params[:segment_num_days], params[:segment_filter])
+      end
+    end
+
+    # Returns an array of errors that were generated in
+    # the process of creating the list
+    # @param list_obj A list object
+    def get_list_errors(list_obj)
+      list_errors = Array.new 
+      if !list_obj.errors.empty?
+        list_errors.push(@list.errors.full_messages)
+      end
+      return list_errors
+    end
 end
