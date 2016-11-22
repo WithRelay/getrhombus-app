@@ -18,7 +18,7 @@ module AdditionalUserActions
   end
 
   def create_managed_acct
-    user_stripe_managed = StripeManaged.new(current_user, full_user_params)
+    user_stripe_managed = StripeManagedAccountService.new(current_user, full_user_params)
     create_account = user_stripe_managed.create_account
     if create_account
       current_user.update(full_user_params)
