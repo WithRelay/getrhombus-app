@@ -4,15 +4,15 @@ class PaymentService
 
     # Create or update customer on Stripe
     def add_token_to_stripe_customer(current_user, params)
-      merchant = current_user.merchant.last
+      merchant_customer = current_user.merchant.last
       if params[:card_token].present?  # is this why i get the errors from stripe??
         begin
-          if merchant.stripe_customer_id.blank?   # Doesnt have a customer uri => first time
+          if merchant_customer.stripe_customer_id.blank?   # Doesnt have a customer uri => first time
             cu = Stripe::Customer.create(email: current_user.email, source: params[:card_token])
-            merchant.update(stripe_customer_id: cu.id)
+            merchant_customer.update(stripe_customer_id: cu.id)
             current_user.livemode = cu.livemode
           else
-            cu = Stripe::Customer.retrieve(merchant.stripe_customer_id)
+            cu = Stripe::Customer.retrieve(merchant_customer.stripe_customer_id)
             cu.email = current_user.email
             cu.source = params[:card_token]
             cu.save
@@ -123,7 +123,7 @@ class PaymentService
           customer = Stripe::Customer.create({ email: hash[:customer][:email], source: tkn.id } )
 
           #### this code will go away....user will already be added to platform with card when 
-          # they sign up with card          
+          # they sign up with card
 
           hash[:customer] = customer.id
           re = Stripe::Subscription.create(hash)
