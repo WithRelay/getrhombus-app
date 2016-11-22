@@ -5,7 +5,7 @@ class UsersController < ApplicationController
 
   # do i need this?
   load_and_authorize_resource except: [:customer_csv_template]
-  
+
   include AdditionalUserActions
 
   def index
@@ -26,16 +26,16 @@ class UsersController < ApplicationController
       Transaction.process_captured_payment(@user, params) if current_user.user_level == 0 && params[:captured_amt].present?
       @last4_transactions = @user.transactions.select(:created_at, :description, :notes).last(4).reverse
       @total_msgs = @user.get_total_messages
-      @dashboard_stuff = @user.dashboard_stats 
-      # @token = TextingService.get_twilio_capibility_token if current_user.user_level == 1     
+      @dashboard_stuff = @user.dashboard_stats
+      # @token = TextingService.get_twilio_capibility_token if current_user.user_level == 1
     end
     delete_captured_payment_session
-  end  
-  
+  end
+
   def create
     @user = User.new(user_params)
     respond_to do |format|
-      if @user.save 
+      if @user.save
           format.html { redirect_to @user, notice: 'Welcome!' }
          	format.json { render action: 'show', status: :created, location: @user }
       else
@@ -45,7 +45,7 @@ class UsersController < ApplicationController
     end
   end
 
-  def edit 
+  def edit
   end
 
   # PATCH/PUT /users/1
@@ -78,13 +78,21 @@ private
     @user = User.find(params[:id])
   end
 
+  def full_user_params
+    nested_user_params = user_params
+    nested_user_params[:stripe_creds_attributes]["0"].merge!(ip: request.remote_ip,
+                                                             user_agent: request.user_agent,
+                                                             uid_type: 0)
+    nested_user_params
+  end
+
   def user_params
     params.require(:user).permit(:id, :org_type, :org_name, :url, :org_tax_id, :description,
-      address_attributes: [:id, :city, :street_address, :state_province, :country, :postal_code], 
+      address_attributes: [:id, :city, :street_address, :state_province, :country, :postal_code],
       bank_accounts_attributes: [:id, :routing_number, :country, :currency, :account_number, :institution_number],
       people_attributes: [:id, :full_name, :dob, :last4, :role, :_destroy,
       address_attributes: [:street_address, :state_province, :id, :country, :postal_code, :state_province]],
-      stripe_cred_attributes: [:id, :uid_type, :ip, :user_agent])
+      stripe_creds_attributes: [:id])
   end
 
   def handle_referrer_and_welcome_email
