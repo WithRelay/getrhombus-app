@@ -18,16 +18,20 @@ module AdditionalUserActions
   end
 
   def create_managed_acct
-    params[:user][:org_type] = 'Business' if params[:user][:org_type] == 'Company' && current_user.org_type == 'Individual'
-    current_user.update(user_params)
+    user_stripe_managed = StripeManaged.new(current_user, full_user_params)
+    create_account = user_stripe_managed.create_account
+    if create_account
+      current_user.update(full_user_params)
+      user_stripe_managed.create_external_account(create_account)
+    end
     render json: {}
   end
 
   # Returns JSON object with user hash who sent a message to the given merchant in the last CONFIG[:dashboard]['messaging']['num_days_history'] days
   def json_get_latest_active_messaging
-    render :json => Hash['success' => true, 'users' => User.get_latest_active_messaging(params[:id], CONFIG[:dashboard]['messaging']['num_days_history'])].to_json 
+    render :json => Hash['success' => true, 'users' => User.get_latest_active_messaging(params[:id], CONFIG[:dashboard]['messaging']['num_days_history'])].to_json
   end
-  
+
   # Returns JSON object with the last x messages a user has sent to the given merchant
   def json_get_user_messages_by_merchant
     if params[:limit]
@@ -35,15 +39,15 @@ module AdditionalUserActions
     else
       limit = CONFIG[:dashboard]['messaging']['num_messages_per_user_default']
     end
-    render :json => Hash['success' => true, 'messages' => Message.get_user_messages_by_merchant(params[:user_number], params[:id], limit)].to_json 
+    render :json => Hash['success' => true, 'messages' => Message.get_user_messages_by_merchant(params[:user_number], params[:id], limit)].to_json
   end
-  
+
   # Marks all user messages sent to a merchant as read
   def mark_user_messages_for_merchant_as_read
     Message.mark_user_messages_for_merchant_as_read(params[:user_number], params[:id])
-    render :json => Hash['success' => true].to_json 
+    render :json => Hash['success' => true].to_json
   end
-  
+
   # Sends a message to user on behalf of merchant
   def send_message_from_merchant
     if !params[:message].blank?
@@ -78,8 +82,8 @@ module AdditionalUserActions
   def build_user_link
     # if it includes a captured payment, also check if msg_id is present, tag_id is optional
     # referrer_num is the merchant the payment is going to
-    link = session[:captured_amt].present? ? "/profile?amt=#{session[:captured_amt]}&referrer_id=#{session[:referrer_id]}" + 
-                                          "&msg_id=#{session[:msg_id]}&tag_id=#{session[:tag_id]}" : "/profile" 
+    link = session[:captured_amt].present? ? "/profile?amt=#{session[:captured_amt]}&referrer_id=#{session[:referrer_id]}" +
+                                          "&msg_id=#{session[:msg_id]}&tag_id=#{session[:tag_id]}" : "/profile"
     delete_captured_payment_session
     link
   end
@@ -105,7 +109,7 @@ module AdditionalUserActions
     response = current_user.get_customer_csv_template
     if response
       respond_to do |format|
-        format.csv { send_data response, filename: "customer_template.csv" } 
+        format.csv { send_data response, filename: "customer_template.csv" }
       end
     else
       # use 500 page after it is built
