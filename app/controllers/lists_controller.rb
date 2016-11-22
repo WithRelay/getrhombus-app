@@ -9,10 +9,10 @@ class ListsController < ApplicationController
   end
 
   def show
-    customers = UserList.where(:list_id => @list.id)
+    customers = @list.get_users
     @users = Array.new
     customers.each do |c|
-      @users.push(User.find(c.user_id))
+      @users.push(User.find(c[:user_id]))
     end
     respond_with(@list,@users)
 

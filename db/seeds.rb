@@ -200,3 +200,17 @@ MerchantCustomer.new(
 	created_at: '2016-10-01 00:20:51',
 	updated_at: '2016-10-01 00:20:51'
 ).save!
+
+MerchantCustomer.new(
+	merchant_id: 7,
+	customer_id: 4,
+	created_at: '2016-11-19 00:20:51',
+	updated_at: '2016-11-19 00:20:51'
+).save!
+MerchantCustomer.new(
+	merchant_id: 7,
+	customer_id: 25,
+	created_at: '2016-11-15 00:20:51',
+	updated_at: '2016-11-15 00:20:51'
+).save!
+# Create transactions
