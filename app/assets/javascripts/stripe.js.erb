@@ -1,4 +1,5 @@
 $(document).ready(function () {
+  
   Stripe.setPublishableKey('<%= Rails.application.secrets.stripe["publishable_key"] %>');
   $('input#cc-number').payment('formatCardNumber');
   $('input#cc-exp').payment('formatCardExpiry');
