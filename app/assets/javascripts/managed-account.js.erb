@@ -243,7 +243,7 @@ $(document).ready(function () {
     }
 
     // handle city
-    (hash.preset_city) ? parent.find('.person-city').val(hash.preset_city).attr('disabled', true) : parent.find('.person-city').val('').attr('disabled', false);
+    (hash.preset_city) ? parent.find('.person-city').val(hash.preset_city).attr('disabled', true) : parent.find('.person-city').attr('disabled', false);
 
     // Add placeholders
     parent.find('.person-street').attr('placeholder', hash.street_label);
@@ -305,7 +305,7 @@ $(document).ready(function () {
       hash = countries[this.value];
       (hash.with_state) ? show_state() : hide_state();
       (hash.without_postal) ? hide_postal() : show_postal();
-      (hash.preset_city) ? $('#company-city').val(hash.preset_city).attr('disabled', true) : $('#company-city').val('').attr('disabled', false);
+      (hash.preset_city) ? $('#company-city').val(hash.preset_city).attr('disabled', true) : $('#company-city').attr('disabled', false);
       $('#company-street').attr('placeholder', hash.street_label);
       $('#company-city').attr('placeholder', hash.city_label);
       $('#company-postal-code').attr('placeholder', hash.postcode_label);
