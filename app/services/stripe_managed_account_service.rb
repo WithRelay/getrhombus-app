@@ -1,78 +1,110 @@
+# stripe managed account handles invidual and company managed account creating and updating
+# it accepts 2 parameter user and params.
+# NOTE constant in this class is immutable element in index of array cannot be modified. If you want to change remove .freeze
 class StripeManagedAccountService < Struct.new( :user, :params )
 
-  # this countries has common params to send
-  COMMON_COUNTRIES = %W(AT FI FR IT LU NL NO PT ES SE BE DK DE US AU).freeze
+  # this countries has common params to send for creating manged individual/company account
+  COMMON_COUNTRIES = %W(AT FI FR IT LU NL NO PT IE ES SE BE DK DE US AU GB).freeze
 
-  # us and au has only field routing number to send
-  DEFAULT_COUNTRIES = %W(US AU).freeze
+  # US and AU has only field routing number to send
+  ROUTING_COUNTRIES = %W(US AU GB).freeze; BANK_CODE_COUNTRIES = %W(SG CA HK).freeze
 
+  # creates stripe managed and individual account
   def create_account
-    managed_account = "#{country_name}_managed_account"
-    account = Stripe::Account.create(self.send(managed_account))
-  rescue => e
-    e.message
+    # managed_account is a string returns same as function name
+    managed_account = "#{string_method_name}_#{params_org_type}_account"
+    # create managed individual and company account self.send method accepts parameter and calls function
+    # function name is dynamic
+    account = Stripe::Account.create(send(managed_account))
+  rescue => e; e # returns error object to retrieve error message is e.message. handle stripe create account error
   end
 
+  # creates external account after creation of account. account paramete is send from module additiona_user_Action
   def create_external_account(account)
-    external_accounts = "#{country_name}_external_accounts"
-    account.external_accounts.create(self.send(external_accounts))
-  rescue => e
-    e.message
+    # external_accounts is a string which hold same name as function declare above
+    external_accounts = "#{string_method_name}_external_accounts"
+    # calls dynamic function name with send method and creates external accounts
+    account.external_accounts.create(send(external_accounts))
+     # this is temporary link
+    "<a href='https://dashboard.stripe.com/test/applications/users/"+ account.id + "'>Stripe Connected Succesfull Click for dashboard page</a>"
+  rescue => e; e
   end
 
+  # private functions
   private
 
+  # address function returns hash address_attributes from params so that it will be convinient to use hash
   def address; params[:address_attributes]; end
 
+  # stripe cred returns stripe cred hash
   def stripe_cred; params[:stripe_creds_attributes]['0']; end
 
+  # returns people hash
   def people; params[:people_attributes]['0']; end
 
   def bank_account; params[:bank_accounts_attributes]['0']; end
 
   def people_address; params[:people_attributes]['0']['address_attributes']; end
 
-  def common_managed_account; managed_company_account; end
+  def country_with_bank_code_individual_account; common_individual_account; end
 
-  def country_name
-    COMMON_COUNTRIES.include?(address[:country]) ? 'common' : authorized_country_list[address[:country].to_sym]
+  def params_org_type; params[:org_type].downcase; end
+
+  def common_company_account
+    company_account = managed_company_account
+    company_account[:legal_entity].delete(:personal_id_number) if address[:country] == 'FI'
+    company_account
   end
 
-  def authorized_country_list
-    country_list = {}
-    PaymentService.stripe_country_list.each{ |k, v| country_list[k] = v[0].split(' ').join('_').downcase}
-    country_list
+  # return string method name
+  def string_method_name
+    return 'common' if COMMON_COUNTRIES.include?(address[:country])
+    return 'country_with_bank_code' if BANK_CODE_COUNTRIES.include?(address[:country])
+  end
+
+  def country_with_bank_code_external_accounts;
+    bank_code_countries = basic_external_accounts
+    bank_code_countries[:external_account].merge( { bank_code: bank_account[:institution_number]  } )
+    bank_code_countries
   end
 
   def common_external_accounts
     external_account = basic_external_accounts
-    external_account[:external_account].merge!({ supported_bank_account_currencies: {
-                                                         bank_account[:currency]=> [ bank_account[:country] ]
-                                                        }
-                                                        })
-    DEFAULT_COUNTRIES.include?(address[:country]) unless external_account[:external_account].delete(:routing_number)
+    # for countries in constant COMMON_COUNTRIES routing number params is not required
+    external_account[:external_account].delete(:routing_number) unless ROUTING_COUNTRIES.include?(address[:country])
     external_account
   end
 
+  # return hash for creating extrnal_bank_account for managed individual and company account
   def basic_external_accounts
     { external_account: { object: 'bank_account', country: bank_account[:country],
                                                   currency: bank_account[:currency],
                                                   account_number: bank_account[:account_number],
                                                   routing_number: bank_account[:routing_number],
                                                   account_holder_type: params[:org_type],
-                                                  account_holder_name: user.first_name
+                                                  account_holder_name: user.first_name,
+                                                  supported_bank_account_currencies: {
+                                                  bank_account[:currency]=> [ bank_account[:country] ] }
 
                         }
     }
   end
-  # required hash as mention in the sripte documentation.Please follow below link.
+
+  def common_individual_account
+    individual_account = managed_company_account
+    individual_account.delete(:business_name) # for individual account business name i.e. legal name is not required
+    individual_account
+  end
+
+  # required hash is prepared as mention in the sripe documentation.Please follow below link.
   # https://stripe.com/docs/api#account_object
+  # TODO function is too lengthy feel free to make small without modifying its behaviour. We do not have test
   def managed_company_account
     dob = people[:dob].split('/')
     { managed: true, country: address[:country], email: user.email, business_url: params[:url],
       business_name: params[:org_name], product_description: params[:description],
       tos_acceptance: { ip: stripe_cred[:ip], date: Time.now.to_i, user_agent: stripe_cred[:user_agent] },
-      legal_entity: { type: params[:org_type].downcase, first_name: user.first_name, last_name: user.last_name,
+      legal_entity: { type: params_org_type, first_name: user.first_name, last_name: user.last_name,
                       business_tax_id: params[:org_tax_id], personal_id_number: people[:last4],
                       personal_address: { city: people_address[:city],
                                           country: people_address[:country],
