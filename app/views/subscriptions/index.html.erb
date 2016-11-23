@@ -16,7 +16,7 @@
     <tbody>
       <% @subscriptions.each do |subscription| %>
         <tr>
-          <td>Customer info here</td>
+          <td><%= present(subscription).get_customer_info %></td>
           <td><%= present(subscription).status %></td>
           <td><%= present(subscription).get_plan_info %></td>
           <td><%= present(subscription).get_coupon_info %></td>

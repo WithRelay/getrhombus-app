@@ -1,4 +1,11 @@
 class SubscriptionPresenter < BasePresenter
+
+  def get_customer_info
+    customer = MerchantCustomer.find @model.merchant_customer_id
+    user = User.find customer.customer_id
+    "#{user.email}"
+  end
+
   def get_plan_info
     plan = Plan.find @model.plan_id
     amount = "%.2f" %(plan.amount.to_f/100)
