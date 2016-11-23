@@ -1403,5 +1403,9 @@ function validateCreditCardForm(form_selector) {
 function preventDefault(e) { e.preventDefault(); }
 
 function get_expiry_date_data() { return $('input#cc-exp').payment('cardExpiryVal'); }
-function submit_cc_form() { $("#user-form").unbind("submit", preventDefault).submit(); }
+function submit_cc_form() {
+  // credit card form id
+  var form_id = $('#cc-submit').parents('form:first').attr('id');
+  $("#" + form_id).unbind("submit", preventDefault).submit();
+}
 function set_number() { $('#phone_number').val(PhoneNumberFormatter.getNumber().replace("+", '')); }
