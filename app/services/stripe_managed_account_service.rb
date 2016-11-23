@@ -103,7 +103,7 @@ class StripeManagedAccountService < Struct.new( :user, :params )
 
   # required hash is prepared as mention in the sripe documentation.Please follow below link.
   # https://stripe.com/docs/api#account_object
-  # TODO function is too lengthy feel free to make small without modifying its behaviour. We do not have test
+  # TODO function is too lengthy feel free to make small without changing its behaviour. We do not have test
   def managed_company_account
     dob = people[:dob].split('/')
     { managed: true, country: address[:country], email: user.email, business_url: params[:url],
