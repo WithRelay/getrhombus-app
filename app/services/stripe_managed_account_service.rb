@@ -6,7 +6,7 @@ class StripeManagedAccountService < Struct.new( :user, :params )
   # this countries has common params to send for creating manged individual/company account
   COMMON_COUNTRIES = %W(AT FI FR IT LU NL NO PT IE ES SE BE DK DE US AU GB).freeze
 
-  # US and AU has only field routing number to send
+  # US has routing number AU and GB has also routing number internally named as account number
   ROUTING_COUNTRIES = %W(US AU GB).freeze; BANK_CODE_COUNTRIES = %W(SG CA HK).freeze
 
   # creates stripe managed and individual account
@@ -56,7 +56,7 @@ class StripeManagedAccountService < Struct.new( :user, :params )
   # returns common company account hash for countries in constant common_countries
   def common_company_account
     company_account = managed_company_account
-    # for finland stripe complain to send 8n digit ssn/personal_id but it is not necessary
+    # for finland stripe complains to send 8 digit ssn/personal_id. it is not require
     company_account[:legal_entity].delete(:personal_id_number) if address[:country] == 'FI'
     company_account # return modified hash if condition met
   end
@@ -76,7 +76,7 @@ class StripeManagedAccountService < Struct.new( :user, :params )
   def common_external_accounts
     external_account = basic_external_accounts
     # for countries in constant COMMON_COUNTRIES routing number params is not required
-    external_account[:external_account].delete(:routing_number) unless ROUTING_COUNTRIES.include?(address[:country])
+    external_account[:external_account].delete(:routing_number) unless ROUTING_COUNTRIES.include?(bank_account[:country])
     external_account
   end
 
