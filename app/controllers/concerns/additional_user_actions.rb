@@ -20,11 +20,18 @@ module AdditionalUserActions
   def create_managed_acct
     user_stripe_managed = StripeManagedAccountService.new(current_user, full_user_params)
     create_account = user_stripe_managed.create_account
-    if create_account
+    if create_account.is_a? Stripe::Account
+      external_account = user_stripe_managed.create_external_account(create_account)
+      message = set_message(external_account)
       current_user.update(full_user_params)
-      user_stripe_managed.create_external_account(create_account)
+    else
+      message = set_message(create_account)
     end
-    render json: {}
+    render html: message
+  end
+
+  def set_message(obj)
+    obj.methods.include?(:message) ? obj.message : obj.html_safe
   end
 
   # Returns JSON object with user hash who sent a message to the given merchant in the last CONFIG[:dashboard]['messaging']['num_days_history'] days
