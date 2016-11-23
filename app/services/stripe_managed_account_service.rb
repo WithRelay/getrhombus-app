@@ -1,6 +1,6 @@
 # stripe managed account class handles invidual and company managed account creating and updating
 # it accepts 2 parameter user and params where user is current user and params is from partialform _managed
-# NOTE constants in this class are immutable. element in index of array cannot be modified. If you want to change remove .freeze
+# NOTE constants in this class are immutable. elements of array cannot be modified. If you want to change remove .freeze
 class StripeManagedAccountService < Struct.new( :user, :params )
 
   # this countries has common params to send for creating manged individual/company account
@@ -80,7 +80,13 @@ class StripeManagedAccountService < Struct.new( :user, :params )
     external_account
   end
 
-  # return hash for creating extrnal_bank_account for managed individual and company account
+  def common_individual_account
+    individual_account = managed_company_account
+    individual_account.delete(:business_name) # for individual account business name i.e. legal name is not required
+    individual_account
+  end
+
+  # return hash for creating external_bank_account for managed individual and company account
   def basic_external_accounts
     { external_account: { object: 'bank_account', country: bank_account[:country],
                                                   currency: bank_account[:currency],
@@ -93,12 +99,6 @@ class StripeManagedAccountService < Struct.new( :user, :params )
 
                         }
     }
-  end
-
-  def common_individual_account
-    individual_account = managed_company_account
-    individual_account.delete(:business_name) # for individual account business name i.e. legal name is not required
-    individual_account
   end
 
   # required hash is prepared as mention in the sripe documentation.Please follow below link.
