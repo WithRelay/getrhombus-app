@@ -18,13 +18,9 @@ class UsersController < ApplicationController
 
   def show
     handle_referrer_and_welcome_email
-    merchant = current_user.merchant.last
-    customer_id = merchant.stripe_customer_id if merchant.present?
-
-    if current_user.user_level == 0 && customer_id.blank? # incomplete customer account
+    if current_user.user_level == 0 && current_user.card_token.blank? # incomplete customer account
       redirect_to build_user_link
-    elsif current_user.user_level == 1 && (current_user.org_name.blank? || current_user.rhombus_number.blank?) # incomplete merchant account
-      # does this empty forms? check...i think so
+    elsif current_user.user_level == 1 && (current_user.org_name.blank? || current_user.rhombus_number.blank? || current_user.card_token.blank?) # incomplete merchant account
       redirect_to "/profile"
     else
       Transaction.process_captured_payment(@user, params) if current_user.user_level == 0 && params[:captured_amt].present?
