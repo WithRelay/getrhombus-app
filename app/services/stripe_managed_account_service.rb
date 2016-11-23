@@ -1,6 +1,6 @@
-# stripe managed account handles invidual and company managed account creating and updating
-# it accepts 2 parameter user and params.
-# NOTE constant in this class is immutable element in index of array cannot be modified. If you want to change remove .freeze
+# stripe managed account class handles invidual and company managed account creating and updating
+# it accepts 2 parameter user and params where user is current user and params is from partialform _managed
+# NOTE constants in this class are immutable. element in index of array cannot be modified. If you want to change remove .freeze
 class StripeManagedAccountService < Struct.new( :user, :params )
 
   # this countries has common params to send for creating manged individual/company account
@@ -11,10 +11,9 @@ class StripeManagedAccountService < Struct.new( :user, :params )
 
   # creates stripe managed and individual account
   def create_account
-    # managed_account is a string returns same as function name
+    # managed_account is a string hold same as function name which is dynamic
     managed_account = "#{string_method_name}_#{params_org_type}_account"
     # create managed individual and company account self.send method accepts parameter and calls function
-    # function name is dynamic
     account = Stripe::Account.create(send(managed_account))
   rescue => e; e # returns error object to retrieve error message is e.message. handle stripe create account error
   end
@@ -25,9 +24,9 @@ class StripeManagedAccountService < Struct.new( :user, :params )
     external_accounts = "#{string_method_name}_external_accounts"
     # calls dynamic function name with send method and creates external accounts
     account.external_accounts.create(send(external_accounts))
-     # this is temporary link
+     # this is temporary link for debugging purpose
     "<a href='https://dashboard.stripe.com/test/applications/users/"+ account.id + "'>Stripe Connected Succesfull Click for dashboard page</a>"
-  rescue => e; e
+  rescue => e; e # error object contains message attribute
   end
 
   # private functions
@@ -42,18 +41,24 @@ class StripeManagedAccountService < Struct.new( :user, :params )
   # returns people hash
   def people; params[:people_attributes]['0']; end
 
+  # returns bank account hash
   def bank_account; params[:bank_accounts_attributes]['0']; end
 
+  # returns people hash
   def people_address; params[:people_attributes]['0']['address_attributes']; end
 
+  # country with bank code are countries in constant BANK_CODE_COUNTRIES
   def country_with_bank_code_individual_account; common_individual_account; end
 
+  # org_type comes in upcase as a params but stripe need in downcase
   def params_org_type; params[:org_type].downcase; end
 
+  # returns common company account hash for countries in constant common_countries
   def common_company_account
     company_account = managed_company_account
+    # for finland stripe complain to send 8n digit ssn/personal_id but it is not necessary
     company_account[:legal_entity].delete(:personal_id_number) if address[:country] == 'FI'
-    company_account
+    company_account # return modified hash if condition met
   end
 
   # return string method name
