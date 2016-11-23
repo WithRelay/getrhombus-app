@@ -108,7 +108,7 @@ class StripeManagedAccountService < Struct.new( :user, :params )
     dob = people[:dob].split('/')
     { managed: true, country: address[:country], email: user.email, business_url: params[:url],
       business_name: params[:org_name], product_description: params[:description],
-      tos_acceptance: { ip: stripe_cred[:ip], date: Time.now.to_i, user_agent: stripe_cred[:user_agent] },
+      tos_acceptance: { ip: stripe_cred[:ip], date: Time.current.to_i, user_agent: stripe_cred[:user_agent] },
       legal_entity: { type: params_org_type, first_name: user.first_name, last_name: user.last_name,
                       business_tax_id: params[:org_tax_id], personal_id_number: people[:last4],
                       personal_address: { city: people_address[:city],
