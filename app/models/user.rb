@@ -90,7 +90,7 @@ class User < ActiveRecord::Base
   validates_presence_of :phone_number, numericality: { only_integer: true }, length: { minimum: 10 }, on: :create
 
   # Edit pages use the right number field for each user type
-  validates_presence_of :org_phone, numericality: { only_integer: true }, length: { minimum: 10 }, on: :update, if: lambda { self.user_level == 1 }
+  # validates_presence_of :org_phone, numericality: { only_integer: true }, length: { minimum: 10 }, on: :update, if: lambda { self.user_level == 1 }
   validates_presence_of :phone_number, numericality: { only_integer: true }, length: { minimum: 10 }, on: :update, if: lambda { self.user_level == 0 }
 
   # Allow nil added to db migration because merchants don't have phone number. They have org_phone.
@@ -209,40 +209,3 @@ class User < ActiveRecord::Base
   end
 
 end
-
-=begin
-
-  def add_token_to_stripe_customer(params)
-    if params[:card_token].present?  # is this why i get the errors from stripe??
-      begin
-        hash = { email: self.email, card_token: params[:card_token] }
-        if self.customer_uri.blank?   # Doesnt have a customer uri => first time
-          res = PaymentService.create_customer(hash)
-          if res[0]
-            self.customer_uri = cu.id
-            self.livemode = cu.livemode
-          end
-        else
-          hash[:uri] = self.customer_uri
-          PaymentService.update_customer(hash)
-        end
-
-        buy_merchant_number if self.user_level == 1 && self.rn_type == nil
-
-        # move out this exception block
-      rescue Stripe::CardError => e
-        # Since it's a decline, Stripe::CardError will be caught
-        err  = e.json_body[:error]
-        owner = User.find_by(email: Rails.application.secrets.team_email)
-        Message.send_and_save_message(owner.rhombus_number, self.phone_number, "We were unable to update your card info on Rhombus because: #{err[:message]}.")
-        Notification.token_failure_notification(err, self.email).deliver_now
-      rescue Stripe::StripeError => e
-        Notification.token_failure_notification(e.json_body[:error], self.email).deliver_now
-      rescue StandardError => e
-        Notification.token_failure_notification(e, self.email).deliver_now
-      end
-      false
-    end
-    true
-  end
-=end

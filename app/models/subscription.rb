@@ -1,7 +1,7 @@
 class Subscription < ActiveRecord::Base
 
-  belongs_to :plans
-  belongs_to :coupons
+  belongs_to :plan
+  belongs_to :coupon
   belongs_to :merchant_customer
   has_many :notification_logs, as: :notifiable, dependent: :destroy
 
@@ -28,14 +28,9 @@ class Subscription < ActiveRecord::Base
       res = PaymentService.create_subscription(hash, uid, is_platform)
       
       if res.first
-        # save customer data to MerchantCustomer
-        merchant_customer = MerchantCustomer.create(
-          merchant_id: team.id ,
-          customer_id: self.merchant_customer_id,
-          stripe_customer_id: res.second.customer
-         )
+        # update merchant_customer table after subscription to maintain merchant-customer relationship
+        self.merchant_customer.update(merchant_id: team.id)
         self.update(
-          merchant_customer_id: merchant_customer.id,
           stripe_subscription_id: res.second.id,
           status: res.second.status,
           stripe_livemode: res.second.livemode,

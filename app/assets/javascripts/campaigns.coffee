@@ -1,11 +1,13 @@
-class DatePicker
+class @DatePicker
 
   RAILS_DATE_FORMAT = 'YYYY-MM-DD h:mm A'
   YES = true
 
-  constructor: (element)->
+  constructor: (element, time, dateSelect)->
     @element = element
+    @time = time
     date = new Date();
+    @minimumDate = dateSelect.select
     dateRangeValue = $('.daterange').val()
     if dateRangeValue == undefined || dateRangeValue == ""
       @today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
@@ -14,13 +16,16 @@ class DatePicker
       @today = new Date(dateRange[0], dateRange[1]-1, dateRange[2].split(" ")[0]);
 
   datePicker: ->
+    today = @today # @today is assign in local variable because of some reason coffescript thinks @today is a object
     if $(@element).length > 0
+      min = @minimumDate ? today : false
+      setFormat = @time ? RAILS_DATE_FORMAT : 'YYYY-MM-DD'
       $(@element).daterangepicker
-        timePicker: YES,
+        time: @time,
         timePickerIncrement: 30,
         singleDatePicker: YES,
-        locale: { format: RAILS_DATE_FORMAT },
-        minDate: @today
+        locale: { format: setFormat },
+        minDate: min
 
 class Campaign
 
@@ -108,7 +113,7 @@ class Campaign
 
 $( document ).on 'ready page:load', ->
   campaign = new Campaign({ pickerPosition: 'right' })
-  campaign.datePicker(new DatePicker( '.daterange' ))
+  campaign.datePicker(new DatePicker( '.daterange', true, { select: true } ))
   window.onload = ->
     $('.emojionearea-editor').counter({ type: 'char', append: false, target: '#textBoxCounter' })
 
@@ -178,7 +183,7 @@ $( document ).on 'ready page:load', ->
 
   $( '#oneTimeFrequency, #deliverNow' ).click ->
     if !$("#deliverNow").is(":checked")
-      campaign.datePicker(new DatePicker( '.daterange' ))
+      campaign.datePicker(new DatePicker( '.daterange', { time: true } ))
     campaign.hideShowScheduler()
 
   getBase64FromImageUrl = (url) ->

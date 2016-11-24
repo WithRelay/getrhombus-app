@@ -18,16 +18,56 @@ module AdditionalUserActions
   end
 
   def create_managed_acct
-    params[:user][:org_type] = 'Business' if params[:user][:org_type] == 'Company' && current_user.org_type == 'Individual'
-    current_user.update(user_params)
-    render json: {}
+    stripe_managed = StripeManagedAccountService.new(current_user, full_user_params)
+    create_account = stripe_managed.create_account
+    if create_account.is_a? Stripe::Account
+      external_account = stripe_managed.create_external_account(create_account)
+      message = set_message(create_account)
+      current_user.update(params_from_stripe(create_account, external_account))
+    end
+    message = set_message(create_account)
+    render html: message
+  end
+
+  def update_managed_acct
+    stripe_managed_account = StripeManagedAccountService.new(current_user, full_user_params)
+    update_user_account = stripe_managed_account.update_account
+    if update_user_account.is_a? Stripe::Account
+      update_bank_account = stripe_managed_account.update_external_accounts(update_user_account)
+      current_user.update(params_from_stripe(update_user_account, update_bank_account))
+    end
+    message = set_message(update_user_account)
+    render html: message
+  end
+
+  def params_from_stripe(account, bank_account)
+    account_keys = account.keys
+    account_verification = account.verification
+    params_with_stripe = full_user_params
+    params_with_stripe[:stripe_creds_attributes]['0'].merge!({ account_id: account.id,
+                                                               secret: account_keys.secret,
+                                                               publishable_key: account_keys.publishable,
+                                                               disabled_reason: account_verification.disabled_reason,
+                                                               due_by: account_verification.due_by,
+                                                               fields_needed: account_verification.fields_needed
+                                                             })
+    params_with_stripe[:bank_accounts_attributes]['0'].merge!({ stripe_bank_account_id: bank_account.id,
+                                                                bank_name: bank_account.bank_name,
+                                                                status: bank_account.status,
+                                                                fingerprint: bank_account.fingerprint })
+    params_with_stripe
+  end
+
+  def set_message(obj)
+    link_to_account = "<a href='https://dashboard.stripe.com/test/applications/users/"
+    obj.methods.include?(:message) ? obj.message : (link_to_account + obj.id + "'>Stripe Connected Succesfull Click for dashboard page</a>").html_safe
   end
 
   # Returns JSON object with user hash who sent a message to the given merchant in the last CONFIG[:dashboard]['messaging']['num_days_history'] days
   def json_get_latest_active_messaging
-    render :json => Hash['success' => true, 'users' => User.get_latest_active_messaging(params[:id], CONFIG[:dashboard]['messaging']['num_days_history'])].to_json 
+    render :json => Hash['success' => true, 'users' => User.get_latest_active_messaging(params[:id], CONFIG[:dashboard]['messaging']['num_days_history'])].to_json
   end
-  
+
   # Returns JSON object with the last x messages a user has sent to the given merchant
   def json_get_user_messages_by_merchant
     if params[:limit]
@@ -35,15 +75,15 @@ module AdditionalUserActions
     else
       limit = CONFIG[:dashboard]['messaging']['num_messages_per_user_default']
     end
-    render :json => Hash['success' => true, 'messages' => Message.get_user_messages_by_merchant(params[:user_number], params[:id], limit)].to_json 
+    render :json => Hash['success' => true, 'messages' => Message.get_user_messages_by_merchant(params[:user_number], params[:id], limit)].to_json
   end
-  
+
   # Marks all user messages sent to a merchant as read
   def mark_user_messages_for_merchant_as_read
     Message.mark_user_messages_for_merchant_as_read(params[:user_number], params[:id])
-    render :json => Hash['success' => true].to_json 
+    render :json => Hash['success' => true].to_json
   end
-  
+
   # Sends a message to user on behalf of merchant
   def send_message_from_merchant
     if !params[:message].blank?
@@ -78,8 +118,8 @@ module AdditionalUserActions
   def build_user_link
     # if it includes a captured payment, also check if msg_id is present, tag_id is optional
     # referrer_num is the merchant the payment is going to
-    link = session[:captured_amt].present? ? "/profile?amt=#{session[:captured_amt]}&referrer_id=#{session[:referrer_id]}" + 
-                                          "&msg_id=#{session[:msg_id]}&tag_id=#{session[:tag_id]}" : "/profile" 
+    link = session[:captured_amt].present? ? "/profile?amt=#{session[:captured_amt]}&referrer_id=#{session[:referrer_id]}" +
+                                          "&msg_id=#{session[:msg_id]}&tag_id=#{session[:tag_id]}" : "/profile"
     delete_captured_payment_session
     link
   end
@@ -105,7 +145,7 @@ module AdditionalUserActions
     response = current_user.get_customer_csv_template
     if response
       respond_to do |format|
-        format.csv { send_data response, filename: "customer_template.csv" } 
+        format.csv { send_data response, filename: "customer_template.csv" }
       end
     else
       # use 500 page after it is built
