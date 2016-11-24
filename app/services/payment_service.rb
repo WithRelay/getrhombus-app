@@ -129,7 +129,7 @@ class PaymentService
           sbtn.delete(at_period_end: true) # cancel at period end
         else
           sbtn = Stripe::Subscription.retrieve(subscription_id, {stripe_account: stripe_account_uid})
-          sbtn.delete #cancel subscription immediately
+          sbtn.delete(at_period_end: true) #cancel subscription immediately
         end
         [true, res]
       rescue Stripe::StripeError => e
