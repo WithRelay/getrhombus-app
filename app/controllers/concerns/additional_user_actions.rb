@@ -18,20 +18,49 @@ module AdditionalUserActions
   end
 
   def create_managed_acct
-    user_stripe_managed = StripeManagedAccountService.new(current_user, full_user_params)
-    create_account = user_stripe_managed.create_account
+    stripe_managed = StripeManagedAccountService.new(current_user, full_user_params)
+    create_account = stripe_managed.create_account
     if create_account.is_a? Stripe::Account
-      external_account = user_stripe_managed.create_external_account(create_account)
-      message = set_message(external_account)
-      current_user.update(full_user_params)
-    else
+      external_account = stripe_managed.create_external_account(create_account)
       message = set_message(create_account)
+      current_user.update(params_from_stripe(create_account, external_account))
     end
+    message = set_message(create_account)
     render html: message
   end
 
+  def update_managed_acct
+    stripe_managed_account = StripeManagedAccountService.new(current_user, full_user_params)
+    update_user_account = stripe_managed_account.update_account
+    if update_user_account.is_a? Stripe::Account
+      update_bank_account = stripe_managed_account.update_external_accounts(update_user_account)
+      current_user.update(params_from_stripe(update_user_account, update_bank_account))
+    end
+    message = set_message(update_user_account)
+    render html: message
+  end
+
+  def params_from_stripe(account, bank_account)
+    account_keys = account.keys
+    account_verification = account.verification
+    params_with_stripe = full_user_params
+    params_with_stripe[:stripe_creds_attributes]['0'].merge!({ account_id: account.id,
+                                                               secret: account_keys.secret,
+                                                               publishable_key: account_keys.publishable,
+                                                               disabled_reason: account_verification.disabled_reason,
+                                                               due_by: account_verification.due_by,
+                                                               fields_needed: account_verification.fields_needed
+                                                             })
+    params_with_stripe[:bank_accounts_attributes]['0'].merge!({ stripe_bank_account_id: bank_account.id,
+                                                                bank_name: bank_account.bank_name,
+                                                                status: bank_account.status,
+                                                                fingerprint: bank_account.fingerprint })
+    params_with_stripe
+  end
+
   def set_message(obj)
-    obj.methods.include?(:message) ? obj.message : obj.html_safe
+    link_to_account = "<a href='https://dashboard.stripe.com/test/applications/users/"
+    obj.methods.include?(:message) ? obj.message : (link_to_account + obj.id + "'>Stripe Connected Succesfull Click for dashboard page</a>").html_safe
   end
 
   # Returns JSON object with user hash who sent a message to the given merchant in the last CONFIG[:dashboard]['messaging']['num_days_history'] days

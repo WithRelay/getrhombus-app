@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161121141028) do
+ActiveRecord::Schema.define(version: 20161124051157) do
 
   create_table "addresses", force: :cascade do |t|
     t.string   "street_address",   limit: 191
@@ -302,6 +302,7 @@ ActiveRecord::Schema.define(version: 20161121141028) do
     t.datetime "updated_at",             null: false
     t.integer  "user_id",    limit: 4
     t.string   "name",       limit: 191
+    t.string   "segment",    limit: 191
   end
 
   add_index "lists", ["user_id"], name: "index_lists_on_user_id", using: :btree
@@ -473,6 +474,7 @@ ActiveRecord::Schema.define(version: 20161121141028) do
     t.string   "fields_needed",     limit: 191
     t.datetime "created_at",                    null: false
     t.datetime "updated_at",                    null: false
+    t.string   "account_id",        limit: 191
   end
 
   add_index "stripe_creds", ["uid"], name: "index_stripe_creds_on_uid", using: :btree

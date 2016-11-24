@@ -127,12 +127,6 @@
 
   <br><br>
   <%= f.fields_for :stripe_creds do |c| %>
-    <div>
-      <%= c.hidden_field :uid_type, value: 'managed' %>
-      <%= c.hidden_field :ip %>
-      <%= c.hidden_field :user_agent, id: 'userAgent' %>
-    </div>
-
     <% if c.object.persisted? %>
       <%= c.check_box :charges_enabled, disabled: true %>
       <%= c.check_box :transfers_enabled, disabled: true %>
