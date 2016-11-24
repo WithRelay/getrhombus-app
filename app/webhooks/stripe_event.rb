@@ -29,31 +29,33 @@ class StripeEvent
     # So we can notify merchant of time left to active subscription
     def subscription_trial_will_end
       # if @data = Subscription.includes(:notification_log).includes(:team)
-      if @data = Subscription.includes(:notification_log).where(stripe_subscription_id: @hash[:id]).first
-                             # .where("stripe_subscription_id = ? and notify_type = ?", @hash[:id], 'subscription_trial_will_end').first
+      if @data = Subscription.includes(:notification_logs)
+                        .where(stripe_subscription_id: @hash[:id]).first
+                        # .where("stripe_subscription_id = ? and notify_type = ?", @hash[:id], 'subscription_trial_will_end').first
         
         # set_time_zone(@data.merchant_customer.merchant.time_zone)
         update_subscription_data
-        if @data.notification_log
+        if @data
           # find merchant and admin
           # Email merchant of time left(merchant)
           # Notify us too (admin) 
-          @data.notification_log << NotificationLog.create(notify_type: 'subscription_trial_will_end', channel: 'email', reason: 'Subscription trial is about to end.')
+          @data.notification_logs << NotificationLog.create(notify_type: 'subscription_trial_will_end', channel: 'email', reason: 'Subscription trial is about to end.')
         end
       end
     end
 
     # Add if deleted and merchant canceled account, return twilio number
     def customer_subscription_deleted
-      if @data = Subscription.includes(:notification_log).where(stripe_subscription_id: @hash[:id]).first
-                                   # .where("stripe_subscription_id = ? and notify_type = ?", @hash[:id], 'subscription_deleted').first  
+      if @data = Subscription.includes(:notification_logs)
+                      .where(stripe_subscription_id: @hash[:id]).first
+                      # .where("stripe_subscription_id = ? and notify_type = ?", @hash[:id], 'subscription_deleted').first  
         # set_time_zone(@data.merchant_customer.merchant.time_zone)
         update_subscription_data
-        if @data.cancel_at_period_end && @data.notification_log
+        if @data
           # find merchant or user and admin
           # Email about cancellation
           # Notify us too (admin)
-          @data.notification_log << NotificationLog.create(notify_type: 'subscription_deleted', channel: 'email', reason: 'Subscription has been deleted.')
+          @data.notification_logs << NotificationLog.create(notify_type: 'subscription_deleted', channel: 'email', reason: 'Subscription has been deleted.')
         end
       end
     end
@@ -93,8 +95,8 @@ class StripeEvent
 
     def update_invoice_data
       # plan_id, user_id, team_id, coupon_id, subscription_id do not need to be set since they are immutable
-      
-      @data.stripe_invoice_id = @hash[:stripe_invoice_id]
+      @data.date = @hash[:date]
+      @data.stripe_invoice_id = @hash[:id]
 
       @data.total = @hash[:total]
       @data.subtotal = @hash[:subtotal]
@@ -122,17 +124,17 @@ class StripeEvent
     end
 
     def invoice_created
-
       # invoice should not already exist but just in case stripe sends this multiple times
       @data = Invoice.where(stripe_invoice_id: @hash[:id]).first_or_initialize
 
       # Ensure all these exists else it isnt ours. They should.
-      if user = User.find_by(customer_uri: @hash[:customer])
+      merchant_customer = MerchantCustomer.find_by(stripe_customer_id:  @hash[:customer])
+      if user = merchant_customer.customer
         @data.user_id = user.id
 
-        if subscription = Subscription.includes(:team).where(stripe_subscription_id: @hash[:lines][:data][0][:id]).first
-          @data.team_id = subscription.team_id
-          set_time_zone(subscription.team.time_zone)
+        if subscription = Subscription.where(stripe_subscription_id: @hash[:lines][:data][0][:id]).first
+          @data.team_id = subscription.merchant_customer.merchant_id
+          # set_time_zone(subscription.team.time_zone)  
         end
 
         if @hash[:discount].present? && coupon = Coupon.find_by(stripe_coupon_id: @hash[:discount][:coupon][:id])
@@ -147,29 +149,35 @@ class StripeEvent
 
     # Handles connect and platform payments. Parameters are basically the same. So nothing special.
     def invoice_payment_succeeded
-
       # Invoice should already exist but if it doesn't, create a new one
       @data = Invoice.where(stripe_invoice_id: @hash[:id]).first_or_initialize
-      
+
       # update_invoice_data
       update_invoice_data
 
       # retrieve charge details
-      charge = Stripe::Charge.retrieve(@hash[:charge])  
-
+      charge = Stripe::Charge.retrieve(@hash[:charge]) if @hash[:charge]
       # a transaction should not already exist but we need to check if it does so we don't send out emails again
       # A tranasaction has only one log unlike subscriptions
-      txn = Transaction.includes(:notification_log).where(txn_uri: charge.id).first_or_initialize 
+      txn = Transaction.includes(:notification_log).where(txn_uri: charge.id).first_or_initialize if charge
 
       # if we havent notified customer before
-      if txn.notification_log
+      # if txn.notification_log
+      if txn
         # for now, we have only one line for each invoice - the subscription
         @hash[:lines][:data].each do |l|
-          if l[:type] == 'subscription'
-            
+          if l[:type] == 'subscription'         
             # find subscription
-            sbtn = Subscription.includes(:plan).includes(:team).where(stripe_subscription_id: l[:id]).first          
-            set_time_zone(sbtn.user.time_zone)  
+            sbtn = Subscription.includes(:plan).where(stripe_subscription_id: l[:id]).first
+            # update coupon and subscription
+            if sbtn
+              @data.update(subscription_id: sbtn.id, coupon_id: sbtn.coupon_id)
+              hashtag_id = sbtn.plan.hashtag_id
+              sbtn_id = sbtn.id
+            end
+
+            # set_time_zone(sbtn.merchant_customer.customer.time_zone)
+            # or set_time_zone(sbtn.merchant_customer.merchant.time_zone)
             
             # just in case transaction actually exists but not log
             amount_less_fees = txn.amount_less_fees ? txn.amount_less_fees : 'calculate here'
@@ -180,51 +188,54 @@ class StripeEvent
             # team@ should handle all transactions going forward
             # dashboard@ is only admin controls
 
-            txn.save( amount: l[:amount], currency: l[:currency], description: description,
-                      rhombus_fee: l[:application_fee], user_id: sbtn.user_id, team_id: sbtn.team_id, 
-                      hashtag_id: sbtn.plan.hashtag_id, txn_available_at: @hash[:date], 
-                      # At the moment, charge will only contain 1 line item, what if there are a couple line items?
-                      txn_uri: @hash[:charge], tax_percent: @hash[:tax_percent], amount_less_fees: amount_less_fees, 
-                      amount_with_taxes: amount_with_taxes, txn_number: txn_number, 
-                      status: 1, last4: charge.source.last4, 
-                      exp_month: charge.source.exp_month, exp_year: charge.source.exp_year,
-                      card_type: charge.source.brand, card_name: charge.source.name,
-                      destination: charge.destination, captured: charge.captured )
+            txn.update( amount: l[:amount], currency: l[:currency], description: description,
+              application_fee: l[:application_fee], 
+              # since user_id and team_id are removed from subscription
+              # user_id: sbtn.user_id, team_id: sbtn.team_id, 
+              hashtag_id: hashtag_id, txn_available_at: @hash[:date], 
+              # At the moment, charge will only contain 1 line item, what if there are a couple line items?
+              txn_uri: @hash[:charge], tax_percent: @hash[:tax_percent], amount_less_fees: amount_less_fees, 
+              amount_with_taxes: amount_with_taxes, txn_number: txn_number, 
+              status: 1, last4: charge.source.last4, 
+              exp_month: charge.source.exp_month, exp_year: charge.source.exp_year,
+              card_type: charge.source.brand, card_name: charge.source.name,
+              subscription_id: sbtn_id, destination: charge.destination, captured: charge.captured
+            )
+
+            # set transaction_id
+            @data.update_attribute(:transaction_id, txn.id)
+
+            # Notify customer and/or merchant
+            # Notify (admin)      
+            txn.notification_log = NotificationLog.create(notify_type: 'new_transaction', reason: 'receipt', channel: 'email')
           end
         end
-
-        # set transaction_id
-        @data.update_attribute(:transaction_id, txn.id)        
-      
-        # Notify customer and/or merchant
-        # Notify (admin)      
-        txn.notification_log = NotificationLog.create(notify_type: 'new_transaction', reason: 'receipt', channel: 'email')
       end
     end
 
     def set_time_zone(zone)
       Time.use_zone(zone)
-      # Time.use_zone(zone) { yield }
     end
 
     def invoice_payment_failed
       # find invoice and update
-      if false #@data = Invoice.find_by(stripe_invoice_id: @hash[:id])
+      if @data = Invoice.find_by(stripe_invoice_id: @hash[:id]).first_or_initialize
         update_invoice_data
+
         # find customer and admin
         # Notify them (admin) (customer)
       end
     end
 
     # This really shouldn't occur since we currently don't allow invoices to be updated
-    def invoice_updated
-      # find invoice and update
-      if false #@data = Invoice.find_by(stripe_invoice_id: @hash[:id])
-        update_invoice_data
-        # find admin
-        # Notify (admin)
-      end
-    end
+    # def invoice_updated
+    #   # find invoice and update
+    #   if false #@data = Invoice.find_by(stripe_invoice_id: @hash[:id])
+    #     update_invoice_data
+    #     # find admin
+    #     # Notify (admin)
+    #   end
+    # end
 
     # We supply pretty much all data except for additional_owners and document
     # So that could be returned here in verification[:fields_needed]

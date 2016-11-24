@@ -65,12 +65,8 @@ class SubscriptionsController < ApplicationController
         status: res.second.status,
         cancel_at_period_end: res.second.cancel_at_period_end
       )
-      if @subscription.cancel_at_period_end
-        flash[:notice] = 'Your subscription has been canceled at period end.'
-      else
-        flash[:notice] = 'Your subscription has been canceled.'
-      end
-      redirect_to user_subscriptions_path         #respond_with(@subscription)
+      flash[:notice] = 'Your subscription has been canceled at period end.'
+      redirect_to user_subscriptions_path
     else
       flash[:error] = 'We could\'t cancel your subscription'
     end
