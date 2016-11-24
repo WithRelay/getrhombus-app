@@ -1,8 +1,12 @@
 Bhishma
 - Dont move forms into stripe js
+- are the form methods clearly named
+- fb_messages... page_id, from, to, fb_page_id?
 
 Surya
 - move campaign/email service into classes
+- what happens to jobs if I change servers?
+- what's account_id for in stripecreds
 
 
 - merchant on add user - add customer to platform
@@ -17,7 +21,6 @@ Surya
 Review
 - campaign_user_list (can better track failures) or notification_log or add an email model??
 - notification_log used for transaction, referrer and alert notifications logging
-- fb_messages... page_id, from, to, fb_page_id?
 - remove first_name and last_name assignment in angular code
 - when user logs in through messenger, indicate in referrers
 - change all emails in test db dump
