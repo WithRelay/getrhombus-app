@@ -33,6 +33,17 @@
       </div>
     </div>
 
+    <!-- only platform user can enter trial days -->
+    <% if current_user.is_platform? %>
+        <div class="form-group">
+          <%= f.label :trial_period_days, class: 'col-xs-3 control-label' %>
+          <div class="col-xs-5 dynamic-count">
+            <%= f.text_field :trial_period_days, id: 'trial-days', class: 'form-control' %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
     <div class="actions field form-group">
       <div class="col-xs-9 col-xs-offset-3">
         <%= f.submit 'Create Plan', class: 'btn btn-primary' %>

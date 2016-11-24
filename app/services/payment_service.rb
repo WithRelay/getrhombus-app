@@ -4,15 +4,15 @@ class PaymentService
 
     # Create or update customer on Stripe
     def add_token_to_stripe_customer(current_user, params)
-      merchant = current_user.merchant.last
-      if params[:card_token].present?  # is this why i get the errors from stripe??
+      merchant_customer = (current_user.user_level == 0) ? current_user.customer.last : current_user.merchant.last
+      if params[:card_token].present?
         begin
-          if merchant.stripe_customer_id.blank?   # Doesnt have a customer uri => first time
+          if merchant_customer.stripe_customer_id.blank?   # Doesnt have a customer uri => first time
             cu = Stripe::Customer.create(email: current_user.email, source: params[:card_token])
-            merchant.update(stripe_customer_id: cu.id)
+            merchant_customer.update(stripe_customer_id: cu.id)
             current_user.livemode = cu.livemode
           else
-            cu = Stripe::Customer.retrieve(merchant.stripe_customer_id)
+            cu = Stripe::Customer.retrieve(merchant_customer.stripe_customer_id)
             cu.email = current_user.email
             cu.source = params[:card_token]
             cu.save
@@ -103,33 +103,13 @@ class PaymentService
     # must check that customer has a card on file first
     def create_subscription(hash, stripe_account_uid, platform=false)
       # using only customer_uri only since we support only 1 card and this
-      # way if a customer changes the card on file we don't need to change the subscription source   
-      
+      # way if a customer changes the card on file we don't need to change the subscription source
       begin
         if platform
-
-          #### this code will go away....user will already be added to platform with card when 
-          # they sign up with card
-
-          # token create using card for testing
-          tkn = Stripe::Token.create(
-            :card => {
-              :number => "<redacted_phone_number>",
-              :exp_month => 11,
-              :exp_year => 2017,
-              :cvc => "314"
-            }
-          )
-          customer = Stripe::Customer.create({ email: hash[:customer][:email], source: tkn.id } )
-
-          #### this code will go away....user will already be added to platform with card when 
-          # they sign up with card          
-
-          hash[:customer] = customer.id
           re = Stripe::Subscription.create(hash)
         else
-          tkn = Stripe::Token.create({ customer: hash[:customer][:customer_uri] }, { stripe_account: stripe_account_uid })
-          customer = Stripe::Customer.create({ email: hash[:customer][:email], source: tkn.id }, { stripe_account: stripe_account_uid })
+          tkn = Stripe::Token.create({ customer: hash[:customer] }, { stripe_account: stripe_account_uid })
+          customer = Stripe::Customer.create({ source: tkn.id }, { stripe_account: stripe_account_uid })
           hash[:customer] = customer.id
           re = Stripe::Subscription.create(hash, { stripe_account: stripe_account_uid })
         end
@@ -146,7 +126,7 @@ class PaymentService
       begin
         res = if platform
           sbtn = Stripe::Subscription.retrieve(subscription_id)
-          sbtn.delete(at_period_end: true)# cancel at period end
+          sbtn.delete(at_period_end: true) # cancel at period end
         else
           sbtn = Stripe::Subscription.retrieve(subscription_id, {stripe_account: stripe_account_uid})
           sbtn.delete #cancel subscription immediately

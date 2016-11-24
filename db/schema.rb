@@ -476,7 +476,7 @@ ActiveRecord::Schema.define(version: 20161121141028) do
     t.boolean  "livemode",          limit: 1
     t.string   "refresh_token",     limit: 191
     t.integer  "user_id",           limit: 4
-    t.string   "uid_type",          limit: 191
+    t.integer  "uid_type",          limit: 4
     t.string   "ip",                limit: 191
     t.integer  "tos_date",          limit: 4
     t.string   "user_agent",        limit: 191

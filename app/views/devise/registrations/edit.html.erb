@@ -1,26 +1,21 @@
+<%#<button type="button" id="populate" class="btn btn-default pull-right" style="margin-bottom: 20px;">Populate Test Data</button>%>
 
-   
+<% if current_user.user_level == 0 %>
 
-  <%#<button type="button" id="populate" class="btn btn-default pull-right" style="margin-bottom: 20px;">Populate Test Data</button>%>
-  
-  <% if current_user.user_level == 0 %>
-  
-     <% if current_user.customer_uri.blank? %>
-        <%= render "user_information" %>        
-    <% else %>
-        <%= render "user_profile" %>              
-    <% end %>
-
-  <% elsif current_user.user_level == 1 %>
-        
-        <% if current_user.org_name.blank? %>
-              <%= render "merchant_information" %>       
-		    <% elsif current_user.rhombus_number.blank? %>
-              <%= render "merchant_number" %>			
-        <% else %>       
-              <%= render "merchant_profile" %>
-        <% end %>
+   <% if current_user.card_token.blank? %>
+      <%= render "user_information" %>
+  <% else %>
+      <%= render "user_profile" %>
   <% end %>
 
-
-
+<% elsif current_user.user_level == 1 %>
+    <% if current_user.org_name.blank? %>
+        <%= render "merchant_information" %>
+    <% elsif current_user.rhombus_number.blank? %>
+        <%= render "merchant_number" %>
+      <% elsif current_user.card_token.blank? %>
+        <%= render "merchant_card_info" %>
+      <% else %>
+         <%= render "merchant_profile" %>
+      <% end %>
+<% end %>

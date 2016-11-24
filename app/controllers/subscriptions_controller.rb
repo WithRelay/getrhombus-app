@@ -6,9 +6,9 @@ class SubscriptionsController < ApplicationController
   # seems to be pulling for everyone
   def index
     #str = current_user.user_level == 1 ? "user_id = " : "team_id = " + current_user.id
+    #@subscriptions = Subscription.where("where " + str)
     merchant_customer = current_user.merchant.pluck(:id)
     @subscriptions = Subscription.where(merchant_customer_id: merchant_customer)
-    #@subscriptions = Subscription.where("where " + str)
     respond_with(@subscriptions)
   end
 
@@ -25,13 +25,6 @@ class SubscriptionsController < ApplicationController
   end
 
   def create
-
-    dummy_customer = [
-      {id: 23, customer_uri: 'cus_9ZBBnoG8jv2ABe', email: '<redacted_email>'},
-      {id: 63, customer_uri: 'cus_6D3r30LunmvQXk', email: '<redacted_email>'},
-      {id: 60, customer_uri: 'cus_9Z9nHEqdsRbbpZ', email: '<redacted_email>'}
-    ]
-
     res = false
     subscription_params[:merchant_customer_id].each do |cid|
       subscription_params[:plan_id].each do |pid|
@@ -39,16 +32,11 @@ class SubscriptionsController < ApplicationController
         subscription_param = subscription_params
         subscription_param[:merchant_customer_id] = cid
         subscription_param[:plan_id] = pid
-         @subscription = Subscription.new(subscription_param)
-         # customer = User.find_by id: self.user_id
-         #for testing
-         customer = {}
-         dummy_customer.each do |h|
-          customer = h if h[:id] == @subscription.merchant_customer_id
-        end
+        merchant_customer = MerchantCustomer.find cid
 
-        if customer && @subscription.create_subscription({ team: current_user, customer: customer })  #@subscription.save
-          res = true 
+        @subscription = merchant_customer.subscriptions.new(subscription_param)
+        if merchant_customer && @subscription.create_subscription({ team: current_user, customer: merchant_customer.stripe_customer_id })  #@subscription.save
+          res = true
         else
          res = false
          break
