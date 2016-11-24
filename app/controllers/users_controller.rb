@@ -82,7 +82,7 @@ private
     nested_user_params = user_params
     nested_user_params[:stripe_creds_attributes]["0"].merge!(ip: request.remote_ip,
                                                              user_agent: request.user_agent,
-                                                             uid_type: 0)
+                                                             uid_type: 0, tos_date: Time.current)
     nested_user_params
   end
 
