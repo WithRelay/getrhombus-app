@@ -7,8 +7,9 @@ class RegistrationsController < Devise::RegistrationsController
     # create merchant_customer
     if current_user.user_level == 1
       # create merchant_customer one time for merchant with merchant id
-      current_user.merchant.create()
+      current_user.customer.create()
     else
+      # create new customer on signup and update customer when card details update
       current_user.customer.create() if current_user.customer.blank?
     end
 
