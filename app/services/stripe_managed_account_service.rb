@@ -11,22 +11,34 @@ class StripeManagedAccountService < Struct.new( :user, :params )
 
   # creates stripe managed and individual account
   def create_account
-    # managed_account is a string hold same as function name which is dynamic
-    managed_account = "#{string_method_name}_#{params_org_type}_account"
     # create managed individual and company account self.send method accepts parameter and calls function
-    account = Stripe::Account.create(send(managed_account))
+    account = Stripe::Account.create(send(string_method_name))
   rescue => e; e # returns error object to retrieve error message is e.message. handle stripe create account error
   end
 
-  # creates external account after creation of account. account paramete is send from module additiona_user_Action
+  # creates external account after creation of account. account parameter is send from module additiona_user_Action
   def create_external_account(account)
-    # external_accounts is a string which hold same name as function declare above
-    external_accounts = "#{string_method_name}_external_accounts"
     # calls dynamic function name with send method and creates external accounts
-    account.external_accounts.create(send(external_accounts))
-     # this is temporary link for debugging purpose
-    "<a href='https://dashboard.stripe.com/test/applications/users/"+ account.id + "'>Stripe Connected Succesfull Click for dashboard page</a>"
+    bank_account = account.external_accounts.create(send(external_string_method_name))
+    bank_account
   rescue => e; e # error object contains message attribute
+  end
+
+  def update_account
+    binding.pry
+    # NOTE while updating account attributes falls in legal_entity cannot be updated
+    account = Stripe::Account.retrieve(user.stripe_creds[0].account_id)
+    account.update_attributes(send("update_#{params_org_type}_managed_account"))
+    account.save
+  rescue => e; e
+  end
+
+  def update_external_accounts(account)
+    bank_account = account.external_accounts.retrieve(user.bank_accounts[0].stripe_bank_account_id)
+    bank_account.update_attributes(send(external_string_method_name))
+    bank_account.save
+    bank_account
+  rescue => e; e
   end
 
   # private functions
@@ -53,6 +65,10 @@ class StripeManagedAccountService < Struct.new( :user, :params )
   # org_type comes in upcase as a params but stripe need in downcase
   def params_org_type; params[:org_type].downcase; end
 
+  def is_common_country_present?; COMMON_COUNTRIES.include?(address[:country]); end
+
+  def is_bank_code_country_present?; BANK_CODE_COUNTRIES.include?(address[:country]); end
+
   # returns common company account hash for countries in constant common_countries
   def common_company_account
     company_account = managed_company_account
@@ -63,11 +79,18 @@ class StripeManagedAccountService < Struct.new( :user, :params )
 
   # return string method name
   def string_method_name
-    return 'common' if COMMON_COUNTRIES.include?(address[:country])
-    return 'country_with_bank_code' if BANK_CODE_COUNTRIES.include?(address[:country])
+    # returns a string hold same as function name which is dynamic
+    return "common_#{params_org_type}_account" if is_common_country_present?
+    return "country_with_bank_code_#{params_org_type}_account" if is_bank_code_country_present?
   end
 
-  def country_with_bank_code_external_accounts;
+  def external_string_method_name
+    # external_accounts is a string which hold same name as function declare above
+    return "common_external_accounts" if is_common_country_present?
+    return "country_with_bank_code_external_accounts" if is_bank_code_country_present?
+  end
+
+  def country_with_bank_code_external_accounts
     bank_code_countries = basic_external_accounts
     bank_code_countries[:external_account].merge( { bank_code: bank_account[:institution_number]  } )
     bank_code_countries
@@ -101,15 +124,28 @@ class StripeManagedAccountService < Struct.new( :user, :params )
     }
   end
 
+  def update_individual_managed_account
+    update_list = update_company_managed_account
+    update_list.except!(:business_name)
+    update_list
+  end
+
+  def update_company_managed_account
+    update_company = managed_company_account
+    update_company.except!(:managed, :country, :product_description)
+    update_company
+  end
   # required hash is prepared as mention in the sripe documentation.Please follow below link.
   # https://stripe.com/docs/api#account_object
   # TODO function is too lengthy feel free to make small without changing its behaviour. We do not have test
   def managed_company_account
     dob = people[:dob].split('/')
-    { managed: true, country: address[:country], email: user.email, business_url: params[:url],
-      business_name: params[:org_name], product_description: params[:description],
-      tos_acceptance: { ip: stripe_cred[:ip], date: Time.current.to_i, user_agent: stripe_cred[:user_agent] },
+    { email: user.email, business_url: params[:url],
+      business_name: params[:org_name], managed: true, country: address[:country],
+      product_description: params[:description],
+      tos_acceptance: { ip: stripe_cred[:ip], date: stripe_cred[:tos_date].to_i, user_agent: stripe_cred[:user_agent] },
       legal_entity: { type: params_org_type, first_name: user.first_name, last_name: user.last_name,
+                      gender: 'male', phone_number: user.phone_number,
                       business_tax_id: params[:org_tax_id], personal_id_number: people[:last4],
                       personal_address: { city: people_address[:city],
                                           country: people_address[:country],
@@ -120,7 +156,10 @@ class StripeManagedAccountService < Struct.new( :user, :params )
                       dob: { day: dob[1], month: dob[0], year: dob[2] }, business_name: params[:org_name],
                       address: { state: address[:state_province], postal_code: address[:postal_code],
                                  city: address[:city], line1: address[:street_address]
-                               }
+                               },
+                      address_kana: {}, address_kanji: {}, personal_address_kana: {}, personal_address_kanji: {},
+                      verification: {}, ssn_last_4_provided: {}, business_tax_id_provided: {},
+                      business_vat_id_provided: {}, personal_id_number_provided: {}
                     }
     }
   end
