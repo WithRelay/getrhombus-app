@@ -28,7 +28,7 @@ class Subscription < ActiveRecord::Base
 
       res = PaymentService.create_subscription(hash, uid, is_platform)
       
-      if res.first        
+      if res.first
         self.update(
           stripe_subscription_id: res.second.id,
           status: res.second.status,
