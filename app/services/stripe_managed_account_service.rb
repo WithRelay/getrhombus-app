@@ -9,6 +9,8 @@ class StripeManagedAccountService < Struct.new( :user, :params )
   # US has routing number AU and GB has also routing number internally named as account number
   ROUTING_COUNTRIES = %W(US AU GB).freeze; BANK_CODE_COUNTRIES = %W(SG CA HK).freeze
 
+  Stripe.api_version = '<redacted_phone_number>'
+
   # creates stripe managed and individual account
   def create_account
     # create managed individual and company account self.send method accepts parameter and calls function
@@ -32,6 +34,8 @@ class StripeManagedAccountService < Struct.new( :user, :params )
   rescue => e; e
   end
 
+  # bank_accounts metadata are only editable other bank_details are not editable by design
+  # https://stripe.com/docs/api#account_update_bank_account
   def update_external_accounts(account)
     bank_account = account.external_accounts.retrieve(user.bank_accounts[0].stripe_bank_account_id)
     bank_account.update_attributes(send(external_string_method_name))
@@ -125,7 +129,7 @@ class StripeManagedAccountService < Struct.new( :user, :params )
 
   def update_individual_managed_account
     update_list = update_company_managed_account
-    update_list.except!(:business_name)
+    update_list.except!(:business_name, :legal_entity)
     update_list
   end
 
@@ -144,7 +148,7 @@ class StripeManagedAccountService < Struct.new( :user, :params )
       product_description: params[:description],
       tos_acceptance: { ip: stripe_cred[:ip], date: stripe_cred[:tos_date].to_i, user_agent: stripe_cred[:user_agent] },
       legal_entity: { type: params_org_type, first_name: user.first_name, last_name: user.last_name,
-                      gender: 'male', phone_number: user.phone_number,
+                      gender: 'female', phone_number: user.phone_number, business_name: params[:org_name],
                       business_tax_id: params[:org_tax_id], personal_id_number: people[:last4],
                       personal_address: { city: people_address[:city],
                                           country: people_address[:country],
@@ -152,7 +156,7 @@ class StripeManagedAccountService < Struct.new( :user, :params )
                                           state: people_address[:state_province],
                                           line1: people_address[:street_address]
                                         },
-                      dob: { day: dob[1], month: dob[0], year: dob[2] }, business_name: params[:org_name],
+                      dob: { day: dob[1], month: dob[0], year: dob[2] },
                       address: { state: address[:state_province], postal_code: address[:postal_code],
                                  city: address[:city], line1: address[:street_address]
                                },
