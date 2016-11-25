@@ -1,8 +1,9 @@
 class Api::V1::MerchantCustomersController < API::V1::BaseController
   def customer_data
-    merchant_customers =  MerchantCustomer.joins(:merchant)
+    merchant_customers =  MerchantCustomer.joins(:customer)
                             .select("merchant_customers.id, email, merchant_customers.stripe_customer_id")
-                            .where.not(users: { card_token: nil, email: current_user.email })
+                            .where('exp_year  > ? || exp_year = ? && exp_month > ?',Time.now.year , Time.now.year, Time.now.month)
+                            .where.not(users: { email: current_user.email })
 
     customers = get_data(merchant_customers)
     begin
