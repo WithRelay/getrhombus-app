@@ -17,10 +17,8 @@ class Subscription < ActiveRecord::Base
       hash[:application_fee_percent] = Rails.application.secrets.application_fee_percent unless is_platform
       
       coupon = Coupon.find_by(id: self.coupon_id) if self.coupon_id.present?
-      
-      # check coupon validity - only use coupons for subscription if coupon is not_expired/valid      
-      hash[:coupon] = coupon.stripe_coupon_id if coupon && PaymentService.is_valid_coupon(coupon.stripe_coupon_id)   
-      
+
+      hash[:coupon] = coupon.stripe_coupon_id
       hash[:plan] = self.plan_id
       hash[:quantity] = self.quantity
       hash[:tax_percent] = hash[:team].tax_percent      

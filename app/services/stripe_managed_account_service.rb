@@ -25,7 +25,6 @@ class StripeManagedAccountService < Struct.new( :user, :params )
   end
 
   def update_account
-    binding.pry
     # NOTE while updating account attributes falls in legal_entity cannot be updated
     account = Stripe::Account.retrieve(user.stripe_creds[0].account_id)
     account.update_attributes(send("update_#{params_org_type}_managed_account"))

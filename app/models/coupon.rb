@@ -62,4 +62,9 @@ class Coupon < ActiveRecord::Base
     end
   end
 
+  # check coupon validity - only use coupons for subscription if coupon is not_expired/valid
+  def is_valid?
+    PaymentService.is_valid_coupon(self.stripe_coupon_id)
+  end
+
 end
