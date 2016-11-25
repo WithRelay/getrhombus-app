@@ -179,7 +179,7 @@ class User < ActiveRecord::Base
         hash = { email: self.email, card_token: card_token, is_new_customer: true, is_platform_customer: true, is_merchant: is_merchant? }
         
         # when blank, add only to platform. Blank indicates signing up
-        if customer.blank? 
+        if cu.blank? 
           re = PaymentService.add_token_to_stripe_customer(hash)
           #buy_merchant_number if hash[:is_merchant] && rn_type == nil
         else
@@ -203,15 +203,16 @@ class User < ActiveRecord::Base
         end
 
         if re.first
-          if customer.blank?
+          if cu.blank?
             MerchantCustomer.create(merchant_id: platform_acct.id, customer_id: self.id, stripe_customer_id: re[1].id, livemode: re[1].livemode)
           end
+          true
         else
-
+          PaymentService.delete_customer if cu.blank?
+          false
         end
       end
-
-      true      
+ 
     rescue StandardError => e
       
       # PaymentService.delete_customer() if res.length > 0

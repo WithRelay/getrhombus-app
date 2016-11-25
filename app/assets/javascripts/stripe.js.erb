@@ -3,7 +3,7 @@ $(document).ready(function () {
   Stripe.setPublishableKey('<%= Rails.application.secrets.stripe["publishable_key"] %>');
   $('input#cc-number').payment('formatCardNumber');
   $('input#cc-exp').payment('formatCardExpiry');
-  // $('input#cc-csc').payment('formatCardCVC');
+  //$('input#cc-csc').payment('formatCardCVC');
 
   // validate all credit card form
   $('#cc-submit').click(function(){
@@ -11,7 +11,21 @@ $(document).ready(function () {
     var selector = $(this).parents('form:first').attr('id');
     validateCreditCardForm('#' + selector);
   });
+
+  // Simply populates credit card and bank account fields with test data
+  /*
+    $('#populate').click(function () {
+      $(this).attr("disabled", true);
+
+      $('#cc-name').val('John Doe');
+      $('#cc-number').val('<redacted_phone_number>');
+      $('#cc-ex-month').val('12');
+      $('#cc-ex-year').val('2020');
+      $('#ex-csc').val('123');
+    });
+  */
 });
+
 // tokenize card details
 function submit_to_stripe() {
   Stripe.card.createToken({
@@ -25,14 +39,147 @@ function submit_to_stripe() {
 
 function stripeResponseHandler(status, response) {
   if (response.error) {
-    setFlashMessage(response.error.message, 'error');
+    try {
+      setFlashMessage(response.error.message, 'error');
     cc_submit_btn.attr("disabled", false).val(cc_btn_text);
+    }
+    catch(err) {
+     //   document.getElementById("demo").innerHTML = err.message;
+     console.log('das')
+    }
+    
   } else {
     $('#cc-number').val(response['card']['last4']);
     $('#cc-ex-month').val(response['card']['exp_month']);
     $('#cc-ex-year').val(response['card']['exp_year']);
     $('#cc-uri').val(response.id);
     $('#cc-type').val(response['card']['brand']);
-    form_submission_handler();
+    form_to_submit_after_stripe_response();
   }
+}
+
+function validateCreditCardForm(form_selector) {
+  // validate credit card form
+  $(form_selector)
+    .formValidation({
+        // I am validating Bootstrap form
+        framework: 'bootstrap',
+        live: 'disabled',
+
+        // List of fields and their validation rules
+        fields: {
+            'cc-name': {
+                selector: '#cc-name',
+                row: '.group',
+                validators: {
+                    notEmpty: {
+                        message: 'Your card name is required'
+                    }
+                }
+            },
+            'cc-number': {
+                selector: '#cc-number',
+                row: '.group',
+                validators: {
+                    callback: {
+                        callback: function (value, validator, $field) {
+                            /*if ($.payment.validateCardNumber(value)) {
+                                return {
+                                    valid: true,    // or false
+                                    message: 'Valid number'
+                                }
+                            } else {
+                                return {
+                                    valid: false,    // or false
+                                    message: 'Enter a valid number'
+                                }
+                            }*/
+                            return {
+                              valid:true
+                            }
+                        }
+                    }
+                }
+            },
+            'cc-exp': {
+                selector: '#cc-exp',
+                row: '#exp-div',
+                validators: {
+                    callback: {
+                        callback: function (value, validator, $field) {
+                            var y = get_expiry_date_data();
+                            cc_month = y.month;
+                            cc_year = y.year;
+                            if ($.payment.validateCardExpiry(cc_month, cc_year)) {
+                                return {
+                                    valid: true,    // or false
+                                    message: 'Valid date'
+                                }
+                            } else {
+                                return {
+                                    valid: false,    // or false
+                                    message: 'Enter a valid date'
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            'cc-csc': {
+                selector: '#cc-csc',
+                row: '#csc-div',
+                validators: {
+                    callback: {
+                        callback: function (value, validator, $field) {
+                            /*if ($.payment.validateCardCVC(value)) {
+                                return {
+                                    valid: true,    // or false
+                                    message: 'Valid csc'
+                                }
+                            } else {
+                                return {
+                                    valid: false,    // or false
+                                    message: 'Enter a valid csc'
+                                }
+                            }*/
+                            return {
+                                    valid: true,    // or false
+                                    message: 'Valid csc'
+                                }
+                        }
+                    }
+                }
+            }
+        }
+    })
+    .on('err.field.fv', function(e, data) {
+        // $(e.target)  --> The field element
+        // data.fv      --> The FormValidation instance
+        // data.field   --> The field name
+        // data.element --> The field element
+
+        // Hide the messages
+        data.element
+            .data('fv.messages')
+            .find('.help-block[data-fv-for="' + data.field + '"]').hide();
+    })
+    .on('success.form.fv', function(e, data) {
+        $(form_selector).bind("submit", preventDefault);
+        // So the button can be reset on fail
+        cc_btn_text = $('#cc-submit').val();
+        cc_submit_btn = $('#cc-submit').attr("disabled", true).val("Please wait...");
+        form_to_submit_after_stripe_response = submit_cc_form
+        submit_to_stripe();
+    })
+    ///
+}
+
+function preventDefault(e) { e.preventDefault(); }
+
+function get_expiry_date_data() { return $('input#cc-exp').payment('cardExpiryVal'); }
+
+function submit_cc_form() {
+  // credit card form id
+  var form_id = $('#cc-submit').parents('form:first').attr('id');
+  $("#" + form_id).unbind("submit", preventDefault).submit();
 }

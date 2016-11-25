@@ -29,23 +29,20 @@ class Subscription < ActiveRecord::Base
       res = PaymentService.create_subscription(hash, uid, is_platform)
       
       if res.first        
-        # update merchant_customer table after subscription to maintain merchant-customer relationship
-        # self.merchant_customer.update(merchant_id: team.id)        
-        data_saved? = self.update(
-            stripe_subscription_id: res.second.id,
-            status: res.second.status,
-            stripe_livemode: res.second.livemode,
-            trial_end: res.second.trial_end,
-            trial_start: res.second.trial_start,
-            current_period_start: res.second.current_period_start,
-            current_period_end: res.second.current_period_end,
-            canceled_at: res.second.canceled_at,
-            cancel_at_period_end: res.second.cancel_at_period_end,
-            ended_at: res.second.ended_at
-          )
+        self.update(
+          stripe_subscription_id: res.second.id,
+          status: res.second.status,
+          stripe_livemode: res.second.livemode,
+          trial_end: res.second.trial_end,
+          trial_start: res.second.trial_start,
+          current_period_start: res.second.current_period_start,
+          current_period_end: res.second.current_period_end,
+          canceled_at: res.second.canceled_at,
+          cancel_at_period_end: res.second.cancel_at_period_end,
+          ended_at: res.second.ended_at
+        )
       else
-        # what if the update fails but subscription is already created??
-        #notify team via email
+        # notify team via email
         # should this be for only standard error caught?
         self.cancel_subscription(team, false)
       end
