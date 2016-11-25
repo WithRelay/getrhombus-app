@@ -1,11 +1,9 @@
 current stripe api version - 2014-03-28
 
 Bhishma
-- Dont move forms into stripe js
 - are the form methods clearly named
 - fb_messages... page_id, from, to, fb_page_id?
-- form validation for cc needs improvement
-
+- form validation for cc needs improvement - show validation error in field?
 
 Surya
 - move campaign/email service into classes
@@ -17,7 +15,7 @@ Surya
 - customers can create subscriptions over messaging...not dashboard, but can cancel subscription
 
 
-Thursday
+Friday
 - Review events
 - Rewrite refunds
 - final review of updating subscriptions, coupons, plans...do we update subscriptions esp platform??
@@ -25,6 +23,8 @@ Thursday
 - where will customer create plan? on whose account?
 - review user controller
 - Messages
+- Rake - migrate customer uri to merchant_customer plus drop column...but after migrating merchant_customer
+	- remove livemode from users, add to merchant_customer and create rake task to migrate this to merchant..customer
 
 
 Review
@@ -33,8 +33,7 @@ Review
 - remove first_name and last_name assignment in angular code
 - when user logs in through messenger, indicate in referrers
 - change all emails in test db dump
-- Rake - migrate customer uri to merchant_customer plus drop column...but after migrating merchant_customer
-	- remove livemode from users and create rake task to migrate this to merchant..customer
+
 - unify team and dashboard email issue really
 
 

@@ -6,7 +6,7 @@ $(document).ready(function () {
   var url = window.location,
       global_page_params = PageParameter.get_params(),
 
-      cc_year, cc_month, cc_submit_btn, cc_btn_text, form_to_submit_after_stripe_response,
+      cc_submit_btn, cc_btn_text,
       create_user_submit = $('#create-user-submit'), create_user_form = $('#create-user-form'),
 
       REFUND_TXN_LINK, REFUND_BOX = $('#refundFormBox'),
@@ -1175,15 +1175,9 @@ $(document).ready(function () {
     // no validations for address or lists
     // if all pass, submit_contact_form
 
-    var y = get_expiry_date_data();
-    cc_month = y.month;
-    cc_year = y.year;
-    // So the button can be reset on fail
-    cc_btn_text = create_user_submit.val();
-    cc_submit_btn = create_user_submit.attr("disabled", true).val("Please wait...");
+    var y = CardHandler.get_expiry_date_data();
     set_number();
-    form_to_submit_after_stripe_response = submit_create_user_form;
-    submit_to_stripe();
+    CardHandler.submit_to_stripe(submit_create_user_form, create_user_submit)
 
     // added accept nested attributes for lists
     // hashes of hashes or array of hashes for lists

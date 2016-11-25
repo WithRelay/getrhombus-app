@@ -17,6 +17,7 @@
 //= require flashes
 //= require pagination
 //= require stripe
+//= require credit_card_form
 //= require plan
 //= require coupon
 //= require subscription
