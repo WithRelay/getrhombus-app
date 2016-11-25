@@ -122,8 +122,8 @@ Rails.application.routes.draw  do
     match 'lists/create' => 'lists#create', via: :post
     match 'coupons/check_coupon_name' => 'coupons#check_coupon_name', via: :post
     match 'plans/check_plan_name' => 'plans#check_plan_name', via: :post
-    match 'subscriptions/get_coupon' => 'subscriptions#get_coupon', via: :get
-    match 'subscriptions/get_plan' => 'subscriptions#get_plan', via: :get
+    match 'coupons/get_coupon' => 'coupons#get_coupon', via: :get
+    match 'plans/get_plan' => 'plans#get_plan', via: :get
     match 'merchant_customers/customer_data' => 'merchant_customers#customer_data', via: :get
   end
 
