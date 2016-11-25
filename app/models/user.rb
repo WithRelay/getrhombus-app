@@ -10,16 +10,15 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable, :omniauthable
 
   has_many :transactions
-  has_many :team_transactions, class_name: 'Transaction', foreign_key: 'team_id'
+  has_many :merchant_transactions, class_name: 'Transaction', foreign_key: 'team_id'
 
   has_many :subscriptions
-  has_many :team_subscriptions, class_name: 'Subscription', foreign_key: 'team_id'
 
-  has_many :referrers, class_name: 'Referrer', foreign_key: 'referrer_id'
-  has_many :referees, class_name: 'Referrer', foreign_key: 'referee_id'
+  has_many :referrers, class_name: 'Referrer', foreign_key: 'referee_id'
+  has_many :referees, class_name: 'Referrer', foreign_key: 'referrer_id'
 
-  has_many :merchant, class_name: 'MerchantCustomer', foreign_key: 'merchant_id'
-  has_many :customer, class_name: 'MerchantCustomer', foreign_key: 'customer_id'
+  has_many :merchants, class_name: 'MerchantCustomer', foreign_key: 'customer_id'
+  has_many :customers, class_name: 'MerchantCustomer', foreign_key: 'merchant_id'
 
   # this block is for customizing build method for user.campaign which allow also to save list
   has_many :campaigns do
@@ -46,7 +45,7 @@ class User < ActiveRecord::Base
   has_many :hashtags
 
   has_many :messages
-  has_many :team_conversations, class_name: 'Conversation', foreign_key: 'merchant_id'
+  has_many :merchant_conversations, class_name: 'Conversation', foreign_key: 'merchant_id'
 
   has_many :plans
   has_many :coupons
@@ -103,12 +102,28 @@ class User < ActiveRecord::Base
     user_level == 1
   end
 
+  def self.platform_email
+    Rails.application.secrets.dashboard_email
+  end
+
+  def self.get_platform_acct_obj
+    # you can change this temporarily to <redacted_email> or <redacted_email>
+    # User.find_by(email: User.platform_email) 
+    User.find_by(email: "<redacted_email>") || User.find_by(email: "<redacted_email>")
+  end
+
   def is_platform?
+    #email == User.platform_email
     email == '<redacted_email>' || email == '<redacted_email>'
   end
 
   def can_send_mms?
     ['US', 'CA'].include? self.country
+  end
+
+  def get_team_uid
+    t = is_platform? ? self.stripe_creds.first : self.stripe_creds.where(uid_type: 0).first
+    t.uid if t
   end
 
   def buy_merchant_number
@@ -146,7 +161,63 @@ class User < ActiveRecord::Base
   end
 
   def phone
-    self.user_level == 0 ? self.phone_number : self.org_phone
+    user_level == 0 ? phone_number : org_phone
+  end
+
+  def add_token_to_user(card_token)
+    begin
+      # platform acct shouldn't really be doing this since it is just a management account
+      if !is_platform?
+        res = []
+        platform_acct = User.get_platform_acct_obj 
+
+        # Two scenarios
+        # 1. a merchant user who is a customer of platform
+        # 2. a customer user who is a customer of the platform and/or merchant(s)
+        # Note that a customer user becomes a customer of merchant when a subscription is created
+        cu = MerchantCustomer.where(customer_id: self.id)
+        hash = { email: self.email, card_token: card_token, is_new_customer: true, is_platform_customer: true, is_merchant: is_merchant? }
+        
+        # when blank, add only to platform. Blank indicates signing up
+        if customer.blank? 
+          re = PaymentService.add_token_to_stripe_customer(hash)
+          #buy_merchant_number if hash[:is_merchant] && rn_type == nil
+        else
+          hash[:is_new_customer] = false
+          if hash[:is_merchant]
+            hash[:stripe_customer_id] = cu.first.stripe_customer_id
+            # is merchant, so update on platform
+            re = PaymentService.add_token_to_stripe_customer(hash)
+          else                      
+            cu.each do |c|
+              hash[:stripe_customer_id] = cu.stripe_customer_id
+              # can be on platform or merchant (stripe managed) account
+              hash[:is_platform_customer] = c.merchant_id == platform_acct.id
+              if hash[:is_platform_customer]
+                re = PaymentService.add_token_to_stripe_customer(hash)
+              else
+                re = PaymentService.add_token_to_stripe_customer(hash, get_team_uid)
+              end
+            end
+          end      
+        end
+
+        if re.first
+          if customer.blank?
+            MerchantCustomer.create(merchant_id: platform_acct.id, customer_id: self.id, stripe_customer_id: re[1].id, livemode: re[1].livemode)
+          end
+        else
+
+        end
+      end
+
+      true      
+    rescue StandardError => e
+      
+      # PaymentService.delete_customer() if res.length > 0
+      # notify team
+      false
+    end
   end
 
   private

@@ -17,6 +17,7 @@ class Subscription < ActiveRecord::Base
       hash[:application_fee_percent] = Rails.application.secrets.application_fee_percent unless is_platform
       
       coupon = Coupon.find_by(id: self.coupon_id) if self.coupon_id.present?
+      
       # check coupon validity - only use coupons for subscription if coupon is not_expired/valid      
       hash[:coupon] = coupon.stripe_coupon_id if coupon && PaymentService.is_valid_coupon(coupon.stripe_coupon_id)   
       
@@ -27,40 +28,49 @@ class Subscription < ActiveRecord::Base
 
       res = PaymentService.create_subscription(hash, uid, is_platform)
       
-      if res.first
+      if res.first        
         # update merchant_customer table after subscription to maintain merchant-customer relationship
-        self.merchant_customer.update(merchant_id: team.id)
-        self.update(
-          stripe_subscription_id: res.second.id,
-          status: res.second.status,
-          stripe_livemode: res.second.livemode,
-          trial_end: res.second.trial_end,
-          trial_start: res.second.trial_start,
-          current_period_start: res.second.current_period_start,
-          current_period_end: res.second.current_period_end,
-          canceled_at: res.second.canceled_at,
-          cancel_at_period_end: res.second.cancel_at_period_end,
-          ended_at: res.second.ended_at
-        )
-
+        # self.merchant_customer.update(merchant_id: team.id)        
+        data_saved? = self.update(
+            stripe_subscription_id: res.second.id,
+            status: res.second.status,
+            stripe_livemode: res.second.livemode,
+            trial_end: res.second.trial_end,
+            trial_start: res.second.trial_start,
+            current_period_start: res.second.current_period_start,
+            current_period_end: res.second.current_period_end,
+            canceled_at: res.second.canceled_at,
+            cancel_at_period_end: res.second.cancel_at_period_end,
+            ended_at: res.second.ended_at
+          )
       else
+        # what if the update fails but subscription is already created??
         #notify team via email
+        # should this be for only standard error caught?
+        self.cancel_subscription(team, false)
       end
 
       res.first
     rescue StandardError => e
-      # if StandardError happened after Stripe was called, delete plan on Stripe
-      self.cancel_subscription(team) if res.length > 0
+      # if StandardError happened after Stripe was called, delete subscription on Stripe
+      self.cancel_subscription(team, false) if res.length > 0
       # notify team via email
+      false
     end
   end
 
-  def cancel_subscription(team)
+  def cancel_subscription(team, at_period_end = true)
     begin
-      PaymentService.cancel_subscription(self.stripe_subscription_id, team.uid, team.is_platform?)
+      res = PaymentService.cancel_subscription(self.stripe_subscription_id, team.uid, team.is_platform?, at_period_end)
+      if res.first && self.update(status: res.second.status, cancel_at_period_end: res.second.cancel_at_period_end)
+        true
+      else
+        # notify team via email
+        false
+      end
     rescue StandardError => e
       # notify team via email
-      [false, e]
+      false
     end
   end
 

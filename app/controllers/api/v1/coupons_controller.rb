@@ -7,6 +7,5 @@ class Api::V1::CouponsController < API::V1::BaseController
     else
       render json: { valid: false }.to_json
     end
-    # need to still render json response if res isn't empty
   end
 end

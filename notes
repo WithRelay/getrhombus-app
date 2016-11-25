@@ -1,7 +1,16 @@
+current stripe api version - 2014-03-28
+
 Bhishma
 - Dont move forms into stripe js
 - are the form methods clearly named
 - fb_messages... page_id, from, to, fb_page_id?
+- for subscriptions...can we have card errors? even if card is still valid... 
+- pls change to many plans - 1 customer...keep controller neat...do the loop in model...
+- get_coupon and get_plan should be in the respective api controllers...move from subscriptions
+- remove coupon validity check in create subscription...add to get_coupon instead i think
+- this line isnt required in subsc.rb         self.merchant_customer.update(merchant_id: team.id)
+- what happens when you delete a plan that doesnt exists - self.delete_plan(team)...say we get code error in plan create or a plan that has already been deleted...say stripe delete succeeds but we get a code error
+- see notes in subscriptions.rb
 
 Surya
 - move campaign/email service into classes
@@ -15,8 +24,21 @@ Surya
 - on card update...update for merchant customer
 
 
+Thursday
+- Review subscriptions - done...just notes for Bhishma
+- Review events
+- Rewrite refunds
+- final review of updating subscriptions, coupons, plans...do we update subscriptions esp platform??
+- review merchant card form and stripe card form submission
+- review registrationscontroller - done 
+- where will customer create plan? on whose account?
+- review subscription index - done
+- review subscription api
+- review add token - done - just notes for Bhishma
 
-2014-03-28 api version
+Friday
+- Messages
+
 
 Review
 - campaign_user_list (can better track failures) or notification_log or add an email model??
@@ -24,7 +46,9 @@ Review
 - remove first_name and last_name assignment in angular code
 - when user logs in through messenger, indicate in referrers
 - change all emails in test db dump
-- Rake - migrate customer uri to merchant_customer
+- Rake - migrate customer uri to merchant_customer plus drop column...but after migrating merchant_customer
+	- remove livemode from users and create rake task to migrate this to merchant..customer
+- unify team and dashboard email issue really
 
 
 - what happens when u send image in countries that don't support it. link?

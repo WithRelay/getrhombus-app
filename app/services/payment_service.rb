@@ -3,35 +3,60 @@ class PaymentService
   class << self
 
     # Create or update customer on Stripe
-    def add_token_to_stripe_customer(current_user, params)
-      merchant_customer = (current_user.user_level == 0) ? current_user.customer.last : current_user.merchant.last
-      if params[:card_token].present?
-        begin
-          if merchant_customer.stripe_customer_id.blank?   # Doesnt have a customer uri => first time
-            cu = Stripe::Customer.create(email: current_user.email, source: params[:card_token])
-            merchant_customer.update(stripe_customer_id: cu.id)
-            current_user.livemode = cu.livemode
+    def add_token_to_stripe_customer(hash, stripe_account_uid = "")
+      begin          
+        if hash[:is_new_customer]
+          cu = Stripe::Customer.create(email: hash[:email], source: hash[:card_token])
+        else 
+          if hash[:is_platform_customer]
+            cu = Stripe::Customer.retrieve(hash[:stripe_customer_id])
           else
-            cu = Stripe::Customer.retrieve(merchant_customer.stripe_customer_id)
-            cu.email = current_user.email
-            cu.source = params[:card_token]
-            cu.save
+            cu = Stripe::Customer.retrieve(hash[:stripe_customer_id], { stripe_account: stripe_account_uid })
           end
-          #buy_merchant_number if self.user_level == 1 && self.rn_type == nil
-        rescue Stripe::CardError => e
-          # Since it's a decline, Stripe::CardError will be caught
-          err  = e.json_body[:error]
-          owner = User.find_by(email: Rails.application.secrets.team_email)
+          
+          cu.email = hash[:email]
+          cu.source = hash[:card_token]
+          cu.save
+        end     
+
+        return [true, cu]
+      rescue Stripe::CardError => e
+        # Since it's a decline, Stripe::CardError will be caught
+        err  = e.json_body[:error]
+        owner = User.find_by(email: Rails.application.secrets.team_email)
+        unless hash[:is_merchant]
           Message.send_and_save_message(owner.rhombus_number, current_user.phone_number, "We were unable to update your card info on Rhombus because: #{err[:message]}.")
-          Notification.token_failure_notification(err, current_user.email).deliver_now
-        rescue Stripe::StripeError => e
-          Notification.token_failure_notification(e.json_body[:error], current_user.email).deliver_now
-        rescue StandardError => e
-          Notification.token_failure_notification(e, current_user.email).deliver_now
         end
-        false
+
+        # redo this email
+        # Notification.token_failure_notification(err, hash[:email]).deliver_now
+        [false, e]
+      rescue Stripe::StripeError => e
+        # send this only to platform
+        # Notification.token_failure_notification(e.json_body[:error], ....).deliver_now
+        [false, e]
+      rescue StandardError => e
+        # send this only to platform
+        #Notification.token_failure_notification(e, .....).deliver_now
+        [false, e]
       end
-      true
+    end
+
+    def delete_customer(customer_id, stripe_account_uid, is_platform)
+      begin
+        if is_platform
+          cu = Stripe::Customer.retrieve(customer_id)
+        else
+          cu = Stripe::Customer.retrieve(customer_id, { stripe_account: stripe_account_uid })
+        end
+
+        cu.delete        
+        [true]
+      rescue Stripe::StripeError => e
+        [false, e]
+      rescue StandardError => e
+        [false, e]
+      end
     end
     
     # return array with txn status, error object, notify customer/merchant
@@ -122,14 +147,14 @@ class PaymentService
       end
     end
 
-    def cancel_subscription(subscription_id,stripe_account_uid, platform)
+    def cancel_subscription(subscription_id, stripe_account_uid, platform, at_period_end)
       begin
         res = if platform
           sbtn = Stripe::Subscription.retrieve(subscription_id)
-          sbtn.delete(at_period_end: true) # cancel at period end
+          sbtn.delete(at_period_end: at_period_end) # cancel at period end
         else
-          sbtn = Stripe::Subscription.retrieve(subscription_id, {stripe_account: stripe_account_uid})
-          sbtn.delete(at_period_end: true) #cancel subscription immediately
+          sbtn = Stripe::Subscription.retrieve(subscription_id, { stripe_account: stripe_account_uid })
+          sbtn.delete(at_period_end: at_period_end)
         end
         [true, res]
       rescue Stripe::StripeError => e
@@ -228,6 +253,7 @@ class PaymentService
       end
     end
 
+    ## remove this method
     def create_managed_account(hash)
       begin
         re = Stripe::Account.create({ country: hash[:country], managed: true } )
@@ -237,10 +263,8 @@ class PaymentService
       rescue StandardError => e
         [false, e]
       end
-
     end
-
-    
+  
     # Some countries require that the routing num and institition num be concatenated with a specific character
     # that's in index postion 1
     def stripe_country_list
@@ -259,17 +283,6 @@ class PaymentService
 end
 
 =begin
-  def create_customer(hash)
-    cu = Stripe::Customer.create(email: hash[:email], source: hash[:card_token]) 
-  end
-
-  def update_customer(hash)
-    cu = Stripe::Customer.retrieve(hash[:uri])  
-    cu.email = hash[:email]
-    cu.source = params[:card_token]
-    cu.save   
-  end
-
   # This applies to saas fee only
   # so only coupon changes should call this for now
   # Stripe prorate charges by default

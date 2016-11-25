@@ -3,12 +3,10 @@ class SubscriptionsController < ApplicationController
 
   respond_to :html
 
-  # seems to be pulling for everyone
   def index
-    #str = current_user.user_level == 1 ? "user_id = " : "team_id = " + current_user.id
-    #@subscriptions = Subscription.where("where " + str)
-    merchant_customer = current_user.merchant.pluck(:id)
-    @subscriptions = Subscription.where(merchant_customer_id: merchant_customer)
+    # This is for merchants only for now
+    merchant_customers = current_user.customers.pluck(:id)
+    @subscriptions = Subscription.where(merchant_customer_id: merchant_customers)
     respond_with(@subscriptions)
   end
 
@@ -59,16 +57,11 @@ class SubscriptionsController < ApplicationController
   # end
 
   def destroy
-    res = @subscription.cancel_subscription(current_user)
-    if (res.first)
-      @subscription.update(
-        status: res.second.status,
-        cancel_at_period_end: res.second.cancel_at_period_end
-      )
-      flash[:notice] = 'Your subscription has been canceled at period end.'
+    if @subscription.cancel_subscription(current_user)
+      flash[:notice] = 'Your subscription will been canceled at period end.'
       redirect_to user_subscriptions_path
     else
-      flash[:error] = 'We could\'t cancel your subscription'
+      flash[:error] = 'We couldn\'t cancel your subscription'
     end
   end
 

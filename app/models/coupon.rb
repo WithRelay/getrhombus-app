@@ -36,11 +36,13 @@ class Coupon < ActiveRecord::Base
       hash.delete(:team)
 
       res = PaymentService.create_coupon(hash)
-      if res.first
-        self.update(stripe_livemode: res.second.livemode, stripe_coupon_id: res.second.id)
+      if res.first && self.update(stripe_livemode: res.second.livemode, stripe_coupon_id: res.second.id)
+        true
       else
-        false
         #notify team via email
+        # if StandardError happens in create_coupon after Stripe was called or update fails above
+        self.delete_coupon
+        false        
       end
 
     rescue StandardError => e
