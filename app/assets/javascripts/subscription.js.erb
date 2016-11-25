@@ -11,7 +11,7 @@ $(document).ready(function () {
      load: function(query, callback) {
         if (!query.length) return callback();
         $.ajax({
-            url: '/v1/subscriptions/get_coupon',
+            url: '/v1/coupons/get_coupon',
             type: 'GET',
             dataType: 'json',
             data: {
@@ -65,7 +65,7 @@ $(document).ready(function () {
      load: function(query, callback) {
         if (!query.length) return callback();
         $.ajax({
-            url: '/v1/subscriptions/get_plan',
+            url: '/v1/plans/get_plan',
             type: 'GET',
             dataType: 'json',
             data: {
