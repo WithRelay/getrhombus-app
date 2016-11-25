@@ -1,29 +1,16 @@
 class StripeEvent
-    
-  class << self
 
+  class << self
     # Methods sending emails out to merchant/customers must be idempotent except for invoice failed
 
     def process_event(hash)
-
       @hash = hash[:data][:object]
-      # puts JSON.pretty_generate(hash)
-      case hash[:type]
-      when "customer.subscription.trial_will_end"
-        subscription_trial_will_end
-      when "customer.subscription.deleted"
-        customer_subscription_deleted
-      #when "customer.subscription.updated"
-        #customer_subscription_updated
-      when "invoice.payment_failed"
-        invoice_payment_failed
-      when "invoice.payment_succeeded"
-        invoice_payment_succeeded
-      when "invoice.created"
-        invoice_created
-      when "invoice.updated"
-        invoice_updated
-      end
+      # Though these things depends upon number of things but what i found is hashlookup is faster it has o(1) whereas switch statement has o(n)
+      # please follow the below link. http://stackoverflow.com/questions/4178240/which-is-faster-in-ruby-a-hash-lookup-or-a-function-with-a-case-statement
+      # send works like message passing to clas hierarchy until method reacts
+      # it accepts a parameter that need to be pass in symbol or string which calls method.
+      # if we pass string it will internally converts to symbol.
+      self.send(string_method_name[hash[:type]])
     end
 
     # So we can notify merchant of time left to active subscription
@@ -32,13 +19,12 @@ class StripeEvent
       if @data = Subscription.includes(:notification_logs)
                         .where(stripe_subscription_id: @hash[:id]).first
                         # .where("stripe_subscription_id = ? and notify_type = ?", @hash[:id], 'subscription_trial_will_end').first
-        
         # set_time_zone(@data.merchant_customer.merchant.time_zone)
         update_subscription_data
         if @data
           # find merchant and admin
           # Email merchant of time left(merchant)
-          # Notify us too (admin) 
+          # Notify us too (admin)
           @data.notification_logs << NotificationLog.create(notify_type: 'subscription_trial_will_end', channel: 'email', reason: 'Subscription trial is about to end.')
         end
       end
@@ -48,7 +34,8 @@ class StripeEvent
     def customer_subscription_deleted
       if @data = Subscription.includes(:notification_logs)
                       .where(stripe_subscription_id: @hash[:id]).first
-                      # .where("stripe_subscription_id = ? and notify_type = ?", @hash[:id], 'subscription_deleted').first  
+                      # .where("stripe_subscription_id = ? and notify_type = ?", @hash[:id], 'subscription_deleted').first
+
         # set_time_zone(@data.merchant_customer.merchant.time_zone)
         update_subscription_data
         if @data
@@ -111,7 +98,7 @@ class StripeEvent
       @data.period_start = @hash[:period_start]
       @data.period_end = @hash[:period_end]
       @data.statement_descriptor = @hash[:statement_descriptor]
-      
+
       @data.paid = @hash[:paid]
       @data.closed = @hash[:closed]
       @data.attempted = @hash[:attempted]
@@ -134,7 +121,7 @@ class StripeEvent
 
         if subscription = Subscription.where(stripe_subscription_id: @hash[:lines][:data][0][:id]).first
           @data.team_id = subscription.merchant_customer.merchant_id
-          # set_time_zone(subscription.team.time_zone)  
+          # set_time_zone(subscription.team.time_zone)
         end
 
         if @hash[:discount].present? && coupon = Coupon.find_by(stripe_coupon_id: @hash[:discount][:coupon][:id])
@@ -166,7 +153,7 @@ class StripeEvent
       if txn
         # for now, we have only one line for each invoice - the subscription
         @hash[:lines][:data].each do |l|
-          if l[:type] == 'subscription'         
+          if l[:type] == 'subscription'
             # find subscription
             sbtn = Subscription.includes(:plan).where(stripe_subscription_id: l[:id]).first
             # update coupon and subscription
@@ -178,7 +165,8 @@ class StripeEvent
 
             # set_time_zone(sbtn.merchant_customer.customer.time_zone)
             # or set_time_zone(sbtn.merchant_customer.merchant.time_zone)
-            
+
+
             # just in case transaction actually exists but not log
             amount_less_fees = txn.amount_less_fees ? txn.amount_less_fees : 'calculate here'
             amount_with_taxes = txn.amount_with_taxes ? txn.amount_with_taxes : 'calculate here'
@@ -189,14 +177,14 @@ class StripeEvent
             # dashboard@ is only admin controls
 
             txn.update( amount: l[:amount], currency: l[:currency], description: description,
-              application_fee: l[:application_fee], 
+              application_fee: l[:application_fee],
               # since user_id and team_id are removed from subscription
-              # user_id: sbtn.user_id, team_id: sbtn.team_id, 
-              hashtag_id: hashtag_id, txn_available_at: @hash[:date], 
+              # user_id: sbtn.user_id, team_id: sbtn.team_id,
+              hashtag_id: hashtag_id, txn_available_at: @hash[:date],
               # At the moment, charge will only contain 1 line item, what if there are a couple line items?
-              txn_uri: @hash[:charge], tax_percent: @hash[:tax_percent], amount_less_fees: amount_less_fees, 
-              amount_with_taxes: amount_with_taxes, txn_number: txn_number, 
-              status: 1, last4: charge.source.last4, 
+              txn_uri: @hash[:charge], tax_percent: @hash[:tax_percent], amount_less_fees: amount_less_fees,
+              amount_with_taxes: amount_with_taxes, txn_number: txn_number,
+              status: 1, last4: charge.source.last4,
               exp_month: charge.source.exp_month, exp_year: charge.source.exp_year,
               card_type: charge.source.brand, card_name: charge.source.name,
               subscription_id: sbtn_id, destination: charge.destination, captured: charge.captured
@@ -206,10 +194,11 @@ class StripeEvent
             @data.update_attribute(:transaction_id, txn.id)
 
             # Notify customer and/or merchant
-            # Notify (admin)      
+            # Notify (admin)
             txn.notification_log = NotificationLog.create(notify_type: 'new_transaction', reason: 'receipt', channel: 'email')
           end
         end
+
       end
     end
 
@@ -237,11 +226,43 @@ class StripeEvent
     #   end
     # end
 
+    private
+
+    def account_updated
+      # To access module methods as class method like self.messaging
+      extend AdditionalUserActions
+      # update_managed_acct
+    end
+
+    def current_user; User.find_by_email(@hash[:email]); end
+
+    #TODO  things are left to do  on going
+    def full_user_params
+      users_attributes = Hash.new { |hash, key| hash[key] = {} }
+      users_attributes[:user] = { org_name: @hash[:business_name], url: @hash[:business_url],
+                                  address_attributes: { street: '' },
+                                  bank_accounts_attributes: {}
+                                 }
+    end
+
+    def bank_account
+      @hash[:external_accounts][:data][0]
+    end
+
+    def string_method_name
+      { 'customer.subscription.trial_will_end'=> :subscription_trial_will_end,
+        'customer.subscription.deleted'=> :customer_subscription_deleted,
+        'invoice.payment_failed'=> :invoice_payment_failed,
+        'invoice.payment_succeeded'=> :invoice_payment_succeeded,
+        'invoice.created'=> :invoice_created,
+        'invoice.updated'=> :invoice_updated,
+        'account.updated'=> :account_updated
+      }
+    end
     # We supply pretty much all data except for additional_owners and document
     # So that could be returned here in verification[:fields_needed]
     # legal_entity.additional_owners legal_entity.verification.document
     # legal_entity.additional_owners.#.verification.document (where # can be 0, 1, 2, or 3).
     # external_account
-    
   end
 end
