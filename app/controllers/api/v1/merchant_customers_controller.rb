@@ -1,6 +1,9 @@
 class Api::V1::MerchantCustomersController < API::V1::BaseController
   def customer_data
-    merchant_customers =  MerchantCustomer.joins(:merchant).where.not(users: { card_token: nil, email: current_user.email })
+    merchant_customers =  MerchantCustomer.joins(:merchant)
+                            .select("merchant_customers.id, email, merchant_customers.stripe_customer_id")
+                            .where.not(users: { card_token: nil, email: current_user.email })
+
     customers = get_data(merchant_customers)
     begin
       if params[:email]
@@ -17,18 +20,16 @@ class Api::V1::MerchantCustomersController < API::V1::BaseController
     end
   end
 
-  def get_data(customers)
+  def get_data(merchant_customers)
     data_array = []
-    customers.each do |cus|
+    merchant_customers.each do |mc|
       data = {}
-      data[:id] = cus.id
-      data[:stripe_customer_id] = cus.stripe_customer_id
-      data[:email] = (User.find cus.customer_id).email
+      data[:id] = mc.id
+      data[:stripe_customer_id] = mc.stripe_customer_id
+      data[:email] = mc.email
       data_array << data
     end
 
     data_array
   end
 end
-
-MerchantCustomer.joins(:customers).where.not(users: {card_token: nil, email: '<redacted_email>'})

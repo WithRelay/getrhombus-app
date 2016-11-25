@@ -11,6 +11,8 @@ Bhishma
 - this line isnt required in subsc.rb         self.merchant_customer.update(merchant_id: team.id)
 - what happens when you delete a plan that doesnt exists - self.delete_plan(team)...say we get code error in plan create or a plan that has already been deleted...say stripe delete succeeds but we get a code error
 - see notes in subscriptions.rb
+- https://stripe.com/blog/smarter-saved-cards
+- use card expiry dates in subscriptions api
 
 Surya
 - move campaign/email service into classes
@@ -33,7 +35,7 @@ Thursday
 - review registrationscontroller - done 
 - where will customer create plan? on whose account?
 - review subscription index - done
-- review subscription api
+- review subscription api - done
 - review add token - done - just notes for Bhishma
 
 Friday
