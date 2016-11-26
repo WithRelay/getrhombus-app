@@ -16,7 +16,7 @@ var CardHandler = new function() {
     // So the button can be reset on fail
     cc_btn_text = btn.val();    
     cc_submit_btn = btn.attr("disabled", true).val("Please wait...");
-    var y = get_expiry_date_data();
+    var y = this.get_expiry_date_data();
 
     Stripe.card.createToken({
       name: $('#cc-name').val(),

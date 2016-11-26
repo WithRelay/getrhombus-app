@@ -7,10 +7,10 @@ class TransactionsController < ApplicationController
   respond_to :html
 
   def index
-    if current_user.user_level == 0
-      @transactions = current_user.get_customer_transactions.paginate(:page => params[:page], :per_page => 25)
-    else
+    if current_user.is_merchant?
       @transactions = current_user.get_merchant_transactions.paginate(:page => params[:page], :per_page => 25)
+    else
+      @transactions = current_user.get_customer_transactions.paginate(:page => params[:page], :per_page => 25)      
     end   
     respond_with(@transactions)
     #render layout: 'xxx' # remove

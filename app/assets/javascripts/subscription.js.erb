@@ -8,22 +8,22 @@ $(document).ready(function () {
       create: false,
       options: [],
       closeAfterSelect: true,
-     load: function(query, callback) {
+      load: function(query, callback) {
         if (!query.length) return callback();
         $.ajax({
-            url: '/v1/coupons/get_coupon',
-            type: 'GET',
-            dataType: 'json',
-            data: {
-                name: query,
-                page_limit: 10,
-            },
-            error: function() {
-                callback();
-            },
-            success: function(res) {
-                callback(res['coupons']);
-            }
+          url: '/v1/coupons/get_coupon',
+          type: 'GET',
+          dataType: 'json',
+          data: {
+            name: query
+          },
+          error: function() {
+            setFlashMessage('Something went wrong...Unable to find your coupons', 'error');
+            callback();
+          },
+          success: function(res) {
+            callback(res['coupons']);
+          }
         });
       }
     }).selectize();
@@ -62,22 +62,22 @@ $(document).ready(function () {
       create: false,
       options: [],
       closeAfterSelect: true,
-     load: function(query, callback) {
+      load: function(query, callback) {
         if (!query.length) return callback();
         $.ajax({
-            url: '/v1/plans/get_plan',
-            type: 'GET',
-            dataType: 'json',
-            data: {
-                name: query,
-                page_limit: 10,
-            },
-            error: function() {
-                callback();
-            },
-            success: function(res) {
-                callback(res['plans']);
-            }
+          url: '/v1/plans/get_plan',
+          type: 'GET',
+          dataType: 'json',
+          data: {
+            name: query
+          },
+          error: function() {
+            setFlashMessage('Something went wrong...Unable to find your plans', 'error');
+            callback();
+          },
+          success: function(res) {
+            callback(res['plans']);
+          }
         });
       }
     })
@@ -98,22 +98,22 @@ $(document).ready(function () {
       create: false,
       options: [],
       closeAfterSelect: true,
-     load: function(query, callback) {
+      load: function(query, callback) {
         if (!query.length) return callback();
         $.ajax({
-            url: '/v1/merchant_customers/customer_data',
-            type: 'GET',
-            dataType: 'json',
-            data: {
-                name: query,
-                page_limit: 10,
-            },
-            error: function() {
-                callback();
-            },
-            success: function(res) {
-                callback(res['customers']);
-            }
+          url: '/v1/merchant/customers',
+          type: 'GET',
+          dataType: 'json',
+          data: {
+            query: query
+          },
+          error: function() {
+            setFlashMessage('Something went wrong...Unable to find your customer', 'error');
+            callback();
+          },
+          success: function(res) {
+            callback(res['customers']);
+          }
         });
       }
     })

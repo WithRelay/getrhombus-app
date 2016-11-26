@@ -1,8 +1,8 @@
 // flash success for all types of flash messages
 // the first parameter is message and second parameter is type eg: success
 function setFlashMessage(msg, type){
-  var typeObj = { 'notice': 'success', 'warning': 'info', 'error':'error' }
-  var messageToSet = typeObj[type] || 'Attention'
+  var typeObj = { 'notice': 'success', 'warning': 'info', 'error':'error' };
+  var messageToSet = typeObj[type] || 'Attention';
   new PNotify({
     title: messageToSet + '!!',
     text: arrayToString(msg),
@@ -10,29 +10,17 @@ function setFlashMessage(msg, type){
     hide: true
   });
 }
+
 function arrayToString(value){
-  if ($.isArray(value)){
+  if ($.isArray(value)) {
     messageString = ''
     $.each(value, function(index, value){ messageString += value + "\n"; })
-    return messageString
+    return messageString;
+  } else {
+    return value;
   }
-    else {
-      return value
-    }
 }
-function flashAlert(alertMsg){
-  var notice = new PNotify({
-     title: 'Alert!!',
-     text: arrayToString(infoMsg),
-     buttons: {
-         closer: false,
-         sticker: false
-     }
-   });
-   notice.get().click(function() {
-       notice.remove();
-   });
-}
+
 // Confirmation
 function flashConfirm(selector, title, confirmText, isConfirm){
   (new PNotify({

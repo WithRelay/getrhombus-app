@@ -2,11 +2,7 @@ class Api::V1::CouponsController < API::V1::BaseController
 
   def check_coupon_name
     res = current_user.coupons.where("lower(name) = ?", params[:coupon][:name].downcase)
-    if res.empty?
-      render json: { valid: true }.to_json
-    else
-      render json: { valid: false }.to_json
-    end
+    render json: { valid: res.empty? }
   end
 
   def get_coupon
@@ -23,11 +19,11 @@ class Api::V1::CouponsController < API::V1::BaseController
   end
 
   def valid_coupon(coupons)
-    array_of_coupon = []
+    array_of_coupons = []
     coupons.each do |c|
-      array_of_coupon << c if c.is_valid?
+      array_of_coupons << c if c.is_valid?
     end
-    array_of_coupon
+    array_of_coupons
   end
 
 end
