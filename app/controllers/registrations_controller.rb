@@ -4,15 +4,8 @@ class RegistrationsController < Devise::RegistrationsController
 
   def update
     set_captured_payment_session
-    # create merchant_customer
-    if current_user.user_level == 1
-      # create merchant_customer one time for merchant with merchant id
-      current_user.merchant.create()
-    else
-      current_user.customer.create() if current_user.customer.blank?
-    end
 
-    re = PaymentService.add_token_to_stripe_customer(current_user, account_update_params)
+    re = (params[:card_token].present?) ? current_user.add_token_to_user(params[:card_token]) : true
       
     if re
       if current_user.update_without_password(devise_parameter_sanitizer.sanitize(:account_update))

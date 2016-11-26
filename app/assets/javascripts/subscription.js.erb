@@ -11,7 +11,7 @@ $(document).ready(function () {
      load: function(query, callback) {
         if (!query.length) return callback();
         $.ajax({
-            url: '/v1/subscriptions/get_coupon',
+            url: '/v1/coupons/get_coupon',
             type: 'GET',
             dataType: 'json',
             data: {
@@ -48,7 +48,7 @@ $(document).ready(function () {
         'subscription[merchant_customer_id]':{
            validators: {
               notEmpty: {
-                message: 'Please select one or more Customers'
+                message: 'Please select a Customer'
             }
            }
         }
@@ -65,7 +65,7 @@ $(document).ready(function () {
      load: function(query, callback) {
         if (!query.length) return callback();
         $.ajax({
-            url: '/v1/subscriptions/get_plan',
+            url: '/v1/plans/get_plan',
             type: 'GET',
             dataType: 'json',
             data: {
@@ -90,6 +90,7 @@ $(document).ready(function () {
 
   $('[name = "subscription[merchant_customer_id]"]')
       .selectize({
+      maxItems: 1,
       valueField: 'id',
       labelField: 'email',
       searchField: 'email',

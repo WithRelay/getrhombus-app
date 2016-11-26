@@ -4,8 +4,8 @@ class Plan < ActiveRecord::Base
   belongs_to :user
 
   validates_presence_of :name, :interval, :interval_count, :amount
-  validates :name, uniqueness: { case_sensitive: false, scope: :user_id }
-  validates_numericality_of :amount, :interval_count, greater_than: 0, only_integer: true
+  #validates :name, uniqueness: { case_sensitive: false, scope: :user_id }
+  #validates_numericality_of :amount, :interval_count, greater_than: 0, only_integer: true
 
   def create_plan(hash)
     begin
@@ -13,7 +13,7 @@ class Plan < ActiveRecord::Base
       team = hash[:team]
       is_platform = team.is_platform?
       # uid = '<redacted_stripe_account_id>' #use this for testing
-      uid = get_team_uid(team) #use this for real use
+      uid = team.get_team_uid # use this for real use
       
       descriptor = (self.name + "-" + team.org_name)[0..21]
       
@@ -37,15 +37,17 @@ class Plan < ActiveRecord::Base
       hash[:currency] = self.currency
 
       res = PaymentService.create_plan(hash, uid, is_platform)
-      if res.first
-        self.update(stripe_livemode: res.second.livemode)
+      if res.first && self.update(stripe_livemode: res.second.livemode)
+        true
       else
-        false
+        # if StandardError happens in create_plan after Stripe was called or update fails above
+        self.delete_plan(team)
         #notify team via email
+        false
       end
 
     rescue StandardError => e
-      # if StandardError happened after Stripe was called, delete plan on Stripe
+      # if StandardError happens here after Stripe was called, delete plan on Stripe
       self.delete_plan(team) if res.length > 0
       # notify team via email
       false
@@ -62,7 +64,7 @@ class Plan < ActiveRecord::Base
       # Update so validations run before calling Stripe api
       self.update(name: hash[:name], statement_descriptor: new_descriptor)
       hash[:statement_descriptor] = new_descriptor
-      res = PaymentService.update_plan(self.id, hash, get_team_uid(team), team.is_platform?)
+      res = PaymentService.update_plan(self.id, hash, team.get_team_uid, team.is_platform?)
       
       unless res.first
         # notify team via email        
@@ -77,18 +79,9 @@ class Plan < ActiveRecord::Base
     end
   end
 
-  def get_team_uid(team)
-    if team.is_platform?
-      t = team.stripe_creds.first
-    else
-      t = team.stripe_creds.where(uid_type: 0).first
-    end
-    t.uid if t
-  end
-
   def delete_plan(team)
     begin
-      PaymentService.delete_plan(self.id, get_team_uid(team), team.is_platform?).first
+      PaymentService.delete_plan(self.id, team.get_team_uid, team.is_platform?).first
     rescue StandardError => e
       # notify team via email
       false

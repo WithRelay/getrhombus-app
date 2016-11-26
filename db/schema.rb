@@ -498,6 +498,7 @@ ActiveRecord::Schema.define(version: 20161125200809) do
     t.string   "fields_needed",     limit: 191
     t.datetime "created_at",                    null: false
     t.datetime "updated_at",                    null: false
+    t.string   "account_id",        limit: 191
   end
 
   add_index "stripe_creds", ["uid"], name: "index_stripe_creds_on_uid", using: :btree

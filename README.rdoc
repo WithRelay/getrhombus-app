@@ -32,6 +32,9 @@ Background jobs running:
  - run all queue includes default `QUEUE=* rake resque:work`
  - run rescue scheduler `rake resque:scheduler`
 
+Debugging Tools:
+ - pry gem usage: call binding class pry function
+ - eg: def rhombus; binding.pry; end
 
 Please feel free to use a different markup language if you do not plan to run
 <tt>rake doc:app</tt>.

@@ -18,7 +18,7 @@ task :move_stripe_connect_details_to_stripe_cred => :environment do
 
   User.where("user_level = ? and stripe_access_token is not null", 1).each do |u|
     StripeCred.create(secret: u.stripe_access_token, publishable_key: u.stripe_publishable_key,
-                        uid: u.uid, scope: u.stripe_scope, refresh_token: u.stripe_refresh_token,
+                        account_id: u.uid, scope: u.stripe_scope, refresh_token: u.stripe_refresh_token,
                         user_id: u.id, livemode: u.livemode, uid_type: 'standalone')
   end
 end

@@ -5,6 +5,7 @@
 # numbers. This wasn't done before and could be the case.
 
 # remove user_id, user_id_to fields since it will now be in conversation model
+# no dont remove ovo...needs this for segmentation
 
   # def change
     #remove_column :messages, :user_id

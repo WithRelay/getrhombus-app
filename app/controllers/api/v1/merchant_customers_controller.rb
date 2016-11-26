@@ -1,6 +1,11 @@
 class Api::V1::MerchantCustomersController < API::V1::BaseController
   def customer_data
-    customers = get_data(MerchantCustomer.where.not(customer_id: nil))
+    merchant_customers =  MerchantCustomer.joins(:customer)
+                            .select("merchant_customers.id, email, merchant_customers.stripe_customer_id")
+                            .where('exp_year  > ? || exp_year = ? && exp_month > ?',Time.now.year , Time.now.year, Time.now.month)
+                            .where.not(users: { email: current_user.email })
+
+    customers = get_data(merchant_customers)
     begin
       if params[:email]
         res = []
@@ -16,13 +21,13 @@ class Api::V1::MerchantCustomersController < API::V1::BaseController
     end
   end
 
-  def get_data(customers)
+  def get_data(merchant_customers)
     data_array = []
-    customers.each do |cus|
+    merchant_customers.each do |mc|
       data = {}
-      data[:id] = cus.id
-      data[:stripe_customer_id] = cus.stripe_customer_id
-      data[:email] = (User.find cus.customer_id).email
+      data[:id] = mc.id
+      data[:stripe_customer_id] = mc.stripe_customer_id
+      data[:email] = mc.email
       data_array << data
     end
 

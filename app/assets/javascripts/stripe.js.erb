@@ -1,37 +1,50 @@
 $(document).ready(function () {
   Stripe.setPublishableKey('<%= Rails.application.secrets.stripe["publishable_key"] %>');
-  $('input#cc-number').payment('formatCardNumber');
-  $('input#cc-exp').payment('formatCardExpiry');
-  // $('input#cc-csc').payment('formatCardCVC');
-
-  // validate all credit card form
-  $('#cc-submit').click(function(){
-    // get form id when submit button is clicked of credit card form
-    var selector = $(this).parents('form:first').attr('id');
-    validateCreditCardForm('#' + selector);
-  });
 });
-// tokenize card details
-function submit_to_stripe() {
-  Stripe.card.createToken({
-    name: $('#cc-name').val(),
-    number: $('#cc-number').val(),
-    exp_month: cc_month,
-    exp_year: cc_year,
-    cvc: $('#cc-csc').val()
-  }, stripeResponseHandler);
-}
 
-function stripeResponseHandler(status, response) {
-  if (response.error) {
-    setFlashMessage(response.error.message, 'error');
-    cc_submit_btn.attr("disabled", false).val(cc_btn_text);
-  } else {
-    $('#cc-number').val(response['card']['last4']);
-    $('#cc-ex-month').val(response['card']['exp_month']);
-    $('#cc-ex-year').val(response['card']['exp_year']);
-    $('#cc-uri').val(response.id);
-    $('#cc-type').val(response['card']['brand']);
-    form_submission_handler();
+var CardHandler = new function() {
+  
+  // http://www.phpied.com/3-ways-to-define-a-javascript-class/
+  var form_to_submit_after_stripe_response;
+  var cc_btn_text;
+  var cc_submit_btn;
+  
+  // tokenize card details
+  this.submit_to_stripe = function(function_for_submission, btn) {
+    
+    form_to_submit_after_stripe_response = function_for_submission;
+    // So the button can be reset on fail
+    cc_btn_text = btn.val();    
+    cc_submit_btn = btn.attr("disabled", true).val("Please wait...");
+    var y = get_expiry_date_data();
+
+    Stripe.card.createToken({
+      name: $('#cc-name').val(),
+      number: $('#cc-number').val(),
+      exp_month: y.month,
+      exp_year: y.year,
+      cvc: $('#cc-csc').val()
+    }, stripeResponseHandler);
+  };
+
+  function stripeResponseHandler(status, response) {
+    if (response.error) {
+      setFlashMessage(response.error.message, 'error');
+      cc_submit_btn.attr("disabled", false).val(cc_btn_text);
+    } else {
+      $('#cc-number').val(response['card']['last4']);
+      $('#cc-ex-month').val(response['card']['exp_month']);
+      $('#cc-ex-year').val(response['card']['exp_year']);
+      $('#cc-uri').val(response.id);
+      $('#cc-type').val(response['card']['brand']);
+      form_to_submit_after_stripe_response();
+    }
+  }
+
+  this.get_expiry_date_data = function() {
+    return $('input#cc-exp').payment('cardExpiryVal');
   }
 }
+
+
+

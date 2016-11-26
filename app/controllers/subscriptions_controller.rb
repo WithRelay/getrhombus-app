@@ -3,12 +3,10 @@ class SubscriptionsController < ApplicationController
 
   respond_to :html
 
-  # seems to be pulling for everyone
   def index
-    #str = current_user.user_level == 1 ? "user_id = " : "team_id = " + current_user.id
-    #@subscriptions = Subscription.where("where " + str)
-    merchant_customer = current_user.merchant.pluck(:id)
-    @subscriptions = Subscription.where(merchant_customer_id: merchant_customer)
+    # This is for merchants only for now
+    merchant_customers = current_user.customers.pluck(:id)
+    @subscriptions = Subscription.where(merchant_customer_id: merchant_customers)
     respond_with(@subscriptions)
   end
 
@@ -26,21 +24,18 @@ class SubscriptionsController < ApplicationController
 
   def create
     res = false
-    subscription_params[:merchant_customer_id].each do |cid|
-      subscription_params[:plan_id].each do |pid|
+    subscription_params[:plan_id].each do |pid|
+      subscription_param = subscription_params
+      # use single plan id at a time
+      subscription_param[:plan_id] = pid
+      merchant_customer = MerchantCustomer.find subscription_params[:merchant_customer_id]
 
-        subscription_param = subscription_params
-        subscription_param[:merchant_customer_id] = cid
-        subscription_param[:plan_id] = pid
-        merchant_customer = MerchantCustomer.find cid
-
-        @subscription = merchant_customer.subscriptions.new(subscription_param)
-        if merchant_customer && @subscription.create_subscription({ team: current_user, customer: merchant_customer.stripe_customer_id })  #@subscription.save
-          res = true
-        else
-         res = false
-         break
-        end
+      @subscription = merchant_customer.subscriptions.new(subscription_param)
+      if merchant_customer && @subscription.create_subscription({ team: current_user, customer: merchant_customer.stripe_customer_id })
+        res = true
+      else
+       res = false
+       break
       end
     end
 
@@ -59,20 +54,11 @@ class SubscriptionsController < ApplicationController
   # end
 
   def destroy
-    res = @subscription.cancel_subscription(current_user)
-    if (res.first)
-      @subscription.update(
-        status: res.second.status,
-        cancel_at_period_end: res.second.cancel_at_period_end
-      )
-      if @subscription.cancel_at_period_end
-        flash[:notice] = 'Your subscription has been canceled at period end.'
-      else
-        flash[:notice] = 'Your subscription has been canceled.'
-      end
-      redirect_to user_subscriptions_path         #respond_with(@subscription)
+    if @subscription.cancel_subscription(current_user)
+      flash[:notice] = 'Your subscription will been canceled at period end.'
+      redirect_to user_subscriptions_path
     else
-      flash[:error] = 'We could\'t cancel your subscription'
+      flash[:error] = 'We couldn\'t cancel your subscription'
     end
   end
 
@@ -84,7 +70,6 @@ class SubscriptionsController < ApplicationController
     def subscription_params
       params.require(:subscription).permit(:quantity, :plan_id, :coupon_id, :merchant_customer_id).tap{ |subscription|
         subscription[:plan_id] = subscription[:plan_id].split(',') if subscription[:plan_id]
-        subscription[:merchant_customer_id] = subscription[:merchant_customer_id].split(',') if subscription[:merchant_customer_id]
       }
     end
 end
