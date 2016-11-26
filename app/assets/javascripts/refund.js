@@ -1,6 +1,7 @@
 $(document).ready(function () {
 
-	var REFUND_TXN_LINK, REFUND_BOX = $('#refundFormBox');
+	var REFUND_TXN_LINK, 
+      REFUND_BOX = $('#refundFormBox');
 
   $('#transactions-column').on("click", ".refund_link", function() {
       REFUND_TXN_LINK = this;
@@ -12,9 +13,12 @@ $(document).ready(function () {
 
   $('#refundButton').click(function(e) {
     e.preventDefault();
-    this.disabled = true;
-    this.textContent = "Please wait...";
-    var charge_id = REFUND_TXN_LINK.getAttribute('data-stripe-txn-num');
+    var refund_btn = this,
+        charge_id = REFUND_TXN_LINK.getAttribute('data-stripe-txn-num');
+
+    refund_btn.disabled = true;
+    refund_btn.textContent = "Please wait...";
+    
     $.ajax({
       url: "/v1/transactions/" + charge_id + "/refund.json",
       beforeSend: function(xhr) { xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content')) },
@@ -30,8 +34,8 @@ $(document).ready(function () {
         setFlashMessage(data.responseJSON.message, 'error');
       })
       .always(function(data, textStatus, response) {
-        this.disabled = false;
-        this.textContent = "Submit";
+        refund_btn.disabled = false;
+        refund_btn.textContent = "Submit";
         REFUND_BOX.trigger('close');
       });
   });

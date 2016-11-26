@@ -10,7 +10,7 @@ class Refund < ActiveRecord::Base
       txn = Transaction.where(transaction_uri: params[:charge_id]).first 
       
       if txn.nil?
-        ["Transaction doesnt exists.", 403]
+        ["Transaction doesnt exists.", 404]
       elsif txn.refund.nil?
         ["Transaction has already been refunded.", 403]
       # temp option for admin refunds
