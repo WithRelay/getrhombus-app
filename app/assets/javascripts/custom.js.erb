@@ -9,7 +9,6 @@ $(document).ready(function () {
       cc_submit_btn, cc_btn_text,
       create_user_submit = $('#create-user-submit'), create_user_form = $('#create-user-form'),
 
-      REFUND_TXN_LINK, REFUND_BOX = $('#refundFormBox'),
       chart_labels = [], chart_totals = [], chart_txns = [],
       contact_url = '/contact_forms.json', searchNumBtn = $('#searchNumberBtn');
 
@@ -920,40 +919,6 @@ $(document).ready(function () {
 
   // character counter
   $("#count_me").counter();
-
-    // Refunds
-  $('#transactions-column').on("click", ".refund_link", function() {
-      REFUND_TXN_LINK = this;
-      REFUND_BOX.lightbox_me({
-          centered: true,
-          onLoad: function() { $('#refundForm').find('input:first').focus(); }
-      });
-  });
-
-  $('#refundButton').click(function(e) {
-    e.preventDefault();
-    this.disabled = true;
-    this.textContent = "Please wait...";
-    $.ajax({
-        url: "/v1/transactions/" + REFUND_TXN_LINK.getAttribute('data-stripe-txn-num') + "/refund.json",
-        beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
-        type: "POST",
-        data: { type: "card", reason: document.getElementById('refund_reason').value }
-    })
-        .done(function(data, textStatus, response) {
-            document.getElementById(charge_id).setAttribute("data-status", "Refunded");
-            ohSnap(data.message, 'green');
-            $(REFUND_TXN_LINK)[0].parentNode.parentNode.innerHTML = "<tr><td>Status: </td><td> Refunded</td></tr>";
-        })
-        .fail(function(data, textStatus, response) { ohSnap(data.responseJSON["message"], "red"); })
-        .always(function(data, textStatus, response) {
-            this.disabled = false;
-            this.textContent = "Submit";
-            REFUND_BOX.trigger('close');
-        })
-  });
-  // Refunds
-
 
 
   //// for number search

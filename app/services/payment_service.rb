@@ -106,17 +106,11 @@ class PaymentService
     end
 
     # returns array with refund status, error object
-    def refund_charge(charge_id, stripe_account_uid, platform=false)
+    def refund_charge(hash)
       begin
-        # need to check if i can refund transaction created prior to managed accounts    
-        if platform
-          ch = Stripe::Charge.retrieve(hash[:charge_id]) 
-        else
-          ch = Stripe::Charge.retrieve(hash[:charge_id], stripe_account: hash[:uid])
-        end
-
-        re = ch.refunds.create(refund_application_fee: true, reverse_transfer: true)
-        [re]
+        ch = Stripe::Charge.retrieve(hash[:charge_id])
+        re = ch.refunds.create(reason: hash[:reason], refund_application_fee: true, reverse_transfer: true)
+        [true, re]
       rescue Stripe::StripeError => e
         # might need to specify that this is a stripe error
         [false, e.json_body[:error]]
@@ -250,18 +244,6 @@ class PaymentService
         false
       rescue StandardError => e
         false
-      end
-    end
-
-    ## remove this method
-    def create_managed_account(hash)
-      begin
-        re = Stripe::Account.create({ country: hash[:country], managed: true } )
-      rescue Stripe::StripeError => e
-        # Display a very generic error to the user, and maybe send yourself an email
-        [false, e]
-      rescue StandardError => e
-        [false, e]
       end
     end
   

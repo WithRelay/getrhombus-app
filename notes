@@ -20,7 +20,6 @@ Notes
 
 Friday
 - Review events
-- Rewrite refunds
 - final review of updating subscriptions, coupons, plans...do we update subscriptions esp platform??
 - where will customer create plan? on whose account?
 - Messages
@@ -46,7 +45,6 @@ Review
 - when you need to access the underlying object....use instance method else use class method
 - notifications platform to merchants should have a single conversation and should not be pulled - mark as read too
 - conversations....need origin...cos system to customers should not open conversation....
-- rewrite refundds
 - return omniauth stripe connect for dashboard account - check how we save platform stripe cred...does stripe connect still work?
 
 

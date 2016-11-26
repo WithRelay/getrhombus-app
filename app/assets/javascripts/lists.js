@@ -84,6 +84,8 @@ $(document).on('ready page:load', function() {
 
     var data = $(this).serializeArray();
 
+    console.log(action)
+
     // Submit form via Ajax
     $.ajax({
       method: method,

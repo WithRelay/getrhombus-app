@@ -5,13 +5,12 @@ class Transaction < ActiveRecord::Base
   # scope :ordering, -> { order(:DESC) }
 
   has_one :message
-  has_one :refund, inverse_of: :refund
+  has_one :refund
   has_one :notification_log, as: :notifiable, dependent: :destroy
 
   belongs_to :hashtag
   belongs_to :user, counter_cache: true
   belongs_to :team, class_name: "User", counter_cache: true
-  belongs_to :refund, inverse_of: :transactions
 
 
   # Why am I passing an array in here?
