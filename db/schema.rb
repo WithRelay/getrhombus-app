@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161121141028) do
+ActiveRecord::Schema.define(version: 20161125200809) do
 
   create_table "addresses", force: :cascade do |t|
     t.string   "street_address",   limit: 191
@@ -298,14 +298,25 @@ ActiveRecord::Schema.define(version: 20161121141028) do
   add_index "invoices", ["user_id"], name: "fk_rails_81a94fd308", using: :btree
 
   create_table "lists", force: :cascade do |t|
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
     t.integer  "user_id",    limit: 4
     t.string   "name",       limit: 191
-    t.string   "segment",    limit: 191
+    t.text     "segment",    limit: 65535
   end
 
   add_index "lists", ["user_id"], name: "index_lists_on_user_id", using: :btree
+
+  create_table "merchant_contacts", force: :cascade do |t|
+    t.integer  "merchant_id",      limit: 4
+    t.string   "customer_id",      limit: 191
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "customer_id_type", limit: 191
+  end
+
+  add_index "merchant_contacts", ["customer_id"], name: "index_merchant_contacts_on_customer_id", using: :btree
+  add_index "merchant_contacts", ["merchant_id"], name: "index_merchant_contacts_on_merchant_id", using: :btree
 
   create_table "merchant_customers", force: :cascade do |t|
     t.integer  "merchant_id",        limit: 4

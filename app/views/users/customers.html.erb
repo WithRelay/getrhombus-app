@@ -95,7 +95,7 @@
           <p>
             <select id="segment_option">
               <option value ="all_customers">All Customers</option>
-              <option value ="new_customers">New customers</option>
+              <option value ="new_customers">Customer created</option>
               <option value="last_purchase"> Last purchase made
               </option>
               <option value ="active_customers" selected>
@@ -110,6 +110,12 @@
               <option value="contacts_without_accounts"> 
                 Contacts without accounts
               </option>
+              <option value ="last_msg_received">Last message received
+              </option>
+              <option value ="last_msg_sent">Last message sent</option>
+              <option value ="contacts_with_accounts">
+                Contacts with accounts
+              </option>
             </select>
           <p></p>
             <select id="range">
@@ -120,8 +126,25 @@
             </select>
           <p></p>
            <input type="text" id="num_days" style="width: 10%" 
-             size="5" value="7" placeholder="Days ago"> 
+             size="5" placeholder="Days ago"> </input>
             <p></p>
+            Filter segment by
+            <p></p>
+            <select id="amount_filter">
+              <option value="customer_spend">Customer spend</option>
+              <option value="less_than">Less than</option>
+              <option value="more_than">More than</option>
+              <option value="exactly">Exactly</option>
+              <option value="between">Between</option>
+            </select>
+          </p>
+           <input type="text" id="amount_1" style="width: 10%" 
+             size="5" placeholder="Amount"> 
+           </input> 
+           <input type="text" id="amount_2" style="width: 10%" 
+             size="5" placeholder="Amount"> 
+           </input> 
+          <p></p>
             <input id="name_segment" type ="button" value="Create segment"></input>
         </p>
         </div>
@@ -176,6 +199,9 @@
             <%= hidden_field_tag(:segment_type) %>
             <%= hidden_field_tag(:segment_num_days) %>
             <%= hidden_field_tag(:segment_filter) %>
+            <%= hidden_field_tag(:amt_filter) %>
+            <%= hidden_field_tag(:amt_1) %>
+            <%= hidden_field_tag(:amt_2) %>
             <%= text_field_tag(:segment_name) %>
             <%= submit_tag("Create segment") %>
             <%= button_tag(type: 'button', class: 'cancel') do 

@@ -48,16 +48,25 @@ module DashboardMerchantQueries
 		Transaction.find_by_sql([query, self.id, self.rhombus_number])		
 	end	
 
-	def DashboardMerchantQueries.get_last_active_transactions(num_of_days='', filter='')
-		query =  "SELECT t.created_at, t.referenced_user_id as user_id, " \
-				 "u.card_name, u.email, " \
-				 "u.phone_number, SUM(t.amount) AS total_spend, " \
-				 "MIN(t.created_at) AS first_transaction, " \
-				 "AVG(t.amount) AS avg_spend, "  \
-				 "MAX(t.created_at) AS last_transaction " \
-				 "FROM transactions t INNER JOIN users u ON t.referenced_user_id = u.id " \
+	# Gets the last n transactions of a merchant
+	# @param params A hash of parameters passed
+	def DashboardMerchantQueries.get_last_transactions(params)
+		query =  "SELECT t.id, t.created_at, t.referenced_user_id as user_id, " \
+				 "t.amount, u.email, u.phone_number " \
+				 "FROM transactions t " \
+				 "INNER JOIN " \
+				 "( " \
+				 "SELECT MAX(t.id) as max_id, t.referenced_user_id as user_id " \
+				 "FROM transactions t " \
 				 "WHERE t.team_id = ? " \
-				 "AND t.created_at #{symbol} DATE_SUB(now(), INTERVAL #{num_of_days} DAY)"
+				 "AND t.created_at #{DashboardMerchantQueries.get_range(params[:segment_filter])}" \
+				 "DATE_SUB(now(), INTERVAL #{params[:segment_num_days]} DAY) " \
+				 "GROUP BY t.referenced_user_id " \
+				") t1 " \
+				"ON (t1.max_id = t.id) " \
+				"INNER JOIN users u ON(t.referenced_user_id = u.id) " \
+				"#{DashboardMerchantQueries.get_amount_filter(
+				 	params[:amt_filter], params[:amt_1], params[:amt_2])}" 
 		return query
 	end
 
@@ -67,16 +76,17 @@ module DashboardMerchantQueries
 	end
 
 	# New referres within the last 7 days
-	def DashboardMerchantQueries.get_new_customers(num_of_days=7, filter='')
+	def DashboardMerchantQueries.get_new_customers(params)
 		if num_of_days.present?
-			query =  "SELECT u.id, u.email " \
+			query =  "SELECT u.id AS user_id, u.email " \
 					 "FROM users u, merchant_customers m " \
 					 "WHERE u.id= m.customer_id " \
 					 "AND m.merchant_id = ? " \
 					 "AND m.created_at #{
-					 	DashboardMerchantQueries.convert_filter(filter)
+					 	DashboardMerchantQueries.get_range(params[:segment_filter])
 					 } " \
-					 "DATE_SUB(now(), INTERVAL #{num_of_days} DAY)"
+					 "DATE_SUB(now(), INTERVAL #{
+					 params[:segment_num_days]} DAY)"
 			return query
 		else
 			query = "SELECT u.id, u.email " \
@@ -86,6 +96,102 @@ module DashboardMerchantQueries
 			return query
 		end	
 	end
+
+	# Gets the segment of the last messages received by a merchant
+	def DashboardMerchantQueries.get_last_msg_received(params)
+		query = "SELECT  m.created_at, m.user_id AS user_id, AVG(t.amount), " \
+		 		"u.first_name, u.last_name " \
+				"FROM messages m " \
+				"INNER JOIN " \
+				"( " \
+				"SELECT MAX(m.id) as max_id, m.user_id "
+				"FROM messages m " \
+				"WHERE m.user_id_to = ? " \
+				"AND m.created_at #{
+					 	DashboardMerchantQueries.get_range(params[:segment_filter])
+					 } " \
+				"DATE_SUB(now(), INTERVAL #{params[:segment_num_days]} DAY) " \
+				"GROUP BY m.user_id " \
+				")t1 " \
+				"ON (t1.max_id = m.id) " \
+				"INNER JOIN users u ON(m.user_id = u.id) " \
+				"INNER JOIN transactions t ON (t.referenced_user_id = m.user_id) " \
+				"#{DashboardMerchantQueries.get_amount_filter(
+				 	params[:amt_filter], params[:amt_1], params[:amt_2])} " \
+				"GROUP BY t.amount, m.created_at, m.user_id_to, " \
+				"u.first_name, u.last_name"
+		return query
+	end
+
+	# Gets the last message sent by a merchant
+	# At present this works primarily with the messages model
+	def DashboardMerchantQueries.get_last_msg_sent(params)
+		query = "SELECT m.user_id, m.created_at, m.user_id_to AS user_id, AVG(t.amount), " \
+		 		"u.first_name, u.last_name " \
+				"FROM messages m " \
+				"INNER JOIN " \
+				"( " \
+				"SELECT MAX(m.id) as max_id, m.user_id_to " \
+				"FROM messages m " \
+				"WHERE m.user_id = ? " \
+				"AND m.created_at #{
+					 	DashboardMerchantQueries.get_range(params[:segment_filter])
+					 } " \
+				"DATE_SUB(now(), INTERVAL #{params[:segment_num_days]} DAY) " \
+				"GROUP BY m.user_id_to " \
+				")t1 " \
+				"ON (t1.max_id = m.id) " \
+				"INNER JOIN users u ON(m.user_id_to = u.id) " \
+				"INNER JOIN transactions t ON (t.referenced_user_id = m.user_id_to) " \
+				"#{DashboardMerchantQueries.get_amount_filter(
+				 	params[:amt_filter], params[:amt_1], params[:amt_2])} " \
+				"GROUP BY t.amount, m.user_id, " \
+				"m.created_at, m.user_id_to, u.first_name, u.last_name"
+		return query
+	end
+
+	# Gets new contacts from within a certain period of time
+	# @param num_of_days The number of days definining the time window to retrieve new contacts
+	# @param filter Used to determine what range to fetch customers for
+	def DashboardMerchantQueries.get_new_contacts(num_of_days=7,filter='')
+		query = "SELECT u.id, u.email " \
+				"FROM users u, merchant_contacts m " \
+				"WHERE u.id= m.customer_id " \
+				"AND m.merchant_id = ? " \
+				"AND m.created_at #{
+					DashboardMerchantQueries.get_range(filter)
+				} " \
+				"DATE_SUB(now(), INTERVAL #{num_of_days} DAY) " 
+		return query
+	end
+
+	# Gets all customers or contants of a merchant
+	# @param type The name of the table storing the information
+	# 'merchant_customers' for a merchant's customers or 
+	# 'merchant_contacts' for a merchant's contacts
+	def DashboardMerchantQueries.get_all_segment(type='merchant_customers')
+		query = "SELECT u.id, u.email " \
+				"FROM users u, merchant_customers m " \
+				"WHERE u.id= m.customer_id " \
+				"AND m.merchant_id = ? " 
+		return query
+	end
+
+
+	def DashboardMerchantQueries.get_contacts
+		query = "SELECT u.id, u.email " \
+				"FROM users u, merchant_contacts m " \
+				"WHERE u.id= m.customer_id " \
+				"AND m.merchant_id = ? " \
+				"AND m.customer_id NOT IN 
+				 	(
+				 	SELECT customer_id
+				 	FROM merchant_customers
+				 	where merchant_id = ? 
+				 	)"
+		return query
+	end
+
 
 	# only inbound
   # user_id_to and user_id are going away so don't use them
@@ -173,7 +279,7 @@ module DashboardMerchantQueries
 	end
 
 	private
-	def DashboardMerchantQueries.convert_filter(filter)
+	def DashboardMerchantQueries.get_range(filter)
 		symbol = ''
 		if filter == "more_than"
 			symbol = "<"
@@ -185,5 +291,25 @@ module DashboardMerchantQueries
 		return symbol
 	end	
 
+	# Returns a SQL statement for filtering the total amount spent by a customer
+	# by amount range
+	# @param filter_type The type of filter passed
+	# @param amount_1 The first amount in the range
+	# @param amount_2 The second amount in the range
+	def DashboardMerchantQueries.get_amount_filter(filter_type, amount_1, amount_2 =0)
+	    sql_statement = ""
+	    spend = "WHERE t.amount"
+		if filter_type == "less_than"
+			sql_statement = "#{spend} < #{amount_1}"
+		elsif filter_type == "between"
+			sql_statement = "#{spend} >= #{amount_1} AND #{spend} < #{amount_2}"
+		elsif filter_type == "exactly"
+			sql_statement = "#{spend} = #{amount_1}"
+		elsif filter_type == "more_than"
+			sql_statement = "#{spend} > #{amount_1}"
+		end
+		return sql_statement
+	end
+			
 end
 
