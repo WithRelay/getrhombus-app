@@ -31,7 +31,7 @@ class List < ActiveRecord::Base
         end
         user_records.push({ 
           email: customer['email'],
-          user_id: customer['id']
+          user_id: customer['user_id']
           })
       end
       return user_records

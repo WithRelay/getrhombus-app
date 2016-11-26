@@ -9,7 +9,6 @@ class CreateFbMessages < ActiveRecord::Migration
       t.integer :page_id
       t.string :from
       t.string :to
-
       t.timestamps null: false
     end
     add_index :fb_messages, :from

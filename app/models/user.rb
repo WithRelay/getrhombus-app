@@ -20,6 +20,8 @@ class User < ActiveRecord::Base
   has_many :merchants, class_name: 'MerchantCustomer', foreign_key: 'customer_id'
   has_many :customers, class_name: 'MerchantCustomer', foreign_key: 'merchant_id'
 
+  has_many :merchant, class_name: 'MerchantContact', foreign_key: 'merchant_id'
+
   # this block is for customizing build method for user.campaign which allow also to save list
   has_many :campaigns do
     # overiding association build function like user.campaigns.build will hit here

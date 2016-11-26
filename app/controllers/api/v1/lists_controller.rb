@@ -76,10 +76,16 @@ class Api::V1::ListsController < API::V1::BaseController
     end
 
     def get_segment_query(params)
-      print "Segment type is: #{params[:segment_type]}"
+      print "Segment type is: #{params[:segment_type]} \n"
       if params[:segment_type] == "new_customers"
-        return DashboardMerchantQueries.get_new_customers(
-          params[:segment_num_days], params[:segment_filter])
+         DashboardMerchantQueries.get_new_customers(
+          params)
+      elsif params[:segment_type] == "last_purchase"
+        DashboardMerchantQueries.get_last_transactions(params)
+      elsif params[:segment_type] == "last_msg_received"
+        DashboardMerchantQueries.get_last_msg_received(params)
+      elsif params[:segment_type] == "last_msg_sent"
+        DashboardMerchantQueries.get_last_msg_sent(params)
       end
     end
 

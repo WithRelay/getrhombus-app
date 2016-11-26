@@ -162,11 +162,15 @@ $(document).on('ready page:load', function() {
       closeEsc: true,
       centered: true,
       onLoad: function() {
+        // Populate segment selection before submitting request 
         $("#segment_create_modal").find('input:first')
         $("#list_type").val("segment")
         $("#segment_type").val($("#segment_option").val())
         $("#segment_num_days").val($("#num_days").val())
         $("#segment_filter").val($("#range").val())
+        $("#amt_filter").val($("#amount_filter").val())
+        $("#amt_1").val($("#amount_1").val())
+        $("#amt_2").val($("#amount_2").val())
       }
       });
      e.preventDefault();
