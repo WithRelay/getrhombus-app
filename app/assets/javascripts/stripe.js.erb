@@ -5,18 +5,18 @@ $(document).ready(function () {
 var CardHandler = new function() {
   
   // http://www.phpied.com/3-ways-to-define-a-javascript-class/
-  var form_to_submit_after_stripe_response;
-  var cc_btn_text;
-  var cc_submit_btn;
+  var form_submission_function, form_btn_text;
+  var form_btn, form_selector;
   
   // tokenize card details
-  this.submit_to_stripe = function(function_for_submission, btn) {
-    
-    form_to_submit_after_stripe_response = function_for_submission;
-    // So the button can be reset on fail
-    cc_btn_text = btn.val();    
-    cc_submit_btn = btn.attr("disabled", true).val("Please wait...");
+  this.submit_to_stripe = function(form_id, btn_id, function_for_submission) {
+    form_selector = form_id;
+    form_submission_function = function_for_submission;
     var y = this.get_expiry_date_data();
+
+    form_btn = $(btn_id);
+    form_btn_text = form_btn.val();        // So the button can be reset on fail
+    form_btn.attr("disabled", true).val("Please wait...");
 
     Stripe.card.createToken({
       name: $('#cc-name').val(),
@@ -30,15 +30,28 @@ var CardHandler = new function() {
   function stripeResponseHandler(status, response) {
     if (response.error) {
       setFlashMessage(response.error.message, 'error');
-      cc_submit_btn.attr("disabled", false).val(cc_btn_text);
+      form_btn.attr("disabled", false).val(form_btn_text);
+      show_stripe_error_field(response.error.param);
     } else {
       $('#cc-number').val(response['card']['last4']);
       $('#cc-ex-month').val(response['card']['exp_month']);
       $('#cc-ex-year').val(response['card']['exp_year']);
       $('#cc-uri').val(response.id);
       $('#cc-type').val(response['card']['brand']);
-      form_to_submit_after_stripe_response();
+      form_submission_function();
     }
+  }
+
+  function show_stripe_error_field(param) {
+    if (param == "cvc") {
+      $(form_selector).data('formValidation').updateStatus('cc-csc', 'INVALID', 'callback');
+    } else if (param == "exp_year" || param == "exp_month") {
+      $(form_selector).data('formValidation').updateStatus('cc-exp', 'INVALID', 'callback');
+    } else if (param == "number") {
+      $(form_selector).data('formValidation').updateStatus('cc-number', 'INVALID', 'callback');
+    } else {
+      $(form_selector).data('formValidation').resetForm(); 
+    }             
   }
 
   this.get_expiry_date_data = function() {

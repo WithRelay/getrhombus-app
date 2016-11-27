@@ -24,7 +24,7 @@ Friday
 - where will customer create plan? on whose account?
 - Messages
 - Rake - migrate customer uri to merchant_customer plus drop column...but after migrating merchant_customer
-	- remove livemode from users, add to merchant_customer and create rake task to migrate this to merchant..customer
+   - remove livemode from users, add to merchant_customer and create rake task to migrate this to merchant..customer
 
 
 Review
