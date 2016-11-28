@@ -8,7 +8,7 @@ class List < ActiveRecord::Base
   # Gets the users that belong to a standard list or segment
   def get_users
   	if !segment.nil?
-  		user_lists = User.find_by_sql([segment, user_id])
+  		user_lists = User.find_by_sql([segment, {:id => user_id}])
   		return generate_list_users user_lists, type="segment"
   	else
   		return generate_list_users self.user_lists

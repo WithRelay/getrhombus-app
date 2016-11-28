@@ -58,7 +58,7 @@ module DashboardMerchantQueries
 				 "( " \
 				 "SELECT MAX(t.id) as max_id, t.referenced_user_id as user_id " \
 				 "FROM transactions t " \
-				 "WHERE t.team_id = ? " \
+				 "WHERE t.team_id = :id " \
 				 "AND t.created_at #{DashboardMerchantQueries.get_range(params[:segment_filter])}" \
 				 "DATE_SUB(now(), INTERVAL #{params[:segment_num_days]} DAY) " \
 				 "GROUP BY t.referenced_user_id " \
@@ -92,7 +92,7 @@ module DashboardMerchantQueries
 			query = "SELECT u.id, u.email " \
 					"FROM users u, merchant_customers m " \
 					"WHERE u.id= m.customer_id " \
-					"AND m.merchant_id = ?"
+					"AND m.merchant_id = :id"
 			return query
 		end	
 	end
@@ -115,7 +115,7 @@ module DashboardMerchantQueries
 				"( " \
 				"SELECT MAX(t.id) as max_id, t.referenced_user_id as user_id " \
 				"FROM transactions t " \
-				"WHERE t.team_id = ? " \
+				"WHERE t.team_id = :id " \
 				"GROUP BY t.referenced_user_id " \
 				")t1 " \
 				"ON (t1.max_id = t.id) " \
@@ -128,7 +128,7 @@ module DashboardMerchantQueries
 					"( " \
 					"SELECT MAX(m.id) as max_id, m.user_id " \
 					"FROM messages m " \
-					"WHERE m.user_id_to = ? " \
+					"WHERE m.user_id_to = :id " \
 					"GROUP BY m.user_id " \
 					")t1 " \
 					"ON (t1.max_id = m.id) " \
@@ -159,7 +159,7 @@ module DashboardMerchantQueries
 				"( " \
 				"SELECT MAX(t.id) as max_id, t.referenced_user_id as user_id " \
 				"FROM transactions t " \
-				"WHERE t.team_id = ? " \
+				"WHERE t.team_id = :id " \
 			    "GROUP BY t.referenced_user_id " \
 				") t1 " \
 				"ON (t1.max_id = t.id) " \
@@ -172,7 +172,7 @@ module DashboardMerchantQueries
 				"( " \
 				"SELECT MAX(m.id) as max_id, m.user_id " \
 				"FROM messages m " \
-				"WHERE m.user_id_to = ? " \
+				"WHERE m.user_id_to = :id " \
 				"GROUP BY m.user_id " \
 				")t1 " \
 				"ON (t1.max_id = m.id) " \
@@ -195,7 +195,7 @@ module DashboardMerchantQueries
 				"( " \
 				"SELECT MAX(m.id) as max_id, m.user_id "
 				"FROM messages m " \
-				"WHERE m.user_id_to = ? " \
+				"WHERE m.user_id_to = :id " \
 				"AND m.created_at #{
 					 	DashboardMerchantQueries.get_range(params[:segment_filter])
 					 } " \
@@ -222,7 +222,7 @@ module DashboardMerchantQueries
 				"( " \
 				"SELECT MAX(m.id) as max_id, m.user_id_to " \
 				"FROM messages m " \
-				"WHERE m.user_id = ? " \
+				"WHERE m.user_id = :id " \
 				"AND m.created_at #{
 					 	DashboardMerchantQueries.get_range(params[:segment_filter])
 					 } " \
@@ -246,7 +246,7 @@ module DashboardMerchantQueries
 		query = "SELECT u.id, u.email " \
 				"FROM users u, merchant_contacts m " \
 				"WHERE u.id= m.customer_id " \
-				"AND m.merchant_id = ? " \
+				"AND m.merchant_id = :id " \
 				"AND m.created_at #{
 					DashboardMerchantQueries.get_range(filter)
 				} " \
@@ -268,22 +268,21 @@ module DashboardMerchantQueries
 		query = "SELECT u.id as user_id, u.email " \
 				"FROM users u, #{table} m " \
 				"WHERE u.id= m.customer_id " \
-				"AND m.merchant_id = ? " 
+				"AND m.merchant_id = :id " 
 		return query
 	end
 
 	# Gets all contacts with accounts
 	def DashboardMerchantQueries.get_contacts_without_account
-		query = "SET @mid :=?; " \
-				"SELECT u.id as user_id, u.email " \
+		query = "SELECT u.id as user_id, u.email " \
 				"FROM users u, merchant_contacts m " \
 				"WHERE u.id= m.customer_id " \
-				"AND m.merchant_id = @mid " \
+				"AND m.merchant_id = :id " \
 				"AND m.customer_id NOT IN 
 				 	(
 				 	SELECT customer_id
 				 	FROM merchant_customers
-				 	where merchant_id = @mid 
+				 	where merchant_id = :id 
 				 	)"
 		return query
 	end
@@ -293,12 +292,12 @@ module DashboardMerchantQueries
 		query = "SELECT u.id as user_id, u.email " \
 		"FROM users u, merchant_contacts m " \
 		"WHERE u.id= m.customer_id " \
-		"AND m.merchant_id = ? " \
+		"AND m.merchant_id = :id " \
 		"AND m.customer_id IN 
 		 	(
 		 	SELECT customer_id
 		 	FROM merchant_customers
-		 	where merchant_id = ? 
+		 	where merchant_id = :id 
 		 	)"
 		return query
 	end
@@ -312,7 +311,7 @@ module DashboardMerchantQueries
 				MIN(messages.created_at) as first_conversation, 
 				MAX(messages.created_at) as last_conversation
 				FROM messages 
-				WHERE ((user_id = 0 or user_id is null) and user_id_to = ?) 
+				WHERE ((user_id = 0 or user_id is null) and user_id_to = :id) 
 				GROUP BY messages.from
 				ORDER BY messages.created_at DESC", self.id])
 	end	
