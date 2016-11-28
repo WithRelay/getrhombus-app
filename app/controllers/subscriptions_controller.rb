@@ -31,7 +31,7 @@ class SubscriptionsController < ApplicationController
       merchant_customer = MerchantCustomer.find subscription_params[:merchant_customer_id]
 
       @subscription = merchant_customer.subscriptions.new(subscription_param)
-      if merchant_customer && @subscription.create_subscription({ team: current_user, customer: merchant_customer.stripe_customer_id })
+      if @subscription.create_subscription({ team: current_user, customer: merchant_customer.stripe_customer_id })
         res = true
       else
        res = false

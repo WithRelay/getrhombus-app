@@ -1,5 +1,5 @@
 # class for adding column account_id in stripe_creds table
-class AddColumnAccountIdToStripCreds < ActiveRecord::Migration
+class AddColumnAccountIdToStripeCreds < ActiveRecord::Migration
 
   # for rake task db:migrate the up method is called and add column as mention
   def up

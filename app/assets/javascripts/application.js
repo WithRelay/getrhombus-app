@@ -27,7 +27,6 @@
 //= require phone_number_formatter
 //= require chartist
 //= require jquery.payment
-//= require ohsnap.js
 //= require url-parameters
 //= require managed-account
 //= require location
@@ -39,7 +38,7 @@
 //= require custom_trumbowyg_plugin
 //= require trumbowyg.min
 //= require emojify
-//= require form_validator
+//= require campaign_form_validator
 //= require emojionearea
 //= require trumbowyg_emoji_plugin
 //= require trumbowyg.upload.min
@@ -50,3 +49,4 @@
 //= require alerts
 //= require hashtags_plans_coupons_alerts
 //= require jquery.checkboxes-1.2.0.min.js
+//= require refund

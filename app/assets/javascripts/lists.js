@@ -30,7 +30,10 @@ $(document).on('ready page:load', function() {
       if (query.length < 2) return callback();
       $.ajax({
         url: window.location.protocol + "//" + window.location.host + "/v1/lists.json?query=" + encodeURIComponent(query),
-        error: function() { callback(); },
+        error: function() { 
+          setFlashMessage('Something went wrong...Unable to find your lists', 'error');
+          callback(); 
+        },
         success: function(res) { callback(res['lists']); }
       });
     }
@@ -80,6 +83,8 @@ $(document).on('ready page:load', function() {
     var method = $(this).attr('method');
 
     var data = $(this).serializeArray();
+
+    console.log(action)
 
     // Submit form via Ajax
     $.ajax({

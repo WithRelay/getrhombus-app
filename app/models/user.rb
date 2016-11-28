@@ -100,8 +100,6 @@ class User < ActiveRecord::Base
   validates_uniqueness_of :phone_number, :allow_nil => true, :if => lambda { self.user_level == 0 }
   validate :phone_number_cannot_be_rhombus_number
 
-  # scope :valid_card, -> { where('exp_year  > ? || exp_year = ? && exp_month > ?',Time.now.year , Time.now.year, Time.now.month)}
-
   def is_merchant?
     user_level == 1
   end

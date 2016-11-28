@@ -1,9 +1,9 @@
 current stripe api version - 2014-03-28
 
 Bhishma
-- are the form methods clearly named
 - fb_messages... page_id, from, to, fb_page_id?
 - form validation for cc needs improvement - show validation error in field?
+- put flashes in singleton function/class so we don't pollute the global namespace..do a global search and replace all uses
 
 Surya
 - move campaign/email service into classes
@@ -14,17 +14,17 @@ Surya
 - on subscription - check if user already belongs to merchant
 - customers can create subscriptions over messaging...not dashboard, but can cancel subscription
 
+Notes
+- clean and concise code
+- remove unnecessary code that you wrote
 
 Friday
 - Review events
-- Rewrite refunds
 - final review of updating subscriptions, coupons, plans...do we update subscriptions esp platform??
-- review merchant card form and stripe card form submission
 - where will customer create plan? on whose account?
-- review user controller
 - Messages
 - Rake - migrate customer uri to merchant_customer plus drop column...but after migrating merchant_customer
-	- remove livemode from users, add to merchant_customer and create rake task to migrate this to merchant..customer
+   - remove livemode from users, add to merchant_customer and create rake task to migrate this to merchant..customer
 
 
 Review
@@ -33,7 +33,6 @@ Review
 - remove first_name and last_name assignment in angular code
 - when user logs in through messenger, indicate in referrers
 - change all emails in test db dump
-
 - unify team and dashboard email issue really
 
 
@@ -46,7 +45,6 @@ Review
 - when you need to access the underlying object....use instance method else use class method
 - notifications platform to merchants should have a single conversation and should not be pulled - mark as read too
 - conversations....need origin...cos system to customers should not open conversation....
-- rewrite refundds
 - return omniauth stripe connect for dashboard account - check how we save platform stripe cred...does stripe connect still work?
 
 
