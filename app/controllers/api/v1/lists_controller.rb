@@ -80,6 +80,18 @@ class Api::V1::ListsController < API::V1::BaseController
       if params[:segment_type] == "new_customers"
          DashboardMerchantQueries.get_new_customers(
           params)
+      elsif params[:segment_type] == "active_customers"
+        DashboardMerchantQueries.get_active_customers(params[:segment_num_days])
+      elsif params[:segment_type] == "inactive_customers"
+        DashboardMerchantQueries.get_inactive_customers(params[:segment_num_days])
+      elsif params[:segment_type] == "all_contacts"
+         DashboardMerchantQueries.get_all_segment(params)
+      elsif params[:segment_type] == "all_customers"
+        DashboardMerchantQueries.get_all_segment(params)
+      elsif params[:segment_type] == "contacts_with_account"
+        DashboardMerchantQueries.get_contacts_with_account
+      elsif params[:segment_type] == "contacts_without_account"
+        DashboardMerchantQueries.get_contacts_without_account
       elsif params[:segment_type] == "last_purchase"
         DashboardMerchantQueries.get_last_transactions(params)
       elsif params[:segment_type] == "last_msg_received"

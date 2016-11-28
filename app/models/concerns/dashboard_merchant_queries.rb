@@ -97,6 +97,95 @@ module DashboardMerchantQueries
 		end	
 	end
 
+	# Gets the list of active customers 
+	# active customers are customers that have sent a message to the merchant
+	# or had a transaction with the merchant within the last n days
+	# @param num_days The number of days for which active is defined
+	# @return An array of the user id, email, transaction and message times
+	# of active customers.
+	def DashboardMerchantQueries.get_active_customers(num_days=14)
+		query = "SELECT transactions.user_id, users.email, " \
+				"transactions.created_at as transaction_time " \
+			 	"messages.created_at as messages_time " \
+				"FROM " \
+ 				"( " \
+				"SELECT t.referenced_user_id as user_id, t.created_at " \
+				"FROM transactions t " \
+				"INNER JOIN " \
+				"( " \
+				"SELECT MAX(t.id) as max_id, t.referenced_user_id as user_id " \
+				"FROM transactions t " \
+				"WHERE t.team_id = ? " \
+				"GROUP BY t.referenced_user_id " \
+				")t1 " \
+				"ON (t1.max_id = t.id) " \
+				")transactions " \
+				"INNER JOIN " \
+				"( " \
+					"SELECT m.user_id, m.created_at " \
+					"FROM messages m " \
+					"INNER JOIN " \
+					"( " \
+					"SELECT MAX(m.id) as max_id, m.user_id " \
+					"FROM messages m " \
+					"WHERE m.user_id_to = ? " \
+					"GROUP BY m.user_id " \
+					")t1 " \
+					"ON (t1.max_id = m.id) " \
+				") messages " \
+				"ON (transactions.user_id = messages.user_id) " \
+				"INNER JOIN users ON (users.id = transactions.user_id) " \
+				"WHERE transactions.created_at > DATE_SUB(now(), INTERVAL #{num_days} DAY) " \
+				"OR messages.created_at > DATE_SUB(now(), INTERVAL #{num_days} DAY)"
+		query
+	end
+
+	# Gets the list of inactive customers 
+	# Inactive customers are customers that have not sent a message to the merchant
+	# or had a transaction with the merchant within the last n days
+	# @param num_days The number of days for which active is defined
+	# @return An array of the user id and email of inactive customers.
+	def DashboardMerchantQueries.get_inactive_customers(num_days=14)
+		query = "SELECT m.customer_id, u.email " \
+				"FROM merchant_customers m, users u " \
+				"WHERE m.customer_id NOT IN " \
+				"( " \
+				"SELECT transactions.user_id " \
+				"FROM " \
+ 				"( " \
+				"SELECT t.referenced_user_id as user_id, t.created_at " \
+				"FROM transactions t " \
+				"INNER JOIN " \
+				"( " \
+				"SELECT MAX(t.id) as max_id, t.referenced_user_id as user_id " \
+				"FROM transactions t " \
+				"WHERE t.team_id = ? " \
+			    "GROUP BY t.referenced_user_id " \
+				") t1 " \
+				"ON (t1.max_id = t.id) " \
+				")transactions " \
+				"INNER JOIN " \
+				"( " \
+				"SELECT m.user_id, m.created_at " \
+				"FROM messages m " \
+				"INNER JOIN " \
+				"( " \
+				"SELECT MAX(m.id) as max_id, m.user_id " \
+				"FROM messages m " \
+				"WHERE m.user_id_to = ? " \
+				"GROUP BY m.user_id " \
+				")t1 " \
+				"ON (t1.max_id = m.id) " \
+			") messages " \
+			"ON (transactions.user_id = messages.user_id) " \
+			"INNER JOIN users ON (users.id = transactions.user_id) " \
+			"WHERE transactions.created_at > DATE_SUB(now(), INTERVAL #{num_days} DAY) 
+			 OR messages.created_at > DATE_SUB(now(), INTERVAL #{num_days} DAY) " \
+			") " \
+			"AND u.id = m.customer_id" 
+		query
+	end
+
 	# Gets the segment of the last messages received by a merchant
 	def DashboardMerchantQueries.get_last_msg_received(params)
 		query = "SELECT  m.created_at, m.user_id AS user_id, AVG(t.amount), " \
@@ -166,29 +255,51 @@ module DashboardMerchantQueries
 	end
 
 	# Gets all customers or contants of a merchant
-	# @param type The name of the table storing the information
+	# @params[:segment_type] The name of the table storing the information
 	# 'merchant_customers' for a merchant's customers or 
 	# 'merchant_contacts' for a merchant's contacts
-	def DashboardMerchantQueries.get_all_segment(type='merchant_customers')
-		query = "SELECT u.id, u.email " \
-				"FROM users u, merchant_customers m " \
+	def DashboardMerchantQueries.get_all_segment(params)
+		table = nil 
+		if (params[:segment_type == 'all_customers'])
+			table = "merchant_customers"
+		else
+			table = "merchant_contacts"
+		end
+		query = "SELECT u.id as user_id, u.email " \
+				"FROM users u, #{table} m " \
 				"WHERE u.id= m.customer_id " \
 				"AND m.merchant_id = ? " 
 		return query
 	end
 
-
-	def DashboardMerchantQueries.get_contacts
-		query = "SELECT u.id, u.email " \
+	# Gets all contacts with accounts
+	def DashboardMerchantQueries.get_contacts_without_account
+		query = "SET @mid :=?; " \
+				"SELECT u.id as user_id, u.email " \
 				"FROM users u, merchant_contacts m " \
 				"WHERE u.id= m.customer_id " \
-				"AND m.merchant_id = ? " \
+				"AND m.merchant_id = @mid " \
 				"AND m.customer_id NOT IN 
 				 	(
 				 	SELECT customer_id
 				 	FROM merchant_customers
-				 	where merchant_id = ? 
+				 	where merchant_id = @mid 
 				 	)"
+		return query
+	end
+
+	# Gets contacts without accounts
+	def DashboardMerchantQueries.get_contacts_with_account
+		query = "SELECT u.id as user_id, u.email " \
+		"FROM users u, merchant_contacts m " \
+		"WHERE u.id= m.customer_id " \
+		"AND m.merchant_id = ? " \
+		"AND m.customer_id IN 
+		 	(
+		 	SELECT customer_id
+		 	FROM merchant_customers
+		 	where merchant_id = ? 
+		 	)"
 		return query
 	end
 
