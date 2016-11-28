@@ -38,7 +38,7 @@ $(document).ready(function() {
   // Confirmation dialog box for destroy message resolution
   $('#delete-message-resolution').click(function(evt) {
     if (!$('#delete-message-resolution').attr('isDestroy')) {
-      flashConfirm('#delete-message-resolution','Confirmation Needed', 'Are you sure?', 'isDestroy' )
+      FlashHandler.setConfirmationDialog('#delete-message-resolution','Confirmation Needed', 'Are you sure?', 'isDestroy' )
       return false;
     }
   });

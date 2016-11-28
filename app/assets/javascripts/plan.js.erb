@@ -71,7 +71,7 @@ $(document).on('click', '.delete-plan', function(evt) {
   var selector = '.' + evt.target.classList[evt.target.classList.length - 1];
   if (!$(selector).attr('isDestroy')) {
     evt.stopImmediatePropagation();
-    flashConfirm(selector, 'Delete Plan',
+    FlashHandler.setConfirmationDialog(selector, 'Delete Plan',
       'If you delete this plan, you won\'t be able to add new subscriptions.',
       'isDestroy'
     );

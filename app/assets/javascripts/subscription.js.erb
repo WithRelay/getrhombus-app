@@ -18,7 +18,7 @@ $(document).ready(function () {
             name: query
           },
           error: function() {
-            setFlashMessage('Something went wrong...Unable to find your coupons', 'error');
+             FlashHandler.setFlashMessage('Something went wrong...Unable to find your coupons', 'error');
             callback();
           },
           success: function(res) {
@@ -72,7 +72,7 @@ $(document).ready(function () {
             name: query
           },
           error: function() {
-            setFlashMessage('Something went wrong...Unable to find your plans', 'error');
+             FlashHandler.setFlashMessage('Something went wrong...Unable to find your plans', 'error');
             callback();
           },
           success: function(res) {
@@ -108,7 +108,7 @@ $(document).ready(function () {
             query: query
           },
           error: function() {
-            setFlashMessage('Something went wrong...Unable to find your customer', 'error');
+             FlashHandler.setFlashMessage('Something went wrong...Unable to find your customer', 'error');
             callback();
           },
           success: function(res) {
@@ -132,7 +132,7 @@ $(document).on('click', '.cancel-subscription', function(evt) {
   var selector = '.' + evt.target.classList[evt.target.classList.length - 1];
   if (!$(selector).attr('isCancel')) {
     evt.stopImmediatePropagation();
-    flashConfirm(selector, 'Cancel Subscription',
+    FlashHandler.setConfirmationDialog(selector, 'Cancel Subscription',
       'Your subscription is going to cancelled',
       'isCancel'
     );

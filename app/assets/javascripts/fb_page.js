@@ -71,7 +71,7 @@ $( document ).ready(function() {
 
   $('#delete_integration').click(function (evt) {
     if (!$('#delete_integration').attr('isDestroy')) {
-      flashConfirm('#delete_integration','Rhombus Facebook Messenger Integration',
+      FlashHandler.setConfirmationDialog('#delete_integration','Rhombus Facebook Messenger Integration',
         'Are you sure, you want to remove the integration?', 'isDestroy' );
       return false;
     }
