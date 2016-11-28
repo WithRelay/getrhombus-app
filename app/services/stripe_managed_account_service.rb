@@ -1,5 +1,5 @@
 # stripe managed account class handles invidual and company managed account creating and updating
-# it accepts 2 parameter user and params where user is current user and params is from partialform _managed
+# Accepts parameter user and params where user is current user and params is from partialform _managed
 # NOTE constants in this class are immutable. elements of array cannot be modified. If you want to change remove .freeze
 class StripeManagedAccountService < Struct.new( :user, :params )
 
@@ -15,7 +15,8 @@ class StripeManagedAccountService < Struct.new( :user, :params )
   def create_account
     # create managed individual and company account self.send method accepts parameter and calls function
     account = Stripe::Account.create(send(string_method_name))
-  rescue => e; e # returns error object to retrieve error message is e.message. handle stripe create account error
+  rescue Stripe::StripeError => e; e
+  rescue StandardError => e; e # returns error object to retrieve error message is e.message. handle stripe create account error
   end
 
   # creates external account after creation of account. account parameter is send from module additiona_user_Action
@@ -23,7 +24,8 @@ class StripeManagedAccountService < Struct.new( :user, :params )
     # calls dynamic function name with send method and creates external accounts
     bank_account = account.external_accounts.create(send(external_string_method_name))
     bank_account
-  rescue => e; e # error object contains message attribute
+  rescue Stripe::StripeError => e; e
+  rescue StandardError => e; e # error object contains message attribute
   end
 
   def update_account
@@ -31,7 +33,8 @@ class StripeManagedAccountService < Struct.new( :user, :params )
     account = Stripe::Account.retrieve(user.stripe_creds[0].account_id)
     account.update_attributes(send("update_#{params_org_type}_managed_account"))
     account.save
-  rescue => e; e
+  rescue Stripe::StripeError => e; e
+  rescue StandardError => e; e
   end
 
   # bank_accounts metadata are only editable other bank_details are not editable by design
@@ -41,7 +44,8 @@ class StripeManagedAccountService < Struct.new( :user, :params )
     bank_account.update_attributes(send(external_string_method_name))
     bank_account.save
     bank_account
-  rescue => e; e
+  rescue Stripe::StripeError => e; e
+  rescue StandardError => e; e
   end
 
   # private functions
@@ -109,6 +113,11 @@ class StripeManagedAccountService < Struct.new( :user, :params )
   def common_individual_account
     individual_account = managed_company_account
     individual_account.delete(:business_name) # for individual account business name i.e. legal name is not required
+    individual_account.merge!({ metadata: { stripe_cred_id: stripe_cred[:id], bank_account_id: bank_account[:id],
+                                            user_address_id: address[:id], people_id: people[:id],
+                                            people_address_id: people[:address_attributes][:id]
+                                          }
+                              })
     individual_account
   end
 
@@ -138,6 +147,32 @@ class StripeManagedAccountService < Struct.new( :user, :params )
     update_company.except!(:managed, :country, :product_description)
     update_company
   end
+
+  # returns additional owner hash as mention in https://stripe.com/docs/api#account_object
+  # creates additional owner params which will be array and includes multiple hashes with
+  # additional owner attributes details like first_name, last_name
+  # TODO Need refactor in future function is lenghty.
+  def additional_owners
+    additional_owner = []
+    params[:people_attributes].each do |key, value|
+      unless key == '0' # key 0 contains address for default legal entities not for additional owners address
+        owner_details = {}
+        dob = value[:dob].split('/');
+        full_name = value[:full_name];
+        owner_details[:first_name] = full_name[0];
+        owner_details[:last_name] = full_name[1]
+        owner_details[:dob] = { day: dob[1], month: dob[0], year: dob[2] }
+        address = value[:address_attributes]
+        owner_details[:address] = { city: address[:city], country: address[:country],
+                                    state: address[:state_province], postal_code: address[:postal_code],
+                                    line1: address[:street_address]
+                                  }
+        additional_owner.push(owner_details);
+      end
+    end if params[:people_attributes].keys.length > 2
+    additional_owner
+  end
+
   # required hash is prepared as mention in the sripe documentation.Please follow below link.
   # https://stripe.com/docs/api#account_object
   # TODO function is too lengthy feel free to make small without changing its behaviour. We do not have test
@@ -148,7 +183,7 @@ class StripeManagedAccountService < Struct.new( :user, :params )
       product_description: params[:description],
       tos_acceptance: { ip: stripe_cred[:ip], date: stripe_cred[:tos_date].to_i, user_agent: stripe_cred[:user_agent] },
       legal_entity: { type: params_org_type, first_name: user.first_name, last_name: user.last_name,
-                      gender: 'female', phone_number: user.phone_number, business_name: params[:org_name],
+                      gender: 'female',  phone_number: '<redacted_phone_number>', business_name: params[:org_name],
                       business_tax_id: params[:org_tax_id], personal_id_number: people[:last4],
                       personal_address: { city: people_address[:city],
                                           country: people_address[:country],
@@ -162,7 +197,8 @@ class StripeManagedAccountService < Struct.new( :user, :params )
                                },
                       address_kana: {}, address_kanji: {}, personal_address_kana: {}, personal_address_kanji: {},
                       verification: {}, ssn_last_4_provided: {}, business_tax_id_provided: {},
-                      business_vat_id_provided: {}, personal_id_number_provided: {}
+                      business_vat_id_provided: {}, personal_id_number_provided: {},
+                      additional_owners: additional_owners
                     }
     }
   end
