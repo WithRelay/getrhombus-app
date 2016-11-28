@@ -23,7 +23,8 @@
 	<td><%= c.last_name %> </td>
 	<td><%= c.email %> </td>
 	<% customer_list = UserList.where(list_id:@list.id,user_id:c.id) %>
-	<td><%= link_to 'Remove user from list', controller:'user_lists', action: 'remove_user', user_id: c.id, list_id:@list.id %></td>
+	<td><%= link_to 'Remove user from list', controller:'user_lists', action: 'remove_user', user_id: c.id, list_id:@list.id %>
+	</td>
 </tr>
 
 <% end %>
