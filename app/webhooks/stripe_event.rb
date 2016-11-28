@@ -5,9 +5,7 @@ class StripeEvent
 
     def process_event(hash)
       @hash = hash[:data][:object]
-      # Though these things depends upon number of things but what i found is hashlookup is faster it has o(1) whereas switch statement has o(n)
-      # please follow the below link. http://stackoverflow.com/questions/4178240/which-is-faster-in-ruby-a-hash-lookup-or-a-function-with-a-case-statement
-      # send works like message passing to clas hierarchy until method reacts
+      # send works like message passing to class hierarchy until method reacts
       # it accepts a parameter that need to be pass in symbol or string which calls method.
       # if we pass string it will internally converts to symbol.
       self.send(string_method_name[hash[:type]])
@@ -223,24 +221,71 @@ class StripeEvent
     private
 
     def account_updated
-      # To access module methods as class method like self.messaging
-      extend AdditionalUserActions
-      # update_managed_acct
+      user_params = response_user_params.merge(bank_accont_params)
+      managed_accout_user.update(user_params)
+    rescue => e
     end
 
-    def current_user; User.find_by_email(@hash[:email]); end
+    def managed_accout_user; User.find_by_email(@hash[:email]); end
 
-    #TODO  things are left to do  on going
-    def full_user_params
-      users_attributes = Hash.new { |hash, key| hash[key] = {} }
-      users_attributes[:user] = { org_name: @hash[:business_name], url: @hash[:business_url],
-                                  address_attributes: { street: '' },
-                                  bank_accounts_attributes: {}
-                                 }
+    # Temporary to find match params as User atttributes. After completion it wil remove
+    #{"org_type"=>"Individual",
+    # "org_name"=>"",
+    # "url"=>"http://thebear",
+    # "org_tax_id"=>"00000000",
+    # "description"=>"kheas",
+     # "address_attributes"=>{"id"=>"23", "city"=>"asd", "street_address"=>"asd", "state_province"=>"", "country"=>"AT", "postal_code"=>"asd"},
+     # "bank_accounts_attributes"=>{"0"=>{"id"=>"9", "routing_number"=>"", "country"=>"AT", "currency"=>"EUR", "account_number"=>"AT89370400440532013000", "institution_number"=>""}},
+     # "people_attributes"=>
+     #  {"0"=>
+     #    {"id"=>"10",
+     #     "full_name"=>"Sad ",
+     #     "dob"=>"11/15/1990",
+     #     "last4"=>"0",
+     #     "role"=>"representative",
+     #     "address_attributes"=>{"street_address"=>"asd", "state_province"=>"", "id"=>"20", "country"=>"AT", "postal_code"=>"988", "city"=>"Asdasdasdas"}}},
+     #    def user_params
+    #   params.require(:user).permit(:id, :org_type, :org_name, :url, :org_tax_id, :description,
+    #     address_attributes: [:id, :city, :street_address, :state_province, :country, :postal_code],
+    #     bank_accounts_attributes: [:id, :routing_number, :country, :currency, :account_number,
+    #                                :institution_number],
+    #     people_attributes: [:id, :full_name, :dob, :last4, :role, :_destroy,
+    #     address_attributes: [:street_address, :state_province, :id, :country, :postal_code, :state_province,
+    #                          :city]],
+    #     stripe_creds_attributes: [:id])
+    # end
+
+    def response_user_params
+      {
+        org_name: @hash[:business_name], url: @hash[:business_url],
+        org_type: bank_account_params[:account_holder_type],
+        address_attributes: { street_address: '', city: '' , state_province: '',
+                              id: metadata_params[:user_address_id],
+                              country: '', postal_code: '' }
+      }
     end
 
-    def bank_account
+    def metadata_params
+      @hash[:metadata]
+    end
+
+    def bank_account_params
       @hash[:external_accounts][:data][0]
+    end
+
+    def bank_accont_params
+      bank_account = {}
+      bank_account[:bank_accounts_attributes] = { country: bank_account_params[:country],
+                                                  routing_number: bank_account_params[:routing_number],
+                                                  currency: bank_account_params[:currency],
+                                                  bank_name: bank_account_params[:name],
+                                                  status: bank_account_params[:status],
+                                                  fingerprint: bank_account_params[:fingerprint],
+                                                  stripe_bank_account_id: bank_account_params[:id],
+                                                  account_number: bank_account_params[:account],
+                                                  id: metadata_params[:bank_account_id]
+                                                }
+      bank_account
     end
 
     def string_method_name
