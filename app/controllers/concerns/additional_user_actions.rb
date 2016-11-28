@@ -22,7 +22,7 @@ module AdditionalUserActions
     create_account = stripe_managed.create_account
     if create_account.is_a? Stripe::Account
       external_account = stripe_managed.create_external_account(create_account)
-      current_user.update(save_managed_connect_acccount(create_account, external_account)) if external_account.is_a? Stripe::Account
+      current_user.update(save_managed_connect_acccount(create_account, external_account)) if external_account.is_a? Stripe::BankAccount
       message = set_message(create_account.id, external_account)
     else
       message = set_message(create_account)
@@ -36,8 +36,10 @@ module AdditionalUserActions
     if update_user_account.is_a? Stripe::Account
       update_bank_account = stripe_managed_account.update_external_accounts(update_user_account)
       current_user.update(params_with_stripe(update_user_account, update_bank_account))
+      message = set_message(update_user_account.id, update_bank_account)
+    else
+      message = set_message(update_user_account)
     end
-    message = set_message(update_user_account)
     render html: message
   end
 
