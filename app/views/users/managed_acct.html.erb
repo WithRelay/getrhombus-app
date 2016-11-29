@@ -3,7 +3,7 @@
 <script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
 <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
 <%# https://hackhands.com/building-has_many-model-relationship-form-cocoon/ %>
-<%= form_for @user, url: { action: "create_managed_acct" } do |f| %>
+<%= form_for @user, url: { action: url_for_create_update } do |f| %>
 
   <% if @user.errors.any? %>
     <div id="error_explanation">
@@ -134,6 +134,7 @@
       <div><%= c.object.due_by %></div>
       <div><%= c.object.fields_needed %></div>
     <% end %>
+    <%= c.hidden_field :ip %>
   <% end %>
 
   <br><br>
