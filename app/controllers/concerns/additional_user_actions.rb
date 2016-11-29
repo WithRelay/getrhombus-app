@@ -18,37 +18,37 @@ module AdditionalUserActions
   end
 
   def create_managed_acct
+    status = user_managed_account
+    render html: set_message(status)
+  end
+
+  def user_managed_account
     stripe_managed = StripeManagedAccountService.new(current_user, full_user_params)
-    create_account = stripe_managed.create_account
-    if create_account.is_a? Stripe::Account
-      external_account = stripe_managed.create_external_account(create_account)
-      current_user.update(save_managed_connect_acccount(create_account, external_account)) if external_account.is_a? Stripe::BankAccount
-      message = set_message(create_account.id, external_account)
+    action = { 'create_managed_acct'=> [:create_account, :create_external_account],
+               'update_managed_acct'=> [:update_account, :update_external_accounts] }
+    account = stripe_managed.send(action[params[:action]][0])
+    if account.is_a?(Stripe::Account)
+      external_account = stripe_managed.send(action[params[:action]][1], account)
+      current_user.update(save_managed_connect_acccount(account, external_account))
+      external_account.is_a?(Stripe::BankAccount) ? external_account : account
     else
-      message = set_message(create_account)
+      account
     end
-    render html: message
   end
 
   def update_managed_acct
-    stripe_managed_account = StripeManagedAccountService.new(current_user, full_user_params)
-    update_user_account = stripe_managed_account.update_account
-    if update_user_account.is_a? Stripe::Account
-      update_bank_account = stripe_managed_account.update_external_accounts(update_user_account)
-      current_user.update(params_with_stripe(update_user_account, update_bank_account))
-      message = set_message(update_user_account.id, update_bank_account)
-    else
-      message = set_message(update_user_account)
-    end
-    render html: message
+    status = user_managed_account
+    render html: set_message(status)
   end
 
   def save_managed_connect_acccount(account, bank_account)
     account_keys = account.keys
     save_params = params_with_stripe(account, bank_account)
-    save_params[:stripe_creds_attributes]['0'].merge!({ account_id: account.id, secret: account_keys.secret,
-                                                        publishable_key: account_keys.publishable
-                                                      })
+    unless params[:action] == 'update_managed_acct'
+      save_params[:stripe_creds_attributes]['0'].merge!({ account_id: account.id, secret: account_keys.secret,
+                                                          publishable_key: account_keys.publishable
+                                                        })
+    end
     save_params
   end
 
@@ -59,18 +59,22 @@ module AdditionalUserActions
                                                           due_by: account_verification.due_by,
                                                           fields_needed: account_verification.fields_needed
                                                         })
-    stripe_params[:bank_accounts_attributes]['0'].merge!({ stripe_bank_account_id: bank_account.id,
-                                                           bank_name: bank_account.bank_name,
-                                                           status: bank_account.status,
-                                                           fingerprint: bank_account.fingerprint })
+    unless bank_account.methods.include?(:message)
+      stripe_params[:bank_accounts_attributes]['0'].merge!({ stripe_bank_account_id: bank_account.id,
+                                                             bank_name: bank_account.bank_name,
+                                                             status: bank_account.status,
+                                                             fingerprint: bank_account.fingerprint })
+    end
     stripe_params
   end
 
-  def set_message(account = '' , ext_account)
-    unless account.blank?
-      link_to_account = "<a href='https://dashboard.stripe.com/test/applications/users/" + account + "'>Stripe Connected Succesfull Click for dashboard page</a>"
+  def set_message(status)
+    if status.methods.include?(:message)
+      status
+    else
+      link_to_account = "<a href='https://dashboard.stripe.com/test/applications/users/" + status.id + "'>Stripe Connected Succesfull Click for dashboard page</a>"
+      link_to_account.html_safe
     end
-    ext_account.methods.include?(:message) ? ext_account.message : link_to_account.html_safe
   end
 
   # Returns JSON object with user hash who sent a message to the given merchant in the last CONFIG[:dashboard]['messaging']['num_days_history'] days
