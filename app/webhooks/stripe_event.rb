@@ -226,66 +226,40 @@ class StripeEvent
     rescue => e
     end
 
-    def managed_accout_user; User.find_by_email(@hash[:email]); end
-
-    # Temporary to find match params as User atttributes. After completion it wil remove
-    #{"org_type"=>"Individual",
-    # "org_name"=>"",
-    # "url"=>"http://thebear",
-    # "org_tax_id"=>"00000000",
-    # "description"=>"kheas",
-     # "address_attributes"=>{"id"=>"23", "city"=>"asd", "street_address"=>"asd", "state_province"=>"", "country"=>"AT", "postal_code"=>"asd"},
-     # "bank_accounts_attributes"=>{"0"=>{"id"=>"9", "routing_number"=>"", "country"=>"AT", "currency"=>"EUR", "account_number"=>"AT89370400440532013000", "institution_number"=>""}},
-     # "people_attributes"=>
-     #  {"0"=>
-     #    {"id"=>"10",
-     #     "full_name"=>"Sad ",
-     #     "dob"=>"11/15/1990",
-     #     "last4"=>"0",
-     #     "role"=>"representative",
-     #     "address_attributes"=>{"street_address"=>"asd", "state_province"=>"", "id"=>"20", "country"=>"AT", "postal_code"=>"988", "city"=>"Asdasdasdas"}}},
-     #    def user_params
-    #   params.require(:user).permit(:id, :org_type, :org_name, :url, :org_tax_id, :description,
-    #     address_attributes: [:id, :city, :street_address, :state_province, :country, :postal_code],
-    #     bank_accounts_attributes: [:id, :routing_number, :country, :currency, :account_number,
-    #                                :institution_number],
-    #     people_attributes: [:id, :full_name, :dob, :last4, :role, :_destroy,
-    #     address_attributes: [:street_address, :state_province, :id, :country, :postal_code, :state_province,
-    #                          :city]],
-    #     stripe_creds_attributes: [:id])
-    # end
+    def managed_accout_user; StripeCred.find_by_account_id(@hash[:id]).user end
 
     def response_user_params
       {
         org_name: @hash[:business_name], url: @hash[:business_url],
         org_type: bank_account_params[:account_holder_type],
-        address_attributes: { street_address: '', city: '' , state_province: '',
-                              id: metadata_params[:user_address_id],
-                              country: '', postal_code: '' }
+        address_attributes: { street_address: address_params[:street], city: address_params[:city],
+                              state_province: address_params[:state],
+                              country: address_params[:country], postal_code: address_params[:zip] }
       }
-    end
-
-    def metadata_params
-      @hash[:metadata]
     end
 
     def bank_account_params
       @hash[:external_accounts][:data][0]
     end
 
+    def address_params
+      @hash[:address]
+    end
+
     def bank_accont_params
-      bank_account = {}
-      bank_account[:bank_accounts_attributes] = { country: bank_account_params[:country],
-                                                  routing_number: bank_account_params[:routing_number],
-                                                  currency: bank_account_params[:currency],
-                                                  bank_name: bank_account_params[:name],
-                                                  status: bank_account_params[:status],
-                                                  fingerprint: bank_account_params[:fingerprint],
-                                                  stripe_bank_account_id: bank_account_params[:id],
-                                                  account_number: bank_account_params[:account],
-                                                  id: metadata_params[:bank_account_id]
-                                                }
-      bank_account
+      bank_account = BankAccount.find_by_stripe_bank_account_id(bank_account_params[:id])
+      bank_account_details = {}
+      bank_account_details[:bank_accounts_attributes] = { country: bank_account_params[:country],
+                                                          routing_number: bank_account_params[:routing_number],
+                                                          currency: bank_account_params[:currency],
+                                                          bank_name: bank_account_params[:name],
+                                                          status: bank_account_params[:status],
+                                                          fingerprint: bank_account_params[:fingerprint],
+                                                          stripe_bank_account_id: bank_account_params[:id],
+                                                          account_number: bank_account_params[:account],
+                                                          id: bank_account.id
+                                                        }
+      bank_account_details
     end
 
     def string_method_name
