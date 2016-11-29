@@ -36,7 +36,7 @@
   <% end %>
    
   <div class="field">
-    <%= f.select :tag_type, options_for_select({ "Non-payment Hashtag" => "1", "One-time payment Hashtag" => '2', "Recurring payment Hashtag" => "3" }, selected: @hashtag.tag_type) %>
+    <%= f.select :tag_type, options_for_select({ "Non-payment Hashtag" => "0", "One-time payment Hashtag" => '1', "Recurring payment Hashtag" => "2" }, selected: @hashtag.tag_type) %>
   </div>
 
   <div class="field">
