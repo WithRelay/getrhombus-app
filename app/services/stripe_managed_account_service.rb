@@ -116,11 +116,6 @@ class StripeManagedAccountService < Struct.new( :user, :params )
   def common_individual_account
     individual_account = managed_company_account
     individual_account.delete(:business_name) # for individual account business name i.e. legal name is not required
-    individual_account.merge!({ metadata: { stripe_cred_id: stripe_cred[:id], bank_account_id: bank_account[:id],
-                                            user_address_id: address[:id], people_id: people[:id],
-                                            people_address_id: people[:address_attributes][:id]
-                                          }
-                              })
     individual_account
   end
 
@@ -140,14 +135,12 @@ class StripeManagedAccountService < Struct.new( :user, :params )
   end
 
   def update_individual_managed_account
-    update_list = update_company_managed_account
-    update_list.except!(:business_name, :legal_entity)
-    update_list
+    update_company_managed_account
   end
 
   def update_company_managed_account
     update_company = managed_company_account
-    update_company.except!(:managed, :country, :product_description)
+    update_company.except!(:managed, :country, :product_description, :business_name, :legal_entity)
     update_company
   end
 
