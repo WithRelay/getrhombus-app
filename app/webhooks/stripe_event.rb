@@ -81,7 +81,7 @@ class StripeEvent
     end
 
     def update_invoice_data
-      # plan_id, user_id, team_id, coupon_id, subscription_id do not need to be set since they are immutable
+      # user_id, team_id, coupon_id, subscription_id do not need to be set since they are immutable
       @data.date = @hash[:date]
       @data.stripe_invoice_id = @hash[:id]
 
@@ -116,29 +116,25 @@ class StripeEvent
 
       # Ensure all these exists else it isnt ours. They should.
       merchant_customer = MerchantCustomer.find_by(stripe_customer_id:  @hash[:customer])
-      if user = merchant_customer.customer
-        @data.user_id = user.id
+      if merchant_customer
+        # update user_id and team_id from merchant_customer
+        @data.user_id = merchant_customer.customer_id
+        @data.team_id = merchant_customer.merchant_id
 
-        if subscription = Subscription.where(stripe_subscription_id: @hash[:lines][:data][0][:id]).first
-          @data.team_id = subscription.merchant_customer.merchant_id
-          # set_time_zone(subscription.team.time_zone)
-        end
-
+        # update coupon_id
         if @hash[:discount].present? && coupon = Coupon.find_by(stripe_coupon_id: @hash[:discount][:coupon][:id])
           @data.coupon_id = coupon.id
         end
-
+        # update invoice data
         update_invoice_data
       end
-
       # notify admin
     end
 
     # Handles connect and platform payments. Parameters are basically the same. So nothing special.
     def invoice_payment_succeeded
       # Invoice should already exist but if it doesn't, create a new one
-      @data = Invoice.where(stripe_invoice_id: @hash[:id]).first_or_initialize
-
+      @data = Invoice.includes(:notification_log).where(stripe_invoice_id: @hash[:id]).first_or_initialize
       # update_invoice_data
       update_invoice_data
 
@@ -156,16 +152,12 @@ class StripeEvent
           if l[:type] == 'subscription'
             # find subscription
             sbtn = Subscription.includes(:plan).where(stripe_subscription_id: l[:id]).first
-            # update coupon and subscription
+            # update subscription_id
             if sbtn
-              @data.update(subscription_id: sbtn.id, coupon_id: sbtn.coupon_id)
+              @data.update(subscription_id: sbtn.id)
               hashtag_id = sbtn.plan.hashtag_id
               sbtn_id = sbtn.id
             end
-
-            # set_time_zone(sbtn.merchant_customer.customer.time_zone)
-            # or set_time_zone(sbtn.merchant_customer.merchant.time_zone)
-
 
             # just in case transaction actually exists but not log
             amount_less_fees = txn.amount_less_fees ? txn.amount_less_fees : 'calculate here'
@@ -178,8 +170,7 @@ class StripeEvent
 
             txn.update( amount: l[:amount], currency: l[:currency], description: description,
               application_fee: l[:application_fee],
-              # since user_id and team_id are removed from subscription
-              # user_id: sbtn.user_id, team_id: sbtn.team_id,
+              user_id: @data.user_id, team_id: @data.team_id,
               hashtag_id: hashtag_id, txn_available_at: @hash[:date],
               # At the moment, charge will only contain 1 line item, what if there are a couple line items?
               txn_uri: @hash[:charge], tax_percent: @hash[:tax_percent], amount_less_fees: amount_less_fees,
@@ -192,13 +183,15 @@ class StripeEvent
 
             # set transaction_id
             @data.update_attribute(:transaction_id, txn.id)
-
             # Notify customer and/or merchant
             # Notify (admin)
             txn.notification_log = NotificationLog.create(notify_type: 'new_transaction', reason: 'receipt', channel: 'email')
           end
         end
-
+      end
+      # save invoice_payment_succeeded event responce to notification_log
+      if @data
+        @data.notification_log = NotificationLog.create(notify_type: 'invoice_payment_succeeded', channel: 'email', reason: 'Invoice payment has been succeeded.')
       end
     end
 
@@ -208,11 +201,12 @@ class StripeEvent
 
     def invoice_payment_failed
       # find invoice and update
-      if @data = Invoice.find_by(stripe_invoice_id: @hash[:id]).first_or_initialize
-        update_invoice_data
-
-        # find customer and admin
-        # Notify them (admin) (customer)
+      @data = Invoice.includes(:notification_log).where(stripe_invoice_id: @hash[:id]).first_or_initialize #Invoice should already exist but if it doesn't, create a new one
+      update_invoice_data
+      # find customer and admin
+      # Notify them (admin) (customer)
+      if @data
+        @data.notification_log =  NotificationLog.create(notify_type: 'invoice_payment_failed', channel: 'email', reason: 'Invoice payment has been failed.')
       end
     end
 
