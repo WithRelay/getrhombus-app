@@ -32,7 +32,7 @@ Rails.application.routes.draw  do
   match "send_mms_from_dashboard" => 'messages#dashboard_mms', via: [:post]
 
   ## events/hooks routegs
-  constraints subdomain: 'hooks' do
+  # constraints subdomain: 'hooks' do
     post 'events/stripe' => 'webhooks#stripe_events'
     match "events/facebook" => "webhooks#facebook_events", via: [:get, :post]
 
@@ -41,7 +41,7 @@ Rails.application.routes.draw  do
     get "receive_voice_twilio" => 'messages#receive_voice_twilio'
     get "receive_delivery_report" => 'messages#receive_delivery_report'
     get "receive_delivery_report_twilio" => 'messages#receive_delivery_report_twilio'
-  end
+  # end
 
   ## devise routes
   devise_for :users, controllers: { registrations: "registrations", omniauth_callbacks: "omniauth_callbacks", sessions: 'sessions' }
@@ -91,6 +91,7 @@ Rails.application.routes.draw  do
     member do
       get 'managed-accounts' => 'users#managed_acct'
       match 'managed-accounts' => "users#create_managed_acct", via: :patch
+      match 'update-managed-acct' => 'users#update_managed_acct', via: :patch
       get 'messaging' => 'users#messaging'
       get 'contacts' => 'users#contacts' #(both customers or merchants)
       get 'json_get_latest_active_messaging' => 'users#json_get_latest_active_messaging'
