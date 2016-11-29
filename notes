@@ -2,18 +2,7 @@ current stripe api version - 2014-03-28
 
 Bhishma
 - fb_messages... page_id, from, to, fb_page_id?
-- put flashes in singleton function/class so we don't pollute the global namespace..do a global search and replace all uses
 
-Surya
-- move campaign/email service into classes
-- what happens to jobs if I change servers?
-- You cannot delete a managed account
-- review errors in dropbox paper
-- rescue standard errors
-- .send is fine since we don't need any processing in the case statements. thank you. concise coding!
-
-
-- merchant on add user - add customer to platform
 - on subscription - check if user already belongs to merchant
 - customers can create subscriptions over messaging...not dashboard, but can cancel subscription
 
@@ -59,7 +48,4 @@ Payment Capture - should be for only customers....capture in logic
 Contact - Inbound
 - sent u a text doesnt have an account 
 - have an account, sent u a text but ref link isnt yours 
-
-Campaigns and Facebook
-- fail safely for audio and video files
 

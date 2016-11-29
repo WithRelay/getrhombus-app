@@ -6,6 +6,8 @@ class Person < ActiveRecord::Base
   accepts_nested_attributes_for :address#, reject_if: :all_blank
   before_validation :the_titleizer  
 
+  enum role: { representative: 0, owner: 1 }
+
 
   def full_name=(val)
     n = val.split(" ", 2)
@@ -24,7 +26,6 @@ class Person < ActiveRecord::Base
     def the_titleizer       #remove leading and trailing whitespaces
       self.first_name = self.first_name.strip.titleize unless self.first_name.blank?
       self.last_name = self.last_name.strip.titleize unless self.last_name.blank?
-      self.role = self.role.strip.titleize unless self.role.blank?
     end
 
   

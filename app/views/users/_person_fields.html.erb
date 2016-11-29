@@ -18,7 +18,7 @@
   <% end %>
 
 
-  <%= f.hidden_field :role, value: f.index == 0 ? 'representative' : 'owner' %>
+  <%= f.hidden_field :role, value: f.index == 0 ? '0' : '1' %>
 
   <%= f.fields_for :address do |a| %>
     <div class='person-street-div'>
