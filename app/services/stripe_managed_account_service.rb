@@ -174,11 +174,12 @@ class StripeManagedAccountService < Struct.new( :user, :params )
   # TODO function is too lengthy feel free to make small without changing its behaviour. We do not have test
   def managed_company_account
     dob = people[:dob].split('/')
+    full_name = people[:full_name].split(' ')
     { email: user.email, business_url: params[:url],
       business_name: params[:org_name], managed: true, country: address[:country],
       product_description: params[:description],
       tos_acceptance: { ip: stripe_cred[:ip], date: stripe_cred[:tos_date].to_i, user_agent: stripe_cred[:user_agent] },
-      legal_entity: { type: params_org_type, first_name: user.first_name, last_name: user.last_name,
+      legal_entity: { type: params_org_type, first_name: full_name[0], last_name: full_name[1],
                       gender: 'female',  phone_number: '<redacted_phone_number>', business_name: params[:org_name],
                       business_tax_id: params[:org_tax_id], personal_id_number: people[:last4],
                       personal_address: { city: people_address[:city],
