@@ -169,7 +169,7 @@ class User < ActiveRecord::Base
   def add_token_to_user(card_token)
     begin
       # platform acct shouldn't really be doing this since it is just a management account
-      unless self.is_platform?
+      unless is_platform?
         res = []
         platform_acct = User.get_platform_acct_obj
 
@@ -181,7 +181,7 @@ class User < ActiveRecord::Base
         hash = { email: self.email, card_token: card_token, is_new_customer: true, is_platform_customer: true, is_merchant: is_merchant? }
         
         # when blank, add only to platform. Blank indicates signing up
-        if cu.blank? 
+        if cu.blank?
           re = PaymentService.add_token_to_stripe_customer(hash)
           #buy_merchant_number if hash[:is_merchant] && rn_type == nil
         else
@@ -190,7 +190,7 @@ class User < ActiveRecord::Base
             hash[:stripe_customer_id] = cu.first.stripe_customer_id
             # is merchant, so update on platform
             re = PaymentService.add_token_to_stripe_customer(hash)
-          else                      
+          else
             cu.each do |c|
               hash[:stripe_customer_id] = c.stripe_customer_id
               # can be on platform or merchant (stripe managed) account
@@ -209,12 +209,14 @@ class User < ActiveRecord::Base
             MerchantCustomer.create(merchant_id: platform_acct.id, customer_id: self.id, stripe_customer_id: re[1].id)
           end
         else
-          PaymentService.delete_customer(cu[0].stripe_customer_id, self.uid, self.is_platform?) if cu.present?
+          # since new customer are always platform customer so is_platform is always true
+          PaymentService.delete_customer(re[1].id, self.get_team_uid, true) if cu.blank?
         end
       end
       re
     rescue StandardError => e
-      # PaymentService.delete_customer() if res.length > 0
+      # since new customer are always platform customer so is_platform is always true
+      PaymentService.delete_customer(re[1].id, self.get_team_uid, true) if (res.length > 0 && cu.blank?)
       # notify team
       [false]
     end
