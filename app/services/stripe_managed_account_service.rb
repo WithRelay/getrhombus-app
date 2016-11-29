@@ -9,6 +9,9 @@ class StripeManagedAccountService < Struct.new( :user, :params )
   # US has routing number AU and GB has also routing number internally named as account number
   ROUTING_COUNTRIES = %W(US AU GB).freeze; BANK_CODE_COUNTRIES = %W(SG CA HK).freeze
 
+  # since we are not accessing contant outside of a class so making privating all constants
+  private_constant :ROUTING_COUNTRIES, :BANK_CODE_COUNTRIES, :COMMON_COUNTRIES
+
   Stripe.api_version = '<redacted_phone_number>'
 
   # creates stripe managed and individual account
@@ -52,29 +55,29 @@ class StripeManagedAccountService < Struct.new( :user, :params )
   private
 
   # address function returns hash address_attributes from params so that it will be convinient to use hash
-  def address; params[:address_attributes]; end
+  def address; params[:address_attributes] end
 
   # stripe cred returns stripe cred hash
-  def stripe_cred; params[:stripe_creds_attributes]['0']; end
+  def stripe_cred; params[:stripe_creds_attributes]['0'] end
 
   # returns people hash
-  def people; params[:people_attributes]['0']; end
+  def people; params[:people_attributes]['0'] end
 
   # returns bank account hash
-  def bank_account; params[:bank_accounts_attributes]['0']; end
+  def bank_account; params[:bank_accounts_attributes]['0'] end
 
   # returns people hash
-  def people_address; params[:people_attributes]['0']['address_attributes']; end
+  def people_address; params[:people_attributes]['0']['address_attributes'] end
 
   # country with bank code are countries in constant BANK_CODE_COUNTRIES
-  def country_with_bank_code_individual_account; common_individual_account; end
+  def country_with_bank_code_individual_account; common_individual_account end
 
   # org_type comes in upcase as a params but stripe need in downcase
-  def params_org_type; params[:org_type].downcase; end
+  def params_org_type; params[:org_type].downcase end
 
-  def is_common_country_present?; COMMON_COUNTRIES.include?(address[:country]); end
+  def common_country_present?; COMMON_COUNTRIES.include?(address[:country]) end
 
-  def is_bank_code_country_present?; BANK_CODE_COUNTRIES.include?(address[:country]); end
+  def bank_code_country_present?; BANK_CODE_COUNTRIES.include?(address[:country]) end
 
   # returns common company account hash for countries in constant common_countries
   def common_company_account
@@ -87,14 +90,14 @@ class StripeManagedAccountService < Struct.new( :user, :params )
   # return string method name
   def string_method_name
     # returns a string hold same as function name which is dynamic
-    return "common_#{params_org_type}_account" if is_common_country_present?
-    return "country_with_bank_code_#{params_org_type}_account" if is_bank_code_country_present?
+    return "common_#{params_org_type}_account" if common_country_present?
+    return "country_with_bank_code_#{params_org_type}_account" if bank_code_country_present?
   end
 
   def external_string_method_name
     # external_accounts is a string which hold same name as function declare above
-    return "common_external_accounts" if is_common_country_present?
-    return "country_with_bank_code_external_accounts" if is_bank_code_country_present?
+    return "common_external_accounts" if common_country_present?
+    return "country_with_bank_code_external_accounts" if bank_code_country_present?
   end
 
   def country_with_bank_code_external_accounts
