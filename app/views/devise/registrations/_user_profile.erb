@@ -25,8 +25,7 @@
 
 
    <div class="login-form">
-   <%= render 'alerts' %>
-    <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put, :autocomplete => "off", id: "user-form", class: "userForm hide show" }) do |f| %>
+    <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put, :autocomplete => "off", id: "cc-form", class: "userForm hide show" }) do |f| %>
         <div class="top">
           <h4>Enter Payment Info.</h4>
           <img src="<%= asset_path 'stripe.png' %>" alt="icon" id="stripe-logo">
