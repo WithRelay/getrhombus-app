@@ -29,7 +29,7 @@ var CardHandler = new function() {
 
   function stripeResponseHandler(status, response) {
     if (response.error) {
-      setFlashMessage(response.error.message, 'error');
+       FlashHandler.setFlashMessage(response.error.message, 'error');
       form_btn.attr("disabled", false).val(form_btn_text);
       show_stripe_error_field(response.error.param);
     } else {

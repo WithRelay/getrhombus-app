@@ -23,7 +23,9 @@ class SubscriptionsController < ApplicationController
   end
 
   def create
-    res = false
+    success = false
+    card_error = ''
+    res = []
     subscription_params[:plan_id].each do |pid|
       subscription_param = subscription_params
       # use single plan id at a time
@@ -31,18 +33,18 @@ class SubscriptionsController < ApplicationController
       merchant_customer = MerchantCustomer.find subscription_params[:merchant_customer_id]
 
       @subscription = merchant_customer.subscriptions.new(subscription_param)
-      if @subscription.create_subscription({ team: current_user, customer: merchant_customer.stripe_customer_id })
-        res = true
+      res = @subscription.create_subscription({ team: current_user, customer: merchant_customer.stripe_customer_id })
+      if res.first
+        success = true
       else
-       res = false
+       success = false
        break
       end
     end
-
-    if res
+    if success
       redirect_to user_subscriptions_path, flash: {notice: 'Subscriptions created successfully'}
     else
-      flash[:error] = 'Something went wrong'
+      flash[:error] = (res.second == 'card_error') ? res.third : 'Something went wrong'
       redirect_to new_user_subscription_path
     end
 

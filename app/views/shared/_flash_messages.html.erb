@@ -7,7 +7,7 @@
       // .to_json is sometime flash message can contain string
       var arrayMessage = <%== flash[flash_key].to_json %>
       // flashMethod is a method availabel in flashes.js
-      setFlashMessage( arrayMessage, flashTitle )
-      });
+      FlashHandler.setFlashMessage( arrayMessage, flashTitle )
+    });
   </script>
 <% end %>

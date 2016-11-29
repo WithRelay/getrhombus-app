@@ -95,7 +95,7 @@ $(document).on('click', '.delete-coupon', function(evt) {
 
     if (!$(selector).attr('isDestroy')) {
       evt.stopImmediatePropagation();
-      flashConfirm(selector,'Delete coupon',
+      FlashHandler.setConfirmationDialog(selector,'Delete coupon',
        'Deleting this coupon will not affect discounts for customers who have already redeemed the coupon, but new redemptions of the coupon won\'t be allowed.',
        'isDestroy'
       );

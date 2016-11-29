@@ -27,11 +27,11 @@ $(document).ready(function () {
     })
       .done(function(data, textStatus, response) {
         document.getElementById(charge_id).setAttribute("data-status", "Refunded");
-        setFlashMessage(data.message, 'notice');
+         FlashHandler.setFlashMessage(data.message, 'notice');
         $(REFUND_TXN_LINK)[0].parentNode.parentNode.innerHTML = "<tr><td>Status: </td><td> Refunded</td></tr>";
       })
       .fail(function(data, textStatus, response) { 
-        setFlashMessage(data.responseJSON.message, 'error');
+         FlashHandler.setFlashMessage(data.responseJSON.message, 'error');
       })
       .always(function(data, textStatus, response) {
         refund_btn.disabled = false;

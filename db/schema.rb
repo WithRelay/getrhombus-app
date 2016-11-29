@@ -298,11 +298,10 @@ ActiveRecord::Schema.define(version: 20161129053711) do
   add_index "invoices", ["user_id"], name: "fk_rails_d981ce0d41", using: :btree
 
   create_table "lists", force: :cascade do |t|
-    t.datetime "created_at",               null: false
-    t.datetime "updated_at",               null: false
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
     t.integer  "user_id",    limit: 4
     t.string   "name",       limit: 191
-    t.text     "segment",    limit: 65535
   end
 
   add_index "lists", ["user_id"], name: "index_lists_on_user_id", using: :btree
@@ -446,9 +445,9 @@ ActiveRecord::Schema.define(version: 20161129053711) do
   add_index "referrers", ["uid"], name: "index_referrers_on_uid", using: :btree
 
   create_table "refunds", force: :cascade do |t|
-    t.string   "uri",            limit: 255
-    t.string   "time",           limit: 255
-    t.string   "reason",         limit: 255
+    t.string   "uri",            limit: 191
+    t.string   "time",           limit: 191
+    t.string   "reason",         limit: 191
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "transaction_id", limit: 4
