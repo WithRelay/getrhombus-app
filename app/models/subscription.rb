@@ -27,7 +27,7 @@ class Subscription < ActiveRecord::Base
       hash.delete(:team)
 
       res = PaymentService.create_subscription(hash, uid, is_platform)
-      
+
       if res.first
         self.update(
           stripe_subscription_id: res.second.id,
@@ -46,13 +46,12 @@ class Subscription < ActiveRecord::Base
         # should this be for only standard error caught?
         self.cancel_subscription(team, false)
       end
-
-      res.first
+      res
     rescue StandardError => e
       # if StandardError happened after Stripe was called, delete subscription on Stripe
       self.cancel_subscription(team, false) if res.length > 0
       # notify team via email
-      false
+      [false]
     end
   end
 

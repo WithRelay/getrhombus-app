@@ -169,9 +169,9 @@ class User < ActiveRecord::Base
   def add_token_to_user(card_token)
     begin
       # platform acct shouldn't really be doing this since it is just a management account
-      if !is_platform?
+      unless self.is_platform?
         res = []
-        platform_acct = User.get_platform_acct_obj 
+        platform_acct = User.get_platform_acct_obj
 
         # Two scenarios
         # 1. a merchant user who is a customer of platform
@@ -192,7 +192,7 @@ class User < ActiveRecord::Base
             re = PaymentService.add_token_to_stripe_customer(hash)
           else                      
             cu.each do |c|
-              hash[:stripe_customer_id] = cu.stripe_customer_id
+              hash[:stripe_customer_id] = c.stripe_customer_id
               # can be on platform or merchant (stripe managed) account
               hash[:is_platform_customer] = c.merchant_id == platform_acct.id
               if hash[:is_platform_customer]
@@ -203,23 +203,20 @@ class User < ActiveRecord::Base
             end
           end      
         end
-
+        # create new merchant_customer for stripe customer
         if re.first
           if cu.blank?
-            MerchantCustomer.create(merchant_id: platform_acct.id, customer_id: self.id, stripe_customer_id: re[1].id, livemode: re[1].livemode)
+            MerchantCustomer.create(merchant_id: platform_acct.id, customer_id: self.id, stripe_customer_id: re[1].id)
           end
-          true
         else
-          PaymentService.delete_customer if cu.blank?
-          false
+          PaymentService.delete_customer(cu[0].stripe_customer_id, self.uid, self.is_platform?) if cu.present?
         end
       end
- 
+      re
     rescue StandardError => e
-      
       # PaymentService.delete_customer() if res.length > 0
       # notify team
-      false
+      [false]
     end
   end
 

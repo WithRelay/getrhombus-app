@@ -4,10 +4,8 @@ class RegistrationsController < Devise::RegistrationsController
 
   def update
     set_captured_payment_session
-
-    re = (params[:card_token].present?) ? current_user.add_token_to_user(params[:card_token]) : true
-      
-    if re
+    re = (params[:user][:card_token].present?) ? current_user.add_token_to_user(params[:user][:card_token]) : [true]
+    if re.first
       if current_user.update_without_password(devise_parameter_sanitizer.sanitize(:account_update))
         set_flash_message :notice, :updated
         # Sign in the current user bypassing validation in case his password changed
@@ -22,7 +20,8 @@ class RegistrationsController < Devise::RegistrationsController
     else
       clean_up_passwords resource
       #render "edit", notice: "We were unable to update your card information"
-      redirect_to build_user_link , flash: { error: "We were unable to update your card information. Please check the details entered." }
+      error_message = (re.second == 'card_error') ? re.third :  "We were unable to update your card information. Please check the details entered."
+      redirect_to build_user_link , flash: { error: error_message }
     end
   end 
 

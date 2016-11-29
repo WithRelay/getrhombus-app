@@ -4,7 +4,7 @@ class PaymentService
 
     # Create or update customer on Stripe
     def add_token_to_stripe_customer(hash, stripe_account_uid = "")
-      begin          
+      begin
         if hash[:is_new_customer]
           cu = Stripe::Customer.create(email: hash[:email], source: hash[:card_token])
         else 
@@ -17,8 +17,7 @@ class PaymentService
           cu.email = hash[:email]
           cu.source = hash[:card_token]
           cu.save
-        end     
-
+        end
         return [true, cu]
       rescue Stripe::CardError => e
         # Since it's a decline, Stripe::CardError will be caught
@@ -27,10 +26,9 @@ class PaymentService
         unless hash[:is_merchant]
           Message.send_and_save_message(owner.rhombus_number, current_user.phone_number, "We were unable to update your card info on Rhombus because: #{err[:message]}.")
         end
-
         # redo this email
         # Notification.token_failure_notification(err, hash[:email]).deliver_now
-        [false, e]
+        [false, err[:type], err[:message]]
       rescue Stripe::StripeError => e
         # send this only to platform
         # Notification.token_failure_notification(e.json_body[:error], ....).deliver_now
@@ -50,7 +48,7 @@ class PaymentService
           cu = Stripe::Customer.retrieve(customer_id, { stripe_account: stripe_account_uid })
         end
 
-        cu.delete        
+        cu.delete
         [true]
       rescue Stripe::StripeError => e
         [false, e]
@@ -75,7 +73,7 @@ class PaymentService
               capture: capture,
               description: "Payment from #{user.email}. Card name: #{user.card_name}. Last four: #{user.last4}.",
               application_fee: 0,
-              metadata: { "message" => message }  
+              metadata: { "message" => message }
             }, { stripe_account: hash[:uid] })
         else
 
@@ -91,7 +89,7 @@ class PaymentService
 
               # statement_descriptor: '', # we will set this here
               # application_fee: rhombus_fee # from hash
-              metadata: { "message" => message }            
+              metadata: { "message" => message }
             })
         end
 
@@ -116,7 +114,7 @@ class PaymentService
         [false, e.json_body[:error]]
       rescue StandardError => e
         [false, e]
-      end 
+      end
     end
 
     # must check that customer has a card on file first
@@ -134,6 +132,10 @@ class PaymentService
         end
 
         [true, re]
+      rescue Stripe::CardError => e
+        # Since it's a decline, Stripe::CardError will be caught
+        err  = e.json_body[:error]
+        [false, err[:type], err[:message]]
       rescue Stripe::StripeError => e
         [false, e]
       rescue StandardError => e
@@ -259,9 +261,7 @@ class PaymentService
         ES: ["Spain", ''], SE: ["Sweden", ''], GB: ["United Kingdom", ''], US: ["United States", '']
       }
     end
-      
-
-  end  
+  end
 end
 
 =begin
