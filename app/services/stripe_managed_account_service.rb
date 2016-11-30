@@ -139,21 +139,14 @@ class StripeManagedAccountService < Struct.new( :user, :params )
   end
 
   def update_individual_managed_account
-    update_company_managed_account
+    update_in_account = update_company_managed_account
+    update_in_account.delete(:business_name)
+    update_in_account
   end
 
   def update_company_managed_account
     update_company = managed_company_account
-    update_company.except!(:managed, :country, :product_description, :business_name, :legal_entity)
-    creds_fields_needed = user.stripe_creds.find(stripe_cred[:id]).fields_needed
-    creds_fields_needed.each do |fields_neeeded|
-      fields = fields_neeeded.split('.')
-      legal_field = fields[1].to_sym
-      value = managed_company_account[:legal_entity][legal_field]
-      if value.present?
-        update_company.merge!(legal_entity: { legal_field => value })
-      end
-    end
+    update_company.except!(:managed, :country, :product_description)
     update_company
   end
 
@@ -208,7 +201,7 @@ class StripeManagedAccountService < Struct.new( :user, :params )
       product_description: params[:description],
       tos_acceptance: { ip: stripe_cred[:ip], date: stripe_cred[:tos_date].to_i, user_agent: stripe_cred[:user_agent] },
       legal_entity: { type: params_org_type, first_name: full_name[0], last_name: full_name[1],
-                      gender: people[:gender],  phone_number: '<redacted_phone_number>', business_name: params[:org_name],
+                      gender: people[:gender],  phone_number: '<redacted_phone_number>', business_name: 'params[:org_name]',
                       business_tax_id: params[:org_tax_id], personal_id_number: people[:last4],
                       personal_address: { city: people_address[:city],
                                           country: people_address[:country],
