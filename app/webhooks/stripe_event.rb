@@ -254,12 +254,14 @@ class StripeEvent
     def managed_accout_user; StripeCred.find_by_account_id(@hash[:id]).user end
 
     def response_user_params
+      account = Stripe::Account.retrieve(@hash[:id])
       {
         org_name: @hash[:business_name], url: @hash[:business_url],
         org_type: bank_account_params[:account_holder_type],
         address_attributes: { street_address: address_params[:street], city: address_params[:city],
                               state_province: address_params[:state],
-                              country: address_params[:country], postal_code: address_params[:zip] }
+                              country: address_params[:country], postal_code: address_params[:zip] },
+        stripe_creds_attributes: { fields_needed: account.verification.fields_needed }
       }
     end
 
@@ -296,6 +298,7 @@ class StripeEvent
         'invoice.payment_succeeded'=> :invoice_payment_succeeded,
         'invoice.created'=> :invoice_created,
         'invoice.updated'=> :invoice_updated,
+        # when managed account information like external bank_account get updated
         'account.updated'=> :account_updated
       }
     end
