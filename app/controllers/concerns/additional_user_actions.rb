@@ -24,18 +24,18 @@ module AdditionalUserActions
     else
       flash[:alert] = 'You need to accept tos'
     end
-    render managed_acct
+    render :managed_acct
   end
 
   def user_managed_account
     stripe_managed = StripeManagedAccountService.new(current_user, full_user_params)
     action = { 'create_managed_acct'=> [:create_account, :create_external_account],
-               'update_managed_acct'=> [:update_account, :update_external_accounts] }
+               'update_managed_acct'=> [:update_account, :check_update_or_create] }
     account = stripe_managed.send(action[params[:action]][0])
     if account.is_a?(Stripe::Account)
       external_account = stripe_managed.send(action[params[:action]][1], account)
       current_user.update(save_managed_connect_acccount(account, external_account))
-      external_account.is_a?(Stripe::BankAccount) ? external_account : account
+      external_account.is_a?(Stripe::BankAccount) ? account : external_account
     else
       account
     end
@@ -84,7 +84,7 @@ module AdditionalUserActions
 
   def set_message(status)
     if status.methods.include?(:message)
-      status
+      status.message
     else
       link_to_account = "<a href='https://dashboard.stripe.com/test/applications/users/" + status.id + "'>Stripe Connected Succesfull Click for dashboard page</a>"
       link_to_account.html_safe
