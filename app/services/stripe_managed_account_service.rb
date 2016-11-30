@@ -12,6 +12,8 @@ class StripeManagedAccountService < Struct.new( :user, :params )
   # since we are not accessing contant outside of a class so making privating all constants
   private_constant :ROUTING_COUNTRIES, :BANK_CODE_COUNTRIES, :COMMON_COUNTRIES
 
+  # sets api version for connect account it needs recent 2014-12-17 plus version
+  # see https://stripe.com/docs/connect/managed-accounts for details
   Stripe.api_version = '<redacted_phone_number>'
 
   # creates stripe managed and individual account
@@ -102,7 +104,7 @@ class StripeManagedAccountService < Struct.new( :user, :params )
   def common_company_account
     company_account = managed_company_account
     # for finland stripe complains to send 8 digit ssn/personal_id. it is not require
-    company_account[:legal_entity].delete(:personal_id_number) if address[:country] == 'FI'
+    company_account[:legal_entity].delete(:personal_id_number) if address[:country] == COMMON_COUNTRIES[1]
     company_account # return modified hash if condition met
   end
 
