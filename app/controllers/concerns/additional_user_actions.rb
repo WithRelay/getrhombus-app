@@ -18,8 +18,13 @@ module AdditionalUserActions
   end
 
   def create_managed_acct
-    status = user_managed_account
-    render html: set_message(status)
+    if tos_accepted?
+      status = user_managed_account
+      flash[:notice] = set_message(status)
+    else
+      flash[:alert] = 'You need to accept tos'
+    end
+    render managed_acct
   end
 
   def user_managed_account
@@ -37,8 +42,13 @@ module AdditionalUserActions
   end
 
   def update_managed_acct
-    status = user_managed_account
-    render html: set_message(status)
+    if tos_accepted?
+      status = user_managed_account
+      flash[:notice] = set_message(status)
+    else
+      flash[:alert] = 'You need to accept tos'
+    end
+    render :managed_acct
   end
 
   def save_managed_connect_acccount(account, bank_account)
@@ -50,6 +60,10 @@ module AdditionalUserActions
                                                         })
     end
     save_params
+  end
+
+  def tos_accepted?
+    full_user_params[:tos_acceptance] == '1'
   end
 
   def params_with_stripe(account, bank_account)
