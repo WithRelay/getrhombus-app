@@ -4,9 +4,9 @@ class Person < ActiveRecord::Base
   has_one :address, as: :addressable, dependent: :destroy
   belongs_to :user
   accepts_nested_attributes_for :address#, reject_if: :all_blank
-  before_validation :the_titleizer  
+  before_validation :the_titleizer
 
-  enum role: { representative: 0, owner: 1 }
+  enum role: { representative: '0', owner: '1' }
 
 
   def full_name=(val)
@@ -28,5 +28,5 @@ class Person < ActiveRecord::Base
       self.last_name = self.last_name.strip.titleize unless self.last_name.blank?
     end
 
-  
+
 end

@@ -7,6 +7,7 @@ class RegistrationsController < Devise::RegistrationsController
     re = (params[:user][:card_token].present?) ? current_user.add_token_to_user(params[:user][:card_token]) : [true]
     if re.first
       if current_user.update_without_password(devise_parameter_sanitizer.sanitize(:account_update))
+        StripeManagedAccountService.new(current_user).update_account_email
         set_flash_message :notice, :updated
         # Sign in the current user bypassing validation in case his password changed
         sign_in current_user, :bypass => true
@@ -23,7 +24,7 @@ class RegistrationsController < Devise::RegistrationsController
       error_message = (re.second == 'card_error') ? re.third :  "We were unable to update your card information. Please check the details entered."
       redirect_to build_user_link , flash: { error: error_message }
     end
-  end 
+  end
 
 
   def create

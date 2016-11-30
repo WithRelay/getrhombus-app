@@ -4,7 +4,7 @@ class User < ActiveRecord::Base
   include DashboardCustomerQueries
   include CSVHandler
 
-  attr_accessor :phone, :captured_amt, :msg_id, :tag_id, :referrer_id
+  attr_accessor :phone, :captured_amt, :msg_id, :tag_id, :referrer_id, :tos_acceptance
 
   # include default devise modules. Others available are: :token_authenticatable, :lockable, :timeoutable and :confirmable,
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable, :omniauthable
@@ -110,7 +110,7 @@ class User < ActiveRecord::Base
 
   def self.get_platform_acct_obj
     # you can change this temporarily to <redacted_email> or <redacted_email>
-    # User.find_by(email: User.platform_email) 
+    # User.find_by(email: User.platform_email)
     User.find_by(email: "<redacted_email>") || User.find_by(email: "<redacted_email>")
   end
 
@@ -179,7 +179,7 @@ class User < ActiveRecord::Base
         # Note that a customer user becomes a customer of merchant when a subscription is created
         cu = MerchantCustomer.where(customer_id: self.id)
         hash = { email: self.email, card_token: card_token, is_new_customer: true, is_platform_customer: true, is_merchant: is_merchant? }
-        
+
         # when blank, add only to platform. Blank indicates signing up
         if cu.blank?
           re = PaymentService.add_token_to_stripe_customer(hash)
@@ -201,7 +201,7 @@ class User < ActiveRecord::Base
                 re = PaymentService.add_token_to_stripe_customer(hash, get_team_uid)
               end
             end
-          end      
+          end
         end
         # create new merchant_customer for stripe customer
         if re.first

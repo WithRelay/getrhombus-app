@@ -31,9 +31,17 @@ class StripeManagedAccountService < Struct.new( :user, :params )
   rescue StandardError => e; e # error object contains message attribute
   end
 
+  def update_account_email
+    account = retrieve_account
+    account.update_attributes({ email: user.email })
+    account.save
+  rescue Stripe::StripeError => e; e
+  rescue StandardError => e; e
+  end
+
   def update_account
     # NOTE while updating account attributes falls in legal_entity cannot be updated
-    account = Stripe::Account.retrieve(user.stripe_creds[0].account_id)
+    account = retrieve_account
     account.update_attributes(send("update_#{params_org_type}_managed_account"))
     account.save
   rescue Stripe::StripeError => e; e
@@ -53,6 +61,9 @@ class StripeManagedAccountService < Struct.new( :user, :params )
 
   # private functions
   private
+
+
+  def retrieve_account; Stripe::Account.retrieve(user.stripe_creds[0].account_id) end
 
   # address function returns hash address_attributes from params so that it will be convinient to use hash
   def address; params[:address_attributes] end
@@ -153,9 +164,9 @@ class StripeManagedAccountService < Struct.new( :user, :params )
     params[:people_attributes].each do |key, value|
       unless key == '0' # key 0 contains address for default legal entities not for additional owners address
         owner_details = {}
-        dob = value[:dob].split('/');
-        full_name = value[:full_name];
-        owner_details[:first_name] = full_name[0];
+        dob = value[:dob].split('/')
+        full_name = value[:full_name].split(' ', 2)
+        owner_details[:first_name] = full_name[0]
         owner_details[:last_name] = full_name[1]
         owner_details[:dob] = { day: dob[1], month: dob[0], year: dob[2] }
         address = value[:address_attributes]
@@ -174,13 +185,13 @@ class StripeManagedAccountService < Struct.new( :user, :params )
   # TODO function is too lengthy feel free to make small without changing its behaviour. We do not have test
   def managed_company_account
     dob = people[:dob].split('/')
-    full_name = people[:full_name].split(' ')
+    full_name = people[:full_name].split(' ',2)
     { email: user.email, business_url: params[:url],
       business_name: params[:org_name], managed: true, country: address[:country],
       product_description: params[:description],
       tos_acceptance: { ip: stripe_cred[:ip], date: stripe_cred[:tos_date].to_i, user_agent: stripe_cred[:user_agent] },
       legal_entity: { type: params_org_type, first_name: full_name[0], last_name: full_name[1],
-                      gender: 'female',  phone_number: '<redacted_phone_number>', business_name: params[:org_name],
+                      gender: people[:gender],  phone_number: '<redacted_phone_number>', business_name: params[:org_name],
                       business_tax_id: params[:org_tax_id], personal_id_number: people[:last4],
                       personal_address: { city: people_address[:city],
                                           country: people_address[:country],
