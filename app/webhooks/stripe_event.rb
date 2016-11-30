@@ -5,10 +5,15 @@ class StripeEvent
 
     def process_event(hash)
       @hash = hash[:data][:object]
-      # send works like message passing to class hierarchy until method reacts
-      # it accepts a parameter that need to be pass in symbol or string which calls method.
-      # if we pass string it will internally converts to symbol.
-      self.send(string_method_name[hash[:type]])
+      begin
+        # send works like message passing to class hierarchy until method reacts
+        # it accepts a parameter that need to be pass in symbol or string which calls method.
+        # if we pass string it will internally converts to symbol.
+        self.send(string_method_name[hash[:type]])
+      rescue StandardError => e
+        # rescue nil response when self.send(string_method_name[hash[:type]]) can't find event_handling_method
+        nil
+      end
     end
 
     # So we can notify merchant of time left to active subscription
@@ -208,6 +213,28 @@ class StripeEvent
       end
     end
 
+    # customer_source_updated webhook will fire if your customers’ info/customer's card info changes
+    def customer_source_updated
+      # customer source info/customer's card info
+      @source = @hash[:data][:object]
+      # find customer
+      merchant_customer = MerchantCustomer.find_by(stripe_customer_id: @source[:customer])
+      @data = User.find merchant_customer.customer_id
+      update_customer_source
+      # find customer and admin
+      # Notify them (admin) (customer)
+      # update notification log if we need it
+    end
+
+    def update_customer_source
+      @data.last4 = @source[:last4]
+      @data.exp_month = @source[:exp_month]
+      @data.exp_year = @source[:exp_year]
+      @data.card_name = @source[:name]
+      @data.card_type = @source[:type]
+      @data.save
+    end
+
     # This really shouldn't occur since we currently don't allow invoices to be updated
     # def invoice_updated
     #   # find invoice and update
@@ -265,6 +292,8 @@ class StripeEvent
     def string_method_name
       { 'customer.subscription.trial_will_end'=> :subscription_trial_will_end,
         'customer.subscription.deleted'=> :customer_subscription_deleted,
+        # customer_source_updated webhook will fire if your customers’ info/customer's card info changes.
+        'customer.source.updated' => :customer_source_updated,
         'invoice.payment_failed'=> :invoice_payment_failed,
         'invoice.payment_succeeded'=> :invoice_payment_succeeded,
         'invoice.created'=> :invoice_created,
