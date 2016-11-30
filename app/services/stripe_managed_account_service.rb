@@ -9,7 +9,7 @@ class StripeManagedAccountService < Struct.new( :user, :params )
   # US has routing number AU and GB has also routing number internally named as account number
   ROUTING_COUNTRIES = %W(US AU GB).freeze; BANK_CODE_COUNTRIES = %W(SG CA HK).freeze
 
-  # since we are not accessing contant outside of a class so making privating all constants
+  # since we are not accessing contant outside of a class so making private all constants
   private_constant :ROUTING_COUNTRIES, :BANK_CODE_COUNTRIES, :COMMON_COUNTRIES
 
   # sets api version for connect account it needs recent 2014-12-17 plus version
