@@ -48,6 +48,17 @@ class StripeManagedAccountService < Struct.new( :user, :params )
   rescue StandardError => e; e
   end
 
+  def check_update_or_create(account)
+    if user.bank_accounts.find(bank_account[:id]).stripe_bank_account_id.present?
+      update_external_accounts(account)
+    else
+      create_external_account(account)
+    end
+  end
+
+  # private functions
+  private
+
   # bank_accounts metadata are only editable other bank_details are not editable by design
   # https://stripe.com/docs/api#account_update_bank_account
   def update_external_accounts(account)
@@ -58,9 +69,6 @@ class StripeManagedAccountService < Struct.new( :user, :params )
   rescue Stripe::StripeError => e; e
   rescue StandardError => e; e
   end
-
-  # private functions
-  private
 
 
   def retrieve_account; Stripe::Account.retrieve(user.stripe_creds[0].account_id) end
@@ -130,6 +138,25 @@ class StripeManagedAccountService < Struct.new( :user, :params )
     individual_account
   end
 
+  def update_individual_managed_account
+    update_company_managed_account
+  end
+
+  def update_company_managed_account
+    update_company = managed_company_account
+    update_company.except!(:managed, :country, :product_description, :business_name, :legal_entity)
+    creds_fields_needed = user.stripe_creds.find(stripe_cred[:id]).fields_needed
+    creds_fields_needed.each do |fields_neeeded|
+      fields = fields_neeeded.split('.')
+      legal_field = fields[1].to_sym
+      value = managed_company_account[:legal_entity][legal_field]
+      if value.present?
+        update_company.merge!(legal_entity: { legal_field => value })
+      end
+    end
+    update_company
+  end
+
   # return hash for creating external_bank_account for managed individual and company account
   def basic_external_accounts
     { external_account: { object: 'bank_account', country: bank_account[:country],
@@ -145,20 +172,10 @@ class StripeManagedAccountService < Struct.new( :user, :params )
     }
   end
 
-  def update_individual_managed_account
-    update_company_managed_account
-  end
-
-  def update_company_managed_account
-    update_company = managed_company_account
-    update_company.except!(:managed, :country, :product_description, :business_name, :legal_entity)
-    update_company
-  end
-
   # returns additional owner hash as mention in https://stripe.com/docs/api#account_object
   # creates additional owner params which will be array and includes multiple hashes with
   # additional owner attributes details like first_name, last_name
-  # TODO Need refactor in future function is lenghty.
+  # TODO Need refactor in future function is lengthy.
   def additional_owners
     additional_owner = []
     params[:people_attributes].each do |key, value|
