@@ -1,6 +1,7 @@
 class Coupon < ActiveRecord::Base
 
   has_many :subscriptions
+  has_many :invoices
   belongs_to :user
 
   attr_accessor :coupon_type

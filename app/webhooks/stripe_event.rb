@@ -120,9 +120,8 @@ class StripeEvent
       # Ensure all these exists else it isnt ours. They should.
       merchant_customer = MerchantCustomer.find_by(stripe_customer_id:  @hash[:customer])
       if merchant_customer
-        # update user_id and team_id from merchant_customer
-        @data.user_id = merchant_customer.customer_id
-        @data.team_id = merchant_customer.merchant_id
+        # update merchant_customer
+        @data.merchant_customer_id = merchant_customer.id
 
         # update coupon_id
         if @hash[:discount].present? && coupon = Coupon.find_by(stripe_coupon_id: @hash[:discount][:coupon][:id])
@@ -148,20 +147,19 @@ class StripeEvent
       txn = Transaction.includes(:notification_log).where(txn_uri: charge.id).first_or_initialize if charge
 
       # if we havent notified customer before
-      # if txn.notification_log
-      if txn
-        # for now, we have only one line for each invoice - the subscription
-        @hash[:lines][:data].each do |l|
-          if l[:type] == 'subscription'
-            # find subscription
-            sbtn = Subscription.includes(:plan).where(stripe_subscription_id: l[:id]).first
-            # update subscription_id
-            if sbtn
-              @data.update(subscription_id: sbtn.id)
-              hashtag_id = sbtn.plan.hashtag_id
-              sbtn_id = sbtn.id
-            end
+      # for now, we have only one line for each invoice - the subscription
+      @hash[:lines][:data].each do |l|
+        if l[:type] == 'subscription'
+          # find subscription
+          sbtn = Subscription.includes(:plan).where(stripe_subscription_id: l[:id]).first
+          # update subscription_id
+          if sbtn
+            @data.update(subscription_id: sbtn.id)
+            hashtag_id = sbtn.plan.hashtag_id
+            sbtn_id = sbtn.id
+          end
 
+          if txn
             # just in case transaction actually exists but not log
             amount_less_fees = txn.amount_less_fees ? txn.amount_less_fees : 'calculate here'
             amount_with_taxes = txn.amount_with_taxes ? txn.amount_with_taxes : 'calculate here'
@@ -173,7 +171,7 @@ class StripeEvent
 
             txn.update( amount: l[:amount], currency: l[:currency], description: description,
               application_fee: l[:application_fee],
-              user_id: @data.user_id, team_id: @data.team_id,
+              merchant_customer_id: @data.merchant_customer_id,
               hashtag_id: hashtag_id, txn_available_at: @hash[:date],
               # At the moment, charge will only contain 1 line item, what if there are a couple line items?
               txn_uri: @hash[:charge], tax_percent: @hash[:tax_percent], amount_less_fees: amount_less_fees,
