@@ -138,9 +138,8 @@
   <% end %>
 
   <br><br>
-
-
-
+  <%= f.label 'Accept Terms and Service' %>
+  <%= f.check_box :tos_acceptance %>
   <div class="actions">
     <%= f.submit 'Create Account', data: { disable_with: "Please wait..." } %>
   </div>
