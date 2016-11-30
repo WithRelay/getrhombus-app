@@ -115,10 +115,11 @@ module AdditionalUserActions
 
   def contacts
     if current_user.user_level == 0
-      @contacts = @user.get_customer_contacts.paginate(:page => params[:page], :per_page => 25)
+      #@contacts = @user.get_customer_contacts.paginate(:page => params[:page], :per_page => 25)
     else
-      @contacts = @user.get_merchant_contacts.paginate(:page => params[:page], :per_page => 25)
+      #@contacts = @user.get_merchant_contacts.paginate(:page => params[:page], :per_page => 25)
     end
+    @contacts = []
   end
 
   def customers
