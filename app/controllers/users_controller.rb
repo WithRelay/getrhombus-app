@@ -90,7 +90,7 @@ private
       address_attributes: [:id, :city, :street_address, :state_province, :country, :postal_code],
       bank_accounts_attributes: [:id, :routing_number, :country, :currency, :account_number,
                                  :institution_number],
-      people_attributes: [:id, :gender, :full_name, :dob, :last4, :role, :_destroy,
+      people_attributes: [:id, :gender, :business_name, :full_name, :dob, :last4, :role, :_destroy,
       address_attributes: [:street_address, :state_province, :id, :country, :postal_code, :state_province,
                            :city]],
       stripe_creds_attributes: [:id, :charges_enabled, :transfers_enabled])
