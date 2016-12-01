@@ -60,7 +60,6 @@ class StripeManagedAccountService < Struct.new( :user, :params )
 
   # private functions
   private
-
   # bank_accounts metadata are only editable other bank_details are not editable by design
   # https://stripe.com/docs/api#account_update_bank_account
   def update_external_accounts(account)
@@ -92,6 +91,8 @@ class StripeManagedAccountService < Struct.new( :user, :params )
 
   # country with bank code are countries in constant BANK_CODE_COUNTRIES
   def country_with_bank_code_individual_account; common_individual_account end
+
+  def country_with_bank_code_company_account; common_individual_account end
 
   # org_type comes in upcase as a params but stripe need in downcase
   def params_org_type; params[:org_type].downcase end
@@ -159,10 +160,7 @@ class StripeManagedAccountService < Struct.new( :user, :params )
                                                   account_number: bank_account[:account_number],
                                                   routing_number: bank_account[:routing_number],
                                                   account_holder_type: params[:org_type],
-                                                  account_holder_name: user.first_name,
-                                                  supported_bank_account_currencies: {
-                                                  bank_account[:currency]=> [ bank_account[:country] ] }
-
+                                                  account_holder_name: people[:full_name]
                         }
     }
   end
@@ -203,7 +201,7 @@ class StripeManagedAccountService < Struct.new( :user, :params )
       product_description: params[:description],
       tos_acceptance: { ip: stripe_cred[:ip], date: stripe_cred[:tos_date].to_i, user_agent: stripe_cred[:user_agent] },
       legal_entity: { type: params_org_type, first_name: full_name[0], last_name: full_name[1],
-                      gender: people[:gender],  phone_number: '<redacted_phone_number>', business_name: 'params[:org_name]',
+                      gender: people[:gender],  phone_number: '<redacted_phone_number>', business_name: people[:business_name],
                       business_tax_id: params[:org_tax_id], personal_id_number: people[:last4],
                       personal_address: { city: people_address[:city],
                                           country: people_address[:country],
