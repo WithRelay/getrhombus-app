@@ -8,11 +8,10 @@ class Person < ActiveRecord::Base
 
   enum role: { representative: '0', owner: '1' }
 
-
-  def full_name=(val)
-    n = val.split(" ", 2)
-    write_attribute(:first_name, n[0])
-    write_attribute(:last_name, n[1] || "")
+  def full_name=(prams_value)
+    full_name = prams_value.split(" ", 2)
+    update_attribute(:first_name, full_name[0])
+    update_attribute(:last_name, full_name[1] || "")
   end
 
   def full_name
