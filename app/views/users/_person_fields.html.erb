@@ -1,8 +1,12 @@
 
 <div class='nested-fields'>
   <div>
+    <label>Full Legal Business Name</label>
+    <%= f.text_field :business_name %>
+  </div>
+  <div>
     <label>Full name</label>
-    <%= f.text_field :full_name %>
+    <%= f.text_field :full_name, readonly: (f.object.first_name.present? || f.object.last_name.present?) %>
   </div>
   <div>
     <%= f.label :gender, 'Male', value: 'male' %>
@@ -13,7 +17,7 @@
   <div>
     <!-- use input masking here -->
     <label>DOB</label>
-    <%= f.text_field :dob, class: 'userDateOfBirth' %>
+    <%= f.text_field :dob, class: 'userDateOfBirth', readonly: f.object.dob.present? %>
   </div>
 
   <% if f.index == 0 %>
