@@ -7,7 +7,6 @@ $(document).ready(function () {
       global_page_params = PageParameter.get_params(),
 
       cc_submit_btn, cc_btn_text,
-      create_user_submit = $('#create-user-submit'), create_user_form = $('#create-user-form'),
 
       chart_labels = [], chart_totals = [], chart_txns = [],
       contact_url = '/contact_forms.json', searchNumBtn = $('#searchNumberBtn');
@@ -1128,46 +1127,7 @@ $(document).ready(function () {
       })
       .always(function(data, textStatus, response) {});
   });
-
   // handle images
-
-  ///// add a customer
-  create_user_form.submit(function(e){
-    e.preventDefault();
-
-    // run validations for email and phone number...have variable for fail
-    // if good above and card number is present, send card details to stripe if...set fail variable
-    // no validations for address or lists
-    // if all pass, submit_contact_form
-
-    var y = CardHandler.get_expiry_date_data();
-    set_number();
-    CardHandler.submit_to_stripe(submit_create_user_form, create_user_submit)
-
-    // added accept nested attributes for lists
-    // hashes of hashes or array of hashes for lists
-    console.log($(this).serialize())
-  })
-
-  function submit_create_user_form() {
-    $.ajax({
-        url: "/v1/users/add_customers.json",
-        beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
-        type: "POST",
-        data: create_user_form.serialize(),
-        dataType: "json"
-    })
-      .done(function(data, textStatus, jqXHR) {
-        console.log(data);
-      })
-      .fail(function(data, textStatus, errorThrown) {
-        console.log(data);
-      })
-      .always(function(data, textStatus, response) {
-        cc_submit_btn.attr("disabled", false).val(cc_btn_text);
-      });
-  }
-  ///// add a customer
 
   // submit referrer
   $("#new_referrer").on("ajax:success", function(e, data, status, xhr) {

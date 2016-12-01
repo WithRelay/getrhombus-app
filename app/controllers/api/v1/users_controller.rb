@@ -31,6 +31,9 @@ class Api::V1::UsersController < API::V1::BaseController
 		  		params[:user][:password] = Toolbox::StringGen.generate_random_string(8)
 		  		params[:user][:user_level] = 0
 		  		u = User.create(api_v1_user_params)
+                  address = u.build_address(api_v1_address_params)
+                  address.save
+                  person = u.people.create(api_v1_person_params)
           # need to add customer's uri here
 		  		response = 'User created'
 		  		status = 200
@@ -46,12 +49,15 @@ class Api::V1::UsersController < API::V1::BaseController
   private
 
   def api_v1_user_params
-    params.require(:user).permit(:email, :password, :first_name, :last_name, :phone_number,
-      :card_name, :exp_month, :exp_year, :card_token, :card_type, :user_level,
-      # redo relationships here
-      #:people_
-      address_attributes: [:street_address, :state_province, :city, :country])
+    params.require(:user).permit(:email, :password, :first_name, :last_name, :phone_number,:user_level)
   end
 
+  def api_v1_address_params
+    params.require(:user).permit(:street_address, :state_province, :city, :country)
+  end
+
+  def api_v1_person_params
+    params.require(:user).permit(:first_name, :last_name)
+  end
 
 end

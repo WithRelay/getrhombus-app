@@ -7,7 +7,7 @@ var CardHandler = new function() {
   // http://www.phpied.com/3-ways-to-define-a-javascript-class/
   var form_submission_function, form_btn_text;
   var form_btn, form_selector;
-  
+
   // tokenize card details
   this.submit_to_stripe = function(form_id, btn_id, function_for_submission) {
     form_selector = form_id;
@@ -50,14 +50,11 @@ var CardHandler = new function() {
     } else if (param == "number") {
       $(form_selector).data('formValidation').updateStatus('cc-number', 'INVALID', 'callback');
     } else {
-      $(form_selector).data('formValidation').resetForm(); 
-    }             
+      $(form_selector).data('formValidation').resetForm();
+    }
   }
 
   this.get_expiry_date_data = function() {
     return $('input#cc-exp').payment('cardExpiryVal');
   }
 }
-
-
-

@@ -126,6 +126,7 @@ Rails.application.routes.draw  do
     match 'coupons/get_coupon' => 'coupons#get_coupon', via: :get
     match 'plans/get_plan' => 'plans#get_plan', via: :get
     match 'merchant/customers' => 'merchant_customers#customers', via: :get
+    match 'countries/get_country_name' => 'countries#get_country_name', via: :get
   end
 
   ## catch all other to 404
