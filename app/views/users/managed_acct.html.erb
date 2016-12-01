@@ -22,15 +22,14 @@
   <%= f.fields_for :address do |a| %>
     <div>
       <%= a.label :country %>
-      <%= a.select :country, options_for_select( PaymentService.stripe_country_list.collect{ |k,v| [v[0], k]}, selected: a.object.country), {}, class: 'rhombusFocus', id: 'managed-acct-country' %>
+      <%= a.select :country, options_for_select(connect_country(a.object), selected: a.object.country), {}, class: 'rhombusFocus', id: 'managed-acct-country' %>
     </div>
   <% end %>
-
-  <%= f.select :org_type, options_for_select({ "Individual" => "Individual", "Organization" => 'company' }, selected: present(current_user).org_type_on_managed_acct_page) %>
+  <%= f.select :org_type, options_for_select(connect_org_type(f.object), selected: present(current_user).org_type_on_managed_acct_page) %>
   <br>
 
   <div id='org-name-div'>
-    <label>Legal Name</label>
+    <label>Publicly Sharable Name</label>
     <%= f.text_field :org_name, id: 'org-name' %>
   </div>
 
