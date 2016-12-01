@@ -5,15 +5,10 @@ class StripeEvent
 
     def process_event(hash)
       @hash = hash[:data][:object]
-      begin
-        # send works like message passing to class hierarchy until method reacts
-        # it accepts a parameter that need to be pass in symbol or string which calls method.
-        # if we pass string it will internally converts to symbol.
-        self.send(string_method_name[hash[:type]])
-      rescue StandardError => e
-        # rescue nil response when self.send(string_method_name[hash[:type]]) can't find event_handling_method
-        nil
-      end
+      # send works like message passing to class hierarchy until method reacts
+      # it accepts a parameter that need to be pass in symbol or string which calls method.
+      # if we pass string it will internally converts to symbol.
+      self.send(string_method_name[hash[:type]]) if string_method_name[hash[:type]].present?
     end
 
     # So we can notify merchant of time left to active subscription
@@ -283,14 +278,14 @@ class StripeEvent
                                                           status: bank_account_params[:status],
                                                           fingerprint: bank_account_params[:fingerprint],
                                                           stripe_bank_account_id: bank_account_params[:id],
-                                                          account_number: bank_account_params[:account],
                                                           id: bank_account.id
                                                         }
       bank_account_details
     end
 
     def string_method_name
-      { 'customer.subscription.trial_will_end'=> :subscription_trial_will_end,
+      {
+        'customer.subscription.trial_will_end'=> :subscription_trial_will_end,
         'customer.subscription.deleted'=> :customer_subscription_deleted,
         # customer_source_updated webhook will fire if your customers’ info/customer's card info changes.
         'customer.source.updated' => :customer_source_updated,
