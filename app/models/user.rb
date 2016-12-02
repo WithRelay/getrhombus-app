@@ -6,6 +6,10 @@ class User < ActiveRecord::Base
 
   attr_accessor :phone, :captured_amt, :msg_id, :tag_id, :referrer_id, :tos_acceptance
 
+  validates :tos_acceptance, acceptance: true
+  validates_presence_of :org_type
+  validates_presence_of :org_name, if: lambda { self.org_type == 'company' }
+
   # include default devise modules. Others available are: :token_authenticatable, :lockable, :timeoutable and :confirmable,
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable, :omniauthable
 
@@ -83,7 +87,7 @@ class User < ActiveRecord::Base
   before_validation :the_titleizer
   before_create :set_merchant_org_phone          # only create because the actual org_phone field is used in edit view
 
-  after_commit :create_user_alert, on: :create, if: lambda { self.user_level == 1 }
+  after_commit :create_user_alert, on: :create, if: lambda { is_merchant? }
   after_commit :update_phone_in_db, on: :update
 
   validates_presence_of :user_level, message: "Please select an account type"
@@ -97,7 +101,7 @@ class User < ActiveRecord::Base
   # Allow nil added to db migration because merchants don't have phone number. They have org_phone.
   # And since mysql indexes this field, it indexes nil and only allows one row with nil.
   # You run into issues with any additional merchants.
-  validates_uniqueness_of :phone_number, :allow_nil => true, :if => lambda { self.user_level == 0 }
+  validates_uniqueness_of :phone_number, :allow_nil => true, :if => lambda { is_merchant? }
   validate :phone_number_cannot_be_rhombus_number
 
   def is_merchant?
@@ -232,7 +236,7 @@ class User < ActiveRecord::Base
   end
 
   def set_merchant_org_phone
-    if self.user_level == 1
+    if is_merchant?
       self.org_phone = self.phone_number
       self.phone_number = nil
     end
@@ -247,7 +251,7 @@ class User < ActiveRecord::Base
 
   def send_welcome_email
     owner = User.find_by(email: Rails.application.secrets.team_email)
-    if self.user_level == 1
+    if is_merchant?
       EmailingService.send_welcome_email(self.email, owner.rhombus_number, "merchant")
     elsif self.user_level == 0
       ref = self.referrers.first
@@ -269,7 +273,7 @@ class User < ActiveRecord::Base
 
   # move to background job
   def update_phone_in_db
-    if self.user_level == 0
+    if is_merchant?
       if x = self.previous_changes['phone_number']
         ActiveRecord::Base.connection.execute("UPDATE messages SET messages.from = #{x[1]} WHERE messages.from = #{x[0]}")
         ActiveRecord::Base.connection.execute("UPDATE messages SET messages.to = #{x[1]} WHERE messages.to = #{x[0]}")
