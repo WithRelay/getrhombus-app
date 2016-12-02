@@ -13,7 +13,6 @@ class Api::V1::ListsController < API::V1::BaseController
     end
   end
 
-
   # Handles creation of a list via Ajax
   def create
     begin
