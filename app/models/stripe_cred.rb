@@ -5,7 +5,4 @@ class StripeCred < ActiveRecord::Base
   belongs_to :user
   enum uid_type: [ :managed, :standalone ]
 
-  # valdation for stripecred attributes
-  validates_presence_of :secret, :publishable_key, :user_agent, :tos_date, :ip
-
 end
