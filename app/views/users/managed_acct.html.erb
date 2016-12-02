@@ -3,145 +3,167 @@
 <script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
 <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
 <%# https://hackhands.com/building-has_many-model-relationship-form-cocoon/ %>
-<%= form_for @user, url: { action: url_for_create_update } do |f| %>
+<div class="container">
+  <div id="signupbox" style=" margin-top:50px" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <div class="panel-title">Stripe Managed Account</div>
+        </div>
+        <div class="panel-body" >
+  <%= form_for @user, url: { action: url_for_create_update }, html: { id: 'managed-account-form' } do |f| %>
 
-  <% if @user.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@user.errors.count, "error") %> prohibited this user from being saved:</h2>
+    <% if @user.errors.any? %>
+      <div id="error_explanation">
+        <h2><%= pluralize(@user.errors.count, "error") %> prohibited this user from being saved:</h2>
 
-      <ul>
-      <% @user.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <%= notice %>
-
-  <%= f.fields_for :address do |a| %>
-    <div>
-      <%= a.label :country %>
-      <%= a.select :country, options_for_select(connect_country(a.object), selected: a.object.country), {}, class: 'rhombusFocus', id: 'managed-acct-country' %>
-    </div>
-  <% end %>
-  <%= f.select :org_type, options_for_select(connect_org_type(f.object), selected: present(current_user).org_type_on_managed_acct_page) %>
-  <br>
-
-  <div id='org-name-div'>
-    <label>Publicly Sharable Name</label>
-    <%= f.text_field :org_name, id: 'org-name' %>
-  </div>
-
-  <br>
-
-  URL <%= f.text_field :url %><br>
-
-  <div>
-    <label id='org-tax-id-label'>EIN</label>
-    <%= f.text_field :org_tax_id, id: 'org-tax-id' %>
-    <span id='org-tax-id-req'>(optional)</span>
-  </div>
-
-  <br>
-
-  <div>
-    <label> tell us about your organization </label>
-    <%= f.text_area :description %>
-  </div>
-<div id='aaa'>aaaa</div>
-  <br>
-
-  <%= f.fields_for :address do |a| %>
-    <div>
-      <label>Street Addres</label>
-      <%= a.text_field :street_address, id: 'company-street' %>
-    </div>
-    <div>
-      <%= a.label :city %>
-      <%= a.text_field :city, id: 'company-city' %>
-    </div>
-    <div id='company-state-div'>
-      <label>State/Province</label>
-      <%= a.text_field :state_province, id: 'company-state' %>
-    </div>
-    <div id='company-postal-code-div'>
-      <%= a.label :postal_code %>
-      <%= a.text_field :postal_code, id: 'company-postal-code' %>
-    </div>
-  <% end %>
-
-  <br><br><br>
-
-  <%= f.fields_for :bank_accounts do |b| %>
-    <div>
-      <label id='account-number-label' >Account Number</label>
-      <%= b.text_field :account_number, id: 'account-number' %>
-    </div>
-    <div id='routing-number-div'>
-      <%= b.label :routing_number, id: 'routing-number-label' %>
-      <%= b.text_field :routing_number, id: 'routing-number' %>
-    </div>
-
-    <!-- style="display: none;" -->
-    <div id='institution-number-div'  >
-      <%= b.label :institution_number, id: 'institution-number-label' %>
-      <%= b.text_field :institution_number, id: 'institution-number', placeholder: '000' %>
-    </div>
-
-    <div id='account-country-div'>
-      <%= b.label :country %>
-      <%= b.text_field :country, id: 'account-country', value: b.object.country %>
-      <select id="account-country-select"></select>
-    </div>
-    <div id='bank-currency-div'>
-      <%= b.label :currency %>
-      <%= b.text_field :currency, id: 'bank-currency', value: b.object.currency %>
-          <!-- style="display: none;" -->
-      <select id="bank-currency-select"></select>
-    </div>
-  <% end %>
-
-  <br><br>
-
-  <div id='ddr-div'>DDR message for australia only i think</div>
-
-  <br><br>
-
-  <fieldset id="user-people">
-    <ol>
-      COMPANY REP
-      <%= f.fields_for :people do |p| %>
-        <%= render "person_fields", f: p %>
-      <% end %>
-      <br><br>
-      <div id='owners-title'>OWNERS IF ANY <br></div>
-    </ol>
-
-    <div id='add-owner-link'><%= link_to_add_association 'add people', f, :people,
-            'data-association-insertion-node' => "#user-people ol", 'data-association-insertion-method' => "append",
-            :wrap_object => Proc.new { |p| p.build_address; p } %>
-    </div>
-  </fieldset>
-
-  <br><br>
-  <%= f.fields_for :stripe_creds do |c| %>
-    <% if c.object.persisted? %>
-      <%= c.check_box :charges_enabled, disabled: true %>
-      <%= c.check_box :transfers_enabled, disabled: true %>
-      <div><%= c.object.disabled_reason %>ssss</div>
-      <div><%= c.object.due_by %></div>
-      <div><%= c.object.fields_needed %></div>
+        <ul>
+        <% @user.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+        </ul>
+      </div>
     <% end %>
-    <%= c.hidden_field :ip %>
+
+    <%= notice %>
+
+    <%= f.fields_for :address do |a| %>
+      <div>
+        <%= a.label :country %>
+        <%= a.select :country, options_for_select(connect_country(a.object), selected: a.object.country), {}, class: 'rhombusFocus', id: 'managed-acct-country' %>
+      </div>
+    <% end %>
+    <%= f.label :business_type %>
+    <%= f.select :org_type, options_for_select(connect_org_type(f.object), selected: present(current_user).org_type_on_managed_acct_page) %>
+    <br>
+
+    <div id='org-name-div'>
+      <label>Publicly Sharable Name</label>
+      <%= f.text_field :org_name, id: 'org-name' %>
+    </div>
+
+    <br>
+
+    URL <%= f.text_field :url %><br>
+
+    <div>
+      <label id='org-tax-id-label'>EIN</label>
+      <%= f.text_field :org_tax_id, id: 'org-tax-id' %>
+      <span id='org-tax-id-req'>(optional)</span>
+    </div>
+
+    <br>
+
+    <div>
+      <label> tell us about your organization </label>
+      <%= f.text_area :description %>
+    </div>
+  <div id='aaa'>aaaa</div>
+    <br>
+
+    <%= f.fields_for :address do |a| %>
+      <div>
+        <label>Street Addres</label>
+        <div class="col-xs-5">
+          <%= a.text_field :street_address, id: 'company-street' %>
+        </div>
+      </div>
+      <div>
+        <%= a.label :city %>
+        <div class="col-xs-5">
+          <%= a.text_field :city, id: 'company-city' %>
+        </div>
+      </div>
+      <div id='company-state-div'>
+        <label>State/Province</label>
+        <div class="col-xs-5">
+          <%= a.text_field :state_province, id: 'company-state' %>
+        </div>
+      </div>
+      <div id='company-postal-code-div'>
+        <%= a.label :postal_code %>
+        <%= a.text_field :postal_code, id: 'company-postal-code' %>
+      </div>
+    <% end %>
+
+    <br><br><br>
+
+    <%= f.fields_for :bank_accounts do |b| %>
+      <div>
+        <label id='account-number-label' >Account Number</label>
+        <div class="col-xs-5">
+          <%= b.text_field :account_number, id: 'account-number' %>
+        </div>
+      </div>
+      <div id='routing-number-div'>
+        <div class="col-xs-5">
+          <%= b.label :routing_number, id: 'routing-number-label' %>
+          <%= b.text_field :routing_number, id: 'routing-number' %>
+        </div>
+      </div>
+
+      <!-- style="display: none;" -->
+      <div id='institution-number-div'  >
+        <%= b.label :institution_number, id: 'institution-number-label' %>
+        <%= b.text_field :institution_number, id: 'institution-number', placeholder: '000' %>
+      </div>
+
+      <div id='account-country-div'>
+        <%= b.label :country %>
+        <%= b.text_field :country, id: 'account-country', value: b.object.country %>
+        <select id="account-country-select"></select>
+      </div>
+      <div id='bank-currency-div'>
+        <%= b.label :currency %>
+        <%= b.text_field :currency, id: 'bank-currency', value: b.object.currency %>
+            <!-- style="display: none;" -->
+        <select id="bank-currency-select"></select>
+      </div>
+    <% end %>
+
+    <br><br>
+
+    <div id='ddr-div'>DDR message for australia only i think</div>
+
+    <br><br>
+
+    <fieldset id="user-people">
+      <ol>
+        COMPANY REP
+        <%= f.fields_for :people do |p| %>
+          <%= render "person_fields", f: p %>
+        <% end %>
+        <br><br>
+        <div id='owners-title'>OWNERS IF ANY <br></div>
+      </ol>
+
+      <div id='add-owner-link'><%= link_to_add_association 'add people', f, :people,
+              'data-association-insertion-node' => "#user-people ol", 'data-association-insertion-method' => "append",
+              :wrap_object => Proc.new { |p| p.build_address; p } %>
+      </div>
+    </fieldset>
+
+    <br><br>
+    <%= f.fields_for :stripe_creds do |c| %>
+      <% if c.object.persisted? %>
+        <%= c.check_box :charges_enabled, disabled: true %>
+        <%= c.check_box :transfers_enabled, disabled: true %>
+        <div><%= c.object.disabled_reason %>ssss</div>
+        <div><%= c.object.due_by %></div>
+        <div><%= c.object.fields_needed %></div>
+      <% end %>
+      <%= c.hidden_field :ip %>
+    <% end %>
+
+    <br><br>
+    <%= f.label 'Accept Terms and Service' %>
+    <%= f.check_box :tos_acceptance %>
+    <div class="actions">
+      <%= f.submit 'Create Account', data: { disable_with: "Please wait..." } %>
+    </div>
+
+
   <% end %>
-
-  <br><br>
-  <%= f.label 'Accept Terms and Service' %>
-  <%= f.check_box :tos_acceptance %>
-  <div class="actions">
-    <%= f.submit 'Create Account', data: { disable_with: "Please wait..." } %>
-  </div>
-
-
-<% end %>
+</div>
+        </div>
+    </div>
+</div>
