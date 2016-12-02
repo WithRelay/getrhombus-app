@@ -36,8 +36,8 @@ class Api::V1::UsersController < API::V1::BaseController
             address = u.build_address(api_v1_address_params)
             address.save
             person = u.people.create(api_v1_person_params)
-            lists = params[:user][:lists].split()
-            list.each{|l| UserList.create(user_id: u.id, list_id:l)}
+            lists = params[:user][:lists].split(',')
+            lists.each{|l| UserList.create(user_id: u.id, list_id:l)}
             # need to add customer's uri here
             response = 'User created'
             status = 200
