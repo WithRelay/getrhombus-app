@@ -53,7 +53,7 @@ module AdditionalUserActions
     account_keys = account.keys
     save_params = params_with_stripe(account, bank_account)
     unless params[:action] == 'update_managed_acct'
-      save_params[:stripe_creds_attributes]['0'].merge!({ account_id: account.id, secret: account_keys.secret,
+      save_params[:stripe_creds_attributes]['0'].merge!({ secret: account_keys.secret,
                                                           publishable_key: account_keys.publishable
                                                         })
     end
@@ -73,7 +73,8 @@ module AdditionalUserActions
     stripe_params = full_user_params
     stripe_params[:stripe_creds_attributes]['0'].merge!({ disabled_reason: account_verification.disabled_reason,
                                                           due_by: account_verification.due_by,
-                                                          fields_needed: account_verification.fields_needed
+                                                          fields_needed: account_verification.fields_needed,
+                                                          account_id: account.id
                                                         })
     unless bank_account.methods.include?(:message)
       stripe_params[:bank_accounts_attributes]['0'].merge!({ stripe_bank_account_id: bank_account.id,

@@ -479,6 +479,13 @@ $(document).ready(function () {
             }
           }
         },
+        'user[address_attributes][country]': {
+          validators: {
+            notEmpty: {
+              message: 'Country is required'
+            }
+          }
+        },
         'user[address_attributes][city]': {
           validators: {
             notEmpty: {
