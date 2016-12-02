@@ -29,7 +29,7 @@ class Api::V1::UsersController < API::V1::BaseController
           params[:user][:password] = Toolbox::StringGen.generate_random_string(8)
           params[:user][:user_level] = 0
           u = User.create(api_v1_user_params)
-          unless u.save # if serverside side error occurs it returns false response
+          if u.errors.present? # if serverside side error occurs it returns false response
             response = u.errors.full_messages
             status = 409
           else
