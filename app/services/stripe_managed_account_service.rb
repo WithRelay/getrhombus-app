@@ -184,7 +184,6 @@ class StripeManagedAccountService < Struct.new( :user, :params )
     params[:people_attributes].each do |key, value|
       unless key == '0' # key 0 contains address for default legal entities not for additional owners address
         owner_details = {}
-        binding.pry
         dob = value[:dob].split('/')
         full_name = value[:full_name].split(' ', 2)
         owner_details[:first_name] = full_name[0]
