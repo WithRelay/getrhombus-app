@@ -3,7 +3,6 @@ class Address < ActiveRecord::Base
   belongs_to :addressable, :polymorphic => true
   before_validation :the_titleizer
   validates :country, length: { is: 2 }, allow_blank: true   # mostly for csv upload
-  validates_presence_of :street_address, :city, :state_province, :postal_code
 
   private
 
