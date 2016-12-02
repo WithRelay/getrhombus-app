@@ -500,6 +500,14 @@ $(document).ready(function () {
             }
           }
         },
+        'user[tos_acceptance]': {
+                validators: {
+                    choice: {
+                        min: 1,
+                        message: 'tos must be accepted'
+                    }
+                }
+        },
         'user[bank_accounts_attributes][0][account_number]': {
           validators: {
             notEmpty: {
@@ -515,5 +523,7 @@ $(document).ready(function () {
           }
         }
       }
-    });
+    }).on('err.field.fv', function(e, data) {
+            data.fv.disableSubmitButtons(false);
+        })
 });
