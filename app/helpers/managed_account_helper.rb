@@ -22,7 +22,7 @@ module ManagedAccountHelper
 
   def connect_country(user)
     country_list = PaymentService.stripe_country_list.collect{ |k,v| [v[0], k]}
-    selected_country = country_list.select{ |country| country.include?(user.country.to_sym) }
+    selected_country = country_list.select{ |country| country.include?(user.country.to_sym) if user.country.present? }
     selected_country[0].present? ? selected_country : country_list
   end
 end
