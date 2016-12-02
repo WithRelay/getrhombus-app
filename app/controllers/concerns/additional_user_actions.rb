@@ -18,11 +18,10 @@ module AdditionalUserActions
   end
 
   def create_managed_acct
-    if tos_accepted?
-      status = user_managed_account
-      flash[:notice] = set_message(status)
+    if user_valid_to_update
+      flash[:notice] = user_valid_to_update
     else
-      flash[:alert] = 'You need to accept tos'
+      flash[:error] = @user.errors
     end
     render :managed_acct
   end
@@ -34,7 +33,7 @@ module AdditionalUserActions
     account = stripe_managed.send(action[params[:action]][0])
     if account.is_a?(Stripe::Account)
       external_account = stripe_managed.send(action[params[:action]][1], account)
-      current_user.update(save_managed_connect_acccount(account, external_account))
+      @user.update(save_managed_connect_acccount(account, external_account))
       external_account.is_a?(Stripe::BankAccount) ? account : external_account
     else
       account
@@ -42,11 +41,10 @@ module AdditionalUserActions
   end
 
   def update_managed_acct
-    if tos_accepted?
-      status = user_managed_account
-      flash[:notice] = set_message(status)
+    if user_valid_to_update
+      flash[:notice] = user_valid_to_update
     else
-      flash[:alert] = 'You need to accept tos'
+      flash[:error] = @user.errors
     end
     render :managed_acct
   end
@@ -62,8 +60,12 @@ module AdditionalUserActions
     save_params
   end
 
-  def tos_accepted?
-    full_user_params[:tos_acceptance] == '1'
+  def user_valid_to_update
+    user_update = @user.update(full_user_params)
+    if user_update
+      status = user_managed_account
+      set_message(status)
+    end
   end
 
   def params_with_stripe(account, bank_account)
@@ -83,12 +85,7 @@ module AdditionalUserActions
   end
 
   def set_message(status)
-    if status.methods.include?(:message)
-      status.message
-    else
-      link_to_account = "<a href='https://dashboard.stripe.com/test/applications/users/" + status.id + "'>Stripe Connected Succesfull Click for dashboard page</a>"
-      link_to_account.html_safe
-    end
+    status.methods.include?(:message) ? status.message : 'Account Connected Succesfully'
   end
 
   # Returns JSON object with user hash who sent a message to the given merchant in the last CONFIG[:dashboard]['messaging']['num_days_history'] days
