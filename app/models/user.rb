@@ -7,7 +7,7 @@ class User < ActiveRecord::Base
   attr_accessor :phone, :captured_amt, :msg_id, :tag_id, :referrer_id, :tos_acceptance
 
   validates :tos_acceptance, acceptance: true
-  validates_presence_of :org_type
+  validates_presence_of :org_type, on: :update
   validates_presence_of :org_name, if: lambda { self.org_type == 'company' }
 
   # include default devise modules. Others available are: :token_authenticatable, :lockable, :timeoutable and :confirmable,
