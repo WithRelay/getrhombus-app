@@ -51,3 +51,4 @@
 //= require jquery.checkboxes-1.2.0.min.js
 //= require refund
 //= require add-user
+//= require util_functions
