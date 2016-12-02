@@ -108,14 +108,12 @@ $(document).ready(function() {
       }
     })
     .on('err.validator.fv', function(e, data) {
-      if (data.field === 'user[email]' && data.validator === 'remote') {
-        // We need to reset the error message
-        data.element // The field element
-          .data('fv.messages') // The message container
-          .find('[data-fv-validator="remote"][data-fv-for="user[email]"]')
-          .html("The email isn't valid")
-          .show();
-      }
+      data.element
+        .data('fv.messages')
+        // Hide all the messages
+        .find('.help-block[data-fv-for="' + data.field + '"]').hide()
+        // Show only message associated with current validator
+        .filter('[data-fv-validator="' + data.validator + '"]').show();
     })
     ///// add a customer
     .on('success.form.fv', function(e) {
@@ -148,7 +146,7 @@ $(document).ready(function() {
       })
       .done(function(data, textStatus, jqXHR) {
         FlashHandler.setFlashMessage('Contacts created successfully', 'notice');
-        resetForms();
+        location.reload();
         // console.log(data);
       })
       .fail(function(data, textStatus, errorThrown) {
