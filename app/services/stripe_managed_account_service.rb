@@ -125,7 +125,17 @@ class StripeManagedAccountService < Struct.new( :user, :params )
   def country_with_bank_code_external_accounts
     bank_code_countries = basic_external_accounts
     bank_code_countries[:external_account].merge( { bank_code: bank_account[:institution_number]  } )
+    bank_code_countries[:external_account][:routing_number] = routing_number_bank_code_countries
     bank_code_countries
+  end
+
+  def routing_number_bank_code_countries
+    bank_code_external = basic_external_accounts[:external_account][:routing_number]
+    if  BANK_CODE_COUNTRIES[1] == address[:country]
+      bank_code_external + bank_account[:institution_number]
+    else
+      "#{bank_code_external}-#{bank_account[:institution_number]}" if  BANK_CODE_COUNTRIES[1] != address[:country]
+    end
   end
 
   def common_external_accounts
@@ -174,6 +184,7 @@ class StripeManagedAccountService < Struct.new( :user, :params )
     params[:people_attributes].each do |key, value|
       unless key == '0' # key 0 contains address for default legal entities not for additional owners address
         owner_details = {}
+        binding.pry
         dob = value[:dob].split('/')
         full_name = value[:full_name].split(' ', 2)
         owner_details[:first_name] = full_name[0]
@@ -186,7 +197,7 @@ class StripeManagedAccountService < Struct.new( :user, :params )
                                   }
         additional_owner.push(owner_details);
       end
-    end if params[:people_attributes].keys.length > 2
+    end if params[:people_attributes].keys.length > 1
     additional_owner
   end
 
