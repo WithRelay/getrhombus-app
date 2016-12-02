@@ -6,9 +6,8 @@ Bhishma
 - on subscription - check if user already belongs to merchant
 - customers can create subscriptions over messaging...not dashboard, but can cancel subscription
 
-Notes
-- clean and concise code
-- remove unnecessary code that you wrote
+surya
+- move campaign and email to classes
 
 Sunday/Monday
 - Finish up subscriptions review

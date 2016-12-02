@@ -49,7 +49,7 @@ $(document).ready(function () {
         validators: {
           callback: {
             callback: function (value, validator, $field) {
-              var y = CardHandler.get_expiry_date_data();
+              var y = UtilFunctions.get_card_expiry_date_data();
               if ($.payment.validateCardExpiry(y.month, y.year)) {
                 return {
                   valid: true,    // or false

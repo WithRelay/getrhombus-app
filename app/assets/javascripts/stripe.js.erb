@@ -12,7 +12,7 @@ var CardHandler = new function() {
   this.submit_to_stripe = function(form_id, btn_id, function_for_submission) {
     form_selector = form_id;
     form_submission_function = function_for_submission;
-    var y = this.get_expiry_date_data();
+    var y = UtilFunctions.get_card_expiry_date_data();
 
     form_btn = $(btn_id);
     form_btn_text = form_btn.val();        // So the button can be reset on fail
@@ -29,7 +29,7 @@ var CardHandler = new function() {
 
   function stripeResponseHandler(status, response) {
     if (response.error) {
-       FlashHandler.setFlashMessage(response.error.message, 'error');
+      FlashHandler.setFlashMessage(response.error.message, 'error');
       form_btn.attr("disabled", false).val(form_btn_text);
       show_stripe_error_field(response.error.param);
     } else {
@@ -54,7 +54,4 @@ var CardHandler = new function() {
     }
   }
 
-  this.get_expiry_date_data = function() {
-    return $('input#cc-exp').payment('cardExpiryVal');
-  }
 }

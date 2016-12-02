@@ -37,6 +37,8 @@
     <div class="row">
       <style type="text/css"> #top { position: relative; }</style>
       <div class="container">
+
+
         <form id="create-user-form" class="form-horizontal" name="create-user-form"    style="width: 40%";>
           <div class="form-group">
             <input type="text" class="form-control rhombusFocus" placeholder="Full Name" id='user_full_name' name="user_full_name">
@@ -93,18 +95,28 @@
           <div class="form-group">
             <input type="text" class="form-control rhombusFocus" name="user[state_province]" placeholder="State or Province">
           </div>
-          <div class="form-group">
-            <input type="text" id="select_user_country" class="form-control rhombusFocus" name="user[country]" placeholder="Country">
+
+          <div class='form-group'>
+            <select id="select_user_country" class="form-control rhombusFocus" name="user[country]">
+              <option value="" disabled selected>Select a country</option>
+              <% CountriesList::COUNTRIES_LIST.each do |c| %>
+                <option value="<%= c[:code] %>"><%= c[:name] %></option>
+              <% end %>
+            </select>
           </div>
-            <footer>
-              <div class="form-group">
-                <input type="submit" name="commit" value="Create Customer" id="create-user-submit" class="btn btn-primary btn-rhombus col-md-12">
-              </div>
-              <div class="form-group">
-                <input type="reset" name="commit" value="Cancel" id="create-user-submit" class="btn btn-block btn-info btn-rhombus-2 col-md-12">
-              </div>
-            </footer>
+
+          <footer>
+            <div class="form-group">
+              <input type="submit" name="commit" value="Create Customer" id="create-user-submit" class="btn btn-primary btn-rhombus col-md-12">
+            </div>
+            <div class="form-group">
+              <input type="reset" name="commit" value="Cancel" id="create-user-submit" class="btn btn-block btn-info btn-rhombus-2 col-md-12">
+            </div>
+          </footer>
         </form>
+
+
+        
       </div>
       <!-- Start Panel -->
       <div class="col-md-12">

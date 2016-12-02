@@ -489,7 +489,7 @@ $(document).ready(function () {
         }
       })
       .on('success.form.fv', function(e, data) {
-        set_number();
+        UtilFunctions.set_phone_number();
       });
   ///
 
@@ -613,7 +613,7 @@ $(document).ready(function () {
           }
       })
       .on('success.form.fv', function(e, data) {
-          set_number();
+          UtilFunctions.set_phone_number();
           set_hidden_fields();
       });
     // validate sign up form
@@ -886,7 +886,7 @@ $(document).ready(function () {
           }
       })
       .on('success.form.fv', function(e, data) {
-          set_number();
+          UtilFunctions.set_phone_number();
       });
   // validate merchant profile form
 
@@ -1197,4 +1197,3 @@ function get_unread_messages() {
 }
 
 
-function set_number() { $('#phone_number').val(PhoneNumberFormatter.getNumber().replace("+", '')); }
