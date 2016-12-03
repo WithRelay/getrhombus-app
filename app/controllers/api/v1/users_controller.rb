@@ -22,6 +22,7 @@ class Api::V1::UsersController < API::V1::BaseController
         response = current_user.upload_customer_csv(params['csv'].tempfile)
         status = 200
       elsif params[:format] == 'json'
+         render json: {}, status: 200 and return
         if u = User.where(email: params[:user][:email]).present?
           response = "User already exists."
           status = 409
