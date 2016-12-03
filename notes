@@ -3,11 +3,16 @@ current stripe api version - 2014-03-28
 Bhishma
 - fb_messages... page_id, from, to, fb_page_id?
 
+Taiwo (review)
+- stripe_events
+- subscription and stripe customer creation places
 - on subscription - check if user already belongs to merchant
 - customers can create subscriptions over messaging...not dashboard, but can cancel subscription
+- finish message parser and review how messsages are saved
 
 surya
 - move campaign and email to classes
+- def managed-accouunt need to specify type of account
 
 Sunday/Monday
 - Finish up subscriptions review

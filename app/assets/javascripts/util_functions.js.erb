@@ -9,7 +9,7 @@ var UtilFunctions = new function() {
   }
 
   this.set_first_and_last_names = function() {
-  	var full_name = $('#user_full_name').val().replace(/\s{2,}/g,' ').split(' ');
+  	var full_name = $('#user_full_name').val().trim().replace(/\s{2,}/g,' ').split(' ');
     $('#firstName').val(full_name[0]);
     full_name.shift();
     $('#lastName').val(full_name.join(' '));
