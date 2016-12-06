@@ -17,7 +17,8 @@ class WebhooksController < ApplicationController
 
   # set timezone for this request since we do duplicate payment check??
   def twilio_events
-
+    TwilioEvent.process_event(params)
+    render nothing: true
   end
 
   def facebook_events

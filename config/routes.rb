@@ -34,7 +34,8 @@ Rails.application.routes.draw  do
   ## events/hooks routegs
   # constraints subdomain: 'hooks' do
     post 'events/stripe' => 'webhooks#stripe_events'
-    match "events/facebook" => "webhooks#facebook_events", via: [:get, :post]
+    post 'events/twilio' => 'webhooks#twilio_events'
+    match 'events/facebook' => 'webhooks#facebook_events', via: [:get, :post]
 
     get "receive_text_message" => 'messages#receive_text_message'
     get "receive_text_message_twilio" => 'messages#receive_text_message_twilio'

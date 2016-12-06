@@ -345,6 +345,15 @@ class TextingService
       rescue StandardError => e
         false
       end
-    end  
+    end
+
+    # it fetches all message information since only limited message response we got from webhook
+    def fetch_message_details(message_id)
+      # client = Twilio::REST::Client.new TWILIO_API_KEY, TWILIO_API_SECRET
+      # for testing
+      client = Twilio::REST::Client.new '<redacted_twilio_account_sid>', '1f9efcd46cb2683629e1d4239b55a59a'
+      client.account.messages(message_id).fetch
+    end
+
   end
 end
