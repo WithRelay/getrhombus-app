@@ -9,6 +9,7 @@ var messagingApp = angular.module('PubNubAngularMessagingApp', [
   'messagingFilters',
   "angucomplete-alt",
   "ngFileUpload",
+  'messageFetcher',
   'luegg.directives' // Auto scroll module
 ]);
 
@@ -36,4 +37,4 @@ messagingApp.directive('ngEnter', function() {
       }
     });
   };
-}); 
+});
