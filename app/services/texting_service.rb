@@ -94,8 +94,8 @@ class TextingService
 
     def number_lookup(num)
       begin
-        client = Twilio::REST::LookupsClient.new TWILIO_API_KEY, TWILIO_API_SECRET
-        number = client.phone_numbers.get(num)
+        client = Twilio::REST::Client.new TWILIO_API_KEY, TWILIO_API_SECRET
+        number = client.lookups.v1.phone_numbers(num).fetch(type: 'carrier')
         [number.phone_number[1..-1], number.country_code]
       rescue StandardError => e
         false
