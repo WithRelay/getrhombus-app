@@ -11,11 +11,11 @@
 // about supported directives.
 //
 //= require pubnub/pubnub.min.js
+//= require jquery
 //= require angularjs/angular.min.js
 //= require angularjs/angular-route.min.js
 //= require angularjs/angular-scrollglue.js
 //= require angular-rails-templates
-//= require jquery
 //= require jquery_ujs
 
 //= require pubnub/pubnub-angular.js
@@ -28,6 +28,7 @@
 //= require jquery.payment.js
 //= require cocoon
 
+//= require dashboard/messaging_angularjs/angularUpwardScroll.js
 //= require dashboard/messaging_angularjs/messagingApp.js
 //= require dashboard/messaging_angularjs/messagingControllers.js
 //= require dashboard/messaging_angularjs/messagingFilters.js
