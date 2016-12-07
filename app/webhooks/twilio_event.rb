@@ -64,12 +64,12 @@ class TwilioEvent
     end
 
     def get_user_id
-      user = User.find_by(phone_number: @param[:To].gsub('+', ''))
+      user = User.find_by(phone_number:  @param[:To][1..-1])
       user.id if user
     end
 
     def get_merchant_id
-      merchant = User.find_by(rhombus_number: @param[:From].gsub('+', ''))
+      merchant = User.find_by(rhombus_number: @param[:From][1..-1])
       merchant.id if merchant
     end
 
