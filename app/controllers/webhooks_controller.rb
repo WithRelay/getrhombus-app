@@ -21,6 +21,11 @@ class WebhooksController < ApplicationController
     render nothing: true
   end
 
+  def nexmo_events
+    NexmoEvent.process_event(params)
+    render nothing: true
+  end
+
   def facebook_events
     res = {}
     
