@@ -59,9 +59,9 @@ class TextingService
         search_params[:exclude_all_address_required] = "true" if data[:address_required] == ""
 
         if params[:type] == 'local'
-          number = client.account.available_phone_numbers.get(params[:country]).local.list(search_params).first
+          number = client.account.available_phone_numbers(params[:country]).local.list(search_params).first
         elsif params[:type] == 'toll_free'
-          number = client.account.available_phone_numbers.get(params[:country]).toll_free.list(search_params).first
+          number = client.account.available_phone_numbers(params[:country]).toll_free.list(search_params).first
         elsif params[:type] == 'mobile'
           number = client.account.available_phone_numbers.get(params[:country]).mobile.list(search_params).first
         end
@@ -327,7 +327,7 @@ class TextingService
       end
     end
 
-    # it fetches all message information since only limited message response we got from webhook
+    # it fetches all message information since only limited message response we got from webhook for sent/received message
     def fetch_message_details(message_id)
       begin
         client = Twilio::REST::Client.new TWILIO_API_KEY, TWILIO_API_SECRET
