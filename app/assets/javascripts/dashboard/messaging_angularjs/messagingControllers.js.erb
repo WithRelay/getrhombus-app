@@ -7,27 +7,37 @@ var messagingControllers = angular.module('messagingControllers', [
 ]);
 
 (function() {
-      angular.module('messageFetcher', ['upwards-scroll']);
-        angular.module('messageFetcher').controller('endlessMessage', function($scope, $http) {
-        var messages = this;
-        messages.Items = [];
-        messages.LoadMore = function() {
-          var url = window.location.origin + '/users/' + 1 + '/json_get_user_messages_by_merchant/' + 1  + '?page=' + page
-          $http({method: 'GET', url: url}).success(function(data) {
-            var msg = data.messages;
-            for (var i = 0; i < msg.length; i++) {
-                msg[i].text =  counter+ msg[i].text
-                messages.Items.unshift(msg[i]);
-                counter++
-            }
-            page = page + 1;
-          });
-    };
-    var counter = 0;
-    var page = 1;
-    messages.LoadMore();
+  angular.module('messageFetcher', ['upwards-scroll']);
+  angular.module('messageFetcher').controller('endlessMessage', function($scope, $http) {
+  var messages = this;
+  messages.Items = [];
+  messages.LoadMore = function() {
+    $http.get(window.location.origin + '/json_get_current_user').success(function(data) {
+      var merchant_id = data.id
+      var url = window.location.origin + '/users/' + merchant_id + '/json_get_user_messages_by_merchant/' + merchant_id  + '?page=' + page
+      $http({ method: 'GET', url: url }).success(function(data) {
+        if (data.messages.length < 1){
+          $('.messageStatus').html('Message Completed')
+        }
+        var msg = data.messages;
+        for (var i = 0; i < msg.length; i++) {
+            msg[i].text =  counter+ msg[i].text
+            messages.Items.unshift(msg[i]);
+            counter++
+        }
+        page = page + 1;
+        }).error(function(data, status, headers, config) {
+          alert('Error while trying to connect to the messaging system.');
+        });
+      }).error(function(data, status, headers, config) {
+        alert('Error while trying to connect to the messaging system.');
     });
-          })();
+  };
+  var counter = 0;
+  var page = 1;
+  messages.LoadMore();
+  });
+})();
 
 
 messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub', 'Upload',

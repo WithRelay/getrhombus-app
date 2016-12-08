@@ -1,6 +1,5 @@
 <style>
 .upwards-scroll-container {
-  height: 300px;
   overflow-y: scroll;
 }
 </style>
@@ -69,9 +68,10 @@
         </div>
         <!-- End Title -->
         <!-- Start Conv -->
-        <ul data-ng-app="messageFetcher">
+        <div data-ng-app="messageFetcher">
           <div data-ng-controller="endlessMessage as messages">
-            <div class="upwards-scroll-container" data-upwards-scoll="messages.LoadMore()" scroll-glue>
+            <div class="messageStatus text-center" style="margin-left:300px; width: 150px; background: #edf9ff;"></div>
+            <ul class="upwards-scroll-container conv" data-upwards-scoll="messages.LoadMore()" scroll-glue>
               <div data-ng-repeat="i in messages.Items track by $index">
                 <li ng-if="($index != 0) && !messages.Items[$index - 1].unread && messages.Items[$index].unread" class="date">New Messages</li>
                 <li ng-if="($index == 0) || (messages.Items[$index - 1].ts_day_of_the_week != messages.Items[$index].ts_day_of_the_week)" class="date">{{i.ts_day_of_the_week}}</li>
@@ -86,9 +86,9 @@
                   <div class="separator">&nbsp;</div>
                 </li>
               </div>
-            </div>
+            </ul>
           </div>
-        </ul>
+        </div>
 
         <!-- <ul class="conv" scroll-glue>
           <div ng-repeat="message in selected_user_messages track by $index">
