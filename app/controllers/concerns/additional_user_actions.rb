@@ -101,7 +101,7 @@ module AdditionalUserActions
     else
       limit = CONFIG[:dashboard]['messaging']['num_messages_per_user_default']
     end
-    render :json => Hash['success' => true, 'messages' => Message.get_user_messages_by_merchant(params[:user_number], params[:id], limit)].to_json
+    render :json => Hash['success' => true, 'messages' => Message.get_user_messages_by_merchant(params[:user_number], params[:id], limit).paginate(page: params[:page], per_page: 20)].to_json
   end
 
   # Marks all user messages sent to a merchant as read

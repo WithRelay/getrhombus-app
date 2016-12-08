@@ -27,7 +27,7 @@ class TextingService
     def send_sms(from, to, body, media_url = nil)
       begin
         client = Twilio::REST::Client.new TWILIO_API_KEY, TWILIO_API_SECRET
-        data = { From: from, To: to, Body: body, ApplicationSid: TWILIO_RHOMBUS_APP_SID } 
+        data = { from: from, to: to, body: body, application_sid: TWILIO_RHOMBUS_APP_SID }
         # 5MB max size, 10 images max
         data[:media_url] = media_url.split(",") if media_url.present?  # US and canadian phone numbers can make use of an image as well.
         message = client.account.messages.create(data)
@@ -74,8 +74,8 @@ class TextingService
 
     def number_lookup(num)
       begin
-        client = Twilio::REST::LookupsClient.new TWILIO_API_KEY, TWILIO_API_SECRET
-        number = client.phone_numbers.get(num)
+        client = Twilio::REST::Client.new TWILIO_API_KEY, TWILIO_API_SECRET
+        number = client.lookups.v1.phone_numbers(num).fetch(type: 'carrier')
         [number.phone_number[1..-1], number.country_code]
       rescue StandardError => e
         false
@@ -329,10 +329,12 @@ class TextingService
 
     # it fetches all message information since only limited message response we got from webhook
     def fetch_message_details(message_id)
-      # client = Twilio::REST::Client.new TWILIO_API_KEY, TWILIO_API_SECRET
-      # for testing
-      client = Twilio::REST::Client.new '<redacted_twilio_account_sid>', '1f9efcd46cb2683629e1d4239b55a59a'
-      client.account.messages(message_id).fetch
+      begin
+        client = Twilio::REST::Client.new TWILIO_API_KEY, TWILIO_API_SECRET
+        client.account.messages(message_id).fetch
+      rescue StandardError => e
+        {}
+      end
     end
 
 
