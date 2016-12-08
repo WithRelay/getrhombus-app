@@ -53,6 +53,15 @@ class TwilioEvent
         error_text: @data.error_message,
         error_code: @data.error_code
       )
+
+      TwilioNumberData.add_or_update_twilio_number_data(
+        @message[:From],
+        @message[:FromCity],
+        @message[:FromState],
+        @message[:FromZip],
+        @message[:FromCountry]
+      )
+
       # save media/mms if present
       save_media if @param[:NumMedia].to_i > 0
       @message.save!
