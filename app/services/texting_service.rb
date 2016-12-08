@@ -36,26 +36,6 @@ class TextingService
       end
     end
 
-    def receive_call
-      response = Twilio::TwiML::Response.new do |r|
-        # Should be your Twilio Number or a verified Caller ID
-        r.Dial :callerId => '+<redacted_phone_number>' do |d|
-            d.Client 'rho-jenny'
-        end
-      end
-      return response
-    end
-
-    def get_twilio_capibility_token
-      # This application sid will play a Welcome Message.
-      demo_app_sid = '<redacted_twilio_app_sid>'
-      capability = Twilio::Util::Capability.new TWILIO_API_KEY, TWILIO_API_SECRET
-      capability.allow_client_outgoing '<redacted_twilio_app_sid>'
-      capability.allow_client_incoming "rho-jenny"
-      token = capability.generate
-      return token
-    end
-
     def buy_number(num)
       begin  
         client = Twilio::REST::Client.new TWILIO_API_KEY, TWILIO_API_SECRET
@@ -353,6 +333,27 @@ class TextingService
       # for testing
       client = Twilio::REST::Client.new '<redacted_twilio_account_sid>', '1f9efcd46cb2683629e1d4239b55a59a'
       client.account.messages(message_id).fetch
+    end
+
+
+    def receive_call
+      response = Twilio::TwiML::Response.new do |r|
+        # Should be your Twilio Number or a verified Caller ID
+        r.Dial :callerId => '+<redacted_phone_number>' do |d|
+            d.Client 'rho-jenny'
+        end
+      end
+      return response
+    end
+
+    def get_twilio_capibility_token
+      # This application sid will play a Welcome Message.
+      demo_app_sid = '<redacted_twilio_app_sid>'
+      capability = Twilio::Util::Capability.new TWILIO_API_KEY, TWILIO_API_SECRET
+      capability.allow_client_outgoing '<redacted_twilio_app_sid>'
+      capability.allow_client_incoming "rho-jenny"
+      token = capability.generate
+      return token
     end
 
   end

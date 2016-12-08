@@ -2,27 +2,29 @@ current stripe api version - 2014-03-28
 
 Bhishma
 - fb_messages... page_id, from, to, fb_page_id?
+- what happens when u send image in countries that don't support it. link? iin that case...remove mms restrictions
+- only send to stripe if card number is present...
 
 Taiwo (review)
-- stripe_events
-- subscription and stripe customer creation places
-- on subscription - check if user already belongs to merchant
-- customers can create subscriptions over messaging...not dashboard, but can cancel subscription
+- review stripe_events
+- review managed account
+- subscription, subscription controller and stripe customer creation places
+- review Add a Customer
+- Review adding token...failing safely.
+- on subscription - check if user already belongs to merchant??? is this when they text?
+	- customers can create subscriptions over messaging...not dashboard, but can cancel subscription
 - finish message parser and review how messsages are saved
-
-surya
-- move campaign and email to classes
-- def managed-accouunt need to specify type of account
-
-Sunday/Monday
-- Finish up subscriptions review
-- Review events
 - final review of updating subscriptions, coupons, plans...do we update subscriptions esp platform??
 - where will customer create plan? on whose account?
-- Parse_Text
 - Rake - migrate customer uri to merchant_customer plus drop column...but after migrating merchant_customer
    - remove livemode from users, add to merchant_customer and create rake task to migrate this to merchant..customer
 
+surya
+- move campaign and email to classes
+- unify image/hashtag presenters...image handling should be generic
+
+ovo
+- add params to list api for add segmentation, static or all
 
 Review
 - campaign_user_list (can better track failures) or notification_log or add an email model??
@@ -32,9 +34,6 @@ Review
 - change all emails in test db dump
 - unify team and dashboard email issue really
 
-
-- what happens when u send image in countries that don't support it. link?
-- clean up image/hashtag presenters
 - Create Seeds
 - Clean up angular - https://blog.joshsoftware.com/2014/07/17/building-web-apps-with-rails4-and-angularjs-in-15-minutes/
 - remove thread profiler in prod
@@ -42,7 +41,6 @@ Review
 - notifications platform to merchants should have a single conversation and should not be pulled - mark as read too
 - conversations....need origin...cos system to customers should not open conversation....
 - return omniauth stripe connect for dashboard account - check how we save platform stripe cred...does stripe connect still work? do we really need this?
-
 
 Payment Capture - should be for only customers....capture in logic
 - check if /profile affect forms for merchants
