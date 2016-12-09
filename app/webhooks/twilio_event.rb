@@ -12,14 +12,14 @@ class TwilioEvent
         save_received_message
       elsif @param[:MessageStatus] == 'delivered'
         update_message_status
-      else
-        # else part goes here
       end
     end                            
 
+    private
+
     # when message send from rhombus
     def save_sent_message
-      @message = Message.create(
+      Message.create(
         to: @param[:To],
         from: @param[:From],
         message_timestamp: @data.date_sent,
@@ -54,17 +54,22 @@ class TwilioEvent
         error_code: @data.error_code
       )
 
+      # save user info on twilio_number_data
+      add_or_update_twilio_number_data
+
+      # save media/mms if present
+      save_media if @param[:NumMedia].to_i > 0
+      @message.save!
+    end
+
+    def add_or_update_twilio_number_data
       TwilioNumberData.add_or_update_twilio_number_data(
         @message[:From],
         @message[:FromCity],
         @message[:FromState],
         @message[:FromZip],
         @message[:FromCountry]
-      )
-
-      # save media/mms if present
-      save_media if @param[:NumMedia].to_i > 0
-      @message.save!
+      ) 
     end
 
     def update_message_status

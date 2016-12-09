@@ -4,11 +4,7 @@ class NexmoEvent
 
      def process_event(params)
       @param = params
-      if @param['messageId']
-        save_message
-      else
-        # else part...
-      end
+      save_message if @param['messageId']
      end
 
      # save both inbound and outbound message
@@ -24,8 +20,10 @@ class NexmoEvent
           user_id: get_user_id,
           user_id_to: get_merchant_id,
           text: @param['text']
-      )
+       )
      end
+
+     private
 
      def get_user_id
        user = User.find_by(phone_number:  @param['to'])

@@ -19,6 +19,8 @@ class Coupon < ActiveRecord::Base
   validates_presence_of :amount_off, if: lambda { self.percent_off.blank? }
   validates :amount_off, :max_redemptions, numericality: { allow_blank: true, greater_than: 0, only_integer: true }
 
+  validate :validate_redeem_by
+
   def create_coupon(hash)
     begin
       res = []
@@ -68,4 +70,9 @@ class Coupon < ActiveRecord::Base
     PaymentService.is_valid_coupon(self.stripe_coupon_id)
   end
 
+  private
+
+  def validate_redeem_by
+    (Time.current + 4.years) >= Time.at(self.redeem_by) &&  (Time.current) < Time.at(self.redeem_by)
+   end
 end
