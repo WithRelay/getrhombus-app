@@ -4,7 +4,7 @@ class NexmoEvent
 
      def process_event(params)
       @param = params
-      if @param
+      if @param['messageId']
         save_message
       else
         # else part...
