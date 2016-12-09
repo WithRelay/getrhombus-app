@@ -56,6 +56,7 @@ $(document).ready(function () {
     })
     .find('[name="subscription[plan_id]"]')
       .selectize({
+      maxItems: 1,
       valueField: 'id',
       labelField: 'name',
       searchField: 'name',
