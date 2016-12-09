@@ -1,4 +1,4 @@
-class MessageParserClass
+class MessageParser
 
   # must have identified existing team, customer and message isnt blank
   # and saved incoming message

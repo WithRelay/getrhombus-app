@@ -124,10 +124,7 @@ class User < ActiveRecord::Base
     #email == User.platform_email
     email == '<redacted_email>' || email == '<redacted_email>'
   end
-
-  def can_send_mms?
-    ['US', 'CA'].include? self.country
-  end
+  
 
   def get_team_uid
     t = is_platform? ? self.stripe_creds.first : self.stripe_creds.where(uid_type: 0).first

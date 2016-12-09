@@ -23,7 +23,6 @@ class Api::V1::UsersController < API::V1::BaseController
         response = current_user.upload_customer_csv(params['csv'].tempfile)
         status = 200
       elsif params[:format] == 'json'
-        # render json: {}, status: 200 and return
         u = User.where(email: params[:user][:email])
         if u.present?
           response = "User already exists."
@@ -40,7 +39,8 @@ class Api::V1::UsersController < API::V1::BaseController
             address.save
             person = u.people.create(api_v1_person_params)
             params[:user][:lists].split(',').each{ |l| UserList.create(user_id: u.id, list_id:l) }
-            # need to add customer's uri here
+            #### TODO ####
+            #### need to add customer's uri here
             response = 'User created'
             status = 200
           end

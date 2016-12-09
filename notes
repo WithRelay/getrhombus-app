@@ -2,13 +2,12 @@ current stripe api version - 2014-03-28
 https://www.getrhombus.com/receive_delivery_report
 
 Bhishma
-- fb_messages... page_id, from, to, fb_page_id?
-- what happens when u send image in countries that don't support it. link? iin that case...remove mms restrictions
-- only send to stripe if card number is present...
 
 Taiwo (review)
+- only send to stripe if card number is present... - Done
+- figure out fb_messages... page_id, from, to, fb_page_id?
 - review stripe_events
-- review managed account
+- review managed account..
 - subscription, subscription controller and stripe customer creation places
 - review Add a Customer
 - Review adding token...failing safely.

@@ -118,16 +118,20 @@ $(document).ready(function() {
     ///// add a customer
     .on('success.form.fv', function(e) {
       e.preventDefault();
-      // run validations for email and phone number...have variable for fail
-      // if good above and card number is present, send card details to stripe if...set fail variable
-      // no validations for address or lists
-      // if all pass, submit_contact_form
-
-      CardHandler.submit_to_stripe(create_user_form, create_user_submit, submit_create_user_form);
-
+      
+      // if good above and card number is present, send card details to stripe
+      if ($('#cc-number').val() != "") {
+        CardHandler.submit_to_stripe(create_user_form, create_user_submit, submit_create_user_form);  
+      } else {
+        $.each(["#cc-name", "#cc-exp", "#cc-csc"], function( index, value ) {
+          $(value).val('');
+        });
+        submit_create_user_form();
+      }
+      
       // added accept nested attributes for lists
       // hashes of hashes or array of hashes for lists
-      console.log($(this).serialize())
+      // console.log($(this).serialize())
     });
 
   function submit_create_user_form() {

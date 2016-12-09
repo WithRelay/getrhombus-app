@@ -67,7 +67,6 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
     .success(function(data) {
       var merchant_id = data.id;
       $scope.merchant_short_url = data.short_url;
-      if (!data.can_send_mms) $('#file-picker').remove();
 
       // Initialize PubNub with SSL
       Pubnub.init({
