@@ -118,15 +118,13 @@ $(document).ready(function() {
     ///// add a customer
     .on('success.form.fv', function(e) {
       e.preventDefault();
-      
+
       // if good above and card number is present, send card details to stripe
-      if ($('#cc-number').val() != "") {
-        CardHandler.submit_to_stripe(create_user_form, create_user_submit, submit_create_user_form);  
-      } else {
-        $.each(["#cc-name", "#cc-exp", "#cc-csc"], function( index, value ) {
-          $(value).val('');
-        });
+      if ($('#cc-number').val() == "") {
+        $.each(["#cc-name", "#cc-exp", "#cc-csc"], function(index, val) { $(val).val(''); });
         submit_create_user_form();
+      } else {
+        CardHandler.submit_to_stripe(create_user_form, create_user_submit, submit_create_user_form);  
       }
       
       // added accept nested attributes for lists
