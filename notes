@@ -5,11 +5,12 @@ Bhishma
 
 Taiwo (review)
 - only send to stripe if card number is present... - Done
+- review Add a Customer - Done
+
 - figure out fb_messages... page_id, from, to, fb_page_id?
 - review stripe_events
 - review managed account..
 - subscription, subscription controller and stripe customer creation places
-- review Add a Customer
 - Review adding token...failing safely.
 - on subscription - check if user already belongs to merchant??? is this when they text?
 	- customers can create subscriptions over messaging...not dashboard, but can cancel subscription

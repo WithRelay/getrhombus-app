@@ -62,7 +62,7 @@ class Api::V1::UsersController < API::V1::BaseController
   end
 
   def api_v1_address_params
-    params.require(:user).permit(:street_address, :state_province, :city, :country)
+    params.require(:user).permit(:street_address, :state_province, :city, :country, :postal_code)
   end
 
   def api_v1_person_params
