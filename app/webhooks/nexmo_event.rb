@@ -4,15 +4,14 @@ class NexmoEvent
 
      def process_event(params)
       @param = params
-      # err-code = '0' indicates success
-      if @param['err-code'] == '0'
+      if @param
         save_message
       else
         # else part...
       end
      end
 
-     # when message send from rhombus
+     # save both inbound and outbound message
      def save_message
       @message = Message.where(message_id: @param['messageId']).first_or_initialize
        @message.update(
@@ -34,7 +33,7 @@ class NexmoEvent
      end
 
      def get_merchant_id
-       merchant = User.find_by(rhombus_number: @param['from'])
+       merchant = User.find_by(rhombus_number: @param['msisdn'])
        merchant.id if merchant
      end
 
