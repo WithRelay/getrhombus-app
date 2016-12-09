@@ -6,10 +6,22 @@ class User < ActiveRecord::Base
 
   attr_accessor :phone, :captured_amt, :msg_id, :tag_id, :referrer_id, :tos_acceptance
 
-  validates :tos_acceptance, acceptance: true
-  validates_presence_of :org_type, on: :update
-  validates_presence_of :org_name, if: lambda { self.org_type == 'company' }
 
+  # validation rules for user attributes
+  validates :tos_acceptance, acceptance: true, if: lambda { self.is_merchant? }, on: :update
+  validates_presence_of :org_type, if: lambda { self.is_merchant? }, on: :update
+  validates_presence_of :org_name, if: lambda { self.org_type.downcase != 'individual' && self.is_merchant? }, on: :update
+  # Edit pages use the right number field for each user type
+  validates_presence_of :org_phone, numericality: { only_integer: true }, length: { minimum: 10 }, on: :update, if: lambda { self.is_merchant? }
+  validates_presence_of :phone_number, numericality: { only_integer: true }, length: { minimum: 10 }, on: :update, if: lambda { self.is_customer? }
+  validates_presence_of :user_level, message: "Please select an account type"
+  # Sign up form uses phone_number field for both user types
+  validates_presence_of :phone_number, numericality: { only_integer: true }, length: { minimum: 10 }, on: :create
+  # Allow nil added to db migration because merchants don't have phone number. They have org_phone.
+  # And since mysql indexes this field, it indexes nil and only allows one row with nil.
+  # You run into issues with any additional merchants.
+  validates_uniqueness_of :phone_number, :allow_nil => true, :if => lambda { is_merchant? }
+  validate :phone_number_cannot_be_rhombus_number
   # include default devise modules. Others available are: :token_authenticatable, :lockable, :timeoutable and :confirmable,
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable, :omniauthable
 
@@ -74,7 +86,7 @@ class User < ActiveRecord::Base
 
   has_many :bank_accounts
   accepts_nested_attributes_for :bank_accounts
-  validates_associated :address
+  validates_associated :bank_accounts
 
   has_many :stripe_creds
   accepts_nested_attributes_for :stripe_creds
@@ -92,22 +104,12 @@ class User < ActiveRecord::Base
   after_commit :create_user_alert, on: :create, if: lambda { is_merchant? }
   after_commit :update_phone_in_db, on: :update
 
-  validates_presence_of :user_level, message: "Please select an account type"
-  # Sign up form uses phone_number field for both user types
-  validates_presence_of :phone_number, numericality: { only_integer: true }, length: { minimum: 10 }, on: :create
-
-  # Edit pages use the right number field for each user type
-  # validates_presence_of :org_phone, numericality: { only_integer: true }, length: { minimum: 10 }, on: :update, if: lambda { self.user_level == 1 }
-  validates_presence_of :phone_number, numericality: { only_integer: true }, length: { minimum: 10 }, on: :update, if: lambda { self.user_level == 0 }
-
-  # Allow nil added to db migration because merchants don't have phone number. They have org_phone.
-  # And since mysql indexes this field, it indexes nil and only allows one row with nil.
-  # You run into issues with any additional merchants.
-  validates_uniqueness_of :phone_number, :allow_nil => true, :if => lambda { is_merchant? }
-  validate :phone_number_cannot_be_rhombus_number
-
   def is_merchant?
     user_level == 1
+  end
+
+  def is_customer?
+    user_level == 0
   end
 
   def self.platform_email
