@@ -1025,10 +1025,11 @@ $(document).ready(function () {
 
   // handle images
   $('#select-images-button').click(function() { $('#select-images').trigger('click'); });
-  $(document).on('change', '#select-images', function() {read_file_picker(this); });
+  $(document).on('change', '#select-images', function() { read_file_picker(this); });
   function read_file_picker(input) {
     var files = input.files, new_image_previews = $('#new-image-previews').html("");
-    var counter = []
+    var counter = [];
+
     function invalid_actions(msg) {
       input.value = "";
       new_image_previews.html("");
@@ -1037,6 +1038,12 @@ $(document).ready(function () {
 
     // http://stackoverflow.com/questions/23402187/multiple-files-upload-and-using-file-reader-to-preview
     if (files && files.length > 0) {
+      console.log($("#image-previews").children().length)
+      if ($("#image-previews").children().length == 0 && files.length > 2) {
+        invalid_actions("Please seletct up to 2 images..");
+        return;
+      }
+
       if (($("#image-previews").children().length + files.length) > 2) {
         invalid_actions("you already have 2 images attached");
         return;
@@ -1074,7 +1081,7 @@ $(document).ready(function () {
               div = "<div class='images'><a href='#' class='deleteImagePreviews' title='"+img.filename+"'>Delete "+ counter.length +" Images</a><img class='thumbnail' src='" + img.result + "'" + "title='" + img.filename + "'/>" +
                     "<span>" + img.filename + "</span></div>";
             }
-          console.log(div)
+          //console.log(div)
           new_image_previews.prepend(div);
         };
 

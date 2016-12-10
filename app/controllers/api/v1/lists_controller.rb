@@ -3,7 +3,13 @@ class Api::V1::ListsController < API::V1::BaseController
   def index
     begin
       if params[:query]
-        res = current_user.lists.where("lower(name) like ?", "%#{params[:query].downcase}%")
+        list_type = ""
+        if params[:type] == "list"
+          list_type = "and segment is null"
+        elsif params[:type] == 'segment'
+          list_type = "and segment is not null"
+        end
+        res = current_user.lists.where("lower(name) like ? " + list_type , "%#{params[:query].downcase}%")
       else
         res = current_user.lists
       end

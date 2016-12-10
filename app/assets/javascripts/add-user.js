@@ -16,7 +16,7 @@ $(document).ready(function() {
     load: function(query, callback) {
       if (!query.length) return callback();
       $.ajax({
-        url: '/v1/lists/',
+        url: '/v1/lists.json?type=list',
         type: 'GET',
         dataType: 'json',
         data: {

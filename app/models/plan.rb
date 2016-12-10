@@ -4,8 +4,8 @@ class Plan < ActiveRecord::Base
   belongs_to :user
 
   validates_presence_of :name, :interval, :interval_count, :amount
-  #validates :name, uniqueness: { case_sensitive: false, scope: :user_id }
-  #validates_numericality_of :amount, :interval_count, greater_than: 0, only_integer: true
+  validates :name, uniqueness: { case_sensitive: false, scope: :user_id }
+  validates_numericality_of :amount, :interval_count, greater_than: 0, only_integer: true
 
   def create_plan(hash)
     begin

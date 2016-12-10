@@ -4,9 +4,7 @@ https://www.getrhombus.com/receive_delivery_report
 Bhishma
 
 Taiwo (review)
-- only send to stripe if card number is present... - Done
-- review Add a Customer - Done
-
+- fix image handler logic and validation messages...might fix some surya issues
 - figure out fb_messages... page_id, from, to, fb_page_id?
 - review stripe_events
 - review managed account..
@@ -21,8 +19,22 @@ Taiwo (review)
    - remove livemode from users, add to merchant_customer and create rake task to migrate this to merchant..customer
 
 surya
+- business name in people?
 - move campaign and email to classes
-- unify image/hashtag presenters...image handling should be generic
+- can I migrate my jobs?
+- check for campaign name validity like Bhishma does...and add scoped name validation
+- campaign calendar needs to not show old dates
+- adding images has issues...should be able to add up to 3 images...overall total of 5MB...plus error message is not right
+- arugment out of range error with dates...need to recreate
+- hide subject field when not email
+- Uncaught TypeError: Cannot read property 'split' of undefined(…)...line 22
+- campaigns-225b555….js?body=1:16 Uncaught TypeError: Cannot read property 'select' of undefined(…) ....eassy to recreat
+- one time...check and uncheck send now...throws error
+- choose date, save campaign, let it fail validation...date field is invalid
+- where is time option in campaigns
+- Attach 2 images...only option is to delete both images...should be able to delete each...check hashtags
+- list validation message isnt helpful and all fields validation should also start from client side
+- when you fail validation and are returned to new campaign...list shows ids not list names
 
 ovo
 - add params to list api for add segmentation, static or all
@@ -34,6 +46,7 @@ Review
 - when user logs in through messenger, indicate in referrers
 - change all emails in test db dump
 - unify team and dashboard email issue really
+- unify image/hashtag presenters...image handling should be generic...do when integrating UI
 
 - Create Seeds
 - Clean up angular - https://blog.joshsoftware.com/2014/07/17/building-web-apps-with-rails4-and-angularjs-in-15-minutes/
