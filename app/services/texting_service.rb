@@ -17,19 +17,20 @@ class TextingService
     def send_sms_nexmo(from, to, message)
       begin
         # encode the nexmo uri
-        uri = URI.encode_www_form([["api_key",NEXMO_API_KEY], ["api_secret", NEXMO_API_SECRET], ["from", from], ["to", to], ["text", message]])   
+        uri = URI.encode_www_form([["api_key",NEXMO_API_KEY], ["api_secret", NEXMO_API_SECRET], ["from", from], ["to", to], ["text", message]])  
+        # ["status-report-req", 1] 
         response = HTTParty.post('https://rest.nexmo.com/sms/json?'+ uri, :headers => {"Content-Type" => "application/x-www-form-urlencoded"} )
       rescue StandardError => err
         return err
       end
     end
   
-    def send_sms(from, to, body, media_url = nil)
+    def send_sms(from, to, body, media_ary = [])
       begin
         client = Twilio::REST::Client.new TWILIO_API_KEY, TWILIO_API_SECRET
         data = { from: from, to: to, body: body, application_sid: TWILIO_RHOMBUS_APP_SID }
         # 5MB max size, 10 images max
-        data[:media_url] = media_url.split(",") if media_url.present?  # US and canadian phone numbers can make use of an image as well.
+        data[:media_url] = media_ary if media_ary.present?
         message = client.account.messages.create(data)
       rescue StandardError => err
         return err

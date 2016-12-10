@@ -15,17 +15,17 @@ class Message < ActiveRecord::Base
   # For sending and saving all outbound text messages
 
   # combine into one method with below
-  def self.send_and_save_message(from, to, message, media_url = "")
+  def self.send_and_save_message(from, to, message, media_ary = [])
     begin
       msg = Message.new
-        msg.update_attributes(from: from, to: to, text: message, unread: false)
-        if response = TextingService.send_sms(from, to, message, media_url)
-          msg.update_attributes(status: response.status, message_id: response.sid, message_timestamp: response.date_updated, message_price: response.price,
-                error_code: response.error_code, error_text: response.error_message, price_unit: response.price_unit, num_segments: response.num_segments)
-        else
-          Notification.text_failure_notification(response, from, to, message).deliver_now                         # Notify marketplace owner of failure
-          false
-        end
+      msg.update_attributes(from: from, to: to, text: message, unread: false)
+      if response = TextingService.send_sms(from, to, message, media_ary)
+        msg.update_attributes(status: response.status, message_id: response.sid, message_timestamp: response.date_updated, message_price: response.price,
+              error_code: response.error_code, error_text: response.error_message, price_unit: response.price_unit, num_segments: response.num_segments)
+      else
+        Notification.text_failure_notification(response, from, to, message).deliver_now                         # Notify team of failure
+        false
+      end
     rescue StandardError => err
       false
     end
@@ -41,9 +41,9 @@ class Message < ActiveRecord::Base
 
       if response && response.code == 200 && response["messages"].first["status"] == "0"
           msg.update_attributes(status: response['messages'].first['status'], message_id: response['messages'].first['message-id'],
-              message_price: response['messages'].first['message-price'], error_text: response['messages'].first['error-text'])
+              message_price: response['messages'].first['message-price'], num_segments: response['message-count'])
       else
-        Notification.text_failure_notification(response["messages"].first, from, to, message).deliver_now               # Notify marketplace owner of failure
+        Notification.text_failure_notification(response["messages"].first, from, to, message).deliver_now               # Notify team of failure
         false
       end
     rescue StandardError => err

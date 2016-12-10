@@ -2,6 +2,7 @@ current stripe api version - 2014-03-28
 https://www.getrhombus.com/receive_delivery_report
 
 Bhishma
+- if you will use one method to handle inbound messages or outbound events, then you need to check for specific properties that are not in both json data
 
 Taiwo (review)
 - fix image handler logic and validation messages...might fix some surya issues
@@ -36,8 +37,6 @@ surya
 - list validation message isnt helpful and all fields validation should also start from client side
 - when you fail validation and are returned to new campaign...list shows ids not list names
 
-ovo
-- add params to list api for add segmentation, static or all
 
 Review
 - campaign_user_list (can better track failures) or notification_log or add an email model??
