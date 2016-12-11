@@ -351,10 +351,10 @@ GEM
     tilt (1.4.1)
     timers (4.1.1)
       hitimes
-    twilio-ruby (4.11.1)
+    twilio-ruby (5.0.0.rc17)
       builder (>= 2.1.2)
+      faraday (~> 0.9)
       jwt (~> 1.0)
-      multi_json (>= 1.3.0)
     twitter (5.16.0)
       addressable (~> 2.3)
       buftok (~> 0.2.0)
@@ -429,7 +429,7 @@ DEPENDENCIES
   sdoc (~> 0.4.0)
   spring
   stripe
-  twilio-ruby (~> 4.11.1)
+  twilio-ruby (~> 5.0.0.rc17)
   twitter
   uglifier (>= 1.3.0)
   versionist
@@ -440,4 +440,4 @@ RUBY VERSION
    ruby 2.2.3p173
 
 BUNDLED WITH
-   1.13.1
+   1.13.6

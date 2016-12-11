@@ -80,21 +80,20 @@ private
 
   def full_user_params
     nested_user_params = user_params
-    nested_user_params[:stripe_creds_attributes]["0"].merge!(ip: request.remote_ip,
-                                                             user_agent: request.user_agent,
-                                                             uid_type: 0, tos_date: Time.current)
+    tos_params = { ip: request.remote_ip, user_agent: request.user_agent, uid_type: 0, tos_date: Time.current }
+    nested_user_params[:stripe_creds_attributes]["0"].merge!(tos_params)
     nested_user_params
   end
 
   def user_params
-    params.require(:user).permit(:id, :org_type, :org_name, :url, :org_tax_id, :description,
+    params.require(:user).permit(:id, :org_type, :org_name, :url, :org_tax_id, :description, :tos_acceptance,
       address_attributes: [:id, :city, :street_address, :state_province, :country, :postal_code],
       bank_accounts_attributes: [:id, :routing_number, :country, :currency, :account_number,
                                  :institution_number],
-      people_attributes: [:id, :full_name, :dob, :last4, :role, :_destroy,
+      people_attributes: [:id, :gender, :business_name, :full_name, :dob, :last4, :role, :_destroy,
       address_attributes: [:street_address, :state_province, :id, :country, :postal_code, :state_province,
                            :city]],
-      stripe_creds_attributes: [:id])
+      stripe_creds_attributes: [:id, :charges_enabled, :transfers_enabled])
   end
 
   def handle_referrer_and_welcome_email

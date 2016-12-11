@@ -3,7 +3,7 @@ $(document).ready(function () {
   RAILS_DATE_FORMAT = 'DD/MM/YYYY h:mm A'
   var date = new Date();
   var tomorrow = new Date(date.getFullYear(), date.getMonth(), date.getDate()+1);
-
+  var maxDate = new Date(date.getFullYear() + 4, date.getMonth(), date.getDate());
   var redeem_by_input = $('input[name="coupon[redeem_by]"]');
   if (redeem_by_input.length > 0) {
     redeem_by_input.daterangepicker({
@@ -12,6 +12,7 @@ $(document).ready(function () {
       showDropdowns: true,
       singleDatePicker: true,
       minDate: tomorrow,
+      maxDate: maxDate,
       todayHighlight: true,
       timePicker: true,
       locale: {
@@ -95,7 +96,7 @@ $(document).on('click', '.delete-coupon', function(evt) {
 
     if (!$(selector).attr('isDestroy')) {
       evt.stopImmediatePropagation();
-      flashConfirm(selector,'Delete coupon',
+      FlashHandler.setConfirmationDialog(selector,'Delete coupon',
        'Deleting this coupon will not affect discounts for customers who have already redeemed the coupon, but new redemptions of the coupon won\'t be allowed.',
        'isDestroy'
       );

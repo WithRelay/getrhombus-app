@@ -1,30 +1,41 @@
 current stripe api version - 2014-03-28
+https://www.getrhombus.com/receive_delivery_report
 
 Bhishma
-- fb_messages... page_id, from, to, fb_page_id?
-- form validation for cc needs improvement - show validation error in field?
-- put flashes in singleton function/class so we don't pollute the global namespace..do a global search and replace all uses
+- if you will use one method to handle inbound messages or outbound events, then you need to check for specific properties that are not in both json data
 
-Surya
-- move campaign/email service into classes
-- what happens to jobs if I change servers?
-
-
-- merchant on add user - add customer to platform
-- on subscription - check if user already belongs to merchant
-- customers can create subscriptions over messaging...not dashboard, but can cancel subscription
-
-Notes
-- clean and concise code
-- remove unnecessary code that you wrote
-
-Friday
-- Review events
+Taiwo (review)
+- fix image handler logic and validation messages...might fix some surya issues
+- figure out fb_messages... page_id, from, to, fb_page_id?
+- review stripe_events
+- review managed account..
+- subscription, subscription controller and stripe customer creation places
+- Review adding token...failing safely.
+- on subscription - check if user already belongs to merchant??? is this when they text?
+	- customers can create subscriptions over messaging...not dashboard, but can cancel subscription
+- finish message parser and review how messsages are saved
 - final review of updating subscriptions, coupons, plans...do we update subscriptions esp platform??
 - where will customer create plan? on whose account?
-- Messages
 - Rake - migrate customer uri to merchant_customer plus drop column...but after migrating merchant_customer
    - remove livemode from users, add to merchant_customer and create rake task to migrate this to merchant..customer
+
+surya
+- business name in people?
+- move campaign and email to classes
+- can I migrate my jobs?
+- check for campaign name validity like Bhishma does...and add scoped name validation
+- campaign calendar needs to not show old dates
+- adding images has issues...should be able to add up to 3 images...overall total of 5MB...plus error message is not right
+- arugment out of range error with dates...need to recreate
+- hide subject field when not email
+- Uncaught TypeError: Cannot read property 'split' of undefined(…)...line 22
+- campaigns-225b555….js?body=1:16 Uncaught TypeError: Cannot read property 'select' of undefined(…) ....eassy to recreat
+- one time...check and uncheck send now...throws error
+- choose date, save campaign, let it fail validation...date field is invalid
+- where is time option in campaigns
+- Attach 2 images...only option is to delete both images...should be able to delete each...check hashtags
+- list validation message isnt helpful and all fields validation should also start from client side
+- when you fail validation and are returned to new campaign...list shows ids not list names
 
 
 Review
@@ -34,19 +45,15 @@ Review
 - when user logs in through messenger, indicate in referrers
 - change all emails in test db dump
 - unify team and dashboard email issue really
+- unify image/hashtag presenters...image handling should be generic...do when integrating UI
 
-
-- what happens when u send image in countries that don't support it. link?
-- clean up image/hashtag presenters
-- Plug into stripe api for managed accts - see notes
 - Create Seeds
 - Clean up angular - https://blog.joshsoftware.com/2014/07/17/building-web-apps-with-rails4-and-angularjs-in-15-minutes/
 - remove thread profiler in prod
 - when you need to access the underlying object....use instance method else use class method
 - notifications platform to merchants should have a single conversation and should not be pulled - mark as read too
 - conversations....need origin...cos system to customers should not open conversation....
-- return omniauth stripe connect for dashboard account - check how we save platform stripe cred...does stripe connect still work?
-
+- return omniauth stripe connect for dashboard account - check how we save platform stripe cred...does stripe connect still work? do we really need this?
 
 Payment Capture - should be for only customers....capture in logic
 - check if /profile affect forms for merchants
@@ -57,5 +64,3 @@ Contact - Inbound
 - sent u a text doesnt have an account 
 - have an account, sent u a text but ref link isnt yours 
 
-Campaigns and Facebook
-- fail safely for audio and video files

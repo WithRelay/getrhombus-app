@@ -18,36 +18,54 @@ module AdditionalUserActions
   end
 
   def create_managed_acct
-    stripe_managed = StripeManagedAccountService.new(current_user, full_user_params)
-    create_account = stripe_managed.create_account
-    if create_account.is_a? Stripe::Account
-      external_account = stripe_managed.create_external_account(create_account)
-      current_user.update(save_managed_connect_acccount(create_account, external_account)) if external_account.is_a? Stripe::Account
-      message = set_message(create_account.id, external_account)
+    if user_valid_to_update
+      flash[:notice] = user_valid_to_update
     else
-      message = set_message(create_account)
+      flash[:error] = @user.errors
     end
-    render html: message
+    render :managed_acct
+  end
+
+  def user_managed_account
+    stripe_managed = StripeManagedAccountService.new(current_user, full_user_params)
+    action = { 'create_managed_acct'=> [:create_account, :create_external_account],
+               'update_managed_acct'=> [:update_account, :check_update_or_create] }
+    account = stripe_managed.send(action[params[:action]][0])
+    if account.is_a?(Stripe::Account)
+      external_account = stripe_managed.send(action[params[:action]][1], account)
+      @user.update(save_managed_connect_acccount(account, external_account))
+      external_account.is_a?(Stripe::BankAccount) ? account : external_account
+    else
+      account
+    end
   end
 
   def update_managed_acct
-    stripe_managed_account = StripeManagedAccountService.new(current_user, full_user_params)
-    update_user_account = stripe_managed_account.update_account
-    if update_user_account.is_a? Stripe::Account
-      update_bank_account = stripe_managed_account.update_external_accounts(update_user_account)
-      current_user.update(params_with_stripe(update_user_account, update_bank_account))
+    if user_valid_to_update
+      flash[:notice] = user_valid_to_update
+    else
+      flash[:error] = @user.errors
     end
-    message = set_message(update_user_account)
-    render html: message
+    render :managed_acct
   end
 
   def save_managed_connect_acccount(account, bank_account)
     account_keys = account.keys
     save_params = params_with_stripe(account, bank_account)
-    save_params[:stripe_creds_attributes]['0'].merge!({ account_id: account.id, secret: account_keys.secret,
-                                                        publishable_key: account_keys.publishable
-                                                      })
+    unless params[:action] == 'update_managed_acct'
+      save_params[:stripe_creds_attributes]['0'].merge!({ secret: account_keys.secret,
+                                                          publishable_key: account_keys.publishable
+                                                        })
+    end
     save_params
+  end
+
+  def user_valid_to_update
+    user_update = @user.update(full_user_params)
+    if user_update
+      status = user_managed_account
+      set_message(status)
+    end
   end
 
   def params_with_stripe(account, bank_account)
@@ -55,20 +73,20 @@ module AdditionalUserActions
     stripe_params = full_user_params
     stripe_params[:stripe_creds_attributes]['0'].merge!({ disabled_reason: account_verification.disabled_reason,
                                                           due_by: account_verification.due_by,
-                                                          fields_needed: account_verification.fields_needed
+                                                          fields_needed: account_verification.fields_needed,
+                                                          account_id: account.id
                                                         })
-    stripe_params[:bank_accounts_attributes]['0'].merge!({ stripe_bank_account_id: bank_account.id,
-                                                           bank_name: bank_account.bank_name,
-                                                           status: bank_account.status,
-                                                           fingerprint: bank_account.fingerprint })
+    unless bank_account.methods.include?(:message)
+      stripe_params[:bank_accounts_attributes]['0'].merge!({ stripe_bank_account_id: bank_account.id,
+                                                             bank_name: bank_account.bank_name,
+                                                             status: bank_account.status,
+                                                             fingerprint: bank_account.fingerprint })
+    end
     stripe_params
   end
 
-  def set_message(account = '' , ext_account)
-    unless account.blank?
-      link_to_account = "<a href='https://dashboard.stripe.com/test/applications/users/" + account + "'>Stripe Connected Succesfull Click for dashboard page</a>"
-    end
-    ext_account.methods.include?(:message) ? ext_account.message : link_to_account.html_safe
+  def set_message(status)
+    status.methods.include?(:message) ? status.message : 'Account Connected Succesfully'
   end
 
   # Returns JSON object with user hash who sent a message to the given merchant in the last CONFIG[:dashboard]['messaging']['num_days_history'] days
@@ -83,7 +101,7 @@ module AdditionalUserActions
     else
       limit = CONFIG[:dashboard]['messaging']['num_messages_per_user_default']
     end
-    render :json => Hash['success' => true, 'messages' => Message.get_user_messages_by_merchant(params[:user_number], params[:id], limit)].to_json
+    render :json => Hash['success' => true, 'messages' => Message.get_user_messages_by_merchant(params[:user_number], params[:id], limit).paginate(page: params[:page], per_page: 20)].to_json
   end
 
   # Marks all user messages sent to a merchant as read
@@ -109,10 +127,11 @@ module AdditionalUserActions
 
   def contacts
     if current_user.user_level == 0
-      @contacts = @user.get_customer_contacts.paginate(:page => params[:page], :per_page => 25)
+      #@contacts = @user.get_customer_contacts.paginate(:page => params[:page], :per_page => 25)
     else
-      @contacts = @user.get_merchant_contacts.paginate(:page => params[:page], :per_page => 25)
+      #@contacts = @user.get_merchant_contacts.paginate(:page => params[:page], :per_page => 25)
     end
+    @contacts = []
   end
 
   def customers

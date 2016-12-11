@@ -17,43 +17,24 @@ class TextingService
     def send_sms_nexmo(from, to, message)
       begin
         # encode the nexmo uri
-        uri = URI.encode_www_form([["api_key",NEXMO_API_KEY], ["api_secret", NEXMO_API_SECRET], ["from", from], ["to", to], ["text", message]])   
+        uri = URI.encode_www_form([["api_key",NEXMO_API_KEY], ["api_secret", NEXMO_API_SECRET], ["from", from], ["to", to], ["text", message]])  
+        # ["status-report-req", 1] 
         response = HTTParty.post('https://rest.nexmo.com/sms/json?'+ uri, :headers => {"Content-Type" => "application/x-www-form-urlencoded"} )
       rescue StandardError => err
         return err
       end
     end
   
-    def send_sms(from, to, body, media_url = nil)
+    def send_sms(from, to, body, media_ary = [])
       begin
         client = Twilio::REST::Client.new TWILIO_API_KEY, TWILIO_API_SECRET
-        data = { From: from, To: to, Body: body, ApplicationSid: TWILIO_RHOMBUS_APP_SID } 
+        data = { from: from, to: to, body: body, application_sid: TWILIO_RHOMBUS_APP_SID }
         # 5MB max size, 10 images max
-        data[:media_url] = media_url.split(",") if media_url.present?  # US and canadian phone numbers can make use of an image as well.
+        data[:media_url] = media_ary if media_ary.present?
         message = client.account.messages.create(data)
       rescue StandardError => err
         return err
       end
-    end
-
-    def receive_call
-      response = Twilio::TwiML::Response.new do |r|
-        # Should be your Twilio Number or a verified Caller ID
-        r.Dial :callerId => '+<redacted_phone_number>' do |d|
-            d.Client 'rho-jenny'
-        end
-      end
-      return response
-    end
-
-    def get_twilio_capibility_token
-      # This application sid will play a Welcome Message.
-      demo_app_sid = '<redacted_twilio_app_sid>'
-      capability = Twilio::Util::Capability.new TWILIO_API_KEY, TWILIO_API_SECRET
-      capability.allow_client_outgoing '<redacted_twilio_app_sid>'
-      capability.allow_client_incoming "rho-jenny"
-      token = capability.generate
-      return token
     end
 
     def buy_number(num)
@@ -79,9 +60,9 @@ class TextingService
         search_params[:exclude_all_address_required] = "true" if data[:address_required] == ""
 
         if params[:type] == 'local'
-          number = client.account.available_phone_numbers.get(params[:country]).local.list(search_params).first
+          number = client.account.available_phone_numbers(params[:country]).local.list(search_params).first
         elsif params[:type] == 'toll_free'
-          number = client.account.available_phone_numbers.get(params[:country]).toll_free.list(search_params).first
+          number = client.account.available_phone_numbers(params[:country]).toll_free.list(search_params).first
         elsif params[:type] == 'mobile'
           number = client.account.available_phone_numbers.get(params[:country]).mobile.list(search_params).first
         end
@@ -94,8 +75,8 @@ class TextingService
 
     def number_lookup(num)
       begin
-        client = Twilio::REST::LookupsClient.new TWILIO_API_KEY, TWILIO_API_SECRET
-        number = client.phone_numbers.get(num)
+        client = Twilio::REST::Client.new TWILIO_API_KEY, TWILIO_API_SECRET
+        number = client.lookups.v1.phone_numbers(num).fetch
         [number.phone_number[1..-1], number.country_code]
       rescue StandardError => e
         false
@@ -345,6 +326,38 @@ class TextingService
       rescue StandardError => e
         false
       end
-    end  
+    end
+
+    # it fetches all message information since only limited message response we got from webhook for sent/received message
+    def fetch_message_details(message_id)
+      begin
+        client = Twilio::REST::Client.new TWILIO_API_KEY, TWILIO_API_SECRET
+        client.account.messages(message_id).fetch
+      rescue StandardError => e
+        {}
+      end
+    end
+
+
+    def receive_call
+      response = Twilio::TwiML::Response.new do |r|
+        # Should be your Twilio Number or a verified Caller ID
+        r.Dial :callerId => '+<redacted_phone_number>' do |d|
+            d.Client 'rho-jenny'
+        end
+      end
+      return response
+    end
+
+    def get_twilio_capibility_token
+      # This application sid will play a Welcome Message.
+      demo_app_sid = '<redacted_twilio_app_sid>'
+      capability = Twilio::Util::Capability.new TWILIO_API_KEY, TWILIO_API_SECRET
+      capability.allow_client_outgoing '<redacted_twilio_app_sid>'
+      capability.allow_client_incoming "rho-jenny"
+      token = capability.generate
+      return token
+    end
+
   end
 end

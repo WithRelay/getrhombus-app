@@ -36,7 +36,6 @@ class ApplicationController < ActionController::Base
       pubnub_publish_key: Rails.application.secrets.pubnub["publish_key"],
       pubnub_subscribe_key: Rails.application.secrets.pubnub["subscribe_key"],
       short_url: current_user.short_url,
-      can_send_mms: current_user.can_send_mms?
     ].to_json
   end
 

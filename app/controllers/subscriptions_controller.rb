@@ -23,26 +23,15 @@ class SubscriptionsController < ApplicationController
   end
 
   def create
-    res = false
-    subscription_params[:plan_id].each do |pid|
-      subscription_param = subscription_params
-      # use single plan id at a time
-      subscription_param[:plan_id] = pid
-      merchant_customer = MerchantCustomer.find subscription_params[:merchant_customer_id]
+    success = false
+    merchant_customer = MerchantCustomer.find subscription_params[:merchant_customer_id]
 
-      @subscription = merchant_customer.subscriptions.new(subscription_param)
-      if @subscription.create_subscription({ team: current_user, customer: merchant_customer.stripe_customer_id })
-        res = true
-      else
-       res = false
-       break
-      end
-    end
+    @subscription = merchant_customer.subscriptions.new(subscription_params)
 
-    if res
-      redirect_to user_subscriptions_path, flash: {notice: 'Subscriptions created successfully'}
+    if @subscription.create_subscription({ team: current_user, customer: merchant_customer.stripe_customer_id })
+      redirect_to user_subscriptions_path, flash: {notice: 'Subscription created successfully'}
     else
-      flash[:error] = 'Something went wrong'
+      flash[:error] = (res.second == 'card_error') ? res.third : 'Something went wrong'
       redirect_to new_user_subscription_path
     end
 
@@ -68,8 +57,6 @@ class SubscriptionsController < ApplicationController
     end
 
     def subscription_params
-      params.require(:subscription).permit(:quantity, :plan_id, :coupon_id, :merchant_customer_id).tap{ |subscription|
-        subscription[:plan_id] = subscription[:plan_id].split(',') if subscription[:plan_id]
-      }
+      params.require(:subscription).permit(:quantity, :plan_id, :coupon_id, :merchant_customer_id)
     end
 end

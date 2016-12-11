@@ -467,5 +467,63 @@ $(document).ready(function () {
     insertedItem.find('.person-country-select').replaceWith(clone)
     clone.val(value).trigger('change');
   });
-
+  // validate managed account create update form
+  $('#managed-account-form').formValidation({
+      framework: 'bootstrap',
+      live: 'disabled',
+      fields: {
+        'user[address_attributes][street_address]': {
+          validators: {
+            notEmpty: {
+              message: 'Stree Name is required'
+            }
+          }
+        },
+        'user[address_attributes][country]': {
+          validators: {
+            notEmpty: {
+              message: 'Country is required'
+            }
+          }
+        },
+        'user[address_attributes][city]': {
+          validators: {
+            notEmpty: {
+              message: 'City Name is required'
+            }
+          }
+        },
+        'user[address_attributes][state_province]': {
+          validators: {
+            notEmpty: {
+              message: 'Valid state province is required'
+            }
+          }
+        },
+        'user[tos_acceptance]': {
+                validators: {
+                    choice: {
+                        min: 1,
+                        message: 'tos must be accepted'
+                    }
+                }
+        },
+        'user[bank_accounts_attributes][0][account_number]': {
+          validators: {
+            notEmpty: {
+              message: 'Account Number is required'
+            }
+          }
+        },
+        'user[bank_accounts_attributes][0][routing_number]': {
+          validators: {
+            notEmpty: {
+              message: 'Routing Number is required'
+            }
+          }
+        }
+      }
+    }).on('err.field.fv', function(e, data) {
+            data.fv.disableSubmitButtons(false);
+        })
 });

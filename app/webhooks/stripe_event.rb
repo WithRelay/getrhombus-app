@@ -5,12 +5,10 @@ class StripeEvent
 
     def process_event(hash)
       @hash = hash[:data][:object]
-      # Though these things depends upon number of things but what i found is hashlookup is faster it has o(1) whereas switch statement has o(n)
-      # please follow the below link. http://stackoverflow.com/questions/4178240/which-is-faster-in-ruby-a-hash-lookup-or-a-function-with-a-case-statement
-      # send works like message passing to clas hierarchy until method reacts
+      # send works like message passing to class hierarchy until method reacts
       # it accepts a parameter that need to be pass in symbol or string which calls method.
       # if we pass string it will internally converts to symbol.
-      self.send(string_method_name[hash[:type]])
+      self.send(string_method_name[hash[:type]]) if string_method_name[hash[:type]].present?
     end
 
     # So we can notify merchant of time left to active subscription
@@ -81,7 +79,7 @@ class StripeEvent
     end
 
     def update_invoice_data
-      # plan_id, user_id, team_id, coupon_id, subscription_id do not need to be set since they are immutable
+      # user_id, team_id, coupon_id, subscription_id do not need to be set since they are immutable
       @data.date = @hash[:date]
       @data.stripe_invoice_id = @hash[:id]
 
@@ -116,29 +114,24 @@ class StripeEvent
 
       # Ensure all these exists else it isnt ours. They should.
       merchant_customer = MerchantCustomer.find_by(stripe_customer_id:  @hash[:customer])
-      if user = merchant_customer.customer
-        @data.user_id = user.id
+      if merchant_customer
+        # update merchant_customer
+        @data.merchant_customer_id = merchant_customer.id
 
-        if subscription = Subscription.where(stripe_subscription_id: @hash[:lines][:data][0][:id]).first
-          @data.team_id = subscription.merchant_customer.merchant_id
-          # set_time_zone(subscription.team.time_zone)
-        end
-
+        # update coupon_id
         if @hash[:discount].present? && coupon = Coupon.find_by(stripe_coupon_id: @hash[:discount][:coupon][:id])
           @data.coupon_id = coupon.id
         end
-
+        # update invoice data
         update_invoice_data
       end
-
       # notify admin
     end
 
     # Handles connect and platform payments. Parameters are basically the same. So nothing special.
     def invoice_payment_succeeded
       # Invoice should already exist but if it doesn't, create a new one
-      @data = Invoice.where(stripe_invoice_id: @hash[:id]).first_or_initialize
-
+      @data = Invoice.includes(:notification_log).where(stripe_invoice_id: @hash[:id]).first_or_initialize
       # update_invoice_data
       update_invoice_data
 
@@ -149,24 +142,19 @@ class StripeEvent
       txn = Transaction.includes(:notification_log).where(txn_uri: charge.id).first_or_initialize if charge
 
       # if we havent notified customer before
-      # if txn.notification_log
-      if txn
-        # for now, we have only one line for each invoice - the subscription
-        @hash[:lines][:data].each do |l|
-          if l[:type] == 'subscription'
-            # find subscription
-            sbtn = Subscription.includes(:plan).where(stripe_subscription_id: l[:id]).first
-            # update coupon and subscription
-            if sbtn
-              @data.update(subscription_id: sbtn.id, coupon_id: sbtn.coupon_id)
-              hashtag_id = sbtn.plan.hashtag_id
-              sbtn_id = sbtn.id
-            end
+      # for now, we have only one line for each invoice - the subscription
+      @hash[:lines][:data].each do |l|
+        if l[:type] == 'subscription'
+          # find subscription
+          sbtn = Subscription.includes(:plan).where(stripe_subscription_id: l[:id]).first
+          # update subscription_id
+          if sbtn
+            @data.update(subscription_id: sbtn.id)
+            hashtag_id = sbtn.plan.hashtag_id
+            sbtn_id = sbtn.id
+          end
 
-            # set_time_zone(sbtn.merchant_customer.customer.time_zone)
-            # or set_time_zone(sbtn.merchant_customer.merchant.time_zone)
-
-
+          if txn
             # just in case transaction actually exists but not log
             amount_less_fees = txn.amount_less_fees ? txn.amount_less_fees : 'calculate here'
             amount_with_taxes = txn.amount_with_taxes ? txn.amount_with_taxes : 'calculate here'
@@ -178,8 +166,7 @@ class StripeEvent
 
             txn.update( amount: l[:amount], currency: l[:currency], description: description,
               application_fee: l[:application_fee],
-              # since user_id and team_id are removed from subscription
-              # user_id: sbtn.user_id, team_id: sbtn.team_id,
+              merchant_customer_id: @data.merchant_customer_id,
               hashtag_id: hashtag_id, txn_available_at: @hash[:date],
               # At the moment, charge will only contain 1 line item, what if there are a couple line items?
               txn_uri: @hash[:charge], tax_percent: @hash[:tax_percent], amount_less_fees: amount_less_fees,
@@ -192,13 +179,15 @@ class StripeEvent
 
             # set transaction_id
             @data.update_attribute(:transaction_id, txn.id)
-
             # Notify customer and/or merchant
             # Notify (admin)
             txn.notification_log = NotificationLog.create(notify_type: 'new_transaction', reason: 'receipt', channel: 'email')
           end
         end
-
+      end
+      # save invoice_payment_succeeded event responce to notification_log
+      if @data
+        @data.notification_log = NotificationLog.create(notify_type: 'invoice_payment_succeeded', channel: 'email', reason: 'Invoice payment has been succeeded.')
       end
     end
 
@@ -208,12 +197,35 @@ class StripeEvent
 
     def invoice_payment_failed
       # find invoice and update
-      if @data = Invoice.find_by(stripe_invoice_id: @hash[:id]).first_or_initialize
-        update_invoice_data
-
-        # find customer and admin
-        # Notify them (admin) (customer)
+      @data = Invoice.includes(:notification_log).where(stripe_invoice_id: @hash[:id]).first_or_initialize #Invoice should already exist but if it doesn't, create a new one
+      update_invoice_data
+      # find customer and admin
+      # Notify them (admin) (customer)
+      if @data
+        @data.notification_log =  NotificationLog.create(notify_type: 'invoice_payment_failed', channel: 'email', reason: 'Invoice payment has been failed.')
       end
+    end
+
+    # customer_source_updated webhook will fire if your customers’ info/customer's card info changes
+    def customer_source_updated
+      # customer source info/customer's card info
+      @source = @hash[:data][:object]
+      # find customer
+      merchant_customer = MerchantCustomer.find_by(stripe_customer_id: @source[:customer])
+      @data = User.find merchant_customer.customer_id
+      update_customer_source
+      # find customer and admin
+      # Notify them (admin) (customer)
+      # update notification log if we need it
+    end
+
+    def update_customer_source
+      @data.last4 = @source[:last4]
+      @data.exp_month = @source[:exp_month]
+      @data.exp_year = @source[:exp_year]
+      @data.card_name = @source[:name]
+      @data.card_type = @source[:type]
+      @data.save
     end
 
     # This really shouldn't occur since we currently don't allow invoices to be updated
@@ -229,33 +241,59 @@ class StripeEvent
     private
 
     def account_updated
-      # To access module methods as class method like self.messaging
-      extend AdditionalUserActions
-      # update_managed_acct
+      user_params = response_user_params.merge(bank_accont_params)
+      managed_accout_user.update(user_params)
+    rescue => e
     end
 
-    def current_user; User.find_by_email(@hash[:email]); end
+    def managed_accout_user; StripeCred.find_by_account_id(@hash[:id]).user end
 
-    #TODO  things are left to do  on going
-    def full_user_params
-      users_attributes = Hash.new { |hash, key| hash[key] = {} }
-      users_attributes[:user] = { org_name: @hash[:business_name], url: @hash[:business_url],
-                                  address_attributes: { street: '' },
-                                  bank_accounts_attributes: {}
-                                 }
+    def response_user_params
+      account = Stripe::Account.retrieve(@hash[:id])
+      {
+        org_name: @hash[:business_name], url: @hash[:business_url],
+        org_type: bank_account_params[:account_holder_type],
+        address_attributes: { street_address: address_params[:street], city: address_params[:city],
+                              state_province: address_params[:state],
+                              country: address_params[:country], postal_code: address_params[:zip] },
+        stripe_creds_attributes: { fields_needed: account.verification.fields_needed }
+      }
     end
 
-    def bank_account
+    def bank_account_params
       @hash[:external_accounts][:data][0]
     end
 
+    def address_params
+      @hash[:address]
+    end
+
+    def bank_accont_params
+      bank_account = BankAccount.find_by_stripe_bank_account_id(bank_account_params[:id])
+      bank_account_details = {}
+      bank_account_details[:bank_accounts_attributes] = { country: bank_account_params[:country],
+                                                          routing_number: bank_account_params[:routing_number],
+                                                          currency: bank_account_params[:currency],
+                                                          bank_name: bank_account_params[:name],
+                                                          status: bank_account_params[:status],
+                                                          fingerprint: bank_account_params[:fingerprint],
+                                                          stripe_bank_account_id: bank_account_params[:id],
+                                                          id: bank_account.id
+                                                        }
+      bank_account_details
+    end
+
     def string_method_name
-      { 'customer.subscription.trial_will_end'=> :subscription_trial_will_end,
+      {
+        'customer.subscription.trial_will_end'=> :subscription_trial_will_end,
         'customer.subscription.deleted'=> :customer_subscription_deleted,
+        # customer_source_updated webhook will fire if your customers’ info/customer's card info changes.
+        'customer.source.updated' => :customer_source_updated,
         'invoice.payment_failed'=> :invoice_payment_failed,
         'invoice.payment_succeeded'=> :invoice_payment_succeeded,
         'invoice.created'=> :invoice_created,
         'invoice.updated'=> :invoice_updated,
+        # when managed account information like external bank_account get updated
         'account.updated'=> :account_updated
       }
     end

@@ -4,13 +4,14 @@ class Person < ActiveRecord::Base
   has_one :address, as: :addressable, dependent: :destroy
   belongs_to :user
   accepts_nested_attributes_for :address#, reject_if: :all_blank
-  before_validation :the_titleizer  
+  before_validation :the_titleizer
 
+  enum role: { representative: '0', owner: '1' }
 
-  def full_name=(val)
-    n = val.split(" ", 2)
-    write_attribute(:first_name, n[0])
-    write_attribute(:last_name, n[1] || "")
+  def full_name=(prams_value)
+    full_name = prams_value.split(" ", 2)
+    update_attribute(:first_name, full_name[0])
+    update_attribute(:last_name, full_name[1] || "")
   end
 
   def full_name
@@ -24,8 +25,7 @@ class Person < ActiveRecord::Base
     def the_titleizer       #remove leading and trailing whitespaces
       self.first_name = self.first_name.strip.titleize unless self.first_name.blank?
       self.last_name = self.last_name.strip.titleize unless self.last_name.blank?
-      self.role = self.role.strip.titleize unless self.role.blank?
     end
 
-  
+
 end

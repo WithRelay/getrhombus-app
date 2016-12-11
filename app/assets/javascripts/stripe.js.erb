@@ -7,12 +7,12 @@ var CardHandler = new function() {
   // http://www.phpied.com/3-ways-to-define-a-javascript-class/
   var form_submission_function, form_btn_text;
   var form_btn, form_selector;
-  
+
   // tokenize card details
   this.submit_to_stripe = function(form_id, btn_id, function_for_submission) {
     form_selector = form_id;
     form_submission_function = function_for_submission;
-    var y = this.get_expiry_date_data();
+    var y = UtilFunctions.get_card_expiry_date_data();
 
     form_btn = $(btn_id);
     form_btn_text = form_btn.val();        // So the button can be reset on fail
@@ -29,7 +29,7 @@ var CardHandler = new function() {
 
   function stripeResponseHandler(status, response) {
     if (response.error) {
-      setFlashMessage(response.error.message, 'error');
+      FlashHandler.setFlashMessage(response.error.message, 'error');
       form_btn.attr("disabled", false).val(form_btn_text);
       show_stripe_error_field(response.error.param);
     } else {
@@ -50,14 +50,8 @@ var CardHandler = new function() {
     } else if (param == "number") {
       $(form_selector).data('formValidation').updateStatus('cc-number', 'INVALID', 'callback');
     } else {
-      $(form_selector).data('formValidation').resetForm(); 
-    }             
+      $(form_selector).data('formValidation').resetForm();
+    }
   }
 
-  this.get_expiry_date_data = function() {
-    return $('input#cc-exp').payment('cardExpiryVal');
-  }
 }
-
-
-

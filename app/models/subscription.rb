@@ -3,6 +3,7 @@ class Subscription < ActiveRecord::Base
   belongs_to :plan
   belongs_to :coupon
   belongs_to :merchant_customer
+  has_many :invoices
   has_many :notification_logs, as: :notifiable, dependent: :destroy
 
   validates_presence_of :plan_id, :merchant_customer_id
@@ -27,7 +28,7 @@ class Subscription < ActiveRecord::Base
       hash.delete(:team)
 
       res = PaymentService.create_subscription(hash, uid, is_platform)
-      
+
       if res.first
         self.update(
           stripe_subscription_id: res.second.id,
@@ -46,13 +47,12 @@ class Subscription < ActiveRecord::Base
         # should this be for only standard error caught?
         self.cancel_subscription(team, false)
       end
-
-      res.first
+      res
     rescue StandardError => e
       # if StandardError happened after Stripe was called, delete subscription on Stripe
       self.cancel_subscription(team, false) if res.length > 0
       # notify team via email
-      false
+      [false]
     end
   end
 

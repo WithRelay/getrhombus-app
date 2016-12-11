@@ -6,6 +6,40 @@ var messagingControllers = angular.module('messagingControllers', [
   'pubnub.angular.service'
 ]);
 
+(function() {
+  angular.module('messageFetcher', ['upwards-scroll']);
+  angular.module('messageFetcher').controller('endlessMessage', function($scope, $http) {
+  var messages = this;
+  messages.Items = [];
+  messages.LoadMore = function() {
+    $http.get(window.location.origin + '/json_get_current_user').success(function(data) {
+      var merchant_id = data.id
+      var url = window.location.origin + '/users/' + merchant_id + '/json_get_user_messages_by_merchant/' + merchant_id  + '?page=' + page
+      $http({ method: 'GET', url: url }).success(function(data) {
+        if (data.messages.length < 1){
+          $('.messageStatus').html('Message Completed')
+        }
+        var msg = data.messages;
+        for (var i = 0; i < msg.length; i++) {
+            msg[i].text =  counter+ msg[i].text
+            messages.Items.unshift(msg[i]);
+            counter++
+        }
+        page = page + 1;
+        }).error(function(data, status, headers, config) {
+          alert('Error while trying to connect to the messaging system.');
+        });
+      }).error(function(data, status, headers, config) {
+        alert('Error while trying to connect to the messaging system.');
+    });
+  };
+  var counter = 0;
+  var page = 1;
+  messages.LoadMore();
+  });
+})();
+
+
 messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub', 'Upload',
   function($scope, $http, Pubnub, Upload) {
 
@@ -27,14 +61,13 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
     // MMS
     $scope.is_sending_mms = false;
     $scope.send_mms_btn = "SEND MMS";
-    
+
     // Get logged in merchant id
-    $http.get(window.location.origin + '/json_get_current_user')    
+    $http.get(window.location.origin + '/json_get_current_user')
     .success(function(data) {
       var merchant_id = data.id;
       $scope.merchant_short_url = data.short_url;
-      if (!data.can_send_mms) $('#file-picker').remove();
-      
+
       // Initialize PubNub with SSL
       Pubnub.init({
         publish_key: data.pubnub_publish_key,
@@ -44,13 +77,13 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
           console.log('Error:', error);
         }*/
       });
-      
+
       // Subscribe to merchant channel
       Pubnub.subscribe({
         channel: 'messaging_<%= Rails.env %>_' + merchant_id,
         message: function(m){
           var json_response = JSON.parse(m[0]);
-          
+
           $scope.$apply(function() {
             if (json_response.user_number == $scope.active_user_number) {
               $scope.selected_user_messages.push({user_number: json_response.user_number, user_level: json_response.user_level, profile_image: json_response.profile_image, text: json_response.message, ts_day_of_the_week: json_response.ts_day_of_the_week, ts_time: json_response.ts_time, unread: false});
@@ -75,10 +108,10 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
           });
         }
       });
-      
+
       // Get latest messages for this merchant
-      $http.get(window.location.origin + '/users/' + merchant_id + '/json_get_latest_active_messaging')      
-      .success(function(data) {        
+      $http.get(window.location.origin + '/users/' + merchant_id + '/json_get_latest_active_messaging')
+      .success(function(data) {
         var user_list = {};
         // Build user list and count initial global unread
         angular.forEach(data.users, function(value, key) {
@@ -86,9 +119,9 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
           $scope.active_user_count += 1;
           $scope.global_unread_count += value.unread_count;
         });
-        
+
         $scope.users = user_list;
-        
+
         $scope.getUserMessages = function(user) {
           $http.get(window.location.origin + '/users/' + merchant_id + '/json_get_user_messages_by_merchant/' + user.user_number + '?limit=' + (user.unread_count + $scope.num_message_history))
           .success(function(data) {
@@ -96,32 +129,32 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
             $scope.selected_user = user;
             $scope.selected_user_messages = data.messages;
             $scope.current_chat_user = user;
-                       
+
             // Mark messages as read
             $scope.global_unread_count = (($scope.global_unread_count - $scope.users[user.user_number].unread_count) > 0) ? $scope.global_unread_count - $scope.users[user.user_number].unread_count : 0;
             $scope.users[user.user_number].unread_count = 0;
             //$http.get(window.location.origin + '/users/' + merchant_id + '/mark_user_messages_for_merchant_as_read/' + user.user_number);
-            
+
             // Bind plugins to textbox
             // should only bind once...add check
-            setTimeout(function(){ BindPlugins.now() }, 0);    
+            setTimeout(function(){ BindPlugins.now() }, 0);
           });
         };
-        
+
         $scope.sendMessage = function(new_message) {
           $scope.is_sending = true;
           $scope.send_msg_btn = "Sending...";
           console.log(new_message)
           // twilio allow 1600 characters
           if ((new_message == undefined) || (new_message.text == '') || (new_message.text.length > $scope.char_limit)) {
-            alert('Maximum ' + $scope.char_limit + ' characters.');            
+            alert('Maximum ' + $scope.char_limit + ' characters.');
           } else {
             /*$http.get(window.location.origin + '/users/' + merchant_id + '/send_message_from_merchant/' + $scope.selected_user.user_number + '?message=' + encodeURIComponent(new_message.text))
             .success(function(data) {
               if (data.success) {
-                $scope.selected_user_messages.push({user_number: merchant_id, user_level: data.user_level, 
-                                                    profile_image: data.profile_image, text: new_message.text, 
-                                                    ts_day_of_the_week: data.ts_day_of_the_week, ts_time: data.ts_time, 
+                $scope.selected_user_messages.push({user_number: merchant_id, user_level: data.user_level,
+                                                    profile_image: data.profile_image, text: new_message.text,
+                                                    ts_day_of_the_week: data.ts_day_of_the_week, ts_time: data.ts_time,
                                                     unread: false});
                 new_message.text = '';
               } else {
@@ -135,10 +168,10 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
           $scope.is_sending = false;
           $scope.send_msg_btn = "SEND";
         };
-     
+
         // Twilio supports only gif, png and jpeg
         $scope.handleFile = function(file, errFiles) {
-          $scope.errFile = errFiles && errFiles[0];            
+          $scope.errFile = errFiles && errFiles[0];
           if (file) {
             if (file.type.match('image')) {
               $scope.f = file;
@@ -147,9 +180,9 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
             } else console.log('unsupported type');
           } else if (errFiles.length > 0) {
             if(errFiles[0].$errorMessages.maxSize) console.log('file size is too large');
-          } 
+          }
         };
-      })  
+      })
       .error(function(data, status, headers, config) {
         alert('Error while trying to connect to the messaging system.');
       });
@@ -182,11 +215,11 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
         //console.log(response)
 
         // Push into user message array
-        /*$scope.selected_user_messages.push({user_number: merchant_id, user_level: data.user_level, 
-                                        profile_image: data.profile_image, text: '', 
-                                        ts_day_of_the_week: data.ts_day_of_the_week, ts_time: data.ts_time, 
+        /*$scope.selected_user_messages.push({user_number: merchant_id, user_level: data.user_level,
+                                        profile_image: data.profile_image, text: '',
+                                        ts_day_of_the_week: data.ts_day_of_the_week, ts_time: data.ts_time,
                                         unread: false, image_url: file.$ngfBlobUrl });*/
-        
+
         console.log('all good');
       }, function (response) {
         console.log('unable to send mms');
@@ -200,7 +233,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
 
     $scope.displayChargeForm = function() {
       $('#chargeFormBox').lightbox_me({
-        centered: true, 
+        centered: true,
         onLoad: function() { $('#chargeForm').find('input:first').focus(); }
       });
     };
@@ -211,13 +244,13 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
 
     $scope.hashtagSelected = function(selected) {
       $scope.charge_data.tag_id = (selected) ? selected.originalObject.id : null;
-    }; 
+    };
 
     $scope.apiErrorHandler = function(selected) {
       alert('error');
-    }; 
+    };
 
-    // function to submit the form after all validation has occurred            
+    // function to submit the form after all validation has occurred
     $scope.submitChargeForm = function(isValid) {
       if (isValid) {
         $scope.is_sending = true;
@@ -228,7 +261,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
         $scope.charge_data.notes = ($scope.notes) ? $scope.notes : '';
         $scope.charge_data.authorize = ($scope.authorize) ? $scope.authorize : false;
         console.log($scope.charge_data);
-        
+
         /*$http.post("/echo/json/", data)
         .success(function(data) {
           if (data.success) {
@@ -248,4 +281,3 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
   }
 
 ]);
-

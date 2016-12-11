@@ -23,4 +23,10 @@ class Image < ActiveRecord::Base
     # avatar_file_name == "face.png"
     # avatar_content_type == "image/png"
   end
+
+  # since for twilio_media we need to use basic authentication
+  def avatar_for_twilio_media(url_value)
+    self.avatar = open(URI.parse(url_value), :http_basic_authentication => [TextingService::TWILIO_API_KEY, TextingService::TWILIO_API_SECRET])
+  end
+
 end

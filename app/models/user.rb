@@ -4,7 +4,11 @@ class User < ActiveRecord::Base
   include DashboardCustomerQueries
   include CSVHandler
 
-  attr_accessor :phone, :captured_amt, :msg_id, :tag_id, :referrer_id
+  attr_accessor :phone, :captured_amt, :msg_id, :tag_id, :referrer_id, :tos_acceptance
+
+  validates :tos_acceptance, acceptance: true
+  validates_presence_of :org_type, on: :update
+  validates_presence_of :org_name, if: lambda { self.org_type == 'company' }
 
   # include default devise modules. Others available are: :token_authenticatable, :lockable, :timeoutable and :confirmable,
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable, :omniauthable
@@ -70,12 +74,14 @@ class User < ActiveRecord::Base
 
   has_many :bank_accounts
   accepts_nested_attributes_for :bank_accounts
+  validates_associated :address
 
   has_many :stripe_creds
   accepts_nested_attributes_for :stripe_creds
 
   has_one :address, as: :addressable
   accepts_nested_attributes_for :address
+  validates_associated :address
 
   has_many :people
   accepts_nested_attributes_for :people, allow_destroy: true  # reject_if: ->(attrs) { attrs['city'].blank? || attrs['street'].blank? }
@@ -83,7 +89,7 @@ class User < ActiveRecord::Base
   before_validation :the_titleizer
   before_create :set_merchant_org_phone          # only create because the actual org_phone field is used in edit view
 
-  after_commit :create_user_alert, on: :create, if: lambda { self.user_level == 1 }
+  after_commit :create_user_alert, on: :create, if: lambda { is_merchant? }
   after_commit :update_phone_in_db, on: :update
 
   validates_presence_of :user_level, message: "Please select an account type"
@@ -97,7 +103,7 @@ class User < ActiveRecord::Base
   # Allow nil added to db migration because merchants don't have phone number. They have org_phone.
   # And since mysql indexes this field, it indexes nil and only allows one row with nil.
   # You run into issues with any additional merchants.
-  validates_uniqueness_of :phone_number, :allow_nil => true, :if => lambda { self.user_level == 0 }
+  validates_uniqueness_of :phone_number, :allow_nil => true, :if => lambda { is_merchant? }
   validate :phone_number_cannot_be_rhombus_number
 
   def is_merchant?
@@ -110,7 +116,7 @@ class User < ActiveRecord::Base
 
   def self.get_platform_acct_obj
     # you can change this temporarily to <redacted_email> or <redacted_email>
-    # User.find_by(email: User.platform_email) 
+    # User.find_by(email: User.platform_email)
     User.find_by(email: "<redacted_email>") || User.find_by(email: "<redacted_email>")
   end
 
@@ -118,10 +124,7 @@ class User < ActiveRecord::Base
     #email == User.platform_email
     email == '<redacted_email>' || email == '<redacted_email>'
   end
-
-  def can_send_mms?
-    ['US', 'CA'].include? self.country
-  end
+  
 
   def get_team_uid
     t = is_platform? ? self.stripe_creds.first : self.stripe_creds.where(uid_type: 0).first
@@ -169,9 +172,9 @@ class User < ActiveRecord::Base
   def add_token_to_user(card_token)
     begin
       # platform acct shouldn't really be doing this since it is just a management account
-      if !is_platform?
+      unless is_platform?
         res = []
-        platform_acct = User.get_platform_acct_obj 
+        platform_acct = User.get_platform_acct_obj
 
         # Two scenarios
         # 1. a merchant user who is a customer of platform
@@ -179,9 +182,9 @@ class User < ActiveRecord::Base
         # Note that a customer user becomes a customer of merchant when a subscription is created
         cu = MerchantCustomer.where(customer_id: self.id)
         hash = { email: self.email, card_token: card_token, is_new_customer: true, is_platform_customer: true, is_merchant: is_merchant? }
-        
+
         # when blank, add only to platform. Blank indicates signing up
-        if cu.blank? 
+        if cu.blank?
           re = PaymentService.add_token_to_stripe_customer(hash)
           #buy_merchant_number if hash[:is_merchant] && rn_type == nil
         else
@@ -190,9 +193,9 @@ class User < ActiveRecord::Base
             hash[:stripe_customer_id] = cu.first.stripe_customer_id
             # is merchant, so update on platform
             re = PaymentService.add_token_to_stripe_customer(hash)
-          else                      
+          else
             cu.each do |c|
-              hash[:stripe_customer_id] = cu.stripe_customer_id
+              hash[:stripe_customer_id] = c.stripe_customer_id
               # can be on platform or merchant (stripe managed) account
               hash[:is_platform_customer] = c.merchant_id == platform_acct.id
               if hash[:is_platform_customer]
@@ -201,25 +204,24 @@ class User < ActiveRecord::Base
                 re = PaymentService.add_token_to_stripe_customer(hash, get_team_uid)
               end
             end
-          end      
+          end
         end
-
+        # create new merchant_customer for stripe customer
         if re.first
           if cu.blank?
-            MerchantCustomer.create(merchant_id: platform_acct.id, customer_id: self.id, stripe_customer_id: re[1].id, livemode: re[1].livemode)
+            MerchantCustomer.create(merchant_id: platform_acct.id, customer_id: self.id, stripe_customer_id: re[1].id)
           end
-          true
         else
-          PaymentService.delete_customer if cu.blank?
-          false
+          # since new customer are always platform customer so is_platform is always true
+          PaymentService.delete_customer(re[1].id, self.get_team_uid, true) if cu.blank?
         end
       end
- 
+      re
     rescue StandardError => e
-      
-      # PaymentService.delete_customer() if res.length > 0
+      # since new customer are always platform customer so is_platform is always true
+      PaymentService.delete_customer(re[1].id, self.get_team_uid, true) if (res.length > 0 && cu.blank?)
       # notify team
-      false
+      [false]
     end
   end
 
@@ -233,7 +235,7 @@ class User < ActiveRecord::Base
   end
 
   def set_merchant_org_phone
-    if self.user_level == 1
+    if is_merchant?
       self.org_phone = self.phone_number
       self.phone_number = nil
     end
@@ -248,7 +250,7 @@ class User < ActiveRecord::Base
 
   def send_welcome_email
     owner = User.find_by(email: Rails.application.secrets.team_email)
-    if self.user_level == 1
+    if is_merchant?
       EmailingService.send_welcome_email(self.email, owner.rhombus_number, "merchant")
     elsif self.user_level == 0
       ref = self.referrers.first
@@ -270,7 +272,7 @@ class User < ActiveRecord::Base
 
   # move to background job
   def update_phone_in_db
-    if self.user_level == 0
+    if is_merchant?
       if x = self.previous_changes['phone_number']
         ActiveRecord::Base.connection.execute("UPDATE messages SET messages.from = #{x[1]} WHERE messages.from = #{x[0]}")
         ActiveRecord::Base.connection.execute("UPDATE messages SET messages.to = #{x[1]} WHERE messages.to = #{x[0]}")

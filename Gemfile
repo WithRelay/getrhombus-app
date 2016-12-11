@@ -98,7 +98,7 @@ gem 'angular-rails-templates'
 gem 'pubnub', '~> 4.0.7'
 
 #Twilio
-gem 'twilio-ruby', '~> 4.11.1'
+gem 'twilio-ruby', '~> 5.0.0.rc17'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.1.7'

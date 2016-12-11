@@ -5,10 +5,6 @@ $(document).ready(function () {
 
   var url = window.location,
       global_page_params = PageParameter.get_params(),
-
-      cc_submit_btn, cc_btn_text,
-      create_user_submit = $('#create-user-submit'), create_user_form = $('#create-user-form'),
-
       chart_labels = [], chart_totals = [], chart_txns = [],
       contact_url = '/contact_forms.json', searchNumBtn = $('#searchNumberBtn');
 
@@ -490,7 +486,7 @@ $(document).ready(function () {
         }
       })
       .on('success.form.fv', function(e, data) {
-        set_number();
+        UtilFunctions.set_phone_number();
       });
   ///
 
@@ -614,7 +610,7 @@ $(document).ready(function () {
           }
       })
       .on('success.form.fv', function(e, data) {
-          set_number();
+          UtilFunctions.set_phone_number();
           set_hidden_fields();
       });
     // validate sign up form
@@ -887,7 +883,7 @@ $(document).ready(function () {
           }
       })
       .on('success.form.fv', function(e, data) {
-          set_number();
+          UtilFunctions.set_phone_number();
       });
   // validate merchant profile form
 
@@ -1029,10 +1025,11 @@ $(document).ready(function () {
 
   // handle images
   $('#select-images-button').click(function() { $('#select-images').trigger('click'); });
-  $(document).on('change', '#select-images', function() {read_file_picker(this); });
+  $(document).on('change', '#select-images', function() { read_file_picker(this); });
   function read_file_picker(input) {
     var files = input.files, new_image_previews = $('#new-image-previews').html("");
-    var counter = []
+    var counter = [];
+
     function invalid_actions(msg) {
       input.value = "";
       new_image_previews.html("");
@@ -1041,6 +1038,12 @@ $(document).ready(function () {
 
     // http://stackoverflow.com/questions/23402187/multiple-files-upload-and-using-file-reader-to-preview
     if (files && files.length > 0) {
+      console.log($("#image-previews").children().length)
+      if ($("#image-previews").children().length == 0 && files.length > 2) {
+        invalid_actions("Please seletct up to 2 images..");
+        return;
+      }
+
       if (($("#image-previews").children().length + files.length) > 2) {
         invalid_actions("you already have 2 images attached");
         return;
@@ -1078,7 +1081,7 @@ $(document).ready(function () {
               div = "<div class='images'><a href='#' class='deleteImagePreviews' title='"+img.filename+"'>Delete "+ counter.length +" Images</a><img class='thumbnail' src='" + img.result + "'" + "title='" + img.filename + "'/>" +
                     "<span>" + img.filename + "</span></div>";
             }
-          console.log(div)
+          //console.log(div)
           new_image_previews.prepend(div);
         };
 
@@ -1128,46 +1131,7 @@ $(document).ready(function () {
       })
       .always(function(data, textStatus, response) {});
   });
-
   // handle images
-
-  ///// add a customer
-  create_user_form.submit(function(e){
-    e.preventDefault();
-
-    // run validations for email and phone number...have variable for fail
-    // if good above and card number is present, send card details to stripe if...set fail variable
-    // no validations for address or lists
-    // if all pass, submit_contact_form
-
-    var y = CardHandler.get_expiry_date_data();
-    set_number();
-    CardHandler.submit_to_stripe(submit_create_user_form, create_user_submit)
-
-    // added accept nested attributes for lists
-    // hashes of hashes or array of hashes for lists
-    console.log($(this).serialize())
-  })
-
-  function submit_create_user_form() {
-    $.ajax({
-        url: "/v1/users/add_customers.json",
-        beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
-        type: "POST",
-        data: create_user_form.serialize(),
-        dataType: "json"
-    })
-      .done(function(data, textStatus, jqXHR) {
-        console.log(data);
-      })
-      .fail(function(data, textStatus, errorThrown) {
-        console.log(data);
-      })
-      .always(function(data, textStatus, response) {
-        cc_submit_btn.attr("disabled", false).val(cc_btn_text);
-      });
-  }
-  ///// add a customer
 
   // submit referrer
   $("#new_referrer").on("ajax:success", function(e, data, status, xhr) {
@@ -1237,4 +1201,3 @@ function get_unread_messages() {
 }
 
 
-function set_number() { $('#phone_number').val(PhoneNumberFormatter.getNumber().replace("+", '')); }
