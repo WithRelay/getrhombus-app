@@ -3,14 +3,13 @@ $(document).ready(function () {
   var coupon_type_value  = $('#coupon-type-value');
   var coupon_type = $('#coupon-type');
 
-
   // no spaces
   $('#hashtag_tag, #coupon-name').on('input', function(){
     this.value = this.value.replace(/\s+/g, '');
   });
 
   // Positive integer only
-  $('#interval-count, #duration-in-months, #max-redemptions, #subscription_quantity').on('input', function(){
+  $('#duration-in-months, #max-redemptions, #subscription_quantity').on('input', function(){
     this.value = positive_integer_only(this.value);
   });
 
@@ -39,14 +38,46 @@ $(document).ready(function () {
 
   // if hashtag isn't for payment, remove payment settings
   $('#hashtag_tag_type').change(function(){
-    if (this.value == '1') {
+    if (this.value == '0') {
       $('#hashtag-payment-settings').slideUp(200);
       $('#interval-settings').slideUp(200);
+      $('#hashtag_amount, #interval-count').val('');
     } else {
-      (this.value == '3') ? $('#interval-settings').slideDown(200) : $('#interval-settings').slideUp(200);
+      if (this.value == '1') {
+        $('#interval-settings').slideUp(200); 
+        $('#interval-count').val('');
+      } else {
+        $('#interval-settings').slideDown(200);
+      }
       $('#hashtag-payment-settings').slideDown(200);
     }
   }).change();
+
+  
+  // dynamic interval-count... used by plans and hashtags
+  $('#interval-count').on('input', function() {
+    var plan_interval = $('#plan_interval').val();
+    if (plan_interval === 'day') {
+      this.value = dynamic_interval(this.value, 366);
+    } else if (plan_interval === 'week') {
+      this.value = dynamic_interval(this.value, 53);
+    } else {
+      this.value = dynamic_interval(this.value, 13);
+    }
+  });
+
+  function dynamic_interval(v, max) {
+    console.log(v)
+    return (v.match(/^[1-9]\d*$/) && parseInt(v) < max) ? v : v.slice(0, -1);
+  }
+
+  // used by plans and hashtags
+  $('#plan_interval').change(function() {
+    $('#interval-count').val('');
+    var plan_form = $('#planForm');
+    if (plan_form.length) plan_form.formValidation('resetField', 'plan[interval_count]');
+  });
+
 
   coupon_type_value.on('input', function(){
     var v = this.value;

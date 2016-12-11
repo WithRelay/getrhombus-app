@@ -113,9 +113,9 @@ Rails.application.routes.draw  do
     match 'users/find' => 'users#find', via: :get
     match 'users/add_customers' => 'users#add_customers', via: :post
     match 'hashtags' => 'hashtags#index', via: :get
-    match 'hashtags/:id/image_delete' => 'hashtags#image_delete', via: :post
+    match 'hashtags/:id/images/:image_id' => 'hashtags#image_delete', via: :delete
     match 'saved_replies' => 'saved_replies#index', via: :get
-    match 'campaigns/:id/image_delete' => 'campaigns#image_delete', via: :post
+    match 'campaigns/:id/images/:image_id' => 'campaigns#image_delete', via: :delete
     match 'campaigns/upload_images' => 'campaigns#upload_images', via: :post
     match 'campaigns/upload_from_url' => 'campaigns#upload_from_url', via: :post
     match 'transactions/:charge_id/refund' => 'transactions#refund', via: :post

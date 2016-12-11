@@ -52,3 +52,4 @@
 //= require refund
 //= require add-user
 //= require util_functions
+//= require images

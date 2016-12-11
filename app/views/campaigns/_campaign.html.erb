@@ -57,11 +57,15 @@
     <%= f.file_field :avatar, multiple: true, id: 'select-images' %>
   </div>
 
+  <!-- for new images -->
   <div id='new-image-previews'></div>
+  <!-- for already attached images -->
+  <div id='image-previews' data-model-id='campaigns_<%= @campaign.id %>'>
     <%= div_for @campaign.images do |image| %>
       <%= present(image).image_url %>
       <%= present(image).image_delete_url %>
-  <% end %>
+    <% end %>
+  </div>
 
   <%= f.submit 'Save Campaign' %>
 

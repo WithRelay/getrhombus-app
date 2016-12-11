@@ -61,6 +61,9 @@ class HashtagsController < ApplicationController
 
     def hashtag_params
       params.require(:hashtag).permit(:amount, :response, :tag, :charge_amount, :tag_type, :interval, :interval_count,
-        :enable_tweet, :description, images_attributes: [:avatar])
+        :enable_tweet, :description, images_attributes: [:avatar]).tap do |c|
+                          c[:charge_amount] = c[:charge_amount].to_i
+                          c[:tag_type] = c[:tag_type].to_i
+                        end
     end
 end

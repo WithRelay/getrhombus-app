@@ -1,4 +1,6 @@
 $(document).ready(function() {
+  // additional plan code in hashtags_plans_coupons_alerts js file
+
   // validate plan form
   $('#planForm')
     .formValidation({
@@ -44,26 +46,6 @@ $(document).ready(function() {
   $('#plan_name').keyup(function(e) {
     $('#planForm').formValidation('revalidateField', 'plan[name]');
   });
-
-  $('#plan_interval').change(function() {
-    $('#interval-count').val('');
-    $('#planForm').formValidation('resetField', 'plan[interval_count]');
-  });
-
-  // dynamic  interval-count
-  $('#interval-count').on('input', function() {
-    if ($('#plan_interval').val() === 'day') {
-      this.value = dynamic_interval(this.value, 366);
-    } else if ($('#plan_interval').val() === 'week') {
-      this.value = dynamic_interval(this.value, 53);
-    } else {
-      this.value = dynamic_interval(this.value, 13);
-    }
-  });
-
-  function dynamic_interval(v, max) {
-    return (v.match(/^[1-9]\d*$/) && parseInt(v) < max) ? v : v.slice(0, -1);
-  }
 
 });
 

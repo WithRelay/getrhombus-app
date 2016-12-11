@@ -1,0 +1,102 @@
+$(document).ready(function () {
+
+  $('#select-images-button').click(function() { $('#select-images').trigger('click'); });
+
+  $(document).on('change', '#select-images', function() { read_file_picker(this); });
+
+  function read_file_picker(input) {
+    var files = input.files, 
+        new_image_previews = $('#new-image-previews').html(""),
+        counter = [];
+
+    function invalid_actions(msg) {
+    	input.value = "";
+      new_image_previews.html("");
+      alert(msg);
+    }
+
+    // http://stackoverflow.com/questions/23402187/multiple-files-upload-and-using-file-reader-to-preview
+    if (files && files.length > 0) {
+      
+      if (files.length > 2) {
+        invalid_actions("You can only select up to 2 files.");
+        return;
+      } else if (($("#image-previews").children().length + files.length) > 2) {
+        invalid_actions("you already have 2 images attached");
+        return;
+      }
+
+      for (var i = 0, l = files.length; i < l; i++) {
+        var file = files[i];
+
+        if (!file.type.match('image')) {
+          invalid_actions("Please reselect only images");
+          return;
+        }
+
+        // 2 MB max
+        if (file.size > 2097152) {
+          invalid_actions("Please reselect only images under 2MB");
+          return;
+        }
+
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          var img = e.target;
+          counter.push(e.target.filename)
+          if (counter.length < 2){
+            div = "<div class='images'><a href='#' class='deleteImagePreview' title='"+img.filename+"'>Delete Image</a><img class='thumbnail' src='" + img.result + "'" + "title='" + img.filename + "'/>" +
+                  "<span>" + img.filename + "</span></div>";
+          }
+          else {
+            $('.deleteImagePreview').remove()
+              div = "<div class='images'><a href='#' class='deleteImagePreviews' title='"+img.filename+"'>Delete "+ counter.length +" Images</a><img class='thumbnail' src='" + img.result + "'" + "title='" + img.filename + "'/>" +
+                    "<span>" + img.filename + "</span></div>";
+            }
+          new_image_previews.prepend(div);
+        };
+
+        //Read the image
+        reader.filename = file.name;
+        reader.readAsDataURL(file);
+      }
+    }
+  }
+
+  function get_image_delete_url(image_id) {
+    var controller = $('#image-previews').data("model-id").split("_");
+    return "/v1/" + controller[0] + "/" + controller[1] + "/images/" + image_id + ".json";
+  }
+
+  $(document).on('click', '.deleteImagePreview, .deleteImagePreviews', function(e) {
+    $(this).parent().slideUp(400, function() {
+      $('#new-image-previews').html('');
+      $('#select-images').val();
+    });
+  });
+
+  $(".delete-image").click(function(e) {
+    
+    e.stopPropagation();
+    var delete_link = this;
+    delete_link.style.pointerEvents = 'none';
+
+    $.ajax({
+        url: get_image_delete_url(delete_link.id.split("_")[1]),
+        beforeSend: function(xhr) { xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content')) },
+        type: "DELETE",
+        dataType: "json"
+    })
+      .done(function(data, textStatus, jqXHR) {
+        console.log(data.response);
+        $(delete_link).parent().slideUp(400, function() { delete_link.remove(); });
+      })
+      .fail(function(data, textStatus, errorThrown) {
+        alert('Unable to delete file')
+        delete_link.style.pointerEvents = 'auto';
+      })
+      .always(function(data, textStatus, response) {});
+      
+  });
+
+});

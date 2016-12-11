@@ -26,11 +26,21 @@
     <a id='select-images-button'>FILE</a>
     <%= file_field_tag "hashtag[images_attributes][][avatar]", type: :file, multiple: true, id: "select-images", accept: "image/*" %>
 
-    <style type="text/css">.thumbnail { height: 50px; width: 50px; }</style>
+    <style type="text/css">
+      .thumbnail { 
+        height: 50px; 
+        width: 50px; 
+      }
+    </style>
+    
+    <!-- for new images -->
     <div id='new-image-previews'></div>
-
-    <div id='image-previews' data-tag-id='<%= @hashtag.id %>'>
-      <%= generate_image_thumbnails(present(@hashtag).images) %>
+      <!-- for already attached images -->
+    <div id='image-previews' data-model-id='hashtags_<%= @hashtag.id %>'>
+      <%= div_for @hashtag.images do |image| %>
+        <%= present(image).image_url %>
+        <%= present(image).image_delete_url %>
+      <% end %>
     </div>
    
   <div class="field">
@@ -64,7 +74,7 @@
     <div id='interval-settings'>
       <div class="field">
         <%= f.label :interval %>
-        <%= f.select :interval, options_for_select({ "Day" => "day", "Week" => 'week', "Month" => "month" }, selected: @hashtag.interval) %>
+        <%= f.select :interval, options_for_select({ "Day" => "day", "Week" => 'week', "Month" => "month" }, selected: @hashtag.interval), {}, id: "plan_interval" %>
       </div>
 
       <div class="field">
@@ -77,7 +87,7 @@
   <br>
 
   <div class="actions">
-    <%= f.submit 'Create Hashtag', id: 'create-hashtag-btn', data: { disable_with: "Please wait..." } %>
+    <%= f.submit 'Create Hashtag', id: 'create-hashtag-btn' %>
   </div>
 <% end %>
 
