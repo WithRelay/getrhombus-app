@@ -15,39 +15,36 @@ class MessageParser
       is_old_format? = @amt_ary[0] && @amt_ary[1] == "$"
 
       # change params...see function params...use initializer
+      # or just pass in the user objects
       @customer = User.find_by(phone_number: params[:From])
       @merchant = User.find_by(rhombus_number: params[:To])
 
-      # handle quick edge cases
-      # invalid payment intent, invalid amount, valid sign - notify user and move on
+      # scenarios
+      # 1. invalid payment intent -> invalid amount and valid sign
+      # 2. Amount is outside limit
+      # 3. valid payment intent -> proceed
+      # 4. otherwise just a regular text
+
       if !@amt_ary[0] && @amt_ary[1].present?
         send_response('We noticed you tried to send a payment. Please resend it in this format. Ex. +5 #CheeseBurgers')
-        return
-      # amount is valid but outside limits
       elsif @amt_ary[0] && @amt_ary[1].present? && !is_amount_under_limit?              
-        return
-      end
-      
-      @tag = check_for_tag
-      @amt_ary = parse_amount_and_tag
+      elsif @amt_ary[0] && @amt_ary[1].present?             
 
-      if @amt_ary.empty?
-      else
+        @tag = Hashtag.where('user_id = ? and lower(tag) = ?', @merchant.id, @tag.downcase).first : nil
+        @amt_ary = parse_amount_and_tag
         @amt_ary = parse_user
-        if @amt_ary.empty?
+       
+        # No test for active accounts, they are now active by default but can be turned on as needed
+        if merchant_supports_payment
+          process_payment
         else
-          # No test for active accounts, they are now active by default but can be turned on as needed
-          if merchant_supports_payment
-            process_payment
-          else
-            # notify user and send to merchant dashboard
-            # send_response("Thank you for sending a payment with Rhombus, but the merchant hasn't completed the account to receive payments.")
-            # notify merchant via Email?
-          end
+          # notify user and send to merchant dashboard
+          # send_response("Thank you for sending a payment with Rhombus, but the merchant hasn't completed the account to receive payments.")
+          # notify merchant via Email?
         end
+       
+        send_deprecation_warning if is_old_format?
       end
-      send_deprecation_warning if is_old_format?
-
     rescue StandardError => e
       # notify team
       puts e.message
@@ -118,61 +115,17 @@ class MessageParser
     false
   end
 
-  def check_for_tag
-    @tag ? Hashtag.where('user_id = ? and lower(tag) = ?', @merchant.id, @tag.downcase).first : nil
-  end
-
   def parse_amount_and_tag
-
-    # a valid payment intent is when amt and sign are valid/true
-    valid_payment_intent = @amt_ary[0] && @amt_ary[1]
-
-    # tag doesnt exists
-    if @tag.empty?      
-      # and if no payment intent - do nothing
-      if !valid_payment_intent                  
-        []
-      # but with payment intent - so charge amt user texted, set parse/outcome type, tag id, tag name
-      elsif valid_payment_intent   
-        [@amt_ary[0], "no_tag", nil, nil]
-        [@amt_ary[0], "no_tag"]
-      end    
-    # tag exists
+    if @tag.empty?                                        # tag doesnt exists
+      [@amt_ary[0], "no_tag"]                             # so charge amt user texted, set parse/outcome type, tag id, tag name
     elsif @tag.present?      
-      # but not a payment tag                                         
-      if @tag.non_payment_tag?         
-        # and no payment intent - do nothing                                         
-        if !valid_payment_intent                              
-          []
-        # and a payment intent - so charge amt user texted
-        elsif valid_payment_intent                           
-          [@amt_ary[0], "no_tag_amt", @amt_ary[2], @amt_ary[3]]
-          [@amt_ary[0], "no_tag_amt"]
-        end
-      # a payment tag
+      if @tag.non_payment_tag?                                               
+        [@amt_ary[0], "no_tag_amt"]                       # so charge amt user texted
       else 
-        # tag default amount isnt enforced
-        if @tag.allow_customers_to_override_amount? 
-          # if no payment intent - charge default amt for tag
-          if !valid_payment_intent                                                  
-            [@amt_ary[4], "charge_tag_amount", @amt_ary[2], @amt_ary[3]]
-            [@amt_ary[4], "charge_tag_amount"]
-          # else charge amount user sent
-          else                                                        
-            [@amt_ary[0], "override_tag_amt", @amt_ary[2], @amt_ary[3]]
-            [@amt_ary[0], "override_tag_amt"]
-          end
-        # if tag default amount is enforced
-        else  
-          # if no payment intent, charge default amount for tag                                                              
-          if !valid_payment_intent                                                        
-            [@amt_ary[4], "charge_tag_amount", @amt_ary[2], @amt_ary[3]]
-            [@amt_ary[4], "charge_tag_amount"]
-          # if valid payment, notify user that default amt has to be charged
-          elsif valid_payment_intent                                                      
-            [@amt_ary[4], "cant_override_tag_amt", @amt_ary[2], @amt_ary[3]]
-            [@amt_ary[4], "cant_override_tag_amt"]
-          end
+        if @tag.allow_customers_to_override_amount?       # tag default amount isnt enforced
+          [@amt_ary[0], "override_tag_amt"]               # else charge amount user sent
+        else 
+          [@tag.amount, "cant_override_tag_amt"]
         end
       end
     end

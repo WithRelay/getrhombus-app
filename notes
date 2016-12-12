@@ -6,8 +6,6 @@ Bhishma
 
 Taiwo (review)
 - Clean up angular - https://blog.joshsoftware.com/2014/07/17/building-web-apps-with-rails4-and-angularjs-in-15-minutes/
-- check if paperclip removes s3 files
-- fix image handler logic and validation messages...might fix some surya issues
 - figure out fb_messages... page_id, from, to, fb_page_id?
 - review stripe_events
 - review managed account..
@@ -27,7 +25,6 @@ surya
 - can I migrate my jobs?
 - check for campaign name validity like Bhishma does...and add scoped name validation
 - campaign calendar needs to not show old dates
-- adding images has issues...should be able to add up to 3 images...overall total of 5MB...plus error message is not right
 - arugment out of range error with dates...need to recreate
 - hide subject field when not email
 - Uncaught TypeError: Cannot read property 'split' of undefined(…)...line 22
@@ -35,9 +32,10 @@ surya
 - one time...check and uncheck send now...throws error
 - choose date, save campaign, let it fail validation...date field is invalid
 - where is time option in campaigns
-- Attach 2 images...only option is to delete both images...should be able to delete each...check hashtags
-- list validation message isnt helpful and all fields validation should also start from client side
+- list, date time validation message isnt helpful and all fields validation should also start from client side
 - when you fail validation and are returned to new campaign...list shows ids not list names
+- emoji scroll bar issue
+- add table plugin...edwin?
 
 
 Review
@@ -47,7 +45,6 @@ Review
 - when user logs in through messenger, indicate in referrers
 - change all emails in test db dump
 - unify team and dashboard email issue really
-- unify image/hashtag presenters...image handling should be generic...do when integrating UI
 
 - Create Seeds
 - remove thread profiler in prod
