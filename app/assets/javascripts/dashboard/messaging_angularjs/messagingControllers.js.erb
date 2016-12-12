@@ -14,7 +14,7 @@ var messagingControllers = angular.module('messagingControllers', [
   messages.LoadMore = function() {
     $http.get(window.location.origin + '/json_get_current_user').success(function(data) {
       var merchant_id = data.id
-      var url = window.location.origin + '/users/' + merchant_id + '/json_get_user_messages_by_merchant/' + merchant_id  + '?page=' + page
+      var url = window.location.origin + '/users/' + merchant_id + '/json_get_user_messages_by_merchant/' + data.user_number  + '?page=' + page
       $http({ method: 'GET', url: url }).success(function(data) {
         if (data.messages.length < 1){
           $('.messageStatus').html('Message Completed')
