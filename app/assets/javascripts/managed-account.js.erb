@@ -213,7 +213,7 @@ $(document).ready(function () {
     US: { postcode_label: 'Zip', city_label: 'City', street_label: 'Street', with_state: true }
   }
 
-  var datePicker = new DatePicker( '.userDateOfBirth', false, { select: false } );
+  var datePicker = new DatePicker( '.userDateOfBirth', false, { time: false,  select: false } );
   datePicker.datePicker();
 
   $('#bank-currency-select').change(function() {
