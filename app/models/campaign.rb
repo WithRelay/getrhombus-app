@@ -20,6 +20,8 @@ class Campaign < ActiveRecord::Base
   # validation for repeat days if recurring is selected.
   validates_presence_of :repeat_days, if: lambda { recurring? }
   validates_presence_of :subject, if: lambda { email? }
+  validate :total_image_size
+
 
   def from_user
     "#{first_name} #{last_name}"
@@ -83,6 +85,11 @@ class Campaign < ActiveRecord::Base
 
   def is_campaign_date_selected?
     (one_time? && !deliver_now?)
+  end
+
+  def total_image_size
+    total_size = self.images.inject(0){ |sum, image| sum += image.avatar_file_size }
+    errors.add(:images, "Total image size not be greatee than 5 MB") if total_size > 5.megabytes
   end
 
   def channel_text_validate
