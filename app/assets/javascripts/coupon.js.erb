@@ -1,4 +1,5 @@
 $(document).ready(function () {
+  // additional coupon code in hashtags_plans_coupons_alerts js file
 
   RAILS_DATE_FORMAT = 'DD/MM/YYYY h:mm A'
   var date = new Date();
@@ -32,51 +33,51 @@ $(document).ready(function () {
   }
 
   // validate coupon form
-    $('#couponForm')
-      .formValidation({
-        framework: 'bootstrap',
-        live: 'disabled',
-        // List of fields and their validation rules
-        fields: {
-            'coupon[name]': {
+  $('#couponForm')
+    .formValidation({
+      framework: 'bootstrap',
+      live: 'disabled',
+      // List of fields and their validation rules
+      fields: {
+          'coupon[name]': {
+              validators: {
+                notEmpty: {
+                      message: 'Coupon name is required'
+                },
+                remote: {
+                    message: 'This coupon name has already been used.',
+                    url: '/v1/coupons/check_coupon_name',
+                    type: 'POST'
+                }
+              }
+          },
+            'coupon[amount_off]': {
+               selector: '#coupon-type-value',
+               validators: {
+                    notEmpty: {
+                        message: 'Amount off is required'
+                    }
+                }
+              },
+            'coupon[duration_in_months]':{
                 validators: {
                   notEmpty: {
-                        message: 'Coupon name is required'
-                  },
-                  remote: {
-                      message: 'This coupon name has already been used.',
-                      url: '/v1/coupons/check_coupon_name',
-                      type: 'POST'
+                    message: 'Required when creating a coupon with a repeating duration'
                   }
                 }
-            },
-              'coupon[amount_off]': {
-                 selector: '#coupon-type-value',
-                 validators: {
-                      notEmpty: {
-                          message: 'Amount off is required'
-                      }
-                  }
-                },
-              'coupon[duration_in_months]':{
-                  validators: {
-                    notEmpty: {
-                      message: 'Required when creating a coupon with a repeating duration'
-                    }
-                  }
-              }
-          }
-        })
-      .on('success.validator.fv', function(e, data) {
-          data.element // Get the field element
-          .closest('.form-group') // Get the field parent
-          .removeClass('has-warning')
-          .addClass('has-success')
-      });
+            }
+        }
+      })
+    .on('success.validator.fv', function(e, data) {
+        data.element // Get the field element
+        .closest('.form-group') // Get the field parent
+        .removeClass('has-warning')
+        .addClass('has-success')
+    });
 
-      $('#coupon-name').keyup(function(e){
-        $('#couponForm').formValidation('revalidateField', 'coupon[name]');
-      });
+  $('#coupon-name').keyup(function(e){
+    $('#couponForm').formValidation('revalidateField', 'coupon[name]');
+  });
 
   // if coupon isnt repeating. repeating needs length in months
   $('#coupon_duration').change(function(){
@@ -92,14 +93,14 @@ $(document).ready(function () {
 });
 
 $(document).on('click', '.delete-coupon', function(evt) {
-    var selector = '.' + evt.target.classList[evt.target.classList.length - 1 ];
+  var selector = '.' + evt.target.classList[evt.target.classList.length - 1 ];
 
-    if (!$(selector).attr('isDestroy')) {
-      evt.stopImmediatePropagation();
-      FlashHandler.setConfirmationDialog(selector,'Delete coupon',
-       'Deleting this coupon will not affect discounts for customers who have already redeemed the coupon, but new redemptions of the coupon won\'t be allowed.',
-       'isDestroy'
-      );
-      return false;
-    }
-  });
+  if (!$(selector).attr('isDestroy')) {
+    evt.stopImmediatePropagation();
+    FlashHandler.setConfirmationDialog(selector,'Delete coupon',
+     'Deleting this coupon will not affect discounts for customers who have already redeemed the coupon, but new redemptions of the coupon won\'t be allowed.',
+     'isDestroy'
+    );
+    return false;
+  }
+});

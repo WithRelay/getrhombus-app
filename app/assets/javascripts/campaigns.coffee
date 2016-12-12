@@ -56,7 +56,7 @@ class Campaign
       $('.emojionearea-editor').counter({ type: 'char', append: false, target: '#textBoxCounter' })
       $('.emailSubject').hide()
       $('#select-images').val('')
-      $('.images').html('')
+      $('#new-image-previews').html('')
       this.hideFileBrowser()
       trumbowygSetting(false, @textArea)
 
@@ -161,7 +161,7 @@ $( document ).on 'ready page:load', ->
     campaign.hideFileBrowser()
     $('.emailSubject').hide()
     $('#select-images').val('')
-    $('.images').html('')
+    $('#new-image-previews').html('')
 
   $( '#campaign_channel' ).change ->
     campaign.showHideEditor(this)

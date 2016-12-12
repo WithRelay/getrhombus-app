@@ -11,7 +11,7 @@ class Hashtag < ActiveRecord::Base
 
 
 	# validations
-	validates :tag, presence: true, uniqueness: { case_sensitive: false }
+	validates :tag, presence: true, uniqueness: { case_sensitive: false, scope: :user_id }
 	validates :amount, presence: true, numericality: true, :if => lambda { !self.non_payment_tag? }
 
   enum tag_type: { non_payment_tag: 0, one_time_payment_tag: 1, recurring_payment_tag: 2 }

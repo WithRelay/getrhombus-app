@@ -24,7 +24,7 @@ class Api::V1::HashtagsController < API::V1::BaseController
   end
 
   def image_delete
-    image_ref = find_image(imageable_type: 'Hashtag', imageable_id: params[:id], image_id: params[:img_id])
+    image_ref = find_image_ref(imageable_type: 'Hashtag', image_id: params[:image_id])
     image_ref.delete if image_ref
     render json: { response: "Deleted" }, status: 200
   end

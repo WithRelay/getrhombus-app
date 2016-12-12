@@ -5,6 +5,8 @@ Bhishma
 - if you will use one method to handle inbound messages or outbound events, then you need to check for specific properties that are not in both json data
 
 Taiwo (review)
+- Clean up angular - https://blog.joshsoftware.com/2014/07/17/building-web-apps-with-rails4-and-angularjs-in-15-minutes/
+- check if paperclip removes s3 files
 - fix image handler logic and validation messages...might fix some surya issues
 - figure out fb_messages... page_id, from, to, fb_page_id?
 - review stripe_events
@@ -48,7 +50,6 @@ Review
 - unify image/hashtag presenters...image handling should be generic...do when integrating UI
 
 - Create Seeds
-- Clean up angular - https://blog.joshsoftware.com/2014/07/17/building-web-apps-with-rails4-and-angularjs-in-15-minutes/
 - remove thread profiler in prod
 - when you need to access the underlying object....use instance method else use class method
 - notifications platform to merchants should have a single conversation and should not be pulled - mark as read too
