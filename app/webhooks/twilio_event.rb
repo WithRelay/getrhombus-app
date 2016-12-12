@@ -20,8 +20,8 @@ class TwilioEvent
     # when message send from rhombus
     def save_sent_message
       Message.create(
-        to: @param[:To],
-        from: @param[:From],
+        to: @param[:To].gsub('+', ''),
+        from: @param[:From].gsub('+', ''),
         message_timestamp: @data.date_sent,
         message_price: @data.price,
         status: @param[:MessageStatus],
