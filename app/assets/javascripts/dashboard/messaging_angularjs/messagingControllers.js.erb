@@ -21,9 +21,7 @@ var messagingControllers = angular.module('messagingControllers', [
         }
         var msg = data.messages;
         for (var i = 0; i < msg.length; i++) {
-            msg[i].text =  counter+ msg[i].text
             messages.Items.unshift(msg[i]);
-            counter++
         }
         page = page + 1;
         }).error(function(data, status, headers, config) {
