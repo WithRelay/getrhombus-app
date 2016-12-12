@@ -14,7 +14,7 @@ class Campaign < ActiveRecord::Base
   enum frequency_type: { one_time: 0, recurring: 1 }
   enum status: { active: 1, paused: 2, inactive: 3 }
   # validation of campaign attributes
-  validates_presence_of :name, :list_ids, :text
+  validates_presence_of :name, :list_ids, :text, message: 'List name cannot be empty'
   validate :channel_text_validate, if: proc { |c| c.text.present? && !c.email? }
   validate :date_time_validate, if: proc { |c| c.recurring? || (c.one_time? && !c.deliver_now?) }
   # validation for repeat days if recurring is selected.
