@@ -214,7 +214,6 @@ module DashboardMerchantQueries
 
 	# Creates a segment for a plan
 	# @param plan_id The id of the plan for which a segment is to be
-	# created
 	def DashboardMerchantQueries.get_plan_users(plan_id)
 		query = "SELECT u.id AS user_id, u.email AS email, " \
 		 		"u.first_name, u.last_name " \
