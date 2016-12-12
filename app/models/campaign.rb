@@ -14,12 +14,14 @@ class Campaign < ActiveRecord::Base
   enum frequency_type: { one_time: 0, recurring: 1 }
   enum status: { active: 1, paused: 2, inactive: 3 }
   # validation of campaign attributes
-  validates_presence_of :name, :list_ids, :text
+  validates_presence_of :name, :list_ids, :text, message: 'List name cannot be empty'
   validate :channel_text_validate, if: proc { |c| c.text.present? && !c.email? }
   validate :date_time_validate, if: proc { |c| c.recurring? || (c.one_time? && !c.deliver_now?) }
   # validation for repeat days if recurring is selected.
   validates_presence_of :repeat_days, if: lambda { recurring? }
   validates_presence_of :subject, if: lambda { email? }
+  validate :total_image_size
+
 
   def from_user
     "#{first_name} #{last_name}"
@@ -83,6 +85,11 @@ class Campaign < ActiveRecord::Base
 
   def is_campaign_date_selected?
     (one_time? && !deliver_now?)
+  end
+
+  def total_image_size
+    total_size = self.images.inject(0){ |sum, image| sum += image.avatar_file_size }
+    errors.add(:images, "Total image size not be greatee than 5 MB") if total_size > 5.megabytes
   end
 
   def channel_text_validate

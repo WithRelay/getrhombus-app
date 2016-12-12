@@ -81,7 +81,7 @@ module DashboardMerchantQueries
 			query =  "SELECT u.id AS user_id, u.email " \
 					 "FROM users u, merchant_customers m " \
 					 "WHERE u.id= m.customer_id " \
-					 "AND m.merchant_id = ? " \
+					 "AND m.merchant_id = :id" \
 					 "AND m.created_at #{
 					 	DashboardMerchantQueries.get_range(params[:segment_filter])
 					 } " \
@@ -209,6 +209,20 @@ module DashboardMerchantQueries
 				 	params[:amt_filter], params[:amt_1], params[:amt_2])} " \
 				"GROUP BY t.amount, m.created_at, m.user_id_to, " \
 				"u.first_name, u.last_name"
+		return query
+	end
+
+	# Creates a segment for a plan
+	# @param plan_id The id of the plan for which a segment is to be
+	def DashboardMerchantQueries.get_plan_users(plan_id)
+		query = "SELECT u.id AS user_id, u.email AS email, " \
+		 		"u.first_name, u.last_name " \
+				"FROM Plans p " \
+				"INNER JOIN merchant_customers m " \
+				"ON (m.merchant_id = :id) " \
+				"INNER JOIN users u " \
+				"ON (u.id = m.customer_id) " \
+				"WHERE p.id = #{plan_id} " 
 		return query
 	end
 

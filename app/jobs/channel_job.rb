@@ -13,7 +13,7 @@ class ChannelJob
     {
       'sms'=>'SmsService', 'mms'=>'MmsService',
       'facebook_messenger'=>'FacebookMessengerService',
-      'email'=>'EmailService'
+      'email'=>'SendEmail::EmailCampaign'
     }
   end
 end

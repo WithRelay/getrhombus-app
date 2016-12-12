@@ -80,6 +80,7 @@ class Api::V1::ListsController < API::V1::BaseController
       return l
     end
 
+    # Get the SQL query for the segment
     def get_segment_query(params)
       print "Segment type is: #{params[:segment_type]} \n"
       if params[:segment_type] == "new_customers"

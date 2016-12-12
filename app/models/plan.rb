@@ -6,6 +6,7 @@ class Plan < ActiveRecord::Base
   validates_presence_of :name, :interval, :interval_count, :amount
   validates :name, uniqueness: { case_sensitive: false, scope: :user_id }
   validates_numericality_of :amount, :interval_count, greater_than: 0, only_integer: true
+  after_create :create_plan_segment
 
   def create_plan(hash)
     begin
@@ -88,4 +89,11 @@ class Plan < ActiveRecord::Base
     end
   end
 
+  private
+  # Triggered after a plan is created to get the users who belong to that plan
+  def create_plan_segment
+    segment = DashboardMerchantQueries.get_plan_users(self.id)
+    l = List.new(name:self.name, user_id:user_id, segment:segment)
+    l.save
+  end
 end

@@ -100,8 +100,8 @@ class FacebookMessengerService
       subscribed_page = campaign.user.fb_pages.subscribed # get merchant fb pages which are subscribed
       # currently we support only one subscription but the relation is as has_many
       page_access_token = subscribed_page[0].page_access_token if subscribed_page.present?
-      campaign_service = CampaignService.new(campaign)
-      email_service = EmailService.new(campaign)
+      campaign_service = ChannelCampaign::SendCampaign.new(campaign)
+      email_service = SendEmail::EmailCampaign.new(campaign)
       campaign.lists.each do |list|
         # get list user fb_cred
         list.user_lists.each do |customer|
