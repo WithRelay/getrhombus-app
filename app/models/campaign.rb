@@ -96,7 +96,7 @@ class Campaign < ActiveRecord::Base
     channel_max_image_upload = { 'email' => 25.megabytes, 'mms' => 5.megabytes }
     get_total_allowed_size = channel_max_image_upload[self.channel]
     unless get_total_allowed_size.nil?
-      errors.add(:images, "Total image size not be greatee than 5 MB") if total_size > get_total_allowed_size
+      errors.add(:images, "Total image size not be greatee than #{get_total_allowed_size/1_048_576} MB") if total_size > get_total_allowed_size
     end
   end
 
