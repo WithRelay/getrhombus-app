@@ -28,7 +28,7 @@
       sender = params['messaging'][0]['sender']
       recipient = params['messaging'][0]['recipient']
       sender_id = sender['id']
-      recipient_id = recipient['id'] 
+      recipient_id = recipient['id']
       uid = (current_page.page_id == sender_id)? recipient_id : sender_id
       uid_type = 'fb_page'
 
@@ -72,12 +72,13 @@
         current_page = FbPage.find_by_page_id page_id
         fb_page_id = current_page.id
         new_user_id = (page_id == message_to)? message_from : message_to
-        add_page_user(fb_page_id, new_user_id)        
+        add_page_user(fb_page_id, new_user_id)
 
         conversation = Conversation.find_by_uid new_user_id
-        fb_message = conversation.fb_messages.create(text: text, seq: seq, time_stamp: timestamp, unread: false, 
-          message_id: message_id, page_id: page_id, from: message_from, to: message_to, 
-          fb_page_id: fb_page_id)
+        fb_message = conversation.fb_messages.create(text: text, seq: seq,
+          time_stamp: timestamp, unread: false, message_id: message_id,
+          from: message_from, to: message_to, fb_page_id: fb_page_id,
+          user_id: get_user_id(new_user_id), user_id_to: conversation.merchant_id)
         
         res = save_attachments(attachments, fb_message)
         # message destroy if attachment is not valid
@@ -85,7 +86,14 @@
       rescue StandardError => err
         nil
       end
-    end 
+    end
+
+    # it gives user id from page specific id of user
+    def get_user_id(new_user_id)
+      fb_cred = FbCred.find_by(page_specific_id: new_user_id)
+      user_fb_cred = FbCred.where(fb_id: fb_cred.fb_id).where.not(user_id: nil).first if fb_cred
+      user_fb_cred.user_id if user_fb_cred
+    end
 
     # set datetime in utc
     def set_timestamp(timestamp)
