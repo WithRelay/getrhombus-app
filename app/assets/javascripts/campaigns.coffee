@@ -132,7 +132,10 @@ $( document ).on 'ready page:load', ->
       alert 'Only image file formats with extension: jpg, jpeg, png, PNG, JPG, JPEG are allowed.'
       window.invalid_image = true
     else if !uploadedImage.validateSize()
-      alert 'invalid upload size. Please upload image of size less then 4 MB'
+      alert 'invalid upload size. upload image should be less than 4 mb'
+      window.invalid_image = true
+    else if !uploadedImage.validateTotalSize()
+      alert 'invalid upload size. Total upload image should be less than 25 mb'
       window.invalid_image = true
     else
       reader = new FileReader
