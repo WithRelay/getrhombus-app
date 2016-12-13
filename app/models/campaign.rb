@@ -21,6 +21,10 @@ class Campaign < ActiveRecord::Base
   validates_presence_of :repeat_days, if: lambda { recurring? }
   validates_presence_of :subject, if: lambda { email? }
   validate :total_image_size
+  validates_uniqueness_of :name
+
+  # scopes
+  scope :check_campaign_uniqueness, -> (campaign_name) { where('lower(name) = ?', campaign_name.downcase) }
 
 
   def from_user
@@ -89,7 +93,11 @@ class Campaign < ActiveRecord::Base
 
   def total_image_size
     total_size = self.images.inject(0){ |sum, image| sum += image.avatar_file_size }
-    errors.add(:images, "Total image size not be greatee than 5 MB") if total_size > 5.megabytes
+    channel_max_image_upload = { 'email' => 25.megabytes, 'mms' => 5.megabytes }
+    get_total_allowed_size = channel_max_image_upload[self.channel]
+    unless get_total_allowed_size.nil?
+      errors.add(:images, "Total image size not be greatee than 5 MB") if total_size > get_total_allowed_size
+    end
   end
 
   def channel_text_validate
