@@ -5,7 +5,7 @@
       var flashTitle= '<%= flash_key %>'
       // to set arrayMessage as flash error array as verbatism
       // .to_json is sometime flash message can contain string
-      var arrayMessage = <%== flash[flash_key].to_json %>
+      var arrayMessage = <%== flash[flash_key].values.flatten.to_json %>
       // flashMethod is a method availabel in flashes.js
       FlashHandler.setFlashMessage( arrayMessage, flashTitle )
     });

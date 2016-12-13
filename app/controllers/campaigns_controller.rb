@@ -24,7 +24,7 @@ class CampaignsController < ApplicationController
       flash[:notice] = 'Campaign Saved successfully'
       redirect_to new_user_campaign_path
     else
-      flash[:error] = @campaign.errors.full_messages
+      flash[:error] = @campaign.errors.messages
       @lists_json = @campaign.campaign_lists.map{|a| current_user.lists.find(a.list_id)}.to_json
       render :new
     end
@@ -41,7 +41,7 @@ class CampaignsController < ApplicationController
       @campaign.change_campaign_job
       flash[:notice] = 'Campaign updated successfully'
     else
-      flash[:error] = @campaign.errors.full_messages
+      flash[:error] = @campaign.errors.messages
     end
     redirect_to edit_user_campaign_path
   end
