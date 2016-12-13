@@ -23,18 +23,20 @@ class SubscriptionsController < ApplicationController
   end
 
   def create
-    success = false
-    merchant_customer = MerchantCustomer.find subscription_params[:merchant_customer_id]
-
-    @subscription = merchant_customer.subscriptions.new(subscription_params)
-
-    if @subscription.create_subscription({ team: current_user, customer: merchant_customer.stripe_customer_id })
+    @subscription = Subscription.create(subscription_params)
+    res = @subscription.create_subscription({ team: current_user })
+    if res.first
       redirect_to user_subscriptions_path, flash: {notice: 'Subscription created successfully'}
     else
-      flash[:error] = (res.second == 'card_error') ? res.third : 'Something went wrong'
+      @subscription.destroy
+      if @subscription.errors.messages.present?
+        error = @subscription.errors.full_messages
+        flash[:error] = error
+      else
+        flash[:error] = (res.second == 'card_error') ? res.third : 'Something went wrong'
+      end
       redirect_to new_user_subscription_path
     end
-
   end
 
   # def update
