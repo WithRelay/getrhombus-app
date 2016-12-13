@@ -22,9 +22,11 @@ class Subscription < ActiveRecord::Base
         hash[:coupon] = coupon.stripe_coupon_id 
       end
       
+      merchant_customer = MerchantCustomer.find self.merchant_customer_id
+      hash[:customer] = merchant_customer.stripe_customer_id
       hash[:plan] = self.plan_id
       hash[:quantity] = self.quantity
-      hash[:tax_percent] = hash[:team].tax_percent      
+      hash[:tax_percent] = hash[:team].tax_percent
       hash.delete(:team)
 
       res = PaymentService.create_subscription(hash, uid, is_platform)
