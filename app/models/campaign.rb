@@ -84,7 +84,7 @@ class Campaign < ActiveRecord::Base
   end
 
   def is_time_greater_than_now?
-    (date_time - 30.minutes) < Time.current
+    (date_time - 30.minutes) < Time.current if date_time.present?
   end
 
   def is_campaign_date_selected?
@@ -96,7 +96,7 @@ class Campaign < ActiveRecord::Base
     channel_max_image_upload = { 'email' => 25.megabytes, 'mms' => 5.megabytes }
     get_total_allowed_size = channel_max_image_upload[self.channel]
     unless get_total_allowed_size.nil?
-      errors.add(:images, "Total image size not be greatee than 5 MB") if total_size > get_total_allowed_size
+      errors.add(:images, "Total image size not be greatee than #{get_total_allowed_size/1_048_576} MB") if total_size > get_total_allowed_size
     end
   end
 
