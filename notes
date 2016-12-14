@@ -3,6 +3,7 @@ https://www.getrhombus.com/receive_delivery_report
 
 Bhishma
 - do we need the application controller code for messenger
+- add index to user_id, user_id_to in fb_messages
 - ToDo 
 	- Add logic for switching plans/subscriptions
 	- In plans, remove user_id, add merchant_id and customer_id
