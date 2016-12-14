@@ -5,7 +5,7 @@ $(document).ready(function () {
   $(document).on('change', '#select-images', function() { read_file_picker(this); });
 
   function read_file_picker(input) {
-    var files = input.files, 
+    var files = input.files,
         new_image_previews = $('#new-image-previews').html(""),
         counter = [];
 
@@ -17,7 +17,7 @@ $(document).ready(function () {
 
     // http://stackoverflow.com/questions/23402187/multiple-files-upload-and-using-file-reader-to-preview
     if (files && files.length > 0) {
-      
+
       if (files.length > 2) {
         invalid_actions("You can only select up to 2 files.");
         return;
@@ -45,7 +45,7 @@ $(document).ready(function () {
           var img = e.target;
           counter.push(e.target.filename)
           if (counter.length < 2){
-            div = "<div class='images'><a href='#' class='deleteImagePreview' title='"+img.filename+"'>Delete Image</a><img class='thumbnail' src='" + img.result + "'" + "title='" + img.filename + "'/>" +
+            div = "<div class='images'><a href='#' class='deleteImagePreview' title='"+img.filename+"'>Delete Image</a><img class='thumbnail' src='" + img.result + "'" + "title='" + img.filename + "'" + "size='" + Math.round(e.total/1024) + "'"+"/>" +
                   "<span>" + img.filename + "</span></div>";
           }
           else {
@@ -76,7 +76,7 @@ $(document).ready(function () {
   });
 
   $(".delete-image").click(function(e) {
-    
+
     e.stopPropagation();
     var delete_link = this;
     delete_link.style.pointerEvents = 'none';
@@ -96,7 +96,7 @@ $(document).ready(function () {
         delete_link.style.pointerEvents = 'auto';
       })
       .always(function(data, textStatus, response) {});
-      
+
   });
 
 });
