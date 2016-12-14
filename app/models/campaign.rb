@@ -1,6 +1,6 @@
 class Campaign < ActiveRecord::Base
 
-  attr_accessor :list_ids
+  attr_accessor :list_name
   has_many :campaign_user_lists
   has_many :lists, through: :campaign_lists
   has_many :campaign_lists, dependent: :destroy
@@ -14,15 +14,15 @@ class Campaign < ActiveRecord::Base
   enum frequency_type: { one_time: 0, recurring: 1 }
   enum status: { active: 1, paused: 2, inactive: 3 }
   # validation of campaign attributes
-  validates_presence_of :name, :list_ids, :text, message: 'List name cannot be empty'
+  validates_presence_of :name, :text, :list_name
+
   validate :channel_text_validate, if: proc { |c| c.text.present? && !c.email? }
   validate :date_time_validate, if: proc { |c| c.recurring? || (c.one_time? && !c.deliver_now?) }
   # validation for repeat days if recurring is selected.
   validates_presence_of :repeat_days, if: lambda { recurring? }
   validates_presence_of :subject, if: lambda { email? }
   validate :total_image_size
-  validates_uniqueness_of :name
-
+  validates :name, uniqueness: { scope: :user_id }
   # scopes
   scope :check_campaign_uniqueness, -> (campaign_name) { where('lower(name) = ?', campaign_name.downcase) }
 
@@ -33,7 +33,7 @@ class Campaign < ActiveRecord::Base
 
   def update_attributes(*args)
     campaign_lists.delete_all
-    args[0][:list_ids].split(',').each { |list_id| campaign_lists.build(list_id: list_id).save }
+    args[0][:list_name].split(',').each { |list_id| campaign_lists.build(list_id: list_id).save }
     # creates records for attachment images associating with campaign
     create_avatar(args[1]) if (!sms? && args[1][:avatar].present?)
     # creates records for inline images associating with campaign
@@ -80,7 +80,7 @@ class Campaign < ActiveRecord::Base
     # date_time.utc will convert date_time to utc and Time.now is current time and .utc will convert to utc
     # no need to convert to datetime object because rails tries to save date time by storing to date time format
     # so the self object date_time attribute returns the date time which is formatted in rails date time
-    errors.add(:date_time, 'date time should be 30 minutes greater than current date time') if is_time_greater_than_now?
+    errors.add(:date_time, 'should be 30 minutes greater than current date time') if is_time_greater_than_now?
   end
 
   def is_time_greater_than_now?
@@ -96,7 +96,7 @@ class Campaign < ActiveRecord::Base
     channel_max_image_upload = { 'email' => 25.megabytes, 'mms' => 5.megabytes }
     get_total_allowed_size = channel_max_image_upload[self.channel]
     unless get_total_allowed_size.nil?
-      errors.add(:images, "Total image size not be greatee than #{get_total_allowed_size/1_048_576} MB") if total_size > get_total_allowed_size
+      errors.add(:images, "size not be greater than #{get_total_allowed_size/1_048_576} MB") if total_size > get_total_allowed_size
     end
   end
 
@@ -106,6 +106,6 @@ class Campaign < ActiveRecord::Base
     # get the text length by its key i.e. from params
     max_text_length = channel_text_size[channel]
     # add errors to text
-    errors.add(:text, "text length should no more than #{max_text_length}") if max_text_length <= text.length
+    errors.add(:text, "length should no more than #{max_text_length}") if max_text_length <= text.length
   end
 end

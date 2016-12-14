@@ -24,7 +24,7 @@ class CampaignsController < ApplicationController
       flash[:notice] = 'Campaign Saved successfully'
       redirect_to new_user_campaign_path
     else
-      flash[:error] = @campaign.errors.messages
+      flash[:error] = @campaign.errors.full_messages
       @lists_json = @campaign.campaign_lists.map{|a| current_user.lists.find(a.list_id)}.to_json
       render :new
     end
@@ -41,7 +41,7 @@ class CampaignsController < ApplicationController
       @campaign.change_campaign_job
       flash[:notice] = 'Campaign updated successfully'
     else
-      flash[:error] = @campaign.errors.messages
+      flash[:error] = @campaign.errors.full_messages
     end
     redirect_to edit_user_campaign_path
   end
@@ -87,7 +87,7 @@ class CampaignsController < ApplicationController
 
   def campaign_params
     # enums are define as integer but params are in string and rails is not converting string to integer
-    params.require(:campaign).permit(:name, :list_ids, :channel, :repeat_days, :date_time, :deliver_now,
+    params.require(:campaign).permit(:name, :list_name, :channel, :repeat_days, :date_time, :deliver_now,
                          :frequency_type, :text, :new_status, :subject).tap do |c|
                           c[:channel] = c[:channel].to_i
                           c[:frequency_type] = c[:frequency_type].to_i

@@ -9,11 +9,11 @@ class @DatePicker
     date = new Date();
     @minimumDate = dateSelect.select
     dateRangeValue = $('.daterange').val()
-    if dateRangeValue == undefined || dateRangeValue == ""
-      @today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-    else
-      dateRange = dateRangeValue.split('-')
-      @today = new Date(dateRange[0], dateRange[1]-1, dateRange[2].split(" ")[0]);
+    # if dateRangeValue == undefined || dateRangeValue == ""
+    @today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    # # else
+    #   dateRange = dateRangeValue.split('-')
+    #   @today = new Date(dateRange[0], dateRange[1]-1, dateRange[2].split(" ")[0]);
 
   datePicker: ->
     today = @today

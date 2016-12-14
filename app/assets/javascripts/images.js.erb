@@ -71,7 +71,7 @@ $(document).ready(function () {
   $(document).on('click', '.deleteImagePreview, .deleteImagePreviews', function(e) {
     $(this).parent().slideUp(400, function() {
       $('#new-image-previews').html('');
-      $('#select-images').val();
+      $('#select-images').val('');
     });
   });
 

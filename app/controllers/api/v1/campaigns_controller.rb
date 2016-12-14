@@ -17,6 +17,7 @@ class Api::V1::CampaignsController < API::V1::BaseController
   end
 
   def find_campaign_by_name
+    # campaign name is unique but only with particular user
     current_user.campaigns.check_campaign_uniqueness(params[:campaign][:name])
   end
 end
