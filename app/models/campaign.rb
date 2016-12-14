@@ -22,8 +22,7 @@ class Campaign < ActiveRecord::Base
   validates_presence_of :repeat_days, if: lambda { recurring? }
   validates_presence_of :subject, if: lambda { email? }
   validate :total_image_size
-  validates_uniqueness_of :name
-
+  validates :name, uniqueness: { scope: :user_id }
   # scopes
   scope :check_campaign_uniqueness, -> (campaign_name) { where('lower(name) = ?', campaign_name.downcase) }
 
