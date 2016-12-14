@@ -2,10 +2,12 @@ current stripe api version - 2014-03-28
 https://www.getrhombus.com/receive_delivery_report
 
 Bhishma
-- fix flashes showing up multiple time
+- do we need the application controller code for messenger
+- ToDo 
+	- Add logic for switching plans/subscriptions
+	- In plans, remove user_id, add merchant_id and customer_id
 
 Taiwo (review)
-- Clean up angular - https://blog.joshsoftware.com/2014/07/17/bloguilding-web-apps-with-rails4-and-angularjs-in-15-minutes/
 - review stripe_events
 - review managed account..
 - subscription, subscription controller and stripe customer creation places
@@ -21,12 +23,9 @@ Taiwo (review)
 surya
 - can I migrate my jobs?
 - check for campaign name validity like Bhishma does...and add scoped name validation
-- arugment out of range error with dates...need to recreate
-- Uncaught TypeError: Cannot read property 'split' of undefined(…)...line 22
 - emoji scroll bar issue
 - on server validation error, valid calendar dates are blocked out
-- seems images are being saved even on validation failure
-- save but fails validation...uploads image but doesnt save...so you get a url that doesnt exists - http://rhombuscdn.s3.amazonaws.com/images/avatars//original/download.jpg?1481609228....i created another bucket for production stuff...and added read only policy for any user
+- save but fails validation...it seems to upload image but doesnt save..i dont think it does...but you get a url that doesnt exists - http://rhombuscdn.s3.amazonaws.com/images/avatars//original/download.jpg?1481609228....i created another bucket for production stuff...and added read only policy for any user
 
 
 Review
