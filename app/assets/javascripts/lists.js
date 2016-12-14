@@ -1,59 +1,11 @@
 $(document).on('ready page:load', function() {
 
-  // this is actually for campaigns not lists but uses lists
-  // http://selectize.github.io/selectize.js/
-
-  // For edit action, get lists data for preloading text input
-  var x = $('#campaign-select-lists'),
-      campaign_lists = x.data("lists_data");
-
-  // Can be undefined for new action
-  campaign_lists = (campaign_lists) ? campaign_lists : [];
-
-  var lists_selectize = x.selectize({
-    valueField: 'id',
-    labelField: 'name',
-    searchField: 'name',
-    openOnFocus: false,
-    maxOptions: 5,
-    options: campaign_lists,
-    closeAfterSelect: true,
-    render: {
-        item: function(item, escape) {
-          return '<div> <span class="name">' + escape(item.name) + '</span></div>';
-        },
-        option: function(item, escape) {
-          return '<div><span class="label">' + escape(item.name) + '</span></div>';
-        }
-    },
-    load: function(query, callback) {
-      if (query.length < 2) return callback();
-      $.ajax({
-        url: window.location.protocol + "//" + window.location.host + "/v1/lists.json?query=" + encodeURIComponent(query),
-        error: function() { 
-           FlashHandler.setFlashMessage('Something went wrong...Unable to find your lists', 'error');
-          callback(); 
-        },
-        success: function(res) { callback(res['lists']); }
-      });
-    }
-  });
-
-  $( "#click-me" ).click(function() {
-    alert(lists_selectize[0].selectize.getValue())
-  });
-
-  // prefill form with previous lists
-  $.each(campaign_lists, function (index, val) {
-    lists_selectize[0].selectize.addItem(val['id']);
-  });
-
 
   $("form#create_segment").submit(function(e){
     e.preventDefault();
     var action = $(this).attr('action');
     var method = $(this).attr('method');
-    var data = $(this).serializeArray();    
+    var data = $(this).serializeArray();
     console.log("Action: " + action)
     console.log("Method: " + method)
     console.log(data)
@@ -164,7 +116,7 @@ $(document).on('ready page:load', function() {
       closeEsc: true,
       centered: true,
       onLoad: function() {
-        // Populate segment selection before submitting request 
+        // Populate segment selection before submitting request
         $("#segment_create_modal").find('input:first')
         $("#list_type").val("segment")
         $("#segment_type").val($("#segment_option").val())
@@ -177,7 +129,7 @@ $(document).on('ready page:load', function() {
       });
      e.preventDefault();
   });
-  
+
 
 
   // Fired on click of the segment button
@@ -198,7 +150,6 @@ $(document).on('ready page:load', function() {
       element_index = selected_users.indexOf(input.val())
       selected_users.splice(element_index, 1);
     }
-
   if (selected_users.length > 0){
     console.log("There is a selected checkbox.", selected_users);
     $("#create_list_button").prop('disabled', false);
