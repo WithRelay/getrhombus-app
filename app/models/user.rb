@@ -34,11 +34,11 @@ class User < ActiveRecord::Base
       campaign = super(args[0])
       unless args.blank?
         # build campaign lists of campaign
-        args[0][:list_ids].split(',').each{ |l| campaign.campaign_lists.build(list_id: l) }
+        args[0][:list_name].split(',').each{ |l| campaign.campaign_lists.build(list_id: l) }
         # build avatar of campaigns
         args[1][:avatar].each do |image|
           campaign.images.build(avatar: image, uploaded_as: 1)
-        end if (!campaign.sms? && args[1][:avatar].present?)
+        end if (!campaign.sms? && args[1][:avatar].present?) && campaign.valid?
         # build image refs for inline images of campaigns
         args[1][:image_id].each do |avatar_id|
           campaign.image_refs.build(image_id: avatar_id).save;
@@ -124,7 +124,7 @@ class User < ActiveRecord::Base
     #email == User.platform_email
     email == '<redacted_email>' || email == '<redacted_email>'
   end
-  
+
 
   def get_team_uid
     t = is_platform? ? self.stripe_creds.first : self.stripe_creds.where(uid_type: 0).first
