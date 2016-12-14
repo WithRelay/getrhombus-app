@@ -32,8 +32,20 @@ $(document).on('ready page:load', function() {
             }
           }
         }
+        ,
+        'campaign[text]': {
+          validators: {
+            notEmpty: {
+                message: 'This Field is required'
+            }
+          }
+        }
     }
-  })
+  }).on('submit', function(e) {
+          $('#new_campaign').formValidation('revalidateField', 'campaign[text]');
+          $('#new_campaign').formValidation('revalidateField', 'campaign[subject]');
+
+        })
   // this is actually for campaigns not lists but uses lists
   // http://selectize.github.io/selectize.js/
 
