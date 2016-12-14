@@ -2,11 +2,10 @@ current stripe api version - 2014-03-28
 https://www.getrhombus.com/receive_delivery_report
 
 Bhishma
-- if you will use one method to handle inbound messages or outbound events, then you need to check for specific properties that are not in both json data
+- fix flashes showing up multiple time
 
 Taiwo (review)
-- Clean up angular - https://blog.joshsoftware.com/2014/07/17/building-web-apps-with-rails4-and-angularjs-in-15-minutes/
-- figure out fb_messages... page_id, from, to, fb_page_id?
+- Clean up angular - https://blog.joshsoftware.com/2014/07/17/bloguilding-web-apps-with-rails4-and-angularjs-in-15-minutes/
 - review stripe_events
 - review managed account..
 - subscription, subscription controller and stripe customer creation places
@@ -20,22 +19,14 @@ Taiwo (review)
    - remove livemode from users, add to merchant_customer and create rake task to migrate this to merchant..customer
 
 surya
-- business name in people?
-- move campaign and email to classes
 - can I migrate my jobs?
 - check for campaign name validity like Bhishma does...and add scoped name validation
-- campaign calendar needs to not show old dates
 - arugment out of range error with dates...need to recreate
-- hide subject field when not email
 - Uncaught TypeError: Cannot read property 'split' of undefined(…)...line 22
-- campaigns-225b555….js?body=1:16 Uncaught TypeError: Cannot read property 'select' of undefined(…) ....eassy to recreat
-- one time...check and uncheck send now...throws error
-- choose date, save campaign, let it fail validation...date field is invalid
-- where is time option in campaigns
-- list, date time validation message isnt helpful and all fields validation should also start from client side
-- when you fail validation and are returned to new campaign...list shows ids not list names
 - emoji scroll bar issue
-- add table plugin...edwin?
+- on server validation error, valid calendar dates are blocked out
+- seems images are being saved even on validation failure
+- save but fails validation...uploads image but doesnt save...so you get a url that doesnt exists - http://rhombuscdn.s3.amazonaws.com/images/avatars//original/download.jpg?1481609228....i created another bucket for production stuff...and added read only policy for any user
 
 
 Review

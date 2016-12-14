@@ -9,6 +9,27 @@ Rails.application.configure do
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.default :charset => "utf-8"
   config.action_mailer.smtp_settings = { address: '127.0.0.1', port: 1025 }
+
+  config.action_mailer.smtp_settings = {
+    address: 'smtp.mandrillapp.com',
+    authentication: :plain,
+    domain: 'localhost',
+    enable_starttls_auto: true,
+    password: 'dNwnU7DENNIYtBABA8OuQA',
+    port: '587',
+    user_name: <redacted_username>
+  }
+  config.action_mailer.default_url_options = { host: 'localhost' }
+
+  config.paperclip_defaults = {
+    :storage => :s3,
+    :s3_region => 'us-east-1',
+    :s3_credentials => {
+      :bucket: <redacted_s3_bucket>
+      :access_key_id: <redacted_access_key_id>
+      :secret_access_key: <redacted_secret_access_key>
+    }
+  }
   ### added
 
   # In the development environment your application's code is reloaded on
@@ -47,17 +68,6 @@ Rails.application.configure do
   # Checks for improperly declared sprockets dependencies.
   # Raises helpful error messages.
   config.assets.raise_runtime_errors = true
-
-  config.action_mailer.smtp_settings = {
-    address: 'smtp.mandrillapp.com',
-    authentication: :plain,
-    domain: 'localhost',
-    enable_starttls_auto: true,
-    password: 'dNwnU7DENNIYtBABA8OuQA',
-    port: '587',
-    user_name: <redacted_username>
-  }
-  config.action_mailer.default_url_options = { host: 'localhost' }
 
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
