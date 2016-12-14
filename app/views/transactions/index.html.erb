@@ -72,7 +72,7 @@
                   <tr role="row">
                       <td class="details-control" data-txn-num="<%= t.txn_number %>"
                         data-time="<%= t.created_at.strftime("%I:%M %p") %>"
-                        id="<%= t.txn_uri %>"
+                        id="<%= t.txn_number %>"
                         data-email="<%= t.email %>"
                         data-tax="<%= t.tax_percent %>"
                         data-status="<%#= (t.refund_id) ? "Refunded" : "Charged" %>"

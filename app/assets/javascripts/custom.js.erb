@@ -144,15 +144,11 @@ $(document).ready(function () {
       if (element.attr('data-page') === 'transactions') {
           y =     '<tr>' +
                       '<td>Rhombus Txn #:</td>'+
-                      '<td>'+ element.attr('data-txn-num') +'</td>'+
+                      '<td>'+ element[0].id +'</td>'+
                   '</tr>'+
                   '<tr>'+
                       '<td>Time (ET):</td>'+
                       '<td>'+ element.attr('data-time') +'</td>'+
-                  '</tr>'+
-                  '<tr>'+
-                      '<td>Stripe Txn #:</td>'+
-                      '<td>' + element[0].id + '</td>'+
                   '</tr>'+
                   '<tr>'+
                       '<td>Taxes and Fees:</td>'+
@@ -166,7 +162,7 @@ $(document).ready(function () {
                   '</tr>';
           } else {
               v = '<tr>'+
-                      '<td><a class="refund_link" data-stripe-txn-num=' + element[0].id + ' >Refund transaction</a></td>'+
+                      '<td><a class="refund_link" data-txn-num=' + element[0].id + ' >Refund transaction</a></td>'+
                   '</tr>'
           }
       } else {

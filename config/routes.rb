@@ -121,7 +121,7 @@ Rails.application.routes.draw  do
     match 'campaigns/upload_images' => 'campaigns#upload_images', via: :post
     match 'campaigns/upload_from_url' => 'campaigns#upload_from_url', via: :post
     #--------------------------------------------------------------------------#
-    match 'transactions/:charge_id/refund' => 'transactions#refund', via: :post
+    match 'transactions/:txn_number/refund' => 'transactions#refund', via: :post
     match 'transactions/charge_customer' => 'transactions#charge_customer', via: :post
     match 'numbers/search' => 'numbers#search', via: :get
     match 'lists' => 'lists#index', via: :get

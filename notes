@@ -3,13 +3,18 @@ https://www.getrhombus.com/receive_delivery_report
 
 Bhishma
 - do we need the application controller code for messenger
-- add index to user_id, user_id_to in fb_messages
+- fb_pages controller...dont rescue Exception...rescue standarderror
+- for indexes
+	- will fb_id in fb_creds be unique? 
+	- do we need fb_cred_id in fb_pages?
 - ToDo 
 	- Add logic for switching plans/subscriptions
 	- In plans, remove user_id, add merchant_id and customer_id
 
 Taiwo (review)
+- ask ovo if he uses created_at...so i can remove index
 - review stripe_events
+- review merchant_customer_id in transactions and invoices
 - review managed account..
 - subscription, subscription controller and stripe customer creation places
 - Review adding token...failing safely.
@@ -23,6 +28,8 @@ Taiwo (review)
 
 surya
 - can I migrate my jobs?
+- use custom method to get campaign users
+- is CampaignUserList being used?
 - check for campaign name validity like Bhishma does...and add scoped name validation
 - emoji scroll bar issue
 - on server validation error, valid calendar dates are blocked out
@@ -36,6 +43,7 @@ Review
 - when user logs in through messenger, indicate in referrers
 - change all emails in test db dump
 - unify team and dashboard email issue really
+- indexes for conversations table later
 
 - Create Seeds
 - remove thread profiler in prod

@@ -7,7 +7,7 @@ class Refund < ActiveRecord::Base
   # We aren't refunding Standalone acct txns going forward once we move to managed accounts.
   def self.refund_card_txn(merchant_id, params, is_admin)
     begin     
-      txn = Transaction.where(transaction_uri: params[:charge_id]).first 
+      txn = Transaction.where(txn_number: params[:txn_number]).first 
       
       if txn.nil?
         ["Transaction doesnt exists.", 404]

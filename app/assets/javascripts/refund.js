@@ -14,19 +14,19 @@ $(document).ready(function () {
   $('#refundButton').click(function(e) {
     e.preventDefault();
     var refund_btn = this,
-        charge_id = REFUND_TXN_LINK.getAttribute('data-stripe-txn-num');
+        txn_num = REFUND_TXN_LINK.getAttribute('data-txn-num');
 
     refund_btn.disabled = true;
     refund_btn.textContent = "Please wait...";
     
     $.ajax({
-      url: "/v1/transactions/" + charge_id + "/refund.json",
+      url: "/v1/transactions/" + txn_num + "/refund.json",
       beforeSend: function(xhr) { xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content')) },
       type: "POST",
       data: { type: "card", reason: document.getElementById('refund_reason').value }
     })
       .done(function(data, textStatus, response) {
-        document.getElementById(charge_id).setAttribute("data-status", "Refunded");
+        document.getElementById(txn_num).setAttribute("data-status", "Refunded");
          FlashHandler.setFlashMessage(data.message, 'notice');
         $(REFUND_TXN_LINK)[0].parentNode.parentNode.innerHTML = "<tr><td>Status: </td><td> Refunded</td></tr>";
       })

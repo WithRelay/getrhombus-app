@@ -1,10 +1,9 @@
 class ListsController < ApplicationController
   before_action :set_list, only: [:show, :edit, :update, :destroy]
-  before_action :find_user, only: [:index]
+  before_action :find_user_lists, only: [:index]
   respond_to :html
 
   def index
-    @lists = List.all
     respond_with(@lists)
   end
 
@@ -41,18 +40,10 @@ class ListsController < ApplicationController
   # Deletes only lists that are not in an active campaign
   # Begins by checking to see if a campaign list exists with the list id
   # If not, deletes the list as usual
-  # else if the list is associated with an active campaign, the delete operation
-  # is aborted
   def destroy
     if CampaignList.where(:list_id => @list.id).any?
-      if CampaignList.where(list_id:@list.id).first.campaign.status == "active"
-        flash[:notice] = "This list cannot be deleted as it is part of an active campaign"
-        respond_with(@list)
-      else 
-        @list.destroy
-        flash[:notice] = "List was successfully deleted"
-        respond_with(@list)
-      end
+      flash[:notice] = "This list cannot be deleted as it is part of a campaign"
+      respond_with(@list)
     else
       @list.destroy
       flash[:notice] = "List was successfully deleted"
@@ -69,7 +60,7 @@ class ListsController < ApplicationController
       params.require(:list).permit(:id,:name,:user_id)
     end
 
-    def find_user
-      @list = List.find_by(user_id:current_user.id)
+    def find_user_lists
+      @lists = List.where(user_id:current_user.id)
     end
 end
