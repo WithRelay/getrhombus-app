@@ -1,4 +1,5 @@
-$(document).ready(function () {
+// for turbolinks page:load works
+$(document).on('ready page:load', function() {
   //https://support.stripe.com/questions/what-bank-account-information-should-platforms-provide-for-managed-accounts-in-different-countries
   //https://stripe.com/docs/connect/required-verification-information
   //https://stripe.com/docs/stripe.js?#collecting-bank-account-details
@@ -515,15 +516,20 @@ $(document).ready(function () {
             }
           }
         },
-        'user[bank_accounts_attributes][0][routing_number]': {
+        'user[people_attributes][0][address_attributes][postal_code]': {
           validators: {
             notEmpty: {
-              message: 'Routing Number is required'
+              message: 'valid postal code is required'
             }
           }
-        }
+        },
+        'user[people_attributes][0][address_attributes][state_province]': {
+            validators: {
+              notEmpty: {
+                message: 'state field is required'
+              }
+            }
+          }
       }
-    }).on('err.field.fv', function(e, data) {
-            data.fv.disableSubmitButtons(false);
-        })
+    })
 });
