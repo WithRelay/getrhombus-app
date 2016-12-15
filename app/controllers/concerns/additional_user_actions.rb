@@ -18,11 +18,13 @@ module AdditionalUserActions
   end
 
   def create_managed_acct
-    if user_valid_to_update
-      flash[:notice] = user_valid_to_update
+    check_user_validation = user_valid_to_update
+    if check_user_validation.present?
+      flash[:error] = check_user_validation
     else
-      flash[:error] = @user.errors
+      flash[:notice] = 'Account connected susseccfully'
     end
+    managed_acct
     render :managed_acct
   end
 
@@ -41,11 +43,13 @@ module AdditionalUserActions
   end
 
   def update_managed_acct
-    if user_valid_to_update
-      flash[:notice] = user_valid_to_update
+    check_user_validation = user_valid_to_update
+    if check_user_validation.present?
+      flash[:error] = check_user_validation
     else
-      flash[:error] = @user.errors
+      flash[:notice] = 'User updated'
     end
+    managed_acct
     render :managed_acct
   end
 
@@ -61,10 +65,11 @@ module AdditionalUserActions
   end
 
   def user_valid_to_update
-    user_update = @user.update(full_user_params)
-    if user_update
-      status = user_managed_account
-      set_message(status)
+    check_account_create = user_managed_account
+    if check_account_create.methods.include?(:message)
+      check_account_create.message
+    else
+      @user.errors.full_messages if @user.errors.full_messages.present?
     end
   end
 
@@ -83,10 +88,6 @@ module AdditionalUserActions
                                                              fingerprint: bank_account.fingerprint })
     end
     stripe_params
-  end
-
-  def set_message(status)
-    status.methods.include?(:message) ? status.message : 'Account Connected Succesfully'
   end
 
   # Returns JSON object with user hash who sent a message to the given merchant in the last CONFIG[:dashboard]['messaging']['num_days_history'] days
