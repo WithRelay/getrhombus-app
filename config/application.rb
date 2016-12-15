@@ -19,7 +19,6 @@ module Rhombus
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
 
     # added
-
     config.generators do |generators|
       generators.javascripts false
       generators.helper false
@@ -43,18 +42,7 @@ module Rhombus
     config.active_record.raise_in_transactional_callbacks = true
 
 
-    # added
+    # added for newrelic
     GC::Profiler.enable
-
-    # added
-    config.paperclip_defaults = {
-      :storage => :s3,
-      :s3_region => 'us-east-1',
-      :s3_credentials => {
-        :bucket: <redacted_s3_bucket>
-        :access_key_id: <redacted_access_key_id>
-        :secret_access_key: <redacted_secret_access_key>
-      }
-    }
   end
 end

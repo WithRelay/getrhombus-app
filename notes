@@ -4,12 +4,15 @@ https://www.getrhombus.com/receive_delivery_report
 Bhishma
 - do we need the application controller code for messenger
 - fb_pages controller...dont rescue Exception...rescue standarderror
+- Subscriptions
+	- create subscription api modal for customer profile/messaging page ... customer name not needed
 - for indexes
 	- will fb_id in fb_creds be unique? 
 	- do we need fb_cred_id in fb_pages?
 - ToDo 
 	- Add logic for switching plans/subscriptions
 	- In plans, remove user_id, add merchant_id and customer_id to track customer plans
+-
 
 Taiwo (review)
 - review stripe_events
@@ -17,7 +20,7 @@ Taiwo (review)
 - review managed account..
 - subscription, subscription controller and stripe customer creation places
 - Review adding token...failing safely.
-- on subscription - check if user already belongs to merchant??? is this when they text?
+- on subscription - check if user alreaokdy belongs to merchant??? is this when they text?
 	- customers can create subscriptions over messaging...not dashboard, but can cancel subscription
 - finish message parser and review how messsages are saved
 - final review of updating subscriptions, coupons, plans...do we update subscriptions esp platform??
@@ -31,6 +34,14 @@ surya
 - use custom method to get campaign users
 - is CampaignUserList being used?
 - emoji scroll bar issue
+- Implement Reminders
+
+Ovo
+- add to list from user profile - http://rhombus-test.webflow.io/customer-profile
+- shouldn't be able to edit default segments
+
+Edwin
+- Create page to show lists of reminders and edit a reminder
 
 
 Review
@@ -41,10 +52,7 @@ Review
 - change all emails in test db dump
 - unify team and dashboard email issue really
 - indexes for conversations table later
-
-- Create Seeds
-- remove thread profiler in prod
-- when you need to access the underlying object....use instance method else use class method
+- create Seeds
 - notifications platform to merchants should have a single conversation and should not be pulled - mark as read too
 - conversations....need origin...cos system to customers should not open conversation....
 - return omniauth stripe connect for dashboard account - check how we save platform stripe cred...does stripe connect still work? do we really need this?
@@ -57,4 +65,10 @@ Payment Capture - should be for only customers....capture in logic
 Contact - Inbound
 - sent u a text doesnt have an account 
 - have an account, sent u a text but ref link isnt yours 
+
+
+http://rhombus-test.webflow.io/account-settings
+http://rhombus-test.webflow.io/business-settings
+http://rhombus-test.webflow.io/setup-payments
+http://rhombus-test.webflow.io/bank-account
 
