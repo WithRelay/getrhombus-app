@@ -43,6 +43,8 @@ $(document).on('ready page:load', function() {
   }).on('submit', function(e) {
     $('#new_campaign').formValidation('revalidateField', 'campaign[text]');
   })
+
+
   // this is actually for campaigns not lists but uses lists
   // http://selectize.github.io/selectize.js/
 
@@ -86,9 +88,7 @@ $(document).on('ready page:load', function() {
   }).on('submit', function(e) {
     $('#new_campaign').formValidation('revalidateField', 'campaign[list_name]');
   })
-  $( "#click-me" ).click(function() {
-    alert(lists_selectize[0].selectize.getValue())
-  });
+
 
   // prefill form with previous lists
   $.each(campaign_lists, function (index, val) {

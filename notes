@@ -9,10 +9,9 @@ Bhishma
 	- do we need fb_cred_id in fb_pages?
 - ToDo 
 	- Add logic for switching plans/subscriptions
-	- In plans, remove user_id, add merchant_id and customer_id
+	- In plans, remove user_id, add merchant_id and customer_id to track customer plans
 
 Taiwo (review)
-- ask ovo if he uses created_at...so i can remove index
 - review stripe_events
 - review merchant_customer_id in transactions and invoices
 - review managed account..
@@ -22,18 +21,16 @@ Taiwo (review)
 	- customers can create subscriptions over messaging...not dashboard, but can cancel subscription
 - finish message parser and review how messsages are saved
 - final review of updating subscriptions, coupons, plans...do we update subscriptions esp platform??
-- where will customer create plan? on whose account?
 - Rake - migrate customer uri to merchant_customer plus drop column...but after migrating merchant_customer
    - remove livemode from users, add to merchant_customer and create rake task to migrate this to merchant..customer
 
 surya
 - can I migrate my jobs?
+- did you go with tightening validation? we might need to tighten date client side validation...noticed images are removed on validation fail...that's fine
+- you have to clikc submit button twice
 - use custom method to get campaign users
 - is CampaignUserList being used?
-- check for campaign name validity like Bhishma does...and add scoped name validation
 - emoji scroll bar issue
-- on server validation error, valid calendar dates are blocked out
-- save but fails validation...it seems to upload image but doesnt save..i dont think it does...but you get a url that doesnt exists - http://rhombuscdn.s3.amazonaws.com/images/avatars//original/download.jpg?1481609228....i created another bucket for production stuff...and added read only policy for any user
 
 
 Review
