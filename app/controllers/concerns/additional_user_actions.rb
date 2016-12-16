@@ -2,11 +2,7 @@ module AdditionalUserActions
   extend ActiveSupport::Concern
 
   def messaging
-    redirect_to :root and return if @user.user_level != 1
-
-    # change back
-    render layout: 'application_dashboard_messaging'
-    #render layout: 'xxx'
+    redirect_to :root and return if @user.is_customer?
   end
 
   def managed_acct
