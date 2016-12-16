@@ -8,13 +8,7 @@
     <a class="w-inline-block social-3" href="#" data-ix="move-social"></a>
     <a class="w-inline-block go-top" href="#top" data-ix="move-social"></a>
   </div>%>
-
-    <%= content_for :head do %>
-    <%= stylesheet_link_tag "normalize" %>
-    <%= stylesheet_link_tag "webflow" %>
-    <%= stylesheet_link_tag "rho.webflow" %>
-  <% end %>
-
+  
     <style type="text/css">
     @media screen and (min-width: 1200px) {
         .w-container {
@@ -25,7 +19,7 @@
     background-color: #e5e5e5; !important
 }
   </style>
-  
+
   <%= render "shared/static_pages_header" %>
 
   <%#= render 'shared/full_messages' %>

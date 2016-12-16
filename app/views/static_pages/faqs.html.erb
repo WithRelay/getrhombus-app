@@ -1,11 +1,5 @@
 <% provide(:title, 'Rhombus - FAQS') %> 
 
-  <%= content_for :head do %>
-    <%= stylesheet_link_tag "normalize" %>
-    <%= stylesheet_link_tag "webflow" %>
-    <%= stylesheet_link_tag "rho.webflow" %>
-  <% end %>
-
    <style type="text/css">
     @media screen and (min-width: 1200px) {
         .w-container {
@@ -18,7 +12,7 @@
   </style>
 
   <%= render 'shared/static_pages_header' %>
-  
+
 
   <%#= render 'shared/full_messages' %>
 
@@ -135,13 +129,13 @@
         <div class="w-col w-col-4">
           <div class="div-img" data-ix="move-img-2">
             <img src="<%= asset_path 'Rhombus Step 2.png' %>">
-            	
+
           </div>
         </div>
         <div class="w-col w-col-4">
            <div class="div-img" data-ix="move-img-2">
             <img src="<%= asset_path 'Rhombus Step 3.png' %>">
-            
+
           </div>
         </div>
       </div>
