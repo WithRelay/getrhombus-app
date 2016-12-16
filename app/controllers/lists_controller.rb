@@ -8,13 +8,8 @@ class ListsController < ApplicationController
   end
 
   def show
-    customers = @list.get_users
-    @users = Array.new
-    customers.each do |c|
-      @users.push(User.find(c[:user_id]))
-    end
+    @users = @list.get_users
     respond_with(@list,@users)
-
   end
 
   def new

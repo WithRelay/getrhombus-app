@@ -4,15 +4,39 @@ https://www.getrhombus.com/receive_delivery_report
 Bhishma
 - do we need the application controller code for messenger
 - fb_pages controller...dont rescue Exception...rescue standarderror
-- Subscriptions
+- Plans/Subscriptions
 	- create subscription api modal for customer profile/messaging page ... customer name not needed
-- for indexes
-	- will fb_id in fb_creds be unique? 
-	- do we need fb_cred_id in fb_pages?
-- ToDo 
 	- Add logic for switching plans/subscriptions
 	- In plans, remove user_id, add merchant_id and customer_id to track customer plans
--
+- for indexes
+	- will fb_id in fb_creds be unique? 
+	- do we need fb_cred_id in fb_pages? 
+- Twilio
+	- twilio has a way to distribute bulk messages over different numbers. Is there an api for that or they do it by default?	
+
+surya
+- can I migrate my jobs?
+- Campaigns
+	- use custom method to get campaign users for all channels - it now return array of hashes of user objects
+	- move send messenger campaign code from services. You might need to restructure and rename your classes..so things are clearer. 
+	- Implement SMS/MMS channel. They are ready. 
+- Upgrade Trumbowyg
+	- so we can use new ordered emojis (generate unicode in the same order in the emoji plugin file)
+	- so we can get the scroll bar fix - i raised an issue here - https://github.com/Alex-D/Trumbowyg/issues/458
+	- add color plugin
+- Implement Reminders
+	- Like campaigns but uses api to create reminder
+	- Reminders index, edit, update and destroy are needed. You can use the campaign controller for all these, but only reminder type campaigns show up in the index...the reverse is true for campaigns. And reminders has a reminder path.
+- Managed Account 
+	- break up form - http://thecodeplayer.com/walkthrough/jquery-multi-step-form-with-progress-bar
+
+Ovo
+- add to list from user profile - http://rhombus-test.webflow.io/customer-profile
+- shouldn't be able to edit default segments
+
+Edwin
+- Create pages to show lists (with edit and delete links) of reminders and edit a reminder - no modal
+- did you go with tightening validation? we might need to tighten date client side validation...noticed images are removed on validation fail...that's fine
 
 Taiwo (review)
 - review stripe_events
@@ -26,24 +50,6 @@ Taiwo (review)
 - final review of updating subscriptions, coupons, plans...do we update subscriptions esp platform??
 - Rake - migrate customer uri to merchant_customer plus drop column...but after migrating merchant_customer
    - remove livemode from users, add to merchant_customer and create rake task to migrate this to merchant..customer
-
-surya
-- can I migrate my jobs?
-- use custom method to get campaign users
-- Implement reminders
-- try out new trumbowyg...so we can order emojis
-- break up managed account form - http://thecodeplayer.com/walkthrough/jquery-multi-step-form-with-progress-bar
-- can we merge the single layout...we need it to start ui integration
-- add color plugin
-
-Ovo
-- add to list from user profile - http://rhombus-test.webflow.io/customer-profile
-- shouldn't be able to edit default segments
-
-Edwin
-- Create page to show lists of reminders and edit a reminder
-- did you go with tightening validation? we might need to tighten date client side validation...noticed images are removed on validation fail...that's fine
-
 
 Review
 - campaign_user_list (can better track failures) or notification_log or add an email model??
