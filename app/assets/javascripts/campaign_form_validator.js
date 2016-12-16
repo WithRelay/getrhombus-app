@@ -17,14 +17,31 @@ $(document).on('ready page:load', function() {
           }
         }
       },
-      // 'campaign[subject]': {
-      //   enable: $('#campaign_channel').val()== 3,
-      //   validators: {
-      //     notEmpty: {
-      //       message: 'Subject is required'
-      //     }
-      //   }
-      // },
+      'campaign[subject]': {
+        validators: {
+          callback: {
+            callback: function (value, validator, $field) {
+              if ($('#campaign_channel').val() == 3) {
+                if ($('#campaign_subject').val().length > 0) {
+                  return {
+                    valid: true, 
+                    //message: 'Valid number'
+                  }
+                } else {
+                  return {
+                    valid: false,
+                    message: "Subject is required"
+                  }
+                }
+              } else {
+                return { 
+                  valid: true 
+                }
+              }
+            }
+          }
+        }
+      },
       'campaign[list_name]': {
         validators: {
           notEmpty: {
@@ -40,9 +57,45 @@ $(document).on('ready page:load', function() {
         }
       }
     }
-  })  .on('change', function(e) {
-      $('#new_campaign').formValidation('resetField', 'campaign[text]');
-    })
+  });
+
+  $("#trumbowyg").on('keyup', function(e) {
+    $('#new_campaign').formValidation('resetField', 'campaign[text]');
+  });
+
+  // bind emoji to textarea
+  /*var reply_body_emoji_box = $('#saved-reply-body-field').emojioneArea({
+    pickerPosition: 'bottom',
+  });
+
+
+  function set_title_and_body() {
+    $('#saved-reply-title-field').val($('#saved-reply-title-' + id).text());
+    reply_body_emoji_box[0].emojioneArea.setText($('#saved-reply-body-' + id).text());
+  }*/
+
+  /*$('#trumbowyg')[0].emojioneArea.events: {
+    /**
+     * @param {jQuery} editor EmojioneArea input
+     * @param {Event} event jQuery Event object
+     */
+   /* focus: function (editor, event) {
+      console.log('event:focus');
+    }setText($('#saved-reply-body-' + id).text());
+    */ 
+
+  $("#trumbowyg").emojioneArea({
+  events: {
+    /**
+     * @param {jQuery} editor EmojioneArea input
+     * @param {Event} event jQuery Event object
+     */
+    focus: function (editor, event) {
+      console.log('event:focus');
+    }
+  }
+})
+
 
   // this is actually for campaigns not lists but uses lists
   // http://selectize.github.io/selectize.js/
@@ -80,11 +133,7 @@ $(document).on('ready page:load', function() {
         success: function(res) { callback(res['lists']); }
       });
     }
-  })
-  .on('change', function(e) {
-    $('#new_campaign').formValidation('resetField', 'campaign[list_name]');
-  })
-
+  });
 
   // prefill form with previous lists
   $.each(campaign_lists, function (index, val) {

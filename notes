@@ -29,12 +29,10 @@ Taiwo (review)
 
 surya
 - can I migrate my jobs?
-- did you go with tightening validation? we might need to tighten date client side validation...noticed images are removed on validation fail...that's fine
-- you have to clikc submit button twice
 - use custom method to get campaign users
-- is CampaignUserList being used?
-- emoji scroll bar issue
-- Implement Reminders
+- Implement reminders
+
+- emoji scroll bar issue - currently unfixable
 
 Ovo
 - add to list from user profile - http://rhombus-test.webflow.io/customer-profile
@@ -42,6 +40,7 @@ Ovo
 
 Edwin
 - Create page to show lists of reminders and edit a reminder
+- did you go with tightening validation? we might need to tighten date client side validation...noticed images are removed on validation fail...that's fine
 
 
 Review
