@@ -40,10 +40,9 @@ $(document).on('ready page:load', function() {
         }
       }
     }
-  }).on('submit', function(e) {
-    $('#new_campaign').formValidation('revalidateField', 'campaign[text]');
-  })
-
+  })  .on('change', function(e) {
+      $('#new_campaign').formValidation('resetField', 'campaign[text]');
+    })
 
   // this is actually for campaigns not lists but uses lists
   // http://selectize.github.io/selectize.js/
@@ -84,9 +83,9 @@ $(document).on('ready page:load', function() {
   })
   .on('change', function(e) {
     $('#new_campaign').formValidation('resetField', 'campaign[list_name]');
-
   }).on('submit', function(e) {
     $('#new_campaign').formValidation('revalidateField', 'campaign[list_name]');
+
   })
 
 
