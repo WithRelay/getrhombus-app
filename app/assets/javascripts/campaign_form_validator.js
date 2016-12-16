@@ -83,9 +83,6 @@ $(document).on('ready page:load', function() {
   })
   .on('change', function(e) {
     $('#new_campaign').formValidation('resetField', 'campaign[list_name]');
-  }).on('submit', function(e) {
-    $('#new_campaign').formValidation('revalidateField', 'campaign[list_name]');
-
   })
 
 
