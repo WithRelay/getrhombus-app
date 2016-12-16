@@ -4,7 +4,7 @@ module SendEmail
 
     def initialize(campaign)
       @campaign = campaign
-      @campaign_service = Campaign::SendCampaign.new(@campaign)
+      @campaign_service = ChannelCampaign::SendCampaign.new(@campaign)
     end
 
     def send_campaign
