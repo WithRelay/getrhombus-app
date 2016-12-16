@@ -52,4 +52,6 @@
 //= require jquery.caret.js
 //= require jquery.atwho.js
 //= require dashboard/messaging_angularjs/messaging.js
+//= require bootstrap-select
+//= require moment
 //= require_tree .

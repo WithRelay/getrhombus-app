@@ -3,7 +3,6 @@
 class CampaignsController < ApplicationController
   before_action :find_campaign, only: [ :update, :destroy, :change_status ]
   before_action :check_campaign_status, only: [ :update, :destroy, :change_status]
-  layout 'campaign'
 
   # @campaigns contains array of campaign of the associated users
   def index
