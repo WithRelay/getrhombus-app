@@ -59,42 +59,9 @@ $(document).on('ready page:load', function() {
     }
   });
 
-  $("#trumbowyg").on('keyup', function(e) {
+  $("#trumbowyg").on('change', function(e) {
     $('#new_campaign').formValidation('resetField', 'campaign[text]');
   });
-
-  // bind emoji to textarea
-  /*var reply_body_emoji_box = $('#saved-reply-body-field').emojioneArea({
-    pickerPosition: 'bottom',
-  });
-
-
-  function set_title_and_body() {
-    $('#saved-reply-title-field').val($('#saved-reply-title-' + id).text());
-    reply_body_emoji_box[0].emojioneArea.setText($('#saved-reply-body-' + id).text());
-  }*/
-
-  /*$('#trumbowyg')[0].emojioneArea.events: {
-    /**
-     * @param {jQuery} editor EmojioneArea input
-     * @param {Event} event jQuery Event object
-     */
-   /* focus: function (editor, event) {
-      console.log('event:focus');
-    }setText($('#saved-reply-body-' + id).text());
-    */ 
-
-  $("#trumbowyg").emojioneArea({
-  events: {
-    /**
-     * @param {jQuery} editor EmojioneArea input
-     * @param {Event} event jQuery Event object
-     */
-    focus: function (editor, event) {
-      console.log('event:focus');
-    }
-  }
-})
 
 
   // this is actually for campaigns not lists but uses lists

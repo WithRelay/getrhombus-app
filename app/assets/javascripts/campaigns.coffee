@@ -112,7 +112,7 @@ class Campaign
     if $(@textArea).length > 0
       txtEmoji = $(@textArea).emojioneArea ->
                    @emojiConfig
-
+                   
   removeDiv = ->
     $('#undefined_counter').each ->
       $(this).remove()
