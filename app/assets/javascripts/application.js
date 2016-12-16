@@ -9,47 +9,47 @@
 //
 // Read Sprockets README (https://github.com/sstephenson/sprockets#sprockets-directives) for details
 // about supported directives.
-//
 
+// Angular js libraries and dependencies and other js
+//
 //= require pubnub/pubnub.min.js
 //= require jquery
-//= require pnotify
-//= require flashes
-//= require pagination
-//= require stripe
-//= require credit_card_form
-//= require plan
-//= require coupon
-//= require subscription
+//= require angularjs/angular.min.js
+//= require angularjs/angular-route.min.js
+//= require angularjs/angular-scrollglue.js
+//= require angular-rails-templates
 //= require jquery_ujs
+//= require pubnub/pubnub-angular.js
+//= require dashboard/messaging_angularjs/angularUpwardScroll.js
+//= require dashboard/messaging_angularjs/messagingApp.js
+//= require dashboard/messaging_angularjs/messagingControllers.js
+//= require dashboard/messaging_angularjs/messagingFilters.js
+//= require_tree ./dashboard/messaging_angularjs/templates
+
+// used for client sie form validation
+//
+//= require formValidation.min
+//= require bootstrap-formvalidator.min
+
+// Other js files require tree is included so no need to include all the files in the folder tree
+//
+//= require pnotify
 //= require jquery.lightbox_me
 //= require intlTelInput.min
-//= require phone_number_formatter
 //= require chartist
 //= require jquery.payment
-//= require url-parameters
-//= require managed-account
-//= require location
 //= require cocoon
-//= require fb_page
-//= require image_validator
-//= require campaigns
 //= require jquery_word_counter
-//= require custom_trumbowyg_plugin
 //= require trumbowyg.min
 //= require emojify
-//= require campaign_form_validator
 //= require emojionearea
 //= require trumbowyg_emoji_plugin
 //= require trumbowyg.upload.min
-//= require saved_replies
-//= require message_resolutions
 //= require selectize
-//= require lists
 //= require alerts
-//= require hashtags_plans_coupons_alerts
 //= require jquery.checkboxes-1.2.0.min.js
-//= require refund
 //= require add-user
-//= require util_functions
-//= require images
+//= require jquery.caret.js
+//= require jquery.atwho.js
+//= require dashboard/messaging_angularjs/messaging.js
+//= require_tree .
