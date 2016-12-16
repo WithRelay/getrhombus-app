@@ -7,7 +7,7 @@
         var i=n.scrollHeight;
         o.$apply(c.upwardsScoll)
         // This code is added later
-        if (i >=3224 && $('.messageStatus').html().trim() == ""){
+        if ($('.messageStatus').html().trim() == ""){
           r.scrollTop(208);
         }
         // This is a plugin code commented which was not working.
