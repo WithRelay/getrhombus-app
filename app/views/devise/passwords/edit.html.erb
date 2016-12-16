@@ -1,21 +1,16 @@
 
   <!-- ========== Css Files ========== -->
   <% provide(:title, 'Rhombus - Change Password') %>
-  <%= content_for :head do %>
-    <%= stylesheet_link_tag "application_dashboard_messaging", media: "all" %>
-  <% end %>
-  
+
   <style type="text/css">
     body{background: #F5F5F5;}
   </style>
 
 
-<body> 
-
   <%= devise_error_messages! %>
   <%= render 'shared/full_messages' %>
 
-  
+
     <div class="login-form">
     <%= form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :put, :id => 'changePasswordForm'}) do |f| %>
     <%= f.hidden_field :reset_password_token %>
@@ -38,7 +33,6 @@
       </div>
     </div>
 
-</body>
 
 
 <%#= form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :put }) do |f| %>
