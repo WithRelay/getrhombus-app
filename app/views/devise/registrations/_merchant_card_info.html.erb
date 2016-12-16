@@ -1,12 +1,9 @@
 <!-- ========== Css Files ========== -->
 <% provide(:title, 'Rhombus - Payment Info') %>
-<%= content_for :head do %>
-<%= stylesheet_link_tag "application_dashboard_messaging", media: "all" %>
-<% end %>
+
 <style type="text/css">
   body{background: #F5F5F5;}
 </style>
-<body>
   <div class="" id="userProfile1">
     <div class="login-form newForms">
       <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put, id: "cc-form", :autocomplete => "off" }) do |f| %>
@@ -52,5 +49,3 @@
     </div>
     <div id="signout1"><%= link_to "LOG OUT", destroy_user_session_path, method: :delete %></div>
   </div>
-</body>
-</html>

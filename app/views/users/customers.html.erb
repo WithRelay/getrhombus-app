@@ -1,10 +1,6 @@
 <%= provide(:title, "Rhombus - Customers") %>
 
 <!-- ========== Css Files ========== -->
-  
-<%= content_for :head do %>
-  <%= stylesheet_link_tag "application_dashboard_messaging", media: "all" %>
-<% end %>
 
 <body>
   <!-- Start Page Loading -->
@@ -16,7 +12,7 @@
 
 
 
- <!-- //////////////////////////////////////////////////////////////////////////// --> 
+ <!-- //////////////////////////////////////////////////////////////////////////// -->
 <!-- START CONTENT -->
 <div class="content">
 
@@ -27,7 +23,7 @@
     <%= render 'shared/dashboard_shortcut' %>
   </div>
 
- <!-- //////////////////////////////////////////////////////////////////////////// --> 
+ <!-- //////////////////////////////////////////////////////////////////////////// -->
     <!-- START CONTAINER -->
     <div class="" id="transactions-column">
 
@@ -107,7 +103,7 @@
               <option value ="contacts_with_account">
                 Contacts with accounts
               </option>
-              <option value="contacts_without_account"> 
+              <option value="contacts_without_account">
                 Contacts without accounts
               </option>
               <option value ="last_msg_received">Last message received
@@ -125,7 +121,7 @@
               <option value="between">Between</option>
             </select>
           <p></p>
-           <input type="text" id="num_days" style="width: 10%" 
+           <input type="text" id="num_days" style="width: 10%"
              size="5" placeholder="Days ago"> </input>
             <p></p>
             Filter segment by
@@ -138,12 +134,12 @@
               <option value="between">Between</option>
             </select>
           </p>
-           <input type="text" id="amount_1" style="width: 10%" 
-             size="5" placeholder="Amount"> 
-           </input> 
-           <input type="text" id="amount_2" style="width: 10%" 
-             size="5" placeholder="Amount"> 
-           </input> 
+           <input type="text" id="amount_1" style="width: 10%"
+             size="5" placeholder="Amount">
+           </input>
+           <input type="text" id="amount_2" style="width: 10%"
+             size="5" placeholder="Amount">
+           </input>
           <p></p>
             <input id="name_segment" type ="button" value="Create segment"></input>
         </p>
@@ -154,7 +150,7 @@
       <!-- End Row -->
     </div>
     <!-- END CONTAINER -->
-     <!-- //////////////////////////////////////////////////////////////////////////// --> 
+     <!-- //////////////////////////////////////////////////////////////////////////// -->
 
      <br><br><br><br><br><br><br><br><br><br><br><br>
      <br><br><br><br><br><br>
@@ -164,7 +160,7 @@
 
 </div>
 <!-- End Content -->
- <!-- //////////////////////////////////////////////////////////////////////////// --> 
+ <!-- //////////////////////////////////////////////////////////////////////////// -->
 
 <!-- Create List form -->
 <div id="list_create_modal" class="list_modal">
@@ -178,10 +174,10 @@
             <%= hidden_field_tag(:list_type, 'list') %>
             <%= text_field_tag(:list_name) %>
             <%= submit_tag("Submit list") %>
-           <%= button_tag(type: 'button', class: 'cancel') do 
+           <%= button_tag(type: 'button', class: 'cancel') do
                 content_tag(:strong, "Cancel")
-              end 
-          %>         
+              end
+          %>
           <% end %>
         </div>
     </div>
@@ -204,9 +200,9 @@
             <%= hidden_field_tag(:amt_2) %>
             <%= text_field_tag(:segment_name) %>
             <%= submit_tag("Create segment") %>
-            <%= button_tag(type: 'button', class: 'cancel') do 
+            <%= button_tag(type: 'button', class: 'cancel') do
                 content_tag(:strong, "Cancel")
-              end 
+              end
             %>
           <% end %>
       </div>

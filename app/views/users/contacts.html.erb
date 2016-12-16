@@ -1,8 +1,5 @@
 <%= provide(:title, "Rhombus - Contacts") %>
 <!-- ========== Css Files ========== -->
-<%= content_for :head do %>
-<%= stylesheet_link_tag "application_dashboard_messaging", media: "all" %>
-<% end %>
 <body>
   <!-- Start Page Loading -->
   <div class="loading"><img src="<%= asset_path 'loading.gif' %>" alt="loading-img"></div>
@@ -21,7 +18,7 @@
       height: auto !important;
     }
   </style>
-  <!-- //////////////////////////////////////////////////////////////////////////// --> 
+  <!-- //////////////////////////////////////////////////////////////////////////// -->
   <!-- START CONTENT -->
   <div class="content">
   <!-- Start Page Header -->
@@ -30,7 +27,7 @@
     <%= render 'shared/dashboard_shortcut' %>
   </div>
   <!-- End Page Header -->
-  <!-- //////////////////////////////////////////////////////////////////////////// --> 
+  <!-- //////////////////////////////////////////////////////////////////////////// -->
   <!-- START CONTAINER -->
   <div class="" id="transactions-column">
     <!-- Start Row -->
@@ -47,7 +44,7 @@
             <input type="text" class="form-control rhombusFocus" name="user[email]" placeholder="Email">
           </div>
 
-          <input type="hidden" class="form-control rhombusFocus" name="user[first_name]" id="firstName">        
+          <input type="hidden" class="form-control rhombusFocus" name="user[first_name]" id="firstName">
           <input type="hidden" class="form-control rhombusFocus" name="user[last_name]" id="lastName">
 
           <div class="form-group">
@@ -119,7 +116,7 @@
         </form>
 
 
-        
+
       </div>
       <!-- Start Panel -->
       <div class="col-md-12">
@@ -138,8 +135,8 @@
       <th>Phone #</th>
       <th>Email</th>
       <th>First Conversation (ET)</th>
-      <th>Last Conversation</th>   
-      <th># Messages</th>    
+      <th>Last Conversation</th>
+      <th># Messages</th>
       </tr>
       </thead>
       <tbody>
@@ -170,12 +167,12 @@
       <!-- End Row -->
     </div>
     <!-- END CONTAINER -->
-    <!-- //////////////////////////////////////////////////////////////////////////// --> 
+    <!-- //////////////////////////////////////////////////////////////////////////// -->
     <br><br><br><br><br><br><br><br><br><br><br><br>
     <br><br><br><br><br><br>
     <%= render 'shared/dashboard_footer' %>
   </div>
   <!-- End Content -->
-  <!-- //////////////////////////////////////////////////////////////////////////// --> 
+  <!-- //////////////////////////////////////////////////////////////////////////// -->
 </body>
 </html>

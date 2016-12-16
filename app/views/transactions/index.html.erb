@@ -1,53 +1,36 @@
 <%= provide(:title, "Rhombus - Transactions") %>
-
 <!-- ========== Css Files ========== -->
-  
-<%= content_for :head do %>
-  <%= stylesheet_link_tag "application_dashboard_messaging", media: "all" %>
-<% end %>
-
-  <body>
   <!-- Start Page Loading -->
   <div class="loading"><img src="<%= asset_path 'loading.gif' %>" alt="loading-img"></div>
   <!-- End Page Loading -->
-
  <%= render 'shared/header_new' %>
-  <%= render 'shared/sidebar' %>
+ <%= render 'shared/sidebar' %>
 
- <!-- //////////////////////////////////////////////////////////////////////////// --> 
-<!-- START CONTENT -->
-<div class="content">
-  
+ <!-- //////////////////////////////////////////////////////////////////////////// -->
+ <!-- START CONTENT -->
+ <div class="content">
   <!-- Start Page Header -->
   <div class="page-header" style="background: transparent; margin-bottom: 0px;">
     <div class="title" style="font-weight: normal;">Transactions</div>
-
-
-  <!-- CSV upload -->
-  <form id="csv-upload-form" action="/v1/users/add_customers.csv" method="POST">
-    <input type="file" id="csv-file-select" name="csv" accept=".csv"/>
-    <button type="submit" id="csv-upload-button">Upload</button>
-  </form>
-
-
+      <!-- CSV upload -->
+      <form id="csv-upload-form" action="/v1/users/add_customers.csv" method="POST">
+        <input type="file" id="csv-file-select" name="csv" accept=".csv"/>
+        <button type="submit" id="csv-upload-button">Upload</button>
+      </form>
 
     <%= render 'shared/dashboard_shortcut' %>
-  </div>
-  <!-- End Page Header -->
-
- <!-- //////////////////////////////////////////////////////////////////////////// --> 
-  
+    </div>
+    <!-- End Page Header -->
+ <!-- //////////////////////////////////////////////////////////////////////////// -->
   <!-- START CONTAINER -->
   <div class="" id="transactions-column" data-level="<%= current_user.user_level %>">
-
    <!-- Start Row -->
     <div class="row">
-
       <!-- Start Panel -->
       <div class="col-md-12">
         <% unless @transactions.blank? %>
-          <div class="panel panel-default">
 
+          <div class="panel panel-default">
             <div class="panel-title">
               <ul class="panel-tools">
                 <li><a class="icon expand-tool"><i class="fa fa-expand"></i></a></li>
@@ -60,10 +43,10 @@
                   <tr role="row">
                     <td class="text-center"><i class="fa fa-trash" style="visibility: hidden;"></i></td>
                     <th>Date (ET)</th>
-                    <th><%= (current_user.user_level == 0) ? "Business" : "Card Name" %></th>
+                    <th><%= current_user.is_customer? ? "Business" : "Card Name" %></th>
                     <th>Message</th>
                     <th>Phone #</th>
-                    <th><%= (current_user.user_level == 0) ? "Rhombus #" : "Amt Paid" %></th>
+                    <th><%= current_user.is_customer? ? "Rhombus #" : "Amt Paid" %></th>
                     <th>Last Four</th>
                   </tr>
                 </thead>
@@ -79,10 +62,10 @@
                         data-page="transactions"
                       ></td>
                       <td><%= t.created_at.strftime("%m/%d/%Y") %></td>
-                      <td><%= (current_user.user_level == 0) ? t.org_name : t.card_name %></td>
+                      <td><%= current_user.is_customer? ? t.org_name : t.card_name %></td>
                       <td><%= t.notes %></td>
-                      <td><%= (current_user.user_level == 0) ? t.org_phone : t.phone_number %></td>
-                      <td><%= (current_user.user_level == 0) ? t.rhombus_number : t.amount_less_fees %></td>
+                      <td><%= current_user.is_customer? ? t.org_phone : t.phone_number %></td>
+                      <td><%= current_user.is_customer? ? t.rhombus_number : t.amount_less_fees %></td>
                       <td><%= t.last4 %></td>
                     </tr>
                   <% end %>
@@ -94,7 +77,7 @@
         <% else %>
           <div class="center">
             <img src="<%= asset_path 'no-transactions.png' %>" alt="no transaction">
-            <div class="no-user"><%= (current_user.user_level == 0) ? "You have no payments :(" : "You have no transactions :(" %></div>
+            <div class="no-user"><%= current_user.is_customer? ? "You have no payments :(" : "You have no transactions :(" %></div>
           </div>
         <% end %>
       </div>
@@ -104,7 +87,7 @@
     <!-- End Row -->
   </div>
   <!-- END CONTAINER -->
-   <!-- //////////////////////////////////////////////////////////////////////////// --> 
+   <!-- //////////////////////////////////////////////////////////////////////////// -->
     <br><br><br><br><br><br><br><br><br><br><br><br>
        <br><br><br><br><br><br>
 
@@ -112,7 +95,7 @@
 
 </div>
 <!-- End Content -->
- <!-- //////////////////////////////////////////////////////////////////////////// --> 
+ <!-- //////////////////////////////////////////////////////////////////////////// -->
 
 <%= render 'refund_box' %>
 
@@ -158,14 +141,3 @@
         });
   });
 </script>
-
-
-
-
-
-
-
-
-
-</body>
-</html>

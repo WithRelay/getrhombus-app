@@ -1,22 +1,14 @@
 <%= provide(:title, "Rhombus - Businesses") %>
-
 <!-- ========== Css Files ========== -->
-  
-<%= content_for :head do %>
-  <%= stylesheet_link_tag "application_dashboard_messaging", media: "all" %>
-<% end %>
-
-<body>
   <!-- Start Page Loading -->
   <div class="loading"><img src="<%= asset_path 'loading.gif' %>" alt="loading-img"></div>
   <!-- End Page Loading -->
-
  <%= render 'shared/header_new' %>
   <%= render 'shared/sidebar' %>
 
 
 
- <!-- //////////////////////////////////////////////////////////////////////////// --> 
+ <!-- //////////////////////////////////////////////////////////////////////////// -->
 <!-- START CONTENT -->
 <div class="content">
 
@@ -27,7 +19,7 @@
     <%= render 'shared/dashboard_shortcut' %>
   </div>
 
- <!-- //////////////////////////////////////////////////////////////////////////// --> 
+ <!-- //////////////////////////////////////////////////////////////////////////// -->
     <!-- START CONTAINER -->
     <div class="" id="transactions-column">
 
@@ -93,7 +85,7 @@
       <!-- End Row -->
     </div>
     <!-- END CONTAINER -->
-     <!-- //////////////////////////////////////////////////////////////////////////// --> 
+     <!-- //////////////////////////////////////////////////////////////////////////// -->
 
      <br><br><br><br><br><br><br><br><br><br><br><br>
      <br><br><br><br><br><br>
@@ -103,8 +95,4 @@
 
 </div>
 <!-- End Content -->
- <!-- //////////////////////////////////////////////////////////////////////////// --> 
-
-
-</body>
-</html>
+ <!-- //////////////////////////////////////////////////////////////////////////// -->

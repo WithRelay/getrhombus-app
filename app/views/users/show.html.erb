@@ -1,21 +1,16 @@
 <%= provide(:title, "Rhombus - Dashboard") %>
 
 <!-- ========== Css Files ========== -->
-  
-<%= content_for :head do %>
-    <%= stylesheet_link_tag "application_dashboard_messaging", media: "all" %>
-<% end %>
-
 <body>
 
 <!-- Start Page Loading -->
   <div class="loading"><img src="<%= asset_path 'loading.gif' %>" alt="loading-img"></div>
   <!-- End Page Loading -->
-  
+
 <%= render 'shared/header_new' %>
 <%= render 'shared/sidebar' %>
 
- <!-- //////////////////////////////////////////////////////////////////////////// --> 
+ <!-- //////////////////////////////////////////////////////////////////////////// -->
 <!-- START CONTENT -->
 <div class="content">
 
@@ -38,8 +33,8 @@
       });
     </script>
 
-    
-    <!-- twilio stuff 
+
+    <!-- twilio stuff
       <%#= @token %>
       <script type="text/javascript"
         src="//static.twilio.com/libs/twiliojs/1.2/twilio.min.js"></script>
@@ -49,20 +44,20 @@
       <link href="//static0.twilio.com/resources/quickstart/client.css"
         type="text/css" rel="stylesheet" />
       <script type="text/javascript">
-    
+
       /* Create the Client with a Capability Token */
       Twilio.Device.setup("<%= @token %>", {debug: true});
-   
+
       /* Let us know when the client is ready. */
       Twilio.Device.ready(function (device) {
           $("#log").text("Ready");
       });
-   
+
       /* Report any errors on the screen */
       Twilio.Device.error(function (error) {
           $("#log").text("Error: " + error.message);
       });
-   
+
       Twilio.Device.connect(function (conn) {
           $("#log").text("Successfully established call");
       });
@@ -78,7 +73,7 @@
         // accept the incoming connection and start two-way audio
         conn.accept();
       });
-   
+
       /* Connect to Twilio when we call this function. */
       function call() {
           Twilio.Device.connect();
@@ -97,11 +92,11 @@
       <button class="hangup" onclick="hangup();">
           Hangup
       </button>
-    
+
       <div id="log" style="height: 50px;">Loading pigeons...</div>
 
       <br><br><br><br><br><br><br><br><br><br><br>
-       twilio change 
+       twilio change
     -->
 
 
@@ -111,7 +106,7 @@
   <!-- End Page Header -->
 
 
- <!-- //////////////////////////////////////////////////////////////////////////// --> 
+ <!-- //////////////////////////////////////////////////////////////////////////// -->
 <!-- START CONTAINER -->
 <div class="container-widget">
 
@@ -235,7 +230,7 @@
                 <th class="text-center"><i class="fa fa-trash" style="visibility: hidden;"></i></th>
                 <th>Date (ET)</th>
                 <th>Description</th>
-                <th>Message</th>              
+                <th>Message</th>
               </tr>
             </thead>
             <tbody>
@@ -258,7 +253,7 @@
 
 
 
-   
+
 
   </div>
   <!-- End Row -->
@@ -332,14 +327,14 @@
 
 </div>
 <!-- END CONTAINER -->
- <!-- //////////////////////////////////////////////////////////////////////////// --> 
+ <!-- //////////////////////////////////////////////////////////////////////////// -->
 
 <%= render 'shared/dashboard_footer' %>
 
 
 </div>
 <!-- End Content -->
- <!-- //////////////////////////////////////////////////////////////////////////// --> 
+ <!-- //////////////////////////////////////////////////////////////////////////// -->
 
 
 

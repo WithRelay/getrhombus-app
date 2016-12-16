@@ -1,58 +1,38 @@
 <!DOCTYPE html>
-<!-- This site was created in Webflow. http://www.webflow.com-->
-<!-- Last Published: Fri May 08 2015 02:25:53 GMT+0000 (UTC) -->
-<html data-wf-site="55398a823ca1c17b4205500b" data-wf-page="55398a823ca1c17b4205500d">
+<html data-wf-site='55398a823ca1c17b4205500b' data-wf-page='55398a823ca1c17b4205500d'>
+  <head>
+    <meta charset='UTF-8'>
+    <title><%= content_for?(:title) ? yield(:title) : 'Rhombus - Conversation Commerce Platform' %></title>
+    <meta name='description' content='Exchange real-time text messages, and accept payments from your customers – all within the conversation.'>
+    <meta name='keywords' content='sms, conversational commerce, payments, text message, pay, chat, Make payments via text messages'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
 
-<head>
-  <meta charset="utf-8">
-  <title><%= content_for?(:title) ? yield(:title) : "Rhombus - Conversation Commerce Platform" %></title>
-  <meta name="description" content="Exchange real-time text messages, and accept payments from your customers – all within the conversation.">
-  <meta name="keywords" content="sms, conversational commerce, payments, text message, pay, chat">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="generator" content="Webflow">
-  <%= favicon_link_tag "favicon.ico" %>
+    <%= favicon_link_tag 'favicon.ico' %>
 
-  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
-  <%= stylesheet_link_tag "application", media: "all" %>
+    <%= stylesheet_link_tag 'application', media: 'all' %>
+    <%= stylesheet_link_tag 'https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css' %>
 
-  <%= yield :head %>
+    <%= yield :head %>
 
-  <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js"></script>
-  <script>
-      WebFont.load({
-        google: {
-          families: ["PT Serif:400,400italic,700,700italic"]
-        }
-      });
-  </script>
+    <%# needs to go before custom.js %>
+    <%= javascript_include_tag "application" %>
+    <%= javascript_include_tag 'https://ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js' %>
+    <%= javascript_include_tag 'https://cdnjs.cloudflare.com/ajax/libs/danialfarid-angular-file-upload/12.2.12/ng-file-upload-all.min.js', integrity: 'sha256-ktd4ChVnmURgRrtZc6nd5lxjjbclQIE29x5Ex4I/76g', crossorigin: 'anonymous' %>
+    <%= javascript_include_tag 'https://cdnjs.cloudflare.com/ajax/libs/angucomplete-alt/2.5.0/angucomplete-alt.min.js', integrity: 'sha256-vmEdXKZ4fjH96do5nyrOOJhzKIAq+uCzuzdcq3q/TfE=', crossorigin: 'anonymous' %>
+    <%= javascript_include_tag 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js' %>
+    <%= javascript_include_tag 'https://cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js' %>
+    <%= javascript_include_tag 'https://js.stripe.com/v2/' %>
+    <script> WebFont.load({ google: { families: [ 'PT Serif:400,400italic,700,700italic'] } }); </script>
 
-  <%= javascript_include_tag "application" %>
+    <%= yield :head_script %>
 
-  <%# needs to go before custom.js %>
-  <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-  <script type="text/javascript" src="https://cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
+    <%= csrf_meta_tags %>
 
-  <%= javascript_include_tag "formValidation.min.js" %>
-  <%= javascript_include_tag "bootstrap-formvalidator.min.js" %>
-
-  <%= javascript_include_tag "bootstrap-select" %>
-  <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
-  <%= javascript_include_tag "custom" %>
-  <%= javascript_include_tag "modernizr" %>
-  <%= javascript_include_tag "webflow" %>
-
-  <%= yield :head_script %>
-
-  <%= csrf_meta_tags %>
-
-</head>
-<body>
-
+  </head>
+  <body>
     <%= yield %>
-
     <%= render 'shared/smooch' %>
     <%= render 'shared/google_analytics' %>
     <%= render 'shared/flash_messages'%>
-
-</body>
+  </body>
 </html>
