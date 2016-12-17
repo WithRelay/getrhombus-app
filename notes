@@ -37,6 +37,7 @@ Ovo
 Edwin
 - Create pages to show lists (with edit and delete links) of reminders and edit a reminder - no modal
 - did you go with tightening validation? we might need to tighten date client side validation...noticed images are removed on validation fail...that's fine
+- we need page loader
 
 Taiwo (review)
 - review stripe_events
