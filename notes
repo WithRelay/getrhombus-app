@@ -11,8 +11,6 @@ Bhishma
 - for indexes
 	- will fb_id in fb_creds be unique? 
 	- do we need fb_cred_id in fb_pages? 
-- Twilio
-	- twilio has a way to distribute bulk messages over different numbers. Is there an api for that or they do it by default?	
 
 surya
 - can I migrate my jobs?
@@ -20,10 +18,11 @@ surya
 	- use custom method to get campaign users for all channels - it now return array of hashes of user objects
 	- move send messenger campaign code from services. You might need to restructure and rename your classes..so things are clearer. 
 	- Implement SMS/MMS channel. They are ready. 
+	- wipe subject if campaign is not email - serverside
 - Upgrade Trumbowyg
 	- so we can use new ordered emojis (generate unicode in the same order in the emoji plugin file)
 	- so we can get the scroll bar fix - i raised an issue here - https://github.com/Alex-D/Trumbowyg/issues/458
-	- add color plugin
+	- add color plugins
 - Implement Reminders
 	- Like campaigns but uses api to create reminder
 	- Reminders index, edit, update and destroy are needed. You can use the campaign controller for all these, but only reminder type campaigns show up in the index...the reverse is true for campaigns. And reminders has a reminder path.
@@ -35,9 +34,8 @@ Ovo
 - shouldn't be able to edit default segments
 
 Edwin
-- Create pages to show lists (with edit and delete links) of reminders and edit a reminder - no modal
-- did you go with tightening validation? we might need to tighten date client side validation...noticed images are removed on validation fail...that's fine
-- we need page loader
+- create pages to show lists (with edit and delete links) of reminders and edit a reminder - no modal
+- generate page loader
 
 Taiwo (review)
 - review stripe_events

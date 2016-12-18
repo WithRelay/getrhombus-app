@@ -100,6 +100,8 @@ $(document).on('ready page:load', function() {
         success: function(res) { callback(res['lists']); }
       });
     }
+  }).on('change', function(e) {
+    $('#new_campaign').formValidation('resetField', 'campaign[list_name]');
   });
 
   // prefill form with previous lists
