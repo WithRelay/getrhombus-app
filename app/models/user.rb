@@ -65,7 +65,8 @@ class User < ActiveRecord::Base
   has_many :messages
   has_many :merchant_conversations, class_name: 'Conversation', foreign_key: 'merchant_id'
 
-  has_many :plans
+  has_many :merchant_plans, class_name: 'Plan', foreign_key: 'merchant_id'
+  has_many :customer_plans, class_name: 'Plan', foreign_key: 'customer_id'
   has_many :coupons
 
   has_one :twitter_cred

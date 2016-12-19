@@ -1,16 +1,16 @@
 class Api::V1::PlansController < API::V1::BaseController
 
   def check_plan_name
-    res = current_user.plans.where("lower(name) = ?", params[:plan][:name].downcase)
+    res = current_user.merchant_plans.where("lower(name) = ?", params[:plan][:name].downcase)
     render json: { valid: res.empty? }
   end
 
   def get_plan
     begin
       if params[:name]
-        res = current_user.plans.where("lower(name) like ?", "%#{params[:name].downcase}%")
+        res = current_user.merchant_plans.where("lower(name) like ?", "%#{params[:name].downcase}%")
       else
-        res = current_user.plans
+        res = current_user.merchant_plans
       end
       render json: { "plans" => res }, status: 200
     rescue StandardError => e

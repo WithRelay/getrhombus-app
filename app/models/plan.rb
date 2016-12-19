@@ -1,10 +1,11 @@
 class Plan < ActiveRecord::Base
 
   has_many :subscriptions 
-  belongs_to :user
+  belongs_to :merchant, class_name: "User"
+  belongs_to :customer, class_name: "User"
 
   validates_presence_of :name, :interval, :interval_count, :amount
-  validates :name, uniqueness: { case_sensitive: false, scope: :user_id }
+  validates :name, uniqueness: { case_sensitive: false, scope: :merchant_id }
   validates_numericality_of :amount, :interval_count, greater_than: 0, only_integer: true
   after_create :create_plan_segment
 
@@ -17,15 +18,15 @@ class Plan < ActiveRecord::Base
       uid = team.get_team_uid # use this for real use
       
       descriptor = (self.name + "-" + team.org_name)[0..21]
-      
+
       # a customer or a team/merchant can create a plan
       _user_id = (hash.has_key? :customer) ? hash[:customer].id : hash[:team].id
-      
+
       # dont send team/merchant or customer data in hash
       [:team, :customer].each { |k| hash.delete(k) }
-      
+
       # Update so validations run before calling Stripe
-      self.update(user_id: _user_id, statement_descriptor: descriptor, currency: team.currency)
+      self.update(merchant_id: _user_id, statement_descriptor: descriptor, currency: team.currency)
 
       hash[:interval] = self.interval
       hash[:interval_count] = self.interval_count
@@ -93,7 +94,7 @@ class Plan < ActiveRecord::Base
   # Triggered after a plan is created to get the users who belong to that plan
   def create_plan_segment
     segment = DashboardMerchantQueries.get_plan_users(self.id)
-    l = List.new(name:self.name, user_id:user_id, segment:segment)
+    l = List.new(name:self.name, user_id:merchant_id, segment:segment)
     l.save
   end
 end
