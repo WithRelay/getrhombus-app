@@ -54,16 +54,13 @@ class FacebookMessengerService
               &fields=recipient\
               &account_linking_token=#{account_linking_token}"
         HTTParty.get(url)
-      rescue HTTParty::Error => err
+      # Exception: HTTParty::Error Inherits:StandardError
+      rescue StandardError => err
         nil
       end
     end
 
     def send_text_message(page_access_token, recipient_id, text)
-      #Using HTTParty
-      # page_access_token = "<redacted_facebook_access_token>"
-      # recipient_id = "<redacted_phone_number>"
-      # text = "welcome!!"
       body = {
         recipient: {
           id: recipient_id
@@ -128,8 +125,7 @@ class FacebookMessengerService
           headers: { 'Content-Type' => 'application/json' }}
         url = "https://graph.facebook.com/v2.7/me/messages?access_token=#{access_token}"
         HTTParty.post(url, options)
-      rescue HTTParty::Error => err
-        nil
+      rescue StandardError => err
       end
     end
 
@@ -137,7 +133,8 @@ class FacebookMessengerService
       begin
         page_graph = Koala::Facebook::API.new(page_token)
         page_graph.get_object(user_id)
-      rescue Koala::Facebook::APIError => err
+      # Exception: Koala::KoalaError Inherits:StandardError
+      rescue StandardError => err
       end
     end
 
@@ -146,8 +143,7 @@ class FacebookMessengerService
         response = Koala::Facebook::API.new(access_token)
         page_array = response.get_object('me/accounts/page')
         page_array
-      rescue Koala::Facebook::APIError => err
-        nil
+      rescue StandardError => err
       end
     end
 
@@ -156,8 +152,7 @@ class FacebookMessengerService
       begin
         graph = Koala::Facebook::API.new(access_token)
         graph.get_picture(id, type: :large)
-      rescue Koala::Facebook::APIError => err
-        nil
+      rescue StandardError => err
       end
     end
 
@@ -166,8 +161,7 @@ class FacebookMessengerService
         subscribe_page = Koala::Facebook::API.new page_access_token
         response = subscribe_page.put_connections("me","subscribed_apps")
         response
-      rescue Koala::Facebook::APIError => err
-        nil
+      rescue StandardError => err
       end
     end
 
@@ -176,8 +170,7 @@ class FacebookMessengerService
         subscribe_page = Koala::Facebook::API.new page_access_token
         response = subscribe_page.delete_connections("me","subscribed_apps")
         response
-      rescue Koala::Facebook::APIError => err
-        nil
+      rescue StandardError => err
       end
     end
 

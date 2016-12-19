@@ -112,7 +112,7 @@ class FbPagesController < ApplicationController
             fb_cred_id: current_user.fb_cred.id)
         end
       end
-    rescue Exception => e
+    rescue StandardError => e
     end
   end
 
@@ -125,7 +125,7 @@ class FbPagesController < ApplicationController
           page.destroy
         end
       end
-    rescue Exception => e
+    rescue StandardError => e
     end
   end
 end
