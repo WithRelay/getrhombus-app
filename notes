@@ -3,14 +3,12 @@ https://www.getrhombus.com/receive_delivery_report
 
 Bhishma
 - do we need the application controller code for messenger
-- fb_pages controller...dont rescue Exception...rescue standarderror
 - Plans/Subscriptions
-	- create subscription api modal for customer profile/messaging page ... customer name not needed
+	- create subscription api modal for customer profile/messaging page...
 	- Add logic for switching plans/subscriptions
 	- In plans, remove user_id, add merchant_id and customer_id to track customer plans
-- for indexes
-	- will fb_id in fb_creds be unique? 
-	- do we need fb_cred_id in fb_pages? 
+	- Add back cancel subscription now
+
 
 surya
 - can I migrate my jobs?
@@ -18,14 +16,15 @@ surya
 	- use custom method to get campaign users for all channels - it now return array of hashes of user objects
 	- move send messenger campaign code from services. You might need to restructure and rename your classes..so things are clearer. 
 	- Implement SMS/MMS channel. They are ready. 
-	- wipe subject if campaign is not email - serverside
+	- wipe subject if campaign is not email - serverside and you can wipe it in validation
+	- check for date on submit
 - Upgrade Trumbowyg
 	- so we can use new ordered emojis (generate unicode in the same order in the emoji plugin file)
 	- so we can get the scroll bar fix - i raised an issue here - https://github.com/Alex-D/Trumbowyg/issues/458
 	- add color plugins
 - Implement Reminders
 	- Like campaigns but uses api to create reminder
-	- Reminders index, edit, update and destroy are needed. You can use the campaign controller for all these, but only reminder type campaigns show up in the index...the reverse is true for campaigns. And reminders has a reminder path.
+	- Reminders index, edit, update and destroy are needed. You can use the campaign controller for all these, but only reminder type campaigns show up in the index...the reverse is true for campaigns. And reminders has a reminder path. http://rhombus-test.webflow.io/messaging-dashboard ...click on bell icon
 - Managed Account 
 	- break up form - http://thecodeplayer.com/walkthrough/jquery-multi-step-form-with-progress-bar
 
@@ -38,6 +37,7 @@ Edwin
 - generate page loader
 
 Taiwo (review)
+- for indexes - fb_id in fb_creds be unique? no 
 - review stripe_events
 - review merchant_customer_id in transactions and invoices
 - review managed account..
