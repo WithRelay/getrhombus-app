@@ -18,6 +18,9 @@
 //= require angularjs/angular-route.min.js
 //= require angularjs/angular-scrollglue.js
 //= require angular-rails-templates
+//= require plan
+//= require coupon
+//= require subscription
 //= require jquery_ujs
 //= require pubnub/pubnub-angular.js
 //= require dashboard/messaging_angularjs/angularUpwardScroll.js

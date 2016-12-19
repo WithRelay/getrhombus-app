@@ -8,10 +8,10 @@
       <td colspan="3"><%= present(plan).format_amount %></td>
       <td colspan="3"><%= plan.interval %></td>
       <td colspan="3"><%= plan.interval_count %></td>
-      <!-- <td><%= plan.currency %></td>
+      <!--
       <td><%#= link_to 'Show', user_plan_path(current_user, plan) %></td>
       -->
-      <td><%= link_to 'Update', edit_user_plan_path(current_user, plan), class: 'btn btn-info' %></td>
+      <td><%= link_to 'Update', edit_user_plan_path(current_user, plan), class: 'btn btn-info' , data: { disable_with: "<i class='fa fa-spinner fa-spin'></i>".html_safe }%></td>
       <td>
         <% if plan.subscription_id.blank? %>
           <%= link_to 'Delete Plan', user_plan_path(current_user, plan), method: :delete, class: "btn btn-danger delete-plan plan#{plan.id}", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i>Please wait...".html_safe } %>

@@ -5,9 +5,8 @@ jQuery(function() {
 
     $('.show_more').show().click(function() {
       var more_plans_url = $('.next_page').attr('href');
-      var $this = $(this); 
-      $this.button('loading');        
-      
+      var $this = $(this);
+      $this.button('loading');
       $.getScript(more_plans_url)
         .done(function(script) {})
         .fail(function() {

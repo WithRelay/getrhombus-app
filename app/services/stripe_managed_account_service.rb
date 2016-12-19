@@ -180,7 +180,6 @@ class StripeManagedAccountService < Struct.new( :user, :params )
   # additional owner attributes details like first_name, last_name
   # TODO Need refactor in future function is lengthy.
   def additional_owners
-    binding.pry
     additional_owner = []
     params[:people_attributes].each do |key, value|
       unless key == '0' # key 0 contains address for default legal entities not for additional owners address

@@ -22,7 +22,7 @@ class Plan < ActiveRecord::Base
       _user_id = (hash.has_key? :customer) ? hash[:customer].id : hash[:team].id
       
       # dont send team/merchant or customer data in hash
-      [:team, :customer].each { |k| hash.delete(k) } 
+      [:team, :customer].each { |k| hash.delete(k) }
       
       # Update so validations run before calling Stripe
       self.update(user_id: _user_id, statement_descriptor: descriptor, currency: team.currency)
