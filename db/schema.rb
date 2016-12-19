@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161214132324) do
+ActiveRecord::Schema.define(version: 20161219071236) do
 
   create_table "addresses", force: :cascade do |t|
     t.string   "street_address",   limit: 191
@@ -302,10 +302,11 @@ ActiveRecord::Schema.define(version: 20161214132324) do
   add_index "invoices", ["transaction_id"], name: "fk_rails_bbdcb50cdd", using: :btree
 
   create_table "lists", force: :cascade do |t|
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
     t.integer  "user_id",    limit: 4
     t.string   "name",       limit: 191
+    t.text     "segment",    limit: 65535
   end
 
   add_index "lists", ["user_id", "name"], name: "index_lists_on_user_id_and_name", unique: true, using: :btree
@@ -370,6 +371,16 @@ ActiveRecord::Schema.define(version: 20161214132324) do
   add_index "messages", ["user_id"], name: "index_messages_on_user_id", using: :btree
   add_index "messages", ["user_id_to"], name: "index_messages_on_user_id_to", using: :btree
 
+  create_table "next_plans", force: :cascade do |t|
+    t.integer  "user_id",    limit: 4
+    t.integer  "plan_id",    limit: 4
+    t.boolean  "status",     limit: 1
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
+  end
+
+  add_index "next_plans", ["plan_id"], name: "index_next_plans_on_plan_id", using: :btree
+
   create_table "notification_logs", force: :cascade do |t|
     t.integer  "notifiable_id",   limit: 4
     t.string   "notifiable_type", limit: 191
@@ -420,13 +431,15 @@ ActiveRecord::Schema.define(version: 20161214132324) do
     t.string   "statement_descriptor", limit: 22
     t.integer  "trial_period_days",    limit: 4,   default: 0
     t.integer  "hashtag_id",           limit: 4
-    t.integer  "user_id",              limit: 4,   default: 0, null: false
     t.datetime "created_at",                                   null: false
     t.datetime "updated_at",                                   null: false
+    t.integer  "merchant_id",          limit: 4
+    t.integer  "customer_id",          limit: 4
   end
 
-  add_index "plans", ["user_id", "name"], name: "index_plans_on_user_id_and_name", unique: true, using: :btree
-  add_index "plans", ["user_id"], name: "index_plans_on_user_id", using: :btree
+  add_index "plans", ["customer_id"], name: "index_plans_on_customer_id", using: :btree
+  add_index "plans", ["merchant_id"], name: "index_plans_on_merchant_id", using: :btree
+  add_index "plans", ["name"], name: "index_plans_on_user_id_and_name", unique: true, using: :btree
 
   create_table "referrers", force: :cascade do |t|
     t.string   "referrer_email", limit: 191
@@ -688,7 +701,6 @@ ActiveRecord::Schema.define(version: 20161214132324) do
   add_foreign_key "lists", "users"
   add_foreign_key "message_resolutions", "users"
   add_foreign_key "messages", "hashtags"
-  add_foreign_key "plans", "users"
   add_foreign_key "refunds", "transactions"
   add_foreign_key "subscriptions", "coupons"
   add_foreign_key "subscriptions", "plans"
