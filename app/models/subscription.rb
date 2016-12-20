@@ -79,6 +79,4 @@ class Subscription < ActiveRecord::Base
     end
   end
 
-  def downgrade_subscription(new_plan_id)
-  end
 end
