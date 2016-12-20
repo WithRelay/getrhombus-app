@@ -373,8 +373,6 @@ ActiveRecord::Schema.define(version: 20161220071221) do
     t.datetime "updated_at",           null: false
   end
 
-  add_index "next_plans", ["plan_id"], name: "index_next_plans_on_plan_id", using: :btree
-
   create_table "notification_logs", force: :cascade do |t|
     t.integer  "notifiable_id",   limit: 4
     t.string   "notifiable_type", limit: 191
