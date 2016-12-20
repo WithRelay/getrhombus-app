@@ -1,7 +1,5 @@
 <!-- Button trigger modal -->
 <%= button_tag 'Create Reminder', class: 'btn btn-primary', data: { toggle: :modal, target: '#myModalNorm' } %>
-
-<!-- Modal -->
 <div class="modal fade" id="myModalNorm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -15,39 +13,9 @@
         <hr>
           Set a reminder or notification that will go out to this customer at a future date. You can use this to automate appointment reminders, or bill payment reminders.
       </div>
-
-      <!-- Modal Body -->
-        <%= form_for [ current_user, @reminder ] do |f| %>
-        <div class="modal-body">
-
-          <div class="col-xs-5">
-            <%= f.label :Channel %>
-            <%= f.select :channel, channel_list(@reminder), selected: get_channel_enum_value(@reminder) %>
-          </div>
-
-          <div class="col-xs-5">
-            <%= f.label :text %>
-            <%= f.text_area :text %>
-          </div>
-
-          <div class="col-xs-5">
-            <%= f.text_field :date_time, class: 'daterange', value: present(@reminder).to_user_date_time %>
-          </div>
-
-          <%= f.label :One_Time %>
-          <%= f.radio_button :frequency_type, 0, id: 'oneTimeFrequency', checked: is_one_time_checked?(@reminder) %>
-
-          <%= f.label :Recurring %>
-          <%= f.radio_button :frequency_type, 1, id: 'recurringFrequency',  checked: is_recurring_checked?(@reminder) %>
-
-          <%= f.select :repeat_days, repeat_days_options, {}, { selected: @reminder.repeat_days, id: 'campaign_repeat_days' } %>
-          <!-- Modal Footer -->
-            <div class="modal-footer">
-              <%= button_tag 'Cancel', class: 'btn btn-default', data: { dismiss: :modal } %>
-              <%= f.submit 'Schedule Notification' %>
-            </div>
-        </div>
-      <% end %>
+      <div class='newReminder'>
+        <%= render partial: 'reminders/form', locals: { reminder: @reminder } %>
+      </div>
     </div>
   </div>
 </div>
