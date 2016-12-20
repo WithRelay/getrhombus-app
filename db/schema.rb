@@ -292,10 +292,10 @@ ActiveRecord::Schema.define(version: 20161220071221) do
     t.integer "merchant_customer_id", limit: 4
   end
 
-  add_index "invoices", ["coupon_id"], name: "fk_rails_0509f5ee0a", using: :btree
+  add_index "invoices", ["coupon_id"], name: "fk_rails_7aa1e153d5", using: :btree
   add_index "invoices", ["stripe_invoice_id"], name: "index_invoices_on_stripe_invoice_id", using: :btree
-  add_index "invoices", ["subscription_id"], name: "fk_rails_3f62823c58", using: :btree
-  add_index "invoices", ["transaction_id"], name: "fk_rails_bbdcb50cdd", using: :btree
+  add_index "invoices", ["subscription_id"], name: "fk_rails_46381ea356", using: :btree
+  add_index "invoices", ["transaction_id"], name: "fk_rails_4ccc1b83a0", using: :btree
 
   create_table "lists", force: :cascade do |t|
     t.datetime "created_at",               null: false
