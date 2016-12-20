@@ -79,6 +79,7 @@ Rails.application.routes.draw  do
     # authenticate campaigns resources if a user is merchant
     authenticate :user, -> (user) { user.is_merchant? } do
       resources :campaigns, except: [:show] { member { put 'change_status' }; collection { get 'filter_campaign' } }
+      resources :reminders, except: [:show] { member { put 'change_status' } }
     end
 
     collection do
