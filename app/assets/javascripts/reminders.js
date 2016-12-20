@@ -36,4 +36,31 @@ $(document).on('ready page:load', function() {
   }).on('change', function(e) {
     $('#new_reminder').formValidation('resetField', 'reminder[date_time]');
   });
+
+  $( '#new_reminder' ).submit(function(e){
+    e.preventDefault();
+    var remoteCall = new RemoteCall(this)
+    remoteCall.ajax()
+  })
 });
+
+function RemoteCall(element){
+  this.url = element.action;
+  this.method = element.method;
+  this.dataType = 'json';
+  this.formData = $(element).serialize()
+  this.domElement = element
+}
+function checkFormValid(element){
+  $(element).data('formValidation').isValid();
+}
+RemoteCall.prototype.ajax = function(){
+  if (checkFormValid(this.domElement)){
+    $.ajax({
+            method: this.method, url: this.url, data: this.formData, dataType: 'json'
+          }).done(function(msg){
+              var flash_key = Object.keys(msg)[0]
+              FlashHandler.setFlashMessage( msg[flash_key], flash_key )
+          }).fail(function(msg){ alert(''); });
+  }
+}
