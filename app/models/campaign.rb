@@ -11,10 +11,12 @@ class Campaign < ActiveRecord::Base
   delegate :first_name, :last_name, to: :user
   # enums for campaign's class attributes channel, status, frequency_type and delivery_type
   enum channel: { sms: 0, mms: 1, facebook_messenger: 2, email: 3 }
+  enum campaign_type: { promo_campaign: 0, reminder_campaign: 1 }
   enum frequency_type: { one_time: 0, recurring: 1 }
   enum status: { active: 1, paused: 2, inactive: 3 }
   # validation of campaign attributes
-  validates_presence_of :name, :text, :list_name
+  validates_presence_of :name, :list_name, unless: lambda { reminder_campaign? }
+  validates_presence_of :text
 
   validate :channel_text_validate, if: proc { |c| c.text.present? && !c.email? }
   validate :date_time_validate, if: proc { |c| c.recurring? || (c.one_time? && !c.deliver_now?) }
@@ -22,7 +24,7 @@ class Campaign < ActiveRecord::Base
   validates_presence_of :repeat_days, if: lambda { recurring? }
   validates_presence_of :subject, if: lambda { email? }
   validate :total_image_size
-  validates :name, uniqueness: { case_sensitive: false, scope: :user_id }
+  validates :name, uniqueness: { case_sensitive: false, scope: :user_id }, unless: lambda { reminder_campaign? }
   # scopes
   scope :check_campaign_uniqueness, -> (campaign_name) { where('lower(name) = ?', campaign_name.downcase) }
 
@@ -98,6 +100,10 @@ class Campaign < ActiveRecord::Base
     unless get_total_allowed_size.nil?
       errors.add(:images, "size not be greater than #{get_total_allowed_size/1_048_576} MB") if total_size > get_total_allowed_size
     end
+  end
+
+  def reminder_campaign?
+    self.is_a?(Reminder)
   end
 
   def channel_text_validate
