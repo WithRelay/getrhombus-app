@@ -131,6 +131,8 @@ Rails.application.routes.draw  do
     match 'coupons/get_coupon' => 'coupons#get_coupon', via: :get
     match 'plans/get_plan' => 'plans#get_plan', via: :get
     match 'merchant/customers' => 'merchant_customers#customers', via: :get
+    match 'subscriptions/upgrading_subscription' => 'subscriptions#upgrading_subscription', via: :post
+    match 'subscriptions/downgrading_subscription' => 'subscriptions#downgrading_subscription', via: :post
   end
 
   ## catch all other to 404
