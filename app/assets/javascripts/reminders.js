@@ -48,15 +48,17 @@ function RemoteCall(element){
   this.method = element.method;
   this.dataType = 'json';
   this.formData = $(element).serialize()
-  this.domElement = element
+  this.domElementId = element.id
 }
 function checkFormValid(element){
-  $(element).data('formValidation').isValid();
+  return $( '#' + element ).data('formValidation').isValid();
 }
 RemoteCall.prototype.ajax = function(){
-  if (checkFormValid(this.domElement)){
-    $.ajax({
-            method: this.method, url: this.url, data: this.formData, dataType: 'json'
+  if (checkFormValid(this.domElementId)){
+    $.ajax({ method: this.method,
+             url: this.url,
+             data: this.formData,
+             dataType: 'json'
           }).done(function(msg){
               var flash_key = Object.keys(msg)[0]
               FlashHandler.setFlashMessage( msg[flash_key], flash_key )
