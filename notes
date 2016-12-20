@@ -27,6 +27,7 @@ surya
 	- Reminders index, edit, update and destroy are needed. You can use the campaign controller for all these, but only reminder type campaigns show up in the index...the reverse is true for campaigns. And reminders has a reminder path. http://rhombus-test.webflow.io/messaging-dashboard ...click on bell icon
 - Managed Account 
 	- break up form - http://thecodeplayer.com/walkthrough/jquery-multi-step-form-with-progress-bar
+- Add plugin versions to file
 
 Ovo
 - add to list from user profile - http://rhombus-test.webflow.io/customer-profile
