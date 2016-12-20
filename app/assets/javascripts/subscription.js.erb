@@ -127,6 +127,56 @@ $(document).ready(function () {
 
   $('.auto-height').css('height', 'auto');
 
+
+//Add logic for switching plans/subscriptions
+// For Upgrading
+$('#upgrade-subscription').on('click', function(){
+  $.ajax({
+      url: "/v1/subscriptions/upgrading_subscription",
+      beforeSend: function(xhr) {
+        xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
+      },
+      type: "POST",
+      // data: $(upgrade).serialize(),
+      // dummy data for testing
+      data: {subscription_id: 23, plan_id: 24},
+      dataType: "json"
+    })
+    .done(function(data, textStatus, jqXHR) {
+      FlashHandler.setFlashMessage(data.response, 'notice');
+    })
+    .fail(function(data, textStatus, errorThrown) {
+      FlashHandler.setFlashMessage(JSON.parse(data.responseText).response, 'error');
+    })
+    .always(function(data, textStatus, response) {
+      $('#upgrade-subscription').attr("disabled", false);
+    });
+});
+
+// For Downgrading
+$('#upgrade-subscription').on('click', function(){
+  $.ajax({
+      url: "/v1/subscriptions/downgrading_subscription",
+      beforeSend: function(xhr) {
+        xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
+      },
+      type: "POST",
+      // data: $(downgrade).serialize(),
+      // dummy data for testing
+      data: {subscription_id: 80, plan_id: 24},
+      dataType: "json"
+    })
+    .done(function(data, textStatus, jqXHR) {
+      FlashHandler.setFlashMessage(data.response, 'notice');
+    })
+    .fail(function(data, textStatus, errorThrown) {
+      FlashHandler.setFlashMessage(JSON.parse(data.responseText).response, 'error');
+    })
+    .always(function(data, textStatus, response) {
+      $('#upgrade-subscription').attr("disabled", false);
+    });
+});
+
 });
 
 $(document).on('click', '.cancel-subscription', function(evt) {

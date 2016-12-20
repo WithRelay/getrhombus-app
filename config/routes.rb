@@ -79,6 +79,7 @@ Rails.application.routes.draw  do
     # authenticate campaigns resources if a user is merchant
     authenticate :user, -> (user) { user.is_merchant? } do
       resources :campaigns, except: [:show] { member { put 'change_status' }; collection { get 'filter_campaign' } }
+      resources :reminders, only: [:new] { member { put 'change_status' } }
     end
 
     collection do
@@ -121,6 +122,9 @@ Rails.application.routes.draw  do
     match 'campaigns/upload_images' => 'campaigns#upload_images', via: :post
     match 'campaigns/upload_from_url' => 'campaigns#upload_from_url', via: :post
     #--------------------------------------------------------------------------#
+    # reminder routes
+    match 'create_reminder' => 'reminders#create', via: :post
+    #--------------------------------------------------------------------------#
     match 'transactions/:txn_number/refund' => 'transactions#refund', via: :post
     match 'transactions/charge_customer' => 'transactions#charge_customer', via: :post
     match 'numbers/search' => 'numbers#search', via: :get
@@ -131,6 +135,8 @@ Rails.application.routes.draw  do
     match 'coupons/get_coupon' => 'coupons#get_coupon', via: :get
     match 'plans/get_plan' => 'plans#get_plan', via: :get
     match 'merchant/customers' => 'merchant_customers#customers', via: :get
+    match 'subscriptions/upgrading_subscription' => 'subscriptions#upgrading_subscription', via: :post
+    match 'subscriptions/downgrading_subscription' => 'subscriptions#downgrading_subscription', via: :post
   end
 
   ## catch all other to 404
