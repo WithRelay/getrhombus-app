@@ -10,6 +10,10 @@ module CampaignsHelper
     end
   end
 
+  def reminder_channel(reminder)
+    { SMS: 0, "Facebook Messenger" => 2 }
+  end
+
   # enums normally return keys. we need the value for the dropdown
   def get_channel_enum_value(campaign)
     Campaign.channels[campaign.channel]
