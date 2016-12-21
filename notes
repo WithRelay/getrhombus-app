@@ -18,7 +18,7 @@ surya
 	- use custom method to get campaign users for all channels - it now return array of hashes of user objects
 	- move send messenger campaign code from services. You might need to restructure and rename your classes..so things are clearer. 
 	- Implement SMS/MMS channel. They are ready. 
-	- wipe subject if campaign is not email - serverside and you can wipe it in validation
+	- wipe subject if campaign is not email - serverside only is fine
 	- check for date on submit
 - Upgrade Trumbowyg
 	- so we can use new ordered emojis (generate unicode in the same order in the emoji plugin file)
@@ -41,9 +41,6 @@ Edwin
 - generate page loader
 
 Taiwo (review)
-
-- review validation for reminders, coupons, campaigns, time validation (put in utilfunctions), wipe email subject
-
 - review stripe_events
 - review merchant_customer_id in transactions and invoices
 - review managed account..

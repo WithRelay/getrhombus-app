@@ -34,7 +34,6 @@ $(document).on('ready page:load', function() {
                   }
                 }
               } else {
-                $('#campaign_subject').val('');
                 return { valid: true }
               }
             }
