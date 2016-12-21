@@ -34,9 +34,8 @@ $(document).on('ready page:load', function() {
                   }
                 }
               } else {
-                return { 
-                  valid: true 
-                }
+                $('#campaign_subject').val('');
+                return { valid: true }
               }
             }
           }

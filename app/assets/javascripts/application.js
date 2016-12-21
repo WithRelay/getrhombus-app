@@ -58,5 +58,4 @@
 //= require dashboard/messaging_angularjs/messaging.js
 //= require bootstrap-select
 //= require moment
-//= require moment-timezone
 //= require_tree .
