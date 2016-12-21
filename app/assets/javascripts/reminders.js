@@ -36,10 +36,10 @@ $(document).on('ready page:load', function() {
     $('#new_reminder').formValidation('resetField', 'reminder[date_time]');
   });
 
-  $( '#new_reminder' ).submit(function(e){
+  $( 'form#new_reminder' ).submit(function(e){
     e.preventDefault();
-    var remoteCall = new RemoteCall(this)
-    remoteCall.ajax()
+    var remoteCall = new RemoteCall(this);
+    remoteCall.ajax();
   })
 });
 
@@ -48,10 +48,10 @@ function RemoteCall(element){
   this.method = element.method;
   this.dataType = 'json';
   this.formData = $(element).serialize()
-  this.domElementId = element.id
+  this.domElementId = '#' + element.id
 }
 function checkFormValid(element){
-  return $( '#' + element ).data('formValidation').isValid();
+  return $(element ).data('formValidation').isValid();
 }
 RemoteCall.prototype.ajax = function(){
   if (checkFormValid(this.domElementId)){
@@ -62,6 +62,7 @@ RemoteCall.prototype.ajax = function(){
           }).done(function(msg){
               var flash_key = Object.keys(msg)[0]
               FlashHandler.setFlashMessage( msg[flash_key], flash_key )
-          }).fail(function(msg){ alert(''); });
+              $(this.domElementId).modal('toggle');
+          }).fail(function(msg){ alert('Sorry request could not complete'); });
   }
 }
