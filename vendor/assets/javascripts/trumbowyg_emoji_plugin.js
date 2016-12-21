@@ -6,6 +6,7 @@
  * Author : Nicolas Pion
  *          Twitter : @nicolas_pion
  */
+ // buildDropdown method is being customized
 $(document).ready(function(){
    'use strict';
     // Add all emoji in a dropdown
