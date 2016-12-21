@@ -23,7 +23,7 @@ $(document).on('ready page:load', function() {
 
   $( 'form#new_reminder' ).submit(function(e){
     e.preventDefault();
-    var remoteCall = new RemoteCall(this, '#myModalNorm');
+    new RemoteCall(this, '#myModalNorm');
     remoteCall.ajax()
   })
 });
@@ -48,6 +48,7 @@ function checkFormValid(element){
 RemoteCall.prototype.ajax = function(){
   // assigning modal class for closing modal after response success
   // The variable has sigil $ beacause local variable inside ajax call are not accessible.
+  // for more deails http://stackoverflow.com/questions/14496680/this-object-not-available-in-ajax-callback
   var $modalClose = this.modalId + ' .close'
   if (checkFormValid(this.domElementId)){
     $.ajax({ method: this.method,
