@@ -8,6 +8,7 @@
      <th>Channel</th>
      <th>Recipients</th>
      <th>Action</th>
+     <th>Edit</th>
     </tr>
   </thead>
   <tbody>
@@ -30,6 +31,9 @@
         </td>
         <td>
           <%= present(reminder).reminder_change_status_link %>
+        </td>
+        <td>
+          <%= link_to 'Edit', edit_user_reminder_path(current_user, reminder) %>
         </td>
       </tr>
     <% end %>
