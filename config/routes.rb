@@ -61,7 +61,13 @@ Rails.application.routes.draw  do
     resources :fb_pages, only: [:index]
     patch 'update_fb_page' => 'fb_pages#update_user_fb_page'
     resources :hashtags, except: [:show, :destroy]
-    resources :subscriptions, except: [:edit, :update]
+    resources :subscriptions, except: [:new, :edit, :update] do
+      collection do
+        post '/:id/upgrading_subscription' => 'subscriptions#upgrading_subscription'
+        post '/:id/downgrading_subscription' => 'subscriptions#downgrading_subscription'
+      end
+    end
+
     resources :plans, only: [:create, :index, :new, :edit, :update, :destroy]
     resources :alerts, only: [:update]
     resources :saved_replies
@@ -70,7 +76,6 @@ Rails.application.routes.draw  do
     resources :people
     resources :message_resolutions
     resources :transactions do
-
       collection do
         get 'download' => 'transactions#download_csv', constraints: { format: 'csv' }
       end
@@ -136,10 +141,6 @@ Rails.application.routes.draw  do
     match 'coupons/get_coupon' => 'coupons#get_coupon', via: :get
     match 'plans/get_plan' => 'plans#get_plan', via: :get
     match 'merchant/customers' => 'merchant_customers#customers', via: :get
-    match 'subscriptions/upgrading_subscription' => 'subscriptions#upgrading_subscription', via: :post
-    match 'subscriptions/downgrading_subscription' => 'subscriptions#downgrading_subscription', via: :post
-    match 'subscriptions/add_subscription' => 'subscriptions#add_subscription', via: :post
-    match 'subscriptions/delete_subscription' => 'subscriptions#delete_subscription', via: :post
   end
 
   ## catch all other to 404
