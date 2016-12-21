@@ -43,6 +43,7 @@ $(document).ready(function() {
         .addClass('has-success')
     })
     .on('submit', function(e) {
+        // only for creating plan from modal as in subscription index page
         if ($('.add-modal-plan').length > 0 && $("[data-fv-result=INVALID]").length === 0){
           addPlan();
         }
@@ -52,10 +53,12 @@ $(document).ready(function() {
     $('#planForm').formValidation('revalidateField', 'plan[name]');
   });
 
+  // when create plan through modal it add class to submit button
   $('.plan-modal').on('click', function(){
     $('.add-plan').attr('class', 'btn btn-primary add-modal-plan')
   })
 
+  // create plan using modal through api call
   function addPlan(){
     $.ajax({
         url: "/v1/plans/add_plan.json",
