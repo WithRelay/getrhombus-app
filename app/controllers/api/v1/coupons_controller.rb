@@ -5,7 +5,7 @@ class Api::V1::CouponsController < API::V1::BaseController
     render json: { valid: res.empty? }
   end
 
-  def get_coupon
+  def index
     begin
       if params[:name]
         res = valid_coupon(current_user.coupons.where("lower(name) like ?", "%#{params[:name].downcase}%"))

@@ -11,6 +11,7 @@ Bhishma
 	- Add back cancel subscription now
 - if response['success'] || fb_pages.empty? || FbPage.where(subscription_status: true).empty?
 - using page_id alone?
+- coupon name needs to check for existence
 
 surya
 - can I migrate my jobs?
@@ -31,7 +32,7 @@ surya
 	- break up form - http://thecodeplayer.com/walkthrough/jquery-multi-step-form-with-progress-bar
 - Add plugin versions to file
 - make sure name in campaigns cannot be an empty string
-- rescue scheduler.yml
+- rescue_scheduler.yml
 
 Ovo
 - add to list from user profile - http://rhombus-test.webflow.io/customer-profile

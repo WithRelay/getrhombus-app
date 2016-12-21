@@ -84,6 +84,39 @@ class Api::V1::SubscriptionsController < API::V1::BaseController
     unused_amount = total_amount - used_amount
   end
 
+  def unused_amount
+    plan = @subscription.plan
+    plan_amt = plan.amount
+    coupon_amt = 0
+
+    # calculate coupon amount
+    if @subscription.coupon.present?
+      if @subscription.amount_off.present?
+        coupon_amt = plan_amt - @subscription.amount_off
+      else
+        coupon_amt = plan_amt - (@subscription.percent_off/100.to_f * plan_amt).round(2)
+      end
+    end
+
+    # amount after coupon discount
+    plan_amt = plan_amt - coupon_amt
+
+    # calculate number of days from subscription start to subscription end
+    # stripe most likely stores time in UTC
+    start_date = DateTime.strptime(@subscription.current_period_start.to_s,'%s')
+    end_date = DateTime.strptime(@subscription.current_period_end.to_s,'%s')
+    total_days = (end_date - start_date).to_i + 1  # +1 to include the start day
+
+    days_remaining = (end_date - DateTime.now.utc).to_i
+    days_remaining = (days_remaining > 0) days_remaining : 0
+
+    plan_amt = (plan_amt.to_f / total_days).round(2)          # plan amount per day
+    (plan_amt * days_remaining).round(2)                      # unspent amount (prorated per day)
+
+    # next steps
+    # create coupon only if this method is greater than 0.0
+  end
+
   # create discount coupon with remaining unused amount while
   # user upgrade subscription before finishing time interval
   def create_coupon(unused_amount)

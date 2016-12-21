@@ -130,11 +130,10 @@ Rails.application.routes.draw  do
     match 'numbers/search' => 'numbers#search', via: :get
     match 'lists' => 'lists#index', via: :get
     match 'lists/create' => 'lists#create', via: :post
-    match 'coupons/check_coupon_name' => 'coupons#check_coupon_name', via: :post
+    match 'coupons/check_coupon_name' => 'coupons#check_coupon_name', via: :post   
+    resources :coupons, only: [:index] 
     match 'plans/check_plan_name' => 'plans#check_plan_name', via: :post
-    match 'plans/add_plan' => 'plans#add_plan', via: :post
-    match 'coupons/get_coupon' => 'coupons#get_coupon', via: :get
-    match 'plans/get_plan' => 'plans#get_plan', via: :get
+    resources :plans, only: [:index, :create]
     match 'merchant/customers' => 'merchant_customers#customers', via: :get
     match 'subscriptions/upgrading_subscription' => 'subscriptions#upgrading_subscription', via: :post
     match 'subscriptions/downgrading_subscription' => 'subscriptions#downgrading_subscription', via: :post
