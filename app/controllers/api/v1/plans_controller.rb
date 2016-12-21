@@ -22,15 +22,12 @@ class Api::V1::PlansController < API::V1::BaseController
   def add_plan
     begin
       status = 500
-      plan = Plan.new(
-                  interval: 'day', name: params['Plan-name'],
-                  amount: (100 * params['Plan-Amount'].to_f).round,
-                  interval_count: params['Plan-Interval']
-                )
+      plan = Plan.new(plan_params)
       if plan.create_plan({ team: current_user })
         response = 'Plan created successfully'
         status = 200
       else
+        plan.destroy     # revoke created plan on error
         response = 'Something went wrong.'
         status = 409
       end
@@ -38,6 +35,15 @@ class Api::V1::PlansController < API::V1::BaseController
       response = 'Something went wrong on our end.'
     end
     render json: { response: response }, status: status
+  end
+
+  private
+
+  def plan_params
+    params.require(:plan).permit(:interval, :name, :amount, :interval_count, :trial_period_days).tap{ |plan|
+      # round - deal with inaccurate floating point math. see 100 * 1.1
+      plan[:amount] = (100 * plan[:amount].to_f).round if plan[:amount].present?
+    }
   end
 
 end

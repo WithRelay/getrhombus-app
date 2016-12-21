@@ -1,4 +1,4 @@
-<%= form_for([current_user, @plan], :html=> { id: 'planForm', class: 'form-horizontal' }) do |f| %>
+<%= form_for([current_user, @plan = Plan. new], :html=> { id: 'planForm', class: 'form-horizontal' }) do |f| %>
 
   <div class="form-group">
     <%= f.label :name, class: 'col-xs-3 control-label' %>
@@ -7,7 +7,7 @@
     </div>
   </div>
 
-  <% if action_name == 'new' || action_name == 'create' %>
+  <% unless action_name == 'edit' %>
     
     <div class="form-group">
       <%= f.label :amount, class: 'col-xs-3 control-label' %>
@@ -19,7 +19,7 @@
     <div id='interval-settings'>
       <div class="form-group">
         <%= f.label :interval, class: 'col-xs-3 control-label' %>
-        <div class="col-xs-2">
+        <div class="col-xs-3">
           <%= f.select :interval, options_for_select({ "Day" => "day", "Week" => 'week', "Month" => "month" }, selected: @plan.interval), {}, class: 'form-control' %>
         </div>
       </div>
@@ -46,11 +46,11 @@
 
     <div class="actions field form-group">
       <div class="col-xs-9 col-xs-offset-3">
-        <%= f.submit 'Create Plan', class: 'btn btn-primary' %>
+        <%= f.submit 'Create Plan', class: 'btn btn-primary add-plan' %>
       </div>
     </div>
 
-  <% elsif action_name == 'edit' %>
+  <% else %>
 
     <div class="actions field form-group">
       <div class="col-xs-9 col-xs-offset-3">
