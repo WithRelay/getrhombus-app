@@ -1,7 +1,51 @@
 <div class="container">
-  <h1>Listing Subscriptions</h1>
+  <!-- Button trigger modal -->
+  <%= button_tag 'Create Plan', class: 'btn btn-default plan-modal', data: { toggle: :modal, target: '#modalPlan' } %>
+  <%= button_tag 'Create Subscription', class: 'btn btn-default', data: { toggle: :modal, target: '#modalSubscription' } %>
+  <!-- Modal -->
+  <div class="modal fade" id="modalPlan" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">
+          <span aria-hidden="true">&times;</span>
+          <span class="sr-only">Close</span>
+          </button>
+          <h4 class="modal-title" id="myModalLabel">Create Plan</h4>
+          <hr>
+          Plans let you charge customers a recurring amount over a specified time interval.
+        </div>
+        <!-- Modal Body -->
+        <div class="create-plan-form w-form">
+          <%= render 'plans/form' %>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="modalSubscription" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">
+          <span aria-hidden="true">&times;</span>
+          <span class="sr-only">Close</span>
+          </button>
+          <h4 class="modal-title" id="myModalLabel">Create Subscription</h4>
+          <hr>
+          Subscribe customers to an existing plan to charge them on a recurring basis.
+        </div>
+        <!-- Modal Body -->
+        <div class="create-subscription-form w-form">
+          <%= render 'subscriptions/form' %>
+        </div>
+      </div>
+    </div>
+  </div>
 
-  <table class="table">
+  <h1>Listing Subscriptions</h1>
+  <table class="table table-condensed table-hover">
     <thead>
       <tr>
         <th>Customer</th>
@@ -12,19 +56,16 @@
         <th></th>
       </tr>
     </thead>
-
     <tbody>
       <% @subscriptions.each do |subscription| %>
-        <tr>
+        <tr id="subscription-<%= subscription.id %>" class="subscription-row">
           <td><%= present(subscription).get_customer_info %></td>
           <td><%= present(subscription).status %></td>
           <td><%= present(subscription).get_plan_info %></td>
           <td><%= present(subscription).get_coupon_info %></td>
           <td><%= subscription.quantity %></td>
-          <!-- <td><%#= link_to 'Show', subscription %></td> -->
-          <!-- <td><%#= link_to 'Edit', edit_subscription_path(subscription) %></td> -->
           <td>
-            <% if subscription.cancel_at_period_end  %>
+            <% if subscription.cancel_at_period_end %>
               <span class="label label-info">Cancel at period end</span>
             <% elsif subscription.status != 'canceled' %>
               <%= link_to 'Cancel Subscription', user_subscription_path(current_user, subscription), method: :delete, class: "btn btn-danger cancel-subscription subscription#{subscription.id}", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i>Please wait...".html_safe } %>
@@ -35,10 +76,6 @@
     </tbody>
   </table>
 
-  <br>
-
-  <%#= link_to 'New Subscription', new_subscription_path %>
-  <%= link_to 'Create Subscription', new_user_subscription_path, id: 'create-subscription' %>
-
-
+  <%= render 'subscriptions/grade_subscription' %>
+  <br><br><br><br><br>
 </div>
