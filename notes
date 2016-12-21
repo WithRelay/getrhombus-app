@@ -31,6 +31,7 @@ surya
 	- break up form - http://thecodeplayer.com/walkthrough/jquery-multi-step-form-with-progress-bar
 - Add plugin versions to file
 - make sure name in campaigns cannot be an empty string
+- rescue scheduler.yml
 
 Ovo
 - add to list from user profile - http://rhombus-test.webflow.io/customer-profile
