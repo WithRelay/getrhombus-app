@@ -1,5 +1,6 @@
 <!-- Button trigger modal -->
 <%= button_tag 'Create Reminder', class: 'btn btn-primary', data: { toggle: :modal, target: '#myModalNorm' } %>
+<!-- Modal Body -->
 <div class="modal fade" id="myModalNorm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -11,10 +12,12 @@
         </button>
         <h4 class="modal-title" id="myModalLabel">Customer Notification</h4>
         <hr>
-          Set a reminder or notification that will go out to this customer at a future date. You can use this to automate appointment reminders, or bill payment reminders.
+        Set a reminder or notification that will go out to this customer at a future date. You can use this to automate appointment reminders, or bill payment reminders.
       </div>
       <div class='newReminder'>
-        <%= render partial: 'reminders/form', locals: { reminder: @reminder } %>
+        <div class="modal-body">
+          <%= render partial: 'reminders/form', locals: { reminder: @reminder, reminder_url: v1_reminders_path, method: 'post' } %>
+        </div>
       </div>
     </div>
   </div>
