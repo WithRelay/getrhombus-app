@@ -40,7 +40,7 @@ class User < ActiveRecord::Base
 
   has_many :reminders, -> { where campaign_type: 1 }
   # this block is for customizing build method for user.campaign which allow also to save list
-  has_many :campaigns do
+  has_many :campaigns, -> { where campaign_type: 0 } do
     # overiding association build function like user.campaigns.build will hit here
     def build(*args)
       # calls parent build action and send arguments first from the splat operator
