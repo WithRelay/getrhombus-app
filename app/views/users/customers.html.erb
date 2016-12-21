@@ -168,7 +168,7 @@
     <div id="create_list_form">
         <div id="list_form_errors"> </div>
         <div id="list_form_items">
-          <%= form_tag("/v1/lists/create", id: "create_user_list", method: "post") do %>
+          <%= form_tag("/v1/lists.json", id: "create_user_list", method: "post") do %>
             <%= label_tag(:list_name, "List name") %>
             <%= hidden_field_tag(:selected_users) %>
             <%= hidden_field_tag(:list_type, 'list') %>
@@ -189,7 +189,7 @@
     <div id="create_segment_form">
         <span id="segment_create_msg"> </span>
         <div id="segment_form_items">
-          <%= form_tag("/v1/lists/create", id: "create_segment", method: "post") do %>
+          <%= form_tag("/v1/lists.json", id: "create_segment", method: "post") do %>
             <%= label_tag(:segment_name, "Segment name") %>
             <%= hidden_field_tag(:list_type, 'segment') %>
             <%= hidden_field_tag(:segment_type) %>

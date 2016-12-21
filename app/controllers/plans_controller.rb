@@ -22,6 +22,23 @@ class PlansController < ApplicationController
     respond_with(@plan)
   end
 
+  def create
+    @plan = Plan.new(plan_params)
+
+    if @plan.create_plan({ team: current_user })
+      redirect_to user_plans_path,  flash: { notice: 'Plan was created' }      #respond_with(@plan)
+    else
+      @plan.destroy     # revoke created plan on error
+      if @plan.errors.messages.present?
+        error = @plan.errors.full_messages
+        flash[:error] = error
+      else
+        flash[:error] = "We couldn't create the plan"
+      end
+      render :new
+    end
+  end  
+
   def edit
   end
 
@@ -57,24 +74,5 @@ class PlansController < ApplicationController
     def plan_params
       params.require(:plan).permit(:name)
     end
-
-=begin  
-    def create
-      @plan = Plan.new(plan_params)
-
-      if @plan.create_plan({ team: current_user })
-        redirect_to user_plans_path,  flash: { notice: 'Plan was created' }      #respond_with(@plan)
-      else
-        @plan.destroy     # revoke created plan on error
-        if @plan.errors.messages.present?
-          error = @plan.errors.full_messages
-          flash[:error] = error
-        else
-          flash[:error] = "We couldn't create the plan"
-        end
-        render :new
-      end
-    end  
-=end
 
 end

@@ -12,6 +12,7 @@ Bhishma
 - if response['success'] || fb_pages.empty? || FbPage.where(subscription_status: true).empty?
 - using page_id alone?
 - coupon name needs to check for existence
+- if next plan is used, change status = false
 
 surya
 - can I migrate my jobs?
@@ -82,4 +83,5 @@ http://rhombus-test.webflow.io/account-settings
 http://rhombus-test.webflow.io/business-settings
 http://rhombus-test.webflow.io/setup-payments
 http://rhombus-test.webflow.io/bank-account
+
 

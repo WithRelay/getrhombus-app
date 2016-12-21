@@ -20,4 +20,13 @@ module Transactionable
     end
     random_token
   end
+
+  def generate_coupon_name
+    random_token = nil
+    loop do
+      random_token = 'Coupon-' + Toolbox::StringGen.generate_random_string(8)
+      break unless Coupon.unscoped.exists?(name: random_token)
+    end
+    random_token
+  end
 end

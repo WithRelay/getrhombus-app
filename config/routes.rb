@@ -61,8 +61,14 @@ Rails.application.routes.draw  do
     resources :fb_pages, only: [:index]
     patch 'update_fb_page' => 'fb_pages#update_user_fb_page'
     resources :hashtags, except: [:show, :destroy]
-    resources :subscriptions, except: [:edit, :update]
-    resources :plans, only: [:create, :index, :new, :edit, :update, :destroy]
+    resources :subscriptions, only: [:index, :show, :destroy] do
+      collection do
+        post '/:id/upgrading_subscription' => 'subscriptions#upgrading_subscription'
+        post '/:id/downgrading_subscription' => 'subscriptions#downgrading_subscription'
+      end
+    end
+
+    resources :plans, only: [:index, :edit, :update, :destroy]
     resources :alerts, only: [:update]
     resources :saved_replies
     resources :bank_accounts
@@ -70,7 +76,6 @@ Rails.application.routes.draw  do
     resources :people
     resources :message_resolutions
     resources :transactions do
-
       collection do
         get 'download' => 'transactions#download_csv', constraints: { format: 'csv' }
       end
@@ -128,17 +133,12 @@ Rails.application.routes.draw  do
     match 'transactions/:txn_number/refund' => 'transactions#refund', via: :post
     match 'transactions/charge_customer' => 'transactions#charge_customer', via: :post
     match 'numbers/search' => 'numbers#search', via: :get
-    match 'lists' => 'lists#index', via: :get
-    match 'lists/create' => 'lists#create', via: :post
+    resources :lists, only: [:index, :create]
     match 'coupons/check_coupon_name' => 'coupons#check_coupon_name', via: :post   
     resources :coupons, only: [:index] 
     match 'plans/check_plan_name' => 'plans#check_plan_name', via: :post
     resources :plans, only: [:index, :create]
     match 'merchant/customers' => 'merchant_customers#customers', via: :get
-    match 'subscriptions/upgrading_subscription' => 'subscriptions#upgrading_subscription', via: :post
-    match 'subscriptions/downgrading_subscription' => 'subscriptions#downgrading_subscription', via: :post
-    match 'subscriptions/add_subscription' => 'subscriptions#add_subscription', via: :post
-    match 'subscriptions/delete_subscription' => 'subscriptions#delete_subscription', via: :post
   end
 
   ## catch all other to 404

@@ -1,4 +1,4 @@
-<%= form_for([current_user, @plan], :html=> { id: 'planForm', class: 'form-horizontal' }) do |f| %>
+<%= form_for([current_user, @plan = Plan.new], :html=> { id: 'planForm', class: 'form-horizontal' }) do |f| %>
 
   <div class="form-group">
     <%= f.label :name, class: 'col-xs-3 control-label' %>
@@ -7,7 +7,7 @@
     </div>
   </div>
 
-  <% if action_name == 'new' || action_name == 'create' %>
+  <% unless action_name == 'edit' %>
     
     <div class="form-group">
       <%= f.label :amount, class: 'col-xs-3 control-label' %>
@@ -16,21 +16,17 @@
       </div>
     </div>
 
-    <div id='interval-settings'>
-      <div class="form-group">
-        <%= f.label :interval, class: 'col-xs-3 control-label' %>
-        <div class="col-xs-2">
-          <%= f.select :interval, options_for_select({ "Day" => "day", "Week" => 'week', "Month" => "month" }, selected: @plan.interval), {}, class: 'form-control' %>
-        </div>
-      </div>
-    </div>
 
-      <div class="form-group">
-        <%= f.label :interval_count, class: 'col-xs-3 control-label' %>
-        <div class="col-xs-5 dynamic-count">
-          <%= f.text_field :interval_count, id: 'interval-count', class: 'form-control' %>
-        </div>
-      </div>
+    <div class="form-group">
+      <label>Interval</label>
+      <select class="dropdown w-select" data-name="Plan Interval" id="Plan-Interval" name="plan[interval]">
+        <option value="week_1">Weekly</option>
+        <option value="week_2">Bi-weekly</option>
+        <option value="month_1">Monthly</option>
+        <option value="month_3">Every 3 months</option>
+        <option value="month_6">Every 6 months</option>
+        <option value="year_1">Yearly</option>
+      </select>
     </div>
 
     <!-- only platform user can enter trial days -->
@@ -46,11 +42,11 @@
 
     <div class="actions field form-group">
       <div class="col-xs-9 col-xs-offset-3">
-        <%= f.submit 'Create Plan', class: 'btn btn-primary' %>
+        <%= f.submit 'Create Plan', class: 'btn btn-primary add-plan' %>
       </div>
     </div>
 
-  <% elsif action_name == 'edit' %>
+  <% else %>
 
     <div class="actions field form-group">
       <div class="col-xs-9 col-xs-offset-3">

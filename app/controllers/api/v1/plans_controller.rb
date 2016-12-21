@@ -22,12 +22,12 @@ class Api::V1::PlansController < API::V1::BaseController
   def create
     begin
       status = 500
-
       plan = Plan.new(plan_params)
       if plan.create_plan({ team: current_user })
         response = 'Plan created successfully'
         status = 200
       else
+        plan.destroy     # revoke created plan on error
         response = 'Something went wrong.'
         status = 409
       end

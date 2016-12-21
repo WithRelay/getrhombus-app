@@ -127,98 +127,39 @@ $(document).ready(function () {
 
   $('.auto-height').css('height', 'auto');
 
-
-//Add logic for switching plans/subscriptions
-// For Upgrading
-$('#upgrade-subscription').on('click', function(){
-  $.ajax({
-      url: "/v1/subscriptions/upgrading_subscription",
-      beforeSend: function(xhr) {
-        xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
-      },
-      type: "POST",
-      // data: $(upgrade).serialize(),
-      // dummy data for testing
-      data: {subscription_id: 23, plan_id: 24},
-      dataType: "json"
-    })
-    .done(function(data, textStatus, jqXHR) {
-      FlashHandler.setFlashMessage(data.response, 'notice');
-    })
-    .fail(function(data, textStatus, errorThrown) {
-      FlashHandler.setFlashMessage(JSON.parse(data.responseText).response, 'error');
-    })
-    .always(function(data, textStatus, response) {
-      $('#upgrade-subscription').attr("disabled", false);
-    });
+$('.subscription-row').on('click', function(){
+  $('.submit-update-plan').removeClass("hidden");
+  $id = this.id.split('-')[1];
+  appendSubscritionInfo($(this).find('td'))
 });
 
-// For Downgrading
-$('#downgrade-subscription').on('click', function(){
-  $.ajax({
-      url: "/v1/subscriptions/downgrading_subscription",
-      beforeSend: function(xhr) {
-        xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
-      },
-      type: "POST",
-      // data: $(downgrade).serialize(),
-      // dummy data for testing
-      data: {subscription_id: 80, plan_id: 24},
-      dataType: "json"
-    })
-    .done(function(data, textStatus, jqXHR) {
-      FlashHandler.setFlashMessage(data.response, 'notice');
-    })
-    .fail(function(data, textStatus, errorThrown) {
-      FlashHandler.setFlashMessage(JSON.parse(data.responseText).response, 'error');
-    })
-    .always(function(data, textStatus, response) {
-      $('#upgrade-subscription').attr("disabled", false);
-    });
+function appendSubscritionInfo(subscriptionData){
+  $('.plan-div').empty(); 
+  $('.plan-div').append('Customer: ' + subscriptionData[0].innerHTML + '<br>');
+  $('.plan-div').append('Status: ' + subscriptionData[1].innerHTML + '<br>');
+  $('.plan-div').append('Plan: ' + subscriptionData[2].innerHTML + '<br>');
+  $('.plan-div').append('Coupon: ' + subscriptionData[3].innerHTML + '<br>');
+  $('.plan-div').append('Quantity: ' + subscriptionData[4].innerHTML + '<br>');
+}
+
+$('.upgrade-plan-selector').on('click', function(){
+  $('.submit-update-plan').val('Upgrade Plan');
+  $('.submit-update-plan').attr('class', 'btn btn-success submit-update-plan');
+  $('#subscription_plan_id').attr('value', '30');
 });
 
-$('#modal-subscription').on('click', function(){
-  $.ajax({
-      url: "/v1/subscriptions/add_subscription.json",
-      beforeSend: function(xhr) {
-        xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
-      },
-      type: "POST",
-      data: $('#modal-subscription-form').serialize(),
-      dataType: "json"
-    })
-    .done(function(data, textStatus, jqXHR) {
-      FlashHandler.setFlashMessage(data.response, 'notice');
-    })
-    .fail(function(data, textStatus, errorThrown) {
-      FlashHandler.setFlashMessage(JSON.parse(data.responseText).response, 'error');
-    })
-    .always(function(data, textStatus, response) {
-      $('#modal-subscription').attr("disabled", false);
-    });
+$('.downgrade-plan-selector').on('click', function(){
+  $('.submit-update-plan').val('Downgrade Plan');
+  $('.submit-update-plan').attr('class', 'btn btn-danger submit-update-plan');
+  $('#subscription_plan_id').attr('value', '31');
 });
 
-$('.cancel-yes').on('click', function(){
-  $.ajax({
-      url: "/v1/subscriptions/delete_subscription",
-      beforeSend: function(xhr) {
-        xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
-      },
-      type: "POST",
-      // dummy data
-      data: {subscription_id: 83},
-      dataType: "json"
-    })
-    .done(function(data, textStatus, jqXHR) {
-      FlashHandler.setFlashMessage(data.response, 'notice');
-      $('.sr-only').click();
-    })
-    .fail(function(data, textStatus, errorThrown) {
-      FlashHandler.setFlashMessage(JSON.parse(data.responseText).response, 'error');
-    })
-    .always(function(data, textStatus, response) {
-      $('.cancel-yes').attr("disabled", false);
-    });
+$('.submit-update-plan').on('click',function(){
+  action = $('#plan-update-form').attr('action') + '/' + $id;
+  actionName = ($('.submit-update-plan').val() === 'Upgrade Plan') ? 'upgrading_subscription' : 'downgrading_subscription' 
+  action = action + '/' + actionName;
+  $('#plan-update-form').attr('action', action);
+  $('#plan-update-form').attr('href', action)
 });
 
 });

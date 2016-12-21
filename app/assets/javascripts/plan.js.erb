@@ -34,25 +34,37 @@ $(document).ready(function() {
         .closest('.form-group') // Get the field parent
         .removeClass('has-warning')
         .addClass('has-success')
+    })
+    .on('submit', function(e) {
+        // only for creating plan from modal as in subscription index page
+        if ($('.add-modal-plan').length > 0 && $("[data-fv-result=INVALID]").length === 0){
+          addPlan();
+        }
     });
 
   $('#plan_name').keyup(function(e) {
     $('#planForm').formValidation('revalidateField', 'plan[name]');
   });
 
-  $('.create-plan').on('click', function(){
+  // when create plan through modal it add class to submit button
+  $('.plan-modal').on('click', function(){
+    $('.add-plan').attr('class', 'btn btn-primary add-modal-plan')
+  })
+
+  // create plan using modal through api call
+  function addPlan(){
     $.ajax({
         url: "/v1/plans/add_plan.json",
         beforeSend: function(xhr) {
           xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
         },
         type: "POST",
-        data: $('#modal-create-plan').serialize(),
+        data: $('#planForm').serialize(),
         dataType: "json"
       })
       .done(function(data, textStatus, jqXHR) {
         FlashHandler.setFlashMessage(data.response, 'notice');
-        $('#modal-create-plan')[0].reset();
+        location.reload();
       })
       .fail(function(data, textStatus, errorThrown) {
         FlashHandler.setFlashMessage(JSON.parse(data.responseText).response, 'error');
@@ -60,7 +72,7 @@ $(document).ready(function() {
       .always(function(data, textStatus, response) {
         $('.create-plan').attr("disabled", false);
       });
-  });
+  }
 
 });
 
