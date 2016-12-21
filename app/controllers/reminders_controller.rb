@@ -15,7 +15,7 @@ class RemindersController < ApplicationController
   def update
     if @reminder.update(reminder_params)
       flash[:notice] = 'Reminders updated'
-      # @reminder.enqueue_jobs
+      @reminder.update_reminder_job
       redirect_to user_reminders_path(current_user)
     else
       render :edit
@@ -26,6 +26,7 @@ class RemindersController < ApplicationController
   def change_status
     status = @reminder.active? ? 2 : 1
     if @reminder.update_attribute('status', status)
+      @reminder.update_reminder_job
       flash[:notice] = 'Reminder updated successfully'
     else
       flash[:error] = @reminder.errors.full_messages

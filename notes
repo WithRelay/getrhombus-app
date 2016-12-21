@@ -2,9 +2,9 @@ current stripe api version - 2014-03-28
 https://www.getrhombus.com/receive_delivery_report
 
 Bhishma
-- do we need the application controller code for messenger
 - Plans/Subscriptions
-	- create subscription api modal for customer profile/messaging page...
+	- create subscription api modal for customer profile/messaging page... 
+		- remove new routes for subscriptions and plans
 	- Add logic for switching plans/subscriptions
 		- page can reload
 	- In plans, remove user_id, add merchant_id and customer_id to track customer plans
@@ -31,6 +31,7 @@ surya
 	- break up form - http://thecodeplayer.com/walkthrough/jquery-multi-step-form-with-progress-bar
 - Add plugin versions to file
 - make sure name in campaigns cannot be an empty string
+- rescue scheduler.yml
 
 Ovo
 - add to list from user profile - http://rhombus-test.webflow.io/customer-profile

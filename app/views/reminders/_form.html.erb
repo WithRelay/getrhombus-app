@@ -25,7 +25,7 @@
   <%= f.select :repeat_days, repeat_days_options, {}, { selected: reminder.repeat_days, id: 'campaign_repeat_days' } %>
   <!-- Modal Footer -->
     <div class="modal-footer">
-      <%= button_tag 'Cancel', class: 'btn btn-default', data: { dismiss: :modal } %>
+      <%= button_tag 'Cancel', class: 'btn btn-default', data: { dismiss: :modal } if method=='post' %>
       <%= f.submit 'Schedule Notification', id: 'submitReminderForm' %>
     </div>
 <% end %>
