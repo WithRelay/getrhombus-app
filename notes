@@ -6,8 +6,10 @@ Bhishma
 - Plans/Subscriptions
 	- create subscription api modal for customer profile/messaging page...
 	- Add logic for switching plans/subscriptions
+		- page can reload
 	- In plans, remove user_id, add merchant_id and customer_id to track customer plans
 	- Add back cancel subscription now
+
 
 
 surya
@@ -23,7 +25,7 @@ surya
 	- so we can get the scroll bar fix - i raised an issue here - https://github.com/Alex-D/Trumbowyg/issues/458
 	- add color plugins
 - Implement Reminders
-	- Like campaigns but uses api to create reminder
+	- Like campaigns but uses api to create reminder - create action should probably be in the api controller only...dont forget this uses JS..you can just use jquery instead of angular
 	- Reminders index, edit, update and destroy are needed. You can use the campaign controller for all these, but only reminder type campaigns show up in the index...the reverse is true for campaigns. And reminders has a reminder path. http://rhombus-test.webflow.io/messaging-dashboard ...click on bell icon
 - Managed Account 
 	- break up form - http://thecodeplayer.com/walkthrough/jquery-multi-step-form-with-progress-bar

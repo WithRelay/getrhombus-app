@@ -1,6 +1,6 @@
 class Plan < ActiveRecord::Base
 
-  has_many :subscriptions 
+  has_many :subscriptions
   belongs_to :merchant, class_name: "User"
   belongs_to :customer, class_name: "User"
 
@@ -16,7 +16,7 @@ class Plan < ActiveRecord::Base
       is_platform = team.is_platform?
       # uid = '<redacted_stripe_account_id>' #use this for testing
       uid = team.get_team_uid # use this for real use
-      
+
       descriptor = (self.name + "-" + team.org_name)[0..21]
 
       # a customer or a team/merchant can create a plan
@@ -24,7 +24,7 @@ class Plan < ActiveRecord::Base
 
       # dont send team/merchant or customer data in hash
       [:team, :customer].each { |k| hash.delete(k) }
-
+      
       # Update so validations run before calling Stripe
       self.update(merchant_id: _user_id, statement_descriptor: descriptor, currency: team.currency)
 
@@ -60,16 +60,16 @@ class Plan < ActiveRecord::Base
     begin
 
       old_name = self.name
-      old_descriptor = self.statement_descriptor      
+      old_descriptor = self.statement_descriptor
       new_descriptor = (hash[:name] + "-" + team.org_name)[0..21]
-      
+
       # Update so validations run before calling Stripe api
       self.update(name: hash[:name], statement_descriptor: new_descriptor)
       hash[:statement_descriptor] = new_descriptor
       res = PaymentService.update_plan(self.id, hash, team.get_team_uid, team.is_platform?)
-      
+
       unless res.first
-        # notify team via email        
+        # notify team via email
         # reverse data
         self.update(name: old_name, statement_descriptor: old_descriptor)
       end

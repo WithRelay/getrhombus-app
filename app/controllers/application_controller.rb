@@ -6,14 +6,6 @@ class ApplicationController < ActionController::Base
   before_action :configure_permitted_parameters, if: :devise_controller?
   around_action :set_time_zone, if: :current_user
 
-  # skip_before_action :authenticate_user!, :if => lambda {
-  #   if params[:object] && params[:object] == "page"
-  #     false
-  #   else
-  #     true
-  #   end
-  # }
-
   # for uniquness check...can it be more specific...cos email, phone numbers are caught
   # capture phone number duplicates on sign up page
   rescue_from ActiveRecord::RecordNotUnique, with: :record_not_unique
