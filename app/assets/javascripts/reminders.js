@@ -17,27 +17,8 @@ $(document).on('ready page:load', function() {
             message: 'This Field is required'
           }
         }
-      },
-      'reminder[date_time]': {
-        validators: {
-          callback: {
-            message: 'Date and Time should be 30 minutes greate than current date time',
-            callback: function(value, validator, $field) {
-              var selectedDateTime = $('#new_reminder').find('[name="reminder[date_time]"]').val();
-              var momentDate = moment(selectedDateTime).toDate()
-              var userDateTime = new Date(new Date().getTime() + 30*60000)
-              console.log(momentDate)
-              console.log(userDateTime)
-              var x = moment.tz(momentDate, "America/New_York");
-              console.log(x)
-              return userDateTime < momentDate
-            }
-          }
-        }
       }
     }
-  }).on('change', function(e) {
-    $('#new_reminder').formValidation('resetField', 'reminder[date_time]');
   });
 
   $( '#new_reminder' ).submit(function(e){
