@@ -23,7 +23,7 @@ $(document).on('ready page:load', function() {
 
   $( 'form#new_reminder' ).submit(function(e){
     e.preventDefault();
-    new RemoteCall(this, '#myModalNorm');
+    var remoteCall = new RemoteCall(this, '#myModalNorm');
     remoteCall.ajax()
   })
 });
