@@ -1,8 +1,23 @@
+# NOTE: reminder uses same table as campaign i.e. campaigns
+# reminder do not have all attribute that are in camapaign you can see more details in form http://localhost:3000/users/1/reminders/new
 class Reminder < Campaign
   belongs_to :user
+  # campaign type is set as enum ( 1 refers to reminder_campaign and 0 refers to promoi_campaign)
   before_create :set_campaign_type
 
-  private def set_campaign_type
+  # enqeue reminder jobs
+  def enqueue_notification_jobs
+    Resque.enqueue_at_with_queue('campaign', date_time.utc, Reminderjob, id) if is_today_campaign?
+  end
+
+  def update_reminder_job
+    destroy_campaign_jobs
+    enqueue_notification_jobs if active? && is_today_campaign?
+  end
+
+  private
+
+  def set_campaign_type
     self.campaign_type = 1
   end
 end
