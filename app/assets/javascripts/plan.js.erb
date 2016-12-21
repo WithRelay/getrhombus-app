@@ -47,6 +47,28 @@ $(document).ready(function() {
     $('#planForm').formValidation('revalidateField', 'plan[name]');
   });
 
+  $('.create-plan').on('click', function(){
+    $.ajax({
+        url: "/v1/plans/add_plan.json",
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
+        },
+        type: "POST",
+        data: $('#modal-create-plan').serialize(),
+        dataType: "json"
+      })
+      .done(function(data, textStatus, jqXHR) {
+        FlashHandler.setFlashMessage(data.response, 'notice');
+        $('#modal-create-plan')[0].reset();
+      })
+      .fail(function(data, textStatus, errorThrown) {
+        FlashHandler.setFlashMessage(JSON.parse(data.responseText).response, 'error');
+      })
+      .always(function(data, textStatus, response) {
+        $('.create-plan').attr("disabled", false);
+      });
+  });
+
 });
 
 $(document).on('click', '.delete-plan', function(evt) {

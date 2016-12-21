@@ -132,11 +132,14 @@ Rails.application.routes.draw  do
     match 'lists/create' => 'lists#create', via: :post
     match 'coupons/check_coupon_name' => 'coupons#check_coupon_name', via: :post
     match 'plans/check_plan_name' => 'plans#check_plan_name', via: :post
+    match 'plans/add_plan' => 'plans#add_plan', via: :post
     match 'coupons/get_coupon' => 'coupons#get_coupon', via: :get
     match 'plans/get_plan' => 'plans#get_plan', via: :get
     match 'merchant/customers' => 'merchant_customers#customers', via: :get
     match 'subscriptions/upgrading_subscription' => 'subscriptions#upgrading_subscription', via: :post
     match 'subscriptions/downgrading_subscription' => 'subscriptions#downgrading_subscription', via: :post
+    match 'subscriptions/add_subscription' => 'subscriptions#add_subscription', via: :post
+    match 'subscriptions/delete_subscription' => 'subscriptions#delete_subscription', via: :post
   end
 
   ## catch all other to 404

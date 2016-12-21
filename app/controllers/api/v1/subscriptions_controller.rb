@@ -5,7 +5,7 @@ class Api::V1::SubscriptionsController < API::V1::BaseController
       status = 500
       @subscription = Subscription.find params[:subscription_id]
       res = create_coupon(unused_amount)
-      if res.first && create_subscription(params[:plan_id], res.second)
+      if res.first && create_subscription(params[:plan_id], res.second, @subscription.merchant_customer_id, @subscription.quantity)
         cancel_subscription(false)
         response = 'Subscription upgraded successfully.'
         status = 200
@@ -29,6 +29,39 @@ class Api::V1::SubscriptionsController < API::V1::BaseController
         # Store new plan that user wants to downgrade to
         store_next_plan(params[:plan_id])
         response = 'Subscription listed for downgrade successfully.'
+        status = 200
+      else
+        response = 'Something went wrong.'
+        status = 409
+      end
+    rescue StandardError => e
+      response = 'Something went wrong on our end.'
+    end
+    render json: { response: response }, status: status
+  end
+
+  def add_subscription
+    begin
+      status = 500
+      if create_subscription()
+        response = 'Subscription created successfully.'
+        status = 200
+      else
+        response = 'Something went wrong.'
+        status = 409
+      end
+    rescue StandardError => e
+      response = 'Something went wrong on our end.'
+    end
+    render json: { response: response }, status: status
+  end
+
+  def delete_subscription
+  begin
+      status = 500
+      @subscription = Subscription.find params[:subscription_id]
+      if cancel_subscription(false)
+        response = 'Subscription cancelled successfully.'
         status = 200
       else
         response = 'Something went wrong.'
@@ -67,11 +100,11 @@ class Api::V1::SubscriptionsController < API::V1::BaseController
   end
 
   # move user to new subscription based on the new plan selected
-  def create_subscription(new_plan_id, new_coupon_id)
+  def create_subscription(new_plan_id, new_coupon_id, merchant_customer_id, quantity)
     subscription = Subscription.new(
       plan_id: new_plan_id, coupon_id: new_coupon_id,
-      merchant_customer_id: @subscription.merchant_customer_id,
-      quantity: @subscription.quantity
+      merchant_customer_id: merchant_customer_id,
+      quantity: quantity
     )
     subscription.create_subscription({ team: current_user }).first
   end
