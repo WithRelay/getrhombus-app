@@ -9,8 +9,8 @@ Bhishma
 		- page can reload
 	- In plans, remove user_id, add merchant_id and customer_id to track customer plans
 	- Add back cancel subscription now
-
-
+- if response['success'] || fb_pages.empty? || FbPage.where(subscription_status: true).empty?
+- using page_id alone?
 
 surya
 - can I migrate my jobs?
@@ -25,11 +25,12 @@ surya
 	- so we can get the scroll bar fix - i raised an issue here - https://github.com/Alex-D/Trumbowyg/issues/458
 	- add color plugins
 - Implement Reminders
-	- Like campaigns but uses api to create reminder - create action should probably be in the api controller only...dont forget this uses JS..you can just use jquery instead of angular
+	- Like campaigns but uses api to create reminder - you might need to do this inside angular
 	- Reminders index, edit, update and destroy are needed. You can use the campaign controller for all these, but only reminder type campaigns show up in the index...the reverse is true for campaigns. And reminders has a reminder path. http://rhombus-test.webflow.io/messaging-dashboard ...click on bell icon
 - Managed Account 
 	- break up form - http://thecodeplayer.com/walkthrough/jquery-multi-step-form-with-progress-bar
 - Add plugin versions to file
+- make sure name in campaigns cannot be an empty string
 
 Ovo
 - add to list from user profile - http://rhombus-test.webflow.io/customer-profile
@@ -40,7 +41,9 @@ Edwin
 - generate page loader
 
 Taiwo (review)
-- for indexes - fb_id in fb_creds be unique? no 
+
+- review validation for reminders, coupons, campaigns, time validation (put in utilfunctions), wipe email subject
+
 - review stripe_events
 - review merchant_customer_id in transactions and invoices
 - review managed account..

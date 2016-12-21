@@ -72,7 +72,7 @@ class Coupon < ActiveRecord::Base
   private
 
   def validate_redeem_by
-    if self.redeem_by
+    if self.redeem_by.present?
       if (Time.current) > (Time.at(self.redeem_by))
         errors.add(:redeem_by, 'can\'t be less than current date_time')
       elsif (Time.current + 4.years) <= (Time.at(self.redeem_by))

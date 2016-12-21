@@ -26,6 +26,10 @@ $(document).on('ready page:load', function() {
               var selectedDateTime = $('#new_reminder').find('[name="reminder[date_time]"]').val();
               var momentDate = moment(selectedDateTime).toDate()
               var userDateTime = new Date(new Date().getTime() + 30*60000)
+              console.log(momentDate)
+              console.log(userDateTime)
+              var x = moment.tz(momentDate, "America/New_York");
+              console.log(x)
               return userDateTime < momentDate
             }
           }

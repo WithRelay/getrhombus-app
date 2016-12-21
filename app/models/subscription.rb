@@ -42,9 +42,7 @@ class Subscription < ActiveRecord::Base
           canceled_at: res.second.canceled_at,
           cancel_at_period_end: res.second.cancel_at_period_end,
           ended_at: res.second.ended_at
-        )
-        # updates plan customer_id after creating subscription for customer
-        add_customer_plan
+        )        
       else
         # notify team via email
         # should this be for only standard error caught?
@@ -57,11 +55,6 @@ class Subscription < ActiveRecord::Base
       # notify team via email
       [false]
     end
-  end
-
-  def add_customer_plan
-    plan = Plan.find self.plan_id
-    plan.update(customer_id: merchant_customer.customer_id)
   end
 
   def cancel_subscription(team, at_period_end = true)
