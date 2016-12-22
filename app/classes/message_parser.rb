@@ -17,9 +17,9 @@ class MessageParser
       # scenarios
       # 1. invalid payment intent -> invalid amount and valid sign
       # 2. Amount is outside limit
-      # 3. valid payment intent -> proceed
-      # 4. otherwise just a regular text
-      # 5. non payment message from an unregistered user
+      # 3. valid payment intent -> proceed -> handle registered/unregistered user
+      # 4. non payment message from an unregistered user
+      # 5. otherwise just a regular text from a registered user
 
       if !@amt_ary[0] && @amt_ary[1].present?
         send_response('We noticed you tried to send a payment. Please resend it in this format. Ex. +5 #CheeseBurgers')
@@ -33,45 +33,36 @@ class MessageParser
         return if @amt_ary.blank?          # No further action needed
         
         # test for active accounts, they are now active by default.
-        if !@merchant.is_active?
+        unless @merchant.is_active
           # send_response
         elsif merchant_supports_payment?
           process_payment
-        else
-          # notify user and send to merchant dashboard
-          # send_response("Thank you for sending a payment with Rhombus, but the merchant hasn't completed the account to receive payments.")
-          # notify merchant via Email?
         end
        
-        send_deprecation_warning if is_old_format?
-      
-      elsif @customer.blank?               
-      
-        merchant_name = @merchant.org_name.present? ? @merchant.org_name : "Rhombus"
-
-        # params From only if SMS...need to support FbMessages too
-        if is_signup = is_signup?
-          short_link = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?num=#{params[:From]}&referrer_id=#{@merchant.id}&referrer=#{merchant_name}")
-          send_response("To chat with us or send a payment, sign up here: #{short_link}")
+        send_deprecation_warning if is_old_format?      
+      elsif @customer.blank?
+        # FbMessage/Messenger doesn't support signup links, only signin link...see method in messenger service class
+        # Check with Edwin on what to do for Messenger users
+        if @channel == "Message"
+          if is_signup = is_signup?
+            merchant_name = @merchant.org_name.present? ? @merchant.org_name : "Rhombus"
+            short_link = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?num=#{@received_msg.from}&referrer_id=#{@merchant.id}&referrer=#{merchant_name}")
+            send_response("To chat with us or send a payment, sign up here: #{short_link}")
+          elsif Message.where(from: @received_msg.from, to: @received_msg.to).limit(2).count < 2 && !is_signup
+            # merchant name is now through person
+            merchant_rep = @merchant.people.where(role: 0).first
+            first_name = (merchant_rep.present?) ? "my name is #{merchant_rep.first_name}, " : ''
+            custom_welcome = "Hi there, " + first_name + "how can I assist you today? If you're looking to send a payment, simply reply with the amount. Ex. +10 #donut"
+            custom_welcome = @merchant.custom_welcome unless @merchant.custom_welcome.blank?
+            send_response(custom_welcome)
+          end
         end
-
-        # This needs to support FbMessages too
-        if Message.where(from: params[:From], to: params[:To]).limit(2).count < 2 && !is_signup
-          # merchant name is now through person
-          merchant_rep = @merchant.people.where(role: 0).first
-          first_name = (merchant_rep.present?) ? "my name is #{merchant_rep.first_name}, " : ''
-          custom_welcome = "Hi there, " + first_name + "how can I assist you today? If you're looking to send a payment, simply reply with the amount. Ex. +10 #donut"
-          custom_welcome = @merchant.custom_welcome unless @merchant.custom_welcome.blank?
-          send_response(custom_welcome)
-        end
-
       end
     rescue StandardError => e
       # notify team
       puts e.message
     end
   end
-
 
   private
 
@@ -137,8 +128,8 @@ class MessageParser
   end
 
   def parse_amount_and_tag
-    if @tag.blank?                                        # tag doesnt exists
-      [@amt_ary[0], "no_tag"]                             # so charge amt user texted, set parse/outcome type, tag id, tag name
+    if @tag.blank?                                       
+      [@amt_ary[0], "no_tag"]                             # so charge amt user texted
     elsif @tag.present?      
       if @tag.non_payment_tag?                                               
         [@amt_ary[0], "no_tag_amt"]                       # so charge amt user texted
@@ -158,13 +149,11 @@ class MessageParser
         # notify user and send to merchant dashboard
         # send_response notify and send sign in link with payment capture
         # payment capture notice if cant ovveride_tag_amt
-        []
       elsif @amt_ary[1] == "cant_override_tag_amt"
         # notify user and send to merchant dashboard
         send_response notify of cant_override_tag_amt 
-        []       
       else
-        @amt_ary
+        return @amt_ary
       end
     else      
       # payment based messages
@@ -173,8 +162,8 @@ class MessageParser
       else
         send_sign_up_link without ovveride message
       end
-      []
     end
+    []
   end
 
   def is_signup?
@@ -192,8 +181,9 @@ class MessageParser
 
   def merchant_supports_payment?
     return true if @merchant.can_accept_payments?
-    send_response()
-    false
+    # notify user and send to merchant dashboard
+    # send_response("Thank you for sending a payment with Rhombus, but the merchant hasn't completed the account to receive payments.")
+    # notify merchant via Email?    false
   end
 
   def process_payment
@@ -233,6 +223,18 @@ class MessageParser
     # needs to handle messenger here
     # Send to merchant's messaging channel
     RealtimeStreamService.send_message_via_number(@received_msg.from, @merchant.rhombus_number, msg, message.created_at, true) if message
+  end
+
+  def handle_subscription_through_text
+    # if can override amount, create plan and create subscription
+    # else find the existing plan for tag and create subbscription
+
+    #@plan.owner = 1
+    #if @plan.create_plan({ currency: current_user.currency, team: current_user })
+
+    #u = User.find_by id: self.user_id
+    #@subscription.team_id = current_user.id
+    #if u && @subscription.create_subscription({ team: current_user, customer: u.customer_uri })
   end
 
 end
