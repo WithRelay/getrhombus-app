@@ -56,7 +56,6 @@ class SubscriptionsController < ApplicationController
       merchant_customer_id: @subscription.merchant_customer_id,
       quantity: @subscription.quantity
     )
-
     if subscription.create_subscription({ team: current_user }).first
       @subscription.cancel_subscription(current_user, false)
       flash[:notice] = 'Subscription upgraded successfully.'
@@ -132,7 +131,7 @@ class SubscriptionsController < ApplicationController
     end
 
     def store_next_plan(plan_id)
-      user_id = (MerchantCustomer.find @subscription.merchant_customer_id).customer_id
+      user_id = (MerchantCustomer.find @subscription.merchant_customer_id).id
       NextPlan.create(user_id: user_id, plan_id: plan_id, status: true)
     end
 end
