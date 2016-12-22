@@ -1,5 +1,5 @@
 $(document).ready(function () {
-
+  appendSubscritionInfo($('.subscription-row').find('td'));
   $('#subscription-select-coupon').selectize({
       maxItems: 1,
       valueField: 'id',
@@ -128,7 +128,6 @@ $(document).ready(function () {
   $('.auto-height').css('height', 'auto');
 
 $('.subscription-row').on('click', function(){
-  $('.submit-update-plan').removeClass("hidden");
   $id = this.id.split('-')[1];
   appendSubscritionInfo($(this).find('td'))
 });
