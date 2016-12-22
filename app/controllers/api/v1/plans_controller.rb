@@ -2,7 +2,7 @@ class Api::V1::PlansController < API::V1::BaseController
 
   def check_plan_name
     res = current_user.merchant_plans.where("lower(name) = ?", params[:plan][:name].downcase)
-    render json: { valid: res.empty? }
+    render json: { valid: res.blank? }
   end
 
   def index

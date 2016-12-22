@@ -6,7 +6,6 @@ class User < ActiveRecord::Base
 
   attr_accessor :phone, :captured_amt, :msg_id, :tag_id, :referrer_id, :tos_acceptance
 
-
   # validation rules for user attributes
   validates :tos_acceptance, acceptance: true, if: lambda { self.is_merchant? }, on: :update
   validates_presence_of :org_type, if: lambda { self.is_merchant? }, on: :update
@@ -115,6 +114,17 @@ class User < ActiveRecord::Base
     user_level == 0
   end
 
+  def is_platform?
+    #email == User.platform_email
+    self.email == '<redacted_email>' || self.email == '<redacted_email>'
+  end
+
+  def can_accept_payments?
+    # the last stripe_cred is either a managed acct, a managed acct even if a user had a standalone acct, or a standalone acct
+    creds = self.stripe_creds.last
+    creds.present? ? creds.charges_enabled && creds.disabled_reason.blank? : false
+  end
+
   def self.platform_email
     Rails.application.secrets.dashboard_email
   end
@@ -125,13 +135,9 @@ class User < ActiveRecord::Base
     User.find_by(email: "<redacted_email>") || User.find_by(email: "<redacted_email>")
   end
 
-  def is_platform?
-    #email == User.platform_email
-    email == '<redacted_email>' || email == '<redacted_email>'
-  end
-
-
   def get_team_uid
+    # platform acct is a standalone account and only one record exists for platform
+    # merchants could have 2 records. Managed, Standalone (prior to v1.5)
     t = is_platform? ? self.stripe_creds.first : self.stripe_creds.where(uid_type: 0).first
     t.uid if t
   end
@@ -171,7 +177,7 @@ class User < ActiveRecord::Base
   end
 
   def phone
-    user_level == 0 ? phone_number : org_phone
+    is_customer? ? phone_number : org_phone
   end
 
   def add_token_to_user(card_token)

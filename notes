@@ -16,7 +16,7 @@ Bhishma
 	- res from coupon may not be defined
 	- still upgrade subscription if coupon create fails
 - what's update plan route for?
-- review if response['success'] || fb_pages.empty? || fb_cred.fb_pages.where(subscription_status: true).empty?
+- review if response['success'] || fb_pages.blank? || fb_cred.fb_pages.where(subscription_status: true).blank?
 
 surya
 - can I migrate my jobs?
@@ -37,7 +37,9 @@ surya
 	- break up form - http://thecodeplayer.com/walkthrough/jquery-multi-step-form-with-progress-bar
 - Add plugin versions to file
 - make sure name in campaigns cannot be an empty string
-- rescue_scheduler.yml
+- rescue_scheduler.yml??
+- multistep form needs to fit with the space in the design - http://rhombus-test.webflow.io/setup-payments
+- when do we know a merchant stripe account is active?
 
 Ovo
 - add to list from user profile - http://rhombus-test.webflow.io/customer-profile

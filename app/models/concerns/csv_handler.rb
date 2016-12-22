@@ -51,7 +51,7 @@ module CSVHandler
         row = row.to_hash
         user = User.where(email: row[:email])
 
-        if user.empty?
+        if user.blank?
           # don't process the dummy data we put in the template file
           unless row[:email] == '<redacted_email>'
             error_message = "Unable to add customer with email: #{row[:email]} because"

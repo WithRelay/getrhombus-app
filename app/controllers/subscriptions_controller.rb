@@ -47,7 +47,7 @@ class SubscriptionsController < ApplicationController
   end
 
   def upgrade_subscription
-    amount = unused_amount
+    amount = @subscription.unused_amount
     coupon_res = create_coupon(amount) if amount > 0
     # move user to new subscription based on the new plan selected
     new_subscription = Subscription.new(
@@ -99,37 +99,6 @@ class SubscriptionsController < ApplicationController
         @coupon.destroy
         false
       end
-    end
-
-    def unused_amount
-      plan = @subscription.plan
-      plan_amt = plan.amount
-      coupon_amt = 0
-
-      # calculate coupon amount
-      coupon = @subscription.coupon
-      if coupon.present?
-        if coupon.amount_off.present?
-          coupon_amt = plan_amt - coupon.amount_off
-        else
-          coupon_amt = plan_amt - (coupon.percent_off/100.to_f * plan_amt).round(2)
-        end
-      end
-
-      # amount after coupon discount
-      plan_amt = plan_amt - coupon_amt
-
-      # calculate number of days from subscription start to subscription end
-      # stripe most likely stores time in UTC
-      start_date = DateTime.strptime(@subscription.current_period_start.to_s,'%s')
-      end_date = DateTime.strptime(@subscription.current_period_end.to_s,'%s')
-      total_days = (end_date - start_date).to_i + 1  # +1 to include the start day
-
-      days_remaining = (end_date - DateTime.now.utc).to_i
-      days_remaining = (days_remaining > 0) ? days_remaining : 0
-
-      plan_amt = (plan_amt.to_f / total_days).round(2)            # plan amount per day
-      (100*(plan_amt * days_remaining)).round                     # unspent amount (prorated per day)
     end
 
     def store_next_plan(plan_id)

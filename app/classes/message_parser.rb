@@ -30,7 +30,7 @@ class MessageParser
         @amt_ary = parse_amount_and_tag
         @amt_ary = parse_user
        
-        return if @amt_ary.empty?          # No further action needed
+        return if @amt_ary.blank?          # No further action needed
         
         # test for active accounts, they are now active by default.
         if !@merchant.is_active?
@@ -45,7 +45,7 @@ class MessageParser
        
         send_deprecation_warning if is_old_format?
       
-      elsif @customer.empty?               
+      elsif @customer.blank?               
       
         merchant_name = @merchant.org_name.present? ? @merchant.org_name : "Rhombus"
 
@@ -137,7 +137,7 @@ class MessageParser
   end
 
   def parse_amount_and_tag
-    if @tag.empty?                                        # tag doesnt exists
+    if @tag.blank?                                        # tag doesnt exists
       [@amt_ary[0], "no_tag"]                             # so charge amt user texted, set parse/outcome type, tag id, tag name
     elsif @tag.present?      
       if @tag.non_payment_tag?                                               
@@ -191,7 +191,9 @@ class MessageParser
   end
 
   def merchant_supports_payment?
-
+    return true if @merchant.can_accept_payments?
+    send_response()
+    false
   end
 
   def process_payment
@@ -204,6 +206,7 @@ class MessageParser
 
   def not_repeating_payment?
     # if necessary, you could modify the query to return a text sent to a specific merchant..so add user_id_to
+    # the last message contains the current message, so remove from results
     last_messages = @channel.constantize.where("user_id = ? and created_at >= ?", @customer.id, Time.current.utc - 5.minutes).order(created_at: :desc)[1..-1]
     return true if last_messages.nil?
     
