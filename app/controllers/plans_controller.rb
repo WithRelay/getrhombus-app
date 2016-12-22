@@ -23,28 +23,13 @@ class PlansController < ApplicationController
   end
 
   def create
-    @plan = Plan.new(plan_params)
-
-    if @plan.create_plan({ team: current_user })
-      redirect_to user_plans_path,  flash: { notice: 'Plan was created' }      #respond_with(@plan)
-    else
-      @plan.destroy     # revoke created plan on error
-      if @plan.errors.messages.present?
-        error = @plan.errors.full_messages
-        flash[:error] = error
-      else
-        flash[:error] = "We couldn't create the plan"
-      end
-      render :new
-    end
   end  
 
   def edit
   end
 
   def update
-    hash = params.require(:plan).permit(:name)
-    if @plan.update_plan(hash, current_user)
+    if @plan.update_plan(plan_params, current_user)
       redirect_to user_plans_path, flash: { notice: 'Plan was updated' }
     else
       flash[:error] = "We couldn't update the plan"
