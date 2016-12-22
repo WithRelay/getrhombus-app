@@ -258,18 +258,19 @@ class User < ActiveRecord::Base
       EmailingService.send_welcome_email(self.email, owner.rhombus_number, "merchant")
     elsif self.user_level == 0
       ref = self.referrers.first
+      message = Message.new
       unless ref.blank?
         referrer = User.find_by(id: ref.referrer_id)
-        EmailingService.send_welcome_email_with_referral(ref.email, self.email, ref.org_name, ref.rhombus_number, owner.rhombus_number)
+        EmailingService.send_welcome_email_with_referral(referrer.email, self.email, referrer.org_name, referrer.rhombus_number, owner.rhombus_number)
         text = "Thanks for signing up! Please add a payment card to your Rhombus profile (if you haven't done so).
         You can chat with us anytime via sms or to make a payment, just text the amount & description/hashtag. Ex. +10 #donut"
-        Message.send_and_save_message(ref.rhombus_number, self.phone_number, text)
+        message.send_and_save_message(referrer.rn_type, referrer.rhombus_number, self.phone_number, text)
       else
         EmailingService.send_welcome_email(self.email, owner.rhombus_number, "customer")
         text = "Thanks for signing up! Please add a payment card to your Rhombus profile (if you haven't done so).
         You can chat with a local business anytime by texting their Rhombus number or to make a payment, just text the amount &
         description/hashtag. Ex. +10 #donut"
-        Message.send_and_save_message(owner.rhombus_number, self.phone_number, text)
+        message.send_and_save_message(owner.rn_type, owner.rhombus_number, self.phone_number, text)
       end
     end
   end

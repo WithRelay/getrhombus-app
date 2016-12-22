@@ -49,7 +49,7 @@ Taiwo (review)
 - review managed account..
 - subscription, subscription controller and stripe customer creation places
 - Review adding token...failing safely.
-- on subscription - check if user alreaokdy belongs to merchant??? is this when they text?
+- on subscription - check if user already belongs to merchant??? is this when they text?
 	- customers can create subscriptions over messaging...not dashboard, but can cancel subscription
 - finish message parser and review how messsages are saved
 - final review of updating subscriptions, coupons, plans...do we update subscriptions esp platform??

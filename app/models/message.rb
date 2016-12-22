@@ -9,45 +9,35 @@ class Message < ActiveRecord::Base
   has_many :conversation_refs, as: :textable, dependent: :destroy
   has_many :conversations, through: :conversation_refs
 
-  has_many :notification_logs, as: :notifiable
-  
+  has_one :notification_log, class_name: 'NotificationLog', foreign_key: 'channel_id'  
   # belongs_to :user, counter_cache: true
-  # For sending and saving all outbound text messages
 
-  # combine into one method with below
-  def self.send_and_save_message(from, to, message, media_ary = [])
+  # For sending and saving all outbound text messages
+  def send_and_save_message(rn_type, from, to, message, media_ary = [])
     begin
-      msg = Message.new
-      msg.update_attributes(from: from, to: to, text: message, unread: false)
-      if response = TextingService.send_sms(from, to, message, media_ary)
-        msg.update_attributes(status: response.status, message_id: response.sid, message_timestamp: response.date_updated, message_price: response.price,
-              error_code: response.error_code, error_text: response.error_message, price_unit: response.price_unit, num_segments: response.num_segments)
-      else
-        Notification.text_failure_notification(response, from, to, message).deliver_now                         # Notify team of failure
-        false
+      self.update_attributes(from: from, to: to, text: message, unread: false)
+      api = (rn_type.present?) ? "twilio" : "nexmo"
+
+      if api == "twilio"        
+        if response = TextingService.send_sms(from, to, message, media_ary)
+          self.update_attributes(status: response.status, message_id: response.sid, message_timestamp: response.date_updated, message_price: response.price,
+                error_code: response.error_code, error_text: response.error_message, price_unit: response.price_unit, num_segments: response.num_segments)
+        else
+          Notification.text_failure_notification(response, from, to, message).deliver_now                         # Notify team of failure
+          false
+        end
+      elsif api == "nexmo"        
+        response = TextingService.send_sms_nexmo(from, to, message)
+        if response && response.code == 200 && response["messages"].first["status"] == "0"
+            msg.update_attributes(status: response['messages'].first['status'], message_id: response['messages'].first['message-id'],
+                message_price: response['messages'].first['message-price'], num_segments: response['message-count'])
+        else
+          Notification.text_failure_notification(response["messages"].first, from, to, message).deliver_now               # Notify team of failure
+          false
+        end
       end
     rescue StandardError => err
       false
-    end
-  end
-
-  # combine into one method with above
-  def self.send_and_save_message_nexmo(from, to, message)
-    begin
-      # save the outbound message
-      msg = Message.new
-      msg.update_attributes(from: from, to: to, text: message, unread: false)
-      response = TextingService.send_sms_nexmo(from, to, message)
-
-      if response && response.code == 200 && response["messages"].first["status"] == "0"
-          msg.update_attributes(status: response['messages'].first['status'], message_id: response['messages'].first['message-id'],
-              message_price: response['messages'].first['message-price'], num_segments: response['message-count'])
-      else
-        Notification.text_failure_notification(response["messages"].first, from, to, message).deliver_now               # Notify team of failure
-        false
-      end
-    rescue StandardError => err
-        false
     end
   end
 

@@ -24,7 +24,9 @@ class PaymentService
         err  = e.json_body[:error]
         owner = User.find_by(email: Rails.application.secrets.team_email)
         unless hash[:is_merchant]
-          Message.send_and_save_message(owner.rhombus_number, current_user.phone_number, "We were unable to update your card info on Rhombus because: #{err[:message]}.")
+          customer = User.find_by(email: hash[:email])
+          message = Message.new
+          message.send_and_save_message(owner.rn_type, owner.rhombus_number, customer.phone_number, "We were unable to update your card info on Rhombus because: #{err[:message]}.")
         end
         # redo this email
         # Notification.token_failure_notification(err, hash[:email]).deliver_now

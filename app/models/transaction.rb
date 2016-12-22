@@ -6,7 +6,7 @@ class Transaction < ActiveRecord::Base
 
   has_one :message
   has_one :refund
-  has_one :notification_log, as: :notifiable, dependent: :destroy
+  has_many :notification_logs, as: :notifiable, dependent: :destroy
 
   belongs_to :hashtag
   belongs_to :merchant_customer
@@ -32,7 +32,8 @@ class Transaction < ActiveRecord::Base
 
       unless response
         if payment_response_array[2]
-          message = Message.send_and_save_message(merchant.rhombus_number, user.phone_number, "Your payment to #{merchant.org_name} failed because: #{err[:message]}")
+          message = Message.new
+          message.send_and_save_message(merchant.rn_type, merchant.rhombus_number, user.phone_number, "Your payment to #{merchant.org_name} failed because: #{err[:message]}")
           # Send to merchant's messaging channel
           RealtimeStreamService.send_message_via_number(user.phone_number, merchant.rhombus_number, message.text, message.created_at, true) if message        
         end
@@ -96,10 +97,10 @@ class Transaction < ActiveRecord::Base
     msg = Message.new
     first_name = (user.card_name.present?) ? " " + user.card_name.split.first : ''
     if merchant.tax_percent == "0"
-      msg.send_and_save_message(merchant.rhombus_number, user.phone_number, 
+      msg.send_and_save_message(merchant.rn_type, merchant.rhombus_number, user.phone_number, 
         "Thanks" + first_name + ". A payment of #{amount_in_hundreds} (#{response.currency}) was sent to #{merchant.org_name}.")
     else
-      msg.send_and_save_message(merchant.rhombus_number, user.phone_number, 
+      msg.send_and_save_message(merchant.rn_type, merchant.rhombus_number, user.phone_number, 
         "Thanks" + first_name + ". A payment of #{amount_with_taxes_in_hundreds} (#{response.currency}) plus taxes and fees set by #{merchant.org_name} was sent.")
     end
     

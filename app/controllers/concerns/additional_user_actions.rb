@@ -109,11 +109,11 @@ module AdditionalUserActions
 
   # Sends a message to user on behalf of merchant
   def send_message_from_merchant
-    if !params[:message].blank?
+    if params[:message].present?      
       merchant = User.find_by_id(params[:id])
-      if !merchant.blank?
-        message = Message.send_and_save_message(merchant.rhombus_number, params[:user_number], params[:message])
-        if message
+      if merchant.present?
+        message = Message.new
+        if message.send_and_save_message(merchant.rn_type, merchant.rhombus_number, params[:user_number], params[:message])
           render :json => Hash['success' => true, 'user_level' => merchant.user_level, 'profile_image' => ActionController::Base.helpers.asset_path('rhombus_icon_50x50.png'), 'ts_day_of_the_week' => message.created_at.strftime('%A'), 'ts_time' => message.created_at.strftime('%l:%M %P')].to_json
           return
         end

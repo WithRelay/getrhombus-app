@@ -1,22 +1,19 @@
 class MessageParser
 
-  # How to differentiate messenger and sms?
+  ## How to differentiate messenger and sms?
   ## TEST captured link for sign in
 
-  def process_message(team, customer, message, msg_id, channel)
+  def process_message(team, customer, msg, channel)
     begin
       
-      @msg_id = msg_id # message object is better here
-      @msg_text = message.strip
-      @channel = channel
+      @received_msg = msg
+      @channel = channel    # Message or FbMessage
+
+      @customer = customer
+      @merchant = team
 
       @amt_ary = check_for_payment
       is_old_format? = @amt_ary[0] && @amt_ary[1] == "$"
-
-      # change params...see function params...use initializer?
-      # or just pass in the user objects
-      @customer = User.find_by(phone_number: params[:From])
-      @merchant = User.find_by(rhombus_number: params[:To])
 
       # scenarios
       # 1. invalid payment intent -> invalid amount and valid sign
@@ -55,7 +52,7 @@ class MessageParser
 
         # params From only if SMS...need to support FbMessages too
         if is_signup = is_signup?
-          short_link = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?num=#{params[:From]}&referrer_id=#{@this_merchant.id}&referrer=#{merchant_name}")
+          short_link = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?num=#{params[:From]}&referrer_id=#{@merchant.id}&referrer=#{merchant_name}")
           send_response("To chat with us or send a payment, sign up here: #{short_link}")
         end
 
@@ -93,8 +90,8 @@ class MessageParser
   
   # check for payment with this format. Ex: $20 fee
   def is_payment_dollar?
-    amount = @msg_text.split(" ", 2).first[1..-1]
-    dollar = @msg_text.chr == "$" ? "$" : false
+    amount = @received_msg.text.split(" ", 2).first[1..-1]
+    dollar = @received_msg.text.chr == "$" ? "$" : false
     return to_cents(amount), dollar if is_number?(amount) && dollar.present?
     return false, dollar
   end
@@ -114,7 +111,7 @@ class MessageParser
   # scan for hashtag and + sign and amt.
   # amt could be invalid, so still track if + was present so user can be notified of payment format.
   def is_payment_plus?
-    t = @msg_text.scan(/[+#]\S+/)
+    t = @received_msg.text.scan(/[+#]\S+/)
     amt = false
     @tag = false
     plus_present = false
@@ -183,7 +180,7 @@ class MessageParser
 
   def is_signup?
     words = ['signup', 'sign-up', 'give', 'pay', 'buy', 'donate']
-    return true if words.include? @msg_text.downcase.gsub(/\s+/, "")
+    return true if words.include? @received_msg.text.downcase.gsub(/\s+/, "")
     return false
   end
 
@@ -201,32 +198,33 @@ class MessageParser
   def process_payment
     if not_repeating_payment?
       # scope this to number
-      customer_txn_id = Transaction.charge_customer_card(@amt_ary, @this_merchant, @this_user, @msg_text)
-      @saved_msg.update(transaction_id: customer_txn_id) if @saved_msg && @saved_msg.id.present?   # Save transaction id
+      customer_txn_id = Transaction.charge_customer_card(@amt_ary, @merchant, @this_user, @received_msg.text)
+      @received_msg.update(transaction_id: customer_txn_id)
     end
   end
 
   def not_repeating_payment?
     # if necessary, you could modify the query to return a text sent to a specific merchant..so add user_id_to
-    last_messages = Message.where("user_id = ? and created_at >= ?", @this_user.id, Time.current.utc - 5.minutes).order(created_at: :desc)[1..-1]
+    last_messages = @channel.constantize.where("user_id = ? and created_at >= ?", @customer.id, Time.current.utc - 5.minutes).order(created_at: :desc)[1..-1]
     return true if last_messages == nil
+    
     last_messages.each do |m|
-      return false if m.text.strip == @msg_text
+      return false if m.text.strip == @received_msg.text
     end
-    return true
+    true
   end
 
   def send_sign_up_link
     short_link = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?amt=#{amt_ary[0]}&num=#{params[:msisdn]}
-                                      &referrer_id=#{@this_merchant.id}&referrer=#{@this_merchant.org_name}&msg_id=#{@saved_msg.id}")
+                                      &referrer_id=#{@merchant.id}&referrer=#{@merchant.org_name}&msg_id=#{@received_msg.id}")
     send_response("Hi there, thanks for reaching out...to send a payment, sign up here. Thanks! => #{short_link}")
   end
 
-  def send_response(msg)
-    
-    if @channel == 'sms'
-      message = Message.send_and_save_message(params[:To], params[:From], msg)
-    elsif @channel == "messenger"
+  def send_response(msg)    
+    if @channel == 'Message'
+      message = Message.new
+      message.send_and_save_message(@merchant.rn_type, @merchant.rhombus_number, @customer.phone_number, msg)
+    elsif @channel == "FbMessage"
 
     end
 

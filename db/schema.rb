@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161220234458) do
+ActiveRecord::Schema.define(version: 20161222045450) do
 
   create_table "addresses", force: :cascade do |t|
     t.string   "street_address",   limit: 191
@@ -389,11 +389,13 @@ ActiveRecord::Schema.define(version: 20161220234458) do
     t.string   "notifiable_type", limit: 191
     t.string   "notify_type",     limit: 191
     t.string   "channel",         limit: 191
+    t.integer  "channel_id",      limit: 4
     t.string   "reason",          limit: 191
     t.datetime "created_at",                  null: false
     t.datetime "updated_at",                  null: false
   end
 
+  add_index "notification_logs", ["channel_id"], name: "index_notification_logs_on_channel_id", using: :btree
   add_index "notification_logs", ["notifiable_type", "notifiable_id"], name: "index_notification_logs_on_notifiable_type_and_notifiable_id", using: :btree
 
   create_table "open_cnam_data", force: :cascade do |t|
