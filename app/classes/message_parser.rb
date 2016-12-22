@@ -205,7 +205,7 @@ class MessageParser
   def not_repeating_payment?
     # if necessary, you could modify the query to return a text sent to a specific merchant..so add user_id_to
     last_messages = @channel.constantize.where("user_id = ? and created_at >= ?", @customer.id, Time.current.utc - 5.minutes).order(created_at: :desc)[1..-1]
-    return true if last_messages == nil
+    return true if last_messages.nil?
     
     last_messages.each do |m|
       return false if m.text.strip == @received_msg.text
