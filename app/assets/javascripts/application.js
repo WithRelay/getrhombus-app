@@ -58,4 +58,5 @@
 //= require dashboard/messaging_angularjs/messaging.js
 //= require bootstrap-select
 //= require moment
+//= require jquery_easing.min
 //= require_tree .
