@@ -155,7 +155,7 @@ $('.downgrade-plan-selector').on('click', function(){
 
 $('.submit-update-plan').on('click',function(){
   action = $('#plan-update-form').attr('action') + '/' + $id;
-  actionName = ($('.submit-update-plan').val() === 'Upgrade Plan') ? 'upgrading_subscription' : 'downgrading_subscription' 
+  actionName = ($('.submit-update-plan').val() === 'Upgrade Plan') ? 'upgrade_subscription' : 'downgrade_subscription' 
   action = action + '/' + actionName;
   $('#plan-update-form').attr('action', action);
   $('#plan-update-form').attr('href', action)

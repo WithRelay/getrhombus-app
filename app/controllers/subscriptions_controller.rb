@@ -46,7 +46,7 @@ class SubscriptionsController < ApplicationController
     end
   end
 
-  def upgrading_subscription
+  def upgrade_subscription
     amount = unused_amount
     coupon_res = create_coupon(amount) if amount > 0
     # move user to new subscription based on the new plan selected
@@ -68,7 +68,7 @@ class SubscriptionsController < ApplicationController
     redirect_to user_subscriptions_path
   end
 
-  def downgrading_subscription
+  def downgrade_subscription
     if @subscription.cancel_subscription(current_user)
       # Store new plan that user wants to downgrade to
       store_next_plan(params[:subscription][:plan_id])
