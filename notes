@@ -12,7 +12,7 @@ Bhishma
 - if response['success'] || fb_pages.empty? || FbPage.where(subscription_status: true).empty?
 - using page_id alone?
 - coupon name needs to check for existence
-- if next plan is used, change status = false
+- if next plan is used, change status = false, if upgrade....sent all next plan to false
 
 surya
 - can I migrate my jobs?
