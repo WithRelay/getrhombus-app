@@ -37,11 +37,6 @@ class SubscriptionsController < ApplicationController
     end
   end
 
-  # def update
-  #   @subscription.update(subscription_params)
-  #   respond_with(@subscription)
-  # end
-
   def destroy
     if @subscription.cancel_subscription(current_user)
       flash[:notice] = 'Your subscription will been canceled at period end.'
@@ -52,7 +47,8 @@ class SubscriptionsController < ApplicationController
   end
 
   def upgrading_subscription
-    res = create_coupon(unused_amount)
+    amount = unused_amount
+    res = create_coupon(amount) if amount > 0
     # move user to new subscription based on the new plan selected
     subscription = Subscription.new(
       plan_id: params[:subscription][:plan_id],
@@ -60,7 +56,8 @@ class SubscriptionsController < ApplicationController
       merchant_customer_id: @subscription.merchant_customer_id,
       quantity: @subscription.quantity
     )
-    if res.first && subscription.create_subscription({ team: current_user }).first
+
+    if subscription.create_subscription({ team: current_user }).first
       @subscription.cancel_subscription(current_user, false)
       flash[:notice] = 'Subscription upgraded successfully.'
     else
@@ -105,26 +102,16 @@ class SubscriptionsController < ApplicationController
     end
 
     def unused_amount
-      plan = Plan.find @subscription.plan_id
-      total_amount = plan.amount
-      plan_interval = (plan.interval == 'day') ? plan.interval_count :
-                                        ((plan.interval == 'week') ? plan.interval_count*7 : plan.interval_count*30)
-
-      used_amount = ((Time.current.to_i - @subscription.current_period_start)/1.days) * total_amount / plan_interval
-      unused_amount = total_amount - used_amount
-    end
-
-    def unused_amount
       plan = @subscription.plan
       plan_amt = plan.amount
       coupon_amt = 0
 
       # calculate coupon amount
       if @subscription.coupon.present?
-        if @subscription.amount_off.present?
-          coupon_amt = plan_amt - @subscription.amount_off
+        if @subscription.coupon.amount_off.present?
+          coupon_amt = plan_amt - @subscription.coupon.amount_off
         else
-          coupon_amt = plan_amt - (@subscription.percent_off/100.to_f * plan_amt).round(2)
+          coupon_amt = plan_amt - (@subscription.coupon.percent_off/100.to_f * plan_amt).round(2)
         end
       end
 
@@ -141,10 +128,7 @@ class SubscriptionsController < ApplicationController
       days_remaining = (days_remaining > 0) ? days_remaining : 0
 
       plan_amt = (plan_amt.to_f / total_days).round(2)          # plan amount per day
-      (plan_amt * days_remaining).round(2)                      # unspent amount (prorated per day)
-
-      # next steps
-      # create coupon only if this method is greater than 0.0
+      (100*(plan_amt * days_remaining)).round                     # unspent amount (prorated per day)
     end
 
     def store_next_plan(plan_id)
