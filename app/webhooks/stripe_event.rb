@@ -141,7 +141,7 @@ class StripeEvent
       charge = PaymentService.retrieve_charge(@hash[:charge]) if @hash[:charge] 
       # a transaction should not already exist but we need to check if it does so we don't send out emails again
       # A tranasaction has only one log unlike subscriptions
-      txn = Transaction.includes(:notification_log).where(txn_uri: charge.id).first_or_initialize if charge
+      txn = Transaction.includes(:notification_logs).where(txn_uri: charge.id).first_or_initialize if charge
 
       # if we havent notified customer before
       # for now, we have only one line for each invoice - the subscription
@@ -183,7 +183,8 @@ class StripeEvent
             @data.update_attribute(:transaction_id, txn.id)
             # Notify customer and/or merchant
             # Notify (admin)
-            txn.notification_log = NotificationLog.create(notify_type: 'new_transaction', reason: 'receipt', channel: 'email')
+
+            txn.notification_logs << NotificationLog.create(notify_type: 'new_transaction', reason: 'receipt', channel: 'email')
           end
         end
       end
@@ -243,13 +244,13 @@ class StripeEvent
     private
     # Subscribe customer to next plan (downgrading plan)
     def subscribe_next_plan
-      next_plan = NextPlan.where(user_id: @data.merchant_customer.id, status: true).first
+      next_plan = NextPlan.where(user_id: @data.merchant_customer.customer_id, status: true).first
       if next_plan
         subscription = Subscription.new(
           plan_id: next_plan.plan_id,
-          merchant_customer_id: next_plan.user_id
+          merchant_customer_id: @data.merchant_customer.id
         )
-        team = (MerchantCustomer.find next_plan.user_id).merchant
+        team = MerchantCustomer.find_by(customer_id: next_plan.user_id).merchant
         res = subscription.create_subscription({team: team})
         next_plan.update(status: false) if res.first
       end
