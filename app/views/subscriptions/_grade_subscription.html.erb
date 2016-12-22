@@ -11,10 +11,12 @@
     </a>
     <div class="settings-info-div">
         <h1 class="business-plan plan-name plans-text">Current Subscription Details:</h1>
-        <div class="flex-underline plan-div"></div>
+        <div class="flex-underline plan-div">
+            You don't have selected any subscriptions
+        </div>
     </div>
 
   <%= f.text_field :plan_id, class: 'hidden', value: '30' %>
   <br>
-  <%= f.submit 'Upgrade Plan', class: 'btn btn-success submit-update-plan' %>
+  <%= f.submit 'Upgrade Plan', class: 'btn btn-success submit-update-plan hidden' %>
 <% end %>

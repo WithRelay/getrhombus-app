@@ -128,7 +128,8 @@ $(document).ready(function () {
 
 $('.subscription-row').on('click', function(){
   $id = this.id.split('-')[1];
-  appendSubscritionInfo($(this).find('td'))
+  appendSubscritionInfo($(this).find('td'));
+  $('.submit-update-plan').removeClass("hidden");
 });
 
 function appendSubscritionInfo(subscriptionData){
