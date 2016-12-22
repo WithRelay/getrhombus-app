@@ -27,6 +27,9 @@ class TextingService
   
     def send_sms(from, to, body, media_ary = [])
       begin
+        from.chr != "+" && from.prepend("+")
+        to.chr != "+" && to.prepend("+")
+
         client = Twilio::REST::Client.new TWILIO_API_KEY, TWILIO_API_SECRET
         data = { from: from, to: to, body: body, application_sid: TWILIO_RHOMBUS_APP_SID }
         # 5MB max size, 10 images max

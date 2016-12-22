@@ -1,6 +1,5 @@
 class MessageParser
 
-  ## How to differentiate messenger and sms?
   ## TEST captured link for sign in
 
   def process_message(team, customer, msg, channel)
@@ -27,7 +26,7 @@ class MessageParser
       elsif @amt_ary[0] && @amt_ary[1].present? && !is_amount_under_limit?              
       elsif @amt_ary[0] && @amt_ary[1].present?             
 
-        @tag = Hashtag.where('user_id = ? and lower(tag) = ?', @merchant.id, @tag.downcase).first : nil
+        (@tag = Hashtag.where('user_id = ? and lower(tag) = ?', @merchant.id, @tag.downcase).first : nil) if @tag.present?
         @amt_ary = parse_amount_and_tag
         @amt_ary = parse_user
        
@@ -198,7 +197,7 @@ class MessageParser
   def process_payment
     if not_repeating_payment?
       # scope this to number
-      customer_txn_id = Transaction.charge_customer_card(@amt_ary, @merchant, @this_user, @received_msg.text)
+      customer_txn_id = Transaction.charge_customer_card(@amt_ary, @merchant, @customer, @received_msg.text)
       @received_msg.update(transaction_id: customer_txn_id)
     end
   end
@@ -215,7 +214,7 @@ class MessageParser
   end
 
   def send_sign_up_link
-    short_link = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?amt=#{amt_ary[0]}&num=#{params[:msisdn]}
+    short_link = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?amt=#{amt_ary[0]}&num=#{@received_msg.from}
                                       &referrer_id=#{@merchant.id}&referrer=#{@merchant.org_name}&msg_id=#{@received_msg.id}")
     send_response("Hi there, thanks for reaching out...to send a payment, sign up here. Thanks! => #{short_link}")
   end
@@ -223,13 +222,14 @@ class MessageParser
   def send_response(msg)    
     if @channel == 'Message'
       message = Message.new
-      message.send_and_save_message(@merchant.rn_type, @merchant.rhombus_number, @customer.phone_number, msg)
+      message.send_and_save_message(@merchant.rn_type, @merchant.rhombus_number, @received_msg.from, msg)
     elsif @channel == "FbMessage"
 
     end
 
+    # needs to handle messenger here
     # Send to merchant's messaging channel
-    RealtimeStreamService.send_message_via_number(params[:From], params[:To], msg, message.created_at, true) if message
+    RealtimeStreamService.send_message_via_number(@received_msg.from, @merchant.rhombus_number, msg, message.created_at, true) if message
   end
 
 end
