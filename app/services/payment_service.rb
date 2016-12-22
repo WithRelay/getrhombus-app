@@ -250,7 +250,19 @@ class PaymentService
         false
       end
     end
-  
+    
+
+    def retrieve_charge(charge_id)
+      begin
+        re = Stripe::Charge.retrieve(charge_id)
+      rescue Stripe::StripeError => e
+        # Display a very generic error to the user, and maybe send yourself an email
+        false
+      rescue StandardError => e
+        false
+      end
+    end
+
     # Some countries require that the routing num and institition num be concatenated with a specific character
     # that's in index postion 1
     def stripe_country_list
