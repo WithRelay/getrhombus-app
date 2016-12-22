@@ -19,7 +19,7 @@ class NexmoEvent
     @message.message_timestamp = @param['message-timestamp']
     @message.user_id = get_user_id
     @message.user_id_to = get_merchant_id
-    @message.text ||= @param[:text]
+    @message.text ||= @param[:text].strip
     @message.message_price = @param[:price]
     @message.status = @param[:status]
     @message.error_code = @param['err-code']

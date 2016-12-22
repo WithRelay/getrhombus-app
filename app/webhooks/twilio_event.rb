@@ -30,7 +30,7 @@ class TwilioEvent
         user_id: get_user_id,
         user_id_to: get_merchant_id,
         message_id: @param[:MessageSid],
-        text: @data.body,
+        text: @data.body.strip,
         num_segments: @data.num_segments,
         price_unit: @data.price_unit
       )
@@ -45,7 +45,7 @@ class TwilioEvent
         user_id: get_user_id,
         user_id_to: get_merchant_id,
         message_id: @param[:MessageSid],
-        text: @param[:Body],
+        text: @param[:Body].strip,
         num_segments: @param[:NumSegments],
         price_unit: @data.price_unit,
         message_timestamp: @data.date_sent,
