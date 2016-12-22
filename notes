@@ -9,10 +9,14 @@ Bhishma
 		- page can reload
 	- In plans, remove user_id, add merchant_id and customer_id to track customer plans
 	- Add back cancel subscription now
-- if response['success'] || fb_pages.empty? || FbPage.where(subscription_status: true).empty?
 - using page_id alone?
 - coupon name needs to check for existence
 - if next plan is used, change status = false, if upgrade....sent all next plan to false
+- upgrading subscription 
+	- res from coupon may not be defined
+	- still upgrade subscription if coupon create fails
+- what's update plan route for?
+- review if response['success'] || fb_pages.empty? || fb_cred.fb_pages.where(subscription_status: true).empty?
 
 surya
 - can I migrate my jobs?

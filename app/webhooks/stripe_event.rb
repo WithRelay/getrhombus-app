@@ -19,12 +19,10 @@ class StripeEvent
                         # .where("stripe_subscription_id = ? and notify_type = ?", @hash[:id], 'subscription_trial_will_end').first
         # set_time_zone(@data.merchant_customer.merchant.time_zone)
         update_subscription_data
-        if @data
-          # find merchant and admin
-          # Email merchant of time left(merchant)
-          # Notify us too (admin)
-          @data.notification_logs << NotificationLog.create(notify_type: 'subscription_trial_will_end', channel: 'email', reason: 'Subscription trial is about to end.')
-        end
+        
+        # Email merchant of time left(merchant)
+        # Notify us too (admin)
+        @data.notification_logs << NotificationLog.create(notify_type: 'subscription_trial_will_end', channel: 'email', reason: 'Subscription trial is about to end.')
       end
     end
 
@@ -36,14 +34,13 @@ class StripeEvent
 
         # set_time_zone(@data.merchant_customer.merchant.time_zone)
         update_subscription_data if @data
-        # subscribe customer with next plan  if present
-        subscribe_next_plan
-        if @data
-          # find merchant or user and admin
-          # Email about cancellation
-          # Notify us too (admin)
-          @data.notification_logs << NotificationLog.create(notify_type: 'subscription_deleted', channel: 'email', reason: 'Subscription has been deleted.')
-        end
+        
+        # subscribe merchant (rhombus platform saas customer) to next plan if present
+        subscribe_merchant_to_downgraded_plan if @data.merchant_customer.customer.is_merchant?  
+
+        # Email about cancellation
+        # Notify us too (admin)
+        @data.notification_logs << NotificationLog.create(notify_type: 'subscription_deleted', channel: 'email', reason: 'Subscription has been deleted.')
       end
     end
 
@@ -243,14 +240,10 @@ class StripeEvent
 
     private
     # Subscribe customer to next plan (downgrading plan)
-    def subscribe_next_plan
-      next_plan = NextPlan.where(user_id: @data.merchant_customer.customer_id, status: true).first
-      if next_plan
-        subscription = Subscription.new(
-          plan_id: next_plan.plan_id,
-          merchant_customer_id: @data.merchant_customer.id
-        )
-        team = MerchantCustomer.find_by(customer_id: next_plan.user_id).merchant
+    def subscribe_merchant_to_downgraded_plan
+      if next_plan = NextPlan.where(user_id: @data.merchant_customer.customer_id, status: true).last
+        subscription = Subscription.new(plan_id: next_plan.plan_id, merchant_customer_id: @data.merchant_customer.id)
+        team = MerchantCustomer.find_by(customer_id: next_plan.user_id).customer
         res = subscription.create_subscription({team: team})
         next_plan.update(status: false) if res.first
       end

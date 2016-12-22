@@ -43,7 +43,7 @@ class Api::V1::PlansController < API::V1::BaseController
     params.require(:plan).permit(:interval, :name, :amount, :trial_period_days).tap{ |plan|
       # round - deal with inaccurate floating point math. see 100 * 1.1
       plan[:amount] = (100 * plan[:amount].to_f).round if plan[:amount].present?
-      interval_ary = params[:plan][:interval].split("_")
+      interval_ary = plan[:interval].split("_")
       plan[:interval] = interval_ary[0]
       plan[:interval_count] = interval_ary[1]
     }

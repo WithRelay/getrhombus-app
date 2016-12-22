@@ -68,6 +68,7 @@ class User < ActiveRecord::Base
 
   has_many :merchant_plans, class_name: 'Plan', foreign_key: 'merchant_id'
   has_many :customer_plans, class_name: 'Plan', foreign_key: 'customer_id'
+  has_many :next_plans
   has_many :coupons
 
   has_one :twitter_cred
