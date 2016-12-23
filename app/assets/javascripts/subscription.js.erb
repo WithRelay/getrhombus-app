@@ -168,6 +168,29 @@ $('.submit-update-plan').on('click',function(){
   }
 });
 
+// create subscription through api with modal
+$('#create-subscription').on('click', function(){
+  $.ajax({
+      url: "/v1/subscriptions/create",
+      beforeSend: function(xhr) {
+        xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
+      },
+      type: "POST",
+      data: $('#subscriptionForm').serialize(),
+      dataType: "json"
+    })
+    .done(function(data, textStatus, jqXHR) {
+      FlashHandler.setFlashMessage(data.response, 'notice');
+      location.reload();
+    })
+    .fail(function(data, textStatus, errorThrown) {
+      FlashHandler.setFlashMessage(JSON.parse(data.responseText).response, 'error');
+    })
+    .always(function(data, textStatus, response) {
+      $('#create-subscription').attr("disabled", false);
+    });
+});
+
 });
 
 $(document).on('click', '.cancel-subscription', function(evt) {
