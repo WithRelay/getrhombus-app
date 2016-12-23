@@ -2,6 +2,7 @@ class MessageParser
 
   ## TEST captured link for sign in
 
+  # msg must when calling this method
   def process_message(team, customer, msg, channel)
     begin
       
@@ -41,6 +42,7 @@ class MessageParser
        
         send_deprecation_warning if is_old_format?      
       elsif @customer.blank?
+
         # FbMessage/Messenger doesn't support signup links, only signin link...see method in messenger service class
         # Check with Edwin on what to do for Messenger users
         if @channel == "Message"
@@ -188,9 +190,13 @@ class MessageParser
 
   def process_payment
     if not_repeating_payment?
-      # scope this to number
-      customer_txn_id = Transaction.charge_customer_card(@amt_ary, @merchant, @customer, @received_msg.text)
-      @received_msg.update(transaction_id: customer_txn_id)
+      if @tag.present? && @tag.recurring_payment_tag?
+
+      else
+        new_txn = Transaction.new
+        new_txn.process_text_payment(@amt_ary, @merchant, @customer, @received_msg.text)
+        @received_msg.update(transaction_id: new_txn.id)
+      end
     end
   end
 
