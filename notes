@@ -17,17 +17,19 @@ Bhishma
 - what's update plan route for?
 - review remove_integration
 - if user connects/reconnects facebook account, you need to remove all page subscriptions, creds etc...clean wipe before new auth details are saved
-- fb_cred.fb_pages alone can cause problems
+- fb_cred.fb_pages alone can cause problems, ##  has_one :fb_cred??? 
 - using page_id alone can cause problems...
-- add page_specific_id: nil in   def self.from_omniauth(auth, id) in fb_cred
+- add page_specific_id: nil in def self.from_omniauth(auth, id) in fb_cred
 
 surya
 - can I migrate my jobs?
+- reverse multistep form
 - Campaigns
 	- use custom method to get campaign users for all channels - it now return array of hashes of user objects
 	- move send messenger campaign code from services. You might need to restructure and rename your classes..so things are clearer. 
 	- Implement SMS/MMS channel. They are ready. 
 	- wipe subject if campaign is not email - serverside only is fine
+	- default to sms...then default to email
 - Upgrade Trumbowyg
 	- find all unicode for emojis or comment out
 	- add color plugins
@@ -37,14 +39,11 @@ surya
 - Make sure we always update charge/transfers enabled and disabled_reason...seems stripe always sends these on account update...i think these are the fields we need to know if a merchant can accept payments
 
 Ovo
+- list with default channels since we now need contacts to be grouped based on channels
 - add to list from user profile - http://rhombus-test.webflow.io/customer-profile
 - shouldn't be able to edit default segments
 
 Edwin
-- multistep form validation issue
-- if u become a cudstomer, do we remove you from a list
-- do we group contacts based on channel?
-- is remove integration wiping your whole fb/messenger details?
 - create pages to show lists (with edit and delete links) of reminders and edit a reminder - no modal
 - generate page loader
 
@@ -53,6 +52,7 @@ Taiwo (review)
 - review stripe_events
 - review merchant_customer_id in transactions and invoices
 - review managed account..
+- when a user becomes customer, remove from a contact/customer list
 - subscription, subscription controller and stripe customer creation places
 - Review adding token...failing safely.
 - on subscription - check if user already belongs to merchant??? is this when they text?

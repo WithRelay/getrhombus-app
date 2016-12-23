@@ -88,16 +88,15 @@ class FbPagesController < ApplicationController
   end
 
   def remove_integration
-    fb_pages = current_user.fb_pages
-
-    ##  has_one :fb_cred??? 
-    fb_creds = current_user.fb_cred                                 # remove both fb page creds and actual fb cred
-    fb_creds = current_user.fb_cred.where.not(page_specific_id: nil)    # remove only fb page creds, leave actual fb cred
     response = {}
+    fb_pages = current_user.fb_pages
+    ##  has_one :fb_cred??? # remove both page creds and actual fb account cred
+    fb_creds = current_user.fb_cred                                 
+
+    fb_pages.each do |page|
+      response = FacebookMessengerService.unsubscribe(page.page_access_token) if page.subscription_status
+    end
     
-    # only one page can be subscribed to at a time
-    subscribed_page = fb_pages.where(subscription_status: true).first
-    response = FacebookMessengerService.unsubscribe(page.page_access_token) if subscribed_page
     if response['success'] || fb_pages.blank? || fb_creds.blank?
       fb_creds.destroy_all
       fb_pages.destroy_all
