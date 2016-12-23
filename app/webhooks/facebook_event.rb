@@ -6,7 +6,7 @@
       @params = params
       if params['hub.mode'].present? #for verify webhook
         verify_webhook
-      else #after verification for message event
+      else #after verification for messenger event
         required_params = params['entry'].last
         event = required_params['messaging'].last
         read_event = event['read']
@@ -18,23 +18,6 @@
           receive_message(required_params['id'], event)
         else
         end
-      end
-    end
-
-    def create_conversation(params)
-      current_page = FbPage.find_by_page_id params['id']
-      current_user = current_page.fb_cred.user
-      merchant_id = current_user.id
-      sender = params['messaging'][0]['sender']
-      recipient = params['messaging'][0]['recipient']
-      sender_id = sender['id']
-      recipient_id = recipient['id']
-      uid = (current_page.page_id == sender_id)? recipient_id : sender_id
-      uid_type = 'fb_page'
-
-      unless (Conversation.find_by_uid uid).present?
-        Conversation.create(merchant_id: merchant_id, uid: uid,
-          uid_type: uid_type, message_resolution_id: 0) #message_resolution_id is bydefault 0
       end
     end
 
@@ -58,10 +41,31 @@
       {}
     end
 
+    def create_conversation(params)
+      current_page = FbPage.find_by_page_id params['id']
+      merchant = current_page.fb_cred.user
+      @merchant_id = merchant.id
+      sender = params['messaging'][0]['sender']
+      recipient = params['messaging'][0]['recipient']
+      sender_id = sender['id']
+      recipient_id = recipient['id']
+      @uid = (current_page.page_id == sender_id)? recipient_id : sender_id
+      @conversation = Conversation.where(uid: @uid).first_or_initialize
+      update_conversation
+    end
+
+    def update_conversation
+      @conversation.update(
+        merchant_id: @merchant_id,
+        uid_type: 'fb_page',
+        message_resolution_id: 0      #message_resolution_id is bydefault 0
+      )
+    end
+
     def receive_message(page_id, params)
       begin
         message = params['message']
-        attachments = message['attachments']
+        @attachments = message['attachments']
         seq = message['seq']
         text = message['text']
         text = '' if text.nil?
@@ -74,15 +78,12 @@
         new_user_id = (page_id == message_to)? message_from : message_to
         add_page_user(fb_page_id, new_user_id)
 
-        conversation = Conversation.find_by_uid new_user_id
-        fb_message = conversation.fb_messages.create(text: text, seq: seq,
+        @fb_message = @conversation.fb_messages.create(text: text, seq: seq,
           time_stamp: timestamp, unread: false, message_id: message_id,
           from: message_from, to: message_to, fb_page_id: fb_page_id,
-          user_id: get_user_id(new_user_id), user_id_to: conversation.merchant_id)
+          user_id: get_user_id(new_user_id), user_id_to: @conversation.merchant_id)
         
-        res = save_attachments(attachments, fb_message)
-        # message destroy if attachment is not valid
-        res ? fb_message.save! : fb_message.destroy
+        save_attachments if @attachments.present?
       rescue StandardError => err
         nil
       end
@@ -108,25 +109,26 @@
       end
     end
 
-    def save_attachments(attachments, fb_message)
-      valid_file = true
-      if attachments.present?
-        attachments.each do |a|
-          url = a['payload']['url']
-          file_extension = File.extname(URI.parse(url).path).downcase
-          if %w{.jpg .png .jpeg .gif .bmp}.include?(file_extension)
-            image = fb_message.images.new
-            image.avatar_from_remote_url(url)
-          else
-            valid_file = false
-          end
+    def save_attachments
+      invalid_file, valid_file = false
+      @attachments.each do |a|
+        url = a['payload']['url']
+        file_extension = File.extname(URI.parse(url).path).downcase
+        if %w{.jpg .png .jpeg .gif .bmp}.include?(file_extension)
+          image = @fb_message.images.new
+          image.avatar_from_remote_url(url)
+          valid_file = true
+        else
+          invalid_file = true
         end
       end
-      # if invalid file attachment is send then it notify with default message
-      unless valid_file
-        notify_invalid_attachment(fb_message.page_id, fb_message.from, fb_message.to)
-      end
-      valid_file
+
+      # if invalid file attachment is send then it notify with error message
+      notify_invalid_attachment if invalid_file
+
+      # save message with valid attachments
+      # message destroy if all attachments are not valid
+      (valid_file) ? @fb_message.save! : @fb_message.destroy
     end
 
     def set_message_unread(params)
@@ -134,19 +136,21 @@
       messages.update_all(unread: true)
     end
 
-    def notify_invalid_attachment(page_id, sender_id, recipient_id)
-      page = FbPage.find_by_page_id page_id
-      if page_id != sender_id
-        user = FbCred.find_by_page_specific_id sender_id
-        to = sender_id
+    def notify_invalid_attachment
+      page = @fb_message.fb_page
+      if page.page_id != @fb_message.from
+        user = FbCred.find_by_page_specific_id @fb_message.from
+        to = @fb_message.from
       else
         user = page.fb_cred
-        to = recipient_id
+        to = @fb_message.to
       end
       user_name = user.name.split.first
       page_access_token = page.page_access_token
       text = "Sorry #{user_name}, currently we only support image file attachments"
       FacebookMessengerService.send_text_message(page_access_token, to, text)
     end
+
   end
+
 end
