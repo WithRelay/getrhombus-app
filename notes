@@ -9,14 +9,17 @@ Bhishma
 		- page can reload
 	- In plans, remove user_id, add merchant_id and customer_id to track customer plans
 	- Add back cancel subscription now
-- using page_id alone?
 - coupon name needs to check for existence
 - if next plan is used, change status = false, if upgrade....sent all next plan to false
 - upgrading subscription 
 	- res from coupon may not be defined
 	- still upgrade subscription if coupon create fails
 - what's update plan route for?
-- review if response['success'] || fb_pages.blank? || fb_cred.fb_pages.where(subscription_status: true).blank?
+- review remove_integration
+- if user connects/reconnects facebook account, you need to remove all page subscriptions, creds etc...clean wipe before new auth details are saved
+- fb_cred.fb_pages alone can cause problems
+- using page_id alone can cause problems...
+- add page_specific_id: nil in   def self.from_omniauth(auth, id) in fb_cred
 
 surya
 - can I migrate my jobs?
@@ -25,10 +28,8 @@ surya
 	- move send messenger campaign code from services. You might need to restructure and rename your classes..so things are clearer. 
 	- Implement SMS/MMS channel. They are ready. 
 	- wipe subject if campaign is not email - serverside only is fine
-	- check for date on submit
 - Upgrade Trumbowyg
-	- so we can use new ordered emojis (generate unicode in the same order in the emoji plugin file)
-	- so we can get the scroll bar fix - i raised an issue here - https://github.com/Alex-D/Trumbowyg/issues/458
+	- find all unicode for emojis or comment out
 	- add color plugins
 - Implement Reminders
 	- Like campaigns but uses api to create reminder - route should be restful
@@ -48,6 +49,7 @@ Ovo
 Edwin
 - if u become a cudstomer, do we remove you from a list
 - do we group contacts based on channel?
+- is remove integration wiping your whole fb/messenger details?
 - create pages to show lists (with edit and delete links) of reminders and edit a reminder - no modal
 - generate page loader
 
