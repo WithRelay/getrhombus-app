@@ -1,5 +1,5 @@
 class SubscriptionsController < ApplicationController
-  before_action :set_subscription, only: [:show, :edit, :update, :destroy, :upgrading_subscription, :downgrading_subscription]
+  before_action :set_subscription, only: [:show, :edit, :update, :destroy, :upgrade_subscription, :downgrade_subscription]
 
   respond_to :html
 
@@ -52,7 +52,7 @@ class SubscriptionsController < ApplicationController
     # move user to new subscription based on the new plan selected
     new_subscription = Subscription.new(
       plan_id: params[:subscription][:plan_id],
-      coupon_id: @coupon.id,
+      coupon_id: coupon_res,
       merchant_customer_id: @subscription.merchant_customer_id,
       quantity: @subscription.quantity
     )
@@ -94,7 +94,7 @@ class SubscriptionsController < ApplicationController
     def create_coupon(amt)
       @coupon = Coupon.new(name: generate_coupon_name, amount_off: amt, duration: 'once')
       if @coupon.create_coupon({team: current_user})
-        true
+        @coupon.id
       else
         @coupon.destroy
         false
