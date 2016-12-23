@@ -96,11 +96,11 @@ class Subscription < ActiveRecord::Base
     end_date = DateTime.strptime(self.current_period_end.to_s,'%s')
     total_days = (end_date - start_date).to_i + 1  # +1 to include the start day
 
-    days_remaining = (end_date - DateTime.now.utc).to_i
+    days_remaining = (end_date - DateTime.now.utc).to_i + 1
     days_remaining = (days_remaining > 0) ? days_remaining : 0
 
     plan_amt = (plan_amt.to_f / total_days).round(2)            # plan amount per day
-    (100*(plan_amt * days_remaining)).round                     # unspent amount (prorated per day)
+    ((plan_amt * days_remaining)).round                 # unspent amount (prorated per day)
   end
 
 end

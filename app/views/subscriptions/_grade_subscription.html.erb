@@ -12,11 +12,14 @@
     <div class="settings-info-div">
         <h1 class="business-plan plan-name plans-text">Current Subscription Details:</h1>
         <div class="flex-underline plan-div">
-            You don't have selected any subscriptions
+            <b>
+                <p>You don't have selected any subscription</p>
+                <p>Please select subscription by clicking on table row before upgrade/downgrade Plan</p>
+            </b>
         </div>
     </div>
 
   <%= f.text_field :plan_id, class: 'hidden update-plan-id', value: '49' %>
   <br>
-  <%= f.submit 'Upgrade Plan', class: 'btn btn-success submit-update-plan hidden' %>
+  <%= f.submit 'Upgrade Plan', class: 'btn btn-success submit-update-plan hidden', data: {disable_with: 'Please wait ...'} %>
 <% end %>
