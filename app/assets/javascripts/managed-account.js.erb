@@ -254,7 +254,7 @@ $(document).on('ready page:load', function() {
 
   $('#user_org_type').change(function() {
     var country = $('#managed-acct-country').val(),
-        options = '<option value="' + country + '">' + bank_countries_list_placeholder[country][0] +'</option>';
+    options = '<option value="' + country + '">' + bank_countries_list_placeholder[country][0] +'</option>';
 
     if (this.value == 'Individual') {
       $('#org-tax-id-req').show()
@@ -473,182 +473,286 @@ $(document).on('ready page:load', function() {
 
 
   // validate managed account create update form
-          $('#managed-account-form').formValidation({
-              framework: 'bootstrap',
-              live: 'disabled',
-              excluded: [':disabled'],
-              fields: {
-                'user[url]': {
-                  validators: {
-                     notEmpty: {
-                       message: 'Please Provide a valid URL'
-                     }
-                   }
-                }
-                ,
-                'user[address_attributes][street_address]': {
-                  validators: {
-                    callback: {
-                      callback: function (value, validator, $field) {
-                        if ($('#step_two_address').is(':visible') && !$('#step_one_business_details').is(':visible') && $('#company-street').val()!=''){
-                          return { valid: true }
-                        }
-                        else if($('#step_one_business_details').is(':visible'))
-                        {
-                          return { valid: true }
-                        }
-                        else if (($('#step_3_bank_account').is(':visible') && !$('#step_two_address').is(':visible') && $('#company-street').val()!='')){
-                          return { valid: true }
-                        }
-                        else{
-                          return { valid: false, message: "this is required" }
-                        }
-                      }
-                    }
-                   }
-                },
-                'user[address_attributes][state_province]': {
-                  validators: {
-                    callback: {
-                      callback: function (value, validator, $field) {
-                          if ($('#step_two_address').is(':visible') && !$('#step_one_business_details').is(':visible') && $('#company-state').val()!=''){
-                            return { valid: true }
-                          }
-                          else if($('#step_one_business_details').is(':visible'))
-                          {
-                            return { valid: true }
-                          }
-                          else if (($('#step_3_bank_account').is(':visible') && !$('#step_two_address').is(':visible') && $('#company-state').val()!='')){
-                            return { valid: true }
-                          }
-                          else{
-                            return { valid: false, message: "this is required" }
-                          }
-                      }
-                    }
-                   }
-                },
-                'user[address_attributes][postal_code]': {
-                  validators: {
-                    callback: {
-                      callback: function (value, validator, $field) {
-                          if ($('#step_two_address').is(':visible') && !$('#step_one_business_details').is(':visible') && $('#company-postal-code').val()!=''){
-                            return { valid: true }
-                          }
-                          else if($('#step_one_business_details').is(':visible'))
-                          {
-                            return { valid: true }
-                          }
-                          else if (($('#step_3_bank_account').is(':visible') && !$('#step_two_address').is(':visible') && $('#company-postal-code').val()!='')){
-                            return { valid: true }
-                          }
-                          else{
-                            return { valid: false, message: "this is required" }
-                          }
-                      }
-                    }
-                   }
-                }
-                ,'user[bank_accounts_attributes][0][account_number]': {
-                  validators: {
-                    callback: {
-                      callback: function (value, validator, $field) {
-                          if ($('#step_two_address').is(':visible') && !$('#step_one_business_details').is(':visible') && $('#account-number').val()!=''){
-                            return { valid: true }
-                          }
-                          else if($('#step_two_address').is(':visible'))
-                          {
-                            return { valid: true }
-                          }else if($('#step_one_business_details').is(':visible')){
-                            return { valid: true }
-                          }
-                          else if ($('#step_3_bank_account').is(':visible') && !$('#step_two_address').is(':visible') && $('#account-number').val()!=''){
-                            return { valid: true }
-                          }
-                          else{
-                            return { valid: false, message: "this is required" }
-                          }
-                      }
-                    }
-                   }
-                }
-                ,
-                'user[bank_accounts_attributes][0][country]': {
-                  validators: {
-                    callback: {
-                      callback: function (value, validator, $field) {
-                          if ($('#step_two_address').is(':visible') && !$('#step_one_business_details').is(':visible') && $('#account-number').val()!=''){
-                            return { valid: true }
-                          }
-                          else if($('#step_two_address').is(':visible'))
-                          {
-                            return { valid: true }
-                          }else if($('#step_one_business_details').is(':visible')){
-                            return { valid: true }
-                          }
-                          else if ($('#step_3_bank_account').is(':visible') && !$('#step_two_address').is(':visible') && $('#account-number').val()!=''){
-                            return { valid: true }
-                          }
-                          else{
-                            return { valid: false, message: "this is required" }
-                          }
-                      }
-                    }
-                   }
-                }  ,
-                  'user[bank_accounts_attributes][0][currency]': {
-                    validators: {
-                      callback: {
-                        callback: function (value, validator, $field) {
-                            if ($('#step_two_address').is(':visible') && !$('#step_one_business_details').is(':visible') && $('#account-number').val()!=''){
-                              return { valid: true }
-                            }
-                            else if($('#step_two_address').is(':visible'))
-                            {
-                              return { valid: true }
-                            }else if($('#step_one_business_details').is(':visible')){
-                              return { valid: true }
-                            }
-                            else if ($('#step_3_bank_account').is(':visible') && !$('#step_two_address').is(':visible') && $('#account-number').val()!=''){
-                              return { valid: true }
-                            }
-                            else{
-                              return { valid: false, message: "this is required" }
-                            }
-                        }
-                      }
-                     }
-                  },
-                'user[bank_accounts_attributes][0][routing_number]': {
-                  validators: {
-                    callback: {
-                      callback: function (value, validator, $field) {
-                          if ($('#step_two_address').is(':visible') && !$('#step_one_business_details').is(':visible') && $('#account-number').val()!=''){
-                            return { valid: true }
-                          }
-                          else if($('#step_two_address').is(':visible'))
-                          {
-                            return { valid: true }
-                          }else if($('#step_one_business_details').is(':visible')){
-                            return { valid: true }
-                          }
-                          else if ($('#step_3_bank_account').is(':visible') && !$('#step_two_address').is(':visible') && $('#account-number').val()!=''){
-                            return { valid: true }
-                          }
-                          else{
-                            return { valid: false, message: "this is required" }
-                          }
-                      }
-                    }
-                   }
-                }
-
+  $('#managed-account-form').formValidation({
+    framework: 'bootstrap',
+    live: 'disabled',
+    excluded: [':disabled'],
+    fields: {
+      'user[url]': {
+        validators: {
+          notEmpty: {
+            message: 'Please Provide a valid URL'
+          }
+        }
+      }
+      ,
+      'user[address_attributes][street_address]': {
+        validators: {
+          callback: {
+            callback: function (value, validator, $field) {
+              if ($('#step_two_address').is(':visible') && !$('#step_one_business_details').is(':visible') && $('#company-street').val()!=''){
+                return { valid: true }
               }
-            })
-            .on('success.form.fv', function(e) {
-                    e.preventDefault()
-                    $('.next').click()
-                  });
+              else if($('#step_one_business_details').is(':visible'))
+              {
+                return { valid: true }
+              }
+              else if ($('#user-people').is(':visible')){
+                return { valid: true }
+              }
+              else if (($('#step_3_bank_account').is(':visible') && !$('#step_two_address').is(':visible') && $('#company-street').val()!='')){
+                return { valid: true }
+              }
+              else{
+                return { valid: false, message: "this is required" }
+              }
+            }
+          }
+        }
+      },
+      'user[address_attributes][state_province]': {
+        validators: {
+          callback: {
+            callback: function (value, validator, $field) {
+              if ($('#step_two_address').is(':visible') && !$('#step_one_business_details').is(':visible') && $('#company-state').val()!=''){
+                return { valid: true }
+              }
+              else if($('#step_one_business_details').is(':visible'))
+              {
+                return { valid: true }
+              }
+              else if ($('#user-people').is(':visible')){
+                return { valid: true }
+              }
+              else if (($('#step_3_bank_account').is(':visible') && !$('#step_two_address').is(':visible') && $('#company-state').val()!='')){
+                return { valid: true }
+              }
+              else{
+                return { valid: false, message: "this is required" }
+              }
+            }
+          }
+        }
+      },
+      'user[address_attributes][postal_code]': {
+        validators: {
+          callback: {
+            callback: function (value, validator, $field) {
+              if ($('#step_two_address').is(':visible') && !$('#step_one_business_details').is(':visible') && $('#company-postal-code').val()!=''){
+                return { valid: true }
+              }
+              else if($('#step_one_business_details').is(':visible'))
+              {
+                return { valid: true }
+              }
+              else if (($('#step_3_bank_account').is(':visible') && !$('#step_two_address').is(':visible') && $('#company-postal-code').val()!='')){
+                return { valid: true }
+              }
+              else if ($('#user-people').is(':visible')){
+                return { valid: true }
+              }
+              else{
+                return { valid: false, message: "this is required" }
+              }
+            }
+          }
+        }
+      }
+      ,'user[bank_accounts_attributes][0][account_number]': {
+        validators: {
+          callback: {
+            callback: function (value, validator, $field) {
+              if ($('#step_two_address').is(':visible') && !$('#step_one_business_details').is(':visible') && $('#account-number').val()!=''){
+                return { valid: true }
+              }
+              else if($('#step_two_address').is(':visible'))
+              {
+                return { valid: true }
+              }else if($('#step_one_business_details').is(':visible')){
+                return { valid: true }
+              }
+              else if($('#user-people').is(':visible')){
+                return { valid: true }
+              }
+              else if ($('#step_3_bank_account').is(':visible') && !$('#step_two_address').is(':visible') && $('#account-number').val()!=''){
+                return { valid: true }
+              }
+              else{
+                return { valid: false, message: "this is required" }
+              }
+            }
+          }
+        }
+      }
+      ,
+      'user[bank_accounts_attributes][0][country]': {
+        validators: {
+          callback: {
+            callback: function (value, validator, $field) {
+              if ($('#step_two_address').is(':visible') && !$('#step_one_business_details').is(':visible') && $('#account-number').val()!=''){
+                return { valid: true }
+              }
+              else if($('#step_two_address').is(':visible'))
+              {
+                return { valid: true }
+              }  else if($('#user-people').is(':visible')){
+                return { valid: true }
+              }
+              else if($('#step_one_business_details').is(':visible')){
+                return { valid: true }
+              }
+              else if ($('#step_3_bank_account').is(':visible') && !$('#step_two_address').is(':visible') && $('#account-number').val()!=''){
+                return { valid: true }
+              }
+              else{
+                return { valid: false, message: "this is required" }
+              }
+            }
+          }
+        }
+      }  ,
+      'user[bank_accounts_attributes][0][currency]': {
+        validators: {
+          callback: {
+            callback: function (value, validator, $field) {
+              if ($('#step_two_address').is(':visible') && !$('#step_one_business_details').is(':visible') && $('#account-number').val()!=''){
+                return { valid: true }
+              }
+              else if($('#step_two_address').is(':visible'))
+              {
+                return { valid: true }
+              }else if($('#step_one_business_details').is(':visible')){
+                return { valid: true }
+              }
+              else if($('#user-people').is(':visible')){
+                return { valid: true }
+              }
+              else if ($('#step_3_bank_account').is(':visible') && !$('#step_two_address').is(':visible') && $('#account-number').val()!=''){
+                return { valid: true }
+              }
+              else{
+                return { valid: false, message: "this is required" }
+              }
+            }
+          }
+        }
+      },
+      'user[bank_accounts_attributes][0][routing_number]': {
+        validators: {
+          callback: {
+            callback: function (value, validator, $field) {
+              if ($('#step_two_address').is(':visible') && !$('#step_one_business_details').is(':visible') && $('#account-number').val()!=''){
+                return { valid: true }
+              }
+              else if($('#step_two_address').is(':visible'))
+              {
+                return { valid: true }
+              }else if($('#step_one_business_details').is(':visible')){
+                return { valid: true }
+              }
+              else if($('#user-people').is(':visible')){
+                return { valid: true }
+              }
+              else if ($('#step_3_bank_account').is(':visible') && !$('#step_two_address').is(':visible') && $('#account-number').val()!=''){
+                return { valid: true }
+              }
+              else{
+                return { valid: false, message: "this is required" }
+              }
+            }
+          }
+        }
+      },
+      'user[people_attributes][0][business_name]': {
+        validators: {
+          callback: {
+            callback: function (value, validator, $field) {
+              if ($('#user-people').is(':visible') && !$('#step_two_address').is(':visible') && $('#user_people_attributes_0_business_name').val()!=''){
+                return { valid: true }
+              }
+              else if($('#step_one_business_details').is(':visible')){
+                return { valid: true }
+              }
+              else if($('#step_two_address').is(':visible')){
+                return { valid: true }
+              }
+              else if($('#step_3_bank_account').is(':visible')){
+                return { valid: true }
+              }
+              else if (!$('#step_3_bank_account').is(':visible') && $('#user-people').is(':visible') && $('#user_people_attributes_0_business_name').val()!=''){
+                return { valid: true }
+              }
+              else{
+                return { valid: false, message: "this is required" }
+              }
+            }
+          }
+        }
+      },
+      'user[people_attributes][0][full_name]': {
+        validators: {
+          callback: {
+            callback: function (value, validator, $field) {
+              if ($('#user-people').is(':visible') && !$('#step_two_address').is(':visible') && $('#user_people_attributes_0_full_name').val()!=''){
+                return { valid: true }
+              }
+              else if($('#step_one_business_details').is(':visible')){
+                return { valid: true }
+              }
+              else if($('#step_two_address').is(':visible')){
+                return { valid: true }
+              }
+              else if($('#step_3_bank_account').is(':visible')){
+                return { valid: true }
+              }
+              else if (!$('#step_3_bank_account').is(':visible') && $('#user-people').is(':visible') && $('#user_people_attributes_0_full_name').val()!=''){
+                return { valid: true }
+              }
+              else{
+                return { valid: false, message: "this is required" }
+              }
+            }
+          }
+        }
+      },
+      'user[people_attributes][0][dob]': {
+        validators: {
+          callback: {
+            callback: function (value, validator, $field) {
+              if ($('#user-people').is(':visible') && !$('#step_two_address').is(':visible') && $('#user_people_attributes_0_dob').val()!=''){
+                return { valid: true }
+              }
+              else if($('#step_one_business_details').is(':visible')){
+                return { valid: true }
+              }
+              else if($('#step_two_address').is(':visible')){
+                return { valid: true }
+              }
+              else if($('#step_3_bank_account').is(':visible')){
+                return { valid: true }
+              }
+              else if (!$('#step_3_bank_account').is(':visible') && $('#user-people').is(':visible') && $('#user_people_attributes_0_dob').val()!=''){
+                return { valid: true }
+              }
+              else{
+                return { valid: false, message: "this is required" }
+              }
+            }
+          }
+        }
+      }
+
+    }
+  })
+  .on('success.form.fv', function(e) {
+    if ($(e.target).find('#saveManagedAccount').is(':visible') && !$(e.target).find('#step_four_button').is(':visible')){
+      return true;
+    }
+    else {
+      e.preventDefault()
+      $('.next').click()
+    }
+  });
 
 
 
@@ -656,38 +760,76 @@ $(document).on('ready page:load', function() {
   var left, opacity, scale; //fieldset properties which we will animate
   var animating; //flag to prevent quick multi-click glitches
   $(".next").click(function(){
-    $('#managed-account-form').formValidation('revalidateField', 'user[address_attributes][street_address]');
-    $('#managed-account-form').formValidation('revalidateField', 'user[address_attributes][state_province]');
-    $('#managed-account-form').formValidation('revalidateField', 'user[address_attributes][postal_code]');
-    $('#managed-account-form').formValidation('revalidateField', 'user[bank_accounts_attributes][0][account_number]');
-    $('#managed-account-form').formValidation('revalidateField', 'user[bank_accounts_attributes][0][routing_number]');
-    $('#managed-account-form').formValidation('revalidateField', 'user[bank_accounts_attributes][0][country]');
-    $('#managed-account-form').formValidation('revalidateField', 'user[bank_accounts_attributes][0][currency]');
+    var accountForm = '#managed-account-form'
+    $(accountForm).formValidation('revalidateField', 'user[address_attributes][street_address]');
+    $(accountForm).formValidation('revalidateField', 'user[address_attributes][state_province]');
+    $(accountForm).formValidation('revalidateField', 'user[address_attributes][postal_code]');
+    $(accountForm).formValidation('revalidateField', 'user[bank_accounts_attributes][0][account_number]');
+    $(accountForm).formValidation('revalidateField', 'user[bank_accounts_attributes][0][routing_number]');
+    $(accountForm).formValidation('revalidateField', 'user[bank_accounts_attributes][0][country]');
+    $(accountForm).formValidation('revalidateField', 'user[bank_accounts_attributes][0][currency]');
+    $(accountForm).formValidation('revalidateField', 'user[people_attributes][0][business_name]');
+    $(accountForm).formValidation('revalidateField', 'user[people_attributes][0][dob]');
+    $(accountForm).formValidation('revalidateField', 'user[people_attributes][0][full_name]');
+    if (checkFormValid(accountForm)){
+      if(animating) return false;
+      animating = true;
 
-    if (checkFormValid('#managed-account-form')){
+      current_fs = $(this).parent();
+      next_fs = $(this).parent().next();
+
+      //activate next step on progressbar using the index of next_fs
+      $("#progressbar li").eq($("fieldset").index(next_fs)).addClass("active");
+      //show the next fieldset
+      next_fs.show();
+      //hide the current fieldset with style
+      current_fs.animate({opacity: 0}, {
+        step: function(now, mx) {
+          //as the opacity of current_fs reduces to 0 - stored in "now"
+          //1. scale current_fs down to 80%
+          scale = 1 - (1 - now) * 0.2;
+          //2. bring next_fs from the right(50%)
+          left = (now * 50)+"%";
+          //3. increase opacity of next_fs to 1 as it moves in
+          opacity = 1 - now;
+          current_fs.css({'transform': 'scale('+scale+')'});
+          next_fs.css({'left': left, 'opacity': opacity});
+        },
+        duration: 800,
+        complete: function(){
+          current_fs.hide();
+          animating = false;
+        },
+        //this comes from the custom easing plugin
+        easing: 'easeInOutBack'
+      });
+    }
+  });
+
+  $(".previous").click(function(){
     if(animating) return false;
     animating = true;
 
     current_fs = $(this).parent();
-    next_fs = $(this).parent().next();
+    previous_fs = $(this).parent().prev();
 
-    //activate next step on progressbar using the index of next_fs
-    $("#progressbar li").eq($("fieldset").index(next_fs)).addClass("active");
+    //de-activate current step on progressbar
+    $("#progressbar li").eq($("fieldset").index(current_fs)).removeClass("active");
 
-    //show the next fieldset
-    next_fs.show();
+    //show the previous fieldset
+    previous_fs.show();
     //hide the current fieldset with style
     current_fs.animate({opacity: 0}, {
       step: function(now, mx) {
         //as the opacity of current_fs reduces to 0 - stored in "now"
-        //1. scale current_fs down to 80%
-        scale = 1 - (1 - now) * 0.2;
-        //2. bring next_fs from the right(50%)
-        left = (now * 50)+"%";
-        //3. increase opacity of next_fs to 1 as it moves in
+        //1. scale previous_fs from 80% to 100%
+        scale = 0.8 + (1 - now) * 0.2;
+        //2. take current_fs to the right(50%) - from 0%
+        left = ((1-now) * 50)+"%";
+        //3. increase opacity of previous_fs to 1 as it moves in
         opacity = 1 - now;
-        current_fs.css({'transform': 'scale('+scale+')'});
-        next_fs.css({'left': left, 'opacity': opacity});
+        current_fs.css({'left': left});
+        previous_fs.css({'transform': 'scale('+scale+')', 'opacity': opacity});
       },
       duration: 800,
       complete: function(){
@@ -697,46 +839,10 @@ $(document).on('ready page:load', function() {
       //this comes from the custom easing plugin
       easing: 'easeInOutBack'
     });
-        }
   });
 
-$(".previous").click(function(){
-  if(animating) return false;
-  animating = true;
-
-  current_fs = $(this).parent();
-  previous_fs = $(this).parent().prev();
-
-  //de-activate current step on progressbar
-  $("#progressbar li").eq($("fieldset").index(current_fs)).removeClass("active");
-
-  //show the previous fieldset
-  previous_fs.show();
-  //hide the current fieldset with style
-  current_fs.animate({opacity: 0}, {
-    step: function(now, mx) {
-      //as the opacity of current_fs reduces to 0 - stored in "now"
-      //1. scale previous_fs from 80% to 100%
-      scale = 0.8 + (1 - now) * 0.2;
-      //2. take current_fs to the right(50%) - from 0%
-      left = ((1-now) * 50)+"%";
-      //3. increase opacity of previous_fs to 1 as it moves in
-      opacity = 1 - now;
-      current_fs.css({'left': left});
-      previous_fs.css({'transform': 'scale('+scale+')', 'opacity': opacity});
-    },
-    duration: 800,
-    complete: function(){
-      current_fs.hide();
-      animating = false;
-    },
-    //this comes from the custom easing plugin
-    easing: 'easeInOutBack'
-  });
-});
-
-$(".submit").click(function(){
-  return false;
-})
+  $(".submit").click(function(){
+    return false;
+  })
 
 });

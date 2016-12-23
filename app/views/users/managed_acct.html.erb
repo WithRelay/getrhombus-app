@@ -1,3 +1,6 @@
+<style>button, select{
+  color:black;
+}</style>
 <div class="panel panel-info">
 
   <div class="panel-heading">
@@ -7,15 +10,16 @@
   <%= form_for @user, url: { action: url_for_create_update }, html: { id: 'managed-account-form' } do |f| %>
 
     <ul id="progressbar">
-      <li class="active">Account Setup</li>
-      <li>Social Profiles</li>
-      <li>Personal Details</li>
-      <li>Personal Details</li>
+      <li class="active">Organization Details</li>
+      <li>Organization Address Details</li>
+      <li>Bank Account Details</li>
+      <li>Owner Details</li>
+      <li>Terms and Conditions</li>
     </ul>
 
     <fieldset id='step_one_business_details'>
       <h2 class="fs-title">Create your account</h2>
-		  <h3 class="fs-subtitle">This is step 1</h3>
+		  <h3 class="fs-subtitle">Your Organization Details</h3>
 
       <%= f.fields_for :address do |a| %>
         <div class="col-xs-5">
@@ -53,8 +57,8 @@
     </fieldset>
 
     <fieldset id='step_two_address'>
-      <h2 class="fs-title">Social Profiles</h2>
-      <h3 class="fs-subtitle">Your presence on the social network</h3>
+      <h2 class="fs-title">Organization Address Details</h2>
+      <h3 class="fs-subtitle">Please fill up all the fields</h3>
       <%= f.fields_for :address do |a| %>
 
         <div class="col-xs-5">
@@ -88,8 +92,8 @@
     </fieldset>
 
     <fieldset id='step_3_bank_account' >
-      <h2 class="fs-title">Social Profiles 2</h2>
-      <h3 class="fs-subtitle">Your presence on the social network</h3>
+      <h2 class="fs-title">Bank Information</h2>
+      <h3 class="fs-subtitle">Please mention bank information in details</h3>
       <%= f.fields_for :bank_accounts do |b| %>
 
         <div class="col-xs-5">
@@ -136,11 +140,13 @@
     </fieldset>
 
     <fieldset id="user-people">
-      <h2 class="fs-title">Social Profiles 3</h2>
-      <h3 class="fs-subtitle">Your presence on the social network</h3>
+      <h2 class="fs-title">Owner Details</h2>
+      <h3 class="fs-subtitle">Please mention owner details</h3>
 
       <%= f.fields_for :people do |p| %>
         <%= render "person_fields", f: p %>
+        <%= f.submit 'Next', class: "next action-button", id: 'step_four_button' %>
+        <input type="button" name="previous" class="previous action-button" value="Previous" />
       <% end %>
       <div id='owners-title'>OWNERS IF ANY <br></div>
 
@@ -148,11 +154,9 @@
               'data-association-insertion-node' => "#user-people ol", 'data-association-insertion-method' => "append",
               :wrap_object => Proc.new { |p| p.build_address; p } %>
       </div>
-      <input type="button" name="previous" class="previous action-button" value="Previous" />
-      <input type="button" name="next" class="next action-button" value="Next" />
     </fieldset>
 
-    <fieldset>
+    <fieldset id='termsAndCondition'>
       <h2 class="fs-title">Social Profiles 4</h2>
       <h3 class="fs-subtitle">Your presence on the social network</h3>
       <%= f.fields_for :stripe_creds do |c| %>
@@ -168,7 +172,7 @@
       <%= f.label 'Accept Terms and Service' %>
       <%= f.check_box :tos_acceptance %>
       <input type="button" name="previous" class="previous action-button" value="Previous" />
-		  <input type="submit" name="submit" class="submit action-button" value="Submit" />
+		  <%= f.submit :save, id: 'saveManagedAccount' %>
     </fieldset>
   <% end %>
 </div>
