@@ -61,7 +61,9 @@ RemoteCall.prototype.ajax = function(){
               // set flash message title and message
               // first argument is title and second is text message.
               FlashHandler.setFlashMessage( msg[flash_key], flash_key );
-              $($modalClose).click()// closing modal after succession
+              if (flash_key!='error'){
+                $($modalClose).click()// closing modal after succession
+              }
           }).fail(function(msg){ alert('Sorry request could not complete'); });
   }
 }
