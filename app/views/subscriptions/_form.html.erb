@@ -33,7 +33,7 @@
 
     <div class="actions field form-group">
       <div class="col-xs-9 col-xs-offset-3">
-        <%= f.submit 'Subscribe Customer', class: 'btn btn-primary' %>
+        <%= f.submit 'Subscribe Customer', class: 'btn btn-primary', id: 'create-subscription', data: {disable_with: 'Please wait ...'}%>
       </div>
     </div>
   <% end %>

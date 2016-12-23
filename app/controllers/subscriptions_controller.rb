@@ -21,20 +21,6 @@ class SubscriptionsController < ApplicationController
   end
 
   def create
-    @subscription = Subscription.create(subscription_params)
-    res = @subscription.create_subscription({ team: current_user })
-    if res.first
-      redirect_to user_subscriptions_path, flash: {notice: 'Subscription created successfully'}
-    else
-      @subscription.destroy
-      if @subscription.errors.messages.present?
-        error = @subscription.errors.full_messages
-        flash[:error] = error
-      else
-        flash[:error] = (res.second == 'card_error') ? res.third : 'Something went wrong'
-      end
-      redirect_to new_user_subscription_path
-    end
   end
 
   def destroy
@@ -48,20 +34,20 @@ class SubscriptionsController < ApplicationController
 
   def upgrade_subscription
     amount = @subscription.unused_amount
-    coupon_res = true if amount == 0
+    coupon_res = [true] if amount == 0
     # coupon only created if amount is valid ie. > 0
     # if coupon create coupon_res is coupon id otherwise false
     coupon_res = create_coupon(amount) if amount > 0
     # move user to new subscription based on the new plan selected
     new_subscription = Subscription.new(
       plan_id: params[:subscription][:plan_id],
-      coupon_id: coupon_res,
+      coupon_id: coupon_res.second,
       merchant_customer_id: @subscription.merchant_customer_id,
       quantity: @subscription.quantity
     )
     # upgrade subscription only if unused amount not present and
     # while coupon successfully created with unused amount
-    if coupon_res && new_subscription.create_subscription({ team: current_user }).first
+    if coupon_res.first && new_subscription.create_subscription({ team: current_user }).first
       @subscription.cancel_subscription(current_user, false)
       current_user.next_plans.update_all(status: false)
       flash[:notice] = 'Subscription upgraded successfully.'
@@ -90,19 +76,15 @@ class SubscriptionsController < ApplicationController
       @subscription = Subscription.find(params[:id])
     end
 
-    def subscription_params
-      params.require(:subscription).permit(:quantity, :plan_id, :coupon_id, :merchant_customer_id)
-    end
-
     # create discount coupon with remaining unused amount while
     # user upgrade subscription before finishing time interval
     def create_coupon(amt)
       @coupon = Coupon.new(name: generate_coupon_name, amount_off: amt, duration: 'once')
       if @coupon.create_coupon({team: current_user})
-        @coupon.id
+        [true, @coupon.id]
       else
         @coupon.destroy
-        false
+        [false]
       end
     end
 
