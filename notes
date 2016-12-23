@@ -31,22 +31,17 @@ surya
 - Upgrade Trumbowyg
 	- find all unicode for emojis or comment out
 	- add color plugins
-- Implement Reminders
-	- Like campaigns but uses api to create reminder - route should be restful
-	- Reminders index, edit, update and destroy are needed. You can use the campaign controller for all these, but only reminder type campaigns show up in the index...the reverse is true for campaigns. And reminders has a reminder path. http://rhombus-test.webflow.io/messaging-dashboard ...click on bell icon
-- Managed Account 
-	- break up form - http://thecodeplayer.com/walkthrough/jquery-multi-step-form-with-progress-bar
-- Add plugin versions to file
-- make sure name in campaigns cannot be an empty string
-- rescue_scheduler.yml??
-- multistep form needs to fit with the space in the design - http://rhombus-test.webflow.io/setup-payments
-- when do we know a merchant stripe account is active?
+- Implement Reminders - no notes
+- Rename classes/queues for jobs...
+- Research dynamic jobs...do we need a static schedule?? rescue_scheduler.yml??
+- Make sure we always update charge/transfers enabled and disabled_reason...seems stripe always sends these on account update...i think these are the fields we need to know if a merchant can accept payments
 
 Ovo
 - add to list from user profile - http://rhombus-test.webflow.io/customer-profile
 - shouldn't be able to edit default segments
 
 Edwin
+- multistep form validation issue
 - if u become a cudstomer, do we remove you from a list
 - do we group contacts based on channel?
 - is remove integration wiping your whole fb/messenger details?
@@ -54,6 +49,7 @@ Edwin
 - generate page loader
 
 Taiwo (review)
+- Research dynamic jobs...do we need a static schedule?? rescue_scheduler.yml??
 - review stripe_events
 - review merchant_customer_id in transactions and invoices
 - review managed account..
