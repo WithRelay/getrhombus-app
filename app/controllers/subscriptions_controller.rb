@@ -48,6 +48,9 @@ class SubscriptionsController < ApplicationController
 
   def upgrade_subscription
     amount = @subscription.unused_amount
+    coupon_res = true if amount == 0
+    # coupon only created if amount is valid ie. > 0
+    # if coupon create coupon_res is coupon id otherwise false
     coupon_res = create_coupon(amount) if amount > 0
     # move user to new subscription based on the new plan selected
     new_subscription = Subscription.new(
@@ -56,7 +59,9 @@ class SubscriptionsController < ApplicationController
       merchant_customer_id: @subscription.merchant_customer_id,
       quantity: @subscription.quantity
     )
-    if new_subscription.create_subscription({ team: current_user }).first
+    # upgrade subscription only if unused amount not present and
+    # while coupon successfully created with unused amount
+    if coupon_res && new_subscription.create_subscription({ team: current_user }).first
       @subscription.cancel_subscription(current_user, false)
       current_user.next_plans.update_all(status: false)
       flash[:notice] = 'Subscription upgraded successfully.'
