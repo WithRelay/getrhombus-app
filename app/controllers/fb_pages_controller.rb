@@ -92,7 +92,7 @@ class FbPagesController < ApplicationController
     fb_pages = current_user.fb_pages
     ##  has_one :fb_cred??? # remove both page creds and actual fb account cred
     fb_creds = current_user.fb_cred                                 
-
+    # only one page should be subscribed to at a time, but just in case we have more than one
     fb_pages.each do |page|
       response = FacebookMessengerService.unsubscribe(page.page_access_token) if page.subscription_status
     end
