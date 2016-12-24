@@ -34,13 +34,11 @@ $(document).ready(function() {
         .closest('.form-group') // Get the field parent
         .removeClass('has-warning')
         .addClass('has-success')
-    })
-    .on('submit', function(e) {
-        // only for creating plan from modal as in subscription index page
-        if ($('.add-modal-plan').length > 0 && $("[data-fv-result=INVALID]").length === 0){
-          addPlan();
-        }
     });
+
+  $('#create-plan').on('click', function(e) {
+    addPlan();
+  });
 
   $('#plan_name').keyup(function(e) {
     $('#planForm').formValidation('revalidateField', 'plan[name]');
@@ -77,7 +75,7 @@ $(document).ready(function() {
         FlashHandler.setFlashMessage(JSON.parse(data.responseText).response, 'error');
       })
       .always(function(data, textStatus, response) {
-        $('.create-plan').attr("disabled", false);
+        $('#create-plan').attr("disabled", false);
       });
   }
 
