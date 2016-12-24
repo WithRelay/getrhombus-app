@@ -31,7 +31,7 @@ class Api::V1::ListsController < API::V1::BaseController
           u = UserList.new(list_id:@list.id, user_id:u)
           list_errors.push(u.errors.full_messages) if !u.save
         end
-          if list_errors.empty?
+          if list_errors.blank?
             render json: {
               "list" => @list,
               "list_users" => user_list,
@@ -49,7 +49,7 @@ class Api::V1::ListsController < API::V1::BaseController
                           user_id:current_user.id, 
                           segment:segment_query)
         list_errors = get_list_errors(@list)
-        if list_errors.empty?
+        if list_errors.blank?
            render json: {
               "list" => @list,
             }, status: 200
@@ -112,7 +112,7 @@ class Api::V1::ListsController < API::V1::BaseController
     # @param list_obj A list object
     def get_list_errors(list_obj)
       list_errors = Array.new 
-      if !list_obj.errors.empty?
+      if !list_obj.errors.blank?
         list_errors.push(@list.errors.full_messages)
       end
       return list_errors

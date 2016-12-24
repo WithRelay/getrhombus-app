@@ -1,4 +1,9 @@
+/*! word-and-character-counter.js
+ v2.4 (c) Wilkins Fernandez
+ MIT License
+ */
 // jscs:disable maximumLineLength
+// line no. 184 to 192 customize
 (function ($) {
   "use strict";
   $.fn.extend({
@@ -174,6 +179,7 @@
 
             // ...down
             if (options.count === defaults.count) {
+              // This area is customize
              // this do not effects other place we have used. I have check the campaign_channel id
               if ($('#campaign_channel').length > 0){
                 // 0 represents for sms and 1 for mms

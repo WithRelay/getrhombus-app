@@ -1,60 +1,61 @@
-<%= form_for([current_user, @plan], :html=> { id: 'planForm', class: 'form-horizontal' }) do |f| %>
+<%= form_for([current_user, plan = Plan.new], :html=> { id: 'planForm', class: 'form-horizontal' }) do |f| %>
 
-  <div class="form-group">
-    <%= f.label :name, class: 'col-xs-3 control-label' %>
-    <div class="col-xs-5">
-      <%= f.text_field :name, class: 'form-control' %>
+  <% unless action_name == 'edit' %>
+    <div class="form-group">
+      <%= f.label :name, class: 'col-xs-3 control-label' %>
+      <div class="col-xs-8">
+        <%= f.text_field :name, class: 'form-control' %>
+      </div>
     </div>
-  </div>
 
-  <% if action_name == 'new' || action_name == 'create' %>
-    
     <div class="form-group">
       <%= f.label :amount, class: 'col-xs-3 control-label' %>
-      <div class="col-xs-5">
-        <%= f.text_field :amount, class: 'form-control', value: present(@plan).format_amount %>
+      <div class="col-xs-8">
+        <%= f.text_field :amount, class: 'form-control' %>
       </div>
     </div>
 
-    <div id='interval-settings'>
-      <div class="form-group">
-        <%= f.label :interval, class: 'col-xs-3 control-label' %>
-        <div class="col-xs-2">
-          <%= f.select :interval, options_for_select({ "Day" => "day", "Week" => 'week', "Month" => "month" }, selected: @plan.interval), {}, class: 'form-control' %>
-        </div>
-      </div>
-    </div>
 
-      <div class="form-group">
-        <%= f.label :interval_count, class: 'col-xs-3 control-label' %>
-        <div class="col-xs-5 dynamic-count">
-          <%= f.text_field :interval_count, id: 'interval-count', class: 'form-control' %>
-        </div>
+    <div class="form-group">
+      <label class="col-xs-3 control-label">Interval</label>
+      <div class="col-xs-8">
+        <select class="dropdown w-select" data-name="Plan Interval" id="Plan-Interval" name="plan[interval]">
+          <option value="week_1">Weekly</option>
+          <option value="week_2">Bi-weekly</option>
+          <option value="month_1">Monthly</option>
+          <option value="month_3">Every 3 months</option>
+          <option value="month_6">Every 6 months</option>
+          <option value="year_1">Yearly</option>
+        </select>
       </div>
     </div>
 
     <!-- only platform user can enter trial days -->
     <% if current_user.is_platform? %>
-        <div class="form-group">
-          <%= f.label :trial_period_days, class: 'col-xs-3 control-label' %>
-          <div class="col-xs-5 dynamic-count">
-            <%= f.text_field :trial_period_days, id: 'trial-days', class: 'form-control' %>
-          </div>
+      <div class="form-group">
+        <%= f.label :trial_period_days, class: 'col-xs-3 control-label' %>
+        <div class="col-xs-8 dynamic-count">
+          <%= f.text_field :trial_period_days, id: 'trial-days', class: 'form-control' %>
         </div>
       </div>
     <% end %>
 
     <div class="actions field form-group">
       <div class="col-xs-9 col-xs-offset-3">
-        <%= f.submit 'Create Plan', class: 'btn btn-primary' %>
+        <%= f.submit 'Create Plan', class: 'btn btn-primary add-plan', id: 'create-plan' %>
       </div>
     </div>
 
-  <% elsif action_name == 'edit' %>
-
+  <% else %>
+    <div class="form-group">
+      <%= f.label :name, class: 'col-xs-3 control-label' %>
+      <div class="col-xs-8">
+        <%= f.text_field :name, class: 'form-control', value: @plan.name  %>
+      </div>
+    </div>
     <div class="actions field form-group">
       <div class="col-xs-9 col-xs-offset-3">
-        <%= f.submit 'Update Plan', class: 'btn btn-primary' %>
+        <%= f.submit 'Update Plan', class: 'btn btn-primary update-plan', data: {disable_with: 'Please wait ...'} %>
       </div>
     </div>
 

@@ -2,11 +2,7 @@ module AdditionalUserActions
   extend ActiveSupport::Concern
 
   def messaging
-    redirect_to :root and return if @user.user_level != 1
-
-    # change back
-    render layout: 'application_dashboard_messaging'
-    #render layout: 'xxx'
+    redirect_to :root and return if @user.is_customer?
   end
 
   def managed_acct
@@ -18,11 +14,13 @@ module AdditionalUserActions
   end
 
   def create_managed_acct
-    if user_valid_to_update
-      flash[:notice] = user_valid_to_update
+    check_user_validation = user_valid_to_update
+    if check_user_validation.present?
+      flash[:error] = check_user_validation
     else
-      flash[:error] = @user.errors
+      flash[:notice] = 'Account connected susseccfully'
     end
+    managed_acct
     render :managed_acct
   end
 
@@ -41,11 +39,13 @@ module AdditionalUserActions
   end
 
   def update_managed_acct
-    if user_valid_to_update
-      flash[:notice] = user_valid_to_update
+    check_user_validation = user_valid_to_update
+    if check_user_validation.present?
+      flash[:error] = check_user_validation
     else
-      flash[:error] = @user.errors
+      flash[:notice] = 'User updated'
     end
+    managed_acct
     render :managed_acct
   end
 
@@ -61,10 +61,11 @@ module AdditionalUserActions
   end
 
   def user_valid_to_update
-    user_update = @user.update(full_user_params)
-    if user_update
-      status = user_managed_account
-      set_message(status)
+    check_account_create = user_managed_account
+    if check_account_create.methods.include?(:message)
+      check_account_create.message
+    else
+      @user.errors.full_messages if @user.errors.full_messages.present?
     end
   end
 
@@ -83,10 +84,6 @@ module AdditionalUserActions
                                                              fingerprint: bank_account.fingerprint })
     end
     stripe_params
-  end
-
-  def set_message(status)
-    status.methods.include?(:message) ? status.message : 'Account Connected Succesfully'
   end
 
   # Returns JSON object with user hash who sent a message to the given merchant in the last CONFIG[:dashboard]['messaging']['num_days_history'] days
@@ -112,11 +109,11 @@ module AdditionalUserActions
 
   # Sends a message to user on behalf of merchant
   def send_message_from_merchant
-    if !params[:message].blank?
+    if params[:message].present?      
       merchant = User.find_by_id(params[:id])
-      if !merchant.blank?
-        message = Message.send_and_save_message(merchant.rhombus_number, params[:user_number], params[:message])
-        if message
+      if merchant.present?
+        message = Message.new
+        if message.send_and_save_message(merchant.rn_type, merchant.rhombus_number, params[:user_number], params[:message])
           render :json => Hash['success' => true, 'user_level' => merchant.user_level, 'profile_image' => ActionController::Base.helpers.asset_path('rhombus_icon_50x50.png'), 'ts_day_of_the_week' => message.created_at.strftime('%A'), 'ts_time' => message.created_at.strftime('%l:%M %P')].to_json
           return
         end

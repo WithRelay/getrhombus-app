@@ -184,11 +184,11 @@ class StripeManagedAccountService < Struct.new( :user, :params )
     params[:people_attributes].each do |key, value|
       unless key == '0' # key 0 contains address for default legal entities not for additional owners address
         owner_details = {}
-        dob = value[:dob].split('/')
-        full_name = value[:full_name].split(' ', 2)
+        dob = value[:dob].present? ? value[:dob].split('-') : []
+        full_name = value[:full_name].present? ? value[:full_name].split(' ', 2) : []
         owner_details[:first_name] = full_name[0]
         owner_details[:last_name] = full_name[1]
-        owner_details[:dob] = { day: dob[1], month: dob[0], year: dob[2] }
+        owner_details[:dob] = { day: dob[2], month: dob[1], year: dob[0] }
         address = value[:address_attributes]
         owner_details[:address] = { city: address[:city], country: address[:country],
                                     state: address[:state_province], postal_code: address[:postal_code],
@@ -204,14 +204,14 @@ class StripeManagedAccountService < Struct.new( :user, :params )
   # https://stripe.com/docs/api#account_object
   # TODO function is too lengthy feel free to make small without changing its behaviour. We do not have test
   def managed_company_account
-    dob = people[:dob].split('/')
-    full_name = people[:full_name].split(' ',2)
+    dob = people[:dob].present? ? people[:dob].split('-') : []
+    full_name = people[:full_name].present? ? people[:full_name].split(' ', 2) : []
     { email: user.email, business_url: params[:url],
       business_name: params[:org_name], managed: true, country: address[:country],
       product_description: params[:description],
       tos_acceptance: { ip: stripe_cred[:ip], date: stripe_cred[:tos_date].to_i, user_agent: stripe_cred[:user_agent] },
       legal_entity: { type: params_org_type, first_name: full_name[0], last_name: full_name[1],
-                      gender: people[:gender],  phone_number: '<redacted_phone_number>', business_name: people[:business_name],
+                      gender: people[:gender],  phone_number: user.phone_number, business_name: people[:business_name],
                       business_tax_id: params[:org_tax_id], personal_id_number: people[:last4],
                       personal_address: { city: people_address[:city],
                                           country: people_address[:country],
@@ -219,7 +219,7 @@ class StripeManagedAccountService < Struct.new( :user, :params )
                                           state: people_address[:state_province],
                                           line1: people_address[:street_address]
                                         },
-                      dob: { day: dob[1], month: dob[0], year: dob[2] },
+                      dob: { day: dob[2], month: dob[1], year: dob[0] },
                       address: { state: address[:state_province], postal_code: address[:postal_code],
                                  city: address[:city], line1: address[:street_address]
                                },

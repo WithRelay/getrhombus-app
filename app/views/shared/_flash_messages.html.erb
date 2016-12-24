@@ -8,6 +8,7 @@
       var arrayMessage = <%== flash[flash_key].to_json %>
       // flashMethod is a method availabel in flashes.js
       FlashHandler.setFlashMessage( arrayMessage, flashTitle )
+      <% flash.delete(flash_key) %>
     });
   </script>
 <% end %>

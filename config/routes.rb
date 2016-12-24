@@ -61,8 +61,18 @@ Rails.application.routes.draw  do
     resources :fb_pages, only: [:index]
     patch 'update_fb_page' => 'fb_pages#update_user_fb_page'
     resources :hashtags, except: [:show, :destroy]
-    resources :subscriptions, except: [:edit, :update]
-    resources :plans, only: [:create, :index, :new, :edit, :update, :destroy]
+    resources :subscriptions, only: [:index, :destroy] do
+      collection do
+        post '/:id/upgrade_subscription' => 'subscriptions#upgrade_subscription'
+        post '/:id/downgrade_subscription' => 'subscriptions#downgrade_subscription'
+      end
+    end
+
+    resources :plans, only: [:index, :edit, :destroy] do
+      collection do
+        post '/:id/update' => 'plans#update'
+      end
+    end
     resources :alerts, only: [:update]
     resources :saved_replies
     resources :bank_accounts
@@ -70,7 +80,6 @@ Rails.application.routes.draw  do
     resources :people
     resources :message_resolutions
     resources :transactions do
-
       collection do
         get 'download' => 'transactions#download_csv', constraints: { format: 'csv' }
       end
@@ -79,6 +88,7 @@ Rails.application.routes.draw  do
     # authenticate campaigns resources if a user is merchant
     authenticate :user, -> (user) { user.is_merchant? } do
       resources :campaigns, except: [:show] { member { put 'change_status' }; collection { get 'filter_campaign' } }
+      resources :reminders, except: [:show] { member { put 'change_status' } }
     end
 
     collection do
@@ -115,18 +125,24 @@ Rails.application.routes.draw  do
     match 'hashtags' => 'hashtags#index', via: :get
     match 'hashtags/:id/images/:image_id' => 'hashtags#image_delete', via: :delete
     match 'saved_replies' => 'saved_replies#index', via: :get
+    # Campaign Routes
+    post 'campaigns/check_campaign_name' => 'campaigns#check_campaign_name'
     match 'campaigns/:id/images/:image_id' => 'campaigns#image_delete', via: :delete
     match 'campaigns/upload_images' => 'campaigns#upload_images', via: :post
     match 'campaigns/upload_from_url' => 'campaigns#upload_from_url', via: :post
-    match 'transactions/:charge_id/refund' => 'transactions#refund', via: :post
+    #--------------------------------------------------------------------------#
+    # reminder routes
+    resources :reminders, only: [:create]
+    #--------------------------------------------------------------------------#
+    match 'transactions/:txn_number/refund' => 'transactions#refund', via: :post
     match 'transactions/charge_customer' => 'transactions#charge_customer', via: :post
     match 'numbers/search' => 'numbers#search', via: :get
-    match 'lists' => 'lists#index', via: :get
-    match 'lists/create' => 'lists#create', via: :post
-    match 'coupons/check_coupon_name' => 'coupons#check_coupon_name', via: :post
+    resources :lists, only: [:index, :create]
+    match 'coupons/check_coupon_name' => 'coupons#check_coupon_name', via: :post   
+    resources :coupons, only: [:index] 
     match 'plans/check_plan_name' => 'plans#check_plan_name', via: :post
-    match 'coupons/get_coupon' => 'coupons#get_coupon', via: :get
-    match 'plans/get_plan' => 'plans#get_plan', via: :get
+    resources :plans, only: [:index, :create]
+    match 'subscriptions/create' => 'subscriptions#create', via: :post
     match 'merchant/customers' => 'merchant_customers#customers', via: :get
   end
 

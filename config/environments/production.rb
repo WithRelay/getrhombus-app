@@ -1,7 +1,6 @@
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
-
   #### added
   config.action_mailer.default_url_options = { :host => 'getrhombus.com' }
   # ActionMailer Config
@@ -17,6 +16,16 @@ Rails.application.configure do
     domain: "getrhombus.com",
     user_name: <redacted_username>
     password: "<redacted_password>" 
+  }
+
+  config.paperclip_defaults = {
+    :storage => :s3,
+    :s3_region => 'us-east-1',
+    :s3_credentials => {
+      :bucket: <redacted_s3_bucket>
+      :access_key_id: <redacted_access_key_id>
+      :secret_access_key: <redacted_secret_access_key>
+    }
   }
   #### added
 

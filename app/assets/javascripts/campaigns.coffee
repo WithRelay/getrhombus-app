@@ -9,19 +9,26 @@ class @DatePicker
     date = new Date();
     @minimumDate = dateSelect.select
     dateRangeValue = $('.daterange').val()
-    if dateRangeValue == undefined || dateRangeValue == ""
-      @today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-    else
-      dateRange = dateRangeValue.split('-')
-      @today = new Date(dateRange[0], dateRange[1]-1, dateRange[2].split(" ")[0]);
+    # if dateRangeValue == undefined || dateRangeValue == ""
+    @today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    # # else
+    #   dateRange = dateRangeValue.split('-')
+    #   @today = new Date(dateRange[0], dateRange[1]-1, dateRange[2].split(" ")[0]);
 
   datePicker: ->
-    today = @today # @today is assign in local variable because of some reason coffescript thinks @today is a object
+    today = @today
+    time = @time
+    if @minimumDate
+      min = today
+    else
+      min = false
     if $(@element).length > 0
-      min = @minimumDate ? today : false
-      setFormat = @time ? RAILS_DATE_FORMAT : 'YYYY-MM-DD'
-      $(@element).daterangepicker
-        time: @time,
+      if time
+        setFormat = RAILS_DATE_FORMAT
+      else
+        setFormat = 'YYYY-MM-DD'
+      $(this.element).daterangepicker
+        timePicker: time,
         timePickerIncrement: 30,
         singleDatePicker: YES,
         locale: { format: setFormat },
@@ -105,7 +112,7 @@ class Campaign
     if $(@textArea).length > 0
       txtEmoji = $(@textArea).emojioneArea ->
                    @emojiConfig
-
+                   
   removeDiv = ->
     $('#undefined_counter').each ->
       $(this).remove()
@@ -113,7 +120,7 @@ class Campaign
 
 $( document ).on 'ready page:load', ->
   campaign = new Campaign({ pickerPosition: 'right' })
-  campaign.datePicker(new DatePicker( '.daterange', true, { select: true } ))
+  campaign.datePicker(new DatePicker( '.daterange', true, { time: true, select: true } ))
   window.onload = ->
     $('.emojionearea-editor').counter({ type: 'char', append: false, target: '#textBoxCounter' })
 
@@ -125,7 +132,10 @@ $( document ).on 'ready page:load', ->
       alert 'Only image file formats with extension: jpg, jpeg, png, PNG, JPG, JPEG are allowed.'
       window.invalid_image = true
     else if !uploadedImage.validateSize()
-      alert 'invalid upload size. Please upload image of size less then 4 MB'
+      alert 'invalid upload size. upload image should be less than 4 mb'
+      window.invalid_image = true
+    else if !uploadedImage.validateTotalSize()
+      alert 'invalid upload size. Total upload image should be less than 25 mb'
       window.invalid_image = true
     else
       reader = new FileReader
@@ -183,7 +193,7 @@ $( document ).on 'ready page:load', ->
 
   $( '#oneTimeFrequency, #deliverNow' ).click ->
     if !$("#deliverNow").is(":checked")
-      campaign.datePicker(new DatePicker( '.daterange', { time: true } ))
+      campaign.datePicker(new DatePicker( '.daterange', true, { time: true, select: true } ))
     campaign.hideShowScheduler()
 
   getBase64FromImageUrl = (url) ->

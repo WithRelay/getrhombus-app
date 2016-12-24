@@ -22,3 +22,9 @@ send_campaigns: # send email for campaign list
   class: 'SendCampaignJob' # class ChannelJob is present in app/jobs which represents campaign jobs
   args:
   description: 'Sends campaign to lists of users selected for campaign'
+
+send_reminders: # send email for reminder user
+  every: 24h # refer to 1 day
+  class: 'SendReminderJob' # class SendReminderJob is present in app/jobs which represents campaign jobs
+  args:
+  description: 'Sends campaign to lists of users selected for campaign'

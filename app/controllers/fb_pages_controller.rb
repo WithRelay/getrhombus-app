@@ -81,10 +81,29 @@ class FbPagesController < ApplicationController
         end
       end
     end
-    if response['success'] || fb_pages.empty? || FbPage.where(subscription_status: true).empty?
-      FbCred.where(fb_id: fb_cred.fb_id).destroy_all
+    if response['success'] || fb_pages.blank? || fb_cred.fb_pages.where(subscription_status: true).blank?
+      FbCred.where(fb_id: fb_cred.fb_id, user_id: current_user.id).destroy_all
     end
     redirect_to user_path(current_user), flash: { notice: 'You have disconnected Facebook Messenger from Rhombus.' }
+  end
+
+  def remove_integration
+    response = {}
+    fb_pages = current_user.fb_pages
+    ##  has_one :fb_cred??? # remove both page creds and actual fb account cred
+    fb_creds = current_user.fb_cred                                 
+    # only one page should be subscribed to at a time, but just in case we have more than one
+    fb_pages.each do |page|
+      response = FacebookMessengerService.unsubscribe(page.page_access_token) if page.subscription_status
+    end
+    
+    if response['success'] || fb_pages.blank? || fb_creds.blank?
+      fb_creds.destroy_all
+      fb_pages.destroy_all
+      redirect_to user_path(current_user), flash: { notice: 'You have disconnected Facebook Messenger from Rhombus.' }
+    else
+      #redirect_to user_path(current_user), flash: { notice: 'Unable to disconnect your Facebook Messenger from Rhombus.' }
+    end
   end
 
   private 
@@ -112,7 +131,7 @@ class FbPagesController < ApplicationController
             fb_cred_id: current_user.fb_cred.id)
         end
       end
-    rescue Exception => e
+    rescue StandardError => e
     end
   end
 
@@ -125,7 +144,7 @@ class FbPagesController < ApplicationController
           page.destroy
         end
       end
-    rescue Exception => e
+    rescue StandardError => e
     end
   end
 end

@@ -22,13 +22,14 @@ class Subscription < ActiveRecord::Base
         hash[:coupon] = coupon.stripe_coupon_id 
       end
       
+      merchant_customer = MerchantCustomer.find self.merchant_customer_id
+      hash[:customer] = merchant_customer.stripe_customer_id
       hash[:plan] = self.plan_id
       hash[:quantity] = self.quantity
-      hash[:tax_percent] = hash[:team].tax_percent      
+      hash[:tax_percent] = hash[:team].tax_percent
       hash.delete(:team)
 
       res = PaymentService.create_subscription(hash, uid, is_platform)
-
       if res.first
         self.update(
           stripe_subscription_id: res.second.id,
@@ -41,7 +42,7 @@ class Subscription < ActiveRecord::Base
           canceled_at: res.second.canceled_at,
           cancel_at_period_end: res.second.cancel_at_period_end,
           ended_at: res.second.ended_at
-        )
+        )        
       else
         # notify team via email
         # should this be for only standard error caught?
@@ -69,6 +70,37 @@ class Subscription < ActiveRecord::Base
       # notify team via email
       false
     end
+  end
+
+  def unused_amount
+    plan = self.plan
+    plan_amt = plan.amount
+    coupon_amt = 0
+
+    # calculate coupon amount
+    coupon = self.coupon
+    if coupon.present?
+      if coupon.amount_off.present?
+        coupon_amt = plan_amt - coupon.amount_off
+      else
+        coupon_amt = plan_amt - (coupon.percent_off/100.to_f * plan_amt).round(2)
+      end
+    end
+
+    # amount after coupon discount
+    plan_amt = plan_amt - coupon_amt
+
+    # calculate number of days from subscription start to subscription end
+    # stripe most likely stores time in UTC
+    start_date = DateTime.strptime(self.current_period_start.to_s,'%s')
+    end_date = DateTime.strptime(self.current_period_end.to_s,'%s')
+    total_days = (end_date - start_date).to_i + 1  # +1 to include the start day
+
+    days_remaining = (end_date - DateTime.now.utc).to_i + 1
+    days_remaining = (days_remaining > 0) ? days_remaining : 0
+
+    plan_amt = (plan_amt.to_f / total_days).round(2)            # plan amount per day
+    ((plan_amt * days_remaining)).round                 # unspent amount (prorated per day)
   end
 
 end

@@ -3,13 +3,20 @@
 <div class="row">
   <div class="col-xs-5">
     <%= f.label :Name %>
-    <%= f.text_field :name %>
   </div>
 
+    <div class="col-xs-6">
+
+      <%= f.text_field :name %>
+    </div>
+
   <br><br>
-    <%= f.label :Choose_a_list %>
-    <%= f.text_field :list_ids, id: 'campaign-select-lists', 'data-lists_data' => "#{@lists_json}", placeholder: "Select 1 or more lists" %>
+    <%= f.label :Choose_a_list, class: 'col-xs-3 control-label' %>
+    <div class="col-xs-6">
+      <%= f.text_field :list_name, id: 'campaign-select-lists', 'data-lists_data' => "#{@lists_json}", placeholder: "Select 1 or more lists" %>
+    </div>
   <br>
+  <br><br><br>
   <br><br><br>
   <%= f.label :Channel %>
   <%= f.select :channel, channel_list(@campaign), selected: get_channel_enum_value(@campaign) %>
@@ -46,7 +53,10 @@
       </div>
       <br>
       <br><br>
+      <div class="col-xs-6">
+
         <%= f.text_area :text, id: 'trumbowyg' %>
+      </div>
       </div>
       <div id="textBoxCounter"> </div>
   </div>
@@ -66,7 +76,7 @@
       <%= present(image).image_delete_url %>
     <% end %>
   </div>
-
-  <%= f.submit 'Save Campaign' %>
-
+  <div class="col-xs-6">
+    <%= f.submit 'Save Campaign' %>
+  </div>
 <% end %>

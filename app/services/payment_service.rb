@@ -24,7 +24,9 @@ class PaymentService
         err  = e.json_body[:error]
         owner = User.find_by(email: Rails.application.secrets.team_email)
         unless hash[:is_merchant]
-          Message.send_and_save_message(owner.rhombus_number, current_user.phone_number, "We were unable to update your card info on Rhombus because: #{err[:message]}.")
+          customer = User.find_by(email: hash[:email])
+          message = Message.new
+          message.send_and_save_message(owner.rn_type, owner.rhombus_number, customer.phone_number, "We were unable to update your card info on Rhombus because: #{err[:message]}.")
         end
         # redo this email
         # Notification.token_failure_notification(err, hash[:email]).deliver_now
@@ -248,7 +250,19 @@ class PaymentService
         false
       end
     end
-  
+    
+
+    def retrieve_charge(charge_id)
+      begin
+        re = Stripe::Charge.retrieve(charge_id)
+      rescue Stripe::StripeError => e
+        # Display a very generic error to the user, and maybe send yourself an email
+        false
+      rescue StandardError => e
+        false
+      end
+    end
+
     # Some countries require that the routing num and institition num be concatenated with a specific character
     # that's in index postion 1
     def stripe_country_list

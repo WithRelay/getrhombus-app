@@ -26,13 +26,6 @@ $(document).ready(function() {
               message: 'Amount  is required'
             }
           }
-        },
-        'plan[interval_count]': {
-          validators: {
-            notEmpty: {
-              message: 'Interval count  is required'
-            }
-          }
         }
       }
     })
@@ -43,9 +36,48 @@ $(document).ready(function() {
         .addClass('has-success')
     });
 
+  $('#create-plan').on('click', function(e) {
+    addPlan();
+  });
+
   $('#plan_name').keyup(function(e) {
     $('#planForm').formValidation('revalidateField', 'plan[name]');
   });
+
+  // when create plan through modal it add class to submit button
+  $('.plan-modal').on('click', function(){
+    $('.add-plan').attr('class', 'btn btn-primary add-modal-plan')
+  });
+
+  $('.update-plan').on('click', function(){
+    location_url = window.location.href.split('/');
+    id = location_url[location_url.length - 2]
+    url = $('#planForm').attr('action');
+    $('#planForm').attr('action', url + '/' + id + '/update');
+  });
+
+  // create plan using modal through api call
+  function addPlan(){
+    $.ajax({
+        url: "/v1/plans.json",
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
+        },
+        type: "POST",
+        data: $('#planForm').serialize(),
+        dataType: "json"
+      })
+      .done(function(data, textStatus, jqXHR) {
+        FlashHandler.setFlashMessage(data.response, 'notice');
+        location.reload();
+      })
+      .fail(function(data, textStatus, errorThrown) {
+        FlashHandler.setFlashMessage(JSON.parse(data.responseText).response, 'error');
+      })
+      .always(function(data, textStatus, response) {
+        $('#create-plan').attr("disabled", false);
+      });
+  }
 
 });
 

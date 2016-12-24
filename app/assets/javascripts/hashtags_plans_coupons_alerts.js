@@ -53,32 +53,6 @@ $(document).ready(function () {
     }
   }).change();
 
-  
-  // dynamic interval-count... used by plans and hashtags
-  $('#interval-count').on('input', function() {
-    var plan_interval = $('#plan_interval').val();
-    if (plan_interval === 'day') {
-      this.value = dynamic_interval(this.value, 366);
-    } else if (plan_interval === 'week') {
-      this.value = dynamic_interval(this.value, 53);
-    } else {
-      this.value = dynamic_interval(this.value, 13);
-    }
-  });
-
-  function dynamic_interval(v, max) {
-    console.log(v)
-    return (v.match(/^[1-9]\d*$/) && parseInt(v) < max) ? v : v.slice(0, -1);
-  }
-
-  // used by plans and hashtags
-  $('#plan_interval').change(function() {
-    $('#interval-count').val('');
-    var plan_form = $('#planForm');
-    if (plan_form.length) plan_form.formValidation('resetField', 'plan[interval_count]');
-  });
-
-
   coupon_type_value.on('input', function(){
     var v = this.value;
     this.value = (coupon_type.val() == 'amount_off') ? decimal_with_up_to_two_places(v) : positive_integer_less_than_100(v);

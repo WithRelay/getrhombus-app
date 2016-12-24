@@ -11,16 +11,50 @@
  * file per style scope
  *
 
- * require_tree .
  *= require pnotify
  *= require_self
  *= require bootstrap
- *= require form
- *= require campaigns
  *= require intlTelInput.css
  *= require chartist.min
  *= require trumbowyg.min
  *= require trumbowyg.emoji.css
  *= require emojionearea.min
  *= require selectize
+ *= require dashboard/style
+ *= require dashboard/responsive
+ *= require dashboard/shortcuts
+ *= require awesome-bootstrap-checkbox
+ *= require bootstrap-select
+ *= require angucomplete-alt.css
+ *= require emojionearea.min
+ *= require jquery.atwho.min.css
+ *= require daterangepicker
+ *= require_tree .
  */
+ @import url('//fonts.googleapis.com/css?family=Montserrat:400,700');
+ @import url('//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,600,700,800,300');
+
+ /* remove this this is for mms progress bar */
+ .thumb {
+     width: 24px;
+     height: 24px;
+     float: none;
+     position: relative;
+     top: 7px;
+ }
+
+ form .progress {
+     line-height: 15px;
+ }
+
+ .progress {
+     display: inline-block;
+     width: 100px;
+     border: 3px groove #CCC;
+ }
+
+ .progress div {
+     font-size: smaller;
+     background: orange;
+     width: 0;
+ }

@@ -1,3 +1,4 @@
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 <div , class="container">
   <div id="ordered-plans", class="container">
 
@@ -30,7 +31,6 @@
 
   <% if @plans.next_page %>
       <div id="load_more_plans" class="show_more btn btn-primary " data-loading-text="<i class='fa fa-spinner fa-spin '></i> Loding more Plans" title="Click here to load more plans">Show More </div>
-  <% end %>
-  <%= link_to 'New Plan', new_user_plan_path %>
 
+  <% end %>
 </div>

@@ -1,38 +1,32 @@
-  
+
 
     <!-- ========== Css Files ========== -->
   <% provide(:title, 'Rhombus - Merchant Profile') %>
-  <%= content_for :head do %>
-    <%= stylesheet_link_tag "application_dashboard_messaging", media: "all" %>
-  <% end %>
-  
 
-  <body>
- 
   <style type="text/css">
     body{background: #F5F5F5;}
   </style>
 
   <div class="completeAccount">
 
-    <!-- //////////////////////////////////////////////////////////////////////////// --> 
+    <!-- //////////////////////////////////////////////////////////////////////////// -->
 <!-- START CONTAINER -->
-<div class="container-padding">  
+<div class="container-padding">
 
   <!-- Start Row -->
   <div class="row">
       <div id="profileLogo"><img src="<%= asset_path 'logo.jpg' %>" alt="icon" id="signup_logo" class="icon"></div>
 
       <div class="panel panel-default" id="merchantprofilepage">
-            
+
             <div class="panel-body">
-            <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put, id: "merchantProfile", class: "form-horizontal rhombusFocus" }) do |f| %> 
+            <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put, id: "merchantProfile", class: "form-horizontal rhombusFocus" }) do |f| %>
 
               <div class="merchant-form-line" style="margin-top: 10px;">Where are you based?</div>
 
                 <div class="form-group" >
                   <label class="col-sm-2 control-label form-label">Country</label>
-                  <div class="col-sm-10 countrygroup">   
+                  <div class="col-sm-10 countrygroup">
                       <%#= f.select :country, options_for_select({ "Select country" => "Select country", "Australia" => "AU", "Austria" => 'AT', "Belgium" => "BE", "Canada" => "CA", "Denmark" => "DK", "Finland" => "FI", "France" => "FR", "Germany" => "DE", "Ireland" => "IE", "Italy" => "IT", "Luxembourg" => "LU", "Netherlands" => "NL", "Norway" => "NO", "Spain" => "ES", "Sweden" => "SE", "United Kingdom" => "GB", "United States" => "US" }, selected: "Select country", disabled: "Select country"), {}, :class => 'selectpicker rhombusFocus', id: 'country' %>
 
                       <%= f.select :country, options_for_select(TextingService.twilio_list.map { |k,v| [v[:name], k.to_s] }), {include_blank: "Select country"}, :class => 'selectpicker rhombusFocus', id: 'country' %>
@@ -41,7 +35,7 @@
 
                 <div class="form-group" >
                   <label class="col-sm-2 control-label form-label">Currency</label>
-                  <div class="col-sm-10">   
+                  <div class="col-sm-10">
                       <%#= f.select :currency, options_for_select({ "Select currency" => "Select currency", "AUD" => "aud", "CAD" => 'cad', "CRC" => "crc", "DKK" => "dkk", "EUR" => "eur", "GBP" => "gbp", "NOK" => "nok", "SEK" => "sek", "USD" => "usd" }, selected: "Select currency", disabled: "Select currency"), {}, :class => 'selectpicker rhombusFocus', id: 'currency' %>
                     </div>
                 </div>
@@ -54,8 +48,8 @@
                   <%= f.text_field :org_name, type: "text", class: "form-control rhombusFocus", placeholder: "Business Name" %>
                   </div>
                 </div>
-           
-                
+
+
                 <div class="form-group">
                   <label class="col-sm-2 control-label form-label">Type</label>
                   <div class="col-sm-10">
@@ -116,9 +110,7 @@
                   </div>
                 </div>
 
-
                 <div class="merchant-form-line">Tell us about you</div>
-
 
                 <div class="form-group">
                   <label class="col-sm-2 control-label form-label">first_nameName</label>
@@ -141,7 +133,7 @@
 
                 <div class="form-group">
                   <label class="col-sm-2 control-label form-label">Welcome Message</label>
-                  <div class="col-sm-10"> 
+                  <div class="col-sm-10">
                   <%= f.text_area :custom_welcome, type: "text", class: "form-control rhombusFocus", id: "count_me", rows: 4 %>
                   </div>
                 </div>
@@ -156,10 +148,10 @@
                   <%= f.password_field :current_password, type: "password", class: "form-control rhombusFocus", placeholder: "Re-enter current password", id: "reenterPassword" %>
                   <%#</div>
                 </div>%>
-                
+
                 <div class="form-group">
                   <div class="col-sm-offset-2 col-sm-10">
-                  <%= f.submit "Save", id: "ba-submit", :class => "btn btn-default btn-rhombus" %> 
+                  <%= f.submit "Save", id: "ba-submit", :class => "btn btn-default btn-rhombus" %>
                   </div>
                 </div>
 
@@ -175,9 +167,6 @@
 
 </div>
 <!-- END CONTAINER -->
- <!-- //////////////////////////////////////////////////////////////////////////// --> 
+ <!-- //////////////////////////////////////////////////////////////////////////// -->
 
  </div>
-
-</body>
-</html>

@@ -3,7 +3,6 @@
 class CampaignsController < ApplicationController
   before_action :find_campaign, only: [ :update, :destroy, :change_status ]
   before_action :check_campaign_status, only: [ :update, :destroy, :change_status]
-  layout 'campaign'
 
   # @campaigns contains array of campaign of the associated users
   def index
@@ -20,11 +19,12 @@ class CampaignsController < ApplicationController
   def create
     @campaign = current_user.campaigns.build(campaign_params, image_params)
     if @campaign.save
-      #@campaign.enqueue_jobs # enque jobs if there is send now checked or one time is checked
+      @campaign.enqueue_jobs # enque jobs if there is send now checked or one time is checked
       flash[:notice] = 'Campaign Saved successfully'
       redirect_to new_user_campaign_path
     else
       flash[:error] = @campaign.errors.full_messages
+      @lists_json = @campaign.campaign_lists.map{|a| current_user.lists.find(a.list_id)}.to_json
       render :new
     end
   end
@@ -86,7 +86,7 @@ class CampaignsController < ApplicationController
 
   def campaign_params
     # enums are define as integer but params are in string and rails is not converting string to integer
-    params.require(:campaign).permit(:name, :list_ids, :channel, :repeat_days, :date_time, :deliver_now,
+    params.require(:campaign).permit(:name, :list_name, :channel, :repeat_days, :date_time, :deliver_now,
                          :frequency_type, :text, :new_status, :subject).tap do |c|
                           c[:channel] = c[:channel].to_i
                           c[:frequency_type] = c[:frequency_type].to_i

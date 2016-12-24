@@ -7,7 +7,7 @@ class MessageAlertJob
       # ActiveRecord::Base.clear_active_connections!
     
       # Add FB messages here
-      results =  Alert.select('alerts.id as id, u.email, u.rhombus_number, sms_number, include_sms, alerts.interval')
+      results =  Alert.select('alerts.id as id, u.email, u.rhombus_number, u.rn_type, sms_number, include_sms, alerts.interval')
                  .joins('INNER JOIN users u on alerts.user_id = u.id')
                  .where('alerts.send_alert = 1')
 
@@ -33,8 +33,8 @@ class MessageAlertJob
               platform_number = User.find_by(email: Rails.application.secrets.team_email).rhombus_number
               msg = Message.new
               msg_to_send = "Rhombus Notification: You have #{messages.length} new unread " + pluralize_msg + " on your dashboard."
-              msg.send_and_save_message(31, platform_number, r.sms_number, msg_to_send)
-              msg.update(unread: false, unread_notification_sent: true)
+              msg.send_and_save_message(r.rn_type, platform_number, r.sms_number, msg_to_send)
+              msg.update(unread_notification_sent: true)
               r.notification_logs.create(notify_type: 'new_alert', channel: 'Message', channel_id: msg.id, reason: 'unread_messages')
             end 
 

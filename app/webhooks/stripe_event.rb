@@ -4,7 +4,7 @@ class StripeEvent
     # Methods sending emails out to merchant/customers must be idempotent except for invoice failed
 
     def process_event(hash)
-      @hash = hash[:data][:object]
+      @hash = hash[:data][:object] if hash[:data]
       # send works like message passing to class hierarchy until method reacts
       # it accepts a parameter that need to be pass in symbol or string which calls method.
       # if we pass string it will internally converts to symbol.
@@ -19,12 +19,10 @@ class StripeEvent
                         # .where("stripe_subscription_id = ? and notify_type = ?", @hash[:id], 'subscription_trial_will_end').first
         # set_time_zone(@data.merchant_customer.merchant.time_zone)
         update_subscription_data
-        if @data
-          # find merchant and admin
-          # Email merchant of time left(merchant)
-          # Notify us too (admin)
-          @data.notification_logs << NotificationLog.create(notify_type: 'subscription_trial_will_end', channel: 'email', reason: 'Subscription trial is about to end.')
-        end
+        
+        # Email merchant of time left(merchant)
+        # Notify us too (admin)
+        @data.notification_logs << NotificationLog.create(notify_type: 'subscription_trial_will_end', channel: 'email', reason: 'Subscription trial is about to end.')
       end
     end
 
@@ -35,13 +33,14 @@ class StripeEvent
                       # .where("stripe_subscription_id = ? and notify_type = ?", @hash[:id], 'subscription_deleted').first
 
         # set_time_zone(@data.merchant_customer.merchant.time_zone)
-        update_subscription_data
-        if @data
-          # find merchant or user and admin
-          # Email about cancellation
-          # Notify us too (admin)
-          @data.notification_logs << NotificationLog.create(notify_type: 'subscription_deleted', channel: 'email', reason: 'Subscription has been deleted.')
-        end
+        update_subscription_data if @data
+        
+        # subscribe merchant (rhombus platform saas customer) to next plan if present
+        subscribe_merchant_to_downgraded_plan if @data.merchant_customer.customer.is_merchant?  
+
+        # Email about cancellation
+        # Notify us too (admin)
+        @data.notification_logs << NotificationLog.create(notify_type: 'subscription_deleted', channel: 'email', reason: 'Subscription has been deleted.')
       end
     end
 
@@ -136,10 +135,10 @@ class StripeEvent
       update_invoice_data
 
       # retrieve charge details
-      charge = Stripe::Charge.retrieve(@hash[:charge]) if @hash[:charge]
+      charge = PaymentService.retrieve_charge(@hash[:charge]) if @hash[:charge] 
       # a transaction should not already exist but we need to check if it does so we don't send out emails again
       # A tranasaction has only one log unlike subscriptions
-      txn = Transaction.includes(:notification_log).where(txn_uri: charge.id).first_or_initialize if charge
+      txn = Transaction.includes(:notification_logs).where(txn_uri: charge.id).first_or_initialize if charge
 
       # if we havent notified customer before
       # for now, we have only one line for each invoice - the subscription
@@ -181,7 +180,8 @@ class StripeEvent
             @data.update_attribute(:transaction_id, txn.id)
             # Notify customer and/or merchant
             # Notify (admin)
-            txn.notification_log = NotificationLog.create(notify_type: 'new_transaction', reason: 'receipt', channel: 'email')
+
+            txn.notification_logs << NotificationLog.create(notify_type: 'new_transaction', reason: 'receipt', channel: 'email')
           end
         end
       end
@@ -239,6 +239,15 @@ class StripeEvent
     # end
 
     private
+    # Subscribe customer to next plan (downgrading plan)
+    def subscribe_merchant_to_downgraded_plan
+      if next_plan = NextPlan.where(user_id: @data.merchant_customer.customer_id, status: true).last
+        subscription = Subscription.new(plan_id: next_plan.plan_id, merchant_customer_id: @data.merchant_customer.id)
+        team = MerchantCustomer.find_by(customer_id: next_plan.user_id).customer
+        res = subscription.create_subscription({team: team})
+        next_plan.update(status: false) if res.first
+      end
+    end
 
     def account_updated
       user_params = response_user_params.merge(bank_accont_params)
@@ -292,7 +301,7 @@ class StripeEvent
         'invoice.payment_failed'=> :invoice_payment_failed,
         'invoice.payment_succeeded'=> :invoice_payment_succeeded,
         'invoice.created'=> :invoice_created,
-        'invoice.updated'=> :invoice_updated,
+        # 'invoice.updated'=> :invoice_updated,
         # when managed account information like external bank_account get updated
         'account.updated'=> :account_updated
       }

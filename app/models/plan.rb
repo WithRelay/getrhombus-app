@@ -1,12 +1,13 @@
 class Plan < ActiveRecord::Base
 
-  has_many :subscriptions 
-  belongs_to :user
+  has_many :subscriptions
+  belongs_to :merchant, class_name: "User"
+  belongs_to :customer, class_name: "User"
 
   validates_presence_of :name, :interval, :interval_count, :amount
-  validates :name, uniqueness: { case_sensitive: false, scope: :user_id }
+  validates :name, uniqueness: { case_sensitive: false, scope: :merchant_id }
   validates_numericality_of :amount, :interval_count, greater_than: 0, only_integer: true
-  after_commit :create_plan_segment
+  after_commit :create_plan_segment, if: lambda { self.customer_id.blank? }
 
   def create_plan(hash)
     begin
@@ -15,17 +16,17 @@ class Plan < ActiveRecord::Base
       is_platform = team.is_platform?
       # uid = '<redacted_stripe_account_id>' #use this for testing
       uid = team.get_team_uid # use this for real use
-      
+
       descriptor = (self.name + "-" + team.org_name)[0..21]
-      
+
       # a customer or a team/merchant can create a plan
       _user_id = (hash.has_key? :customer) ? hash[:customer].id : hash[:team].id
-      
+
       # dont send team/merchant or customer data in hash
-      [:team, :customer].each { |k| hash.delete(k) } 
+      [:team, :customer].each { |k| hash.delete(k) }
       
       # Update so validations run before calling Stripe
-      self.update(user_id: _user_id, statement_descriptor: descriptor, currency: team.currency)
+      self.update(merchant_id: _user_id, statement_descriptor: descriptor, currency: team.currency)
 
       hash[:interval] = self.interval
       hash[:interval_count] = self.interval_count
@@ -59,16 +60,16 @@ class Plan < ActiveRecord::Base
     begin
 
       old_name = self.name
-      old_descriptor = self.statement_descriptor      
+      old_descriptor = self.statement_descriptor
       new_descriptor = (hash[:name] + "-" + team.org_name)[0..21]
-      
+
       # Update so validations run before calling Stripe api
       self.update(name: hash[:name], statement_descriptor: new_descriptor)
       hash[:statement_descriptor] = new_descriptor
       res = PaymentService.update_plan(self.id, hash, team.get_team_uid, team.is_platform?)
-      
+
       unless res.first
-        # notify team via email        
+        # notify team via email
         # reverse data
         self.update(name: old_name, statement_descriptor: old_descriptor)
       end
@@ -90,10 +91,9 @@ class Plan < ActiveRecord::Base
   end
 
   private
-  # Triggered after a plan is commited to get the users who belong to that plan
+  # Triggered after a plan is created to get the users who belong to that plan
   def create_plan_segment
     segment = DashboardMerchantQueries.get_plan_users(self.id)
-    l = List.new(name:self.name, user_id:user_id, segment:segment)
-    l.save
+    List.create(name:self.name, user_id: self.merchant_id, segment: segment)
   end
 end

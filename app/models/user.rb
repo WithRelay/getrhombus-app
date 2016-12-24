@@ -6,10 +6,21 @@ class User < ActiveRecord::Base
 
   attr_accessor :phone, :captured_amt, :msg_id, :tag_id, :referrer_id, :tos_acceptance
 
-  validates :tos_acceptance, acceptance: true
-  validates_presence_of :org_type, on: :update
-  validates_presence_of :org_name, if: lambda { self.org_type == 'company' }
-
+  # validation rules for user attributes
+  validates :tos_acceptance, acceptance: true, if: lambda { self.is_merchant? }, on: :update
+  validates_presence_of :org_type, if: lambda { self.is_merchant? }, on: :update
+  validates_presence_of :org_name, if: lambda { self.org_type.downcase != 'individual' && self.is_merchant? }, on: :update
+  # Edit pages use the right number field for each user type
+  validates_presence_of :org_phone, numericality: { only_integer: true }, length: { minimum: 10 }, on: :update, if: lambda { self.is_merchant? }
+  validates_presence_of :phone_number, numericality: { only_integer: true }, length: { minimum: 10 }, on: :update, if: lambda { self.is_customer? }
+  validates_presence_of :user_level, message: "Please select an account type"
+  # Sign up form uses phone_number field for both user types
+  validates_presence_of :phone_number, numericality: { only_integer: true }, length: { minimum: 10 }, on: :create
+  # Allow nil added to db migration because merchants don't have phone number. They have org_phone.
+  # And since mysql indexes this field, it indexes nil and only allows one row with nil.
+  # You run into issues with any additional merchants.
+  validates_uniqueness_of :phone_number, :allow_nil => true, :if => lambda { is_merchant? }
+  validate :phone_number_cannot_be_rhombus_number
   # include default devise modules. Others available are: :token_authenticatable, :lockable, :timeoutable and :confirmable,
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable, :omniauthable
 
@@ -26,19 +37,20 @@ class User < ActiveRecord::Base
 
   has_many :merchant, class_name: 'MerchantContact', foreign_key: 'merchant_id'
 
+  has_many :reminders, -> { where campaign_type: 1 }
   # this block is for customizing build method for user.campaign which allow also to save list
-  has_many :campaigns do
+  has_many :campaigns, -> { where campaign_type: 0 } do
     # overiding association build function like user.campaigns.build will hit here
     def build(*args)
       # calls parent build action and send arguments first from the splat operator
       campaign = super(args[0])
       unless args.blank?
         # build campaign lists of campaign
-        args[0][:list_ids].split(',').each{ |l| campaign.campaign_lists.build(list_id: l) }
+        args[0][:list_name].split(',').each{ |l| campaign.campaign_lists.build(list_id: l) }
         # build avatar of campaigns
         args[1][:avatar].each do |image|
           campaign.images.build(avatar: image, uploaded_as: 1)
-        end if (!campaign.sms? && args[1][:avatar].present?)
+        end if (!campaign.sms? && args[1][:avatar].present?) && campaign.valid?
         # build image refs for inline images of campaigns
         args[1][:image_id].each do |avatar_id|
           campaign.image_refs.build(image_id: avatar_id).save;
@@ -53,7 +65,9 @@ class User < ActiveRecord::Base
   has_many :messages
   has_many :merchant_conversations, class_name: 'Conversation', foreign_key: 'merchant_id'
 
-  has_many :plans
+  has_many :merchant_plans, class_name: 'Plan', foreign_key: 'merchant_id'
+  has_many :customer_plans, class_name: 'Plan', foreign_key: 'customer_id'
+  has_many :next_plans
   has_many :coupons
 
   has_one :twitter_cred
@@ -74,7 +88,7 @@ class User < ActiveRecord::Base
 
   has_many :bank_accounts
   accepts_nested_attributes_for :bank_accounts
-  validates_associated :address
+  validates_associated :bank_accounts
 
   has_many :stripe_creds
   accepts_nested_attributes_for :stripe_creds
@@ -92,22 +106,23 @@ class User < ActiveRecord::Base
   after_commit :create_user_alert, on: :create, if: lambda { is_merchant? }
   after_commit :update_phone_in_db, on: :update
 
-  validates_presence_of :user_level, message: "Please select an account type"
-  # Sign up form uses phone_number field for both user types
-  validates_presence_of :phone_number, numericality: { only_integer: true }, length: { minimum: 10 }, on: :create
-
-  # Edit pages use the right number field for each user type
-  # validates_presence_of :org_phone, numericality: { only_integer: true }, length: { minimum: 10 }, on: :update, if: lambda { self.user_level == 1 }
-  validates_presence_of :phone_number, numericality: { only_integer: true }, length: { minimum: 10 }, on: :update, if: lambda { self.user_level == 0 }
-
-  # Allow nil added to db migration because merchants don't have phone number. They have org_phone.
-  # And since mysql indexes this field, it indexes nil and only allows one row with nil.
-  # You run into issues with any additional merchants.
-  validates_uniqueness_of :phone_number, :allow_nil => true, :if => lambda { is_merchant? }
-  validate :phone_number_cannot_be_rhombus_number
-
   def is_merchant?
     user_level == 1
+  end
+
+  def is_customer?
+    user_level == 0
+  end
+
+  def is_platform?
+    #email == User.platform_email
+    self.email == '<redacted_email>' || self.email == '<redacted_email>'
+  end
+
+  def can_accept_payments?
+    # the last stripe_cred is either a managed acct, a managed acct even if a user had a standalone acct, or a standalone acct
+    creds = self.stripe_creds.last
+    creds.present? ? creds.charges_enabled && creds.disabled_reason.blank? : false
   end
 
   def self.platform_email
@@ -120,13 +135,9 @@ class User < ActiveRecord::Base
     User.find_by(email: "<redacted_email>") || User.find_by(email: "<redacted_email>")
   end
 
-  def is_platform?
-    #email == User.platform_email
-    email == '<redacted_email>' || email == '<redacted_email>'
-  end
-  
-
   def get_team_uid
+    # platform acct is a standalone account and only one record exists for platform
+    # merchants could have 2 records. Managed, Standalone (prior to v1.5)
     t = is_platform? ? self.stripe_creds.first : self.stripe_creds.where(uid_type: 0).first
     t.uid if t
   end
@@ -166,7 +177,7 @@ class User < ActiveRecord::Base
   end
 
   def phone
-    user_level == 0 ? phone_number : org_phone
+    is_customer? ? phone_number : org_phone
   end
 
   def add_token_to_user(card_token)
@@ -254,18 +265,19 @@ class User < ActiveRecord::Base
       EmailingService.send_welcome_email(self.email, owner.rhombus_number, "merchant")
     elsif self.user_level == 0
       ref = self.referrers.first
+      message = Message.new
       unless ref.blank?
         referrer = User.find_by(id: ref.referrer_id)
-        EmailingService.send_welcome_email_with_referral(ref.email, self.email, ref.org_name, ref.rhombus_number, owner.rhombus_number)
+        EmailingService.send_welcome_email_with_referral(referrer.email, self.email, referrer.org_name, referrer.rhombus_number, owner.rhombus_number)
         text = "Thanks for signing up! Please add a payment card to your Rhombus profile (if you haven't done so).
         You can chat with us anytime via sms or to make a payment, just text the amount & description/hashtag. Ex. +10 #donut"
-        Message.send_and_save_message(ref.rhombus_number, self.phone_number, text)
+        message.send_and_save_message(referrer.rn_type, referrer.rhombus_number, self.phone_number, text)
       else
         EmailingService.send_welcome_email(self.email, owner.rhombus_number, "customer")
         text = "Thanks for signing up! Please add a payment card to your Rhombus profile (if you haven't done so).
         You can chat with a local business anytime by texting their Rhombus number or to make a payment, just text the amount &
         description/hashtag. Ex. +10 #donut"
-        Message.send_and_save_message(owner.rhombus_number, self.phone_number, text)
+        message.send_and_save_message(owner.rn_type, owner.rhombus_number, self.phone_number, text)
       end
     end
   end

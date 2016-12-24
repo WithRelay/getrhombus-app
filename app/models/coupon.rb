@@ -33,7 +33,6 @@ class Coupon < ActiveRecord::Base
       hash[:percent_off] = self.percent_off
       hash[:redeem_by] = self.redeem_by
       hash[:currency] = hash[:team].currency
-
       # Update so validations run before calling Stripe
       self.update(user_id: hash[:team].id, currency: hash[:team].currency)
       hash.delete(:team)
@@ -73,6 +72,14 @@ class Coupon < ActiveRecord::Base
   private
 
   def validate_redeem_by
-    (Time.current + 4.years) >= Time.at(self.redeem_by) &&  (Time.current) < Time.at(self.redeem_by)
-   end
+    if self.redeem_by.present?
+      if (Time.current) > (Time.at(self.redeem_by))
+        errors.add(:redeem_by, 'can\'t be less than current date_time')
+      elsif (Time.current + 4.years) <= (Time.at(self.redeem_by))
+        errors.add(:redeem_by, 'can\'t be greater than 5 years from current date time')
+      end
+    else
+      true
+    end
+ end
 end

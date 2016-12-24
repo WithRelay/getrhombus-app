@@ -4,7 +4,7 @@ class PlansController < ApplicationController
 
   def index
     # get subscription id to use to determine if destroy link should show up
-    @plans = current_user.plans
+    @plans = current_user.merchant_plans
               .joins("LEFT JOIN subscriptions s ON s.plan_id = plans.id")
               .select('plans.id, amount, plans.name, currency, plans.interval, interval_count, s.id as subscription_id')
               .paginate(page: params[:page], per_page: 1)
@@ -22,29 +22,14 @@ class PlansController < ApplicationController
     respond_with(@plan)
   end
 
+  def create
+  end  
+
   def edit
   end
 
-  def create
-    @plan = Plan.new(plan_params)
-
-    if @plan.create_plan({ team: current_user })
-      redirect_to user_plans_path,  flash: { notice: 'Plan was created' }      #respond_with(@plan)
-    else
-      @plan.destroy     # revoke created plan on error
-      if @plan.errors.messages.present?
-        error = @plan.errors.full_messages
-        flash[:error] = error
-      else
-        flash[:error] = "We couldn't create the plan"
-      end
-      render :new
-    end
-  end
-
   def update
-    hash = params.require(:plan).permit(:name)
-    if @plan.update_plan(hash, current_user)
+    if @plan.update_plan(plan_params, current_user)
       redirect_to user_plans_path, flash: { notice: 'Plan was updated' }
     else
       flash[:error] = "We couldn't update the plan"
@@ -70,10 +55,9 @@ class PlansController < ApplicationController
       @plan = Plan.find(params[:id])
     end
 
+    # for edit only. Create uses the api
     def plan_params
-      params.require(:plan).permit(:interval, :name, :amount, :interval_count, :trial_period_days).tap{ |plan|
-        # round - deal with inaccurate floating point math. see 100 * 1.1
-        plan[:amount] = (100 * plan[:amount].to_f).round if plan[:amount].present?
-      }
+      params.require(:plan).permit(:name)
     end
+
 end

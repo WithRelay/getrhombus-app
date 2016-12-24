@@ -1,0 +1,69 @@
+$(document).on('ready page:load', function() {
+  $('#new_reminder').formValidation({
+    framework: 'bootstrap',
+    excluded: ':disabled',
+    live: 'disabled',
+    fields: {
+      'reminder[channel]': {
+        validators: {
+          notEmpty: {
+            message: 'Campaign name is required'
+          }
+        }
+      },
+      'reminder[text]': {
+        validators: {
+          notEmpty: {
+            message: 'This Field is required'
+          }
+        }
+      }
+    }
+  });
+
+  $( 'form#new_reminder' ).submit(function(e){
+    e.preventDefault();
+    var remoteCall = new RemoteCall(this, '#myModalNorm');
+    remoteCall.ajax()
+  })
+});
+
+// Class RemoteCall handle all call to http verb to the server
+// First argument is the dom object it self and second contains the modal id
+function RemoteCall(element, modalId){
+  // assigning properties to RemoteCall
+  this.url = element.action;
+  this.method = element.method;
+  this.dataType = 'json';
+  this.formData = $(element).serialize()
+  this.domElementId = '#' + element.id
+  this.modalId = modalId;
+}
+// Checks whether the form is validated or not and return true/false
+function checkFormValid(element){
+  return $(element ).data('formValidation').isValid();
+}
+// defining instance method ajax for class remote call
+// Send remote request and fetch response.
+RemoteCall.prototype.ajax = function(){
+  // assigning modal class for closing modal after response success
+  // The variable has sigil $ beacause local variable inside ajax call are not accessible.
+  // for more deails http://stackoverflow.com/questions/14496680/this-object-not-available-in-ajax-callback
+  var $modalClose = this.modalId + ' .close'
+  if (checkFormValid(this.domElementId)){
+    $.ajax({ method: this.method,
+             url: this.url,
+             data: this.formData,
+             dataType: 'json'
+          }).done(function(msg){
+              // key in index 1 contains title/flash message key please see api/controllers/reminders for more details.
+              var flash_key = Object.keys(msg)[1]
+              // set flash message title and message
+              // first argument is title and second is text message.
+              FlashHandler.setFlashMessage( msg[flash_key], flash_key );
+              if (flash_key!='error'){
+                $($modalClose).click()// closing modal after succession
+              }
+          }).fail(function(msg){ alert('Sorry request could not complete'); });
+  }
+}
