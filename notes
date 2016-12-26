@@ -28,6 +28,7 @@ surya
 	- Implement SMS/MMS channel. They are ready. 
 	- wipe subject if campaign is not email - serverside only is fine
 	- default to sms...then default to email
+	- lists with default channels
 - Upgrade Trumbowyg
 	- find all unicode for emojis or comment out
 	- add color plugins
@@ -38,7 +39,7 @@ surya
 - Make sure we always update charge/transfers enabled and disabled_reason...seems stripe always sends these on account update...i think these are the fields we need to know if a merchant can accept payments
 
 Ovo
-- list with default channels since we now need contacts to be grouped based on channels
+- list with default channels since we now need contacts to be grouped based on channels and merchant contacts
 - add to list from user profile - http://rhombus-test.webflow.io/customer-profile
 - shouldn't be able to edit default segments
 

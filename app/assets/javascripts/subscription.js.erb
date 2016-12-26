@@ -169,7 +169,7 @@ $('.submit-update-plan').on('click',function(){
 });
 
 // create subscription through api with modal
-$('#create-subscription').on('click', function(){
+$('#create-subscription').on('submit', function(){
   $.ajax({
       url: "/v1/subscriptions/create",
       beforeSend: function(xhr) {
