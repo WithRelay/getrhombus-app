@@ -87,8 +87,7 @@ class Api::V1::ListsController < API::V1::BaseController
       params[:current_time] = Time.current
       print "Segment type is: #{params[:segment_type]} \n"
       if params[:segment_type] == "new_customers"
-         DashboardMerchantQueries.get_new_customers(
-          params)
+         DashboardMerchantQueries.get_new_customers(params)
       elsif params[:segment_type] == "active_customers"
         DashboardMerchantQueries.get_active_customers(params)
       elsif params[:segment_type] == "inactive_customers"
