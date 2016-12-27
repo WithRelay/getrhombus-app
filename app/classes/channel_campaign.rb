@@ -1,17 +1,31 @@
-# campaign service class for building campaign with use list
+# Campaign service class for building campaign with use list
 module ChannelCampaign
   class SendCampaign
-    attr_accessor :user_id_list, :email_list
 
     def initialize(campaign)
-      @user_id_list = []
-      @email_list = []
       @campaign = campaign
       @facebook_messenger = FacebookMessengerService
     end
 
-    def send_email(email_hash)
-      update_campaign if EmailingService.send_email_campaign(email_hash)
+    def get_user_id
+      user_id_list = []
+      @campaign.lists.each do |list|
+        list.user_lists.each{ |customer| user_id_list.push({ user_id: customer.user.id }) }
+      end
+    end
+
+    def send_channel_campaign
+      channel_class = channel_mapper[@campaign.channel].constantize
+      channel_class.new(@campaign).send_campaign
+    end
+
+    private
+
+    def channel_mapper
+      {
+        'email' => 'EmailCampaign', 'mms' => 'MobileCampaign', 'sms' => 'MobileCampaign',
+        'facebook_messenger' => 'MessengerCampaign'
+      }
     end
 
     def send_fb_message_reminder
@@ -27,7 +41,7 @@ module ChannelCampaign
 
     def update_campaign
       @campaign.send_count = @campaign.send_count + 1
-      @campaign.lists.each { |list| @campaign.campaign_user_lists.build(@user_id_list) }
+      @campaign.lists.each { |list| @campaign.campaign_user_lists.build(get_user_id) }
       @campaign.save(validate: false)
       @campaign.update_attribute('status', 3) if is_recurring_campaign_completed? || @campaign.one_time?
     end
