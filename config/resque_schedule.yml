@@ -17,14 +17,14 @@
 #   class: "CardExpiredJob"
 #   args:
 #   description: "This job notifies customers of expired or soon-to-expire cards."
-send_campaigns: # send email for campaign list
+recurring_campaigns: # send email for campaign list
   every: 24h # refer to 1 day
-  class: 'SendCampaignJob' # class ChannelJob is present in app/jobs which represents campaign jobs
+  class: 'RecurringCampaignJob' # class ChannelJob is present in app/jobs which represents campaign jobs
   args:
   description: 'Sends campaign to lists of users selected for campaign'
 
-send_reminders: # send email for reminder user
+recurring_reminders: # send email for reminder user
   every: 24h # refer to 1 day
-  class: 'SendReminderJob' # class SendReminderJob is present in app/jobs which represents campaign jobs
+  class: 'RecurringReminderJob' # class SendReminderJob is present in app/jobs which represents campaign jobs
   args:
   description: 'Sends campaign to lists of users selected for campaign'
