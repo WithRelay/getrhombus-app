@@ -9,17 +9,7 @@
 
   <%= form_for @user, url: { action: url_for_create_update }, html: { id: 'managed-account-form' } do |f| %>
 
-    <ul id="progressbar">
-      <li class="active">Organization Details</li>
-      <li>Organization Address Details</li>
-      <li>Bank Account Details</li>
-      <li>Owner Details</li>
-      <li>Terms and Conditions</li>
-    </ul>
-
     <fieldset id='step_one_business_details'>
-      <h2 class="fs-title">Create your account</h2>
-		  <h3 class="fs-subtitle">Your Organization Details</h3>
 
       <%= f.fields_for :address do |a| %>
         <div class="col-xs-5">
@@ -53,12 +43,9 @@
         <label> tell us about your organization </label>
         <%= f.text_area :description %>
       </div>
-      <%= f.submit 'Next', class: "next action-button" %>
     </fieldset>
 
     <fieldset id='step_two_address'>
-      <h2 class="fs-title">Organization Address Details</h2>
-      <h3 class="fs-subtitle">Please fill up all the fields</h3>
       <%= f.fields_for :address do |a| %>
 
         <div class="col-xs-5">
@@ -87,13 +74,9 @@
 
       <% end %>
 
-      <input type="button" name="previous" class="previous action-button" value="Previous" />
-      <%= f.submit 'Next', class: "next action-button" %>
     </fieldset>
 
-    <fieldset id='step_3_bank_account' >
-      <h2 class="fs-title">Bank Information</h2>
-      <h3 class="fs-subtitle">Please mention bank information in details</h3>
+    <fieldset id='step_3_bank_account'>
       <%= f.fields_for :bank_accounts do |b| %>
 
         <div class="col-xs-5">
@@ -135,18 +118,12 @@
 
       <div id='ddr-div'>DDR message for australia only i think</div>
 
-      <input type="button" name="previous" class="previous action-button" value="Previous" />
-      <%= f.submit 'Next', class: "next action-button" %>
     </fieldset>
 
     <fieldset id="user-people">
-      <h2 class="fs-title">Owner Details</h2>
-      <h3 class="fs-subtitle">Please mention owner details</h3>
 
       <%= f.fields_for :people do |p| %>
         <%= render "person_fields", f: p %>
-        <%= f.submit 'Next', class: "next action-button", id: 'step_four_button' %>
-        <input type="button" name="previous" class="previous action-button" value="Previous" />
       <% end %>
       <div id='owners-title'>OWNERS IF ANY <br></div>
 
@@ -157,8 +134,7 @@
     </fieldset>
 
     <fieldset id='termsAndCondition'>
-      <h2 class="fs-title">Social Profiles 4</h2>
-      <h3 class="fs-subtitle">Your presence on the social network</h3>
+
       <%= f.fields_for :stripe_creds do |c| %>
         <% if c.object.persisted? %>
           <%= c.check_box :charges_enabled, disabled: true %>
@@ -169,10 +145,12 @@
         <% end %>
         <%= c.hidden_field :ip %>
       <% end %>
-      <%= f.label 'Accept Terms and Service' %>
-      <%= f.check_box :tos_acceptance %>
-      <input type="button" name="previous" class="previous action-button" value="Previous" />
-		  <%= f.submit :save, id: 'saveManagedAccount' %>
+      <div class="col-xs-5">
+        <%= f.label 'Accept Terms and Service' %>
+        <%= f.check_box :tos_acceptance %>
+      </div>
     </fieldset>
+    <%= f.submit :save, id: 'saveManagedAccount' %>
+
   <% end %>
 </div>

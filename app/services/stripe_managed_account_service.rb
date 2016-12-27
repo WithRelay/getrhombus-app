@@ -211,7 +211,7 @@ class StripeManagedAccountService < Struct.new( :user, :params )
       product_description: params[:description],
       tos_acceptance: { ip: stripe_cred[:ip], date: stripe_cred[:tos_date].to_i, user_agent: stripe_cred[:user_agent] },
       legal_entity: { type: params_org_type, first_name: full_name[0], last_name: full_name[1],
-                      gender: people[:gender],  phone_number: user.phone_number, business_name: people[:business_name],
+                      gender: people[:gender],  phone_number: '<redacted_phone_number>', business_name: people[:business_name],
                       business_tax_id: params[:org_tax_id], personal_id_number: people[:last4],
                       personal_address: { city: people_address[:city],
                                           country: people_address[:country],
