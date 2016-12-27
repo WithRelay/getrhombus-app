@@ -7,7 +7,7 @@ class EmailCampaign
     def user_email_list
       email_list = []
       @campaign.lists.each do |list|
-        list.user_lists.each{ |customer| email_list.push({ email: customer.user.email }) }
+        list.get_users.each{ |customer| email_list.push({ email: customer[:user].email }) }
       end
       email_list
     end
