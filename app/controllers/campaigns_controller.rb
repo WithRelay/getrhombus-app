@@ -17,6 +17,7 @@ class CampaignsController < ApplicationController
   # creates a campaigns, campaign_lists, images if params available, associate inline image with campaign
   # note : build method is being overide please go through user model has_many :campaigns relationship
   def create
+    binding.pry
     @campaign = current_user.campaigns.build(campaign_params, image_params)
     if @campaign.save
       @campaign.enqueue_jobs # enque jobs if there is send now checked or one time is checked
@@ -91,6 +92,7 @@ class CampaignsController < ApplicationController
                           c[:channel] = c[:channel].to_i
                           c[:frequency_type] = c[:frequency_type].to_i
                           c[:deliver_now] = c[:deliver_now] == '1' ? true : false
+                          c[:subject] = nil unless c[:channel] == 3
                           c[:date_time] = c[:date_time].present? ? c[:date_time].in_time_zone(current_user.time_zone) : nil
                         end
   end
