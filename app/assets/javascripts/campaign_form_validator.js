@@ -82,9 +82,6 @@ $(document).on('ready page:load', function() {
     render: {
       item: function(item, escape) {
         return '<div> <span class="name">' + escape(item.name) + '</span></div>';
-      },
-      option: function(item, escape) {
-        return '<div><span class="label">' + escape(item.name) + '</span></div>';
       }
     },
     load: function(query, callback) {
