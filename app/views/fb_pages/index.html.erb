@@ -1,9 +1,4 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <%= stylesheet_link_tag "application_dashboard_messaging", media: "all" %>
-  <%= javascript_include_tag "plugins" %>
-</head>
+<%= javascript_include_tag "plugins" %>
 <body style = "background: #f4f4f4">
    <!-- Start Page Loading -->
   <div class="loading"><img src="<%= asset_path 'loading.gif' %>" alt="loading-img"></div>
@@ -56,6 +51,3 @@
   <%= render 'shared/smooch' %>
   <%= render 'shared/google_analytics' %>
 </body>
-</html>
-
-    
