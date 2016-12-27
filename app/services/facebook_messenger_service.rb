@@ -94,29 +94,29 @@ class FacebookMessengerService
     end
 
     def send_campaign(campaign)
-      subscribed_page = campaign.user.fb_pages.subscribed # get merchant fb pages which are subscribed
-      # currently we support only one subscription but the relation is as has_many
-      page_access_token = subscribed_page[0].page_access_token if subscribed_page.present?
-      campaign_service = ChannelCampaign::SendCampaign.new(campaign)
-      email_service = SendEmail::EmailCampaign.new(campaign)
-      campaign.lists.each do |list|
-        # get list user fb_cred
-        list.user_lists.each do |customer|
-          user_fb_cred = customer.user.fb_cred
-          # get credentital page_specific_id i.e. recipient_id
-          user_fb_cred_id = user_fb_cred.page_specific_id if user_fb_cred.present?
-          if page_access_token.present? && user_fb_cred_id.present?
-            # calls a function send_text_message with parameter page_access_token page_access_token, text
-            send_text_message(page_access_token, user_fb_cred_id, campaign.text)
-            campaign.images.each do |image|
-              send_attachment(page_access_token, user_fb_cred_id, 'image', image.avatar.url)
-            end if campaign.images.present?
-          else
-            email_service.send_campaign
-          end
-        end
-      end
-      campaign_service.update_campaign
+      # subscribed_page = campaign.user.fb_pages.subscribed # get merchant fb pages which are subscribed
+      # # currently we support only one subscription but the relation is as has_many
+      # page_access_token = subscribed_page[0].page_access_token if subscribed_page.present?
+      # campaign_service = ChannelCampaign::SendCampaign.new(campaign)
+      # email_service = SendEmail::EmailCampaign.new(campaign)
+      # campaign.lists.each do |list|
+      #   # get list user fb_cred
+      #   list.user_lists.each do |customer|
+      #     user_fb_cred = customer.user.fb_cred
+      #     # get credentital page_specific_id i.e. recipient_id
+      #     user_fb_cred_id = user_fb_cred.page_specific_id if user_fb_cred.present?
+      #     if page_access_token.present? && user_fb_cred_id.present?
+      #       # calls a function send_text_message with parameter page_access_token page_access_token, text
+      #       send_text_message(page_access_token, user_fb_cred_id, campaign.text)
+      #       campaign.images.each do |image|
+      #         send_attachment(page_access_token, user_fb_cred_id, 'image', image.avatar.url)
+      #       end if campaign.images.present?
+      #     else
+      #       email_service.send_campaign
+      #     end
+      #   end
+      # end
+      # campaign_service.update_campaign
     end
 
     def httparty_post(post_body, access_token)
