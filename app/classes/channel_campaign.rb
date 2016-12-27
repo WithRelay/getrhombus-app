@@ -1,12 +1,23 @@
-# Campaign service class for building campaign with use list
+# Class responsible for sending camapaigns to a group of users by channel emails, mms/sms, facebook messenger
 module ChannelCampaign
   class SendCampaign
 
     def initialize(campaign)
-      @campaign = campaign
-      @facebook_messenger = FacebookMessengerService
+      @campaign = campaign # campaign object
     end
 
+    def send_channel_campaign
+      # channel mappers maps campaign channel to its respective class
+      # declare constant with a string eg: string EmailCampaign will act like contant EmailCampaign
+      channel_class = channel_mapper[@campaign.channel].constantize
+      # all channels classes like messenger_campaign, mobile_campaign, email_campaign
+      # has a common method send campaign which send campaign to a group of users
+      channel_class.new(@campaign).send_campaign
+    end
+
+    private
+
+    # returns array of user_id list hash eg: [{ user_id: 1 }, { user_id: 2 }]
     def get_user_id
       user_id_list = []
       @campaign.lists.each do |list|
@@ -14,13 +25,8 @@ module ChannelCampaign
       end
     end
 
-    def send_channel_campaign
-      channel_class = channel_mapper[@campaign.channel].constantize
-      channel_class.new(@campaign).send_campaign
-    end
-
-    private
-
+    # The key in channel mapper is enum channels of campaign please refer to campaign model
+    # Value of the key is string which is same as class name
     def channel_mapper
       {
         'email' => 'EmailCampaign', 'mms' => 'MobileCampaign', 'sms' => 'MobileCampaign',
@@ -28,6 +34,7 @@ module ChannelCampaign
       }
     end
 
+    # updates campaign details after sending campaign success.
     def update_campaign
       @campaign.send_count = @campaign.send_count + 1
       @campaign.lists.each { |list| @campaign.campaign_user_lists.build(get_user_id) }
@@ -35,6 +42,7 @@ module ChannelCampaign
       @campaign.update_attribute('status', 3) if is_recurring_campaign_completed? || @campaign.one_time?
     end
 
+    # Check if recurring campaign is completed or not by comparing repeat days and send count.
     def is_recurring_campaign_completed?
       @campaign.repeat_days == @campaign.send_count if @campaign.recurring?
     end
