@@ -154,6 +154,11 @@ $('.downgrade-plan-selector').on('click', function(){
   $('.update-plan-id').attr('value', '48');
 });
 
+// reset form when modal close
+$('#modalSubscription').on('hidden.bs.modal', function () {
+ $('#subscriptionForm').data('formValidation').resetForm();
+})
+
 $('.submit-update-plan').on('click',function(){
   if (subscriptionId === 0){
     errorMsg = 'Please select subscription from table before upgrade/downgrade Plan'

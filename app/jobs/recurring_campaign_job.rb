@@ -1,13 +1,13 @@
-class SendCampaignJob
-  @queue = :send_campaigns
+class RecurringCampaignJob
+  @queue = :recurring_campaigns
 
   def self.perform
     campaigns = Campaign.recurring.active.includes([:images, lists:[:user_lists]])
     campaigns.each do |campaign|
       utc_date_time = campaign.date_time.utc
-      Resque.enqueue_at_with_queue('campaign',
+      Resque.enqueue_at_with_queue('one_time_campaign',
                                     utc_date_time,
-                                    ChannelJob,
+                                    OneTimeCampaignJob,
                                     campaign.id) if uncompleted_campaign_present?(campaign) && check_date(campaign)
     end
   end
