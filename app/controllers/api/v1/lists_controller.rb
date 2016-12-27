@@ -42,6 +42,7 @@ class Api::V1::ListsController < API::V1::BaseController
             }, status: 400
           end
       else
+        params[:current_time] = Time.current
         name = params[:segment_name]
         segment_query = get_segment_query(params)
         print "Segment query is: #{segment_query}"
@@ -82,14 +83,16 @@ class Api::V1::ListsController < API::V1::BaseController
 
     # Get the SQL query for the segment
     def get_segment_query(params)
+      # Pass the current time in the user's time zone
+      params[:current_time] = Time.current
       print "Segment type is: #{params[:segment_type]} \n"
       if params[:segment_type] == "new_customers"
          DashboardMerchantQueries.get_new_customers(
           params)
       elsif params[:segment_type] == "active_customers"
-        DashboardMerchantQueries.get_active_customers(params[:segment_num_days])
+        DashboardMerchantQueries.get_active_customers(params)
       elsif params[:segment_type] == "inactive_customers"
-        DashboardMerchantQueries.get_inactive_customers(params[:segment_num_days])
+        DashboardMerchantQueries.get_inactive_customers(params)
       elsif params[:segment_type] == "all_contacts"
          DashboardMerchantQueries.get_all_segment(params)
       elsif params[:segment_type] == "all_customers"
