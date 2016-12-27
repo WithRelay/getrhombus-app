@@ -40,6 +40,12 @@ $(document).ready(function() {
     addPlan();
   });
 
+  // reload page when modal close
+  $('#modalPlan').on('hidden.bs.modal', function () {
+    // $('#planForm').data('formValidation').resetForm(); //not working
+    location.reload();
+  })
+
   $('#plan_name').keyup(function(e) {
     $('#planForm').formValidation('revalidateField', 'plan[name]');
   });
