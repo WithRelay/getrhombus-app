@@ -15,9 +15,8 @@ class CampaignsController < ApplicationController
   end
 
   # creates a campaigns, campaign_lists, images if params available, associate inline image with campaign
-  # note : build method is being overide please go through user model has_many :campaigns relationship
+  # NOTE: build method is being overide please go through user model has_many :campaigns relationship
   def create
-    binding.pry
     @campaign = current_user.campaigns.build(campaign_params, image_params)
     if @campaign.save
       @campaign.enqueue_jobs # enque jobs if there is send now checked or one time is checked
