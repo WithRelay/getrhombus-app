@@ -12,7 +12,7 @@ class Referrer < ActiveRecord::Base
         self.uid = ref.referrer_uid
       else
         self.uid = generate_uid
-        self.link = "dasd" #UrlShorternerService.shorten_link("https://www.getrhombus.com/signup?referrer_uid=#{self.uid}")
+        self.link = "dasd" #UrlShorternerService.shorten_link("https://www.withrelay.com/signup?referrer_uid=#{self.uid}")
       end
       self.link
     rescue StandardError => e 
