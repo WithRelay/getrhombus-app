@@ -9,11 +9,8 @@ Bhishma
 - use id in html and not classes if possible...they are faster
 - your code tends to be unnecessarily complicated
 - Plans/Subscriptions
-	- not sure...but subscriptions needs to be like plans
 	- does plan upgrade/downgrade work for any number of plans
-	- validate quantity - integer and present
-	- create subscription api modal for customer profile/messaging page... 
-		- remove new routes for subscriptions and plans
+	- validate quantity client side - integer and present
 	- Add logic for switching plans/subscriptions
 		- page can reload
 - Messenger
@@ -50,7 +47,7 @@ Edwin
 
 Taiwo (review)
 - review remove_integration
-- review upgrading subscription 
+- review upgrading/downgrading subscription 
 - single image up to 4.5 mb
 - reread stripe managed accts for disabled reason and charges enabled
 - review stripe_events
