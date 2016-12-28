@@ -68,11 +68,7 @@ Rails.application.routes.draw  do
       end
     end
 
-    resources :plans, only: [:index, :edit, :destroy] do
-      collection do
-        post '/:id/update' => 'plans#update'
-      end
-    end
+    resources :plans, only: [:index, :edit, :update, :destroy]
     resources :alerts, only: [:update]
     resources :saved_replies
     resources :bank_accounts
