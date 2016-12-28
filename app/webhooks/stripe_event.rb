@@ -19,7 +19,7 @@ class StripeEvent
                         # .where("stripe_subscription_id = ? and notify_type = ?", @hash[:id], 'subscription_trial_will_end').first
         # set_time_zone(@data.merchant_customer.merchant.time_zone)
         update_subscription_data
-        
+
         # Email merchant of time left(merchant)
         # Notify us too (admin)
         @data.notification_logs << NotificationLog.create(notify_type: 'subscription_trial_will_end', channel: 'email', reason: 'Subscription trial is about to end.')
@@ -34,9 +34,9 @@ class StripeEvent
 
         # set_time_zone(@data.merchant_customer.merchant.time_zone)
         update_subscription_data if @data
-        
+
         # subscribe merchant (rhombus platform saas customer) to next plan if present
-        subscribe_merchant_to_downgraded_plan if @data.merchant_customer.customer.is_merchant?  
+        subscribe_merchant_to_downgraded_plan if @data.merchant_customer.customer.is_merchant?
 
         # Email about cancellation
         # Notify us too (admin)
@@ -135,7 +135,7 @@ class StripeEvent
       update_invoice_data
 
       # retrieve charge details
-      charge = PaymentService.retrieve_charge(@hash[:charge]) if @hash[:charge] 
+      charge = PaymentService.retrieve_charge(@hash[:charge]) if @hash[:charge]
       # a transaction should not already exist but we need to check if it does so we don't send out emails again
       # A tranasaction has only one log unlike subscriptions
       txn = Transaction.includes(:notification_logs).where(txn_uri: charge.id).first_or_initialize if charge
@@ -250,7 +250,7 @@ class StripeEvent
     end
 
     def account_updated
-      user_params = response_user_params.merge(bank_accont_params)
+      user_params = response_user_params.merge(bank_accont_details)
       managed_accout_user.update(user_params)
     rescue => e
     end
@@ -265,7 +265,10 @@ class StripeEvent
         address_attributes: { street_address: address_params[:street], city: address_params[:city],
                               state_province: address_params[:state],
                               country: address_params[:country], postal_code: address_params[:zip] },
-        stripe_creds_attributes: { fields_needed: account.verification.fields_needed }
+        stripe_creds_attributes: { fields_needed: account.verification.fields_needed,
+                                   disabled_reason: account.verification.disabled_reason,
+                                   charges_enabled: @hash[:charge_enabled]
+                                 }
       }
     end
 
@@ -277,7 +280,7 @@ class StripeEvent
       @hash[:address]
     end
 
-    def bank_accont_params
+    def bank_accont_details
       bank_account = BankAccount.find_by_stripe_bank_account_id(bank_account_params[:id])
       bank_account_details = {}
       bank_account_details[:bank_accounts_attributes] = { country: bank_account_params[:country],
