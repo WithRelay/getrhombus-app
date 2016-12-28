@@ -12,13 +12,14 @@
 #   args:
 #   description: "This job alerts merchants of unread messages."
 # card_expired_emails:
-#   #cron: "0 12 * * * America/New_York"
+#   cron: "0 12 * * * America/New_York"
 #   every: 15s
 #   class: "CardExpiredJob"
 #   args:
 #   description: "This job notifies customers of expired or soon-to-expire cards."
 recurring_campaigns: # send email for campaign list
   every: 24h # refer to 1 day
+  cron:  
   class: 'RecurringCampaignJob' # class ChannelJob is present in app/jobs which represents campaign jobs
   args:
   description: 'Sends campaign to lists of users selected for campaign'
