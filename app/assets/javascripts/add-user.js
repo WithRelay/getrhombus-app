@@ -1,10 +1,10 @@
 $(document).ready(function() {
   var create_user_form = '#create-user-form',
-    create_user_submit = '#create-user-submit';
+      create_user_submit = '#create-user-submit';
 
   $('#select_user_country').selectize({
     closeAfterSelect: true,
-  }).selectize();
+  });
 
   $('#select-user-lists').selectize({
     valueField: 'id',
@@ -36,69 +36,69 @@ $(document).ready(function() {
         }
       });
     }
-  }).selectize();
+  });
 
   // form validation
   $(create_user_form).formValidation({
-      framework: 'bootstrap',
-      live: 'disabled',
-      fields: {
-        'user[email]': {
-          validators: {
-            notEmpty: {
-              message: 'Your email is required'
+    framework: 'bootstrap',
+    live: 'disabled',
+    fields: {
+      'user[email]': {
+        validators: {
+          notEmpty: {
+            message: 'Your email is required'
+          },
+          emailAddress: {
+            message: "The email isn't valid"
+          },
+          remote: {
+            type: 'GET',
+            url: 'https://api.mailgun.net/v2/address/validate?callback=?',
+            crossDomain: true,
+            name: 'address',
+            data: {
+              // Registry a Mailgun account and get a free API key
+              // at https://mailgun.com/signup
+              api_key: '<redacted_api_key>'
             },
-            emailAddress: {
-              message: "The email isn't valid"
-            },
-            remote: {
-              type: 'GET',
-              url: 'https://api.mailgun.net/v2/address/validate?callback=?',
-              crossDomain: true,
-              name: 'address',
-              data: {
-                // Registry a Mailgun account and get a free API key
-                // at https://mailgun.com/signup
-                api_key: '<redacted_api_key>'
-              },
-              dataType: 'jsonp',
-              validKey: 'is_valid',
-              message: "The email isn't valid"
-            }
+            dataType: 'jsonp',
+            validKey: 'is_valid',
+            message: "The email isn't valid"
           }
-        },
-        'user_full_name': {
-          validators: {
-            notEmpty: {
-              message: 'Full name is required '
-            },
-            regexp: {
-              regexp: /^[a-z]([-']?[a-z]+)*( [a-z]([-']?[a-z]+)*)+$/,
-              message: 'Full name can consists first and last name of alphabetical characters with spaces'
-            }
+        }
+      },
+      'user_full_name': {
+        validators: {
+          notEmpty: {
+            message: 'Full name is required '
+          },
+          regexp: {
+            regexp: /^[a-z]([-']?[a-z]+)*( [a-z]([-']?[a-z]+)*)+$/,
+            message: 'Full name can consists first and last name of alphabetical characters with spaces'
           }
-        },
-        'user[phone]': {
-          validators: {
-            callback: {
-              callback: function(value, validator, $field) {
-                if (PhoneNumberFormatter.isValid()) {
-                  return {
-                    valid: true, // or false
-                    message: 'Valid number'
-                  }
-                } else {
-                  return {
-                    valid: false, // or false
-                    message: 'Enter a valid number'
-                  }
+        }
+      },
+      'user[phone]': {
+        validators: {
+          callback: {
+            callback: function(value, validator, $field) {
+              if (PhoneNumberFormatter.isValid()) {
+                return {
+                  valid: true, // or false
+                  message: 'Valid number'
+                }
+              } else {
+                return {
+                  valid: false, // or false
+                  message: 'Enter a valid number'
                 }
               }
             }
           }
         }
       }
-    })
+    }
+  })
     .on('success.validator.fv', function(e, data) {
       if (data.field === 'user[email]' && data.validator === 'remote') {
         var response = data.result; // response is the result returned by MailGun API
@@ -131,10 +131,6 @@ $(document).ready(function() {
       } else {
         CardHandler.submit_to_stripe(create_user_form, create_user_submit, submit_create_user_form);  
       }
-      
-      // added accept nested attributes for lists
-      // hashes of hashes or array of hashes for lists
-      // console.log($(this).serialize())
     });
 
   function submit_create_user_form() {
@@ -153,12 +149,9 @@ $(document).ready(function() {
       })
       .done(function(data, textStatus, jqXHR) {
         FlashHandler.setFlashMessage('Contacts created successfully', 'notice');
-        location.reload();
-        // console.log(data);
       })
       .fail(function(data, textStatus, errorThrown) {
         FlashHandler.setFlashMessage(JSON.parse(data.responseText).response, 'error');
-        // console.log(data);
       })
       .always(function(data, textStatus, response) {
         $(create_user_submit).attr("disabled", false).val('Create Customer');
