@@ -13,21 +13,13 @@ Bhishma
 	- still upgrade subscription if coupon create fails
 - what's update plan route for?
 - Messenger
-	- review remove_integration
-	- if user connects/reconnects/updates facebook account, you need to remove all page subscriptions, creds etc...clean wipe before new auth details are saved
-	- fb_cred.fb_pages alone can cause problems, has_one :fb_cred??? 
-	- using page_id alone can cause problems...
-	- add page_specific_id: nil in def self.from_omniauth(auth, id) in fb_cred
+	- has_one :fb_cred??? - highlighted
+	- using page_id alone can cause problems... - highlighted
 
 surya
 - can I migrate my jobs?
-- how do i know if a campaign is active
-- reverse multistep form
 - Campaigns
-	- use custom method to get campaign users for all channels - it now return array of hashes of user objects
-	- move send messenger campaign code from services. You might need to restructure and rename your classes..so things are clearer. 
-	- Implement SMS/MMS channel. They are ready. 
-	- wipe subject if campaign is not email - serverside only is fine
+	- Implement SMS/MMS channel. They are ready. mms testing left
 	- default to sms...then default to email
 	- lists with default channels
 	- send test to myself for email
@@ -35,10 +27,8 @@ surya
 	- find all unicode for emojis or comment out
 	- add color plugins
 - Implement Reminders - no notes
-- Rename classes/queues for jobs...
 - Change calendar interval in campaigns/reminders to every hour 
-	- we need to use a static job scheduler that runs every 5 mins past the hour - so use cron not every...5 mins past the hour so we avoid minor clock differences on a server
-- Make sure we always update charge/transfers enabled and disabled_reason...seems stripe always sends these on account update...i think these are the fields we need to know if a merchant can accept payments
+- we need to use a static job scheduler that runs every 5 mins past the hour - so use cron not every...5 mins past the hour so we avoid minor clock differences on a server
 
 Ovo
 - list with default channels since we now need contacts to be grouped based on channels and merchant contacts
@@ -46,10 +36,15 @@ Ovo
 - shouldn't be able to edit default segments
 
 Edwin
+- facebook integration page
+- how do we tell you that a list has a default channel and should we restrict the dropdown if you select this types of lists
+- datables show arrows
+- compile list of links
 - create pages to show lists (with edit and delete links) of reminders and edit a reminder - no modal
 - generate page loader
 
 Taiwo (review)
+- review remove_integration
 - single image up to 4.5 mb
 - reread stripe managed accts for disabled reason and charges enabled
 - review stripe_events
@@ -94,25 +89,22 @@ http://rhombus-test.webflow.io/setup-payments
 http://rhombus-test.webflow.io/bank-account
 
 
-
+UI INTEGRATION
 1. Referrer Page - refer-a-business
 	- tie in page to backend
 	- tie in logic for Get Started for Free
-
 2. Demo page - request-date
 	- Save demo data, on save...open new tab with calendly
-
 3. Welcome Page
 	- graph - leave for now
-
 4. Customer's page
 	- search bar - search by name
-
 5. Edit list page
     - implement adding users
-
 6. List campaign
 	- send campaign...should prefill campaign list 
+
+
 
 
 

@@ -14,7 +14,6 @@ class FbCred < ActiveRecord::Base
         fb_cred.profile_pic_url = FacebookMessengerService.get_profile_pic(auth.credentials.token, auth.uid)
         fb_cred.user_id = id
         fb_cred.time_zone = (User.find id).time_zone
-        fb_cred.page_specific_id = nil
         fb_cred.save
       end
       true
