@@ -10,7 +10,7 @@ class MobileCampaign
     merchant_rhombus_number = @campaign.user.rhombus_number; message = @campaign.text
     @campaign.lists.each do |list|
       list.get_users.each do |customer|
-        @message_class.send_and_save_message(rn_type, merchant_rhombus_number, customer[:user].phone_number,
+        return @message_class.send_and_save_message(rn_type, merchant_rhombus_number, customer[:user].phone_number,
                                              message, media_link_urls)
       end
     end
