@@ -21,6 +21,7 @@ Bhishma
 
 surya
 - can I migrate my jobs?
+- how do i know if a campaign is active
 - reverse multistep form
 - Campaigns
 	- use custom method to get campaign users for all channels - it now return array of hashes of user objects
@@ -29,6 +30,7 @@ surya
 	- wipe subject if campaign is not email - serverside only is fine
 	- default to sms...then default to email
 	- lists with default channels
+	- send test to myself for email
 - Upgrade Trumbowyg
 	- find all unicode for emojis or comment out
 	- add color plugins
@@ -48,6 +50,7 @@ Edwin
 - generate page loader
 
 Taiwo (review)
+- single image up to 4.5 mb
 - reread stripe managed accts for disabled reason and charges enabled
 - review stripe_events
 - review merchant_customer_id in transactions and invoices
@@ -89,5 +92,27 @@ http://rhombus-test.webflow.io/account-settings
 http://rhombus-test.webflow.io/business-settings
 http://rhombus-test.webflow.io/setup-payments
 http://rhombus-test.webflow.io/bank-account
+
+
+
+1. Referrer Page - refer-a-business
+	- tie in page to backend
+	- tie in logic for Get Started for Free
+
+2. Demo page - request-date
+	- Save demo data, on save...open new tab with calendly
+
+3. Welcome Page
+	- graph - leave for now
+
+4. Customer's page
+	- search bar - search by name
+
+5. Edit list page
+    - implement adding users
+
+6. List campaign
+	- send campaign...should prefill campaign list 
+
 
 
