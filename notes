@@ -26,6 +26,7 @@ surya
 	- lists with default channels
 	- send test to myself for email
 	- restrict campaign list to 1 campaign...if list has default channel...rebuild dropdown
+	- only 1 image under 4.5mb is attachable...still keep inline image logic for email
 - Upgrade Trumbowyg
 	- find all unicode for emojis or comment out
 	- add color plugins
@@ -48,7 +49,6 @@ Edwin
 Taiwo (review)
 - review remove_integration
 - review upgrading/downgrading subscription 
-- single image up to 4.5 mb
 - reread stripe managed accts for disabled reason and charges enabled
 - review stripe_events
 - review merchant_customer_id in transactions and invoices
