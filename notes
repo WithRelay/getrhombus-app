@@ -7,11 +7,6 @@ Bhishma
 		- remove new routes for subscriptions and plans
 	- Add logic for switching plans/subscriptions
 		- page can reload
-	- Add back cancel subscription now
-- upgrading subscription 
-	- res from coupon may not be defined
-	- still upgrade subscription if coupon create fails
-- what's update plan route for?
 - Messenger
 	- has_one :fb_cred??? - highlighted
 	- using page_id alone can cause problems... - highlighted
@@ -44,7 +39,9 @@ Edwin
 - generate page loader
 
 Taiwo (review)
+- review - what's update plan route for?
 - review remove_integration
+- review upgrading subscription 
 - single image up to 4.5 mb
 - reread stripe managed accts for disabled reason and charges enabled
 - review stripe_events
