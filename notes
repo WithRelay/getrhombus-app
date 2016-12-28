@@ -8,6 +8,7 @@ https://www.getrhombus.com/receive_delivery_report
 Bhishma
 - use id in html and not classes if possible...they are faster
 - your code tends to be unnecessarily complicated
+- stop reloading pages when using ajax/modals
 - Plans/Subscriptions
 	- does plan upgrade/downgrade work for any number of plans
 	- validate quantity client side - integer and present

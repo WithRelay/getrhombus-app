@@ -108,7 +108,7 @@ module CSVHandler
       end
       response
     rescue StandardError => e
-      return e.message
+      e.message
     end
   end
 
