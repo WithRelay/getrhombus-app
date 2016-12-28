@@ -32,7 +32,6 @@ class Subscription < ActiveRecord::Base
       hash[:tax_percent] = hash[:team].tax_percent
       hash.delete(:team)
 
-      return [true] 
       res = PaymentService.create_subscription(hash, uid, is_platform)
       if res.first
         self.update(
