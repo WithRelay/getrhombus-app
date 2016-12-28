@@ -55,13 +55,6 @@ $(document).ready(function() {
     $('.add-plan').attr('class', 'btn btn-primary add-modal-plan')
   });
 
-  $('.update-plan').on('click', function(){
-    location_url = window.location.href.split('/');
-    id = location_url[location_url.length - 2]
-    url = $('#planForm').attr('action');
-    $('#planForm').attr('action', url + '/' + id + '/update');
-  });
-
   // create plan using modal through api call
   function addPlan(){
     $.ajax({

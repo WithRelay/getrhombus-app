@@ -29,7 +29,7 @@ class @DatePicker
         setFormat = 'YYYY-MM-DD'
       $(this.element).daterangepicker
         timePicker: time,
-        timePickerIncrement: 30,
+        timePickerIncrement: 60,
         singleDatePicker: YES,
         locale: { format: setFormat },
         minDate: min
@@ -112,7 +112,7 @@ class Campaign
     if $(@textArea).length > 0
       txtEmoji = $(@textArea).emojioneArea ->
                    @emojiConfig
-                   
+
   removeDiv = ->
     $('#undefined_counter').each ->
       $(this).remove()
