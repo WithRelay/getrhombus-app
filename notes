@@ -27,6 +27,7 @@ surya
 
 Ovo
 - list with default channels since we now need contacts to be grouped based on channels and merchant contacts
+- how do you know a segment is a default segment...should not be editable
 - add to list from user profile - http://rhombus-test.webflow.io/customer-profile
 - shouldn't be able to edit default segments
 
@@ -39,7 +40,6 @@ Edwin
 - generate page loader
 
 Taiwo (review)
-- review - what's update plan route for?
 - review remove_integration
 - review upgrading subscription 
 - single image up to 4.5 mb
@@ -48,7 +48,7 @@ Taiwo (review)
 - review merchant_customer_id in transactions and invoices
 - review managed account..
 - when a user becomes customer, remove from a contact table/list 
-- subscription, subscription controller and stripe customer creation places
+- subscription (see other fields like tax_percent...save first...compare to plan.rb), subscription controller and stripe customer creation places
 - Review adding token...failing safely.
 - on subscription - check if user already belongs to merchant??? is this when they text?
 	- customers can create subscriptions over messaging...not dashboard, but can cancel subscription

@@ -17,14 +17,6 @@ class PlansController < ApplicationController
     respond_with(@plan)
   end
 
-  def new
-    @plan = Plan.new
-    respond_with(@plan)
-  end
-
-  def create
-  end  
-
   def edit
   end
 

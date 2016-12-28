@@ -34,27 +34,22 @@ $(document).ready(function() {
         .closest('.form-group') // Get the field parent
         .removeClass('has-warning')
         .addClass('has-success')
+    })
+    .on('success.form.fv', function(e, data) {    
+      
+      // only applies to create modal
+      if ($("#modalPlan").length > 0) {
+        e.preventDefault();
+        $('#create-plan').attr("disabled", true).val("Please wait...");
+        addPlan(); 
+      }
+      
     });
 
-  $('#create-plan').on('submit', function(e) {
-    addPlan();
-  });
-
-  // reload page when modal close
-  $('#modalPlan').on('hidden.bs.modal', function () {
-    // $('#planForm').data('formValidation').resetForm(); //not working
-    location.reload();
-  })
-
-  $('#plan_name').keyup(function(e) {
+  $('#plan_name').on("input", function() {
     $('#planForm').formValidation('revalidateField', 'plan[name]');
   });
-
-  // when create plan through modal it add class to submit button
-  $('.plan-modal').on('click', function(){
-    $('.add-plan').attr('class', 'btn btn-primary add-modal-plan')
-  });
-
+  
   // create plan using modal through api call
   function addPlan(){
     $.ajax({
@@ -68,13 +63,12 @@ $(document).ready(function() {
       })
       .done(function(data, textStatus, jqXHR) {
         FlashHandler.setFlashMessage(data.response, 'notice');
-        location.reload();
       })
       .fail(function(data, textStatus, errorThrown) {
         FlashHandler.setFlashMessage(JSON.parse(data.responseText).response, 'error');
       })
       .always(function(data, textStatus, response) {
-        $('#create-plan').attr("disabled", false);
+        $('#create-plan').attr("disabled", false).val("Create Plan");
       });
   }
 

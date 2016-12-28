@@ -6,6 +6,7 @@ class SubscriptionsController < ApplicationController
   include Transactionable
 
   def index
+    @plan = Plan.new
     # This is for merchants only for now
     merchant_customers = current_user.customers.pluck(:id)
     @subscriptions = Subscription.where(merchant_customer_id: merchant_customers)

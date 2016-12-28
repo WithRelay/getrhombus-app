@@ -33,8 +33,11 @@ class Coupon < ActiveRecord::Base
       hash[:percent_off] = self.percent_off
       hash[:redeem_by] = self.redeem_by
       hash[:currency] = hash[:team].currency
-      # Update so validations run before calling Stripe
-      self.update(user_id: hash[:team].id, currency: hash[:team].currency)
+
+      # save so validations run before calling Stripe
+      self.user_id = hash[:team].id
+      self.currency = hash[:team].currency
+      self.save!
       hash.delete(:team)
 
       res = PaymentService.create_coupon(hash)

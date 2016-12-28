@@ -7,7 +7,6 @@ class Plan < ActiveRecord::Base
   validates_presence_of :name, :interval, :interval_count, :amount
   validates :name, uniqueness: { case_sensitive: false, scope: :merchant_id }
   validates_numericality_of :amount, :interval_count, greater_than: 0, only_integer: true
-  after_commit :create_plan_segment, if: lambda { self.customer_id.blank? }
 
   def create_plan(hash)
     begin
@@ -24,9 +23,12 @@ class Plan < ActiveRecord::Base
 
       # dont send team/merchant or customer data in hash
       [:team, :customer].each { |k| hash.delete(k) }
-      
-      # Update so validations run before calling Stripe
-      self.update(merchant_id: _user_id, statement_descriptor: descriptor, currency: team.currency)
+            
+      # save so validations run before calling Stripe
+      self.statement_descriptor = descriptor
+      self.merchant_id = _user_id
+      self.currency = team.currency
+      self.save!
 
       hash[:interval] = self.interval
       hash[:interval_count] = self.interval_count
@@ -39,7 +41,9 @@ class Plan < ActiveRecord::Base
       hash[:currency] = self.currency
 
       res = PaymentService.create_plan(hash, uid, is_platform)
+
       if res.first && self.update(stripe_livemode: res.second.livemode)
+        create_plan_segment if self.customer_id.blank? 
         true
       else
         # if StandardError happens in create_plan after Stripe was called or update fails above
@@ -63,12 +67,17 @@ class Plan < ActiveRecord::Base
       old_descriptor = self.statement_descriptor
       new_descriptor = (hash[:name] + "-" + team.org_name)[0..21]
 
-      # Update so validations run before calling Stripe api
-      self.update(name: hash[:name], statement_descriptor: new_descriptor)
+      # save so validations run before calling Stripe api
+      self.name = hash[:name]
+      self.statement_descriptor = new_descriptor
+      self.save!
+
       hash[:statement_descriptor] = new_descriptor
       res = PaymentService.update_plan(self.id, hash, team.get_team_uid, team.is_platform?)
 
-      unless res.first
+      if res.first
+        update_plan_segment if self.customer_id.blank?
+      else
         # notify team via email
         # reverse data
         self.update(name: old_name, statement_descriptor: old_descriptor)
@@ -83,7 +92,9 @@ class Plan < ActiveRecord::Base
 
   def delete_plan(team)
     begin
-      PaymentService.delete_plan(self.id, team.get_team_uid, team.is_platform?).first
+      res = PaymentService.delete_plan(self.id, team.get_team_uid, team.is_platform?).first
+      delete_plan_segment if res
+      res
     rescue StandardError => e
       # notify team via email
       false
@@ -91,9 +102,22 @@ class Plan < ActiveRecord::Base
   end
 
   private
-  # Triggered after a plan is created to get the users who belong to that plan
+  
   def create_plan_segment
     segment = DashboardMerchantQueries.get_plan_users(self.id)
     List.create(name:self.name, user_id: self.merchant_id, segment: segment)
+  end
+
+  def update_plan_segment
+    old_name = self.previous_changes["name"]
+    if old_name.present?
+      l = List.find_by user_id: self.merchant_id, name: old_name[0]
+      l.update(name: self.name) if l
+    end
+  end
+
+  def delete_plan_segment
+    l = List.find_by user_id: self.merchant_id, name: self.name
+    l.destroy if l
   end
 end
