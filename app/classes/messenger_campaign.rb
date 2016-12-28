@@ -11,9 +11,9 @@ class MessengerCampaign
      list.get_users.each do |customer|
        user_fb_cred = customer[:user].fb_cred
        user_fb_cred_id = user_fb_cred.page_specific_id if user_fb_cred.present?
-       fb_message_sender(page_access_token, user_fb_cred_id)
+       return fb_message_sender(page_access_token, user_fb_cred_id)
      end
-   end if @campaign.lists.present?
+   end
   end
 
  private

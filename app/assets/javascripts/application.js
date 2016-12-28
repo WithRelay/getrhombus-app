@@ -47,6 +47,7 @@
 //= require trumbowyg.min
 //= require emojify
 //= require emojionearea
+//= require trumbowyg_color_plugin
 //= require trumbowyg_emoji_plugin
 //= require trumbowyg.upload.min
 //= require selectize
