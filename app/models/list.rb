@@ -7,6 +7,10 @@ class List < ActiveRecord::Base
 
   # default channel for contacting users on the list
   enum channel: [:email, :text, :messenger]
+ 
+  # List origin specifies whether the list is system generated 
+  # or created by a merchant (user)
+  enum origin: [:merchant, :system]
 
   # Gets the users that belong to a standard list or segment
   def get_users

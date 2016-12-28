@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161228222622) do
+ActiveRecord::Schema.define(version: 20161228224941) do
 
   create_table "addresses", force: :cascade do |t|
     t.string   "street_address",   limit: 191
@@ -314,6 +314,7 @@ ActiveRecord::Schema.define(version: 20161228222622) do
     t.string   "name",       limit: 191
     t.text     "segment",    limit: 65535
     t.integer  "channel",    limit: 4,     default: 0
+    t.integer  "origin",     limit: 4,     default: 0
   end
 
   add_index "lists", ["user_id", "name"], name: "index_lists_on_user_id_and_name", unique: true, using: :btree
