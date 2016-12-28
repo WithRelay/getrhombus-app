@@ -5,6 +5,7 @@ class Api::V1::MerchantCustomersController < API::V1::BaseController
                   .select("merchant_customers.id, email, merchant_customers.stripe_customer_id")
                   .where('exp_year  > ? || exp_year = ? && exp_month >= ?', Time.current.year , Time.current.year, Time.current.month)
                   .where("email like ?", "%#{params[:query].downcase}%")
+                  .where("merchant_customers.merchant_id = ?", current_user.id)
 
       render json: { "customers" => customers }, status: 200
     rescue StandardError => e

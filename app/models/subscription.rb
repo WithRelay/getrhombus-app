@@ -6,10 +6,13 @@ class Subscription < ActiveRecord::Base
   has_many :invoices
   has_many :notification_logs, as: :notifiable, dependent: :destroy
 
-  validates_presence_of :plan_id, :merchant_customer_id
+  validates_presence_of :plan_id, :merchant_customer_id, :quantity
+  validates_numericality_of :quantity, greater_than: 0, only_integer: true
 
   def create_subscription(hash)
     begin
+      return [false] if !self.save
+
       res = []
       team = hash[:team]
       is_platform = team.is_platform?
@@ -29,6 +32,7 @@ class Subscription < ActiveRecord::Base
       hash[:tax_percent] = hash[:team].tax_percent
       hash.delete(:team)
 
+      return [true] 
       res = PaymentService.create_subscription(hash, uid, is_platform)
       if res.first
         self.update(

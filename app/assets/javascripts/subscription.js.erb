@@ -1,96 +1,105 @@
 $(document).ready(function () {
   var subscriptionId = 0;
+
   $('#subscription-select-coupon').selectize({
-      maxItems: 1,
-      valueField: 'id',
-      labelField: 'name',
-      searchField: 'name',
-      create: false,
-      options: [],
-      closeAfterSelect: true,
-      load: function(query, callback) {
-        if (!query.length) return callback();
-        $.ajax({
-          url: '/v1/coupons.json',
-          type: 'GET',
-          dataType: 'json',
-          data: {
-            name: query
-          },
-          error: function() {
-             FlashHandler.setFlashMessage('Something went wrong...Unable to find your coupons', 'error');
-            callback();
-          },
-          success: function(res) {
-            callback(res['coupons']);
-          }
-        });
-      }
-    }).selectize();
+    maxItems: 1,
+    valueField: 'id',
+    labelField: 'name',
+    searchField: 'name',
+    create: false,
+    options: [],
+    closeAfterSelect: true,
+    load: function(query, callback) {
+      if (!query.length) return callback();
+      $.ajax({
+        url: '/v1/coupons.json',
+        type: 'GET',
+        dataType: 'json',
+        data: {
+          name: query
+        },
+        error: function() {
+          FlashHandler.setFlashMessage('Something went wrong...Unable to find your coupons', 'error');
+          callback();
+        },
+        success: function(res) {
+          callback(res['coupons']);
+        }
+      });
+    }
+  });
 
   $('#subscriptionForm')
     .formValidation({
       framework: 'bootstrap',
       excluded: ':disabled',
+      live: 'disabled',
       // List of fields and their validation rules
       fields: {
         'subscription[plan_id]':{
-           validators: {
-              callback: {
-                message: 'Please select one or more Plans',
-                callback: function(value, validator, $field) {
-                    var plans = validator.getFieldElements('subscription[plan_id]').val();
-                    return (plans !== '');
-                }
+          validators: {
+            callback: {
+              message: 'Please select a plan',
+              callback: function(value, validator, $field) {
+                var plans = validator.getFieldElements('subscription[plan_id]').val();
+                return (plans !== '');
+              }
             }
-           }
+          }
         },
         'subscription[merchant_customer_id]':{
-           validators: {
+          validators: {
               notEmpty: {
-                message: 'Please select a Customer'
+                message: 'Please select a customer'
             }
-           }
+          }
         }
       }
     })
-    .find('[name="subscription[plan_id]"]')
-      .selectize({
-      maxItems: 1,
-      valueField: 'id',
-      labelField: 'name',
-      searchField: 'name',
-      create: false,
-      options: [],
-      closeAfterSelect: true,
-      load: function(query, callback) {
-        if (!query.length) return callback();
-        $.ajax({
-          url: '/v1/plans.json',
-          type: 'GET',
-          dataType: 'json',
-          data: {
-            name: query
-          },
-          error: function() {
-             FlashHandler.setFlashMessage('Something went wrong...Unable to find your plans', 'error');
-            callback();
-          },
-          success: function(res) {
-            callback(res['plans']);
-          }
-        });
-      }
-    })
-    .on('change', function(e) {
-        $('#subscriptionForm').formValidation('resetField', 'subscription[plan_id]');
-    })
-    .on('submit', function(e) {
-        $('#subscriptionForm').formValidation('revalidateField', 'subscription[plan_id]');
-    })
+    .on('success.form.fv', function(e, data) {          
+      e.preventDefault();
+      $("#create-subscription").attr("disabled", true).val("Please wait...");
+      addSubscription(); 
+    });
+    
+  $("#subscription-plan-id").selectize({
+    maxItems: 1,
+    valueField: 'id',
+    labelField: 'name',
+    searchField: 'name',
+    create: false,
+    options: [],
+    closeAfterSelect: true,
+    load: function(query, callback) {
+      if (!query.length) return callback();
+      $.ajax({
+        url: '/v1/plans.json',
+        type: 'GET',
+        dataType: 'json',
+        data: {
+          name: query
+        },
+        error: function() {
+          FlashHandler.setFlashMessage('Something went wrong...Unable to find your plans', 'error');
+          callback();
+        },
+        success: function(res) {
+          callback(res['plans']);
+        }
+      });
+    }
+  })
+  .on('change', function(e) {
+    $('#subscriptionForm').formValidation('resetField', 'subscription[plan_id]');
+  });
 
-  $('[name = "subscription[merchant_customer_id]"]')
-      .selectize({
+  // reset form when modal close
+  $('#modalSubscription').on('hidden.bs.modal', function () {
+   $('#subscriptionForm').data('formValidation').resetForm();
+  })
+
+  $('#subscription-customer-id')
+    .selectize({
       maxItems: 1,
       valueField: 'id',
       labelField: 'email',
@@ -109,7 +118,7 @@ $(document).ready(function () {
             query: query
           },
           error: function() {
-             FlashHandler.setFlashMessage('Something went wrong...Unable to find your customer', 'error');
+            FlashHandler.setFlashMessage('Something went wrong...Unable to find your customer', 'error');
             callback();
           },
           success: function(res) {
@@ -119,64 +128,13 @@ $(document).ready(function () {
       }
     })
     .on('change', function(e) {
-        $('#subscriptionForm').formValidation('resetField', 'subscription[merchant_customer_id]');
+      $('#subscriptionForm').formValidation('resetField', 'subscription[merchant_customer_id]');
     })
-    .on('submit', function(e) {
-        $('#subscriptionForm').formValidation('revalidateField', 'subscription[merchant_customer_id]');
-    })
-
-  $('.auto-height').css('height', 'auto');
-
-$('.subscription-row').on('click', function(){
-  subscriptionId = this.id.split('-')[1];
-  appendSubscritionInfo($(this).find('td'));
-  $('.submit-update-plan').removeClass("hidden");
-});
-
-function appendSubscritionInfo(subscriptionData){
-  $('.plan-div').empty(); 
-  $('.plan-div').append('Customer: ' + subscriptionData[0].innerHTML + '<br>');
-  $('.plan-div').append('Status: ' + subscriptionData[1].innerHTML + '<br>');
-  $('.plan-div').append('Plan: ' + subscriptionData[2].innerHTML + '<br>');
-  $('.plan-div').append('Coupon: ' + subscriptionData[3].innerHTML + '<br>');
-  $('.plan-div').append('Quantity: ' + subscriptionData[4].innerHTML + '<br>');
-}
-
-$('.upgrade-plan-selector').on('click', function(){
-  $('.submit-update-plan').val('Upgrade Plan');
-  $('.submit-update-plan').attr('class', 'btn btn-success submit-update-plan');
-  $('.update-plan-id').attr('value', '49');
-});
-
-$('.downgrade-plan-selector').on('click', function(){
-  $('.submit-update-plan').val('Downgrade Plan');
-  $('.submit-update-plan').attr('class', 'btn btn-danger submit-update-plan');
-  $('.update-plan-id').attr('value', '48');
-});
-
-// reset form when modal close
-$('#modalSubscription').on('hidden.bs.modal', function () {
- $('#subscriptionForm').data('formValidation').resetForm();
-})
-
-$('.submit-update-plan').on('click',function(){
-  if (subscriptionId === 0){
-    errorMsg = 'Please select subscription from table before upgrade/downgrade Plan'
-    FlashHandler.setFlashMessage(errorMsg, 'error');
-    return false
-  } else {
-    action = $('#plan-update-form').attr('action') + '/' + subscriptionId;
-    actionName = ($('.submit-update-plan').val() === 'Upgrade Plan') ? 'upgrade_subscription' : 'downgrade_subscription' 
-    action = action + '/' + actionName;
-    $('#plan-update-form').attr('action', action);
-    $('#plan-update-form').attr('href', action);
-  }
-});
-
-// create subscription through api with modal
-$('#create-subscription').on('submit', function(){
-  $.ajax({
-      url: "/v1/subscriptions/create",
+    
+  // create subscription through api with modal
+  function addSubscription() {
+   $.ajax({
+      url: "/v1/subscriptions.json",
       beforeSend: function(xhr) {
         xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
       },
@@ -186,15 +144,61 @@ $('#create-subscription').on('submit', function(){
     })
     .done(function(data, textStatus, jqXHR) {
       FlashHandler.setFlashMessage(data.response, 'notice');
-      location.reload();
     })
     .fail(function(data, textStatus, errorThrown) {
       FlashHandler.setFlashMessage(JSON.parse(data.responseText).response, 'error');
     })
     .always(function(data, textStatus, response) {
-      $('#create-subscription').attr("disabled", false);
+      $('#create-subscription').removeAttr('disabled').val("Subscribe Customer");
     });
-});
+  };
+
+
+
+  $('.auto-height').css('height', 'auto');
+
+  $('.subscription-row').on('click', function(){
+    subscriptionId = this.id.split('-')[1];
+    appendSubscriptionInfo($(this).find('td'));
+    $('.submit-update-plan').removeClass("hidden");
+  });
+
+  function appendSubscriptionInfo(subscriptionData){
+    $('.plan-div').empty(); 
+    $('.plan-div').append('Customer: ' + subscriptionData[0].innerHTML + '<br>');
+    $('.plan-div').append('Status: ' + subscriptionData[1].innerHTML + '<br>');
+    $('.plan-div').append('Plan: ' + subscriptionData[2].innerHTML + '<br>');
+    $('.plan-div').append('Coupon: ' + subscriptionData[3].innerHTML + '<br>');
+    $('.plan-div').append('Quantity: ' + subscriptionData[4].innerHTML + '<br>');
+  }
+
+  $('.upgrade-plan-selector').on('click', function(){
+    $('.submit-update-plan').val('Upgrade Plan');
+    $('.submit-update-plan').attr('class', 'btn btn-success submit-update-plan');
+    $('.update-plan-id').attr('value', '49');
+  });
+
+  $('.downgrade-plan-selector').on('click', function(){
+    $('.submit-update-plan').val('Downgrade Plan');
+    $('.submit-update-plan').attr('class', 'btn btn-danger submit-update-plan');
+    $('.update-plan-id').attr('value', '48');
+  });
+
+
+  $('.submit-update-plan').on('click',function(){
+    if (subscriptionId === 0){
+      errorMsg = 'Please select subscription from table before upgrade/downgrade Plan'
+      FlashHandler.setFlashMessage(errorMsg, 'error');
+      return false
+    } else {
+      action = $('#plan-update-form').attr('action') + '/' + subscriptionId;
+      actionName = ($('.submit-update-plan').val() === 'Upgrade Plan') ? 'upgrade_subscription' : 'downgrade_subscription' 
+      action = action + '/' + actionName;
+      $('#plan-update-form').attr('action', action);
+      $('#plan-update-form').attr('href', action);
+    }
+  });
+  
 
 });
 

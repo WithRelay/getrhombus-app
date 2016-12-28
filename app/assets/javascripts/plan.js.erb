@@ -35,15 +35,13 @@ $(document).ready(function() {
         .removeClass('has-warning')
         .addClass('has-success')
     })
-    .on('success.form.fv', function(e, data) {    
-      
+    .on('success.form.fv', function(e, data) {       
       // only applies to create modal
       if ($("#modalPlan").length > 0) {
         e.preventDefault();
         $('#create-plan').attr("disabled", true).val("Please wait...");
         addPlan(); 
-      }
-      
+      }      
     });
 
   $('#plan_name').on("input", function() {

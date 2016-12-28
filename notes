@@ -1,8 +1,17 @@
 current stripe api version - 2014-03-28
 https://www.getrhombus.com/receive_delivery_report
 
+- EVERYONE INDENT YOUR CODE PROPERLY 
+- every field is validated on submit and formvalidator submit the form...stop adding on submit event/function
+- dont create unnecessary routes unless rails doesnt have a restil route for it
+
 Bhishma
+- use id in html and not classes if possible...they are faster
+- your code tends to be unnecessarily complicated
 - Plans/Subscriptions
+	- not sure...but subscriptions needs to be like plans
+	- does plan upgrade/downgrade work for any number of plans
+	- validate quantity - integer and present
 	- create subscription api modal for customer profile/messaging page... 
 		- remove new routes for subscriptions and plans
 	- Add logic for switching plans/subscriptions
@@ -10,6 +19,7 @@ Bhishma
 - Messenger
 	- has_one :fb_cred??? - highlighted
 	- using page_id alone can cause problems... - highlighted
+	- redo how messages are saved
 
 surya
 - can I migrate my jobs?
@@ -18,11 +28,11 @@ surya
 	- default to sms...then default to email
 	- lists with default channels
 	- send test to myself for email
+	- restrict campaign list to 1 campaign...if list has default channel...rebuild dropdown
 - Upgrade Trumbowyg
 	- find all unicode for emojis or comment out
 	- add color plugins
 - Implement Reminders - no notes
-- Change calendar interval in campaigns/reminders to every hour 
 - we need to use a static job scheduler that runs every 5 mins past the hour - so use cron not every...5 mins past the hour so we avoid minor clock differences on a server
 
 Ovo
@@ -33,8 +43,7 @@ Ovo
 
 Edwin
 - facebook integration page
-- how do we tell you that a list has a default channel and should we restrict the dropdown if you select this types of lists
-- datables show arrows
+- quantity default to 1...do we need to ask for quantity
 - compile list of links
 - create pages to show lists (with edit and delete links) of reminders and edit a reminder - no modal
 - generate page loader

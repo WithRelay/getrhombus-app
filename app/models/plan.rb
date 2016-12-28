@@ -28,7 +28,7 @@ class Plan < ActiveRecord::Base
       self.statement_descriptor = descriptor
       self.merchant_id = _user_id
       self.currency = team.currency
-      self.save!
+      return false if !self.save
 
       hash[:interval] = self.interval
       hash[:interval_count] = self.interval_count
@@ -70,7 +70,7 @@ class Plan < ActiveRecord::Base
       # save so validations run before calling Stripe api
       self.name = hash[:name]
       self.statement_descriptor = new_descriptor
-      self.save!
+      return false if !self.save
 
       hash[:statement_descriptor] = new_descriptor
       res = PaymentService.update_plan(self.id, hash, team.get_team_uid, team.is_platform?)

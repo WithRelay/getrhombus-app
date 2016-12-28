@@ -21,9 +21,6 @@ class SubscriptionsController < ApplicationController
   def edit
   end
 
-  def create
-  end
-
   def destroy
     if @subscription.cancel_subscription(current_user)
       flash[:notice] = 'Your subscription will been canceled at period end.'

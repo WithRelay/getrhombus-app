@@ -3,7 +3,6 @@ $(document).on('ready page:load', function() {
     framework: 'bootstrap',
     excluded: ':disabled',
     live: 'disabled',
-    // excluded: [ ':hidden', ':not(:visible)' ],
     fields: {
       'campaign[name]': {
         validators: {

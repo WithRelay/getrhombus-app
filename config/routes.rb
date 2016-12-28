@@ -138,7 +138,7 @@ Rails.application.routes.draw  do
     resources :coupons, only: [:index] 
     match 'plans/check_plan_name' => 'plans#check_plan_name', via: :post
     resources :plans, only: [:index, :create]
-    match 'subscriptions/create' => 'subscriptions#create', via: :post
+    resources :subscriptions, only: [:create]
     match 'merchant/customers' => 'merchant_customers#customers', via: :get
   end
 
