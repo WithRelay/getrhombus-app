@@ -47,6 +47,8 @@ class Api::V1::UsersController < API::V1::BaseController
         end
         Referrer.save_referrer_with_id(current_user.id, u.id)
       end
+    rescue ActiveRecord::RecordNotUnique => e
+      response = e.original_exception.message
     rescue StandardError => e
       response = 'Something went wrong on our end.'
     end

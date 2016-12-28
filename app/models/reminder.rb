@@ -7,7 +7,7 @@ class Reminder < Campaign
 
   # enqeue reminder jobs
   def enqueue_notification_jobs
-    Resque.enqueue_at_with_queue('campaign', date_time.utc, ReminderJob, id) if is_today_campaign?
+    Resque.enqueue_at_with_queue('one_time_reminder', date_time.utc, OneTimeReminderJob, id) if is_today_campaign?
   end
 
   def update_reminder_job

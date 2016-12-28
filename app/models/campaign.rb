@@ -68,8 +68,8 @@ class Campaign < ActiveRecord::Base
   def enqueue_jobs
     # rescue enqueue_at_with_queue accepts four parametera 1 name of queue, 2 date_time(provided as utc)
     # 3 class name 4 the parameter send for class method perform
-    Resque.enqueue_at_with_queue('campaign', date_time.utc, ChannelJob, id) if is_campaign_date_selected? || is_today_campaign?
-    CampaignJob.perform_now(self) if deliver_now?
+    Resque.enqueue_at_with_queue('one_time_campaign', date_time.utc, OneTimeCampaignJob, id) if is_campaign_date_selected? || is_today_campaign?
+    SendNowCampaignJob.perform_now(self) if deliver_now?
   end
 
   private

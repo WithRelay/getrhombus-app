@@ -13,6 +13,11 @@ $(document).ready(function() {
     create: false,
     options: [],
     closeAfterSelect: true,
+    render: {
+      item: function(item, escape) {
+        return '<div> <span class="name">' + escape(item.name) + '</span></div>';
+      }
+    },
     load: function(query, callback) {
       if (!query.length) return callback();
       $.ajax({

@@ -60,7 +60,7 @@ module DashboardMerchantQueries
 				 "FROM transactions t " \
 				 "WHERE t.team_id = :id " \
 				 "AND t.created_at #{DashboardMerchantQueries.get_range(params[:segment_filter])}" \
-				 "DATE_SUB(now(), INTERVAL #{params[:segment_num_days]} DAY) " \
+				 "DATE_SUB(#{params[:current_time]}, INTERVAL #{params[:segment_num_days]} DAY) " \
 				 "GROUP BY t.referenced_user_id " \
 				") t1 " \
 				"ON (t1.max_id = t.id) " \
@@ -85,7 +85,7 @@ module DashboardMerchantQueries
 					 "AND m.created_at #{
 					 	DashboardMerchantQueries.get_range(params[:segment_filter])
 					 } " \
-					 "DATE_SUB(now(), INTERVAL #{
+					 "DATE_SUB(#{params[:current_time]}, INTERVAL #{
 					 params[:segment_num_days]} DAY)"
 			return query
 		else
@@ -103,7 +103,8 @@ module DashboardMerchantQueries
 	# @param num_days The number of days for which active is defined
 	# @return An array of the user id, email, transaction and message times
 	# of active customers.
-	def DashboardMerchantQueries.get_active_customers(num_days=14)
+	def DashboardMerchantQueries.get_active_customers(params)
+		num_days = params[:segment_num_days]
 		query = "SELECT transactions.user_id, users.email, " \
 				"transactions.created_at as transaction_time " \
 			 	"messages.created_at as messages_time " \
@@ -135,8 +136,8 @@ module DashboardMerchantQueries
 				") messages " \
 				"ON (transactions.user_id = messages.user_id) " \
 				"INNER JOIN users ON (users.id = transactions.user_id) " \
-				"WHERE transactions.created_at > DATE_SUB(now(), INTERVAL #{num_days} DAY) " \
-				"OR messages.created_at > DATE_SUB(now(), INTERVAL #{num_days} DAY)"
+				"WHERE transactions.created_at > DATE_SUB(#{params[:current_time]}, INTERVAL #{num_days} DAY) " \
+				"OR messages.created_at > DATE_SUB(#{params[:current_time]}, INTERVAL #{num_days} DAY)"
 		query
 	end
 
@@ -145,7 +146,8 @@ module DashboardMerchantQueries
 	# or had a transaction with the merchant within the last n days
 	# @param num_days The number of days for which active is defined
 	# @return An array of the user id and email of inactive customers.
-	def DashboardMerchantQueries.get_inactive_customers(num_days=14)
+	def DashboardMerchantQueries.get_inactive_customers(params)
+		num_days = params[:segment_num_days]
 		query = "SELECT m.customer_id, u.email " \
 				"FROM merchant_customers m, users u " \
 				"WHERE m.customer_id NOT IN " \
@@ -179,8 +181,8 @@ module DashboardMerchantQueries
 			") messages " \
 			"ON (transactions.user_id = messages.user_id) " \
 			"INNER JOIN users ON (users.id = transactions.user_id) " \
-			"WHERE transactions.created_at > DATE_SUB(now(), INTERVAL #{num_days} DAY) 
-			 OR messages.created_at > DATE_SUB(now(), INTERVAL #{num_days} DAY) " \
+			"WHERE transactions.created_at > DATE_SUB(#{params[:current_time]}, INTERVAL #{num_days} DAY) 
+			 OR messages.created_at > DATE_SUB(#{params[:current_time]}, INTERVAL #{num_days} DAY) " \
 			") " \
 			"AND u.id = m.customer_id" 
 		query
@@ -199,7 +201,7 @@ module DashboardMerchantQueries
 				"AND m.created_at #{
 					 	DashboardMerchantQueries.get_range(params[:segment_filter])
 					 } " \
-				"DATE_SUB(now(), INTERVAL #{params[:segment_num_days]} DAY) " \
+				"DATE_SUB(#{params[:current_time]}, INTERVAL #{params[:segment_num_days]} DAY) " \
 				"GROUP BY m.user_id " \
 				")t1 " \
 				"ON (t1.max_id = m.id) " \
@@ -217,12 +219,12 @@ module DashboardMerchantQueries
 	def DashboardMerchantQueries.get_plan_users(plan_id)
 		query = "SELECT u.id AS user_id, u.email AS email, " \
 		 		"u.first_name, u.last_name " \
-				"FROM Plans p " \
+				"FROM subscriptions s " \
 				"INNER JOIN merchant_customers m " \
 				"ON (m.merchant_id = :id) " \
 				"INNER JOIN users u " \
 				"ON (u.id = m.customer_id) " \
-				"WHERE p.id = #{plan_id} " 
+				"WHERE p.=== = #{plan_id} " 
 		return query
 	end
 
@@ -240,7 +242,7 @@ module DashboardMerchantQueries
 				"AND m.created_at #{
 					 	DashboardMerchantQueries.get_range(params[:segment_filter])
 					 } " \
-				"DATE_SUB(now(), INTERVAL #{params[:segment_num_days]} DAY) " \
+				"DATE_SUB(#{params[:current_time]}, INTERVAL #{params[:segment_num_days]} DAY) " \
 				"GROUP BY m.user_id_to " \
 				")t1 " \
 				"ON (t1.max_id = m.id) " \

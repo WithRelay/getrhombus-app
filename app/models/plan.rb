@@ -91,7 +91,6 @@ class Plan < ActiveRecord::Base
   end
 
   private
-  
   # Triggered after a plan is created to get the users who belong to that plan
   def create_plan_segment
     segment = DashboardMerchantQueries.get_plan_users(self.id)
