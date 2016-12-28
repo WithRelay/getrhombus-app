@@ -12,7 +12,7 @@ module ChannelCampaign
       channel_class = channel_mapper[@campaign.channel].constantize
       # all channels classes like messenger_campaign, mobile_campaign, email_campaign
       # has a common method send campaign which send campaign to a group of users
-      channel_class.new(@campaign).send_campaign
+      update_campaign if channel_class.new(@campaign).send_campaign
     end
 
     private
@@ -21,8 +21,9 @@ module ChannelCampaign
     def get_user_id
       user_id_list = []
       @campaign.lists.each do |list|
-        list.get_user.each{ |customer| user_id_list.push({ user_id: customer[:user].id }) }
+        list.get_users.each{ |customer| user_id_list.push({ user_id: customer[:user].id }) }
       end
+      user_id_list
     end
 
     # The key in channel mapper is enum channels of campaign please refer to campaign model
