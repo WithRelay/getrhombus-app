@@ -5,6 +5,9 @@ class List < ActiveRecord::Base
   has_many :campaigns, through: :campaign_lists
   has_many :campaign_lists
 
+  # default channel for contacting users on the list
+  enum channel: [:email, :text, :messenger]
+
   # Gets the users that belong to a standard list or segment
   def get_users
   	if segment.present?
