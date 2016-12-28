@@ -1,0 +1,20 @@
+<%= form_for('user', url: 'signup', method: :get, :html => { :id => "get-started-form" } ) do |f| %>
+
+  <div class="field form-group">
+    <%= f.text_field 'email', placeholder: 'Email Address', class: 'form-control' %>
+  </div>
+
+  <div class="field form-group">
+    <%= f.text_field 'phone', placeholder: 'Phone Number', class: 'form-control' %>
+  </div>
+
+  <div class="field form-group">
+    <%= f.radio_button 'check', 'get-start', :checked => true %>
+    I agree to Relay terms of use & policy
+  </div>
+
+  <div class="field form-group">
+    <%= f.button "Create relay account", class: "btn btn-primary", value: 'get-start', data: { disable_with: "<i class='fa fa-spinner fa-spin'></i>Please wait...".html_safe } %>
+  </div>
+
+<% end %>

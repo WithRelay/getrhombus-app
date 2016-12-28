@@ -15,8 +15,7 @@ $(document).ready(function () {
   // signin is included for when user texts payment and is prompted to sign in to complete account
   // can use form presence instead
   if (["/signup", "/signin", "/users/sign_in", '/users', "/profile"].indexOf(url.pathname) != -1) {
-      var amt = validate_captured_amt(global_page_params['amt'])
-
+      var amt = validate_captured_amt(global_page_params['amt']);
       if (url.pathname == "/signup") {
           document.getElementById('phone').value = global_page_params['num'];
           hide_account_type(global_page_params['referrer']);
