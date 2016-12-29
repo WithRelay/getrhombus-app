@@ -6,7 +6,7 @@ class List < ActiveRecord::Base
   has_many :campaign_lists
 
   # default channel for contacting users on the list
-  enum channel: [:text, :messenger, :email]
+  enum channel: [:sms, :messenger, :email]
  
   # List origin specifies whether the list is system generated 
   # or created by a merchant (user)
