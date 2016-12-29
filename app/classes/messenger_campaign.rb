@@ -9,14 +9,23 @@ class MessengerCampaign
     page_access_token = user_page_access_token
     @campaign.lists.each do |list|
      list.get_users.each do |customer|
-       user_fb_cred = customer[:user].fb_cred
-       user_fb_cred_id = user_fb_cred.page_specific_id if user_fb_cred.present?
+       @user_fb_creds = customer[:user].fb_creds
+       user_fb_cred_id = get_page_specific_id if @user_fb_creds.present?
        return fb_message_sender(page_access_token, user_fb_cred_id)
      end
    end
   end
 
  private
+
+ def get_page_specific_id
+    res = nil
+    @user_fb_creds.each do |cred|
+      page_user = @facebook_messenger.get_user_info(user_page_access_token, cred.page_specific_id)
+      res = cred.page_specific_id if page_user
+    end
+    res
+ end
 
   def send_fb_images(page_token, fb_cred_id)
     @campaign.images.each do |image|
