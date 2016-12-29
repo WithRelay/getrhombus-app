@@ -1,6 +1,7 @@
 # User can select facebook pages 
 class FbPagesController < ApplicationController
-  before_action :check_user_present, :update_page
+  before_action :set_data, :check_user_present, :update_page
+  before_action :set_page, only: [:update_user_fb_page]
   respond_to :html, :js
 
   def index
@@ -8,38 +9,34 @@ class FbPagesController < ApplicationController
   end
 
   def update_user_fb_page
-    select_page = params['select_page'].split.first
     if (params['commit'] == 'Subscribe')
-      subscribe_user_fb_page(select_page)
+      subscribe_user_fb_page
     else
-      unsubscribe_user_fb_page(select_page)
+      unsubscribe_user_fb_page
     end    
   end
 
-  def subscribe_user_fb_page(page_id)
-    page = FbPage.find_by_id page_id
-    flag = true
-    flag = unsubscribe_previous_page if subscribed_page_present?
+  def subscribe_user_fb_page
+    res = subscribed_page_present? ? unsubscribe_previous_page : true
 
-    if page.present? && flag
-      response = FacebookMessengerService.subscribe(page.page_access_token)
+    if @fb_page.present? && res
+      response = FacebookMessengerService.subscribe(@fb_page.page_access_token)
       if(response["success"])
-        page.update_attributes(subscription_status: true)
+        @fb_page.update_attributes(subscription_status: true)
       end
-      redirect_to user_fb_pages_path(current_user), flash: { notice: page.page_name + ' page has been successfully subscribed' }
+      redirect_to user_fb_pages_path(current_user), flash: { notice: @fb_page.page_name + ' page has been successfully subscribed' }
     else
       redirect_to user_fb_pages_path(current_user), flash: { error: 'Something went wrong' }
     end
   end
 
-  def unsubscribe_user_fb_page(page_id)
-    page = FbPage.find_by_id page_id
-    if page.present?
-      response = FacebookMessengerService.unsubscribe(page.page_access_token)
+  def unsubscribe_user_fb_page
+    if @fb_page.present?
+      response = FacebookMessengerService.unsubscribe(@fb_page.page_access_token)
       if(response['success'])
-        page.update_attributes(subscription_status: false)
+        @fb_page.update_attributes(subscription_status: false)
       end
-      redirect_to user_fb_pages_path(current_user), flash: { notice: page.page_name + ' page has been successfully unsubscribed' }
+      redirect_to user_fb_pages_path(current_user), flash: { notice: @fb_page.page_name + ' page has been successfully unsubscribed' }
     else
       redirect_to user_fb_pages_path(current_user), flash: { error: 'Something went wrong' }
     end
@@ -47,9 +44,8 @@ class FbPagesController < ApplicationController
 
   def unsubscribe_previous_page
     res = false
-    current_user.fb_cred.fb_pages.each do |page|
+    @user_fb_pages.each do |page|
       if page.subscription_status
-        page = FbPage.find_by_id page.id
         response = FacebookMessengerService.unsubscribe(page.page_access_token)
         if(response['success'])
           res = true
@@ -61,69 +57,72 @@ class FbPagesController < ApplicationController
   end
 
   def subscribed_page_present?
-    response = false
-    current_user.fb_cred.fb_pages.each do |page|
-      if page.subscription_status
-        response = true
-      end
-    end
-    response
+    @user_fb_pages.subscribed.present?
   end
 
   def remove_integration
     response = {}
-    fb_pages = current_user.fb_pages
-    fb_cred = current_user.fb_cred
-    # for removing both page creds and actual fb account cred
-    page_fb_cred = FbCred.where(fb_id: fb_cred.fb_id)
-    # only one page should be subscribed to at a time, but just in case we have more than one
-    fb_pages.each do |page|
+    # oauth fb_cred of current user including page specific fb_cred
+    fb_creds = current_user.fb_creds
+    @user_fb_pages.each do |page|
       response = FacebookMessengerService.unsubscribe(page.page_access_token) if page.subscription_status
     end
     
-    if response['success'] || fb_pages.blank? || fb_cred.blank? || current_user.fb_pages.subscribed.empty?
-      page_fb_cred.destroy_all
-      fb_pages.destroy_all
+    # current_user.fb_pages.subscribed.empty? returns true when no page is subscribed
+    # in this case response['success'] || fb_pages.blank? returns false
+    if response['success'] || @user_fb_pages.blank? || @user_fb_pages.subscribed.empty?
+      fb_creds.destroy_all
       redirect_to user_path(current_user), flash: { notice: 'You have disconnected Facebook Messenger from Rhombus.' }
     else
       redirect_to user_path(current_user), flash: { error: 'Unable to disconnect your Facebook Messenger from Rhombus.' }
     end
   end
 
-  private 
+  private
+
+  def set_data
+    @user_fb_pages = current_user.fb_pages
+    @fb_cred = current_user.fb_creds.where(page_specific_id: nil)[0]
+  end
+
+  def set_page
+    @fb_page = FbPage.find params['select_page'].split.first
+  end
 
   def check_user_present
     if current_user.nil?
       redirect_to signin_path,  flash: { error: 'You are not Signed In' }
-    elsif current_user.fb_cred.nil?
+    elsif @fb_cred.nil?
       redirect_to user_path(current_user),  flash: { error: 'Your messenger account is not connected with Rhombus' }
     end
   end
 
   def update_page
     begin
-      page_array = FacebookMessengerService.get_page(current_user.fb_cred.auth_token)
-      stored_pages = current_user.fb_cred.fb_pages
-      remove_deleted_page(stored_pages, page_array)
+      auth_token = @fb_cred.auth_token
+      page_array = FacebookMessengerService.get_page(auth_token)
+      remove_deleted_page(page_array)
       page_array.each do |page|
-        unless stored_pages.find_by_page_id page['id']
-          FbPage.create(page_id: page['id'],
+        unless @user_fb_pages.find_by_page_id page['id']
+          FbPage.create(
+            page_id: page['id'],
             user_id: current_user.id,
             category: page['category'],
             page_access_token: page['access_token'],
             page_name: page['name'],
-            fb_cred_id: current_user.fb_cred.id)
+            fb_cred_id: @fb_cred.id
+          )
         end
       end
     rescue StandardError => e
     end
   end
 
-  def remove_deleted_page(stored_pages, page_array)
+  def remove_deleted_page( page_array)
     begin
       page_ids = []
       page_array.each{|p| page_ids << p['id']}
-      stored_pages.each do |page|
+      @user_fb_pages.each do |page|
         unless page_ids.include? page.page_id
           page.destroy
         end

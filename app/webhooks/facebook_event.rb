@@ -49,8 +49,8 @@
       recipient = params['messaging'][0]['recipient']
       sender_id = sender['id']
       recipient_id = recipient['id']
-      @uid = (current_page.page_id == sender_id)? recipient_id : sender_id
-      @conversation = Conversation.where(uid: @uid).first_or_initialize
+      uid = (current_page.page_id == sender_id)? recipient_id : sender_id
+      @conversation = Conversation.where(uid: uid).first_or_initialize
       update_conversation
     end
 

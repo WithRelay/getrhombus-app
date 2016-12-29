@@ -7,7 +7,7 @@
     <div class="page-header">
       <p>Connected to Facebook as
         <span style="color: blue"> 
-          <i class="fa fa-user"></i> <%= current_user.fb_cred.name %>
+          <i class="fa fa-user"></i> <%= @fb_cred.name %>
         </span>
       </p>
       
@@ -18,7 +18,7 @@
         <%= form_for :fb_page, url: user_update_fb_page_path(current_user), method: :patch do |f| %>
           <div class="dropdown">
             <%= select_tag 'select_page', options_for_select(@user_fb_pages.map{|p| ["#{p.page_name}", "#{p.id} #{p.subscription_status}"] }), class: "btn dropdown-toggle", prompt: 'Select a Facebook Page' %>
-            <%= f.submit '' , class: 'submit_page', param: "#{current_user.fb_cred.name}", data: { disable_with: "Please wait..." }, subscribed_page: "#{subscribed_page}" %>
+            <%= f.submit '' , class: 'submit_page', param: "#{current_user.fb_creds.first.name}", data: { disable_with: "Please wait..." }, subscribed_page: "#{subscribed_page}" %>
           </div>
 
           <br>

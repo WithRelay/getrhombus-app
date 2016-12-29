@@ -71,7 +71,7 @@ class User < ActiveRecord::Base
   has_many :coupons
 
   has_one :twitter_cred
-  has_one :fb_cred
+  has_many :fb_creds
 
   has_one :alert, dependent: :destroy
   has_many :fb_pages

@@ -6,7 +6,7 @@ class FbPage < ActiveRecord::Base
   scope :subscribed, -> { where(subscription_status: true) }
 
   def self.store_page(current_user)
-    page_array = FacebookMessengerService.get_page(current_user.fb_cred.auth_token)
+    page_array = FacebookMessengerService.get_page(current_user.fb_creds.pluck(:auth_token).first)
     page_array.each do |page|
       begin
         where(page_id: page["id"]).first_or_initialize.tap do |row|
@@ -15,7 +15,7 @@ class FbPage < ActiveRecord::Base
           row.category = page["category"]
           row.page_access_token = page["access_token"]
           row.page_name = page["name"]
-          row.fb_cred_id = current_user.fb_cred.id
+          row.fb_cred_id = current_user.fb_creds.first.id
           row.save
         end
       rescue StandardError => err
