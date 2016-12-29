@@ -3,7 +3,7 @@ https://www.getrhombus.com/receive_delivery_report
 
 - EVERYONE INDENT YOUR CODE PROPERLY 
 - every field is validated on submit and formvalidator submit the form...stop adding on submit event/function
-- dont create unnecessary routes unless rails doesnt have a restil route for it
+- dont create unnecessary routes unless rails doesnt have a restful route for it
 
 Bhishma
 - use id in html and not classes if possible...they are faster
@@ -35,10 +35,7 @@ surya
 - we need to use a static job scheduler that runs every 5 mins past the hour - so use cron not every...5 mins past the hour so we avoid minor clock differences on a server
 
 Ovo
-- list with default channels since we now need contacts to be grouped based on channels and merchant contacts
-- how do you know a segment is a default segment...should not be editable
 - add to list from user profile - http://rhombus-test.webflow.io/customer-profile
-- shouldn't be able to edit default segments
 
 Edwin
 - facebook integration page

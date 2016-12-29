@@ -105,7 +105,7 @@ class Plan < ActiveRecord::Base
   
   def create_plan_segment
     segment = DashboardMerchantQueries.get_plan_users(self.id)
-    List.create(name:self.name, user_id: self.merchant_id, segment: segment)
+    List.create(name:self.name, user_id: self.merchant_id, segment: segment, origin: 1)
   end
 
   def update_plan_segment
