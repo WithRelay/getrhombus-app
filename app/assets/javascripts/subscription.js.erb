@@ -53,6 +53,13 @@ $(document).ready(function () {
                 message: 'Please select a customer'
             }
           }
+        },
+        "subscription[quantity]": {
+          validators: {
+            notEmpty: {
+              message: 'Please enter a quantity'
+            }
+          }
         }
       }
     })

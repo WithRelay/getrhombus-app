@@ -105,7 +105,7 @@
     # Add new user from massenger to FbCred table
     def add_page_user(page_id, new_user)
       unless (FbCred.find_by_page_specific_id new_user).present?
-        FbCred.add_fb_user_from_massenger(page_id, new_user)
+        FbCred.add_fb_user_from_messenger(page_id, new_user)
       end
     end
 

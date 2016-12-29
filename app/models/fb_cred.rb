@@ -20,7 +20,7 @@ class FbCred < ActiveRecord::Base
     end
   end
 
-  def add_fb_user_from_massenger(page_id, new_user_id)
+  def add_fb_user_from_messenger(page_id, new_user_id)
     begin
       page_access_token = (FbPage.find page_id)['page_access_token']
       user_data = FacebookMessengerService.get_user_info(page_access_token, new_user_id)
