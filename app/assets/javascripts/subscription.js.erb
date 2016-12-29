@@ -64,13 +64,6 @@ $(document).ready(function () {
               }
             }
           }
-        },
-        "subscription[quantity]": {
-          validators: {
-            notEmpty: {
-              message: 'Please enter a quantity'
-            }
-          }
         }
     })
     .on('success.form.fv', function(e, data) {          
