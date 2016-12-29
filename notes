@@ -12,6 +12,8 @@ Bhishma
 	- using page_id alone can cause problems... - highlighted
 	- redo how messages are saved
 - Get Started Page
+- twitter integration...simple method to tweet - will supply current user and text to tweet
+- update subscription - coupon only
 
 surya
 - can I migrate my jobs?
@@ -28,14 +30,13 @@ Ovo
 - add to list from user profile - http://rhombus-test.webflow.io/customer-profile
 
 Edwin
-- facebook integration page
-- quantity default to 1...do we need to ask for quantity
 - compile list of links
-- create pages to show lists (with edit and delete links) of reminders and edit a reminder - no modal
 - generate page loader
 
 Taiwo (review)
+- review account/business/managed acct with surya and edwin
 - review remove_integration
+- will apply discount only affect future subscriptions?
 - review upgrading/downgrading subscription 
 - reread stripe managed accts for disabled reason and charges enabled
 - review stripe_events
@@ -81,7 +82,7 @@ http://rhombus-test.webflow.io/bank-account
 
 
 UI INTEGRATION
-1. Referrer Page - refer-a-business
+1. Referrer Page/Settings referrer page - refer-a-business
 	- tie in page to backend
 	- tie in logic for Get Started for Free
 2. Demo page - request-date
@@ -93,7 +94,8 @@ UI INTEGRATION
 5. Edit list page
     - implement adding users
 6. List campaign
-	- send campaign...should prefill campaign list 
+	- send campaign...should prefill campaign list
+7. Deactivate account...store info in popup
 
 
 
