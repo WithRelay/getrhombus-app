@@ -47,10 +47,21 @@ $(document).ready(function () {
             }
           }
         },
+        'subscription[quantity]' :{
+          validators: {
+            notEmpty: {
+              message: 'Quantity is required'
+            },
+            integer: {
+              message: 'The value is not an integer'
+            }
+          }
+        },
         'subscription[merchant_customer_id]':{
           validators: {
               notEmpty: {
                 message: 'Please select a customer'
+              }
             }
           }
         },
@@ -61,7 +72,6 @@ $(document).ready(function () {
             }
           }
         }
-      }
     })
     .on('success.form.fv', function(e, data) {          
       e.preventDefault();
@@ -167,39 +177,39 @@ $(document).ready(function () {
   $('.subscription-row').on('click', function(){
     subscriptionId = this.id.split('-')[1];
     appendSubscriptionInfo($(this).find('td'));
-    $('.submit-update-plan').removeClass("hidden");
+    $('#submit-update-plan').removeClass("hidden");
   });
 
   function appendSubscriptionInfo(subscriptionData){
-    $('.plan-div').empty(); 
-    $('.plan-div').append('Customer: ' + subscriptionData[0].innerHTML + '<br>');
-    $('.plan-div').append('Status: ' + subscriptionData[1].innerHTML + '<br>');
-    $('.plan-div').append('Plan: ' + subscriptionData[2].innerHTML + '<br>');
-    $('.plan-div').append('Coupon: ' + subscriptionData[3].innerHTML + '<br>');
-    $('.plan-div').append('Quantity: ' + subscriptionData[4].innerHTML + '<br>');
+    $('#plan-div').empty();
+    $('#plan-div').append('Customer: ' + subscriptionData[0].innerHTML + '<br>');
+    $('#plan-div').append('Status: ' + subscriptionData[1].innerHTML + '<br>');
+    $('#plan-div').append('Plan: ' + subscriptionData[2].innerHTML + '<br>');
+    $('#plan-div').append('Coupon: ' + subscriptionData[3].innerHTML + '<br>');
+    $('#plan-div').append('Quantity: ' + subscriptionData[4].innerHTML + '<br>');
   }
 
-  $('.upgrade-plan-selector').on('click', function(){
-    $('.submit-update-plan').val('Upgrade Plan');
-    $('.submit-update-plan').attr('class', 'btn btn-success submit-update-plan');
-    $('.update-plan-id').attr('value', '49');
+  $('#upgrade-plan-selector').on('click', function(){
+    $('#submit-update-plan').val('Upgrade Plan');
+    $('#submit-update-plan').attr('class', 'btn btn-success#submit-update-plan');
+    $('#update-plan-id').attr('value', '49');
   });
 
   $('.downgrade-plan-selector').on('click', function(){
-    $('.submit-update-plan').val('Downgrade Plan');
-    $('.submit-update-plan').attr('class', 'btn btn-danger submit-update-plan');
-    $('.update-plan-id').attr('value', '48');
+    $('#submit-update-plan').val('Downgrade Plan');
+    $('#submit-update-plan').attr('class', 'btn btn-danger#submit-update-plan');
+    $('#update-plan-id').attr('value', '48');
   });
 
 
-  $('.submit-update-plan').on('click',function(){
+  $('#submit-update-plan').on('click',function(){
     if (subscriptionId === 0){
       errorMsg = 'Please select subscription from table before upgrade/downgrade Plan'
       FlashHandler.setFlashMessage(errorMsg, 'error');
       return false
     } else {
       action = $('#plan-update-form').attr('action') + '/' + subscriptionId;
-      actionName = ($('.submit-update-plan').val() === 'Upgrade Plan') ? 'upgrade_subscription' : 'downgrade_subscription' 
+      actionName = ($('#submit-update-plan').val() === 'Upgrade Plan') ? 'upgrade_subscription' : 'downgrade_subscription' 
       action = action + '/' + actionName;
       $('#plan-update-form').attr('action', action);
       $('#plan-update-form').attr('href', action);
@@ -209,14 +219,14 @@ $(document).ready(function () {
 
 });
 
-$(document).on('click', '.cancel-subscription', function(evt) {
+$(document).on('click', '#cancel-subscription', function(evt) {
   var selector = '.' + evt.target.classList[evt.target.classList.length - 1];
   if (!$(selector).attr('isCancel')) {
     evt.stopImmediatePropagation();
     FlashHandler.setConfirmationDialog(selector, 'Cancel Subscription',
-      'Your subscription is going to cancelled',
+      'Your subscription is going to be cancelled',
       'isCancel'
     );
     return false;
   }
-});
+})
