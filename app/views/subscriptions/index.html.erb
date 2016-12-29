@@ -68,7 +68,7 @@
             <% if subscription.cancel_at_period_end %>
               <span class="label label-info">Cancel at period end</span>
             <% elsif subscription.status != 'canceled' %>
-              <%= link_to 'Cancel Subscription', user_subscription_path(current_user, subscription), method: :delete, class: "btn btn-danger cancel-subscription subscription#{subscription.id}", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i>Please wait...".html_safe } %>
+              <%= link_to 'Cancel Subscription', user_subscription_path(current_user, subscription), method: :delete, class: "btn btn-danger subscription#{subscription.id}", id: 'cancel-subscription', data: { disable_with: "<i class='fa fa-spinner fa-spin'></i>Please wait...".html_safe } %>
             <% end %>
           </td>
         </tr>
