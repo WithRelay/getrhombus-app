@@ -6,7 +6,6 @@ Bhishma
 	- Add logic for switching plans/subscriptions - does plan upgrade/downgrade work for any number of plans
 	- Subscription can be updated...but coupon only
 	- when subscription cancels, release rhombus number, wipe rhombus number, rn_type and delete facebook integration....set user is_active attribute to false
-
 - Messenger - don't touch this yet until we talk
 	- has_one :fb_cred??? - highlighted
 	- using page_id alone can cause problems... - highlighted
