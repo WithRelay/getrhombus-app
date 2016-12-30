@@ -3,7 +3,7 @@
    
   <% @plans.each do |plan| %>
     <tr>
-      <td colspan="3"><%= plan.name %></td>
+      <td colspan="3"><span data-editable><%= plan.name %></span></td>
       <!-- show amount like $12.33, $10.00 -->
       <td colspan="3"><%= present(plan).format_amount %></td>
       <td colspan="3"><%= plan.interval %></td>
