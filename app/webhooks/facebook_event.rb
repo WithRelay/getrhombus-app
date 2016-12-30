@@ -7,16 +7,17 @@
       if params['hub.mode'].present? #for verify webhook
         verify_webhook
       else #after verification for messenger event
-        required_params = params['entry'].last
-        event = required_params['messaging'].last
+        @required_params = params['entry'].last
+        event = @required_params['messaging'].last
         read_event = event['read']
         message_event = event['message']
-        create_conversation(required_params)
-        if read_event.present?
+        # creates new conversation if not exists
+        create_conversation
+
+        if message_event.present?
+          receive_message(event)
+        elsif read_event.present?
           set_message_unread(event)
-        elsif message_event.present?
-          receive_message(required_params['id'], event)
-        else
         end
       end
     end
@@ -41,12 +42,11 @@
       {}
     end
 
-    def create_conversation(params)
-      current_page = FbPage.find_by_page_id params['id']
+    def create_conversation
       merchant = current_page.fb_cred.user
       @merchant_id = merchant.id
-      sender = params['messaging'][0]['sender']
-      recipient = params['messaging'][0]['recipient']
+      sender = @required_params['messaging'][0]['sender']
+      recipient = @required_params['messaging'][0]['recipient']
       sender_id = sender['id']
       recipient_id = recipient['id']
       uid = (current_page.page_id == sender_id)? recipient_id : sender_id
@@ -62,7 +62,7 @@
       )
     end
 
-    def receive_message(page_id, params)
+    def receive_message(params)
       begin
         message = params['message']
         @attachments = message['attachments']
@@ -73,10 +73,9 @@
         message_id =  message['mid']
         message_from = params['sender']['id']
         message_to = params['recipient']['id']
-        current_page = FbPage.find_by_page_id page_id
         fb_page_id = current_page.id
-        new_user_id = (page_id == message_to)? message_from : message_to
-        add_page_user(fb_page_id, new_user_id)
+        new_user_id = (current_page.page_id == message_to)? message_from : message_to
+        add_page_user(current_page, new_user_id)
 
         @fb_message = @conversation.fb_messages.create(text: text, seq: seq,
           time_stamp: timestamp, unread: false, message_id: message_id,
@@ -103,14 +102,14 @@
     end
         
     # Add new user from massenger to FbCred table
-    def add_page_user(page_id, new_user)
+    def add_page_user(page, new_user)
       unless (FbCred.find_by_page_specific_id new_user).present?
-        FbCred.add_fb_user_from_messenger(page_id, new_user)
+        FbCred.add_fb_user_from_messenger(page, new_user)
       end
     end
 
     def save_attachments
-      invalid_file, valid_file = false
+      invalid_file = false; valid_file = false
       @attachments.each do |a|
         url = a['payload']['url']
         file_extension = File.extname(URI.parse(url).path).downcase
@@ -149,6 +148,10 @@
       page_access_token = page.page_access_token
       text = "Sorry #{user_name}, currently we only support image file attachments"
       FacebookMessengerService.send_text_message(page_access_token, to, text)
+    end
+
+    def current_page
+      FbPage.find_by_page_id @required_params['id']
     end
 
   end

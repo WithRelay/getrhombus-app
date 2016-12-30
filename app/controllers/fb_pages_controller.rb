@@ -74,8 +74,7 @@ class FbPagesController < ApplicationController
     # current_user.fb_pages.subscribed.empty? returns true when no page is subscribed
     # in this case response['success'] || fb_pages.blank? returns false
     if response['success'] || @user_fb_pages.blank? || subscribed_page.empty?
-      fb_creds.destroy_all
-      # wipe everythiing just to be sure
+      # wipe everythiing (fb_creds, fb_pages and messages) related to the current_user
       current_user.fb_creds.destroy_all             # oauth fb_cred of current user including page specific fb_creds
       redirect_to user_path(current_user), flash: { notice: 'You have disconnected Facebook Messenger from Rhombus.' }
     else
