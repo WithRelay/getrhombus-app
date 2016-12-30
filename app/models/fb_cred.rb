@@ -20,9 +20,9 @@ class FbCred < ActiveRecord::Base
     end
   end
 
-  def add_fb_user_from_messenger(page_id, new_user_id)
+  def self.add_fb_user_from_messenger(fb_page, new_user_id)
     begin
-      page_access_token = (FbPage.find page_id)['page_access_token']
+      page_access_token = fb_page.page_access_token
       user_data = FacebookMessengerService.get_user_info(page_access_token, new_user_id)
       full_name = user_data['first_name'] + ' ' + user_data['last_name']
       url = user_data['profile_pic']
@@ -54,7 +54,7 @@ class FbCred < ActiveRecord::Base
   private
   
   # extract user identifier from profile picture
-  def extract_profile_pic_identifier(pic_url)
+  def self.extract_profile_pic_identifier(pic_url)
     url = pic_url.match(/^.+\/[\w:]+\.(jpe?g|png|gif)/i).to_a.first
     name = url.split('/').last
     name_array = name.split('_')
@@ -65,7 +65,7 @@ class FbCred < ActiveRecord::Base
   end
 
   #link facebook page specific user to Merchant
-  def link_page_specific_user(pic_url)
+  def self.link_page_specific_user(pic_url)
     response = {}
     user_identifier = extract_profile_pic_identifier(pic_url)
     all_user_fb_cred = FbCred.where.not('user_id' => nil)
