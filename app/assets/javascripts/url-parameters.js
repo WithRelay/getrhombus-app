@@ -10,7 +10,7 @@ var PageParameter = new function() {
       params = params.split('&');
       for (var i = 0, l = params.length; i < l; i++) {
         param_str = params[i].split('=');
-        page_params[param_str[0]] = param_str[1];
+        page_params[param_str[0]] = decodeURIComponent(param_str[1]);
       }
     }
   }
