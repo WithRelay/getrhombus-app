@@ -8,6 +8,8 @@ class Plan < ActiveRecord::Base
   validates :name, uniqueness: { case_sensitive: false, scope: :merchant_id }
   validates_numericality_of :amount, :interval_count, greater_than: 0, only_integer: true
 
+  after_commit :create_plan_segment
+
   def create_plan(hash)
     begin
       res = []
@@ -102,7 +104,8 @@ class Plan < ActiveRecord::Base
   end
 
   private
-  
+  # Creates a plan segment
+  # This is called after a new plan is created.
   def create_plan_segment
     segment = DashboardMerchantQueries.get_plan_users(self.id)
     List.create(name:self.name, user_id: self.merchant_id, segment: segment, origin: 1)

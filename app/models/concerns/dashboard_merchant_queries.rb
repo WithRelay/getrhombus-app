@@ -219,12 +219,14 @@ module DashboardMerchantQueries
 	def DashboardMerchantQueries.get_plan_users(plan_id)
 		query = "SELECT u.id AS user_id, u.email AS email, " \
 		 		"u.first_name, u.last_name " \
-				"FROM subscriptions s " \
-				"INNER JOIN merchant_customers m " \
-				"ON (m.merchant_id = :id) " \
+				"FROM merchant_customers m " \
 				"INNER JOIN users u " \
-				"ON (u.id = m.customer_id) " \
-				"WHERE p.=== = #{plan_id} " 
+				"ON (u.id = m.customer_id) "\
+				"WHERE m.customer_id IN ( "  \
+					"SELECT s.merchant_customer_id " \
+					"FROM subscriptions s " \
+					"where s.plan_id = #{plan_id} " \
+					") "
 		return query
 	end
 
