@@ -1,5 +1,5 @@
 class PlansController < ApplicationController
-  before_action :set_plan, only: [:show, :edit, :update, :destroy]
+  before_action :set_plan, only: [:show, :destroy]
   respond_to :html, :js
 
   def index
@@ -15,18 +15,6 @@ class PlansController < ApplicationController
 
   def show
     respond_with(@plan)
-  end
-
-  def edit
-  end
-
-  def update
-    if @plan.update_plan(plan_params, current_user)
-      redirect_to user_plans_path, flash: { notice: 'Plan was updated' }
-    else
-      flash[:error] = "We couldn't update the plan"
-      redirect_to edit_user_plan_path
-    end
   end
 
   def destroy
@@ -45,11 +33,6 @@ class PlansController < ApplicationController
   private
     def set_plan
       @plan = Plan.find(params[:id])
-    end
-
-    # for edit only. Create uses the api
-    def plan_params
-      params.require(:plan).permit(:name)
     end
 
 end

@@ -1,4 +1,5 @@
 class Api::V1::PlansController < API::V1::BaseController
+  before_action :set_plan, only: [:update]
 
   def check_plan_name
     res = current_user.merchant_plans.where("lower(name) = ?", params[:plan][:name].downcase)
@@ -36,16 +37,40 @@ class Api::V1::PlansController < API::V1::BaseController
     render json: { response: response }, status: status
   end
 
+  def update
+    begin
+      status = 500
+      if @plan.update_plan(plan_update_params, current_user)
+        response = 'Plan created successfully'
+        status = 200
+      else
+        response = @plan.errors.messages.present? ? @plan.errors.full_messages : "We couldn't update the plan"
+      end
+    rescue StandardError => e
+      response = 'Something went wrong on our end.'
+    end
+    render json: { response: response }, status: status
+  end
+
   private
 
-  def plan_params
-    params.require(:plan).permit(:interval, :name, :amount, :trial_period_days).tap{ |plan|
-      # round - deal with inaccurate floating point math. see 100 * 1.1
-      plan[:amount] = (100 * plan[:amount].to_f).round if plan[:amount].present?
-      interval_ary = plan[:interval].split("_")
-      plan[:interval] = interval_ary[0]
-      plan[:interval_count] = interval_ary[1]
-    }
-  end
+    def set_plan
+      @plan = Plan.find(params[:id])
+    end
+
+    # for edit only. Create uses the api
+    def plan_update_params
+      params.require(:plan).permit(:name)
+    end
+
+    def plan_params
+      params.require(:plan).permit(:interval, :name, :amount, :trial_period_days).tap{ |plan|
+        # round - deal with inaccurate floating point math. see 100 * 1.1
+        plan[:amount] = (100 * plan[:amount].to_f).round if plan[:amount].present?
+        interval_ary = plan[:interval].split("_")
+        plan[:interval] = interval_ary[0]
+        plan[:interval_count] = interval_ary[1]
+      }
+    end
 
 end

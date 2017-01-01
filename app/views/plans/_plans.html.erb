@@ -3,7 +3,15 @@
    
   <% @plans.each do |plan| %>
     <tr>
-      <td colspan="3"><span data-editable><%= plan.name %></span></td>
+      <td colspan="3">
+        <span class='plan-name'><%= plan.name %></span>
+        <span style="margin-left: 120px;" class="plan-name-edit-span">
+          <img src="<%= asset_path 'poweredbyR.jpg' %>" class="plan-name-edit-icon" style="width: 100px;">
+        </span>
+        <span style="margin-left: 120px;" class='hide plan-name-save-span' data-plan-id='<%= plan.id %>'>
+          <img src="<%= asset_path 'About Icon.png' %>" class="plan-name-save-icon" style="width: 40px;">
+        </span>
+      </td>
       <!-- show amount like $12.33, $10.00 -->
       <td colspan="3"><%= present(plan).format_amount %></td>
       <td colspan="3"><%= plan.interval %></td>
@@ -11,7 +19,6 @@
       <!--
       <td><%#= link_to 'Show', user_plan_path(current_user, plan) %></td>
       -->
-      <td><%= link_to 'Update', edit_user_plan_path(current_user, plan), class: 'btn btn-info' , data: { disable_with: "<i class='fa fa-spinner fa-spin'></i>".html_safe }%></td>
       <td>
         <% if plan.subscription_id.blank? %>
           <%= link_to 'Delete Plan', user_plan_path(current_user, plan), method: :delete, class: "btn btn-danger delete-plan plan#{plan.id}", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i>Please wait...".html_safe } %>

@@ -68,7 +68,7 @@ Rails.application.routes.draw  do
       end
     end
 
-    resources :plans, only: [:index, :edit, :update, :destroy]
+    resources :plans, only: [:index, :destroy]
     resources :alerts, only: [:update]
     resources :saved_replies
     resources :bank_accounts
@@ -137,7 +137,7 @@ Rails.application.routes.draw  do
     match 'coupons/check_coupon_name' => 'coupons#check_coupon_name', via: :post   
     resources :coupons, only: [:index] 
     match 'plans/check_plan_name' => 'plans#check_plan_name', via: :post
-    resources :plans, only: [:index, :create]
+    resources :plans, only: [:index, :create, :update]
     resources :subscriptions, only: [:create]
     match 'merchant/customers' => 'merchant_customers#customers', via: :get
   end

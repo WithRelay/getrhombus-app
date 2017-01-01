@@ -71,7 +71,7 @@ class Plan < ActiveRecord::Base
       self.name = hash[:name]
       self.statement_descriptor = new_descriptor
       return false if !self.save
-
+      
       hash[:statement_descriptor] = new_descriptor
       res = PaymentService.update_plan(self.id, hash, team.get_team_uid, team.is_platform?)
 

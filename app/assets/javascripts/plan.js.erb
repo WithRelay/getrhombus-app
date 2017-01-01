@@ -1,6 +1,9 @@
 $(document).ready(function() {
   // additional plan code in hashtags_plans_coupons_alerts js file
 
+  var current_plan_name, save_icon_parent, 
+      save_icon_grandparent, plan_name_input;
+
   // validate plan form
   $('#planForm')
     .formValidation({
@@ -68,31 +71,65 @@ $(document).ready(function() {
       .always(function(data, textStatus, response) {
         $('#create-plan').attr("disabled", false).val("Create Plan");
       });
-  }
-
+  };
 
   /**
     We're defining the event on the `body` element, because we know the `body` is not going away.
     Second argument makes sure the callback only fires when the `click` event happens only on elements marked as `data-editable`
   */
-  $('body').on('click', '[data-editable]', function(){
-    
-    var $el = $(this);                
-    var $input = $('<input/>').val( $el.text() );
+  $('body').on('click', '.plan-name-edit-icon', function() {
+    var parent = $(this).parent();
+    parent.addClass('hide');
+    parent = parent.parent(); 
+    parent.find(".plan-name-save-span").removeClass('hide');
+
+    var $el = parent.find('.plan-name');
+    current_plan_name = $el.text();
+    var $input = $('<input class="plan-name" />').val( current_plan_name );
     $el.replaceWith( $input );
-    
-    var revert_to_text = function() {
-      var $span = $('<span data-editable />').text( $input.val() );
-      $input.replaceWith( $span );
-    };
-    
-    /**
-      We're defining the callback with `one`, because we know that the element will be gone just after that, and we don't want 
-      any callbacks leftovers take memory. Next time `span` turns into `input` this single callback will be applied again.
-    */
-    $input.one('blur', revert_to_text).focus();
-    
+    $input.focus();        
   });
+
+  $('body').on('click', '.plan-name-save-icon', function() {
+    save_icon_parent = $(this).parent();
+    save_icon_grandparent = save_icon_parent.parent();
+    plan_name_input = save_icon_grandparent.find('.plan-name');
+
+    if (current_plan_name == plan_name_input.val()) {
+      revert_to_text();
+    } else {
+      this.disabled = true;
+      updatePlanName(this);
+    }
+  });
+
+  function revert_to_text() {
+    save_icon_parent.addClass('hide');
+    save_icon_grandparent.find(".plan-name-edit-span").removeClass('hide');
+    var $span = $('<span class="plan-name" />').text( plan_name_input.val() );
+    plan_name_input.replaceWith( $span );
+  }
+
+  function updatePlanName(plan_save_icon) {
+    $.ajax({
+      url: "/v1/plans/" + save_icon_parent.data('plan-id') + ".json",
+      beforeSend: function(xhr) { xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content')); },
+      type: "PATCH",
+      data: { plan: { name: plan_name_input.val() }} ,
+      dataType: "json"
+    })
+      .done(function(data, textStatus, jqXHR) {
+        FlashHandler.setFlashMessage(data.response, 'notice');
+        revert_to_text();
+      })
+      .fail(function(data, textStatus, errorThrown) {
+        FlashHandler.setFlashMessage(JSON.parse(data.responseText).response, 'error');
+      })
+      .always(function(data, textStatus, response) {
+        plan_save_icon.disabled = false;
+      });
+  };
+
 
 });
 
