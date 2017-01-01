@@ -226,7 +226,7 @@ module DashboardMerchantQueries
 					"SELECT s.merchant_customer_id " \
 					"FROM subscriptions s " \
 					"where s.plan_id = #{plan_id} " \
-					") " \
+					") "
 		return query
 	end
 
