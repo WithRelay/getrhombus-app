@@ -90,7 +90,7 @@ class FbPagesController < ApplicationController
       redirect_to signin_path,  flash: { error: 'You are not Signed In' }
     else 
       @user_fb_pages = current_user.fb_pages
-      @fb_cred = current_user.fb_creds.where(page_specific_id: nil)[0]
+      @fb_cred = current_user.fb_creds.original_cred.first
     end    
   end
 

@@ -1,7 +1,7 @@
 class FbCred < ActiveRecord::Base
 
   belongs_to :user
-  has_many :fb_pages, dependent: :destroy
+  scope :original_cred, -> { where.not(auth_token: nil) }
 
   def self.from_omniauth(auth, id)
     begin
@@ -52,7 +52,21 @@ class FbCred < ActiveRecord::Base
   end
 
   private
-  
+
+  #link facebook page specific user to Merchant
+  def self.link_page_specific_user(pic_url)
+    response = {}
+    user_identifier = extract_profile_pic_identifier(pic_url)
+    all_user_fb_cred = FbCred.where.not(fb_id: nil)
+                                        .where(page_specific_id: nil)
+    all_user_fb_cred.each do |cred|
+      if extract_profile_pic_identifier(cred.profile_pic_url) == user_identifier
+        response = { fb_id: cred.fb_id, email: cred.email, user_id: cred.user_id }
+      end      
+    end  
+    response   
+  end
+
   # extract user identifier from profile picture
   def self.extract_profile_pic_identifier(pic_url)
     url = pic_url.match(/^.+\/[\w:]+\.(jpe?g|png|gif)/i).to_a.first
@@ -62,19 +76,6 @@ class FbCred < ActiveRecord::Base
     name_array.pop
     pic_identifier = name_array.join('_')
     pic_identifier
-  end
-
-  #link facebook page specific user to Merchant
-  def self.link_page_specific_user(pic_url)
-    response = {}
-    user_identifier = extract_profile_pic_identifier(pic_url)
-    all_user_fb_cred = FbCred.where.not('user_id' => nil)
-    all_user_fb_cred.each do |cred|
-      if extract_profile_pic_identifier(cred.profile_pic_url) == user_identifier
-        response = { fb_id: cred.fb_id, email: cred.email, user_id: cred.user_id }
-      end      
-    end  
-    response   
   end
 
 end

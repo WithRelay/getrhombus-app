@@ -43,7 +43,7 @@
     end
 
     def create_conversation
-      merchant = current_page.fb_cred.user
+      merchant = current_page.user
       @merchant_id = merchant.id
       sender = @required_params['messaging'][0]['sender']
       recipient = @required_params['messaging'][0]['recipient']
