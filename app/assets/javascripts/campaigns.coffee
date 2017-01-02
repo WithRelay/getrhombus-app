@@ -49,6 +49,7 @@ class Campaign
   showHideEditor: (element)->
     if isEmailChecked(element)
       $('.emailSubject').show()
+      $('#campaign_channel').show()
       this.showFileBrowser()
       trumbowygSetting(true, @textArea)
       removeDiv()
@@ -156,17 +157,21 @@ $( document ).on 'ready page:load', ->
 
   if $('#campaign_channel').val() == '3'
     $('.emailSubject').show()
+    $('#sendTestCampaign').show();
     new CustomTrumbowygPlugin('#trumbowyg')
     campaign.showFileBrowser()
   else if $('#campaign_channel').val() == '1'
+    $('#sendTestCampaign').hide();
     campaign.showFileBrowser()
     $('.emailSubject').hide()
     campaign.textAreaEmojis()
   else if $('#campaign_channel').val() == '2'
+    $('#sendTestCampaign').hide();
     $('.emailSubject').hide()
     campaign.showFileBrowser()
     campaign.textAreaEmojis()
   else
+    $('#sendTestCampaign').hide();
     campaign.textAreaEmojis()
     campaign.hideFileBrowser()
     $('.emailSubject').hide()
