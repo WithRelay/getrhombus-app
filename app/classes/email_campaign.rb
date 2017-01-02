@@ -11,12 +11,15 @@ class EmailCampaign
   end
 
   private
-
   # returns array of user email list eg: [{ email: '<redacted_email>' }, { email: '<redacted_email>' }]
   def user_email_list
     email_list = []
-    @campaign.lists.each do |list|
-      list.get_users.each{ |customer| email_list.push({ email: customer[:user].email }) }
+    unless @campaign.test?
+      @campaign.lists.each do |list|
+        list.get_users.each{ |customer| email_list.push({ email: customer[:user].email }) }
+      end
+    else
+      email_list.push({ email: @campaign.user.email })
     end
     email_list
   end
