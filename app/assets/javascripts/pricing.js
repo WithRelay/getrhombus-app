@@ -2,17 +2,18 @@ $(document).ready(function () {
   var pricingSlider = document.getElementById('pricing-range'),
          priceValueSpan = document.getElementById('price-value'),
          range_all_sliders = {
-                                                  'min': 0,
-                                                  '10%': 100,
-                                                  '25%': 1000,
-                                                  '50%': 5000,
-                                                  'max': 10000
-                                                };
+          'min': [0],
+          '25%': [100],
+          '50%': [1000],
+          '75%': [5000],
+          'max': [10000]
+        };
 
   noUiSlider.create(pricingSlider, {
     start: [0],
     connect: [true, false],
-    orientation: 'horizontal',
+    orientation: 'vertical',
+    direction: 'rtl',
     step: 100,
     range: range_all_sliders
   });
@@ -36,4 +37,5 @@ $(document).ready(function () {
       return ['free_plan', 'Free Plan for $0/month']
     }
   }
-})
+
+});
