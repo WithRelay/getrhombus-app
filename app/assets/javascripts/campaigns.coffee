@@ -49,7 +49,7 @@ class Campaign
   showHideEditor: (element)->
     if isEmailChecked(element)
       $('.emailSubject').show()
-      $('#campaign_channel').show()
+      $('#sendTestCampaign').show()
       this.showFileBrowser()
       trumbowygSetting(true, @textArea)
       removeDiv()
