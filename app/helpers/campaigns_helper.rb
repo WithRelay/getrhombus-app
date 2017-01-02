@@ -1,14 +1,19 @@
 module CampaignsHelper
 
-  def channel_list(campaign)
+  def channel_list(campaign, list)
     # Switching between channels is probably dangerous for persisted campaigns
     # Ex: Email content can't become sms
+    campaign_channel = campaign.channel=='facebook_messenger' ? 'Facebook Messenger' : campaign.channel
     if campaign.persisted?
-      { campaign.channel => get_channel_enum_value(campaign) }
+      { campaign_channel => get_channel_enum_value(campaign.channel) }
+    elsif list.present? && campaign.invalid?
+      list_channel = list[0].channel=='messenger' ? 'facebook_messenger' : list[0].channel
+      { campaign_channel => get_channel_enum_value(list_channel) }
     else
-      channel_list = { SMS: 0, MMS: 1, Email: 3 }
+      channel_list = { SMS: 0, MMS: 1, Email: 3, 'Facebook Messenger' => 2 }
       # if fb page subscription is not present mms channel will be not visible
-      current_user.fb_pages.subscribed.present? ? channel_list.merge({'Facebook Messenger' => 2}) : channel_list
+      channel_list.delete('Facebook Messenger') if current_user.fb_pages.subscribed.present?
+      channel_list
     end
   end
 
@@ -17,8 +22,8 @@ module CampaignsHelper
   end
 
   # enums normally return keys. we need the value for the dropdown
-  def get_channel_enum_value(campaign)
-    Campaign.channels[campaign.channel]
+  def get_channel_enum_value(channel)
+    Campaign.channels[channel]
   end
 
   def is_one_time_checked?(campaign)
