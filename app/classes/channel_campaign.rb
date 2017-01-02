@@ -11,7 +11,7 @@ module ChannelCampaign
       # declare constant with a string eg: string EmailCampaign will act like contant EmailCampaign
       channel_class = channel_mapper[@campaign.channel].constantize
       # all channels classes like messenger_campaign, mobile_campaign, email_campaign
-      # has a common method send campaign which send campaign to a group of users
+      # and has a common method send campaign which send campaign to a group of users
       send_campaign = channel_class.new(@campaign).send_campaign
       retry_other_channel(send_campaign) unless @campaign.test?
     end
