@@ -13,15 +13,15 @@ module ChannelCampaign
       # all channels classes like messenger_campaign, mobile_campaign, email_campaign
       # and has a common method send campaign which send campaign to a group of users
       send_campaign = channel_class.new(@campaign).send_campaign
-      retry_other_channel(send_campaign) unless @campaign.test?
+      retry_other_channel(channel_class, send_campaign) unless @campaign.test?
     end
 
     private
 
-    def retry_other_channel(send_campaign)
-      unless channel_class != MessengerCampaign && send_campaign
-        unless MobileCampaign.new(@campaign).send_campaign
-          update_campaign if EmailCampaign.new(@campaign).send_campaign
+    def retry_other_channel(campaign_channel, failure_user_list)
+      unless campaign_channel != MessengerCampaign && failure_user_list.present?
+        unless MobileCampaign.new(@campaign, failure_user_list).send_failure
+          update_campaign if EmailCampaign.new(@campaign, failure_user_list).send_failure
         else
           update_campaign
         end
