@@ -9,7 +9,7 @@ class Api::V1::CampaignsController < API::V1::BaseController
   def send_test_email
     job_params = { user_id: current_user.id, campaign_params: campaign_params, image_params: image_params }
     SendNowCampaignJob.perform_now(job_params)
-    render json: { response: "Deleted" }, status: 200
+    render json: { status: 200, notice: "Email Send" }
   end
 
   # Check uniqueness of campaign name from remote post request from campaign_form_validator.js
