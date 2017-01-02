@@ -13,7 +13,7 @@ class Campaign < ActiveRecord::Base
   enum channel: { sms: 0, mms: 1, facebook_messenger: 2, email: 3 }
   enum campaign_type: { promo_campaign: 0, reminder_campaign: 1 }
   enum frequency_type: { one_time: 0, recurring: 1 }
-  enum status: { active: 1, paused: 2, inactive: 3 }
+  enum status: { active: 1, paused: 2, inactive: 3, test: 4 }
   # validation of campaign attributes
   validates_presence_of :name, :list_name, unless: lambda { reminder_campaign? }
   validates_presence_of :text
@@ -69,7 +69,7 @@ class Campaign < ActiveRecord::Base
     # rescue enqueue_at_with_queue accepts four parametera 1 name of queue, 2 date_time(provided as utc)
     # 3 class name 4 the parameter send for class method perform
     Resque.enqueue_at_with_queue('one_time_campaign', date_time.utc, OneTimeCampaignJob, id) if is_campaign_date_selected? || is_today_campaign?
-    SendNowCampaignJob.perform_now(self) if deliver_now?
+    SendNowCampaignJob.perform_now({ campaign_id: self.id }) if deliver_now?
   end
 
   private
