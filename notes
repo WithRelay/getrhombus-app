@@ -3,9 +3,10 @@ https://www.getrhombus.com/receive_delivery_report
 
 Bhishma
 - Plans/Subscriptions
-	- Add logic for switching plans/subscriptions - does plan upgrade/downgrade work for any number of plans
+	- Add logic for switching plans/subscriptions
 	- Subscription can be updated...but coupon only
 	- when subscription cancels, release rhombus number, wipe rhombus number, rn_type and delete facebook integration....set user is_active attribute to false
+	- make slider vertical
 - Messenger - don't touch this yet until we talk
 	- has_one :fb_cred??? - highlighted
 	- using page_id alone can cause problems... - highlighted
@@ -24,20 +25,18 @@ Bhishma
 
 
 surya
-- do we always have due_by in stripe managed account hash...we need that to be updated too whenever stripe sends an account event
-- can I migrate my jobs? - dont worry about this since we dont havve any dynamic jobs
+- do we always have due_by, transfers_enabled in stripe managed account hash...we need that to be updated too whenever stripe sends an account event - maybe just resave every field we store anyway
 - Campaigns
 	- Implement SMS/MMS channel. They are ready. mms testing left
-	- default to sms...then default to email
-	- lists with default channels
+	- default to sms...then default to email - done
+	- lists with default channels - done
 	- send test to myself for email
-	- restrict campaign list to 1 campaign...if list has default channel...rebuild dropdown
+	- restrict campaign list to 1 campaign...if list has default channel...rebuild dropdown - done - i need to test
 	- only 1 image under 4.5mb is attachable...still keep inline image logic for email
-	- messenger option in dropdown for reminders and campaigns only if you have a subcribed page
-	- for default channel...if customer messenger isnt available...fail silently and move on
+	- When user select messenger option and doesnt have a subcribed page, show alert that campaign wont run unless they select a page
+	- for default channel...if customer messenger isnt available...fail silently and move on - dont remember
 	- for default channel, if merchant doesnt have subscribed page, just move on. (merchant can remove facebook integration after creating campaign)
 	- review messenger campaign
-- we need to use a static job scheduler that runs every 5 mins past the hour - so use cron not every...5 mins past the hour so we avoid minor clock differences on a server - 5 * * * * *
 
 Ovo
 - add to list from user profile - http://rhombus-test.webflow.io/customer-profile
