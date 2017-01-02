@@ -8,8 +8,11 @@ class Api::V1::CampaignsController < API::V1::BaseController
 
   def send_test_email
     job_params = { user_id: current_user.id, campaign_params: campaign_params, image_params: image_params }
-    SendNowCampaignJob.perform_now(job_params)
-    render json: { status: 200, notice: "Email Send" }
+    # we can send object to active jobs but it is good not to send complex object to active jobs
+    # http://chriskottom.com/blog/2015/11/bulletproof-rails-background-jobs/
+    send_email = SendNowCampaignJob.perform_now(job_params)
+    json_msg = send_email ? { notice: 'Email Send' } : { error: 'Sorry email could not send' }
+    render json: { status: 200 }.merge(json_msg)
   end
 
   # Check uniqueness of campaign name from remote post request from campaign_form_validator.js
