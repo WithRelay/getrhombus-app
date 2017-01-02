@@ -11,19 +11,20 @@
     }
   </style>
 
-  <%= render 'shared/static_pages_header' %>
+  <%#= render 'shared/static_pages_header' %>
 
   <%#= render 'shared/full_messages' %>
 
 
- <div class="w-section banner inner _4 pricing-hero" id="top" data-ix="show-social-and-nav">
+  <!-- <div class="w-section banner inner _4 pricing-hero" id="top" data-ix="show-social-and-nav">
     <div class="w-container">
       <div class="div-center" data-ix="show-navigation">
         <h1 class="h-inner" data-ix="h-inner"><span class="white-1 about-hero-text">Simple pricing</span></h1>
       </div>
       <div class="sub-inner contact-subtext" data-ix="h-inner-2">Free 14-day trial. No credit card required.</div>
     </div>
-  </div>
+  </div> -->
+
   <div class="w-section section pricing-section-1">
     <div class="w-container">
       <div class="tittle-wrapper pricing-icon"><img src="<%= asset_path 'Pricing.png' %>">
@@ -35,6 +36,13 @@
             <li>Free Rhombus number –&nbsp;Email &amp; SMS&nbsp;receipts –&nbsp;Email &amp; Phone support</li>
           </ul>
         </div>
+      </div>
+      <!-- Relay Pricing Packages/Plan -->
+      <div id="pricing-range">
+      </div>
+      <span id="price-value"></span>
+      <div>
+        <a class="button pricing-button customer-text-me" href="/signup" id="select_plan" >Sign up</a>
       </div>
       <div class="w-row pricing-table">
         <div class="w-col w-col-3 pricing-columns pricing-first-column">
