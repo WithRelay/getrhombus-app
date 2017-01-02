@@ -13,6 +13,12 @@ module ChannelCampaign
       # all channels classes like messenger_campaign, mobile_campaign, email_campaign
       # has a common method send campaign which send campaign to a group of users
       send_campaign = channel_class.new(@campaign).send_campaign
+      retry_other_channel(send_campaign) unless @campaign.test?
+    end
+
+    private
+
+    def retry_other_channel(send_campaign)
       unless channel_class != MessengerCampaign && send_campaign
         unless MobileCampaign.new(@campaign).send_campaign
           update_campaign if EmailCampaign.new(@campaign).send_campaign
@@ -23,8 +29,6 @@ module ChannelCampaign
         update_campaign
       end
     end
-
-    private
 
     # returns array of user_id list hash eg: [{ user_id: 1 }, { user_id: 2 }]
     def get_user_id
