@@ -1,4 +1,5 @@
 $(document).on('ready page:load', function() {
+  var htmlContent = $('#campaign_channel').html()
   $('#new_campaign').formValidation({
     framework: 'bootstrap',
     excluded: ':disabled',
@@ -54,7 +55,9 @@ $(document).on('ready page:load', function() {
         }
       }
     }
-  });
+  }).on('success.form.fv', function(e, data) {
+      alert('s');
+    });
 
   $("#trumbowyg").on('change', function(e) {
     $('#new_campaign').formValidation('resetField', 'campaign[text]');
@@ -127,7 +130,6 @@ $(document).on('ready page:load', function() {
   }
 
   function createDynamicDropdown(list_name=''){
-    var htmlContent = '<option value="0">SMS</option><option value="1">MMS</option> <option value="2">Facebook Messenger</option><option value="3">Email</option></select>'
     if (list_name.length > 0){
       var dropDownOption = { 'sms': [ '0', 'SMS'], 'messenger': ['2', 'Facebook Messenger'], 'email': ['3', 'Email'] };
       var listOption = dropDownOption[list_name[0].channel];
@@ -138,8 +140,7 @@ $(document).on('ready page:load', function() {
     }else{
       return $('#campaign_channel').html(htmlContent);
     }
-
-
+    $('#campaign_channel').change();
   }
 
   // prefill form with previous lists
