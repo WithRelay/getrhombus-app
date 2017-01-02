@@ -56,8 +56,21 @@ $(document).on('ready page:load', function() {
       }
     }
   }).on('success.form.fv', function(e, data) {
-      alert('s');
+      if ($( '#sendTestCampaign' ).attr('active')){
+        e.preventDefault();
+        this.action = window.location.origin + '/v1/campaigns/send_test_email'
+        remoteCall = new RemoteCall(this);
+        remoteCall.ajax();
+        $('#sendTestCampaign').removeAttr('active');
+      }
     });
+
+  $( '#sendTestCampaign' ).click(function(e){
+    e.preventDefault();
+    $(this).attr('active', 'true')
+    $( 'form#new_campaign' ).submit();
+  });
+
 
   $("#trumbowyg").on('change', function(e) {
     $('#new_campaign').formValidation('resetField', 'campaign[text]');
