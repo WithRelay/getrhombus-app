@@ -13,13 +13,13 @@
   <br><br>
     <%= f.label :Choose_a_list, class: 'col-xs-3 control-label' %>
     <div class="col-xs-6">
-      <%= f.text_field :list_name, id: 'campaign-select-lists', 'data-lists_data' => "#{@lists_json}", placeholder: "Select 1 or more lists" %>
+      <%= f.text_field :list_name, id: 'campaign-select-lists', 'data-lists_data' => "#{@lists.to_json}", placeholder: "Select 1 or more lists" %>
     </div>
   <br>
   <br><br><br>
   <br><br><br>
   <%= f.label :Channel %>
-  <%= f.select :channel, channel_list(@campaign), selected: get_channel_enum_value(@campaign) %>
+  <%= f.select :channel, channel_list(@campaign, @lists), selected: get_channel_enum_value(@campaign) %>
 
   <br><br>
 
@@ -54,7 +54,6 @@
       <br>
       <br><br>
       <div class="col-xs-6">
-
         <%= f.text_area :text, id: 'trumbowyg' %>
       </div>
       </div>
