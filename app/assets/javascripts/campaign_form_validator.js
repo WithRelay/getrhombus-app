@@ -62,6 +62,8 @@ $(document).on('ready page:load', function() {
         remoteCall = new RemoteCall(this);
         remoteCall.ajax();
         $('#sendTestCampaign').removeAttr('active');
+      }else{
+        return true;
       }
     });
 
