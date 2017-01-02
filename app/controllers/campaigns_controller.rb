@@ -24,7 +24,7 @@ class CampaignsController < ApplicationController
       redirect_to new_user_campaign_path
     else
       flash[:error] = @campaign.errors.full_messages
-      @lists_json = @campaign.campaign_lists.map{|a| current_user.lists.find(a.list_id)}.to_json
+      @lists = @campaign.campaign_lists.map{|a| current_user.lists.find(a.list_id)}
       render :new
     end
   end
