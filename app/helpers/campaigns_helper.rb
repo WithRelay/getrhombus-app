@@ -6,7 +6,9 @@ module CampaignsHelper
     if campaign.persisted?
       { campaign.channel => get_channel_enum_value(campaign) }
     else
-      { SMS: 0, MMS: 1, "Facebook Messenger" => 2, Email: 3}
+      channel_list = { SMS: 0, MMS: 1, Email: 3 }
+      # if fb page subscription is not present mms channel will be not visible
+      current_user.fb_pages.subscribed.present? ? channel_list.merge({'Facebook Messenger' => 2}) : channel_list
     end
   end
 

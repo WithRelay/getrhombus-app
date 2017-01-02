@@ -64,7 +64,7 @@
   <br><br>
 
   <div class="upload_image">
-    <%= f.file_field :avatar, multiple: true, id: 'select-images' %>
+    <%= f.file_field :avatar, id: 'select-images' %>
   </div>
 
   <!-- for new images -->
@@ -78,5 +78,8 @@
   </div>
   <div class="col-xs-6">
     <%= f.submit 'Save Campaign' %>
+  </div>
+  <div class="col-xs-6">
+    <%= link_to 'Send Test Email For Me', '#', id: 'sendTestCampaign' %>
   </div>
 <% end %>

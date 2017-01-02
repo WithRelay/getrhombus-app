@@ -124,6 +124,7 @@ Rails.application.routes.draw  do
     # Campaign Routes
     post 'campaigns/check_campaign_name' => 'campaigns#check_campaign_name'
     match 'campaigns/:id/images/:image_id' => 'campaigns#image_delete', via: :delete
+    post 'campaigns/send_test_email' => 'campaigns#send_test_email'
     match 'campaigns/upload_images' => 'campaigns#upload_images', via: :post
     match 'campaigns/upload_from_url' => 'campaigns#upload_from_url', via: :post
     #--------------------------------------------------------------------------#
@@ -134,8 +135,8 @@ Rails.application.routes.draw  do
     match 'transactions/charge_customer' => 'transactions#charge_customer', via: :post
     match 'numbers/search' => 'numbers#search', via: :get
     resources :lists, only: [:index, :create]
-    match 'coupons/check_coupon_name' => 'coupons#check_coupon_name', via: :post   
-    resources :coupons, only: [:index] 
+    match 'coupons/check_coupon_name' => 'coupons#check_coupon_name', via: :post
+    resources :coupons, only: [:index]
     match 'plans/check_plan_name' => 'plans#check_plan_name', via: :post
     resources :plans, only: [:index, :create, :update]
     resources :subscriptions, only: [:create]

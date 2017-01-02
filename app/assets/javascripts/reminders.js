@@ -30,7 +30,7 @@ $(document).on('ready page:load', function() {
 
 // Class RemoteCall handle all call to http verb to the server
 // First argument is the dom object it self and second contains the modal id
-function RemoteCall(element, modalId){
+function RemoteCall(element, modalId = ''){
   // assigning properties to RemoteCall
   this.url = element.action;
   this.method = element.method;

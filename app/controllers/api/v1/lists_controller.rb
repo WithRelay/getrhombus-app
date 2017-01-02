@@ -9,7 +9,11 @@ class Api::V1::ListsController < API::V1::BaseController
         elsif params[:type] == 'segment'
           list_type = "and segment is not null"
         end
-        res = current_user.lists.where("lower(name) like ? " + list_type , "%#{params[:query].downcase}%")
+        if params[:query].to_i != 0
+          res = current_user.lists.where( { id: params[:query] })
+        else
+          res = current_user.lists.where("lower(name) like ? " + list_type , "%#{params[:query].downcase}%")
+        end
       else
         res = current_user.lists
       end
@@ -46,8 +50,8 @@ class Api::V1::ListsController < API::V1::BaseController
         name = params[:segment_name]
         segment_query = get_segment_query(params)
         print "Segment query is: #{segment_query}"
-        @list = save_list(name:name, 
-                          user_id:current_user.id, 
+        @list = save_list(name:name,
+                          user_id:current_user.id,
                           segment:segment_query)
         list_errors = get_list_errors(@list)
         if list_errors.blank?
@@ -113,7 +117,7 @@ class Api::V1::ListsController < API::V1::BaseController
     # the process of creating the list
     # @param list_obj A list object
     def get_list_errors(list_obj)
-      list_errors = Array.new 
+      list_errors = Array.new
       if !list_obj.errors.blank?
         list_errors.push(@list.errors.full_messages)
       end

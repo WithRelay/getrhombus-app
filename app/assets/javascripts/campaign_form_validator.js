@@ -1,4 +1,5 @@
 $(document).on('ready page:load', function() {
+  var htmlContent = $('#campaign_channel').html()
   $('#new_campaign').formValidation({
     framework: 'bootstrap',
     excluded: ':disabled',
@@ -23,7 +24,7 @@ $(document).on('ready page:load', function() {
               if ($('#campaign_channel').val() == 3) {
                 if ($('#campaign_subject').val().length > 0) {
                   return {
-                    valid: true, 
+                    valid: true,
                     //message: 'Valid number'
                   }
                 } else {
@@ -54,7 +55,9 @@ $(document).on('ready page:load', function() {
         }
       }
     }
-  });
+  }).on('success.form.fv', function(e, data) {
+      alert('s');
+    });
 
   $("#trumbowyg").on('change', function(e) {
     $('#new_campaign').formValidation('resetField', 'campaign[text]');
@@ -71,11 +74,28 @@ $(document).on('ready page:load', function() {
   // Can be undefined for new action
   campaign_lists = (campaign_lists) ? campaign_lists : [];
   var lists_selectize = x.selectize({
+    onItemRemove: function(){
+      createDynamicDropdown();
+    },
+    onItemAdd: function(){
+      var element = $('.selectize-input div').data();
+      selectizeAjax(element.value);
+    },
+    onDropdownClose: function(){
+      var element = $('.selectize-input div').data();
+      if (element && element.value ==''){
+          createDynamicDropdown();
+      }
+      else if ($('.selectize-input div').length == 0){
+          createDynamicDropdown();
+      }
+    },
     valueField: 'id',
     labelField: 'name',
     searchField: 'name',
     openOnFocus: false,
     maxOptions: 5,
+    maxItems: 1,
     options: campaign_lists,
     closeAfterSelect: true,
     render: {
@@ -91,12 +111,37 @@ $(document).on('ready page:load', function() {
           FlashHandler.setFlashMessage('Something went wrong...Unable to find your lists', 'error');
           callback();
         },
-        success: function(res) { callback(res['lists']); }
+        success: function(res) { createDynamicDropdown(res['lists']); callback(res['lists']); }
       });
     }
   }).on('change', function(e) {
     $('#new_campaign').formValidation('resetField', 'campaign[list_name]');
-  });
+  })
+
+  function selectizeAjax(listName){
+    $.ajax({
+      url: window.location.protocol + "//" + window.location.host + "/v1/lists.json?query=" + encodeURIComponent(listName),
+      error: function() {
+        FlashHandler.setFlashMessage('Something went wrong...Unable to find your lists', 'error');
+        callback();
+      },
+      success: function(res) { createDynamicDropdown(res['lists']);}
+    });
+  }
+
+  function createDynamicDropdown(list_name=''){
+    if (list_name.length > 0){
+      var dropDownOption = { 'sms': [ '0', 'SMS'], 'messenger': ['2', 'Facebook Messenger'], 'email': ['3', 'Email'] };
+      var listOption = dropDownOption[list_name[0].channel];
+      if (listOption){
+        var newHtmlContent = '<option value="'+ listOption[0] +'"'+ ">" +  listOption[1]  + "</option>";
+        $('#campaign_channel').html(newHtmlContent);
+      }
+    }else{
+      return $('#campaign_channel').html(htmlContent);
+    }
+    $('#campaign_channel').change();
+  }
 
   // prefill form with previous lists
   $.each(campaign_lists, function (index, val) {
