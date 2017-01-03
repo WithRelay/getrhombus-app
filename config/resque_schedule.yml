@@ -18,14 +18,15 @@
 #   args:
 #   description: "This job notifies customers of expired or soon-to-expire cards."
 recurring_campaigns: # send email for campaign list
-  every: 24h # refer to 1 day
-  cron:  
-  class: 'RecurringCampaignJob' # class ChannelJob is present in app/jobs which represents campaign jobs
+  cron: '5 * * * *'
+  class: 'RecurringCampaignJob' # class RecurringCampaignJob is present in app/jobs which represents campaign jobs
   args:
   description: 'Sends campaign to lists of users selected for campaign'
+  queue: recurring_campaigns
 
 recurring_reminders: # send email for reminder user
-  every: 24h # refer to 1 day
+  cron: '5 * * * *'
   class: 'RecurringReminderJob' # class SendReminderJob is present in app/jobs which represents campaign jobs
   args:
   description: 'Sends campaign to lists of users selected for campaign'
+  queue: recurring_reminders
