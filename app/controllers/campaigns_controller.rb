@@ -21,7 +21,7 @@ class CampaignsController < ApplicationController
     if @campaign.save
       @campaign.enqueue_jobs # enque jobs if there is send now checked or one time is checked
       flash[:notice] = 'Campaign Saved successfully'
-      redirect_to new_user_campaign_path
+      redirect_to edit_user_campaign_path(@campaign)
     else
       flash[:error] = @campaign.errors.full_messages
       @lists = @campaign.campaign_lists.map{|a| current_user.lists.find(a.list_id)}
@@ -31,7 +31,7 @@ class CampaignsController < ApplicationController
 
   def edit
     @campaign = current_user.campaigns.includes(:images).find(params[:id])
-    @lists_json = @campaign.lists.to_json
+    @lists = @campaign.lists
   end
 
   # note : update_attributes method is being overide please go through campaign model
