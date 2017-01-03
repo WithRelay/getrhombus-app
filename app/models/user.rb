@@ -72,7 +72,7 @@ class User < ActiveRecord::Base
   has_many :fb_creds
 
   has_one :alert, dependent: :destroy
-  has_many :fb_pages
+  has_many :fb_pages,dependent: :destroy
 
   has_many :saved_replies
   has_many :message_resolutions

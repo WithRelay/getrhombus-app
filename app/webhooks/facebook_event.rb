@@ -43,7 +43,7 @@
     end
 
     def create_conversation
-      merchant = current_page.fb_cred.user
+      merchant = current_page.user
       @merchant_id = merchant.id
       sender = @required_params['messaging'][0]['sender']
       recipient = @required_params['messaging'][0]['recipient']
@@ -80,19 +80,12 @@
         @fb_message = @conversation.fb_messages.create(text: text, seq: seq,
           time_stamp: timestamp, unread: false, message_id: message_id,
           from: message_from, to: message_to, fb_page_id: fb_page_id,
-          user_id: get_user_id(new_user_id), user_id_to: @conversation.merchant_id)
+          user_id: get_user_id, user_id_to: @conversation.merchant_id)
         
         save_attachments if @attachments.present?
       rescue StandardError => err
         nil
       end
-    end
-
-    # it gives user id from page specific id of user
-    def get_user_id(new_user_id)
-      fb_cred = FbCred.find_by(page_specific_id: new_user_id)
-      user_fb_cred = FbCred.where(fb_id: fb_cred.fb_id).where.not(user_id: nil).first if fb_cred
-      user_fb_cred.user_id if user_fb_cred
     end
 
     # set datetime in utc
@@ -102,10 +95,13 @@
     end
         
     # Add new user from massenger to FbCred table
-    def add_page_user(page, new_user)
-      unless (FbCred.find_by_page_specific_id new_user).present?
-        FbCred.add_fb_user_from_messenger(page, new_user)
-      end
+    def add_page_user(page, new_user_id)
+      @fb_cred = FbCred.find_by(page_specific_id: new_user_id) || FbCred.add_fb_user_from_messenger(page, new_user_id)
+    end
+
+    # it gives user id from page specific id of user
+    def get_user_id
+      @fb_cred.user_id if @fb_cred
     end
 
     def save_attachments
