@@ -1,5 +1,6 @@
 $(document).ready(function () {
   var pricingSlider = document.getElementById('pricing-range'),
+         currentAmount = pricingSlider.attributes.amountValue.value,
          priceValueSpan = document.getElementById('price-value'),
          range_all_sliders = {
           'min': [0],
@@ -10,7 +11,7 @@ $(document).ready(function () {
         };
 
   noUiSlider.create(pricingSlider, {
-    start: [0],
+    start: [currentAmount],
     connect: [true, false],
     orientation: 'vertical',
     direction: 'rtl',
@@ -22,6 +23,13 @@ $(document).ready(function () {
     priceValueSpan.innerHTML = '<h3><b> Amount: </b>'+ values[handle] +'</h3><br>' +
                                                         '<h4>'+plan_range(values[handle])[1]+'</h4>';
     $('#select_plan').attr('href', '/signup?signup_plan=' + plan_range(values[handle])[0]);
+
+    //only for subscription setting page
+    if (parseInt(values[handle]) > currentAmount){
+      $('#change_subscription_plan')[0].innerHTML = 'Upgrage Subscription'
+    } else if (parseInt(values[handle]) < currentAmount){
+      $('#change_subscription_plan')[0].innerHTML = 'Downgrage Subscription'
+    }
   });
 
   function plan_range(amount){
