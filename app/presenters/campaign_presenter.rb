@@ -19,6 +19,6 @@ class CampaignPresenter < BasePresenter
   def show_info
     html = '<div class="alert alert-info"> <strong>Info!</strong> Sorry this campaign could not run.
             You need to complete facebook messenger association </div>'
-    return html if !@user.fb_pages.subscribed.present? && @model.facebook_messenger?
+    !@user.fb_pages.subscribed.present? && @model.facebook_messenger? ? html : ''
   end
 end
