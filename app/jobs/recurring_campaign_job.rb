@@ -2,7 +2,6 @@ class RecurringCampaignJob
   @queue = :recurring_campaigns
 
   def self.perform
-    binding.pry
     campaigns = Campaign.recurring.active.includes([:images, lists:[:user_lists]])
     campaigns.each do |campaign|
       utc_date_time = campaign.date_time.utc
