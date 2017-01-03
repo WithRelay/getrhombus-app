@@ -32,7 +32,7 @@ class EmailCampaign
         list.get_users.each{ |customer| @email_list.push({ email: customer[:user].email }) }
       end
     else
-      email_list.push({ email: @campaign.user.email })
+      @email_list.push({ email: @campaign.user.email })
     end
     return @email_list
   end
