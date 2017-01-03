@@ -21,7 +21,7 @@ class CampaignsController < ApplicationController
     if @campaign.save
       @campaign.enqueue_jobs # enque jobs if there is send now checked or one time is checked
       flash[:notice] = 'Campaign Saved successfully'
-      redirect_to edit_user_campaign_path(@campaign)
+      redirect_to edit_user_campaign_path(current_user, @campaign)
     else
       flash[:error] = @campaign.errors.full_messages
       @lists = @campaign.campaign_lists.map{|a| current_user.lists.find(a.list_id)}
