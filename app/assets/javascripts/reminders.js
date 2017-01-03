@@ -35,7 +35,12 @@ function RemoteCall(element, modalId = ''){
   this.url = element.action;
   this.method = element.method;
   this.dataType = 'json';
-  this.formData = $(element).serialize()
+  if ($('.images img').length > 0){
+    this.formData = $(element).serialize() + '&campaign%5Bavatar%5D=' + $('.images img').attr('src')
+  }
+  else {
+    this.formData = $(element).serialize()
+  }
   this.domElementId = '#' + element.id
   this.modalId = modalId;
 }
