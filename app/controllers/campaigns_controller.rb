@@ -97,6 +97,6 @@ class CampaignsController < ApplicationController
   end
 
   def image_params
-    params.require(:campaign).permit(avatar:[], image_id:[])
+    params.require(:campaign).permit(:avatar, image_id:[])
   end
 end
