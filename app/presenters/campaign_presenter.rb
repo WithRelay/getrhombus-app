@@ -15,4 +15,10 @@ class CampaignPresenter < BasePresenter
     text = @model.paused? ? 'Unpause' : 'Pause'
     h.link_to(text, change_status_user_campaign_path(@user, @model), method: :put)
   end
+
+  def show_info
+    html = '<div class="alert alert-info"> <strong>Info!</strong> Sorry this campaign could not run.
+            You need to complete facebook messenger association </div>'
+    return html if !@user.fb_pages.subscribed.present? && @model.facebook_messenger?
+  end
 end
