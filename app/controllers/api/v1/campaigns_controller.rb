@@ -42,6 +42,6 @@ class Api::V1::CampaignsController < API::V1::BaseController
   end
 
   def image_params
-    params.require(:campaign).permit(avatar:[], image_id:[])
+    params.require(:campaign).permit(:avatar, image_id:[])
   end
 end
