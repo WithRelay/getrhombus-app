@@ -28,6 +28,7 @@ class Campaign < ActiveRecord::Base
   # scopes
   scope :check_campaign_uniqueness, -> (campaign_name) { where('lower(name) = ?', campaign_name.downcase) }
 
+  before_create :set_campaign_status
 
   def from_user
     "#{first_name} #{last_name}"
@@ -104,6 +105,10 @@ class Campaign < ActiveRecord::Base
 
   def reminder_campaign?
     self.is_a?(Reminder)
+  end
+
+  def set_campaign_status
+    self.status = 3 if self.user.fb_pages.subscribed.present? && self.facebook_messenger?
   end
 
   def channel_text_validate
