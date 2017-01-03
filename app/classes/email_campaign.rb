@@ -4,7 +4,7 @@ class EmailCampaign
   def initialize(campaign, user_list=[])
     @campaign = campaign # campaign object
     @user_list = user_list
-    @email_list
+    @email_list = []
   end
 
   def send_campaign
