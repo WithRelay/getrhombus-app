@@ -46,7 +46,7 @@ class FbCred < ActiveRecord::Base
           time_zone: timezone, gender: gender, profile_pic_url: url
         )
       end
-      fb_cred.save    
+      fb_cred if fb_cred.save
     rescue StandardError => err
     end
   end
