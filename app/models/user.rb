@@ -48,11 +48,13 @@ class User < ActiveRecord::Base
         # build campaign lists of campaign
         args[0][:list_name].split(',').each{ |l| campaign.campaign_lists.build(list_id: l) }
         # build avatar of campaigns
-        campaign.images.build(avatar: args[1][:avatar], uploaded_as: 1) if (!campaign.sms? && args[1][:avatar].present?) && campaign.valid?
+        if args[1].present?
+          campaign.images.build(avatar: args[1][:avatar], uploaded_as: 1) if (!campaign.sms? && args[1][:avatar].present?) && campaign.valid?
         # build image refs for inline images of campaigns
-        args[1][:image_id].each do |avatar_id|
-          campaign.image_refs.build(image_id: avatar_id).save;
-        end if args[1][:image_id].present?
+          args[1][:image_id].each do |avatar_id|
+            campaign.image_refs.build(image_id: avatar_id).save;
+          end if args[1][:image_id].present?
+        end
       end
       return campaign
     end
