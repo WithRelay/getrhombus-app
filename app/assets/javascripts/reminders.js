@@ -35,12 +35,6 @@ function RemoteCall(element, modalId = ''){
   this.url = element.action;
   this.method = element.method;
   this.dataType = 'json';
-  if ($('.images img').length > 0){
-    this.formData = $(element).serialize() + '&campaign%5Bavatar%5D=' + $('.images img').attr('src')
-  }
-  else {
-    this.formData = $(element).serialize()
-  }
   this.domElementId = '#' + element.id
   this.modalId = modalId;
 }
@@ -50,16 +44,19 @@ function checkFormValid(element){
 }
 // defining instance method ajax for class remote call
 // Send remote request and fetch response.
-RemoteCall.prototype.ajax = function(){
+RemoteCall.prototype.ajax = function(data){
   // assigning modal class for closing modal after response success
   // The variable has sigil $ beacause local variable inside ajax call are not accessible.
   // for more deails http://stackoverflow.com/questions/14496680/this-object-not-available-in-ajax-callback
+  (data !='') ? postData = data : postData = this.formData
   var $modalClose = this.modalId + ' .close'
   if (checkFormValid(this.domElementId)){
     $.ajax({ method: this.method,
              url: this.url,
-             data: this.formData,
-             dataType: 'json'
+             contentType: false,
+             processData: false,
+             dataType: 'json',
+             data: postData
           }).done(function(msg){
               // key in index 1 contains title/flash message key please see api/controllers/reminders for more details.
               var flash_key = Object.keys(msg)[1]
