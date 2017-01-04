@@ -19,7 +19,7 @@ module ChannelCampaign
     private
 
     def retry_other_channel(campaign_channel, failure_user_list)
-      unless campaign_channel == EmailCampaign && failure_user_list.present?
+      unless campaign_channel == EmailCampaign && !failure_user_list.present?
         unless MobileCampaign.new(@campaign, failure_user_list).send_failure
           update_campaign if EmailCampaign.new(@campaign, failure_user_list).send_failure
         else
