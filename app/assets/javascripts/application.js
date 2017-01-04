@@ -59,5 +59,5 @@
 //= require dashboard/messaging_angularjs/messaging.js
 //= require bootstrap-select
 //= require moment
-//= require nouislider.min
+//= require powerange
 //= require_tree .

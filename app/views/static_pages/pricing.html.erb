@@ -1,201 +1,262 @@
 <% provide(:title, 'Rhombus - Pricing') %>  
-
-  <style type="text/css">
-    @media screen and (min-width: 1200px) {
-        .w-container {
-          max-width: 1170px;
-        }
-      }
-      .w-slider-nav-invert>div {
-        background-color: #e5e5e5; !important
-    }
-  </style>
-
-  <%= render 'shared/static_pages_header' %>
-
-  <%#= render 'shared/full_messages' %>
-
-
-  <div class="w-section banner inner _4 pricing-hero" id="top" data-ix="show-social-and-nav">
-    <div class="w-container">
-      <div class="div-center" data-ix="show-navigation">
-        <h1 class="h-inner" data-ix="h-inner"><span class="white-1 about-hero-text">Simple pricing</span></h1>
+<style type="text/css">
+  @media screen and (min-width: 1200px) {
+  .w-container {
+  max-width: 1170px;
+  }
+  }
+  .w-slider-nav-invert>div {
+  background-color: #e5e5e5; !important
+  }
+</style>
+<%= render 'shared/static_pages_header' %>
+<%#= render 'shared/full_messages' %>
+<div class="w-section banner inner _4 pricing-hero" id="top" data-ix="show-social-and-nav">
+  <div class="w-container">
+    <div class="div-center" data-ix="show-navigation">
+      <h1 class="h-inner" data-ix="h-inner"><span class="white-1 about-hero-text">Simple pricing</span></h1>
+    </div>
+    <div class="sub-inner contact-subtext" data-ix="h-inner-2">Free 14-day trial. No credit card required.</div>
+  </div>
+</div>
+<div class="w-section section pricing-section-1">
+<div class="tittle-wrapper pricing-icon"><img src="<%= asset_path 'Pricing.png' %>">
+</div>
+<div>
+  <h1 class="pricing-section-3-title">Simple Pricing</h1>
+  <div>
+    <ul class="w-list-unstyled standard-feature-list">
+      <li>TRY IT FREE FOR 14 DAYS ON PAID PLANS</li>
+    </ul>
+  </div>
+</div>
+<div class="tbl pricing-row-column-1 w-clearfix w-col w-col-6">
+  <div class="plan-2 plan-details-wrapper">
+    <h4 class="premium-table signup-box-subheading">ALL FEATURES INCLUDED IN EVERY PLAN</h4>
+    <div class="premium-features pricing-table-feature-list">Unlimited Inbound &amp; Outbound Messages</div>
+    <div class="premium-features pricing-table-feature-list">Customer Segmentation</div>
+    <div class="premium-features pricing-table-feature-list">Drip Campaigns</div>
+    <div class="premium-features pricing-table-feature-list">Hashtags &amp; Keywords</div>
+    <div class="premium-features pricing-table-feature-list">Automated Responses</div>
+    <div class="premium-features pricing-table-feature-list">Customer Import</div>
+    <div class="premium-features pricing-table-feature-list">Stripe Integration for Charges &amp; Subscriptions</div>
+    <div class="premium-features pricing-table-feature-list">In-Chat Payments</div>
+    <div class="premium-features pricing-table-feature-list">Messaging &amp; Transaction Analytics</div>
+    <div class="premium-features pricing-table-feature-list">Full Contact Data</div>
+    <div class="premium-features pricing-table-feature-list">OpenCNAM Data</div>
+    <div class="premium-features pricing-table-feature-list">Data Export</div>
+    <div class="premium-features pricing-table-feature-list">Free SMS Number | Cost Per SMS: $0.025</div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-6">
+    <img class="pricing-table-icon" src="http://uploads.webflow.com/5767087cbd63608e7eb4abdc/58349dc8801ad6fd2b2b56f1_003_043.png">
+    <h1 class="first-content-section-sub-header pricing-header">Unlimited usage for your team</h1>
+    <p class="def-content-section-paragraph pricing-paragraph">Pricing is based on how many active customers or leads you communicate with inside Relay. No per seat pricing.<br><br>How many customers do you have?</p>
+  </div>
+  <!-- Relay Pricing Packages/Plan -->
+  <div class="col-xs-6" >
+    <!-- we can pass user's subscribed plan amount in amountValue attribute -->
+    <div class="col-xs-3"  style="height: 200px;margin-top: 70px;">
+      <!-- we have to set amountValue dynamically for selected subscription -->
+      <input type="text" name="plan[amount]" id="pricing-range" amountValue="0">
+    </div>
+    <br>
+    <div class="col-xs-3">
+      <span class="row" id="price-value"></span>
+      <div class="row">
+        <a class="button pricing-button customer-text-me" href="/signup" id="select_plan" >Get Started</a>
       </div>
-      <div class="sub-inner contact-subtext" data-ix="h-inner-2">Free 14-day trial. No credit card required.</div>
     </div>
   </div>
-
-  <div class="w-section section pricing-section-1">
-    <div class="w-container">
-      <div class="tittle-wrapper pricing-icon"><img src="<%= asset_path 'Pricing.png' %>">
-      </div>
-      <div>
-        <h1 class="pricing-section-3-title">All Plans Include</h1>
-        <div>
-          <ul class="w-list-unstyled standard-feature-list">
-            <li>Free Rhombus number –&nbsp;Email &amp; SMS&nbsp;receipts –&nbsp;Email &amp; Phone support</li>
-          </ul>
+</div>
+<div class="row">
+  <div class="transaction-fee-section">
+    <div class="content-wrapper transaction-fee-wrapper w-container">
+      <h1 class="first-content-section-sub-header transaction-fee-table-subheader">Transaction Fee</h1>
+      <h5 class="signup-box-subheading">2-DAY PAYOUTS . PCI COMPLIANT . INTEGRATED FRAUD TOOLS</h5>
+      <div class="transaction-fee-table w-row">
+        <div class="transaction-fee-table-column-1 w-col w-col-7">
+          <h1 class="first-content-section-sub-header transaction-table-subheader">Debit &amp; Credit Cards</h1>
+          <p class="transaction-fee-table-description">We charge a percentage-based fee each time you accept a credit or debit card payment. The price is the same for all major cards, including American Express. There’s no additional fee for international cards, failed charges, or refunds.</p>
+          <img class="payment-card-types" src="http://uploads.webflow.com/5767087cbd63608e7eb4abdc/577aa94f3dcedd7133c2328a_payment%20card%20types.svg">
         </div>
-      </div>
-      <!-- Relay Pricing Packages/Plan -->
-      <div class="container">
-        <div id="pricing-range" style="height: 300px;" amountValue="0">
-        </div>
-        <br>
-        <div><span id="price-value"></span></div>
-        <div>
-          <a class="button pricing-button customer-text-me" href="/signup" id="select_plan" >SIGNUP NOW</a>
-        </div>
-      </div>
-      <div class="w-row pricing-table">
-        <div class="w-col w-col-3 pricing-columns pricing-first-column">
-          <div class="pricing-title-div">
-            <div class="pricing-plan">Free</div>
-            <div class="pricing-price">$0/month</div><a class="button pricing-button customer-text-me" href="/signup">Sign up</a>
-          </div>
-          <ul class="w-list-unstyled pricing-other-columns">
-            <li>
-              <div class="pricing-lines">500 messages</div>
-            </li>
-            <li>
-              <div class="pricing-lines">Unlimited customers</div>
-            </li>
-            <li>
-              <div class="pricing-lines">2.9% + 30c per transaction</div>
-            </li>
-            <li>
-              <div class="pricing-lines">N/A</div>
-            </li>
-            <li>
-              <div class="pricing-lines">Basic analytics</div>
-            </li>
-          </ul>
-        </div>
-        <div class="w-col w-col-3 pricing-columns pricing-second-column">
-          <div class="pricing-title-div">
-            <div class="pricing-plan">Starter</div>
-            <div class="pricing-price">$49/month</div><a class="button pricing-button customer-text-me" href="/signup">Sign up</a>
-          </div>
-          <ul class="w-list-unstyled">
-            <li>
-              <div class="pricing-lines">2500 messages</div>
-            </li>
-            <li>
-              <div class="pricing-lines">Unlimited customers</div>
-            </li>
-            <li>
-              <div class="pricing-lines">2.9% + 30c per transaction</div>
-            </li>
-            <li>
-              <div class="pricing-lines">Custom welcome message</div>
-            </li>
-            <li>
-              <div class="pricing-lines">Advanced analytics</div>
-            </li>
-          </ul>
-        </div>
-        <div class="w-col w-col-3 pricing-columns">
-          <div class="pricing-title-div">
-            <div class="pricing-plan">Business</div>
-            <div class="pricing-price">$149/month</div><a class="button pricing-button customer-text-me" href="/signup">Sign up</a>
-          </div>
-          <ul class="w-list-unstyled">
-            <li>
-              <div class="pricing-lines">7000 messages</div>
-            </li>
-            <li>
-              <div class="pricing-lines">Unlimited customers</div>
-            </li>
-            <li>
-              <div class="pricing-lines">2.9% + 30c per transaction</div>
-            </li>
-            <li>
-              <div class="pricing-lines">Custom welcome message</div>
-            </li>
-            <li>
-              <div class="pricing-lines">Advanced analytics</div>
-            </li>
-          </ul>
-        </div>
-        <div class="w-col w-col-3 pricing-columns pricing-fourth-column">
-          <div class="pricing-title-div">
-            <div class="pricing-plan">Enterprise</div>
-            <div class="pricing-price">Let’s talk</div><a class="button pricing-button customer-text-me" href="/signup">Sign up</a>
-          </div>
-          <ul class="w-list-unstyled">
-            <li>
-              <div class="pricing-lines">TBD</div>
-            </li>
-            <li>
-              <div class="pricing-lines">Unlimited customers</div>
-            </li>
-            <li>
-              <div class="pricing-lines">TBD</div>
-            </li>
-            <li>
-              <div class="pricing-lines">Custom messages</div>
-            </li>
-            <li>
-              <div class="pricing-lines">TBD</div>
-            </li>
-          </ul>
+        <div class="transaction-fee-table-column-2 w-col w-col-5">
+          <h1 class="first-content-section-sub-header transaction-fee-amount">2.9% + $0.30</h1>
+          <h5 class="signup-box-subheading">PER SUCCESSFUL TRANSACTION</h5>
         </div>
       </div>
     </div>
   </div>
-  <div class="w-section section pricing-section-3">
-    <div class="w-container">
-      <div>
-        <div class="pricing-questions-title">Questions? We’re here to help.</div>
+</div>
+<div  class="row">
+  <div class="def-content-section-wrapper w-container">
+    <img class="section-icon" src="http://uploads.webflow.com/5767087cbd63608e7eb4abdc/586aabdf3b1d1cdd6920aedb_003_045.png">
+    <h1 class="sub-hero-header">Available in twenty-one countries</h1>
+    <div class="default-content-section-table w-row">
+      <div class="def-content-section-column-1 pricing w-col w-col-6">
+        <h3 class="section-3-header">Reach customers globally</h3>
+        <p class="def-content-section-paragraph section-4">All Relay phone numbers are payment enabled, with the exception of Chile, Czech, Estonia, Hungary, Israel, Lithuania, Poland &amp; Puerto Rico.</p>
+        <h3 class="section-3-header">What's an active customer or lead?</h3>
+        <p class="def-content-section-paragraph section-4">Active customers or leads are individuals that have engaged in a two-way conversation with your business. You can also think of conversations as tickets, and you only pay for individuals your team has responded to, this way you don't pay for spam senders that message your business.</p>
+        <a class="button def-content-section-button w-button" href="#">See all FAQs</a>
       </div>
-      <div>
-        <div class="w-row row-spc x2 pricing-section-3-row">
-          <div class="w-col w-col-4">
-            <div class="icon-wrapper">
-              <h4 class="pricing-question-header">How does the 14-day free trial work?</h4>
-              <p class="pricing-section-3-text">No payment information is required to sign up for Rhombus. Your first 14 days are free with 500 messages, including unlimited customers or recipients. Once your trial is up, you’ll need to pay to continue using Rhombus. If you’d like to pay annually, please&nbsp;get in touch&nbsp;with us.</p>
-            </div>
+      <div class="w-col w-col-6">
+        <div class="country-list flex-container w-clearfix">
+          <div class="country-block w-clearfix">
+            <img class="country-flag" src="http://uploads.webflow.com/5767087cbd63608e7eb4abdc/577d5648ea25da09330bb134_Australia-48.png" width="23">
+            <div class="countries">Australia</div>
           </div>
-          <div class="w-col w-col-4">
-            <div class="icon-wrapper">
-              <h4 class="pricing-question-header">Do I have to sign a long-term contract?</h4>
-              <p class="pricing-section-3-text">No contracts – just pay month-to-month, or annually. You can cancel at any time without penalty.</p>
-            </div>
+          <div class="country-block w-clearfix">
+            <img class="country-flag" src="http://uploads.webflow.com/5767087cbd63608e7eb4abdc/577d5f2fea25da09330bc324_Star%20of%20David-50.png" width="23">
+            <div class="countries">Israel</div>
+            <div class="number-functionality">NON PAYMENT</div>
           </div>
-          <div class="w-col w-col-4">
-            <div class="icon-wrapper">
-              <h4 class="pricing-question-header">What forms of payment can we accept from our customers?</h4>
-              <p class="pricing-section-3-text">You can accept Mastercard, Visa, American Express, and Discover via Rhombus.</p>
-            </div>
+          <div class="country-block w-clearfix">
+            <img class="country-flag" src="http://uploads.webflow.com/5767087cbd63608e7eb4abdc/577d5bafea25da09330bbaad_Austria-48.png" width="23">
+            <div class="countries">Austria</div>
           </div>
-        </div>
-        <div class="w-row row-spc x2 pricing-section-3-row">
-          <div class="w-col w-col-4">
-            <div class="icon-wrapper">
-              <h4 class="pricing-question-header">Do I need to download an app to use Rhombus?</h4>
-              <p class="pricing-section-3-text">No, you don't need to download anything to use Rhombus. You can access your transactions and messages online at any time from any web-enabled device – computers, tablets or smartphones. Easily run your business from anywhere.</p>
-            </div>
+          <div class="country-block w-clearfix">
+            <img class="country-flag" src="http://uploads.webflow.com/5767087cbd63608e7eb4abdc/577d5f6eea25da09330bc3b3_Lithuania-48.png" width="23">
+            <div class="countries">Lithuania</div>
+            <div class="number-functionality">NON PAYMENT</div>
           </div>
-          <div class="w-col w-col-4">
-            <div class="icon-wrapper">
-              <h4 class="pricing-question-header">How do I pay after my free trial?</h4>
-              <p class="pricing-section-3-text">After your free trial is up, we will automatically debit your company bank account each month so you never have to worry about invoicing.</p>
-            </div>
+          <div class="country-block w-clearfix">
+            <img class="country-flag" src="http://uploads.webflow.com/5767087cbd63608e7eb4abdc/577d5bec044a522433e173a2_Belgium-48.png" width="23">
+            <div class="countries">Belgium</div>
           </div>
-          <div class="w-col w-col-4">
-            <div class="icon-wrapper">
-              <h4 class="pricing-question-header">Is Rhombus secure?</h4>
-              <p class="pricing-section-3-text">Accepting payments with Rhombus is safer than using a POS, checks or cash. We encrypt and tokenize your customers’ payment information so no one can have access to it. All transmission to our payment processor and on our site is via an encrypted HTTPS connection.</p>
-            </div>
+          <div class="country-block w-clearfix">
+            <img class="country-flag" src="http://uploads.webflow.com/5767087cbd63608e7eb4abdc/577d5fa3e3f0f32215821538_Norway-48.png" width="23">
+            <div class="countries">Norway</div>
+          </div>
+          <div class="country-block w-clearfix">
+            <img class="country-flag" src="http://uploads.webflow.com/5767087cbd63608e7eb4abdc/577d5c2dea25da09330bbc66_Canada-48.png" width="23">
+            <div class="countries">Canada</div>
+          </div>
+          <div class="country-block w-clearfix">
+            <img class="country-flag" src="http://uploads.webflow.com/5767087cbd63608e7eb4abdc/577d5fdde3f0f32215821558_Poland-48.png" width="23">
+            <div class="countries">Poland</div>
+            <div class="number-functionality">NON PAYMENT</div>
+          </div>
+          <div class="country-block w-clearfix">
+            <img class="country-flag" src="http://uploads.webflow.com/5767087cbd63608e7eb4abdc/577d5c7c3a9f1a3f15328b31_Chile-48.png" width="23">
+            <div class="countries">Chile</div>
+            <div class="number-functionality">NON PAYMENT</div>
+          </div>
+          <div class="country-block w-clearfix">
+            <img class="country-flag" src="http://uploads.webflow.com/5767087cbd63608e7eb4abdc/577d61643a9f1a3f15329b5e_Spain-48.png" width="23">
+            <div class="countries">Spain</div>
+          </div>
+          <div class="country-block w-clearfix">
+            <img class="country-flag" src="http://uploads.webflow.com/5767087cbd63608e7eb4abdc/577d5cb5044a522433e1746b_Czech%20Republic-48.png" width="23">
+            <div class="countries">Czech&nbsp;</div>
+            <div class="number-functionality">NON PAYMENT</div>
+          </div>
+          <div class="country-block w-clearfix">
+            <img class="country-flag" src="http://uploads.webflow.com/5767087cbd63608e7eb4abdc/577d619c044a522433e180d4_Sweden-48.png" width="23">
+            <div class="countries">Sweden</div>
+          </div>
+          <div class="country-block w-clearfix">
+            <img class="country-flag" src="http://uploads.webflow.com/5767087cbd63608e7eb4abdc/577d5cf2e3f0f32215821263_Estonia-48.png" width="23">
+            <div class="countries">Estonia</div>
+            <div class="number-functionality">NON PAYMENT</div>
+          </div>
+          <div class="country-block w-clearfix">
+            <img class="country-flag" src="http://uploads.webflow.com/5767087cbd63608e7eb4abdc/577d61db044a522433e18119_Switzerland-48.png" width="23">
+            <div class="countries">Switzerland</div>
+          </div>
+          <div class="country-block w-clearfix">
+            <img class="country-flag" src="http://uploads.webflow.com/5767087cbd63608e7eb4abdc/577d5d29ea25da09330bbddf_Finland-48.png" width="23">
+            <div class="countries">Finland</div>
+          </div>
+          <div class="country-block w-clearfix">
+            <img class="country-flag" src="http://uploads.webflow.com/5767087cbd63608e7eb4abdc/577d62363a9f1a3f15329d0a_Great%20Britain-48.png" width="23">
+            <div class="countries">United Kingdom</div>
+          </div>
+          <div class="country-block w-clearfix">
+            <img class="country-flag" src="http://uploads.webflow.com/5767087cbd63608e7eb4abdc/577d5d5d3a9f1a3f15329152_France-48.png" width="23">
+            <div class="countries">France</div>
+          </div>
+          <div class="country-block w-clearfix">
+            <img class="country-flag" src="http://uploads.webflow.com/5767087cbd63608e7eb4abdc/577d62b63a9f1a3f15329dab_USA-48.png" width="23">
+            <div class="countries">United States</div>
+          </div>
+          <div class="country-block w-clearfix">
+            <img class="country-flag" src="http://uploads.webflow.com/5767087cbd63608e7eb4abdc/577d5d90e3f0f322158212e1_Germany-48.png" width="23">
+            <div class="countries">Germany</div>
+          </div>
+          <div class="country-block w-clearfix">
+            <img class="country-flag" src="http://uploads.webflow.com/5767087cbd63608e7eb4abdc/577d633c044a522433e18913_Horizontal%20Flag-50.png" width="23">
+            <div class="countries">PR</div>
+            <div class="number-functionality">NON PAYMENT</div>
+          </div>
+          <div class="country-block w-clearfix">
+            <img class="country-flag" src="http://uploads.webflow.com/5767087cbd63608e7eb4abdc/577d5dd2ea25da09330bbf4f_Hungary-48.png" width="23">
+            <div class="countries">Hungary</div>
+            <div class="number-functionality">NON PAYMENT</div>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <div class="w-section section faq-section-3">
-    <div class="w-container"><a class="button faqs-btn" href="/contact">I have more questions</a>
+</div>
+<div>
+  <h2>Get started for free</h2>
+  <p>TRY IT FREE NO LONG-TERM COMMITMENT</p>
+  <%= render "static_pages/get_started_form" %>
+</div>
+<div class="w-section section pricing-section-3">
+  <div class="w-container">
+    <div>
+      <div class="pricing-questions-title">Questions? We’re here to help.</div>
+    </div>
+    <div>
+      <div class="w-row row-spc x2 pricing-section-3-row">
+        <div class="w-col w-col-4">
+          <div class="icon-wrapper">
+            <h4 class="pricing-question-header">How does the 14-day free trial work?</h4>
+            <p class="pricing-section-3-text">No payment information is required to sign up for Rhombus. Your first 14 days are free with 500 messages, including unlimited customers or recipients. Once your trial is up, you’ll need to pay to continue using Rhombus. If you’d like to pay annually, please&nbsp;get in touch&nbsp;with us.</p>
+          </div>
+        </div>
+        <div class="w-col w-col-4">
+          <div class="icon-wrapper">
+            <h4 class="pricing-question-header">Do I have to sign a long-term contract?</h4>
+            <p class="pricing-section-3-text">No contracts – just pay month-to-month, or annually. You can cancel at any time without penalty.</p>
+          </div>
+        </div>
+        <div class="w-col w-col-4">
+          <div class="icon-wrapper">
+            <h4 class="pricing-question-header">What forms of payment can we accept from our customers?</h4>
+            <p class="pricing-section-3-text">You can accept Mastercard, Visa, American Express, and Discover via Rhombus.</p>
+          </div>
+        </div>
+      </div>
+      <div class="w-row row-spc x2 pricing-section-3-row">
+        <div class="w-col w-col-4">
+          <div class="icon-wrapper">
+            <h4 class="pricing-question-header">Do I need to download an app to use Rhombus?</h4>
+            <p class="pricing-section-3-text">No, you don't need to download anything to use Rhombus. You can access your transactions and messages online at any time from any web-enabled device – computers, tablets or smartphones. Easily run your business from anywhere.</p>
+          </div>
+        </div>
+        <div class="w-col w-col-4">
+          <div class="icon-wrapper">
+            <h4 class="pricing-question-header">How do I pay after my free trial?</h4>
+            <p class="pricing-section-3-text">After your free trial is up, we will automatically debit your company bank account each month so you never have to worry about invoicing.</p>
+          </div>
+        </div>
+        <div class="w-col w-col-4">
+          <div class="icon-wrapper">
+            <h4 class="pricing-question-header">Is Rhombus secure?</h4>
+            <p class="pricing-section-3-text">Accepting payments with Rhombus is safer than using a POS, checks or cash. We encrypt and tokenize your customers’ payment information so no one can have access to it. All transmission to our payment processor and on our site is via an encrypted HTTPS connection.</p>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-  <div class="w-section section pricing-section-2"></div>
-
-  <%= render "shared/static_pages_footer" %>
+</div>
+<div class="w-section section faq-section-3">
+  <div class="w-container"><a class="button faqs-btn" href="/contact">I have more questions</a>
+  </div>
+</div>
+<div class="w-section section pricing-section-2"></div>
+<%= render "shared/static_pages_footer" %>

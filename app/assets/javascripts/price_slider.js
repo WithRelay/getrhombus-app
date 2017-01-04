@@ -1,36 +1,34 @@
 $(document).ready(function() {
   var pricingSlider = document.getElementById('pricing-range'),
     currentAmount = (pricingSlider) ? pricingSlider.attributes.amountValue.value : 0,
-    priceValueSpan = document.getElementById('price-value'),
-    range_all_sliders = {
-      'min': [0],
-      '25%': [100],
-      '50%': [1000],
-      '75%': [5000],
-      'max': [10000]
-    };
+    priceValueSpan = document.getElementById('price-value');
 
   if (pricingSlider) {
-    noUiSlider.create(pricingSlider, {
-      start: [currentAmount],
-      connect: [true, false],
-      orientation: 'vertical',
-      direction: 'rtl',
-      range: range_all_sliders
+    var slider = new Powerange(pricingSlider, {
+      callback : displayValue
+      , decimal       : false
+      , disableOpacity: 0.5
+      , min           : 0
+      , max           : 10000
+      , start         : currentAmount
+      , vertical      : true
     });
 
-    pricingSlider.noUiSlider.on('update', function(values, handle) {
-      priceValueSpan.innerHTML = '<h3><b> Amount: </b>' + values[handle] + '</h3><br>' +
-        '<h4>' + plan_range(values[handle])[1] + '</h4>';
-      $('#select_plan').attr('href', '/signup?signup_plan=' + plan_range(values[handle])[0]);
+  }
 
-      //only for subscription setting page
-      if (changePlan = $('#change_subscription_plan')[0]) {
-        changePlan.innerHTML = (parseInt(values[handle]) > currentAmount) ?
-          'Upgrage Subscription' :
-          (parseInt(values[handle]) < currentAmount) ? 'Downgrage Subscription' : 'Change Plan';
-      }
-    });
+  function displayValue() {
+    // priceValueSpan.innerHTML = pricingSlider.value;
+    priceValueSpan.innerHTML = '<h3><b> Amount: </b> $' + pricingSlider.value + '</h3><br>' +
+      '<p>BILLED MONTHLY<p><br>' +
+      '<h4>' + plan_range(pricingSlider.value)[1] + '</h4>';
+    $('#select_plan').attr('href', '/signup?signup_plan=' + plan_range(pricingSlider.value)[0]);
+
+    //only for subscription setting page
+    if (changePlan = $('#change_subscription_plan')[0]) {
+      changePlan.innerHTML = (parseInt(pricingSlider.value) > currentAmount) ?
+        'Upgrage Subscription' :
+        (parseInt(pricingSlider.value) < currentAmount) ? 'Downgrage Subscription' : 'Change Plan';
+    }
   }
 
   function plan_range(amount) {

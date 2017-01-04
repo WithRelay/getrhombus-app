@@ -1,13 +1,19 @@
 <!-- Relay Pricing Packages/Plan -->
 <div class="container">
-  <h2>Select Subscription Plan</h2>
-  <!-- we can pass user's subscribed plan amount in amountValue attribute -->
-  <div id="pricing-range" style="height: 300px;" amountValue="120">
-  <!-- we have to set amountValue dynamically for selected subscription -->
-  </div>
+  <h2 style="padding-left: 15%;">Select Subscription Plan</h2>
   <br>
-  <div><span id="price-value"></span></div>
-  <div>
+  <div class="row" >
+    <!-- we can pass user's subscribed plan amount in amountValue attribute -->
+    <div class="col-xs-3"  style="height: 200px;padding-left: 15%;">
+    <!-- we have to set amountValue dynamically for selected subscription -->
+      <input type="text" name="plan[amount]" id="pricing-range" amountValue="120">
+    </div>
+    <br>
+    <div class="col-xs-3">
+      <span id="price-value"></span>
+    </div>
+  </div>
+  <div class="row" style="padding-left: 25%;">
     <a class="button pricing-button customer-text-me" href="javascript:;" id="change_subscription_plan" >CHANGE PLAN</a>
   </div>
 </div>
