@@ -15,6 +15,8 @@ class Image < ActiveRecord::Base
                                             }
   # Validate the attached image is image/jpg, image/png, etc
   validates_attachment_content_type :avatar, :content_type => /\Aimage\/.*\Z/
+  validate :campaign_file_attachment, if: proc { |i| i.uploaded_as.present? }
+
   enum uploaded_as: [:inline,  :attachment]
 
   def avatar_from_remote_url(url_value)
@@ -29,4 +31,7 @@ class Image < ActiveRecord::Base
     self.avatar = open(URI.parse(url_value), :http_basic_authentication => [TextingService::TWILIO_API_KEY, TextingService::TWILIO_API_SECRET])
   end
 
+  def campaign_file_attachment
+    errors.add(:avatar, 'size should not be more than 4.5 MB') if self.avatar_file_size > 4.5.megabytes
+  end
 end
