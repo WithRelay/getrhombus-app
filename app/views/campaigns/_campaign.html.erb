@@ -19,7 +19,7 @@
   <br><br><br>
   <br><br><br>
   <%= f.label :Channel %>
-  <%= f.select :channel, channel_list(@campaign, @lists), selected: get_channel_enum_value(@campaign) %>
+  <%= f.select :channel, channel_list(@campaign, @lists), selected: get_channel_enum_value(@campaign.channel) %>
 
   <br><br>
 
