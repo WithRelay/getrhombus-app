@@ -3,14 +3,18 @@ module CampaignsHelper
   def channel_list(campaign, list)
     # Switching between channels is probably dangerous for persisted campaigns
     # Ex: Email content can't become sms
+    channel_list = { SMS: 0, MMS: 1, Email: 3, 'Facebook Messenger' => 2 }
     campaign_channel = campaign.channel=='facebook_messenger' ? 'Facebook Messenger' : campaign.channel
     if campaign.persisted?
       { campaign_channel => get_channel_enum_value(campaign.channel) }
     elsif list.present? && campaign.invalid?
       list_channel = list[0].channel=='messenger' ? 'facebook_messenger' : list[0].channel
-      { campaign_channel => get_channel_enum_value(list_channel) }
+      if list_channel.present?
+        { campaign_channel => get_channel_enum_value(list_channel) }
+      else
+        channel_list
+      end
     else
-      channel_list = { SMS: 0, MMS: 1, Email: 3, 'Facebook Messenger' => 2 }
       # if fb page subscription is not present mms channel will be not visible
       channel_list.delete('Facebook Messenger') if current_user.fb_pages.subscribed.present?
       channel_list
