@@ -58,9 +58,10 @@ $(document).on('ready page:load', function() {
   }).on('success.form.fv', function(e, data) {
       if ($( '#sendTestCampaign' ).attr('active')){
         e.preventDefault();
+        var formData = new FormData(this);
         this.action = window.location.origin + '/v1/campaigns/send_test_email'
         remoteCall = new RemoteCall(this);
-        remoteCall.ajax();
+        remoteCall.ajax(formData);
         $('#sendTestCampaign').removeAttr('active');
       }else{
         return true;
