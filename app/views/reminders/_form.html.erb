@@ -1,6 +1,6 @@
 
 
-<%= form_for reminder, url: reminder_url, method: method do |f| %>
+<%= form_for reminder, url: reminder_url, method: method, html: { id: 'reminderForm' } do |f| %>
 
   <div class="col-xs-5">
     <%= f.label :Channel %>
