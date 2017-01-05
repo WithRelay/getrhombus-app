@@ -4,6 +4,6 @@ class SendNowCampaignJob < ActiveJob::Base
 
   def perform(campaign_id)
     campaign = Campaign.find_by_id(campaign_id)
-    ChannelCampaign::SendCampaign.new(campaign).send_channel_campaign
+    ChannelCampaign::SendCampaign.new(campaign).send_channel_campaign if campaign.present?
   end
 end
