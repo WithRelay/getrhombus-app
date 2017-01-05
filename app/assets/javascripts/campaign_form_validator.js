@@ -1,6 +1,6 @@
 $(document).on('ready page:load', function() {
   var htmlContent = $('#campaign_channel').html()
-  $('#new_campaign').formValidation({
+  $('#campaignForm').formValidation({
     framework: 'bootstrap',
     excluded: ':disabled',
     live: 'disabled',
@@ -59,24 +59,27 @@ $(document).on('ready page:load', function() {
       if ($( '#sendTestCampaign' ).attr('active')){
         e.preventDefault();
         var formData = new FormData(this);
+        // assign url of form
+        var originalURL = this.action
         this.action = window.location.origin + '/v1/campaigns/send_test_email'
+        // initialize a class apicontroller
         var apiController = new ApiController(this);
+        // calls instance method sendRequest with parameter formdata
         apiController.sendRequest(formData);
+        this.action = originalURL
         $('#sendTestCampaign').removeAttr('active');
-      }else{
-        return true;
       }
     });
 
   $( '#sendTestCampaign' ).click(function(e){
     e.preventDefault();
     $(this).attr('active', 'true')
-    $( 'form#new_campaign' ).submit();
+    $( 'form#campaignForm' ).submit();
   });
 
 
   $("#trumbowyg").on('change', function(e) {
-    $('#new_campaign').formValidation('resetField', 'campaign[text]');
+    $('#campaignForm').formValidation('resetField', 'campaign[text]');
   });
 
 
@@ -131,7 +134,7 @@ $(document).on('ready page:load', function() {
       });
     }
   }).on('change', function(e) {
-    $('#new_campaign').formValidation('resetField', 'campaign[list_name]');
+    $('#campaignForm').formValidation('resetField', 'campaign[list_name]');
   })
 
   function selectizeAjax(listName){
