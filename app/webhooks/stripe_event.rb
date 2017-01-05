@@ -44,19 +44,23 @@ class StripeEvent
       end
     end
 
-=begin
+
     # At the moment, Subscription only changes if a coupon is added.
     # Else to change a subscription, cancel and create a new one
     # It also notifies us of changes from trial to active
     # You generally don't want to notify merchants or users in this method
     def customer_subscription_updated
-      if false #@data = Subscription.find_by(stripe_subscription_id: @hash[:id])
-        update_subscription_data
-        # find admin
-        # Notify (admin)
+      if @data = Subscription.includes(:notification_logs)
+                      .where(stripe_subscription_id: @hash[:id]).first
+
+        update_subscription_data if @data
+
+        # Email about update
+        # Notify us too (admin)
+        @data.notification_logs << NotificationLog.create(notify_type: 'subscription_updated', channel: 'email', reason: 'Subscription has been updated.')
       end
     end
-=end
+
 
     # Most fields aren't important but we can resave data
     def update_subscription_data
@@ -299,6 +303,7 @@ class StripeEvent
       {
         'customer.subscription.trial_will_end'=> :subscription_trial_will_end,
         'customer.subscription.deleted'=> :customer_subscription_deleted,
+        'customer.subscription.updated' => :customer_subscription_updated,
         # customer_source_updated webhook will fire if your customers’ info/customer's card info changes.
         'customer.source.updated' => :customer_source_updated,
         'invoice.payment_failed'=> :invoice_payment_failed,
