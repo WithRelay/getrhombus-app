@@ -13,10 +13,15 @@ module ChannelCampaign
       # all channels classes like messenger_campaign, mobile_campaign, email_campaign
       # and has a common method send campaign which send campaign to a group of users
       send_campaign = channel_class.new(@campaign).send_campaign
-      retry_other_channel(channel_class, send_campaign) unless @campaign.test?
-  end
+      update_test_campaign if @campaign.test?
+      retry_other_channel(channel_class, send_campaign) unless retry_campaign?
+    end
 
     private
+
+    def retry_campaign?
+      @campaign.test? && @campaign.lists[0].try(:channel).present?
+    end
 
     def retry_other_channel(campaign_channel, failure_user_list)
       unless campaign_channel == EmailCampaign && !failure_user_list.present?
@@ -46,6 +51,12 @@ module ChannelCampaign
         'email' => 'EmailCampaign', 'mms' => 'MobileCampaign', 'sms' => 'MobileCampaign',
         'facebook_messenger' => 'MessengerCampaign'
       }
+    end
+
+    def update_test_campaign
+      @campaign.images.delete_all
+      @campaign.campaign_lists.delete_all
+      @campaign.destroy
     end
 
     # updates campaign details after sending campaign success.
