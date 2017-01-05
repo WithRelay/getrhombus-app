@@ -4,17 +4,18 @@ module ChannelCampaign
 
     def initialize(campaign)
       @campaign = campaign # campaign object
+      @failure_user_list = []
     end
 
     def send_channel_campaign
-      # channel mappers maps campaign channel to its respective class
       # declare constant with a string eg: string EmailCampaign will act like contant EmailCampaign
-      channel_class = channel_mapper[@campaign.channel].constantize
       # all channels classes like messenger_campaign, mobile_campaign, email_campaign
       # and has a common method send campaign which send campaign to a group of users
-      send_campaign = channel_class.new(@campaign).send_campaign
-      update_test_campaign if @campaign.test?
-      retry_other_channel(channel_class, send_campaign) unless retry_campaign?
+      channel_class = channel_string_class.constantize
+      @failure_user_list = channel_class.new(@campaign).send_campaign
+      unless @campaign.reminder_campaign?
+        retry_other_channel unless retry_campaign?
+      end
     end
 
     private
@@ -23,12 +24,20 @@ module ChannelCampaign
       @campaign.test? && @campaign.lists[0].try(:channel).present?
     end
 
-    def retry_other_channel(campaign_channel, failure_user_list)
-      unless campaign_channel == EmailCampaign && !failure_user_list.present?
-        unless MobileCampaign.new(@campaign, failure_user_list).send_failure
-          update_campaign if EmailCampaign.new(@campaign, failure_user_list).send_failure
-        else
-          update_campaign
+    def channel_string_class
+      # channel mappers maps campaign channel to its respective class
+      return channel_mapper[@campaign.channel]
+    end
+
+    def retry_other_channel
+      # valid_retry_channel contains ["MobileCampaign", "MobileCampaign", "MessengerCampaign"]
+      valid_retry_channel = channel_mapper.values[1..3]
+      # valid_retry_channel[2] contains "MessengerCampaign"
+      if @failure_user_list.present? && valid_retry_channel.include?(channel_string_class)
+        if valid_retry_channel[2].include?(channel_string_class)
+          retry_email_campaign unless retry_mobile_campaign
+        elsif valid_retry_channel[0].include?(channel_string_class)
+          retry_email_campaign
         end
       else
         update_campaign
@@ -44,6 +53,14 @@ module ChannelCampaign
       user_id_list
     end
 
+    def retry_email_campaign
+      EmailCampaign.new(@campaign, @failure_user_list).send_failure ? update_campaign : false
+    end
+
+    def retry_mobile_campaign
+      MobileCampaign.new(@campaign, @failure_user_list).send_failure ? update_campaign : false
+    end
+
     # The key in channel mapper is enum channels of campaign please refer to campaign model
     # Value of the key is string which is same as class name
     def channel_mapper
@@ -51,12 +68,6 @@ module ChannelCampaign
         'email' => 'EmailCampaign', 'mms' => 'MobileCampaign', 'sms' => 'MobileCampaign',
         'facebook_messenger' => 'MessengerCampaign'
       }
-    end
-
-    def update_test_campaign
-      @campaign.images.delete_all
-      @campaign.campaign_lists.delete_all
-      @campaign.destroy
     end
 
     # updates campaign details after sending campaign success.
