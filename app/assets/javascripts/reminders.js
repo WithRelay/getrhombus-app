@@ -1,5 +1,5 @@
 $(document).on('ready page:load', function() {
-  $('#new_reminder').formValidation({
+  $('#reminderForm').formValidation({
     framework: 'bootstrap',
     excluded: ':disabled',
     live: 'disabled',
@@ -27,7 +27,7 @@ $(document).on('ready page:load', function() {
     });
 });
 
-// Class RemoteCall handle all call to http verb to the server
+// Class ApiController handle all call to http verb to the server
 // First argument is the dom object it self and second contains the modal id
 function ApiController(element, modalId = ''){
   // assigning properties to RemoteCall
@@ -42,7 +42,7 @@ function ApiController(element, modalId = ''){
 function checkFormValid(element){
   return $(element ).data('formValidation').isValid();
 }
-// defining instance method ajax for class remote call
+// defining instance method sendRequest for class ApiController
 // Send remote request and fetch response.
 ApiController.prototype.sendRequest = function(data=''){
   // assigning modal class for closing modal after response success
@@ -55,7 +55,7 @@ ApiController.prototype.sendRequest = function(data=''){
              url: this.url,
              contentType: false,
              processData: false,
-             dataType: 'json',
+             dataType: this.dataType,
              data: postData
           }).done(function(msg){
               // key in index 1 contains title/flash message key please see api/controllers/reminders for more details.
