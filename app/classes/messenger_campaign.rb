@@ -12,7 +12,8 @@ class MessengerCampaign
       list.get_users.each do |customer|
         @user_fb_creds = customer[:user].fb_creds
         user_fb_cred_id = get_page_specific_id if @user_fb_creds.present?
-        failure_list.push(customer[:user]) unless fb_message_sender(page_access_token, user_fb_cred_id)
+        send_message = fb_message_sender(page_access_token, user_fb_cred_id)
+      failure_list.push(customer[:user]) unless send_message && list.channel.present?
       end
     end
     return failure_list
