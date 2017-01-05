@@ -14,7 +14,7 @@ class EmailingService
       campaign_hash[:subject] = "Rhombus Campaign" if campaign_hash[:subject].blank?
       message = campaign_hash.merge({ from_name: 'Rhombus'}).merge(FROM_EMAIL)
       response = MANDRILL.messages.send(message)
-      response[0]['status'] == ('sent' || 'queued') ? true : false
+      ['sent', 'queued'].include?(response[0]['status']) ? true : false
     end
 
     def send_welcome_email_with_referral(merchant_email, to, merchant_name, rhombus_number, rhombus_team_number)
@@ -186,11 +186,11 @@ class EmailingService
          "from_email" => SENDER
         }
         async = true
-        result = mandrill.messages.send_template template_name, template_content, message, async      
+        result = mandrill.messages.send_template template_name, template_content, message, async
       rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
         puts "A mandrill error occurred: #{e.class} - #{e.message}"
       rescue StandardError => e
-      end 
+      end
     end
 
   end
