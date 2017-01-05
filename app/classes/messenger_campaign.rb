@@ -20,17 +20,17 @@ class MessengerCampaign
 
  private
 
- def get_page_specific_id
+  def get_page_specific_id
     res = nil
     @user_fb_creds.each do |cred|
       page_user = @facebook_messenger.get_user_info(user_page_access_token, cred.page_specific_id)
       res = cred.page_specific_id if page_user
     end
     res
- end
+  end
 
   def send_fb_images(page_token, fb_cred_id)
-    @campaign.images.each do |image|
+    @campaign.images.attachment.each do |image|
       @facebook_messenger.send_attachment(page_token, fb_cred_id, 'image', image.avatar.url)
     end
   end
