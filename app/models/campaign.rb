@@ -1,13 +1,13 @@
 class Campaign < ActiveRecord::Base
 
   attr_accessor :list_name
-  has_many :campaign_user_lists
+  has_many :campaign_user_lists, dependent: :destroy
   has_many :lists, through: :campaign_lists
   has_many :campaign_lists, dependent: :destroy
   has_many :messages
   belongs_to :user
   has_many :image_refs, as: :imageable, dependent: :destroy
-  has_many :images, through: :image_refs
+  has_many :images, through: :image_refs, dependent: :destroy
   delegate :first_name, :last_name, to: :user
   # enums for campaign's class attributes channel, status, frequency_type and delivery_type
   enum channel: { sms: 0, mms: 1, facebook_messenger: 2, email: 3 }
@@ -67,10 +67,16 @@ class Campaign < ActiveRecord::Base
   end
 
   def enqueue_jobs
-    # rescue enqueue_at_with_queue accepts four parametera 1 name of queue, 2 date_time(provided as utc)
-    # 3 class name 4 the parameter send for class method perform
-    Resque.enqueue_at_with_queue('one_time_campaign', date_time.utc, OneTimeCampaignJob, id) if is_campaign_date_selected? || is_today_campaign?
-    SendNowCampaignJob.perform_now(self.id) if deliver_now?
+    unless (!self.active? || self.test?)
+      # rescue enqueue_at_with_queue accepts four parametera 1 name of queue, 2 date_time(provided as utc)
+      # 3 class name 4 the parameter send for class method perform
+      Resque.enqueue_at_with_queue('one_time_campaign', date_time.utc, OneTimeCampaignJob, id) if is_campaign_date_selected? || is_today_campaign?
+      SendNowCampaignJob.perform_now(self.id) if deliver_now?
+    end
+  end
+
+  def reminder_campaign?
+    self.is_a?(Reminder)
   end
 
   private
@@ -103,12 +109,11 @@ class Campaign < ActiveRecord::Base
     end
   end
 
-  def reminder_campaign?
-    self.is_a?(Reminder)
-  end
-
   def set_campaign_status
-    self.status = 3 if self.user.fb_pages.subscribed.present? && self.facebook_messenger?
+    # sets campaign status as inactive because merchant do not have facebook messenger associated
+    unless self.test?
+      self.status = 3 if !self.user.fb_pages.subscribed.present? && self.facebook_messenger?
+    end
   end
 
   def channel_text_validate
