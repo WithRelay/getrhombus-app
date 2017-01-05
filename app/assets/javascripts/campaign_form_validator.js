@@ -60,8 +60,8 @@ $(document).on('ready page:load', function() {
         e.preventDefault();
         var formData = new FormData(this);
         this.action = window.location.origin + '/v1/campaigns/send_test_email'
-        remoteCall = new RemoteCall(this);
-        remoteCall.ajax(formData);
+        var apiController = new ApiController(this);
+        apiController.sendRequest(formData);
         $('#sendTestCampaign').removeAttr('active');
       }else{
         return true;
