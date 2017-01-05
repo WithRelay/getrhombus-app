@@ -23,7 +23,7 @@ class MobileCampaign
       list.get_users.each do |customer|
         campaign_send = @message_class.send_and_save_message(rn_type, merchant_rhombus_number, customer[:user].phone_number,
                                              message, media_link_urls)
-        @failure_list.push(customer[:user]) unless  campaign_send
+        @failure_list.push(customer[:user]) unless campaign_send && list.channel.present?
       end
     end
     return @failure_list
