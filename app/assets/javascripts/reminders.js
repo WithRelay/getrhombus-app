@@ -19,24 +19,24 @@ $(document).on('ready page:load', function() {
         }
       }
     }
-  });
-
-  $( 'form#new_reminder' ).submit(function(e){
-    e.preventDefault();
-    var remoteCall = new RemoteCall(this, '#myModalNorm');
-    remoteCall.ajax()
-  })
+  }).on('success.form.fv', function(e, data) {
+        e.preventDefault();
+        var apiController = new ApiController(this, '#myModalNorm');
+        var formData = new FormData(this);
+        apiController.sendRequest(formData)
+    });
 });
 
 // Class RemoteCall handle all call to http verb to the server
 // First argument is the dom object it self and second contains the modal id
-function RemoteCall(element, modalId = ''){
+function ApiController(element, modalId = ''){
   // assigning properties to RemoteCall
   this.url = element.action;
   this.method = element.method;
   this.dataType = 'json';
-  this.domElementId = '#' + element.id
+  this.domElementId = '#' + element.id;
   this.modalId = modalId;
+  this.formData = $(element).serialize();
 }
 // Checks whether the form is validated or not and return true/false
 function checkFormValid(element){
@@ -44,11 +44,11 @@ function checkFormValid(element){
 }
 // defining instance method ajax for class remote call
 // Send remote request and fetch response.
-RemoteCall.prototype.ajax = function(data){
+ApiController.prototype.sendRequest = function(data=''){
   // assigning modal class for closing modal after response success
   // The variable has sigil $ beacause local variable inside ajax call are not accessible.
   // for more deails http://stackoverflow.com/questions/14496680/this-object-not-available-in-ajax-callback
-  (data !='') ? postData = data : postData = this.formData
+  var postData = ((data !='') ? data : this.formData)
   var $modalClose = this.modalId + ' .close'
   if (checkFormValid(this.domElementId)){
     $.ajax({ method: this.method,
