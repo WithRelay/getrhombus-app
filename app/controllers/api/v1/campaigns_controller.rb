@@ -10,12 +10,13 @@ class Api::V1::CampaignsController < API::V1::BaseController
     campaign = current_user.campaigns.build(campaign_params, image_params)
     if campaign.save
       flash_msg = { notice: 'Email Send' }
+      # we can send object to active jobs but it is good not to send complex object to active jobs
+      # http://chriskottom.com/blog/2015/11/bulletproof-rails-background-jobs/
       SendNowCampaignJob.perform_now(campaign.id)
     else
       flash_msg = { error: campaign.errors.full_messages }
     end
-    # we can send object to active jobs but it is good not to send complex object to active jobs
-    # http://chriskottom.com/blog/2015/11/bulletproof-rails-background-jobs/
+    campaign.destroy
     render json: { status: 200 }.merge(flash_msg)
   end
 
@@ -23,6 +24,7 @@ class Api::V1::CampaignsController < API::V1::BaseController
   def check_campaign_name
     render json: { valid: find_campaign_by_name.blank? }
   end
+
   # uplaoding image from local and url
   def upload_images
     image = params[:img_url].present? ? open(params[:img_url]) : params[:image]
@@ -36,14 +38,14 @@ class Api::V1::CampaignsController < API::V1::BaseController
 
   def campaign_params
     # enums are define as integer but params are in string and rails is not converting string to integer
-    params.require(:campaign).permit(:name, :list_name, :channel, :repeat_days, :date_time, :deliver_now,
-                         :frequency_type, :text, :subject).tap do |c|
-                          c[:channel] = c[:channel].to_i
-                          c[:frequency_type] = c[:frequency_type].to_i
-                          c[:deliver_now] = c[:deliver_now] == '1' ? true : false
-                          c[:subject] = nil unless c[:channel] == 3
-                          c[:date_time] = Time.current + 1.hour
-                        end.merge({ status: 4 })
+    params.require(:campaign).permit(:list_name, :channel, :repeat_days, :date_time, :deliver_now,
+                                     :frequency_type, :text, :subject).tap do |c|
+                                        c[:channel] = c[:channel].to_i
+                                        c[:frequency_type] = c[:frequency_type].to_i
+                                        c[:deliver_now] = c[:deliver_now] == '1' ? true : false
+                                        c[:subject] = nil unless c[:channel] == 3
+                                        c[:date_time] = Time.current + 1.hour
+                                      end.merge({ status: 4 })
   end
 
   def image_params
