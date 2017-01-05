@@ -182,33 +182,23 @@ $(document).ready(function () {
     $('#plan-div').append('Quantity: ' + subscriptionData[4].innerHTML + '<br>');
   }
 
-  $('#upgrade-plan-selector').on('click', function(){
-    $('#submit-update-plan').val('Upgrade Plan');
-    $('#submit-update-plan').attr('class', 'btn btn-success#submit-update-plan');
-    $('#update-plan-id').attr('value', '49');
-  });
-
-  $('.downgrade-plan-selector').on('click', function(){
-    $('#submit-update-plan').val('Downgrade Plan');
-    $('#submit-update-plan').attr('class', 'btn btn-danger#submit-update-plan');
-    $('#update-plan-id').attr('value', '48');
-  });
-
-
-  $('#submit-update-plan').on('click',function(){
+  $('#submit-update-coupon').on('click',function(){
     if (subscriptionId === 0){
-      errorMsg = 'Please select subscription from table before upgrade/downgrade Plan'
+      errorMsg = 'Please select subscription from table before apply new Coupon'
       FlashHandler.setFlashMessage(errorMsg, 'error');
       return false
     } else {
-      action = $('#plan-update-form').attr('action') + '/' + subscriptionId;
-      actionName = ($('#submit-update-plan').val() === 'Upgrade Plan') ? 'upgrade_subscription' : 'downgrade_subscription' 
-      action = action + '/' + actionName;
-      $('#plan-update-form').attr('action', action);
-      $('#plan-update-form').attr('href', action);
+      action = $('#coupon-update-form').attr('action') + '/' + subscriptionId;
+      $('#coupon-update-form').attr('action', action);
     }
   });
   
+  $('#change_subscription_plan').on('click',function(){
+    action = $('#plan-update-form').attr('action') + '/143';
+    actionName = ($(this).val() === 'Upgrade Subscription') ? 'upgrade_subscription' : 'downgrade_subscription' 
+    action +='/' + actionName;
+    $('#plan-update-form').attr('action', action);
+  });
 
 });
 

@@ -20,6 +20,15 @@ class SubscriptionsController < ApplicationController
 
   def edit
   end
+  
+  def update
+    if @subscription.update_subscription(current_user, params[:subscription][:coupon_id])
+      flash[:notice] = 'Subscription updated successfully'
+    else
+      flash[:error] = 'We couldn\'t update subscription'
+    end
+    respond_with(@subscription)
+  end
 
   def destroy
     if @subscription.cancel_subscription(current_user)
@@ -38,7 +47,7 @@ class SubscriptionsController < ApplicationController
     coupon_res = create_coupon(amount) if amount > 0
     # move user to new subscription based on the new plan selected
     new_subscription = Subscription.new(
-      plan_id: params[:subscription][:plan_id],
+      plan_id: get_plan_id,
       coupon_id: coupon_res.second,
       merchant_customer_id: @subscription.merchant_customer_id,
       quantity: @subscription.quantity
@@ -60,7 +69,7 @@ class SubscriptionsController < ApplicationController
   def downgrade_subscription
     if @subscription.cancel_subscription(current_user)
       # Store new plan that user wants to downgrade to
-      store_next_plan(params[:subscription][:plan_id])
+      store_next_plan(get_plan_id)
       flash[:notice] = 'Subscription listed for downgrade successfully.'
     else
       flash[:error] = 'Something went wrong.'
@@ -84,6 +93,11 @@ class SubscriptionsController < ApplicationController
         @coupon.destroy
         [false]
       end
+    end
+
+    def get_plan_id
+      plan = Plan.find_by(name: params[:subscription][:plan_name])
+      plan.id if plan
     end
 
     def store_next_plan(plan_id)

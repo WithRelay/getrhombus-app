@@ -25,9 +25,11 @@ $(document).ready(function() {
 
     //only for subscription setting page
     if (changePlan = $('#change_subscription_plan')[0]) {
-      changePlan.innerHTML = (parseInt(pricingSlider.value) > currentAmount) ?
-        'Upgrage Subscription' :
-        (parseInt(pricingSlider.value) < currentAmount) ? 'Downgrage Subscription' : 'Change Plan';
+      submitValue = (parseInt(pricingSlider.value) > currentAmount) ?
+        'Upgrade Subscription' :
+        (parseInt(pricingSlider.value) < currentAmount) ? 'Downgrage Subscription' : 'Subscription';
+      $('#change_subscription_plan').val(submitValue);
+      $('#pricing-range').val(plan_range(pricingSlider.value)[0]);
     }
   }
 

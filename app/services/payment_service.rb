@@ -162,6 +162,24 @@ class PaymentService
       end
     end
 
+    def update_subscription(subscription_id, stripe_account_id, platform, coupon_id)
+      begin
+        if platform
+          sbtn = Stripe::Subscription.retrieve(subscription_id)
+          sbtn.coupon = coupon_id
+        else
+          sbtn = Stripe::Subscription.retrieve(subscription_id, { stripe_account: stripe_account_id })
+          sbtn.coupon = coupon_id
+        end
+        sbtn.save
+        true
+      rescue Stripe::StripeError => e
+        false
+      rescue StandardError => e
+        false
+      end
+    end
+
     def create_plan(hash, stripe_account_id, platform)
       begin
         if platform

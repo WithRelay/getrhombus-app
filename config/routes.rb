@@ -61,7 +61,7 @@ Rails.application.routes.draw  do
     resources :fb_pages, only: [:index]
     patch 'update_fb_page' => 'fb_pages#update_user_fb_page'
     resources :hashtags, except: [:show, :destroy]
-    resources :subscriptions, only: [:index, :destroy] do
+    resources :subscriptions, only: [:index, :update, :destroy] do
       collection do
         post '/:id/upgrade_subscription' => 'subscriptions#upgrade_subscription'
         post '/:id/downgrade_subscription' => 'subscriptions#downgrade_subscription'

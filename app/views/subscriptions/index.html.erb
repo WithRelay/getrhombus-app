@@ -2,6 +2,7 @@
   <!-- Button trigger modal -->
   <%= button_tag 'Create Plan', class: 'btn btn-default plan-modal', data: { toggle: :modal, target: '#modalPlan' } %>
   <%= button_tag 'Create Subscription', class: 'btn btn-default', data: { toggle: :modal, target: '#modalSubscription' } %>
+  <%= button_tag 'Setting', class: 'btn btn-default', data: { toggle: :modal, target: '#setSubscription' } %>
   <!-- Modal -->
   <div class="modal fade" id="modalPlan" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -43,6 +44,26 @@
       </div>
     </div>
   </div>
+  <div class="modal fade" id="setSubscription" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">
+          <span aria-hidden="true">&times;</span>
+          <span class="sr-only">Close</span>
+          </button>
+          <h4 class="modal-title" id="myModalLabel">SAAS Subscription Setting</h4>
+          <hr>
+          Upgrade or modify your subscription plan by making a sliding price range below:
+        </div>
+        <!-- Modal Body -->
+        <div class="create-subscription-form w-form">
+          <%= render 'shared/subscription_setting' %>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <h1>Listing Subscriptions</h1>
   <table class="table table-condensed table-hover">
@@ -76,6 +97,6 @@
     </tbody>
   </table>
 
-  <%= render 'subscriptions/grade_subscription' %>
+  <%= render 'subscriptions/update_coupon' %>
   <br><br><br><br><br>
 </div>

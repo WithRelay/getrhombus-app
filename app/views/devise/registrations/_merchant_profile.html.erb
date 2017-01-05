@@ -14,7 +14,7 @@
       <div class="row">
         <div class="">
           <!-- we have to remove this setting to user subscription setting -->
-          <%= render 'shared/subscription_setting' %>
+          <%#= render 'shared/subscription_setting' %>
           <div class="panel panel-default" id="merchantprofilepage">
             <div class="panel-body">
               <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put, id: "merchantProfile", class: "form-horizontal rhombusFocus" }) do |f| %>

@@ -74,6 +74,22 @@ class Subscription < ActiveRecord::Base
       false
     end
   end
+ 
+  def update_subscription(team, coupon_id)
+    begin
+      res = PaymentService.update_subscription(self.stripe_subscription_id, team.uid, team.is_platform?, coupon_id)
+      if res.first && self.update(status: res.second.status, cancel_at_period_end: res.second.cancel_at_period_end)
+        true
+      else
+        # notify team via email
+        false
+      end
+    rescue StandardError => e
+      false
+    end
+  end
+
+  private
 
   def unused_amount
     plan = self.plan
