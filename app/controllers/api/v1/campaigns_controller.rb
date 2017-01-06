@@ -3,12 +3,12 @@ class Api::V1::CampaignsController < API::V1::BaseController
   def image_delete
     image_ref = find_image_ref(imageable_type: 'Campaign', image_id: params[:image_id])
     image_ref.delete if image_ref
-    render json: { response: "Deleted" }, status: 200
+    render json: { response: 'Deleted' }, status: 200
   end
 
   def send_test_email
     campaign = current_user.campaigns.build(campaign_params, image_params)
-    if campaign.save
+    if campaign.save(validate: false)
       flash_msg = { notice: 'Email Send' }
       # we can send object to active jobs but it is good not to send complex object to active jobs
       # http://chriskottom.com/blog/2015/11/bulletproof-rails-background-jobs/
@@ -33,7 +33,12 @@ class Api::V1::CampaignsController < API::V1::BaseController
 
   def find_campaign_by_name
     # campaign name is unique but only with particular user
-    current_user.campaigns.check_campaign_uniqueness(params[:campaign][:name])
+    campaign = current_user.campaigns.check_campaign_uniqueness(params[:campaign][:name])
+    if params[:id].present?
+      params[:id].to_i == campaign[0].id ? [] : campaign
+    else
+      campaign
+    end
   end
 
   def campaign_params
