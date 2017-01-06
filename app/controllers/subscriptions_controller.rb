@@ -97,7 +97,7 @@ class SubscriptionsController < ApplicationController
     end
 
     def get_plan_id
-      plan = Plan.find_by(name: params[:subscription][:plan_name])
+      plan = Plan.find_by(name: params[:subscription][:plan_name], merchant_id: current_user.id)
       plan.id if plan
     end
 

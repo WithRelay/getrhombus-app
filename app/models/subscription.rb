@@ -21,7 +21,7 @@ class Subscription < ActiveRecord::Base
       hash[:application_fee_percent] = Rails.application.secrets.application_fee_percent unless is_platform
       
       if self.coupon_id.present?
-        coupon = Coupon.find_by(id: self.coupon_id)
+        coupon = Coupon.find self.coupon_id
         hash[:coupon] = coupon.stripe_coupon_id 
       end
       
