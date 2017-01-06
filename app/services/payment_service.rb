@@ -172,7 +172,6 @@ class PaymentService
           sbtn.coupon = coupon_id
         end
         sbtn.save
-        true
       rescue Stripe::StripeError => e
         false
       rescue StandardError => e

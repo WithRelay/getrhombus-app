@@ -78,7 +78,9 @@ class Subscription < ActiveRecord::Base
   def update_subscription(team, coupon_id)
     begin
       res = PaymentService.update_subscription(self.stripe_subscription_id, team.uid, team.is_platform?, coupon_id)
-      if res.first && self.update(status: res.second.status, cancel_at_period_end: res.second.cancel_at_period_end)
+      if res
+        coupon = Coupon.find_by(stripe_coupon_id: res[:discount][:coupon][:id])
+         self.update(coupon_id: coupon.id, status: res.status, cancel_at_period_end: res.cancel_at_period_end)
         true
       else
         # notify team via email

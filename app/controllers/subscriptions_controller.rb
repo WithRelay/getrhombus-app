@@ -22,12 +22,13 @@ class SubscriptionsController < ApplicationController
   end
   
   def update
-    if @subscription.update_subscription(current_user, params[:subscription][:coupon_id])
+    coupon = Coupon.find params[:subscription][:coupon_id]
+    if @subscription.update_subscription(current_user, coupon.stripe_coupon_id)
       flash[:notice] = 'Subscription updated successfully'
     else
       flash[:error] = 'We couldn\'t update subscription'
     end
-    respond_with(@subscription)
+    redirect_to user_subscriptions_path
   end
 
   def destroy
