@@ -1,4 +1,4 @@
-class RecurringReminderJob < RecurringJob
+class RecurringReminderJob < BaseScheduler::RecurringJob
   @queue = :recurring_reminders
 
   def self.perform

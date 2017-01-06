@@ -1,4 +1,4 @@
-class RecurringCampaignJob < RecurringJob
+class RecurringCampaignJob < BaseScheduler::RecurringJob
   @queue = :recurring_campaigns
 
   def self.perform
