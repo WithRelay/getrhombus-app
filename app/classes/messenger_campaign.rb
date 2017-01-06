@@ -1,4 +1,6 @@
 class MessengerCampaign
+  attr_reader :user_fb_creds
+  protected :user_fb_creds
 
   def initialize(campaign)
     @campaign = campaign
