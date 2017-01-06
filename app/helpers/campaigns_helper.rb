@@ -16,7 +16,7 @@ module CampaignsHelper
       end
     else
       # if fb page subscription is not present mms channel will be not visible
-      channel_list.delete('Facebook Messenger') if current_user.fb_pages.subscribed.present?
+      channel_list.delete('Facebook Messenger') unless current_user.fb_pages.subscribed.present?
       channel_list
     end
   end
