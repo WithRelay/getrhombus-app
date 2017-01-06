@@ -21,7 +21,7 @@ module ChannelCampaign
     private
 
     def retry_campaign?
-      @campaign.test? && @campaign.lists[0].try(:channel).present?
+      @campaign.test? || @campaign.lists[0].try(:channel).nil?
     end
 
     def channel_string_class
@@ -31,6 +31,7 @@ module ChannelCampaign
 
     def retry_other_channel
       # valid_retry_channel contains ["MobileCampaign", "MobileCampaign", "MessengerCampaign"]
+      valid_retry_channel = channel_mapper.values[1..3]
       valid_retry_channel = channel_mapper.values[1..3]
       # valid_retry_channel[2] contains "MessengerCampaign"
       if @failure_user_list.present? && valid_retry_channel.include?(channel_string_class)
