@@ -38,17 +38,11 @@ class Campaign < ActiveRecord::Base
     campaign_lists.delete_all
     args[0][:list_name].split(',').each { |list_id| campaign_lists.build(list_id: list_id).save }
     # creates records for attachment images associating with campaign
-    create_avatar(args[1]) if (!sms? && args[1][:avatar].present?)
+    images.build(avatar: args[1][:avatar], uploaded_as: 1) if (!sms? && args[1][:avatar].present?)
     # creates records for inline images associating with campaign
     create_image_refs(args[1]) if args[1][:image_id].present?
     # super calls a parent class update_attributes function and updates campaign attributes
     super(args[0])
-  end
-
-  def create_avatar(image_params)
-    image_params[:avatar].each do |image|
-      images.build(avatar: image, uploaded_as: 1)
-    end
   end
 
   def create_image_refs(campaign_image)
@@ -102,7 +96,7 @@ class Campaign < ActiveRecord::Base
 
   def total_image_size
     total_size = self.images.inject(0){ |sum, image| sum += image.avatar_file_size }
-    channel_max_image_upload = { 'email' => 25.megabytes, 'mms' => 5.megabytes }
+    channel_max_image_upload = { 'email' => 25.megabytes, 'mms' => (4.5).megabytes }
     get_total_allowed_size = channel_max_image_upload[self.channel]
     unless get_total_allowed_size.nil?
       errors.add(:images, "size not be greater than #{get_total_allowed_size/1_048_576} MB") if total_size > get_total_allowed_size
