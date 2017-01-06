@@ -1,5 +1,7 @@
 $(document).on('ready page:load', function() {
   var htmlContent = $('#campaign_channel').html()
+  var url = window.location.pathname.split('/')
+  var campaignId = (url[url.length-1]=='edit') ? ('?id=' + url[url.length-2]) : ''
   $('#campaignForm').formValidation({
     framework: 'bootstrap',
     excluded: ':disabled',
@@ -12,7 +14,7 @@ $(document).on('ready page:load', function() {
           },
           remote: {
             message: 'Campaign name already taken.',
-            url: '/v1/campaigns/check_campaign_name',
+            url: '/v1/campaigns/check_campaign_name' + campaignId,
             type: 'POST'
           }
         }
@@ -58,15 +60,20 @@ $(document).on('ready page:load', function() {
   }).on('success.form.fv', function(e, data) {
       if ($( '#sendTestCampaign' ).attr('active')){
         e.preventDefault();
-        var formData = new FormData(this);
-        // assign url of form
         var originalURL = this.action
+        // assign url of form
+        var originalMethod = $('input[name="_method"]').val()
+        if ($('input[name="_method"]').val()=='patch'){
+          $('input[name="_method"]').val('post')
+        }
         this.action = window.location.origin + '/v1/campaigns/send_test_email'
+        var formData = new FormData(this)
         // initialize a class apicontroller
         var apiController = new ApiController(this);
         // calls instance method sendRequest with parameter formdata
         apiController.sendRequest(formData);
         this.action = originalURL
+        $('input[name="_method"]').val(originalMethod)
         $('#sendTestCampaign').removeAttr('active');
       }
     });
