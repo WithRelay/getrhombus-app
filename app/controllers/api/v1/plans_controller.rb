@@ -41,10 +41,10 @@ class Api::V1::PlansController < API::V1::BaseController
     begin
       status = 500
       if @plan.update_plan(plan_update_params, current_user)
-        response = 'Plan created successfully'
+        response = 'Plan name updated successfully'
         status = 200
       else
-        response = @plan.errors.messages.present? ? @plan.errors.full_messages : "We couldn't update the plan"
+        response = @plan.errors.messages.present? ? @plan.errors.full_messages : "We couldn't update the plan name"
       end
     rescue StandardError => e
       response = 'Something went wrong on our end.'
