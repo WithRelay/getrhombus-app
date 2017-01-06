@@ -22,12 +22,13 @@ class SubscriptionsController < ApplicationController
   end
   
   def update
-    if @subscription.update_subscription(current_user, params[:subscription][:coupon_id])
+    coupon = Coupon.find params[:subscription][:coupon_id]
+    if @subscription.update_subscription(current_user, coupon.stripe_coupon_id)
       flash[:notice] = 'Subscription updated successfully'
     else
       flash[:error] = 'We couldn\'t update subscription'
     end
-    respond_with(@subscription)
+    redirect_to user_subscriptions_path
   end
 
   def destroy
@@ -96,7 +97,7 @@ class SubscriptionsController < ApplicationController
     end
 
     def get_plan_id
-      plan = Plan.find_by(name: params[:subscription][:plan_name])
+      plan = Plan.find_by(name: params[:subscription][:plan_name], merchant_id: User.get_platform_acct_obj.id)
       plan.id if plan
     end
 
