@@ -1,16 +1,7 @@
 <%= form_for('subscription', method: 'PUT', :html=> { id: 'coupon-update-form', class: 'form-horizontal' }) do |f| %>
     <label class="field-headers form-label settings" for="Business-Name">COUPON & DISCOUNTS</label>
 
-    <div class="settings-info-div">
-        <div class="flex-underline" id="plan-div">
-            <b>
-                <p>You don't have selected any subscription</p>
-                <p>Please select subscription by clicking on table row before upgrade/downgrade Plan</p>
-            </b>
-        </div>
-    </div>
-
-  <%= f.text_field :coupon_id, id: 'update-plan-id', placeholder: 'Enter Discount Code' %>
+  <%= f.text_field :coupon, id: 'update-plan-id', placeholder: 'Enter Discount Code' %>
   <br>
-  <%= f.submit 'Apply Discount', class: 'btn btn-success', id: 'submit-update-coupon', data: {disable_with: 'Please wait ...'} %>
+  <%= f.submit 'Apply Discount', class: 'button pricing-button customer-text-me', id: 'submit-update-coupon', saas_sub_id: get_saas_sub_id, data: {disable_with: 'Please wait ...'} %>
 <% end %>

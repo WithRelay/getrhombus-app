@@ -172,30 +172,10 @@ $(document).ready(function () {
 
   $('.auto-height').css('height', 'auto');
 
-  $('.subscription-row').on('click', function(){
-    subscriptionId = this.id.split('-')[1];
-    appendSubscriptionInfo($(this).find('td'));
-    $('#submit-update-plan').removeClass("hidden");
-  });
-
-  function appendSubscriptionInfo(subscriptionData){
-    $('#plan-div').empty();
-    $('#plan-div').append('Customer: ' + subscriptionData[0].innerHTML + '<br>');
-    $('#plan-div').append('Status: ' + subscriptionData[1].innerHTML + '<br>');
-    $('#plan-div').append('Plan: ' + subscriptionData[2].innerHTML + '<br>');
-    $('#plan-div').append('Coupon: ' + subscriptionData[3].innerHTML + '<br>');
-    $('#plan-div').append('Quantity: ' + subscriptionData[4].innerHTML + '<br>');
-  }
-
   $('#submit-update-coupon').on('click',function(){
-    if (subscriptionId === 0){
-      errorMsg = 'Please select subscription from table before apply new Coupon'
-      FlashHandler.setFlashMessage(errorMsg, 'error');
-      return false
-    } else {
-      action = $('#coupon-update-form').attr('action') + '/' + subscriptionId;
-      $('#coupon-update-form').attr('action', action);
-    }
+    subscriptionId = $(this).attr('saas_sub_id')
+    action = $('#coupon-update-form').attr('action') + '/' + subscriptionId;
+    $('#coupon-update-form').attr('action', action);
   });
   
   $('#change_subscription_plan').on('click',function(){
