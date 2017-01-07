@@ -81,7 +81,11 @@ class SubscriptionsController < ApplicationController
 
   private
     def set_subscription
-      @subscription = Subscription.find(params[:id])
+      @subscription = if params[:action] == 'upgrade_subscription' || params[:action] == 'downgrade_subscription'
+        Subscription.find(params[:subscription][:subscription_id])
+      else
+        Subscription.find(params[:id])
+      end
     end
 
     # create discount coupon with remaining unused amount while

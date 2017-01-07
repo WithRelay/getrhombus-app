@@ -4,10 +4,9 @@
     <h2 style="padding-left: 5%;">Select Subscription Plan</h2>
     <br>
     <div class="row" >
-      <!-- we can pass user's subscribed plan amount in amountValue attribute -->
-      <div class="col-xs-1"  style="height: 200px;padding-left: 5%;margin-top: 25px;">
-      <!-- we have to set amountValue dynamically for selected subscription -->
-        <%= f.text_field :plan_name, id: 'pricing-range', amountValue: "120" %>
+      <div class="col-xs-1" id="slider" style="height: 200px;padding-left: 5%;margin-top: 25px;">
+        <%= f.text_field :subscription_id, class: 'hidden', value: saas_sub(@subscriptions) %>
+        <%= f.text_field :plan_name, id: 'pricing-range', amountValue: amount(@subscriptions) %>
       </div>
       <br>
       <div class="col-xs-5">

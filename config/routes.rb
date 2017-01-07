@@ -63,8 +63,8 @@ Rails.application.routes.draw  do
     resources :hashtags, except: [:show, :destroy]
     resources :subscriptions, only: [:index, :update, :destroy] do
       collection do
-        post '/:id/upgrade_subscription' => 'subscriptions#upgrade_subscription'
-        post '/:id/downgrade_subscription' => 'subscriptions#downgrade_subscription'
+        post '/upgrade_subscription' => 'subscriptions#upgrade_subscription'
+        post '/downgrade_subscription' => 'subscriptions#downgrade_subscription'
       end
     end
 

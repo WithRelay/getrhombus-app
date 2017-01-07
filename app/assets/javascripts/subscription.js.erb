@@ -194,7 +194,7 @@ $(document).ready(function () {
   });
   
   $('#change_subscription_plan').on('click',function(){
-    action = $('#plan-update-form').attr('action') + '/143';
+    action = $('#plan-update-form').attr('action');
     actionName = ($(this).val() === 'Upgrade Subscription') ? 'upgrade_subscription' : 'downgrade_subscription' 
     action +='/' + actionName;
     $('#plan-update-form').attr('action', action);

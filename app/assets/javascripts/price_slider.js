@@ -1,19 +1,35 @@
 $(document).ready(function() {
-  var pricingSlider = document.getElementById('pricing-range'),
-    currentAmount = (pricingSlider) ? pricingSlider.attributes.amountValue.value : 0,
+  var pricingSlider, priceValueSpan, currentAmount;
+
+  // show slider on pricing page load
+  $(function(){
+    if (location.pathname === "/pricing") {
+      showSlider();
+    }
+  });
+
+   // show slider on subscription setting
+   $('#setSubscription').on('focus', function (e) {
+      showSlider();
+    })
+
+  function showSlider(){
+    pricingSlider = document.getElementById('pricing-range');
     priceValueSpan = document.getElementById('price-value');
-
-  if (pricingSlider) {
-    var slider = new Powerange(pricingSlider, {
-      callback : displayValue
-      , decimal       : false
-      , disableOpacity: 0.5
-      , min           : 0
-      , max           : 10000
-      , start         : currentAmount
-      , vertical      : true
-    });
-
+    $('.range-bar').remove();
+    currentAmount = (pricingSlider) ? pricingSlider.attributes.amountValue.value : 0;
+    if (pricingSlider) {
+      var slider = new Powerange(pricingSlider, {
+        callback : displayValue
+        , decimal       : false
+        , hideRange     : true
+        , disableOpacity: 0.5
+        , min           : 0
+        , max           : 10000
+        , start         : currentAmount
+        , vertical      : true
+      });
+    }
   }
 
   function displayValue() {
@@ -27,7 +43,7 @@ $(document).ready(function() {
     if (changePlan = $('#change_subscription_plan')[0]) {
       submitValue = (parseInt(pricingSlider.value) > currentAmount) ?
         'Upgrade Subscription' :
-        (parseInt(pricingSlider.value) < currentAmount) ? 'Downgrage Subscription' : 'Subscription';
+        (parseInt(pricingSlider.value) < currentAmount) ? 'Downgrade Subscription' : 'Subscription';
       $('#change_subscription_plan').val(submitValue);
       $('#pricing-range').val(plan_range(pricingSlider.value)[0]);
     }

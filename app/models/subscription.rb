@@ -91,8 +91,6 @@ class Subscription < ActiveRecord::Base
     end
   end
 
-  private
-
   def unused_amount
     plan = self.plan
     plan_amt = plan.amount
