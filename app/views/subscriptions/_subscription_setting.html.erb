@@ -5,8 +5,8 @@
     <br>
     <div class="row" >
       <div class="col-xs-1" id="slider" style="height: 200px;padding-left: 5%;margin-top: 25px;">
-        <%= f.text_field :subscription_id, class: 'hidden', value: saas_sub(@subscriptions) %>
-        <%= f.text_field :plan_name, id: 'pricing-range', amountValue: amount(@subscriptions) %>
+        <%= f.text_field :subscription_id, class: 'hidden', value: get_saas_sub_id %>
+        <%= f.text_field :plan_name, id: 'pricing-range', amountValue: get_saas_plan_amount %>
       </div>
       <br>
       <div class="col-xs-5">
@@ -15,7 +15,7 @@
     </div>
     <div class="row" style="padding-left: 15%;margin-top:-35px;">
       <br>
-      <%= f.submit 'Subscription', class: 'button pricing-button customer-text-me', id: 'change_subscription_plan', data: {disable_with: 'Please wait ...'} %>
+      <%= f.submit 'Change Plan', class: 'button pricing-button customer-text-me', id: 'change_subscription_plan', data: {disable_with: 'Please wait ...'} %>
     </div>
   </div>
 <% end %>

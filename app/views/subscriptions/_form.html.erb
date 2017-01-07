@@ -1,41 +1,38 @@
-<div>
-  <%= form_for('subscription', :html=> { id: 'subscriptionForm', class: 'form-horizontal' }) do |f| %>
+<%= form_for('subscription', :html=> { id: 'subscriptionForm', class: 'form-horizontal' }) do |f| %>
 
-     <div class="form-group">
-      <%= f.label :plan, class: 'col-xs-3 control-label' %>
-      <div class="col-xs-8">
-        <%= f.text_field :plan_id, class: 'form-control auto-height', placeholder: "Select a plan", id: "subscription-plan-id" %>
-      </div>
+   <div class="form-group">
+    <%= f.label :plan, class: 'col-xs-3 control-label' %>
+    <div class="col-xs-8">
+      <%= f.text_field :plan_id, class: 'form-control auto-height', placeholder: "Select a plan", id: "subscription-plan-id" %>
     </div>
+  </div>
 
-    <% if current_user.is_platform? %>
-      <div class="form-group">
-        <%= f.label :coupon, class: 'col-xs-3 control-label' %>
-        <div class="col-xs-8">
-          <%= f.text_field :coupon_id, class: 'form-control auto-height', id: 'subscription-select-coupon', placeholder: "Select a coupon" %>
-        </div>
-      </div>
-    <% end %>
-
+  <% if current_user.is_platform? %>
     <div class="form-group">
-      <%= f.label :customer, class: 'col-xs-3 control-label' %>
+      <%= f.label :coupon, class: 'col-xs-3 control-label' %>
       <div class="col-xs-8">
-        <%= f.text_field :merchant_customer_id, class: 'form-control auto-height', placeholder: "Select a customer", id: "subscription-customer-id" %>
-      </div>
-    </div>
-
-    <div class="form-group">
-      <%= f.label :quantity, class: 'col-xs-3 control-label' %>
-      <div class="col-xs-8">
-        <%= f.text_field :quantity, class: 'form-control', value: 1 %>
-      </div>
-    </div>
-
-    <div class="actions field form-group">
-      <div class="col-xs-9 col-xs-offset-3">
-        <%= f.submit 'Subscribe Customer', class: 'btn btn-primary', id: 'create-subscription' %>
+        <%= f.text_field :coupon_id, class: 'form-control auto-height', id: 'subscription-select-coupon', placeholder: "Select a coupon" %>
       </div>
     </div>
   <% end %>
 
-</div>
+  <div class="form-group">
+    <%= f.label :customer, class: 'col-xs-3 control-label' %>
+    <div class="col-xs-8">
+      <%= f.text_field :merchant_customer_id, class: 'form-control auto-height', placeholder: "Select a customer", id: "subscription-customer-id" %>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :quantity, class: 'col-xs-3 control-label' %>
+    <div class="col-xs-8">
+      <%= f.text_field :quantity, class: 'form-control', value: 1 %>
+    </div>
+  </div>
+
+  <div class="actions field form-group">
+    <div class="col-xs-9 col-xs-offset-3">
+      <%= f.submit 'Subscribe Customer', class: 'btn btn-primary', id: 'create-subscription' %>
+    </div>
+  </div>
+<% end %>

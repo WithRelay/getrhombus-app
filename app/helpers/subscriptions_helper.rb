@@ -1,23 +1,14 @@
 module SubscriptionsHelper
-  def saas_sub(subsriptions)
-    subsriptions.where(status: 'active').last.id
+  def get_saas_sub_id
+    saas_sub.id if current_user.is_merchant?
   end
 
-  def amount(subsriptions)
-    saas_subs = subsriptions.where(status: 'active').last
-    plan = Plan.find saas_subs.plan_id
-    per_month_amount(plan)
+  def get_saas_plan_amount
+    (Plan.find saas_sub.plan_id).amount/100 if current_user.is_merchant?
   end
 
-  def per_month_amount(plan)
-    amount = plan.amount
-    interval = plan.interval
-    if interval == 'week'
-      (amount*7*plan.interval_count)/(30 * 100)
-    elsif interval == 'month'
-      amount/100
-    else
-      (amount*12*plan.interval_count)/100
-    end
+  def saas_sub
+    platform_user = MerchantCustomer.find_by(customer_id: current_user.id)
+    platform_user.subscriptions.where(status: 'active').last
   end
 end

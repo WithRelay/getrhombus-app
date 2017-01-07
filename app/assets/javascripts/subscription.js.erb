@@ -108,6 +108,11 @@ $(document).ready(function () {
    $('#subscriptionForm').data('formValidation').resetForm();
   })
 
+  $('#modalPlan').on('shown.bs.modal', function () {
+   $('#planForm').data('formValidation').resetForm();
+  })
+
+
   $('#subscription-customer-id')
     .selectize({
       maxItems: 1,

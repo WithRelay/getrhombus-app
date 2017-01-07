@@ -6,7 +6,7 @@ class Plan < ActiveRecord::Base
 
   validates_presence_of :name, :interval, :interval_count, :amount
   validates :name, uniqueness: { case_sensitive: false, scope: :merchant_id }
-  validates_numericality_of :amount, :interval_count, greater_than: 0, only_integer: true
+  validates_numericality_of :amount, :interval_count, greater_than_or_equal_to: 0, only_integer: true
 
   after_commit :create_plan_segment
 
