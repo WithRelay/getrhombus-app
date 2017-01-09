@@ -16,6 +16,7 @@ module ChannelCampaign
       unless @campaign.reminder_campaign?
         retry_other_channel unless retry_campaign?
       end
+      update_campaign
     end
 
     private
@@ -32,7 +33,6 @@ module ChannelCampaign
     def retry_other_channel
       # valid_retry_channel contains ["MobileCampaign", "MobileCampaign", "MessengerCampaign"]
       valid_retry_channel = channel_mapper.values[1..3]
-      valid_retry_channel = channel_mapper.values[1..3]
       # valid_retry_channel[2] contains "MessengerCampaign"
       if @failure_user_list.present? && valid_retry_channel.include?(channel_string_class)
         if valid_retry_channel[2].include?(channel_string_class)
@@ -40,8 +40,6 @@ module ChannelCampaign
         elsif valid_retry_channel[0].include?(channel_string_class)
           retry_email_campaign
         end
-      else
-        update_campaign
       end
     end
 
