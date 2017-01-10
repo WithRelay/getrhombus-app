@@ -6,7 +6,6 @@ class SubscriptionsController < ApplicationController
   include Transactionable
 
   def index
-    @plan = Plan.new
     # This is for merchants only for now
     merchant_customers = current_user.customers.pluck(:id)
     @subscriptions = Subscription.where(merchant_customer_id: merchant_customers)
@@ -69,6 +68,7 @@ class SubscriptionsController < ApplicationController
 
   def downgrade_subscription
     if @subscription.cancel_subscription(current_user)
+      current_user.next_plans.update_all(status: false)
       # Store new plan that user wants to downgrade to
       store_next_plan(get_plan_id)
       flash[:notice] = 'Subscription listed for downgrade successfully.'

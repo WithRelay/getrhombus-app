@@ -10,11 +10,11 @@
 
   <div class="field form-group">
     <%= f.radio_button 'check', 'get-start', :checked => true %>
-    I agree to Relay terms of use & policy
+    <p>I agree to Relay terms of use & policy</p>
   </div>
 
   <div class="field form-group">
-    <%= f.button "Create relay account", class: "btn btn-primary", value: 'get-start', data: { disable_with: "<i class='fa fa-spinner fa-spin'></i>Please wait...".html_safe } %>
+    <%= f.button "Create relay account", class: "button", value: 'get-start', data: { disable_with: "<i class='fa fa-spinner fa-spin'></i>Please wait...".html_safe } %>
   </div>
 
 <% end %>
