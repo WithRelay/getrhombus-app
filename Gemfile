@@ -118,6 +118,11 @@ group :development, :test do
   gem 'spring'
   # debugging
   gem 'pry'
+  # for tests
+  gem 'rspec-rails', '~> 3.5'
+  gem 'ffaker'
+  gem 'factory_girl_rails'
+  gem 'database_cleaner'
 end
 
 ruby "2.2.3"
