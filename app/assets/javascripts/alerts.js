@@ -37,7 +37,7 @@ $(document).ready(function () {
       }
     })
     .on('success.form.fv', function(e, data) { 
-      $('#phone_number').val(PhoneNumberFormatter.getNumber().replace("+", ''));          
+      UtilFunctions.set_phone_number();
     });
 
   $('#alert-include-sms').change(function() {
