@@ -18,6 +18,13 @@ $(document).ready(function() {
       showSlider();
     })
 
+   // show slider on merchant credit card info update form
+   $(function(){
+     if (location.pathname === "/profile") {
+       showSlider();
+     }
+   });
+
   function showSlider(){
     pricingSlider = document.getElementById('pricing-range');
     priceValueSpan = document.getElementById('price-value');
@@ -42,15 +49,19 @@ $(document).ready(function() {
     priceValueSpan.innerHTML = '<h3>' + pricingSlider.value + '<b> Users</b> </h3><br>' +
       '<p>BILLED MONTHLY<p><br>' +
       '<h4>' + plan_range(pricingSlider.value)[1] + '</h4>';
-    $('#select_plan').attr('href', '/signup?signup_plan=' + plan_range(pricingSlider.value)[0]);
 
     //only for subscription setting page
-    if (changePlan = $('#change_subscription_plan')[0]) {
+    if ($('#change_subscription_plan')[0]) {
       amount = plan_range(parseInt(pricingSlider.value))[2];
       submitValue = (amount > currentAmount) ?
         'Upgrade Subscription' :
         (amount < currentAmount) ? 'Downgrade Subscription' : 'Subscription';
       (submitValue === 'Subscription') ? $('#change_subscription_plan').hide() : $('#change_subscription_plan').val(submitValue).show();
+      $('#pricing-range').val(plan_range(pricingSlider.value)[0]);
+    }
+    else {
+      // $('#select_plan').attr('href', '/signup?signup_plan=' + plan_range(pricingSlider.value)[0]);
+      // update selected plan name
       $('#pricing-range').val(plan_range(pricingSlider.value)[0]);
     }
   }
