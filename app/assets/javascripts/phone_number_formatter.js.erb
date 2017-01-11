@@ -26,6 +26,8 @@ var PhoneNumberFormatter = new function() {
  
 
 $(document).ready(function () {
+  // if presetting field, you must set the value to phone_number field before calling the code below run
   PhoneNumberFormatter.init('#phone');
-  $('#phone').val($('#phone_number').val())
+  var number = $('#phone_number').val();
+  if (number) $('#phone').val(number)
 });

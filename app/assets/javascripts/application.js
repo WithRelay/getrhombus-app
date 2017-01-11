@@ -29,7 +29,7 @@
 //= require dashboard/messaging_angularjs/messagingFilters.js
 //= require_tree ./dashboard/messaging_angularjs/templates
 
-// used for client sie form validation
+// used for client side form validation
 //
 //= require formValidation.min
 //= require bootstrap-formvalidator.min
@@ -51,9 +51,7 @@
 //= require trumbowyg_emoji_plugin
 //= require trumbowyg.upload.min
 //= require selectize
-//= require alerts
 //= require jquery.checkboxes-1.2.0.min.js
-//= require add-user
 //= require jquery.caret.js
 //= require jquery.atwho.js
 //= require dashboard/messaging_angularjs/messaging.js
