@@ -1,0 +1,99 @@
+
+<div class="container">
+  <div class="home sub-hero-div">
+    <h1 class="sub-hero-header">We've made it extremely easy for businesses to make customers happy <br>using personalized mobile messaging, help us spread the word.</h1>
+    <div class="customer-interactions-table w-row">
+      <div class="w-col w-col-4">
+        <div class="customer-interaction-content-wrapper first">
+          <div class="featues-div-header-wrapper"><img class="features-div-icon" src="http://uploads.webflow.com/5767087cbd63608e7eb4abdc/582b8e27ea22747e6e394794_Node.png"></div>
+          <div class="features-div-paragraph-wrapper">
+            <h3 class="features-div-header-text">Tell us about the business</h3>
+            <p class="feature-div-paragraph">Respond to customer inquiries via SMS or Facebook Messenger, so you can provide better support, quicker.</p>
+          </div>
+        </div>
+      </div>
+      <div class="w-col w-col-4">
+        <div class="customer-interaction-content-wrapper">
+          <div class="featues-div-header-wrapper"><img class="features-div-icon" src="http://uploads.webflow.com/5767087cbd63608e7eb4abdc/582b8f7eea22747e6e394cfe_User%20ID.png"></div>
+          <div class="features-div-paragraph-wrapper">
+            <h3 class="features-div-header-text">Notify the owner</h3>
+            <p class="feature-div-paragraph">Automate important notifications like bill payment due date, appointment reminders, etc. via mobile messaging.</p>
+          </div>
+        </div>
+      </div>
+      <div class="w-col w-col-4">
+        <div class="customer-interaction-content-wrapper">
+          <div class="featues-div-header-wrapper"><img class="features-div-icon" src="http://uploads.webflow.com/5767087cbd63608e7eb4abdc/582c9423749a3a9f347c0915_Node%203.png"></div>
+          <div class="features-div-paragraph-wrapper">
+            <h3 class="features-div-header-text">earn commissions</h3>
+            <p class="feature-div-paragraph">Segment your customers &nbsp;and send them targeted mobile messages to drive more sales.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="default-content-section features-page">
+    <div class="def-content-section-wrapper w-container">
+      <img class="section-icon" src="http://uploads.webflow.com/5767087cbd63608e7eb4abdc/582c9423749a3a9f347c0915_Node%203.png">
+      <h2>Business Referral</h2>
+      <div class="business-referral-table-column-1 w-col w-col-6">
+        <h3 class="section-3-header">Facebook Messenger Integration</h3>
+        <p class="def-content-section-paragraph section-4">Untether support from your website "live chat" by allowing your customers message you anywhere anytime via SMS or Facebook Messenger.&nbsp;</p>
+        <h3 class="section-3-header">Facebook Messenger Integration</h3>
+        <p class="def-content-section-paragraph section-4">Untether support from your website "live chat" by allowing your customers message you anywhere anytime via SMS or Facebook Messenger.&nbsp;</p>
+        <h3 class="section-3-header">Facebook Messenger Integration</h3>
+        <p class="def-content-section-paragraph section-4">Untether support from your website "live chat" by allowing your customers message you anywhere anytime via SMS or Facebook Messenger.&nbsp;</p>
+      </div>
+      <div class="w-col w-col-6">
+        <div class="account-settings-form-wrapper business-referral w-form">
+          <%= form_for('referrer', :html => { :id => "referrerForm" } ) do |f| %>
+
+            <h3>MY INFORMATION</h3>
+            <div class="field form-group group">
+              <%= f.text_field 'referrer_name', placeholder: 'Full name', class: 'form-control rhombusFocus' %>
+            </div>
+
+            <div class="field form-group group">
+              <%= f.text_field 'referrer_email', placeholder: 'Email Address', class: 'form-control rhombusFocus' %>
+            </div>
+            <hr>
+            <h3>I'M REFERRING</h3>
+
+            <div class="field form-group group">
+              <%= f.phone_field 'org_name', placeholder: 'Name of the business you\'re referring', class: 'form-control rhombusFocus'%>
+            </div>
+
+            <div class="field form-group group">
+              <%= f.phone_field 'email', placeholder: 'Contact person\'s email address', class: 'form-control rhombusFocus'%>
+            </div>
+
+            <div class="field form-group group">
+              <%= f.phone_field 'phone', placeholder: 'Phone Number (optional)', class: 'form-control rhombusFocus', id: 'phone' %>
+              <%= f.hidden_field :phone_number, :id => "phone_number" %>
+            </div>
+
+            <div class="field form-group group">
+              <%= f.select :country, CountriesList::COUNTRIES_LIST.collect { |c| [ c[:name], c[:code] ] }, include_blank: true, class: 'form-control rhombusFocus', prompt: 'Country' %>
+            </div>
+
+            <div class="field form-group">
+              <%= f.button "Invite business", id: 'referrer-submit', class: "button" %>
+            </div>
+
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr>
+  <div class="default-content-section">
+    <h1 class="first-content-section-sub-header footer-cta-header">Get started for free</h1>
+    <h5 class="footer-cta-subheading signup-box-subheading">TRY IT FREE NO LONG-TERM COMMITMENT</h5>
+    <div class="footer-cta-forms w-form">
+      <%= render 'static_pages/get_started_form' %>
+    </div>
+  </div>
+  
+</div>

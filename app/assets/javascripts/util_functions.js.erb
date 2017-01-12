@@ -4,10 +4,6 @@ var UtilFunctions = new function() {
     return $('input#cc-exp').payment('cardExpiryVal');
   }
 
-  this.set_phone_number = function() { 
-  	$('#phone_number').val(PhoneNumberFormatter.getNumber().replace("+", '')); 
-  }
-
   this.set_first_and_last_names = function() {
   	var full_name = $('#user_full_name').val().trim().replace(/\s{2,}/g,' ').split(' ');
     $('#firstName').val(full_name[0]);
@@ -15,5 +11,8 @@ var UtilFunctions = new function() {
     $('#lastName').val(full_name.join(' '));
   }
 
+  this.get_ipinfo_url = function() {
+  	return "https://ipinfo.io/?token=ae79647534348f";
+  }
 
 }

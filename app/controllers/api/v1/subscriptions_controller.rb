@@ -19,7 +19,7 @@ class Api::V1::SubscriptionsController < API::V1::BaseController
     rescue StandardError => e
       response = 'Something went wrong on our end.'
     end       
-    render json: { response: response }, status: status 
+    render json: { response: response }, status: status
   end
 
   private

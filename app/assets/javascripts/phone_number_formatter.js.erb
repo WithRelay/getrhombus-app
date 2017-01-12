@@ -6,8 +6,13 @@ var PhoneNumberFormatter = new function() {
     input = $(selector)
     input.intlTelInput({
       nationalMode: true,
-      defaultCountry: "auto",
-      ipinfoToken: "ae79647534348f",
+      initialCountry: 'auto',
+      geoIpLookup: function(callback) {
+        $.get(UtilFunctions.get_ipinfo_url(), function() {}, "jsonp").always(function(resp) {
+          var countryCode = (resp && resp.country) ? resp.country : "";
+          callback(countryCode);
+        });
+      },
       utilsScript: "<%= asset_path 'utils.js' %>" // just for formatting/placeholders etc
     });
   }
@@ -22,10 +27,18 @@ var PhoneNumberFormatter = new function() {
     return input.intlTelInput("getNumber");
   };
 
+  this.set_phone_number = function(with_plus) { 
+    var number = PhoneNumberFormatter.getNumber();
+    if (with_plus && number) number.replace("+", '');
+    if (number) $('#phone_number').val(number); 
+  }
+
 }
  
 
 $(document).ready(function () {
+  // if presetting field, you must set the value to phone_number field before calling the code below
   PhoneNumberFormatter.init('#phone');
-  $('#phone').val($('#phone_number').val())
+  var number = $('#phone_number').val();
+  if (number) $("#phone").intlTelInput("setNumber", number);
 });
