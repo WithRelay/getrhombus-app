@@ -106,7 +106,7 @@ $(document).ready(function () {
   })
   .on('success.form.fv', function(e, data) {
     e.preventDefault();
-    UtilFunctions.set_phone_number();
+    PhoneNumberFormatter.set_phone_number();
     $("#create-subscription").attr("disabled", true).val("Please wait...");
     referBusiness();
   })

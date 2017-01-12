@@ -135,7 +135,7 @@ $(document).ready(function() {
 
   function submit_create_user_form() {
 
-    UtilFunctions.set_phone_number();
+    PhoneNumberFormatter.set_phone_number();
     UtilFunctions.set_first_and_last_names();
 
     $.ajax({

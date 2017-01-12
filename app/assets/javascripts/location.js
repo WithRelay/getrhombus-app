@@ -3,7 +3,7 @@ $(document).ready(function () {
   //get_ip_info(save_referrer_uid);
   
   function get_ip_info(function_to_run) { 
-    $.getJSON('https://ipinfo.io/?token=ae79647534348f', function(data) { 
+    $.getJSON(UtilFunctions.get_ipinfo_url, function(data) { 
       function_to_run(data);
     }); 
   };

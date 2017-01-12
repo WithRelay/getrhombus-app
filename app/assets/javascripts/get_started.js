@@ -58,7 +58,7 @@ $(document).ready(function () {
       }
   })
   .on('success.form.fv', function(e, data) {
-    UtilFunctions.set_phone_number();
+    PhoneNumberFormatter.set_phone_number(true);
   });
 
 
