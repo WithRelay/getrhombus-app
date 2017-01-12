@@ -6,8 +6,13 @@ var PhoneNumberFormatter = new function() {
     input = $(selector)
     input.intlTelInput({
       nationalMode: true,
-      defaultCountry: "auto",
-      ipinfoToken: UtilFunctions.get_ipinfo_token(),
+      initialCountry: 'auto',
+      geoIpLookup: function(callback) {
+        $.get(UtilFunctions.get_ipinfo_url(), function() {}, "jsonp").always(function(resp) {
+          var countryCode = (resp && resp.country) ? resp.country : "";
+          callback(countryCode);
+        });
+      },
       utilsScript: "<%= asset_path 'utils.js' %>" // just for formatting/placeholders etc
     });
   }
