@@ -1,0 +1,45 @@
+<div class="dashboard-body settings w-clearfix">
+  <div class="dash-content-container settings">
+    <h4 class="form-header">Refer Businesses</h4>
+    <div class="flex-underline form-header-underline"></div>
+    <div class="account-settings-form-wrapper w-form">
+      <!-- form -->
+      <%= form_for('referrer', :html => { :id => "referrerForm" } ) do |f| %>
+
+        <h3>MY INFORMATION</h3>
+        <div class="field form-group group">
+          <%= f.text_field 'referrer_name', placeholder: 'Full name', class: 'form-control rhombusFocus', value: user_full_name %>
+        </div>
+
+        <div class="field form-group group">
+          <%= f.text_field 'referrer_email', placeholder: 'Email Address', class: 'form-control rhombusFocus', value: current_user.email %>
+          <%= f.hidden_field :referrer_id, :id => "referrer_id", value: current_user.id %>
+        </div>
+        <hr>
+        <h3>I'M REFERRING</h3>
+
+        <div class="field form-group group">
+          <%= f.phone_field 'org_name', placeholder: 'Name of the business you\'re referring', class: 'form-control rhombusFocus'%>
+        </div>
+
+        <div class="field form-group group">
+          <%= f.phone_field 'email', placeholder: 'Contact person\'s email address', class: 'form-control rhombusFocus'%>
+        </div>
+
+        <div class="field form-group group">
+          <%= f.phone_field 'phone', placeholder: 'Phone Number (optional)', class: 'form-control rhombusFocus', id: 'phone' %>
+          <%= f.hidden_field :phone_number, :id => "phone_number" %>
+        </div>
+
+        <div class="field form-group group">
+          <%= f.select :country, CountriesList::COUNTRIES_LIST.collect { |c| [ c[:name], c[:code] ] }, include_blank: true, class: 'form-control rhombusFocus', prompt: 'Country' %>
+        </div>
+
+        <div class="field form-group">
+          <%= f.button "Invite business", id: 'referrer-submit', class: "button" %>
+        </div>
+
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -110,6 +110,7 @@ Rails.application.routes.draw  do
       get 'businesses' => 'users#businesses'
       get 'notifications' => 'alerts#edit'
       get 'lists' => 'users#lists'
+      match 'refer_business' => 'users#refer_business', via: [:get, :post]
     end
   end
 
