@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
 
   # do I need these here ????
-  before_action :set_user, only: [:show, :edit, :update, :destroy, :messaging, :contacts, :customers]
+  before_action :set_user, only: [:show, :edit, :update, :destroy, :messaging, :contacts, :customers, :refer_business]
 
   # do i need this?
   load_and_authorize_resource except: [:customer_csv_template]

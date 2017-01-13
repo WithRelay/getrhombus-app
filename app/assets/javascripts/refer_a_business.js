@@ -105,10 +105,12 @@ $(document).ready(function () {
       }
   })
   .on('success.form.fv', function(e, data) {
-    e.preventDefault();
     PhoneNumberFormatter.set_phone_number();
-    $("#create-subscription").attr("disabled", true).val("Please wait...");
-    referBusiness();
+    if ($(this).attr('action').split('/').pop() !== 'refer_business') {
+      e.preventDefault();
+      $("#create-subscription").attr("disabled", true).val("Please wait...");
+      referBusiness();
+    }
   })
   .on('submit.form.fv', function(e,data) {
     if ($( "input[name='referrer[phone]']" ).val() === '') {
@@ -117,7 +119,6 @@ $(document).ready(function () {
   });
 
   function referBusiness() {
-    debugger
     $.ajax({
        url: "/v1/referrers/invite_business.json",
        beforeSend: function(xhr) {
