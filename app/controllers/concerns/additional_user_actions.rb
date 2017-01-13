@@ -5,6 +5,18 @@ module AdditionalUserActions
     redirect_to :root and return if @user.is_customer?
   end
 
+  def refer_business
+    if params[:referrer].present?
+      @referrer = Referrer.new(referrer_params)
+      if @referrer.save
+        flash[:notice] = 'Business invitation created successfully'
+      else
+        flash[:error] = 'Business invitation is not created'
+      end
+      redirect_to refer_business_user_path
+    end
+  end
+
   def managed_acct
     @user.address || @user.build_address
     @user.bank_accounts.present? || @user.bank_accounts.build
@@ -177,4 +189,8 @@ module AdditionalUserActions
     end
   end
 
+  def referrer_params
+    params.require(:referrer).permit(:referrer_email, :referrer_id, :email, :phone_number, :country, :referrer_name, :org_name,
+                                        :ip, :city, :region, :postal, :uid)
+  end
 end
