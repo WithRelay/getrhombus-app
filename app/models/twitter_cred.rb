@@ -22,8 +22,6 @@ class TwitterCred < ActiveRecord::Base
         row.friends_count = auth.extra.raw_info.friends_count
         row.image_url = auth.extra.raw_info.profile_image_url_https
 
-        row.user_id = id
-
         row.save
       end
       true
