@@ -58,7 +58,7 @@ class CampaignsController < ApplicationController
   def change_status
     status = @campaign.active? ? 2 : 1
     if @campaign.update_attribute('status', status)
-      @campaign.change_campaign_job
+      @campaign.change_job_status
       flash[:notice] = "Campaign #{@campaign.status}"
     else
       flash[:notice] = 'Sorry campaign could not be paused'
