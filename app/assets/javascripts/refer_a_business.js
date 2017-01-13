@@ -139,4 +139,9 @@ $(document).ready(function () {
      });
   };
 
+
+  $('[name="referrer[country]"]').selectize({
+    closeAfterSelect: true,
+  });
+
 })
