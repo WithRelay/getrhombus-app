@@ -4,7 +4,9 @@
   <div class="content">
     <div class="page-header">
       <div class="settings sub-nav-bar w-clearfix">
-        <%= link_to "Return to dashboard", user_path, class: "dashboard-return sub-nav-button w-button" %>
+        <%= link_to user_path, class: 'dashboard-return sub-nav-button w-button' do%>
+          <i class="fa fa-arrow-circle-left" aria-hidden="true">  Return to dashboard </i>
+        <%end%>
       </div>
 
       <div class="dashboard-body settings">
