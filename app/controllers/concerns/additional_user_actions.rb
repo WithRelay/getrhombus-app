@@ -1,6 +1,18 @@
 module AdditionalUserActions
   extend ActiveSupport::Concern
 
+  def integrations
+  end
+
+  def remove_twitter_integration
+    if current_user.twitter_cred.destroy
+      flash[:warning] = 'Twitter integration removed successfully'
+    else
+      flash[:error] = 'Something went wrong'
+    end
+    redirect_to integrations_user_path
+  end
+
   def messaging
     redirect_to :root and return if @user.is_customer?
   end
