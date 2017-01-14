@@ -105,7 +105,7 @@
     end
 
     def save_attachments
-      invalid_file = false; valid_file = false
+      invalid_file = valid_file = false
       @attachments.each do |a|
         url = a['payload']['url']
         file_extension = File.extname(URI.parse(url).path).downcase

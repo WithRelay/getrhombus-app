@@ -39,7 +39,7 @@ $(document).ready(function() {
         , min           : 0
         , max           : 10000
         , start         : 0
-        , vertical      : true
+        , vertical      : false
       });
     }
   }
