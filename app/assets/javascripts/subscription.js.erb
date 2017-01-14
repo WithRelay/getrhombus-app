@@ -29,6 +29,23 @@ $(document).ready(function () {
     }
   });
 
+  $('#coupon-update-form')
+    .formValidation({
+      framework: 'bootstrap',
+      excluded: ':disabled',
+      live: 'disabled',
+      // List of fields and their validation rules
+      fields: {
+        'subscription[coupon]':{
+          validators: {
+              notEmpty: {
+                message: 'Coupon code required'
+              }
+            }
+          }
+        }
+    });
+
   $('#subscriptionForm')
     .formValidation({
       framework: 'bootstrap',
