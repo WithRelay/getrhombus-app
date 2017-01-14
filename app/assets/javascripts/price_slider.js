@@ -67,16 +67,20 @@ $(document).ready(function() {
 
   function plan_range(customerCount) {
     if (customerCount > 0 && customerCount <= 100) {
-      return ['starter_plan', '$55<br><p>BILLED MONTHLY<p><br>' +'<h3>Starter Plan for $55/month <br>Up to 100 Users</h3>', starter_plan_amount]
+      return ['starter_plan', planInfo(starter_plan_amount), starter_plan_amount]
     } else if (customerCount > 100 && customerCount <= 1000) {
-      return ['growth_plan', '$255<br><p>BILLED MONTHLY<p><br>' +'<h3>Growth Plan for $255/month <br>Up to 1000 Users</h3>', growth_plan_amount]
+      return ['growth_plan',planInfo(growth_plan_amount), growth_plan_amount]
     } else if (customerCount > 1000 && customerCount <= 5000) {
-      return ['business_plan', '$2500<br><p>BILLED MONTHLY<p><br>' +'<h3>Business Plan for $2500/month <br>Up to 5000 Users</h3>', business_plan_amount]
+      return ['business_plan', planInfo(business_plan_amount), business_plan_amount]
     } else if (customerCount > 5000 && customerCount <= 10000) {
-      return ['enterprise_plan', '$7000<br><p>BILLED MONTHLY<p><br>' +'<h3>Enterprise Plan for $7000/month <br>Up to 10,000+ Users</h3>', enterprise_plan_amount]
+      return ['enterprise_plan', planInfo(enterprise_plan_amount), enterprise_plan_amount]
     } else {
-      return ['free_plan', '$0<br><p>BILLED MONTHLY<p><br>' +'<h3>Free Plan for $0/month <br>Up to 0 Users</h3>', free_plan_amount]
+      return ['free_plan', planInfo(free_plan_amount), free_plan_amount]
     }
+  }
+
+  function planInfo(amount) {
+    return '<h3 style="color: red;">$'+ amount +'</h3><br><p>BILLED MONTHLY<p><br>' +'<h3>Starter Plan for '+ amount +'/month <br>Up to 100 Users</h3>'
   }
 
 });
