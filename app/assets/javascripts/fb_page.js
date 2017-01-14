@@ -130,6 +130,14 @@ $( document ).ready(function() {
           }
       });
 
+   $('#remove_twitter_integration').click(function (evt) {
+     if (!$('#remove_twitter_integration').attr('isDestroy')) {
+       FlashHandler.setConfirmationDialog('#remove_twitter_integration','Twitter Integration',
+         'Are you sure, you want to remove the integration?', 'isDestroy' );
+       return false;
+     }
+   });
+
 });
 
 function check_status(val){

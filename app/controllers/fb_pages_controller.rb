@@ -77,9 +77,9 @@ class FbPagesController < ApplicationController
       # wipe everythiing (fb_creds, fb_pages) related to the current_user
       @user_fb_pages.destroy_all
       current_user.fb_creds.destroy_all             # oauth fb_cred of current user including page specific fb_creds
-      redirect_to user_path(current_user), flash: { notice: 'You have disconnected Facebook Messenger from Rhombus.' }
+      redirect_to integrations_user_path(current_user), flash: { notice: 'You have disconnected Facebook Messenger from Rhombus.' }
     else
-      redirect_to user_path(current_user), flash: { error: 'Unable to disconnect your Facebook Messenger from Rhombus.' }
+      redirect_to user_fb_pages_path(current_user), flash: { error: 'Unable to disconnect your Facebook Messenger from Rhombus.' }
     end
   end
 
