@@ -9,7 +9,7 @@ class StaticPagesController < ApplicationController
 
 	def privacy
 	end
-	
+
 	def customers
 	end
 
@@ -24,4 +24,8 @@ class StaticPagesController < ApplicationController
 
 	def to_404
 	end
+
+  def platform_integration; end
+
+  def request_demo; end
 end
