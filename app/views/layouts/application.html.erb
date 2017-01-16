@@ -6,12 +6,12 @@
     <meta name='description' content='Exchange real-time text messages, and accept payments from your customers – all within the conversation.'>
     <meta name='keywords' content='sms, conversational commerce, payments, text message, pay, chat, Make payments via text messages'>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
-
+    <!--  favicon -->
     <%= favicon_link_tag 'favicon.ico' %>
-
+    <!--  CSS files -->
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true  %>
     <%= stylesheet_link_tag 'https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css' %>
-
+    <!--  CSS files -->
     <%= javascript_include_tag 'https://ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js' %>
     <%= javascript_include_tag 'https://js.stripe.com/v2/' %>
     <%= javascript_include_tag 'application', 'data-turbolinks-track' => true  %>
@@ -24,10 +24,13 @@
     <%= csrf_meta_tags %>
 
   </head>
-  <body>
+  <body class='body'>
+    <%= render 'shared/unauthenticate_header' %>
     <%= yield %>
     <%= render 'shared/smooch' %>
     <%= render 'shared/google_analytics' %>
     <%= render 'shared/flash_messages'%>
+    <%= render 'shared/sign_up' %>
+    <%= render 'shared/unauthenticate_footer' %>
   </body>
 </html>
