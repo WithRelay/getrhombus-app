@@ -5,10 +5,12 @@ Rails.application.routes.draw  do
   ## static pages routes
   root 'static_pages#home'
   get 'about' => 'static_pages#about'
+  get 'platform-integration' => 'static_pages#platform_integration'
   get 'customers' => 'static_pages#customers'
   get 'faqs' => 'static_pages#faqs'
   get 'privacy' => 'static_pages#privacy'
   get 'terms' => 'static_pages#terms'
+  get 'request-demo'=> 'static_pages#request_demo'
   get 'pricing' => 'static_pages#pricing'
 
   get 'contact' => 'contact_forms#new'
