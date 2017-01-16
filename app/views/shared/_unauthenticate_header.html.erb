@@ -1,0 +1,135 @@
+<div class="fixed-navbar w-nav" data-animation="default" data-collapse="medium" data-duration="400" data-easing="ease-out" data-easing2="ease-in" data-ix="fixed-nav-display-none">
+  <div class="navbar-content-wrapper w-container">
+    <a class="brand-container w-nav-brand" href="#">
+      <%= image_tag('Relay-Transparent.png', class: 'logo-icon', width: 60) %>
+    </a>
+    <div class="hamburger-menu-wrapper w-nav-button">
+      <div class="hamburger-menu w-icon-nav-menu"></div>
+    </div>
+    <nav class="hamburger nav-menu w-nav-menu" role="navigation"><a class="nav-link w-nav-link" href="#">Features</a><a class="nav-link w-nav-link" href="#">Pricing</a>
+      <div class="w-dropdown" data-delay="400" data-hover="1">
+        <div class="use-case-dropdown w-dropdown-toggle">
+          <div class="use-case-dropdown-text">Use Cases</div>
+          <div class="w-icon-dropdown-toggle"></div>
+        </div>
+        <nav class="dropdown-options-wrapper w-dropdown-list">
+          <div class="dropdown-row w-row">
+            <div class="dropdown-column-1 w-col w-col-6"><a class="alt-dropdown-links w-inline-block" href="#"><h4 class="dropdown-header">Customer support</h4><p class="dropdpwn-paragraph">Provide personalized customer support with 3x better engagement</p></a>
+            </div>
+            <div class="dropdown-column-2 w-col w-col-6"><a class="alt-dropdown-links w-inline-block" href="#"><h4 class="dropdown-header">Staffing &amp; Recruitment</h4><p class="dropdpwn-paragraph">Accelerate candidate recruitment &amp; shift management using mobile messages</p></a>
+            </div>
+          </div>
+          <div class="dropdown-row w-row">
+            <div class="dropdown-column-1 w-col w-col-6"><a class="alt-dropdown-links w-inline-block" href="#"><h4 class="dropdown-header">On-demand Services</h4><p class="dropdpwn-paragraph">Send &amp; receive time sensitive messages to your mobile workforce</p></a>
+            </div>
+            <div class="dropdown-column-2 w-col w-col-6"><a class="alt-dropdown-links w-inline-block" href="#"><h4 class="dropdown-header">Education</h4><p class="dropdpwn-paragraph">Application deadlines, course notifications, school-wide alerts and more via text messages</p></a>
+            </div>
+          </div>
+          <div class="dropdown-row w-row">
+            <div class="dropdown-column-1 w-col w-col-6"><a class="alt-dropdown-links w-inline-block" href="#"><h4 class="dropdown-header">Non-profits</h4><p class="dropdpwn-paragraph">Accept payments and engage donors via text messages</p></a>
+            </div>
+            <div class="dropdown-column-2 w-col w-col-6"><a class="alt-dropdown-links w-inline-block" href="#"><h4 class="dropdown-header">Sales &amp; Marketing</h4><p class="dropdpwn-paragraph">Segment customers or leads, and set up automated drip campaigns via mobile messages</p></a>
+            </div>
+          </div>
+        </nav>
+      </div><a class="nav-link w-nav-link" href="#">Request a Demo</a><a class="nav-link w-nav-link" href="#">Log in</a><a class="button fixed signup w-button" href="#">Get started</a>
+    </nav>
+  </div>
+</div>
+
+<div class="hero" data-ix="show-fixed-navbar">
+    <div class="alt-navbar nav-bar w-nav" data-animation="default" data-collapse="medium" data-duration="400">
+      <div class="navbar-content-wrapper w-container">
+        <a class="brand-container w-nav-brand" href="#">
+          <%= image_tag('Relay-Transparent.png', class: 'logo-icon', width: 60) %>
+        </a>
+        <div class="hamburger-menu-wrapper w-nav-button">
+          <div class="hamburger-menu w-icon-nav-menu"></div>
+        </div>
+        <nav class="hamburger nav-menu w-nav-menu" role="navigation">
+          <%= link_to 'features', pricing_url, class: 'nav-link w-nav-link' %>
+          <%= link_to 'pricing', pricing_url, class: 'nav-link w-nav-link' %>
+          <div class="w-dropdown" data-delay="200" data-hover="1">
+            <div class="use-case-dropdown w-dropdown-toggle">
+              <div class="use-case-dropdown-text">Use Cases</div>
+              <div class="w-icon-dropdown-toggle"></div>
+            </div>
+            <nav class="dropdown-options-wrapper w-dropdown-list">
+              <div class="dropdown-row w-row">
+                <div class="dropdown-column-1 w-col w-col-6">
+                  <%= link_to pricing_url, class: 'alt-dropdown-links w-inline-block' do %>
+                      <h4 class="dropdown-header">Customer support</h4>
+                      <p class="dropdpwn-paragraph">Provide personalized customer support with 3x better engagement</p>
+                  <% end %>
+                </div>
+                <div class="dropdown-column-2 w-col w-col-6"><a class="alt-dropdown-links w-inline-block" href="#"><h4 class="dropdown-header">Staffing &amp; Recruitment</h4><p class="dropdpwn-paragraph">Accelerate candidate recruitment &amp; shift management using mobile messages</p></a>
+                </div>
+              </div>
+              <div class="dropdown-row w-row">
+                <div class="dropdown-column-1 w-col w-col-6">
+                  <%= link_to pricing_url, class: 'alt-dropdown-links w-inline-block' do %>
+                    <h4 class="dropdown-header">On-demand Services</h4>
+                    <p class="dropdpwn-paragraph">Send &amp; receive time sensitive messages to your mobile workforce</p>
+                  <% end %>
+                </div>
+                <div class="dropdown-column-2 w-col w-col-6"><a class="alt-dropdown-links w-inline-block" href="#"><h4 class="dropdown-header">Education</h4><p class="dropdpwn-paragraph">Application deadlines, course notifications, school-wide alerts and more via text messages</p></a>
+                </div>
+              </div>
+              <div class="dropdown-row w-row">
+                <div class="dropdown-column-1 w-col w-col-6"><a class="alt-dropdown-links w-inline-block" href="#"><h4 class="dropdown-header">Non-profits</h4><p class="dropdpwn-paragraph">Accept payments and engage donors via text messages</p></a>
+                </div>
+                <div class="dropdown-column-2 w-col w-col-6"><a class="alt-dropdown-links w-inline-block" href="#"><h4 class="dropdown-header">Sales &amp; Marketing</h4><p class="dropdpwn-paragraph">Segment customers or leads, and set up automated drip campaigns via mobile messages</p></a>
+                </div>
+              </div>
+            </nav>
+          </div>
+          <%= link_to 'Request Demo', request_demo_url, class: 'nav-link w-nav-link' %>
+          <%= link_to 'Log In', new_user_session_url, class: 'nav-link w-nav-link' %>
+          <%= link_to 'Log In', new_user_registration_url, class: 'button fixed signup w-button' %>
+        </nav>
+      </div>
+    </div>
+  </div>
+
+
+<!--
+<div class="w-nav navigation" data-collapse="medium" data-animation="over-right" data-duration="400" data-contain="1">
+    <div class="w-container">
+      <a class="w-nav-brand logo" href="/">
+        <div class="rhombus-logo"><img src="<%= asset_path 'imgo.jpg' %>" width="60" height="60">
+        </div>
+      </a>
+      <nav class="w-nav-menu nav-menu" role="navigation"><a class="w-nav-link nav-link" href="/">business</a><a class="w-nav-link nav-link" href="/customers">customers</a><a class="w-nav-link nav-link" href="/pricing">PRICING</a><a class="w-nav-link nav-link" href="/about">about</a>
+
+        <% if user_signed_in? %>
+          <%= link_to "Hi, #{current_user.email}", current_user, class: "w-nav-link nav-link" %>
+
+        <% else %>
+            <a class="button btn-white btn-signin btn-signin-main" href="/signin">sign in</a>
+        <% end %>
+
+      </nav>
+      <div class="w-nav-button hamburger">
+        <div class="w-icon-nav-menu"></div>
+      </div>
+    </div>
+  </div>
+  <div class="w-nav w-hidden-medium w-hidden-small w-hidden-tiny nav-scroll" data-collapse="medium" data-animation="default" data-duration="400" data-contain="1" data-ix="dispay-navscroll-none">
+    <div class="w-container">
+      <a class="w-nav-brand" href="/"><img src="<%= asset_path 'imgo.jpg' %>" alt="Rhombus Logo" width="60" height="60">
+      </a>
+      <nav class="w-nav-menu" role="navigation"><a class="w-nav-link nav-link link-scroll" href="/">business</a><a class="w-nav-link nav-link link-scroll" href="/customers">customers</a><a class="w-nav-link nav-link link-scroll" href="/pricing">PRICING</a><a class="w-nav-link nav-link link-scroll" href="/about">About</a>
+
+        <% if user_signed_in? %>
+          <%= link_to "Hi, #{current_user.email}", current_user, class: 'w-nav-link nav-link link-scroll' %>
+
+        <% else %>
+            <a class="button btn-signin btn-white" href="/signin">sign iN</a>
+        <% end %>
+
+      </nav>
+      <div class="w-nav-button">
+        <div class="w-icon-nav-menu"></div>
+      </div>
+    </div>
+  </div> -->

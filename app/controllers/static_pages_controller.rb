@@ -1,6 +1,5 @@
 class StaticPagesController < ApplicationController
 
-
 	def home
 	end
 
@@ -9,7 +8,7 @@ class StaticPagesController < ApplicationController
 
 	def privacy
 	end
-	
+
 	def customers
 	end
 
@@ -31,4 +30,8 @@ class StaticPagesController < ApplicationController
 	def creating_campaigns_in_relay
 		@url = action_name.split('_').join("-")
 	end
+
+  def platform_integration; end
+
+  def request_demo; end
 end
