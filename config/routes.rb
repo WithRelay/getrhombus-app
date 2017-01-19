@@ -13,6 +13,7 @@ Rails.application.routes.draw  do
   get 'request-demo'=> 'static_pages#request_demo'
   get 'pricing' => 'static_pages#pricing'
   get 'request_demo' => 'demos#request_demo'
+  get 'features' => 'static_pages#features'
 
   get 'contact' => 'contact_forms#new'
 
