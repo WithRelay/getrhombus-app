@@ -13,7 +13,7 @@ class Transaction < ActiveRecord::Base
   belongs_to :user, counter_cache: true
   belongs_to :team, class_name: "User", counter_cache: true
 
-=begin
+#=begin
   # Why am I passing an array in here?
   # Capture can change transaction status and date
   # Each transaction generates 3 rows. This will be normalized in future updates

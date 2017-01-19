@@ -46,6 +46,10 @@ Edwin
 - generate page loader
 
 Taiwo (review)
+- review referrer... 
+    - when do I use id and uid
+    - Is everyone getting a uid - i think yes
+    - do I store the referral and then store seperately when someone signs up?
 - review account/business/managed acct with surya and edwin
 - review upgrading/downgrading subscription 
 - review stripe_events
@@ -60,6 +64,7 @@ Taiwo (review)
 - final review of updating subscriptions, coupons, plans...do we update subscriptions esp platform??
 - Rake - migrate customer uri to merchant_customer plus drop column...but after migrating merchant_customer
    - remove livemode from users, add to merchant_customer and create rake task to migrate this to merchant..customer
+- signup page doesnt need params...only facebook link page
 
 Review
 - campaign_user_list (can better track failures) or notification_log or add an email model??
