@@ -12,7 +12,7 @@ Rails.application.routes.draw  do
   get 'terms' => 'static_pages#terms'
   get 'request-demo'=> 'static_pages#request_demo'
   get 'pricing' => 'static_pages#pricing'
-  get 'request_demo' => 'demos#request_demo'
+  get 'features' => 'static_pages#features'
 
   get 'contact' => 'contact_forms#new'
 
@@ -27,7 +27,7 @@ Rails.application.routes.draw  do
 
   ### fix this url
   post 'redirect' => 'link_fb_accounts#redirect'
-  
+
   resources :lists do
     resources :customer_lists
   end
@@ -149,7 +149,7 @@ Rails.application.routes.draw  do
     post "conversations/:id/mark_messages_as_read" => "conversations#mark_messages_as_read"
     post 'conversations/:id/send_merchant_message' => 'conversations#send_merchant_message'
     resources :knowledge_bases, param: :url, only: [:index] do
-      get 'rating', on: :member      
+      get 'rating', on: :member
     end
   end
 
