@@ -13,7 +13,9 @@
         <%= image_tag('whatsapp.png', class: 'alt messaging-app-icons', width: 30) %>
       </div>
     </div>
-    <div class="hero-button-wrapper w-clearfix"><a class="alt-hero-cta-button features hero-button w-button" href="#">Get started for free</a><a class="button div-cta hero-alt-button w-button" href="#">Learn more</a>
+    <div class="hero-button-wrapper w-clearfix">
+      <%= link_to 'Get started for free', new_user_registration_url, class: 'alt-hero-cta-button features hero-button w-button' %>
+      <a class="button div-cta hero-alt-button w-button" href="#">Learn more</a>
     </div>
   </div>
   <div class="w-col w-col-6">
