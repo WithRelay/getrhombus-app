@@ -32,7 +32,7 @@ h4 {
   margin-bottom: 0px;
   padding-top: 500px;
   padding-bottom: 0px;
-  background-image: url('../images/bubble-e055b4ad6f0a1b132abcee2606357611c13138df9fa21bd79fdc2f40cfbddbda.jpg');
+  background-image: url('bubble-e055b4ad6f0a1b132abcee2606357611c13138df9fa21bd79fdc2f40cfbddbda.jpg');
   background-position: 0px 0px;
   background-size: cover;
 }
@@ -961,7 +961,7 @@ h4 {
 }
 
 .hero.bg-hero {
-  background-image: url('../images/Blue-Wave-2-Background.png');
+  background-image: url('Blue-Wave-2-Background.png');
   background-position: 0px -144px;
   background-size: cover;
   background-repeat: no-repeat;
@@ -979,8 +979,8 @@ h4 {
 
 .hero.bg-hero.referral {
   background-color: #fff;
-  background-image: -webkit-linear-gradient(270deg, rgba(141, 162, 183, .5), rgba(141, 162, 183, .5)), url('../images/work-4.jpg');
-  background-image: linear-gradient(180deg, rgba(141, 162, 183, .5), rgba(141, 162, 183, .5)), url('../images/work-4.jpg');
+  background-image: -webkit-linear-gradient(270deg, rgba(141, 162, 183, .5), rgba(141, 162, 183, .5)), url('work-4.jpg');
+  background-image: linear-gradient(180deg, rgba(141, 162, 183, .5), rgba(141, 162, 183, .5)), url('work-4.jpg');
   background-position: 0px 0px, 0px -125px;
   background-size: auto, cover;
   background-repeat: repeat, no-repeat;
@@ -997,13 +997,13 @@ h4 {
 }
 
 .hero.alt-2 {
-  background-image: url('../images/Blue-Wave-Background.png');
+  background-image: url('Blue-Wave-Background.png');
   background-position: 0px -313px;
   background-size: cover;
 }
 
 .hero.customer-support {
-  background-image: url('../images/work-7.jpg');
+  background-image: url('work-7.jpg');
   background-position: 0px 0px;
   background-size: contain;
 }
@@ -1610,7 +1610,7 @@ h4 {
   -ms-flex-align: center;
   align-items: center;
   background-color: transparent;
-  background-image: url('../images/background-1.jpg');
+  background-image: url('background-1.jpg');
   background-position: 0px 0px;
   background-size: cover;
   background-repeat: no-repeat;
@@ -1634,7 +1634,7 @@ h4 {
   -webkit-align-items: center;
   -ms-flex-align: center;
   align-items: center;
-  background-image: url('../images/bubble-e055b4ad6f0a1b132abcee2606357611c13138df9fa21bd79fdc2f40cfbddbda.jpg');
+  background-image: url('bubble-e055b4ad6f0a1b132abcee2606357611c13138df9fa21bd79fdc2f40cfbddbda.jpg');
   background-position: 0px 0px;
   background-size: 880px;
 }
@@ -1678,8 +1678,8 @@ h4 {
   margin-left: 100px;
   border-radius: 4px;
   background-color: #fff;
-  background-image: -webkit-linear-gradient(270deg, rgba(0, 0, 0, .5), rgba(0, 0, 0, .5)), url('../images/Texting-2.jpg');
-  background-image: linear-gradient(180deg, rgba(0, 0, 0, .5), rgba(0, 0, 0, .5)), url('../images/Texting-2.jpg');
+  background-image: -webkit-linear-gradient(270deg, rgba(0, 0, 0, .5), rgba(0, 0, 0, .5)), url('Texting-2.jpg');
+  background-image: linear-gradient(180deg, rgba(0, 0, 0, .5), rgba(0, 0, 0, .5)), url('Texting-2.jpg');
   background-position: 0px 0px, 0px 0px;
   background-size: auto, cover;
 }
@@ -1693,7 +1693,7 @@ h4 {
 
 .side-blocks.signup-box-right {
   position: static;
-  background-image: url('../images/texting-3.jpg');
+  background-image: url('texting-3.jpg');
   background-position: -130px 0px;
   background-size: cover;
 }
@@ -1843,7 +1843,7 @@ h4 {
 
 .default-content-section.pricing-page {
   background-color: #f0f6fb;
-  background-image: url('../images/texting-3.jpg');
+  background-image: url('texting-3.jpg');
   background-position: 0px 0px;
   background-size: cover;
 }
@@ -5367,7 +5367,7 @@ h4 {
   padding-right: 0px;
   padding-left: 3px;
   float: left;
-  background-image: url('../images/Whitebox.png');
+  background-image: url('Whitebox.png');
   background-position: 0px 0px;
   background-size: 38px;
   font-family: 'Akkurat regular', sans-serif;
@@ -6512,7 +6512,7 @@ h4 {
   border: 1px solid #1f8cec;
   border-radius: 3px;
   background-color: #fff;
-  background-image: url('../images/Whitebox.png');
+  background-image: url('Whitebox.png');
   background-position: 0px 0px;
   background-size: 38px;
   font-family: 'Akkurat regular', sans-serif;
@@ -7039,7 +7039,7 @@ h4 {
   margin-left: 2px;
   border: 1px solid #1f8cec;
   border-radius: 3px;
-  background-image: url('../images/Whitebox.png');
+  background-image: url('Whitebox.png');
   background-position: 0px 0px;
   background-size: 38px;
   font-family: 'Akkurat regular', sans-serif;
@@ -7183,7 +7183,7 @@ h4 {
   width: 47%;
   height: 45px;
   float: left;
-  background-image: url('../images/Whitebox.png');
+  background-image: url('Whitebox.png');
   background-position: 0px 0px;
   background-size: 38px;
   font-family: 'Akkurat regular', sans-serif;
@@ -7337,7 +7337,7 @@ h4 {
   float: left;
   border: 1px solid #1f8cec;
   border-radius: 3px;
-  background-image: url('../images/Whitebox.png');
+  background-image: url('Whitebox.png');
   background-position: 0px 0px;
   background-size: 38px;
   font-family: 'Akkurat regular', sans-serif;
@@ -7357,7 +7357,7 @@ h4 {
   margin-left: 2px;
   border: 1px solid #1f8cec;
   border-radius: 3px;
-  background-image: url('../images/Whitebox.png');
+  background-image: url('Whitebox.png');
   background-position: 0px 0px;
   background-size: cover;
   font-family: 'Akkurat regular', sans-serif;
@@ -7436,7 +7436,7 @@ h4 {
   float: left;
   border: 1px solid #1f8cec;
   border-radius: 3px;
-  background-image: url('../images/Whitebox.png');
+  background-image: url('Whitebox.png');
   background-position: 0px 0px;
   background-size: 38px;
   font-family: 'Akkurat regular', sans-serif;
@@ -7455,7 +7455,7 @@ h4 {
   margin-left: 10%;
   border: 1px solid #1f8cec;
   border-radius: 3px;
-  background-image: url('../images/Whitebox.png');
+  background-image: url('Whitebox.png');
   background-position: 0px 0px;
   background-size: 38px;
   font-family: 'Akkurat regular', sans-serif;
@@ -7480,7 +7480,7 @@ h4 {
   margin-left: 10%;
   border: 1px solid #1f8cec;
   border-radius: 3px;
-  background-image: url('../images/Whitebox.png');
+  background-image: url('Whitebox.png');
   background-position: 0px 0px;
   background-size: 38px;
   font-family: 'Akkurat regular', sans-serif;
@@ -8163,7 +8163,7 @@ h4 {
   margin-left: 10px;
   float: left;
   border: 1px solid #1f8cec;
-  background-image: url('../images/Whitebox.png');
+  background-image: url('Whitebox.png');
   background-position: 0px 0px;
   background-size: 38px;
   font-family: 'Akkurat regular', sans-serif;
@@ -9714,7 +9714,7 @@ h4 {
 }
 
 .def-row-content-wrapper.picture-bg {
-  background-image: url('../images/working.jpeg');
+  background-image: url('working.jpeg');
   background-position: 0px 0px;
   background-size: cover;
   background-repeat: no-repeat;
@@ -9775,18 +9775,18 @@ h4 {
   margin-left: 10%;
   padding-top: 100px;
   border-radius: 3px;
-  background-image: url('../images/work-6.jpg');
+  background-image: url('work-6.jpg');
   background-position: 0px 0px;
   background-size: cover;
   background-repeat: no-repeat;
 }
 
 .use-case-div.alt {
-  background-image: url('../images/working.jpeg');
+  background-image: url('working.jpeg');
 }
 
 .use-case-div.alt-2 {
-  background-image: url('../images/Charity.jpg');
+  background-image: url('Charity.jpg');
   background-size: cover;
 }
 
