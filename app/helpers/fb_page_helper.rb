@@ -14,4 +14,8 @@
       page_name = ''
     end
   end
+
+  def fb_user_name
+    current_user.fb_creds.original_cred[0].name
+  end
 end

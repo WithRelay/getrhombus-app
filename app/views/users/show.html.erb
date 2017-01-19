@@ -17,12 +17,6 @@
   <!-- Start Page Header -->
   <div class="page-header" style="background: transparent; margin: -20px -24px 78px -32px; margin-bottom: 0px;">
     <h1 class="title">Dashboard</h1>
-    <%= link_to "Connect my Twitter Account", user_omniauth_authorize_path(:twitter), class: "btn btn-primary btn-rhombus" %>
-    <% if current_user.fb_creds.present? %>
-      <%= link_to "Connected with Facebook ", user_fb_pages_path(current_user), class: "btn btn-primary btn-rhombus" %>
-    <%else%>
-      <%= link_to "Connect my Facebook Account", user_omniauth_authorize_path(:facebook), class: "btn btn-primary btn-rhombus" %>
-    <%end%>
 
     <div id="customer-csv-template-link">empty template</div>
     <form id="customer-csv-template" method="get" action="customer_template.csv">

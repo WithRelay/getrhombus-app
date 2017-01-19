@@ -271,7 +271,8 @@ class StripeEvent
                               country: address_params[:country], postal_code: address_params[:zip] },
         stripe_creds_attributes: { fields_needed: account.verification.fields_needed,
                                    disabled_reason: account.verification.disabled_reason,
-                                   charges_enabled: @hash[:charge_enabled]
+                                   charges_enabled: @hash[:charge_enabled],
+                                   due_by: account.verification.due_by
                                  }
       }
     end

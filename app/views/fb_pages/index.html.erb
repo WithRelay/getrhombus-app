@@ -1,4 +1,3 @@
-<%= javascript_include_tag "plugins" %>
 <body style = "background: #f4f4f4">
    <!-- Start Page Loading -->
   <div class="loading"><img src="<%= asset_path 'loading.gif' %>" alt="loading-img"></div>
@@ -31,21 +30,18 @@
             <b>No page is subscribed yet</b>
           <% end %>
           </p>
-
         <%end%>
       <% else %>
         <p> Please make some facebook page before proceed</p>
       <%end%>
 
       <br/>
-      <%= link_to fb_pages_remove_integration_path, id: 'delete_integration', class: 'pull-right' do%>
+      <%= link_to fb_pages_remove_integration_path, id: 'delete_integration', class: 'pull-right button integrate-button w-button' do%>
         <i class="fa fa-trash" aria-hidden="true"> Remove Integration </i>
       <%end%>
     </div>
-    </div>
-
   </div>
-  <!-- End Page Loading -->
+
   <%= render 'shared/header_new' %>
   <%= render 'shared/sidebar' %>
   <%= render 'shared/smooch' %>

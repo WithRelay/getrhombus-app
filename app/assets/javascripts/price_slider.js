@@ -39,7 +39,7 @@ $(document).ready(function() {
         , min           : 0
         , max           : 10000
         , start         : 0
-        , vertical      : true
+        , vertical      : false
       });
     }
   }
@@ -47,7 +47,6 @@ $(document).ready(function() {
   function displayValue() {
     // priceValueSpan.innerHTML = pricingSlider.value;
     priceValueSpan.innerHTML = '<h3>' + pricingSlider.value + '<b> Users</b> </h3><br>' +
-      '<p>BILLED MONTHLY<p><br>' +
       '<h4>' + plan_range(pricingSlider.value)[1] + '</h4>';
 
     //only for subscription setting page
@@ -68,16 +67,20 @@ $(document).ready(function() {
 
   function plan_range(customerCount) {
     if (customerCount > 0 && customerCount <= 100) {
-      return ['starter_plan', 'Starter Plan for $55/month <br>Up to 100 Users', starter_plan_amount]
+      return ['starter_plan', planInfo('Starter Plan', starter_plan_amount), starter_plan_amount]
     } else if (customerCount > 100 && customerCount <= 1000) {
-      return ['growth_plan', 'Growth Plan for $255/month <br>Up to 1000 Users', growth_plan_amount]
+      return ['growth_plan',planInfo('Growth Plan', growth_plan_amount), growth_plan_amount]
     } else if (customerCount > 1000 && customerCount <= 5000) {
-      return ['business_plan', 'Business Plan for $2500/month <br>Up to 5000 Users', business_plan_amount]
+      return ['business_plan', planInfo('Business Plan', business_plan_amount), business_plan_amount]
     } else if (customerCount > 5000 && customerCount <= 10000) {
-      return ['enterprise_plan', 'Enterprise Plan for $7000/month <br>Up to 10,000+ Users', enterprise_plan_amount]
+      return ['enterprise_plan', planInfo('Enterprise Plan', enterprise_plan_amount), enterprise_plan_amount]
     } else {
-      return ['free_plan', 'Free Plan for $0/month <br>Up to 0 Users', free_plan_amount]
+      return ['free_plan', planInfo('Free Plan', free_plan_amount), free_plan_amount]
     }
+  }
+
+  function planInfo(plan, amount) {
+    return '<h3 style="color: red;">$'+ amount +'</h3><br><p>BILLED MONTHLY<p><br><h3>'+plan+' for '+ amount +'/month <br>Up to 100 Users</h3>'
   }
 
 });

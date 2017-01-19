@@ -57,12 +57,12 @@
   <!-- Relay Pricing Packages/Plan -->
   <div class="col-xs-6" >
     <!-- we can pass user's subscribed plan amount in amountValue attribute -->
-    <div class="col-xs-3"  style="height: 200px;margin-top: 70px;">
+    <div  style="width: 300px;margin-top: 50px;">
       <!-- we have to set amountValue dynamically for selected subscription -->
       <input type="text" name="plan[amount]" id="pricing-range" amountValue="0">
     </div>
     <br>
-    <div class="col-xs-3">
+    <div>
       <span class="row" id="price-value"></span>
       <div class="row">
         <a class="button pricing-button customer-text-me" href="/signup" id="select_plan" >Get Started</a>
@@ -99,7 +99,7 @@
         <p class="def-content-section-paragraph section-4">All Relay phone numbers are payment enabled, with the exception of Chile, Czech, Estonia, Hungary, Israel, Lithuania, Poland &amp; Puerto Rico.</p>
         <h3 class="section-3-header">What's an active customer or lead?</h3>
         <p class="def-content-section-paragraph section-4">Active customers or leads are individuals that have engaged in a two-way conversation with your business. You can also think of conversations as tickets, and you only pay for individuals your team has responded to, this way you don't pay for spam senders that message your business.</p>
-        <a class="button def-content-section-button w-button" href="#">See all FAQs</a>
+        <a class="button def-content-section-button w-button" href="#pricing-questions">See all FAQs</a>
       </div>
       <div class="w-col w-col-6">
         <div class="country-list flex-container w-clearfix">
@@ -206,7 +206,7 @@
   <%= render "static_pages/get_started_form" %>
 </div>
 <div class="w-section section pricing-section-3">
-  <div class="w-container">
+  <div class="w-container" id="pricing-questions">
     <div>
       <div class="pricing-questions-title">Questions? We’re here to help.</div>
     </div>

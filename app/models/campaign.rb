@@ -53,7 +53,8 @@ class Campaign < ActiveRecord::Base
 
   def change_campaign_job
     destroy_campaign_jobs
-    enqueue_jobs if active? || one_time? && deliver_now?
+    enqueue_jobs if is_campaign_date_selected? && is_campaign_date_less?
+    send_now_campaign if deliver_now?
   end
 
   def destroy_campaign_jobs
@@ -62,15 +63,28 @@ class Campaign < ActiveRecord::Base
 
   def enqueue_jobs
     unless (!self.active? || self.test?)
-      # rescue enqueue_at_with_queue accepts four parametera 1 name of queue, 2 date_time(provided as utc)
-      # 3 class name 4 the parameter send for class method perform
-      Resque.enqueue_at_with_queue('one_time_campaign', date_time.utc, OneTimeCampaignJob, id) if is_campaign_date_selected? || is_today_campaign?
-      SendNowCampaignJob.perform_now(self.id) if deliver_now?
+      rescue_job_queue if is_today_campaign?
+      send_now_campaign
     end
+  end
+
+  def change_job_status
+    destroy_campaign_jobs unless self.active?
+    rescue_job_queue if self.active? && is_campaign_date_selected? && is_campaign_date_less?
+  end
+
+  def rescue_job_queue
+    # rescue enqueue_at_with_queue accepts four parametera 1 name of queue, 2 date_time(provided as utc)
+    # 3 class name 4 the parameter send for class method perform
+    Resque.enqueue_at_with_queue('one_time_campaign', date_time.utc, OneTimeCampaignJob, id)
   end
 
   def reminder_campaign?
     self.is_a?(Reminder)
+  end
+
+  def send_now_campaign
+    SendNowCampaignJob.perform_now(self.id) if deliver_now?
   end
 
   private
@@ -101,6 +115,10 @@ class Campaign < ActiveRecord::Base
     unless get_total_allowed_size.nil?
       errors.add(:images, "size not be greater than #{get_total_allowed_size/1_048_576} MB") if total_size > get_total_allowed_size
     end
+  end
+
+  def is_campaign_date_less?
+    Time.current < self.date_time
   end
 
   def set_campaign_status

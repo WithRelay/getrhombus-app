@@ -35,7 +35,7 @@
 //= require_tree ./dashboard/messaging_angularjs/templates
 
 //= require url-parameters
-//= require fb_page
+//= require integrations
 
 //= require emojionearea
 

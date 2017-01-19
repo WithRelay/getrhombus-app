@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
 
   # do I need these here ????
-  before_action :set_user, only: [:show, :edit, :update, :destroy, :messaging, :contacts, :customers]
+  before_action :set_user, only: [:show, :edit, :update, :destroy, :messaging, :contacts, :customers, :refer_business]
 
   # do i need this?
   load_and_authorize_resource except: [:customer_csv_template]
@@ -36,8 +36,8 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
     respond_to do |format|
       if @user.save
-          format.html { redirect_to @user, notice: 'Welcome!' }
-         	format.json { render action: 'show', status: :created, location: @user }
+        format.html { redirect_to @user, notice: 'Welcome!' }
+        format.json { render action: 'show', status: :created, location: @user }
       else
        	format.html { render action: 'new' }
        	format.json { render json: @user.errors, status: :unprocessable_entity }

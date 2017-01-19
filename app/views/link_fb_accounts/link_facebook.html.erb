@@ -21,10 +21,10 @@
       </div>
       <br>
       <div class="pull-right">
-        <%= link_to signup_path, id: 'signup', target: '_blank', onClick: 'javascript:window.close()' do%>
-        <i class='fa fa-sign-in' aria-hidden='true'>Sign Up</i>
+        <%= link_to signup_path(referrer_uid: 1, value: @params), id: 'signup', target: '_blank', onClick: 'javascript:window.close()' do%>
+          <i class='fa fa-sign-in' aria-hidden='true'>Sign Up</i>
+        <%end%>
       </div>
-      <%end%>
     </div>
   </div>
 </div>

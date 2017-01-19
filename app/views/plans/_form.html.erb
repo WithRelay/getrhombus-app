@@ -1,4 +1,4 @@
-<%= form_for([current_user, @plan], :html=> { id: 'planForm', class: 'form-horizontal' }) do |f| %>
+<%= form_for([current_user,  Plan.new], :html=> { id: 'planForm', class: 'form-horizontal' }) do |f| %>
 
   <div class="form-group">
     <%= f.label :name, class: 'col-xs-3 control-label' %>

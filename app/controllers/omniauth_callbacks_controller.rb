@@ -5,13 +5,13 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
   def twitter
     if current_user.is_merchant?
       if TwitterCred.from_omniauth(request.env["omniauth.auth"], current_user.id) == true
-        redirect_to user_path(current_user)
+        redirect_to integrations_user_path(current_user)
         set_flash_message(:notice, :success, :kind => "Twitter") if is_navigational_format?
         return
       end
-      redirect_to user_path(current_user), alert: "We were unable to connect your account to Twitter. Please try again"
+      redirect_to integrations_user_path(current_user), alert: "We were unable to connect your account to Twitter. Please try again"
     else
-      redirect_to user_path(current_user), alert: "You cannot connect your Twitter account."
+      redirect_to integrations_user_path(current_user), alert: "You cannot connect your Twitter account."
     end
   end
 

@@ -9,7 +9,7 @@ module BaseScheduler
       # sets time zone i.e. user time zone for all datatime object
       Time.zone = campaign.user.time_zone
       # set current date time in campaign user's time zone
-      date_time_now =  Time.now.in_time_zone
+      date_time_now =  Time.current.in_time_zone
       # check if job is already send to rescue scheduler job_schedule variable contains boolean value
       job_schedule = Resque.find_delayed_selection{|s| s.include?(campaign.id) }
       # if campaign is less than send_count than 1. it means it is running first time

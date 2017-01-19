@@ -4,7 +4,7 @@ class FacebookMessengerService
 
     # for messenger_account_linking
     def send_auth_link(page_access_token, recipient_id, welcome_text)
-      link_url = (Rails.env == 'production')? "https://www.getrhombus.com/link_facebook" : "<redacted_webhook_url>"
+      link_url = (Rails.env == 'production')? "https://www.getrhombus.com/link_facebook" : "https://f18d5f30.ngrok.io/link_facebook"
       body = {
         recipient:{
           id: recipient_id
@@ -30,22 +30,37 @@ class FacebookMessengerService
     end
 
     # update new user from messenger's email from account linking
-    def update_user_fb_cred(params)
+    def update_user_fb_cred(referee, params)
       account_linking_token = params['account_linking_token']
-      subscribed_page = FbPage.where(subscription_status: true)
-      token_array = subscribed_page.pluck('page_access_token')
-      token_array.each do |token|
-        response = get_page_scope_id(account_linking_token, token)
-        if response.is_a? String
-          response = JSON.parse response
-        end
-        if response
-          psid = response['recipient']
-          fb_user = FbCred.find_by(page_specific_id: psid)
-          fb_user.update(email: params['email']) if fb_user
-          break
-        end
+      subscribed_page = FbPage.subscribed.first
+      @referee = referee
+      @referrer = User.find  subscribed_page[:user_id]
+      set_referrer unless check_referrer
+      token = subscribed_page[:page_access_token]
+
+      response = get_page_scope_id(account_linking_token, token)
+      if response.is_a? String
+        response = JSON.parse response
       end
+      if response
+        psid = response['recipient']
+        fb_cred = FbCred.find_by(page_specific_id: psid)
+        fb_cred.update(email: params['email'], user_id: @referee.id) if fb_cred
+      end
+    end
+
+    def check_referrer
+      Referrer.where(referee_id: @referee.id, referrer_id: @referrer.id).present? ? true : false
+    end
+
+    def set_referrer
+      Referrer.create(
+        referrer_email: @referrer.email,
+        email: @referee.email,
+        referrer_id: @referrer.id,
+        referee_id: @referee.id,
+        referrer_name: @referrer.first_name + ' ' + @referrer.last_name,
+      )
     end
 
     def get_page_scope_id(account_linking_token, page_access_token)
