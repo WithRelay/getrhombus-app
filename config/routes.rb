@@ -19,8 +19,6 @@ Rails.application.routes.draw  do
   get 'use-case-on-sales-marketing' => 'static_pages#use_case_sales_marketing'
   get 'use-case-staffing-employment' => 'static_pages#use_case_staffing_employment'
   get 'refer-a-business' => 'static_pages#refer_a_business'
-
-
   get 'contact' => 'contact_forms#new'
 
   post 'lists/create_new_list' => 'lists#create_new_list'
