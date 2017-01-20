@@ -39,12 +39,12 @@
 
   </head>
   <body class='body'>
-    <%= render 'shared/unauthenticate_header' unless check_params %>
+    <%= render_header_partial %>
+    <%= render_sidebar_partial %>
     <%= yield %>
+    <%= render_footer_partial %>
     <%= render 'shared/smooch' %>
     <%= render 'shared/google_analytics' %>
-    <%= render 'shared/flash_messages' unless check_params %>
-    <%= render 'shared/sign_up' unless check_params %>
-    <%= render 'shared/unauthenticate_footer' unless check_params %>
+    <%= render 'shared/flash_messages' %>
   </body>
 </html>
