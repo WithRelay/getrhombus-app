@@ -7,13 +7,17 @@ module ApplicationHelper
   end
 
   def render_header_partial
-    concat(render 'shared/unauthenticate_header') if !check_params && unauthenticate_controller
-    concat(render 'shared/authenticated_header') unless (unauthenticate_controller || check_params) || campaign_restrict_params || campaign_restrict_params
+    unless relay_docs_page
+      concat(render 'shared/unauthenticate_header') if (!check_params && unauthenticate_controller)
+    end
+    concat(render 'shared/docs_header') if relay_docs_page
+    concat(render 'shared/authenticated_header') unless (unauthenticate_controller || check_params) || campaign_restrict_params || messaging_dashboard
     concat(render 'campaigns/campaign_header') if campaign_restrict_params
+    concat(render 'shared/messaging_header') if messaging_dashboard
   end
 
   def render_sidebar_partial
-    render 'shared/dashboard_sidebar' unless (unauthenticate_controller || check_params) || restrict_other_params
+    render 'shared/dashboard_sidebar' unless (unauthenticate_controller || check_params) || restrict_other_params || messaging_dashboard
   end
 
   def restrict_other_params
@@ -21,9 +25,19 @@ module ApplicationHelper
     actions.include?("#{params[:controller]}-#{params[:action]}")
   end
 
+  def messaging_dashboard
+    messaging_params = ['users-messaging']
+    messaging_params.include?("#{params[:controller]}-#{params[:action]}")
+  end
+
   def campaign_restrict_params
     restrict_params = ['campaigns-index']
     restrict_params.include?("#{params[:controller]}-#{params[:action]}")
+  end
+
+  def relay_docs_page
+    doc_actions = ['static_pages-relay_docs', 'hashtags-new']
+    doc_actions.include?("#{params[:controller]}-#{params[:action]}")
   end
 
   def render_footer_partial
@@ -32,7 +46,8 @@ module ApplicationHelper
   end
 
   def unauthenticate_controller
-    (params[:controller]=='static_pages' || params[:controller] == 'contact_forms')
+    static_controllers = ['static_pages', 'contact_forms' ]
+    static_controllers.include?(params[:controller])
   end
 
   def check_params
