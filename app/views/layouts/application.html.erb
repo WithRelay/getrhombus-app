@@ -1,13 +1,3 @@
-<!DOCTYPE html>
-<html data-wf-site='55398a823ca1c17b4205500b' data-wf-page='55398a823ca1c17b4205500d'>
-  <head>
-    <meta charset='UTF-8'>
-    <title><%= content_for?(:title) ? yield(:title) : 'Rhombus - Conversation Commerce Platform' %></title>
-
-    <!-- Meta Tags -->
-    <meta name='description' content='Exchange real-time text messages, and accept payments from your customers – all within the conversation.'>
-    <meta name='keywords' content='sms, conversational commerce, payments, text message, pay, chat, Make payments via text messages'>
-    <meta content="width=device-width, initial-scale=1" name="viewport">
 
     <!--  favicon -->
     <%= favicon_link_tag 'favicon.ico' %>
@@ -38,12 +28,13 @@
   <%= csrf_meta_tags %>
 
   </head>
-  
   <body class='body'>
     <%= render_header_partial %>
     <%= yield %>
     <%= render_sidebar_partial %>
     <%= render_footer_partial %>
+    <%= render 'shared/smooch' %>
+    <%= render 'shared/google_analytics' %>
     <%= render 'shared/flash_messages' %>
   </body>
 </html>
