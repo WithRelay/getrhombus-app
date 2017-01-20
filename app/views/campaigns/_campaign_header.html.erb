@@ -1,4 +1,13 @@
-<%= link_to 'Active', filter_campaign_user_campaigns_path(current_user, status: 'active') %>
-<%= link_to 'Inactive', filter_campaign_user_campaigns_path(current_user, status: 'inactive') %>
-<%= link_to 'Sent', filter_campaign_user_campaigns_path(current_user, status: 'sent') %>
-<%= link_to 'Paused', filter_campaign_user_campaigns_path(current_user, status: 'paused') %>
+<%#= link_to 'Active', filter_campaign_user_campaigns_path(current_user, status: 'active') %>
+<%#= link_to 'Inactive', filter_campaign_user_campaigns_path(current_user, status: 'inactive') %>
+<%#= link_to 'Sent', filter_campaign_user_campaigns_path(current_user, status: 'sent') %>
+<%#= link_to 'Paused', filter_campaign_user_campaigns_path(current_user, status: 'paused') %>
+
+<div class="customer-dash sub-nav-bar">
+    <div class="sub-nav-options-wrapper w-clearfix">
+      <%= link_to ' &nbsp;New campaign'.html_safe, new_user_campaign_path, class: 'add sub-nav-button w-button', data: { ix: 'create-customer' } %>
+      <a class="import sub-nav-button w-button" data-ix="import-customers" href="#">&nbsp; Deactivate</a>
+      <a class="sub-nav-button w-button" data-ix="create-list" href="#"> &nbsp;Resend</a>
+      <a class="sub-nav-button w-button" data-ix="create-list" href="#"> &nbsp;Delete</a>
+    </div>
+  </div>
