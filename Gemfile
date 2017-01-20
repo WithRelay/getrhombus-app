@@ -19,9 +19,10 @@ gem 'ar_after_transaction'
 gem "cancan"
 
 gem 'cocoon'
-
 # bread & butter
 gem "stripe"
+gem 'omniauth-stripe-connect'
+
 
 gem 'paperclip', :git=> 'https://github.com/thoughtbot/paperclip', :ref => '523bd46c768226893f23889079a7aa9c73b57d68'
 gem 'aws-sdk'
