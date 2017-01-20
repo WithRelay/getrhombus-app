@@ -2,6 +2,20 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
   protect_from_forgery
   before_action :check_user_present
 
+  def stripe_connect
+    if current_user.is_merchant?
+        if StripeCred.from_omniauth(request.env["omniauth.auth"], current_user.id)
+           sign_in_and_redirect current_user
+           set_flash_message(:notice, :success, :kind => "Stripe Connect") if is_navigational_format?
+           return
+        else
+           redirect_to user_path(current_user), alert: "We were unable to connect your account to Stripe. Please try again"
+        end
+    else
+        redirect_to user_path(current_user), alert: "We were unable to connect your account to Stripe. Please try again"
+    end
+  end
+
   def twitter
     if current_user.is_merchant?
       if TwitterCred.from_omniauth(request.env["omniauth.auth"], current_user.id) == true
@@ -22,14 +36,10 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
         redirect_to user_fb_pages_path(current_user), flash: { notice: "You have connected Messenger to Rhombus" }
         return
       end
-      redirect_to user_path(current_user), flash: { error: "We were unable to connect your account to Facebook account. Please try again" }
+      redirect_to integrations_user_path(current_user), flash: { error: "We were unable to connect your account to Facebook account. Please try again" }
     else
-      redirect_to user_path(current_user), flash: { error: "You cannot connect your Facebook account." }
+      redirect_to integrations_user_path(current_user), flash: { error: "You cannot connect your Facebook account." }
     end
-  end
-
-  def failure
-    redirect_to user_path(current_user), flash: { error: "We were unable to connect your account. Please try again" }
   end
 
   private 

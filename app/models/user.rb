@@ -22,7 +22,7 @@ class User < ActiveRecord::Base
   validates_uniqueness_of :phone_number, :allow_nil => true, :if => lambda { is_merchant? }
   validate :phone_number_cannot_be_rhombus_number
   # include default devise modules. Others available are: :token_authenticatable, :lockable, :timeoutable and :confirmable,
-  devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable, :omniauthable
+  devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable, :omniauthable, :omniauth_providers => [:facebook, :twitter, :stripe_connect]
 
   has_many :transactions
   has_many :merchant_transactions, class_name: 'Transaction', foreign_key: 'team_id'
