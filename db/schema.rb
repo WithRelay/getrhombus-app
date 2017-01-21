@@ -37,7 +37,7 @@ ActiveRecord::Schema.define(version: 20170128161715) do
     t.datetime "updated_at",                              null: false
   end
 
-  add_index "alerts", ["user_id"], name: "index_alerts_on_user_id", using: :btree
+  add_index "alerts", ["user_id"], name: "fk_rails_a4db95c162", using: :btree
 
   create_table "bank_accounts", force: :cascade do |t|
     t.string   "stripe_bank_account_id", limit: 191
@@ -347,6 +347,7 @@ ActiveRecord::Schema.define(version: 20170128161715) do
 
   add_index "knowledge_bases", ["title", "raw_content"], name: "title", type: :fulltext
   add_index "knowledge_bases", ["title"], name: "index_knowledge_bases_on_title", unique: true, using: :btree
+  add_index "knowledge_bases", ["title", "raw_content"], name: "index_knowledge_bases_on_title_and_raw_content", type: :fulltext
   add_index "invoices", ["coupon_id"], name: "fk_rails_7aa1e153d5", using: :btree
   add_index "invoices", ["stripe_invoice_id"], name: "index_invoices_on_stripe_invoice_id", using: :btree
   add_index "invoices", ["subscription_id"], name: "fk_rails_46381ea356", using: :btree
