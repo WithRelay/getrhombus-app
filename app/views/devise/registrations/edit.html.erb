@@ -8,7 +8,6 @@
       <%= render "user_profile" %>
   <% end %>
 
-
 <% elsif current_user.is_merchant? %>
     <% if current_user.card_token.blank? %>
       <%= render "merchant_card_info" %>
