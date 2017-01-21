@@ -16,7 +16,7 @@ module ApplicationHelper
   end
 
   def render_footer_partial
-    render 'shared/sign_up' if !check_params && unauthenticate_controller
+    concat(render 'shared/sign_up') if !check_params && unauthenticate_controller
     render 'shared/unauthenticate_footer' if !check_params && unauthenticate_controller
   end
 
