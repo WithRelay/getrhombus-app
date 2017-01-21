@@ -65,6 +65,7 @@ Taiwo (review)
 - Rake - migrate customer uri to merchant_customer plus drop column...but after migrating merchant_customer
    - remove livemode from users, add to merchant_customer and create rake task to migrate this to merchant..customer
 - signup page doesnt need params...only facebook link page
+- <% if current_user.stripe_creds.empty? %> not needed for connect
 
 Review
 - campaign_user_list (can better track failures) or notification_log or add an email model??
@@ -77,7 +78,7 @@ Review
 - create Seeds
 - notifications platform to merchants should have a single conversation and should not be pulled - mark as read too
 - conversations....need origin...cos system to customers should not open conversation....
-- return omniauth stripe connect for dashboard account - check how we save platform stripe cred...does stripe connect still work? do we really need this?
+
 
 Payment Capture - should be for only customers....capture in logic
 - check if /profile affect forms for merchants
