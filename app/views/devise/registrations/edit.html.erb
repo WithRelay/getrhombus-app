@@ -1,6 +1,6 @@
 <%#<button type="button" id="populate" class="btn btn-default pull-right" style="margin-bottom: 20px;">Populate Test Data</button>%>
 
-<% if current_user.user_level == 0 %>
+<% if current_user.is_customer? %>
 
    <% if current_user.card_token.blank? %>
       <%= render "user_information" %>
@@ -8,7 +8,7 @@
       <%= render "user_profile" %>
   <% end %>
 
-<% elsif current_user.user_level == 1 %>
+<% elsif current_user.is_merchant? %>
     <% if current_user.card_token.blank? %>
       <%= render "merchant_card_info" %>
     <% elsif current_user.org_name.blank? %>
