@@ -3,12 +3,11 @@ class Plan < ActiveRecord::Base
   has_many :subscriptions
   belongs_to :merchant, class_name: "User"
   belongs_to :customer, class_name: "User"
+  belongs_to :hashtag, -> { where tag_type: 3 }
 
   validates_presence_of :name, :interval, :interval_count, :amount
   validates :name, uniqueness: { case_sensitive: false, scope: :merchant_id }
   validates_numericality_of :amount, :interval_count, greater_than_or_equal_to: 0, only_integer: true
-
-  after_commit :create_plan_segment
 
   def create_plan(hash)
     begin
@@ -20,15 +19,12 @@ class Plan < ActiveRecord::Base
 
       descriptor = (self.name + "-" + team.org_name)[0..21]
 
-      # a customer or a team/merchant can create a plan
-      _user_id = (hash.has_key? :customer) ? hash[:customer].id : hash[:team].id
-
-      # dont send team/merchant or customer data in hash
-      [:team, :customer].each { |k| hash.delete(k) }
+      # dont send team/merchant in hash
+      hash.delete(:team)
             
       # save so validations run before calling Stripe
       self.statement_descriptor = descriptor
-      self.merchant_id = _user_id
+      self.merchant_id = team.id
       self.currency = team.currency
       return false if !self.save
 
@@ -45,7 +41,7 @@ class Plan < ActiveRecord::Base
       res = PaymentService.create_plan(hash, uid, is_platform)
 
       if res.first && self.update(stripe_livemode: res.second.livemode)
-        create_plan_segment if self.customer_id.blank? 
+        create_plan_segment if self.customer_id.blank?
         true
       else
         # if StandardError happens in create_plan after Stripe was called or update fails above

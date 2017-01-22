@@ -2,17 +2,18 @@ class MessageParser
 
   ## TEST captured link for sign in
 
-  # msg must when calling this method
+  include Transactionable
+
+  # message/fbmessage object must exist when calling this method
   def process_message(team, customer, msg, channel)
     begin
       
       @received_msg = msg
       @channel = channel    # Message or FbMessage
-
       @customer = customer
       @merchant = team
-
       @amt_ary = check_for_payment
+
       is_old_format? = @amt_ary[0] && @amt_ary[1] == "$"
 
       # scenarios
@@ -27,7 +28,7 @@ class MessageParser
       elsif @amt_ary[0] && @amt_ary[1].present? && !is_amount_under_limit?              
       elsif @amt_ary[0] && @amt_ary[1].present?             
 
-        (@tag = Hashtag.where('user_id = ? and lower(tag) = ?', @merchant.id, @tag.downcase).first : nil) if @tag.present?
+        @tag = Hashtag.where('user_id = ? and lower(tag) = ?', @merchant.id, @tag.downcase).first if @tag.present?
         @amt_ary = parse_amount_and_tag
         @amt_ary = parse_user
        
@@ -40,7 +41,8 @@ class MessageParser
           process_payment
         end
        
-        send_deprecation_warning if is_old_format?      
+        send_deprecation_warning if is_old_format? 
+
       elsif @customer.blank?
 
         # FbMessage/Messenger doesn't support signup links, only signin link...see method in messenger service class
@@ -135,12 +137,12 @@ class MessageParser
     elsif @tag.present?      
       if @tag.non_payment_tag?                                               
         [@amt_ary[0], "no_tag_amt"]                       # so charge amt user texted
-      else 
-        if @tag.allow_customers_to_override_amount?       # tag default amount isnt enforced
-          [@amt_ary[0], "override_tag_amt"]               # else charge amount user sent
-        else 
-          [@tag.amount, "cant_override_tag_amt"]
-        end
+      else
+        @tag_amt = to_cents(Toolbox::Decimal.to_2dp(@tag.amount))
+        @original_amt = amt_ary[0]
+        [@amt_ary[0], "override_tag_amt"]
+        # cant override amount if tag doesnt allow it and customer amount isnt equal to tag amount
+        [@tag.amount, "cant_override_tag_amt"] if !@tag.allow_customers_to_override_amount && @tag_amt != @original_amt
       end
     end
   end
@@ -151,7 +153,7 @@ class MessageParser
         # notify user and send to merchant dashboard
         # send_response notify and send sign in link with payment capture
         # payment capture notice if cant ovveride_tag_amt
-      elsif @amt_ary[1] == "cant_override_tag_amt"
+      elsif @amt_ary[1] == "cant_override_tag_amt"    # @tag.present? && !@tag.allow_customers_to_override_amount?
         # notify user and send to merchant dashboard
         send_response notify of cant_override_tag_amt 
       else
@@ -159,7 +161,7 @@ class MessageParser
       end
     else      
       # payment based messages
-      if @amt_ary[1] == "cant_override_tag_amt"
+      if @amt_ary[1] == "cant_override_tag_amt"       # @tag.present? && !@tag.allow_customers_to_override_amount?
         send_sign_up_link with ovveride message
       else
         send_sign_up_link without ovveride message
@@ -191,15 +193,38 @@ class MessageParser
   def process_payment
     if not_repeating_payment?
       if @tag.present? && @tag.recurring_payment_tag?
-
-      else
-        new_txn = Transaction.new
-        new_txn.process_text_payment(@amt_ary, @merchant, @customer, @received_msg.text)
-        @received_msg.update(transaction_id: new_txn.id)
+        res = handle_subscription_through_text
+        if res.first
+          # send response
+        else
+          # send response
+        end
+      else        
+        @new_txn = Transaction.new
+        @new_txn.process_text_payment(@amt_ary[0], @merchant, @customer, @received_msg.text, (@tag ? @tag.id : nil), @channel, true)
+        if @new_txn.id.present?
+          @received_msg.update(transaction_id: new_txn.id)
+          send_payment_responses        
+        end
       end
     end
   end
 
+  def send_payment_responses
+    first_name = (@user.card_name.present?) ? " " + @user.card_name.split.first : ''
+    msg_to_send = "Thanks" + first_name + ". A payment of #{amt_in_decimal(@stripe_res.amount)} (#{@stripe_res.currency}) "
+    msg_to_send = msg_to_send + (@merchant.tax_percent == "0" ? "was sent to #{@merchant.org_name}." : "plus taxes and fees set by #{@merchant.org_name} was sent."
+    
+    if @tag.present?
+      msg = "sdasdsa"
+    else
+      msg = "dsadsadas"
+    end
+
+    @new_txn.send_text_receipt(msg_to_send)
+    @new_txn.send_email_receipt
+  end
+    
   def not_repeating_payment?
     # if necessary, you could modify the query to return a text sent to a specific merchant..so add user_id_to
     # the last message contains the current message, so remove from results
@@ -232,15 +257,47 @@ class MessageParser
   end
 
   def handle_subscription_through_text
-    # if can override amount, create plan and create subscription
-    # else find the existing plan for tag and create subbscription
-
-    #@plan.owner = 1
-    #if @plan.create_plan({ currency: current_user.currency, team: current_user })
-
-    #u = User.find_by id: self.user_id
-    #@subscription.team_id = current_user.id
-    #if u && @subscription.create_subscription({ team: current_user, customer: u.customer_uri })
+    # if can override amount and amt isnt the same, create plan and create subscription
+    # else find the existing plan for tag and create subscription
+    begin
+      merchant_plan = @tag.plan
+      if merchant_plan.present?
+        if @tag.allow_customers_to_override_amount? && @original_amt != @tag_amt      
+          customer_plan = merchant_plan.dup
+          customer_plan.amount = @original_amt
+          customer_plan.customer_id = @customer.id
+          customer_plan.name = generate_resource_name("Plan")
+          if customer_plan.create_plan({ team: @merchant })
+            create_text_subscription(customer_plan.id)
+          else
+            customer_plan.destroy     # revoke created plan on error
+            [false, "Unable to create subscription"]
+          end  
+        else 
+          create_text_subscription(merchant_plan.id)
+        end
+      else
+        [false, "Unable to subscribe, plan no longer exists."]
+      end
+    rescue StandardError => e
+      [false, "Unable to create subscription"]
+    end
   end
+
+  def create_text_subscription(plan_id)
+    merchant_customer = MerchantCustomer.find_by(merchant_id: @merchant.id, customer_id: @customer.id)
+    if merchant_customer.present?
+      subscription = Subscription.new(plan_id: plan_id, merchant_customer_id: merchant_customer.id, quantity: 1)
+      res = subscription.create_subscription({ team: current_user })
+      if res.first
+        return [true, 'Subscription created successfully']
+      else
+        subscription.destroy
+        return [false, res.third] if res.second == 'card_error' 
+      end
+    end
+    [false, 'Something went wrong']      
+  end
+
 
 end
