@@ -1,5 +1,5 @@
 drip_campaign_emails:
-  cron: '0 11 * * 1-5' # “At 11:00 on every day-of-week from Monday through Friday.”
+  cron: '0 11 * * *' # “At 11:00 on every day”
   class: "DripCampaignJob"
   args:
   description: "This job runs our drip campaigns."
