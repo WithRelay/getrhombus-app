@@ -366,6 +366,48 @@ class EmailingService
       end
     end
 
+    def customer_import_campaigns(user)
+    end
+
+    def connect_facebook_messenger(user)
+    end
+
+    def add_bank_account(user)
+    end
+
+    def lists(user)
+    end
+
+    def customer_segmentation(user)
+    end
+
+    def in_chat_payments(user)
+    end
+
+    def pre_authorize_transactions(user)
+    end
+
+    def plans_and_subscriptions(user)
+    end
+
+    def saved_replies(user)
+    end
+
+    def message_reason(user)
+    end
+
+    def campaign_templates(user)
+    end
+
+    def set_customer_notifications(user)
+    end
+
+    def hashtag_keywords(user)
+    end
+
+    def first_time_message_auto_response(user)
+    end
+
   end
 
 end
