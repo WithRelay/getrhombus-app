@@ -2,10 +2,10 @@
   <%= form_for [current_user, @campaign], html: { multipart: true, id: 'email-form campaignForm', class: 'w-clearfix', data: { name: 'Email Form' } } do |f| %>
     <%= f.text_field :name, class: 'editor text-field w-input', id: 'Campaign-name', data: { name: 'Campaign name' }, placeholder: 'Campaign name'  %>
     <label class="editor-options form-label" for="List"> &nbsp; List</label>
-    <%= f.text_field :list_name, id: 'campaign-select-lists List', 'data-lists_data' => "#{@lists.to_json}", placeholder: "Select 1 or more lists", class: 'editor text-field w-input', data: { name: 'List' } %>
+    <%= f.text_field :list_name, id: 'campaign-select-lists List', 'data-lists_data' => "#{@lists.to_json}", placeholder: "Choose a list", class: 'editor text-field w-input', data: { name: 'List' } %>
     <a class="create-list-link new-campaign" href="#">Create new list</a>
     <label class="channel editor-options form-label" for="Channel"> &nbsp; Message channel</label>
-    <%= f.select :channel, channel_list(@campaign, @lists), selected: get_channel_enum_value(@campaign.channel), class: 'dropdown editor-dropdown w-select', data: { name: 'Channel' } %>
+    <%= f.select :channel, channel_list(@campaign, @lists), selected: get_channel_enum_value(@campaign.channel), class: 'dropdown editor-dropdown w-select', id: 'Channel', data: { name: 'Channel' } %>
     <div class="editor-options form-label"> &nbsp; Message frequency</div>
     <%= f.radio_button :frequency_type, 0, id: 'oneTimeFrequency', checked: is_one_time_checked?(@campaign), class: 'frequency-tabs left w-button' %>
     <%= f.radio_button :frequency_type, 1, id: 'recurringFrequency',  checked: is_recurring_checked?(@campaign), class: 'frequency-tabs right w-button' %>
@@ -29,8 +29,16 @@
             <img class="editor-thumbnail" src="http://uploads.webflow.com/img/image-placeholder.svg" width="90">
           </div>
         </div>
-        <div class="w-form">
-            <%= f.text_area :text, id: 'trumbowyg Editor-Text-Area', class: 'message-editor text-area w-input', data: { name: 'Editor Text Area' } %>
+        <div class='newMessage'>
+          <div class='emailSubject'>
+            <div class="col-xs-5">
+              <%= f.label :subject %>
+              <%= f.text_field :subject %>
+            </div>
+          </div>
+          <div class="w-form">
+              <%= f.text_area :text, id: 'trumbowyg', class: 'message-editor text-area w-input', data: { name: 'Editor Text Area' } %>
+          </div>
         </div>
         <!-- for new images -->
         <div id='new-image-previews'></div>
@@ -52,66 +60,3 @@
   </div>
   <% end %>
 </div>
-
-<%= form_for [current_user, @campaign], html: { multipart: true, id: 'email-form campaignForm', class: 'w-clearfix', data: { name: 'Email Form' } } do |f| %>
-
-<div class="row">
-  <div class="col-xs-5">
-    <%= f.label :Name %>
-  </div>
-
-    <div class="col-xs-6">
-
-    </div>
-
-  <br><br>
-    <%= f.label :Choose_a_list, class: 'col-xs-3 control-label' %>
-    <div class="col-xs-6">
-    </div>
-  <br>
-  <br><br><br>
-  <br><br><br>
-  <%= f.label :Channel %>
-
-  <br><br>
-
-  <%= f.label :Delivery_Settings %>
-
-  <br><br>
-
-  <%= f.label :One_Time %>
-  <%= f.radio_button :frequency_type, 0, id: 'oneTimeFrequency', checked: is_one_time_checked?(@campaign)   %>
-
-  <%= f.label :Recurring %>
-  <%= f.radio_button :frequency_type, 1, id: 'recurringFrequency',  checked: is_recurring_checked?(@campaign)  %>
-
-  <br><br>
-
-  <%= f.label :send_campaign_now, class: 'deliverNow' %>
-
-  <div class='scheduleOption'>
-  </div>
-
-  <br><br>
-    <div class='newMessage'>
-      <div class='emailSubject'>
-        <div class="col-xs-5">
-          <%= f.label :subject %>
-          <%= f.text_field :subject %>
-        </div>
-      </div>
-      <br>
-      <br><br>
-      <div class="col-xs-6">
-        <%= f.text_area :text, id: 'trumbowyg' %>
-      </div>
-      </div>
-  </div>
-
-  <br><br>
-
-
-
-
-
-<% end %>
