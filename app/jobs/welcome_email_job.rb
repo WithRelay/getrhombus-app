@@ -8,7 +8,7 @@ class WelcomeEmailJob
       
       time_in_zone = Time.current
 
-      if (time_in_zone - user.created_at).round/(60) == 15 #minutes
+      if ((time_in_zone - user.created_at)/1.minute).to_i == 15
         EmailingService.welcome_email(user)
       end
     end
