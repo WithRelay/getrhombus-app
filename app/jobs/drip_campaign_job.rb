@@ -9,7 +9,7 @@ class DripCampaignJob
     
     User.where(user_level: 0).each do |user|
       
-      time_in_zone = Time.current.in_time_zone
+      time_in_zone = Time.current
 
       if ((time_in_zone - user.created_at)/1.day).to_i == 2
         EmailingService.send_proactive_support_email(user)
