@@ -11,12 +11,18 @@ class DripCampaignJob
       
       time_in_zone = Time.current
 
-      if (time_in_zone - user.created_at) <= 3.days.seconds.to_f
-        EmailingService.send_founder_welcome_email(user.email)
-      elsif (time_in_zone - user.created_at) <= 7.days.seconds.to_f
-        EmailingService.send_proactive_support_email(user.email)
-      elsif (time_in_zone - user.created_at) <= 10.days.seconds.to_f
-        EmailingService.schedule_demo_email(user.email)
+      if (time_in_zone - user.created_at).round/(60*60*24) == 2 # days
+        EmailingService.send_proactive_support_email(user)
+      elsif (time_in_zone - user.created_at).round/(60*60*24) == 4 # days
+        EmailingService.schedule_demo_email(user)
+      elsif (time_in_zone - user.created_at).round/(60*60*24) == 14 # days
+        EmailingService.free_trial_expiration(user)
+      elsif (time_in_zone - user.created_at).round/(60*60*24) == 31 # days
+        EmailingService.one_month_followup(user)
+      elsif (time_in_zone - user.created_at).round/(60*60*24) == 91 # days
+        EmailingService.three_month_followup(user)
+      elsif (time_in_zone - user.created_at).round/(60*60*24) == 7 # days
+        EmailingService.offer_to_help(user)
       end
     end
   end

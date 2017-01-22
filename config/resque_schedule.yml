@@ -1,10 +1,21 @@
-# drip_campaign_emails:
-#   # every: 5s - Calculates time from moment of deploy...so best for frequent jobs like 10-30 mins else use cron: "30 6 * * 1"
-#   #cron: "0 11 * * * America/New_York"
-#   every: 15s
-#   class: "DripCampaignJob"
-#   args:
-#   description: "This job runs our drip campaigns."
+drip_campaign_emails:
+  cron: '0 11 * * 1-5' # “At 11:00 on every day-of-week from Monday through Friday.”
+  class: "DripCampaignJob"
+  args:
+  description: "This job runs our drip campaigns."
+  queue: drip_campaigns
+welcome_email:
+  every: 30s
+  class: "WelcomeEmailJob"
+  args:
+  description: "This job send welcome message to new user."
+  queue: welcome_email
+weekly_activity_summary:
+  cron: '0 11 * * 1' #“At 11:00 on Monday.”
+  class: "WeeklyActivitySummaryJob"
+  args:
+  description: "This job send weekly activity summary."
+  queue: weekly_activity_summary  
 # alert_emails:
 #   #every: 15m
 #   every: 15s
