@@ -9,7 +9,7 @@ class DripCampaignJob
    
     User.where(user_level: 0).each do |user|
 
-      diff_in_days = (((Time.current.change(hours: 0) - user.created_at.change(hour: 0)) / 1.day).to_i) - 1
+      diff_in_days = (((Time.current.change(hour: 0) - user.created_at.change(hour: 0)) / 1.day).to_i) - 1
 
       if diff_in_days == 2
         EmailingService.send_proactive_support_email(user)
@@ -66,7 +66,7 @@ class DripCampaignJob
       elsif diff_in_days == 100
         EmailingService.first_time_message_auto_response(user)
       end
-      
+
     end
 
   end
