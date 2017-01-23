@@ -82,7 +82,7 @@ class PaymentService
               currency: merchant.currency ? merchant.currency : "usd",
               customer: hash[:customer_uri],
               capture: capture,
-              description: "Payment from #{user.email}. Card name: #{user.card_name}. Last four: #{user.last4}.",            
+              description: "Payment from #{user.email}. Card name: #{user.card_name}. Last four: #{user.last4}.",      
               
               # this should not be here for platform############
               destination: hash[:uid],    
