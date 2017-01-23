@@ -4,8 +4,8 @@ class EmailingService
   MANDRILL = Mandrill::API.new Rails.application.secrets.mandrill["key"]
 
   # Note there are a number of global settings for this email in the mandrill account
-  FROM_EMAIL = { from_email: Rails.application.secrets.team_email }
-
+   SENDER = Rails.application.secrets.team_email
+   FROM_EMAIL= {edwin: "<redacted_email>", ovo: '<redacted_email>'}
   class << self
 
     def send_email_campaign(campaign_hash)
@@ -62,7 +62,6 @@ class EmailingService
 
     def send_receipt(options = {})
       begin
-        mandrill = Mandrill::API.new MANDRILL_API_KEY
         template_name = 'receipt'
         template_content = []
         message = { "subject"=>"You sent a payment with Rhombus",
@@ -126,7 +125,6 @@ class EmailingService
     def charge_failure_notification(options = {})
       begin
         recipient = (options[:to_merchant]) ? options[:to] : SENDER
-        mandrill = Mandrill::API.new MANDRILL_API_KEY
         template_name = 'charge-failure'
         template_content = []
         message = { "subject"=>"Charge Failure",
@@ -153,22 +151,197 @@ class EmailingService
       end
     end
 
-    def send_founder_welcome_email(user)
-      puts "send founder welcome email"
-      puts user
-      puts "\n"
+    # Welcome Email (15 minutes after sign-up)
+    def welcome_email(user)
+      begin
+        template_name = "welcome-email"
+        template_content = []
+        message = { "subject" => "Welcome to Relay",
+         "merge_language" => "handlebars",
+         "global_merge_vars"=> [    { "name" => "first_name", "content" => user.first_name || 'there' } ],
+         "bcc_address"=> SENDER,
+         "to"=> [ { "email" => user.email } ],
+         "from_name" => "Edwin from Relay",
+         "from_email" => FROM_EMAIL[:edwin]
+        }
+        async = true
+        result = MANDRILL.messages.send_template template_name, template_content, message, async
+      rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
+        puts "A mandrill error occurred: #{e.class} - #{e.message}"
+      rescue StandardError => e
+      end
     end
 
+    # Proactive Support Email (2 days after sign-up)
     def send_proactive_support_email(user)
-      puts "send proactive support email"
-      puts user
-      puts "\n"
+      begin
+        template_name = "proactive-support-email"
+        template_content = []
+        message = { "subject" => "Get the most out of Relay",
+         "global_merge_vars"=> [    { "name" => "first_name", "content" => user.first_name || 'there' } ],
+         "merge_language" => "handlebars",
+         "bcc_address"=> SENDER,
+         "to"=> [ { "email" => user.email } ],
+         "from_name" => "Ovo from Relay",
+         "from_email" => FROM_EMAIL[:ovo]
+        }
+        async = true
+        result = MANDRILL.messages.send_template template_name, template_content, message, async
+      rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
+        puts "A mandrill error occurred: #{e.class} - #{e.message}"
+      rescue StandardError => e
+      end
     end
 
+    # Schedule Demo Email (4 days after sign-up)
     def schedule_demo_email(user)
-      puts "send demo email"
-      puts user
-      puts "\n"
+      begin
+        template_name = 'schedule-demo-email'
+        template_content = []
+        message = { "subject" => "Schedule a live walk-through of Relay",
+         "global_merge_vars"=> [    { "name" => "first_name", "content" => user.first_name || 'there' } ],
+         "merge_language" => "handlebars",
+         "to"=> [ { "email" => user.email } ],
+         "bcc_address"=> SENDER,
+         "from_name" => "Ovo from Relay",
+         "from_email" => FROM_EMAIL[:ovo]
+        }
+        async = true
+        result = MANDRILL.messages.send_template template_name, template_content, message, async
+      rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
+        puts "A mandrill error occurred: #{e.class} - #{e.message}"
+      rescue StandardError => e
+      end
+    end
+
+    #Features Tutorials
+    def features_tutorials(user)
+    end
+
+    # Free Trial Expiration (14 days after sign-up)
+    def free_trial_expiration(user)
+      begin
+        template_name = 'free-trial-expiration'
+        template_content = []
+        message = { "subject" => "Your Relay Trial",
+         "global_merge_vars"=> [    { "name" => "first_name", "content" => user.first_name || 'there' } ],
+         "merge_language" => "handlebars",
+         "to"=> [ { "email" => user.email } ],
+         "bcc_address"=> SENDER,
+         "from_name" => "Edwin from Relay",
+         "from_email" => FROM_EMAIL[:edwin]
+        }
+        async = true
+        result = MANDRILL.messages.send_template template_name, template_content, message, async
+      rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
+        puts "A mandrill error occurred: #{e.class} - #{e.message}"
+      rescue StandardError => e
+      end
+    end
+
+    # Weekly Activity Summary (HTML Template, Every Monday - 11am)
+    def weekly_activity_summary(user)
+      begin
+        template_name = 'weekly-activity-summary'
+        template_content = []
+        message = { "subject" => "Relay: Weekly activity summary",
+         "global_merge_vars"=> [    { "name" => "first_name", "content" => user.first_name || 'there' } ],
+         "merge_language" => "handlebars",
+         "to"=> [ { "email" => user.email } ],
+         "bcc_address"=> SENDER,
+         "from_name" => "Relay Report",
+         "from_email" => SENDER
+        }
+        async = true
+        result = MANDRILL.messages.send_template template_name, template_content, message, async
+      rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
+        puts "A mandrill error occurred: #{e.class} - #{e.message}"
+      rescue StandardError => e
+      end
+    end
+
+    # One-month Follow-up (31 Days after sign-up)
+    def one_month_followup(user)
+      begin
+        template_name = 'one-month-follow-up'
+        template_content = []
+        message = { "subject" => "It’s been a month",
+         "merge_language" => "handlebars",
+         "global_merge_vars"=> [    { "name" => "first_name", "content" => user.first_name || 'there' } ],
+         "to"=> [ { "email" => user.email } ],
+         "bcc_address"=> SENDER,
+         "from_name" => "Edwin from Relay",
+         "from_email" => FROM_EMAIL[:edwin]
+        }
+        async = true
+        result = MANDRILL.messages.send_template template_name, template_content, message, async
+      rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
+        puts "A mandrill error occurred: #{e.class} - #{e.message}"
+      rescue StandardError => e
+      end
+    end
+
+    # Three month Follow-up (91 Days after sign-up)
+    def three_month_followup(user)
+      begin
+        template_name = 'three-month-follow-up'
+        template_content = []
+        message = { "subject" => "It’s been a 3 months",
+         "global_merge_vars"=> [    { "name" => "first_name", "content" => user.first_name || 'there' } ],
+         "merge_language" => "handlebars",
+         "to"=> [ { "email" => user.email } ],
+         "bcc_address"=> SENDER,
+         "from_name" => "Edwin from Relay",
+         "from_email" => FROM_EMAIL[:edwin]
+        }
+        async = true
+        result = MANDRILL.messages.send_template template_name, template_content, message, async
+      rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
+        puts "A mandrill error occurred: #{e.class} - #{e.message}"
+      rescue StandardError => e
+      end
+    end
+
+    # Offer to Help (7 Days after signup, IF Zero Account Activity)
+    def offer_to_help(user)
+      begin
+        template_name = 'offer-to-help'
+        template_content = []
+        message = { "subject" => "Checking in",
+         "global_merge_vars"=> [    { "name" => "first_name", "content" => user.first_name || 'there' } ],
+         "merge_language" => "handlebars",
+         "to"=> [ { "email" => user.email } ],
+         "bcc_address"=> SENDER,
+         "from_name" => "Edwin from Relay",
+         "from_email" => FROM_EMAIL[:edwin]
+        }
+        async = true
+        result = MANDRILL.messages.send_template template_name, template_content, message, async
+      rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
+        puts "A mandrill error occurred: #{e.class} - #{e.message}"
+      rescue StandardError => e
+      end
+    end
+
+    # Exit Survey (IF Account is Cancelled)
+    def exit_survey(user)
+      begin
+        template_name = 'free-trial-expiration'
+        template_content = []
+        message = { "subject" => "Cancellation",
+         "global_merge_vars"=> [    { "name" => "first_name", "content" => user.first_name || 'there' } ],
+         "merge_language" => "handlebars",
+         "to"=> [ { "email" => user.email } ],
+         "bcc_address"=> SENDER,
+         "from_name" => "Edwin from Relay",
+         "from_email" => FROM_EMAIL[:edwin]
+        }
+        async = true
+        result = MANDRILL.messages.send_template template_name, template_content, message, async
+      rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
+        puts "A mandrill error occurred: #{e.class} - #{e.message}"
+      rescue StandardError => e
+      end
     end
 
     def send_unread_message_alert(options = {})
@@ -191,6 +364,48 @@ class EmailingService
         puts "A mandrill error occurred: #{e.class} - #{e.message}"
       rescue StandardError => e
       end
+    end
+
+    def customer_import_campaigns(user)
+    end
+
+    def connect_facebook_messenger(user)
+    end
+
+    def add_bank_account(user)
+    end
+
+    def lists(user)
+    end
+
+    def customer_segmentation(user)
+    end
+
+    def in_chat_payments(user)
+    end
+
+    def pre_authorize_transactions(user)
+    end
+
+    def plans_and_subscriptions(user)
+    end
+
+    def saved_replies(user)
+    end
+
+    def message_reason(user)
+    end
+
+    def campaign_templates(user)
+    end
+
+    def set_customer_notifications(user)
+    end
+
+    def hashtag_keywords(user)
+    end
+
+    def first_time_message_auto_response(user)
     end
 
   end

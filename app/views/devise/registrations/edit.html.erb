@@ -10,7 +10,7 @@
 
 <% elsif current_user.user_level == 1 %>
     <% if current_user.stripe_creds.empty? %>
-        <%= render "stripe_connect" %>
+      <%= render "stripe_connect" %>
     <% elsif current_user.card_token.blank? %>
       <%= render "merchant_card_info" %>
     <% elsif current_user.org_name.blank? %>

@@ -10,6 +10,7 @@ Rails.application.routes.draw  do
   get 'privacy' => 'static_pages#privacy'
   get 'terms' => 'static_pages#terms'
   get 'pricing' => 'static_pages#pricing'
+  get 'request_demo' => 'demos#request_demo'
 
   get 'contact' => 'contact_forms#new'
 
