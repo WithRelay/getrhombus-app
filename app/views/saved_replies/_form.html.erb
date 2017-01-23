@@ -1,17 +1,17 @@
-<%= form_for([current_user, saved_reply], :html => { :id => "saved-reply-form" } ) do |f| %>
-
-  <%= f.text_field :title, placeholder: 'Saved reply title', id: 'saved-reply-title-field', class: 'col-xs-12' %>
-
-  <br>
-  <br>
-
-  <%= f.text_area :body, placeholder: 'Start typing...', id: 'saved-reply-body-field', class: 'col-xs-12' %>
-
-  <% if action_name == 'index' %>
-    <%= link_to 'Delete', [current_user, saved_reply],  method: :delete, id: 'delete-saved-reply', class: "btn btn-danger", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i>Please wait...".html_safe } %>
-    <%= f.button "Cancel", id: 'saved-reply-cancel', class: "btn btn-default " %>
+<div class="saved-reply-form w-form">
+  <%= form_for([current_user, saved_reply], :html => { :id => "email-form-8 saved-reply-form", data: { name: 'Email Form 8' } } ) do |f| %>
+    <%= f.text_field :title, placeholder: 'Saved reply title', id: 'Saved-Reply-Title saved-reply-title-field', class: 'saved-reply text-field w-input', data: { name: 'Saved Reply Title' } %>
+    <%= f.text_area :body, placeholder: 'Start typing...', id: 'Saved-Replies-Editor saved-reply-body-field', class: 'saved-reply text-area w-input', data: {name: 'Saved Replies Editor'} %>
+    <%= f.button "Save", class: 'button save-reply-button w-button' %>
+    <% if action_name == 'index' %>
+      <%= link_to 'Delete', [current_user, saved_reply],  method: :delete, id: 'delete-saved-reply', class: "button cancel-save-reply w-button" %>
+      <%= f.button "Cancel", id: 'saved-reply-cancel', class: "button delete-saved-reply w-button" %>
+    <% end %>
   <% end %>
-
-  <%= f.button "Save", class: "btn btn-primary  pull-right", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i>Please wait...".html_safe } %>
-
-<% end %>
+  <div class="w-form-done">
+    <div>Thank you! Your submission has been received!</div>
+  </div>
+  <div class="w-form-fail">
+    <div>Oops! Something went wrong while submitting the form</div>
+  </div>
+</div>
