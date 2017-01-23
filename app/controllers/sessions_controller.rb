@@ -6,6 +6,4 @@ class SessionsController < Devise::SessionsController
     set_captured_payment_session
     super
   end
-
-
 end
