@@ -21,7 +21,6 @@ class PaymentService
         return [true, cu]
       rescue Stripe::CardError => e
         # Since it's a decline, Stripe::CardError will be caught
-        err  = e.json_body[:error]
         owner = User.find_by(email: Rails.application.secrets.team_email)
         unless hash[:is_merchant]
           customer = User.find_by(email: hash[:email])
@@ -30,7 +29,7 @@ class PaymentService
         end
         # redo this email
         # Notification.token_failure_notification(err, hash[:email]).deliver_now
-        [false, err[:type], err[:message]]
+        [false, e, e.json_body[:error][:message]]
       rescue Stripe::StripeError => e
         # send this only to platform
         # Notification.token_failure_notification(e.json_body[:error], ....).deliver_now
@@ -62,11 +61,10 @@ class PaymentService
     # return array with txn status, error object, notify customer/merchant
     def charge(amount_with_taxes, merchant, user, message, capture, platform=false)
       begin
-        # This also add the customer to the connected account
-        
+        stripe_cred = merchant.get_stripe_cred
 
-        # need to backward support merchant's with old connect account
-        if x
+        if stripe_cred.standalone?                # need to backward support merchant's with standalone connect account
+          # This also adds the customer to the connected account
           tkn = Stripe::Token.create({ customer: hash[:customer_uri] }, { stripe_account: stripe_account_id })
           re = Stripe::Charge.create({
               amount: amount_with_taxes,
@@ -97,11 +95,24 @@ class PaymentService
 
         [re]
       rescue Stripe::CardError => e               # Since it's a decline, Stripe::CardError will be caught
-        [false, e.json_body[:error], true]
+        [false, e, e.json_body[:error][:message], true]
       rescue Stripe::StripeError => e
-        [false, e.json_body[:error]]
+        [false, e.json_body[:error], "Stripe error"]
       rescue StandardError => e
-        [false, e]
+        [false, e, "Something went wrong"]
+      end
+    end
+
+    # return array with txn status, error object, notify customer/merchant
+    def process_captured_charge(charge_id)
+      begin
+        charge_ary = retrieve_charge(charge_id)       
+        return charge_ary unless charge_ary[0]
+        [charge_ary[1].capture]
+      rescue Stripe::StripeError => e
+        [false, e.json_body[:error], "Stripe is unable to process charge. Note that authorized txns over 7 days can no longer be processed."]
+      rescue StandardError => e
+        [false, e, "Something went wrong"]
       end
     end
 
@@ -127,6 +138,7 @@ class PaymentService
         if platform
           re = Stripe::Subscription.create(hash)
         else
+          # is this where we create merchant-customer relationship?
           tkn = Stripe::Token.create({ customer: hash[:customer] }, { stripe_account: stripe_account_id })
           customer = Stripe::Customer.create({ source: tkn.id }, { stripe_account: stripe_account_id })
           hash[:customer] = customer.id
@@ -136,8 +148,7 @@ class PaymentService
         [true, re]
       rescue Stripe::CardError => e
         # Since it's a decline, Stripe::CardError will be caught
-        err  = e.json_body[:error]
-        [false, err[:type], err[:message]]
+        [false, e, e.json_body[:error][:message]]
       rescue Stripe::StripeError => e
         [false, e]
       rescue StandardError => e
@@ -268,19 +279,19 @@ class PaymentService
       end
     end
     
-
     def retrieve_charge(charge_id)
       begin
         re = Stripe::Charge.retrieve(charge_id)
+        [re]
       rescue Stripe::StripeError => e
         # Display a very generic error to the user, and maybe send yourself an email
-        false
+        [false, e.json_body[:error], "Stripe is unable to retrieve this charge."]
       rescue StandardError => e
-        false
+        [false, e, "Something went wrong on our end"]
       end
     end
 
-    # Some countries require that the routing num and institition num be concatenated with a specific character
+    # Some countries require that the routing num and institution num be concatenated with a specific character
     # that's in index postion 1
     def stripe_country_list
       {
@@ -294,22 +305,3 @@ class PaymentService
     end
   end
 end
-
-=begin
-  # This applies to saas fee only
-  # so only coupon changes should call this for now
-  # Stripe prorate charges by default
-  def update_subscription(hash)
-    begin 
-      sbtn = Stripe::Subscription.retrieve(hash[:subscription_id])
-      sbtn.coupon = hash[:stripe_coupon_id]
-      sbtn.save
-    rescue Stripe::StripeError => e
-      # Display a very generic error to the user, and maybe send yourself an email
-      [false, e.json_body[:error]]
-    rescue StandardError => e
-      [false, e]
-    end
-  end
-=end
-

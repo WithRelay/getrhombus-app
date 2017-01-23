@@ -12,34 +12,29 @@ class Transaction < ActiveRecord::Base
   belongs_to :user, counter_cache: true
   belongs_to :team, class_name: "User", counter_cache: true
  
-  # Capture can change transaction status and date
-  # does this include hashtag_id
-  # send in a hash instaed to PaymentService?
+  # send in a hash instead to PaymentService?
+  def process_payment(amt, merchant, user, msg, hashtag_id, channel, capture=true) 
+    begin  
+      method(__method__).parameters.each { |_,arg| instance_variable_set("@#{arg}", binding.local_variable_get(arg)) }
 
-  def process_text_payment(amt, merchant, user, msg, tag_id, channel, capture=true) 
-    begin    
-      @merchant = merchant
-      @user = user
-      @msg = msg
-      @channel = channel
-      @hashtag_id = tag_id
-
-      @amt = amt
       tax_percent = (((@merchant.tax_percent.to_f) / 100) + 1)                     # default is 0
       @amt_with_taxes = (@amt.to_f * tax_percent).round      
       @app_fee = ((Rails.application.secrets.app_fee_percent.to_f / 100) * @amt_with_taxes).round
 
-      @stripe_response_array = PaymentService.charge(@amt_with_taxes, merchant, user, msg, capture)
-      @stripe_res = @stripe_response_array[0]
+      @stripe_res_ary = PaymentService.charge(@amt_with_taxes, merchant, user, msg, capture)
+      @stripe_res = @stripe_res_ary[0]
 
       if @stripe_res
         update_transaction_data
+        [true, "Transaction done"]
       else
-        send_card_error_text if @stripe_response_array[2]         # true if it is a card decline...we text the customer about it
-        send_charge_failure_notification(@stripe_response_array[1], @stripe_response_array[2])
+        send_card_error_text if @stripe_res_ary[3]         # true if it is a card decline...we text the customer about it
+        send_payment_failure_email(@stripe_res_ary[1], @stripe_res_ary[3])
+        [false, @stripe_res_ary[2]]
       end     
     rescue StandardError => err
-      send_charge_failure_notification(err, false)
+      send_payment_failure_email(err, false)
+      [false, "Something went wrong"]
     end
   end
 
@@ -66,6 +61,9 @@ class Transaction < ActiveRecord::Base
   end
 
   def send_card_error_text
+    # change text based on capture or not
+    # if @capture
+
     msg = @channel.constantize.new
     msg.send_and_save_message(@merchant.rn_type, @merchant.rhombus_number, @user.phone_number, "Your payment to #{@merchant.org_name} failed because: #{err[:message]}")
     # Send to merchant's messaging channel
@@ -91,26 +89,75 @@ class Transaction < ActiveRecord::Base
     self.notification_logs.create(notify_type: 'new_transaction', reason: 'receipt', channel: 'Email')
   end
 
-  def send_charge_failure_notification(err, to_merchant)
+  def send_payment_failure_email(err, to_merchant)
+    # change text based on capture or not
+    # if @capture
+    
     EmailingService.charge_failure_notification(to: @merchant.email, customer_email: @user.email, customer_phone: @user.phone_number, card_name: @user.card_name, 
                                                   last4: @user.last4, text: @msg, org_phone: @merchant.org_phone, rhombus_number: @merchant.rhombus_number, 
                                                   dump: err, to_merchant: to_merchant)
   end
 
-  def captured_transaction
-    # call charge customer here
-    payment_response_array = PaymentService.capture_payment(txn_uri)
-    @stripe_res = payment_response_array[0]
-
-    unless @stripe_res
-      # notify platform
-      return { error: "can't process" }
-    end
-    
-    #send_text_receipt
-    send_email_receipt  
-    return { message: 'processed' }
+  def process_dashboard_txn(amt, merchant, user, msg, hashtag_id, channel="Message", capture=true)
+    process_payment(amt, merchant, user, msg, hashtag_id, channel, capture) 
+    capture ? handle_captured_txn : handle_uncaptured_txn
   end
+
+  def handle_captured_txn
+    begin  
+      unless @stripe_res
+        # notify platform...should we email merchant too? could be a security measure.
+        [false, "Payment successful"]
+      else
+        send_text_receipt
+        send_email_receipt  
+        [true, 'Unable to process txn because: ' + @stripe_res_ary[2]]
+      end   
+    rescue StandardError => err
+      # notify platform...should we email merchant too? could be a security measure.
+      [false, "Something went wrong"]
+    end
+  end
+
+  def handle_uncaptured_txn
+    begin  
+      unless @stripe_res
+        # notify platform...should we email merchant too? could be a security measure.
+        [false, "can't authorize card"]
+      else
+        #send_text_receipt
+        send_email_receipt  
+        [true, 'card is authorized']
+      end   
+    rescue StandardError => err
+      # notify platform...should we email merchant too? could be a security measure.
+      [false, "Something went wrong"]
+    end
+  end
+
+  # https://support.stripe.com/questions/does-stripe-support-authorize-and-capture
+  def capture_uncaptured_txn(merchant, user, charge_id, channel="Message")
+    begin
+      @capture = true
+      method(__method__).parameters.each { |_,arg| instance_variable_set("@#{arg}", binding.local_variable_get(arg)) if arg != :charge_id }
+      payment_ary = PaymentService.process_captured_charge(charge_id)
+      if payment_ary[0]
+        # will capture change transaction status and date???
+        self.update(captured: true)
+        send_text_receipt("adasdsa")
+        send_email_receipt
+        [true, "Payment processed"]
+      else
+        # notify platform only. Merchants don't need an email for this.
+        # payment_ary[1]
+        [false, payment_ary[2]]  
+      end   
+    rescue StandardError => err
+      # notify platform only. Merchants don't need an email for this.
+      [false, "Something went wrong"]
+    end
+  end
+
 
 end
 

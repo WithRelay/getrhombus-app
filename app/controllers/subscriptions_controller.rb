@@ -59,6 +59,7 @@ class SubscriptionsController < ApplicationController
       current_user.next_plans.update_all(status: false)
       flash[:notice] = 'Subscription upgraded successfully.'
     else
+      # what about card errors here
       # delete new coupon if subscription is not upgraded/created
       @coupon.destroy if coupon_res
       flash[:error] = 'Something went wrong.'

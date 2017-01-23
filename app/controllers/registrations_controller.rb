@@ -35,6 +35,7 @@ class RegistrationsController < Devise::RegistrationsController
 
   protected
 
+  #### needs better error handling
   def create_saas_subscription
     if params[:plan].present?
       merchant_customer = MerchantCustomer.find_by(stripe_customer_id: @re[1].id)

@@ -5,15 +5,11 @@ class MessageParser
   include Transactionable
 
   # message/fbmessage object must exist when calling this method
-  def process_message(team, customer, msg, channel)
+  def process_message(merchant, customer, received_msg, channel)
     begin
+      method(__method__).parameters.each { |_,arg| instance_variable_set("@#{arg}", binding.local_variable_get(arg)) }
       
-      @received_msg = msg
-      @channel = channel    # Message or FbMessage
-      @customer = customer
-      @merchant = team
       @amt_ary = check_for_payment
-
       is_old_format? = @amt_ary[0] && @amt_ary[1] == "$"
 
       # scenarios
@@ -134,12 +130,12 @@ class MessageParser
   def parse_amount_and_tag
     if @tag.blank?                                       
       [@amt_ary[0], "no_tag"]                             # so charge amt user texted
-    elsif @tag.present?      
+    else      
       if @tag.non_payment_tag?                                               
         [@amt_ary[0], "no_tag_amt"]                       # so charge amt user texted
       else
         @tag_amt = to_cents(Toolbox::Decimal.to_2dp(@tag.amount))
-        @original_amt = amt_ary[0]
+        @original_amt = @amt_ary[0]
         [@amt_ary[0], "override_tag_amt"]
         # cant override amount if tag doesnt allow it and customer amount isnt equal to tag amount
         [@tag.amount, "cant_override_tag_amt"] if !@tag.allow_customers_to_override_amount && @tag_amt != @original_amt
@@ -201,9 +197,9 @@ class MessageParser
         end
       else        
         @new_txn = Transaction.new
-        @new_txn.process_text_payment(@amt_ary[0], @merchant, @customer, @received_msg.text, (@tag ? @tag.id : nil), @channel, true)
+        @new_txn.process_payment(@amt_ary[0], @merchant, @customer, @received_msg.text, (@tag ? @tag.id : nil), @channel, true)
         if @new_txn.id.present?
-          @received_msg.update(transaction_id: new_txn.id)
+          @received_msg.update(transaction_id: @new_txn.id)
           send_payment_responses        
         end
       end

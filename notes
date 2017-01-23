@@ -22,6 +22,9 @@ Bhishma
 	- when switching managed page, add that any messenger campaign will now use this page
 - Get Started Page
 - twitter integration...simple method to tweet - will supply current user and text to tweet - dont touch this till we speak
+- fix registrations controller
+- subscriptions controller needs check for card error
+- in stripe event, #### needs better error handling
 
 
 surya
@@ -53,6 +56,7 @@ Taiwo (review)
 - review account/business/managed acct with surya and edwin
 - review upgrading/downgrading subscription 
 - review stripe_events
+- review where merchant customer is created.... see create_subscription, add-token_to_customer, etc
 - review merchant_customer_id in transactions and invoices
 - review managed account..
 - when a user becomes customer, remove from a contact table/list 
