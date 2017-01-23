@@ -25,7 +25,7 @@ module ApplicationHelper
   end
 
   def check_params
-    restricted_actions = ['sessions-new', 'registrations-new']
+    restricted_actions = ['sessions-new', 'sessions-create', 'registrations-new']
     restricted_actions.include?("#{params[:controller]}-#{params[:action]}")
   end
 end
