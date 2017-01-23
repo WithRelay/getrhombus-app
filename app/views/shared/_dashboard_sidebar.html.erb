@@ -31,8 +31,9 @@
   </a>
   <div class="messaging-hidden-menu" data-ix="display-none-on-load">
     <div class="customer-dropdown left-nav-tab">&nbsp; Conversations</div>
-    <div class="customer-dropdown left-nav-tab">&nbsp; Saved replies</div>
-    <div class="customer-dropdown left-nav-tab">&nbsp; Customer reminders</div>
+    <%= link_to 'Saved replies', user_saved_replies_path(current_user), class: 'customer-dropdown left-nav-tab' %>
+    <br>
+    <%= link_to 'Customer reminders'.html_safe, user_reminders_path(current_user), class: 'customer-dropdown left-nav-tab' %>
   </div>
   <%= link_to user_campaigns_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
     <div class="left-nav-tab">&nbsp; &nbsp;Campaigns</div>
