@@ -124,7 +124,7 @@ class Campaign < ActiveRecord::Base
   def set_campaign_status
     # sets campaign status as inactive because merchant do not have facebook messenger associated
     unless self.test?
-      self.status = 3 if !self.user.fb_pages.subscribed.present? && self.facebook_messenger?
+      self.status = 3 if !self.user.try(:fb_pages).try(:subscribed).present? && self.facebook_messenger?
     end
   end
 
