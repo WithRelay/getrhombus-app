@@ -1,3 +1,230 @@
+<div class="modal-wrapper-7" data-ix="modal-interaction-7">
+    <div class="create-plan-form-wrapper">
+      <div class="content-sub-wrapper modal w-clearfix">
+        <h4 class="modal-header welcome-dash-content-container-header">Create plan</h4>
+      </div>
+      <a class="close-modal" data-ix="close-create-plan" href="#"></a>
+      <p class="create-plan modal-content-description">Plans let you charge customers a recurring amount over a specified time interval.</p>
+      <div class="modal-underline underline-div"></div>
+      <div class="create-plan-form w-form">
+        <%= render 'plans/form' %>
+        <div class="w-form-done">
+          <div>Thank you! Your submission has been received!</div>
+        </div>
+        <div class="w-form-fail">
+          <div>Oops! Something went wrong while submitting the form</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-wrapper-8" data-ix="modal-interaction-8">
+    <div class="create-subscription-form-wrapper">
+      <div class="content-sub-wrapper modal w-clearfix">
+        <h4 class="modal-header welcome-dash-content-container-header">Create subscription</h4><a class="close-modal" data-ix="close-create-subscription" href="#"></a>
+      </div>
+      <p class="create-plan modal-content-description">Subscribe customers to an existing plan to charge them on a recurring basis.</p>
+      <div class="modal-underline underline-div"></div>
+      <div class="create-subscription-form w-form">
+        <%= render 'subscriptions/form' %>
+        <div class="w-form-done">
+          <div>Thank you! Your submission has been received!</div>
+        </div>
+        <div class="w-form-fail">
+          <div>Oops! Something went wrong while submitting the form</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-wrapper-9" data-ix="modal-interaction-9">
+    <div class="cancel-subscription-wrapper w-clearfix">
+      <p class="cancel-subscription modal-content-description">Are you sure you'd like to unsubscriber <span class="text-highlight">[customer name]</span> from <span class="text-highlight">[plan name]</span> plan?</p>
+      <div class="modal-underline underline-div"></div><a class="button cancel-yes w-button" href="#">Yes, unsubscribe customer</a><a class="button cancel-no w-button" data-ix="close-cancel-subscription" href="#">Cancel</a>
+    </div>
+  </div>
+  <div class="customer-dash sub-nav-bar w-clearfix">
+    <div class="search-bar">
+      <div class="w-form">
+        <form data-name="Email Form" id="email-form" name="email-form">
+          <input class="search-field w-input" data-name="Search 3" id="Search-3" maxlength="256" name="Search-3" placeholder="Search" type="text">
+        </form>
+        <div class="w-form-done">
+          <div>Thank you! Your submission has been received!</div>
+        </div>
+        <div class="w-form-fail">
+          <div>Oops! Something went wrong while submitting the form</div>
+        </div>
+      </div>
+    </div>
+    <div class="sub-nav-options-wrapper transactions w-clearfix"><a class="add sub-nav-button w-button" data-ix="create-plan" href="#"> &nbsp;Create plan</a><a class="import sub-nav-button w-button" data-ix="create-subscription" href="#">&nbsp; Create subscription</a><a class="import sub-nav-button w-button" data-ix="cancel-subscription" href="#">&nbsp; Cancel subscription</a><a class="export sub-nav-button w-button" href="#">&nbsp; Export</a>
+    </div>
+  </div>
+  <div class="dashboard-body">
+    <div class="table-wrapper">
+      <div class="transaction-summary-wrapper">
+        <div class="transaction-summary-row w-row">
+          <div class="w-col w-col-4">
+            <div class="subscriptions transaction-summary-cell">
+              <h1 class="total-customer-count">16</h1>
+              <h4 class="count-description"> &nbsp; Subscriptions Today</h4>
+              <h4 class="count-description transaction-count"> &nbsp; Down 5% from yesterday</h4>
+            </div>
+          </div>
+          <div class="w-col w-col-4">
+            <div class="transaction-summary-cell">
+              <h1 class="total-customer-count">$900</h1>
+              <h4 class="count-description"> &nbsp; Total Collected</h4>
+              <h4 class="count-description transaction-count"> &nbsp; Down 5% from yesterday</h4>
+            </div>
+          </div>
+          <div class="w-col w-col-4">
+            <div class="transaction-summary-cell">
+              <h1 class="total-customer-count">$1,190</h1>
+              <h4 class="count-description"> &nbsp; Net Sales</h4>
+              <h4 class="count-description transaction-count"> &nbsp; Down 5% from yesterday</h4>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row-wrapper transactions">
+        <div class="transactions-table-row w-row">
+          <div class="transaction-column w-clearfix w-col w-col-3">
+            <div class="card-name table-heading transaction-cell w-clearfix">
+              <div class="table-heading-text transaction-header-text">Card name</div>
+            </div>
+            <div class="cb check-box-column table-heading"></div>
+          </div>
+          <div class="transaction-column w-col w-col-2">
+            <div class="table-heading transaction-cell w-clearfix">
+              <div class="table-heading-text table-text">Item name</div>
+            </div>
+          </div>
+          <div class="transaction-column w-col w-col-2">
+            <div class="table-heading transaction-cell w-clearfix">
+              <div class="table-heading-text table-text">Date</div>
+            </div>
+          </div>
+          <div class="transaction-column w-col w-col-2">
+            <div class="table-heading transaction-cell w-clearfix">
+              <div class="table-heading-text table-text tran-amount">Amount</div>
+            </div>
+          </div>
+          <div class="transaction-column w-col w-col-2">
+            <div class="table-heading transaction-cell w-clearfix">
+              <div class="table-heading-text table-text tran-email">Email</div>
+            </div>
+          </div>
+          <div class="transaction-column w-col w-col-1">
+            <div class="table-heading transaction-cell w-clearfix">
+              <div class="table-heading-text table-text tran-last-four">Last four</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <% @subscriptions.each do |subscription| %>
+      <div class="row-wrapper transactions">
+        <div class="transactions-table-row w-row">
+          <div class="transaction-column w-clearfix w-col w-col-3">
+            <div class="card-name transaction-cell">
+              <div class="table-text">Richard Davidson</div>
+            </div>
+            <div class="cb check-box-column">
+              <div class="w-form">
+                <form data-name="Email Form 2" id="email-form-2" name="email-form-2">
+                  <div class="select-all-check-box w-checkbox w-clearfix">
+                    <input class="cb table-checkbox w-checkbox-input" id="node" type="checkbox">
+                    <label class="checkbox-field-lable w-form-label" for="node">-</label>
+                  </div>
+                </form>
+                <div class="w-form-done">
+                  <div>Thank you! Your submission has been received!</div>
+                </div>
+                <div class="w-form-fail">
+                  <div>Oops! Something went wrong while submitting the form</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="transaction-column w-col w-col-2">
+            <div class="transaction-cell">
+              <div class="table-text">12 inch sub</div>
+            </div>
+          </div>
+          <div class="transaction-column w-col w-col-2">
+            <div class="transaction-cell">
+              <div class="table-text">08/12/2016</div>
+            </div>
+          </div>
+          <div class="transaction-column w-col w-col-2">
+            <div class="transaction-cell w-clearfix">
+              <div class="table-text tran-amount">$8.65</div>
+            </div>
+          </div>
+          <div class="transaction-column w-col w-col-2">
+            <div class="transaction-cell w-clearfix">
+              <div class="table-text tran-email"><redacted_email></div>
+            </div>
+          </div>
+          <div class="transaction-column w-col w-col-1">
+            <div class="transaction-cell w-clearfix">
+              <div class="table-text tran-last-four">5678</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row-wrapper transactions">
+        <div class="transactions-table-row w-row">
+          <div class="transaction-column w-clearfix w-col w-col-3">
+            <div class="card-name transaction-cell">
+              <div class="table-text">Richard Davidson</div>
+            </div>
+            <div class="cb check-box-column">
+              <div class="w-form">
+                <form data-name="Email Form 2" id="email-form-2" name="email-form-2">
+                  <div class="select-all-check-box w-checkbox w-clearfix">
+                    <input class="cb table-checkbox w-checkbox-input" id="node" type="checkbox">
+                    <label class="checkbox-field-lable w-form-label" for="node">-</label>
+                  </div>
+                </form>
+                <div class="w-form-done">
+                  <div>Thank you! Your submission has been received!</div>
+                </div>
+                <div class="w-form-fail">
+                  <div>Oops! Something went wrong while submitting the form</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="transaction-column w-col w-col-2">
+            <div class="transaction-cell">
+              <div class="table-text">12 inch sub</div>
+            </div>
+          </div>
+          <div class="transaction-column w-col w-col-2">
+            <div class="transaction-cell">
+              <div class="table-text">08/12/2016</div>
+            </div>
+          </div>
+          <div class="transaction-column w-col w-col-2">
+            <div class="transaction-cell w-clearfix">
+              <div class="table-text tran-amount">$8.65</div>
+            </div>
+          </div>
+          <div class="transaction-column w-col w-col-2">
+            <div class="transaction-cell w-clearfix">
+              <div class="table-text tran-email"><redacted_email></div>
+            </div>
+          </div>
+          <div class="transaction-column w-col w-col-1">
+            <div class="transaction-cell w-clearfix">
+              <div class="table-text tran-last-four">5678</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <% end %>
+    </div>
+  </div>
+
 <div class="container">
   <!-- Button trigger modal -->
   <%= button_tag 'Create Plan', class: 'btn btn-default plan-modal', data: { toggle: :modal, target: '#modalPlan' } %>
