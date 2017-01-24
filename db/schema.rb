@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170122174559) do
+ActiveRecord::Schema.define(version: 20170124004415) do
 
   create_table "addresses", force: :cascade do |t|
     t.string   "street_address",   limit: 191
@@ -311,6 +311,24 @@ ActiveRecord::Schema.define(version: 20170122174559) do
   add_index "invoices", ["stripe_invoice_id"], name: "index_invoices_on_stripe_invoice_id", using: :btree
   add_index "invoices", ["subscription_id"], name: "fk_rails_3f62823c58", using: :btree
   add_index "invoices", ["transaction_id"], name: "fk_rails_bbdcb50cdd", using: :btree
+
+  create_table "knowledge_base_categories", force: :cascade do |t|
+    t.string   "name",       limit: 191
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+  end
+
+  create_table "knowledge_bases", force: :cascade do |t|
+    t.string   "title",                      limit: 191
+    t.string   "author",                     limit: 191
+    t.integer  "upvotes",                    limit: 4
+    t.integer  "downvotes",                  limit: 4
+    t.string   "url",                        limit: 191
+    t.text     "raw_content",                limit: 65535
+    t.integer  "knowledge_base_category_id", limit: 4
+    t.datetime "created_at",                               null: false
+    t.datetime "updated_at",                               null: false
+  end
 
   create_table "lists", force: :cascade do |t|
     t.datetime "created_at",                           null: false
