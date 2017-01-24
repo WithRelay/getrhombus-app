@@ -1,17 +1,37 @@
+<link href="https://calendly.com/assets/external/widget.css" rel="stylesheet" >
+<script src="https://calendly.com/assets/external/widget.js" type="text/javascript"></script>
 <div class="alt hero-content w-container">
   <h1 class="hero-h1 home-header">Schedule a demo below. We'll walk you through the features specific to your use case &amp; answer all your questions.</h1>
 </div>
-<div class="default-content-section">
+<div class="default-content-section container">
   <h1 class="first-content-section-sub-header footer-cta-header">Schedule a Demo</h1>
   <h5 class="footer-cta-subheading signup-box-subheading">get a 30-minute overview of relay</h5>
   <div class="demo-request footer-cta-forms w-form">
-    <%= form_for 'demo', id: 'demoForm', class: 'form-horizontal', method: :post do |f| %>
-      <%= f.text_field :full_name, class: 'form-control text-field w-input', placeholder: "Full name"  %>
-      <%= f.text_field :company, class: 'form-control company text-field w-input', placeholder: "Company"  %>
-      <%= f.text_field :email, class: 'form-control text-field w-input', placeholder: "Work email"  %>
-      <%= f.text_field :phone, class: 'form-control text-field w-input', placeholder: "Phone Number"  %>
-      <%= f.select :employee_count, options_for_select({'1-9' => '1-9','10-24'=>'10-24','25-49' => '25-49','50-99' => '50-99',  '100-249'=>'100-249', '250-499'=>'250-499','500-999' => '500-999', '1000-4999' => '1000-4999', '5000+' => '5000+'  }), {include_blank: "Number of employees"}, class: 'dropdown w-select' %>
-      <%= f.submit 'Schedule Demo', id: 'commit_demo',class: 'alt-hero-cta-button footer-cta-button home w-button', data: {disable_with: 'Please wait ...'} %>
+    <%= form_for 'demo', url: '#',html: { id: 'demoForm', class: 'form-horizontal'} do |f| %>
+      <div class="field form-group group">
+        <%= f.text_field :full_name, class: 'form-control text-field w-input', placeholder: "Full name"  %>
+        </div>
+
+      <div class="field form-group group">
+        <%= f.text_field :company, class: 'form-control company text-field w-input', placeholder: "Company"  %>
+      </div>
+
+      <div class="field form-group group">
+        <%= f.text_field :email, class: 'form-control text-field w-input', placeholder: "Work email"  %>
+      </div>
+
+      <div class="field form-group group">
+        <%= f.phone_field :phone, placeholder: 'Phone Number', class: 'form-control rhombusFocus', id: 'phone', placeholder: "Phone Number" %>
+        <%= f.hidden_field :phone_number, :id => "phone_number" %>
+      </div>
+
+      <div class="field form-group group">
+        <%= f.select :employee_count, options_for_select({'1-9' => '1-9','10-24'=>'10-24','25-49' => '25-49','50-99' => '50-99',  '100-249'=>'100-249', '250-499'=>'250-499','500-999' => '500-999', '1000-4999' => '1000-4999', '5000+' => '5000+'  }), {include_blank: "Number of employees"}, class: 'dropdown w-select' %>
+      </div>
+
+      <div class="field form-group">
+        <%= f.submit 'Schedule Demo', id: 'commit_demo',class: 'alt-hero-cta-button footer-cta-button home w-button', data: {disable_with: 'Please wait ...'} %>
+      </div>
     <% end %>
     <div class="w-form-done">
       <div>Thank you! Your submission has been received!</div>
