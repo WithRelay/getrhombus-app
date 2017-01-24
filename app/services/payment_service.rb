@@ -59,38 +59,51 @@ class PaymentService
     end
     
     # return array with txn status, error object, notify customer/merchant
-    def charge(amount_with_taxes, merchant, user, message, capture, platform=false)
+    def charge(amount_with_taxes, merchant, customer, message, capture, platform=false)
       begin
         stripe_cred = merchant.get_stripe_cred
 
-        if stripe_cred.standalone?                # need to backward support merchant's with standalone connect account
-          # This also adds the customer to the connected account
-          tkn = Stripe::Token.create({ customer: hash[:customer_uri] }, { stripe_account: stripe_account_id })
+        what of platform - merchant billing??
+
+
+        # need to backward support merchant's with standalone connect stripe_account
+        if stripe_cred.standalone?  
+          # You use merchant and customer for standalone account
+########!!!!!!!!!!!!!!!!# Merchant and customer relationship in MerchantCustomer might not exists when it gets here....so fix
+          merchant_customer = MerchantCustomer.find_by(merchant_id: merchant.id, customer_id: customer.id)            
           re = Stripe::Charge.create({
-              amount: amount_with_taxes,
-              currency: merchant.currency ? merchant.currency : "usd",
-              source: tkn,
-              capture: capture,
-              description: "Payment from #{user.email}. Card name: #{user.card_name}. Last four: #{user.last4}.",
-              application_fee: 0,
-              metadata: { "message" => message }
-            }, { stripe_account: hash[:uid] })
+            amount: amount_with_taxes,
+            currency: merchant.currency ? merchant.currency : "usd",
+            customer: merchant_customer.customer_uri,
+            description: "Payment from #{customer.email}. Card name: #{customer.card_name}. Last four: #{customer.last4}.",
+            application_fee: 0,
+            metadata: { "message" => message }
+          }, { stripe_account: stripe_cred.uid })
+
+
         else
 
-          re = Stripe::Charge.create({
-              amount: amount_with_taxes, # in cents
-              currency: merchant.currency ? merchant.currency : "usd",
-              customer: hash[:customer_uri],
-              capture: capture,
-              description: "Payment from #{user.email}. Card name: #{user.card_name}. Last four: #{user.last4}.",      
-              
-              # this should not be here for platform############
-              destination: hash[:uid],    
 
-              # statement_descriptor: '', # we will set this here
-              # application_fee: rhombus_fee # from hash
-              metadata: { "message" => message }
-            })
+          # You use platform and customer for managed account
+          # Platform and customer relationship in MerchantCustomer will always exists when it gets here
+          merchant_customer = MerchantCustomer.find_by(merchant_id: User.get_platform_acct_obj.id, customer_id: customer.id)
+          re = Stripe::Charge.create({
+            amount: amount_with_taxes,
+            currency: merchant.currency ? merchant.currency : "usd",
+            customer: merchant_customer.customer_uri,
+            capture: capture,
+            description: "Payment from #{customer.email}. Card name: #{customer.card_name}. Last four: #{customer.last4}.",      
+            
+            # this should not be here for platform############???????
+            destination: stripe_cred.uid,    
+
+            # statement_descriptor: '', # we will set this here...get from Edwin
+            # application_fee: rhombus_fee # from hash
+            metadata: { "message" => message }
+          })
+
+
+
         end
 
         [re]
