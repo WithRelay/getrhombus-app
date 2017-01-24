@@ -23,9 +23,9 @@
       </div>
     </div>
   </div>
-  <a class="left-nav-tab-wrapper w-inline-block" href="#">
+  <%= link_to lists_path, class: 'left-nav-tab-wrapper w-inline-block' do %>
     <div class="left-nav-tab" data-ix="display-and-hide-customers">&nbsp; &nbsp; Lists</div>
-  </a>
+  <% end %>
   <a class="left-nav-tab-wrapper w-inline-block" href="#">
     <div class="left-nav-tab messaging" data-ix="display-and-hide-left-nav">&nbsp; &nbsp;Messaging &nbsp; &nbsp; </div>
   </a>
@@ -38,13 +38,19 @@
   <%= link_to user_campaigns_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
     <div class="left-nav-tab">&nbsp; &nbsp;Campaigns</div>
   <% end %>
+  <%= link_to user_plans_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
+    <div class="left-nav-tab"> &nbsp; Manage plans</div>
+  <% end %>
+  <%= link_to managed_accounts_user_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
+    <div class="left-nav-tab"> &nbsp; Bank account</div>
+  <% end %>
   <a class="left-nav-tab-wrapper w-inline-block" data-ix="display-and-hide-transaction-tab" href="#">
     <div class="left-nav-tab transactions" data-ix="display-and-hide-transaction-tab"> &nbsp;Transactions &nbsp;</div>
   </a>
   <div class="transactions-hidden-nav" data-ix="display-none-on-load">
     <div class="customer-dropdown left-nav-tab">&nbsp; Charges</div>
     <div class="customer-dropdown left-nav-tab">&nbsp; Pre-authorized</div>
-    <div class="customer-dropdown left-nav-tab">&nbsp; Subscriptions</div>
+    <div class="customer-dropdown left-nav-tab">&nbsp;<%= link_to 'Subscriptions', user_subscriptions_path(current_user) %></div>
   </div>
   <%= link_to user_hashtags_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
     <div class="left-nav-tab">&nbsp; &nbsp;Hashtags</div>
