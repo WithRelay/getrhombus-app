@@ -146,7 +146,7 @@ Rails.application.routes.draw  do
     resources :subscriptions, only: [:create]
     match 'merchant/customers' => 'merchant_customers#customers', via: :get
     match 'referrers/invite_business' => 'referrers#invite_business', via: :post
-    match 'demos/create' => 'demos#create', via: :post
+    resources :demos, only: [:create]
   end
 
   ## catch all other to 404

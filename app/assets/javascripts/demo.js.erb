@@ -88,7 +88,7 @@ $(document).ready(function () {
   
   function addDemo() {
    $.ajax({
-      url: "/v1/demos/create",
+      url: "/v1/demos.json",
       beforeSend: function(xhr) {
         xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
       },

@@ -5,9 +5,7 @@ class StripeCred < ActiveRecord::Base
   belongs_to :user
   enum uid_type: [ :managed, :standalone ]
 
-
-  # saves merchant info from stripe
-
+  # saves merchant info from stripe for standalone accounts
   def self.from_omniauth(auth, id)
     begin
        where(user_id: id).first_or_initialize.tap do |row|
