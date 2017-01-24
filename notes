@@ -62,6 +62,7 @@ Taiwo (review)
 - when a user becomes customer, remove from a contact table/list 
 - subscription (see other fields like tax_percent...save first...compare to plan.rb), subscription controller and stripe customer creation places
 - Review adding token...failing safely.
+- add back stripe connect
 - on subscription - check if user already belongs to merchant??? is this when they text?
 	- customers can create subscriptions over messaging...not dashboard, but can cancel subscription
 - finish message parser and review how messsages are saved

@@ -21,7 +21,7 @@ class Transaction < ActiveRecord::Base
       @amt_with_taxes = (@amt.to_f * tax_percent).round      
       @app_fee = ((Rails.application.secrets.app_fee_percent.to_f / 100) * @amt_with_taxes).round
 
-      @stripe_res_ary = PaymentService.charge(@amt_with_taxes, merchant, user, msg, capture)
+      @stripe_res_ary = PaymentService.charge(@amt_with_taxes, merchant, user, msg, @app_fee, capture)
       @stripe_res = @stripe_res_ary[0]
 
       if @stripe_res
