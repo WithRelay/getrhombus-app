@@ -1,6 +1,43 @@
 <!-- Title for header -->
 <% provide(:title, 'Rhombus - Merchant Profile') %>
 
+<div class="settings sub-nav-bar w-clearfix"><a class="dashboard-return sub-nav-button w-button" href="#"> &nbsp;Return to dashboard</a>
+  </div>
+  <div class="dashboard-body settings w-clearfix">
+    <div class="dash-content-container settings w-clearfix" id="merchantProfile">
+      <h4 class="form-header">Account Information</h4>
+      <div class="flex-underline form-header-underline"></div>
+      <div class="account-settings-form-wrapper w-form" id="merchantprofilepage">
+        <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, id: "merchantProfile email-form", class: "form-horizontal rhombusFocus" }) do |f| %>
+
+          <label class="field-headers form-label settings" for="name">Basic details</label>
+          <div class="company-rep-div w-clearfix">
+            <%= f.text_field :full_name, type: "text", class: "full-name settings text-field w-input rhombusFocus", placeholder: "First", id: "fullName Name", data: { name: 'Name' } %>
+            <%= f.hidden_field :org_phone, :id => "phone_number", class: "form-control rhombusFocus" %>
+            <%= f.phone_field :phone, :id => "phone", class: "password settings text-field w-input rhombusFocus" %>
+            <input class="" data-name="Phone Number" id="Phone-Number" maxlength="256" name="Phone-Number" placeholder="Mobile number" required="required" type="text">
+          </div>
+          <div class="update-email-password-div w-clearfix">
+            <div class="flex-underline form-section-divider"></div>
+            <label class="field-headers form-label settings" for="email">update email/password</label>
+            <input class="settings text-field w-input" data-name="Email" id="email" maxlength="256" name="email" placeholder="Email" required="required" type="email">
+            <input class="full-name settings text-field w-input" data-name="Current Password" id="Current-Password-3" maxlength="256" name="Current-Password" placeholder="Current Password" type="password">
+            <input class="password settings text-field w-input" data-name="Password 2" id="Password-2" maxlength="256" name="Password-2" placeholder="New password" required="required" type="password">
+            <input class="confirm password settings text-field w-input" data-name="Confirm Password" id="Confirm-Password" maxlength="256" name="Confirm-Password" placeholder="Confirm password" required="required" type="password">
+          </div>
+        </form>
+        <div class="w-form-done">
+          <div>Thank you! Your submission has been received!</div>
+        </div>
+        <div class="w-form-fail">
+          <div>Oops! Something went wrong while submitting the form</div>
+        </div>
+      </div><a class="button save-changes w-button" href="#">Save changes</a><a class="button deactivate w-button" data-ix="deactivate-account" href="#">Deactivate/Pause Account</a>
+    </div>
+  </div>
+
+
+
   <div class="content">
     <!-- Start Page Header -->
     <div class="page-header">
