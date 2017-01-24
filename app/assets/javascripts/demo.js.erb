@@ -1,84 +1,86 @@
 $(document).ready(function () {
 
-  $('#demoForm').formValidation({
-      // I am validating Bootstrap form
-      framework: 'bootstrap',
-      excluded: ':disabled',
-      live: 'disabled',
+  Calendly.initBadgeWidget({ url: 'https://calendly.com/relay/30min', text: 'Schedule time with me', color: '#00a2ff' });
 
-      // List of fields and their validation rules!
-      fields: {
-          'demo[full_name]': {
-            row: '.group',
-            validators: {
+  $('#demoForm').formValidation({
+    // I am validating Bootstrap form
+    framework: 'bootstrap',
+    excluded: ':disabled',
+    live: 'disabled',
+
+    // List of fields and their validation rules!
+    fields: {
+      'demo[full_name]': {
+        row: '.group',
+        validators: {
+          notEmpty: {
+            message: 'Required'
+          }
+        }
+      },
+      'demo[company]': {
+        row: '.group',
+        validators: {
+          notEmpty: {
+            message: 'Required'
+          }
+        }
+      },
+      'demo[email]': {
+          verbose: false,
+          row: '.group',
+          validators: {
               notEmpty: {
-                message: 'Required'
-              }
-            }
-          },
-          'demo[company]': {
-            row: '.group',
-            validators: {
-              notEmpty: {
-                message: 'Required'
-              }
-            }
-          },
-          'demo[email]': {
-              verbose: false,
-              row: '.group',
-              validators: {
-                  notEmpty: {
-                      message: 'Your email is required'
+                  message: 'Your email is required'
+              },
+              emailAddress: {
+                  message: "The email isn't valid"
+              },
+              remote: {
+                  type: 'GET',
+                  url: 'https://api.mailgun.net/v2/address/validate?callback=?',
+                  crossDomain: true,
+                  name: 'address',
+                  data: {
+                      // Registry a Mailgun account and get a free API key
+                      // at https://mailgun.com/signup
+                      api_key: '<redacted_api_key>'
                   },
-                  emailAddress: {
-                      message: "The email isn't valid"
-                  },
-                  remote: {
-                      type: 'GET',
-                      url: 'https://api.mailgun.net/v2/address/validate?callback=?',
-                      crossDomain: true,
-                      name: 'address',
-                      data: {
-                          // Registry a Mailgun account and get a free API key
-                          // at https://mailgun.com/signup
-                          api_key: '<redacted_api_key>'
-                      },
-                      dataType: 'jsonp',
-                      validKey: 'is_valid',
-                      message: "The email isn't valid"
-                  }
+                  dataType: 'jsonp',
+                  validKey: 'is_valid',
+                  message: "The email isn't valid"
               }
-          },
-          'demo[phone]': {
-              row: '.group',
-              validators: {
-                  callback: {
-                      callback: function (value, validator, $field) {
-                          if (PhoneNumberFormatter.isValid()) {
-                              return {
-                                  valid: true,    // or false
-                                  message: 'Valid number'
-                              }
-                          } else {
-                              return {
-                                  valid: false,    // or false
-                                  message: 'Enter a valid number'
-                              }
+          }
+      },
+      'demo[phone]': {
+          row: '.group',
+          validators: {
+              callback: {
+                  callback: function (value, validator, $field) {
+                      if (PhoneNumberFormatter.isValid()) {
+                          return {
+                              valid: true,    // or false
+                              message: 'Valid number'
+                          }
+                      } else {
+                          return {
+                              valid: false,    // or false
+                              message: 'Enter a valid number'
                           }
                       }
                   }
               }
-          },
-          'demo[employee_count]': {
-            row: '.group',
-            validators: {
-              notEmpty: {
-                message: 'Required'
-              }
-            }
           }
-      }
+      },
+      'demo[employee_count]': {
+        row: '.group',
+        validators: {
+          notEmpty: {
+            message: 'Required'
+          }
+        }
+      }      
+    }
   })
   .on('success.form.fv', function(e, data) {
     e.preventDefault();
@@ -98,13 +100,10 @@ $(document).ready(function () {
       dataType: "json",
       timeout: 10000
     })
-    .done(function(data, textStatus, jqXHR) {
-      FlashHandler.setFlashMessage(data.response, 'notice');
-    })
     .always(function(data, textStatus, response) {
+      FlashHandler.setFlashMessage(data.response, 'notice');
       $('#commit_demo').attr("disabled", false).val("Schedule Demo");
-      Calendly.initBadgeWidget({url: 'https://calendly.com/relay/30min', text: 'Schedule time with me', color: '#00a2ff'});
-      $('.calendly-badge-content').hide().click();
+      $('.calendly-badge-content').click();
     });
   };  
 })

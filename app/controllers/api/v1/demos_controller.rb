@@ -1,11 +1,9 @@
 class Api::V1::DemosController < API::V1::BaseController
-  respond_to :html, :json
+  respond_to :json
 
   def create
     @demo = Demo.new(demo_params)
-    if @demo.save
-      EmailingService.send_demo_notifcation(@demo)
-    end
+    EmailingService.send_demo_notifcation(@demo) if @demo.save
     render json: { response: 'Thank you! Your submission has been received!' }, status: 200
   end
 
