@@ -96,14 +96,9 @@ $(document).ready(function () {
       data: $('#demoForm').serialize(),
       dataType: "json"
     })
-    .done(function(data, textStatus, jqXHR) {
-      FlashHandler.setFlashMessage(data.response, 'notice');
-    })
-    .fail(function(data, textStatus, errorThrown) {
-      FlashHandler.setFlashMessage(JSON.parse(data.responseText).response, 'error');
-    })
     .always(function(data, textStatus, response) {
       Calendly.initBadgeWidget({url: 'https://calendly.com/relay/30min', text: 'Schedule time with me', color: '#00a2ff'});
+      $('.calendly-badge-content').hide().click();
     });
   };  
 })
