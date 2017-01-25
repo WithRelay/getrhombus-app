@@ -19,9 +19,7 @@ Rails.application.routes.draw  do
   get 'fb_pages/remove_integration' => 'fb_pages#remove_integration'
   get 'link_facebook' => 'link_fb_accounts#link_facebook'
   post 'redirect' => 'link_fb_accounts#redirect'
-  get 'relay_docs' => 'static_pages#relay_docs'
-  get 'relay_docs_article' => 'static_pages#relay_docs_article'
-  get 'relay_docs_categories' => 'static_pages#relay_docs_categories'
+  get 'knowledge_base' => 'knowledge_base_categories#index'
 
   resources :lists do
     resources :customer_lists

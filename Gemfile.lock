@@ -163,6 +163,8 @@ GEM
     faraday_middleware (0.10.0)
       faraday (>= 0.7.4, < 0.10)
     ffaker (2.4.0)
+    friendly_id (5.1.0)
+      activerecord (>= 4.0.0)
     fullcontact (0.15.0)
       faraday (~> 0.9.0)
       faraday_middleware (>= 0.9)
@@ -268,6 +270,7 @@ GEM
       rack
       rake (>= 0.8.1)
     pnotify-rails (3.0.0)
+    polyglot (0.3.5)
     pry (0.10.4)
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
@@ -356,6 +359,8 @@ GEM
     sdoc (0.4.1)
       json (~> 1.7, >= 1.7.7)
       rdoc (~> 4.0)
+    search_cop (1.0.6)
+      treetop
     simple_oauth (0.3.1)
     sinatra (1.4.7)
       rack (~> 1.5)
@@ -379,6 +384,8 @@ GEM
     tilt (1.4.1)
     timers (4.1.1)
       hitimes
+    treetop (1.6.8)
+      polyglot (~> 0.3)
     twilio-ruby (5.0.0.rc17)
       builder (>= 2.1.2)
       faraday (~> 0.9)
@@ -434,6 +441,7 @@ DEPENDENCIES
   devise
   factory_girl_rails
   ffaker
+  friendly_id (~> 5.1.0)
   fullcontact
   httparty
   jbuilder (~> 2.0)
@@ -460,6 +468,7 @@ DEPENDENCIES
   rspec-rails (~> 3.5)
   sass-rails (~> 5.0)
   sdoc (~> 0.4.0)
+  search_cop
   spring
   stripe
   twilio-ruby (~> 5.0.0.rc17)
