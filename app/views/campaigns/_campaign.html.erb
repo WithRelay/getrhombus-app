@@ -5,7 +5,7 @@
     <%= f.text_field :list_name, id: 'campaign-select-lists List', 'data-lists_data' => "#{@lists.to_json}", placeholder: "Choose a list", class: 'editor text-field w-input', data: { name: 'List' } %>
     <a class="create-list-link new-campaign" href="#">Create new list</a>
     <label class="channel editor-options form-label" for="Channel"> &nbsp; Message channel</label>
-    <%= f.select :channel, channel_list(@campaign, @lists), selected: get_channel_enum_value(@campaign.channel), class: 'dropdown editor-dropdown w-select', id: 'Channel', data: { name: 'Channel' } %>
+    <%= f.select :channel, channel_list(@campaign, @lists), {}, selected: get_channel_enum_value(@campaign.channel), class: 'dropdown editor-dropdown w-select', id: 'Channel', data: { name: 'Channel' } %>
     <div class="editor-options form-label"> &nbsp; Message frequency</div>
     <%= f.radio_button :frequency_type, 0, id: 'oneTimeFrequency', checked: is_one_time_checked?(@campaign), class: 'frequency-tabs left w-button' %>
     <%= f.radio_button :frequency_type, 1, id: 'recurringFrequency',  checked: is_recurring_checked?(@campaign), class: 'frequency-tabs right w-button' %>
@@ -30,12 +30,7 @@
           </div>
         </div>
         <div class='newMessage'>
-          <div class='emailSubject'>
-            <div class="col-xs-5">
-              <%= f.label :subject %>
-              <%= f.text_field :subject %>
-            </div>
-          </div>
+
           <div class="w-form">
               <%= f.text_area :text, id: 'trumbowyg', class: 'message-editor text-area w-input', data: { name: 'Editor Text Area' } %>
           </div>
@@ -50,7 +45,13 @@
           <% end %>
         </div>
       </div>
-    <div class="editor-date">December 28, 2016</div>
+      <div class="editor-date">December 28, 2016</div>
+      <div class="alt campaign-editor sub-nav-bar w-clearfix">
+        <div class="w-form">
+            <%= f.text_field :subject, class: "email-subject text-field w-input", data: { name: "Email Subject" }, id: "Email-Subject", placeholder: 'Email subject'  %>
+        </div>
+        <h4 class="sender welcome-dash-content-container-header">Patrick from Joan's Coffee</h4>
+      </div>
     <div class="w-form-done">
       <div>Thank you! Your submission has been received!</div>
     </div>
