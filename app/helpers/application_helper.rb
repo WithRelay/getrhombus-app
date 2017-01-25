@@ -12,11 +12,11 @@ module ApplicationHelper
   end
 
   def render_sidebar_partial
-    render 'shared/dashboard_sidebar' unless (unauthenticate_controller || check_params) || check_campaign_params
+    render 'shared/dashboard_sidebar' unless (unauthenticate_controller || check_params) || restrict_other_params
   end
 
-  def check_campaign_params
-     (params[:controller] == 'campaigns' && params[:action]=='new')
+  def restrict_other_params
+     (params[:controller] == 'campaigns' && params[:action]=='new' || params[:controller] == 'hashtags' && params[:action]=='new')
   end
 
   def render_footer_partial
@@ -25,7 +25,7 @@ module ApplicationHelper
   end
 
   def unauthenticate_controller
-    (params[:controller]=='static_pages')
+    (params[:controller]=='static_pages' || params[:controller] == 'contact_forms')
   end
 
   def check_params
