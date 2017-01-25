@@ -58,18 +58,18 @@ class PaymentService
       end
     end
     
-    # return array with txn status, error object, notify customer/merchant
     def charge(amount_with_taxes, merchant, customer, message, app_fee, capture)
       begin
         stripe_cred = merchant.get_stripe_cred
 
         if stripe_cred.standalone? 
           # 1. need to backward support merchant's with standalone connect stripe_account
-  #######!! 2. Platform account is a standalone account. For charging merchants. Do we still get the discount with this???? I think so.
+  #######!! 2. Platform account is a standalone account. For charging merchants or regular customers. Do we still get the discount with this?? I think so.
         
           # You use merchant/customer or platform/merchant combination for standalone account
  ########!! Merchant and customer relationship in MerchantCustomer might not exists when it gets here for merchant/customer....so fix
           merchant_customer = MerchantCustomer.find_by(merchant_id: merchant.id, customer_id: customer.id)            
+
           if customer.is_customer?          
             re = Stripe::Charge.create({
               amount: amount_with_taxes,
@@ -89,7 +89,7 @@ class PaymentService
             })
           end
         else
-          # You use platform and customer for managed account
+          # You use platform and customer for managed account charges
           # Platform and customer relationship in MerchantCustomer will always exists when it gets here
           merchant_customer = MerchantCustomer.find_by(merchant_id: User.get_platform_acct_obj.id, customer_id: customer.id)
           re = Stripe::Charge.create({

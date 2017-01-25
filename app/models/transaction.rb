@@ -17,9 +17,11 @@ class Transaction < ActiveRecord::Base
     begin  
       method(__method__).parameters.each { |_,arg| instance_variable_set("@#{arg}", binding.local_variable_get(arg)) }
 
-      tax_percent = (((@merchant.tax_percent.to_f) / 100) + 1)                     # default is 0
-      @amt_with_taxes = (@amt.to_f * tax_percent).round      
-      @app_fee = ((Rails.application.secrets.app_fee_percent.to_f / 100) * @amt_with_taxes).round
+      tax_percent = (((@merchant.tax_percent.to_f) / 100) + 1)                                            # default is 0
+
+      @amt_with_taxes = (@amt.to_f * tax_percent).round                                                   # total amount to charge 
+      @app_fee = ((Rails.application.secrets.app_fee_percent.to_f / 100) * @amt_with_taxes).round         # app fee
+      amt_less_stripe_fee = ((@amt_with_taxes * 0.975) - 30.0).round                                      # 2.5% + 30c
 
       @stripe_res_ary = PaymentService.charge(@amt_with_taxes, merchant, user, msg, @app_fee, capture)
       @stripe_res = @stripe_res_ary[0]

@@ -59,3 +59,21 @@ task :move_txns_table_to_one_row => :environment do
   # delete all platform txns
   platform_txns.delete_all
 end
+
+# split amount_less_fess into amount_less_stripe_fees, app_fee
+
+#amount_with_taxes
+# stripe_fee, app_fee = amount_less_fees
+
+# 390 was right
+ 
+# (((1 − 0.035) * amount_with_taxes) − .3) # amount_less_fees
+
+# (((0.029 * amount_with_taxes) + .3) # stripe fee
+
+# ( (amount_with_taxes - amount_less_fees) − .3) −  (0.029 × amount_with_taxes)  # app fee
+
+# (amount_with_taxes - amount_less_fees) - stripe_fee = app_fee
+
+# 4.215 - 4.22 (round up/down)  45.525
+# .815 - .81 (round down)   32.775
