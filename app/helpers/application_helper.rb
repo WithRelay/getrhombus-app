@@ -12,7 +12,11 @@ module ApplicationHelper
   end
 
   def render_sidebar_partial
-    render 'shared/dashboard_sidebar' unless unauthenticate_controller || check_params
+    render 'shared/dashboard_sidebar' unless (unauthenticate_controller || check_params) || check_campaign_params
+  end
+
+  def check_campaign_params
+     (params[:controller] == 'campaigns' && params[:action]=='new')
   end
 
   def render_footer_partial
