@@ -42,10 +42,11 @@ class Transaction < ActiveRecord::Base
   end
 
   def update_transaction_data
-    _stripe_fee = @amount_with_taxes - amt_less_stripe_fee
+    # storing this in intger, other amount columns need to be changed to integer...consistent with Stripe
+    _stripe_fee = @amount_with_taxes - amt_less_stripe_fee      
 
-    self.update(amount: amt_in_decimal(@amt), amount_with_taxes: amt_in_decimal(@stripe_res.amount), 
-                application_fee: amt_in_decimal(@app_fee), stripe_fee: _stripe_fee,
+    self.update(app_fee: amt_in_decimal(@app_fee), stripe_fee: _stripe_fee,
+                amount: amt_in_decimal(@amt), amount_with_taxes: amt_in_decimal(@stripe_res.amount),                 
                 currency: @stripe_res.currency, txn_uri: @stripe_res.id, txn_number: generate_txn_number,
                 status: @stripe_res.status, txn_available_at: @stripe_res.created, last4: @stripe_res.source.last4, 
                 card_name: @stripe_res.source.name, tax_percent: @merchant.tax_percent, destination: @stripe_res.destination, 
