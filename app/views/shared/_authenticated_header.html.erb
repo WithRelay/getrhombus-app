@@ -6,7 +6,9 @@
   </div>
   <div class="dashboard-nav-links-wrapper">
     <a class="w-clearfix w-inline-block" href="#">
-      <div class="dash-header-links"> &nbsp;Dashboard</div>
+      <%= link_to user_path(current_user) do %>
+        <div class="dash-header-links"> &nbsp;Dashboard</div>
+      <% end %>
       <div class="dash-header-links new-link"> &nbsp;All &nbsp;customers</div>
       <div class="dash-header-links new-link"> &nbsp;New &nbsp;customers</div>
     </a>
