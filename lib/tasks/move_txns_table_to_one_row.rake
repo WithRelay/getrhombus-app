@@ -61,6 +61,7 @@ task :move_txns_table_to_one_row => :environment do
 end
 
 # split amount_less_fess into amount_less_stripe_fees, app_fee
+# then remove amount_less_fees
 
 #amount_with_taxes
 # stripe_fee, app_fee = amount_less_fees

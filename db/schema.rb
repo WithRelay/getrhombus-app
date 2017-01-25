@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170124004415) do
+ActiveRecord::Schema.define(version: 20170125220020) do
 
   create_table "addresses", force: :cascade do |t|
     t.string   "street_address",   limit: 191
@@ -583,7 +583,8 @@ ActiveRecord::Schema.define(version: 20170124004415) do
     t.decimal  "amount",                                           precision: 8, scale: 2
     t.decimal  "amount_with_taxes",                                precision: 8, scale: 2
     t.string   "tax_percent",                        limit: 191
-    t.decimal  "application_fee",                                  precision: 8, scale: 2
+    t.decimal  "app_fee",                                          precision: 8, scale: 2
+    t.integer  "stripe_fee",                         limit: 4
     t.decimal  "amount_less_fees",                                 precision: 8, scale: 2
     t.string   "txn_uri",                            limit: 191
     t.string   "txn_number",                         limit: 191

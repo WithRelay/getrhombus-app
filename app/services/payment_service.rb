@@ -58,9 +58,10 @@ class PaymentService
       end
     end
     
-    def charge(amount_with_taxes, merchant, customer, message, app_fee, capture)
+    def charge(amount_with_taxes, amt_less_stripe_fee, app_fee, merchant, customer, msg, capture)
       begin
         stripe_cred = merchant.get_stripe_cred
+        currency = merchant.currency ? merchant.currency : "usd",
 
         if stripe_cred.standalone? 
           # 1. need to backward support merchant's with standalone connect stripe_account
@@ -72,20 +73,16 @@ class PaymentService
 
           if customer.is_customer?          
             re = Stripe::Charge.create({
-              amount: amount_with_taxes,
-              currency: merchant.currency ? merchant.currency : "usd",
-              customer: merchant_customer.customer_uri,
+              amount: amount_with_taxes, currency: currency,
+              customer: merchant_customer.customer_uri, metadata: { "message" => msg },
               description: "Payment from #{customer.email}. Card name: #{customer.card_name}. Last four: #{customer.last4}.",
-              metadata: { "message" => message }
             }, { stripe_account: stripe_cred.uid })
           else
             re = Stripe::Charge.create({
-              amount: amount_with_taxes,
-              currency: merchant.currency ? merchant.currency : "usd",
-              customer: merchant_customer.customer_uri,
+              amount: amount_with_taxes, currency: currency,
+              customer: merchant_customer.customer_uri, metadata: { "message" => msg },
               description: "Payment from #{customer.email}. Card name: #{customer.card_name}. Last four: #{customer.last4}.",
    ########!! statement_descriptor: '', # should already be on our stripe account, can still set this here...get from Edwin
-              metadata: { "message" => message } 
             })
           end
         else
@@ -93,15 +90,12 @@ class PaymentService
           # Platform and customer relationship in MerchantCustomer will always exists when it gets here
           merchant_customer = MerchantCustomer.find_by(merchant_id: User.get_platform_acct_obj.id, customer_id: customer.id)
           re = Stripe::Charge.create({
-            amount: amount_with_taxes,
-            currency: merchant.currency ? merchant.currency : "usd",
-            customer: merchant_customer.customer_uri,
-            capture: capture,
+            amount: amt_less_stripe_fee, currency: currency,
+            customer: merchant_customer.customer_uri, capture: capture,
             description: "Payment from #{customer.email}. Card name: #{customer.card_name}. Last four: #{customer.last4}.",      
-            destination: stripe_cred.uid,
+            destination: stripe_cred.uid, metadata: { "message" => msg },
  ########!! statement_descriptor: '', # we will set this here...get from Edwin
             application_fee: app_fee
-            metadata: { "message" => message }
           })
         end
 
