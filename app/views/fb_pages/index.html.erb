@@ -1,49 +1,71 @@
-<body style = "background: #f4f4f4">
-   <!-- Start Page Loading -->
-  <div class="loading"><img src="<%= asset_path 'loading.gif' %>" alt="loading-img"></div>
-
-  <div class="content">
-    <div class="page-header">
-      <p>Connected to Facebook as
-        <span style="color: blue"> 
-          <i class="fa fa-user"></i> <%= @fb_cred.name %>
-        </span>
-      </p>
-      
-      <h1>Facebook Messenger</h1>
+<div class="settings sub-nav-bar w-clearfix"><a class="dashboard-return sub-nav-button w-button" href="#"> &nbsp;Return to dashboard</a>
+</div>
+<div class="dashboard-body settings">
+  <div class="dash-content-container integrations settings w-clearfix">
+    <h4 class="form-header">Integrations</h4>
+    <div class="flex-underline form-header-underline"></div>
+    <div class="integrations-row w-row">
+      <div class="w-clearfix w-col w-col-9">
+        <%= image_tag 'messenger-logo.png', class: 'integration-partner-icon', width: 50 %>
+        <h4 class="integration-partner-name">Facebook Messenger</h4>
+        <p class="integration-description-paragraph">Facebook Messenger connects people with friends and businesses across platforms and devices.This integration allows your customers to chat with your team from Facebook and the Messenger app.</p>
+      </div>
+      <div class="w-clearfix w-col w-col-3">
+        <a class="button integrate-button w-button" href="#">Connect Facebook</a>
+      </div>
+    </div>
+    <div class="integration-settings-div">
+      <div class="w-row">
+        <div class="w-col w-col-6">
+          <h4 class="authentication-column-header">Authentication</h4>
+        </div>
+        <div class="w-col w-col-6">
+          <div class="authentication-column-text name-tag">Connected to Facebook as <%= @fb_cred.name %></div>
+        </div>
+      </div>
       <% if present(current_user).page_count %>
-        <p> Choose the Facebook page that you will use to receive messages </p>
-        <h3>Facebook Page</h3>
-        <%= form_for :fb_page, url: user_update_fb_page_path(current_user), method: :patch do |f| %>
-          <div class="dropdown">
-            <%= select_tag 'select_page', options_for_select(@user_fb_pages.map{|p| ["#{p.page_name}", "#{p.id} #{p.subscription_status}"] }), class: "btn dropdown-toggle", prompt: 'Select a Facebook Page' %>
-            <%= f.submit '' , class: 'submit_page hidden', param: "#{current_user.fb_creds.first.name}", data: { disable_with: "Please wait..." }, subscribed_page: "#{subscribed_page}" %>
+      <div class="w-row">
+        <div class="w-col w-col-6">
+          <p class="authentication-column-paragraph">Choose the Facebook page that you will use to receive messages</p>
+        </div>
+        <div class="w-col w-col-6">
+          <div class="w-form">
+            <%= form_for :fb_page, url: user_update_fb_page_path(current_user), html: { class: 'w-clearfix', id: "email-form", data: { name: 'Email Form' } }, method: :patch do |f| %>
+              <%= select_tag 'Select Facebook page', options_for_select(@user_fb_pages.map{|p| ["#{p.page_name}", "#{p.id} #{p.subscription_status}"] }), class: "dropdown select-facebook-page w-select", data: { name: "Select Facebook Page" }, id: "Select-Facebook-Page", prompt: 'Select a Facebook Page' %>
+              <p>Subscribed Page:
+              <% if subscribed_page.present? %>
+                <span> <i class="fa fa-file" aria-hidden="true"></i> <%= subscribed_page %> </span>
+              <% else %>
+                <b class='authentication-column-text name-tag '>No page is subscribed yet</b>
+              <% end %>
+              </p>
+            <% end %>
+            <div class="w-form-done">
+              <div>Thank you! Your submission has been received!</div>
+            </div>
+            <div class="w-form-fail">
+              <div>Oops! Something went wrong while submitting the form</div>
+            </div>
           </div>
-
-          <br>
-          <p>Subscribed Page:
-          <% if subscribed_page.present? %>
-            <span style="color: green">
-              <i class="fa fa-file" aria-hidden="true"></i> <%= subscribed_page %>
-            </span>
-          <% else %>
-            <b>No page is subscribed yet</b>
-          <% end %>
-          </p>
-        <%end%>
+        </div>
+      </div>
       <% else %>
         <p> Please make some facebook page before proceed</p>
       <%end%>
-
-      <br/>
       <%= link_to fb_pages_remove_integration_path, id: 'delete_integration', class: 'pull-right button integrate-button w-button' do%>
         <i class="fa fa-trash" aria-hidden="true"> Remove Integration </i>
       <%end%>
-    </div>
-  </div>
 
-  <%= render 'shared/header_new' %>
-  <%= render 'shared/sidebar' %>
-  <%= render 'shared/smooch' %>
-  <%= render 'shared/google_analytics' %>
-</body>
+    </div>
+    <div class="integrations-row w-row">
+      <div class="w-clearfix w-col w-col-9">
+        <%= image_tag 'twitter-logo.png', class: 'integration-partner-icon', width: 50 %>
+        <h4 class="integration-partner-name">Twitter</h4>
+        <p class="integration-description-paragraph">Twitter allows your business to send and read short 140-character messages from customers and followers.This integration allows you to create Hashtags in Relay and broadcast it to all your customers on Twitter</p>
+      </div>
+      <div class="w-clearfix w-col w-col-3">
+        <a class="button integrate-button w-button" href="#">Connect Twitter</a>
+      </div>
+    </div><a class="button integrations save-changes w-button" href="#">Save changes</a>
+  </div>
+</div>
