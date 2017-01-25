@@ -18,9 +18,9 @@ class UsersController < ApplicationController
 
   def show
     handle_referrer_and_welcome_email
-    if current_user.user_level == 0 && current_user.card_token.blank? # incomplete customer account
+    if current_user.is_customer? && current_user.card_token.blank? # incomplete customer account
       redirect_to build_user_link
-    elsif current_user.user_level == 1 && (current_user.org_name.blank? || current_user.rhombus_number.blank? || current_user.card_token.blank?) # incomplete merchant account
+    elsif current_user.is_merchant? && (current_user.org_name.blank? || current_user.rhombus_number.blank? || current_user.card_token.blank?) # incomplete merchant account
       redirect_to "/profile"
     else
       Transaction.process_captured_payment(@user, params) if current_user.user_level == 0 && params[:captured_amt].present?
@@ -70,6 +70,9 @@ class UsersController < ApplicationController
       format.html { redirect_to users_url, notice: 'Account deleted' }
       format.json { head :no_content }
     end
+  end
+
+  def sms_usage
   end
 
 private
