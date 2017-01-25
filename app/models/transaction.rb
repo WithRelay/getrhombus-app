@@ -17,18 +17,21 @@ class Transaction < ActiveRecord::Base
     begin  
       method(__method__).parameters.each { |_,arg| instance_variable_set("@#{arg}", binding.local_variable_get(arg)) }
 
-      tax_percent = (((@merchant.tax_percent.to_f) / 100) + 1)                     # default is 0
-      @amt_with_taxes = (@amt.to_f * tax_percent).round      
-      @app_fee = ((Rails.application.secrets.app_fee_percent.to_f / 100) * @amt_with_taxes).round
+      tax_percent = (((@merchant.tax_percent.to_f) / 100) + 1)                                            # default is 0
 
-      @stripe_res_ary = PaymentService.charge(@amt_with_taxes, merchant, user, msg, @app_fee, capture)
+      @amt_with_taxes = (@amt.to_f * tax_percent).round                                                   # total amount to charge 
+      @app_fee = ((Rails.application.secrets.app_fee_percent.to_f / 100) * @amt_with_taxes).round         # app fee
+      amt_less_stripe_fee = ((@amt_with_taxes * 0.975) - 30.0).round                                      # 2.5% + 30c
+      
+      @stripe_res_ary = PaymentService.charge(@amt_with_taxes, amt_less_stripe_fee, @app_fee, merchant, user, msg, capture)
       @stripe_res = @stripe_res_ary[0]
 
       if @stripe_res
         update_transaction_data
         [true, "Transaction done"]
       else
-        send_card_error_text if @stripe_res_ary[3]         # true if it is a card decline...we text the customer about it
+        # true if it is a card decline...we text only customers. Merchants may not have textable number on file.
+        send_card_error_text if @stripe_res_ary[3] && user.is_customer?     
         send_payment_failure_email(@stripe_res_ary[1], @stripe_res_ary[3])
         [false, @stripe_res_ary[2]]
       end     
@@ -39,17 +42,17 @@ class Transaction < ActiveRecord::Base
   end
 
   def update_transaction_data
-    # This might need to change if we charge merchants different fees
-    amt_less_fees = amt_in_decimal(@amt_with_taxes.to_f - @app_fee.to_f - ((@amt_with_taxes.to_f * 0.029) + 0.3))     # this line first
+    # storing this in intger, other amount columns need to be changed to integer...consistent with Stripe
+    _stripe_fee = @amount_with_taxes - amt_less_stripe_fee      
 
-    self.update(currency: @stripe_res.currency, captured: @stripe_res.captured, application_fee: amt_in_decimal(@app_fee),
-                description: "Payment to #{@merchant.email}. #{@merchant.org_name}. rhombus number: #{@merchant.rhombus_number}", 
-                txn_uri: @stripe_res.id, amount: amt_in_decimal(@amt), txn_number: generate_txn_number, amount_less_fees: amt_less_fees,                 
+    self.update(app_fee: amt_in_decimal(@app_fee), stripe_fee: _stripe_fee,
+                amount: amt_in_decimal(@amt), amount_with_taxes: amt_in_decimal(@stripe_res.amount),                 
+                currency: @stripe_res.currency, txn_uri: @stripe_res.id, txn_number: generate_txn_number,
                 status: @stripe_res.status, txn_available_at: @stripe_res.created, last4: @stripe_res.source.last4, 
-                exp_month: @stripe_res.source.exp_month, exp_year: @stripe_res.source.exp_year, card_type: @stripe_res.source.brand, 
                 card_name: @stripe_res.source.name, tax_percent: @merchant.tax_percent, destination: @stripe_res.destination, 
-                team_id: @merchant.id, user_id: @user.id, notes: @msg, amount_with_taxes: amt_in_decimal(@stripe_res.amount),
-                hashtag_id: @hashtag_id)
+                team_id: @merchant.id, user_id: @user.id, notes: @msg, hashtag_id: @hashtag_id, captured: @stripe_res.captured,
+                exp_month: @stripe_res.source.exp_month, exp_year: @stripe_res.source.exp_year, card_type: @stripe_res.source.brand,
+                description: "Payment to #{@merchant.email}. #{@merchant.org_name}. rhombus number: #{@merchant.rhombus_number}")
   end
 
   def amt_in_decimal(amt)
@@ -157,7 +160,6 @@ class Transaction < ActiveRecord::Base
       [false, "Something went wrong"]
     end
   end
-
 
 end
 
