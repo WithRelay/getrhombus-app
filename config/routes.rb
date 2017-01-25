@@ -64,6 +64,7 @@ Rails.application.routes.draw  do
 
   # user routes
   resources :users, only: :show do
+    member { get 'sms-usage' => 'users#sms_usage' }
     resources :fb_pages, only: [:index]
     patch 'update_fb_page' => 'fb_pages#update_user_fb_page'
     resources :hashtags, except: [:show, :destroy]
