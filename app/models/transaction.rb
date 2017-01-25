@@ -17,9 +17,8 @@ class Transaction < ActiveRecord::Base
     begin  
       method(__method__).parameters.each { |_,arg| instance_variable_set("@#{arg}", binding.local_variable_get(arg)) }
 
-      tax_percent = (((@merchant.tax_percent.to_f) / 100) + 1)                                            # default is 0
-
-      @amt_with_taxes = (@amt.to_f * tax_percent).round                                                   # total amount to charge 
+      tax_multiplier = (((@merchant.tax_percent.to_f) / 100) + 1)                                         # default is 0
+      @amt_with_taxes = (@amt.to_f * tax_multiplier).round                                                # total amount to charge 
       @app_fee = ((Rails.application.secrets.app_fee_percent.to_f / 100) * @amt_with_taxes).round         # app fee
       amt_less_stripe_fee = ((@amt_with_taxes * 0.975) - 30.0).round                                      # 2.5% + 30c
       
@@ -30,7 +29,7 @@ class Transaction < ActiveRecord::Base
         update_transaction_data
         [true, "Transaction done"]
       else
-        # true if it is a card decline...we text only customers. Merchants may not have textable number on file.
+        # true if it is a card decline...we text only customers. Merchant might not have textable number on file.
         send_card_error_text if @stripe_res_ary[3] && user.is_customer?     
         send_payment_failure_email(@stripe_res_ary[1], @stripe_res_ary[3])
         [false, @stripe_res_ary[2]]
