@@ -1,5 +1,5 @@
 $(document).on('ready page:load', function() {
-  var htmlContent = $('#campaign_channel').html()
+  var htmlContent = $('#Channel').html()
   var url = window.location.pathname.split('/')
   var campaignId = (url[url.length-1]=='edit') ? ('?id=' + url[url.length-2]) : ''
   $('#campaignForm').formValidation({
@@ -23,7 +23,7 @@ $(document).on('ready page:load', function() {
         validators: {
           callback: {
             callback: function (value, validator, $field) {
-              if ($('#campaign_channel').val() == 3) {
+              if ($('#Channel').val() == 3) {
                 if ($('#campaign_subject').val().length > 0) {
                   return {
                     valid: true,
@@ -161,12 +161,12 @@ $(document).on('ready page:load', function() {
       var listOption = dropDownOption[list_name[0].channel];
       if (listOption){
         var newHtmlContent = '<option value="'+ listOption[0] +'"'+ ">" +  listOption[1]  + "</option>";
-        $('#campaign_channel').html(newHtmlContent);
+        $('#Channel').html(newHtmlContent);
       }
     }else{
-      return $('#campaign_channel').html(htmlContent);
+      return $('#Channel').html(htmlContent);
     }
-    $('#campaign_channel').change();
+    $('#Channel').change();
   }
 
   // prefill form with previous lists

@@ -155,17 +155,17 @@ $( document ).on 'ready page:load', ->
       $('body').addClass('loading')
       getBase64FromImageUrl($('input[name=url]').val())
 
-  if $('#campaign_channel').val() == '3'
+  if $('#Channel').val() == '3'
     $('.emailSubject').show()
     $('#sendTestCampaign').show();
     new CustomTrumbowygPlugin('#trumbowyg')
     campaign.showFileBrowser()
-  else if $('#campaign_channel').val() == '1'
+  else if $('#Channel').val() == '1'
     $('#sendTestCampaign').hide();
     campaign.showFileBrowser()
     $('.emailSubject').hide()
     campaign.textAreaEmojis()
-  else if $('#campaign_channel').val() == '2'
+  else if $('#Channel').val() == '2'
     $('#sendTestCampaign').hide();
     $('.emailSubject').hide()
     campaign.showFileBrowser()
@@ -178,7 +178,7 @@ $( document ).on 'ready page:load', ->
     $('#select-images').val('')
     $('#new-image-previews').html('')
 
-  $( '#campaign_channel' ).change ->
+  $( '#Channel' ).change ->
     campaign.showHideEditor(this)
 
   $( '#oneTimeFrequency' ).click ->
