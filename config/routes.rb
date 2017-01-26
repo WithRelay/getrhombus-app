@@ -20,6 +20,7 @@ Rails.application.routes.draw  do
   get 'link_facebook' => 'link_fb_accounts#link_facebook'
   post 'redirect' => 'link_fb_accounts#redirect'
   get 'knowledge_base' => 'knowledge_base_categories#index'
+  get 'knowledge_base/getting_started' => 'knowledge_base_categories#show'
 
   resources :lists do
     resources :customer_lists

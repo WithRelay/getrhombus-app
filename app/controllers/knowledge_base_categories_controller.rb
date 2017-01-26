@@ -4,17 +4,17 @@ class KnowledgeBaseCategoriesController < ApplicationController
   end
 
   def create
+    @kb_category = KnowledgeBaseCategory.new
   end
 
   def edit
   end
 
-  def relay_docs
+  def update
   end
 
-  def relay_docs_article
-  end
-
-  def relay_docs_categories
+  def show
+    # @kb_list = KnowledgeBase.search(params['search'])
+    @kb_list = KnowledgeBase.all
   end
 end
