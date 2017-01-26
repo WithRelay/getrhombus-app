@@ -11783,7 +11783,7 @@ html.w-mod-js *[data-ix="fixed-nav-display-none"] {
 
 @font-face {
   font-family: 'Fontawesome webfont';
-  src: url('fontawesome-webfont.woff2') format('undefined'), url('fontawesome-webfont.eot') format('embedded-opentype'), url('../fonts/fontawesome-webfont.woff') format('woff'), url('../fonts/fontawesome-webfont.ttf') format('truetype'), url('../fonts/FontAwesome.otf') format('opentype'), url('../fonts/fontawesome-webfont.svg') format('svg');
+  src: url('fontawesome-webfont.woff2') format('undefined'), url('fontawesome-webfont.eot') format('embedded-opentype'), url('fontawesome-webfont.woff') format('woff'), url('fontawesome-webfont.ttf') format('truetype'), url('FontAwesome.otf') format('opentype'), url('fontawesome-webfont.svg') format('svg');
   font-weight: 400;
   font-style: normal;
 }
