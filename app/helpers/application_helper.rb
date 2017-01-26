@@ -54,5 +54,4 @@ module ApplicationHelper
     restricted_actions = ['sessions-new', 'sessions-create', 'registrations-new', 'registrations-create']
     restricted_actions.include?("#{params[:controller]}-#{params[:action]}")
   end
-
 end
