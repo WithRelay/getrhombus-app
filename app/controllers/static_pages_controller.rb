@@ -29,4 +29,14 @@ class StaticPagesController < ApplicationController
   def request_demo; end
 
   def features; end
+
+  def use_case_education; end
+
+  def use_case_non_profit; end
+
+  def use_case_demand_service; end
+
+  def use_case_sales_marketing; end
+
+  def use_case_staffing_employment; end
 end
