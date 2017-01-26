@@ -14,6 +14,11 @@ Rails.application.routes.draw  do
   get 'pricing' => 'static_pages#pricing'
   get 'request_demo' => 'demos#request_demo'
   get 'features' => 'static_pages#features'
+  get 'use-case-education' => 'static_pages#use_case_education'
+  get 'use-case-non-profit' => 'static_pages#use_case_non_profit'
+  get 'use-case-on-demand-service' => 'static_pages#use_case_demand_service'
+  get 'use-case-on-sales-marketing' => 'static_pages#use_case_sales_marketing'
+  get 'use-case-staffing-employment' => 'static_pages#use_case_staffing_employment'
 
   get 'contact' => 'contact_forms#new'
 
