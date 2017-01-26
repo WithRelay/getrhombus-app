@@ -349,7 +349,6 @@ ActiveRecord::Schema.define(version: 20170126014512) do
   add_index "invoices", ["subscription_id"], name: "fk_rails_46381ea356", using: :btree
   add_index "invoices", ["transaction_id"], name: "fk_rails_4ccc1b83a0", using: :btree
 
-
   create_table "lists", force: :cascade do |t|
     t.datetime "created_at",                           null: false
     t.datetime "updated_at",                           null: false
