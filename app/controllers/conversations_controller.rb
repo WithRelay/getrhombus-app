@@ -1,8 +1,5 @@
-class MessagesController < ApplicationController
+class ConversationsController < ApplicationController
 
-  def receive_voice_twilio
-    render xml: TextingService.receive_call.to_xml
-  end
 
   # help in dasboard_mms...need params from and params to from dashboard
   # add optional text
@@ -25,7 +22,10 @@ class MessagesController < ApplicationController
     end
   end
 
-	
+  def receive_voice_twilio
+    render xml: TextingService.receive_call.to_xml
+  end
+
+
+
 end
-
-
