@@ -7,7 +7,9 @@ module ApplicationHelper
   end
 
   def render_header_partial
-    concat(render 'shared/unauthenticate_header') if !check_params && unauthenticate_controller
+    unless knowledge_base_page
+      concat(render 'shared/unauthenticate_header')  || (!check_params && unauthenticate_controller)
+    end
     concat(render 'shared/authenticated_header') unless (unauthenticate_controller || check_params) || campaign_restrict_params || campaign_restrict_params
     concat(render 'campaigns/campaign_header') if campaign_restrict_params
   end
@@ -26,13 +28,18 @@ module ApplicationHelper
     restrict_params.include?("#{params[:controller]}-#{params[:action]}")
   end
 
+  def knowledge_base_page
+    params[:controller] == 'knowledge_base_categories'
+  end
+
   def render_footer_partial
     concat(render 'shared/sign_up') if !check_params && unauthenticate_controller
     render 'shared/unauthenticate_footer' if !check_params && unauthenticate_controller
   end
 
   def unauthenticate_controller
-    (params[:controller]=='static_pages' || params[:controller] == 'contact_forms')
+    static_controllers = ['knowledge_base_categories', 'static_pages', 'contact_forms' ]
+    static_controllers.include?(params[:controller])
   end
 
   def check_params
