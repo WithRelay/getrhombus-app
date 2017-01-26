@@ -8,7 +8,8 @@ module ApplicationHelper
 
   def render_header_partial
     concat(render 'shared/unauthenticate_header') if !check_params && unauthenticate_controller
-    concat(render 'shared/authenticated_header') unless unauthenticate_controller || check_params
+    concat(render 'shared/authenticated_header') unless (unauthenticate_controller || check_params) || campaign_restrict_params || campaign_restrict_params
+    concat(render 'campaigns/campaign_header') if campaign_restrict_params
   end
 
   def render_sidebar_partial
@@ -16,7 +17,13 @@ module ApplicationHelper
   end
 
   def restrict_other_params
-     (params[:controller] == 'campaigns' && params[:action]=='new' || params[:controller] == 'hashtags' && params[:action]=='new')
+    actions = ['campaigns-new', 'hashtags-new']
+    actions.include?("#{params[:controller]}-#{params[:action]}")
+  end
+
+  def campaign_restrict_params
+    restrict_params = ['campaigns-index']
+    restrict_params.include?("#{params[:controller]}-#{params[:action]}")
   end
 
   def render_footer_partial
