@@ -1,0 +1,71 @@
+<div class="settings sub-nav-bar w-clearfix"><a class="dashboard-return sub-nav-button w-button" href="#"> &nbsp;Return to dashboard</a>
+</div>
+<div class="dashboard-body settings">
+  <div class="dash-content-container manage-plans settings w-clearfix">
+    <h4 class="form-header">Manage Segments</h4>
+    <div class="flex-underline form-header-underline"></div>
+    <div class="manage-segments-row w-row">
+      <div class="w-col w-col-4">
+        <div class="header settings-row-text">Segment name</div>
+      </div>
+      <div class="w-col w-col-2">
+        <div class="header settings-row-text">Type</div>
+      </div>
+      <div class="w-col w-col-2">
+        <div class="header settings-row-text">Customers in segment</div>
+      </div>
+      <div class="w-col w-col-2">
+        <div class="header settings-row-text">Date created</div>
+      </div>
+      <div class="w-col w-col-2">
+        <div class="header settings-row-text">Actions</div>
+      </div>
+    </div>
+    <% @segments.each do |segment| %>
+      <div class="manage-segments-row w-row">
+        <div class="w-col w-col-4">
+          <div class="settings-row-text"><%= segment.name %></div>
+        </div>
+        <div class="w-col w-col-2">
+          <div class="settings-row-text"><%= segment.origin %></div>
+        </div>
+        <div class="w-col w-col-2">
+          <div class="settings-row-text">3450</div>
+        </div>
+        <div class="w-col w-col-2">
+          <div class="settings-row-text"><%= segment.created_at.strftime('%y/%m/%D') %></div>
+        </div>
+        <div class="w-col w-col-2">
+          <%= link_to 'Delete', list_path(segment), class: 'button settings-table-row w-button' %>
+        </div>
+    </div>
+    <% end %>
+
+    <div class="manage-segments-row w-row">
+      <div class="w-col w-col-4">
+        <div class="w-form">
+          <form data-name="Email Form" id="email-form" name="email-form">
+            <input class="text-field w-input" data-name="Segment name" id="Segment-name-5" maxlength="256" name="Segment-name" type="text">
+          </form>
+          <div class="w-form-done">
+            <div>Thank you! Your submission has been received!</div>
+          </div>
+          <div class="w-form-fail">
+            <div>Oops! Something went wrong while submitting the form</div>
+          </div>
+        </div>
+      </div>
+      <div class="w-col w-col-2">
+        <div class="settings-row-text">Custom</div>
+      </div>
+      <div class="w-col w-col-2">
+        <div class="settings-row-text">180</div>
+      </div>
+      <div class="w-col w-col-2">
+        <div class="settings-row-text">04/19/2016</div>
+      </div>
+      <div class="w-col w-col-2"><a class="button settings-table-row w-button" href="#">Delete</a>
+      </div>
+    </div><a class="button save-changes segments settings-table w-button" href="#">Save changes</a>
+  </div>
+</div>
