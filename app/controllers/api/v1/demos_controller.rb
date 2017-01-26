@@ -1,5 +1,4 @@
 class Api::V1::DemosController < API::V1::BaseController
-  respond_to :json
 
   def create
     @demo = Demo.new(demo_params)

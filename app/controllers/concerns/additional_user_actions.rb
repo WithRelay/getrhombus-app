@@ -13,10 +13,6 @@ module AdditionalUserActions
     redirect_to integrations_user_path
   end
 
-  def messaging
-    redirect_to :root and return if @user.is_customer?
-  end
-
   def refer_business
     if params[:referrer].present?
       @referrer = Referrer.new(referrer_params)
@@ -110,6 +106,7 @@ module AdditionalUserActions
     stripe_params
   end
 
+  #### remove this method
   # Returns JSON object with user hash who sent a message to the given merchant in the last CONFIG[:dashboard]['messaging']['num_days_history'] days
   def json_get_latest_active_messaging
     render :json => Hash['success' => true, 'users' => User.get_latest_active_messaging(params[:id], CONFIG[:dashboard]['messaging']['num_days_history'])].to_json

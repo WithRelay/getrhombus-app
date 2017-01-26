@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170125225209) do
+ActiveRecord::Schema.define(version: 20170126175954) do
 
   create_table "addresses", force: :cascade do |t|
     t.string   "street_address",   limit: 191
@@ -107,6 +107,7 @@ ActiveRecord::Schema.define(version: 20170125225209) do
     t.integer  "conversation_id", limit: 4
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "unread",          limit: 1,   default: true
   end
 
   add_index "conversation_refs", ["conversation_id"], name: "index_conversation_refs_on_conversation_id", using: :btree

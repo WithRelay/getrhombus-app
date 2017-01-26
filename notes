@@ -1,5 +1,12 @@
 current stripe api version - 2014-03-28
 https://www.getrhombus.com/receive_delivery_report
+- payment capture - done
+- payment capture processing - done
+- payment from dashboard  - done
+- charge payment service for connect/managed - done
+	- fix how we store amounts - just job left
+- redo messaging
+
 
 Bhishma
 - Plans/Subscriptions
@@ -49,6 +56,7 @@ Edwin
 - generate page loader
 
 Taiwo (review)
+- review additional user actions file
 - review referrer... 
     - when do I use id and uid
     - Is everyone getting a uid - i think yes
@@ -71,6 +79,7 @@ Taiwo (review)
    - remove livemode from users, add to merchant_customer and create rake task to migrate this to merchant..customer
 - signup page doesnt need params...only facebook link page
 - <% if current_user.stripe_creds.empty? %> not needed for connect
+- clean up routes
 
 Review
 - campaign_user_list (can better track failures) or notification_log or add an email model??

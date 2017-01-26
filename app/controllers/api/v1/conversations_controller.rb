@@ -1,8 +1,24 @@
-class ConversationsController < ApplicationController
+class Api::V1::ConversationsController < API::V1::BaseController
 
 	def index
-    puts Conversation.get_open_conversations(current_user.id, params[:page]).to_json
+    render json: { conversations: Conversation.get_open_conversations(current_user.id, params[:page]), 
+                      count: Conversation.get_open_conversations_count(current_user.id) }
 	end
+
+  def show
+    render json:  
+  end
+
+  # Returns JSON object with the last x messages a user has sent to the given merchant
+  def json_get_user_messages_by_merchant
+    if params[:limit]
+      limit = params[:limit]
+    else
+      limit = CONFIG[:dashboard]['messaging']['num_messages_per_user_default']
+    end
+    render :json => Hash['success' => true, 'messages' => Message.get_user_messages_by_merchant(params[:user_number], params[:id], limit).paginate(page: params[:page], per_page: 20)].to_json
+  end
+
 
   # help in dasboard_mms...need params from and params to from dashboard
   # add optional text

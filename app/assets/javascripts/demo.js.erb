@@ -1,6 +1,6 @@
 $(document).ready(function () {
 
-  Calendly.initBadgeWidget({ url: 'https://calendly.com/relay/30min', text: 'Schedule time with me', color: '#00a2ff' });
+  if (typeof Calendly !== 'undefined') Calendly.initBadgeWidget({ url: 'https://calendly.com/relay/30min', text: 'Schedule time with me', color: '#00a2ff' });
 
   $('#demoForm').formValidation({
     // I am validating Bootstrap form

@@ -45,7 +45,10 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
     $scope.num_message_history = 200;
     $scope.char_limit = 150;
     $scope.active_user_number = 0;
-    $scope.active_user_count = 0;
+
+    $scope.active_user_count = 0;   // remove
+    $scope.open_conversations_count = 0;
+    
     $scope.global_unread_count = 0;
     $scope.current_chat_user = false;
     $scope.send_msg_btn = "SEND";
@@ -94,7 +97,10 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
               // names now in person model
               if (!$scope.users[json_response.user_number]) {
                 $scope.users[json_response.user_number] = {user_number: json_response.user_number, first_name: json_response.first_name, last_name: json_response.last_name, email: json_response.email, profile_image: json_response.profile_image, last_message: json_response.message, last_message_ts: json_response.ts_int, unread_count: 0};
-                $scope.active_user_count += 1;
+                
+                $scope.active_user_count += 1;  // remove
+                $scope.open_conversations_count += 1; // should this be here?
+
               }
               if (json_response.user_level == 0) {
                 $scope.global_unread_count += 1;
@@ -108,20 +114,32 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
       });
 
       // Get latest messages for this merchant
-      $http.get(window.location.origin + '/users/' + merchant_id + '/json_get_latest_active_messaging')
+      //$http.get(window.location.origin + '/users/' + merchant_id + '/json_get_latest_active_messaging') //remove
+      $http.get(window.location.origin + '/v1/conversations.json?page=1')
       .success(function(data) {
-        var user_list = {};
+        //var user_list = {};  // remove
+        var conversation_list = {};
+        console.log(data)
         // Build user list and count initial global unread
-        angular.forEach(data.users, function(value, key) {
-          user_list[value.user_number] = value;
-          $scope.active_user_count += 1;
+        //angular.forEach(data.users, function(value, key) {    // remove
+        angular.forEach(data.conversations, function(value, key) {
+          //user_list[value.user_number] = value;    // remove
+          conversation_list[value.uid_type + "-" + value.user_id] = value;
+          //$scope.active_user_count += 1;   // remove
           $scope.global_unread_count += value.unread_count;
         });
 
-        $scope.users = user_list;
+        console.log(conversation_list)
+        $scope.open_conversations_count = data.count;          
+        //$scope.users = user_list;  // remove
+        $scope.conversations = conversation_list;
 
-        $scope.getUserMessages = function(user) {
-          $http.get(window.location.origin + '/users/' + merchant_id + '/json_get_user_messages_by_merchant/' + user.user_number + '?limit=' + (user.unread_count + $scope.num_message_history))
+
+        //$scope.getUserMessages = function(user) {  //remove
+        //$scope.getUserMessages = function(conversation) {   // remove
+        $scope.getConversationMessages = function(conversation) {
+          //$http.get(window.location.origin + '/users/' + merchant_id + '/json_get_user_messages_by_merchant/' + user.user_number + '?limit=' + (user.unread_count + $scope.num_message_history)) // remove
+          $http.get(window.location.origin + '/v1/conversations/' + conversation.conversation.id + '.json?page=1')
           .success(function(data) {
             $scope.active_user_number = user.user_number;
             $scope.selected_user = user;

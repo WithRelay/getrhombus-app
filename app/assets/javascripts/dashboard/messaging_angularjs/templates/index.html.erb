@@ -25,150 +25,157 @@
 </div>
 <!-- End Page Header -->
 <!-- //////////////////////////////////////////////////////////////////////////// -->
-<!-- START CONTAINER -->
-<div ng-if="active_user_count > 0" class="container-mail">
-  <!-- Start Mailbox -->
-  <div class="mailbox clearfix">
-    <!-- Start Mailbox Menu -->
-    <div class="mailbox-menu"></div>
-    <!-- End Mailbox Menu -->
-    <!-- Start Mailbox Container -->
-    <div class="container-mailbox">
-      <!-- Start Mailbox Inbox -->
-      <div class="col-lg-3 col-md-4 padding-0">
-        <ul class="mailbox-inbox">
-          <li class="search">
-            <form>
-              <input type="text" class="mailbox-search" id="mailboxsearch" placeholder="Search" ng-model="query">
-              <span class="searchbutton"><i class="fa fa-search"></i></span>
-            </form>
-          </li>
-          <div class="user-list">
-            <li ng-repeat="(user_number, user) in users | filterUserList:query | orderObjectBy:'last_message_ts':true">
 
-              <a ng-class="{ chat_highlight : current_chat_user === user, item : true, clearfix : true }" ng-click="getUserMessages(user)">
-                <img ng-src="{{user.profile_image}}" alt="img" class="img" />
-                <span class="from">{{user.first_name}} {{user.last_name}}</span>
-                <div class="last-message">{{user.last_message}}</div>
-                <span ng-if="user.unread_count > 0" class="unread">{{user.unread_count}}</span>
-              </a>
+  <!-- START CONTAINER -->
+  <!--<div ng-if="active_user_count > 0" class="container-mail">-->
+  <div ng-if="open_conversations_count > 0" class="container-mail">
+    <!-- Start Mailbox -->
+    <div class="mailbox clearfix">
+      <!-- Start Mailbox Menu -->
+      <div class="mailbox-menu"></div>
+      <!-- End Mailbox Menu -->
+      <!-- Start Mailbox Container -->
+      <div class="container-mailbox">
+        <!-- Start Mailbox Inbox -->
+        <div class="col-lg-3 col-md-4 padding-0">
+          <ul class="mailbox-inbox">
+            <li class="search">
+              <form>
+                <input type="text" class="mailbox-search" id="mailboxsearch" placeholder="Search" ng-model="query">
+                <span class="searchbutton"><i class="fa fa-search"></i></span>
+              </form>
             </li>
-          </div>
-        </ul>
-      </div>
-      <!-- End Mailbox Inbox -->
-      <!-- Start Chat -->
-      <div ng-if="selected_user_messages.length > 0" class="chat col-lg-9 col-md-8 padding-0">
-        <!-- Start Title -->
-        <div class="title">
-          <h1>{{selected_user.first_name}} {{selected_user.last_name}}</h1>
-          <p>
-            {{selected_user.email}}
-          </p>
+            <!--<div class="user-list">-->
+            <div class="conversation-list">
+              <!--<li ng-repeat="(user_number, user) in users | filterUserList:query | orderObjectBy:'last_message_ts':true">-->
+              <li ng-repeat="(identifier, conversation) in conversations | filterConversationList:query | orderObjectBy:'last_message_ts':true">
+
+                <!--<a ng-class="{ chat_highlight : current_chat_user === user, item : true, clearfix : true }" ng-click="getUserMessages(user)">-->
+                <a ng-class="{ chat_highlight : current_chat_user === conversation, item : true, clearfix : true }" ng-click="getConversationMessages(conversation)">
+                  <img ng-src="{{conversation.profile_image}}" alt="img" class="img" />
+                  <!--<span class="from">{{user.first_name}} {{user.last_name}}</span>-->
+                  <span class="from">{{conversation.full_name}}</span>
+                  <div class="last-message">{{conversation.last_message}}</div>
+                  <span ng-if="conversation.unread_count > 0" class="unread">{{conversation.unread_count}}</span>
+                </a>
+              </li>
+            </div>
+          </ul>
         </div>
-        <!-- End Title -->
-        <!-- Start Conv -->
-        <div data-ng-app="messageFetcher">
-          <div data-ng-controller="endlessMessage as messages">
-            <div class="messageStatus text-center" style="margin-left:300px; width: 150px; background: #edf9ff;"></div>
-            <ul class="upwards-scroll-container conv" data-upwards-scoll="messages.LoadMore()" scroll-glue>
-              <div data-ng-repeat="i in messages.Items track by $index">
-                <li ng-if="($index != 0) && !messages.Items[$index - 1].unread && messages.Items[$index].unread" class="date">New Messages</li>
-                <li ng-if="($index == 0) || (messages.Items[$index - 1].ts_day_of_the_week != messages.Items[$index].ts_day_of_the_week)" class="date">{{i.ts_day_of_the_week}}</li>
-                <li>
-                  <img ng-if="(i.user_level == 0) && (($index == 0) || (messages.Items[$index - 1].user_level != i.user_level))" ng-src="{{i.profile_image}}" alt="img" class="img">
-                  <p ng-class="{'ballon color1': i.user_level == 0 , 'ballon color2': i.user_level != 0}">
-                    <span ng-if="i.text">{{i.text}}</span>
-
-                    <span ng-if="i.image_url"><img src="{{i.image_url}}"/></span>
-                  </p>
-                  <p class="ts">{{i.ts_time}}</p>
-                  <div class="separator">&nbsp;</div>
-                </li>
-              </div>
-            </ul>
-          </div>
-        </div>
-
-        <!-- <ul class="conv" scroll-glue>
-          <div ng-repeat="message in selected_user_messages track by $index">
-            <li ng-if="($index != 0) && !selected_user_messages[$index - 1].unread && selected_user_messages[$index].unread" class="date">New Messages</li>
-            <li ng-if="($index == 0) || (selected_user_messages[$index - 1].ts_day_of_the_week != selected_user_messages[$index].ts_day_of_the_week)" class="date">{{message.ts_day_of_the_week}}</li>
-            <li>
-              <img ng-if="(message.user_level == 0) && (($index == 0) || (selected_user_messages[$index - 1].user_level != message.user_level))" ng-src="{{message.profile_image}}" alt="img" class="img">
-              <p ng-class="{'ballon color1': message.user_level == 0 , 'ballon color2': message.user_level != 0}">
--->
-                <!--{{message.text}}-->
-                <!-- <span ng-if="message.text">{{message.text}}</span>
-                <span ng-if="message.image_url"><img src="{{message.image_url}}"/></span>
-              </p>
-              <p class="ts">
-                {{message.ts_time}}
-              </p>
-              <div class="separator">&nbsp;</div>
-            <li>
-          </div>
-        </ul> -->
-
-        <div class="write">
-          <form>
+        <!-- End Mailbox Inbox -->
+        <!-- Start Chat -->
+        <div ng-if="selected_user_messages.length > 0" class="chat col-lg-9 col-md-8 padding-0">
+          <!-- Start Title -->
+          <div class="title">
+            <h1>{{selected_user.first_name}} {{selected_user.last_name}}</h1>
             <p>
-              <textarea class="textarea form-control" placeholder="Type a message here..." style="width:100%; height: 60px;" id='message_box'></textarea>
+              {{selected_user.email}}
             </p>
-
-            <style type="text/css">
-            .emojionearea, .emojionearea.form-control {
-              height: 60px !important;
-              margin-bottom: 18px;
-            }
-            .emojionearea .emojionearea-editor {
-              padding-left: 10px !important;
-            }
-            </style>
-
-            <textarea ng-model="new_message.text" ng-trim="true" id='aaa' style="display: none;"></textarea>
-
-            <span class="char-counter">{{char_limit - new_message.text.length}} characters left</span>
-
-            <br><br><br><br>
-            <button class="btn btn-default btn-rhombus" id="send_msg_btn" ng-click="sendMessage(new_message)" style="height: 32px;" ng-disabled='is_sending'>
-              {{send_msg_btn}}
-            </button>
-
-            <input type="file" id="file-picker" ngf-select="handleFile($file, $invalidFiles)" ng-model="pic_file" ngf-accept="'image/*'" ngf-max-size="1MB">
-
-          </form>
-
-
-
-
-          <!-- Image Preview -->
-          <div style="display: none; width: 400px; height: 400px; background: white;" id="mms-img-preview">
-            <div style="font:smaller">{{f.name}}</div>
-            <textarea class="textarea form-control" placeholder="Add an optional message to this MMS..." style="height:100px; width:70%;" ng-model="mms_text" ng-trim="true"></textarea>
-            <br><br>
-            <style type="text/css"> .thumb { width: 100px; height: 100px; float: none; position: relative; top: 7px; }</style>
-            <img ngf-thumbnail="pic_file" class="thumb">
-            <br><br>
-            <button class="btn btn-default btn-rhombus" id="send_mms_btn" ng-click="sendMMS()" style="height: 32px;" ng-disabled='is_sending_mms'>
-              {{send_mms_btn}}
-            </button>
-            <br>
-            <button class="btn btn-default btn-rhombus" id="cancel_mms_btn" ng-click="cancelMMS()" style="height: 32px;" ng-disabled='is_sending_mms'>
-              Cancel
-            </button>
           </div>
-          <!-- Image Preview -->
+          <!-- End Title -->
+          <!-- Start Conv -->
+          <div data-ng-app="messageFetcher">
+            <div data-ng-controller="endlessMessage as messages">
+              <div class="messageStatus text-center" style="margin-left:300px; width: 150px; background: #edf9ff;"></div>
+              <ul class="upwards-scroll-container conv" data-upwards-scoll="messages.LoadMore()" scroll-glue>
+                <div data-ng-repeat="i in messages.Items track by $index">
+                  <li ng-if="($index != 0) && !messages.Items[$index - 1].unread && messages.Items[$index].unread" class="date">New Messages</li>
+                  <li ng-if="($index == 0) || (messages.Items[$index - 1].ts_day_of_the_week != messages.Items[$index].ts_day_of_the_week)" class="date">{{i.ts_day_of_the_week}}</li>
+                  <li>
+                    <img ng-if="(i.user_level == 0) && (($index == 0) || (messages.Items[$index - 1].user_level != i.user_level))" ng-src="{{i.profile_image}}" alt="img" class="img">
+                    <p ng-class="{'ballon color1': i.user_level == 0 , 'ballon color2': i.user_level != 0}">
+                      <span ng-if="i.text">{{i.text}}</span>
 
+                      <span ng-if="i.image_url"><img src="{{i.image_url}}"/></span>
+                    </p>
+                    <p class="ts">{{i.ts_time}}</p>
+                    <div class="separator">&nbsp;</div>
+                  </li>
+                </div>
+              </ul>
+            </div>
+          </div>
+
+          <!-- <ul class="conv" scroll-glue>
+            <div ng-repeat="message in selected_user_messages track by $index">
+              <li ng-if="($index != 0) && !selected_user_messages[$index - 1].unread && selected_user_messages[$index].unread" class="date">New Messages</li>
+              <li ng-if="($index == 0) || (selected_user_messages[$index - 1].ts_day_of_the_week != selected_user_messages[$index].ts_day_of_the_week)" class="date">{{message.ts_day_of_the_week}}</li>
+              <li>
+                <img ng-if="(message.user_level == 0) && (($index == 0) || (selected_user_messages[$index - 1].user_level != message.user_level))" ng-src="{{message.profile_image}}" alt="img" class="img">
+                <p ng-class="{'ballon color1': message.user_level == 0 , 'ballon color2': message.user_level != 0}">
+  -->
+                  <!--{{message.text}}-->
+                  <!-- <span ng-if="message.text">{{message.text}}</span>
+                  <span ng-if="message.image_url"><img src="{{message.image_url}}"/></span>
+                </p>
+                <p class="ts">
+                  {{message.ts_time}}
+                </p>
+                <div class="separator">&nbsp;</div>
+              <li>
+            </div>
+          </ul> -->
+
+          <div class="write">
+            <form>
+              <p>
+                <textarea class="textarea form-control" placeholder="Type a message here..." style="width:100%; height: 60px;" id='message_box'></textarea>
+              </p>
+
+              <style type="text/css">
+              .emojionearea, .emojionearea.form-control {
+                height: 60px !important;
+                margin-bottom: 18px;
+              }
+              .emojionearea .emojionearea-editor {
+                padding-left: 10px !important;
+              }
+              </style>
+
+              <textarea ng-model="new_message.text" ng-trim="true" id='aaa' style="display: none;"></textarea>
+
+              <span class="char-counter">{{char_limit - new_message.text.length}} characters left</span>
+
+              <br><br><br><br>
+              <button class="btn btn-default btn-rhombus" id="send_msg_btn" ng-click="sendMessage(new_message)" style="height: 32px;" ng-disabled='is_sending'>
+                {{send_msg_btn}}
+              </button>
+
+              <input type="file" id="file-picker" ngf-select="handleFile($file, $invalidFiles)" ng-model="pic_file" ngf-accept="'image/*'" ngf-max-size="1MB">
+
+            </form>
+
+
+
+
+            <!-- Image Preview -->
+            <div style="display: none; width: 400px; height: 400px; background: white;" id="mms-img-preview">
+              <div style="font:smaller">{{f.name}}</div>
+              <textarea class="textarea form-control" placeholder="Add an optional message to this MMS..." style="height:100px; width:70%;" ng-model="mms_text" ng-trim="true"></textarea>
+              <br><br>
+              <style type="text/css"> .thumb { width: 100px; height: 100px; float: none; position: relative; top: 7px; }</style>
+              <img ngf-thumbnail="pic_file" class="thumb">
+              <br><br>
+              <button class="btn btn-default btn-rhombus" id="send_mms_btn" ng-click="sendMMS()" style="height: 32px;" ng-disabled='is_sending_mms'>
+                {{send_mms_btn}}
+              </button>
+              <br>
+              <button class="btn btn-default btn-rhombus" id="cancel_mms_btn" ng-click="cancelMMS()" style="height: 32px;" ng-disabled='is_sending_mms'>
+                Cancel
+              </button>
+            </div>
+            <!-- Image Preview -->
+
+          </div>
         </div>
+        <!-- End Chat -->
       </div>
-      <!-- End Chat -->
+      <!-- End Mailbox Container -->
     </div>
-    <!-- End Mailbox Container -->
+    <!-- End Mailbox -->
   </div>
-  <!-- End Mailbox -->
-</div>
-<!-- END CONTAINER -->
+  <!-- END CONTAINER -->
+
 </div>
 
 

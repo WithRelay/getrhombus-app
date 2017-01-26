@@ -86,6 +86,7 @@ Rails.application.routes.draw  do
 
     # authenticate campaigns resources if a user is merchant
     authenticate :user, -> (user) { user.is_merchant? } do
+      resources :conversations, only: [:index]
       resources :campaigns, except: [:show] { member { put 'change_status' }; collection { get 'filter_campaign' } }
       resources :reminders, except: [:show] { member { put 'change_status' } }
     end
@@ -95,15 +96,12 @@ Rails.application.routes.draw  do
     end
 
     # Only admins can create coupons
-    resources :coupons, :constraints => lambda { |req|
-      req.env['warden'].user.is_platform? #and req.env['warden'].user.email == '<redacted_email>' #Rails.application.secrets.dashboard_email
-    }
+    resources :coupons, :constraints => lambda { |req| req.env['warden'].authenticated? and req.env['warden'].user.is_platform? }
 
     member do
       get 'managed-accounts' => 'users#managed_acct'
       match 'managed-accounts' => "users#create_managed_acct", via: :patch
       match 'update-managed-acct' => 'users#update_managed_acct', via: :patch
-      get 'messaging' => 'users#messaging'
       get 'contacts' => 'users#contacts' #(both customers or merchants)
       get 'json_get_latest_active_messaging' => 'users#json_get_latest_active_messaging'
       get 'json_get_user_messages_by_merchant/:user_number' => 'users#json_get_user_messages_by_merchant'
@@ -149,6 +147,7 @@ Rails.application.routes.draw  do
     match 'merchant/customers' => 'merchant_customers#customers', via: :get
     match 'referrers/invite_business' => 'referrers#invite_business', via: :post
     resources :demos, only: [:create]
+    resources :conversations, only: [:index]
   end
 
   ## catch all other to 404
