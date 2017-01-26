@@ -44,6 +44,9 @@
   <%= link_to managed_accounts_user_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
     <div class="left-nav-tab"> &nbsp; Bank account</div>
   <% end %>
+  <%= link_to refer_business_user_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
+    <div class="left-nav-tab"> &nbsp; Refer a Business </div>
+  <% end %>
   <a class="left-nav-tab-wrapper w-inline-block" data-ix="display-and-hide-transaction-tab" href="#">
     <div class="left-nav-tab transactions" data-ix="display-and-hide-transaction-tab"> &nbsp;Transactions &nbsp;</div>
   </a>
