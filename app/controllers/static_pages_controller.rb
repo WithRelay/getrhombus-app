@@ -31,4 +31,6 @@ class StaticPagesController < ApplicationController
   def use_case_sales_marketing; end
 
   def use_case_staffing_employment; end
+
+  def refer_a_business; end
 end
