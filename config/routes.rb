@@ -18,6 +18,8 @@ Rails.application.routes.draw  do
   get 'use-case-on-demand-service' => 'static_pages#use_case_demand_service'
   get 'use-case-on-sales-marketing' => 'static_pages#use_case_sales_marketing'
   get 'use-case-staffing-employment' => 'static_pages#use_case_staffing_employment'
+  get 'refer-a-business' => 'static_pages#refer_a_business'
+
 
   get 'contact' => 'contact_forms#new'
 
@@ -65,6 +67,7 @@ Rails.application.routes.draw  do
 
   # user routes
   resources :users, only: :show do
+    member { get 'segments' => 'lists#segments' }
     member { get 'sms-usage' => 'users#sms_usage' }
     resources :fb_pages, only: [:index]
     patch 'update_fb_page' => 'fb_pages#update_user_fb_page'
