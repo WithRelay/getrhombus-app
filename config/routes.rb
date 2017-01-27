@@ -20,8 +20,10 @@ Rails.application.routes.draw  do
   get 'link_facebook' => 'link_fb_accounts#link_facebook'
   post 'redirect' => 'link_fb_accounts#redirect'
   get 'knowledge_base' => 'knowledge_base_categories#index'
-  get 'knowledge_base/getting_started' => 'knowledge_base_categories#show'
-
+  get 'knowledge_base/new' => 'knowledge_base_categories#create'
+  post 'knowledge_base/new' => 'knowledge_base_categories#new'
+  post 'knowledge_base' => 'knowledge_base_categories#show'
+  match "knowledge_base/:slug" => "knowledge_base_categories#show", via: [:get, :post]
   resources :lists do
     resources :customer_lists
   end
