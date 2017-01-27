@@ -51,7 +51,7 @@
               <li ng-repeat="(identifier, conversation) in conversations | filterConversationList:query | orderObjectBy:'last_message_ts':true">
 
                 <!--<a ng-class="{ chat_highlight : current_chat_user === user, item : true, clearfix : true }" ng-click="getUserMessages(user)">-->
-                <a ng-class="{ chat_highlight : current_chat_user === conversation, item : true, clearfix : true }" ng-click="getConversationMessages(conversation)">
+                <a ng-class="{ chat_highlight : current_chat_conversation === conversation, item : true, clearfix : true }" ng-click="getConversationMessages(conversation)">
                   <img ng-src="{{conversation.profile_image}}" alt="img" class="img" />
                   <!--<span class="from">{{user.first_name}} {{user.last_name}}</span>-->
                   <span class="from">{{conversation.full_name}}</span>
@@ -64,7 +64,8 @@
         </div>
         <!-- End Mailbox Inbox -->
         <!-- Start Chat -->
-        <div ng-if="selected_user_messages.length > 0" class="chat col-lg-9 col-md-8 padding-0">
+        <!--<div ng-if="selected_user_messages.length > 0" class="chat col-lg-9 col-md-8 padding-0">-->
+        <div ng-if="selected_conversation_messages.length > 0" class="chat col-lg-9 col-md-8 padding-0">
           <!-- Start Title -->
           <div class="title">
             <h1>{{selected_user.first_name}} {{selected_user.last_name}}</h1>

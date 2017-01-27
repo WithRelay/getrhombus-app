@@ -154,7 +154,8 @@ Rails.application.routes.draw  do
     match 'merchant/customers' => 'merchant_customers#customers', via: :get
     match 'referrers/invite_business' => 'referrers#invite_business', via: :post
     resources :demos, only: [:create]
-    resources :conversations, only: [:index]
+    resources :conversations, only: [:index, :show]
+    post "conversations/:id/mark_messages_as_read" => "conversations#mark_messages_as_read"
     get "relay-docs/search" => "knowledge_bases#index"
   end
 

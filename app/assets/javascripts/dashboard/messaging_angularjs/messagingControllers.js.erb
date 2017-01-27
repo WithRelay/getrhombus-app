@@ -15,6 +15,7 @@ var messagingControllers = angular.module('messagingControllers', [
     $http.get(window.location.origin + '/json_get_current_user').success(function(data) {
       var merchant_id = data.id
       var url = window.location.origin + '/users/' + merchant_id + '/json_get_user_messages_by_merchant/' + data.user_number  + '?page=' + page
+      //var url = window.location.origin + '/v1/conversations/1' + '.json?page=' + page;
       $http.get(url).success(function(data) {
         if (data.messages.length < 1){
           $('.messageStatus').html('Message Completed')
@@ -140,7 +141,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
         //$scope.getUserMessages = function(user) {  //remove
         $scope.getConversationMessages = function(conversation) {
           //$http.get(window.location.origin + '/users/' + merchant_id + '/json_get_user_messages_by_merchant/' + user.user_number + '?limit=' + (user.unread_count + $scope.num_message_history)) // remove
-          $http.get(window.location.origin + '/v1/conversations/' + conversation.conversation.id + '.json?page=1')
+          $http.get(window.location.origin + '/v1/conversations/' + conversation.conversation_id + '.json?page=1')
           .success(function(data) {
             //$scope.active_user_number = user.user_number;      //remove
             $scope.active_conversation_id = conversation.conversation_id;
@@ -155,6 +156,8 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
             //$scope.current_chat_user = user;  // remove
             $scope.current_chat_conversation = conversation;
 
+            console.log(data)
+
             // stopped here
             // Mark messages as read
             //$scope.global_unread_count = (($scope.global_unread_count - $scope.users[user.user_number].unread_count) > 0) ? $scope.global_unread_count - $scope.users[user.user_number].unread_count : 0;  // remove
@@ -162,12 +165,19 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
             var unread_diff = $scope.global_unread_count - unread_ids.length;
             $scope.global_unread_count = (unread_diff > 0) ? unread_diff : 0;
             //$scope.users[user.user_number].unread_count = 0;   //remove
-            $scope.users[conversation.conversation_id].unread_count -= unread_ids.length;
+            $scope.conversations[conversation.conversation_id].unread_count -= unread_ids.length;
             //$http.get(window.location.origin + '/users/' + merchant_id + '/mark_user_messages_for_merchant_as_read/' + user.user_number); //remove
-            $http.get(window.location.origin + 'v1/conversation/' + conversation.conversation_id + 'mark_messages_as_read?ids=' + data.unread_ids);   
+            /*$http({
+              method: 'POST',
+              url: window.location.origin + '/v1/conversations/' + conversation.conversation_id + '/mark_messages_as_read?ids=' + data.unread_ids,
+              headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+              },
+            }).then(function successCallback(response) { console.log("marked as read") }, function errorCallback(response) {});
+            */
             // Bind plugins to textbox
-            // should only bind once...add check
-            setTimeout(function(){ BindPlugins.now() }, 0);
+            // should only bind once...add check!!!!!!!!!!!!!!
+            // setTimeout(function(){ BindPlugins.now() }, 0);
           });
         };
 

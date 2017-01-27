@@ -88,7 +88,7 @@ class Conversation < ActiveRecord::Base
         msg_type: msg.class.name
       })
     end
-    latest_messages, unread_ids.join(",")
+    [latest_messages, unread_ids.join(",")]
 	end
 
     # Returns hash with the last "num_messages" messages that the given user has sent to the given merchant
@@ -107,7 +107,7 @@ class Conversation < ActiveRecord::Base
         :text => (message.text) ? message.text : nil,
         :ts_day_of_the_week => message.created_at.strftime('%A'),
         :ts_time => message.created_at.strftime('%l:%M %P'),
-        :unread => message.unread,
+        :unread => true#message.unread,
         # return small version here??
         #:image_url => message.image_id? ? message.image.avatar.url : nil
       })
