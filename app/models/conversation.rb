@@ -115,14 +115,21 @@ class Conversation < ActiveRecord::Base
     latest_messages
   end
 
-
   def mark_messages_as_read(ids)
-  	# this can be more efficient
-  	refs = ConversationRef.includes(:textable).where(id: ids.split(","), conversation_id: self.id)  	
-  	refs.update_all(unread: false)
-  	refs.textable.update_all(unread: false)
-
-  end
-
+  	begin
+	  	# this can be more efficient
+	  	refs = ConversationRef.includes(:textable).where(id: ids.split(","), conversation_id: self.id) 
+	  	ActiveRecord::Base.transaction do	 	
+		  	refs.update_all(unread: false)
+		  	sms_ary, messenger_ary = Array.new, Array.new
+		  	refs.each { |r|	r.textable.class.name == "Message" ? sms_ary.push(r.textable.id) : messenger_ary.push(r.textable.id) }
+		  	Message.where(id: sms_ary).update_all(unread: false)
+		  	FbMessage.where(id: messenger_ary).update_all(unread: false)
+		  end
+		  true
+		rescue StandardError => e
+		 	false
+		end
+	end
 
 end

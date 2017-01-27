@@ -12,8 +12,8 @@ class Api::V1::ConversationsController < API::V1::BaseController
   end
 
   def mark_messages_as_read
-    @conversation.mark_messages_as_read(params[:ids])
-    render json: {} 
+    re = @conversation.mark_messages_as_read(params[:ids])
+    render json: {}, status: re ? 200 : 500 
   end
 
   # help in dasboard_mms...need params from and params to from dashboard

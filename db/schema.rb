@@ -348,6 +348,8 @@ ActiveRecord::Schema.define(version: 20170126175954) do
     t.datetime "updated_at",                               null: false
   end
 
+  add_index "knowledge_bases", ["title", "raw_content"], name: "index_knowledge_bases_on_title_and_raw_content", type: :fulltext
+
   create_table "lists", force: :cascade do |t|
     t.datetime "created_at",                           null: false
     t.datetime "updated_at",                           null: false
