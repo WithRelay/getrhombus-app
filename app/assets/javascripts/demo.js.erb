@@ -1,6 +1,5 @@
 $(document).ready(function () {
-
-  Calendly.initBadgeWidget({ url: 'https://calendly.com/relay/30min', text: 'Schedule time with me', color: '#00a2ff' });
+  if (typeof Calendly !== 'undefined') Calendly.initBadgeWidget({ url: 'https://calendly.com/relay/30min', text: 'Schedule time with me', color: '#00a2ff ' });
 
   $('#demoForm').formValidation({
     // I am validating Bootstrap form
@@ -79,7 +78,7 @@ $(document).ready(function () {
             message: 'Required'
           }
         }
-      }      
+      }
     }
   })
   .on('success.form.fv', function(e, data) {
@@ -88,7 +87,7 @@ $(document).ready(function () {
     $('#commit_demo').attr("disabled", true).val("Please wait...");
     addDemo();
   });
-  
+
   function addDemo() {
    $.ajax({
       url: "/v1/demos.json",
@@ -105,5 +104,5 @@ $(document).ready(function () {
       $('#commit_demo').attr("disabled", false).val("Schedule Demo");
       $('.calendly-badge-content').click();
     });
-  };  
+  };
 })
