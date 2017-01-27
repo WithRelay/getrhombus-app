@@ -44,7 +44,7 @@ class Campaign
   constructor: (emojiConfig)->
     @textArea = '#trumbowyg'
     @emojiConfig = emojiConfig
-    @oneTime = '#oneTimeFrequency'; @deliverNow = '#deliverNow'; @schedule = '.scheduleOption'
+    @oneTime = '#oneTimeFrequency'; @deliverNow = '#Deliver-now'; @schedule = '.scheduleOption'
 
   showHideEditor: (element)->
     if isEmailChecked(element)
@@ -120,6 +120,7 @@ class Campaign
 
 
 $( document ).on 'ready page:load', ->
+  $('.scheduleOption').hide()
   campaign = new Campaign({ pickerPosition: 'right' })
   campaign.datePicker(new DatePicker( '.daterange', true, { time: true, select: true } ))
   window.onload = ->
@@ -188,7 +189,7 @@ $( document ).on 'ready page:load', ->
     $('#campaign_repeat_days').show()
     campaign.hideShowScheduler()
 
-  if $("#deliverNow").is(":checked")
+  if $("#Deliver-now").is(":checked")
     $('.scheduleOption').hide()
     $('.daterange').val('')
 
@@ -196,8 +197,8 @@ $( document ).on 'ready page:load', ->
   frequency_type = if $('#oneTimeFrequency').is(':checked') then '#oneTimeFrequency' else '#recurringFrequency'
   $(frequency_type).trigger('click')
 
-  $( '#oneTimeFrequency, #deliverNow' ).click ->
-    if !$("#deliverNow").is(":checked")
+  $( '#oneTimeFrequency, #Deliver-now' ).click ->
+    if !$("#Deliver-now").is(":checked")
       campaign.datePicker(new DatePicker( '.daterange', true, { time: true, select: true } ))
     campaign.hideShowScheduler()
 

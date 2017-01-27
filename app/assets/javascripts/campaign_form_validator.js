@@ -94,7 +94,7 @@ $(document).on('ready page:load', function() {
   // http://selectize.github.io/selectize.js/
 
   // For edit action, get lists data for preloading text input
-  var x = $('#campaign-select-lists'),
+  var x = $('#List'),
   campaign_lists = x.data("lists_data");
 
   // Can be undefined for new action
