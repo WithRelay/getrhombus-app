@@ -27,14 +27,13 @@ class Conversation < ActiveRecord::Base
   		end
 
   		latest_conv.push({
-        user_id: conv.uid,
-        uid_type: conv.uid_type,
         conversation_id: conv.id,
         full_name: full_name || "",
         profile_image: ActionController::Base.helpers.asset_path('user_icon_50x50.png'),
         last_message: last_message.blank? ? '' : last_message.text,
         last_message_ts: last_message.blank? ? 0 : last_message.created_at.to_i,
-        unread_count: ConversationRef.where(conversation_id: 1, unread: true).count
+        last_message_type: last_message.class.name,
+        unread_count: ConversationRef.where(conversation_id: conv.id, unread: true).count
       })
   	end
   	puts latest_conv.to_json
@@ -67,31 +66,29 @@ class Conversation < ActiveRecord::Base
 	end
 
 
-	def self.get_conversation_messages(conv_id, page)
-		convs_refs = ConversationRef.includes(:textable).where(conversation_id: conv_id).paginate(page: page, per_page: 25)
+	def get_conversation_messages(page)
+		convs_refs = self.conversation_refs.paginate(page: page, per_page: 25).includes(textable: [:images])
 		latest_messages = Array.new
+		unread_ids = []
 
-		  			full_name = User.find_by(conv.uid).card_name
-		  			  		last_message = ConversationRef.where(conversation_id: conv.id).last.textable
-
-
-		
-		convs_refs.each do |cf|
+		convs_refs.each do |cf| 
+			unread_ids.push(cf.id) if cf.unread
+			
 			msg = cf.textable
+			# Used for profile image...This should change if merchant can talk to merchant? or change how we determine profile image
+			user_level = msg.user_id == self.merchant_id ? 1 : 0    
       latest_messages.push({
-        :user_number => message.user_id,
-        :user_level => message.user_level.blank? ? 0 : message.user_level,
-        :profile_image => (message.user_level.blank? || (message.user_level == 0)) ? ActionController::Base.helpers.asset_path('user_icon_50x50.png') : ActionController::Base.helpers.asset_path('rhombus_icon_50x50.png'),
+        source: msg.user_id == self.merchant_id ? "merchant" : 'user',
+        profile_image: (user_level == 0) ? ActionController::Base.helpers.asset_path('user_icon_50x50.png') : ActionController::Base.helpers.asset_path('rhombus_icon_50x50.png'),
         text: (msg.text) ? msg.text : nil,
         ts_day_of_the_week: msg.created_at.strftime('%A'),
         ts_time: msg.created_at.strftime('%l:%M %P'),
         unread: msg.unread,
-        # return small version here??
-        #:image_url => message.image_id? ? message.image.avatar.url : nil
+        image_urls: msg.images.map { |i| i.avatar.url },           # return small version here??
+        msg_type: msg.class.name
       })
     end
-    latest_messages
-		#x.to_json
+    latest_messages, unread_ids.join(",")
 	end
 
     # Returns hash with the last "num_messages" messages that the given user has sent to the given merchant
@@ -116,6 +113,15 @@ class Conversation < ActiveRecord::Base
       })
     end
     latest_messages
+  end
+
+
+  def mark_messages_as_read(ids)
+  	# this can be more efficient
+  	refs = ConversationRef.includes(:textable).where(id: ids.split(","), conversation_id: self.id)  	
+  	refs.update_all(unread: false)
+  	refs.textable.update_all(unread: false)
+
   end
 
 

@@ -153,6 +153,7 @@ class User < ActiveRecord::Base
     # @user.short_url = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?referrer_id=#{@user.id}")
   end
 
+  # remove this method
   # Returns hash with users who sent a message to the given merchant in the last "num_days" days
   def self.get_latest_active_messaging(merchant_id, num_days)
     # name is now thrugh person

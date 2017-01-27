@@ -44,13 +44,15 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
     // Messages
     $scope.num_message_history = 200;
     $scope.char_limit = 150;
-    $scope.active_user_number = 0;
+    //$scope.active_user_number = 0;    //remove
+    $scope.active_conversation_id = 0;
 
     $scope.active_user_count = 0;   // remove
     $scope.open_conversations_count = 0;
     
     $scope.global_unread_count = 0;
-    $scope.current_chat_user = false;
+    //$scope.current_chat_user = false; // remove
+    $scope.current_chat_conversation = false;
     $scope.send_msg_btn = "SEND";
 
     // Transactions
@@ -113,7 +115,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
         }
       });
 
-      // Get latest messages for this merchant
+      // Get latest conversations for this merchant
       //$http.get(window.location.origin + '/users/' + merchant_id + '/json_get_latest_active_messaging') //remove
       $http.get(window.location.origin + '/v1/conversations.json?page=1')
       .success(function(data) {
@@ -124,7 +126,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
         //angular.forEach(data.users, function(value, key) {    // remove
         angular.forEach(data.conversations, function(value, key) {
           //user_list[value.user_number] = value;    // remove
-          conversation_list[value.uid_type + "-" + value.user_id] = value;
+          conversation_list[value.conversation_id] = value;
           //$scope.active_user_count += 1;   // remove
           $scope.global_unread_count += value.unread_count;
         });
@@ -136,21 +138,33 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
 
 
         //$scope.getUserMessages = function(user) {  //remove
-        //$scope.getUserMessages = function(conversation) {   // remove
         $scope.getConversationMessages = function(conversation) {
           //$http.get(window.location.origin + '/users/' + merchant_id + '/json_get_user_messages_by_merchant/' + user.user_number + '?limit=' + (user.unread_count + $scope.num_message_history)) // remove
           $http.get(window.location.origin + '/v1/conversations/' + conversation.conversation.id + '.json?page=1')
           .success(function(data) {
-            $scope.active_user_number = user.user_number;
-            $scope.selected_user = user;
-            $scope.selected_user_messages = data.messages;
-            $scope.current_chat_user = user;
+            //$scope.active_user_number = user.user_number;      //remove
+            $scope.active_conversation_id = conversation.conversation_id;
+            
+            //$scope.selected_user = user;   // remove
+            $scope.selected_conversation = conversation;
 
+            //$scope.selected_user_messages = data.messages;  // remove
+            $scope.selected_conversation_messages = data.messages;
+
+            // dopnt think this is used
+            //$scope.current_chat_user = user;  // remove
+            $scope.current_chat_conversation = conversation;
+
+            // stopped here
             // Mark messages as read
-            $scope.global_unread_count = (($scope.global_unread_count - $scope.users[user.user_number].unread_count) > 0) ? $scope.global_unread_count - $scope.users[user.user_number].unread_count : 0;
-            $scope.users[user.user_number].unread_count = 0;
-            //$http.get(window.location.origin + '/users/' + merchant_id + '/mark_user_messages_for_merchant_as_read/' + user.user_number);
-
+            //$scope.global_unread_count = (($scope.global_unread_count - $scope.users[user.user_number].unread_count) > 0) ? $scope.global_unread_count - $scope.users[user.user_number].unread_count : 0;  // remove
+            var unread_ids = data.unread_ids.split(",");
+            var unread_diff = $scope.global_unread_count - unread_ids.length;
+            $scope.global_unread_count = (unread_diff > 0) ? unread_diff : 0;
+            //$scope.users[user.user_number].unread_count = 0;   //remove
+            $scope.users[conversation.conversation_id].unread_count -= unread_ids.length;
+            //$http.get(window.location.origin + '/users/' + merchant_id + '/mark_user_messages_for_merchant_as_read/' + user.user_number); //remove
+            $http.get(window.location.origin + 'v1/conversation/' + conversation.conversation_id + 'mark_messages_as_read?ids=' + data.unread_ids);   
             // Bind plugins to textbox
             // should only bind once...add check
             setTimeout(function(){ BindPlugins.now() }, 0);
