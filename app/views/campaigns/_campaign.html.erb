@@ -2,21 +2,21 @@
   <%= form_for [current_user, @campaign], html: { multipart: true, id: 'email-form campaignForm', class: 'w-clearfix', data: { name: 'Email Form' } } do |f| %>
     <%= f.text_field :name, class: 'editor text-field w-input', id: 'Campaign-name', data: { name: 'Campaign name' }, placeholder: 'Campaign name'  %>
     <label class="editor-options form-label" for="List"> &nbsp; List</label>
-    <%= f.text_field :list_name, id: 'campaign-select-lists List', 'data-lists_data' => "#{@lists.to_json}", placeholder: "Choose a list", class: 'editor text-field w-input', data: { name: 'List' } %>
+    <%= f.text_field :list_name, id: 'List', 'data-lists_data' => "#{@lists.to_json}", placeholder: "Choose a list", class: 'editor text-field w-input', data: { name: 'List' } %>
     <a class="create-list-link new-campaign" href="#">Create new list</a>
     <label class="channel editor-options form-label" for="Channel"> &nbsp; Message channel</label>
     <%= f.select :channel, channel_list(@campaign, @lists), {}, selected: get_channel_enum_value(@campaign.channel), class: 'dropdown editor-dropdown w-select', id: 'Channel', data: { name: 'Channel' } %>
     <div class="editor-options form-label"> &nbsp; Message frequency</div>
     <%= f.radio_button :frequency_type, 0, id: 'oneTimeFrequency', checked: is_one_time_checked?(@campaign), class: 'frequency-tabs left w-button' %>
-    <%= f.radio_button :frequency_type, 1, id: 'recurringFrequency',  checked: is_recurring_checked?(@campaign), class: 'frequency-tabs right w-button' %>
+    <%= f.radio_button :frequency_type, 1, id: 'recurringFrequency',  checked: is_recurring_checked?(@campaign), class: 'frequency-tabs left w-button' %>
     <div class="editor underline-div"></div>
     <div class="check-box editor w-checkbox w-clearfix">
-      <%= f.check_box :deliver_now, id: 'deliverNow Deliver-now', class: 'w-checkbox-input', data: { name: 'Deliver now' } %>
+      <%= f.check_box :deliver_now, id: 'Deliver-now', class: 'w-checkbox-input', data: { name: 'Deliver now' } %>
       <label class="check-radio-text w-form-label" for="Deliver-now">Deliver now &nbsp; &nbsp;[ OR ] &nbsp; &nbsp;Select later Day/Time [?]</label>
     </div>
     <div class='scheduleOption'>
       <%= f.text_field :date_time, class: 'daterange editor text-field w-input', id: 'Date-Picker', value: present(@campaign).to_user_date_time, data: { name: "Date Picker" } %>
-      <%= f.select :repeat_days, repeat_days_options, selected: @campaign.repeat_days, id: 'Interval', class: 'dropdown editor-dropdown w-select', data: { name: 'Interval' } %>
+      <%= f.select :repeat_days, repeat_days_options, {}, selected: @campaign.repeat_days, id: 'campaign_repeat_days', class: 'dropdown editor-dropdown w-select', data: { name: 'Interval' } %>
     </div>
     <div class="dashboard-body editor">
       <div class="dash-content-container message-editor">
