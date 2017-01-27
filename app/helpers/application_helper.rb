@@ -8,7 +8,7 @@ module ApplicationHelper
 
   def render_header_partial
     unless knowledge_base_page
-      concat(render 'shared/unauthenticate_header')  || (!check_params && unauthenticate_controller)
+      concat(render 'shared/unauthenticate_header') if (!check_params && unauthenticate_controller)
     end
     concat(render 'shared/authenticated_header') unless (unauthenticate_controller || check_params) || campaign_restrict_params || campaign_restrict_params
     concat(render 'campaigns/campaign_header') if campaign_restrict_params
