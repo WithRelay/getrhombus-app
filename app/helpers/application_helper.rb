@@ -7,9 +7,10 @@ module ApplicationHelper
   end
 
   def render_header_partial
-    unless knowledge_base_page
+    unless relay_docs_page
       concat(render 'shared/unauthenticate_header') if (!check_params && unauthenticate_controller)
     end
+    concat(render 'shared/docs_header') if relay_docs_page
     concat(render 'shared/authenticated_header') unless (unauthenticate_controller || check_params) || campaign_restrict_params || campaign_restrict_params
     concat(render 'campaigns/campaign_header') if campaign_restrict_params
   end
@@ -28,8 +29,9 @@ module ApplicationHelper
     restrict_params.include?("#{params[:controller]}-#{params[:action]}")
   end
 
-  def knowledge_base_page
-    params[:controller] == 'knowledge_base_categories'
+  def relay_docs_page
+    doc_actions = ['static_pages-relay_docs', 'hashtags-new']
+    doc_actions.include?("#{params[:controller]}-#{params[:action]}")
   end
 
   def render_footer_partial
@@ -38,7 +40,7 @@ module ApplicationHelper
   end
 
   def unauthenticate_controller
-    static_controllers = ['knowledge_base_categories', 'static_pages', 'contact_forms' ]
+    static_controllers = ['static_pages', 'contact_forms' ]
     static_controllers.include?(params[:controller])
   end
 
