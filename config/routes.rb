@@ -3,24 +3,10 @@ Rails.application.routes.draw  do
   require 'resque/server'
   mount Resque::Server, at: '/jobs'
   ## static pages routes
+  StaticPagesController.action_methods.each do |action|
+    get action.split('_').join('-') => "static_pages##{action}"
+  end
   root 'static_pages#home'
-  get 'about' => 'static_pages#about'
-  get 'platform-integration' => 'static_pages#platform_integration'
-  get 'customers' => 'static_pages#customers'
-  get 'faqs' => 'static_pages#faqs'
-  get 'privacy' => 'static_pages#privacy'
-  get 'terms' => 'static_pages#terms'
-  get 'request-demo'=> 'static_pages#request_demo'
-  get 'pricing' => 'static_pages#pricing'
-  get 'request_demo' => 'demos#request_demo'
-  get 'features' => 'static_pages#features'
-  get 'use-case-education' => 'static_pages#use_case_education'
-  get 'use-case-non-profit' => 'static_pages#use_case_non_profit'
-  get 'use-case-on-demand-service' => 'static_pages#use_case_demand_service'
-  get 'use-case-on-sales-marketing' => 'static_pages#use_case_sales_marketing'
-  get 'use-case-staffing-employment' => 'static_pages#use_case_staffing_employment'
-  get 'refer-a-business' => 'static_pages#refer_a_business'
-
 
   get 'contact' => 'contact_forms#new'
 
