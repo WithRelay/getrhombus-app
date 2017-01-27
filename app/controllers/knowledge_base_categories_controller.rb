@@ -3,8 +3,13 @@ class KnowledgeBaseCategoriesController < ApplicationController
     @knowledge_base_categories = KnowledgeBaseCategory.all
   end
 
-  def create
-    @kb_category = KnowledgeBaseCategory.new
+  def new
+    if KnowledgeBaseCategory.create({name: params[:name]})
+      flash[:notice] = 'Knowledge base category created successfully.'
+    else
+      flash[:error] = 'Something went wrong'
+    end
+    redirect_to knowledge_base_path
   end
 
   def edit
@@ -14,7 +19,20 @@ class KnowledgeBaseCategoriesController < ApplicationController
   end
 
   def show
-    # @kb_list = KnowledgeBase.search(params['search'])
-    @kb_list = KnowledgeBase.all
+    @kb_list = if params[:show].present?
+      kb ? kb.knowledge_bases.search(params[:show][:search]) : []
+    elsif params[:search].present?
+      KnowledgeBase.search(params['search'])
+    elsif params[:slug].present?
+      kb ? kb.knowledge_bases : ''
+    else
+      KnowledgeBase.all
+    end
   end
+
+  private
+  def kb
+    KnowledgeBaseCategory.find_by(slug: params[:slug])
+  end
+
 end

@@ -21,4 +21,8 @@ module KnowledgeBaseCategoriesHelper
       time_ago_in_words(date) + ' ago'
     end
   end
+
+  def breadcrumb_item
+    request.url.split('/').last.gsub('-', ' ').titleize
+  end
 end
