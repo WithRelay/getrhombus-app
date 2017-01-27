@@ -11,17 +11,23 @@ module ApplicationHelper
       concat(render 'shared/unauthenticate_header') if (!check_params && unauthenticate_controller)
     end
     concat(render 'shared/docs_header') if relay_docs_page
-    concat(render 'shared/authenticated_header') unless (unauthenticate_controller || check_params) || campaign_restrict_params || campaign_restrict_params
+    concat(render 'shared/authenticated_header') unless (unauthenticate_controller || check_params) || campaign_restrict_params || messaging_dashboard
     concat(render 'campaigns/campaign_header') if campaign_restrict_params
+    concat(render 'shared/messaging_header') if messaging_dashboard
   end
 
   def render_sidebar_partial
-    render 'shared/dashboard_sidebar' unless (unauthenticate_controller || check_params) || restrict_other_params
+    render 'shared/dashboard_sidebar' unless (unauthenticate_controller || check_params) || restrict_other_params || messaging_dashboard
   end
 
   def restrict_other_params
     actions = ['campaigns-new', 'hashtags-new']
     actions.include?("#{params[:controller]}-#{params[:action]}")
+  end
+
+  def messaging_dashboard
+    messaging_params = ['users-messaging']
+    messaging_params.include?("#{params[:controller]}-#{params[:action]}")
   end
 
   def campaign_restrict_params
