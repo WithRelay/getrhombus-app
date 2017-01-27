@@ -18,12 +18,14 @@ Rails.application.routes.draw  do
   get 'user_lists/remove_user' => 'user_lists#remove_user'
   get 'fb_pages/remove_integration' => 'fb_pages#remove_integration'
   get 'link_facebook' => 'link_fb_accounts#link_facebook'
+  get 'relay-docs' => 'static_pages#relay_docs'
+  get "relay-docs-categories/:slug" => "knowledge_base_categories#show"
+
+  ### fix this url
   post 'redirect' => 'link_fb_accounts#redirect'
-  get 'knowledge_base' => 'knowledge_base_categories#index'
-  get 'knowledge_base/new' => 'knowledge_base_categories#create'
-  post 'knowledge_base/new' => 'knowledge_base_categories#new'
-  post 'knowledge_base' => 'knowledge_base_categories#show'
-  match "knowledge_base/:slug" => "knowledge_base_categories#show", via: [:get, :post]
+  
+  
+  
   resources :lists do
     resources :customer_lists
   end
@@ -73,6 +75,9 @@ Rails.application.routes.draw  do
       end
     end
 
+    authenticate :user, -> (user) { user.is_platform? } do
+      resources :knowledge_base_categories, param: :slug, only: [:index, :edit, :update, :new, :create]
+    end
     resources :plans, only: [:index, :destroy]
     resources :alerts, only: [:update]
     resources :saved_replies
@@ -150,6 +155,7 @@ Rails.application.routes.draw  do
     match 'referrers/invite_business' => 'referrers#invite_business', via: :post
     resources :demos, only: [:create]
     resources :conversations, only: [:index]
+    get "relay-docs/search" => "knowledge_bases#index"
   end
 
   ## catch all other to 404

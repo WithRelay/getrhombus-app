@@ -1,0 +1,4 @@
+<%= form_for([current_user, knowledge_base_category], html: { id: "kb-form" } ) do |f| %>
+  <%= f.text_field :name, placeholder: 'Name of the Knowledge base category', id: 'Docs-Search-2', class: 'alt relay-docs-search w-input' %>
+  <%= f.submit 'Submit', data: { disable_with: "Please wait..." } %>
+<% end %>

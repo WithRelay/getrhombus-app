@@ -1,38 +1,50 @@
 class KnowledgeBaseCategoriesController < ApplicationController
+  before_action :set_kb, only: [:edit, :show, :update]
+
   def index
     @knowledge_base_categories = KnowledgeBaseCategory.all
   end
 
   def new
-    if KnowledgeBaseCategory.create({name: params[:name]})
+    @knowledge_base_category = KnowledgeBaseCategory.new
+  end
+
+  def create
+    @knowledge_base_category = KnowledgeBaseCategory.new(kb_params)
+    if @knowledge_base_category.save
       flash[:notice] = 'Knowledge base category created successfully.'
+      redirect_to user_knowledge_base_categories_path(current_user)
     else
       flash[:error] = 'Something went wrong'
+      render :new
     end
-    redirect_to knowledge_base_path
   end
 
   def edit
   end
 
   def update
-  end
-
-  def show
-    @kb_list = if params[:show].present?
-      kb ? kb.knowledge_bases.search(params[:show][:search]) : []
-    elsif params[:search].present?
-      KnowledgeBase.search(params['search'])
-    elsif params[:slug].present?
-      kb ? kb.knowledge_bases : ''
+    if @knowledge_base_category.update(kb_params)
+      flash[:notice] = 'Knowledge base category updated.'
+      redirect_to user_knowledge_base_categories_path(current_user)
     else
-      KnowledgeBase.all
+      flash[:error] = 'Something went wrong'
+      render :edit
     end
   end
 
+  def show
+    @kb_list = @knowledge_base_category.knowledge_bases
+  end
+
   private
-  def kb
-    KnowledgeBaseCategory.find_by(slug: params[:slug])
+
+  def kb_params
+    params.require(:knowledge_base_category).permit(:name)
+  end
+  
+  def set_kb
+    @knowledge_base_category = KnowledgeBaseCategory.find_by(slug: params[:slug])
   end
 
 end

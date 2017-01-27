@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170126175954) do
+ActiveRecord::Schema.define(version: 20170127033409) do
 
   create_table "addresses", force: :cascade do |t|
     t.string   "street_address",   limit: 191
@@ -334,6 +334,7 @@ ActiveRecord::Schema.define(version: 20170126175954) do
     t.string   "slug",       limit: 191
   end
 
+  add_index "knowledge_base_categories", ["name"], name: "index_knowledge_base_categories_on_name", unique: true, using: :btree
   add_index "knowledge_base_categories", ["slug"], name: "index_knowledge_base_categories_on_slug", unique: true, using: :btree
 
   create_table "knowledge_bases", force: :cascade do |t|
@@ -348,7 +349,9 @@ ActiveRecord::Schema.define(version: 20170126175954) do
     t.datetime "updated_at",                               null: false
   end
 
-  add_index "knowledge_bases", ["title", "raw_content"], name: "index_knowledge_bases_on_title_and_raw_content", type: :fulltext
+  add_index "knowledge_bases", ["raw_content"], name: "index_knowledge_bases_on_raw_content", type: :fulltext
+  add_index "knowledge_bases", ["title"], name: "index_knowledge_bases_on_title", type: :fulltext
+  add_index "knowledge_bases", ["title"], name: "normal_title_index", unique: true, using: :btree
 
   create_table "lists", force: :cascade do |t|
     t.datetime "created_at",                           null: false

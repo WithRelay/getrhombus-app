@@ -24,4 +24,7 @@ class StaticPagesController < ApplicationController
 
 	def to_404
 	end
+
+	def relay_docs
+	end
 end
