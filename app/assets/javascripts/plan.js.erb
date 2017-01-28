@@ -5,47 +5,48 @@ $(document).ready(function() {
       save_icon_grandparent, plan_name_input;
 
   // validate plan form
-  $('#planForm')
-    .formValidation({
-      framework: 'bootstrap',
-      live: 'disabled',
-      // List of fields and their validation rules
-      fields: {
-        'plan[name]': {
-          validators: {
-            notEmpty: {
-              message: 'Name is required'
-            },
-            remote: {
-              message: 'This Plan name has already been used.',
-              url: '/v1/plans/check_plan_name',
-              type: 'POST'
+  if ($('#planForm').length > 0) {
+    $('#planForm').formValidation({
+        framework: 'bootstrap',
+        live: 'disabled',
+        // List of fields and their validation rules
+        fields: {
+          'plan[name]': {
+            validators: {
+              notEmpty: {
+                message: 'Name is required'
+              },
+              remote: {
+                message: 'This Plan name has already been used.',
+                url: '/v1/plans/check_plan_name',
+                type: 'POST'
+              }
             }
-          }
-        },
-        'plan[amount]': {
-          validators: {
-            notEmpty: {
-              message: 'Amount  is required'
+          },
+          'plan[amount]': {
+            validators: {
+              notEmpty: {
+                message: 'Amount  is required'
+              }
             }
           }
         }
-      }
-    })
-    .on('success.validator.fv', function(e, data) {
-      data.element // Get the field element
-        .closest('.form-group') // Get the field parent
-        .removeClass('has-warning')
-        .addClass('has-success')
-    })
-    .on('success.form.fv', function(e, data) {       
-      // only applies to create modal
-      if ($("#modalPlan").length > 0) {
-        e.preventDefault();
-        $('#create-plan').attr("disabled", true).val("Please wait...");
-        addPlan(); 
-      }      
-    });
+      })
+      .on('success.validator.fv', function(e, data) {
+        data.element // Get the field element
+          .closest('.form-group') // Get the field parent
+          .removeClass('has-warning')
+          .addClass('has-success')
+      })
+      .on('success.form.fv', function(e, data) {       
+        // only applies to create modal
+        if ($("#modalPlan").length > 0) {
+          e.preventDefault();
+          $('#create-plan').attr("disabled", true).val("Please wait...");
+          addPlan(); 
+        }      
+      });
+  }
 
   $('#plan_name').on("input", function() {
     $('#planForm').formValidation('revalidateField', 'plan[name]');

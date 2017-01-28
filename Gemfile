@@ -64,8 +64,6 @@ gem "koala"
 
 gem 'friendly_id', '~> 5.1.0'
 
-gem 'search_cop'
-
 group :production do
   gem "passenger"
 end

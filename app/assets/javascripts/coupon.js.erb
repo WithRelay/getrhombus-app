@@ -33,48 +33,51 @@ $(document).ready(function () {
   }
 
   // validate coupon form
-  $('#couponForm')
-    .formValidation({
-      framework: 'bootstrap',
-      live: 'disabled',
-      // List of fields and their validation rules
-      fields: {
-          'coupon[name]': {
-              validators: {
-                notEmpty: {
-                      message: 'Coupon name is required'
-                },
-                remote: {
-                    message: 'This coupon name has already been used.',
-                    url: '/v1/coupons/check_coupon_name',
-                    type: 'POST'
-                }
-              }
-          },
-            'coupon[amount_off]': {
-               selector: '#coupon-type-value',
-               validators: {
-                    notEmpty: {
-                        message: 'Amount off is required'
-                    }
-                }
-              },
-            'coupon[duration_in_months]':{
+  if ($('#couponForm').length > 0) {
+    $('#couponForm')
+      .formValidation({
+        framework: 'bootstrap',
+        live: 'disabled',
+        // List of fields and their validation rules
+        fields: {
+            'coupon[name]': {
                 validators: {
                   notEmpty: {
-                    message: 'Required when creating a coupon with a repeating duration'
+                        message: 'Coupon name is required'
+                  },
+                  remote: {
+                      message: 'This coupon name has already been used.',
+                      url: '/v1/coupons/check_coupon_name',
+                      type: 'POST'
                   }
                 }
-            }
-        }
-      })
-    .on('success.validator.fv', function(e, data) {
-        data.element // Get the field element
-        .closest('.form-group') // Get the field parent
-        .removeClass('has-warning')
-        .addClass('has-success')
-    });
+            },
+              'coupon[amount_off]': {
+                 selector: '#coupon-type-value',
+                 validators: {
+                      notEmpty: {
+                          message: 'Amount off is required'
+                      }
+                  }
+                },
+              'coupon[duration_in_months]':{
+                  validators: {
+                    notEmpty: {
+                      message: 'Required when creating a coupon with a repeating duration'
+                    }
+                  }
+              }
+          }
+        })
+      .on('success.validator.fv', function(e, data) {
+          data.element // Get the field element
+          .closest('.form-group') // Get the field parent
+          .removeClass('has-warning')
+          .addClass('has-success')
+      });
 
+  }
+  
   $('#coupon-name').keyup(function(e){
     $('#couponForm').formValidation('revalidateField', 'coupon[name]');
   });

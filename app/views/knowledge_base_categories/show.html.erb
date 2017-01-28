@@ -1,23 +1,31 @@
 <%= render 'shared/relay_docs_search' %>
 
 <div class="docs-categories static-page-def-section">
-  <div class="breadcrumb-wrapper">
-    <div class="breadcrumb-text">
-    <%= link_to 'Help Center', relay_docs_path %>
-    </div>
-    <div class="breadcrumb-text follow-on">&nbsp;&nbsp;&nbsp;&nbsp;<%= breadcrumb_item %></div>
-  </div>
-  <div id = 'kb_list'>
-    <% @kb_list.each do |item| %>
-      <a href="<%= item.url %>">
-        <div class="article static-page-content-wrapper w-container">
-        <div class="articles-title"><%= item.title %></div>
-        <p class="article-preview"><%= item.raw_content %></p>
-        <img class="article-author" height="30" src="http://uploads.webflow.com/5767087cbd63608e7eb4abdc/586da5db511381a742ba3da1_Edwin%202.jpg" width="30">
-        <div class="author-info">By <span class="author-name"><%= item.author %></span> &nbsp;| &nbsp;<%= date_in_words(item.created_at)%></div>
+
+  <div id='kb-search-title'></div>
+  <div id='kb-search-results'></div>
+
+  <div id="kb-content">
+    <div class="breadcrumb-wrapper">
+      <div class="breadcrumb-text">
+      <%= link_to 'Help Center', relay_docs_path %>
       </div>
-      </a>
-    <% end %>
+      <div class="breadcrumb-text follow-on">&nbsp;&nbsp;&nbsp;&nbsp;<%= breadcrumb_item %></div>
+    </div>
+
+    <div id='kb-list'>
+      <% @kb_list.each do |item| %>
+        <a href="<%= item.url %>">
+          <div class="article static-page-content-wrapper w-container">
+          <div class="articles-title"><%= item.title %></div>
+          <p class="article-preview"><%= item.raw_content %></p>
+          <img class="article-author" height="30" src="http://uploads.webflow.com/5767087cbd63608e7eb4abdc/586da5db511381a742ba3da1_Edwin%202.jpg" width="30">
+          <div class="author-info">By <span class="author-name"><%= item.author %></span> &nbsp;| &nbsp;<%= date_in_words(item.created_at)%></div>
+        </div>
+        </a>
+      <% end %>
+    </div>
   </div>
+  
 </div>
     
