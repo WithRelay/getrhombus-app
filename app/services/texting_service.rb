@@ -337,7 +337,7 @@ class TextingService
         client = Twilio::REST::Client.new TWILIO_API_KEY, TWILIO_API_SECRET
         client.account.messages(message_id).fetch
       rescue StandardError => e
-        {}
+        false
       end
     end
 

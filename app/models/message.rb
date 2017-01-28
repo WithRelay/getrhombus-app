@@ -14,16 +14,18 @@ class Message < ActiveRecord::Base
 
   # For sending and saving all outbound text messages
   def send_and_save_message(merchant, user, from, to, message, unread, media_ary = [])
-    begin
+    #begin
 
       # save message before sending
       user = (user.present?) ? user.id : nil
-      update_attributes(user_id: merchant.id, user_id_to: user, from: from, to: to, text: message, unread: unread)
+      self.update_attributes(user_id: merchant.id, user_id_to: user, from: from, to: to, text: message, unread: unread)
             
-      if merchant.rn_type.present?      # this is twilio
+      if true #merchant.rn_type.present?      # this is twilio
         if response = TextingService.send_sms(from, to, message, media_ary)
+          puts response.inspect
           self.update_attributes(status: response.status, message_id: response.sid, message_timestamp: response.date_updated, message_price: response.price,
-                error_code: response.error_code, error_text: response.error_message, price_unit: response.price_unit, num_segments: response.num_segments)
+                error_code: response.error_code, error_text: response.error_message, price_unit: response.price_unit, num_segments: response.num_segments,
+                num_media: response.num_media)
         else
           Notification.text_failure_notification(response, from, to, message).deliver_now                         # Notify team of failure
           false
@@ -39,9 +41,9 @@ class Message < ActiveRecord::Base
         end
       end
     
-    rescue StandardError => err
-      false
-    end
+   # rescue StandardError => err
+    #  false
+    #end
   end
 
   # remove this method

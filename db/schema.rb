@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170127033409) do
+ActiveRecord::Schema.define(version: 20170128003534) do
 
   create_table "addresses", force: :cascade do |t|
     t.string   "street_address",   limit: 191
@@ -414,6 +414,7 @@ ActiveRecord::Schema.define(version: 20170127033409) do
     t.text     "text",                     limit: 65535
     t.boolean  "unread",                   limit: 1,     default: true
     t.string   "num_segments",             limit: 191
+    t.integer  "num_media",                limit: 4,     default: 0
     t.string   "price_unit",               limit: 191
     t.integer  "hashtag_id",               limit: 4
     t.boolean  "unread_notification_sent", limit: 1,     default: false
