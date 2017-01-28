@@ -1,7 +1,7 @@
 <div class="alt faq static-page-def-section">
-      <div class="w-form">
-        <%= form_for 'show', html: { id: "kb-search-form" }  do |f| %>
-          <%= f.text_field :search, placeholder: 'Search the help center', id: 'Docs-Search-2', class: 'alt relay-docs-search w-input' %>
-        <% end %>
-      </div>
-    </div>
+  <div class="w-form">
+    <%= form_for 'show', url: '#', html: { id: "kb-search-form" }  do |f| %>
+      <%= f.text_field :search, placeholder: 'Search the help center', id: 'kb_search', class: 'alt relay-docs-search w-input' %>
+    <% end %>
+  </div>
+</div>

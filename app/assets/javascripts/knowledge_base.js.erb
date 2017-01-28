@@ -1,0 +1,36 @@
+$(document).ready(function () {
+  $('#kb_search').on('keyup', function (e) {
+    e.preventDefault();
+    $.ajax({
+      url: "/v1/knowledge_bases/search.json",
+      beforeSend: function(xhr) {
+        xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
+      },
+      type: "POST",
+      data: $('#kb-search-form').serialize(),
+      dataType: "json",
+      success: function(data) {
+        param = $('#kb_search').val();
+        setKB(data.knowledge_bases, param);
+      }
+    });
+  });
+})
+
+function setKB(kbList,searchParam) {
+  $('#kb_list').html('<div class="search_value">Search results for:'+searchParam+'</div>');
+  $.each(kbList, function(index, item) {
+      var created_at = item.created_at,
+     $('#kb_list').append('<a href="'+ item.url+'/>\
+      <div class="article static-page-content-wrapper w-container">\
+      <div class="articles-title">' + item.title + '</div>\
+      <p class="article-preview">'+item.raw_content+'</p>\
+      <img class="article-author" height="30" src="http://uploads.webflow.com/5767087cbd63608e7eb4abdc/586da5db511381a742ba3da1_Edwin%202.jpg" width="30">\
+      <div class="author-info">By <span class="author-name">'+item.author+'</span> &nbsp;| &nbsp; date_in_words('+created_at+') </div>\
+      </div>\
+      </a>')
+    })
+  if (searchParam.length === 0) {
+    $('.search_value').show();
+  }
+}
