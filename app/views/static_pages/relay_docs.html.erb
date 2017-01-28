@@ -32,23 +32,30 @@
     </div>
     
     <%= render 'shared/relay_docs_search' %>
-
+    
     <div class="static-page-def-section">
-      <h1 class="sub-hero-header">Choose a category or browse FAQs below</h1>
-      <div class="customer-interactions-table no-icon-row w-row">
-          <a href="knowledge_base/<%#= category.slug %>">
-            <div class="w-col w-col-4" style="padding-bottom: 10px">
-              <div>
-                <div class="docs features-div-paragraph-wrapper">
-                  <img class="relay-docs-row-icon" src = <%#= map_icon[category.name] %> >
-                  <h3 class="features-div-header-text use-case"> <%#= category.name %> </h3>
+      
+      <div id='kb-search-title'></div>
+      <div id='kb-search-results'></div>
+      
+      <div id="kb-content">
+        <h1 class="sub-hero-header">Choose a category or browse FAQs below</h1>
+        <div class="customer-interactions-table no-icon-row w-row">
+            <a href="knowledge_base/<%#= category.slug %>">
+              <div class="w-col w-col-4" style="padding-bottom: 10px">
+                <div>
+                  <div class="docs features-div-paragraph-wrapper">
+                    <img class="relay-docs-row-icon" src = <%#= map_icon[category.name] %> >
+                    <h3 class="features-div-header-text use-case"> <%#= category.name %> </h3>
+                  </div>
                 </div>
               </div>
-            </div>
-          </a>
-        <%# end %>
+            </a>
+          <%# end %>
+        </div>
       </div>
     </div>
+
     <div class="faq static-page-def-section">
       <div class="faq-content-wrapper w-container">
         <div class="faq-section-header">Frequently Asked Questions</div>

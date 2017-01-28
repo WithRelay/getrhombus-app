@@ -1,7 +1,12 @@
 class Api::V1::KnowledgeBasesController < API::V1::BaseController
-  def search
-    kb = KnowledgeBase.search(params[:show][:search])
-    # kb = User.where("raw_content LIKE (?)", "%#{params[:show][:search]}%")
-    render json: { knowledge_bases: kb }
+ 
+  def index
+  	if params[:query].present? 
+  		q = "%#{params[:query].downcase}%"
+  		kb = KnowledgeBase.where("lower(raw_content) LIKE (?) or lower(title) LIKE (?)", q, q)    
+  	else
+  		KnowledgeBase.all
+  	end
+	render json: { results: kb }
   end
 end

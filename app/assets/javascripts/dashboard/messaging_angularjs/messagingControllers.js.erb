@@ -86,9 +86,9 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
       Pubnub.subscribe({
         channel: 'messaging_<%= Rails.env %>_' + merchant_id,
         message: function(m){
-          var json_response = JSON.parse(m[0]);
+          var json_response = JSON.parse(m);
 
-          $scope.$apply(function() {
+          /*$scope.$apply(function() {
             if (json_response.user_number == $scope.active_user_number) {
               $scope.selected_user_messages.push({user_number: json_response.user_number, user_level: json_response.user_level, profile_image: json_response.profile_image, text: json_response.message, ts_day_of_the_week: json_response.ts_day_of_the_week, ts_time: json_response.ts_time, unread: false});
               if (json_response.user_level == 0) {
@@ -112,7 +112,9 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
                 $scope.users[json_response.user_number].last_message_ts = parseInt(json_response.ts_int);
               }
             }
-          });
+          });*/
+
+          console.log(json_response)
         }
       });
 

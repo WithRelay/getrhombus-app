@@ -1,36 +1,56 @@
-$(document).ready(function () {
-  $('#kb_search').on('keyup', function (e) {
-    e.preventDefault();
-    $.ajax({
-      url: "/v1/knowledge_bases/search.json",
-      beforeSend: function(xhr) {
-        xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
-      },
-      type: "POST",
-      data: $('#kb-search-form').serialize(),
-      dataType: "json",
-      success: function(data) {
-        param = $('#kb_search').val();
-        setKB(data.knowledge_bases, param);
-      }
-    });
-  });
-})
 
-function setKB(kbList,searchParam) {
-  $('#kb_list').html('<div class="search_value">Search results for:'+searchParam+'</div>');
-  $.each(kbList, function(index, item) {
-      var created_at = item.created_at;
-     $('#kb_list').append('<a href="'+ item.url+'/>\
-      <div class="article static-page-content-wrapper w-container">\
-      <div class="articles-title">' + item.title + '</div>\
-      <p class="article-preview">'+item.raw_content+'</p>\
-      <img class="article-author" height="30" src="http://uploads.webflow.com/5767087cbd63608e7eb4abdc/586da5db511381a742ba3da1_Edwin%202.jpg" width="30">\
-      <div class="author-info">By <span class="author-name">'+item.author+'</span> &nbsp; </div>\
-      </div>\
-      </a>')
-    })
-  if (searchParam.length === 0) {
-    $('.search_value').show();
-  }
-}
+$(document).ready(function () {
+
+  var query = "";
+
+  $('#kb-search').on('input', function (e) {
+    e.preventDefault();
+    console.log(e.currentTarget.value)
+    get_results();
+  });
+
+  $("#kb-search-form").submit(function(e) {
+    e.preventDefault();
+    get_results();
+  });
+
+  function get_results() {
+    var new_query = $('#kb-search').val().trim();
+    if ((query != new_query) && (new_query != "")) {
+      query = new_query;
+      var remote_data = [];
+      $.ajax({
+        url: "/v1/relay-docs.json",
+        data: { query: new_query }
+      })
+      .done(function(data, textStatus, jqXHR) { console.log(data); remote_data = data.results; })
+      .always(function(data, textStatus, errorThrown) { setKB(remote_data); });
+    } else if (query == new_query) {
+    } else {
+      query = "";
+      $('#kb-search-title, #kb-search-results').html("");  
+      $("#kb-content").show();
+    }
+  };
+
+  function setKB(kbList) {
+    $("#kb-content").hide();
+    $('#kb-search-results').html("");  
+    if (kbList.length == 0) {
+      $('#kb-search-title').html('<div class="search_value">We couldn\'t find any results for: ' + query + '</div>');
+    } else {
+      $('#kb-search-title').html('<div class="search_value">Search results for: ' + query + '</div>');
+      $.each(kbList, function(index, item) {
+        var created_at = moment(item.created_at, "YYYYMMDD").fromNow();
+        $('#kb-search-results').append(
+          '<div class="article static-page-content-wrapper w-container">\
+            <a href="' + item.url + '">' + item.title + '</a>\
+            <p class="article-preview">' + item.raw_content.substring(0,29) + '</p>\
+            <img class="article-author" height="30" src="http://uploads.webflow.com/5767087cbd63608e7eb4abdc/586da5db511381a742ba3da1_Edwin%202.jpg" width="30">\
+            <div class="author-info">By <span class="author-name">' + item.author + '</span> &nbsp;| &nbsp;' + created_at + '</div>\
+          </div>');
+      });  
+    }
+  };
+
+});

@@ -1,124 +1,132 @@
 $(document).ready(function () {
   var subscriptionId = 0;
 
-  $('#subscription-select-coupon').selectize({
-    maxItems: 1,
-    valueField: 'id',
-    labelField: 'name',
-    searchField: 'name',
-    create: false,
-    options: [],
-    closeAfterSelect: true,
-    load: function(query, callback) {
-      if (!query.length) return callback();
-      $.ajax({
-        url: '/v1/coupons.json',
-        type: 'GET',
-        dataType: 'json',
-        data: {
-          name: query
-        },
-        error: function() {
-          FlashHandler.setFlashMessage('Something went wrong...Unable to find your coupons', 'error');
-          callback();
-        },
-        success: function(res) {
-          callback(res['coupons']);
-        }
-      });
-    }
-  });
-
-  $('#coupon-update-form')
-    .formValidation({
-      framework: 'bootstrap',
-      excluded: ':disabled',
-      live: 'disabled',
-      // List of fields and their validation rules
-      fields: {
-        'subscription[coupon]':{
-          validators: {
-              notEmpty: {
-                message: 'Coupon code required'
-              }
-            }
+  if ($('#subscription-select-coupon').length > 0) {
+    $('#subscription-select-coupon').selectize({
+      maxItems: 1,
+      valueField: 'id',
+      labelField: 'name',
+      searchField: 'name',
+      create: false,
+      options: [],
+      closeAfterSelect: true,
+      load: function(query, callback) {
+        if (!query.length) return callback();
+        $.ajax({
+          url: '/v1/coupons.json',
+          type: 'GET',
+          dataType: 'json',
+          data: {
+            name: query
+          },
+          error: function() {
+            FlashHandler.setFlashMessage('Something went wrong...Unable to find your coupons', 'error');
+            callback();
+          },
+          success: function(res) {
+            callback(res['coupons']);
           }
-        }
+        });
+      }
     });
+  }
 
-  $('#subscriptionForm')
-    .formValidation({
-      framework: 'bootstrap',
-      excluded: ':disabled',
-      live: 'disabled',
-      // List of fields and their validation rules
-      fields: {
-        'subscription[plan_id]':{
-          validators: {
-            callback: {
-              message: 'Please select a plan',
-              callback: function(value, validator, $field) {
-                var plans = validator.getFieldElements('subscription[plan_id]').val();
-                return (plans !== '');
+  if ($('#coupon-update-form').length > 0) {
+    $('#coupon-update-form')
+      .formValidation({
+        framework: 'bootstrap',
+        excluded: ':disabled',
+        live: 'disabled',
+        // List of fields and their validation rules
+        fields: {
+          'subscription[coupon]':{
+            validators: {
+                notEmpty: {
+                  message: 'Coupon code required'
+                }
               }
             }
           }
-        },
-        'subscription[quantity]' :{
-          validators: {
-            notEmpty: {
-              message: 'Quantity is required'
-            },
-            integer: {
-              message: 'The value is not an integer'
+      });
+  }
+
+  if ($('#subscriptionForm').length > 0) {
+    $('#subscriptionForm')
+      .formValidation({
+        framework: 'bootstrap',
+        excluded: ':disabled',
+        live: 'disabled',
+        // List of fields and their validation rules
+        fields: {
+          'subscription[plan_id]':{
+            validators: {
+              callback: {
+                message: 'Please select a plan',
+                callback: function(value, validator, $field) {
+                  var plans = validator.getFieldElements('subscription[plan_id]').val();
+                  return (plans !== '');
+                }
+              }
             }
-          }
-        },
-        'subscription[merchant_customer_id]':{
-          validators: {
+          },
+          'subscription[quantity]' :{
+            validators: {
               notEmpty: {
-                message: 'Please select a customer'
+                message: 'Quantity is required'
+              },
+              integer: {
+                message: 'The value is not an integer'
+              }
+            }
+          },
+          'subscription[merchant_customer_id]':{
+            validators: {
+                notEmpty: {
+                  message: 'Please select a customer'
+                }
               }
             }
           }
-        }
+      })
+      .on('success.form.fv', function(e, data) {          
+        e.preventDefault();
+        $("#create-subscription").attr("disabled", true).val("Please wait...");
+        addSubscription(); 
+      });
+  }
+
+  if ($('#subscription-plan-id').length > 0) {  
+    $("#subscription-plan-id").selectize({
+      maxItems: 1,
+      valueField: 'id',
+      labelField: 'name',
+      searchField: 'name',
+      create: false,
+      options: [],
+      closeAfterSelect: true,
+      load: function(query, callback) {
+        if (!query.length) return callback();
+        $.ajax({
+          url: '/v1/plans.json',
+          type: 'GET',
+          dataType: 'json',
+          data: {
+            name: query
+          },
+          error: function() {
+            FlashHandler.setFlashMessage('Something went wrong...Unable to find your plans', 'error');
+            callback();
+          },
+          success: function(res) {
+            callback(res['plans']);
+          }
+        });
+      }
     })
-    .on('success.form.fv', function(e, data) {          
-      e.preventDefault();
-      $("#create-subscription").attr("disabled", true).val("Please wait...");
-      addSubscription(); 
+    .on('change', function(e) {
+      $('#subscriptionForm').formValidation('resetField', 'subscription[plan_id]');
     });
-    
-  $("#subscription-plan-id").selectize({
-    maxItems: 1,
-    valueField: 'id',
-    labelField: 'name',
-    searchField: 'name',
-    create: false,
-    options: [],
-    closeAfterSelect: true,
-    load: function(query, callback) {
-      if (!query.length) return callback();
-      $.ajax({
-        url: '/v1/plans.json',
-        type: 'GET',
-        dataType: 'json',
-        data: {
-          name: query
-        },
-        error: function() {
-          FlashHandler.setFlashMessage('Something went wrong...Unable to find your plans', 'error');
-          callback();
-        },
-        success: function(res) {
-          callback(res['plans']);
-        }
-      });
-    }
-  })
-  .on('change', function(e) {
-    $('#subscriptionForm').formValidation('resetField', 'subscription[plan_id]');
-  });
+  }
 
   // reset form when modal close
   $('#modalSubscription').on('hidden.bs.modal', function () {
@@ -129,40 +137,40 @@ $(document).ready(function () {
    $('#planForm').data('formValidation').resetForm();
   })
 
-
-  $('#subscription-customer-id')
-    .selectize({
-      maxItems: 1,
-      valueField: 'id',
-      labelField: 'email',
-      searchField: 'email',
-      plugins: ['remove_button'],
-      create: false,
-      options: [],
-      closeAfterSelect: true,
-      load: function(query, callback) {
-        if (!query.length) return callback();
-        $.ajax({
-          url: '/v1/merchant/customers',
-          type: 'GET',
-          dataType: 'json',
-          data: {
-            query: query
-          },
-          error: function() {
-            FlashHandler.setFlashMessage('Something went wrong...Unable to find your customer', 'error');
-            callback();
-          },
-          success: function(res) {
-            callback(res['customers']);
-          }
-        });
-      }
-    })
-    .on('change', function(e) {
-      $('#subscriptionForm').formValidation('resetField', 'subscription[merchant_customer_id]');
-    })
-    
+  if ($('#subscription-customer-id').length > 0) {  
+    $('#subscription-customer-id')
+      .selectize({
+        maxItems: 1,
+        valueField: 'id',
+        labelField: 'email',
+        searchField: 'email',
+        plugins: ['remove_button'],
+        create: false,
+        options: [],
+        closeAfterSelect: true,
+        load: function(query, callback) {
+          if (!query.length) return callback();
+          $.ajax({
+            url: '/v1/merchant/customers',
+            type: 'GET',
+            dataType: 'json',
+            data: {
+              query: query
+            },
+            error: function() {
+              FlashHandler.setFlashMessage('Something went wrong...Unable to find your customer', 'error');
+              callback();
+            },
+            success: function(res) {
+              callback(res['customers']);
+            }
+          });
+        }
+      })
+      .on('change', function(e) {
+        $('#subscriptionForm').formValidation('resetField', 'subscription[merchant_customer_id]');
+      })
+  }
   // create subscription through api with modal
   function addSubscription() {
    $.ajax({

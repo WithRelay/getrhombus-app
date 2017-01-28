@@ -145,8 +145,7 @@ Rails.application.routes.draw  do
     resources :conversations, only: [:index, :show]
     post "conversations/:id/mark_messages_as_read" => "conversations#mark_messages_as_read"
     post 'conversations/:id/send_merchant_message' => 'conversations#send_merchant_message'
-    get "relay-docs/search" => "knowledge_bases#index"
-    post 'knowledge_bases/search' => 'knowledge_bases#search'
+    get "relay-docs" => "knowledge_bases#index"
   end
 
   ## catch all other to 404
