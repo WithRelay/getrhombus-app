@@ -7,7 +7,6 @@ $(document).ready(function () {
 
   $('#kb-search').on('input', function (e) {
     e.preventDefault();
-    console.log(e.currentTarget.value)
     get_results();
   });
 
@@ -18,14 +17,11 @@ $(document).ready(function () {
 
   $('.article-rating-button').on('click', function(e){
     e.preventDefault();
-    vote = $(this).text()
-    title = $('html').data().wfUrl;
+    var vote = $(this).text();
     if ($(this).attr('disabled') !== 'disabled') {
-      count_vote(vote, title);
+      count_vote(vote, $('html').data("article-url"));
       voteButtonCheck(vote)
-    } else {
-      return;
-    }
+    } 
   })
 
   function voteButtonCheck(vote) {
@@ -38,11 +34,10 @@ $(document).ready(function () {
     }
   }
 
-  function count_vote(vote, kb_title) {
+  function count_vote(vote, url) {
     $.ajax({
-      url: "/v1/article-rating.json",
-      type: 'POST',
-      data: { query: vote, title: kb_title }
+      url: "/v1/knowledge_bases/" + url + "/rating.json",
+      data: { vote: vote }
     })
     .done(function(data, textStatus, jqXHR) { console.log(data); });
   }
@@ -53,7 +48,7 @@ $(document).ready(function () {
       query = new_query;
       var remote_data = [];
       $.ajax({
-        url: "/v1/relay-docs.json",
+        url: "/v1/knowledge_bases.json",
         data: { query: new_query }
       })
       .done(function(data, textStatus, jqXHR) { console.log(data); remote_data = data.results; })
@@ -63,13 +58,11 @@ $(document).ready(function () {
       query = "";
       $('#kb-search-title, #kb-search-results').html("");  
       $("#kb-content").show();
-      $(".docs-categories").show();
     }
   };
 
   function setKB(kbList) {
     $("#kb-content").hide();
-    $(".docs-categories").hide();
     $('#kb-search-results').html("");  
     if (kbList.length == 0) {
       $('#kb-search-title').html('<div class="search_value">We couldn\'t find any results for: ' + query + '</div>');
