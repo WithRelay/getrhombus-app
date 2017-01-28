@@ -67,28 +67,32 @@ class Conversation < ActiveRecord::Base
 
 
 	def get_conversation_messages(page)
-		convs_refs = self.conversation_refs.paginate(page: page, per_page: 25).includes(textable: [:images])
+		convs_refs = self.conversation_refs.paginate(page: page, per_page: 10).includes(textable: [:images])
 		latest_messages = Array.new
 		unread_ids = []
 
 		convs_refs.each do |cf| 
-			unread_ids.push(cf.id) if cf.unread
-			
-			msg = cf.textable
-			# Used for profile image...This should change if merchant can talk to merchant? or change how we determine profile image
-			user_level = msg.user_id == self.merchant_id ? 1 : 0    
-      latest_messages.push({
-        source: msg.user_id == self.merchant_id ? "merchant" : 'user',
-        profile_image: (user_level == 0) ? ActionController::Base.helpers.asset_path('user_icon_50x50.png') : ActionController::Base.helpers.asset_path('rhombus_icon_50x50.png'),
-        text: (msg.text) ? msg.text : nil,
-        ts_day_of_the_week: msg.created_at.strftime('%A'),
-        ts_time: msg.created_at.strftime('%l:%M %P'),
-        unread: msg.unread,
-        image_urls: msg.images.map { |i| i.avatar.url },           # return small version here??
-        msg_type: msg.class.name
-      })
+			unread_ids.push(cf.id) if cf.unread			
+			latest_messages.push(message_hash(cf.textable))
     end
+
     [latest_messages, unread_ids.join(",")]
+	end
+
+	def message_hash(msg)
+		# Used for profile image...This should change if merchant can talk to merchant? or change how we determine profile image
+		user_level = msg.user_id == self.merchant_id ? 1 : 0  
+
+		{
+      source: msg.user_id == self.merchant_id ? "merchant" : 'user',
+      profile_image: (user_level == 0) ? ActionController::Base.helpers.asset_path('user_icon_50x50.png') : ActionController::Base.helpers.asset_path('rhombus_icon_50x50.png'),
+      text: (msg.text) ? msg.text : nil,
+      ts_day_of_the_week: msg.created_at.strftime('%A'),
+      ts_time: msg.created_at.strftime('%l:%M %P'),
+      unread: msg.unread,
+      image_urls: msg.images.map { |i| i.avatar.url },           # return small version here??
+      msg_type: msg.class.name
+  	}
 	end
 
     # Returns hash with the last "num_messages" messages that the given user has sent to the given merchant
@@ -131,5 +135,31 @@ class Conversation < ActiveRecord::Base
 		 	false
 		end
 	end
+
+  # user can be nil
+  # uid can be user id, phone number or messenger id
+  def send_message(team, user, uid, msg, channel, uid_type, unread, media_url = [])
+		from = (channel == "Message") ? team.rhombus_number : "get messenger cred"
+    to = (channel == "Message") ? user.phone_number : "get messenger cred" if user.present? 
+    
+    msg = channel.constantize.new
+		if msg.send_and_save_message(team, user, from, to, msg, unread, media_url)
+			find_or_create_conversation_for_message(team_id, uid_type, uid, msg, unread)
+			message_hash(msg)
+		else
+			false
+		end
+  end
+
+	# find the conversation or create one
+  def find_or_create_conversation(team_id, uid_type, uid)
+  	return self if self.id.present?
+  	Conversation.find_or_create_by(merchant_id: team_id, uid_type: uid_type, uid: uid, message_resolution_id: nil)
+  end
+
+  def find_or_create_conversation_for_message(team_id, uid_type, uid, msg, unread)
+    conv = find_or_create_conversation(team_id, uid_type, uid)
+    conv.conversation_refs.create(textable: msg, unread: unread)
+  end
 
 end

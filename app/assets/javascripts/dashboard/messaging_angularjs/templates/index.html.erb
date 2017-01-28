@@ -63,9 +63,11 @@
           </ul>
         </div>
         <!-- End Mailbox Inbox -->
+       
         <!-- Start Chat -->
-        <!--<div ng-if="selected_user_messages.length > 0" class="chat col-lg-9 col-md-8 padding-0">-->
-        <div ng-if="selected_conversation_messages.length > 0" class="chat col-lg-9 col-md-8 padding-0">
+
+          <!--<div ng-if="selected_user_messages.length > 0" class="chat col-lg-9 col-md-8 padding-0">-->
+          <div ng-if="selected_conversation_messages.length > 0" class="chat col-lg-9 col-md-8 padding-0">
           <!-- Start Title -->
           <div class="title">
             <h1>{{selected_user.first_name}} {{selected_user.last_name}}</h1>
@@ -104,7 +106,7 @@
               <li>
                 <img ng-if="(message.user_level == 0) && (($index == 0) || (selected_user_messages[$index - 1].user_level != message.user_level))" ng-src="{{message.profile_image}}" alt="img" class="img">
                 <p ng-class="{'ballon color1': message.user_level == 0 , 'ballon color2': message.user_level != 0}">
-  -->
+      -->
                   <!--{{message.text}}-->
                   <!-- <span ng-if="message.text">{{message.text}}</span>
                   <span ng-if="message.image_url"><img src="{{message.image_url}}"/></span>
@@ -172,13 +174,12 @@
         <!-- End Chat -->
       </div>
       <!-- End Mailbox Container -->
-    </div>
-    <!-- End Mailbox -->
-  </div>
-  <!-- END CONTAINER -->
+      </div>
+      <!-- End Mailbox -->
+      </div>
+      <!-- END CONTAINER -->
 
-</div>
-
+      </div>
 
 <!-- Charge Box -->
 <div style="display: none;" id="chargeFormBox" class="newForms">

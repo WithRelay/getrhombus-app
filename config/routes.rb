@@ -20,17 +20,15 @@ Rails.application.routes.draw  do
   get 'link_facebook' => 'link_fb_accounts#link_facebook'
   get 'relay-docs' => 'static_pages#relay_docs'
   get "relay-docs-categories/:slug" => "knowledge_base_categories#show"
+  get 'get_current_user' => 'application#get_current_user'
 
   ### fix this url
   post 'redirect' => 'link_fb_accounts#redirect'
-  
-  
   
   resources :lists do
     resources :customer_lists
   end
 
-  get 'json_get_current_user' => 'application#json_get_current_user'
   get "homepage_referrer" => 'referrers#homepage_referrer'
   get "resque" => Resque::Server, anchor: false, constraints: lambda { |req|
     req.env['warden'].authenticated? and req.env['warden'].user.id == 23
@@ -44,12 +42,6 @@ Rails.application.routes.draw  do
     post 'events/twilio' => 'webhooks#twilio_events'
     match'events/nexmo' => 'webhooks#nexmo_events', via: [:get, :post]
     match 'events/facebook' => 'webhooks#facebook_events', via: [:get, :post]
-
-    get "receive_text_message" => 'messages#receive_text_message'
-    get "receive_text_message_twilio" => 'messages#receive_text_message_twilio'
-    get "receive_voice_twilio" => 'messages#receive_voice_twilio'
-    get "receive_delivery_report" => 'messages#receive_delivery_report'
-    get "receive_delivery_report_twilio" => 'messages#receive_delivery_report_twilio'
   # end
 
   ## devise routes
@@ -110,10 +102,6 @@ Rails.application.routes.draw  do
       match 'managed-accounts' => "users#create_managed_acct", via: :patch
       match 'update-managed-acct' => 'users#update_managed_acct', via: :patch
       get 'contacts' => 'users#contacts' #(both customers or merchants)
-      get 'json_get_latest_active_messaging' => 'users#json_get_latest_active_messaging'
-      get 'json_get_user_messages_by_merchant/:user_number' => 'users#json_get_user_messages_by_merchant'
-      get 'mark_user_messages_for_merchant_as_read/:user_number' => 'users#mark_user_messages_for_merchant_as_read'
-      get 'send_message_from_merchant/:user_number' => 'users#send_message_from_merchant'
       get 'customers' => 'users#customers'
       get 'businesses' => 'users#businesses'
       get 'notifications' => 'alerts#edit'
@@ -156,6 +144,7 @@ Rails.application.routes.draw  do
     resources :demos, only: [:create]
     resources :conversations, only: [:index, :show]
     post "conversations/:id/mark_messages_as_read" => "conversations#mark_messages_as_read"
+    post 'conversations/:id/send_merchant_message' => 'conversations#send_merchant_message'
     get "relay-docs/search" => "knowledge_bases#index"
   end
 

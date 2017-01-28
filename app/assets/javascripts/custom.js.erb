@@ -999,7 +999,7 @@ function get_unread_messages() {
     var global_unread_count = 0;
     var url = window.location;
     $.ajax({
-        url: url.origin + '/json_get_current_user',
+        url: url.origin + '/get_current_user',
         type: "GET",
         dataType: "json"
     })

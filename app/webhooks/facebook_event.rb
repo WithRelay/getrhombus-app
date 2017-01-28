@@ -50,6 +50,7 @@
       sender_id = sender['id']
       recipient_id = recipient['id']
       uid = (current_page.page_id == sender_id)? recipient_id : sender_id
+      # this is a bug
       @conversation = Conversation.where(uid: uid).first_or_initialize
       update_conversation
     end
@@ -58,7 +59,8 @@
       @conversation.update(
         merchant_id: @merchant_id,
         uid_type: 'fb_page',
-        message_resolution_id: 0      #message_resolution_id is bydefault 0
+  ######### this should be nil be default
+        message_resolution_id: 0      #message_resolution_id is by default 0
       )
     end
 
@@ -100,6 +102,7 @@
     end
 
     # it gives user id from page specific id of user
+####### not that user id can be false ???? so do u save nil
     def get_user_id
       @fb_cred.user_id if @fb_cred
     end

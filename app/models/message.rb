@@ -13,11 +13,14 @@ class Message < ActiveRecord::Base
   # belongs_to :user, counter_cache: true
 
   # For sending and saving all outbound text messages
-  def send_and_save_message(rn_type, from, to, message, media_ary = [])
+  def send_and_save_message(merchant, user, from, to, message, unread, media_ary = [])
     begin
-      self.update_attributes(from: from, to: to, text: message, unread: false)
-      api = (rn_type.present?) ? "twilio" : "nexmo"
-      if api == "twilio"
+
+      # save message before sending
+      user = (user.present?) ? user.id : nil
+      update_attributes(user_id: merchant.id, user_id_to: user, from: from, to: to, text: message, unread: unread)
+            
+      if merchant.rn_type.present?      # this is twilio
         if response = TextingService.send_sms(from, to, message, media_ary)
           self.update_attributes(status: response.status, message_id: response.sid, message_timestamp: response.date_updated, message_price: response.price,
                 error_code: response.error_code, error_text: response.error_message, price_unit: response.price_unit, num_segments: response.num_segments)
@@ -25,7 +28,7 @@ class Message < ActiveRecord::Base
           Notification.text_failure_notification(response, from, to, message).deliver_now                         # Notify team of failure
           false
         end
-      elsif api == "nexmo"
+      else
         response = TextingService.send_sms_nexmo(from, to, message)
         if response && response.code == 200 && response["messages"].first["status"] == "0"
             self.update_attributes(status: response['messages'].first['status'], message_id: response['messages'].first['message-id'],
@@ -35,6 +38,7 @@ class Message < ActiveRecord::Base
           false
         end
       end
+    
     rescue StandardError => err
       false
     end
@@ -65,6 +69,7 @@ class Message < ActiveRecord::Base
     latest_messages
   end
 
+  ##### remove this method
   # Marks all user messages sent to a merchant as read
   def self.mark_user_messages_for_merchant_as_read(user_number, merchant_id)
     Message.where('`from` = ? AND `user_id_to` = ? AND `unread` = ?', user_number, merchant_id, true).update_all(unread: false)

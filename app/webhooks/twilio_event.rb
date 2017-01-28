@@ -19,6 +19,9 @@ class TwilioEvent
 
     # when message send from rhombus
     def save_sent_message
+      merchant_id = get_merchant_id(@param[:From])
+      user_id = get_user_id(@param[:To])
+      
       Message.create(
         to: @param[:To].gsub('+', ''),
         from: @param[:From].gsub('+', ''),
@@ -27,8 +30,8 @@ class TwilioEvent
         status: @param[:MessageStatus],
         error_text: @data.error_message,
         error_code: @data.error_code,
-        user_id: get_user_id,
-        user_id_to: get_merchant_id,
+        user_id: merchant_id,
+        user_id_to: user_id,
         message_id: @param[:MessageSid],
         text: @data.body.strip,
         num_segments: @data.num_segments,
@@ -38,6 +41,15 @@ class TwilioEvent
 
     # when message send to rhombus
     def save_received_message
+      merchant_id = get_merchant_id(@param[:To])
+      user_id = get_user_id(@param[:From])
+
+      if user_id.present?
+        uid, uid_type = user_id, 'user'
+      else
+        uid, uid_type = @param[:From].gsub('+', ''), 'phone_number'
+      end
+
       @message = Message.create(
         to: @param[:To].gsub('+', ''),
         from: @param[:From].gsub('+', ''),
@@ -57,6 +69,9 @@ class TwilioEvent
       # save user info on twilio_number_data
       add_or_update_twilio_number_data
 
+      # create or add to existing conversation
+      Conversation.new.find_or_create_conversation_for_message(merchant_id, uid_type, uid, @message, true)
+  
       # save media/mms if present
       save_media if @param[:NumMedia].to_i > 0
       @message.save!
@@ -77,13 +92,13 @@ class TwilioEvent
       message.update(status: @param[:MessageStatus])
     end
 
-    def get_user_id
-      user = User.find_by(phone_number:  @param[:To].gsub('+', ''))
+    def get_user_id(num)
+      user = User.find_by(phone_number:  num.gsub('+', ''))
       user.id if user
     end
 
-    def get_merchant_id
-      merchant = User.find_by(rhombus_number: @param[:From].gsub('+', ''))
+    def get_merchant_id(num)
+      merchant = User.find_by(rhombus_number: num.gsub('+', ''))
       merchant.id if merchant
     end
 

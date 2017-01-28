@@ -1,5 +1,5 @@
 class Api::V1::ConversationsController < API::V1::BaseController
-  before_action :set_conversation, only: [:show, :mark_messages_as_read]
+  before_action :set_conversation, except: [:index]
 
 	def index
     render json: { conversations: Conversation.get_open_conversations(current_user.id, params[:page]), 
@@ -12,8 +12,17 @@ class Api::V1::ConversationsController < API::V1::BaseController
   end
 
   def mark_messages_as_read
-    re = @conversation.mark_messages_as_read(params[:ids])
-    render json: {}, status: re ? 200 : 500 
+    render json: {}, status: @conversation.mark_messages_as_read(params[:ids]) ? 200 : 500 
+  end
+
+  def send_merchant_message
+    customer = User.find_by(params[:to]) if params[:uid_type] == "user"
+    re = @conversation.send_message(current_user, customer, params[:to], params[:msg], params[:channel], params[:uid_type], false) if params[:msg].present?
+    if re
+      render json: re, status: 200
+    else 
+      render json: {}, status: 500
+    end
   end
 
   # help in dasboard_mms...need params from and params to from dashboard

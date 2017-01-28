@@ -1,5 +1,8 @@
 current stripe api version - 2014-03-28
 https://www.getrhombus.com/receive_delivery_report
+- <redacted_webhook_url>      - voice
+- <redacted_webhook_url>      - messaging
+
 - payment capture - done
 - payment capture processing - done
 - payment from dashboard  - done
@@ -32,6 +35,10 @@ Bhishma
 - fix registrations controller
 - subscriptions controller needs check for card error
 - in stripe event, #### needs better error handling
+
+- i need a method in fb_messages that sends and saves fb messages...it should call the fb service
+- changed kb knowledge.... what is this for should_generate_new_friendly_id
+- facebook event, where is conversationref
 
 
 surya

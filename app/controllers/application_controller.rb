@@ -19,15 +19,15 @@ class ApplicationController < ActionController::Base
   end
 
   # Returns JSON object with the current user id
-  def json_get_current_user
-    render :json => Hash[
+  def get_current_user
+    render :json => {
       success: current_user.present?,
       id: current_user.present? ? current_user.id : nil,
       user_number: current_user.present? ? current_user.rhombus_number : nil,
       pubnub_publish_key: Rails.application.secrets.pubnub["publish_key"],
       pubnub_subscribe_key: Rails.application.secrets.pubnub["subscribe_key"],
       short_url: current_user.short_url,
-    ].to_json
+    }
   end
 
   rescue_from CanCan::AccessDenied do |exception|
