@@ -14,7 +14,7 @@ class Message < ActiveRecord::Base
 
   # For sending and saving all outbound text messages
   def send_and_save_message(merchant, user, from, to, message, unread, media_ary = [])
-    #begin
+    begin
 
       # save message before sending
       user = (user.present?) ? user.id : nil
@@ -31,19 +31,20 @@ class Message < ActiveRecord::Base
           false
         end
       else
-        response = TextingService.send_sms_nexmo(from, to, message)
+        response = TextingService.send_sms_nexmo(from, to, message, self.id)
         if response && response.code == 200 && response["messages"].first["status"] == "0"
             self.update_attributes(status: response['messages'].first['status'], message_id: response['messages'].first['message-id'],
-                message_price: response['messages'].first['message-price'], num_segments: response['message-count'])
+                message_price: response['messages'].first['message-price'], num_segments: response['message-count'],
+                error_text: response["error-text"])
         else
           Notification.text_failure_notification(response["messages"].first, from, to, message).deliver_now               # Notify team of failure
           false
         end
       end
     
-   # rescue StandardError => err
-    #  false
-    #end
+    rescue StandardError => err
+      false
+    end
   end
 
   # remove this method

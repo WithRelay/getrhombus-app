@@ -14,10 +14,10 @@ class TextingService
 
   class << self
 
-    def send_sms_nexmo(from, to, message)
+    def send_sms_nexmo(from, to, message, client_ref)
       begin
         # encode the nexmo uri
-        uri = URI.encode_www_form([["api_key",NEXMO_API_KEY], ["api_secret", NEXMO_API_SECRET], ["from", from], ["to", to], ["text", message]])  
+        uri = URI.encode_www_form([["api_key",NEXMO_API_KEY], ["api_secret", NEXMO_API_SECRET], ["from", from], ["to", to], ["text", message], ['client-ref', client_ref]])  
         # ["status-report-req", 1] 
         response = HTTParty.post('https://rest.nexmo.com/sms/json?'+ uri, :headers => {"Content-Type" => "application/x-www-form-urlencoded"} )
       rescue StandardError => err

@@ -5,7 +5,7 @@ class TwilioEvent
     def process_event(params)
       @param = params
       @data = TextingService.fetch_message_details(@param[:MessageSid])         # fetch additional message data
-      
+
       if (@data && @data.direction == "outbound-api") || (!@data && !["received", "receiving"].include?(@param[:SmsStatus]))
         update_sent_message
       elsif @param[:SmsStatus] == 'received' 
@@ -25,8 +25,8 @@ class TwilioEvent
 
     # when message is sent to rhombus
     def save_received_message
-      merchant_id = get_merchant_id(@param[:To])
-      user_id = get_user_id(@param[:From])
+      merchant_id = get_merchant_id
+      user_id = get_user_id
 
       @message = Message.create(
         to: @param[:To].gsub('+', ''),
@@ -73,13 +73,13 @@ class TwilioEvent
       ) 
     end
 
-    def get_user_id(num)
-      user = User.find_by(phone_number:  num.gsub('+', ''))
+    def get_user_id
+      user = User.find_by(phone_number:  @param[:From].gsub('+', ''))
       user.id if user
     end
 
-    def get_merchant_id(num)
-      merchant = User.find_by(rhombus_number: num.gsub('+', ''))
+    def get_merchant_id
+      merchant = User.find_by(rhombus_number: @param[:To].gsub('+', ''))
       merchant.id if merchant
     end
 
