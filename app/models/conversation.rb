@@ -26,20 +26,10 @@ class Conversation < ActiveRecord::Base
   			full_name = (conv.uid_type == 'fb_page') ? "messenger user" : conv.uid
   		end
 
-  		latest_conv.push({
-        conversation_id: conv.id,
-        full_name: full_name || "",
-        profile_image: ActionController::Base.helpers.asset_path('user_icon_50x50.png'),
-        last_message: last_message.blank? ? '' : last_message.text,
-        last_message_ts: last_message.blank? ? 0 : last_message.created_at.to_i,
-        last_message_type: last_message.class.name,
-        unread_count: ConversationRef.where(conversation_id: conv.id, unread: true).count
-      })
+  		latest_conv.push(conv.conversation_hash)
   	end
-  	puts latest_conv.to_json
-  	latest_conv
 
-  	#where(message_resolution_id: nil, merchant_id: merchant_id).paginate(page: page, per_page: 25)
+  	latest_conv
 
 =begin
     # name is now thrugh person
@@ -64,6 +54,27 @@ class Conversation < ActiveRecord::Base
     latest_active
 =end
 	end
+
+  def conversation_hash(user = nil)
+    last_message = ConversationRef.where(conversation_id: self.id).last.textable
+
+    if self.uid_type == "user"
+      full_name = (user) ? user.card_name : User.find_by(self.uid).card_name
+    else 
+      # does fb at least give us some info?
+      full_name = (self.uid_type == 'fb_page') ? "messenger user" : self.uid
+    end
+
+    {
+      id: self.id,
+      full_name: full_name || "",
+      profile_image: ActionController::Base.helpers.asset_path('user_icon_50x50.png'),
+      last_message: last_message.blank? ? '' : last_message.text,
+      last_message_ts: last_message.blank? ? 0 : last_message.created_at.to_i,
+      last_message_type: last_message.class.name,
+      unread_count: ConversationRef.where(conversation_id: self.id, unread: true).count
+    }
+  end
 
 
 	def get_conversation_messages(page)
