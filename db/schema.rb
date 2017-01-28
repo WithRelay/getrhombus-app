@@ -37,6 +37,7 @@ ActiveRecord::Schema.define(version: 20170122174559) do
     t.datetime "updated_at",                              null: false
   end
 
+  add_index "alerts", ["user_id"], name: "fk_rails_c0e9fe00e4", using: :btree
   add_index "alerts", ["user_id"], name: "index_alerts_on_user_id", using: :btree
 
   create_table "bank_accounts", force: :cascade do |t|
@@ -67,6 +68,7 @@ ActiveRecord::Schema.define(version: 20170122174559) do
     t.datetime "updated_at",            null: false
   end
 
+  add_index "campaign_lists", ["campaign_id"], name: "fk_rails_7110991fef", using: :btree
   add_index "campaign_lists", ["campaign_id"], name: "index_campaign_lists_on_campaign_id", using: :btree
   add_index "campaign_lists", ["list_id"], name: "index_campaign_lists_on_list_id", using: :btree
 
@@ -77,7 +79,9 @@ ActiveRecord::Schema.define(version: 20170122174559) do
     t.datetime "updated_at",            null: false
   end
 
+  add_index "campaign_user_lists", ["campaign_id"], name: "fk_rails_541635315c", using: :btree
   add_index "campaign_user_lists", ["campaign_id"], name: "index_campaign_user_lists_on_campaign_id", using: :btree
+  add_index "campaign_user_lists", ["user_id"], name: "fk_rails_49fd90a2cf", using: :btree
   add_index "campaign_user_lists", ["user_id"], name: "index_campaign_user_lists_on_user_id", using: :btree
 
   create_table "campaigns", force: :cascade do |t|
@@ -270,8 +274,8 @@ ActiveRecord::Schema.define(version: 20170122174559) do
   add_index "image_refs", ["imageable_type", "imageable_id"], name: "index_image_refs_on_imageable_type_and_imageable_id", using: :btree
 
   create_table "images", force: :cascade do |t|
-    t.string   "avatar_file_name",    limit: 191
-    t.string   "avatar_content_type", limit: 191
+    t.string   "avatar_file_name",    limit: 255
+    t.string   "avatar_content_type", limit: 255
     t.integer  "avatar_file_size",    limit: 4
     t.datetime "avatar_updated_at"
     t.datetime "created_at"
@@ -307,10 +311,10 @@ ActiveRecord::Schema.define(version: 20170122174559) do
     t.integer "merchant_customer_id", limit: 4
   end
 
-  add_index "invoices", ["coupon_id"], name: "fk_rails_0509f5ee0a", using: :btree
+  add_index "invoices", ["coupon_id"], name: "fk_rails_d45ca588ce", using: :btree
   add_index "invoices", ["stripe_invoice_id"], name: "index_invoices_on_stripe_invoice_id", using: :btree
-  add_index "invoices", ["subscription_id"], name: "fk_rails_3f62823c58", using: :btree
-  add_index "invoices", ["transaction_id"], name: "fk_rails_bbdcb50cdd", using: :btree
+  add_index "invoices", ["subscription_id"], name: "fk_rails_d72c4f68e3", using: :btree
+  add_index "invoices", ["transaction_id"], name: "fk_rails_849bdac215", using: :btree
 
   create_table "lists", force: :cascade do |t|
     t.datetime "created_at",                           null: false
@@ -346,6 +350,19 @@ ActiveRecord::Schema.define(version: 20170122174559) do
 
   add_index "merchant_customers", ["customer_id"], name: "index_merchant_customers_on_customer_id", using: :btree
   add_index "merchant_customers", ["merchant_id"], name: "index_merchant_customers_on_merchant_id", using: :btree
+
+  create_table "message_frequencies", force: :cascade do |t|
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+    t.datetime "date"
+    t.datetime "time"
+    t.string   "repeat_days",    limit: 191
+    t.integer  "frequency_type", limit: 4
+    t.string   "delivery_type",  limit: 191
+    t.integer  "campaign_id",    limit: 4
+  end
+
+  add_index "message_frequencies", ["campaign_id"], name: "index_message_frequencies_on_campaign_id", using: :btree
 
   create_table "message_resolutions", force: :cascade do |t|
     t.string   "title",      limit: 191
@@ -483,9 +500,9 @@ ActiveRecord::Schema.define(version: 20170122174559) do
   add_index "referrers", ["uid"], name: "index_referrers_on_uid", using: :btree
 
   create_table "refunds", force: :cascade do |t|
-    t.string   "uri",            limit: 191
-    t.string   "time",           limit: 191
-    t.string   "reason",         limit: 191
+    t.string   "uri",            limit: 255
+    t.string   "time",           limit: 255
+    t.string   "reason",         limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "transaction_id", limit: 4
@@ -551,8 +568,10 @@ ActiveRecord::Schema.define(version: 20170122174559) do
     t.integer  "merchant_customer_id",    limit: 4
   end
 
+  add_index "subscriptions", ["coupon_id"], name: "fk_rails_ac5e8cb6b8", using: :btree
   add_index "subscriptions", ["coupon_id"], name: "index_subscriptions_on_coupon_id", using: :btree
   add_index "subscriptions", ["merchant_customer_id"], name: "index_subscriptions_on_merchant_customer_id", using: :btree
+  add_index "subscriptions", ["plan_id"], name: "fk_rails_2a4cdd8807", using: :btree
   add_index "subscriptions", ["plan_id"], name: "index_subscriptions_on_plan_id", using: :btree
 
   create_table "transactions", force: :cascade do |t|
@@ -594,6 +613,7 @@ ActiveRecord::Schema.define(version: 20170122174559) do
   add_index "transactions", ["merchant_customer_id"], name: "index_transactions_on_merchant_customer_id", using: :btree
   add_index "transactions", ["referenced_customer_transaction_id"], name: "index_transactions_on_referenced_customer_transaction_id", using: :btree
   add_index "transactions", ["subscription_id"], name: "index_transactions_on_subscription_id", using: :btree
+  add_index "transactions", ["team_id"], name: "fk_rails_f0d5bce5eb", using: :btree
   add_index "transactions", ["team_id"], name: "index_transactions_on_team_id", using: :btree
   add_index "transactions", ["txn_number"], name: "index_transactions_on_txn_number", using: :btree
   add_index "transactions", ["user_id"], name: "index_transactions_on_user_id", using: :btree
@@ -714,6 +734,7 @@ ActiveRecord::Schema.define(version: 20170122174559) do
   add_foreign_key "invoices", "subscriptions"
   add_foreign_key "invoices", "transactions"
   add_foreign_key "lists", "users"
+  add_foreign_key "message_frequencies", "campaigns"
   add_foreign_key "message_resolutions", "users"
   add_foreign_key "messages", "hashtags"
   add_foreign_key "refunds", "transactions"
