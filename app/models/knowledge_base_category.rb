@@ -6,8 +6,5 @@ class KnowledgeBaseCategory < ActiveRecord::Base
   has_many :knowledge_bases
   validates_presence_of :name
   validates :name, uniqueness: { case_sensitive: false}
-
-  # def should_generate_new_friendly_id?
-  #   new_record?
-  # end
+  
 end
