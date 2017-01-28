@@ -74,6 +74,10 @@ class FbPagesController < ApplicationController
     # current_user.fb_pages.subscribed.empty? returns true when no page is subscribed
     # in this case response['success'] || fb_pages.blank? returns false
     if response['success'] || @user_fb_pages.blank? || subscribed_page.empty?
+      if subscribed_page.present?
+        # unsubscribe the subscribed page if present
+        subscribed_page.first.update(subscription_status: false)
+      end
       # @user_fb_pages.destroy_all
       # wipe fb_creds related to the current_user
       current_user.fb_creds.destroy_all             # oauth fb_cred of current user including page specific fb_creds
@@ -100,7 +104,7 @@ class FbPagesController < ApplicationController
 
   def check_cred_present
     if @fb_cred.nil?
-      redirect_to user_path(current_user),  flash: { error: 'Your facebook account is not connected with Rhombus' }
+      redirect_to integrations_user_path(current_user),  flash: { error: 'Your facebook account is not connected with Rhombus' }
     end
   end
 

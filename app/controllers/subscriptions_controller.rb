@@ -59,6 +59,7 @@ class SubscriptionsController < ApplicationController
       current_user.next_plans.update_all(status: false)
       flash[:notice] = 'Subscription upgraded successfully.'
     else
+      # what about card errors here
       # delete new coupon if subscription is not upgraded/created
       @coupon.destroy if coupon_res
       flash[:error] = 'Something went wrong.'
@@ -91,7 +92,7 @@ class SubscriptionsController < ApplicationController
     # create discount coupon with remaining unused amount while
     # user upgrade subscription before finishing time interval
     def create_coupon(amt)
-      @coupon = Coupon.new(name: generate_coupon_name, amount_off: amt, duration: 'once')
+      @coupon = Coupon.new(name: generate_resource_name("Coupon"), amount_off: amt, duration: 'once')
       if @coupon.create_coupon({team: current_user})
         [true, @coupon.id]
       else

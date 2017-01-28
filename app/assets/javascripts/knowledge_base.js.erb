@@ -1,0 +1,91 @@
+
+$(document).ready(function () {
+
+  var query = "";
+
+  $('.article-rating-button').attr('disabled', false)
+
+  $('#kb-search').on('input', function (e) {
+    e.preventDefault();
+    console.log(e.currentTarget.value)
+    get_results();
+  });
+
+  $("#kb-search-form").submit(function(e) {
+    e.preventDefault();
+    get_results();
+  });
+
+  $('.article-rating-button').on('click', function(e){
+    e.preventDefault();
+    vote = $(this).text()
+    title = $('html').data().wfUrl;
+    if ($(this).attr('disabled') !== 'disabled') {
+      count_vote(vote, title);
+      voteButtonCheck(vote)
+    } else {
+      return;
+    }
+  })
+
+  function voteButtonCheck(vote) {
+    if (vote === 'Yes') {
+      $('#up-rating-button').attr("disabled", true);
+      $('#down-rating-button').attr("disabled", false);
+    } else {
+      $('#up-rating-button').attr("disabled", false);
+      $('#down-rating-button').attr("disabled", true);
+    }
+  }
+
+  function count_vote(vote, kb_title) {
+    $.ajax({
+      url: "/v1/article-rating.json",
+      type: 'POST',
+      data: { query: vote, title: kb_title }
+    })
+    .done(function(data, textStatus, jqXHR) { console.log(data); });
+  }
+
+  function get_results() {
+    var new_query = $('#kb-search').val().trim();
+    if ((query != new_query) && (new_query != "")) {
+      query = new_query;
+      var remote_data = [];
+      $.ajax({
+        url: "/v1/relay-docs.json",
+        data: { query: new_query }
+      })
+      .done(function(data, textStatus, jqXHR) { console.log(data); remote_data = data.results; })
+      .always(function(data, textStatus, errorThrown) { setKB(remote_data); });
+    } else if (query == new_query) {
+    } else {
+      query = "";
+      $('#kb-search-title, #kb-search-results').html("");  
+      $("#kb-content").show();
+      $(".docs-categories").show();
+    }
+  };
+
+  function setKB(kbList) {
+    $("#kb-content").hide();
+    $(".docs-categories").hide();
+    $('#kb-search-results').html("");  
+    if (kbList.length == 0) {
+      $('#kb-search-title').html('<div class="search_value">We couldn\'t find any results for: ' + query + '</div>');
+    } else {
+      $('#kb-search-title').html('<div class="search_value">Search results for: ' + query + '</div>');
+      $.each(kbList, function(index, item) {
+        var created_at = moment(item.created_at, "YYYYMMDD").fromNow();
+        $('#kb-search-results').append(
+          '<div class="article static-page-content-wrapper w-container">\
+            <a href="' + item.url + '">' + item.title + '</a>\
+            <p class="article-preview">' + item.raw_content.substring(0,29) + '</p>\
+            <img class="article-author" height="30" src="http://uploads.webflow.com/5767087cbd63608e7eb4abdc/586da5db511381a742ba3da1_Edwin%202.jpg" width="30">\
+            <div class="author-info">By <span class="author-name">' + item.author + '</span> &nbsp;| &nbsp;' + created_at + '</div>\
+          </div>');
+      });  
+    }
+  };
+
+});

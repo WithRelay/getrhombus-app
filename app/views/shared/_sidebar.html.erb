@@ -13,7 +13,7 @@
 
   <% if current_user.is_merchant? %>
    <li>
-    <%= link_to messaging_user_path(current_user) do %>
+    <%= link_to user_conversations_path(current_user.id) do %>
         <span class="icon color6"><i class="fa fa-send-o"></i></span>Messaging
         <span class="label label-danger" id="unreadCount"></span>
     <% end %>

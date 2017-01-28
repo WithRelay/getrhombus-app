@@ -18,8 +18,8 @@ class RemindersController < ApplicationController
       @reminder.update_reminder_job
       redirect_to user_reminders_path(current_user)
     else
-      render :edit
       flash[:error] = @reminder.errors.full_messages
+      render :edit
     end
   end
 

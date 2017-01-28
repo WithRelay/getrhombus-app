@@ -408,6 +408,8 @@ class EmailingService
     def first_time_message_auto_response(user)
     end
 
+    def send_demo_notifcation(demo)
+    end
   end
 
 end

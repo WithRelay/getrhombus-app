@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170122174559) do
+ActiveRecord::Schema.define(version: 20170128102335) do
 
   create_table "addresses", force: :cascade do |t|
     t.string   "street_address",   limit: 191
@@ -110,6 +110,7 @@ ActiveRecord::Schema.define(version: 20170122174559) do
     t.integer  "conversation_id", limit: 4
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "unread",          limit: 1,   default: true
   end
 
   add_index "conversation_refs", ["conversation_id"], name: "index_conversation_refs_on_conversation_id", using: :btree
@@ -211,6 +212,19 @@ ActiveRecord::Schema.define(version: 20170122174559) do
   end
 
   add_index "fb_pages", ["user_id"], name: "index_fb_pages_on_user_id", using: :btree
+
+  create_table "friendly_id_slugs", force: :cascade do |t|
+    t.string   "slug",           limit: 191, null: false
+    t.integer  "sluggable_id",   limit: 4,   null: false
+    t.string   "sluggable_type", limit: 50
+    t.string   "scope",          limit: 191
+    t.datetime "created_at"
+  end
+
+  add_index "friendly_id_slugs", ["slug", "sluggable_type", "scope"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type_and_scope", unique: true, using: :btree
+  add_index "friendly_id_slugs", ["slug", "sluggable_type"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type", using: :btree
+  add_index "friendly_id_slugs", ["sluggable_id"], name: "index_friendly_id_slugs_on_sluggable_id", using: :btree
+  add_index "friendly_id_slugs", ["sluggable_type"], name: "index_friendly_id_slugs_on_sluggable_type", using: :btree
 
   create_table "full_contact_data", force: :cascade do |t|
     t.string   "likelihood",    limit: 191
@@ -316,6 +330,31 @@ ActiveRecord::Schema.define(version: 20170122174559) do
   add_index "invoices", ["subscription_id"], name: "fk_rails_d72c4f68e3", using: :btree
   add_index "invoices", ["transaction_id"], name: "fk_rails_849bdac215", using: :btree
 
+  create_table "knowledge_base_categories", force: :cascade do |t|
+    t.string   "name",       limit: 191
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+    t.string   "slug",       limit: 191
+  end
+
+  add_index "knowledge_base_categories", ["slug"], name: "index_knowledge_base_categories_on_slug", unique: true, using: :btree
+
+  create_table "knowledge_bases", force: :cascade do |t|
+    t.string   "title",                      limit: 191
+    t.string   "author",                     limit: 191
+    t.string   "author_url",                 limit: 191
+    t.integer  "upvotes",                    limit: 4
+    t.integer  "downvotes",                  limit: 4
+    t.string   "url",                        limit: 191
+    t.text     "raw_content",                limit: 65535
+    t.integer  "knowledge_base_category_id", limit: 4
+    t.datetime "created_at",                               null: false
+    t.datetime "updated_at",                               null: false
+  end
+
+  add_index "knowledge_bases", ["title", "raw_content"], name: "title", type: :fulltext
+  add_index "knowledge_bases", ["title"], name: "index_knowledge_bases_on_title", unique: true, using: :btree
+
   create_table "lists", force: :cascade do |t|
     t.datetime "created_at",                           null: false
     t.datetime "updated_at",                           null: false
@@ -390,6 +429,7 @@ ActiveRecord::Schema.define(version: 20170122174559) do
     t.text     "text",                     limit: 65535
     t.boolean  "unread",                   limit: 1,     default: true
     t.string   "num_segments",             limit: 191
+    t.integer  "num_media",                limit: 4,     default: 0
     t.string   "price_unit",               limit: 191
     t.integer  "hashtag_id",               limit: 4
     t.boolean  "unread_notification_sent", limit: 1,     default: false
@@ -581,7 +621,8 @@ ActiveRecord::Schema.define(version: 20170122174559) do
     t.decimal  "amount",                                           precision: 8, scale: 2
     t.decimal  "amount_with_taxes",                                precision: 8, scale: 2
     t.string   "tax_percent",                        limit: 191
-    t.decimal  "application_fee",                                  precision: 8, scale: 2
+    t.decimal  "app_fee",                                          precision: 8, scale: 2
+    t.integer  "stripe_fee",                         limit: 4
     t.decimal  "amount_less_fees",                                 precision: 8, scale: 2
     t.string   "txn_uri",                            limit: 191
     t.string   "txn_number",                         limit: 191

@@ -1,5 +1,15 @@
 current stripe api version - 2014-03-28
 https://www.getrhombus.com/receive_delivery_report
+- <redacted_webhook_url>      - voice
+- <redacted_webhook_url>      - messaging
+
+- payment capture - done
+- payment capture processing - done
+- payment from dashboard  - done
+- charge payment service for connect/managed - done
+	- fix how we store amounts - just job left
+- redo messaging
+
 
 Bhishma
 - Plans/Subscriptions
@@ -22,6 +32,13 @@ Bhishma
 	- when switching managed page, add that any messenger campaign will now use this page
 - Get Started Page
 - twitter integration...simple method to tweet - will supply current user and text to tweet - dont touch this till we speak
+- fix registrations controller
+- subscriptions controller needs check for card error
+- in stripe event, #### needs better error handling
+
+- i need a method in fb_messages that sends and saves fb messages...it should call the fb service
+- changed kb knowledge.... what is this for should_generate_new_friendly_id
+- facebook event, where is conversationref
 
 
 surya
@@ -46,6 +63,8 @@ Edwin
 - generate page loader
 
 Taiwo (review)
+- review additional user actions file
+- review routes
 - review referrer... 
     - when do I use id and uid
     - Is everyone getting a uid - i think yes
@@ -53,11 +72,13 @@ Taiwo (review)
 - review account/business/managed acct with surya and edwin
 - review upgrading/downgrading subscription 
 - review stripe_events
+- review where merchant customer is created.... see create_subscription, add-token_to_customer, etc
 - review merchant_customer_id in transactions and invoices
 - review managed account..
 - when a user becomes customer, remove from a contact table/list 
 - subscription (see other fields like tax_percent...save first...compare to plan.rb), subscription controller and stripe customer creation places
 - Review adding token...failing safely.
+- add back stripe connect
 - on subscription - check if user already belongs to merchant??? is this when they text?
 	- customers can create subscriptions over messaging...not dashboard, but can cancel subscription
 - finish message parser and review how messsages are saved
@@ -66,6 +87,7 @@ Taiwo (review)
    - remove livemode from users, add to merchant_customer and create rake task to migrate this to merchant..customer
 - signup page doesnt need params...only facebook link page
 - <% if current_user.stripe_creds.empty? %> not needed for connect
+- clean up routes
 
 Review
 - campaign_user_list (can better track failures) or notification_log or add an email model??

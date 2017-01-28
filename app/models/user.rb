@@ -135,11 +135,12 @@ class User < ActiveRecord::Base
     User.find_by(email: "<redacted_email>") || User.find_by(email: "<redacted_email>")
   end
 
-  def get_team_uid
+  def get_stripe_cred(type)
     # platform acct is a standalone account and only one record exists for platform
     # merchants could have 2 records. Managed, Standalone (prior to v1.5)
-    t = is_platform? ? self.stripe_creds.first : self.stripe_creds.where(uid_type: 0).first
-    t.uid if t
+    return self.stripe_creds.first if is_platform? 
+    creds = self.stripe_creds
+    creds.where(uid_type: ((creds.length == 2) ? 'managed' : 'standalone') ).first
   end
 
   def buy_merchant_number
@@ -152,6 +153,7 @@ class User < ActiveRecord::Base
     # @user.short_url = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?referrer_id=#{@user.id}")
   end
 
+  # remove this method
   # Returns hash with users who sent a message to the given merchant in the last "num_days" days
   def self.get_latest_active_messaging(merchant_id, num_days)
     # name is now thrugh person
@@ -212,7 +214,7 @@ class User < ActiveRecord::Base
               if hash[:is_platform_customer]
                 re = PaymentService.add_token_to_stripe_customer(hash)
               else
-                re = PaymentService.add_token_to_stripe_customer(hash, get_team_uid)
+                re = PaymentService.add_token_to_stripe_customer(hash, get_stripe_cred.uid)
               end
             end
           end
@@ -224,13 +226,13 @@ class User < ActiveRecord::Base
           end
         else
           # since new customer are always platform customer so is_platform is always true
-          PaymentService.delete_customer(re[1].id, self.get_team_uid, true) if cu.blank?
+          PaymentService.delete_customer(re[1].id, get_stripe_cred.uid, true) if cu.blank?
         end
       end
       re
     rescue StandardError => e
       # since new customer are always platform customer so is_platform is always true
-      PaymentService.delete_customer(re[1].id, self.get_team_uid, true) if (res.length > 0 && cu.blank?)
+      PaymentService.delete_customer(re[1].id, get_stripe_cred.uid, true) if (res.length > 0 && cu.blank?)
       # notify team
       [false]
     end
@@ -285,9 +287,11 @@ class User < ActiveRecord::Base
   # move to background job
   def update_phone_in_db
     if is_merchant?
+      # is this phone_number or rhombus_number?
       if x = self.previous_changes['phone_number']
         ActiveRecord::Base.connection.execute("UPDATE messages SET messages.from = #{x[1]} WHERE messages.from = #{x[0]}")
         ActiveRecord::Base.connection.execute("UPDATE messages SET messages.to = #{x[1]} WHERE messages.to = #{x[0]}")
+        # add transaction columns here too
       end
     end
   end

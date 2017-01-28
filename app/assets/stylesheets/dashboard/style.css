@@ -1397,7 +1397,7 @@ Mailbox
   color: #ffffff;
   border-radius: 4px;
 }
-.mailbox-inbox .user-list {
+.mailbox-inbox .user-list, .mailbox-inbox .conversation-list {
   height: -webkit-calc(100vh - 218px);
   height: -moz-calc(100vh - 218px);
   height: calc(100vh - 218px);

@@ -62,6 +62,8 @@ gem "messenger_platform_rails"
 # Accessing Facebook Graph API
 gem "koala"
 
+gem 'friendly_id', '~> 5.1.0'
+
 group :production do
   gem "passenger"
 end

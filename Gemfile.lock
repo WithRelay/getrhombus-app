@@ -163,6 +163,8 @@ GEM
     faraday_middleware (0.10.0)
       faraday (>= 0.7.4, < 0.10)
     ffaker (2.4.0)
+    friendly_id (5.1.0)
+      activerecord (>= 4.0.0)
     fullcontact (0.15.0)
       faraday (~> 0.9.0)
       faraday_middleware (>= 0.9)
@@ -434,6 +436,7 @@ DEPENDENCIES
   devise
   factory_girl_rails
   ffaker
+  friendly_id (~> 5.1.0)
   fullcontact
   httparty
   jbuilder (~> 2.0)

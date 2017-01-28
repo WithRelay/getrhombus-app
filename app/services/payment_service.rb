@@ -21,7 +21,6 @@ class PaymentService
         return [true, cu]
       rescue Stripe::CardError => e
         # Since it's a decline, Stripe::CardError will be caught
-        err  = e.json_body[:error]
         owner = User.find_by(email: Rails.application.secrets.team_email)
         unless hash[:is_merchant]
           customer = User.find_by(email: hash[:email])
@@ -30,7 +29,7 @@ class PaymentService
         end
         # redo this email
         # Notification.token_failure_notification(err, hash[:email]).deliver_now
-        [false, err[:type], err[:message]]
+        [false, e, e.json_body[:error][:message]]
       rescue Stripe::StripeError => e
         # send this only to platform
         # Notification.token_failure_notification(e.json_body[:error], ....).deliver_now
@@ -59,49 +58,67 @@ class PaymentService
       end
     end
     
-    # return array with txn status, error object, notify customer/merchant
-    def charge(amount_with_taxes, merchant, user, message, capture, platform=false)
+    def charge(amount_with_taxes, amt_less_stripe_fee, app_fee, merchant, customer, msg, capture)
       begin
-        # This also add the customer to the connected account
+        stripe_cred = merchant.get_stripe_cred
+        currency = merchant.currency ? merchant.currency : "usd",
+
+        if stripe_cred.standalone? 
+          # 1. need to backward support merchant's with standalone connect stripe_account
+  #######!! 2. Platform account is a standalone account. For charging merchants or regular customers. Do we still get the discount with this?? I think so.
         
+          # You use merchant/customer or platform/merchant combination for standalone account
+ ########!! Merchant and customer relationship in MerchantCustomer might not exists when it gets here for merchant/customer....so fix
+          merchant_customer = MerchantCustomer.find_by(merchant_id: merchant.id, customer_id: customer.id)            
 
-        # need to backward support merchant's with old connect account
-        if x
-          tkn = Stripe::Token.create({ customer: hash[:customer_uri] }, { stripe_account: stripe_account_id })
-          re = Stripe::Charge.create({
-              amount: amount_with_taxes,
-              currency: merchant.currency ? merchant.currency : "usd",
-              source: tkn,
-              capture: capture,
-              description: "Payment from #{user.email}. Card name: #{user.card_name}. Last four: #{user.last4}.",
-              application_fee: 0,
-              metadata: { "message" => message }
-            }, { stripe_account: hash[:uid] })
-        else
-
-          re = Stripe::Charge.create({
-              amount: amount_with_taxes, # in cents
-              currency: merchant.currency ? merchant.currency : "usd",
-              customer: hash[:customer_uri],
-              capture: capture,
-              description: "Payment from #{user.email}. Card name: #{user.card_name}. Last four: #{user.last4}.",            
-              
-              # this should not be here for platform############
-              destination: hash[:uid],    
-
-              # statement_descriptor: '', # we will set this here
-              # application_fee: rhombus_fee # from hash
-              metadata: { "message" => message }
+          if customer.is_customer?          
+            re = Stripe::Charge.create({
+              amount: amount_with_taxes, currency: currency,
+              customer: merchant_customer.customer_uri, metadata: { "message" => msg },
+              description: "Payment from #{customer.email}. Card name: #{customer.card_name}. Last four: #{customer.last4}.",
+            }, { stripe_account: stripe_cred.uid })
+          else
+            re = Stripe::Charge.create({
+              amount: amount_with_taxes, currency: currency,
+              customer: merchant_customer.customer_uri, metadata: { "message" => msg },
+              description: "Payment from #{customer.email}. Card name: #{customer.card_name}. Last four: #{customer.last4}.",
+   ########!! statement_descriptor: '', # should already be on our stripe account, can still set this here...get from Edwin
             })
+          end
+        else
+          # You use platform and customer for managed account charges
+          # Platform and customer relationship in MerchantCustomer will always exists when it gets here
+          merchant_customer = MerchantCustomer.find_by(merchant_id: User.get_platform_acct_obj.id, customer_id: customer.id)
+          re = Stripe::Charge.create({
+            amount: amt_less_stripe_fee, currency: currency,
+            customer: merchant_customer.customer_uri, capture: capture,
+            description: "Payment from #{customer.email}. Card name: #{customer.card_name}. Last four: #{customer.last4}.",      
+            destination: stripe_cred.uid, metadata: { "message" => msg },
+ ########!! statement_descriptor: '', # we will set this here...get from Edwin
+            application_fee: app_fee
+          })
         end
 
         [re]
       rescue Stripe::CardError => e               # Since it's a decline, Stripe::CardError will be caught
-        [false, e.json_body[:error], true]
+        [false, e, e.json_body[:error][:message], true]
       rescue Stripe::StripeError => e
-        [false, e.json_body[:error]]
+        [false, e.json_body[:error], "Stripe error"]
       rescue StandardError => e
-        [false, e]
+        [false, e, "Something went wrong"]
+      end
+    end
+
+    # return array with txn status, error object, notify customer/merchant
+    def process_captured_charge(charge_id)
+      begin
+        charge_ary = retrieve_charge(charge_id)       
+        return charge_ary unless charge_ary[0]
+        [charge_ary[1].capture]
+      rescue Stripe::StripeError => e
+        [false, e.json_body[:error], "Stripe is unable to process charge. Note that authorized txns over 7 days can no longer be processed."]
+      rescue StandardError => e
+        [false, e, "Something went wrong"]
       end
     end
 
@@ -127,6 +144,7 @@ class PaymentService
         if platform
           re = Stripe::Subscription.create(hash)
         else
+          # is this where we create merchant-customer relationship?
           tkn = Stripe::Token.create({ customer: hash[:customer] }, { stripe_account: stripe_account_id })
           customer = Stripe::Customer.create({ source: tkn.id }, { stripe_account: stripe_account_id })
           hash[:customer] = customer.id
@@ -136,8 +154,7 @@ class PaymentService
         [true, re]
       rescue Stripe::CardError => e
         # Since it's a decline, Stripe::CardError will be caught
-        err  = e.json_body[:error]
-        [false, err[:type], err[:message]]
+        [false, e, e.json_body[:error][:message]]
       rescue Stripe::StripeError => e
         [false, e]
       rescue StandardError => e
@@ -268,19 +285,19 @@ class PaymentService
       end
     end
     
-
     def retrieve_charge(charge_id)
       begin
         re = Stripe::Charge.retrieve(charge_id)
+        [re]
       rescue Stripe::StripeError => e
         # Display a very generic error to the user, and maybe send yourself an email
-        false
+        [false, e.json_body[:error], "Stripe is unable to retrieve this charge."]
       rescue StandardError => e
-        false
+        [false, e, "Something went wrong on our end"]
       end
     end
 
-    # Some countries require that the routing num and institition num be concatenated with a specific character
+    # Some countries require that the routing num and institution num be concatenated with a specific character
     # that's in index postion 1
     def stripe_country_list
       {
@@ -294,22 +311,3 @@ class PaymentService
     end
   end
 end
-
-=begin
-  # This applies to saas fee only
-  # so only coupon changes should call this for now
-  # Stripe prorate charges by default
-  def update_subscription(hash)
-    begin 
-      sbtn = Stripe::Subscription.retrieve(hash[:subscription_id])
-      sbtn.coupon = hash[:stripe_coupon_id]
-      sbtn.save
-    rescue Stripe::StripeError => e
-      # Display a very generic error to the user, and maybe send yourself an email
-      [false, e.json_body[:error]]
-    rescue StandardError => e
-      [false, e]
-    end
-  end
-=end
-

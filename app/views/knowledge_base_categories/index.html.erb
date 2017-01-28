@@ -1,0 +1,5 @@
+<% @knowledge_base_categories.each do |category| %>
+  <h3 class="features-div-header-text"> <%= category.name %> <%= link_to 'Edit', edit_user_knowledge_base_category_path(current_user, category) %></h3>
+  <br>
+<% end %>
+<%= link_to 'New category', new_user_knowledge_base_category_path %>

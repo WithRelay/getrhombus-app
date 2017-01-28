@@ -139,6 +139,7 @@ class StripeEvent
       update_invoice_data
 
       # retrieve charge details
+      # test that charge is true
       charge = PaymentService.retrieve_charge(@hash[:charge]) if @hash[:charge]
       # a transaction should not already exist but we need to check if it does so we don't send out emails again
       # A tranasaction has only one log unlike subscriptions
@@ -243,6 +244,8 @@ class StripeEvent
     # end
 
     private
+
+    #### needs better error handling
     # Subscribe customer to next plan (downgrading plan)
     def subscribe_merchant_to_downgraded_plan
       if next_plan = NextPlan.where(user_id: @data.merchant_customer.customer_id, status: true).last

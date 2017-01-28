@@ -8,7 +8,7 @@ class Hashtag < ActiveRecord::Base
   
   has_many :messages
   belongs_to :txn, :foreign_key => :hashtag_id, :class_name => :Transaction
-
+  has_one :plan
 
 	# validations
 	validates :tag, presence: true, uniqueness: { case_sensitive: false, scope: :user_id }
