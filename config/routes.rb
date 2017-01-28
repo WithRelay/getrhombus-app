@@ -11,6 +11,7 @@ Rails.application.routes.draw  do
   get 'terms' => 'static_pages#terms'
   get 'pricing' => 'static_pages#pricing'
   get 'request_demo' => 'demos#request_demo'
+  get  'creating-campaigns-in-relay' => 'static_pages'
 
   get 'contact' => 'contact_forms#new'
 
@@ -146,6 +147,7 @@ Rails.application.routes.draw  do
     post "conversations/:id/mark_messages_as_read" => "conversations#mark_messages_as_read"
     post 'conversations/:id/send_merchant_message' => 'conversations#send_merchant_message'
     get "relay-docs" => "knowledge_bases#index"
+    post 'article-rating' => 'knowledge_bases#article_rating'
   end
 
   ## catch all other to 404
