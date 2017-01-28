@@ -20,13 +20,13 @@ $(document).ready(function () {
 function setKB(kbList,searchParam) {
   $('#kb_list').html('<div class="search_value">Search results for:'+searchParam+'</div>');
   $.each(kbList, function(index, item) {
-      var created_at = item.created_at,
+      var created_at = item.created_at;
      $('#kb_list').append('<a href="'+ item.url+'/>\
       <div class="article static-page-content-wrapper w-container">\
       <div class="articles-title">' + item.title + '</div>\
       <p class="article-preview">'+item.raw_content+'</p>\
       <img class="article-author" height="30" src="http://uploads.webflow.com/5767087cbd63608e7eb4abdc/586da5db511381a742ba3da1_Edwin%202.jpg" width="30">\
-      <div class="author-info">By <span class="author-name">'+item.author+'</span> &nbsp;| &nbsp; date_in_words('+created_at+') </div>\
+      <div class="author-info">By <span class="author-name">'+item.author+'</span> &nbsp; </div>\
       </div>\
       </a>')
     })
