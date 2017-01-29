@@ -60,4 +60,5 @@
 //= require plan
 //= require coupon
 //= require subscription
+//= require integrations
 // require_tree .

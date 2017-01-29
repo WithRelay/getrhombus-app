@@ -51,23 +51,32 @@
         fb_page_id = current_page.id
         new_user_id = (current_page.page_id == message_to)? message_from : message_to
         add_page_user(current_page, new_user_id)
-        merchant = current_page.user
-        @merchant_id = merchant.id
+
+        uid = get_uid
+        @merchant_id = get_merchant_id
+        if (current_page.page_id == message_from)
+          @user_id =  @merchant_id
+          @user_id_to = uid
+        else
+          @user_id = uid
+          @user_id_to = @merchant_id
+        end
 
         @fb_message = FbMessage.create(text: text, seq: seq,
-          time_stamp: timestamp, unread: false, message_id: message_id,
+          time_stamp: timestamp, unread: true, message_id: message_id,
           from: message_from, to: message_to, fb_page_id: fb_page_id,
-          user_id: get_user_id, user_id_to: @merchant_id)
-        
+          user_id: @user_id, user_id_to: @user_id_to)
+
         save_attachments if @attachments.present?
 
-        uid = (current_page.page_id == message_from)? message_to : message_from
         Conversation.new.find_or_create_conversation_for_message(@merchant_id, 'fb_page', uid, @fb_message, true)
         @fb_message.save
       rescue StandardError => err
         nil
       end
     end
+
+
 
     # set datetime in utc
     def set_timestamp(timestamp)
@@ -81,8 +90,13 @@
     end
 
     # it gives user id from page specific id of user
-    def get_user_id
-      @fb_cred.user_id if @fb_cred
+    def get_uid
+      @fb_cred.user ? @fb_cred.user_id : @fb_cred.page_specific_id
+    end
+
+    def get_merchant_id
+      merchant = current_page.user
+      @merchant_id = merchant.id
     end
 
     def save_attachments
