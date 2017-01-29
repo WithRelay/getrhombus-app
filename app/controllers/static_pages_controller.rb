@@ -27,4 +27,8 @@ class StaticPagesController < ApplicationController
 
 	def relay_docs
 	end
+
+	def creating_campaigns_in_relay
+		@url = action_name.split('_').join("-")
+	end
 end

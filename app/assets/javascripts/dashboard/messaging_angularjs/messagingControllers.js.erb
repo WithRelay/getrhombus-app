@@ -24,6 +24,7 @@ var messagingControllers = angular.module('messagingControllers', [
         for (var i = 0; i < msg.length; i++) {
             messages.Items.unshift(msg[i]);
         }
+        console.log(data)
         $scope.update_unread_messages(data.unread_ids);
         page += 1;
       })
@@ -86,7 +87,38 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
       Pubnub.subscribe({
         channel: 'messaging_<%= Rails.env %>_' + merchant_id,
         message: function(m){
-          var json_response = JSON.parse(m);
+          var re = JSON.parse(m);
+
+          $scope.$apply(function() {
+            if (re.conversation.id == $scope.active_conversation_id) {
+              //$scope.selected_user_messages.push({user_number: json_response.user_number, user_level: json_response.user_level, profile_image: json_response.profile_image, text: json_response.message, ts_day_of_the_week: json_response.ts_day_of_the_week, ts_time: json_response.ts_time, unread: false});
+              $scope.selected_conversation_messages.push(re.message);              
+
+              $scope.conversations[re.conversation.id] = re.conversation;
+              /*if (re.user_level == 0) {
+                $scope.users[re.user_number].last_message = re.message;
+                $scope.users[re.user_number].last_message_ts = parseInt(re.ts_int);
+              }*/
+              //$http.get(window.location.origin + '/users/' + merchant_id + '/mark_user_messages_for_merchant_as_read/' + $scope.active_user_number);
+            } else {
+              if (!$scope.conversations[re.conversation.id]) {
+                //$scope.users[re.user_number] = {user_number: re.user_number, first_name: json_response.first_name, last_name: json_response.last_name, email: json_response.email, profile_image: json_response.profile_image, last_message: json_response.message, last_message_ts: json_response.ts_int, unread_count: 0};
+                $scope.conversations[re.conversation.id] = re.conversation;
+                
+                //$scope.active_user_count += 1;  // remove
+                // also add new conversations count here
+                $scope.open_conversations_count += 1; // should this be here?
+
+              }
+              if (re.message.source == 'user') {
+                $scope.global_unread_count += 1;
+                //$scope.conversations[re.conuser_number].unread_count += 1;
+                //$scope.users[re.user_number].last_message = re.message;
+                //$scope.users[re.user_number].last_message_ts = parseInt(re.ts_int);
+              }
+            }
+          });
+
 
           /*$scope.$apply(function() {
             if (json_response.user_number == $scope.active_user_number) {
@@ -130,7 +162,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
         //angular.forEach(data.users, function(value, key) {    // remove
         angular.forEach(data.conversations, function(value, key) {
           //user_list[value.user_number] = value;    // remove
-          conversation_list[value.conversation_id] = value;
+          conversation_list[value.id] = value;
           //$scope.active_user_count += 1;   // remove
           $scope.open_conversations_count += 1; // should this be here?
           $scope.global_unread_count += value.unread_count;
@@ -144,10 +176,11 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
         //$scope.getUserMessages = function(user) {  //remove
         $scope.getConversationMessages = function(conversation) {
           //$http.get(window.location.origin + '/users/' + merchant_id + '/json_get_user_messages_by_merchant/' + user.user_number + '?limit=' + (user.unread_count + $scope.num_message_history)) // remove
-          $http.get(window.location.origin + '/v1/conversations/' + conversation.conversation_id + '.json?page=1')
+          $http.get(window.location.origin + '/v1/conversations/' + conversation.id + '.json?page=1')
           .success(function(data) {
             //$scope.active_user_number = user.user_number;      //remove
-            $scope.active_conversation_id = conversation.conversation_id;
+            $scope.active_conversation_id = conversation.id;
+            console.log(conversation)
 
             //$scope.selected_user = user;   // remove
             $scope.selected_conversation = conversation;
@@ -166,11 +199,11 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
             var unread_diff = $scope.global_unread_count - unread_ids.length;
             $scope.global_unread_count = (unread_diff > 0) ? unread_diff : 0;
             //$scope.users[user.user_number].unread_count = 0;   //remove
-            $scope.conversations[conversation.conversation_id].unread_count -= unread_ids.length;
+            $scope.conversations[conversation.id].unread_count -= unread_ids.length;
             //$http.get(window.location.origin + '/users/' + merchant_id + '/mark_user_messages_for_merchant_as_read/' + user.user_number); //remove
             /*$http({
               method: 'POST',
-              url: window.location.origin + '/v1/conversations/' + conversation.conversation_id + '/mark_messages_as_read?ids=' + data.unread_ids,
+              url: window.location.origin + '/v1/conversations/' + conversation.id + '/mark_messages_as_read?ids=' + data.unread_ids,
               headers: {
                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
               },
@@ -191,7 +224,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
           $scope.conversations[$scope.active_conversation_id].unread_count -= unread_ids.length;
           /*$http({
             method: 'POST',
-            url: window.location.origin + '/v1/conversations/' + conversation.conversation_id + '/mark_messages_as_read?ids=' + data.unread_ids,
+            url: window.location.origin + '/v1/conversations/' + conversation.id + '/mark_messages_as_read?ids=' + data.unread_ids,
             headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content') },
           }).then(function successCallback(response) { console.log("marked as read") }, function errorCallback(response) {});
           */

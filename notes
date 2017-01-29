@@ -36,10 +36,13 @@ Bhishma
 - subscriptions controller needs check for card error
 - in stripe event, #### needs better error handling
 
-- i need a method in fb_messages that sends and saves fb messages...it should call the fb service
-- changed kb knowledge.... what is this for should_generate_new_friendly_id
 - facebook event, where is conversationref
-
+-2. you need to check that you are saving user_id and user_id_to properly...depending on the direction of the message...remember i showed you that it was wrong for twilio/nexmo
+3. we need a method in fb_message.rb to send and save a fb message. see Message.rb for a similar method. this should be the only method that sends fb messages to end users. if you are sending messages somewhere else, you need to change it to use this method. this method wraps the messeenger service. the messenger service should not be saving messages/images...it only talks with facebook
+[8:31]  
+4. Whenever you receive a message, we mark it as unread by default.... so Conversation.new.find_or_create_conversation_for_message(@merchant_id, 'fb_page', uid, @fb_message, false) should have true as the last parameter. Messages arent marked as read until the merchant sees it on their dashboard.
+[8:32]  
+so unread should be true inn the snippet below
 
 surya
 - do we always have due_by, transfers_enabled in stripe managed account hash...we need that to be updated too whenever stripe sends an account event - maybe just resave every field we store anyway

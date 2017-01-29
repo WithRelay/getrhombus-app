@@ -11,7 +11,6 @@ Rails.application.routes.draw  do
   get 'terms' => 'static_pages#terms'
   get 'pricing' => 'static_pages#pricing'
   get 'request_demo' => 'demos#request_demo'
-  get  'creating-campaigns-in-relay' => 'static_pages'
 
   get 'contact' => 'contact_forms#new'
 
@@ -21,6 +20,7 @@ Rails.application.routes.draw  do
   get 'link_facebook' => 'link_fb_accounts#link_facebook'
   get 'relay-docs' => 'static_pages#relay_docs'
   get "relay-docs-categories/:slug" => "knowledge_base_categories#show"
+  get 'relay-docs/creating-campaigns-in-relay' => 'static_pages#creating_campaigns_in_relay'
   get 'get_current_user' => 'application#get_current_user'
 
   ### fix this url
@@ -146,8 +146,9 @@ Rails.application.routes.draw  do
     resources :conversations, only: [:index, :show]
     post "conversations/:id/mark_messages_as_read" => "conversations#mark_messages_as_read"
     post 'conversations/:id/send_merchant_message' => 'conversations#send_merchant_message'
-    get "relay-docs" => "knowledge_bases#index"
-    post 'article-rating' => 'knowledge_bases#article_rating'
+    resources :knowledge_bases, param: :url, only: [:index] do
+      get 'rating', on: :member      
+    end
   end
 
   ## catch all other to 404
