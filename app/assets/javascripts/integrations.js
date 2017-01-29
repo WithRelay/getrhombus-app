@@ -145,12 +145,10 @@ $( document ).ready(function() {
      else if (val === 'false'){
        $('.submit_page').show();
        $('.submit_page').val('Subscribe');
-       $('.submit_page').attr('class', 'submit_page btn btn-success');
      }
      else{
        $('.submit_page').show();
        $('.submit_page').val('Unsubscribe');
-       $('.submit_page').attr('class', 'submit_page btn btn-warning');
      }
    }
 
