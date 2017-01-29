@@ -7,51 +7,58 @@ module ApplicationHelper
   end
 
   def render_header_partial
-    unless relay_docs_page
-      concat(render 'shared/unauthenticate_header') if (!check_params && unauthenticate_controller)
-    end
-    concat(render 'shared/docs_header') if relay_docs_page
-    concat(render 'shared/authenticated_header') unless (unauthenticate_controller || check_params) || campaign_restrict_params || messaging_dashboard
+    concat(render 'shared/unauthenticate_header') if unauthenticate_controller
+    concat(render 'shared/authenticated_header') unless authenticated_pages || campaign_restrict_params
+    concat(render 'shared/docs_header') if relay_docs_pages
     concat(render 'campaigns/campaign_header') if campaign_restrict_params
     concat(render 'shared/messaging_header') if messaging_dashboard
   end
 
   def render_sidebar_partial
-    render 'shared/dashboard_sidebar' unless (unauthenticate_controller || check_params) || restrict_other_params || messaging_dashboard
+    concat(render 'shared/dashboard_sidebar') unless authenticated_pages
+  end
+
+  def authenticated_pages
+     unauthenticate_controller || restrict_devise_actions || relay_docs_pages
   end
 
   def restrict_other_params
-    actions = ['campaigns-new', 'hashtags-new', 'hashtags-create']
-    actions.include?("#{params[:controller]}-#{params[:action]}")
+    actions = ['campaigns-new', 'hashtags-new', 'hashtags-create', 'users-messaging']
+    actions.include?(params_controller_action)
   end
 
   def messaging_dashboard
-    messaging_params = ['users-messaging']
-    messaging_params.include?("#{params[:controller]}-#{params[:action]}")
+    messaging_params = ['messaging-index']
+    messaging_params.include?(params_controller_action)
   end
 
   def campaign_restrict_params
     restrict_params = ['campaigns-index']
-    restrict_params.include?("#{params[:controller]}-#{params[:action]}")
-  end
-
-  def relay_docs_page
-    doc_actions = ['static_pages-relay_docs', 'hashtags-new']
-    doc_actions.include?("#{params[:controller]}-#{params[:action]}")
+    restrict_params.include?(params_controller_action)
   end
 
   def render_footer_partial
-    concat(render 'shared/sign_up') if !check_params && unauthenticate_controller
-    render 'shared/unauthenticate_footer' if !check_params && unauthenticate_controller
+    concat(render 'shared/sign_up') if unauthenticate_controller
+    concat(render 'shared/unauthenticate_footer') if unauthenticate_controller
   end
 
   def unauthenticate_controller
     static_controllers = ['static_pages', 'contact_forms' ]
-    static_controllers.include?(params[:controller])
+    static_controllers.include?(params[:controller]) unless relay_docs_pages
   end
 
-  def check_params
-    restricted_actions = ['sessions-new', 'sessions-create', 'registrations-new', 'registrations-create']
-    restricted_actions.include?("#{params[:controller]}-#{params[:action]}")
+  def relay_docs_pages
+    controller_actions = ['static_pages-relay_docs']
+    controller_actions.include?(params_controller_action)
+  end
+
+  def params_controller_action
+    "#{params[:controller]}-#{params[:action]}"
+  end
+
+  def restrict_devise_actions
+    restricted_actions = ['sessions-new', 'sessions-create', 'registrations-new', 'registrations-create',
+                          'campaigns-new', 'hashtags-new', 'hashtags-create', 'users-messaging']
+    restricted_actions.include?(params_controller_action)
   end
 end
