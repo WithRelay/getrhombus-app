@@ -337,6 +337,7 @@ ActiveRecord::Schema.define(version: 20170128102335) do
     t.string   "slug",       limit: 191
   end
 
+  add_index "knowledge_base_categories", ["name"], name: "index_knowledge_base_categories_on_name", unique: true, using: :btree
   add_index "knowledge_base_categories", ["slug"], name: "index_knowledge_base_categories_on_slug", unique: true, using: :btree
 
   create_table "knowledge_bases", force: :cascade do |t|
@@ -352,7 +353,6 @@ ActiveRecord::Schema.define(version: 20170128102335) do
     t.datetime "updated_at",                               null: false
   end
 
-  add_index "knowledge_bases", ["title", "raw_content"], name: "title", type: :fulltext
   add_index "knowledge_bases", ["title"], name: "index_knowledge_bases_on_title", unique: true, using: :btree
 
   create_table "lists", force: :cascade do |t|
