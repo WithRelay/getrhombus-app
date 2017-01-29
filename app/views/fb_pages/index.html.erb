@@ -35,7 +35,9 @@
           <div class="w-form">
             <%= form_for :fb_page, url: user_update_fb_page_path(current_user), html: { class: 'w-clearfix', id: "email-form", data: { name: 'Email Form' } }, method: :patch do |f| %>
               <%= select_tag 'select_page', options_for_select(@user_fb_pages.map{|p| ["#{p.page_name}", "#{p.id} #{p.subscription_status}"] }), class: "dropdown select-facebook-page w-select", data: { name: "Select Facebook Page" }, id: "Select-Facebook-Page", prompt: 'Select a Facebook Page' %>
-              <%= f.submit '' , class: 'submit_page hidden', param: "#{current_user.fb_creds.first.name}", data: { disable_with: "Please wait..." }, subscribed_page: "#{subscribed_page}" %>
+              <div>
+                <%= f.submit '' , class: 'submit_page', param: "#{current_user.fb_creds.first.name}", data: { disable_with: "Please wait..." }, subscribed_page: "#{subscribed_page}" %>
+              </div>
               <p>Subscribed Page:
               <% if subscribed_page.present? %>
                 <span> <i class="fa fa-file" aria-hidden="true"></i> <%= subscribed_page %> </span>

@@ -21,7 +21,7 @@ class FbPagesController < ApplicationController
 
     if @fb_page.present? && res
       response = FacebookMessengerService.subscribe(@fb_page.page_access_token)
-      if(response["success"])
+      if(response && response["success"])
         @fb_page.update_attributes(subscription_status: true)
       end
       redirect_to user_fb_pages_path(current_user), flash: { notice: @fb_page.page_name + ' page has been successfully subscribed' }
@@ -33,7 +33,7 @@ class FbPagesController < ApplicationController
   def unsubscribe_user_fb_page
     if @fb_page.present?
       response = FacebookMessengerService.unsubscribe(@fb_page.page_access_token)
-      if(response['success'])
+      if(response && response['success'])
         @fb_page.update_attributes(subscription_status: false)
       end
       redirect_to user_fb_pages_path(current_user), flash: { notice: @fb_page.page_name + ' page has been successfully unsubscribed' }
@@ -73,7 +73,7 @@ class FbPagesController < ApplicationController
 
     # current_user.fb_pages.subscribed.empty? returns true when no page is subscribed
     # in this case response['success'] || fb_pages.blank? returns false
-    if response['success'] || @user_fb_pages.blank? || subscribed_page.empty?
+    if response && response['success'] || @user_fb_pages.blank? || subscribed_page.empty?
       if subscribed_page.present?
         # unsubscribe the subscribed page if present
         subscribed_page.first.update(subscription_status: false)
