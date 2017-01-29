@@ -62,4 +62,7 @@
 //= require subscription
 //= require flashes
 //= require integrations
+//= require demo
+//= require phone_number_formatter
+//= require util_functions
 // require_tree .
