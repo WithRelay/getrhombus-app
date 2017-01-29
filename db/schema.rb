@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170125225209) do
+ActiveRecord::Schema.define(version: 20170128161715) do
 
   create_table "addresses", force: :cascade do |t|
     t.string   "street_address",   limit: 191
@@ -328,6 +328,7 @@ ActiveRecord::Schema.define(version: 20170125225209) do
     t.string   "slug",       limit: 191
   end
 
+  add_index "knowledge_base_categories", ["name"], name: "index_knowledge_base_categories_on_name", unique: true, using: :btree
   add_index "knowledge_base_categories", ["slug"], name: "index_knowledge_base_categories_on_slug", unique: true, using: :btree
 
   create_table "knowledge_bases", force: :cascade do |t|
@@ -343,13 +344,7 @@ ActiveRecord::Schema.define(version: 20170125225209) do
     t.datetime "updated_at",                                           null: false
   end
 
-  add_index "knowledge_bases", ["title", "raw_content"], name: "title", type: :fulltext
   add_index "knowledge_bases", ["title"], name: "index_knowledge_bases_on_title", unique: true, using: :btree
-  add_index "knowledge_bases", ["title", "raw_content"], name: "index_knowledge_bases_on_title_and_raw_content", type: :fulltext
-  add_index "invoices", ["coupon_id"], name: "fk_rails_7aa1e153d5", using: :btree
-  add_index "invoices", ["stripe_invoice_id"], name: "index_invoices_on_stripe_invoice_id", using: :btree
-  add_index "invoices", ["subscription_id"], name: "fk_rails_46381ea356", using: :btree
-  add_index "invoices", ["transaction_id"], name: "fk_rails_4ccc1b83a0", using: :btree
 
   create_table "lists", force: :cascade do |t|
     t.datetime "created_at",                           null: false
