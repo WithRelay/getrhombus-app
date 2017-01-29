@@ -65,9 +65,9 @@ $(document).ready(function () {
     $("#kb-content").hide();
     $('#kb-search-results').html("");  
     if (kbList.length == 0) {
-      $('#kb-search-title').html('<div class="search_value">We couldn\'t find any results for: ' + query + '</div>');
+      $('#kb-search-title').html('<div class="search_value w-container">We couldn\'t find any results for: ' + query + '</div>');
     } else {
-      $('#kb-search-title').html('<div class="search_value">Search results for: ' + query + '</div>');
+      $('#kb-search-title').html('<div class="search_value w-container">Search results for: ' + query + '</div>');
       $.each(kbList, function(index, item) {
         var created_at = moment(item.created_at, "YYYYMMDD").fromNow();
         $('#kb-search-results').append(
