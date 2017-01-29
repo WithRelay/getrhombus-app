@@ -11,13 +11,8 @@
         event = @required_params['messaging'].last
         read_event = event['read']
         message_event = event['message']
-        # creates new conversation if not exists
-        create_conversation
-
         if message_event.present?
           receive_message(event)
-        elsif read_event.present?
-          set_message_unread(event)
         end
       end
     end
@@ -42,26 +37,6 @@
       {}
     end
 
-    def create_conversation
-      merchant = current_page.user
-      @merchant_id = merchant.id
-      sender = @required_params['messaging'][0]['sender']
-      recipient = @required_params['messaging'][0]['recipient']
-      sender_id = sender['id']
-      recipient_id = recipient['id']
-      uid = (current_page.page_id == sender_id)? recipient_id : sender_id
-      @conversation = Conversation.where(uid: uid).first_or_initialize
-      update_conversation
-    end
-
-    def update_conversation
-      @conversation.update(
-        merchant_id: @merchant_id,
-        uid_type: 'fb_page',
-        message_resolution_id: 0      #message_resolution_id is bydefault 0
-      )
-    end
-
     def receive_message(params)
       begin
         message = params['message']
@@ -77,16 +52,32 @@
         new_user_id = (current_page.page_id == message_to)? message_from : message_to
         add_page_user(current_page, new_user_id)
 
-        @fb_message = @conversation.fb_messages.create(text: text, seq: seq,
-          time_stamp: timestamp, unread: false, message_id: message_id,
+        uid = get_uid
+        @merchant_id = get_merchant_id
+        if (current_page.page_id == message_from)
+          @user_id =  @merchant_id
+          @user_id_to = uid
+        else
+          @user_id = uid
+          @user_id_to = @merchant_id
+        end
+
+        @fb_message = FbMessage.where( message_id: message_id).first_or_initialize
+        @fb_message.update(text: text, seq: seq,
+          time_stamp: timestamp, unread: true,
           from: message_from, to: message_to, fb_page_id: fb_page_id,
-          user_id: get_user_id, user_id_to: @conversation.merchant_id)
-        
+          user_id: @user_id, user_id_to: @user_id_to)
+
         save_attachments if @attachments.present?
+
+        Conversation.new.find_or_create_conversation_for_message(@merchant_id, 'fb_page', uid, @fb_message, true)
+        @fb_message.save
       rescue StandardError => err
         nil
       end
     end
+
+
 
     # set datetime in utc
     def set_timestamp(timestamp)
@@ -100,8 +91,13 @@
     end
 
     # it gives user id from page specific id of user
-    def get_user_id
-      @fb_cred.user_id if @fb_cred
+    def get_uid
+      @fb_cred.user ? @fb_cred.user_id : @fb_cred.page_specific_id
+    end
+
+    def get_merchant_id
+      merchant = current_page.user
+      @merchant_id = merchant.id
     end
 
     def save_attachments
@@ -124,11 +120,6 @@
       # save message with valid attachments
       # message destroy if all attachments are not valid
       (valid_file) ? @fb_message.save! : @fb_message.destroy
-    end
-
-    def set_message_unread(params)
-      messages = FbMessage.where(to: params['sender']['id'], unread: false)
-      messages.update_all(unread: true)
     end
 
     def notify_invalid_attachment

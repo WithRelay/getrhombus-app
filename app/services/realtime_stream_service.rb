@@ -14,7 +14,6 @@ class RealtimeStreamService
         user = User.find_by_phone_number(user_number)
         user_level = is_merchant_message ? 1 : 0
         
-        # name is now through person
         $pubnub.publish(
           :channel  => 'messaging_' + Rails.env + '_' + merchant.id.to_s,
           :message => Hash[
@@ -23,7 +22,7 @@ class RealtimeStreamService
             'last_name' => user.blank? ? '' : user.last_name,
             'email' => user.blank? ? '' : user.email,
             'user_level' => user_level,
-            'profile_image' => user_level == 0 ? ActionController::Base.helpers.asset_path('user_icon_50x50.png') : ActionController::Base.helpers.asset_path('rhombus_icon_50x50.png'),
+            'image_url' => user_level == 0 ? ActionController::Base.helpers.asset_path('user_icon_50x50.png') : ActionController::Base.helpers.asset_path('rhombus_icon_50x50.png'),
             'message' => message,
             'ts_day_of_the_week' => message_ts.strftime('%A'),
             'ts_time' => message_ts.strftime('%l:%M %P'),
@@ -33,7 +32,14 @@ class RealtimeStreamService
         ) {}
       end
     end
-    
+
+    def publish_to_dashboard(conversation, user)           
+      merchant_id = conversation.merchant_id.to_s
+      $pubnub.subscribe(channel: 'messaging_' + Rails.env + '_' + merchant_id) {}      
+      $pubnub.publish(channel: 'messaging_' + Rails.env + '_' + merchant_id,
+                      message: { message: conversation.message_hash(msg), conversation: conversation.conversation_hash(user) }.to_json) {}
+    end
+
   end
   
 end

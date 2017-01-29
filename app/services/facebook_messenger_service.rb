@@ -33,9 +33,8 @@ class FacebookMessengerService
     def update_user_fb_cred(referee, params)
       account_linking_token = params['account_linking_token']
       subscribed_page = FbPage.subscribed.first
-      @referee = referee
-      @referrer = User.find  subscribed_page[:user_id]
-      set_referrer unless check_referrer
+      referrer = User.find subscribed_page[:user_id]
+      Referrer.save_referrer_with_id(referrer.id, referee.id)
       token = subscribed_page[:page_access_token]
 
       response = get_page_scope_id(account_linking_token, token)
@@ -45,22 +44,8 @@ class FacebookMessengerService
       if response
         psid = response['recipient']
         fb_cred = FbCred.find_by(page_specific_id: psid)
-        fb_cred.update(email: params['email'], user_id: @referee.id) if fb_cred
+        fb_cred.update(email: params['email'], user_id: referee.id) if fb_cred
       end
-    end
-
-    def check_referrer
-      Referrer.where(referee_id: @referee.id, referrer_id: @referrer.id).present? ? true : false
-    end
-
-    def set_referrer
-      Referrer.create(
-        referrer_email: @referrer.email,
-        email: @referee.email,
-        referrer_id: @referrer.id,
-        referee_id: @referee.id,
-        referrer_name: @referrer.first_name + ' ' + @referrer.last_name,
-      )
     end
 
     def get_page_scope_id(account_linking_token, page_access_token)

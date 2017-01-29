@@ -18,9 +18,12 @@
 //= require angularjs/angular-route.min.js
 //= require angularjs/angular-scrollglue.js
 //= require angular-rails-templates
-//= require plan
-//= require coupon
-//= require subscription
+
+// used for client side form validation
+//
+//= require formValidation.min
+//= require bootstrap-formvalidator.min
+
 //= require jquery_ujs
 //= require pubnub/pubnub-angular.js
 //= require dashboard/messaging_angularjs/angularUpwardScroll.js
@@ -28,11 +31,6 @@
 //= require dashboard/messaging_angularjs/messagingControllers.js
 //= require dashboard/messaging_angularjs/messagingFilters.js
 //= require_tree ./dashboard/messaging_angularjs/templates
-
-// used for client side form validation
-//
-//= require formValidation.min
-//= require bootstrap-formvalidator.min
 
 // Other js files require tree is included so no need to include all the files in the folder tree
 //
@@ -58,4 +56,9 @@
 //= require bootstrap-select
 //= require moment
 //= require powerange
-//= require_tree .
+//= require knowledge_base
+//= require plan
+//= require coupon
+//= require subscription
+//= require integrations
+// require_tree .

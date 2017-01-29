@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170125225209) do
+ActiveRecord::Schema.define(version: 20170128161715) do
 
   create_table "addresses", force: :cascade do |t|
     t.string   "street_address",   limit: 191
@@ -106,6 +106,7 @@ ActiveRecord::Schema.define(version: 20170125225209) do
     t.integer  "conversation_id", limit: 4
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "unread",          limit: 1,   default: true
   end
 
   add_index "conversation_refs", ["conversation_id"], name: "index_conversation_refs_on_conversation_id", using: :btree
@@ -332,14 +333,18 @@ ActiveRecord::Schema.define(version: 20170125225209) do
   create_table "knowledge_bases", force: :cascade do |t|
     t.string   "title",                      limit: 191
     t.string   "author",                     limit: 191
-    t.integer  "upvotes",                    limit: 4
-    t.integer  "downvotes",                  limit: 4
+    t.string   "author_url",                 limit: 191
+    t.integer  "upvotes",                    limit: 4,     default: 0
+    t.integer  "downvotes",                  limit: 4,     default: 0
     t.string   "url",                        limit: 191
     t.text     "raw_content",                limit: 65535
     t.integer  "knowledge_base_category_id", limit: 4
-    t.datetime "created_at",                               null: false
-    t.datetime "updated_at",                               null: false
+    t.datetime "created_at",                                           null: false
+    t.datetime "updated_at",                                           null: false
   end
+
+  add_index "knowledge_bases", ["title", "raw_content"], name: "title", type: :fulltext
+  add_index "knowledge_bases", ["title"], name: "index_knowledge_bases_on_title", unique: true, using: :btree
 
   create_table "lists", force: :cascade do |t|
     t.datetime "created_at",                           null: false
@@ -402,6 +407,7 @@ ActiveRecord::Schema.define(version: 20170125225209) do
     t.text     "text",                     limit: 65535
     t.boolean  "unread",                   limit: 1,     default: true
     t.string   "num_segments",             limit: 191
+    t.integer  "num_media",                limit: 4,     default: 0
     t.string   "price_unit",               limit: 191
     t.integer  "hashtag_id",               limit: 4
     t.boolean  "unread_notification_sent", limit: 1,     default: false

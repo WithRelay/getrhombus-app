@@ -14,15 +14,18 @@ Rails.application.routes.draw  do
   get 'user_lists/remove_user' => 'user_lists#remove_user'
   get 'fb_pages/remove_integration' => 'fb_pages#remove_integration'
   get 'link_facebook' => 'link_fb_accounts#link_facebook'
-  post 'redirect' => 'link_fb_accounts#redirect'
-  get 'knowledge_base' => 'knowledge_base_categories#index'
-  get 'knowledge_base/getting_started' => 'knowledge_base_categories#show'
+  get 'relay-docs' => 'static_pages#relay_docs'
+  get "relay-docs-categories/:slug" => "knowledge_base_categories#show"
+  get 'relay-docs/creating-campaigns-in-relay' => 'static_pages#creating_campaigns_in_relay'
+  get 'get_current_user' => 'application#get_current_user'
 
+  ### fix this url
+  post 'redirect' => 'link_fb_accounts#redirect'
+  
   resources :lists do
     resources :customer_lists
   end
 
-  get 'json_get_current_user' => 'application#json_get_current_user'
   get "homepage_referrer" => 'referrers#homepage_referrer'
   get "resque" => Resque::Server, anchor: false, constraints: lambda { |req|
     req.env['warden'].authenticated? and req.env['warden'].user.id == 23
@@ -36,12 +39,6 @@ Rails.application.routes.draw  do
     post 'events/twilio' => 'webhooks#twilio_events'
     match'events/nexmo' => 'webhooks#nexmo_events', via: [:get, :post]
     match 'events/facebook' => 'webhooks#facebook_events', via: [:get, :post]
-
-    get "receive_text_message" => 'messages#receive_text_message'
-    get "receive_text_message_twilio" => 'messages#receive_text_message_twilio'
-    get "receive_voice_twilio" => 'messages#receive_voice_twilio'
-    get "receive_delivery_report" => 'messages#receive_delivery_report'
-    get "receive_delivery_report_twilio" => 'messages#receive_delivery_report_twilio'
   # end
 
   ## devise routes
@@ -69,6 +66,9 @@ Rails.application.routes.draw  do
       end
     end
 
+    authenticate :user, -> (user) { user.is_platform? } do
+      resources :knowledge_base_categories, param: :slug, only: [:index, :edit, :update, :new, :create]
+    end
     resources :plans, only: [:index, :destroy]
     resources :alerts, only: [:update]
     resources :saved_replies
@@ -84,6 +84,7 @@ Rails.application.routes.draw  do
 
     # authenticate campaigns resources if a user is merchant
     authenticate :user, -> (user) { user.is_merchant? } do
+      resources :conversations, only: [:index]
       resources :campaigns, except: [:show] { member { put 'change_status' }; collection { get 'filter_campaign' } }
       resources :reminders, except: [:show] { member { put 'change_status' } }
     end
@@ -93,20 +94,13 @@ Rails.application.routes.draw  do
     end
 
     # Only admins can create coupons
-    resources :coupons, :constraints => lambda { |req|
-      req.env['warden'].user.is_platform? #and req.env['warden'].user.email == '<redacted_email>' #Rails.application.secrets.dashboard_email
-    }
+    resources :coupons, :constraints => lambda { |req| req.env['warden'].authenticated? and req.env['warden'].user.is_platform? }
 
     member do
       get 'managed-accounts' => 'users#managed_acct'
       match 'managed-accounts' => "users#create_managed_acct", via: :patch
       match 'update-managed-acct' => 'users#update_managed_acct', via: :patch
-      get 'messaging' => 'users#messaging'
       get 'contacts' => 'users#contacts' #(both customers or merchants)
-      get 'json_get_latest_active_messaging' => 'users#json_get_latest_active_messaging'
-      get 'json_get_user_messages_by_merchant/:user_number' => 'users#json_get_user_messages_by_merchant'
-      get 'mark_user_messages_for_merchant_as_read/:user_number' => 'users#mark_user_messages_for_merchant_as_read'
-      get 'send_message_from_merchant/:user_number' => 'users#send_message_from_merchant'
       get 'customers' => 'users#customers'
       get 'businesses' => 'users#businesses'
       get 'notifications' => 'alerts#edit'
@@ -147,6 +141,12 @@ Rails.application.routes.draw  do
     match 'merchant/customers' => 'merchant_customers#customers', via: :get
     match 'referrers/invite_business' => 'referrers#invite_business', via: :post
     resources :demos, only: [:create]
+    resources :conversations, only: [:index, :show]
+    post "conversations/:id/mark_messages_as_read" => "conversations#mark_messages_as_read"
+    post 'conversations/:id/send_merchant_message' => 'conversations#send_merchant_message'
+    resources :knowledge_bases, param: :url, only: [:index] do
+      get 'rating', on: :member      
+    end
   end
 
   ## catch all other to 404

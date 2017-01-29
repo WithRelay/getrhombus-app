@@ -1,5 +1,15 @@
 current stripe api version - 2014-03-28
 https://www.getrhombus.com/receive_delivery_report
+- <redacted_webhook_url>      - voice
+- <redacted_webhook_url>      - messaging
+
+- payment capture - done
+- payment capture processing - done
+- payment from dashboard  - done
+- charge payment service for connect/managed - done
+	- fix how we store amounts - just job left
+- redo messaging
+
 
 Bhishma
 - Plans/Subscriptions
@@ -26,6 +36,13 @@ Bhishma
 - subscriptions controller needs check for card error
 - in stripe event, #### needs better error handling
 
+- facebook event, where is conversationref
+-2. you need to check that you are saving user_id and user_id_to properly...depending on the direction of the message...remember i showed you that it was wrong for twilio/nexmo
+3. we need a method in fb_message.rb to send and save a fb message. see Message.rb for a similar method. this should be the only method that sends fb messages to end users. if you are sending messages somewhere else, you need to change it to use this method. this method wraps the messeenger service. the messenger service should not be saving messages/images...it only talks with facebook
+[8:31]  
+4. Whenever you receive a message, we mark it as unread by default.... so Conversation.new.find_or_create_conversation_for_message(@merchant_id, 'fb_page', uid, @fb_message, false) should have true as the last parameter. Messages arent marked as read until the merchant sees it on their dashboard.
+[8:32]  
+so unread should be true inn the snippet below
 
 surya
 - do we always have due_by, transfers_enabled in stripe managed account hash...we need that to be updated too whenever stripe sends an account event - maybe just resave every field we store anyway
@@ -49,6 +66,8 @@ Edwin
 - generate page loader
 
 Taiwo (review)
+- review additional user actions file
+- review routes
 - review referrer... 
     - when do I use id and uid
     - Is everyone getting a uid - i think yes
@@ -71,6 +90,7 @@ Taiwo (review)
    - remove livemode from users, add to merchant_customer and create rake task to migrate this to merchant..customer
 - signup page doesnt need params...only facebook link page
 - <% if current_user.stripe_creds.empty? %> not needed for connect
+- clean up routes
 
 Review
 - campaign_user_list (can better track failures) or notification_log or add an email model??

@@ -4,8 +4,10 @@ class MessageParser
 
   include Transactionable
 
-  # message/fbmessage object must exist when calling this method
-  def process_message(merchant, customer, received_msg, channel)
+  # Message/FbMessage object must exist when calling this method
+  # from can be user fb cred or phone number
+  # customer can be nil
+  def process_message(merchant, customer, from, received_msg, channel)
     begin
       method(__method__).parameters.each { |_,arg| instance_variable_set("@#{arg}", binding.local_variable_get(arg)) }
       
@@ -242,7 +244,7 @@ class MessageParser
   def send_response(msg)    
     if @channel == 'Message'
       message = Message.new
-      message.send_and_save_message(@merchant.rn_type, @merchant.rhombus_number, @received_msg.from, msg)
+      message.send_and_save_message(@merchant.rhombus_number, @received_msg.from, msg)
     elsif @channel == "FbMessage"
 
     end
