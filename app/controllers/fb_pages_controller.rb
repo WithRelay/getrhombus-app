@@ -99,7 +99,7 @@ class FbPagesController < ApplicationController
   end
 
   def set_page
-    @fb_page = FbPage.find_by id: params['select_page'].split.first
+    @fb_page = FbPage.find_by id: params['Select Facebook page'].split.first
   end
 
   def check_cred_present
