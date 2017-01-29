@@ -1,92 +1,27 @@
-<!DOCTYPE html>
-<html data-wf-domain="rhombus-test.webflow.io" data-wf-page="5885448d69a2ab15223b01d2" data-wf-site="5767087cbd63608e7eb4abdc">
-  <head>
-    <meta charset="utf-8">
-    <title>Relay Docs</title>
-    <meta content="Relay Docs" property="og:title">
-    <meta content="width=device-width, initial-scale=1" name="viewport">
-    <meta content="Webflow" name="generator">
-
-  </head>
-  <body>
-    <div class="alt help-center hero" data-ix="show-fixed-navbar">
-      <div class="help-center hero-content w-container">
-        <div class="categories relay-docs-logo-wrapper w-row">
-          <div class="w-col w-col-6">
-            <img class="relay-logo-docs" src="http://uploads.webflow.com/5767087cbd63608e7eb4abdc/5814dd1c95b374593d45ad84_Relay%20Transparent%20White.png" width="67">
-            <div class="docs-page-title">Help Center</div>
-          </div>
-          <div class="relay-docs-logo-wrapper-column-2 w-col w-col-6">
-            <%= link_to 'Sign in', signin_path, class: "sign-in-link" %>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    <%= render 'shared/relay_docs_search' %>
-    
-    <div class="static-page-def-section">
-      
-      <div id='kb-search-title'></div>
-      <div id='kb-search-results'></div>
-      
-      <div id="kb-content">
-        <h1 class="sub-hero-header">Choose a category or browse FAQs below</h1>
-        <div class="customer-interactions-table no-icon-row w-row">
-            <a href="knowledge_base/<%#= category.slug %>">
-              <div class="w-col w-col-4" style="padding-bottom: 10px">
-                <div>
-                  <div class="docs features-div-paragraph-wrapper">
-                    <img class="relay-docs-row-icon" src = <%#= map_icon[category.name] %> >
-                    <h3 class="features-div-header-text use-case"> <%#= category.name %> </h3>
-                  </div>
-                </div>
+  <div id="kb-content">
+    <h1 class="sub-hero-header">Choose a category or browse FAQs below</h1>
+    <div class="customer-interactions-table no-icon-row w-row">
+        <a href="knowledge_base/<%#= category.slug %>">
+          <div class="w-col w-col-4" style="padding-bottom: 10px">
+            <div>
+              <div class="docs features-div-paragraph-wrapper">
+                <img class="relay-docs-row-icon" src = <%#= map_icon[category.name] %> >
+                <h3 class="features-div-header-text use-case"> <%#= category.name %> </h3>
               </div>
-            </a>
-          <%# end %>
-        </div>
-      </div>
+            </div>
+          </div>
+        </a>
+      <%# end %>
     </div>
+  </div>
+</div>
 
-    <div class="faq static-page-def-section">
-      <div class="faq-content-wrapper w-container">
-        <div class="faq-section-header">Frequently Asked Questions</div>
-        <div class="w-row">
-          <div class="faq-row-column-1 w-col w-col-6"><a class="faqs links" href="#">What is Relay?</a><a class="faqs links" href="#">How does Relay compare to "live chat" on my website?</a><a class="faqs links" href="#">Is text messaging right for my organization?</a><a class="faqs links" href="#">What countries are you available in?</a><a class="faqs links" href="#">Can I import customers into Relay?</a><a class="faqs links" href="#">How does group messaging work?</a><a class="faqs links" href="#">Do you offer a free tier for startups and small businesses?</a><a class="faqs links" href="#">Can I schedule messages to go out later?</a><a class="faqs links" href="#">How does In-chat payments work?</a><a class="faqs links" href="#">Can I charge customers directly from my Relay dashboard?</a><a class="faqs links" href="#">What are the transaction fees?</a></div>
-          <div class="w-col w-col-6"><a class="faqs links" href="#">Can I setup recurring charges for my customers in Relay?</a><a class="faqs links" href="#">When are funds deposited into my bank account?</a><a class="faqs links" href="#">Who handles receipts and refunds?</a><a class="faqs links" href="#">Can I create keywords and track keywords?</a><a class="faqs links" href="#">What is the difference between lists &amp; segments?</a><a class="faqs links" href="#">How do I setup automated drip messages?</a><a class="faqs links" href="#">Will you provide me with a new phone number?</a><a class="faqs links" href="#">Can I use my existing business phone number in Relay?</a><a class="faqs links" href="#">How do I connect Facebook Messenger to Relay?</a><a class="faqs links" href="#">How do I get notified of unread messages?</a></div>
-        </div>
-      </div>
+<div class="faq static-page-def-section">
+  <div class="faq-content-wrapper w-container">
+    <div class="faq-section-header">Frequently Asked Questions</div>
+    <div class="w-row">
+      <div class="faq-row-column-1 w-col w-col-6"><a class="faqs links" href="#">What is Relay?</a><a class="faqs links" href="#">How does Relay compare to "live chat" on my website?</a><a class="faqs links" href="#">Is text messaging right for my organization?</a><a class="faqs links" href="#">What countries are you available in?</a><a class="faqs links" href="#">Can I import customers into Relay?</a><a class="faqs links" href="#">How does group messaging work?</a><a class="faqs links" href="#">Do you offer a free tier for startups and small businesses?</a><a class="faqs links" href="#">Can I schedule messages to go out later?</a><a class="faqs links" href="#">How does In-chat payments work?</a><a class="faqs links" href="#">Can I charge customers directly from my Relay dashboard?</a><a class="faqs links" href="#">What are the transaction fees?</a></div>
+      <div class="w-col w-col-6"><a class="faqs links" href="#">Can I setup recurring charges for my customers in Relay?</a><a class="faqs links" href="#">When are funds deposited into my bank account?</a><a class="faqs links" href="#">Who handles receipts and refunds?</a><a class="faqs links" href="#">Can I create keywords and track keywords?</a><a class="faqs links" href="#">What is the difference between lists &amp; segments?</a><a class="faqs links" href="#">How do I setup automated drip messages?</a><a class="faqs links" href="#">Will you provide me with a new phone number?</a><a class="faqs links" href="#">Can I use my existing business phone number in Relay?</a><a class="faqs links" href="#">How do I connect Facebook Messenger to Relay?</a><a class="faqs links" href="#">How do I get notified of unread messages?</a></div>
     </div>
-    <div class="footer">
-      <div class="content-wrapper footer w-container">
-        <div class="w-row">
-          <div class="w-col w-col-2">
-            <div class="footer-heading">product</div>
-            <a class="footer-links links" href="#">Pricing</a><a class="footer-links links" href="#">Use Cases</a><a class="footer-links links" href="#">Request Demo</a><a class="footer-links links" href="#">Sign-up</a><a class="footer-links links" href="#">Dashboard</a>
-          </div>
-          <div class="w-col w-col-2">
-            <div class="footer-heading">features</div>
-            <a class="footer-links links" href="#">SMS | MMS</a><a class="footer-links links" href="#">Messenger</a><a class="footer-links links" href="#">Payment Request</a><a class="footer-links links" href="#">Charge</a><a class="footer-links links" href="#">Pre-authorize</a><a class="footer-links links" href="#">Hashtags</a>
-          </div>
-          <div class="w-col w-col-2">
-            <div class="footer-heading">HELP &amp; SUPPORT</div>
-            <a class="footer-links links" href="#">Help Center</a><a class="footer-links links" href="#">Resources</a><a class="footer-links links" href="#">Contact Us</a>
-          </div>
-          <div class="w-col w-col-3">
-            <div class="footer-heading">COMPANY</div>
-            <a class="footer-links links" href="#">About Relay</a><a class="footer-links links" href="#">Blog</a><a class="footer-links links" href="#">Jobs</a><a class="footer-links links" href="#">Privacy Policy</a><a class="footer-links links" href="#">Terms of Use</a>
-          </div>
-          <div class="blog-content-footer w-col w-col-3">
-            <div class="blog-section footer-heading">RECENT POSTS</div>
-            <div class="blog-date footer-heading">JULY 2016</div>
-            <a class="blog-links footer-links links" href="#">The Future of Messaging Bots in the Enterprise</a><a class="blog-links footer-links links" href="#">How to Provide Exceptional Customer Support</a>
-            <div class="blog-date footer-heading">JUNE 2016</div>
-            <a class="blog-links footer-links links" href="#">The Age&nbsp;Conversational Commerce</a><a class="blog-links footer-links links" href="#">Why Instant&nbsp;Messaging is a Better Medium for Customer Interaction</a><a class="blog-links footer-links links" href="#">Best Customer Communication Tools 2015</a>
-          </div>
-        </div>
-        <img class="footer-logo" src="http://uploads.webflow.com/5767087cbd63608e7eb4abdc/57f7c0596a60112360e1e017_relay%20(4).png" width="60">
-        <div class="copyright">© 2016, Relay Software Inc. All Rights Reserved.</div>
-      </div>
-    </div>
-  </body>
-</html>
+  </div>
+</div>
