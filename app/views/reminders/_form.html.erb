@@ -1,31 +1,17 @@
-
-
-<%= form_for reminder, url: reminder_url, method: method, html: { id: 'reminderForm' } do |f| %>
-
-  <div class="col-xs-5">
-    <%= f.label :Channel %>
-    <%= f.select :channel, reminder_channel(reminder), selected: get_channel_enum_value(reminder) %>
+<%= form_for reminder, url: reminder_url, method: method, html: { id: 'reminderForm', class: 'w-clearfix', data: { name: "Email Form 7" } } do |f| %>
+<%= f.select :channel, reminder_channel(reminder), {}, selected: get_channel_enum_value(reminder), class: 'dropdown w-select', data: { name: 'Notification Channel', id: 'Notification-Channel' } %>
+  <%= f.text_area :text, class: 'notification-message text-area w-input', data: { name: "Notification Message" }, id: "Notification-Message" %>
+  <div class="char-count notications">150 characters</div>
+  <%= f.text_field :date_time, data: { name: "Delivery Date &amp; Time" }, class: 'daterange delivery-date-time-picker text-field w-input', value: present(reminder).to_user_date_time %>
+  <div class="notification-frequency radio-button w-radio">
+    <%= f.radio_button :frequency_type, 0, id: 'oneTimeFrequency', class: 'w-radio-input', data: { name: "Notification Frequency" }, checked: is_one_time_checked?(reminder) %>
+    <label class="w-form-label" for="Notification Frequency">Send once</label>
   </div>
-
-  <div class="col-xs-5">
-    <%= f.label :text %>
-    <%= f.text_area :text %>
+  <div class="notification-frequency radio-button repeat w-radio">
+    <%= f.radio_button :frequency_type, 1, id: 'recurringFrequency', class: 'w-radio-input', data: { name: "Notification Frequency" }, checked: is_recurring_checked?(reminder) %>
+    <label class="w-form-label" for="Notification Frequency-2">Repeat</label>
   </div>
-
-  <div class="col-xs-5">
-    <%= f.text_field :date_time, class: 'daterange', value: present(reminder).to_user_date_time %>
-  </div>
-
-  <%= f.label :One_Time %>
-  <%= f.radio_button :frequency_type, 0, id: 'oneTimeFrequency', checked: is_one_time_checked?(reminder) %>
-
-  <%= f.label :Recurring %>
-  <%= f.radio_button :frequency_type, 1, id: 'recurringFrequency',  checked: is_recurring_checked?(reminder) %>
-
-  <%= f.select :repeat_days, repeat_days_options, {}, { selected: reminder.repeat_days, id: 'campaign_repeat_days' } %>
-  <!-- Modal Footer -->
-    <div class="modal-footer">
-      <%= button_tag 'Cancel', class: 'btn btn-default', data: { dismiss: :modal } if method=='post' %>
-      <%= f.submit 'Schedule Notification', id: 'submitReminderForm' %>
-    </div>
+  <%= f.select :repeat_days, repeat_days_options, {}, selected: reminder.repeat_days, id: 'campaign_repeat_days', class: "dropdown frequency-dropdown w-select" %>
+  <%= f.submit 'Schedule Notification', id: 'submitReminderForm', class: 'button schedule-notification w-button' %>
+  <%= button_tag 'Cancel', data: { ix: "close-schedule-notification" }, class: 'button cancel-notification w-button', data: { dismiss: :modal } if method=='post' %>
 <% end %>
