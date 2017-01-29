@@ -21,7 +21,7 @@ module ApplicationHelper
   end
 
   def restrict_other_params
-    actions = ['campaigns-new', 'hashtags-new']
+    actions = ['campaigns-new', 'hashtags-new', 'hashtags-create']
     actions.include?("#{params[:controller]}-#{params[:action]}")
   end
 
