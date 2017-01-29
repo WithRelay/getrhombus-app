@@ -1,9 +1,9 @@
 <div class="side-bar">
   <div class="dashboard-nav-links">All Customers</div>
   <h5 class="left-nav signup-box-subheading">account info</h5>
-  <a class="left-nav-tab-wrapper w-inline-block" href="#">
+  <%= link_to account_setting_path, class: 'left-nav-tab-wrapper w-inline-block' do %>
     <div class="left-nav-tab" data-ix="display-and-hide-customers">&nbsp; &nbsp; Account</div>
-  </a>
+  <% end %>
   <%= link_to notifications_user_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
     <div class="left-nav-tab"> &nbsp; Notifications</div>
   <% end %>
@@ -19,7 +19,7 @@
   <%= link_to user_fb_pages_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
     <div class="left-nav-tab">&nbsp; &nbsp;Integration</div>
   <% end %>
-  <%= link_to user_fb_pages_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
+  <%= link_to billing_information_path, class: 'left-nav-tab-wrapper w-inline-block' do %>
     <div class="left-nav-tab"> &nbsp; Billing Information</div>
   <% end %>
   <a class="left-nav-tab-wrapper w-inline-block" href="#">
