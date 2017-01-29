@@ -70,7 +70,7 @@ module ApplicationHelper
 
   def restrict_devise_actions
     restricted_actions = ['sessions-new', 'sessions-create', 'registrations-new', 'registrations-create',
-                          'campaigns-new', 'hashtags-new', 'hashtags-create', 'users-messaging']
+                          'users-messaging']
     restricted_actions.include?(params_controller_action)
   end
 end
