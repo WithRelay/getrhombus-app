@@ -47,6 +47,7 @@ Rails.application.routes.draw  do
     get "profile", to: "devise/registrations#edit"
     get "signin", to: "devise/sessions#new"
     get "billing-information", to: "devise/registrations#billing_information"
+    get "account-setting", to: "devise/registrations#account_setting"
   end
 
   resources :contact_forms
