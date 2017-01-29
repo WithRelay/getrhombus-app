@@ -13,8 +13,6 @@
         message_event = event['message']
         if message_event.present?
           receive_message(event)
-        elsif read_event.present?
-          set_message_unread(event)
         end
       end
     end
@@ -64,7 +62,7 @@
         save_attachments if @attachments.present?
 
         uid = (current_page.page_id == message_from)? message_to : message_from
-        Conversation.new.find_or_create_conversation_for_message(@merchant_id, 'fb_page', uid, @fb_message, false)
+        Conversation.new.find_or_create_conversation_for_message(@merchant_id, 'fb_page', uid, @fb_message, true)
         @fb_message.save
       rescue StandardError => err
         nil
@@ -107,11 +105,6 @@
       # save message with valid attachments
       # message destroy if all attachments are not valid
       (valid_file) ? @fb_message.save! : @fb_message.destroy
-    end
-
-    def set_message_unread(params)
-      messages = FbMessage.where(to: params['sender']['id'], unread: false)
-      messages.update_all(unread: true)
     end
 
     def notify_invalid_attachment
