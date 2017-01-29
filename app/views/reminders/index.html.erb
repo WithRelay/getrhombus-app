@@ -6,27 +6,31 @@
 </div>
 <!-- Button trigger modal -->
 <!-- Modal Body -->
-<div class="modal fade" id="myModalNorm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <!-- Modal Header -->
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">
-          <span aria-hidden="true">&times;</span>
-          <span class="sr-only">Close</span>
-        </button>
-        <h4 class="modal-title" id="myModalLabel">Customer Notification</h4>
-        <hr>
-        Set a reminder or notification that will go out to this customer at a future date. You can use this to automate appointment reminders, or bill payment reminders.
-      </div>
+<div class="modal fade modal-wrapper-14" data-ix="modal-interaction-14" id="myModalNorm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
+  <div class="schedule-notification-form-wrapper">
+    <div class="content-sub-wrapper modal w-clearfix">
+      <h4 class="modal-header welcome-dash-content-container-header">Customer Notification</h4>
+    </div>
+    <p class="modal-content-description">Set a reminder or notification that will go out to this customer at a future date. You can use this to automate appointment reminders, or bill payment reminders.</p>
+    <div class="segment-modal underline-div"></div>
+
+    <div class="scheduled-notification-form w-form">
       <div class='newReminder'>
         <div class="modal-body">
           <%= render partial: 'reminders/form', locals: { reminder: Reminder.new, reminder_url: v1_reminders_path, method: 'post' } %>
         </div>
       </div>
+      <div class="w-form-done">
+        <div>Thank you! Your submission has been received!</div>
+      </div>
+      <div class="w-form-fail">
+        <div>Oops! Something went wrong while submitting the form</div>
+      </div>
     </div>
   </div>
 </div>
+
 <% if @reminders.present? %>
 
 <div class="dashboard-body">
