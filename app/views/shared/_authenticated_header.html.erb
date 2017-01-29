@@ -16,7 +16,9 @@
   <div class="dashboard-nav-links-wrapper new-tab right-nav settings-dropdown">
     <div class="dropdown-wrapper w-dropdown" data-delay="0">
       <div class="w-dropdown-toggle">
-        <div class="dropdown-wrapper-text">Settings</div>
+        <%= link_to account_setting_path do %>
+          <div class="dropdown-wrapper-text">Settings</div>
+        <% end %>
         <div class="dropdown-wrapper-icon w-icon-dropdown-toggle"></div>
       </div>
       <nav class="dropdown-content-wrapper w-dropdown-list">
