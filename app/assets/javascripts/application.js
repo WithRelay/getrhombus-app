@@ -61,4 +61,4 @@
 //= require coupon
 //= require subscription
 //= require integrations
-// require_tree .
+//= require lists.js

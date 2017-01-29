@@ -19,11 +19,11 @@
 
 <% @users.each do |c| %>
 <tr>
-	<td><%= c.first_name %> </td>
-	<td><%= c.last_name %> </td>
-	<td><%= c.email %> </td>
-	<% customer_list = UserList.where(list_id:@list.id,user_id:c.id) %>
-	<td><%= link_to 'Remove user from list', controller:'user_lists', action: 'remove_user', user_id: c.id, list_id:@list.id %>
+	<td><%= c[:user].first_name %> </td>
+	<td><%= c[:user].last_name %> </td>
+	<td><%= c[:user].email %> </td>
+	<% customer_list = UserList.where(list_id:@list.id,user_id:c[:user].id) %>
+	<td><%= link_to 'Remove user from list', controller:'user_lists', action: 'remove_user', user_id: c[:user].id, list_id:@list.id %>
 	</td>
 </tr>
 
