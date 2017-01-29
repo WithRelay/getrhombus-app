@@ -60,5 +60,6 @@
 //= require plan
 //= require coupon
 //= require subscription
+//= require flashes
 //= require integrations
 // require_tree .

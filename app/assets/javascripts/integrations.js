@@ -3,14 +3,14 @@ $( document ).ready(function() {
   var index = 1;
   if ($('#select_page').length > 0){
     check_status($('#select_page').val().split(' ')[index]);
-    $( '#select_page' ).change(function() {
+    $( '#Select-Facebook-Page' ).change(function() {
       check_status($(this).val().split(' ')[index]);
     });
   }
 
-  $('.submit_page').click(function (evt) {
+  $('#select_page').click(function (evt) {
     if (($(this).val() === 'Subscribe') && ($(this).attr('subscribed_page'))) {
-      if (!$(".submit_page").attr('canSubscribe')) {
+      if (!$("#select_page").attr('canSubscribe')) {
         evt.stopImmediatePropagation();
         (new PNotify({
           title: 'Change Facebook Page',
@@ -30,8 +30,8 @@ $( document ).ready(function() {
           addclass: 'stack-modal',
           stack: {'dir1': 'down', 'dir2': 'right', 'modal': true}
           })).get().on('pnotify.confirm', function() {
-            $('.submit_page').attr('canSubscribe', true);
-            $('.submit_page').click();
+            $('#select_page').attr('canSubscribe', true);
+            $('#select_page').click();
           }).on('pnotify.cancel', function() {
             return false;
         });
@@ -39,7 +39,7 @@ $( document ).ready(function() {
       }
     }
     else if(($(this).val() === 'Unsubscribe')){
-      if (!$(".submit_page").attr('canUnsubscribe')) {
+      if (!$("#select_page").attr('canUnsubscribe')) {
         evt.stopImmediatePropagation();
         (new PNotify({
           title: 'Are you sure?',
@@ -59,8 +59,8 @@ $( document ).ready(function() {
           addclass: 'stack-modal',
           stack: {'dir1': 'down', 'dir2': 'right', 'modal': true}
           })).get().on('pnotify.confirm', function() {
-            $('.submit_page').attr('canUnsubscribe', true);
-            $('.submit_page').click();
+            $('#select_page').attr('canUnsubscribe', true);
+            $('#select_page').click();
           }).on('pnotify.cancel', function() {
             return false;
         });
@@ -139,16 +139,19 @@ $( document ).ready(function() {
    });
 
    function check_status(val){
+      debugger
      if (!val) {
-       $('.submit_page').hide();
+       $('#select_page').hide();
      }
      else if (val === 'false'){
-       $('.submit_page').show();
-       $('.submit_page').val('Subscribe');
+       $('#select_page').show();
+       $('#select_page').val('Subscribe');
+       $('#select_page').attr('class', 'button w-button')
      }
      else{
-       $('.submit_page').show();
-       $('.submit_page').val('Unsubscribe');
+       $('#select_page').show();
+       $('#select_page').val('Unsubscribe');
+       $('#select_page').attr('class', 'button w-button')
      }
    }
 
