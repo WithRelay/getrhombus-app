@@ -427,7 +427,7 @@
    */
   Webflow.define = function(name, factory, options) {
     if (modules[name]) unbindModule(modules[name]);
-    var instance = modules[name] = factory($, _, options) || {}
+    var instance = modules[name] = factory($, _, options) || {};
     bindModule(instance);
     return instance;
   };
@@ -1215,7 +1215,7 @@
     var api = {};
 
     // Cross-Domain AJAX for IE8
-
+    
 
     var $doc = $(document);
     var $forms;
