@@ -1,10 +1,10 @@
 $(document).ready(function() {
   var pricingSlider, priceValueSpan, amount, currentAmount,
          free_plan_amount = 0,
-         starter_plan_amount = 55,
-         growth_plan_amount = 255,
-         business_plan_amount = 2500,
-         enterprise_plan_amount = 7000;
+         starter_plan_amount = 25,
+         growth_plan_amount = 125,
+         business_plan_amount = 250,
+         enterprise_plan_amount = 400;
 
   // show slider on pricing page load
   $(function(){
@@ -46,7 +46,7 @@ $(document).ready(function() {
 
   function displayValue() {
     // priceValueSpan.innerHTML = pricingSlider.value;
-    priceValueSpan.innerHTML = '<h3>' + pricingSlider.value + '<b> Users</b> </h3><br>' +
+    priceValueSpan.innerHTML = '<h5>' + pricingSlider.value + '<b> Users</b> </h5>' +
       '<h4>' + plan_range(pricingSlider.value)[1] + '</h4>';
 
     //only for subscription setting page
@@ -80,7 +80,7 @@ $(document).ready(function() {
   }
 
   function planInfo(plan, amount) {
-    return '<h3 style="color: red;">$'+ amount +'</h3><br><p>BILLED MONTHLY<p><br><h3>'+plan+' for '+ amount +'/month <br>Up to 100 Users</h3>'
+    return '<h1 class="plan-amount">$'+ amount +'</h1><h5 class="signup-box-subheading starter-table">BILLED MONTHLY</h5><h5 class="signup-box-subheading">'+plan+' for $'+ amount +'/month Up to 100 Users</h5>'
   }
 
 });
