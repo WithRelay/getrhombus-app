@@ -12,7 +12,7 @@ Rails.application.config.assets.paths << Rails.root.join('app', 'assets', 'fonts
 # Rails.application.config.assets.precompile += %w( search.js )
 
 # added
-Rails.application.config.assets.precompile += %w( webflow.js utils.js custom.js modernizr.js plugins.js bootstrap-select.js )
+Rails.application.config.assets.precompile += %w( utils.js custom.js modernizr.js plugins.js bootstrap-select.js )
 
 Rails.application.config.assets.precompile += %w( glyphicons-halflings-regular.eot glyphicons-halflings-regular.svg )
 Rails.application.config.assets.precompile += %w( glyphicons-halflings-regular.ttf glyphicons-halflings-regular.woff )
