@@ -24,7 +24,7 @@
       <nav class="dropdown-content-wrapper w-dropdown-list">
         <a class="dropdown-link w-dropdown-link" href="#">&nbsp;&nbsp;&nbsp;&nbsp;Your profile</a>
         <%= link_to '&nbsp;&nbsp;&nbsp;&nbsp;Settings'.html_safe, edit_user_registration_path, class: 'dropdown-link w-dropdown-link' %>
-        <a class="dropdown-link w-dropdown-link" href="#">&nbsp;&nbsp;&nbsp;&nbsp;Billing Information</a>
+        <%= link_to '&nbsp;&nbsp;&nbsp;&nbsp;Billing Information'.html_safe, billing_information_path, class: 'dropdown-link w-dropdown-link' %>
         <%= link_to '&nbsp;&nbsp;&nbsp;&nbsp;Log out'.html_safe, destroy_user_session_path, class: 'dropdown-link w-dropdown-link', method: :delete %>
       </nav>
     </div>
