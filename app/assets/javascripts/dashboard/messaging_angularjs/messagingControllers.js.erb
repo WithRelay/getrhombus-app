@@ -6,7 +6,7 @@ var messagingControllers = angular.module('messagingControllers', [
   'pubnub.angular.service'
 ]);
 
-
+/*
 (function() {
   angular.module('messageFetcher', ['upwards-scroll']);
   angular.module('messageFetcher').controller('endlessMessage', function($scope, $http) {
@@ -36,11 +36,52 @@ var messagingControllers = angular.module('messagingControllers', [
     var counter = 0, page = 1;
     messages.LoadMore();
   });
-})();
+})();*/
 
 
-messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub', 'Upload',
-  function($scope, $http, Pubnub, Upload) {
+messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub', 'Upload', '$timeout', '$q',
+  function($scope, $http, Pubnub, Upload, $timeout, $q) {
+
+    $scope.selected_conversation_messages = [];
+    $scope.status = {
+        loading: false,
+        loaded: false
+    };
+
+    $scope.containerLineInView = function(index, inview, inviewpart, id) {
+      /*var inViewReport = inview ? '<strong>enters</strong>' : '<strong>exit</strong>';
+      if (typeof(inviewpart) != 'undefined') {
+        inViewReport = '<strong>' + inviewpart + '</strong> part ' + inViewReport;
+      }
+      $scope.inviewLogs.unshift({ id: logId++, message: $sce.trustAsHtml('Containerd line <em>#' + index + '</em>: ' + inViewReport) });
+      */
+      //console.log(inview)
+      //console.log(id)
+    }
+
+    var counter = 70;
+    $scope.loadMore = function() {
+        var deferred = $q.defer();
+        if (!$scope.status.loading) {
+            $scope.status.loading = true;
+
+            // simulate an ajax request
+            $timeout(function() {
+              for (var i = 0; i < 15; i++) {
+                    $scope.selected_conversation_messages.unshift({
+                        id: counter
+                    });
+                    counter += 10;
+                }
+                $scope.status.loading = false;
+                $scope.status.loaded = ($scope.selected_conversation_messages.length > 0);
+                deferred.resolve();
+            }, 1000);
+        } else {
+            deferred.reject();
+        }
+        return deferred.promise;
+    };
 
     // Messages  // remove
     // conversations
@@ -172,7 +213,6 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
         //$scope.users = user_list;  // remove
         $scope.conversations = conversation_list;
 
-
         //$scope.getUserMessages = function(user) {  //remove
         $scope.getConversationMessages = function(conversation) {
           //$http.get(window.location.origin + '/users/' + merchant_id + '/json_get_user_messages_by_merchant/' + user.user_number + '?limit=' + (user.unread_count + $scope.num_message_history)) // remove
@@ -180,7 +220,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
           .success(function(data) {
             //$scope.active_user_number = user.user_number;      //remove
             $scope.active_conversation_id = conversation.id;
-            console.log(conversation)
+            console.log(data)
 
             //$scope.selected_user = user;   // remove
             $scope.selected_conversation = conversation;
@@ -214,7 +254,6 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
             // setTimeout(function(){ BindPlugins.now() }, 0);
           });
         };
-
 
         $scope.update_unread_messages = function(unread_ids) {
           // Mark messages as read

@@ -84,7 +84,7 @@ Rails.application.routes.draw  do
       end
     end
 
-    # authenticate campaigns resources if a user is merchant
+    # authenticate resources if a user is merchant
     authenticate :user, -> (user) { user.is_merchant? } do
       resources :conversations, only: [:index]
       resources :campaigns, except: [:show] { member { put 'change_status' }; collection { get 'filter_campaign' } }
@@ -143,9 +143,12 @@ Rails.application.routes.draw  do
     match 'merchant/customers' => 'merchant_customers#customers', via: :get
     match 'referrers/invite_business' => 'referrers#invite_business', via: :post
     resources :demos, only: [:create]
-    resources :conversations, only: [:index, :show]
-    post "conversations/:id/mark_messages_as_read" => "conversations#mark_messages_as_read"
-    post 'conversations/:id/send_merchant_message' => 'conversations#send_merchant_message'
+    resources :conversations, only: [:index, :show] do
+      member do 
+        post "mark_messages_as_read"
+        post 'send_merchant_message'
+      end
+    end
     resources :knowledge_bases, param: :url, only: [:index] do
       get 'rating', on: :member      
     end

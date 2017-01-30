@@ -14,6 +14,7 @@
 //
 //= require pubnub/pubnub.min.js
 //= require jquery
+//= require lodash.min
 //= require angularjs/angular.min.js
 //= require angularjs/angular-route.min.js
 //= require angularjs/angular-scrollglue.js
@@ -25,6 +26,8 @@
 //= require bootstrap-formvalidator.min
 
 //= require jquery_ujs
+//= require angular-inview
+//= require angular-scroll.min
 //= require pubnub/pubnub-angular.js
 //= require dashboard/messaging_angularjs/angularUpwardScroll.js
 //= require dashboard/messaging_angularjs/messagingApp.js

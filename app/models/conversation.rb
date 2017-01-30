@@ -27,6 +27,7 @@ class Conversation < ActiveRecord::Base
   		end
 
   		latest_conv.push(conv.conversation_hash)
+     # return latest_conv
   	end
 
   	latest_conv
@@ -82,19 +83,21 @@ class Conversation < ActiveRecord::Base
 		latest_messages = Array.new
 		unread_ids = []
 
+    v=1
 		convs_refs.each do |cf| 
 			unread_ids.push(cf.id) if cf.unread			
-			latest_messages.push(message_hash(cf.textable))
+			latest_messages.push(message_hash(cf.textable, v = v+1))
     end
 
     [latest_messages, unread_ids.join(",")]
 	end
 
-	def message_hash(msg)
+	def message_hash(msg, v)
 		# Used for profile image...This should change if merchant can talk to merchant? or change how we determine profile image
 		user_level = msg.user_id == self.merchant_id ? 1 : 0  
 
 		{
+      id: v,
       source: msg.user_id == self.merchant_id ? "merchant" : 'user',
       profile_image: (user_level == 0) ? ActionController::Base.helpers.asset_path('user_icon_50x50.png') : ActionController::Base.helpers.asset_path('rhombus_icon_50x50.png'),
       text: (msg.text) ? msg.text : nil,
