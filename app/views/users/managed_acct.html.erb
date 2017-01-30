@@ -12,7 +12,7 @@
         <label class="form-label paragraph payment-setup-section-header" for="Organization-Type">Take a minute to answer a few questions and then you'll be ready to accept payments</label>
         <label class="field-headers form-label settings" for="Stripe-Countries">Where are you based?</label>
         <%= f.fields_for :address do |a| %>
-          <%= a.select :country, options_for_select(connect_country(a.object), selected: a.object.country), {}, class: 'rhombusFocus dropdown w-select', id: 'managed-acct-country Stripe-Countries', data: { name: 'Stripe Countries' } %>
+          <%= a.select :country, options_for_select(connect_country(a.object), selected: a.object.country), {}, class: 'rhombusFocus dropdown w-select', id: 'managed-acct-country', data: { name: 'Stripe Countries' } %>
         <% end %>
         <div class="flex-underline form-section-divider"></div>
         <label class="field-headers form-label settings" for="About-your-business">your product</label>
@@ -42,32 +42,19 @@
         <label class="form-label paragraph" for="Currency">Currencies without a bank account will be converted and sent to your default bank account.</label>
         <div class="bank-div">
           <%= f.fields_for :bank_accounts do |b| %>
-          <div id='bank-currency-div'>
-            <div class="col-xs-5">
-              <%= b.label :currency %>
-              <%= b.text_field :currency, id: 'bank-currency', value: b.object.currency %>
-              <select id="bank-currency-select Currency" class="currency dropdown w-select" data-name='Currency'></select>
-            </div>
-          </div>
-          <div id='account-country-div'>
-            <div class="col-xs-5">
-              <%= b.label :country %>
-              <%= b.text_field :country, id: 'account-country', value: b.object.country %>
-              <select id="account-country-select" class='bank-country dropdown w-select' data-name="Bank Country"></select>
-            </div>
+            <%= b.hidden_field :currency, id: 'bank-currency', value: b.object.currency %>
+            <select id="bank-currency-select" class="currency dropdown w-select" data-name='Currency'></select>
+            <%= b.hidden_field :country, id: 'account-country', value: b.object.country %>
+            <select id="account-country-select" class='bank-country dropdown w-select' data-name="Bank Country"></select>
           </div>
             <div id='routing-number-div'>
               <%= b.text_field :routing_number, id: 'routing-number Routing', class: 'routing-number settings short-field text-field w-input', data: { name: 'Routing' }, placeholder: 'Routing number' %>
             </div>
-            <label id='account-number-label' >Account Number</label>
-            <%= b.text_field :account_number, id: 'account-number', class: 'settings short-field text-field w-input', data: {name: 'Account Number 2'}, placeholder: 'Account number' %>
-            <div id='institution-number-div'>
-              <div class="col-xs-5">
-              <%= b.label :institution_number, id: 'institution-number-label' %>
-              <%= b.text_field :institution_number, id: 'institution-number Bank-code', placeholder: 'Bank code', class: 'settings short-field text-field w-input', data: { name: 'Bank code' } %>
-              </div>
-              <input class="settings short-field text-field w-input" data-name="Branch code" id="Branch-code" maxlength="256" name="Branch-code" placeholder="Branch code" type="email">
-            </div>
+            <!-- <div id='institution-number-div'> -->
+            <%= b.text_field :institution_number, id: 'institution-number Bank-code', placeholder: 'Bank code', class: 'settings short-field text-field w-input', data: { name: 'Bank code' } %>
+            <input class="settings short-field text-field w-input" data-name="Branch code" id="Branch-code" maxlength="256" name="Branch-code" placeholder="Branch code" type="email">
+          <!-- </div> -->
+          <%= b.text_field :account_number, id: 'account-number', class: 'settings short-field text-field w-input', data: {name: 'Account Number 2'}, placeholder: 'Account number' %>
           <% end %>
         </div>
         <div class="flex-underline form-section-divider"></div>
