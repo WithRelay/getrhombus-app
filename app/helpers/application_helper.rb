@@ -14,6 +14,10 @@ module ApplicationHelper
     concat(render 'shared/messaging_header') if messaging_dashboard
   end
 
+  def render_customer_sidebar
+    concat(render 'shared/customer_sidebar') if params_controller_action == 'users-customers'
+  end
+
   def render_sidebar_partial
     concat(render 'shared/dashboard_sidebar') unless authenticated_pages || setting_pages
     concat(render 'shared/setting_sidebar') if setting_pages
