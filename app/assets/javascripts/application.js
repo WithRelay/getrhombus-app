@@ -34,7 +34,6 @@
 
 // Other js files require tree is included so no need to include all the files in the folder tree
 //
-//= require bootstrap.min
 //= require pnotify
 //= require jquery.lightbox_me
 //= require intlTelInput.min
