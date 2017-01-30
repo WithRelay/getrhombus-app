@@ -31,10 +31,11 @@
         <br>
         <br>How many customers do you have?</p>
         <div class="slider-wrapper">
-          <%= image_tag('Slider-Placeholder-2.png', class: 'slider-placeholder') %>
+          <!-- we have to set amountValue dynamically for selected subscription -->
+          <input type="text" name="plan[amount]" id="pricing-range" amountValue="0">
+          <span class="row" id="price-value"></span>
         </div>
-        <h1 class="plan-amount">$0</h1>
-        <h5 class="signup-box-subheading starter-table">BILLED MONTHLY</h5><a class="button pricing-table-button w-button" href="#">Get Started</a>
+        <a class="button pricing-table-button w-button" href="/signup">Get Started</a>
       </div>
     </div>
   </div>

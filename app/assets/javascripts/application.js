@@ -65,4 +65,6 @@
 //= require demo
 //= require phone_number_formatter
 //= require util_functions
+//= require price_slider
+//= require get_started
 //= require_tree .

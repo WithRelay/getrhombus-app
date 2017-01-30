@@ -1,21 +1,35 @@
+<style type="text/css">
+  .intl-tel-input.allow-dropdown input, .intl-tel-input.allow-dropdown input[type=text], .intl-tel-input.allow-dropdown input[type=tel] {
+    padding-right: 68px;
+    padding-left: 54px;
+    margin-left: 0;
+    width: 100%;
+}
+</style>
 <div class="default-content-section">
-    <h1 class="first-content-section-sub-header footer-cta-header">Get started for free</h1>
-    <h5 class="footer-cta-subheading signup-box-subheading">TRY IT FREE NO LONG-TERM <br>COMMITMENT</h5>
-    <div class="footer-cta-forms w-form">
-      <form class="w-clearfix" data-name="Email Form" id="email-form" name="email-form">
-        <input class="footer-cta-field text-field w-input" data-name="Email" id="email" maxlength="256" name="email" placeholder="Email address" required="required" type="email">
-        <input class="text-field w-input" data-name="Phone Number" id="Phone-Number" maxlength="256" name="Phone-Number" placeholder="Phone number" required="required" type="email">
-        <div class="footer-cta form-check-box w-checkbox">
-          <input class="w-checkbox-input" data-name="Checkbox" id="checkbox" name="checkbox" type="checkbox">
-          <label class="w-form-label" for="checkbox">I agree to Relay <a class="terms-link" href="#">terms of use &amp; policy</a>
-          </label>
-        </div><a class="alt-hero-cta-button footer-cta-button home w-button" href="#">Create relay account</a>
-      </form>
-      <div class="w-form-done">
-        <div>Thank you! Your submission has been received!</div>
+  <h1 class="first-content-section-sub-header footer-cta-header">Get started for free</h1>
+  <h5 class="footer-cta-subheading signup-box-subheading">TRY IT FREE NO LONG-TERM <br>COMMITMENT</h5>
+  <div class="footer-cta-forms w-form">
+    <%= form_for('user', url: 'signup', method: :get, :html => { :id => "get-started-form" } ) do |f| %>
+
+      <div class="field form-group group">
+        <%= f.text_field 'email', placeholder: 'Email Address', class: 'form-control footer-cta-field text-field w-input' %>
       </div>
-      <div class="w-form-fail">
-        <div>Oops! Something went wrong while submitting the form</div>
+
+      <div class="field form-group group">
+        <%= f.phone_field 'phone', placeholder: 'Phone Number', class: 'form-control text-field w-input', id: 'phone' %>
+        <%= f.hidden_field :phone_number, :id => "phone_number" %>
       </div>
-    </div>
-  </div>
+
+      <div class="field footer-cta form-check-box w-checkbox">
+        <input class="w-checkbox-input" data-name="Checkbox" id="checkbox" name="checkbox" type="checkbox">
+        <label class="w-form-label" for="checkbox">I agree to Relay <a class="terms-link" href="#">terms of use &amp; policy</a></label>
+      </div>
+
+      <div class="field form-group">
+        <%= f.submit "Create relay account", id: 'get-started', class: "alt-hero-cta-button footer-cta-button home w-button", value: 'GET STARTED', href: '/users/sign_up' %>
+      </div>
+
+    <% end %>
+  </div>    
+</div>

@@ -1,0 +1,98 @@
+<div class="w-row">
+  <div class="onboarding-table-column-1 w-col w-col-8">
+    <div class="onboarding-form-section">
+      <div class="choose-plan onboarding-form-div sign-in signup w-clearfix">
+        <div class="choose-plan def-row-content-wrapper">
+          <img src="http://uploads.webflow.com/5767087cbd63608e7eb4abdc/587e5fef406151a55b9105b0_Relay%20Transparent%20500x300.png" width="50">
+          <h1 class="first-content-section-sub-header pricing-header">Select a plan to get started</h1>
+          <div class="flex-underline form-header-underline"></div>
+          <p class="def-content-section-paragraph pricing-paragraph">How many customers do you have?</p>
+          <div class="slider-wrapper">
+            <input type="text" name="plan[name]" id="pricing-range" amountValue="0">
+            <span class="row" id="price-value"></span>
+          </div>
+          <a class="button choose-plan pricing-table-button w-button" href="#">Get Started</a>
+          <div class="display-credit-card-wrapper">
+            <div class="get-started-2 log-in-form w-form">
+              <form class="w-clearfix" data-name="Email Form" id="email-form" name="email-form"><input class="card-number text-field w-input" data-name="Card Number 4" id="Card-Number-4" maxlength="256" name="Card-Number-4" placeholder="Card number" required="required" type="text"><input class="name-on-card text-field w-input" data-name="Name On Card 4" id="Name-on-Card-4" maxlength="256" name="Name-on-Card-4" placeholder="Name on card" required="required" type="text"><input class="month-year text-field w-input" data-name="Month Year 3" id="Month-Year-3" maxlength="256" name="Month-Year-3" placeholder="MM / YYYY" required="required" type="text"><input class="cvv text-field w-input" data-name="Cvv 5" id="CVV-5" maxlength="256" name="CVV-5" placeholder="CVV" required="required" type="text"><input class="button log-in w-button" data-wait="Please wait..." type="submit" value="Start 14-day Trial"><label class="form-label paragraph select-plan" for="Card-Number-3">Don't worry, we'll notify you when your trial is about to expire</label></form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="onboarding-table-column-2 w-col w-col-4">
+    <div class="onboarding-right-bar">
+      <div class="w-container whats-new-container">
+        <div class="whats-new-content-wrapper">
+          <h4 class="onboarding-side-bar-h4">get started: step 3</h4>
+          <h3 class="onboarding-side-bar-h3">You're almost done.</h3>
+          <p class="onboarding-side-bar-paragraph">You're moments away from delighting your customers with personalized messages on the messaging apps they love; including Facebook Messenger, and SMS.</p>
+          <p class="onboarding-side-bar-paragraph">Create and send amazing marketing campaigns, respond to support questions or new customer inquiries, and best of all, make it easy for your customers to pay you using SMS and Messenger.</p>
+          <p class="credit onboarding-side-bar-paragraph">Enjoy $5 SMS credit during your trial period.</p>
+          <div class="left-arrow"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+     <!-- <div class="w-row" id="userProfile1">
+        <div class="login-form newForms">
+          <%#= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put, id: "cc-form", :autocomplete => "off" }) do |f| %>
+          <div class="top">
+            <h4>Billing Information</h4>
+            <img src="<%#= asset_path 'stripe.png' %>" alt="icon" id="stripe-logo">
+            <label class="form-label paragraph" for="Card-Number-2">Please enter your debit/credit card information to begin your 14-day free trial. Don't worry, we'll notify you when your trial is about to expire</label>
+          </div>
+          <div class="form-area">
+            <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10" id="response">
+              <div class="panel-body" ></div>
+            </div>
+            <div class="group">
+              <%#= f.text_field :card_name, id: 'cc-name', type: "text", :class => "form-control rhombusFocus", placeholder: "Name on Card", 'x-autocompletetype' => "off", autocompletetype: 'off', :autocorrect => "off", spellcheck: 'off', autocapitalize: "off", autocomplete: "off" %>
+              <i class="fa fa-user"></i>
+            </div>
+            <div class="group ccn-group">
+              <%#= f.number_field :last4, id: "cc-number", type: "tel", class: "form-control cc-num rhombusFocus", placeholder: "Card number", "x-autocompletetype" => "cc-number", autocompletetype: "cc-number", autocorrect: 'off', spellcheck: 'off', autocapitalize: 'off' %>
+              <span class="card" aria-hidden="true"></span>
+            </div>
+            <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10">
+              <div class="col-md-6 col-sm-6" id="exp-div">
+                <%#= f.hidden_field :exp_month, id: "cc-ex-month" %>
+                <%#= f.hidden_field :exp_year, id: "cc-ex-year" %>
+                <%#= f.hidden_field :card_token, id: "cc-uri" %>
+                <%#= f.hidden_field :card_type, id: "cc-type" %>
+                <input id="cc-exp" type="text" class="form-control rhombusFocus" placeholder="MM / YY" value="" x-autocompletetype="off" autocompletetype="off" autocorrect="off" spellcheck="off" autocapitalize="off">
+                <i class="fa fa-calendar" id="fa-Calendar"></i>
+              </div>
+              <div class="col-md-6 col-sm-6" id="csc-div">
+                <input id="cc-csc" type="tel" class="form-control rhombusFocus" placeholder="CVC" value="" autocorrect="off" spellcheck="off" autocapitalize="off" autocomplete="off" maxlength="4">
+                <i class="fa fa-lock"></i>
+              </div>
+            </div>
+            <hr>
+            <div class="col-xs-12">
+              <h3>Select a SAAS Plan</h3>
+              <div style="width: 220px;margin-top: 50px;">
+                <!-- we have to set amountValue dynamically for selected subscription -->
+               <!--  
+              </div>
+              <br>
+              <div>
+                
+              </div>
+            </div>
+            <%#= f.submit "Save", id: "cc-submit", class: "btn btn-default btn-block btn-rhombus" %>
+          </div>
+          <%# end %>
+          <div class="footer-links row">
+            <div class="col-xs-6"><a href="#"></a></div>
+            <div class="col-xs-6 text-right"><a href="#"></a></div>
+          </div>
+        </div>
+        <div id="signout1"><%#= link_to "LOG OUT", destroy_user_session_path, method: :delete %></div>
+      </div> --> -->
