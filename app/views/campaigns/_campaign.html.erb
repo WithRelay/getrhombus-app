@@ -7,8 +7,14 @@
     <label class="channel editor-options form-label" for="Channel"> &nbsp; Message channel</label>
     <%= f.select :channel, channel_list(@campaign, @lists), {}, selected: get_channel_enum_value(@campaign.channel), class: 'dropdown editor-dropdown w-select', id: 'Channel', data: { name: 'Channel' } %>
     <div class="editor-options form-label"> &nbsp; Message frequency</div>
-    <%= f.radio_button :frequency_type, 0, id: 'oneTimeFrequency', checked: is_one_time_checked?(@campaign), class: 'frequency-tabs left w-button' %>
-    <%= f.radio_button :frequency_type, 1, id: 'recurringFrequency',  checked: is_recurring_checked?(@campaign), class: 'frequency-tabs left w-button' %>
+    <div class="frequency radio-button w-clearfix w-radio">
+      <%= f.radio_button :frequency_type, 0, id: 'oneTimeFrequency', checked: is_one_time_checked?(@campaign), class: 'w-radio-input', data: { name: 'Radio 2' } %>
+    <label class="check-radio-text w-form-label" for="radio">Send once</label>
+  </div>
+  <div class="frequency radio-button w-clearfix w-radio">
+    <%= f.radio_button :frequency_type, 1, id: 'recurringFrequency',  checked: is_recurring_checked?(@campaign), class: 'w-radio-input' %>
+    <label class="check-radio-text w-form-label" for="radio">Repeat message</label>
+  </div>
     <div class="editor underline-div"></div>
     <div class="check-box editor w-checkbox w-clearfix">
       <%= f.check_box :deliver_now, id: 'Deliver-now', class: 'w-checkbox-input', data: { name: 'Deliver now' } %>
@@ -18,6 +24,7 @@
       <%= f.text_field :date_time, class: 'daterange editor text-field w-input', id: 'Date-Picker', value: present(@campaign).to_user_date_time, data: { name: "Date Picker" } %>
       <%= f.select :repeat_days, repeat_days_options, {}, selected: @campaign.repeat_days, id: 'campaign_repeat_days', class: 'dropdown editor-dropdown w-select', data: { name: 'Interval' } %>
     </div>
+    <p class="editor-paragraph tips"> &nbsp;TIP: Set your messages to deliver at the most appropriate time for your customers</p>
     <div class="dashboard-body editor">
       <div class="dash-content-container message-editor">
         <div class="editor-button-container w-clearfix">

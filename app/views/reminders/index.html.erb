@@ -77,9 +77,8 @@
       <div class="new-table-row w-row">
           <% @reminders.each do |reminder| %>
           <div class="cn w-clearfix w-col w-col-3">
-
           <div class="name w-clearfix">
-              <img class="table-profile-picture" src="images/Customer-2.jpg" width="24">
+            <%= image_tag('Light-Blue.png', class: 'table-profile-picture', width: 24) %>
               <div class="table-text"><%= reminder.from_user %></div>
           </div>
           <div class="cb check-box-column">

@@ -18,5 +18,5 @@
   <br><br><br>
   <%= f.select :repeat_days, repeat_days_options, {}, selected: reminder.repeat_days, id: 'campaign_repeat_days', class: "dropdown frequency-dropdown w-select" %>
   <%= f.submit 'Schedule Notification', id: 'submitReminderForm', class: 'button schedule-notification w-button' %>
-  <%= button_tag 'Cancel', data: { ix: "close-schedule-notification" }, class: 'button cancel-notification w-button', data: { dismiss: :modal } if method=='post' %>
+  <a class="button cancel-notification w-button" data-ix="close-schedule-notification" href="#">Cancel</a>
 <% end %>
