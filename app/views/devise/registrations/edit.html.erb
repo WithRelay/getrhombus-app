@@ -10,11 +10,11 @@
 
 <% elsif current_user.is_merchant? %>
     <% if current_user.card_token.blank? %>
-      <%= render "merchant_card_info" %>
+      <%= render "billing_information" %>
     <% elsif current_user.org_name.blank? %>
-        <%= render "merchant_information" %>
+        <%= render "business_information" %>
     <% elsif current_user.rhombus_number.blank? %>
-        <%= render "merchant_number" %>
+        <%= render "phone_number" %>
     <% else %>
        <%= render "merchant_profile" %>
     <% end %>
