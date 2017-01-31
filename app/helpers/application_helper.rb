@@ -55,14 +55,10 @@ module ApplicationHelper
     static_controllers.include?(params[:controller]) unless relay_docs_pages
   end
 
-  def prevent_side_bar_render
-
-  end
-
   def setting_pages
     settings_action = ['devise/registrations-billing_information', 'devise/registrations-account_setting',
                        'registrations-edit', 'alerts-edit', 'plans-index','users-integrations',
-                        'users-managed_acct', 'users-sms_usage']
+                        'users-managed_acct', 'users-sms_usage', 'lists-segments']
     settings_action.include?(params_controller_action)
   end
 
