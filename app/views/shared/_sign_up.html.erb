@@ -1,34 +1,29 @@
 <style type="text/css">
   .intl-tel-input.allow-dropdown input, .intl-tel-input.allow-dropdown input[type=text], .intl-tel-input.allow-dropdown input[type=tel] {
-    padding-right: 68px;
-    padding-left: 54px;
-    margin-left: 0;
-    width: 100%;
-}
+      padding-right: 46px;
+      padding-left: 46px;
+      margin-left: 0px;
+      width: 100%;
+  }
 </style>
+
 <div class="default-content-section">
   <h1 class="first-content-section-sub-header footer-cta-header">Get started for free</h1>
   <h5 class="footer-cta-subheading signup-box-subheading">TRY IT FREE NO LONG-TERM <br>COMMITMENT</h5>
   <div class="footer-cta-forms w-form">
-    <%= form_for('user', url: 'signup', method: :get, :html => { :id => "get-started-form" } ) do |f| %>
+    <%= form_for('user', url: 'signup', method: :get, :html => { :id => "Get-started-form" } ) do |f| %>
 
-      <div class="field form-group group">
-        <%= f.text_field 'email', placeholder: 'Email Address', class: 'form-control footer-cta-field text-field w-input' %>
-      </div>
+        <%= f.text_field 'email', placeholder: 'Email Address', class: 'footer-cta-field text-field w-input' %>
 
-      <div class="field form-group group">
-        <%= f.phone_field 'phone', placeholder: 'Phone Number', class: 'form-control text-field w-input', id: 'phone' %>
+        <%= f.phone_field 'phone', placeholder: 'Phone Number', class: 'text-field w-input', id: 'phone' %>
         <%= f.hidden_field :phone_number, :id => "phone_number" %>
-      </div>
 
-      <div class="field footer-cta form-check-box w-checkbox">
+      <div class="footer-cta form-check-box w-checkbox">
         <input class="w-checkbox-input" data-name="Checkbox" id="checkbox" name="checkbox" type="checkbox">
         <label class="w-form-label" for="checkbox">I agree to Relay <a class="terms-link" href="#">terms of use &amp; policy</a></label>
       </div>
 
-      <div class="field form-group">
         <%= f.submit "Create relay account", id: 'get-started', class: "alt-hero-cta-button footer-cta-button home w-button", value: 'GET STARTED', href: '/users/sign_up' %>
-      </div>
 
     <% end %>
   </div>    

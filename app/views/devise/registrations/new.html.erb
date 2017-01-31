@@ -11,7 +11,7 @@
           <%= form_for(resource, as: resource_name, url: registration_path(resource_name, params[:value]), html: { id: 'signupForm frm_register email-form', class: 'w-clearfix', data: { name: 'Email Form' }} ) do |f| %>
             <%= f.email_field :email, id: "email Email-2", class: "email-address text-field w-input", placeholder: "Email address", data: { name:'Email' }, max_length: 100 %>
             <%= f.phone_field :phone_number, id: "", class: "login phone text-field w-input", placeholder: 'Mobile number', data: { name: 'Phone'} %>
-            <%#= f.hidden_field :phone_number, :id => "phone_number" %>
+            <%= f.hidden_field :phone_number, :id => "phone_number" %>
             <%= f.select :user_level, "<option value='' disabled selected class='hide'>Account Type</option> <option value='0'>Business Account</option><option value='1'>Customer Account</option>".html_safe, {}, class: 'dropdown w-select', data: { name:'Field 2'}, id: 'field-2' %>
             <%= f.password_field :password, class: "login password text-field w-input", placeholder: "Password", id: 'Password-3' %>
             <%= f.submit "SIGN UP", class: "button log-in w-button", value: 'continue', data: { wait: 'Please wait...' } %>
@@ -43,70 +43,3 @@
     </div>
   </div>
 </div>
-
-
-
-    <!-- <div class="login-form"> -->
-    <%#= form_for(resource, :id => "frm_register", :as => resource_name, :url => registration_path(resource_name, params[:value]), :html=> {:id => 'signupForm'} ) do |f| %>
-          <!-- <img src="<%#= asset_path 'logo.jpg' %>" alt="icon" id="signup_logo" class="icon"> -->
-        <!-- <div class="form-area"> -->
-          <!-- <div class="group"> -->
-          <%#= f.email_field :email, id: "email", type: "email", :class => "form-control rhombusFocus", placeholder: "E-mail" %>
-            <!-- <i class="fa fa-envelope-o"></i> -->
-          <!-- </div> -->
-          <!-- <div class="group phonegroup"> -->
-            <%#= f.phone_field :phone, :id => "phone", class: "form-control rhombusFocus" %>
-
-            <%#= f.hidden_field :phone_number, :id => "phone_number" %>
-            <%# setting value as params so if user create fails, this value stay since devise changes the url %>
-            <%#= f.hidden_field :captured_amt, :id => "captured_amt", value: params[:user] ? params[:user][:captured_amt] : '' %>
-            <%#= f.hidden_field :msg_id, :id => "msg_id", value: params[:user] ? params[:user][:msg_id] : '' %>
-            <%#= f.hidden_field :tag_id, :id => "tag_id", value: params[:user] ? params[:user][:tag_id] : '' %>
-            <%#= f.hidden_field :referrer_id, :id => "referrer_id", value: params[:user] ? params[:user][:referrer_id] : '' %>
-            <%#= f.hidden_field :referrer_uid, :id => "referrer_uid", value: params[:user] ? params[:user][:referrer_uid] : '' %>
-            <%#= f.hidden_field :referrer, :id => "referrer", value: params[:user] ? params[:user][:referrer] : '' %>
-
-          <!-- </div> -->
-          <!-- <div class="group"> -->
-           <%#= f.password_field :password, type: "password", :class => "form-control rhombusFocus", placeholder: "Password" %>
-            <!-- <i class="fa fa-key"></i> -->
-          <!-- </div> -->
-      <!--<div class="group">
-          <%#= f.password_field :password_confirmation, type: "password", :class => "form-control rhombusFocus", placeholder: "Confirm Password" %>
-            <i class="fa fa-key"></i>
-          </div> -->
-          <!-- <div class="form-group accountTypegroup"> -->
-            <%#= f.select :user_level, "<option value='' disabled selected class='hide'>Please select account type</option> <option value='0'>Make Payments</option><option value='1'>Receive Payments (merchants)</option>".html_safe, {}, :class => 'selectpicker rhombusFocus' %>
-          <!-- </div> -->
-
-          <%#= f.submit "SIGN UP", :class => "btn btn-default btn-block btn-rhombus" %>
-          <!-- <p id="termsNote">By signing up, I agree to Rhombus <a href="/terms">terms and conditions.</a></p>
-
-
-        </div> -->
-      <%# end %>
-      <!-- <div class="footer-links row">
-        <div class="col-xs-6"><a href="/signin"><i class="fa fa-sign-in"></i> Login</a></div>
-        <div class="col-xs-6 text-right"><a href="/users/password/new"><i class="fa fa-lock"></i> Forgot password</a></div>
-        <div class="col-md-12 hide" id="rhombusPower"><img src="<%#= asset_path 'poweredbyR.jpg' %>" style="width: 140px; margin: 20px auto;"></div>
-      </div>
-    </div> -->
-
-<%#= form_for(resource, :as => resource_name, :url => registration_path(resource_name)) do |f| %>
-
-  <%#= f.label :phone_number %>
-  <%#= f.text_field :phone_number, :id => "num" %>
-
-  <%#= f.label :email %>
-  <%#= f.email_field :email, :autofocus => true %>
-
-  <%#= f.label :password %>
-  <%#= f.password_field :password %>
-
-  <%#= f.label :password_confirmation %>
-  <%#= f.password_field :password_confirmation %>
-
-  <%#= f.submit "Sign up" %>
-<%# end %>
-
-<%#= render "devise/shared/links" %>

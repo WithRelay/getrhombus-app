@@ -13,31 +13,26 @@
   <h1 class="first-content-section-sub-header footer-cta-header">Schedule a Demo</h1>
   <h5 class="footer-cta-subheading signup-box-subheading">get a 30-minute overview of relay</h5>
   <div class="demo-request footer-cta-forms w-form">
-    <%= form_for 'demo', url: '#',html: { id: 'demoForm', class: 'form-horizontal'} do |f| %>
-      <div class="field form-group group">
-        <%= f.text_field :full_name, class: 'form-control text-field w-input', placeholder: "Full name"  %>
-        </div>
+    <%= form_for 'demo', url: '#',html: { id: 'demoForm'} do |f| %>
+        <%= f.text_field :full_name, class: 'text-field w-input', placeholder: "Full name"  %>
 
-      <div class="field form-group group">
-        <%= f.text_field :company, class: 'form-control company text-field w-input', placeholder: "Company"  %>
-      </div>
+        <%= f.text_field :company, class: 'company text-field w-input', placeholder: "Company"  %>
 
-      <div class="field form-group group">
-        <%= f.text_field :email, class: 'form-control text-field w-input', placeholder: "Work email"  %>
-      </div>
+        <%= f.text_field :email, class: 'footer-cta-field text-field w-input', placeholder: "Work email"  %>
 
-      <div class="field form-group group">
-        <%= f.phone_field :phone, placeholder: 'Phone Number', class: 'form-control text-field w-input rhombusFocus', id: 'phone', placeholder: "Phone Number" %>
+        <%= f.phone_field :phone, placeholder: 'Phone Number', class: 'text-field w-input rhombusFocus', id: 'phone', placeholder: "Phone Number" %>
         <%= f.hidden_field :phone_number, :id => "phone_number" %>
-      </div>
 
-      <div class="field form-group group">
-        <%= f.select :employee_count, options_for_select({'1-9' => '1-9','10-24'=>'10-24','25-49' => '25-49','50-99' => '50-99',  '100-249'=>'100-249', '250-499'=>'250-499','500-999' => '500-999', '1000-4999' => '1000-4999', '5000+' => '5000+'  }), {include_blank: "Number of employees"}, class: 'form-control dropdown w-select' %>
-      </div>
+        <%= f.select :employee_count, options_for_select({'1-9' => '1-9','10-24'=>'10-24','25-49' => '25-49','50-99' => '50-99',  '100-249'=>'100-249', '250-499'=>'250-499','500-999' => '500-999', '1000-4999' => '1000-4999', '5000+' => '5000+'  }), {include_blank: "Number of employees"}, class: 'dropdown w-select' %>
 
-      <div class="field form-group">
         <%= f.submit 'Schedule Demo', id: 'commit_demo',class: 'alt-hero-cta-button footer-cta-button home w-button' %>
-      </div>
     <% end %>
+    <div class="w-form-done">
+      <div>Thank you! Your submission has been received!</div>
+    </div>
+    <div class="w-form-fail">
+      <div>Oops! Something went wrong while submitting the form</div>
+    </div>
+  </div>
   </div>
 </div>
