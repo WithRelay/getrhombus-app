@@ -3593,7 +3593,7 @@ h4 {
 
 .dashboard-body {
   position: absolute;
-  top: 100px;
+  top: 50px;
   right: 0px;
   z-index: 0;
   overflow: scroll;
@@ -3759,7 +3759,7 @@ h4 {
 }
 
 .table-text {
-  margin-top: 16px;
+  margin-top: 10px;
   margin-left: 20px;
   float: left;
   font-family: 'Fontawesome webfont', sans-serif;
@@ -10398,7 +10398,7 @@ h4 {
 .def-row-content-wrapper {
   display: block;
   width: 100%;
-  min-height: 650px;
+  min-height: 714px;
   margin-right: auto;
   margin-bottom: 20px;
   margin-left: auto;

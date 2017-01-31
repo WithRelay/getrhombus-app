@@ -16,22 +16,27 @@
         <label class="form-label paragraph" for="Card-Number-2">You will be billed at the beginning of every month for all active paid plans, excluding the 14-day trial period. SMS/MMS related charges will deducted from available credits in your Rhombus account see <a class="settings-link" href="#">SMS/MMS usage</a>.
           <br>
           <br>A sales tax will be included in your monthly subscription charge if this is a legal requirement in your ZIP code.</label>
-        <%= f.number_field :last4, id: "cc-number Card-Number-2", data: { name: "Card Number 2" }, type: "tel", class: "card-number text-field w-input form-control cc-num rhombusFocus", placeholder: "Card number", "x-autocompletetype" => "cc-number", autocompletetype: "cc-number", autocorrect: 'off', spellcheck: 'off', autocapitalize: 'off' %>
+        <%= f.number_field :last4, id: "cc-number Card-Number-2", data: { name: "Card Number 2" }, type: "tel", class: "card-number text-field w-input form-control cc-num", placeholder: "Card number", "x-autocompletetype" => "cc-number", autocompletetype: "cc-number", autocorrect: 'off', spellcheck: 'off', autocapitalize: 'off' %>
         <span class="card" aria-hidden="true"></span>
-        <%= f.text_field :card_name, id: 'cc-name Name-on-Card-2',  data: { name: 'Name On Card 2' }, class: "name-on-card text-field w-input form-control rhombusFocus", placeholder: "Name on Card", 'x-autocompletetype' => "off", autocompletetype: 'off', :autocorrect => "off", spellcheck: 'off', autocapitalize: "off", autocomplete: "off" %>
-        <input id="cc-exp Month-Year-2" type="text", data-name="Month Year 2", class="month-year text-field w-input rhombusFocus" placeholder="MM / YY" value="" x-autocompletetype="off" autocompletetype="off" autocorrect="off" spellcheck="off" autocapitalize="off">
-        <input id="cc-csc" type="tel" data-name="Cvv 2" id="CVV-2" class="cvv text-field w-input form-control rhombusFocus" placeholder="CVC" value="" autocorrect="off" spellcheck="off" autocapitalize="off" autocomplete="off" maxlength="4">
+        <%= f.text_field :card_name, id: 'cc-name Name-on-Card-2',  data: { name: 'Name On Card 2' }, class: "name-on-card text-field w-input form-control", placeholder: "Name on Card", 'x-autocompletetype' => "off", autocompletetype: 'off', :autocorrect => "off", spellcheck: 'off', autocapitalize: "off", autocomplete: "off" %>
+        <input id="cc-exp Month-Year-2" type="text", data-name="Month Year 2", class="month-year text-field w-input" placeholder="MM / YY" value="" x-autocompletetype="off" autocompletetype="off" autocorrect="off" spellcheck="off" autocapitalize="off">
+        <input id="cc-csc" type="tel" data-name="Cvv 2" id="CVV-2" class="cvv text-field w-input form-control" placeholder="CVC" value="" autocorrect="off" spellcheck="off" autocapitalize="off" autocomplete="off" maxlength="4">
         <div class="col-md-6 col-sm-6" id="exp-div">
           <%= f.hidden_field :exp_month, id: "cc-ex-month" %>
           <%= f.hidden_field :exp_year, id: "cc-ex-year" %>
           <%= f.hidden_field :card_token, id: "cc-uri" %>
           <%= f.hidden_field :card_type, id: "cc-type" %>
         </div>
-        <input type="text" name="plan[name]" id="pricing-range" amountValue="0">
+
         <%= f.submit "Update Information", id: "cc-submit", class: "alt-button button save-changes w-button btn btn-default btn-block btn-rhombus" %>
         <div class="flex-underline form-section-divider"></div>
         <label class="field-headers form-label settings" for="Business-Name">PLAN INFORMATION</label>
+
         <label class="form-label paragraph" for="Tax-Rate">Upgrade or modify your subscription plan by making a selection below:</label>
+        <div style="margin: auto;margin-top: 20px; width: 80%">
+          <input type="text" name="plan[name]" id="pricing-range" amountValue="0">
+          <span class="" id="price-value"></span>
+        </div>
         <a class="plan-selector w-inline-block" href="#">
           <%= image_tag('Shop-100.png', height: 80, class: 'plan-icon') %>
           <div class="plan-name">Starter Plan</div>
