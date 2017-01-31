@@ -1,68 +1,105 @@
 <div class="campaign-editor-options w-form">
-  <%= form_for [current_user, @campaign], html: { multipart: true, id: 'email-form campaignForm', class: 'w-clearfix', data: { name: 'Email Form' } } do |f| %>
-    <%= f.text_field :name, class: 'editor text-field w-input', id: 'Campaign-name', data: { name: 'Campaign name' }, placeholder: 'Campaign name'  %>
-    <label class="editor-options form-label" for="List"> &nbsp; List</label>
-    <%= f.text_field :list_name, id: 'List', 'data-lists_data' => "#{@lists.to_json}", placeholder: "Choose a list", class: 'editor text-field w-input', data: { name: 'List' } %>
+  <%= form_for [current_user, @campaign], html: { multipart: true, id: 'campaignForm', class: 'w-clearfix', data: { name: 'Email Form' } } do |f| %>
+
+    <div class='col-xs-6'>
+      <%= f.text_field :name, class: 'editor text-field w-input', id: 'Campaign-name', data: { name: 'Campaign name' }, placeholder: 'Campaign name'  %>
+      <div class="messageContainer"></div>
+    </div>
+
+    <div class='col-xs-6'>
+      <label class="editor-options form-label" for="List"> &nbsp; List</label>
+      <%= f.text_field :list_name, id: 'List', 'data-lists_data' => "#{@lists.to_json}", placeholder: "Choose a list", class: 'editor text-field w-input', data: { name: 'List' } %>
+      <div class="messageContainer"></div>
+    </div>
+
     <a class="create-list-link new-campaign" href="#">Create new list</a>
     <label class="channel editor-options form-label" for="Channel"> &nbsp; Message channel</label>
+
     <%= f.select :channel, channel_list(@campaign, @lists), {}, selected: get_channel_enum_value(@campaign.channel), class: 'dropdown editor-dropdown w-select', id: 'Channel', data: { name: 'Channel' } %>
+
     <div class="editor-options form-label"> &nbsp; Message frequency</div>
     <div class="frequency radio-button w-clearfix w-radio">
       <%= f.radio_button :frequency_type, 0, id: 'oneTimeFrequency', checked: is_one_time_checked?(@campaign), class: 'w-radio-input', data: { name: 'Radio 2' } %>
-    <label class="check-radio-text w-form-label" for="radio">Send once</label>
-  </div>
-  <div class="frequency radio-button w-clearfix w-radio">
-    <%= f.radio_button :frequency_type, 1, id: 'recurringFrequency',  checked: is_recurring_checked?(@campaign), class: 'w-radio-input' %>
-    <label class="check-radio-text w-form-label" for="radio">Repeat message</label>
-  </div>
+      <label class="check-radio-text w-form-label" for="radio">Send once</label>
+    </div>
+
+    <div class="frequency radio-button w-clearfix w-radio">
+      <%= f.radio_button :frequency_type, 1, id: 'recurringFrequency',  checked: is_recurring_checked?(@campaign), class: 'w-radio-input' %>
+      <label class="check-radio-text w-form-label" for="radio">Repeat message</label>
+    </div>
+
     <div class="editor underline-div"></div>
+
     <div class="check-box editor w-checkbox w-clearfix">
       <%= f.check_box :deliver_now, id: 'Deliver-now', class: 'w-checkbox-input', data: { name: 'Deliver now' } %>
       <label class="check-radio-text w-form-label" for="Deliver-now">Deliver now &nbsp; &nbsp;[ OR ] &nbsp; &nbsp;Select later Day/Time [?]</label>
     </div>
+
     <div class='scheduleOption'>
       <%= f.text_field :date_time, class: 'daterange editor text-field w-input', id: 'Date-Picker', value: present(@campaign).to_user_date_time, data: { name: "Date Picker" } %>
       <%= f.select :repeat_days, repeat_days_options, {}, selected: @campaign.repeat_days, id: 'campaign_repeat_days', class: 'dropdown editor-dropdown w-select', data: { name: 'Interval' } %>
     </div>
+
     <p class="editor-paragraph tips"> &nbsp;TIP: Set your messages to deliver at the most appropriate time for your customers</p>
+
     <div class="dashboard-body editor">
-      <div class="dash-content-container message-editor">
-        <div class="editor-button-container w-clearfix">
-          <%= f.submit 'Send me a test', id: 'sendTestCampaign', class: 'alt button editor-buttons w-button' %>
-          <%= f.submit 'Send', class: 'button editor-buttons w-button' %>
-          <div id="textBoxCounter" class='char-count'> </div>
-          <div class="upload_image">
-            <%= f.file_field :avatar, id: 'select-images', class: 'attach-text' %>
-            <img class="editor-thumbnail" src="http://uploads.webflow.com/img/image-placeholder.svg" width="90">
-          </div>
-        </div>
+    <div class="dash-content-container message-editor">
+      <div class="w-form">
         <div class='newMessage'>
           <div class="w-form">
+            <div class='col-xs-6'>
               <%= f.text_area :text, id: 'trumbowyg', class: 'message-editor text-area w-input', data: { name: 'Editor Text Area' } %>
+              <div class="messageContainer"></div>
+            </div>
           </div>
         </div>
-        <!-- for new images -->
-        <div id='new-image-previews'></div>
-        <!-- for already attached images -->
-        <div id='image-previews' data-model-id='campaigns_<%= @campaign.id %>'>
-          <%= div_for @campaign.images do |image| %>
-            <%= present(image).image_url %>
-            <%= present(image).image_delete_url %>
-          <% end %>
+        <div class="w-form-done">
+          <div>Thank you! Your submission has been received!</div>
+        </div>
+        <div class="w-form-fail">
+          <div>Oops! Something went wrong while submitting the form</div>
         </div>
       </div>
-      <div class="editor-date">December 28, 2016</div>
-      <div class="alt campaign-editor sub-nav-bar w-clearfix">
-        <div class="w-form">
-            <%= f.text_field :subject, class: "emailSubject email-subject text-field w-input", data: { name: "Email Subject" }, id: "Email-Subject", placeholder: 'Email subject'  %>
-        </div>
-        <h4 class="sender welcome-dash-content-container-header">Patrick from Joan's Coffee</h4>
+      <div class="editor-button-container">
+        <div class="w-row">
+          <div class="w-col w-col-6">
+            <div id="textBoxCounter" class='char-count'> </div>
+            <div class="upload_image">
+              <%= f.file_field :avatar, id: 'select-images', class: 'attach-text' %>
+              <img class="editor-thumbnail" src="http://uploads.webflow.com/img/image-placeholder.svg" width="90">
+              <!-- for new images -->
+              <div id='new-image-previews'></div>
+              <!-- for already attached images -->
+              <div id='image-previews' data-model-id='campaigns_<%= @campaign.id %>'>
+                <%= div_for @campaign.images do |image| %>
+                <%= present(image).image_url %>
+                <%= present(image).image_delete_url %>
+                <% end %>
+              </div>
+            </div>
+          </div>
+          <div class="w-clearfix w-col w-col-6">
+            <%= f.submit 'Send me a test', id: 'sendTestCampaign', class: 'alt button editor-buttons w-button' %>
+            <%= f.submit 'Send', class: 'button editor-buttons w-button' %>
+          </div>
+        </div><img class="editor-thumbnail" src="http://uploads.webflow.com/img/image-placeholder.svg" width="100">
       </div>
-    <div class="w-form-done">
-      <div>Thank you! Your submission has been received!</div>
     </div>
-    <div class="w-form-fail">
-      <div>Oops! Something went wrong while submitting the form</div>
+    <div class="editor-date">December 28, 2016</div>
+    <div class="alt campaign-editor sub-nav-bar w-clearfix">
+      <div class="w-form">
+        <div class='col-xs-6'>
+          <%= f.text_field :subject, class: "emailSubject email-subject text-field w-input", data: { name: "Email Subject" }, id: "Email-Subject", placeholder: 'Email subject'  %>
+          <div class="messageContainer"></div>
+        </div>
+        <div class="w-form-done">
+          <div>Thank you! Your submission has been received!</div>
+        </div>
+        <div class="w-form-fail">
+          <div>Oops! Something went wrong while submitting the form</div>
+        </div>
+      </div>
+      <h4 class="sender welcome-dash-content-container-header">Patrick from Joan's Coffee</h4>
     </div>
   </div>
   <% end %>
