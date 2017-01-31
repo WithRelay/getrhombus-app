@@ -6,6 +6,11 @@ $(document).on('ready page:load', function() {
     framework: 'bootstrap',
     excluded: ':disabled',
     live: 'disabled',
+    err: {
+          container: function($field, validator) {
+              return $field.parent().find('.messageContainer');
+          }
+      },
     fields: {
       'campaign[name]': {
         validators: {
