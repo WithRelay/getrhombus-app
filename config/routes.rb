@@ -4,18 +4,19 @@ Rails.application.routes.draw  do
   mount Resque::Server, at: '/jobs'
   ## static pages routes
   StaticPagesController.action_methods.each do |action|
-    get action.split('_').join('-') => "static_pages##{action}"
+    unless action=='creating_campaigns_in_relay'
+      get action.split('_').join('-') => "static_pages##{action}"
+    end
   end
+
+  get 'relay-docs/creating-campaigns-in-relay' => 'static_pages#creating_campaigns_in_relay'
   root 'static_pages#home'
   get 'contact' => 'contact_forms#new'
-
   post 'lists/create_new_list' => 'lists#create_new_list'
   get 'user_lists/remove_user' => 'user_lists#remove_user'
   get 'fb_pages/remove_integration' => 'fb_pages#remove_integration'
   get 'link_facebook' => 'link_fb_accounts#link_facebook'
-  get 'relay-docs' => 'static_pages#relay_docs'
   get "relay-docs-categories/:slug" => "knowledge_base_categories#show"
-  get 'relay-docs/creating-campaigns-in-relay' => 'static_pages#creating_campaigns_in_relay'
   get 'get_current_user' => 'application#get_current_user'
 
   ### fix this url
@@ -59,7 +60,9 @@ Rails.application.routes.draw  do
     member { get 'sms-usage' => 'users#sms_usage' }
     resources :fb_pages, only: [:index]
     patch 'update_fb_page' => 'fb_pages#update_user_fb_page'
-    resources :hashtags, except: [:show, :destroy]
+    resources :hashtags, except: [:show, :destroy] do
+      collection { get 'mention' => 'hashtags#tag_mention' }
+    end
     resources :subscriptions, only: [:index, :update, :destroy] do
       collection do
         post '/upgrade_subscription' => 'subscriptions#upgrade_subscription'
