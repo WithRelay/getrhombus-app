@@ -14,7 +14,13 @@
           <a class="button choose-plan pricing-table-button w-button" href="#">Get Started</a>
           <div class="display-credit-card-wrapper">
             <div class="get-started-2 log-in-form w-form">
-              <form class="w-clearfix" data-name="Email Form" id="email-form" name="email-form"><input class="card-number text-field w-input" data-name="Card Number 4" id="Card-Number-4" maxlength="256" name="Card-Number-4" placeholder="Card number" required="required" type="text"><input class="name-on-card text-field w-input" data-name="Name On Card 4" id="Name-on-Card-4" maxlength="256" name="Name-on-Card-4" placeholder="Name on card" required="required" type="text"><input class="month-year text-field w-input" data-name="Month Year 3" id="Month-Year-3" maxlength="256" name="Month-Year-3" placeholder="MM / YYYY" required="required" type="text"><input class="cvv text-field w-input" data-name="Cvv 5" id="CVV-5" maxlength="256" name="CVV-5" placeholder="CVV" required="required" type="text"><input class="button log-in w-button" data-wait="Please wait..." type="submit" value="Start 14-day Trial"><label class="form-label paragraph select-plan" for="Card-Number-3">Don't worry, we'll notify you when your trial is about to expire</label></form>
+              <form class="w-clearfix" data-name="Email Form" id="email-form" name="email-form">
+                <input class="card-number text-field w-input" data-name="Card Number 4" id="Card-Number-4" maxlength="256" name="Card-Number-4" placeholder="Card number" required="required" type="text">
+                <input class="name-on-card text-field w-input" data-name="Name On Card 4" id="Name-on-Card-4" maxlength="256" name="Name-on-Card-4" placeholder="Name on card" required="required" type="text">
+                <input class="month-year text-field w-input" data-name="Month Year 3" id="Month-Year-3" maxlength="256" name="Month-Year-3" placeholder="MM / YYYY" required="required" type="text">
+                <input class="cvv text-field w-input" data-name="Cvv 5" id="CVV-5" maxlength="256" name="CVV-5" placeholder="CVV" required="required" type="text">
+                <input class="button log-in w-button" data-wait="Please wait..." type="submit" value="Start 14-day Trial">
+                <label class="form-label paragraph select-plan" for="Card-Number-3">Don't worry, we'll notify you when your trial is about to expire</label></form>
             </div>
           </div>
         </div>
@@ -46,7 +52,8 @@
           <div class="top">
             <h4>Billing Information</h4>
             <img src="<%#= asset_path 'stripe.png' %>" alt="icon" id="stripe-logo">
-            <label class="form-label paragraph" for="Card-Number-2">Please enter your debit/credit card information to begin your 14-day free trial. Don't worry, we'll notify you when your trial is about to expire</label>
+            <label class="form-label paragraph" for="Card-Number-2">
+            Please enter your debit/credit card information to begin your 14-day free trial. Don't worry, we'll notify you when your trial is about to expire</label>
           </div>
           <div class="form-area">
             <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10" id="response">
@@ -79,11 +86,11 @@
               <h3>Select a SAAS Plan</h3>
               <div style="width: 220px;margin-top: 50px;">
                 <!-- we have to set amountValue dynamically for selected subscription -->
-               <!--  
+               <!--
               </div>
               <br>
               <div>
-                
+
               </div>
             </div>
             <%#= f.submit "Save", id: "cc-submit", class: "btn btn-default btn-block btn-rhombus" %>
