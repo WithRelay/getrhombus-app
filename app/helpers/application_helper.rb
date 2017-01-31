@@ -7,11 +7,11 @@ module ApplicationHelper
   end
 
   def render_header_partial
-    concat(render 'shared/unauthenticate_header') if unauthenticate_controller
-    concat(render 'shared/authenticated_header') unless authenticated_pages || campaign_restrict_params
-    concat(render 'shared/docs_header') if relay_docs_pages
-    concat(render 'campaigns/campaign_header') if campaign_restrict_params
-    concat(render 'shared/messaging_header') if messaging_dashboard
+    return render 'shared/unauthenticate_header' if unauthenticate_controller
+    return render 'shared/authenticated_header' unless authenticated_pages || campaign_restrict_params
+    return render 'shared/docs_header' if relay_docs_pages
+    return render 'campaigns/campaign_header' if campaign_restrict_params
+    return render 'shared/messaging_header' if messaging_dashboard
   end
 
   def render_customer_sidebar
@@ -43,8 +43,11 @@ module ApplicationHelper
   end
 
   def render_footer_partial
-    concat(render 'shared/sign_up') if unauthenticate_controller
-    concat(render 'shared/unauthenticate_footer') if unauthenticate_controller
+    return render 'shared/unauthenticate_footer' if unauthenticate_controller
+  end
+
+  def render_sign_up_footer
+    return render 'shared/sign_up' if unauthenticate_controller
   end
 
   def unauthenticate_controller
