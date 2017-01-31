@@ -48,9 +48,10 @@
   </div>
 </div>
 <div class="dashboard-body">
+  <% @campaigns.each do |campaign| %>
+
   <div class="row-wrapper">
     <div class="alt-table-row w-row">
-      <% @campaigns.each do |campaign| %>
         <div class="alt-column w-clearfix w-col w-col-3">
           <div class="title-column-div w-clearfix">
             <div class="alt-table table-text"><%= campaign.name %></div>
@@ -98,7 +99,7 @@
             <div class="alt-table recipients table-text"> &nbsp; <%= present(campaign).count_recipient %></div>
           </div>
         </div>
-        <% end %>
       </div>
     </div>
+    <% end %>
 </div>
