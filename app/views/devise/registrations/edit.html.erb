@@ -3,7 +3,7 @@
 <% if current_user.is_customer? %>
 
    <% if current_user.card_token.blank? %>
-      <%= render "user_information" %>
+      <%= render "billing_information" %>
   <% else %>
       <%= render "user_profile" %>
   <% end %>
