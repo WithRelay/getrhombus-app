@@ -138,20 +138,20 @@ $( document ).ready(function() {
      }
    });
 
-});
+   function check_status(val){
+     if (!val) {
+       $('.submit_page').hide();
+     }
+     else if (val === 'false'){
+       $('.submit_page').show();
+       $('.submit_page').val('Subscribe');
+       $('.submit_page').attr('class', 'submit_page btn btn-success');
+     }
+     else{
+       $('.submit_page').show();
+       $('.submit_page').val('Unsubscribe');
+       $('.submit_page').attr('class', 'submit_page btn btn-warning');
+     }
+   }
 
-function check_status(val){
-  if (!val) {
-    $('.submit_page').hide();
-  }
-  else if (val === 'false'){
-    $('.submit_page').show();
-    $('.submit_page').val('Subscribe');
-    $('.submit_page').attr('class', 'submit_page btn btn-success');
-  }
-  else{
-    $('.submit_page').show();
-    $('.submit_page').val('Unsubscribe');
-    $('.submit_page').attr('class', 'submit_page btn btn-warning');
-  }
-}
+});
