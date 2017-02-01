@@ -12,6 +12,9 @@
     <%= link_to filter_campaign_user_campaigns_path(status: 'active'), class: 'w-clearfix w-inline-block' do %>
       <div class="dash-header-links"> &nbsp; Active</div>
     <% end %>
+    <%= link_to filter_campaign_user_campaigns_path(status: 'paused'), class: 'w-clearfix w-inline-block' do %>
+      <div class="dash-header-links new-link"> &nbsp; Pause</div>
+    <% end %>
     <%= link_to filter_campaign_user_campaigns_path(status: 'inactive'), class: 'w-clearfix w-inline-block' do %>
       <div class="dash-header-links new-link"> &nbsp; Inactive</div>
     <% end %>
