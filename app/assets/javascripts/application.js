@@ -26,7 +26,7 @@
 
 //= require jquery_ujs
 //= require pubnub/pubnub-angular.js
-//= require dashboard/messaging_angularjs/angularUpwardScroll.js
+//= require dashboard/messaging_angularjs/messaging.js
 //= require dashboard/messaging_angularjs/messagingApp.js
 //= require dashboard/messaging_angularjs/messagingControllers.js
 //= require dashboard/messaging_angularjs/messagingFilters.js
@@ -66,4 +66,6 @@
 //= require util_functions
 //= require price_slider
 //= require get_started
-//= require_tree .
+
+// DO NOT REQUIRE TREE AS IT DOESNT GUARANTEE THE DEPENDENCY ORDER OF THESE FILES
+// require_tree .

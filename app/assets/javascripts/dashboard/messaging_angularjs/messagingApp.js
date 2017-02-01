@@ -9,9 +9,70 @@ var messagingApp = angular.module('PubNubAngularMessagingApp', [
   'messagingFilters',
   "angucomplete-alt",
   "ngFileUpload",
-  'messageFetcher',
+  'smoothScroll',
   'luegg.directives' // Auto scroll module
 ]);
+
+/* Directive to detect enter key presses */
+messagingApp.directive('ngEnter', function() {
+  return function(scope, element, attrs) {
+    element.bind("keydown keypress", function(event) {
+      if (event.which === 13) {
+        scope.$apply(function() {
+          scope.$eval(attrs.ngEnter);
+        });
+        event.preventDefault();
+      }
+    });
+  };
+});
+
+messagingApp.directive('whenScrolledUp', ['$timeout', 'smoothScroll', function($timeout, smoothScroll) {
+  return function(scope, elm, attr) {
+    var raw = elm[0];    
+    elm.bind('scroll', _.throttle(function() {
+      if (raw.scrollTop <= 0) {
+        var sh = raw.scrollHeight;
+        var first_item = raw.children.item(1);
+        scope.$apply(attr.whenScrolledUp).then(function() {
+          $timeout(function() {
+            var options = {
+              duration: 800,
+              offset: (raw.scrollHeight - sh),
+              containerId: 'fixed'
+            }
+            smoothScroll(first_item, options);
+          })
+        });
+      }
+    }, 350));
+  };
+}])
+
+messagingApp.directive('whenScrolledDown', function() {
+  return function(scope, elm, attr) {
+    var raw = elm[0];        
+    elm.bind('scroll', _.throttle(function() {
+      if (raw.scrollTop + raw.offsetHeight >= raw.scrollHeight) {
+          scope.$apply(attr.whenScrolledDown);
+      }
+    }, 350));
+  };
+});
+
+messagingApp.directive('onFinishRender', function ($timeout) {
+  return {
+    restrict: 'A',
+    link: function (scope, element, attr) {
+      var raw = element[0];
+      if (scope.$last === true) {
+        $timeout(function() {
+          raw.parentElement.scrollTop = raw.parentElement.scrollHeight; 
+        });
+      }
+    }
+  }
+});
 
 messagingApp.config(['$routeProvider',
   function($routeProvider) {
@@ -24,17 +85,130 @@ messagingApp.config(['$routeProvider',
   }
 ]);
 
-/* Directive to detect enter key presses */
-messagingApp.directive('ngEnter', function() {
-  return function(scope, element, attrs) {
-    element.bind("keydown keypress", function(event) {
-      if (event.which === 13) {
-        scope.$apply(function() {
-          scope.$eval(attrs.ngEnter);
-        });
+messagingApp.factory('conversationService', function($http, $q, Upload){
+  var service = {};
+  var base_url = window.location.origin + '/v1/conversations';
+  var token = { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content') };
 
-        event.preventDefault();
-      }
+  service.getConversations = function(page){
+    var deferred = $q.defer();
+    $http.get(base_url + '.json?page=' + page)
+    .success(function(data) {
+      console.log('console success in serice get conversations'); 
+      deferred.resolve(data);
+    })
+    .error(function(data, status, headers, config) { 
+      console.log('console fail in serice get conversations'); 
+      deferred.reject("there was an error");
     });
+    return deferred.promise;
+  }
+
+  service.getConversationMessages = function(conversation_id, page){
+    var deferred = $q.defer();
+    $http.get(base_url + "/" + conversation_id + '.json?page=' + page)
+    .success(function(data) { 
+      console.log('console success in service get conversation messages');
+      deferred.resolve(data);
+    })
+    .error(function() { 
+      console.log('console fail in service get conversation messages');
+      deferred.reject("there was an error");
+    });
+    return deferred.promise;
   };
+
+  service.markMessageAsRead = function(conversation_id, unread_ids) {
+    var deferred = $q.defer();
+    $http({
+      method: 'POST',
+      url: base_url + "/" + conversation_id + 'mark_messages_as_read?ids=' + unread_ids,
+      headers: token,
+    })
+    .success(function(data) { 
+      deferred.resolve(true);
+    })
+    .error(function() { 
+      deferred.reject(false);
+    });
+    return deferred.promise;
+  };
+
+
+  service.sendConversationMessage = function(conversation_id, text, channel) {
+    var deferred = $q.defer();
+    $http({
+      method: 'POST',
+      url: base_url + "/" + conversation_id + 'messages.json',
+      headers: token,
+      data: { msg: encodeURIComponent(text), channel: channel },
+    })
+    .success(function(data) { 
+      deferred.resolve(data);
+    })
+    .error(function(data) { 
+      deferred.reject(data);
+    });
+    return deferred.promise;
+  };
+
+  service.sendConversationMMS = function(conversation_id, file, text) {
+    file.upload = Upload.upload({
+      url: base_url + "/" + conversation_id + "mms.json",
+      data: { avatar: file, msg: text },
+      headers: token
+    });
+    return file.upload;
+  };
+
+  return service;
 });
+
+
+messagingApp.factory('transactionService', function($http, $q, Upload){
+  var service = {};
+  var base_url = window.location.origin + '/v1/transactions';
+  var token = { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content') };
+
+  service.getConversations = function(page){
+    var deferred = $q.defer();
+    $http.get(base_url + '.json?page=' + page)
+    .success(function(data) {
+      console.log('console success in serice get conversations'); 
+      deferred.resolve(data);
+    })
+    .error(function(data, status, headers, config) { 
+      console.log('console fail in serice get conversations'); 
+      deferred.reject("there was an error");
+    });
+    return deferred.promise;
+  }
+
+  service.createCharge = function(data){
+    var deferred = $q.defer();
+    $http({
+      method: 'POST',
+      url: base_url + '.json',
+      headers: token,
+      data: { transaction: data }
+    })
+    .success(function(data) { 
+      console.log("in service pass for create txn")
+      deferred.resolve(data);
+    })
+    .error(function(data) { 
+      console.log('in service fail for create txn')
+      deferred.reject(data);
+    });
+    return deferred.promise;
+  };
+
+
+  return service;
+});
+
+
+
+
+
+

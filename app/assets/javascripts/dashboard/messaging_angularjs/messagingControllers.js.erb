@@ -7,70 +7,40 @@ var messagingControllers = angular.module('messagingControllers', [
 ]);
 
 
-(function() {
-  angular.module('messageFetcher', ['upwards-scroll']);
-  angular.module('messageFetcher').controller('endlessMessage', function($scope, $http) {
-  
-    var messages = this;
-    messages.Items = [];
-
-    messages.LoadMore = function() {
-      var url = window.location.origin + '/v1/conversations/' + $scope.active_conversation_id + '.json?page=' + page;
-      $http.get(url).success(function(data) {
-        if (data.messages.length < 1){
-          $('.messageStatus').html('Message Completed')
-        }
-        var msg = data.messages;
-        for (var i = 0; i < msg.length; i++) {
-            messages.Items.unshift(msg[i]);
-        }
-        console.log(data)
-        $scope.update_unread_messages(data.unread_ids);
-        page += 1;
-      })
-      .error(function(data, status, headers, config) {
-        alert('Error while trying to connect to the messaging system.');
-      });
-    };
-    
-    var counter = 0, page = 1;
-    messages.LoadMore();
-  });
-})();
-
-
-messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub', 'Upload',
-  function($scope, $http, Pubnub, Upload) {
+messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub', 'Upload', '$timeout', '$q', 'conversationService', 'transactionService',
+  function($scope, $http, Pubnub, Upload, $timeout, $q, conversationService, transactionService) {
 
     // Messages  // remove
     // conversations
     //$scope.num_message_history = 200;   // remove
-    $scope.char_limit = 150;
+    //$scope.char_limit = 150;
     //$scope.active_user_number = 0;    //remove
-    $scope.active_conversation_id = 0;
 
     //$scope.active_user_count = 0;   // remove
     $scope.open_conversations_count = 0;
-    
+    $scope.conversations = {};
+    $scope.selected_conversation_messages = [];   
+    $scope.current_chat_conversation = false; 
+
+    // counters
     $scope.global_unread_count = 0;
-    //$scope.current_chat_user = false; // remove
-    $scope.current_chat_conversation = false;
+
+    // ajax
+    $scope.is_sending = false;
+    
+    // buttons
     $scope.send_msg_btn = "SEND";
+    $scope.charge_btn = "CHARGE";
+    $scope.send_mms_btn = "SEND MMS";  
 
     // Transactions
-    $scope.charge_btn = "CHARGE";
-    $scope.charge_data = { tag_id: null };
-    $scope.is_true = true;
-    $scope.is_sending = false;
-
-    // MMS
-    $scope.is_sending_mms = false;
-    $scope.send_mms_btn = "SEND MMS";
+    $scope.charge_data = { hashtag_id: null };
 
     // Get logged in merchant id
     $http.get(window.location.origin + '/get_current_user').success(function(data) {
 
       var merchant_id = data.id;
+      var char_limit = data.num_of_chars;
       $scope.merchant_short_url = data.short_url;
 
       // Initialize PubNub with SSL
@@ -90,16 +60,37 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
           var re = JSON.parse(m);
 
           $scope.$apply(function() {
-            if (re.conversation.id == $scope.active_conversation_id) {
-              //$scope.selected_user_messages.push({user_number: json_response.user_number, user_level: json_response.user_level, profile_image: json_response.profile_image, text: json_response.message, ts_day_of_the_week: json_response.ts_day_of_the_week, ts_time: json_response.ts_time, unread: false});
-              $scope.selected_conversation_messages.push(re.message);              
-
+            if (!$scope.conversations[re.conversation.id]) {
+              // add conversation object
               $scope.conversations[re.conversation.id] = re.conversation;
-              /*if (re.user_level == 0) {
-                $scope.users[re.user_number].last_message = re.message;
-                $scope.users[re.user_number].last_message_ts = parseInt(re.ts_int);
-              }*/
-              //$http.get(window.location.origin + '/users/' + merchant_id + '/mark_user_messages_for_merchant_as_read/' + $scope.active_user_number);
+              
+              // update counts
+              //$scope.active_user_count += 1;  // remove
+              // also add new conversations count here
+              //$scope.open_conversations_count += 1; // should this be here?
+            } else {
+              $scope.conversations[re.conversation.id].last_message = re.conversation.last_message
+              $scope.conversations[re.conversation.id].last_message_ts = re.conversation.last_message_ts
+
+              if (re.message.source == 'user') {
+                $scope.global_unread_count += 1;
+                $scope.conversations[re.conversation.id].unread_count += 1;
+              }
+            }
+
+            if (re.conversation.id == $scope.selected_conversation.id) {
+              $scope.selected_conversation_messages.push(re.message);              
+              //$scope.markMessagesAsRead(conversation.id, re.message.id);
+            }
+
+            
+            
+
+            /*if (re.conversation.id == $scope.selected_conversation.id) {
+              $scope.selected_conversation_messages.push(re.message);              
+              // update conversation object
+              $scope.conversations[re.conversation.id] = re.conversation;
+              //$scope.markMessagesAsRead(conversation.id, re.message.id);
             } else {
               if (!$scope.conversations[re.conversation.id]) {
                 //$scope.users[re.user_number] = {user_number: re.user_number, first_name: json_response.first_name, last_name: json_response.last_name, email: json_response.email, profile_image: json_response.profile_image, last_message: json_response.message, last_message_ts: json_response.ts_int, unread_count: 0};
@@ -116,7 +107,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
                 //$scope.users[re.user_number].last_message = re.message;
                 //$scope.users[re.user_number].last_message_ts = parseInt(re.ts_int);
               }
-            }
+            }*/
           });
 
 
@@ -146,13 +137,14 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
             }
           });*/
 
-          console.log(json_response)
+          console.log(re)
         }
       });
+  
 
       // Get latest conversations for this merchant
       //$http.get(window.location.origin + '/users/' + merchant_id + '/json_get_latest_active_messaging') //remove
-      $http.get(window.location.origin + '/v1/conversations.json?page=1')
+      /*$http.get(window.location.origin + '/v1/conversations.json?page=1')
       .success(function(data) {
 
         //var user_list = {};  // remove
@@ -172,7 +164,6 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
         //$scope.users = user_list;  // remove
         $scope.conversations = conversation_list;
 
-
         //$scope.getUserMessages = function(user) {  //remove
         $scope.getConversationMessages = function(conversation) {
           //$http.get(window.location.origin + '/users/' + merchant_id + '/json_get_user_messages_by_merchant/' + user.user_number + '?limit=' + (user.unread_count + $scope.num_message_history)) // remove
@@ -180,7 +171,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
           .success(function(data) {
             //$scope.active_user_number = user.user_number;      //remove
             $scope.active_conversation_id = conversation.id;
-            console.log(conversation)
+            console.log(data)
 
             //$scope.selected_user = user;   // remove
             $scope.selected_conversation = conversation;
@@ -212,9 +203,8 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
             // Bind plugins to textbox
             // should only bind once...add check!!!!!!!!!!!!!!
             // setTimeout(function(){ BindPlugins.now() }, 0);
-          });
-        };
-
+          //});
+        //};
 
         $scope.update_unread_messages = function(unread_ids) {
           // Mark messages as read
@@ -271,64 +261,212 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
         };
 
 
-        // Twilio supports only gif, png and jpeg
-        $scope.handleFile = function(file, errFiles) {
-          $scope.errFile = errFiles && errFiles[0];
-          if (file) {
-            if (file.type.match('image')) {
-              $scope.f = file;
-              // show preview
-              $('#mms-img-preview').lightbox_me({ centered: true })
-            } else console.log('unsupported type');
-          } else if (errFiles.length > 0) {
-            if(errFiles[0].$errorMessages.maxSize) console.log('file size is too large');
-          }
-        };
 
+      /*
       })
-      .error(function(data, status, headers, config) { alert('Error while trying to connect to the messaging system.'); });
-    }) 
+      .error(function(data, status, headers, config) { alert('Error while trying to connect to the messaging system.'); });*/
+    })
     .error(function(data, status, headers, config) { alert('Error while trying to connect to the messaging system.'); });
 
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // need to keep track of when at the end of conversations
+    var conversation_page = 1;
+    $scope.loadConversations = function() {
+      conversationService.getConversations(conversation_page)
+      .then(function(data) {
+        if (data.conversations.length > 0) {
+          // Build conversation list and count initial global unread
+          angular.forEach(data.conversations, function(value, key) {
+            $scope.conversations[value.id] = value;
+            $scope.open_conversations_count += 1;
+            $scope.global_unread_count += value.unread_count;
+          });
+
+          $scope.open_conversations_count = data.count;  
+          conversation_page += 1;
+          console.log('loaded conversations')
+        } else {
+          console.log('you have no conversations');
+        }      
+      }, function(data) {
+        console.log('unable to retrieve your conversations')
+      });
+    };
+
+    $scope.trackingFunction = function(message) {
+      return message.msg_type + message.id.toString();
+    }
+
+    // get initial conversations
+    $scope.loadConversations();
+
+    // Bind plugins to textbox
+    // should only bind once...add check!!!!!!!!!!!!!!
+    // setTimeout(function(){ BindPlugins.now() }, 0);
+    var messages_page = 1;    
+    $scope.status = { loading: false, /* loaded: false */ };    
+    $scope.selected_conversation = {};
+    $scope.getConversationMessages = function(conversation, from_conversations_list) {
+      var deferred = $q.defer();  
+
+      // don't get messages if user clicks again on current conversation 
+      if (!(from_conversations_list && conversation.id == $scope.selected_conversation.id)) {
+        //console.log(conversation);
+        // highlight conversation
+        $scope.current_chat_conversation = conversation;
+        
+        // a new conversation is selected, reset
+        if ($scope.selected_conversation.id != conversation.id) {
+          messages_page = 1;
+          $scope.selected_conversation_messages = [];      
+        }
+        
+        // Pull messages if you click on another conversation, even if the current one is loading
+        // Pull messages for the current conversation if it isnt loading
+        if (!$scope.status.loading || conversation.id != $scope.selected_conversation.id) {
+          $scope.selected_conversation = conversation;
+          $scope.status.loading = true;
+
+          conversationService.getConversationMessages(conversation.id, messages_page)
+          .then(function(data) {
+            if (conversation.id == $scope.selected_conversation.id) {
+              if (data.messages.length > 0) {
+                messages_page += 1;
+                for (var i = 0; i < data.messages.length; i++) { $scope.selected_conversation_messages.unshift(data.messages[i]); }
+                //$scope.status.loaded = ($scope.selected_conversation_messages.length > 0);  // might not need this line
+                //$scope.markMessagesAsRead(conversation.id, data.unread_ids);
+                $scope.status.loading = false;
+
+                // Bind plugins to textbox
+                // should only bind once...add check!!!!!!!!!!!!!!
+                $timeout(function(){ BindPlugins.now() }, 0);
+                
+                deferred.resolve();          
+              } else
+                $scope.rejectPromise(false, 'no messages', deferred);
+            } else
+              $scope.rejectPromise(false, 'viewing anothe conversation', deferred)
+          }, function(data) {
+            $scope.rejectPromise(false, 'get more messages failed', deferred)
+          });
+        } else
+          deferred.reject();
+      } else 
+        deferred.reject();
+
+      return deferred.promise;
+    };      
+
+    $scope.rejectPromise = function(status, msg, obj) {
+      $scope.status.loading = status;
+      console.log(msg);
+      obj.reject();
+    } 
+
+    $scope.markMessagesAsRead = function(conversation_id, unread_ids) {
+      conversationService.markMessageAsRead(conversation_id, unread_ids)
+      .then(function(re) {
+        var unread_ids = unread_ids.split(",");
+        var unread_diff = $scope.global_unread_count - unread_ids.length;
+        $scope.global_unread_count = (unread_diff > 0) ? unread_diff : 0;
+        $scope.conversations[conversation_id].unread_count -= unread_ids.length;
+        console.log('marked as read');
+      }, function(re) {
+        console.log('markes as read Failed');
+      });
+    };
+
+    $scope.sendConversationMessage = function(new_message, channel) {
+      $scope.is_sending = true;
+      $scope.send_msg_btn = "Sending...";
+      console.log(new_message);
+
+      if ((new_message == undefined) || (new_message.text == '') || (new_message.text.length > $scope.char_limit)) {
+        alert('Maximum ' + $scope.char_limit + ' characters.');
+        $scope.enable_msg_btn();
+      } else {
+        var conversation_id = $scope.selected_conversation.id;
+        conversationService.markMessageAsRead(conversation_id, new_message.text, channel)
+        .then(function(data) {
+          // ensure we still have the right conversation
+          if ($scope.selected_conversation.id == conversation_id)
+            $scope.selected_conversation_messages.push(data);
+          new_message.text = '';
+          console.log('sent message');
+        }, function(data) {
+          console.log('unable to send message');
+          console.log(data)
+        })
+        .finally(function() { $scope.enable_msg_btn(); });
+      };     
+    };
+
+    $scope.enable_msg_btn = function() {
+      $scope.is_sending = false;
+      $scope.send_msg_btn = "SEND";
+    };
+
+    // MMS
+    // Twilio supports only gif, png and jpeg
+    $scope.handleFile = function(file, errFiles) {
+      $scope.errFile = errFiles && errFiles[0];
+      console.log(errFiles)
+      if (file) {
+        if (file.type.match('image')) {
+          $scope.selected_file = file;
+          // show preview
+          $('#mms-img-preview').lightbox_me({ centered: true })
+        } else 
+          console.log('unsupported type');
+      } else if (errFiles.length > 0) {
+        if(errFiles[0].$errorMessages.maxSize) console.log('file size is too large');
+      }
+    };
+   
     $scope.cancelMMS = function() { $('#mms-img-preview').trigger('close'); };
 
-    
-    $scope.sendMMS = function() {
-      $scope.is_sending_mms = true;
+    $scope.sendMMS = function(channel) {
+      $scope.is_sending = true;
       $scope.send_mms_btn = "SENDING MMS";
-      var file = $scope.f;
-
-      file.upload = Upload.upload({
-        url: '/send_mms_from_dashboard',
-        data: { avatar: file, text: $scope.mms_text },
-        headers: { 'Content-Type': file.type, 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content') },
-      });
-
-      file.upload.then(function (response) {
-        // seeing some errors with timeout???
-        //$scope.users["<redacted_phone_number>"]
-        //console.log($scope.users)
-        //console.log(response)
-
-        // Push into user message array
-        /*$scope.selected_user_messages.push({user_number: merchant_id, user_level: data.user_level,
-                                        profile_image: data.profile_image, text: '',
-                                        ts_day_of_the_week: data.ts_day_of_the_week, ts_time: data.ts_time,
-                                        unread: false, image_url: file.$ngfBlobUrl });*/
-
-        console.log('all good');
+      var file = $scope.selected_file;
+      var conversation_id = $scope.selected_conversation.id;
+      conversationService.sendConversationMMS(conversation_id, file, $scope.mms_text, channel)
+      .then(function (data) {
+        if ($scope.selected_conversation.id == conversation_id)
+          $scope.selected_conversation_messages.push(data);
+        // wipe file picker?
+        console.log('mms sent');
       }, function (response) {
         console.log('unable to send mms');
       })
       .finally(function() {
         $('#mms-img-preview').trigger('close');
-        $scope.is_sending_mms = false;
+        $scope.is_sending = false;
         $scope.send_mms_btn = "SEND MMS";
       });
     }
+    // End MMS
 
-
+    
+    // Transactions
     $scope.displayChargeForm = function() {
       $('#chargeFormBox').lightbox_me({
         centered: true,
@@ -336,39 +474,40 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
       });
     };
 
+    $scope.hashtagSelected = function(selected) { $scope.charge_data.hashtag_id = (selected) ? selected.originalObject.id : null; };
+    $scope.hashtagsApiErrorHandler = function(selected) { alert('couldnt retrieve your tags'); };
 
-    $scope.customerSelected = function(selected) { $scope.customerToCharge = (selected) ? selected.originalObject.phone_number : null; };
-    $scope.hashtagSelected = function(selected) { $scope.charge_data.tag_id = (selected) ? selected.originalObject.id : null; };
-    $scope.apiErrorHandler = function(selected) { alert('error'); };
-
+    $scope.disableChargeButton = function(chargeForm) {
+      return $scope.selected_conversation.id === undefined || chargeForm.$invalid || $scope.is_sending;
+    }
 
     // function to submit the form after all validation has occurred
     $scope.submitChargeForm = function(isValid) {
       if (isValid) {
         $scope.is_sending = true;
         $scope.charge_btn = "Please wait...";
-        $scope.charge_data.phone_number = $scope.customerToCharge;
-        $scope.charge_data.tag = document.getElementById('find-hashtag_value').value;
-        $scope.charge_data.amount = $scope.amount;
-        $scope.charge_data.notes = ($scope.notes) ? $scope.notes : '';
-        $scope.charge_data.authorize = ($scope.authorize) ? $scope.authorize : false;
+        $scope.charge_data.user_id = $scope.selected_conversation.uid;
+        $scope.charge_data.item_name = document.getElementById('find-hashtag_value').value;
+        $scope.charge_data.amount = $scope.charge.amount;
+        $scope.charge_data.notes = ($scope.charge.notes) ? $scope.charge.notes : '';
+        $scope.charge_data.capture = ($scope.charge.authorize) ? $scope.charge.authorize : false;
         console.log($scope.charge_data);
 
-        /*$http.post("/echo/json/", data)
-        .success(function(data) {
-          if (data.success) {
-            charge.amount = '';
-          } else {
-            alert('The message could not be sent, please try again.');
-          }
+        transactionService.createCharge($scope.charge_data)
+        .then(function (data) {
+          console.log('charge complete');
+          console.log(data)
+        }, function (response) {
+          console.log('unable to charge customer');
+          console.log(response);
         })
-        .error(function(data, status, headers, config) {
-          alert('The message could not be sent, please try again.');
-        });*/
+        .finally(function() {
+          $scope.is_sending = false;
+          $scope.charge_btn = "CHARGE";
+        });
       }
-      $scope.is_sending = false;
-      $scope.charge_btn = "CHARGE";
     };
+    // End Transactions
 
   }
 
