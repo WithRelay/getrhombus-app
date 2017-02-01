@@ -11,7 +11,7 @@
   <h1 class="first-content-section-sub-header footer-cta-header">Get started for free</h1>
   <h5 class="footer-cta-subheading signup-box-subheading">TRY IT FREE NO LONG-TERM <br>COMMITMENT</h5>
   <div class="footer-cta-forms w-form">
-    <%= form_for('user', url: 'signup', method: :get, :html => { :id => "Get-started-form" } ) do |f| %>
+    <%= form_for('user', url: '/users/sign_up', method: :get, :html => { :id => "Get-started-form" } ) do |f| %>
 
         <%= f.text_field 'email', placeholder: 'Email Address', class: 'footer-cta-field text-field w-input' %>
 
@@ -23,7 +23,7 @@
         <label class="w-form-label" for="checkbox">I agree to Relay <a class="terms-link" href="#">terms of use &amp; policy</a></label>
       </div>
 
-        <%= f.submit "Create relay account", id: 'get-started', class: "alt-hero-cta-button footer-cta-button home w-button", value: 'GET STARTED', href: '/users/sign_up' %>
+        <%= f.submit "Create relay account", id: 'get-started', class: "alt-hero-cta-button footer-cta-button home w-button", value: 'GET STARTED' %>
 
     <% end %>
   </div>    

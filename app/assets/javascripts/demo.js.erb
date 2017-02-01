@@ -87,6 +87,13 @@ $(document).ready(function () {
     addDemo();
   });
 
+  $('#commit_demo').on('click', function(e){
+    e.preventDefault();
+     PhoneNumberFormatter.set_phone_number(true);
+    $('#commit_demo').attr("disabled", true).val("Please wait...");
+    addDemo();
+  })
+
   function addDemo() {
    $.ajax({
       url: "/v1/demos.json",

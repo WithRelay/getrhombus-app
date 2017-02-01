@@ -54,7 +54,7 @@ class ApplicationController < ActionController::Base
 
     def record_not_unique
       flash[:alert] = "The phone number you entered is already being used on rhombus :("
-      redirect_to "/signup"
+      redirect_to "users/sign_up"
     end
 
 end

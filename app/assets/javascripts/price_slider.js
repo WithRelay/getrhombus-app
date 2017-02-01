@@ -52,7 +52,7 @@ $(document).ready(function() {
       $('#pricing-range').val(plan_range(pricingSlider.value)[0]);
     }
     else {
-      // $('#select_plan').attr('href', '/signup?signup_plan=' + plan_range(pricingSlider.value)[0]);
+      $('#select_plan').attr('href', '/users/sign_up?signup_plan=' + plan_range(pricingSlider.value)[0]);
       // update selected plan name
       $('#pricing-range').val(plan_range(pricingSlider.value)[0]);
     }
