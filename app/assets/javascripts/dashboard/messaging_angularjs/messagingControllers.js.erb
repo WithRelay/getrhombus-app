@@ -316,7 +316,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
     }
 
     // get initial conversations
-    $scope.loadConversations();
+    //$scope.loadConversations();
 
     // Bind plugins to textbox
     // should only bind once...add check!!!!!!!!!!!!!!
@@ -468,9 +468,9 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
     
     // Transactions
     $scope.displayChargeForm = function() {
-      $('#chargeFormBox').lightbox_me({
+      $('#update-charge-form-box').lightbox_me({
         centered: true,
-        onLoad: function() { $('#chargeForm').find('input:first').focus(); }
+        onLoad: function() { $('#update-charge-form').find('input:first').focus(); }
       });
     };
 
@@ -508,6 +508,17 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
       }
     };
     // End Transactions
+
+
+    // saved replies
+    $scope.displaySavedRepliesForm = function() {
+      $('#update-saved-reply-form-box').lightbox_me({
+        centered: true,
+        onLoad: function() { $('#update-saved-replies-form').find('input:first').focus(); }
+      });
+    }
+
+    // End saved replies
 
   }
 

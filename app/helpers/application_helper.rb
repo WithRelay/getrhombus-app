@@ -19,7 +19,7 @@ module ApplicationHelper
   end
 
   def render_sidebar_partial
-    concat(render 'shared/dashboard_sidebar') unless authenticated_pages || setting_pages
+    concat(render 'shared/dashboard_sidebar') unless authenticated_pages || setting_pages || messaging_dashboard
     concat(render 'shared/setting_sidebar') if setting_pages
   end
 
@@ -28,12 +28,12 @@ module ApplicationHelper
   end
 
   def restrict_other_params
-    actions = ['campaigns-new', 'hashtags-new', 'hashtags-create', 'users-messaging']
+    actions = ['campaigns-new', 'hashtags-new', 'hashtags-create']
     actions.include?(params_controller_action)
   end
 
   def messaging_dashboard
-    messaging_params = ['messaging-index']
+    messaging_params = ['conversations-index']
     messaging_params.include?(params_controller_action)
   end
 
@@ -73,7 +73,7 @@ module ApplicationHelper
 
   def restrict_devise_actions
     restricted_actions = ['sessions-new', 'sessions-create', 'registrations-new', 'registrations-create',
-                          'users-messaging', 'devise/registrations-edit', 'devise/passwords-new']
+                           'devise/registrations-edit', 'devise/passwords-new']
     restricted_actions.include?(params_controller_action)
   end
 end

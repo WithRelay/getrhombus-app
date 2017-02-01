@@ -25,6 +25,7 @@
 //= require bootstrap-formvalidator.min
 
 //= require jquery_ujs
+//= require angular-smooth-scroll.min
 //= require pubnub/pubnub-angular.js
 //= require dashboard/messaging_angularjs/messaging.js
 //= require dashboard/messaging_angularjs/messagingApp.js
@@ -35,6 +36,7 @@
 // Other js files require tree is included so no need to include all the files in the folder tree
 //
 //= require pnotify
+//= require url-parameters
 //= require jquery.lightbox_me
 //= require intlTelInput.min
 //= require chartist
@@ -66,6 +68,8 @@
 //= require util_functions
 //= require price_slider
 //= require get_started
+//= require modernizr
+//= require webflow
 
 // DO NOT REQUIRE TREE AS IT DOESNT GUARANTEE THE DEPENDENCY ORDER OF THESE FILES
 // require_tree .
