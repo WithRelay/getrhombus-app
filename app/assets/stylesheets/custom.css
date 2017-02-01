@@ -1,0 +1,18 @@
+/*fix css for phone number*/
+.intl-tel-input{
+  width: 100% !important;
+  margin-left: 36px !important;
+}
+
+/*page specific css for signup page*/
+#sign_up-page .intl-tel-input{
+  margin-bottom: 20px !important;
+  margin-left: 53px !important;
+}
+
+#request-demo-page .intl-tel-input {
+  margin-bottom: 20px !important;
+  margin-left: 10% !important;
+}
+
+
