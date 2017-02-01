@@ -31,8 +31,6 @@ Rails.application.routes.draw  do
     req.env['warden'].authenticated? and req.env['warden'].user.id == 23
   }
 
-  match "send_mms_from_dashboard" => 'messages#dashboard_mms', via: [:post]
-
   ## events/hooks routegs
   # constraints subdomain: 'hooks' do
     post 'events/stripe' => 'webhooks#stripe_events'
@@ -118,7 +116,6 @@ Rails.application.routes.draw  do
 
   ## api
   api_version(module: "Api::V1", path: { value: "v1"}, constraints: { subdomain: "api" }, defaults: { format: "json" }) do
-    match 'users/find' => 'users#find', via: :get
     match 'users/add_customers' => 'users#add_customers', via: :post
     match 'hashtags' => 'hashtags#index', via: :get
     match 'hashtags/:id/images/:image_id' => 'hashtags#image_delete', via: :delete
@@ -136,7 +133,7 @@ Rails.application.routes.draw  do
     resources :reminders, only: [:create]
     #--------------------------------------------------------------------------#
     match 'transactions/:txn_number/refund' => 'transactions#refund', via: :post
-    match 'transactions/charge_customer' => 'transactions#charge_customer', via: :post
+    resources :transactions, only: [:create]
     match 'numbers/search' => 'numbers#search', via: :get
     resources :lists, only: [:index, :create]
     match 'coupons/check_coupon_name' => 'coupons#check_coupon_name', via: :post
@@ -148,8 +145,12 @@ Rails.application.routes.draw  do
     match 'referrers/invite_business' => 'referrers#invite_business', via: :post
     resources :demos, only: [:create]
     resources :conversations, only: [:index, :show]
-    post "conversations/:id/mark_messages_as_read" => "conversations#mark_messages_as_read"
-    post 'conversations/:id/send_merchant_message' => 'conversations#send_merchant_message'
+    resources :conversations, only: [:index, :show] do
+      member do 
+        post 'messages'
+        post 'mms'
+      end
+  end
     resources :knowledge_bases, param: :url, only: [:index] do
       get 'rating', on: :member
     end
