@@ -33,7 +33,7 @@ class RealtimeStreamService
       end
     end
 
-    def publish_to_dashboard(conversation, user)           
+    def publish_to_dashboard(conversation, user, msg)           
       merchant_id = conversation.merchant_id.to_s
       $pubnub.subscribe(channel: 'messaging_' + Rails.env + '_' + merchant_id) {}      
       $pubnub.publish(channel: 'messaging_' + Rails.env + '_' + merchant_id,
@@ -43,4 +43,3 @@ class RealtimeStreamService
   end
   
 end
-

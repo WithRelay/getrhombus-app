@@ -6,30 +6,31 @@ class Conversation < ActiveRecord::Base
   belongs_to :merchant_conversation, class_name: "User"
 
   def self.get_open_conversations_count(merchant_id)
-  	where(merchant_id: merchant_id, message_resolution_id: nil).count  
-  	where(merchant_id: merchant_id).count  		
+    where(merchant_id: merchant_id, message_resolution_id: nil).count  
+    where(merchant_id: merchant_id).count     
   end
 
   # Returns hash with users who sent a message to the given merchant in the last "num_days" days
   def self.get_open_conversations(merchant_id, page)
 ####convs = where(merchant_id: merchant_id, message_resolution_id: nil).paginate(page: page, per_page: 25)
-  	convs = where(merchant_id: merchant_id).paginate(page: page, per_page: 25)
-  	latest_conv = Array.new
+    convs = where(merchant_id: merchant_id).paginate(page: page, per_page: 25)
+    latest_conv = Array.new
 
-  	convs.each do |conv|
-  		last_message = ConversationRef.where(conversation_id: conv.id).last.textable
+    convs.each do |conv|
+      last_message = ConversationRef.where(conversation_id: conv.id).last.textable
 
-  		if conv.uid_type == "user"
-  			full_name = User.find_by(conv.uid).card_name
-  		else 
-  			# does fb at least give us some info?
-  			full_name = (conv.uid_type == 'fb_page') ? "messenger user" : conv.uid
-  		end
+      if conv.uid_type == "user"
+        full_name = User.find_by(conv.uid).card_name
+      else 
+        # does fb at least give us some info?
+        full_name = (conv.uid_type == 'fb_page') ? "messenger user" : conv.uid
+      end
 
-  		latest_conv.push(conv.conversation_hash)
-  	end
+      latest_conv.push(conv.conversation_hash)
+     # return latest_conv
+    end
 
-  	latest_conv
+    latest_conv
 
 =begin
     # name is now thrugh person
@@ -53,7 +54,7 @@ class Conversation < ActiveRecord::Base
     end
     latest_active
 =end
-	end
+  end
 
   def conversation_hash(user = nil)
     last_message = ConversationRef.where(conversation_id: self.id).last.textable
@@ -67,6 +68,8 @@ class Conversation < ActiveRecord::Base
 
     {
       id: self.id,
+      uid_type: self.uid_type,
+      uid: self.uid,
       full_name: full_name || "",
       profile_image: ActionController::Base.helpers.asset_path('user_icon_50x50.png'),
       last_message: last_message.blank? ? '' : last_message.text,
@@ -77,24 +80,24 @@ class Conversation < ActiveRecord::Base
   end
 
 
-	def get_conversation_messages(page)
-		convs_refs = self.conversation_refs.paginate(page: page, per_page: 10).includes(textable: [:images])
-		latest_messages = Array.new
-		unread_ids = []
+  def get_conversation_messages(page)
+    convs_refs = self.conversation_refs.paginate(page: page, per_page: 7).includes(textable: [:images])
+    latest_messages = Array.new
+    unread_ids = []
 
-		convs_refs.each do |cf| 
-			unread_ids.push(cf.id) if cf.unread			
-			latest_messages.push(message_hash(cf.textable))
+    convs_refs.each do |cf| 
+      unread_ids.push(cf.id) if cf.unread     
+      latest_messages.push(message_hash(cf.textable))
     end
-
     [latest_messages, unread_ids.join(",")]
-	end
+  end
 
-	def message_hash(msg)
-		# Used for profile image...This should change if merchant can talk to merchant? or change how we determine profile image
-		user_level = msg.user_id == self.merchant_id ? 1 : 0  
+  def message_hash(msg)
+    # Used for profile image...This should change if merchant can talk to merchant? or change how we determine profile image
+    user_level = msg.user_id == self.merchant_id ? 1 : 0  
 
-		{
+    {
+      id: msg.id,
       source: msg.user_id == self.merchant_id ? "merchant" : 'user',
       profile_image: (user_level == 0) ? ActionController::Base.helpers.asset_path('user_icon_50x50.png') : ActionController::Base.helpers.asset_path('rhombus_icon_50x50.png'),
       text: (msg.text) ? msg.text : nil,
@@ -103,8 +106,8 @@ class Conversation < ActiveRecord::Base
       unread: msg.unread,
       image_urls: msg.images.map { |i| i.avatar.url },           # return small version here??
       msg_type: msg.class.name
-  	}
-	end
+    }
+  end
 
     # Returns hash with the last "num_messages" messages that the given user has sent to the given merchant
   def self.get_user_messages_by_merchant(user_number, merchant_id, num_messages)
@@ -131,41 +134,52 @@ class Conversation < ActiveRecord::Base
   end
 
   def mark_messages_as_read(ids)
-  	begin
-	  	# this can be more efficient
-	  	refs = ConversationRef.includes(:textable).where(id: ids.split(","), conversation_id: self.id) 
-	  	ActiveRecord::Base.transaction do	 	
-		  	refs.update_all(unread: false)
-		  	sms_ary, messenger_ary = Array.new, Array.new
-		  	refs.each { |r|	r.textable.class.name == "Message" ? sms_ary.push(r.textable.id) : messenger_ary.push(r.textable.id) }
-		  	Message.where(id: sms_ary).update_all(unread: false)
-		  	FbMessage.where(id: messenger_ary).update_all(unread: false)
-		  end
-		  true
-		rescue StandardError => e
-		 	false
-		end
-	end
+    begin
+      # this can be more efficient
+      refs = ConversationRef.includes(:textable).where(id: ids.split(","), conversation_id: self.id) 
+      ActiveRecord::Base.transaction do   
+        refs.update_all(unread: false)
+        sms_ary, messenger_ary = Array.new, Array.new
+        refs.each { |r| r.textable.class.name == "Message" ? sms_ary.push(r.textable.id) : messenger_ary.push(r.textable.id) }
+        Message.where(id: sms_ary).update_all(unread: false)
+        FbMessage.where(id: messenger_ary).update_all(unread: false)
+      end
+      true
+    rescue StandardError => e
+      false
+    end
+  end
 
   # user can be nil
   # uid can be user id, phone number or messenger id
-  def send_message(team, user, uid, msg, channel, uid_type, unread, media_url = [])
-		from = (channel == "Message") ? team.rhombus_number : "get messenger cred"
-    to = (channel == "Message") ? user.phone_number : "get messenger cred" if user.present? 
+  def send_message(team, user, msg, channel, unread, uid = nil, uid_type = nil, media = [])
+    from = (channel == "FbMessage") ? "get messenger cred" : team.rhombus_number
+    to = (channel == "FbMessage") ? 'get messenger cred' : user.phone_number if user.present? 
     
-    msg = channel.constantize.new
-		if msg.send_and_save_message(team, user, from, to, msg, unread, media_url)
-			find_or_create_conversation_for_message(team_id, uid_type, uid, msg, unread)
-			message_hash(msg)
-		else
-			false
-		end
+    msg_instance = channel.constantize.new
+    
+    # Relate message to files
+    if media.present?
+      media_ids = []
+      media.map! do |m| 
+        media_ids.push(m.id)
+        m.avatar.url        
+      end   
+      msg_instance.image_ids = media_ids
+    end
+    
+    if msg_instance.send_and_save_message(team, user, from, to, msg, unread, media)
+      find_or_create_conversation_for_message(team.id, uid_type, uid, msg_instance, unread)
+      message_hash(msg_instance)
+    else
+      false
+    end
   end
 
-	# find the conversation or create one
+  # find the conversation or create one
   def find_or_create_conversation(team_id, uid_type, uid)
-  	return self if self.id.present?
-  	Conversation.find_or_create_by(merchant_id: team_id, uid_type: uid_type, uid: uid, message_resolution_id: nil)
+    return self if self.id.present?
+    Conversation.find_or_create_by(merchant_id: team_id, uid_type: uid_type, uid: uid, message_resolution_id: nil)
   end
 
   def find_or_create_conversation_for_message(team_id, uid_type, uid, msg, unread)

@@ -1,21 +1,5 @@
 class Api::V1::UsersController < API::V1::BaseController
 
-  ## should now use merchant customer
-  def find
-    sql = ActiveRecord::Base.send(:sanitize_sql_array,
-    ["SELECT users.card_name, users.phone_number FROM
-          ( SELECT user_id as usersID FROM messages where messages.user_id_to = ?
-              union
-            SELECT user_id_to as usersID FROM messages where messages.user_id = ?
-          ) t1
-          inner join users on t1.usersID = users.id where lower(card_name) LIKE concat('%', ?, '%') or
-          phone_number like concat('%', ?, '%') and card_token is not null", current_user.id, current_user.id, params[:query].downcase, params[:query] ])
-
-    results = User.connection.select_all(sql)
-    results = results.map { |u| { phone_number: u["phone_number"], card_name: u['card_name'] } }
-    render json: { "users" => results }, status: 200
-  end
-
   def add_customers
     begin
       status = 200

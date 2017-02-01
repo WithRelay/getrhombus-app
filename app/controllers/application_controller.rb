@@ -27,6 +27,7 @@ class ApplicationController < ActionController::Base
       pubnub_publish_key: Rails.application.secrets.pubnub["publish_key"],
       pubnub_subscribe_key: Rails.application.secrets.pubnub["subscribe_key"],
       short_url: current_user.short_url,
+      num_of_chars: current_user.rn_type.present? ? 1500 : 150
     }
   end
 
@@ -54,7 +55,7 @@ class ApplicationController < ActionController::Base
 
     def record_not_unique
       flash[:alert] = "The phone number you entered is already being used on rhombus :("
-      redirect_to "users/sign_up"
+      redirect_to "/signup"
     end
 
 end

@@ -100,7 +100,7 @@ class Transaction < ActiveRecord::Base
                                                   dump: err, to_merchant: to_merchant)
   end
 
-  def process_dashboard_txn(amt, merchant, user, msg, hashtag_id, channel="Message", capture=true)
+  def process_dashboard_txn(amt, merchant, user, msg, hashtag_id, capture=true, channel="Message")
     process_payment(amt, merchant, user, msg, hashtag_id, channel, capture) 
     capture ? handle_captured_txn : handle_uncaptured_txn
   end
@@ -109,11 +109,15 @@ class Transaction < ActiveRecord::Base
     begin  
       unless @stripe_res
         # notify platform...should we email merchant too? could be a security measure.
-        [false, "Payment successful"]
+        [true, "Payment successful"]
       else
         send_text_receipt
         send_email_receipt  
-        [true, 'Unable to process txn because: ' + @stripe_res_ary[2]]
+        unless @stripe_res_ary[3]
+          [false, 'Unable to process txn because: ' + @stripe_res_ary[2]]       
+        else
+          [false, 'Stripe is unable to provess this transaction.']
+        end
       end   
     rescue StandardError => err
       # notify platform...should we email merchant too? could be a security measure.
@@ -161,4 +165,3 @@ class Transaction < ActiveRecord::Base
   end
 
 end
-
