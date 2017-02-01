@@ -1,4 +1,6 @@
 <% provide(:title, 'Rhombus - Sign Up') %>
+<style type="text/css">
+  .intl-tel-input { margin-bottom: 20px; width: 100%; margin-left: 53px; }
 </style>
 <div class="w-row">
   <div class="onboarding-table-column-1 w-col w-col-8">
@@ -10,7 +12,7 @@
         <div class="log-in-form w-form">
           <%= form_for(resource, as: resource_name, url: registration_path(resource_name, params[:value]), html: { id: 'signupForm frm_register email-form', class: 'w-clearfix', data: { name: 'Email Form' }} ) do |f| %>
             <%= f.email_field :email, id: "email Email-2", class: "email-address text-field w-input", placeholder: "Email address", data: { name:'Email' }, max_length: 100 %>
-            <%= f.phone_field :phone_number, id: "", class: "login phone text-field w-input", placeholder: 'Mobile number', data: { name: 'Phone'} %>
+            <%= f.phone_field :phone, id: "phone", class: "login phone text-field w-input", placeholder: 'Mobile number', data: { name: 'Phone'} %>
             <%= f.hidden_field :phone_number, :id => "phone_number" %>
             <%= f.select :user_level, "<option value='' disabled selected class='hide'>Account Type</option> <option value='0'>Business Account</option><option value='1'>Customer Account</option>".html_safe, {}, class: 'dropdown w-select', data: { name:'Field 2'}, id: 'field-2' %>
             <%= f.password_field :password, class: "login password text-field w-input", placeholder: "Password", id: 'Password-3' %>
