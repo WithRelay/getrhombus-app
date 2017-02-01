@@ -6,11 +6,9 @@ class SubscriptionsController < ApplicationController
   include Transactionable
 
   def index
-    # This is for merchants only for now
-    merchant_customers = current_user.customers.pluck(:id)
+    merchant_customers = MerchantCustomer.where(merchant_id: current_user.id).pluck(:id)
     @subscriptions = Subscription.where(merchant_customer_id: merchant_customers)
                                         .where.not(status: 'canceled')
-    respond_with(@subscriptions)
   end
 
   def show

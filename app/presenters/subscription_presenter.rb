@@ -1,17 +1,23 @@
 class SubscriptionPresenter < BasePresenter
 
-  def get_customer_info
-    customer = MerchantCustomer.find @model.merchant_customer_id
-    user = User.find customer.customer_id
-    "#{user.email}"
+  def get_customer_name
+    "#{user.first_name} #{user.last_name}"
   end
 
-  def get_plan_info
-    plan = Plan.find @model.plan_id
-    amount = "%.2f" %(plan.amount.to_f/100)
-    interval_count = plan.interval_count
-    interval = (interval_count > 1)? (plan.interval.pluralize): plan.interval
-    "#{plan.name}(#{plan.currency} #{amount} every #{interval_count} #{interval})"
+  def get_plan_name
+    plan.name
+  end
+
+  def get_amount
+    "%.2f" %(plan.amount.to_f/100)
+  end
+
+  def get_customer_email
+    user.email
+  end
+
+  def last4
+    user.last4
   end
 
   def get_coupon_info
@@ -41,6 +47,18 @@ class SubscriptionPresenter < BasePresenter
     else
       "<span class='label label-warning'>#{ @model.status}</span>".html_safe
     end
+  end
+
+  def user
+     User.find customer.customer_id
+  end
+
+  def customer
+    MerchantCustomer.find @model.merchant_customer_id
+  end
+
+  def plan
+    Plan.find @model.plan_id
   end
 
 end
