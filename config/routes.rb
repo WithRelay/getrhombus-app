@@ -89,7 +89,7 @@ Rails.application.routes.draw  do
     # authenticate campaigns resources if a user is merchant
     authenticate :user, -> (user) { user.is_merchant? } do
       resources :conversations, only: [:index]
-      resources :campaigns, except: [:show] { member { put 'change_status' }; collection { get 'filter_campaign' } }
+      resources :campaigns, except: [:show] { collection { get 'filter_campaign' } }
       resources :reminders, except: [:show] { member { put 'change_status' } }
     end
 
@@ -124,6 +124,8 @@ Rails.application.routes.draw  do
     match 'hashtags/:id/images/:image_id' => 'hashtags#image_delete', via: :delete
     match 'saved_replies' => 'saved_replies#index', via: :get
     # Campaign Routes
+    post 'campaigns/change_status' => 'campaigns#change_status'
+    post 'campaigns/delete' => 'campaigns#delete_campaign'
     post 'campaigns/check_campaign_name' => 'campaigns#check_campaign_name'
     match 'campaigns/:id/images/:image_id' => 'campaigns#image_delete', via: :delete
     post 'campaigns/send_test_email' => 'campaigns#send_test_email'

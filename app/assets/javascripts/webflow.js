@@ -1223,9 +1223,10 @@
     var retro = window.XDomainRequest && !window.atob;
     var namespace = '.w-form';
     var siteId;
-    var emailField = /e(\-)?mail/i;
+    var emailField = /e(-)?mail/i;
     var emailValue = /^\S+@\S+$/;
     var alert = window.alert;
+    var inApp = Webflow.env();
     var listening;
 
     // MailChimp domains: list-manage.com + mirrors
@@ -1235,16 +1236,14 @@
       alert('Oops! This page has improperly configured forms. Please contact your website administrator to fix this issue.');
     }, 100);
 
-    api.ready = function() {
+    api.ready = api.design = api.preview = function() {
       // Init forms
       init();
 
-      // Wire document events once
-      if (!listening) addListeners();
-    };
-
-    api.preview = api.design = function() {
-      init();
+      // Wire document events on published site only once
+      if (!inApp && !listening) {
+        addListeners();
+      }
     };
 
     function init() {
@@ -1596,6 +1595,9 @@
     };
 
     api.ready = function() {
+      // Redirect IX init while in design/preview modes
+      if (inApp) return env('design') ? api.design() : api.preview();
+
       // Ready should only be used after destroy, as a way to re-init
       if (config && destroyed) {
         destroyed = false;
@@ -3486,6 +3488,7 @@
     // Module methods
 
     api.ready = function() {
+      designer = Webflow.env('design');
       init();
     };
 
@@ -4394,5 +4397,8 @@ Webflow.require('ix').init([
   {"slug":"hide-refund-option","name":"Hide Refund Option","value":{"style":{"display":"none"},"triggers":[]}},
   {"slug":"display-refund-options","name":"Display Refund Options","value":{"style":{},"triggers":[{"type":"click","selector":".hidden-refund-options","stepsA":[{"display":"block","height":"0px"},{"height":"auto"}],"stepsB":[{"height":"0px"},{"display":"none"}]}]}},
   {"slug":"fixed-nav-display-none","name":"Fixed Nav Display None","value":{"style":{"display":"none"},"triggers":[]}},
-  {"slug":"show-fixed-navbar","name":"Show Fixed Navbar","value":{"style":{},"triggers":[{"type":"scroll","selector":".fixed-navbar","offsetTop":"50%","offsetBot":"50%","preserve3d":true,"stepsA":[{"opacity":0,"transition":"transform 500ms ease 0, opacity 200 ease 0","x":"0px","y":"-79px","z":"0px"},{"display":"none"}],"stepsB":[{"display":"block"},{"opacity":1,"transition":"transform 500ms ease 0, opacity 200 ease 0","x":"0px","y":"0px","z":"0px"}]}]}}
+  {"slug":"show-fixed-navbar","name":"Show Fixed Navbar","value":{"style":{},"triggers":[{"type":"scroll","selector":".fixed-navbar","offsetTop":"50%","offsetBot":"50%","preserve3d":true,"stepsA":[{"opacity":0,"transition":"transform 500ms ease 0, opacity 200 ease 0","x":"0px","y":"-79px","z":"0px"},{"display":"none"}],"stepsB":[{"display":"block"},{"opacity":1,"transition":"transform 500ms ease 0, opacity 200 ease 0","x":"0px","y":"0px","z":"0px"}]}]}},
+  {"slug":"file-preview-modal","name":"File Preview Modal","value":{"style":{"display":"none","opacity":0},"triggers":[]}},
+  {"slug":"load-image-preview","name":"Load Image Preview","value":{"style":{},"triggers":[{"type":"click","selector":".modal-wrapper-16","stepsA":[{"wait":"200ms","display":"block"},{"opacity":1,"transition":"opacity 200ms ease 0"}],"stepsB":[]}]}},
+  {"slug":"cancel-send-file","name":"Cancel Send File","value":{"style":{},"triggers":[{"type":"click","selector":".modal-wrapper-16","stepsA":[{"opacity":0,"transition":"opacity 200ms ease 0"},{"wait":"200ms","display":"none"}],"stepsB":[]}]}}
 ]);
