@@ -74,7 +74,7 @@
       </div>
       <div class="alt-column w-col w-col-2">
         <div class="alt-table-column-div w-clearfix">
-          <%= image_tag('Light-Blue.png', class: "campaigns table-profile-picture", width:  "24") %>
+          <div class="campaigns table-profile-picture" style="background-color : <%= present(campaign).generate_color.sample %>"></div>
           <div class="table-text"><%= campaign.from_user %></div>
         </div>
       </div>
