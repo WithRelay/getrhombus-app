@@ -14,9 +14,12 @@ module Toolbox
     class << self
  
       def to_2dp(amt)
-    	sprintf("%.2f", amt)
+    	 sprintf("%.2f", amt)
       end
- 
+
+      def to_cents
+        ((var.to_f.abs)*100).round        # 100 * 1.1
+      end 
     end
   end
   

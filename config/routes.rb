@@ -35,8 +35,6 @@ Rails.application.routes.draw  do
     req.env['warden'].authenticated? and req.env['warden'].user.id == 23
   }
 
-  match "send_mms_from_dashboard" => 'messages#dashboard_mms', via: [:post]
-
   ## events/hooks routegs
   # constraints subdomain: 'hooks' do
     post 'events/stripe' => 'webhooks#stripe_events'
@@ -116,7 +114,6 @@ Rails.application.routes.draw  do
 
   ## api
   api_version(module: "Api::V1", path: { value: "v1"}, constraints: { subdomain: "api" }, defaults: { format: "json" }) do
-    match 'users/find' => 'users#find', via: :get
     match 'users/add_customers' => 'users#add_customers', via: :post
     match 'hashtags' => 'hashtags#index', via: :get
     match 'hashtags/:id/images/:image_id' => 'hashtags#image_delete', via: :delete
@@ -131,7 +128,7 @@ Rails.application.routes.draw  do
     # reminder routes
     resources :reminders, only: [:create]
     #--------------------------------------------------------------------------#
-    match 'transactions/:txn_number/refund' => 'transactions#refund', via: :post
+    resources :transactions, only: [:create]
     match 'transactions/charge_customer' => 'transactions#charge_customer', via: :post
     match 'numbers/search' => 'numbers#search', via: :get
     resources :lists, only: [:index, :create]
@@ -146,7 +143,8 @@ Rails.application.routes.draw  do
     resources :conversations, only: [:index, :show] do
       member do 
         post "mark_messages_as_read"
-        post 'send_merchant_message'
+        post 'messages'
+        post 'mms'
       end
     end
     resources :knowledge_bases, param: :url, only: [:index] do

@@ -26,10 +26,9 @@
 //= require bootstrap-formvalidator.min
 
 //= require jquery_ujs
-//= require angular-inview
-//= require angular-scroll.min
+//= require angular-smooth-scroll.min
 //= require pubnub/pubnub-angular.js
-//= require dashboard/messaging_angularjs/angularUpwardScroll.js
+//= require dashboard/messaging_angularjs/messaging.js
 //= require dashboard/messaging_angularjs/messagingApp.js
 //= require dashboard/messaging_angularjs/messagingControllers.js
 //= require dashboard/messaging_angularjs/messagingFilters.js

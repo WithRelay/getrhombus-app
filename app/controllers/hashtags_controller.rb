@@ -31,6 +31,7 @@ class HashtagsController < ApplicationController
     else
       respond_with(@hashtag)
     end
+
   end
 
   def update

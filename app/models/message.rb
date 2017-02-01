@@ -15,12 +15,11 @@ class Message < ActiveRecord::Base
   # For sending and saving all outbound text messages
   def send_and_save_message(merchant, user, from, to, message, unread, media_ary = [])
     begin
-
       # save message before sending
       user = (user.present?) ? user.id : nil
       self.update_attributes(user_id: merchant.id, user_id_to: user, from: from, to: to, text: message, unread: unread)
-            
-      if true #merchant.rn_type.present?      # this is twilio
+      return true      
+      if merchant.rn_type.present?      # this is twilio
         if response = TextingService.send_sms(from, to, message, media_ary)
           puts response.inspect
           self.update_attributes(status: response.status, message_id: response.sid, message_timestamp: response.date_updated, message_price: response.price,

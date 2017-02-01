@@ -97,7 +97,7 @@ class MessageParser
   end
 
   def to_cents(var)
-    ((var.to_f.abs)*100).round        # 100 * 1.1
+    Toolbox::Decimal.to_cents(var)
   end
 
   # scan for hashtag and + sign and amt.

@@ -149,6 +149,11 @@ http://stackoverflow.com/questions/15207788/calling-a-function-when-ng-repeat-ha
 https://www.pubnub.com/blog/2016-03-01-building-an-angularjs-chat-app-with-infinite-scroll/
 
 
+http://stackoverflow.com/questions/15666048/angularjs-service-vs-provider-vs-factory
+http://www.codelord.net/2015/09/24/$q-dot-defer-youre-doing-it-wrong/
+https://www.peterbe.com/plog/promises-with-$http
+https://davidwalsh.name/combining-js-arrays
+
 
 
 'use strict';

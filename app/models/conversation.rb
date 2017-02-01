@@ -68,6 +68,8 @@ class Conversation < ActiveRecord::Base
 
     {
       id: self.id,
+      uid_type: self.uid_type,
+      uid: self.uid,
       full_name: full_name || "",
       profile_image: ActionController::Base.helpers.asset_path('user_icon_50x50.png'),
       last_message: last_message.blank? ? '' : last_message.text,
@@ -79,25 +81,23 @@ class Conversation < ActiveRecord::Base
 
 
 	def get_conversation_messages(page)
-		convs_refs = self.conversation_refs.paginate(page: page, per_page: 10).includes(textable: [:images])
+		convs_refs = self.conversation_refs.paginate(page: page, per_page: 7).includes(textable: [:images])
 		latest_messages = Array.new
 		unread_ids = []
 
-    v=1
 		convs_refs.each do |cf| 
 			unread_ids.push(cf.id) if cf.unread			
-			latest_messages.push(message_hash(cf.textable, v = v+1))
+			latest_messages.push(message_hash(cf.textable))
     end
-
     [latest_messages, unread_ids.join(",")]
 	end
 
-	def message_hash(msg, v)
+	def message_hash(msg)
 		# Used for profile image...This should change if merchant can talk to merchant? or change how we determine profile image
 		user_level = msg.user_id == self.merchant_id ? 1 : 0  
 
 		{
-      id: v,
+      id: msg.id,
       source: msg.user_id == self.merchant_id ? "merchant" : 'user',
       profile_image: (user_level == 0) ? ActionController::Base.helpers.asset_path('user_icon_50x50.png') : ActionController::Base.helpers.asset_path('rhombus_icon_50x50.png'),
       text: (msg.text) ? msg.text : nil,
@@ -152,14 +152,25 @@ class Conversation < ActiveRecord::Base
 
   # user can be nil
   # uid can be user id, phone number or messenger id
-  def send_message(team, user, uid, msg, channel, uid_type, unread, media_url = [])
-		from = (channel == "Message") ? team.rhombus_number : "get messenger cred"
-    to = (channel == "Message") ? user.phone_number : "get messenger cred" if user.present? 
+  def send_message(team, user, msg, channel, unread, uid = nil, uid_type = nil, media = [])
+		from = (channel == "FbMessage") ? "get messenger cred" : team.rhombus_number
+    to = (channel == "FbMessage") ? 'get messenger cred' : user.phone_number if user.present? 
     
-    msg = channel.constantize.new
-		if msg.send_and_save_message(team, user, from, to, msg, unread, media_url)
-			find_or_create_conversation_for_message(team_id, uid_type, uid, msg, unread)
-			message_hash(msg)
+    msg_instance = channel.constantize.new
+    
+    # Relate message to files
+    if media.present?
+      media_ids = []
+      media.map! do |m| 
+        media_ids.push(m.id)
+        m.avatar.url        
+      end   
+      msg_instance.image_ids = media_ids
+    end
+    
+		if msg_instance.send_and_save_message(team, user, from, to, msg, unread, media)
+			find_or_create_conversation_for_message(team.id, uid_type, uid, msg_instance, unread)
+			message_hash(msg_instance)
 		else
 			false
 		end

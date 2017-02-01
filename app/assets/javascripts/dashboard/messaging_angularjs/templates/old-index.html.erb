@@ -51,7 +51,7 @@
               <li ng-repeat="(identifier, conversation) in conversations | filterConversationList:query | orderObjectBy:'last_message_ts':true">
 
                 <!--<a ng-class="{ chat_highlight : current_chat_user === user, item : true, clearfix : true }" ng-click="getUserMessages(user)">-->
-                <a ng-class="{ chat_highlight : current_chat_conversation === conversation, item : true, clearfix : true }" ng-click="getConversationMessages(conversation, true)" style="width: 100%">
+                <a ng-class="{ chat_highlight : current_chat_conversation === conversation, item : true, clearfix : true }" ng-click="getConversationMessages(conversation, 1)" style="width: 100%">
                   <img ng-src="{{conversation.profile_image}}" alt="img" class="img" />
                   <!--<span class="from">{{user.first_name}} {{user.last_name}}</span>-->
                   <span class="from">{{conversation.full_name}}</span>
@@ -103,11 +103,11 @@
             </div>
           </div>
 -->
-            <div id="fixed" when-scrolled-up="getConversationMessages(selected_conversation, false)" scroll-bottom-on="status.loaded">
-              <p ng-show="status.loading" class="me">loading...</p>       
-              <!--<ul>  scroll-glue> -->
-                <div ng-repeat="i in selected_conversation_messages track by trackingFunction(i)" on-finish-render>{{i}}</div>
-              <!--</ul>  -->
+            <p ng-show="status.loading" class="me">loading...</p>         
+            <div id="fixed" when-scrolled-up="getConversationMessages(selected_conversation)" scroll-bottom-on="status.loaded">
+              <ul> <!-- scroll-glue> -->
+                <li ng-repeat="i in selected_conversation_messages track by i.id" on-finish-render>{{i}}</li>
+              </ul>  
             </div>
           <!--<div id="fixed" when-scrolled="loadMore()" scroll-bottom-on="status.loaded"> 
           <ul class="conv">
@@ -163,7 +163,7 @@
               <span class="char-counter">{{char_limit - new_message.text.length}} characters left</span>
 
               <br><br><br><br>
-              <button class="btn btn-default btn-rhombus" id="send_msg_btn" ng-click="sendConversationMessage(new_message, 'Message')" style="height: 32px;" ng-disabled='is_sending || selected_conversation.id === undefined'>
+              <button class="btn btn-default btn-rhombus" id="send_msg_btn" ng-click="sendMessage(new_message)" style="height: 32px;" ng-disabled='is_sending'>
                 {{send_msg_btn}}
               </button>
 
@@ -176,17 +176,17 @@
 
             <!-- Image Preview -->
             <div style="display: none; width: 400px; height: 400px; background: white;" id="mms-img-preview">
-              <div style="font:smaller">{{selected_file.name}}</div>
+              <div style="font:smaller">{{f.name}}</div>
               <textarea class="textarea form-control" placeholder="Add an optional message to this MMS..." style="height:100px; width:70%;" ng-model="mms_text" ng-trim="true"></textarea>
               <br><br>
               <style type="text/css"> .thumb { width: 100px; height: 100px; float: none; position: relative; top: 7px; }</style>
               <img ngf-thumbnail="pic_file" class="thumb">
               <br><br>
-              <button class="btn btn-default btn-rhombus" id="send_mms_btn" ng-click="sendMMS('Message')" style="height: 32px;" ng-disabled='is_sending || selected_conversation.id === undefined'>
+              <button class="btn btn-default btn-rhombus" id="send_mms_btn" ng-click="sendMMS()" style="height: 32px;" ng-disabled='is_sending_mms'>
                 {{send_mms_btn}}
               </button>
               <br>
-              <button class="btn btn-default btn-rhombus" id="cancel_mms_btn" ng-click="cancelMMS()" style="height: 32px;" ng-disabled='is_sending'>
+              <button class="btn btn-default btn-rhombus" id="cancel_mms_btn" ng-click="cancelMMS()" style="height: 32px;" ng-disabled='is_sending_mms'>
                 Cancel
               </button>
             </div>
@@ -215,10 +215,10 @@
         <label>
           <angucomplete-alt id="find-hashtag"
           placeholder="Hashtag or item name"
-          pause="300"
+          pause="400"
           minlength="1"
           selected-object="hashtagSelected"
-          remote-url="<%= (Rails.env == 'development' ? "http://localhost:3000" : "#{Rails.application.secrets.url["info"]}") + "/v1/hashtags?query=" %>"
+          remote-url="<%= (Rails.env == 'development' ? "http://localhost:3000" : "https://www.getrhombus.com")  +  "/v1/hashtags?query=" %>"
           remote-url-data-field="hashtags"
           title-field="tag"
           text-no-results='false'
@@ -228,28 +228,47 @@
           text-searching="Finding your tag/item..."
           <%#= add html notification during ui integration %>
           <%#= scroll bar added but test option during UI integration and testing %>
-          remote-url-error-callback='hashtagsApiErrorHandler'
+          remote-url-error-callback='apiErrorHandler'
           />
         </label>
 
-        <style> .has-error { border-color: red; }</style>
+        <label>
+          <angucomplete-alt id="find-customer"
+          placeholder="Customer name or number"
+          pause="400"
+          minlength="3"
+          selected-object="customerSelected"
+          remote-url="<%= (Rails.env == 'development' ? "http://localhost:3000" : "https://www.getrhombus.com")  +  "/v1/users/find?query=" %>"
+          remote-url-data-field="users"
+          title-field="card_name"
+          text-no-results="We couldn't find any customer"
+          match-class='highlight'
+          input-name='customer_number'
+          description-field='phone_number'
+          text-searching="Finding your customer..."
+          field-required="is_true"
+          remote-url-error-callback='apiErrorHandler'
+          />
+        </label>
+
+        <style type="text/css"> .has-error { border-color: red; }</style>
 
         <label class="left">
           <%# http://gsferreira.com/archive/2015/02/angularjs-input-number-with-two-decimal-places %>
-          <input type="number" min="1" max='15000' required ng-model='charge.amount' name="amount" placeholder="Amount" style="width: 150px" step='0.01' ng-pattern="/^\d+(.\d{1,2})?$/" ng-class="{'has-error': chargeForm.amount.$invalid && !chargeForm.amount.$pristine }">
-          <p ng-show="chargeForm.amount.$invalid && !chargeForm.amount.$pristine">A valid amount is required</p>
+          <input type="number" min="1" max='15000' required ng-model='amount' name="amount" placeholder="Amount" style="width: 150px" step='0.01' ng-pattern="/^\d+(.\d{1,2})?$/" ng-class="{'has-error': chargeForm.amount.$invalid && !chargeForm.amount.$pristine }">
+          <p ng-show="chargeForm.amount.$invalid && !chargeForm.amount.$pristine">Amount is required.</p>
         </label>
 
         <label>
-          <textarea type="text" ng-model='charge.notes' name="notes" placeholder="Description" style="height: 100px;" class="rhombusFocus" ng-trim='true'></textarea>
+          <textarea type="text" ng-model='notes' name="notes" placeholder="Description" style="height: 100px;" class="rhombusFocus"></textarea>
         </label>
 
         <label>
-          <input type="checkbox" name="authorize" ng-model='charge.authorize' value="authorize">Authorize only
+          <input type="checkbox" name="authorize" ng-model='authorize' value="authorize">Authorize only
         </label>
 
         <footer>
-          <button class="btn btn-default btn-block btn-rhombus" id="chargeButton" ng-disabled="disableChargeButton(chargeForm)" type="submit">{{charge_btn}}</button>
+          <button class="btn btn-default btn-block btn-rhombus" id="chargeButton" ng-disabled="chargeForm.$invalid || is_sending" type="submit">{{charge_btn}}</button>
         </footer>
       </form>
     </div>
