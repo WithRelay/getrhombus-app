@@ -42,9 +42,25 @@
 <div class="customer-dash sub-nav-bar">
   <div class="sub-nav-options-wrapper w-clearfix">
     <%= link_to ' &nbsp;New campaign'.html_safe, new_user_campaign_path(current_user), class: 'add sub-nav-button w-button', data: { ix: "create-customer" } %>
-    <a class="import sub-nav-button w-button" data-ix="import-customers" href="#">&nbsp; Deactivate</a>
+    <a class="import sub-nav-button w-button" data-ix="cancel-subscription" href="#">&nbsp; Deactivate</a>
     <a class="sub-nav-button w-button" data-ix="create-list" href="#"> &nbsp;Resend</a>
-    <a class="sub-nav-button w-button" data-ix="create-list" href="#"> &nbsp;Delete</a>
+    <a class="import sub-nav-button w-button" data-ix="cancel-subscription" href="#"> &nbsp;Delete</a>
+  </div>
+</div>
+<div class="modal-wrapper-9" data-ix="modal-interaction-9">
+  <div class="cancel-subscription-wrapper w-clearfix">
+    <p class="cancel-subscription modal-content-description">Are you sure you'd like to delete ? </p>
+    <div class="modal-underline underline-div"></div>
+    <a class="button cancel-yes w-button" href="#" id='deleteResource'>Yes, Delete</a>
+    <a class="button cancel-no w-button" data-ix="close-cancel-subscription" href="#">Cancel</a>
+  </div>
+</div>
+<div class="modal-wrapper-9" data-ix="modal-interaction-9">
+  <div class="cancel-subscription-wrapper w-clearfix">
+    <p class="cancel-subscription modal-content-description">Are you sure you'd like to delete ? </p>
+    <div class="modal-underline underline-div"></div>
+    <a class="button cancel-yes w-button" href="#" id='updateResource'>Yes, Delete</a>
+    <a class="button cancel-no w-button" data-ix="close-cancel-subscription" href="#">Cancel</a>
   </div>
 </div>
 <div class="dashboard-body">
@@ -57,12 +73,11 @@
         </div>
         <div class="alt-table cb check-box-column">
           <div class="w-form">
-            <form data-name="Email Form 2" id="email-form-2" name="email-form-2">
               <div class="select-all-check-box w-checkbox w-clearfix">
                 <input class="cb table-checkbox w-checkbox-input" id="node" type="checkbox">
+                <div class='w-hidden'><%= campaign.id %></div>
                 <label class="checkbox-field-lable w-form-label" for="node">-</label>
               </div>
-            </form>
             <div class="w-form-done">
               <div>Thank you! Your submission has been received!</div>
             </div>
