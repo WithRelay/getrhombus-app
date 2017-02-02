@@ -39,6 +39,7 @@
   margin-top: 5px !important;
 }
 
+$colors: #ff0000 #ffff00 #0080ff #f20d0d  #996666 #808080 #0000ff #ffbf00 #40ff00 #ff00bf;
 @each $color in $colors
 {
   $i: index($colors, $color);
