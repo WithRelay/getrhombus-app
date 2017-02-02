@@ -27,6 +27,11 @@ module ApplicationHelper
      unauthenticate_controller || restrict_devise_actions || relay_docs_pages
   end
 
+  def add_body_class
+    return 'body message' if messaging_dashboard 
+    'body'
+  end
+
   def restrict_other_params
     actions = ['campaigns-new', 'hashtags-new', 'hashtags-create']
     actions.include?(params_controller_action)
