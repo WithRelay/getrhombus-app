@@ -1,4 +1,4 @@
-<%= form_for('subscription', html: { id: 'subscriptionForm email-form-9', class: 'w-clearfix', data: { name: "Email Form 9" } }) do |f| %>
+<%= form_for('subscription', html: { id: 'subscriptionForm', class: 'w-clearfix', data: { name: "Email Form 9" } }) do |f| %>
 
   <input class="subscriber-name text-field w-input" data-name="Subscriber Name" id="Subscriber-Name" maxlength="256" name="Subscriber-Name" placeholder="Enter customer&#39;s name or phone number" required="required" type="text">
   <%= f.text_field :plan_id, class: 'dropdown w-select', placeholder: "Select a plan", id: "subscription-plan-id" %>

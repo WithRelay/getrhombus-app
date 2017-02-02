@@ -8,9 +8,9 @@ class Api::V1::CouponsController < API::V1::BaseController
   def index
     begin
       if params[:name]
-        res = valid_coupon(current_user.coupons.where("lower(name) like ?", "%#{params[:name].downcase}%"))
+        res = current_user.coupons.where("lower(name) like ?", "%#{params[:name].downcase}%")
       else
-        res = valid_coupon(current_user.coupons)
+        res = current_user.coupons
       end
       render json: { "coupons" => res }, status: 200
     rescue StandardError => e

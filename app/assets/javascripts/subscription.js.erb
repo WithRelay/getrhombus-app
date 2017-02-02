@@ -50,8 +50,8 @@ $(document).ready(function () {
       });
   }
 
-  if ($('#subscriptionForm').length > 0) {
-    $('#subscriptionForm')
+  if ($('#subscription-Form').length > 0) {
+    $('#subscription-Form')
       .formValidation({
         framework: 'bootstrap',
         excluded: ':disabled',
@@ -91,7 +91,7 @@ $(document).ready(function () {
       .on('success.form.fv', function(e, data) {          
         e.preventDefault();
         $("#create-subscription").attr("disabled", true).val("Please wait...");
-        addSubscription(); 
+        addSubscription();
       });
   }
 
@@ -127,6 +127,12 @@ $(document).ready(function () {
       $('#subscriptionForm').formValidation('resetField', 'subscription[plan_id]');
     });
   }
+
+  $("#create-subscription").on('click', function(e) {
+    e.preventDefault();
+    $("#create-subscription").attr("disabled", true).val("Please wait...");
+    addSubscription(); 
+  })
 
   // reset form when modal close
   $('#modalSubscription').on('hidden.bs.modal', function () {
