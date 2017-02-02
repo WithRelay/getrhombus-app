@@ -6,6 +6,28 @@ class Api::V1::CampaignsController < API::V1::BaseController
     render json: { response: 'Deleted' }, status: 200
   end
 
+
+  def delete_campaign
+    campaigns = Campaign.where(id: params[:ids])
+    if campaigns.destroy_all
+      # campaigns.destroy_campaign_jobs
+      flash = { status: 200, notice: 'Campaign is being succesfully deleted' }
+    else
+      flash = { status: 404, error: 'Sorry campaign could not delete please try again' }
+    end
+    render json: flash
+  end
+
+  def change_status
+    campaigns = Campaign.where(id: params[:ids])
+    campaigns.each do |campaign|
+      status = campaign.active? ? 2 : 1
+      campaign.update_attribute('status', status)
+      campaign.change_job_status
+    end
+    render json: { status: 200, notice: "Campaign status change" }
+  end
+
   def send_test_email
     campaign = current_user.campaigns.build(campaign_params, image_params)
     if campaign.save(validate: false)

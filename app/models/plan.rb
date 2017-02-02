@@ -39,7 +39,6 @@ class Plan < ActiveRecord::Base
       hash[:currency] = self.currency
 
       res = PaymentService.create_plan(hash, uid, is_platform)
-
       if res.first && self.update(stripe_livemode: res.second.livemode)
         create_plan_segment if self.customer_id.blank?
         true

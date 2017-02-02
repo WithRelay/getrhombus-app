@@ -63,7 +63,7 @@
           </ul>
         </div>
         <!-- End Mailbox Inbox -->
-       
+
         <!-- Start Chat -->
 
           <!--<div ng-if="selected_user_messages.length > 0" class="chat col-lg-9 col-md-8 padding-0">-->
@@ -78,7 +78,7 @@
             </div>
             <!-- End Title -->
 
-         
+
           <!-- Start Conv -->
 <!--
           <div data-ng-app="messageFetcher">
@@ -104,7 +104,7 @@
           </div>
 -->
             <div id="fixed" when-scrolled-up="getConversationMessages(selected_conversation, false)" scroll-bottom-on="status.loaded">
-              <p ng-show="status.loading" class="me">loading...</p>       
+              <p ng-show="status.loading" class="me">loading...</p>
               <!--<ul>  scroll-glue> -->
                 <div ng-repeat="i in selected_conversation_messages track by trackingFunction(i)" on-finish-render>{{i}}
                 <br>
@@ -112,7 +112,7 @@
                 </div>
               <!--</ul>  -->
             </div>
-          <!--<div id="fixed" when-scrolled="loadMore()" scroll-bottom-on="status.loaded"> 
+          <!--<div id="fixed" when-scrolled="loadMore()" scroll-bottom-on="status.loaded">
           <ul class="conv">
             <div ng-repeat="message in selected_conversation_messages track by $index">
               <li ng-if="($index != 0) && !selected_conversation_messages[$index - 1].unread && selected_conversation_messages[$index].unread" class="date">New Messages</li>
@@ -120,7 +120,7 @@
               <li>
                 <img ng-if="(message.source == 'user') && (($index == 0) || (selected_conversation_messages[$index - 1].source != message.source))" ng-src="{{message.profile_image}}" alt="img" class="img">
                 <p ng-class="{'ballon color1': message.source == 'user' , 'ballon color2': message.source != 'user'}">
-      
+
                   <!--{{message.text}}-->
                   <!-- <span ng-if="message.text">{{message.text}}</span>
                   <span ng-if="message.image_url"><img src="{{message.image_url}}"/></span>
@@ -132,7 +132,7 @@
               <li>
             </div>
           </ul>
-          </div>-->             
+          </div>-->
 
           <div class="write">
             <form>

@@ -1,102 +1,63 @@
 <%= provide(:title, "Rhombus - Hashtags") %>
 
-<%#= notice %>
-<!-- ========== Css Files ========== -->
-<body>
-  <!-- Start Page Loading -->
-  <div class="loading"><img src="<%= asset_path 'loading.gif' %>" alt="loading-img"></div>
-  <!-- End Page Loading -->
-
- <%= render 'shared/header_new' %>
-  <%= render 'shared/sidebar' %>
-
- <!-- //////////////////////////////////////////////////////////////////////////// -->
-<!-- START CONTENT -->
-<div class="content">
-
-  <!-- Start Page Header -->
-  <div class="page-header" style="background: transparent; margin-bottom: 0px;">
-    <div class="title">
-      <%= link_to 'Create Hashtag', new_user_hashtag_path, id: 'create-hashtag', class: "hashtagBtns" %>
-    </div>
-
-    <%= render 'shared/dashboard_shortcut' %>
-
+<div class="customer-dash sub-nav-bar">
+  <div class="sub-nav-options-wrapper w-clearfix">
+    <%= link_to 'Create Hashtag', new_user_hashtag_path, data: { ix: "create-customer" }, id: 'create-hashtag', class: "add sub-nav-button w-button hashtagBtns" %>
+    <a class="import sub-nav-button w-button" data-ix="import-customers" href="#">&nbsp; Deactivate</a>
+    <a class="sub-nav-button w-button" data-ix="create-list" href="#"> &nbsp;Resend</a>
+    <a class="sub-nav-button w-button" data-ix="create-list" href="#"> &nbsp;Delete</a>
   </div>
-  <!-- End Page Header -->
+</div>
+<div class="dashboard-body">
 
- <!-- //////////////////////////////////////////////////////////////////////////// -->
-<!-- START CONTAINER -->
-<div class="" id="transactions-column">
+  <% unless @hashtags.blank? %>
+  <% @hashtags.each do |h| %>
 
- <!-- Start Row -->
-  <div class="row">
-
-    <!-- Start Panel -->
-    <div class="col-md-12">
-      <% unless @hashtags.blank? %>
-        <div class="panel panel-default">
-
-          <div class="panel-title">
-            <ul class="panel-tools">
-              <li><a class="icon expand-tool"><i class="fa fa-expand"></i></a></li>
-            </ul>
-          </div>
-
-          <div class="panel-body table-responsive">
-            <table id="transactions-table" class="table table-striped dataTable">
-              <thead>
-                <tr role="row">
-                  <th>Hash tag</th>
-                  <th>Item/Campaign Name</th>
-                  <th>Created</th>
-                  <th># Txns</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-              <% @hashtags.each do |h| %>
-                <tr role="row">
-                  <td><%= h.tag %></td>
-                  <td><%= h.description %></td>
-                  <td><%= h.created_at.strftime("%m/%d/%Y %I:%M %p") %></td>
-                  <td><%= h.updated_at.strftime("%m/%d/%Y %I:%M %p") %></td>
-                  <td>
-                      <%# = link_to 'Details', user_hashtag_path(current_user, h), id: "show-hashtag", class: "hashtag-btns" %>
-                      <%= link_to 'Edit', edit_user_hashtag_path(current_user, h), id: "edit-hashtag", class: "hashtag-btns" %>
-                      <%#= link_to 'Delete', user_hashtag_path(current_user, h), id: "delete-hashtag", class: "hashtag-btns", method: :delete, data: { confirm: 'Are you sure?' } %>
-                  </td>
-                </tr>
-              <% end %>
-              </tbody>
-            </table>
-          </div>
-
+  <div class="row-wrapper">
+    <div class="alt-table-row w-row">
+      <div class="alt-column w-clearfix w-col w-col-3">
+        <div class="title-column-div w-clearfix">
+          <div class="alt-table table-text"><%= h.tag %></div>
         </div>
-      <% else %>
-        <div class="center">
-          <div class="no-user">You have no hashtags :(</div>
+        <div class="alt-table cb check-box-column">
+          <div class="w-form">
+            <form data-name="Email Form 2" id="email-form-2" name="email-form-2">
+              <div class="alt-table select-all-check-box w-checkbox w-clearfix">
+                <input class="cb table-checkbox w-checkbox-input" id="node" type="checkbox">
+                <label class="checkbox-field-lable w-form-label" for="node">-</label>
+              </div>
+            </form>
+            <div class="w-form-done">
+              <div>Thank you! Your submission has been received!</div>
+            </div>
+            <div class="w-form-fail">
+              <div>Oops! Something went wrong while submitting the form</div>
+            </div>
+          </div>
         </div>
-      <% end %>
+      </div>
+
+      <div class="alt-column w-col w-col-2">
+        <div class="alt-table-column-div">
+          <div class="alt-table table-text"><%= h.description %></div>
+        </div>
+      </div>
+      <div class="alt-column w-col w-col-2">
+        <div class="alt-table-column-div">
+          <div class="alt-table table-text"><%= h.created_at.strftime("%m/%d/%Y %I:%M %p") %></div>
+        </div>
+      </div>
+      <div class="alt-column w-col w-col-2">
+        <div class="alt-table-column-div w-clearfix">
+          <div class="alt-table table-text"><%= h.updated_at.strftime("%m/%d/%Y %I:%M %p") %></div>
+        </div>
+      </div>
     </div>
-    <!-- End Panel -->
-      <div style="text-align: center; margin-bottom: 40px;"><%#= will_paginate @hashtags, :page_links => false %></div>
   </div>
-  <!-- End Row -->
+  <% end %>
+  <% else %>
+    <div class="center">
+      <div class="no-user">You have no hashtags :(</div>
+    </div>
+  <% end %>
 </div>
-<!-- END CONTAINER -->
- <!-- //////////////////////////////////////////////////////////////////////////// -->
-
-          <br><br><br><br><br><br><br><br><br><br><br><br>
-     <br><br><br><br><br><br>
-
-<%= render 'shared/dashboard_footer' %>
-
-
-</div>
-<!-- End Content -->
- <!-- //////////////////////////////////////////////////////////////////////////// -->
-
-
-</body>
-</html>

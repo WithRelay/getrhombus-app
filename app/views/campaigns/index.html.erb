@@ -1,42 +1,119 @@
 <%= render 'campaign_header' %>
-<%= render 'shared/flash_messages' %>
-<%= link_to 'New Campaign', new_user_campaign_path(current_user), method: :get %>
-<%= button_to 'Resend' %>
-<table>
-  <thead>
-    <tr>
-     <th>Title</th>
-     <th>From</th>
-     <th>Created</th>
-     <th>Channel</th>
-     <th>Recipients</th>
-     <th>Action</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @campaigns.each do |campaign| %>
-      <tr>
-        <td>
-          <%= link_to edit_user_campaign_path(current_user, campaign) do %>
-            <%= campaign.name %>
-          <% end %>
-        </td>
-        <td>
-          <%= campaign.from_user %>
-        </td>
-        <td>
-          <%= present(campaign).format_created_at %>
-        </td>
-        <td>
-          <%= "#{campaign.channel} (#{present(campaign).format_frequency_type}) " %>
-        </td>
-        <td>
-          <%= present(campaign).count_recipient %>
-        </td>
-        <td>
-          <%= present(campaign).campaign_change_status_link %>
-        </td>
-      </tr>
+<div class="sub-nav-bar table-header">
+  <div class="table-header">
+    <div class="table-header">
+      <div class="new-table-row w-row">
+        <div class="cn w-clearfix w-col w-col-3">
+          <div class="header name w-clearfix">
+            <div class="headings name"> &nbsp; Title</div>
+          </div>
+          <div class="cb check-box-column header"></div>
+        </div>
+        <div class="fv w-clearfix w-col w-col-2">
+          <div class="cn column column-2 header">
+            <div class="first-visit headings"> &nbsp; From</div>
+          </div>
+        </div>
+        <div class="lv w-clearfix w-col w-col-2">
+          <div class="colum-3 column header lv">
+            <div class="headings last-visit"> &nbsp;Created</div>
+          </div>
+        </div>
+        <div class="avs w-clearfix w-col w-col-1">
+          <div class="avs column column-4 header">
+            <div class="avs headings last-visit"> &nbsp;Last sent</div>
+          </div>
+        </div>
+        <div class="ts w-clearfix w-col w-col-1">
+          <div class="column column-5 header ts"></div>
+        </div>
+        <div class="table-actions w-clearfix w-col w-col-3">
+          <div class="column column-6 header new-row">
+            <div class="headings recipient">&nbsp;  &nbsp; Recipients</div>
+          </div>
+          <div class="column column-6 header new-row w-clearfix">
+            <div class="headings location name">&nbsp; &nbsp;Channel</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="customer-dash sub-nav-bar">
+  <div class="sub-nav-options-wrapper w-clearfix">
+    <%= link_to ' &nbsp;New campaign'.html_safe, new_user_campaign_path(current_user), class: 'add sub-nav-button w-button', data: { ix: "create-customer" } %>
+    <a class="import sub-nav-button w-button" data-ix="cancel-subscription" href="#">&nbsp; Deactivate</a>
+    <a class="sub-nav-button w-button" data-ix="create-list" href="#"> &nbsp;Resend</a>
+    <a class="import sub-nav-button w-button" data-ix="cancel-subscription" href="#"> &nbsp;Delete</a>
+  </div>
+</div>
+<div class="modal-wrapper-9" data-ix="modal-interaction-9">
+  <div class="cancel-subscription-wrapper w-clearfix">
+    <p class="cancel-subscription modal-content-description">Are you sure you'd like to delete ? </p>
+    <div class="modal-underline underline-div"></div>
+    <a class="button cancel-yes w-button" href="#" id='deleteResource'>Yes, Delete</a>
+    <a class="button cancel-no w-button" data-ix="close-cancel-subscription" href="#">Cancel</a>
+  </div>
+</div>
+<div class="modal-wrapper-9" data-ix="modal-interaction-9">
+  <div class="cancel-subscription-wrapper w-clearfix">
+    <p class="cancel-subscription modal-content-description">Are you sure you'd like to delete ? </p>
+    <div class="modal-underline underline-div"></div>
+    <a class="button cancel-yes w-button" href="#" id='updateResource'>Yes, Delete</a>
+    <a class="button cancel-no w-button" data-ix="close-cancel-subscription" href="#">Cancel</a>
+  </div>
+</div>
+<div class="dashboard-body">
+  <% @campaigns.each do |campaign| %>
+  <div class="row-wrapper">
+    <div class="alt-table-row w-row">
+      <div class="alt-column w-clearfix w-col w-col-3">
+        <div class="title-column-div w-clearfix">
+          <div class="table-text"><%= campaign.name %></div>
+        </div>
+        <div class="alt-table cb check-box-column">
+          <div class="w-form">
+              <div class="select-all-check-box w-checkbox w-clearfix">
+                <input class="cb table-checkbox w-checkbox-input" id="node" type="checkbox">
+                <div class='w-hidden'><%= campaign.id %></div>
+                <label class="checkbox-field-lable w-form-label" for="node">-</label>
+              </div>
+            <div class="w-form-done">
+              <div>Thank you! Your submission has been received!</div>
+            </div>
+            <div class="w-form-fail">
+              <div>Oops! Something went wrong while submitting the form</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="alt-column w-col w-col-2">
+        <div class="alt-table-column-div w-clearfix">
+          <div class="campaigns table-profile-picture" style="background-color : <%= present(campaign).generate_color.sample %>"></div>
+          <div class="table-text"><%= campaign.from_user %></div>
+        </div>
+      </div>
+      <div class="alt-column w-col w-col-2">
+        <div class="alt-table-column-div w-clearfix">
+          <div class="table-text"><%= present(campaign).format_created_at %></div>
+        </div>
+      </div>
+      <div class="alt-column w-col w-col-2">
+        <div class="alt-table-column-div w-clearfix">
+          <div class="table-text">1 week ago</div>
+        </div>
+      </div>
+      <div class="alt-column w-col w-col-2">
+        <div class="alt-table-column-div w-clearfix">
+          <div class="table-text"> &nbsp;<%= "#{campaign.channel} (#{present(campaign).format_frequency_type}) " %></div>
+        </div>
+      </div>
+      <div class="alt-column w-col w-col-1">
+        <div class="alt-table-column-div w-clearfix">
+          <div class="table-text"> &nbsp; <%= present(campaign).count_recipient %></div>
+        </div>
+      </div>
+    </div>
+  </div>
     <% end %>
-  </tbody>
-</table>
+</div>

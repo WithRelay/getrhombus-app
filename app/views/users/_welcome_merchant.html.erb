@@ -1,0 +1,234 @@
+<%= provide(:title, "Rhombus - Dashboard") %>
+
+<div class="dashboard-body">
+  <div class="account-completion-wrapper">
+    <h4 class="account-setup welcome-dash-content-container-header">Complete your account setup</h4>
+    <div class="account-completion-table-container w-row">
+      <div class="w-col w-col-3">
+        <div class="account-completion-table-cell">
+          <h4 class="account-setup-box-header">Import your customers</h4>
+          <div class="account-setup-box-paragraph">Import your customers' phone numbers &amp; email addresses to start messaging them.</div>
+          <a class="account-setup-button w-button" href="#" id='customer-csv-template-link'>Import customers</a>
+        </div>
+      </div>
+      <div class="w-col w-col-3">
+        <div class="account-completion-table-cell">
+          <h4 class="account-setup-box-header">Add bank account</h4>
+          <div class="account-setup-box-paragraph">Add your bank information to start accepting payments from your customers</div>
+          <%= link_to 'Add Bank Account', managed_accounts_user_path(current_user), class: 'account-setup-button w-button' %>
+        </div>
+      </div>
+      <div class="w-col w-col-3">
+        <div class="account-completion-table-cell">
+          <h4 class="account-setup-box-header">Connect Facebook</h4>
+          <div class="account-setup-box-paragraph">Connect your Facebook account to start sending &amp; receiving Facebook chats inside Rhombus</div>
+          <%= link_to 'Connect Facebook', user_fb_pages_path(current_user), class: 'account-setup-button w-button' %>
+        </div>
+      </div>
+      <div class="w-col w-col-3">
+        <div class="account-completion-table-cell">
+          <h4 class="account-setup-box-header">Send your first campaign</h4>
+          <div class="account-setup-box-paragraph">Send your first SMS or Facebook messenger campaign to get things started. Happy chatting!</div>
+          <%= link_to 'Start messaging', new_user_campaign_path(current_user), class: 'account-setup-button w-button' %>
+        </div>
+      </div>
+    </div><a class="account-completion bottom sub-nav-button w-button welcome-dash-container" data-ix="hide-account-setup" href="#">Dismiss</a>
+  </div>
+  <div class="dash-content-container">
+    <div class="content-sub-wrapper">
+      <h4 class="welcome-dash-content-container-header">Overview</h4>
+    </div>
+    <div class="w-row welcome-dash-table-wrapper">
+      <div class="w-col w-col-3">
+        <div class="overview welcome-dash-content-container">
+          <h1 class="total-customer-count">2753</h1>
+          <h4 class="count-description">All Customers</h4>
+        </div>
+      </div>
+      <div class="w-col w-col-3">
+        <div class="customer-contacts-2 welcome-dash-content-container">
+          <h1 class="new-customers">15</h1>
+          <h4 class="count-description"> &nbsp;New Customers this Week</h4>
+        </div>
+      </div>
+      <div class="w-col w-col-3">
+        <div class="customer-contacts-3 welcome-dash-content-container">
+          <h1 class="new-contacts"><%= number_to_currency(@dashboard_stuff.first.sales_till_date) || 0 %></h1>
+          <h4 class="count-description"><%= current_user.is_merchant? ? 'Payments' : 'SALES' %></h4>
+        </div>
+      </div>
+      <div class="w-col w-col-3">
+        <div class="column-4 overview welcome-dash-content-container">
+          <h1 class="total-customer-count">$1,127</h1>
+          <h4 class="count-description"> &nbsp; Sales Today</h4>
+          <h4 class="count-description transaction-count"> &nbsp; 22 Transactions</h4>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="dash-content-container">
+    <div class="content-sub-wrapper">
+      <h4 class="welcome-dash-content-container-header">Messages</h4>
+    </div>
+    <div class="unread-messages-table-container w-row">
+      <div class="w-col w-col-3">
+        <div class="overview unread-messages-count welcome-dash-content-container">
+          <h1 class="total-customer-count">9</h1>
+          <h4 class="count-description">Unread &nbsp;Messages</h4>
+        </div>
+      </div>
+      <div class="w-col w-col-9">
+        <div class="w-clearfix welcome-dash-table-header-wrapper">
+          <div class="header unread-column">
+            <div class="headings name"> &nbsp; Name</div>
+          </div>
+          <div class="header payment-time unread-column">
+            <div class="first-visit headings"> &nbsp; Received</div>
+          </div>
+          <div class="header preview unread-column">
+            <div class="first-visit headings"> &nbsp;Preview</div>
+          </div>
+        </div>
+        <div class="w-clearfix welcome-dash-table-header-wrapper">
+          <div class="unread-column w-clearfix"><img class="table-profile-picture" src="../assets/Customer-2.jpg" width="24">
+            <div class="table-text unread-table">Sandra Fried</div>
+          </div>
+          <div class="payment-time unread-column w-clearfix">
+            <div class="received table-text unread-table">15 mins ago</div>
+          </div>
+          <div class="preview unread-column w-clearfix">
+            <div class="preview table-text unread-table">Hey Joe, I'd like to schedule an appointment for tomorrow afternoon, say..</div>
+          </div>
+        </div>
+        <div class="w-clearfix welcome-dash-table-header-wrapper">
+          <div class="unread-column w-clearfix"><img class="table-profile-picture" src="../assets/Light-Blue.png" width="24">
+            <div class="table-text unread-table">Samuel &nbsp;Mondi</div>
+          </div>
+          <div class="payment-time unread-column w-clearfix">
+            <div class="received table-text unread-table">37 mins ago</div>
+          </div>
+          <div class="preview unread-column">
+            <div class="preview table-text unread-table">Are you guys open until 6pm on the weekends?</div>
+          </div>
+        </div>
+        <div class="w-clearfix welcome-dash-table-header-wrapper">
+          <div class="unread-column w-clearfix"><img class="table-profile-picture" src="../assets/49-2.jpg" width="24">
+            <div class="table-text unread-table">Mandy Sonola</div>
+          </div>
+          <div class="payment-time unread-column w-clearfix">
+            <div class="received table-text unread-table">1 hour ago</div>
+          </div>
+          <div class="preview unread-column">
+            <div class="preview table-text unread-table">I already texted the payment ahead of my appointment tomorrow please co..</div>
+          </div>
+        </div>
+        <div class="w-clearfix welcome-dash-table-header-wrapper">
+          <div class="unread-column w-clearfix"><img class="table-profile-picture" src="../assets/Orange.png" width="24">
+            <div class="table-text unread-table">Jeffery Francisco</div>
+          </div>
+          <div class="payment-time unread-column w-clearfix">
+            <div class="received table-text unread-table">90 mins ago</div>
+          </div>
+          <div class="preview unread-column">
+            <div class="preview table-text unread-table">I got a message about a holiday discount, what does it cover and when does..</div>
+          </div>
+        </div>
+        <div class="w-clearfix welcome-dash-table-header-wrapper">
+          <div class="last-row unread-column w-clearfix"><img class="table-profile-picture" src="../assets/49-1.jpg" width="24">
+            <div class="table-text unread-table">Bryan Balotelli</div>
+          </div>
+          <div class="last-row payment-time unread-column w-clearfix">
+            <div class="received table-text unread-table">2 hours ago</div>
+          </div>
+          <div class="last-row preview unread-column">
+            <div class="preview table-text unread-table">I'm looking to surprise my wife with a full deluxe reservation &nbsp;next weekend...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="dash-content-container scheduled-campaigns-notifications">
+    <div class="content-sub-wrapper">
+      <h4 class="welcome-dash-content-container-header">Message Performance</h4>
+    </div>
+    <div class="w-row welcome-dash-table-wrapper">
+      <div class="w-col w-col-3">
+        <div class="average-message-count-per-day customer-contacts-2 welcome-dash-content-container">
+          <h1 class="new-customers">13469</h1>
+          <h4 class="count-description"> &nbsp;Messages per day</h4>
+          <h4 class="count-description transaction-count">Facebook 27% | SMS &nbsp;73%</h4>
+        </div>
+      </div>
+      <div class="w-col w-col-3">
+        <div class="average-conversations-per-hour customer-contacts-2 welcome-dash-content-container">
+          <h1 class="new-customers">15.7</h1>
+          <h4 class="count-description"> &nbsp;Conversations per hour</h4>
+        </div>
+      </div>
+      <div class="w-col w-col-3">
+        <div class="average-handle-time customer-contacts-2 welcome-dash-content-container">
+          <h1 class="new-customers">4.89 mins</h1>
+          <h4 class="count-description">Average Handle Time</h4>
+        </div>
+      </div>
+      <div class="w-col w-col-3">
+        <div class="customer-contacts-2 open-conversations-yesterday welcome-dash-content-container">
+          <h1 class="new-customers">6</h1>
+          <h4 class="count-description">Open Conversations Yesterday</h4>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="w-row welcome-dash-content-table">
+    <div class="new-transaction-column w-col w-col-4">
+      <div class="dash-content-container transactions">
+        <div class="content-sub-wrapper">
+          <h4 class="welcome-dash-content-container-header">Recent Transactions</h4>
+        </div>
+        <div class="sakes welcome-dash-content-container">
+          <div class="new-customer-list w-row">
+            <%- last4_transactions.each do |t| %>
+              <div class="w-col w-col-1">
+                <div class="customer-list-content-div">
+                  <div class="new-customer-table-text"><%= t.id %></div>
+                </div>
+              </div>
+              <div class="w-col w-col-6">
+                <div class="customer-list-content-div">
+                  <div class="customer-list-content-div w-clearfix">
+                    <div class="name-text new-customer-table-text"><%= t.user %></div>
+                  </div>
+                </div>
+              </div>
+              <div class="w-col w-col-2">
+                <div class="customer-list-content-div">
+                  <div class="new-customer-table-text"><%= t.created_at %></div>
+                </div>
+              </div>
+              <div class="w-col w-col-3">
+                <div class="customer-list-content-div">
+                  <div class="new-customer-table-text"><%= t.amount %></div>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    <div class="column-2 new-transaction-column w-col w-col-8">
+      <div class="chart dash-content-container transactions">
+        <div class="content-sub-wrapper">
+          <h4 class="welcome-dash-content-container-header">Month to Date</h4>
+        </div><img class="chart-place-holder" src="../assets/Graph-screen-shot.png">
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+    <script type="text/javascript">
+      $("#customer-csv-template-link").click(function(){
+        $('#customer-csv-template').submit();
+      });
+    </script>

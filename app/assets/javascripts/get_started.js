@@ -66,13 +66,13 @@ $(document).ready(function () {
   // to prefill signup form or handle captured payments
   // signin is included for when user texts payment and is prompted to sign in to complete account
   // can use form presence instead
-  if (["/signup", "/signin", "/users/sign_in", '/users', "/profile"].indexOf(url.pathname) != -1) {
+  if (["/users/sign_in", "users/sign_up", '/users', "/profile"].indexOf(url.pathname) != -1) {
       var amt = validate_captured_amt(global_page_params['amt']);
 
-      if (global_page_params['button'] == "get-started" && url.pathname == "/signup") {
+      if (global_page_params['button'] == "get-started" && url.pathname == "users/sign_up") {
         $('#email').val(global_page_params['user[email]']);
         $('#phone_number').val(global_page_params['user[phone_number]']);
-      } else if (url.pathname == "/signup") {
+      } else if (url.pathname == "/users/sign_up") {
           $('#phone').val(global_page_params['num']);
           hide_account_type(global_page_params['referrer']);
       } else if (url.pathname == "/profile" && amt) {

@@ -1,0 +1,59 @@
+<div class="side-bar">
+  <div class="dashboard-nav-links">All Customers</div>
+  <h5 class="left-nav signup-box-subheading"><%= params[:controller] %></h5>
+  <a class="left-nav-tab-wrapper w-inline-block" href="#">
+    <div class="left-nav-tab" data-ix="display-and-hide-customers">&nbsp; &nbsp; Customers &nbsp; &nbsp;</div>
+  </a>
+  <div class="customers-hidden-menu" data-ix="display-none-on-load">
+    <div class="w-form">
+      <form data-name="Email Form 7" id="email-form-7" name="email-form-7">
+        <select class="dropdown segments w-select" data-name="Field 4" id="field-4" name="field-4">
+          <option value="">Segments</option>
+          <option value="">New customers</option>
+          <option value="">Active customers</option>
+          <option value="">Inactive customers</option>
+          <option value="">Signed up 3 days ago</option>
+        </select>
+      </form>
+      <div class="w-form-done">
+        <div>Thank you! Your submission has been received!</div>
+      </div>
+      <div class="w-form-fail">
+        <div>Oops! Something went wrong while submitting the form</div>
+      </div>
+    </div>
+  </div>
+  <%= link_to lists_path, class: 'left-nav-tab-wrapper w-inline-block' do %>
+    <div class="left-nav-tab" data-ix="display-and-hide-customers">&nbsp; &nbsp; Lists</div>
+  <% end %>
+  <a class="left-nav-tab-wrapper w-inline-block" href="#">
+    <div class="left-nav-tab messaging" data-ix="display-and-hide-left-nav">&nbsp; &nbsp;Messaging &nbsp; &nbsp; </div>
+  </a>
+  <div class="messaging-hidden-menu" data-ix="display-none-on-load">
+    <div class="customer-dropdown left-nav-tab">&nbsp; Conversations</div>
+    <%= link_to 'Saved replies', user_saved_replies_path(current_user), class: 'customer-dropdown left-nav-tab' %>
+    <br>
+    <%= link_to 'Customer reminders'.html_safe, user_reminders_path(current_user), class: 'customer-dropdown left-nav-tab' %>
+  </div>
+  <%= link_to user_campaigns_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
+    <div class="left-nav-tab">&nbsp; &nbsp;Campaigns</div>
+  <% end %>
+  <%= link_to refer_business_user_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
+    <div class="left-nav-tab"> &nbsp; Refer a Business </div>
+  <% end %>
+  <a class="left-nav-tab-wrapper w-inline-block" data-ix="display-and-hide-transaction-tab" href="#">
+    <div class="left-nav-tab transactions" data-ix="display-and-hide-transaction-tab"> &nbsp;Transactions &nbsp;</div>
+  </a>
+  <div class="transactions-hidden-nav" data-ix="display-none-on-load">
+    <div class="customer-dropdown left-nav-tab">&nbsp; Charges</div>
+    <div class="customer-dropdown left-nav-tab">&nbsp; Pre-authorized</div>
+    <div class="customer-dropdown left-nav-tab">&nbsp;<%= link_to 'Subscriptions', user_subscriptions_path(current_user) %></div>
+  </div>
+  <%= link_to user_hashtags_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
+    <div class="left-nav-tab">&nbsp; &nbsp;Hashtags</div>
+  <% end %>
+  <a class="left-nav-tab-wrapper w-inline-block" href="#">
+    <div class="left-nav-tab">&nbsp; &nbsp;Leads</div>
+  </a>
+  <%= render_customer_sidebar %>
+</div>

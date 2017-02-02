@@ -1,4 +1,7 @@
 $(document).on('ready page:load', function() {
+
+  $('#Notification-Message').counter({ type: 'char', append: false, target: '#textBoxCounter' })
+
   $('#reminderForm').formValidation({
     framework: 'bootstrap',
     excluded: ':disabled',

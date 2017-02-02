@@ -1,29 +1,22 @@
 $(document).ready(function() {
   var pricingSlider, priceValueSpan, amount, currentAmount,
          free_plan_amount = 0,
-         starter_plan_amount = 55,
-         growth_plan_amount = 255,
-         business_plan_amount = 2500,
-         enterprise_plan_amount = 7000;
+         starter_plan_amount = 25,
+         growth_plan_amount = 125,
+         business_plan_amount = 250,
+         enterprise_plan_amount = 400;
 
+   // show slider on merchant credit card info update form
   // show slider on pricing page load
-  $(function(){
-    if (location.pathname === "/pricing") {
+    if ($('#pricing-range')) {
       showSlider();
     }
-  });
 
    // show slider on subscription setting
    $('#setSubscription').on('focus', function (e) {
       showSlider();
     })
 
-   // show slider on merchant credit card info update form
-   $(function(){
-     if (location.pathname === "/profile") {
-       showSlider();
-     }
-   });
 
   function showSlider(){
     pricingSlider = document.getElementById('pricing-range');
@@ -46,7 +39,7 @@ $(document).ready(function() {
 
   function displayValue() {
     // priceValueSpan.innerHTML = pricingSlider.value;
-    priceValueSpan.innerHTML = '<h3>' + pricingSlider.value + '<b> Users</b> </h3><br>' +
+    priceValueSpan.innerHTML = '<h5>' + pricingSlider.value + '<b> Users</b> </h5>' +
       '<h4>' + plan_range(pricingSlider.value)[1] + '</h4>';
 
     //only for subscription setting page
@@ -59,7 +52,7 @@ $(document).ready(function() {
       $('#pricing-range').val(plan_range(pricingSlider.value)[0]);
     }
     else {
-      // $('#select_plan').attr('href', '/signup?signup_plan=' + plan_range(pricingSlider.value)[0]);
+      $('#select_plan').attr('href', '/users/sign_up?signup_plan=' + plan_range(pricingSlider.value)[0]);
       // update selected plan name
       $('#pricing-range').val(plan_range(pricingSlider.value)[0]);
     }
@@ -67,20 +60,20 @@ $(document).ready(function() {
 
   function plan_range(customerCount) {
     if (customerCount > 0 && customerCount <= 100) {
-      return ['starter_plan', planInfo('Starter Plan', starter_plan_amount), starter_plan_amount]
+      return ['starter_plan', planInfo('Starter Plan', starter_plan_amount, 100), starter_plan_amount]
     } else if (customerCount > 100 && customerCount <= 1000) {
-      return ['growth_plan',planInfo('Growth Plan', growth_plan_amount), growth_plan_amount]
+      return ['growth_plan',planInfo('Growth Plan', growth_plan_amount, 1000), growth_plan_amount]
     } else if (customerCount > 1000 && customerCount <= 5000) {
-      return ['business_plan', planInfo('Business Plan', business_plan_amount), business_plan_amount]
+      return ['business_plan', planInfo('Business Plan', business_plan_amount, 5000), business_plan_amount]
     } else if (customerCount > 5000 && customerCount <= 10000) {
-      return ['enterprise_plan', planInfo('Enterprise Plan', enterprise_plan_amount), enterprise_plan_amount]
+      return ['enterprise_plan', planInfo('Enterprise Plan', enterprise_plan_amount, 10000), enterprise_plan_amount]
     } else {
-      return ['free_plan', planInfo('Free Plan', free_plan_amount), free_plan_amount]
+      return ['free_plan', planInfo('Free Plan', free_plan_amount, 0), free_plan_amount]
     }
   }
 
-  function planInfo(plan, amount) {
-    return '<h3 style="color: red;">$'+ amount +'</h3><br><p>BILLED MONTHLY<p><br><h3>'+plan+' for '+ amount +'/month <br>Up to 100 Users</h3>'
+  function planInfo(plan, amount, count) {
+    return '<h1 class="plan-amount">$'+ amount +'</h1><h5 class="signup-box-subheading starter-table">BILLED MONTHLY</h5><h5 class="signup-box-subheading">'+plan+' for $'+ amount +'/month Up to '+count+' Users</h5>'
   }
 
 });

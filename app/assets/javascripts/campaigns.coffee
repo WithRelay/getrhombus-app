@@ -44,7 +44,7 @@ class Campaign
   constructor: (emojiConfig)->
     @textArea = '#trumbowyg'
     @emojiConfig = emojiConfig
-    @oneTime = '#oneTimeFrequency'; @deliverNow = '#deliverNow'; @schedule = '.scheduleOption'
+    @oneTime = '#oneTimeFrequency'; @deliverNow = '#Deliver-now'; @schedule = '.scheduleOption'
 
   showHideEditor: (element)->
     if isEmailChecked(element)
@@ -120,6 +120,7 @@ class Campaign
 
 
 $( document ).on 'ready page:load', ->
+  $('.scheduleOption').hide()
   campaign = new Campaign({ pickerPosition: 'right' })
   campaign.datePicker(new DatePicker( '.daterange', true, { time: true, select: true } ))
   window.onload = ->
@@ -155,17 +156,17 @@ $( document ).on 'ready page:load', ->
       $('body').addClass('loading')
       getBase64FromImageUrl($('input[name=url]').val())
 
-  if $('#campaign_channel').val() == '3'
+  if $('#Channel').val() == '3'
     $('.emailSubject').show()
     $('#sendTestCampaign').show();
     new CustomTrumbowygPlugin('#trumbowyg')
     campaign.showFileBrowser()
-  else if $('#campaign_channel').val() == '1'
+  else if $('#Channel').val() == '1'
     $('#sendTestCampaign').hide();
     campaign.showFileBrowser()
     $('.emailSubject').hide()
     campaign.textAreaEmojis()
-  else if $('#campaign_channel').val() == '2'
+  else if $('#Channel').val() == '2'
     $('#sendTestCampaign').hide();
     $('.emailSubject').hide()
     campaign.showFileBrowser()
@@ -178,7 +179,7 @@ $( document ).on 'ready page:load', ->
     $('#select-images').val('')
     $('#new-image-previews').html('')
 
-  $( '#campaign_channel' ).change ->
+  $( '#Channel' ).change ->
     campaign.showHideEditor(this)
 
   $( '#oneTimeFrequency' ).click ->
@@ -188,7 +189,7 @@ $( document ).on 'ready page:load', ->
     $('#campaign_repeat_days').show()
     campaign.hideShowScheduler()
 
-  if $("#deliverNow").is(":checked")
+  if $("#Deliver-now").is(":checked")
     $('.scheduleOption').hide()
     $('.daterange').val('')
 
@@ -196,8 +197,8 @@ $( document ).on 'ready page:load', ->
   frequency_type = if $('#oneTimeFrequency').is(':checked') then '#oneTimeFrequency' else '#recurringFrequency'
   $(frequency_type).trigger('click')
 
-  $( '#oneTimeFrequency, #deliverNow' ).click ->
-    if !$("#deliverNow").is(":checked")
+  $( '#oneTimeFrequency, #Deliver-now' ).click ->
+    if !$("#Deliver-now").is(":checked")
       campaign.datePicker(new DatePicker( '.daterange', true, { time: true, select: true } ))
     campaign.hideShowScheduler()
 

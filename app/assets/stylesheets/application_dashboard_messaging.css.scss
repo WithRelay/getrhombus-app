@@ -12,9 +12,6 @@
  *
  *= require_self
  *= require bootstrap
- *= require dashboard/style
- *= require dashboard/responsive
- *= require dashboard/shortcuts
  *= require awesome-bootstrap-checkbox
  *= require bootstrap-select
  *= require formValidation.min
@@ -53,6 +50,3 @@ form .progress {
     background: orange;
     width: 0;
 }
-
-
-

@@ -1,37 +1,142 @@
 <%= render 'shared/flash_messages' %>
-<table>
-  <thead>
-    <tr>
-     <th>Id</th>
-     <th>From</th>
-     <th>Created</th>
-     <th>Channel</th>
-     <th>Action</th>
-     <th>Edit</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @reminders.each do |reminder| %>
-      <tr>
-        <td>
-          <%= reminder.id %>
-        </td>
-        <td>
-          <%= reminder.from_user %>
-        </td>
-        <td>
-          <%= present(reminder).format_created_at %>
-        </td>
-        <td>
-          <%= "#{reminder.channel} (#{present(reminder).format_frequency_type}) " %>
-        </td>
-        <td>
-          <%= present(reminder).reminder_change_status_link %>
-        </td>
-        <td>
-          <%= link_to 'Edit', edit_user_reminder_path(current_user, reminder) %>
-        </td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+<div class="customer-dash sub-nav-bar w-clearfix">
+  <%= button_tag 'Set new reminder', class: 'btn btn-primary add sub-nav-button w-button', 'data-ix' => "schedule-notification" %>
+  <a class="sub-nav-button w-button" data-ix="create-list" href="#"> &nbsp;Edit</a>
+  <a class="sub-nav-button w-button" data-ix="create-list" href="#"> &nbsp;Delete</a>
+</div>
+<!-- Button trigger modal -->
+<!-- Modal Body -->
+<div class="modal-wrapper-14" data-ix="modal-interaction-14">
+  <div class="schedule-notification-form-wrapper">
+    <div class="content-sub-wrapper modal w-clearfix">
+      <h4 class="modal-header welcome-dash-content-container-header">Customer Notification</h4>
+    </div>
+    <p class="modal-content-description">Set a reminder or notification that will go out to this customer at a future date. You can use this to automate appointment reminders, or bill payment reminders.</p>
+    <div class="segment-modal underline-div"></div>
+    <div class="scheduled-notification-form w-form">
+      <div class='newReminder'>
+        <div class="modal-body">
+          <%= render partial: 'reminders/form', locals: { reminder: @reminder , reminder_url: v1_reminders_path, method: 'post' } %>
+        </div>
+      </div>
+      <div class="w-form-done">
+        <div>Thank you! Your submission has been received!</div>
+      </div>
+      <div class="w-form-fail">
+        <div>Oops! Something went wrong while submitting the form</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<% if @reminders.present? %>
+
+<div class="dashboard-body">
+  <div class="reminder-dates">Today</div>
+  <div class="reminders-by-date row-wrapper">
+    <div>
+      <div class="new-table-row w-row">
+        <div class="cn w-clearfix w-col w-col-3">
+          <div class="header name w-clearfix">
+            <div class="heading table-text"> &nbsp; Name</div>
+          </div>
+          <div class="cb check-box-column header"></div>
+        </div>
+        <div class="fv w-clearfix w-col w-col-2">
+          <div class="cn column column-2 header w-clearfix">
+            <div class="heading table-text"> &nbsp; Phone</div>
+          </div>
+        </div>
+        <div class="lv w-clearfix w-col w-col-2">
+          <div class="colum-3 column header lv w-clearfix">
+            <div class="heading table-text"> &nbsp;Channel</div>
+          </div>
+        </div>
+        <div class="avs w-clearfix w-col w-col-1">
+          <div class="avs column column-4 header w-clearfix">
+            <div class="heading table-text"> &nbsp;Time</div>
+          </div>
+        </div>
+        <div class="ts w-clearfix w-col w-col-1">
+          <div class="column column-5 header ts w-clearfix">
+            <div class="heading r table-text total-spend-text"> Frequency</div>
+          </div>
+        </div>
+        <div class="table-actions w-clearfix w-col w-col-3">
+          <div class="column column-6 header left new-row w-clearfix">
+            <div class="frequency heading table-text"> &nbsp; Last visit</div>
+          </div>
+          <div class="column column-6 header new-row w-clearfix">
+            <div class="frequency heading table-text">&nbsp; &nbsp;Actions</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="new-table-row w-row">
+          <% @reminders.each do |reminder| %>
+          <div class="cn w-clearfix w-col w-col-3">
+          <div class="name w-clearfix">
+            <%= image_tag('Light-Blue.png', class: 'table-profile-picture', width: 24) %>
+              <div class="table-text"><%= reminder.from_user %></div>
+          </div>
+          <div class="cb check-box-column">
+            <div class="w-form">
+              <form data-name="Email Form 2" id="email-form-2" name="email-form-2">
+                <div class="select-all-check-box w-checkbox w-clearfix">
+                  <input class="cb table-checkbox w-checkbox-input" id="node" type="checkbox">
+                  <label class="checkbox-field-lable w-form-label" for="node">-</label>
+                </div>
+              </form>
+              <div class="w-form-done">
+                <div>Thank you! Your submission has been received!</div>
+              </div>
+              <div class="w-form-fail">
+                <div>Oops! Something went wrong while submitting the form</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="fv w-clearfix w-col w-col-2">
+          <div class="cn column column-2 w-clearfix">
+            <div class="table-text">+1 (202) 345 - 5898</div>
+          </div>
+        </div>
+        <div class="lv w-clearfix w-col w-col-2">
+          <div class="colum-3 column lv">
+            <div class="table-text">Facebook Messenger</div>
+          </div>
+        </div>
+        <div class="avs w-clearfix w-col w-col-1">
+          <div class="avs column column-4 w-clearfix">
+            <div class="table-text">9:00 AM</div>
+          </div>
+        </div>
+        <div class="ts w-clearfix w-col w-col-1">
+          <div class="column column-5 ts w-clearfix">
+            <div class="table-text total-spend-text"><%= reminder.frequency_type %></div>
+          </div>
+        </div>
+        <div class="table-actions w-clearfix w-col w-col-3">
+          <div class="column column-6 left new-row">
+            <div class="frequency table-text"><%= present(reminder).format_created_at %></div>
+          </div>
+          <div class="column column-6 new-row">
+            <%= present(reminder).reminder_change_status_link %>
+          </div>
+        </div>
+        <% end %>
+      </div>
+    </div>
+    </div>
+  </div>
+  <% else %>
+  <div class="dashboard-body">
+  <div class="blank-page-container w-container">
+    <%= image_tag('020_200.png', class: 'blank-page-icon') %>
+    <h1 class="empty-state-dash hero-h1 home-header">You have no scheduled customer<br>reminders</h1>
+    <%= button_tag 'Set new reminder', class: 'button error-page-button w-button', 'data-ix' => "schedule-notification" %>
+  </div>
+</div>
+  <% end %>
