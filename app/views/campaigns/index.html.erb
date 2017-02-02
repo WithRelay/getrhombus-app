@@ -89,7 +89,7 @@
       </div>
       <div class="alt-column w-col w-col-2">
         <div class="alt-table-column-div w-clearfix">
-          <div class="campaigns table-profile-picture" style="background-color : <%= present(campaign).generate_color.sample %>"></div>
+          <div class="campaigns table-profile-picture radius-color-<%= rand(1..10)%>"></div>
           <div class="table-text"><%= campaign.from_user %></div>
         </div>
       </div>
