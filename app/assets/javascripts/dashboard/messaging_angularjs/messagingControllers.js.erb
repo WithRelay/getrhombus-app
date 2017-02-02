@@ -315,8 +315,8 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
 
 
     $scope.selectConversation = function(data) {
-      $timeout(function() {        
-        if (data.select_conversation !== undefined) {
+      if (data.select_conversation !== undefined) {
+        $timeout(function() { 
           var select_conversation;
           for (var i = 0, len = data.conversations.length; i < len; i++) {
             if (data.select_conversation.uid == data.conversations[i].uid && data.select_conversation.uid_type == data.conversations[i].uid_type) {
@@ -333,11 +333,9 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
           } else 
             select_conversation.last_message_ts = new_timestamp;
           
-          $timeout(function() { 
-            angular.element('#conversations-list').children(':first').children(':first').triggerHandler('click');
-          });
-        }
-      });
+          $timeout(function() { angular.element('#conversations-list').children(':first').children(':first').triggerHandler('click'); });
+        });
+      }
     };
 
     
