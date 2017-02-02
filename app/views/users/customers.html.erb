@@ -1,16 +1,172 @@
 <%= provide(:title, "Rhombus - Customers") %>
-
-<!-- ========== Css Files ========== -->
-
-<body>
-  <!-- Start Page Loading -->
-  <div class="loading"><img src="<%= asset_path 'loading.gif' %>" alt="loading-img"></div>
-  <!-- End Page Loading -->
-
- <%= render 'shared/header_new' %>
-  <%= render 'shared/sidebar' %>
-
-
+<div class="modal-wrapper-1" data-ix="modal-interaction">
+  <div class="modal-form-wrapper">
+    <div class="content-sub-wrapper modal w-clearfix">
+      <h4 class="modal-header welcome-dash-content-container-header">Create Customer</h4><a class="close-create-customer" data-ix="close-create-customer" href="#"></a>
+    </div>
+    <div class="get-started-2 log-in-form w-form">
+      <form class="modal-form w-clearfix" data-name="Email Form" id="email-form" name="email-form">
+        <label class="form-label modal" for="Full-name">Basic Information</label>
+        <input class="modal-field text-field w-input" data-name="Full name" id="Full-name" maxlength="256" name="Full-name" placeholder="Full name" required="required" type="text">
+        <input class="modal-field text-field w-input" data-name="Email" id="Email-2" maxlength="256" name="Email" placeholder="Email" required="required" type="text">
+        <input class="modal-field text-field w-input" data-name="Phone" id="Phone" maxlength="256" name="Phone" placeholder="Phone number" required="required" type="text">
+        <select class="dropdown w-select" data-name="List Selection" id="List-Selection" name="List-Selection">
+          <option value="">Add to List</option>
+          <option value="">VIP</option>
+          <option value="">First-time customers</option>
+          <option value="">San Francisco</option>
+        </select>
+        <div class="form underline-div"></div>
+        <label class="form-label modal" for="Street-Address-2">Address (optional)</label>
+        <input class="modal-field text-field w-input" data-name="Street Address 2" id="Street-Address-2" maxlength="256" name="Street-Address-2" placeholder="Street address, APT" type="text">
+        <input class="city modal-field text-field w-input" data-name="City 2" id="City-2" maxlength="256" name="City-2" placeholder="City" type="text">
+        <input class="modal-field state-province text-field w-input" data-name="State 2" id="State-2" maxlength="256" name="State-2" placeholder="State: E.g. (MA)" type="text">
+        <select class="dropdown w-select" data-name="Country 2" id="Country-2" name="Country-2">
+          <option value="">Country</option>
+          <option value="">United States</option>
+          <option value="">Canada</option>
+        </select>
+        <div class="form underline-div"></div>
+        <label class="form-label modal" for="Card-Number-2">Payment Information (optional)</label>
+        <input class="card-number modal text-field w-input" data-name="Card Number 2" id="Card-Number-2" maxlength="256" name="Card-Number-2" placeholder="Card number" type="text">
+        <input class="card-name modal text-field w-input" data-name="Name On Card 2" id="Name-on-Card-2" maxlength="256" name="Name-on-Card-2" placeholder="Name on card" type="text">
+        <input class="month-year text-field w-input" data-name="Month Year 2" id="Month-Year-2" maxlength="256" name="Month-Year-2" placeholder="MM / YYYY" required="required" type="text">
+        <input class="cvv modal text-field w-input" data-name="Cvv 2" id="CVV-2" maxlength="256" name="CVV-2" placeholder="CVV" type="text">
+        <input class="button create-customer w-button" data-wait="Please wait..." type="submit" value="Create customer">
+        <input class="button cancel log-in w-button" data-ix="close-modal" data-wait="Please wait..." type="submit" value="Cancel">
+      </form>
+      <div class="w-form-done">
+        <div>Thank you! Your submission has been received!</div>
+      </div>
+      <div class="w-form-fail">
+        <div>Oops! Something went wrong while submitting the form</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-wrapper-2" data-ix="modal-interaction-2">
+  <div class="import-customers-form-wrapper w-clearfix">
+    <div class="content-sub-wrapper modal w-clearfix">
+      <h4 class="modal-header welcome-dash-content-container-header">Import Customers</h4><a class="close-import-customers" data-ix="close-import-customers" href="#"></a>
+    </div>
+    <div class="modal-instruction-wrapper">
+      <p class="modal-paragraph">To import your customers, use this <a class="template-link" href="#">template file</a> and format your customers' information as specified in the template example.</p>
+    </div><a class="button file-upload w-button" href="#">Choose file from computer</a>
+    <div class="file-name">No file chosen.</div>
+    <div class="w-form">
+      <form class="import-form" data-name="Email Form 5" id="email-form-5" name="email-form-5"><a class="button import-customers w-button" href="#">Import customers</a>
+      </form>
+      <div class="w-form-done">
+        <div>Thank you! Your submission has been received!</div>
+      </div>
+      <div class="w-form-fail">
+        <div>Oops! Something went wrong while submitting the form</div>
+      </div>
+    </div>
+    <p class="modal-paragraph segment tips"> &nbsp;TIP: Import customers who have opted to receive messages from your business. You are responsible making sure your customers have granted you permission to send them messages.</p>
+  </div>
+</div>
+<div class="modal-wrapper-3" data-ix="modal-interaction-3">
+  <div class="create-list-form-wrapper">
+    <div class="content-sub-wrapper modal w-clearfix">
+      <h4 class="modal-header welcome-dash-content-container-header">Create List</h4><a class="close-modal" data-ix="close-create-list" href="#"></a>
+    </div>
+    <div class="w-form">
+      <form class="create-list" data-name="Email Form 5" id="email-form-5" name="email-form-5">
+        <label class="form-label list-name" for="List-Name">List name</label>
+        <input class="modal-field text-field w-input" data-name="List Name" id="List-Name" maxlength="256" name="List-Name" placeholder="E.g. VIP customers" required="required" type="text"><a class="button create-a-list w-button" href="#">Create List</a>
+      </form>
+      <div class="w-form-done">
+        <div>Thank you! Your submission has been received!</div>
+      </div>
+      <div class="w-form-fail">
+        <div>Oops! Something went wrong while submitting the form</div>
+      </div>
+    </div>
+    <div class="modal-instruction-wrapper">
+      <p class="modal-paragraph tips"> &nbsp;TIP: You can create a list based on "Custom segments". You can also send messaging campaigns to members of each list you create. Go to "List" tab on the left navigation to view and edit all your customer OR lead lists.</p>
+    </div>
+  </div>
+</div>
+<div class="modal-wrapper-6" data-ix="modal-interaction-6">
+  <div class="create-segment-form-wrapper">
+    <div class="content-sub-wrapper modal w-clearfix">
+      <h4 class="modal-header welcome-dash-content-container-header">Create Segment</h4><a class="close-modal" data-ix="close-create-segment" href="#"></a>
+    </div>
+    <p class="modal-content-description">A segment is a group (subset) of your customers defined by filters that you set. Customers that match these filters are automatically added to the group over time.</p>
+    <div class="segment-modal underline-div"></div>
+    <div class="create-segment w-form">
+      <form data-name="Email Form 8" id="email-form-8" name="email-form-8">
+        <label class="form-label list-name" for="Segment-Name">Segment name</label>
+        <input class="segment-name text-field w-input" data-name="Segment Name" id="Segment-Name" maxlength="256" name="Segment-Name" placeholder="Ex. Customer created 3 days ago" type="text"><a class="button create-segment-button w-button" href="#">Create Segment</a>
+      </form>
+      <div class="w-form-done">
+        <div>Thank you! Your submission has been received!</div>
+      </div>
+      <div class="w-form-fail">
+        <div>Oops! Something went wrong while submitting the form</div>
+      </div>
+    </div>
+    <p class="modal-paragraph segment tips"> &nbsp;TIP: You can setup automated drip campaigns to nurture customers or leads. First create segments for each key group of customers or leads, E.g:leads that became customers 3-6 days ago,followed by leads that became customers 7-14 days ago, etc. Then go to your campaigns page to set up automatic messages.</p><a class="button manage-segments w-button" href="#">Manage segments</a>
+  </div>
+</div>
+<div class="customer-dashboard-header sub-nav-bar table-header">
+  <div class="table-header">
+    <div class="table-header">
+      <div class="header new-table-row w-row">
+        <div class="cn w-clearfix w-col w-col-3">
+          <div class="header name w-clearfix">
+            <div class="headings name"> &nbsp; Name</div>
+          </div>
+          <div class="cb check-box-column header">
+            <div class="w-form">
+              <form data-name="Email Form 2" id="email-form-2" name="email-form-2">
+                <div class="select-all-check-box w-checkbox w-clearfix">
+                  <input class="cb table-checkbox w-checkbox-input" id="node" type="checkbox">
+                  <label class="checkbox-field-lable w-form-label" for="node">-</label>
+                </div>
+              </form>
+              <div class="w-form-done">
+                <div>Thank you! Your submission has been received!</div>
+              </div>
+              <div class="w-form-fail">
+                <div>Oops! Something went wrong while submitting the form</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="fv w-clearfix w-col w-col-2">
+          <div class="cn column column-2 header">
+            <div class="first-visit headings"> &nbsp; First visit</div>
+          </div>
+        </div>
+        <div class="lv w-clearfix w-col w-col-2">
+          <div class="colum-3 column header lv">
+            <div class="headings last-visit"> &nbsp;Last visit</div>
+          </div>
+        </div>
+        <div class="avs w-clearfix w-col w-col-1">
+          <div class="avs column column-4 header">
+            <div class="avs headings last-visit"> &nbsp;Average</div>
+          </div>
+        </div>
+        <div class="ts w-clearfix w-col w-col-1">
+          <div class="column column-5 header ts">
+            <div class="headings total-spend-header">&nbsp; Total Spend</div>
+          </div>
+        </div>
+        <div class="table-actions w-clearfix w-col w-col-3">
+          <div class="column column-6 header new-row w-clearfix">
+            <div class="headings message-customer name">&nbsp; &nbsp;Actions</div>
+          </div>
+          <div class="column column-6 header id new-row">
+            <div class="headings id">&nbsp; &nbsp;Relay ID</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
  <!-- //////////////////////////////////////////////////////////////////////////// -->
 <!-- START CONTENT -->
