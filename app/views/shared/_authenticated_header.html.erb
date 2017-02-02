@@ -1,0 +1,44 @@
+<div class="dashboard-nav w-clearfix">
+  <div class="dashboard-logo-wrapper">
+    <%= link_to root_url do %>
+      <%= image_tag 'relay_6.png', class: 'dashboard-logo', width: 50 %>
+    <% end %>
+  </div>
+  <div class="dashboard-nav-links-wrapper">
+    <a class="w-clearfix w-inline-block" href="#">
+      <%= link_to user_path(current_user) do %>
+        <div class="dash-header-links"> &nbsp;Dashboard</div>
+      <% end %>
+      <div class="dash-header-links new-link"> &nbsp;All &nbsp;customers</div>
+      <div class="dash-header-links new-link"> &nbsp;New &nbsp;customers</div>
+    </a>
+  </div>
+  <div class="dashboard-nav-links-wrapper new-tab right-nav settings-dropdown">
+    <div class="dropdown-wrapper w-dropdown" data-delay="0">
+      <div class="w-dropdown-toggle">
+        <%= link_to account_setting_path do %>
+          <div class="dropdown-wrapper-text">Settings</div>
+        <% end %>
+        <div class="dropdown-wrapper-icon w-icon-dropdown-toggle"></div>
+      </div>
+      <nav class="dropdown-content-wrapper w-dropdown-list">
+        <a class="dropdown-link w-dropdown-link" href="#">&nbsp;&nbsp;&nbsp;&nbsp;Your profile</a>
+        <%= link_to '&nbsp;&nbsp;&nbsp;&nbsp;Settings'.html_safe, edit_user_registration_path, class: 'dropdown-link w-dropdown-link' %>
+        <%= link_to '&nbsp;&nbsp;&nbsp;&nbsp;Billing Information'.html_safe, billing_information_path, class: 'dropdown-link w-dropdown-link' %>
+        <%= link_to '&nbsp;&nbsp;&nbsp;&nbsp;Log out'.html_safe, destroy_user_session_path, class: 'dropdown-link w-dropdown-link', method: :delete %>
+      </nav>
+    </div>
+  </div>
+  <div class="dashboard-nav-links-wrapper notifications right-nav">
+    <div class="dropdown-wrapper w-dropdown" data-delay="0">
+      <div class="w-dropdown-toggle">
+        <div class="dropdown-wrapper-text"></div>
+      </div>
+      <nav class="dropdown-content-wrapper w-dropdown-list">
+        <a class="dropdown-link w-dropdown-link" href="#">&nbsp;&nbsp;&nbsp;&nbsp;Unread Messages</a>
+        <a class="dropdown-link w-dropdown-link" href="#">&nbsp;&nbsp;&nbsp;&nbsp;New customer</a>
+        <a class="dropdown-link w-dropdown-link" href="#">&nbsp;&nbsp;&nbsp;&nbsp;Payment received</a>
+      </nav>
+    </div>
+  </div>
+</div>

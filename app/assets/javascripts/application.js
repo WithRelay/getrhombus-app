@@ -38,8 +38,8 @@
 
 // Other js files require tree is included so no need to include all the files in the folder tree
 //
-//= require bootstrap.min
 //= require pnotify
+//= require url-parameters
 //= require jquery.lightbox_me
 //= require intlTelInput.min
 //= require chartist
@@ -63,5 +63,16 @@
 //= require plan
 //= require coupon
 //= require subscription
+//= require flashes
 //= require integrations
 //= require lists.js
+//= require demo
+//= require phone_number_formatter
+//= require util_functions
+//= require price_slider
+//= require get_started
+//= require modernizr
+//= require webflow
+
+// DO NOT REQUIRE TREE AS IT DOESNT GUARANTEE THE DEPENDENCY ORDER OF THESE FILES
+// require_tree .

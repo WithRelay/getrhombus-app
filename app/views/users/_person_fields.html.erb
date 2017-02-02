@@ -1,14 +1,11 @@
-
 <div class='nested-fields'>
-  <div class="col-xs-5">
-    <label>Full Legal Business Name</label>
-    <%= f.text_field :business_name %>
-  </div>
+    <%= f.text_field :business_name, class: 'full-name settings text-field w-input' %>
+    <%= f.text_field :full_name, readonly: (f.object.first_name.present? || f.object.last_name.present?), data: { name: 'Name 2'}, id: 'name-2', placeholder: 'Full name', class: 'full-name settings text-field w-input' %>
+    <%= f.text_field :dob, id: 'Date-of-birth', placeholder: 'Date of birth', class: 'userDateOfBirth settings short-field text-field w-input', data: { name: "Date of birth" }, readonly: f.object.dob.present? %>
+    <%# if f.index == 0 %>
+    <%= f.text_field :last4, placeholder: "City", id: 'City-2', class: 'rep-pii settings short-field ssn text-field w-input', data: { name: "SSN" }, id: "SSN" %>
 
-  <div class="col-xs-5">
-    <label>Full name</label>
-      <%= f.text_field :full_name, readonly: (f.object.first_name.present? || f.object.last_name.present?) %>
-  </div>
+    <%# end %>
 </div>
 
   <div class="col-md-10">
@@ -22,19 +19,6 @@
     </div>
   </div>
 
-  <div class="col-xs-5">
-    <label>DOB</label>
-    <%= f.text_field :dob, class: 'userDateOfBirth', readonly: f.object.dob.present? %>
-  </div>
-
-  <% if f.index == 0 %>
-    <div class="col-xs-5">
-      <div class='rep-pii-div'>
-        <label class='rep-pii-label'>SSN</label>
-        <%= f.text_field :last4, class: 'rep-pii' %>
-      </div>
-    </div>
-  <% end %>
 
 
   <%= f.hidden_field :role, value: f.index == 0 ? '0' : '1' %>
@@ -42,41 +26,35 @@
   <%= f.fields_for :address do |a| %>
     <div class="col-xs-5">
       <div class='person-street-div'>
-        <%= a.label :street_address %>
-        <%= a.text_field :street_address, class: 'person-street' %>
+        <%= a.text_field :street_address, placeholder: 'Street Address', id: "Street-Address-2", class: 'person-street settings street-name text-field w-input', data: { name: "Street Address 2" } %>
       </div>
     </div>
 
     <div class="col-xs-5">
       <div class='person-city-div'>
-        <%= a.label :city %>
-        <%= a.text_field :city, class: 'person-city' %>
+        <%= a.text_field :city, class: 'apt_suite settings text-field w-input', data: { name: "City 2" } %>
       </div>
     </div>
 
     <div class="col-xs-5">
       <div class='person-state-div'>
-        <%= a.label :state_province %>
-        <%= a.text_field :state_province, class: 'person-state' %>
+        <%= a.text_field :state_province, placeholder: "State/Province", id: "State-2", class: 'person-street settings street-name text-field w-input',  data: { name: "State 2" } %>
       </div>
     </div>
 
     <div class="col-xs-5">
       <div class='person-postal-div'>
-        <%= a.label :postal_code %>
-        <%= a.text_field :postal_code, class: 'person-postal' %>
+        <%= a.text_field :postal_code, placeholder: "Zip/Postal code", data: { name: "Zip 2" },  id: "Zip-2", class: 'person-postal company-rep settings text-field w-input zip' %>
       </div>
     </div>
 
     <div class="col-xs-5">
-      <label>Select Country </label>
-      <select class="person-country-select"></select>
+      <select class="person-country-select bank-country dropdown w-select"></select>
     </div>
 
     <div class="col-xs-10">
       <div class="person-country-div">
-        <%= a.label :country %>
-        <%= a.text_field :country, class: 'person-country' %>
+        <%= a.hidden_field :country, class: 'person-country' %>
       </div>
     </div>
 

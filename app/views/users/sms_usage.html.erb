@@ -1,0 +1,80 @@
+<div class="settings sub-nav-bar w-clearfix">
+  <%= link_to user_path(current_user) , class: 'dashboard-return sub-nav-button w-button' do %>
+   &nbsp;Return to dashboard
+  <% end %>
+</div>
+<div class="dashboard-body settings w-clearfix">
+  <div class="dash-content-container settings">
+    <h4 class="form-header">SMS &amp; MMS usage</h4>
+    <div class="flex-underline form-header-underline"></div>
+    <div class="account-settings-form-wrapper w-form">
+      <form class="w-clearfix" data-name="Email Form" id="email-form" name="email-form">
+        <label class="field-headers form-label settings" for="Business-Name">current balance</label>
+        <div class="balance-section settings-info-div">
+          <p class="account-balance settings-details-paragraph">$49.00 remaining in your account</p>
+          <p class="settings-details-paragraph">You will receive an email notification when your balance drops below $5</p>
+          <p class="auto-recharge-status settings-details-paragraph">- Auto-recharge disabled</p><a class="alt-button auto-reload button save-changes w-button" href="#">Enable Auto-recharge</a>
+        </div>
+        <div class="flex-underline form-section-divider"></div>
+        <label class="field-headers form-label settings" for="Add-Funds">add funds</label>
+        <input class="add-funds-amount-field text-field w-input" data-name="Add Funds" id="Add-Funds" maxlength="256" name="Add-Funds" placeholder="$0.00" required="required" type="text">
+        <select class="dropdown payment-method w-select" data-name="Expiration Year 2" id="Expiration-Year-2" name="Expiration-Year-2" required="required">
+          <option value="">visa **** **** **** 3456</option>
+        </select><a class="alt-button button save-changes w-button" href="#">Add funds</a>
+        <div class="flex-underline form-section-divider"></div>
+        <label class="field-headers form-label settings" for="Card-Number-2">USAGE HISTORY</label>
+        <label class="form-label paragraph" for="Tax-Rate">View history of your SMS and MMS usage below:</label>
+        <div class="settings-table w-row">
+          <div class="settings-table-cell-wrapper w-col w-col-3">
+            <div class="settings-table-cell-div usage-table-header">
+              <div class="settings-table-text">Date</div>
+            </div>
+          </div>
+          <div class="settings-table-cell-wrapper w-col w-col-3">
+            <div class="settings-table-cell-div usage-table-header">
+              <div class="settings-table-text">Time</div>
+            </div>
+          </div>
+          <div class="settings-table-cell-wrapper w-col w-col-3">
+            <div class="settings-table-cell-div usage-table-header">
+              <div class="settings-table-text">Amount</div>
+            </div>
+          </div>
+          <div class="settings-table-cell-wrapper w-col w-col-3">
+            <div class="last-cell settings-table-cell-div usage-table-header">
+              <div class="settings-table-text">Description</div>
+            </div>
+          </div>
+        </div>
+        <div class="settings-table w-row">
+          <div class="settings-table-cell-wrapper w-col w-col-3">
+            <div class="settings-table-cell-div">
+              <div class="content settings-table-text">January 1, 2016</div>
+            </div>
+          </div>
+          <div class="settings-table-cell-wrapper w-col w-col-3">
+            <div class="settings-table-cell-div">
+              <div class="content settings-table-text">03:24:11 pm</div>
+            </div>
+          </div>
+          <div class="settings-table-cell-wrapper w-col w-col-3">
+            <div class="settings-table-cell-div">
+              <div class="content settings-table-text">$0.002</div>
+            </div>
+          </div>
+          <div class="settings-table-cell-wrapper w-col w-col-3">
+            <div class="last-cell settings-table-cell-div">
+              <div class="content settings-table-text">Outbound SMS</div>
+            </div>
+          </div>
+        </div>
+      </form>
+      <div class="w-form-done">
+        <div>Thank you! Your submission has been received!</div>
+      </div>
+      <div class="w-form-fail">
+        <div>Oops! Something went wrong while submitting the form</div>
+      </div>
+    </div>
+  </div>
+</div>

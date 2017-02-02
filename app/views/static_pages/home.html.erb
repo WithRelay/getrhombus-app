@@ -1,206 +1,144 @@
 <% provide(:title, 'Rhombus - Conversational Commerce Platform') %>
-
-  <style type="text/css">
-    @media screen and (min-width: 1200px) {
-        .w-container {
-          max-width: 1170px;
-        }
-      }
-      .w-slider-nav-invert>div {
-        background-color: #e5e5e5; !important
-    }
-  </style>
-
-  <%= render 'shared/static_pages_header' %>
-
-  <%#= render 'shared/full_messages' %>
-
-  <div class="w-section banner" id="top" data-ix="show-social-and-nav">
-    <div class="w-slider big-slider" data-animation="outin" data-duration="500" data-infinite="1" data-nav-spacing="4">
-      <div class="w-slider-mask">
-        <div class="w-slide slide" data-ix="new-interaction">
-          <div class="w-container">
-            <div class="div-center">
-              <div class="slide-wrapper" data-ix="show-navigation">
-                <div class="div-spc x2">
-                  <div class="banner-logo hero-text"><strong>RHOMBUS</strong>
-                  </div>
-                </div>
-                <div class="div-spc x2">
-                  <div class="sub-inner hero-text" data-ix="slide-animation-2">Exchange real-time text messages, and accept payments from your customers â€“ all within the conversation.</div>
-                </div>
-                <div class="div-spc x2" data-ix="slide-amimation-button"><a class="button btn-white" href="/signup">Get started</a>
-                </div>
+<div class="alternate-hero-table w-row">
+  <div class="w-col w-col-6">
+    <div class="alt-hero-content">
+      <h1 class="alt-hero-heading v2">Communicate with customers inside the messaging apps they use everyday.</h1>
+      <p class="def-content-section-paragraph">Untether support from your website "live chat" by allowing your customers message you anywhere anytime via SMS or Facebook Messenger.&nbsp;</p>
+      <div>
+        <%= image_tag('fb-messenger.png', class: 'alt messaging-app-icons', width: 30) %>
+        <%= image_tag('twilio-logo.png', class: 'alt messaging-app-icons', width: 30) %>
+        <%= image_tag('slack.png', class: 'alt messaging-app-icons', width: 30) %>
+        <%= image_tag('twitter.png', class: 'alt messaging-app-icons', width: 30) %>
+        <%= image_tag('whatsapp.png', class: 'alt messaging-app-icons', width: 30) %>
+      </div>
+    </div>
+    <div class="hero-button-wrapper w-clearfix">
+      <%= link_to 'Get started for free', new_user_registration_url, class: 'alt-hero-cta-button features hero-button w-button' %>
+      <a class="button div-cta hero-alt-button w-button" href="#">Learn more</a>
+    </div>
+  </div>
+  <div class="w-col w-col-6">
+    <%= image_tag('Rhombus-iphone-frame-crop-top.png', class: 'alt features-hero-image', width: 371) %>
+  </div>
+</div>
+</div>
+<div class="alt home sub-hero-div">
+  <h1 class="sub-hero-header">A single interface to manage all your customer interactions including direct messaging, <br>marketing campaigns &amp; transactions</h1>
+  <div class="customer-interactions-table w-row">
+    <div class="w-col w-col-3">
+      <div class="customer-interaction-content-wrapper first">
+        <div class="featues-div-header-wrapper">
+          <%= image_tag('User-ID.png', class: 'features-div-icon') %>
+        </div>
+        <div class="features-div-paragraph-wrapper">
+          <h3 class="features-div-header-text">Customer support</h3>
+          <p class="feature-div-paragraph">Respond to customer inquiries via SMS or Facebook Messenger, so you can provide better support, quicker.</p>
+        </div>
+      </div>
+    </div>
+    <div class="w-col w-col-3">
+      <div class="customer-interaction-content-wrapper">
+        <div class="featues-div-header-wrapper">
+          <%= image_tag('Messaging-1.png', class: 'features-div-icon') %>
+        </div>
+        <div class="features-div-paragraph-wrapper">
+          <h3 class="features-div-header-text">notifications</h3>
+          <p class="feature-div-paragraph">Automate important notifications like bill payment due date, appointment reminders, etc. via mobile messaging.</p>
+        </div>
+      </div>
+    </div>
+    <div class="w-col w-col-3">
+      <div class="customer-interaction-content-wrapper">
+        <div class="featues-div-header-wrapper">
+          <%= image_tag('Node.png', class: 'features-div-icon') %>
+        </div>
+        <div class="features-div-paragraph-wrapper">
+          <h3 class="features-div-header-text">targeted campaigns</h3>
+          <p class="feature-div-paragraph">Segment your customers &nbsp;and send them targeted mobile messages to drive more sales.</p>
+        </div>
+      </div>
+    </div>
+    <div class="w-col w-col-3">
+      <div class="customer-interaction-content-wrapper">
+        <div class="featues-div-header-wrapper">
+          <%= image_tag('Wallet.png', class: 'features-div-icon') %>
+        </div>
+        <div class="features-div-paragraph-wrapper">
+          <h3 class="features-div-header-text">Transactions &amp; Refunds</h3>
+          <p class="feature-div-paragraph">Charge customers, or create subscriptions within a conversation. No need to switch between apps</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="default-content-section home">
+  <div class="content-wrapper icon-table w-container">
+    <%= image_tag('Node-3.png', class: 'section-icon') %>
+    <h1 class="sub-hero-header">Delight your customers by making every&nbsp;<br>interaction more human.</h1>
+    <div>
+      <div class="browser-header-full w-clearfix">
+        <div class="browser-options"></div>
+        <div class="browser-options new-option"></div>
+        <div class="browser-options new-option"></div>
+      </div>
+      <%= image_tag('Messaging-Dashboard.png', class: 'messaging-dashboard', width: 929) %>
+    </div>
+  </div>
+  <div class="customer-interactions-table no-icon-row w-row">
+    <div class="w-col w-col-4">
+      <div class="customer-interaction-content-wrapper first">
+        <div class="features-div-paragraph-wrapper">
+          <h3 class="features-div-header-text">Transcend email</h3>
+          <p class="feature-div-paragraph">90% of text messages are read within 3 minutes. interact with customers, employees and contractors in real-time using mobile messages.</p>
+        </div>
+      </div>
+    </div>
+    <div class="w-col w-col-4">
+      <div class="customer-interaction-content-wrapper no-icon-row">
+        <div class="features-div-paragraph-wrapper">
+          <h3 class="features-div-header-text">Go Where Your Customers are</h3>
+          <p class="feature-div-paragraph">Untether customer support from your website's "live chat" by giving customers the flexibility to message you anytime, even on the go.</p>
+        </div>
+      </div>
+    </div>
+    <div class="w-col w-col-4">
+      <div class="customer-interaction-content-wrapper no-icon-row">
+        <div class="features-div-paragraph-wrapper">
+          <h3 class="features-div-header-text">prevent Customers from slipping away</h3>
+          <p class="feature-div-paragraph">Create rule based drip campaigns to nurture first-time and VIP customers so you can grow your business.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="default-content-section-2 table-section">
+  <div class="def-content-section-wrapper w-container">
+    <%= image_tag('011_095.png', class: 'section-icon') %>
+    <h1 class="sub-hero-header">Turn first-time contacts<br>to loyal customers</h1>
+    <div class="default-content-section-table w-row">
+      <div class="def-content-section-column-1 w-col w-col-6">
+        <h3 class="section-3-header">Engage customers everywhere</h3>
+        <p class="def-content-section-paragraph section-4">Untether support from your website "live chat" by allowing your customers message you anywhere anytime via SMS or Facebook Messenger.&nbsp;</p>
+        <h3 class="section-3-header">Get a complete picture of each customer</h3>
+        <p class="def-content-section-paragraph section-4">No more switching between support tools and your transaction data to look up customer information.
+          <br>
+          <br>Relay connects with your back-office&nbsp;to show your customers' purchase history alongside their interactions with your business, giving your team a complete picture.</p><a class="button def-content-section-button w-button" href="#">See all features</a>
+          <div class="user-review-div">
+            <div class="user-review-table w-row">
+              <div class="w-col w-col-3">
+                <%= image_tag('J-Libov.jpg', class: 'user-review-image', width: 50) %>
+              </div>
+              <div class="w-col w-col-9">
+                <p class="user-revew-paragraph"><span class="quotes">&nbsp; </span>Text-based interaction is fast..flexible, descriptive and even consistent in ways that voice and user interface often are not</p>
+                <div class="user-reviewer-name">Jonathan Libov (USV Analyst)</div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
-  </div>
-  <div class="w-section section hm-section-2" data-ix="show-social-and-nav">
-    <div class="w-container">
-      <div>
-        <div class="w-row">
-          <div class="w-col w-col-3">
-            <div class="icon-wrapper"><img src="<%= asset_path 'Connect With Customers.png' %>">
-              <h5>Connect with your customers</h5>
-              <p>Accept orders for pickup or delivery, take dinner reservations, book hair appointments, and more â€“ all without a phone call.</p>
-            </div>
-          </div>
-          <div class="w-col w-col-3">
-            <div class="icon-wrapper"><img src="<%= asset_path 'Accept Payments.png' %>">
-              <h5>Accept payments</h5>
-              <p>Get paid by a single customer or group of customers simultaneously, all within the SMS conversation.</p>
-            </div>
-          </div>
-          <div class="w-col w-col-3">
-            <div class="icon-wrapper"><img src="<%= asset_path 'Rhombus Analytics.png' %>">
-              <h5>Get feedback</h5>
-              <p>Know how customers feel about your product or service in real-time and provide them with a more personal way to answer questions that come up.</p>
-            </div>
-          </div>
-          <div class="w-col w-col-3">
-            <div class="icon-wrapper"><img src="<%= asset_path 'Simple Pricing.png' %>">
-              <h5>Simple pricing</h5>
-              <p>No carrier billing. Just 2.9% + 30c per transaction to receive payments. Sending payments is always free.</p>
-            </div>
-          </div>
+        <div class="w-col w-col-6">
+          <%= image_tag('Iphone-frame-Rhombus.png', class: 'phone', width: 366) %>
         </div>
       </div>
     </div>
   </div>
-  <div class="w-section section">
-    <div class="w-container">
-      <div class="w-row">
-        <div class="w-col w-col-7 w-col-stack">
-          <div data-ix="img-from-left"><img src="<%= asset_path 'Rhombus Android.png' %>">
-          </div>
-        </div>
-        <div class="w-col w-col-5 w-col-stack col-spcae">
-          <div>
-            <div class="div-spc section-3-spacing"></div>
-            <div class="div-spc section-3-spacing"></div>
-            <h1 class="hm-section-3-heading">Messaging + Payments = Bliss</h1>
-          </div>
-          <p class="hm-section-3-text">Accepting payment from your customers has never been easier. Smart phone or not, customers can chat with you via SMS, and complete transactions by simply texting the payment amount to your Rhombus number. Your customers can securely link their debit cards to Rhombus; our bank-grade security keeps their information safe.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="w-section section hm-section-4">
-    <div class="w-container">
-      <div class="w-row">
-        <div class="w-col w-col-7 w-col-stack">
-          <div data-ix="img-from-left">
-            <div class="div-spc section-3-spacing">
-              <div class="div-spc section-3-spacing"></div>
-            </div>
-            <div>
-              <div class="div-spc section-3-spacing"></div>
-              <h1 class="hm-section-4-heading">Reach customers wherever they are.</h1>
-            </div>
-            <p class="hm-section-4-text">You can easily respond to support questions, sales inquiries, schedule appointments, or take orders from the messaging dashboard. Your customers will receive your responses as a text message. Weâ€™ve built the best way to provide your customers with a more personal way to answer any questions that come up.</p>
-            <div>
-              <h2>Get started for free</h2>
-              <p>TRY IT FREE NO LONG-TERM COMMITMENT</p>
-              <%= render "static_pages/get_started_form" %>
-            </div>
-          </div>
-        </div>
-        <div class="w-col w-col-5 w-col-stack col-spcae">
-          <div class="div-spc"><img src="<%= asset_path 'Rhombus Iphone 1.png' %>">
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="w-section section paralax hm-section-5"></div>
-  <div class="w-section section hm-section-6">
-    <div class="w-container">
-      <div class="hm-section-3-content">
-        <div class="hm-section-6-title">Customer CRM and Transaction Analytics</div>
-        <div class="hm-section-6-text">Get full access to customer &amp; transactional data, showing you who your customers are, how often they visit, as well as a detailed breakdown of your bottom-line.</div>
-        <div class="hm-section-6-img"><img src="<%= asset_path 'Rhombus Dash.png' %>" height="542">
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="w-section section gray ask-us">
-    <div class="w-container">
-      <div class="div-center ask-us">You can ask us anything. Just text our number: <a href="sms://+<redacted_phone_number>" class='ask-us-number'>202-350-2966</a>
-      </div>
-    </div>
-  </div>
-  <div class="w-section section hm-section-7">
-    <div class="w-container">
-      <div>
-        <div class="hm-section-7-title">Businesses that use Rhombus</div>
-      </div>
-      <div class="w-row row-business-icons">
-        <div class="w-col w-col-2"><img src="<%= asset_path 'Taxi-50.png' %>">
-          <div class="business-icons-text">TAXI</div>
-        </div>
-        <div class="w-col w-col-2"><img src="<%= asset_path 'Restaurant-50.png' %>">
-          <div class="business-icons-text">RESTAURANT</div>
-        </div>
-        <div class="w-col w-col-2"><img src="<%= asset_path 'Coffee To Go-50.png' %>">
-          <div class="business-icons-text">COFFEE SHOP</div>
-        </div>
-        <div class="w-col w-col-2"><img src="<%= asset_path 'Hair Dryer-50.png' %>">
-          <div class="business-icons-text">BEAUTY PROFESSIONALS</div>
-        </div>
-        <div class="w-col w-col-2"><img src="<%= asset_path 'Roller Brush-50.png' %>">
-          <div class="business-icons-text">HOME &amp; REPAIR SERVICES</div>
-        </div>
-        <div class="w-col w-col-2"><img src="<%= asset_path 'Money Transfer-50.png' %>">
-          <div class="business-icons-text">ORGS &amp; NONPROFITS</div>
-        </div>
-      </div>
-      <div class="business-icons-spacing"></div>
-      <div class="w-row row-business-icons">
-        <div class="w-col w-col-2"><img src="<%= asset_path 'Delivery-50.png' %>">
-          <div class="business-icons-text">ON-DEMAND DELIVERY</div>
-        </div>
-        <div class="w-col w-col-2"><img src="<%= asset_path 'Price Tag-50.png' %>">
-          <div class="business-icons-text">RETAIL</div>
-        </div>
-        <div class="w-col w-col-2"><img src="<%= asset_path 'Broom-50.png' %>">
-          <div class="business-icons-text">CLEANING SERVICES</div>
-        </div>
-        <div class="w-col w-col-2"><img src="<%= asset_path 'Briefcase-50.png' %>">
-          <div class="business-icons-text">PROFESSIONAL SERVICES</div>
-        </div>
-        <div class="w-col w-col-2"><img src="<%= asset_path 'Dumbbell-50.png' %>">
-          <div class="business-icons-text">HEALTH &amp; FITNESS</div>
-        </div>
-        <div class="w-col w-col-2"><img src="<%= asset_path 'Purchase Order-50.png' %>">
-          <div class="business-icons-text">OTHERS</div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="w-section section hm-section-8">
-    <div class="w-container">
-      <div class="hm-section-3-content">
-        <div class="hm-section-3-img"><img src="<%= asset_path 'RhombusBusinesses2.png' %>" height="542">
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="w-section section section-9">
-    <div class="w-container">
-      <div class="hm-stripe-div">
-        <div class="hm-stripe-title">Secure Transactions</div>
-      </div>
-      <div class="w-row">
-        <div class="w-col w-col-3"><img class="hm-stripe-icon" src="<%= asset_path 'big.png' %>">
-        </div>
-        <div class="w-col w-col-9">
-          <div class="hm-stripe-content">Paying with Rhombus is safer than debit cards or checks. We encrypt and tokenize your payment information so no one can have access to it. You will never have to give out sensitive information to businesses.</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <%= render "shared/static_pages_footer" %>
+<%= render_sign_up_footer %>

@@ -181,13 +181,13 @@
             if (options.count === defaults.count) {
               // This area is customize
              // this do not effects other place we have used. I have check the campaign_channel id
-              if ($('#campaign_channel').length > 0){
+              if ($('#Channel').length > 0){
                 // 0 represents for sms and 1 for mms
-                if ($('#campaign_channel').val()=="0" || $('#campaign_channel').val()=="1"){
+                if ($('#Channel').val()=="0" || $('#Channel').val()=="1"){
                   countIndex = 1600 - $value.length;
                 }
                 // value 2 represent for facebook messenger
-                else if (($('#campaign_channel').val()=="2")){
+                else if (($('#Channel').val()=="2")){
                   countIndex = 320 - $value.length;
                 }
                 // else conditions is for other values like email

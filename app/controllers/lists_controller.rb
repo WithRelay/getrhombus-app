@@ -26,7 +26,7 @@ class ListsController < ApplicationController
     respond_with(@list)
   end
 
- 
+
   def update
     flash[:notice] = 'List was successfully updated.' if @list.update(list_params)
     respond_with(@list)
@@ -44,6 +44,10 @@ class ListsController < ApplicationController
       flash[:notice] = "List was successfully deleted"
       respond_with(@list)
     end
+  end
+
+  def segments
+    @segments = current_user.lists.where(segment: true)
   end
 
   private

@@ -135,7 +135,7 @@ class User < ActiveRecord::Base
     User.find_by(email: "<redacted_email>") || User.find_by(email: "<redacted_email>")
   end
 
-  def get_stripe_cred(type)
+  def get_stripe_cred
     # platform acct is a standalone account and only one record exists for platform
     # merchants could have 2 records. Managed, Standalone (prior to v1.5)
     return self.stripe_creds.first if is_platform? 

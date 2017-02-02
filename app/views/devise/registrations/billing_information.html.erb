@@ -1,0 +1,118 @@
+<!-- ========== Css Files ========== -->
+<% provide(:title, 'Rhombus - Payment Info') %>
+
+<div class="settings sub-nav-bar w-clearfix">
+  <%= link_to user_path(current_user) , class: 'dashboard-return sub-nav-button w-button' do %>
+   &nbsp;Return to dashboard
+  <% end %>
+</div>
+<div class="dashboard-body settings w-clearfix">
+  <div class="dash-content-container settings">
+    <h4 class="form-header">Billing Information</h4>
+    <div class="flex-underline form-header-underline"></div>
+    <div class="account-settings-form-wrapper w-form">
+      <%= form_for(current_user, as: resource_name, url: registration_path(current_user), html: { method: :put, id: "cc-form email-form", class: 'w-clearfix', autocomplete: "off", data: { name: "Email Form" } }) do |f| %>
+        <label class="field-headers form-label settings" for="Business-Name">credit card information</label>
+        <label class="form-label paragraph" for="Card-Number-2">You will be billed at the beginning of every month for all active paid plans, excluding the 14-day trial period. SMS/MMS related charges will deducted from available credits in your Rhombus account see <a class="settings-link" href="#">SMS/MMS usage</a>.
+          <br>
+          <br>A sales tax will be included in your monthly subscription charge if this is a legal requirement in your ZIP code.</label>
+        <%= f.number_field :last4, id: "cc-number Card-Number-2", data: { name: "Card Number 2" }, type: "tel", class: "card-number text-field w-input form-control cc-num", placeholder: "Card number", "x-autocompletetype" => "cc-number", autocompletetype: "cc-number", autocorrect: 'off', spellcheck: 'off', autocapitalize: 'off' %>
+        <span class="card" aria-hidden="true"></span>
+        <%= f.text_field :card_name, id: 'cc-name Name-on-Card-2',  data: { name: 'Name On Card 2' }, class: "name-on-card text-field w-input form-control", placeholder: "Name on Card", 'x-autocompletetype' => "off", autocompletetype: 'off', :autocorrect => "off", spellcheck: 'off', autocapitalize: "off", autocomplete: "off" %>
+        <input id="cc-exp Month-Year-2" type="text", data-name="Month Year 2", class="month-year text-field w-input" placeholder="MM / YY" value="" x-autocompletetype="off" autocompletetype="off" autocorrect="off" spellcheck="off" autocapitalize="off">
+        <input id="cc-csc" type="tel" data-name="Cvv 2" id="CVV-2" class="cvv text-field w-input form-control" placeholder="CVC" value="" autocorrect="off" spellcheck="off" autocapitalize="off" autocomplete="off" maxlength="4">
+        <div class="col-md-6 col-sm-6" id="exp-div">
+          <%= f.hidden_field :exp_month, id: "cc-ex-month" %>
+          <%= f.hidden_field :exp_year, id: "cc-ex-year" %>
+          <%= f.hidden_field :card_token, id: "cc-uri" %>
+          <%= f.hidden_field :card_type, id: "cc-type" %>
+        </div>
+
+        <%= f.submit "Update Information", id: "cc-submit", class: "alt-button button save-changes w-button btn btn-default btn-block btn-rhombus" %>
+        <div class="flex-underline form-section-divider"></div>
+        <label class="field-headers form-label settings" for="Business-Name">PLAN INFORMATION</label>
+
+        <label class="form-label paragraph" for="Tax-Rate">Upgrade or modify your subscription plan by making a selection below:</label>
+        <div style="margin: auto;margin-top: 20px; width: 80%">
+          <input type="text" name="plan[name]" id="pricing-range" amountValue="0">
+          <span class="" id="price-value"></span>
+        </div>
+        <a class="plan-selector w-inline-block" href="#">
+          <%= image_tag('Shop-100.png', height: 80, class: 'plan-icon') %>
+          <div class="plan-name">Starter Plan</div>
+        </a>
+        <a class="plan-selector w-inline-block" href="#">
+          <%= image_tag('Business-100.png', height: 80, class: 'plan-icon') %>
+          <div class="plan-name">Business Plan</div>
+        </a>
+        <div class="settings-info-div">
+          <h1 class="business-plan plan-name plans-text">Current Subscription: Business Plan (Standard)</h1>
+          <div class="flex-underline plan-div"></div>
+          <p class="settings-details-paragraph">Number of seats: [1 seat]</p>
+          <p class="settings-details-paragraph">Time period: January 1, 2016 - December 31, 2016 (Annual)</p>
+          <p class="settings-details-paragraph">Plan amount: $49.00 USD</p>
+        </div>
+        <div class="settings-info-div">
+          <h1 class="bg-icon plans-text"></h1>
+          <h1 class="plan-name plans-text">You don't have any subscriptions</h1>
+        </div><a class="alt-button button save-changes w-button" href="#">Upgrade&nbsp;plans</a>
+        <div class="flex-underline form-section-divider"></div>
+        <label class="field-headers form-label settings" for="Month-Year-2">COUPON &amp; DISCOUNTS</label>
+        <input class="coupon text-field w-input" data-name="Coupon Code" id="Coupon-Code" maxlength="256" name="Coupon-Code" placeholder="Enter Discount Code" required="required" type="text"><a class="alt-button button discount-code save-changes w-button" href="#">Apply discount</a>
+        <div class="flex-underline form-section-divider"></div>
+        <label class="field-headers form-label settings" for="Card-Number-2">INVOICES</label>
+        <label class="form-label paragraph" for="Tax-Rate">View history of your paid subscriptions below:</label>
+        <div class="settings-table w-row">
+          <div class="settings-table-cell-wrapper w-col w-col-3">
+            <div class="id settings-table-cell-div settings-table-header">
+              <div class="settings-table-text">Invoice ID</div>
+            </div>
+          </div>
+          <div class="settings-table-cell-wrapper w-col w-col-3">
+            <div class="invoice-date settings-table-cell-div settings-table-header">
+              <div class="settings-table-text">Date</div>
+            </div>
+          </div>
+          <div class="settings-table-cell-wrapper w-col w-col-3">
+            <div class="invoice-amount settings-table-cell-div settings-table-header">
+              <div class="settings-table-text">Amount</div>
+            </div>
+          </div>
+          <div class="settings-table-cell-wrapper w-col w-col-3">
+            <div class="invoice-status settings-table-cell-div settings-table-header">
+              <div class="settings-table-text">Status</div>
+            </div>
+          </div>
+        </div>
+        <div class="settings-table w-row">
+          <div class="settings-table-cell-wrapper w-col w-col-3">
+            <div class="id settings-table-cell-div">
+              <div class="content settings-table-text">T23SJ59P</div>
+            </div>
+          </div>
+          <div class="settings-table-cell-wrapper w-col w-col-3">
+            <div class="invoice-date settings-table-cell-div">
+              <div class="content invoice-date settings-table-text">January 1, 2016</div>
+            </div>
+          </div>
+          <div class="settings-table-cell-wrapper w-col w-col-3">
+            <div class="invoice-amount settings-table-cell-div">
+              <div class="content settings-table-text">$49.00</div>
+            </div>
+          </div>
+          <div class="settings-table-cell-wrapper w-col w-col-3">
+            <div class="last-cell settings-table-cell-div">
+              <div class="content settings-table-text status-text">Paid</div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+      <div class="w-form-done">
+        <div>Thank you! Your submission has been received!</div>
+      </div>
+      <div class="w-form-fail">
+        <div>Oops! Something went wrong while submitting the form</div>
+      </div>
+    </div>
+  </div>
+</div>

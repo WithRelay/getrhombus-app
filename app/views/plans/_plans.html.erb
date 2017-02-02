@@ -1,30 +1,107 @@
 <!-- partials for plans index for show more feature support -->
-<% if @plans %>    
-   
-  <% @plans.each do |plan| %>
-    <tr>
+
+<% if @plans %>
+<div class="dashboard-body settings">
+    <div class="dash-content-container manage-plans settings">
+      <h4 class="form-header">Manage Plans</h4>
+      <div class="flex-underline form-header-underline"></div>
+      <% @plans.each do |plan| %>
+
+      <div class="header manage-plans-row w-row">
+        <div class="w-col w-col-4">
+          <div class="header settings-row-text">Plan name</div>
+        </div>
+        <div class="w-col w-col-2">
+          <div class="header settings-row-text">Amount</div>
+        </div>
+        <div class="w-col w-col-2">
+          <div class="header settings-row-text">Plan interval</div>
+        </div>
+        <div class="w-col w-col-2">
+          <div class="header settings-row-text">Subscriber count</div>
+        </div>
+        <div class="w-col w-col-2">
+          <div class="header settings-row-text">Actions</div>
+        </div>
+      </div>
+
+<div class="manage-plans-row w-row">
+  <div class="w-col w-col-4">
+    <div class="w-form">
+      <form data-name="Email Form" id="email-form" name="email-form">
+        <span class="plan-name manage-plans plan-name text-field w-input" data-name="Plan Name 2" id="Plan-name-2"><%= plan.name %></span>
+      </form>
+      <div class="w-form-done">
+        <div>Thank you! Your submission has been received!</div>
+      </div>
+      <div class="w-form-fail">
+        <div>Oops! Something went wrong while submitting the form</div>
+      </div>
+    </div>
+  </div>
+  <div class="w-col w-col-2">
+    <div class="w-form">
+      <form data-name="Email Form" id="email-form" name="email-form">
+        <span class="text-field w-input" data-name="Plan Amount 2" id="Plan-amount-2"><%= present(plan).format_amount %></span>
+      </form>
+      <div class="w-form-done">
+        <div>Thank you! Your submission has been received!</div>
+      </div>
+      <div class="w-form-fail">
+        <div>Oops! Something went wrong while submitting the form</div>
+      </div>
+    </div>
+  </div>
+  <div class="w-col w-col-2">
+    <div class="w-form">
+      <form class="plan-interval-column" data-name="Email Form" id="email-form" name="email-form">
+        <span class="dropdown subscription-interval w-select" data-name="Subscription Interval 2" id="Subscription-Interval-2" ><%= plan.interval %> </span>
+      </form>
+      <div class="w-form-done">
+        <div>Thank you! Your submission has been received!</div>
+      </div>
+      <div class="w-form-fail">
+        <div>Oops! Something went wrong while submitting the form</div>
+      </div>
+    </div>
+  </div>
+  <div class="w-col w-col-2">
+    <div class="settings-row-text">500</div>
+  </div>
+  <div class="w-col w-col-2">
+    <% if plan.subscription_id.blank? %>
+      <%= link_to 'Delete Plan', user_plan_path(current_user, plan), method: :delete, class: "button settings-table-row w-button delete-plan plan#{plan.id}", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i>Please wait...".html_safe } %>
+    <% end %>
+  </div>
+</div>
+<% end %>
+</div>
+</div>
+<a class="button save-changes settings-table w-button" href="#">Save changes</a>
+<% end %>
+
+  <%# @plans.each do |plan| %>
+    <!-- <tr>
       <td colspan="3">
-        <span class='plan-name'><%= plan.name %></span>
+        <span class='plan-name'><%#= plan.name %></span>
         <span style="margin-left: 120px;" class="plan-name-edit-span">
-          <img src="<%= asset_path 'poweredbyR.jpg' %>" class="plan-name-edit-icon pull-right" style="width: 100px;">
+          <img src="<%#= asset_path 'poweredbyR.jpg' %>" class="plan-name-edit-icon pull-right" style="width: 100px;">
         </span>
-        <span style="margin-left: 120px;" class='hide plan-name-save-span' data-plan-id='<%= plan.id %>'>
-          <img src="<%= asset_path 'About Icon.png' %>" class="plan-name-save-icon" style="width: 40px;">
+        <span style="margin-left: 120px;" class='hide plan-name-save-span' data-plan-id='<%#= plan.id %>'>
+          <img src="<%#= asset_path 'About Icon.png' %>" class="plan-name-save-icon" style="width: 40px;">
         </span>
-      </td>
+      </td> -->
       <!-- show amount like $12.33, $10.00 -->
-      <td colspan="3"><%= present(plan).format_amount %></td>
-      <td colspan="3"><%= plan.interval %></td>
-      <td colspan="3"><%= plan.interval_count %></td>
+      <!-- <td colspan="3"><%#= present(plan).format_amount %></td>
+      <td colspan="3"><%#= plan.interval %></td>
+      <td colspan="3"><%#= plan.interval_count %></td> -->
       <!--
       <td><%#= link_to 'Show', user_plan_path(current_user, plan) %></td>
       -->
-      <td>
-        <% if plan.subscription_id.blank? %>
-          <%= link_to 'Delete Plan', user_plan_path(current_user, plan), method: :delete, class: "btn btn-danger delete-plan plan#{plan.id}", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i>Please wait...".html_safe } %>
-        <% end %>
-      </td> 
-    </tr>
-  <% end %>
-
-<% end %>
+      <!-- <td>
+        <%# if plan.subscription_id.blank? %>
+          <%#= link_to 'Delete Plan', user_plan_path(current_user, plan), method: :delete, class: "btn btn-danger delete-plan plan#{plan.id}", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i>Please wait...".html_safe } %>
+        <%# end %>
+      </td>
+    </tr> -->
+  <%# end %>

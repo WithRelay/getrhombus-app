@@ -1,66 +1,105 @@
 <!-- Title for header -->
 <% provide(:title, 'Rhombus - Merchant Profile') %>
-  <%= render 'shared/header_new' %>
-  <%= render 'shared/sidebar' %>
-  <div class="content">
-    <!-- Start Page Header -->
-    <div class="page-header">
-      <h1 class="title">Account Settings</h1>
+
+<div class="settings sub-nav-bar w-clearfix">
+  <%= link_to user_path(current_user) , class: 'dashboard-return sub-nav-button w-button' do %>
+   &nbsp;Return to dashboard
+  <% end %>
+  </div>
+  <div class="dashboard-body settings w-clearfix">
+    <div class="dash-content-container settings w-clearfix" id="merchantProfile">
+      <h4 class="form-header">Account Information</h4>
+      <div class="flex-underline form-header-underline"></div>
+      <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, id: "merchantProfile email-form", class: "form-horizontal rhombusFocus" }) do |f| %>
+      <div class="account-settings-form-wrapper w-form" id="merchantprofilepage">
+          <label class="field-headers form-label settings" for="name">Basic details</label>
+          <div class="company-rep-div w-clearfix">
+            <%#= f.text_field :full_name, type: "text", class: "full-name settings text-field w-input rhombusFocus", placeholder: "First", id: "fullName Name", data: { name: 'Name' } %>
+            <%= f.hidden_field :org_phone, :id => "phone_number", class: "form-control rhombusFocus" %>
+            <%= f.phone_field :phone, id: "phone Phone-Number", data: { name: 'Phone Number' }, class: "password settings text-field w-input rhombusFocus" %>
+          </div>
+          <div class="update-email-password-div w-clearfix">
+            <div class="flex-underline form-section-divider"></div>
+            <label class="field-headers form-label settings" for="email">update email/password</label>
+            <%= f.email_field :email, type: "email", data: { nmae: 'Email' }, id: "email email", placeholder: "Email", class: "form-control rhombusFocus settings text-field w-input", autofocus: true %>
+            <%= f.password_field :password, type: "password", data: { name: 'Password 2' }, id: "newpassword Password-2", :autocomplete => "off", placeholder: "Enter new password", class: "form-control rhombusFocus password settings text-field w-input" %>
+            <%= f.password_field :password_confirmation, data: { name: 'Confirm Password' }, id: "confirmNewPassword Confirm-Password", type: "password", placeholder: "Confirm new password", class: "form-control rhombusFocus confirm password settings text-field w-input" %>
+          </div>
+        </form>
+        <div class="w-form-done">
+          <div>Thank you! Your submission has been received!</div>
+        </div>
+        <div class="w-form-fail">
+          <div>Oops! Something went wrong while submitting the form</div>
+        </div>
+      </div>
+      <%= f.submit "Save changes", id: "ba-submit", class: "btn-rhombus button save-changes w-button" %>
+      <a class="button deactivate w-button" data-ix="deactivate-account" href="#">Deactivate/Pause Account</a>
+      <% end %>
     </div>
+  </div>
+
+
+<!--
+  <div class="content">
+    <!- Start Page Header -->
+    <!-- <div class="page-header">
+      <h1 class="title">Account Settings</h1>
+    </div> -->
     <!-- End Page Header -->
     <!-- START CONTAINER -->
-    <div class="container-padding" id="merchantProfile">
+    <!-- <div class="container-padding" id="merchantProfile"> -->
       <!-- Start Row -->
-      <div class="row">
-        <div class="">
+      <!-- <div class="row"> -->
+        <!-- <div class=""> -->
           <!-- we have to remove this setting to user subscription setting -->
           <%#= render 'shared/subscription_setting' %>
-          <div class="panel panel-default" id="merchantprofilepage">
-            <div class="panel-body">
-              <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put, id: "merchantProfile", class: "form-horizontal rhombusFocus" }) do |f| %>
-              <div class="merchant-form-line">Email and Password</div>
+          <!-- <div class="panel panel-default" id="merchantprofilepage"> -->
+            <!-- <div class="panel-body"> -->
+              <%#= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put, id: "merchantProfile", class: "form-horizontal rhombusFocus" }) do |f| %>
+              <!-- <div class="merchant-form-line">Email and Password</div> -->
 
-              <div class="form-group">
-                <label class="col-sm-2 control-label form-label">Email</label>
-                <div class="col-sm-10">
-                  <%= f.email_field :email, type: "email", id: "email", placeholder: "Email", class: "form-control rhombusFocus", :autofocus => true %>
-                </div>
-              </div>
+              <!-- <div class="form-group"> -->
+                <!-- <label class="col-sm-2 control-label form-label">Email</label> -->
+                <!-- <div class="col-sm-10"> -->
+                  <%#= f.email_field :email, type: "email", id: "email", placeholder: "Email", class: "form-control rhombusFocus", :autofocus => true %>
+                <!-- </div> -->
+              <!-- </div> -->
 
-              <div class="form-group">
-                <label class="col-sm-2 control-label form-label">New Password</label>
-                <div class="col-sm-10">
-                  <%= f.password_field :password, type: "password", id: "newpassword", :autocomplete => "off", placeholder: "Enter new password", class: "form-control rhombusFocus" %>
-                </div>
-              </div>
+              <!-- <div class="form-group"> -->
+                <!-- <label class="col-sm-2 control-label form-label">New Password</label> -->
+                <!-- <div class="col-sm-10"> -->
+                  <%#= f.password_field :password, type: "password", id: "newpassword", :autocomplete => "off", placeholder: "Enter new password", class: "form-control rhombusFocus" %>
+                <!-- </div> -->
+              <!-- </div> -->
 
-              <div class="form-group">
-                <label class="col-sm-2 control-label form-label">Confirm Password</label>
-                <div class="col-sm-10">
-                  <%= f.password_field :password_confirmation, id: "confirmNewPassword", type: "password", placeholder: "Confirm new password", class: "form-control rhombusFocus" %>
-                </div>
-              </div>
-
+              <!-- <div class="form-group"> -->
+                <!-- <label class="col-sm-2 control-label form-label">Confirm Password</label>
+                <div class="col-sm-10"> -->
+                  <%#= f.password_field :password_confirmation, id: "confirmNewPassword", type: "password", placeholder: "Confirm new password", class: "form-control rhombusFocus" %>
+                <!-- </div>
+              </div> -->
+<!--
               <div class="merchant-form-line">Where are you based?</div>
 
               <div class="form-group" >
                 <label class="col-sm-2 control-label form-label">Country</label>
                 <div class="col-sm-10 countrygroup">
-                  <%= f.select :country, options_for_select({ "Australia" => "AU", "Austria" => 'AT', "Belgium" => "BE", "Canada" => "CA", "Denmark" => "DK", "Finland" => "FI", "France" => "FR", "Germany" => "DE", "Ireland" => "IE", "Italy" => "IT", "Luxembourg" => "LU", "Netherlands" => "NL", "Norway" => "NO", "Spain" => "ES", "Sweden" => "SE", "United Kingdom" => "GB", "United States" => "US" }, selected: current_user.country), {}, :class => 'selectpicker rhombusFocus', id: 'country' %>
+                  <%#= f.select :country, options_for_select({ "Australia" => "AU", "Austria" => 'AT', "Belgium" => "BE", "Canada" => "CA", "Denmark" => "DK", "Finland" => "FI", "France" => "FR", "Germany" => "DE", "Ireland" => "IE", "Italy" => "IT", "Luxembourg" => "LU", "Netherlands" => "NL", "Norway" => "NO", "Spain" => "ES", "Sweden" => "SE", "United Kingdom" => "GB", "United States" => "US" }, selected: current_user.country), {}, :class => 'selectpicker rhombusFocus', id: 'country' %>
                 </div>
               </div>
 
               <div class="form-group" >
                 <label class="col-sm-2 control-label form-label">Time Zone</label>
                 <div class="col-sm-10 countrygroup">
-                  <%= time_zone_select(:user, :time_zone) %>
+                  <%#= time_zone_select(:user, :time_zone) %>
                 </div>
               </div>
 
               <div class="form-group" >
                 <label class="col-sm-2 control-label form-label">Currency</label>
                 <div class="col-sm-10">
-                  <%= f.select :currency, options_for_select({ "AUD" => "aud", "CAD" => 'cad', "CRC" => "crc", "DKK" => "dkk", "EUR" => "eur", "GBP" => "gbp", "NOK" => "nok", "SEK" => "sek", "USD" => "usd" }, selected: current_user.currency), {}, :class => 'selectpicker rhombusFocus', id: 'currency' %>
+                  <%#= f.select :currency, options_for_select({ "AUD" => "aud", "CAD" => 'cad', "CRC" => "crc", "DKK" => "dkk", "EUR" => "eur", "GBP" => "gbp", "NOK" => "nok", "SEK" => "sek", "USD" => "usd" }, selected: current_user.currency), {}, :class => 'selectpicker rhombusFocus', id: 'currency' %>
                 </div>
               </div>
 
@@ -69,22 +108,22 @@
               <div class="form-group">
                 <label class="col-sm-2 control-label form-label">Name</label>
                 <div class="col-sm-10">
-                  <%= f.text_field :org_name, type: "text", class: "form-control rhombusFocus", placeholder: "Business Name" %>
+                  <%#= f.text_field :org_name, type: "text", class: "form-control rhombusFocus", placeholder: "Business Name" %>
                 </div>
               </div>
 
               <div class="form-group">
                 <label class="col-sm-2 control-label form-label">Type</label>
                 <div class="col-sm-10">
-                  <%= f.select :org_category, options_for_select({ "Beauty Professional" => "Beauty Professional", "Cleaning Services" => 'Cleaning Services', "Coffee Shop" => "Coffee Shop", "Concierge Services" => "Concierge Services", "Home and Repair Services" => "Home and Repair Services", "Health and Fitness" => "Health and Fitness", "Individual" => "Individual", "On-Demand Delivery" => "On-Demand Delivery", "Orgs and Non-Profits" => "Orgs and Non-Profits", "Professional Services" => "Professional Services", "Restaurant" => "Restaurant", "Retail" => "Retail", "Taxi" => "Taxi", "Others" => "Others" }, selected: current_user.org_category), {}, :class => 'selectpicker rhombusFocus' %>
+                  <%#= f.select :org_category, options_for_select({ "Beauty Professional" => "Beauty Professional", "Cleaning Services" => 'Cleaning Services', "Coffee Shop" => "Coffee Shop", "Concierge Services" => "Concierge Services", "Home and Repair Services" => "Home and Repair Services", "Health and Fitness" => "Health and Fitness", "Individual" => "Individual", "On-Demand Delivery" => "On-Demand Delivery", "Orgs and Non-Profits" => "Orgs and Non-Profits", "Professional Services" => "Professional Services", "Restaurant" => "Restaurant", "Retail" => "Retail", "Taxi" => "Taxi", "Others" => "Others" }, selected: current_user.org_category), {}, :class => 'selectpicker rhombusFocus' %>
                 </div>
               </div>
 
               <div class="form-group">
                 <label class="col-sm-2 control-label form-label">Business Phone</label>
                 <div class="col-sm-10">
-                  <%= f.hidden_field :org_phone, :id => "phone_number", class: "form-control rhombusFocus" %>
-                  <%= f.phone_field :phone, :id => "phone", class: "form-control rhombusFocus" %>
+                  <%#= f.hidden_field :org_phone, :id => "phone_number", class: "form-control rhombusFocus" %>
+                  <%#= f.phone_field :phone, :id => "phone", class: "form-control rhombusFocus" %>
                   <%# <input type="tel" class="form-control rhombusFocus" id="phone" name="phone"> %>
                   <%#= f.hidden_field :phone_number, :id => "phone_number" %>
                 </div>
@@ -93,44 +132,44 @@
               <div class="form-group">
                 <label class="col-sm-2 control-label form-label">Address</label>
                 <div class="col-sm-10">
-                  <%= f.text_field :street_address, type: "text", :class => "form-control rhombusFocus", placeholder: "123 Main St, Ste 3", id: "address" %>
+                  <%#= f.text_field :street_address, type: "text", :class => "form-control rhombusFocus", placeholder: "123 Main St, Ste 3", id: "address" %>
                 </div>
               </div>
 
               <div class="form-group">
                 <label class="col-sm-2 control-label form-label">City</label>
                 <div class="col-sm-10">
-                  <%= f.text_field :city, type: "text", class: "form-control rhombusFocus", placeholder: "City", id: "city" %>
+                  <%#= f.text_field :city, type: "text", class: "form-control rhombusFocus", placeholder: "City", id: "city" %>
                 </div>
               </div>
 
               <div class="form-group">
                 <label class="col-sm-2 control-label form-label">State or Province</label>
                 <div class="col-sm-10">
-                  <%= f.text_field :state_province, type: "text", class: "form-control rhombusFocus", placeholder: "State", id: "state" %>
+                  <%#= f.text_field :state_province, type: "text", class: "form-control rhombusFocus", placeholder: "State", id: "state" %>
                 </div>
               </div>
 
-              <!-- Addresses now has it own model      -->
-              <div class="form-group">
+              <!- Addresses now has it own model      -->
+              <!-- <div class="form-group">
                 <label class="col-sm-2 control-label form-label">Postal Code</label>
-                <div class="col-sm-10">
-                  <%= f.text_field :zip_code, type: "text", class: "form-control rhombusFocus", placeholder: "Zip", id: 'zip' %>
-                </div>
-              </div>
+                <div class="col-sm-10"> -->
+                  <%#= f.text_field :zip_code, type: "text", class: "form-control rhombusFocus", placeholder: "Zip", id: 'zip' %>
+                <!-- </div>
+              </div> -->
 
-              <div class="form-group">
+              <!-- <div class="form-group">
                 <label class="col-sm-2 control-label form-label">Website</label>
-                <div class="col-sm-10">
-                  <%= f.text_field :url, type: "text", class: "form-control rhombusFocus", placeholder: "Your website or social profile link" %>
-                </div>
+                <div class="col-sm-10"> -->
+                  <%#= f.text_field :url, type: "text", class: "form-control rhombusFocus", placeholder: "Your website or social profile link" %>
+                <!-- </div>
               </div>
 
               <div class="form-group">
                 <label class="col-sm-2 control-label form-label">Tax rate</label>
-                <div class="col-sm-10">
-                  <%= f.text_field :tax_percent, type: "text", class: "form-control rhombusFocus", placeholder: "5", id: "taxrate" %>
-                  <span>Default is 0. To be applied to transactions</span>
+                <div class="col-sm-10"> -->
+                  <%#= f.text_field :tax_percent, type: "text", class: "form-control rhombusFocus", placeholder: "5", id: "taxrate" %>
+                  <!-- <span>Default is 0. To be applied to transactions</span>
                 </div>
               </div>
 
@@ -139,23 +178,23 @@
 
               <div class="form-group">
                 <label class="col-sm-2 control-label form-label">Name</label>
-                <div class="col-sm-10">
+                <div class="col-sm-10"> -->
                   <!-- now thru person -->
                   <%#= f.text_field :full_name, type: "text", class: "form-control rhombusFocus", placeholder: "First", id: "fullName" %>
-                </div>
+                <!-- </div>
               </div>
 
               <div class="merchant-form-line">Optional SMS message sent to customers the first time they text you</div>
 
               <div class="form-group">
                 <label class="col-sm-2 control-label form-label">Message</label>
-                <div class="col-sm-10">
-                  <%= f.text_area :custom_welcome, type: "text", class: "form-control rhombusFocus", id: "count_me", rows: 4 %>
-                </div>
-              </div>
+                <div class="col-sm-10"> -->
+                  <%#= f.text_area :custom_welcome, type: "text", class: "form-control rhombusFocus", id: "count_me", rows: 4 %>
+                <!-- </div>
+              </div> -->
 
 
-              <div class="merchant-form-line">You're almost set</div>
+              <!-- <div class="merchant-form-line">You're almost set</div>  -->
 
               <%# if you need merchant's to confirm password %>
               <%#<div class="form-group">
@@ -165,18 +204,15 @@
               <%#</div>
             </div>%>
 
-            <div class="form-group">
+            <!-- <div class="form-group">
               <div class="col-sm-offset-2 col-sm-10">
-                <%= f.submit "Save", id: "ba-submit", :class => "btn btn-default btn-rhombus" %>
+                <%#= f.submit "Save", id: "ba-submit", :class => "btn btn-default btn-rhombus" %>
               </div>
-            </div>
-            <% end %>
-          </div>
+            </div> -->
+            <%# end %>
+          <!-- </div>
         </div>
       </div>
     </div>
-    <!-- End Row -->
   </div>
-  <!-- END CONTAINER -->
-  <!-- //////////////////////////////////////////////////////////////////////////// -->
-</div>
+</div> -->

@@ -45,27 +45,6 @@ class CampaignsController < ApplicationController
     redirect_to edit_user_campaign_path
   end
 
-  def destroy
-    if @campaign.destroy
-      @campaign.destroy_campaign_jobs
-      flash[:notice] = 'Campaign is being succesfully deleted'
-    else
-      flash[:error] = 'Sorry campaign could not delete please try again'
-    end
-    redirect_to user_campaigns_path
-  end
-
-  def change_status
-    status = @campaign.active? ? 2 : 1
-    if @campaign.update_attribute('status', status)
-      @campaign.change_job_status
-      flash[:notice] = "Campaign #{@campaign.status}"
-    else
-      flash[:notice] = 'Sorry campaign could not be paused'
-    end
-    redirect_to user_campaigns_path
-  end
-
   def filter_campaign
     @campaigns = current_user.campaigns.where('status = ?', Campaign.statuses[params[:status]])
     render 'index'

@@ -1,41 +1,26 @@
  <% provide(:title, 'Rhombus - Reset Password') %>
-  <!-- ========== Css Files ========== -->
-
-  <style type="text/css">
-    body{background: #F5F5F5;}
-  </style>
 
   <%= devise_error_messages! %>
-  <%= render 'shared/full_messages' %>
-
-  <div class="login-form">
-    <%= form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :post, :id => 'ForgotPassword' }) do |f| %>
-        <div class="top">
-        <img src="<%= asset_path 'logo_grey.jpg' %>" alt="icon" id="signup_logo" class="icon">
-          <h4>You can reset your password</h4>
-        </div>
-        <div class="form-area">
-          <div class="group">
-          <%= f.email_field :email, :class => "form-control rhombusFocus", type: "email", placeholder: "Email", :autofocus => true %>
-            <i class="fa fa-envelope-o"></i>
-          </div>
-          <%= f.submit "RESET PASSWORD",  :class => "btn btn-default btn-block btn-rhombus" %>
-        </div>
+  <div class="blank-page-content-wrapper reset-password">
+    <div class="onboarding-form-div sign-in signup">
+      <%= link_to root_url, class: 'form-logo w-inline-block' do %>
+        <%= image_tag('Relay-Transparent-500x300.png', width: 50, class: 'password-reset-logo') %>
       <% end %>
-      <div class="footer-links row">
-        <div class="col-xs-6"><a href="/signin"><i class="fa fa-sign-in"></i> Login</a></div>
-        <div class="col-xs-6 text-right"><a href="/signup"><i class="fa fa-external-link"></i> Register Now</a></div>
+      <div class="flex-underline form-header-underline"></div>
+      <div class="password-reset-instructions">Enter your email address below and we'll send you a link to reset your password.</div>
+      <div class="log-in-form w-form">
+        <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post, id: 'ForgotPassword', class: 'w-clearfix', data: { name: "Email Form" } }) do |f| %>
+          <div class='col-xs-6'>
+            <%= f.email_field :email, placeholder: "Email", autofocus: true, class: 'email-address reset-password text-field w-input', data: { name: "Email" } %>
+          </div>
+          <%= f.submit "RESET PASSWORD", class: "button log-in w-button", value: "Send reset password email", data: { wait: "Please wait..." } %>
+        <% end %>
+        <div class="w-form-done">
+          <div>Thank you! Your submission has been received!</div>
+        </div>
+        <div class="w-form-fail">
+          <div>Oops! Something went wrong while submitting the form</div>
+        </div>
       </div>
     </div>
-
-
-<%#= render "devise/shared/links" %>
-
-<%#= form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :post }) do |f| %>
-
-
-  <%#= f.label :email %>
-  <%#= f.email_field :email, :autofocus => true %>
-
-  <%#= f.submit "Send me reset password instructions" %>
-<%# end %>
+  </div>

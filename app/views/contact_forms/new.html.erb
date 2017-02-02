@@ -18,9 +18,7 @@
           background-color: #e5e5e5; !important
       }
   </style>
-  <%= render 'shared/static_pages_header' %>
 
-<%#= render 'contact_form_errors' %>
 
   <div class="w-section banner inner" id="top" data-ix="show-social-and-nav">
     <div class="w-container">
@@ -42,20 +40,20 @@
                   <div class="form-group">
                     <%= f.text_field :name, id: "Name", type: "text", class: "w-input tex-filed", placeholder: "Enter your name", "data-name" => "Name" %>
                     </div>
-                  <div class="form-group">  
+                  <div class="form-group">
                     <%= f.text_field :email, id: "Email", type: "email", class: "w-input tex-filed", placeholder: "Enter your email", "data-name" => "Email" %>
                   </div>
-                <div class="form-group"> 
+                <div class="form-group">
                   <%= f.text_field :organization, id: "Company", type: "text", class: "w-input tex-filed", placeholder: "Organization", "data-name" => "Company"  %>
                 </div>
-                 <div class="form-group"> 
+                 <div class="form-group">
                   <%= f.text_area :message, id: "Message", type: "text", class: "w-input text-area", placeholder: "Type your message", "data-name" => "Message" %>
                   </div>
                   <div class="div-spc">
-                    <%= f.hidden_field :nickname %> 
+                    <%= f.hidden_field :nickname %>
                     <%= f.submit "Send", class: "w-button button btn-form contact-btn", id: "contact-form-btn", data: { disable_with: "Please wait..." } %>
 
-                  </div>             
+                  </div>
                 <% end %>
 
               </div>
@@ -87,6 +85,5 @@
         </div>
       </div>
       </div>
-  
+
   </div>
-  <%= render 'shared/static_pages_footer' %>

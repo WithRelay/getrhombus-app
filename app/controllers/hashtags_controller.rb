@@ -25,7 +25,7 @@ class HashtagsController < ApplicationController
     @hashtag.user_id = current_user.id
 
     # create a plan and subscription if tag is recurring
-    
+
     if @hashtag.save
       redirect_to user_hashtags_path       #respond_with(@hashtag)
     else
@@ -49,10 +49,14 @@ class HashtagsController < ApplicationController
     if @hashtag.destroy
       redirect_to user_hashtags_path
     else
-      respond_with(@hashtag) 
+      respond_with(@hashtag)
     end
     #@hashtag.destroy
-    #respond_with(@hashtag) 
+    #respond_with(@hashtag)
+  end
+
+  def tag_mention
+
   end
 
   private
