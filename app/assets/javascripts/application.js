@@ -56,7 +56,6 @@
 //= require jquery.checkboxes-1.2.0.min.js
 //= require jquery.caret.js
 //= require jquery.atwho.js
-//= require dashboard/messaging_angularjs/messaging.js
 //= require bootstrap-select
 //= require powerange
 //= require knowledge_base
