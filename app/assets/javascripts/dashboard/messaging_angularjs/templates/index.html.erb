@@ -1,8 +1,4 @@
-<style>
-.upwards-scroll-container {
-  overflow-y: scroll;
-}
-</style>
+
 <div class="content">
   <!-- Start Page Header -->
   <div class="page-header">
@@ -79,30 +75,6 @@
             <!-- End Title -->
 
 
-          <!-- Start Conv -->
-<!--
-          <div data-ng-app="messageFetcher">
-            <div data-ng-controller="endlessMessage as messages">
-              <div class="messageStatus text-center" style="margin-left:300px; width: 150px; background: #edf9ff;"></div>
-              <ul class="upwards-scroll-container conv" data-upwards-scoll="messages.LoadMore()" scroll-glue>
-                <div data-ng-repeat="i in messages.Items track by $index">
-                  <li ng-if="($index != 0) && !messages.Items[$index - 1].unread && messages.Items[$index].unread" class="date">New Messages</li>
-                  <li ng-if="($index == 0) || (messages.Items[$index - 1].ts_day_of_the_week != messages.Items[$index].ts_day_of_the_week)" class="date">{{i.ts_day_of_the_week}}</li>
-                  <li>
-                    <img ng-if="(i.user_level == 0) && (($index == 0) || (messages.Items[$index - 1].user_level != i.user_level))" ng-src="{{i.profile_image}}" alt="img" class="img">
-                    <p ng-class="{'ballon color1': i.user_level == 0 , 'ballon color2': i.user_level != 0}">
-                      <span ng-if="i.text">{{i.text}}</span>
-
-                      <span ng-if="i.image_url"><img src="{{i.image_url}}"/></span>
-                    </p>
-                    <p class="ts">{{i.ts_time}}</p>
-                    <div class="separator">&nbsp;</div>
-                  </li>
-                </div>
-              </ul>
-            </div>
-          </div>
--->
             <div id="fixed" when-scrolled-up="getConversationMessages(selected_conversation, false)" scroll-bottom-on="status.loaded" in-view-container>
                 <p ng-show="status.loading" class="me">loading...</p>
               <!--<ul>  scroll-glue> -->
