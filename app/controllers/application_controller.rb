@@ -27,7 +27,8 @@ class ApplicationController < ActionController::Base
       pubnub_publish_key: Rails.application.secrets.pubnub["publish_key"],
       pubnub_subscribe_key: Rails.application.secrets.pubnub["subscribe_key"],
       short_url: current_user.short_url,
-      num_of_chars: current_user.rn_type.present? ? 1500 : 150
+      num_of_chars: current_user.rn_type.present? ? 1500 : 150,
+      time_zone: ActiveSupport::TimeZone.new(current_user.time_zone).tzinfo.name
     }
   end
 

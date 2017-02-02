@@ -39,9 +39,8 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
     // Get logged in merchant id
     $http.get(window.location.origin + '/get_current_user').success(function(data) {
 
-      var merchant_id = data.id;
-      var char_limit = data.num_of_chars;
-      $scope.merchant_short_url = data.short_url;
+      $scope.merchant = data;
+      $scope.char_limit = data.num_of_chars;
 
       // Initialize PubNub with SSL
       Pubnub.init({
@@ -55,7 +54,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
 
       // Subscribe to merchant channel
       Pubnub.subscribe({
-        channel: 'messaging_<%= Rails.env %>_' + merchant_id,
+        channel: 'messaging_<%= Rails.env %>_' + $scope.merchant.id,
         message: function(m){
           var re = JSON.parse(m);
 
@@ -140,6 +139,40 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
           console.log(re)
         }
       });
+
+      // need to keep track of when at the end of conversations
+      var conversation_page = 1;
+      $scope.loadConversations = function() {
+        var params = PageParameter.get_params(), select_conversation = {};
+        if (params['type'] == 'start_conversation')
+          select_conversation = { uid: params['uid'], uid_type: params['uid_type'] };
+
+        conversationService.getConversations(conversation_page, select_conversation)
+        .then(function(data) {
+          if (data.conversations.length > 0) {
+            // Build conversation list and count initial global unread
+            angular.forEach(data.conversations, function(value, key) {
+              $scope.conversations[value.id] = value;
+              $scope.open_conversations_count += 1;
+              $scope.global_unread_count += value.unread_count;
+            });
+
+            $scope.open_conversations_count = data.count;  
+            conversation_page += 1;
+            console.log('loaded conversations')
+          } else {
+            console.log('you have no conversations');
+          }
+
+          $scope.selectConversation(data);
+        }, function(data) {
+          console.log('unable to retrieve your conversations')
+        });
+      };
+
+      // get initial conversations
+      $scope.loadConversations();
+      
   
 
       // Get latest conversations for this merchant
@@ -281,42 +314,37 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
 
 
 
+    $scope.selectConversation = function(data) {
+      $timeout(function() {        
+        if (data.select_conversation !== undefined) {
+          var select_conversation;
+          for (var i = 0, len = data.conversations.length; i < len; i++) {
+            if (data.select_conversation.uid == data.conversations[i].uid && data.select_conversation.uid_type == data.conversations[i].uid_type) {
+              select_conversation = data.conversations[i];
+              break;
+            }
+          }
 
-
-
-
-
-
-    // need to keep track of when at the end of conversations
-    var conversation_page = 1;
-    $scope.loadConversations = function() {
-      conversationService.getConversations(conversation_page)
-      .then(function(data) {
-        if (data.conversations.length > 0) {
-          // Build conversation list and count initial global unread
-          angular.forEach(data.conversations, function(value, key) {
-            $scope.conversations[value.id] = value;
-            $scope.open_conversations_count += 1;
-            $scope.global_unread_count += value.unread_count;
+          // if not displayed push into conversations. Move to top.
+          var new_timestamp = $scope.conversations[Object.keys($scope.conversations)[0]].last_message_ts + 1;
+          if (select_conversation === undefined) {
+            data.select_conversation.last_message_ts = new_timestamp;
+            $scope.conversations[data.select_conversation.id] = data.select_conversation;
+          } else 
+            select_conversation.last_message_ts = new_timestamp;
+          
+          $timeout(function() { 
+            angular.element('#conversations-list').children(':first').children(':first').triggerHandler('click');
           });
-
-          $scope.open_conversations_count = data.count;  
-          conversation_page += 1;
-          console.log('loaded conversations')
-        } else {
-          console.log('you have no conversations');
-        }      
-      }, function(data) {
-        console.log('unable to retrieve your conversations')
+        }
       });
     };
 
+    
     $scope.trackingFunction = function(message) {
       return message.msg_type + message.id.toString();
     }
 
-    // get initial conversations
-    $scope.loadConversations();
 
     // Bind plugins to textbox
     // should only bind once...add check!!!!!!!!!!!!!!

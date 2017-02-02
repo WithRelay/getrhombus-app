@@ -60,6 +60,39 @@ messagingApp.directive('whenScrolledDown', function() {
   };
 });
 
+messagingApp.directive("mySrc", function() {
+    return {
+      link: function(scope, element, attrs) {
+        var img, loadImage;
+        img = null;
+
+        loadImage = function() {
+
+          element[0].src = "<%= asset_path 'pricing.jpg' %>";
+
+          img = new Image();
+          img.src = attrs.mySrc;
+
+          img.onload = function() {
+            element.hide();
+            element[0].src = attrs.mySrc;
+            element.fadeIn('slow')
+          };
+        };
+
+        loadImage();
+
+        /*scope.$watch((function() {
+          return attrs.mySrc;
+        }), function(newVal, oldVal) {
+          if (oldVal !== newVal) {
+            loadImage();
+          }
+        });*/
+      }
+    };
+  });
+
 messagingApp.directive('onFinishRender', function ($timeout) {
   return {
     restrict: 'A',
@@ -90,7 +123,21 @@ messagingApp.factory('conversationService', function($http, $q, Upload){
   var base_url = window.location.origin + '/v1/conversations';
   var token = { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content') };
 
-  service.getConversations = function(page){
+  service.getConversations = function(page, conversation) {
+    var deferred = $q.defer();
+    $http.get(base_url + ".json", { params: { select_conversation: conversation, page: page } })
+    .success(function(data) {
+      console.log('console success in serice get conversations'); 
+      deferred.resolve(data);
+    })
+    .error(function(data, status, headers, config) { 
+      console.log('console fail in serice get conversations'); 
+      deferred.reject("there was an error");
+    });
+    return deferred.promise;
+  }
+
+  service.findConversation = function(page){
     var deferred = $q.defer();
     $http.get(base_url + '.json?page=' + page)
     .success(function(data) {

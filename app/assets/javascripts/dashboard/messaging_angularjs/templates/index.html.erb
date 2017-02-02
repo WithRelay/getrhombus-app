@@ -46,7 +46,7 @@
               </form>
             </li>
             <!--<div class="user-list">-->
-            <div class="conversation-list" when-scrolled-down="loadConversations()">
+            <div class="conversation-list" when-scrolled-down="loadConversations()" id='conversations-list'>
               <!--<li ng-repeat="(user_number, user) in users | filterUserList:query | orderObjectBy:'last_message_ts':true">-->
               <li ng-repeat="(identifier, conversation) in conversations | filterConversationList:query | orderObjectBy:'last_message_ts':true">
 
@@ -106,7 +106,10 @@
             <div id="fixed" when-scrolled-up="getConversationMessages(selected_conversation, false)" scroll-bottom-on="status.loaded">
               <p ng-show="status.loading" class="me">loading...</p>       
               <!--<ul>  scroll-glue> -->
-                <div ng-repeat="i in selected_conversation_messages track by trackingFunction(i)" on-finish-render>{{i}}</div>
+                <div ng-repeat="i in selected_conversation_messages track by trackingFunction(i)" on-finish-render>{{i}}
+                <br>
+                  <img my-src={{"http://deelay.me/5000/http://cdn.wonderfulengineering.com/wp-content/uploads/2014/03/high-resolution-wallpapers-1.jpg"}} width="200", height="200" class="animate-show">
+                </div>
               <!--</ul>  -->
             </div>
           <!--<div id="fixed" when-scrolled="loadMore()" scroll-bottom-on="status.loaded"> 
@@ -147,7 +150,7 @@
               }
 
               #fixed {
-                height: 200px;
+                height: 500px;
                 overflow: auto;
                 margin-bottom: 20px;
               }

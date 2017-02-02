@@ -24,6 +24,8 @@
 //
 //= require formValidation.min
 //= require bootstrap-formvalidator.min
+//= require url-parameters
+//= require moment
 
 //= require jquery_ujs
 //= require angular-smooth-scroll.min
@@ -56,7 +58,6 @@
 //= require jquery.atwho.js
 //= require dashboard/messaging_angularjs/messaging.js
 //= require bootstrap-select
-//= require moment
 //= require powerange
 //= require knowledge_base
 //= require plan

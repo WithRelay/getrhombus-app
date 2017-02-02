@@ -17,8 +17,6 @@ class Conversation < ActiveRecord::Base
   	latest_conv = Array.new
 
   	convs.each do |conv|
-  		last_message = ConversationRef.where(conversation_id: conv.id).last.textable
-
   		if conv.uid_type == "user"
   			full_name = User.find_by(conv.uid).card_name
   		else 
@@ -57,7 +55,8 @@ class Conversation < ActiveRecord::Base
 	end
 
   def conversation_hash(user = nil)
-    last_message = ConversationRef.where(conversation_id: self.id).last.textable
+    last_message = ConversationRef.where(conversation_id: self.id).last 
+    last_message = (last_message) ? last_message.textable : nil
 
     if self.uid_type == "user"
       full_name = (user) ? user.card_name : User.find_by(self.uid).card_name
@@ -104,7 +103,7 @@ class Conversation < ActiveRecord::Base
       ts_day_of_the_week: msg.created_at.strftime('%A'),
       ts_time: msg.created_at.strftime('%l:%M %P'),
       unread: msg.unread,
-      image_urls: msg.images.map { |i| i.avatar.url },           # return small version here??
+      image_urls: "https://i0.wp.com/www.asphaltandrubber.com/wp-content/uploads/2012/11/2013-KTM-390-Duke-high-resolution-02.jpg",#msg.images.map { |i| i.avatar.url },           # return small version here??
       msg_type: msg.class.name
   	}
 	end
