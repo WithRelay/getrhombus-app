@@ -17,6 +17,10 @@
       <%= f.text_field :trial_period_days, id: 'trial-days', class: 'plan-amount text-field w-input' %>
   <% end %>
   <%= f.submit 'Create Plan', class: 'button create-plan w-button', id: 'create-plan' %>
-  <p class="charge-tips modal-paragraph tips"> &nbsp;TIP: You can also use Hashtags to create a subscription plan in Rhombus. Recurring payment Hashtags allow your customers subscribe themselves to a plan by simply texting the Hashtag to your Rhombus number.</p>
-  <a class="button manage-plans w-button" href="#">Manage plans</a>
 <% end %>
+<div class="w-form-done">
+  <div>Thank you! Your submission has been received!</div>
+</div>
+<div class="w-form-fail">
+  <div>Oops! Something went wrong while submitting the form</div>
+</div>

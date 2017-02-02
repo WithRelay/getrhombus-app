@@ -87,15 +87,3 @@
 #redeemLabel{
     top: 16px;
 }
-
-.form-group .selectize-input{
-    padding: 0 !important;
-    border: none !important;
-    width: 100% !important;
-    -webkit-box-shadow: none !important;
-    background: none !important;
-}
-
-.form-group .selectize-control{
-    height: auto !important;
-}
