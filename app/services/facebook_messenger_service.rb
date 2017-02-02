@@ -4,7 +4,7 @@ class FacebookMessengerService
 
     # for messenger_account_linking
     def send_auth_link(page_access_token, recipient_id, welcome_text)
-      link_url = (Rails.env == 'production')? "https://www.getrhombus.com/link_facebook" : "https://f18d5f30.ngrok.io/link_facebook"
+      link_url = (Rails.env == 'production')? "https://www.getrhombus.com/link_facebook" : "https://5bdbcb80.ngrok.io/link_facebook"
       body = {
         recipient:{
           id: recipient_id

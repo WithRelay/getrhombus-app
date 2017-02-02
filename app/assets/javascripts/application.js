@@ -73,6 +73,7 @@
 //= require get_started
 //= require modernizr
 //= require webflow
+//= require integrations
 
 // DO NOT REQUIRE TREE AS IT DOESNT GUARANTEE THE DEPENDENCY ORDER OF THESE FILES
 // require_tree .
