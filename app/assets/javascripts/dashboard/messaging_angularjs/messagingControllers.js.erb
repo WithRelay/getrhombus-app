@@ -77,10 +77,8 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
               }
             }
 
-            if (re.conversation.id == $scope.selected_conversation.id) {
+            if (re.conversation.id == $scope.selected_conversation.id)
               $scope.selected_conversation_messages.push(re.message);
-              //$scope.markMessagesAsRead(conversation.id, re.message.id);
-            }
 
 
 
@@ -311,9 +309,6 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
 
 
 
-
-
-
     $scope.selectConversation = function(data) {
       if (data.select_conversation !== undefined) {
         $timeout(function() {
@@ -332,7 +327,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
             $scope.conversations[data.select_conversation.id] = data.select_conversation;
           } else
             select_conversation.last_message_ts = new_timestamp;
-            
+
           $timeout(function() { angular.element('#conversations-list').children(':first').children(':first').triggerHandler('click'); });
         });
       }
@@ -341,6 +336,14 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
 
     $scope.trackingFunction = function(message) {
       return message.msg_type + message.id.toString();
+    }
+
+    $scope.messageInView = function(index) {
+      var message = $scope.selected_conversation_messages[index];
+      if (message.unread) {
+        message.unread = false;
+        $scope.markMessagesAsRead($scope.current_chat_conversation.id, message.id);
+      }
     }
 
 
@@ -376,7 +379,10 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
             if (conversation.id == $scope.selected_conversation.id) {
               if (data.messages.length > 0) {
                 messages_page += 1;
-                for (var i = 0; i < data.messages.length; i++) { $scope.selected_conversation_messages.unshift(data.messages[i]); }
+                for (var i = 0; i < data.messages.length; i++) { 
+                  data.messages[i].unread = false;
+                  $scope.selected_conversation_messages.unshift(data.messages[i]); 
+                }
                 //$scope.status.loaded = ($scope.selected_conversation_messages.length > 0);  // might not need this line
                 //$scope.markMessagesAsRead(conversation.id, data.unread_ids);
                 $scope.status.loading = false;

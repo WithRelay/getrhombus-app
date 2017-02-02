@@ -103,14 +103,14 @@
             </div>
           </div>
 -->
-            <div id="fixed" when-scrolled-up="getConversationMessages(selected_conversation, false)" scroll-bottom-on="status.loaded">
-              <p ng-show="status.loading" class="me">loading...</p>
+            <div id="fixed" when-scrolled-up="getConversationMessages(selected_conversation, false)" scroll-bottom-on="status.loaded" in-view-container>
+                <p ng-show="status.loading" class="me">loading...</p>
               <!--<ul>  scroll-glue> -->
-                <div ng-repeat="i in selected_conversation_messages track by trackingFunction(i)" on-finish-render>{{i}}
-                <br>
-                  <img my-src={{"http://deelay.me/5000/http://cdn.wonderfulengineering.com/wp-content/uploads/2014/03/high-resolution-wallpapers-1.jpg"}} width="200", height="200" class="animate-show">
+                <div ng-repeat="i in selected_conversation_messages track by trackingFunction(i)" on-finish-render in-view="messageInView($index)">{{i}}
+                  <!--<br>
+                  <img my-src={{"http://deelay.me/5000/http://cdn.wonderfulengineering.com/wp-content/uploads/2014/03/high-resolution-wallpapers-1.jpg"}} width="200", height="200" class="animate-show">-->
                 </div>
-              <!--</ul>  -->
+                <!--</ul>  -->
             </div>
           <!--<div id="fixed" when-scrolled="loadMore()" scroll-bottom-on="status.loaded">
           <ul class="conv">
@@ -150,7 +150,7 @@
               }
 
               #fixed {
-                height: 500px;
+                height: 200px;
                 overflow: auto;
                 margin-bottom: 20px;
               }

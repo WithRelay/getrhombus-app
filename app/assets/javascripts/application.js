@@ -30,8 +30,9 @@
 //= require jquery_ujs
 //= require angular-smooth-scroll.min
 //= require pubnub/pubnub-angular.js
+//= require angular-inview
 //= require dashboard/messaging_angularjs/messaging.js
-//= require dashboard/messaging_angularjs/messagingApp.js
+//= require dashboard/messaging_angularjs/messagingApp.js.erb
 //= require dashboard/messaging_angularjs/messagingControllers.js
 //= require dashboard/messaging_angularjs/messagingFilters.js
 //= require_tree ./dashboard/messaging_angularjs/templates
