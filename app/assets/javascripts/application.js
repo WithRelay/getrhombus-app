@@ -74,9 +74,9 @@
 //= require price_slider
 //= require refer_a_business
 //= require get_started
+//= require integrations
 //= require modernizr
 //= require webflow
-//= require integrations
 
 // DO NOT REQUIRE TREE AS IT DOESNT GUARANTEE THE DEPENDENCY ORDER OF THESE FILES
 // require_tree .

@@ -2,7 +2,7 @@
   display: none;
 }
 
-/*fix css for phone number*
+
 $colors: #ff0000 #ffff00 #0080ff #f20d0d  #996666 #808080 #0000ff #ffbf00 #40ff00 #ff00bf;
 $error-color: red;
 $success-color: green;
@@ -57,11 +57,11 @@ $colors: #ff0000 #ffff00 #0080ff #f20d0d  #996666 #808080 #0000ff #ffbf00 #40ff0
   }
 }
 
-.has-error .form-control  
+.has-error .form-control
 {
   border-color: $error-color;
 }
-  
+
 .help-block{
     color: $error-color;
 }
