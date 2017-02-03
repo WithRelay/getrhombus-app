@@ -4,13 +4,16 @@
     <div class="w-row">
       <div class="w-col w-col-4"></div>
       <div class="w-col w-col-4">
-        <div class="customer-name-text subheader">Michael Randy</div>
+        <div class="customer-name-text subheader" ng-show="current_chat_conversation != false">{{current_chat_conversation.full_name}}</div>
       </div>
       <div class="w-col w-col-4"></div>
     </div>
   </div>
-  <div class="messaging side-bar">
+
+
+  <div class="messaging side-bar" when-scrolled-down="loadConversations()" id='conversations-list'>
     <div class="w-tabs" data-duration-in="300" data-duration-out="100">
+      
       <div class="messaging-tab-menu w-tab-menu">
         <a class="messages-tab-link w--current w-inline-block w-tab-link" data-w-tab="Tab 1">
           <div class="messages-tab-link-text">New (<span>29)</span>
@@ -21,9 +24,12 @@
           </div>
         </a>
       </div>
+
       <div class="message-tab-content w-tab-content">
         <div class="w--tab-active w-tab-pane" data-w-tab="Tab 1">
-          <a class="message-tab w-inline-block" href="#">
+
+          
+          <a class="message-tab w-inline-block" ng-repeat="(identifier, conversation) in conversations | filterConversationList:query | orderObjectBy:'last_message_ts':true" href='#'>
             <div class="message-tab-content-wrapper w-row">
               <div class="message-tab-picture-column w-col w-col-2">
                 <div class="w-clearfix">
@@ -31,15 +37,17 @@
                 </div>
               </div>
               <div class="w-clearfix w-col w-col-9">
-                <div class="customer-name-text">Michael Randy</div>
-                <div class="message">Do you currently have the blue option is stock? Last time I checked it was...</div>
+                <div class="customer-name-text">{{conversation.full_name}}</div>
+                <div class="message">{{conversation.last_message}}</div>
               </div>
               <div class="w-clearfix w-col w-col-1">
-                <div class="messaging-dash-variable-text">4m</div>
-                <div class="message-counter">14</div>
+                <div class="messaging-dash-variable-text">{{conversation.ago}}</div>
+                <div class="message-counter" ng-show="conversation.unread_count > 0">{{conversation.unread_count}}</div>
               </div>
             </div>
           </a>
+
+          <!--
           <a class="message-tab older-message w-inline-block" href="#">
             <div class="message-tab-content-wrapper w-row">
               <div class="message-tab-picture-column w-col w-col-2">
@@ -108,7 +116,7 @@
                 <div class="messaging-dash-variable-text">4m</div>
               </div>
             </div>
-          </a>
+          </a>-->
         </div>
         <div class="w-tab-pane" data-w-tab="Tab 2">
           <a class="message-tab older-message w-inline-block" href="#">
@@ -141,6 +149,9 @@
       </div>
     </div>
   </div>
+  
+
+
   <div class="text-window-wrapper">
     <div class="w-form">
       <form class="w-clearfix" id="email-form-2" name="email-form-2">
@@ -476,25 +487,75 @@
       </div>
     </div>
   </div>
+  
   <div class="message-wrapper w-clearfix">
     <div class="message">I'd like to cancel my appointment for Tuesday</div>
   </div>
+
+
   <div class="dashboard-body messaging w-clearfix">
-    <div class="conversation-date-wrapper">
-      <div class="conversation-date">December 25th</div>
-    </div>
-    <div class="customer-messaging-bubble w-clearfix">
-      <div class="w-row">
-        <div class="customer-messaging-bubble-picture-wrapper w-clearfix w-col w-col-2"><img class="messaging-bubble right-nav-profile-picture" src="images/Customer-1.jpg" width="35">
-        </div>
-        <div class="w-col w-col-10">
-          <div class="customer-message message-bubble">
-            <div class="chat-text">Do you currently have the blue option is stock? Last time I checked it was unavailable</div>
+
+      <!-- <div ng-repeat="message in selected_conversation_messages track by $index">
+              <li ng-if="($index != 0) && !selected_conversation_messages[$index - 1].unread && selected_conversation_messages[$index].unread" class="date">New Messages</li>
+              <li ng-if="($index == 0) || (selected_conversation_messages[$index - 1].ts_day_of_the_week != selected_conversation_messages[$index].ts_day_of_the_week)" class="date">{{message.ts_day_of_the_week}}</li>
+              <li>
+                <img ng-if="(message.source == 'user') && (($index == 0) || (selected_conversation_messages[$index - 1].source != message.source))" ng-src="{{message.profile_image}}" alt="img" class="img">
+                <p ng-class="{'ballon color1': message.source == 'user' , 'ballon color2': message.source != 'user'}">
+
+                  {{message.text}}
+                  <span ng-if="message.text">{{message.text}}</span>
+                  <span ng-if="message.image_url"><img src="{{message.image_url}}"/></span>
+                </p>
+                <p class="ts">
+                  {{message.ts_time}}
+                </p>
+                <div class="separator">&nbsp;</div>
+              <li>
+            </div>-->
+    
+    <div ng-repeat="message in selected_conversation_messages track by trackingFunction(i)">
+      
+      <div class="conversation-date-wrapper" ng-if="($index != 0) && !selected_conversation_messages[$index - 1].unread && selected_conversation_messages[$index].unread">
+        <div class="conversation-date">New Messages</div>
+      </div>
+
+      <div class="conversation-date-wrapper" ng-if="($index == 0) || (selected_conversation_messages[$index - 1].ts_day_of_the_week != selected_conversation_messages[$index].ts_day_of_the_week)">
+        <div class="conversation-date">{{message.ts_day_of_the_week}}</div>
+      </div>
+
+      <!-- user -->
+      <div class="customer-messaging-bubble w-clearfix" ng-if="(message.source == 'user')">
+        <div class="w-row">
+          <div class="customer-messaging-bubble-picture-wrapper w-clearfix w-col w-col-2"><img class="messaging-bubble right-nav-profile-picture" src="images/Customer-1.jpg" width="35">
+          </div>
+          <div class="w-col w-col-10">
+            <div class="customer-message message-bubble">
+              <div class="chat-text">{{message.text}}</div>
+            </div>
           </div>
         </div>
+        <div class="message-date-time">Received via <strong class="channel-and-time">{{ message.msg_type == 'Message' ? 'SMS' : 'Facebook Messenger'}} {{message.ts_time}}</strong></div>
       </div>
-      <div class="message-date-time">Sent via <strong class="channel-and-time">SMS 12 mins</strong> ago</div>
+
+      <!-- merchant -->
+      <div class="agent-messaging-bubble w-clearfix" ng-if="(message.source == 'merchant')">
+        <div class="w-row">
+          <div class="w-col w-col-10">
+            <div class="agent-messaging message-bubble">
+              <div class="agent chat-text">{{message.text}}</div>
+            </div>
+          </div>
+          <div class="w-clearfix w-col w-col-2"><img class="agent-picture messaging-bubble right-nav-profile-picture" src="images/Customer-2.jpg" width="35">
+          </div>
+        </div>
+        <div class="agent message-date-time">&nbsp;&nbsp;Sent <em class="time-text">{{message.ts_time}}</em></div>
+      </div>
+
     </div>
+
+
+
+    <!--
     <div class="agent-messaging-bubble w-clearfix">
       <div class="w-row">
         <div class="w-col w-col-10">
@@ -507,6 +568,7 @@
       </div>
       <div class="agent message-date-time">&nbsp;&nbsp;Sent <em class="time-text">8 mins</em> ago</div>
     </div>
+
     <div class="agent-messaging-bubble w-clearfix">
       <div class="w-row">
         <div class="w-col w-col-10">
@@ -517,6 +579,7 @@
       </div>
       <div class="agent message-date-time">&nbsp;&nbsp;Sent <em class="time-text">8 mins</em> ago</div>
     </div>
+
     <div class="customer-messaging-bubble">
       <div class="w-row">
         <div class="customer-messaging-bubble-picture-wrapper w-clearfix w-col w-col-2"><img class="messaging-bubble right-nav-profile-picture" src="images/Customer-1.jpg" width="35">
@@ -529,6 +592,7 @@
       </div>
       <div class="message-date-time">Sent via <strong class="channel-and-time">SMS 5 mins</strong> ago</div>
     </div>
+
     <div class="customer-messaging-bubble">
       <div class="w-row">
         <div class="customer-messaging-bubble-picture-wrapper w-clearfix w-col w-col-2"><img class="messaging-bubble right-nav-profile-picture" src="images/Customer-1.jpg" width="35">
@@ -542,6 +606,7 @@
       </div>
       <div class="message-date-time">Sent via <strong class="channel-and-time">SMS 5 mins</strong> ago</div>
     </div>
+
     <div class="customer-messaging-bubble">
       <div class="w-row">
         <div class="customer-messaging-bubble-picture-wrapper w-col w-col-2"></div>
@@ -552,6 +617,7 @@
       </div>
       <div class="message-date-time">Sent via <strong class="channel-and-time">SMS 5 mins</strong> ago</div>
     </div>
+
     <div class="agent-messaging-bubble">
       <div class="w-row">
         <div class="w-col w-col-10">
@@ -564,6 +630,7 @@
       </div>
       <div class="agent message-date-time">&nbsp;&nbsp;Sent <em class="time-text">2 mins</em> ago</div>
     </div>
+
     <div class="customer-messaging-bubble">
       <div class="w-row">
         <div class="customer-messaging-bubble-picture-wrapper w-clearfix w-col w-col-2"><img class="messaging-bubble right-nav-profile-picture" src="images/Customer-1.jpg" width="35">
@@ -576,7 +643,10 @@
       </div>
       <div class="message-date-time">Sent via <strong class="channel-and-time">Facebook Messenger Just now</strong>
       </div>
-    </div>
+    </div>-->
+
   </div>
+
+
   <div></div>
   <!-- [if lte IE 9]><script src="https://cdnjs.cloudflare.com/ajax/libs/placeholders/3.0.2/placeholders.min.js"></script><![endif] -->

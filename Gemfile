@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.0'
 
-gem 'mysql2'
+gem 'mysql2', '~> 0.3.18'
 
 gem "httparty"
 
@@ -95,7 +95,7 @@ gem 'jbuilder', '~> 2.0'
 gem 'sdoc', '~> 0.4.0', group: :doc
 
 # For using the rails asset pipeline with angularjs
-gem 'angular-rails-templates'
+gem 'angular-rails-templates', '~> 1.0', '>= 1.0.2'
 
 # Pubnub
 gem 'pubnub', '~> 4.0.7'

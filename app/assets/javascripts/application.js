@@ -31,11 +31,11 @@
 //= require angular-smooth-scroll.min
 //= require pubnub/pubnub-angular.js
 //= require angular-inview
+//= require_tree ./dashboard/messaging_angularjs/templates
 //= require dashboard/messaging_angularjs/messaging.js
 //= require dashboard/messaging_angularjs/messagingApp.js.erb
 //= require dashboard/messaging_angularjs/messagingControllers.js
 //= require dashboard/messaging_angularjs/messagingFilters.js
-//= require_tree ./dashboard/messaging_angularjs/templates
 
 // Other js files require tree is included so no need to include all the files in the folder tree
 //

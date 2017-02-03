@@ -336,7 +336,8 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
 
     $scope.trackingFunction = function(message) {
       return message.msg_type + message.id.toString();
-    }
+    };
+
 
     $scope.messageInView = function(index) {
       var message = $scope.selected_conversation_messages[index];
@@ -344,7 +345,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
         message.unread = false;
         $scope.markMessagesAsRead($scope.current_chat_conversation.id, message.id);
       }
-    }
+    };
 
 
     // Bind plugins to textbox
@@ -505,6 +506,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
         onLoad: function() { $('#chargeForm').find('input:first').focus(); }
       });
     };
+
 
     $scope.hashtagSelected = function(selected) { $scope.charge_data.hashtag_id = (selected) ? selected.originalObject.id : null; };
     $scope.hashtagsApiErrorHandler = function(selected) { alert('couldnt retrieve your tags'); };

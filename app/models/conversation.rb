@@ -1,5 +1,6 @@
 class Conversation < ActiveRecord::Base
-  
+  include PrettyDate
+
   has_many :conversation_refs, dependent: :destroy
   has_many :fb_messages, through: :conversation_refs, source: :textable, source_type: 'FbMessage', dependent: :destroy
   has_many :messages, through: :conversation_refs, source: :textable, source_type: 'Message', dependent: :destroy
@@ -74,6 +75,7 @@ class Conversation < ActiveRecord::Base
       last_message: last_message.blank? ? '' : last_message.text,
       last_message_ts: last_message.blank? ? 0 : last_message.created_at.to_i,
       last_message_type: last_message.class.name,
+      ago: last_message.blank? ? "" : last_message.created_at.super_short,
       unread_count: ConversationRef.where(conversation_id: self.id, unread: true).count
     }
   end
