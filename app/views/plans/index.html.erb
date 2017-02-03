@@ -9,7 +9,7 @@
     <div class="flex-underline form-header-underline"></div>
     <div class="header manage-plans-row w-row">
       <div class="w-col w-col-4">
-        <div class="header settings-row-text">Plan name</div>
+        <div class="editable-row-header header settings-row-text">Plan name</div>
       </div>
       <div class="w-col w-col-2">
         <div class="header settings-row-text">Amount</div>
@@ -24,41 +24,14 @@
         <div class="header settings-row-text">Actions</div>
       </div>
     </div>
-
+    <%= render partial: 'plans' %>
   </div>
 </div>
 
-<div class="container">
-  <div id="ordered-plans", class="container">
-
-    <h1>Listing Plans</h1>
-
-    <div class="table-responsive" >
-      <table class="table table-inverse table-hover table-bordered">
-        <thead>
-          <tr>
-            <th colspan="3">Name</th>
-            <th colspan="3">Amount</th>
-            <th colspan="3">Interval</th>
-            <th colspan="3">Interval Count</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody id='my-plans'>
-          <%= render partial: 'plans' %>
-        </tbody>
-      </table>
+   <!-- <div id="with-button" class="hidden">
+        <%#= will_paginate %>
     </div>
-  </div>
 
-  <br>
-  <!-- will_paginate gem for infinite scrolling with show more button with class show_more -->
-  <div id="with-button" class="hidden">
-      <%= will_paginate %>
-  </div>
-
-  <% if @plans.next_page %>
-      <div id="load_more_plans" class="show_more btn btn-primary " data-loading-text="<i class='fa fa-spinner fa-spin '></i> Loding more Plans" title="Click here to load more plans">Show More </div>
-
-  <% end %>
-</div>
+    <%# if @plans.next_page %>
+        <div id="load_more_plans" class="show_more btn btn-primary " data-loading-text="<i class='fa fa-spinner fa-spin '></i> Loding more Plans" title="Click here to load more plans">Show More </div>
+    <%# end %> -->

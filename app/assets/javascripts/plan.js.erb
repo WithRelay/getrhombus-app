@@ -89,10 +89,9 @@ $(document).ready(function() {
     parent.addClass('hide');
     parent = parent.parent(); 
     parent.find(".plan-name-save-span").removeClass('hide');
-
     var $el = parent.find('.plan-name');
     current_plan_name = $el.text();
-    var $input = $('<input class="plan-name" />').val( current_plan_name );
+    var $input = $('<input class="plan-name editable open text-field w-input" placeholder="Plan name" />').val( current_plan_name );
     $el.replaceWith( $input );
     $input.focus();        
   });

@@ -52,3 +52,7 @@ $colors: #ff0000 #ffff00 #0080ff #f20d0d  #996666 #808080 #0000ff #ffbf00 #40ff0
     background-color: $color;
   }
 }
+
+.hide {
+  display: none !important;
+}
