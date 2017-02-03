@@ -139,11 +139,11 @@ $(document).ready(function () {
   }
 
   // for table slide dowm
-  var table = $('#transactions-table').DataTable({
-      'dom' : 't',
-      'order' : [],
-      "pageLength": 25
-  });
+  // var table = $('#transactions-table').DataTable({
+  //     'dom' : 't',
+  //     'order' : [],
+  //     "pageLength": 25
+  // });
 
 
   // Add event listener for opening and closing details
@@ -198,7 +198,6 @@ $(document).ready(function () {
           fields: {
               'user[email]': {
                   verbose: false,
-                  row: '.group',
                   validators: {
                       notEmpty: {
                           message: 'Your email is required'
@@ -223,7 +222,6 @@ $(document).ready(function () {
                   }
               },
               'user[password]': {
-                  row: '.group',
                   validators: {
                       notEmpty: {
                           message: 'Your password is required'
@@ -451,12 +449,6 @@ $(document).ready(function () {
 
   // validate sign up form
   $('#signupForm')
-      .find('[name="user[user_level]"]')
-          .selectpicker()
-          .change(function(e) {
-              $('#signupForm').formValidation('revalidateField', 'user[user_level]');
-          })
-          .end()
       .formValidation({
           // I am validating Bootstrap form
           framework: 'bootstrap',
@@ -465,7 +457,6 @@ $(document).ready(function () {
           fields: {
               'user[email]': {
                   verbose: false,
-                  row: '.group',
                   validators: {
                       notEmpty: {
                           message: 'Your email is required'
@@ -490,7 +481,6 @@ $(document).ready(function () {
                   }
               },
               'user[password]': {
-                  row: '.group',
                   validators: {
                       notEmpty: {
                           message: 'The password is required'
@@ -502,7 +492,6 @@ $(document).ready(function () {
                   }
               },
               "user[password_confirmation]": {
-                  row: '.group',
                   validators: {
                       verbose: false,
                       notEmpty: {
@@ -515,7 +504,6 @@ $(document).ready(function () {
                   }
               },
               'user[phone]': {
-                  row: '.group',
                   validators: {
                       callback: {
                           callback: function (value, validator, $field) {
@@ -535,7 +523,6 @@ $(document).ready(function () {
                   }
               },
               'user[user_level]': {
-                  row: '.form-group',
                   validators: {
                       notEmpty: {
                           message: 'Please select an account'
