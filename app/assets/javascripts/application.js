@@ -27,6 +27,11 @@
 //= require url-parameters
 //= require moment
 
+// We need to place these js before jquery ujs for workable confirmation dialog box
+//= require plan
+//= require coupon
+//= require subscription
+
 //= require jquery_ujs
 //= require angular-smooth-scroll.min
 //= require pubnub/pubnub-angular.js
@@ -60,9 +65,6 @@
 //= require bootstrap-select
 //= require powerange
 //= require knowledge_base
-//= require plan
-//= require coupon
-//= require subscription
 //= require flashes
 //= require integrations
 //= require lists.js
