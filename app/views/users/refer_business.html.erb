@@ -8,26 +8,7 @@
     <h4 class="form-header">Refer Businesses</h4>
     <div class="flex-underline form-header-underline"></div>
     <div class="account-settings-form-wrapper w-form">
-      <form class="w-clearfix" data-name="Email Form" id="email-form" name="email-form">
-        <label class="form-label paragraph" for="Referrer-Email">Refer your favorite local businesses to Rhombus, and earn up to <strong>$25 per month</strong>&nbsp;for <strong>12 months</strong>, after they subscribe. The businesses your refer also receive a 50% discount on their subscription because you sent them our way. There are no limits to how many businesses you can refer</label>
-        <label class="field-headers form-label settings" for="name">referrer details</label>
-        <input class="full-name settings text-field w-input" data-name="Name" id="name" maxlength="256" name="name" placeholder="Your full name" type="text">
-        <input class="settings text-field w-input" data-name="Referrer Email" id="Referrer-Email" maxlength="256" name="Referrer-Email" placeholder="Your email address" required="required" type="email">
-        <div class="flex-underline form-section-divider"></div>
-        <label class="field-headers form-label settings" for="Referee-Business-Name">i'm referring</label>
-        <input class="full-name settings text-field w-input" data-name="Referee Business Name" id="Referee-Business-Name" maxlength="256" name="Referee-Business-Name" placeholder="Name of the business you&#39;re referring" required="required" type="text">
-        <input class="settings text-field w-input" data-name="Referee Email" id="Referee-Email" maxlength="256" name="Referee-Email" placeholder="Contact person&#39;s email address" required="required" type="email">
-        <input class="settings text-field w-input" data-name="Referree Phone" id="Referree-Phone" maxlength="256" name="Referree-Phone" placeholder="Phone number (Optional)" type="email">
-        <select class="country_dropdown w-select" data-name="Country 2" id="Country-2" name="Country-2">
-          <option value="">Country</option>
-        </select><a class="button save-changes w-button" href="#">Invite business</a>
-      </form>
-      <div class="w-form-done">
-        <div>Thank you! Your submission has been received!</div>
-      </div>
-      <div class="w-form-fail">
-        <div>Oops! Something went wrong while submitting the form</div>
-      </div>
+      <%= render 'shared/referrer_form' %>
     </div>
   </div>
 </div>

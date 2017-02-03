@@ -2,7 +2,7 @@
 <html data-wf-site='55398a823ca1c17b4205500b' data-wf-page='55398a823ca1c17b4205500d'>
   <head>
     <meta charset='UTF-8'>
-    <title><%= content_for?(:title) ? yield(:title) : 'Rhombus - Conversation Commerce Platform' %></title>
+    <title><%= content_for?(:title) ? yield(:title) : 'Relay Platform' %></title>
 
     <!-- Meta Tags -->
     <meta name='description' content='Exchange real-time text messages, and accept payments from your customers – all within the conversation.'>
@@ -14,7 +14,6 @@
 
     <!--  CSS files -->
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true  %>
-    <!-- <%= stylesheet_link_tag 'https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css' %> -->
 
     <!--  Js files -->
     <%= javascript_include_tag 'https://ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js' %>
@@ -36,7 +35,8 @@
   <%= csrf_meta_tags %>
 
   </head>
-  <body class='body'>
+
+  <body class="<%= add_body_class %>" >
     <%= render_header_partial %>
     <%= render_sidebar_partial %>
     <%= yield %>
@@ -45,4 +45,6 @@
     <%= render 'shared/google_analytics' %>
     <%= render 'shared/flash_messages' %>
   </body>
+
+
 </html>

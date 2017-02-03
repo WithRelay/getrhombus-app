@@ -1,6 +1,11 @@
-/*fix css for phone number*/
+.display_none {
+  display: none;
+}
 
+/*fix css for phone number*
 $colors: #ff0000 #ffff00 #0080ff #f20d0d  #996666 #808080 #0000ff #ffbf00 #40ff00 #ff00bf;
+$error-color: red;
+$success-color: green;
 
 .intl-tel-input{
   width: 100% !important;
@@ -13,7 +18,7 @@ $colors: #ff0000 #ffff00 #0080ff #f20d0d  #996666 #808080 #0000ff #ffbf00 #40ff0
   margin-left: 53px !important;
 }
 
-#request-demo-page .intl-tel-input {
+#request-demo-page .intl-tel-input, #refer-a-business .intl-tel-input {
   margin-bottom: 20px !important;
   margin-left: 10% !important;
 }
@@ -41,10 +46,29 @@ $colors: #ff0000 #ffff00 #0080ff #f20d0d  #996666 #808080 #0000ff #ffbf00 #40ff0
 #subscription-plan-id-selectized {
   margin-top: 5px !important;
 }
+
+$colors: #ff0000 #ffff00 #0080ff #f20d0d  #996666 #808080 #0000ff #ffbf00 #40ff00 #ff00bf;
+
 @each $color in $colors
 {
   $i: index($colors, $color);
   .radius-color-#{$i}{
     background-color: $color;
   }
+}
+
+.has-error .form-control  
+{
+  border-color: $error-color;
+}
+  
+.help-block{
+    color: $error-color;
+}
+.has-success .control-label,
+.has-success .help-block {
+    color: $success-color;
+}
+.hide {
+  display: none !important;
 }

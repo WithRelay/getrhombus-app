@@ -1,13 +1,13 @@
 class Conversation < ActiveRecord::Base
-
+  
   has_many :conversation_refs, dependent: :destroy
   has_many :fb_messages, through: :conversation_refs, source: :textable, source_type: 'FbMessage', dependent: :destroy
   has_many :messages, through: :conversation_refs, source: :textable, source_type: 'Message', dependent: :destroy
   belongs_to :merchant_conversation, class_name: "User"
 
   def self.get_open_conversations_count(merchant_id)
-  	where(merchant_id: merchant_id, message_resolution_id: nil).count
-  	where(merchant_id: merchant_id).count
+  	where(merchant_id: merchant_id, message_resolution_id: nil).count  
+  	where(merchant_id: merchant_id).count  		
   end
 
   # Returns hash with users who sent a message to the given merchant in the last "num_days" days
@@ -19,7 +19,7 @@ class Conversation < ActiveRecord::Base
   	convs.each do |conv|
   		if conv.uid_type == "user"
   			full_name = User.find_by(conv.uid).card_name
-  		else
+  		else 
   			# does fb at least give us some info?
   			full_name = (conv.uid_type == 'fb_page') ? "messenger user" : conv.uid
   		end
@@ -55,12 +55,12 @@ class Conversation < ActiveRecord::Base
 	end
 
   def conversation_hash(user = nil)
-    last_message = ConversationRef.where(conversation_id: self.id).last
+    last_message = ConversationRef.where(conversation_id: self.id).last 
     last_message = (last_message) ? last_message.textable : nil
 
     if self.uid_type == "user"
       full_name = (user) ? user.card_name : User.find_by(self.uid).card_name
-    else
+    else 
       # does fb at least give us some info?
       full_name = (self.uid_type == 'fb_page') ? "messenger user" : self.uid
     end
@@ -84,8 +84,8 @@ class Conversation < ActiveRecord::Base
 		latest_messages = Array.new
 		unread_ids = []
 
-		convs_refs.each do |cf|
-			unread_ids.push(cf.id) if cf.unread
+		convs_refs.each do |cf| 
+			unread_ids.push(cf.id) if cf.unread			
 			latest_messages.push(message_hash(cf.textable))
     end
     [latest_messages, unread_ids.join(",")]
@@ -93,7 +93,7 @@ class Conversation < ActiveRecord::Base
 
 	def message_hash(msg)
 		# Used for profile image...This should change if merchant can talk to merchant? or change how we determine profile image
-		user_level = msg.user_id == self.merchant_id ? 1 : 0
+		user_level = msg.user_id == self.merchant_id ? 1 : 0  
 
 		{
       id: msg.id,
@@ -135,8 +135,8 @@ class Conversation < ActiveRecord::Base
   def mark_messages_as_read(ids)
   	begin
 	  	# this can be more efficient
-	  	refs = ConversationRef.includes(:textable).where(id: ids.split(","), conversation_id: self.id)
-	  	ActiveRecord::Base.transaction do
+	  	refs = ConversationRef.includes(:textable).where(id: ids.split(","), conversation_id: self.id) 
+	  	ActiveRecord::Base.transaction do	 	
 		  	refs.update_all(unread: false)
 		  	sms_ary, messenger_ary = Array.new, Array.new
 		  	refs.each { |r|	r.textable.class.name == "Message" ? sms_ary.push(r.textable.id) : messenger_ary.push(r.textable.id) }
@@ -153,20 +153,20 @@ class Conversation < ActiveRecord::Base
   # uid can be user id, phone number or messenger id
   def send_message(team, user, msg, channel, unread, uid = nil, uid_type = nil, media = [])
 		from = (channel == "FbMessage") ? "get messenger cred" : team.rhombus_number
-    to = (channel == "FbMessage") ? 'get messenger cred' : user.phone_number if user.present?
-
+    to = (channel == "FbMessage") ? 'get messenger cred' : user.phone_number if user.present? 
+    
     msg_instance = channel.constantize.new
-
+    
     # Relate message to files
     if media.present?
       media_ids = []
-      media.map! do |m|
+      media.map! do |m| 
         media_ids.push(m.id)
-        m.avatar.url
-      end
+        m.avatar.url        
+      end   
       msg_instance.image_ids = media_ids
     end
-
+    
 		if msg_instance.send_and_save_message(team, user, from, to, msg, unread, media)
 			find_or_create_conversation_for_message(team.id, uid_type, uid, msg_instance, unread)
 			message_hash(msg_instance)
