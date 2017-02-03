@@ -1,261 +1,582 @@
-<style>
-.upwards-scroll-container {
-  overflow-y: scroll;
-}
-</style>
-<div class="content">
-  <!-- Start Page Header -->
-  <div class="page-header">
-    <div style="float:left;">
-      <h1 class="title">Messaging</h1>
-      <!--<ol class="breadcrumb">
-      <li ng-if="active_user_count > 0" class="active">
-      You have <span ng-class="{'label label-danger': global_unread_count > 0 , '': global_unread_count == 0}" class="">{{global_unread_count}}</span> unread messages
-    </li>
-    <li ng-if="active_user_count == 0" class="active">
-    No messages in the last <%= CONFIG[:dashboard]['messaging']['num_days_history'] %> days.
-  </li>
-</ol>-->
-</div>
-
-<div style="float:right;">
-  <button ng-click="displayChargeForm()">Charge a customer</button>
-</div>
-<div class="clearfix"></div>
-</div>
-<!-- End Page Header -->
-<!-- //////////////////////////////////////////////////////////////////////////// -->
-
-  <!-- START CONTAINER -->
-  <!--<div ng-if="active_user_count > 0" class="container-mail">-->
-  <div ng-if="open_conversations_count > 0" class="container-mail">
-    <!-- Start Mailbox -->
-    <div class="mailbox clearfix">
-      <!-- Start Mailbox Menu -->
-      <div class="mailbox-menu"></div>
-      <!-- End Mailbox Menu -->
-      <!-- Start Mailbox Container -->
-      <div class="container-mailbox">
-        <!-- Start Mailbox Inbox -->
-        <div class="col-lg-3 col-md-4 padding-0">
-          <ul class="mailbox-inbox">
-            <li class="search">
-              <form>
-                <input type="text" class="mailbox-search" id="mailboxsearch" placeholder="Search" ng-model="query">
-                <span class="searchbutton"><i class="fa fa-search"></i></span>
-              </form>
-            </li>
-            <!--<div class="user-list">-->
-            <div class="conversation-list" when-scrolled-down="loadConversations()" id='conversations-list'>
-              <!--<li ng-repeat="(user_number, user) in users | filterUserList:query | orderObjectBy:'last_message_ts':true">-->
-              <li ng-repeat="(identifier, conversation) in conversations | filterConversationList:query | orderObjectBy:'last_message_ts':true">
-
-                <!--<a ng-class="{ chat_highlight : current_chat_user === user, item : true, clearfix : true }" ng-click="getUserMessages(user)">-->
-                <a ng-class="{ chat_highlight : current_chat_conversation === conversation, item : true, clearfix : true }" ng-click="getConversationMessages(conversation, true)" style="width: 100%">
-                  <img ng-src="{{conversation.profile_image}}" alt="img" class="img" />
-                  <!--<span class="from">{{user.first_name}} {{user.last_name}}</span>-->
-                  <span class="from">{{conversation.full_name}}</span>
-                  <div class="last-message">{{conversation.last_message}}</div>
-                  <span ng-if="conversation.unread_count > 0" class="unread">{{conversation.unread_count}}</span>
-                </a>
-              </li>
-            </div>
-          </ul>
-        </div>
-        <!-- End Mailbox Inbox -->
-
-        <!-- Start Chat -->
-
-          <!--<div ng-if="selected_user_messages.length > 0" class="chat col-lg-9 col-md-8 padding-0">-->
-          <!--<div ng-if="selected_conversation_messages.length > 0" class="chat col-lg-9 col-md-8 padding-0">-->
-          <div class="chat col-lg-9 col-md-8 padding-0">
-            <!-- Start Title -->
-            <div class="title">
-              <h1>{{selected_user.first_name}} {{selected_user.last_name}}</h1>
-              <p>
-                {{selected_user.email}}
-              </p>
-            </div>
-            <!-- End Title -->
 
 
-          <!-- Start Conv -->
-<!--
-          <div data-ng-app="messageFetcher">
-            <div data-ng-controller="endlessMessage as messages">
-              <div class="messageStatus text-center" style="margin-left:300px; width: 150px; background: #edf9ff;"></div>
-              <ul class="upwards-scroll-container conv" data-upwards-scoll="messages.LoadMore()" scroll-glue>
-                <div data-ng-repeat="i in messages.Items track by $index">
-                  <li ng-if="($index != 0) && !messages.Items[$index - 1].unread && messages.Items[$index].unread" class="date">New Messages</li>
-                  <li ng-if="($index == 0) || (messages.Items[$index - 1].ts_day_of_the_week != messages.Items[$index].ts_day_of_the_week)" class="date">{{i.ts_day_of_the_week}}</li>
-                  <li>
-                    <img ng-if="(i.user_level == 0) && (($index == 0) || (messages.Items[$index - 1].user_level != i.user_level))" ng-src="{{i.profile_image}}" alt="img" class="img">
-                    <p ng-class="{'ballon color1': i.user_level == 0 , 'ballon color2': i.user_level != 0}">
-                      <span ng-if="i.text">{{i.text}}</span>
-
-                      <span ng-if="i.image_url"><img src="{{i.image_url}}"/></span>
-                    </p>
-                    <p class="ts">{{i.ts_time}}</p>
-                    <div class="separator">&nbsp;</div>
-                  </li>
-                </div>
-              </ul>
-            </div>
-          </div>
--->
-            <div id="fixed" when-scrolled-up="getConversationMessages(selected_conversation, false)" scroll-bottom-on="status.loaded">
-              <p ng-show="status.loading" class="me">loading...</p>
-              <!--<ul>  scroll-glue> -->
-                <div ng-repeat="i in selected_conversation_messages track by trackingFunction(i)" on-finish-render>{{i}}
-                <br>
-                  <img my-src={{"http://deelay.me/5000/http://cdn.wonderfulengineering.com/wp-content/uploads/2014/03/high-resolution-wallpapers-1.jpg"}} width="200", height="200" class="animate-show">
-                </div>
-              <!--</ul>  -->
-            </div>
-          <!--<div id="fixed" when-scrolled="loadMore()" scroll-bottom-on="status.loaded">
-          <ul class="conv">
-            <div ng-repeat="message in selected_conversation_messages track by $index">
-              <li ng-if="($index != 0) && !selected_conversation_messages[$index - 1].unread && selected_conversation_messages[$index].unread" class="date">New Messages</li>
-              <li ng-if="($index == 0) || (selected_conversation_messages[$index - 1].ts_day_of_the_week != selected_conversation_messages[$index].ts_day_of_the_week)" class="date">{{message.ts_day_of_the_week}}</li>
-              <li>
-                <img ng-if="(message.source == 'user') && (($index == 0) || (selected_conversation_messages[$index - 1].source != message.source))" ng-src="{{message.profile_image}}" alt="img" class="img">
-                <p ng-class="{'ballon color1': message.source == 'user' , 'ballon color2': message.source != 'user'}">
-
-                  <!--{{message.text}}-->
-                  <!-- <span ng-if="message.text">{{message.text}}</span>
-                  <span ng-if="message.image_url"><img src="{{message.image_url}}"/></span>
-                </p>
-                <p class="ts">
-                  {{message.ts_time}}
-                </p>
-                <div class="separator">&nbsp;</div>
-              <li>
-            </div>
-          </ul>
-          </div>-->
-
-          <div class="write">
-            <form>
-              <p>
-                <textarea class="textarea form-control" placeholder="Type a message here..." style="width:100%; height: 60px;" id='message_box'></textarea>
-              </p>
-
-              <style type="text/css">
-              .emojionearea, .emojionearea.form-control {
-                height: 60px !important;
-                margin-bottom: 18px;
-              }
-              .emojionearea .emojionearea-editor {
-                padding-left: 10px !important;
-              }
-
-              #fixed {
-                height: 500px;
-                overflow: auto;
-                margin-bottom: 20px;
-              }
-
-              .me {
-                margin-left: 50px;
-                margin-bottom: 50px;
-              }
-             </style>
-
-              <textarea ng-model="new_message.text" ng-trim="true" id='aaa' style="display: none;"></textarea>
-
-              <span class="char-counter">{{char_limit - new_message.text.length}} characters left</span>
-
-              <br><br><br><br>
-              <button class="btn btn-default btn-rhombus" id="send_msg_btn" ng-click="sendConversationMessage(new_message, 'Message')" style="height: 32px;" ng-disabled='is_sending || selected_conversation.id === undefined'>
-                {{send_msg_btn}}
-              </button>
-
-              <input type="file" id="file-picker" ngf-select="handleFile($file, $invalidFiles)" ng-model="pic_file" ngf-accept="'image/*'" ngf-max-size="1MB">
-
-            </form>
-
-
-
-
-            <!-- Image Preview -->
-            <div style="display: none; width: 400px; height: 400px; background: white;" id="mms-img-preview">
-              <div style="font:smaller">{{selected_file.name}}</div>
-              <textarea class="textarea form-control" placeholder="Add an optional message to this MMS..." style="height:100px; width:70%;" ng-model="mms_text" ng-trim="true"></textarea>
-              <br><br>
-              <style type="text/css"> .thumb { width: 100px; height: 100px; float: none; position: relative; top: 7px; }</style>
-              <img ngf-thumbnail="pic_file" class="thumb">
-              <br><br>
-              <button class="btn btn-default btn-rhombus" id="send_mms_btn" ng-click="sendMMS('Message')" style="height: 32px;" ng-disabled='is_sending || selected_conversation.id === undefined'>
-                {{send_mms_btn}}
-              </button>
-              <br>
-              <button class="btn btn-default btn-rhombus" id="cancel_mms_btn" ng-click="cancelMMS()" style="height: 32px;" ng-disabled='is_sending'>
-                Cancel
-              </button>
-            </div>
-            <!-- Image Preview -->
-
-          </div>
-        </div>
-        <!-- End Chat -->
+  <div class="messaging sub-nav-bar">
+    <div class="w-row">
+      <div class="w-col w-col-4"></div>
+      <div class="w-col w-col-4">
+        <div class="customer-name-text subheader">Michael Randy</div>
       </div>
-      <!-- End Mailbox Container -->
-      </div>
-      <!-- End Mailbox -->
-      </div>
-      <!-- END CONTAINER -->
-
-      </div>
-
-<!-- Charge Box -->
-<div style="display: none;" id="chargeFormBox" class="newForms">
-  <div id="chargeFormDiv" class="parent_div">
-    <div class="center_div">
-      <div id="chargeCustomer">Charge Customer</div>
-      <p id="chargeCustomerLine">____</p>
-      <form id="chargeForm" name="chargeForm" ng-submit="submitChargeForm(chargeForm.$valid)" novalidate>
-
-        <label>
-          <angucomplete-alt id="find-hashtag"
-          placeholder="Hashtag or item name"
-          pause="300"
-          minlength="1"
-          selected-object="hashtagSelected"
-          remote-url="<%= (Rails.env == 'development' ? "http://localhost:3000" : "#{Rails.application.secrets.url["info"]}") + "/v1/hashtags?query=" %>"
-          remote-url-data-field="hashtags"
-          title-field="tag"
-          text-no-results='false'
-          match-class='highlight'
-          input-name='hashtag'
-          description-field='description'
-          text-searching="Finding your tag/item..."
-          <%#= add html notification during ui integration %>
-          <%#= scroll bar added but test option during UI integration and testing %>
-          remote-url-error-callback='hashtagsApiErrorHandler'
-          />
-        </label>
-
-        <style> .has-error { border-color: red; }</style>
-
-        <label class="left">
-          <%# http://gsferreira.com/archive/2015/02/angularjs-input-number-with-two-decimal-places %>
-          <input type="number" min="1" max='15000' required ng-model='charge.amount' name="amount" placeholder="Amount" style="width: 150px" step='0.01' ng-pattern="/^\d+(.\d{1,2})?$/" ng-class="{'has-error': chargeForm.amount.$invalid && !chargeForm.amount.$pristine }">
-          <p ng-show="chargeForm.amount.$invalid && !chargeForm.amount.$pristine">A valid amount is required</p>
-        </label>
-
-        <label>
-          <textarea type="text" ng-model='charge.notes' name="notes" placeholder="Description" style="height: 100px;" class="rhombusFocus" ng-trim='true'></textarea>
-        </label>
-
-        <label>
-          <input type="checkbox" name="authorize" ng-model='charge.authorize' value="authorize">Authorize only
-        </label>
-
-        <footer>
-          <button class="btn btn-default btn-block btn-rhombus" id="chargeButton" ng-disabled="disableChargeButton(chargeForm)" type="submit">{{charge_btn}}</button>
-        </footer>
-      </form>
+      <div class="w-col w-col-4"></div>
     </div>
   </div>
-</div>
-<!-- Charge Box -->
+  <div class="messaging side-bar">
+    <div class="w-tabs" data-duration-in="300" data-duration-out="100">
+      <div class="messaging-tab-menu w-tab-menu">
+        <a class="messages-tab-link w--current w-inline-block w-tab-link" data-w-tab="Tab 1">
+          <div class="messages-tab-link-text">New (<span>29)</span>
+          </div>
+        </a>
+        <a class="messages-tab-link right w-inline-block w-tab-link" data-w-tab="Tab 2">
+          <div class="messages-tab-link-text">Open (<span>9)</span>
+          </div>
+        </a>
+      </div>
+      <div class="message-tab-content w-tab-content">
+        <div class="w--tab-active w-tab-pane" data-w-tab="Tab 1">
+          <a class="message-tab w-inline-block" href="#">
+            <div class="message-tab-content-wrapper w-row">
+              <div class="message-tab-picture-column w-col w-col-2">
+                <div class="w-clearfix">
+                  <div class="channel-indicator"></div><img class="customer-profile-picture" src="images/Customer-1.jpg" width="30">
+                </div>
+              </div>
+              <div class="w-clearfix w-col w-col-9">
+                <div class="customer-name-text">Michael Randy</div>
+                <div class="message">Do you currently have the blue option is stock? Last time I checked it was...</div>
+              </div>
+              <div class="w-clearfix w-col w-col-1">
+                <div class="messaging-dash-variable-text">4m</div>
+                <div class="message-counter">14</div>
+              </div>
+            </div>
+          </a>
+          <a class="message-tab older-message w-inline-block" href="#">
+            <div class="message-tab-content-wrapper w-row">
+              <div class="message-tab-picture-column w-col w-col-2">
+                <div class="w-clearfix">
+                  <div class="channel-indicator-2"></div><img class="customer-profile-picture" src="images/49-1.jpg" width="30">
+                </div>
+              </div>
+              <div class="w-col w-col-9">
+                <div class="customer-name-text">Jim Brooks</div>
+                <div class="message">Hi I'd like to re-order the same shirts I bought last summer</div>
+              </div>
+              <div class="w-clearfix w-col w-col-1">
+                <div class="messaging-dash-variable-text">4m</div>
+                <div class="message-counter">23</div>
+              </div>
+            </div>
+          </a>
+          <a class="message-tab older-message w-inline-block" href="#">
+            <div class="message-tab-content-wrapper w-row">
+              <div class="message-tab-picture-column w-clearfix w-col w-col-2"><img class="customer-profile-picture" src="images/Orange.png" width="30">
+              </div>
+              <div class="w-col w-col-9">
+                <div class="customer-name-text">Cynthia Mark</div>
+                <div class="message">I need help returning my last purchase. It didn't quite fit properly</div>
+              </div>
+              <div class="w-clearfix w-col w-col-1">
+                <div class="messaging-dash-variable-text">4m</div>
+              </div>
+            </div>
+          </a>
+          <a class="message-tab older-message w-inline-block" href="#">
+            <div class="message-tab-content-wrapper w-row">
+              <div class="message-tab-picture-column w-clearfix w-col w-col-2"><img class="customer-profile-picture" src="images/81.jpg" width="30">
+              </div>
+              <div class="w-col w-col-9">
+                <div class="customer-name-text">Edward Fischer</div>
+                <div class="message">Hey guys, any Labor day promotions this year?</div>
+              </div>
+              <div class="w-clearfix w-col w-col-1">
+                <div class="messaging-dash-variable-text">4m</div>
+              </div>
+            </div>
+          </a>
+          <a class="message-tab older-message w-inline-block" href="#">
+            <div class="message-tab-content-wrapper w-row">
+              <div class="message-tab-picture-column w-clearfix w-col w-col-2"><img class="customer-profile-picture" src="images/Light-Blue.png" width="30">
+              </div>
+              <div class="w-col w-col-9">
+                <div class="customer-name-text">Jenn Franco</div>
+                <div class="message">Thanks guys. I just received my order in the mail. Looks fantastic!</div>
+              </div>
+              <div class="w-clearfix w-col w-col-1">
+                <div class="messaging-dash-variable-text">4m</div>
+              </div>
+            </div>
+          </a>
+          <a class="message-tab older-message w-inline-block" href="#">
+            <div class="message-tab-content-wrapper w-row">
+              <div class="message-tab-picture-column w-clearfix w-col w-col-2"><img class="customer-profile-picture" src="images/31.jpg" width="30">
+              </div>
+              <div class="w-col w-col-9">
+                <div class="customer-name-text">Samantha Geoffery</div>
+                <div class="message">Hi there...I need help putting together a look for my sister's wedding</div>
+              </div>
+              <div class="w-clearfix w-col w-col-1">
+                <div class="messaging-dash-variable-text">4m</div>
+              </div>
+            </div>
+          </a>
+        </div>
+        <div class="w-tab-pane" data-w-tab="Tab 2">
+          <a class="message-tab older-message w-inline-block" href="#">
+            <div class="message-tab-content-wrapper w-row">
+              <div class="message-tab-picture-column w-clearfix w-col w-col-2"><img class="customer-profile-picture" src="images/J-Libov.jpg" width="30">
+              </div>
+              <div class="w-col w-col-9">
+                <div class="customer-name-text">Joe Benjamin</div>
+                <div class="message">How do I get a refund for my cancelled booking?</div>
+              </div>
+              <div class="w-clearfix w-col w-col-1">
+                <div class="messaging-dash-variable-text">4m</div>
+              </div>
+            </div>
+          </a>
+          <a class="message-tab older-message w-inline-block" href="#">
+            <div class="message-tab-content-wrapper w-row">
+              <div class="message-tab-picture-column w-clearfix w-col w-col-2"><img class="customer-profile-picture" src="images/Purple.png" width="30">
+              </div>
+              <div class="w-col w-col-9">
+                <div class="customer-name-text">Ruth Edwin</div>
+                <div class="message">Do you currently have the blue option is stock? Last time I checked it was...</div>
+              </div>
+              <div class="w-clearfix w-col w-col-1">
+                <div class="messaging-dash-variable-text">4m</div>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="text-window-wrapper">
+    <div class="w-form">
+      <form class="w-clearfix" id="email-form-2" name="email-form-2">
+        <input class="text-area w-input" data-name="Message Window" id="Message-Window" maxlength="256" name="Message-Window" placeholder="Type a message..." type="text">
+        <a class="message-window-tabs w-button" data-ix="load-image-preview" href="#">t</a>
+        <a class="message-window-tabs w-button" href="#"></a>
+        <a class="message-window-tabs w-button" href="#"></a>
+        <a class="message-window-tabs w-button" data-ix="schedule-notification" href="#"></a>
+        <a class="message-window-tabs w-button" data-ix="add-to-list" href="#"></a>
+        <%# removed data-ix, added ng-click%>
+        <a class="message-window-tabs w-button" data-ix="charge-customer-2" ng-click="displayChargeForm()" href="#"></a>
+        
+        <div class="split-button-wrapper"><a class="message-window-tabs send-button split-button w-button" href="#">Reply</a>
+          <div class="w-dropdown" data-delay="0">
+            <div class="split-dropdown w-dropdown-toggle"><span class="font-icon-split"></span>
+            </div>
+            <nav class="dropdown-options-wrapper split-button w-dropdown-list"><a class="dropdown-link split-button w-dropdown-link" href="#"> &nbsp; &nbsp;Send via Messenger</a>
+            </nav>
+          </div>
+        </div><a class="message-reason message-window-tabs send-button w-button" data-ix="select-saved-reply" href="#">Saved replies</a><a class="mark sub-nav-button w-button" data-ix="mark-as-done" href="#"> &nbsp;Mark as done</a>
+      </form>
+      <div class="w-form-done">
+        <div>Thank you! Your submission has been received!</div>
+      </div>
+      <div class="w-form-fail">
+        <div>Oops! Something went wrong while submitting the form</div>
+      </div>
+    </div>
+  </div>
+  <div class="right side-bar">
+    <div class="right-nav-profile-content-wrapper"><img class="profile-picture-right-nav" src="images/Customer-1.jpg" width="60">
+      <div class="dashboard-right-nav signup-box-subheading">MICHAEL RANDY <span class="relay-id">VERIFIED</span>
+      </div>
+      <div class="left-column-text number"> &nbsp; &nbsp;+1 <redacted_phone_number></div>
+      <div class="left-column-text"> &nbsp; &nbsp;<redacted_email></div>
+      <div class="left-column-text"> &nbsp; &nbsp; &nbsp;Washington, DC</div>
+      <div class="left-column-text"> &nbsp; &nbsp; @mrandy</div>
+      <div class="left-column-text"> &nbsp; &nbsp; Customer since: 04/23/2009</div>
+      <div class="right-nav-underline"></div>
+    </div>
+    <div class="right-nav-tab w-tabs" data-duration-in="300" data-duration-out="100">
+      <div class="right-nav tab-menu w-tab-menu">
+        <a class="tab-link w--current w-inline-block w-tab-link" data-w-tab="Tab 1">
+          <div class="messages-tab-link-text">Transactions</div>
+        </a>
+        <a class="right tab-link w-inline-block w-tab-link" data-w-tab="Tab 2">
+          <div class="messages-tab-link-text">Segments</div>
+        </a>
+      </div>
+      <div class="w-tab-content">
+        <div class="transaction-pane w--tab-active w-tab-pane" data-w-tab="Tab 1">
+          <a class="transactions-div-wrapper w-inline-block" href="#">
+            <div class="transaction-div" data-ix="display-refund-options">
+              <div class="right-nav-transaction-div-table w-row">
+                <div class="w-col w-col-9">
+                  <div class="right-nav-amount-text">$35.70</div>
+                  <div class="right-nav-amount-desc">Chicken Sharwarma</div>
+                </div>
+                <div class="w-col w-col-3">
+                  <div class="messaging-dash-variable-text transactions-div-table">4m</div>
+                  <div class="expand"></div>
+                </div>
+              </div>
+            </div>
+            <div class="hidden-refund-options" data-ix="hide-refund-option">
+              <div class="w-form">
+                <form id="email-form-8" name="email-form-8">
+                  <label class="form-label right-nav-form" for="Refund-Amount">Refund Transaction</label>
+                  <input class="right-nav text-field w-input" data-name="Refund Amount" id="Refund-Amount" maxlength="256" name="Refund-Amount" placeholder="Refund Amount" type="text">
+                  <select class="dropdown w-select" data-name="Refund Reason" id="Refund-Reason" name="Refund-Reason" required="required">
+                    <option value="">Select reason</option>
+                    <option value="Another Choice">Canceled order</option>
+                    <option value="Another Choice">Returned goods</option>
+                    <option value="Another Choice">Accidental charge</option>
+                    <option value="Another Choice">Other</option>
+                  </select>
+                  <input class="button refund w-button" data-wait="Please wait..." type="submit" value="Refund">
+                </form>
+                <div class="w-form-done">
+                  <div>Thank you! Your submission has been received!</div>
+                </div>
+                <div class="w-form-fail">
+                  <div>Oops! Something went wrong while submitting the form</div>
+                </div>
+              </div>
+            </div>
+          </a>
+          <a class="transactions-div-wrapper w-inline-block" href="#">
+            <div class="transaction-div" data-ix="display-refund-options">
+              <div class="right-nav-transaction-div-table w-row">
+                <div class="w-col w-col-9">
+                  <div class="right-nav-amount-text">$127.10</div>
+                  <div class="right-nav-amount-desc">Chicken Sharwarma</div>
+                </div>
+                <div class="w-col w-col-3">
+                  <div class="messaging-dash-variable-text transactions-div-table">4m</div>
+                  <div class="expand"></div>
+                </div>
+              </div>
+            </div>
+            <div class="hidden-refund-options" data-ix="hide-refund-option">
+              <div class="w-form">
+                <form id="email-form-8" name="email-form-8">
+                  <label class="form-label right-nav-form" for="Refund-Amount-7">Refund Transaction</label>
+                  <input class="right-nav text-field w-input" data-name="Refund Amount 7" id="Refund-Amount-7" maxlength="256" name="Refund-Amount-7" placeholder="Refund Amount" type="text">
+                  <select class="dropdown w-select" data-name="Refund Reason 7" id="Refund-Reason-7" name="Refund-Reason-7" required="required">
+                    <option value="">Select reason</option>
+                    <option value="Another Choice">Canceled order</option>
+                    <option value="Another Choice">Returned goods</option>
+                    <option value="Another Choice">Accidental charge</option>
+                    <option value="Another Choice">Other</option>
+                  </select>
+                  <input class="button refund w-button" data-wait="Please wait..." type="submit" value="Refund">
+                </form>
+                <div class="w-form-done">
+                  <div>Thank you! Your submission has been received!</div>
+                </div>
+                <div class="w-form-fail">
+                  <div>Oops! Something went wrong while submitting the form</div>
+                </div>
+              </div>
+            </div>
+          </a>
+          <a class="transactions-div-wrapper w-inline-block" href="#">
+            <div class="transaction-div" data-ix="display-refund-options">
+              <div class="right-nav-transaction-div-table w-row">
+                <div class="w-col w-col-9">
+                  <div class="right-nav-amount-text">$63.00</div>
+                  <div class="right-nav-amount-desc">Chicken Sharwarma</div>
+                </div>
+                <div class="w-col w-col-3">
+                  <div class="messaging-dash-variable-text transactions-div-table">4m</div>
+                  <div class="expand"></div>
+                </div>
+              </div>
+            </div>
+            <div class="hidden-refund-options" data-ix="hide-refund-option">
+              <div class="w-form">
+                <form id="email-form-8" name="email-form-8">
+                  <label class="form-label right-nav-form" for="Refund-Amount-6">Refund Transaction</label>
+                  <input class="right-nav text-field w-input" data-name="Refund Amount 6" id="Refund-Amount-6" maxlength="256" name="Refund-Amount-6" placeholder="Refund Amount" type="text">
+                  <select class="dropdown w-select" data-name="Refund Reason 6" id="Refund-Reason-6" name="Refund-Reason-6" required="required">
+                    <option value="">Select reason</option>
+                    <option value="Another Choice">Canceled order</option>
+                    <option value="Another Choice">Returned goods</option>
+                    <option value="Another Choice">Accidental charge</option>
+                    <option value="Another Choice">Other</option>
+                  </select>
+                  <input class="button refund w-button" data-wait="Please wait..." type="submit" value="Refund">
+                </form>
+                <div class="w-form-done">
+                  <div>Thank you! Your submission has been received!</div>
+                </div>
+                <div class="w-form-fail">
+                  <div>Oops! Something went wrong while submitting the form</div>
+                </div>
+              </div>
+            </div>
+          </a>
+          <a class="transactions-div-wrapper w-inline-block" href="#">
+            <div class="transaction-div" data-ix="display-refund-options">
+              <div class="right-nav-transaction-div-table w-row">
+                <div class="w-col w-col-9">
+                  <div class="right-nav-amount-text">$15.90</div>
+                  <div class="right-nav-amount-desc">Chicken Sharwarma</div>
+                </div>
+                <div class="w-col w-col-3">
+                  <div class="messaging-dash-variable-text transactions-div-table">4m</div>
+                  <div class="expand"></div>
+                </div>
+              </div>
+            </div>
+            <div class="hidden-refund-options" data-ix="hide-refund-option">
+              <div class="w-form">
+                <form id="email-form-8" name="email-form-8">
+                  <label class="form-label right-nav-form" for="Refund-Amount-5">Refund Transaction</label>
+                  <input class="right-nav text-field w-input" data-name="Refund Amount 5" id="Refund-Amount-5" maxlength="256" name="Refund-Amount-5" placeholder="Refund Amount" type="text">
+                  <select class="dropdown w-select" data-name="Refund Reason 5" id="Refund-Reason-5" name="Refund-Reason-5" required="required">
+                    <option value="">Select reason</option>
+                    <option value="Another Choice">Canceled order</option>
+                    <option value="Another Choice">Returned goods</option>
+                    <option value="Another Choice">Accidental charge</option>
+                    <option value="Another Choice">Other</option>
+                  </select>
+                  <input class="button refund w-button" data-wait="Please wait..." type="submit" value="Refund">
+                </form>
+                <div class="w-form-done">
+                  <div>Thank you! Your submission has been received!</div>
+                </div>
+                <div class="w-form-fail">
+                  <div>Oops! Something went wrong while submitting the form</div>
+                </div>
+              </div>
+            </div>
+          </a>
+          <a class="transactions-div-wrapper w-inline-block" href="#">
+            <div class="transaction-div" data-ix="display-refund-options">
+              <div class="right-nav-transaction-div-table w-row">
+                <div class="w-col w-col-9">
+                  <div class="right-nav-amount-text">$35.70</div>
+                  <div class="right-nav-amount-desc">Chicken Sharwarma</div>
+                </div>
+                <div class="w-col w-col-3">
+                  <div class="messaging-dash-variable-text transactions-div-table">4m</div>
+                  <div class="expand"></div>
+                </div>
+              </div>
+            </div>
+            <div class="hidden-refund-options" data-ix="hide-refund-option">
+              <div class="w-form">
+                <form id="email-form-8" name="email-form-8">
+                  <label class="form-label right-nav-form" for="Refund-Amount-4">Refund Transaction</label>
+                  <input class="right-nav text-field w-input" data-name="Refund Amount 4" id="Refund-Amount-4" maxlength="256" name="Refund-Amount-4" placeholder="Refund Amount" type="text">
+                  <select class="dropdown w-select" data-name="Refund Reason 4" id="Refund-Reason-4" name="Refund-Reason-4" required="required">
+                    <option value="">Select reason</option>
+                    <option value="Another Choice">Canceled order</option>
+                    <option value="Another Choice">Returned goods</option>
+                    <option value="Another Choice">Accidental charge</option>
+                    <option value="Another Choice">Other</option>
+                  </select>
+                  <input class="button refund w-button" data-wait="Please wait..." type="submit" value="Refund">
+                </form>
+                <div class="w-form-done">
+                  <div>Thank you! Your submission has been received!</div>
+                </div>
+                <div class="w-form-fail">
+                  <div>Oops! Something went wrong while submitting the form</div>
+                </div>
+              </div>
+            </div>
+          </a>
+          <a class="transactions-div-wrapper w-inline-block" href="#">
+            <div class="transaction-div" data-ix="display-refund-options">
+              <div class="right-nav-transaction-div-table w-row">
+                <div class="w-col w-col-9">
+                  <div class="right-nav-amount-text">$25.00</div>
+                  <div class="right-nav-amount-desc">Chicken Sharwarma</div>
+                </div>
+                <div class="w-col w-col-3">
+                  <div class="messaging-dash-variable-text transactions-div-table">4m</div>
+                  <div class="expand"></div>
+                </div>
+              </div>
+            </div>
+            <div class="hidden-refund-options" data-ix="hide-refund-option">
+              <div class="w-form">
+                <form id="email-form-8" name="email-form-8">
+                  <label class="form-label right-nav-form" for="Refund-Amount-3">Refund Transaction</label>
+                  <input class="right-nav text-field w-input" data-name="Refund Amount 3" id="Refund-Amount-3" maxlength="256" name="Refund-Amount-3" placeholder="Refund Amount" type="text">
+                  <select class="dropdown w-select" data-name="Refund Reason 3" id="Refund-Reason-3" name="Refund-Reason-3" required="required">
+                    <option value="">Select reason</option>
+                    <option value="Another Choice">Canceled order</option>
+                    <option value="Another Choice">Returned goods</option>
+                    <option value="Another Choice">Accidental charge</option>
+                    <option value="Another Choice">Other</option>
+                  </select>
+                  <input class="button refund w-button" data-wait="Please wait..." type="submit" value="Refund">
+                </form>
+                <div class="w-form-done">
+                  <div>Thank you! Your submission has been received!</div>
+                </div>
+                <div class="w-form-fail">
+                  <div>Oops! Something went wrong while submitting the form</div>
+                </div>
+              </div>
+            </div>
+          </a>
+          <a class="transactions-div-wrapper w-inline-block" href="#">
+            <div class="transaction-div" data-ix="display-refund-options">
+              <div class="right-nav-transaction-div-table w-row">
+                <div class="w-col w-col-9">
+                  <div class="right-nav-amount-text">$12.58</div>
+                  <div class="right-nav-amount-desc">Chicken Sharwarma</div>
+                </div>
+                <div class="w-col w-col-3">
+                  <div class="messaging-dash-variable-text transactions-div-table">4m</div>
+                  <div class="expand"></div>
+                </div>
+              </div>
+            </div>
+            <div class="hidden-refund-options" data-ix="hide-refund-option">
+              <div class="w-form">
+                <form id="email-form-8" name="email-form-8">
+                  <label class="form-label right-nav-form" for="Refund-Amount-2">Refund Transaction</label>
+                  <input class="right-nav text-field w-input" data-name="Refund Amount 2" id="Refund-Amount-2" maxlength="256" name="Refund-Amount-2" placeholder="Refund Amount" type="text">
+                  <select class="dropdown w-select" data-name="Refund Reason 2" id="Refund-Reason-2" name="Refund-Reason-2" required="required">
+                    <option value="">Select reason</option>
+                    <option value="Another Choice">Canceled order</option>
+                    <option value="Another Choice">Returned goods</option>
+                    <option value="Another Choice">Accidental charge</option>
+                    <option value="Another Choice">Other</option>
+                  </select>
+                  <input class="button refund w-button" data-wait="Please wait..." type="submit" value="Refund">
+                </form>
+                <div class="w-form-done">
+                  <div>Thank you! Your submission has been received!</div>
+                </div>
+                <div class="w-form-fail">
+                  <div>Oops! Something went wrong while submitting the form</div>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+        <div class="transaction-pane w-tab-pane" data-w-tab="Tab 2">
+          <a class="transactions-div-wrapper w-inline-block" href="#">
+            <div class="transaction-div" data-ix="display-refund-options">
+              <div class="right-nav-transaction-div-table w-row">
+                <div class="w-col w-col-8">
+                  <div class="right-nav-amount-text">VIP Customer</div>
+                  <div class="right-nav-amount-desc">Automatically added 3 days ago</div>
+                </div>
+                <div class="w-col w-col-4">
+                  <div class="messaging-dash-variable-text transactions-div-table">&nbsp;&nbsp;&nbsp;Segment</div>
+                </div>
+              </div>
+            </div>
+          </a>
+          <a class="transactions-div-wrapper w-inline-block" href="#">
+            <div class="transaction-div" data-ix="display-refund-options">
+              <div class="right-nav-transaction-div-table w-row">
+                <div class="w-col w-col-8">
+                  <div class="right-nav-amount-text">New York Customer</div>
+                  <div class="right-nav-amount-desc">Added 1 week ago</div>
+                </div>
+                <div class="w-col w-col-4">
+                  <div class="messaging-dash-variable-text transactions-div-table">&nbsp;&nbsp;&nbsp;List</div>
+                </div>
+              </div>
+            </div>
+          </a><a class="button right-nav-add-to-list w-button" href="#">&nbsp;&nbsp;&nbsp;&nbsp;Add customer to new list</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="message-wrapper w-clearfix">
+    <div class="message">I'd like to cancel my appointment for Tuesday</div>
+  </div>
+  <div class="dashboard-body messaging w-clearfix">
+    <div class="conversation-date-wrapper">
+      <div class="conversation-date">December 25th</div>
+    </div>
+    <div class="customer-messaging-bubble w-clearfix">
+      <div class="w-row">
+        <div class="customer-messaging-bubble-picture-wrapper w-clearfix w-col w-col-2"><img class="messaging-bubble right-nav-profile-picture" src="images/Customer-1.jpg" width="35">
+        </div>
+        <div class="w-col w-col-10">
+          <div class="customer-message message-bubble">
+            <div class="chat-text">Do you currently have the blue option is stock? Last time I checked it was unavailable</div>
+          </div>
+        </div>
+      </div>
+      <div class="message-date-time">Sent via <strong class="channel-and-time">SMS 12 mins</strong> ago</div>
+    </div>
+    <div class="agent-messaging-bubble w-clearfix">
+      <div class="w-row">
+        <div class="w-col w-col-10">
+          <div class="agent-messaging message-bubble">
+            <div class="agent chat-text">Hi Michael, thanks for checking back! The blue turtle neck should be in stock by next week Tuesday.</div>
+          </div>
+        </div>
+        <div class="w-clearfix w-col w-col-2"><img class="agent-picture messaging-bubble right-nav-profile-picture" src="images/Customer-2.jpg" width="35">
+        </div>
+      </div>
+      <div class="agent message-date-time">&nbsp;&nbsp;Sent <em class="time-text">8 mins</em> ago</div>
+    </div>
+    <div class="agent-messaging-bubble w-clearfix">
+      <div class="w-row">
+        <div class="w-col w-col-10">
+          <div class="chat-bubble-image-wrapper"><img class="chat-bubble-image" src="images/work-4.jpg">
+          </div>
+        </div>
+        <div class="w-col w-col-2"></div>
+      </div>
+      <div class="agent message-date-time">&nbsp;&nbsp;Sent <em class="time-text">8 mins</em> ago</div>
+    </div>
+    <div class="customer-messaging-bubble">
+      <div class="w-row">
+        <div class="customer-messaging-bubble-picture-wrapper w-clearfix w-col w-col-2"><img class="messaging-bubble right-nav-profile-picture" src="images/Customer-1.jpg" width="35">
+        </div>
+        <div class="w-col w-col-10">
+          <div class="customer-message message-bubble">
+            <div class="chat-text">That's awesome. Can I pre-order now?</div>
+          </div>
+        </div>
+      </div>
+      <div class="message-date-time">Sent via <strong class="channel-and-time">SMS 5 mins</strong> ago</div>
+    </div>
+    <div class="customer-messaging-bubble">
+      <div class="w-row">
+        <div class="customer-messaging-bubble-picture-wrapper w-clearfix w-col w-col-2"><img class="messaging-bubble right-nav-profile-picture" src="images/Customer-1.jpg" width="35">
+        </div>
+        <div class="w-col w-col-10">
+          <div class="customer-message message-bubble">
+            <div class="chat-text">That's awesome. Can I pre-order now?</div>
+            <div class="chat-text">I need it to arrive before my wife's birthday which is in 3 months is that possible on your timeline?</div>
+          </div>
+        </div>
+      </div>
+      <div class="message-date-time">Sent via <strong class="channel-and-time">SMS 5 mins</strong> ago</div>
+    </div>
+    <div class="customer-messaging-bubble">
+      <div class="w-row">
+        <div class="customer-messaging-bubble-picture-wrapper w-col w-col-2"></div>
+        <div class="w-col w-col-10">
+          <div class="chat-bubble-image-wrapper customer"><img class="chat-bubble-image" src="images/Use-Case-2.jpg">
+          </div>
+        </div>
+      </div>
+      <div class="message-date-time">Sent via <strong class="channel-and-time">SMS 5 mins</strong> ago</div>
+    </div>
+    <div class="agent-messaging-bubble">
+      <div class="w-row">
+        <div class="w-col w-col-10">
+          <div class="agent-messaging message-bubble">
+            <div class="agent chat-text">Unfortunately we don't take pre-orders. But I can send you a text message once it's available for purchase. Is that okay?</div>
+          </div>
+        </div>
+        <div class="w-clearfix w-col w-col-2"><img class="agent-picture messaging-bubble right-nav-profile-picture" src="images/Customer-2.jpg" width="35">
+        </div>
+      </div>
+      <div class="agent message-date-time">&nbsp;&nbsp;Sent <em class="time-text">2 mins</em> ago</div>
+    </div>
+    <div class="customer-messaging-bubble">
+      <div class="w-row">
+        <div class="customer-messaging-bubble-picture-wrapper w-clearfix w-col w-col-2"><img class="messaging-bubble right-nav-profile-picture" src="images/Customer-1.jpg" width="35">
+        </div>
+        <div class="w-col w-col-10">
+          <div class="customer-message fb-messenger message-bubble">
+            <div class="chat-text fb-messenger">Hi, I'd like to schedule an appointment tomorrow for a massage. When can you squeeze me in?</div>
+          </div>
+        </div>
+      </div>
+      <div class="message-date-time">Sent via <strong class="channel-and-time">Facebook Messenger Just now</strong>
+      </div>
+    </div>
+  </div>
+  <div></div>
+  <!-- [if lte IE 9]><script src="https://cdnjs.cloudflare.com/ajax/libs/placeholders/3.0.2/placeholders.min.js"></script><![endif] -->

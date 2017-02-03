@@ -1,6 +1,11 @@
 $(document).ready(function () {
+
+  $('#referrer_country').selectize({
+    closeAfterSelect: true,
+  });
+
   // validate coupon form
-  $('#referrerForm')
+  $('#referrer-Form')
     .formValidation({
       framework: 'bootstrap',
       live: 'disabled',
@@ -108,7 +113,7 @@ $(document).ready(function () {
     PhoneNumberFormatter.set_phone_number();
     if ($(this).attr('action').split('/').pop() !== 'refer_business') {
       e.preventDefault();
-      $("#create-subscription").attr("disabled", true).val("Please wait...");
+      $("#referrer-submit").attr("disabled", true).val("Please wait...");
       referBusiness();
     }
   })
@@ -117,6 +122,12 @@ $(document).ready(function () {
       $('#referrerForm').formValidation('resetField', 'referrer[phone]');
     }
   });
+
+  $("#referrer-submit").on('click', function(e) {
+    e.preventDefault();
+    $("#referrer-submit").attr("disabled", true).val("Please wait...");
+    referBusiness();
+  })
 
   function referBusiness() {
     $.ajax({
@@ -138,10 +149,5 @@ $(document).ready(function () {
        $('#referrer-submit').removeAttr('disabled').val("Invite business");
      });
   };
-
-
-  $('[name="referrer[country]"]').selectize({
-    closeAfterSelect: true,
-  });
 
 })

@@ -10,6 +10,7 @@ var messagingApp = angular.module('PubNubAngularMessagingApp', [
   "angucomplete-alt",
   "ngFileUpload",
   'smoothScroll',
+  'angular-inview',
   'luegg.directives' // Auto scroll module
 ]);
 
@@ -54,44 +55,36 @@ messagingApp.directive('whenScrolledDown', function() {
     var raw = elm[0];        
     elm.bind('scroll', _.throttle(function() {
       if (raw.scrollTop + raw.offsetHeight >= raw.scrollHeight) {
-          scope.$apply(attr.whenScrolledDown);
+        scope.$apply(attr.whenScrolledDown);
       }
     }, 350));
   };
 });
 
 messagingApp.directive("mySrc", function() {
-    return {
-      link: function(scope, element, attrs) {
-        var img, loadImage;
-        img = null;
+  return {
+    link: function(scope, element, attrs) {
+      var img, loadImage;
+      img = null;
 
-        loadImage = function() {
+      loadImage = function() {
 
-          element[0].src = "<%= asset_path 'pricing.jpg' %>";
+        element[0].src = "<%= asset_path 'pricing.jpg' %>";
 
-          img = new Image();
-          img.src = attrs.mySrc;
+        img = new Image();
+        img.src = attrs.mySrc;
 
-          img.onload = function() {
-            element.hide();
-            element[0].src = attrs.mySrc;
-            element.fadeIn('slow')
-          };
+        img.onload = function() {
+          element.hide();
+          element[0].src = attrs.mySrc;
+          element.fadeIn('slow')
         };
+      };
 
-        loadImage();
-
-        /*scope.$watch((function() {
-          return attrs.mySrc;
-        }), function(newVal, oldVal) {
-          if (oldVal !== newVal) {
-            loadImage();
-          }
-        });*/
-      }
-    };
-  });
+      loadImage();
+    }
+  };
+});
 
 messagingApp.directive('onFinishRender', function ($timeout) {
   return {

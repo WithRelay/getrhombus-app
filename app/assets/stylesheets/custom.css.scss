@@ -1,4 +1,8 @@
-/*fix css for phone number*/
+.display_none {
+  display: none;
+}
+
+/*fix css for phone number*
 $colors: #ff0000 #ffff00 #0080ff #f20d0d  #996666 #808080 #0000ff #ffbf00 #40ff00 #ff00bf;
 $error-color: red;
 $success-color: green;
@@ -14,10 +18,36 @@ $success-color: green;
   margin-left: 53px !important;
 }
 
-#request-demo-page .intl-tel-input {
+#request-demo-page .intl-tel-input, #refer-a-business .intl-tel-input {
   margin-bottom: 20px !important;
   margin-left: 10% !important;
 }
+
+.selectize-control.single .selectize-input, .selectize-dropdown.single {
+    padding: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+    border: none !important;
+    -webkit-box-shadow: none !important;
+    background: none !important;
+    text-align: left !important;
+}
+
+.selectize-dropdown-content {
+  display: block !important;
+  background-color: white !important;
+  width: 100% !important;
+  border: 1px solid #1f8cec !important;
+  margin-left: -60px !important;
+  margin-top: 12px !important;
+  text-align: left !important;
+}
+
+#subscription-plan-id-selectized {
+  margin-top: 5px !important;
+}
+
+$colors: #ff0000 #ffff00 #0080ff #f20d0d  #996666 #808080 #0000ff #ffbf00 #40ff00 #ff00bf;
 
 @each $color in $colors
 {
@@ -38,4 +68,7 @@ $success-color: green;
 .has-success .control-label,
 .has-success .help-block {
     color: $success-color;
+}
+.hide {
+  display: none !important;
 }
