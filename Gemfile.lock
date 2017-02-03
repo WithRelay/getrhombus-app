@@ -426,7 +426,6 @@ DEPENDENCIES
   ffaker
   friendly_id (~> 5.1.0)
   fullcontact
-  hashie (= 3.4.6)
   httparty
   jbuilder (~> 2.0)
   jquery-rails
