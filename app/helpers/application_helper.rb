@@ -24,7 +24,11 @@ module ApplicationHelper
   end
 
   def authenticated_pages
-     unauthenticate_controller || restrict_devise_actions || relay_docs_pages
+     unauthenticate_controller || restrict_devise_actions || relay_docs_pages || link_facebook
+  end
+
+  def link_facebook
+    params['controller'] == 'link_fb_accounts'
   end
 
   def add_body_class

@@ -89,10 +89,9 @@ $(document).ready(function() {
     parent.addClass('hide');
     parent = parent.parent(); 
     parent.find(".plan-name-save-span").removeClass('hide');
-
     var $el = parent.find('.plan-name');
     current_plan_name = $el.text();
-    var $input = $('<input class="plan-name" />').val( current_plan_name );
+    var $input = $('<input class="plan-name editable open text-field w-input" placeholder="Plan name" />').val( current_plan_name );
     $el.replaceWith( $input );
     $input.focus();        
   });
@@ -113,7 +112,7 @@ $(document).ready(function() {
   function revert_to_text() {
     save_icon_parent.addClass('hide');
     save_icon_grandparent.find(".plan-name-edit-span").removeClass('hide');
-    var $span = $('<span class="plan-name" />').text( plan_name_input.val() );
+    var $span = $('<span class="editable-field-text settings-row-text plan-name" />').text( plan_name_input.val() );
     plan_name_input.replaceWith( $span );
   }
 

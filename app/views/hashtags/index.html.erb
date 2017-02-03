@@ -11,18 +11,57 @@
 <div class="dashboard-body">
 
   <% unless @hashtags.blank? %>
+  <div class="sub-nav-bar table-header">
+    <div class="table-header">
+      <div class="table-header">
+        <div class="header new-table-row w-row">
+          <div class="cn w-clearfix w-col w-col-3">
+            <div class="header name w-clearfix">
+              <div class="headings name"> &nbsp; Tag name</div>
+            </div>
+            <div class="cb check-box-column header"></div>
+          </div>
+          <div class="fv w-clearfix w-col w-col-2">
+            <div class="cn column column-2 header">
+              <div class="first-visit headings">&nbsp; &nbsp;&nbsp;Created by</div>
+            </div>
+          </div>
+          <div class="lv w-clearfix w-col w-col-2">
+            <div class="colum-3 column header lv">
+              <div class="headings last-visit"> &nbsp;&nbsp;&nbsp;Date created</div>
+            </div>
+          </div>
+          <div class="avs w-clearfix w-col w-col-1">
+            <div class="avs column column-4 header">
+              <div class="avs headings last-visit"> &nbsp;&nbsp;&nbsp;Type</div>
+            </div>
+          </div>
+          <div class="ts w-clearfix w-col w-col-1">
+            <div class="column column-5 header ts"></div>
+          </div>
+          <div class="table-actions w-clearfix w-col w-col-3">
+            <div class="column column-6 header new-row">
+              <div class="headings recipient">@ &nbsp; Mentions</div>
+            </div>
+            <div class="column column-6 header new-row w-clearfix">
+              <div class="headings location name">&nbsp; &nbsp;&nbsp;&nbsp;Total amount</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
   <% @hashtags.each do |h| %>
-
   <div class="row-wrapper">
     <div class="alt-table-row w-row">
       <div class="alt-column w-clearfix w-col w-col-3">
         <div class="title-column-div w-clearfix">
-          <div class="alt-table table-text"><%= h.tag %></div>
+          <div class="table-text">#CheezeIt</div>
         </div>
-        <div class="alt-table cb check-box-column">
+        <div class="cb check-box-column">
           <div class="w-form">
             <form data-name="Email Form 2" id="email-form-2" name="email-form-2">
-              <div class="alt-table select-all-check-box w-checkbox w-clearfix">
+              <div class="select-all-check-box w-checkbox w-clearfix">
                 <input class="cb table-checkbox w-checkbox-input" id="node" type="checkbox">
                 <label class="checkbox-field-lable w-form-label" for="node">-</label>
               </div>
@@ -36,20 +75,30 @@
           </div>
         </div>
       </div>
-
       <div class="alt-column w-col w-col-2">
-        <div class="alt-table-column-div">
-          <div class="alt-table table-text"><%= h.description %></div>
-        </div>
-      </div>
-      <div class="alt-column w-col w-col-2">
-        <div class="alt-table-column-div">
-          <div class="alt-table table-text"><%= h.created_at.strftime("%m/%d/%Y %I:%M %p") %></div>
+        <div class="alt-table-column-div w-clearfix">
+          <img class="campaigns table-profile-picture" src="images/37.jpg" width="24">
+          <div class="table-text">Morgan Richards</div>
         </div>
       </div>
       <div class="alt-column w-col w-col-2">
         <div class="alt-table-column-div w-clearfix">
-          <div class="alt-table table-text"><%= h.updated_at.strftime("%m/%d/%Y %I:%M %p") %></div>
+          <div class="table-text">4 months ago</div>
+        </div>
+      </div>
+      <div class="alt-column w-col w-col-2">
+        <div class="alt-table-column-div w-clearfix">
+          <div class="table-text">Non-payment</div>
+        </div>
+      </div>
+      <div class="alt-column w-col w-col-2">
+        <div class="alt-table-column-div w-clearfix">
+          <div class="table-text">---</div>
+        </div>
+      </div>
+      <div class="alt-column w-col w-col-1">
+        <div class="alt-table-column-div w-clearfix">
+          <div class="table-text"> &nbsp; 279</div>
         </div>
       </div>
     </div>

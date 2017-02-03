@@ -7,6 +7,7 @@ class CampaignsController < ApplicationController
   # @campaigns contains array of campaign of the associated users
   def index
     @campaigns = current_user.campaigns
+    render 'empty_campaign' unless @campaigns.present?
   end
 
   # initializing campaign as association way using build method.

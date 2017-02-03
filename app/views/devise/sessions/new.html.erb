@@ -1,3 +1,4 @@
+
 <% provide(:title, 'Rhombus - Sign In') %>
 <div class="w-row">
   <div class="onboarding-table-column-1 w-col w-col-8">
@@ -9,9 +10,15 @@
 
 
         <div class="log-in-form w-form">
-          <%= form_for(resource, as: resource_name, html: { id: 'email-form signinForm', class: 'w-clearfix', data: { name: 'Email Form' } }, url: session_path(resource_name)) do |f| %>
+          <%= form_for(resource, as: resource_name, html: { id: 'signinForm', class: 'w-clearfix', data: { name: 'Email Form' } }, url: session_path(resource_name)) do |f| %>
+          <div class= "form-group col-xs-5">
             <%= f.email_field :email, id: 'Email-2', class: "form-control rhombusFocus login text-field w-input", placeholder: "Email", data: { name: 'Email' }, max_length: 100 %>
+            </div>
+    
+          <div class="form-group col-xs-5">
             <%= f.password_field :password, class: "form-control rhombusFocus login text-field w-input", placeholder: "Password", max_length: 100, id: 'Password-2', data: { name:'Password 2' } %>
+            </div>
+            
             <%= f.hidden_field :captured_amt, id: "captured_amt", value: params[:user] ? params[:user][:captured_amt] : '' %>
             <%= f.hidden_field :referrer_id, id: "referrer_id", value: params[:user] ? params[:user][:referrer_id] : '' %>
             <%= f.hidden_field :referrer_uid, id: "referrer_uid", value: params[:user] ? params[:user][:referrer_uid] : '' %>

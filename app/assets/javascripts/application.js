@@ -27,6 +27,11 @@
 //= require url-parameters
 //= require moment
 
+// We need to place these js before jquery ujs for workable confirmation dialog box
+//= require plan
+//= require coupon
+//= require subscription
+
 //= require jquery_ujs
 //= require angular-smooth-scroll.min
 //= require pubnub/pubnub-angular.js
@@ -60,9 +65,6 @@
 //= require bootstrap-select
 //= require powerange
 //= require knowledge_base
-//= require plan
-//= require coupon
-//= require subscription
 //= require flashes
 //= require integrations
 //= require lists.js
@@ -70,9 +72,12 @@
 //= require phone_number_formatter
 //= require util_functions
 //= require price_slider
+//= require refer_a_business
 //= require get_started
+//= require integrations
 //= require modernizr
 //= require webflow
+//= require custom
 
 // DO NOT REQUIRE TREE AS IT DOESNT GUARANTEE THE DEPENDENCY ORDER OF THESE FILES
 // require_tree .
