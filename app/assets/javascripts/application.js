@@ -80,4 +80,4 @@
 //= require custom
 
 // DO NOT REQUIRE TREE AS IT DOESNT GUARANTEE THE DEPENDENCY ORDER OF THESE FILES
-//= require_tree .
+// require_tree .
