@@ -1,35 +1,33 @@
-<%= form_for('referrer', :html => { :id => "referrerForm" } ) do |f| %>
+<div id= 'refer-a-business'>
+  <%= form_for('referrer', :html => { :class => "w-clearfix", :id => "referrerForm" } ) do |f| %>
 
-  <h3>MY INFORMATION</h3>
-  <div class="field form-group group">
-    <%= f.text_field 'referrer_name', placeholder: 'Full name', class: 'form-control rhombusFocus', value: current_user.present? ? user_full_name : '' %>
-  </div>
+    <label class="form-label paragraph" for="Referrer-Email">Refer your favorite local businesses to Rhombus, and earn up to <strong>$25 per month</strong>&nbsp;for <strong>12 months</strong>, after they subscribe. The businesses your refer also receive a 50% discount on their subscription because you sent them our way. There are no limits to how many businesses you can refer</label>
+    <label class="field-headers form-label settings" for="name">referrer details</label>
+    <%= f.text_field 'referrer_name', placeholder: 'Your full name', class: 'full-name settings text-field w-input', value: current_user.present? ? user_full_name : '' %>
 
-  <div class="field form-group group">
-    <%= f.text_field 'referrer_email', placeholder: 'Email Address', class: 'form-control rhombusFocus', value: current_user.present? ? current_user.email : '' %>
-  </div>
-  <hr>
-  <h3>I'M REFERRING</h3>
+    <%= f.text_field 'referrer_email', placeholder: 'Your email address', class: 'settings text-field w-input', value: current_user.present? ? current_user.email : '' %>
+    <div class="flex-underline form-section-divider"></div>
 
-  <div class="field form-group group">
-    <%= f.phone_field 'org_name', placeholder: 'Name of the business you\'re referring', class: 'form-control rhombusFocus'%>
-  </div>
+    <label class="field-headers form-label settings" for="Referee-Business-Name">i'm referring</label>
 
-  <div class="field form-group group">
-    <%= f.phone_field 'email', placeholder: 'Contact person\'s email address', class: 'form-control rhombusFocus'%>
-  </div>
+    <%= f.text_field 'org_name', placeholder: 'Name of the business you\'re referring', class: 'full-name settings text-field w-input'%>
 
-  <div class="field form-group group">
-    <%= f.phone_field 'phone', placeholder: 'Phone Number (optional)', class: 'form-control rhombusFocus', id: 'phone' %>
+    <%= f.text_field 'referee_email', placeholder: 'Contact person\'s email address', class: 'settings text-field w-input' %>
+
+    <%= f.phone_field 'phone', placeholder: 'Phone Number (optional)', class: 'settings text-field w-input', id: 'phone' %>
     <%= f.hidden_field :phone_number, :id => "phone_number" %>
+
+    <%= f.select :country, CountriesList::COUNTRIES_LIST.collect { |c| [ c[:name], c[:code] ] }, {  include_blank: true, prompt: 'Country' }, { class: 'country_dropdown w-select'} %>
+
+    <%= f.button "Invite business", id: 'referrer-submit', class: "button save-changes w-button" %>
+
+  <% end %>
+
+  <div class="w-form-done">
+    <div>Thank you! Your submission has been received!</div>
+  </div>
+  <div class="w-form-fail">
+    <div>Oops! Something went wrong while submitting the form</div>
   </div>
 
-  <div class="field form-group group">
-    <%= f.select :country, CountriesList::COUNTRIES_LIST.collect { |c| [ c[:name], c[:code] ] }, include_blank: true, class: 'form-control rhombusFocus', prompt: 'Country' %>
-  </div>
-
-  <div class="field form-group">
-    <%= f.button "Invite business", id: 'referrer-submit', class: "button" %>
-  </div>
-
-<% end %>
+</div>
