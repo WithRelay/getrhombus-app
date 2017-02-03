@@ -3,7 +3,7 @@
 }
 
 
-$colors: #ff0000 #ffff00 #0080ff #f20d0d  #996666 #808080 #0000ff #ffbf00 #40ff00 #ff00bf;
+$colors: silver #bdc3c7, cloud #ecf0f1, carrot #e67e22, pumpkin #d35400, peter-river #3498db, orange #f39c12, green-sea #16a085, wisteria #8e44ad, sun-flower #f1c40f, midnight-blue #2c3e50;
 $error-color: red;
 $success-color: green;
 
@@ -47,12 +47,9 @@ $success-color: green;
   margin-top: 5px !important;
 }
 
-$colors: #ff0000 #ffff00 #0080ff #f20d0d  #996666 #808080 #0000ff #ffbf00 #40ff00 #ff00bf;
-
-@each $color in $colors
+@each $name,$color in $colors
 {
-  $i: index($colors, $color);
-  .radius-color-#{$i}{
+  .radius-color-#{$name}{
     background-color: $color;
   }
 }

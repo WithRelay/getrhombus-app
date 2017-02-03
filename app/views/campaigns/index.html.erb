@@ -47,7 +47,7 @@
     <a class="import sub-nav-button w-button" data-ix="cancel-subscription" href="#"> &nbsp;Delete</a>
   </div>
 </div>
-<div class="modal-wrapper-9" data-ix="modal-interaction-9">
+<!-- <div class="modal-wrapper-9" data-ix="modal-interaction-9">
   <div class="cancel-subscription-wrapper w-clearfix">
     <p class="cancel-subscription modal-content-description">Are you sure you'd like to delete ? </p>
     <div class="modal-underline underline-div"></div>
@@ -62,7 +62,7 @@
     <a class="button cancel-yes w-button" href="#" id='updateResource'>Yes, Delete</a>
     <a class="button cancel-no w-button" data-ix="close-cancel-subscription" href="#">Cancel</a>
   </div>
-</div>
+</div> -->
 <div class="dashboard-body">
   <% @campaigns.each do |campaign| %>
   <div class="row-wrapper">
@@ -89,7 +89,7 @@
       </div>
       <div class="alt-column w-col w-col-2">
         <div class="alt-table-column-div w-clearfix">
-          <div class="campaigns table-profile-picture radius-color-<%= rand(1..10)%>"></div>
+          <%= present(campaign).profile_image %>
           <div class="table-text"><%= campaign.from_user %></div>
         </div>
       </div>

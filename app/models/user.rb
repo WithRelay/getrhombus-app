@@ -46,7 +46,7 @@ class User < ActiveRecord::Base
       campaign = super(args[0])
       unless args.blank?
         # build campaign lists of campaign
-        args[0][:list_name].split(',').each{ |l| campaign.campaign_lists.build(list_id: l) }
+        args[0][:list_name].split(',').each{ |l| campaign.campaign_lists.build(list_id: l) } if args[0][:list_name].present?
         # build avatar of campaigns
         if args[1].present?
           campaign.images.build(avatar: args[1][:avatar], uploaded_as: 1) if (!campaign.sms? && args[1][:avatar].present?) && campaign.valid?
@@ -236,6 +236,18 @@ class User < ActiveRecord::Base
       # notify team
       [false]
     end
+  end
+
+  def check_profile_picture
+    colors = %w(silver cloud carrot pumpkin peter-river orange green-sea wisteria sun-flower midnight-blue )
+    user_fb_cred = self.fb_creds
+    contact_email = FullContactData.find_by_email(self.email)
+    if user_fb_cred.present? && user_fb_cred.first.profile_pic_url.present?
+      return { type:'image', value: user_fb_cred.first.profile_pic_url } 
+    elsif contact_email && !contact_email.photo_url.nil?
+      return { type: 'image', value: contact_email.photo_url} 
+    end
+    { type: 'color', value: colors.sample}
   end
 
   private
