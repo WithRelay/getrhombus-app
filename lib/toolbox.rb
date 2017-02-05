@@ -17,7 +17,7 @@ module Toolbox
     	 sprintf("%.2f", amt)
       end
 
-      def to_cents
+      def to_cents(var)
         ((var.to_f.abs)*100).round        # 100 * 1.1
       end 
     end

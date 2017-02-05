@@ -8,11 +8,15 @@ class MessageParser
   # from can be user fb cred or phone number
   # customer can be nil
   def process_message(merchant, customer, from, received_msg, channel)
-    begin
+    #begin
+      puts 'in function'
       method(__method__).parameters.each { |_,arg| instance_variable_set("@#{arg}", binding.local_variable_get(arg)) }
       
+      @received_msg.text = @received_msg.text.strip
       @amt_ary = check_for_payment
-      is_old_format? = @amt_ary[0] && @amt_ary[1] == "$"
+      is_old_format = (@amt_ary[0] && @amt_ary[1] == "$")
+      puts 'is old format '
+      puts is_old_format
 
       # scenarios
       # 1. invalid payment intent -> invalid amount and valid sign
@@ -21,25 +25,33 @@ class MessageParser
       # 4. non payment message from an unregistered user
       # 5. otherwise just a regular text from a registered user
 
-      if !@amt_ary[0] && @amt_ary[1].present?
+      if !@amt_ary[0] && @amt_ary[1].present?  #tested
+        puts 'invalid payment intent'
         send_response('We noticed you tried to send a payment. Please resend it in this format. Ex. +5 #CheeseBurgers')
-      elsif @amt_ary[0] && @amt_ary[1].present? && !is_amount_under_limit?              
-      elsif @amt_ary[0] && @amt_ary[1].present?             
+      elsif @amt_ary[0] && @amt_ary[1].present? && !is_amount_under_limit?    #tested
+        puts 'above limits'
+      elsif @amt_ary[0] && @amt_ary[1].present?      # what if i send only a tag        
 
         @tag = Hashtag.where('user_id = ? and lower(tag) = ?', @merchant.id, @tag.downcase).first if @tag.present?
+        
         @amt_ary = parse_amount_and_tag
+        puts 'from parse amount and tag'
+        puts @amt_ary.inspect
+        
         @amt_ary = parse_user
+        puts 'from parse user'
+        puts @amt_ary.inspect
        
-        return if @amt_ary.blank?          # No further action needed
+        return if @amt_ary.blank?          # No further action needed.
         
         # test for active accounts, they are now active by default.
-        unless @merchant.is_active
+        if !@merchant.is_active
           # send_response
         elsif merchant_supports_payment?
           process_payment
         end
        
-        send_deprecation_warning if is_old_format? 
+        send_deprecation_warning if is_old_format
 
       elsif @customer.blank?
 
@@ -59,11 +71,14 @@ class MessageParser
             send_response(custom_welcome)
           end
         end
+      
+      else 
+        'yay!'
       end
-    rescue StandardError => e
+    #rescue StandardError => e
       # notify team
-      puts e.message
-    end
+    #  puts e.message
+    #end
   end
 
   private
@@ -73,6 +88,10 @@ class MessageParser
   def check_for_payment
     amt_dollar_ary = is_payment_dollar?
     amt_plus_array = is_payment_plus?
+
+    puts 'in check for payment'
+    puts amt_dollar_ary.inspect
+    puts amt_plus_array.inspect
 
     # if user sends in a valid payment or made a mistake by sending $ sign with invalid number
     # $ sign payments have higher priority
@@ -118,11 +137,11 @@ class MessageParser
       break if amt && @tag
     end
     
-    amt, plus_present
+    return amt, plus_present
   end
 
   def is_amount_under_limit?
-    return true if @amt_ary[0] <= 1500000
+    return true if @amt_ary[0] >= 100 && @amt_ary[0] <= 1500000
     # notify user and send to merchant dashboard
     send_response("Sorry, we are unable to make payments above 15,000 dollars. But you can send in smaller amounts. Thanks!")
     # notify merchant via Email?
@@ -130,7 +149,7 @@ class MessageParser
   end
 
   def parse_amount_and_tag
-    if @tag.blank?                                       
+    if @tag.blank?                                    #tested                             
       [@amt_ary[0], "no_tag"]                             # so charge amt user texted
     else      
       if @tag.non_payment_tag?                                               
@@ -146,23 +165,27 @@ class MessageParser
   end
 
   def parse_user
-    if @customer.present?
-      if !@customer.card_token
+    if @customer.present?  
+      if @customer.card_token.blank?                            #tested
         # notify user and send to merchant dashboard
         # send_response notify and send sign in link with payment capture
         # payment capture notice if cant ovveride_tag_amt
+        puts 'no card token'
       elsif @amt_ary[1] == "cant_override_tag_amt"    # @tag.present? && !@tag.allow_customers_to_override_amount?
         # notify user and send to merchant dashboard
-        send_response notify of cant_override_tag_amt 
-      else
+        #send_response notify of cant_override_tag_amt 
+        puts 'user but cant override_tag_amt'
+      else                                                 #tested
         return @amt_ary
       end
     else      
       # payment based messages
       if @amt_ary[1] == "cant_override_tag_amt"       # @tag.present? && !@tag.allow_customers_to_override_amount?
-        send_sign_up_link with ovveride message
-      else
-        send_sign_up_link without ovveride message
+        #send_sign_up_link with ovveride message    
+        puts 'no user and cant override_tag_amt'
+      else                                                    #tested
+        #send_sign_up_link without ovveride message
+        puts 'no user and can override_tag_amt'
       end
     end
     []
@@ -189,6 +212,7 @@ class MessageParser
   end
 
   def process_payment
+=begin
     if not_repeating_payment?
       if @tag.present? && @tag.recurring_payment_tag?
         res = handle_subscription_through_text
@@ -206,12 +230,13 @@ class MessageParser
         end
       end
     end
+=end
   end
 
   def send_payment_responses
     first_name = (@user.card_name.present?) ? " " + @user.card_name.split.first : ''
     msg_to_send = "Thanks" + first_name + ". A payment of #{amt_in_decimal(@stripe_res.amount)} (#{@stripe_res.currency}) "
-    msg_to_send = msg_to_send + (@merchant.tax_percent == "0" ? "was sent to #{@merchant.org_name}." : "plus taxes and fees set by #{@merchant.org_name} was sent."
+    msg_to_send = msg_to_send + (@merchant.tax_percent == "0" ? "was sent to #{@merchant.org_name}." : "plus taxes and fees set by #{@merchant.org_name} was sent.")
     
     if @tag.present?
       msg = "sdasdsa"
@@ -241,7 +266,8 @@ class MessageParser
     send_response("Hi there, thanks for reaching out...to send a payment, sign up here. Thanks! => #{short_link}")
   end
 
-  def send_response(msg)    
+  def send_response(msg)   
+=begin 
     if @channel == 'Message'
       message = Message.new
       message.send_and_save_message(@merchant.rhombus_number, @received_msg.from, msg)
@@ -252,6 +278,7 @@ class MessageParser
     # needs to handle messenger here
     # Send to merchant's messaging channel
     RealtimeStreamService.send_message_via_number(@received_msg.from, @merchant.rhombus_number, msg, message.created_at, true) if message
+=end 
   end
 
   def handle_subscription_through_text
