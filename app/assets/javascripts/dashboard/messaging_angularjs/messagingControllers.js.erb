@@ -71,7 +71,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
               $scope.conversations[re.conversation.id].last_message = re.conversation.last_message
               $scope.conversations[re.conversation.id].last_message_ts = re.conversation.last_message_ts
 
-              if (re.message.source == 'user') {
+              if (re.message.source == 'customer') {
                 $scope.global_unread_count += 1;
                 $scope.conversations[re.conversation.id].unread_count += 1;
               }
@@ -334,8 +334,12 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
     };
 
 
-    $scope.trackingFunction = function(message) {
-      return message.msg_type + message.id.toString();
+    $scope.messageTrackingFunction = function(message) {
+      return message.msg_type + "-" + message.id.toString();
+    };
+
+    $scope.imageTrackingFunction = function(image) {
+      return 'Image-' + image.ref.toString();
     };
 
 
@@ -390,7 +394,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
 
                 // Bind plugins to textbox
                 // should only bind once...add check!!!!!!!!!!!!!!
-                $timeout(function(){ BindPlugins.now() }, 0);
+                //$timeout(function(){ BindPlugins.now() }, 0);
 
                 deferred.resolve();
               } else

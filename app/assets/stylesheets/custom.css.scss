@@ -1,7 +1,9 @@
-.display_none {
-  display: none;
-}
 
+.shrink-text {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
 
 $colors: silver #bdc3c7, cloud #ecf0f1, carrot #e67e22, pumpkin #d35400, peter-river #3498db, orange #f39c12, green-sea #16a085, wisteria #8e44ad, sun-flower #f1c40f, midnight-blue #2c3e50;
 $error-color: red;
@@ -49,7 +51,7 @@ $success-color: green;
 
 @each $name,$color in $colors
 {
-  .radius-color-#{$name}{
+  .radius-color-#{$name} {
     background-color: $color;
   }
 }

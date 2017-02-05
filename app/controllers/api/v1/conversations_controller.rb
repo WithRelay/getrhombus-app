@@ -1,7 +1,7 @@
 class Api::V1::ConversationsController < API::V1::BaseController
   before_action :set_conversation, except: [:index]
   before_action :check_user
-  before_action :set_recipient_object, only: [:messages, :mms]
+  before_action :set_recipient_object, only: [:messages, :mms, :show]
 
 	def index
     if params[:select_conversation].present?
@@ -17,7 +17,7 @@ class Api::V1::ConversationsController < API::V1::BaseController
 	end
 
   def show
-    messages_ary = @conversation.get_conversation_messages(params[:page])
+    messages_ary = @conversation.get_conversation_messages(params[:page], @customer)
     render json: { messages: messages_ary[0], unread_ids: messages_ary[1] }  
   end
 
@@ -27,7 +27,7 @@ class Api::V1::ConversationsController < API::V1::BaseController
 
   def messages
     # test that user is present here
-    re = @conversation.send_message(current_user, customer, params[:msg], params[:channel], false) if params[:msg].present?
+    re = @conversation.send_message(current_user, params[:msg], params[:channel]) if params[:msg].present?
     if re
       render json: re, status: 200
     else 
@@ -42,7 +42,7 @@ class Api::V1::ConversationsController < API::V1::BaseController
       raise StandardError if params[:avatar].blank?
       # twilio supports only gif, png and jpeg though it accepts other types
       img = Image.create(avatar: params[:avatar])
-      re = @conversation.send_message(current_user, customer, params[:msg], params[:channel], false, nil, nil, [img])
+      re = @conversation.send_message(current_user, params[:msg], params[:channel], [img])
       raise StandardError unless re
       render json: re, status: :created
     rescue StandardError => e
@@ -53,7 +53,7 @@ class Api::V1::ConversationsController < API::V1::BaseController
   private
 
     def set_conversation
-      @conversation = Conversation.find_by(id: params[:id], merchant_id: current_user.id) or not_found
+      @conversation = Conversation.find_by(id: params[:id]) or not_found
     end
 
     def check_user
@@ -61,7 +61,7 @@ class Api::V1::ConversationsController < API::V1::BaseController
     end
 
     def set_recipient_object
-      customer = User.find_by(@conversation.uid) if @conversation.uid_type == "user"
+      @customer = User.find_by(@conversation.uid) if @conversation.uid_type == "user"
     end
 
     def not_found

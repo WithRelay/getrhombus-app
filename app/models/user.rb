@@ -5,20 +5,24 @@ class User < ActiveRecord::Base
   include CSVHandler
 
   attr_accessor :phone, :captured_amt, :msg_id, :tag_id, :referrer_id, :tos_acceptance
+  COLORS = %w(silver cloud carrot pumpkin peter-river orange green-sea wisteria sun-flower midnight-blue).freeze
 
   # validation rules for user attributes
   validates :tos_acceptance, acceptance: true, if: lambda { self.is_merchant? }, on: :update
   validates_presence_of :org_type, if: lambda { self.is_merchant? }, on: :update
-  validates_presence_of :org_name, if: lambda { self.org_type.downcase != 'individual' && self.is_merchant? }, on: :update
+  validates_presence_of :org_name, if: lambda { self.is_merchant? && self.org_type.downcase != 'individual' }, on: :update
+  
   # Edit pages use the right number field for each user type
   validates_presence_of :org_phone, numericality: { only_integer: true }, length: { minimum: 10 }, on: :update, if: lambda { self.is_merchant? }
   validates_presence_of :phone_number, numericality: { only_integer: true }, length: { minimum: 10 }, on: :update, if: lambda { self.is_customer? }
   validates_presence_of :user_level, message: "Please select an account type"
+  
   # Sign up form uses phone_number field for both user types
   validates_presence_of :phone_number, numericality: { only_integer: true }, length: { minimum: 10 }, on: :create
   # Allow nil added to db migration because merchants don't have phone number. They have org_phone.
   # And since mysql indexes this field, it indexes nil and only allows one row with nil.
   # You run into issues with any additional merchants.
+  
   validates_uniqueness_of :phone_number, :allow_nil => true, :if => lambda { is_merchant? }
   validate :phone_number_cannot_be_rhombus_number
   # include default devise modules. Others available are: :token_authenticatable, :lockable, :timeoutable and :confirmable,
@@ -238,16 +242,22 @@ class User < ActiveRecord::Base
     end
   end
 
-  def check_profile_picture
-    colors = %w(silver cloud carrot pumpkin peter-river orange green-sea wisteria sun-flower midnight-blue )
-    user_fb_cred = self.fb_creds
-    contact_email = FullContactData.find_by_email(self.email)
+  def self.check_profile_picture(cus)
+    return { type: 'color', value: COLORS.first } if cus.nil?
+    
+    user_fb_cred = cus.fb_creds
     if user_fb_cred.present? && user_fb_cred.first.profile_pic_url.present?
       return { type:'image', value: user_fb_cred.first.profile_pic_url } 
-    elsif contact_email && !contact_email.photo_url.nil?
-      return { type: 'image', value: contact_email.photo_url} 
     end
-    { type: 'color', value: colors.sample}
+
+    contact_email = FullContactData.find_by_email(cus.email)
+    if contact_email && contact_email.photo_url.present?
+      return { type: 'image', value: contact_email.photo_url } 
+    elsif cus.user_color.blank?
+      cus.user_color = COLORS.sample
+      cus.save
+    end
+    { type: 'color', value: cus.user_color }
   end
 
   private

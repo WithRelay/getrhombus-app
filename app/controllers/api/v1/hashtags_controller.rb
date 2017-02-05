@@ -4,7 +4,7 @@ class Api::V1::HashtagsController < API::V1::BaseController
     begin
       if params[:query]
         q = params[:query].downcase
-        res = current_user.hashtags.where("lower(description) like ? or lower(tag) like ?", "%#{q}%", "%#{q.gsub(/\s+/, '')}%")
+        res = current_user.hashtags.where("lower(name) like ? or lower(tag) like ?", "%#{q}%", "%#{q.gsub(/\s+/, '')}%")
       else
         res = current_user.hashtags
       end

@@ -103,6 +103,7 @@ Review
 - create Seeds
 - notifications platform to merchants should have a single conversation and should not be pulled - mark as read too
 - conversations....need origin...cos system to customers should not open conversation....
+- conversation_refs now have direction...so i can remove user_id, user_id_to from messages, fbmessages
 
 
 Payment Capture - should be for only customers....capture in logic

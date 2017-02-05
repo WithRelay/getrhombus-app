@@ -560,7 +560,6 @@ h4 {
   margin: 15px 10% 30px;
   float: none;
   font-size: 13px;
-  text-align: center;
 }
 
 .button.refund-button {
@@ -568,7 +567,6 @@ h4 {
   margin-right: 10%;
   margin-bottom: 20px;
   margin-left: 10%;
-  text-align: center;
 }
 
 .button.file-upload {
@@ -606,7 +604,6 @@ h4 {
 }
 
 .button.manage-segments {
-  height: 43px;
   margin-top: 30px;
   margin-right: 0%;
   float: none;
@@ -627,7 +624,6 @@ h4 {
 }
 
 .button.manage-plans {
-  height: 43px;
   margin-top: 10px;
   margin-right: 0%;
   float: none;
@@ -647,7 +643,6 @@ h4 {
   margin-bottom: 20px;
   margin-left: 10%;
   float: none;
-  text-align: center;
 }
 
 .button.cancel-yes {
@@ -721,11 +716,10 @@ h4 {
   width: 20%;
   height: 38px;
   margin-right: 10%;
-  text-align: center;
 }
 
 .button.cancel-saved-reply {
-  width: auto;
+  width: 20%;
   height: 38px;
   margin-left: 10%;
   float: left;
@@ -754,13 +748,12 @@ h4 {
   min-width: 32%;
   margin-right: 10%;
   font-size: 12px;
-  text-align: center;
 }
 
 .button.cancel-mark-as-done {
   width: auto;
   height: 38px;
-  min-width: auto;
+  min-width: 18%;
   margin-right: 10%;
   margin-left: 10%;
   float: left;
@@ -781,7 +774,7 @@ h4 {
 }
 
 .button.cancel-notification {
-  width: auto;
+  width: 20%;
   height: 38px;
   margin-left: 10%;
   float: left;
@@ -1002,7 +995,6 @@ h4 {
   margin-right: 2%;
   background-color: transparent;
   color: #1f8cec;
-  text-align: center;
 }
 
 .button.cancel-send:hover {
@@ -3660,7 +3652,7 @@ h4 {
   width: 55%;
   height: 100vh;
   min-width: 55%;
-  padding-bottom: 120px;
+  padding-bottom: 130px;
   background-color: #f8fafc;
 }
 
@@ -3922,6 +3914,12 @@ h4 {
   text-decoration: none;
 }
 
+.table-text.shrink-text {
+  width: 100%;
+  padding-right: 35px;
+  text-align: left;
+}
+
 .message-icon {
   margin-top: 10px;
 }
@@ -3994,6 +3992,8 @@ h4 {
 }
 
 .customer-name-text {
+  width: 100%;
+  height: 20px;
   margin-top: 8px;
   margin-bottom: 5px;
   margin-left: 0px;
@@ -4033,14 +4033,19 @@ h4 {
   margin-top: 0px;
 }
 
+.customer-name-text.shrink-text {
+  padding-right: 10px;
+}
+
 .message {
   overflow: hidden;
   width: 100%;
+  height: 66px;
   min-width: 100%;
   margin-top: 0px;
   margin-left: 0px;
   padding-top: 0px;
-  padding-right: 5px;
+  padding-right: 10px;
   padding-bottom: 5px;
   float: left;
   font-family: 'Akkurat regular', sans-serif;
@@ -7315,7 +7320,6 @@ h4 {
   padding: 0px 0px 50px;
   border-radius: 3px;
   background-color: #fff;
-  text-align: center;
 }
 
 .modal-form {
@@ -8793,6 +8797,7 @@ h4 {
 
 .message-tab {
   position: static;
+  display: block;
   width: 100%;
   height: 18%;
   min-width: 100%;
@@ -8802,6 +8807,7 @@ h4 {
 }
 
 .message-tab:hover {
+  border-bottom-style: solid;
   background-color: rgba(221, 229, 237, .2);
   text-decoration: none;
 }
@@ -8812,7 +8818,7 @@ h4 {
 }
 
 .message-tab.older-message {
-  margin-top: -5px;
+  margin-top: 0px;
 }
 
 .message-tab.top {
@@ -8820,12 +8826,15 @@ h4 {
 }
 
 .message-tab-content-wrapper {
+  display: block;
+  height: 100%;
   margin-top: 0%;
   padding-top: 20px;
   padding-bottom: 20px;
 }
 
 .message-tab-picture-column {
+  padding-top: 0px;
   padding-right: 0px;
   padding-left: 0px;
 }
@@ -9062,7 +9071,6 @@ h4 {
   border: 1px none #e6e5e5;
   border-radius: 3px;
   background-color: #fff;
-  text-align: center;
 }
 
 .create-segment {
@@ -9111,7 +9119,6 @@ h4 {
   padding-bottom: 35px;
   border-radius: 3px;
   background-color: #fff;
-  text-align: center;
 }
 
 .create-plan-form {
@@ -9186,7 +9193,6 @@ h4 {
   padding-top: 20px;
   border-radius: 3px;
   background-color: #fff;
-  text-align: center;
 }
 
 .text-highlight {
@@ -9636,7 +9642,7 @@ h4 {
   top: 0px;
   right: 0px;
   bottom: 0px;
-  z-index: 300;
+  z-index: -300;
   height: 100%;
   padding-top: 90px;
   padding-bottom: 90px;
@@ -12541,16 +12547,124 @@ h4 {
   padding-left: 0px;
 }
 
+.no-image-found-placeholder {
+  position: relative;
+  width: 30px;
+  height: 30px;
+  margin-top: 10px;
+  margin-left: 20px;
+  float: left;
+  border-radius: 50%;
+  background-color: #3eca99;
+}
+
+.conversation-list-row-column-2 {
+  height: 100%;
+}
+
+.name-and-preview-column {
+  padding-top: 0px;
+}
+
+.time-and-counter-column {
+  padding-top: 0px;
+}
+
 html.w-mod-js *[data-ix="display-none-on-load"] {
   display: none;
 }
 
-html.w-mod-js *[data-ix="hide-refund-option"] {
+html.w-mod-js *[data-ix="modal-interaction"] {
   display: none;
+  opacity: 0;
+  -webkit-transform: scale(1, 1);
+  -ms-transform: scale(1, 1);
+  transform: scale(1, 1);
+}
+
+html.w-mod-js *[data-ix="modal-interaction-2"] {
+  display: none;
+  opacity: 0;
+  -webkit-transform: scale(1, 1);
+  -ms-transform: scale(1, 1);
+  transform: scale(1, 1);
+}
+
+html.w-mod-js *[data-ix="modal-interaction-3"] {
+  display: none;
+  opacity: 0;
+  -webkit-transform: scale(1, 1);
+  -ms-transform: scale(1, 1);
+  transform: scale(1, 1);
+}
+
+html.w-mod-js *[data-ix="modal-interaction-5"] {
+  display: none;
+  opacity: 0;
+}
+
+html.w-mod-js *[data-ix="modal-interaction-4"] {
+  display: none;
+  opacity: 0;
+}
+
+html.w-mod-js *[data-ix="modal-interaction-6"] {
+  display: none;
+  opacity: 0;
+}
+
+html.w-mod-js *[data-ix="modal-interaction-7"] {
+  display: none;
+  opacity: 0;
+}
+
+html.w-mod-js *[data-ix="modal-interaction-8"] {
+  display: none;
+  opacity: 0;
+}
+
+html.w-mod-js *[data-ix="modal-interaction-9"] {
+  display: none;
+  opacity: 0;
+}
+
+html.w-mod-js *[data-ix="modal-interaction-10"] {
+  display: none;
+  opacity: 0;
+}
+
+html.w-mod-js *[data-ix="modal-interaction-11"] {
+  display: none;
+  opacity: 0;
+}
+
+html.w-mod-js *[data-ix="modal-interaction-12"] {
+  display: none;
+  opacity: 0;
+}
+
+html.w-mod-js *[data-ix="modal-interaction-13"] {
+  display: none;
+  opacity: 0;
+}
+
+html.w-mod-js *[data-ix="modal-interaction-14"] {
+  display: none;
+  opacity: 0;
+}
+
+html.w-mod-js *[data-ix="modal-interaction-15"] {
+  display: none;
+  opacity: 0;
 }
 
 html.w-mod-js *[data-ix="fixed-nav-display-none"] {
   display: none;
+}
+
+html.w-mod-js *[data-ix="file-preview-modal"] {
+  display: none;
+  opacity: 0;
 }
 
 @media (max-width: 991px) {

@@ -33,11 +33,13 @@ class RealtimeStreamService
       end
     end
 
-    def publish_to_dashboard(conversation, user, msg)           
+
+    # might need to redo how conv_ref is sent
+    def publish_to_dashboard(conversation, conv_ref, merchant, customer, msg)           
       merchant_id = conversation.merchant_id.to_s
       $pubnub.subscribe(channel: 'messaging_' + Rails.env + '_' + merchant_id) {}      
       $pubnub.publish(channel: 'messaging_' + Rails.env + '_' + merchant_id,
-                      message: { message: conversation.message_hash(msg), conversation: conversation.conversation_hash(user) }.to_json) {}
+                      message: { message: conversation.message_hash(msg, conv_ref, customer), conversation: conversation.conversation_hash }.to_json) {}
     end
 
   end

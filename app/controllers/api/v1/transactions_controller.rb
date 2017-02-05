@@ -28,10 +28,12 @@ class Api::V1::TransactionsController < API::V1::BaseController
 
     def setup_charge_data
       @customer = User.find_by(id: data[:uid])
+      data[:amount] = data[:amount].round(2)
       if data[:hashtag_id].present?
-        @hashtag = current_user.hashtags.where(id: data[:hashtag_id])
+        @hashtag = current_user.hashtags.where(id: data[:hashtag_id]).first
       else
-        @hashtag = ''''
+        @hashtag = Hashtag.create(name: params[:item_name], description: params[:notes], 
+                      amount: data[:amount], user_id: current_user.id, tag_type: 1, enable_tweet: 0)
       end
       @amount = Toolbox::Decimal.to_cents(data[:amount])
     end

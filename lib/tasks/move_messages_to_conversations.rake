@@ -16,7 +16,10 @@ task :move_messages_to_conversations => :environment do
       if User.find_by(id: m.user_id_to)
         uid = m.user_id_to
         uid_type = 'User'
+        direction = "adsssssssssssssssssssssssssssssssssssssssssss"
       else  # if no user, use phone number
+
+        direction = "asdsadasdadsdsasddddddddddddddddddddddddddd"
         uid = m.to
         uid_type = 'PhoneNumber'
       end

@@ -24,7 +24,7 @@ class CampaignPresenter < BasePresenter
   end
 
   def profile_image
-      profile_pic = @model.user.check_profile_picture
+      profile_pic = User.check_profile_picture(@model.user)
     if profile_pic[:type] == "image"
        html = h.image_tag(profile_pic[:value], class: 'table-profile-picture', width: 24)
       elsif profile_pic[:type] == "color"

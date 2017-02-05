@@ -14,6 +14,7 @@ var FlashHandler = new function() {
   };
 
   // Confirmation Dialog for event
+  var stack = {'dir1': 'down', 'dir2': 'right', 'modal': true};
   this.setConfirmationDialog = function (selector, title, confirmText, isConfirm){
     (new PNotify({
       title: title,
@@ -31,7 +32,7 @@ var FlashHandler = new function() {
         history: false
       },
       addclass: 'stack-modal',
-      stack: {'dir1': 'down', 'dir2': 'right', 'modal': true}
+      stack: stack
     })).get().on('pnotify.confirm', function() {
       $(selector).attr(isConfirm, true);
       $(selector)[0].click();
