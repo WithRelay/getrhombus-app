@@ -5,12 +5,11 @@ class User < ActiveRecord::Base
   include CSVHandler
 
   attr_accessor :phone, :captured_amt, :msg_id, :tag_id, :referrer_id, :tos_acceptance
-  COLORS = %w(silver cloud carrot pumpkin peter-river orange green-sea wisteria sun-flower midnight-blue).freeze
-
+  
   # validation rules for user attributes
   validates :tos_acceptance, acceptance: true, if: lambda { self.is_merchant? }, on: :update
   validates_presence_of :org_type, if: lambda { self.is_merchant? }, on: :update
-  validates_presence_of :org_name, if: lambda { self.is_merchant? && self.org_type.downcase != 'individual' }, on: :update
+  # validates_presence_of :org_name, if: lambda { self.is_merchant? && self.org_type.downcase != 'individual' }, on: :update
   
   # Edit pages use the right number field for each user type
   validates_presence_of :org_phone, numericality: { only_integer: true }, length: { minimum: 10 }, on: :update, if: lambda { self.is_merchant? }
@@ -244,7 +243,7 @@ class User < ActiveRecord::Base
   end
 
   def self.check_profile_picture(cus)
-    return { type: 'color', value: COLORS.first } if cus.nil?
+    return { type: 'color', value: COLORS.first.first } if cus.nil?
     
     user_fb_cred = cus.fb_creds
     if user_fb_cred.present? && user_fb_cred.first.profile_pic_url.present?
@@ -255,7 +254,7 @@ class User < ActiveRecord::Base
     if contact_email && contact_email.photo_url.present?
       return { type: 'image', value: contact_email.photo_url } 
     elsif cus.user_color.blank?
-      cus.user_color = COLORS.sample
+      cus.user_color = COLORS.sample.first
       cus.save
     end
     { type: 'color', value: cus.user_color }
