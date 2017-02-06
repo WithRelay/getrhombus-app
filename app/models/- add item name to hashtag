@@ -8,53 +8,15 @@
 3. everything coupon...coupon create, index. only name is ediatable...so like plans. coupon pages (add link to transactions dropdown and link under segments)
 4. up/downgrade sass plan...you havent redesigned on billing info page 
 
-5. form validation error state design - done 
+5. form validation error state design - i dont see the styling for this...where is it????
 6. ellipsis - done
-7. logic for signup - done
+7. logic for signup - I dont see you doing what i said youu should do.
 
 8. calendar styling (from edwin), calendar defaults ..this is me
 
 9. copy number on click - done...just integrate...tell Surya - done
 10. design for toastrs - stated
 12. popups - stated
-
-
-Pages
-Surya
-Bhishma
-Ovo
-Taiwo
-
-
-
-- New UI. Please integrete every page.
-- Integrate my pages like hashtags, transactions. Skip conversations page...I will do it myself. I also added some lines to application.html.erb for the conversations page. Please check and move it over into the new UI. For all the pages you didnt work on, put the html that needs to go into his pages in his files, but don't delete what is in there...just comment it so we will be able to look at the old UI for prior changes. Integrate Ovo's List pages. You do not need to add actual data logic to pages you haven't built. 
-- Base url to check designs is http://relay-test.webflow.io/ (not rhombus-test.webflow.io anymore). I strongly advise that you look at the actual pages closely online as you integrate in the code. There are changes per page and you might not see it by just looking at the html. The previous integration was patchy. Let's do very well. Please compare your integration with what is on the website. 
-- Campaigns, messaging, customer-profile pages have different headers. Also some pages have a different left side bar. PLEASE TAKE NOTE
-- There is a sample design to show form error state. The page should be in the zip folder. Please replicate for formvalidation.
-- Edwin has added text truncating to all tags containing texts that might overflow. So no need to do this. It is with a class called shrink-text. Please make sure it is in your code. In some cases, it is only in the first row that has the css class, since you only one row in erb
-- In the header, the user's rhombus number is displayed... see util_function.js for a click event that copies the numebr to the clipboard. Please bind to it. In the js code, you will see how to structure the html.
-- Use Edwin's loading design for all loadings...dont use any other spinner.
-- Ignore toastrs design.
-- Popups are in /modals. http://buckwilson.me/lightboxme/ is what we will use to show them on the required pages. Note that the plugin is already in the repo.
-- The notifications dropdown at the top right corner...integrate with the one on welcome-dashboard. Please take note. In terms of the code for this, you pull the last 5 transactions of the merchant and the total numebr of transactions for that day - add from transactions table. there is team_id (merchant id in transactions) and also pull the last message from the last 5 conversations (with merchant_id and message_resolution_id is not nil or blank) and the total number of unread messages till date. See conversation and conversation_ref models. conversation_refs can tell you if a message is unread. Please write these queries in their respective models so they can be used somewhere else.  
-- Split the work with Torchi. 
-
-
-
-
-
-
-Users Show Action - All users go to show upon sign in or sign up
-1. Customer has no card, redirect to card page. I build a custom link that might contain info i need to show in the card page...we will still need that. (url should say add-card-info and should keep the params i was attaching in build_user_link)
-2. Merchant has no org name, send to http://relay-test.webflow.io/create-account-2  (url should say add-profile-info)
-	- then on submit, check if they have rhombus number...if they dont send here http://relay-test.webflow.io/create-account-25  (url should be add-rhombus-number)
-	- then on submit, check if they have an active saas subscription...if they dont send here http://relay-test.webflow.io/create-account-3 (url should be add-subscription)
-
-3. If everything above is true, render either of this pages next. Note that i have 2 methods called process_captured_payment and delete delete_captured_payment_session that you should keep where they are. Remove this variables @last4_transactions, @total_msgs, @dashboard_stuff.
-	- Merchants go to messaging dashboard
-	- Customer go to transactions
-
 
 
 
