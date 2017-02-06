@@ -9,14 +9,14 @@ var FlashHandler = new function() {
     //   title: messageToSet + '!!',
     //   text: arrayToString(msg),
     //   type: messageToSet,
-    //   hide: true
+    //   hide: true,
+    //   styling: 'jqueryui'
     // });
     showToastr (messageToSet, arrayToString(msg));
-    $('.toasters-close').on('click', function (e) {
-      e.preventDefault();
-      debugger
-      $('.toasters').fadeOut(3000);
-    } );
+      $('.toasters-close').on('click', function (e) {
+        e.preventDefault();
+        $('.toasters').fadeOut(5000);
+      } );
   };
 
   function showToastr (type, message) {
@@ -32,7 +32,7 @@ var FlashHandler = new function() {
           <div class="toaster-font-awesome toasters-close"></div>\
         </div>\
       </div>\
-    </div>')
+    </div>');
   }
 
   // Confirmation Dialog for event
