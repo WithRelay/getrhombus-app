@@ -1,0 +1,42 @@
+<div class="schedule-notification-form-wrapper">
+  <div class="content-sub-wrapper modal w-clearfix">
+    <h4 class="modal-header welcome-dash-content-container-header">Customer Notification</h4>
+  </div>
+  <p class="modal-content-description">Set a reminder or notification that will go out to this customer at a future date. You can use this to automate appointment reminders, or bill payment reminders.</p>
+  <div class="segment-modal underline-div"></div>
+  <div class="scheduled-notification-form w-form">
+    <form class="w-clearfix" data-name="Email Form 7" id="email-form-7" name="email-form-7">
+      <select class="dropdown w-select" data-name="Notification Channel 2" id="Notification-Channel-2" name="Notification-Channel-2" required="required">
+        <option value="">Select channel</option>
+        <option value="">SMS</option>
+        <option value="">Facebook Messenger</option>
+      </select>
+      <textarea class="notification-message text-area w-input" data-name="Notification Message 2" id="Notification-Message-2" maxlength="5000" name="Notification-Message-2" placeholder="Enter notification message" required="required"></textarea>
+      <div class="char-count notications">150 characters</div>
+      <input class="delivery-date-time-picker text-field w-input" data-name="Delivery Date Time 2" id="Delivery-Date-Time-2" maxlength="256" name="Delivery-Date-Time-2" placeholder="Notification Delivery Date &amp; Time" required="required" type="email">
+      <div class="notification-frequency radio-button w-radio">
+        <input class="w-radio-input" data-name="Notification Frequency" id="Notification Frequency" name="Notification-Frequency" required="required" type="radio" value="Notification Frequency">
+        <label class="w-form-label" for="Notification Frequency">Send once</label>
+      </div>
+      <div class="notification-frequency radio-button repeat w-radio">
+        <input class="w-radio-input" data-name="Notification Frequency" id="Notification Frequency-2" name="Notification-Frequency" required="required" type="radio" value="Notification Frequency">
+        <label class="w-form-label" for="Notification Frequency-2">Repeat</label>
+      </div>
+      <select class="dropdown frequency-dropdown w-select" data-name="Field 5" id="field-5" name="field-5">
+        <option value="">Repeat every</option>
+        <option value="">3 days</option>
+        <option value="">7 days</option>
+        <option value="">14 days</option>
+        <option value="">30 days</option>
+        <option value="">60 days </option>
+        <option value="">90 days</option>
+      </select><a class="button schedule-notification w-button" href="#">Schedule notification for [Customer name]</a><a class="button cancel-notification w-button" data-ix="close-schedule-notification" href="#">Cancel</a>
+    </form>
+    <div class="w-form-done">
+      <div>Thank you! Your submission has been received!</div>
+    </div>
+    <div class="w-form-fail">
+      <div>Oops! Something went wrong while submitting the form</div>
+    </div>
+  </div>
+</div>
