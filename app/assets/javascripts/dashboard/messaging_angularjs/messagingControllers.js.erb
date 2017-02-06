@@ -548,6 +548,13 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
     };
     // End Transactions
 
+    // Start new conversation
+    $scope.recipientSelected = function(selected) { 
+      $scope.recipient.id = (selected) ? selected.originalObject.id : null; 
+    };
+    $scope.searchRecipientsApiErrorHandler = function(selected) { alert('couldnt retrieve your customers/contacts'); };
+    // End new conversation
+
   }
 
 ]);

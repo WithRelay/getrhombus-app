@@ -70,6 +70,7 @@
 //= require lists.js
 //= require demo
 //= require phone_number_formatter
+//= require clipboard.min
 //= require util_functions
 //= require price_slider
 //= require refer_a_business

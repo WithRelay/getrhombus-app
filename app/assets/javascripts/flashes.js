@@ -35,6 +35,7 @@ var FlashHandler = new function() {
     </div>');
   }
 
+
   // Confirmation Dialog for event
   var stack = {'dir1': 'down', 'dir2': 'right', 'modal': true};
   this.setConfirmationDialog = function (selector, title, confirmText, isConfirm){
@@ -75,3 +76,4 @@ var FlashHandler = new function() {
   }
 
 }
+
