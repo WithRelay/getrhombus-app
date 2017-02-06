@@ -1,11 +1,16 @@
-- message profile pic with color only not done
 - description in hashtag are optional - remove
 - deactivate stuatus for hashtags
+
+- on link click paste in box
+- plug in box
+- fix angular binding issue in modal
+- plug in file handler
 
 
 2. fb linkng page. 
 3. everything coupon...coupon create, index. only name is ediatable...so like plans. coupon pages (add link to transactions dropdown and link under segments)
 4. up/downgrade sass plan...you havent redesigned on billing info page 
+5. slider type - Minimum, maximum and start values. also doesnt look like design
 
 5. form validation error state design - i dont see the styling for this...where is it????
 6. ellipsis - done
@@ -16,6 +21,13 @@
 9. copy number on click - done...just integrate...tell Surya - stated
 10. design for toastrs - stated
 12. popups - stated
+
+
+
+
+
+
+
 
 
 

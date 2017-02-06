@@ -52,7 +52,7 @@ class Conversation < ActiveRecord::Base
 
 
 	def get_conversation_messages(page, customer, merchant=nil)
-		convs_refs = self.conversation_refs.paginate(page: page, per_page: 10).includes(textable: [:images]).order(created_at: :desc)
+		convs_refs = self.conversation_refs.paginate(page: page, per_page: 25).includes(textable: [:images]).order(created_at: :desc)
 		latest_messages = Array.new
 		unread_ids = []  
 

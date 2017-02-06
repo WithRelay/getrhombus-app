@@ -1,20 +1,18 @@
+<%# removed all webflow data attributes %>
+
 <div class="import-customers-form-wrapper w-clearfix">
   <div class="content-sub-wrapper modal w-clearfix">
-    <h4 class="modal-header welcome-dash-content-container-header">Import Customers</h4><a class="close-import-customers" data-ix="close-import-customers" href="#"></a>
+    <h4 class="modal-header welcome-dash-content-container-header">Import Customers</h4>
+    <%# added update-close-modals and data %>
+    <a class="close-import-customers update-close-modals" id='import-customers-div' href="#"></a>
   </div>
   <div class="modal-instruction-wrapper">
     <p class="modal-paragraph">To import your customers, use this <a class="template-link" href="#">template file</a> and format your customers' information as specified in the template example.</p>
   </div><a class="button file-upload w-button" href="#">Choose file from computer</a>
   <div class="file-name">No file chosen.</div>
   <div class="w-form">
-    <form class="import-form" data-name="Email Form 5" id="email-form-5" name="email-form-5"><a class="button import-customers w-button" href="#">Import customers</a>
-    </form>
-    <div class="w-form-done">
-      <div>Thank you! Your submission has been received!</div>
-    </div>
-    <div class="w-form-fail">
-      <div>Oops! Something went wrong while submitting the form</div>
-    </div>
+    <form class="import-form" id="email-form-5" name="email-form-5"><a class="button import-customers w-button" href="#">Import customers</a>
+    </form>    
   </div>
   <p class="modal-paragraph segment tips"> &nbsp;TIP: Import customers who have opted to receive messages from your business. You are responsible making sure your customers have granted you permission to send them messages.</p>
 </div>

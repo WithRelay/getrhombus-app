@@ -1,22 +1,4 @@
 
-  <div class="modal-body w-hidden">
-    <%= render partial: 'shared/modals/save_reply', locals: { reminder: @reminder , reminder_url: v1_reminders_path, method: 'post' } %>
-  </div>
-  <div class="modal-body w-hidden">
-    <%= render partial: 'shared/modals/charge_customer', locals: { reminder: @reminder , reminder_url: v1_reminders_path, method: 'post' } %>
-  </div>
-  <div class="modal-body w-hidden">
-    <%= render partial: 'shared/modals/add_to_list', locals: { reminder: @reminder , reminder_url: v1_reminders_path, method: 'post' } %>
-  </div>
-  <div class="modal-body w-hidden">
-    <%= render partial: 'shared/modals/mark_as_done', locals: { reminder: @reminder , reminder_url: v1_reminders_path, method: 'post' } %>
-  </div>
-  <div class="modal-body w-hidden">
-    <%= render partial: 'shared/modals/new_reminder', locals: { reminder: @reminder , reminder_url: v1_reminders_path, method: 'post' } %>
-  </div>
-  <div class="modal-body w-hidden">
-    <%= render partial: 'shared/modals/mms_file_preview', locals: { reminder: @reminder , reminder_url: v1_reminders_path, method: 'post' } %>
-  </div>
 
   <div class="messaging sub-nav-bar">
     <div class="w-row">
@@ -96,17 +78,23 @@
 
   <div class="text-window-wrapper">
     <div class="w-form">
-      <form class="w-clearfix" id="email-form-2" name="email-form-2">
-        <input class="text-area w-input" id="Message-Window" maxlength="256" name="Message-Window" placeholder="Type a message..." type="text"><a class="message-window-tabs w-button" data-ix="load-image-preview">t</a><a class="message-window-tabs w-button" ></a><a class="message-window-tabs w-button" ></a><a class="message-window-tabs w-button" data-ix="schedule-notification" ></a><a class="message-window-tabs w-button" data-ix="add-to-list" ></a><a class="message-window-tabs w-button" data-ix="charge-customer-2" ></a>
-        <div class="split-button-wrapper"><a class="message-window-tabs send-button split-button w-button" >Reply</a>
+        <input class="text-area w-input" id="Message-Window" maxlength="256" name="Message-Window" placeholder="Type a message..." type="text" ng-model="new_message.text" ng-trim="true">
+        <a class="message-window-tabs w-button" ng-click="displayMMSFilePreview()">t</a>
+        <a class="message-window-tabs w-button" ></a>
+        <a class="message-window-tabs w-button" ng-click="pasteMerchantLink()"></a>
+        <a class="message-window-tabs w-button" ng-click="newReminderDiv()"></a>
+        <a class="message-window-tabs w-button" ng-click='addToListDiv()' ></a>
+        <a class="message-window-tabs w-button" ng-click='displayChargeForm()'></a>
+
+        <div class="split-button-wrapper"><a class="message-window-tabs send-button split-button w-button">Reply</a>
           <div class="w-dropdown" data-delay="0">
             <div class="split-dropdown w-dropdown-toggle"><span class="font-icon-split"></span>
             </div>
             <nav class="dropdown-options-wrapper split-button w-dropdown-list"><a class="dropdown-link split-button w-dropdown-link" > &nbsp; &nbsp;Send via Messenger</a>
             </nav>
           </div>
-        </div><a class="message-reason message-window-tabs send-button w-button" data-ix="select-saved-reply" >Saved replies</a><a class="mark sub-nav-button w-button" data-ix="mark-as-done" > &nbsp;Mark as done</a>
-      </form>
+          <%# added id %>
+        </div><a class="message-reason message-window-tabs send-button w-button" ng-click='openSavedRepliesDiv()'>Saved replies</a><a class="mark sub-nav-button w-button" ng-click='markAsDoneDiv()'> &nbsp;Mark as done</a>
     </div>
   </div>
 
@@ -281,7 +269,7 @@
                 </div>
               </div>
             </div>
-          </a><a class="button right-nav-add-to-list w-button" >&nbsp;&nbsp;&nbsp;&nbsp;Add customer to new list</a>
+          </a><a class="button right-nav-add-to-list w-button" ng-click='addToListDiv()'>&nbsp;&nbsp;&nbsp;&nbsp;Add customer to new list</a>
         </div>
       </div>
     </div>

@@ -10,6 +10,8 @@ var messagingControllers = angular.module('messagingControllers', [
 messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub', 'Upload', '$timeout', '$q', 'conversationService', 'transactionService',
   function($scope, $http, Pubnub, Upload, $timeout, $q, conversationService, transactionService) {
 
+    BindPlugins.now();
+
     // Messages  // remove
     // conversations
     //$scope.num_message_history = 200;   // remove
@@ -21,6 +23,9 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
     $scope.conversations = {};
     $scope.selected_conversation_messages = [];
     $scope.current_chat_conversation = false;
+
+    $scope.new_message = {};
+    $scope.new_message.text = "";
 
     // counters
     $scope.global_unread_count = 0;
@@ -506,12 +511,46 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
 
     // Transactions
     $scope.displayChargeForm = function() {
-      $('#chargeFormBox').lightbox_me({
+      $('#charge-a-customer-div').lightbox_me({
         centered: true,
         onLoad: function() { $('#chargeForm').find('input:first').focus(); }
       });
     };
 
+    $scope.openSavedRepliesDiv = function() {
+      $('#saved-reply-selection-div').lightbox_me({
+        centered: true,
+      });
+    };
+
+    $scope.markAsDoneDiv = function() {
+      $('#mark-as-done-div').lightbox_me({
+        centered: true,
+      });
+    };
+
+    $scope.addToListDiv = function() {
+      $('#add-to-list-div').lightbox_me({
+        centered: true,
+      });
+    };
+
+    $scope.displayMMSFilePreview = function() {
+      $('#mms-file-preview-div').lightbox_me({
+        centered: true,
+      });
+    };
+    
+    $scope.newReminderDiv = function() {
+      $('#new-reminder-div').lightbox_me({
+        centered: true,
+      });
+    };
+
+    $scope.pasteMerchantLink = function() {
+      $scope.new_message.text = ($scope.new_message.text) ? $scope.merchant.short_url : $scope.new_message.text + " " + $scope.merchant.short_url;
+    }
+    
 
     $scope.hashtagSelected = function(selected) { $scope.charge_data.hashtag_id = (selected) ? selected.originalObject.id : null; };
     $scope.hashtagsApiErrorHandler = function(selected) { alert('couldnt retrieve your tags'); };

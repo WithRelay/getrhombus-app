@@ -1,18 +1,16 @@
+<%# removed all webflow data attributes %>
+
 <div class="create-list-form-wrapper">
   <div class="content-sub-wrapper modal w-clearfix">
-    <h4 class="modal-header welcome-dash-content-container-header">Create List</h4><a class="close-modal" data-ix="close-create-list" href="#"></a>
+    <h4 class="modal-header welcome-dash-content-container-header">Create List</h4>
+    <%# added data and update-close-modals %>
+    <a class="close-modal update-close-modals" data-parent='new-list-div' href="#"></a>
   </div>
   <div class="w-form">
-    <form class="create-list" data-name="Email Form 5" id="email-form-5" name="email-form-5">
+    <form class="create-list" id="email-form-5" name="email-form-5">
       <label class="form-label list-name" for="List-Name-2">List name</label>
-      <input class="modal-field text-field w-input" data-name="List Name 2" id="List-Name-2" maxlength="256" name="List-Name-2" placeholder="E.g. VIP customers" required="required" type="text"><a class="button create-a-list w-button" href="#">Create List</a>
+      <input class="modal-field text-field w-input" id="List-Name-2" maxlength="256" name="List-Name-2" placeholder="E.g. VIP customers" required="required" type="text"><a class="button create-a-list w-button" href="#">Create List</a>
     </form>
-    <div class="w-form-done">
-      <div>Thank you! Your submission has been received!</div>
-    </div>
-    <div class="w-form-fail">
-      <div>Oops! Something went wrong while submitting the form</div>
-    </div>
   </div>
   <div class="modal-instruction-wrapper">
     <p class="modal-paragraph tips"> &nbsp;TIP: You can create a list based on "Custom segments". You can also send messaging campaigns to members of each list you create. Go to "List" tab on the left navigation to view and edit all your customer OR lead lists.</p>

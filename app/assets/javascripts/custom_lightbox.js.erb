@@ -1,9 +1,18 @@
-
 $(document).ready(function(){
+
   $('.modal-loader').click(function(e){
     $('.modal-body').lightbox_me({
         centered: true
         });
     e.preventDefault();
   });
-})
+
+  // for closing all modals
+  $('.update-close-modals').click(function(e){
+    $('#' + e.target.dataset.parent).trigger('close');
+    e.preventDefault();
+  });
+
+
+
+});

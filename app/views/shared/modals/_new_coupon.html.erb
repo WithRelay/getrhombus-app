@@ -1,31 +1,29 @@
+<%# removed all webflow data attributes %>
+
 <div class="create-coupon-form-wrapper">
   <div class="content-sub-wrapper modal w-clearfix">
-    <h4 class="modal-header welcome-dash-content-container-header">Create Coupon</h4><a class="close-modal" data-ix="close-create-subscription" href="#"></a>
+    <h4 class="modal-header welcome-dash-content-container-header">Create Coupon</h4>
+    <%# added data and update-close-modals %>
+    <a class="close-modal update-close-modals" data-parent="new-coupon-div" href="#"></a>
   </div>
   <p class="modal-content-description">Make customers happy with coupons. Easily create fixed amount coupons or percentage based coupons</p>
   <div class="segment-modal underline-div"></div>
   <div class="create-coupon-form w-form">
-    <form data-name="Email Form 10" id="email-form-10" name="email-form-10">
-      <input class="coupon-name text-field w-input" data-name="Coupon Name" id="Coupon-Name" maxlength="256" name="Coupon-Name" placeholder="Coupon name (no spaces)" required="required" type="text">
-      <select class="coupon-type dropdown w-select" data-name="Coupon Type" id="Coupon-Type" name="Coupon-Type" required="required">
+    <form id="email-form-10" name="email-form-10">
+      <input class="coupon-name text-field w-input" id="Coupon-Name" maxlength="256" name="Coupon-Name" placeholder="Coupon name (no spaces)" required="required" type="text">
+      <select class="coupon-type dropdown w-select" id="Coupon-Type" name="Coupon-Type" required="required">
         <option value="">Select coupon type</option>
         <option value="amount_off">Amount off</option>
         <option value="percent_off">Percent off</option>
       </select>
-      <input class="text-field w-input" data-name="Amount or Percent Value" id="Amount-or-Percent-Value" maxlength="256" name="Amount-or-Percent-Value" placeholder="Enter amount off or percentage" required="required" type="text">
-      <select class="coupon-duration dropdown w-select" data-name="Field 9" id="field-9" name="field-9">
+      <input class="text-field w-input" id="Amount-or-Percent-Value" maxlength="256" name="Amount-or-Percent-Value" placeholder="Enter amount off or percentage" required="required" type="text">
+      <select class="coupon-duration dropdown w-select" id="field-9" name="field-9">
         <option value="">Duration</option>
         <option value="one_time">One-time</option>
       </select>
-      <input class="coupon-redemptions text-field w-input" data-name="Redemptions" id="Redemptions" maxlength="256" name="Redemptions" placeholder="Maximum number of redemptions" required="required" type="text">
+      <input class="coupon-redemptions text-field w-input" id="Redemptions" maxlength="256" name="Redemptions" placeholder="Maximum number of redemptions" required="required" type="text">
       <label class="form-label" for="Redemption-Date">Redeem by date:</label>
-      <input class="redemption-date text-field w-input" data-name="Redemption Date" id="Redemption-Date" maxlength="256" name="Redemption-Date" placeholder="Date picker" required="required" type="text"><a class="button subscription w-button" href="#">Create coupon</a>
+      <input class="redemption-date text-field w-input" id="Redemption-Date" maxlength="256" name="Redemption-Date" placeholder="Date picker" required="required" type="text"><a class="button subscription w-button" href="#">Create coupon</a>
     </form>
-    <div class="w-form-done">
-      <div>Thank you! Your submission has been received!</div>
-    </div>
-    <div class="w-form-fail">
-      <div>Oops! Something went wrong while submitting the form</div>
-    </div>
   </div>
 </div>

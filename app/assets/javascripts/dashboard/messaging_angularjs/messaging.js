@@ -5,7 +5,7 @@ var BindPlugins = new function() {
   this.now = function () {
 
     // bind emoji to textarea
-    var msg_emoji_box = $('#message_box').emojioneArea({
+    var msg_emoji_box = $('#Message-Window').emojioneArea({
       pickerPosition: "top",
       events: {
         // bind atwho
@@ -38,8 +38,8 @@ var BindPlugins = new function() {
 
     // update the angular field that is hidden
     function update_actual_text_box() {
-      $('#aaa').val(msg_emoji_box[0].emojioneArea.getText())
-      angular.element(jQuery('#aaa')).triggerHandler('change');
+      $('#Message-Window').val(msg_emoji_box[0].emojioneArea.getText())
+      angular.element(jQuery('#Message-Window')).triggerHandler('change');
     }
   }; 
 

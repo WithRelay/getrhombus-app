@@ -5,10 +5,6 @@
   overflow: hidden;
 }
 
-.display_none {
-  display: none;
-}
-
 $error-color: red;
 $success-color: green;
 
@@ -58,7 +54,6 @@ $success-color: green;
   }
 <%end%>
 
-
 .has-error .form-control
 {
   border-color: $error-color;
@@ -73,4 +68,26 @@ $success-color: green;
 }
 .hide {
   display: none !important;
+}
+
+/* For modals */
+.modal-background {
+  background: white;
+}
+
+.update-close-modals:hover {
+  cursor: pointer;
+}
+
+/* End For modals */
+
+/* For messaging page */
+.message-counter {
+  text-align: center;
+}
+
+/* End For messaging page */
+
+.emojionearea-editor {
+  height: 74px;
 }

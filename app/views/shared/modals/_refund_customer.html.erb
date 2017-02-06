@@ -1,10 +1,14 @@
+<%# removed all webflow data attributes %>
+
 <div class="refund-customer-form-wrapper w-clearfix">
   <div class="content-sub-wrapper modal w-clearfix">
-    <h4 class="modal-header welcome-dash-content-container-header">Refund Customer</h4><a class="close-refund-modal" data-ix="close-refund-modal" href="#"></a>
+    <h4 class="modal-header welcome-dash-content-container-header">Refund Customer</h4>
+    <%# added update-close-modals and data %>
+    <a class="close-refund-modal update-close-modals" data-parent='refund-customer-div'></a>
   </div>
   <div class="refund-form w-form">
-    <form data-name="Email Form 5" id="email-form-5" name="email-form-5">
-      <select class="dropdown refund-reason w-select" data-name="Refund Reason 2" id="Refund-Reason-2" name="Refund-Reason-2" required="required">
+    <form id="email-form-5" name="email-form-5">
+      <select class="dropdown refund-reason w-select" id="Refund-Reason-2" name="Refund-Reason-2" required="required">
         <option value="">Select a reason</option>
         <option value="">Canceled order</option>
         <option value="">Returned goods</option>
@@ -12,12 +16,6 @@
         <option value="">Other</option>
       </select>
     </form>
-    <div class="w-form-done">
-      <div>Thank you! Your submission has been received!</div>
-    </div>
-    <div class="w-form-fail">
-      <div>Oops! Something went wrong while submitting the form</div>
-    </div>
   </div>
-  <p class="modal-paragraph refund-instructions tips">By issuing this refund, I authorize Relay to debit the refund amount from the bank account linked to my Rhombus account.</p><a class="button refund-button w-button" href="#">Issue [Amount] refund to card ending 5331</a>
+  <p class="modal-paragraph refund-instructions tips">By issuing this refund, I authorize Relay to debit the refund amount from the bank account linked to my Rhombus account.</p><a class="button refund-button w-button">Issue [Amount] refund to card ending 5331</a>
 </div>
