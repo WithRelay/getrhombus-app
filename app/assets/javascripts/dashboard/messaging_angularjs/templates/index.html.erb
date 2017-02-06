@@ -222,6 +222,33 @@
         </a>
       </div>
 
+      <form novalidate>
+
+        <label>
+          <angucomplete-alt id="find-recipient"
+          placeholder="name or phone number"
+          pause="300"
+          minlength="1"
+          selected-object="recipientSelected"
+          remote-url="<%= (Rails.env == 'development' ? "http://localhost:3000" : "#{Rails.application.secrets.url["info"]}") + "/v1/hashtags?query=" %>"
+          remote-url-data-field="data"
+          title-field="tag"
+          text-no-results='false'
+          match-class='highlight'
+          input-name='recipient'
+          description-field='description'
+          text-searching="Finding your customer/contact..."
+          <%#= add html notification during ui integration %>
+          <%#= scroll bar added but test option during UI integration and testing %>
+          remote-url-error-callback='searchRecipientsApiErrorHandler'
+          />
+        </label>
+      </form>
+
+      
+      <div id="rhombus-number" data-clipboard-text="RHOMBUS NUMBER ALSO GOES HERE!">RHOMBUS NUMBER HERE</div>
+
+
       <div class="message-tab-content w-tab-content">
 
         <div class="w--tab-active w-tab-pane" data-w-tab="Tab 1">
@@ -618,13 +645,13 @@
     <!-- message ng-repeat -->
     <div ng-repeat="message in selected_conversation_messages track by messageTrackingFunction(message)"> <%# track by $index">  %>
       
-      <!--<div class="conversation-date-wrapper" ng-if="($index != 0) && !selected_conversation_messages[$index - 1].unread && selected_conversation_messages[$index].unread">
+      <div class="conversation-date-wrapper" ng-if="($index != 0) && !selected_conversation_messages[$index - 1].unread && selected_conversation_messages[$index].unread">
         <div class="conversation-date">New Messages</div>
       </div>
 
       <div class="conversation-date-wrapper" ng-if="($index == 0) || (selected_conversation_messages[$index - 1].ts_day_of_the_week != selected_conversation_messages[$index].ts_day_of_the_week)">
         <div class="conversation-date">{{message.ts_day_of_the_week}}</div>
-      </div>-->
+      </div>
 
       <!-- user -->
       <div class="customer-messaging-bubble w-clearfix" ng-if="(message.source == 'customer')">

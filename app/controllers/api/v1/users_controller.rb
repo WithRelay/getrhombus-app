@@ -46,6 +46,16 @@ class Api::V1::UsersController < API::V1::BaseController
     render json: { response: response }, status: status
   end
 
+
+
+
+
+
+
+
+
+
+
   private
 
     def api_v1_user_params

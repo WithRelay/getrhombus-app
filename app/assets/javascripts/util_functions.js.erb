@@ -16,3 +16,21 @@ var UtilFunctions = new function() {
   }
 
 }
+
+
+$(document).ready(function () {
+
+  // for example  <div id="rhombus-number" data-clipboard-text="RHOMBUS NUMBER ALSO GOES HERE!">RHOMBUS NUMBER HERE</div>
+  // copy number in header to clipboard
+  $('#rhombus-number').click(function(e) {
+    var clipboard = new Clipboard('#rhombus-number');
+    clipboard.on('success', function(e) {
+      clipboard.destroy();
+      // show alert here
+    })
+    .on('error', function(e) { clipboard.destroy(); });
+  });
+
+
+});
+

@@ -12,4 +12,4 @@ COLORS = [
 		  	['light-green','#97CB51'], ['purple','#B5739D'], ['blue','#3F51B5'], 
 		  	['green','#388E3C'], ['orange','#FFC107'], ['dark-grey','#607D8B'],
 		  	['red','#FF5252']
-		  ]
+		  ].freeze
