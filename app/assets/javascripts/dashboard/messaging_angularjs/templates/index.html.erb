@@ -1,4 +1,23 @@
 
+  <div class="modal-body w-hidden">
+    <%= render partial: 'shared/modals/save_reply', locals: { reminder: @reminder , reminder_url: v1_reminders_path, method: 'post' } %>
+  </div>
+  <div class="modal-body w-hidden">
+    <%= render partial: 'shared/modals/charge_customer', locals: { reminder: @reminder , reminder_url: v1_reminders_path, method: 'post' } %>
+  </div>
+  <div class="modal-body w-hidden">
+    <%= render partial: 'shared/modals/add_to_list', locals: { reminder: @reminder , reminder_url: v1_reminders_path, method: 'post' } %>
+  </div>
+  <div class="modal-body w-hidden">
+    <%= render partial: 'shared/modals/mark_as_done', locals: { reminder: @reminder , reminder_url: v1_reminders_path, method: 'post' } %>
+  </div>
+  <div class="modal-body w-hidden">
+    <%= render partial: 'shared/modals/new_reminder', locals: { reminder: @reminder , reminder_url: v1_reminders_path, method: 'post' } %>
+  </div>
+  <div class="modal-body w-hidden">
+    <%= render partial: 'shared/modals/mms_file_preview', locals: { reminder: @reminder , reminder_url: v1_reminders_path, method: 'post' } %>
+  </div>
+
   <div class="messaging sub-nav-bar">
     <div class="w-row">
       <div class="w-col w-col-4"></div>
@@ -13,25 +32,25 @@
     <div class="conversation-list-menu">
       <div class="w-form">
         <form id="email-form-10" name="email-form-10">
-         <label>
-          <angucomplete-alt id="find-recipient"
-          placeholder="Start new conversation"
-          pause="300"
-          minlength="1"
-          selected-object="recipientSelected"
-          remote-url="<%= (Rails.env == 'development' ? "http://localhost:3000" : "#{Rails.application.secrets.url["info"]}") + "/v1/hashtags?query=" %>"
-          remote-url-data-field="data"
-          title-field="tag"
-          text-no-results='false'
-          match-class='highlight'
-          input-name='recipient'
-          description-field='description'
-          text-searching="Finding your customer/contact..."
-          <%#= add html notification during ui integration %>
-          <%#= scroll bar added but test option during UI integration and testing %>
-          remote-url-error-callback='searchRecipientsApiErrorHandler'
-          />
-        </label>
+          <label>
+            <angucomplete-alt id="find-recipient"
+            placeholder="Start new conversation"
+            pause="300"
+            minlength="1"
+            selected-object="recipientSelected"
+            remote-url="<%= (Rails.env == 'development' ? "http://localhost:3000" : "#{Rails.application.secrets.url["info"]}") + "/v1/hashtags?query=" %>"
+            remote-url-data-field="data"
+            title-field="tag"
+            text-no-results='false'
+            match-class='highlight'
+            input-name='recipient'
+            description-field='description'
+            text-searching="Finding your customer/contact..."
+            <%#= add html notification during ui integration %>
+            <%#= scroll bar added but test option during UI integration and testing %>
+            remote-url-error-callback='searchRecipientsApiErrorHandler'
+            />
+          </label>
           <input class="start-conversation-field w-input" id="Start-Conversation-Field" maxlength="256" name="Start-Conversation-Field" placeholder="Start new  conversation" type="text">
         </form>
         <%# removed 2 div from here %>
@@ -74,9 +93,6 @@
       
     </div>
   </div>
-
-
-
 
   <div class="text-window-wrapper">
     <div class="w-form">
@@ -273,12 +289,13 @@
 
   <%# added id %>
   <div class="dashboard-body messaging w-clearfix" id='messages-box' when-scrolled-up="getConversationMessages(selected_conversation, false)" scroll-bottom-on="status.loaded" in-view-container>
+
     <%# <div ng-show="status.loading" class="me"><span>loading...</span></div> %>
     
     <%# added this wrapping div %>
     <!-- message ng-repeat -->
     <div ng-repeat="message in selected_conversation_messages track by messageTrackingFunction(message)"> <%# track by $index">  %>
-      
+
       <div class="conversation-date-wrapper" ng-if="($index != 0) && !selected_conversation_messages[$index - 1].unread && selected_conversation_messages[$index].unread">
         <div class="conversation-date">New Messages</div>
       </div>
@@ -300,7 +317,7 @@
           </div>
 
           <div class="w-col w-col-10">
-            
+
             <!-- image -->
             <div class="chat-bubble-image-wrapper customer" ng-if='message.images.length'>
               <img ng-repeat="image in message.images track by imageTrackingFunction(image)" class="chat-bubble-image" src="{{ message.images[$index].url }}">
@@ -331,7 +348,7 @@
             </div>
 
           </div>
-          <div class="w-clearfix w-col w-col-2">  
+          <div class="w-clearfix w-col w-col-2">
             <%# added height %>
             <img ng-if="message.profile_image.type == 'image'" class="agent-picture messaging-bubble right-nav-profile-picture" src="{{message.profile_image.value}}" width="35" height='35'>
             <div class="agent chat-wwindow no-image-found-placeholder" ng-if="message.profile_image.type == 'color'">

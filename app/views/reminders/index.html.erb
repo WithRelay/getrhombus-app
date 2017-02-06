@@ -1,36 +1,14 @@
 <%= render 'shared/flash_messages' %>
 <div class="customer-dash sub-nav-bar w-clearfix">
-  <%= button_tag 'Set new reminder', class: 'btn btn-primary add sub-nav-button w-button', 'data-ix' => "schedule-notification" %>
+  <%= button_tag 'Set new reminder', class: 'modal-loader btn btn-primary add sub-nav-button w-button' %>
   <a class="sub-nav-button w-button" data-ix="create-list" href="#"> &nbsp;Edit</a>
   <a class="sub-nav-button w-button" data-ix="create-list" href="#"> &nbsp;Delete</a>
 </div>
 <!-- Button trigger modal -->
 <!-- Modal Body -->
-<div class="modal-wrapper-14" data-ix="modal-interaction-14">
-  <div class="schedule-notification-form-wrapper">
-    <div class="content-sub-wrapper modal w-clearfix">
-      <h4 class="modal-header welcome-dash-content-container-header">Customer Notification</h4>
-    </div>
-    <p class="modal-content-description">Set a reminder or notification that will go out to this customer at a future date. You can use this to automate appointment reminders, or bill payment reminders.</p>
-    <div class="segment-modal underline-div"></div>
-    <div class="scheduled-notification-form w-form">
-      <div class='newReminder'>
-        <div class="modal-body">
-          <%= render partial: 'reminders/form', locals: { reminder: @reminder , reminder_url: v1_reminders_path, method: 'post' } %>
-        </div>
-      </div>
-      <div class="w-form-done">
-        <div>Thank you! Your submission has been received!</div>
-      </div>
-      <div class="w-form-fail">
-        <div>Oops! Something went wrong while submitting the form</div>
-      </div>
-    </div>
+  <div class="modal-body w-hidden">
+    <%#= render partial: 'shared/modals/new_reminder', locals: { reminder: @reminder , reminder_url: v1_reminders_path, method: 'post' } %>
   </div>
-</div>
-
-
-<% if @reminders.present? %>
 
 <div class="dashboard-body">
   <div class="reminder-dates">Today</div>
@@ -131,12 +109,3 @@
     </div>
     </div>
   </div>
-  <% else %>
-  <div class="dashboard-body">
-  <div class="blank-page-container w-container">
-    <%= image_tag('020_200.png', class: 'blank-page-icon') %>
-    <h1 class="empty-state-dash hero-h1 home-header">You have no scheduled customer<br>reminders</h1>
-    <%= button_tag 'Set new reminder', class: 'button error-page-button w-button', 'data-ix' => "schedule-notification" %>
-  </div>
-</div>
-  <% end %>
