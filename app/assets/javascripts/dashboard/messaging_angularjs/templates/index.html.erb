@@ -1,202 +1,21 @@
-<div class="modal-wrapper-10" data-ix="modal-interaction-10">
-    <div class="saved-reply-selection-wrapper w-clearfix">
-      <div class="content-sub-wrapper modal w-clearfix">
-        <h4 class="modal-header welcome-dash-content-container-header">Select Saved Reply</h4>
-      </div>
-      <p class="modal-content-description">Saved replies help your team speed up response time to frequently asked questions. Select your saved replies from the drop-down, then personalize and hit send.</p>
-      <div class="segment-modal underline-div"></div>
-      <div class="saved-reply-select-form w-form">
-        <form id="email-form-3" name="email-form-3">
-          <select class="dropdown w-select" id="field" name="field">
-            <option value="">Select saved reply</option>
-            <option value="">Business Hours: Monday - Friday</option>
-            <option value="">Order Cancellation</option>
-            <option value="">Returns</option>
-            <option value="">International Shipping</option>
-          </select>
-          <textarea class="text-area view-saved-reply w-input" data-name="Saved Reply Content" id="Saved-Reply-Content" maxlength="5000" name="Saved-Reply-Content" placeholder="Edit saved reply"></textarea>
-        </form>
-        <div class="w-form-done">
-          <div>Thank you! Your submission has been received!</div>
-        </div>
-        <div class="w-form-fail">
-          <div>Oops! Something went wrong while submitting the form</div>
-        </div>
-      </div><a class="button send-saved-reply w-button" href="#">Send Reply</a><a class="button cancel-saved-reply w-button" data-ix="close-saved-reply" href="#">Cancel</a>
-    </div>
+<div class="modal-body w-hidden">
+  <%= render partial: 'shared/modals/save_reply', locals: { reminder: @reminder , reminder_url: v1_reminders_path, method: 'post' } %>
+</div>
+  <div class="modal-body w-hidden">
+    <%= render partial: 'shared/modals/charge_customer', locals: { reminder: @reminder , reminder_url: v1_reminders_path, method: 'post' } %>
   </div>
-  <div class="modal-wrapper-11" data-ix="modal-interaction-11">
-    <div class="charge-customer-form-wrapper-2">
-      <div class="content-sub-wrapper modal w-clearfix">
-        <h4 class="modal-header welcome-dash-content-container-header">Charge Customer</h4><a class="close-refund-modal" data-ix="close-charge-customer-2" href="#"></a>
-      </div>
-      <div class="charge-customer-form w-form">
-        <form id="email-form-4" name="email-form-4">
-          <input class="item-name text-field w-input" data-name="Item Name 2" id="Item-name-2" maxlength="256" name="Item-name-2" placeholder="Item name" required="required" type="email">
-          <input class="amount-field text-field w-input" data-name="Amount 2" id="Amount-2" maxlength="256" name="Amount-2" placeholder="Amount" required="required" type="email">
-          <textarea class="item-description text-area w-input" data-name="Item Description 2" id="Item-Description-2" maxlength="5000" name="Item-Description-2" placeholder="Item Description"></textarea>
-          <div class="form-check-box w-checkbox">
-            <input class="w-checkbox-input" data-name="Checkbox 2" id="checkbox-2" name="checkbox-2" type="checkbox">
-            <label class="w-form-label" for="checkbox-2">Authorize only</label>
-          </div><a class="button charge-modal-button w-button" href="#">Charge [Customer name]</a>
-          <p class="charge-tips modal-paragraph tips"> &nbsp;TIP: You can use Hashtags to create an item list in Relay. Hashtags allow your customers text an item name to place an order</p>
-        </form>
-        <div class="w-form-done">
-          <div>Thank you! Your submission has been received!</div>
-        </div>
-        <div class="w-form-fail">
-          <div>Oops! Something went wrong while submitting the form</div>
-        </div>
-      </div>
-    </div>
+  <div class="modal-body w-hidden">
+    <%= render partial: 'shared/modals/add_to_list', locals: { reminder: @reminder , reminder_url: v1_reminders_path, method: 'post' } %>
   </div>
-  <div class="modal-wrapper-12" data-ix="modal-interaction-12">
-    <div class="add-to-list-form-wrapper">
-      <div class="content-sub-wrapper modal w-clearfix">
-        <h4 class="modal-header welcome-dash-content-container-header">Add to list</h4><a class="close-refund-modal" data-ix="close-add-to-list" href="#"></a>
-      </div>
-      <div class="add-to-list-modal-form w-form">
-        <form class="w-clearfix" id="email-form-5" name="email-form-5">
-          <select class="dropdown w-select" data-name="Add to list dropdown" id="Add-to-list-dropdown" name="Add-to-list-dropdown" required="required">
-            <option value="">Select a list</option>
-            <option value="">VIP List</option>
-            <option value="">First time customers</option>
-            <option value="">San Francisco customers</option>
-            <option value="">San Mateo customers</option>
-          </select><a class="add-to-list-modal-button button w-button" href="#">Add customer to List</a>
-        </form>
-        <div class="w-form-done">
-          <div>Thank you! Your submission has been received!</div>
-        </div>
-        <div class="w-form-fail">
-          <div>Oops! Something went wrong while submitting the form</div>
-        </div>
-      </div>
-    </div>
+  <div class="modal-body w-hidden">
+    <%= render partial: 'shared/modals/mark_as_done', locals: { reminder: @reminder , reminder_url: v1_reminders_path, method: 'post' } %>
   </div>
-  <div class="modal-wrapper-13" data-ix="modal-interaction-13">
-    <div class="mark-as-done-form-wrapper">
-      <p class="modal-content-description">Label conversations before you close it, so your entire team can stay informed on why a customer or lead reached out.</p>
-      <div class="segment-modal underline-div"></div>
-      <div class="mark-as-done-form w-form">
-        <form class="w-clearfix" id="email-form-6" name="email-form-6">
-          <select class="dropdown message-reason w-select" data-name="Message Reason" id="Message-Reason" name="Message-Reason" required="required">
-            <option value="">Select message reason</option>
-            <option value="">Account reactivation</option>
-            <option value="">Account deactivation</option>
-            <option value="">Apply coupon/promo code</option>
-            <option value="">Appointment scheduled</option>
-            <option value="">Appointment cancelled </option>
-            <option value="">Billing or payment question</option>
-            <option value="">Complaint</option>
-            <option value="">Change delivery address</option>
-            <option value="">Delivery status</option>
-            <option value="">Defective product</option>
-            <option value="">Defective feature</option>
-            <option value="">Late order arrival</option>
-            <option value="">Missing item</option>
-            <option value="">New order</option>
-            <option value="">Order cancellation</option>
-            <option value="">Order not delivered</option>
-            <option value="">Product or service question</option>
-            <option value="">Product or service feedback</option>
-            <option value="">Refund request</option>
-            <option value="">Refund status</option>
-            <option value="">Resend receipt</option>
-            <option value="">Returns</option>
-            <option value="">Spam</option>
-            <option value="">Subscription cancellation</option>
-            <option value="">Subscription reactivation</option>
-            <option value="">Update account information</option>
-            <option value="">Update order</option>
-            <option value="">Wrong item</option>
-          </select>
-          <textarea class="mark-done text-area w-input" id="field-3" maxlength="5000" name="field-3" placeholder="Add notes"></textarea><a class="button mark-as-done-modal-button w-button" href="#">Mark conversation as done</a><a class="button cancel-mark-as-done w-button" data-ix="close-mark-as-done" href="#">Cancel</a>
-        </form>
-        <div class="w-form-done">
-          <div>Thank you! Your submission has been received!</div>
-        </div>
-        <div class="w-form-fail">
-          <div>Oops! Something went wrong while submitting the form</div>
-        </div>
-      </div>
-    </div>
+  <div class="modal-body w-hidden">
+    <%= render partial: 'shared/modals/new_reminder', locals: { reminder: @reminder , reminder_url: v1_reminders_path, method: 'post' } %>
   </div>
-  <div class="modal-wrapper-14" data-ix="modal-interaction-14">
-    <div class="schedule-notification-form-wrapper">
-      <div class="content-sub-wrapper modal w-clearfix">
-        <h4 class="modal-header welcome-dash-content-container-header">Customer Notification</h4>
-      </div>
-      <p class="modal-content-description">Set a reminder or notification that will go out to this customer at a future date. You can use this to automate appointment reminders, or bill payment reminders.</p>
-      <div class="segment-modal underline-div"></div>
-      <div class="scheduled-notification-form w-form">
-        <form class="w-clearfix" id="email-form-7" name="email-form-7">
-          <select class="dropdown w-select" data-name="Notification Channel" id="Notification-Channel" name="Notification-Channel" required="required">
-            <option value="">Select channel</option>
-            <option value="">SMS</option>
-            <option value="">Facebook Messenger</option>
-          </select>
-          <textarea class="notification-message text-area w-input" data-name="Notification Message" id="Notification-Message" maxlength="5000" name="Notification-Message" placeholder="Enter notification message" required="required"></textarea>
-          <div class="char-count notications">150 characters</div>
-          <input class="delivery-date-time-picker text-field w-input" data-name="Delivery Date &amp; Time" id="Delivery-Date-Time" maxlength="256" name="Delivery-Date-Time" placeholder="Notification Delivery Date &amp; Time" required="required" type="email">
-          <div class="notification-frequency radio-button w-radio">
-            <input class="w-radio-input" data-name="Notification Frequency" id="Notification Frequency" name="Notification-Frequency" required="required" type="radio" value="Notification Frequency">
-            <label class="w-form-label" for="Notification Frequency">Send once</label>
-          </div>
-          <div class="notification-frequency radio-button repeat w-radio">
-            <input class="w-radio-input" data-name="Notification Frequency" id="Notification Frequency-2" name="Notification-Frequency" required="required" type="radio" value="Notification Frequency">
-            <label class="w-form-label" for="Notification Frequency-2">Repeat</label>
-          </div>
-          <select class="dropdown frequency-dropdown w-select" id="field-2" name="field-2">
-            <option value="">Repeat every</option>
-            <option value="">3 days</option>
-            <option value="">7 days</option>
-            <option value="">14 days</option>
-            <option value="">30 days</option>
-            <option value="">60 days </option>
-            <option value="">90 days</option>
-          </select><a class="button schedule-notification w-button" href="#">Schedule notification for [Customer name]</a><a class="button cancel-notification w-button" data-ix="close-schedule-notification" href="#">Cancel</a>
-        </form>
-        <div class="w-form-done">
-          <div>Thank you! Your submission has been received!</div>
-        </div>
-        <div class="w-form-fail">
-          <div>Oops! Something went wrong while submitting the form</div>
-        </div>
-      </div>
-    </div>
+  <div class="modal-body w-hidden">
+    <%= render partial: 'shared/modals/mms_file_preview', locals: { reminder: @reminder , reminder_url: v1_reminders_path, method: 'post' } %>
   </div>
-  <div class="modal-wrapper-16" data-ix="file-preview-modal">
-    <div class="mms-file-preview-wrapper">
-      <div class="content-sub-wrapper modal w-clearfix">
-        <h4 class="modal-header welcome-dash-content-container-header">Send file</h4>
-      </div>
-      <div class="file-name image-preview">Sample_File_Name.jpg</div>
-      <div class="image-preview-wrapper"><img class="image-file-preview" src="http://uploads.webflow.com/img/image-placeholder.svg" width="254">
-      </div>
-      <div class="w-form">
-        <form class="w-clearfix" id="email-form-9" name="email-form-9">
-          <textarea class="file-description text-area w-input" data-name="File Description" id="File-Description" maxlength="5000" name="File-Description" placeholder="Add description (optional)"></textarea>
-          <div class="file-sender split-button-wrapper"><a class="message-window-tabs send-button split-button w-button" href="#">Send</a>
-            <div class="w-dropdown" data-delay="0">
-              <div class="split-dropdown w-dropdown-toggle"><span class="font-icon-split"></span>
-              </div>
-              <nav class="dropdown-options-wrapper split-button w-dropdown-list"><a class="dropdown-link split-button w-dropdown-link" href="#"> &nbsp; &nbsp;Send via Messenger</a>
-              </nav>
-            </div>
-          </div><a class="button cancel-send w-button" data-ix="cancel-send-file" href="#">Cancel</a>
-        </form>
-        <div class="w-form-done">
-          <div>Thank you! Your submission has been received!</div>
-        </div>
-        <div class="w-form-fail">
-          <div>Oops! Something went wrong while submitting the form</div>
-        </div>
-      </div>
-    </div>
-  </div>
- 
-  
 
   <div class="messaging sub-nav-bar">
     <div class="w-row">
@@ -210,7 +29,7 @@
 
   <div class="messaging side-bar" when-scrolled-down="loadConversations()" id='conversations-list'>
     <div class="w-tabs" data-duration-in="300" data-duration-out="100">
-      
+
       <div class="messaging-tab-menu w-tab-menu">
         <a class="messages-tab-link w--current w-inline-block w-tab-link" data-w-tab="Tab 1">
           <div class="messages-tab-link-text">New (<span>29)</span>
@@ -245,7 +64,7 @@
         </label>
       </form>
 
-      
+
       <div id="rhombus-number" data-clipboard-text="RHOMBUS NUMBER ALSO GOES HERE!">RHOMBUS NUMBER HERE</div>
 
 
@@ -256,13 +75,13 @@
             <div class="message-tab-content-wrapper w-row">
               <div class="message-tab-picture-column w-col w-col-2">
                 <div class="w-clearfix">
-                  
+
                   <div ng-class="conversation.last_message_type === 'Message' ? 'channel-indicator-2' : 'channel-indicator'" ng-if="conversation.last_message"></div>
                   <%# combined color and image div into the same a tag %>
                   <div ng-class="{ 'no-image-found-placeholder' : true, 'radius-color-{{conversation.profile_image.value}}' : true }" ng-if="conversation.profile_image.type == 'color'"></div>
                   <%# added height %>
                   <img ng-if="conversation.profile_image.type == 'image'" class="customer-profile-picture" src="{{conversation.profile_image.value}}" width="30" height='30'>
-                
+
                 </div>
               </div>
               <div class="name-and-preview-column w-clearfix w-col w-col-9">
@@ -309,7 +128,7 @@
       </div>
     </div>
   </div>
-  
+
 
 
   <div class="text-window-wrapper">
@@ -333,7 +152,7 @@
       </div>
     </div>
   </div>
- 
+
   <div class="right side-bar">
     <div class="right-nav-profile-content-wrapper"><img class="profile-picture-right-nav" src="images/Customer-1.jpg" width="60">
       <div class="dashboard-right-nav signup-box-subheading">MICHAEL RANDY <span class="relay-id">VERIFIED</span>
@@ -636,15 +455,15 @@
       </div>
     </div>
   </div>
-  
+
   <%# added id %>
   <div class="dashboard-body messaging w-clearfix" id='messages-box' when-scrolled-up="getConversationMessages(selected_conversation, false)" scroll-bottom-on="status.loaded" in-view-container>
   <%# <div ng-show="status.loading" class="me"><span>loading...</span></div> %>
-    
+
     <%# added this wrapping div %>
     <!-- message ng-repeat -->
     <div ng-repeat="message in selected_conversation_messages track by messageTrackingFunction(message)"> <%# track by $index">  %>
-      
+
       <div class="conversation-date-wrapper" ng-if="($index != 0) && !selected_conversation_messages[$index - 1].unread && selected_conversation_messages[$index].unread">
         <div class="conversation-date">New Messages</div>
       </div>
@@ -661,7 +480,7 @@
             <img ng-if="message.profile_image.type == 'image'" class="messaging-bubble right-nav-profile-picture" src="{{message.profile_image.value}}" width="35" height='35'>
           </div>
           <div class="w-col w-col-10">
-            
+
             <!-- image -->
             <div class="chat-bubble-image-wrapper customer" ng-if='message.images.length'>
               <img ng-repeat="image in message.images track by imageTrackingFunction(image)" class="chat-bubble-image" src="{{ message.images[$index].url }}">
@@ -692,7 +511,7 @@
             </div>
 
           </div>
-          <div class="w-clearfix w-col w-col-2">  
+          <div class="w-clearfix w-col w-col-2">
             <%# added height %>
             <img ng-if="message.profile_image.type == 'image'" class="agent-picture messaging-bubble right-nav-profile-picture" src="{{message.profile_image.value}}" width="35" height='35'>
           </div>
