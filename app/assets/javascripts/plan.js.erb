@@ -96,7 +96,8 @@ $(document).ready(function() {
     $input.focus();        
   });
 
-  $('body').on('click', '.plan-name-save-icon', function() {
+  $('body').on('click', '.plan-name-save-icon', function(e) {
+    e.stopImmediatePropagation();
     save_icon_parent = $(this).parent();
     save_icon_grandparent = save_icon_parent.parent();
     plan_name_input = save_icon_grandparent.find('.plan-name');
