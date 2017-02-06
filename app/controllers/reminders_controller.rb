@@ -3,7 +3,7 @@ class RemindersController < ApplicationController
 
   def index
     @reminders = current_user.reminders
-    @reminder = Reminder.new
+    render('empty_reminder', locals: { reminder: current_user.reminders.build }) unless @campaigns.present?
   end
 
   def new
