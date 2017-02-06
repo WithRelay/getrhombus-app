@@ -391,6 +391,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
                 //$scope.status.loaded = ($scope.selected_conversation_messages.length > 0);  // might not need this line
                 //$scope.markMessagesAsRead(conversation.id, data.unread_ids);
                 $scope.status.loading = false;
+                console.log(data.messages)
 
                 // Bind plugins to textbox
                 // should only bind once...add check!!!!!!!!!!!!!!

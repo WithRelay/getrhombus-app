@@ -1,11 +1,31 @@
 - message profile pic with color only not done
+- description in hashtag are optional
 
-
-
-1. list of color names and code. 
+1. list of color names and code.  - add into config.rb
 2. fb linkng page. 
 3. everything coupon...coupon create, index. only name is ediatable...so like plans. 
 4. up/downgrade sass plan...you havent redesigned on billing info page 
 5. form validation error state design
 6. ellipsis
 7. logic for signup
+8. calendar defaults and styling (from edwin)
+9. copy number on click
+10. design for alerts
+11. coupon pages (add link to transactions dropdown and link under segments)
+12. popups
+
+
+Pages
+Surya
+
+
+
+Bhishma
+
+
+
+Ovo
+
+
+
+Taiwo

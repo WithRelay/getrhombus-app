@@ -34,13 +34,15 @@ messagingApp.directive('whenScrolledUp', ['$timeout', 'smoothScroll', function($
     elm.bind('scroll', _.throttle(function() {
       if (raw.scrollTop <= 0) {
         var sh = raw.scrollHeight;
-        var first_item = raw.children.item(1);
+        console.log(sh)
+        var first_item = raw.children.item(0).children.item(0);
+        //console.log(first_item)
         scope.$apply(attr.whenScrolledUp).then(function() {
           $timeout(function() {
             var options = {
               duration: 800,
               offset: (raw.scrollHeight - sh),
-              containerId: 'fixed'
+              containerId: 'messages-box'
             }
             smoothScroll(first_item, options);
           })
@@ -69,7 +71,7 @@ messagingApp.directive("mySrc", function() {
 
       loadImage = function() {
 
-        element[0].src = "<%= asset_path 'pricing.jpg' %>";
+        element[0].src = "<%= asset_path 'Relay Image Placeholder.png' %>";
 
         img = new Image();
         img.src = attrs.mySrc;

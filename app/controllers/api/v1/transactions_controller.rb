@@ -32,8 +32,8 @@ class Api::V1::TransactionsController < API::V1::BaseController
       if data[:hashtag_id].present?
         @hashtag = current_user.hashtags.where(id: data[:hashtag_id]).first
       else
-        @hashtag = Hashtag.create(name: params[:item_name], description: params[:notes], 
-                      amount: data[:amount], user_id: current_user.id, tag_type: 1, enable_tweet: 0)
+        @hashtag = Hashtag.new(skip_tag_validation: true)
+        @hashtag.save(name: params[:item_name], description: params[:notes], amount: data[:amount], user_id: current_user.id, tag_type: 1, enable_tweet: 0)
       end
       @amount = Toolbox::Decimal.to_cents(data[:amount])
     end

@@ -202,7 +202,7 @@
     <div class="w-row">
       <div class="w-col w-col-4"></div>
       <div class="w-col w-col-4">
-        <div class="customer-name-text subheader" ng-show="current_chat_conversation != false">{{current_chat_conversation.full_name}}</div>
+        <div class="customer-name-text subheader" ng-show="current_chat_conversation != false">Conversation with {{current_chat_conversation.full_name}}</div>
       </div>
       <div class="w-col w-col-4"></div>
     </div>
@@ -610,19 +610,21 @@
     </div>
   </div>
   
-  <div class="dashboard-body messaging w-clearfix">
+  <%# added id %>
+  <div class="dashboard-body messaging w-clearfix" id='messages-box' when-scrolled-up="getConversationMessages(selected_conversation, false)" scroll-bottom-on="status.loaded" in-view-container>
+  <%# <div ng-show="status.loading" class="me"><span>loading...</span></div> %>
     
     <%# added this wrapping div %>
     <!-- message ng-repeat -->
-    <div ng-repeat="message in selected_conversation_messages track by messageTrackingFunction(message)">
+    <div ng-repeat="message in selected_conversation_messages track by messageTrackingFunction(message)"> <%# track by $index">  %>
       
-      <div class="conversation-date-wrapper" ng-if="($index != 0) && !selected_conversation_messages[$index - 1].unread && selected_conversation_messages[$index].unread">
+      <!--<div class="conversation-date-wrapper" ng-if="($index != 0) && !selected_conversation_messages[$index - 1].unread && selected_conversation_messages[$index].unread">
         <div class="conversation-date">New Messages</div>
       </div>
 
       <div class="conversation-date-wrapper" ng-if="($index == 0) || (selected_conversation_messages[$index - 1].ts_day_of_the_week != selected_conversation_messages[$index].ts_day_of_the_week)">
         <div class="conversation-date">{{message.ts_day_of_the_week}}</div>
-      </div>
+      </div>-->
 
       <!-- user -->
       <div class="customer-messaging-bubble w-clearfix" ng-if="(message.source == 'customer')">
