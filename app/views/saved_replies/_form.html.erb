@@ -1,4 +1,3 @@
-<div class="saved-reply-form w-form">
   <%= form_for([current_user, saved_reply], :html => { :id => "email-form-8 saved-reply-form", data: { name: 'Email Form 8' } } ) do |f| %>
     <%= f.text_field :title, placeholder: 'Saved reply title', id: 'Saved-Reply-Title saved-reply-title-field', class: 'saved-reply text-field w-input', data: { name: 'Saved Reply Title' } %>
     <%= f.text_area :body, placeholder: 'Start typing...', id: 'Saved-Replies-Editor saved-reply-body-field', class: 'saved-reply text-area w-input', data: {name: 'Saved Replies Editor'} %>
@@ -14,4 +13,3 @@
   <div class="w-form-fail">
     <div>Oops! Something went wrong while submitting the form</div>
   </div>
-</div>

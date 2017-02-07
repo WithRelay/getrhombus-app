@@ -1,28 +1,54 @@
+<div class="customer-dash sub-nav-bar">
+  <div class="sub-nav-options-wrapper w-clearfix">
+    <a class="saved-replies sub-nav-button w-button" href="#"><strong> &nbsp; Create new saved replies</strong></a>
+  </div>
+</div>
 <div class="dashboard-body">
-  <div class="saved-replies-wrapper">
-    <div class="content-sub-wrapper">
-      <h4 class="welcome-dash-content-container-header">Saved Replies</h4>
-    </div>
-    <div class="saved-replies-table w-row">
-      <div class="soved-reply-column w-col w-col-5">
-        <% if @saved_replies.present? %>
+    <div class="saved-replies-alt-wrapper w-row">
+      <div class="w-col w-col-6">
+        <div class="replies-list saved-replies-wrapper">
+          <div class="content-sub-wrapper">
+            <h4 class="welcome-dash-content-container-header">Saved Replies</h4>
+          </div>
           <% @saved_replies.each do |reply| %>
-            <%= link_to class: 'saved-reply-row-wrapper w-inline-block' do %>
-              <div class="saved-reply-row">
-                <div class="saved-reply-title"><%= reply.title %></div>
+            <div class="new-table-row saved-replies w-row">
+
+              <div class="cn w-clearfix w-col w-col-4">
+                <%= link_to class: 'name w-clearfix' do %>
+                    <div class="shrink-text table-text"><%= reply.title %></div>
+                <% end %>
+                <div class="cb check-box-column"></div>
               </div>
+              <div class="fv w-clearfix w-col w-col-4">
+                <div class="cn column column-2 w-clearfix">
+                  <div class="shrink-text table-text">Order Cancellation Policy</div>
+                </div>
+              </div>
+              <div class="lv w-clearfix w-col w-col-4">
+                <div class="colum-3 column lv">
+                  <div class="table-text"><em>Created</em> <em>1 week ago</em>
+                  </div>
+                </div>
+              </div>
+            </div>
             <% end %>
-          <% end %>
-          <% else %>
-
-           You don't have any saved replies
-
-        <% end %>
+        </div>
       </div>
-      <div class="saved-reply-editor w-clearfix w-col w-col-7">
-        <%= render partial: 'form', locals: { saved_reply: @saved_replies.first } %>
+      <div class="w-col w-col-6">
+        <div class="reply-editor saved-replies-wrapper w-clearfix">
+          <div class="content-sub-wrapper">
+            <h4 class="welcome-dash-content-container-header">Edit</h4>
+          </div>
+          <div class="saved-reply-form w-form">
+            <%= render partial: 'form', locals: { saved_reply: @saved_replies.first } %>
+            <div class="w-form-done">
+              <div>Thank you! Your submission has been received!</div>
+            </div>
+            <div class="w-form-fail">
+              <div>Oops! Something went wrong while submitting the form</div>
+            </div>
+          </div><a class="button save-reply-button w-button" href="#">Save</a><a class="button cancel-save-reply w-button" href="#">Cancel</a><a class="button delete-saved-reply w-button" href="#">Delete</a>
+        </div>
       </div>
     </div>
   </div>
-</div>
-<%= link_to 'New Saved Reply', new_user_saved_reply_path %>
