@@ -4,6 +4,7 @@ $(document).ready(function() {
     id = $('.saved-reply-title'), // hold title for now..will change to the actual id
     form = $('#saved-reply-form');
 
+    $('#saved-reply-body-field').emojioneArea();
 
   // set first id
   if (id.length > 0) id = id[0].id.split('-')[3];
@@ -11,16 +12,49 @@ $(document).ready(function() {
 
   // when a saved reply is click populate form fields and rebuild links
   $('.saved-reply-title').click(function() {
-    id = this.id.split('-')[3];
-    action = form.attr('action');
-    action = action.substring(0, action.lastIndexOf('/') + 1) + id;
 
-    form.attr('action', action);
-    $('#delete-saved-reply').attr('href', action)
+
+    id = this.id.split('-')[3];
+
+    action = form.attr('action');
+    
+    // $('#delete-saved-reply').attr('href', action)
+    saved_reply = {}
+    saved_reply['saved_reply'] =  { 'id': id }
+     debugger;
+    sendRequest(saved_reply, action, ['#saved-reply-title-field', '.emojionearea-editor', 
+      '.hidden-id-field'])
 
     set_title_and_body();
   });
 
+  $('#save-reply-button').click(function(e){
+    e.preventDefault();
+    url = $('#saved-reply-edit-new').attr('action')
+    sendRequest($('#saved-reply-edit-new').serialize(), url);
+  });
+
+  function sendRequest(data, action, div_elements = []){
+    $.ajax({
+      url: action,
+      type: "post",
+      data: data,
+      dataType: "json"
+    })
+    .done(function(msg){
+      if (div_elements.length > 0 ){
+        $(div_elements[0]).val(msg.save_reply.title);
+        $(div_elements[1]).text(msg.save_reply.body);
+        $(div_elements[2]).val(msg.save_reply.id);
+      }
+      else{
+        var flash_key = Object.keys(msg)[0]
+        // set flash message title and message
+        // first argument is title and second is text message.
+        FlashHandler.setFlashMessage( msg[flash_key], flash_key )
+      }
+    }).fail(function(msg){ alert('Sorry request could not complete'); });
+  }
 
   // return saved reply to original state
   $('#saved-reply-cancel').click(function(e) {

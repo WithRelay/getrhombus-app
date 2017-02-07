@@ -1,43 +1,100 @@
-<div class="w-container">
-  <h1>Listing Coupons</h1>
+<div class="sub-nav-bar table-header">
+  <div class="table-header">
+    <div class="table-header">
+      <div class="header new-table-row w-row">
+        <div class="cn w-clearfix w-col w-col-3">
+          <div class="header name w-clearfix">
+            <div class="headings name"> &nbsp; Coupon name</div>
+          </div>
+          <div class="cb check-box-column header"></div>
+        </div>
+        <div class="fv w-clearfix w-col w-col-2">
+          <div class="cn column column-2 header">
+            <div class="first-visit headings">&nbsp; &nbsp;&nbsp;Type</div>
+          </div>
+        </div>
+        <div class="lv w-clearfix w-col w-col-2">
+          <div class="colum-3 column header lv">
+            <div class="headings last-visit"> &nbsp; Value</div>
+          </div>
+        </div>
+        <div class="avs w-clearfix w-col w-col-1">
+          <div class="avs column column-4 header">
+            <div class="avs headings last-visit"> &nbsp;&nbsp;&nbsp;Duration</div>
+          </div>
+        </div>
+        <div class="ts w-clearfix w-col w-col-1">
+          <div class="column column-5 header ts"></div>
+        </div>
+        <div class="table-actions w-clearfix w-col w-col-3">
+          <div class="column column-6 header new-row">
+            <div class="headings recipient">&nbsp;  &nbsp; Redemptions</div>
+          </div>
+          <div class="column column-6 header new-row w-clearfix">
+            <div class="headings location name">&nbsp; &nbsp;&nbsp;&nbsp;Redeem by</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="customer-dash sub-nav-bar">
+  <div class="sub-nav-options-wrapper w-clearfix"><a class="add sub-nav-button w-button" data-ix="create-customer" href="#"> &nbsp;<strong>New coupon</strong></a><a class="import sub-nav-button w-button" data-ix="import-customers" href="#">&nbsp; <strong>Edit coupons</strong></a><a class="sub-nav-button w-button" data-ix="create-list" href="#"> &nbsp;<strong>Delete</strong></a>
+  </div>
+</div>
 
-  <table class= 'table'>
-    <thead>
-      <tr>
-        <th>Coupon name</th>
-        <th>Amount off</th>
-        <th>Currency</th>
-        <th>duration</th>
-        <th>Duration in months</th>
-        <th>Max Redemption</th>
-        <th>Percent off</th>
-        <th>Redeem by</th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <% @coupons.each do |coupon| %>
-        <tr>
-          <td><%= coupon.name %></td>
-          <td><%= present(coupon).format_amount %></td>
-          <td><%= coupon.currency %></td>
-          <td><%= coupon.duration %></td>
-          <td><%= coupon.duration_in_months %></td>
-          <td><%= coupon.max_redemptions %></td>
-          <td><%= coupon.percent_off %></td>
-          <td><%= present(coupon).zone_timestamp %></td>
-          <td>
-            <% if coupon.subscription_id.blank? %>
-              <%= link_to 'Delete Coupon', user_coupon_path(current_user, coupon), method: :delete, class: "btn btn-danger delete-coupon coupon#{coupon.id}", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i>Please wait...".html_safe } %></td>
-            <% end %>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-
-  <br>
-
-  <%= link_to 'New Coupon', new_user_coupon_path %>
-   <%#= render :partial => '/referrers/form' %>
-
+<div class="dashboard-body">
+  <% @coupons.each do |coupon| %>
+  <div class="row-wrapper">
+    <div class="alt-table-row w-row">
+      <div class="alt-column w-clearfix w-col w-col-3">
+        <div class="title-column-div w-clearfix">
+          <div class="shrink-text table-text"><%= coupon.name %></div>
+        </div>
+        <div class="alt-table cb check-box-column">
+          <div class="w-form">
+            <form data-name="Email Form 2" id="email-form-2" name="email-form-2">
+              <div class="select-all-check-box w-checkbox w-clearfix">
+                <input class="cb table-checkbox w-checkbox-input" id="node" type="checkbox">
+                <label class="checkbox-field-lable w-form-label" for="node">-</label>
+              </div>
+            </form>
+            <div class="w-form-done">
+              <div>Thank you! Your submission has been received!</div>
+            </div>
+            <div class="w-form-fail">
+              <div>Oops! Something went wrong while submitting the form</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="alt-column w-col w-col-2">
+        <div class="alt-table-column-div w-clearfix">
+          <div class="percentage-coupon shrink-text table-text"><strong><%= present(coupon).format_amount %></strong>
+          </div>
+        </div>
+      </div>
+      <div class="alt-column w-col w-col-2">
+        <div class="alt-table-column-div w-clearfix">
+          <div class="table-text"><%= coupon.max_redemptions %></div>
+        </div>
+      </div>
+      <div class="alt-column w-col w-col-2">
+        <div class="alt-table-column-div w-clearfix">
+          <div class="shrink-text table-text"><%= coupon.duration_in_months %></div>
+        </div>
+      </div>
+      <div class="alt-column w-col w-col-2">
+        <div class="alt-table-column-div w-clearfix">
+          <div class="shrink-text table-text"><%= present(coupon).zone_timestamp %></div>
+        </div>
+      </div>
+      <div class="alt-column w-col w-col-1">
+        <div class="alt-table-column-div w-clearfix">
+          <div class="table-text"> &nbsp;109</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% end %>
 </div>

@@ -1,7 +1,8 @@
 $(document).ready(function(){
 
   $('.modal-loader').click(function(e){
-    $('.modal-body').lightbox_me({
+    var modal = $(this).parent().prev('.modal-body')
+    $(modal).lightbox_me({
         centered: true
         });
     e.preventDefault();
