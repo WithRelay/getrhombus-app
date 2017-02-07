@@ -6,14 +6,15 @@ var FlashHandler = new function() {
     var typeObj = { 'notice': 'success', 'warning': 'info', 'error':'error' };
     var messageToSet = typeObj[type] || 'Attention';
     showToastr (messageToSet, arrayToString(msg));
-    $('.toasters-close').on('click', function (e) {
+    $('.toaster-font-awesome').on('click', function (e) {
       e.preventDefault();
-      $('.toasters').fadeOut(5000);
+      $('.toasters').fadeOut(3000);
     } );
   };
 
   function showToastr (type, message) {
-    var class_name = (type === 'error') ? 'failure toasters' : 'toasters' ;
+    var class_name = (type === 'error') ? 'failure toasters' : 'toasters' ,
+      close_button_class = (type === 'error') ? 'failure toaster-font-awesome' : 'toaster-font-awesome'
     $('body').append('<div class="'+class_name+'">\
       <div class="toaster-row w-row">\
         <div class="toaster-row-column-1 w-col w-col-11">\
@@ -22,7 +23,7 @@ var FlashHandler = new function() {
           </div>\
         </div>\
         <div class="toaster-row-column-2 w-clearfix w-col w-col-1">\
-          <div class="toaster-font-awesome toasters-close"></div>\
+          <div class="'+close_button_class+'"></div>\
         </div>\
       </div>\
     </div>');
