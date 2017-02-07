@@ -4,6 +4,9 @@
     <%= image_tag('relay_6.png', class: 'dashboard-logo', width: 50) %>
   <% end %>
   <div class="dashboard-nav-links-wrapper">
+    <div class="modal-body w-hidden">
+      <%= render 'shared/modals/create_customer'%>
+    </div>
       <a class="w-clearfix w-inline-block" href="#">
         <div class="dash-header-links"> &nbsp; <strong>Dashboard</strong>
         </div>
@@ -134,7 +137,4 @@
         </nav>
       </div>
     </div>
-  </div>
-  <div class="modal-body w-hidden">
-    <%= render 'shared/modals/create_customer'%>
   </div>
