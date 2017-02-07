@@ -18,6 +18,7 @@ class Hashtag < ActiveRecord::Base
 	validates :amount, presence: true, numericality: true, unless: lambda { self.non_payment_tag? }
 
   enum tag_type: { non_payment_tag: 0, one_time_payment_tag: 1, recurring_payment_tag: 2 }
+  enum status: { active: 0, inactive: 2 }
   enum charge_amount: { allow_customers_to_override_amount: 0, always_charge_amount: 1 }
 
   accepts_nested_attributes_for :images

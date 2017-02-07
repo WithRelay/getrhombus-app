@@ -21,9 +21,9 @@
       <div class="dash-header-links new-link">&nbsp; &nbsp;<strong>Sent</strong>
       </div>
     <% end %>
-    <%= link_to filter_campaign_user_campaigns_path, class: 'w-clearfix w-inline-block' do %>
-      <div class="dash-header-links new-link relay-nav-number-display">+ 1 <redacted_phone_number></div>
-    <% end %>
+
+    <%= render "shared/rhombus_number" %>
+    
   </div>
   <div class="dashboard-nav-links-wrapper new-tab right-nav settings-dropdown">
     <div class="dropdown-wrapper w-dropdown" data-delay="0">

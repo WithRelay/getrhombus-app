@@ -1,5 +1,5 @@
   <div class="dashboard-nav w-clearfix">
-    <div class="dashboard-logo-wrapper">    <%= image_tag('relay_6.png', class: 'dashboard-logo', width: 50)%>
+    <div class="dashboard-logo-wrapper"><%= image_tag('relay_6.png', class: 'dashboard-logo', width: 50)%>
     </div>
     <div class="dashboard-nav-links-wrapper">
       <a class="w-clearfix w-inline-block" href="#">
@@ -7,29 +7,124 @@
         </div>
         <div class="dash-header-links new-link"> &nbsp;<strong>All &nbsp;customers</strong>
         </div>
-        <div class="dash-header-links new-link">&nbsp; <strong>Contacts</strong>
+        <div class="dash-header-links new-link"> &nbsp;&nbsp;<strong>Contacts</strong>
         </div>
-        <div class="dash-header-links new-link">&nbsp; <strong>Lists</strong>
+        <div class="dash-header-links new-link"> &nbsp;&nbsp;<strong>List</strong>
         </div>
+        <%= render "shared/rhombus_number" %>
       </a>
     </div>
     <div class="dashboard-nav-links-wrapper new-tab right-nav settings-dropdown">
       <div class="dropdown-wrapper w-dropdown" data-delay="0">
         <div class="w-dropdown-toggle">
-          <div class="dropdown-wrapper-text"><strong>Settings</strong>
+          <div class="dropdown-wrapper-text"><strong class="settings-header-tab-text">Settings &nbsp;&nbsp;</strong>
           </div>
-          <div class="dropdown-wrapper-icon w-icon-dropdown-toggle"></div>
         </div>
-        <nav class="dropdown-content-wrapper w-dropdown-list"><a class="dropdown-link w-dropdown-link" href="#">&nbsp;&nbsp;&nbsp;&nbsp;Your profile</a><a class="dropdown-link w-dropdown-link" href="#">&nbsp;&nbsp;&nbsp;&nbsp;Settings</a><a class="dropdown-link w-dropdown-link" href="#">&nbsp;&nbsp;&nbsp;&nbsp;Billing Information</a><a class="dropdown-link w-dropdown-link" href="#">&nbsp;&nbsp;&nbsp;&nbsp;Log out</a>
+        <nav class="dropdown-content-wrapper w-dropdown-list"><a class="dropdown-link header w-dropdown-link" href="#">Rebecca Caldwell</a><a class="content-link dropdown-link w-dropdown-link" href="#"><span class="business-name-settings-dropdown">Joan's Coffee</span><br><span class="account-owner-email-settings-dropdown"><redacted_email></span></a><a class="dropdown-link w-dropdown-link" href="#">Settings</a><a class="dropdown-link w-dropdown-link" href="#">Billing Information</a><a class="dropdown-link sign-out w-dropdown-link" href="#">Sign out</a>
         </nav>
       </div>
     </div>
-    <div class="dashboard-nav-links-wrapper notifications right-nav">
+    <div class="dashboard-nav-links-wrapper new-tab right-nav settings-dropdown">
       <div class="dropdown-wrapper w-dropdown" data-delay="0">
-        <div class="w-dropdown-toggle">
-          <div class="dropdown-wrapper-text"></div>
+        <div class="notifications-navbar-dropdown w-dropdown-toggle">
+          <div class="dropdown-wrapper-text"><strong> &nbsp;&nbsp;<span class="notification-counter">200</span></strong>
+          </div>
         </div>
-        <nav class="dropdown-content-wrapper w-dropdown-list"><a class="dropdown-link w-dropdown-link" href="#">&nbsp;&nbsp;&nbsp;&nbsp;Your profile</a><a class="dropdown-link w-dropdown-link" href="#">&nbsp;&nbsp;&nbsp;&nbsp;Settings</a><a class="dropdown-link w-dropdown-link" href="#">&nbsp;&nbsp;&nbsp;&nbsp;Billing Information</a><a class="dropdown-link w-dropdown-link" href="#">&nbsp;&nbsp;&nbsp;&nbsp;Log out</a>
+        <nav class="dropdown-content-wrapper notifications-dropdown-wrapper w-dropdown-list"><a class="dropdown-link header notifications-dropdown-header w-clearfix w-dropdown-link" href="#">Today <span class="unread-notification-count">Unread (3)</span></a>
+          <a class="dashboard-header-notification-wrapper w-inline-block" href="#">
+            <div class="w-row">
+              <div class="w-col w-col-2"><img class="notifier-picture" height="30" src="images/49-1.jpg" width="30">
+              </div>
+              <div class="w-col w-col-8">
+                <div class="notification-text-block notifier"><strong class="notifier-name">James Gordon</strong> sent your a <strong class="notifier-action">message</strong> via messenger</div>
+              </div>
+              <div class="w-col w-col-2">
+                <div class="notification-text-block notifier"><strong class="notifier-time">5m</strong>
+                </div>
+              </div>
+            </div>
+          </a>
+          <a class="dashboard-header-notification-wrapper older w-inline-block" href="#">
+            <div class="w-row">
+              <div class="w-col w-col-2">
+                <div class="no-image-notifier-placeholder">
+                  <div class="customer-initial">M</div>
+                </div>
+              </div>
+              <div class="w-col w-col-8">
+                <div class="notification-text-block notifier"><strong class="notifier-name">Mensah Joseph</strong>&nbsp;sent your a <strong class="notifier-action">Payment </strong>via messenger</div>
+              </div>
+              <div class="w-col w-col-2">
+                <div class="notification-text-block notifier"><strong class="notifier-time">5m</strong>
+                </div>
+              </div>
+            </div>
+          </a>
+          <a class="dashboard-header-notification-wrapper older w-inline-block" href="#">
+            <div class="w-row">
+              <div class="w-col w-col-2"><img class="notifier-picture" height="30" src="images/31.jpg" width="30">
+              </div>
+              <div class="w-col w-col-8">
+                <div class="notification-text-block notifier"><strong class="notifier-name">Francesca Totti</strong>&nbsp;sent your a <strong class="notifier-action">message</strong> via SMS</div>
+              </div>
+              <div class="w-col w-col-2">
+                <div class="notification-text-block notifier"><strong class="notifier-time">5m</strong>
+                </div>
+              </div>
+            </div>
+          </a><a class="dropdown-link header notifications-dropdown-header older w-clearfix w-dropdown-link" href="#">Yesterday <span class="unread-notification-count">Unread (1)</span></a>
+          <a class="dashboard-header-notification-wrapper w-inline-block" href="#">
+            <div class="w-row">
+              <div class="w-col w-col-2"><img class="notifier-picture" height="30" src="images/81.jpg" width="30">
+              </div>
+              <div class="w-col w-col-8">
+                <div class="notification-text-block notifier"><strong class="notifier-name">Brendan Fraser</strong>&nbsp;sent your a <strong class="notifier-action">Payment</strong> via SMS</div>
+              </div>
+              <div class="w-col w-col-2">
+                <div class="notification-text-block notifier"><strong class="notifier-time">1d</strong>
+                </div>
+              </div>
+            </div>
+          </a>
+          <a class="dashboard-header-notification-wrapper older w-inline-block" href="#">
+            <div class="w-row">
+              <div class="w-col w-col-2"><img class="notifier-picture" height="30" src="images/49-1.jpg" width="30">
+              </div>
+              <div class="w-col w-col-8">
+                <div class="notification-text-block notifier"><strong class="notifier-name">James Gordon</strong> sent your a <strong class="notifier-action">message</strong> via messenger</div>
+              </div>
+              <div class="w-col w-col-2">
+                <div class="notification-text-block notifier"><strong class="notifier-time">1d</strong>
+                </div>
+              </div>
+            </div>
+          </a><a class="dropdown-link header notifications-dropdown-header w-clearfix w-dropdown-link" href="#">Earlier <span class="unread-notification-count">Unread (16)</span></a>
+          <a class="dashboard-header-notification-wrapper w-inline-block" href="#">
+            <div class="w-row">
+              <div class="w-col w-col-2"><img class="notifier-picture" height="30" src="images/49-2.jpg" width="30">
+              </div>
+              <div class="w-col w-col-8">
+                <div class="notification-text-block notifier"><strong class="notifier-name">Jacqueline&nbsp;Krantz</strong>&nbsp;sent your a <strong class="notifier-action">message</strong> via SMS</div>
+              </div>
+              <div class="w-col w-col-2">
+                <div class="notification-text-block notifier"><strong class="notifier-time">1w</strong>
+                </div>
+              </div>
+            </div>
+          </a>
+          <a class="dashboard-header-notification-wrapper older w-inline-block" href="#">
+            <div class="w-row">
+              <div class="w-col w-col-2"><img class="notifier-picture" height="30" src="images/37.jpg" width="30">
+              </div>
+              <div class="w-col w-col-8">
+                <div class="notification-text-block notifier"><strong class="notifier-name">Bryanna Choi</strong>&nbsp;sent your a <strong class="notifier-action">message</strong> via messenger</div>
+              </div>
+              <div class="w-col w-col-2">
+                <div class="notification-text-block notifier"><strong class="notifier-time">7w<br></strong>
+                </div>
+              </div>
+            </div>
+          </a>
         </nav>
       </div>
     </div>

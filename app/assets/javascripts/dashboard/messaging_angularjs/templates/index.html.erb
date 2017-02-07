@@ -60,8 +60,11 @@
 
   <div class="text-window-wrapper">
     <div class="w-form">
-        <input class="text-area w-input" id="Message-Window" maxlength="256" name="Message-Window" placeholder="Type a message..." type="text" ng-model="new_message.text" ng-trim="true">
-        <a class="message-window-tabs w-button" ng-click="clickFilePicker()">t</a>
+
+        <!--<input class="text-area w-input" id="Message-Window" maxlength="256" name="Message-Window" placeholder="Type a message..." type="text" ng-model="new_message.text" ng-trim="true">-->
+        <textarea class="message-text-box text-area w-input" id="Messaging-Text-Area" maxlength="5000" name="Messaging-Text-Area" placeholder="Type your message..." ng-model="new_message.text" ng-trim="true"></textarea>
+
+        <a class="message-window-tabs w-button" ng-click="clickFilePicker()"></a>
         <%# added file picker %>
         <input type="file" id="file-picker" ngf-select="handleFile($file, $invalidFiles)" ng-model="pic_file" ngf-accept="'image/*'" ngf-max-size="1MB" class='hide'>
         <a class="message-window-tabs w-button" ></a>
@@ -113,11 +116,12 @@
                 </div>
                 <div class="w-col w-col-3">
                   <div class="messaging-dash-variable-text transactions-div-table">4m</div>
-                  <div class="expand"></div>
+                  <div class="expand refund-slider"></div>
                 </div>
               </div>
             </div>
-            <div class="hidden-refund-options">
+            <%# added id %>
+            <div class="hidden-refund-options hide-not-important" id="refundBox">
               <div class="w-form">
                 <form id="email-form-8" name="email-form-8">
                   <label class="form-label right-nav-form" for="Refund-Amount">Refund Transaction</label>
@@ -133,12 +137,6 @@
                   </select>
                   <input class="button refund w-button" data-wait="Please wait..." type="submit" value="Refund">
                 </form>
-                <div class="w-form-done">
-                  <div>Thank you! Your submission has been received!</div>
-                </div>
-                <div class="w-form-fail">
-                  <div>Oops! Something went wrong while submitting the form</div>
-                </div>
               </div>
             </div>
           </a>
@@ -151,77 +149,7 @@
                 </div>
                 <div class="w-col w-col-3">
                   <div class="messaging-dash-variable-text transactions-div-table">4m</div>
-                  <div class="expand"></div>
-                </div>
-              </div>
-            </div>
-          </a>
-          <a class="transactions-div-wrapper w-inline-block" >
-            <div class="transaction-div" data-ix="display-refund-options">
-              <div class="right-nav-transaction-div-table w-row">
-                <div class="w-col w-col-9">
-                  <div class="right-nav-amount-text">$63.00</div>
-                  <div class="right-nav-amount-desc shrink-text">Chicken Sharwarma</div>
-                </div>
-                <div class="w-col w-col-3">
-                  <div class="messaging-dash-variable-text transactions-div-table">4m</div>
-                  <div class="expand"></div>
-                </div>
-              </div>
-            </div>
-          </a>
-          <a class="transactions-div-wrapper w-inline-block" >
-            <div class="transaction-div" data-ix="display-refund-options">
-              <div class="right-nav-transaction-div-table w-row">
-                <div class="w-col w-col-9">
-                  <div class="right-nav-amount-text">$15.90</div>
-                  <div class="right-nav-amount-desc shrink-text">Chicken Sharwarma</div>
-                </div>
-                <div class="w-col w-col-3">
-                  <div class="messaging-dash-variable-text transactions-div-table">4m</div>
-                  <div class="expand"></div>
-                </div>
-              </div>
-            </div>
-          </a>
-          <a class="transactions-div-wrapper w-inline-block" >
-            <div class="transaction-div" data-ix="display-refund-options">
-              <div class="right-nav-transaction-div-table w-row">
-                <div class="w-col w-col-9">
-                  <div class="right-nav-amount-text">$35.70</div>
-                  <div class="right-nav-amount-desc shrink-text">Chicken Sharwarma</div>
-                </div>
-                <div class="w-col w-col-3">
-                  <div class="messaging-dash-variable-text transactions-div-table">4m</div>
-                  <div class="expand"></div>
-                </div>
-              </div>
-            </div>
-          </a>
-          <a class="transactions-div-wrapper w-inline-block" >
-            <div class="transaction-div" data-ix="display-refund-options">
-              <div class="right-nav-transaction-div-table w-row">
-                <div class="w-col w-col-9">
-                  <div class="right-nav-amount-text">$25.00</div>
-                  <div class="right-nav-amount-desc shrink-text">Chicken Sharwarma</div>
-                </div>
-                <div class="w-col w-col-3">
-                  <div class="messaging-dash-variable-text transactions-div-table">4m</div>
-                  <div class="expand"></div>
-                </div>
-              </div>
-            </div>
-          </a>
-          <a class="transactions-div-wrapper w-inline-block" >
-            <div class="transaction-div" data-ix="display-refund-options">
-              <div class="right-nav-transaction-div-table w-row">
-                <div class="w-col w-col-9">
-                  <div class="right-nav-amount-text">$12.58</div>
-                  <div class="right-nav-amount-desc shrink-text">Chicken Sharwarma</div>
-                </div>
-                <div class="w-col w-col-3">
-                  <div class="messaging-dash-variable-text transactions-div-table">4m</div>
-                  <div class="expand"></div>
+                  <div class="expand refund-slider"></div>
                 </div>
               </div>
             </div>

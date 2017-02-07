@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170204233027) do
+ActiveRecord::Schema.define(version: 20170207164154) do
 
   create_table "addresses", force: :cascade do |t|
     t.string   "street_address",   limit: 191
@@ -37,6 +37,7 @@ ActiveRecord::Schema.define(version: 20170204233027) do
     t.datetime "updated_at",                              null: false
   end
 
+  add_index "alerts", ["user_id"], name: "fk_rails_6637a8d260", using: :btree
   add_index "alerts", ["user_id"], name: "index_alerts_on_user_id", using: :btree
 
   create_table "bank_accounts", force: :cascade do |t|
@@ -266,6 +267,7 @@ ActiveRecord::Schema.define(version: 20170204233027) do
     t.integer  "interval_count", limit: 4
     t.string   "interval",       limit: 191
     t.integer  "tag_type",       limit: 4
+    t.integer  "status",         limit: 4,                             default: 0
     t.boolean  "enable_tweet",   limit: 1
     t.datetime "created_at",                                                           null: false
     t.datetime "updated_at",                                                           null: false
@@ -324,10 +326,10 @@ ActiveRecord::Schema.define(version: 20170204233027) do
     t.integer "merchant_customer_id", limit: 4
   end
 
-  add_index "invoices", ["coupon_id"], name: "fk_rails_3a7441455e", using: :btree
+  add_index "invoices", ["coupon_id"], name: "fk_rails_d904f32fa0", using: :btree
   add_index "invoices", ["stripe_invoice_id"], name: "index_invoices_on_stripe_invoice_id", using: :btree
-  add_index "invoices", ["subscription_id"], name: "fk_rails_b4031d55c5", using: :btree
-  add_index "invoices", ["transaction_id"], name: "fk_rails_eb9f2dc670", using: :btree
+  add_index "invoices", ["subscription_id"], name: "fk_rails_2fe0fa30e5", using: :btree
+  add_index "invoices", ["transaction_id"], name: "fk_rails_ca7e31fd1d", using: :btree
 
   create_table "knowledge_base_categories", force: :cascade do |t|
     t.string   "name",       limit: 191
@@ -594,8 +596,10 @@ ActiveRecord::Schema.define(version: 20170204233027) do
     t.integer  "merchant_customer_id",    limit: 4
   end
 
+  add_index "subscriptions", ["coupon_id"], name: "fk_rails_56c77d859b", using: :btree
   add_index "subscriptions", ["coupon_id"], name: "index_subscriptions_on_coupon_id", using: :btree
   add_index "subscriptions", ["merchant_customer_id"], name: "index_subscriptions_on_merchant_customer_id", using: :btree
+  add_index "subscriptions", ["plan_id"], name: "fk_rails_4506bac28d", using: :btree
   add_index "subscriptions", ["plan_id"], name: "index_subscriptions_on_plan_id", using: :btree
 
   create_table "transactions", force: :cascade do |t|
@@ -627,9 +631,9 @@ ActiveRecord::Schema.define(version: 20170204233027) do
     t.integer  "referenced_merchant_transaction_id", limit: 4
     t.integer  "team_id",                            limit: 4
     t.string   "currency",                           limit: 191
+    t.boolean  "captured",                           limit: 1,                             default: true
     t.integer  "hashtag_id",                         limit: 4
     t.integer  "subscription_id",                    limit: 4
-    t.boolean  "captured",                           limit: 1,                             default: true
     t.integer  "merchant_customer_id",               limit: 4
   end
 
@@ -638,6 +642,7 @@ ActiveRecord::Schema.define(version: 20170204233027) do
   add_index "transactions", ["merchant_customer_id"], name: "index_transactions_on_merchant_customer_id", using: :btree
   add_index "transactions", ["referenced_customer_transaction_id"], name: "index_transactions_on_referenced_customer_transaction_id", using: :btree
   add_index "transactions", ["subscription_id"], name: "index_transactions_on_subscription_id", using: :btree
+  add_index "transactions", ["team_id"], name: "fk_rails_669ffc34df", using: :btree
   add_index "transactions", ["team_id"], name: "index_transactions_on_team_id", using: :btree
   add_index "transactions", ["txn_number"], name: "index_transactions_on_txn_number", using: :btree
   add_index "transactions", ["user_id"], name: "index_transactions_on_user_id", using: :btree
