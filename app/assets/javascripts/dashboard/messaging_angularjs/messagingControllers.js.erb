@@ -10,7 +10,7 @@ var messagingControllers = angular.module('messagingControllers', [
 messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub', 'Upload', '$timeout', '$q', 'conversationService', 'transactionService',
   function($scope, $http, Pubnub, Upload, $timeout, $q, conversationService, transactionService) {
 
-    BindPlugins.now();
+    //BindPlugins.now();
 
     // Messages  // remove
     // conversations
@@ -24,8 +24,8 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
     $scope.selected_conversation_messages = [];
     $scope.current_chat_conversation = false;
 
-    $scope.new_message = {};
-    $scope.new_message.text = "";
+    $scope.new_message = {}; 
+    $scope.new_message.text = "";    
 
     // counters
     $scope.global_unread_count = 0;
@@ -34,9 +34,11 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
     $scope.is_sending = false;
 
     // buttons
-    $scope.send_msg_btn = "SEND";
+    $scope.send_msg_btn = "Reply";
+    $scope.send_msg_fb_btn = "Send via Messenger";
+    $scope.send_mms_btn = "Send";
+    $scope.send_mms_fb_btn = "Send via Messenger";
     $scope.charge_btn = "CHARGE";
-    $scope.send_mms_btn = "SEND MMS";
 
     // Transactions
     $scope.charge_data = { hashtag_id: null };
@@ -293,7 +295,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
             });*/
           }
           $scope.is_sending = false;
-          $scope.send_msg_btn = "SEND";
+          $scope.send_msg_btn = "Reply";
         };
 
 
@@ -339,13 +341,8 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
     };
 
 
-    $scope.messageTrackingFunction = function(message) {
-      return message.msg_type + "-" + message.id.toString();
-    };
-
-    $scope.imageTrackingFunction = function(image) {
-      return 'Image-' + image.ref.toString();
-    };
+    $scope.messageTrackingFunction = function(message) { return message.msg_type + "-" + message.id.toString(); };
+    $scope.imageTrackingFunction = function(image) { return 'Image-' + image.ref.toString(); };
 
 
     $scope.messageInView = function(index) {
@@ -438,13 +435,14 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
     };
 
     $scope.sendConversationMessage = function(new_message, channel) {
-      $scope.is_sending = true;
-      $scope.send_msg_btn = "Sending...";
+      var btn = (channel == 'Message') ? 'send_msg_btn' : 'send_msg_fb_btn';
+      /*$scope.is_sending = true;
+      $scope[btn] = "Sending...";
       console.log(new_message);
 
       if ((new_message == undefined) || (new_message.text == '') || (new_message.text.length > $scope.char_limit)) {
         alert('Maximum ' + $scope.char_limit + ' characters.');
-        $scope.enable_msg_btn();
+        $scope.enable_msg_btn(btn, channel);
       } else {
         var conversation_id = $scope.selected_conversation.id;
         conversationService.markMessageAsRead(conversation_id, new_message.text, channel)
@@ -458,13 +456,13 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
           console.log('unable to send message');
           console.log(data)
         })
-        .finally(function() { $scope.enable_msg_btn(); });
-      };
+        .finally(function() { $scope.enable_msg_btn(btn, channel); });
+      };*/
     };
 
-    $scope.enable_msg_btn = function() {
+    $scope.enable_msg_btn = function(btn, channel) {
       $scope.is_sending = false;
-      $scope.send_msg_btn = "SEND";
+      $scope[btn] = (channel == 'Message') ? 'Send' : 'send with fb';
     };
 
     // MMS
@@ -476,7 +474,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
         if (file.type.match('image')) {
           $scope.selected_file = file;
           // show preview
-          $('#mms-img-preview').lightbox_me({ centered: true })
+          $('#mms-file-preview-div').lightbox_me({ centered: true })
         } else
           console.log('unsupported type');
       } else if (errFiles.length > 0) {
@@ -484,11 +482,11 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
       }
     };
 
-    $scope.cancelMMS = function() { $('#mms-img-preview').trigger('close'); };
 
     $scope.sendMMS = function(channel) {
-      $scope.is_sending = true;
-      $scope.send_mms_btn = "SENDING MMS";
+      var btn = (channel == 'Message') ? 'send_mms_btn' : 'send_mms_fb_btn';
+      /*$scope.is_sending = true;
+      $scope[btn] = "Sending...";
       var file = $scope.selected_file;
       var conversation_id = $scope.selected_conversation.id;
       conversationService.sendConversationMMS(conversation_id, file, $scope.mms_text, channel)
@@ -503,12 +501,13 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
       .finally(function() {
         $('#mms-img-preview').trigger('close');
         $scope.is_sending = false;
-        $scope.send_mms_btn = "SEND MMS";
-      });
-    }
+        $scope[btn] = (channel == 'Message') ? 'Send' : 'send with fb';
+      });*/
+    };
     // End MMS
 
 
+    // Modals
     // Transactions
     $scope.displayChargeForm = function() {
       $('#charge-a-customer-div').lightbox_me({
@@ -535,11 +534,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
       });
     };
 
-    $scope.displayMMSFilePreview = function() {
-      $('#mms-file-preview-div').lightbox_me({
-        centered: true,
-      });
-    };
+    $scope.clickFilePicker = function() { $('#file-picker').click(); };
     
     $scope.newReminderDiv = function() {
       $('#new-reminder-div').lightbox_me({
@@ -547,17 +542,22 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
       });
     };
 
-    $scope.pasteMerchantLink = function() {
-      $scope.new_message.text = ($scope.new_message.text) ? $scope.merchant.short_url : $scope.new_message.text + " " + $scope.merchant.short_url;
-    }
-    
+    // End Modals
 
+    $scope.pasteMerchantLink = function() {
+      var textarea = angular.element(document.getElementById('Message-Window'));      
+      var ngModel = angular.element(textarea).controller('ngModel');
+      var text = ($scope.new_message.text.length) ? $scope.new_message.text + " " + $scope.merchant.short_url : $scope.merchant.short_url;
+      ngModel.$setViewValue(text);
+      ngModel.$render();   
+    };
+    
     $scope.hashtagSelected = function(selected) { $scope.charge_data.hashtag_id = (selected) ? selected.originalObject.id : null; };
     $scope.hashtagsApiErrorHandler = function(selected) { alert('couldnt retrieve your tags'); };
 
     $scope.disableChargeButton = function(chargeForm) {
       return $scope.selected_conversation.id === undefined || chargeForm.$invalid || $scope.is_sending;
-    }
+    };
 
     // function to submit the form after all validation has occurred
     $scope.submitChargeForm = function(isValid) {
@@ -588,9 +588,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
     // End Transactions
 
     // Start new conversation
-    $scope.recipientSelected = function(selected) { 
-      $scope.recipient.id = (selected) ? selected.originalObject.id : null; 
-    };
+    $scope.recipientSelected = function(selected) { $scope.recipient.id = (selected) ? selected.originalObject.id : null; };
     $scope.searchRecipientsApiErrorHandler = function(selected) { alert('couldnt retrieve your customers/contacts'); };
     // End new conversation
 

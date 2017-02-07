@@ -14,25 +14,6 @@
     <div class="conversation-list-menu">
       <div class="w-form">
         <form id="email-form-10" name="email-form-10">
-          <label>
-            <angucomplete-alt id="find-recipient"
-            placeholder="Start new conversation"
-            pause="300"
-            minlength="1"
-            selected-object="recipientSelected"
-            remote-url="<%= (Rails.env == 'development' ? "http://localhost:3000" : "#{Rails.application.secrets.url["info"]}") + "/v1/hashtags?query=" %>"
-            remote-url-data-field="data"
-            title-field="tag"
-            text-no-results='false'
-            match-class='highlight'
-            input-name='recipient'
-            description-field='description'
-            text-searching="Finding your customer/contact..."
-            <%#= add html notification during ui integration %>
-            <%#= scroll bar added but test option during UI integration and testing %>
-            remote-url-error-callback='searchRecipientsApiErrorHandler'
-            />
-          </label>
           <input class="start-conversation-field w-input" id="Start-Conversation-Field" maxlength="256" name="Start-Conversation-Field" placeholder="Start new  conversation" type="text">
         </form>
         <%# removed 2 div from here %>
@@ -76,21 +57,24 @@
     </div>
   </div>
 
+
   <div class="text-window-wrapper">
     <div class="w-form">
         <input class="text-area w-input" id="Message-Window" maxlength="256" name="Message-Window" placeholder="Type a message..." type="text" ng-model="new_message.text" ng-trim="true">
-        <a class="message-window-tabs w-button" ng-click="displayMMSFilePreview()">t</a>
+        <a class="message-window-tabs w-button" ng-click="clickFilePicker()">t</a>
+        <%# added file picker %>
+        <input type="file" id="file-picker" ngf-select="handleFile($file, $invalidFiles)" ng-model="pic_file" ngf-accept="'image/*'" ngf-max-size="1MB" class='hide'>
         <a class="message-window-tabs w-button" ></a>
         <a class="message-window-tabs w-button" ng-click="pasteMerchantLink()"></a>
         <a class="message-window-tabs w-button" ng-click="newReminderDiv()"></a>
         <a class="message-window-tabs w-button" ng-click='addToListDiv()' ></a>
         <a class="message-window-tabs w-button" ng-click='displayChargeForm()'></a>
 
-        <div class="split-button-wrapper"><a class="message-window-tabs send-button split-button w-button">Reply</a>
+        <div class="split-button-wrapper"><a class="message-window-tabs send-button split-button w-button"  ng-click="sendConversationMessage(new_message, 'Message')" ng-disabled='is_sending || selected_conversation.id === undefined'>{{send_msg_btn}}</a>
           <div class="w-dropdown" data-delay="0">
             <div class="split-dropdown w-dropdown-toggle"><span class="font-icon-split"></span>
             </div>
-            <nav class="dropdown-options-wrapper split-button w-dropdown-list"><a class="dropdown-link split-button w-dropdown-link" > &nbsp; &nbsp;Send via Messenger</a>
+            <nav class="dropdown-options-wrapper split-button w-dropdown-list"><a class="dropdown-link split-button w-dropdown-link" ng-click="sendConversationMessage(new_message, 'FbMessage')" ng-disabled='is_sending || selected_conversation.id === undefined'> &nbsp; &nbsp;{{send_msg_fb_btn}}</a>
             </nav>
           </div>
           <%# added id %>
@@ -353,3 +337,222 @@
   </div>
   
   <!-- [if lte IE 9]><script src="https://cdnjs.cloudflare.com/ajax/libs/placeholders/3.0.2/placeholders.min.js"></script><![endif] -->
+    
+    <div class="modal-body w-hidden" id='saved-reply-selection-div'>
+      <%# removed all webflow data attributes %>
+
+      <div class="saved-reply-selection-wrapper w-clearfix">
+        <div class="content-sub-wrapper modal w-clearfix">
+          <h4 class="modal-header welcome-dash-content-container-header">Select Saved Reply</h4>
+        </div>
+        <p class="modal-content-description">Saved replies help your team speed up response time to frequently asked questions. Select your saved replies from the drop-down, then personalize and hit send.</p>
+        <div class="segment-modal underline-div"></div>
+        <div class="saved-reply-select-form w-form">
+          <form id="email-form-3" name="email-form-3">
+            <select class="dropdown w-select" id="field-2" name="field-2">
+              <option value="">Select saved reply</option>
+              <option value="">Business Hours: Monday - Friday</option>
+              <option value="">Order Cancellation</option>
+              <option value="">Returns</option>
+              <option value="">International Shipping</option>
+            </select>
+            <textarea class="text-area view-saved-reply w-input" id="Saved-Reply-Content-2" maxlength="5000" name="Saved-Reply-Content-2" placeholder="Edit saved reply"></textarea>
+          </form>
+        </div><a class="button send-saved-reply w-button">Send Reply</a>
+        <%# added update-close-modals and data %>
+        <a class="button cancel-saved-reply w-button update-close-modals" data-parent='saved-reply-selection-div'>Cancel</a>
+      </div>
+
+    </div>
+
+    
+    <div class="modal-body w-hidden" id='charge-a-customer-div'>
+      <%# removed all webflow data attributes %>
+      <div class="charge-customer-form-wrapper">
+        <div class="content-sub-wrapper modal w-clearfix">
+          <h4 class="modal-header welcome-dash-content-container-header">Charge customer</h4>
+          <%# added update-close-modals and data %>
+          <a class="close-modal update-close-modals" data-parent='charge-a-customer-div'></a>
+        </div>
+        <div class="charge-customer-form w-form">
+             <label>
+                <angucomplete-alt id="find-hashtag"
+                placeholder="Hashtag or item name"
+                pause="300"
+                minlength="1"
+                selected-object="hashtagSelected"
+                remote-url="<%= (Rails.env == 'development' ? "http://localhost:3000" : "#{Rails.application.secrets.url["info"]}") + "/v1/hashtags?query=" %>"
+                remote-url-data-field="hashtags"
+                title-field="tag"
+                text-no-results='false'
+                match-class='highlight'
+                input-name='hashtag'
+                description-field='description'
+                text-searching="Finding your tag/item..."
+                <%#= add html notification during ui integration %>
+                <%#= scroll bar added but test option during UI integration and testing %>
+                remote-url-error-callback='hashtagsApiErrorHandler'
+                />
+              </label>
+
+          <form id="chargeForm" name="email-form-4">
+            <input class="customer-name-or-number text-field w-input" id="Name-or-Number-2" maxlength="256" name="Name-or-Number-2" placeholder="Enter customer&#39;s name or phone number" type="text">
+            <input class="item-name text-field w-input" id="Item-name-4" maxlength="256" name="Item-name-4" placeholder="Item name" required="required" type="email">
+            <input class="amount-field text-field w-input"  id="Amount-4" maxlength="256" name="Amount-4" placeholder="Amount" required="required" type="email">
+            <textarea class="item-description text-area w-input" id="Item-Description-4" maxlength="5000" name="Item-Description-4" placeholder="Item Description"></textarea>
+            <div class="form-check-box w-checkbox">
+              <input class="w-checkbox-input" id="checkbox-4" name="checkbox-4" type="checkbox">
+              <label class="w-form-label" for="checkbox-4">Authorize only</label>
+            </div><a class="button charge-modal-button w-button">Charge Customer</a>
+          </form>
+        </div>
+        <p class="charge-tips modal-paragraph tips"> &nbsp;TIP: You can use Hashtags to create an item list in Relay. Hashtags allow your customers text an item name to place an order</p>
+      </div>
+    </div>
+    
+    <div class="modal-body w-hidden" id='add-to-list-div'>
+      <%# removed all webflow data attributes %>
+      <div class="add-to-list-form-wrapper">
+        <div class="content-sub-wrapper modal w-clearfix">
+          <h4 class="modal-header welcome-dash-content-container-header">Add to list</h4>
+          <%# added data and update-close-modals %>
+          <a class="close-refund-modal update-close-modals" data-parent='add-to-list-div'></a>
+        </div>
+        <div class="add-to-list-modal-form w-form">
+          <form class="w-clearfix" id="email-form-5" name="email-form-5">
+            <select class="dropdown w-select" id="Add-to-list-dropdown-2" name="Add-to-list-dropdown-2" required="required">
+              <option value="">Select a list</option>
+              <option value="">VIP List</option>
+              <option value="">First time customers</option>
+              <option value="">San Francisco customers</option>
+              <option value="">San Mateo customers</option>
+            </select><a class="add-to-list-modal-button button w-button" href="#">Add customer to List</a>
+          </form>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="modal-body w-hidden" id='mark-as-done-div'>
+      <%# removed all webflow data attributes %>
+
+      <div class="mark-as-done-form-wrapper">
+        <p class="modal-content-description">Label conversations before you close it, so your entire team can stay informed on why a customer or lead reached out.</p>
+        <div class="segment-modal underline-div"></div>
+        <div class="mark-as-done-form w-form">
+          <form class="w-clearfix" id="email-form-6" name="email-form-6">
+            <select class="dropdown message-reason w-select" id="Message-Reason-2" name="Message-Reason-2" required="required">
+              <option value="">Select message reason</option>
+              <option value="">Account reactivation</option>
+              <option value="">Account deactivation</option>
+              <option value="">Apply coupon/promo code</option>
+              <option value="">Appointment scheduled</option>
+              <option value="">Appointment cancelled </option>
+              <option value="">Billing or payment question</option>
+              <option value="">Complaint</option>
+              <option value="">Change delivery address</option>
+              <option value="">Delivery status</option>
+              <option value="">Defective product</option>
+              <option value="">Defective feature</option>
+              <option value="">Late order arrival</option>
+              <option value="">Missing item</option>
+              <option value="">New order</option>
+              <option value="">Order cancellation</option>
+              <option value="">Order not delivered</option>
+              <option value="">Product or service question</option>
+              <option value="">Product or service feedback</option>
+              <option value="">Refund request</option>
+              <option value="">Refund status</option>
+              <option value="">Resend receipt</option>
+              <option value="">Returns</option>
+              <option value="">Spam</option>
+              <option value="">Subscription cancellation</option>
+              <option value="">Subscription reactivation</option>
+              <option value="">Update account information</option>
+              <option value="">Update order</option>
+              <option value="">Wrong item</option>
+            </select>
+            <textarea class="mark-done text-area w-input" id="field-4" maxlength="5000" name="field-4" placeholder="Add notes"></textarea><a class="button mark-as-done-modal-button w-button">Mark conversation as done</a>
+            <%# added update-close-modals and data %>
+            <a class="button cancel-mark-as-done w-button update-close-modals" data-parent='mark-as-done-div'>Cancel</a>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-body w-hidden" id='new-reminder-div'>
+      <%# removed all webflow data attributes %>
+
+      <div class="schedule-notification-form-wrapper">
+        <div class="content-sub-wrapper modal w-clearfix">
+          <h4 class="modal-header welcome-dash-content-container-header">Customer Notification</h4>
+        </div>
+        <p class="modal-content-description">Set a reminder or notification that will go out to this customer at a future date. You can use this to automate appointment reminders, or bill payment reminders.</p>
+        <div class="segment-modal underline-div"></div>
+        <div class="scheduled-notification-form w-form">
+          <form class="w-clearfix" id="email-form-7" name="email-form-7">
+            <select class="dropdown w-select" id="Notification-Channel-2" name="Notification-Channel-2" required="required">
+              <option value="">Select channel</option>
+              <option value="">SMS</option>
+              <option value="">Facebook Messenger</option>
+            </select>
+            <textarea class="notification-message text-area w-input" id="Notification-Message-2" maxlength="5000" name="Notification-Message-2" placeholder="Enter notification message" required="required"></textarea>
+            <div class="char-count notications">150 characters</div>
+            <input class="delivery-date-time-picker text-field w-input" id="Delivery-Date-Time-2" maxlength="256" name="Delivery-Date-Time-2" placeholder="Notification Delivery Date &amp; Time" required="required" type="email">
+            <div class="notification-frequency radio-button w-radio">
+              <input class="w-radio-input" id="Notification Frequency" name="Notification-Frequency" required="required" type="radio" value="Notification Frequency">
+              <label class="w-form-label" for="Notification Frequency">Send once</label>
+            </div>
+            <div class="notification-frequency radio-button repeat w-radio">
+              <input class="w-radio-input" id="Notification Frequency-2" name="Notification-Frequency" required="required" type="radio" value="Notification Frequency">
+              <label class="w-form-label" for="Notification Frequency-2">Repeat</label>
+            </div>
+            <select class="dropdown frequency-dropdown w-select" id="field-5" name="field-5">
+              <option value="">Repeat every</option>
+              <option value="">3 days</option>
+              <option value="">7 days</option>
+              <option value="">14 days</option>
+              <option value="">30 days</option>
+              <option value="">60 days </option>
+              <option value="">90 days</option>
+            </select><a class="button schedule-notification w-button">Schedule notification for [Customer name]</a>
+            <%# added data and update-close-modals %>
+            <a class="button cancel-notification w-button update-close-modals" data-parent='new-reminder-div'>Cancel</a>
+          </form>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="modal-body w-hidden" id='mms-file-preview-div'>
+      <%# removed all webflow data attributes %>
+      <div class="mms-file-preview-wrapper">
+        <div class="content-sub-wrapper modal w-clearfix">
+          <h4 class="modal-header welcome-dash-content-container-header">Send file</h4>
+        </div>
+        <div class="file-name image-preview">{{selected_file.name}}</div>
+        <div class="image-preview-wrapper"><img class="image-file-preview" ngf-thumbnail="pic_file" src='<%= asset_path "Relay-Image-Placeholder.png" %>' width="254">
+        </div>
+        <div class="w-form">
+          <form class="w-clearfix" id="email-form-9" name="email-form-9">
+            <textarea class="file-description text-area w-input" id="File-Description-2" maxlength="5000" name="File-Description-2" placeholder="Add description (optional)" ng-model="mms_text" ng-trim="true"></textarea>
+            <div class="file-sender split-button-wrapper">
+              
+              <a class="message-window-tabs send-button split-button w-button" ng-click="sendMMS('Message')" ng-disabled='is_sending || selected_conversation.id === undefined'>{{send_mms_btn}}</a>
+              
+              <div class="w-dropdown">
+                <div class="split-dropdown w-dropdown-toggle"><span class="font-icon-split"></span>
+                </div>
+                <nav class="dropdown-options-wrapper split-button w-dropdown-list">
+                  <a class="dropdown-link split-button w-dropdown-link" ng-click="sendMMS('FbMessage')" ng-disabled='is_sending || selected_conversation.id === undefined'> &nbsp; &nbsp;{{send_mms_fb_btn}}</a>
+                </nav>
+              </div>
+
+            </div>
+            <%# added update-close-modals and data %>
+            <a class="button cancel-send w-button update-close-modals" data-parent='mms-file-preview-div'>Cancel</a>
+          </form>
+        </div>
+      </div>
+    </div>
+

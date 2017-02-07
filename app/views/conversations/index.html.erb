@@ -1,23 +1,5 @@
 <%= provide(:title, "Rhombus - Conversations") %>
 <div ng-app="PubNubAngularMessagingApp">
 	<%= render 'shared/messaging_header' %>
-  <div class="modal-body w-hidden" id='saved-reply-selection-div'>
-    <%= render partial: 'shared/modals/save_reply_selection' %>
-  </div>
-  <div class="modal-body w-hidden" id='charge-a-customer-div'>
-    <%= render partial: 'shared/modals/charge_customer' %>
-  </div>
-  <div class="modal-body w-hidden" id='add-to-list-div'>
-    <%= render partial: 'shared/modals/add_to_list' %>
-  </div>
-  <div class="modal-body w-hidden" id='mark-as-done-div'>
-    <%= render partial: 'shared/modals/mark_as_done' %>
-  </div>
-  <div class="modal-body w-hidden" id='new-reminder-div'>
-    <%= render partial: 'shared/modals/new_reminder' %>
-  </div>
-  <div class="modal-body w-hidden" id='mms-file-preview-div'>
-    <%= render partial: 'shared/modals/mms_file_preview' %>
-  </div>
-	<div ng-view></div>  
+  <div ng-view></div>  
 </div>

@@ -7,26 +7,6 @@
     <a class="close-modal update-close-modals" data-parent='charge-a-customer-div'></a>
   </div>
   <div class="charge-customer-form w-form">
-       <label>
-          <angucomplete-alt id="find-hashtag"
-          placeholder="Hashtag or item name"
-          pause="300"
-          minlength="1"
-          selected-object="hashtagSelected"
-          remote-url="<%= (Rails.env == 'development' ? "http://localhost:3000" : "#{Rails.application.secrets.url["info"]}") + "/v1/hashtags?query=" %>"
-          remote-url-data-field="hashtags"
-          title-field="tag"
-          text-no-results='false'
-          match-class='highlight'
-          input-name='hashtag'
-          description-field='description'
-          text-searching="Finding your tag/item..."
-          <%#= add html notification during ui integration %>
-          <%#= scroll bar added but test option during UI integration and testing %>
-          remote-url-error-callback='hashtagsApiErrorHandler'
-          />
-        </label>
-
     <form id="chargeForm" name="email-form-4">
       <input class="customer-name-or-number text-field w-input" id="Name-or-Number-2" maxlength="256" name="Name-or-Number-2" placeholder="Enter customer&#39;s name or phone number" type="text">
       <input class="item-name text-field w-input" id="Item-name-4" maxlength="256" name="Item-name-4" placeholder="Item name" required="required" type="email">
