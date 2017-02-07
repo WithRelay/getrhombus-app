@@ -1,30 +1,32 @@
-<div class="container">
-  <div class="row">
-    <div class="col-sm-6 col-md-4 col-md-offset-4">
-      <h1 class="text-center login-title">Sign in to Rhombus </h1>
-      <div class="account-wall">
-        <img class="profile-img" src="https://www.getrhombus.com/assets/imgo-252069578bf9441f8f0cf59bc8660170.jpg"
-          alt="">
-        <%= form_tag redirect_path(redirect_uri: @params['redirect_uri'], account_linking_token: @params['account_linking_token']), :method => :post, id: 'user_login_form', class: 'form-signin' do %>
-        <p class = 'group'>
-          <%= label_tag :email, 'Email' %><br />
-          <%= text_field_tag :email, params[:email], type:'email', class: 'form-control' %>
-        </p>
-        <p class = 'group'>
-          <%= label_tag :password %><br />
-          <%= password_field_tag :password, params[:password], type: 'password', class: 'form-control' %>
-        </p>
-        <p class="group">
-          <%= button_tag 'Log In', class: 'btn btn-primary btn-block' %>
-          </p>
-        <% end %>
+<div class="blank-page-content-wrapper loading reset-password">
+  <div class="onboarding-form-div sign-in">
+    <a class="form-logo w-inline-block" href="#"><img src="assets/Relay-Transparent-500x300.png" width="50">
+    </a>
+    <div class="log-in-form w-form">
+      <%= form_tag redirect_path(redirect_uri: @params['redirect_uri'], account_linking_token: @params['account_linking_token']), :method => :post, id: '', class: 'w-clearfix' do %>
+        <%= email_field_tag :email, params[:email], type:'email', class: 'email-address text-field w-input', placeholder: 'Email address' %>
+        <%= password_field_tag :password, params[:password], type: 'password', class: 'login password text-field w-input', placeholder: 'Password' %>
+        <%= submit_tag 'Log In', class: 'button log-in w-button' %>
+      <% end %>
+    </div>
+    <div class="login-form-row w-row">
+      <div class="log-in-form-row-column-1 w-col w-col-6">
+        <div class="w-form">
+          <form data-name="Email Form 2" id="email-form-2" name="email-form-2">
+            <div class="footer-cta form-check-box login-form w-checkbox">
+              <input class="w-checkbox-input" data-name="Checkbox 4" id="checkbox-4" name="checkbox-4" type="checkbox">
+              <label class="w-form-label" for="checkbox-4">Remember me</label>
+            </div>
+          </form>
+        </div>
       </div>
-      <br>
-      <div class="pull-right">
-        <%= link_to signup_path(referrer_uid: 1, value: @params), id: 'signup', target: '_blank', onClick: 'javascript:window.close()' do%>
-          <i class='fa fa-sign-in' aria-hidden='true'>Sign Up</i>
-        <%end%>
+      <div class="log-in-form-row-column-2 w-clearfix w-col w-col-6"><a class="links login-form-password-reset" href="#">Forgot your password?</a>
       </div>
     </div>
+  </div>
+  <div class="log-in-sign-up-cta">Don't have a Rhombus account? 
+    <%= link_to signup_path(referrer_uid: 1, value: @params), id: 'signup', class: 'links sign-up-cta-log-in-page', target: '_blank', onClick: 'javascript:window.close()' do%>
+      Sign up
+    <%end%>
   </div>
 </div>
