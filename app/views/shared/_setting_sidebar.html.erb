@@ -1,46 +1,61 @@
+<div class="settings sub-nav-bar w-clearfix">
+  <a class="dashboard-return sub-nav-button w-button" href="#"> &nbsp;<strong>Return to dashboard</strong></a>
+</div>
+
 <div class="side-bar">
   <div class="dashboard-nav-links">All Customers</div>
   <h5 class="left-nav signup-box-subheading">account info</h5>
+
   <%= link_to account_setting_path, class: 'left-nav-tab-wrapper w-inline-block' do %>
     <div class="left-nav-tab" data-ix="display-and-hide-customers">&nbsp; &nbsp; Account</div>
   <% end %>
-  <%= link_to notifications_user_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
-    <div class="left-nav-tab"> &nbsp; Notifications</div>
-  <% end %>
+
   <a class="left-nav-tab-wrapper w-inline-block" href="#">
     <div class="left-nav-tab"> &nbsp; Business</div>
   </a>
-  <%= link_to user_plans_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
-    <div class="left-nav-tab"> &nbsp; Manage plans</div>
+
+  <%= link_to notifications_user_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
+    <div class="left-nav-tab"> &nbsp; Notifications</div>
   <% end %>
-  <%= link_to segments_user_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
-    <div class="left-nav-tab"> &nbsp; Manage segments</div>
-  <% end %>
-  <%= link_to user_fb_pages_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
-    <div class="left-nav-tab">&nbsp; &nbsp;Integration</div>
-  <% end %>
-  <%= link_to billing_information_path, class: 'left-nav-tab-wrapper w-inline-block' do %>
-    <div class="left-nav-tab"> &nbsp; Billing Information</div>
-  <% end %>
+
   <a class="left-nav-tab-wrapper w-inline-block" href="#">
-    <div class="left-nav-tab"></div>
+    <div class="left-nav-tab"> &nbsp; Manage plans</div>
   </a>
+
+  <a class="left-nav-tab-wrapper w-inline-block" href="#">
+    <div class="left-nav-tab"> &nbsp; Manage segments</div>
+  </a>
+
+  <a class="left-nav-tab-wrapper w-inline-block" href="#">
+    <div class="left-nav-tab"> &nbsp; Integrations</div>
+  </a>
+
+  <a class="left-nav-tab-wrapper w-inline-block" href="#">
+    <div class="left-nav-tab"> &nbsp; Billing Information</div>
+  </a>
+
   <%= link_to managed_accounts_user_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
     <div class="left-nav-tab"> &nbsp; Bank account</div>
   <% end %>
   <%= link_to sms_usage_user_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
     <div class="left-nav-tab"> &nbsp; SMS usage</div>
   <% end %>
+
   <a class="left-nav-tab-wrapper w-inline-block" href="#">
     <div class="left-nav-tab"> &nbsp; Free subscriptions</div>
   </a>
   <h5 class="left-nav rhom-number signup-box-subheading">RHOMBUS NUMBER</h5>
+
   <div class="left-nav-underline"></div>
+
   <a class="left-nav-tab-wrapper w-inline-block" href="#">
     <div class="left-nav-tab"> &nbsp; + <redacted_phone_number></div>
   </a>
+
   <h5 class="left-nav rhom-number signup-box-subheading">OTHER</h5>
+
   <div class="left-nav-underline"></div>
+
   <a class="left-nav-tab-wrapper w-inline-block" href="#">
     <div class="left-nav-tab">&nbsp; &nbsp;Help</div>
   </a>
