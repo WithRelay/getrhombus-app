@@ -107,31 +107,38 @@ var FlashHandler = new function() {
   }
 
   // Confirmation Dialog for event
-  var stack = {'dir1': 'down', 'dir2': 'right', 'modal': true};
-  this.setConfirmationDialog = function (selector, title, confirmText, isConfirm){
-    (new PNotify({
-      title: title,
-      text: confirmText,
-      icon: 'glyphicon glyphicon-question-sign',
-      hide: false,
-      confirm: {
-        confirm: true
-      },
-      buttons: {
-        closer: false,
-        sticker: false
-      },
-      history: {
-        history: false
-      },
-      addclass: 'stack-modal',
-      stack: stack
-    })).get().on('pnotify.confirm', function() {
-      $(selector).attr(isConfirm, true);
-      $(selector)[0].click();
-    }).on('pnotify.cancel', function() {
-      return false;
-    });
+  // var stack = {'dir1': 'down', 'dir2': 'right', 'modal': true};
+  this.setConfirmationDialog = function (selector, confirmText, confirmDialog, isConfirm){
+    // (new PNotify({
+    //   title: title,
+    //   text: confirmText,
+    //   icon: 'glyphicon glyphicon-question-sign',
+    //   hide: false,
+    //   confirm: {
+    //     confirm: true
+    //   },
+    //   buttons: {
+    //     closer: false,
+    //     sticker: false
+    //   },
+    //   history: {
+    //     history: false
+    //   },
+    //   addclass: 'stack-modal',
+    //   stack: stack
+    // })).get().on('pnotify.confirm', function() {
+    //   $(selector).attr(isConfirm, true);
+    //   $(selector)[0].click();
+    // }).on('pnotify.cancel', function() {
+    //   return false;
+    // });
+
+    $('body').append('<div class="cancel-subscription-wrapper w-clearfix">\
+      <p class="cancel-subscription modal-content-description">'+confirmText+'</p>\
+      <div class="modal-underline underline-div"></div>\
+      <a class="button cancel-yes w-button" href="#">'+confirmDialog+'</a>\
+      <a class="button cancel-no w-button" data-ix="close-cancel-subscription" href="#">Cancel</a>\
+    </div>')
   };
 
   // when multiple flash message are present it converts it to multiline flash message
