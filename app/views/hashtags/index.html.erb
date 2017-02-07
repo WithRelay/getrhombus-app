@@ -1,64 +1,57 @@
 <%= provide(:title, "Rhombus - Hashtags") %>
-
-<div class="customer-dash sub-nav-bar">
-  <div class="sub-nav-options-wrapper w-clearfix">
-    <%= link_to 'Create Hashtag', new_user_hashtag_path, data: { ix: "create-customer" }, id: 'create-hashtag', class: "add sub-nav-button w-button hashtagBtns" %>
-    <a class="import sub-nav-button w-button" data-ix="import-customers" href="#">&nbsp; Deactivate</a>
-    <a class="sub-nav-button w-button" data-ix="create-list" href="#"> &nbsp;Resend</a>
-    <a class="sub-nav-button w-button" data-ix="create-list" href="#"> &nbsp;Delete</a>
-  </div>
-</div>
-<div class="dashboard-body">
-
-  <% unless @hashtags.blank? %>
-  <div class="sub-nav-bar table-header">
+<div class="sub-nav-bar table-header">
+  <div class="table-header">
     <div class="table-header">
-      <div class="table-header">
-        <div class="header new-table-row w-row">
-          <div class="cn w-clearfix w-col w-col-3">
-            <div class="header name w-clearfix">
-              <div class="headings name"> &nbsp; Tag name</div>
-            </div>
-            <div class="cb check-box-column header"></div>
+      <div class="header new-table-row w-row">
+        <div class="cn w-clearfix w-col w-col-3">
+          <div class="header name w-clearfix">
+            <div class="headings name"> &nbsp; Tag name</div>
           </div>
-          <div class="fv w-clearfix w-col w-col-2">
-            <div class="cn column column-2 header">
-              <div class="first-visit headings">&nbsp; &nbsp;&nbsp;Created by</div>
-            </div>
+          <div class="cb check-box-column header"></div>
+        </div>
+        <div class="fv w-clearfix w-col w-col-2">
+          <div class="cn column column-2 header">
+            <div class="first-visit headings">&nbsp; &nbsp;&nbsp;Created by</div>
           </div>
-          <div class="lv w-clearfix w-col w-col-2">
-            <div class="colum-3 column header lv">
-              <div class="headings last-visit"> &nbsp;&nbsp;&nbsp;Date created</div>
-            </div>
+        </div>
+        <div class="lv w-clearfix w-col w-col-2">
+          <div class="colum-3 column header lv">
+            <div class="headings last-visit"> &nbsp;&nbsp;&nbsp;Date created</div>
           </div>
-          <div class="avs w-clearfix w-col w-col-1">
-            <div class="avs column column-4 header">
-              <div class="avs headings last-visit"> &nbsp;&nbsp;&nbsp;Type</div>
-            </div>
+        </div>
+        <div class="avs w-clearfix w-col w-col-1">
+          <div class="avs column column-4 header">
+            <div class="avs headings last-visit"> &nbsp;&nbsp;&nbsp;Type</div>
           </div>
-          <div class="ts w-clearfix w-col w-col-1">
-            <div class="column column-5 header ts"></div>
+        </div>
+        <div class="ts w-clearfix w-col w-col-1">
+          <div class="column column-5 header ts"></div>
+        </div>
+        <div class="table-actions w-clearfix w-col w-col-3">
+          <div class="column column-6 header new-row">
+            <div class="headings recipient">@ &nbsp; Mentions</div>
           </div>
-          <div class="table-actions w-clearfix w-col w-col-3">
-            <div class="column column-6 header new-row">
-              <div class="headings recipient">@ &nbsp; Mentions</div>
-            </div>
-            <div class="column column-6 header new-row w-clearfix">
-              <div class="headings location name">&nbsp; &nbsp;&nbsp;&nbsp;Total amount</div>
-            </div>
+          <div class="column column-6 header new-row w-clearfix">
+            <div class="headings location name">&nbsp; &nbsp;&nbsp;&nbsp;Total amount</div>
           </div>
         </div>
       </div>
     </div>
   </div>
+</div>
+<div class="customer-dash sub-nav-bar">
+  <div class="sub-nav-options-wrapper w-clearfix"><a class="add sub-nav-button w-button" data-ix="create-customer" href="#"> &nbsp;<strong>New hashtag</strong></a><a class="import sub-nav-button w-button" data-ix="import-customers" href="#">&nbsp; <strong>Deactivate</strong></a><a class="sub-nav-button w-button" data-ix="create-list" href="#"> &nbsp;<strong>Delete</strong></a>
+  </div>
+</div>
+<div class="dashboard-body">
   <% @hashtags.each do |h| %>
   <div class="row-wrapper">
     <div class="alt-table-row w-row">
       <div class="alt-column w-clearfix w-col w-col-3">
         <div class="title-column-div w-clearfix">
-          <div class="table-text">#CheezeIt</div>
+          <div class="shrink-text table-text">#CheezeIt</div>
         </div>
-        <div class="cb check-box-column">
+        <div class="alt-table cb check-box-column">
           <div class="w-form">
             <form data-name="Email Form 2" id="email-form-2" name="email-form-2">
               <div class="select-all-check-box w-checkbox w-clearfix">
@@ -76,9 +69,8 @@
         </div>
       </div>
       <div class="alt-column w-col w-col-2">
-        <div class="alt-table-column-div w-clearfix">
-          <img class="campaigns table-profile-picture" src="images/37.jpg" width="24">
-          <div class="table-text">Morgan Richards</div>
+        <div class="alt-table-column-div w-clearfix"><img class="campaigns table-profile-picture" src="images/37.jpg" width="24">
+          <div class="shrink-text table-text">Morgan Richards</div>
         </div>
       </div>
       <div class="alt-column w-col w-col-2">
@@ -103,10 +95,5 @@
       </div>
     </div>
   </div>
-  <% end %>
-  <% else %>
-    <div class="center">
-      <div class="no-user">You have no hashtags :(</div>
-    </div>
   <% end %>
 </div>
