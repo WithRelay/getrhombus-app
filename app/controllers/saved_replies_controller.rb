@@ -1,4 +1,4 @@
-class SavedRepliesController < ApplicationController
+  class SavedRepliesController < ApplicationController
   before_action :set_saved_reply, only: [:update, :destroy]
 
   def new

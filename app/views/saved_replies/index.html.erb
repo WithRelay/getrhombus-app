@@ -11,17 +11,19 @@
             <h4 class="welcome-dash-content-container-header">Saved Replies</h4>
           </div>
           <% @saved_replies.each do |reply| %>
+
             <div class="new-table-row saved-replies w-row">
 
               <div class="cn w-clearfix w-col w-col-4">
-                <%= link_to class: 'name w-clearfix' do %>
-                    <div class="shrink-text table-text"><%= reply.title %></div>
-                <% end %>
+                <%= button_to reply.title, v1_saved_replies_edit_path, form: { id: 'saved-reply-form', class: 'w-hidden' } %>
+
+                <div class="saved-reply-title" id="saved-reply-edit-<%= reply.id %>"><%= reply.title%></div>
+            
                 <div class="cb check-box-column"></div>
               </div>
               <div class="fv w-clearfix w-col w-col-4">
                 <div class="cn column column-2 w-clearfix">
-                  <div class="shrink-text table-text">Order Cancellation Policy</div>
+                  <div class="shrink-text table-text"><%= reply.body %></div>
                 </div>
               </div>
               <div class="lv w-clearfix w-col w-col-4">
@@ -47,7 +49,7 @@
             <div class="w-form-fail">
               <div>Oops! Something went wrong while submitting the form</div>
             </div>
-          </div><a class="button save-reply-button w-button" href="#">Save</a><a class="button cancel-save-reply w-button" href="#">Cancel</a><a class="button delete-saved-reply w-button" href="#">Delete</a>
+          </div>
         </div>
       </div>
     </div>
