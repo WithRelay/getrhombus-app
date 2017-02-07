@@ -9,7 +9,7 @@
         </div>
         <div class="dash-header-links new-link"> &nbsp;<strong>All &nbsp;customers</strong>
         </div>
-        <div class="dash-header-links new-link"> &nbsp;<strong>New &nbsp;customers</strong>
+        <div class="dash-header-links new-link modal-loader"> &nbsp;<strong>New &nbsp;customers</strong>
         </div>
         <div class="dash-header-links new-link relay-nav-number-display">+ 1 <redacted_phone_number></div>
       </a>
@@ -20,7 +20,8 @@
           <div class="dropdown-wrapper-text"><strong class="settings-header-tab-text">Settings &nbsp;&nbsp;</strong>
           </div>
         </div>
-        <nav class="dropdown-content-wrapper w-dropdown-list"><a class="dropdown-link header w-dropdown-link" href="#">Rebecca Caldwell</a><a class="content-link dropdown-link w-dropdown-link" href="#"><span class="business-name-settings-dropdown">Joan's Coffee</span><br><span class="account-owner-email-settings-dropdown"><redacted_email></span></a><a class="dropdown-link w-dropdown-link" href="#">Settings</a><a class="dropdown-link w-dropdown-link" href="#">Billing Information</a><a class="dropdown-link sign-out w-dropdown-link" href="#">Sign out</a>
+        <nav class="dropdown-content-wrapper w-dropdown-list"><a class="dropdown-link header w-dropdown-link" href="#">Rebecca Caldwell</a><a class="content-link dropdown-link w-dropdown-link" href="#"><span class="business-name-settings-dropdown">Joan's Coffee</span><br><span class="account-owner-email-settings-dropdown"><redacted_email></span></a><a class="dropdown-link w-dropdown-link" href="#">Settings</a><a class="dropdown-link w-dropdown-link" href="#">Billing Information</a>
+          <%= link_to 'Sign out', destroy_user_session_path, class: 'dropdown-link sign-out w-dropdown-link', method: :delete %>
         </nav>
       </div>
     </div>
@@ -133,4 +134,7 @@
         </nav>
       </div>
     </div>
+  </div>
+  <div class="modal-body w-hidden">
+    <%= render 'shared/modals/create_customer'%>
   </div>
