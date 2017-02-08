@@ -12,7 +12,7 @@ $( document ).ready(function() {
     if (($(this).val() === 'Subscribe') && (!$(this).attr('subscribed_page'))) {
       if (!$(this).attr('canSubscribe')) {
         FlashHandler.setConfirmationDialog('#select_page',
-          'Existing conversations linked to your previous Facebook page will stop being synced to your business app integrations. Continue?', 'Subscribe', 'canSubscribe' );
+          'Conversations linked to your Facebook page being synced to your business app integrations. Continue?', 'Subscribe', 'canSubscribe' );
         return false;
       }
 
