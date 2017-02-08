@@ -3527,9 +3527,9 @@ h4 {
   right: 0px;
   bottom: 0px;
   z-index: 2;
-  overflow: scroll;
-  width: 21%;
-  min-width: 21%;
+  overflow: auto;
+  width: 23%;
+  min-width: 23%;
   padding-bottom: 100px;
   border-bottom-color: rgba(141, 162, 183, .28);
   border-left-style: solid;
@@ -3555,9 +3555,9 @@ h4 {
   left: 0%;
   top: 50px;
   z-index: 2;
-  overflow: scroll;
-  width: 24%;
-  min-width: 24%;
+  overflow: auto;
+  width: 23%;
+  min-width: 23%;
   padding-bottom: 100px;
   border-right-color: rgba(141, 162, 183, .28);
   background-color: #fff;
@@ -3575,7 +3575,7 @@ h4 {
 }
 
 .side-bar.customer-dashboard {
-  overflow: scroll;
+  overflow: auto;
   padding-bottom: 50px;
 }
 
@@ -3706,12 +3706,12 @@ h4 {
 
 .dashboard-body.messaging {
   top: 100px;
-  right: 21%;
-  overflow: scroll;
+  right: 23%;
+  overflow: auto;
   width: 54%;
-  height: auto;
-  min-height: 100vh;
-  min-width: 55%;
+  height: 100vh;
+  min-height: auto;
+  min-width: 54%;
   padding-bottom: 130px;
   background-color: #f8fafc;
 }
@@ -3859,7 +3859,7 @@ h4 {
   width: 70%;
   margin-top: 16px;
   margin-left: 20px;
-  padding-right: 10px;
+  padding-right: 0px;
   float: left;
   font-family: 'Fontawesome webfont', sans-serif;
   color: #495b70;
@@ -3881,6 +3881,7 @@ h4 {
 }
 
 .table-text.unread-table.preview {
+  width: 90%;
   color: #8da2b7;
 }
 
@@ -3986,9 +3987,13 @@ h4 {
   text-decoration: none;
 }
 
+.table-text.heading.saved-reply-date-created-header {
+  text-align: left;
+}
+
 .table-text.shrink-text {
   width: 70%;
-  padding-right: 35px;
+  padding-right: 0px;
   text-align: left;
 }
 
@@ -4007,6 +4012,10 @@ h4 {
 .table-text.shrink-text.deactivated-text {
   color: #8da2b7;
   text-decoration: line-through;
+}
+
+.table-text.shrink-text.transaction-table {
+  width: 69%;
 }
 
 .table-text.saved-reply-author {
@@ -4769,12 +4778,12 @@ h4 {
 
 .text-window-wrapper {
   position: fixed;
-  right: 23%;
+  right: 25%;
   bottom: 0px;
   z-index: 2;
   overflow: visible;
-  width: 52%;
-  height: 120px;
+  width: 51%;
+  height: 122px;
   margin-left: 0px;
   border-top: 1px solid #e6e5e5;
   border-right: 1px solid #e6e5e5;
@@ -5090,6 +5099,21 @@ h4 {
   margin-left: 10%;
   border: 1px solid #1f8cec;
   border-radius: 3px;
+}
+
+.text-area.message-text-box {
+  height: 78px;
+  margin-bottom: 9px;
+  padding-top: 15px;
+  padding-right: 15px;
+  padding-left: 20px;
+}
+
+.text-area.hashtag-description-area {
+  width: 80%;
+  margin-left: 20px;
+  border: 1px solid #1f8cec;
+  font-size: 12px;
 }
 
 .message-window-tabs {
@@ -6808,10 +6832,14 @@ h4 {
 
 .transaction-history-box-headers.total-spend-text {
   top: 45px;
+  padding-right: 5px;
+  padding-left: 5px;
 }
 
 .transaction-history-box-headers.average-spend-text {
   top: 45px;
+  padding-right: 5px;
+  padding-left: 5px;
 }
 
 .table-description {
@@ -8603,7 +8631,7 @@ h4 {
 .customer-count {
   position: static;
   display: inline;
-  width: auto;
+  width: 80%;
   margin-top: 16px;
   margin-right: 1px;
   margin-left: 45px;
@@ -8808,7 +8836,7 @@ h4 {
 
 .transaction-header-text.table-heading-text {
   margin-top: 16px;
-  font-family: 'Akkurat regular', sans-serif;
+  font-family: 'Fontawesome webfont', sans-serif;
   color: #495b70;
 }
 
@@ -9414,6 +9442,7 @@ h4 {
 }
 
 .saved-replies-wrapper.replies-list {
+  overflow: auto;
   width: 612px;
   margin-right: 20px;
   border-right: 1px solid #e6e5e5;
@@ -9423,9 +9452,11 @@ h4 {
 }
 
 .saved-replies-wrapper.reply-editor {
-  position: fixed;
+  position: static;
+  left: 10px;
   width: 612px;
   min-width: auto;
+  margin-left: 0px;
   padding-bottom: 30px;
   border-right: 1px solid #e6e5e5;
   border-bottom: 1px solid #e6e5e5;
@@ -10505,7 +10536,7 @@ h4 {
   margin-top: 30px;
   margin-bottom: 0px;
   padding-bottom: 10px;
-  padding-left: 11%;
+  padding-left: 10%;
   text-align: left;
 }
 
@@ -10613,7 +10644,7 @@ h4 {
   width: 100%;
   margin-right: 0%;
   margin-left: 0%;
-  padding: 15px 1% 15px 3%;
+  padding: 15px 1% 15px 2%;
   border-bottom: 1px none rgba(221, 229, 237, .8);
   -webkit-transition: background-color 250ms ease;
   transition: background-color 250ms ease;
@@ -11988,6 +12019,7 @@ h4 {
   border-radius: 4px;
   background-color: #fff;
   color: #637280;
+  text-align: center;
 }
 
 .tab-counter {
@@ -12615,6 +12647,7 @@ h4 {
 }
 
 .saved-replies-alt-wrapper {
+  position: static;
   margin-top: 0px;
   margin-right: 30px;
   margin-left: 30px;
@@ -12883,6 +12916,11 @@ h4 {
 .sub-nav-sub-text {
   font-family: 'Akkurat light regular', sans-serif;
   font-size: 13px;
+}
+
+.sub-nav-sub-text.shrink-text {
+  display: inline;
+  width: auto;
 }
 
 .customer-initial {
@@ -13182,6 +13220,7 @@ h4 {
 
 .sub-nav-bar-messaging-dash-column-2 {
   padding-right: 0px;
+  padding-left: 0px;
 }
 
 .editor-file-name {
@@ -13326,6 +13365,12 @@ h4 {
   border: 1px solid #e6e5e5;
   border-radius: 3px;
   text-align: center;
+}
+
+.saved-reply-table-wrapper {
+  margin-top: 0px;
+  margin-right: 30px;
+  margin-left: 0px;
 }
 
 html.w-mod-js *[data-ix="display-none-on-load"] {

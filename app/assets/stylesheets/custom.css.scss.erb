@@ -66,8 +66,13 @@ $success-color: green;
 .has-success .help-block {
     color: $success-color;
 }
+
 .hide {
   display: none !important;
+}
+
+.hide-not-important {
+  display: none;
 }
 
 /* For modals */
@@ -87,6 +92,12 @@ $success-color: green;
   text-align: center;
 }
 
+.refund-slider {
+  cursor: pointer;
+}
+
+textarea { resize: none; }
+
 /* End For messaging page */
 
 .emojionearea-editor {
@@ -96,4 +107,15 @@ $success-color: green;
 .button.remove_fb_integration {
   margin-top: 40px;
   margin-right: -4%;
+}
+
+.browser-notification-link-block, .toasters {
+  position: fixed !important;
+  margin: 5% auto !important;
+  left: 35%;
+  z-index: 1 !important;
+}
+
+.cancel-subscription-wrapper {
+  padding-bottom: 20px;
 }

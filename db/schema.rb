@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170204233027) do
+ActiveRecord::Schema.define(version: 20170207164154) do
 
   create_table "addresses", force: :cascade do |t|
     t.string   "street_address",   limit: 191
@@ -266,6 +266,7 @@ ActiveRecord::Schema.define(version: 20170204233027) do
     t.integer  "interval_count", limit: 4
     t.string   "interval",       limit: 191
     t.integer  "tag_type",       limit: 4
+    t.integer  "status",         limit: 4,                             default: 0
     t.boolean  "enable_tweet",   limit: 1
     t.datetime "created_at",                                                           null: false
     t.datetime "updated_at",                                                           null: false

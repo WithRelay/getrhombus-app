@@ -59,29 +59,24 @@
                 <label class="checkbox-field-lable w-form-label" for="node">-</label>
               </div>
             </form>
-            <div class="w-form-done">
-              <div>Thank you! Your submission has been received!</div>
-            </div>
-            <div class="w-form-fail">
-              <div>Oops! Something went wrong while submitting the form</div>
-            </div>
+          </div>
+        </div>
+      </div>
+      <div class="alt-column w-col w-col-2">
+        <div class="alt-table-column-div w-clearfix">         
+          <%= present(coupon).coupon_type %>
+        </div>
+      </div>
+      <div class="alt-column w-col w-col-2">
+        <div class="alt-table-column-div w-clearfix">
+          <div class="table-text">
+            <%= present(coupon).format_amount %>
           </div>
         </div>
       </div>
       <div class="alt-column w-col w-col-2">
         <div class="alt-table-column-div w-clearfix">
-          <div class="percentage-coupon shrink-text table-text"><strong><%= present(coupon).format_amount %></strong>
-          </div>
-        </div>
-      </div>
-      <div class="alt-column w-col w-col-2">
-        <div class="alt-table-column-div w-clearfix">
-          <div class="table-text"><%= coupon.max_redemptions %></div>
-        </div>
-      </div>
-      <div class="alt-column w-col w-col-2">
-        <div class="alt-table-column-div w-clearfix">
-          <div class="shrink-text table-text"><%= coupon.duration_in_months %></div>
+          <div class="shrink-text table-text"><%= coupon.duration.capitalize %></div>
         </div>
       </div>
       <div class="alt-column w-col w-col-2">
@@ -91,7 +86,7 @@
       </div>
       <div class="alt-column w-col w-col-1">
         <div class="alt-table-column-div w-clearfix">
-          <div class="table-text"> &nbsp;109</div>
+          <div class="table-text"> <%= coupon.max_redemptions %></div>
         </div>
       </div>
     </div>

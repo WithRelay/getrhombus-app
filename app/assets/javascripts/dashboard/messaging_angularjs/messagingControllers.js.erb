@@ -10,8 +10,6 @@ var messagingControllers = angular.module('messagingControllers', [
 messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub', 'Upload', '$timeout', '$q', 'conversationService', 'transactionService',
   function($scope, $http, Pubnub, Upload, $timeout, $q, conversationService, transactionService) {
 
-    //BindPlugins.now();
-
     // Messages  // remove
     // conversations
     //$scope.num_message_history = 200;   // remove
@@ -238,9 +236,6 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
               },
             }).then(function successCallback(response) { console.log("marked as read") }, function errorCallback(response) {});
             */
-            // Bind plugins to textbox
-            // should only bind once...add check!!!!!!!!!!!!!!
-            // setTimeout(function(){ BindPlugins.now() }, 0);
           //});
         //};
 
@@ -353,10 +348,6 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
       }
     };
 
-
-    // Bind plugins to textbox
-    // should only bind once...add check!!!!!!!!!!!!!!
-    // setTimeout(function(){ BindPlugins.now() }, 0);
     var messages_page = 1;
     $scope.status = { loading: false, /* loaded: false */ };
     $scope.selected_conversation = {};
