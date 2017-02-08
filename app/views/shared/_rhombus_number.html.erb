@@ -1,4 +1,5 @@
 
-<%= link_to "#", class: 'w-clearfix w-inline-block' do %>
+	<%# used on messaging page...dont put href in the a tag %>
+ <a class='w-clearfix w-inline-block'>
   <div class="dash-header-links new-link relay-nav-number-display" id='rhombus-number' data-clipboard-text='<%= current_user.rhombus_number %>'><%= current_user.rhombus_number %></div>
-<% end %>
+ </a>
