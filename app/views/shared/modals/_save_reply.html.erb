@@ -1,7 +1,7 @@
 <!-- added modal-background -->
 <%# removed all webflow data attributes %>
 
-<div class="create-saved-reply-form-wrapper w-clearfix modal-background">
+<div class="create-saved-reply-form-wrapper w-clearfix modal-background" id="new-saved-reply-div">
   <div class="content-sub-wrapper modal w-clearfix">
     <h4 class="modal-header welcome-dash-content-container-header">Create Saved reply</h4>
     <%# added data and update-close-modals %>
@@ -18,7 +18,7 @@
 
     <%= f.button "Save", class: 'button send-saved-reply w-button', id: 'send-saved-reply' %>
     
-    <%= f.button "Cancel", id: 'saved-reply-cancel', class: "button cancel-saved-reply w-button update-close-modals", data:{ data_parent: 'new-saved-reply-div'}  %>
+    <%= f.button "Cancel", id: 'saved-reply-cancel', class: "button cancel-saved-reply w-button update-close-modals", data_parent: 'new-saved-reply-div'  %>
    
     <%end%>
   </div>
