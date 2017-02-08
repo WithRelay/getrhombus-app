@@ -9,61 +9,26 @@ $( document ).ready(function() {
   }
 
   $('#select_page').click(function (evt) {
-    if (($(this).val() === 'Subscribe') && ($(this).attr('subscribed_page'))) {
-      if (!$("#select_page").attr('canSubscribe')) {
-        evt.stopImmediatePropagation();
-        (new PNotify({
-          title: 'Change Facebook Page',
-          text: 'Existing conversations linked to your previous Facebook page will stop being synced to your business app integrations. Continue?',
-          icon: 'glyphicon glyphicon-question-sign',
-          hide: false,
-          confirm: {
-            confirm: true
-          },
-          buttons: {
-            closer: false,
-            sticker: false
-          },
-          history: {
-            history: false
-          },
-          addclass: 'stack-modal',
-          stack: {'dir1': 'down', 'dir2': 'right', 'modal': true}
-          })).get().on('pnotify.confirm', function() {
-            $('#select_page').attr('canSubscribe', true);
-            $('#select_page').click();
-          }).on('pnotify.cancel', function() {
-            return false;
-        });
+    if (($(this).val() === 'Subscribe') && (!$(this).attr('subscribed_page'))) {
+      if (!$(this).attr('canSubscribe')) {
+        FlashHandler.setConfirmationDialog('#select_page',
+          'Conversations linked to your Facebook page being synced to your business app integrations. Continue?', 'Subscribe', 'canSubscribe' );
         return false;
       }
+
+    }
+    else if (($(this).val() === 'Subscribe') && ($(this).attr('subscribed_page'))) {
+      if (!$(this).attr('canSubscribe')) {
+        FlashHandler.setConfirmationDialog('#select_page',
+          'Existing conversations linked to your previous Facebook page will stop being synced to your business app integrations. Continue?', 'Subscribe', 'canSubscribe' );
+        return false;
+      }
+
     }
     else if(($(this).val() === 'Unsubscribe')){
-      if (!$("#select_page").attr('canUnsubscribe')) {
-        evt.stopImmediatePropagation();
-        (new PNotify({
-          title: 'Are you sure?',
-          text: 'Existing conversations linked to this Facebook page will stop being synced to your business app integrations. Continue?',
-          icon: 'glyphicon glyphicon-question-sign',
-          hide: false,
-          confirm: {
-            confirm: true
-          },
-          buttons: {
-            closer: false,
-            sticker: false
-          },
-          history: {
-            history: false
-          },
-          addclass: 'stack-modal',
-          stack: {'dir1': 'down', 'dir2': 'right', 'modal': true}
-          })).get().on('pnotify.confirm', function() {
-            $('#select_page').attr('canUnsubscribe', true);
-            $('#select_page').click();
-          }).on('pnotify.cancel', function() {
-            return false;
-        });
+      if (!$(this).attr('canUnsubscribe')) {
+        FlashHandler.setConfirmationDialog('#select_page',
+          'Existing conversations linked to this Facebook page will stop being synced to your business app integrations. Continue?', 'Unsubscribe', 'canUnsubscribe' );
         return false;
       }
     }
@@ -131,7 +96,6 @@ $( document ).ready(function() {
       });
 
    $('#remove_twitter_integration').click(function (evt) {
-      evt.stopImmediatePropagation();
      if (!$('#remove_twitter_integration').attr('isDestroy')) {
        FlashHandler.setConfirmationDialog('#remove_twitter_integration',
          'Are you sure, you want to remove the integration?', 'Remove Integration', 'isDestroy' );
@@ -140,7 +104,6 @@ $( document ).ready(function() {
    });
 
    function check_status(val){
-      debugger
      if (!val) {
        $('#select_page').hide();
      }

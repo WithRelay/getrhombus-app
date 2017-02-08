@@ -1,27 +1,26 @@
-- deactivate stuatus for hashtags
-- plug in box
-- slide down for refund
-- plug in file handler
-- find simple native browser notifications
+- plug in chat box
+- new conversation box
 
 
 2. fb linkng page. - done
 3. everything coupon...coupon create, index. only name is ediatable...so like plans. coupon pages (add link to transactions dropdown and link under segments)
 4. up/downgrade sass plan...you havent redesigned on billing info page 
 5. slider type - Minimum, maximum and start values. also doesnt look like design
+6. find simple native browser notifications
+7. design for toastrs - stated
 
 
 5. form validation error state design - i dont see the styling for this...where is it????
 6. ellipsis - done
 7. logic for signup - I dont see you doing what i said youu should do.
 
+
 8. calendar styling (from edwin), calendar defaults ..this is me
 
-9. copy number on click - done...just integrate...tell Surya - stated
-10. design for toastrs - stated
 12. popups - stated
 
-
+13. all headers should have the number copy and notifications and settings dropdwon....use partials
+14. hve u imported campaigns page???
 
 
 

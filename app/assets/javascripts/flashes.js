@@ -13,6 +13,7 @@ var FlashHandler = new function() {
   };
 
   function showToastr (type, message) {
+    hideToastr();
     var class_name = (type === 'error') ? 'failure toasters' : 'toasters' ,
       close_button_class = (type === 'error') ? 'failure toaster-font-awesome' : 'toaster-font-awesome'
     $('body').append('<div class="'+class_name+'">\
@@ -27,9 +28,15 @@ var FlashHandler = new function() {
         </div>\
       </div>\
     </div>');
+
+  }
+
+  function hideToastr(){
+    $('.browser-notification-link-block, .toasters').remove();
   }
 
   function incoming_facebook_message(profile_pic, customer_name, message) {
+    hideToastr();
     $('body').append('<a class="browser-notification-link-block w-inline-block" href="#">\
       <div class="browser-notification-row w-row">\
         <div class="browser-notification-row-column-1 w-clearfix w-col w-col-4">\
@@ -49,6 +56,7 @@ var FlashHandler = new function() {
 
 
   function incoming_sms (profile_pic, customer_name, message) {
+    hideToastr();
     $('body').append('<a class="browser-notification-link-block sms-browser-notification w-inline-block" href="#">\
       <div class="browser-notification-row w-row">\
         <div class="browser-notification-row-column-1 payment-notification w-clearfix w-col w-col-4">\
@@ -67,6 +75,7 @@ var FlashHandler = new function() {
   }
 
   function payment_notification(profile_pic, amount, customer_name) {
+    hideToastr();
     $('body').append('<a class="browser-notification-link-block payment w-clearfix w-inline-block" href="#">\
       <img class="browser-notification customer-profile-picture" height="40" src="'+profile_pic+'" width="40">\
       <div class="payment-notification-amount">$'+amount+'</div>\
@@ -77,6 +86,7 @@ var FlashHandler = new function() {
   }
 
   function copied_no() {
+    hideToastr();
     $('body').append('<a class="browser-notification-link-block copied w-inline-block" href="#">\
       <div class="browser-notification-close payment toaster-font-awesome"></div>\
       <div class="number-copied-text">Phone number copied!</div>\
@@ -85,6 +95,7 @@ var FlashHandler = new function() {
   }
 
   function schedule_jobs (message, no_of_recipient) {
+    hideToastr();
     $('body').append('<a class="browser-notification-link-block scheduled-jobs w-inline-block" href="#">\
       <div class="scheduled-jobs-notification-description">'+message+'</div>\
       <img class="browser-notification customer-profile-picture scheduled-jobs" height="40" src="http://uploads.webflow.com/58977e002a25945021983468/58977e002a2594502198356c_81.jpg" width="40">\
@@ -100,6 +111,7 @@ var FlashHandler = new function() {
   }
 
   function close_browser_toastr() {
+    hideToastr();
     $('.browser-notification-close').on('click', function (e) {
       e.preventDefault();
       $('.browser-notification-link-block').fadeOut(5000);
@@ -107,38 +119,35 @@ var FlashHandler = new function() {
   }
 
   // Confirmation Dialog for event
-  // var stack = {'dir1': 'down', 'dir2': 'right', 'modal': true};
   this.setConfirmationDialog = function (selector, confirmText, confirmDialog, isConfirm){
-    // (new PNotify({
-    //   title: title,
-    //   text: confirmText,
-    //   icon: 'glyphicon glyphicon-question-sign',
-    //   hide: false,
-    //   confirm: {
-    //     confirm: true
-    //   },
-    //   buttons: {
-    //     closer: false,
-    //     sticker: false
-    //   },
-    //   history: {
-    //     history: false
-    //   },
-    //   addclass: 'stack-modal',
-    //   stack: stack
-    // })).get().on('pnotify.confirm', function() {
-    //   $(selector).attr(isConfirm, true);
-    //   $(selector)[0].click();
-    // }).on('pnotify.cancel', function() {
-    //   return false;
-    // });
+    hideToastr();
 
     $('body').append('<div class="cancel-subscription-wrapper w-clearfix">\
       <p class="cancel-subscription modal-content-description">'+confirmText+'</p>\
       <div class="modal-underline underline-div"></div>\
       <a class="button cancel-yes w-button" href="#">'+confirmDialog+'</a>\
       <a class="button cancel-no w-button" data-ix="close-cancel-subscription" href="#">Cancel</a>\
-    </div>')
+    </div>');
+
+    $('.cancel-subscription-wrapper').lightbox_me({
+      centered: true,
+      overlayCSS: {
+        background: '#0040ff',
+        opacity: .25
+      }
+    });
+
+    $('.cancel-no').on('click', function(e){
+      $('.cancel-subscription-wrapper').remove();
+      $('.js_lb_overlay').remove();
+      return false;
+    })
+
+    $('.cancel-yes').on('click', function(){
+      $(selector).attr(isConfirm, true);
+      $('.cancel-yes')[0].innerHTML = 'Please wait...';
+      $(selector)[0].click();
+    })
   };
 
   // when multiple flash message are present it converts it to multiline flash message
