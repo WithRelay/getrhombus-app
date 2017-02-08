@@ -28,7 +28,6 @@ var FlashHandler = new function() {
         </div>\
       </div>\
     </div>');
-
   }
 
   function hideToastr(){
