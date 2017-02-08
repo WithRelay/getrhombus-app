@@ -3,39 +3,37 @@
     <h1 class="hero-h1 home-header pricing-hero">Simple Pricing</h1>
     <h5 class="hero-section-sub signup-box-subheading">TRY IT FREE FOR 14 DAYS ON PAID PLANS</h5>
   </div>
-
-<div class="def-content-row w-row">
-  <div class="pricing-row-column-1 w-clearfix w-col w-col-6">
-    <div class="def-row-content-wrapper plan-2">
-      <h5 class="premium-table signup-box-subheading">ALL FEATURES INCLUDED IN EVERY PLAN</h5>
-      <div class="premium-features pricing-table-feature-list">Unlimited Inbound &amp; Outbound Messages</div>
-      <div class="premium-features pricing-table-feature-list">Customer Segmentation</div>
-      <div class="premium-features pricing-table-feature-list">Drip Campaigns</div>
-      <div class="premium-features pricing-table-feature-list">Hashtags &amp; Keywords</div>
-      <div class="premium-features pricing-table-feature-list">Automated Responses</div>
-      <div class="premium-features pricing-table-feature-list">Customer Import</div>
-      <div class="premium-features pricing-table-feature-list">Stripe Integration for Charges &amp; Subscriptions</div>
-      <div class="premium-features pricing-table-feature-list">In-Chat Payments</div>
-      <div class="premium-features pricing-table-feature-list">Messaging &amp; Transaction Analytics</div>
-      <div class="premium-features pricing-table-feature-list">Full Contact Data</div>
-      <div class="premium-features pricing-table-feature-list">OpenCNAM Data</div>
-      <div class="premium-features pricing-table-feature-list">Data Export</div>
-      <div class="premium-features pricing-table-feature-list">Free SMS Number | Cost Per SMS: $0.025</div>
+  <div class="def-content-row w-row">
+    <div class="pricing-row-column-1 w-clearfix w-col w-col-6">
+      <div class="def-row-content-wrapper plan-2">
+        <h5 class="premium-table signup-box-subheading">ALL FEATURES INCLUDED IN EVERY PLAN</h5>
+        <div class="premium-features pricing-table-feature-list">Unlimited Inbound &amp; Outbound Messages</div>
+        <div class="premium-features pricing-table-feature-list">Customer Segmentation</div>
+        <div class="premium-features pricing-table-feature-list">Drip Campaigns</div>
+        <div class="premium-features pricing-table-feature-list">Hashtags &amp; Keywords</div>
+        <div class="premium-features pricing-table-feature-list">Automated Responses</div>
+        <div class="premium-features pricing-table-feature-list">Customer Import</div>
+        <div class="premium-features pricing-table-feature-list">Stripe Integration for Charges &amp; Subscriptions</div>
+        <div class="premium-features pricing-table-feature-list">In-Chat Payments</div>
+        <div class="premium-features pricing-table-feature-list">Messaging &amp; Transaction Analytics</div>
+        <div class="premium-features pricing-table-feature-list">Full Contact Data</div>
+        <div class="premium-features pricing-table-feature-list">OpenCNAM Data</div>
+        <div class="premium-features pricing-table-feature-list">Data Export</div>
+        <div class="premium-features pricing-table-feature-list">Free SMS Number | Cost Per SMS: $0.025</div>
+      </div>
     </div>
-  </div>
-  <div class="pricing-row-column-2 w-clearfix w-col w-col-6">
-    <div class="def-row-content-wrapper">
-      <%= image_tag('003_043.png', class: 'pricing-table-icon') %>
-      <h1 class="first-content-section-sub-header pricing-header">Unlimited usage for your team</h1>
-      <p class="def-content-section-paragraph pricing-paragraph">Pricing is based on how many active customers or leads you communicate with inside Relay. No per seat pricing.
-        <br>
-        <br>How many customers do you have?</p>
-        <div class="slider-wrapper" style="margin: auto;width: 80%;">
-          <!-- we have to set amountValue dynamically for selected subscription -->
-          <input type="text" name="plan[amount]" id="pricing-range" amountValue="0">
-          <span class="" id="price-value"></span>
+    <div class="pricing-row-column-2 w-clearfix w-col w-col-6">
+      <div class="def-row-content-wrapper">
+        <%= image_tag('003_043.png', class: 'pricing-table-icon') %>
+        <h1 class="first-content-section-sub-header pricing-header">Unlimited usage for your team</h1>
+        <p class="def-content-section-paragraph pricing-paragraph">Pricing is based on how many active customers or leads you communicate with inside Relay. No per seat pricing.
+          <br>
+          <br>How many customers do you have?</p>
+        <div class="slider-wrapper">
+          <%= image_tag('Slider-Placeholder-2.png', class: 'slider-placeholder') %>
         </div>
-        <a class="button pricing-table-button w-button" href="/users/sign_up">Get Started</a>
+        <h1 class="plan-amount">$0</h1>
+        <h5 class="signup-box-subheading starter-table">BILLED MONTHLY</h5><a class="button pricing-table-button w-button" href="#">Get Started</a>
       </div>
     </div>
   </div>
@@ -126,6 +124,7 @@
           </div>
           <div class="country-block w-clearfix">
             <%= image_tag('Sweden-48.png', class: 'country-flag', width: 23) %>
+            <img class="country-flag" src="images/Sweden-48.png" width="23">
             <div class="countries">Sweden</div>
           </div>
           <div class="country-block w-clearfix">
@@ -172,4 +171,3 @@
     </div>
   </div>
 </div>
-<%= render_sign_up_footer %>
