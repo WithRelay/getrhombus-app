@@ -165,8 +165,8 @@ module AdditionalUserActions
   def build_user_link
     # if it includes a captured payment, also check if msg_id is present, tag_id is optional
     # referrer_num is the merchant the payment is going to
-    link = session[:captured_amt].present? ? "/profile?amt=#{session[:captured_amt]}&referrer_id=#{session[:referrer_id]}" +
-                                          "&msg_id=#{session[:msg_id]}&tag_id=#{session[:tag_id]}" : "/profile"
+    link = session[:captured_amt].present? ? "/add-card-info?amt=#{session[:captured_amt]}&referrer_id=#{session[:referrer_id]}" +
+                                          "&msg_id=#{session[:msg_id]}&tag_id=#{session[:tag_id]}" : "/add-card-info"
     delete_captured_payment_session
     link
   end
