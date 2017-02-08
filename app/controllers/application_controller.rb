@@ -11,6 +11,7 @@ class ApplicationController < ActionController::Base
   rescue_from ActiveRecord::RecordNotUnique, with: :record_not_unique
 
   def after_sign_in_path_for(user)
+    return build_user_link unless customer_details_present?
     return user_conversations_path(user) if merchant_details_present?
     return user_transactions_path(user) if customer_details_present?
     current_user
