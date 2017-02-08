@@ -52,7 +52,7 @@
     <div class="alt-table-row w-row">
       <div class="alt-column w-clearfix w-col w-col-3">
         <div class="title-column-div w-clearfix">
-          <div class="shrink-text table-text">#CheezeIt</div>
+          <div class="shrink-text table-text"><%= h.name %></div>
         </div>
         <div class="alt-table cb check-box-column">
           <div class="w-form">
@@ -72,13 +72,14 @@
         </div>
       </div>
       <div class="alt-column w-col w-col-2">
-        <div class="alt-table-column-div w-clearfix"><img class="campaigns table-profile-picture" src="images/37.jpg" width="24">
-          <div class="shrink-text table-text">Morgan Richards</div>
+        <div class="alt-table-column-div w-clearfix">
+            <%= present(h).profile_image %>
+          <div class="shrink-text table-text"><%="#{current_user.first_name} #{current_user.last_name}" %></div>
         </div>
       </div>
       <div class="alt-column w-col w-col-2">
         <div class="alt-table-column-div w-clearfix">
-          <div class="table-text">4 months ago</div>
+          <div class="table-text"><%= present(h).date_in_word %></div>
         </div>
       </div>
       <div class="alt-column w-col w-col-2">
