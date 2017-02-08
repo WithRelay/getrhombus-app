@@ -1,4 +1,4 @@
-  <%= form_for(saved_reply, url: v1_saved_replies_save_path, :html => { :id => "saved-reply-edit-new", data: { name: 'Email Form 8' } } ) do |f| %>
+  <%= form_for(saved_reply, url: v1_saved_replies_update_path, :html => { :id => "saved-reply-edit-new", data: { name: 'Email Form 8' } } ) do |f| %>
     <%= f.text_field :title, placeholder: 'Saved reply title', id: 'saved-reply-title-field', class: 'saved-reply text-field w-input', data: { name: 'Saved Reply Title' } %>
     <%= f.text_area :body, placeholder: 'Start typing...', id: 'saved-reply-body-field', class: 'saved-reply text-area w-input', data: {name: 'Saved Replies Editor'} %>
 

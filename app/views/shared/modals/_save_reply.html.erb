@@ -10,11 +10,16 @@
   <p class="modal-content-description">Create saved replies to frequently asked questions so you can respond to you customers faster. Type '/' on your messaging dashboard to trigger a saved reply.</p>
   <div class="segment-modal underline-div"></div>
   <div class="saved-reply-form w-form">
-    <form id="email-form-8" name="email-form-8">
-      <input class="saved-reply text-field title-create w-input" id="Saved-Reply-Title-3" maxlength="256" name="Saved-Reply-Title-3" placeholder="Saved reply title" type="text">
-      <textarea class="create saved-reply text-area w-input" id="Saved-Replies-Editor-3" maxlength="5000" name="Saved-Replies-Editor-3" placeholder="Start typing..."></textarea>
-    </form>
-  </div><a class="button send-saved-reply w-button" href="#">Save</a>
-  <%# added update-close-modals and data %>
-  <a class="button cancel-saved-reply w-button update-close-modals" data-parent='new-saved-reply-div' href="#">Cancel</a>
+    <%= form_for(saved_reply, url: v1_saved_replies_create_path,:html => { :id => "email-form-8", data: { name: 'email-form-8' } } ) do |f| %>
+       <%= f.text_field :title, placeholder: 'Saved reply title', id: 'Saved-Reply-Title-3', class: 'saved-reply text-field title-create w-input', data: { name: 'Saved Reply Title' } %>
+
+       <%= f.text_area :body, placeholder:'Start typing...', id: 'Saved-Replies-Editor-3',
+       class: 'create saved-reply text-area w-input', data: { name: 'Saved-Replies-Editor-3'}   %>
+
+    <%= f.button "Save", class: 'button send-saved-reply w-button', id: 'send-saved-reply' %>
+    
+    <%= f.button "Cancel", id: 'saved-reply-cancel', class: "button cancel-saved-reply w-button update-close-modals", data:{ data_parent: 'new-saved-reply-div'}  %>
+   
+    <%end%>
+  </div>
 </div>
