@@ -10,6 +10,7 @@
   end
 
   def create
+    binding.pry
     @saved_reply = current_user.saved_replies.build(saved_reply_params)
     if @saved_reply.save
       flash[:notice] = 'Reply was saved'

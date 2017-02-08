@@ -1,0 +1,2 @@
+class SavedReplyPresenter < BasePresenter 
+end

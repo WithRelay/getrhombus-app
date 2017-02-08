@@ -1,12 +1,10 @@
 <div class="customer-dash sub-nav-bar">
-  <div class='modal-background w-hidden modal-body'>
-    <%= render 'shared/modals/save_reply' %>
-  </div>
+
   <div class="sub-nav-options-wrapper w-clearfix">
     <a class="saved-replies sub-nav-button w-button modal-loader" href="#"><strong> &nbsp; Create new saved replies</strong></a>
-
-    <div class='modal-background w-hidden modal-body'>
+ <div class='modal-background w-hidden modal-body'>
       <%= render partial: 'shared/modals/save_reply', locals: { saved_reply: SavedReply.new }  %>
+   
       </div>
 
       <a class="sub-nav-button w-button" data-ix="create-list" href="#"> &nbsp;<strong>Edit</strong></a>
@@ -95,7 +93,7 @@
             <h4 class="welcome-dash-content-container-header">Edit</h4>
           </div>
           <div class="saved-reply-form w-form">
-            <%= #render partial: 'form', locals: { saved_reply: @saved_replies.first } %>
+            <%#= render partial: 'form', locals: { saved_reply: @saved_replies.first } %>
             <div class="w-form-done">
               <div>Thank you! Your submission has been received!</div>
             </div>

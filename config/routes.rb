@@ -121,7 +121,8 @@ Rails.application.routes.draw  do
     match 'hashtags/:id/images/:image_id' => 'hashtags#image_delete', via: :delete
     match 'saved_replies' => 'saved_replies#index', via: :get
     post 'saved_replies/edit' => 'saved_replies#edit'
-    patch 'saved_replies/save' => 'saved_replies#save'
+    patch 'saved_replies/update' => 'saved_replies#update'
+    post 'saved_replies/create' => 'saved_replies#create'
     # Campaign Routes
     post 'campaigns/change_status' => 'campaigns#change_status'
     post 'campaigns/delete' => 'campaigns#delete_campaign'
