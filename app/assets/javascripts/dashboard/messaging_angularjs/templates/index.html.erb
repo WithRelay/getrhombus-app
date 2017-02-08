@@ -14,14 +14,34 @@
     <div class="conversation-list-menu">
       <div class="w-form">
         <form id="email-form-10" name="email-form-10">
-          <input class="start-conversation-field w-input" id="Start-Conversation-Field" maxlength="256" name="Start-Conversation-Field" placeholder="Start new  conversation" type="text">
+          <input class="start-conversation-field w-input" id="Start-Conversation-Field" maxlength="256" name="Start-Conversation-Field" placeholder="Start new conversation" type="text">
+          <label>
+            <angucomplete-alt id="find-recipient"
+            placeholder="Start new conversation"
+            pause="300"
+            minlength="3"
+            selected-object="recipientSelected"
+            remote-url="<%= (Rails.env == 'development' ? "http://localhost:3000" : "#{Rails.application.secrets.url["info"]}") + "/v1/users?query=" %>"
+            remote-url-data-field="data"
+            title-field="title"
+            text-no-results='false'
+            match-class='highlight'
+            input-name='recipient'
+            description-field='description'
+            text-searching="Finding your customers/contacts..."
+            <%#= add html notification during ui integration %>
+            <%#= scroll bar added but test option during UI integration and testing %>
+            remote-url-error-callback='searchRecipientsApiErrorHandler'
+            />
+          </label>
         </form>
         <%# removed 2 div from here %>
       </div>
       <div class="open-conversation-text">Open (289)</div>
     </div>
     <!--<div class="w-tabs" data-duration-in="300" data-duration-out="100"></div>-->
-    <div class="conversation-list-wrapper">
+    <%# added id %>
+    <div class="conversation-list-wrapper" id='conversation-list-wrapper'>
 
       <a class="message-tab w-inline-block" ng-repeat="(identifier, conversation) in conversations | filterConversationList:query | orderObjectBy:'last_message_ts':true" ng-click="getConversationMessages(conversation, true)">
         <div class="message-tab-content-wrapper w-row">

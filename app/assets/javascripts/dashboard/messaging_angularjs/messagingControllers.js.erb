@@ -315,6 +315,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
       if (data.select_conversation !== undefined) {
         $timeout(function() {
           var select_conversation;
+          // check if conversation to select is already in the conversations list that was just loaded
           for (var i = 0, len = data.conversations.length; i < len; i++) {
             if (data.select_conversation.uid == data.conversations[i].uid && data.select_conversation.uid_type == data.conversations[i].uid_type) {
               select_conversation = data.conversations[i];
@@ -323,22 +324,62 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
           }
 
           // if not displayed push into conversations. Move to top.
-          var new_timestamp = $scope.conversations[Object.keys($scope.conversations)[0]].last_message_ts + 1;
+          var convs_keys = Object.keys($scope.conversations);          
           if (select_conversation === undefined) {
-            data.select_conversation.last_message_ts = new_timestamp;
+            // are there conversations in view?
+            if (convs_keys.length) data.select_conversation.last_message_ts = $scope.conversations[convs_keys[0]].last_message_ts + 1; 
             $scope.conversations[data.select_conversation.id] = data.select_conversation;
           } else
-            select_conversation.last_message_ts = new_timestamp;
+            select_conversation.last_message_ts = $scope.conversations[convs_keys[0]].last_message_ts + 1; 
 
-          $timeout(function() { angular.element('#conversations-list').children(':first').children(':first').triggerHandler('click'); });
+          $scope.clickFirstConversation();
         });
       }
     };
 
+    $scope.startConversation = function(data) {
+      var convs_keys = Object.keys($scope.conversations);
+
+      // is conversation already in view?
+      for (var i = 0, len = convs_keys.length; i < len; i++) {
+        if (data.uid == $scope.conversations[convs_keys[i]].uid && data.uid_type == $scope.conversations[convs_keys[i]].uid_type) {
+          $scope.conversations[convs_keys[i]].last_message_ts = $scope.conversations[convs_keys[0]].last_message_ts + 1;
+          $scope.clickFirstConversation();
+          console.log('found conversation in view');
+          return;
+        }
+      };
+
+      conversationService.findConversation(data)
+      .then(function(conv) {
+        convs_keys = Object.keys($scope.conversations);       // get updated keys
+        
+        // one more check like above...this conversation could have been opened before this ajax came back.
+        for (var i = 0, len = convs_keys.length; i < len; i++) {
+          if (data.uid == $scope.conversations[convs_keys[i]].uid && data.uid_type == $scope.conversations[convs_keys[i]].uid_type) {
+            $scope.conversations[convs_keys[i]].last_message_ts = $scope.conversations[convs_keys[0]].last_message_ts + 1;;
+            $scope.clickFirstConversation();
+            console.log('found conversation in view');
+            return;
+          }
+        };
+
+        // are there messages already loaded
+        if (convs_keys.length) conv.last_message_ts = $scope.conversations[convs_keys[0]].last_message_ts + 1;        
+        $scope.conversations[conv.id] = conv;
+        $scope.clickFirstConversation();
+        console.log('started conversation');
+      }, function() {
+        console.log('unable to start conversations');
+      });
+    };
+
+    $scope.clickFirstConversation = function() {
+      $timeout(function() { angular.element('#conversation-list-wrapper').children(':first').triggerHandler('click'); });
+    }
 
     $scope.messageTrackingFunction = function(message) { return message.msg_type + "-" + message.id.toString(); };
     $scope.imageTrackingFunction = function(image) { return 'Image-' + image.ref.toString(); };
-
 
     $scope.messageInView = function(index) {
       var message = $scope.selected_conversation_messages[index];
@@ -377,7 +418,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
             if (conversation.id == $scope.selected_conversation.id) {
               if (data.messages.length > 0) {
                 messages_page += 1;
-                for (var i = 0; i < data.messages.length; i++) { 
+                for (var i = 0, len = data.messages.length; i < len; i++) { 
                   data.messages[i].unread = false;
                   $scope.selected_conversation_messages.unshift(data.messages[i]); 
                 }
@@ -579,7 +620,11 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
     // End Transactions
 
     // Start new conversation
-    $scope.recipientSelected = function(selected) { $scope.recipient.id = (selected) ? selected.originalObject.id : null; };
+    $scope.recipientSelected = function(selected) { 
+      if (selected !== undefined) 
+        $scope.startConversation({ uid: selected.originalObject.uid, uid_type: selected.originalObject.uid_type });
+    };
+
     $scope.searchRecipientsApiErrorHandler = function(selected) { alert('couldnt retrieve your customers/contacts'); };
     // End new conversation
 
