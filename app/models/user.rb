@@ -5,26 +5,26 @@ class User < ActiveRecord::Base
   include CSVHandler
 
   attr_accessor :phone, :captured_amt, :msg_id, :tag_id, :referrer_id, :tos_acceptance
-  
+
   # validation rules for user attributes
   validates :tos_acceptance, acceptance: true, if: lambda { self.is_merchant? }, on: :update
   validates_presence_of :org_type, if: lambda { self.is_merchant? }, on: :update
   # validates_presence_of :org_name, if: lambda { self.is_merchant? && self.org_type.downcase != 'individual' }, on: :update
-  
+
   # Edit pages use the right number field for each user type
   validates_presence_of :org_phone, numericality: { only_integer: true }, length: { minimum: 10 }, on: :update, if: lambda { self.is_merchant? }
   validates_presence_of :phone_number, numericality: { only_integer: true }, length: { minimum: 10 }, on: :update, if: lambda { self.is_customer? }
   validates_presence_of :user_level, message: "Please select an account type"
-  
+
   # Sign up form uses phone_number field for both user types
   validates_presence_of :phone_number, numericality: { only_integer: true }, length: { minimum: 10 }, on: :create
-  
+
   # Allow nil added to db migration because merchants don't have phone number. They have org_phone.
   # And since mysql indexes this field, it indexes nil and only allows one row with nil.
   # You run into issues with any additional merchants.
   validates_uniqueness_of :phone_number, :allow_nil => true, :if => lambda { is_merchant? }
   validate :phone_number_cannot_be_rhombus_number
-  
+
   # include default devise modules. Others available are: :token_authenticatable, :lockable, :timeoutable and :confirmable,
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable, :omniauthable, :omniauth_providers => [:facebook, :twitter, :stripe_connect]
 
@@ -118,6 +118,9 @@ class User < ActiveRecord::Base
     user_level == 0
   end
 
+  def get_saas_subscription
+  end
+
   def is_platform?
     #email == User.platform_email
     self.email == '<redacted_email>' || self.email == '<redacted_email>'
@@ -142,7 +145,7 @@ class User < ActiveRecord::Base
   def get_stripe_cred
     # platform acct is a standalone account and only one record exists for platform
     # merchants could have 2 records. Managed, Standalone (prior to v1.5)
-    return self.stripe_creds.first if is_platform? 
+    return self.stripe_creds.first if is_platform?
     creds = self.stripe_creds
     creds.where(uid_type: ((creds.length == 2) ? 'managed' : 'standalone') ).first
   end
@@ -244,15 +247,15 @@ class User < ActiveRecord::Base
 
   def self.check_profile_picture(cus)
     return { type: 'color', value: COLORS.first.first } if cus.nil?
-    
+
     user_fb_cred = cus.fb_creds
     if user_fb_cred.present? && user_fb_cred.first.profile_pic_url.present?
-      return { type:'image', value: user_fb_cred.first.profile_pic_url } 
+      return { type:'image', value: user_fb_cred.first.profile_pic_url }
     end
 
     contact_email = FullContactData.find_by_email(cus.email)
     if contact_email && contact_email.photo_url.present?
-      return { type: 'image', value: contact_email.photo_url } 
+      return { type: 'image', value: contact_email.photo_url }
     elsif cus.user_color.blank?
       cus.user_color = COLORS.sample.first
       cus.save
