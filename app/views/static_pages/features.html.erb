@@ -1,17 +1,28 @@
-  <div class="alternate-hero-table w-row">
+<div class="alternate-hero-table w-row">
     <div class="w-col w-col-6">
       <div class="w-clearfix">
-        <h1 class="alt alt-hero-heading">Better customer relationships using mobile messaging.</h1>
+        <h1 class="alt alt-hero-heading">Build better customer relationships using mobile messaging.</h1>
         <p class="def-content-section-paragraph">Create happy customers by sending them beautiful personalized messages through the mobile channels they prefer. Move support beyond tickets.</p><a class="alt-hero-cta-button features hero-button w-button" href="#">Create relay account</a>
       </div>
     </div>
     <div class="w-col w-col-6">
-      <%= image_tag('Rhombus-iphone-frame-crop-top.png', class: 'features-hero-image', width: 371)%>
+      <div class="phone-wrapper">
+        <div class="speaker"></div>
+        <div class="camera"></div>
+        <div class="phone-screenshot-wrapper w-clearfix">
+          <div class="phone-header">
+            <div class="phone-name placeholder-content-text">Happy Corp.</div>
+          </div>
+          <div class="phone-text-placeholder"></div>
+          <div class="alt-blue phone-text-placeholder"></div>
+          <div class="grey phone-text-placeholder"></div>
+          <div class="phone-text-placeholder position"></div>
+          <div class="alt grey phone-text-placeholder"></div>
+        </div>
+      </div>
     </div>
   </div>
-</div>
-</div>
-  <div class="home sub-hero-div">
+<div class="home sub-hero-div">
     <h1 class="sub-hero-header">All-in-one Support Platform</h1>
     <div class="customer-interactions-table w-row">
       <div class="w-col w-col-4">
@@ -48,14 +59,12 @@
         </div>
       </div>
     </div>
-    <div class="div-cta-container w-container">
-      <%= link_to 'Schedule a demo', request_demo_path, class: 'button demo div-cta w-button' %>
-      <%= link_to 'Get started free', new_user_registration_path, class: 'button div-cta w-button' %>
+    <div class="div-cta-container w-container"><a class="button div-cta w-button" href="#">Get started free</a><a class="button demo div-cta w-button" href="#">Schedule a demo</a>
     </div>
   </div>
   <div class="default-content-section home">
     <div class="content-wrapper icon-table w-container">
-      <%= image_tag('Node-3.png', class: 'section-icon') %>
+      <%= image_tag('009_014.png', class: 'section-icon')%>
       <h1 class="sub-hero-header">Scalable mobile support for any size business.</h1>
       <div>
         <div class="browser-header-full w-clearfix">
@@ -130,9 +139,7 @@
         </div>
       </div>
     </div>
-    <div class="div-cta-container w-container">
-      <a class="button div-cta w-button" href="/users/sign_up">Get started free</a>
-      <a class="button demo div-cta w-button" href="/request-demo">Schedule a demo</a>
+    <div class="div-cta-container w-container"><a class="button div-cta w-button" href="#">Get started free</a><a class="button demo div-cta w-button" href="#">Schedule a demo</a>
     </div>
   </div>
   <div class="default-content-section features-page">
@@ -146,11 +153,50 @@
           <h3 class="section-3-header">Facebook Messenger Integration</h3>
           <p class="def-content-section-paragraph section-4">Connect with your customers on Facebook Messenger. Simply link your existing Facebook page to Relay to start managing social conversations.</p>
           <h3 class="section-3-header">Multi-channel campaigns</h3>
-          <p class="def-content-section-paragraph section-4">Send promotional marketing campaigns, or announcements that'll go out to your customers via SMS, Messenger or Email.</p>
-          <a class="button def-content-section-button w-button" href="#">See all features</a>
+          <p class="def-content-section-paragraph section-4">Send promotional marketing campaigns, or announcements that'll go out to your customers via SMS, Messenger or Email.</p><a class="button def-content-section-button w-button" href="#">See all features</a>
         </div>
-        <div class="w-col w-col-6">
-          <%= image_tag('Iphone-frame-Rhombus.png', class: 'phone', width: 366) %>
+        <div class="def-content-section-column-2 w-col w-col-6">
+          <div class="descriptive-div"></div>
+          <div class="alt descriptive-div nested select-channel w-clearfix">
+            <div class="merchant phone-text-placeholder"></div>
+            <div class="alt-blue light-grey merchant phone-text-placeholder"></div>
+            <div class="messaging-options">
+              <div class="placeholder-content-text">You should get a receipt by tex</div>
+            </div>
+            <div class="select-channel-placeholder-dropdown">
+              <div class="channel-options top">
+                <div class="channel-options-row w-row">
+                  <div class="w-col w-col-3">
+                    <div class="channel-color sms-channel"></div>
+                  </div>
+                  <div class="w-col w-col-9">
+                    <div class="channel-name">SMS</div>
+                  </div>
+                </div>
+              </div>
+              <div class="channel-options middle">
+                <div class="channel-options-row w-row">
+                  <div class="w-col w-col-3">
+                    <div class="channel-color messenger-channel"></div>
+                  </div>
+                  <div class="w-col w-col-9">
+                    <div class="channel-name">Messenger</div>
+                  </div>
+                </div>
+              </div>
+              <div class="bottom channel-options">
+                <div class="channel-options-row w-row">
+                  <div class="w-col w-col-3">
+                    <div class="channel-color email-channel"></div>
+                  </div>
+                  <div class="w-col w-col-9">
+                    <div class="channel-name">Email</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="customer grey phone-text-placeholder"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -200,21 +246,35 @@
       <%= image_tag('017_017.png', class: 'section-icon') %>
       <h1 class="sub-hero-header">In-chat payments, one-time charges &amp; subscriptions</h1>
       <div class="default-content-section-table w-row">
-        <div class="def-content-section-column-1 w-col w-col-6">
+        <div class="def-content-section-column-1-alt w-col w-col-6">
+          <div class="phone-wrapper">
+            <div class="speaker"></div>
+            <div class="camera"></div>
+            <div class="phone-screenshot-wrapper w-clearfix">
+              <div class="phone-header">
+                <div class="phone-name placeholder-content-text">Happy Corp.</div>
+              </div>
+              <div class="phone-text-placeholder"></div>
+              <div class="alt-blue phone-text-placeholder"></div>
+              <div class="grey phone-text-placeholder"></div>
+              <div class="phone-text-placeholder position"></div>
+              <div class="alt grey phone-text-placeholder"></div>
+            </div>
+          </div>
+          <div class="descriptive-div nest-2"></div>
+        </div>
+        <div class="def-content-section-column-2-alt w-col w-col-6">
           <h3 class="section-3-header">In-chat payments via SMS or Messenger</h3>
           <p class="def-content-section-paragraph section-4">80% of all customer interactions are transaction related. Make it easy for your customers to securely pay you without leaving the conversation. It's as simple as texting the amount via Messenger or SMS</p>
           <h3 class="section-3-header">Plans &amp; subscriptions for recurring charges</h3>
           <p class="def-content-section-paragraph section-4">Create and manage recurring payments from customers right inside your Relay dashboard. Ideal for subscription based businesses.</p><a class="button def-content-section-button w-button" href="#">See use cases</a>
-        </div>
-        <div class="w-col w-col-6">
-          <%= image_tag('Iphone-frame-Rhombus.png', class: 'phone', width: 366) %>
         </div>
       </div>
     </div>
   </div>
   <div class="default-content-section home">
     <div class="content-wrapper icon-table w-container">
-      <%= image_tag('014_001.png', class: 'section-icon') %>
+      <%= image_tag('014_007.png', class: 'features-div-icon') %>
       <h1 class="sub-hero-header">Virtual Terminal</h1>
       <div>
         <div class="browser-header-full w-clearfix">
@@ -257,9 +317,7 @@
         </div>
       </div>
     </div>
-    <div class="div-cta-container virtual-terminal w-container">
-      <a class="button div-cta w-button" href="/users/sign_up">Get started free</a>
-      <a class="button demo div-cta w-button" href="/request-demo">Schedule a demo</a>
+    <div class="div-cta-container virtual-terminal w-container"><a class="button div-cta w-button" href="#">Get started free</a><a class="button demo div-cta w-button" href="#">Schedule a demo</a>
     </div>
   </div>
   <div class="default-content-section-2 features value-prop-details">

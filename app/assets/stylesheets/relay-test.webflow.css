@@ -2642,6 +2642,11 @@ h4 {
   color: #637280;
 }
 
+.underline-div.message-input-dropdown-underline {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
 .tab {
   margin-right: 2%;
   padding-right: 30px;
@@ -3712,7 +3717,7 @@ h4 {
   height: 100vh;
   min-height: auto;
   min-width: 54%;
-  padding-bottom: 130px;
+  padding-bottom: 85px;
   background-color: #f8fafc;
 }
 
@@ -4205,6 +4210,7 @@ h4 {
   float: none;
   font-family: 'Fontawesome webfont', sans-serif;
   color: #8da2b7;
+  text-align: right;
 }
 
 .messaging-dash-variable-text.transactions-div-table.list-or-segment {
@@ -4276,7 +4282,7 @@ h4 {
 }
 
 .sub-nav-button.mark {
-  position: relative;
+  position: static;
   right: 25px;
   bottom: 3px;
   height: 36px;
@@ -4284,7 +4290,7 @@ h4 {
   margin-right: 3px;
   margin-left: 3px;
   padding-top: 9px;
-  float: right;
+  float: none;
   border-color: #1f8cec;
   background-color: transparent;
   box-shadow: none;
@@ -4778,19 +4784,20 @@ h4 {
 
 .text-window-wrapper {
   position: fixed;
-  right: 25%;
+  right: 24%;
   bottom: 0px;
   z-index: 2;
   overflow: visible;
-  width: 51%;
-  height: 122px;
+  width: 53%;
+  height: auto;
   margin-left: 0px;
-  border-top: 1px solid #e6e5e5;
+  padding: 18px 10px 0px 0px;
+  border-top: 1px none #e6e5e5;
   border-right: 1px solid #e6e5e5;
   border-left: 1px solid #e6e5e5;
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
-  background-color: #fff;
+  background-color: #f8fafc;
 }
 
 .text-window-wrapper.customer-profile {
@@ -5102,11 +5109,15 @@ h4 {
 }
 
 .text-area.message-text-box {
-  height: 78px;
-  margin-bottom: 9px;
+  height: 50px;
+  margin-bottom: 0px;
   padding-top: 15px;
   padding-right: 15px;
-  padding-left: 20px;
+  padding-left: 15px;
+  border: 1px solid #1f8cec;
+  border-radius: 6px;
+  background-color: #fff;
+  box-shadow: inset 1px 1px 3px 0 #e6e5e5;
 }
 
 .text-area.hashtag-description-area {
@@ -5149,12 +5160,12 @@ h4 {
 }
 
 .message-window-tabs.send-button.message-reason {
-  position: relative;
+  position: static;
   right: 25px;
   bottom: 3px;
   height: 36px;
   margin-right: 3px;
-  float: right;
+  float: none;
   border: 1px solid #1f8cec;
   background-color: transparent;
   color: #1f8cec;
@@ -10535,8 +10546,9 @@ h4 {
 .right-nav-profile-content-wrapper {
   margin-top: 30px;
   margin-bottom: 0px;
+  margin-left: 10%;
   padding-bottom: 10px;
-  padding-left: 10%;
+  padding-left: 0%;
   text-align: left;
 }
 
@@ -10644,7 +10656,7 @@ h4 {
   width: 100%;
   margin-right: 0%;
   margin-left: 0%;
-  padding: 15px 1% 15px 2%;
+  padding: 15px 0%;
   border-bottom: 1px none rgba(221, 229, 237, .8);
   -webkit-transition: background-color 250ms ease;
   transition: background-color 250ms ease;
@@ -10663,7 +10675,7 @@ h4 {
 
 .right-nav-transaction-div-table {
   margin-right: 20px;
-  margin-left: 20px;
+  margin-left: 10%;
   padding-top: 10px;
   padding-bottom: 10px;
   padding-left: 0px;
@@ -10689,6 +10701,7 @@ h4 {
   font-family: 'Fontawesome webfont', sans-serif;
   color: #495b70;
   font-size: 14px;
+  text-align: right;
 }
 
 .user-review-div {
@@ -12768,10 +12781,10 @@ h4 {
 }
 
 .split-button-wrapper {
-  position: relative;
+  position: static;
   right: 22px;
   bottom: 8px;
-  width: 10%;
+  width: 28%;
   float: right;
 }
 
@@ -13371,6 +13384,142 @@ h4 {
   margin-top: 0px;
   margin-right: 30px;
   margin-left: 0px;
+}
+
+.text-window-row-column-2 {
+  position: relative;
+}
+
+.right-nav-transaction-div-column-1 {
+  padding-left: 0px;
+}
+
+.message-input-box-column-2 {
+  padding-right: 0px;
+  padding-left: 0px;
+}
+
+.message-input-box-column-1 {
+  padding-right: 0px;
+  padding-left: 0px;
+}
+
+.message-input-box-button-text {
+  display: block;
+  margin-top: 3px;
+  margin-right: auto;
+  margin-left: auto;
+  padding-top: 13px;
+  padding-bottom: 12px;
+  font-family: 'Fontawesome webfont', sans-serif;
+  color: #1f8cec;
+  font-size: 17px;
+  text-align: center;
+}
+
+.message-input-box-button-text:hover {
+  color: #fff;
+}
+
+.message-input-box-dropdown {
+  width: 50px;
+  height: 50px;
+  text-align: center;
+}
+
+.message-input-box-dropdown-toggle {
+  width: 100%;
+  height: 50px;
+  margin-left: 10px;
+  padding: 0px;
+  border: 1px solid #1f8cec;
+  border-radius: 6px;
+  background-color: #fff;
+  -webkit-transition: background-color 300ms ease;
+  transition: background-color 300ms ease;
+}
+
+.message-input-box-dropdown-toggle:hover {
+  border-color: #1f8cec;
+  background-color: #1f8cec;
+  font-family: 'Fontawesome webfont', sans-serif;
+  color: #fff;
+}
+
+.message-input-box-dropdown-toggle:focus {
+  background-color: #1f8cec;
+}
+
+.message-input-dropdown-list-wrapper.w--open {
+  left: 10px;
+  bottom: 59px;
+  display: block;
+  width: 220px;
+  border: 1px solid #e6e5e5;
+  border-radius: 6px;
+  background-color: transparent;
+  box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, .16);
+}
+
+.message-input-box-option-buttons {
+  display: block;
+  width: auto;
+  height: auto;
+  min-width: 0px;
+  margin-right: 15px;
+  margin-bottom: 3px;
+  margin-left: 15px;
+  padding-top: 7px;
+  padding-bottom: 7px;
+  border: 1px none #e6e5e5;
+  border-radius: 3px;
+  background-color: #fff;
+  text-align: left;
+  text-decoration: none;
+}
+
+.message-input-box-option-buttons:hover {
+  margin-bottom: 3px;
+  border-style: none;
+  background-color: #f8f9fb;
+}
+
+.message-input-box-option-buttons.payment-info-collection-link {
+  margin-right: 15px;
+  margin-bottom: 5px;
+  margin-left: 15px;
+  border-style: solid;
+  border-color: #1f8cec;
+  background-color: rgba(240, 246, 251, .5);
+}
+
+.message-input-box-option-buttons.payment-info-collection-link:hover {
+  background-color: #f0f6fb;
+}
+
+.message-input-box-option-div-wrapper {
+  margin-left: 0px;
+  padding: 20px 0px 10px;
+  border-radius: 6px;
+  background-color: #fff;
+  text-align: left;
+}
+
+.message-input-options-text {
+  margin-top: 1px;
+  margin-left: 13px;
+  font-family: 'Fontawesome webfont', sans-serif;
+  color: #8da2b7;
+  font-size: 13px;
+  text-align: left;
+}
+
+.message-input-options-text:hover {
+  color: #8da2b7;
+}
+
+.message-input-options-text.collect-payment-info-text {
+  color: #637280;
 }
 
 html.w-mod-js *[data-ix="display-none-on-load"] {
