@@ -59,7 +59,7 @@ Rails.application.routes.draw  do
     member { get 'sms-usage' => 'users#sms_usage' }
     resources :fb_pages, only: [:index]
     patch 'update_fb_page' => 'fb_pages#update_user_fb_page'
-    resources :hashtags, except: [:show, :destroy] do
+    resources :hashtags, except: [:show] do
       collection { get 'mention' => 'hashtags#tag_mention' }
     end
     resources :subscriptions, only: [:index, :update, :destroy] do
@@ -117,7 +117,9 @@ Rails.application.routes.draw  do
 
   ## api
   api_version(module: "Api::V1", path: { value: "v1"}, constraints: { subdomain: "api" }, defaults: { format: "json" }) do
-    match 'users/add_customers' => 'users#add_customers', via: :post
+    resources :users, only: [:index] do
+      post 'add_customers', on: :collection
+    end
     match 'hashtags' => 'hashtags#index', via: :get
     match 'hashtags/:id/images/:image_id' => 'hashtags#image_delete', via: :delete
     match 'saved_replies' => 'saved_replies#index', via: :get
@@ -149,6 +151,7 @@ Rails.application.routes.draw  do
     match 'referrers/invite_business' => 'referrers#invite_business', via: :post
     resources :demos, only: [:create]
     resources :conversations, only: [:index, :show] do
+      get 'find', on: :collection
       member do
         post 'messages'
         post 'mms'

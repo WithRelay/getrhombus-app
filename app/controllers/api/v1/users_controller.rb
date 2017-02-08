@@ -46,15 +46,40 @@ class Api::V1::UsersController < API::V1::BaseController
     render json: { response: response }, status: status
   end
 
+  def index
+    q = params[:query].downcase
+    results = User.find_by_sql [
+      "(select customer_id as uid, customer_id_type as uid_type, 
+          coalesce(NULLIF(card_name, ''), email) as title, phone_number as description from 
+        
+        (select * from 
+        
+          (select merchant_id, customer_id, 'user' as customer_id_type
+          from merchant_customers where merchant_id = ?
+          union
+          select merchant_id, customer_id, customer_id_type
+          from merchant_contacts where merchant_id = ? and customer_id_type = 'user') as A
 
+      inner join users on A.customer_id = users.id 
+      where lower(card_name) like concat('%', ?, '%') or phone_number like concat('%', ?, '%')) as B)
 
+      union all
 
+      (select customer_id as uid, 'fb_page', name as title, 'Messenger User'
+      from merchant_contacts
+      inner join fb_creds on fb_creds.page_specific_id = merchant_contacts.customer_id
+      where merchant_id = ? and customer_id_type = 'fb_page' and name <> '' and lower(name) like concat('%', ?, '%'))
 
+      union all
 
+      (select customer_id as uid, 'phone_number', 'SMS User', customer_id as description
+      from merchant_contacts
+      where merchant_id = ? and customer_id_type = 'phone_number' and customer_id like concat('%', ?, '%'))", 
 
+      current_user.id, current_user.id, q, q, current_user.id, q, current_user.id, q]
 
-
-
+    render json: { data: results }
+  end
 
   private
 

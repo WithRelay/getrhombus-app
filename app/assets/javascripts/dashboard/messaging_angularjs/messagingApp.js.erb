@@ -130,15 +130,15 @@ messagingApp.factory('conversationService', function($http, $q, Upload){
     return deferred.promise;
   }
 
-  service.findConversation = function(page){
+  service.findConversation = function(data){
     var deferred = $q.defer();
-    $http.get(base_url + '.json?page=' + page)
+    $http.get(base_url + '/find.json', { params: data })
     .success(function(data) {
-      console.log('console success in serice get conversations'); 
+      console.log('console success in serice get conversation'); 
       deferred.resolve(data);
     })
     .error(function(data, status, headers, config) { 
-      console.log('console fail in serice get conversations'); 
+      console.log('console fail in serice get conversation'); 
       deferred.reject("there was an error");
     });
     return deferred.promise;

@@ -43,7 +43,10 @@
   <div class="sub-nav-options-wrapper w-clearfix">
     <a class="add sub-nav-button w-button" data-ix="create-customer" href="#"> &nbsp;<strong>New hashtag</strong></a>
     <a class="import sub-nav-button w-button" data-ix="import-customers" href="#">&nbsp; <strong>Deactivate</strong></a>
-    <a class="sub-nav-button w-button" data-ix="create-list" href="#"> &nbsp;<strong>Delete</strong></a>
+
+
+    <a class="sub-nav-button w-button" data-ix="create-list" id= "delete-hashtag" href="#"> &nbsp;<strong>Delete</strong></a>
+
   </div>
 </div>
 <div class="dashboard-body">
@@ -56,12 +59,13 @@
         </div>
         <div class="alt-table cb check-box-column">
           <div class="w-form">
-            <form data-name="Email Form 2" id="email-form-2" name="email-form-2">
+            <%= form_for h, url: user_hashtag_path(current_user, h) do |f| %>
               <div class="select-all-check-box w-checkbox w-clearfix">
-                <input class="cb table-checkbox w-checkbox-input" id="node" type="checkbox">
+                <%= f.hidden_field :id %>
+                <input class="cb table-checkbox w-checkbox-input hashtag-check-box" id="node" type="checkbox">
                 <label class="checkbox-field-lable w-form-label" for="node">-</label>
               </div>
-            </form>
+            <% end %>
             <div class="w-form-done">
               <div>Thank you! Your submission has been received!</div>
             </div>

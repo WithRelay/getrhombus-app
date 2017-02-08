@@ -2,8 +2,8 @@
 // the first parameter is message and second parameter is type eg: success
 var FlashHandler = new function() {
   // toast message for error, success, notice
+  var typeObj = { 'notice': 'success', 'warning': 'info', 'error':'error' };
   this.setFlashMessage = function(msg, type){
-    var typeObj = { 'notice': 'success', 'warning': 'info', 'error':'error' };
     var messageToSet = typeObj[type] || 'Attention';
     showToastr (messageToSet, arrayToString(msg));
     $('.toaster-font-awesome').on('click', function (e) {
@@ -15,7 +15,7 @@ var FlashHandler = new function() {
   function showToastr (type, message) {
     hideToastr();
     var class_name = (type === 'error') ? 'failure toasters' : 'toasters' ,
-      close_button_class = (type === 'error') ? 'failure toaster-font-awesome' : 'toaster-font-awesome'
+        close_button_class = (type === 'error') ? 'failure toaster-font-awesome' : 'toaster-font-awesome'
     $('body').append('<div class="'+class_name+'">\
       <div class="toaster-row w-row">\
         <div class="toaster-row-column-1 w-col w-col-11">\
@@ -28,7 +28,6 @@ var FlashHandler = new function() {
         </div>\
       </div>\
     </div>');
-
   }
 
   function hideToastr(){

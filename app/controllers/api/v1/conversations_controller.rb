@@ -1,7 +1,6 @@
 class Api::V1::ConversationsController < API::V1::BaseController
-  before_action :set_conversation, except: [:index]
+  before_action :set_conversation, except: [:index, :find]
   before_action :check_user
-  before_action :set_recipient_object, only: [:messages, :mms, :show]
 
 	def index
     if params[:select_conversation].present?
@@ -17,8 +16,12 @@ class Api::V1::ConversationsController < API::V1::BaseController
 	end
 
   def show
-    messages_ary = @conversation.get_conversation_messages(params[:page], @customer)
+    messages_ary = @conversation.get_conversation_messages(params[:page])
     render json: { messages: messages_ary[0], unread_ids: messages_ary[1] }  
+  end
+
+  def find
+    render json: Conversation.new.find_or_create_conversation(current_user.id, params[:uid_type], params[:uid]), status: 200
   end
 
   def mark_messages_as_read
@@ -58,10 +61,6 @@ class Api::V1::ConversationsController < API::V1::BaseController
 
     def check_user
       render(json: {}, status: 500) if !current_user || current_user.is_customer?
-    end
-
-    def set_recipient_object
-      @customer = User.find_by(@conversation.uid) if @conversation.uid_type == "user"
     end
 
     def not_found

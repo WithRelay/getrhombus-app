@@ -3,12 +3,9 @@ https://www.getrhombus.com/receive_delivery_report
 - <redacted_webhook_url>      - voice
 - <redacted_webhook_url>      - messaging
 
-- payment capture - done
-- payment capture processing - done
-- payment from dashboard  - done
 - charge payment service for connect/managed - done
 	- fix how we store amounts - just job left
-- redo messaging
+
 
 
 Bhishma
@@ -16,7 +13,6 @@ Bhishma
 	- Add logic for switching plans/subscriptions
 	- Subscription can be updated...but coupon only
 	- when subscription cancels, release rhombus number, wipe rhombus number, rn_type and delete facebook integration....set user is_active attribute to false
-	- make slider vertical
 - Messenger - don't touch this yet until we talk
 	- has_one :fb_cred??? - highlighted
 	- using page_id alone can cause problems... - highlighted
@@ -30,8 +26,6 @@ Bhishma
 	- review FbCred.find_by_page_specific_id in facebook_event
 	- review remove_integration
 	- when switching managed page, add that any messenger campaign will now use this page
-- Get Started Page
-- twitter integration...simple method to tweet - will supply current user and text to tweet - dont touch this till we speak
 - fix registrations controller
 - subscriptions controller needs check for card error
 - in stripe event, #### needs better error handling
@@ -61,13 +55,9 @@ surya
 Ovo
 - add to list from user profile - http://rhombus-test.webflow.io/customer-profile
 
-Edwin
-- compile list of links
-- generate page loader
-
 Taiwo (review)
 - review additional user actions file
-- review routes
+- clean up routes
 - review referrer... 
     - when do I use id and uid
     - Is everyone getting a uid - i think yes
@@ -90,7 +80,6 @@ Taiwo (review)
    - remove livemode from users, add to merchant_customer and create rake task to migrate this to merchant..customer
 - signup page doesnt need params...only facebook link page
 - <% if current_user.stripe_creds.empty? %> not needed for connect
-- clean up routes
 
 Review
 - campaign_user_list (can better track failures) or notification_log or add an email model??
@@ -117,11 +106,6 @@ Contact - Inbound
 - have an account, sent u a text but ref link isnt yours 
 
 
-http://rhombus-test.webflow.io/account-settings
-http://rhombus-test.webflow.io/business-settings
-http://rhombus-test.webflow.io/setup-payments
-http://rhombus-test.webflow.io/bank-account
-
 
 UI INTEGRATION
 1. Referrer Page/Settings referrer page - refer-a-business
@@ -138,6 +122,19 @@ UI INTEGRATION
 6. List campaign
 	- send campaign...should prefill campaign list
 7. Deactivate account...store info in popup
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

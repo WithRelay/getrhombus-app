@@ -30,7 +30,7 @@ class Conversation < ActiveRecord::Base
 
     if self.uid_type == "user"
       customer = User.find_by(id: self.uid)
-      full_name = (customer) ? customer.card_name : ""
+      full_name = (customer) ? ((customer.card_name.present?) ? customer.card_name : customer.email) : ""
     else 
       # does fb at least give us some info?
       full_name = (self.uid_type == 'fb_page') ? "messenger user" : self.uid
@@ -51,14 +51,15 @@ class Conversation < ActiveRecord::Base
   end
 
 
-	def get_conversation_messages(page, customer, merchant=nil)
+	def get_conversation_messages(page)
+    customer = User.find_by(self.uid) if self.uid_type == "user"
 		convs_refs = self.conversation_refs.paginate(page: page, per_page: 25).includes(textable: [:images]).order(created_at: :desc)
 		latest_messages = Array.new
 		unread_ids = []  
 
 		convs_refs.each do |cr| 
 			unread_ids.push(cr.id) if cr.unread			
-			latest_messages.push(message_hash(cr.textable, cr.id, customer, merchant))
+			latest_messages.push(message_hash(cr.textable, cr.id, customer, nil))
     end
     [latest_messages, unread_ids.join(",")]
 	end
