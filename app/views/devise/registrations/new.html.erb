@@ -1,39 +1,37 @@
 <% provide(:title, 'Rhombus - Sign Up') %>
 <style type="text/css">
-  .intl-tel-input { margin-bottom: 20px; }
+.intl-tel-input { margin-bottom: 20px; }
 </style>
-<div class="w-row", id="sign_up-page">
+
+<div class="w-row">
   <div class="onboarding-table-column-1 w-col w-col-8">
     <div class="onboarding-form-section">
       <div class="onboarding-form-div sign-in signup">
         <%= link_to root_url, class: 'form-logo w-inline-block' do %>
-          <%= image_tag('relay-4.png', width: 50) %>
+          <%= image_tag('Relay-Transparent-500x300.png', width: 50) %>
         <% end %>
         <div class="log-in-form w-form">
           <%= form_for(resource, as: resource_name, url: registration_path(resource_name, params[:value]), html: { id: 'signupForm', class: 'w-clearfix', data: { name: 'Email Form' }} ) do |f| %>
-            <div class="form-group col-xs-5">
-                <%= f.email_field :email, id: "email Email-2", class: "form-control email-address text-field w-input", placeholder: "Email address", data: { name:'Email' }, max_length: 100 %>
-            </div>
+          <div class="form-group col-xs-5">
+              <%= f.email_field :email, id: "email Email-2", class: "form-control email-address text-field w-input", placeholder: "Email address", data: { name:'Email' }, max_length: 100 %>
+          </div>
+          <div class="form-group col-xs-6">
+              <%= f.phone_field :phone, id: "phone", class: "form-control login phone text-field w-input", placeholder: 'Mobile number', data: { name: 'Phone'} %>
+          </div>
 
+          <%= f.hidden_field :phone_number, :id => "phone_number" %>
 
-            <div class="form-group col-xs-5">
-                <%= f.phone_field :phone, id: "phone", class: "form-control login phone text-field w-input", placeholder: 'Mobile number', data: { name: 'Phone'} %>
-            </div>
+          <div class="form-group col-xs-5">
+          <%= f.select :user_level, "<option value='' disabled selected class='hide'>Account Type</option> <option value='0'>Business Account</option><option value='1'>Customer Account</option>".html_safe, {}, class: 'form-control dropdown w-select', data: { name:'Field 2'}, id: 'field-2' %>
 
-            <%= f.hidden_field :phone_number, :id => "phone_number" %>
-            
+          </div>
 
-            <div class="form-group col-xs-5">
-            <%= f.select :user_level, "<option value='' disabled selected class='hide'>Account Type</option> <option value='0'>Business Account</option><option value='1'>Customer Account</option>".html_safe, {}, class: 'form-control dropdown w-select', data: { name:'Field 2'}, id: 'field-2' %>
+          <div class="form-group col-xs-5">
+          <%= f.password_field :password, class: "form-control login password text-field w-input", placeholder: "Password", id: 'Password-3' %>
+          </div>
 
-            </div>
-
-            <div class="form-group col-xs-5">
-            <%= f.password_field :password, class: "form-control login password text-field w-input", placeholder: "Password", id: 'Password-3' %>
-            </div>
-
-            <%= f.submit "SIGN UP", class: "button log-in w-button", value: 'continue', data: { wait: 'Please wait...' } %>
-          <% end %>
+          <%= f.submit "SIGN UP", class: "button log-in w-button", value: 'continue', data: { wait: 'Please wait...' } %>
+        <% end %>
           <div class="w-form-done">
             <div>Thank you! Your submission has been received!</div>
           </div>
@@ -41,10 +39,11 @@
             <div>Oops! Something went wrong while submitting the form</div>
           </div>
         </div>
-        <div class="log-in-sign-up-cta">Already have a Rhombus account? <a class="links sign-up-cta-log-in-page" href="/users/sign_in">Sign in.</a>
+        <div class="log-in-sign-up-cta">Already have a Rhombus account? <a class="links sign-up-cta-log-in-page" href="#">Sign in.</a>
         </div>
       </div>
-      <div class="forgot-password links">By continuing, I agree to Rhombus' Terms and Privacy Policy</div>
+      <div class="forgot-password links">By continuing, I agree to Rhombus' <span class="terms-link"><a href="#" class="terms-link">Terms and Privacy Policy</a></span>
+      </div>
     </div>
   </div>
   <div class="onboarding-table-column-2 w-col w-col-4">

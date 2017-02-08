@@ -13,7 +13,6 @@ $(document).ready(function() {
   // when a saved reply is click populate form fields and rebuild links
   $('.saved-reply-title').click(function() {
 
-
     id = this.id.split('-')[3];
 
     action = form.attr('action');
@@ -21,11 +20,19 @@ $(document).ready(function() {
     // $('#delete-saved-reply').attr('href', action)
     saved_reply = {}
     saved_reply['saved_reply'] =  { 'id': id }
-     debugger;
     sendRequest(saved_reply, action, ['#saved-reply-title-field', '.emojionearea-editor', 
       '.hidden-id-field'])
 
     set_title_and_body();
+  });
+
+  $('#email-form-8').submit(function(e){
+    e.preventDefault();
+  });
+
+  $('#send-saved-reply').click(function(){
+     action = $('#email-form-8').attr('action');
+     sendRequest($('#email-form-8').serialize(), action);
   });
 
   $('#save-reply-button').click(function(e){

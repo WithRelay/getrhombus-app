@@ -58,7 +58,7 @@ Rails.application.routes.draw  do
     member { get 'sms-usage' => 'users#sms_usage' }
     resources :fb_pages, only: [:index]
     patch 'update_fb_page' => 'fb_pages#update_user_fb_page'
-    resources :hashtags, except: [:show, :destroy] do
+    resources :hashtags, except: [:show] do
       collection { get 'mention' => 'hashtags#tag_mention' }
     end
     resources :subscriptions, only: [:index, :update, :destroy] do
@@ -123,7 +123,8 @@ Rails.application.routes.draw  do
     match 'hashtags/:id/images/:image_id' => 'hashtags#image_delete', via: :delete
     match 'saved_replies' => 'saved_replies#index', via: :get
     post 'saved_replies/edit' => 'saved_replies#edit'
-    patch 'saved_replies/save' => 'saved_replies#save'
+    patch 'saved_replies/update' => 'saved_replies#update'
+    post 'saved_replies/create' => 'saved_replies#create'
     # Campaign Routes
     post 'campaigns/change_status' => 'campaigns#change_status'
     post 'campaigns/delete' => 'campaigns#delete_campaign'

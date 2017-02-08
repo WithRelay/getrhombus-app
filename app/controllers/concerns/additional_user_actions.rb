@@ -132,7 +132,7 @@ module AdditionalUserActions
 
   # Sends a message to user on behalf of merchant
   def send_message_from_merchant
-    if params[:message].present?      
+    if params[:message].present?
       merchant = User.find_by_id(params[:id])
       if merchant.present?
         message = Message.new

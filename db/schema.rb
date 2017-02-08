@@ -325,10 +325,10 @@ ActiveRecord::Schema.define(version: 20170207164154) do
     t.integer "merchant_customer_id", limit: 4
   end
 
-  add_index "invoices", ["coupon_id"], name: "fk_rails_0509f5ee0a", using: :btree
+  add_index "invoices", ["coupon_id"], name: "fk_rails_1489735805", using: :btree
   add_index "invoices", ["stripe_invoice_id"], name: "index_invoices_on_stripe_invoice_id", using: :btree
-  add_index "invoices", ["subscription_id"], name: "fk_rails_3f62823c58", using: :btree
-  add_index "invoices", ["transaction_id"], name: "fk_rails_bbdcb50cdd", using: :btree
+  add_index "invoices", ["subscription_id"], name: "fk_rails_8a85263dc0", using: :btree
+  add_index "invoices", ["transaction_id"], name: "fk_rails_497f2b74ce", using: :btree
 
   create_table "knowledge_base_categories", force: :cascade do |t|
     t.string   "name",       limit: 191
@@ -337,6 +337,7 @@ ActiveRecord::Schema.define(version: 20170207164154) do
     t.string   "slug",       limit: 191
   end
 
+  add_index "knowledge_base_categories", ["name"], name: "index_knowledge_base_categories_on_name", unique: true, using: :btree
   add_index "knowledge_base_categories", ["slug"], name: "index_knowledge_base_categories_on_slug", unique: true, using: :btree
 
   create_table "knowledge_bases", force: :cascade do |t|
@@ -352,7 +353,6 @@ ActiveRecord::Schema.define(version: 20170207164154) do
     t.datetime "updated_at",                                           null: false
   end
 
-  add_index "knowledge_bases", ["title", "raw_content"], name: "title", type: :fulltext
   add_index "knowledge_bases", ["title"], name: "index_knowledge_bases_on_title", unique: true, using: :btree
 
   create_table "lists", force: :cascade do |t|

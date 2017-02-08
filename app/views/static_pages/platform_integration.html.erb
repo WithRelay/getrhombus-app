@@ -1,13 +1,11 @@
-<div class="hero-content pricing w-container">
+  <div class="hero-content pricing w-container">
     <h1 class="hero-h1 home-header pricing-hero">Integrations</h1>
-    <div class="integrations-header-paragraph">Relay works well with tools you already use to run your business</div>
-    <a class="button div-cta w-button" href="/users/sign_up">Get started free</a>
-    <a class="button demo div-cta w-button" href="/request_demo">Schedule a demo</a>
+    <div class="integrations-header-paragraph">Relay works well with tools you already use to run your business</div><a class="button div-cta w-button" href="#">Get started free</a><a class="button demo div-cta w-button" href="#">Schedule a demo</a>
   </div>
   <div class="integrations-row-alt w-row">
     <div class="w-col w-col-4">
       <div class="integrations-content-wrapper w-clearfix">
-        <% image_tag 'twilio-logo.png', class: 'integration-icon', height: 65, width: 65 %>
+        <% image_tag 'twilio-logo.png', class: 'alt integration-icon', height: 65, width: 65 %>
         <h5 class="integration-name">SMS</h5>
         <p class="integration-paragraph">Manage customer two-way interactions via SMS powered by Twilio</p>
       </div>
@@ -37,14 +35,15 @@
     </div>
     <div class="w-col w-col-4">
       <div class="integrations-content-wrapper w-clearfix">
-        <% image_tag 'OpenCNAM.png', class: 'integration-icon', height: 65, width: 65 %>
+        <% image_tag 'OpenCNAM.png', class: 'alt integration-icon', height: 65, width: 65 %>
         <h5 class="integration-name">OPEN CNAM</h5>
         <p class="integration-paragraph">Automatically identify phone numbers when you receive text messages from non-contacts.</p>
       </div>
     </div>
     <div class="w-col w-col-4">
       <div class="integrations-content-wrapper w-clearfix">
-        <% image_tag 'clearbit.png', class: 'integration-icon', height: 65, width: 65 %>
+
+        <% image_tag 'Light-Blue.png', class: 'alt integration-icon', height: 65, width: 65 %>
         <h5 class="integration-name">full contact</h5>
         <p class="integration-paragraph">See enriched customer profiles, including profile pictures and social handles.</p>
       </div>
@@ -56,19 +55,19 @@
 </div>
 <div class="default-content-section-2 integrations table-section">
   <div class="def-content-section-wrapper w-container">
-    <% image_tag '', class: 'integration-icon', height: 65, width: 65 %>
-    <img class="section-icon" src="images/001_111.png">
+    <% image_tag '001_111.png', class: 'section-icon' %>
     <h1 class="sub-hero-header">We're constantly adding new integrations so you can <br>easily run your business in Relay.</h1>
   </div>
 </div>
 <div class="default-content-section integrations-upcoming">
-  <div class="def-content-section-wrapper w-container"><img class="section-icon" src="images/Circuit-50.png">
+  <div class="def-content-section-wrapper w-container">
+    <% image_tag 'Circuit-50.png', class: 'section-icon' %>
     <h1 class="alt sub-hero-header">Upcoming Integrations</h1>
   </div>
   <div class="integrations-row-alt upcoming w-row">
     <div class="w-col w-col-3">
       <div class="alt integrations-content-wrapper w-clearfix">
-        <%= image_tag 'slack.png', class: 'integration-icon', height: 65, width: 65 %>
+        <%= image_tag 'slack.png', class: 'alt integration-icon', height: 65, width: 65 %>
         <h5 class="integration-name">slack</h5>
         <div class="upcoming-integration-text">Communication</div>
       </div>
@@ -98,7 +97,7 @@
   <div class="integrations-row-alt upcoming w-row">
     <div class="w-col w-col-3">
       <div class="alt integrations-content-wrapper w-clearfix">
-        <%= image_tag 'telegram.png', class: 'integration-icon', height: 65, width: 65 %>
+        <%= image_tag 'telegram.png', class: 'alt integration-icon', height: 65, width: 65 %>
         <h5 class="integration-name">telegram</h5>
         <div class="upcoming-integration-text">Communication</div>
       </div>
@@ -126,6 +125,3 @@
     </div>
   </div>
 </div>
-<%= render 'shared/sign_up' %>
-
-<%= render 'shared/unauthenticate_footer' %>

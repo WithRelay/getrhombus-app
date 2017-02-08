@@ -11,6 +11,8 @@ class ApplicationController < ActionController::Base
   rescue_from ActiveRecord::RecordNotUnique, with: :record_not_unique
 
   def after_sign_in_path_for(user)
+    return user_conversations_path(user) if merchant_details_present?
+    return user_transactions_path(user) if customer_details_present?
     current_user
   end
 
@@ -38,6 +40,18 @@ class ApplicationController < ActionController::Base
   end
 
   protected
+
+    def merchant_details_present?
+      unless current_user.is_customer?
+        current_user.org_name.present? && current_user.rhombus_number.present? && current_user.get_saas_subscription.present?
+      end
+    end
+
+    def customer_details_present?
+      unless current_user.is_merchant?
+        current_user.card_token.present?
+      end
+    end
 
     def set_time_zone(&block)
       Time.use_zone(current_user.time_zone, &block)
