@@ -1,21 +1,3 @@
 <%#<button type="button" id="populate" class="btn btn-default pull-right" style="margin-bottom: 20px;">Populate Test Data</button>%>
 
-<% if current_user.is_customer? %>
-
-   <% if current_user.card_token.blank? %>
-      <%= render "billing_information" %>
-  <% else %>
-      <%= render "user_profile" %>
-  <% end %>
-
-<% elsif current_user.is_merchant? %>
-    <% if current_user.card_token.blank? %>
-      <%= render "billing_information" %>
-    <% elsif current_user.org_name.blank? %>
-        <%= render "business_information" %>
-    <% elsif current_user.rhombus_number.blank? %>
-        <%= render "phone_number" %>
-    <% else %>
-       <%= render "merchant_profile" %>
-    <% end %>
-<% end %>
+<%= present(current_user).render_user_pages %>
