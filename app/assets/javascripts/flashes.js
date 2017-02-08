@@ -27,6 +27,7 @@ var FlashHandler = new function() {
         </div>\
       </div>\
     </div>');
+
   }
 
   function incoming_facebook_message(profile_pic, customer_name, message) {
@@ -116,8 +117,17 @@ var FlashHandler = new function() {
       <a class="button cancel-no w-button" data-ix="close-cancel-subscription" href="#">Cancel</a>\
     </div>');
 
+    $('.cancel-subscription-wrapper').lightbox_me({
+      centered: true,
+      overlayCSS: {
+        background: '#0040ff',
+        opacity: .25
+      }
+    });
+
     $('.cancel-no').on('click', function(e){
       $('.cancel-subscription-wrapper').remove();
+      $('.js_lb_overlay').remove();
       return false;
     })
 
