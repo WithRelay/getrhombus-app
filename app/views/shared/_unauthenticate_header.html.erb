@@ -76,7 +76,9 @@
         <div class="hamburger-menu-wrapper w-nav-button">
           <div class="hamburger-menu w-icon-nav-menu"></div>
         </div>
-        <nav class="hamburger nav-menu w-nav-menu" role="navigation"><a class="nav-link w-nav-link" href="#">Features</a><a class="nav-link w-nav-link" href="#">Pricing</a>
+        <nav class="hamburger nav-menu w-nav-menu" role="navigation">
+          <%= link_to 'Features', features_url, class: 'nav-link w-nav-link' %>
+          <%= link_to 'pricing', pricing_url, class: 'nav-link w-nav-link' %>
           <div class="w-dropdown" data-delay="200" data-hover="1">
             <div class="use-case-dropdown w-dropdown-toggle">
               <div class="use-case-dropdown-text">Use Cases</div>
