@@ -1,65 +1,102 @@
-<div class="editor side-bar">
-  <div class="dashboard-nav-links">All Customers</div>
-  <h5 class="left-nav signup-box-subheading">CREATE HASHTAG</h5>
-  <div class="campaign-editor-options w-form">
-    <%= form_for [current_user, @hashtag], html: { multipart: true, data: { name: "Email Form" }, id: 'email-form' } do |f| %>
-      <label class="editor-options form-label" for="Tag-name"> &nbsp; Tag name</label>
-      <%= f.text_field :tag, class: "editor text-field w-input", data: { name: "Tag name" }, id: 'Tag-name', placeholder: "E.g. #CheeseBurger" %>
-      <label class="editor-options form-label" for="Tag-Description">&nbsp; &nbsp;Description</label>
-      <%= f.text_area :description, class: "editor text-field w-input", data: { name: "Tag Description" }, placeholder: "E.g. Wednesday chesseburger special", id: "Tag-Description" %>
-      <label class="editor-options form-label" for="Channel"> &nbsp; Type</label>
-      <%= f.select :tag_type, options_for_select({ "Non-payment Hashtag" => "0", "One-time payment Hashtag" => '1', "Recurring payment Hashtag" => "2" }, selected: @hashtag.tag_type), {}, class: 'dropdown editor-dropdown w-select', data: { name: 'Channel' },  id: "Channel" %>
-      <div class="editor-options form-label"> &nbsp; Payment Settings</div>
-      <div class="editor underline-div"></div>
-      <div class="fixed-amount radio-button w-clearfix w-radio">
-        <%= f.radio_button :charge_amount, 1, class: "w-radio-input", data: { name: "Radio" }, id:"radio"%>
-        <label class="check-radio-text w-form-label" for="radio">Set a fixed amount</label>
-      </div>
-      <div class="fixed-amount radio-button w-clearfix w-radio">
-        <%= f.radio_button :charge_amount, 0 , class: "w-radio-input", data: { name: "Radio" }, id:"radio" %>
+<%= form_for [current_user, @hashtag], :html => { :multipart => true } do |f| %>
+  
+  <div class="editor side-bar">
+    <div class="dashboard-nav-links">All Customers</div>
+    <h5 class="left-nav signup-box-subheading">CREATE HASHTAG</h5>
+    <div class="campaign-editor-options w-form">
+          
+      <%= f.label :name, class: 'editor-options form-label' do %>
+         &nbsp; Name
+      <% end %>
+      <%= f.text_field :name, class: 'editor item-name-field text-field w-input', placeholder: 'E.g. Cheese Burger' %>
+
+    
+      <%= f.label :hashtag, class: 'editor-options form-label' do %>
+         &nbsp; Hashtag
+      <% end %>
+      <%= f.text_field :tag, class: 'editor text-field w-input', placeholder: 'E.g. #CheeseBurger' %>
+      
+
+      <%= f.label :description, class: "editor-options form-label" do %>
+         &nbsp; Description
+      <% end %>
+      <%= f.text_area :description, class: 'hashtag-description-area text-area w-input', placeholder: 'E.g. Burger with bacon & extra bun' %>
+              
+      <label class="editor-options form-label" > &nbsp; Type</label>
+      <%= f.select :tag_type, options_for_select(present(@hashtag).get_tag_type_options, selected: present(@hashtag).get_tag_type_value), {}, { class: "dropdown editor-dropdown w-select" } %>
+
+      <div class="hashtag-payment-settings">
+
+        <div class="editor-options form-label"> &nbsp; Payment Settings</div>
+        <div class="editor underline-div"></div>
+        <div class="fixed-amount radio-button w-clearfix w-radio">
+          <%= f.radio_button :charge_amount, 1, class: "w-radio-input", checked: @hashtag.always_charge_amount? %>
+          <label class="check-radio-text w-form-label" for="radio">Set a fixed amount</label>
+        </div>
+        <div class="fixed-amount radio-button w-clearfix w-radio">
+          <%= f.radio_button :charge_amount, 0, class: "w-radio-input", checked: @hashtag.new_record? || @hashtag.allow_customers_to_override_amount? %>
           <label class="check-radio-text w-form-label" for="radio">Allow customers to send any amount&nbsp;</label>
         </div>
-      <%= file_field_tag "hashtag[images_attributes][][avatar]", type: :file, id: "Amount select-images", accept: "image/*", class: "editor text-field w-input", data: { name: "Amount" } %>
-      <%= f.text_field :amount, class: "editor text-field w-input", data: { name: "Tag name" }, id: 'Tag-name', placeholder: "Enter amount (USD)" %>
-      <%= f.select :interval, options_for_select({ "Day" => "day", "Week" => 'week', "Month" => "month" }, selected: @hashtag.interval), {},  data: { name: "Interval" },  class: "dropdown editor-dropdown w-select" , id: "Interval plan_interval" %>
-      <%= f.text_field :interval_count, class: "editor text-field w-input", data: { name: "Tag name" }, id: 'Tag-name interval-count' %>
+        
+        <%= f.text_field :amount, class: "editor text-field w-input", placeholder: "Enter amount (USD)" %>
+        
+        <div id='interval-settings'>
+          <%= f.select :interval, options_for_select({ "Weekly" => "week_1", "Bi-weekly" => 'week_2', "Monthly" => "month_1", "Every 3 months" => 'month_3', 'Every 6 months' => 'month_6', 'Yearly' => 'year_1' }, selected: present(@hashtag).get_interval_string), {}, { id: "plan_interval", class: "dropdown editor-dropdown w-select" } %>
+        </div>
+      </div>
+
+      
       <div class="check-box editor w-checkbox w-clearfix">
-        <%= f.check_box :enable_tweet, class: "w-checkbox-input", data: { name: "Deliver Now 2"},  id: "checkbox"   %>
-      <label class="check-radio-text w-form-label" for="Deliver-now-2">Enable Tweet</label>
-    </div>
-      <p class="editor-paragraph tips"> &nbsp;TIP: Fixed amounts for payment Hashtags are suitable for products or services with a set price.</p>
-    <div class="w-form-done">
-      <div>Thank you! Your submission has been received!</div>
-    </div>
-    <div class="w-form-fail">
-      <div>Oops! Something went wrong while submitting the form</div>
+        <%= f.check_box :enable_tweet, class: "w-checkbox-input" %><label class="check-radio-text w-form-label" for="Deliver-now-2">Enable Tweet</label>
+      </div>
+
+      <div class="hashtag-payment-settings">
+        <p class="editor-paragraph tips"> &nbsp;TIP: Fixed amounts for payment Hashtags are suitable for products or services with a set price.</p>
+      </div>
+
     </div>
   </div>
-</div>
-<div class="dashboard-body editor">
+  <div class="dashboard-body editor">
     <div class="dash-content-container message-editor">
       <div class="w-form">
-          <%= f.text_area :response, class: 'message-editor text-area w-input', data: { name: 'Editor Text Area 2' }, id: "Hashtag-Auto-response", placeholder: 'Type message'  %>
-
-        <div class="w-form-done">
-          <div>Thank you! Your submission has been received!</div>
-        </div>
-        <div class="w-form-fail">
-          <div>Oops! Something went wrong while submitting the form</div>
-        </div>
+        
+        <%= f.text_area :response, class: "message-editor text-area w-input", placeholder: "Type message", id: "hashtag-response-textarea" %>
+          
       </div>
       <div class="editor-button-container">
         <div class="w-row">
           <div class="w-col w-col-6">
-            <div class="char-count">0 characters</div><a class="attach-text" href="#"></a>
+            <%# added id %>
+            <div class="char-count" id='char-count'>300 characters</div>
+            <a class="attach-text" href="#" id='select-images-button'></a>
+            <%= file_field_tag "hashtag[images_attributes][][avatar]", type: :file, id: "select-images", class: 'hide', accept: "image/*" %>
           </div>
           <div class="w-clearfix w-col w-col-6">
-            <%= f.submit 'Create Hashtag', id: 'create-hashtag-btn', class: 'button editor-buttons w-button' %>
+            <%= f.submit present(@hashtag).get_submit_text, id: 'create-hashtag-btn', class: "button editor-buttons w-button" %>
+          </div>
         </div>
-        </div><img class="editor-thumbnail" src="http://uploads.webflow.com/img/image-placeholder.svg" width="100">
+                
+        <!-- for new images -->
+        <div id='new-image-previews'>
+        </div> 
+
+        <!-- for already attached images -->
+        <div id='image-previews' data-model-id='hashtags_<%= @hashtag.id %>'>
+          <%= div_for @hashtag.images do |image| %>
+            <%= present(image).image_delete_url %>
+            <%= present(image).image_url %>
+            <%= present(image).image_name %>
+          <% end %>
+        </div>
+
       </div>
     </div>
-    <div class="editor-date">December 28, 2016</div>
+
+    <% end %>
+
+    <div class="editor-date"><%= todays_date %></div>
   </div>
   <div class="alt hashtags sub-nav-bar"></div>
-<% end %>
+  
+  
+  <!-- [if lte IE 9]><script src="https://cdnjs.cloudflare.com/ajax/libs/placeholders/3.0.2/placeholders.min.js"></script><![endif] -->

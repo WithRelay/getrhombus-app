@@ -69,6 +69,7 @@
 //= require powerange
 //= require knowledge_base
 //= require lists.js
+//= require images.js.erb
 //= require demo
 //= require phone_number_formatter
 //= require clipboard.min

@@ -18,7 +18,7 @@ class PlansController < ApplicationController
   end
 
   def destroy
-    unless Subscription.exists?(plan_id: @plan.id)
+    unless @plan.has_subscription?
       if @plan.delete_plan(current_user)
         @plan.destroy
         redirect_to user_plans_path, flash: { notice: 'Plan was deleted' }
