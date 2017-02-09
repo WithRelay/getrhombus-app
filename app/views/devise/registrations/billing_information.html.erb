@@ -1,61 +1,5 @@
 <!-- ========== Css Files ========== -->
 <% provide(:title, 'Rhombus - Payment Info') %>
-<div class="w-row">
-    <div class="onboarding-table-column-1 w-col w-col-8">
-      <div class="onboarding-form-section">
-        <div class="choose-plan onboarding-form-div sign-in signup w-clearfix">
-          <div class="choose-plan def-row-content-wrapper onboarding"><img src="images/Relay-Transparent-500x300.png" width="50">
-            <h1 class="first-content-section-sub-header pricing-header">Select a plan to get started</h1>
-            <div class="flex-underline form-header-underline"></div>
-            <p class="def-content-section-paragraph pricing-paragraph">How many customers do you have?</p>
-            <div class="slider-wrapper"><img class="slider-placeholder" src="images/Slider-Placeholder-2.png">
-            </div>
-            <h1 class="plan-amount">$0</h1>
-            <h5 class="signup-box-subheading starter-table">BILLED MONTHLY</h5><a class="button choose-plan pricing-table-button w-button" href="#">Get Started</a>
-            <div class="display-credit-card-wrapper">
-              <div class="get-started-2 log-in-form w-form">
-                <form class="w-clearfix" data-name="Email Form" id="email-form" name="email-form">
-                  <label class="form-label new paragraph select-plan" for="Card-Number-4">You won't be charged for the trial account, and we'll notify you days before your trial is to expire.</label>
-                  <input class="card-number text-field w-input" data-name="Card Number 4" id="Card-Number-4" maxlength="256" name="Card-Number-4" placeholder="Card number" required="required" type="text">
-                  <input class="name-on-card text-field w-input" data-name="Name On Card 4" id="Name-on-Card-4" maxlength="256" name="Name-on-Card-4" placeholder="Name on card" required="required" type="text">
-                  <input class="month-year text-field w-input" data-name="Month Year 3" id="Month-Year-3" maxlength="256" name="Month-Year-3" placeholder="MM / YYYY" required="required" type="text">
-                  <input class="cvv text-field w-input" data-name="Cvv 5" id="CVV-5" maxlength="256" name="CVV-5" placeholder="CVV" required="required" type="text">
-                  <input class="button log-in w-button" data-wait="Please wait..." type="submit" value="Start 14-day Trial">
-                </form>
-                <div class="w-form-done">
-                  <div>Thank you! Your submission has been received!</div>
-                </div>
-                <div class="w-form-fail">
-                  <div>Oops! Something went wrong while submitting the form</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    
-    <div class="onboarding-table-column-2 w-col w-col-4">
-      <div class="onboarding-right-bar">
-        <div class="w-container whats-new-container">
-          <div class="whats-new-content-wrapper">
-            <h4 class="onboarding-side-bar-h4">get started: step 3</h4>
-            <h3 class="onboarding-side-bar-h3">You're almost done.</h3>
-            <p class="onboarding-side-bar-paragraph">You're moments away from delighting your customers with personalized messages on the messaging apps they love; including Facebook Messenger, and SMS.</p>
-            <p class="onboarding-side-bar-paragraph">Create and send amazing marketing campaigns, respond to support questions or new customer inquiries, and best of all, make it easy for your customers to pay you using SMS and Messenger.</p>
-            <p class="credit onboarding-side-bar-paragraph">Enjoy $5 SMS credit during your trial period.</p>
-            <div class="left-arrow"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-<div class="settings sub-nav-bar w-clearfix">
-  <%= link_to user_path(current_user) , class: 'dashboard-return sub-nav-button w-button' do %>
-   &nbsp;Return to dashboard
-  <% end %>
-</div>
 <div class="dashboard-body settings w-clearfix">
   <div class="dash-content-container settings">
     <h4 class="form-header">Billing Information</h4>
@@ -79,39 +23,45 @@
         </div>
 
         <%= f.submit "Update Information", id: "cc-submit", class: "alt-button button save-changes w-button btn btn-default btn-block btn-rhombus" %>
+        <% end %>
         <div class="flex-underline form-section-divider"></div>
         <label class="field-headers form-label settings" for="Business-Name">PLAN INFORMATION</label>
-
         <label class="form-label paragraph" for="Tax-Rate">Upgrade or modify your subscription plan by making a selection below:</label>
-        <div style="margin: auto;margin-top: 20px; width: 80%">
-          <input type="text" name="plan[name]" id="pricing-range" amountValue="0">
-          <span class="" id="price-value"></span>
-        </div>
-        <a class="plan-selector w-inline-block" href="#">
-          <%= image_tag('Shop-100.png', height: 80, class: 'plan-icon') %>
-          <div class="plan-name">Starter Plan</div>
-        </a>
-        <a class="plan-selector w-inline-block" href="#">
-          <%= image_tag('Business-100.png', height: 80, class: 'plan-icon') %>
-          <div class="plan-name">Business Plan</div>
-        </a>
         <div class="settings-info-div">
-          <h1 class="business-plan plan-name plans-text">Current Subscription: Business Plan (Standard)</h1>
+          <h1 class="business-plan plan-name plans-text">Current Subscription: <%=saas_plan_name.humanize %></h1>
           <div class="flex-underline plan-div"></div>
-          <p class="settings-details-paragraph">Number of seats: [1 seat]</p>
+          <p class="settings-details-paragraph">Number of customers: <%= saas_customers %></p>
           <p class="settings-details-paragraph">Time period: January 1, 2016 - December 31, 2016 (Annual)</p>
-          <p class="settings-details-paragraph">Plan amount: $49.00 USD</p>
+          <p class="settings-details-paragraph">Plan amount: <strong>$9,890</strong> USD/year</p>
         </div>
-        <div class="settings-info-div">
-          <h1 class="bg-icon plans-text"></h1>
-          <h1 class="plan-name plans-text">You don't have any subscriptions</h1>
-        </div><a class="alt-button button save-changes w-button" href="#">Upgrade&nbsp;plans</a>
+
+        <div class="settings-info-div"><h1 class="business-plan plan-name plans-text">You are currently on the free plan: [100 customers]</h1></div>
+
         <div class="flex-underline form-section-divider"></div>
+
         <label class="field-headers form-label settings" for="Month-Year-2">COUPON &amp; DISCOUNTS</label>
-        <input class="coupon text-field w-input" data-name="Coupon Code" id="Coupon-Code" maxlength="256" name="Coupon-Code" placeholder="Enter Discount Code" required="required" type="text"><a class="alt-button button discount-code save-changes w-button" href="#">Apply discount</a>
+
+        <div class="settings-info-div">
+          <h1 class="business-plan plan-name plans-text">Coupon: GrandFatherPlan</h1>
+          <div class="flex-underline plan-div"></div>
+          <p class="settings-details-paragraph">Type: Percentage</p>
+          <p class="settings-details-paragraph">Value: <strong>30%</strong></p>
+          <p class="settings-details-paragraph">Duration: 6 months</p>
+          <p class="settings-details-paragraph">End date: <strong>December 31, 2017</strong></p>
+        </div>
+
+        <div class="settings-info-div">
+          <h1 class="business-plan plan-name plans-text">There are no coupons applied to your subscription</h1>
+        </div>
+
+        <input class="coupon-code text-field w-input" data-name="Coupon Code" id="Coupon-Code" maxlength="256" name="Coupon-Code" placeholder="Enter Coupon Code" type="text">
+
+        <a class="alt-button button discount-code save-changes w-button" href="#">Apply discount</a>
+
         <div class="flex-underline form-section-divider"></div>
         <label class="field-headers form-label settings" for="Card-Number-2">INVOICES</label>
         <label class="form-label paragraph" for="Tax-Rate">View history of your paid subscriptions below:</label>
+        
         <div class="settings-table w-row">
           <div class="settings-table-cell-wrapper w-col w-col-3">
             <div class="id settings-table-cell-div settings-table-header">
@@ -134,10 +84,11 @@
             </div>
           </div>
         </div>
+
         <div class="settings-table w-row">
           <div class="settings-table-cell-wrapper w-col w-col-3">
             <div class="id settings-table-cell-div">
-              <div class="content settings-table-text">T23SJ59P</div>
+              <div class="content settings-table-text shrink-text">T23SJ59P</div>
             </div>
           </div>
           <div class="settings-table-cell-wrapper w-col w-col-3">
@@ -146,23 +97,16 @@
             </div>
           </div>
           <div class="settings-table-cell-wrapper w-col w-col-3">
-            <div class="invoice-amount settings-table-cell-div">
-              <div class="content settings-table-text">$49.00</div>
+              <div class="invoice-amount settings-table-cell-div">
+                <div class="content settings-table-text">$49.00</div>
+              </div>
+            </div>
+            <div class="settings-table-cell-wrapper w-col w-col-3">
+              <div class="last-cell settings-table-cell-div">
+                <div class="content settings-table-text status-text">Paid</div>
+              </div>
             </div>
           </div>
-          <div class="settings-table-cell-wrapper w-col w-col-3">
-            <div class="last-cell settings-table-cell-div">
-              <div class="content settings-table-text status-text">Paid</div>
-            </div>
-          </div>
-        </div>
-      <% end %>
-      <div class="w-form-done">
-        <div>Thank you! Your submission has been received!</div>
-      </div>
-      <div class="w-form-fail">
-        <div>Oops! Something went wrong while submitting the form</div>
-      </div>
     </div>
   </div>
 </div>

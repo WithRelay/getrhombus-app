@@ -119,6 +119,7 @@ class User < ActiveRecord::Base
   end
 
   def get_saas_subscription
+    saas_subscription = self.merchants.last.subscriptions.active.last
   end
 
   def is_platform?

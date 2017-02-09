@@ -28,10 +28,12 @@
 //= require moment
 
 // We need to place these js before jquery ujs for workable confirmation dialog box
+//= require flashes
 //= require hashtags_plans_coupons_alerts
 //= require plan
 //= require coupon
 //= require subscription
+//= require integrations
 
 //= require jquery_ujs
 //= require angular-smooth-scroll.min
@@ -66,8 +68,6 @@
 //= require bootstrap-select
 //= require powerange
 //= require knowledge_base
-//= require flashes
-//= require integrations
 //= require lists.js
 //= require demo
 //= require phone_number_formatter
