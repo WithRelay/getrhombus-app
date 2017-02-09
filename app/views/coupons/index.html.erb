@@ -39,9 +39,13 @@
   </div>
 </div>
 <div class="customer-dash sub-nav-bar">
-  <div class="sub-nav-options-wrapper w-clearfix"><a class="add sub-nav-button w-button" data-ix="create-customer" href="#"> &nbsp;<strong>New coupon</strong></a><a class="import sub-nav-button w-button" data-ix="import-customers" href="#">&nbsp; <strong>Edit coupons</strong></a><a class="sub-nav-button w-button" data-ix="create-list" href="#"> &nbsp;<strong>Delete</strong></a>
+  <div class="sub-nav-options-wrapper w-clearfix">
+    <a class="add sub-nav-button w-button" data-ix="create-customer", id: 'new-coupon-modal', href="#"> &nbsp;<strong>New coupon</strong></a>    
+    <a class="import sub-nav-button w-button" data-ix="import-customers" href="#">&nbsp; <strong>Edit coupons</strong></a>
+    <a class="sub-nav-button w-button" data-ix="create-list" href="#"> &nbsp;<strong>Delete</strong></a>
   </div>
 </div>
+<%= render 'shared/modals/new_coupon' %>
 
 <div class="dashboard-body">
   <% @coupons.each do |coupon| %>

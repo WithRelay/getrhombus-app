@@ -28,6 +28,7 @@
 //= require moment
 
 // We need to place these js before jquery ujs for workable confirmation dialog box
+//= require hashtags_plans_coupons_alerts
 //= require plan
 //= require coupon
 //= require subscription
@@ -75,13 +76,11 @@
 //= require price_slider
 //= require refer_a_business
 //= require get_started
-//= require integrations
 //= require modernizr
 //= require webflow
 //= require custom
 //= require jquery.lightbox_me
 //= require custom_lightbox.js
 //= require saved_replies
-//= require hashtags_plans_coupons_alerts
 // DO NOT REQUIRE TREE AS IT DOESNT GUARANTEE THE DEPENDENCY ORDER OF THESE FILES
 // require_tree .

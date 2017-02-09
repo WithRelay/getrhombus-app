@@ -33,7 +33,7 @@ $(document).ready(function () {
   }
 
   // validate coupon form
-  if ($('#couponForm').length > 0) {
+  if ($('#coupon-Form').length > 0) {
     $('#couponForm')
       .formValidation({
         framework: 'bootstrap',
@@ -87,7 +87,7 @@ $(document).ready(function () {
     if (this.value == 'repeating') {
       $('#duration-in-months-div').slideDown(200);
     } else {
-      $('#couponForm').formValidation('resetField', 'coupon[duration_in_months]');
+      // $('#couponForm').formValidation('resetField', 'coupon[duration_in_months]');
       $('#duration-in-months-div').slideUp(200);
       $('#duration-in-months').val('');
     }
