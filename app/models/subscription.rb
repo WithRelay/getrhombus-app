@@ -9,6 +9,8 @@ class Subscription < ActiveRecord::Base
   validates_presence_of :plan_id, :merchant_customer_id, :quantity
   validates_numericality_of :quantity, greater_than: 0, only_integer: true
 
+  scope :active, -> { where(status: 'active') }
+
   def create_subscription(hash)
     begin
       return [false] if !self.save

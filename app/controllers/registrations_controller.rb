@@ -5,7 +5,7 @@ class RegistrationsController < Devise::RegistrationsController
   def update
     set_captured_payment_session
     @re = (params[:user][:card_token].present?) ? current_user.add_token_to_user(params[:user][:card_token]) : [true]
-    if @re.first
+    if @re && @re.first
       sub_res = create_saas_subscription
       if sub_res.first && current_user.update_without_password(devise_parameter_sanitizer.sanitize(:account_update))
         StripeManagedAccountService.new(current_user).update_account_email
@@ -22,7 +22,7 @@ class RegistrationsController < Devise::RegistrationsController
     else
       clean_up_passwords resource
       #render "edit", notice: "We were unable to update your card information"
-      error_message = (@re.second == 'card_error') ? @re.third :  "We were unable to update your card information. Please check the details entered."
+      error_message = (@re && @re.second == 'card_error') ? @re.third :  "We were unable to update your card information. Please check the details entered."
       redirect_to build_user_link , flash: { error: error_message }
     end
   end
@@ -55,7 +55,8 @@ class RegistrationsController < Devise::RegistrationsController
     user_path(resource)
   end
 
-  def billing_information; end
+  def billing_information
+  end
 
   def account_setting; end
 

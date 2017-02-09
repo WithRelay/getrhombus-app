@@ -47,7 +47,6 @@ class HashtagsController < ApplicationController
   end
 
   def destroy
-    binding.pry
     if @hashtag.destroy
       redirect_to user_hashtags_path
     else

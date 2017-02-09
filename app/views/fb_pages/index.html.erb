@@ -41,7 +41,7 @@
               <% end %>
               </p>
               <div class="w-col w-col6 pull-right">
-               <%= f.submit '' , class: 'submit_page hidden', id: 'select_page', param: "#{current_user.fb_creds.first.name}", data: { disable_with: "Please wait..." }, subscribed_page: "#{subscribed_page}" %>
+               <%= f.submit '' , class: 'submit_page hide', id: 'select_page', param: "#{current_user.fb_creds.first.name}", data: { disable_with: "Please wait..." }, subscribed_page: "#{subscribed_page}" %>
               </div>
 
             <% end %>
