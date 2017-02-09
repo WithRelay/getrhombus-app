@@ -1,0 +1,48 @@
+<% provide(:title, 'Rhombus - Merchant Profile') %>
+<div class="settings sub-nav-bar w-clearfix"><a class="dashboard-return sub-nav-button w-button" href="#"> &nbsp;<strong>Return to dashboard</strong></a>
+</div>
+<div class="dashboard-body settings">
+  <div class="dash-content-container settings">
+    <h4 class="form-header">Business Information</h4>
+    <div class="flex-underline form-header-underline"></div>
+    <div class="account-settings-form-wrapper w-form">
+      <%= form_for(current_user, as: resource_name, data: { name: "Email Form" }, url: registration_path(resource_name), html: { method: :put, id: "email-form merchantProfile", class: "w-clearfix" }) do |f| %>
+        <label class="field-headers form-label settings" for="Business-Name">Basic details</label>
+        <%= f.text_field :org_name, data: { name: "Business Name" }, class: "full-name settings text-field w-input", placeholder: "Business Name", id: 'Business-Name' %>
+        <label class="form-label paragraph" for="Organization-Type">Your business name will appear on both your customer’s card statement &amp; receipts. If your business doesn't have a name, enter your product or services and your city, e.g. “Bakery - New York”</label>
+        <select class="organization-type w-select" data-name="Organization Type" id="Organization-Type" name="Organization-Type">
+          <option value="">Organization Type</option>
+          <option value="">Business</option>
+          <option value="">Nonprofit</option>
+          <option value="">Education (K-12)</option>
+          <option value="">Education (Universities &amp; Colleges)</option>
+        </select>
+        <%= f.select :org_category, options_for_select({ "Select business type" => "Select business type", "Beauty Professional" => "Beauty Professional", "Cleaning Services" => 'Cleaning Services', "Coffee Shop" => "Coffee Shop", "Concierge Services" => "Concierge Services", "Home and Repair Services" => "Home and Repair Services", "Health and Fitness" => "Health and Fitness", "Individual" => "Individual", "On-Demand Delivery" => "On-Demand Delivery", "Orgs and Non-Profits" => "Orgs and Non-Profits", "Professional Services" => "Professional Services", "Restaurant" => "Restaurant", "Retail" => "Retail", "Taxi" => "Taxi", "Others" => "Others" }, selected: "Select business type", disabled: "Select business type"), {}, data: { name: "Business category (optional)"}, id: "Business-category-optional", class: 'business-category organization-type w-select' %>
+        <%= f.phone_field :org_phone, id: "phone_number", data: { name: "Business Phone Number 2" }, class: "settings text-field w-input", placeholder: "Business phone number" %>
+        <%#= f.hidden_field :phone_number, id: "phone" %>
+        <div class="flex-underline form-section-divider"></div>
+        <label class="field-headers form-label settings" for="Street-Address">ADDRESS INFORMATION</label>
+        <%= f.text_field :street_address, type: "text", data: { name: "Street Address" }, class: "settings street-name text-field w-input", placeholder: "123 Main St, Ste 3", id: "Street-Address address" %>
+        <input class="apt_suite settings text-field w-input" data-name="APT/Suite" id="APT-Suite" maxlength="256" name="APT-Suite" placeholder="Suite" type="email">
+        <%= f.text_field :city, data: { name: "City" }, class: "city settings text-field w-input", placeholder: "City", id: 'City' %>
+        <%= f.text_field :state_province, data: { name: "State" }, type: "text", class: "settings state text-field w-input", placeholder: "State" %>
+        <%= f.text_field :zip_code, data: { name: 'Zip' }, class: "settings text-field w-input zip", placeholder: "Zip", id: 'Zip zip' %>
+        <%= f.select :country, options_for_select(TextingService.twilio_list.map { |k,v| [v[:name], k.to_s] }), { include_blank: "Select country" }, class:  'country_dropdown w-select', id: 'country Country', data: { name: "Country" } %>
+        <div class="flex-underline form-section-divider"></div>
+        <label class="field-headers form-label settings" for="Website">other INFORMATION</label>
+        <%= f.text_field :url, data: { name: "Website" }, id: 'Website', class: "settings short-field text-field w-input", placeholder: "Your website or social profile link" %>
+        <%= f.text_field :tax_percent, data: { name: "Tax Rate" }, class: "settings tax text-field w-input", placeholder: "5", id: "taxrate Tax-Rate" %>
+        <label class="form-label other-info paragraph" for="Re-enter-Password">Set the tax rate that will be applied to every transaction made by your customers via Rhombus. The default rate is set at zero.</label>
+        <div class="flex-underline form-section-divider save"></div>
+        <%= f.password_field :current_password, data: { name: "Re-enter Password" }, class: "re-enter-password settings text-field w-input", placeholder: "Re-enter current password", id: "reenterPassword" %>
+        <%= f.submit "Save changes", id: "ba-submit", class: "button save-changes w-button" %>
+      <% end %>
+      <div class="w-form-done">
+        <div>Thank you! Your submission has been received!</div>
+      </div>
+      <div class="w-form-fail">
+        <div>Oops! Something went wrong while submitting the form</div>
+      </div>
+    </div>
+  </div>
+</div>
