@@ -34,7 +34,7 @@ class Hashtag < ActiveRecord::Base
   end
 
 
-  def is_mentioned?
+  def mentions
     in_txns_not_in_msg_count = Hashtag.find_by_sql ["SELECT * FROM transactions t LEFT JOIN messages m
                                           on m.transaction_id = t.id
                                           WHERE t.hashtag_id = ? and m.transaction_id IS NULL", self.id]
