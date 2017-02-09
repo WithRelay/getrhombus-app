@@ -5705,11 +5705,11 @@ h4 {
 }
 
 .headings.name.location {
-  margin-left: 0px;
+  margin-left: 25px;
 }
 
 .headings.name.message-customer {
-  margin-left: 10px;
+  margin-left: 25px;
 }
 
 .headings.first-visit {
@@ -5751,7 +5751,7 @@ h4 {
 
 .headings.total-spend-header.leads {
   margin-left: 0px;
-  text-align: center;
+  text-align: right;
 }
 
 .headings.last-visit {
@@ -7414,7 +7414,7 @@ h4 {
 .actions-button.notification {
   top: 15px;
   width: 115px;
-  margin-left: 15px;
+  margin-left: 10px;
   padding-right: 12px;
   padding-left: 12px;
   color: rgba(73, 91, 112, .8);

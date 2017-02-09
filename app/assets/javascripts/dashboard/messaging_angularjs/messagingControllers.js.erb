@@ -562,7 +562,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
 
     $scope.addToListDiv = function() {
       $('#add-to-list-div').lightbox_me({
-        centered: true,
+        centered: true
       });
     };
 
@@ -577,11 +577,15 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
     // End Modals
 
     $scope.pasteMerchantLink = function() {
-      var textarea = angular.element(document.getElementById('Message-Window'));      
+      $('#Messaging-Text-Area').val($scope.merchant.short_url)
+      console.log($scope.new_message.text)
+      /*
+      var textarea = angular.element(document.getElementById('Messaging-Text-Area'));      
       var ngModel = angular.element(textarea).controller('ngModel');
       var text = ($scope.new_message.text.length) ? $scope.new_message.text + " " + $scope.merchant.short_url : $scope.merchant.short_url;
       ngModel.$setViewValue(text);
       ngModel.$render();   
+      */
     };
     
     $scope.hashtagSelected = function(selected) { $scope.charge_data.hashtag_id = (selected) ? selected.originalObject.id : null; };

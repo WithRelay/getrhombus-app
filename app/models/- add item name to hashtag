@@ -1,6 +1,4 @@
 Taiwo
-- plug in chat box
-- right nav transaction div column 1
 - hashtags - delete plan if unmentioned hashtag is deleted, mentions should be distinct in query
 
 Tomorrow
@@ -18,9 +16,6 @@ Tomorrow
 
 
 5. form validation error state design - i dont see the styling for this...where is it????
-6. ellipsis - done
-7. logic for signup - I dont see you doing what i said youu should do.
-
 
 8. calendar styling (from edwin), calendar defaults ..this is me
 

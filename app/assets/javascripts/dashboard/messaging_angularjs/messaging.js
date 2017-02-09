@@ -1,11 +1,11 @@
 var BindPlugins = new function() {
   
-  var is_atwho_binded = false;
+  var is_atwho_binded = false, msg_emoji_box;
 
   this.now = function () {
 
     // bind emoji to textarea
-    var msg_emoji_box = $('#Message-Window').emojioneArea({
+    msg_emoji_box = $('#Messaging-Text-Area').emojioneArea({
       pickerPosition: "top",
       events: {
         // bind atwho
@@ -38,16 +38,20 @@ var BindPlugins = new function() {
 
     // update the angular field that is hidden
     function update_actual_text_box() {
-      $('#Message-Window').val(msg_emoji_box[0].emojioneArea.getText())
-      angular.element(jQuery('#Message-Window')).triggerHandler('change');
+      $('#Messaging-Text-Area').val(msg_emoji_box[0].emojioneArea.getText());
+      angular.element(jQuery('#Messaging-Text-Area')).triggerHandler('change');
     }
   }; 
+
+  this.get_emoji_box = function() {
+    return msg_emoji_box;
+  }
 
 }
 
 $(document).ready(function () {
 
-  //BindPlugins.now();
+  BindPlugins.now();
 
   $(".refund-slider").click(function(e) {
     var great_granny = $(this).parent().parent().parent();
@@ -59,6 +63,13 @@ $(document).ready(function () {
       great_granny.after($('#refundBox').hide().detach());
       $('#refundBox').show();
     };
+  });  
+
+  var box, text;
+  $("#paste-link").click(function(e) {
+    box = BindPlugins.get_emoji_box()[0], text = box.emojioneArea.getText();
+    text += " " + angular.element(jQuery('#Messaging-Text-Area')).scope().merchant.short_url;
+    box.emojioneArea.setText(text);
   });  
 
 
