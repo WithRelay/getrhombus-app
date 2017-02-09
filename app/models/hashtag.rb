@@ -48,7 +48,7 @@ class Hashtag < ActiveRecord::Base
     in_txns_not_in_msg_count + in_txns_not_in_fb_msg_count + in_fb_msg_count + in_msg_count
   end
 
-  def is_mention?
-    self.mention_count > 0
+  def is_mentioned?
+    self.mentions > 0
   end
 end

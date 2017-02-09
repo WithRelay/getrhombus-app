@@ -45,7 +45,7 @@ class HashtagsController < ApplicationController
   end
 
   def destroy
-    if !@hashtag.is_mention? && @hashtag.destroy
+    if !@hashtag.is_mentioned? && @hashtag.destroy
       redirect_to user_hashtags_path
     else
       respond_with(@hashtag)
