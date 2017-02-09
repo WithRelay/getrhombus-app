@@ -30,17 +30,17 @@ $(document).ready(function () {
   }
   
   //disable checkbox
-  $('.hashtag-check-box').click(function(){
+  $('.table-checkbox').click(function(){
     if ($(this).is(':checked')){
-          $('.hashtag-check-box').attr('disabled', true);
+          $('.table-checkbox').attr('disabled', true);
           $(this).attr('disabled', false);
     }
     else{
-          $('.hashtag-check-box').attr('disabled', false);
+          $('.table-checkbox').attr('disabled', false);
         }
 
   });
-
+  
   $('#delete-hashtag').click(function(e)
     {
       FlashHandler.setConfirmationDialog('#delete-hashtag','Are you sure, you want to remove the hashtag?', 'Delete', 'isDistroy');
@@ -72,7 +72,8 @@ $(document).ready(function () {
           var method_input = selectedElement.parents('.edit_hashtag').find("input[name='_method']");
           method_input.attr('value','patch');
         }
-        selectedElement.parents('.edit_hashtag').submit()
+        a = selectedElement.parents('.edit_hashtag')
+        debugger;
     });
 
   // decimal with two places
