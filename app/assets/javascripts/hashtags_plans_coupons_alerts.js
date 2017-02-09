@@ -28,7 +28,7 @@ $(document).ready(function () {
     else if (v.match(/^\d+(.\d{1,2})?$/)) return v
     else return v.slice(0, -1);
   }
-
+  
   //disable checkbox
   $('.hashtag-check-box').click(function(){
     if ($(this).is(':checked')){
@@ -75,7 +75,6 @@ $(document).ready(function () {
         selectedElement.parents('.edit_hashtag').submit()
     });
 
-
   // decimal with two places
   $('#hashtag_amount, #plan_amount').on('input', function(){
     $(this).val(function(_, v) {
@@ -117,6 +116,34 @@ $(document).ready(function () {
     //   $('.dynamic-coupon').find('small').text(text);
     // }
 
+  });
+
+
+  //disable checkbox
+  $('.hashtag-check-box').click(function(){
+    if ($(this).is(':checked')){
+      $('.hashtag-check-box').attr('disabled', true);
+      $(this).attr('disabled', false);
+    }
+    else{
+      $('.hashtag-check-box').attr('disabled', false);
+    };
+  });
+
+  $('#delete-hashtag').click(function(e) {
+    FlashHandler.setConfirmationDialog('#delete-hashtag','Are you sure, you want to remove the hashtag?', 'Delete', 'isDistroy');
+    return false;
+  });
+
+  $(document).on('click', '.cancel-yes', function(e){
+    e.preventDefault(); 
+    var selectedElement;
+    $('.hashtag-check-box').each(function( index, element){
+      if ($(this).is(':checked')){
+        selectedElement = $(this);
+      }
+    });
+    selectedElement.parents('.edit_hashtag').submit()
   });
 
 });

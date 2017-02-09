@@ -125,7 +125,7 @@ var FlashHandler = new function() {
       <p class="cancel-subscription modal-content-description">'+confirmText+'</p>\
       <div class="modal-underline underline-div"></div>\
       <a class="button cancel-yes w-button" href="#">'+confirmDialog+'</a>\
-      <a class="button cancel-no w-button" data-ix="close-cancel-subscription" href="#">Cancel</a>\
+      <a class="button cancel-no w-button" href="#">Cancel</a>\
     </div>');
 
     $('.cancel-subscription-wrapper').lightbox_me({

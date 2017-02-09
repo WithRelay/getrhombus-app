@@ -11,12 +11,8 @@ class UserPresenter < BasePresenter
   end
 
   def render_user_pages
-    render_page = @user.is_customer? ? render_customer_page : render_merchant_page
+    render_page = render_merchant_page if @user.is_merchant?
     h.render(render_page)
-  end
-
-  def render_customer_page
-    'customer_payment_info' unless @user.card_token.present?
   end
 
   def render_merchant_page

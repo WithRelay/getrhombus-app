@@ -46,35 +46,4 @@ class Message < ActiveRecord::Base
     end
   end
 
-  # remove this method
-  # Returns hash with the last "num_messages" messages that the given user has sent to the given merchant
-  def self.get_user_messages_by_merchant(user_number, merchant_id, num_messages)
-    messages = Message.includes(:images)
-                                        .select('`messages`.`user_id`,`messages`.`text`,`messages`.`unread`,`messages`.`created_at`,`users`.`user_level`')#, `messages`.`image_id`')
-                        .joins('LEFT JOIN `users` ON (`users`.`id` = `messages`.`user_id`)')
-                        .where('(`messages`.`from` = ? AND `messages`.`user_id_to` = ?) OR (`messages`.`user_id` = ? AND `messages`.`to` = ?)', user_number, merchant_id, merchant_id, user_number)
-                        .order('`messages`.`created_at` DESC').limit(num_messages)
-    latest_messages = Array.new
-    messages.reverse.each do |message|
-      latest_messages.push({
-        :user_number => message.user_id,
-        :user_level => message.user_level.blank? ? 0 : message.user_level,
-        :profile_image => (message.user_level.blank? || (message.user_level == 0)) ? ActionController::Base.helpers.asset_path('user_icon_50x50.png') : ActionController::Base.helpers.asset_path('rhombus_icon_50x50.png'),
-        :text => (message.text) ? message.text : nil,
-        :ts_day_of_the_week => message.created_at.strftime('%A'),
-        :ts_time => message.created_at.strftime('%l:%M %P'),
-        :unread => message.unread,
-        # return small version here??
-        #:image_url => message.image_id? ? message.image.avatar.url : nil
-      })
-    end
-    latest_messages
-  end
-
-  ##### remove this method
-  # Marks all user messages sent to a merchant as read
-  def self.mark_user_messages_for_merchant_as_read(user_number, merchant_id)
-    Message.where('`from` = ? AND `user_id_to` = ? AND `unread` = ?', user_number, merchant_id, true).update_all(unread: false)
-  end
-
 end
