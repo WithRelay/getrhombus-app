@@ -6,6 +6,10 @@ module ApplicationHelper
     block_given? ? yield(presenter) : presenter
   end
 
+  def total_transaction
+    (@earlier_transactions.count + @todays_transaction.count + @yesterday_transactions.count)
+  end
+
   def render_header_partial
     return render 'shared/unauthenticate_header' if unauthenticate_controller
     return render 'shared/authenticated_header' unless authenticated_pages || campaign_restrict_params
