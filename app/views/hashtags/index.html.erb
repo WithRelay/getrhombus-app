@@ -1,4 +1,4 @@
-<%= provide(:title, "Relay - Hashtags") %>
+<%= provide(:title, "Relay - Hashtags")  %>
 <div class="sub-nav-bar table-header">
   <div class="table-header">
     <div class="table-header">
@@ -97,7 +97,7 @@
       </div>
       <div class="alt-column w-col w-col-2">
         <div class="alt-table-column-div w-clearfix">
-          <div class="table-text"><%= h.tag_type %></div>
+          <div class="table-text"><%= present(h).format_tag_type %></div>
         </div>
       </div>
       <div class="alt-column w-col w-col-2">
@@ -107,7 +107,7 @@
       </div>
       <div class="alt-column w-col w-col-1">
         <div class="alt-table-column-div w-clearfix">
-          <div class="table-text"> &nbsp; <%= h.mention_count %></div>
+          <div class="table-text"> &nbsp; <%= h.mention_count %> </div>
         </div>
       </div>
     </div>
