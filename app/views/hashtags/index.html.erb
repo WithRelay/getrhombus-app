@@ -1,4 +1,4 @@
-<%= provide(:title, "Rhombus - Hashtags") %>
+<%= provide(:title, "Relay - Hashtags") %>
 <div class="sub-nav-bar table-header">
   <div class="table-header">
     <div class="table-header">
@@ -41,11 +41,11 @@
 </div>
 <div class="customer-dash sub-nav-bar">
   <div class="sub-nav-options-wrapper w-clearfix">
-    <a class="add sub-nav-button w-button" data-ix="create-customer" href="#"> &nbsp;<strong>New hashtag</strong></a>
-    <a class="import sub-nav-button w-button" data-ix="import-customers" href="#">&nbsp; <strong>Deactivate</strong></a>
+    <a class="add sub-nav-button w-button" href="#"> &nbsp;<strong>New hashtag</strong></a>
+    <a class="import sub-nav-button w-button" href="#">&nbsp; <strong>Deactivate</strong></a>
 
 
-    <a class="sub-nav-button w-button" data-ix="create-list" id= "delete-hashtag" href="#"> &nbsp;<strong>Delete</strong></a>
+    <a class="sub-nav-button w-button" id= "delete-hashtag" href="#"> &nbsp;<strong>Delete</strong></a>
 
   </div>
 </div>
@@ -55,7 +55,7 @@
     <div class="alt-table-row w-row">
       <div class="alt-column w-clearfix w-col w-col-3">
         <div class="title-column-div w-clearfix">
-          <div class="shrink-text table-text"><%= h.name %></div>
+          <div class="shrink-text table-text"><%= h.tag %></div>
         </div>
         <div class="alt-table cb check-box-column">
           <div class="w-form">
@@ -66,12 +66,6 @@
                 <label class="checkbox-field-lable w-form-label" for="node">-</label>
               </div>
             <% end %>
-            <div class="w-form-done">
-              <div>Thank you! Your submission has been received!</div>
-            </div>
-            <div class="w-form-fail">
-              <div>Oops! Something went wrong while submitting the form</div>
-            </div>
           </div>
         </div>
       </div>

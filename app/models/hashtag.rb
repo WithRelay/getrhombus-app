@@ -34,5 +34,10 @@ class Hashtag < ActiveRecord::Base
   end
 
 
+  def is_mentioned?
+    
+  end
+
+
 
 end
