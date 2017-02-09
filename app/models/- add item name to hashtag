@@ -1,8 +1,6 @@
 Thursday
-- hashtags - delete plan if unmentioned hashtag is deleted, mentions should be distinct in query
-- hashtags create/edit, alerts page
+- hashtags - delete plan if unmentioned hashtag is deleted
 - review hashtags with surya/Dorje
-- wrote method to check if it is mentioned
 - do we need fb_page_id in fb_messages
 - do we store fb_cred even if not a user? - affects my users query with outer join
 - can we message a messenger user just like that...with just creds?
