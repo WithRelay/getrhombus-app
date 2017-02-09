@@ -65,9 +65,9 @@ module ApplicationHelper
   end
 
   def setting_pages
-    settings_action = ['devise/registrations-billing_information', 'devise/registrations-account_setting',
-                       'registrations-edit', 'alerts-edit', 'plans-index','users-integrations',
-                        'users-managed_acct', 'users-sms_usage', 'lists-segments']
+    settings_action = ['registrations-billing_information', 'registrations-account_setting',
+                       'registrations-edit', 'alerts-edit', 'plans-index','registrations-business_setting',
+                       'users-integrations', 'users-managed_acct', 'users-sms_usage', 'lists-segments']
     settings_action.include?(params_controller_action)
   end
 
