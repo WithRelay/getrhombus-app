@@ -35,7 +35,16 @@ class Hashtag < ActiveRecord::Base
 
 
   def is_mentioned?
-    
+    in_txns_not_in_msg_count = Hashtag.find_by_sql ["SELECT * FROM transactions t LEFT JOIN messages m
+                                          on m.transaction_id = t.id
+                                          WHERE t.hashtag_id = ? and m.transaction_id IS NULL", self.id]
+    in_txns_not_in_fb_msg_count = Hashtag.find_by_sql ["SELECT * FROM transactions t LEFT JOIN fb_messages f
+                                          on f.transaction_id = t.id
+                                          WHERE t.hashtag_id = ? and f.transaction_id IS NULL", self.id]
+    in_fb_msg_count = FbMessage.where(hashtag_id: self.id).count
+    in_msg_count = Message.where(hashtag_id: self.id).count
+
+    (in_txns_not_in_msg_count + in_txns_not_in_fb_msg_count + in_fb_msg_count + in_msg_count) > 0
   end
 
 

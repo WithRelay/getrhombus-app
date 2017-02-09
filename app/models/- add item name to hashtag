@@ -1,16 +1,15 @@
 Thursday
 - hashtags - delete plan if unmentioned hashtag is deleted, mentions should be distinct in query
+- hashtags create/edit, alerts page
 - review hashtags with surya/Dorje
 - wrote method to check if it is mentioned
-- delete plan on tag not mentioned
 - do we need fb_page_id in fb_messages
 - do we store fb_cred even if not a user? - affects my users query with outer join
 - can we message a messenger user just like that...with just creds?
-- wrote is_mentioned?
 - did anyone plug in the hashtags? i guess only index. review the js with them
 
 
-Friday
+Thursday for sure
 - test parser, transactions, stripe events
 - workflow for sign in, sign up and places where we add card, token, referrer, contact and customer
 
@@ -19,6 +18,7 @@ Friday
 3. coupon pages (add link to transactions dropdown and link under segments)
 5. slider type - Minimum, maximum and start values. also doesnt look like design
 6. find simple native browser notifications
+7. fill in method for finiding user with saas - obj or nil
 
 
 5. form validation error state design - i dont see the styling for this...where is it????
