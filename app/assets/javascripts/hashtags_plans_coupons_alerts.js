@@ -48,6 +48,16 @@ $(document).ready(function () {
       return false;
     });
 
+  $('#deactivate-hashtag').click(function()
+  {
+     FlashHandler.setConfirmationDialog('#deactivate-hashtag','Are you sure, you want to deactivate the hashtag?', 'Deactivate', 'isDeactivate');
+
+      return false;
+
+  });
+
+
+
     $(document).on('click', '.cancel-yes', function(e){
        e.preventDefault(); 
       var selectedElement;
@@ -56,8 +66,15 @@ $(document).ready(function () {
             selectedElement = $(this);
           }
         });
+
+        var msg = $(this).parent().find('p').text()
+        if (/deactivate/i.test(msg)){
+          var method_input = selectedElement.parents('.edit_hashtag').find("input[name='_method']");
+          method_input.attr('value','patch');
+        }
         selectedElement.parents('.edit_hashtag').submit()
     });
+
 
   // decimal with two places
   $('#hashtag_amount, #plan_amount').on('input', function(){

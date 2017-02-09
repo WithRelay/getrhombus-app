@@ -42,7 +42,7 @@
 <div class="customer-dash sub-nav-bar">
   <div class="sub-nav-options-wrapper w-clearfix">
     <a class="add sub-nav-button w-button" data-ix="create-customer" href="#"> &nbsp;<strong>New hashtag</strong></a>
-    <a class="import sub-nav-button w-button" data-ix="import-customers" href="#">&nbsp; <strong>Deactivate</strong></a>
+    <a class="import sub-nav-button w-button" data-ix="import-customers" id="deactivate-hashtag" href="#">&nbsp; <strong>Deactivate</strong></a>
 
 
     <a class="sub-nav-button w-button" data-ix="create-list" id= "delete-hashtag" href="#"> &nbsp;<strong>Delete</strong></a>
@@ -59,9 +59,10 @@
         </div>
         <div class="alt-table cb check-box-column">
           <div class="w-form">
-            <%= form_for h, url: user_hashtag_path(current_user, h) do |f| %>
+            <%= form_for(h, url: user_hashtag_path(current_user, h), html: { method: :delete }) do |f| %>
               <div class="select-all-check-box w-checkbox w-clearfix">
                 <%= f.hidden_field :id %>
+                <%= f.hidden_field :status , value: 'inactive' %>
                 <input class="cb table-checkbox w-checkbox-input hashtag-check-box" id="node" type="checkbox">
                 <label class="checkbox-field-lable w-form-label" for="node">-</label>
               </div>
