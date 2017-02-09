@@ -6,6 +6,10 @@ module ApplicationHelper
     block_given? ? yield(presenter) : presenter
   end
 
+  def total_transaction
+    (@earlier_transactions.count + @todays_transaction.count + @yesterday_transactions.count)
+  end
+
   def render_header_partial
     return render 'shared/unauthenticate_header' if unauthenticate_controller
     return render 'shared/authenticated_header' unless authenticated_pages || campaign_restrict_params
@@ -65,9 +69,9 @@ module ApplicationHelper
   end
 
   def setting_pages
-    settings_action = ['devise/registrations-billing_information', 'devise/registrations-account_setting',
-                       'registrations-edit', 'alerts-edit', 'plans-index','users-integrations',
-                        'users-managed_acct', 'users-sms_usage', 'lists-segments']
+    settings_action = ['registrations-billing_information', 'registrations-account_setting',
+                       'registrations-edit', 'alerts-edit', 'plans-index','registrations-business_setting',
+                       'users-integrations', 'users-managed_acct', 'users-sms_usage', 'lists-segments']
     settings_action.include?(params_controller_action)
   end
 

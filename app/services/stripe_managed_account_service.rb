@@ -1,6 +1,6 @@
 # stripe managed account class handles invidual and company managed account creating and updating
 # Accepts parameter user and params where user is current user and params is from partialform _managed
-# NOTE constants in this class are immutable. elements of array cannot be modified. If you want to change remove .freeze
+# NOTE constants in this class are immutable. elements of array cannot be modified because of .freeze
 class StripeManagedAccountService < Struct.new( :user, :params )
 
   # this countries has common params to send for creating manged individual/company account

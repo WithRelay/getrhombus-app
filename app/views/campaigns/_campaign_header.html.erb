@@ -5,25 +5,19 @@
 <div class="dashboard-nav w-clearfix">
   <div class="dashboard-logo-wrapper">
     <%= link_to root_url do %>
-      <%= image_tag('relay_6.png', class: 'dashboard-logo', width: 50) %>
+      <%= image_tag('relay-6.png', class: 'dashboard-logo', width: 50) %>
     <% end %>
   </div>
   <div class="dashboard-nav-links-wrapper">
-    <%= link_to filter_campaign_user_campaigns_path(status: 'active'), class: 'w-clearfix w-inline-block' do %>
+    <a class="w-clearfix w-inline-block" href="#">
       <div class="dash-header-links"> &nbsp; <strong>Active</strong>
       </div>
-    <% end %>
-    <%= link_to filter_campaign_user_campaigns_path(status: 'inactive'), class: 'w-clearfix w-inline-block' do %>
       <div class="dash-header-links new-link"> &nbsp;&nbsp;<strong>Inactive</strong>
       </div>
-    <% end %>
-    <%= link_to filter_campaign_user_campaigns_path(status: 'sent'), class: 'w-clearfix w-inline-block' do %>
       <div class="dash-header-links new-link">&nbsp; &nbsp;<strong>Sent</strong>
       </div>
-    <% end %>
-
-    <%= render "shared/rhombus_number" %>
-    
+      <div class="dash-header-links new-link relay-nav-number-display">+ 1 <redacted_phone_number></div>
+    </a>
   </div>
   <div class="dashboard-nav-links-wrapper new-tab right-nav settings-dropdown">
     <div class="dropdown-wrapper w-dropdown" data-delay="0">
@@ -44,8 +38,7 @@
       <nav class="dropdown-content-wrapper notifications-dropdown-wrapper w-dropdown-list"><a class="dropdown-link header notifications-dropdown-header w-clearfix w-dropdown-link" href="#">Today <span class="unread-notification-count">Unread (3)</span></a>
         <a class="dashboard-header-notification-wrapper w-inline-block" href="#">
           <div class="w-row">
-            <div class="w-col w-col-2">
-              <%= image_tag('49-1.jpg', width: 30, class: 'notifier-picture', height: 30)%>
+            <div class="w-col w-col-2"><img class="notifier-picture" height="30" src="images/49-1.jpg" width="30">
             </div>
             <div class="w-col w-col-8">
               <div class="notification-text-block notifier"><strong class="notifier-name">James Gordon</strong> sent your a <strong class="notifier-action">message</strong> via messenger</div>
@@ -74,8 +67,7 @@
         </a>
         <a class="dashboard-header-notification-wrapper older w-inline-block" href="#">
           <div class="w-row">
-            <div class="w-col w-col-2">
-              <%= image_tag('31.jpg', width: 30, class: 'notifier-picture', height: 30)%>
+            <div class="w-col w-col-2"><img class="notifier-picture" height="30" src="images/31.jpg" width="30">
             </div>
             <div class="w-col w-col-8">
               <div class="notification-text-block notifier"><strong class="notifier-name">Francesca Totti</strong>&nbsp;sent your a <strong class="notifier-action">message</strong> via SMS</div>
@@ -88,8 +80,7 @@
         </a><a class="dropdown-link header notifications-dropdown-header older w-clearfix w-dropdown-link" href="#">Yesterday <span class="unread-notification-count">Unread (1)</span></a>
         <a class="dashboard-header-notification-wrapper w-inline-block" href="#">
           <div class="w-row">
-            <div class="w-col w-col-2">
-              <%= image_tag('81.jpg', width: 30, class: 'notifier-picture', height: 30)%>
+            <div class="w-col w-col-2"><img class="notifier-picture" height="30" src="images/81.jpg" width="30">
             </div>
             <div class="w-col w-col-8">
               <div class="notification-text-block notifier"><strong class="notifier-name">Brendan Fraser</strong>&nbsp;sent your a <strong class="notifier-action">Payment</strong> via SMS</div>
@@ -102,8 +93,7 @@
         </a>
         <a class="dashboard-header-notification-wrapper older w-inline-block" href="#">
           <div class="w-row">
-            <div class="w-col w-col-2">
-              <%= image_tag('49-1.jpg', width: 30, class: 'notifier-picture', height: 30)%>
+            <div class="w-col w-col-2"><img class="notifier-picture" height="30" src="images/49-1.jpg" width="30">
             </div>
             <div class="w-col w-col-8">
               <div class="notification-text-block notifier"><strong class="notifier-name">James Gordon</strong> sent your a <strong class="notifier-action">message</strong> via messenger</div>
@@ -116,8 +106,7 @@
         </a><a class="dropdown-link header notifications-dropdown-header w-clearfix w-dropdown-link" href="#">Earlier <span class="unread-notification-count">Unread (16)</span></a>
         <a class="dashboard-header-notification-wrapper w-inline-block" href="#">
           <div class="w-row">
-            <div class="w-col w-col-2">
-              <%= image_tag('49-2.jpg', width: 30, class: 'notifier-picture', height: 30)%>
+            <div class="w-col w-col-2"><img class="notifier-picture" height="30" src="images/49-2.jpg" width="30">
             </div>
             <div class="w-col w-col-8">
               <div class="notification-text-block notifier"><strong class="notifier-name">Jacqueline&nbsp;Krantz</strong>&nbsp;sent your a <strong class="notifier-action">message</strong> via SMS</div>
@@ -130,8 +119,7 @@
         </a>
         <a class="dashboard-header-notification-wrapper older w-inline-block" href="#">
           <div class="w-row">
-            <div class="w-col w-col-2">
-              <%= image_tag('37.jpg', width: 30, class: 'notifier-picture', height: 30)%>
+            <div class="w-col w-col-2"><img class="notifier-picture" height="30" src="images/37.jpg" width="30">
             </div>
             <div class="w-col w-col-8">
               <div class="notification-text-block notifier"><strong class="notifier-name">Bryanna Choi</strong>&nbsp;sent your a <strong class="notifier-action">message</strong> via messenger</div>

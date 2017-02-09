@@ -1,5 +1,5 @@
 var BindPlugins = new function() {
-  
+
   var is_atwho_binded = false, msg_emoji_box;
 
   this.now = function () {
@@ -21,7 +21,7 @@ var BindPlugins = new function() {
               insertTpl: '${body}',
             })
             .on("inserted.atwho", function(event, flag, query) {
-              // reinsert as plain text. normally it inserts spans in contenteditable 
+              // reinsert as plain text. normally it inserts spans in contenteditable
               msg_emoji_box[0].emojioneArea.setText(msg_emoji_box[0].emojioneArea.getText())
               update_actual_text_box();
             });
@@ -41,7 +41,7 @@ var BindPlugins = new function() {
       $('#Messaging-Text-Area').val(msg_emoji_box[0].emojioneArea.getText());
       angular.element(jQuery('#Messaging-Text-Area')).triggerHandler('change');
     }
-  }; 
+  };
 
   this.get_emoji_box = function() {
     return msg_emoji_box;
@@ -51,7 +51,7 @@ var BindPlugins = new function() {
 
 $(document).ready(function () {
 
-  BindPlugins.now();
+  if ($('#Messaging-Text-Area').length > 0) BindPlugins.now();
 
   $(".refund-slider").click(function(e) {
     var great_granny = $(this).parent().parent().parent();
@@ -63,15 +63,14 @@ $(document).ready(function () {
       great_granny.after($('#refundBox').hide().detach());
       $('#refundBox').show();
     };
-  });  
+  });
 
   var box, text;
   $("#paste-link").click(function(e) {
     box = BindPlugins.get_emoji_box()[0], text = box.emojioneArea.getText();
     text += " " + angular.element(jQuery('#Messaging-Text-Area')).scope().merchant.short_url;
     box.emojioneArea.setText(text);
-  });  
+  });
 
 
 });
-

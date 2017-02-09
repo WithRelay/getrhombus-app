@@ -5,6 +5,7 @@ class ApplicationController < ActionController::Base
 
   before_action :configure_permitted_parameters, if: :devise_controller?
   around_action :set_time_zone, if: :current_user
+  before_action :set_notifications
 
   # for uniquness check...can it be more specific...cos email, phone numbers are caught
   # capture phone number duplicates on sign up page
@@ -76,4 +77,11 @@ class ApplicationController < ActionController::Base
       redirect_to "/signup"
     end
 
+    def set_notifications
+      unless current_user.nil? && current_user.customer?
+        @todays_transaction = Transaction.get_merchant_transactions(current_user.id, Time.current.beginning_of_day)
+        @yesterday_transactions = Transaction.get_merchant_transactions(current_user.id, Time.current.beginning_of_day - 1.day)
+        @earlier_transactions = Transaction.get_merchant_transactions(current_user.id, Time.current.beginning_of_day - 2.day)
+      end
+    end
 end

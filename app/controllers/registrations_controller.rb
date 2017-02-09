@@ -33,6 +33,12 @@ class RegistrationsController < Devise::RegistrationsController
     super
   end
 
+  def billing_information; end
+
+  def account_setting; end
+
+  def business_setting; end
+
   protected
 
   #### needs better error handling
@@ -54,11 +60,6 @@ class RegistrationsController < Devise::RegistrationsController
   def after_update_path_for(resource)
     user_path(resource)
   end
-
-  def billing_information
-  end
-
-  def account_setting; end
 
   def after_sign_up_path_for(resource)
     user_path(resource)

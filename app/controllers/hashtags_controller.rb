@@ -36,7 +36,6 @@ class HashtagsController < ApplicationController
   end
 
   def update
-    binding.pry
     # create a new plan and subscription and delete old one on stripe if tag is recurring and key details change
     if @hashtag.update(hashtag_params)
       redirect_to user_hashtags_path
@@ -46,7 +45,7 @@ class HashtagsController < ApplicationController
   end
 
   def destroy
-    if @hashtag.destroy
+    if !@hashtag.is_mention? && @hashtag.destroy
       redirect_to user_hashtags_path
     else
       respond_with(@hashtag)
