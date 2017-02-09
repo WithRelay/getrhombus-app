@@ -28,7 +28,7 @@
         <label class="field-headers form-label settings" for="Business-Name">PLAN INFORMATION</label>
         <label class="form-label paragraph" for="Tax-Rate">Upgrade or modify your subscription plan by making a selection below:</label>
         <div class="settings-info-div">
-          <h1 class="business-plan plan-name plans-text">Current Subscription: <%=saas_plan_name.humanize %></h1>
+          <h1 class="business-plan plan-name plans-text">Current Subscription: <%#=saas_plan_name.humanize %></h1>
           <div class="flex-underline plan-div"></div>
           <p class="settings-details-paragraph">Number of customers: <%= saas_customers %></p>
           <p class="settings-details-paragraph">Time period: January 1, 2016 - December 31, 2016 (Annual)</p>
@@ -61,7 +61,7 @@
         <div class="flex-underline form-section-divider"></div>
         <label class="field-headers form-label settings" for="Card-Number-2">INVOICES</label>
         <label class="form-label paragraph" for="Tax-Rate">View history of your paid subscriptions below:</label>
-        
+
         <div class="settings-table w-row">
           <div class="settings-table-cell-wrapper w-col w-col-3">
             <div class="id settings-table-cell-div settings-table-header">

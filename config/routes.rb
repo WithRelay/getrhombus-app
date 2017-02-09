@@ -45,9 +45,10 @@ Rails.application.routes.draw  do
     get "signup", to: "devise/registrations#new"
     get "profile", to: "devise/registrations#edit"
     get "signin", to: "devise/sessions#new"
-    get "add-card-info", to: "devise/registrations#add_card_info"
-    get "billing-information", to: "devise/registrations#billing_information"
-    get "account-setting", to: "devise/registrations#account_setting"
+    get "add-card-info", to: "registrations#add_card_info"
+    get "billing-information", to: "registrations#billing_information"
+    get "business-setting", to: "registrations#business_setting"
+    get "account-setting", to: "registrations#account_setting"
   end
 
   resources :contact_forms
@@ -97,7 +98,8 @@ Rails.application.routes.draw  do
     end
 
     # Only admins can create coupons
-    resources :coupons, :constraints => lambda { |req| req.env['warden'].authenticated? and req.env['warden'].user.is_platform? }
+    resources :coupons
+    # , :constraints => lambda { |req| req.env['warden'].authenticated? and req.env['warden'].user.is_platform? }
 
     member do
       get 'managed-accounts' => 'users#managed_acct'
