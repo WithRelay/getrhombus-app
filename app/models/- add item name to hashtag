@@ -1,15 +1,16 @@
 Thursday
 - hashtags - delete plan if unmentioned hashtag is deleted
-- review hashtags with surya/Dorje
 - do we need fb_page_id in fb_messages
 - do we store fb_cred even if not a user? - affects my users query with outer join
 - can we message a messenger user just like that...with just creds?
 - did anyone plug in the hashtags? i guess only index. review the js with them
 
+- merchant_customer_id in transactions?? pulling for merchant is unnecessarily compliacted
+
 
 Thursday for sure
 - test parser, transactions, stripe events
-- workflow for sign in, sign up and places where we add card, token, referrer, contact and customer
+- workflow for sign in, sign up and places where we add card, token, referrer, contact and customer, payment capture
 
 
 
