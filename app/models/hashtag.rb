@@ -44,7 +44,7 @@ class Hashtag < ActiveRecord::Base
     in_fb_msg_count = FbMessage.where(hashtag_id: self.id).count
     in_msg_count = Message.where(hashtag_id: self.id).count
 
-    (in_txns_not_in_msg_count + in_txns_not_in_fb_msg_count + in_fb_msg_count + in_msg_count) > 0
+    in_txns_not_in_msg_count + in_txns_not_in_fb_msg_count + in_fb_msg_count + in_msg_count
   end
 
 
