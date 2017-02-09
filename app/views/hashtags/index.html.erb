@@ -1,4 +1,4 @@
-<%= provide(:title, "Rhombus - Hashtags") %>
+<%= provide(:title, "Relay - Hashtags") %>
 <div class="sub-nav-bar table-header">
   <div class="table-header">
     <div class="table-header">
@@ -41,11 +41,11 @@
 </div>
 <div class="customer-dash sub-nav-bar">
   <div class="sub-nav-options-wrapper w-clearfix">
+
     <a class="add sub-nav-button w-button" data-ix="create-customer" href="#"> &nbsp;<strong>New hashtag</strong></a>
-    <a class="import sub-nav-button w-button" data-ix="import-customers" href="#">&nbsp; <strong>Deactivate</strong></a>
+    <a class="import sub-nav-button w-button" data-ix="import-customers" id="deactivate-hashtag" href="#">&nbsp; <strong>Deactivate</strong></a>
 
-
-    <a class="sub-nav-button w-button" data-ix="create-list" id= "delete-hashtag" href="#"> &nbsp;<strong>Delete</strong></a>
+    <a class="sub-nav-button w-button" id= "delete-hashtag" href="#"> &nbsp;<strong>Delete</strong></a>
 
   </div>
 </div>
@@ -55,40 +55,49 @@
     <div class="alt-table-row w-row">
       <div class="alt-column w-clearfix w-col w-col-3">
         <div class="title-column-div w-clearfix">
+        <% if h.status == "inactive" %>
+          <div class=" deactivated-text shrink-text table-text"><%= h.name %></div>
+          <%else%>
           <div class="shrink-text table-text"><%= h.name %></div>
+          <%end%>
         </div>
         <div class="alt-table cb check-box-column">
           <div class="w-form">
-            <%= form_for h, url: user_hashtag_path(current_user, h) do |f| %>
+            <%= form_for(h, url: user_hashtag_path(current_user, h), html: { method: :delete }) do |f| %>
               <div class="select-all-check-box w-checkbox w-clearfix">
                 <%= f.hidden_field :id %>
+                <%if h.status == "active" %>
+                <%= f.hidden_field :status , value: 'inactive' %>
+                <% end %>
                 <input class="cb table-checkbox w-checkbox-input hashtag-check-box" id="node" type="checkbox">
                 <label class="checkbox-field-lable w-form-label" for="node">-</label>
               </div>
             <% end %>
-            <div class="w-form-done">
-              <div>Thank you! Your submission has been received!</div>
-            </div>
-            <div class="w-form-fail">
-              <div>Oops! Something went wrong while submitting the form</div>
-            </div>
           </div>
         </div>
       </div>
       <div class="alt-column w-col w-col-2">
         <div class="alt-table-column-div w-clearfix">
             <%= present(h).profile_image %>
+            <%if h.status == "inactive" %>
+          <div class="deactivated-text shrink-text table-text"><%="#{current_user.first_name} #{current_user.last_name}" %></div>  
+            <%else%>
           <div class="shrink-text table-text"><%="#{current_user.first_name} #{current_user.last_name}" %></div>
+          <%end%>
         </div>
       </div>
       <div class="alt-column w-col w-col-2">
         <div class="alt-table-column-div w-clearfix">
+        <%if h.status == "inactive" %>
+         <div class="deactivated-text table-text"><%= present(h).date_in_word %></div>
+        <%else%>
           <div class="table-text"><%= present(h).date_in_word %></div>
+          <%end%>
         </div>
       </div>
       <div class="alt-column w-col w-col-2">
         <div class="alt-table-column-div w-clearfix">
-          <div class="table-text">Non-payment</div>
+          <div class="table-text"><%= h.tag_type %></div>
         </div>
       </div>
       <div class="alt-column w-col w-col-2">
@@ -98,7 +107,7 @@
       </div>
       <div class="alt-column w-col w-col-1">
         <div class="alt-table-column-div w-clearfix">
-          <div class="table-text"> &nbsp; 279</div>
+          <div class="table-text"> &nbsp; <%= h.mention_count %></div>
         </div>
       </div>
     </div>

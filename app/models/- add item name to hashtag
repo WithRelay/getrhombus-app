@@ -1,23 +1,25 @@
-Taiwo
-- hashtags - delete plan if unmentioned hashtag is deleted, mentions should be distinct in query
+Thursday
+- hashtags - delete plan if unmentioned hashtag is deleted
+- review hashtags with surya/Dorje
+- do we need fb_page_id in fb_messages
+- do we store fb_cred even if not a user? - affects my users query with outer join
+- can we message a messenger user just like that...with just creds?
+- did anyone plug in the hashtags? i guess only index. review the js with them
 
-Tomorrow
+
+Thursday for sure
 - test parser, transactions, stripe events
 - workflow for sign in, sign up and places where we add card, token, referrer, contact and customer
 
 
 
-3. everything coupon...coupon create, index. only name is ediatable...so like plans. coupon pages (add link to transactions dropdown and link under segments)
-4. up/downgrade sass plan...you havent redesigned on billing info page 
+3. coupon pages (add link to transactions dropdown and link under segments)
 5. slider type - Minimum, maximum and start values. also doesnt look like design
 6. find simple native browser notifications
-8. can we message a messenger user just like that...with just creds?
- do we store fb_cred even if not a user? - affects my users query with outer join
+7. fill in method for finiding user with saas - obj or nil
 
 
 5. form validation error state design - i dont see the styling for this...where is it????
-
-8. calendar styling (from edwin), calendar defaults ..this is me
 
 
 

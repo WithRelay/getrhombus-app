@@ -36,9 +36,7 @@ class HashtagsController < ApplicationController
   end
 
   def update
-
     # create a new plan and subscription and delete old one on stripe if tag is recurring and key details change
-
     if @hashtag.update(hashtag_params)
       redirect_to user_hashtags_path
     end
@@ -47,7 +45,7 @@ class HashtagsController < ApplicationController
   end
 
   def destroy
-    if @hashtag.destroy
+    if !@hashtag.is_mention? && @hashtag.destroy
       redirect_to user_hashtags_path
     else
       respond_with(@hashtag)
@@ -66,7 +64,7 @@ class HashtagsController < ApplicationController
     end
 
     def hashtag_params
-      params.require(:hashtag).permit(:amount, :response, :tag, :charge_amount, :tag_type, :interval, :interval_count,
+      params.require(:hashtag).permit(:amount, :status, :response, :tag, :charge_amount, :tag_type, :interval, :interval_count,
         :enable_tweet, :description, images_attributes: [:avatar]).tap do |c|
                           c[:charge_amount] = c[:charge_amount].to_i
                           c[:tag_type] = c[:tag_type].to_i
