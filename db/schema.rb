@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170209222725) do
+ActiveRecord::Schema.define(version: 20170210013659) do
 
   create_table "addresses", force: :cascade do |t|
     t.string   "street_address",   limit: 191
@@ -622,7 +622,6 @@ ActiveRecord::Schema.define(version: 20170209222725) do
     t.integer  "hashtag_id",                         limit: 4
     t.integer  "subscription_id",                    limit: 4
     t.boolean  "captured",                           limit: 1,                             default: true
-    t.integer  "merchant_customer_id",               limit: 4
   end
 
   add_index "transactions", ["created_at"], name: "index_transactions_on_created_at", using: :btree

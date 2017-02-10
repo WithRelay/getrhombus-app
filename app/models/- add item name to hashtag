@@ -1,26 +1,27 @@
 Thursday
-- hashtags - delete plan if unmentioned hashtag is deleted
-- merchant_customer_id in transactions?? pulling for merchant is unnecessarily compliacted
 - updating hashtags with recurring
 - validate mention before save
+- remove nextplan, clean up subscriptions, routes, upgrade/downgrade
 
-Thursday for sure
+Friday 
 - test parser, transactions, stripe events
 - workflow for sign in, sign up and places where we add card, token, referrer, contact and customer, payment capture
 
-Everyone
-- dont work on tag mentions page..not releasing it for now
 
 Torchi
 - review hashtag js with torchi
 - review saved replies
 - empty hashtag
 
+Edwin
+- allow red alert to have multiple lines
+
 Surya
 - select image icon....tell surya
 - document form validation error state design
 - add emojionearea to reminders. check for unique id before appending emojiareas
 - show_info alert in campaigns presenter
+- sign up workflow for merchants?? check active saas subscription?
 
 Bhishma
 - coupon pages (add link to transactions dropdown and link under segments)

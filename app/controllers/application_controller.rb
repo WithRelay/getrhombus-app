@@ -79,9 +79,9 @@ class ApplicationController < ActionController::Base
 
     def set_notifications
       unless current_user.nil? && current_user.is_customer?
-        @todays_transaction = Transaction.get_merchant_transactions(current_user.id, Time.current.beginning_of_day)
-        @yesterday_transactions = Transaction.get_merchant_transactions(current_user.id, Time.current.beginning_of_day - 1.day)
-        @earlier_transactions = Transaction.get_merchant_transactions(current_user.id, Time.current.beginning_of_day - 2.day)
+        begining_of_day = Time.current.beginning_of_day
+        @todays_transaction = Transaction.get_merchant_transactions(current_user.id, begining_of_day)
+        @todays_conversation = Conversation.get_conversations(current_user.id, begining_of_day, nil)
       end
     end
 end
