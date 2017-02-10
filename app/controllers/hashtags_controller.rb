@@ -20,11 +20,14 @@ class HashtagsController < ApplicationController
   def create
     @hashtag = Hashtag.new(hashtag_params)
     @hashtag.user_id = current_user.id
-
-    # create a plan and subscription if tag is recurring
-
     if @hashtag.save
-      redirect_to user_hashtags_path, flash: { notice: "Hashtag created!" }
+      if @hashtag.create_plan_for_recurring_tag(current_user)
+        redirect_to user_hashtags_path, flash: { notice: "Hashtag created!" }
+      else 
+        flash[:error] = "We're unable to create a plan for this recurring hashtag."
+        @hashtag.destroy
+        render :new
+      end
     else
       flash[:error] = @hashtag.errors.messages.present? ? @hashtag.errors.full_messages : "We couldn't create the hashtag"
       respond_with(@hashtag) 
@@ -43,7 +46,7 @@ class HashtagsController < ApplicationController
 
   def destroy
     if !@hashtag.is_mentioned? 
-      re = @hashtag.delete_recurring_plan(current_user)
+      re = @hashtag.delete_plan_for_recurring_tag(current_user)
       if re.first
         if @hashtag.destroy
           redirect_to(user_hashtags_path, flash: { notice: "Hashtag Deleted" }) and return
