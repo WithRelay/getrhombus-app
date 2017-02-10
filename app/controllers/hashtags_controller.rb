@@ -5,8 +5,8 @@ class HashtagsController < ApplicationController
 
   def index
     @hashtags = current_user.hashtags.paginate(:page => params[:page], :per_page => 25).order('updated_at DESC')
-    respond_with(@hashtags)
-    #render 'empty_hashtag' unless @hashtags.present?
+    #respond_with(@hashtags)
+    render 'empty_hashtag' unless @hashtags.present?
   end
 
   def new
@@ -20,6 +20,7 @@ class HashtagsController < ApplicationController
   def create
     @hashtag = Hashtag.new(hashtag_params)
     @hashtag.user_id = current_user.id
+    @hashtag.status = "active"
     if @hashtag.save
       if @hashtag.create_plan_for_recurring_tag(current_user)
         redirect_to user_hashtags_path, flash: { notice: "Hashtag created!" }

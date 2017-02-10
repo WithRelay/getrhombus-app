@@ -2,8 +2,12 @@ class RemindersController < ApplicationController
   before_action :set_reminder, only: [ :edit, :update, :change_status , :destroy ]
 
   def index
-    @reminders = current_user.reminders
-    #render('empty_reminder', locals: { reminder: current_user.reminders.build }) unless @campaigns.present?
+
+    @reminders_today = current_user.reminders.active.where("date_time >= ? AND date_time < ?",Time.current.beginning_of_day, Time.current.beginning_of_day + 1.days)
+    @reminders_tomorrow = current_user.reminders.active.where("date_time >= ? AND date_time < ?", Time.current.beginning_of_day + 1.days, Time.current.beginning_of_day + 2.days)
+    @reminders_upcoming = current_user.reminders.active.where("date_time >= ?", Time.current.beginning_of_day + 2.days)
+    
+    render('empty_reminder', locals: { reminder: current_user.reminders.build }) unless (@reminders_today.present? || @reminders_tomorrow.present? || @reminders_upcoming.present?)
   end
 
   def new
@@ -57,4 +61,6 @@ class RemindersController < ApplicationController
                                     c[:date_time] = c[:date_time].present? ? c[:date_time].in_time_zone(current_user.time_zone) : nil
                                    end
   end
+
+
 end

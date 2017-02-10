@@ -1,3 +1,20 @@
-<div class="center">
-  <div class="no-user">You have no hashtags :(</div>
-</div>
+<div class="customer-dash sub-nav-bar">
+    <div class="sub-nav-options-wrapper w-clearfix">
+    <%= link_to new_user_hashtag_path, class: 'add sub-nav-button w-button' do %>
+       &nbsp;<strong>New hashtag</strong>
+    <% end %>
+    <a class="import sub-nav-button w-button" data-ix="import-customers" id="deactivate-hashtag" href="#">&nbsp; <strong>Deactivate</strong></a>
+
+    <a class="sub-nav-button w-button" id= "delete-hashtag" href="#"> &nbsp;<strong>Delete</strong></a>
+
+    </div>
+  </div>
+
+    <div class="dashboard-body">
+    <div class="blank-page-container w-container"><img class="blank-page-icon" src="images/011_162.png">
+      <h1 class="empty-state-dash hero-h1 home-header">Create Hahtag <br>You can get started by creating a hashtag</h1>
+          <%= link_to new_user_hashtag_path, class: 'button error-page-button w-button' do %>
+      <strong>Create Hashtag</strong>
+    <% end %>
+    </div>
+  </div>
