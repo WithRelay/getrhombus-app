@@ -1,64 +1,44 @@
 <div class="dashboard-nav-links-wrapper new-tab right-nav settings-dropdown">
   <div class="dropdown-wrapper w-dropdown" data-delay="0">
     <div class="notifications-navbar-dropdown w-dropdown-toggle">
-      <div class="dropdown-wrapper-text"><strong> &nbsp;&nbsp;<span class="notification-counter"><%= total_transaction %></span></strong>
+      <div class="dropdown-wrapper-text"><strong> &nbsp;&nbsp;<span class="notification-counter">200</span></strong>
       </div>
     </div>
-    <nav class="dropdown-content-wrapper notifications-dropdown-wrapper w-dropdown-list">
-      <a class="dropdown-link header notifications-dropdown-header w-clearfix w-dropdown-link" href="#">Today <span class="unread-notification-count">Unread (<%= @todays_transaction.count %>)</span></a>
-      <% @todays_transaction.each do |tr| %>
-
-      <a class="dashboard-header-notification-wrapper w-inline-block" href="#">
+    <nav class="dropdown-content-wrapper notifications-dropdown-wrapper w-dropdown-list"><a class="dropdown-link header notifications-dropdown-header w-clearfix w-dropdown-link" href="#">Messages<span class="unread-notification-count">Unread (<%= @todays_conversation.count %>)</span></a>
+      <% @todays_conversation.each do |conversation| %>
+        <a class="dashboard-header-notification-wrapper w-inline-block" href="#">
           <div class="w-row">
             <div class="w-col w-col-2">
-              <img class="notifier-picture" height="30" src="images/49-1.jpg" width="30">
+              <%= present(transaction).profile_image %>
             </div>
             <div class="w-col w-col-8">
-              <div class="notification-text-block notifier"><strong class="notifier-name">James Gordon</strong> sent your a <strong class="notifier-action">message</strong> via messenger</div>
+              <div class="notification-text-block notifier"><strong class="notifier-name"><%= present(conversation).get_full_name %></strong> sent you a <strong class="notifier-action">message</strong> via <%= present(conversation).conversation_channel %></div>
             </div>
             <div class="w-col w-col-2">
               <div class="notification-text-block notifier"><strong class="notifier-time">5m</strong>
               </div>
             </div>
           </div>
-
-      </a>
+        </a>
       <% end %>
-      <a class="dropdown-link header notifications-dropdown-header older w-clearfix w-dropdown-link" href="#">Yesterday <span class="unread-notification-count">Unread (<%= @yesterday_transactions.count %>)</span></a>
-      <% @yesterday_transactions.each do |tr| %>
-
-      <a class="dashboard-header-notification-wrapper w-inline-block" href="#">
+      <a class="dropdown-link header notifications-dropdown-header older w-clearfix w-dropdown-link" href="#">Transactions<span class="unread-notification-count">New (<%= @todays_transaction.count %>)</span></a>
+      <% @todays_transaction.each do |transaction| %>
+        <a class="dashboard-header-notification-wrapper w-inline-block" href="#">
           <div class="w-row">
             <div class="w-col w-col-2">
-              <img class="notifier-picture" height="30" src="images/81.jpg" width="30">
+              <%= present(transaction).profile_image %>
             </div>
             <div class="w-col w-col-8">
-              <div class="notification-text-block notifier"><strong class="notifier-name">Brendan Fraser</strong>&nbsp;sent your a <strong class="notifier-action">Payment</strong> via SMS</div>
+              <div class="notification-text-block notifier"><strong class="notifier-name"><%= transaction.user.card_name %></strong>&nbsp;sent you a <strong class="notifier-action">
+                Payment</strong>&nbsp;of $<%= transaction.amount %></div>
             </div>
             <div class="w-col w-col-2">
               <div class="notification-text-block notifier"><strong class="notifier-time">1d</strong>
               </div>
             </div>
           </div>
-
-      </a>
-      <% end %>
-      <a class="dropdown-link header notifications-dropdown-header w-clearfix w-dropdown-link" href="#">Earlier <span class="unread-notification-count">Unread (<%= @earlier_transactions.count %>)</span></a>
-      <% @earlier_transactions.each do |tr| %>
-        <a class="dashboard-header-notification-wrapper w-inline-block" href="#">
-          <div class="w-row">
-            <div class="w-col w-col-2"><img class="notifier-picture" height="30" src="images/49-2.jpg" width="30">
-            </div>
-            <div class="w-col w-col-8">
-              <div class="notification-text-block notifier"><strong class="notifier-name">Jacqueline&nbsp;Krantz</strong>&nbsp;sent your a <strong class="notifier-action">message</strong> via SMS</div>
-            </div>
-            <div class="w-col w-col-2">
-              <div class="notification-text-block notifier"><strong class="notifier-time">1w</strong>
-              </div>
-            </div>
-          </div>
         </a>
-      <% end %>
+        <% end %>
     </nav>
   </div>
 </div>
