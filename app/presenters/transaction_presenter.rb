@@ -1,0 +1,2 @@
+class TransactionPresenter < BasePresenter
+end
