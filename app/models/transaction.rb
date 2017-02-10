@@ -11,7 +11,7 @@ class Transaction < ActiveRecord::Base
   belongs_to :merchant_customer
   belongs_to :user, counter_cache: true
   belongs_to :team, class_name: "User", counter_cache: true
-  scope :get_merchant_transactions, -> (team_id, date) { self.where('team_id = ? and created_at = ?', team_id, date).limit(5) }
+  scope :get_merchant_transactions, -> (team_id, date) { self.where('team_id = ? and created_at > ?', team_id, date).limit(5) }
   # send in a hash instead to PaymentService?
   def process_payment(amt, merchant, user, msg, hashtag_id, channel, capture=true)
     begin
