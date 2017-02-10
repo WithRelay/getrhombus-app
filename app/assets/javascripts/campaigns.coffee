@@ -111,17 +111,15 @@ class Campaign
 
   textAreaEmojis: ->
     if $(@textArea).length > 0
-      txtEmoji = $(@textArea).emojioneArea ->
-                   @emojiConfig
+      txtEmoji = $(@textArea).emojioneArea(@emojiConfig)
 
   removeDiv = ->
     $('#undefined_counter').each ->
       $(this).remove()
 
-
 $( document ).on 'ready page:load', ->
   $('.scheduleOption').hide()
-  campaign = new Campaign({ pickerPosition: 'right' })
+  campaign = new Campaign({ pickerPosition: "bottom", tonesStyle: "bullet" })
   campaign.datePicker(new DatePicker( '.daterange', true, { time: true, select: true } ))
   window.onload = ->
     $('.emojionearea-editor').counter({ type: 'char', append: false, target: '#textBoxCounter' })
