@@ -5,8 +5,8 @@ class HashtagsController < ApplicationController
 
   def index
     @hashtags = current_user.hashtags.paginate(:page => params[:page], :per_page => 25).order('updated_at DESC')
-    respond_with(@hashtags)
-    #render 'empty_hashtag' unless @hashtags.present?
+    #respond_with(@hashtags)
+    render 'empty_hashtag' unless @hashtags.present?
   end
 
   def new

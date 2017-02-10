@@ -53,7 +53,7 @@
 
 
     <div>
-     <% @reminders.each do |reminder| %>
+     <% @reminders_today.each do |reminder| %>
       <div class="new-table-row w-row">
           <div class="cn w-clearfix w-col w-col-3">
           <div class="name w-clearfix">
@@ -69,12 +69,62 @@
                   <label class="checkbox-field-lable w-form-label" for="node">-</label>
                 </div>
               <%end%>
-              <div class="w-form-done">
-                <div>Thank you! Your submission has been received!</div>
-              </div>
-              <div class="w-form-fail">
-                <div>Oops! Something went wrong while submitting the form</div>
-              </div>
+            </div>
+          </div>
+        </div>
+        <div class="fv w-clearfix w-col w-col-2">
+          <div class="cn column column-2 w-clearfix">
+            <div class="table-text">+1 (202) 345 - 5898</div>
+          </div>
+        </div>
+        <div class="lv w-clearfix w-col w-col-2">
+          <div class="colum-3 column lv">
+            <div class="table-text">Facebook Messenger</div>
+          </div>
+        </div>
+        <div class="avs w-clearfix w-col w-col-1">
+          <div class="avs column column-4 w-clearfix">
+            <div class="table-text">9:00 AM</div>
+          </div>
+        </div>
+        <div class="ts w-clearfix w-col w-col-1">
+          <div class="column column-5 ts w-clearfix">
+            <div class="table-text total-spend-text"><%= reminder.frequency_type %></div>
+          </div>
+        </div>
+        <div class="table-actions w-clearfix w-col w-col-3">
+          <div class="column column-6 left new-row">
+            <div class="frequency table-text"><%= present(reminder).format_created_at %></div>
+          </div>
+          <div class="column column-6 new-row">
+            <%= present(reminder).reminder_change_status_link %>
+          </div>
+        </div>
+        <% end %>
+        </div>
+    </div>
+    </div>
+
+     <div class="reminder-dates">Tomorrow <span class="reminder-count"><%= @reminders_tomorrow.count %></span>
+    </div>
+    <div class="reminders-by-date row-wrapper">
+      <div>
+     <% @reminders_tomorrow.each do |reminder| %>
+      <div class="new-table-row w-row">
+          <div class="cn w-clearfix w-col w-col-3">
+          <div class="name w-clearfix">
+            <%= present(reminder).profile_image %>
+              <div class="table-text"><%= reminder.from_user %></div>
+          </div>
+          <div class="cb check-box-column">
+            <div class="w-form">
+              <%= form_for(reminder, url: user_reminder_path(current_user, reminder), html: { method: :delete}) do |f|%>
+                <div class="select-all-check-box w-checkbox w-clearfix">
+                  <%= f.hidden_field :id %>
+                  <input class="cb table-checkbox w-checkbox-input" id="node" type="checkbox">
+                  <label class="checkbox-field-lable w-form-label" for="node">-</label>
+                </div>
+              <%end%>
             </div>
           </div>
         </div>
@@ -108,6 +158,64 @@
         </div>
         </div>
         <% end %>
+        </div>
+        
+    </div>
+
+        <div class="reminder-dates">Upcoming <span class="reminder-count"><%= @reminders_upcoming.count %></span>
+    </div>
+    <div class="reminders-by-date row-wrapper">
+    <div>
+     <% @reminders_upcoming.each do |reminder| %>
+      <div class="new-table-row w-row">
+          <div class="cn w-clearfix w-col w-col-3">
+          <div class="name w-clearfix">
+            <%= present(reminder).profile_image %>
+              <div class="table-text"><%= reminder.from_user %></div>
+          </div>
+          <div class="cb check-box-column">
+            <div class="w-form">
+              <%= form_for(reminder, url: user_reminder_path(current_user, reminder), html: { method: :delete}) do |f|%>
+                <div class="select-all-check-box w-checkbox w-clearfix">
+                  <%= f.hidden_field :id %>
+                  <input class="cb table-checkbox w-checkbox-input" id="node" type="checkbox">
+                  <label class="checkbox-field-lable w-form-label" for="node">-</label>
+                </div>
+              <%end%>
+            </div>
+          </div>
+        </div>
+        <div class="fv w-clearfix w-col w-col-2">
+          <div class="cn column column-2 w-clearfix">
+            <div class="table-text">+1 (202) 345 - 5898</div>
+          </div>
+        </div>
+        <div class="lv w-clearfix w-col w-col-2">
+          <div class="colum-3 column lv">
+            <div class="table-text">Facebook Messenger</div>
+          </div>
+        </div>
+        <div class="avs w-clearfix w-col w-col-1">
+          <div class="avs column column-4 w-clearfix">
+            <div class="table-text">9:00 AM</div>
+          </div>
+        </div>
+        <div class="ts w-clearfix w-col w-col-1">
+          <div class="column column-5 ts w-clearfix">
+            <div class="table-text total-spend-text"><%= reminder.frequency_type %></div>
+          </div>
+        </div>
+        <div class="table-actions w-clearfix w-col w-col-3">
+          <div class="column column-6 left new-row">
+            <div class="frequency table-text"><%= present(reminder).format_created_at %></div>
+          </div>
+          <div class="column column-6 new-row">
+            <%= present(reminder).reminder_change_status_link %>
+          </div>
+        </div>
+        </div>
+        <% end %>
+    </div>  
     </div>
     </div>
   </div>
