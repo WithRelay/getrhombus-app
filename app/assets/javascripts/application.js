@@ -81,7 +81,11 @@
 //= require webflow
 //= require custom
 //= require jquery.lightbox_me
-//= require custom_lightbox.js
+//= require custom_lightbox
 //= require saved_replies
+//= require custom_trumbowyg_plugin
+//= require campaigns
+//= require date_picker
+//= require campaign_form_validator
 // DO NOT REQUIRE TREE AS IT DOESNT GUARANTEE THE DEPENDENCY ORDER OF THESE FILES
 // require_tree .
