@@ -43,9 +43,7 @@ var BindPlugins = new function() {
     }
   };
 
-  this.get_emoji_box = function() {
-    return msg_emoji_box;
-  }
+  this.get_emoji_box = function() { return msg_emoji_box; };
 
 }
 

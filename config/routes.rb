@@ -18,6 +18,7 @@ Rails.application.routes.draw  do
   get 'link_facebook' => 'link_fb_accounts#link_facebook'
   get "relay-docs-categories/:slug" => "knowledge_base_categories#show"
   get 'get_current_user' => 'application#get_current_user'
+  get 'manage-coupons' => 'coupons#manage_coupons'
 
   ### fix this url
   post 'redirect' => 'link_fb_accounts#redirect'
@@ -61,7 +62,7 @@ Rails.application.routes.draw  do
     resources :fb_pages, only: [:index]
     patch 'update_fb_page' => 'fb_pages#update_user_fb_page'
     resources :hashtags, except: [:show] do
-      collection { get 'mention' => 'hashtags#tag_mention' }
+      #collection { get 'mention' => 'hashtags#tag_mention' }
     end
     resources :subscriptions, only: [:index, :update, :destroy] do
       collection do
@@ -143,11 +144,13 @@ Rails.application.routes.draw  do
     match 'transactions/:txn_number/refund' => 'transactions#refund', via: :post
     resources :transactions, only: [:create]
     match 'numbers/search' => 'numbers#search', via: :get
-    resources :lists, only: [:index, :create]
-    match 'coupons/check_coupon_name' => 'coupons#check_coupon_name', via: :post
-    resources :coupons, only: [:index]
-    match 'plans/check_plan_name' => 'plans#check_plan_name', via: :post
-    resources :plans, only: [:index, :create, :update]
+    resources :lists, only: [:index, :create]  
+    resources :coupons, only: [:index] do 
+      post 'check_coupon_name', on: :collection
+    end  
+    resources :plans, only: [:index, :create, :update] do
+      post 'check_coupon_name', on: :collection
+    end
     resources :subscriptions, only: [:create]
     match 'merchant/customers' => 'merchant_customers#customers', via: :get
     match 'referrers/invite_business' => 'referrers#invite_business', via: :post

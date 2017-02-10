@@ -42,7 +42,9 @@
 <div class="customer-dash sub-nav-bar">
   <div class="sub-nav-options-wrapper w-clearfix">
 
-    <a class="add sub-nav-button w-button" data-ix="create-customer" href="#"> &nbsp;<strong>New hashtag</strong></a>
+    <%= link_to new_user_hashtag_path, class: 'add sub-nav-button w-button' do %>
+       &nbsp;<strong>New hashtag</strong>
+    <% end %>
     <a class="import sub-nav-button w-button" data-ix="import-customers" id="deactivate-hashtag" href="#">&nbsp; <strong>Deactivate</strong></a>
 
     <a class="sub-nav-button w-button" id= "delete-hashtag" href="#"> &nbsp;<strong>Delete</strong></a>
@@ -55,19 +57,19 @@
     <div class="alt-table-row w-row">
       <div class="alt-column w-clearfix w-col w-col-3">
         <div class="title-column-div w-clearfix">
-        <% if h.status == "inactive" %>
+        <% if h.inactive? %>
           <div class=" deactivated-text shrink-text table-text"><%= h.name %></div>
-          <%else%>
+        <% else %>
           <div class="shrink-text table-text"><%= h.name %></div>
-          <%end%>
+        <% end %>
         </div>
         <div class="alt-table cb check-box-column">
           <div class="w-form">
             <%= form_for(h, url: user_hashtag_path(current_user, h), html: { method: :delete }) do |f| %>
               <div class="select-all-check-box w-checkbox w-clearfix">
                 <%= f.hidden_field :id %>
-                <%if h.status == "active" %>
-                <%= f.hidden_field :status , value: 'inactive' %>
+                <% if h.active? %>
+                  <%= f.hidden_field :status , value: 'inactive' %>
                 <% end %>
                 <input class="cb table-checkbox w-checkbox-input hashtag-check-box" id="node" type="checkbox">
                 <label class="checkbox-field-lable w-form-label" for="node">-</label>
@@ -78,21 +80,21 @@
       </div>
       <div class="alt-column w-col w-col-2">
         <div class="alt-table-column-div w-clearfix">
-            <%= present(h).profile_image %>
-            <%if h.status == "inactive" %>
-          <div class="deactivated-text shrink-text table-text"><%="#{current_user.first_name} #{current_user.last_name}" %></div>  
-            <%else%>
-          <div class="shrink-text table-text"><%="#{current_user.first_name} #{current_user.last_name}" %></div>
-          <%end%>
+          <%= present(h).profile_image %>
+          <% if h.inactive? %>
+            <div class="deactivated-text shrink-text table-text"><%="#{current_user.first_name} #{current_user.last_name}" %></div>  
+          <% else %>
+            <div class="shrink-text table-text"><%="#{current_user.first_name} #{current_user.last_name}" %></div>
+          <% end %>
         </div>
       </div>
       <div class="alt-column w-col w-col-2">
         <div class="alt-table-column-div w-clearfix">
-        <%if h.status == "inactive" %>
-         <div class="deactivated-text table-text"><%= present(h).date_in_word %></div>
-        <%else%>
+        <%if h.inactive? %>
+          <div class="deactivated-text table-text"><%= present(h).date_in_word %></div>
+        <% else %>
           <div class="table-text"><%= present(h).date_in_word %></div>
-          <%end%>
+        <%end%>
         </div>
       </div>
       <div class="alt-column w-col w-col-2">
@@ -107,7 +109,7 @@
       </div>
       <div class="alt-column w-col w-col-1">
         <div class="alt-table-column-div w-clearfix">
-          <div class="table-text"> &nbsp; <%= h.mention_count %> </div>
+          <div class="table-text"> &nbsp; <%= h.mentions_count %> </div>
         </div>
       </div>
     </div>

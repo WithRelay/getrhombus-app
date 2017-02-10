@@ -6,6 +6,10 @@ module ApplicationHelper
     block_given? ? yield(presenter) : presenter
   end
 
+  def todays_date
+    Time.current.strftime('%B %d, %Y')
+  end
+
   def total_transaction
     (@earlier_transactions.count + @todays_transaction.count + @yesterday_transactions.count)
   end
@@ -23,7 +27,7 @@ module ApplicationHelper
   end
 
   def render_sidebar_partial
-    concat(render 'shared/dashboard_sidebar') unless authenticated_pages || setting_pages || messaging_dashboard
+    concat(render 'shared/dashboard_sidebar') unless authenticated_pages || setting_pages || messaging_dashboard || restrict_other_params
     concat(render 'shared/setting_sidebar') if setting_pages
   end
 

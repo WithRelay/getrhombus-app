@@ -9,6 +9,8 @@ class Plan < ActiveRecord::Base
   validates :name, uniqueness: { case_sensitive: false, scope: :merchant_id }
   validates_numericality_of :amount, :interval_count, greater_than_or_equal_to: 0, only_integer: true
 
+  enum status: { inactive: 0, active: 1 }
+
   def create_plan(hash)
     begin
       res = []
@@ -96,6 +98,10 @@ class Plan < ActiveRecord::Base
       # notify team via email
       false
     end
+  end
+
+  def has_subscription?
+    Subscription.exists?(plan_id: self.id)
   end
 
   private

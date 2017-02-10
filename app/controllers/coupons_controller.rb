@@ -31,12 +31,7 @@ class CouponsController < ApplicationController
     else
       # revoke amount_off from cent
       @coupon.destroy     # revoke created coupon on error
-      if @coupon.errors.messages.present?
-        error = @coupon.errors.full_messages
-        flash[:error] = error
-      else
-        flash[:error] = "We couldn't create the coupon"
-      end
+      flash[:error] = @coupon.errors.messages.present? ? @coupon.errors.full_messages : "We couldn't create the coupon"
       render :new
     end
   end
@@ -52,6 +47,9 @@ class CouponsController < ApplicationController
     else
       redirect_to user_coupons_path, flash: { warning: "You can't delete a used Coupon..." }
     end
+  end
+
+  def manage_coupons
   end
 
   private

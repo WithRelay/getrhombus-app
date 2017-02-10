@@ -2,6 +2,7 @@ $(document).ready(function () {
 
   $('#select-images-button').click(function() { $('#select-images').trigger('click'); });
 
+
   $(document).on('change', '#select-images', function() { read_file_picker(this); });
 
   function read_file_picker(input) {
@@ -45,8 +46,11 @@ $(document).ready(function () {
           var img = e.target;
           counter.push(e.target.filename)
           if (counter.length < 2){
-            div = "<div class='images'><a href='#' class='deleteImagePreview' title='"+img.filename+"'>Delete Image</a><img class='thumbnail' src='" + img.result + "'" + "title='" + img.filename + "'" + "size='" + Math.round(e.total/1024) + "'"+"/>" +
-                  "<span>" + img.filename + "</span></div>";
+            div = "<div class='images'>" +
+                    "<div href='#' class='deleteImagePreview' title='"+img.filename+"'>x</div>" + 
+                    "<img class='editor-thumbnail' src='" + img.result + "'" + "title='" + img.filename + "' />" +
+                    '<div class="editor-file-name shrink-text">' + img.filename + '</div>' +
+                  "</div>";
           }
           // if we ever support selecting more than one image
           else {

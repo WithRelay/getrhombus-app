@@ -53,12 +53,7 @@
             </div>
           </div>
         </div>
-        <div class="w-form-done">
-          <div>Thank you! Your submission has been received!</div>
-        </div>
-        <div class="w-form-fail">
-          <div>Oops! Something went wrong while submitting the form</div>
-        </div>
+        
       </div>
       <div class="editor-button-container">
         <div class="w-row">
@@ -67,12 +62,14 @@
             <div class="upload_image">
               <%= f.file_field :avatar, id: 'select-images' %>
               <!-- for new images -->
-              <div id='new-image-previews'></div>
+              <div id='new-image-previews'>
+              </div> 
               <!-- for already attached images -->
               <div id='image-previews' data-model-id='campaigns_<%= @campaign.id %>'>
                 <%= div_for @campaign.images do |image| %>
-                <%= present(image).image_url %>
-                <%= present(image).image_delete_url %>
+                  <%= present(image).image_delete_url %>
+                  <%= present(image).image_url %>
+                  <%= present(image).image_name %>
                 <% end %>
               </div>
             </div>

@@ -69,7 +69,6 @@ $(document).ready(function() {
     set_title_and_body();
   });
 
-
   // bind emoji to textarea
   var reply_body_emoji_box = $('#saved-reply-body-field').emojioneArea({
     pickerPosition: 'bottom',
