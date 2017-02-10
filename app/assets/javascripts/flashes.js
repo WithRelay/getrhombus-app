@@ -1,6 +1,32 @@
 // flash success for all types of flash messages
 // the first parameter is message and second parameter is type eg: success
 var FlashHandler = new function() {
+  var focused = true;
+
+  window.onfocus = window.onblur = function(e) {
+    focused = (e || event).type === "focus";
+  }
+
+// ask for the enable browser notification permission
+  this.notificationPermission = function () {
+    if(Notification.permission !== 'granted'){
+      Notification.requestPermission();
+    }
+  }
+
+  function browserNotification(title, message){
+    var chck = Notification.permission;
+    if( chck === 'granted' ){
+      var notification = new Notification( title, {
+        body: message
+      });
+      notification.onclick = function () {
+        notification.close();
+        window.focus();
+      };
+    }
+  }
+
   // toast message for error, success, notice
   var typeObj = { 'notice': 'success', 'warning': 'info', 'error':'error' };
   this.setFlashMessage = function(msg, type){
@@ -12,8 +38,11 @@ var FlashHandler = new function() {
     } );
   };
 
-  function showToastr (type, message) {
+  function showToastr(type, message) {
     hideToastr();
+    if (focused === false) {
+      browserNotification(type, message);
+    }
     var class_name = (type === 'error') ? 'failure toasters' : 'toasters' ,
         close_button_class = (type === 'error') ? 'failure toaster-font-awesome' : 'toaster-font-awesome'
     $('body').append('<div class="'+class_name+'">\
@@ -34,8 +63,11 @@ var FlashHandler = new function() {
     $('.browser-notification-link-block, .toasters').remove();
   }
 
-  function incoming_facebook_message(profile_pic, customer_name, message) {
+  this.incoming_facebook_message = function(profile_pic, customer_name, message) {
     hideToastr();
+    if (focused === false) {
+      browserNotification('New Message', message);
+    }
     $('body').append('<a class="browser-notification-link-block w-inline-block" href="#">\
       <div class="browser-notification-row w-row">\
         <div class="browser-notification-row-column-1 w-clearfix w-col w-col-4">\
@@ -54,8 +86,11 @@ var FlashHandler = new function() {
   }
 
 
-  function incoming_sms (profile_pic, customer_name, message) {
+  this.incoming_sms = function(profile_pic, customer_name, message) {
     hideToastr();
+    if (focused === false) {
+      browserNotification('New Message', message);
+    }
     $('body').append('<a class="browser-notification-link-block sms-browser-notification w-inline-block" href="#">\
       <div class="browser-notification-row w-row">\
         <div class="browser-notification-row-column-1 payment-notification w-clearfix w-col w-col-4">\
@@ -73,8 +108,11 @@ var FlashHandler = new function() {
     close_browser_toastr();
   }
 
-  function payment_notification(profile_pic, amount, customer_name) {
+  this.payment_notification = function(profile_pic, amount, customer_name) {
     hideToastr();
+    if (focused === false) {
+      browserNotification('New payment', amount);
+    }
     $('body').append('<a class="browser-notification-link-block payment w-clearfix w-inline-block" href="#">\
       <img class="browser-notification customer-profile-picture" height="40" src="'+profile_pic+'" width="40">\
       <div class="payment-notification-amount">$'+amount+'</div>\
@@ -84,7 +122,7 @@ var FlashHandler = new function() {
     close_browser_toastr();
   }
 
-  function copied_no() {
+  this.copied_no = function() {
     hideToastr();
     $('body').append('<a class="browser-notification-link-block copied w-inline-block" href="#">\
       <div class="browser-notification-close payment toaster-font-awesome"></div>\
@@ -93,8 +131,11 @@ var FlashHandler = new function() {
     close_browser_toastr();
   }
 
-  function schedule_jobs (message, no_of_recipient) {
+  this.schedule_jobs = function(message, no_of_recipient) {
     hideToastr();
+    if (focused === false) {
+      browserNotification('New Campaign sent', message);
+    }
     $('body').append('<a class="browser-notification-link-block scheduled-jobs w-inline-block" href="#">\
       <div class="scheduled-jobs-notification-description">'+message+'</div>\
       <img class="browser-notification customer-profile-picture scheduled-jobs" height="40" src="http://uploads.webflow.com/58977e002a25945021983468/58977e002a2594502198356c_81.jpg" width="40">\
