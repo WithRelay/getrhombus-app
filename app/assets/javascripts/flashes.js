@@ -40,9 +40,7 @@ var FlashHandler = new function() {
 
   function showToastr(type, message) {
     hideToastr();
-    if (focused === false) {
-      browserNotification(type, message);
-    }
+
     var class_name = (type === 'error') ? 'failure toasters' : 'toasters' ,
         close_button_class = (type === 'error') ? 'failure toaster-font-awesome' : 'toaster-font-awesome'
     $('body').append('<div class="'+class_name+'">\
