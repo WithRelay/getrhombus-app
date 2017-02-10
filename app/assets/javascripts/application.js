@@ -83,5 +83,7 @@
 //= require jquery.lightbox_me
 //= require custom_lightbox.js
 //= require saved_replies
+//= require reminders
+
 // DO NOT REQUIRE TREE AS IT DOESNT GUARANTEE THE DEPENDENCY ORDER OF THESE FILES
 // require_tree .

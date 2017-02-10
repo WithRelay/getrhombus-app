@@ -18,6 +18,7 @@ Rails.application.routes.draw  do
   get 'link_facebook' => 'link_fb_accounts#link_facebook'
   get "relay-docs-categories/:slug" => "knowledge_base_categories#show"
   get 'get_current_user' => 'application#get_current_user'
+  get 'manage-coupons' => 'coupons#manage_coupons'
 
   ### fix this url
   post 'redirect' => 'link_fb_accounts#redirect'

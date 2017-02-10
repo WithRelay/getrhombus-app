@@ -69,7 +69,7 @@ $(document).ready(function () {
   $(document).on('click', '.cancel-yes', function(e){
     e.preventDefault(); 
     var selectedElement;
-    $('.hashtag-check-box').each(function( index, element){
+    $('.table-checkbox').each(function( index, element){
       if ($(this).is(':checked')){
         selectedElement = $(this);
       }
@@ -81,7 +81,10 @@ $(document).ready(function () {
       method_input.attr('value','patch');
     }
     a = selectedElement.parents('.edit_hashtag')
-    debugger;
+    if(a.length == 0){
+      a = selectedElement.parents('.edit_reminder')
+    }
+    a.submit()
   });
 
   // decimal with two places

@@ -49,6 +49,9 @@ class CouponsController < ApplicationController
     end
   end
 
+  def manage_coupons
+  end
+
   private
     def set_coupon
       @coupon = Coupon.find(params[:id])

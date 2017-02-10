@@ -1,5 +1,5 @@
 class RemindersController < ApplicationController
-  before_action :set_reminder, only: [ :edit, :update, :change_status ]
+  before_action :set_reminder, only: [ :edit, :update, :change_status , :destroy ]
 
   def index
     @reminders = current_user.reminders
@@ -33,6 +33,15 @@ class RemindersController < ApplicationController
       flash[:error] = @reminder.errors.full_messages
     end
     redirect_to user_reminders_path(current_user)
+  end
+
+  def destroy
+    if @reminder.destroy
+    redirect_to user_reminders_path, flash: { notice: 'Reminder deleted'}
+    else
+      flash[:error] = "Reminder cannot be deleted"
+      return
+    end
   end
 
   private
