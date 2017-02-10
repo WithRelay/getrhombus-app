@@ -1,6 +1,6 @@
 # presents camapgin object
 class CampaignPresenter < BasePresenter
-   
+
 
   # formats date time for campaign object as "2016/09/28 05:05 AM"
   def format_date_time
@@ -18,8 +18,12 @@ class CampaignPresenter < BasePresenter
   end
 
   def show_info
-    html = '<div class="alert alert-info"> <strong>Info!</strong> Sorry this campaign could not run.
-            You need to complete facebook messenger association </div>'
+    html = '<div class="toaster-row-column-1 w-col w-col-11">
+              <div class="shrink-text toaster-text">
+                <strong>Info!</strong> Sorry this campaign could not run.
+                  You need to complete facebook messenger association
+              </div>
+            </div>'
     !@user.fb_pages.subscribed.present? && @model.facebook_messenger? ? html : ''
   end
 end
