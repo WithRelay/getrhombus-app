@@ -127,7 +127,7 @@ class User < ActiveRecord::Base
     self.email == '<redacted_email>' || self.email == '<redacted_email>'
   end
 
-  def get_display_name(source_type)
+  def get_display_name(uid, uid_type)
   end
 
   def can_accept_payments?
