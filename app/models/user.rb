@@ -127,6 +127,9 @@ class User < ActiveRecord::Base
     self.email == '<redacted_email>' || self.email == '<redacted_email>'
   end
 
+  def get_display_name(source_type)
+  end
+
   def can_accept_payments?
     # the last stripe_cred is either a managed acct, a managed acct even if a user had a standalone acct, or a standalone acct
     creds = self.stripe_creds.last
