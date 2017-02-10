@@ -28,7 +28,17 @@ $(document).on('ready page:load', function() {
         var formData = new FormData(this);
         apiController.sendRequest(formData)
     });
+
+
+    $('#delete-reminder').click(function(e){
+    
+      FlashHandler.setConfirmationDialog('#delete-reminder','Are you sure, you want to delete the Reminder?', 'Delete', 'isDistroy');
+
+      return false;
+    });
+    
 });
+
 
 // Class ApiController handle all call to http verb to the server
 // First argument is the dom object it self and second contains the modal id
