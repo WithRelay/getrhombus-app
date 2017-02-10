@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170209222725) do
+ActiveRecord::Schema.define(version: 20170210013659) do
 
   create_table "addresses", force: :cascade do |t|
     t.string   "street_address",   limit: 191
@@ -636,12 +636,10 @@ ActiveRecord::Schema.define(version: 20170209222725) do
     t.boolean  "captured",                           limit: 1,                             default: true
     t.integer  "hashtag_id",                         limit: 4
     t.integer  "subscription_id",                    limit: 4
-    t.integer  "merchant_customer_id",               limit: 4
   end
 
   add_index "transactions", ["created_at"], name: "index_transactions_on_created_at", using: :btree
   add_index "transactions", ["hashtag_id"], name: "index_transactions_on_hashtag_id", using: :btree
-  add_index "transactions", ["merchant_customer_id"], name: "index_transactions_on_merchant_customer_id", using: :btree
   add_index "transactions", ["referenced_customer_transaction_id"], name: "index_transactions_on_referenced_customer_transaction_id", using: :btree
   add_index "transactions", ["subscription_id"], name: "index_transactions_on_subscription_id", using: :btree
   add_index "transactions", ["team_id"], name: "fk_rails_669ffc34df", using: :btree

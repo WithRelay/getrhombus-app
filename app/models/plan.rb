@@ -8,6 +8,7 @@ class Plan < ActiveRecord::Base
   validates_presence_of :name, :interval, :interval_count, :amount
   validates :name, uniqueness: { case_sensitive: false, scope: :merchant_id }
   validates_numericality_of :amount, :interval_count, greater_than_or_equal_to: 0, only_integer: true
+  validate :amount_greater_than_15000
 
   enum status: { inactive: 0, active: 1 }
 
@@ -123,5 +124,9 @@ class Plan < ActiveRecord::Base
   def delete_plan_segment
     l = List.find_by user_id: self.merchant_id, name: self.name
     l.destroy if l
+  end
+
+  def amount_greater_than_15000
+    errors.add(:amount, "can't be greater than 15000") if Toolbox::Decimal.to_cents(self.amount) > 1500000
   end
 end

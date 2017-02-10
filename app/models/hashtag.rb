@@ -1,5 +1,7 @@
 class Hashtag < ActiveRecord::Base
 
+  include Transactionable
+
 	belongs_to :user
 
   attr_accessor :skip_tag_validation
@@ -10,7 +12,7 @@ class Hashtag < ActiveRecord::Base
   
   has_many :messages
   belongs_to :txn, foreign_key: :hashtag_id, class_name: :Transaction
-  has_one :plan
+  has_many :plans
 
 	# validations
 	validates :tag, presence: true, uniqueness: { case_sensitive: false, scope: :user_id }, unless: :skip_tag_validation
@@ -25,13 +27,15 @@ class Hashtag < ActiveRecord::Base
 
   accepts_nested_attributes_for :images
 
-  # You need a new plan if this is the first time
-  # or any recurring hashtag detail changes on update
-  def create_new_plan_and_subscription
-    if true
-    end
-  end
+  # You need a new plan if this is a recurring hashtag
+  def create_plan_for_recurring_tag(merchant)
+    return true if !self.recurring_payment_tag?
 
+    plan = Plan.new({ interval: self.interval, interval_count: self.interval_count, hashtag_id: self.id,
+                      amount: Toolbox::Decimal.to_cents(self.amount), name: generate_resource_name("Plan") })   
+
+    plan.create_plan({ team: merchant })
+  end
 
   def mentions_count
     # because hashtag_id will exist in a transaction that was created by a text message. so avoid duplicates
@@ -49,6 +53,18 @@ class Hashtag < ActiveRecord::Base
 
   def is_mentioned?
     self.mentions_count > 0
+  end
+
+  def delete_plan_for_recurring_tag(merchant)
+    return [true] if !self.recurring_payment_tag?
+    plan = self.plans.where(customer_id: nil, merchant_id: merchant.id, active: 1).last
+    return [true] if plan.blank?
+    if plan.has_subscription? 
+      return [true] if plan.delete_plan(merchant) && plan.destroy
+      [false, 'We cannot delete this hashtag because we cannot delete the associated recurring plan.'] 
+    else
+      [false, 'We cannot delete this hashtag because it has a plan that has a subscription.']
+    end
   end
 
   def delete_recurring_plan(merchant)
