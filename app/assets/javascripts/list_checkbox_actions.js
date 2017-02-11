@@ -1,32 +1,36 @@
 $(document).ready(function(){
 
-  $('#deleteResource').click(function(e){
-    element = { 'checkBoxes': '.w-checkbox-input', 'hiddenField': '.w-hidden', 'url': '/v1/campaigns/delete' }
-    resource = new Resource(element);
-    resource.updateOrDelete();
+  $('.delete-resource').click(function(e){
+    FlashHandler.setConfirmationDialog('.delete-resource','Are you sure, you want to remove the campaign?', 'Delete', 'isDestroy');
   });
 
-  $('#updateResource').click(function(){
-    element = { 'checkBoxes': '.w-checkbox-input', 'hiddenField': '.w-hidden', 'url': '/v1/campaigns/change_status' }
+  $('.deactivate-resource').click(function(e){
+    FlashHandler.setConfirmationDialog('.deactivate-resource','Are you sure, you want to deactivate the campaign?', 'Deactivate', 'isDestroy');
+  });
+
+  $(document).on('click', '.cancel-yes', function(e){
+    element = { 'url': '/v1/campaigns/change_status' }
     resource = new Resource(element);
     resource.updateOrDelete();
   });
 
   function Resource(element){
-    var ids = []
-    $.each($(element.checkBoxes + ':checkbox:checked'), function(index, value){
-      ids.push($(value).next(element.hiddenField).text());
+    var id
+    $.each($('.table-checkbox' + ':checkbox:checked'), function(index, value){
+      if ($(this).is(':checked')){
+        id =  $(this).parent().find('.resource-id').text()
+      }
     });
-    this.postData = ids;
+    this.postData = id;
     this.url = element.url;
   }
 
   Resource.prototype.updateOrDelete = function(){
-    if (this.postData.length >= 1){
+    if (this.postData != undefined){
       $.ajax({ method: 'post',
               url: this.url,
               dataType: 'Json',
-              data: { 'ids': this.postData }
+              data: { 'id': this.postData }
     }).done(function(msg){
       // key in index 1 contains title/flash message key please see api/controllers/reminders for more details.
       var flash_key = Object.keys(msg)[1]
