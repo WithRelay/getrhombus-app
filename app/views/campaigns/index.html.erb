@@ -1,5 +1,8 @@
 <div class="customer-dash sub-nav-bar">
-  <div class="sub-nav-options-wrapper w-clearfix"><a class="add sub-nav-button w-button" data-ix="create-customer" href="#"> &nbsp;<strong>New campaign</strong></a><a class="import sub-nav-button w-button" data-ix="import-customers" href="#">&nbsp; <strong>Deactivate</strong></a><a class="sub-nav-button w-button" data-ix="create-list" href="#"> &nbsp;<strong>Delete</strong></a>
+  <div class="sub-nav-options-wrapper w-clearfix">
+    <a class="add sub-nav-button w-button" data-ix="create-customer" href="#"> &nbsp;<strong>New campaign</strong></a>
+    <a class="import sub-nav-button w-button" data-ix="import-customers" href="#">&nbsp; <strong>Deactivate</strong></a>
+    <a class="sub-nav-button w-button" data-ix="create-list" href="#"> &nbsp;<strong>Delete</strong></a>
   </div>
 </div>
 <div class="dashboard-body">
@@ -16,6 +19,7 @@
             <form data-name="Email Form 2" id="email-form-2" name="email-form-2">
               <div class="select-all-check-box w-checkbox w-clearfix">
                 <input class="cb table-checkbox w-checkbox-input" id="node" type="checkbox">
+                <div class ='resource-id w-hidden'><%= campaign.id %></div>
                 <label class="checkbox-field-lable w-form-label" for="node">-</label>
               </div>
             </form>
@@ -102,9 +106,9 @@
 <div class="customer-dash sub-nav-bar">
   <div class="sub-nav-options-wrapper w-clearfix">
     <%= link_to ' &nbsp;New campaign'.html_safe, new_user_campaign_path(current_user), class: 'add sub-nav-button w-button', data: { ix: "create-customer" } %>
-    <a class="import sub-nav-button w-button" data-ix="cancel-subscription" href="#">&nbsp; Deactivate</a>
+    <a class="import sub-nav-button w-button deactivate-resource" data-ix="cancel-subscription" href="#">&nbsp; Deactivate</a>
     <a class="sub-nav-button w-button" data-ix="create-list" href="#"> &nbsp;Resend</a>
-    <a class="import sub-nav-button w-button" data-ix="cancel-subscription" href="#"> &nbsp;Delete</a>
+    <a class="import sub-nav-button w-button delete-resource" data-ix="cancel-subscription" href="#"> &nbsp;Delete</a>
   </div>
 </div>
 <!-- <div class="modal-wrapper-9" data-ix="modal-interaction-9">
