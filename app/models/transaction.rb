@@ -11,7 +11,16 @@ class Transaction < ActiveRecord::Base
   belongs_to :merchant_customer
   belongs_to :user, counter_cache: true
   belongs_to :team, class_name: "User", counter_cache: true
-  scope :get_merchant_transactions, -> (team_id, date) { self.where('team_id = ? and created_at > ?', team_id, date).limit(5) }
+
+  # Exclude refunded transactions
+  scope :get_merchant_todays_last5_txns, -> (team_id, date) { self.includes(:user).joins('LEFT JOIN refunds on transactions.id = refunds.transaction_id')
+                                                              .where("refunds.transaction_id is null and transactions.team_id = ? 
+                                                                       and transactions.created_at >= ?", team_id, date).order(created_at: :desc).limit(5) }
+  scope :get_merchant_todays_txn_count, -> (team_id, date) { self.joins('LEFT JOIN refunds on transactions.id = refunds.transaction_id')
+                                                              .where("refunds.transaction_id is null and transactions.team_id = ? 
+                                                                       and transactions.created_at >= ?", team_id, date).count }
+
+  
   # send in a hash instead to PaymentService?
   def process_payment(amt, merchant, user, msg, hashtag_id, channel, capture=true)
     begin

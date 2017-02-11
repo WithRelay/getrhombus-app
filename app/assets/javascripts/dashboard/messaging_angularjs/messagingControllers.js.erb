@@ -373,7 +373,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
       $timeout(function() { angular.element('#conversation-list-wrapper').children(':first').triggerHandler('click'); });
     }
 
-    $scope.messageTrackingFunction = function(message) { return message.msg_type + "-" + message.id.toString(); };
+    $scope.messageTrackingFunction = function(message) { return message.channel + "-" + message.id.toString(); };
     $scope.imageTrackingFunction = function(image) { return 'Image-' + image.ref.toString(); };
 
     $scope.messageInView = function(index) {

@@ -1,5 +1,6 @@
 class BasePresenter < SimpleDelegator
   include Rails.application.routes.url_helpers
+  include PrettyDate
 
   # might need to send user and template for partials in here
   def initialize(model, view, user)
@@ -23,6 +24,10 @@ class BasePresenter < SimpleDelegator
     h.time_ago_in_words(@model.created_at) + ' ago'
   end
 
+  def relative_time
+    @model.created_at.super_short
+  end
+
   def profile_image
     profile_pic = User.check_profile_picture(@model.user)
     if profile_pic[:type] == "image"
@@ -37,6 +42,12 @@ class BasePresenter < SimpleDelegator
 
   def date_in_word
     @model.created_at.strftime('%B %d, %Y')
+  end
+
+  def get_plan_intervals
+    { "Weekly" => "week_1", "Bi-weekly" => 'week_2', 
+      "Monthly" => "month_1", "Every 3 months" => 'month_3', 
+      'Every 6 months' => 'month_6', 'Yearly' => 'year_1' }
   end
 
 end

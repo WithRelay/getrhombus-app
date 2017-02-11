@@ -257,13 +257,13 @@
               <img ng-repeat="image in message.images track by imageTrackingFunction(image)" class="chat-bubble-image" src="{{ message.images[$index].url }}">
             </div>
             <!-- text -->
-            <div ng-class="{ 'customer-message' : true, 'fb-messenger': message.msg_type == 'FbMessage', 'message-bubble' : true }">
-              <div ng-class="{ 'chat-text' : true, 'fb-messenger': message.msg_type == 'FbMessage' }">{{message.text}}</div>
+            <div ng-class="{ 'customer-message' : true, 'fb-messenger': message.channel == 'FbMessage', 'message-bubble' : true }">
+              <div ng-class="{ 'chat-text' : true, 'fb-messenger': message.channel == 'FbMessage' }">{{message.text}}</div>
             </div>
 
           </div>
         </div>
-        <div class="message-date-time">Received via <strong class="channel-and-time">{{ message.msg_type == 'Message' ? 'SMS' : 'Facebook Messenger'}} {{message.ts_time}}</strong></div>
+        <div class="message-date-time">Received via <strong class="channel-and-time">{{ message.channel == 'Message' ? 'SMS' : 'Facebook Messenger'}} {{message.ts_time}}</strong></div>
       </div>
       <!-- end user -->
 

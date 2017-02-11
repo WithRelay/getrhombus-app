@@ -208,13 +208,16 @@ $(document).ready(function () {
     action = $('#coupon-update-form').attr('action') + '/' + subscriptionId;
     $('#coupon-update-form').attr('action', action);
   });
-  
+ 
+/* LEAVE FOR LATER
+  // For upgrading/downgrading plans
   $('#change_subscription_plan').on('click',function(){
     action = $('#plan-update-form').attr('action');
     actionName = ($(this).val() === 'Upgrade Subscription') ? 'upgrade_subscription' : 'downgrade_subscription' 
     action +='/' + actionName;
     $('#plan-update-form').attr('action', action);
   });
+*/
 
 });
 

@@ -11,7 +11,7 @@ class Hashtag < ActiveRecord::Base
   has_many :images, through: :image_refs
   
   has_many :messages
-  belongs_to :txn, foreign_key: :hashtag_id, class_name: :Transaction
+  belongs_to :txn, class_name: :Transaction
   has_many :plans
 
 	# validations
@@ -30,13 +30,12 @@ class Hashtag < ActiveRecord::Base
   # You need a new plan if this is a recurring hashtag
   def create_plan_for_recurring_tag(merchant)
     return true if !self.recurring_payment_tag?
-
     plan = Plan.new({ interval: self.interval, interval_count: self.interval_count, hashtag_id: self.id,
                       amount: Toolbox::Decimal.to_cents(self.amount), name: generate_resource_name("Plan") })   
-
     plan.create_plan({ team: merchant })
   end
 
+  # caching needed for this
   def mentions_count
     # because hashtag_id will exist in a transaction that was created by a text message. so avoid duplicates
     in_txns_not_in_msg_count = Hashtag.find_by_sql(["SELECT count(*) as count FROM transactions t LEFT JOIN messages m
@@ -57,7 +56,7 @@ class Hashtag < ActiveRecord::Base
 
   def delete_plan_for_recurring_tag(merchant)
     return [true] if !self.recurring_payment_tag?
-    plan = self.plans.where(customer_id: nil, merchant_id: merchant.id, active: 1).last
+    plan = self.plans.where(customer_id: nil, merchant_id: merchant.id).first
     return [true] if plan.blank?
     if plan.has_subscription? 
       return [true] if plan.delete_plan(merchant) && plan.destroy
@@ -66,19 +65,6 @@ class Hashtag < ActiveRecord::Base
       [false, 'We cannot delete this hashtag because it has a plan that has a subscription.']
     end
   end
-
-  def delete_recurring_plan(merchant)
-    return [true] if !self.recurring_payment_tag?
-    plan = Plan.find_by(customer_id: nil, merchant_id: merchant.id, hashtag_id: self.id, active: 1)
-    return [true] if plan.blank?
-    if plan.plan_has_subscription? 
-      return [true] if plan.delete_plan(merchant) && plan.destroy
-      [false, 'We cannot delete this hashtag because we cannot delete the associated recurring plan.'] 
-    else
-      [false, 'We cannot delete this hashtag because it has a plan that has a subscription.']
-    end
-  end
-
 
   private
 

@@ -40,8 +40,9 @@ $(document).ready(function() {
   function displayValue() {
     // priceValueSpan.innerHTML = pricingSlider.value;
     priceValueSpan.innerHTML = '<h5>' + pricingSlider.value + '<b> Users</b> </h5>' +
-      '<h4>' + plan_range(pricingSlider.value)[1] + '</h4>';
-
+      '<h4>' + plan_range(pricingSlider.value)[1] + '</h4>';    
+    /*
+    # LEAVE THIS FOR LATER
     //only for subscription setting page
     if ($('#change_subscription_plan')[0]) {
       amount = plan_range(parseInt(pricingSlider.value))[2];
@@ -52,10 +53,11 @@ $(document).ready(function() {
       $('#pricing-range').val(plan_range(pricingSlider.value)[0]);
     }
     else {
-      $('#select_plan').attr('href', '/users/sign_up?signup_plan=' + plan_range(pricingSlider.value)[0]);
-      // update selected plan name
-      $('#pricing-range').val(plan_range(pricingSlider.value)[0]);
-    }
+    */
+    $('#select_plan').attr('href', '/users/sign_up?signup_plan=' + plan_range(pricingSlider.value)[0]);
+    // update selected plan name
+    $('#pricing-range').val(plan_range(pricingSlider.value)[0]);
+   //}
   }
 
   function plan_range(customerCount) {

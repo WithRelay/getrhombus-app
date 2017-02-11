@@ -1,28 +1,28 @@
 <div class="dashboard-nav-links-wrapper new-tab right-nav settings-dropdown">
   <div class="dropdown-wrapper w-dropdown" data-delay="0">
     <div class="notifications-navbar-dropdown w-dropdown-toggle">
-      <div class="dropdown-wrapper-text"><strong> &nbsp;&nbsp;<span class="notification-counter">200</span></strong>
+      <div class="dropdown-wrapper-text"><strong> &nbsp;&nbsp;<span class="notification-counter"><%= total_alerts %></span></strong>
       </div>
     </div>
-    <nav class="dropdown-content-wrapper notifications-dropdown-wrapper w-dropdown-list"><a class="dropdown-link header notifications-dropdown-header w-clearfix w-dropdown-link" href="#">Messages<span class="unread-notification-count">Unread (<%= @todays_conversation.count %>)</span></a>
-      <% @todays_conversation.each do |conversation| %>
+    <nav class="dropdown-content-wrapper notifications-dropdown-wrapper w-dropdown-list"><a class="dropdown-link header notifications-dropdown-header w-clearfix w-dropdown-link" href="#">Messages<span class="unread-notification-count">Unread (<%= @todays_unread_convs_count %>)</span></a>
+      <% @todays_last_msgs_from_last5_convs.each do |m| %>
         <a class="dashboard-header-notification-wrapper w-inline-block" href="#">
           <div class="w-row">
             <div class="w-col w-col-2">
-              <%= present(transaction).profile_image %>
+              <%= present(m).profile_image %>
             </div>
             <div class="w-col w-col-8">
-              <div class="notification-text-block notifier"><strong class="notifier-name"><%= present(conversation).get_full_name %></strong> sent you a <strong class="notifier-action">message</strong> via <%= present(conversation).conversation_channel %></div>
+              <div class="notification-text-block notifier"><strong class="notifier-name"><%= present(m).get_full_name %></strong> sent you a <strong class="notifier-action">message</strong> via <%= m.channel %></div>
             </div>
             <div class="w-col w-col-2">
-              <div class="notification-text-block notifier"><strong class="notifier-time">5m</strong>
+              <div class="notification-text-block notifier"><strong class="notifier-time"><%= present(m).relative_time %></strong>
               </div>
             </div>
           </div>
         </a>
       <% end %>
-      <a class="dropdown-link header notifications-dropdown-header older w-clearfix w-dropdown-link" href="#">Transactions<span class="unread-notification-count">New (<%= @todays_transaction.count %>)</span></a>
-      <% @todays_transaction.each do |transaction| %>
+      <a class="dropdown-link header notifications-dropdown-header older w-clearfix w-dropdown-link" href="#">Transactions<span class="unread-notification-count">New (<%= @todays_txns_count %>)</span></a>
+      <% @todays_last5_txns.each do |transaction| %>
         <a class="dashboard-header-notification-wrapper w-inline-block" href="#">
           <div class="w-row">
             <div class="w-col w-col-2">
@@ -33,7 +33,7 @@
                 Payment</strong>&nbsp;of $<%= transaction.amount %></div>
             </div>
             <div class="w-col w-col-2">
-              <div class="notification-text-block notifier"><strong class="notifier-time">1d</strong>
+              <div class="notification-text-block notifier"><strong class="notifier-time"><%= present(transaction).relative_time %></strong>
               </div>
             </div>
           </div>
