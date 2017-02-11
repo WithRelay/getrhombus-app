@@ -93,7 +93,11 @@ $(document).ready(function () {
     }
   }).change();
 
-  $('body').on('click', '.coupon-name-edit-icon', function() {
+  $('body').on('click', '.coupon-name-edit-icon', function(e) {
+    e.stopImmediatePropagation();
+    if ($('.coupon-name.editable.open').length > 0) { 
+      $('.coupon-name.editable.open').parent().find('.cancel-edit-coupon').click()
+    }
     var parent = $(this).parent();
     parent.addClass('hide');
     parent = parent.parent(); 
@@ -106,7 +110,6 @@ $(document).ready(function () {
   });
 
   $('body').on('click', '.coupon-name-save-icon, .cancel-edit-coupon', function(e) {
-    debugger
     e.stopImmediatePropagation();
     save_icon_parent = $(this).parent();
     save_icon_grandparent = save_icon_parent.parent();
