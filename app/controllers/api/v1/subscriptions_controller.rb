@@ -22,6 +22,22 @@ class Api::V1::SubscriptionsController < API::V1::BaseController
     render json: { response: response }, status: status
   end
 
+  def update_coupon
+    begin
+      status = 500
+      @subscription = Subscription.find params[:subscription_id]
+      coupon = Coupon.find_by(name: params[:subscription][:coupon])
+      if coupon && @subscription.update_subscription(current_user, coupon.stripe_coupon_id)
+        response = 'Coupon updated successfully'
+        status = 200
+      else
+        response = (coupon.nil?) ? 'Invalid Discount code' : 'We couldn\'t change discount'
+      end      
+    rescue StandardError => e
+      response = 'Something went wrong on our end.'
+    end
+  end
+
   private
 
   def subscription_params

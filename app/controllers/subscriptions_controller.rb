@@ -18,13 +18,6 @@ class SubscriptionsController < ApplicationController
   end
   
   def update
-    coupon = Coupon.find_by(name: params[:subscription][:coupon])
-    if coupon && @subscription.update_subscription(current_user, coupon.stripe_coupon_id)
-      flash[:notice] = 'Discount updated successfully'
-    else
-      flash[:error] = (coupon.nil?) ? 'Invalid Discount code' : 'We couldn\'t change discount'
-    end
-    redirect_to request.referrer
   end
 
   def destroy

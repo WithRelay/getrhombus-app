@@ -31,7 +31,7 @@ $(document).ready(function () {
     });
   }
 
-  if ($('#coupon-update-form').length > 0) {
+  if ($('#couponupdateform').length > 0) {
     $('#coupon-update-form')
       .formValidation({
         framework: 'bootstrap',
@@ -203,11 +203,33 @@ $(document).ready(function () {
 
   $('.auto-height').css('height', 'auto');
 
-  $('#submit-update-coupon').on('click',function(){
-    subscriptionId = $(this).attr('saas_sub_id')
-    action = $('#coupon-update-form').attr('action') + '/' + subscriptionId;
-    $('#coupon-update-form').attr('action', action);
+  $('#submit-update-coupon').on('click',function(e){
+    e.preventDefault();
+    subscriptionId = $(this).attr('saas_sub_id');
+    updateCoupon();
   });
+
+
+  function updateCoupon() {
+   $.ajax({
+      url: "/v1/subscriptions/update_coupon?subscription_id="+subscriptionId,
+      beforeSend: function(xhr) {
+        xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
+      },
+      type: "POST",
+      data: $('#coupon-update-form').serialize(),
+      dataType: "json"
+    })
+    .done(function(data, textStatus, jqXHR) {
+      FlashHandler.setFlashMessage(data.response, 'notice');
+    })
+    .fail(function(data, textStatus, errorThrown) {
+      FlashHandler.setFlashMessage(JSON.parse(data.responseText).response, 'error');
+    })
+    .always(function(data, textStatus, response) {
+      $('#create-subscription').removeAttr('disabled').val("Apply Discount");
+    });
+  };
  
 /* LEAVE FOR LATER
   // For upgrading/downgrading plans

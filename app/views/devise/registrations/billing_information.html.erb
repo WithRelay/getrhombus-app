@@ -31,32 +31,37 @@
           <h1 class="business-plan plan-name plans-text">Current Subscription: <%#=saas_plan_name.humanize %></h1>
           <div class="flex-underline plan-div"></div>
           <p class="settings-details-paragraph">Number of customers: <%= saas_customers %></p>
-          <p class="settings-details-paragraph">Time period: January 1, 2016 - December 31, 2016 (Annual)</p>
-          <p class="settings-details-paragraph">Plan amount: <strong>$9,890</strong> USD/year</p>
+          <p class="settings-details-paragraph"> <%= subscription_time_period %></p>
+          <p class="settings-details-paragraph"><%= subscription_plan_amount %></p>
         </div>
 
-        <div class="settings-info-div"><h1 class="business-plan plan-name plans-text">You are currently on the free plan: [100 customers]</h1></div>
+        <div class="settings-info-div"><h1 class="business-plan plan-name plans-text"><%= subscription_customer_count %></h1></div>
 
         <div class="flex-underline form-section-divider"></div>
 
         <label class="field-headers form-label settings" for="Month-Year-2">COUPON &amp; DISCOUNTS</label>
 
-        <div class="settings-info-div">
-          <h1 class="business-plan plan-name plans-text">Coupon: GrandFatherPlan</h1>
-          <div class="flex-underline plan-div"></div>
-          <p class="settings-details-paragraph">Type: Percentage</p>
-          <p class="settings-details-paragraph">Value: <strong>30%</strong></p>
-          <p class="settings-details-paragraph">Duration: 6 months</p>
-          <p class="settings-details-paragraph">End date: <strong>December 31, 2017</strong></p>
-        </div>
+        <% if saas_sub.coupon.present? %>
+          <% saas_coupon_data = saas_coupon %>
+          <div class="settings-info-div">
+            <h1 class="business-plan plan-name plans-text">Coupon: <%= saas_coupon_data[:name] %></h1>
+            <div class="flex-underline plan-div"></div>
+            <p class="settings-details-paragraph">Type: <%= saas_coupon_data[:type]%></p>
+            <p class="settings-details-paragraph">Value: <strong><%= saas_coupon_data[:value]%></strong></p>
+            <p class="settings-details-paragraph">Duration: <%= saas_coupon_data[:duration]%></p>
+            <p class="settings-details-paragraph">End date: <strong><%= saas_coupon_data[:end_date]%></strong></p>
+          </div>
+        <% else %>
+          <div class="settings-info-div">
+            <h1 class="business-plan plan-name plans-text">There are no coupons applied to your subscription</h1>
+          </div>
+        <% end %>
 
-        <div class="settings-info-div">
-          <h1 class="business-plan plan-name plans-text">There are no coupons applied to your subscription</h1>
-        </div>
+        <%= form_for('subscription', method: 'POST', :html=> { id: 'coupon-update-form'}) do |f| %>
+          <%= f.text_field :coupon, id: 'update-plan-id', class: 'coupon-code text-field w-input', placeholder: 'Enter Coupon Code' %>
+          <%= f.submit 'Apply Discount', class: 'alt-button button discount-code save-changes w-button', id: 'submit-update-coupon', saas_sub_id: get_saas_sub_id, data: {disable_with: 'Please wait ...'} %>
+        <% end %>
 
-        <input class="coupon-code text-field w-input" data-name="Coupon Code" id="Coupon-Code" maxlength="256" name="Coupon-Code" placeholder="Enter Coupon Code" type="text">
-
-        <a class="alt-button button discount-code save-changes w-button" href="#">Apply discount</a>
 
         <div class="flex-underline form-section-divider"></div>
         <label class="field-headers form-label settings" for="Card-Number-2">INVOICES</label>
