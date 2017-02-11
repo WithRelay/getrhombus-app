@@ -26,4 +26,20 @@ class Api::V1::CouponsController < API::V1::BaseController
     array_of_coupons
   end
 
+  def update
+    @coupon = Coupon.find(params[:id])
+    begin
+      status = 500
+      if @coupon.update_coupon(params[:coupon][:name], current_user)
+        response = 'Coupon name updated successfully'
+        status = 200
+      else
+        response = @coupon.errors.messages.present? ? @coupon.errors.full_messages : "We couldn't update the coupon name"
+      end
+    rescue StandardError => e
+      response = 'Something went wrong on our end.'
+    end
+    render json: { response: response }, status: status
+  end
+
 end

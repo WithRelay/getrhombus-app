@@ -10,8 +10,8 @@ module ApplicationHelper
     Time.current.strftime('%B %d, %Y')
   end
 
-  def total_transaction
-    (@earlier_transactions.count + @todays_transaction.count + @yesterday_transactions.count)
+  def total_alerts
+    @todays_txns_count + @todays_unread_convs_count 
   end
 
   def render_header_partial

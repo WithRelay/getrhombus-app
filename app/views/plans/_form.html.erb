@@ -1,29 +1,15 @@
 <div class="w-container">
-  <%= form_for([current_user,  Plan.new], :html=> { id: 'planForm', data: { name: 'Email Form 8' } }) do |f| %>
+  <%= form_for([current_user, @plan], :html=> { id: 'planForm' }) do |f| %>
     <label class="form-label" for="Plan-name">Plan name</label>
     <%= f.text_field :name, id: 'Plan-name', class: 'plan-name text-field w-input', data: { name: "Plan name" }, placeholder: 'Ex. Monthly fruit basket' %>
 
     <%= f.text_field :amount, id: 'Plan-Amount', data: { name: "Plan Amount" }, class: 'plan-amount text-field w-input', placeholder: 'Plan Amount' %>
     <label class="form-label" for="Plan-Interval">Subscription Interval</label>
-    <select class="dropdown w-select" data-name="Plan Interval" id="Plan-Interval" name="plan[interval]">
-      <option value="week_1">Weekly</option>
-      <option value="week_2">Bi-weekly</option>
-      <option value="month_1">Monthly</option>
-      <option value="month_3">Every 3 months</option>
-      <option value="month_6">Every 6 months</option>
-      <option value="year_1">Yearly</option>
-    </select>
+    <%= f.select :interval, options_for_select(present(@plan).get_plan_intervals), {}, { id: "plan_interval", class: "dropdown w-select" } %>    
     <% unless !current_user.is_platform? %>
         <%= f.label :trial_period_days, class: 'form-label' %>
         <%= f.text_field :trial_period_days, id: 'trial-days', class: 'plan-amount text-field w-input' %>
     <% end %>
     <%= f.submit 'Create Plan', class: 'button create-plan w-button', id: 'create-plan' %>
   <% end %>
-  <div class="w-form-done">
-    <div>Thank you! Your submission has been received!</div>
-  </div>
-  <div class="w-form-fail">
-    <div>Oops! Something went wrong while submitting the form</div>
-  </div>
-
 </div>

@@ -1,19 +1,14 @@
-<%= form_for('subscription', html: { id: 'subscriptionForm', class: 'w-clearfix', data: { name: "Email Form 9" } }) do |f| %>
+<%= form_for('subscription', html: { id: 'subscriptionForm', class: 'w-clearfix' }) do |f| %>
 
-  <input class="subscriber-name text-field w-input" data-name="Subscriber Name" id="Subscriber-Name" maxlength="256" name="Subscriber-Name" placeholder="Enter customer&#39;s name or phone number" required="required" type="text">
+  <input class="subscriber-name text-field w-input" id="Subscriber-Name" maxlength="256" name="Subscriber-Name" placeholder="Enter customer&#39;s name or phone number" required="required" type="text">
   <%= f.text_field :plan_id, class: 'dropdown w-select', placeholder: "Select a plan", id: "subscription-plan-id" %>
   <%= f.text_field :coupon_id, class: 'subscriber-name text-field w-input', id: 'subscription-select-coupon', placeholder: "Select a coupon" %>
   <%= f.text_field :merchant_customer_id, class: 'subscriber-name text-field w-input', placeholder: "Select a customer", id: "subscription-customer-id" %>
 
-  <a class="create-new-plan" data-ix="create-plan" href="#" " data-dismiss="modal" data-toggle="modal" >Create a new plan</a>
+  <a class="create-new-plan" href="#" data-dismiss="modal" data-toggle="modal" >Create a new plan</a>
 
   <label class="form-label" for="Number-of-subscriptions">Number of subscriptions</label>
   <%= f.text_field :quantity, class: 'number-of-subscriptions text-field w-input', data: { name: 'data-name="Number of subscriptions' }, id: "Number-of-subscriptions", value: 1 %>
   <%= f.submit 'Subscribe Customer', class: 'button subscription w-button', id: 'create-subscription' %>
 <% end %>
-<div class="w-form-done">
-  <div>Thank you! Your submission has been received!</div>
-</div>
-<div class="w-form-fail">
-  <div>Oops! Something went wrong while submitting the form</div>
-</div>
+

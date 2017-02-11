@@ -261,6 +261,17 @@ class PaymentService
       end
     end
 
+    def update_coupon(hash)
+      begin
+        re = Stripe::Coupon.create(hash)
+        [true, re]
+      rescue Stripe::StripeError => e
+        [false,  e]
+      rescue StandardError => e
+        [false, e]
+      end
+    end
+
     def delete_coupon(id)
       begin
         coupon = Stripe::Coupon.retrieve(id)

@@ -93,7 +93,7 @@ $(document).ready(function() {
     current_plan_name = $el.text();
     var $input = $('<input class="plan-name editable open text-field w-input" placeholder="Plan name" />').val( current_plan_name );
     $el.replaceWith( $input );
-    $input.focus();        
+    $input.focus();
   });
 
   $('body').on('click', '.plan-name-save-icon', function(e) {

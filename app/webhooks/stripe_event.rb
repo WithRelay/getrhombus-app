@@ -35,8 +35,9 @@ class StripeEvent
         # set_time_zone(@data.merchant_customer.merchant.time_zone)
         update_subscription_data if @data
 
+        # LEAVE THIS FOR LATER
         # subscribe merchant (rhombus platform saas customer) to next plan if present
-        subscribe_merchant_to_downgraded_plan if @data.merchant_customer.customer.is_merchant?
+        # subscribe_merchant_to_downgraded_plan if @data.merchant_customer.customer.is_merchant?
 
         # Email about cancellation
         # Notify us too (admin)
@@ -245,7 +246,8 @@ class StripeEvent
 
     private
 
-    #### needs better error handling
+=begin
+    # LEAVE THIS FOR LATER
     # Subscribe customer to next plan (downgrading plan)
     def subscribe_merchant_to_downgraded_plan
       if next_plan = NextPlan.where(user_id: @data.merchant_customer.customer_id, status: true).last
@@ -255,6 +257,7 @@ class StripeEvent
         next_plan.update(status: false) if res.first
       end
     end
+=end 
 
     def account_updated
       user_params = response_user_params.merge(bank_accont_details)

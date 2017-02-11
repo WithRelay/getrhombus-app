@@ -41,7 +41,7 @@
         <%= f.text_field :amount, class: "editor text-field w-input", placeholder: "Enter amount (USD)" %>
         
         <div id='interval-settings'>
-          <%= f.select :interval, options_for_select({ "Weekly" => "week_1", "Bi-weekly" => 'week_2', "Monthly" => "month_1", "Every 3 months" => 'month_3', 'Every 6 months' => 'month_6', 'Yearly' => 'year_1' }, selected: present(@hashtag).get_interval_string), {}, { id: "plan_interval", class: "dropdown editor-dropdown w-select" } %>
+          <%= f.select :interval, options_for_select(present(@hashtag).get_tag_interval_options, selected: present(@hashtag).get_interval_string), {}, { id: "plan_interval", class: "dropdown editor-dropdown w-select" } %>
         </div>
       </div>
 

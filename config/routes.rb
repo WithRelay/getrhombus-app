@@ -61,15 +61,8 @@ Rails.application.routes.draw  do
     member { get 'sms-usage' => 'users#sms_usage' }
     resources :fb_pages, only: [:index]
     patch 'update_fb_page' => 'fb_pages#update_user_fb_page'
-    resources :hashtags, except: [:show] do
-      #collection { get 'mention' => 'hashtags#tag_mention' }
-    end
-    resources :subscriptions, only: [:index, :update, :destroy] do
-      collection do
-        post '/upgrade_subscription' => 'subscriptions#upgrade_subscription'
-        post '/downgrade_subscription' => 'subscriptions#downgrade_subscription'
-      end
-    end
+    resources :hashtags, except: [:show] 
+    resources :subscriptions, only: [:index, :update, :destroy]
 
     authenticate :user, -> (user) { user.is_platform? } do
       resources :knowledge_base_categories, param: :slug, only: [:index, :edit, :update, :new, :create]
@@ -145,11 +138,11 @@ Rails.application.routes.draw  do
     resources :transactions, only: [:create]
     match 'numbers/search' => 'numbers#search', via: :get
     resources :lists, only: [:index, :create]  
-    resources :coupons, only: [:index] do 
+    resources :coupons, only: [:index, :update] do 
       post 'check_coupon_name', on: :collection
     end  
     resources :plans, only: [:index, :create, :update] do
-      post 'check_coupon_name', on: :collection
+      post 'check_plan_name', on: :collection
     end
     resources :subscriptions, only: [:create]
     match 'merchant/customers' => 'merchant_customers#customers', via: :get

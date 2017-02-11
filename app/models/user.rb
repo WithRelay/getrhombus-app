@@ -42,6 +42,7 @@ class User < ActiveRecord::Base
   has_many :merchant, class_name: 'MerchantContact', foreign_key: 'merchant_id'
 
   has_many :reminders, -> { where campaign_type: 1 }
+  
   # this block is for customizing build method for user.campaign which allow also to save list
   has_many :campaigns, -> { where campaign_type: 0 } do
     # overiding association build function like user.campaigns.build will hit here
@@ -68,11 +69,13 @@ class User < ActiveRecord::Base
 
   has_many :messages
   has_many :merchant_conversations, class_name: 'Conversation', foreign_key: 'merchant_id'
+  has_many :customer_conversations, class_name: 'Conversation', foreign_key: 'uid'
 
   has_many :merchant_plans, class_name: 'Plan', foreign_key: 'merchant_id'
   has_many :customer_plans, class_name: 'Plan', foreign_key: 'customer_id'
-  has_many :next_plans
   has_many :coupons
+  # LEAVE THIS FOR LATER
+  #has_many :next_plans                                   
 
   has_one :twitter_cred
   has_many :fb_creds
@@ -127,7 +130,14 @@ class User < ActiveRecord::Base
     self.email == '<redacted_email>' || self.email == '<redacted_email>'
   end
 
-  def get_display_name(uid, uid_type)
+  def self.get_display_name(uid, uid_type)
+    if uid_type == "user"
+      cus = User.find_by(id: uid)
+      cus ? cus.card_name.present? ? cus.card_name : cus.email : "Relay user"
+    else
+      # does fb at least give us some info?
+      uid_type == 'fb_page' ? "messenger user" : uid
+    end
   end
 
   def can_accept_payments?
