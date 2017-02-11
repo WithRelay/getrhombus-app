@@ -33,9 +33,10 @@ class BasePresenter < SimpleDelegator
     if profile_pic[:type] == "image"
           html = h.image_tag(profile_pic[:value], class: 'table-profile-picture', width: 24)
           html = h.image_tag(profile_pic[:value], class: 'campaigns table-profile-picture', width: 24) if @model.class == Hashtag
-      elsif profile_pic[:type] == "color"
-        class_name = "campaigns table-profile-picture radius-color-#{profile_pic[:value]}"
-        html = ("<div class='"+class_name+"'></div>").html_safe
+    elsif profile_pic[:type] == "color"
+      class_name_value = "table-profile-picture radius-color-#{profile_pic[:value]}"
+      class_name = @model.class.to_s == 'Reminder' ? class_name_value : "campaigns #{class_name_value}"
+      html = ("<div class='"+class_name+"'></div>").html_safe
     end
     html
   end
@@ -45,8 +46,8 @@ class BasePresenter < SimpleDelegator
   end
 
   def get_plan_intervals
-    { "Weekly" => "week_1", "Bi-weekly" => 'week_2', 
-      "Monthly" => "month_1", "Every 3 months" => 'month_3', 
+    { "Weekly" => "week_1", "Bi-weekly" => 'week_2',
+      "Monthly" => "month_1", "Every 3 months" => 'month_3',
       'Every 6 months' => 'month_6', 'Yearly' => 'year_1' }
   end
 

@@ -3811,7 +3811,7 @@ h4 {
 }
 
 .name {
-  width: 90%;
+  width: 91%;
   height: 50px;
   float: right;
   border-bottom: 1px solid #e6e5e5;
@@ -3908,6 +3908,7 @@ h4 {
 }
 
 .table-text.total-spend-text.r.heading {
+  width: 90%;
   margin-left: 0px;
   padding-right: 0px;
 }

@@ -1,7 +1,8 @@
 $(document).ready(function(){
 
   $('.delete-resource').click(function(e){
-    FlashHandler.setConfirmationDialog('.delete-resource','Are you sure, you want to remove the campaign?', 'Delete', 'isDestroy');
+    url = window.location.pathname.split('/')
+    FlashHandler.setConfirmationDialog('.delete-resource','Are you sure, you want to remove the' + url[url.length-1], 'Delete', 'isDestroy');
   });
 
   $('.deactivate-resource').click(function(e){
@@ -9,7 +10,10 @@ $(document).ready(function(){
   });
 
   $(document).on('click', '.cancel-yes', function(e){
-    element = { 'url': '/v1/campaigns/change_status' }
+    url = window.location.pathname.split('/')
+    full_url = url[url.length-1]
+    resource_url = '/v1/' + full_url + '/' + $('.delete-resource').attr('id')
+    element = { 'url': url }
     resource = new Resource(element);
     resource.updateOrDelete();
   });
