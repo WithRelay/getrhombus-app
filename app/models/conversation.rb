@@ -5,8 +5,9 @@ class Conversation < ActiveRecord::Base
   has_many :fb_messages, through: :conversation_refs, source: :textable, source_type: 'FbMessage', dependent: :destroy
   has_many :messages, through: :conversation_refs, source: :textable, source_type: 'Message', dependent: :destroy
   belongs_to :merchant_conversation, class_name: "User"   
+  belongs_to :user, class_name: "User", foreign_key: :uid
  
- # the user texting this merchant
+  # the user texting this merchant
   def user
     User.find_by(self.uid) if self.uid_type == "user"
   end
