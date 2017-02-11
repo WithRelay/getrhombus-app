@@ -7,7 +7,7 @@ $(document).ready(function () {
 
   // emojionearea
   if ($("#hashtag-response-textarea").length) {
-    
+
     // for edit page - initialize count
     emoji_area_text_length = (320 - $('#hashtag-response-textarea').val().length).toString() + " characters";
     $('#char-count').text(emoji_area_text_length);
@@ -15,7 +15,7 @@ $(document).ready(function () {
     msg_emoji_box = $('#hashtag-response-textarea').emojioneArea({
       pickerPosition: "bottom"
     });
-    
+
     // paste - when you paste, keyup - so counter is more realtime
     // emojibtn.click - as the name implies, blur - good measure, last resort, catch all
     msg_emoji_box[0].emojioneArea.on("blur paste keyup emojibtn.click", function(button, event) {
@@ -45,7 +45,7 @@ $(document).ready(function () {
     else if (v.match(/^\d+(.\d{1,2})?$/)) return v
     else return v.slice(0, -1);
   };
-  
+
   //disable checkbox
   $('.table-checkbox').click(function(){
     if ($(this).is(':checked')){
@@ -55,7 +55,7 @@ $(document).ready(function () {
       $('.table-checkbox').attr('disabled', false);
     };
   });
-  
+
   $('#delete-hashtag').click(function(e) {
     FlashHandler.setConfirmationDialog('#delete-hashtag','Are you sure, you want to remove the hashtag?', 'Delete', 'isDistroy');
     return false;
@@ -67,7 +67,7 @@ $(document).ready(function () {
   });
 
   $(document).on('click', '.cancel-yes', function(e){
-    e.preventDefault(); 
+    e.preventDefault();
     var selectedElement;
     $('.table-checkbox').each(function( index, element){
       if ($(this).is(':checked')){
@@ -80,11 +80,11 @@ $(document).ready(function () {
       var method_input = selectedElement.parents('.edit_hashtag').find("input[name='_method']");
       method_input.attr('value','patch');
     }
-    a = selectedElement.parents('.edit_hashtag')
+     a = (selectedElement!= undefined) ? selectedElement.parents('.edit_hashtag') : [1]
     if(a.length == 0){
       a = selectedElement.parents('.edit_reminder')
     }
-    a.submit()
+    (a.length ==0) && a.submit()
   });
 
   // decimal with two places
@@ -102,7 +102,7 @@ $(document).ready(function () {
       $('#hashtag_amount').val('');
     } else {
       if (this.value == '1') {
-        $('#interval-settings').slideUp(200); 
+        $('#interval-settings').slideUp(200);
       } else {
         $('#interval-settings').slideDown(200);
       }
