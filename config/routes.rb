@@ -138,11 +138,11 @@ Rails.application.routes.draw  do
     resources :transactions, only: [:create]
     match 'numbers/search' => 'numbers#search', via: :get
     resources :lists, only: [:index, :create]  
-    resources :coupons, only: [:index] do 
+    resources :coupons, only: [:index, :update] do 
       post 'check_coupon_name', on: :collection
     end  
     resources :plans, only: [:index, :create, :update] do
-      post 'check_coupon_name', on: :collection
+      post 'check_plan_name', on: :collection
     end
     resources :subscriptions, only: [:create]
     match 'merchant/customers' => 'merchant_customers#customers', via: :get

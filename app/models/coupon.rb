@@ -59,6 +59,20 @@ class Coupon < ActiveRecord::Base
     end
   end
 
+  def update_coupon(coupon_name, team)
+    begin
+
+      old_name = self.name
+
+      # save so validations run before calling Stripe api
+      self.name = coupon_name
+      self.save ? true : false
+    rescue StandardError => e
+      # notify team via email
+      false
+    end
+  end
+
   def delete_coupon
     begin
       PaymentService.delete_coupon(self.stripe_coupon_id).first

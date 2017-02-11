@@ -5,13 +5,7 @@ class CouponsController < ApplicationController
 
   def index
     # get subscription id to use to determine if destroy link should show up
-    @coupons = current_user.coupons
-              .joins("LEFT JOIN subscriptions s ON s.coupon_id = coupons.id")
-              .select('coupons.id, name, amount_off, percent_off, currency, duration, duration_in_months, max_redemptions,
-                        percent_off, redeem_by, s.id as subscription_id')
-              .paginate(page: params[:page], per_page: 25)
-              .order('coupons.created_at DESC')
-
+    @coupons = coupons
     respond_with(@coupons)
   end
 
@@ -50,9 +44,19 @@ class CouponsController < ApplicationController
   end
 
   def manage_coupons
+    @coupons = coupons
   end
 
   private
+    def coupons
+      current_user.coupons
+        .joins("LEFT JOIN subscriptions s ON s.coupon_id = coupons.id")
+        .select('coupons.id, name, amount_off, percent_off, currency, duration, duration_in_months, max_redemptions,
+                  percent_off, redeem_by, coupons.created_at, s.id as subscription_id')
+        .paginate(page: params[:page], per_page: 25)
+        .order('coupons.created_at DESC')
+    end
+
     def set_coupon
       @coupon = Coupon.find(params[:id])
     end
