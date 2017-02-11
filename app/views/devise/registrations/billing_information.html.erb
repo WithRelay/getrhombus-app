@@ -90,28 +90,31 @@
           </div>
         </div>
 
-        <div class="settings-table w-row">
-          <div class="settings-table-cell-wrapper w-col w-col-3">
-            <div class="id settings-table-cell-div">
-              <div class="content settings-table-text shrink-text">T23SJ59P</div>
-            </div>
-          </div>
-          <div class="settings-table-cell-wrapper w-col w-col-3">
-            <div class="invoice-date settings-table-cell-div">
-              <div class="content invoice-date settings-table-text">January 1, 2016</div>
-            </div>
-          </div>
-          <div class="settings-table-cell-wrapper w-col w-col-3">
-              <div class="invoice-amount settings-table-cell-div">
-                <div class="content settings-table-text">$49.00</div>
+        <% saas_invoices.each do |invoice| %>
+          <div class="settings-table w-row">
+            <div class="settings-table-cell-wrapper w-col w-col-3">
+              <div class="id settings-table-cell-div">
+                <div class="content settings-table-text shrink-text"><%= invoice.stripe_invoice_id%></div>
               </div>
             </div>
             <div class="settings-table-cell-wrapper w-col w-col-3">
-              <div class="last-cell settings-table-cell-div">
-                <div class="content settings-table-text status-text">Paid</div>
+              <div class="invoice-date settings-table-cell-div">
+                <div class="content invoice-date settings-table-text"><%= Time.zone.at(invoice.date).strftime("%B %d, %Y") %></div>
               </div>
             </div>
-          </div>
+            <div class="settings-table-cell-wrapper w-col w-col-3">
+                <div class="invoice-amount settings-table-cell-div">
+                  <div class="content settings-table-text"><%= "$%.2f"%" #{invoice.total.to_f/100}" %></div>
+                </div>
+              </div>
+              <div class="settings-table-cell-wrapper w-col w-col-3">
+                <div class="last-cell settings-table-cell-div">
+                  <div class="content settings-table-text status-text">Paid</div>
+                </div>
+              </div>
+            </div>
+        <% end %>
+
     </div>
   </div>
 </div>

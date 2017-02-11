@@ -74,4 +74,9 @@ module SubscriptionsHelper
       "#{(@saas_sub.created_at).strftime("%B %d, %Y")}"
     end
   end
+
+  def saas_invoices
+    @saas_sub.invoices
+  end
+
 end
