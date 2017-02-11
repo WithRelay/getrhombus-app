@@ -8,8 +8,9 @@ class Api::V1::CampaignsController < API::V1::BaseController
 
 
   def delete_campaign
-    campaigns = Campaign.where(id: params[:ids])
-    if campaigns.destroy_all
+    campaign = current_user.campaigns.find_by_id(params[:id])
+    if campaign.present?
+      campaign.delete
       # campaigns.destroy_campaign_jobs
       flash = { status: 200, notice: 'Campaign is being succesfully deleted' }
     else
@@ -19,8 +20,8 @@ class Api::V1::CampaignsController < API::V1::BaseController
   end
 
   def change_status
-    campaigns = Campaign.where(id: params[:ids])
-    campaigns.each do |campaign|
+    campaign = current_user.campaigns.find_by_id(params[:id])
+    if campaign.present?
       status = campaign.active? ? 2 : 1
       campaign.update_attribute('status', status)
       campaign.change_job_status
