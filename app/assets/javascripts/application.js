@@ -88,5 +88,6 @@
 //= require date_picker
 //= require campaign_form_validator
 //= require reminders
+//= require list_checkbox_actions
 // DO NOT REQUIRE TREE AS IT DOESNT GUARANTEE THE DEPENDENCY ORDER OF THESE FILES
 // require_tree .
