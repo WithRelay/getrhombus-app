@@ -12,7 +12,9 @@
     <div class="alt-table-row w-row">
       <div class="alt-column w-clearfix w-col w-col-3">
         <div class="title-column-div w-clearfix">
-          <div class="shrink-text table-text"><%= campaign.name %></div>
+          <%= link_to edit_user_campaign_path(current_user, campaign), class: 'shrink-text table-text' do %>
+            <%= campaign.name %>
+            <% end %>
         </div>
         <div class="alt-table cb check-box-column">
           <div class="w-form">
