@@ -6,7 +6,7 @@ module AdditionalUserActions
 
   def remove_twitter_integration
     if current_user.twitter_cred.destroy
-      flash[:warning] = 'Twitter integration removed successfully'
+      flash[:notice] = 'Twitter integration removed successfully'
     else
       flash[:error] = 'Something went wrong'
     end

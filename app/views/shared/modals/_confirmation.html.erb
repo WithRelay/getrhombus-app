@@ -1,9 +1,10 @@
 <%# removed all webflow data attributes %>
-
-<div class="cancel-subscription-wrapper w-clearfix">
+<div class="cancel-subscription-form-wrapper w-clearfix modal-background" id="cancel-subscription-div">
+  <div class="cancel-subscription-wrapper w-clearfix">
     <p class="cancel-subscription modal-content-description">Are you sure you'd like to unsubscriber <span class="text-highlight">[customer name]</span> from <span class="text-highlight">[plan name]</span> plan?</p>
     <div class="modal-underline underline-div"></div>
     <a class="button cancel-yes w-button">Yes, unsubscribe customer</a>
     <%# added update-close-modals and data %>
-    <a class="button cancel-no w-button update-close-modals" data-parent='delete-action'>Cancel</a>
+    <a class="button cancel-no w-button update-close-modals" data-parent='cancel-subscription-div'>Cancel</a>
   </div>
+</div>

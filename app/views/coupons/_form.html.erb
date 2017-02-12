@@ -1,23 +1,19 @@
 <% @coupon = Coupon.new %>
-    <%= form_for([current_user, @coupon], :html=> { id: 'couponForm' }) do |f| %>
-      <%= f.text_field :name, id: 'coupon-name', class: 'coupon-name text-field w-input', placeholder: 'Coupon name (no spaces)' %>
+<%= form_for([current_user, @coupon], :html=> { id: 'couponForm' }) do |f| %>
+  <%= f.text_field :name, id: 'coupon-name', class: 'coupon-name text-field w-input', placeholder: 'Coupon name (no spaces)' %>
 
-      <%= f.select :coupon_type, options_for_select({ "Amount Off" => "amount_off", "Percent Off" => 'percent_off' }, selected: present(@coupon).get_selected_coupon_type), {}, id: "coupon-type", class: "coupon-type dropdown w-select", prompt: 'Select coupon type' %>
+  <%= f.select :coupon_type, options_for_select({ "Amount Off" => "amount_off", "Percent Off" => 'percent_off' }, selected: present(@coupon).get_selected_coupon_type), {}, id: "coupon-type", class: "coupon-type dropdown w-select", prompt: 'Select coupon type' %>
 
-      <% if f.object.new_record? || (f.object.persisted? && f.object.amount_off.present?)%>
-        <%= f.text_field :amount_off, id: "coupon-type-value", value: present(@coupon).format_amount %>
-      <% else %>
-        <%= f.text_field :percent_off, id: "coupon-type-value" %>
-      <% end %>
 
-      <%= f.select :duration, options_for_select({ "Once" => "once", "repeating" => 'repeating' }, selected: @coupon.duration), {} %>
-      <%= f.text_field :duration_in_months, id: "duration-in-months" %>
+    <%= f.text_field :amount_off, id: "coupon-type-value", class: "text-field w-input", placeholder: 'Amount'%>
 
-      <%= f.text_field :max_redemptions, id: 'max-redemptions',  class: "coupon-redemptions text-field w-input", placeholder: "Maximum number of redemptions" %>
-      <%= f.label :redeem_by_date, class: 'form-label', id: 'redeemLabel' %>
-       <i id='calIcon' class="fa fa-calendar" aria-hidden="true"></i>
-      <%= f.text_field :redeem_by, id: 'redeemField', class: "redemption-date text-field w-input", value: present(@coupon).zone_timestamp %>
+  <%= f.select :duration, options_for_select({ "Once" => "once", "repeating" => 'repeating' }, selected: @coupon.duration), {}, class: "coupon-duration dropdown w-select" %>
+  <%= f.text_field :duration_in_months, id: "duration-in-months-div", class: "text-field w-input", placeholder: 'Duration in months' %>
 
-      <%= f.submit 'Create Coupon', id: 'commit',class: 'button subscription w-button' %>
+  <%= f.text_field :max_redemptions, id: 'max-redemptions',  class: "coupon-redemptions text-field w-input", placeholder: "Maximum number of redemptions" %>
+  <%= f.label :redeem_by_date, class: 'form-label', id: 'redeemLabel' %>
+  <%= f.text_field :redeem_by, id: 'redeemField', class: "redemption-date text-field w-input", value: present(@coupon).zone_timestamp %>
 
-    <% end %>
+  <%= f.submit 'Create Coupon', id: 'commit',class: 'button subscription w-button' %>
+
+<% end %>

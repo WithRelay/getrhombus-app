@@ -15,7 +15,7 @@
             <i class="fa fa-user"></i> <%= fb_user_name %>
           </span>
         </p>
-        <%= link_to "Page Setting", user_fb_pages_path(current_user), class: "button integrate-button w-button", data: {disable_with: 'Please wait...'} %>
+        <%= link_to "Page Setting", user_fb_pages_path(current_user), class: "button integrate-button w-button" %>
       <%else%>
         <%= link_to "Connect Facebook", user_facebook_omniauth_authorize_path, class: "button integrate-button w-button", data: {disable_with: 'Please wait...'} %>
       <%end%>
@@ -31,7 +31,7 @@
       <% if current_user.twitter_cred.present? %>
         <%= link_to "Disconnect Twitter", remove_twitter_integration_user_path(current_user), id: 'remove_twitter_integration', class: "button integrate-button w-button", data: {disable_with: 'Please wait...'} %>
       <%else%>
-        <%= link_to "Connect Twitter", user_twitter_omniauth_authorize_path, class: "button integrate-button w-button", data: {disable_with: 'Please wait...'} %>
+        <%= link_to "Connect Twitter", user_twitter_omniauth_authorize_path, class: "button integrate-button w-button" %>
       <%end%>
     </div>
   </div>
