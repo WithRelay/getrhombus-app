@@ -80,11 +80,11 @@ $(document).ready(function () {
       var method_input = selectedElement.parents('.edit_hashtag').find("input[name='_method']");
       method_input.attr('value','patch');
     }
-     a = (selectedElement!= undefined) ? selectedElement.parents('.edit_hashtag') : [1]
+     a = selectedElement.parents('.edit_hashtag')
     if(a.length == 0){
       a = selectedElement.parents('.edit_reminder')
     }
-    (a.length ==0) && a.submit()
+    a.submit()
   });
 
   // decimal with two places
