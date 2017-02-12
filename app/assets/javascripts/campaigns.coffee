@@ -53,6 +53,7 @@ class Campaign
       this.showFileBrowser()
       trumbowygSetting(true, @textArea)
       removeDiv()
+      $('#textBoxCounter').html('upload an image')
     else if isMmsChecked(element) || isFacebookMessengerChecked(element)
       this.showFileBrowser()
       $('.emailSubject').hide()
