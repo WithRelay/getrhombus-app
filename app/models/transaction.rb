@@ -16,6 +16,7 @@ class Transaction < ActiveRecord::Base
   scope :get_merchant_todays_last5_txns, -> (team_id, date) { self.includes(:user).joins('LEFT JOIN refunds on transactions.id = refunds.transaction_id')
                                                               .where("refunds.transaction_id is null and transactions.team_id = ? 
                                                                        and transactions.created_at >= ?", team_id, date).order(created_at: :desc).limit(5) }
+                                                              
   scope :get_merchant_todays_txn_count, -> (team_id, date) { self.joins('LEFT JOIN refunds on transactions.id = refunds.transaction_id')
                                                               .where("refunds.transaction_id is null and transactions.team_id = ? 
                                                                        and transactions.created_at >= ?", team_id, date).count }

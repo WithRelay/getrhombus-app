@@ -144,23 +144,19 @@ class Conversation < ActiveRecord::Base
   end
 
   def self.get_last_msg_from_last5_convs(merchant_id, date)
-    last_5_ary = Conversation.where("merchant_id = ? and created_at >= ? and message_resolution_id is null", merchant_id, date)
-                              .select('id').order(created_at: :desc).limit(5)
-    return [] if last_5_ary.blank?
-    last_5_ary = Conversation.find_by_sql(["SELECT b.id as id, a.textable_id, b.uid, b.uid_type, b.created_at as created_at,
-                                                CASE WHEN a.textable_type = 'Message' THEN 'SMS'
-                                                ELSE 'messenger' 
-                                                END as channel FROM conversation_refs a
-                                               INNER JOIN (
-                                                  SELECT e.id as id, max(c.textable_id) as textable_id, e.uid as uid, e.uid_type as uid_type, c.created_at as created_at
-                                                  FROM conversation_refs c
-                                                  INNER JOIN (
-                                                    SELECT id, uid, uid_type from conversations d
-                                                    where d.merchant_id = ? and d.message_resolution_id is null
-                                                    and d.created_at >= ? order by d.created_at desc limit 5
-                                                  ) e ON e.id = c.conversation_id
-                                                  GROUP BY c.conversation_id 
-                                                ) b ON a.textable_id = b.textable_id", merchant_id, date])
+    last_5_ary = Conversation.find_by_sql(["SELECT b.id as id, a.textable_id, b.uid, b.uid_type, a.created_at as created_at,
+                                            CASE WHEN a.textable_type = 'Message' THEN 'SMS' ELSE 'messenger' END as channel 
+                                            FROM conversation_refs a
+                                            INNER JOIN (
+                                              SELECT e.id as id, max(c.id) as cr_id, e.uid as uid, e.uid_type as uid_type
+                                              FROM conversation_refs c
+                                              INNER JOIN (
+                                                SELECT id, uid, uid_type from conversations d
+                                                where d.merchant_id = ? and d.message_resolution_id is null
+                                                and d.created_at >= ? order by d.created_at desc limit 5
+                                                ) e ON e.id = c.conversation_id
+                                              GROUP BY c.conversation_id 
+                                            ) b ON a.id = b.cr_id", merchant_id, date])
   end   
 
 end
