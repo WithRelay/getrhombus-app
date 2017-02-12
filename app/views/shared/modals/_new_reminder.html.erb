@@ -7,7 +7,7 @@
   <p class="modal-content-description">Set a reminder or notification that will go out to this customer at a future date. You can use this to automate appointment reminders, or bill payment reminders.</p>
   <div class="segment-modal underline-div"></div>
   <div class="scheduled-notification-form w-form">
-    <%= form_for reminder, url: v1_reminders_url, html: { class: "w-clearfix", id: "email-form-7",  name: "email-form-7" }  do |f| %>
+    <%= form_for reminder, url: v1_reminders_url, html: { class: "w-clearfix", id: "reminderForm",  name: "email-form-7" }  do |f| %>
      <!--  <select class="dropdown w-select" id="Notification-Channel-2" name="Notification-Channel-2" required="required">
         <option value="">Select channel</option>
         <option value="">SMS</option>
@@ -19,9 +19,9 @@
 
       <%= f.text_area :text, class: 'notification-message text-area w-input', data: { name: "Notification Message" }, id: "Notification-Message" %>
 
-      <div class="char-count notications">150 characters</div>
+      <div class="char-count notications" id= "textBoxCounter" ></div>
       
-      <input class="delivery-date-time-picker text-field w-input" id="Delivery-Date-Time-2" maxlength="256" name="Delivery-Date-Time-2" placeholder="Notification Delivery Date &amp; Time" required="required" type="email">
+      <%= f.text_field :date_time, data: { name: "Delivery Date &amp; Time" }, class: 'daterange delivery-date-time-picker text-field w-input', value: present(reminder).to_user_date_time %>
 
       <div class="notification-frequency radio-button w-radio">
         <%= f.radio_button :frequency_type, 0, id: 'oneTimeFrequency', class: 'w-radio-input', data: { name: "Notification Frequency" }, checked: is_one_time_checked?(reminder) %>
@@ -35,10 +35,13 @@
 
      <%#= f.submit 'Schedule Notification', id: 'submitReminderForm',   class: 'button schedule-notification w-button' %>
 
-      <a class="button schedule-notification w-button">Schedule notification for [Customer name]</a>
+      
+      <a class="button schedule-notification w-button" id="submitReminderForm">Schedule notification for [Customer name]</a>
        <%#= f.submit 'Schedule Notification [Customer name]', id: 'submitReminderForm', class: 'button schedule-notification w-button' %>
       <%# added data and update-close-modals %>
-      <a class="button cancel-notification w-button update-close-modals" data-parent='new-reminder-div'>Cancel</a>
+      <div id="new-reminder-div">
+        <a class="button cancel-notification w-button update-close-modals" data-parent='new-reminder-div'>Cancel</a>
+      </div>
     <%end%>
   </div>
 </div>

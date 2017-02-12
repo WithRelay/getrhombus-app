@@ -5,7 +5,7 @@
   <div class="col-xs-5">
     <%= f.text_area :text, class: 'notification-message text-area w-input', data: { name: "Notification Message" }, id: "Notification-Message" %>
   </div>
-  <div id="textBoxCounter" class='char-count char-count notications'> </div>
+  <div id="textBoxCounter"  class='char-count char-count notications'> </div>
   <%= f.text_field :date_time, data: { name: "Delivery Date &amp; Time" }, class: 'daterange delivery-date-time-picker text-field w-input', value: present(reminder).to_user_date_time %>
   <div class="notification-frequency radio-button w-radio">
     <%= f.radio_button :frequency_type, 0, id: 'oneTimeFrequency', class: 'w-radio-input', data: { name: "Notification Frequency" }, checked: is_one_time_checked?(reminder) %>
