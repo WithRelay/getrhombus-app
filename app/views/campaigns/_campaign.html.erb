@@ -58,8 +58,11 @@
           <div class="w-col w-col-6">
             <div id="textBoxCounter" class='char-count'> </div>
             <div class="upload_image">
-              <%= f.file_field :avatar, id: 'select-images' %>
+              <div class='attach-image-container'>
+                <a class="attach-text" href="#" id='select-images-button'></a>
+              </div>
               <!-- for new images -->
+              <%= f.file_field :avatar, id: 'select-images', class: 'w-hidden' %>
               <div id='new-image-previews'>
               </div>
               <!-- for already attached images -->
