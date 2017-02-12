@@ -6,33 +6,17 @@
 <script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
 <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
 
-<div class="create-coupon-form-wrapper w-hidden">
-  <div class="content-sub-wrapper modal w-clearfix">
-    <h4 class="modal-header welcome-dash-content-container-header">Create Coupon</h4>
-    <%# added data and update-close-modals %>
-    <a class="close-modal update-close-modals" data-parent="new-coupon-div" href="#"></a>
-  </div>
-  <p class="modal-content-description">Make customers happy with coupons. Easily create fixed amount coupons or percentage based coupons</p>
-  <div class="segment-modal underline-div"></div>
-  <div class="create-coupon-form w-form">
-    <% @coupon = Coupon.new %>
-        <%= form_for([current_user, @coupon], :html=> { id: 'couponForm' }) do |f| %>
-          <%= f.text_field :name, id: 'coupon-name', class: 'coupon-name text-field w-input', placeholder: 'Coupon name (no spaces)' %>
-
-          <%= f.select :coupon_type, options_for_select({ "Amount Off" => "amount_off", "Percent Off" => 'percent_off' }, selected: present(@coupon).get_selected_coupon_type), {}, id: "coupon-type", class: "coupon-type dropdown w-select", prompt: 'Select coupon type' %>
-
-
-            <%= f.text_field :amount_off, id: "coupon-type-value", class: "text-field w-input", placeholder: 'Amount'%>
-
-          <%= f.select :duration, options_for_select({ "Once" => "once", "repeating" => 'repeating' }, selected: @coupon.duration), {}, class: "coupon-duration dropdown w-select" %>
-          <%= f.text_field :duration_in_months, id: "duration-in-months-div", class: "text-field w-input", placeholder: 'Duration in months' %>
-
-          <%= f.text_field :max_redemptions, id: 'max-redemptions',  class: "coupon-redemptions text-field w-input", placeholder: "Maximum number of redemptions" %>
-          <%= f.label :redeem_by_date, class: 'form-label', id: 'redeemLabel' %>
-          <%= f.text_field :redeem_by, id: 'redeemField', class: "redemption-date text-field w-input", value: present(@coupon).zone_timestamp %>
-
-          <%= f.submit 'Create Coupon', id: 'commit',class: 'button subscription w-button' %>
-
-        <% end %>
+<div class="create-coupon-form-wrapper w-clearfix modal-background" id="new-coupon-div">
+  <div class="create-coupon-form-wrapper w-hidden">
+    <div class="content-sub-wrapper modal w-clearfix">
+      <h4 class="modal-header welcome-dash-content-container-header">Create Coupon</h4>
+      <%# added data and update-close-modals %>
+      <a class="close-modal update-close-modals" data-parent="new-coupon-div" href="#"></a>
+    </div>
+    <p class="modal-content-description">Make customers happy with coupons. Easily create fixed amount coupons or percentage based coupons</p>
+    <div class="segment-modal underline-div"></div>
+    <div class="create-coupon-form w-form">
+      <%= render 'coupons/form'%>
+    </div>
   </div>
 </div>

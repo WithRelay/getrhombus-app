@@ -48,9 +48,9 @@ $success-color: green;
   margin-top: 5px !important;
 }
 
-<% COLORS.each do |color| %>
-  .radius-color-#{<%= color.first %>}{
-  background-color:<%= color.last %>
+<% COLORS.each_with_index do |color, index| %>
+  .radius-color-#{<%= index %>}{
+  background-color:<%= color.last %> !important;
   }
 <%end%>
 
@@ -165,3 +165,9 @@ textarea { resize: none; }
 }
 
 /* end for images */
+
+.transaction-cell.card-name {
+  float: left !important;
+  width: 100% !important;
+  padding-left: 0px !important;
+}

@@ -1,11 +1,10 @@
 <div class="customer-dash sub-nav-bar">
 
   <div class="sub-nav-options-wrapper w-clearfix">
-    <a class="saved-replies sub-nav-button w-button modal-loader" href="#"><strong> &nbsp; Create new saved replies</strong></a>
- <div class='modal-background w-hidden modal-body'>
+    <a class="saved-replies sub-nav-button w-button modal-loader" href="#"><strong> &nbsp; Create new saved reply</strong></a>
+    <div class='modal-background w-hidden modal-body'>
       <%= render partial: 'shared/modals/save_reply', locals: { saved_reply: SavedReply.new }  %>
-   
-      </div>
+    </div>
 
       <a class="sub-nav-button w-button" data-ix="create-list" href="#"> &nbsp;<strong>Edit</strong></a>
 
@@ -33,7 +32,7 @@
         </div>
       </div>
 
-          <% @saved_replies.each do |reply| %>
+      <% @saved_replies.each do |reply| %>
 
       <div class="new-table-row saved-replies w-row">
         <div class="cn w-clearfix w-col w-col-4">
