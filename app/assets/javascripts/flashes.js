@@ -32,6 +32,7 @@ var FlashHandler = new function() {
   this.setFlashMessage = function(msg, type){
     var messageToSet = typeObj[type] || 'Attention';
     showToastr (messageToSet, arrayToString(msg));
+    if (type !== 'error') { $('.toasters').fadeOut(7000);}
     $('.toaster-font-awesome').on('click', function (e) {
       e.preventDefault();
       $('.toasters').fadeOut(3000);

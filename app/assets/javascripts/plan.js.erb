@@ -84,7 +84,11 @@ $(document).ready(function() {
     We're defining the event on the `body` element, because we know the `body` is not going away.
     Second argument makes sure the callback only fires when the `click` event happens only on elements marked as `data-editable`
   */
-  $('body').on('click', '.plan-name-edit-icon', function() {
+  $('body').on('click', '.plan-name-edit-icon', function(e) {
+    e.stopImmediatePropagation();
+    if ($('.plan-name.editable.open').length > 0) { 
+      $('.plan-name.editable.open').parent().find('.cancel-edit-plan').click()
+    }
     var parent = $(this).parent();
     parent.addClass('hide');
     parent = parent.parent(); 
@@ -96,15 +100,18 @@ $(document).ready(function() {
     $input.focus();
   });
 
-  $('body').on('click', '.plan-name-save-icon', function(e) {
+  $('body').on('click', '.plan-name-save-icon, .cancel-edit-plan', function(e) {
     e.stopImmediatePropagation();
     save_icon_parent = $(this).parent();
     save_icon_grandparent = save_icon_parent.parent();
     plan_name_input = save_icon_grandparent.find('.plan-name');
+    cancel_edit = 'cancel-edit cancel-edit-plan save-editable-field' 
 
-    if (current_plan_name == plan_name_input.val()) {
+    if ((current_plan_name == plan_name_input.val()) || ($(this).attr('class') === cancel_edit)) {
+      plan_name = current_plan_name
       revert_to_text();
     } else {
+      plan_name = plan_name_input.val();
       this.disabled = true;
       updatePlanName(this);
     }
@@ -113,7 +120,7 @@ $(document).ready(function() {
   function revert_to_text() {
     save_icon_parent.addClass('hide');
     save_icon_grandparent.find(".plan-name-edit-span").removeClass('hide');
-    var $span = $('<span class="editable-field-text settings-row-text plan-name" />').text( plan_name_input.val() );
+    var $span = $('<span class="editable-field-text settings-row-text plan-name" />').text( plan_name );
     plan_name_input.replaceWith( $span );
   }
 

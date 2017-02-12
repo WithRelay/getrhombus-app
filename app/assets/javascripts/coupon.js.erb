@@ -93,7 +93,11 @@ $(document).ready(function () {
     }
   }).change();
 
-  $('body').on('click', '.coupon-name-edit-icon', function() {
+  $('body').on('click', '.coupon-name-edit-icon', function(e) {
+    e.stopImmediatePropagation();
+    if ($('.coupon-name.editable.open').length > 0) { 
+      $('.coupon-name.editable.open').parent().find('.cancel-edit-coupon').click()
+    }
     var parent = $(this).parent();
     parent.addClass('hide');
     parent = parent.parent(); 
@@ -105,14 +109,15 @@ $(document).ready(function () {
     $input.focus();
   });
 
-  $('body').on('click', '.coupon-name-save-icon, .cancel-edit', function(e) {
+  $('body').on('click', '.coupon-name-save-icon, .cancel-edit-coupon', function(e) {
     e.stopImmediatePropagation();
     save_icon_parent = $(this).parent();
     save_icon_grandparent = save_icon_parent.parent();
     coupon_name_input = save_icon_grandparent.find('.coupon-name');
-    cancel_edit = 'cancel-edit save-editable-field'
+    cancel_edit = 'cancel-edit cancel-edit-coupon save-editable-field';
+
     if ((current_coupon_name == coupon_name_input.val()) || ($(this).attr('class') === cancel_edit)) {
-      coupon_name = current_coupon_name
+      coupon_name = current_coupon_name;
       revert_to_text();
     } else {
       this.disabled = true;
