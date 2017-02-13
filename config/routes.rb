@@ -46,7 +46,6 @@ Rails.application.routes.draw  do
     get "signup", to: "registrations#new"
     get "profile", to: "registrations#edit"
     get "signin", to: "devise/sessions#new"
-    get "add-card-info", to: "registrations#add_card_info"
     get "billing-information", to: "registrations#billing_information"
     get "business-setting", to: "registrations#business_setting"
     get "account-setting", to: "registrations#account_setting"
@@ -57,8 +56,15 @@ Rails.application.routes.draw  do
 
   # user routes
   resources :users, only: :show do
-    member { get 'segments' => 'lists#segments' }
-    member { get 'sms-usage' => 'users#sms_usage' }
+    devise_scope :user do
+      member do
+        get 'add-subscription' => 'registrations#add_subscription'
+        get 'add-rhombus-number' => 'registrations#add_rhombus_number'
+        get 'add-profile-info' => 'registrations#add_profile_info'
+        get 'segments' => 'lists#segments'
+        get 'sms-usage' => 'users#sms_usage'
+      end
+    end
     resources :fb_pages, only: [:index]
     patch 'update_fb_page' => 'fb_pages#update_user_fb_page'
     resources :hashtags, except: [:show]
