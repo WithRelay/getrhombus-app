@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170213011411) do
+ActiveRecord::Schema.define(version: 20170213054110) do
 
   create_table "addresses", force: :cascade do |t|
     t.string   "street_address",   limit: 191
@@ -744,6 +744,7 @@ ActiveRecord::Schema.define(version: 20170213011411) do
     t.string   "currency",               limit: 191
     t.string   "time_zone",              limit: 191,   default: "Eastern Time (US & Canada)"
     t.string   "user_color",             limit: 191
+    t.string   "team_size",              limit: 191
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree

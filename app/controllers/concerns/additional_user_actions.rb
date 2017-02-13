@@ -4,6 +4,9 @@ module AdditionalUserActions
   def integrations
   end
 
+  def business_information
+  end
+
   def remove_twitter_integration
     if current_user.twitter_cred.destroy
       flash[:notice] = 'Twitter integration removed successfully'
@@ -126,8 +129,9 @@ module AdditionalUserActions
   def build_user_link
     # if it includes a captured payment, also check if msg_id is present, tag_id is optional
     # referrer_num is the merchant the payment is going to
-    link = session[:captured_amt].present? ? "/add-card-info?amt=#{session[:captured_amt]}&referrer_id=#{session[:referrer_id]}" +
-                                          "&msg_id=#{session[:msg_id]}&tag_id=#{session[:tag_id]}" : "/add-card-info"
+    path = "/users/#{current_user.id}/add-card-info"
+    link = session[:captured_amt].present? ? "#{path}?amt=#{session[:captured_amt]}&referrer_id=#{session[:referrer_id]}" +
+                                          "&msg_id=#{session[:msg_id]}&tag_id=#{session[:tag_id]}" : path
     delete_captured_payment_session
     link
   end
@@ -148,6 +152,15 @@ module AdditionalUserActions
     session.delete(:msg_id)
   end
 
+  def check_user_redirect
+    return build_user_link unless customer_details_present?
+    return user_conversations_path(current_user) if merchant_details_present?
+    return user_transactions_path(current_user) if !customer_details_present?
+    return add_profile_info_user_path(current_user) if current_user.is_merchant? && current_user.org_name.blank?
+    return add_rhombus_number_user_path(current_user) if current_user.is_merchant? && current_user.rhombus_number.blank?
+    return add_subscription_user_path(current_user) if current_user.is_merchant? && current_user.get_saas_subscription.blank?
+  end
+
   def customer_csv_template
     render :template => "static_pages/to_404.html" and return if !current_user
     response = current_user.get_customer_csv_template
@@ -159,6 +172,18 @@ module AdditionalUserActions
       # use 500 page after it is built
       render :template => "static_pages/to_404.html"
     end
+  end
+
+  def merchant_details_present?
+    current_user.is_merchant? ? check_merchant_detail_present? : false
+  end
+
+  def check_merchant_detail_present?
+    current_user.org_name.present? && current_user.rhombus_number.present? && current_user.get_saas_subscription.present?
+  end
+
+  def customer_details_present?
+    current_user.is_customer? ? current_user.card_token.present? : true
   end
 
   def referrer_params
