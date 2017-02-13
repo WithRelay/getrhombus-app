@@ -1,0 +1,34 @@
+class MerchantCustomerPresenter < BasePresenter
+  
+  def profile_image
+    profile_pic = User.check_profile_picture(@model.customer)
+    if profile_pic[:type] == "image"
+          html = h.image_tag(profile_pic[:value], class: 'campaigns table-profile-picture', width: 24)
+    elsif profile_pic[:type] == "color"
+      class_name_value = " campaigns table-profile-picture radius-color-#{profile_pic[:value]}"
+      html = ("<div class='"+class_name+"'></div>").html_safe
+    end
+    html
+  end
+
+  def first_visit_format_created_at
+  	transaction = Transaction.where(user_id: @model.customer_id).first
+    h.time_ago_in_words(transaction.created_at) + ' ago'
+  end
+
+ def last_visit_format_created_at
+  	transaction = Transaction.where(user_id: @model.customer_id).last
+    h.time_ago_in_words(transaction.created_at) + ' ago'
+  end
+  
+  def average
+  	transaction_avg = Transaction.where(user_id: @model.customer_id).average(:amount)
+  	"$ #{transaction_avg}"
+  end
+
+  def total
+  	transaction_sum = Transaction.where(user_id: @model.customer_id).sum(:amount)
+  	"$ #{transaction_sum}"
+  end
+
+end
