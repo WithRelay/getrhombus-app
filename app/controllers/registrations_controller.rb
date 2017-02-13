@@ -27,6 +27,10 @@ class RegistrationsController < Devise::RegistrationsController
     end
   end
 
+  def edit
+    @user = current_user
+    @user.people.build
+  end
 
   def create
     set_captured_payment_session
