@@ -17,13 +17,13 @@ class RegistrationsController < Devise::RegistrationsController
       else
         clean_up_passwords resource
         #render "edit", notice: "We were unable to update your information"
-        redirect_to build_user_link, flash: { error: "We were unable to update your information. Please retry." }
+        redirect_to "/users/#{current_user.id}", flash: { error: "We were unable to update your information. Please retry." }
       end
     else
       clean_up_passwords resource
       #render "edit", notice: "We were unable to update your card information"
       error_message = (@re && @re.second == 'card_error') ? @re.third :  "We were unable to update your card information. Please check the details entered."
-      redirect_to build_user_link , flash: { error: error_message }
+      redirect_to "/users/#{current_user.id}", flash: { error: error_message }
     end
   end
 
@@ -46,6 +46,8 @@ class RegistrationsController < Devise::RegistrationsController
   def add_rhombus_number; end
 
   def add_subscription; end
+
+  def add_card_info; end
 
 
   protected
@@ -71,7 +73,7 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   def after_sign_up_path_for(resource)
-    user_path(resource)
+    return check_user_redirect
   end
 
 end

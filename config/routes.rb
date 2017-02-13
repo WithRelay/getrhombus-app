@@ -61,6 +61,7 @@ Rails.application.routes.draw  do
         get 'add-subscription' => 'registrations#add_subscription'
         get 'add-rhombus-number' => 'registrations#add_rhombus_number'
         get 'add-profile-info' => 'registrations#add_profile_info'
+        get 'add-card-info' => 'registrations#add_card_info'
         get 'segments' => 'lists#segments'
         get 'sms-usage' => 'users#sms_usage'
         patch "update", to: "registrations#update"

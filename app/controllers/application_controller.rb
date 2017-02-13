@@ -12,7 +12,8 @@ class ApplicationController < ActionController::Base
   rescue_from ActiveRecord::RecordNotUnique, with: :record_not_unique
 
   def after_sign_in_path_for(user)
-    return check_user_redirect
+    return check_user_redirect if check_user_redirect.present?
+    current_user
   end
 
   def after_update_path_for(user)
@@ -53,7 +54,7 @@ class ApplicationController < ActionController::Base
         :password, :password_confirmation, :card_token, :last4, :exp_month,  :exp_year, :card_name, :card_type,
         :rhombus_number, :update_rhombus_number, :phone_number, :org_name, :org_category, :org_phone, :currency,
         :tax_percent, :url, :custom_welcome, :time_zone, :zip_code, :state_province, :city, :street_address,
-        :country
+        :country, :org_type
          )}
     end
 

@@ -129,8 +129,9 @@ module AdditionalUserActions
   def build_user_link
     # if it includes a captured payment, also check if msg_id is present, tag_id is optional
     # referrer_num is the merchant the payment is going to
-    link = session[:captured_amt].present? ? "/add-card-info?amt=#{session[:captured_amt]}&referrer_id=#{session[:referrer_id]}" +
-                                          "&msg_id=#{session[:msg_id]}&tag_id=#{session[:tag_id]}" : "/add-card-info"
+    path = "/users/#{current_user.id}/add-card-info"
+    link = session[:captured_amt].present? ? "#{path}?amt=#{session[:captured_amt]}&referrer_id=#{session[:referrer_id]}" +
+                                          "&msg_id=#{session[:msg_id]}&tag_id=#{session[:tag_id]}" : path
     delete_captured_payment_session
     link
   end
@@ -152,9 +153,9 @@ module AdditionalUserActions
   end
 
   def check_user_redirect
-    return build_user_link if customer_details_present?
+    return build_user_link unless customer_details_present?
     return user_conversations_path(current_user) if merchant_details_present?
-    return user_transactions_path(current_user) if customer_details_present?
+    return user_transactions_path(current_user) if !customer_details_present?
     return add_profile_info_user_path(current_user) if current_user.is_merchant? && current_user.org_name.blank?
     return add_rhombus_number_user_path(current_user) if current_user.is_merchant? && current_user.rhombus_number.blank?
     return add_subscription_user_path(current_user) if current_user.is_merchant? && current_user.get_saas_subscription.blank?
@@ -182,7 +183,7 @@ module AdditionalUserActions
   end
 
   def customer_details_present?
-    current_user.is_customer? ? current_user.card_token.present? : false
+    current_user.is_customer? ? current_user.card_token.present? : true
   end
 
   def referrer_params
