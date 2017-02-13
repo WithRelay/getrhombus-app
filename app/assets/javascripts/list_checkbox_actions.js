@@ -12,10 +12,13 @@ $(document).ready(function(){
   $(document).on('click', '.cancel-yes', function(e){
     url = window.location.pathname.split('/')
     full_url = url[url.length-1]
-    resource_url = '/v1/' + full_url + '/' + $('.delete-resource').attr('id')
-    element = { 'url': url }
-    resource = new Resource(element);
-    resource.updateOrDelete();
+    if (url == 'campaigns'){
+      resource_url = '/v1/' + full_url + '/' + $('.delete-resource').attr('id')
+      element = { 'url': url }
+      resource = new Resource(element);
+      resource.updateOrDelete();
+    }
+
   });
 
   function Resource(element){

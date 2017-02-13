@@ -37,9 +37,9 @@ $success-color: green;
 .selectize-dropdown-content {
   display: block !important;
   background-color: white !important;
-  width: 100% !important;
+  width: 113% !important;
   border: 1px solid #1f8cec !important;
-  margin-left: -60px !important;
+  margin-left: -33px !important;
   margin-top: 12px !important;
   text-align: left !important;
 }
@@ -48,9 +48,9 @@ $success-color: green;
   margin-top: 5px !important;
 }
 
-<% COLORS.each do |color| %>
-  .radius-color-#{<%= color.first %>}{
-  background-color:<%= color.last %>
+<% COLORS.each_with_index do |color, index| %>
+  .radius-color-#{<%= index %>}{
+  background-color:<%= color.last %> !important;
   }
 <%end%>
 
@@ -163,5 +163,14 @@ textarea { resize: none; }
   padding-left: 30px;
   padding-right: 30px;
 }
-
+.attach-image-container{
+  margin-left: 160px;
+  margin-top: -20px;
+}
 /* end for images */
+
+.transaction-cell.card-name {
+  float: left !important;
+  width: 100% !important;
+  padding-left: 0px !important;
+}

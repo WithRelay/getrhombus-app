@@ -1,5 +1,16 @@
-<div class="customer-dash sub-nav-bar w-clearfix"><a class="add sub-nav-button w-button" href="#"> &nbsp;<strong>Set new reminder</strong></a><a class="sub-nav-button w-button" data-ix="create-list" href="#"> &nbsp;<strong>Edit</strong></a><a class="sub-nav-button w-button" data-ix="create-list" href="#"> &nbsp;<strong>Delete</strong></a>
+<div class="customer-dash sub-nav-bar w-clearfix">
+
+<div class='modal-background w-hidden modal-body'>
+      <%= render partial: 'shared/modals/new_reminder', locals: {reminder: Reminder.new }  %>
+      </div>
+  <a class="add sub-nav-button w-button modal-loader" href="#"> &nbsp;<strong>Set new reminder</strong></a>
+  
+  <a class="sub-nav-button w-button" data-ix="create-list" id= 'edit-reminder' href="#"> &nbsp;<strong>Edit</strong></a>
+
+  <a class="sub-nav-button w-button" data-ix="create-list"  id = 'delete-reminder' href="#"> &nbsp;<strong>Delete</strong></a>
 </div>
+
+
 <div class="dashboard-body">
 
     <div class="reminders-by-date row-wrapper">
@@ -41,403 +52,34 @@
           </div>
         </div>
       </div>
+    
+    <div class="reminders-by-date row-wrapper">
       <div>
-        <% @reminders_today.each do |reminder| %>
-
-        <div class="new-table-row w-row">
-          <div class="cn w-clearfix w-col w-col-3">
-            <div class="name w-clearfix">
-              <%= present(reminder).profile_image %>
-                <div class="shrink-text table-text"><%= reminder.from_user %></div>
-            </div>
-            <div class="cb check-box-column">
-              <div class="w-form">
-                <form data-name="Email Form 2" id="email-form-2" name="email-form-2">
-                  <div class="select-all-check-box w-checkbox w-clearfix">
-                    <input class="cb table-checkbox w-checkbox-input" id="node" type="checkbox">
-                    <label class="checkbox-field-lable w-form-label" for="node">-</label>
-                  </div>
-                </form>
-                <div class="w-form-done">
-                  <div>Thank you! Your submission has been received!</div>
-                </div>
-                <div class="w-form-fail">
-                  <div>Oops! Something went wrong while submitting the form</div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="fv w-clearfix w-col w-col-2">
-            <div class="cn column column-2 w-clearfix">
-              <div class="shrink-text table-text">+1 (202) 345 - 5898</div>
-            </div>
-          </div>
-          <div class="lv w-clearfix w-col w-col-2">
-            <div class="colum-3 column lv">
-              <div class="table-text">Messenger</div>
-            </div>
-          </div>
-          <div class="avs w-clearfix w-col w-col-1">
-            <div class="avs column column-4 w-clearfix">
-              <div class="table-text">9:00 AM</div>
-            </div>
-          </div>
-          <div class="ts w-clearfix w-col w-col-1">
-            <div class="column column-5 ts w-clearfix">
-              <div class="table-text total-spend-text">Once</div>
-            </div>
-          </div>
-          <div class="table-actions w-clearfix w-col w-col-3">
-            <div class="column column-6 left new-row">
-              <div class="frequency table-text">
-                <%= present(reminder).format_created_at %>
-              </div>
-            </div>
-            <div class="column column-6 new-row"><a class="actions-button cancel" href="#">Cancel</a>
-            </div>
-          </div>
-        </div>
+          <% @reminders_today.each do |reminder| %>
+          <%= render partial: 'list_reminder', locals: {reminder: reminder } %>
         <% end %>
       </div>
     </div>
-  <div class="reminder-dates">Tomorrow <span class="reminder-count">(18 scheduled)</span>
+
+  <div class="reminder-dates">Tomorrow <span class="reminder-count">(<%= @reminders_tomorrow.count %>)</span>
   </div>
+
   <div class="reminders-by-date row-wrapper">
     <div>
       <% @reminders_tomorrow.each do |reminder| %>
-      <div class="new-table-row w-row">
-        <div class="cn w-clearfix w-col w-col-3">
-          <div class="name w-clearfix"><img class="table-profile-picture" src="images/Green.png" width="24">
-            <div class="shrink-text table-text">Rebecca Sydney</div>
-          </div>
-          <div class="cb check-box-column">
-            <div class="w-form">
-              <form data-name="Email Form 2" id="email-form-2" name="email-form-2">
-                <div class="select-all-check-box w-checkbox w-clearfix">
-                  <input class="cb table-checkbox w-checkbox-input" id="node" type="checkbox">
-                  <label class="checkbox-field-lable w-form-label" for="node">-</label>
-                </div>
-              </form>
-              <div class="w-form-done">
-                <div>Thank you! Your submission has been received!</div>
-              </div>
-              <div class="w-form-fail">
-                <div>Oops! Something went wrong while submitting the form</div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="fv w-clearfix w-col w-col-2">
-          <div class="cn column column-2">
-            <div class="table-text">+1 (890) 791 - 4123</div>
-          </div>
-        </div>
-        <div class="lv w-clearfix w-col w-col-2">
-          <div class="colum-3 column lv">
-            <div class="table-text"><%= reminder.frequency_type %></div>
-          </div>
-        </div>
-        <div class="avs w-clearfix w-col w-col-1">
-          <div class="avs column column-4">
-            <div class="table-text">6:30 PM</div>
-          </div>
-        </div>
-        <div class="ts w-clearfix w-col w-col-1">
-          <div class="column column-5 ts">
-            <div class="table-text total-spend-text">Once</div>
-          </div>
-        </div>
-        <div class="table-actions w-clearfix w-col w-col-3">
-          <div class="column column-6 new-row"><a class="actions-button cancel" href="#">Cancel</a>
-          </div>
-          <div class="column column-6 left new-row">
-            <div class="frequency table-text">09/10/2016</div>
-          </div>
-        </div>
-      </div>
+         <%= render partial: 'list_reminder', locals: {reminder: reminder } %>
       <% end %>
     </div>
   </div>
-  <div class="reminder-dates">Upcoming <span class="reminder-count">(8 scheduled)</span>
+
+  <div class="reminder-dates">Upcoming <span class="reminder-count">(<%= @reminders_upcoming.count %>)</span> </div>
+  
+  <div class="reminders-by-date row-wrapper">
+    <div>
     <% @reminders_upcoming.each do |reminder| %>
 
-    <div>
-      <div class="new-table-row w-row">
-        <div class="cn w-clearfix w-col w-col-3">
-          <div class="name w-clearfix"><img class="table-profile-picture" src="images/Green.png" width="24">
-            <div class="shrink-text table-text">Rebecca Sydney</div>
-          </div>
-          <div class="cb check-box-column">
-            <div class="w-form">
-              <form data-name="Email Form 2" id="email-form-2" name="email-form-2">
-                <div class="select-all-check-box w-checkbox w-clearfix">
-                  <input class="cb table-checkbox w-checkbox-input" id="node" type="checkbox">
-                  <label class="checkbox-field-lable w-form-label" for="node">-</label>
-                </div>
-              </form>
-              <div class="w-form-done">
-                <div>Thank you! Your submission has been received!</div>
-              </div>
-              <div class="w-form-fail">
-                <div>Oops! Something went wrong while submitting the form</div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="fv w-clearfix w-col w-col-2">
-          <div class="cn column column-2">
-            <div class="table-text">+1 (890) 791 - 4123</div>
-          </div>
-        </div>
-        <div class="lv w-clearfix w-col w-col-2">
-          <div class="colum-3 column lv">
-            <div class="table-text">SMS</div>
-          </div>
-        </div>
-        <div class="avs w-clearfix w-col w-col-1">
-          <div class="avs column column-4">
-            <div class="table-text">6:30 PM</div>
-          </div>
-        </div>
-        <div class="ts w-clearfix w-col w-col-1">
-          <div class="column column-5 ts">
-            <div class="table-text total-spend-text">Once</div>
-          </div>
-        </div>
-        <div class="table-actions w-clearfix w-col w-col-3">
-          <div class="column column-6 new-row"><a class="actions-button cancel" href="#">Cancel</a>
-          </div>
-          <div class="column column-6 left new-row">
-            <div class="frequency table-text">09/10/2016</div>
-          </div>
-        </div>
-      </div>
-    </div>
+      <%= render partial: 'list_reminder', locals: {reminder: reminder } %>
     <% end %>
   </div>
 </div>
-
-
-
-
-<%= render 'shared/flash_messages' %>
-<div class="customer-dash sub-nav-bar w-clearfix">
-  <%= button_tag 'Set new reminder', class: 'modal-loader btn btn-primary add sub-nav-button w-button' %>
-  <a class="sub-nav-button w-button" data-ix="create-list" href="#"> &nbsp;Edit</a>
-  <a class="sub-nav-button w-button" data-ix="create-list" id="delete-reminder" href="#"> &nbsp;<strong>Delete</strong></a>
 </div>
-<!-- Button trigger modal -->
-<!-- Modal Body -->
-  <div class="modal-body w-hidden">
-    <%#= render partial: 'shared/modals/new_reminder', locals: { reminder: @reminder , reminder_url: v1_reminders_path, method: 'post' } %>
-  </div>
-
-<div class="dashboard-body">
-  <div class="reminders-by-date row-wrapper">
-    <div>
- <div class="header new-table-row w-row">
-          <div class="cn w-clearfix w-col w-col-3">
-            <div class="header name w-clearfix">
-              <div class="heading table-text"> &nbsp; Name</div>
-            </div>
-            <div class="cb check-box-column header"></div>
-          </div>
-          <div class="fv w-clearfix w-col w-col-2">
-            <div class="cn column column-2 header w-clearfix">
-              <div class="heading table-text"> &nbsp; Phone</div>
-            </div>
-          </div>
-          <div class="lv w-clearfix w-col w-col-2">
-            <div class="colum-3 column header lv w-clearfix">
-              <div class="heading table-text"> &nbsp;Channel</div>
-            </div>
-          </div>
-          <div class="avs w-clearfix w-col w-col-1">
-            <div class="avs column column-4 header w-clearfix">
-              <div class="heading table-text"> &nbsp;Time</div>
-            </div>
-          </div>
-          <div class="ts w-clearfix w-col w-col-1">
-            <div class="column column-5 header ts w-clearfix">
-              <div class="heading r table-text total-spend-text"> &nbsp;Frequency</div>
-            </div>
-          </div>
-          <div class="table-actions w-clearfix w-col w-col-3">
-            <div class="column column-6 header left new-row w-clearfix">
-              <div class="frequency heading table-text"> &nbsp; Last visit</div>
-            </div>
-            <div class="column column-6 header new-row w-clearfix">
-              <div class="frequency heading table-text">&nbsp; &nbsp;Actions</div>
-            </div>
-          </div>
-        </div>
-    </div>
-
-
-    <div>
-     <% @reminders_today.each do |reminder| %>
-      <div class="new-table-row w-row">
-          <div class="cn w-clearfix w-col w-col-3">
-          <div class="name w-clearfix">
-            <%= present(reminder).profile_image %>
-              <div class="table-text"><%= reminder.from_user %></div>
-          </div>
-          <div class="cb check-box-column">
-            <div class="w-form">
-              <%= form_for(reminder, url: user_reminder_path(current_user, reminder), html: { method: :delete}) do |f|%>
-                <div class="select-all-check-box w-checkbox w-clearfix">
-                  <%= f.hidden_field :id %>
-                  <input class="cb table-checkbox w-checkbox-input" id="node" type="checkbox">
-                  <label class="checkbox-field-lable w-form-label" for="node">-</label>
-                </div>
-              <%end%>
-            </div>
-          </div>
-        </div>
-        <div class="fv w-clearfix w-col w-col-2">
-          <div class="cn column column-2 w-clearfix">
-            <div class="table-text">+1 (202) 345 - 5898</div>
-          </div>
-        </div>
-        <div class="lv w-clearfix w-col w-col-2">
-          <div class="colum-3 column lv">
-            <div class="table-text">Facebook Messenger</div>
-          </div>
-        </div>
-        <div class="avs w-clearfix w-col w-col-1">
-          <div class="avs column column-4 w-clearfix">
-            <div class="table-text">9:00 AM</div>
-          </div>
-        </div>
-        <div class="ts w-clearfix w-col w-col-1">
-          <div class="column column-5 ts w-clearfix">
-            <div class="table-text total-spend-text"><%= reminder.frequency_type %></div>
-          </div>
-        </div>
-        <div class="table-actions w-clearfix w-col w-col-3">
-          <div class="column column-6 left new-row">
-            <div class="frequency table-text"><%= present(reminder).format_created_at %></div>
-          </div>
-          <div class="column column-6 new-row">
-            <%= present(reminder).reminder_change_status_link %>
-          </div>
-        </div>
-        <% end %>
-        </div>
-    </div>
-    </div>
-
-     <div class="reminder-dates">Tomorrow <span class="reminder-count"><%= @reminders_tomorrow.count %></span>
-    </div>
-    <div class="reminders-by-date row-wrapper">
-      <div>
-     <% @reminders_tomorrow.each do |reminder| %>
-      <div class="new-table-row w-row">
-          <div class="cn w-clearfix w-col w-col-3">
-          <div class="name w-clearfix">
-            <%= present(reminder).profile_image %>
-              <div class="table-text"><%= reminder.from_user %></div>
-          </div>
-          <div class="cb check-box-column">
-            <div class="w-form">
-              <%= form_for(reminder, url: user_reminder_path(current_user, reminder), html: { method: :delete}) do |f|%>
-                <div class="select-all-check-box w-checkbox w-clearfix">
-                  <%= f.hidden_field :id %>
-                  <input class="cb table-checkbox w-checkbox-input" id="node" type="checkbox">
-                  <label class="checkbox-field-lable w-form-label" for="node">-</label>
-                </div>
-              <%end%>
-            </div>
-          </div>
-        </div>
-        <div class="fv w-clearfix w-col w-col-2">
-          <div class="cn column column-2 w-clearfix">
-            <div class="table-text">+1 (202) 345 - 5898</div>
-          </div>
-        </div>
-        <div class="lv w-clearfix w-col w-col-2">
-          <div class="colum-3 column lv">
-            <div class="table-text">Facebook Messenger</div>
-          </div>
-        </div>
-        <div class="avs w-clearfix w-col w-col-1">
-          <div class="avs column column-4 w-clearfix">
-            <div class="table-text">9:00 AM</div>
-          </div>
-        </div>
-        <div class="ts w-clearfix w-col w-col-1">
-          <div class="column column-5 ts w-clearfix">
-            <div class="table-text total-spend-text"><%= reminder.frequency_type %></div>
-          </div>
-        </div>
-        <div class="table-actions w-clearfix w-col w-col-3">
-          <div class="column column-6 left new-row">
-            <div class="frequency table-text"><%= present(reminder).format_created_at %></div>
-          </div>
-          <div class="column column-6 new-row">
-            <%= present(reminder).reminder_change_status_link %>
-          </div>
-        </div>
-        </div>
-        <% end %>
-        </div>
-
-    </div>
-
-        <div class="reminder-dates">Upcoming <span class="reminder-count"><%= @reminders_upcoming.count %></span>
-    </div>
-    <div class="reminders-by-date row-wrapper">
-    <div>
-     <% @reminders_upcoming.each do |reminder| %>
-      <div class="new-table-row w-row">
-          <div class="cn w-clearfix w-col w-col-3">
-          <div class="name w-clearfix">
-            <%= present(reminder).profile_image %>
-              <div class="table-text"><%= reminder.from_user %></div>
-          </div>
-          <div class="cb check-box-column">
-            <div class="w-form">
-              <%= form_for(reminder, url: user_reminder_path(current_user, reminder), html: { method: :delete}) do |f|%>
-                <div class="select-all-check-box w-checkbox w-clearfix">
-                  <%= f.hidden_field :id %>
-                  <input class="cb table-checkbox w-checkbox-input" id="node" type="checkbox">
-                  <label class="checkbox-field-lable w-form-label" for="node">-</label>
-                </div>
-              <%end%>
-            </div>
-          </div>
-        </div>
-        <div class="fv w-clearfix w-col w-col-2">
-          <div class="cn column column-2 w-clearfix">
-            <div class="table-text">+1 (202) 345 - 5898</div>
-          </div>
-        </div>
-        <div class="lv w-clearfix w-col w-col-2">
-          <div class="colum-3 column lv">
-            <div class="table-text">Facebook Messenger</div>
-          </div>
-        </div>
-        <div class="avs w-clearfix w-col w-col-1">
-          <div class="avs column column-4 w-clearfix">
-            <div class="table-text">9:00 AM</div>
-          </div>
-        </div>
-        <div class="ts w-clearfix w-col w-col-1">
-          <div class="column column-5 ts w-clearfix">
-            <div class="table-text total-spend-text"><%= reminder.frequency_type %></div>
-          </div>
-        </div>
-        <div class="table-actions w-clearfix w-col w-col-3">
-          <div class="column column-6 left new-row">
-            <div class="frequency table-text"><%= present(reminder).format_created_at %></div>
-          </div>
-          <div class="column column-6 new-row">
-            <%= present(reminder).reminder_change_status_link %>
-          </div>
-        </div>
-        </div>
-        <% end %>
-    </div>
-    </div>
-    </div>
-  </div>

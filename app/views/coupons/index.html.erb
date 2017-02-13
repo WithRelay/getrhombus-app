@@ -39,14 +39,15 @@
   </div>
 </div>
 <div class="customer-dash sub-nav-bar">
-    <div class="sub-nav-options-wrapper w-clearfix">
-      <a class="add sub-nav-button w-button" data-ix="create-customer", id: 'new-coupon-modal', href="#"> &nbsp;<strong>New coupon</strong></a>
-      <a class="import sub-nav-button w-button" data-ix="import-customers" href="/manage-coupons">&nbsp; <strong>Edit coupons</strong></a>
-      <a class="sub-nav-button w-button" data-ix="create-list" href="#"> &nbsp;<strong>Delete</strong></a>
-    </div>
+  <div class="sub-nav-options-wrapper w-clearfix">
+    <a class="w-button sub-nav-button w-button modal-loader", id: 'new-coupon-modal', href="#"> &nbsp;<strong>New coupon</strong></a>
+    <a class="import sub-nav-button w-button" data-ix="import-customers" href="/manage-coupons">&nbsp; <strong>Edit coupons</strong></a>
   </div>
 
-<%= render 'shared/modals/new_coupon' %>
+  <div class='modal-background w-hidden modal-body'>
+    <%= render partial: 'shared/modals/new_coupon'  %> 
+  </div>
+</div>
 
 <div class="dashboard-body">
   <% @coupons.each do |coupon| %>
@@ -57,14 +58,6 @@
           <div class="shrink-text table-text"><%= coupon.name %></div>
         </div>
         <div class="alt-table cb check-box-column">
-          <div class="w-form">
-            <form data-name="Email Form 2" id="email-form-2" name="email-form-2">
-              <div class="select-all-check-box w-checkbox w-clearfix">
-                <input class="cb table-checkbox w-checkbox-input" id="node" type="checkbox">
-                <label class="checkbox-field-lable w-form-label" for="node">-</label>
-              </div>
-            </form>
-          </div>
         </div>
       </div>
       <div class="alt-column w-col w-col-2">
@@ -81,7 +74,7 @@
       </div>
       <div class="alt-column w-col w-col-2">
         <div class="alt-table-column-div w-clearfix">
-          <div class="shrink-text table-text"><%#= coupon.duration.capitalize %></div>
+          <div class="shrink-text table-text"><%= coupon.duration.capitalize %></div>
         </div>
       </div>
       <div class="alt-column w-col w-col-2">

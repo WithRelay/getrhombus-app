@@ -1,28 +1,16 @@
 <%# removed all webflow data attributes %>
 
-<div class="create-plan-form-wrapper">
-  <div class="content-sub-wrapper modal w-clearfix">
-    <h4 class="modal-header welcome-dash-content-container-header">Create plan</h4>
-    <%# added data and update-close-modals %>
-    <a class="close-modal update-close-modals" data-parent='new-plan-div' href="#"></a>
-  </div>
-  <p class="create-plan modal-content-description">Plans let you charge customers a recurring amount over a specified time interval.</p>
-  <div class="modal-underline underline-div"></div>
-  <div class="create-plan-form w-form">
-    <form id="email-form-8" name="email-form-8">
-      <label class="form-label" for="Plan-name-2">Plan name</label>
-      <input class="editable text-field w-input" id="Plan-name-2" maxlength="256" name="Plan-name-2" placeholder="Ex. Monthly fruit basket" type="text">
-      <input class="amount-field text-field w-input" id="Plan-Amount-2" maxlength="256" name="Plan-Amount-2" placeholder="Amount" required="required" type="email">
-      <label class="form-label" for="Plan-Interval-2">Subscription Interval</label>
-      <select class="dropdown w-select" id="Plan-Interval-2" name="Plan-Interval-2">
-        <option value="">Weekly</option>
-        <option value="">Bi-weekly</option>
-        <option value="">Monthly</option>
-        <option value="">Every 3 months</option>
-        <option value="">Every 6 months</option>
-        <option value="">Yearly</option>
-      </select><a class="button create-plan w-button" href="#">Create plan</a>
-      <p class="charge-tips modal-paragraph tips"> &nbsp;TIP: You can also use Hashtags to create a subscription plan in Rhombus. Recurring payment Hashtags allow your customers subscribe themselves to a plan by simply texting the Hashtag to your Rhombus number.</p><a class="button manage-plans w-button" href="#">Manage plans</a>
-    </form>
+<div class="create-plan-form-wrapper w-clearfix modal-background" id="new-plan-div">
+  <div class="create-plan-form-wrapper">
+    <div class="content-sub-wrapper modal w-clearfix">
+      <h4 class="modal-header welcome-dash-content-container-header">Create plan</h4>
+      <%# added data and update-close-modals %>
+      <a class="close-modal update-close-modals" data-parent='new-plan-div' href="#"></a>
+    </div>
+    <p class="create-plan modal-content-description">Plans let you charge customers a recurring amount over a specified time interval.</p>
+    <div class="modal-underline underline-div"></div>
+    <div class="create-plan-form w-form">
+      <%= render 'plans/form' %>
+    </div>
   </div>
 </div>

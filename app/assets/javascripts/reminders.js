@@ -1,5 +1,33 @@
 $(document).on('ready page:load', function() {
 
+  $('#delete-reminder').click(function(e){
+      e.preventDefault
+      FlashHandler.setConfirmationDialog('#delete-reminder','Are you sure, you want to delete the Reminder?', 'Delete', 'isDistroy');
+
+      return false;
+    });
+
+  $('#submitReminderForm').click(function(){
+    $.ajax({
+
+        url: $('#reminderForm').attr('action'),
+        type: "POST",
+        data: $('#reminderForm').serialize(),
+        dataType: "json"
+      })
+      .done(function(msg) {
+          var flash_key = Object.keys(msg)[1]
+           // set flash message title and message
+              // first argument is title and second is text message.
+           FlashHandler.setFlashMessage( msg[flash_key], flash_key );
+           $('.update-close-modals').click()
+      })
+      .fail(function(data) {
+        FlashHandler.setFlashMessage(JSON.parse(data.responseText).response, 'error');
+      });
+  });
+
+
   $('#Notification-Message').counter({ type: 'char', append: false, target: '#textBoxCounter' })
 
   $('#reminderForm').formValidation({
@@ -30,12 +58,7 @@ $(document).on('ready page:load', function() {
     });
 
 
-    $('#delete-reminder').click(function(e){
-    
-      FlashHandler.setConfirmationDialog('#delete-reminder','Are you sure, you want to delete the Reminder?', 'Delete', 'isDistroy');
-
-      return false;
-    });
+   
     
 });
 
