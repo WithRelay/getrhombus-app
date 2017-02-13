@@ -1,7 +1,21 @@
 Friday
-- test parser, transactions, stripe events
+- test parser
+- transactions
+- stripe events  --- maybe not for this release
+- clean up conversations
 - workflow for sign in, sign up and places where we add card, token, referrer, contact and customer, payment capture
 - clean up below
+
+
+
+
+
+
+
+
+
+
+
 
 Everyone
 - popups are repeated... code across the page must be one.
@@ -9,7 +23,7 @@ Everyone
 Torchi
 - review hashtag js
 - review saved replies
-- reminders create is a popup appears
+- reminders create is a popup, appears on
 	- http://relay-test.webflow.io/customer-reminders, http://relay-test.webflow.io/customer-profile and conversations page
 	- use only one popup across all pages
 
@@ -21,10 +35,14 @@ Surya
 - add emojionearea to reminders. 
 - document form validation error state design
 - sign up workflow for merchants?? check active saas subscription?
-- notifications header issue
+- notifications header issue...not consistent across pages
 - campaigns new 
-	- fb missing in dropdown, image attachment view, give sub nav higher index cos of emoji, 
-		show subnav on empty index, hide subject and from if not email, characters left formatting
+	- fb missing in dropdown, 
+	- image attachment view/behavior - see implementation in hashtags create
+	- give sub nav higher z-index cos of emoji -- if you scroll down and the text box is under the subnav, the emoji icon will still show up
+	- on index page, show subnav even if there are no campaigns
+	- hide subject/from subnav if not email, 
+	- character counter formatting is incorrect...
 
 Bhishma
 - coupon pages (add link to transactions dropdown and link under segments)
@@ -37,8 +55,7 @@ Bhishma
 - position toastrs to right.
 - plan, subscription modals are firing...havent been redone?
 - fix saas_sub method
-
-
+- plan subscribers page
 
 
 <%= provide(:title, "Rhombus - Transactions") %>

@@ -69,7 +69,7 @@ class User < ActiveRecord::Base
 
   has_many :messages
   has_many :merchant_conversations, class_name: 'Conversation', foreign_key: 'merchant_id'
-  has_many :customer_conversations, class_name: 'Conversation', foreign_key: 'uid'
+  has_many :customer_conversations, -> { where uid_type: 'user' }, class_name: 'Conversation', foreign_key: 'uid'
 
   has_many :merchant_plans, class_name: 'Plan', foreign_key: 'merchant_id'
   has_many :customer_plans, class_name: 'Plan', foreign_key: 'customer_id'
@@ -159,9 +159,13 @@ class User < ActiveRecord::Base
   def get_stripe_cred
     # platform acct is a standalone account and only one record exists for platform
     # merchants could have 2 records. Managed, Standalone (prior to v1.5)
-    return self.stripe_creds.first if is_platform?
-    creds = self.stripe_creds
-    creds.where(uid_type: ((creds.length == 2) ? 'managed' : 'standalone') ).first
+    
+    return User.find_by(id: 23)
+
+    # this shoulnd be the actual code
+    #return self.stripe_creds.first if is_platform?
+    #creds = self.stripe_creds
+    #creds.where(uid_type: ((creds.length == 2) ? 'managed' : 'standalone') ).first
   end
 
   def buy_merchant_number
