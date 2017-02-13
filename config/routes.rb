@@ -20,6 +20,7 @@ Rails.application.routes.draw  do
   get 'get_current_user' => 'application#get_current_user'
   get 'manage-coupons' => 'coupons#manage_coupons'
 
+
   ### fix this url
   post 'redirect' => 'link_fb_accounts#redirect'
 
@@ -43,10 +44,9 @@ Rails.application.routes.draw  do
   ## devise routes
   devise_for :users, controllers: { registrations: "registrations", omniauth_callbacks: "omniauth_callbacks", sessions: 'sessions' }
   devise_scope :user do
-    get "signup", to: "devise/registrations#new"
-    get "profile", to: "devise/registrations#edit"
+    get "signup", to: "registrations#new"
+    get "profile", to: "registrations#edit"
     get "signin", to: "devise/sessions#new"
-    get "add-card-info", to: "registrations#add_card_info"
     get "billing-information", to: "registrations#billing_information"
     get "business-setting", to: "registrations#business_setting"
     get "account-setting", to: "registrations#account_setting"
@@ -57,11 +57,21 @@ Rails.application.routes.draw  do
 
   # user routes
   resources :users, only: :show do
-    member { get 'segments' => 'lists#segments' }
-    member { get 'sms-usage' => 'users#sms_usage' }
+    member { get 'customers' => 'merchant_customers#customers' }
+    devise_scope :user do
+      member do
+        get 'add-subscription' => 'registrations#add_subscription'
+        get 'add-rhombus-number' => 'registrations#add_rhombus_number'
+        get 'add-profile-info' => 'registrations#add_profile_info'
+        get 'add-card-info' => 'registrations#add_card_info'
+        get 'segments' => 'lists#segments'
+        get 'sms-usage' => 'users#sms_usage'
+        patch "update", to: "registrations#update"
+      end
+    end
     resources :fb_pages, only: [:index]
     patch 'update_fb_page' => 'fb_pages#update_user_fb_page'
-    resources :hashtags, except: [:show] 
+    resources :hashtags, except: [:show]
     resources :subscriptions, only: [:index, :update, :destroy]
 
     authenticate :user, -> (user) { user.is_platform? } do
@@ -79,6 +89,8 @@ Rails.application.routes.draw  do
         get 'download' => 'transactions#download_csv', constraints: { format: 'csv' }
       end
     end
+
+
 
     # authenticate resources if a user is merchant
     authenticate :user, -> (user) { user.is_merchant? } do
@@ -100,7 +112,7 @@ Rails.application.routes.draw  do
       match 'managed-accounts' => "users#create_managed_acct", via: :patch
       match 'update-managed-acct' => 'users#update_managed_acct', via: :patch
       get 'contacts' => 'users#contacts' #(both customers or merchants)
-      get 'customers' => 'users#customers'
+      # get 'customers' => 'users#customers'
       get 'businesses' => 'users#businesses'
       get 'notifications' => 'alerts#edit'
       get 'lists' => 'users#lists'
@@ -119,7 +131,7 @@ Rails.application.routes.draw  do
     match 'hashtags' => 'hashtags#index', via: :get
     match 'hashtags/:id/images/:image_id' => 'hashtags#image_delete', via: :delete
     match 'saved_replies' => 'saved_replies#index', via: :get
-    post 'saved_replies/edit' => 'saved_replies#edit'
+    post 'saved_replies/edit' => 'saved_replies#edit' 
     patch 'saved_replies/update' => 'saved_replies#update'
     post 'saved_replies/create' => 'saved_replies#create'
     # Campaign Routes
@@ -137,10 +149,10 @@ Rails.application.routes.draw  do
     match 'transactions/:txn_number/refund' => 'transactions#refund', via: :post
     resources :transactions, only: [:create]
     match 'numbers/search' => 'numbers#search', via: :get
-    resources :lists, only: [:index, :create]  
-    resources :coupons, only: [:index, :update] do 
+    resources :lists, only: [:index, :create]
+    resources :coupons, only: [:index, :update] do
       post 'check_coupon_name', on: :collection
-    end  
+    end
     resources :plans, only: [:index, :create, :update] do
       post 'check_plan_name', on: :collection
     end

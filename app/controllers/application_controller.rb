@@ -12,9 +12,7 @@ class ApplicationController < ActionController::Base
   rescue_from ActiveRecord::RecordNotUnique, with: :record_not_unique
 
   def after_sign_in_path_for(user)
-    return build_user_link unless customer_details_present?
-    return user_conversations_path(user) if merchant_details_present?
-    return user_transactions_path(user) if customer_details_present?
+    return check_user_redirect if check_user_redirect.present?
     current_user
   end
 
@@ -45,18 +43,6 @@ class ApplicationController < ActionController::Base
 
   protected
 
-    def merchant_details_present?
-      check_merchant_detail_present? ? current_user.is_merchant? : false
-    end
-
-    def check_merchant_detail_present?
-      current_user.org_name.present? && current_user.rhombus_number.present? && current_user.get_saas_subscription.present?
-    end
-
-    def customer_details_present?
-      current_user.is_customer? ? current_user.card_token.present? : false
-    end
-
     def set_time_zone(&block)
       Time.use_zone(current_user.time_zone, &block)
     end
@@ -70,7 +56,7 @@ class ApplicationController < ActionController::Base
         :password, :password_confirmation, :card_token, :last4, :exp_month,  :exp_year, :card_name, :card_type,
         :rhombus_number, :update_rhombus_number, :phone_number, :org_name, :org_category, :org_phone, :currency,
         :tax_percent, :url, :custom_welcome, :time_zone, :zip_code, :state_province, :city, :street_address,
-        :country
+        :country, :org_type
          )}
     end
 

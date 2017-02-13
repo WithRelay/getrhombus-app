@@ -11,35 +11,44 @@ class RegistrationsController < Devise::RegistrationsController
         StripeManagedAccountService.new(current_user).update_account_email
         set_flash_message :notice, :updated
         # Sign in the current user bypassing validation in case his password changed
-        sign_in current_user, :bypass => true
-        respond_with resource, :location => after_update_path_for(resource)
+        sign_in current_user, bypass: true
+        respond_with resource, location: user_path(resource)
         #redirect_to after_update_path_for(current_user)
       else
         clean_up_passwords resource
         #render "edit", notice: "We were unable to update your information"
-        redirect_to build_user_link, flash: { error: "We were unable to update your information. Please retry." }
+        redirect_to "/users/#{current_user.id}", flash: { error: "We were unable to update your information. Please retry." }
       end
     else
       clean_up_passwords resource
       #render "edit", notice: "We were unable to update your card information"
       error_message = (@re && @re.second == 'card_error') ? @re.third :  "We were unable to update your card information. Please check the details entered."
-      redirect_to build_user_link , flash: { error: error_message }
+      redirect_to "/users/#{current_user.id}", flash: { error: error_message }
     end
   end
-
 
   def create
     set_captured_payment_session
     super
   end
 
-  def add_card_info; end
+  def add_profile_info
+    @user = current_user
+    @user.people.build
+  end
 
   def billing_information; end
 
   def account_setting; end
 
   def business_setting; end
+
+  def add_rhombus_number; end
+
+  def add_subscription; end
+
+  def add_card_info; end
+
 
   protected
 
@@ -64,7 +73,7 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   def after_sign_up_path_for(resource)
-    user_path(resource)
+    return check_user_redirect
   end
 
 end

@@ -1,0 +1,49 @@
+<div class="w-row">
+  <div class="onboarding-table-column-1 w-col w-col-8">
+    <div class="onboarding-form-section">
+      <div class="get-started-2 onboarding-form-div sign-in signup">
+        <h4 class="form-header">Business Information</h4>
+        <div class="flex-underline form-header-underline"></div>
+        <div class="get-started-2 log-in-form w-form">
+          <%= form_for(@user, as: resource_name, data: { name: "Email Form" }, url: user_path(@user), html: { method: :patch, class: "w-clearfix rhombusFocus" }) do |f| %>
+            <%= f.fields_for :people do |f| %>
+              <%= f.text_field :full_name, class: 'ogin text-field w-inputt' %>
+            <% end %>
+            <%= f.text_field :org_name, class: 'ogin text-field w-inputt' %>
+            <label class="form-label" for="Company-Size-2">Team size</label>
+            <%= f.select :team_size, select_team_size, {}, class: 'form-control dropdown w-select', data: { name:'Field 2'}, id: 'field-2' %>
+
+            <label class="form-label" for="Department-2">We'd like to use Rhombus for:</label>
+            <%= f.select :use_rhombus_for, rhombus_for, {}, class: 'form-control dropdown w-select', data: { name:'Field 2'}, id: 'field-2' %>
+
+            <label class="form-label" for="Org-Type-2">Organization type</label>
+            <%= f.select :org_type, business_type_list, {}, class: 'form-control dropdown w-select', data: { name:'Field 2'}, id: 'field-2' %>
+
+            <label class="form-label" for="Timezones-3">Set Timezone:</label>
+            <%= f.select :user_level, get_time_zone_lists, {}, class: 'form-control dropdown w-select', data: { name:'Field 2'}, id: 'field-2' %>
+            <input class="button log-in w-button" data-wait="Please wait..." type="submit" value="Continue">
+          <% end %>
+          <div class="w-form-done">
+            <div>Thank you! Your submission has been received!</div>
+          </div>
+          <div class="w-form-fail">
+            <div>Oops! Something went wrong while submitting the form</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="onboarding-table-column-2 w-col w-col-4">
+    <div class="onboarding-right-bar">
+      <div class="w-container whats-new-container">
+        <div class="whats-new-content-wrapper">
+          <h4 class="onboarding-side-bar-h4">get started: step 2</h4>
+          <h3 class="onboarding-side-bar-h3">Welcome to Relay</h3>
+          <p class="onboarding-side-bar-paragraph">Thanks for choosing us to handle your customer communications via SMS and Messenger.</p>
+          <p class="onboarding-side-bar-paragraph">To help setup your dashboard, tell us more about your business</p>
+          <div class="left-arrow"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
