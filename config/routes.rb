@@ -63,6 +63,7 @@ Rails.application.routes.draw  do
         get 'add-profile-info' => 'registrations#add_profile_info'
         get 'segments' => 'lists#segments'
         get 'sms-usage' => 'users#sms_usage'
+        patch "update", to: "registrations#update"
       end
     end
     resources :fb_pages, only: [:index]
