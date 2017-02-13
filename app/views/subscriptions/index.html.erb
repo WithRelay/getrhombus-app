@@ -9,7 +9,6 @@
   <div class="sub-nav-options-wrapper transactions w-clearfix">
     <a class="w-button sub-nav-button modal-loader"  href="#" modal-target= 'new-plan-modal'> &nbsp;Create plan</a>
     <a class="w-button sub-nav-button modal-loader"  href="#" modal-target= 'new-subscription-modal'>&nbsp;Create subscription</a>
-    <a class="w-button sub-nav-button modal-loader"  href="#" modal-target= 'cancel-subscription-modal'>&nbsp;Cancel subscription</a>
     <a class="export sub-nav-button w-button" href="#">&nbsp; Export</a>
     <div class='modal-background w-hidden modal-body new-plan-modal'>
       <%= render 'shared/modals/new_plan' %>
@@ -17,9 +16,12 @@
     <div class='modal-background w-hidden modal-body new-subscription-modal'>
       <%= render 'shared/modals/new_subscription' %>
     </div>
-    <div class='modal-background w-hidden modal-body cancel-subscription-modal'>
-      <%= render 'shared/modals/confirmation' %>
-    </div>
+    <% if saas_sub.present? %>
+      <a class="w-button sub-nav-button modal-loader"  href="#" modal-target= 'cancel-subscription-modal'>&nbsp;Cancel subscription</a>
+      <div class='modal-background w-hidden modal-body cancel-subscription-modal'>
+        <%= render 'shared/modals/confirmation' %>
+      </div>
+    <% end %>
   </div>
 </div>
 <div class="dashboard-body">
