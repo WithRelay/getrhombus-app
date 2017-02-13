@@ -11,8 +11,8 @@ class RegistrationsController < Devise::RegistrationsController
         StripeManagedAccountService.new(current_user).update_account_email
         set_flash_message :notice, :updated
         # Sign in the current user bypassing validation in case his password changed
-        sign_in current_user, :bypass => true
-        respond_with resource, :location => after_update_path_for(resource)
+        sign_in current_user, bypass: true
+        respond_with resource, location: user_path(resource)
         #redirect_to after_update_path_for(current_user)
       else
         clean_up_passwords resource
