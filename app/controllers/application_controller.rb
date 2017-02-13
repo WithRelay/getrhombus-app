@@ -41,6 +41,8 @@ class ApplicationController < ActionController::Base
     render :template => "static_pages/to_404"
   end
 
+
+
   protected
 
     def merchant_details_present?

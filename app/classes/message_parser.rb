@@ -252,7 +252,7 @@ class MessageParser
         @new_txn.process_payment(@amt_ary[0], @merchant, @customer, @received_msg.text, (@tag ? @tag.id : nil), @channel, true)
         if @new_txn.id.present?
           @received_msg.update(transaction_id: @new_txn.id)
-          #send_payment_responses        
+          send_payment_responses        
           puts 'payment went thourhgadsdasdasdasdasds'
         end
       end
@@ -265,14 +265,14 @@ class MessageParser
     msg_to_send = "Thanks" + first_name + ". A payment of #{amt_in_decimal(@stripe_res.amount)} (#{@stripe_res.currency}) "
     msg_to_send = msg_to_send + (@merchant.tax_percent == "0" ? "was sent to #{@merchant.org_name}." : "plus taxes and fees set by #{@merchant.org_name} was sent.")
     
-    if @tag.present?
-      msg = "sdasdsa"
-    else
-      msg = "dsadsadas"
-    end
+    #if @tag.present?
+     # msg = "sdasdsa"
+    #else
+     # msg = "dsadsadas"
+    #end
 
     @new_txn.send_text_receipt(msg_to_send)
-    @new_txn.send_email_receipt
+    #@new_txn.send_email_receipt
   end
     
   def not_repeating_payment?

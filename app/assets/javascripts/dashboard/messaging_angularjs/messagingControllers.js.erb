@@ -69,9 +69,9 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
               $scope.conversations[re.conversation.id] = re.conversation;
 
               // update counts
-              //$scope.active_user_count += 1;  // remove
+              // $scope.active_user_count += 1;  // remove
               // also add new conversations count here
-              //$scope.open_conversations_count += 1; // should this be here?
+              // $scope.open_conversations_count += 1; // should this be here?
             } else {
               $scope.conversations[re.conversation.id].last_message = re.conversation.last_message
               $scope.conversations[re.conversation.id].last_message_ts = re.conversation.last_message_ts
@@ -463,7 +463,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
 
     $scope.sendConversationMessage = function(new_message, channel) {
       var btn = (channel == 'Message') ? 'send_msg_btn' : 'send_msg_fb_btn';
-      /*$scope.is_sending = true;
+      $scope.is_sending = true;
       $scope[btn] = "Sending...";
       console.log(new_message);
 
@@ -484,7 +484,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
           console.log(data)
         })
         .finally(function() { $scope.enable_msg_btn(btn, channel); });
-      };*/
+      };
     };
 
     $scope.enable_msg_btn = function(btn, channel) {
@@ -512,7 +512,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
 
     $scope.sendMMS = function(channel) {
       var btn = (channel == 'Message') ? 'send_mms_btn' : 'send_mms_fb_btn';
-      /*$scope.is_sending = true;
+      $scope.is_sending = true;
       $scope[btn] = "Sending...";
       var file = $scope.selected_file;
       var conversation_id = $scope.selected_conversation.id;
@@ -529,7 +529,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
         $('#mms-img-preview').trigger('close');
         $scope.is_sending = false;
         $scope[btn] = (channel == 'Message') ? 'Send' : 'send with fb';
-      });*/
+      });
     };
     // End MMS
 

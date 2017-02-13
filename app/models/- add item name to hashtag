@@ -1,7 +1,6 @@
 Friday
-- test parser
-- transactions
-- stripe events  --- maybe not for this release
+- test parser - done
+- transactions - doneish
 - clean up conversations
 - workflow for sign in, sign up and places where we add card, token, referrer, contact and customer, payment capture
 - clean up below

@@ -6,7 +6,7 @@ class Api::V1::ConversationsController < API::V1::BaseController
     if params[:select_conversation].present?
       conv = JSON.parse(params[:select_conversation]) 
       # Add check for if they are a user or contact, we dont want to create conversations for folks who dont exists
-      conv = conv["uid"].present? ? Conversation.new.find_or_create_conversation(current_user.id, conv["uid_type"], conv["uid"]) : nil
+      conv = conv["uid"].present? ? Conversation.find_or_create_conversation(current_user.id, conv["uid_type"], conv["uid"]) : nil
     end
 
     re = { conversations: Conversation.get_open_conversations(current_user.id, params[:page]), 
@@ -21,7 +21,7 @@ class Api::V1::ConversationsController < API::V1::BaseController
   end
 
   def find
-    render json: Conversation.new.find_or_create_conversation(current_user.id, params[:uid_type], params[:uid]), status: 200
+    render json: Conversation.find_or_create_conversation(current_user.id, params[:uid_type], params[:uid]), status: 200
   end
 
   def mark_messages_as_read

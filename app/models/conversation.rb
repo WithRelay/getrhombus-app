@@ -28,7 +28,7 @@ class Conversation < ActiveRecord::Base
 
   def conversation_hash
     last_message = ConversationRef.where(conversation_id: self.id).last
-    if last_message
+    if last_message.present?
       last_message = last_message.textable
       last_message.text = 'image attached' if last_message.text.blank? && last_message.images.exists?
     end
@@ -105,7 +105,7 @@ class Conversation < ActiveRecord::Base
       to = uid
     end
 
-    msg_instance = channel.constantize.new
+    @msg_instance = channel.constantize.new
 
     # Relate message to files
     if media.present?
@@ -114,29 +114,44 @@ class Conversation < ActiveRecord::Base
         media_ids.push(m.id)
         m.avatar.url
       end
-      msg_instance.image_ids = media_ids
+      @msg_instance.image_ids = media_ids
     end
 
 		if msg_instance.send_and_save_message(team, customer, from, to, msg, false, media)
-			ref_id = find_or_create_conversation_for_message(team.id, self.uid_type, self.uid, msg_instance, false)
-			message_hash(msg_instance, ref_id, customer, team)
+			ref_id = find_or_create_conversation_for_message(team.id, self.uid_type, self.uid, @msg_instance, false)
+      message_hash(@msg_instance, ref_id, customer, team)
 		else
 			false
 		end
   end
 
+  # when sending
+  def self.find_or_create_conversation_for_message_and_send_publish(team, customer, uid_type, uid, msg_to_send, channel, media = [])
+    find_or_create_conversation_for_message(team.id, uid_type, uid)
+    @conv.send_message(team, msg_to_send, channel, media)
+    RealtimeStreamService.publish_to_dashboard(@conv, @conv_ref, team, customer, @msg_instance)
+    @msg_instance.id
+  end
+
+  # when receiving
+  def self.find_or_create_conversation_for_message_and_publish(team, customer, uid_type, uid, msg_instance, unread)
+    find_or_create_conversation_for_message(team.id, uid_type, uid, msg_instance, unread)
+    RealtimeStreamService.publish_to_dashboard(@conv, @conv_ref, team, customer, msg_instance)
+  end
+
+  # find or create conversation and attach new message
+  def self.find_or_create_conversation_for_message(team_id, uid_type, uid, msg, unread)
+    @conv = find_or_create_conversation(team_id, uid_type, uid)
+    @conv_ref = @conv.conversation_refs.create(textable: msg, unread: unread)
+    @conv_ref.id
+  end 
+
 	# find the conversation or create one
-  def find_or_create_conversation(team_id, uid_type, uid)
-  	return self if self.id.present?
+  def self.find_or_create_conversation(team_id, uid_type, uid)
   	Conversation.find_or_create_by(merchant_id: team_id, uid_type: uid_type, uid: uid, message_resolution_id: nil)
   end
 
-  def find_or_create_conversation_for_message(team_id, uid_type, uid, msg, unread)
-    conv = find_or_create_conversation(team_id, uid_type, uid)
-    conv_ref = conv.conversation_refs.create(textable: msg, unread: unread)
-    conv_ref.id
-  end
-
+  # find conversation
   def self.find_conversation(team_id, uid_type, uid)
     find_by(merchant_id: team_id, uid_type: uid_type, uid: uid, message_resolution_id: nil)
   end
@@ -160,6 +175,6 @@ class Conversation < ActiveRecord::Base
                                     ) e ON e.id = c.conversation_id
                                   GROUP BY c.conversation_id 
                                 ) b ON a.id = b.cr_id", merchant_id, date])
-  end   
+  end  
 
 end
