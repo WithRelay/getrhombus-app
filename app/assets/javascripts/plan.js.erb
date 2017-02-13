@@ -71,6 +71,7 @@ $(document).ready(function() {
       })
       .done(function(data, textStatus, jqXHR) {
         FlashHandler.setFlashMessage(data.response, 'notice');
+        $('.update-close-modals').trigger('close');
       })
       .fail(function(data, textStatus, errorThrown) {
         FlashHandler.setFlashMessage(JSON.parse(data.responseText).response, 'error');

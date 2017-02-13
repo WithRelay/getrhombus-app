@@ -62,7 +62,7 @@ class Subscription < ActiveRecord::Base
     end
   end
 
-  def cancel_subscription(team, at_period_end = true)
+  def cancel_subscription(team, at_period_end = false)
     begin
       res = PaymentService.cancel_subscription(self.stripe_subscription_id, team.get_stripe_cred.uid, team.is_platform?, at_period_end)
       if res.first && self.update(status: res.second.status, cancel_at_period_end: res.second.cancel_at_period_end)

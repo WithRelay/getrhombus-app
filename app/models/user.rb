@@ -256,6 +256,11 @@ class User < ActiveRecord::Base
     { type: 'color', value: cus.user_color }
   end
 
+  def get_merchant_saas_subscription
+    platform_user = MerchantCustomer.find_by(customer_id: self.id, merchant_id: User.get_platform_acct_obj.id)
+    platform_user.subscriptions.active.last
+  end
+
   private
 
   # Some users sign up with Rhombus numbers
