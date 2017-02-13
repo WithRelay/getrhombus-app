@@ -1,42 +1,44 @@
-<%# removed all webflow data attributes %>
+ <div class="create-customer-form-wrapper w-clearfix modal-background" id="new-customer-div">
+  <%# removed all webflow data attributes %>
 
-<div class="modal-form-wrapper">
-  <div class="content-sub-wrapper modal w-clearfix">
-    <h4 class="modal-header welcome-dash-content-container-header">Create Customer</h4>
-    <%# added update-close-modals and data %>
-    <a class="close-create-customer update-close-modals" data-parent='create-customer-div' href="#"></a>
-  </div>
-  <div class="get-started-2 log-in-form w-form">
-    <form class="modal-form w-clearfix" id="email-form" name="email-form">
-      <label class="form-label modal" for="Full-name-2">Basic Information</label>
-      <input class="modal-field text-field w-input" id="Full-name-2" maxlength="256" name="Full-name-2" placeholder="Full name" required="required" type="text">
-      <input class="modal-field text-field w-input" id="Email-2" maxlength="256" name="Email" placeholder="Email" required="required" type="text">
-      <input class="modal-field text-field w-input" id="Phone-2" maxlength="256" name="Phone-2" placeholder="Phone number" required="required" type="text">
-      <select class="dropdown w-select" id="List-Selection-2" name="List-Selection-2">
-        <option value="">Add to List</option>
-        <option value="">VIP</option>
-        <option value="">First-time customers</option>
-        <option value="">San Francisco</option>
-      </select>
-      <div class="form underline-div"></div>
-      <label class="form-label modal" for="Street-Address-3">Address (optional)</label>
-      <input class="modal-field text-field w-input" id="Street-Address-3" maxlength="256" name="Street-Address-3" placeholder="Street address, APT" type="text">
-      <input class="city modal-field text-field w-input" id="City-3" maxlength="256" name="City-3" placeholder="City" type="text">
-      <input class="modal-field state-province text-field w-input" id="State-3" maxlength="256" name="State-3" placeholder="State: E.g. (MA)" type="text">
-      <select class="dropdown w-select" id="Country-3" name="Country-3">
-        <option value="">Country</option>
-        <option value="">United States</option>
-        <option value="">Canada</option>
-      </select>
-      <div class="form underline-div"></div>
-      <label class="form-label modal" for="Card-Number-3">Payment Information (optional)</label>
-      <input class="card-number modal text-field w-input" id="Card-Number-3" maxlength="256" name="Card-Number-3" placeholder="Card number" type="text">
-      <input class="card-name modal text-field w-input" id="Name-on-Card-3" maxlength="256" name="Name-on-Card-3" placeholder="Name on card" type="text">
-      <input class="month-year text-field w-input" id="Month-Year-3" maxlength="256" name="Month-Year-3" placeholder="MM / YYYY" required="required" type="text">
-      <input class="cvv modal text-field w-input" id="CVV-3" maxlength="256" name="CVV-3" placeholder="CVV" type="text">
-      <input class="button create-customer w-button" type="submit" value="Create customer">
+  <div class="modal-form-wrapper">
+    <div class="content-sub-wrapper modal w-clearfix">
+      <h4 class="modal-header welcome-dash-content-container-header">Create Customer</h4>
       <%# added update-close-modals and data %>
-      <input class="button cancel log-in w-button update-close-modals" data-parent='create-customer-div' type="submit" value="Cancel">
-    </form>
+      <a class="close-modal update-close-modals" data-parent='new-customer-div' href="#"></a>
+    </div>
+    <div class="get-started-2 log-in-form w-form">
+      <form class="modal-form w-clearfix" id="email-form" name="email-form">
+        <label class="form-label modal" for="Full-name-2">Basic Information</label>
+        <input class="modal-field text-field w-input" id="Full-name-2" maxlength="256" name="Full-name-2" placeholder="Full name" required="required" type="text">
+        <input class="modal-field text-field w-input" id="Email-2" maxlength="256" name="Email" placeholder="Email" required="required" type="text">
+        <input class="modal-field text-field w-input" id="Phone-2" maxlength="256" name="Phone-2" placeholder="Phone number" required="required" type="text">
+        <select class="dropdown w-select" id="List-Selection-2" name="List-Selection-2">
+          <option value="">Add to List</option>
+          <option value="">VIP</option>
+          <option value="">First-time customers</option>
+          <option value="">San Francisco</option>
+        </select>
+        <div class="form underline-div"></div>
+        <label class="form-label modal" for="Street-Address-3">Address (optional)</label>
+        <input class="modal-field text-field w-input" id="Street-Address-3" maxlength="256" name="Street-Address-3" placeholder="Street address, APT" type="text">
+        <input class="city modal-field text-field w-input" id="City-3" maxlength="256" name="City-3" placeholder="City" type="text">
+        <input class="modal-field state-province text-field w-input" id="State-3" maxlength="256" name="State-3" placeholder="State: E.g. (MA)" type="text">
+        <select class="dropdown w-select" id="Country-3" name="Country-3">
+          <option value="">Country</option>
+          <option value="">United States</option>
+          <option value="">Canada</option>
+        </select>
+        <div class="form underline-div"></div>
+        <label class="form-label modal" for="Card-Number-3">Payment Information (optional)</label>
+        <input class="card-number modal text-field w-input" id="Card-Number-3" maxlength="256" name="Card-Number-3" placeholder="Card number" type="text">
+        <input class="card-name modal text-field w-input" id="Name-on-Card-3" maxlength="256" name="Name-on-Card-3" placeholder="Name on card" type="text">
+        <input class="month-year text-field w-input" id="Month-Year-3" maxlength="256" name="Month-Year-3" placeholder="MM / YYYY" required="required" type="text">
+        <input class="cvv modal text-field w-input" id="CVV-3" maxlength="256" name="CVV-3" placeholder="CVV" type="text">
+        <input class="button create-customer w-button" type="submit" value="Create customer">
+        <%# added update-close-modals and data %>
+        <input class="button cancel log-in w-button update-close-modals" data-parent='create-customer-div' type="submit" value="Cancel">
+      </form>
+    </div>
   </div>
 </div>

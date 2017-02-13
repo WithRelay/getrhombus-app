@@ -15,12 +15,6 @@
                   <label class="checkbox-field-lable w-form-label" for="node">-</label>
                 </div>
               </form>
-              <div class="w-form-done">
-                <div>Thank you! Your submission has been received!</div>
-              </div>
-              <div class="w-form-fail">
-                <div>Oops! Something went wrong while submitting the form</div>
-              </div>
             </div>
           </div>
         </div>
@@ -115,12 +109,19 @@
       </div>
     </div>
     <div class="sub-nav-bar-row-column-2 w-col w-col-6">
-      <div class="modal-body w-hidden">
+      <div class="modal-background w-hidden modal-body import-customers-modal">
         <%= render partial: 'shared/modals/import_customers' %>
       </div>
-      <div class="customer-dashoard sub-nav-options-wrapper w-clearfix"><a class="sub-nav-button w-button" data-ix="create-customer" href="#"> &nbsp;<strong>Create customer</strong></a>
-        <a class="import sub-nav-button w-button modal-loader" data-ix="import-customers" href="#">&nbsp; <strong>Import customers</strong></a>
-        <a class="sub-nav-button w-button modal-loader" data-ix="create-list" href="#"> &nbsp;<strong>Create&nbsp;list</strong></a>
+      <div class="customer-dashoard sub-nav-options-wrapper w-clearfix">
+        <a class="w-button sub-nav-button modal-loader"  href="#" modal-target= 'new-customer-modal'>&nbsp;<strong>Create customer</strong></a>
+        <a class="import sub-nav-button w-button modal-loader" modal-target="import-customers-modal" href="#">&nbsp; <strong>Import customers</strong></a>
+        <a class="sub-nav-button w-button modal-loader" modal-target='new-list-modal' href="#"> &nbsp;<strong>Create&nbsp;list</strong></a>
+        <div class='modal-background w-hidden modal-body new-customer-modal'>
+          <%= render 'shared/modals/create_customer' %>
+        </div>
+        <div class='modal-background w-hidden modal-body new-list-modal'>
+          <%= render 'shared/modals/new_list' %>
+        </div>
       </div>
     </div>
     <div class="sub-nav-bar-search-row w-col w-col-4">
@@ -128,12 +129,6 @@
         <form class="w-clearfix" data-name="Email Form" id="email-form" name="email-form">
           <input class="search-field w-input" data-name="Search 6" id="Search-6" maxlength="256" name="Search-6" placeholder="Search" type="text">
         </form>
-        <div class="w-form-done">
-          <div>Thank you! Your submission has been received!</div>
-        </div>
-        <div class="w-form-fail">
-          <div>Oops! Something went wrong while submitting the form</div>
-        </div>
       </div>
     </div>
   </div>
