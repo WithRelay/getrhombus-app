@@ -9,7 +9,7 @@
               <%= form_for(reminder, url: user_reminder_path(current_user, reminder), html: { method: :delete }) do |f| %>
                   <div class="select-all-check-box w-checkbox w-clearfix">
                       <%= f.hidden_field :id %>
-                      <input class="cb table-checkbox w-checkbox-input hashtag-check-box" id="node" type="checkbox">
+                      <input class="cb checkboxes table-checkbox w-checkbox-input hashtag-check-box" id="node" type="checkbox">
                       <label class="checkbox-field-lable w-form-label" for="node">-</label>
                   </div>
                <% end %>
