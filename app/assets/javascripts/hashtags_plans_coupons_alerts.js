@@ -47,12 +47,12 @@ $(document).ready(function () {
   };
 
   //disable checkbox
-  $('.table-checkbox').click(function(){
+  $('.checkboxes').click(function(){
     if ($(this).is(':checked')){
-      $('.table-checkbox').attr('disabled', true);
+      $('.checkboxes').attr('disabled', true);
       $(this).attr('disabled', false);
     } else {
-      $('.table-checkbox').attr('disabled', false);
+      $('.checkboxes').attr('disabled', false);
     };
   });
 
