@@ -11,7 +11,7 @@ module ApplicationHelper
   end
 
   def total_alerts
-    @todays_txns_count + @todays_unread_convs_count 
+    @todays_txns_count + @todays_unread_convs_count
   end
 
   def render_header_partial
@@ -74,7 +74,7 @@ module ApplicationHelper
 
   def setting_pages
     settings_action = ['registrations-billing_information', 'registrations-account_setting',
-                       'registrations-edit', 'alerts-edit', 'plans-index','registrations-business_setting',
+                        'alerts-edit', 'plans-index','registrations-business_setting',
                        'users-integrations', 'users-managed_acct', 'users-sms_usage', 'lists-segments']
     settings_action.include?(params_controller_action)
   end
