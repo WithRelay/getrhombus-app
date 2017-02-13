@@ -43,8 +43,8 @@ Rails.application.routes.draw  do
   ## devise routes
   devise_for :users, controllers: { registrations: "registrations", omniauth_callbacks: "omniauth_callbacks", sessions: 'sessions' }
   devise_scope :user do
-    get "signup", to: "devise/registrations#new"
-    get "profile", to: "devise/registrations#edit"
+    get "signup", to: "registrations#new"
+    get "profile", to: "registrations#edit"
     get "signin", to: "devise/sessions#new"
     get "add-card-info", to: "registrations#add_card_info"
     get "billing-information", to: "registrations#billing_information"
@@ -61,7 +61,7 @@ Rails.application.routes.draw  do
     member { get 'sms-usage' => 'users#sms_usage' }
     resources :fb_pages, only: [:index]
     patch 'update_fb_page' => 'fb_pages#update_user_fb_page'
-    resources :hashtags, except: [:show] 
+    resources :hashtags, except: [:show]
     resources :subscriptions, only: [:index, :update, :destroy]
 
     authenticate :user, -> (user) { user.is_platform? } do
@@ -137,10 +137,10 @@ Rails.application.routes.draw  do
     match 'transactions/:txn_number/refund' => 'transactions#refund', via: :post
     resources :transactions, only: [:create]
     match 'numbers/search' => 'numbers#search', via: :get
-    resources :lists, only: [:index, :create]  
-    resources :coupons, only: [:index, :update] do 
+    resources :lists, only: [:index, :create]
+    resources :coupons, only: [:index, :update] do
       post 'check_coupon_name', on: :collection
-    end  
+    end
     resources :plans, only: [:index, :create, :update] do
       post 'check_plan_name', on: :collection
     end
