@@ -157,7 +157,7 @@ module AdditionalUserActions
     return user_transactions_path(current_user) if customer_details_present?
     return add_profile_info_user_path(current_user) if current_user.is_merchant? && current_user.org_name.blank?
     return add_rhombus_number_user_path(current_user) if current_user.is_merchant? && current_user.rhombus_number.blank?
-    return add_subscription_user(current_user) if current_user.is_merchant? && current_user.rhombus_number.blank?
+    return add_subscription_user_path(current_user) if current_user.is_merchant? && current_user.get_saas_subscription.blank?
   end
 
   def customer_csv_template
