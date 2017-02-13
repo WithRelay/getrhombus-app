@@ -12,7 +12,7 @@ class ApplicationController < ActionController::Base
   rescue_from ActiveRecord::RecordNotUnique, with: :record_not_unique
 
   def after_sign_in_path_for(user)
-    current_user
+    return check_user_redirect
   end
 
   def after_update_path_for(user)
