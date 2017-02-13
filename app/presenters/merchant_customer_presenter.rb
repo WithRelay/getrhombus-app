@@ -12,13 +12,22 @@ class MerchantCustomerPresenter < BasePresenter
   end
 
   def first_visit_format_created_at
-  	transaction = Transaction.where(user_id: @model.customer_id).first
-    h.time_ago_in_words(transaction.created_at) + ' ago'
+  	transaction = Transaction.where(user_id: @model.customer_id)
+    if (transaction.present?)
+      h.time_ago_in_words(transaction.first.created_at) + ' ago'
+    else
+      ' -- '
+    end
   end
 
  def last_visit_format_created_at
-  	transaction = Transaction.where(user_id: @model.customer_id).last
-    h.time_ago_in_words(transaction.created_at) + ' ago'
+  	transaction = Transaction.where(user_id: @model.customer_id)
+    if (transaction.present?)
+      h.time_ago_in_words(transaction.last .created_at) + ' ago'
+    else
+      '--'
+    end
+
   end
   
   def average
