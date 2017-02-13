@@ -5,8 +5,8 @@ class MerchantCustomerPresenter < BasePresenter
     if profile_pic[:type] == "image"
           html = h.image_tag(profile_pic[:value], class: 'campaigns table-profile-picture', width: 24)
     elsif profile_pic[:type] == "color"
-      class_name_value = " campaigns table-profile-picture radius-color-#{profile_pic[:value]}"
-      html = ("<div class='"+class_name+"'></div>").html_safe
+      class_name = " campaigns table-profile-picture radius-color-#{profile_pic[:value]}"
+      html = ("<div class='"+ class_name +"'></div>").html_safe
     end
     html
   end
