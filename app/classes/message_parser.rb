@@ -7,7 +7,7 @@ class MessageParser
   # Message/FbMessage object must exist when calling this method
   # from can be user fb cred or phone number
   # customer can be nil
-  def process_message(merchant, customer, from, received_msg, channel)
+  def process_message(merchant, customer, received_msg, channel)
     #begin
 
       # tested
@@ -91,8 +91,8 @@ class MessageParser
   private
 
   def find_conversation_refs_count
-    uid = (@customer.present?) @customer.id : @from
-    uid_type = (@customer.present?) 'user' : (channel == 'Message') ? 'phone_number' : 'fb_page'
+    uid = (@customer.present?) ? @customer.id : @received_msg.from
+    uid_type = (@customer.present?) ? 'user' : (channel == 'Message') ? 'phone_number' : 'fb_page'
     conv = Conversation.find_conversation(@merchant.id, uid_type, uid)
     conv.present? ? conv.conversation_refs.count : 0
   end

@@ -60,7 +60,7 @@ class TwilioEvent
       end
 
       Conversation.find_or_create_conversation_for_message_and_publish(merchant, user, uid_type, uid, @message, true)
-      # send to parser here
+      MessageParser.new.process_message(merchant, user, @message, 'Message')
     end
 
     def add_or_update_twilio_number_data
