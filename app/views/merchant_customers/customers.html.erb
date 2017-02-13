@@ -124,7 +124,7 @@
             </div>
             <div class="column column-6 new-row">
             <!-- <a class="actions-button notification" href="#">Message &nbsp; </a> -->
-            <%= link_to "Message ", user_conversations_url(current_user), class: "actions-button notification"%>
+            <%= link_to "Message ", user_conversations_path(current_user, customer_id: c.customer_id), class: "actions-button notification"%>
             </div>
           </div>
         </div>
