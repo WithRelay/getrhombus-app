@@ -9,14 +9,16 @@
           <div class="flex-underline form-header-underline"></div>
           <div class="customer-card-info display-credit-card-wrapper">
             <div class="get-started-2 log-in-form w-form">
-              <form class="w-clearfix" data-name="Email Form" id="email-form" name="email-form">
-                <label class="form-label paragraph" for="Card-Number-5">Messaging businesses with Relay is free. Add your debit/credit card information to your profile to allow send payments to via text</label>
-                <input class="card-number text-field w-input" data-name="Card Number 5" id="Card-Number-5" maxlength="256" name="Card-Number-5" placeholder="Card number" required="required" type="text">
-                <input class="name-on-card text-field w-input" data-name="Name On Card 5" id="Name-on-Card-5" maxlength="256" name="Name-on-Card-5" placeholder="Name on card" required="required" type="text">
-                <input class="month-year text-field w-input" data-name="Month Year 4" id="Month-Year-4" maxlength="256" name="Month-Year-4" placeholder="MM / YYYY" required="required" type="text">
-                <input class="cvv text-field w-input" data-name="Cvv 6" id="CVV-6" maxlength="256" name="CVV-6" placeholder="CVV" required="required" type="text">
-                <input class="button log-in w-button" data-wait="Please wait..." type="submit" value="Start 14-day Trial">
-              </form>
+              <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put, id: "user-form", :autocomplete => "off", class: 'w-clearfix' }) do |f| %>
+
+              <label class="form-label paragraph" for="Card-Number-5">Messaging businesses with Relay is free. Add your debit/credit card information to your profile to allow send payments to via text</label>
+              <%= f.number_field :last_four, id: "cc-number", type: "tel", class: "card-number text-field w-input", placeholder: "Card number", "x-autocompletetype" => "cc-number", autocompletetype: "cc-number", autocorrect: 'off', spellcheck: 'off', autocapitalize: 'off' %>
+              <%= f.text_field :card_name, id: 'cc-name', type: "text", class: "name-on-card text-field w-input", placeholder: "Name on Card", 'x-autocompletetype' => "off", autocompletetype: 'off', :autocorrect => "off", spellcheck: 'off', autocapitalize: "off", autocomplete: "off" %>
+
+              <input class="month-year text-field w-input" data-name="Month Year 4" id="Month-Year-4" maxlength="256" name="Month-Year-4" placeholder="MM / YYYY" required="required" type="text">
+              <input class="cvv text-field w-input" data-name="Cvv 6" id="CVV-6" maxlength="256" name="CVV-6" placeholder="CVV" required="required" type="text">
+              <input class="button log-in w-button" data-wait="Please wait..." type="submit" value="Start 14-day Trial">
+            <% end %> 
             </div>
           </div>
         </div>

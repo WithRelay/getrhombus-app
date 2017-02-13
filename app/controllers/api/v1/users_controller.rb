@@ -48,6 +48,7 @@ class Api::V1::UsersController < API::V1::BaseController
 
   def index
     q = params[:query].downcase
+    # uid_type is fb_page, user, phone_number
     results = User.find_by_sql [
       "(select customer_id as uid, customer_id_type as uid_type, 
           coalesce(NULLIF(card_name, ''), email) as title, phone_number as description from 

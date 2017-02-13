@@ -37,6 +37,8 @@ class RegistrationsController < Devise::RegistrationsController
     super
   end
 
+  def add_card_info; end
+
   def billing_information; end
 
   def account_setting; end

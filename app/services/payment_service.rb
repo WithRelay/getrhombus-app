@@ -59,11 +59,16 @@ class PaymentService
     end
     
     def charge(amount_with_taxes, amt_less_stripe_fee, app_fee, merchant, customer, msg, capture)
-      begin
+      #begin
         stripe_cred = merchant.get_stripe_cred
-        currency = merchant.currency ? merchant.currency : "usd",
+        currency = merchant.currency ? merchant.currency : "usd"
 
-        if stripe_cred.standalone? 
+        puts merchant.inspect
+        puts "putting strupe cred"
+        puts stripe_cred
+
+        #if stripe_cred.standalone? 
+        if stripe_cred 
           # 1. need to backward support merchant's with standalone connect stripe_account
   #######!! 2. Platform account is a standalone account. For charging merchants or regular customers. Do we still get the discount with this?? I think so.
         
@@ -71,16 +76,17 @@ class PaymentService
  ########!! Merchant and customer relationship in MerchantCustomer might not exists when it gets here for merchant/customer....so fix
           merchant_customer = MerchantCustomer.find_by(merchant_id: merchant.id, customer_id: customer.id)            
 
-          if customer.is_customer?          
+          #unless merchant.is_platform?
+          unless true
             re = Stripe::Charge.create({
               amount: amount_with_taxes, currency: currency,
-              customer: merchant_customer.customer_uri, metadata: { "message" => msg },
+              customer: merchant_customer.stripe_customer_id, metadata: { "message" => msg },
               description: "Payment from #{customer.email}. Card name: #{customer.card_name}. Last four: #{customer.last4}.",
             }, { stripe_account: stripe_cred.uid })
           else
             re = Stripe::Charge.create({
               amount: amount_with_taxes, currency: currency,
-              customer: merchant_customer.customer_uri, metadata: { "message" => msg },
+              customer: merchant_customer.stripe_customer_id, metadata: { "message" => msg },
               description: "Payment from #{customer.email}. Card name: #{customer.card_name}. Last four: #{customer.last4}.",
    ########!! statement_descriptor: '', # should already be on our stripe account, can still set this here...get from Edwin
             })
@@ -91,7 +97,7 @@ class PaymentService
           merchant_customer = MerchantCustomer.find_by(merchant_id: User.get_platform_acct_obj.id, customer_id: customer.id)
           re = Stripe::Charge.create({
             amount: amt_less_stripe_fee, currency: currency,
-            customer: merchant_customer.customer_uri, capture: capture,
+            customer: merchant_customer.stripe_customer_id, capture: capture,
             description: "Payment from #{customer.email}. Card name: #{customer.card_name}. Last four: #{customer.last4}.",      
             destination: stripe_cred.uid, metadata: { "message" => msg },
  ########!! statement_descriptor: '', # we will set this here...get from Edwin
@@ -100,13 +106,13 @@ class PaymentService
         end
 
         [re]
-      rescue Stripe::CardError => e               # Since it's a decline, Stripe::CardError will be caught
-        [false, e, e.json_body[:error][:message], true]
-      rescue Stripe::StripeError => e
-        [false, e.json_body[:error], "Stripe error"]
-      rescue StandardError => e
-        [false, e, "Something went wrong"]
-      end
+      #rescue Stripe::CardError => e               # Since it's a decline, Stripe::CardError will be caught
+       # [false, e, e.json_body[:error][:message], true]
+      #rescue Stripe::StripeError => e
+       # [false, e.json_body[:error], "Stripe error"]
+      #rescue StandardError => e
+       # [false, e, "Something went wrong"]
+      #end
     end
 
     # return array with txn status, error object, notify customer/merchant

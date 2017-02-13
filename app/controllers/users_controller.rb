@@ -17,19 +17,22 @@ class UsersController < ApplicationController
   end
 
   def show
-    handle_referrer_and_welcome_email
+    #handle_referrer_and_welcome_email
+    #delete_captured_payment_session
+    #Transaction.process_captured_payment(@user, params) if current_user.user_level == 0 && params[:captured_amt].present?
+
     if current_user.is_customer? && current_user.card_token.blank? # incomplete customer account
       redirect_to build_user_link
     elsif current_user.is_merchant? && (current_user.org_name.blank? || current_user.rhombus_number.blank? || current_user.card_token.blank?) # incomplete merchant account
       redirect_to "/profile"
+      #edit_user_registration
     else
-      Transaction.process_captured_payment(@user, params) if current_user.user_level == 0 && params[:captured_amt].present?
-      @last4_transactions = @user.transactions.select(:created_at, :description, :notes).last(4).reverse
-      @total_msgs = @user.get_total_messages
-      @dashboard_stuff = @user.dashboard_stats
+      
+      @last6_transactions = Transaction.includes(:user).where(team_id: current_user.id).order(created_at: :desc).last(6)
       # @token = TextingService.get_twilio_capibility_token if current_user.user_level == 1
     end
-    delete_captured_payment_session
+    
+
   end
 
   def create

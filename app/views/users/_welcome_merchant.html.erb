@@ -187,16 +187,16 @@
         </div>
         <div class="sakes welcome-dash-content-container">
           <div class="new-customer-list w-row">
-            <%- last4_transactions.each do |t| %>
+            <% @last6_transactions.each_with_index do |t, i| %>
               <div class="w-col w-col-1">
                 <div class="customer-list-content-div">
-                  <div class="new-customer-table-text"><%= t.id %></div>
+                  <div class="new-customer-table-text"><%= i %></div>
                 </div>
               </div>
               <div class="w-col w-col-6">
                 <div class="customer-list-content-div">
                   <div class="customer-list-content-div w-clearfix">
-                    <div class="name-text new-customer-table-text"><%= t.user %></div>
+                    <div class="name-text new-customer-table-text"><%= t.user.card_name %></div>
                   </div>
                 </div>
               </div>
