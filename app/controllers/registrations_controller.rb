@@ -27,23 +27,26 @@ class RegistrationsController < Devise::RegistrationsController
     end
   end
 
-  def edit
-    @user = current_user
-    @user.people.build
-  end
-
   def create
     set_captured_payment_session
     super
   end
 
-  def add_card_info; end
+  def add_profile_info
+    @user = current_user
+    @user.people.build
+  end
 
   def billing_information; end
 
   def account_setting; end
 
   def business_setting; end
+
+  def add_rhombus_number; end
+
+  def add_subscription; end
+
 
   protected
 
