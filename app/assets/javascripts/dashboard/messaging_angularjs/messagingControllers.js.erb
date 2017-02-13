@@ -269,6 +269,8 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
               headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content') },
             }).then(function successCallback(response) {
               $scope.selected_conversation_messages.push(response);
+              console.log('message response');
+              console.log(response);
               new_message.text = '';
             }, function errorCallback(response) { alert('The message could not be sent, please try again.') });
 
@@ -462,9 +464,9 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
     };
 
     $scope.sendConversationMessage = function(new_message, channel) {
-      var btn = (channel == 'Message') ? 'send_msg_btn' : 'send_msg_fb_btn';
+      //var btn = (channel == 'Message') ? 'send_msg_btn' : 'send_msg_fb_btn';
       $scope.is_sending = true;
-      $scope[btn] = "Sending...";
+      //f$scope[btn] = "Sending...";
       console.log(new_message);
 
       if ((new_message == undefined) || (new_message.text == '') || (new_message.text.length > $scope.char_limit)) {
@@ -472,18 +474,21 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
         $scope.enable_msg_btn(btn, channel);
       } else {
         var conversation_id = $scope.selected_conversation.id;
-        conversationService.markMessageAsRead(conversation_id, new_message.text, channel)
+        conversationService.sendConversationMessage(conversation_id, new_message.text, channel)
         .then(function(data) {
           // ensure we still have the right conversation
           if ($scope.selected_conversation.id == conversation_id)
             $scope.selected_conversation_messages.push(data);
           new_message.text = '';
+          BindPlugins.get_emoji_box()[0].emojioneArea.setText('');
           console.log('sent message');
         }, function(data) {
           console.log('unable to send message');
           console.log(data)
         })
-        .finally(function() { $scope.enable_msg_btn(btn, channel); });
+        .finally(function() { 
+          //$scope.enable_msg_btn(btn, channel); 
+        });
       };
     };
 
@@ -519,9 +524,11 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
       conversationService.sendConversationMMS(conversation_id, file, $scope.mms_text, channel)
       .then(function (data) {
         if ($scope.selected_conversation.id == conversation_id)
-          $scope.selected_conversation_messages.push(data);
+          $scope.selected_conversation_messages.push(data.data);
         // wipe file picker?
         console.log('mms sent');
+        console.log(data)
+        $('#mms-file-preview-div').trigger('close');
       }, function (response) {
         console.log('unable to send mms');
       })

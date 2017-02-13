@@ -162,7 +162,7 @@ messagingApp.factory('conversationService', function($http, $q, Upload){
     var deferred = $q.defer();
     $http({
       method: 'POST',
-      url: base_url + "/" + conversation_id + 'mark_messages_as_read?ids=' + unread_ids,
+      url: base_url + "/" + conversation_id + '/mark_messages_as_read?ids=' + unread_ids,
       headers: token,
     })
     .success(function(data) { 
@@ -179,9 +179,9 @@ messagingApp.factory('conversationService', function($http, $q, Upload){
     var deferred = $q.defer();
     $http({
       method: 'POST',
-      url: base_url + "/" + conversation_id + 'messages.json',
+      url: base_url + "/" + conversation_id + '/messages.json',
       headers: token,
-      data: { msg: encodeURIComponent(text), channel: channel },
+      data: { msg: text, channel: channel },
     })
     .success(function(data) { 
       deferred.resolve(data);
@@ -192,10 +192,10 @@ messagingApp.factory('conversationService', function($http, $q, Upload){
     return deferred.promise;
   };
 
-  service.sendConversationMMS = function(conversation_id, file, text) {
+  service.sendConversationMMS = function(conversation_id, file, text, channel) {
     file.upload = Upload.upload({
-      url: base_url + "/" + conversation_id + "mms.json",
-      data: { avatar: file, msg: text },
+      url: base_url + "/" + conversation_id + "/mms.json",
+      data: { avatar: file, msg: text, channel: channel },
       headers: token
     });
     return file.upload;

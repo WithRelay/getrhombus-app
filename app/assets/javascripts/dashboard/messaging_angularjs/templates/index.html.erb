@@ -92,15 +92,17 @@
                   <a class="message-input-box-option-buttons payment-info-collection-link w-inline-block" id='paste-link'>
                     <div class="message-input-options-text"> &nbsp; &nbsp;Collect payment card</div>
                   </a>
+                  <!--
                   <a class="message-input-box-option-buttons w-inline-block" ng-click="newReminderDiv()">
                     <div class="message-input-options-text"> &nbsp; Set reminder</div>
-                  </a>
+                  </a> -->
                   <a class="message-input-box-option-buttons w-inline-block" ng-click='displayChargeForm()'>
                     <div class="message-input-options-text"> &nbsp;&nbsp;Charge customer</div>
                   </a>
+                  <!--
                   <a class="message-input-box-option-buttons w-inline-block" ng-click='markAsDoneDiv()'>
                     <div class="message-input-options-text"> &nbsp; Mark as done</div>
-                  </a>
+                  </a>-->
                   <div class="message-input-dropdown-underline underline-div"></div>
                   <a class="message-input-box-option-buttons w-inline-block" ng-click="clickFilePicker()">
                     <div class="message-input-options-text"> &nbsp; &nbsp;Attach image</div>
@@ -114,6 +116,8 @@
           </div>
           <div class="message-input-box-column-2 w-col w-col-11">
             <textarea class="message-text-box text-area w-input" id="Messaging-Text-Area" maxlength="5000" placeholder="Type your message..." ng-model="new_message.text" ng-trim="true" ng-enter></textarea>
+          </div>
+          <div class="message-input-box-column-3 w-col w-col-1"><a class="button send-message-button w-button" ng-click="sendConversationMessage(new_message, 'Message')"></a>
           </div>
         </div>
     </div>
