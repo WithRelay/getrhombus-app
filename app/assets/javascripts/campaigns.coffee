@@ -53,12 +53,14 @@ class Campaign
       this.showFileBrowser()
       trumbowygSetting(true, @textArea)
       removeDiv()
+      $('.welcome-dash-content-container-header').show()
       $('#textBoxCounter').html('upload an image')
     else if isMmsChecked(element) || isFacebookMessengerChecked(element)
       this.showFileBrowser()
       $('.emailSubject').hide()
       trumbowygSetting(false, @textArea)
       removeDiv()
+      $('.welcome-dash-content-container-header').hide()
       $('.emojionearea-editor').counter({ type: 'char', append: false, target: '#textBoxCounter' })
     else
       removeDiv()
@@ -67,6 +69,7 @@ class Campaign
       $('#select-images').val('')
       $('#new-image-previews').html('')
       this.hideFileBrowser()
+      $('.welcome-dash-content-container-header').hide()
       trumbowygSetting(false, @textArea)
 
   isEmailChecked = (channel) ->
@@ -157,6 +160,7 @@ $( document ).on 'ready page:load', ->
 
   if $('#Channel').val() == '3'
     $('.emailSubject').show()
+    $('.welcome-dash-content-container-header').show()
     $('#sendTestCampaign').show();
     new CustomTrumbowygPlugin('#trumbowyg')
     campaign.showFileBrowser()
