@@ -60,6 +60,7 @@ class Campaign
       $('.emailSubject').hide()
       trumbowygSetting(false, @textArea)
       removeDiv()
+      $('#textBoxCounter').html($('#textBoxCounter').html().replace('upload an image', ''))
       $('.welcome-dash-content-container-header').hide()
       $('.emojionearea-editor').counter({ type: 'char', append: false, target: '#textBoxCounter' })
     else
@@ -69,6 +70,7 @@ class Campaign
       $('#select-images').val('')
       $('#new-image-previews').html('')
       this.hideFileBrowser()
+      $('#textBoxCounter').html($('#textBoxCounter').html().replace('upload an image', ''))
       $('.welcome-dash-content-container-header').hide()
       trumbowygSetting(false, @textArea)
 
