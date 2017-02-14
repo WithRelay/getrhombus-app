@@ -32,12 +32,12 @@ class MerchantCustomerPresenter < BasePresenter
   
   def average
   	transaction_avg = Transaction.where(user_id: @model.customer_id).average(:amount)
-  	"$ #{transaction_avg}"
+  	"$ #{'%.02f' % t = transaction_avg ? transaction_avg : 0 }"
   end
 
   def total
   	transaction_sum = Transaction.where(user_id: @model.customer_id).sum(:amount)
-  	"$ #{transaction_sum}"
+  	"$ #{'%.02f' % t = transaction_sum ? transaction_sum : 0}"
   end
 
 end

@@ -70,10 +70,10 @@ $(document).on('ready page:load', function() {
   // Toggles between checking or unchecking all checkboxes
  $("#check_or_uncheck_all").click(function(e){
       console.log("Select all checkboxes was clicked")
-      if(this.checked){
-          $("#merchant_customers").checkboxes('check');
-      } else{
-         $("#merchant_customers").checkboxes('uncheck');
+      if( $(this).is(':checked') ){
+          $(".merchant_customers").prop('checked', true);
+      }else{
+         $(".merchant_customers").prop('checked', false);
       }
  })
 
