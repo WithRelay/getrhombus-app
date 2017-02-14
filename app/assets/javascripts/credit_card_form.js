@@ -1,6 +1,6 @@
 $(document).ready(function () {
   
-  var cc_form_btn = '#cc-submit', cc_form_id = "#cc-form";
+  var cc_form_btn = '#cc-submit', cc_form_id = "#ccform";
 
   $('input#cc-number').payment('formatCardNumber');
   $('input#cc-exp').payment('formatCardExpiry');
