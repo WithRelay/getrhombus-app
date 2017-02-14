@@ -11,7 +11,7 @@ class Api::V1::CampaignsController < API::V1::BaseController
     campaign = current_user.campaigns.find_by_id(params[:id])
     if campaign.present?
       campaign.delete
-      # campaigns.destroy_campaign_jobs
+      campaign.destroy_campaign_jobs
       flash = { status: 200, notice: 'Campaign is being succesfully deleted' }
     else
       flash = { status: 404, error: 'Sorry campaign could not delete please try again' }
@@ -20,6 +20,7 @@ class Api::V1::CampaignsController < API::V1::BaseController
   end
 
   def change_status
+    binding.pry
     campaign = current_user.campaigns.find_by_id(params[:id])
     if campaign.present?
       status = campaign.active? ? 2 : 1

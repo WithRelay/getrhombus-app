@@ -2,7 +2,7 @@ $(document).ready(function(){
 
   $('.delete-resource').click(function(e){
     url = window.location.pathname.split('/')
-    FlashHandler.setConfirmationDialog('.delete-resource','Are you sure, you want to remove the' + url[url.length-1], 'Delete', 'isDestroy');
+    FlashHandler.setConfirmationDialog('.delete-resource','Are you sure, you want to remove the ' + url[url.length-2], 'Delete', 'isDestroy');
   });
 
   $('.deactivate-resource').click(function(e){
@@ -11,15 +11,24 @@ $(document).ready(function(){
 
   $(document).on('click', '.cancel-yes', function(e){
     url = window.location.pathname.split('/')
-    full_url = url[url.length-1]
-    if (url == 'campaigns'){
-      resource_url = '/v1/' + full_url + '/' + $('.delete-resource').attr('id')
-      element = { 'url': url }
-      resource = new Resource(element);
+    full_url = url[url.length-2]
+    resource_url = '/v1/' + full_url + '/delete/' + getSelectedCheckbox('.checkboxes')
+    url_hash = { 'url': resource_url, 'method': 'delete' }
+    if (full_url == 'campaigns'){
+      resource = new Resource(url_hash);
       resource.updateOrDelete();
     }
-
   });
+
+  function getSelectedCheckbox(checkbox_class){
+    var resource_id;
+    $(checkbox_class).each(function( index, element){
+       if ($(this).is(':checked')){
+         resource_id= $(this).parent().find('.resource-id').text();
+       }
+     });
+     return resource_id
+  }
 
   function Resource(element){
     var id
@@ -30,11 +39,12 @@ $(document).ready(function(){
     });
     this.postData = id;
     this.url = element.url;
+    this.method = element.method;
   }
 
   Resource.prototype.updateOrDelete = function(){
     if (this.postData != undefined){
-      $.ajax({ method: 'post',
+      $.ajax({ method: this.method,
               url: this.url,
               dataType: 'Json',
               data: { 'id': this.postData }
