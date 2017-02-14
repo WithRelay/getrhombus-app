@@ -1,8 +1,15 @@
 module PrettyDate
   #http://stackoverflow.com/questions/195740/how-do-you-do-relative-time-in-rails
   def super_short
+    puts Time.current
+    puts self
     a = (Time.current - self).to_i
 
+    puts a.inspect
+    puts "adasdasdas"
+
+    #return 'adsdasdas'
+    #debugger
     case a
       when 0..1 then '1s'
       when 2..59 then a.to_s + 's' 

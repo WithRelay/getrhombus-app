@@ -121,10 +121,6 @@ class User < ActiveRecord::Base
     user_level == 0
   end
 
-  def get_saas_subscription
-    saas_subscription = self.merchants.last.subscriptions.active.last
-  end
-
   def is_platform?
     #email == User.platform_email
     self.email == '<redacted_email>' || self.email == '<redacted_email>'
@@ -256,9 +252,9 @@ class User < ActiveRecord::Base
     { type: 'color', value: cus.user_color }
   end
 
-  def get_merchant_saas_subscription
-    platform_user = MerchantCustomer.find_by(customer_id: self.id, merchant_id: User.get_platform_acct_obj.id)
-    platform_user.subscriptions.active.last
+  def get_saas_subscription
+    platform_merchant = MerchantCustomer.find_by(customer_id: self.id, merchant_id: User.get_platform_acct_obj.id)
+    platform_merchant.subscriptions.active.last
   end
 
   private

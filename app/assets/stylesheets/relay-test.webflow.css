@@ -1020,6 +1020,26 @@ h4 {
   color: #1074ae;
 }
 
+.button.send-message-button {
+  width: 90%;
+  height: 50px;
+  margin-right: 0%;
+  padding-top: 14px;
+  float: none;
+  border-radius: 6px;
+  -webkit-transition: background-color 300ms ease;
+  transition: background-color 300ms ease;
+  font-family: 'Fontawesome webfont', sans-serif;
+  color: hsla(0, 0%, 100%, .9);
+  font-size: 16px;
+  font-weight: 400;
+  text-align: center;
+}
+
+.button.send-message-button:hover {
+  color: hsla(0, 0%, 100%, .75);
+}
+
 .nav-form {
   width: 200px;
   float: left;
@@ -1593,6 +1613,7 @@ h4 {
   margin-right: 10%;
   margin-bottom: 20px;
   margin-left: 10%;
+  background-color: #fff;
   text-align: left;
 }
 
@@ -1773,6 +1794,11 @@ h4 {
 
 .text-field.coupon-code {
   width: 50%;
+}
+
+.text-field.search-customers-and-contacts {
+  background-color: rgba(221, 229, 237, .4);
+  box-shadow: inset 1px 1px 3px 0 rgba(0, 0, 0, .16);
 }
 
 .form-row {
@@ -3640,7 +3666,7 @@ h4 {
   position: fixed;
   top: 50px;
   right: 0px;
-  z-index: 175;
+  z-index: 1;
   width: 85%;
   height: 50px;
   min-width: 85%;
@@ -3864,7 +3890,7 @@ h4 {
 
 .name {
   width: 90%;
-  height: 13px;
+  height: 50px;
   float: right;
   border-bottom: 1px solid #e6e5e5;
   background-color: #fff;
@@ -6992,7 +7018,7 @@ h4 {
   overflow: auto;
   width: auto;
   height: 100vh;
-  padding-top: 120px;
+  padding-top: 150px;
   padding-bottom: 100px;
   background-color: #f8f9fb;
   text-align: center;
@@ -10513,7 +10539,7 @@ h4 {
 }
 
 .customer-interactions-table.no-icon-row {
-  margin: 50px 15% 20px;
+  margin: 20px 15% 0px;
 }
 
 .customer-interactions-table.no-icon-row.virtual-terminal {
@@ -13966,6 +13992,11 @@ h4 {
   margin-bottom: 0px;
   padding-bottom: 10px;
   border-bottom: 1px solid #e6e5e5;
+}
+
+.message-input-box-column-3 {
+  padding-right: 0px;
+  padding-left: 10px;
 }
 
 html.w-mod-js *[data-ix="display-none-on-load"] {

@@ -6,7 +6,7 @@ class Api::V1::ConversationsController < API::V1::BaseController
     if params[:select_conversation].present?
       conv = JSON.parse(params[:select_conversation]) 
       # Add check for if they are a user or contact, we dont want to create conversations for folks who dont exists
-      conv = conv["uid"].present? ? Conversation.new.find_or_create_conversation(current_user.id, conv["uid_type"], conv["uid"]) : nil
+      conv = conv["uid"].present? ? Conversation.find_or_create_conversation(current_user.id, conv["uid_type"], conv["uid"]) : nil
     end
 
     re = { conversations: Conversation.get_open_conversations(current_user.id, params[:page]), 
@@ -16,12 +16,12 @@ class Api::V1::ConversationsController < API::V1::BaseController
 	end
 
   def show
-    messages_ary = @conversation.get_conversation_messages(params[:page])
+    messages_ary = Conversation.get_conversation_messages(@conversation, params[:page])
     render json: { messages: messages_ary[0], unread_ids: messages_ary[1] }  
   end
 
   def find
-    render json: Conversation.new.find_or_create_conversation(current_user.id, params[:uid_type], params[:uid]), status: 200
+    render json: Conversation.find_or_create_conversation(current_user.id, params[:uid_type], params[:uid]), status: 200
   end
 
   def mark_messages_as_read
@@ -30,7 +30,7 @@ class Api::V1::ConversationsController < API::V1::BaseController
 
   def messages
     # test that user is present here
-    re = @conversation.send_message(current_user, params[:msg], params[:channel]) if params[:msg].present?
+    re = Conversation.send_message(@conversation, current_user, params[:msg], params[:channel]) if params[:msg].present?
     if re
       render json: re, status: 200
     else 
@@ -45,7 +45,7 @@ class Api::V1::ConversationsController < API::V1::BaseController
       raise StandardError if params[:avatar].blank?
       # twilio supports only gif, png and jpeg though it accepts other types
       img = Image.create(avatar: params[:avatar])
-      re = @conversation.send_message(current_user, params[:msg], params[:channel], [img])
+      re = Conversation.send_message(@conversation, current_user, params[:msg], params[:channel], [img])
       raise StandardError unless re
       render json: re, status: :created
     rescue StandardError => e

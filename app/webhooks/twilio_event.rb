@@ -25,15 +25,15 @@ class TwilioEvent
 
     # when message is sent to rhombus
     def save_received_message
-      merchant_id = get_merchant_id
-      user_id = get_user_id
+      merchant = get_merchant
+      user = get_user
 
       @message = Message.create(
         to: @param[:To].gsub('+', ''),
         from: @param[:From].gsub('+', ''),
         status: @param[:SmsStatus],
-        user_id: user_id,
-        user_id_to: merchant_id,
+        user_id: user.nil? ? nil : user.id,
+        user_id_to: merchant.id,
         message_id: @param[:MessageSid],
         text: @param[:Body].strip,
         num_segments: @param[:NumSegments],
@@ -47,40 +47,38 @@ class TwilioEvent
 
       # save user info on twilio_number_data
       add_or_update_twilio_number_data
-
-      # create or add to existing conversation
-      if user_id.present?
-        uid, uid_type = user_id, 'user'
-      else
-        uid, uid_type = @param[:From].gsub('+', ''), 'phone_number'
-      end
-      Conversation.new.find_or_create_conversation_for_message(merchant_id, uid_type, uid, @message, true)
   
       # save media/mms if present
       save_media if @param[:NumMedia].to_i > 0
       @message.save
 
-      # send to real time service
+      # create or add to existing conversation, send to real time service
+      if user.present?
+        uid, uid_type = user.id, 'user'
+      else
+        uid, uid_type = @param[:From].gsub('+', ''), 'phone_number'
+      end
+
+      Conversation.find_or_create_conversation_for_message_and_publish(merchant, user, uid_type, uid, @message, true)
+      MessageParser.new.process_message(merchant, user, @message, 'Message')
     end
 
     def add_or_update_twilio_number_data
       TwilioNumberData.add_or_update_twilio_number_data(
-        @message[:From],
-        @message[:FromCity],
-        @message[:FromState],
-        @message[:FromZip],
-        @message[:FromCountry]
+        @message.from,
+        @param[:FromCity],
+        @param[:FromState],
+        @param[:FromZip],
+        @param[:FromCountry]
       ) 
     end
 
-    def get_user_id
-      user = User.find_by(phone_number:  @param[:From].gsub('+', ''))
-      user.id if user
+    def get_user
+      User.find_by(phone_number:  @param[:From].gsub('+', ''))
     end
 
-    def get_merchant_id
-      merchant = User.find_by(rhombus_number: @param[:To].gsub('+', ''))
-      merchant.id if merchant
+    def get_merchant
+      User.find_by(rhombus_number: @param[:To].gsub('+', ''))
     end
 
     def save_media

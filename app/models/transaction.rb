@@ -87,13 +87,8 @@ class Transaction < ActiveRecord::Base
   end
 
   def send_text_receipt(msg_to_send)
-    msg = @channel.constantize.new
-    msg.send_and_save_message(@merchant.rn_type, @merchant.rhombus_number, @user.phone_number, msg_to_send)
-
-    # Log sms notification
-    self.notification_logs.create(notify_type: 'new_transaction', reason: 'receipt', channel: @channel, channel_id: msg.id)
-    # Send to merchant's messaging channel
-    RealtimeStreamService.send_message_via_number(@user.phone_number, @merchant.rhombus_number, msg.text, msg.created_at, true)
+    msg_id = Conversation.find_or_create_conversation_for_message_and_send_publish(@merchant, @customer, 'user', @customer.id, msg_to_send, @channel)
+    self.notification_logs.create(notify_type: 'new_transaction', reason: 'receipt', channel: @channel, channel_id: msg_id)
   end
 
   def send_email_receipt

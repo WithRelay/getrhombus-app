@@ -7,7 +7,7 @@ class MessageParser
   # Message/FbMessage object must exist when calling this method
   # from can be user fb cred or phone number
   # customer can be nil
-  def process_message(merchant, customer, from, received_msg, channel)
+  def process_message(merchant, customer, received_msg, channel)
     #begin
 
       # tested
@@ -91,8 +91,8 @@ class MessageParser
   private
 
   def find_conversation_refs_count
-    uid = (@customer.present?) @customer.id : @from
-    uid_type = (@customer.present?) 'user' : (channel == 'Message') ? 'phone_number' : 'fb_page'
+    uid = (@customer.present?) ? @customer.id : @received_msg.from
+    uid_type = (@customer.present?) ? 'user' : (channel == 'Message') ? 'phone_number' : 'fb_page'
     conv = Conversation.find_conversation(@merchant.id, uid_type, uid)
     conv.present? ? conv.conversation_refs.count : 0
   end
@@ -252,7 +252,7 @@ class MessageParser
         @new_txn.process_payment(@amt_ary[0], @merchant, @customer, @received_msg.text, (@tag ? @tag.id : nil), @channel, true)
         if @new_txn.id.present?
           @received_msg.update(transaction_id: @new_txn.id)
-          #send_payment_responses        
+          send_payment_responses        
           puts 'payment went thourhgadsdasdasdasdasds'
         end
       end
@@ -265,14 +265,14 @@ class MessageParser
     msg_to_send = "Thanks" + first_name + ". A payment of #{amt_in_decimal(@stripe_res.amount)} (#{@stripe_res.currency}) "
     msg_to_send = msg_to_send + (@merchant.tax_percent == "0" ? "was sent to #{@merchant.org_name}." : "plus taxes and fees set by #{@merchant.org_name} was sent.")
     
-    if @tag.present?
-      msg = "sdasdsa"
-    else
-      msg = "dsadsadas"
-    end
+    #if @tag.present?
+     # msg = "sdasdsa"
+    #else
+     # msg = "dsadsadas"
+    #end
 
     @new_txn.send_text_receipt(msg_to_send)
-    @new_txn.send_email_receipt
+    #@new_txn.send_email_receipt
   end
     
   def not_repeating_payment?

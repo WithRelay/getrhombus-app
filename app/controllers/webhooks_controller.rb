@@ -18,6 +18,7 @@ class WebhooksController < ApplicationController
   # set timezone for this request since we do duplicate payment check??
   def twilio_events
     TwilioEvent.process_event(params)
+    puts current_user.inspect
     render nothing: true
   end
 
@@ -37,4 +38,5 @@ class WebhooksController < ApplicationController
 
     render json: res
   end
+
 end
