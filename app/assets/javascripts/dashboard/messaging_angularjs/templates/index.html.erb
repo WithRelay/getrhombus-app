@@ -261,7 +261,7 @@
               <img ng-repeat="image in message.images track by imageTrackingFunction(image)" class="chat-bubble-image" src="{{ message.images[$index].url }}">
             </div>
             <!-- text -->
-            <div ng-class="{ 'customer-message' : true, 'fb-messenger': message.channel == 'FbMessage', 'message-bubble' : true }">
+            <div ng-class="{ 'customer-message' : true, 'fb-messenger': message.channel == 'FbMessage', 'message-bubble' : true }" ng-if='message.text.length'>
               <div ng-class="{ 'chat-text' : true, 'fb-messenger': message.channel == 'FbMessage' }">{{message.text}}</div>
             </div>
 
@@ -281,7 +281,7 @@
               <img ng-repeat="image in message.images track by imageTrackingFunction(image)" class="chat-bubble-image" src="{{ message.images[$index].url }}">
             </div>
             <!-- text -->
-            <div class="agent-messaging message-bubble" ng-if='message.text'>
+            <div class="agent-messaging message-bubble" ng-if='message.text.length'>
               <div class="agent chat-text">{{message.text}}</div>
             </div>
 
