@@ -14,16 +14,16 @@
           <a class="button choose-plan pricing-table-button w-button" href="#">Get Started</a>
           <div class="display-credit-card-wrapper">
             <div class="get-started-2 log-in-form w-form">
-              <%= form_for(current_user, as: resource_name, data: { name: "Email Form" }, url: current_user, html: { method: :patch, class: "w-clearfix rhombusFocus" }) do |f| %>
-                <%#= f.number_field :last4, id: "cc-number", type: "tel", class: "card-number text-field w-input", placeholder: "Card number", "x-autocompletetype" => "cc-number", autocompletetype: "cc-number", autocorrect: 'off', spellcheck: 'off', autocapitalize: 'off' %>
+              <%= form_for(current_user, as: resource_name, data: { name: "Email Form" }, url: current_user, html: { method: :patch, class: "w-clearfix" }) do |f| %>
+                <%= f.number_field :last4, id: "cc-number", type: "tel", class: "card-number text-field w-input", placeholder: "Card number", "x-autocompletetype" => "cc-number", autocompletetype: "cc-number", autocorrect: 'off', spellcheck: 'off', autocapitalize: 'off' %>
 
-                <%#= f.hidden_field :exp_month, id: "cc-ex-month" %>
-                <%#= f.hidden_field :exp_year, id: "cc-ex-year", class %>
-                <%#= f.hidden_field :card_token, id: "cc-uri" %>
-                <%#= f.hidden_field :card_type, id: "cc-type" %>
-                <input class="card-number text-field w-input" data-name="Card Number 4" id="Card-Number-4" maxlength="256" name="Card-Number-4" placeholder="Card number" required="required" type="text">
+                <%= f.hidden_field :exp_month, id: "cc-ex-month" %>
+                <%= f.hidden_field :exp_year, id: "cc-ex-year" %>
+                <%= f.hidden_field :card_token, id: "cc-uri" %>
+                <%= f.hidden_field :card_type, id: "cc-type" %>
+
                 <input class="name-on-card text-field w-input" data-name="Name On Card 4" id="Name-on-Card-4" maxlength="256" name="Name-on-Card-4" placeholder="Name on card" required="required" type="text">
-                <input class="month-year text-field w-input" data-name="Month Year 3" id="Month-Year-3" maxlength="256" name="Month-Year-3" placeholder="MM / YYYY" required="required" type="text">
+                <input class="month-year text-field w-input" data-name="Month Year 3" id="cc-exp" maxlength="256" name="Month-Year-3" placeholder="MM / YYYY" required="required" type="text">
                 <input class="cvv text-field w-input" data-name="Cvv 5" id="CVV-5" maxlength="256" name="CVV-5" placeholder="CVV" required="required" type="text">
                 <input class="button log-in w-button" data-wait="Please wait..." type="submit" value="Start 14-day Trial">
                 <label class="form-label paragraph select-plan" for="Card-Number-3">Don't worry, we'll notify you when your trial is about to expire</label></form>
