@@ -1,6 +1,9 @@
 # NOTE: reminder uses same table as campaign i.e. campaigns
 # reminder do not have all attribute that are in camapaign you can see more details in form http://localhost:3000/users/1/reminders/new
 class Reminder < Campaign
+
+  attr_accessor :customer_lists
+
   belongs_to :user
   # campaign type is set as enum ( 1 refers to reminder_campaign and 0 refers to promoi_campaign)
   before_create :set_campaign_type
