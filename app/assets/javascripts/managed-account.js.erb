@@ -226,7 +226,6 @@ $(document).on('ready page:load', function() {
     $(this).prev().val(this.value)
     var hash = countries[this.value];
     var parent = $(this).parent().parent();
-
     // handle state
     if (hash.with_state) {
       parent.find('.person-state-div').show();
@@ -290,6 +289,9 @@ $(document).on('ready page:load', function() {
       hide_institution_number();
     }
   });
+
+  var acct_selected_country = $('#managed-acct-country option:selected').val()
+  build_currency_details(acct_selected_country);
 
   $('#managed-acct-country').change(function() {
 
@@ -406,7 +408,6 @@ $(document).on('ready page:load', function() {
 
   function build_currency_details(country) {
     var cur = currency_supported_in_countries[country];
-
     // build currency options
     var options = '';
     $.each(cur, function( index, value ) {
