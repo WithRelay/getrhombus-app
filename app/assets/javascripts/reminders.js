@@ -36,40 +36,17 @@ $(document).on('ready page:load', function() {
     });
 
   $('#submitReminderForm').click(function(){
-    $.ajax({
-
-        url: $('#reminderForm').attr('action'),
-        type: "POST",
-        data: $('#reminderForm').serialize(),
-        dataType: "json"
-      })
-      .done(function(msg) {
-          var flash_key = Object.keys(msg)[1]
-           // set flash message title and message
-              // first argument is title and second is text message.
-           FlashHandler.setFlashMessage( msg[flash_key], flash_key );
-           $('.update-close-modals').click()
-      })
-      .fail(function(data) {
-        FlashHandler.setFlashMessage(JSON.parse(data.responseText).response, 'error');
-      });
+    $('#reminderForm').formValidation('resetField', 'reminder[text]');
+    $('#reminderForm').submit();
   });
 
-
-  $('#Notification-Message').counter({ type: 'char', append: false, target: '#textBoxCounter' })
+  $('#Notification-Message').emojioneArea();
 
   $('#reminderForm').formValidation({
     framework: 'bootstrap',
     excluded: ':disabled',
     live: 'disabled',
     fields: {
-      'reminder[channel]': {
-        validators: {
-          notEmpty: {
-            message: 'Campaign name is required'
-          }
-        }
-      },
       'reminder[text]': {
         validators: {
           notEmpty: {
@@ -79,6 +56,7 @@ $(document).on('ready page:load', function() {
       }
     }
   }).on('success.form.fv', function(e, data) {
+    alert('s')
         e.preventDefault();
         var apiController = new ApiController(this, '#myModalNorm');
         var formData = new FormData(this);
