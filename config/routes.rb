@@ -66,7 +66,11 @@ Rails.application.routes.draw  do
 
     # user routes
     resources :users, only: :show do
-      member { get 'customers' => 'merchant_customers#customers' }
+      member do  
+        get 'customers' => 'merchant_customers#customers'
+        get 'customers/:id' => 'merchant_customers#show' 
+      end
+
       devise_scope :user do
         member do
           get 'segments' => 'lists#segments'
