@@ -1,15 +1,12 @@
 $(document).ready(function () {
   if (typeof Calendly !== 'undefined') Calendly.initBadgeWidget({ url: 'https://calendly.com/relay/30min', text: 'Schedule time with me', color: '#00a2ff ' });
-  $('#demo-Form').formValidation({
-    // I am validating Bootstrap form
+  $('#demoForm').formValidation({
     framework: 'bootstrap',
-    excluded: ':disabled',
     live: 'disabled',
 
     // List of fields and their validation rules!
     fields: {
       'demo[full_name]': {
-        row: '.group',
         validators: {
           notEmpty: {
             message: 'Required'
@@ -17,7 +14,6 @@ $(document).ready(function () {
         }
       },
       'demo[company]': {
-        row: '.group',
         validators: {
           notEmpty: {
             message: 'Required'
@@ -26,8 +22,7 @@ $(document).ready(function () {
       },
       'demo[email]': {
           verbose: false,
-          row: '.group',
-          validators: {
+            validators: {
               notEmpty: {
                   message: 'Your email is required'
               },
@@ -51,8 +46,7 @@ $(document).ready(function () {
           }
       },
       'demo[phone]': {
-          row: '.group',
-          validators: {
+            validators: {
               callback: {
                   callback: function (value, validator, $field) {
                       if (PhoneNumberFormatter.isValid()) {
@@ -71,7 +65,6 @@ $(document).ready(function () {
           }
       },
       'demo[employee_count]': {
-        row: '.group',
         validators: {
           notEmpty: {
             message: 'Required'
@@ -85,14 +78,10 @@ $(document).ready(function () {
     PhoneNumberFormatter.set_phone_number(true);
     $('#commit_demo').attr("disabled", true).val("Please wait...");
     addDemo();
-  });
-
-  $('#commit_demo').on('click', function(e){
-    e.preventDefault();
-     PhoneNumberFormatter.set_phone_number(true);
-    $('#commit_demo').attr("disabled", true).val("Please wait...");
-    addDemo();
   })
+  .on('err.validator.fv', function(e) {
+    $('.help-block').hide();
+  });
 
   function addDemo() {
    $.ajax({
