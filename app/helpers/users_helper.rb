@@ -8,7 +8,7 @@ module UsersHelper
   end
 
   def get_time_zone_lists
-    ActiveSupport::TimeZone::MAPPING.map{ |zone| zone }
+    ActiveSupport::TimeZone::MAPPING.map{ |zone| zone }.sort {|x,y| x[0] <=> y[0]}
   end
 
   def business_type_list
@@ -16,7 +16,7 @@ module UsersHelper
   end
 
   def rhombus_for
-    %W(Customer Support Sales Marketing Payments)
+    ['Customer Support', 'Sales', 'Marketing', 'Payments']
   end
 
   def select_team_size

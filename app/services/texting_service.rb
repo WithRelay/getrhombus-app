@@ -193,8 +193,8 @@ class TextingService
             },
           }
         },
-        HU: {
-          name: "Hungary",
+        HK: {
+          name: "Hong Kong",
           types: {
             mobile: {
               capabilities: ["sms"], 
@@ -203,11 +203,31 @@ class TextingService
             },
           }
         },
+        HU: {
+          name: "Hungary",
+          types: {
+            mobile: {
+              capabilities: ["sms"], 
+              reach: "global",
+              address_required: ""
+            },
+          }
+        },
+        IE: {
+          name: "Ireland",
+          types: {
+            mobile: {
+              capabilities: ["sms"],
+              reach: "global",
+              address_required: ""
+            },
+          }
+        },
         IL: {
           name: "Israel",
           types: {
             mobile: {
-              capabilities: ["sms"],
+              capabilities: ["sms", 'voice'],
               reach: "global",
               address_required: ""
             },
@@ -223,13 +243,23 @@ class TextingService
             },
           }
         },
-        MX: {
-          name: "Mexico",
+        MY: {
+          name: "Malaysia",
+          types: {
+            mobile: {
+              capabilities: ["sms"],
+              reach: "domestic",
+              address_required: ""
+            },
+          }
+        },
+        NL: {
+          name: "Netherlands",
           types: {
             mobile: {
               capabilities: ["sms"],
               reach: "global",
-              address_required: ""
+              address_required: "any address"
             },
           }
         },
@@ -259,16 +289,6 @@ class TextingService
             local: {
               capabilities: ["sms", "voice"],
               reach: "global",
-              address_required: ""
-            },
-          }
-        },
-        ES: {
-          name: "Spain",
-          types: {  
-            local: {
-              capabilities: ["sms"],
-              reach: "domestic",
               address_required: ""
             },
           }
