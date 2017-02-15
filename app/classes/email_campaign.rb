@@ -8,7 +8,6 @@ class EmailCampaign
   end
 
   def send_campaign
-    binding.pry
     # class method send_email_campaign accepts hash parameter
     EmailingService.send_email_campaign(email_hash_params.merge({ to: user_email_list }))
   end
