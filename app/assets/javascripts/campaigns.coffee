@@ -128,7 +128,7 @@ $( document ).on 'ready page:load', ->
   campaign = new Campaign({ pickerPosition: "bottom", tonesStyle: "bullet" })
   campaign.datePicker(new DatePicker( '.daterange', true, { time: true, select: true } ))
   window.onload = ->
-    $('.emojionearea-editor').counter({ type: 'char', append: false, target: '#textBoxCounter' })
+    $('.newMessage .emojionearea-editor').counter({ type: 'char', append: false, target: '#textBoxCounter' })
 
   $(document).on 'change', 'input[name=file]', ->
     # this is for client side validation of locally uploaded images
