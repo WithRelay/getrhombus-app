@@ -56,17 +56,11 @@ $(document).on('ready page:load', function() {
       }
     }
   }).on('success.form.fv', function(e, data) {
-    alert('s')
         e.preventDefault();
         var apiController = new ApiController(this, '#myModalNorm');
         var formData = new FormData(this);
         apiController.sendRequest(formData)
     });
-
-
-
-
-
 
 // Class ApiController handle all call to http verb to the server
 // First argument is the dom object it self and second contains the modal id
