@@ -1,5 +1,33 @@
 $(document).on('ready page:load', function() {
 
+  $('#reminder-customer-list').selectize({
+    maxItems: 1,
+    valueField: 'uid',
+    labelField: 'title',
+    searchField: 'description',
+    create: false,
+    options: [],
+    closeAfterSelect: true,
+    load: function(query, callback) {
+      if (!query.length) return callback();
+      $.ajax({
+        url: '/v1/users.json',
+        type: 'GET',
+        dataType: 'json',
+        data: {
+          query: query
+        },
+        error: function() {
+          FlashHandler.setFlashMessage('Something went wrong...Unable to find any customer', 'error');
+          callback();
+        },
+        success: function(res) {
+          callback(res['data']);
+        }
+      });
+    }
+  });
+
   $('#delete-reminder').click(function(e){
       e.preventDefault
       FlashHandler.setConfirmationDialog('#delete-reminder','Are you sure, you want to delete the Reminder?', 'Delete', 'isDistroy');
@@ -58,9 +86,8 @@ $(document).on('ready page:load', function() {
     });
 
 
-   
-    
-});
+
+
 
 
 // Class ApiController handle all call to http verb to the server
@@ -105,3 +132,4 @@ ApiController.prototype.sendRequest = function(data=''){
           }).fail(function(msg){ alert('Sorry request could not complete'); });
   }
 }
+});
