@@ -31,30 +31,27 @@ $(document).ready(function () {
     });
   }
 
-  if ($('#couponupdateform').length > 0) {
-    $('#coupon-update-form')
-      .formValidation({
-        framework: 'bootstrap',
-        excluded: ':disabled',
-        live: 'disabled',
-        // List of fields and their validation rules
-        fields: {
-          'subscription[coupon]':{
-            validators: {
-                notEmpty: {
-                  message: 'Coupon code required'
-                }
+  $('#coupon-update-form')
+    .formValidation({
+      framework: 'bootstrap',
+      excluded: ':disabled',
+      live: 'disabled',
+      // List of fields and their validation rules
+      fields: {
+        'subscription[coupon]':{
+          validators: {
+              notEmpty: {
+                message: 'Coupon code required'
               }
             }
           }
-      });
-  }
+        }
+    });
 
-  if ($('#subscription-Form').length > 0) {
-    $('#subscription-Form')
+  if ($('#subscriptionForm').length > 0) {
+    $('#subscriptionForm')
       .formValidation({
         framework: 'bootstrap',
-        excluded: ':disabled',
         live: 'disabled',
         // List of fields and their validation rules
         fields: {
@@ -127,12 +124,6 @@ $(document).ready(function () {
       $('#subscriptionForm').formValidation('resetField', 'subscription[plan_id]');
     });
   }
-
-  $("#create-subscription").on('click', function(e) {
-    e.preventDefault();
-    $("#create-subscription").attr("disabled", true).val("Please wait...");
-    addSubscription(); 
-  })
 
   // reset form when modal close
   $('#modalSubscription').on('hidden.bs.modal', function () {
