@@ -6,7 +6,7 @@
 }
 
 $error-color: red;
-$success-color: green;
+$success-color: #43e50f;
 
 .intl-tel-input{
   width: 100% !important;
@@ -59,12 +59,16 @@ $success-color: green;
   border-color: $error-color;
 }
 
+.has-success .form-control {
+  border-color: $success-color;
+}
+
 .help-block{
     color: $error-color;
 }
 .has-success .control-label,
 .has-success .help-block {
-    color: $success-color;
+  color: $success-color;
 }
 
 .hide {
