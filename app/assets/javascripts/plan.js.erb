@@ -45,10 +45,13 @@ $(document).ready(function() {
           $('#create-plan').attr("disabled", true).val("Please wait...");
           addPlan(); 
         }      
+      })
+      .on('err.validator.fv', function(e) {
+        $('.help-block').hide();
       });
   }
 
-  $('#plan_name').on("input", function() {
+  $('#Plan-name').on("input", function() {
     $('#planForm').formValidation('revalidateField', 'plan[name]');
   });
   

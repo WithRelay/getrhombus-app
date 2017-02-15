@@ -1,6 +1,8 @@
 <% @coupon = Coupon.new %>
 <%= form_for([current_user, @coupon], :html=> { id: 'couponForm' }) do |f| %>
-  <%= f.text_field :name, id: 'coupon-name', class: 'form-control coupon-name text-field w-input', placeholder: 'Coupon name (no spaces)' %>
+  <div class="form-group col-xs-6">
+    <%= f.text_field :name, id: 'coupon-name', class: 'form-control coupon-name text-field w-input', placeholder: 'Coupon name (no spaces)' %>
+    </div>
 
   <div class="form-group col-xs-6">
     <%= f.select :coupon_type, options_for_select({ "Amount Off" => "amount_off", "Percent Off" => 'percent_off' }, selected: present(@coupon).get_selected_coupon_type), {}, id: "coupon-type", class: "form-control coupon-type dropdown w-select", prompt: 'Select coupon type' %>

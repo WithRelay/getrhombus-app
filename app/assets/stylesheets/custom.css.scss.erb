@@ -40,12 +40,12 @@ $success-color: #43e50f;
   width: 100% !important;
   border: 1px solid #1f8cec !important;
   margin-left: -60px !important;
-  margin-top: 10px !important;
+  margin-top: 15px !important;
   text-align: left !important;
 }
 
 #subscription-plan-id-selectized, #subscription-select-coupon-selectized, #subscription-customer-id-selectized {
-  margin-top: 8px !important;
+  margin-top: 5px !important;
 }
 
 <% COLORS.each_with_index do |color, index| %>
@@ -54,13 +54,14 @@ $success-color: #43e50f;
   }
 <%end%>
 
-.has-error .form-control
-{
-  border-color: $error-color;
+
+.has-success .form-control{
+  border-color: $success-color !important;
 }
 
-.has-success .form-control {
-  border-color: $success-color;
+.has-error .form-control
+{
+  border-color: $error-color !important;
 }
 
 .help-block{
