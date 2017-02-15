@@ -5,14 +5,14 @@ class EmailingService
 
   # Note there are a number of global settings for this email in the mandrill account
    SENDER = Rails.application.secrets.team_email
-   FROM_EMAIL= {edwin: "<redacted_email>", ovo: '<redacted_email>'}
+   FROM_EMAIL= { edwin: "<redacted_email>", ovo: '<redacted_email>' }
   class << self
 
     def send_email_campaign(campaign_hash)
       # Email camapign is not only used to send email campaign but also facebook messenger camapign
       # and facebook messenger camapaign do not contain subject
       campaign_hash[:subject] = "Rhombus Campaign" if campaign_hash[:subject].blank?
-      message = campaign_hash.merge({ from_name: 'Rhombus'}).merge(FROM_EMAIL)
+      message = campaign_hash.merge(FROM_EMAIL)
       response = MANDRILL.messages.send(message)
       ['sent', 'queued'].include?(response[0]['status']) ? true : false
     end

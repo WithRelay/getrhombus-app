@@ -126,6 +126,12 @@ class User < ActiveRecord::Base
     self.email == '<redacted_email>' || self.email == '<redacted_email>'
   end
 
+  def self.user_title(user)
+    user_first_name = user.people.representative[0]
+    return "#{user_first_name.first_name} from #{user.org_name}" if user_first_name.present?
+    return user.org_name if user_first_name.blank?
+  end
+
   def self.get_display_name(uid, uid_type)
     if uid_type == "user"
       cus = User.find_by(id: uid)

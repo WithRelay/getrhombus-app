@@ -8,11 +8,6 @@ class Reminder < Campaign
   # campaign type is set as enum ( 1 refers to reminder_campaign and 0 refers to promoi_campaign)
   before_create :set_campaign_type
 
-  # enqeue reminder jobs
-  def enqueue_notification_jobs
-    Resque.enqueue_at_with_queue('one_time_reminder', date_time.utc, OneTimeReminderJob, id) if is_today_campaign?
-  end
-
   def update_reminder_job
     destroy_campaign_jobs
     enqueue_notification_jobs if active? && is_today_campaign?

@@ -40,7 +40,8 @@ class EmailCampaign
   # returns default hash as { html: '', subject: '', to: [{email: '<redacted_email>'}]
   # if inline image  and attachment image is present return with merging both hash
   def email_hash_params
-    message_hash = { html: @campaign.text, subject: @campaign.subject}
+    campaign_user = User.user_title(@campaign.user)
+    message_hash = { html: @campaign.text, subject: @campaign.subject, from_name: campaign_user }
     message_hash.merge!({ images: inline_images }) if inline_images.present?
     message_hash.merge!({ attachments: attachment_images }) if attachment_images.present?
     return message_hash
