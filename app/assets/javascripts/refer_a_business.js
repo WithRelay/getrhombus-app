@@ -5,14 +5,13 @@ $(document).ready(function () {
   });
 
   // validate coupon form
-  $('#referrer-Form')
+  $('#referrerForm')
     .formValidation({
       framework: 'bootstrap',
       live: 'disabled',
       // List of fields and their validation rules
       fields: {
           'referrer[referrer_name]': {
-              row: '.group',
               validators: {
                 notEmpty: {
                       message: 'Name is required'
@@ -20,7 +19,6 @@ $(document).ready(function () {
               }
           },
           'referrer[org_name]': {
-              row: '.group',
               validators: {
                 notEmpty: {
                       message: 'Business name is required'
@@ -28,7 +26,6 @@ $(document).ready(function () {
               }
           },
           'referrer[country]': {
-              row: '.group',
               validators: {
                 notEmpty: {
                       message: 'Country name is required'
@@ -37,7 +34,6 @@ $(document).ready(function () {
           },
           'referrer[referrer_email]': {
               verbose: false,
-              row: '.group',
               validators: {
                   notEmpty: {
                       message: 'Your email is required'
@@ -61,9 +57,8 @@ $(document).ready(function () {
                   }
               }
           },
-          'referrer[email]': {
+          'referrer[referee_email]': {
               verbose: false,
-              row: '.group',
               validators: {
                   notEmpty: {
                       message: 'Your email is required'
@@ -86,9 +81,15 @@ $(document).ready(function () {
                       message: "The email isn't valid"
                   }
               }
+          },
+          'referrer[country]': {
+            validators: {
+              notEmpty: {
+                message: 'Select Country'
+              }
+            }
           },
           'referrer[phone]': {
-              row: '.group',
               validators: {
                   callback: {
                       callback: function (value, validator, $field) {
@@ -121,13 +122,10 @@ $(document).ready(function () {
     if ($( "input[name='referrer[phone]']" ).val() === '') {
       $('#referrerForm').formValidation('resetField', 'referrer[phone]');
     }
-  });
-
-  $("#referrer-submit").on('click', function(e) {
-    e.preventDefault();
-    $("#referrer-submit").attr("disabled", true).val("Please wait...");
-    referBusiness();
   })
+  .on('err.validator.fv', function(e) {
+    $('.help-block').hide();
+  });
 
   function referBusiness() {
     $.ajax({

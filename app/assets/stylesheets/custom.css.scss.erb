@@ -6,7 +6,7 @@
 }
 
 $error-color: red;
-$success-color: green;
+$success-color: #43e50f;
 
 .intl-tel-input{
   width: 100% !important;
@@ -40,7 +40,7 @@ $success-color: green;
   width: 100% !important;
   border: 1px solid #1f8cec !important;
   margin-left: -60px !important;
-  margin-top: 10px !important;
+  margin-top: 15px !important;
   text-align: left !important;
 }
 
@@ -53,7 +53,7 @@ $success-color: green;
 
 
 #subscription-plan-id-selectized, #subscription-select-coupon-selectized, #subscription-customer-id-selectized {
-  margin-top: 8px !important;
+  margin-top: 5px !important;
 }
 
 <% COLORS.each_with_index do |color, index| %>
@@ -62,9 +62,14 @@ $success-color: green;
   }
 <%end%>
 
+
+.has-success .form-control{
+  border-color: $success-color !important;
+}
+
 .has-error .form-control
 {
-  border-color: $error-color;
+  border-color: $error-color !important;
 }
 
 .help-block{
@@ -72,7 +77,7 @@ $success-color: green;
 }
 .has-success .control-label,
 .has-success .help-block {
-    color: $success-color;
+  color: $success-color;
 }
 
 .hide {
