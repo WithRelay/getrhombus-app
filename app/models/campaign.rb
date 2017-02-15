@@ -73,18 +73,23 @@ class Campaign < ActiveRecord::Base
     rescue_job_queue if self.active? && is_campaign_date_selected? && is_campaign_date_less?
   end
 
-  def rescue_job_queue
-    # rescue enqueue_at_with_queue accepts four parametera 1 name of queue, 2 date_time(provided as utc)
-    # 3 class name 4 the parameter send for class method perform
-    Resque.enqueue_at_with_queue('one_time_campaign', date_time.utc, OneTimeCampaignJob, id)
-  end
-
   def reminder_campaign?
     self.is_a?(Reminder)
   end
 
+  def rescue_job_queue
+    # rescue enqueue_at_with_queue accepts four parametera 1 name of queue, 2 date_time(provided as utc)
+    # 3 class name 4 the parameter send for class method perform
+    if reminder_campaign?
+      Resque.enqueue_at_with_queue('one_time_reminder', date_time.utc, OneTimeReminderJob, id) if is_today_campaign?
+    else
+      Resque.enqueue_at_with_queue('one_time_campaign', date_time.utc, OneTimeCampaignJob, id)
+    end
+  end
+
   def send_now_campaign
-    SendNowCampaignJob.perform_now(self.id) if deliver_now?
+    SendNowCampaignJob.perform_now(self.id) if deliver_now? && !reminder_campaign?
+    SendNowReminderJob.perform_now(self.id) if deliver_now? && reminder_campaign?
   end
 
   private

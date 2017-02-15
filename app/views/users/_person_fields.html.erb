@@ -2,22 +2,22 @@
     <%= f.text_field :business_name, class: 'full-name settings text-field w-input' %>
     <%= f.text_field :full_name, readonly: (f.object.first_name.present? || f.object.last_name.present?), data: { name: 'Name 2'}, id: 'name-2', placeholder: 'Full name', class: 'full-name settings text-field w-input' %>
     <%= f.text_field :dob, id: 'Date-of-birth', placeholder: 'Date of birth', class: 'userDateOfBirth settings short-field text-field w-input', data: { name: "Date of birth" }, readonly: f.object.dob.present? %>
-    <%# if f.index == 0 %>
+    <% if f.index == 0 %>
     <%= f.text_field :last4, placeholder: "City", id: 'City-2', class: 'rep-pii settings short-field ssn text-field w-input', data: { name: "SSN" }, id: "SSN" %>
 
-    <%# end %>
+    <% end %>
 </div>
 
-  <div class="col-md-10">
+  <!-- <div class="col-md-10">
     <div class='col-md-5'>
-      <%= f.label :gender, 'Male', value: 'male' %>
-      <%= f.radio_button :gender, 'male'  %>
+      <%#= f.label :gender, 'Male', value: 'male' %>
+      <%#= f.radio_button :gender, 'male'  %>
     </div>
     <div class='col-md-5'>
-      <%= f.label :gender, 'Female', value: 'female' %>
-      <%= f.radio_button :gender, 'female'  %>
+      <%#= f.label :gender, 'Female', value: 'female' %>
+      <%#= f.radio_button :gender, 'female'  %>
     </div>
-  </div>
+  </div> -->
 
 
 

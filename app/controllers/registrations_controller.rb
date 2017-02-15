@@ -12,7 +12,7 @@ class RegistrationsController < Devise::RegistrationsController
         set_flash_message :notice, :updated
         # Sign in the current user bypassing validation in case his password changed
         sign_in current_user, bypass: true
-        respond_with resource, location: user_path(resource)
+        respond_with resource, location: "/users/#{current_user.id}"
         #redirect_to after_update_path_for(current_user)
       else
         clean_up_passwords resource

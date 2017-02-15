@@ -7,6 +7,22 @@
             <div class="header name w-clearfix">
               <div class="headings name"> &nbsp; Name</div>
             </div>
+            <div class="cb check-box-column header">
+              <div class="w-form">
+                <form data-name="Email Form 2" id="email-form-2" name="email-form-2">
+                  <div class="select-all-check-box w-checkbox w-clearfix">
+                    <input class="cb table-checkbox w-checkbox-input" id="check_or_uncheck_all" type="checkbox">
+                    <label class="checkbox-field-lable w-form-label" for="check_or_uncheck_all">-</label>
+                  </div>
+                </form>
+                <div class="w-form-done">
+                  <div>Thank you! Your submission has been received!</div>
+                </div>
+                <div class="w-form-fail">
+                  <div>Oops! Something went wrong while submitting the form</div>
+                </div>
+              </div>
+            </div>
           </div>
           <div class="fv w-clearfix w-col w-col-2">
             <div class="cn column column-2 header">
@@ -84,7 +100,7 @@
               <div class="w-form">
                 <form data-name="Email Form 2" id="email-form-2" name="email-form-2">
                   <div class="select-all-check-box w-checkbox w-clearfix">
-                    <input class="cb table-checkbox w-checkbox-input" id="node" type="checkbox">
+                    <input class="cb table-checkbox w-checkbox-input merchant_customers" id="node" type="checkbox">
                     <label class="checkbox-field-lable w-form-label" for="node">-</label>
                   </div>
                 </form>
@@ -124,7 +140,7 @@
             </div>
             <div class="column column-6 new-row">
             <!-- <a class="actions-button notification" href="#">Message &nbsp; </a> -->
-            <%= link_to "Message ", user_conversations_path(current_user, customer_id: c.customer_id), class: "actions-button notification"%>
+            <%= link_to "Message ", user_conversations_path(current_user, uid: c.customer_id, type:'start_conversation', uid_type: 'user'), class: "actions-button notification"%>
             </div>
           </div>
         </div>

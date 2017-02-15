@@ -1,3 +1,18 @@
+<style>
+.selectize-dropdown-content {
+  display: block !important;
+  background-color: white !important;
+  width: 113% !important;
+  border: 1px solid #1f8cec !important;
+  margin-left: -33px !important;
+  margin-top: 12px !important;
+  text-align: left !important;
+}
+.name{
+  border-bottom: none;
+  height: 20px;
+}
+</style>
 <div class="campaign-editor-options w-form">
   <%= form_for [current_user, @campaign], html: { multipart: true, id: 'campaignForm', class: 'w-clearfix', data: { name: 'Email Form' } } do |f| %>
 
@@ -86,7 +101,7 @@
     <div class="alt campaign-editor sub-nav-bar w-clearfix">
       <div class="w-form">
         <div class='form-group col-xs-6'>
-          <%= f.text_field :subject, class: "form-control emailSubject email-subject text-field w-input", data: { name: "Email Subject" }, id: "Email-Subject", placeholder: 'Email subject'  %>
+          <%= f.text_field :subject, class: "form-control emailSubject email-subject text-field w-input", data: { name: "Email Subject" }, id: "campaign_subject", placeholder: 'Email subject'  %>
           <div class="messageContainer"></div>
         </div>
         <div class="w-form-done">
@@ -96,7 +111,7 @@
           <div>Oops! Something went wrong while submitting the form</div>
         </div>
       </div>
-      <h4 class="sender welcome-dash-content-container-header">Patrick from Joan's Coffee</h4>
+      <h4 class="sender welcome-dash-content-container-header w-hidden"><%= @user_title %></h4>
     </div>
   </div>
   <% end %>

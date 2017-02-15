@@ -4,7 +4,7 @@ class User < ActiveRecord::Base
   include DashboardCustomerQueries
   include CSVHandler
 
-  attr_accessor :phone, :captured_amt, :msg_id, :tag_id, :referrer_id, :tos_acceptance
+  attr_accessor :phone, :captured_amt, :msg_id, :tag_id, :referrer_id, :tos_acceptance, :user_lists
 
   # validation rules for user attributes
   validates :tos_acceptance, acceptance: true, if: lambda { self.is_merchant? }, on: :update
@@ -17,7 +17,7 @@ class User < ActiveRecord::Base
   validates_presence_of :user_level, message: "Please select an account type"
 
   # Sign up form uses phone_number field for both user types
-  validates_presence_of :phone_number, numericality: { only_integer: true }, length: { minimum: 10 }, on: :create
+  validates_presence_of :phone_number, numericality: { only_integer: true }, length: { minimum: 10 }, on: :create, if: lambda { self.is_customer? }
 
   # Allow nil added to db migration because merchants don't have phone number. They have org_phone.
   # And since mysql indexes this field, it indexes nil and only allows one row with nil.
@@ -42,7 +42,7 @@ class User < ActiveRecord::Base
   has_many :merchant, class_name: 'MerchantContact', foreign_key: 'merchant_id'
 
   has_many :reminders, -> { where campaign_type: 1 }
-  
+
   # this block is for customizing build method for user.campaign which allow also to save list
   has_many :campaigns, -> { where campaign_type: 0 } do
     # overiding association build function like user.campaigns.build will hit here
@@ -75,7 +75,7 @@ class User < ActiveRecord::Base
   has_many :customer_plans, class_name: 'Plan', foreign_key: 'customer_id'
   has_many :coupons
   # LEAVE THIS FOR LATER
-  #has_many :next_plans                                   
+  #has_many :next_plans
 
   has_one :twitter_cred
   has_many :fb_creds
@@ -121,14 +121,15 @@ class User < ActiveRecord::Base
     user_level == 0
   end
 
-  def get_saas_subscription
-    #saas_subscription = self.merchants.last.subscriptions.active.last
-    []
-  end
-
   def is_platform?
     #email == User.platform_email
     self.email == '<redacted_email>' || self.email == '<redacted_email>'
+  end
+
+  def self.user_title(user)
+    user_first_name = user.people.representative[0]
+    return "#{user_first_name.first_name} from #{user.org_name}" if user_first_name.present?
+    return user.org_name if user_first_name.blank?
   end
 
   def self.get_display_name(uid, uid_type)
@@ -160,7 +161,7 @@ class User < ActiveRecord::Base
   def get_stripe_cred
     # platform acct is a standalone account and only one record exists for platform
     # merchants could have 2 records. Managed, Standalone (prior to v1.5)
-    
+
     return User.find_by(id: 23)
 
     # this shoulnd be the actual code
@@ -257,16 +258,19 @@ class User < ActiveRecord::Base
     { type: 'color', value: cus.user_color }
   end
 
-  def get_merchant_saas_subscription
-    platform_user = MerchantCustomer.find_by(customer_id: self.id, merchant_id: User.get_platform_acct_obj.id)
-    platform_user.subscriptions.active.last
+  def get_saas_subscription
+    platform_user_id = User.get_platform_acct_obj
+    if platform_user_id.present?
+      platform_merchant = MerchantCustomer.find_by(customer_id: self.id, merchant_id: platform_user_id.id)
+      platform_merchant.subscriptions.active.last
+    end
   end
 
   private
 
   # Some users sign up with Rhombus numbers
   def phone_number_cannot_be_rhombus_number
-    if User.exists?(rhombus_number: self.phone_number)
+    if self.phone_number.present? && User.exists?(rhombus_number: self.phone_number)
       errors.add(:phone_number, "can't be a Rhombus number. Please enter your phone number.")
     end
   end

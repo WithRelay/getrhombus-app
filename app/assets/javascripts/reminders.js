@@ -1,5 +1,33 @@
 $(document).on('ready page:load', function() {
 
+  $('#reminder-customer-list').selectize({
+    maxItems: 1,
+    valueField: 'uid',
+    labelField: 'title',
+    searchField: 'description',
+    create: false,
+    options: [],
+    closeAfterSelect: true,
+    load: function(query, callback) {
+      if (!query.length) return callback();
+      $.ajax({
+        url: '/v1/users.json',
+        type: 'GET',
+        dataType: 'json',
+        data: {
+          query: query
+        },
+        error: function() {
+          FlashHandler.setFlashMessage('Something went wrong...Unable to find any customer', 'error');
+          callback();
+        },
+        success: function(res) {
+          callback(res['data']);
+        }
+      });
+    }
+  });
+
   $('#delete-reminder').click(function(e){
       e.preventDefault
       FlashHandler.setConfirmationDialog('#delete-reminder','Are you sure, you want to delete the Reminder?', 'Delete', 'isDistroy');
@@ -8,40 +36,17 @@ $(document).on('ready page:load', function() {
     });
 
   $('#submitReminderForm').click(function(){
-    $.ajax({
-
-        url: $('#reminderForm').attr('action'),
-        type: "POST",
-        data: $('#reminderForm').serialize(),
-        dataType: "json"
-      })
-      .done(function(msg) {
-          var flash_key = Object.keys(msg)[1]
-           // set flash message title and message
-              // first argument is title and second is text message.
-           FlashHandler.setFlashMessage( msg[flash_key], flash_key );
-           $('.update-close-modals').click()
-      })
-      .fail(function(data) {
-        FlashHandler.setFlashMessage(JSON.parse(data.responseText).response, 'error');
-      });
+    $('#reminderForm').formValidation('resetField', 'reminder[text]');
+    $('#reminderForm').submit();
   });
 
-
-  $('#Notification-Message').counter({ type: 'char', append: false, target: '#textBoxCounter' })
+  $('#Notification-Message').emojioneArea();
 
   $('#reminderForm').formValidation({
     framework: 'bootstrap',
     excluded: ':disabled',
     live: 'disabled',
     fields: {
-      'reminder[channel]': {
-        validators: {
-          notEmpty: {
-            message: 'Campaign name is required'
-          }
-        }
-      },
       'reminder[text]': {
         validators: {
           notEmpty: {
@@ -56,12 +61,6 @@ $(document).on('ready page:load', function() {
         var formData = new FormData(this);
         apiController.sendRequest(formData)
     });
-
-
-   
-    
-});
-
 
 // Class ApiController handle all call to http verb to the server
 // First argument is the dom object it self and second contains the modal id
@@ -105,3 +104,4 @@ ApiController.prototype.sendRequest = function(data=''){
           }).fail(function(msg){ alert('Sorry request could not complete'); });
   }
 }
+});

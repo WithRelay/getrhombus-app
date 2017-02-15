@@ -31,30 +31,35 @@ $(document).ready(function () {
     });
   }
 
-  if ($('#couponupdateform').length > 0) {
-    $('#coupon-update-form')
-      .formValidation({
-        framework: 'bootstrap',
-        excluded: ':disabled',
-        live: 'disabled',
-        // List of fields and their validation rules
-        fields: {
-          'subscription[coupon]':{
-            validators: {
-                notEmpty: {
-                  message: 'Coupon code required'
-                }
+  $('#coupon-update-form')
+    .formValidation({
+      framework: 'bootstrap',
+      live: 'disabled',
+      // List of fields and their validation rules
+      fields: {
+        'subscription[coupon]':{
+          validators: {
+              notEmpty: {
+                message: 'Coupon code required'
               }
             }
           }
-      });
-  }
+        }
+    })
+    .on('success.form.fv', function(e, data) {          
+      e.preventDefault();
+      subscriptionId = $(this).attr('saas_sub_id');
+      $("#submit-update-coupon").attr("disabled", true).val("Please wait...");
+      updateCoupon();
+    })
+    .on('err.validator.fv', function(e) {
+      $('.help-block').hide();
+    });
 
-  if ($('#subscription-Form').length > 0) {
-    $('#subscription-Form')
+  if ($('#subscriptionForm').length > 0) {
+    $('#subscriptionForm')
       .formValidation({
         framework: 'bootstrap',
-        excluded: ':disabled',
         live: 'disabled',
         // List of fields and their validation rules
         fields: {
@@ -88,10 +93,13 @@ $(document).ready(function () {
             }
           }
       })
-      .on('success.form.fv', function(e, data) {          
+      .on('success.form.fv', function(e, data) {
         e.preventDefault();
         $("#create-subscription").attr("disabled", true).val("Please wait...");
         addSubscription();
+      })
+      .on('err.validator.fv', function(e) {
+        $('.help-block').hide();
       });
   }
 
@@ -128,20 +136,14 @@ $(document).ready(function () {
     });
   }
 
-  $("#create-subscription").on('click', function(e) {
-    e.preventDefault();
-    $("#create-subscription").attr("disabled", true).val("Please wait...");
-    addSubscription(); 
-  })
-
   // reset form when modal close
-  $('#modalSubscription').on('hidden.bs.modal', function () {
-   $('#subscriptionForm').data('formValidation').resetForm();
-  })
+  // $('#new-subscription-modal').on('hide', function () {
+  //  $('#subscriptionForm').data('formValidation').resetForm();
+  // })
 
-  $('#modalPlan').on('shown.bs.modal', function () {
-   $('#planForm').data('formValidation').resetForm();
-  })
+  // $('#modalPlan').on('shown.bs.modal', function () {
+  //  $('#planForm').data('formValidation').resetForm();
+  // })
 
   if ($('#subscription-customer-id').length > 0) {  
     $('#subscription-customer-id')
@@ -199,16 +201,7 @@ $(document).ready(function () {
     });
   };
 
-
-
-  $('.auto-height').css('height', 'auto');
-
-  $('#submit-update-coupon').on('click',function(e){
-    e.preventDefault();
-    subscriptionId = $(this).attr('saas_sub_id');
-    updateCoupon();
-  });
-
+  // $('.auto-height').css('height', 'auto');
 
   function updateCoupon() {
    $.ajax({
@@ -228,7 +221,7 @@ $(document).ready(function () {
       FlashHandler.setFlashMessage(JSON.parse(data.responseText).response, 'error');
     })
     .always(function(data, textStatus, response) {
-      $('#create-subscription').removeAttr('disabled').val("Apply Discount");
+      $('#submit-update-coupon').removeAttr('disabled').val("Apply Discount");
     });
   };
  

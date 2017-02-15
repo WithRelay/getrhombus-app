@@ -13,6 +13,10 @@ class CampaignsController < ApplicationController
   # initializing campaign as association way using build method.
   def new
     @campaign = current_user.campaigns.build
+    user_first_name = current_user.people.representative[0]
+    @user_title = user_first_name.present? ?
+                  "#{user_first_name.first_name} from #{current_user.org_name}"
+                  : current_user.org_name
   end
 
   # creates a campaigns, campaign_lists, images if params available, associate inline image with campaign

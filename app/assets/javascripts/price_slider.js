@@ -1,10 +1,19 @@
 $(document).ready(function() {
   var pricingSlider, priceValueSpan, amount, currentAmount,
-         free_plan_amount = 0,
-         starter_plan_amount = 25,
-         growth_plan_amount = 125,
-         business_plan_amount = 250,
-         enterprise_plan_amount = 400;
+         PlanA = 0,
+         PlanB = 50,
+         PlanC = 75,
+         PlanD = 90,
+         PlanE = 105,
+         PlanF = 120,
+         PlanG = 145,
+         PlanH = 195,
+         PlanI = 240,
+         PlanJ = 295,
+         PlanK = 350,
+         PlanL = 400,
+         PlanM = 450,
+         PlanN = 500;
 
    // show slider on merchant credit card info update form
   // show slider on pricing page load
@@ -26,12 +35,9 @@ $(document).ready(function() {
     if (pricingSlider) {
       var slider = new Powerange(pricingSlider, {
         callback : displayValue
-        , decimal       : false
-        , hideRange     : true
-        , disableOpacity: 0.5
-        , min           : 0
-        , max           : 10000
-        , start         : 0
+        , min           : 100
+        , max           : 50000
+        , start         : 100
         , vertical      : false
       });
     }
@@ -39,8 +45,7 @@ $(document).ready(function() {
 
   function displayValue() {
     // priceValueSpan.innerHTML = pricingSlider.value;
-    priceValueSpan.innerHTML = '<h5>' + pricingSlider.value + '<b> Users</b> </h5>' +
-      '<h4>' + plan_range(pricingSlider.value)[1] + '</h4>';    
+    priceValueSpan.innerHTML = '<h4>' + plan_range(pricingSlider.value)[1] + '</h4>';
     /*
     # LEAVE THIS FOR LATER
     //only for subscription setting page
@@ -54,28 +59,44 @@ $(document).ready(function() {
     }
     else {
     */
-    $('#select_plan').attr('href', '/users/sign_up?signup_plan=' + plan_range(pricingSlider.value)[0]);
-    // update selected plan name
-    $('#pricing-range').val(plan_range(pricingSlider.value)[0]);
+    $('#select_plan').attr('href', '/users/sign_up?signup_plan=' + plan_range((pricingSlider.value)[0]));
    //}
   }
 
   function plan_range(customerCount) {
     if (customerCount > 0 && customerCount <= 100) {
-      return ['starter_plan', planInfo('Starter Plan', starter_plan_amount, 100), starter_plan_amount]
-    } else if (customerCount > 100 && customerCount <= 1000) {
-      return ['growth_plan',planInfo('Growth Plan', growth_plan_amount, 1000), growth_plan_amount]
-    } else if (customerCount > 1000 && customerCount <= 5000) {
-      return ['business_plan', planInfo('Business Plan', business_plan_amount, 5000), business_plan_amount]
-    } else if (customerCount > 5000 && customerCount <= 10000) {
-      return ['enterprise_plan', planInfo('Enterprise Plan', enterprise_plan_amount, 10000), enterprise_plan_amount]
+      return ['PlanA', planInfo(PlanA)]
+    }else if (customerCount > 101 && customerCount <= 1000) {
+      return ['PlanB', planInfo(PlanB)]
+    } else if (customerCount > 1001 && customerCount <= 2500) {
+      return ['PlanC',planInfo(PlanC)]
+    } else if (customerCount > 2501 && customerCount <= 5000) {
+      return ['PlanD', planInfo(PlanD)]
+    } else if (customerCount > 5001 && customerCount <= 7500) {
+      return ['PlanE', planInfo(PlanE)]
+    } else if (customerCount > 7501 && customerCount <= 10000) {
+      return ['PlanF',planInfo(PlanF)]
+    } else if (customerCount > 10001 && customerCount <= 15000) {
+      return ['PlanG', planInfo(PlanG)]
+    } else if (customerCount > 15000 && customerCount <= 20000) {
+      return ['PlanH', planInfo(PlanH)]
+    } else if (customerCount > 20001 && customerCount <= 30000) {
+      return ['PlanI',planInfo(PlanI)]
+    } else if (customerCount > 30001 && customerCount <= 35000) {
+      return ['PlanJ', planInfo(PlanJ)]
+    } else if (customerCount > 30001 && customerCount <= 35000) {
+      return ['PlanK', planInfo(PlanK)]
+    } else if (customerCount > 35001 && customerCount <= 40000) {
+      return ['PlanL',planInfo(PlanL)]
+    } else if (customerCount > 40001 && customerCount <= 45000) {
+      return ['PlanM', planInfo(PlanM)]
     } else {
-      return ['free_plan', planInfo('Free Plan', free_plan_amount, 0), free_plan_amount]
+      return ['PlanN', planInfo(PlanN)]
     }
   }
 
-  function planInfo(plan, amount, count) {
-    return '<h1 class="plan-amount">$'+ amount +'</h1><h5 class="signup-box-subheading starter-table">BILLED MONTHLY</h5><h5 class="signup-box-subheading">'+plan+' for $'+ amount +'/month Up to '+count+' Users</h5>'
+  function planInfo(amount) {
+    return '<h1 class="plan-amount">$'+ amount +'</h1><h5 class="signup-box-subheading starter-table">BILLED MONTHLY</h5>'
   }
 
 });

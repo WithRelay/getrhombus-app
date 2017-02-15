@@ -33,7 +33,7 @@ $(document).ready(function () {
   }
 
   // validate coupon form
-  if ($('#coupon-Form').length > 0) {
+  if ($('#couponForm').length > 0) {
     $('#couponForm')
       .formValidation({
         framework: 'bootstrap',
@@ -71,9 +71,11 @@ $(document).ready(function () {
         })
       .on('success.validator.fv', function(e, data) {
           data.element // Get the field element
-          .closest('.form-group') // Get the field parent
           .removeClass('has-warning')
           .addClass('has-success')
+      })
+      .on('err.validator.fv', function(e) {
+        $('.help-block').hide();
       });
 
   }

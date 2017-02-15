@@ -5,8 +5,8 @@ $(document).ready(function() {
       save_icon_grandparent, plan_name_input;
 
   // validate plan form
-  if ($('#plan-Form').length > 0) {
-    $('#plan-Form').formValidation({
+  if ($('#planForm').length > 0) {
+    $('#planForm').formValidation({
         framework: 'bootstrap',
         live: 'disabled',
         // List of fields and their validation rules
@@ -45,16 +45,13 @@ $(document).ready(function() {
           $('#create-plan').attr("disabled", true).val("Please wait...");
           addPlan(); 
         }      
+      })
+      .on('err.validator.fv', function(e) {
+        $('.help-block').hide();
       });
   }
 
-  $('#create-plan').on('click', function(e){
-    e.preventDefault();
-    $('#create-plan').attr("disabled", true).val("Please wait...");
-    addPlan();
-  })
-
-  $('#plan_name').on("input", function() {
+  $('#Plan-name').on("input", function() {
     $('#planForm').formValidation('revalidateField', 'plan[name]');
   });
   
