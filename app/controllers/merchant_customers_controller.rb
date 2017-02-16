@@ -8,5 +8,8 @@ class MerchantCustomersController < ApplicationController
   end
 
   def show
+  	@user = User.find_by_id(params[:id])
+  	@merchant_customer = MerchantCustomer.find_by_customer_id(params[:id])
+  	@transactions = Transaction.where(user_id: params[:id]).order(created_at: :desc)
   end
 end
