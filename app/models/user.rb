@@ -111,6 +111,8 @@ class User < ActiveRecord::Base
   after_commit :create_user_alert, on: :create, if: lambda { is_merchant? }
   after_commit :update_phone_in_db, on: :update
 
+  enum status: { inactive: 0, active: 1, needs_rhombus_number: 2, buy_rhombus_number: 3 }
+
   def is_merchant?
     user_level == 1
   end
@@ -260,7 +262,7 @@ class User < ActiveRecord::Base
     platform_user_id = User.get_platform_acct_obj
     if platform_user_id.present?
       platform_merchant = MerchantCustomer.find_by(customer_id: self.id, merchant_id: platform_user_id.id)
-      platform_merchant.subscriptions.active.last
+      platform_merchant ? platform_merchant.subscriptions.active.last : nil
     end
   end
 

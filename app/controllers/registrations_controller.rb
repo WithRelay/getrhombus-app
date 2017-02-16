@@ -6,6 +6,11 @@ class RegistrationsController < Devise::RegistrationsController
 
   def update
     if params[:add_profile_info].present? && current_user.is_merchant?
+      current_user.status = 2
+    elsif params[:add_rhombus_number].present? && current_user.is_merchant?
+      current_user.status = 3
+    elsif params[:add_subscription].present? && current_user.is_merchant?
+      current_user.status = 1
     else
       set_captured_payment_session
       @re = (params[:user][:card_token].present?) ? current_user.add_token_to_user(params[:user][:card_token]) : [true]

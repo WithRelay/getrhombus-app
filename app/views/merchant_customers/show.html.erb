@@ -4,7 +4,7 @@
     <div class="customer-profile-section-header w-row">
       <div class="w-col w-col-3">
         <div class="customer-properties-div">
-          <div class="right-nav-profile-content-wrapper"><img class="profile-picture-right-nav" src="images/Customer-1.jpg" width="60">
+          <div class="right-nav-profile-content-wrapper"><%= present(@user).profile_image %>
             <div class="dashboard-right-nav signup-box-subheading"><%= "#{@user.first_name} #{@user.last_name}"%> <span class="relay-id">RELAY ID</span>
             </div>
             <div class="left-column-text number"> &nbsp; &nbsp;<%= @user.phone_number %></div>
@@ -37,7 +37,7 @@
                 <div class="left-column-text recent-activity">Last &nbsp;Transaction</div>
               </div>
               <div class="right-column w-col w-col-7">
-                <div class="recent-activity-description">1 week ago</div>
+                <div class="recent-activity-description"><%= present(@merchant_customer).last_visit_format_created_at%></div>
               </div>
             </div>
             <div class="recent-activity right-nav-row w-row">
@@ -223,7 +223,7 @@
                 </div>
                 <div class="w-col w-col-2">
                   <div class="date w-clearfix">
-                    <div class="table-text unread-table"><%= present(transaction).format_created_at %></div>
+                    <div class="table-text unread-table"><%= present(transaction).format_short_created_at %></div>
                   </div>
                 </div>
                 <div class="w-col w-col-3">

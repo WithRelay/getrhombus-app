@@ -109,22 +109,6 @@ module AdditionalUserActions
     stripe_params
   end
 
-  def contacts
-    if current_user.user_level == 0
-      #@contacts = @user.get_customer_contacts.paginate(:page => params[:page], :per_page => 25)
-    else
-      #@contacts = @user.get_merchant_contacts.paginate(:page => params[:page], :per_page => 25)
-    end
-    @contacts = []
-  end
-
-  def customers
-    @customers = @user.get_merchant_customers.paginate(:page => params[:page], :per_page => 25)
-  end
-
-  def businesses
-    @businesses = @user.get_customer_businesses.paginate(:page => params[:page], :per_page => 25)
-  end
 
   def build_user_link
     # if it includes a captured payment, also check if msg_id is present, tag_id is optional
@@ -157,7 +141,7 @@ module AdditionalUserActions
     return user_conversations_path(current_user) if merchant_details_present?
     return user_transactions_path(current_user) if !customer_details_present?
     return add_profile_info_user_path(current_user) if current_user.is_merchant? && current_user.org_name.blank?
-    return add_rhombus_number_user_path(current_user) if current_user.is_merchant? && current_user.rhombus_number.blank?
+    return add_rhombus_number_user_path(current_user) if current_user.is_merchant? && current_user.needs_rhombus_number?
     return add_subscription_user_path(current_user) if current_user.is_merchant? && current_user.get_saas_subscription.blank?
   end
 
@@ -179,7 +163,7 @@ module AdditionalUserActions
   end
 
   def check_merchant_detail_present?
-    current_user.org_name.present? && current_user.rhombus_number.present? && current_user.get_saas_subscription.present?
+    current_user.org_name.present? && !current_user.needs_rhombus_number? && current_user.get_saas_subscription.present?
   end
 
   def customer_details_present?

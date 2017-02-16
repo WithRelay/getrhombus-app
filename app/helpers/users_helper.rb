@@ -8,11 +8,17 @@ module UsersHelper
   end
 
   def get_time_zone_lists
-    ActiveSupport::TimeZone::MAPPING.map{ |zone| zone }.sort {|x,y| x[0] <=> y[0]}
+    ActiveSupport::TimeZone::MAPPING.map{ |z| [z.first, z.first] }.sort {|x,y| x[0] <=> y[0]}
   end
 
   def business_type_list
     ['Business', 'Nonprofit', 'Education', '[K12] Education [University & Colleges]', 'Individual']
+  end
+
+  def twilio_countries
+    TextingService.twilio_list.keys.map do |k|
+      [TextingService.twilio_list[k][:name], k]
+    end
   end
 
   def rhombus_for

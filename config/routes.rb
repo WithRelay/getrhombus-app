@@ -27,7 +27,7 @@ Rails.application.routes.draw  do
     end
   end
 
-  authenticate :user, -> (user) { CheckUser::RouteAuthentication.new(user).should_authenticate? } do
+  #authenticate :user, -> (user) { CheckUser::RouteAuthentication.new(user).should_authenticate? } do
     post 'lists/create_new_list' => 'lists#create_new_list'
     get 'user_lists/remove_user' => 'user_lists#remove_user'
     get 'fb_pages/remove_integration' => 'fb_pages#remove_integration'
@@ -89,7 +89,6 @@ Rails.application.routes.draw  do
       resources :bank_accounts
       resources :addresses
       resources :people
-      resources :message_resolutions
       resources :transactions do
         collection do
           get 'download' => 'transactions#download_csv', constraints: { format: 'csv' }
@@ -150,7 +149,7 @@ Rails.application.routes.draw  do
       #--------------------------------------------------------------------------#
       match 'transactions/:txn_number/refund' => 'transactions#refund', via: :post
       resources :transactions, only: [:create]
-      match 'numbers/search' => 'numbers#search', via: :get
+      match 'numbers/search' => 'numbers#search', via: [:get]
       resources :lists, only: [:index, :create]
       resources :coupons, only: [:index, :update] do
         post 'check_coupon_name', on: :collection
@@ -175,7 +174,7 @@ Rails.application.routes.draw  do
         get 'rating', on: :member
       end
     end
-  end
+  #end
 
 
   ## catch all other to 404
