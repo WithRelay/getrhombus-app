@@ -14,7 +14,7 @@
           <a class="button choose-plan pricing-table-button w-button" href="#">Get Started</a>
           <div class="display-credit-card-wrapper">
             <div class="get-started-2 log-in-form w-form">
-              <%= form_for(current_user, as: resource_name, url: current_user, html: { method: :patch, class: "w-clearfix", id: "cc-form" }) do |f| %>
+              <%= form_for(current_user, as: resource_name, url: registration_update_user_path(current_user), html: { method: :patch, class: "w-clearfix", id: "cc-form" }) do |f| %>
                 <%= f.number_field :last4, id: "cc-number", type: "tel", class: "card-number text-field w-input", placeholder: "Card number", "x-autocompletetype" => "cc-number", autocompletetype: "cc-number", autocorrect: 'off', spellcheck: 'off', autocapitalize: 'off' %>
                 <span class="card" aria-hidden="true"></span>
 
