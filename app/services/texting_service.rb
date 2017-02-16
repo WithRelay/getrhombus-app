@@ -57,9 +57,9 @@ class TextingService
         client = Twilio::REST::Client.new TWILIO_API_KEY, TWILIO_API_SECRET
         
         search_params = {}
-        search_params[ (['US', 'CA'].include? params[:country]) ? 'area_code' : 'contains' ] = params[:query]
+        search_params[ ((['US', 'CA'].include? params[:country]) ? 'area_code' : 'contains').to_sym ] = params[:query]
         data = twilio_list[params[:country].to_sym][:types][params[:type].to_sym]
-        data[:capabilities].each { |c| search_params[c + '_enabled'] = "true" }
+        data[:capabilities].each { |c| search_params[(c + '_enabled').to_sym] = "true" }
         search_params[:exclude_all_address_required] = "true" if data[:address_required] == ""
 
         if params[:type] == 'local'
@@ -67,7 +67,7 @@ class TextingService
         elsif params[:type] == 'toll_free'
           number = client.account.available_phone_numbers(params[:country]).toll_free.list(search_params).first
         elsif params[:type] == 'mobile'
-          number = client.account.available_phone_numbers.get(params[:country]).mobile.list(search_params).first
+          number = client.account.available_phone_numbers(params[:country]).mobile.list(search_params).first
         end
 
         { number: number.nil? ? '' : number.phone_number  }

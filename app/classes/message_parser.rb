@@ -55,7 +55,7 @@ class MessageParser
         return if @amt_ary.blank?          # No further action needed.
         
         # test for active accounts, they are now active by default.
-        if !@merchant.is_active
+        if !@merchant.active?
           # send_response
           puts 'merchant isnt active'
         elsif true #merchant_supports_payment?
@@ -93,8 +93,8 @@ class MessageParser
   def find_conversation_refs_count
     uid = (@customer.present?) ? @customer.id : @received_msg.from
     uid_type = (@customer.present?) ? 'user' : (channel == 'Message') ? 'phone_number' : 'fb_page'
-    conv = Conversation.find_conversation(@merchant.id, uid_type, uid)
-    conv.present? ? conv.conversation_refs.count : 0
+#    conv = Conversation.find_conversation(@merchant.id, uid_type, uid)
+#    conv.present? ? conv.conversation_refs.count : 0
   end
 
   # check if text is a payment

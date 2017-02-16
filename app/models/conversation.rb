@@ -156,6 +156,10 @@ class Conversation < ActiveRecord::Base
     find_by(merchant_id: team_id, uid_type: uid_type, uid: uid, message_resolution_id: nil)
   end
 
+  def self.find_last_conversation(team_id, uid_type, uid)
+    where(merchant_id: team_id, uid_type: uid_type, uid: uid)
+  end
+
   def self.get_merchant_todays_unread_count(merchant_id, date)
     find_by_sql(["select count(cr.id) as count from conversations c inner join conversation_refs cr on c.id = cr.conversation_id
                    where cr.unread = 1 and c.message_resolution_id is null and c.merchant_id = ? and c.created_at >= ?", merchant_id, date]).first.count

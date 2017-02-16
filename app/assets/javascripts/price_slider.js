@@ -1,37 +1,31 @@
 $(document).ready(function() {
-  var pricingSlider, priceValueSpan, amount, currentAmount,
-         PlanA = 0,
-         PlanB = 50,
-         PlanC = 75,
-         PlanD = 90,
-         PlanE = 105,
-         PlanF = 120,
-         PlanG = 145,
-         PlanH = 195,
-         PlanI = 240,
-         PlanJ = 295,
-         PlanK = 350,
-         PlanL = 400,
-         PlanM = 450,
-         PlanN = 500;
+  var pricingSlider, priceValueSpan, amount, selection,//currentAmount,
+      PlanA = 0,
+      PlanB = 50,
+      PlanC = 75,
+      PlanD = 90,
+      PlanE = 105,
+      PlanF = 120,
+      PlanG = 145,
+      PlanH = 195,
+      PlanI = 240,
+      PlanJ = 295,
+      PlanK = 350,
+      PlanL = 400,
+      PlanM = 450,
+      PlanN = 500;
 
-   // show slider on merchant credit card info update form
+  // show slider on merchant credit card info update form
   // show slider on pricing page load
-    if ($('#pricing-range')) {
-      showSlider();
-    }
-
-   // show slider on subscription setting
-   $('#setSubscription').on('focus', function (e) {
-      showSlider();
-    })
-
+  if ($('#pricing-range')) {
+    showSlider();
+  };
 
   function showSlider(){
     pricingSlider = document.getElementById('pricing-range');
     priceValueSpan = document.getElementById('price-value');
     $('.range-bar').remove();
-    currentAmount = (pricingSlider) ? pricingSlider.attributes.amountValue.value : 0;
+    //currentAmount = (pricingSlider) ? pricingSlider.attributes.amountValue.value : 0;
     if (pricingSlider) {
       var slider = new Powerange(pricingSlider, {
         callback : displayValue
@@ -39,13 +33,27 @@ $(document).ready(function() {
         , max           : 50000
         , start         : 100
         , vertical      : false
+        , hideRange     : true
       });
     }
   }
 
   function displayValue() {
-    // priceValueSpan.innerHTML = pricingSlider.value;
-    priceValueSpan.innerHTML = '<h4>' + plan_range(pricingSlider.value)[1] + '</h4>';
+    selection = plan_range(pricingSlider.value)
+    priceValueSpan.innerHTML = '<h4>' + selection[1] + '</h4>';
+
+    // for add a subscription page
+    if ($('#add_subscription').length) {
+      if (pricingSlider.value <= 100) {
+        $('#cc-fields').slideUp(300);
+        $('#add_subscription_btn').val('Get Started');
+      } else {
+        $('#cc-fields').slideDown(300);
+        $('#add_subscription_btn').val('Start 14-day Trial');
+      }
+    }
+
+    $('#plan_name').val(selection[0])
     /*
     # LEAVE THIS FOR LATER
     //only for subscription setting page
@@ -58,15 +66,15 @@ $(document).ready(function() {
       $('#pricing-range').val(plan_range(pricingSlider.value)[0]);
     }
     else {
+      $('#select_plan').attr('href', '/users/sign_up?signup_plan=' + plan_range((pricingSlider.value)[0]));
+    } 
     */
-    $('#select_plan').attr('href', '/users/sign_up?signup_plan=' + plan_range((pricingSlider.value)[0]));
-   //}
   }
 
   function plan_range(customerCount) {
     if (customerCount > 0 && customerCount <= 100) {
       return ['PlanA', planInfo(PlanA)]
-    }else if (customerCount > 101 && customerCount <= 1000) {
+    } else if (customerCount > 101 && customerCount <= 1000) {
       return ['PlanB', planInfo(PlanB)]
     } else if (customerCount > 1001 && customerCount <= 2500) {
       return ['PlanC',planInfo(PlanC)]

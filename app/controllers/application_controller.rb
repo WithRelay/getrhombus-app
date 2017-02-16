@@ -4,7 +4,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
   before_action :configure_permitted_parameters, if: :devise_controller?
-  around_action :set_time_zone, if: :current_user
+  #around_action :set_time_zone, if: :current_user
   before_action :set_notifications
 
   # for uniquness check...can it be more specific...cos email, phone numbers are caught
@@ -50,13 +50,11 @@ class ApplicationController < ActionController::Base
     def configure_permitted_parameters
       devise_parameter_sanitizer.permit(:sign_up) { |u| u.permit(:email, :phone_number, :password, :user_level ) }
       devise_parameter_sanitizer.permit(:sign_in) { |u| u.permit(:email, :password) }
-
-      ### do we need these parameters here or in users_controller when updating account from settings page??
       devise_parameter_sanitizer.permit(:account_update) { |u| u.permit(:email, #:current_password,
         :password, :password_confirmation, :card_token, 
         :last4, :exp_month,  :exp_year, :card_name, :card_type,
         :rhombus_number, :team_size, :use_rhombus_for,
-        :update_rhombus_number,
+        :rn_type, :rn_country,
         :phone_number, :org_name, :org_category, :org_phone, :currency,
         :tax_percent, :url, :custom_welcome, :time_zone, :zip_code, 
         :state_province, :city, :street_address, :country, :org_type, 

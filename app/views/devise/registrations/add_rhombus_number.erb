@@ -2,33 +2,37 @@
   <div class="onboarding-table-column-1 w-col w-col-8">
     <div class="onboarding-form-section">
       <div class="onboarding-form-div sign-in signup">
-        <h4 class="form-header">Select area code</h4>
+        <h4 class="form-header">Setup phone number</h4>
         <div class="flex-underline form-header-underline"></div>
         <div class="get-started-2 log-in-form w-form">
 
           <%= form_for(current_user, as: resource_name, url: registration_path(resource_name), html: { method: :put, class: "w-clearfix", id: "search_number_form" }) do |f| %>
 
             <label class="form-label" for="Country-3">In what country would you like your number?</label>
-            <select id="searchNumberCountry" class='dropdown w-select'>
-              <% TextingService.twilio_list.keys.each do |k| %>
-                <option value="<%= k %>" <%= "selected" if k.to_s == "US" %> ><%= TextingService.twilio_list[k][:name] %></option>
-              <% end %>
-            </select>
+            <%= f.select :rn_country,  options_for_select(twilio_countries, selected: 'US'), {}, class: 'dropdown w-select', id: "searchNumberCountry" %>
 
-            <label class="form-label" for="Area-Code-2">Enter preferred area code:</label>
-            <input id="searchNumberField" class="login text-field w-input" placeholder='Enter area code' type="text" />
+            <div id='searchOptions'>
+
+              <%= f.select :rn_type, [], {}, class: 'dropdown w-select hide-not-important', id: "searchNumberType" %>
+
+              <label class="form-label" for="Area-Code-2" id='searchNumberFieldLabel'>Enter preferred area code:</label>
+              <%= f.text_field :rhombus_number, id: 'searchNumberField', :class => "login text-field w-input", placeholder: "Enter area code" %>
+                        
+              <div class="area-code-availability flex-underline form-header-underline"></div>
+
+              <input type="hidden" name="add_rhombus_number" value="true">
             
-            <div class="area-code-availability flex-underline form-header-underline"></div>
-            
-            <label class="form-label paragraph" for="Area-Code-Unavailable-CTA-2">Area code availability depends on the telecom network providers. What would you like to do if your preferred area code is unavailable?</label>
-            <select class="dropdown w-select" id="Area-Code-Unavailable-CTA-2" name="Area-Code-Unavailable-CTA-2" required="required">
-              <option value="First">Give me any area code</option>
-              <option value="Second">Let me try another area code</option>
-            </select>
-            
-            <%= f.submit "Submit", id: "ba-submit", class: "button log-in w-button" %>
+              <label class="form-label paragraph" for="Area-Code-Unavailable-CTA-2">Area code availability depends on the telecom network providers. What would you like to do if your preferred area code is unavailable?</label>
+              <select class="dropdown w-select" id="areaCodeUnavailable" >
+                <option value="random">Give me any area code</option>
+                <option value="try_again">Let me try another area code</option>
+              </select>
+
+            </div>
+
+            <%= f.submit "Submit", id: "searchNumberBtn", class: "button log-in w-button" %>
+
           <% end %>
-
           
         </div>
       </div>
