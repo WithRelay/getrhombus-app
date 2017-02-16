@@ -5,13 +5,13 @@
       <div class="w-col w-col-3">
         <div class="customer-properties-div">
           <div class="right-nav-profile-content-wrapper"><img class="profile-picture-right-nav" src="images/Customer-1.jpg" width="60">
-            <div class="dashboard-right-nav signup-box-subheading">MICHAEL RANDY <span class="relay-id">RELAY ID</span>
+            <div class="dashboard-right-nav signup-box-subheading"><%= "#{@user.first_name} #{@user.last_name}"%> <span class="relay-id">RELAY ID</span>
             </div>
-            <div class="left-column-text number"> &nbsp; &nbsp;+1 <redacted_phone_number></div>
-            <div class="left-column-text"> &nbsp; &nbsp;<redacted_email></div>
-            <div class="left-column-text"> &nbsp; &nbsp; &nbsp;Washington, DC</div>
-            <div class="left-column-text"> &nbsp; &nbsp; @mrandy</div>
-            <div class="left-column-text"> &nbsp; &nbsp; Customer since: 04/23/2009</div>
+            <div class="left-column-text number"> &nbsp; &nbsp;<%= @user.phone_number %></div>
+            <div class="left-column-text"> &nbsp; &nbsp; <%= @user.email %></div>
+            <div class="left-column-text"> &nbsp; &nbsp; &nbsp; <%= @user.state_province %></div>
+            <div class="left-column-text"> &nbsp; &nbsp; <%= @user.twitter_cred.uid %></div>
+            <div class="left-column-text"> &nbsp; &nbsp; Customer since: <%= present(@merchant_customer).customer_since_date %></div>
             <div class="right-nav-underline"></div>
           </div>
           <div class="customer-profile profile-info-wrapper">
@@ -45,7 +45,7 @@
                 <div class="left-column-text recent-activity">Amount</div>
               </div>
               <div class="right-column w-col w-col-6">
-                <div class="recent-activity-description">$23.71</div>
+                <div class="recent-activity-description"><%= present(@merchant_customer).total%></div>
               </div>
             </div>
             <div class="recent-activity right-nav-row w-row">
@@ -53,7 +53,7 @@
                 <div class="left-column-text recent-activity">Average Spend</div>
               </div>
               <div class="right-column w-col w-col-6">
-                <div class="recent-activity-description">$43.90</div>
+                <div class="recent-activity-description"><%= present(@merchant_customer).average %></div>
               </div>
             </div>
             <div class="recent-activity right-nav-row w-row">
@@ -61,7 +61,7 @@
                 <div class="left-column-text recent-activity">Customer since</div>
               </div>
               <div class="right-column w-col w-col-6">
-                <div class="recent-activity-description">04/23/2009</div>
+                <div class="recent-activity-description"><%= present(@merchant_customer).customer_since_date %></div>
               </div>
             </div>
             <div class="right-nav-underline"></div>
@@ -205,28 +205,30 @@
                 </div>
               </div>
             </div>
-            <div class="customer-profile-trasaction-table w-row">
-              <div class="w-col w-col-5">
-                <div class="description w-clearfix">
-                  <div class="shrink-text table-text unread-table">Swedish Massage</div>
+            <% @transactions.each do |transaction| %>
+              <div class="customer-profile-trasaction-table w-row">
+                <div class="w-col w-col-5">
+                  <div class="description w-clearfix">
+                    <div class="shrink-text table-text unread-table"><%= transaction.description %></div>
+                  </div>
+                </div>
+                <div class="w-col w-col-2">
+                  <div class="amount w-clearfix">
+                    <div class="shrink-text table-text unread-table"><%= transaction.amount %></div>
+                  </div>
+                </div>
+                <div class="w-col w-col-2">
+                  <div class="date w-clearfix">
+                    <div class="shrink-text table-text unread-table"><%= present(transaction).format_created_at %></div>
+                  </div>
+                </div>
+                <div class="w-col w-col-3">
+                  <div class="action w-clearfix">
+                    <div class="actions status">Refund</div>
+                  </div>
                 </div>
               </div>
-              <div class="w-col w-col-2">
-                <div class="amount w-clearfix">
-                  <div class="shrink-text table-text unread-table">$15.25</div>
-                </div>
-              </div>
-              <div class="w-col w-col-2">
-                <div class="date w-clearfix">
-                  <div class="shrink-text table-text unread-table">3d ago</div>
-                </div>
-              </div>
-              <div class="w-col w-col-3">
-                <div class="action w-clearfix">
-                  <div class="actions status">Refund</div>
-                </div>
-              </div>
-            </div>
+             <%end%> 
             <div class="customer-profile-trasaction-table w-row">
               <div class="w-col w-col-5">
                 <div class="description w-clearfix">
