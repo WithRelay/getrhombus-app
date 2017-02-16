@@ -1,6 +1,8 @@
 class RegistrationsController < Devise::RegistrationsController
 
   include AdditionalUserActions
+  include DashboardNotification
+  before_action :set_notifications, only: [:billing_information, :account_setting, :business_setting]
 
   def update
     if params[:add_profile_info].present? && current_user.is_merchant?
@@ -32,7 +34,7 @@ class RegistrationsController < Devise::RegistrationsController
 =end
 
     end
-   
+
     if current_user.update_without_password(devise_parameter_sanitizer.sanitize(:account_update))
       set_flash_message :notice, :updated
       # Sign in the current user bypassing validation in case his password changed

@@ -5,7 +5,7 @@
     <h4 class="form-header">Billing Information</h4>
     <div class="flex-underline form-header-underline"></div>
     <div class="account-settings-form-wrapper w-form">
-      <%= form_for(current_user, as: resource_name, url: registration_path(current_user), html: { method: :put, id: "cc-form", class: 'w-clearfix', autocomplete: "off" }) do |f| %>
+      <%= form_for(current_user, as: resource_name, url: registration_update_user_path(current_user), html: { method: :put, id: "cc-form", class: 'w-clearfix', autocomplete: "off" }) do |f| %>
         <label class="field-headers form-label settings" for="Business-Name">credit card information</label>
         <label class="form-label paragraph" for="Card-Number-2">You will be billed at the beginning of every month for all active paid plans, excluding the 14-day trial period. SMS/MMS related charges will deducted from available credits in your Rhombus account see <a class="settings-link" href="#">SMS/MMS usage</a>.
           <br>

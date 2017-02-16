@@ -6,7 +6,7 @@
     <h4 class="form-header">Business Information</h4>
     <div class="flex-underline form-header-underline"></div>
     <div class="account-settings-form-wrapper w-form">
-      <%= form_for(current_user, as: resource_name, data: { name: "Email Form" }, url: registration_path(resource_name), html: { method: :put, id: "email-form merchantProfile", class: "w-clearfix" }) do |f| %>
+      <%= form_for(current_user, as: resource_name, data: { name: "Email Form" }, url: registration_update_user_path(current_user), html: { method: :put, id: "email-form merchantProfile", class: "w-clearfix" }) do |f| %>
         <label class="field-headers form-label settings" for="Business-Name">Basic details</label>
         <%= f.text_field :org_name, data: { name: "Business Name" }, class: "full-name settings text-field w-input", placeholder: "Business Name", id: 'Business-Name' %>
         <label class="form-label paragraph" for="Organization-Type">Your business name will appear on both your customer’s card statement &amp; receipts. If your business doesn't have a name, enter your product or services and your city, e.g. “Bakery - New York”</label>
