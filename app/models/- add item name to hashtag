@@ -59,7 +59,6 @@ Bhishma
 - create_saas_subscription
 
 - coupon pages (add link to transactions dropdown and link under segments)
-- slider type - Minimum, maximum and start values. also doesnt look like design
 - find simple native browser notifications
 - do we need fb_page_id in fb_messages
 - do we store fb_cred even if not a user? - affects my users query with outer join
