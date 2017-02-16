@@ -23,23 +23,21 @@
         <div class="flex-underline form-section-divider"></div>
         <label class="field-headers form-label settings" for="field">Account details</label>
         <%= f.select :org_type, options_for_select(connect_org_type(f.object), selected: present(current_user).org_type_on_managed_acct_page), {}, class: 'business-type dropdown w-select', id: 'user_org_type' %>
-        <%= f.text_field :org_name, id: 'org-name Legal-name', class: 'text-field w-input', placeholder: 'Company legal name' %>
-        <%= f.text_field :org_tax_id, id: 'org-tax-id EIN', data: { name: 'EIN' }, class: 'text-field w-input', placeholder: 'EIN (Tax ID)' %>
+        <%= f.text_field :org_name, id: 'org-name', class: 'text-field w-input', placeholder: 'Company legal name' %>
+        <%= f.text_field :org_tax_id, id: 'org-tax-id', data: { name: 'EIN' }, class: 'text-field w-input', placeholder: 'EIN (Tax ID)' %>
 
         <div class="flex-underline form-section-divider"></div>
         <label class="field-headers form-label settings" for="Business-Name">BUSINESS ADDRESS</label>
         <%= f.fields_for :address do |a| %>
-          <%= a.text_field :street_address, id: 'company-street Street-Address', placeholder: 'Street Address', class: 'settings street-name text-field w-input', data: {name: 'Street Address'} %>
+          <%= a.text_field :street_address, id: 'company-street', placeholder: 'Street Address', class: 'settings street-name text-field w-input', data: {name: 'Street Address'} %>
 
-          <input class="apt_suite settings text-field w-input" data-name="APT/Suite" id="APT-Suite" maxlength="256" name="APT-Suite" placeholder="Suite" type="email">
-
-          <%= a.text_field :city, id: 'company-city City', class: 'city settings text-field w-input', placeholder: 'City' %>
+          <%= a.text_field :city, id: 'company-city', class: 'apt_suite settings text-field w-input', placeholder: 'City' %>
 
           <div id='company-state-div'>
-            <%= a.text_field :state_province, id: 'company-state State', class: 'settings state text-field w-input', data: { name: 'State' }, placeholder: 'State/Province' %>
+            <%= a.text_field :state_province, id: 'company-state', class: 'settings street-name text-field w-input', data: { name: 'State' }, placeholder: 'State/Province' %>
           </div>
 
-          <%= a.text_field :city, id: 'company-city Zip', class: 'settings text-field w-input zip', placeholder: 'Zip/Postal code' %>
+          <%= a.text_field :city, id: 'company-city', class: 'settings text-field w-input zip', placeholder: 'Zip/Postal code' %>
 
         <% end %>
 

@@ -291,6 +291,8 @@ $(document).on('ready page:load', function() {
     }
   });
 
+  ($('#managed-acct-country option:selected').val()) && build_currency_details($('#managed-acct-country option:selected').val())
+
   $('#managed-acct-country').change(function() {
 
     var hash = org_country_formatter[this.value];

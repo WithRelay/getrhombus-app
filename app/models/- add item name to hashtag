@@ -7,8 +7,8 @@ signup form
 - sign up form can have devise/database error but not showing up. 
 - capture phone number not unique check from database - see application controller
 
-
-
+rhombus number form
+- no flash message ... probably in signup and profile info forms
 
 
 
@@ -19,14 +19,6 @@ Friday
 - clean up conversations
 - workflow for sign in, sign up and places where we add card, token, referrer, contact and customer, payment capture
 - clean up below
-
-
-
-
-
-
-
-
 
 
 
@@ -47,11 +39,9 @@ Edwin
 Surya
 - emojionearea from campaigns showing up in hashtag...check for unique id before appending emojiareas - implement for hashtag
 - add emojionearea to reminders. 
-- document form validation error state design
 - sign up workflow for merchants?? check active saas subscription?
 - notifications header issue...not consistent across pages
 - campaigns new 
-	- fb missing in dropdown, 
 	- image attachment view/behavior - see implementation in hashtags create
 	- give sub nav higher z-index cos of emoji -- if you scroll down and the text box is under the subnav, the emoji icon will still show up
 	- on index page, show subnav even if there are no campaigns
@@ -62,7 +52,6 @@ Bhishma
 - coupon pages (add link to transactions dropdown and link under segments)
 - slider type - Minimum, maximum and start values. also doesnt look like design
 - find simple native browser notifications
-- fill in method for finding user with saas - obj or nil
 - do we need fb_page_id in fb_messages
 - do we store fb_cred even if not a user? - affects my users query with outer join
 - can we message a messenger user just like that...with just creds?

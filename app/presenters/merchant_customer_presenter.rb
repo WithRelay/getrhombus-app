@@ -12,18 +12,18 @@ class MerchantCustomerPresenter < BasePresenter
   end
 
   def first_visit_format_created_at
-  	transaction = Transaction.where(user_id: @model.customer_id)
-    if (transaction.present?)
-      h.time_ago_in_words(transaction.first.created_at) + ' ago'
+  	transactions = customer_transactions
+    if (transactions.present?)
+      h.time_ago_in_words(transactions.first.created_at) + ' ago'
     else
       ' -- '
     end
   end
 
  def last_visit_format_created_at
-  	transaction = Transaction.where(user_id: @model.customer_id)
-    if (transaction.present?)
-      h.time_ago_in_words(transaction.last .created_at) + ' ago'
+  	transactions = customer_transactions
+    if (transactions.present?)
+      h.time_ago_in_words(transactions.last.created_at) + ' ago'
     else
       '--'
     end
@@ -40,4 +40,13 @@ class MerchantCustomerPresenter < BasePresenter
   	"$ #{'%.02f' % t = transaction_sum ? transaction_sum : 0}"
   end
 
+  def customer_since_date
+    @model.created_at.strftime('%m/%d/%Y')
+  end
+
+private
+
+  def customer_transactions
+    transaction = Transaction.where(user_id: @model.customer_id)
+  end
 end

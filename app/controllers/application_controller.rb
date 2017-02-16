@@ -5,7 +5,6 @@ class ApplicationController < ActionController::Base
 
   before_action :configure_permitted_parameters, if: :devise_controller?
   around_action :set_time_zone, if: :current_user
-  before_action :set_notifications
 
   # for uniquness check...can it be more specific...cos email, phone numbers are caught
   # capture phone number duplicates on sign up page
@@ -50,13 +49,11 @@ class ApplicationController < ActionController::Base
     def configure_permitted_parameters
       devise_parameter_sanitizer.permit(:sign_up) { |u| u.permit(:email, :phone_number, :password, :user_level ) }
       devise_parameter_sanitizer.permit(:sign_in) { |u| u.permit(:email, :password) }
-
-      ### do we need these parameters here or in users_controller when updating account from settings page??
       devise_parameter_sanitizer.permit(:account_update) { |u| u.permit(:email, #:current_password,
         :password, :password_confirmation, :card_token, 
         :last4, :exp_month,  :exp_year, :card_name, :card_type,
         :rhombus_number, :team_size, :use_rhombus_for,
-        :update_rhombus_number,
+        :rn_type, :rn_country,
         :phone_number, :org_name, :org_category, :org_phone, :currency,
         :tax_percent, :url, :custom_welcome, :time_zone, :zip_code, 
         :state_province, :city, :street_address, :country, :org_type, 
@@ -67,15 +64,5 @@ class ApplicationController < ActionController::Base
     def record_not_unique
       flash[:alert] = "The phone number you entered is already being used on rhombus :("
       redirect_to "/signup"
-    end
-
-    def set_notifications
-      unless current_user.nil?
-        beginning_of_day = Time.current.beginning_of_day
-        @todays_last5_txns = Transaction.get_merchant_todays_last5_txns(current_user.id, beginning_of_day)
-        @todays_txns_count = Transaction.get_merchant_todays_txn_count(current_user.id, beginning_of_day)
-        @todays_last_msgs_from_last5_convs = Conversation.get_last_msg_from_last5_convs(current_user.id, beginning_of_day)
-        @todays_unread_convs_count = Conversation.get_merchant_todays_unread_count(current_user.id, beginning_of_day)
-      end
     end
 end

@@ -5,10 +5,10 @@ class WebhooksController < ApplicationController
     # should we return 500 if something goes wrong?
     #begin
       # Verify the event by fetching it from Stripe
-      #event = Stripe::Event.retrieve(params[:id]) 
+      #event = Stripe::Event.retrieve(params[:id])
       #if params[:id] == event[:id]
-        StripeEvent.process_event(params) 
-      #end    
+        StripeEvent.process_event(params)
+      #end
     #rescue StandardError => e
       # email platform
     #end
@@ -29,7 +29,7 @@ class WebhooksController < ApplicationController
 
   def facebook_events
     res = {}
-    
+
     begin
       res = FacebookEvent.process_event(params)
     rescue StandardError => e

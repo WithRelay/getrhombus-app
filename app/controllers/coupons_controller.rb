@@ -1,6 +1,7 @@
 class CouponsController < ApplicationController
   before_action :set_coupon, only: [:show, :destroy]
-
+  include DashboardNotification
+  before_action :set_notifications
   respond_to :html
 
   def index

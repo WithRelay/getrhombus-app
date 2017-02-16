@@ -1,9 +1,16 @@
 class RegistrationsController < Devise::RegistrationsController
 
   include AdditionalUserActions
+  include DashboardNotification
+  before_action :set_notifications, only: [:billing_information, :account_setting, :business_setting]
 
   def update
     if params[:add_profile_info].present? && current_user.is_merchant?
+      current_user.status = 2
+    elsif params[:add_rhombus_number].present? && current_user.is_merchant?
+      current_user.status = 3
+    elsif params[:add_subscription].present? && current_user.is_merchant?
+      current_user.status = 1
     else
       set_captured_payment_session
       @re = (params[:user][:card_token].present?) ? current_user.add_token_to_user(params[:user][:card_token]) : [true]
@@ -32,7 +39,7 @@ class RegistrationsController < Devise::RegistrationsController
 =end
 
     end
-   
+
     if current_user.update_without_password(devise_parameter_sanitizer.sanitize(:account_update))
       set_flash_message :notice, :updated
       # Sign in the current user bypassing validation in case his password changed

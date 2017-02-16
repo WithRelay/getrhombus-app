@@ -152,8 +152,8 @@ class Conversation < ActiveRecord::Base
   end
 
   # find conversation
-  def self.find_conversation(team_id, uid_type, uid)
-    find_by(merchant_id: team_id, uid_type: uid_type, uid: uid, message_resolution_id: nil)
+    def self.find_last_conversation(team_id, uid_type, uid)
+    where(merchant_id: team_id, uid_type: uid_type, uid: uid).last
   end
 
   def self.get_merchant_todays_unread_count(merchant_id, date)
