@@ -20,7 +20,6 @@ class Api::V1::CampaignsController < API::V1::BaseController
   end
 
   def change_status
-    binding.pry
     campaign = current_user.campaigns.find_by_id(params[:id])
     if campaign.present?
       status = campaign.active? ? 2 : 1

@@ -1,4 +1,6 @@
 class MerchantCustomersController < ApplicationController
+  inlcude DashboardNotification
+  before_action :set_notifications
   
   def customers
   	@customers = current_user.customers

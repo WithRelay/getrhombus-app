@@ -2,7 +2,8 @@ class UsersController < ApplicationController
 
   # do I need these here ????
   before_action :set_user, only: [:show, :edit, :update, :destroy, :contacts, :customers, :refer_business]
-
+  inlcude DashboardNotification
+  before_action :set_notifications, only: [:index, :show]
   # do i need this?
   load_and_authorize_resource except: [:customer_csv_template]
 

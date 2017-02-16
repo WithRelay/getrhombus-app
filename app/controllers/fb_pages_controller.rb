@@ -1,7 +1,9 @@
-# User can select facebook pages 
+# User can select facebook pages
 class FbPagesController < ApplicationController
   before_action :set_data, :check_cred_present, :update_page
   before_action :set_page, only: [:update_user_fb_page]
+  inlcude DashboardNotification
+  before_action :set_notifications
   respond_to :html, :js
 
   def index
@@ -13,7 +15,7 @@ class FbPagesController < ApplicationController
       subscribe_user_fb_page
     else
       unsubscribe_user_fb_page
-    end    
+    end
   end
 
   def subscribe_user_fb_page
@@ -65,7 +67,7 @@ class FbPagesController < ApplicationController
     subscribed_page = @user_fb_pages.subscribed
     # only one page can be subscribed to at a time
     response = FacebookMessengerService.unsubscribe(subscribed_page[0].page_access_token) if subscribed_page.present?
-    
+
     #1. user has pages/subscribed-page and fb returns success - destroy
     #2. user has pages/subscribed-page and fb returns failure - dont destroy
     #3. user has pages but no subscribed-page (no fb call) - destroy
@@ -92,10 +94,10 @@ class FbPagesController < ApplicationController
   def set_data
     if current_user.nil?
       redirect_to signin_path,  flash: { error: 'You are not Signed In' }
-    else 
+    else
       @user_fb_pages = current_user.fb_pages
       @fb_cred = current_user.fb_creds.original_cred.first
-    end    
+    end
   end
 
   def set_page

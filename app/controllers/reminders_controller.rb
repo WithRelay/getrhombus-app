@@ -1,4 +1,6 @@
 class RemindersController < ApplicationController
+  inlcude DashboardNotification
+  before_action :set_notifications
   before_action :set_reminder, only: [ :edit, :update, :change_status , :destroy ]
 
   def index
@@ -6,7 +8,7 @@ class RemindersController < ApplicationController
     @reminders_today = current_user.reminders.active.where("date_time >= ? AND date_time < ?",Time.current.beginning_of_day, Time.current.beginning_of_day + 1.days)
     @reminders_tomorrow = current_user.reminders.active.where("date_time >= ? AND date_time < ?", Time.current.beginning_of_day + 1.days, Time.current.beginning_of_day + 2.days)
     @reminders_upcoming = current_user.reminders.active.where("date_time >= ?", Time.current.beginning_of_day + 2.days)
-    
+
     render('empty_reminder', locals: { reminder: current_user.reminders.build }) unless (@reminders_today.present? || @reminders_tomorrow.present? || @reminders_upcoming.present?)
   end
 

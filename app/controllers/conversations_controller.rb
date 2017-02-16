@@ -1,4 +1,6 @@
 class ConversationsController < ApplicationController
+  inlcude DashboardNotification
+  before_action :set_notifications
 
 	def index
 	end

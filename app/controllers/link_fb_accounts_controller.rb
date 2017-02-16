@@ -1,7 +1,9 @@
 class LinkFbAccountsController < ApplicationController
   before_action :set_params
+  inlcude DashboardNotification
+  before_action :set_notifications
 
-  def link_facebook    
+  def link_facebook
   end
 
   def redirect

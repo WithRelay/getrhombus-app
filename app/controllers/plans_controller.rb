@@ -1,4 +1,6 @@
 class PlansController < ApplicationController
+  inlcude DashboardNotification
+  before_action :set_notifications, except: [:destroy]
   before_action :set_plan, only: [:show, :destroy]
   respond_to :html, :js
 

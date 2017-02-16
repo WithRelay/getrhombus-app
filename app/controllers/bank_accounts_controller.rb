@@ -1,6 +1,7 @@
 class BankAccountsController < ApplicationController
+  inlcude DashboardNotification
+  before_action :set_notifications
   before_action :set_bank_account, only: [:show, :edit, :update, :destroy]
-
   respond_to :html
 
   def index

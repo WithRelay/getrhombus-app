@@ -5,8 +5,6 @@ class ApplicationController < ActionController::Base
 
   before_action :configure_permitted_parameters, if: :devise_controller?
   around_action :set_time_zone, if: :current_user
-  before_action :set_notifications
-
   # for uniquness check...can it be more specific...cos email, phone numbers are caught
   # capture phone number duplicates on sign up page
   rescue_from ActiveRecord::RecordNotUnique, with: :record_not_unique
@@ -63,15 +61,5 @@ class ApplicationController < ActionController::Base
     def record_not_unique
       flash[:alert] = "The phone number you entered is already being used on rhombus :("
       redirect_to "/signup"
-    end
-
-    def set_notifications
-      unless current_user.nil?
-        beginning_of_day = Time.current.beginning_of_day
-        @todays_last5_txns = Transaction.get_merchant_todays_last5_txns(current_user.id, beginning_of_day)
-        @todays_txns_count = Transaction.get_merchant_todays_txn_count(current_user.id, beginning_of_day)
-        @todays_last_msgs_from_last5_convs = Conversation.get_last_msg_from_last5_convs(current_user.id, beginning_of_day)
-        @todays_unread_convs_count = Conversation.get_merchant_todays_unread_count(current_user.id, beginning_of_day)
-      end
     end
 end

@@ -1,5 +1,6 @@
 class TransactionsController < ApplicationController
-  
+  inlcude DashboardNotification
+  before_action :set_notifications
   before_action :set_transaction, only: [:show, :edit, :update, :destroy]
 
   # why am I not authorizing user?
@@ -10,8 +11,8 @@ class TransactionsController < ApplicationController
     if current_user.is_merchant?
       @transactions = current_user.get_merchant_transactions.paginate(:page => params[:page], :per_page => 25)
     else
-      @transactions = current_user.get_customer_transactions.paginate(:page => params[:page], :per_page => 25)      
-    end   
+      @transactions = current_user.get_customer_transactions.paginate(:page => params[:page], :per_page => 25)
+    end
     respond_with(@transactions)
     #render layout: 'xxx' # remove
   end
@@ -26,7 +27,7 @@ class TransactionsController < ApplicationController
     response = t.get_transactions_csv(current_user.id, current_user.user_level, params[:txn_start_date], params[:txn_end_date])
     if response
       respond_to do |format|
-        format.csv { send_data response, filename: "rhombus_transactions_#{Time.zone.today.strftime("%d-%b-%y")}.csv" } 
+        format.csv { send_data response, filename: "rhombus_transactions_#{Time.zone.today.strftime("%d-%b-%y")}.csv" }
       end
     else
       # use 500 page after it is built

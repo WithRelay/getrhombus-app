@@ -1,4 +1,6 @@
 class SubscriptionsController < ApplicationController
+  inlcude DashboardNotification
+  before_action :set_notifications
   before_action :set_subscription, only: [:show, :edit, :update, :destroy]
 
   respond_to :html
@@ -16,7 +18,7 @@ class SubscriptionsController < ApplicationController
 
   def edit
   end
-  
+
   def update
   end
 
@@ -116,4 +118,3 @@ end
       redirect_to user_subscriptions_path
     end
 =end
-

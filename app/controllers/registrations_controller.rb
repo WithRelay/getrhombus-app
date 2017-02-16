@@ -1,6 +1,8 @@
 class RegistrationsController < Devise::RegistrationsController
 
   include AdditionalUserActions
+  inlcude DashboardNotification
+  before_action :set_notifications, only: [:billing_information, :account_setting, :business_setting]
 
   def update
     set_captured_payment_session

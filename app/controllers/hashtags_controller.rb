@@ -1,6 +1,7 @@
 class HashtagsController < ApplicationController
   before_action :set_hashtag, only: [:show, :edit, :update, :destroy]
-
+  inlcude DashboardNotification
+  before_action :set_notifications
   respond_to :html
 
   def index
@@ -22,14 +23,14 @@ class HashtagsController < ApplicationController
     if @hashtag.save
       if @hashtag.create_plan_for_recurring_tag(current_user)
         redirect_to user_hashtags_path, flash: { notice: "Hashtag created!" }
-      else 
+      else
         flash[:error] = "We're unable to create a plan for this recurring hashtag."
         @hashtag.destroy
         render :new
       end
     else
       flash[:error] = @hashtag.errors.messages.present? ? @hashtag.errors.full_messages : "We couldn't create the hashtag"
-      respond_with(@hashtag) 
+      respond_with(@hashtag)
     end
   end
 
@@ -38,19 +39,19 @@ class HashtagsController < ApplicationController
       redirect_to user_hashtags_path, flash: { notice: "Hashtag Updated!" }
     else
       flash[:error] = @hashtag.errors.messages.present? ? @hashtag.errors.full_messages : "We couldn't update the hashtag"
-      respond_with(@hashtag) 
+      respond_with(@hashtag)
     end
   end
 
   def destroy
-    if !@hashtag.is_mentioned? 
+    if !@hashtag.is_mentioned?
       re = @hashtag.delete_plan_for_recurring_tag(current_user)
       if re.first
         if @hashtag.destroy
           redirect_to(user_hashtags_path, flash: { notice: "Hashtag Deleted" }) and return
         else
           flash[:error] = "We cannot delete the hashtag"
-        end        
+        end
       else
         flash[:error] = re.second
       end
@@ -75,14 +76,14 @@ class HashtagsController < ApplicationController
           if h[:tag_type] == 2
             interval_ary = h[:interval].split("_")
             h[:interval] = interval_ary[0]
-            h[:interval_count] = interval_ary[1] 
+            h[:interval_count] = interval_ary[1]
           elsif h[:tag_type] == 0
             h[:charge_amount] = nil
             h[:amount] = nil
             h[:interval] = nil
           else
             h[:interval] = nil
-          end          
-      end                    
+          end
+      end
     end
 end
