@@ -2,7 +2,7 @@
 class FbPagesController < ApplicationController
   before_action :set_data, :check_cred_present, :update_page
   before_action :set_page, only: [:update_user_fb_page]
-  inlcude DashboardNotification
+  include DashboardNotification
   before_action :set_notifications
   respond_to :html, :js
 

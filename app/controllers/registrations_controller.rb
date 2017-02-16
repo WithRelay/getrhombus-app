@@ -1,7 +1,7 @@
 class RegistrationsController < Devise::RegistrationsController
 
   include AdditionalUserActions
-  inlcude DashboardNotification
+  include DashboardNotification
   before_action :set_notifications, only: [:billing_information, :account_setting, :business_setting]
 
   def update
@@ -34,7 +34,7 @@ class RegistrationsController < Devise::RegistrationsController
 =end
 
     end
-   
+
     if current_user.update_without_password(devise_parameter_sanitizer.sanitize(:account_update))
       set_flash_message :notice, :updated
       # Sign in the current user bypassing validation in case his password changed

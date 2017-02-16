@@ -1,6 +1,6 @@
 class LinkFbAccountsController < ApplicationController
   before_action :set_params
-  inlcude DashboardNotification
+  include DashboardNotification
   before_action :set_notifications
 
   def link_facebook

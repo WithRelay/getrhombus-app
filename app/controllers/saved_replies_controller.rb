@@ -1,5 +1,5 @@
 class SavedRepliesController < ApplicationController
-  inlcude DashboardNotification
+  include DashboardNotification
   before_action :set_notifications
   before_action :set_saved_reply, only: [:update, :destroy]
 

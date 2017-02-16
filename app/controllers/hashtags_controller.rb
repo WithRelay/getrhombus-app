@@ -1,6 +1,6 @@
 class HashtagsController < ApplicationController
   before_action :set_hashtag, only: [:show, :edit, :update, :destroy]
-  inlcude DashboardNotification
+  include DashboardNotification
   before_action :set_notifications
   respond_to :html
 

@@ -1,5 +1,5 @@
 class TransactionsController < ApplicationController
-  inlcude DashboardNotification
+  include DashboardNotification
   before_action :set_notifications
   before_action :set_transaction, only: [:show, :edit, :update, :destroy]
 

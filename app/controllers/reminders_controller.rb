@@ -1,5 +1,5 @@
 class RemindersController < ApplicationController
-  inlcude DashboardNotification
+  include DashboardNotification
   before_action :set_notifications
   before_action :set_reminder, only: [ :edit, :update, :change_status , :destroy ]
 

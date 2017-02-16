@@ -1,5 +1,5 @@
 class SubscriptionsController < ApplicationController
-  inlcude DashboardNotification
+  include DashboardNotification
   before_action :set_notifications
   before_action :set_subscription, only: [:show, :edit, :update, :destroy]
 
