@@ -171,13 +171,17 @@
           <div class="transaction-summary-table w-row">
             <div class="w-col w-col-6">
               <div class="customer-profile-box total-spend">
-                <div class="total-spend-text transaction-history-box-headers">$1,281.50</div>
+                <div class="total-spend-text transaction-history-box-headers">
+                  <%= present(@merchant_customer).total %>
+                </div>
                 <div class="table-description">Total Spend</div>
               </div>
             </div>
             <div class="w-col w-col-6">
               <div class="average-spend customer-profile-box">
-                <div class="average-spend-text transaction-history-box-headers">$14.32</div>
+                <div class="average-spend-text transaction-history-box-headers">
+                  <%= present(@merchant_customer).average %>
+                </div>
                 <div class="table-description">Average Spend</div>
               </div>
             </div>
