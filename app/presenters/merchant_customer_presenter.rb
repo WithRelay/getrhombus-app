@@ -13,7 +13,7 @@ class MerchantCustomerPresenter < BasePresenter
 
   def first_visit_format_created_at
   	transactions = customer_transactions
-    if (transaction.present?)
+    if (transactions.present?)
       h.time_ago_in_words(transactions.first.created_at) + ' ago'
     else
       ' -- '
@@ -22,8 +22,8 @@ class MerchantCustomerPresenter < BasePresenter
 
  def last_visit_format_created_at
   	transactions = customer_transactions
-    if (transaction.present?)
-      h.time_ago_in_words(transactions.last .created_at) + ' ago'
+    if (transactions.present?)
+      h.time_ago_in_words(transactions.last.created_at) + ' ago'
     else
       '--'
     end
@@ -45,6 +45,7 @@ class MerchantCustomerPresenter < BasePresenter
   end
 
 private
+
   def customer_transactions
     transaction = Transaction.where(user_id: @model.customer_id)
   end
