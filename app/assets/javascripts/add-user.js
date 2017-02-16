@@ -128,15 +128,14 @@ $(document).ready(function() {
   //     if ($('#cc-number').val() == "") {
   //       $.each(["#cc-name", "#cc-exp", "#cc-csc"], function(index, val) { $(val).val(''); });
   //       submit_create_user_form();
-  //     } else {
+  //     } else 
   //       CardHandler.submit_to_stripe(create_user_form, create_user_submit, submit_create_user_form);  
-  //     }
   //   });
 
-    $(create_user_form).submit(function(e){
-      submit_create_user_form()
-      e.preventDefault()
-    })
+  $(create_user_form).submit(function(e){
+    submit_create_user_form()
+    e.preventDefault()
+  });
 
   function submit_create_user_form() {
 
@@ -144,25 +143,25 @@ $(document).ready(function() {
     UtilFunctions.set_first_and_last_names();
 
     $.ajax({
-        url: "/v1/users/add_customers.json",
-        beforeSend: function(xhr) {
-          xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
-        },
-        type: "POST",
-        data: $(create_user_form).serialize(),
-        dataType: "json"
-      })
-      .done(function(data, textStatus, jqXHR) {
-        FlashHandler.setFlashMessage('Contacts created successfully', 'notice');
-        $('.close-modal').click();
-      })
-      .fail(function(data, textStatus, errorThrown) {
-        FlashHandler.setFlashMessage(JSON.parse(data.responseText).response, 'error');
-      })
-      .always(function(data, textStatus, response) {
-        $(create_user_submit).attr("disabled", false).val('Create Customer');
-      });
-  }
+      url: "/v1/users/add_customers.json",
+      beforeSend: function(xhr) {
+        xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
+      },
+      type: "POST",
+      data: $(create_user_form).serialize(),
+      dataType: "json"
+    })
+    .done(function(data, textStatus, jqXHR) {
+      FlashHandler.setFlashMessage('Contacts created successfully', 'notice');
+      $('.close-modal').click();
+    })
+    .fail(function(data, textStatus, errorThrown) {
+      FlashHandler.setFlashMessage(JSON.parse(data.responseText).response, 'error');
+    })
+    .always(function(data, textStatus, response) {
+      $(create_user_submit).attr("disabled", false).val('Create Customer');
+    });
+  };
   ///// add a customer
 
 })

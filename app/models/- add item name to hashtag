@@ -10,7 +10,11 @@ signup form
 rhombus number form
 - no flash message ... probably in signup and profile info forms
 
+credit card form
+- flash message showing??
 
+More notes
+- platform - create customer/merchant on signup?? i think not...we need serious users
 
 
 Friday
@@ -49,6 +53,11 @@ Surya
 	- character counter formatting is incorrect...
 
 Bhishma
+- pricing page doesnt have slider (no max and min)
+- repeated plan
+- if statements
+- create_saas_subscription
+
 - coupon pages (add link to transactions dropdown and link under segments)
 - slider type - Minimum, maximum and start values. also doesnt look like design
 - find simple native browser notifications

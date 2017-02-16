@@ -1,59 +1,66 @@
-$(document).ready(function() {
-  var pricingSlider, priceValueSpan, amount, selection,//currentAmount,
-      PlanA = 0,
-      PlanB = 50,
-      PlanC = 75,
-      PlanD = 90,
-      PlanE = 105,
-      PlanF = 120,
-      PlanG = 145,
-      PlanH = 195,
-      PlanI = 240,
-      PlanJ = 295,
-      PlanK = 350,
-      PlanL = 400,
-      PlanM = 450,
-      PlanN = 500;
+var PriceSlider = new function() {
 
-  // show slider on merchant credit card info update form
-  // show slider on pricing page load
-  if ($('#pricing-range')) {
-    showSlider();
+  var pricingSlider, priceValueSpan, amount, selection; //currentAmount,  
+  var plans = { PlanA: { amt: 0, min: 0, max: 100 }, 
+                PlanB: { amt: 50, min: 101, max: 1000 }, 
+                PlanC: { amt: 75, min: 1001, max: 2500 }, 
+                PlanD: { amt: 90, min: 2501, max: 5000 }, 
+                PlanE: { amt: 105, min: 5001, max: 7500 }, 
+                PlanF: { amt: 120, min: 7501, max: 10000 }, 
+                PlanG: { amt: 145, min: 10001, max: 15000 }, 
+                PlanH: { amt: 195, min: 15001, max: 20000 }, 
+                PlanI: { amt: 240, min: 20001, max: 30000 }, 
+                PlanJ: { amt: 295, min: 30001, max: 35000 }, 
+                PlanK: { amt: 350, min: 35001, max: 40000 }, 
+                PlanL: { amt: 400, min: 40001, max: 45000 }, 
+                PlanM: { amt: 450, min: 45001, max: 50000 }, 
+              };
+  var keys = Object.keys(plans);
+
+  this.bind_slider = function() {
+    // show slider on merchant credit card info update form, show slider on pricing page load
+    if ($('#pricing-range').length) {
+      pricingSlider = document.getElementById('pricing-range');
+      priceValueSpan = document.getElementById('price-value');
+      $('.range-bar').remove();
+      //currentAmount = (pricingSlider) ? pricingSlider.attributes.amountValue.value : 0;
+      if (pricingSlider) {
+        var slider = new Powerange(pricingSlider, {
+          callback: displayValue, min: 100, max: 50000,
+          start: 100, vertical: false, hideRange: true
+        });
+      };
+    };
   };
 
-  function showSlider(){
-    pricingSlider = document.getElementById('pricing-range');
-    priceValueSpan = document.getElementById('price-value');
-    $('.range-bar').remove();
-    //currentAmount = (pricingSlider) ? pricingSlider.attributes.amountValue.value : 0;
-    if (pricingSlider) {
-      var slider = new Powerange(pricingSlider, {
-        callback : displayValue
-        , min           : 100
-        , max           : 50000
-        , start         : 100
-        , vertical      : false
-        , hideRange     : true
-      });
+  this.get_free_plan_name = function() {
+    for(var i = 0, len = keys.length; i < len; i++) {
+      if (plans[keys[i]].amt == 0) {
+        return keys[i];
+      }
     }
-  }
+  };
 
   function displayValue() {
-    selection = plan_range(pricingSlider.value)
+    selection = plan_range(pricingSlider.value);
+
+    // also used by the credit_card_form_js to skip validation
+    $('#plan_name').val(selection[0]);
     priceValueSpan.innerHTML = '<h4>' + selection[1] + '</h4>';
 
     // for add a subscription page
     if ($('#add_subscription').length) {
       if (pricingSlider.value <= 100) {
         $('#cc-fields').slideUp(300);
-        $('#add_subscription_btn').val('Get Started');
+        $('#cc-submit').val('Get Started');
+        $('#cc-form').data('formValidation').resetForm();
+        $('#cc-number, #cc-ex-month, #cc-ex-year, #cc-uri, #cc-type, #cc-name, #cc-exp, #cc-csc').val("");
       } else {
         $('#cc-fields').slideDown(300);
-        $('#add_subscription_btn').val('Start 14-day Trial');
-      }
-    }
+        $('#cc-submit').val('Start 14-day Trial');
+      };
+    };
 
-    $('#plan_name').val(selection[0])
     /*
     # LEAVE THIS FOR LATER
     //only for subscription setting page
@@ -64,47 +71,26 @@ $(document).ready(function() {
         (amount < currentAmount) ? 'Downgrade Subscription' : 'Subscription';
       (submitValue === 'Subscription') ? $('#change_subscription_plan').hide() : $('#change_subscription_plan').val(submitValue).show();
       $('#pricing-range').val(plan_range(pricingSlider.value)[0]);
-    }
-    else {
+    } else {
       $('#select_plan').attr('href', '/users/sign_up?signup_plan=' + plan_range((pricingSlider.value)[0]));
     } 
     */
-  }
+  };
 
   function plan_range(customerCount) {
-    if (customerCount > 0 && customerCount <= 100) {
-      return ['PlanA', planInfo(PlanA)]
-    } else if (customerCount > 101 && customerCount <= 1000) {
-      return ['PlanB', planInfo(PlanB)]
-    } else if (customerCount > 1001 && customerCount <= 2500) {
-      return ['PlanC',planInfo(PlanC)]
-    } else if (customerCount > 2501 && customerCount <= 5000) {
-      return ['PlanD', planInfo(PlanD)]
-    } else if (customerCount > 5001 && customerCount <= 7500) {
-      return ['PlanE', planInfo(PlanE)]
-    } else if (customerCount > 7501 && customerCount <= 10000) {
-      return ['PlanF',planInfo(PlanF)]
-    } else if (customerCount > 10001 && customerCount <= 15000) {
-      return ['PlanG', planInfo(PlanG)]
-    } else if (customerCount > 15000 && customerCount <= 20000) {
-      return ['PlanH', planInfo(PlanH)]
-    } else if (customerCount > 20001 && customerCount <= 30000) {
-      return ['PlanI',planInfo(PlanI)]
-    } else if (customerCount > 30001 && customerCount <= 35000) {
-      return ['PlanJ', planInfo(PlanJ)]
-    } else if (customerCount > 30001 && customerCount <= 35000) {
-      return ['PlanK', planInfo(PlanK)]
-    } else if (customerCount > 35001 && customerCount <= 40000) {
-      return ['PlanL',planInfo(PlanL)]
-    } else if (customerCount > 40001 && customerCount <= 45000) {
-      return ['PlanM', planInfo(PlanM)]
-    } else {
-      return ['PlanN', planInfo(PlanN)]
-    }
-  }
+    for(var i = 0, len = keys.length; i < len; i++) {
+      if (customerCount >= plans[keys[i]].min && customerCount <= plans[keys[i]].max) {
+        return [keys[i], planInfo(plans[keys[i]].amt)];
+      };
+    };
+  };
 
   function planInfo(amount) {
     return '<h1 class="plan-amount">$'+ amount +'</h1><h5 class="signup-box-subheading starter-table">BILLED MONTHLY</h5>'
-  }
+  };
 
+};
+
+$(document).ready(function() {
+  PriceSlider.bind_slider(); 
 });

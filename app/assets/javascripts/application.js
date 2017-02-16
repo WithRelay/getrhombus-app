@@ -73,6 +73,8 @@
 //= require phone_number_formatter
 //= require clipboard.min
 //= require util_functions
+//= require stripe.js.erb
+//= require credit_card_form
 //= require price_slider
 //= require refer_a_business
 //= require get_started
@@ -84,8 +86,6 @@
 //= require saved_replies
 //= require custom_trumbowyg_plugin
 //= require campaigns
-//= require stripe.js.erb
-//= require credit_card_form
 //= require date_picker
 //= require campaign_form_validator
 //= require reminders

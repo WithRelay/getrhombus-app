@@ -7,11 +7,8 @@ $(document).ready(function () {
   $('input#cc-csc').payment('formatCardCVC');
 
   $(cc_form_id).formValidation({
-    // I am validating Bootstrap form
     framework: 'bootstrap',
     live: 'disabled',
-
-    // List of fields and their validation rules
     fields: {
       'cc-name': {
         selector: '#cc-name',
@@ -97,23 +94,28 @@ $(document).ready(function () {
   })
   .on('success.form.fv', function(e, data) {    
     e.preventDefault();
-    CardHandler.submit_to_stripe(cc_form_id, cc_form_btn, submit_cc_form)
+    // for add subscription page in onboarding
+    if ($('#add_subscription').length && $('#plan_name').val() == PriceSlider.get_free_plan_name()) {
+      // wipe the fields one more time
+      $('#cc-number, #cc-ex-month, #cc-ex-year, #cc-uri, #cc-type, #cc-name, #cc-exp, #cc-csc').val("");      
+      submit_cc_form();
+    } else {
+      CardHandler.submit_to_stripe(cc_form_id, cc_form_btn, submit_cc_form);  
+    };    
   });
  
-  function submit_cc_form() {
-    $(cc_form_id).data('formValidation').defaultSubmit();
-  }
+  function submit_cc_form() { $(cc_form_id).data('formValidation').defaultSubmit(); };
 
   // Simply populates credit card and bank account fields with test data
   /*
-    $('#populate').click(function () {
-      $(this).attr("disabled", true);
+  $('#populate').click(function () {
+    $(this).attr("disabled", true);
 
-      $('#cc-name').val('John Doe');
-      $('#cc-number').val('<redacted_phone_number>');
-      $('#cc-ex-month').val('12');
-      $('#cc-ex-year').val('2020');
-      $('#ex-csc').val('123');
-    });
+    $('#cc-name').val('John Doe');
+    $('#cc-number').val('<redacted_phone_number>');
+    $('#cc-ex-month').val('12');
+    $('#cc-ex-year').val('2020');
+    $('#ex-csc').val('123');
+  });
   */
 });

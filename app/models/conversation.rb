@@ -152,7 +152,7 @@ class Conversation < ActiveRecord::Base
   end
 
   # find conversation
-    def self.find_last_conversation(team_id, uid_type, uid)
+  def self.find_last_conversation(team_id, uid_type, uid)
     where(merchant_id: team_id, uid_type: uid_type, uid: uid).last
   end
 
