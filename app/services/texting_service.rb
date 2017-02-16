@@ -40,15 +40,18 @@ class TextingService
       end
     end
 
-    def buy_number(num)
+    def buy_number(params)
       begin  
         client = Twilio::REST::Client.new TWILIO_API_KEY, TWILIO_API_SECRET
-        number = client.account.incoming_phone_numbers.create(:phone_number => num, :VoiceApplicationSid => TWILIO_RHOMBUS_APP_SID,
-         :SmsApplicationSid => TWILIO_RHOMBUS_APP_SID)    
-        true    
+        re = search_number(params)
+        if re[:number].present?
+          re = client.account.incoming_phone_numbers.create(phone_number: re[:number], VoiceApplicationSid: TWILIO_RHOMBUS_APP_SID,
+                SmsApplicationSid: TWILIO_RHOMBUS_APP_SID)    
+          return re
+        end
       rescue StandardError => e
-        false
       end
+      false
     end
 
     def search_number(params)

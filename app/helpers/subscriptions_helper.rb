@@ -1,8 +1,7 @@
 module SubscriptionsHelper
 
   def saas_sub
-    platform_user = MerchantCustomer.find_by(customer_id: current_user.id, merchant_id: User.get_platform_acct_obj.id)
-    platform_user.subscriptions.active.last
+    current_user.get_saas_subscription
   end
 
   def get_saas_sub_id

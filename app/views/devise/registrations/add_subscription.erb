@@ -21,28 +21,35 @@
                 
                 <div id='cc-fields'>
 
-                  <%= f.number_field :last4, id: "cc-number", type: "tel", class: "card-number text-field w-input", placeholder: "Card number", "x-autocompletetype" => "cc-number", autocompletetype: "cc-number", autocorrect: 'off', spellcheck: 'off', autocapitalize: 'off' %> 
+                  <div class="form-group col-xs-6">
+                    <%= f.number_field :last4, id: "cc-number", type: "tel", class: "form-control card-number text-field w-input", placeholder: "Card number", "x-autocompletetype" => "cc-number", autocompletetype: "cc-number", autocorrect: 'off', spellcheck: 'off', autocapitalize: 'off' %> 
+                  </div>
 
                   <%= f.hidden_field :exp_month, id: "cc-ex-month" %>
                   <%= f.hidden_field :exp_year, id: "cc-ex-year" %>
                   <%= f.hidden_field :card_token, id: "cc-uri" %>
                   <%= f.hidden_field :card_type, id: "cc-type" %>
 
-                  <%= f.text_field :card_name, id: 'cc-name', type: "text", :class => "name-on-card text-field w-input", placeholder: "Name on Card", 'x-autocompletetype' => "off", autocompletetype: 'off', :autocorrect => "off", spellcheck: 'off', autocapitalize: "off", autocomplete: "off" %>
+                  <div class="form-group col-xs-6">
+                    <%= f.text_field :card_name, id: 'cc-name', type: "text", class: "form-control name-on-card text-field w-input", placeholder: "Name on Card", 'x-autocompletetype' => "off", autocompletetype: 'off', :autocorrect => "off", spellcheck: 'off', autocapitalize: "off", autocomplete: "off" %>
+                  </div>
 
-                   <input id="cc-exp" type="text" class="month-year text-field w-input" placeholder="MM / YYYY" value="" x-autocompletetype="off" autocompletetype="off" autocorrect="off" spellcheck="off" autocapitalize="off">
+                  <div class="form-group col-xs-6">
+                    <input id="cc-exp" type="text" class="form-control month-year text-field w-input" placeholder="MM / YYYY" value="" x-autocompletetype="off" autocompletetype="off" autocorrect="off" spellcheck="off" autocapitalize="off">
+                  </div>
 
-                  <input id="cc-csc" type="tel" class="cvv text-field w-input" placeholder="CVV" value="" autocorrect="off" spellcheck="off" autocapitalize="off" autocomplete="off" maxlength="4">
-
+                  <div class="form-group col-xs-6">
+                    <input id="cc-csc" type="tel" class="form-control cvv text-field w-input" placeholder="CVV" value="" autocorrect="off" spellcheck="off" autocapitalize="off" autocomplete="off" maxlength="4">
+                  </div>
 
                   <label class="form-label paragraph select-plan" for="Card-Number-3">Don't worry, we'll notify you when your trial is about to expire</label>
 
                   <input type="hidden" id='add_subscription' name="add_subscription" value="true">
-                  <input type="hidden" id='plan_name' name="plan_name">
+                  <input type="hidden" id='plan_name' name="plan[name]">
 
                 </div>
 
-                <%= f.submit "Start 14-day Trial", class: "button log-in w-button", id: 'add_subscription_btn' %>
+                <%= f.submit "Start 14-day Trial", class: "button log-in w-button", id: 'cc-submit' %>
 
               <% end %>
 

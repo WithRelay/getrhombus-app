@@ -170,14 +170,10 @@ class User < ActiveRecord::Base
     #creds.where(uid_type: ((creds.length == 2) ? 'managed' : 'standalone') ).first
   end
 
-  def buy_merchant_number
-    # save the area code in rhombus number till a number is bought
-    #number = TextingService.buy_number(self.rhombus_number])
-    #self.rn_type = number if number
-    self.rhombus_number = number if number
-    return number[0]
-    # if successful create bitly link
-    # @user.short_url = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?referrer_id=#{@user.id}")
+  def buy_rhombus_number
+    # area code is saved as rhombus number till a number is bought
+    # number = TextingService.buy_number({ query: self.rhombus_number || "", country: self.rn_country, type: self.rn_type })
+    # number && self.update(rhombus_number: number) ? true : false
   end
 
   def phone
@@ -259,11 +255,8 @@ class User < ActiveRecord::Base
   end
 
   def get_saas_subscription
-    platform_user_id = User.get_platform_acct_obj
-    if platform_user_id.present?
-      platform_merchant = MerchantCustomer.find_by(customer_id: self.id, merchant_id: platform_user_id.id)
-      platform_merchant ? platform_merchant.subscriptions.active.last : nil
-    end
+    platform_merchant = MerchantCustomer.find_by(customer_id: self.id, merchant_id: User.get_platform_acct_obj.id)
+    platform_merchant ? platform_merchant.subscriptions.active.last : nil
   end
 
   private
