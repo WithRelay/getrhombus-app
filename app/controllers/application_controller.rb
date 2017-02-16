@@ -51,11 +51,15 @@ class ApplicationController < ActionController::Base
 
       ### do we need these parameters here or in users_controller when updating account from settings page??
       devise_parameter_sanitizer.permit(:account_update) { |u| u.permit(:email, #:current_password,
-        :password, :password_confirmation, :card_token, :last4, :exp_month,  :exp_year, :card_name, :card_type,
-        :rhombus_number, :update_rhombus_number, :phone_number, :org_name, :org_category, :org_phone, :currency,
-        :tax_percent, :url, :custom_welcome, :time_zone, :zip_code, :state_province, :city, :street_address,
-        :country, :org_type, people_attributes: [:full_name]
-         )}
+        :password, :password_confirmation, :card_token, 
+        :last4, :exp_month,  :exp_year, :card_name, :card_type,
+        :rhombus_number, :team_size, :use_rhombus_for,
+        :update_rhombus_number,
+        :phone_number, :org_name, :org_category, :org_phone, :currency,
+        :tax_percent, :url, :custom_welcome, :time_zone, :zip_code, 
+        :state_province, :city, :street_address, :country, :org_type, 
+        people_attributes: [:id, :full_name]
+      )}
     end
 
     def record_not_unique

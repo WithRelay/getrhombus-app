@@ -10,13 +10,13 @@
 
 
         <div class="log-in-form w-form">
-          <%= form_for(resource, as: resource_name, html: { id: 'signinForm', class: 'w-clearfix', data: { name: 'Email Form' } }, url: session_path(resource_name)) do |f| %>
-          <div class= "form-group col-xs-5">
-            <%= f.email_field :email, id: 'Email-2', class: "form-control rhombusFocus login text-field w-input", placeholder: "Email", data: { name: 'Email' }, max_length: 100 %>
+          <%= form_for(resource, as: resource_name, html: { id: 'signinForm', class: 'w-clearfix' }, url: session_path(resource_name)) do |f| %>
+            <div class= "form-group col-xs-5">
+              <%= f.email_field :email, id: 'Email-2', class: "form-control rhombusFocus login text-field w-input", placeholder: "Email" %>
             </div>
     
-          <div class="form-group col-xs-5">
-            <%= f.password_field :password, class: "form-control rhombusFocus login text-field w-input", placeholder: "Password", max_length: 100, id: 'Password-2', data: { name:'Password 2' } %>
+            <div class="form-group col-xs-5">
+              <%= f.password_field :password, class: "form-control rhombusFocus login text-field w-input", placeholder: "Password", id: 'Password-2' %>
             </div>
             
             <%= f.hidden_field :captured_amt, id: "captured_amt", value: params[:user] ? params[:user][:captured_amt] : '' %>
@@ -24,16 +24,14 @@
             <%= f.hidden_field :referrer_uid, id: "referrer_uid", value: params[:user] ? params[:user][:referrer_uid] : '' %>
             <%= f.hidden_field :msg_id, id: "msg_id", value: params[:user] ? params[:user][:msg_id] : '' %>
             <%= f.hidden_field :tag_id, id: "tag_id", value: params[:user] ? params[:user][:tag_id] : '' %>
-            <%= f.submit 'Sign in', class: 'button log-in w-button', data: { wait: 'Please wait...' } %>
+            
+            <%= f.submit 'Sign in', class: 'button log-in w-button' %>
+            
             <%= f.label :remember_me %>
             <%= f.check_box :remember_me, id: "checkbox1", checked: devise_mapping.rememberable? %>
+          
           <% end %>
-          <div class="w-form-done">
-            <div>Thank you! Your submission has been received!</div>
-          </div>
-          <div class="w-form-fail">
-            <div>Oops! Something went wrong while submitting the form</div>
-          </div>
+          
         </div>
         <div class="log-in-sign-up-cta">Don't have a Rhombus account? <%= link_to 'Sign up', new_user_registration_path, class:'links sign-up-cta-log-in-page' %>
         </div>

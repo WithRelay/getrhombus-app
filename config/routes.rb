@@ -9,7 +9,6 @@ Rails.application.routes.draw  do
   end
 
   get 'relay-docs/creating-campaigns-in-relay' => 'static_pages#creating_campaigns_in_relay'
-  get 'contact' => 'contact_forms#new'
   get "relay-docs-categories/:slug" => "knowledge_base_categories#show"
 
   devise_for :users, controllers: { registrations: "registrations", omniauth_callbacks: "omniauth_callbacks", sessions: 'sessions' }
@@ -61,12 +60,15 @@ Rails.application.routes.draw  do
       get "account-setting", to: "registrations#account_setting"
     end
 
-    resources :contact_forms
     resources :referrers, only: [:new, :create]
 
     # user routes
     resources :users, only: :show do
-      member { get 'customers' => 'merchant_customers#customers' }
+      member do  
+        get 'customers' => 'merchant_customers#customers'
+        get 'customers/:id' => 'merchant_customers#show' 
+      end
+
       devise_scope :user do
         member do
           get 'segments' => 'lists#segments'
@@ -113,8 +115,6 @@ Rails.application.routes.draw  do
         get 'managed-accounts' => 'users#managed_acct'
         match 'managed-accounts' => "users#create_managed_acct", via: :patch
         match 'update-managed-acct' => 'users#update_managed_acct', via: :patch
-        get 'contacts' => 'users#contacts' #(both customers or merchants)
-        # get 'customers' => 'users#customers'
         get 'businesses' => 'users#businesses'
         get 'notifications' => 'alerts#edit'
         get 'lists' => 'users#lists'

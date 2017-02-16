@@ -73,12 +73,13 @@ $(document).ready(function () {
         $('#email').val(global_page_params['user[email]']);
         $('#phone_number').val(global_page_params['user[phone_number]']);
       } else if (url.pathname == "/users/sign_up") {
-          $('#phone').val(global_page_params['num']);
-          hide_account_type(global_page_params['referrer']);
+        $('#phone').val(global_page_params['num']);
+        hide_account_type(global_page_params['referrer']);
       } else if (url.pathname == "/profile" && amt) {
-          cc_submit.prop('value', 'Save & Pay ' + (amt/100));   // on profile page show the amt in button
+        cc_submit.prop('value', 'Save & Pay ' + (amt/100));   // on profile page show the amt in button
       } else if (url.pathname == '/users') {
-          hide_account_type(document.getElementById('referrer').value);
+        var referrer = document.getElementById('referrer');
+        if (referrer) hide_account_type(referrer.value);
       }
 
       if (amt) document.getElementById('captured_amt').value = amt;
@@ -86,14 +87,13 @@ $(document).ready(function () {
   // to prefill signup form or handle captured payments
 
   function hide_account_type(referrer) {
-      if (referrer) {
-          $('#signupForm .selectpicker').val('0');
-          $('#signupForm .accountTypegroup').hide();
-          $("#signup_logo").replaceWith("<h2 class='referrer'>" + referrer + "</h2>");
-          $("#rhombusPower").removeClass('hide');
-      } else {
-          $("#rhombusPower").addClass('hide');
-      }
+    if (referrer) {
+      $('#signupForm .selectpicker').val('0');
+      $('#signupForm .accountTypegroup').hide();
+      $("#signup_logo").replaceWith("<h2 class='referrer'>" + referrer + "</h2>");
+      $("#rhombusPower").removeClass('hide');
+    } else
+      $("#rhombusPower").addClass('hide');
   }
 
   function validate_captured_amt(str) {

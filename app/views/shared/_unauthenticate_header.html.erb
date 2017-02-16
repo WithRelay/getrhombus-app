@@ -60,8 +60,8 @@
         </nav>
       </div>
       <%= link_to 'Request a Demo', request_demo_url, class: 'nav-link w-nav-link' %>
-    <%= link_to 'Log In', new_user_session_url, class: 'nav-link w-nav-link' %>
-    <%= link_to 'Get started', new_user_registration_url, class: 'button fixed signup w-button' %>
+      
+      <%= render 'shared/sign_in_sign_out' %>
     </nav>
   </div>
 </div>
@@ -130,8 +130,7 @@
             </nav>
           </div>
           <%= link_to 'Request a Demo', request_demo_url, class: 'nav-link w-nav-link' %>
-        <%= link_to 'Log In', new_user_session_url, class: 'nav-link w-nav-link' %>
-        <%= link_to 'Get started', new_user_registration_url, class: 'button fixed signup w-button' %>
+          <%= render 'shared/sign_in_sign_out' %>
         </nav>
       </div>
     </div>

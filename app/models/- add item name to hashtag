@@ -1,3 +1,18 @@
+Add profile info
+1. validation
+2. still bypassing to other onboarding steps
+3. dont see devise validation error it seems (signup form too)
+
+signup form
+- sign up form can have devise/database error but not showing up. 
+- capture phone number not unique check from database - see application controller
+
+
+
+
+
+
+
 Friday
 - test parser - done
 - transactions - doneish

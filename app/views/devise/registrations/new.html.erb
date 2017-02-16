@@ -6,40 +6,54 @@
 <div class="w-row">
   <div class="onboarding-table-column-1 w-col w-col-8">
     <div class="onboarding-form-section">
+      
       <div class="onboarding-form-div sign-in signup">
         <%= link_to root_url, class: 'form-logo w-inline-block' do %>
           <%= image_tag('Relay-Transparent-500x300.png', width: 50) %>
         <% end %>
+        
         <div class="log-in-form w-form">
-          <%= form_for(resource, as: resource_name, url: registration_path(resource_name, params[:value]), html: { id: 'signupForm', class: 'w-clearfix', data: { name: 'Email Form' }} ) do |f| %>
-          <div class="form-group col-xs-5">
-              <%= f.email_field :email, id: "email Email-2", class: "form-control email-address text-field w-input", placeholder: "Email address", data: { name:'Email' }, max_length: 100 %>
-          </div>
-          <div class="form-group col-xs-6">
-              <%= f.phone_field :phone, id: "phone", class: "form-control login phone text-field w-input", placeholder: 'Mobile number', data: { name: 'Phone'} %>
-          </div>
+          <%= form_for(resource, as: resource_name, url: registration_path(resource_name, params[:value]), html: { id: 'signupForm', class: 'w-clearfix' } ) do |f| %>
+            
+            <div class="form-group col-xs-5">
+              <%= f.email_field :email, id: "email Email-2", class: "form-control email-address text-field w-input", placeholder: "Email address" %>
+            </div>
 
-          <%= f.hidden_field :phone_number, :id => "phone_number" %>
+            <div class="form-group col-xs-6">
+              <%= f.phone_field :phone, id: "phone", class: "form-control login phone text-field w-input", placeholder: 'Mobile number' %>
+            </div>
 
-          <div class="form-group col-xs-5">
-          <%= f.select :user_level, "<option value='' disabled selected class='hide'>Account Type</option> <option value='1'>Business Account</option><option value='0'>Customer Account</option>".html_safe, {}, class: 'form-control dropdown w-select', data: { name:'Field 2'}, id: 'field-2' %>
+            <%= f.hidden_field :phone_number, :id => "phone_number" %>
 
-          </div>
+            <%= f.hidden_field :captured_amt, id: "captured_amt", value: params[:user] ? params[:user][:captured_amt] : '' %>
+            <%= f.hidden_field :referrer_id, id: "referrer_id", value: params[:user] ? params[:user][:referrer_id] : '' %>
+            <%= f.hidden_field :referrer_uid, id: "referrer_uid", value: params[:user] ? params[:user][:referrer_uid] : '' %>
+            <%= f.hidden_field :msg_id, id: "msg_id", value: params[:user] ? params[:user][:msg_id] : '' %>
+            <%= f.hidden_field :tag_id, id: "tag_id", value: params[:user] ? params[:user][:tag_id] : '' %>
 
-          <div class="form-group col-xs-5">
-          <%= f.password_field :password, class: "form-control login password text-field w-input", placeholder: "Password", id: 'Password-3' %>
-          </div>
+            <div class="form-group col-xs-5">
+              <%= f.select :user_level, "<option value='' disabled selected class='hide'>Account Type</option> <option value='1'>Business Account</option><option value='0'>Customer Account</option>".html_safe, {}, class: 'form-control dropdown w-select', id: 'field-2' %>
+            </div>
 
-          <%= f.submit "SIGN UP", class: "button log-in w-button", value: 'continue', data: { wait: 'Please wait...' } %>
+            <div class="form-group col-xs-5">
+              <%= f.password_field :password, class: "form-control login password text-field w-input", placeholder: "Password", id: 'Password-3' %>
+            </div>
+
+            <%= f.submit "SIGN UP", class: "button log-in w-button", value: 'continue' %>
         <% end %>
         </div>
+        
         <div class="log-in-sign-up-cta">Already have a Rhombus account? <a class="links sign-up-cta-log-in-page" href="#">Sign in.</a>
         </div>
+
       </div>
+
       <div class="forgot-password links">By continuing, I agree to Rhombus' <span class="terms-link"><a href="#" class="terms-link">Terms and Privacy Policy</a></span>
       </div>
+
     </div>
   </div>
+
   <div class="onboarding-table-column-2 w-col w-col-4">
     <div class="onboarding-right-bar">
       <div class="w-container whats-new-container">
