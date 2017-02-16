@@ -31,31 +31,6 @@ $(document).ready(function () {
     });
   }
 
-  $('#coupon-update-form')
-    .formValidation({
-      framework: 'bootstrap',
-      live: 'disabled',
-      // List of fields and their validation rules
-      fields: {
-        'subscription[coupon]':{
-          validators: {
-              notEmpty: {
-                message: 'Coupon code required'
-              }
-            }
-          }
-        }
-    })
-    .on('success.form.fv', function(e, data) {          
-      e.preventDefault();
-      subscriptionId = $(this).attr('saas_sub_id');
-      $("#submit-update-coupon").attr("disabled", true).val("Please wait...");
-      updateCoupon();
-    })
-    .on('err.validator.fv', function(e) {
-      $('.help-block').hide();
-    });
-
   if ($('#subscriptionForm').length > 0) {
     $('#subscriptionForm')
       .formValidation({
@@ -64,7 +39,11 @@ $(document).ready(function () {
         // List of fields and their validation rules
         fields: {
           'subscription[plan_id]':{
+            selector: '#subscription-plan-id-selectized',
             validators: {
+              notEmpty: {
+                message: 'Plan is required'
+              },
               callback: {
                 message: 'Please select a plan',
                 callback: function(value, validator, $field) {
@@ -85,6 +64,7 @@ $(document).ready(function () {
             }
           },
           'subscription[merchant_customer_id]':{
+            selector: '#subscription-customer-id-selectized',
             validators: {
                 notEmpty: {
                   message: 'Please select a customer'
@@ -194,6 +174,32 @@ $(document).ready(function () {
   };
 
   // $('.auto-height').css('height', 'auto');
+
+  $('#coupon-update-form')
+    .formValidation({
+      framework: 'bootstrap',
+      live: 'disabled',
+      // List of fields and their validation rules
+      fields: {
+        'subscription[coupon]':{
+          validators: {
+              notEmpty: {
+                message: 'Coupon code required'
+              }
+            }
+          }
+        }
+    })
+    .on('success.form.fv', function(e, data) {
+      e.preventDefault();
+      subscriptionId = $(this).attr('saas_sub_id');
+      $("#submit-update-coupon").attr("disabled", true).val("Please wait...");
+      updateCoupon();
+    })
+    .on('err.validator.fv', function(e) {
+      $('.help-block').hide();
+    });
+
 
   function updateCoupon() {
    $.ajax({
