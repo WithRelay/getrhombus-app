@@ -5,26 +5,26 @@
     <h4 class="form-header">Billing Information</h4>
     <div class="flex-underline form-header-underline"></div>
     <div class="account-settings-form-wrapper w-form">
-      <%= form_for(current_user, as: resource_name, url: registration_path(current_user), html: { method: :put, id: "cc-form", class: 'w-clearfix', autocomplete: "off", data: { name: "Email Form" } }) do |f| %>
+      <%= form_for(current_user, as: resource_name, url: registration_path(current_user), html: { method: :put, id: "cc-form", class: 'w-clearfix', autocomplete: "off" }) do |f| %>
         <label class="field-headers form-label settings" for="Business-Name">credit card information</label>
         <label class="form-label paragraph" for="Card-Number-2">You will be billed at the beginning of every month for all active paid plans, excluding the 14-day trial period. SMS/MMS related charges will deducted from available credits in your Rhombus account see <a class="settings-link" href="#">SMS/MMS usage</a>.
           <br>
           <br>A sales tax will be included in your monthly subscription charge if this is a legal requirement in your ZIP code.</label>
         <div class="form-group col-xs-6">
-          <%= f.number_field :last4, id: "cc-number Card-Number-2", data: { name: "Card Number 2" }, type: "tel", class: "form-control card-number text-field w-input form-control cc-num", placeholder: "Card number", "x-autocompletetype" => "cc-number", autocompletetype: "cc-number", autocorrect: 'off', spellcheck: 'off', autocapitalize: 'off' %>
+          <%= f.number_field :last4, id: "cc-number", type: "tel", class: "form-control card-number text-field w-input form-control cc-num", placeholder: "Card number", "x-autocompletetype" => "cc-number", autocompletetype: "cc-number", autocorrect: 'off', spellcheck: 'off', autocapitalize: 'off' %>
         </div>
 
         <span class="card" aria-hidden="true"></span>
         <div class="form-group col-xs-6">
-          <%= f.text_field :card_name, id: 'cc-name Name-on-Card-2',  data: { name: 'Name On Card 2' }, class: "form-control name-on-card text-field w-input form-control", placeholder: "Name on Card", 'x-autocompletetype' => "off", autocompletetype: 'off', :autocorrect => "off", spellcheck: 'off', autocapitalize: "off", autocomplete: "off" %>
+          <%= f.text_field :card_name, id: 'cc-name', class: "form-control name-on-card text-field w-input form-control", placeholder: "Name on Card", 'x-autocompletetype' => "off", autocompletetype: 'off', :autocorrect => "off", spellcheck: 'off', autocapitalize: "off", autocomplete: "off" %>
         </div>
 
         <div class="form-group col-xs-6">
-          <input id="cc-exp Month-Year-2" type="text", data-name="Month Year 2", class="form-control month-year text-field w-input" placeholder="MM / YY" value="" x-autocompletetype="off" autocompletetype="off" autocorrect="off" spellcheck="off" autocapitalize="off">
+          <input id="cc-exp" type="text", class="form-control month-year text-field w-input" placeholder="MM / YYYY" value="" x-autocompletetype="off" autocompletetype="off" autocorrect="off" spellcheck="off" autocapitalize="off">
         </div>
 
         <div class="form-group col-xs-6">
-          <input id="cc-csc" type="tel" data-name="Cvv 2" id="CVV-2" class="form-control cvv text-field w-input form-control" placeholder="CVC" value="" autocorrect="off" spellcheck="off" autocapitalize="off" autocomplete="off" maxlength="4">
+          <input id="cc-csc" type="tel" id="CVV-2" class="form-control cvv text-field w-input form-control" placeholder="CVC" value="" autocorrect="off" spellcheck="off" autocapitalize="off" autocomplete="off" maxlength="4">
         </div>
 
         <div class="col-md-6 col-sm-6" id="exp-div">
