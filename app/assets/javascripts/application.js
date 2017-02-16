@@ -91,6 +91,7 @@
 //= require reminders
 //= require add-user
 //= require list_checkbox_actions
+//= require managed-account
 //= require rhombus_number_search
 // DO NOT REQUIRE TREE AS IT DOESNT GUARANTEE THE DEPENDENCY ORDER OF THESE FILES
 // require_tree .

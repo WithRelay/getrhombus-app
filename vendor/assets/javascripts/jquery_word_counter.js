@@ -205,6 +205,9 @@
               //   $countObj.text(countIndex);
               // }
              $countObj.text(countIndex);
+             // This section is being modified because we need custom message in plugin
+             // The custom is only if character is 0 and pass in .html function parameter
+             if (countIndex==0) $countObj.parent().html('<span id="undefined_count">0</span> Characters')
               // ...up
             } else if (options.count === "up") {
               countIndex = $value.length;

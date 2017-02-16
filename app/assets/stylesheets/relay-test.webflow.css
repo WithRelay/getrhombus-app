@@ -3988,6 +3988,7 @@ h4 {
 .table-text.total-spend-text.r.heading {
   margin-left: 0px;
   padding-right: 0px;
+  width: 106%;
 }
 
 .table-text.actions {
