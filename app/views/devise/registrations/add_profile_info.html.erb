@@ -5,13 +5,13 @@
         <h4 class="form-header">Business Information</h4>
         <div class="flex-underline form-header-underline"></div>
         <div class="get-started-2 log-in-form w-form">
-          
-          <%= form_for(@user, as: resource_name, url: user_path(@user), html: { method: :patch, class: "w-clearfix rhombusFocus", id: 'add-profile-info' }) do |f| %>
-            
+
+          <%= form_for(@user, as: resource_name, url: registration_update_user_path(@user), html: { method: :patch, class: "w-clearfix rhombusFocus", id: 'add-profile-info' }) do |f| %>
+
             <%= f.fields_for :people do |f| %>
               <%= f.text_field :full_name, class: 'login text-field w-input', placeholder: 'Full name' %>
             <% end %>
-            
+
             <%= f.text_field :org_name, class: 'login text-field w-input', placeholder: 'Business name' %>
 
             <label class="form-label" for="Company-Size-2">Team size</label>
@@ -25,10 +25,10 @@
 
             <label class="form-label" for="Timezones-3">Set Timezone:</label>
             <%= f.select :time_zone, get_time_zone_lists, {}, class: 'form-control dropdown w-select' %>
-            
+
             <input type="hidden" name="add_profile_info" value="true">
             <input class="button log-in w-button" type="submit" value="Continue">
-          
+
           <% end %>
 
         </div>

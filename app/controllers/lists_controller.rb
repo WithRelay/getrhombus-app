@@ -1,6 +1,8 @@
 class ListsController < ApplicationController
   before_action :set_list, only: [:show, :edit, :update, :destroy]
   before_action :find_user_lists, only: [:index]
+  include DashboardNotification
+  before_action :set_notifications
   respond_to :html
 
   def index

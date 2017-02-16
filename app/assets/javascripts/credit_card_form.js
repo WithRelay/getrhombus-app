@@ -1,6 +1,6 @@
 $(document).ready(function () {
   
-  var cc_form_btn = '#cc-submit', cc_form_id = "#ccform";
+  var cc_form_btn = '#cc-submit', cc_form_id = "#cc-form";
 
   $('input#cc-number').payment('formatCardNumber');
   $('input#cc-exp').payment('formatCardExpiry');
@@ -15,7 +15,6 @@ $(document).ready(function () {
     fields: {
       'cc-name': {
         selector: '#cc-name',
-        row: '.group',
         validators: {
           notEmpty: {
             message: 'Your card name is required'
@@ -24,7 +23,6 @@ $(document).ready(function () {
       },
       'cc-number': {
         selector: '#cc-number',
-        row: '.group',
         validators: {
           callback: {
             callback: function (value, validator, $field) {
@@ -45,7 +43,6 @@ $(document).ready(function () {
       },
       'cc-exp': {
         selector: '#cc-exp',
-        row: '#exp-div',
         validators: {
           callback: {
             callback: function (value, validator, $field) {
@@ -67,7 +64,6 @@ $(document).ready(function () {
       },
       'cc-csc': {
         selector: '#cc-csc',
-        row: '#csc-div',
         validators: {
           callback: {
             callback: function (value, validator, $field) {

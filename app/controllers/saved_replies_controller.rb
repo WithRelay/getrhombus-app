@@ -1,4 +1,6 @@
-  class SavedRepliesController < ApplicationController
+class SavedRepliesController < ApplicationController
+  include DashboardNotification
+  before_action :set_notifications
   before_action :set_saved_reply, only: [:update, :destroy]
 
   def new
@@ -18,7 +20,6 @@
       flash[:error] = 'Reply cannot be saved'
       render :new
     end
-    
   end
 
   def update
@@ -37,11 +38,11 @@
 
   private
 
-    def saved_reply_params
-      params.require(:saved_reply).permit(:title, :body)
-    end
+  def saved_reply_params
+    params.require(:saved_reply).permit(:title, :body)
+  end
 
-    def set_saved_reply
-      @saved_reply = SavedReply.find params[:id]
-    end
+  def set_saved_reply
+    @saved_reply = SavedReply.find params[:id]
+  end
 end

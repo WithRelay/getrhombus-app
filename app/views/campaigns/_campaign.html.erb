@@ -98,17 +98,11 @@
       </div>
     </div>
     <div class="editor-date">December 28, 2016</div>
-    <div class="alt campaign-editor sub-nav-bar w-clearfix">
+    <div class="alt campaign-editor sub-nav-bar w-clearfix emailSubject">
       <div class="w-form">
         <div class='form-group col-xs-6'>
-          <%= f.text_field :subject, class: "form-control emailSubject email-subject text-field w-input", data: { name: "Email Subject" }, id: "campaign_subject", placeholder: 'Email subject'  %>
+          <%= f.text_field :subject, class: "form-control email-subject text-field w-input", data: { name: "Email Subject" }, id: "campaign_subject", placeholder: 'Email subject'  %>
           <div class="messageContainer"></div>
-        </div>
-        <div class="w-form-done">
-          <div>Thank you! Your submission has been received!</div>
-        </div>
-        <div class="w-form-fail">
-          <div>Oops! Something went wrong while submitting the form</div>
         </div>
       </div>
       <h4 class="sender welcome-dash-content-container-header w-hidden"><%= @user_title %></h4>
