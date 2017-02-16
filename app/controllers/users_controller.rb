@@ -3,11 +3,10 @@ class UsersController < ApplicationController
   # do I need these here ????
   before_action :set_user, only: [:show, :edit, :update, :destroy, :refer_business]
   include DashboardNotification
-  before_action :set_notifications, only: [:index, :show]
+  include AdditionalUserActions
+  before_action :set_notifications, except: [:create]
   # do i need this?
   load_and_authorize_resource except: [:customer_csv_template]
-
-  include AdditionalUserActions
 
   def index
      @users = User.all  # paginate(:page => params[:page], :per_page => 10)
@@ -102,5 +101,4 @@ private
     # Change this logic at some point
     # current_user.send_welcome_email if current_user.sign_in_count == 1
   end
-
 end

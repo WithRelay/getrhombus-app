@@ -203,7 +203,7 @@ Transaction.create!(
 # 	password: 'password1',
 # 	phone_number: '<redacted_phone_number>',
 # 	user_level: 0,
-# 	is_active: true)
+# 	is_active: 1)
 # User.create!(
 # 	email: '<redacted_email>',
 # 	first_name: 'Jeff',
@@ -211,7 +211,7 @@ Transaction.create!(
 # 	password: 'password1',
 # 	phone_number: '<redacted_phone_number>',
 # 	user_level: 0,
-# 	is_active: true)
+# 	is_active: 1)
 # User.create!(
 # 	email: '<redacted_email>',
 # 	first_name: 'Kemi',
@@ -219,7 +219,7 @@ Transaction.create!(
 # 	password: 'password3',
 # 	phone_number: '<redacted_phone_number>',
 # 	user_level: 0,
-# 	is_active: true)
+# 	is_active: 1)
 # User.create!(
 # 	email: '<redacted_email>',
 # 	first_name: 'Funsho',
@@ -227,7 +227,7 @@ Transaction.create!(
 # 	password: 'password1',
 # 	phone_number: '<redacted_phone_number>',
 # 	user_level: 0,
-# 	is_active: true)
+# 	is_active: 1)
 # User.create!(
 # 	email: '<redacted_email>',
 # 	first_name: 'Barack',
@@ -235,7 +235,7 @@ Transaction.create!(
 # 	password: 'obamaforUsa',
 # 	phone_number: '<redacted_phone_number>',
 # 	user_level: 0,
-# 	is_active: true)
+# 	is_active: 1)
 # User.create!(
 # 	email: '<redacted_email>',
 # 	first_name: 'Prince',
@@ -243,7 +243,7 @@ Transaction.create!(
 # 	password: 'password1',
 # 	phone_number: '<redacted_phone_number>',
 # 	user_level: 0,
-# 	is_active: true)
+# 	is_active: 1)
 # User.create!(
 # 	email: '<redacted_email>',
 # 	first_name: 'Jazmine',
@@ -251,7 +251,7 @@ Transaction.create!(
 # 	password: 'password1',
 # 	phone_number: '<redacted_phone_number>',
 # 	user_level: 0,
-# 	is_active: true)
+# 	is_active: 1)
 # User.create!(
 # 	email: '<redacted_email>',
 # 	first_name: 'Queen',
@@ -259,7 +259,7 @@ Transaction.create!(
 # 	password: 'nigeria100',
 # 	phone_number: '<redacted_phone_number>',
 # 	user_level: 0,
-# 	is_active: true)
+# 	is_active: 1)
 # User.create!(
 # 	email: '<redacted_email>',
 # 	first_name: 'Mike',
@@ -267,7 +267,7 @@ Transaction.create!(
 # 	password: 'passwordformikae',
 # 	phone_number: '<redacted_phone_number>',
 # 	user_level: 0,
-# 	is_active: true)
+# 	is_active: 1)
 # User.create!(
 # 	email: '<redacted_email>',
 # 	first_name: 'Samantha',
@@ -275,7 +275,7 @@ Transaction.create!(
 # 	password: 'vanity789',
 # 	phone_number: '<redacted_phone_number>',
 # 	user_level: 0,
-# 	is_active: true)
+# 	is_active: 1)
 # User.create!(
 # 	email: '<redacted_email>',
 # 	first_name: 'Gree',
@@ -283,7 +283,7 @@ Transaction.create!(
 # 	password: 'passingby2000',
 # 	phone_number: '<redacted_phone_number>',
 # 	user_level: 0,
-# 	is_active: true)
+# 	is_active: 1)
 # User.create!(
 # 	email: '<redacted_email>',
 # 	first_name: 'Jeffrey',
@@ -291,7 +291,7 @@ Transaction.create!(
 # 	password: 'password1',
 # 	phone_number: '<redacted_phone_number>',
 # 	user_level: 0,
-# 	is_active: true)
+# 	is_active: 1)
 # User.create!(
 # 	email: '<redacted_email>',
 # 	first_name: 'Jeffrey',
@@ -299,7 +299,7 @@ Transaction.create!(
 # 	password: 'greenpassword',
 # 	phone_number: '<redacted_phone_number>',
 # 	user_level: 0,
-# 	is_active: true)
+# 	is_active: 1)
 # User.create!(
 # 	email: '<redacted_email>',
 # 	first_name: 'Timothy',
@@ -307,7 +307,7 @@ Transaction.create!(
 # 	password: 'password1',
 # 	phone_number: '<redacted_phone_number>',
 # 	user_level: 0,
-# 	is_active: true)
+# 	is_active: 1)
 # User.create!(
 # 	email: '<redacted_email>',
 # 	first_name: 'Jeffrey',
@@ -315,7 +315,7 @@ Transaction.create!(
 # 	password: 'lovingme1000',
 # 	phone_number: '<redacted_phone_number>',
 # 	user_level: 0,
-# 	is_active: true)
+# 	is_active: 1)
 # User.create!(
 # 	email: '<redacted_email>',
 # 	first_name: 'Femi',
@@ -323,7 +323,7 @@ Transaction.create!(
 # 	password: 'password34',
 # 	phone_number: '<redacted_phone_number>',
 # 	user_level: 0,
-# 	is_active: true)
+# 	is_active: 1)
 
 #Seeds for Merchant users
 #Clear the Merchant database
