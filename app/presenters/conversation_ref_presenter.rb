@@ -1,0 +1,3 @@
+class ConversationRefPresenter < BasePresenter
+	 
+end

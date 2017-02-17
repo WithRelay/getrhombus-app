@@ -92,7 +92,7 @@ module ApplicationHelper
     restricted_actions = ['sessions-new', 'sessions-create', 'registrations-new', 'registrations-create',
                            'registrations-edit', 'passwords-new', 'registrations-add_card_info',
                            'registrations-add_profile_info', 'registrations-add_subscription',
-                           'registrations-add_rhombus_number'
+                           'registrations-add_rhombus_number', 'merchant_customers-show'
                          ]
     restricted_actions.include?(params_controller_action)
   end
