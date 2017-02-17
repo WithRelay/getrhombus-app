@@ -2,7 +2,7 @@ class Campaign < ActiveRecord::Base
 
   attr_accessor :list_name
   has_many :campaign_user_lists, dependent: :destroy
-  has_many :lists, through: :campaign_lists
+  has_many :lists, through: :campaign_lists, dependent: :destroy
   has_many :campaign_lists, dependent: :destroy
   has_many :messages
   belongs_to :user
