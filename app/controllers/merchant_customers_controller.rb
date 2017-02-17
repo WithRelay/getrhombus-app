@@ -11,6 +11,11 @@ class MerchantCustomersController < ApplicationController
   	@user = User.find_by_id(params[:id])
   	@merchant_customer = MerchantCustomer.find_by_customer_id(params[:id])
 
+    @conversations = @user.merchant_conversations
+
+  	@last_message_resolution = @user.message_resolutions.last
+  	@reason = @last_message_resolution.title 
+
   	@last_conversation = Conversation.find_last_conversation(@merchant_customer.merchant_id, 'user', @user.id)
   	@last_conversation_ref = ConversationRef.find_last_conversation_ref(@last_conversation) 
 
