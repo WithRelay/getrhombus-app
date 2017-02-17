@@ -1,7 +1,7 @@
 class SubscriptionsController < ApplicationController
   include DashboardNotification
   before_action :set_notifications
-  before_action :set_subscription, only: [:show, :edit, :update, :destroy]
+  before_action :set_subscription, only: [:show, :edit, :update]
 
   respond_to :html
 
@@ -20,15 +20,6 @@ class SubscriptionsController < ApplicationController
   end
 
   def update
-  end
-
-  def destroy
-    if @subscription.cancel_subscription(current_user)
-      flash[:notice] = 'Your subscription will been canceled at period end.'
-    else
-      flash[:error] = 'We couldn\'t cancel your subscription'
-    end
-    redirect_to user_subscriptions_path
   end
 
   private

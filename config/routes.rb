@@ -159,6 +159,7 @@ Rails.application.routes.draw  do
       end
       resources :subscriptions, only: [:create]
       post 'subscriptions/update_coupon' => 'subscriptions#update_coupon'
+      post 'subscriptions/destroy' => 'subscriptions#destroy'
       match 'merchant/customers' => 'merchant_customers#customers', via: :get
       match 'referrers/invite_business' => 'referrers#invite_business', via: :post
       resources :demos, only: [:create]

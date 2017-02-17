@@ -39,6 +39,22 @@ class Api::V1::SubscriptionsController < API::V1::BaseController
     render json: { response: response }, status: status
   end
 
+  def destroy
+    begin
+      status = 500
+      @subscription = Subscription.find params[:subscription_id]
+      if @subscription.cancel_subscription(current_user)
+        response = 'Your subscription will been canceled at period end.'
+        status = 200
+      else
+        response = 'We couldn\'t cancel your subscription'
+      end
+    rescue StandardError => e
+      response = 'Something went wrong on our end.'
+    end
+    render json: { response: response }, status: status
+  end
+
   private
 
   def subscription_params

@@ -16,12 +16,10 @@
     <div class='modal-background w-hidden modal-body new-subscription-modal'>
       <%= render 'shared/modals/new_subscription' %>
     </div>
-    <% if saas_sub.present? %>
-      <a class="w-button sub-nav-button modal-loader"  href="#" modal-target= 'cancel-subscription-modal'>&nbsp;<strong>Cancel subscription</strong></a>
-      <div class='modal-background w-hidden modal-body cancel-subscription-modal'>
-        <%= render 'shared/modals/confirmation' %>
-      </div>
-    <% end %>
+    <a class="w-button sub-nav-button modal-loader hide" id="cancel-customer-subscription" href="#" modal-target= 'cancel-subscription-modal'>&nbsp;<strong>Cancel subscription</strong></a>
+    <div class='modal-background w-hidden modal-body cancel-subscription-modal'>
+      <%= render 'shared/modals/confirmation' %>
+    </div>
   </div>
 </div>
 <div class="dashboard-body">
@@ -88,16 +86,26 @@
     </div>
     <% @subscriptions.each do |subscription| %>
       <div class="row-wrapper transactions">
-        <div class="transactions-table-row w-row">
+        <div class="transactions-table-row w-row" id="<%= subscription.id %>">
           <div class="transaction-column w-clearfix w-col w-col-3">
             <div class="card-name transaction-cell">
               <div class="table-profile-picture radius-color-<%= rand(1..8)%>"></div>
-              <div class="table-text"><%= present(subscription).get_customer_name %></div>
+              <div class="table-text customer-name"><%= present(subscription).get_customer_name %></div>
+            </div>
+            <div class="cb check-box-column">
+              <div class="w-form">
+                <form data-name="Email Form 2" id="email-form-2" name="email-form-2">
+                  <div class="select-all-check-box w-checkbox w-clearfix">
+                    <input class="cb table-checkbox checkboxes w-checkbox-input subscription-checkbox" id="node" type="checkbox">
+                    <label class="checkbox-field-lable w-form-label" for="node">-</label>
+                  </div>
+                </form>
+              </div>
             </div>
           </div>
           <div class="transaction-column w-col w-col-2">
             <div class="transaction-cell">
-              <div class="table-text"><%= present(subscription).get_plan_name %></div>
+              <div class="table-text plan-name"><%= present(subscription).get_plan_name %></div>
             </div>
           </div>
           <div class="transaction-column w-col w-col-2">
