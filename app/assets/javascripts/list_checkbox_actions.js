@@ -1,8 +1,7 @@
 $(document).ready(function(){
 
   $('.delete-resource').click(function(e){
-    url = window.location.pathname.split('/')
-    FlashHandler.setConfirmationDialog('.delete-resource','Are you sure, you want to remove the ' + url[url.length-2], 'Delete', 'isDestroy');
+    FlashHandler.setConfirmationDialog('.delete-resource','Are you sure, you want to remove the ' + getCurrentURL(), 'Delete', 'isDestroy');
   });
 
   $('.deactivate-resource').click(function(e){
@@ -10,15 +9,27 @@ $(document).ready(function(){
   });
 
   $(document).on('click', '.cancel-yes', function(e){
-    url = window.location.pathname.split('/')
-    full_url = url[url.length-2]
-    resource_url = '/v1/' + full_url + '/delete/' + getSelectedCheckbox('.checkboxes')
-    url_hash = { 'url': resource_url, 'method': 'delete' }
-    if (full_url == 'campaigns'){
-      resource = new Resource(url_hash);
+    if (getCurrentURL() == 'campaigns'){
+      resource = new Resource(getResourceActionUrl());
       resource.updateOrDelete();
     }
   });
+
+  function getResourceActionUrl(){
+    if ($('.cancel-yes').text() == 'Please wait...Deactivate'){
+      action_url = '/v1/' + getCurrentURL() + '/change_status/' + getSelectedCheckbox('.checkboxes')
+      return { 'url': action_url, 'method': 'patch' }
+    }
+      else{
+        action_url ='/v1/' + getCurrentURL() + '/delete/' + getSelectedCheckbox('.checkboxes')
+        return { 'url': action_url, 'method': 'delete' }
+      }
+  }
+
+  function getCurrentURL(){
+    url = window.location.pathname.split('/');
+    return url[url.length-1]
+  }
 
   function getSelectedCheckbox(checkbox_class){
     var resource_id;

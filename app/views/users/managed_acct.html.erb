@@ -9,97 +9,97 @@
     <div class="flex-underline form-header-underline"></div>
     <div class="account-settings-form-wrapper w-form">
       <%= form_for @user, url: { action: url_for_create_update }, html: { id: 'managed-account-form email-form', class: 'w-clearfix', data: { name: 'Email Form' } } do |f| %>
-        <label class="form-label paragraph payment-setup-section-header" for="Organization-Type">Take a minute to answer a few questions and then you'll be ready to accept payments</label>
-        <label class="field-headers form-label settings" for="Stripe-Countries">Where are you based?</label>
+      <label class="form-label paragraph payment-setup-section-header" for="Organization-Type">Take a minute to answer a few questions and then you'll be ready to accept payments</label>
+      <label class="field-headers form-label settings" for="Stripe-Countries">Where are you based?</label>
 
-        <%= f.fields_for :address do |a| %>
-          <%= a.select :country, options_for_select(connect_country(a.object), selected: a.object.country), {}, class: 'rhombusFocus dropdown w-select', id: 'managed-acct-country', data: { name: 'Stripe Countries' } %>
-        <% end %>
-
-        <div class="flex-underline form-section-divider"></div>
-        <label class="field-headers form-label settings" for="About-your-business">your product</label>
-        <%= f.text_area :description, class: 'text-area w-input your-product', id: 'About-your-business', placeholder: 'Tell us about your business. What do you sell, when do you charge your customers?' %>
-
-        <div class="flex-underline form-section-divider"></div>
-        <label class="field-headers form-label settings" for="field">Account details</label>
-        <%= f.select :org_type, options_for_select(connect_org_type(f.object), selected: present(current_user).org_type_on_managed_acct_page), {}, class: 'business-type dropdown w-select', id: 'user_org_type' %>
-        <%= f.text_field :org_name, id: 'org-name', class: 'text-field w-input', placeholder: 'Company legal name' %>
-        <%= f.text_field :org_tax_id, id: 'org-tax-id', data: { name: 'EIN' }, class: 'text-field w-input', placeholder: 'EIN (Tax ID)' %>
-
-        <div class="flex-underline form-section-divider"></div>
-        <label class="field-headers form-label settings" for="Business-Name">BUSINESS ADDRESS</label>
-        <%= f.fields_for :address do |a| %>
-          <%= a.text_field :street_address, id: 'company-street', placeholder: 'Street Address', class: 'settings street-name text-field w-input', data: {name: 'Street Address'} %>
-
-          <%= a.text_field :city, id: 'company-city', class: 'apt_suite settings text-field w-input', placeholder: 'City' %>
-
-          <div id='company-state-div'>
-            <%= a.text_field :state_province, id: 'company-state', class: 'settings street-name text-field w-input', data: { name: 'State' }, placeholder: 'State/Province' %>
-          </div>
-
-          <%= a.text_field :city, id: 'company-city', class: 'settings text-field w-input zip', placeholder: 'Zip/Postal code' %>
-
-        <% end %>
-
-        <label class="field-headers form-label settings" for="Website">other INFORMATION</label>
-        <%= f.text_field :url, class: 'settings short-field text-field w-input', id: 'Website', data: { name: 'Website' }, placeholder: 'Website' %>
-        <div class="flex-underline form-section-divider"></div>
-        <label class="field-headers form-label settings" for="Website-2">BANK DETAILS</label>
-        <label class="form-label paragraph" for="Currency">Currencies without a bank account will be converted and sent to your default bank account.</label>
-
-        <div class="bank-div">
-          <%= f.fields_for :bank_accounts do |b| %>
-          <%= b.hidden_field :currency, id: 'bank-currency', value: b.object.currency %>
-          <select id="bank-currency-select" class="currency dropdown w-select"></select>
-          <%= b.hidden_field :country, id: 'account-country', value: b.object.country %>
-          <select id="account-country-select" class='bank-country dropdown w-select' data-name="Bank Country"></select>
-        </div>
-
-        <div id='routing-number-div'>
-          <%= b.text_field :routing_number, id: 'routing-number Routing', class: 'routing-number settings short-field text-field w-input', data: { name: 'Routing' }, placeholder: 'Routing number' %>
-        </div>
-        <!-- <div id='institution-number-div'> -->
-        <%= b.text_field :institution_number, id: 'institution-number Bank-code', placeholder: 'Bank code', class: 'settings short-field text-field w-input', data: { name: 'Bank code' } %>
-        <input class="settings short-field text-field w-input" data-name="Branch code" id="Branch-code" maxlength="256" name="Branch-code" placeholder="Branch code" type="email">
-        <!-- </div> -->
-        <%= b.text_field :account_number, id: 'account-number', class: 'settings short-field text-field w-input', data: {name: 'Account Number 2'}, placeholder: 'Account number' %>
-        <% end %>
-      </div>
+      <%= f.fields_for :address do |a| %>
+      <%= a.select :country, options_for_select(connect_country(a.object), selected: a.object.country), {}, class: 'rhombusFocus dropdown w-select', id: 'managed-acct-country', data: { name: 'Stripe Countries' } %>
+      <% end %>
 
       <div class="flex-underline form-section-divider"></div>
-      <label class="field-headers form-label settings" for="name-2">company representative (you)</label>
-      <div class="company-rep-div w-clearfix">
-        <fieldset id="user-people">
-          <%= f.fields_for :people do |p| %>
-          <%= render "person_fields", f: p %>
-          <% end %>
-        </fieldset>
-        <div id='owners-title'>OWNERS IF ANY <br></div>
-        <label class="field-headers form-label other-owners settings" for="Zip-2">all other individuals who own more than 25% of the company</label>
-        <div id='add-owner-link'>
-          <%= link_to_add_association 'Add another owner', f, :people, class: 'add-people button w-button',
-          'data-association-insertion-node' => "#user-people", 'data-association-insertion-method' => "append",
-          :wrap_object => Proc.new { |p| p.build_address; p } %>
-        </div>
-      </div>
-      <fieldset id='termsAndCondition'>
+      <label class="field-headers form-label settings" for="About-your-business">your product</label>
+      <%= f.text_area :description, class: 'text-area w-input your-product', id: 'About-your-business', placeholder: 'Tell us about your business. What do you sell, when do you charge your customers?' %>
 
-        <%= f.fields_for :stripe_creds do |c| %>
-        <% if c.object.persisted? %>
-        <%= c.check_box :charges_enabled, disabled: true %>
-        <%= c.check_box :transfers_enabled, disabled: true %>
-        <div><%= c.object.disabled_reason %>ssss</div>
-        <div><%= c.object.due_by %></div>
-        <div><%= c.object.fields_needed %></div>
+      <div class="flex-underline form-section-divider"></div>
+      <label class="field-headers form-label settings" for="field">Account details</label>
+      <%= f.select :org_type, options_for_select(connect_org_type(f.object), selected: present(current_user).org_type_on_managed_acct_page), {}, class: 'business-type dropdown w-select', id: 'user_org_type' %>
+      <%= f.text_field :org_name, id: 'org-name', class: 'text-field w-input', placeholder: 'Company legal name' %>
+      <%= f.text_field :org_tax_id, id: 'org-tax-id', data: { name: 'EIN' }, class: 'text-field w-input', placeholder: 'EIN (Tax ID)' %>
+
+      <div class="flex-underline form-section-divider"></div>
+      <label class="field-headers form-label settings" for="Business-Name">BUSINESS ADDRESS</label>
+      <%= f.fields_for :address do |a| %>
+      <%= a.text_field :street_address, id: 'company-street', placeholder: 'Street Address', class: 'settings street-name text-field w-input', data: {name: 'Street Address'} %>
+
+      <%= a.text_field :city, id: 'company-city', class: 'apt_suite settings text-field w-input', placeholder: 'City' %>
+
+      <div id='company-state-div'>
+        <%= a.text_field :state_province, id: 'company-state', class: 'settings street-name text-field w-input', data: { name: 'State' }, placeholder: 'State/Province' %>
+      </div>
+
+      <%= a.text_field :city, id: 'company-city', class: 'settings text-field w-input zip', placeholder: 'Zip/Postal code' %>
+
+      <% end %>
+
+      <label class="field-headers form-label settings" for="Website">other INFORMATION</label>
+      <%= f.text_field :url, class: 'settings short-field text-field w-input', id: 'Website', data: { name: 'Website' }, placeholder: 'Website' %>
+      <div class="flex-underline form-section-divider"></div>
+      <label class="field-headers form-label settings" for="Website-2">BANK DETAILS</label>
+      <label class="form-label paragraph" for="Currency">Currencies without a bank account will be converted and sent to your default bank account.</label>
+
+      <div class="bank-div">
+        <%= f.fields_for :bank_accounts do |b| %>
+        <%= b.hidden_field :currency, id: 'bank-currency', value: b.object.currency %>
+        <select id="bank-currency-select" class="currency dropdown w-select"></select>
+        <%= b.hidden_field :country, id: 'account-country', value: b.object.country %>
+        <select id="account-country-select" class='bank-country dropdown w-select' data-name="Bank Country"></select>
+      </div>
+
+      <div id='routing-number-div'>
+        <%= b.text_field :routing_number, id: 'routing-number Routing', class: 'routing-number settings short-field text-field w-input', data: { name: 'Routing' }, placeholder: 'Routing number' %>
+      </div>
+      <!-- <div id='institution-number-div'> -->
+      <%= b.text_field :institution_number, id: 'institution-number', placeholder: 'Bank code', class: 'settings short-field text-field w-input', data: { name: 'Bank code' } %>
+      <!-- </div> -->
+      <%= b.text_field :account_number, id: 'account-number', class: 'settings short-field text-field w-input', data: {name: 'Account Number 2'}, placeholder: 'Account number' %>
+      <% end %>
+    </div>
+
+    <div class="flex-underline form-section-divider"></div>
+    <label class="field-headers form-label settings" for="name-2">company representative (you)</label>
+    <div class="company-rep-div w-clearfix">
+      <fieldset id="user-people">
+        <%= f.fields_for :people do |p| %>
+        <%= render "person_fields", f: p %>
         <% end %>
-        <%= c.hidden_field :ip %>
-        <% end %>
-        <div class="check-box editor w-checkbox w-clearfix">
-          <%= f.label 'Accept Terms and Service', class: 'w-checkbox-input tos-acceptance' %>
-          <%= f.check_box :tos_acceptance, class: 'check-radio-text w-form-label tos-checkbox' %>
-        </div>
       </fieldset>
-      <%= f.submit :save, id: 'saveManagedAccount', class: 'button payment-setup save-changes w-button' %>
+      <div id='owners-title'>OWNERS IF ANY <br></div>
+      <label class="field-headers form-label other-owners settings" for="Zip-2">all other individuals who own more than 25% of the company</label>
+      <div id='add-owner-link'>
+        <%= link_to_add_association 'Add another owner', f, :people, class: 'add-people button w-button',
+        'data-association-insertion-node' => "#user-people", 'data-association-insertion-method' => "append",
+        :wrap_object => Proc.new { |p| p.build_address; p } %>
+      </div>
+    </div>
+    <fieldset id='termsAndCondition'>
+      <%= f.fields_for :stripe_creds do |c| %>
+        <div class='w-hidden'>
+          <% if c.object.persisted? %>
+          <%= c.check_box :charges_enabled, disabled: true %>
+          <%= c.check_box :transfers_enabled, disabled: true %>
+          <div><%= c.object.disabled_reason %></div>
+          <div><%= c.object.due_by %></div>
+          <div><%= c.object.fields_needed %></div>
+          <% end %>
+          <%= c.hidden_field :ip %>
+        </div>
+      <% end %>
+      <div class="check-box editor w-checkbox w-clearfix">
+        <%= f.label 'Accept Terms and Service', class: 'w-checkbox-input tos-acceptance' %>
+        <%= f.check_box :tos_acceptance, class: 'check-radio-text w-form-label tos-checkbox' %>
+      </div>
+    </fieldset>
+    <%= f.submit :save, id: 'saveManagedAccount', class: 'button payment-setup save-changes w-button' %>
     <% end %>
     <div class="w-form-done">
       <div>Thank you! Your submission has been received!</div>

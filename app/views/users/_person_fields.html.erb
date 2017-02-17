@@ -1,20 +1,19 @@
 <div class='nested-fields'>
-    <%= f.text_field :first_name, id: 'name-2', placeholder: 'Full name', class: 'settings street-name text-field w-input' %>
-    <%= f.text_field :last_name, id: 'name-2', placeholder: 'Full name', class: 'apt_suite settings text-field w-input' %>
-    <%= f.text_field :dob, id: 'Date-of-birth', placeholder: 'Date of birth', class: 'userDateOfBirth settings short-field text-field w-input', data: { name: "Date of birth" }, readonly: f.object.dob.present? %>
+    <%= f.text_field :full_name, id: 'name-2', placeholder: 'Full name', class: 'settings short-field text-field w-input' %>
+    <%= f.text_field :dob, id: 'Date-of-birth', placeholder: 'Date of birth', class: 'userDateOfBirth settings short-field text-field w-input', data: { name: "Date of birth" } %>
     <% if f.index == 0 %>
-    <%= f.text_field :last4, placeholder: "SSN", id: 'City-2', class: 'settings short-field ssn text-field w-input', data: { name: "SSN" }, id: "SSN" %>
-
+      <%= f.text_field :last4, placeholder: "SSN", id: 'City-2', class: 'settings short-field ssn text-field w-input', data: { name: "SSN" }, id: "SSN" %>
     <% end %>
 </div>
-
-  <%= f.label :gender, 'Male', value: 'male' %>
-  <%= f.radio_button :gender, 'male'  %>
-  <%= f.label :gender, 'Female', value: 'female' %>
-  <%= f.radio_button :gender, 'female'  %>
-
+<fieldset class='gender-fieldset'>
+  <div class="managed-account-gender">
+    <%= f.label :gender, 'Male', value: 'male', class: 'gender-label' %>
+    <%= f.radio_button :gender, 'male', class: 'gender-input'  %>
+    <%= f.label :gender, 'Female', value: 'female', class: 'gender-label' %>
+    <%= f.radio_button :gender, 'female', class: 'gender-input'  %>
+  </div>
+</fieldset>
   <%= f.hidden_field :role, value: f.index == 0 ? '0' : '1' %>
-
   <%= f.fields_for :address do |a| %>
     <div class="col-xs-5">
       <div class='person-street-div'>
