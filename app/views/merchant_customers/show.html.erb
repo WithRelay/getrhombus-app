@@ -10,7 +10,7 @@
             <div class="left-column-text number"> &nbsp; &nbsp;<%= @user.phone_number %></div>
             <div class="left-column-text"> &nbsp; &nbsp; <%= @user.email %></div>
             <div class="left-column-text"> &nbsp; &nbsp; &nbsp; <%= @user.state_province %></div>
-            <div class="left-column-text"> &nbsp; &nbsp; <%= "#{@user.twitter_cred.uid}" %></div>
+            <div class="left-column-text"> &nbsp; &nbsp; <%= present(@user).twitter_uid %></div>
             <div class="left-column-text"> &nbsp; &nbsp; Customer since: <%= present(@merchant_customer).customer_since_date %></div>
             <div class="right-nav-underline"></div>
           </div>
@@ -107,7 +107,7 @@
                 <div class="table-description">Total Spend</div>
               </div>
             </div>
-            <div class="w-col w-col-6">`
+            <div class="w-col w-col-6">
               <div class="average-spend customer-profile-box">
                 <div class="average-spend-text transaction-history-box-headers">
                   <%= present(@merchant_customer).average %>

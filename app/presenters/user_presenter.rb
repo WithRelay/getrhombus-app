@@ -15,6 +15,11 @@ class UserPresenter < BasePresenter
     h.render(render_page)
   end
 
+  def twitter_uid
+    uid = @model.twitter_cred ? @model.twitter_cred.uid : nil 
+    uid
+  end
+
   def render_merchant_page
     return 'business_information' unless merchant_org_present?
     return 'phone_number' unless merchant_rhombus_number_present?
