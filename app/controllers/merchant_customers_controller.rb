@@ -13,8 +13,7 @@ class MerchantCustomersController < ApplicationController
 
     @conversations = @user.merchant_conversations
 
-  	@last_message_resolution = @user.message_resolutions.last
-  	@reason = @last_message_resolution.title 
+  	@last_message_resolution = @user.message_resolutions.last 
 
   	@last_conversation = Conversation.find_last_conversation(@merchant_customer.merchant_id, 'user', @user.id)
   	@last_conversation_ref = ConversationRef.find_last_conversation_ref(@last_conversation) 

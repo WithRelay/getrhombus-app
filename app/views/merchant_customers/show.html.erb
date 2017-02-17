@@ -29,7 +29,7 @@
                 <div class="left-column-text recent-activity">Reason</div>
               </div>
               <div class="right-column w-col w-col-7">
-                <div class="recent-activity-description"><%= @reason %></div>
+                <div class="recent-activity-description"><%= "#{@last_message_resolution.title}" %></div>
               </div>
             </div>
             <div class="payment recent-activity right-nav-row w-row">
@@ -107,7 +107,7 @@
                 <div class="table-description">Total Spend</div>
               </div>
             </div>
-            <div class="w-col w-col-6">
+            <div class="w-col w-col-6">`
               <div class="average-spend customer-profile-box">
                 <div class="average-spend-text transaction-history-box-headers">
                   <%= present(@merchant_customer).average %>
