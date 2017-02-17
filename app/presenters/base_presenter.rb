@@ -21,7 +21,7 @@ class BasePresenter < SimpleDelegator
   end
 
   def format_created_at
-    h.time_ago_in_words(@model.created_at) + ' ago'
+    h.time_ago_in_words(@model.created_at) + ' ago' if @modal.present?
   end
 
   def relative_time
