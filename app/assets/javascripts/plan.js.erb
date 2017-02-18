@@ -39,12 +39,9 @@ $(document).ready(function() {
           .addClass('has-success')
       })
       .on('success.form.fv', function(e, data) {       
-        // only applies to create modal
-        if ($("#modalPlan").length > 0) {
           e.preventDefault();
           $('#create-plan').attr("disabled", true).val("Please wait...");
           addPlan(); 
-        }      
       })
       .on('err.validator.fv', function(e) {
         $('.help-block').hide();
@@ -72,8 +69,9 @@ $(document).ready(function() {
       })
       .fail(function(data, textStatus, errorThrown) {
         FlashHandler.setFlashMessage(JSON.parse(data.responseText).response, 'error');
+        $('#create-plan').attr("disabled", false).val("Create Plan");
       })
-      .always(function(data, textStatus, response) {
+    .always(function(data, textStatus, response) {
         $('#create-plan').attr("disabled", false).val("Create Plan");
       });
   };

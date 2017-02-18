@@ -1,19 +1,19 @@
 var PriceSlider = new function() {
 
   var pricingSlider, priceValueSpan, amount, selection; //currentAmount,  
-  var plans = { PlanA: { amt: 0, min: 0, max: 100 }, 
-                PlanB: { amt: 50, min: 101, max: 1000 }, 
-                PlanC: { amt: 75, min: 1001, max: 2500 }, 
-                PlanD: { amt: 90, min: 2501, max: 5000 }, 
-                PlanE: { amt: 105, min: 5001, max: 7500 }, 
-                PlanF: { amt: 120, min: 7501, max: 10000 }, 
-                PlanG: { amt: 145, min: 10001, max: 15000 }, 
-                PlanH: { amt: 195, min: 15001, max: 20000 }, 
-                PlanI: { amt: 240, min: 20001, max: 30000 }, 
-                PlanJ: { amt: 295, min: 30001, max: 35000 }, 
-                PlanK: { amt: 350, min: 35001, max: 40000 }, 
-                PlanL: { amt: 400, min: 40001, max: 45000 }, 
-                PlanM: { amt: 450, min: 45001, max: 50000 }, 
+  var plans = { PlanA: { amt: 0, min: 0, max: 100 },
+                PlanB: { amt: 50, min: 101, max: 1000 },
+                PlanC: { amt: 75, min: 1001, max: 2500 },
+                PlanD: { amt: 90, min: 2501, max: 5000 },
+                PlanE: { amt: 105, min: 5001, max: 7500 },
+                PlanF: { amt: 120, min: 7501, max: 10000 },
+                PlanG: { amt: 145, min: 10001, max: 15000 },
+                PlanH: { amt: 195, min: 15001, max: 20000 },
+                PlanI: { amt: 240, min: 20001, max: 30000 },
+                PlanJ: { amt: 295, min: 30001, max: 35000 },
+                PlanK: { amt: 350, min: 35001, max: 40000 },
+                PlanL: { amt: 400, min: 40001, max: 45000 },
+                PlanM: { amt: 450, min: 45001, max: 50000 },
               };
   var keys = Object.keys(plans);
 
