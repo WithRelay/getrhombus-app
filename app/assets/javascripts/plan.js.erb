@@ -65,7 +65,9 @@ $(document).ready(function() {
       })
       .done(function(data, textStatus, jqXHR) {
         FlashHandler.setFlashMessage(data.response, 'notice');
-        $('.update-close-modals').trigger('close');
+        $('#planForm')[0].reset();
+        $('#planForm').data('formValidation').resetForm();
+        // $('.update-close-modals').trigger('close');
       })
       .fail(function(data, textStatus, errorThrown) {
         FlashHandler.setFlashMessage(JSON.parse(data.responseText).response, 'error');
@@ -147,8 +149,10 @@ $(document).on('click', '.delete-plan', function(evt) {
   var selector = '.' + evt.target.classList[evt.target.classList.length - 1];
   if (!$(selector).attr('isDestroy')) {
     evt.stopImmediatePropagation();
-    FlashHandler.setConfirmationDialog(selector, 'Delete Plan',
+    FlashHandler.setConfirmationDialog(
+      selector,
       'If you delete this plan, you won\'t be able to add new subscriptions.',
+      'Delete Plan',
       'isDestroy'
     );
     return false;
