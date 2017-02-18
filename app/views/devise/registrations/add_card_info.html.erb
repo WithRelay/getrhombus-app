@@ -15,6 +15,8 @@
               <%= f.number_field :last4, id: "cc-number", type: "tel", class: "card-number text-field w-input", placeholder: "Card number", "x-autocompletetype" => "cc-number", autocompletetype: "cc-number", autocorrect: 'off', spellcheck: 'off', autocapitalize: 'off' %>
               <%= f.text_field :card_name, id: 'cc-name', type: "text", class: "name-on-card text-field w-input", placeholder: "Name on Card", 'x-autocompletetype' => "off", autocompletetype: 'off', :autocorrect => "off", spellcheck: 'off', autocapitalize: "off", autocomplete: "off" %>
 
+              <input type="hidden" name="add_card_info" value="true">
+
               <input class="month-year text-field w-input" data-name="Month Year 4" id="Month-Year-4" maxlength="256" name="Month-Year-4" placeholder="MM / YYYY" required="required" type="text">
               <input class="cvv text-field w-input" data-name="Cvv 6" id="CVV-6" maxlength="256" name="CVV-6" placeholder="CVV" required="required" type="text">
               <input class="button log-in w-button" data-wait="Please wait..." type="submit" value="Start 14-day Trial">

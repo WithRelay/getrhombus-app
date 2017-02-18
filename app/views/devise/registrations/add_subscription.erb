@@ -17,7 +17,7 @@
           <div class="display-credit-card-wrapper display-credit-card-wrapper-fix">
             <div class="get-started-2 log-in-form w-form">
               
-              <%= form_for(current_user, as: resource_name, url: current_user, html: { method: :patch, class: "w-clearfix", id: "cc-form" }) do |f| %>
+              <%= form_for(current_user, as: resource_name, url: user_path(current_user), html: { method: :patch, class: "w-clearfix", id: "cc-form" }) do |f| %>
                 
                 <div id='cc-fields'>
 

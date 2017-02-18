@@ -6,32 +6,23 @@ class RegistrationsController < Devise::RegistrationsController
   before_action :set_notifications, only: [:billing_information, :account_setting, :business_setting]
 
   def update
+    self.resource = resource_class.to_adapter.get!(send(:"current_#{resource_name}").to_key)
+
     if params[:add_profile_info].present? && current_user.is_merchant?
-      current_user.status = 2
-    elsif params[:add_rhombus_number].present? && current_user.is_merchant?
-      current_user.status = 3
+      msg = 'profile updated'
     elsif params[:add_subscription].present? && current_user.is_merchant?
-      current_user.status = 1
       re = create_saas_subscription
-      if re.first
-        re = current_user.buy_rhombus_number
-        msg = "We are unable to provision a number for you" unless re
-      else
-        msg = re.third ? re.third : "We are unable to start a subscription for you"
-      end
-    else
-      #set_captured_payment_session
-      #@re = (params[:user][:card_token].present?) ? current_user.add_token_to_user(params[:user][:card_token]) : [true]
+      msg = "Subscription added" 
+      msg = re.third ? re.third : "We are unable to start a subscription for you" unless re.first
+    elsif params[:add_rhombus_number].present? && current_user.is_merchant?
+      msg = "We are unable to provision a number for you" 
+      msg = "Rhombus number added" if current_user.buy_number(params)
+    else params[:add_card_info].present? && current_user.is_customer?
+      set_captured_payment_session
+      re = (params[:user][:card_token].present?) ? current_user.add_token_to_user(params[:user][:card_token]) : [true]
     end
 
 =begin
-    if re && re.first
-
-    else
-
-    end
-
-
     if @re && @re.first
       sub_res = create_saas_subscription
       if sub_res.first && current_user.update_without_password(devise_parameter_sanitizer.sanitize(:account_update))
@@ -54,7 +45,25 @@ class RegistrationsController < Devise::RegistrationsController
     end
 =end
 
-=begin
+    prev_unconfirmed_email = resource.unconfirmed_email if resource.respond_to?(:unconfirmed_email)
+
+    resource_updated = update_resource(resource, account_update_params)
+    yield resource if block_given?
+    if resource_updated
+      if is_flashing_format?
+        #flash_key = update_needs_confirmation?(resource, prev_unconfirmed_email) ? :update_needs_confirmation : :updated
+        #set_flash_message :notice, flash_key
+        flash[:notice] = msg 
+      end
+      bypass_sign_in resource, scope: resource_name
+      respond_with resource, location: after_update_path_for(resource)
+    else
+      clean_up_passwords resource
+      set_minimum_password_length
+      respond_with resource
+    end
+
+=begin    
     if current_user.update_without_password(devise_parameter_sanitizer.sanitize(:account_update))
       set_flash_message :notice, :updated
       # Sign in the current user bypassing validation in case his password changed
@@ -100,8 +109,8 @@ class RegistrationsController < Devise::RegistrationsController
       if token_res.first
         @platform_acct = User.get_platform_acct_obj
         merchant_customer = MerchantCustomer.find_by(customer_id: current_user.id, merchant_id: @platform_acct.id)
-        saas_subscription = Subscription.new(plan_id: get_plan_id, merchant_customer_id:  merchant_customer.id)
-        return saas_subscription.create_subscription({ team: @platform_acct })
+        saas_sub = Subscription.new(plan_id: get_plan_id, merchant_customer_id:  merchant_customer.id)
+        return saas_sub.create_subscription({ team: @platform_acct })
       end
       token_res
     rescue StandardError => e
@@ -114,11 +123,14 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   def after_update_path_for(resource)
-    user_path(resource)
+    check_user_redirect || root_path
   end
 
   def after_sign_up_path_for(resource)
-    return check_user_redirect
+    check_user_redirect || root_path
   end
 
+  def update_resource(resource, params)
+    resource.update_without_password(params)
+  end
 end

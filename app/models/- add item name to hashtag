@@ -13,9 +13,6 @@ rhombus number form
 credit card form
 - flash message showing??
 
-More notes
-- platform - create customer/merchant on signup?? i think not...we need serious users
-
 
 Friday
 - test parser - done
@@ -31,6 +28,7 @@ Everyone
 - popups are repeated... code across the page must be one.
 
 Torchi
+- review merchant customer
 - review hashtag js
 - review saved replies
 - reminders create is a popup, appears on

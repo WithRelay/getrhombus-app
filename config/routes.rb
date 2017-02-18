@@ -19,10 +19,7 @@ Rails.application.routes.draw  do
         get 'add-rhombus-number' => 'registrations#add_rhombus_number'
         get 'add-profile-info' => 'registrations#add_profile_info'
         get 'add-card-info' => 'registrations#add_card_info'
-        get "signup", to: "registrations#new"
-        get "profile", to: "registrations#edit"
-        get "signin", to: "devise/sessions#new"
-        patch "update", to: "registrations#update"
+        put "update", to: "registrations#update"
       end
     end
   end
