@@ -22,7 +22,7 @@
     </div>
     <div class="w-col w-col-2">
       <% if plan.subscription_id.blank? %>
-        <%= link_to 'Delete Plan', user_plan_path(current_user, plan), method: :delete, class: "button settings-table-row w-button delete-plan plan#{plan.id}", data: { disable_with: "<i class='fa fa-spinner fa-spin'></i>Please wait...".html_safe } %>
+        <%= link_to 'Delete Plan', user_plan_path(current_user, plan), method: :delete, class: "button settings-table-row w-button delete-plan plan#{plan.id}" %>
       <% end %>
     </div>
   </div>
