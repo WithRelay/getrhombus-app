@@ -67,7 +67,7 @@ $(document).ready(function() {
         FlashHandler.setFlashMessage(data.response, 'notice');
         $('#planForm')[0].reset();
         $('#planForm').data('formValidation').resetForm();
-        // $('.update-close-modals').trigger('close');
+        $('.update-close-modals').click();
       })
       .fail(function(data, textStatus, errorThrown) {
         FlashHandler.setFlashMessage(JSON.parse(data.responseText).response, 'error');
