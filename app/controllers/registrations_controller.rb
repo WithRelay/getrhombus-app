@@ -17,9 +17,11 @@ class RegistrationsController < Devise::RegistrationsController
     elsif params[:add_rhombus_number].present? && current_user.is_merchant?
       msg = "We are unable to provision a number for you" 
       msg = "Rhombus number added" if current_user.buy_number(params)
-    else params[:add_card_info].present? && current_user.is_customer?
+    elsif params[:add_card_info].present? && current_user.is_customer?
       set_captured_payment_session
-      re = (params[:user][:card_token].present?) ? current_user.add_token_to_user(params[:user][:card_token]) : [true]
+      re = current_user.add_token_to_user(params[:user][:card_token])
+      msg = "Card info added" 
+      msg = re.third ? re.third : "We are unable to add your card to your profile." unless re.first
     end
 
 =begin

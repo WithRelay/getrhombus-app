@@ -2,7 +2,7 @@
   <div class="dashboard-nav-links">All Customers</div>
   <h5 class="left-nav signup-box-subheading">billing info</h5>
 
-  <%= link_to account_setting_path, class: 'left-nav-tab-wrapper w-inline-block' do %>
+  <%= link_to account_setting_user_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
     <div class="left-nav-tab" data-ix="display-and-hide-customers">&nbsp; &nbsp; Account</div>
   <% end %>
 
@@ -23,16 +23,18 @@
   <a class="left-nav-tab-wrapper w-inline-block" href="#">
     <div class="left-nav-tab"> &nbsp; Integrations</div>
   </a>
-  <a class="left-nav-tab-wrapper w-inline-block" href="#">
+  
+  <%= link_to billing_information_user_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
     <div class="left-nav-tab"> &nbsp; Billing Information</div>
-  </a>
-  <%= link_to managed_accounts_user_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
-   <div class="left-nav-tab"> &nbsp; Bank account</div>
- <% end %>
+  <% end %>
 
- <%= link_to sms_usage_user_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
-   <div class="left-nav-tab"> &nbsp; SMS usage</div>
- <% end %>
+  <%= link_to managed_accounts_user_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
+    <div class="left-nav-tab"> &nbsp; Bank account</div>
+  <% end %>
+
+  <%= link_to sms_usage_user_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
+    <div class="left-nav-tab"> &nbsp; SMS usage</div>
+  <% end %>
 
   <a class="left-nav-tab-wrapper w-inline-block" href="#">
     <div class="left-nav-tab"> &nbsp; Free subscriptions</div>

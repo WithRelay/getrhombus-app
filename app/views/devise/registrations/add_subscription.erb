@@ -29,6 +29,8 @@
                   <%= f.hidden_field :exp_year, id: "cc-ex-year" %>
                   <%= f.hidden_field :card_token, id: "cc-uri" %>
                   <%= f.hidden_field :card_type, id: "cc-type" %>
+                  <input type="hidden" id='add_subscription' name="add_subscription" value="true">
+                  <input type="hidden" id='plan_name' name="plan[name]">
 
                   <div class="form-group col-xs-6">
                     <%= f.text_field :card_name, id: 'cc-name', type: "text", class: "form-control name-on-card text-field w-input", placeholder: "Name on Card", 'x-autocompletetype' => "off", autocompletetype: 'off', :autocorrect => "off", spellcheck: 'off', autocapitalize: "off", autocomplete: "off" %>
@@ -43,9 +45,6 @@
                   </div>
 
                   <label class="form-label paragraph select-plan" for="Card-Number-3">Don't worry, we'll notify you when your trial is about to expire</label>
-
-                  <input type="hidden" id='add_subscription' name="add_subscription" value="true">
-                  <input type="hidden" id='plan_name' name="plan[name]">
 
                 </div>
 

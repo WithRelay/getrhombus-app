@@ -112,12 +112,12 @@ module AdditionalUserActions
 
   def build_user_link
     # if it includes a captured payment, also check if msg_id is present, tag_id is optional
-    # referrer_num is the merchant the payment is going to
-    path = "/users/#{current_user.id}/add-card-info"
-    link = session[:captured_amt].present? ? "#{path}?amt=#{session[:captured_amt]}&referrer_id=#{session[:referrer_id]}" +
-                                          "&msg_id=#{session[:msg_id]}&tag_id=#{session[:tag_id]}" : path
+    # referrer_id is the merchant the payment is going to    
+    path = add_card_info_user_path(current_user) 
+    path = add_card_info_user_path(current_user, amt: session[:captured_amt], referrer_id: session[:referrer_id], 
+                                                  msg_id: session[:msg_id], tag_id: session[:tag_id]) if session[:captured_amt].present?
     delete_captured_payment_session
-    link
+    path 
   end
 
   def set_captured_payment_session
@@ -137,6 +137,8 @@ module AdditionalUserActions
   end
 
   def check_user_redirect
+    current_user.reload
+    
     if current_user.is_customer?
       return build_user_link if current_user.card_token.blank?
       return user_transactions_path(current_user)

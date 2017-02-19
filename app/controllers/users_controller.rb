@@ -10,18 +10,14 @@ class UsersController < ApplicationController
   load_and_authorize_resource except: [:customer_csv_template]
 
   def show
-    # #handle_referrer_and_welcome_email
-    # #delete_captured_payment_session
-    # #Transaction.process_captured_payment(@user, params) if current_user.user_level == 0 && params[:captured_amt].present?
-    redirect_to check_user_redirect
-    #   @last6_transactions = Transaction.includes(:user).where(team_id: current_user.id).order(created_at: :desc).last(6)
-    #   # @token = TextingService.get_twilio_capibility_token if current_user.user_level == 1
-    # end
-    #
+    # handle_referrer_and_welcome_email
+    # delete_captured_payment_session
+    # Transaction.process_captured_payment(@user, params) if current_user.user_level == 0 && params[:captured_amt].present?
+    @last6_transactions = Transaction.includes(:user).where(team_id: current_user.id).order(created_at: :desc).last(6)
+    # @token = TextingService.get_twilio_capibility_token if current_user.user_level == 1
   end
 
   # DELETE /users/1
-  # DELETE /users/1.json
   def destroy
     @user.destroy
     respond_to do |format|
@@ -32,7 +28,6 @@ class UsersController < ApplicationController
 
   def sms_usage
   end
-
 
 private
   # Use callbacks to share common setup or constraints between actions.

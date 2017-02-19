@@ -192,6 +192,7 @@ class User < ActiveRecord::Base
         # 1. a merchant user who is a customer of platform
         # 2. a customer user who is a customer of the platform and/or merchant(s)
         # Note that a customer user becomes a customer of merchant when a subscription is created
+        
         cu = MerchantCustomer.where(customer_id: self.id)
         hash = { email: self.email, card_token: card_token, is_new_customer: true, is_platform_customer: true, is_merchant: is_merchant? }
 
@@ -217,14 +218,15 @@ class User < ActiveRecord::Base
             end
           end
         end
+
         # create new merchant_customer for stripe customer
-        if re.first
-          if cu.blank?
+        if cu.blank?
+          if re.first
             MerchantCustomer.create(merchant_id: platform_acct.id, customer_id: self.id, stripe_customer_id: re[1].id)
+          else
+            # since new customer are always platform customer so is_platform is always true
+            PaymentService.delete_customer(re[1].id, get_stripe_cred.uid, true)
           end
-        else
-          # since new customer are always platform customer so is_platform is always true
-          PaymentService.delete_customer(re[1].id, get_stripe_cred.uid, true) if cu.blank?
         end
         re 
       else

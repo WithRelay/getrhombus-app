@@ -1,9 +1,10 @@
 Rails.application.routes.draw  do
 
   root 'static_pages#home'
+
   # Dynamic action for static_controller routes eg: home_page will generate as home-page
   StaticPagesController.action_methods.each do |action|
-    unless action=='creating_campaigns_in_relay'
+    unless action == 'creating_campaigns_in_relay'
       get action.split('_').join('-') => "static_pages##{action}"
     end
   end
@@ -12,18 +13,7 @@ Rails.application.routes.draw  do
   get "relay-docs-categories/:slug" => "knowledge_base_categories#show"
 
   devise_for :users, controllers: { registrations: "registrations", omniauth_callbacks: "omniauth_callbacks", sessions: 'sessions' }
-  resources :users, only: [:show] do
-    devise_scope :user do
-      member do
-        get 'add-subscription' => 'registrations#add_subscription'
-        get 'add-rhombus-number' => 'registrations#add_rhombus_number'
-        get 'add-profile-info' => 'registrations#add_profile_info'
-        get 'add-card-info' => 'registrations#add_card_info'
-        put "update", to: "registrations#update"
-      end
-    end
-  end
-
+  
   #authenticate :user, -> (user) { CheckUser::RouteAuthentication.new(user).should_authenticate? } do
     post 'lists/create_new_list' => 'lists#create_new_list'
     get 'user_lists/remove_user' => 'user_lists#remove_user'
@@ -50,46 +40,28 @@ Rails.application.routes.draw  do
     match 'events/facebook' => 'webhooks#facebook_events', via: [:get, :post]
     # end
 
-    ## devise routes
-    devise_scope :user do
-      get "billing-information", to: "registrations#billing_information"
-      get "business-setting", to: "registrations#business_setting"
-      get "account-setting", to: "registrations#account_setting"
-    end
-
     resources :referrers, only: [:new, :create]
 
     # user routes
     resources :users, only: :show do
-      member do  
-        get 'customers' => 'merchant_customers#customers'
-        get 'customers/:id' => 'merchant_customers#show' 
-      end
-
+      
       devise_scope :user do
         member do
-          get 'segments' => 'lists#segments'
-          get 'sms-usage' => 'users#sms_usage'
+          get 'add-subscription' => 'registrations#add_subscription'
+          get 'add-rhombus-number' => 'registrations#add_rhombus_number'
+          get 'add-profile-info' => 'registrations#add_profile_info'
+          get 'add-card-info' => 'registrations#add_card_info'
+          put "update", to: "registrations#update"
+          get "billing-information", to: "registrations#billing_information"
+          get "business-setting", to: "registrations#business_setting"
+          get "account-setting", to: "registrations#account_setting"
         end
       end
-      resources :fb_pages, only: [:index]
-      patch 'update_fb_page' => 'fb_pages#update_user_fb_page'
-      resources :hashtags, except: [:show]
-      resources :subscriptions, only: [:index, :update, :destroy]
 
+      # Only platform can create coupons
       authenticate :user, -> (user) { user.is_platform? } do
         resources :knowledge_base_categories, param: :slug, only: [:index, :edit, :update, :new, :create]
-      end
-      resources :plans, only: [:index, :destroy]
-      resources :alerts, only: [:update]
-      resources :saved_replies
-      resources :bank_accounts
-      resources :addresses
-      resources :people
-      resources :transactions do
-        collection do
-          get 'download' => 'transactions#download_csv', constraints: { format: 'csv' }
-        end
+        resources :coupons
       end
 
       # authenticate resources if a user is merchant
@@ -99,15 +71,26 @@ Rails.application.routes.draw  do
         resources :reminders, except: [:show] { member { put 'change_status' } }
       end
 
-      collection do
-        get 'customer_template' => "users#customer_csv_template", constraints: { format: 'csv' }
+      resources :fb_pages, only: [:index]
+      patch 'update_fb_page' => 'fb_pages#update_user_fb_page'
+      resources :hashtags, except: [:show]
+      resources :subscriptions, only: [:index, :update, :destroy]
+      resources :merchant_customers, only: [:index, :show], path: "customers", as: :customers
+      resources :plans, only: [:index, :destroy]
+      resources :alerts, only: [:update]
+      resources :saved_replies
+      resources :bank_accounts
+      resources :addresses
+      resources :people
+      resources :transactions do
+        get 'download' => 'transactions#download_csv', constraints: { format: 'csv' }, on: :collection
       end
 
-      # Only admins can create coupons
-      resources :coupons
-      # , :constraints => lambda { |req| req.env['warden'].authenticated? and req.env['warden'].user.is_platform? }
+      get 'customer_template' => "users#customer_csv_template", constraints: { format: 'csv' }, on: :collection
 
       member do
+        get 'segments' => 'lists#segments'
+        get 'sms-usage' => 'users#sms_usage'
         get 'managed-accounts' => 'users#managed_acct'
         match 'managed-accounts' => "users#create_managed_acct", via: :patch
         match 'update-managed-acct' => 'users#update_managed_acct', via: :patch

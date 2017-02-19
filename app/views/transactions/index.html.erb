@@ -3,8 +3,7 @@
 <!-- Start Page Loading -->
 <div class="loading"><img src="<%= asset_path 'loading.gif' %>" alt="loading-img"></div>
 <!-- End Page Loading -->
-<%= render 'shared/header_new' %>
-<%= render 'shared/sidebar' %>
+
 <!-- //////////////////////////////////////////////////////////////////////////// -->
 <!-- START CONTENT -->
 <div class="content">
@@ -77,7 +76,7 @@
         <% end %>
       </div>
       <!-- End Panel -->
-      <div style="text-align: center; margin-bottom: 40px;"><%= will_paginate @transactions, :page_links => false %></div>
+      <div style="text-align: center; margin-bottom: 40px;"><%#= will_paginate @transactions, :page_links => false %></div>
     </div>
     <!-- End Row -->
   </div>

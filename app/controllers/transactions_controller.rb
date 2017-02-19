@@ -11,9 +11,9 @@ class TransactionsController < ApplicationController
 
   def index
     if current_user.is_merchant?
-      @transactions = Transaction.all
+      @transactions = []
     else      
-      @transactions = Transaction.all
+      @transactions = []
     end
     respond_with(@transactions)
   end
