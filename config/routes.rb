@@ -64,9 +64,9 @@ Rails.application.routes.draw  do
 
     # user routes
     resources :users, only: :show do
-      member do  
+      member do
         get 'customers' => 'merchant_customers#index'
-        get 'customers/:customer_id' => 'merchant_customers#show' 
+        get 'customers/:customer_id' => 'merchant_customers#show'
       end
 
       devise_scope :user do
@@ -136,8 +136,8 @@ Rails.application.routes.draw  do
       patch 'saved_replies/update' => 'saved_replies#update'
       post 'saved_replies/create' => 'saved_replies#create'
       # Campaign Routes
-      post 'campaigns/change_status' => 'campaigns#change_status'
-      post 'campaigns/delete' => 'campaigns#delete_campaign'
+      patch 'campaigns/change_status/:id' => 'campaigns#change_status'
+      delete 'campaigns/delete/:id' => 'campaigns#delete_campaign'
       post 'campaigns/check_campaign_name' => 'campaigns#check_campaign_name'
       match 'campaigns/:id/images/:image_id' => 'campaigns#image_delete', via: :delete
       post 'campaigns/send_test_email' => 'campaigns#send_test_email'
