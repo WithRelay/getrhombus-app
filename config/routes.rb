@@ -22,12 +22,12 @@ Rails.application.routes.draw  do
         get "signup", to: "registrations#new"
         get "profile", to: "registrations#edit"
         get "signin", to: "devise/sessions#new"
-        patch "update", to: "registrations#update"
+        patch "registration/update", to: "registrations#update"
       end
     end
   end
 
-  #authenticate :user, -> (user) { CheckUser::RouteAuthentication.new(user).should_authenticate? } do
+  authenticate :user, -> (user) { CheckUser::RouteAuthentication.new(user).should_authenticate? } do
     post 'lists/create_new_list' => 'lists#create_new_list'
     get 'user_lists/remove_user' => 'user_lists#remove_user'
     get 'fb_pages/remove_integration' => 'fb_pages#remove_integration'
@@ -68,7 +68,6 @@ Rails.application.routes.draw  do
         get 'customers' => 'merchant_customers#index'
         get 'customers/:customer_id' => 'merchant_customers#show'
       end
-
       devise_scope :user do
         member do
           get 'segments' => 'lists#segments'
@@ -175,7 +174,7 @@ Rails.application.routes.draw  do
         get 'rating', on: :member
       end
     end
-  #end
+end
 
 
   ## catch all other to 404
