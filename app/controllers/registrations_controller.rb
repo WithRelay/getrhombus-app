@@ -6,22 +6,29 @@ class RegistrationsController < Devise::RegistrationsController
   before_action :set_notifications, only: [:billing_information, :account_setting, :business_setting]
 
   def update
+
     self.resource = resource_class.to_adapter.get!(send(:"current_#{resource_name}").to_key)
 
     if params[:add_profile_info].present? && current_user.is_merchant?
-      msg = 'profile updated'
+      success_message = 'profile updated'
+      error_message = "Unable to update your profile" 
     elsif params[:add_subscription].present? && current_user.is_merchant?
       re = create_saas_subscription
-      msg = "Subscription added" 
-      msg = re.third ? re.third : "We are unable to start a subscription for you" unless re.first
+      success_message = "Subscription added" 
+      error_message = re.third ? re.third : "We are unable to start a subscription for you" unless re.first
     elsif params[:add_rhombus_number].present? && current_user.is_merchant?
-      msg = "We are unable to provision a number for you" 
-      msg = "Rhombus number added" if current_user.buy_number(params)
+      error_message = "We are unable to provision a number for you" 
+      success_message = "Rhombus number added" if current_user.buy_number(params)
     elsif params[:add_card_info].present? && current_user.is_customer?
       set_captured_payment_session
       re = current_user.add_token_to_user(params[:user][:card_token])
-      msg = "Card info added" 
-      msg = re.third ? re.third : "We are unable to add your card to your profile." unless re.first
+      success_message = "Card info added" 
+      error_message = re.third ? re.third : "We are unable to add your card to your profile." unless re.first
+    elsif params[:update_billing_info].present?
+      re = current_user.add_token_to_user(params[:user][:card_token])
+      success_message = "Billing Info updated" 
+      error_message = re.third ? re.third : "We are unable to add your card to your profile." unless re.first
+      url = request.referrer
     end
 
 =begin
@@ -53,16 +60,17 @@ class RegistrationsController < Devise::RegistrationsController
     yield resource if block_given?
     if resource_updated
       if is_flashing_format?
-        #flash_key = update_needs_confirmation?(resource, prev_unconfirmed_email) ? :update_needs_confirmation : :updated
-        #set_flash_message :notice, flash_key
-        flash[:notice] = msg 
+        # flash_key = update_needs_confirmation?(resource, prev_unconfirmed_email) ? :update_needs_confirmation : :updated
+        # set_flash_message :notice, flash_key
+        flash[:notice] = success_message
       end
       bypass_sign_in resource, scope: resource_name
-      respond_with resource, location: after_update_path_for(resource)
+      respond_with resource, location: url || after_update_path_for(resource)
     else
+      flash[:error] = error_message
       clean_up_passwords resource
       set_minimum_password_length
-      respond_with resource
+      respond_with resource, location: previous_url
     end
 
 =begin    
@@ -130,6 +138,10 @@ class RegistrationsController < Devise::RegistrationsController
 
   def after_sign_up_path_for(resource)
     check_user_redirect || root_path
+  end
+
+  def previous_url
+    request.referrer || root_path
   end
 
   def update_resource(resource, params)

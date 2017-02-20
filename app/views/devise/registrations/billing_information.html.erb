@@ -4,17 +4,20 @@
   <div class="dash-content-container settings">
     <h4 class="form-header">Billing Information</h4>
     <div class="flex-underline form-header-underline"></div>
+
     <div class="account-settings-form-wrapper w-form">
-      <%= form_for(current_user, as: resource_name, url: edit_user_registration_path(current_user), html: { method: :put, id: "cc-form", class: 'w-clearfix', autocomplete: "off" }) do |f| %>
+     
+      <%= form_for(current_user, as: resource_name, url: user_path(current_user), html: { method: :put, id: "cc-form", class: 'w-clearfix', autocomplete: "off" }) do |f| %>
+
         <label class="field-headers form-label settings" for="Business-Name">credit card information</label>
         <label class="form-label paragraph" for="Card-Number-2">You will be billed at the beginning of every month for all active paid plans, excluding the 14-day trial period. SMS/MMS related charges will deducted from available credits in your Rhombus account see <a class="settings-link" href="#">SMS/MMS usage</a>.
-          <br>
-          <br>A sales tax will be included in your monthly subscription charge if this is a legal requirement in your ZIP code.</label>
+        <br>
+        <br>A sales tax will be included in your monthly subscription charge if this is a legal requirement in your ZIP code.</label>
+       
         <div class="form-group col-xs-6">
           <%= f.number_field :last4, id: "cc-number", type: "tel", class: "form-control card-number text-field w-input form-control cc-num", placeholder: "Card number", "x-autocompletetype" => "cc-number", autocompletetype: "cc-number", autocorrect: 'off', spellcheck: 'off', autocapitalize: 'off' %>
         </div>
 
-        <span class="card" aria-hidden="true"></span>
         <div class="form-group col-xs-6">
           <%= f.text_field :card_name, id: 'cc-name', class: "form-control name-on-card text-field w-input form-control", placeholder: "Name on Card", 'x-autocompletetype' => "off", autocompletetype: 'off', :autocorrect => "off", spellcheck: 'off', autocapitalize: "off", autocomplete: "off" %>
         </div>
@@ -27,107 +30,18 @@
           <input id="cc-csc" type="tel" id="CVV-2" class="form-control cvv text-field w-input form-control" placeholder="CVC" value="" autocorrect="off" spellcheck="off" autocapitalize="off" autocomplete="off" maxlength="4">
         </div>
 
-        <div class="col-md-6 col-sm-6" id="exp-div">
-          <%= f.hidden_field :exp_month, id: "cc-ex-month" %>
-          <%= f.hidden_field :exp_year, id: "cc-ex-year" %>
-          <%= f.hidden_field :card_token, id: "cc-uri" %>
-          <%= f.hidden_field :card_type, id: "cc-type" %>
-        </div>
+        <input type="hidden" name="update_billing_info" value="true">
+        <%= f.hidden_field :exp_month, id: "cc-ex-month" %>
+        <%= f.hidden_field :exp_year, id: "cc-ex-year" %>
+        <%= f.hidden_field :card_token, id: "cc-uri" %>
+        <%= f.hidden_field :card_type, id: "cc-type" %>
 
         <%= f.submit "Update Information", id: "cc-submit", class: "alt-button button save-changes w-button btn btn-default btn-block btn-rhombus" %>
-        <% end %>
-        <div class="flex-underline form-section-divider"></div>
-        <label class="field-headers form-label settings" for="Business-Name">PLAN INFORMATION</label>
-        <label class="form-label paragraph" for="Tax-Rate">Upgrade or modify your subscription plan by making a selection below:</label>
-        <div class="settings-info-div">
-          <h1 class="business-plan plan-name plans-text">Current Subscription: <%#=saas_plan_name.humanize %></h1>
-          <div class="flex-underline plan-div"></div>
-          <p class="settings-details-paragraph">Number of customers: <%= saas_customers %></p>
-          <p class="settings-details-paragraph"> <%= subscription_time_period %></p>
-          <p class="settings-details-paragraph"><%= subscription_plan_amount %></p>
-        </div>
-
-        <div class="settings-info-div"><h1 class="business-plan plan-name plans-text"><%= subscription_customer_count %></h1></div>
-
-        <div class="flex-underline form-section-divider"></div>
-
-        <label class="field-headers form-label settings" for="Month-Year-2">COUPON &amp; DISCOUNTS</label>
-
-        <% if saas_sub.coupon.present? %>
-          <% saas_coupon_data = saas_coupon %>
-          <div class="settings-info-div">
-            <h1 class="business-plan plan-name plans-text">Coupon: <%= saas_coupon_data[:name] %></h1>
-            <div class="flex-underline plan-div"></div>
-            <p class="settings-details-paragraph">Type: <%= saas_coupon_data[:type]%></p>
-            <p class="settings-details-paragraph">Value: <strong><%= saas_coupon_data[:value]%></strong></p>
-            <p class="settings-details-paragraph">Duration: <%= saas_coupon_data[:duration]%></p>
-            <p class="settings-details-paragraph">End date: <strong><%= saas_coupon_data[:end_date]%></strong></p>
-          </div>
-        <% else %>
-          <div class="settings-info-div">
-            <h1 class="business-plan plan-name plans-text">There are no coupons applied to your subscription</h1>
-          </div>
-        <% end %>
-
-        <%= form_for('subscription', method: 'POST', :html=> { id: 'coupon-update-form'}) do |f| %>
-          <div class="form-group col-xs-6">
-            <%= f.text_field :coupon, id: 'update-plan-id', class: 'form-control coupon-code text-field w-input', placeholder: 'Enter Coupon Code' %>
-          </div>
-          <%= f.submit 'Apply Discount', class: 'alt-button button discount-code save-changes w-button', id: 'submit-update-coupon', saas_sub_id: get_saas_sub_id %>
-        <% end %>
-
-
-        <div class="flex-underline form-section-divider"></div>
-        <label class="field-headers form-label settings" for="Card-Number-2">INVOICES</label>
-        <label class="form-label paragraph" for="Tax-Rate">View history of your paid subscriptions below:</label>
-
-        <div class="settings-table w-row">
-          <div class="settings-table-cell-wrapper w-col w-col-3">
-            <div class="id settings-table-cell-div settings-table-header">
-              <div class="settings-table-text">Invoice ID</div>
-            </div>
-          </div>
-          <div class="settings-table-cell-wrapper w-col w-col-3">
-            <div class="invoice-date settings-table-cell-div settings-table-header">
-              <div class="settings-table-text">Date</div>
-            </div>
-          </div>
-          <div class="settings-table-cell-wrapper w-col w-col-3">
-            <div class="invoice-amount settings-table-cell-div settings-table-header">
-              <div class="settings-table-text">Amount</div>
-            </div>
-          </div>
-          <div class="settings-table-cell-wrapper w-col w-col-3">
-            <div class="invoice-status settings-table-cell-div settings-table-header">
-              <div class="settings-table-text">Status</div>
-            </div>
-          </div>
-        </div>
-
-        <% saas_invoices.each do |invoice| %>
-          <div class="settings-table w-row">
-            <div class="settings-table-cell-wrapper w-col w-col-3">
-              <div class="id settings-table-cell-div">
-                <div class="content settings-table-text shrink-text"><%= invoice.stripe_invoice_id%></div>
-              </div>
-            </div>
-            <div class="settings-table-cell-wrapper w-col w-col-3">
-              <div class="invoice-date settings-table-cell-div">
-                <div class="content invoice-date settings-table-text"><%= Time.zone.at(invoice.date).strftime("%B %d, %Y") %></div>
-              </div>
-            </div>
-            <div class="settings-table-cell-wrapper w-col w-col-3">
-                <div class="invoice-amount settings-table-cell-div">
-                  <div class="content settings-table-text"><%= "$%.2f"%" #{invoice.total.to_f/100}" %></div>
-                </div>
-              </div>
-              <div class="settings-table-cell-wrapper w-col w-col-3">
-                <div class="last-cell settings-table-cell-div">
-                  <div class="content settings-table-text status-text">Paid</div>
-                </div>
-              </div>
-            </div>
-        <% end %>
+      <% end %>
+      
+      <% if current_user.is_merchant? %>
+        <%= render 'more_merchant_billing_info' %>
+      <% end %>
 
     </div>
   </div>
