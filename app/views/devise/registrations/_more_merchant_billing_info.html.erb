@@ -1,0 +1,92 @@
+<div class="flex-underline form-section-divider"></div>
+        <label class="field-headers form-label settings" for="Business-Name">PLAN INFORMATION</label>
+        <label class="form-label paragraph" for="Tax-Rate">Upgrade or modify your subscription plan by making a selection below:</label>
+        <div class="settings-info-div">
+          <h1 class="business-plan plan-name plans-text">Current Subscription: <%#=saas_plan_name.humanize %></h1>
+          <div class="flex-underline plan-div"></div>
+          <p class="settings-details-paragraph">Number of customers: <%= saas_customers %></p>
+          <p class="settings-details-paragraph"> <%= subscription_time_period %></p>
+          <p class="settings-details-paragraph"><%= subscription_plan_amount %></p>
+        </div>
+
+        <div class="settings-info-div"><h1 class="business-plan plan-name plans-text"><%= subscription_customer_count %></h1></div>
+
+        <div class="flex-underline form-section-divider"></div>
+
+        <label class="field-headers form-label settings" for="Month-Year-2">COUPON &amp; DISCOUNTS</label>
+
+        <% if saas_sub.coupon.present? %>
+          <% saas_coupon_data = saas_coupon %>
+          <div class="settings-info-div">
+            <h1 class="business-plan plan-name plans-text">Coupon: <%= saas_coupon_data[:name] %></h1>
+            <div class="flex-underline plan-div"></div>
+            <p class="settings-details-paragraph">Type: <%= saas_coupon_data[:type]%></p>
+            <p class="settings-details-paragraph">Value: <strong><%= saas_coupon_data[:value]%></strong></p>
+            <p class="settings-details-paragraph">Duration: <%= saas_coupon_data[:duration]%></p>
+            <p class="settings-details-paragraph">End date: <strong><%= saas_coupon_data[:end_date]%></strong></p>
+          </div>
+        <% else %>
+          <div class="settings-info-div">
+            <h1 class="business-plan plan-name plans-text">There are no coupons applied to your subscription</h1>
+          </div>
+        <% end %>
+
+        <%= form_for('subscription', method: 'POST', :html=> { id: 'coupon-update-form'}) do |f| %>
+          <div class="form-group col-xs-6">
+            <%= f.text_field :coupon, id: 'update-plan-id', class: 'form-control coupon-code text-field w-input', placeholder: 'Enter Coupon Code' %>
+          </div>
+          <%= f.submit 'Apply Discount', class: 'alt-button button discount-code save-changes w-button', id: 'submit-update-coupon', saas_sub_id: get_saas_sub_id %>
+        <% end %>
+
+
+        <div class="flex-underline form-section-divider"></div>
+        <label class="field-headers form-label settings" for="Card-Number-2">INVOICES</label>
+        <label class="form-label paragraph" for="Tax-Rate">View history of your paid subscriptions below:</label>
+
+        <div class="settings-table w-row">
+          <div class="settings-table-cell-wrapper w-col w-col-3">
+            <div class="id settings-table-cell-div settings-table-header">
+              <div class="settings-table-text">Invoice ID</div>
+            </div>
+          </div>
+          <div class="settings-table-cell-wrapper w-col w-col-3">
+            <div class="invoice-date settings-table-cell-div settings-table-header">
+              <div class="settings-table-text">Date</div>
+            </div>
+          </div>
+          <div class="settings-table-cell-wrapper w-col w-col-3">
+            <div class="invoice-amount settings-table-cell-div settings-table-header">
+              <div class="settings-table-text">Amount</div>
+            </div>
+          </div>
+          <div class="settings-table-cell-wrapper w-col w-col-3">
+            <div class="invoice-status settings-table-cell-div settings-table-header">
+              <div class="settings-table-text">Status</div>
+            </div>
+          </div>
+        </div>
+
+        <% saas_invoices.each do |invoice| %>
+          <div class="settings-table w-row">
+            <div class="settings-table-cell-wrapper w-col w-col-3">
+              <div class="id settings-table-cell-div">
+                <div class="content settings-table-text shrink-text"><%= invoice.stripe_invoice_id %></div>
+              </div>
+            </div>
+            <div class="settings-table-cell-wrapper w-col w-col-3">
+              <div class="invoice-date settings-table-cell-div">
+                <div class="content invoice-date settings-table-text"><%= Time.zone.at(invoice.date).strftime("%B %d, %Y") %></div>
+              </div>
+            </div>
+            <div class="settings-table-cell-wrapper w-col w-col-3">
+                <div class="invoice-amount settings-table-cell-div">
+                  <div class="content settings-table-text"><%= "$%.2f"%" #{invoice.total.to_f/100}" %></div>
+                </div>
+              </div>
+              <div class="settings-table-cell-wrapper w-col w-col-3">
+                <div class="last-cell settings-table-cell-div">
+                  <div class="content settings-table-text status-text">Paid</div>
+                </div>
+              </div>
+            </div>
+        <% end %>

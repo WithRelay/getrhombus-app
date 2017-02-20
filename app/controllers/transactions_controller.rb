@@ -1,7 +1,9 @@
 class TransactionsController < ApplicationController
+  
   include DashboardNotification
-  before_action :set_notifications
-  before_action :set_transaction, only: [:show, :edit, :update, :destroy]
+  
+  before_action :set_notifications, except: [:download_csv]
+  before_action :set_transaction, only: [:show]
 
   # why am I not authorizing user?
   #load_and_authorize_resource :except => [:download_csv]
@@ -9,12 +11,11 @@ class TransactionsController < ApplicationController
 
   def index
     if current_user.is_merchant?
-      @transactions = current_user.get_merchant_transactions.paginate(:page => params[:page], :per_page => 25)
-    else
-      @transactions = current_user.get_customer_transactions.paginate(:page => params[:page], :per_page => 25)
+      @transactions = []
+    else      
+      @transactions = []
     end
     respond_with(@transactions)
-    #render layout: 'xxx' # remove
   end
 
   def show

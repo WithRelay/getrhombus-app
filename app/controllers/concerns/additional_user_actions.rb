@@ -112,12 +112,12 @@ module AdditionalUserActions
 
   def build_user_link
     # if it includes a captured payment, also check if msg_id is present, tag_id is optional
-    # referrer_num is the merchant the payment is going to
-    path = "/users/#{current_user.id}/add-card-info"
-    link = session[:captured_amt].present? ? "#{path}?amt=#{session[:captured_amt]}&referrer_id=#{session[:referrer_id]}" +
-                                          "&msg_id=#{session[:msg_id]}&tag_id=#{session[:tag_id]}" : path
+    # referrer_id is the merchant the payment is going to    
+    path = add_card_info_user_path(current_user) 
+    path = add_card_info_user_path(current_user, amt: session[:captured_amt], referrer_id: session[:referrer_id], 
+                                                  msg_id: session[:msg_id], tag_id: session[:tag_id]) if session[:captured_amt].present?
     delete_captured_payment_session
-    link
+    path 
   end
 
   def set_captured_payment_session
@@ -137,12 +137,17 @@ module AdditionalUserActions
   end
 
   def check_user_redirect
-    return build_user_link unless customer_details_present?
-    return user_conversations_path(current_user) if merchant_details_present?
-    return user_transactions_path(current_user) if !customer_details_present?
-    return add_profile_info_user_path(current_user) if current_user.is_merchant? && current_user.org_name.blank?
-    return add_rhombus_number_user_path(current_user) if current_user.is_merchant? && current_user.needs_rhombus_number?
-    return add_subscription_user_path(current_user) if current_user.is_merchant? && current_user.get_saas_subscription.blank?
+    current_user.reload
+    
+    if current_user.is_customer?
+      return build_user_link if current_user.card_token.blank?
+      return user_transactions_path(current_user)
+    else
+      return add_profile_info_user_path(current_user) if current_user.org_name.blank?
+      return add_subscription_user_path(current_user) if current_user.get_saas_subscription.blank?
+      return add_rhombus_number_user_path(current_user) if current_user.rhombus_number.blank?
+      return user_conversations_path(current_user)
+    end
   end
 
   def customer_csv_template
@@ -156,18 +161,6 @@ module AdditionalUserActions
       # use 500 page after it is built
       render :template => "static_pages/to_404.html"
     end
-  end
-
-  def merchant_details_present?
-    current_user.is_merchant? ? check_merchant_detail_present? : false
-  end
-
-  def check_merchant_detail_present?
-    current_user.org_name.present? && !current_user.needs_rhombus_number? && current_user.get_saas_subscription.present?
-  end
-
-  def customer_details_present?
-    current_user.is_customer? ? current_user.card_token.present? : true
   end
 
   def referrer_params

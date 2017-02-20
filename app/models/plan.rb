@@ -127,6 +127,6 @@ class Plan < ActiveRecord::Base
   end
 
   def amount_greater_than_15000
-    errors.add(:amount, "can't be greater than 15000") if Toolbox::Decimal.to_cents(self.amount) > 1500000
+    errors.add(:amount, "can't be greater than 15000") if self.amount > 1500000
   end
 end

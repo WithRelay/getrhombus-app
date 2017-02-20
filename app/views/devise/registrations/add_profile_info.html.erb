@@ -6,7 +6,7 @@
         <div class="flex-underline form-header-underline"></div>
         <div class="get-started-2 log-in-form w-form">
 
-          <%= form_for(@user, as: resource_name, url: registration_update_user_path(@user), html: { method: :patch, class: "w-clearfix rhombusFocus", id: 'add-profile-info' }) do |f| %>
+          <%= form_for(@user, as: resource_name, url: user_path(@user), html: { method: :patch, class: "w-clearfix rhombusFocus", id: 'add-profile-info' }) do |f| %>
 
             <%= f.fields_for :people do |f| %>
               <%= f.text_field :full_name, class: 'login text-field w-input', placeholder: 'Full name' %>

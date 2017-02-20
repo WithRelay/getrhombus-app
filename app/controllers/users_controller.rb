@@ -1,64 +1,23 @@
 class UsersController < ApplicationController
 
-  # do I need these here ????
-  before_action :set_user, only: [:show, :edit, :update, :destroy, :refer_business]
   include DashboardNotification
   include AdditionalUserActions
-  before_action :set_notifications, except: [:create]
+
+  before_action :set_user
+  before_action :set_notifications
+
   # do i need this?
   load_and_authorize_resource except: [:customer_csv_template]
 
-  def index
-     @users = User.all  # paginate(:page => params[:page], :per_page => 10)
-  end
-
-  def new
-    @user = User.new
-  end
-
   def show
-    # #handle_referrer_and_welcome_email
-    # #delete_captured_payment_session
-    # #Transaction.process_captured_payment(@user, params) if current_user.user_level == 0 && params[:captured_amt].present?
-    redirect_to check_user_redirect
-    #   @last6_transactions = Transaction.includes(:user).where(team_id: current_user.id).order(created_at: :desc).last(6)
-    #   # @token = TextingService.get_twilio_capibility_token if current_user.user_level == 1
-    # end
-    #
-  end
-
-  def create
-    @user = User.new(user_params)
-    respond_to do |format|
-      if @user.save
-        format.html { redirect_to @user, notice: 'Welcome!' }
-        format.json { render action: 'show', status: :created, location: @user }
-      else
-       	format.html { render action: 'new' }
-       	format.json { render json: @user.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  def edit
-  end
-
-  # PATCH/PUT /users/1
-  # PATCH/PUT /users/1.json
-  def update
-    respond_to do |format|
-      if @user.update_with_password(params)
-        format.html { redirect_to @user, notice: 'Profile updated!' }
-        format.json { head :no_content }
-      else
-        format.html { render action: 'edit' }
-        format.json { render json: @user.errors, status: :unprocessable_entity }
-      end
-    end
+    # handle_referrer_and_welcome_email
+    # delete_captured_payment_session
+    # Transaction.process_captured_payment(@user, params) if current_user.user_level == 0 && params[:captured_amt].present?
+    @last6_transactions = Transaction.includes(:user).where(team_id: current_user.id).order(created_at: :desc).last(6)
+    # @token = TextingService.get_twilio_capibility_token if current_user.user_level == 1
   end
 
   # DELETE /users/1
-  # DELETE /users/1.json
   def destroy
     @user.destroy
     respond_to do |format|
@@ -70,11 +29,10 @@ class UsersController < ApplicationController
   def sms_usage
   end
 
-
 private
   # Use callbacks to share common setup or constraints between actions.
   def set_user
-    @user = User.find(params[:id])
+    @user = current_user
   end
 
   def full_user_params

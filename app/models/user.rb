@@ -111,7 +111,7 @@ class User < ActiveRecord::Base
   after_commit :create_user_alert, on: :create, if: lambda { is_merchant? }
   after_commit :update_phone_in_db, on: :update
 
-  enum status: { inactive: 0, active: 1, needs_rhombus_number: 2, buy_rhombus_number: 3 }
+  enum status: { inactive: 0, active: 1 }
 
   def is_merchant?
     user_level == 1
@@ -170,10 +170,11 @@ class User < ActiveRecord::Base
     #creds.where(uid_type: ((creds.length == 2) ? 'managed' : 'standalone') ).first
   end
 
-  def buy_rhombus_number
+  def buy_number(params)
     # area code is saved as rhombus number till a number is bought
-    # number = TextingService.buy_number({ query: self.rhombus_number || "", country: self.rn_country, type: self.rn_type })
-    # number && self.update(rhombus_number: number) ? true : false
+    # number = TextingService.buy_number({ query: params[rhombus_number] || "", country: params[:rn_country], type: params[:rn_type] })
+    number = '202'
+    number && self.update(rhombus_number: number) ? true : false
   end
 
   def phone
@@ -182,7 +183,7 @@ class User < ActiveRecord::Base
 
   def add_token_to_user(card_token)
     begin
-      # platform acct shouldn't really be doing this since it is just a management account
+      # platform acct shouldn't really be doing this
       unless is_platform?
         res = []
         platform_acct = User.get_platform_acct_obj
@@ -191,13 +192,13 @@ class User < ActiveRecord::Base
         # 1. a merchant user who is a customer of platform
         # 2. a customer user who is a customer of the platform and/or merchant(s)
         # Note that a customer user becomes a customer of merchant when a subscription is created
+        
         cu = MerchantCustomer.where(customer_id: self.id)
         hash = { email: self.email, card_token: card_token, is_new_customer: true, is_platform_customer: true, is_merchant: is_merchant? }
 
         # when blank, add only to platform. Blank indicates signing up
         if cu.blank?
           re = PaymentService.add_token_to_stripe_customer(hash)
-          #buy_merchant_number if hash[:is_merchant] && rn_type == nil
         else
           hash[:is_new_customer] = false
           if hash[:is_merchant]
@@ -217,17 +218,20 @@ class User < ActiveRecord::Base
             end
           end
         end
+
         # create new merchant_customer for stripe customer
-        if re.first
-          if cu.blank?
+        if cu.blank?
+          if re.first
             MerchantCustomer.create(merchant_id: platform_acct.id, customer_id: self.id, stripe_customer_id: re[1].id)
+          else
+            # since new customer are always platform customer so is_platform is always true
+            PaymentService.delete_customer(re[1].id, get_stripe_cred.uid, true)
           end
-        else
-          # since new customer are always platform customer so is_platform is always true
-          PaymentService.delete_customer(re[1].id, get_stripe_cred.uid, true) if cu.blank?
         end
+        re 
+      else
+        [true]
       end
-      re
     rescue StandardError => e
       # since new customer are always platform customer so is_platform is always true
       PaymentService.delete_customer(re[1].id, get_stripe_cred.uid, true) if (res.length > 0 && cu.blank?)
@@ -257,6 +261,7 @@ class User < ActiveRecord::Base
   def get_saas_subscription
     platform_merchant = MerchantCustomer.find_by(customer_id: self.id, merchant_id: User.get_platform_acct_obj.id)
     platform_merchant ? platform_merchant.subscriptions.active.last : nil
+    Subscription.last
   end
 
   private

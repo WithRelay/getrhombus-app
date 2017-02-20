@@ -10,11 +10,8 @@ signup form
 rhombus number form
 - no flash message ... probably in signup and profile info forms
 
-credit card form
+add card info, add subscription, billing info
 - flash message showing??
-
-More notes
-- platform - create customer/merchant on signup?? i think not...we need serious users
 
 
 Friday
@@ -31,6 +28,7 @@ Everyone
 - popups are repeated... code across the page must be one.
 
 Torchi
+- review merchant customer
 - review hashtag js
 - review saved replies
 - reminders create is a popup, appears on
@@ -55,8 +53,12 @@ Surya
 Bhishma
 - pricing page doesnt have slider (no max and min)
 - repeated plan
-- if statements
+- if statements... should have >= 
 - create_saas_subscription
+- reduce repeated calls for saas_sub
+- invoices are incorrect
+- you can query for today and yesterday directly
+- reduce repeated calls/queries
 
 - coupon pages (add link to transactions dropdown and link under segments)
 - find simple native browser notifications

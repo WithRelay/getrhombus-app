@@ -6,7 +6,7 @@
         <div class="flex-underline form-header-underline"></div>
         <div class="get-started-2 log-in-form w-form">
 
-          <%= form_for(current_user, as: resource_name, url: registration_update_user_path(resource_name), html: { method: :put, class: "w-clearfix", id: "search_number_form" }) do |f| %>
+          <%= form_for(current_user, as: resource_name, url: user_path(current_user), html: { method: :put, class: "w-clearfix", id: "search_number_form" }) do |f| %>
 
             <label class="form-label" for="Country-3">In what country would you like your number?</label>
 
