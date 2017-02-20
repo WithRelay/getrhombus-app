@@ -65,7 +65,7 @@ Rails.application.routes.draw  do
     # user routes
     resources :users, only: :show do
       member do  
-        get 'customers' => 'merchant_customers#customers'
+        get 'customers' => 'merchant_customers#index'
         get 'customers/:customer_id' => 'merchant_customers#show' 
       end
 
