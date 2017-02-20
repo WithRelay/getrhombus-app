@@ -176,7 +176,10 @@
     </div>
   </div>
   <div class="dashboard-nav w-clearfix">
-    <div class="dashboard-logo-wrapper"><img class="dashboard-logo" src="images/relay-6.png" width="50">
+    <div class="dashboard-logo-wrapper">
+      <%= link_to root_url do %>
+        <%= image_tag('relay-6.png', class: 'dashboard-logo', width: 50) %>
+      <% end %>
     </div>
     <div class="dashboard-nav-links-wrapper">
       <a class="w-clearfix w-inline-block" href="#">
