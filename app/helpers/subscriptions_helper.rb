@@ -37,9 +37,11 @@ module SubscriptionsHelper
 
   def subscription_time_period
     @saas_sub = saas_sub
-    start_date = @saas_sub.current_period_start.present? ? Time.zone.at(@saas_sub.current_period_start).strftime("%B %d, %Y") : ''
-    end_date = saas_sub.current_period_end.present? ? Time.zone.at(@saas_sub.current_period_end).strftime("%B %d, %Y") : ''
-    "Time period: #{start_date} - #{end_date} (#{@saas_sub.plan.interval})"
+    unless @saas_sub.nil?
+      start_date = @saas_sub.current_period_start.present? ? Time.zone.at(@saas_sub.current_period_start).strftime("%B %d, %Y") : ''
+      end_date = saas_sub.current_period_end.present? ? Time.zone.at(@saas_sub.current_period_end).strftime("%B %d, %Y") : ''
+      "Time period: #{start_date} - #{end_date} (#{@saas_sub.plan.interval})"
+    end
   end
 
   def subscription_plan_amount
@@ -47,7 +49,7 @@ module SubscriptionsHelper
   end
 
   def subscription_customer_count
-    "You are currently on the #{saas_plan_name.humanize}: #{saas_customers} customers"
+    "You are currently on the #{saas_plan_name.try(:humanize)}: #{saas_customers} customers"
   end
 
   def saas_coupon
@@ -75,7 +77,7 @@ module SubscriptionsHelper
 
   def saas_coupon_end_date
     if @coupon.duration_in_months
-      end_date = (@coupon.duration_in_months).months 
+      end_date = (@coupon.duration_in_months).months
       "#{(@saas_sub.created_at + end_date).strftime("%B %d, %Y")}"
     else
       "#{(@saas_sub.created_at).strftime("%B %d, %Y")}"
