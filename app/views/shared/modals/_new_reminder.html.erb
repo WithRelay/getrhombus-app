@@ -31,7 +31,7 @@
         <label class="w-form-label" for="Notification Frequency-2">Repeat</label>
       </div>
       <%= f.select :repeat_days, repeat_days_options, {}, selected: reminder.repeat_days, id: 'campaign_repeat_days', class: "dropdown frequency-dropdown w-select" %>
-      <a class="button schedule-notification w-button" href="#" id='submitReminderForm'>Schedule notification for [Customer name]</a>
+      <a class="button schedule-notification w-button" href="#" id='submitReminderForm'>Schedule notification</a>
       <%#= f.submit 'Schedule Notification [Customer name]', id: 'submitReminderForm', class: 'button schedule-notification w-button' %>
       <div id="new-reminder-div">
         <a class="button cancel-notification w-button update-close-modals" data-parent='new-reminder-div'>Cancel</a>

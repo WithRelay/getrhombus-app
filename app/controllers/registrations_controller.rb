@@ -3,7 +3,7 @@ class RegistrationsController < Devise::RegistrationsController
   include AdditionalUserActions
   include DashboardNotification
 
-  before_action :set_notifications, only: [:billing_information, :account_setting, :business_setting]
+  before_action :set_notifications, only: [:billing_information, :account_settings, :business_settings]
 
   def update
 
@@ -11,22 +11,22 @@ class RegistrationsController < Devise::RegistrationsController
 
     if params[:add_profile_info].present? && current_user.is_merchant?
       success_message = 'profile updated'
-      error_message = "Unable to update your profile" 
+      error_message = "Unable to update your profile"
     elsif params[:add_subscription].present? && current_user.is_merchant?
       re = create_saas_subscription
-      success_message = "Subscription added" 
+      success_message = "Subscription added"
       error_message = re.third ? re.third : "We are unable to start a subscription for you" unless re.first
     elsif params[:add_rhombus_number].present? && current_user.is_merchant?
-      error_message = "We are unable to provision a number for you" 
+      error_message = "We are unable to provision a number for you"
       success_message = "Rhombus number added" if current_user.buy_number(params)
     elsif params[:add_card_info].present? && current_user.is_customer?
       set_captured_payment_session
       re = current_user.add_token_to_user(params[:user][:card_token])
-      success_message = "Card info added" 
+      success_message = "Card info added"
       error_message = re.third ? re.third : "We are unable to add your card to your profile." unless re.first
     elsif params[:update_billing_info].present?
       re = current_user.add_token_to_user(params[:user][:card_token])
-      success_message = "Billing Info updated" 
+      success_message = "Billing Info updated"
       error_message = re.third ? re.third : "We are unable to add your card to your profile." unless re.first
       url = request.referrer
     end
@@ -73,7 +73,7 @@ class RegistrationsController < Devise::RegistrationsController
       respond_with resource, location: previous_url
     end
 
-=begin    
+=begin
     if current_user.update_without_password(devise_parameter_sanitizer.sanitize(:account_update))
       set_flash_message :notice, :updated
       # Sign in the current user bypassing validation in case his password changed
@@ -91,6 +91,7 @@ class RegistrationsController < Devise::RegistrationsController
   def create
     set_captured_payment_session
     super
+    flash[:errors] = resource.errors.full_messages if resource.errors.messages.present?
   end
 
   def add_profile_info
@@ -100,9 +101,14 @@ class RegistrationsController < Devise::RegistrationsController
 
   def billing_information; end
 
-  def account_setting; end
+  def account_settings
+    if current_user.is_merchant?
+      @user = current_user
+      @user.people = [@user.people.first || Person.new]
+    end
+  end
 
-  def business_setting; end
+  def business_settings; end
 
   def add_rhombus_number; end
 
@@ -115,7 +121,7 @@ class RegistrationsController < Devise::RegistrationsController
 
   def create_saas_subscription
     begin
-      token_res = (params[:user][:card_token].present?) ? current_user.add_token_to_user(params[:user][:card_token]) : [true]     
+      token_res = (params[:user][:card_token].present?) ? current_user.add_token_to_user(params[:user][:card_token]) : [true]
       if token_res.first
         @platform_acct = User.get_platform_acct_obj
         merchant_customer = MerchantCustomer.find_by(customer_id: current_user.id, merchant_id: @platform_acct.id)
@@ -129,7 +135,7 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   def get_plan_id
-    Plan.find_by(name: params[:plan][:name], merchant_id: @platform_acct.id, status: 1)    
+    Plan.find_by(name: params[:plan][:name], merchant_id: @platform_acct.id, status: 1)
   end
 
   def after_update_path_for(resource)

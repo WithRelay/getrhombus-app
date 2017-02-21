@@ -121,6 +121,10 @@ class User < ActiveRecord::Base
     user_level == 0
   end
 
+  def full_name
+    "#{self.first_name} #{self.last_name}"
+  end
+
   def is_platform?
     #email == User.platform_email
     self.email == '<redacted_email>' || self.email == '<redacted_email>'
@@ -177,10 +181,6 @@ class User < ActiveRecord::Base
     number && self.update(rhombus_number: number) ? true : false
   end
 
-  def phone
-    is_customer? ? phone_number : org_phone
-  end
-
   def add_token_to_user(card_token)
     begin
       # platform acct shouldn't really be doing this
@@ -192,7 +192,7 @@ class User < ActiveRecord::Base
         # 1. a merchant user who is a customer of platform
         # 2. a customer user who is a customer of the platform and/or merchant(s)
         # Note that a customer user becomes a customer of merchant when a subscription is created
-        
+
         cu = MerchantCustomer.where(customer_id: self.id)
         hash = { email: self.email, card_token: card_token, is_new_customer: true, is_platform_customer: true, is_merchant: is_merchant? }
 
@@ -228,7 +228,7 @@ class User < ActiveRecord::Base
             PaymentService.delete_customer(re[1].id, get_stripe_cred.uid, true)
           end
         end
-        re 
+        re
       else
         [true]
       end

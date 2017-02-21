@@ -26,7 +26,7 @@
         </div>
       </div>
       <nav class="dropdown-content-wrapper w-dropdown-list">
-        <a class="dropdown-link header w-dropdown-link" href="#">Rebecca Caldwell</a>
+        <a class="dropdown-link header w-dropdown-link" href="#"><%= current_user.full_name %></a>
         <a class="content-link dropdown-link w-dropdown-link" href="#"><span class="business-name-settings-dropdown">Joan's Coffee</span><br><span class="account-owner-email-settings-dropdown"><redacted_email></span></a><a class="dropdown-link w-dropdown-link" href="#">Settings</a>
         <a class="dropdown-link w-dropdown-link" href="/billing-information">Billing Information</a>
         <%= link_to 'Sign out', destroy_user_session_path, class: 'dropdown-link sign-out w-dropdown-link', method: :delete %>

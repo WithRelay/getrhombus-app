@@ -3,7 +3,7 @@ $(document).on('ready page:load', function() {
   $('#reminder-customer-list').selectize({
     maxItems: 1,
     valueField: 'uid',
-    labelField: 'title',
+    labelField: 'description',
     searchField: 'description',
     create: false,
     options: [],

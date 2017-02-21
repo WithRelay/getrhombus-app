@@ -38,6 +38,7 @@
 
   <body class="<%= add_body_class %>" > <%#= needed for conversations page body %>
     <%= render_header_partial %>
+    <%= render 'shared/flash_messages' %>
     <%= render_sidebar_partial %>
     <%= yield %>
     <%= render_footer_partial %>
