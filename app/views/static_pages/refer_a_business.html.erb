@@ -7,7 +7,7 @@
   <div class="customer-interactions-table w-row">
     <div class="w-col w-col-4">
       <div class="customer-interaction-content-wrapper first">
-        <div class="featues-div-header-wrapper"><img class="features-div-icon" src="images/008_053.png">
+        <div class="featues-div-header-wrapper"><img class="features-div-icon" src="../assets/008_053.png">
         </div>
         <div class="features-div-paragraph-wrapper">
           <h3 class="features-div-header-text">Tell us about the business</h3>
@@ -17,7 +17,7 @@
     </div>
     <div class="w-col w-col-4">
       <div class="customer-interaction-content-wrapper">
-        <div class="featues-div-header-wrapper"><img class="features-div-icon" src="images/011_146.png">
+        <div class="featues-div-header-wrapper"><img class="features-div-icon" src="../assets/011_146.png">
         </div>
         <div class="features-div-paragraph-wrapper">
           <h3 class="features-div-header-text">Notify the owner</h3>
@@ -27,7 +27,7 @@
     </div>
     <div class="w-col w-col-4">
       <div class="customer-interaction-content-wrapper">
-        <div class="featues-div-header-wrapper"><img class="features-div-icon" src="images/014_124.png">
+        <div class="featues-div-header-wrapper"><img class="features-div-icon" src="../assets/014_124.png">
         </div>
         <div class="features-div-paragraph-wrapper">
           <h3 class="features-div-header-text">earn commissions</h3>
@@ -38,7 +38,7 @@
   </div>
 </div>
 <div class="default-content-section features-page">
-  <div class="def-content-section-wrapper w-container"><img class="section-icon" src="images/015_037.png">
+  <div class="def-content-section-wrapper w-container"><img class="section-icon" src="../assets/015_037.png">
     <h1 class="sub-hero-header">Business Referral</h1>
   </div>
   <div class="business-referral-table w-row">
@@ -52,25 +52,43 @@
     </div>
     <div class="w-col w-col-6">
       <div class="account-settings-form-wrapper business-referral w-form">
-        <form data-name="Email Form" id="email-form" name="email-form">
-          <label class="field-headers form-label settings" for="name-3">my information</label>
-          <input class="full-name settings text-field w-input" data-name="Name 3" id="name-3" maxlength="256" name="name-3" placeholder="Full name" type="text">
-          <input class="settings text-field w-input" data-name="Referrer Email 3" id="Referrer-Email-3" maxlength="256" name="Referrer-Email-3" placeholder="Email address" required="required" type="email">
-          <div class="flex-underline form-section-divider"></div>
-          <label class="field-headers form-label settings" for="Referee-Business-Name-3">i'm referring</label>
-          <input class="full-name settings text-field w-input" data-name="Referee Business Name 3" id="Referee-Business-Name-3" maxlength="256" name="Referee-Business-Name-3" placeholder="Name of the business you&#39;re referring" required="required" type="text">
-          <input class="settings text-field w-input" data-name="Referee Email 3" id="Referee-Email-3" maxlength="256" name="Referee-Email-3" placeholder="Contact person&#39;s email address" required="required" type="email">
-          <input class="settings text-field w-input" data-name="Referree Phone 3" id="Referree-Phone-3" maxlength="256" name="Referree-Phone-3" placeholder="Phone number (Optional)" type="email">
-          <select class="country_dropdown w-select" data-name="Country 4" id="Country-4" name="Country-4">
-            <option value="">Country</option>
-          </select><a class="button referral save-changes w-button" href="#">Invite business</a>
-        </form>
-        <div class="w-form-done">
-          <div>Thank you! Your submission has been received!</div>
+        <div id= 'refer-a-business'>
+          <%= form_for('referrer', :html => { :class => "w-clearfix", :id => "referrerForm" } ) do |f| %>
+
+            <label class="field-headers form-label settings" for="name">referrer details</label>
+            <div class="form-group col-xs-6">
+              <%= f.text_field 'referrer_name', placeholder: 'Your full name', class: 'form-control full-name settings text-field w-input' %>
+            </div>
+
+            <div class="form-group col-xs-6">
+              <%= f.text_field 'referrer_email', placeholder: 'Your email address', class: 'form-control settings text-field w-input' %>
+            </div>
+            <div class="flex-underline form-section-divider"></div>
+
+            <label class="field-headers form-label settings" for="Referee-Business-Name">i'm referring</label>
+
+            <div class="form-group col-xs-6">
+              <%= f.text_field 'org_name', placeholder: 'Name of the business you\'re referring', class: 'form-control full-name settings text-field w-input'%>
+            </div>
+
+            <div class="form-group col-xs-6">
+              <%= f.text_field 'referee_email', placeholder: 'Contact person\'s email address', class: 'form-control settings text-field w-input' %>
+            </div>
+
+            <div class="form-group col-xs-6">
+              <%= f.phone_field 'phone', placeholder: 'Phone Number (optional)', class: 'form-control settings text-field w-input', id: 'phone' %>
+              <%= f.hidden_field :phone_number, :id => "phone_number" %>
+            </div>
+
+            <div class="form-group col-xs-6">
+              <%= f.select :country, CountriesList::COUNTRIES_LIST.collect { |c| [ c[:name], c[:code] ] }, {  include_blank: true, prompt: 'Country' }, { class: 'form-control country_dropdown w-select' } %>
+            </div>
+
+            <%= f.button "Invite business", id: 'referrer-submit', class: "button save-changes w-button" %>
+
+          <% end %>
         </div>
-        <div class="w-form-fail">
-          <div>Oops! Something went wrong while submitting the form</div>
-        </div>
+
       </div>
     </div>
   </div>

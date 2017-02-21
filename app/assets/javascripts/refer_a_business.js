@@ -47,9 +47,9 @@ $(document).ready(function () {
                       crossDomain: true,
                       name: 'address',
                       data: {
-                          // Registry a Mailgun account and get a free API key
-                          // at https://mailgun.com/signup
-                          api_key: '<redacted_api_key>'
+                        // Registry a Mailgun account and get a free API key
+                        // at https://mailgun.com/signup
+                        api_key: '<redacted_api_key>'
                       },
                       dataType: 'jsonp',
                       validKey: 'is_valid',
@@ -72,9 +72,9 @@ $(document).ready(function () {
                       crossDomain: true,
                       name: 'address',
                       data: {
-                          // Registry a Mailgun account and get a free API key
-                          // at https://mailgun.com/signup
-                          api_key: '<redacted_api_key>'
+                        // Registry a Mailgun account and get a free API key
+                        // at https://mailgun.com/signup
+                        api_key: '<redacted_api_key>'
                       },
                       dataType: 'jsonp',
                       validKey: 'is_valid',
@@ -83,7 +83,7 @@ $(document).ready(function () {
               }
           },
           'referrer[country]': {
-            selector: '#referrer_country-selectized',
+            selector: '#referrer_country',
             validators: {
               notEmpty: {
                 message: 'Select Country'
