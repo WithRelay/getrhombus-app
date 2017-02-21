@@ -3,7 +3,7 @@ class RegistrationsController < Devise::RegistrationsController
   include AdditionalUserActions
   include DashboardNotification
 
-  before_action :set_notifications, only: [:billing_information, :account_setting, :business_setting]
+  before_action :set_notifications, only: [:billing_information, :account_settings, :business_settings]
 
   def update
 
@@ -100,9 +100,14 @@ class RegistrationsController < Devise::RegistrationsController
 
   def billing_information; end
 
-  def account_setting; end
+  def account_settings
+    if current_user.is_merchant?
+      @user = current_user
+      @user.people = [@user.people.first || Person.new]
+    end
+  end
 
-  def business_setting; end
+  def business_settings; end
 
   def add_rhombus_number; end
 

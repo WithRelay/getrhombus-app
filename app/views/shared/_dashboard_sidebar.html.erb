@@ -2,12 +2,12 @@
     <div class="dashboard-nav-links">All Customers</div>
     <h5 class="left-nav signup-box-subheading">CAMPAIGNS</h5>
     <a class="left-nav-tab-wrapper w-inline-block" href="#">
-      <div class="left-nav-tab" data-ix="display-and-hide-customers">&nbsp; &nbsp; Customers &nbsp; &nbsp;</div>
+      <div class="left-nav-tab">&nbsp; &nbsp; Customers &nbsp; &nbsp;</div>
     </a>
     <div class="customers-hidden-menu">
       <div class="w-form">
-        <form data-name="Email Form 7" id="email-form-7" name="email-form-7">
-          <select class="dropdown segments w-select" data-name="Field 5" id="field-5" name="field-5">
+        <form id="email-form-7" name="email-form-7">
+          <select class="dropdown segments w-select" id="field-5" name="field-5">
             <option value="">Segments</option>
             <option value="">New customers</option>
             <option value="">Active customers</option>
@@ -21,7 +21,7 @@
       <div class="left-nav-tab" data-ix="display-and-hide-customers">&nbsp; &nbsp; Lists</div>
     <% end %>
     <a class="left-nav-tab-wrapper w-inline-block" href="#">
-      <div class="left-nav-tab messaging" data-ix="display-and-hide-left-nav">&nbsp; &nbsp;Messaging &nbsp; &nbsp; </div>
+      <div class="left-nav-tab messaging">&nbsp; &nbsp;Messaging &nbsp; &nbsp; </div>
     </a>
     <div class="messaging-hidden-menu" data-ix="display-none-on-load">
       <%= link_to 'Conversations', user_conversations_path(current_user), class: 'dashboard-dropdown-link' %>
@@ -34,7 +34,7 @@
     <a class="left-nav-tab-wrapper w-inline-block" data-ix="display-and-hide-transaction-tab" href="#">
       <div class="left-nav-tab transactions" data-ix="display-and-hide-transaction-tab"> &nbsp;Transactions &nbsp;</div>
     </a>
-    <div class="transactions-hidden-nav" data-ix="display-none-on-load">
+    <div class="transactions-hidden-nav">
       <a class="dashboard-dropdown-link" href="#">Charges</a>
       <a class="dashboard-dropdown-link" href="#">Pre-authorized</a>
       <a class="dashboard-dropdown-link" href="#">Subscriptions</a>
