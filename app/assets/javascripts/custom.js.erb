@@ -5,6 +5,13 @@ $(document).ready(function () {
 
   var global_page_params = PageParameter.get_params();
 
+  $('#type-it').typeIt({
+     strings: ["Students",  "Candidates",  "Donors"],
+     speed: 50,
+     autoStart: true,
+    breakLines: false
+});
+
 
   $.ajaxSetup({ cache:false });
 
