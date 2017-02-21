@@ -94,7 +94,7 @@
         <div class="new-table-row w-row">
           <div class="cn w-clearfix w-col w-col-3">
             <div class="name w-clearfix"><%= present(c).profile_image %>
-              <div class="shrink-text table-text"><%="#{current_user.first_name} #{current_user.last_name}" %></div>
+              <div class="shrink-text table-text"><%= link_to "#{current_user.first_name} #{current_user.last_name}", action: "show" , customer_id: c.customer_id %></div>
             </div>
             <div class="cb check-box-column">
               <div class="w-form">

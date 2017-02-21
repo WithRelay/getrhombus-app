@@ -1,4 +1,11 @@
- <div class="customer-profile sub-nav-bar w-clearfix"><a class="add sub-nav-button w-button" href="#">&nbsp; <strong>Charge</strong></a><a class="import sub-nav-button w-button" href="#">&nbsp; <strong>Create subscription</strong></a><a class="sub-nav-button w-button" href="#"> &nbsp;<strong>Add to&nbsp;list</strong></a>
+<div class='modal-background w-hidden modal-body new-reminder-modal'>
+      <%= render partial: 'shared/modals/new_reminder', locals: {reminder: Reminder.new }  %>
+</div>
+ <div class="customer-profile sub-nav-bar w-clearfix">
+ <a class="add sub-nav-button w-button" href="#">&nbsp; <strong>Charge</strong></a>
+ <a class="import sub-nav-button w-button" href="#">&nbsp; <strong>Create subscription</strong></a>
+ <a class="sub-nav-button w-button" href="#"> &nbsp;<strong>Add to&nbsp;list</strong></a>
+ <a class="sub-nav-button w-button modal-loader" href="#" modal-target="new-reminder-modal"> &nbsp;<strong>Schedule message</strong></a>
   </div>
   <div class="customer-profile dashboard-body">
     <div class="customer-profile-section-header w-row">
@@ -21,7 +28,7 @@
                 <div class="left-column-text recent-activity">Last &nbsp;Contact</div>
               </div>
               <div class="right-column w-col w-col-6">
-                <div class="recent-activity-description"><%= present(@last_conversation_ref).format_created_at %></div>
+                <div class="recent-activity-description"><%= present(@last_conversation_ref).format_created_at if @last_conversation_ref.present? %></div>
               </div>
             </div>
             <div class="recent-activity right-nav-row w-row">
@@ -29,7 +36,7 @@
                 <div class="left-column-text recent-activity">Reason</div>
               </div>
               <div class="right-column w-col w-col-7">
-                <div class="recent-activity-description"><%= "#{@last_message_resolution.title}" %></div>
+                <div class="recent-activity-description"><%= "#{@last_message_resolution.try(:title)}" %></div>
               </div>
             </div>
             <div class="payment recent-activity right-nav-row w-row">
@@ -169,7 +176,10 @@
     </div>
   </div>
   <div class="dashboard-nav w-clearfix">
-    <div class="dashboard-logo-wrapper"><img class="dashboard-logo" src="images/relay-6.png" width="50">
+    <div class="dashboard-logo-wrapper">
+      <%= link_to root_url do %>
+        <%= image_tag('relay-6.png', class: 'dashboard-logo', width: 50) %>
+      <% end %>
     </div>
     <div class="dashboard-nav-links-wrapper">
       <a class="w-clearfix w-inline-block" href="#">

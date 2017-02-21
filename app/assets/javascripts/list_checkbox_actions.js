@@ -67,6 +67,7 @@ $(document).ready(function(){
       FlashHandler.setFlashMessage( msg[flash_key], flash_key );
     }).fail(function(msg){ alert('Sorry request could not complete'); });
     $('.cancel-no').click();
+    location.reload()
   }
     else{
       FlashHandler.setFlashMessage( 'Please select and item you want to delete', 'error' );
