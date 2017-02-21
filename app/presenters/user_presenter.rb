@@ -10,22 +10,10 @@ class UserPresenter < BasePresenter
     @user.org_type == 'Individual' ? 'Individual' : 'Company'
   end
 
-  def render_user_pages
-    render_page = render_merchant_page if @user.is_merchant?
-    h.render(render_page)
-  end
-
   def twitter_uid
-    uid = @model.twitter_cred ? @model.twitter_cred.uid : nil 
+    uid = @model.twitter_cred ? @model.twitter_cred.uid : nil
     uid
   end
-
-  def render_merchant_page
-    return 'business_information' unless merchant_org_present?
-    return 'phone_number' unless merchant_rhombus_number_present?
-    return 'billing_information' unless merchant_subscription_present?
-  end
-
 
   def page_count
     @model.fb_pages.count > 0
