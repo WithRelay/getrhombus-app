@@ -7,11 +7,13 @@ $(document).ready(function () {
 
   $('#type-it').typeIt({
      strings: ["Students",  "Candidates",  "Donors"],
-     speed: 50,
+     speed: 80,
+     deleteDelay: 1500,
      breakLines: false,
-     autoStart: false
+     autoStart: false,
+     loop: true
 
-}).tiType(' inside the messaging apps they use everyday.');
+});
 
 
   $.ajaxSetup({ cache:false });
