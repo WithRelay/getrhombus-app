@@ -8,9 +8,10 @@ $(document).ready(function () {
   $('#type-it').typeIt({
      strings: ["Students",  "Candidates",  "Donors"],
      speed: 50,
-     autoStart: true,
-    breakLines: false
-});
+     breakLines: false,
+     autoStart: false
+
+}).tiType(' inside the messaging apps they use everyday.');
 
 
   $.ajaxSetup({ cache:false });
