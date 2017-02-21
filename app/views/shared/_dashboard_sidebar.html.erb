@@ -15,28 +15,22 @@
             <option value="">Signed up 3 days ago</option>
           </select>
         </form>
-        <div class="w-form-done">
-          <div>Thank you! Your submission has been received!</div>
-        </div>
-        <div class="w-form-fail">
-          <div>Oops! Something went wrong while submitting the form</div>
-        </div>
       </div>
     </div>
-    <a class="left-nav-tab-wrapper w-inline-block" href="#">
+    <%= link_to lists_user_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
       <div class="left-nav-tab" data-ix="display-and-hide-customers">&nbsp; &nbsp; Lists</div>
-    </a>
+    <% end %>
     <a class="left-nav-tab-wrapper w-inline-block" href="#">
       <div class="left-nav-tab messaging" data-ix="display-and-hide-left-nav">&nbsp; &nbsp;Messaging &nbsp; &nbsp; </div>
     </a>
     <div class="messaging-hidden-menu" data-ix="display-none-on-load">
-      <a class="dashboard-dropdown-link" href="#">Conversations</a>
-      <a class="dashboard-dropdown-link" href="#">Saved Replies</a>
-      <a class="dashboard-dropdown-link" href="#">Customer Reminders</a>
+      <%= link_to 'Conversations', user_conversations_path(current_user), class: 'dashboard-dropdown-link' %>
+      <%= link_to 'Saved Replirs', user_saved_replies_path(current_user), class: 'dashboard-dropdown-link' %>
+      <%= link_to 'Customer Reminders', user_reminders_path(current_user), class: 'dashboard-dropdown-link' %>
     </div>
-    <a class="left-nav-tab-wrapper w-inline-block" href="#">
+    <%= link_to user_campaigns_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
       <div class="left-nav-tab">&nbsp; &nbsp;Campaigns</div>
-    </a>
+    <% end %>
     <a class="left-nav-tab-wrapper w-inline-block" data-ix="display-and-hide-transaction-tab" href="#">
       <div class="left-nav-tab transactions" data-ix="display-and-hide-transaction-tab"> &nbsp;Transactions &nbsp;</div>
     </a>
