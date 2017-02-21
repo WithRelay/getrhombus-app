@@ -28,10 +28,10 @@ var FlashHandler = new function() {
   }
 
   // toast message for error, success, notice
-  var typeObj = { 'notice': 'success', 'warning': 'info', 'error':'error' };
+  var typeObj = { 'notice': 'success', 'warning': 'info', 'error':'error', 'errors': 'error' };
   this.setFlashMessage = function(msg, type){
     var messageToSet = typeObj[type] || 'Attention';
-    showToastr (messageToSet, arrayToString(msg));
+    showToastr(messageToSet, arrayToString(msg));
     if (type !== 'error') { $('.toasters').fadeOut(7000);}
     $('.toaster-font-awesome').on('click', function (e) {
       e.preventDefault();
@@ -44,7 +44,7 @@ var FlashHandler = new function() {
 
     var class_name = (type === 'error') ? 'failure toasters' : 'toasters' ,
         close_button_class = (type === 'error') ? 'failure toaster-font-awesome' : 'toaster-font-awesome'
-    $('body').append('<div class="'+class_name+'">\
+    $('body').prepend('<div class="'+class_name+'">\
       <div class="toaster-row w-row">\
         <div class="toaster-row-column-1 w-col w-col-11">\
           <div class="shrink-text toaster-text">\
@@ -81,7 +81,7 @@ var FlashHandler = new function() {
         </div>\
       </div>\
     </a>')
-    close_browser_toastr();    
+    close_browser_toastr();
   }
 
 
@@ -193,7 +193,7 @@ var FlashHandler = new function() {
   function arrayToString(value){
     if ($.isArray(value)) {
       messageString = ''
-      $.each(value, function(index, value){ messageString += value + "\n"; })
+      $.each(value, function(index, value){ messageString += value + "<br>"; })
       return messageString;
     } else {
       return value;
@@ -201,4 +201,3 @@ var FlashHandler = new function() {
   }
 
 }
-
