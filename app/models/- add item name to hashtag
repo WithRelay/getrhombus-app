@@ -11,7 +11,7 @@ rhombus number form
 - no flash message ... probably in signup and profile info forms
 
 add card info, add subscription, billing info
-- flash message showing??
+- flash message not showing...also needs to show devise error
 
 
 Friday
@@ -59,6 +59,7 @@ Bhishma
 - invoices are incorrect
 - you can query for today and yesterday directly
 - reduce repeated calls/queries
+- account-setting form doesnt have two ids.... genereally you replace the one from webflow... we dont necessarily merge the forms...of course there will be 2 ids
 
 - coupon pages (add link to transactions dropdown and link under segments)
 - find simple native browser notifications

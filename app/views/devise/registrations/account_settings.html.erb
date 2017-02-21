@@ -7,34 +7,42 @@
   <% end %>
 </div>
 <div class="dashboard-body settings w-clearfix">
-  <div class="dash-content-container settings w-clearfix" id="merchantProfile">
+  <div class="dash-content-container settings w-clearfix" id="account-settings">
     <h4 class="form-header">Account Information</h4>
     <div class="flex-underline form-header-underline"></div>
-    <%= form_for(current_user, as: resource_name, url: registration_update_user_path(current_user), html: { method: :put, id: "merchantProfile email-form", class: "form-horizontal rhombusFocus" }) do |f| %>
-    <div class="account-settings-form-wrapper w-form" id="merchantprofilepage">
+    <%= form_for(current_user, as: resource_name, url: user_path(current_user), html: { method: :put, id: "account-settings-form", class: "form-horizontal rhombusFocus" }) do |f| %>
+    <div class="account-settings-form-wrapper w-form">
+      
       <label class="field-headers form-label settings" for="name">Basic details</label>
-      <div class="company-rep-div w-clearfix">
-        <%#= f.text_field :full_name, type: "text", class: "full-name settings text-field w-input rhombusFocus", placeholder: "First", id: "fullName Name", data: { name: 'Name' } %>
-        <%= f.hidden_field :org_phone, :id => "phone_number", class: "form-control rhombusFocus" %>
-        <%= f.phone_field :phone, id: "phone Phone-Number", data: { name: 'Phone Number' }, class: "password settings text-field w-input rhombusFocus" %>
+      <div class="company-rep-div w-clearfix"> 
+        <% if current_user.is_merchant? %>
+
+          <%= f.fields_for :people do |f| %>
+            <%= f.text_field :full_name, class: 'form-control full-name settings text-field w-input', placeholder: 'Full name' %>
+          <% end %>
+            <%= f.hidden_field :org_phone, id: "phone_number" %>
+            <%#= f.phone_field :phone, id: "phone", class: "password settings text-field w-input" %>
+        <% else %>
+            <%= f.hidden_field :phone_number, id: "phone_number" %>
+            
+        <% end %>        
+        <%= f.phone_field :phone, id: "phone", class: "password settings text-field w-input" %>
       </div>
+
+
       <div class="update-email-password-div w-clearfix">
         <div class="flex-underline form-section-divider"></div>
         <label class="field-headers form-label settings" for="email">update email/password</label>
-        <%= f.email_field :email, type: "email", data: { nmae: 'Email' }, id: "email email", placeholder: "Email", class: "form-control rhombusFocus settings text-field w-input", autofocus: true %>
-        <%= f.password_field :password, type: "password", data: { name: 'Password 2' }, id: "newpassword Password-2", :autocomplete => "off", placeholder: "Enter new password", class: "form-control rhombusFocus password settings text-field w-input" %>
-        <%= f.password_field :password_confirmation, data: { name: 'Confirm Password' }, id: "confirmNewPassword Confirm-Password", type: "password", placeholder: "Confirm new password", class: "form-control rhombusFocus confirm password settings text-field w-input" %>
+        <%= f.email_field :email, type: "email", id: "email", placeholder: "Email", class: "form-control rhombusFocus settings text-field w-input" %>
+        <%= f.password_field :current_password, type: 'password', class: 'form-control full-name settings text-field w-input', placeholder: "Current Password" %>
+        <%= f.password_field :password, type: "password", id: "newPassword", placeholder: "Enter new password", class: "form-control password settings text-field w-input" %>
+        <%= f.password_field :password_confirmation, id: "confirmNewPassword", type: "password", placeholder: "Confirm new password", class: "form-control confirm password settings text-field w-input" %>
       </div>
+
     </form>
-    <div class="w-form-done">
-      <div>Thank you! Your submission has been received!</div>
-    </div>
-    <div class="w-form-fail">
-      <div>Oops! Something went wrong while submitting the form</div>
-    </div>
   </div>
   <%= f.submit "Save changes", id: "ba-submit", class: "btn-rhombus button save-changes w-button" %>
-  <a class="button deactivate w-button" data-ix="deactivate-account" href="#">Deactivate/Pause Account</a>
+  <a class="button deactivate w-button" href="#">Deactivate/Pause Account</a>
   <% end %>
 </div>
 </div>

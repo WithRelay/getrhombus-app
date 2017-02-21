@@ -28,7 +28,7 @@ module ApplicationHelper
 
   def render_sidebar_partial
     concat(render 'shared/dashboard_sidebar') unless authenticated_pages || setting_pages || messaging_dashboard || restrict_other_params
-    concat(render 'shared/setting_sidebar') if setting_pages
+    render 'shared/setting_sidebar' if setting_pages
   end
 
   def authenticated_pages
@@ -73,8 +73,8 @@ module ApplicationHelper
   end
 
   def setting_pages
-    settings_action = ['registrations-billing_information', 'registrations-account_setting',
-                        'alerts-edit', 'plans-index','registrations-business_setting',
+    settings_action = ['registrations-billing_information', 'registrations-account_settings',
+                        'alerts-edit', 'plans-index','registrations-business_settings',
                        'users-integrations', 'users-managed_acct', 'users-sms_usage', 'lists-segments']
     settings_action.include?(params_controller_action)
   end

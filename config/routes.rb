@@ -53,8 +53,8 @@ Rails.application.routes.draw  do
           get 'add-card-info' => 'registrations#add_card_info'
           put "update", to: "registrations#update"
           get "billing-information", to: "registrations#billing_information"
-          get "business-setting", to: "registrations#business_setting"
-          get "account-setting", to: "registrations#account_setting"
+          get "business-settings", to: "registrations#business_settings"
+          get "account-settings", to: "registrations#account_settings"
         end
       end
 

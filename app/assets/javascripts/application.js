@@ -45,9 +45,6 @@
 //= require dashboard/messaging_angularjs/messagingControllers.js
 //= require dashboard/messaging_angularjs/messagingFilters.js
 
-// Other js files require tree is included so no need to include all the files in the folder tree
-//
-//= require pnotify
 //= require jquery.lightbox_me
 //= require intlTelInput.min
 //= require chartist
@@ -93,5 +90,6 @@
 //= require list_checkbox_actions
 //= require managed-account
 //= require rhombus_number_search
+
 // DO NOT REQUIRE TREE AS IT DOESNT GUARANTEE THE DEPENDENCY ORDER OF THESE FILES
 // require_tree .

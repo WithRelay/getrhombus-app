@@ -177,9 +177,9 @@ class User < ActiveRecord::Base
     number && self.update(rhombus_number: number) ? true : false
   end
 
-  def phone
-    is_customer? ? phone_number : org_phone
-  end
+  #def phone
+   # is_customer? ? phone_number : org_phone
+  #end
 
   def add_token_to_user(card_token)
     begin
