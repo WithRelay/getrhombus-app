@@ -9,7 +9,7 @@ class User < ActiveRecord::Base
   # validation rules for user attributes
   validates :tos_acceptance, acceptance: true, if: lambda { self.is_merchant? }, on: :update
   validates_presence_of :org_type, if: lambda { self.is_merchant? }, on: :update
-  validates_presence_of :org_name, if: lambda { self.is_merchant? && self.org_type.downcase != 'individual' }, on: :update
+  validates_presence_of :org_name, if: lambda { self.is_merchant? && self.org_type.try(:downcase) != 'individual' }, on: :update
   validates_presence_of :user_level, message: "Please select an account type"
 
   # Edit pages use the right number field for each user type
