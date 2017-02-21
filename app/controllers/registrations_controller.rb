@@ -19,11 +19,10 @@ class RegistrationsController < Devise::RegistrationsController
     resource_updated = update_resource(resource, account_update_params)
     yield resource if block_given?
     if resource_updated
-      if is_flashing_format?
-        # flash_key = update_needs_confirmation?(resource, prev_unconfirmed_email) ? :update_needs_confirmation : :updated
-        # set_flash_message :notice, flash_key
-        flash[:notice] = page_params[:success]
-      end
+      update_stripe_email if page_params[:account_settings].present?
+      # flash_key = update_needs_confirmation?(resource, prev_unconfirmed_email) ? :update_needs_confirmation : :updated
+      # set_flash_message :notice, flash_key
+      flash[:notice] = page_params[:success] if is_flashing_format?
       bypass_sign_in resource, scope: resource_name
       redirect_to url || after_update_path_for(resource)
     else
@@ -80,6 +79,10 @@ class RegistrationsController < Devise::RegistrationsController
     @user.people = [@user.people.first || Person.new]
   end
 
+  def update_stripe_email
+    StripeManagedAccountService.new(current_user).update_account_email if resource.bank_accounts.present?
+  end
+
   def billing_information; end
 
   def account_settings
@@ -99,8 +102,6 @@ class RegistrationsController < Devise::RegistrationsController
       current_user.add_token_to_user(params[:user][:card_token])
     elsif page_params[:billing_info].present?
       current_user.add_token_to_user(params[:user][:card_token])
-    elsif page_params[:account_settings].present?
-      StripeManagedAccountService.new(current_user).update_account_email if resource.bank_accounts.present?
     end
   end
 
