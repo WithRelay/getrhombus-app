@@ -13,7 +13,7 @@ Rails.application.routes.draw  do
   get "relay-docs-categories/:slug" => "knowledge_base_categories#show"
 
   devise_for :users, controllers: { registrations: "registrations", omniauth_callbacks: "omniauth_callbacks", sessions: 'sessions' }
-  
+
   # events/hooks routess
   #constraints subdomain: 'hooks' do
     post 'events/stripe' => 'webhooks#stripe_events'
@@ -21,9 +21,9 @@ Rails.application.routes.draw  do
     match'events/nexmo' => 'webhooks#nexmo_events', via: [:get, :post]
     match 'events/facebook' => 'webhooks#facebook_events', via: [:get, :post]
   #end
-  
-  #authenticate :user, -> (user) { CheckUser::RouteAuthentication.new(user).should_authenticate? } do
-  
+
+  authenticate :user, -> (user) { CheckUser::RouteAuthentication.new(user).should_authenticate? } do
+
       post 'lists/create_new_list' => 'lists#create_new_list'
       get 'user_lists/remove_user' => 'user_lists#remove_user'
       get 'fb_pages/remove_integration' => 'fb_pages#remove_integration'
@@ -44,7 +44,7 @@ Rails.application.routes.draw  do
 
       # user routes
       resources :users, only: :show do
-       
+
         ## devise routes
         devise_scope :user do
           member do
@@ -81,7 +81,7 @@ Rails.application.routes.draw  do
           resources :coupons
           get 'manage-coupons' => 'coupons#manage_coupons'
         end
-        
+
         # authenticate resources if a user is merchant
         authenticate :user, -> (user) { user.is_merchant? } do
           resources :conversations, only: [:index]
@@ -156,7 +156,7 @@ Rails.application.routes.draw  do
           get 'rating', on: :member
         end
       end
-  #end
+  end
 
 
   ## catch all other to 404
