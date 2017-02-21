@@ -13,47 +13,9 @@ Rails.application.routes.draw  do
   get "relay-docs-categories/:slug" => "knowledge_base_categories#show"
 
   devise_for :users, controllers: { registrations: "registrations", omniauth_callbacks: "omniauth_callbacks", sessions: 'sessions' }
-<<<<<<< HEAD
-  resources :users, only: [:show] do
-    devise_scope :user do
-      member do
-        get 'add-subscription' => 'registrations#add_subscription'
-        get 'add-rhombus-number' => 'registrations#add_rhombus_number'
-        get 'add-profile-info' => 'registrations#add_profile_info'
-        get 'add-card-info' => 'registrations#add_card_info'
-        get "signup", to: "registrations#new"
-        get "profile", to: "registrations#edit"
-        get "signin", to: "devise/sessions#new"
-        patch "registration/update", to: "registrations#update"
-      end
-    end
-  end
-
- # authenticate :user, -> (user) { CheckUser::RouteAuthentication.new(user).should_authenticate? } do
-    post 'lists/create_new_list' => 'lists#create_new_list'
-    get 'user_lists/remove_user' => 'user_lists#remove_user'
-    get 'fb_pages/remove_integration' => 'fb_pages#remove_integration'
-    get 'link_facebook' => 'link_fb_accounts#link_facebook'
-    get 'get_current_user' => 'application#get_current_user'
-    get 'manage-coupons' => 'coupons#manage_coupons'
-    post 'redirect' => 'link_fb_accounts#redirect'
-
-    resources :lists do
-      resources :customer_lists
-    end
-
-    get "homepage_referrer" => 'referrers#homepage_referrer'
-    get "resque" => Resque::Server, anchor: false, constraints: lambda { |req|
-      req.env['warden'].authenticated? and req.env['warden'].user.id == 23
-    }
-
-    # events/hooks routess
-    # constraints subdomain: 'hooks' do
-=======
   
   # events/hooks routess
   #constraints subdomain: 'hooks' do
->>>>>>> 0b40671b12ad49b9e9f16d446dc90b351916c51f
     post 'events/stripe' => 'webhooks#stripe_events'
     post 'events/twilio' => 'webhooks#twilio_events'
     match'events/nexmo' => 'webhooks#nexmo_events', via: [:get, :post]
@@ -194,15 +156,7 @@ Rails.application.routes.draw  do
           get 'rating', on: :member
         end
       end
-<<<<<<< HEAD
-      resources :knowledge_bases, param: :url, only: [:index] do
-        get 'rating', on: :member
-      end
-    end
-#end
-=======
   #end
->>>>>>> 0b40671b12ad49b9e9f16d446dc90b351916c51f
 
 
   ## catch all other to 404
