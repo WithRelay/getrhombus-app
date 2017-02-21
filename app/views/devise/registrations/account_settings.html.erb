@@ -20,9 +20,10 @@
           <%= f.fields_for :people do |f| %>
             <%= f.text_field :full_name, class: 'form-control full-name settings text-field w-input', placeholder: 'Full name' %>
           <% end %>
-            <%= f.hidden_field :org_phone, id: "phone_number" %>
-            <%#= f.phone_field :phone, id: "phone", class: "password settings text-field w-input" %>
+          <%= f.hidden_field :org_phone, id: "phone_number" %>
+        
         <% else %>
+        
             <%= f.hidden_field :phone_number, id: "phone_number" %>
             
         <% end %>        
