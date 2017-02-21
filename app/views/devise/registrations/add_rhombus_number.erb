@@ -6,7 +6,7 @@
         <div class="flex-underline form-header-underline"></div>
         <div class="get-started-2 log-in-form w-form">
 
-          <%= form_for(current_user, as: resource_name, url: user_path(current_user), html: { method: :put, class: "w-clearfix", id: "search_number_form" }) do |f| %>
+          <%= form_for(current_user, as: resource_name, url: registration_update_user_path(resource_name), html: { method: :patch, class: "w-clearfix", id: "search_number_form" }) do |f| %>
 
             <label class="form-label" for="Country-3">In what country would you like your number?</label>
 
@@ -18,11 +18,11 @@
 
               <label class="form-label" for="Area-Code-2" id='searchNumberFieldLabel'>Enter preferred area code:</label>
               <%= f.text_field :rhombus_number, id: 'searchNumberField', :class => "login text-field w-input", placeholder: "Enter area code" %>
-                        
+
               <div class="area-code-availability flex-underline form-header-underline"></div>
 
-              <input type="hidden" name="add_rhombus_number" value="true">
-            
+              <input type="hidden" name="page_params" value="add_rhombus_number">
+
               <label class="form-label paragraph" for="Area-Code-Unavailable-CTA-2">Area code availability depends on the telecom network providers. What would you like to do if your preferred area code is unavailable?</label>
               <select class="dropdown w-select" id="areaCodeUnavailable" >
                 <option value="random">Give me any area code</option>
@@ -34,7 +34,7 @@
             <%= f.submit "Submit", id: "searchNumberBtn", class: "button log-in w-button" %>
 
           <% end %>
-          
+
         </div>
       </div>
     </div>

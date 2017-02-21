@@ -26,7 +26,7 @@
             <label class="form-label" for="Timezones-3">Set Timezone:</label>
             <%= f.select :time_zone, get_time_zone_lists, {}, class: 'form-control dropdown w-select' %>
 
-            <input type="hidden" name="add_profile_info" value="true">
+            <input type="hidden" name="page_params" value="add_profile_info">
             <input class="button log-in w-button" type="submit" value="Continue">
 
           <% end %>

@@ -10,24 +10,25 @@
   <div class="dash-content-container settings w-clearfix" id="account-settings">
     <h4 class="form-header">Account Information</h4>
     <div class="flex-underline form-header-underline"></div>
-    <%= form_for(current_user, as: resource_name, url: user_path(current_user), html: { method: :put, id: "account-settings-form", class: "form-horizontal rhombusFocus" }) do |f| %>
+    <%= form_for(current_user, as: resource_name, url: registration_update_user_path(resource_name), html: { method: :patch, id: "account-settings-form", class: "form-horizontal rhombusFocus" }) do |f| %>
     <div class="account-settings-form-wrapper w-form">
-      
+
       <label class="field-headers form-label settings" for="name">Basic details</label>
-      <div class="company-rep-div w-clearfix"> 
+      <div class="company-rep-div w-clearfix">
         <% if current_user.is_merchant? %>
 
           <%= f.fields_for :people do |f| %>
             <%= f.text_field :full_name, class: 'form-control full-name settings text-field w-input', placeholder: 'Full name' %>
           <% end %>
           <%= f.hidden_field :org_phone, id: "phone_number" %>
-        
+
         <% else %>
-        
+
             <%= f.hidden_field :phone_number, id: "phone_number" %>
-            
-        <% end %>        
+
+        <% end %>
         <%= f.phone_field :phone, id: "phone", class: "password settings text-field w-input" %>
+        <input type="hidden" name="page_params" value="account_settings">
       </div>
 
 
@@ -40,7 +41,6 @@
         <%= f.password_field :password_confirmation, id: "confirmNewPassword", type: "password", placeholder: "Confirm new password", class: "form-control confirm password settings text-field w-input" %>
       </div>
 
-    </form>
   </div>
   <%= f.submit "Save changes", id: "ba-submit", class: "btn-rhombus button save-changes w-button" %>
   <a class="button deactivate w-button" href="#">Deactivate/Pause Account</a>
