@@ -6,14 +6,14 @@
     <div class="flex-underline form-header-underline"></div>
 
     <div class="account-settings-form-wrapper w-form">
-     
-      <%= form_for(current_user, as: resource_name, url: user_path(current_user), html: { method: :put, id: "cc-form", class: 'w-clearfix', autocomplete: "off" }) do |f| %>
+
+      <%= form_for(current_user, as: resource_name, url: registration_update_user_path(resource_name), html: { method: :patch, id: "cc-form", class: 'w-clearfix', autocomplete: "off" }) do |f| %>
 
         <label class="field-headers form-label settings" for="Business-Name">credit card information</label>
         <label class="form-label paragraph" for="Card-Number-2">You will be billed at the beginning of every month for all active paid plans, excluding the 14-day trial period. SMS/MMS related charges will deducted from available credits in your Rhombus account see <a class="settings-link" href="#">SMS/MMS usage</a>.
         <br>
         <br>A sales tax will be included in your monthly subscription charge if this is a legal requirement in your ZIP code.</label>
-       
+
         <div class="form-group col-xs-6">
           <%= f.number_field :last4, id: "cc-number", type: "tel", class: "form-control card-number text-field w-input form-control cc-num", placeholder: "Card number", "x-autocompletetype" => "cc-number", autocompletetype: "cc-number", autocorrect: 'off', spellcheck: 'off', autocapitalize: 'off' %>
         </div>
@@ -30,7 +30,7 @@
           <input id="cc-csc" type="tel" id="CVV-2" class="form-control cvv text-field w-input form-control" placeholder="CVC" value="" autocorrect="off" spellcheck="off" autocapitalize="off" autocomplete="off" maxlength="4">
         </div>
 
-        <input type="hidden" name="update_billing_info" value="true">
+        <input type="hidden" name="page_params" value="update_billing_info">
         <%= f.hidden_field :exp_month, id: "cc-ex-month" %>
         <%= f.hidden_field :exp_year, id: "cc-ex-year" %>
         <%= f.hidden_field :card_token, id: "cc-uri" %>
@@ -38,7 +38,7 @@
 
         <%= f.submit "Update Information", id: "cc-submit", class: "alt-button button save-changes w-button btn btn-default btn-block btn-rhombus" %>
       <% end %>
-      
+
       <% if current_user.is_merchant? %>
         <%= render 'more_merchant_billing_info' %>
       <% end %>
