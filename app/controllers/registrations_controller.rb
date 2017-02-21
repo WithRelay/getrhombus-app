@@ -10,7 +10,9 @@ class RegistrationsController < Devise::RegistrationsController
 
     page_params = set_update_flash_messages[params[:page_params].to_sym]
 
-    url = page_params[:billing_info] ? check_params_with_update(page_params) : nil
+    check_params_with_update(page_params)
+
+    url = request.referrer if page_params[:billing_info].present?
 
     prev_unconfirmed_email = resource.unconfirmed_email if resource.respond_to?(:unconfirmed_email)
 
@@ -97,7 +99,8 @@ class RegistrationsController < Devise::RegistrationsController
       current_user.add_token_to_user(params[:user][:card_token])
     elsif page_params[:billing_info].present?
       current_user.add_token_to_user(params[:user][:card_token])
-      request.referrer
+    elsif page_params[:account_settings].present?
+      StripeManagedAccountService.new(current_user).update_account_email if resource.bank_accounts.present?
     end
   end
 
