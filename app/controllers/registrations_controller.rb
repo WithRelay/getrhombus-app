@@ -7,6 +7,7 @@ class RegistrationsController < Devise::RegistrationsController
 
   def update
     self.resource = resource_class.to_adapter.get!(send(:"current_#{resource_name}").to_key)
+
     page_params = set_update_flash_messages[params[:page_params].to_sym]
 
     url = page_params[:billing_info] ? check_params_with_update(page_params) : nil
@@ -166,9 +167,14 @@ class RegistrationsController < Devise::RegistrationsController
                           },
       account_settings: {
                           success: 'account updated',
-                          account_setting: true
-                        }
-
+                          error: 'We are unable to update account. Please try again',
+                          account_settings: true
+                        },
+      business_settings: {
+                          success: 'account updated',
+                          business_settings: true,
+                          error: 'We are unable to update business settings. Please try again'
+                         }
     }
   end
 
