@@ -50,11 +50,20 @@ $(document).ready(function () {
   $('.checkboxes').click(function(){
     if ($(this).is(':checked')){
       $('.checkboxes').attr('disabled', true);
+      if ($('#activate-deactivate-campaign').length > 0){
+          statusName = $(this).parent().find('.resource-status').text();
+          changeButtonName('#activate-deactivate-campaign', statusName)
+      }
       $(this).attr('disabled', false);
     } else {
       $('.checkboxes').attr('disabled', false);
     };
   });
+
+  function changeButtonName(buttonId, statusName){
+    var status = { paused: '  Activate', active: '  Deactivate' }
+    $(buttonId).text(status[statusName])
+  }
 
   $('#delete-hashtag').click(function(e) {
     FlashHandler.setConfirmationDialog('#delete-hashtag','Are you sure, you want to remove the hashtag?', 'Delete', 'isDistroy');
