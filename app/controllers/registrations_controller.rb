@@ -31,41 +31,6 @@ class RegistrationsController < Devise::RegistrationsController
       set_minimum_password_length
       redirect_to previous_url
     end
-=begin
-    if @re && @re.first
-      sub_res = create_saas_subscription
-      if sub_res.first && current_user.update_without_password(devise_parameter_sanitizer.sanitize(:account_update))
-        StripeManagedAccountService.new(current_user).update_account_email
-        set_flash_message :notice, :updated
-        # Sign in the current user bypassing validation in case his password changed
-        sign_in current_user, bypass: true
-        respond_with resource, location: "/users/#{current_user.id}"
-        #redirect_to after_update_path_for(current_user)
-      else
-        clean_up_passwords resource
-        #render "edit", notice: "We were unable to update your information"
-        redirect_to "/users/#{current_user.id}", flash: { error: "We were unable to update your information. Please retry." }
-      end
-    else
-      clean_up_passwords resource
-      #render "edit", notice: "We were unable to update your card information"
-      error_message = (@re && @re.second == 'card_error') ? @re.third :  "We were unable to update your card information. Please check the details entered."
-      redirect_to "/users/#{current_user.id}", flash: { error: error_message }
-    end
-=end
-=begin
-    if current_user.update_without_password(devise_parameter_sanitizer.sanitize(:account_update))
-      set_flash_message :notice, :updated
-      # Sign in the current user bypassing validation in case his password changed
-      sign_in current_user, bypass: true
-      respond_with resource, location: "/users/#{current_user.id}"
-      #redirect_to after_update_path_for(current_user)
-    else
-      clean_up_passwords resource
-      #render "edit", notice: "We were unable to update your information"
-      redirect_to "/users/#{current_user.id}", flash: { error: "We were unable to update your information. Please retry." }
-    end
-=end
   end
 
   def create

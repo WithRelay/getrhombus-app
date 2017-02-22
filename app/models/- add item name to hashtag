@@ -13,6 +13,16 @@ rhombus number form
 add card info, add subscription, billing info
 - flash message not showing...also needs to show devise error
 
+business settings
+- plug in org_type, org_category
+
+- Header not fully dynamic
+- client side validations for account/business settings pages
+- remove the phone number field from business settings
+
+- add the customer count to slider
+- add the url for pages you did to the sidebar on dashboard and settings page
+
 
 Friday
 - test parser - done
@@ -20,9 +30,6 @@ Friday
 - clean up conversations
 - workflow for sign in, sign up and places where we add card, token, referrer, contact and customer, payment capture
 - clean up below
-
-
-
 
 Everyone
 - popups are repeated... code across the page must be one.
