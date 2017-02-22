@@ -13,7 +13,7 @@
       <div class="alt-column w-clearfix w-col w-col-3">
         <div class="title-column-div w-clearfix">
           <%= link_to edit_user_campaign_path(current_user, campaign), class: 'shrink-text table-text' do %>
-            <%= campaign.name %>
+            <%= present(campaign).campaign_name %>
             <% end %>
         </div>
         <div class="alt-table cb check-box-column">
@@ -103,7 +103,6 @@
   <div class="sub-nav-options-wrapper w-clearfix">
     <%= link_to ' &nbsp;New campaign'.html_safe, new_user_campaign_path(current_user), class: 'add sub-nav-button w-button', data: { ix: "create-customer" } %>
     <a class="import sub-nav-button w-button deactivate-resource" data-ix="cancel-subscription" href="#">&nbsp; Deactivate</a>
-    <a class="sub-nav-button w-button" data-ix="create-list" href="#"> &nbsp;Resend</a>
     <a class="import sub-nav-button w-button delete-resource" data-ix="cancel-subscription" href="#"> &nbsp;Delete</a>
   </div>
 </div>

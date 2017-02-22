@@ -11,6 +11,10 @@ class CampaignPresenter < BasePresenter
     @model.lists.count
   end
 
+  def campaign_name
+    "#{@model.name} (#{@model.status})"
+  end
+
   def campaign_change_status_link
     return 'Inactive' if @model.inactive?
     text = @model.paused? ? 'Unpause' : 'Pause'
