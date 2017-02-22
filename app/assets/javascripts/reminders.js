@@ -40,7 +40,7 @@ $(document).on('ready page:load', function() {
     $('#reminderForm').submit();
   });
 
-  $('#Notification-Message').emojioneArea();
+  $('.notification-message').emojioneArea();
 
   $('#reminderForm').formValidation({
     framework: 'bootstrap',
