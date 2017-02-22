@@ -76,15 +76,17 @@ $(document).ready(function () {
     });
 
     var msg = $(this).parent().find('p').text()
-    if (/deactivate/i.test(msg)){
-      var method_input = selectedElement.parents('.edit_hashtag').find("input[name='_method']");
-      method_input.attr('value','patch');
+    if (selectedElement){
+      if (/deactivate/i.test(msg)){
+        var method_input = selectedElement.parents('.edit_hashtag').find("input[name='_method']");
+        method_input.attr('value','patch');
+      }
+       a = selectedElement.parents('.edit_hashtag')
+      if(a.length == 0){
+        a = selectedElement.parents('.edit_reminder')
+      }
+      a.submit()
     }
-     a = selectedElement.parents('.edit_hashtag')
-    if(a.length == 0){
-      a = selectedElement.parents('.edit_reminder')
-    }
-    a.submit()
   });
 
   // decimal with two places
