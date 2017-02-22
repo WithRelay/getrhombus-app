@@ -1,6 +1,7 @@
 <!-- Title for header -->
 <% provide(:title, 'Rhombus - Merchant Profile') %>
-
+<!-- the css is page specific because some pages have different ui for phone number field -->
+<style>.intl-tel-input { margin-left: 65px !important }</style>
 <div class="settings sub-nav-bar w-clearfix">
   <%= link_to user_path(current_user) , class: 'dashboard-return sub-nav-button w-button' do %>
    &nbsp;Return to dashboard

@@ -15,7 +15,7 @@
 
         <label class="field-headers form-label settings" for="Month-Year-2">COUPON &amp; DISCOUNTS</label>
 
-        <% if saas_sub.coupon.present? %>
+        <% if saas_sub.try(:coupon).present? %>
           <% saas_coupon_data = saas_coupon %>
           <div class="settings-info-div">
             <h1 class="business-plan plan-name plans-text">Coupon: <%= saas_coupon_data[:name] %></h1>

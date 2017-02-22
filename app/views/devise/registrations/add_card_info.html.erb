@@ -27,7 +27,7 @@
                 <%= f.hidden_field :tag_id, id: "tag_id" %>
                 <%= f.hidden_field :referrer_id, id: "referrer_id" %>
 
-                <input type="hidden" name="add_card_info" value="true">
+                <input type="hidden" name="page_params" value="add_card_info">
 
                 <div class="form-group col-xs-6">
                   <%= f.text_field :card_name, id: 'cc-name', type: "text", class: "form-control name-on-card text-field w-input", placeholder: "Name on Card", 'x-autocompletetype' => "off", autocompletetype: 'off', :autocorrect => "off", spellcheck: 'off', autocapitalize: "off", autocomplete: "off" %>

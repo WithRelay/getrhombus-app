@@ -1,7 +1,7 @@
 class SubscriptionPresenter < BasePresenter
 
   def get_customer_name
-    "#{user.first_name} #{user.last_name}"
+    "#{user.card_name}"
   end
 
   def get_plan_name
