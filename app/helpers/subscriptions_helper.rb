@@ -122,12 +122,12 @@ module SubscriptionsHelper
 
   def total_count_change
     count = invoices_count
-    "#{(((count[0] - count[1]).to_f/count[0]) * 100).to_i}%"
+    # "#{(((count[0] - count[1])/count[1]) * 100).to_i}%"
   end
 
   def total_amount_changes
     amount = total_invoices_amount
-    "#{(((amount[0] - amount[1])/amount[0]) * 100).to_i}%"
+    # "#{(((amount[0] - amount[1])/amount[1]) * 100).to_i}%"
   end
 
 end

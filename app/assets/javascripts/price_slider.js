@@ -27,7 +27,7 @@ var PriceSlider = new function() {
       if (pricingSlider) {
         var slider = new Powerange(pricingSlider, {
           callback: displayValue, min: 100, max: 50000,
-          start: 100, vertical: false, hideRange: true
+          start: 100, step: 100, vertical: false, hideRange: true
         });
       };
     };
@@ -46,7 +46,7 @@ var PriceSlider = new function() {
 
     // also used by the credit_card_form_js to skip validation
     $('#plan_name').val(selection[0]);
-    priceValueSpan.innerHTML = '<h4>' + selection[1] + '</h4>';
+    priceValueSpan.innerHTML = selection[1];
 
     // for add a subscription page
     if ($('#add_subscription').length) {
@@ -86,7 +86,11 @@ var PriceSlider = new function() {
   };
 
   function planInfo(amount) {
-    return '<h1 class="plan-amount">$'+ amount +'</h1><h5 class="signup-box-subheading starter-table">BILLED MONTHLY</h5>'
+    return '<div class="customer-count-text">\
+      <strong>'+ pricingSlider.value +'</strong>\
+      <span class="customer-count-text-alt">customers</span></div>\
+      <div class="price-table underline-div"></div>\
+      <h1 class="plan-amount">$'+ amount +'/Month</h1>'
   };
 
 };
