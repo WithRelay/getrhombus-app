@@ -35,8 +35,13 @@ class RegistrationsController < Devise::RegistrationsController
 
   def create
     set_captured_payment_session
-    super
-    flash[:errors] = resource.errors.full_messages if resource.errors.messages.present?
+    @user = User.new(params[:sign_up])
+    if @user.save
+      redirect_to user_path(@user)
+    else
+      flash[:error] = resource.errors.full_messages if resource.errors.full_messages.present?
+      render :new
+    end
   end
 
   def add_profile_info
