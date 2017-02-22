@@ -10,6 +10,11 @@ class Api::V1::RemindersController < API::V1::BaseController
     render json: status.merge(message)
   end
 
+  def edit
+    reminder = Reminder.find(params[:id])
+    render json: reminder
+  end
+
   private
 
   def reminder_params

@@ -4,7 +4,7 @@ class RemindersController < ApplicationController
   before_action :set_reminder, only: [ :edit, :update, :change_status , :destroy ]
 
   def index
-
+    @reminder = params[:id].present? ? Reminder.find_by_id(params[:id]) : Reminder.new   
     @reminders_today = current_user.reminders.active.where("date_time >= ? AND date_time < ?",Time.current.beginning_of_day, Time.current.beginning_of_day + 1.days)
     @reminders_tomorrow = current_user.reminders.active.where("date_time >= ? AND date_time < ?", Time.current.beginning_of_day + 1.days, Time.current.beginning_of_day + 2.days)
     @reminders_upcoming = current_user.reminders.active.where("date_time >= ?", Time.current.beginning_of_day + 2.days)
