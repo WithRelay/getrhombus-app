@@ -13,7 +13,7 @@
       <div class="alt-column w-clearfix w-col w-col-3">
         <div class="title-column-div w-clearfix">
           <%= link_to edit_user_campaign_path(current_user, campaign), class: 'shrink-text table-text' do %>
-            <%= campaign.name %>
+            <%= present(campaign).campaign_name %>
             <% end %>
         </div>
         <div class="alt-table cb check-box-column">
@@ -22,6 +22,7 @@
               <div class="select-all-check-box w-checkbox w-clearfix">
                 <input class="cb table-checkbox checkboxes w-checkbox-input" id="node" type="checkbox">
                 <div class ='resource-id w-hidden'><%= campaign.id %></div>
+                <div class ='resource-status w-hidden'><%= campaign.status %></div>
                 <label class="checkbox-field-lable w-form-label" for="node">-</label>
               </div>
             </form>
@@ -102,8 +103,7 @@
 <div class="customer-dash sub-nav-bar">
   <div class="sub-nav-options-wrapper w-clearfix">
     <%= link_to ' &nbsp;New campaign'.html_safe, new_user_campaign_path(current_user), class: 'add sub-nav-button w-button', data: { ix: "create-customer" } %>
-    <a class="import sub-nav-button w-button deactivate-resource" data-ix="cancel-subscription" href="#">&nbsp; Deactivate</a>
-    <a class="sub-nav-button w-button" data-ix="create-list" href="#"> &nbsp;Resend</a>
+    <a class="import sub-nav-button w-button deactivate-resource" id="activate-deactivate-campaign" href="#">&nbsp; Deactivate</a>
     <a class="import sub-nav-button w-button delete-resource" data-ix="cancel-subscription" href="#"> &nbsp;Delete</a>
   </div>
 </div>
