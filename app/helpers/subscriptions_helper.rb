@@ -1,19 +1,19 @@
 module SubscriptionsHelper
 
   def saas_sub
-    current_user.get_saas_subscription
+    @saas_sub = current_user.get_saas_subscription
   end
 
   def get_saas_sub_id
-    saas_sub.id if current_user.is_merchant? && saas_sub.present?
+    @saas_sub.id if current_user.is_merchant? && @saas_sub.present?
   end
 
   def get_saas_plan_amount
-    (Plan.find saas_sub.plan_id).amount/100 if current_user.is_merchant? && saas_sub.present?
+    (Plan.find @saas_sub.plan_id).amount/100 if current_user.is_merchant? && @saas_sub.present?
   end
 
   def saas_plan_name
-    (Plan.find saas_sub.plan_id).name if saas_sub.present?
+    (Plan.find @saas_sub.plan_id).name if @saas_sub.present?
   end
 
   def saas_customers
@@ -36,7 +36,6 @@ module SubscriptionsHelper
   end
 
   def subscription_time_period
-    @saas_sub = saas_sub
     unless @saas_sub.nil?
       start_date = @saas_sub.current_period_start.present? ? Time.zone.at(@saas_sub.current_period_start).strftime("%B %d, %Y") : ''
       end_date = saas_sub.current_period_end.present? ? Time.zone.at(@saas_sub.current_period_end).strftime("%B %d, %Y") : ''
@@ -53,7 +52,7 @@ module SubscriptionsHelper
   end
 
   def saas_coupon
-    @coupon = saas_sub.coupon
+    @coupon = @saas_sub.coupon
     {
       name: @coupon.name.humanize,
       type: saas_coupon_type,
