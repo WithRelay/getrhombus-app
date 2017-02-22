@@ -15,7 +15,7 @@ module CheckUser
     end
 
     def merchant_details_present?
-      user_card_token.present? && @user.get_saas_subscription.blank? && @user.rhombus_number.blank?
+      user_card_token.present? && @user.get_saas_subscription.present? && @user.rhombus_number.present?
     end
   end
 end
