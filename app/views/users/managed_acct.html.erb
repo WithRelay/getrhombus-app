@@ -70,7 +70,7 @@
     <div class="company-rep-div w-clearfix">
       <fieldset id="user-people">
         <%= f.fields_for :people do |p| %>
-        <%= render "person_fields", f: p %>
+          <%= render "person_fields", f: p %>
         <% end %>
       </fieldset>
       <div id='owners-title'>OWNERS IF ANY <br></div>
