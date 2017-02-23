@@ -126,7 +126,7 @@ Rails.application.routes.draw  do
       match 'campaigns/upload_from_url' => 'campaigns#upload_from_url', via: :post
       #--------------------------------------------------------------------------#
       # reminder routes
-      resources :reminders, only: [:create]
+      resources :reminders, only: [:create, :edit]
       #--------------------------------------------------------------------------#
       match 'transactions/:txn_number/refund' => 'transactions#refund', via: :post
       resources :transactions, only: [:create]

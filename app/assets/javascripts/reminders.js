@@ -3,16 +3,29 @@ $(document).on('ready page:load', function() {
   $('#edit-reminder').on('click', function(){
     var selectedElement = $('.table-checkbox:checked').closest('form');
     var reminder_id = selectedElement.find("#reminder_id").val();
+   
      $.ajax({
        url:  "/v1/reminders/" + reminder_id + "/edit" ,
        data:{id: reminder_id}
      }).done(function(res){
-      $(".emojionearea-editor").text(res.text);
-      var action = $('#editReminderForm').attr("action"),
-          newAction = action.substring(0, action.length-2) + reminder_id;
-          $('#editReminderForm').attr("action", newAction);
 
-     }).error();
+      var form = $('#editReminderForm');
+      var action = form.attr("action");
+      var newAction = action.substring(0, action.length-2) + reminder_id;
+       
+      form.find("#Notification-Message").val(res.text);
+      form.find(".emojionearea-editor").text(res.text);
+      form.attr("action", newAction);
+
+        debugger;
+      var raw_date_time = res.date_time.substring(0, res.date_time.length - 10);
+      var date_time = raw_date_time;
+
+
+      form.find("#reminder-date-time").val(date_time);
+     }).error(function(){
+        // alert("")
+     });
   });
 
   $('#reminder-customer-list').selectize({
@@ -53,6 +66,11 @@ $(document).on('ready page:load', function() {
   $('#submitReminderForm').click(function(){
     $('#reminderForm').formValidation('resetField', 'reminder[text]');
     $('#reminderForm').submit();
+  });
+
+  $('#submitEditReminderForm').on('click',function(){
+    // $('#reminderForm').formValidation('resetField', 'reminder[text]');
+    $('#editReminderForm').submit();
   });
 
   $('.notification-message').emojioneArea();
