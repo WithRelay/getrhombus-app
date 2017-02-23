@@ -83,6 +83,10 @@ module SubscriptionsHelper
     end
   end
 
+  def invoices
+    Invoice.where(team_id: current_user.id, paid: true)
+  end
+
   def saas_invoices
     today_invoices = Invoice.where(team_id: current_user.id, paid: true)
       .where("date >= ?", Time.current.beginning_of_day.to_i).pluck(:total, :application_fee)
