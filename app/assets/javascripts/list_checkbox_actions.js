@@ -1,12 +1,32 @@
 $(document).ready(function(){
 
   $('.delete-resource').click(function(e){
-    FlashHandler.setConfirmationDialog('.delete-resource','Are you sure, you want to remove the ' + getCurrentURL(), 'Delete', 'isDestroy');
+    var statusName = campaignStatusName()
+    if (statusName){
+      FlashHandler.setConfirmationDialog('.delete-resource','Are you sure, you want to remove the ' + getCurrentURL(), 'Delete', 'isDestroy');
+    }else{
+      showUncheckError();
+    }
   });
 
   $('.deactivate-resource').click(function(e){
-    FlashHandler.setConfirmationDialog('.deactivate-resource','Are you sure, you want to deactivate the campaign?', 'Deactivate', 'isDestroy');
+    var statusName = campaignStatusName()
+    var text = { paused: 'Activate', active: 'Deactivate' }
+    if (statusName){
+      FlashHandler.setConfirmationDialog('.deactivate-resource','Are you sure, you want to '+ text[statusName] +' the campaign?', 'Deactivate', 'isDestroy');
+    }
+    else{
+      showUncheckError();
+    }
   });
+
+  function showUncheckError(){
+    FlashHandler.setFlashMessage( 'Please select campaign', 'error' );
+  }
+
+  function campaignStatusName(){
+    return $('.checkboxes:checked').parent().find('.resource-status').text();
+  }
 
   $(document).on('click', '.cancel-yes', function(e){
     if (getCurrentURL() == 'campaigns'){
@@ -28,7 +48,7 @@ $(document).ready(function(){
 
   function getCurrentURL(){
     url = window.location.pathname.split('/');
-    return url[url.length-2];
+    return url[url.length-1];
   }
 
   function getSelectedCheckbox(checkbox_class){
