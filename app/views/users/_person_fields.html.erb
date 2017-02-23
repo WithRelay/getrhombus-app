@@ -4,6 +4,7 @@
     <% if f.index == 0 %>
       <%= f.text_field :last4, placeholder: "SSN", id: 'City-2', class: 'settings short-field ssn text-field w-input', data: { name: "SSN" }, id: "SSN" %>
     <% end %>
+</div>
 <fieldset class='gender-fieldset'>
   <div class="managed-account-gender">
     <%= f.label :gender, 'Male', value: 'male', class: 'gender-label' %>
@@ -47,7 +48,7 @@
         <%= a.text_field :postal_code, placeholder: "Zip/Postal code", data: { name: "Zip 2" },  id: "Zip-2", class: 'person-postal company-rep settings text-field w-input zip' %>
       </div>
     </div>
-  </div>
+
 
 
     <div class="col-xs-5">
