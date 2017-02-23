@@ -5,5 +5,5 @@
       <%= f.text_field :coupon, id: 'update-plan-id', class: 'form-control', placeholder: 'Enter Discount Code' %>
     </div>
   <br>
-  <%= f.submit 'Apply Discount', class: 'button pricing-button customer-text-me', id: 'submit-update-coupon', saas_sub_id: get_saas_sub_id, data: {disable_with: 'Please wait ...'} %>
+  <%= f.submit 'Apply Discount', class: 'button pricing-button customer-text-me', id: 'submit-update-coupon', saas_sub_id: get_saas_sub_id %>
 <% end %>
