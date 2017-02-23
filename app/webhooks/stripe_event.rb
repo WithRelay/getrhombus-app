@@ -120,7 +120,8 @@ class StripeEvent
       merchant_customer = MerchantCustomer.find_by(stripe_customer_id:  @hash[:customer])
       if merchant_customer
         # update merchant_customer
-        @data.merchant_customer_id = merchant_customer.id
+        @data.team_id = merchant_customer.merchant_id
+        @data.customer_id = merchant_customer.customer_id
 
         # update coupon_id
         if @hash[:discount].present? && coupon = Coupon.find_by(stripe_coupon_id: @hash[:discount][:coupon][:id])
