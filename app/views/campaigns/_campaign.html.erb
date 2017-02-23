@@ -18,13 +18,13 @@
 
     <div class='form-group col-xs-6'>
       <%= f.text_field :name, class: 'form-control editor text-field w-input', id: 'Campaign-name', data: { name: 'Campaign name' }, placeholder: 'Campaign name'  %>
-      <div class="messageContainer"></div>
+      <div class="errorMessageContainer"></div>
     </div>
 
     <div class='form-group col-xs-6'>
       <label class="editor-options form-label" for="List"> &nbsp; List</label>
       <%= f.text_field :list_name, id: 'List', 'data-lists_data' => "#{@lists.to_json}", placeholder: "Choose a list", class: 'form-control editor text-field w-input', data: { name: 'List' } %>
-      <div class="messageContainer"></div>
+      <div class="errorMessageContainer"></div>
     </div>
 
     <label class="channel editor-options form-label" for="Channel"> &nbsp; Message channel</label>
@@ -62,7 +62,7 @@
           <div class="w-form">
             <div class='form-group col-xs-6'>
               <%= f.text_area :text, id: 'trumbowyg', class: 'form-control message-editor text-area w-input', data: { name: 'Editor Text Area' } %>
-              <div class="messageContainer"></div>
+              <div class="errorMessageContainer"></div>
             </div>
           </div>
         </div>
@@ -102,7 +102,7 @@
       <div class="w-form">
         <div class='form-group col-xs-6'>
           <%= f.text_field :subject, class: "form-control email-subject text-field w-input", data: { name: "Email Subject" }, id: "campaign_subject", placeholder: 'Email subject'  %>
-          <div class="messageContainer"></div>
+          <div class="errorMessageContainer"></div>
         </div>
       </div>
       <h4 class="sender welcome-dash-content-container-header w-hidden"><%= @user_title %></h4>
