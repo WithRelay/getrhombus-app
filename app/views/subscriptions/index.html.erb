@@ -28,23 +28,23 @@
       <div class="transaction-summary-row w-row">
         <div class="w-col w-col-4">
           <div class="subscriptions transaction-summary-cell">
-            <h1 class="total-customer-count"><%= invoices_count[0] %></h1>
-            <h4 class="count-description"> &nbsp; Subscriptions Today</h4>
-            <h4 class="count-description transaction-count"> &nbsp; Down <%= total_count_change %> from yesterday</h4>
+            <h1 class="total-customer-count"><%= saas_invoices[0].count %></h1>
+            <h4 class="count-description"> &nbsp; Transactions Today</h4>
+            <h4 class="count-description transaction-count"> &nbsp; <%= transaction_change %></h4>
           </div>
         </div>
         <div class="w-col w-col-4">
           <div class="transaction-summary-cell">
-            <h1 class="total-customer-count"><%= "$%.2f"%" #{total_invoices_amount[0].to_f/100}"  %></h1>
+            <h1 class="total-customer-count"><%= "$%.2f"%" #{total_amount}"  %></h1>
             <h4 class="count-description"> &nbsp; Total Collected</h4>
-            <h4 class="count-description transaction-count"> &nbsp; Down <%= total_amount_changes %> from yesterday</h4>
+            <h4 class="count-description transaction-count"> &nbsp; <%= total_amount_change %></h4>
           </div>
         </div>
         <div class="w-col w-col-4">
           <div class="transaction-summary-cell">
-            <h1 class="total-customer-count"><%= "$%.2f"%" #{fees_on_subscription.to_f/100}"  %></h1>
+            <h1 class="total-customer-count"><%= "$%.2f"%" #{net_sales}"  %></h1>
             <h4 class="count-description"> &nbsp; Net Sales</h4>
-            <h4 class="count-description transaction-count"> &nbsp; Down 5% from yesterday</h4>
+            <h4 class="count-description transaction-count"> &nbsp; <%= net_sales_change   %></h4>
           </div>
         </div>
       </div>
