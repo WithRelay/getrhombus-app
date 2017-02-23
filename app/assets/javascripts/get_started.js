@@ -11,7 +11,6 @@ $(document).ready(function () {
       fields: {
           'user[email]': {
               verbose: false,
-              row: '.group',
               validators: {
                   notEmpty: {
                       message: 'Your email is required'
@@ -36,7 +35,6 @@ $(document).ready(function () {
               }
           },
           'user[phone]': {
-              row: '.group',
               validators: {
                   callback: {
                       callback: function (value, validator, $field) {
@@ -58,7 +56,12 @@ $(document).ready(function () {
       }
   })
   .on('success.form.fv', function(e, data) {
+    e.preventDefault();
     PhoneNumberFormatter.set_phone_number(true);
+    $('#get-started').attr("disabled", true).val("Please wait...");
+  })
+  .on('err.validator.fv', function(e) {
+    $('.help-block').hide();
   });
 
 
