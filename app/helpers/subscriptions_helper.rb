@@ -120,7 +120,7 @@ module SubscriptionsHelper
 
   def net_sales_change
     @yday_net_sale = 0
-    @saas_invoices[1].each{|arr| @yday_net_sale += (arr[0] - arr[1]) }
+    @saas_invoices[1].each{|arr| @yday_net_sale += (arr[0] - arr[1])}
     percent_change = (@tday_net_sale - @yday_net_sale).to_f/@yday_net_sale * 100 if @yday_net_sale > 0
     display_change(percent_change.round)
   end
@@ -128,7 +128,7 @@ module SubscriptionsHelper
   def display_change(percent_change)
     if percent_change > 0
       "Up #{percent_change}%\ from yesterday"
-    elsif yday_txns_count < 0
+    elsif percent_change < 0
       "Down #{percent_change}%\ from yesterday"
     else
       "-"
