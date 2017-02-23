@@ -1,0 +1,24 @@
+<div class="default-content-section" id="sign_up-page">
+  <h1 class="first-content-section-sub-header footer-cta-header">Start your free trial</h1>
+  <h5 class="footer-cta-subheading signup-box-subheading">TRY IT FREE FOR 14-DAYS, NO LONG-TERM COMMITMENT</h5>
+  <div class="footer-cta-forms w-form">
+    <%= form_for('user', url: 'signup', method: :get, html: { id: "get-started-form", class:'w-clearfix' } ) do |f| %>
+
+      <div class="form-group col-xs-6">
+        <%= f.text_field 'email', placeholder: 'Email Address', class: 'form-control footer-cta-field text-field w-input' %>
+      </div>
+
+      <div class="form-group col-xs-6">
+        <%= f.phone_field 'phone', placeholder: 'Phone Number', class: 'form-control text-field w-input', id: 'phone' %>
+        <%= f.hidden_field :phone_number, :id => "phone_number" %>
+      </div>
+
+      <div class="field footer-cta form-check-box w-checkbox form-group col-xs-6" >
+        <input class="w-checkbox-input" data-name="Checkbox" id="checkbox" name="checkbox" type="checkbox">
+        <label class="w-form-label" for="checkbox">I agree to Relay <a class="terms-link" href="#">terms of use &amp; policy</a></label>
+      </div>
+
+      <%= f.button "GET STARTED", id: 'get-started', class: "button footer-cta-button w-button" %>
+    <% end %>
+  </div>
+</div>
