@@ -12088,8 +12088,8 @@ h4 {
   margin-right: 6%;
   margin-left: 6%;
   border-radius: 3px;
-  background-image: -webkit-linear-gradient(270deg, rgba(0, 0, 0, .15), rgba(0, 0, 0, .15)), url('photo-1449247666642-264389f5f5b1.jpg');
-  background-image: linear-gradient(180deg, rgba(0, 0, 0, .15), rgba(0, 0, 0, .15)), url('photo-1449247666642-264389f5f5b1.jpg');
+  background-image: -webkit-linear-gradient(270deg, rgba(0, 0, 0, .15), rgba(0, 0, 0, .15)), url('use-case-demand-service.jpg');
+  background-image: linear-gradient(180deg, rgba(0, 0, 0, .15), rgba(0, 0, 0, .15)), url('use-case-demand-service.jpg');
   background-position: 0px 0px, 0px 0px;
   background-size: auto, cover;
 }
