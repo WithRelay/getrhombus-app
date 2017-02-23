@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170222231030) do
+ActiveRecord::Schema.define(version: 20170223023338) do
 
   create_table "addresses", force: :cascade do |t|
     t.string   "street_address",   limit: 191
@@ -309,7 +309,7 @@ ActiveRecord::Schema.define(version: 20170222231030) do
     t.integer "subtotal",             limit: 4
     t.integer "tax",                  limit: 4
     t.string  "tax_percent",          limit: 191
-    t.integer "application_fee",      limit: 4
+    t.integer "application_fee",      limit: 4,   default: 0
     t.integer "amount_due",           limit: 4
     t.string  "currency",             limit: 191
     t.integer "starting_balance",     limit: 4
@@ -325,7 +325,7 @@ ActiveRecord::Schema.define(version: 20170222231030) do
     t.boolean "forgiven",             limit: 1
     t.boolean "livemode",             limit: 1
     t.integer "team_id",              limit: 4
-    t.integer "customer",             limit: 4
+    t.integer "customer_id",          limit: 4
   end
 
   add_index "invoices", ["coupon_id"], name: "fk_rails_0509f5ee0a", using: :btree
