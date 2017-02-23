@@ -84,8 +84,10 @@ module SubscriptionsHelper
   end
 
   def saas_invoices
-    today_invoices = Invoice.where("date >= ?", Time.zone.now.beginning_of_day.to_i).pluck(:total, :application_fee)
-    yesterday_invoices = Invoice.where("date < ? && date >= ?", (Time.zone.now.beginning_of_day).to_i, (Time.zone.now.beginning_of_day - 1.days).to_i).pluck(:total, :application_fee)
+    today_invoices = Invoice.where(team_id: current_user.id)
+      .where("date >= ?", Time.zone.now.beginning_of_day.to_i).pluck(:total, :application_fee)
+    yesterday_invoices = Invoice.where(team_id: current_user.id)
+    .where("date < ? && date >= ?", (Time.zone.now.beginning_of_day).to_i, (Time.zone.now.beginning_of_day - 1.days).to_i).pluck(:total, :application_fee)
     @saas_invoices = [today_invoices, yesterday_invoices]
     @saas_invoices
   end
