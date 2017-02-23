@@ -6,24 +6,26 @@
     <div class="left-nav-tab" data-ix="display-and-hide-customers">&nbsp; &nbsp; Account</div>
   <% end %>
 
-  <a class="left-nav-tab-wrapper w-inline-block" href="#">
+  <%= link_to business_settings_user_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
     <div class="left-nav-tab"> &nbsp; Business</div>
-  </a>
+  <% end %>
 
   <%= link_to notifications_user_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
     <div class="left-nav-tab"> &nbsp; Notifications</div>
   <% end %>
 
-  <a class="left-nav-tab-wrapper w-inline-block" href="#">
+  <%= link_to user_plans_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
     <div class="left-nav-tab"> &nbsp; Manage plans</div>
-  </a>
-  <a class="left-nav-tab-wrapper w-inline-block" href="#">
+  <% end %>
+
+  <%= link_to segments_user_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
     <div class="left-nav-tab"> &nbsp; Manage segments</div>
-  </a>
-  <a class="left-nav-tab-wrapper w-inline-block" href="#">
+  <% end %>
+
+  <%= link_to integrations_user_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
     <div class="left-nav-tab"> &nbsp; Integrations</div>
-  </a>
-  
+  <% end %>
+
   <%= link_to billing_information_user_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
     <div class="left-nav-tab"> &nbsp; Billing Information</div>
   <% end %>
@@ -36,9 +38,10 @@
     <div class="left-nav-tab"> &nbsp; SMS usage</div>
   <% end %>
 
-  <a class="left-nav-tab-wrapper w-inline-block" href="#">
+  <%= link_to user_subscriptions_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
     <div class="left-nav-tab"> &nbsp; Free subscriptions</div>
-  </a>
+  <% end %>
+
   <h5 class="left-nav rhom-number signup-box-subheading">RHOMBUS NUMBER</h5>
   <div class="left-nav-underline"></div>
   <a class="left-nav-tab-wrapper w-inline-block" href="#">
