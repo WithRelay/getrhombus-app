@@ -3,6 +3,6 @@ class MerchantCustomer < ActiveRecord::Base
   belongs_to :customer, class_name: "User"
   has_many :subscriptions
   has_many :transactions
-  has_many :invoices
+  # has_many :invoices
 end
 

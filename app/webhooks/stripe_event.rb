@@ -91,7 +91,7 @@ class StripeEvent
       @data.subtotal = @hash[:subtotal]
       @data.tax = @hash[:tax]
       @data.tax_percent = @hash[:tax_percent]
-      @data.application_fee = @hash[:application_fee]
+      @data.application_fee = @hash[:application_fee] || 0
       @data.amount_due = @hash[:amount_due]
       @data.currency = @hash[:currency]
 
@@ -120,7 +120,8 @@ class StripeEvent
       merchant_customer = MerchantCustomer.find_by(stripe_customer_id:  @hash[:customer])
       if merchant_customer
         # update merchant_customer
-        @data.merchant_customer_id = merchant_customer.id
+        @data.team_id = merchant_customer.merchant_id
+        @data.customer_id = merchant_customer.customer_id
 
         # update coupon_id
         if @hash[:discount].present? && coupon = Coupon.find_by(stripe_coupon_id: @hash[:discount][:coupon][:id])
@@ -144,7 +145,7 @@ class StripeEvent
       charge = PaymentService.retrieve_charge(@hash[:charge]) if @hash[:charge]
       # a transaction should not already exist but we need to check if it does so we don't send out emails again
       # A tranasaction has only one log unlike subscriptions
-      txn = Transaction.includes(:notification_logs).where(txn_uri: charge.id).first_or_initialize if charge
+      txn = Transaction.includes(:notification_logs).where(txn_uri: charge.id).first_or_initialize if charge.first
 
       # if we havent notified customer before
       # for now, we have only one line for each invoice - the subscription

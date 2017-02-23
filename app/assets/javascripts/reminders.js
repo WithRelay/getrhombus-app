@@ -1,5 +1,20 @@
 $(document).on('ready page:load', function() {
 
+  $('#edit-reminder').on('click', function(){
+    var selectedElement = $('.table-checkbox:checked').closest('form');
+    var reminder_id = selectedElement.find("#reminder_id").val();
+     $.ajax({
+       url:  "/v1/reminders/" + reminder_id + "/edit" ,
+       data:{id: reminder_id}
+     }).done(function(res){
+      $(".emojionearea-editor").text(res.text);
+      var action = $('#editReminderForm').attr("action"),
+          newAction = action.substring(0, action.length-2) + reminder_id;
+          $('#editReminderForm').attr("action", newAction);
+
+     }).error();
+  });
+
   $('#reminder-customer-list').selectize({
     maxItems: 1,
     valueField: 'uid',
@@ -40,7 +55,7 @@ $(document).on('ready page:load', function() {
     $('#reminderForm').submit();
   });
 
-  $('#Notification-Message').emojioneArea();
+  $('.notification-message').emojioneArea();
 
   $('#reminderForm').formValidation({
     framework: 'bootstrap',

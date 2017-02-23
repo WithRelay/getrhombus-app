@@ -84,49 +84,55 @@ module SubscriptionsHelper
   end
 
   def saas_invoices
-    invoices = []
-    current_user.customers.each do |cus|
-      invoices += cus.invoices
+    today_invoices = Invoice.where(team_id: current_user.id, paid: true)
+      .where("date >= ?", Time.zone.now.beginning_of_day.to_i).pluck(:total, :application_fee)
+    yesterday_invoices = Invoice.where(team_id: current_user.id, paid: true)
+    .where("date < ? && date >= ?", (Time.zone.now.beginning_of_day).to_i, (Time.zone.now.beginning_of_day - 1.days).to_i).pluck(:total, :application_fee)
+    @saas_invoices = [today_invoices, yesterday_invoices]
+    @saas_invoices
+  end
+
+  def transaction_change
+    tday_txns_count = @saas_invoices[0].count
+    yday_txns_count = @saas_invoices[1].count
+    percent_change = (tday_txns_count - yday_txns_count).to_f/yday_txns_count * 100 if yday_txns_count > 0
+    display_change(percent_change.round)
+  end
+
+  def total_amount
+    @tday_txns_amount = 0
+    @saas_invoices[0].each{|arr| @tday_txns_amount += arr[0] }
+    @tday_txns_amount/100
+  end
+
+  def total_amount_change
+    @yday_txns_amount = 0
+    @saas_invoices[1].each{|arr| @yday_txns_amount += arr[0] }
+    percent_change = (@tday_txns_amount - @yday_txns_amount).to_f/@yday_txns_amount * 100 if @yday_txns_amount > 0
+    display_change(percent_change.round)
+  end
+
+  def net_sales
+    @tday_net_sale = 0
+    @saas_invoices[0].each{|arr| @tday_net_sale += (arr[0] - arr[1])}
+    @tday_net_sale/100
+  end
+
+  def net_sales_change
+    @yday_net_sale = 0
+    @saas_invoices[1].each{|arr| @yday_net_sale += (arr[0] - arr[1])}
+    percent_change = (@tday_net_sale - @yday_net_sale).to_f/@yday_net_sale * 100 if @yday_net_sale > 0
+    display_change(percent_change.round)
+  end
+
+  def display_change(percent_change)
+    if percent_change > 0
+      "Up #{percent_change}%\ from yesterday"
+    elsif percent_change < 0
+      "Down #{percent_change}%\ from yesterday"
+    else
+      "-"
     end
-    invoices
-  end
-
-  def invoices_count
-    today_count = 0
-    yesterday_count = 0
-    saas_invoices.each do |i|
-      today_count += 1 if Time.zone.at(i.date).today?
-      yesterday_count += 1 if (Time.zone.at(i.date) + 1.days).today?
-    end
-    [today_count, yesterday_count]
-  end
-
-  def total_invoices_amount
-    today_amount = 0
-    yesterday_amount = 0
-    saas_invoices.each do |i|
-      today_amount += i.total if Time.zone.at(i.date).today?
-      yesterday_amount += i.total if (Time.zone.at(i.date) + 1.days).today?
-    end
-    [today_amount, yesterday_amount]
-  end
-
-  def fees_on_subscription
-    fees = 0
-    current_user.customers.each do |cus|
-      cus.subscriptions.active.each { |i| fees += i.plan.amount}
-    end
-    fees
-  end
-
-  def total_count_change
-    count = invoices_count
-    # "#{(((count[0] - count[1])/count[1]) * 100).to_i}%"
-  end
-
-  def total_amount_changes
-    amount = total_invoices_amount
-    # "#{(((amount[0] - amount[1])/amount[1]) * 100).to_i}%"
   end
 
 end
