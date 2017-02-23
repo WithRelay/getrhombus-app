@@ -32,6 +32,13 @@ $('#businessSetting').formValidation({
         }
       }
     },
+    'Organization-Type' : {
+      validators: {
+        notEmpty: {
+          message: 'Required'
+        }
+      }
+    },
     'user[org_phone]': {
       validators: {
         notEmpty: {
@@ -64,6 +71,13 @@ $('#businessSetting').formValidation({
         validators: {
           notEmpty: {
             message: 'Zip code is required'
+          }
+        }
+      },
+      'user[country]' : {
+        validators: {
+          notEmpty: {
+            message: 'Country is required'
           }
         }
       }
