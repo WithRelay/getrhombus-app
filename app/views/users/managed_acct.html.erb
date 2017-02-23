@@ -37,7 +37,7 @@
         <%= a.text_field :state_province, id: 'company-state', class: 'settings street-name text-field w-input', data: { name: 'State' }, placeholder: 'State/Province' %>
       </div>
 
-      <%= a.text_field :city, id: 'company-city', class: 'settings text-field w-input zip', placeholder: 'Zip/Postal code' %>
+      <%= a.text_field :postal_code, id: 'company-postal-code', class: 'apt_suite settings text-field w-input', placeholder: 'Zip/Postal code' %>
 
       <% end %>
 
@@ -70,7 +70,7 @@
     <div class="company-rep-div w-clearfix">
       <fieldset id="user-people">
         <%= f.fields_for :people do |p| %>
-        <%= render "person_fields", f: p %>
+          <%= render "person_fields", f: p %>
         <% end %>
       </fieldset>
       <div id='owners-title'>OWNERS IF ANY <br></div>

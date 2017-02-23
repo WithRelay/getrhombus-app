@@ -365,10 +365,14 @@ $(document).on('ready page:load', function() {
   function hide_state() {
     $('#company-state-div').hide().val('');
     $('#company-state').val('');
+    $('#company-postal-code').removeClass();
+    $('#company-postal-code').addClass('form-control settings short-field text-field w-input');
   }
 
   function show_state() {
     $('#company-state-div').show();
+    $('#company-postal-code').removeClass();
+    $('#company-postal-code').addClass('form-control apt_suite settings text-field w-input');
   }
 
   function hide_postal() {

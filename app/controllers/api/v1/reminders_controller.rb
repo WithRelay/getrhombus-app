@@ -1,5 +1,6 @@
 class Api::V1::RemindersController < API::V1::BaseController
 
+
   def create
     reminder = current_user.reminders.build(reminder_params)
     saved_reminder = reminder.save
@@ -11,7 +12,7 @@ class Api::V1::RemindersController < API::V1::BaseController
   end
 
   def edit
-    reminder = Reminder.find(params[:id])
+    reminder = Reminder.find_by_id(params[:id])
     render json: reminder
   end
 

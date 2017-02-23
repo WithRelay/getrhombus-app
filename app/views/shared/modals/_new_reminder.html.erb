@@ -1,4 +1,4 @@
-<div class="schedule-notification-form-wrapper">
+<div class="schedule-notification-form-wrapper" id="form-reminder-div">
   <div class="content-sub-wrapper modal w-clearfix">
     <h4 class="modal-header welcome-dash-content-container-header">Customer Notification</h4>
   </div>
@@ -7,7 +7,7 @@
   <div class="segment-modal underline-div"></div>
 
   <div class="scheduled-notification-form w-form">
-    <%= form_for reminder, url: v1_reminders_url, html: { class: "w-clearfix", id: "reminderForm",  name: "email-form-7" }  do |f| %>
+    <%= form_for reminder, url: v1_reminders_url, html: { class: "w-clearfix reminderForm", id: "reminderForm",  name: "email-form-7" }  do |f| %>
 
 
       <div class="form-group col-xs-6">
@@ -34,7 +34,7 @@
       <a class="button schedule-notification w-button" href="#" id='submitReminderForm'>Schedule notification</a>
       <%#= f.submit 'Schedule Notification [Customer name]', id: 'submitReminderForm', class: 'button schedule-notification w-button' %>
       <div id="new-reminder-div">
-        <a class="button cancel-notification w-button update-close-modals" data-parent='new-reminder-div'>Cancel</a>
+        <a class="button cancel-notification w-button update-close-modals" data-parent='form-reminder-div'>Cancel</a>
       </div>
     <% end %>
   </div>

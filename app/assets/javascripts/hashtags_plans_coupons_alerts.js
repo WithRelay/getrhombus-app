@@ -51,7 +51,7 @@ $(document).ready(function () {
     if ($(this).is(':checked')){
       $('.checkboxes').attr('disabled', true);
       if ($('#activate-deactivate-campaign').length > 0){
-          statusName = $(this).parent().find('.resource-status').text();
+          var statusName = $(this).parent().find('.resource-status').text();
           changeButtonName('#activate-deactivate-campaign', statusName)
       }
       $(this).attr('disabled', false);

@@ -15,6 +15,60 @@ $(document).ready(function () {
 
 });
 
+$('#businessSetting').formValidation({
+  framework: 'bootstrap',
+  excluded: ':disabled',
+  live: 'disabled',
+  err: {
+        container: function($field, validator) {
+            return $field.parent().find('.errorMessageContainer');
+        }
+    },
+  fields: {
+    'user[org_name]': {
+      validators: {
+        notEmpty: {
+          message: 'organization full name is required'
+        }
+      }
+    },
+    'user[org_phone]': {
+      validators: {
+        notEmpty: {
+          message: 'Your password is required'
+        }
+      }
+     },
+    'user[street_address]': {
+      validators: {
+        notEmpty: {
+          message: 'street address is required'
+      }
+    }
+  },
+      'user[city]': {
+        validators: {
+          notEmpty: {
+            message: 'city is required'
+          }
+        }
+      },
+      'user[state_province]': {
+        validators: {
+          notEmpty: {
+            message: 'state province is required'
+          }
+        }
+      },
+      'user[zip_code]': {
+        validators: {
+          notEmpty: {
+            message: 'Zip code is required'
+          }
+        }
+      }
+    }
+});
 
   $.ajaxSetup({ cache:false });
 
@@ -788,5 +842,3 @@ function get_unread_messages() {
             document.getElementById('unreadCount').textContent = '';
         })
 }
-
-
