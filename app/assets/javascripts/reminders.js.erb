@@ -13,20 +13,31 @@ $(document).on('ready page:load', function() {
       var action = form.attr("action");
       var newAction = action.substring(0, action.length-2) + reminder_id;
        
-      form.find("#Notification-Message").val(res.text);
+      form.find("#Notification-Message").val(res.text); 
       form.find(".emojionearea-editor").text(res.text);
       form.attr("action", newAction);
 
-        debugger;
-      var raw_date_time = res.date_time.substring(0, res.date_time.length - 10);
-      var date_time = raw_date_time;
-
-
-      form.find("#reminder-date-time").val(date_time);
+        
+      var raw_date_time = res.date_time;
+      var date_time = new Date(raw_date_time);
+      var formated_date_time = formatDate(date_time);
+      debugger;
+      form.find("#reminder-date-time").val(formated_date_time);
      }).error(function(){
         // alert("")
      });
   });
+
+function formatDate(date) {
+  var hours = date.getHours();
+  var minutes = date.getMinutes();
+  var ampm = hours >= 12 ? 'PM' : 'AM';
+  hours = hours % 12;
+  hours = hours ? hours : 12; // the hour '0' should be '12'
+  minutes = minutes < 10 ? '0'+minutes : minutes;
+  var strTime = hours + ':' + minutes + ' ' + ampm;
+  return  date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate() + "  " + strTime;
+}
 
   $('#reminder-customer-list').selectize({
     maxItems: 1,
