@@ -10,13 +10,13 @@
 
         <label class="field-headers form-label settings" for="Business-Name">Basic details</label>
           <div class="form-group col-xs-6">
-            <%= f.text_field :org_name, class: "form-control full-name settings text-field w-input", placeholder: "Business legal name", id: 'Business-Name' %>
+            <%= f.text_field :org_name, class: "form-control full-name settings text-field w-input", placeholder: "Business legal name" %>
             <div class="messageContainer"></div>
           </div>
         <label class="form-label paragraph" for="Organization-Type">Your business name will appear on both your customer’s card statement &amp; receipts. If your business doesn't have a name, enter your product or services and your city, e.g. “Bakery - New York”</label>
 
         <div class="form-group col-xs-6">
-          <select class="form-control organization-type w-select" id="Organization-Type" name="user[org_type]">
+          <select class="form-control organization-type w-select" name="user[org_type]">
           <option value="" disabled selected class='hide'>Organization Type</option>
             <option value="Business">Business</option>
             <option value="Nonprofit">Nonprofit</option>
@@ -26,7 +26,7 @@
         </div>
 
         <div class="form-group col-xs-6">
-          <select class="form-control business-category organization-type w-select" id="Business-category-optional" name="user[org_category]">
+          <select class="form-control business-category organization-type w-select" name="user[org_category]">
             <option value="">Business category (optional)</option>
             <option value="Beauty &amp; Spas">Beauty &amp; Spas</option>
             <option value="Charity">Charity</option>
@@ -59,7 +59,7 @@
 
         <label class="field-headers form-label settings" for="Street-Address">ADDRESS INFORMATION</label>
         <div class="form-group col-xs-6">
-          <%= f.text_field :street_address, type: "text", class: "form-control settings street-name text-field w-input", placeholder: "Street Address", id: "Street-Address" %>
+          <%= f.text_field :street_address, type: "text", class: "form-control settings street-name text-field w-input", placeholder: "Street Address" %>
           <div class="messageContainer"></div>
         </div>
 
@@ -68,7 +68,7 @@
         </div>
 
         <div class="form-group col-xs-6">
-          <%= f.text_field :city, class: "form-control city settings text-field w-input", placeholder: "City", id: 'City' %>
+          <%= f.text_field :city, class: "form-control city settings text-field w-input", placeholder: "City" %>
           <div class="messageContainer"></div>
         </div>
         <div class="form-group col-xs-6">
@@ -76,28 +76,24 @@
           <div class="messageContainer"></div>
         </div>
         <div class="form-group col-xs-6">
-          <%= f.text_field :zip_code, class: "form-control settings text-field w-input zip", placeholder: "Zip/Postal code", id: 'zip' %>
+          <%= f.text_field :zip_code, class: "form-control settings text-field w-input zip", placeholder: "Zip/Postal code" %>
           <div class="messageContainer"></div>
         </div>
         <div class="form-group col-xs-6">
-          <%= f.select :country, CountriesList::COUNTRIES_LIST.collect { |c| [ c[:name], c[:code] ] }, {  include_blank: true, prompt: 'Select country' }, { class: 'form-control country_dropdown w-select', id: 'country'  } %>  
+          <%= f.select :country, CountriesList::COUNTRIES_LIST.collect { |c| [ c[:name], c[:code] ] }, { include_blank: true, prompt: 'Select country' }, { class: 'form-control country_dropdown w-select' } %>  
         </div>
         
         <div class="flex-underline form-section-divider"></div>
         <label class="field-headers form-label settings" for="Website">other INFORMATION</label>
         <div class="form-group col-xs-6">
-          <%= f.text_field :url, id: 'Website', class: "form-control settings short-field text-field w-input", placeholder: "Website" %>
+          <%= f.text_field :url, class: "form-control settings short-field text-field w-input", placeholder: "Website" %>
           <div class="messageContainer"></div>
         </div>
         <div class="form-group col-xs-6">
-          <%= f.text_field :tax_percent, class: "form-control settings tax text-field w-input", placeholder: "Tax rate", id: "taxrate Tax-Rate" %>
+          <%= f.text_field :tax_percent, class: "form-control settings tax text-field w-input", placeholder: "5" %>
           <div class="messageContainer"></div>
         </div>
         <label class="form-label other-info paragraph" for="Re-enter-Password">Set the tax rate that will be applied to every transaction made by your customers via Rhombus. The default rate is set at zero.</label>
-
-
-        <%#<div class="flex-underline form-section-divider save"></div>%>
-        <%#= f.password_field :current_password, class: "re-enter-password settings text-field w-input", placeholder: "Re-enter current password", id: "reenterPassword" %>
 
         <%= f.submit "Save changes", id: "ba-submit", class: "button save-changes w-button" %>
         <input type="hidden" name="page_params" value="business_settings">

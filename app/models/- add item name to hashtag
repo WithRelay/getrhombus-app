@@ -23,6 +23,9 @@ business settings
 - add the customer count to slider
 - add the url for pages you did to the sidebar on dashboard and settings page
 
+- card error flash missing in registrations update
+- user auth in routes
+
 
 Friday
 - test parser - done
