@@ -20,10 +20,10 @@ $('#businessSetting').formValidation({
   excluded: ':disabled',
   live: 'disabled',
   err: {
-        container: function($field, validator) {
-            return $field.parent().find('.errorMessageContainer');
-        }
-    },
+    container: function($field, validator) {
+      return $field.parent().find('.errorMessageContainer');
+    }
+  },
   fields: {
     'user[org_name]': {
       validators: {
@@ -50,38 +50,38 @@ $('#businessSetting').formValidation({
       validators: {
         notEmpty: {
           message: 'street address is required'
-      }
-    }
-  },
-      'user[city]': {
-        validators: {
-          notEmpty: {
-            message: 'city is required'
-          }
-        }
-      },
-      'user[state_province]': {
-        validators: {
-          notEmpty: {
-            message: 'state province is required'
-          }
-        }
-      },
-      'user[zip_code]': {
-        validators: {
-          notEmpty: {
-            message: 'Zip code is required'
-          }
-        }
-      },
-      'user[country]' : {
-        validators: {
-          notEmpty: {
-            message: 'Country is required'
-          }
         }
       }
+    },
+    'user[city]': {
+      validators: {
+        notEmpty: {
+          message: 'city is required'
+        }
+      }
+    },
+    'user[state_province]': {
+      validators: {
+        notEmpty: {
+          message: 'state province is required'
+        }
+      }
+    },
+    'user[zip_code]': {
+      validators: {
+        notEmpty: {
+          message: 'Zip code is required'
+        }
+      }
+    },
+    'user[country]' : {
+      validators: {
+        notEmpty: {
+          message: 'Country is required'
+        }
+      }
     }
+  }
 });
 
   $.ajaxSetup({ cache:false });
