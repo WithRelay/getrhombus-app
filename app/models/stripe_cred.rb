@@ -9,6 +9,7 @@ class StripeCred < ActiveRecord::Base
   def self.from_omniauth(auth, id)
     begin
        where(user_id: id).first_or_initialize.tap do |row|
+          row.email = auth.info.email
           row.uid = auth.uid
           row.uid_type = 1
           row.secret = auth.credentials.token

@@ -30,4 +30,8 @@ module UsersHelper
     '101 - 200 employees', '201 - 500 employees', '501 - 1000 employees',
     '1001 - 3000 employees', '3001 - 5000 employees', '5000+ employees']
   end
+
+  def stripe_standalone_cred
+    current_user.stripe_creds.where(uid_type: 1)[0]
+  end
 end

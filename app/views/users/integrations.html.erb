@@ -12,10 +12,10 @@
         <% if current_user.fb_creds.present? %>
           <p>Connected to Facebook as
             <span style="color: blue"> 
-              <i class="fa fa-user"></i> <%= fb_user_name %>
+              <%= fb_user_name %>
             </span>
           </p>
-          <%= link_to "Page Setting", user_fb_pages_path(current_user), class: "button integrate-button w-button" %>
+          <%= link_to "Facebook Page Setting", user_fb_pages_path(current_user), class: "button integrate-button w-button" %>
         <%else%>
           <%= link_to "Connect Facebook", user_facebook_omniauth_authorize_path, class: "button integrate-button w-button", data: {disable_with: 'Please wait...'} %>
         <%end%>
@@ -43,7 +43,12 @@
           <p class="integration-description-paragraph">Stripe is the best software platform for running an internet business. We handle billions of dollars every year for forward-thinking businesses around the world.</p>
         </div>
         <div class="w-clearfix w-col w-col-3">
-          <% if current_user.stripe_creds.where(uid_type: 1).present? %>
+          <% if stripe_standalone_cred.present? %>
+            <p>Connected to Stripe as
+              <span style="color: blue">
+                <%= stripe_standalone_cred.email %>
+              </span>
+            </p>
             <%= link_to "Disconnect Stripe", remove_stripe_integration_user_path(current_user), id:'remove_stripe_integration', class: "button integrate-button w-button", data: {disable_with: 'Please wait...'} %>
           <%else%>
             <%= link_to "Connect Stripe", user_stripe_connect_omniauth_authorize_path, class: "button integrate-button w-button", data: {disable_with: 'Please wait...'} %>
