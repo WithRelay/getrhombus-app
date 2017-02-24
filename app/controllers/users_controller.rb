@@ -44,11 +44,11 @@ private
 
   def user_params
     params.require(:user).permit(:id, :org_type, :org_name, :url, :org_tax_id, :description, :tos_acceptance,
-      address_attributes: [:id, :city, :street_address, :state_province, :country, :postal_code],
+      address_attributes: [:id, :city, :street_address, :suite, :state_province, :country, :postal_code],
       bank_accounts_attributes: [:id, :routing_number, :country, :currency, :account_number,
                                  :institution_number],
       people_attributes: [:id, :gender, :business_name, :full_name, :dob, :last4, :role, :_destroy,
-      address_attributes: [:street_address, :state_province, :id, :country, :postal_code, :state_province,
+      address_attributes: [:street_address, :suite, :state_province, :id, :country, :postal_code, :state_province,
                            :city]],
       stripe_creds_attributes: [:id, :charges_enabled, :transfers_enabled])
   end

@@ -48,7 +48,7 @@ class ApplicationController < ActionController::Base
         :rhombus_number, :team_size, :use_rhombus_for, :rn_type, :rn_country,
         :phone_number, :org_name, :org_category, :org_phone, :currency,
         :tax_percent, :url, :custom_welcome, :time_zone, :zip_code,
-        :state_province, :city, :street_address, :country, :org_type,
+        :state_province, :city, :street_address, :suite, :country, :org_type,
         people_attributes: [:id, :full_name]
       )}
     end
