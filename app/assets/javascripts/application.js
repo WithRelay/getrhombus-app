@@ -29,6 +29,7 @@
 
 // We need to place these js before jquery ujs for workable confirmation dialog box
 //= require flashes
+//= require get_started
 //= require hashtags_plans_coupons_alerts
 //= require plan
 //= require coupon
@@ -74,7 +75,6 @@
 //= require credit_card_form
 //= require price_slider
 //= require refer_a_business
-//= require get_started
 //= require modernizr
 //= require webflow
 //= require custom

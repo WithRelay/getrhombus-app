@@ -16,7 +16,7 @@
         <label class="form-label paragraph" for="Organization-Type">Your business name will appear on both your customer’s card statement &amp; receipts. If your business doesn't have a name, enter your product or services and your city, e.g. “Bakery - New York”</label>
 
         <div class="form-group col-xs-6">
-          <select class="form-control organization-type w-select" id="Organization-Type" name="Organization-Type">
+          <select class="form-control organization-type w-select" id="Organization-Type" name="user[org_type]">
           <option value="" disabled selected class='hide'>Organization Type</option>
             <option value="Business">Business</option>
             <option value="Nonprofit">Nonprofit</option>
@@ -26,7 +26,7 @@
         </div>
 
         <div class="form-group col-xs-6">
-          <select class="form-control business-category organization-type w-select" data-name="Business category (optional)" id="Business-category-optional" name="Business-category-optional">
+          <select class="form-control business-category organization-type w-select" id="Business-category-optional" name="user[org_category]">
             <option value="">Business category (optional)</option>
             <option value="Beauty &amp; Spas">Beauty &amp; Spas</option>
             <option value="Charity">Charity</option>
