@@ -6,26 +6,31 @@
       <div class="w-clearfix w-col w-col-9">
         <img class="integration-partner-icon" src="/assets/messenger-logo.png" width="50">
         <h4 class="integration-partner-name">Facebook Messenger</h4>
-        <p class="integration-description-paragraph">Facebook Messenger connects people with friends and businesses across platforms and devices.This integration allows your customers to chat with your team from Facebook and the Messenger app.</p>
+        <p class="integration-description-paragraph">
+          Facebook Messenger connects people with friends and businesses across platforms and devices.This integration allows your customers to chat with your team from Facebook and the Messenger app.
+        </p>
       </div>
       <div class="w-clearfix w-col w-col-3">
         <% if current_user.fb_creds.present? %>
-          <p>Connected to Facebook as
-            <span style="color: blue"> 
-              <i class="fa fa-user"></i> <%= fb_user_name %>
+          <%= link_to "Facebook Page Setting", user_fb_pages_path(current_user), class: "button integrate-button w-button" %>
+          <p class="integration-text">Connected to Facebook as
+            <span>
+              <b><%= fb_user_name %></b>
             </span>
           </p>
-          <%= link_to "Page Setting", user_fb_pages_path(current_user), class: "button integrate-button w-button" %>
         <%else%>
           <%= link_to "Connect Facebook", user_facebook_omniauth_authorize_path, class: "button integrate-button w-button", data: {disable_with: 'Please wait...'} %>
         <%end%>
       </div>
     </div>
+    <div class="flex-underline form-header-underline"></div>
     <div class="integrations-row w-row">
       <div class="w-clearfix w-col w-col-9">
         <img class="integration-partner-icon" src="/assets/twitter-logo.png" width="50">
         <h4 class="integration-partner-name">Twitter</h4>
-        <p class="integration-description-paragraph">Twitter allows your business to send and read short 140-character messages from customers and followers.This integration allows you to create Hashtags in Relay and broadcast it to all your customers on Twitter</p>
+        <p class="integration-description-paragraph">
+          Twitter allows your business to send and read short 140-character messages from customers and followers.This integration allows you to create Hashtags in Relay and broadcast it to all your customers on Twitter
+        </p>
       </div>
       <div class="w-clearfix w-col w-col-3">
         <% if current_user.twitter_cred.present? %>
@@ -35,16 +40,24 @@
         <%end%>
       </div>
     </div>
+    <div class="flex-underline form-header-underline"></div>
     <% if current_user.is_platform? %>
       <div class="integrations-row w-row">
         <div class="w-clearfix w-col w-col-9">
           <img class="integration-partner-icon" src="/assets/stripe.png" width="50">
           <h4 class="integration-partner-name">Stripe</h4>
-          <p class="integration-description-paragraph">Stripe is the best software platform for running an internet business. We handle billions of dollars every year for forward-thinking businesses around the world.</p>
+          <p class="integration-description-paragraph">
+            Stripe is the best software platform for running an internet business. We handle billions of dollars every year for forward-thinking businesses around the world.
+          </p>
         </div>
         <div class="w-clearfix w-col w-col-3">
-          <% if current_user.stripe_creds.where(uid_type: 1).present? %>
+          <% if stripe_standalone_cred.present? %>
             <%= link_to "Disconnect Stripe", remove_stripe_integration_user_path(current_user), id:'remove_stripe_integration', class: "button integrate-button w-button", data: {disable_with: 'Please wait...'} %>
+             <p class="integration-text">Connected to:
+              <span>
+                <b><%= stripe_standalone_cred.email %><b>
+              </span>
+            </p>
           <%else%>
             <%= link_to "Connect Stripe", user_stripe_connect_omniauth_authorize_path, class: "button integrate-button w-button", data: {disable_with: 'Please wait...'} %>
           <%end%>

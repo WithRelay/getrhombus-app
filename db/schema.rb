@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170224020157) do
+ActiveRecord::Schema.define(version: 20170224223404) do
 
   create_table "addresses", force: :cascade do |t|
     t.string   "street_address",   limit: 191
@@ -553,6 +553,7 @@ ActiveRecord::Schema.define(version: 20170224020157) do
   add_index "saved_replies", ["user_id"], name: "index_saved_replies_on_user_id", using: :btree
 
   create_table "stripe_creds", force: :cascade do |t|
+    t.string   "email",             limit: 191
     t.string   "secret",            limit: 191
     t.string   "publishable_key",   limit: 191
     t.string   "uid",               limit: 191
