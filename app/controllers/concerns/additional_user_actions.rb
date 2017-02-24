@@ -16,6 +16,15 @@ module AdditionalUserActions
     redirect_to integrations_user_path
   end
 
+  def remove_stripe_integration
+    if current_user.stripe_creds.where(uid_type: :standalone).destroy_all
+      flash[:notice] = 'Stripe integration removed successfully'
+    else
+      flash[:error] = 'Something went wrong'
+    end
+    redirect_to integrations_user_path
+  end
+
   def refer_business
     if params[:referrer].present?
       @referrer = Referrer.new(referrer_params)

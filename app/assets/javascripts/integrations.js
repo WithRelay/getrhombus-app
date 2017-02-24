@@ -37,7 +37,7 @@ $( document ).ready(function() {
   $('#delete_integration').click(function (evt) {
     if (!$('#delete_integration').attr('isDestroy')) {
       FlashHandler.setConfirmationDialog('#delete_integration',
-        'Are you sure, you want to remove the integration?', 'Remove Integration', 'isDestroy' );
+        'Are you sure, you want to remove the Messenger integration?', 'Remove Integration', 'isDestroy' );
       return false;
     }
   });
@@ -98,7 +98,15 @@ $( document ).ready(function() {
    $('#remove_twitter_integration').click(function (evt) {
      if (!$('#remove_twitter_integration').attr('isDestroy')) {
        FlashHandler.setConfirmationDialog('#remove_twitter_integration',
-         'Are you sure, you want to remove the integration?', 'Remove Integration', 'isDestroy' );
+         'Are you sure, you want to remove the twitter integration?', 'Remove Integration', 'isDestroy' );
+       return false;
+     }
+   });
+
+   $('#remove_stripe_integration').click(function (evt) {
+     if (!$('#remove_stripe_integration').attr('isDestroy')) {
+       FlashHandler.setConfirmationDialog('#remove_stripe_integration',
+         'Are you sure, you want to remove the stripe integration?', 'Remove Integration', 'isDestroy' );
        return false;
      }
    });

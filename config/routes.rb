@@ -97,6 +97,7 @@ Rails.application.routes.draw  do
         get 'notifications' => 'alerts#edit'
         get 'lists' => 'users#lists'
         get 'integrations' => 'users#integrations'
+        get 'remove_stripe_integration' => 'users#remove_stripe_integration'
         get 'remove_twitter_integration' => 'users#remove_twitter_integration'
         match 'refer_business' => 'users#refer_business', via: [:get, :post]
         get 'customers' => 'merchant_customers#index'
