@@ -80,7 +80,7 @@
           <div class="messageContainer"></div>
         </div>
         <div class="form-group col-xs-6">
-          <%= f.select :country, CountriesList::COUNTRIES_LIST.collect { |c| [ c[:name], c[:code] ] }, {  include_blank: true, prompt: 'Select country' }, { class: 'form-control country_dropdown w-select', id: 'country'  } %>  
+          <%= f.select :country, CountriesList::COUNTRIES_LIST.collect { |c| [ c[:name], c[:code] ] }, { include_blank: true, prompt: 'Select country' }, { class: 'form-control country_dropdown w-select', id: 'country'  } %>  
         </div>
         
         <div class="flex-underline form-section-divider"></div>
@@ -90,7 +90,7 @@
           <div class="messageContainer"></div>
         </div>
         <div class="form-group col-xs-6">
-          <%= f.text_field :tax_percent, class: "form-control settings tax text-field w-input", placeholder: "Tax rate", id: "taxrate Tax-Rate" %>
+          <%= f.text_field :tax_percent, class: "form-control settings tax text-field w-input", placeholder: "5", id: "taxrate Tax-Rate" %>
           <div class="messageContainer"></div>
         </div>
         <label class="form-label other-info paragraph" for="Re-enter-Password">Set the tax rate that will be applied to every transaction made by your customers via Rhombus. The default rate is set at zero.</label>
