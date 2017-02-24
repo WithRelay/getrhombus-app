@@ -13,16 +13,16 @@ module AdditionalUserActions
     else
       flash[:error] = 'Something went wrong'
     end
-    redirect_to integrations_user_path
+    redirect_to integrations_user_path(current_user)
   end
 
   def remove_stripe_integration
-    if current_user.stripe_creds.where(uid_type: :standalone).destroy_all
+    if current_user.stripe_creds.where(uid_type: 1).destroy_all
       flash[:notice] = 'Stripe integration removed successfully'
     else
       flash[:error] = 'Something went wrong'
     end
-    redirect_to integrations_user_path
+    redirect_to integrations_user_path(current_user)
   end
 
   def refer_business

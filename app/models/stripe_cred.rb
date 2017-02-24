@@ -13,8 +13,8 @@ class StripeCred < ActiveRecord::Base
           row.uid_type = 1
           row.secret = auth.credentials.token
           row.publishable_key = auth.info.stripe_publishable_key
-          row.stripe_scope = auth.info.scope
-          row.stripe_livemode = auth.info.livemode
+          row.scope = auth.info.scope
+          row.livemode = auth.info.livemode
           row.save
        end
       true
