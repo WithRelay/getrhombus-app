@@ -15,7 +15,7 @@
           </div>
         <label class="form-label paragraph" for="Organization-Type">Your business name will appear on both your customer’s card statement &amp; receipts. If your business doesn't have a name, enter your product or services and your city, e.g. “Bakery - New York”</label>
 
-        <div class="form-group col-xs-6">
+        <div class="form-group col-xs-6 inline-display">
           <select class="form-control organization-type w-select" name="user[org_type]">
           <option value="" disabled selected class='hide'>Organization Type</option>
             <option value="Business">Business</option>
@@ -25,36 +25,30 @@
           </select>
         </div>
 
-        <div class="form-group col-xs-6">
-          <select class="form-control business-category organization-type w-select" name="user[org_category]">
-            <option value="">Business category (optional)</option>
-            <option value="Beauty &amp; Spas">Beauty &amp; Spas</option>
-            <option value="Charity">Charity</option>
-            <option value="Cleaning Service">Cleaning Service</option>
-            <option value="Coffee Shop">Coffee Shop</option>
-            <option value="Concierge Services">Concierge Services</option>
-            <option value="Ecommerce">Ecommerce</option>
-            <option value="Financial Services">Financial Services</option>
-            <option value="Home &amp; Repair Services">Home &amp; Repair Services</option>
-            <option value="Hotel &amp; Travel">Hotel &amp; Travel</option>
-            <option value="Health &amp; Fitness">Health &amp; Fitness</option>
-            <option value="Individual">Individual</option>
-            <option value="Local Services">Local Services</option>
-            <option value="On-demand Delivery">On-demand Delivery</option>
-            <option value="Pets">Pets</option>
-            <option value="Professional Services">Professional Services</option>
-            <option value="Religious Organization">Religious Organization</option>
-            <option value="Restaurant">Restaurant</option>
-            <option value="Retail">Retail</option>
-            <option value="Taxi &amp; Limousine">Taxi &amp; Limousine</option>
-            <option value="Other">Other</option>
-          </select>
-        </div>
+        <select class="form-control business-category organization-type w-select" name="user[org_category]">
+          <option value="">Business category (optional)</option>
+          <option value="Beauty &amp; Spas">Beauty &amp; Spas</option>
+          <option value="Charity">Charity</option>
+          <option value="Cleaning Service">Cleaning Service</option>
+          <option value="Coffee Shop">Coffee Shop</option>
+          <option value="Concierge Services">Concierge Services</option>
+          <option value="Ecommerce">Ecommerce</option>
+          <option value="Financial Services">Financial Services</option>
+          <option value="Home &amp; Repair Services">Home &amp; Repair Services</option>
+          <option value="Hotel &amp; Travel">Hotel &amp; Travel</option>
+          <option value="Health &amp; Fitness">Health &amp; Fitness</option>
+          <option value="Individual">Individual</option>
+          <option value="Local Services">Local Services</option>
+          <option value="On-demand Delivery">On-demand Delivery</option>
+          <option value="Pets">Pets</option>
+          <option value="Professional Services">Professional Services</option>
+          <option value="Religious Organization">Religious Organization</option>
+          <option value="Restaurant">Restaurant</option>
+          <option value="Retail">Retail</option>
+          <option value="Taxi &amp; Limousine">Taxi &amp; Limousine</option>
+          <option value="Other">Other</option>
+        </select>
 
-        <div class="form-group col-xs-6">
-          <%= f.phone_field :org_phone, id: "phone_number", class: "settings text-field w-input form-control", placeholder: "Business phone number" %>
-          <div class="messageContainer"></div>
-        </div>
         <div class="flex-underline form-section-divider"></div>
 
         <label class="field-headers form-label settings" for="Street-Address">ADDRESS INFORMATION</label>
@@ -64,7 +58,7 @@
         </div>
 
         <div class="form-group col-xs-6">
-          <%= f.text_field :suite, type: "text", class: "form-control apt_suite settings text-field w-input", placeholder: "Suite", id: "APT-Suite" %>
+          <%= f.text_field :suite, type: "text", class: "form-control apt_suite settings text-field w-input", placeholder: "Suite" %>
         </div>
 
         <div class="form-group col-xs-6">

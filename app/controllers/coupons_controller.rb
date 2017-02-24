@@ -1,22 +1,17 @@
 class CouponsController < ApplicationController
-  before_action :set_coupon, only: [:show, :destroy]
+  
   include DashboardNotification
+  
+  before_action :set_coupon, only: [:show, :destroy]
   before_action :set_notifications
+  
   respond_to :html
 
   def index
     # get subscription id to use to determine if destroy link should show up
+    @coupon = Coupon.new
     @coupons = coupons
     respond_with(@coupons)
-  end
-
-  def show
-    respond_with(@coupon)
-  end
-
-  def new
-    @coupon = current_user.coupons.build
-    respond_with(@coupon)
   end
 
   def create

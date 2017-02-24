@@ -259,7 +259,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
           $scope.send_msg_btn = "Sending...";
           console.log(new_message)
           // twilio allow 1600 characters
-          if ((new_message == undefined) || (new_message.text == '') || (new_message.text.length > $scope.char_limit)) {
+          /*if ((new_message == undefined) || (new_message.text == '') || (new_message.text.length > $scope.char_limit)) {
             alert('Maximum ' + $scope.char_limit + ' characters.');
           } else {
             $http({
@@ -290,7 +290,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
             error(function(data, status, headers, config) {
               alert('The message could not be sent, please try again.');
             });*/
-          }
+          //}
           $scope.is_sending = false;
           $scope.send_msg_btn = "Reply";
         };

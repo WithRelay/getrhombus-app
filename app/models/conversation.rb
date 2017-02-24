@@ -30,7 +30,7 @@ class Conversation < ActiveRecord::Base
     last_message = ConversationRef.where(conversation_id: self.id).last
     if last_message.present?
       last_message = last_message.textable
-      last_message.text = 'image attached' if last_message.text.blank? && last_message.images.exists?
+      last_message.text = 'image attached' if last_message.present? && last_message.text.blank? && last_message.images.exists?
     end
     
     {

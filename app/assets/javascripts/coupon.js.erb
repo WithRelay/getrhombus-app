@@ -40,33 +40,41 @@ $(document).ready(function () {
         live: 'disabled',
         // List of fields and their validation rules
         fields: {
-            'coupon[name]': {
-                validators: {
-                  notEmpty: {
-                        message: 'Coupon name is required'
-                  },
-                  remote: {
-                      message: 'This coupon name has already been used.',
-                      url: '/v1/coupons/check_coupon_name',
-                      type: 'POST'
-                  }
-                }
-            },
-              'coupon[amount_off]': {
-                 selector: '#coupon-type-value',
-                 validators: {
-                      notEmpty: {
-                          message: 'Amount off is required'
-                      }
-                  }
-                },
-              'coupon[duration_in_months]':{
-                  validators: {
-                    notEmpty: {
-                      message: 'Required when creating a coupon with a repeating duration'
-                    }
-                  }
+          'coupon[name]': {
+            validators: {
+              notEmpty: {
+                message: 'Coupon name is required'
+              },
+              remote: {
+                message: 'This coupon name has already been used.',
+                url: '/v1/coupons/check_coupon_name',
+                type: 'POST'
               }
+            }
+          },
+          'coupon[amount_off]': {
+             selector: '#coupon-type-value',
+             validators: {
+                notEmpty: {
+                  message: 'Amount off is required'
+                }
+              }
+            },
+          'coupon[percent_off]': {
+             selector: '#coupon-type-value',
+             validators: {
+                notEmpty: {
+                  message: 'Percent off is required'
+                }
+              }
+            },
+          'coupon[duration_in_months]':{
+              validators: {
+                notEmpty: {
+                  message: 'Required when creating a coupon with a repeating duration'
+                }
+              }
+            }
           }
         })
       .on('success.validator.fv', function(e, data) {
@@ -155,17 +163,18 @@ $(document).ready(function () {
       });
   };
 
+  $(document).on('click', '.delete-coupon', function(evt) {
+    var selector = '.' + evt.target.classList[evt.target.classList.length - 1 ];
+
+    if (!$(selector).attr('isDestroy')) {
+      evt.stopImmediatePropagation();
+      FlashHandler.setConfirmationDialog(selector,
+       'Deleting this coupon will not affect discounts for customers who have already redeemed the coupon, but new redemptions of the coupon won\'t be allowed.',
+       'Delete coupon', 'isDestroy'
+      );
+      return false;
+    }
+  });
+
 });
 
-$(document).on('click', '.delete-coupon', function(evt) {
-  var selector = '.' + evt.target.classList[evt.target.classList.length - 1 ];
-
-  if (!$(selector).attr('isDestroy')) {
-    evt.stopImmediatePropagation();
-    FlashHandler.setConfirmationDialog(selector,
-     'Deleting this coupon will not affect discounts for customers who have already redeemed the coupon, but new redemptions of the coupon won\'t be allowed.',
-     'Delete coupon', 'isDestroy'
-    );
-    return false;
-  }
-});

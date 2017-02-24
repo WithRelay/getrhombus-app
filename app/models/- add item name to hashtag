@@ -6,6 +6,7 @@ Add profile info
 signup form
 - sign up form can have devise/database error but not showing up. 
 - capture phone number not unique check from database - see application controller
+- sign up not signing up
 
 rhombus number form
 - no flash message ... probably in signup and profile info forms
@@ -13,18 +14,23 @@ rhombus number form
 add card info, add subscription, billing info
 - flash message not showing...also needs to show devise error
 
-business settings
-- plug in org_type, org_category
-
 - Header not fully dynamic
-- client side validations for account/business settings pages
+- client side validations for account settings pages
+- validation for url, tax rate on business settings field
 - remove the phone number field from business settings
 
-- add the customer count to slider
 - add the url for pages you did to the sidebar on dashboard and settings page
 
 - card error flash missing in registrations update
+- instead of checking for if the key exists, enforce that that method run for that specific page_params
 - user auth in routes
+- address_attributes params twice in user controller
+- only platform should see stripe connnct...is that right?
+
+- new customers in dashboard header
+- new header when signed in
+
+- EVERYONE CLEAN UP YOUR ROUTES and CONTROLLERS
 
 
 Friday
@@ -39,35 +45,23 @@ Everyone
 
 Torchi
 - review merchant customer
-- review hashtag js
 - review saved replies
 - reminders create is a popup, appears on
 	- http://relay-test.webflow.io/customer-reminders, http://relay-test.webflow.io/customer-profile and conversations page
 	- use only one popup across all pages
+	- no need to show customer search dropdown on customers page
 
 Edwin
 - allow red alert to have multiple lines
 
 Surya
-- emojionearea from campaigns showing up in hashtag...check for unique id before appending emojiareas - implement for hashtag
-- add emojionearea to reminders. 
-- sign up workflow for merchants?? check active saas subscription?
 - notifications header issue...not consistent across pages
 - campaigns new 
+	- no campaign... subnav New Campaign button link not set
 	- image attachment view/behavior - see implementation in hashtags create
-	- give sub nav higher z-index cos of emoji -- if you scroll down and the text box is under the subnav, the emoji icon will still show up
-	- on index page, show subnav even if there are no campaigns
-	- hide subject/from subnav if not email, 
-	- character counter formatting is incorrect...
+	- character counter format still incorrect...
 
 Bhishma
-- pricing page doesnt have slider (no max and min)
-- repeated plan
-- if statements... should have >= 
-- create_saas_subscription
-- reduce repeated calls for saas_sub
-- invoices are incorrect
-- you can query for today and yesterday directly
 - reduce repeated calls/queries
 - account-setting form doesnt have two ids.... genereally you replace the one from webflow... we dont necessarily merge the forms...of course there will be 2 ids
 

@@ -25,7 +25,6 @@ $(document).ready(function () {
 
   };
 
-
   // no spaces
   $('#hashtag_tag, #coupon-name').on('input', function(){ this.value = this.value.replace(/\s+/g, ''); });
 
@@ -127,16 +126,20 @@ $(document).ready(function () {
   });
 
   coupon_type.on('change', function() {
-    // $('#couponForm').formValidation('resetField', 'coupon[amount_off]');
-    var name_value = (this.value == 'amount_off') ? "coupon[amount_off]" : "coupon[percent_off]",
-      placeholder_value = (this.value == 'amount_off') ? "Amount" : "Percentage"
+    var name_value, placeholder_value;
+
+    if (this.value == 'amount_off') {
+      name_value = "coupon[amount_off]";
+      placeholder_value = "Amount";
+      $('#couponForm').formValidation('resetField', 'coupon[percent_off]');
+    } else {
+      name_value = "coupon[percent_off]";
+      placeholder_value = "Percentage";
+      $('#couponForm').formValidation('resetField', 'coupon[amount_off]');
+    }
+
     coupon_type_value.val('').attr('name', name_value);
     coupon_type_value.attr('placeholder', placeholder_value);
-    // var text = (name_value === 'coupon[percent_off]')?
-    //   "Percent off is required" : "Amount off is required";
-    // if ($('.dynamic-coupon').find('small')){
-    //   $('.dynamic-coupon').find('small').text(text);
-    // }
   });
 
 

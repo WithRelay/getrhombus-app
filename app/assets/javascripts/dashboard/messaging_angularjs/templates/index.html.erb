@@ -1,5 +1,4 @@
 
-
   <div class="messaging sub-nav-bar">
     <div class="w-row">
       <div class="w-col w-col-4"></div>
@@ -49,7 +48,7 @@
           <div class="message-tab-picture-column w-col w-col-2">
             <div class="w-clearfix">
               <%# combined color and image div into the same a tag %>
-              <div class="no-image-found-placeholder" ng-class="{ 'no-image-found-placeholder' : true, 'radius-color-{{conversation.profile_image.value}}' : true }" ng-if="conversation.profile_image.type == 'color'">
+              <div ng-class="{ 'no-image-found-placeholder' : true, 'radius-color-{{conversation.profile_image.value}}' : true }" ng-if="conversation.profile_image.type == 'color'">
                 <div class="customer-initial">{{ conversation.uid_type == 'user' ? conversation.full_name.charAt(0) : '#' }}</div>
               </div>
               
@@ -62,15 +61,13 @@
             </div>
           </div>
 
-          <div class="name-and-preview-column w-clearfix w-col w-col-9">
-            <div class="customer-name-text shrink-text">{{conversation.full_name}}</div>
-            <div class="message">{{conversation.last_message}}</div>
-          </div>
-
-          <div class="time-and-counter-column w-clearfix w-col w-col-1">
-            <div class="messaging-dash-variable-text">{{conversation.ago}}</div>
+          <div class="name-and-preview-column w-clearfix w-col w-col-10">
+            <div class="customer-name-text shrink-text w-clearfix">{{conversation.full_name}} <span class="message-delivery-time">{{conversation.ago}}</span>
+            </div>
+            <div class="break-word message word-wrap">{{conversation.last_message}}</div>
             <div class="message-counter" ng-show="conversation.unread_count > 0">{{conversation.unread_count}}</div>
           </div>
+
         </div>
       </a>
       
@@ -92,17 +89,15 @@
                   <a class="message-input-box-option-buttons payment-info-collection-link w-inline-block" id='paste-link'>
                     <div class="message-input-options-text"> &nbsp; &nbsp;Collect payment card</div>
                   </a>
-                  <!--
                   <a class="message-input-box-option-buttons w-inline-block" ng-click="newReminderDiv()">
                     <div class="message-input-options-text"> &nbsp; Set reminder</div>
-                  </a> -->
+                  </a>
                   <a class="message-input-box-option-buttons w-inline-block" ng-click='displayChargeForm()'>
                     <div class="message-input-options-text"> &nbsp;&nbsp;Charge customer</div>
                   </a>
-                  <!--
                   <a class="message-input-box-option-buttons w-inline-block" ng-click='markAsDoneDiv()'>
                     <div class="message-input-options-text"> &nbsp; Mark as done</div>
-                  </a>-->
+                  </a>
                   <div class="message-input-dropdown-underline underline-div"></div>
                   <a class="message-input-box-option-buttons w-inline-block" ng-click="clickFilePicker()">
                     <div class="message-input-options-text"> &nbsp; &nbsp;Attach image</div>
@@ -115,9 +110,7 @@
             </div>
           </div>
           <div class="message-input-box-column-2 w-col w-col-11">
-            <textarea class="message-text-box text-area w-input" id="Messaging-Text-Area" maxlength="5000" placeholder="Type your message..." ng-model="new_message.text" ng-trim="true" ng-enter></textarea>
-          </div>
-          <div class="message-input-box-column-3 w-col w-col-1"><a class="button send-message-button w-button" ng-click="sendConversationMessage(new_message, 'Message')"></a>
+            <textarea class="message-text-box text-area w-input" id="Messaging-Text-Area" placeholder="Type your message..." ng-model="new_message.text" ng-enter="sendConversationMessage(new_message, 'Message')"></textarea>
           </div>
         </div>
     </div>
@@ -154,6 +147,7 @@
                 </div>
                 <div class="w-col w-col-3">
                   <div class="messaging-dash-variable-text transactions-div-table">4m</div>
+                  <%# add refund slider %>
                   <div class="expand refund-slider"></div>
                 </div>
               </div>
@@ -179,7 +173,7 @@
             </div>
           </a>
           <a class="transactions-div-wrapper w-inline-block" >
-            <div class="transaction-div" data-ix="display-refund-options">
+            <div class="transaction-div">
               <div class="right-nav-transaction-div-table w-row">
                 <div class="right-nav-transaction-div-column-1 w-col w-col-9">
                   <div class="right-nav-amount-text">$127.10</div>
@@ -195,7 +189,7 @@
         </div>
         <div class="transaction-pane w-tab-pane" data-w-tab="Tab 2">
           <a class="transactions-div-wrapper w-inline-block" >
-            <div class="transaction-div" data-ix="display-refund-options">
+            <div class="transaction-div">
               <div class="right-nav-transaction-div-table w-row">
                 <div class="w-col w-col-8">
                   <div class="right-nav-amount-text">VIP Customer</div>
@@ -208,7 +202,7 @@
             </div>
           </a>
           <a class="transactions-div-wrapper w-inline-block" >
-            <div class="transaction-div" data-ix="display-refund-options">
+            <div class="transaction-div">
               <div class="right-nav-transaction-div-table w-row">
                 <div class="w-col w-col-8">
                   <div class="right-nav-amount-text">New York Customer</div>

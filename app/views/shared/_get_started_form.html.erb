@@ -2,7 +2,7 @@
   <h1 class="first-content-section-sub-header footer-cta-header">Start your free trial</h1>
   <h5 class="footer-cta-subheading signup-box-subheading">TRY IT FREE FOR 14-DAYS, NO LONG-TERM COMMITMENT</h5>
   <div class="footer-cta-forms w-form">
-    <%= form_for('user', url: 'users/sign_up', method: :get, html: { id: "get-started-form", class:'w-clearfix' } ) do |f| %>
+    <%= form_for('user', url: new_user_registration_path, method: :get, html: { id: "get-started-form", class:'w-clearfix' } ) do |f| %>
 
       <div class="form-group col-xs-6">
         <%= f.text_field 'email', placeholder: 'Email Address', class: 'form-control footer-cta-field text-field w-input' %>

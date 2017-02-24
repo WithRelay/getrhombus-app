@@ -49,7 +49,7 @@ var PriceSlider = new function() {
     priceValueSpan.innerHTML = selection[1];
 
     // for add a subscription page
-    if ($('#add_subscription').length) {
+    if ($('#page_params').attr("name") == 'add_subscription') {
       if (pricingSlider.value <= 100) {
         $('#cc-fields').slideUp(300);
         $('#cc-submit').val('Get Started');

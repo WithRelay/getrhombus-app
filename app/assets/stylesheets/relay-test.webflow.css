@@ -1040,6 +1040,42 @@ h4 {
   color: hsla(0, 0%, 100%, .75);
 }
 
+.button.html-email-button {
+  display: block;
+  margin-top: 50px;
+  margin-right: auto;
+  margin-left: auto;
+  padding-top: 11px;
+  float: none;
+  text-align: center;
+}
+
+.button.html-email-button.password-reset {
+  margin-top: 20px;
+}
+
+.button.html-email-button.receipt {
+  display: inline-block;
+  margin-top: 0px;
+}
+
+.button.html-email-button.receipt.cta {
+  display: inline-block;
+  margin-right: auto;
+  margin-left: 10px;
+  background-color: transparent;
+  color: #1280e0;
+}
+
+.button.html-email-button.receipt.cta:hover {
+  border-color: #0f649a;
+  color: #0f649a;
+}
+
+.button.html-email-button.add-credit {
+  text-align: center;
+}
+
 .nav-form {
   width: 200px;
   float: left;
@@ -1466,6 +1502,7 @@ h4 {
 }
 
 .text-field.settings.street-name {
+  display: inline-block;
   width: 47%;
   margin-right: 3%;
   float: left;
@@ -1476,6 +1513,7 @@ h4 {
 }
 
 .text-field.settings.apt_suite {
+  display: inline-block;
   width: 30%;
   margin-left: 0%;
   float: left;
@@ -1485,6 +1523,7 @@ h4 {
 }
 
 .text-field.settings.city {
+  display: inline-block;
   width: 25%;
   margin-right: 3%;
   float: left;
@@ -1494,6 +1533,7 @@ h4 {
 }
 
 .text-field.settings.state {
+  display: inline-block;
   width: 25%;
   margin-right: 3%;
   margin-left: 0%;
@@ -1504,6 +1544,7 @@ h4 {
 }
 
 .text-field.settings.zip {
+  display: inline-block;
   width: 24%;
   margin-left: 0%;
   float: left;
@@ -2481,7 +2522,7 @@ h4 {
 }
 
 .first-content-section-sub-header.pricing-header {
-  margin: 30px 10% 20px;
+  margin: 40px 10% 20px;
   font-family: 'Akkurat light regular', sans-serif;
   color: #2e2e7f;
   text-align: center;
@@ -2644,6 +2685,7 @@ h4 {
 }
 
 .underline-div {
+  width: 100%;
   height: 1px;
   margin-bottom: 50px;
   background-color: #dde5ed;
@@ -2716,6 +2758,20 @@ h4 {
   margin-bottom: 20px;
 }
 
+.underline-div.price-table {
+  display: block;
+  width: 50%;
+  margin-right: auto;
+  margin-bottom: 30px;
+  margin-left: auto;
+  background-color: #e6e5e5;
+}
+
+.underline-div.html-email {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
 .tab {
   margin-right: 2%;
   padding-right: 30px;
@@ -2775,7 +2831,7 @@ h4 {
   -webkit-transition: color 300ms ease;
   transition: color 300ms ease;
   font-family: 'Akkurat regular', sans-serif;
-  color: #1f8cec;
+  color: #1280e0;
   font-size: 14px;
   text-align: left;
   text-decoration: none;
@@ -2825,6 +2881,14 @@ h4 {
 
 .links.footer-links.email-address {
   padding-right: 15%;
+  text-align: right;
+}
+
+.links.footer-links.html-email {
+  font-size: 12px;
+}
+
+.links.footer-links.html-email.alt {
   text-align: right;
 }
 
@@ -2882,6 +2946,10 @@ h4 {
   margin-right: 0%;
   margin-left: 0%;
   float: right;
+}
+
+.links.subscription-receipt {
+  font-size: 12px;
 }
 
 .tab-container {
@@ -3036,7 +3104,16 @@ h4 {
   margin-right: auto;
   margin-left: auto;
   color: #1f8cec;
+  font-size: 30px;
   text-align: center;
+}
+
+.signup-box-subheading.starter-table.static {
+  margin-top: 40px;
+  margin-bottom: 50px;
+  font-family: 'Akkurat light regular', sans-serif;
+  font-size: 50px;
+  font-weight: 400;
 }
 
 .signup-box-subheading.customer-properties {
@@ -3537,7 +3614,8 @@ h4 {
 }
 
 .country-block:hover {
-  background-color: #f0f6fb;
+  border-radius: 6px;
+  background-color: rgba(240, 246, 251, .4);
   color: #1f8cec;
 }
 
@@ -3988,7 +4066,6 @@ h4 {
 .table-text.total-spend-text.r.heading {
   margin-left: 0px;
   padding-right: 0px;
-  width: 106%;
 }
 
 .table-text.actions {
@@ -6405,6 +6482,12 @@ h4 {
   color: #fff;
 }
 
+.total-customer-count.html-email {
+  margin-top: 30px;
+  margin-bottom: 0px;
+  font-size: 24px;
+}
+
 .count-description {
   margin-bottom: 0px;
   font-family: 'Fontawesome webfont', sans-serif;
@@ -6421,6 +6504,11 @@ h4 {
 
 .count-description.transaction-count.customer-count {
   color: #f8f9fb;
+}
+
+.count-description.html-email {
+  margin-top: 0px;
+  font-size: 12px;
 }
 
 .new-customers {
@@ -8297,12 +8385,13 @@ h4 {
 }
 
 .organization-type {
+  display: inline-block;
   width: 36%;
   height: 45px;
   margin-right: 3%;
   margin-bottom: 20px;
-  margin-left: 10%;
-  float: left;
+  margin-left: 3%;
+  float: none;
   border: 1px solid #1f8cec;
   border-radius: 3px;
   background-image: url('Whitebox.png');
@@ -8986,9 +9075,10 @@ h4 {
 
 .def-content-section-paragraph.pricing-paragraph {
   width: 80%;
-  margin-right: 50px;
-  margin-left: 50px;
-  padding-right: 30px;
+  margin-right: 40px;
+  margin-left: 40px;
+  padding-right: 10px;
+  padding-left: 10px;
   text-align: center;
 }
 
@@ -9350,6 +9440,18 @@ h4 {
 
 .transaction-summary-cell.transcation-count {
   background-color: rgba(73, 91, 112, .61);
+}
+
+.transaction-summary-cell.transcation-count.html-email {
+  padding-bottom: 30px;
+}
+
+.transaction-summary-cell.transcation-count.html-email.subscriptions {
+  background-color: #1074ae;
+}
+
+.transaction-summary-cell.html-email {
+  padding-bottom: 30px;
 }
 
 .uploaded-photos-wrapper {
@@ -9857,7 +9959,7 @@ h4 {
   max-height: 620px;
   padding-bottom: 0px;
   border: 1px solid #e6e5e5;
-  border-radius: 3px;
+  border-radius: 6px;
   background-color: #fff;
   box-shadow: 2px 2px 3px 1px rgba(0, 0, 0, .16);
 }
@@ -9893,13 +9995,18 @@ h4 {
 .dropdown-link.header.notifications-dropdown-header {
   margin-top: 0px;
   padding-top: 18px;
-  border-bottom: 1px solid #1f8cec;
+  border-top: 1px solid rgba(31, 140, 236, .5);
+  border-bottom: 1px none #1f8cec;
   background-color: #fff;
   font-size: 13px;
 }
 
 .dropdown-link.header.notifications-dropdown-header.older {
   margin-top: -5px;
+}
+
+.dropdown-link.header.notifications-dropdown-header.messages {
+  border-top-style: none;
 }
 
 .dropdown-link.content-link {
@@ -11236,9 +11343,9 @@ h4 {
 }
 
 .plan-amount {
-  width: 40%;
-  margin: 0px 30% 20px;
-  font-family: 'Akkurat light regular', sans-serif;
+  width: auto;
+  margin: 0px 10% 20px;
+  font-family: 'Akkurat regular', sans-serif;
   color: #e04e50;
   font-size: 25px;
   font-weight: 100;
@@ -11564,8 +11671,8 @@ h4 {
 
 .static-page-content-wrapper.article:hover {
   border-style: solid;
-  border-color: #1f8cec;
-  background-color: rgba(240, 246, 251, .5);
+  border-color: #1280e0;
+  background-color: #fff;
 }
 
 .content-writer-image {
@@ -11707,8 +11814,8 @@ h4 {
   margin-right: 6%;
   margin-left: 6%;
   border-radius: 3px;
-  background-image: -webkit-linear-gradient(270deg, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2)), url('refer-photo.jpg');
-  background-image: linear-gradient(180deg, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2)), url('refer-photo.jpg');
+  background-image: -webkit-linear-gradient(270deg, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2)), url('photo-1449247666642-264389f5f5b1.jpg');
+  background-image: linear-gradient(180deg, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2)), url('photo-1449247666642-264389f5f5b1.jpg');
   background-position: 0px 0px, 0px 0px;
   background-size: auto, cover;
 }
@@ -11910,20 +12017,29 @@ h4 {
 .article-rating-button {
   height: 32px;
   margin-top: 20px;
-  margin-right: 7px;
-  padding-top: 6px;
-  border: 1px solid #1280e0;
-  border-radius: 3px;
+  margin-right: 10px;
+  padding: 0px;
+  border: 1px none #1280e0;
+  border-radius: 0px;
   background-color: #fff;
   -webkit-transition: background-color 300ms ease;
   transition: background-color 300ms ease;
   font-family: 'Akkurat regular', sans-serif;
   color: #1280e0;
-  font-size: 12px;
+  font-size: 18px;
 }
 
 .article-rating-button:hover {
-  background-color: rgba(221, 229, 237, .4);
+  background-color: transparent;
+  -webkit-transform: scale(1.2);
+  -ms-transform: scale(1.2);
+  transform: scale(1.2);
+}
+
+.article-rating-button:focus {
+  -webkit-transform: scale(1.2);
+  -ms-transform: scale(1.2);
+  transform: scale(1.2);
 }
 
 .article-rating-button.alt:hover {
@@ -12088,8 +12204,8 @@ h4 {
   margin-right: 6%;
   margin-left: 6%;
   border-radius: 3px;
-  background-image: -webkit-linear-gradient(270deg, rgba(0, 0, 0, .15), rgba(0, 0, 0, .15)), url('use-case-demand-service.jpg');
-  background-image: linear-gradient(180deg, rgba(0, 0, 0, .15), rgba(0, 0, 0, .15)), url('use-case-demand-service.jpg');
+  background-image: -webkit-linear-gradient(270deg, rgba(0, 0, 0, .15), rgba(0, 0, 0, .15)), url('photo-1449247666642-264389f5f5b1.jpg');
+  background-image: linear-gradient(180deg, rgba(0, 0, 0, .15), rgba(0, 0, 0, .15)), url('photo-1449247666642-264389f5f5b1.jpg');
   background-position: 0px 0px, 0px 0px;
   background-size: auto, cover;
 }
@@ -12127,7 +12243,7 @@ h4 {
 }
 
 .docs-category-link-block {
-  width: 100%;
+  width: 400px;
   text-decoration: none;
 }
 
@@ -13105,6 +13221,18 @@ h4 {
   background-color: #e04e50;
 }
 
+.no-image-found-placeholder.html-email {
+  width: 35px;
+  height: 35px;
+  margin-top: 0px;
+  margin-right: 10px;
+  margin-left: 0px;
+}
+
+.no-image-found-placeholder.html-email.leads {
+  background-color: #1280e0;
+}
+
 .conversation-list-row-column-2 {
   height: 100%;
 }
@@ -13140,6 +13268,11 @@ h4 {
   font-weight: 400;
   text-align: center;
   text-transform: uppercase;
+}
+
+.customer-initial.html-email {
+  left: 10px;
+  top: 8px;
 }
 
 .log-in-form-row-column-1 {
@@ -13500,8 +13633,9 @@ h4 {
   width: 100%;
   margin-top: 0px;
   padding: 15px 0px 15px 10px;
-  border-bottom: 1px solid rgba(31, 140, 236, .5);
-  background-color: rgba(240, 246, 251, .5);
+  border-top: 1px solid rgba(31, 140, 236, .5);
+  border-bottom: 1px none rgba(31, 140, 236, .5);
+  background-color: #fff;
   text-decoration: none;
 }
 
@@ -13513,7 +13647,7 @@ h4 {
   min-height: 75px;
   margin-top: -5px;
   border-bottom-color: rgba(31, 140, 236, .5);
-  background-color: rgba(240, 246, 251, .4);
+  background-color: #fff;
 }
 
 .dashboard-header-notification-wrapper.older:hover {
@@ -13551,7 +13685,10 @@ h4 {
 
 .unread-notification-count {
   margin-left: 0px;
+  padding: 5px 10px;
   float: right;
+  border-radius: 10px;
+  background-color: #f0f6fb;
   font-family: 'Akkurat light regular', sans-serif;
   color: #000;
   font-size: 12px;
@@ -14000,6 +14137,325 @@ h4 {
   padding-left: 10px;
 }
 
+.customer-count-text {
+  margin-top: 30px;
+  margin-bottom: 20px;
+  font-family: 'Akkurat regular', sans-serif;
+  color: #2e2e7f;
+  font-size: 19px;
+}
+
+.customer-count-terms {
+  color: #8da2b7;
+}
+
+.customer-count-text-alt {
+  font-family: 'Akkurat light regular', sans-serif;
+}
+
+.html-email-wrapper {
+  display: block;
+  width: 784px;
+  margin-top: 30px;
+  margin-right: auto;
+  margin-left: auto;
+  padding-top: 50px;
+  padding-bottom: 50px;
+  border-radius: 6px;
+  background-color: #f8fafb;
+}
+
+.html-email-body-div {
+  display: block;
+  width: 600px;
+  margin-right: auto;
+  margin-left: auto;
+  padding: 40px 30px 50px;
+  border: 1px solid #e6e5e5;
+  border-radius: 3px;
+  background-color: #fff;
+  box-shadow: 1px 1px 3px 1px #e6e5e5;
+}
+
+.html-email-logo {
+  display: block;
+  margin-right: auto;
+  margin-bottom: 30px;
+  margin-left: auto;
+}
+
+.html-email-heading {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-radius: 6px;
+  font-family: 'Akkurat regular', sans-serif;
+  color: #1280e0;
+  font-size: 22px;
+  font-weight: 400;
+  text-align: center;
+}
+
+.html-email-content-paragraph {
+  margin-top: 20px;
+  font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+  line-height: 25px;
+}
+
+.weekly-report-date-range {
+  font-family: 'Akkurat bold', sans-serif;
+  color: #637280;
+  font-style: normal;
+  font-weight: 400;
+}
+
+.html-email-sections-div {
+  margin-top: 20px;
+  padding: 20px 25px 30px;
+  border-radius: 3px;
+  background-color: rgba(240, 246, 251, .5);
+}
+
+.html-email-sections-div.transactions {
+  margin-bottom: 30px;
+  background-color: rgba(248, 250, 251, .5);
+}
+
+.html-email-sections-div.unread-message {
+  padding-top: 30px;
+  padding-bottom: 0px;
+  border: 1px none #e6e5e5;
+  background-color: #fff;
+}
+
+.html-email-section-title {
+  margin-bottom: 30px;
+}
+
+.html-email-section-title.empty {
+  margin-bottom: 0px;
+}
+
+.html-email-section-title.transactions {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.html-email-customer-profile-picture {
+  position: static;
+  top: 6px;
+  margin-top: 0px;
+  margin-right: 10px;
+  border-radius: 50%;
+}
+
+.html-email-row-column {
+  padding-right: 10px;
+  padding-left: 0px;
+}
+
+.html-email-subtext {
+  display: inline-block;
+  font-size: 12px;
+}
+
+.html-email-subtext.customer-name {
+  position: relative;
+  font-family: 'Akkurat regular', sans-serif;
+  color: #1280e0;
+}
+
+.html-email-subtext.customer-name.shrink-text {
+  position: static;
+}
+
+.html-email-subtext.email-address {
+  position: absolute;
+  left: 44px;
+  bottom: -8px;
+  display: block;
+  margin-top: 0px;
+  margin-left: 0px;
+}
+
+.html-email-subtext.email-address.shrink-text {
+  position: static;
+}
+
+.html-email-subtext.email-address.shrink-text.unread-message {
+  left: 55px;
+}
+
+.html-email-subtext.contact-channel {
+  margin-top: 10px;
+}
+
+.html-email-subtext.referral {
+  display: block;
+  margin-right: auto;
+  margin-left: auto;
+  color: #8da2b7;
+  text-align: center;
+}
+
+.html-email-row {
+  margin-bottom: 30px;
+}
+
+.html-email-link {
+  position: relative;
+  top: 10px;
+  display: block;
+  margin-top: 0px;
+  -webkit-transition: background-color 300ms ease;
+  transition: background-color 300ms ease;
+  font-family: 'Akkurat regular', sans-serif;
+  color: #1280e0;
+  font-size: 13px;
+  font-weight: 400;
+  text-align: center;
+  text-decoration: none;
+}
+
+.html-email-link:hover {
+  color: #e04e50;
+}
+
+.html-more-div {
+  display: block;
+  width: 40px;
+  height: 40px;
+  margin-top: 5px;
+  margin-right: auto;
+  margin-left: auto;
+  border: 1px dashed #1280e0;
+  border-radius: 6px;
+}
+
+.webinar-link-html-email {
+  -webkit-transition: background-color 300ms ease;
+  transition: background-color 300ms ease;
+  font-family: 'Akkurat regular', sans-serif;
+  color: #1280e0;
+  font-weight: 400;
+  text-decoration: none;
+}
+
+.webinar-link-html-email:hover {
+  color: #e04e50;
+  font-weight: 400;
+}
+
+.html-email-footer-row {
+  display: block;
+  width: 600px;
+  margin: 20px auto 30px;
+}
+
+.email-company-info {
+  display: block;
+  width: 600px;
+  margin-top: 0px;
+  margin-right: auto;
+  margin-left: auto;
+  padding-right: 10px;
+  padding-left: 10px;
+  color: #8da2b7;
+  font-size: 10px;
+  text-align: center;
+}
+
+.html-email-message-preview {
+  margin-left: 10px;
+  padding: 15px;
+  border-radius: 6px;
+  background-color: rgba(240, 246, 251, .5);
+}
+
+.html-unread-messages-row {
+  margin-bottom: 20px;
+}
+
+.html-message-preview-date-time {
+  margin-top: 5px;
+  margin-left: 25px;
+  font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+  color: #8da2b7;
+  font-size: 12px;
+}
+
+.html-customer-info-div {
+  display: inline-block;
+}
+
+.html-email-buttons-wrapper {
+  margin-top: 50px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.html-email-buttons-wrapper.credit {
+  margin-top: 20px;
+}
+
+.html-transactions-table-text {
+  font-size: 12px;
+}
+
+.html-transactions-table-text.header {
+  color: #8da2b7;
+}
+
+.html-transactions-table-text.header.total {
+  font-family: 'Akkurat regular', sans-serif;
+  color: #1280e0;
+  font-weight: 400;
+}
+
+.html-transactions-table-text.value {
+  font-family: 'Akkurat regular', sans-serif;
+  color: #637280;
+  font-weight: 400;
+  text-align: right;
+}
+
+.html-transactions-table-text.value.total {
+  font-family: 'Akkurat bold', sans-serif;
+}
+
+.html-email-transactions-row {
+  margin-bottom: 15px;
+}
+
+.html-email-transactions-row.total {
+  padding: 8px 0px 10px 8px;
+  border: 1px solid #1f8cec;
+  border-radius: 6px;
+}
+
+.html-email-transactions-row.total.sent {
+  border-color: #e6e5e5;
+}
+
+.transaction-refund-notes {
+  color: #8da2b7;
+  font-size: 12px;
+}
+
+.html-profile-info-subdiv {
+  display: inline-block;
+  padding-left: 5px;
+  text-align: left;
+}
+
+.onboarding-learn-more-link {
+  color: #fff;
+  text-decoration: none;
+}
+
+.onboarding-learn-more-link:hover {
+  color: hsla(0, 0%, 100%, .8);
+}
+
 html.w-mod-js *[data-ix="display-none-on-load"] {
   display: none;
 }
@@ -14311,6 +14767,9 @@ html.w-mod-js *[data-ix="fixed-nav-display-none"] {
   .button.use-case-button {
     width: 35%;
   }
+  .button.html-email-button {
+    width: auto;
+  }
   .nav-menu.hamburger {
     margin-top: 0px;
     border-style: none solid solid;
@@ -14366,6 +14825,9 @@ html.w-mod-js *[data-ix="fixed-nav-display-none"] {
   }
   .links.footer-links.blog-links {
     padding-left: 0px;
+  }
+  .links.footer-links.html-email.alt {
+    text-align: center;
   }
   .links.login-form-password-reset {
     margin-left: 20%;
@@ -14598,6 +15060,43 @@ html.w-mod-js *[data-ix="fixed-nav-display-none"] {
   .def-content-section-column-2-alt {
     padding-left: 0px;
   }
+  .no-image-found-placeholder.html-email {
+    margin-left: 20px;
+  }
+  .html-email-wrapper {
+    width: auto;
+  }
+  .html-email-body-div {
+    width: auto;
+  }
+  .html-email-customer-profile-picture {
+    margin-top: 10px;
+    margin-left: 20px;
+  }
+  .html-email-row-column {
+    display: block;
+  }
+  .html-email-subtext.email-address.shrink-text {
+    bottom: 12px;
+  }
+  .html-email-footer-row {
+    width: auto;
+  }
+  .html-email-message-preview {
+    margin-top: 15px;
+  }
+  .html-customer-info-div {
+    margin-bottom: 5px;
+  }
+  .html-transactions-table-text.header {
+    display: inline-block;
+  }
+  .html-transactions-table-text.value {
+    display: inline-block;
+  }
+  .html-profile-info-subdiv {
+    padding-left: 20px;
+  }
 }
 
 @media (max-width: 479px) {
@@ -14631,6 +15130,13 @@ html.w-mod-js *[data-ix="fixed-nav-display-none"] {
   .button.use-case-button {
     width: 60%;
     margin-bottom: 10px;
+  }
+  .button.html-email-button {
+    width: auto;
+  }
+  .button.html-email-button.receipt.cta {
+    margin-top: 15px;
+    margin-left: 0px;
   }
   .nav-menu.hamburger {
     margin-top: 0px;
@@ -14918,6 +15424,24 @@ html.w-mod-js *[data-ix="fixed-nav-display-none"] {
   }
   .use-case-image-wrapper-on-demand {
     height: 500px;
+  }
+  .no-image-found-placeholder.html-email {
+    margin-left: 20px;
+  }
+  .html-email-wrapper {
+    width: auto;
+  }
+  .html-email-body-div {
+    width: auto;
+  }
+  .html-email-customer-profile-picture {
+    margin-left: 20px;
+  }
+  .email-company-info {
+    width: auto;
+  }
+  .html-transactions-table-text.value {
+    text-align: left;
   }
 }
 

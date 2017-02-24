@@ -78,7 +78,7 @@ Rails.application.routes.draw  do
 
       authenticate :user, -> (user) { user.is_platform? } do
         resources :knowledge_base_categories, param: :slug, only: [:index, :edit, :update, :new, :create]
-        resources :coupons
+        resources :coupons, only: [:index, :create, :destroy]
         get 'manage-coupons' => 'coupons#manage_coupons'
       end
 

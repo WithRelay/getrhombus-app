@@ -1,4 +1,3 @@
-<% @coupon = Coupon.new %>
 <%= form_for([current_user, @coupon], :html=> { id: 'couponForm' }) do |f| %>
   <div class="form-group col-xs-6">
     <%= f.text_field :name, id: 'coupon-name', class: 'form-control coupon-name text-field w-input', placeholder: 'Coupon name (no spaces)' %>
