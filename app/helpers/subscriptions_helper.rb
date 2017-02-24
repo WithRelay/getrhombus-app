@@ -100,8 +100,7 @@ module SubscriptionsHelper
     tday_txns_count = @saas_invoices[0].count
     yday_txns_count = @saas_invoices[1].count
     percent_change = (tday_txns_count - yday_txns_count).to_f/yday_txns_count * 100 if yday_txns_count > 0
-    percent_change = percent_change.round if percent_change.present?
-    display_change(percent_change)
+    display_change( percent_change.round ) if percent_change.present?
   end
 
   def total_amount
@@ -114,7 +113,7 @@ module SubscriptionsHelper
     @yday_txns_amount = 0
     @saas_invoices[1].each{|arr| @yday_txns_amount += arr[0] }
     percent_change = (@tday_txns_amount - @yday_txns_amount).to_f/@yday_txns_amount * 100 if @yday_txns_amount > 0
-    display_change(percent_change.round)
+    display_change(percent_change.round) if percent_change.present?
   end
 
   def net_sales
@@ -127,7 +126,7 @@ module SubscriptionsHelper
     @yday_net_sale = 0
     @saas_invoices[1].each{|arr| @yday_net_sale += (arr[0] - arr[1])}
     percent_change = (@tday_net_sale - @yday_net_sale).to_f/@yday_net_sale * 100 if @yday_net_sale > 0
-    display_change(percent_change.round)
+    display_change(percent_change.round) if percent_change.present?
   end
 
   def display_change(percent_change)
