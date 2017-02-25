@@ -80,7 +80,17 @@ $(document).ready(function() {
             message: 'Country is required'
           }
         }
+      },
+      'user[url]': {
+         uri: {
+          message: 'The url is not valid'
+        }
       }
+    },
+    'user[tax_percent]': {
+     numeric: {
+        message: 'Not Valid'
+     },
     }
   });
 

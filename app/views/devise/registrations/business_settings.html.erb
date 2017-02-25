@@ -80,11 +80,11 @@
         <div class="flex-underline form-section-divider"></div>
         <label class="field-headers form-label settings" for="Website">other INFORMATION</label>
         <div class="form-group col-xs-6">
-          <%= f.text_field :url, class: "form-control settings short-field text-field w-input", placeholder: "Website" %>
+          <%= f.url_field :url, class: "form-control settings short-field text-field w-input", placeholder: "Website" %>
           <div class="messageContainer"></div>
         </div>
         <div class="form-group col-xs-6">
-          <%= f.text_field :tax_percent, class: "form-control settings tax text-field w-input", placeholder: "5" %>
+          <%= f.number_field :tax_percent, step: 0.1, min: 0, class: "form-control settings tax text-field w-input", placeholder: "Tax" %>
           <div class="messageContainer"></div>
         </div>
         <label class="form-label other-info paragraph" for="Re-enter-Password">Set the tax rate that will be applied to every transaction made by your customers via Rhombus. The default rate is set at zero.</label>
