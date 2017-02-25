@@ -1,19 +1,19 @@
-$(document).ready(function(){
+$(document).ready(function() {
 
   FormValidation.Validator.password = {
-        validate: function(validator, $field, options) {
-            var value = $field.val();
-            if (value === '') {
-                return false;
-            }
+    validate: function(validator, $field, options) {
+      var value = $field.val();
+      if (value === "") {
+        return false;
+      }
 
-            if (value.length < 8) {
-                return false;
-            }
+      if (value.length < 8) {
+        return false;
+      }
 
-            return true;
-        }
-    };
+      return true;
+    }
+  };
 
   $('#account-settings-form').formValidation({
     framework: 'bootstrap',
@@ -33,75 +33,75 @@ $(document).ready(function(){
         }
       },
       'user[phone]': {
-          validators: {
-            callback: {
-              callback: function(value, validator, $field) {
-                if (PhoneNumberFormatter.isValid()) {
-                  return {
-                    valid: true, // or false
-                    message: 'Valid number'
-                  }
-                } else {
-                  return {
-                    valid: false, // or false
-                    message: 'Enter a valid number'
-                  }
+        validators: {
+          callback: {
+            callback: function(value, validator, $field) {
+              if (PhoneNumberFormatter.isValid()) {
+                return {
+                  valid: true, // or false
+                  message: 'Valid number'
+                }
+              } else {
+                return {
+                  valid: false, // or false
+                  message: 'Enter a valid number'
                 }
               }
             }
           }
-        },
-        'user[email]': {
-          verbose: false,
-          validators: {
-            notEmpty: {
-              message: 'Your email is required'
+        }
+      },
+      'user[email]': {
+        verbose: false,
+        validators: {
+          notEmpty: {
+            message: 'Your email is required'
+          },
+          emailAddress: {
+            message: "The email isn't valid"
+          },
+          remote: {
+            type: 'GET',
+            url: 'https://api.mailgun.net/v2/address/validate?callback=?',
+            crossDomain: true,
+            name: 'address',
+            data: {
+              // Registry a Mailgun account and get a free API key
+              // at https://mailgun.com/signup
+              api_key: '<redacted_api_key>'
             },
-            emailAddress: {
-              message: "The email isn't valid"
-            },
-            remote: {
-              type: 'GET',
-              url: 'https://api.mailgun.net/v2/address/validate?callback=?',
-              crossDomain: true,
-              name: 'address',
-              data: {
-                // Registry a Mailgun account and get a free API key
-                // at https://mailgun.com/signup
-                api_key: '<redacted_api_key>'
-              },
-              dataType: 'jsonp',
-              validKey: 'is_valid',
-              message: "The email isn't valid"
-            }
-          }
-        },
-        'user[current_password]': {
-            validators: {
-                notEmpty: {
-                    message: 'The password is required'
-                },
-                password: {
-                    message: 'The password is not valid'
-                }
-            }
-        },
-        'user[password]': {
-          validators: {
-            stringLength: {
-              min: 8,
-              message: 'Your password should be at least 8 characters'
-            }
-          }
-        },
-        'user[password_confirmation]': {
-          validators: {
-            identical: {
-              field: 'user[password]',
-              message: "The passwords don't match"
-            }
+            dataType: 'jsonp',
+            validKey: 'is_valid',
+            message: "The email isn't valid"
           }
         }
+      },
+      'user[current_password]': {
+        validators: {
+          notEmpty: {
+            message: 'The password is required'
+          },
+          password: {
+            message: 'The password is not valid'
+          }
+        }
+      },
+      'user[password]': {
+        validators: {
+          stringLength: {
+            min: 8,
+            message: 'Your password should be at least 8 characters'
+          }
+        }
+      },
+      'user[password_confirmation]': {
+        validators: {
+          identical: {
+            field: 'user[password]',
+            message: "The passwords don't match"
+          }
+        }
+      }
     }
   });
 
@@ -118,7 +118,7 @@ $(document).ready(function(){
       'user[org_name]': {
         validators: {
           notEmpty: {
-            message: 'organization full name is required'
+            message: 'Organization name is required'
           }
         }
       },
@@ -149,49 +149,54 @@ $(document).ready(function(){
             message: 'city is required'
           }
         }
-      }
-    },
-    'user[state_province]': {
-      validators: {
-        notEmpty: {
-          message: 'state province is required'
-        }
-      }
-    },
-    'user[zip_code]': {
-      validators: {
-        notEmpty: {
-          message: 'Zip code is required'
-        }
       },
-      'user[country]': {
+      'user[state_province]': {
         validators: {
           notEmpty: {
-            message: 'Country is required'
+            message: 'state province is required'
           }
         }
       },
-      'user[url]': {
-         uri: {
-          message: 'The url is not valid'
+      'user[zip_code]': {
+        validators: {
+          notEmpty: {
+            message: 'Zip code is required'
+          }
+        },
+        'user[country]': {
+          validators: {
+            notEmpty: {
+              message: 'Country is required'
+            }
+          }
+        },
+        'user[url]': {
+          validators: {
+            uri: {
+              message: 'The url is not valid'
+            }
+          }          
+        }
+      },
+      'user[tax_percent]': {
+        selector: '#user_tax_percent',
+        validators: {
+          numeric: {
+            message: 'Not Valid'
+          },
+          between: {
+            min: 0,
+            max: 100,
+            message: 'Tax should be between 0 and 100%'
+          }
         }
       }
-    },
-    'user[tax_percent]': {
-      selector: '#user_tax_percent',
-     numeric: {
-        message: 'Not Valid'
-     },
-     between: {
-      min: 0,
-      max: 100,
-      message: 'Tax should be between 0 and 100%'
-     }
     }
   });
 
   $.ajaxSetup({
     cache: false
   });
+
 
 })
