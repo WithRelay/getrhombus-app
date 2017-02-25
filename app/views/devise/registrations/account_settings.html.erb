@@ -19,7 +19,9 @@
         <% if current_user.is_merchant? %>
 
           <%= f.fields_for :people do |f| %>
-            <%= f.text_field :full_name, class: 'form-control full-name settings text-field w-input', placeholder: 'Full name' %>
+            <div class="form-group">
+              <%= f.text_field :full_name, class: 'form-control full-name settings text-field w-input', placeholder: 'Full name' %>
+            </div>
           <% end %>
           <%= f.hidden_field :org_phone, id: "phone_number" %>
 
@@ -28,7 +30,9 @@
             <%= f.hidden_field :phone_number, id: "phone_number" %>
 
         <% end %>
-        <%= f.phone_field :phone, id: "phone", class: "password settings text-field w-input" %>
+        <div class="form-group">
+          <%= f.phone_field :phone, id: "phone", class: "form-control password settings text-field w-input" %>
+        </div>
         <input type="hidden" name="page_params" value="account_settings">
       </div>
 
@@ -36,10 +40,18 @@
       <div class="update-email-password-div w-clearfix">
         <div class="flex-underline form-section-divider"></div>
         <label class="field-headers form-label settings" for="email">update email/password</label>
-        <%= f.email_field :email, type: "email", id: "email", placeholder: "Email", class: "form-control rhombusFocus settings text-field w-input" %>
-        <%= f.password_field :current_password, type: 'password', class: 'form-control full-name settings text-field w-input', placeholder: "Current Password" %>
-        <%= f.password_field :password, type: "password", id: "newPassword", placeholder: "Enter new password", class: "form-control password settings text-field w-input" %>
-        <%= f.password_field :password_confirmation, id: "confirmNewPassword", type: "password", placeholder: "Confirm new password", class: "form-control confirm password settings text-field w-input" %>
+        <div class="form-group">
+          <%= f.email_field :email, type: "email", id: "email", placeholder: "Email", class: "form-control settings text-field w-input" %>
+        </div>
+        <div class="form-group">
+          <%= f.password_field :current_password, type: 'password', class: 'form-control full-name settings text-field w-input', placeholder: "Current Password" %>
+        </div>
+        <div class="form-group">
+          <%= f.password_field :password, type: "password", id: "newPassword", placeholder: "Enter new password", class: "form-control password settings text-field w-input" %>
+        </div>
+        <div class="form-group">
+          <%= f.password_field :password_confirmation, id: "confirmNewPassword", type: "password", placeholder: "Confirm new password", class: "form-control confirm password settings text-field w-input" %>
+        </div>
       </div>
 
   </div>

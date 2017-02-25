@@ -15,88 +15,66 @@ $(document).ready(function() {
 
   });
 
-  $('#businessSetting').formValidation({
-    framework: 'bootstrap',
-    excluded: ':disabled',
-    live: 'disabled',
-    err: {
-      container: function($field, validator) {
-        return $field.parent().find('.errorMessageContainer');
-      }
-    },
-    fields: {
-      'user[org_name]': {
-        validators: {
-          notEmpty: {
-            message: 'organization full name is required'
-          }
-        }
-      },
-      'user[org_type]': {
-        validators: {
-          notEmpty: {
-            message: 'Required'
-          }
-        }
-      },
-      'user[org_phone]': {
-        validators: {
-          notEmpty: {
-            message: 'Your password is required'
-          }
-        }
-      },
-      'user[street_address]': {
-        validators: {
-          notEmpty: {
-            message: 'street address is required'
-          }
-        }
-      },
-      'user[city]': {
-        validators: {
-          notEmpty: {
-            message: 'city is required'
+  // validate forgot password form
+  $('#ForgotPassword')
+    .formValidation({
+      // I am validating Bootstrap form
+      framework: 'bootstrap',
+      live: 'disabled',
+      // List of fields and their validation rules
+      fields: {
+        'user[email]': {
+          verbose: false,
+          row: '.group',
+          validators: {
+            notEmpty: {
+              message: 'Your email is required'
+            },
+            emailAddress: {
+              message: "The email isn't valid"
+            },
+            remote: {
+              type: 'GET',
+              url: 'https://api.mailgun.net/v2/address/validate?callback=?',
+              crossDomain: true,
+              name: 'address',
+              data: {
+                // Registry a Mailgun account and get a free API key
+                // at https://mailgun.com/signup
+                api_key: '<redacted_api_key>'
+              },
+              dataType: 'jsonp',
+              validKey: 'is_valid',
+              message: "The email isn't valid"
+            }
           }
         }
       }
-    },
-    'user[state_province]': {
-      validators: {
-        notEmpty: {
-          message: 'state province is required'
+    })
+    .on('success.validator.fv', function(e, data) {
+      if (data.field === 'email' && data.validator === 'remote') {
+        var response = data.result; // response is the result returned by MailGun API
+        if (response.did_you_mean) {
+          // Update the message
+          data.element // The field element
+            .data('fv.messages') // The message container
+            .find('[data-fv-validator="remote"][data-fv-for="email"]')
+            .html('Did you mean ' + response.did_you_mean + '?')
+            .show();
         }
       }
-    },
-    'user[zip_code]': {
-      validators: {
-        notEmpty: {
-          message: 'Zip code is required'
-        }
-      },
-      'user[country]': {
-        validators: {
-          notEmpty: {
-            message: 'Country is required'
-          }
-        }
-      },
-      'user[url]': {
-         uri: {
-          message: 'The url is not valid'
-        }
+    })
+    .on('err.validator.fv', function(e, data) {
+      if (data.field === 'email' && data.validator === 'remote') {
+        // We need to reset the error message
+        data.element // The field element
+          .data('fv.messages') // The message container
+          .find('[data-fv-validator="remote"][data-fv-for="email"]')
+          .html("The email isn't valid")
+          .show();
       }
-    },
-    'user[tax_percent]': {
-     numeric: {
-        message: 'Not Valid'
-     },
-    }
-  });
-
-  $.ajaxSetup({
-    cache: false
-  });
+    });
+  // validate forgot password form
 
   // validate signin form
   $('#signinForm')
@@ -166,68 +144,7 @@ $(document).ready(function() {
     .on('success.form.fv', function(e, data) {
       set_hidden_fields();
     });
-  ////
 
-  // validate forgot password form
-  $('#ForgotPassword')
-    .formValidation({
-      // I am validating Bootstrap form
-      framework: 'bootstrap',
-      live: 'disabled',
-      // List of fields and their validation rules
-      fields: {
-        'user[email]': {
-          verbose: false,
-          row: '.group',
-          validators: {
-            notEmpty: {
-              message: 'Your email is required'
-            },
-            emailAddress: {
-              message: "The email isn't valid"
-            },
-            remote: {
-              type: 'GET',
-              url: 'https://api.mailgun.net/v2/address/validate?callback=?',
-              crossDomain: true,
-              name: 'address',
-              data: {
-                // Registry a Mailgun account and get a free API key
-                // at https://mailgun.com/signup
-                api_key: '<redacted_api_key>'
-              },
-              dataType: 'jsonp',
-              validKey: 'is_valid',
-              message: "The email isn't valid"
-            }
-          }
-        }
-      }
-    })
-    .on('success.validator.fv', function(e, data) {
-      if (data.field === 'email' && data.validator === 'remote') {
-        var response = data.result; // response is the result returned by MailGun API
-        if (response.did_you_mean) {
-          // Update the message
-          data.element // The field element
-            .data('fv.messages') // The message container
-            .find('[data-fv-validator="remote"][data-fv-for="email"]')
-            .html('Did you mean ' + response.did_you_mean + '?')
-            .show();
-        }
-      }
-    })
-    .on('err.validator.fv', function(e, data) {
-      if (data.field === 'email' && data.validator === 'remote') {
-        // We need to reset the error message
-        data.element // The field element
-          .data('fv.messages') // The message container
-          .find('[data-fv-validator="remote"][data-fv-for="email"]')
-          .html("The email isn't valid")
-          .show();
-      }
-    });
-  // validate forgot password form
 
   // user profile forms
   $('#user-profile-form')
