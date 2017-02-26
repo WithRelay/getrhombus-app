@@ -86,7 +86,7 @@
               </div>
               <nav class="message-input-dropdown-list-wrapper w-dropdown-list">
                 <div class="message-input-box-option-div-wrapper">
-                  <a class="message-input-box-option-buttons payment-info-collection-link w-inline-block" id='paste-link'>
+                  <a class="message-input-box-option-buttons payment-info-collection-link w-inline-block" ng-click="pasteMerchantLink()">
                     <div class="message-input-options-text"> &nbsp; &nbsp;Collect payment card</div>
                   </a>
                   <a class="message-input-box-option-buttons w-inline-block" ng-click="newReminderDiv()">
@@ -102,7 +102,7 @@
                   <a class="message-input-box-option-buttons w-inline-block" ng-click="clickFilePicker()">
                     <div class="message-input-options-text"> &nbsp; &nbsp;Attach image</div>
                   </a>
-                  <a class="message-input-box-option-buttons w-inline-block" ng-click="sendConversationMessage(new_message, 'FbMessage')" ng-disabled='is_sending || selected_conversation.id === undefined'>
+                  <a class="message-input-box-option-buttons w-inline-block" ng-click="sendConversationMessage('FbMessage')" ng-disabled='is_sending || selected_conversation.id === undefined'>
                     <div class="message-input-options-text"> &nbsp; &nbsp;{{send_msg_fb_btn}}</div>
                   </a>
                 </div>
@@ -110,7 +110,7 @@
             </div>
           </div>
           <div class="message-input-box-column-2 w-col w-col-11">
-            <textarea class="message-text-box text-area w-input" id="Messaging-Text-Area" placeholder="Type your message..." ng-model="new_message.text" ng-enter="sendConversationMessage(new_message, 'Message')"></textarea>
+            <textarea class="message-text-box text-area w-input" id="Messaging-Text-Area" placeholder="Type your message..." ng-model="new_message.text"></textarea>
           </div>
         </div>
     </div>

@@ -1,16 +1,16 @@
-var BindPlugins = new function() {
+var BindConversationPlugins = new function() {
 
-  var is_atwho_binded = false, msg_emoji_box;
+  var msg_emoji_box; //is_atwho_binded = false;
 
   this.now = function () {
 
     // bind emoji to textarea
     msg_emoji_box = $('#Messaging-Text-Area').emojioneArea({
       pickerPosition: "top",
-      events: {
+      /*events: {
         // bind atwho
         focus: function (editor, event) {
-          // hacky not doubt
+          // hacky no doubt
           if (!is_atwho_binded) {
             is_atwho_binded = true;
             $('.emojionearea-editor').atwho({
@@ -27,29 +27,30 @@ var BindPlugins = new function() {
             });
           }
         },
-      }
+      }*/
     });
 
-    // paste - when you paste, keyup - so counter is more realtime
-    // emojibtn.click - as the name implies, blur - good measure, last resort, catch all
-    msg_emoji_box[0].emojioneArea.on("blur paste keyup emojibtn.click", function(button, event) {
-      update_actual_text_box();
-    });
-
-    // update the angular field that is hidden
-    function update_actual_text_box() {
-      $('#Messaging-Text-Area').val(msg_emoji_box[0].emojioneArea.getText());
-      angular.element(jQuery('#Messaging-Text-Area')).triggerHandler('change');
-    }
+    // paste - when you paste, emojibtn.click - as the name implies
+    msg_emoji_box[0].emojioneArea.on("paste emojibtn.click", function(button, e) { update_actual_text_box(); })
+    .on("keydown", function(btn, e) { if (e.keyCode == 13) e.preventDefault(); });
   };
 
-  this.get_emoji_box = function() { return msg_emoji_box; };
+  // update the angular field that is hidden
+  function update_actual_text_box() {
+    $('#Messaging-Text-Area').val(msg_emoji_box[0].emojioneArea.getText());
+    angular.element(jQuery('#Messaging-Text-Area')).triggerHandler('change');
+  };
 
-}
+  this.update_textarea = function() { update_actual_text_box(); };
+  this.get_emoji_box = function() { return msg_emoji_box; };
+};
 
 $(document).ready(function () {
 
-  if ($('#Messaging-Text-Area').length > 0) BindPlugins.now();
+  if ($('#Messaging-Text-Area').length > 0) {
+    BindConversationPlugins.now();
+    angular.element(jQuery('#Messaging-Text-Area')).scope().bindEnterToMessagingArea();
+  }
 
   $(".refund-slider").click(function(e) {
     var great_granny = $(this).parent().parent().parent();
@@ -62,13 +63,5 @@ $(document).ready(function () {
       $('#refundBox').show();
     };
   });
-
-  var box, text;
-  $("#paste-link").click(function(e) {
-    box = BindPlugins.get_emoji_box()[0], text = box.emojioneArea.getText();
-    text += " " + angular.element(jQuery('#Messaging-Text-Area')).scope().merchant.short_url;
-    box.emojioneArea.setText(text);
-  });
-
 
 });
