@@ -78,6 +78,7 @@
 //= require modernizr
 //= require webflow
 //= require custom
+//= require account_setting
 //= require jquery.lightbox_me
 //= require custom_lightbox
 //= require saved_replies
