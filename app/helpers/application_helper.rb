@@ -15,6 +15,7 @@ module ApplicationHelper
   end
 
   def render_header_partial
+    return render 'shared/authenticate_home_header' if (current_user && unauthenticate_controller)
     return render 'shared/unauthenticate_header' if unauthenticate_controller
     return render 'shared/authenticated_header' unless authenticated_pages || campaign_restrict_params
     return render 'shared/docs_header' if relay_docs_pages
