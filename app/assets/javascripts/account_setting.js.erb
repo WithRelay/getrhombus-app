@@ -81,8 +81,10 @@ $(document).ready(function() {
           notEmpty: {
             message: 'The password is required'
           },
-          password: {
-            message: 'The password is not valid'
+          remote: {
+            message: 'This password is not valid.',
+            url: '/v1/users/check_password',
+            type: 'POST'
           }
         }
       },

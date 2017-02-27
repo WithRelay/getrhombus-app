@@ -82,6 +82,11 @@ class Api::V1::UsersController < API::V1::BaseController
     render json: { data: results }
   end
 
+  def check_password
+    res = current_user.valid_password?(params[:user][:current_password])
+    render json: { valid: res}
+  end
+
   private
 
     def api_v1_user_params

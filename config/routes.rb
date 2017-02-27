@@ -111,6 +111,7 @@ Rails.application.routes.draw  do
       resources :users, only: [:index] do
         post 'add_customers', on: :collection
       end
+      post 'users/check_password' => 'users#check_password'
       match 'hashtags' => 'hashtags#index', via: :get
       match 'hashtags/:id/images/:image_id' => 'hashtags#image_delete', via: :delete
       match 'saved_replies' => 'saved_replies#index', via: :get
