@@ -15,18 +15,24 @@ add card info, add subscription, billing info
 - flash message not showing...also needs to show devise error
 
 - Header not fully dynamic
-- client side validations for account settings pages
-- validation for url, tax rate on business settings field
+- surya - test client side validations for account settings pages
+- surya - test validation for url, tax rate on business settings field
+- where is this page http://relay-test.webflow.io/platform-integrations
+- password reset page, change password pages and validations
+- redo static header for when user signs in
+- review each static page...there are some updates it seems - https://www.one-tab.com/page/JvNSs6beRmuwuIRBmxT68Q
+- reimport footer, and plug in links... dashabord to dashboard
+- 400, 500 pages
+- ovo's task
+- update notifications dropdown
 
 - add the url for pages you did to the sidebar on dashboard and settings page
 
 - card error flash missing in registrations update
 - instead of checking for if the key exists, enforce that that method run for that specific page_params
 - user auth in routes
-- address_attributes params twice in user controller
 
 - new customers in dashboard header
-- new header when signed in
 
 - EVERYONE CLEAN UP YOUR ROUTES and CONTROLLERS
 
