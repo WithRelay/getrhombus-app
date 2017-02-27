@@ -13,7 +13,7 @@ class ReminderPresenter < BasePresenter
   def get_time
   	date_time = @model.date_time
   	ampm = date_time.hour >= 12 ? "PM" : "AM"
-  	hour = date_time.hour % 12 
+  	hour =  (date_time.hour == 12 || date_time.hour == 0) ? 12 : date_time.hour % 12 
   	minute = date_time.min.to_s
   	minute = minute.length < 2 ? minute.prepend("0") : minute  
 
