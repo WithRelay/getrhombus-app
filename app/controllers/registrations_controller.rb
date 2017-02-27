@@ -8,25 +8,23 @@ class RegistrationsController < Devise::RegistrationsController
   def update
     self.resource = resource_class.to_adapter.get!(send(:"current_#{resource_name}").to_key)
 
-    page_params = set_update_flash_messages[params[:page_params].to_sym]
+    check_params_with_update
 
-    check_params_with_update(page_params)
-
-    url = request.referrer if page_params[:billing_info].present?
+    url = request.referrer if set_update_flash_messages[:billing_info].present?
 
     prev_unconfirmed_email = resource.unconfirmed_email if resource.respond_to?(:unconfirmed_email)
 
     resource_updated = update_resource(resource, account_update_params)
     yield resource if block_given?
     if resource_updated
-      update_stripe_email if page_params[:account_settings].present?
+      update_stripe_email if set_update_flash_messages[:account_settings].present?
       # flash_key = update_needs_confirmation?(resource, prev_unconfirmed_email) ? :update_needs_confirmation : :updated
       # set_flash_message :notice, flash_key
-      flash[:notice] = page_params[:success] if is_flashing_format?
+      flash[:notice] = set_update_flash_messages[:success] if is_flashing_format?
       bypass_sign_in resource, scope: resource_name
       redirect_to url || after_update_path_for(resource)
     else
-      flash[:error] = page_params[:error]
+      flash[:error] = set_update_flash_messages[:error]
       clean_up_passwords resource
       set_minimum_password_length
       redirect_to previous_url
@@ -62,15 +60,15 @@ class RegistrationsController < Devise::RegistrationsController
     end
   end
 
-  def check_params_with_update(page_params)
-    if page_params[:subscription].present? && current_user.is_merchant?
+  def check_params_with_update
+    if set_update_flash_messages[:subscription].present? && current_user.is_merchant?
       create_saas_subscription
-    elsif page_params[:rhombus_number].present? && current_user.is_merchant?
+    elsif set_update_flash_messages[:rhombus_number].present? && current_user.is_merchant?
       current_user.buy_number(params)
-    elsif page_params[:card_info].present? && current_user.is_customer?
+    elsif set_update_flash_messages[:card_info].present? && current_user.is_customer?
       set_captured_payment_session
       current_user.add_token_to_user(params[:user][:card_token])
-    elsif page_params[:billing_info].present?
+    elsif set_update_flash_messages[:billing_info].present?
       current_user.add_token_to_user(params[:user][:card_token])
     end
   end
@@ -114,42 +112,43 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   def set_update_flash_messages
-    { add_profile_info: {
-                          success: 'profile updated',
-                          error: 'Unable to update your profile',
-                          profile_info: true
-                        },
-      add_subscription: {
-                          success: 'Subscription added',
-                          error: 'We are unable to start a subscription for you',
-                          subscription: true
-                        },
-      add_rhombus_number: {
-                            success: 'We are unable to provision a number for you',
-                            error: 'Rhombus number added',
-                            rhombus_number: true
-                          },
-      add_card_info: {
-                      success: 'Card info added',
-                      error: 'We are unable to add your card to your profile.',
-                      card_info: true
-                     },
-      update_billing_info: {
-                            success: 'Billing Info updated',
-                            error: 'We are unable to add your card to your profile.',
-                            billing_info: true
-                          },
-      account_settings: {
-                          success: 'account updated',
-                          error: 'We are unable to update account. Please try again',
-                          account_settings: true
-                        },
-      business_settings: {
-                          success: 'account updated',
-                          business_settings: true,
-                          error: 'We are unable to update business settings. Please try again'
-                         }
-    }
+    page_params = { add_profile_info: {
+                                        success: 'profile updated',
+                                        error: 'Unable to update your profile',
+                                        profile_info: true
+                                      },
+                    add_subscription: {
+                                        success: 'Subscription added',
+                                        error: 'We are unable to start a subscription for you',
+                                        subscription: true
+                                      },
+                    add_rhombus_number: {
+                                          success: 'We are unable to provision a number for you',
+                                          error: 'Rhombus number added',
+                                          rhombus_number: true
+                                        },
+                    add_card_info: {
+                                    success: 'Card info added',
+                                    error: 'We are unable to add your card to your profile.',
+                                    card_info: true
+                                   },
+                    update_billing_info: {
+                                          success: 'Billing Info updated',
+                                          error: 'We are unable to add your card to your profile.',
+                                          billing_info: true
+                                        },
+                    account_settings: {
+                                        success: 'account updated',
+                                        error: 'We are unable to update account. Please try again',
+                                        account_settings: true
+                                      },
+                    business_settings: {
+                                        success: 'account updated',
+                                        business_settings: true,
+                                        error: 'We are unable to update business settings. Please try again'
+                                       }
+                  }
+    page_params[params[:page_params].to_sym]
   end
 
   def previous_url
@@ -157,7 +156,7 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   def update_resource(resource, user_params)
-    if user_params.keys.include?('current_password')
+    if set_update_flash_messages[:account_settings].present?
       resource.update_with_password(user_params)
     else
       resource.update_without_password(user_params)
