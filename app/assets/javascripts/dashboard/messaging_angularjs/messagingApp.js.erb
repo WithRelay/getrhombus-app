@@ -14,20 +14,6 @@ var messagingApp = angular.module('PubNubAngularMessagingApp', [
   'luegg.directives' // Auto scroll module
 ]);
 
-/* Directive to detect enter key presses */
-messagingApp.directive('ngEnter', function() {
-  return function(scope, element, attrs) {
-    element.bind("keydown keypress", function(event) {
-      if (event.which === 13) {
-        scope.$apply(function() {
-          scope.$eval(attrs.ngEnter);
-        });
-        event.preventDefault();
-      }
-    });
-  };
-});
-
 messagingApp.directive('whenScrolledUp', ['$timeout', 'smoothScroll', function($timeout, smoothScroll) {
   return function(scope, elm, attr) {
     var raw = elm[0];    

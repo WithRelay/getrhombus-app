@@ -17,7 +17,6 @@ add card info, add subscription, billing info
 - Header not fully dynamic
 - client side validations for account settings pages
 - validation for url, tax rate on business settings field
-- remove the phone number field from business settings
 
 - add the url for pages you did to the sidebar on dashboard and settings page
 
@@ -25,7 +24,6 @@ add card info, add subscription, billing info
 - instead of checking for if the key exists, enforce that that method run for that specific page_params
 - user auth in routes
 - address_attributes params twice in user controller
-- only platform should see stripe connnct...is that right?
 
 - new customers in dashboard header
 - new header when signed in

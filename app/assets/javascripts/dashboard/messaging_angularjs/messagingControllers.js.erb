@@ -463,24 +463,30 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
       });
     };
 
-    $scope.sendConversationMessage = function(new_message, channel) {
+    $scope.bindEnterToMessagingArea = function() {
+      BindConversationPlugins.get_emoji_box()[0].emojioneArea.on("keyup", function(btn, e) {
+        BindConversationPlugins.update_textarea();
+        if (e.keyCode == 13) $scope.sendConversationMessage('Message');   
+      });
+    };
+
+    $scope.sendConversationMessage = function(channel) {
       //var btn = (channel == 'Message') ? 'send_msg_btn' : 'send_msg_fb_btn';
       $scope.is_sending = true;
-      //f$scope[btn] = "Sending...";
-      console.log(new_message);
-
-      if ((new_message == undefined) || (new_message.text == '') || (new_message.text.length > $scope.char_limit)) {
+      console.log($scope.new_message)
+      //$scope[btn] = "Sending...";
+      /*if (($scope.new_message.text == '') || ($scope.new_message.text.length > $scope.char_limit)) {
         alert('Maximum ' + $scope.char_limit + ' characters.');
         $scope.enable_msg_btn(btn, channel);
       } else {
         var conversation_id = $scope.selected_conversation.id;
-        conversationService.sendConversationMessage(conversation_id, new_message.text, channel)
+        conversationService.sendConversationMessage(conversation_id, $scope.new_message.text, channel)
         .then(function(data) {
           // ensure we still have the right conversation
           if ($scope.selected_conversation.id == conversation_id)
             $scope.selected_conversation_messages.push(data);
-          new_message.text = '';
-          BindPlugins.get_emoji_box()[0].emojioneArea.setText('');
+          $scope.new_message.text = '';
+          BindConversationPlugins.get_emoji_box()[0].emojioneArea.setText('');
           console.log('sent message');
         }, function(data) {
           console.log('unable to send message');
@@ -489,7 +495,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
         .finally(function() { 
           //$scope.enable_msg_btn(btn, channel); 
         });
-      };
+      };*/
     };
 
     $scope.enable_msg_btn = function(btn, channel) {
@@ -576,19 +582,14 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
       });
     };
 
-    // End Modals
-
     $scope.pasteMerchantLink = function() {
-      $('#Messaging-Text-Area').val($scope.merchant.short_url)
-      console.log($scope.new_message.text)
-      /*
-      var textarea = angular.element(document.getElementById('Messaging-Text-Area'));      
-      var ngModel = angular.element(textarea).controller('ngModel');
-      var text = ($scope.new_message.text.length) ? $scope.new_message.text + " " + $scope.merchant.short_url : $scope.merchant.short_url;
-      ngModel.$setViewValue(text);
-      ngModel.$render();   
-      */
+      var box = BindConversationPlugins.get_emoji_box()[0], text = box.emojioneArea.getText();
+      text += " " + $scope.merchant.short_url;
+      box.emojioneArea.setText(text);
+      $scope.new_message.text = text;
     };
+
+    // End Modals
     
     $scope.hashtagSelected = function(selected) { $scope.charge_data.hashtag_id = (selected) ? selected.originalObject.id : null; };
     $scope.hashtagsApiErrorHandler = function(selected) { alert('couldnt retrieve your tags'); };
