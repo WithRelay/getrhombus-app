@@ -11,7 +11,7 @@ class TransactionsController < ApplicationController
 
   def index
     if current_user.is_merchant?
-      @transactions = []
+      @transactions = Transaction. includes(:user).where(team_id: current_user.id)
     else      
       @transactions = []
     end
