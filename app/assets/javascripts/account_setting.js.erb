@@ -178,19 +178,30 @@ $(document).ready(function() {
             uri: {
               message: 'The url is not valid'
             }
-          }          
+          }
         }
       },
       'user[tax_percent]': {
         selector: '#user_tax_percent',
+        // Setting verbose to false ensures that the callback validator is only performed
+        // Its because validation is not working in a normal flow
+        verbose: false,
         validators: {
+          notEmpty: {
+            message: 'Country is required'
+          },
           numeric: {
             message: 'Not Valid'
           },
-          between: {
-            min: 0,
-            max: 100,
-            message: 'Tax should be between 0 and 100%'
+          callback: {
+            message: 'The sum of percentages must be 100',
+            callback: function(value, validator, $field) {
+                if ($field.val() >= 100) {
+                    validator.updateStatus('percentage[]', 'INVALID', 'callback');
+                    return false;
+                }
+                return true;
+            }
           }
         }
       }

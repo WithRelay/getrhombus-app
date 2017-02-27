@@ -70,7 +70,6 @@ $(document).ready(function () {
   // can use form presence instead
   if (["/users/sign_in", "/users/sign_up", '/users', "/profile"].indexOf(url.pathname) != -1) {
       var amt = validate_captured_amt(global_page_params['amt']);
-      debugger
       if (url.pathname == "/users/sign_up") {
         $('#email').val(global_page_params['user[email]']);
         $('#phone_number').val(global_page_params['user[phone_number]']);
