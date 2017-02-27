@@ -270,4 +270,19 @@ $('#cancel-subscription').on('click', function(e){
      $('#cancel-subscription').removeAttr('disabled').text("Yes, unsubscribe customer");
    });
 });
+
+// transaction checkbox
+$('.transaction-checkbox').click(function() {
+  if ($(this).is(':checked')) {
+    $("#refund-charge").removeClass('hide')
+    parent_row = $(this).closest('.transactions-table-row')
+    amount = parent_row.find('.tran-amount').text()
+    last4 = parent_row.find('.tran-last-four').text()
+    $('#tran-amount').text(amount)
+    $('#last_four').text(last4)
+  } else {
+    $("#refund-charge").addClass('hide')
+  }
+});
+
 });

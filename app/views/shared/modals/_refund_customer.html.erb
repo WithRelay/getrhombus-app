@@ -1,6 +1,6 @@
 <%# removed all webflow data attributes %>
 
-<div class="refund-customer-form-wrapper w-clearfix">
+<div class="refund-customer-form-wrapper w-clearfix" id="refund-customer-div">
   <div class="content-sub-wrapper modal w-clearfix">
     <h4 class="modal-header welcome-dash-content-container-header">Refund Customer</h4>
     <%# added update-close-modals and data %>
@@ -17,5 +17,5 @@
       </select>
     </form>
   </div>
-  <p class="modal-paragraph refund-instructions tips">By issuing this refund, I authorize Relay to debit the refund amount from the bank account linked to my Rhombus account.</p><a class="button refund-button w-button">Issue [Amount] refund to card ending 5331</a>
+  <p class="modal-paragraph refund-instructions tips">By issuing this refund, I authorize Relay to debit the refund amount from the bank account linked to my Rhombus account.</p><a class="button refund-button w-button">Issue <span id="tran-amount"></span> refund to card ending <span id="last_four"></span></a>
 </div>
