@@ -16,22 +16,29 @@
       </div>
     </div>
 
-    <div class="w-col w-col-6">
-      <div class="phone-wrapper">
-        <div class="speaker"></div>
-        <div class="camera"></div>
-        <div class="phone-screenshot-wrapper w-clearfix">
-          <div class="phone-header">
-            <div class="phone-name placeholder-content-text">Happy Corp.</div>
+      <div class="w-col w-col-6">
+        <div class="phone-wrapper w-hidden-tiny">
+          <div class="speaker"></div>
+          <div class="camera"></div>
+          <div class="phone-screenshot-wrapper">
+            <div class="phone-header">
+              <div class="phone-name placeholder-content-text">Happy Fun Store</div>
+            </div>
+            <div class="agent conversation-bubble-place-holder-div">
+              <p class="conversation-bubble-placeholder-text">Hi Jen, thanks for visiting our store today! We'd like to offer you a discount on your next purchase</p>
+            </div>
+            <div class="conversation-bubble-place-holder-div">
+              <p class="conversation-bubble-placeholder-text">Really? that's fantastic!</p>
+            </div>
+            <div class="agent conversation-bubble-place-holder-div">
+              <p class="conversation-bubble-placeholder-text">Sure thing!</p>
+            </div>
+            <div class="agent conversation-bubble-place-holder-div">
+              <p class="conversation-bubble-placeholder-text">Use this code: Y7G8S next time your in the store to get 20% off your entire purchase.</p>
+            </div>
           </div>
-          <div class="phone-text-placeholder"></div>
-          <div class="alt-blue phone-text-placeholder"></div>
-          <div class="grey phone-text-placeholder"></div>
-          <div class="phone-text-placeholder position"></div>
-          <div class="alt grey phone-text-placeholder"></div>
         </div>
       </div>
-    </div>
   </div>
 </div>
 
@@ -165,40 +172,32 @@
           </div> -->
         </div>
         <div class="def-content-section-column-2 w-col w-col-6">
-          <div class="relay-id-placeholder-wrapper">
+          <div class="relay-id-placeholder-wrapper w-hidden-small w-hidden-tiny">
+            <div class="descriptive-div nested w-hidden-medium w-hidden-small w-hidden-tiny">
+              <div class="descriptive-div-header-wrapper w-clearfix">
+                <div class="heading placeholder-content-text">Conversation with Jen</div>
+              </div>
+              <div class="conversation-bubble-place-holder-div">
+                <p class="conversation-bubble-placeholder-text">Hey, I just received my order yesterday afternoon, but its a bit too small.</p>
+              </div>
+              <div class="agent conversation-bubble-place-holder-div">
+                <p class="conversation-bubble-placeholder-text">Hi Jen, not a problem we can send you a replacement after we get your returns</p>
+              </div>
+              <div class="agent-typing-message-placeholder w-clearfix">You should receive a return labe...<span class="emoji-icon"></span>
+              </div>
+            </div>
+            <div class="browser-header-partial"></div>
             <div class="dash-header-placeholder"></div>
             <div class="w-row">
-              <div class="w-col w-col-4">
-                <div class="partial-message-window">
-                  <div class="partial-chat-text"></div>
-                  <div class="new partial-chat-text"></div>
-                  <div class="w-row">
-                    <div class="w-clearfix w-col w-col-6">
-                      <div class="chat-window customer grey phone-text-placeholder"></div>
-                    </div>
-                    <div class="w-col w-col-6">
-                      <div class="agent-placeholder-icon"></div>
-                    </div>
-                  </div>
-                  <div class="next-message partial-chat-text"></div>
-                  <div class="new partial-chat-text"></div>
-                  <div class="w-row">
-                    <div class="w-clearfix w-col w-col-6">
-                      <div class="chat-window customer grey phone-text-placeholder"></div>
-                    </div>
-                    <div class="w-col w-col-6">
-                      <div class="agent-placeholder-icon"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <div class="w-col w-col-4"></div>
               <div class="w-col w-col-8">
                 <div class="relay-id-content-wrapper">
-                  <div class="placeholder-channel-indicator"></div>
-                  <%= image_tag('76.jpg', class: 'placeholder-customer-profile-image', width: 90, height: 90) %>
-                  <div class="customer-name placeholder-content-text">Julia M.</div>
+                  <div class="placeholder-customer-profile-picture-wrapper"><img class="placeholder-customer-profile-image" height="50" src="images/37.jpg" width="50">
+                    <div class="placeholder-channel-indicator"></div>
+                  </div>
+                  <div class="customer-name placeholder-content-text">Jen Awesome</div>
                   <div>
-                    <div class="relay-id-placeholder">RELAY ID</div>
+                    <div class="relay-id-placeholder">VERIFIED</div>
                     <div class="social-profile-placeholder w-row">
                       <div class="w-col w-col-2">
                         <div class="placeholder-font-awesome"></div>
@@ -212,7 +211,7 @@
                         <div class="placeholder-font-awesome"></div>
                       </div>
                       <div class="w-clearfix w-col w-col-10">
-                        <div class="chat-window customer email grey id phone-text-placeholder"></div>
+                        <div class="chat-window customer grey id phone-text-placeholder"></div>
                       </div>
                     </div>
                     <div class="new social-profile-placeholder w-row">
@@ -281,5 +280,5 @@
         </div>
       </div>
     </div>
-  </div>
+  </div>  
 <%= render 'shared/get_started_form'%>
