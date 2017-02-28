@@ -1,7 +1,9 @@
 <% provide(:title, 'Rhombus - 404') %>
-<div class="utility-page-wrap">
-  <div class="utility-page-content"><img src="http://uploads.webflow.com/static/page-not-found.211a85e40c.svg">
-    <h2>Page not found</h2>
-    <div>The page you are looking for doesn't exist or has been moved.</div>
+<div class="blank-page-content-wrapper">
+  <div class="blank-page-container w-container">
+    <%= image_tag('007_040.png', class: 'blank-page-icon') %>
+    <h1 class="hero-h1 home-header">Sorry, looks like something went <br>wrong on our end.</h1>
+    <%= link_to 'Return home', root_url, class: 'button error-page-button w-button' %>
+    <h5 class="footer-cta-subheading signup-box-subheading">error 404</h5>
   </div>
 </div>
