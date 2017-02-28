@@ -5,11 +5,13 @@
       <div class="alt-hero-content">
         <h1 class="alt-hero-heading v2" >Communicate with <span id="type-it"></span> <p>inside the messaging apps they use everyday. </p> </h1>
         <p class="def-content-section-paragraph">Untether support from your website "live chat" by allowing your customers message from their favorite chat apps</p>
+        <div>
         <%= image_tag('fb-messenger.png', class: 'alt messaging-app-icons', width: 30) %>
         <%= image_tag('twilio-logo.png', class: 'alt messaging-app-icons', width: 30) %>
         <%= image_tag('slack.png', class: 'alt messaging-app-icons', width: 30) %>
         <%= image_tag('twitter.png', class: 'alt messaging-app-icons', width: 30) %>
         <%= image_tag('whatsapp.png', class: 'alt messaging-app-icons', width: 30) %>
+      </div>
       </div>
       <div class="hero-button-wrapper w-clearfix">
         <a class="alt-hero-cta-button features hero-button w-button" href="#">Get started for free</a><a class="button div-cta hero-alt-button w-button" href="#">Learn more</a>
@@ -137,7 +139,8 @@
 </div>
 
 <div class="default-content-section-2 table-section">
-  <div class="def-content-section-wrapper w-container"><img class="section-icon" src="assets/011_095.png">
+  <div class="def-content-section-wrapper w-container">
+  <%= image_tag('011_095.png', class: "section-icon") %>
     <h1 class="sub-hero-header">Turn first-time contacts to <br>loyal customers</h1>
     <div class="default-content-section-table w-row">
       <div class="def-content-section-column-1 w-col w-col-6">
@@ -146,30 +149,7 @@
         <h3 class="section-3-header">Get a complete picture of each customer</h3>
         <p class="def-content-section-paragraph section-4">No more switching between support tools and your transaction data to look up customer information.
           <br>
-          <br>Relay connects with your back-office&nbsp;to show your customers' purchase history alongside their interactions with your business, giving your team a complete picture.</p><a class="button def-content-section-button w-button" href="#">See all features</a>
-<!--           <div class="descriptive-div nested w-clearfix">
-            <div class="descriptive-div-header-wrapper w-clearfix">
-              <%= image_tag('31.jpg', class: 'placeholder-image', width: 30) %>
-              <div class="heading placeholder-content-text">Happy Corp.</div>
-            </div>
-            <div class="merchant phone-text-placeholder"></div>
-            <div class="alt-blue light-grey merchant phone-text-placeholder"></div>
-            <div class="customer grey phone-text-placeholder"></div>
-            <div class="_2 alt customer grey phone-text-placeholder">
-              <div class="text-window">
-                <div class="placeholder-text-row w-row">
-                  <div class="w-clearfix w-col w-col-10">
-                    <div class="placeholder-content-text">Hi Julia, I'd be happy to help you chang</div>
-                  </div>
-                  <div class="w-col w-col-2">
-                    <div class="placeholder-button">
-                      <div class="placeholder-button-text">Send</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div> -->
+          <br>Relay connects with your back-office&nbsp;to show your customers' purchase history alongside their interactions with your business, giving your team a complete picture.</p><a class="button def-content-section-button w-button" href="#">See all features</a> 
         </div>
         <div class="def-content-section-column-2 w-col w-col-6">
           <div class="relay-id-placeholder-wrapper w-hidden-small w-hidden-tiny">
@@ -192,7 +172,8 @@
               <div class="w-col w-col-4"></div>
               <div class="w-col w-col-8">
                 <div class="relay-id-content-wrapper">
-                  <div class="placeholder-customer-profile-picture-wrapper"><img class="placeholder-customer-profile-image" height="50" src="images/37.jpg" width="50">
+                  <div class="placeholder-customer-profile-picture-wrapper">
+                  <%= image_tag('37.jpg', class: "placeholder-customer-profile-image", height: "50", width: "50") %>
                     <div class="placeholder-channel-indicator"></div>
                   </div>
                   <div class="customer-name placeholder-content-text">Jen Awesome</div>
