@@ -28,6 +28,8 @@ class User < ActiveRecord::Base
 
   has_many :transactions
   has_many :merchant_transactions, class_name: 'Transaction', foreign_key: 'team_id'
+  has_many :merchant_customers, foreign_key: 'merchant_id'
+  has_many :merchant_customers, foreign_key: 'customer_id'
 
   has_many :subscriptions
 
