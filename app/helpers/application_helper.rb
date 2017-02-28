@@ -93,7 +93,7 @@ module ApplicationHelper
                            'registrations-edit', 'devise/passwords-new', 'registrations-add_card_info',
                            'registrations-add_profile_info', 'registrations-add_subscription',
                            'registrations-add_rhombus_number', 'merchant_customers-show',
-                           'devise/passwords-edit'
+                           'devise/passwords-edit', 'devise/passwords-update'
                          ]
     restricted_actions.include?(params_controller_action)
   end
