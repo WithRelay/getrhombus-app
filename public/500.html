@@ -1,35 +1,97 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
-<meta charset="utf-8" />
-<title>Rhombus - 500</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-
-<!-- BEGIN CORE CSS FRAMEWORK -->
-<link href="assets/application.css" rel="stylesheet" type="text/css"/>
-<link href="assets/forms.css" rel="stylesheet" type="text/css"/>
-<!-- END CORE CSS FRAMEWORK -->
-</head>
-
-<!-- END HEAD -->
-<!-- BEGIN BODY -->
-<body class="error-body no-top">
-<div class="error-wrapper container">
-<div class="row">
-    <div class="col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3 col-xs-offset-1 col-xs-10">
-   <div class="error-container" >
-    <div class="error-main">
-      <div class="error-number"> 500 </div>
-      <div class="error-description" > We seem to have lost you in the clouds. </div>
-      <div class="error-description-mini"> The page you are looking for is not here :( </div>
-      <br>
-    </div>
-    </div>
+<style>
+.blank-page-content-wrapper {
+  position: fixed;
+  left: 0px;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  overflow: visible;
+  height: 100%;
+  padding: 100px 200px;
+  background-color: rgba(248, 250, 251, .5);
+  -webkit-transition: opacity 200ms ease;
+  transition: opacity 200ms ease;
+}
+.blank-page-container {
+  margin-top: 160px;
+  text-align: center;
+}
+.w-container {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 940px;
+}
+.w-container:before,
+.w-container:after {
+  content: " ";
+  display: table;
+}
+.w-container:after {
+  clear: both;
+}
+.blank-page-icon {
+  display: block;
+  margin-right: auto;
+  margin-bottom: 50px;
+  margin-left: auto;
+  -webkit-transform: scale(1) translate(0px, 0px);
+  -ms-transform: scale(1) translate(0px, 0px);
+  transform: scale(1) translate(0px, 0px);
+}
+.hero-h1 {
+  margin-top: 70px;
+  margin-bottom: 20px;
+  font-family: 'Akkurat light regular', sans-serif;
+  color: #fff;
+  font-size: 29px;
+  font-weight: 400;
+  text-align: center;
+}
+.hero-h1.home-header {
+  width: auto;
+  margin: 0px 10% 20px;
+  padding-bottom: 20px;
+  font-family: 'Akkurat light regular', sans-serif;
+  color: #2e2e7f;
+  font-size: 30px;
+  line-height: 42px;
+}
+.button.error-page-button {
+  width: 20%;
+  margin-top: 0px;
+  margin-right: 0%;
+  margin-bottom: 20px;
+  padding-top: 10px;
+  float: none;
+}
+.w-button {
+  display: inline-block;
+  padding: 9px 15px;
+  background-color: #3898EC;
+  color: white;
+  border: 0;
+  line-height: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  border-radius: 0;
+}
+.signup-box-subheading.footer-cta-subheading {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+}
+@font-face {
+  font-family: 'Akkurat light regular';
+  src: url('assets/fonts/Akkurat-Light-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+}
+</style>
+<div class="blank-page-content-wrapper">
+  <div class="blank-page-container w-container">
+    <img class="blank-page-icon" src="assets/images/008_001.png">
+    <h1 class="hero-h1 home-header">Sorry, looks like something went <br>wrong on our end.</h1>
+    <a class="button error-page-button w-button" href="/">Return home</a>
+    <h5 class="footer-cta-subheading signup-box-subheading">error 500</h5>
   </div>
 </div>
-</div>
-
-<!-- END CONTAINER -->
-</body>
-</html>
