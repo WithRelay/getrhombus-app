@@ -30,7 +30,8 @@ class UsersController < ApplicationController
   end
 
   def leads_contacts
-    @leads_contacts = current_user.merchant_customers
+    uid_type = params[:customer_id_type] || 'phone_number'
+    @leads_contacts = MerchantContact.where(merchant_id: 1, uid_type: uid_type)
   end
 
 private
