@@ -16,7 +16,7 @@ module ApplicationHelper
 
   def render_header_partial
     return render 'shared/docs_header' if relay_docs_pages || privacy_and_terms_pages
-    return render 'shared/unauthenticate_header' if unauthenticate_controller
+    return render 'shared/unauthenticate_header' if unauthenticate_controller && !restrict_static_pages
     return render 'shared/authenticated_header' unless authenticated_pages || campaign_restrict_params
     return render 'campaigns/campaign_header' if campaign_restrict_params
     return render 'shared/messaging_header' if messaging_dashboard
@@ -60,7 +60,7 @@ module ApplicationHelper
   end
 
   def render_footer_partial
-    return render 'shared/unauthenticate_footer' if unauthenticate_controller
+    return render 'shared/unauthenticate_footer' if unauthenticate_controller && !restrict_static_pages
   end
 
   def render_sign_up_footer
@@ -70,6 +70,10 @@ module ApplicationHelper
   def unauthenticate_controller
     static_controllers = ['static_pages', 'contact_forms' ]
     static_controllers.include?(params[:controller]) unless relay_docs_pages
+  end
+
+  def restrict_static_pages
+    ['static_pages-to_404'].include?(params_controller_action)
   end
 
   def setting_pages
@@ -98,7 +102,7 @@ module ApplicationHelper
                            'registrations-edit', 'devise/passwords-new', 'registrations-add_card_info',
                            'registrations-add_profile_info', 'registrations-add_subscription',
                            'registrations-add_rhombus_number', 'merchant_customers-show',
-                           'devise/passwords-edit', 'devise/passwords-update'
+                           'devise/passwords-edit', 'devise/passwords-update', ''
                          ]
     restricted_actions.include?(params_controller_action)
   end

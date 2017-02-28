@@ -29,6 +29,10 @@ class UsersController < ApplicationController
   def sms_usage
   end
 
+  def leads_contacts
+    @leads_contacts = current_user.merchant_customers
+  end
+
 private
   # Use callbacks to share common setup or constraints between actions.
   def set_user
