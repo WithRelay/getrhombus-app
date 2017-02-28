@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170228032546) do
+ActiveRecord::Schema.define(version: 20170228120848) do
 
   create_table "addresses", force: :cascade do |t|
     t.string   "street_address",   limit: 191
@@ -324,17 +324,10 @@ ActiveRecord::Schema.define(version: 20170228032546) do
     t.integer "customer_id",          limit: 4
   end
 
-<<<<<<< Updated upstream
-  add_index "invoices", ["coupon_id"], name: "fk_rails_1489735805", using: :btree
-  add_index "invoices", ["stripe_invoice_id"], name: "index_invoices_on_stripe_invoice_id", using: :btree
-  add_index "invoices", ["subscription_id"], name: "fk_rails_8a85263dc0", using: :btree
-  add_index "invoices", ["transaction_id"], name: "fk_rails_497f2b74ce", using: :btree
-=======
   add_index "invoices", ["coupon_id"], name: "fk_rails_7aa1e153d5", using: :btree
   add_index "invoices", ["stripe_invoice_id"], name: "index_invoices_on_stripe_invoice_id", using: :btree
   add_index "invoices", ["subscription_id"], name: "fk_rails_46381ea356", using: :btree
   add_index "invoices", ["transaction_id"], name: "fk_rails_4ccc1b83a0", using: :btree
->>>>>>> Stashed changes
 
   create_table "knowledge_base_categories", force: :cascade do |t|
     t.string   "name",       limit: 191
@@ -375,15 +368,15 @@ ActiveRecord::Schema.define(version: 20170228032546) do
   add_index "lists", ["user_id"], name: "index_lists_on_user_id", using: :btree
 
   create_table "merchant_contacts", force: :cascade do |t|
-    t.integer  "merchant_id",      limit: 4
-    t.string   "customer_id",      limit: 191
+    t.integer  "merchant_id", limit: 4
+    t.string   "uid",         limit: 191
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "customer_id_type", limit: 191
+    t.string   "uid_type",    limit: 191
   end
 
-  add_index "merchant_contacts", ["customer_id"], name: "index_merchant_contacts_on_customer_id", using: :btree
   add_index "merchant_contacts", ["merchant_id"], name: "index_merchant_contacts_on_merchant_id", using: :btree
+  add_index "merchant_contacts", ["uid"], name: "index_merchant_contacts_on_uid", using: :btree
 
   create_table "merchant_customers", force: :cascade do |t|
     t.integer  "merchant_id",        limit: 4
@@ -598,14 +591,8 @@ ActiveRecord::Schema.define(version: 20170228032546) do
     t.integer  "merchant_customer_id",    limit: 4
   end
 
-<<<<<<< Updated upstream
-  add_index "subscriptions", ["coupon_id"], name: "index_subscriptions_on_coupon_id", using: :btree
-  add_index "subscriptions", ["merchant_customer_id"], name: "index_subscriptions_on_merchant_customer_id", using: :btree
-  add_index "subscriptions", ["plan_id"], name: "index_subscriptions_on_plan_id", using: :btree
-=======
   add_index "subscriptions", ["coupon_id"], name: "fk_rails_ddc53c9490", using: :btree
   add_index "subscriptions", ["plan_id"], name: "fk_rails_fc223f21da", using: :btree
->>>>>>> Stashed changes
 
   create_table "transactions", force: :cascade do |t|
     t.datetime "created_at"
@@ -645,11 +632,7 @@ ActiveRecord::Schema.define(version: 20170228032546) do
   add_index "transactions", ["hashtag_id"], name: "index_transactions_on_hashtag_id", using: :btree
   add_index "transactions", ["referenced_customer_transaction_id"], name: "index_transactions_on_referenced_customer_transaction_id", using: :btree
   add_index "transactions", ["subscription_id"], name: "index_transactions_on_subscription_id", using: :btree
-<<<<<<< Updated upstream
-  add_index "transactions", ["team_id"], name: "index_transactions_on_team_id", using: :btree
-=======
   add_index "transactions", ["team_id"], name: "fk_rails_0e0853dbc8", using: :btree
->>>>>>> Stashed changes
   add_index "transactions", ["txn_number"], name: "index_transactions_on_txn_number", using: :btree
   add_index "transactions", ["user_id"], name: "index_transactions_on_user_id", using: :btree
 

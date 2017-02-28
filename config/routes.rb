@@ -50,6 +50,7 @@ Rails.application.routes.draw  do
         member do
           get 'segments' => 'lists#segments'
           get 'sms-usage' => 'users#sms_usage'
+          get 'leads-and-contacts' => 'users#leads_contacts'
           get 'add-subscription' => 'registrations#add_subscription'
           get 'add-rhombus-number' => 'registrations#add_rhombus_number'
           get 'add-profile-info' => 'registrations#add_profile_info'
