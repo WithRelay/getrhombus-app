@@ -10,7 +10,7 @@ class User < ActiveRecord::Base
   validates :tos_acceptance, acceptance: true, if: lambda { self.is_merchant? }, on: :update
   validates_presence_of :org_type, if: lambda { self.is_merchant? }, on: :update
   validates_presence_of :org_name, if: lambda { self.is_merchant? && self.org_type.try(:downcase) != 'individual' }, on: :update
-  validates_presence_of :user_level, message: "Please select an account type"
+  validates_presence_of :user_level, message: "Please select an account type", on: :create
 
   # Edit pages use the right number field for each user type
   validates_presence_of :org_phone, numericality: { only_integer: true }, length: { minimum: 10 }, on: :update, if: lambda { self.is_merchant? }
