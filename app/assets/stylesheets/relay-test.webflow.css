@@ -2131,7 +2131,7 @@ h4 {
 }
 
 .body.message {
-  overflow: hidden;
+  overflow: scroll;
   height: 100vh;
   padding-right: 0px;
   padding-bottom: 130px;
@@ -3870,10 +3870,10 @@ h4 {
   right: 23%;
   overflow: auto;
   width: 54%;
-  height: 80vh;
-  min-height: 80vh;
+  height: 100vh;
+  min-height: auto;
   min-width: 54%;
-  padding-bottom: 50px;
+  padding-bottom: 85px;
   background-color: #f8fafc;
 }
 
@@ -4957,12 +4957,12 @@ h4 {
 
 .text-window-wrapper {
   position: fixed;
-  right: 23%;
+  right: 24%;
   bottom: 0px;
   z-index: 2;
   overflow: visible;
-  width: 54%;
-  height: 11vh;
+  width: 53%;
+  height: auto;
   margin-left: 0px;
   padding: 18px 10px 0px 0px;
   border-top: 1px none #e6e5e5;
@@ -11816,8 +11816,8 @@ h4 {
   margin-right: 6%;
   margin-left: 6%;
   border-radius: 3px;
-  background-image: -webkit-linear-gradient(270deg, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2)), url('use-case-demand-service.jpg');
-  background-image: linear-gradient(180deg, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2)), url('use-case-demand-service.jpg');
+  background-image: -webkit-linear-gradient(270deg, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2)), url('photo-1449247666642-264389f5f5b1.jpg');
+  background-image: linear-gradient(180deg, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2)), url('photo-1449247666642-264389f5f5b1.jpg');
   background-position: 0px 0px, 0px 0px;
   background-size: auto, cover;
 }
@@ -12206,8 +12206,8 @@ h4 {
   margin-right: 6%;
   margin-left: 6%;
   border-radius: 3px;
-  background-image: -webkit-linear-gradient(270deg, rgba(0, 0, 0, .15), rgba(0, 0, 0, .15)), url('use-case-demand-service.jpg');
-  background-image: linear-gradient(180deg, rgba(0, 0, 0, .15), rgba(0, 0, 0, .15)), url('use-case-demand-service.jpg');
+  background-image: -webkit-linear-gradient(270deg, rgba(0, 0, 0, .15), rgba(0, 0, 0, .15)), url('photo-1449247666642-264389f5f5b1.jpg');
+  background-image: linear-gradient(180deg, rgba(0, 0, 0, .15), rgba(0, 0, 0, .15)), url('photo-1449247666642-264389f5f5b1.jpg');
   background-position: 0px 0px, 0px 0px;
   background-size: auto, cover;
 }
@@ -13098,12 +13098,10 @@ h4 {
 }
 
 .split-button-wrapper.file-sender {
-  position: relative;
   top: 2px;
   right: 78px;
   bottom: 0px;
   width: 11%;
-  float: right;
 }
 
 .modal-wrapper-16 {
