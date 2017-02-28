@@ -152,6 +152,7 @@ Rails.application.routes.draw  do
           post 'messages'
           post 'mms'
           post 'mark_messages_as_read'
+          post 'close'
         end
       end
       resources :knowledge_bases, param: :url, only: [:index] do

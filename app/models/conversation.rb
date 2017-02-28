@@ -12,13 +12,13 @@ class Conversation < ActiveRecord::Base
   end
 
   def self.get_open_conversations_count(merchant_id)
-  	where(merchant_id: merchant_id, message_resolution_id: nil).count
+  	where(merchant_id: merchant_id, resolution: [nil, ""]).count
   	where(merchant_id: merchant_id).count
   end
 
   # Returns hash with users who sent a message to the given merchant in the last "num_days" days
   def self.get_open_conversations(merchant_id, page)
-####convs = where(merchant_id: merchant_id, message_resolution_id: [nil, '']).paginate(page: page, per_page: 25)
+####convs = where(merchant_id: merchant_id, resolution: [nil, '']).paginate(page: page, per_page: 25)
   	convs = where(merchant_id: merchant_id).paginate(page: page, per_page: 25)
   	x = convs.map { |conv| conv.conversation_hash }
     # remove these lines and x
@@ -148,7 +148,7 @@ class Conversation < ActiveRecord::Base
 
 	# find the conversation or create one
   def self.find_or_create_conversation(team_id, uid_type, uid)
-  	Conversation.find_or_create_by(merchant_id: team_id, uid_type: uid_type, uid: uid, message_resolution_id: nil)
+  	Conversation.find_or_create_by(merchant_id: team_id, uid_type: uid_type, uid: uid, resolution: [nil, ""])
   end
 
   # find conversation
@@ -158,7 +158,8 @@ class Conversation < ActiveRecord::Base
 
   def self.get_merchant_todays_unread_count(merchant_id, date)
     find_by_sql(["select count(cr.id) as count from conversations c inner join conversation_refs cr on c.id = cr.conversation_id
-                   where cr.unread = 1 and c.message_resolution_id is null and c.merchant_id = ? and c.created_at >= ?", merchant_id, date]).first.count
+                   where cr.unread = 1 and c.resolution is null or c.resolution = ''
+                   and c.merchant_id = ? and c.created_at >= ?", merchant_id, date]).first.count
   end
 
   def self.get_last_msg_from_last5_convs(merchant_id, date)
@@ -170,8 +171,8 @@ class Conversation < ActiveRecord::Base
                                   FROM conversation_refs c
                                   INNER JOIN (
                                     SELECT id, uid, uid_type from conversations d
-                                    where d.merchant_id = ? and d.message_resolution_id is null
-                                    and d.created_at >= ? order by d.created_at desc limit 5
+                                    where d.merchant_id = ? and d.resolution is null or 
+                                    d.resolution = '' and d.created_at >= ? order by d.created_at desc limit 5
                                     ) e ON e.id = c.conversation_id
                                   GROUP BY c.conversation_id 
                                 ) b ON a.id = b.cr_id", merchant_id, date])

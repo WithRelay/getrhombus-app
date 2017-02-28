@@ -11,7 +11,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
   function($scope, $http, Pubnub, Upload, $timeout, $q, conversationService, transactionService) {
 
     // Messages  // remove
-    // conversations
+    // Conversations
     //$scope.num_message_history = 200;   // remove
     //$scope.char_limit = 150;
     //$scope.active_user_number = 0;    //remove
@@ -22,8 +22,14 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
     $scope.selected_conversation_messages = [];
     $scope.current_chat_conversation = false;
 
+    // Message
     $scope.new_message = {}; 
-    $scope.new_message.text = "";    
+    $scope.new_message.text = "";
+
+    // Marked As Done
+    $scope.marked_as_done = {}; 
+    $scope.marked_as_done.reason = "";    
+    $scope.marked_as_done.notes = "";    
 
     // counters
     $scope.global_unread_count = 0;
@@ -373,7 +379,24 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
 
     $scope.clickFirstConversation = function() {
       $timeout(function() { angular.element('#conversation-list-wrapper').children(':first').triggerHandler('click'); });
-    }
+    };
+
+    $scope.closeConversation = function(data) {
+      if ($scope.marked_as_done.reason == "") {
+        alert('select a reason');
+      } else {    
+        var hash = { conversation: { notes: $scope.marked_as_done.notes, resolution: $scope.marked_as_done.reason } };
+        conversationService.closeConversation($scope.selected_conversation.id, hash)
+        .then(function(data) {
+          $scope.selected_conversation_messages = []
+          $scope.selected_conversation = {};
+          delete $scope.conversations[$scope.selected_conversation.id];
+        }, function(data) {
+          alert('unable to close conversation');
+        })
+        .finally(function() { $('#mark-as-done-div').trigger('close'); });
+      };
+    };
 
     $scope.messageTrackingFunction = function(message) { return message.channel + "-" + message.id.toString(); };
     $scope.imageTrackingFunction = function(image) { return 'Image-' + image.ref.toString(); };

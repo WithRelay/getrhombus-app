@@ -226,7 +226,7 @@
     
     <%# added this wrapping div %>
     <!-- message ng-repeat -->
-    <div ng-repeat="message in selected_conversation_messages track by messageTrackingFunction(message)"> <%# track by $index">  %>
+    <div ng-repeat="message in selected_conversation_messages track by messageTrackingFunction(message)" on-finish-render>
 
       <div class="conversation-date-wrapper" ng-if="($index != 0) && !selected_conversation_messages[$index - 1].unread && selected_conversation_messages[$index].unread">
         <div class="conversation-date">New Messages</div>
@@ -395,44 +395,43 @@
 
     <div class="modal-body w-hidden" id='mark-as-done-div'>
       <%# removed all webflow data attributes %>
-
       <div class="mark-as-done-form-wrapper">
         <p class="modal-content-description">Label conversations before you close it, so your entire team can stay informed on why a customer or lead reached out.</p>
         <div class="segment-modal underline-div"></div>
         <div class="mark-as-done-form w-form">
-          <form class="w-clearfix" id="email-form-6" name="email-form-6">
-            <select class="dropdown message-reason w-select" id="Message-Reason-2" name="Message-Reason-2" required="required">
-              <option value="">Select message reason</option>
-              <option value="">Account reactivation</option>
-              <option value="">Account deactivation</option>
-              <option value="">Apply coupon/promo code</option>
-              <option value="">Appointment scheduled</option>
-              <option value="">Appointment cancelled </option>
-              <option value="">Billing or payment question</option>
-              <option value="">Complaint</option>
-              <option value="">Change delivery address</option>
-              <option value="">Delivery status</option>
-              <option value="">Defective product</option>
-              <option value="">Defective feature</option>
-              <option value="">Late order arrival</option>
-              <option value="">Missing item</option>
-              <option value="">New order</option>
-              <option value="">Order cancellation</option>
-              <option value="">Order not delivered</option>
-              <option value="">Product or service question</option>
-              <option value="">Product or service feedback</option>
-              <option value="">Refund request</option>
-              <option value="">Refund status</option>
-              <option value="">Resend receipt</option>
-              <option value="">Returns</option>
-              <option value="">Spam</option>
-              <option value="">Subscription cancellation</option>
-              <option value="">Subscription reactivation</option>
-              <option value="">Update account information</option>
-              <option value="">Update order</option>
-              <option value="">Wrong item</option>
+          <form class="w-clearfix" id="email-form-6">
+            <select class="dropdown message-reason w-select" id="Message-Reason-2" ng-model='marked_as_done.reason'>
+              <option value='' disabled selected>Select message reason</option>
+              <option value="account_reactivation">Account reactivation</option>
+              <option value="account_deactivation">Account deactivation</option>
+              <option value="apply_coupon/promo_code">Apply coupon/promo code</option>
+              <option value="appoinment_scheduled">Appointment scheduled</option>
+              <option value="appointment_cancelled">Appointment cancelled </option>
+              <option value="billing_or_payment_question">Billing or payment question</option>
+              <option value="complaint">Complaint</option>
+              <option value="change_delivery_address">Change delivery address</option>
+              <option value="delivery_status">Delivery status</option>
+              <option value="defective_product">Defective product</option>
+              <option value="defective_feature">Defective feature</option>
+              <option value="late_order_arrival">Late order arrival</option>
+              <option value="missing_item">Missing item</option>
+              <option value="new_order">New order</option>
+              <option value="order_cancellation">Order cancellation</option>
+              <option value="order_not_delivered">Order not delivered</option>
+              <option value="product_or_service_question">Product or service question</option>
+              <option value="product_or_service_feedback">Product or service feedback</option>
+              <option value="refund_request">Refund request</option>
+              <option value="refund_status">Refund status</option>
+              <option value="refund_receipt">Resend receipt</option>
+              <option value="returns">Returns</option>
+              <option value="spam">Spam</option>
+              <option value="subscription_cancellation">Subscription cancellation</option>
+              <option value="subscription_reactivation">Subscription reactivation</option>
+              <option value="update_account_information">Update account information</option>
+              <option value="update_order">Update order</option>
+              <option value="wrong_item">Wrong item</option>
             </select>
-            <textarea class="mark-done text-area w-input" id="field-4" maxlength="5000" name="field-4" placeholder="Add notes"></textarea><a class="button mark-as-done-modal-button w-button">Mark conversation as done</a>
+            <textarea class="mark-done text-area w-input" ng-model='marked_as_done.notes' placeholder="Add notes"></textarea><a class="button mark-as-done-modal-button w-button" ng-click="closeConversation()">Mark conversation as done</a>
             <%# added update-close-modals and data %>
             <a class="button cancel-mark-as-done w-button update-close-modals" data-parent='mark-as-done-div'>Cancel</a>
           </form>

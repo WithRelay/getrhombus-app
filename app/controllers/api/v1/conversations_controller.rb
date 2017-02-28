@@ -24,6 +24,14 @@ class Api::V1::ConversationsController < API::V1::BaseController
     render json: Conversation.find_or_create_conversation(current_user.id, params[:uid_type], params[:uid]), status: 200
   end
 
+  def close
+    if @conversation.update(close_conversation_params)
+      render json: {}, status: 200
+    else
+      render json: {}, status: 500
+    end
+  end
+
   def mark_messages_as_read
     render json: {}, status: @conversation.mark_messages_as_read(params[:ids]) ? 200 : 500 
   end
@@ -57,6 +65,12 @@ class Api::V1::ConversationsController < API::V1::BaseController
 
     def set_conversation
       @conversation = Conversation.find_by(id: params[:id]) or not_found
+    end
+
+    def close_conversation_params
+      params.require(:conversation).permit(:notes, :resolution).tap do |param|
+        param[:notes] = param[:notes].present? ? param[:notes] : nil 
+      end
     end
 
     def check_user

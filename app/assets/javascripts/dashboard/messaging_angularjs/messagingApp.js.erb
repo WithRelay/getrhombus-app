@@ -72,6 +72,12 @@ messagingApp.directive("mySrc", function() {
   };
 });
 
+var hasScrollReachedBottom = function(element) {
+  console.log(element.scrollTop() + element.innerHeight())
+  console.log(element.prop('scrollHeight'))
+    return element.scrollTop() + element.innerHeight() >= element.prop('scrollHeight')
+};
+
 messagingApp.directive('onFinishRender', function ($timeout) {
   return {
     restrict: 'A',
@@ -79,8 +85,10 @@ messagingApp.directive('onFinishRender', function ($timeout) {
       var raw = element[0];
       if (scope.$last === true) {
         $timeout(function() {
-          raw.parentElement.scrollTop = raw.parentElement.scrollHeight; 
+          //if (hasScrollReachedBottom(element))
+          //raw.parentElement.scrollTop = raw.parentElement.scrollHeight; 
         });
+        console.log(element)
       }
     }
   }
@@ -148,7 +156,7 @@ messagingApp.factory('conversationService', function($http, $q, Upload){
     var deferred = $q.defer();
     $http({
       method: 'POST',
-      url: base_url + "/" + conversation_id + '/mark_messages_as_read?ids=' + unread_ids,
+      url: base_url + "/" + conversation_id + '/mark_messages_as_read.json?ids=' + unread_ids,
       headers: token,
     })
     .success(function(data) { 
@@ -159,7 +167,6 @@ messagingApp.factory('conversationService', function($http, $q, Upload){
     });
     return deferred.promise;
   };
-
 
   service.sendConversationMessage = function(conversation_id, text, channel) {
     var deferred = $q.defer();
@@ -186,6 +193,23 @@ messagingApp.factory('conversationService', function($http, $q, Upload){
     });
     return file.upload;
   };
+
+  service.closeConversation = function(conversation_id, data){
+    var deferred = $q.defer();
+    $http({
+      method: 'POST',
+      url: base_url + "/" + conversation_id + '/close.json',
+      headers: token,
+      data: data
+    })
+    .success(function(data) { 
+      deferred.resolve(true);
+    })
+    .error(function() { 
+      deferred.reject(false);
+    });
+    return deferred.promise;
+  }
 
   return service;
 });

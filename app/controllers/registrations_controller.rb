@@ -12,7 +12,7 @@ class RegistrationsController < Devise::RegistrationsController
 
     url = request.referrer if set_update_flash_messages[:billing_info].present?
 
-    prev_unconfirmed_email = resource.unconfirmed_email if resource.respond_to?(:unconfirmed_email)
+    #prev_unconfirmed_email = resource.unconfirmed_email if resource.respond_to?(:unconfirmed_email)
 
     resource_updated = update_resource(resource, account_update_params)
     yield resource if block_given?

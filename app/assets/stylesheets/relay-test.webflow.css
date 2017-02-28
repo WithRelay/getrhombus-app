@@ -3688,7 +3688,7 @@ h4 {
   right: 0px;
   bottom: 0px;
   z-index: 2;
-  overflow: auto;
+  overflow: scroll;
   width: 23%;
   min-width: 23%;
   padding-bottom: 100px;
@@ -3868,7 +3868,7 @@ h4 {
 .dashboard-body.messaging {
   top: 100px;
   right: 23%;
-  overflow: auto;
+  overflow: scroll;
   width: 54%;
   height: 100vh;
   min-height: auto;
@@ -10596,6 +10596,8 @@ h4 {
 }
 
 .alt-hero-cta-button.features.hero-button {
+  display: inline-block;
+  float: none;
   border-color: #1280e0;
   background-color: #1280e0;
   font-family: 'Akkurat regular', sans-serif;
@@ -13096,10 +13098,12 @@ h4 {
 }
 
 .split-button-wrapper.file-sender {
+  position: relative;
   top: 2px;
   right: 78px;
   bottom: 0px;
   width: 11%;
+  float: right;
 }
 
 .modal-wrapper-16 {
@@ -13684,6 +13688,8 @@ h4 {
 }
 
 .unread-notification-count {
+  margin-top: -6px;
+  margin-bottom: 0px;
   margin-left: 0px;
   padding: 5px 10px;
   float: right;
@@ -14456,6 +14462,13 @@ h4 {
   color: hsla(0, 0%, 100%, .8);
 }
 
+.dynamic-text {
+  padding-right: 10px;
+  padding-left: 8px;
+  background-color: rgba(240, 246, 251, .3);
+  color: #2e2e7f;
+}
+
 html.w-mod-js *[data-ix="display-none-on-load"] {
   display: none;
 }
@@ -14820,6 +14833,11 @@ html.w-mod-js *[data-ix="fixed-nav-display-none"] {
   .first-content-section-sub-header.default-content-section-h1.second-def-content-section {
     margin-top: 30px;
   }
+  .underline-div.footer-underline {
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+  }
   .links.footer-links {
     text-align: center;
   }
@@ -14937,6 +14955,7 @@ html.w-mod-js *[data-ix="fixed-nav-display-none"] {
     margin-bottom: 50px;
   }
   .alt-hero-cta-button.features.hero-button {
+    margin-right: 1%;
     margin-left: 88px;
   }
   .customer-interactions-table {
@@ -15196,6 +15215,11 @@ html.w-mod-js *[data-ix="fixed-nav-display-none"] {
   }
   .content-section-description.country-list {
     width: 500px;
+  }
+  .underline-div.footer-underline {
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
   }
   .links.footer-links.blog-links {
     padding-left: 0px;
