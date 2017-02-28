@@ -2131,7 +2131,7 @@ h4 {
 }
 
 .body.message {
-  overflow: scroll;
+  overflow: hidden;
   height: 100vh;
   padding-right: 0px;
   padding-bottom: 130px;
@@ -3688,7 +3688,7 @@ h4 {
   right: 0px;
   bottom: 0px;
   z-index: 2;
-  overflow: scroll;
+  overflow: auto;
   width: 23%;
   min-width: 23%;
   padding-bottom: 100px;
@@ -3868,12 +3868,12 @@ h4 {
 .dashboard-body.messaging {
   top: 100px;
   right: 23%;
-  overflow: scroll;
+  overflow: auto;
   width: 54%;
-  height: 100vh;
-  min-height: auto;
+  height: 80vh;
+  min-height: 80vh;
   min-width: 54%;
-  padding-bottom: 85px;
+  padding-bottom: 50px;
   background-color: #f8fafc;
 }
 
@@ -4957,12 +4957,12 @@ h4 {
 
 .text-window-wrapper {
   position: fixed;
-  right: 24%;
+  right: 23%;
   bottom: 0px;
   z-index: 2;
   overflow: visible;
-  width: 53%;
-  height: auto;
+  width: 54%;
+  height: 11vh;
   margin-left: 0px;
   padding: 18px 10px 0px 0px;
   border-top: 1px none #e6e5e5;

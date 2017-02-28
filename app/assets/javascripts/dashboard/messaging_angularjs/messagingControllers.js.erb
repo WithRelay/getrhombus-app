@@ -489,25 +489,25 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
     $scope.bindEnterToMessagingArea = function() {
       BindConversationPlugins.get_emoji_box()[0].emojioneArea.on("keyup", function(btn, e) {
         BindConversationPlugins.update_textarea();
-        if (e.keyCode == 13) $scope.sendConversationMessage('Message');   
+        if (e.keyCode == 13 && !$scope.is_sending) $scope.sendConversationMessage('Message');   
       });
     };
 
     $scope.sendConversationMessage = function(channel) {
-      //var btn = (channel == 'Message') ? 'send_msg_btn' : 'send_msg_fb_btn';
       $scope.is_sending = true;
-      console.log($scope.new_message)
-      //$scope[btn] = "Sending...";
-      /*if (($scope.new_message.text == '') || ($scope.new_message.text.length > $scope.char_limit)) {
-        alert('Maximum ' + $scope.char_limit + ' characters.');
+      var btn = (channel == 'Message') ? 'send_msg_btn' : 'send_msg_fb_btn';
+      $scope[btn] = "Sending...";
+      console.log($scope.new_message);
+
+      if (($scope.new_message.text == '') || ($scope.new_message.text.length > $scope.char_limit)) {
+        alert('enter up to ' + $scope.char_limit + ' characters.');
         $scope.enable_msg_btn(btn, channel);
       } else {
         var conversation_id = $scope.selected_conversation.id;
         conversationService.sendConversationMessage(conversation_id, $scope.new_message.text, channel)
         .then(function(data) {
           // ensure we still have the right conversation
-          if ($scope.selected_conversation.id == conversation_id)
-            $scope.selected_conversation_messages.push(data);
+          if ($scope.selected_conversation.id == conversation_id) $scope.selected_conversation_messages.push(data);
           $scope.new_message.text = '';
           BindConversationPlugins.get_emoji_box()[0].emojioneArea.setText('');
           console.log('sent message');
@@ -516,14 +516,14 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
           console.log(data)
         })
         .finally(function() { 
-          //$scope.enable_msg_btn(btn, channel); 
+          $scope.enable_msg_btn(btn, channel); 
         });
-      };*/
+      };
     };
 
     $scope.enable_msg_btn = function(btn, channel) {
-      $scope.is_sending = false;
       $scope[btn] = (channel == 'Message') ? 'Send' : 'send with fb';
+      $scope.is_sending = false;
     };
 
     // MMS
@@ -545,15 +545,14 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
 
 
     $scope.sendMMS = function(channel) {
-      var btn = (channel == 'Message') ? 'send_mms_btn' : 'send_mms_fb_btn';
       $scope.is_sending = true;
+      var btn = (channel == 'Message') ? 'send_mms_btn' : 'send_mms_fb_btn';
       $scope[btn] = "Sending...";
       var file = $scope.selected_file;
       var conversation_id = $scope.selected_conversation.id;
       conversationService.sendConversationMMS(conversation_id, file, $scope.mms_text, channel)
       .then(function (data) {
-        if ($scope.selected_conversation.id == conversation_id)
-          $scope.selected_conversation_messages.push(data.data);
+        if ($scope.selected_conversation.id == conversation_id) $scope.selected_conversation_messages.push(data.data);
         // wipe file picker?
         console.log('mms sent');
         console.log(data)
@@ -562,9 +561,8 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
         console.log('unable to send mms');
       })
       .finally(function() {
-        $('#mms-img-preview').trigger('close');
-        $scope.is_sending = false;
-        $scope[btn] = (channel == 'Message') ? 'Send' : 'send with fb';
+        $scope.enable_msg_btn(btn, channel); 
+        $('#mms-img-preview-div').trigger('close');
       });
     };
     // End MMS

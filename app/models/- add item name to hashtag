@@ -30,6 +30,7 @@ New
 - all settings pages should go back to the same page... i did it only for billing so far 
 - show me devise errors
 - we will need pubnub in other pages outside messages
+- do reminders for messaging page
 
 - add the url for pages you did to the sidebar on dashboard and settings page
 
