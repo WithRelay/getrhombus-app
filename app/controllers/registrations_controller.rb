@@ -2,6 +2,7 @@ class RegistrationsController < Devise::RegistrationsController
 
   include AdditionalUserActions
   include DashboardNotification
+  include CheckUserProfile
 
   before_action :set_notifications, only: [:billing_information, :account_settings, :business_settings]
 
