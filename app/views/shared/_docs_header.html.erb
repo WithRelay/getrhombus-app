@@ -3,7 +3,15 @@
     <div class="categories relay-docs-logo-wrapper w-row">
       <div class="w-col w-col-6">
         <%= image_tag('Relay-Transparent-White.png', class: 'relay-logo-docs', width: 67) %>
-        <div class="docs-page-title">Help Center</div>
+        <div class="docs-page-title">
+         <%if controller.action_name == "terms" %>
+            Terms of Use
+          <%elsif controller.action_name == 'privacy' %>
+          Privacy Policy
+          <% else %>
+          Help Center
+          <%end%>
+        </div>
       </div>
       <div class="relay-docs-logo-wrapper-column-2 w-col w-col-6"><a class="sign-in-link" href="#">Sign in</a>
       </div>

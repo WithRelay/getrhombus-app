@@ -15,9 +15,9 @@ module ApplicationHelper
   end
 
   def render_header_partial
+    return render 'shared/docs_header' if relay_docs_pages || privacy_and_terms_pages
     return render 'shared/unauthenticate_header' if unauthenticate_controller && !restrict_static_pages
     return render 'shared/authenticated_header' unless authenticated_pages || campaign_restrict_params
-    return render 'shared/docs_header' if relay_docs_pages
     return render 'campaigns/campaign_header' if campaign_restrict_params
     return render 'shared/messaging_header' if messaging_dashboard
   end
@@ -85,6 +85,11 @@ module ApplicationHelper
 
   def relay_docs_pages
     controller_actions = ['static_pages-relay_docs', 'static_pages-creating_campaigns_in_relay']
+    controller_actions.include?(params_controller_action)
+  end
+
+  def privacy_and_terms_pages
+    controller_actions = ['static_pages-privacy', 'static_pages-terms']
     controller_actions.include?(params_controller_action)
   end
 
