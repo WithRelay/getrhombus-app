@@ -257,6 +257,28 @@ messagingApp.factory('transactionService', function($http, $q, Upload){
   return service;
 });
 
+messagingApp.factory('savedReplyService', function($http, $q, Upload){
+  var service = {};
+  var base_url = window.location.origin + '/v1/saved_replies';
+  var token = { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content') };
+
+  service.getSavedReplies = function(){
+    var deferred = $q.defer();
+    $http.get(base_url + '.json')
+    .success(function(data) {
+      console.log('console success in serice get saved replies'); 
+      deferred.resolve(data);
+    })
+    .error(function(data, status, headers, config) { 
+      console.log('console fail in serice get saved replies'); 
+      deferred.reject("there was an error");
+    });
+    return deferred.promise;
+  }
+
+  return service;
+});
+
 
 
 

@@ -102,7 +102,7 @@ class Conversation < ActiveRecord::Base
       customer = User.find_by(id: conv.uid)
       to = (channel == "FbMessage") ? 'get messenger cred' : customer.phone_number
     else
-      to = uid
+      to = conv.uid
     end
 
     @msg_instance = channel.constantize.new

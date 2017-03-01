@@ -7,8 +7,9 @@ var messagingControllers = angular.module('messagingControllers', [
 ]);
 
 
-messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub', 'Upload', '$timeout', '$q', 'conversationService', 'transactionService',
-  function($scope, $http, Pubnub, Upload, $timeout, $q, conversationService, transactionService) {
+messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub', 'Upload', '$timeout', '$q', 
+                                                        'savedReplyService',  'conversationService', 'transactionService',
+  function($scope, $http, Pubnub, Upload, $timeout, $q, savedReplyService, conversationService, transactionService) {
 
     // Messages  // remove
     // Conversations
@@ -26,10 +27,12 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
     $scope.new_message = {}; 
     $scope.new_message.text = "";
 
+
     // Marked As Done
     $scope.marked_as_done = {}; 
     $scope.marked_as_done.reason = "";    
-    $scope.marked_as_done.notes = "";    
+    $scope.marked_as_done.notes = ""; 
+
 
     // counters
     $scope.global_unread_count = 0;
@@ -37,15 +40,25 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
     // ajax
     $scope.is_sending = false;
 
+
     // buttons
     $scope.send_msg_btn = "Reply";
-    $scope.send_msg_fb_btn = "Send via Messenger";
+    $scope.send_msg_fb_btn = "Send via Facebook";
     $scope.send_mms_btn = "Send";
-    $scope.send_mms_fb_btn = "Send via Messenger";
+    $scope.send_mms_fb_btn = "Send via Facebook";
     $scope.charge_btn = "CHARGE";
+
 
     // Transactions
     $scope.charge_data = { hashtag_id: null };
+
+
+    // Saved Replies
+    $scope.saved_replies_list = {};
+    $scope.saved_replies = {};
+    $scope.saved_replies.reply_id = "";
+
+
 
     // Get logged in merchant id
     $http.get(window.location.origin + '/get_current_user').success(function(data) {
@@ -312,7 +325,17 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
 
 
 
+    $scope.getSavedReplies = function() {
+      savedReplyService.getSavedReplies()
+      .then(function(data) {
+        $scope.saved_replies_list = data;
+        console.log('saved replies retrieved');
+      }, function(data) {
+        alert('unable to get saved replies');
+      });      
+    };
 
+    $scope.getSavedReplies();
 
     $scope.selectConversation = function(data) {
       if (data.select_conversation !== undefined) {
@@ -382,19 +405,21 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
     };
 
     $scope.closeConversation = function(data) {
-      if ($scope.marked_as_done.reason == "") {
-        alert('select a reason');
-      } else {    
-        var hash = { conversation: { notes: $scope.marked_as_done.notes, resolution: $scope.marked_as_done.reason } };
-        conversationService.closeConversation($scope.selected_conversation.id, hash)
-        .then(function(data) {
-          $scope.selected_conversation_messages = []
-          $scope.selected_conversation = {};
-          delete $scope.conversations[$scope.selected_conversation.id];
-        }, function(data) {
-          alert('unable to close conversation');
-        })
-        .finally(function() { $('#mark-as-done-div').trigger('close'); });
+      if ($scope.is_conversation_selected()) {
+        if ($scope.marked_as_done.reason == "") {
+          alert('select a reason');
+        } else {    
+          var hash = { conversation: { notes: $scope.marked_as_done.notes, resolution: $scope.marked_as_done.reason } };
+          conversationService.closeConversation($scope.selected_conversation.id, hash)
+          .then(function(data) {
+            $scope.selected_conversation_messages = []
+            $scope.selected_conversation = {};
+            delete $scope.conversations[$scope.selected_conversation.id];
+          }, function(data) {
+            alert('unable to close conversation');
+          })
+          .finally(function() { $('#mark-as-done-div').trigger('close'); });
+        };
       };
     };
 
@@ -489,40 +514,49 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
     $scope.bindEnterToMessagingArea = function() {
       BindConversationPlugins.get_emoji_box()[0].emojioneArea.on("keyup", function(btn, e) {
         BindConversationPlugins.update_textarea();
-        if (e.keyCode == 13 && !$scope.is_sending) $scope.sendConversationMessage('Message');   
+        if (e.keyCode == 13) $scope.sendConversationMessage('Message');   
       });
     };
 
     $scope.sendConversationMessage = function(channel) {
-      $scope.is_sending = true;
-      var btn = (channel == 'Message') ? 'send_msg_btn' : 'send_msg_fb_btn';
-      $scope[btn] = "Sending...";
-      console.log($scope.new_message);
+      if ($scope.is_conversation_selected() && !$scope.is_sending) {
+        $scope.is_sending = true;
+        var btn = (channel == 'Message') ? 'send_msg_btn' : 'send_msg_fb_btn';
+        $scope[btn] = "Sending...";
+        console.log($scope.new_message);
 
-      if (($scope.new_message.text == '') || ($scope.new_message.text.length > $scope.char_limit)) {
-        alert('enter up to ' + $scope.char_limit + ' characters.');
-        $scope.enable_msg_btn(btn, channel);
-      } else {
-        var conversation_id = $scope.selected_conversation.id;
-        conversationService.sendConversationMessage(conversation_id, $scope.new_message.text, channel)
-        .then(function(data) {
-          // ensure we still have the right conversation
-          if ($scope.selected_conversation.id == conversation_id) $scope.selected_conversation_messages.push(data);
-          $scope.new_message.text = '';
-          BindConversationPlugins.get_emoji_box()[0].emojioneArea.setText('');
-          console.log('sent message');
-        }, function(data) {
-          console.log('unable to send message');
-          console.log(data)
-        })
-        .finally(function() { 
-          $scope.enable_msg_btn(btn, channel); 
-        });
+        if (($scope.new_message.text == '') || ($scope.new_message.text.length > $scope.char_limit)) {
+          alert('enter up to ' + $scope.char_limit + ' characters.');
+          $scope.enable_msg_btn(btn, channel);
+        } else {
+          var conversation_id = $scope.selected_conversation.id;
+          conversationService.sendConversationMessage(conversation_id, $scope.new_message.text, channel)
+          .then(function(data) {
+            // ensure we still have the right conversation
+            if ($scope.selected_conversation.id == conversation_id) $scope.selected_conversation_messages.push(data);
+            $scope.new_message.text = '';
+            BindConversationPlugins.get_emoji_box()[0].emojioneArea.setText('');
+            console.log('sent message');
+            console.log(data)
+          }, function(data) {
+            console.log('unable to send message');
+            console.log(data)
+          })
+          .finally(function() { 
+            $scope.enable_msg_btn(btn, channel); 
+          });
+        };
       };
     };
 
+    $scope.is_conversation_selected = function() {
+      var state = $scope.selected_conversation.id !== undefined;
+      if (!state) alert('select a conversation')
+      return state;
+    }
+
     $scope.enable_msg_btn = function(btn, channel) {
-      $scope[btn] = (channel == 'Message') ? 'Send' : 'send with fb';
+      $scope[btn] = (channel == 'Message') ? 'Send' : 'Send via Facebook';
       $scope.is_sending = false;
     };
 
@@ -545,25 +579,27 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
 
 
     $scope.sendMMS = function(channel) {
-      $scope.is_sending = true;
-      var btn = (channel == 'Message') ? 'send_mms_btn' : 'send_mms_fb_btn';
-      $scope[btn] = "Sending...";
-      var file = $scope.selected_file;
-      var conversation_id = $scope.selected_conversation.id;
-      conversationService.sendConversationMMS(conversation_id, file, $scope.mms_text, channel)
-      .then(function (data) {
-        if ($scope.selected_conversation.id == conversation_id) $scope.selected_conversation_messages.push(data.data);
-        // wipe file picker?
-        console.log('mms sent');
-        console.log(data)
-        $('#mms-file-preview-div').trigger('close');
-      }, function (response) {
-        console.log('unable to send mms');
-      })
-      .finally(function() {
-        $scope.enable_msg_btn(btn, channel); 
-        $('#mms-img-preview-div').trigger('close');
-      });
+      if ($scope.is_conversation_selected() && !$scope.is_sending) {
+        $scope.is_sending = true;
+        var btn = (channel == 'Message') ? 'send_mms_btn' : 'send_mms_fb_btn';
+        $scope[btn] = "Sending...";
+        var file = $scope.selected_file;
+        var conversation_id = $scope.selected_conversation.id;
+        conversationService.sendConversationMMS(conversation_id, file, $scope.mms_text, channel)
+        .then(function (data) {
+          if ($scope.selected_conversation.id == conversation_id) $scope.selected_conversation_messages.push(data.data);
+          // wipe file picker?
+          console.log('mms sent');
+          console.log(data)
+          $('#mms-file-preview-div').trigger('close');
+        }, function (response) {
+          console.log('unable to send mms');
+        })
+        .finally(function() {
+          $scope.enable_msg_btn(btn, channel); 
+          $('#mms-img-preview-div').trigger('close');
+        });
+      }
     };
     // End MMS
 
@@ -582,6 +618,8 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
         centered: true,
       });
     };
+
+    $scope.openSavedRepliesDiv();
 
     $scope.markAsDoneDiv = function() {
       $('#mark-as-done-div').lightbox_me({
