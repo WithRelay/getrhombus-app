@@ -30,7 +30,7 @@ class UsersController < ApplicationController
   end
 
   def leads_contacts
-    uid_type = params[:customer_id_type] || 'phone_number'
+    uid_type = params[:uid_type] || 'phone_number'
     @leads_contacts = current_user.contacts.where(uid_type: uid_type).includes(:contacts)
   end
 
