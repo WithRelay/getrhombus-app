@@ -151,7 +151,7 @@ class Conversation < ActiveRecord::Base
 	# find the conversation or create one
   def self.find_or_create_conversation(team_id, uid_type, uid)
     return @conv if @conv.present?
-  	Conversation.find_or_create_by(merchant_id: team_id, uid_type: uid_type, uid: uid, resolution: "[nil, '']")
+    Conversation.find_by(merchant_id: team_id, uid_type: uid_type, uid: uid, resolution: [nil, ""]) || Conversation.create(merchant_id: team_id, uid_type: uid_type, uid: uid)
   end
 
   # find conversation
