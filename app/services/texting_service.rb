@@ -27,11 +27,11 @@ class TextingService
   
     def send_sms(from, to, body, media_ary = [])
       begin
-        from.chr != "+" && from.prepend("+")
-        to.chr != "+" && to.prepend("+")
+        sender = from.chr == "+" ? from : "+" + from
+        recipient = to.chr == "+" ? to : "+" + to
 
         client = Twilio::REST::Client.new TWILIO_API_KEY, TWILIO_API_SECRET
-        data = { from: from, to: to, body: body, application_sid: TWILIO_RHOMBUS_APP_SID }
+        data = { from: sender, to: recipient, body: body, application_sid: TWILIO_RHOMBUS_APP_SID }
         # 5MB max size, 10 images max
         data[:media_url] = media_ary if media_ary.present?
         message = client.account.messages.create(data)

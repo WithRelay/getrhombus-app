@@ -18,7 +18,7 @@ add card info, add subscription, billing info
 - surya - test client side validations for account settings pages
 - surya - test validation for url, tax rate on business settings field
 - where is this page http://relay-test.webflow.io/platform-integrations
-- password reset page, change password pages and validations
+- password reset page and validations
 - redo static header for when user signs in
 - review each static page...there are some updates it seems - https://www.one-tab.com/page/JvNSs6beRmuwuIRBmxT68Q
 - reimport footer, and plug in links... dashabord to dashboard
@@ -35,14 +35,16 @@ New
 - do reminders for messaging page
 - fix alerts html
 - homepage/features hero buttons
-????
+- change password pages (relay-test.webflow.io/change-password) and validations
+Surya
+- validates_associated in user... any read op on user will run a query
 Dorje
 - add flags.png and flags2x.png back
 - about page not done
+- update login page
 - customer_id in customer profile is tightly coupled to reminders...shouldnt be - https://bitbucket.org/rhombus_inhouse/getrhombus/commits/36ee857ebdbb59eabf7fa766bf46e29acd5f7b70
 bhishma
 - do messageparser with bhishma tomorrow. 
-- reverse change to conversations
 - create subscription on customer profile page
 
 

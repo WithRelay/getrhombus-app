@@ -434,9 +434,10 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
       }
     };
 
-    var messages_page = 1;
+    $scope.messages_page = 1;
     $scope.status = { loading: false, /* loaded: false */ };
     $scope.selected_conversation = {};
+
     $scope.getConversationMessages = function(conversation, from_conversations_list) {
       var deferred = $q.defer();
 
@@ -448,7 +449,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
 
         // a new conversation is selected, reset
         if ($scope.selected_conversation.id != conversation.id) {
-          messages_page = 1;
+          $scope.messages_page = 1;
           $scope.selected_conversation_messages = [];
         }
 
@@ -458,11 +459,11 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
           $scope.selected_conversation = conversation;
           $scope.status.loading = true;
 
-          conversationService.getConversationMessages(conversation.id, messages_page)
+          conversationService.getConversationMessages(conversation.id, $scope.messages_page)
           .then(function(data) {
             if (conversation.id == $scope.selected_conversation.id) {
               if (data.messages.length > 0) {
-                messages_page += 1;
+                $scope.messages_page += 1;
                 for (var i = 0, len = data.messages.length; i < len; i++) { 
                   data.messages[i].unread = false;
                   $scope.selected_conversation_messages.unshift(data.messages[i]); 
@@ -471,11 +472,6 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
                 //$scope.markMessagesAsRead(conversation.id, data.unread_ids);
                 $scope.status.loading = false;
                 console.log(data.messages)
-
-                // Bind plugins to textbox
-                // should only bind once...add check!!!!!!!!!!!!!!
-                //$timeout(function(){ BindPlugins.now() }, 0);
-
                 deferred.resolve();
               } else
                 $scope.rejectPromise(false, 'no messages', deferred);
@@ -640,9 +636,9 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
     };
 
     $scope.insertTextIntoMessageBox = function(text_to_insert) {
-      if (text_to_insert) {
+      if (text_to_insert && text_to_insert.trim().length) {
         var box = BindConversationPlugins.get_emoji_box()[0], text = box.emojioneArea.getText();
-        text += " " + text_to_insert;
+        text += " " + text_to_insert.trim();
         box.emojioneArea.setText(text);
         $scope.new_message.text = text;
       }
