@@ -31,7 +31,7 @@ class UsersController < ApplicationController
 
   def leads_contacts
     uid_type = params[:customer_id_type] || 'phone_number'
-    @leads_contacts = MerchantContact.where(merchant_id: 1, uid_type: uid_type)
+    @leads_contacts = current_user.contacts.where(uid_type: uid_type).includes(:contacts)
   end
 
 private
