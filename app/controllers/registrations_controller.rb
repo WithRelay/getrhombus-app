@@ -13,8 +13,7 @@ class RegistrationsController < Devise::RegistrationsController
 
     set_flash_message = set_update_flash_messages(message)
 
-    url = request.referrer if set_flash_message[:billing_info].present?
-
+    url = request.referrer if setting_pages_present?
     #prev_unconfirmed_email = resource.unconfirmed_email if resource.respond_to?(:unconfirmed_email)
     yield resource if block_given?
     if message.blank? && update_resource(resource, account_update_params)
@@ -156,6 +155,10 @@ class RegistrationsController < Devise::RegistrationsController
                                        }
                   }
     page_params[params[:page_params].to_sym]
+  end
+
+  def setting_pages_present?
+    set_update_flash_messages[:business_settings].present? || set_flash_message[:billing_info].present? || set_flash_message[:account_settings]
   end
 
   def previous_url
