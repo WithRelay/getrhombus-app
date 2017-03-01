@@ -4,7 +4,7 @@ class Api::V1::RemindersController < API::V1::BaseController
   def create
     reminder = current_user.reminders.build(reminder_params)
     saved_reminder = reminder.save
-    reminder.campaign_user_lists.build(user_id: params[:reminder][:customer_lists]).save
+    reminder.campaign_user_lists.build(user_id: params[:reminder][:customer_id]).save
     reminder.enqueue_jobs if saved_reminder
     status = saved_reminder ? { status: 200 } : { status: 400 }
     message = saved_reminder ? { notice: 'Reminder successfully Created' } : { error: reminder.errors.full_messages }

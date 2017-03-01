@@ -2,7 +2,7 @@
 # reminder do not have all attribute that are in camapaign you can see more details in form http://localhost:3000/users/1/reminders/new
 class Reminder < Campaign
 
-  attr_accessor :customer_lists
+  attr_accessor :customer_id
 
   belongs_to :user
   # campaign type is set as enum ( 1 refers to reminder_campaign and 0 refers to promoi_campaign)
