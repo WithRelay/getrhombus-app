@@ -10,6 +10,7 @@ module TransactionsHelper
   end
 
   def transaction_change
+    transactions   
     tday_txns_count = @all_transactions[0].count
     yday_txns_count = @all_transactions[1].count
     percent_change = (tday_txns_count - yday_txns_count).to_f/yday_txns_count * 100 if yday_txns_count > 0
