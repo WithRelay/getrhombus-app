@@ -10,7 +10,7 @@ class User < ActiveRecord::Base
   validates :tos_acceptance, acceptance: true, if: lambda { self.is_merchant? }, on: :update
   validates_presence_of :org_type, if: lambda { self.is_merchant? }, on: :update
   validates_presence_of :org_name, if: lambda { self.is_merchant? && self.org_type.try(:downcase) != 'individual' }, on: :update
-  validates_presence_of :user_level, message: "Please select an account type"
+  validates_presence_of :user_level, message: "Please select an account type", on: :create
 
   # Edit pages use the right number field for each user type
   validates_presence_of :org_phone, numericality: { only_integer: true }, length: { minimum: 10 }, on: :update, if: lambda { self.is_merchant? }
@@ -28,6 +28,8 @@ class User < ActiveRecord::Base
 
   has_many :transactions
   has_many :merchant_transactions, class_name: 'Transaction', foreign_key: 'team_id'
+  has_many :merchant_customers, foreign_key: 'merchant_id'
+  has_many :merchant_customers, foreign_key: 'customer_id'
 
   has_many :subscriptions
 
@@ -38,6 +40,8 @@ class User < ActiveRecord::Base
   has_many :customers, class_name: 'MerchantCustomer', foreign_key: 'merchant_id'
 
   has_many :merchant, class_name: 'MerchantContact', foreign_key: 'merchant_id'
+
+  has_many :contacts, class_name: 'MerchantContact', foreign_key: 'uid'
 
   has_many :reminders, -> { where campaign_type: 1 }
 

@@ -1,11 +1,11 @@
 <div class="customer-dash sub-nav-bar w-clearfix">
-  <div class="search-bar">
+ <!--  <div class="search-bar">
     <div class="w-form">
       <form id="email-form" name="email-form">
         <input class="search-field w-input" id="Search-3" maxlength="256" name="Search-3" placeholder="Search" type="text">
       </form>
     </div>
-  </div>
+  </div> -->
   <div class="sub-nav-options-wrapper transactions w-clearfix">
     <a class="add sub-nav-button w-button" href="#"> &nbsp;<strong>Charge&nbsp;customer</strong></a>
     <a class="import sub-nav-button w-button modal-loader hide"  href="#" modal-target= 'refund_customer_modal' id="refund-charge">&nbsp; <strong>Refund</strong></a>
@@ -25,23 +25,23 @@
       <div class="transaction-summary-row w-row">
         <div class="w-col w-col-4">
           <div class="transaction-summary-cell transcation-count">
-            <h1 class="total-customer-count">64</h1>
+            <h1 class="total-customer-count"><%= transactions[0].count %></h1>
             <h4 class="count-description"> &nbsp; Transactions Today</h4>
-            <h4 class="count-description transaction-count"> &nbsp; Down 5% from yesterday</h4>
+            <h4 class="count-description transaction-count"> &nbsp; <%= transaction_change %></h4>
           </div>
         </div>
         <div class="w-col w-col-4">
           <div class="transaction-summary-cell">
-            <h1 class="total-customer-count">$2,580</h1>
+            <h1 class="total-customer-count"><%= "$%.2f"%" #{total_amount}"  %></h1>
             <h4 class="count-description"> &nbsp; Total Collected</h4>
-            <h4 class="count-description transaction-count"> &nbsp; Up 2% from yesterday</h4>
+            <h4 class="count-description transaction-count"> &nbsp; <%= total_amount_change %></h4>
           </div>
         </div>
         <div class="w-col w-col-4">
           <div class="transaction-summary-cell">
-            <h1 class="total-customer-count">$2,987</h1>
+            <h1 class="total-customer-count"><%= "$%.2f"%" #{net_sales}"  %></h1>
             <h4 class="count-description"> &nbsp; Net Sales</h4>
-            <h4 class="count-description transaction-count"> &nbsp; Down 5% from yesterday</h4>
+            <h4 class="count-description transaction-count"> &nbsp; <%= net_sales_change   %></h4>
           </div>
         </div>
       </div>
@@ -112,7 +112,7 @@
           </div>
           <div class="transaction-column w-col w-col-2">
             <div class="transaction-cell w-clearfix">
-              <div class="table-text tran-amount"><%= transaction.amount %></div>
+              <div class="table-text tran-amount"><%= "%.2f" %  transaction.amount.truncate(2) %></div>
             </div>
           </div>
           <div class="transaction-column w-col w-col-2">

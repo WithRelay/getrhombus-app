@@ -15,10 +15,9 @@ module ApplicationHelper
   end
 
   def render_header_partial
-    return render 'shared/authenticate_home_header' if (current_user && unauthenticate_controller)
-    return render 'shared/unauthenticate_header' if unauthenticate_controller
+    return render 'shared/docs_header' if relay_docs_pages || privacy_and_terms_pages
+    return render 'shared/unauthenticate_header' if unauthenticate_controller && !restrict_static_pages
     return render 'shared/authenticated_header' unless authenticated_pages || campaign_restrict_params
-    return render 'shared/docs_header' if relay_docs_pages
     return render 'campaigns/campaign_header' if campaign_restrict_params
     return render 'shared/messaging_header' if messaging_dashboard
   end
@@ -45,6 +44,10 @@ module ApplicationHelper
     'body'
   end
 
+  def home_page
+    params_controller_action == "static_pages-home"
+  end
+
   def restrict_other_params
     actions = ['campaigns-new', 'hashtags-new', 'hashtags-create']
     actions.include?(params_controller_action)
@@ -61,7 +64,8 @@ module ApplicationHelper
   end
 
   def render_footer_partial
-    return render 'shared/unauthenticate_footer' if unauthenticate_controller
+    return render 'shared/home_footer' if home_page
+    return render 'shared/unauthenticate_footer' if unauthenticate_controller && !restrict_static_pages
   end
 
   def render_sign_up_footer
@@ -71,6 +75,10 @@ module ApplicationHelper
   def unauthenticate_controller
     static_controllers = ['static_pages', 'contact_forms' ]
     static_controllers.include?(params[:controller]) unless relay_docs_pages
+  end
+
+  def restrict_static_pages
+    ['static_pages-to_404'].include?(params_controller_action)
   end
 
   def setting_pages
@@ -85,15 +93,21 @@ module ApplicationHelper
     controller_actions.include?(params_controller_action)
   end
 
+  def privacy_and_terms_pages
+    controller_actions = ['static_pages-privacy', 'static_pages-terms']
+    controller_actions.include?(params_controller_action)
+  end
+
   def params_controller_action
     "#{params[:controller]}-#{params[:action]}"
   end
 
   def restrict_devise_actions
     restricted_actions = ['sessions-new', 'sessions-create', 'registrations-new', 'registrations-create',
-                           'registrations-edit', 'passwords-new', 'registrations-add_card_info',
+                           'registrations-edit', 'devise/passwords-new', 'registrations-add_card_info',
                            'registrations-add_profile_info', 'registrations-add_subscription',
-                           'registrations-add_rhombus_number', 'merchant_customers-show'
+                           'registrations-add_rhombus_number', 'merchant_customers-show',
+                           'devise/passwords-edit', 'devise/passwords-update', ''
                          ]
     restricted_actions.include?(params_controller_action)
   end

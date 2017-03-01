@@ -99,9 +99,15 @@ $(document).ready(function() {
       },
       'user[password_confirmation]': {
         validators: {
-          identical: {
-            field: 'user[password]',
-            message: "The passwords don't match"
+          callback: {
+            message: 'Password confirmation should be same as password',
+            callback: function(value, validator, $field) {
+              var password_value = $("[name='user[password]']").val()
+              if (password_value != ''){
+                return password_value  == $field.val();
+              }
+              return true
+            }
           }
         }
       }
@@ -196,11 +202,11 @@ $(document).ready(function() {
           callback: {
             message: 'The sum of percentages must be 100',
             callback: function(value, validator, $field) {
-                if ($field.val() >= 100) {
-                    validator.updateStatus('percentage[]', 'INVALID', 'callback');
-                    return false;
-                }
-                return true;
+              if ($field.val() >= 100) {
+                validator.updateStatus('percentage[]', 'INVALID', 'callback');
+                return false;
+              }
+              return true;
             }
           }
         }

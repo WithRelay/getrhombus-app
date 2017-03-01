@@ -29,6 +29,11 @@ class UsersController < ApplicationController
   def sms_usage
   end
 
+  def leads_contacts
+    uid_type = params[:uid_type] || 'phone_number'
+    @leads_contacts = current_user.contacts.where(uid_type: uid_type).includes(:contacts)
+  end
+
 private
   # Use callbacks to share common setup or constraints between actions.
   def set_user

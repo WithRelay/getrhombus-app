@@ -2,29 +2,30 @@ class RegistrationsController < Devise::RegistrationsController
 
   include AdditionalUserActions
   include DashboardNotification
+  include CheckUserProfile
 
   before_action :set_notifications, only: [:billing_information, :account_settings, :business_settings]
 
   def update
     self.resource = resource_class.to_adapter.get!(send(:"current_#{resource_name}").to_key)
 
-    check_params_with_update
+    message = check_params_with_update
 
-    url = request.referrer if set_update_flash_messages[:billing_info].present?
+    set_flash_message = set_update_flash_messages(message)
 
+    url = request.referrer if setting_pages_present?
     #prev_unconfirmed_email = resource.unconfirmed_email if resource.respond_to?(:unconfirmed_email)
-
-    resource_updated = update_resource(resource, account_update_params)
     yield resource if block_given?
-    if resource_updated
-      update_stripe_email if set_update_flash_messages[:account_settings].present?
+    if message.blank? && update_resource(resource, account_update_params)
+      update_stripe_email if set_flash_message[:account_settings].present?
       # flash_key = update_needs_confirmation?(resource, prev_unconfirmed_email) ? :update_needs_confirmation : :updated
       # set_flash_message :notice, flash_key
-      flash[:notice] = set_update_flash_messages[:success] if is_flashing_format?
+      flash[:notice] = set_flash_message[:success] if is_flashing_format?
       bypass_sign_in resource, scope: resource_name
       redirect_to url || after_update_path_for(resource)
     else
-      flash[:error] = set_update_flash_messages[:error]
+      flash[:error] = message.is_a?(Stripe::InvalidRequestError) ?
+                      set_flash_message[:error].message : set_flash_message[:error]
       clean_up_passwords resource
       set_minimum_password_length
       redirect_to previous_url
@@ -61,16 +62,21 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   def check_params_with_update
+    msg = nil
     if set_update_flash_messages[:subscription].present? && current_user.is_merchant?
-      create_saas_subscription
+      subscription = create_saas_subscription
+      msg = (subscription.second ? subscription.second : "We are unable to start a subscription for you")
     elsif set_update_flash_messages[:rhombus_number].present? && current_user.is_merchant?
       current_user.buy_number(params)
     elsif set_update_flash_messages[:card_info].present? && current_user.is_customer?
       set_captured_payment_session
-      current_user.add_token_to_user(params[:user][:card_token])
+      user_card = current_user.add_token_to_user(params[:user][:card_token])
+      msg = (user_card.second ? user_card.second : "We are unable to add your card to your profile.") unless user_card.first
     elsif set_update_flash_messages[:billing_info].present?
-      current_user.add_token_to_user(params[:user][:card_token])
+      add_token = current_user.add_token_to_user(params[:user][:card_token])
+      msg = (add_token.second ? add_token.second : "We are unable to add your card to your profile.") unless add_token.first
     end
+    msg
   end
 
   def business_settings; end
@@ -111,7 +117,7 @@ class RegistrationsController < Devise::RegistrationsController
     check_user_redirect || root_path
   end
 
-  def set_update_flash_messages
+  def set_update_flash_messages(msg = '')
     page_params = { add_profile_info: {
                                         success: 'profile updated',
                                         error: 'Unable to update your profile',
@@ -119,7 +125,7 @@ class RegistrationsController < Devise::RegistrationsController
                                       },
                     add_subscription: {
                                         success: 'Subscription added',
-                                        error: 'We are unable to start a subscription for you',
+                                        error: msg,
                                         subscription: true
                                       },
                     add_rhombus_number: {
@@ -129,12 +135,12 @@ class RegistrationsController < Devise::RegistrationsController
                                         },
                     add_card_info: {
                                     success: 'Card info added',
-                                    error: 'We are unable to add your card to your profile.',
+                                    error: msg,
                                     card_info: true
                                    },
                     update_billing_info: {
                                           success: 'Billing Info updated',
-                                          error: 'We are unable to add your card to your profile.',
+                                          error: msg,
                                           billing_info: true
                                         },
                     account_settings: {
@@ -149,6 +155,10 @@ class RegistrationsController < Devise::RegistrationsController
                                        }
                   }
     page_params[params[:page_params].to_sym]
+  end
+
+  def setting_pages_present?
+    set_update_flash_messages[:business_settings].present? || set_flash_message[:billing_info].present? || set_flash_message[:account_settings]
   end
 
   def previous_url

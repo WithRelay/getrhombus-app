@@ -21,11 +21,15 @@ $(document).ready(function() {
       // I am validating Bootstrap form
       framework: 'bootstrap',
       live: 'disabled',
+      err: {
+          container: function($field, validator) {
+              return $field.parent().find('.messageContainer');
+          }
+        },
       // List of fields and their validation rules
       fields: {
         'user[email]': {
           verbose: false,
-          row: '.group',
           validators: {
             notEmpty: {
               message: 'Your email is required'

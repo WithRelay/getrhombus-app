@@ -13,9 +13,11 @@
       <div class="form-group col-xs-6">
         <%= f.select :channel, reminder_channel(reminder), {}, selected: get_channel_enum_value(reminder), class: 'form-control dropdown w-select', data: { name: 'Notification Channel', id: 'Notification-Channel' } %>
       </div>
+
       <div class="form-group col-xs-6">
-        <%= f.text_field :customer_lists, class: 'search-customers-and-contacts text-field w-input', id: 'reminder-customer-list' %>
+        <%= customer_list_field(f) %>
       </div>
+
       <div class="form-group col-xs-6">
         <%= f.text_area :text, class: 'form-control notification-message text-area w-input', id: "Notification-Message" %>
       </div>
