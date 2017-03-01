@@ -44,6 +44,10 @@ module ApplicationHelper
     'body'
   end
 
+  def home_page
+    params_controller_action == "static_pages-home"
+  end
+
   def restrict_other_params
     actions = ['campaigns-new', 'hashtags-new', 'hashtags-create']
     actions.include?(params_controller_action)
@@ -60,6 +64,7 @@ module ApplicationHelper
   end
 
   def render_footer_partial
+    return render 'shared/home_footer' if home_page
     return render 'shared/unauthenticate_footer' if unauthenticate_controller && !restrict_static_pages
   end
 
