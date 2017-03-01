@@ -56,9 +56,9 @@
         @merchant_id = get_merchant_id
         if (current_page.page_id == message_from)
           @user_id =  @merchant_id
-          @user_id_to = uid
+          @user_id_to = uid unless uid == @fb_cred.page_specific_id
         else
-          @user_id = uid
+          @user_id = uid unless uid == @fb_cred.page_specific_id
           @user_id_to = @merchant_id
         end
 
@@ -70,7 +70,7 @@
 
         save_attachments if @attachments.present?
 
-        Conversation.new.find_or_create_conversation_for_message(@merchant_id, 'fb_page', uid, @fb_message, true)
+        Conversation.find_or_create_conversation_for_message_and_publish(@merchant, @user_id, 'fb_page', uid,  @fb_message, true)
         @fb_message.save
       rescue StandardError => err
         nil
@@ -96,8 +96,8 @@
     end
 
     def get_merchant_id
-      merchant = current_page.user
-      @merchant_id = merchant.id
+      @merchant = current_page.user
+      @merchant_id = @merchant.id
     end
 
     def save_attachments
