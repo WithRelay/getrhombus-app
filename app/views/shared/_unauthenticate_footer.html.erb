@@ -1,46 +1,47 @@
-<div class="footer">
-  <div class="content-wrapper footer w-container">
-    <div class="w-row">
-      <div class="w-col w-col-2">
-        <div class="footer-heading">product</div>
-        <%= link_to 'Pricing', pricing_path, class: 'footer-links links' %>
-        <%= link_to 'Use Cases', features_path, class: 'footer-links links' %>
+  <div class="footer">
+    <div class="content-wrapper footer w-container">
+      <div class="w-row">
+        <div class="w-col w-col-3">
+          <div class="footer-heading">product</div>
+         <%= link_to 'Pricing', pricing_path, class: 'footer-links links' %>
+        <%= link_to 'Features', features_path, class: 'footer-links links' %>
         <%= link_to 'Request Demo', request_demo_url, class: 'footer-links links' %>
+        <%= link_to 'Integrations', platform_integrations_path, class: 'footer-links links'%>
         <%= link_to 'Sign-up', new_user_registration_path, class: 'footer-links links' %>
-        <%= link_to 'Dashboard', request_demo_url, class: 'footer-links links' %>
-      </div>
-      <div class="w-col w-col-2">
-        <div class="footer-heading">features</div>
-        <a class="footer-links links" href="#">SMS | MMS</a>
-        <a class="footer-links links" href="#">Messenger</a>
-        <a class="footer-links links" href="#">Payment Request</a>
-        <a class="footer-links links" href="#">Charge</a>
-        <a class="footer-links links" href="#">Pre-authorize</a>
-        <a class="footer-links links" href="#">Hashtags</a>
-      </div>
-      <div class="w-col w-col-2">
-        <div class="footer-heading">HELP &amp; SUPPORT</div>
-        <a class="footer-links links" href="#">Help Center</a>
-        <a class="footer-links links" href="#">Resources</a>
-        <a href="mailto:<redacted_email>" class="footer-links links">Contact Us</a>
 
+        <%= link_to 'Dashboard', current_user ? user_path(current_user) : new_user_session_path , class: 'footer-links links' %>
+        </div>
+        <div class="w-col w-col-3">
+          <div class="footer-heading">use cases</div>
+          <div class="footer-underline underline-div"></div>
+          <%= link_to "Customer Support", use_case_customer_support_path, class: "footer-links links"%>
+          <%= link_to "Sales & Marketing" ,  use_case_sales_marketing_path , class: "footer-links links"%>          
+          <%= link_to "Staffing & Recruitment" ,  use_case_staffing_employment_path , class: "footer-links links"%>          
+          <%= link_to "On-demand & Logistics" ,  use_case_demand_service_path , class: "footer-links links"%>          
+          <%= link_to "Education" ,  use_case_education_path , class: "footer-links links"%>          
+          <%= link_to "Non-profits" ,  use_case_non_profit_path , class: "footer-links links"%>          
+        </div>
+        <div class="w-col w-col-3">
+          <div class="footer-heading">HELP &amp; SUPPORT</div>
+          <a class="footer-links links" href="#">Help Center</a>
+          <a class="footer-links links" href="#">Resources</a>
+          <a class="footer-links links" href="#">Contact Us</a>
+        </div>
+        <div class="w-col w-col-3">
+          <div class="footer-heading">COMPANY</div>
+          <%= link_to 'About Relay', about_url, class: 'footer-links links' %>
+          <%= link_to 'Blog', '#', class: 'footer-links links' %>
+          <%= link_to 'Jobs', '#', class: 'footer-links links' %>
+          <%= link_to 'Privacy Policy', privacy_url , class: 'footer-links links' %>
+          <%= link_to 'Terms of Use', terms_url, class: 'footer-links links' %>
+          </div>
       </div>
-      <div class="w-col w-col-3">
-        <div class="footer-heading">COMPANY</div>
-        <%= link_to 'About Relay', about_url, class: 'footer-links links' %>
-        <%= link_to 'Blog', '#', class: 'footer-links links' %>
-        <%= link_to 'Jobs', '#', class: 'footer-links links' %>
-        <%= link_to 'Privacy Policy', privacy_url , class: 'footer-links links' %>
-        <%= link_to 'Terms of Use', terms_url, class: 'footer-links links' %>
+      <div class="social-icons-and-contact-email-row w-hidden-small w-hidden-tiny w-row">
+        <div class="w-clearfix w-col w-col-6"><a class="social-icons-font-awesome" href="#"></a><a class="social-icons-font-awesome" href="#"></a><a class="social-icons-font-awesome" href="#"></a>
+        </div>
+        <div class="w-col w-col-6"><a class="email-address footer-links links" href="#"><redacted_email></a>
+        </div>
       </div>
-      <div class="blog-content-footer w-col w-col-3">
-        <div class="blog-section footer-heading">RECENT POSTS</div>
-        <div class="blog-date footer-heading">JULY 2016</div><a class="blog-links footer-links links" href="#">The Future of Messaging Bots in the Enterprise</a><a class="blog-links footer-links links" href="#">How to Provide Exceptional Customer Support</a>
-        <div class="blog-date footer-heading">JUNE 2016</div><a class="blog-links footer-links links" href="#">The Age&nbsp;Conversational Commerce</a><a class="blog-links footer-links links" href="#">Why Instant&nbsp;Messaging is a Better Medium for Customer Interaction</a><a class="blog-links footer-links links" href="#">Best Customer Communication Tools 2015</a>
-      </div>
-
+      <div class="copyright">© 2016 - 2017, WITHRELAY Inc.&nbsp;</div>
     </div>
-    <%= image_tag('relay-4.png', class: 'footer-logo', width: 60)%>
-    <div class="copyright">© 2016, Relay Software Inc. All Rights Reserved.</div>
   </div>
-</div>
