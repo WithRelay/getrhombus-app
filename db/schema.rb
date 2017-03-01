@@ -324,10 +324,10 @@ ActiveRecord::Schema.define(version: 20170228233920) do
     t.integer "customer_id",          limit: 4
   end
 
-  add_index "invoices", ["coupon_id"], name: "fk_rails_7aa1e153d5", using: :btree
+  add_index "invoices", ["coupon_id"], name: "fk_rails_1489735805", using: :btree
   add_index "invoices", ["stripe_invoice_id"], name: "index_invoices_on_stripe_invoice_id", using: :btree
-  add_index "invoices", ["subscription_id"], name: "fk_rails_46381ea356", using: :btree
-  add_index "invoices", ["transaction_id"], name: "fk_rails_4ccc1b83a0", using: :btree
+  add_index "invoices", ["subscription_id"], name: "fk_rails_8a85263dc0", using: :btree
+  add_index "invoices", ["transaction_id"], name: "fk_rails_497f2b74ce", using: :btree
 
   create_table "knowledge_base_categories", force: :cascade do |t|
     t.string   "name",       limit: 191
