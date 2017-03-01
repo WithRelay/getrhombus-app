@@ -4,14 +4,9 @@ class Api::V1::SavedRepliesController < API::V1::BaseController
 
   def index
     begin
-      data = current_user.saved_replies.select('title, body')
-      
-      results = {}
-      data.each_with_index { |sr, i| results[i] = sr }
-
-      render json: results
+      render json: current_user.saved_replies.select('id, title, body')
     rescue StandardError => e
-      render json: {}, status: 500
+      render json: [], status: 500
     end
   end
 

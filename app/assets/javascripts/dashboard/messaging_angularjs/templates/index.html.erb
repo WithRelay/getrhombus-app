@@ -86,11 +86,11 @@
               </div>
               <nav class="message-input-dropdown-list-wrapper w-dropdown-list">
                 <div class="message-input-box-option-div-wrapper">
-                  <a class="message-input-box-option-buttons payment-info-collection-link w-inline-block" ng-click="pasteMerchantLink()">
-                    <div class="message-input-options-text"> &nbsp; &nbsp;Collect payment card</div>
+                  <a class="message-input-box-option-buttons payment-info-collection-link w-inline-block" ng-click="insertTextIntoMessageBox(merchant.short_url)">
+                    <div class="message-input-options-text"> &nbsp; &nbsp;Relay URL</div>
                   </a>
                   <a class="message-input-box-option-buttons w-inline-block" ng-click="newReminderDiv()">
-                    <div class="message-input-options-text"> &nbsp; Set reminder</div>
+                    <div class="message-input-options-text"> &nbsp; Schedule message</div>
                   </a>
                   <a class="message-input-box-option-buttons w-inline-block" ng-click='displayChargeForm()'>
                     <div class="message-input-options-text"> &nbsp;&nbsp;Charge customer</div>
@@ -98,12 +98,12 @@
                   <a class="message-input-box-option-buttons w-inline-block" ng-click='markAsDoneDiv()'>
                     <div class="message-input-options-text"> &nbsp; Mark as done</div>
                   </a>
-                  <a class="message-input-box-option-buttons w-inline-block" ng-click='openSavedRepliesDiv()'>
-                    <div class="message-input-options-text"> &nbsp; Saved Reply</div>
-                  </a>
                   <div class="message-input-dropdown-underline underline-div"></div>
                   <a class="message-input-box-option-buttons w-inline-block" ng-click="clickFilePicker()">
                     <div class="message-input-options-text"> &nbsp; &nbsp;Attach image</div>
+                  </a>
+                  <a class="message-input-box-option-buttons w-inline-block" ng-click='openSavedRepliesDiv()'>
+                    <div class="message-input-options-text"> &nbsp; &nbsp;Saved reply</div>
                   </a>
                   <a class="message-input-box-option-buttons w-inline-block" ng-click="sendConversationMessage('FbMessage')">
                     <div class="message-input-options-text"> &nbsp; &nbsp;{{send_msg_fb_btn}}</div>
@@ -303,7 +303,6 @@
     
     <div class="modal-body w-hidden" id='saved-reply-selection-div'>
       <%# removed all webflow data attributes %>
-
       <div class="saved-reply-selection-wrapper w-clearfix">
         <div class="content-sub-wrapper modal w-clearfix">
           <h4 class="modal-header welcome-dash-content-container-header">Select Saved Reply</h4>
@@ -312,24 +311,14 @@
         <div class="segment-modal underline-div"></div>
         <div class="saved-reply-select-form w-form">
           <form id="email-form-3" name="email-form-3">
-          ng-options="key as value for (key , value) in data"
-            <select class="dropdown w-select" ng-model="saved_replies.reply_id" ng-options="option.title for option in saved_replies_list track by option.id">
+            <select class="dropdown select-saved-reply w-select" ng-model="saved_replies.reply" ng-options="option.title for option in saved_replies_list track by option.id">
+              <option ng-selected="true" value="">Select saved reply</option>
             </select>
-
-            <!--<select class="dropdown w-select" id="field-2" name="field-2">
-              <option value="">Select saved reply</option>
-              <option value="">Business Hours: Monday - Friday</option>
-              <option value="">Order Cancellation</option>
-              <option value="">Returns</option>
-              <option value="">International Shipping</option>
-            </select>-->
-            <textarea class="text-area view-saved-reply w-input" id="Saved-Reply-Content-2" maxlength="5000" name="Saved-Reply-Content-2" placeholder="Edit saved reply"></textarea>
           </form>
-        </div><a class="button send-saved-reply w-button">Send Reply</a>
-        <%# added update-close-modals and data %>
+        </div>
+        <a class="button send-saved-reply w-button" ng-click='insertTextIntoMessageBox(saved_replies.reply.body)'>Select reply</a>
         <a class="button cancel-saved-reply w-button update-close-modals" data-parent='saved-reply-selection-div'>Cancel</a>
       </div>
-
     </div>
 
     

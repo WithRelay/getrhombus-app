@@ -54,9 +54,9 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
 
 
     // Saved Replies
-    $scope.saved_replies_list = {};
+    $scope.saved_replies_list = [];
     $scope.saved_replies = {};
-    $scope.saved_replies.reply_id = "";
+    $scope.saved_replies.reply = null;
 
 
 
@@ -619,8 +619,6 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
       });
     };
 
-    $scope.openSavedRepliesDiv();
-
     $scope.markAsDoneDiv = function() {
       $('#mark-as-done-div').lightbox_me({
         centered: true,
@@ -641,11 +639,13 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
       });
     };
 
-    $scope.pasteMerchantLink = function() {
-      var box = BindConversationPlugins.get_emoji_box()[0], text = box.emojioneArea.getText();
-      text += " " + $scope.merchant.short_url;
-      box.emojioneArea.setText(text);
-      $scope.new_message.text = text;
+    $scope.insertTextIntoMessageBox = function(text_to_insert) {
+      if (text_to_insert) {
+        var box = BindConversationPlugins.get_emoji_box()[0], text = box.emojioneArea.getText();
+        text += " " + text_to_insert;
+        box.emojioneArea.setText(text);
+        $scope.new_message.text = text;
+      }
     };
 
     // End Modals
