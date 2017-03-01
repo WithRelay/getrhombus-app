@@ -34,9 +34,11 @@ New
 - we will need pubnub in other pages outside messages
 - do reminders for messaging page
 - fix alerts html
+- homepage/features hero buttons
 ????
-- add flags.png and flags2x.png back
 Dorje
+- add flags.png and flags2x.png back
+- about page not done
 - customer_id in customer profile is tightly coupled to reminders...shouldnt be - https://bitbucket.org/rhombus_inhouse/getrhombus/commits/36ee857ebdbb59eabf7fa766bf46e29acd5f7b70
 bhishma
 - do messageparser with bhishma tomorrow. 
