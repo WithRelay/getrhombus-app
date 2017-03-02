@@ -137,7 +137,7 @@ class Conversation < ActiveRecord::Base
 
   # when sending
   def self.find_or_create_conversation_for_message_and_send_publish(team, customer, uid_type, uid, msg_to_send, channel, media = [])
-    re = find_or_create_conversation_for_message(team.id, uid_type, uid)
+    re = find_or_create_conversation(team.id, uid_type, uid)
     msg_res = send_message(re[0], team, msg_to_send, channel, media)
     RealtimeStreamService.publish_to_dashboard(re[0], re[1], team, customer, @msg_instance)
     msg_res.id
@@ -150,16 +150,17 @@ class Conversation < ActiveRecord::Base
   end
 
   # find or create conversation and attach new message
-  def self.find_or_create_conversation_for_message(team_id, uid_type, uid, msg, unread)
+  def self.find_or_create_conversation_for_message(team_id, uid_type, uid, msg_instance, unread)
     conv = find_or_create_conversation(team_id, uid_type, uid)
-    conv_ref = conv.conversation_refs.create(textable: msg, unread: unread)
+    conv_ref = conv.conversation_refs.create(textable: msg_instance, unread: unread)
     [conv, conv_ref]
   end 
 
 	# find the conversation or create one
   def self.find_or_create_conversation(team_id, uid_type, uid)
     return @conv if @conv.present?
-    Conversation.find_by(merchant_id: team_id, uid_type: uid_type, uid: uid, resolution: [nil, ""]) || Conversation.create(merchant_id: team_id, uid_type: uid_type, uid: uid)
+    Conversation.find_by(merchant_id: team_id, uid_type: uid_type, uid: uid, resolution: [nil, ""]) 
+      || Conversation.create(merchant_id: team_id, uid_type: uid_type, uid: uid)
   end
 
   # find conversation

@@ -34,6 +34,7 @@ Surya
 - validates_associated in user... any read op on user will run a query
 - lists should be user scoped, what is customer_lists routes, clean up routes
 - where do u catch phone number db error
+- are you using campaign.scss, loading image is provided by edwin
 Dorje
 - about page not done
 - update login page - just minor UI updates... validation code stays
