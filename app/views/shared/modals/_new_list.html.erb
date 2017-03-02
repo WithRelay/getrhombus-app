@@ -7,10 +7,13 @@
     <a class="close-modal update-close-modals" data-parent='new-list-div' href="#"></a>
   </div>
   <div class="w-form">
-    <form class="create-list" id="email-form-5" name="email-form-5">
-      <label class="form-label list-name" for="List-Name-2">List name</label>
-      <input class="modal-field text-field w-input" id="List-Name-2" maxlength="256" name="List-Name-2" placeholder="E.g. VIP customers" required="required" type="text"><a class="button create-a-list w-button" href="#">Create List</a>
-    </form>
+    <%= form_for('lists', url: v1_user_lists_path(current_user), html: { id: "create_user_list", class: "create-list" }) do |f| %>
+      <%= f.label "List name", class: 'form-label list-name' %>
+      <%= f.hidden_field :selected_users, id: 'selectedUsers' %>
+      <%= f.hidden_field :list_type, placeholder: 'E.g. VIP customers', id: 'listType' %>
+      <%= f.text_field :list_name, class: 'modal-field text-field w-input' %>
+      <%= f.submit "Create List", class: 'button create-a-list w-button' %>
+    <% end %>
   </div>
   <div class="modal-instruction-wrapper">
     <p class="modal-paragraph tips"> &nbsp;TIP: You can create a list based on "Custom segments". You can also send messaging campaigns to members of each list you create. Go to "List" tab on the left navigation to view and edit all your customer OR lead lists.</p>
