@@ -182,7 +182,7 @@ class Conversation < ActiveRecord::Base
                                     where d.merchant_id = ? and d.resolution is null or 
                                     d.resolution = '' and d.created_at >= ? order by d.created_at desc limit 5
                                     ) e ON e.id = c.conversation_id
-                                  GROUP BY c.conversation_id 
+                                  where source = 2 GROUP BY c.conversation_id 
                                 ) b ON a.id = b.cr_id", merchant_id, date])
   end
 
