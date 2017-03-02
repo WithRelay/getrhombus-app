@@ -6,9 +6,6 @@ class ApplicationController < ActionController::Base
   before_action :configure_permitted_parameters, if: :devise_controller?
   around_action :set_time_zone, if: :current_user
 
-  # for uniquness check...can it be more specific...cos email, phone numbers are caught
-  # capture phone number duplicates on sign up page
-
   def after_sign_in_path_for(resource)
     check_user_redirect || root_path
   end

@@ -44,9 +44,6 @@ Rails.application.routes.draw  do
       ## devise routes
       devise_scope :user do
         member do
-          get 'segments' => 'lists#segments'
-          get 'sms-usage' => 'users#sms_usage'
-          get 'leads-and-contacts' => 'users#leads_contacts'
           get 'add-subscription' => 'registrations#add_subscription'
           get 'add-rhombus-number' => 'registrations#add_rhombus_number'
           get 'add-profile-info' => 'registrations#add_profile_info'
@@ -87,6 +84,9 @@ Rails.application.routes.draw  do
       end
 
       member do
+        get 'segments' => 'lists#segments'
+        get 'sms-usage' => 'users#sms_usage'
+        get 'leads-and-contacts' => 'users#leads_contacts'
         resources :lists, only: [:index, :create]
         get 'managed-accounts' => 'users#managed_acct'
         match 'managed-accounts' => "users#create_managed_acct", via: :patch

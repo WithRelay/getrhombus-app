@@ -8,6 +8,9 @@ class Conversation < ActiveRecord::Base
    
 
   #### plug in source in conversationrefs
+  # fix date issue
+  # plug in charges
+  # 
 
 
 
@@ -24,7 +27,7 @@ class Conversation < ActiveRecord::Base
   # Returns hash with users who sent a message to the given merchant in the last "num_days" days
   def self.get_open_conversations(merchant_id, page)
 ####convs = where(merchant_id: merchant_id, resolution: [nil, '']).paginate(page: page, per_page: 25)
-  	convs = where(merchant_id: merchant_id).paginate(page: page, per_page: 3)
+  	convs = where(merchant_id: merchant_id).paginate(page: page, per_page: 5)
   	x = convs.map { |conv| conv.conversation_hash }
     # remove these lines and x
   	x.first[:profile_image] = { type: 'image', value: 'http://lorempixel.com/400/200/' } if x.present?

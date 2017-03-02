@@ -136,8 +136,7 @@ class User < ActiveRecord::Base
 
   def self.user_title(user)
     user_first_name = user.people.representative[0]
-    return "#{user_first_name.first_name} from #{user.org_name}" if user_first_name.present?
-    return user.org_name if user_first_name.blank?
+    user_first_name.present? ? "#{user_first_name.first_name} from #{user.org_name}" : user.org_name
   end
 
   def self.get_display_name(uid, uid_type)

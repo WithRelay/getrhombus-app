@@ -33,6 +33,7 @@ OLD
 Surya
 - validates_associated in user... any read op on user will run a query
 - lists should be user scoped, what is customer_lists routes, clean up routes
+- where do u catch phone number db error
 Dorje
 - about page not done
 - update login page - just minor UI updates... validation code stays
@@ -45,8 +46,13 @@ NEW
 - fix alerts html
 - homepage/features hero buttons
 - password reset, remove validation and put in an invalid email
+Surya
+- dont scope api routes under user like lists, group routes together with collection/member so it is easier to track
+- empty state for lists
 Dorje
-- alerts for change password page and probably reset password...
+- customer index empty state
+- alerts for forgot password, change password page and probably reset password...
+- profile pic, dont show twitter info if not exists and transaction history on customer profile page
 bhishma
 - do messageparser with bhishma tomorrow. 
 - create subscription on customer profile page

@@ -37,9 +37,8 @@ messagingApp.directive('whenScrolledDown', function() {
   return function(scope, elm, attr) {
     var raw = elm[0];        
     elm.bind('scroll', _.throttle(function() {
-      if (raw.scrollTop + raw.offsetHeight >= raw.scrollHeight) {
+      if (hasScrollReachedBottom(raw))
         scope.$apply(attr.whenScrolledDown);
-      }
     }, 350));
   };
 });

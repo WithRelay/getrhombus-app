@@ -92,8 +92,12 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
               // also add new conversations count here
               // $scope.open_conversations_count += 1; // should this be here?
             } else {
+              console.log('hi')
               $scope.conversations[re.conversation.id].last_message = re.conversation.last_message
               $scope.conversations[re.conversation.id].last_message_ts = re.conversation.last_message_ts
+
+              console.log($scope.conversations[re.conversation.id].last_message)
+              console.log(re.conversation.last_message)
 
               if (re.message.source == 'customer') {
                 $scope.global_unread_count += 1;
