@@ -23,28 +23,25 @@ class Api::V1::ListsController < API::V1::BaseController
     end
   end
 
+  def check_list_name
+    list = current_user.lists.find_by_name(list_params[:list_name])
+    render json: { valid: list.nil? }
+  end
+
   # Handles creation of a list via Ajax
   def create
     begin
-      if params[:list_type] == 'list'
-        name = params[:list_name]
-        @list = save_list(name:name, user_id:current_user.id)
-        user_list = params[:selected_users].split(",")
-        list_errors = get_list_errors(@list)
-        user_list.each do |u|
-          u = UserList.new(list_id:@list.id, user_id:u)
-          list_errors.push(u.errors.full_messages) if !u.save
-        end
-          if list_errors.blank?
-            render json: {
-              "list" => @list,
-              "list_users" => user_list,
-            }, status: 200
-          else
-            render json: {
-               "list_error" => list_errors.to_json,
-            }, status: 400
-          end
+      if list_params[:list_type] == 'list'
+        list = current_user.lists.build(name: list_params[:list_name])
+        selected_users_id = list_params[:selected_users].split(",")
+        selected_users_id.each { |user_id| list.user_lists.build(user_id: user_id) }
+        # list also save associated record
+        message = if list.save
+                    { notice: 'List saved successfully', status: 200 }
+                  else
+                    { error: list.errors.full_messages.to_json, status: 404 }
+                  end
+        render json: message
       else
         params[:current_time] = Time.current
         name = params[:segment_name]
@@ -83,6 +80,10 @@ class Api::V1::ListsController < API::V1::BaseController
       l.save
       print "List created is: #{l}"
       return l
+    end
+
+    def list_params
+      params.require(:lists).permit(:selected_users, :list_type, :list_name)
     end
 
     # Get the SQL query for the segment

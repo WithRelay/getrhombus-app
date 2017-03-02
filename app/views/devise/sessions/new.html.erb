@@ -5,7 +5,7 @@
     <div class="onboarding-form-section">
       <div class="onboarding-form-div sign-in">
         <%= link_to root_url, class: 'form-logo w-inline-block' do %>
-          <%= image_tag('relay-4.png', width: 50) %>
+          <%= image_tag('Relay-Transparent-500x300.png', width: 50) %>
         <% end %>
 
 
@@ -27,34 +27,47 @@
             
             <%= f.submit 'Sign in', class: 'button log-in w-button' %>
             
-            <%= f.label :remember_me %>
-            <%= f.check_box :remember_me, id: "checkbox1", checked: devise_mapping.rememberable? %>
-          
-          <% end %>
-          
+            <%#= f.label :remember_me %>
+            <%#= f.check_box :remember_me, id: "checkbox1", checked: devise_mapping.rememberable? %>
         </div>
-        <div class="log-in-sign-up-cta">Don't have a Rhombus account? <%= link_to 'Sign up', new_user_registration_path, class:'links sign-up-cta-log-in-page' %>
+
+            <div class="def login-form-row w-row">
+              <div class="log-in-form-row-column-1 w-col w-col-6">
+                <div class="w-form">
+                    <div class="footer-cta form-check-box login-form w-checkbox">
+                      <%= f.check_box :remember_me, id: "checkbox1", checked: devise_mapping.rememberable?, class: "w-checkbox-input" %>
+                      <input class="w-checkbox-input" data-name="Checkbox 3" id="checkbox-3" name="checkbox-3" type="checkbox">
+                      <%= f.label :remember_me, class: "w-form-label", for: "checkbox-3" %>
+                    </div>
+                </div>
+              </div>
+            <% end %>
+            <div class="log-in-form-row-column-2 w-clearfix w-col w-col-6">
+                <%- if devise_mapping.recoverable? && controller_name != 'passwords' %>
+                  <%= link_to new_password_path(resource_name) do %>
+                    <div class="links login-form-password-reset">Forgot your password?</div>
+                  <% end %>
+                <% end -%>
+              </div>
+            </div>
+     </div>
+        <div class="log-in-sign-up-cta">Don't have a Rhombus account?
+         <%= link_to 'Sign up', new_user_registration_path ,class: "links sign-up-cta-log-in-page" %>
+        <!-- <a href="#" class="links sign-up-cta-log-in-page">Sign up.</a> -->
         </div>
-      </div>
-      <div class="forgot-password links">Forgot your password?&nbsp;
-        <%- if devise_mapping.recoverable? && controller_name != 'passwords' %>
-          <%= link_to new_password_path(resource_name) do %>
-            <i class="fa fa-lock"></i> Forgot password
-          <% end %>
-        <% end -%>
-      </div>
     </div>
   </div>
-  <div class="onboarding-table-column-2 w-col w-col-4">
-    <div class="onboarding-right-bar">
-      <div class="w-container whats-new-container">
-        <div class="whats-new-content-wrapper">
-          <h4 class="onboarding-side-bar-h4">WHAT'S NEW</h4>
-          <h3 class="onboarding-side-bar-h3">Check out our new Shopify Integration.</h3>
-          <p class="onboarding-side-bar-paragraph">Rejoice eCommerce businesses! We've integrated Shopify. This integration allows you to track your customer metrics from inside Rhombus and set automatic mobile messaage based on what they do in your online store.</p>
-          <div class="sign-in-right-bar-cta">Learn More &nbsp; </div>
+    <div class="onboarding-table-column-2 w-col w-col-4">
+      <div class="onboarding-right-bar">
+        <div class="w-container whats-new-container">
+          <div class="whats-new-content-wrapper">
+            <h4 class="onboarding-side-bar-h4">WHAT'S NEW</h4>
+            <h3 class="onboarding-side-bar-h3">Rhombus is now Relay.</h3>
+            <p class="onboarding-side-bar-paragraph">We've re-imagined the entire platform to make it easier for you to reach your customers and get paid faster using mobile messages. Go ahead and explore all the exciting features in this update, and of course we'd love to hear from you; let us know what you think.</p>
+            <div class="sign-in-right-bar-cta"><a href="#" class="onboarding-learn-more-link">Learn more &nbsp; </a>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 </div>

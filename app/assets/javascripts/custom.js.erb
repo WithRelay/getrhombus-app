@@ -392,7 +392,6 @@ $(document).ready(function() {
       // List of fields and their validation rules!
       fields: {
         'user[password]': {
-          row: '.group',
           validators: {
             notEmpty: {
               message: 'The password is required'
@@ -404,7 +403,6 @@ $(document).ready(function() {
           }
         },
         'user[password_confirmation]': {
-          row: '.group',
           validators: {
             verbose: false,
             notEmpty: {
