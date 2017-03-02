@@ -65,16 +65,16 @@ class RegistrationsController < Devise::RegistrationsController
     msg = nil
     if set_update_flash_messages[:subscription].present? && current_user.is_merchant?
       subscription = create_saas_subscription
-      msg = (subscription.second ? subscription.second : "We are unable to start a subscription for you")
+      msg = (subscription.third ? subscription.third : "We are unable to start a subscription for you") unless subscription.first
     elsif set_update_flash_messages[:rhombus_number].present? && current_user.is_merchant?
       current_user.buy_number(params)
     elsif set_update_flash_messages[:card_info].present? && current_user.is_customer?
       set_captured_payment_session
       user_card = current_user.add_token_to_user(params[:user][:card_token])
-      msg = (user_card.second ? user_card.second : "We are unable to add your card to your profile.") unless user_card.first
+      msg = (user_card.third ? user_card.third : "We are unable to add your card to your profile.") unless user_card.first
     elsif set_update_flash_messages[:billing_info].present?
       add_token = current_user.add_token_to_user(params[:user][:card_token])
-      msg = (add_token.second ? add_token.second : "We are unable to add your card to your profile.") unless add_token.first
+      msg = (add_token.third ? add_token.third : "We are unable to add your card to your profile.") unless add_token.first
     end
     msg
   end

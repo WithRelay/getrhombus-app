@@ -37,7 +37,6 @@
 //= require integrations
 
 //= require jquery_ujs
-//= require angular-smooth-scroll.min
 //= require pubnub/pubnub-angular.js
 //= require angular-inview
 //= require_tree ./dashboard/messaging_angularjs/templates

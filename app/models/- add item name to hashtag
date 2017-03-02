@@ -18,26 +18,41 @@ add card info, add subscription, billing info
 - surya - test client side validations for account settings pages
 - surya - test validation for url, tax rate on business settings field
 - where is this page http://relay-test.webflow.io/platform-integrations
-- password reset page, change password pages and validations
+- password reset page and validations
 - redo static header for when user signs in
 - review each static page...there are some updates it seems - https://www.one-tab.com/page/JvNSs6beRmuwuIRBmxT68Q
 - reimport footer, and plug in links... dashabord to dashboard
 - 400, 500 pages
 - ovo's task
 - update notifications dropdown
+- all settings pages should go back to the same page... i did it only for billing so far 
+- load more for all index pages
+
 
 New
-- all settings pages should go back to the same page... i did it only for billing so far 
 - show me devise errors
 - we will need pubnub in other pages outside messages
 - do reminders for messaging page
+- fix alerts html
+- homepage/features hero buttons
+- change password pages (relay-test.webflow.io/change-password) and validations
+Surya
+- validates_associated in user... any read op on user will run a query
+- lists should be user scoped, what is customer_lists
+Dorje
+- add flags.png and flags2x.png back
+- about page not done
+- update login page
+bhishma
+- do messageparser with bhishma tomorrow. 
+- create subscription on customer profile page
+
 
 - add the url for pages you did to the sidebar on dashboard and settings page
-
 - card error flash missing in registrations update
 - instead of checking for if the key exists, enforce that that method run for that specific page_params
 - user auth in routes
-
+  
 - new customers in dashboard header
 
 - EVERYONE CLEAN UP YOUR ROUTES and CONTROLLERS

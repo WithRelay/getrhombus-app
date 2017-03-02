@@ -6,13 +6,12 @@ $(document).ready(function() {
   var global_page_params = PageParameter.get_params();
 
   $('#type-it').typeIt({
-    strings: ["Students", "Candidates", "Donors"],
-    speed: 80,
-    deleteDelay: 1500,
+    strings: ["customers", "shift workers", "candidates", "students", "donors", "employees", "hotel guests"],
+    speed: 120,
+    deleteDelay: 4500,
     breakLines: false,
     autoStart: false,
     loop: true
-
   });
 
   // validate forgot password form

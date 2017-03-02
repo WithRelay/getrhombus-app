@@ -86,11 +86,11 @@
               </div>
               <nav class="message-input-dropdown-list-wrapper w-dropdown-list">
                 <div class="message-input-box-option-div-wrapper">
-                  <a class="message-input-box-option-buttons payment-info-collection-link w-inline-block" ng-click="pasteMerchantLink()">
-                    <div class="message-input-options-text"> &nbsp; &nbsp;Collect payment card</div>
+                  <a class="message-input-box-option-buttons payment-info-collection-link w-inline-block" ng-click="insertTextIntoMessageBox(merchant.short_url)">
+                    <div class="message-input-options-text"> &nbsp; &nbsp;Relay URL</div>
                   </a>
                   <a class="message-input-box-option-buttons w-inline-block" ng-click="newReminderDiv()">
-                    <div class="message-input-options-text"> &nbsp; Set reminder</div>
+                    <div class="message-input-options-text"> &nbsp; Schedule message</div>
                   </a>
                   <a class="message-input-box-option-buttons w-inline-block" ng-click='displayChargeForm()'>
                     <div class="message-input-options-text"> &nbsp;&nbsp;Charge customer</div>
@@ -102,7 +102,10 @@
                   <a class="message-input-box-option-buttons w-inline-block" ng-click="clickFilePicker()">
                     <div class="message-input-options-text"> &nbsp; &nbsp;Attach image</div>
                   </a>
-                  <a class="message-input-box-option-buttons w-inline-block" ng-click="sendConversationMessage('FbMessage')" ng-disabled='is_sending || selected_conversation.id === undefined'>
+                  <a class="message-input-box-option-buttons w-inline-block" ng-click='openSavedRepliesDiv()'>
+                    <div class="message-input-options-text"> &nbsp; &nbsp;Saved reply</div>
+                  </a>
+                  <a class="message-input-box-option-buttons w-inline-block" ng-click="sendConversationMessage('FbMessage')">
                     <div class="message-input-options-text"> &nbsp; &nbsp;{{send_msg_fb_btn}}</div>
                   </a>
                 </div>
@@ -110,7 +113,7 @@
             </div>
           </div>
           <div class="message-input-box-column-2 w-col w-col-11">
-            <textarea disabled='true' class="message-text-box text-area w-input" id="Messaging-Text-Area" placeholder="Type your message..." ng-model="new_message.text"></textarea>
+            <textarea class="message-text-box text-area w-input" id="Messaging-Text-Area" placeholder="Type your message..." ng-model="new_message.text"></textarea>
           </div>
         </div>
     </div>
@@ -300,7 +303,6 @@
     
     <div class="modal-body w-hidden" id='saved-reply-selection-div'>
       <%# removed all webflow data attributes %>
-
       <div class="saved-reply-selection-wrapper w-clearfix">
         <div class="content-sub-wrapper modal w-clearfix">
           <h4 class="modal-header welcome-dash-content-container-header">Select Saved Reply</h4>
@@ -309,20 +311,14 @@
         <div class="segment-modal underline-div"></div>
         <div class="saved-reply-select-form w-form">
           <form id="email-form-3" name="email-form-3">
-            <select class="dropdown w-select" id="field-2" name="field-2">
-              <option value="">Select saved reply</option>
-              <option value="">Business Hours: Monday - Friday</option>
-              <option value="">Order Cancellation</option>
-              <option value="">Returns</option>
-              <option value="">International Shipping</option>
+            <select class="dropdown select-saved-reply w-select" ng-model="saved_replies.reply" ng-options="option.title for option in saved_replies_list track by option.id">
+              <option ng-selected="true" value="">Select saved reply</option>
             </select>
-            <textarea class="text-area view-saved-reply w-input" id="Saved-Reply-Content-2" maxlength="5000" name="Saved-Reply-Content-2" placeholder="Edit saved reply"></textarea>
           </form>
-        </div><a class="button send-saved-reply w-button">Send Reply</a>
-        <%# added update-close-modals and data %>
+        </div>
+        <a class="button send-saved-reply w-button" ng-click='insertTextIntoMessageBox(saved_replies.reply.body)'>Select reply</a>
         <a class="button cancel-saved-reply w-button update-close-modals" data-parent='saved-reply-selection-div'>Cancel</a>
       </div>
-
     </div>
 
     
@@ -369,30 +365,7 @@
         <p class="charge-tips modal-paragraph tips"> &nbsp;TIP: You can use Hashtags to create an item list in Relay. Hashtags allow your customers text an item name to place an order</p>
       </div>
     </div>
-    
-    <div class="modal-body w-hidden" id='add-to-list-div'>
-      <%# removed all webflow data attributes %>
-      <div class="add-to-list-form-wrapper">
-        <div class="content-sub-wrapper modal w-clearfix">
-          <h4 class="modal-header welcome-dash-content-container-header">Add to list</h4>
-          <%# added data and update-close-modals %>
-          <a class="close-refund-modal update-close-modals" data-parent='add-to-list-div'></a>
-        </div>
-        <div class="add-to-list-modal-form w-form">
-          <form class="w-clearfix" id="email-form-5" name="email-form-5">
-            <select class="dropdown w-select" id="Add-to-list-dropdown-2" name="Add-to-list-dropdown-2" required="required">
-              <option value="">Select a list</option>
-              <option value="">VIP List</option>
-              <option value="">First time customers</option>
-              <option value="">San Francisco customers</option>
-              <option value="">San Mateo customers</option>
-            </select><a class="add-to-list-modal-button button w-button">Add customer to List</a>
-          </form>
-        </div>
-      </div>
-    </div>
-
-
+  
     <div class="modal-body w-hidden" id='mark-as-done-div'>
       <%# removed all webflow data attributes %>
       <div class="mark-as-done-form-wrapper">
@@ -497,13 +470,13 @@
             <textarea class="file-description text-area w-input" id="File-Description-2" maxlength="5000" name="File-Description-2" placeholder="Add description (optional)" ng-model="mms_text" ng-trim="true"></textarea>
             <div class="file-sender split-button-wrapper">
               
-              <a class="message-window-tabs send-button split-button w-button" ng-click="sendMMS('Message')" ng-disabled='is_sending || selected_conversation.id === undefined'>{{send_mms_btn}}</a>
+              <a class="message-window-tabs send-button split-button w-button" ng-click="sendMMS('Message')">{{send_mms_btn}}</a>
               
               <div class="w-dropdown">
                 <div class="split-dropdown w-dropdown-toggle"><span class="font-icon-split"></span>
                 </div>
                 <nav class="dropdown-options-wrapper split-button w-dropdown-list">
-                  <a class="dropdown-link split-button w-dropdown-link" ng-click="sendMMS('FbMessage')" ng-disabled='is_sending || selected_conversation.id === undefined'> &nbsp; &nbsp;{{send_mms_fb_btn}}</a>
+                  <a class="dropdown-link split-button w-dropdown-link" ng-click="sendMMS('FbMessage')"> &nbsp; &nbsp;{{send_mms_fb_btn}}</a>
                 </nav>
               </div>
 

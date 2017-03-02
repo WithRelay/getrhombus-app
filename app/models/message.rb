@@ -21,7 +21,6 @@ class Message < ActiveRecord::Base
       
       if true #merchant.rn_type.present?      # this is twilio
         if response = TextingService.send_sms(from, to, message, media_ary)
-          puts response.inspect
           self.update_attributes(status: response.status, message_id: response.sid, message_timestamp: response.date_updated, message_price: response.price,
                 error_code: response.error_code, error_text: response.error_message, price_unit: response.price_unit, num_segments: response.num_segments,
                 num_media: response.num_media)

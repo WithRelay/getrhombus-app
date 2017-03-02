@@ -2131,7 +2131,7 @@ h4 {
 }
 
 .body.message {
-  overflow: scroll;
+  overflow: hidden;
   height: 100vh;
   padding-right: 0px;
   padding-bottom: 130px;
@@ -3870,10 +3870,10 @@ h4 {
   right: 23%;
   overflow: auto;
   width: 54%;
-  height: 100vh;
-  min-height: auto;
+  height: 80vh;
+  min-height: 80vh;
   min-width: 54%;
-  padding-bottom: 85px;
+  padding-bottom: 50px;
   background-color: #f8fafc;
 }
 
@@ -4957,12 +4957,12 @@ h4 {
 
 .text-window-wrapper {
   position: fixed;
-  right: 24%;
+  right: 23%;
   bottom: 0px;
   z-index: 2;
   overflow: visible;
-  width: 53%;
-  height: auto;
+  width: 54%;
+  height: 11vh;
   margin-left: 0px;
   padding: 18px 10px 0px 0px;
   border-top: 1px none #e6e5e5;
@@ -7476,6 +7476,10 @@ h4 {
   width: 40%;
 }
 
+.dropdown.select-saved-reply {
+  margin-bottom: 30px;
+}
+
 .left-arrow {
   width: 268px;
   margin-top: 80px;
@@ -9780,7 +9784,7 @@ h4 {
 .saved-reply-selection-wrapper {
   display: block;
   width: 600px;
-  min-height: 420px;
+  min-height: 330px;
   margin-right: auto;
   margin-left: auto;
   padding-bottom: 40px;
@@ -11816,8 +11820,8 @@ h4 {
   margin-right: 6%;
   margin-left: 6%;
   border-radius: 3px;
-  background-image: -webkit-linear-gradient(270deg, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2)), url('photo-1449247666642-264389f5f5b1.jpg');
-  background-image: linear-gradient(180deg, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2)), url('photo-1449247666642-264389f5f5b1.jpg');
+  background-image: -webkit-linear-gradient(270deg, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2)), url('use-case-demand-service.jpg');
+  background-image: linear-gradient(180deg, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2)), url('use-case-demand-service.jpg');
   background-position: 0px 0px, 0px 0px;
   background-size: auto, cover;
 }
@@ -12206,8 +12210,8 @@ h4 {
   margin-right: 6%;
   margin-left: 6%;
   border-radius: 3px;
-  background-image: -webkit-linear-gradient(270deg, rgba(0, 0, 0, .15), rgba(0, 0, 0, .15)), url('photo-1449247666642-264389f5f5b1.jpg');
-  background-image: linear-gradient(180deg, rgba(0, 0, 0, .15), rgba(0, 0, 0, .15)), url('photo-1449247666642-264389f5f5b1.jpg');
+  background-image: -webkit-linear-gradient(270deg, rgba(0, 0, 0, .15), rgba(0, 0, 0, .15)), url('use-case-demand-service.jpg');
+  background-image: linear-gradient(180deg, rgba(0, 0, 0, .15), rgba(0, 0, 0, .15)), url('use-case-demand-service.jpg');
   background-position: 0px 0px, 0px 0px;
   background-size: auto, cover;
 }
@@ -13098,10 +13102,12 @@ h4 {
 }
 
 .split-button-wrapper.file-sender {
+  position: relative;
   top: 2px;
   right: 78px;
   bottom: 0px;
   width: 11%;
+  float: right;
 }
 
 .modal-wrapper-16 {
@@ -13846,13 +13852,13 @@ h4 {
   margin-right: 15px;
   margin-bottom: 5px;
   margin-left: 15px;
-  border-style: solid;
+  border-style: none;
   border-color: #1f8cec;
-  background-color: rgba(240, 246, 251, .5);
+  background-color: rgba(240, 246, 251, .8);
 }
 
 .message-input-box-option-buttons.payment-info-collection-link:hover {
-  background-color: #f0f6fb;
+  background-color: rgba(178, 217, 250, .43);
 }
 
 .message-input-box-option-div-wrapper {
