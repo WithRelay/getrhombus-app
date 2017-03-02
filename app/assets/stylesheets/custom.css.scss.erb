@@ -75,9 +75,9 @@ $success-color: #43e50f;
   margin-top: 5px !important;
 }
 
-<% COLORS.each_with_index do |color, index| %>
-  .radius-color-#{<%= index %>}{
-  background-color:<%= color.last %> !important;
+<% COLORS.each do |color| %>
+  .radius-color-<%= color[0] %> {
+    background-color: <%= color[1] %> !important;
   }
 <% end %>
 

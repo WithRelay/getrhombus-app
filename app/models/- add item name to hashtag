@@ -41,9 +41,9 @@ Surya
 - lists should be user scoped, what is customer_lists
 Dorje
 - add flags.png and flags2x.png back
+- profile picture in notifications dropdown
 - about page not done
 - update login page
-- customer_id in customer profile is tightly coupled to reminders...shouldnt be - https://bitbucket.org/rhombus_inhouse/getrhombus/commits/36ee857ebdbb59eabf7fa766bf46e29acd5f7b70
 bhishma
 - do messageparser with bhishma tomorrow. 
 - create subscription on customer profile page
