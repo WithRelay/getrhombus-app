@@ -16,46 +16,73 @@ $(document).on('ready page:load', function() {
     }).done(function(msg){
       console.log("Segment created successfully")
       $('#segment_create_msg').html("Segment created successfully")
-      })
-     .fail(function(msg){
+    })
+    .fail(function(msg){
       console.log("Segment could not be created")
       $('#segment_create_msg').html("Segment could not be created")
-     })
+    })
   })
 
-
-  // Submission of the create list form
-  $("form#create_user_list").submit(function(e){
-    e.preventDefault();
-    var action = $(this).attr('action');
-    var method = $(this).attr('method');
-    // Submit form via Ajax
-    $.ajax({
-      method: method,
-      url: action,
-      data: $(this).serializeArray(),
-      dataType: 'json'
-    }).done(function(msg){
-      (msg.status == 404) && setFlashForList(msg.error.replace(/[\["\]']/g, ''), 'error');
-      (msg.status == 200) && setFlashForList('List successfully Created', 'notice');
-    }).fail(function(msg){
-      setFlashForList(msg, 'error');
-    });
-  })
   // Toggles between checking or unchecking all checkboxes
- $("#check_or_uncheck_all").click(function(e){
+  $("#check_or_uncheck_all").click(function(e){
     if( $(this).is(':checked') ){
       $('#create_list_button').removeAttr('disabled');
       $(".merchant_customers").prop('checked', true);
     }else{
       $(".merchant_customers").prop('checked', false);
     }
- });
+  });
 
- $('.merchant_customers').click(function(){
-   $(this).is(':checked') && $('#create_list_button').removeAttr('disabled')
- });
+  $('.merchant_customers').click(function(){
+    $(this).is(':checked') && $('#create_list_button').removeAttr('disabled')
+  });
 
+  $('#create_user_list').formValidation({
+    framework: 'bootstrap',
+    live: 'disabled',
+    err: {
+      container: function($field, validator) {
+        return $field.parent().find('.messageContainer');
+      }
+    },
+    fields: {
+      'lists[list_name]': {
+        excluded: false,
+        verbose: false,
+        validators: {
+          notEmpty: {
+            message: 'Campaign name is required'
+          },
+            remote: {
+            url: '/v1/lists/check_list_name',
+            type: 'GET'
+          }
+        }
+      }
+    }
+  }).on('success.form.fv', function(e, data) {
+    // Submission of the create list form
+    $("form#create_user_list").submit(function(e){
+      e.preventDefault();
+      var action = $(this).attr('action');
+      var method = $(this).attr('method');
+      // Submit form via Ajax
+      $.ajax({
+        method: method,
+        url: action,
+        data: $(this).serializeArray(),
+        dataType: 'json'
+      }).done(function(msg){
+        (msg.status == 404) && setFlashForList(msg.error.replace(/[\["\]']/g, ''), 'error');
+        if (msg.status == 200){
+          setFlashForList('List successfully Created', 'notice');
+          $('.close-modal').click();
+        }
+      }).fail(function(msg){
+        setFlashForList(msg, 'error');
+      });
+    })
+  });
 
   // Fired when the user wants to select checkboxes that fall in a range
   jQuery(function($) {
@@ -77,8 +104,8 @@ $(document).on('ready page:load', function() {
           $("#selectedUsers").val(user_ids);
           $("#listType").val("list");
         }
-        });
-      }
+      });
+    }
     e.preventDefault();
   });
 
@@ -97,7 +124,7 @@ $(document).on('ready page:load', function() {
 
 
   // Fired on click of create segment button
-    $("#name_segment").click(function(e){
+  $("#name_segment").click(function(e){
     $("#segment_create_modal").lightbox_me({
       closeClick: true,
       closeEsc: true,
@@ -113,43 +140,43 @@ $(document).on('ready page:load', function() {
         $("#amt_1").val($("#amount_1").val())
         $("#amt_2").val($("#amount_2").val())
       }
-      });
-     e.preventDefault();
+    });
+    e.preventDefault();
   });
 
 
-function getSelectedUserIds(){
-  var selected_users = ''; // An array for storing selected users
-  $('.merchant_customers:checked').each(function(){
-    selected_users += ($(this).data('users'));
-  })
-  return selected_users;
-}
+  function getSelectedUserIds(){
+    var selected_users = ''; // An array for storing selected users
+    $('.merchant_customers:checked').each(function(){
+      selected_users += ($(this).data('users'));
+    })
+    return selected_users;
+  }
   // Fired on click of the segment button
   // Still under development
 
 
-//   num_checkboxes_selected = 0;
-//   $(".customer_checkboxes" ).change(function() {
-//
-//     var input = $(this);
-//     var state = (input.prop("checked"))
-//     if (state == true){
-//       num_checkboxes_selected +=1;
-//       selected_users.push(input.val());
-//       console.log("Input checked is : ", input.val());
-//
-//     } else{
-//       num_checkboxes_selected -=1;
-//       element_index = selected_users.indexOf(input.val())
-//       selected_users.splice(element_index, 1);
-//     }
-//   if (selected_users.length > 0){
-//     console.log("There is a selected checkbox.", selected_users);
-//     $("#create_list_button").prop('disabled', false);
-//   }else{
-//     console.log("No selected checkboxes");
-//     $("#create_list_button").prop('disabled', true);
-//   }
-// })
+  //   num_checkboxes_selected = 0;
+  //   $(".customer_checkboxes" ).change(function() {
+  //
+  //     var input = $(this);
+  //     var state = (input.prop("checked"))
+  //     if (state == true){
+  //       num_checkboxes_selected +=1;
+  //       selected_users.push(input.val());
+  //       console.log("Input checked is : ", input.val());
+  //
+  //     } else{
+  //       num_checkboxes_selected -=1;
+  //       element_index = selected_users.indexOf(input.val())
+  //       selected_users.splice(element_index, 1);
+  //     }
+  //   if (selected_users.length > 0){
+  //     console.log("There is a selected checkbox.", selected_users);
+  //     $("#create_list_button").prop('disabled', false);
+  //   }else{
+  //     console.log("No selected checkboxes");
+  //     $("#create_list_button").prop('disabled', true);
+  //   }
+  // })
 });
