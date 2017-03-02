@@ -6,6 +6,11 @@ class Conversation < ActiveRecord::Base
   has_many :messages, through: :conversation_refs, source: :textable, source_type: 'Message', dependent: :destroy
   belongs_to :merchant_conversation, class_name: "User"   
    
+
+  #### plug in source in conversationrefs
+
+
+
   # the user texting this merchant
   def user
     User.find_by(id: self.uid) if self.uid_type == "user"
@@ -179,8 +184,7 @@ class Conversation < ActiveRecord::Base
                                     ) e ON e.id = c.conversation_id
                                   GROUP BY c.conversation_id 
                                 ) b ON a.id = b.cr_id", merchant_id, date])
-  end  
-
+  end
 
   def self.publish_test_conversation
     conversation = Conversation.first

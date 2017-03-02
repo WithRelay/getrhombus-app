@@ -27,7 +27,12 @@ add card info, add subscription, billing info
 - update notifications dropdown
 - all settings pages should go back to the same page... i did it only for billing so far 
 - load more for all index pages
-
+Surya
+- validates_associated in user... any read op on user will run a query
+- lists should be user scoped, what is customer_lists routes, clean up routes
+Dorje
+- about page not done
+- update login page - just minor UI updates... validation code stays
 
 New
 - show me devise errors
@@ -36,13 +41,6 @@ New
 - fix alerts html
 - homepage/features hero buttons
 - change password pages (relay-test.webflow.io/change-password) and validations
-Surya
-- validates_associated in user... any read op on user will run a query
-- lists should be user scoped, what is customer_lists
-Dorje
-- add flags.png and flags2x.png back
-- about page not done
-- update login page
 bhishma
 - do messageparser with bhishma tomorrow. 
 - create subscription on customer profile page
