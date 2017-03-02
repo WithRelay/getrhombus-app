@@ -22,11 +22,12 @@
       <div class="log-in-form w-form">
       
       <%= form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :put, :id => 'changePasswordForm'}) do |f| %>
-
-          <%= f.password_field :password, :autofocus => true, :type => 'password', :class => "reset-password text-field w-input", placeholder: "New password" %>
-
-          <%= f.password_field :password_confirmation, type: "password", :class => "reset-password text-field w-input", placeholder: "Confirm password" %>
-
+          <div class="form-group col-xs-5">
+          <%= f.password_field :password, :autofocus => true, :type => 'password', :class => " form-control reset-password text-field w-input", placeholder: "New password" %>
+          </div>
+          <div class="form-group col-xs-5">
+            <%= f.password_field :password_confirmation, type: "password", :class => "form-control reset-password text-field w-input", placeholder: "Confirm password" %>
+          </div>
           <%= f.submit "Reset Password",  :class => "button log-in w-button" %>
 
       <% end %>
