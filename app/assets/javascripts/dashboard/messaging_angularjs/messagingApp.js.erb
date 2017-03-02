@@ -19,11 +19,11 @@ messagingApp.directive('whenScrolledUp', ['$timeout', function($timeout) {
     var debounced = _.debounce(function() {
       console.log('debounced')
       if (raw.scrollTop <= 0) {
-        console.log('fired')
         var sh = raw.scrollHeight;
         scope.$apply(attr.whenScrolledUp).then(function() {
           $timeout(function() {
             raw.scrollTop = raw.scrollHeight - sh;
+            console.log('fired')
           });
         });
       }
@@ -70,9 +70,7 @@ messagingApp.directive("mySrc", function() {
 });
 
 var hasScrollReachedBottom = function(element) {
-  console.log(element.scrollTop + element.innerHeight)
-  console.log(element.prop('scrollHeight'))
-  return element.scrollTop + element.innerHeight >= element.prop('scrollHeight')
+  return element.scrollTop + $(element).innerHeight() >= element.scrollHeight;
 };
 
 messagingApp.directive('onFinishRender', function ($timeout) {
@@ -80,15 +78,12 @@ messagingApp.directive('onFinishRender', function ($timeout) {
     restrict: 'A',
     link: function (scope, element, attr) {
       var raw = element[0];
-      console.log(raw.parentElement.scrollTop)
-      console.log(scope.messages_page)
       if (scope.$last === true) {
-        //if (scope.messages_page == 1 || hasScrollReachedBottom(raw.parentElement)) {
+        if (hasScrollReachedBottom(raw.parentElement)) {
           $timeout(function() {
             raw.parentElement.scrollTop = raw.parentElement.scrollHeight;
-            console.log('done')
           });
-        //}
+        }
       }
     }
   }

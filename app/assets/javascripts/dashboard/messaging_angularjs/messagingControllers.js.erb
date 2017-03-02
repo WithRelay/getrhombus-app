@@ -434,7 +434,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
       }
     };
 
-    $scope.messages_page = 1;
+    var messages_page = 1;
     $scope.status = { loading: false, /* loaded: false */ };
     $scope.selected_conversation = {};
 
@@ -449,7 +449,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
 
         // a new conversation is selected, reset
         if ($scope.selected_conversation.id != conversation.id) {
-          $scope.messages_page = 1;
+          messages_page = 1;
           $scope.selected_conversation_messages = [];
         }
 
@@ -459,11 +459,11 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
           $scope.selected_conversation = conversation;
           $scope.status.loading = true;
 
-          conversationService.getConversationMessages(conversation.id, $scope.messages_page)
+          conversationService.getConversationMessages(conversation.id, messages_page)
           .then(function(data) {
             if (conversation.id == $scope.selected_conversation.id) {
               if (data.messages.length > 0) {
-                $scope.messages_page += 1;
+                messages_page += 1;
                 for (var i = 0, len = data.messages.length; i < len; i++) { 
                   data.messages[i].unread = false;
                   $scope.selected_conversation_messages.unshift(data.messages[i]); 
