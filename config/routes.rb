@@ -31,10 +31,6 @@ Rails.application.routes.draw  do
     get 'get_current_user' => 'application#get_current_user'
     post 'redirect' => 'link_fb_accounts#redirect'
 
-    resources :lists do
-      resources :customer_lists
-    end
-
     get "homepage_referrer" => 'referrers#homepage_referrer'
     get "resque" => Resque::Server, anchor: false, constraints: lambda { |req|
       req.env['warden'].authenticated? and req.env['warden'].user.id == 23
@@ -91,12 +87,12 @@ Rails.application.routes.draw  do
       end
 
       member do
+        resources :lists, only: [:index, :create]
         get 'managed-accounts' => 'users#managed_acct'
         match 'managed-accounts' => "users#create_managed_acct", via: :patch
         match 'update-managed-acct' => 'users#update_managed_acct', via: :patch
         get 'businesses' => 'users#businesses'
         get 'notifications' => 'alerts#edit'
-        get 'lists' => 'users#lists'
         get 'integrations' => 'users#integrations'
         get 'remove_stripe_integration' => 'users#remove_stripe_integration'
         get 'remove_twitter_integration' => 'users#remove_twitter_integration'
@@ -111,6 +107,8 @@ Rails.application.routes.draw  do
     api_version(module: "Api::V1", path: { value: "v1"}, constraints: { subdomain: "api" }, defaults: { format: "json" }) do
       resources :users, only: [:index] do
         post 'add_customers', on: :collection
+        # list routes
+        resources :lists, only: [:create, :edit]
       end
       post 'users/check_password' => 'users#check_password'
       match 'hashtags' => 'hashtags#index', via: :get
@@ -134,7 +132,6 @@ Rails.application.routes.draw  do
       match 'transactions/:txn_number/refund' => 'transactions#refund', via: :post
       resources :transactions, only: [:create]
       match 'numbers/search' => 'numbers#search', via: [:get]
-      resources :lists, only: [:index, :create]
       resources :coupons, only: [:index, :update] do
         post 'check_coupon_name', on: :collection
       end
