@@ -34,7 +34,7 @@ class RegistrationsController < Devise::RegistrationsController
 
   def create
     set_captured_payment_session
-    @user = User.new(params[:sign_up])
+    @user = User.new(sign_up_params)
     if @user.save
       redirect_to user_path(@user)
     else
