@@ -170,7 +170,7 @@ class Conversation < ActiveRecord::Base
                    and c.merchant_id = ? and c.created_at >= ?", merchant_id, date]).first.count
   end
 
-  def self.get_last_msg_from_last5_convs(merchant_id, date)
+  def self.get_last_customer_msg_from_last5_convs(merchant_id, date)
     Conversation.find_by_sql(["SELECT b.id as id, a.textable_id, b.uid, b.uid_type, a.created_at as created_at,
                                 CASE WHEN a.textable_type = 'Message' THEN 'SMS' ELSE 'messenger' END as channel 
                                 FROM conversation_refs a
