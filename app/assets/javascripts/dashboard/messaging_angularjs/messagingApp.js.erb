@@ -9,32 +9,29 @@ var messagingApp = angular.module('PubNubAngularMessagingApp', [
   'messagingFilters',
   "angucomplete-alt",
   "ngFileUpload",
-  'smoothScroll',
   'angular-inview',
   'luegg.directives' // Auto scroll module
 ]);
 
-messagingApp.directive('whenScrolledUp', ['$timeout', 'smoothScroll', function($timeout, smoothScroll) {
+messagingApp.directive('whenScrolledUp', ['$timeout', function($timeout) {
   return function(scope, elm, attr) {
     var raw = elm[0];    
-    elm.bind('scroll', _.throttle(function() {
+    var debounced = _.debounce(function() {
+      console.log('debounced')
       if (raw.scrollTop <= 0) {
         var sh = raw.scrollHeight;
-        var first_item = raw.children.item(0).children.item(0);
         scope.$apply(attr.whenScrolledUp).then(function() {
           $timeout(function() {
-            var options = {
-              duration: 800,
-              offset: (raw.scrollHeight - sh),
-              containerId: 'messages-box'
-            }
-            smoothScroll(first_item, options);
-          })
+            raw.scrollTop = raw.scrollHeight - sh;
+            console.log('fired')
+          });
         });
       }
-    }, 350));
+    }, 350);
+
+   elm.bind('scroll', debounced);  
   };
-}])
+}]);
 
 messagingApp.directive('whenScrolledDown', function() {
   return function(scope, elm, attr) {
@@ -73,9 +70,7 @@ messagingApp.directive("mySrc", function() {
 });
 
 var hasScrollReachedBottom = function(element) {
-  console.log(element.scrollTop() + element.innerHeight())
-  console.log(element.prop('scrollHeight'))
-    return element.scrollTop() + element.innerHeight() >= element.prop('scrollHeight')
+  return element.scrollTop + $(element).innerHeight() >= element.scrollHeight;
 };
 
 messagingApp.directive('onFinishRender', function ($timeout) {
@@ -84,11 +79,11 @@ messagingApp.directive('onFinishRender', function ($timeout) {
     link: function (scope, element, attr) {
       var raw = element[0];
       if (scope.$last === true) {
-        $timeout(function() {
-          //if (hasScrollReachedBottom(element))
-          //raw.parentElement.scrollTop = raw.parentElement.scrollHeight; 
-        });
-        console.log(element)
+        if (hasScrollReachedBottom(raw.parentElement)) {
+          $timeout(function() {
+            raw.parentElement.scrollTop = raw.parentElement.scrollHeight;
+          });
+        }
       }
     }
   }
@@ -114,11 +109,11 @@ messagingApp.factory('conversationService', function($http, $q, Upload){
     var deferred = $q.defer();
     $http.get(base_url + ".json", { params: { select_conversation: conversation, page: page } })
     .success(function(data) {
-      console.log('console success in serice get conversations'); 
+      console.log('console success in service get conversations'); 
       deferred.resolve(data);
     })
     .error(function(data, status, headers, config) { 
-      console.log('console fail in serice get conversations'); 
+      console.log('console fail in service get conversations'); 
       deferred.reject("there was an error");
     });
     return deferred.promise;
@@ -128,11 +123,11 @@ messagingApp.factory('conversationService', function($http, $q, Upload){
     var deferred = $q.defer();
     $http.get(base_url + '/find.json', { params: data })
     .success(function(data) {
-      console.log('console success in serice get conversation'); 
+      console.log('console success in service get conversation'); 
       deferred.resolve(data);
     })
     .error(function(data, status, headers, config) { 
-      console.log('console fail in serice get conversation'); 
+      console.log('console fail in service get conversation'); 
       deferred.reject("there was an error");
     });
     return deferred.promise;
@@ -224,11 +219,11 @@ messagingApp.factory('transactionService', function($http, $q, Upload){
     var deferred = $q.defer();
     $http.get(base_url + '.json?page=' + page)
     .success(function(data) {
-      console.log('console success in serice get conversations'); 
+      console.log('console success in service get conversations'); 
       deferred.resolve(data);
     })
     .error(function(data, status, headers, config) { 
-      console.log('console fail in serice get conversations'); 
+      console.log('console fail in service get conversations'); 
       deferred.reject("there was an error");
     });
     return deferred.promise;
@@ -253,6 +248,28 @@ messagingApp.factory('transactionService', function($http, $q, Upload){
     return deferred.promise;
   };
 
+
+  return service;
+});
+
+messagingApp.factory('savedReplyService', function($http, $q, Upload){
+  var service = {};
+  var base_url = window.location.origin + '/v1/saved_replies';
+  var token = { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content') };
+
+  service.getSavedReplies = function(){
+    var deferred = $q.defer();
+    $http.get(base_url + '.json')
+    .success(function(data) {
+      console.log('console success in service get saved replies'); 
+      deferred.resolve(data);
+    })
+    .error(function(data, status, headers, config) { 
+      console.log('console fail in service get saved replies'); 
+      deferred.reject("there was an error");
+    });
+    return deferred.promise;
+  }
 
   return service;
 });

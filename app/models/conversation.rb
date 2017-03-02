@@ -6,6 +6,11 @@ class Conversation < ActiveRecord::Base
   has_many :messages, through: :conversation_refs, source: :textable, source_type: 'Message', dependent: :destroy
   belongs_to :merchant_conversation, class_name: "User"   
    
+
+  #### plug in source in conversationrefs
+
+
+
   # the user texting this merchant
   def user
     User.find_by(id: self.uid) if self.uid_type == "user"
@@ -19,7 +24,7 @@ class Conversation < ActiveRecord::Base
   # Returns hash with users who sent a message to the given merchant in the last "num_days" days
   def self.get_open_conversations(merchant_id, page)
 ####convs = where(merchant_id: merchant_id, resolution: [nil, '']).paginate(page: page, per_page: 25)
-  	convs = where(merchant_id: merchant_id).paginate(page: page, per_page: 25)
+  	convs = where(merchant_id: merchant_id).paginate(page: page, per_page: 3)
   	x = convs.map { |conv| conv.conversation_hash }
     # remove these lines and x
   	x.first[:profile_image] = { type: 'image', value: 'http://lorempixel.com/400/200/' } if x.present?
@@ -50,7 +55,7 @@ class Conversation < ActiveRecord::Base
 
 	def self.get_conversation_messages(conv, page)
     customer = User.find_by(id: conv.uid) if conv.uid_type == "user"
-		convs_refs = conv.conversation_refs.paginate(page: page, per_page: 25).includes(textable: [:images]).order(created_at: :desc)
+		convs_refs = conv.conversation_refs.paginate(page: page, per_page: 7).includes(textable: [:images]).order(created_at: :desc, id: :desc)
 		latest_messages = Array.new
 		unread_ids = []
 
@@ -96,13 +101,15 @@ class Conversation < ActiveRecord::Base
 
   # uid can be user id, phone number or messenger id
   def self.send_message(conv, team, msg, channel, media = [])
+    @conv = conv
+
 		from = (channel == "FbMessage") ? "get messenger cred" : team.rhombus_number
 
-    if conv.uid_type == "user"
-      customer = User.find_by(id: conv.uid)
+    if @conv.uid_type == "user"
+      customer = User.find_by(id: @conv.uid)
       to = (channel == "FbMessage") ? 'get messenger cred' : customer.phone_number
     else
-      to = uid
+      to = @conv.uid
     end
 
     @msg_instance = channel.constantize.new
@@ -118,7 +125,7 @@ class Conversation < ActiveRecord::Base
     end
 
 		if @msg_instance.send_and_save_message(team, customer, from, to, msg, false, media)
-			re = find_or_create_conversation_for_message(team.id, conv.uid_type, conv.uid, @msg_instance, false)
+			re = find_or_create_conversation_for_message(team.id, @conv.uid_type, @conv.uid, @msg_instance, false)
       message_hash(re[0], @msg_instance, re[1].id, customer, team)
 		else
 			false
@@ -148,7 +155,8 @@ class Conversation < ActiveRecord::Base
 
 	# find the conversation or create one
   def self.find_or_create_conversation(team_id, uid_type, uid)
-  	Conversation.find_or_create_by(merchant_id: team_id, uid_type: uid_type, uid: uid, resolution: "[nil, '']")
+    return @conv if @conv.present?
+    Conversation.find_by(merchant_id: team_id, uid_type: uid_type, uid: uid, resolution: [nil, ""]) || Conversation.create(merchant_id: team_id, uid_type: uid_type, uid: uid)
   end
 
   # find conversation
@@ -162,7 +170,7 @@ class Conversation < ActiveRecord::Base
                    and c.merchant_id = ? and c.created_at >= ?", merchant_id, date]).first.count
   end
 
-  def self.get_last_msg_from_last5_convs(merchant_id, date)
+  def self.get_last_customer_msg_from_last5_convs(merchant_id, date)
     Conversation.find_by_sql(["SELECT b.id as id, a.textable_id, b.uid, b.uid_type, a.created_at as created_at,
                                 CASE WHEN a.textable_type = 'Message' THEN 'SMS' ELSE 'messenger' END as channel 
                                 FROM conversation_refs a
@@ -174,8 +182,16 @@ class Conversation < ActiveRecord::Base
                                     where d.merchant_id = ? and d.resolution is null or 
                                     d.resolution = '' and d.created_at >= ? order by d.created_at desc limit 5
                                     ) e ON e.id = c.conversation_id
-                                  GROUP BY c.conversation_id 
+                                  where source = 2 GROUP BY c.conversation_id 
                                 ) b ON a.id = b.cr_id", merchant_id, date])
-  end  
+  end
 
+  def self.publish_test_conversation
+    conversation = Conversation.first
+    conv_ref = ConversationRef.first
+    merchant = User.find 23
+    customer = User.find 22
+    msg = Message.find 280
+    RealtimeStreamService.publish_to_dashboard(conversation, conv_ref, merchant, customer, msg)
+  end
 end

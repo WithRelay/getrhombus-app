@@ -38,7 +38,7 @@ class StaticPagesController < ApplicationController
 		@url = action_name.split('_').join("-")
 	end
 
-  def platform_integration; end
+  def platform_integrations; end
 
   def request_demo; end
 
