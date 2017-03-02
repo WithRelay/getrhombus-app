@@ -14,6 +14,8 @@ rhombus number form
 add card info, add subscription, billing info
 - flash message not showing...also needs to show devise error
 
+OLD
+
 - Header not fully dynamic
 - surya - test client side validations for account settings pages
 - surya - test validation for url, tax rate on business settings field
@@ -27,6 +29,7 @@ add card info, add subscription, billing info
 - update notifications dropdown
 - all settings pages should go back to the same page... i did it only for billing so far 
 - load more for all index pages
+- change password pages (relay-test.webflow.io/change-password) and validations
 Surya
 - validates_associated in user... any read op on user will run a query
 - lists should be user scoped, what is customer_lists routes, clean up routes
@@ -34,13 +37,16 @@ Dorje
 - about page not done
 - update login page - just minor UI updates... validation code stays
 
-New
+NEW
+
 - show me devise errors
 - we will need pubnub in other pages outside messages
 - do reminders for messaging page
 - fix alerts html
 - homepage/features hero buttons
-- change password pages (relay-test.webflow.io/change-password) and validations
+- password reset, remove validation and put in an invalid email
+Dorje
+- alerts for change password page and probably reset password...
 bhishma
 - do messageparser with bhishma tomorrow. 
 - create subscription on customer profile page

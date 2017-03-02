@@ -1,13 +1,5 @@
 
-  <!-- ========== Css Files ========== -->
-  <% provide(:title, 'Rhombus - Change Password') %>
-  <style>
-    .shrink-text {
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      overflow: hidden;
-    }
-  </style>
+  <% provide(:title, 'Relay - Change Password') %>
 
   <%= devise_error_messages! %>
   <%= render 'shared/full_messages' %>
@@ -22,6 +14,9 @@
       <div class="log-in-form w-form">
       
       <%= form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :put, :id => 'changePasswordForm'}) do |f| %>
+
+          <%= f.hidden_field :reset_password_token %>
+
           <div class="form-group col-xs-5">
           <%= f.password_field :password, :autofocus => true, :type => 'password', :class => " form-control reset-password text-field w-input", placeholder: "New password" %>
           </div>
@@ -34,21 +29,8 @@
         &nbsp;
       </div>
       </div>
-      <div class="log-in-sign-up-cta" style= "text-align: center">Return to <a href="#" class="links sign-up-cta-log-in-page">Log-in.</a>
+      <div class="log-in-sign-up-cta" style= "text-align: center">Return to <%= link_to 'Log In.', new_user_session_url, class: 'links sign-up-cta-log-in-page' %> 
     </div>
     </div>
-
-<%#= form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :put }) do |f| %>
-  <%#= devise_error_messages! %>
-  <%#= f.hidden_field :reset_password_token %>
-
-  <%#= f.label :password, "New password" %>
-  <%#= f.password_field :password, :autofocus => true %>
-
-  <%#= f.label :password_confirmation, "Confirm new password" %>
-  <%#= f.password_field :password_confirmation %>
-
-  <%#= f.submit "Change my password" %>
-<%# end %>
 
 <%#= render "devise/shared/links" %>
