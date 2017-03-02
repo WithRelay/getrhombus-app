@@ -23,6 +23,11 @@ class Api::V1::ListsController < API::V1::BaseController
     end
   end
 
+  def check_list_name
+    list = current_user.lists.find_by_name(list_params[:list_name])
+    render json: { valid: list.nil? }
+  end
+
   # Handles creation of a list via Ajax
   def create
     begin
