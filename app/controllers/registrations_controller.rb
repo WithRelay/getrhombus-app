@@ -8,13 +8,12 @@ class RegistrationsController < Devise::RegistrationsController
 
   def update
     self.resource = resource_class.to_adapter.get!(send(:"current_#{resource_name}").to_key)
+    #prev_unconfirmed_email = resource.unconfirmed_email if resource.respond_to?(:unconfirmed_email)
 
     message = check_params_with_update
-
     set_flash_message = set_update_flash_messages(message)
-
     url = request.referrer if setting_pages_present?
-    #prev_unconfirmed_email = resource.unconfirmed_email if resource.respond_to?(:unconfirmed_email)
+
     yield resource if block_given?
     if message.blank? && update_resource(resource, account_update_params)
       update_stripe_email if set_flash_message[:account_settings].present?
@@ -34,12 +33,19 @@ class RegistrationsController < Devise::RegistrationsController
 
   def create
     set_captured_payment_session
-    @user = User.new(sign_up_params)
-    if @user.save
-      redirect_to user_path(@user)
+
+    build_resource(sign_up_params)
+
+    resource.save
+    yield resource if block_given?
+    if resource.persisted?
+      sign_up(resource_name, resource)
+      respond_with resource, location: after_sign_up_path_for(resource)
     else
       flash[:error] = resource.errors.full_messages if resource.errors.full_messages.present?
-      render :new
+      clean_up_passwords resource
+      set_minimum_password_length
+      respond_with resource
     end
   end
 

@@ -9,7 +9,7 @@ class ConversationRef < ActiveRecord::Base
   	conv.blank? ? nil : conv.conversation_refs.last
   end
 
-   def self.get_last_customer_msg_from_all_merchant_convs(merchant_id)
+  def self.get_last_customer_msg_from_all_merchant_convs(merchant_id)
     data = ConversationRef.find_by_sql(["SELECT a.id, a.textable_id, a.textable_type, b.uid, b.uid_type, a.created_at as created_at,
 		                                      CASE WHEN a.textable_type = 'Message' THEN 'SMS' ELSE 'messenger' END as channel,
 		                                      b.resolution as resolution
