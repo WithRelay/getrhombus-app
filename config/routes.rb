@@ -110,6 +110,7 @@ Rails.application.routes.draw  do
         # list routes
         resources :lists, only: [:create, :edit]
       end
+      get 'lists/check_list_name' => 'lists#check_list_name'
       post 'users/check_password' => 'users#check_password'
       match 'hashtags' => 'hashtags#index', via: :get
       match 'hashtags/:id/images/:image_id' => 'hashtags#image_delete', via: :delete
