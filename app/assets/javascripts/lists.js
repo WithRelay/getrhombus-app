@@ -6,10 +6,6 @@ $(document).on('ready page:load', function() {
     var action = $(this).attr('action');
     var method = $(this).attr('method');
     var data = $(this).serializeArray();
-    console.log("Action: " + action)
-    console.log("Method: " + method)
-    console.log(data)
-    //debugger;
 
     // Submit form via Ajax
     $.ajax({
@@ -20,67 +16,73 @@ $(document).on('ready page:load', function() {
     }).done(function(msg){
       console.log("Segment created successfully")
       $('#segment_create_msg').html("Segment created successfully")
-      })
-     .fail(function(msg){
+    })
+    .fail(function(msg){
       console.log("Segment could not be created")
       $('#segment_create_msg').html("Segment could not be created")
-     })
-  })
-
-
-  // Submission of the create list form
-  $("form#create_user_list").submit(function(e){
-    e.preventDefault();
-    var action = $(this).attr('action');
-    var method = $(this).attr('method');
-
-    var data = $(this).serializeArray();
-
-    console.log(action)
-
-    // Submit form via Ajax
-    $.ajax({
-      method: method,
-      url: action,
-      data: data,
-      dataType: 'json'
-    }).done(function(msg){
-      $('#list_form_items').html("List created successfully")
-      })
-     .fail(function(msg){
-      console.log("An error occured")
-      process_list_error(msg)
-     })
-   //debugger;
-  })
-
-  // Processes any list submission error
-  // and displays appropriate error messages to the user
-  function process_list_error(msg){
-     var error_div = $("#list_form_errors")
-     var response = JSON.parse(msg.responseText)
-     errors = response['list_error']
-     errors = JSON.parse(errors)
-     console.log(errors)
-     $.each(errors, function(index, value){
-     error_div.html(" ").append(value).css('color', 'red')
     })
-   }
+  })
 
   // Toggles between checking or unchecking all checkboxes
- $("#check_or_uncheck_all").click(function(e){
-      console.log("Select all checkboxes was clicked")
-      if( $(this).is(':checked') ){
-          $(".merchant_customers").prop('checked', true);
-      }else{
-         $(".merchant_customers").prop('checked', false);
+  $("#check_or_uncheck_all").click(function(e){
+    if( $(this).is(':checked') ){
+      $('#create_list_button').removeAttr('disabled');
+      $(".merchant_customers").prop('checked', true);
+    }else{
+      $(".merchant_customers").prop('checked', false);
+    }
+  });
+
+  $('.merchant_customers').click(function(){
+    $(this).is(':checked') && $('#create_list_button').removeAttr('disabled')
+  });
+
+  $('#create_user_list').formValidation({
+    framework: 'bootstrap',
+    live: 'disabled',
+    err: {
+      container: function($field, validator) {
+        return $field.parent().find('.messageContainer');
       }
- })
-
-  // This chunk of code handles the lightbox pop up behavior for creating
-  // a new list
-  var selected_users = [] // An array for storing selected users
-
+    },
+    fields: {
+      'lists[list_name]': {
+        excluded: false,
+        verbose: false,
+        validators: {
+          notEmpty: {
+            message: 'Campaign name is required'
+          },
+            remote: {
+            url: '/v1/lists/check_list_name',
+            type: 'GET'
+          }
+        }
+      }
+    }
+  }).on('success.form.fv', function(e, data) {
+    // Submission of the create list form
+    $("form#create_user_list").submit(function(e){
+      e.preventDefault();
+      var action = $(this).attr('action');
+      var method = $(this).attr('method');
+      // Submit form via Ajax
+      $.ajax({
+        method: method,
+        url: action,
+        data: $(this).serializeArray(),
+        dataType: 'json'
+      }).done(function(msg){
+        (msg.status == 404) && setFlashForList(msg.error.replace(/[\["\]']/g, ''), 'error');
+        if (msg.status == 200){
+          setFlashForList('List successfully Created', 'notice');
+          $('.close-modal').click();
+        }
+      }).fail(function(msg){
+        setFlashForList(msg, 'error');
+      });
+    })
+  });
 
   // Fired when the user wants to select checkboxes that fall in a range
   jQuery(function($) {
@@ -89,28 +91,40 @@ $(document).on('ready page:load', function() {
 
   // Fired on click on create list button
   $("#create_list_button").click(function(e){
-    $("#list_create_modal").lightbox_me({
-      closeClick: true,
-      closeEsc: true,
-      centered: true,
-      onLoad: function() {
-        $("#list_create_modal").find('input:first')
-        $("#selected_users").val(selected_users)
-        $("#list_type").val("list")
-      }
+    if (!isAnyCheckboxSelected('.merchant_customers')){
+      setFlashForList('Please select customer from the table', 'error');
+    }
+    else{
+      user_ids = getSelectedUserIds();
+      $("#import-customers-div").lightbox_me({
+        closeClick: true,
+        closeEsc: true,
+        centered: true,
+        onLoad: function() {
+          $("#selectedUsers").val(user_ids);
+          $("#listType").val("list");
+        }
       });
-     e.preventDefault();
+    }
+    e.preventDefault();
   });
 
+  function isAnyCheckboxSelected(checkbox_class){
+    return $(checkbox_class).is(':checked') || $('#check_or_uncheck_all').is(':checked');
+  }
   // On click of the cancel button close out the lightbox
   $(".cancel").click(function(e){
     $("#list_create_modal").hide();
     $("#segment_create_modal").hide();
   });
 
+  function setFlashForList(msg, title){
+    FlashHandler.setFlashMessage(msg, title);
+  }
+
 
   // Fired on click of create segment button
-    $("#name_segment").click(function(e){
+  $("#name_segment").click(function(e){
     $("#segment_create_modal").lightbox_me({
       closeClick: true,
       closeEsc: true,
@@ -126,36 +140,43 @@ $(document).on('ready page:load', function() {
         $("#amt_1").val($("#amount_1").val())
         $("#amt_2").val($("#amount_2").val())
       }
-      });
-     e.preventDefault();
+    });
+    e.preventDefault();
   });
 
 
-
+  function getSelectedUserIds(){
+    var selected_users = ''; // An array for storing selected users
+    $('.merchant_customers:checked').each(function(){
+      selected_users += ($(this).data('users'));
+    })
+    return selected_users;
+  }
   // Fired on click of the segment button
   // Still under development
 
 
-  num_checkboxes_selected = 0;
-  $(".customer_checkboxes" ).change(function() {
-    var input = $(this);
-    var state = (input.prop("checked"))
-    if (state == true){
-      num_checkboxes_selected +=1;
-      selected_users.push(input.val());
-      console.log("Input checked is : ", input.val());
-
-    } else{
-      num_checkboxes_selected -=1;
-      element_index = selected_users.indexOf(input.val())
-      selected_users.splice(element_index, 1);
-    }
-  if (selected_users.length > 0){
-    console.log("There is a selected checkbox.", selected_users);
-    $("#create_list_button").prop('disabled', false);
-  }else{
-    console.log("No selected checkboxes");
-    $("#create_list_button").prop('disabled', true);
-  }
-})
+  //   num_checkboxes_selected = 0;
+  //   $(".customer_checkboxes" ).change(function() {
+  //
+  //     var input = $(this);
+  //     var state = (input.prop("checked"))
+  //     if (state == true){
+  //       num_checkboxes_selected +=1;
+  //       selected_users.push(input.val());
+  //       console.log("Input checked is : ", input.val());
+  //
+  //     } else{
+  //       num_checkboxes_selected -=1;
+  //       element_index = selected_users.indexOf(input.val())
+  //       selected_users.splice(element_index, 1);
+  //     }
+  //   if (selected_users.length > 0){
+  //     console.log("There is a selected checkbox.", selected_users);
+  //     $("#create_list_button").prop('disabled', false);
+  //   }else{
+  //     console.log("No selected checkboxes");
+  //     $("#create_list_button").prop('disabled', true);
+  //   }
+  // })
 });

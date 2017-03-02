@@ -3,7 +3,7 @@ $(document).on('ready page:load', function() {
   $('#edit-reminder').on('click', function(){
     var selectedElement = $('.table-checkbox:checked').closest('form');
     var reminder_id = selectedElement.find("#reminder_id").val();
-   
+
      $.ajax({
        url:  "/v1/reminders/" + reminder_id + "/edit" ,
        data:{id: reminder_id}
@@ -12,16 +12,15 @@ $(document).on('ready page:load', function() {
       var form = $('#editReminderForm');
       var action = form.attr("action");
       var newAction = action.substring(0, action.length-2) + reminder_id;
-       
-      form.find("#Notification-Message").val(res.text); 
+
+      form.find("#Notification-Message").val(res.text);
       form.find(".emojionearea-editor").text(res.text);
       form.attr("action", newAction);
 
-        
+
       var raw_date_time = res.date_time;
       var date_time = new Date(raw_date_time);
       var formated_date_time = formatDate(date_time);
-      debugger;
       form.find("#reminder-date-time").val(formated_date_time);
      }).error(function(){
         // alert("")
