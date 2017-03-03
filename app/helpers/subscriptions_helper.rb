@@ -140,7 +140,7 @@ module SubscriptionsHelper
   end
 
   def subscription_customer_field(f)
-    @merchant_customer_id = MerchantCustomer.where(merchant_id: current_user.id, customer_id: request.url.split('/').last.to_i)
+    @merchant_customer_id = MerchantCustomer.where(merchant_id: current_user.id, customer_id: request.url.split('/').last.to_i)[0].id
     if(controller.action_name == 'show' && controller.controller_name == "merchant_customers")
       f.hidden_field :merchant_customer_id, value: @merchant_customer_id
      else
