@@ -38,9 +38,9 @@ class Api::V1::ConversationsController < API::V1::BaseController
 
   def messages
     # test that user is present here
-    re = Conversation.send_message(@conversation, current_user, params[:msg], params[:channel]) if params[:msg].present?
+    re = Conversation.send_message(@conversation, current_user, params[:msg], params[:channel], 'merchant') if params[:msg].present?
     if re
-      render json: re, status: 200
+      render json: re.first, status: 200
     else 
       render json: {}, status: 500
     end
@@ -53,9 +53,9 @@ class Api::V1::ConversationsController < API::V1::BaseController
       raise StandardError if params[:avatar].blank?
       # twilio supports only gif, png and jpeg though it accepts other types
       img = Image.create(avatar: params[:avatar])
-      re = Conversation.send_message(@conversation, current_user, params[:msg], params[:channel], [img])
+      re = Conversation.send_message(@conversation, current_user, params[:msg], params[:channel], 'merchant', [img])
       raise StandardError unless re
-      render json: re, status: :created
+      render json: re.first, status: :created
     rescue StandardError => e
       render json: { error: "Unable to upload file" }, status: 500
     end
