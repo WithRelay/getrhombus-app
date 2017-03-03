@@ -34,7 +34,7 @@ class ApplicationController < ActionController::Base
   protected
 
     def set_time_zone(&block)
-      Time.use_zone(zone, &block)
+      Time.use_zone(current_user.time_zone, &block)
     end
 
     def configure_permitted_parameters
