@@ -50,18 +50,18 @@ NEW
 Surya
 - dont scope api routes under user like lists, group routes together with collection/member so it is easier to track
 - empty state for lists
-
 Dorje
 - when you run quries on tables with merchant_id, you need to add merchant_id like in MerchantCustomer, Transaction, MerchantContact
 - customer index empty state
 - alerts for forgot password, change password page and probably reset password...
 - profile pic, dont show twitter info if not exists and transaction history on customer profile page
 bhishma
+- add timezone finder for fb events
 - do messageparser with bhishma tomorrow. 
-- create subscription on customer profile page
 - what's the use of this in subscription presenter  def customer
     MerchantCustomer.find @model.merchant_customer_id
   end
+- when messages get resent do nothing
 
 
 - add the url for pages you did to the sidebar on dashboard and settings page

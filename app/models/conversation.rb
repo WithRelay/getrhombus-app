@@ -6,7 +6,8 @@ class Conversation < ActiveRecord::Base
   has_many :messages, through: :conversation_refs, source: :textable, source_type: 'Message', dependent: :destroy
   belongs_to :merchant_conversation, class_name: "User"   
    
-  # fix date issue
+  # Timezone should already be set when calling methods in this class.
+
   # plug in charges
   # bugs bhishma mentioned
   # profile snapshot
@@ -37,6 +38,8 @@ class Conversation < ActiveRecord::Base
       last_message = last_message.textable
       last_message.text = 'image attached' if last_message.present? && last_message.text.blank? && last_message.images.exists?
     end
+
+    puts last_message.created_at
     
     {
       id: self.id,
@@ -47,7 +50,7 @@ class Conversation < ActiveRecord::Base
       last_message: last_message.blank? ? '' : last_message.text,
       last_message_ts: last_message.blank? ? 0 : last_message.created_at.to_i,
       last_message_type: last_message.class.name,
-      ago: ConversationRef.find(87).created_at.super_short, #last_message.blank? ? "" : last_message.created_at.super_short,
+      ago: last_message.blank? ? "" : time_in_relative_form(last_message.created_at),
       unread_count: ConversationRef.where(conversation_id: self.id, unread: true).count,
       #has_messenger: 
     }

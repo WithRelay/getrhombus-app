@@ -11,14 +11,11 @@ class TransactionsController < ApplicationController
 
   def index
     if current_user.is_merchant?
-      @transactions = Transaction. includes(:user).where(team_id: current_user.id)
+      @transactions = Transaction.includes(:user).where(team_id: current_user.id)
     else      
       @transactions = []
     end
     respond_with(@transactions)
-  end
-
-  def show
   end
 
   # generate user csv data
@@ -44,7 +41,7 @@ class TransactionsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def transaction_params
-     params.require(:transaction).permit(:amount)
+      params.require(:transaction).permit(:amount)
     end
 
 end
