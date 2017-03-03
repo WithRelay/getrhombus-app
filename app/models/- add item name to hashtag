@@ -64,9 +64,6 @@ bhishma
 - client side validation for subscription doesnt work
 - add timezone finder for fb events
 - do messageparser with bhishma tomorrow. 
-- what's the use of this in subscription presenter  def customer
-    MerchantCustomer.find @model.merchant_customer_id
-  end
 - when messages get resent do nothing
 
 
