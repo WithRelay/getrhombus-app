@@ -3,7 +3,7 @@ class MerchantCustomerPresenter < BasePresenter
   def profile_image
     profile_pic = User.check_profile_picture(@model.customer)
     if profile_pic[:type] == "image"
-          html = h.image_tag(profile_pic[:value], class: 'campaigns table-profile-picture', width: 24)
+      html = h.image_tag(profile_pic[:value], class: 'campaigns table-profile-picture', width: 24)
     elsif profile_pic[:type] == "color"
       class_name = " campaigns table-profile-picture radius-color-#{profile_pic[:value]}"
       html = ("<div class='"+ class_name +"'></div>").html_safe
@@ -12,7 +12,7 @@ class MerchantCustomerPresenter < BasePresenter
   end
 
   def first_visit_format_created_at
-  	transactions = customer_transactions
+  	transactions = @transactions || customer_transactions
     if (transactions.present?)
       h.time_ago_in_words(transactions.first.created_at) + ' ago'
     else
@@ -21,7 +21,7 @@ class MerchantCustomerPresenter < BasePresenter
   end
 
  def last_visit_format_created_at
-  	transactions = customer_transactions
+  	transactions = @transactions || customer_transactions
     if (transactions.present?)
       h.time_ago_in_words(transactions.last.created_at) + ' ago'
     else
@@ -31,12 +31,12 @@ class MerchantCustomerPresenter < BasePresenter
   end
   
   def average
-  	transaction_avg = Transaction.where(user_id: @model.customer_id).average(:amount)
+  	transaction_avg = Transaction.where(user_id: @model.customer_id, team_id: @model.merchant_id).average(:amount)
   	"$ #{'%.02f' % t = transaction_avg ? transaction_avg : 0 }"
   end
 
   def total
-  	transaction_sum = Transaction.where(user_id: @model.customer_id).sum(:amount)
+  	transaction_sum = Transaction.where(user_id: @model.customer_id, team_id: @model.merchant_id).sum(:amount)
   	"$ #{'%.02f' % t = transaction_sum ? transaction_sum : 0}"
   end
 
@@ -47,6 +47,6 @@ class MerchantCustomerPresenter < BasePresenter
 private
 
   def customer_transactions
-    transaction = Transaction.where(user_id: @model.customer_id)
+    @transactions = Transaction.where(user_id: @model.customer_id, team_id: @model.merchant_id)
   end
 end
