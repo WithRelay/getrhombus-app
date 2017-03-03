@@ -6,13 +6,10 @@ class Conversation < ActiveRecord::Base
   has_many :messages, through: :conversation_refs, source: :textable, source_type: 'Message', dependent: :destroy
   belongs_to :merchant_conversation, class_name: "User"   
    
-
-  #### plug in source in conversationrefs
   # fix date issue
   # plug in charges
-  # 
-
-
+  # bugs bhishma mentioned
+  # profile snapshot
 
   # the user texting this merchant
   def user
@@ -50,7 +47,7 @@ class Conversation < ActiveRecord::Base
       last_message: last_message.blank? ? '' : last_message.text,
       last_message_ts: last_message.blank? ? 0 : last_message.created_at.to_i,
       last_message_type: last_message.class.name,
-      ago: last_message.blank? ? "" : last_message.created_at.super_short,
+      ago: ConversationRef.find(87).created_at.super_short, #last_message.blank? ? "" : last_message.created_at.super_short,
       unread_count: ConversationRef.where(conversation_id: self.id, unread: true).count,
       #has_messenger: 
     }
@@ -64,23 +61,24 @@ class Conversation < ActiveRecord::Base
 
 		convs_refs.each do |cr|
 			unread_ids.push(cr.id) if cr.unread
-			latest_messages.push(message_hash(conv, cr.textable, cr.id, customer, nil))
+			latest_messages.push(message_hash(conv, cr.textable, cr, customer, nil))
     end
     [latest_messages, unread_ids.join(",")]
 	end
 
-	def self.message_hash(conv, msg, ref_id, customer, merchant=nil)
+	def self.message_hash(conv, msg, conv_ref, customer, merchant=nil)
     u = msg.user_id == conv.merchant_id ? merchant : customer
+    #u = conv_ref.source == 'customer' ? customer : merchant
 
     {
       id: msg.id,
-      source: msg.user_id == conv.merchant_id ? "merchant" : 'customer',  # or use conversation ref source
+      source: msg.user_id == conv.merchant_id ? "merchant" : 'customer',  # or conv_ref.source
       profile_image: User.check_profile_picture(u),
       text: (msg.text) ? msg.text : '',
       ts_day_of_the_week: msg.created_at.strftime("%B") + " " + msg.created_at.strftime("%d").to_i.ordinalize,
       ts_time: msg.created_at.strftime('%l:%M %P'),
       unread: msg.unread,
-      images: msg.images.map { |i| { ref: ref_id, url: i.avatar.url } },           # return small version here??
+      images: msg.images.map { |i| { ref: conv_ref.id, url: i.avatar.url } },           # return small version here??
       channel: msg.class.name
   	}
 	end
@@ -103,7 +101,7 @@ class Conversation < ActiveRecord::Base
 	end  
 
   # uid can be user id, phone number or messenger id
-  def self.send_message(conv, team, msg, channel, media = [])
+  def self.send_message(conv, team, msg, channel, source, media = [])
     @conv = conv
 
 		from = (channel == "FbMessage") ? "get messenger cred" : team.rhombus_number
@@ -115,7 +113,7 @@ class Conversation < ActiveRecord::Base
       to = @conv.uid
     end
 
-    @msg_instance = channel.constantize.new
+    msg_instance = channel.constantize.new
 
     # Relate message to files
     if media.present?
@@ -124,35 +122,40 @@ class Conversation < ActiveRecord::Base
         media_ids.push(m.id)
         m.avatar.url
       end
-      @msg_instance.image_ids = media_ids
+      msg_instance.image_ids = media_ids
     end
 
-		if @msg_instance.send_and_save_message(team, customer, from, to, msg, false, media)
-			re = find_or_create_conversation_for_message(team.id, @conv.uid_type, @conv.uid, @msg_instance, false)
-      message_hash(re[0], @msg_instance, re[1].id, customer, team)
-		else
-			false
+		if msg_instance.send_and_save_message(team, customer, from, to, msg, false, media)
+			re = find_or_create_conversation_for_message(team.id, @conv.uid_type, @conv.uid, msg_instance, false, source)
+      msg_hash = message_hash(re[0], msg_instance, re[1], customer, team)
+      [msg_hash, msg_instance]
+    else 
+      false
 		end
   end
 
-  # when sending
+  # when sending by platform on behalf of merchant like automated messages (excludes sending from dashboard)
   def self.find_or_create_conversation_for_message_and_send_publish(team, customer, uid_type, uid, msg_to_send, channel, media = [])
     re = find_or_create_conversation(team.id, uid_type, uid)
-    msg_res = send_message(re[0], team, msg_to_send, channel, media)
-    RealtimeStreamService.publish_to_dashboard(re[0], re[1], team, customer, @msg_instance)
-    msg_res.id
+    msg_ary = send_message(re[0], team, msg_to_send, channel, 'platform', media)
+    if msg_ary
+      RealtimeStreamService.publish_to_dashboard(re[0], re[1], team, customer, msg_ary.second)
+      msg_ary.first.id
+    else
+      false
+    end    
   end
 
   # when receiving
   def self.find_or_create_conversation_for_message_and_publish(team, customer, uid_type, uid, msg_instance, unread)
-    re = find_or_create_conversation_for_message(team.id, uid_type, uid, msg_instance, unread)
+    re = find_or_create_conversation_for_message(team.id, uid_type, uid, msg_instance, unread, 'customer')
     RealtimeStreamService.publish_to_dashboard(re[0], re[1], team, customer, msg_instance)
   end
 
   # find or create conversation and attach new message
-  def self.find_or_create_conversation_for_message(team_id, uid_type, uid, msg_instance, unread)
+  def self.find_or_create_conversation_for_message(team_id, uid_type, uid, msg_instance, unread, source)
     conv = find_or_create_conversation(team_id, uid_type, uid)
-    conv_ref = conv.conversation_refs.create(textable: msg_instance, unread: unread)
+    conv_ref = conv.conversation_refs.create(textable: msg_instance, unread: unread, source: source)
     [conv, conv_ref]
   end 
 

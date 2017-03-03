@@ -9,14 +9,14 @@ class NexmoEvent
 
     # save inbound
     def save_message
-      merchant_id = get_merchant_id
-      user_id = get_user_id
+      merchant = get_merchant
+      user = get_user
 
       @message = Message.create(
         to: @param[:to],
         from: @param[:msisdn],
-        user_id: user_id,
-        user_id_to: merchant_id,
+        user_id: user.nil? ? nil : user.id,
+        user_id_to: merchant.id,
         message_id: @param[:messageId],
         text: @param[:text].strip,
         num_segments: @param["concat-total"] || 1,
@@ -24,14 +24,12 @@ class NexmoEvent
       )
 
       # create or add to existing conversation
-      if user_id.present?
-        uid, uid_type = user_id, 'user'
+      if user.present?
+        uid, uid_type = user.id, 'user'
       else
         uid, uid_type = @param[:From].gsub('+', ''), 'phone_number'
       end
-      Conversation.new.find_or_create_conversation_for_message(merchant_id, uid_type, uid, @message, true)
-  
-      # send to real time service
+      Conversation.find_or_create_conversation_for_message_and_publish(merchant, user, uid_type, uid, @message, true)
     end
 
     # save outbound delivery report
@@ -43,14 +41,12 @@ class NexmoEvent
 
     private
 
-      def get_user_id
-        user = User.find_by(phone_number:  @param[:msisdn])
-        user.id if user
+      def get_user
+        User.find_by(phone_number:  @param[:msisdn])
       end
 
-      def get_merchant_id
-        merchant = User.find_by(rhombus_number: @param[:to])
-        merchant.id if merchant
+      def get_merchant
+        User.find_by(rhombus_number: @param[:to])
       end
 
   end
