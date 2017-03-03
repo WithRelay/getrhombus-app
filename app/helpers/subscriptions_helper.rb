@@ -143,7 +143,7 @@ module SubscriptionsHelper
     if (controller.action_name == 'show' && controller.controller_name == "merchant_customers")
       f.hidden_field :merchant_customer_id, value: @merchant_customer.id
      else
-      f.number_field :merchant_customer_id, class: 'form-control subscriber-name text-field w-input', id: 'subscription-customer-id', placeholder: 'Select a customer'
+      f.text_field :merchant_customer_id, class: 'form-control subscriber-name text-field w-input', id: 'subscription-customer-id', placeholder: 'Select a customer'
     end
   end
 
