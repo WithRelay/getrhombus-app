@@ -12,6 +12,7 @@ class Subscription < ActiveRecord::Base
   scope :active, -> { where(status: 'active') }
 
   def create_subscription(hash)
+
     begin
       return [false] if !self.save
 
