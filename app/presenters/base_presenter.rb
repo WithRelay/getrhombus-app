@@ -25,7 +25,7 @@ class BasePresenter < SimpleDelegator
   end
 
   def relative_time
-    @model.created_at.super_short
+    time_in_relative_form(@model.created_at)
   end
 
   def profile_image

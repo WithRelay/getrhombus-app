@@ -1,16 +1,15 @@
 <%= form_for('subscription', html: { id: 'subscriptionForm', class: 'w-clearfix' }) do |f| %>
 
   <div class="form-group col-xs-6">
-    <input class="form-control subscriber-name text-field w-input" id="Subscriber-Name" maxlength="256" name="Subscriber-Name" placeholder="Enter customer&#39;s name or phone number" required="required" type="text">
+     <%= subscription_customer_field(f) %>
   </div>
+
   <div class="form-group col-xs-6">
     <%= f.text_field :plan_id, class: 'form-control dropdown w-select', placeholder: "Select a plan", id: "subscription-plan-id" %>
   </div>
+
   <div class="form-group col-xs-6">
     <%= f.text_field :coupon_id, class: 'form-control subscriber-name text-field w-input', id: 'subscription-select-coupon', placeholder: "Select a coupon" %>
-  </div>
-  <div class="form-group col-xs-6">
-     <%= subscription_customer_field(f) %>
   </div>
 
   <a class="create-new-plan modal-loader"  href="#" modal-target= 'new-plan-modal'>

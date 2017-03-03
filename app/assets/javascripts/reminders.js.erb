@@ -74,20 +74,20 @@ function formatDate(date) {
     });
 
   $('#submitReminderForm').click(function(){
-    $('.reminderForm').formValidation('resetField', 'reminder[text]');
+    $('#reminderForm').formValidation('resetField', 'reminder[text]');
     $('#reminderForm').submit();
     $('.update-close-modals').click();
   });
 
   $('#submitEditReminderForm').on('click',function(){
-     $('.reminderForm').formValidation('resetField', 'reminder[text]');
+     $('#reminderForm').formValidation('resetField', 'reminder[text]');
     $('#editReminderForm').submit();
     $('.update-close-modals').click();
   });
 
   $('.notification-message').emojioneArea();
 
-  $('.reminderForm').formValidation({
+  $('#reminderForm').formValidation({
     framework: 'bootstrap',
     excluded: ':disabled',
     live: 'disabled',

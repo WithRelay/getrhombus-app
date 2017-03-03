@@ -50,12 +50,18 @@ NEW
 Surya
 - dont scope api routes under user like lists, group routes together with collection/member so it is easier to track
 - empty state for lists
+- reminders.js  url:  "/v1/reminders/" + reminder_id + "/edit" 
+- validate reminders field
+- something wrong with how you submit subscription form 
 Dorje
 - when you run quries on tables with merchant_id, you need to add merchant_id like in MerchantCustomer, Transaction, MerchantContact
 - customer index empty state
 - alerts for forgot password, change password page and probably reset password...
 - profile pic, dont show twitter info if not exists and transaction history on customer profile page
 bhishma
+- routes in subscriptions.js
+- pre-authorized transaction page... just a url param
+- client side validation for subscription doesnt work
 - add timezone finder for fb events
 - do messageparser with bhishma tomorrow. 
 - what's the use of this in subscription presenter  def customer
