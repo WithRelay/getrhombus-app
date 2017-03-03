@@ -31,7 +31,7 @@ class WebhooksController < ApplicationController
     res = {}
 
     begin
-      res = FacebookEvent.process_event(params)
+      res = FacebookEvent.process_event(params, @current_page, @merchant)
     rescue StandardError => e
       # email platform
     end
@@ -43,15 +43,27 @@ class WebhooksController < ApplicationController
 
     def set_time_zone(&block)
       if action_name == 'facebook_events'
-        @merchant = User.first # placeholder....replace this
+        if params['entry']
+          @merchant = get_merchant
+        end
       elsif action_name == 'stripe_events'
-        @merchant = User.first # placeholder....replace this
+         @merchant = params['user_id'].present? ? User.find_by(uid: params['user_id']) : User.get_platform_acct_obj
       elsif action_name == 'twilio_events'
         @merchant = User.find_by(rhombus_number: params[:To].gsub('+', ''))
       elsif action_name == 'nexmo_events'
         @merchant = User.find_by(rhombus_number: params[:to])
       end
       Time.use_zone(@merchant.time_zone, &block)
+    end
+
+    def current_page
+      @required_params =  @required_params = params['entry'].last
+      FbPage.find_by_page_id @required_params['id']
+    end
+
+    def get_merchant
+      @current_page = current_page
+      @merchant = @current_page.user
     end
 
 end

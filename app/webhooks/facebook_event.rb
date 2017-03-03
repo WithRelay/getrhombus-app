@@ -2,17 +2,19 @@
     
   class << self
 
-    def process_event(params)
+    def process_event(params, current_page, merchant)
       @params = params
-      if params['hub.mode'].present? #for verify webhook
+      @current_page = current_page
+      @merchant = merchant
+      if @params['hub.mode'].present? #for verify webhook
         verify_webhook
       else #after verification for messenger event
-        @required_params = params['entry'].last
-        event = @required_params['messaging'].last
-        read_event = event['read']
-        message_event = event['message']
+        @required_params = @params['entry'].last
+        @event = @required_params['messaging'].last
+        read_event = @event['read']
+        message_event = @event['message']
         if message_event.present?
-          receive_message(event)
+          receive_message
         end
       end
     end
@@ -37,24 +39,24 @@
       {}
     end
 
-    def receive_message(params)
+    def receive_message
       begin
-        message = params['message']
+        message = @event['message']
         @attachments = message['attachments']
         seq = message['seq']
         text = message['text']
         text = '' if text.nil?
-        timestamp = set_timestamp(params['timestamp'])
+        timestamp = set_timestamp(@event['timestamp'])
         message_id =  message['mid']
-        message_from = params['sender']['id']
-        message_to = params['recipient']['id']
-        fb_page_id = current_page.id
-        new_user_id = (current_page.page_id == message_to)? message_from : message_to
-        add_page_user(current_page, new_user_id)
+        message_from = @event['sender']['id']
+        message_to = @event['recipient']['id']
+        fb_page_id = @current_page.id
+        new_user_id = (@current_page.page_id == message_to)? message_from : message_to
+        add_page_user(@current_page, new_user_id)
 
         uid = get_uid
-        @merchant_id = get_merchant_id
-        if (current_page.page_id == message_from)
+        @merchant_id = @merchant.id
+        if (@current_page.page_id == message_from)
           @user_id =  @merchant_id
           @user_id_to = uid unless uid == @fb_cred.page_specific_id
         else
@@ -95,11 +97,6 @@
       @fb_cred.user ? @fb_cred.user_id : @fb_cred.page_specific_id
     end
 
-    def get_merchant_id
-      @merchant = current_page.user
-      @merchant_id = @merchant.id
-    end
-
     def save_attachments
       invalid_file = valid_file = false
       @attachments.each do |a|
@@ -135,10 +132,6 @@
       page_access_token = page.page_access_token
       text = "Sorry #{user_name}, currently we only support image file attachments"
       FacebookMessengerService.send_text_message(page_access_token, to, text)
-    end
-
-    def current_page
-      FbPage.find_by_page_id @required_params['id']
     end
 
   end

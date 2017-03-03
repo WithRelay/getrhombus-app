@@ -13,11 +13,11 @@ class SubscriptionPresenter < BasePresenter
   end
 
   def get_customer_email
-    user.email
+    @user.email
   end
 
   def last4
-    user.last4
+    @user.last4
   end
 
   def get_coupon_info
@@ -50,11 +50,8 @@ class SubscriptionPresenter < BasePresenter
   end
 
   def user
-     User.find customer.customer_id
-  end
-
-  def customer
-    MerchantCustomer.find @model.merchant_customer_id
+    customer = MerchantCustomer.find @model.merchant_customer_id
+    @user = User.find customer.customer_id
   end
 
   def plan
