@@ -98,14 +98,28 @@ function formatDate(date) {
             message: 'This Field is required'
           }
         }
-      }
+      },
+      'reminder[customer_id]':{
+            validators: {
+              callback: {
+                message: 'Please select a customer',
+                callback: function(value, validator, $field) {
+                  var customer = validator.getFieldElements('reminder[customer_id]').val();
+                  return (customer !== '');
+                }
+              }
+            }
+          },
     }
   }).on('success.form.fv', function(e, data) {
         e.preventDefault();
         var apiController = new ApiController(this, '#myModalNorm');
         var formData = new FormData(this);
         apiController.sendRequest(formData)
-    });
+    })
+  .on('err.validator.fv', function(e) {
+        $('.help-block').hide();
+      });
 
 // Class ApiController handle all call to http verb to the server
 // First argument is the dom object it self and second contains the modal id
