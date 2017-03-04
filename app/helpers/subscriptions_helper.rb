@@ -99,7 +99,6 @@ module SubscriptionsHelper
   def subscriptions_change
     tday_txns_count = @saas_invoices[0].count
     yday_txns_count = @saas_invoices[1].count
-    puts yday_txns_count
     percent_change = (tday_txns_count - yday_txns_count).to_f/yday_txns_count * 100 if yday_txns_count > 0
     display_change( percent_change.round ) if percent_change.present?
   end

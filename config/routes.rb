@@ -80,7 +80,7 @@ Rails.application.routes.draw  do
       authenticate :user, -> (user) { user.is_merchant? } do
         resources :conversations, only: [:index]
         resources :campaigns, except: [:show] { collection { get 'filter_campaign' } }
-        resources :reminders, except: [:show] { member { put 'change_status' } }
+        resources :reminders, except: [:show, :new] { member { put 'change_status' } }
       end
 
       member do

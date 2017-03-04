@@ -26,22 +26,16 @@ class User < ActiveRecord::Base
   # include default devise modules. Others available are: :token_authenticatable, :lockable, :timeoutable and :confirmable,
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable, :omniauthable, :omniauth_providers => [:facebook, :twitter, :stripe_connect]
 
-  has_many :transactions
+  has_many :customer_transactions
   has_many :merchant_transactions, class_name: 'Transaction', foreign_key: 'team_id'
-  has_many :merchant_customers, foreign_key: 'merchant_id'
-  has_many :merchant_customers, foreign_key: 'customer_id'
-
-  has_many :subscriptions
 
   has_many :referrers, class_name: 'Referrer', foreign_key: 'referee_id'
   has_many :referees, class_name: 'Referrer', foreign_key: 'referrer_id'
 
-  has_many :merchants, class_name: 'MerchantCustomer', foreign_key: 'customer_id'
-  has_many :customers, class_name: 'MerchantCustomer', foreign_key: 'merchant_id'
+  has_many :customer_merchants, class_name: 'MerchantCustomer', foreign_key: 'customer_id'
+  has_many :merchant_customers, class_name: 'MerchantCustomer', foreign_key: 'merchant_id'
 
-  has_many :merchant, class_name: 'MerchantContact', foreign_key: 'merchant_id'
-
-  has_many :contacts, class_name: 'MerchantContact', foreign_key: 'uid'
+  has_many :merchant_contacts, class_name: 'MerchantContact', foreign_key: 'merchant_id'
 
   has_many :reminders, -> { where campaign_type: 1 }
 
