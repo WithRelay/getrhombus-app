@@ -1,8 +1,8 @@
 module TransactionsHelper
     def transactions
-    today_transactions = Transaction.where(team_id: current_user.id)
+    today_transactions = Transaction.where(team_id: current_user.id, captured: true)
       .where("created_at >= ?", Time.current.beginning_of_day).pluck(:amount_with_taxes, :app_fee, :stripe_fee)
-    yesterday_transactions = Transaction.where(team_id: current_user.id)
+    yesterday_transactions = Transaction.where(team_id: current_user.id, captured: true)
       .where("created_at < ? && created_at >= ?", Time.current.beginning_of_day, (Time.current.beginning_of_day - 1.days))
       .pluck(:amount_with_taxes, :app_fee, :stripe_fee)
     @all_transactions = [today_transactions, yesterday_transactions]
