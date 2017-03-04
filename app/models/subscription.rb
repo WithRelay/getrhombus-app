@@ -2,7 +2,7 @@ class Subscription < ActiveRecord::Base
 
   belongs_to :plan
   belongs_to :coupon
-  belongs_to :merchant_customer
+  belongs_to :merchant_customer, inverse_of: :subscriptions
   has_many :invoices
   has_many :notification_logs, as: :notifiable, dependent: :destroy
 
