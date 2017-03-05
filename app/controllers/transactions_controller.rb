@@ -10,7 +10,10 @@ class TransactionsController < ApplicationController
   respond_to :html
 
   def index
-    if current_user.is_merchant?
+    if params[:captured] == "false"
+      @transactions = Transaction.includes(:user).where(team_id: current_user.id, captured: false)
+                                 .paginate(page: params[:page], per_page: 10).order(created_at: :desc)
+    elsif current_user.is_merchant?
       @transactions = Transaction.includes(:user).where(team_id: current_user.id, captured: true)
                                  .paginate(page: params[:page], per_page: 10).order(created_at: :desc)
     else      

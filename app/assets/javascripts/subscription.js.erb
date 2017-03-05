@@ -71,7 +71,6 @@ $(document).ready(function () {
                 callback: {
                   message: 'Please select a Customer',
                   callback: function(value, validator, $field) {
-                    debugger
                     var cus = validator.getFieldElements('subscription[merchant_customer_id]').val();
                     return (cus !== '');
                   }

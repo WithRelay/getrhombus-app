@@ -36,7 +36,8 @@
     </a>
     <div class="transactions-hidden-nav">
       <a class="dashboard-dropdown-link" href="#">Charges</a>
-      <a class="dashboard-dropdown-link" href="#">Pre-authorized</a>
+      <!-- <a class="dashboard-dropdown-link" href="#">Pre-authorized</a> -->
+      <%= link_to "Pre-authorized", user_transactions_path(:captured => false),class:"dashboard-dropdown-link" %>
       <a class="dashboard-dropdown-link" href="#">Subscriptions</a>
     </div>
     <%= link_to user_hashtags_path(current_user)  , class: "left-nav-tab-wrapper w-inline-block" do %>
