@@ -30,24 +30,4 @@ class UserPresenter < BasePresenter
     html
   end
 
-
-  private
-
-  def merchant_org_present?
-    @user.org_name.present?
-  end
-
-  def merchant_rhombus_number_present?
-    @user.rhombus_number.present?
-  end
-
-  def merchant_subscription_present?
-    @user.get_saas_subscription.present?
-  end
-
-  def number_org_present?
-    merchant_org_present? && merchant_rhombus_number_present?
-  end
-
-
 end

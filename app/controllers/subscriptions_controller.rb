@@ -6,9 +6,12 @@ class SubscriptionsController < ApplicationController
   respond_to :html
 
   def index
-    merchant_customers = MerchantCustomer.where(merchant_id: current_user.id).pluck(:id)
-    @subscriptions = Subscription.where(merchant_customer_id: merchant_customers)
-                                        .where.not(status: 'canceled')
+    @subscriptions = Subscription.includes(merchant_customer: [:customer]).includes(:plan, :coupon)
+                                      .where.not(status: 'canceled')
+                                      .where('merchant_customers.merchant_id' => current_user.id)
+                                      .where.not('merchant_customers.stripe_customer_id' => [nil, ""])
+                                      .paginate(page: params[:page], per_page: 10)
+                                      .order(created_at: :desc)
     @plan = Plan.new
   end
 

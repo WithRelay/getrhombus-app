@@ -6,7 +6,6 @@ Add profile info
 signup form
 - sign up form can have devise/database error but not showing up. 
 - capture phone number not unique check from database - see application controller
-- sign up not signing up
 
 rhombus number form
 - no flash message ... probably in signup and profile info forms
@@ -15,58 +14,46 @@ add card info, add subscription, billing info
 - flash message not showing...also needs to show devise error
 
 OLD
-
 - Header not fully dynamic
 - surya - test client side validations for account settings pages
 - surya - test validation for url, tax rate on business settings field
-- where is this page http://relay-test.webflow.io/platform-integrations
 - password reset page and validations
-- redo static header for when user signs in
-- review each static page...there are some updates it seems - https://www.one-tab.com/page/JvNSs6beRmuwuIRBmxT68Q
-- reimport footer, and plug in links... dashabord to dashboard
-- 400, 500 pages
 - ovo's task
-- update notifications dropdown
-- all settings pages should go back to the same page... i did it only for billing so far 
 - load more for all index pages
 - change password pages (relay-test.webflow.io/change-password) and validations
 Surya
 - validates_associated in user... any read op on user will run a query
-- lists should be user scoped, what is customer_lists routes, clean up routes
 - where do u catch phone number db error
 - are you using campaign.scss, loading image is provided by edwin
-Dorje
-- about page not done
-- update login page - just minor UI updates... validation code stays
 
 NEW
-
 - show me devise errors
 - we will need pubnub in other pages outside messages
 - do reminders for messaging page
 - fix alerts html
-- homepage/features hero buttons
 - password reset, remove validation and put in an invalid email
 Surya
+- 500 page not loading properly
 - dont scope api routes under user like lists, group routes together with collection/member so it is easier to track
 - empty state for lists
+- lock down permissions cancancan?
 - reminders.js  url:  "/v1/reminders/" + reminder_id + "/edit" 
 - validate reminders field
-- something wrong with how you submit subscription form 
+- something wrong with how you submit reminder form 
 Dorje
 - when you run quries on tables with merchant_id, you need to add merchant_id like in MerchantCustomer, Transaction, MerchantContact
 - customer index empty state
 - alerts for forgot password, change password page and probably reset password...
 - profile pic, dont show twitter info if not exists and transaction history on customer profile page
 bhishma
+-     "%.2f" %(@model.plan.amount.to_f/100)
+- search for get_coupon_name remove specific check
+- dont show the + if there are no txns/subscriptions
 - routes in subscriptions.js
+- empty state for subscriptions
 - pre-authorized transaction page... just a url param
-- client side validation for subscription doesnt work
 - add timezone finder for fb events
 - do messageparser with bhishma tomorrow. 
-- what's the use of this in subscription presenter  def customer
-    MerchantCustomer.find @model.merchant_customer_id
-  end
 - when messages get resent do nothing
 
 

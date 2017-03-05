@@ -8,7 +8,6 @@ class Transaction < ActiveRecord::Base
   has_many :notification_logs, as: :notifiable, dependent: :destroy
 
   belongs_to :hashtag
-  belongs_to :merchant_customer
   belongs_to :user, counter_cache: true
   belongs_to :team, class_name: "User", counter_cache: true
 
