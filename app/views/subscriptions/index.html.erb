@@ -30,21 +30,21 @@
           <div class="subscriptions transaction-summary-cell">
             <h1 class="total-customer-count"><%= saas_invoices[0].count %></h1>
             <h4 class="count-description"> &nbsp; Transactions Today</h4>
-            <h4 class="count-description transaction-count"> &nbsp; <%= subscriptions_change %></h4>
+            <h4 class="count-description transaction-count"><%= subscriptions_change %></h4>
           </div>
         </div>
         <div class="w-col w-col-4">
           <div class="transaction-summary-cell">
             <h1 class="total-customer-count"><%= "$%.2f"%" #{subscriptions_total_amount}"  %></h1>
             <h4 class="count-description"> &nbsp; Total Collected</h4>
-            <h4 class="count-description transaction-count"> &nbsp; <%= subscriptions_total_amount_change %></h4>
+            <h4 class="count-description transaction-count"> <%= subscriptions_total_amount_change %></h4>
           </div>
         </div>
         <div class="w-col w-col-4">
           <div class="transaction-summary-cell">
             <h1 class="total-customer-count"><%= "$%.2f"%" #{subscriptions_net_sales}"  %></h1>
             <h4 class="count-description"> &nbsp; Net Sales</h4>
-            <h4 class="count-description transaction-count"> &nbsp; <%= subscription_net_sales_change %></h4>
+            <h4 class="count-description transaction-count"> <%= subscription_net_sales_change %></h4>
           </div>
         </div>
       </div>

@@ -131,11 +131,11 @@ module SubscriptionsHelper
 
   def display_change(percent_change)
     if percent_change > 0
-      "Up #{percent_change}%\ from yesterday"
+      " &nbsp; Up #{percent_change}%\ from yesterday"
     elsif percent_change < 0
-      "Down #{percent_change}%\ from yesterday"
+      " &nbsp; Down #{percent_change}%\ from yesterday"
     else
-      "-"
+      ""
     end
   end
 

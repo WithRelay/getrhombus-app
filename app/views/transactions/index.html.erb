@@ -27,21 +27,21 @@
           <div class="transaction-summary-cell transcation-count">
             <h1 class="total-customer-count"><%= transactions[0].count %></h1>
             <h4 class="count-description"> &nbsp; Transactions Today</h4>
-            <h4 class="count-description transaction-count"> &nbsp; <%= transactions_change %></h4>
+            <h4 class="count-description transaction-count"> <%= transactions_change %></h4>
           </div>
         </div>
         <div class="w-col w-col-4">
           <div class="transaction-summary-cell">
             <h1 class="total-customer-count"><%= "$%.2f"%" #{transactions_total_amount}"  %></h1>
             <h4 class="count-description"> &nbsp; Total Collected</h4>
-            <h4 class="count-description transaction-count"> &nbsp; <%= transactions_total_amount_change %></h4>
+            <h4 class="count-description transaction-count"> <%= transactions_total_amount_change %></h4>
           </div>
         </div>
         <div class="w-col w-col-4">
           <div class="transaction-summary-cell">
             <h1 class="total-customer-count"><%= "$%.2f"%" #{transactions_net_sales}"  %></h1>
             <h4 class="count-description"> &nbsp; Net Sales</h4>
-            <h4 class="count-description transaction-count"> &nbsp; <%= transactions_net_sales_change   %></h4>
+            <h4 class="count-description transaction-count"><%= transactions_net_sales_change   %></h4>
           </div>
         </div>
       </div>
