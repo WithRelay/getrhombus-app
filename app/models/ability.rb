@@ -8,7 +8,7 @@ class Ability
        can :manage, :all
     else
        can :manage, user
-       can :show, user.transactions
+       can :show, user.merchant_transactions
        #can :manage, user.transactions
        #can :manage, user.messages
     end
