@@ -1,0 +1,61 @@
+<div class="row-wrapper">
+  <div class="alt-table-row w-row">
+    <div class="alt-column w-clearfix w-col w-col-3">
+      <div class="title-column-div w-clearfix">
+      <% if hashtag.inactive? %>
+        <div class=" deactivated-text shrink-text table-text"><%= hashtag.name %></div>
+      <% else %>
+        <div class="shrink-text table-text"><%= hashtag.name %></div>
+      <% end %>
+      </div>
+      <div class="alt-table cb check-box-column">
+        <div class="w-form">
+          <%= form_for(hashtag, url: user_hashtag_path(current_user, hashtag), html: { method: :delete }) do |f| %>
+            <div class="select-all-check-box w-checkbox w-clearfix">
+              <%= f.hidden_field :id %>
+              <% if hashtag.active? %>
+                <%= f.hidden_field :status , value: 'inactive' %>
+              <% end %>
+              <input class="cb table-checkbox checkboxes w-checkbox-input hashtag-check-box" id="node" type="checkbox">
+              <label class="checkbox-field-lable w-form-label" for="node">-</label>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    <div class="alt-column w-col w-col-2">
+      <div class="alt-table-column-div w-clearfix">
+        <%= present(hashtag).profile_image %>
+        <% if hashtag.inactive? %>
+          <div class="deactivated-text shrink-text table-text"><%="#{current_user.first_name} #{current_user.last_name}" %></div>
+        <% else %>
+          <div class="shrink-text table-text"><%="#{current_user.first_name} #{current_user.last_name}" %></div>
+        <% end %>
+      </div>
+    </div>
+    <div class="alt-column w-col w-col-2">
+      <div class="alt-table-column-div w-clearfix">
+      <%if hashtag.inactive? %>
+        <div class="deactivated-text table-text"><%= present(hashtag).date_in_word %></div>
+      <% else %>
+        <div class="table-text"><%= present(hashtag).date_in_word %></div>
+      <%end%>
+      </div>
+    </div>
+    <div class="alt-column w-col w-col-2">
+      <div class="alt-table-column-div w-clearfix">
+        <div class="table-text"><%= present(hashtag).format_tag_type %></div>
+      </div>
+    </div>
+    <div class="alt-column w-col w-col-2">
+      <div class="alt-table-column-div w-clearfix">
+        <div class="table-text">---</div>
+      </div>
+    </div>
+    <div class="alt-column w-col w-col-1">
+      <div class="alt-table-column-div w-clearfix">
+        <div class="table-text"> &nbsp; <%= hashtag.mentions_count %> </div>
+      </div>
+    </div>
+  </div>
+</div>
