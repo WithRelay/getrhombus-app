@@ -1,23 +1,27 @@
 <style>
 .selectize-dropdown-content {
   display: block !important;
-  background-color: white !important;
-  width: 113% !important;
+  background-color: #f8fafb !important;
+  width: 80% !important;
   border: 1px solid #1f8cec !important;
   margin-left: -33px !important;
   margin-top: 12px !important;
   text-align: left !important;
+  position: absolute;
 }
 .name{
   border-bottom: none;
   height: 20px;
 }
+.has-error .trumbowyg-editor{
+  border: red solid 1px;
+}
 </style>
 <div class="campaign-editor-options w-form">
-  <%= form_for [current_user, @campaign], html: { multipart: true, id: 'campaignForm', class: 'w-clearfix', data: { name: 'Email Form' } } do |f| %>
+  <%= form_for [current_user, @campaign], html: { multipart: true, id: 'campaignForm', class: 'w-clearfix' } do |f| %>
 
     <div class='form-group col-xs-6'>
-      <%= f.text_field :name, class: 'form-control editor text-field w-input', id: 'Campaign-name', data: { name: 'Campaign name' }, placeholder: 'Campaign name'  %>
+      <%= f.text_field :name, class: 'form-control editor text-field w-input', id: 'Campaign-name', placeholder: 'Campaign name'  %>
       <div class="errorMessageContainer"></div>
     </div>
 
@@ -57,16 +61,13 @@
 
     <div class="dashboard-body editor">
     <div class="dash-content-container message-editor">
-      <div class="w-form">
+      <div class='form-group col-xs-6'>
         <div class='newMessage'>
           <div class="w-form">
-            <div class='form-group col-xs-6'>
-              <%= f.text_area :text, id: 'trumbowyg', class: 'form-control message-editor text-area w-input', data: { name: 'Editor Text Area' } %>
-              <div class="errorMessageContainer"></div>
-            </div>
+            <%= f.text_area :text, id: 'trumbowyg', class: 'form-control message-editor text-area w-input', data: { name: 'Editor Text Area' } %>
+            <div class="errorMessageContainer"></div>
           </div>
         </div>
-
       </div>
       <div class="editor-button-container">
         <div class="w-row">
