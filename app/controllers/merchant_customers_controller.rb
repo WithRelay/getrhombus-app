@@ -20,7 +20,7 @@ class MerchantCustomersController < ApplicationController
 
   	@last_conversation = Conversation.find_last_conversation(current_user.id, 'user', @user.id)
   	@last_conversation_ref = ConversationRef.find_last_conversation_ref(@last_conversation)
-
+    @conversations = ConversationRef.get_last_customer_msg_from_all_merchant_convs(@merchant_customer.merchant_id)
     @last_message_resolution = @last_conversation.resolution.present? ? @last_conversation.resolution : ""
   end
 end
