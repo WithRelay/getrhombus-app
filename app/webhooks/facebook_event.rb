@@ -64,8 +64,8 @@
           @user_id_to = @merchant_id
         end
 
-        @fb_message = FbMessage.where( message_id: message_id).first_or_initialize
-        @fb_message.update(text: text, seq: seq,
+        @fb_message = FbMessage.new
+        @fb_message.update(message_id: message_id, text: text, seq: seq,
           time_stamp: timestamp, unread: true,
           from: message_from, to: message_to, fb_page_id: fb_page_id,
           user_id: @user_id, user_id_to: @user_id_to)

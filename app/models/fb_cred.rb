@@ -30,7 +30,7 @@ class FbCred < ActiveRecord::Base
       gender = user_data['gender']
       link_response = link_page_specific_user(url)
       welcome_text = "Welcome #{full_name} to Relay-Message Commerce platform"
-      unless link_response.present?
+      if link_response.present?
         # FacebookMessengerService.send_text_message(page_access_token, new_user_id, welcome_text)
         # FacebookMessengerService.send_attachment(page_access_token, new_user_id, 'image', 'http://www.compustarltd.com/wp-content/uploads/2015/11/welcome.png')
         fb_cred = FbCred.new(
