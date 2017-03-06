@@ -13,6 +13,7 @@ $(document).on('ready page:load', function() {
       },
     fields: {
       'campaign[name]': {
+        verbose: false,
         validators: {
           notEmpty: {
             message: 'Campaign name is required'

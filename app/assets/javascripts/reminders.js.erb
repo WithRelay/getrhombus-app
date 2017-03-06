@@ -76,7 +76,7 @@ function formatDate(date) {
   $('#submitReminderForm').click(function(){
     $('#reminderForm').formValidation('resetField', 'reminder[text]');
     $('#reminderForm').submit();
-    $('.update-close-modals').click();
+    $('#reminderForm').formValidation('revalidateField', 'reminder[customer_id]');
   });
 
   $('#submitEditReminderForm').on('click',function(){
@@ -113,7 +113,7 @@ function formatDate(date) {
     }
   }).on('success.form.fv', function(e, data) {
         e.preventDefault();
-        var apiController = new ApiController(this, '#myModalNorm');
+        var apiController = new ApiController(this, '.update-close-modals');
         var formData = new FormData(this);
         apiController.sendRequest(formData)
     })
@@ -129,7 +129,7 @@ function ApiController(element, modalId = ''){
   this.method = element.method;
   this.dataType = 'json';
   this.domElementId = '#' + element.id;
-  this.modalId = modalId;
+  this.modalClass = modalId;
   this.formData = $(element).serialize();
 }
 // Checks whether the form is validated or not and return true/false
@@ -143,7 +143,8 @@ ApiController.prototype.sendRequest = function(data=''){
   // The variable has sigil $ beacause local variable inside ajax call are not accessible.
   // for more deails http://stackoverflow.com/questions/14496680/this-object-not-available-in-ajax-callback
   var postData = ((data !='') ? data : this.formData)
-  var $modalClose = this.modalId + ' .close'
+  var $modalClose = this.modalClass
+
   if (checkFormValid(this.domElementId)){
     $.ajax({ method: this.method,
              url: this.url,
