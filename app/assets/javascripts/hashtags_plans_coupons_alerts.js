@@ -94,6 +94,7 @@ $(document).ready(function () {
         a = selectedElement.parents('.edit_reminder')
       }
       a.submit()
+      $('.cancel-no').click();
     }
   });
 
