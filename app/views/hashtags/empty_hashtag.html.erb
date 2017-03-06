@@ -1,11 +1,10 @@
 <%= render 'sub_nav' %>
-
-
-    <div class="dashboard-body">
-    <div class="blank-page-container w-container"><img class="blank-page-icon" src="images/011_162.png">
-      <h1 class="empty-state-dash hero-h1 home-header">Create Hahtag <br>You can get started by creating a hashtag</h1>
-          <%= link_to new_user_hashtag_path, class: 'button error-page-button w-button' do %>
-      <strong>Create Hashtag</strong>
+<div class="dashboard-body">
+  <div class="blank-page-container w-container">
+    <%= image_tag('011_162.png', class: 'blank-page-icon')%>
+    <h1 class="empty-state-dash hero-h1 home-header">Create Hahtag <br>You can get started by creating a hashtag</h1>
+    <%= link_to new_user_hashtag_path, class: 'button error-page-button w-button' do %>
+    <strong>Create Hashtag</strong>
     <% end %>
-    </div>
   </div>
+</div>
