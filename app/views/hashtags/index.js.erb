@@ -1,0 +1,6 @@
+$('#hashtag_lists').append('<%= j render(@hashtags) %>');
+<% if @hashtags.next_page %>
+  $('.pagination').replaceWith('<%= j will_paginate(@hashtags) %>');
+<% else %>
+  $('.pagination').remove();
+<% end %>
