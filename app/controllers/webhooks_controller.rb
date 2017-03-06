@@ -53,7 +53,7 @@ class WebhooksController < ApplicationController
       elsif action_name == 'nexmo_events'
         @merchant = User.find_by(rhombus_number: params[:to])
       end
-      Time.use_zone(@merchant.time_zone, &block)
+      params['hub.mode'].present? ? Time.use_zone(Rails.application.config.time_zone, &block) : Time.use_zone(@merchant.time_zone, &block)
     end
 
     def current_page
