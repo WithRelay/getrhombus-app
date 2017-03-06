@@ -87,6 +87,7 @@
 //= require campaign_form_validator
 //= require reminders
 //= require add-user
+//= require pagination
 //= require list_checkbox_actions
 //= require managed-account
 //= require rhombus_number_search
