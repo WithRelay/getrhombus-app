@@ -133,7 +133,7 @@ class User < ActiveRecord::Base
     user_first_name.present? ? "#{user_first_name.first_name} from #{user.org_name}" : user.org_name
   end
 
-  def self.get_display_name(uid, uid_type)
+  def self.get_conversation_display_name(uid, uid_type)
     if uid_type == "user"
       cus = User.find_by(id: uid)
       cus ? cus.card_name.present? ? cus.card_name : cus.email : "Relay user"

@@ -25,6 +25,7 @@ Surya
 - validates_associated in user... any read op on user will run a query
 - where do u catch phone number db error
 - are you using campaign.scss, loading image is provided by edwin
+-   def full_name in user.rb
 
 NEW
 - show me devise errors

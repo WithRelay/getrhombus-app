@@ -10,7 +10,7 @@ class Conversation < ActiveRecord::Base
 
   # plug in charges
   # bugs bhishma mentioned
-  # profile snapshot
+  # profile snapshot -  remove the extra customer since in customer show
 
   # the user texting this merchant
   def user
@@ -43,7 +43,7 @@ class Conversation < ActiveRecord::Base
       id: self.id,
       uid_type: self.uid_type,
       uid: self.uid,
-      full_name: User.get_display_name(self.uid, self.uid_type),
+      full_name: User.get_conversation_display_name(self.uid, self.uid_type),
       profile_image: User.check_profile_picture(user),
       last_message: last_message.blank? ? '' : last_message.text,
       last_message_ts: last_message.blank? ? 0 : last_message.created_at.to_i,
