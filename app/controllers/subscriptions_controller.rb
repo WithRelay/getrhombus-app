@@ -13,6 +13,7 @@ class SubscriptionsController < ApplicationController
                                       .paginate(page: params[:page], per_page: 10)
                                       .order(created_at: :desc)
     @plan = Plan.new
+    render 'empty_subscription' unless @subscriptions.present?
   end
 
   def show

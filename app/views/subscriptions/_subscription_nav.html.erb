@@ -1,0 +1,24 @@
+<div class="customer-dash sub-nav-bar w-clearfix">
+  <!-- <div class="search-bar">
+    <div class="w-form">
+      <form data-name="Email Form" id="email-form" name="email-form">
+        <input class="search-field w-input" data-name="Search 3" id="Search-3" maxlength="256" name="Search-3" placeholder="Search" type="text">
+      </form>
+    </div>
+  </div> -->
+  <div class="sub-nav-options-wrapper transactions w-clearfix">
+    <a class="w-button sub-nav-button modal-loader"  href="#" modal-target= 'new-plan-modal'> &nbsp;<strong>Create plan</strong></a>
+    <a class="w-button sub-nav-button modal-loader"  href="#" modal-target= 'new-subscription-modal'>&nbsp;<strong>Create subscription</strong></a>
+    <!-- <a class="export sub-nav-button w-button" href="#">&nbsp; Export</a> -->
+    <div class='modal-background w-hidden modal-body new-plan-modal'>
+      <%= render 'shared/modals/new_plan' %>
+    </div>
+    <div class='modal-background w-hidden modal-body new-subscription-modal'>
+      <%= render 'shared/modals/new_subscription' %>
+    </div>
+    <a class="w-button sub-nav-button modal-loader hide" id="cancel-customer-subscription" href="#" modal-target= 'cancel-subscription-modal'>&nbsp;<strong>Cancel subscription</strong></a>
+    <div class='modal-background w-hidden modal-body cancel-subscription-modal'>
+      <%= render 'shared/modals/confirmation' %>
+    </div>
+  </div>
+</div>

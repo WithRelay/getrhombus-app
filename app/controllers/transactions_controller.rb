@@ -19,7 +19,7 @@ class TransactionsController < ApplicationController
     else      
       @transactions = []
     end
-    respond_with(@transactions)
+    render 'empty_transaction' unless @transactions.present?
   end
 
   # generate user csv data
