@@ -1,97 +1,29 @@
-<style>
-.blank-page-content-wrapper {
-  position: fixed;
-  left: 0px;
-  top: 0px;
-  right: 0px;
-  bottom: 0px;
-  overflow: visible;
-  height: 100%;
-  padding: 100px 200px;
-  background-color: rgba(248, 250, 251, .5);
-  -webkit-transition: opacity 200ms ease;
-  transition: opacity 200ms ease;
-}
-.blank-page-container {
-  margin-top: 160px;
-  text-align: center;
-}
-.w-container {
-  margin-left: auto;
-  margin-right: auto;
-  max-width: 940px;
-}
-.w-container:before,
-.w-container:after {
-  content: " ";
-  display: table;
-}
-.w-container:after {
-  clear: both;
-}
-.blank-page-icon {
-  display: block;
-  margin-right: auto;
-  margin-bottom: 50px;
-  margin-left: auto;
-  -webkit-transform: scale(1) translate(0px, 0px);
-  -ms-transform: scale(1) translate(0px, 0px);
-  transform: scale(1) translate(0px, 0px);
-}
-.hero-h1 {
-  margin-top: 70px;
-  margin-bottom: 20px;
-  font-family: 'Akkurat light regular', sans-serif;
-  color: #fff;
-  font-size: 29px;
-  font-weight: 400;
-  text-align: center;
-}
-.hero-h1.home-header {
-  width: auto;
-  margin: 0px 10% 20px;
-  padding-bottom: 20px;
-  font-family: 'Akkurat light regular', sans-serif;
-  color: #2e2e7f;
-  font-size: 30px;
-  line-height: 42px;
-}
-.button.error-page-button {
-  width: 20%;
-  margin-top: 0px;
-  margin-right: 0%;
-  margin-bottom: 20px;
-  padding-top: 10px;
-  float: none;
-}
-.w-button {
-  display: inline-block;
-  padding: 9px 15px;
-  background-color: #3898EC;
-  color: white;
-  border: 0;
-  line-height: inherit;
-  text-decoration: none;
-  cursor: pointer;
-  border-radius: 0;
-}
-.signup-box-subheading.footer-cta-subheading {
-  margin-top: 20px;
-  margin-bottom: 20px;
-  text-transform: uppercase;
-}
-@font-face {
-  font-family: 'Akkurat light regular';
-  src: url('assets/fonts/Akkurat-Light-Regular.otf') format('opentype');
-  font-weight: 400;
-  font-style: normal;
-}
-</style>
-<div class="blank-page-content-wrapper">
-  <div class="blank-page-container w-container">
-    <img class="blank-page-icon" src="assets/images/008_001.png">
-    <h1 class="hero-h1 home-header">Sorry, looks like something went <br>wrong on our end.</h1>
-    <a class="button error-page-button w-button" href="/">Return home</a>
-    <h5 class="footer-cta-subheading signup-box-subheading">error 500</h5>
-  </div>
-</div>
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Error Page 500</title>
+    <meta content="Error Page 500" property="Relay">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <script type="text/javascript">
+      WebFont.load({
+        google: {
+          families: ["Lato:100,100italic,300,300italic,400,400italic,700,700italic,900,900italic","Open Sans:300,300italic,400,400italic,600,600italic,700,700italic,800,800italic","Montserrat:400,700","Nunito:300,regular,700","Alegreya Sans:100,300,regular,500,700","Fira Sans:300,regular,500,700","Roboto:100,300,regular,500,700","Raleway:100,200,300,regular,500,700","Lobster:regular","Lobster Two:regular,700","Fira Sans:300,regular,500","Montserrat Alternates:regular"]
+        }
+      });
+    </script>
+    <link href="assets/stylesheets/webflow.css" rel="stylesheet" type="text/css">
+    <link href="assets/stylesheets/relay-test.webflow.css" rel="stylesheet" type="text/css">
+    <link href="assets/images/rsz_relay_fav_icon.png" rel="shortcut icon" type="image/x-icon">
+    <link href="https://daks2k3a4ib2z.cloudfront.net/img/webclip.png" rel="apple-touch-icon">
+  </head>
+  <body>
+    <div class="blank-page-content-wrapper">
+      <div class="blank-page-container w-container"><img class="blank-page-icon" src="assets/images/008_001.png">
+        <h1 class="hero-h1 home-header">Sorry, looks like something went <br>wrong on our end.</h1>
+        <a class="button error-page-button w-button" href="/">Return home</a>
+        <h5 class="footer-cta-subheading signup-box-subheading">error 500</h5>
+      </div>
+    </div>
+  </body>
+</html>
