@@ -120,7 +120,8 @@ class User < ActiveRecord::Base
   end
 
   def full_name
-    "#{self.first_name} #{self.last_name}"
+    return "#{self.first_name} #{self.last_name}" if self.is_merchant?
+    return "#{self.card_name}" if self.is_customer?
   end
 
   def is_platform?
