@@ -49,9 +49,7 @@ Dorje
 bhishma
 -     "%.2f" %(@model.plan.amount.to_f/100)
 - search for get_coupon_name remove specific check
-- dont show the + if there are no txns/subscriptions
 - routes in subscriptions.js
-- empty state for subscriptions
 - pre-authorized transaction page... just a url param
 - add timezone finder for fb events
 - do messageparser with bhishma tomorrow. 

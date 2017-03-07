@@ -30,4 +30,8 @@ class UserPresenter < BasePresenter
     html
   end
 
+  def format_customer_name
+    @model.card_name.present? ? @model.card_name.split(" ")[0] : "Customer"
+  end
+
 end

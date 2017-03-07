@@ -16,7 +16,7 @@ class MerchantCustomerPresenter < BasePresenter
     if txn.present?
       h.time_ago_in_words(txn.created_at) + ' ago'
     else
-      ' -- '
+      '-'
     end
   end
 
@@ -25,7 +25,7 @@ class MerchantCustomerPresenter < BasePresenter
     if txn.present?
       h.time_ago_in_words(txn.created_at) + ' ago'
     else
-      '--'
+      '-'
     end
 
   end
@@ -41,7 +41,7 @@ class MerchantCustomerPresenter < BasePresenter
   end
 
   def customer_since_date
-    @model.created_at ? @model.created_at.strftime('%m/%d/%Y') : ''
+    @model.created_at ? @model.created_at.strftime('%m/%d/%Y') : '-'
   end
 
 private

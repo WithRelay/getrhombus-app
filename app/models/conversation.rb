@@ -187,10 +187,10 @@ class Conversation < ActiveRecord::Base
                                   INNER JOIN (
                                     SELECT id, uid, uid_type from conversations d
                                     where d.merchant_id = ? and d.resolution is null or 
-                                    d.resolution = '' and d.created_at >= ? order by d.created_at desc limit 5
+                                    d.resolution = '' and d.created_at >= ? order by d.created_at desc, id desc limit 5
                                     ) e ON e.id = c.conversation_id
                                   where source = 2 GROUP BY c.conversation_id 
-                                ) b ON a.id = b.cr_id", merchant_id, date])
+                                ) b ON a.id = b.cr_id order by a.created_at desc, id desc", merchant_id, date])
   end
 
   def self.publish_test_conversation
