@@ -114,7 +114,8 @@ $(document).ready(function() {
     }
   });
 
-  $('#businessSetting').formValidation({
+  $('#businessSetting')
+  .formValidation({
     framework: 'bootstrap',
     excluded: ':disabled',
     live: 'disabled',
@@ -172,15 +173,14 @@ $(document).ready(function() {
             message: 'Zip code is required'
           }
         },
-        'user[country]': {
-          verbose: false,
+      'user[country]': {
           validators: {
             notEmpty: {
               message: 'Country is required'
             }
           }
         },
-        'user[url]': {
+      'user[url]': {
           validators: {
             uri: {
               message: 'The url is not valid'
@@ -195,7 +195,7 @@ $(document).ready(function() {
         verbose: false,
         validators: {
           notEmpty: {
-            message: 'Country is required'
+            message: 'Tax is required'
           },
           numeric: {
             message: 'Not Valid'

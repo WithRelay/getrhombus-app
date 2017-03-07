@@ -140,9 +140,7 @@ Rails.application.routes.draw  do
       resources :plans, only: [:index, :create, :update] do
         post 'check_plan_name', on: :collection
       end
-      resources :subscriptions, only: [:create]
-      post 'subscriptions/update_coupon' => 'subscriptions#update_coupon'
-      post 'subscriptions/destroy' => 'subscriptions#destroy'
+      resources :subscriptions, only: [:create, :update, :destroy]
       match 'merchant/customers' => 'merchant_customers#customers', via: :get
       match 'referrers/invite_business' => 'referrers#invite_business', via: :post
       resources :demos, only: [:create]

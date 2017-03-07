@@ -82,7 +82,7 @@
             </div>
 
             <div class="form-group col-xs-6">
-              <%= f.select :country, CountriesList::COUNTRIES_LIST.collect { |c| [ c[:name], c[:code] ] }, {  include_blank: true, prompt: 'Country' }, { class: 'form-control country_dropdown w-select' } %>
+              <%= f.select :country, country_list, { prompt: 'Select your country' }, { class: 'form-control country_dropdown w-select', id:'user-country' } %>
             </div>
 
             <%= f.button "Invite business", id: 'referrer-submit', class: "button save-changes w-button" %>
