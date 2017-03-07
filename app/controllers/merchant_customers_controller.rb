@@ -11,7 +11,7 @@ class MerchantCustomersController < ApplicationController
 
   def show    
     @customer_id = params[:customer_id]
-  	@user = User.find_by_id(@customer_id)
+  	@customer = User.find_by_id(@customer_id)
 
   	@merchant_customer = MerchantCustomer.find_by(customer_id: @customer_id, merchant_id: current_user.id)
     @transactions = Transaction.where(user_id: @customer_id, team_id: current_user.id).order(created_at: :desc)

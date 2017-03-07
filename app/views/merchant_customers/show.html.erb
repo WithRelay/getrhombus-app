@@ -15,13 +15,13 @@
     <div class="customer-profile-section-header w-row">
       <div class="w-col w-col-3">
         <div class="customer-properties-div">
-          <div class="right-nav-profile-content-wrapper"><%= present(@user).profile_image %>
-            <div class="dashboard-right-nav signup-box-subheading"><%= "#{@user.first_name} #{@user.last_name}"%> <span class="relay-id">RELAY ID</span>
+          <div class="right-nav-profile-content-wrapper"><%= present(@customer).profile_image %>
+            <div class="dashboard-right-nav signup-box-subheading"><%= "#{@customer.first_name} #{@customer.last_name}"%> <span class="relay-id">RELAY ID</span>
             </div>
-            <div class="left-column-text number"> &nbsp; &nbsp;<%= @user.phone_number %></div>
-            <div class="left-column-text"> &nbsp; &nbsp; <%= @user.email %></div>
-            <div class="left-column-text"> &nbsp; &nbsp; &nbsp; <%= @user.state_province %></div>
-            <div class="left-column-text"> &nbsp; &nbsp; <%= present(@user).twitter_uid %></div>
+            <div class="left-column-text number"> &nbsp; &nbsp;<%= @customer.phone_number %></div>
+            <div class="left-column-text"> &nbsp; &nbsp; <%= @customer.email %></div>
+            <div class="left-column-text"> &nbsp; &nbsp; &nbsp; <%= @customer.state_province %></div>
+            <div class="left-column-text"> &nbsp; &nbsp; <%= present(@customer).twitter_uid %></div>
             <div class="left-column-text"> &nbsp; &nbsp; Customer since: <%= present(@merchant_customer).customer_since_date %></div>
             <div class="right-nav-underline"></div>
           </div>
@@ -91,7 +91,7 @@
                   <div class="icon-cell"></div>
                 </div>
                 <div class="w-clearfix w-col w-col-11">
-                  <div class="customer-name-conversation-tab"><%= present(@user).format_customer_name %></div>
+                  <div class="customer-name-conversation-tab"><%= present(@customer).format_customer_name %></div>
                   <div class="said-text">said:</div>
                   <p class="conversation-preview"><%= present(conversation_ref).format_textable_text %></p>
                   <div class="message-channel"> &nbsp; Sent from</div>
