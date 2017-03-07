@@ -45,6 +45,7 @@
 <div class="dashboard-body">
   <div id='hashtag_lists'>
     <%= render @hashtags %>
+    <script><%= render partial: 'shared/index.js.erb', locals: { obj: @hashtags } %></script>
   </div>
 </div>
 <%= will_paginate @hashtags %>
