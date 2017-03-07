@@ -6,8 +6,9 @@
   </div>
 </div>
 <div class="dashboard-body">
-  <%= render @campaigns %>
-  <script><%= render partial: 'shared/index.js.erb', locals: { obj: @campaigns } %></script>
+  <div id='objlists'>
+    <%= render @campaigns %>
+  </div>
 </div>
 
 <div class="sub-nav-bar table-header">
@@ -57,3 +58,4 @@
     <a class="import sub-nav-button w-button delete-resource" data-ix="cancel-subscription" href="#"> &nbsp;Delete</a>
   </div>
 </div>
+<script><%= render partial: 'shared/index.js.erb', locals: { obj: @campaigns } %></script>

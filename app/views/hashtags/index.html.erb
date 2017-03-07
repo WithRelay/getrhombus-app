@@ -43,9 +43,9 @@
 <%= render 'sub_nav' %>
 
 <div class="dashboard-body">
-  <div id='hashtag_lists'>
+  <div id='objlists'>
     <%= render @hashtags %>
-    <script><%= render partial: 'shared/index.js.erb', locals: { obj: @hashtags } %></script>
   </div>
 </div>
+<script><%= render partial: 'shared/index.js.erb', locals: { obj: @hashtags } %></script>
 <%= will_paginate @hashtags %>
