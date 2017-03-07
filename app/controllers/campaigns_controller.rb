@@ -8,7 +8,9 @@ class CampaignsController < ApplicationController
 
   # @campaigns contains array of campaign of the associated users
   def index
-    @campaigns = current_user.campaigns
+    @campaigns = current_user.campaigns.paginate(per_page: PAGINATION_PER_PAGE,
+                                                 page: params[:page])
+                                                 .order('updated_at DESC')
     render 'empty_campaign' unless @campaigns.present?
   end
 
