@@ -23,8 +23,6 @@ Rails.application.routes.draw  do
   #end
 
  # authenticate :user, -> (user) { CheckUser::RouteAuthentication.new(user).should_authenticate? } do
-
-    post 'lists/create_new_list' => 'lists#create_new_list'
     get 'user_lists/remove_user' => 'user_lists#remove_user'
     get 'fb_pages/remove_integration' => 'fb_pages#remove_integration'
     get 'link_facebook' => 'link_fb_accounts#link_facebook'
@@ -102,16 +100,14 @@ Rails.application.routes.draw  do
       end
     end
 
-
     ## api
     api_version(module: "Api::V1", path: { value: "v1"}, constraints: { subdomain: "api" }, defaults: { format: "json" }) do
       resources :users, only: [:index] do
         post 'add_customers', on: :collection
-        # list routes
-        resources :lists, only: [:create, :edit]
       end
-      get 'lists' => 'lists#index'
-      get 'lists/check_list_name' => 'lists#check_list_name'
+      resources :lists, only: [:create, :edit, :index] do
+        get 'check_list_name', on: :collection
+      end
       post 'users/check_password' => 'users#check_password'
       match 'hashtags' => 'hashtags#index', via: :get
       match 'hashtags/:id/images/:image_id' => 'hashtags#image_delete', via: :delete
