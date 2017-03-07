@@ -7,7 +7,7 @@
     <a class="close-modal update-close-modals" data-parent='import-customers-div' href="#"></a>
   </div>
   <div class="w-form">
-    <%= form_for('lists', url: v1_user_lists_path(current_user), html: { id: "create_user_list", class: "create-list" }) do |f| %>
+    <%= form_for('lists', url: v1_lists_path, html: { id: "create_user_list", class: "create-list" }) do |f| %>
       <%= f.label "List name", class: 'form-label list-name' %>
       <%= f.hidden_field :selected_users, id: 'selectedUsers' %>
       <%= f.hidden_field :list_type, placeholder: 'E.g. VIP customers', id: 'listType' %>
