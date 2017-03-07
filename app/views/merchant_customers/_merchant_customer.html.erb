@@ -1,0 +1,48 @@
+<% @customers.each do |c| %>
+  <div class="new-table-row w-row">
+    <div class="cn w-clearfix w-col w-col-3">
+      <div class="name w-clearfix"><%= present(c).profile_image %>
+        <div class="shrink-text table-text"><%= link_to "#{current_user.first_name} #{current_user.last_name}", action: "show" , customer_id: c.customer_id %></div>
+      </div>
+      <div class="cb check-box-column">
+        <div class="w-form">
+          <form data-name="Email Form 2" id="email-form-2" name="email-form-2">
+            <div class="select-all-check-box w-checkbox w-clearfix">
+              <input class="cb table-checkbox w-checkbox-input merchant_customers" id="node" type="checkbox" data-users="<%= c.id %>">
+              <label class="checkbox-field-lable w-form-label" for="node">-</label>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="fv w-clearfix w-col w-col-2">
+      <div class="cn column column-2 w-clearfix">
+        <div class="shrink-text table-text"><%= present(c).first_visit_format_created_at %></div>
+      </div>
+    </div>
+    <div class="lv w-clearfix w-col w-col-2">
+      <div class="colum-3 column lv w-clearfix">
+        <div class="shrink-text table-text"><%= present(c).last_visit_format_created_at %></div>
+      </div>
+    </div>
+    <div class="avs w-clearfix w-col w-col-1">
+      <div class="avs column column-4 w-clearfix">
+        <div class="shrink-text table-text"><%= present(c).average %></div>
+      </div>
+    </div>
+    <div class="ts w-clearfix w-col w-col-1">
+      <div class="column column-5 ts w-clearfix">
+        <div class="table-text total-spend-text"><%= present(c).total %></div>
+      </div>
+    </div>
+    <div class="table-actions w-clearfix w-col w-col-3">
+      <div class="column column-6 left new-row w-clearfix">
+        <div class="dashboard-right-nav id signup-box-subheading"><span class="relay-id leads unverified customer-dash">UNVERIFIED</span>
+        </div>
+      </div>
+      <div class="column column-6 new-row">
+      <%= link_to "Message ", user_conversations_path(current_user, uid: c.customer_id, type:'start_conversation', uid_type: 'user'), class: "actions-button notification"%>
+      </div>
+    </div>
+  </div>
+ <% end%>
