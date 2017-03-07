@@ -22,10 +22,10 @@ class Api::V1::SubscriptionsController < API::V1::BaseController
     render json: { response: response }, status: status
   end
 
-  def update_coupon
+  def update
     begin
       status = 500
-      @subscription = Subscription.find params[:subscription_id]
+      @subscription = Subscription.find params[:id]
       coupon = Coupon.find_by(name: params[:subscription][:coupon])
       if coupon && @subscription.update_subscription(current_user, coupon.stripe_coupon_id)
         response = 'Coupon updated successfully'
@@ -42,7 +42,7 @@ class Api::V1::SubscriptionsController < API::V1::BaseController
   def destroy
     begin
       status = 500
-      @subscription = Subscription.find params[:subscription_id]
+      @subscription = Subscription.find params[:id]
       if @subscription.cancel_subscription(current_user)
         response = 'Your subscription has canceled'
         status = 200

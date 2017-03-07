@@ -34,4 +34,8 @@ module UsersHelper
   def stripe_standalone_cred
     current_user.stripe_creds.where(uid_type: 1)[0]
   end
+
+  def country_list
+    CountriesList::COUNTRIES_LIST.collect { |c| [ c[:name], c[:code] ] }
+  end
 end

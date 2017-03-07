@@ -13,7 +13,7 @@ module SubscriptionsHelper
   end
 
   def saas_plan_name
-    (Plan.find @saas_sub.plan_id).name if @saas_sub.present?
+    (Plan.find saas_sub.plan_id).name if saas_sub.present?
   end
 
   def saas_customers

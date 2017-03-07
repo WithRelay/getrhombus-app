@@ -201,7 +201,8 @@ $(document).ready(function () {
     })
     .on('success.form.fv', function(e, data) {
       e.preventDefault();
-      subscriptionId = $(this).attr('saas_sub_id');
+      debugger
+      subscriptionId = $("#submit-update-coupon").attr('saas_sub_id');
       $("#submit-update-coupon").attr("disabled", true).val("Please wait...");
       updateCoupon();
     })
@@ -212,11 +213,11 @@ $(document).ready(function () {
 
   function updateCoupon() {
    $.ajax({
-      url: "/v1/subscriptions/update_coupon?subscription_id="+subscriptionId,
+      url: "/v1/subscriptions/"+subscriptionId,
       beforeSend: function(xhr) {
         xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
       },
-      type: "POST",
+      type: "PATCH",
       data: $('#coupon-update-form').serialize(),
       dataType: "json"
     })
@@ -260,11 +261,11 @@ $('#cancel-subscription').on('click', function(e){
   e.preventDefault();
   $(this).attr("disabled", true).text("Please wait...");
   $.ajax({
-     url: "/v1/subscriptions/destroy?subscription_id="+subscriptionId,
+     url: "/v1/subscriptions/"+subscriptionId,
      beforeSend: function(xhr) {
        xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
      },
-     type: "POST",
+     type: "DELETE",
      dataType: "json"
    })
    .done(function(data, textStatus, jqXHR) {
