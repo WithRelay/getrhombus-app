@@ -14,7 +14,8 @@
       </div>
       </div>
       <div class="hero-button-wrapper w-clearfix def-content-section-button">
-        <a class="alt-hero-cta-button features hero-button w-button" href="#">Get started for free</a><a class="button div-cta hero-alt-button w-button" href="#">Learn more</a>
+        <%= link_to 'Get started for free', new_user_registration_path, class: 'alt-hero-cta-button features hero-button w-button' %>
+        <%= link_to 'Learn more', request_demo_path, class: 'button div-cta hero-alt-button w-button' %>
       </div>
     </div>
 
@@ -149,7 +150,7 @@
         <h3 class="section-3-header">Get a complete picture of each customer</h3>
         <p class="def-content-section-paragraph section-4">No more switching between support tools and your transaction data to look up customer information.
           <br>
-          <br>Relay connects with your back-office&nbsp;to show your customers' purchase history alongside their interactions with your business, giving your team a complete picture.</p><a class="button def-content-section-button w-button" href="#">See all features</a> 
+          <br>Relay connects with your back-office&nbsp;to show your customers' purchase history alongside their interactions with your business, giving your team a complete picture.</p><a class="button def-content-section-button w-button" href="#">See all features</a>
         </div>
         <div class="def-content-section-column-2 w-col w-col-6">
           <div class="relay-id-placeholder-wrapper w-hidden-small w-hidden-tiny">
@@ -261,5 +262,5 @@
         </div>
       </div>
     </div>
-  </div>  
+  </div>
 <%= render 'shared/get_started_form'%>
