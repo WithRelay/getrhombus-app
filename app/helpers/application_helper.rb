@@ -22,11 +22,16 @@ module ApplicationHelper
     return render 'shared/messaging_header' if messaging_dashboard
   end
 
-  def render_customer_sidebar
-    concat(render 'shared/customer_sidebar') if params_controller_action == 'users-customers'
+  # def render_customer_sidebar
+  #   concat(render 'shared/customer_sidebar') if params_controller_action == 'users-customers' || params_controller_action == 'merchant_customers-index'
+  # end
+
+  def customer_index
+    params_controller_action == 'merchant_customers-index'
   end
 
   def render_sidebar_partial
+    concat(render 'shared/customer_sidebar'); return if customer_index
     concat(render 'shared/dashboard_sidebar') unless authenticated_pages || setting_pages || messaging_dashboard || restrict_other_params
     render 'shared/setting_sidebar' if setting_pages
   end
