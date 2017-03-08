@@ -91,14 +91,14 @@ class User < ActiveRecord::Base
 
   has_many :bank_accounts
   accepts_nested_attributes_for :bank_accounts
-  validates_associated :bank_accounts
+  validates_associated :bank_accounts, if: lambda { self.bank_accounts.present? }
 
   has_many :stripe_creds
   accepts_nested_attributes_for :stripe_creds
 
   has_one :address, as: :addressable
   accepts_nested_attributes_for :address
-  validates_associated :address
+  validates_associated :address, if: lambda { self.bank_accounts.present? }
 
   has_many :people
   accepts_nested_attributes_for :people, allow_destroy: true  # reject_if: ->(attrs) { attrs['city'].blank? || attrs['street'].blank? }
