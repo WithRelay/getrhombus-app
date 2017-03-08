@@ -22,11 +22,16 @@ module ApplicationHelper
     return render 'shared/messaging_header' if messaging_dashboard
   end
 
-  def render_customer_sidebar
-    concat(render 'shared/customer_sidebar') if params_controller_action == 'users-customers'
+  # def render_customer_sidebar
+  #   concat(render 'shared/customer_sidebar') if params_controller_action == 'users-customers' || params_controller_action == 'merchant_customers-index'
+  # end
+
+  def customer_index
+    params_controller_action == 'merchant_customers-index'
   end
 
   def render_sidebar_partial
+    return concat(render 'shared/customer_sidebar') if customer_index
     concat(render 'shared/dashboard_sidebar') unless authenticated_pages || setting_pages || messaging_dashboard || restrict_other_params
     render 'shared/setting_sidebar' if setting_pages
   end
@@ -99,7 +104,7 @@ module ApplicationHelper
 
   def restrict_devise_actions
     restricted_actions = ['sessions-new', 'sessions-create', 'registrations-new', 'registrations-create',
-                           'registrations-edit', 'devise/passwords-new', 'registrations-add_card_info',
+                           'registrations-edit', 'devise/passwords-new', 'devise/passwords-create', 'registrations-add_card_info',
                            'registrations-add_profile_info', 'registrations-add_subscription',
                            'registrations-add_rhombus_number', 'merchant_customers-show',
                            'devise/passwords-edit', 'devise/passwords-update', ''
