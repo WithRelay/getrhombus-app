@@ -79,7 +79,7 @@
           <div class="cn w-clearfix w-col w-col-3">
             <div class="name w-clearfix">
               <%= present(leads.contacts).profile_image %>
-              <div class="shrink-text table-text"><%= leads.contacts.first_name %></div>
+              <div class="shrink-text table-text"><%= leads.contacts.full_name %></div>
             </div>
             <div class="cb check-box-column">
               <div class="w-form">
@@ -104,7 +104,7 @@
           </div>
           <div class="avs w-clearfix w-col w-col-1">
             <div class="avs column column-4">
-              <div class="table-text"><%= leads.uid_type %></div>
+              <div class="table-text"><%= present(leads).channel %></div>
             </div>
           </div>
           <div class="ts w-clearfix w-col w-col-1">
@@ -114,7 +114,8 @@
             </div>
           </div>
           <div class="table-actions w-clearfix w-col w-col-3">
-            <div class="column column-6 new-row"><a class="actions-button notification" href="#">Message &nbsp; </a>
+            <div class="column column-6 new-row">
+              <%= link_to "Message &nbsp; ".html_safe, user_conversations_path(current_user, uid: leads, type:'start_conversation', uid_type: 'user'), class: "actions-button notification"%>
             </div>
             <div class="column column-6 left new-row w-clearfix">
               <div class="frequency shrink-text table-text"><%= leads.contacts.address %></div>
