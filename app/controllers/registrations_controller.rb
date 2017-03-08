@@ -35,8 +35,11 @@ class RegistrationsController < Devise::RegistrationsController
     set_captured_payment_session
 
     build_resource(sign_up_params)
-
-    resource.save
+    begin
+      resource.save
+    rescue ActiveRecord::RecordNotUnique
+      flash[:error] = 'User with the phone number already registered' if $!.message.include?('index_users_on_phone_number')
+    end
     yield resource if block_given?
     if resource.persisted?
       sign_up(resource_name, resource)
@@ -45,7 +48,7 @@ class RegistrationsController < Devise::RegistrationsController
       flash[:error] = resource.errors.full_messages if resource.errors.full_messages.present?
       clean_up_passwords resource
       set_minimum_password_length
-      respond_with resource
+      render :new
     end
   end
 
