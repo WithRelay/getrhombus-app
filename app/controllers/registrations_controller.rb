@@ -13,7 +13,7 @@ class RegistrationsController < Devise::RegistrationsController
     message = check_params_with_update
     set_flash_message = set_update_flash_messages(message)
     url = request.referrer if setting_pages_present?
-
+    get_uniquness_error
     yield resource if block_given?
     if message.blank? && update_resource(resource, account_update_params)
       update_stripe_email if set_flash_message[:account_settings].present?
@@ -35,11 +35,7 @@ class RegistrationsController < Devise::RegistrationsController
     set_captured_payment_session
 
     build_resource(sign_up_params)
-    begin
-      resource.save
-    rescue ActiveRecord::RecordNotUnique
-      flash[:error] = 'User with the phone number already registered' if $!.message.include?('index_users_on_phone_number')
-    end
+    get_uniquness_error
     yield resource if block_given?
     if resource.persisted?
       sign_up(resource_name, resource)
@@ -49,6 +45,14 @@ class RegistrationsController < Devise::RegistrationsController
       clean_up_passwords resource
       set_minimum_password_length
       render :new
+    end
+  end
+
+  def get_uniquness_error
+    begin
+      resource.save
+    rescue ActiveRecord::RecordNotUnique
+      flash[:error] = 'User with the phone number already registered' if $!.message.include?('index_users_on_phone_number')
     end
   end
 
@@ -167,7 +171,7 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   def setting_pages_present?
-    set_update_flash_messages[:business_settings].present? || set_flash_message[:billing_info].present? || set_flash_message[:account_settings]
+    set_update_flash_messages[:business_settings].present? || set_update_flash_messages[:billing_info].present? || set_update_flash_messages[:account_settings]
   end
 
   def previous_url
