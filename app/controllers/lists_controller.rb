@@ -7,6 +7,7 @@ class ListsController < ApplicationController
 
   def index
     respond_with(@lists)
+    render 'empty_list' if @lists.empty? and return
   end
 
   def show
