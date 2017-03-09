@@ -9,7 +9,7 @@ class MerchantCustomersController < ApplicationController
                               .paginate(page: params[:page], per_page: 10).order(created_at: :desc)
   	@new_customer = User.new
 
-    render 'empty_customer' if  @customers
+    render 'empty_customer' unless @customers
   end
 
   def show    
