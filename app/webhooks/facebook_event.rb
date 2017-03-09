@@ -54,13 +54,13 @@
         new_user_id = (@current_page.page_id == message_to)? message_from : message_to
         add_page_user(@current_page, new_user_id)
 
-        uid = get_uid
+        @uid = get_uid
         @merchant_id = @merchant.id
         if (@current_page.page_id == message_from)
           @user_id =  @merchant_id
-          @user_id_to = uid unless uid == @fb_cred.page_specific_id
+          @user_id_to = @uid unless @uid == @fb_cred.page_specific_id
         else
-          @user_id = uid unless uid == @fb_cred.page_specific_id
+          @user_id = @uid unless @uid == @fb_cred.page_specific_id
           @user_id_to = @merchant_id
         end
 
@@ -72,8 +72,7 @@
             user_id: @user_id, user_id_to: @user_id_to)
 
           save_attachments if @attachments.present?
-
-          Conversation.find_or_create_conversation_for_message_and_publish(@merchant, @user_id, 'fb_page', uid,  @fb_message, true)
+          Conversation.find_or_create_conversation_for_message_and_publish(@merchant, @user_id, 'fb_page', @uid,  @fb_message, true)
           @fb_message.save
         end
       rescue StandardError => err
@@ -133,7 +132,8 @@
       user_name = user.name.split.first
       page_access_token = page.page_access_token
       text = "Sorry #{user_name}, currently we only support image file attachments"
-      FacebookMessengerService.send_text_message(page_access_token, to, text)
+      # FacebookMessengerService.send_text_message(page_access_token, to, text)
+      Conversation.find_or_create_conversation_for_message_and_send_publish(@merchant, user.id, 'fb_page', @uid, text, "FbMessage")
     end
 
   end
