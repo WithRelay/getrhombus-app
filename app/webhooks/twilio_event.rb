@@ -27,40 +27,41 @@ class TwilioEvent
     # when message is sent to rhombus
     def save_received_message
       user = get_user
+      @message_id = @params[:MessageSid]
+      unless Message.find_by(message_id: @message_id).present?
+        @message = Message.create(
+          to: @params[:To].gsub('+', ''),
+          from: @params[:From].gsub('+', ''),
+          status: @params[:SmsStatus],
+          user_id: user.nil? ? nil : user.id,
+          user_id_to: @merchant.id,
+          message_id: @message_id,
+          text: @params[:Body].strip,
+          num_segments: @params[:NumSegments],
+          num_media: @params[:NumMedia],
+          price_unit: @data.price_unit,
+          message_timestamp: @data.date_updated,
+          message_price: @data.price,
+          error_text: @data.error_message,
+          error_code: @data.error_code
+        )
 
-      @message = Message.create(
-        to: @params[:To].gsub('+', ''),
-        from: @params[:From].gsub('+', ''),
-        status: @params[:SmsStatus],
-        user_id: user.nil? ? nil : user.id,
-        user_id_to: @merchant.id,
-        message_id: @params[:MessageSid],
-        text: @params[:Body].strip,
-        num_segments: @params[:NumSegments],
-        num_media: @params[:NumMedia],
-        price_unit: @data.price_unit,
-        message_timestamp: @data.date_updated,
-        message_price: @data.price,
-        error_text: @data.error_message,
-        error_code: @data.error_code
-      )
+        # save user info on twilio_number_data
+        add_or_update_twilio_number_data
+        # save media/mms if present
+        save_media if @params[:NumMedia].to_i > 0
+        @message.save
 
-      # save user info on twilio_number_data
-      add_or_update_twilio_number_data
-  
-      # save media/mms if present
-      save_media if @params[:NumMedia].to_i > 0
-      @message.save
+        # create or add to existing conversation, send to real time service
+        if user.present?
+          uid, uid_type = user.id, 'user'
+        else
+          uid, uid_type = @params[:From].gsub('+', ''), 'phone_number'
+        end
 
-      # create or add to existing conversation, send to real time service
-      if user.present?
-        uid, uid_type = user.id, 'user'
-      else
-        uid, uid_type = @params[:From].gsub('+', ''), 'phone_number'
+        Conversation.find_or_create_conversation_for_message_and_publish(@merchant, user, uid_type, uid, @message, true)
+        MessageParser.new.process_message(@merchant, user, @message, 'Message')
       end
-
-      Conversation.find_or_create_conversation_for_message_and_publish(@merchant, user, uid_type, uid, @message, true)
-      MessageParser.new.process_message(@merchant, user, @message, 'Message')
     end
 
     def add_or_update_twilio_number_data

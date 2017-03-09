@@ -11,25 +11,27 @@ class NexmoEvent
     # save inbound
     def save_message
       user = get_user
+      @message_id = @params[:messageId]
+        unless Message.find_by(message_id: @message_id).present?
+        @message = Message.create(
+          to: @params[:to],
+          from: @params[:msisdn],
+          user_id: user.nil? ? nil : user.id,
+          user_id_to: @merchant.id,
+          message_id: @message_id,
+          text: @params[:text].strip,
+          num_segments: @params["concat-total"] || 1,
+          message_timestamp: @params["message-timestamp"]
+        )
 
-      @message = Message.create(
-        to: @params[:to],
-        from: @params[:msisdn],
-        user_id: user.nil? ? nil : user.id,
-        user_id_to: @merchant.id,
-        message_id: @params[:messageId],
-        text: @params[:text].strip,
-        num_segments: @params["concat-total"] || 1,
-        message_timestamp: @params["message-timestamp"]
-      )
-
-      # create or add to existing conversation
-      if user.present?
-        uid, uid_type = user.id, 'user'
-      else
-        uid, uid_type = @params[:From].gsub('+', ''), 'phone_number'
+        # create or add to existing conversation
+        if user.present?
+          uid, uid_type = user.id, 'user'
+        else
+          uid, uid_type = @params[:From].gsub('+', ''), 'phone_number'
+        end
+        Conversation.find_or_create_conversation_for_message_and_publish(@merchant, user, uid_type, uid, @message, true)
       end
-      Conversation.find_or_create_conversation_for_message_and_publish(@merchant, user, uid_type, uid, @message, true)
     end
 
     # save outbound delivery report
