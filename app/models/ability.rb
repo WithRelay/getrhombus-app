@@ -6,12 +6,16 @@ class Ability
     user ||= User.new # guest user (not logged in)
     if user.user_level == 2  # Change this to admin?
        can :manage, :all
-    else
+    elsif user.is_merchant?
+       can :manage, Reminder 
+       can :manage, Hashtag
+    else 
        can :manage, user
        can :show, user.merchant_transactions
        #can :manage, user.transactions
        #can :manage, user.messages
     end
+
 
     # Define abilities for the passed in user here. For example:
     #

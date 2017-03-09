@@ -2,11 +2,21 @@
  <div class="customer-dash sub-nav-bar">
     <div class="sub-nav-bar-row w-row">
       <div class="sub-nav-bar-row-column-1 w-clearfix w-col w-col-2">
-        <div class="customer-count shrink-text">389 of/<span class="sub-nav-sub-text">1379 </span>
+        <div class="customer-count shrink-text">
+        0 <span class="sub-nav-sub-text"> Customers </span>
         </div>
       </div>
       <div class="w-col w-col-6">
-        <div class="customer-dashoard sub-nav-options-wrapper w-clearfix"><a class="sub-nav-button w-button" data-ix="create-customer" href="#"> &nbsp;<strong>Create customer</strong></a><a class="import sub-nav-button w-button" data-ix="import-customers" href="#">&nbsp; <strong>Import customers</strong></a><a class="sub-nav-button w-button" data-ix="create-list" href="#"> &nbsp;<strong>Create&nbsp;list</strong></a>
+        <div class="customer-dashoard sub-nav-options-wrapper w-clearfix">
+       <a class="w-button sub-nav-button modal-loader"  id = "customer-modal-loader"  modal-target= 'new-customer-modal'>&nbsp;<strong>Create customer</strong></a>
+        <a class="import sub-nav-button w-button modal-loader" modal-target="import-customers-modal" href="#">&nbsp; <strong>Import customers</strong></a>
+        <a class="sub-nav-button w-button" modal-target='new-list-modal' disabled id='create_list_button'> &nbsp;<strong>Create&nbsp;list</strong></a>
+        <div class='modal-background w-hidden modal-body new-customer-modal'>
+          <%= render 'shared/modals/create_customer' %>
+        </div>
+        <div class='modal-background w-hidden modal-body new-list-modal'>
+          <%= render 'shared/modals/new_list' %>
+        </div>
         </div>
       </div>
       <div class="sub-nav-bar-search-row w-col w-col-4">
@@ -18,7 +28,7 @@
   <div class="dashboard-body">
     <div class="blank-page-container w-container">
     <%= image_tag '011_086.png', class: 'blank-page-icon' %>
-      <h1 class="empty-state-dash hero-h1 home-header">Add or import your customers <br>to get started</h1><a class="button error-page-button w-button" href="#">Create customer</a>
+      <h1 class="empty-state-dash hero-h1 home-header">Add or import your customers <br>to get started</h1><a class="button error-page-button w-button" id = "createCustomer">Create customer</a>
       <h5 class="connect-facebook footer-cta-subheading signup-box-subheading"><a href="#" class="connect-facebook-messenger-link">or connect facebook messenger</a></h5>
     </div>
   </div>
