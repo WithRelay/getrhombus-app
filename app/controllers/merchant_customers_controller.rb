@@ -5,9 +5,10 @@ class MerchantCustomersController < ApplicationController
 
   def index
     
+
   	@customers = current_user.merchant_customers
-                              .paginate(page: params[:page], per_page: 10).order(created_at: :desc)
-  	@new_customer = User.new
+                             .paginate(page: params[:page], per_page: 10).order(created_at: :desc)
+    @new_customer = User.new
 
     render 'empty_customer' unless @customers
   end

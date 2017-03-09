@@ -1,3 +1,9 @@
+<div class="blank-page-content-wrapper loading" >
+  <div class="blank-page-container w-container">
+    <%= image_tag('Relay-Transparent-500x300.png', class: 'blank-page-icon', width: 145) %>
+    <h5 class="blank-page footer-cta-subheading signup-box-subheading">loading...</h5>
+  </div>
+</div>
 <div class="dashboard-nav w-clearfix">
   <div class="dashboard-logo-wrapper">
     <%= link_to root_url do %>
@@ -8,10 +14,10 @@
     <a class="w-clearfix w-inline-block" href="#">
         <div class="dash-header-links">
           <%= link_to user_path(current_user), class: 'header-links-fix' do %>
-             &nbsp;<strong>Dashboard</strong> 
+             &nbsp;<strong>Dashboard</strong>
           <% end %>
         </div>
-      
+
         <div class="dash-header-links new-link">
           <%= link_to customers_user_path(current_user), class: 'header-links-fix' do %>
              &nbsp;<strong>All &nbsp;customers</strong>

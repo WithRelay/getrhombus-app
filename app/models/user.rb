@@ -120,7 +120,7 @@ class User < ActiveRecord::Base
   end
 
   def full_name
-    return "#{self.first_name} #{self.last_name}" if self.is_merchant?
+    return "#{self.people.representative[0].try(:first_name)} #{self.people.representative[0].try(:first_name)}" if self.is_merchant?
     return "#{self.card_name}" if self.is_customer?
   end
 

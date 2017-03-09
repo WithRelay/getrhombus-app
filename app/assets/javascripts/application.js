@@ -84,6 +84,7 @@
 //= require custom_trumbowyg_plugin
 //= require campaigns
 //= require date_picker
+//= require image_validator
 //= require campaign_form_validator
 //= require reminders
 //= require add-user
