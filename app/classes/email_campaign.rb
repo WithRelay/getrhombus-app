@@ -2,6 +2,7 @@
 class EmailCampaign
 
   def initialize(campaign, user_list=[])
+    @campaign_text = campaign.text
     @campaign = campaign # campaign object
     @user_list = user_list
     @email_list = []
@@ -41,7 +42,7 @@ class EmailCampaign
   # if inline image  and attachment image is present return with merging both hash
   def email_hash_params
     campaign_user = User.user_title(@campaign.user)
-    message_hash = { html: @campaign.text, subject: @campaign.subject, from_name: campaign_user }
+    message_hash = { html: @campaign_text, subject: @campaign.subject, from_name: campaign_user }
     message_hash.merge!({ images: inline_images }) if inline_images.present?
     message_hash.merge!({ attachments: attachment_images }) if attachment_images.present?
     return message_hash
@@ -50,7 +51,7 @@ class EmailCampaign
   # retuns [ { type: image_content_type, name: image_name,  content: Base64.encode64 } ]
   def inline_images
     @campaign.images.inline.map do |image|
-      @campaign.text.gsub!(image.avatar.url, "cid:#{image.avatar_file_name}")
+      @campaign_text.gsub(image.avatar.url, "cid:#{image.avatar_file_name}")
       create_image_params(image)
     end
   end

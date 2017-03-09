@@ -8,8 +8,8 @@ class User < ActiveRecord::Base
 
   # validation rules for user attributes
   validates :tos_acceptance, acceptance: true, if: lambda { self.is_merchant? }, on: :update
-  validates_presence_of :org_type, if: lambda { self.is_merchant? }, on: :update
-  validates_presence_of :org_name, if: lambda { self.is_merchant? && self.org_type.try(:downcase) != 'individual' }, on: :update
+  validates_presence_of :org_type, if: lambda { self.is_merchant? }, on: :update, unless: Proc.new{|u| u.encrypted_password_changed? }
+  validates_presence_of :org_name, if: lambda { self.is_merchant? && self.org_type.try(:downcase) != 'individual' }, on: :update, unless: Proc.new{|u| u.encrypted_password_changed? }
   validates_presence_of :user_level, message: "Please select an account type", on: :create
 
   # Edit pages use the right number field for each user type
@@ -91,14 +91,14 @@ class User < ActiveRecord::Base
 
   has_many :bank_accounts
   accepts_nested_attributes_for :bank_accounts
-  validates_associated :bank_accounts
+  validates_associated :bank_accounts, if: lambda { self.bank_accounts.present? }
 
   has_many :stripe_creds
   accepts_nested_attributes_for :stripe_creds
 
   has_one :address, as: :addressable
   accepts_nested_attributes_for :address
-  validates_associated :address
+  validates_associated :address, if: lambda { self.bank_accounts.present? }
 
   has_many :people
   accepts_nested_attributes_for :people, allow_destroy: true  # reject_if: ->(attrs) { attrs['city'].blank? || attrs['street'].blank? }

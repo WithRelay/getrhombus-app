@@ -3,7 +3,9 @@
         <div>
           <h1 class="alt alt-hero-heading features">Build better customer relationships using mobile messaging.</h1>
           <p class="def-content-section-paragraph">Create happy customers by responding to issues faster using the mobile channels they prefer. Move support beyond tickets.</p>
-          <div class="hero-button-wrapper w-clearfix def-content-section-button"><a class="alt-hero-cta-button features hero-button w-button" href="#">Get started for free</a><a class="button div-cta hero-alt-button w-button" href="#">Schedule demo</a>
+          <div class="hero-button-wrapper w-clearfix def-content-section-button">
+            <%= link_to 'Get started for free', new_user_registration_path, class: 'alt-hero-cta-button features hero-button w-button' %>
+            <%= link_to 'Schedule demo', request_demo_path, class: 'button div-cta hero-alt-button w-button' %>
           </div>
         </div>
       </div>
@@ -68,7 +70,9 @@
         </div>
       </div>
     </div>
-    <div class="div-cta-container w-container"><a class="button div-cta w-button" href="#">Get started free</a><a class="button demo div-cta w-button" href="#">Schedule a demo</a>
+    <div class="div-cta-container w-container">
+      <%= link_to 'Get started for free', new_user_registration_path, class: 'button div-cta w-button' %>
+      <%= link_to 'Schedule demo', request_demo_path, class: 'button demo div-cta w-button' %>
     </div>
   </div>
   <div class="default-content-section home">
@@ -148,7 +152,9 @@
         </div>
       </div>
     </div>
-    <div class="div-cta-container w-container"><a class="button div-cta w-button" href="#">Get started free</a><a class="button demo div-cta w-button" href="#">Schedule a demo</a>
+    <div class="div-cta-container w-container">
+      <%= link_to 'Get started for free', new_user_registration_path, class: 'button div-cta w-button' %>
+      <%= link_to 'Schedule demo', request_demo_path, class: 'button demo div-cta w-button' %>
     </div>
   </div>
   <div class="default-content-section features-page">
@@ -162,7 +168,8 @@
           <h3 class="section-3-header">Facebook Messenger Integration</h3>
           <p class="def-content-section-paragraph section-4">Connect with your customers on Facebook Messenger. Simply link your existing Facebook page to Relay to start managing social conversations.</p>
           <h3 class="section-3-header">Multi-channel campaigns</h3>
-          <p class="def-content-section-paragraph section-4">Send promotional marketing campaigns, or announcements that'll go out to your customers via SMS, Messenger or Email.</p><a class="button def-content-section-button w-button" href="#">See all features</a>
+          <p class="def-content-section-paragraph section-4">Send promotional marketing campaigns, or announcements that'll go out to your customers via SMS, Messenger or Email.</p>
+          <%= link_to 'See all features', features_path, class: 'button def-content-section-button w-button' %>
         </div>
         <div class="def-content-section-column-2 messaging-in-relay-bg w-col w-col-6">
           <div class="descriptive-div partial-messaging-window-left-to-right w-hidden-small w-hidden-tiny">
@@ -272,7 +279,8 @@
           <h3 class="section-3-header">In-chat payments via SMS or Messenger</h3>
           <p class="def-content-section-paragraph section-4">80% of all customer interactions are transaction related. Make it easy for your customers to securely pay you without leaving the conversation. It's as simple as texting the amount via Messenger or SMS</p>
           <h3 class="section-3-header">Plans &amp; subscriptions for recurring charges</h3>
-          <p class="def-content-section-paragraph section-4">Create and manage recurring payments from customers right inside your Relay dashboard. Ideal for subscription based businesses.</p><a class="button def-content-section-button w-button" href="#">See use cases</a>
+          <p class="def-content-section-paragraph section-4">Create and manage recurring payments from customers right inside your Relay dashboard. Ideal for subscription based businesses.</p>
+          <a class="button def-content-section-button w-button" href="#">See use cases</a>
         </div>
       </div>
     </div>
@@ -322,7 +330,9 @@
         </div>
       </div>
     </div>
-    <div class="div-cta-container virtual-terminal w-container"><a class="button div-cta w-button" href="#">Get started free</a><a class="button demo div-cta w-button" href="#">Schedule a demo</a>
+    <div class="div-cta-container virtual-terminal w-container">
+      <%= link_to 'Get started for free', new_user_registration_path, class: 'button div-cta w-button' %>
+      <%= link_to 'Schedule demo', request_demo_path, class: 'button demo div-cta w-button' %>
     </div>
   </div>
   <div class="default-content-section-2 features value-prop-details">
