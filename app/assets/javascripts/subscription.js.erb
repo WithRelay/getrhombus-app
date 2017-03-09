@@ -89,7 +89,7 @@ $(document).ready(function () {
       });
   }
 
-  if ($('#subscription-plan-id').length > 0) {  
+  if ($('#subscription-plan-id').length > 0) {
     $("#subscription-plan-id").selectize({
       maxItems: 1,
       valueField: 'id',
@@ -123,7 +123,7 @@ $(document).ready(function () {
   }
 
 
-  if ($('#subscription-customer-id').length > 0) {  
+  if ($('#subscription-customer-id').length > 0) {
     $('#subscription-customer-id')
       .selectize({
         maxItems: 1,
@@ -201,7 +201,6 @@ $(document).ready(function () {
     })
     .on('success.form.fv', function(e, data) {
       e.preventDefault();
-      debugger
       subscriptionId = $("#submit-update-coupon").attr('saas_sub_id');
       $("#submit-update-coupon").attr("disabled", true).val("Please wait...");
       updateCoupon();
@@ -232,12 +231,12 @@ $(document).ready(function () {
       $('#submit-update-coupon').removeAttr('disabled').val("Apply Discount");
     });
   };
- 
+
 /* LEAVE FOR LATER
   // For upgrading/downgrading plans
   $('#change_subscription_plan').on('click',function(){
     action = $('#plan-update-form').attr('action');
-    actionName = ($(this).val() === 'Upgrade Subscription') ? 'upgrade_subscription' : 'downgrade_subscription' 
+    actionName = ($(this).val() === 'Upgrade Subscription') ? 'upgrade_subscription' : 'downgrade_subscription'
     action +='/' + actionName;
     $('#plan-update-form').attr('action', action);
   });

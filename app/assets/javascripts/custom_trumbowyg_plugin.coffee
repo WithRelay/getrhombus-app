@@ -32,7 +32,7 @@ class @CustomTrumbowygPlugin
             ), 250
           else
             trumbowyg.addErrorOnModalField $('input[type=file]', modal), trumbowyg.lang.uploadError or data.message
-          $('body').removeClass('loading')
+          $('.loading').css({'position': '', 'z-index': '', 'margin': ''});
     .on('tbwchange', ->
       $('#new_campaign').formValidation('resetField', 'campaign[text]')
       return
