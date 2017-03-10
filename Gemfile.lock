@@ -75,7 +75,7 @@ GEM
     buftok (0.2.0)
     builder (3.2.3)
     byebug (9.0.6)
-    cancan (1.6.10)
+    cancancan (1.10.1)
     celluloid (0.17.3)
       celluloid-essentials
       celluloid-extras
@@ -417,7 +417,7 @@ DEPENDENCIES
   aws-sdk
   bitly
   byebug
-  cancan
+  cancancan
   cocoon
   coffee-rails (~> 4.1.0)
   database_cleaner
@@ -460,5 +460,8 @@ DEPENDENCIES
   web-console (~> 2.0)
   will_paginate (~> 3.0.6)
 
+RUBY VERSION
+   ruby 2.2.3p173
+
 BUNDLED WITH
-   1.13.1
+   1.14.3

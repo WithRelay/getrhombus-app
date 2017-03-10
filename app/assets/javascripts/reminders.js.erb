@@ -8,15 +8,13 @@ $(document).on('ready page:load', function() {
        url:  "/v1/reminders/" + reminder_id + "/edit" ,
        data:{id: reminder_id}
      }).done(function(res){
-
-      var form = $('#editReminderForm');
+      var form = $('.editReminderFrom');
       var action = form.attr("action");
-      var newAction = action.substring(0, action.length-2) + reminder_id;
+      var newAction = window.location.origin + '/users/' + action.split('/')[2] + '/reminders/' + reminder_id;
 
       form.find("#Notification-Message").val(res.text);
       form.find(".emojionearea-editor").text(res.text);
       form.attr("action", newAction);
-
 
       var raw_date_time = res.date_time;
       var date_time = new Date(raw_date_time);
@@ -37,8 +35,8 @@ function formatDate(date) {
   var strTime = hours + ':' + minutes + ' ' + ampm;
   return  date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate() + "  " + strTime;
 }
-
-  $('#reminder-customer-list').selectize({
+//
+  $('.search-customers-and-contacts').selectize({
     maxItems: 1,
     valueField: 'uid',
     labelField: 'description',
@@ -69,28 +67,25 @@ function formatDate(date) {
   $('#delete-reminder').click(function(e){
       e.preventDefault
       FlashHandler.setConfirmationDialog('#delete-reminder','Are you sure, you want to delete the Reminder?', 'Delete', 'isDistroy');
-
       return false;
     });
-
-  $('#submitReminderForm').click(function(){
-    $('#reminderForm').formValidation('resetField', 'reminder[text]');
-    $('#reminderForm').submit();
-    $('#reminderForm').formValidation('revalidateField', 'reminder[customer_id]');
-  });
-
-  $('#submitEditReminderForm').on('click',function(){
-     $('#reminderForm').formValidation('resetField', 'reminder[text]');
-    $('#editReminderForm').submit();
-    $('.update-close-modals').click();
-  });
-
+//
   $('.notification-message').emojioneArea();
 
-  $('#reminderForm').formValidation({
+  $('.reminderForm').submit(function(){
+    $(this).formValidation('revalidateField', 'reminder[text]');
+    $(this).formValidation('revalidateField', 'reminder[customer_id]');
+  });
+
+  $('.reminderForm').formValidation({
     framework: 'bootstrap',
     excluded: ':disabled',
     live: 'disabled',
+    err: {
+          container: function($field, validator) {
+              return $field.parent().find('.messageContainer');
+          }
+      },
     fields: {
       'reminder[text]': {
         validators: {
@@ -99,27 +94,26 @@ function formatDate(date) {
           }
         }
       },
-      'reminder[customer_id]':{
-            validators: {
-              callback: {
-                message: 'Please select a customer',
-                callback: function(value, validator, $field) {
-                  var customer = validator.getFieldElements('reminder[customer_id]').val();
-                  return (customer !== '');
-                }
-              }
+  'reminder[customer_id]':{
+        validators: {
+          callback: {
+            message: 'Please select a customer',
+            callback: function(value, validator, $field) {
+              var customer = validator.getFieldElements('reminder[customer_id]').val();
+              return { valid: (customer !== '') };
             }
-          },
+          }
+        }
+      }
     }
   }).on('success.form.fv', function(e, data) {
+      if ($(this).attr('class').split(' ')[1] != 'editReminderFrom'){
         e.preventDefault();
         var apiController = new ApiController(this, '.update-close-modals');
         var formData = new FormData(this);
-        apiController.sendRequest(formData)
+        apiController.sendRequest(formData);
+      }
     })
-  .on('err.validator.fv', function(e) {
-        $('.help-block').hide();
-      });
 
 // Class ApiController handle all call to http verb to the server
 // First argument is the dom object it self and second contains the modal id
@@ -159,6 +153,7 @@ ApiController.prototype.sendRequest = function(data=''){
               // first argument is title and second is text message.
               FlashHandler.setFlashMessage( msg[flash_key], flash_key );
               if (flash_key!='error'){
+                $("#reminderForm").trigger('reset');
                 $($modalClose).click()// closing modal after succession
               }
           }).fail(function(msg){ alert('Sorry request could not complete'); });

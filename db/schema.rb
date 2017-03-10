@@ -331,6 +331,7 @@ ActiveRecord::Schema.define(version: 20170310014749) do
     t.integer "customer_id",          limit: 4
   end
 
+
   add_index "invoices", ["coupon_id"], name: "fk_rails_d904f32fa0", using: :btree
   add_index "invoices", ["stripe_invoice_id"], name: "index_invoices_on_stripe_invoice_id", using: :btree
   add_index "invoices", ["subscription_id"], name: "fk_rails_2fe0fa30e5", using: :btree

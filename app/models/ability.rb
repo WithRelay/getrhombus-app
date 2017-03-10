@@ -7,7 +7,7 @@ class Ability
     if user.user_level == 2  # Change this to admin?
        can :manage, :all
     elsif user.is_merchant?
-       can :manage, Reminder 
+       can :read, :all 
        can :manage, Hashtag
     else 
        can :manage, user
