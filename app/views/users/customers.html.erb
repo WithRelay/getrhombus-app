@@ -189,7 +189,7 @@
                           <td class="details-control" data-page="users" data-email="<%= c.email %>"
                             data-phone="<%= c.phone_number %>"></td>
                           <td><input type="checkbox" value="<%=c.user_id %>"  class="customer_checkboxes"></input></td>
-                          <td><%= c.card_name %></td>
+                          <td><%= c.full_name %></td>
                           <td><%= (c.first_visit) ? c.first_visit.strftime("%m/%d/%Y") : '--' %></td>
                           <td><%= (c.last_visit) ? c.last_visit.strftime("%m/%d/%Y") : "--" %></td>
                           <td><%= number_to_currency(c.avg_spend) %></td>

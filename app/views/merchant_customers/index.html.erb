@@ -80,14 +80,12 @@
 
 
   <div class="dashboard-body">
-
-    <div class="customer-dashboard-table-wrapper row-wrapper">
+   <div class="customer-dashboard-table-wrapper row-wrapper">
       <div>
         <div id='objlists'>
           <%= render @customers %>
-          <!-- <div class = "pagination" > </div> -->
-          <%= will_paginate(@customers) %>
         </div>
       </div>
     </div>
   </div>
+  <%= will_paginate(@customers) %>

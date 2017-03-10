@@ -132,10 +132,6 @@ $(document).ready(function() {
   //       CardHandler.submit_to_stripe(create_user_form, create_user_submit, submit_create_user_form);  
   //   });
 
-  $(create_user_form).submit(function(e){
-    submit_create_user_form()
-    e.preventDefault()
-  });
 
   function submit_create_user_form() {
 

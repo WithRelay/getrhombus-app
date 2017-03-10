@@ -20,7 +20,7 @@ class ApplicationController < ActionController::Base
       pubnub_publish_key: Rails.application.secrets.pubnub["publish_key"],
       pubnub_subscribe_key: Rails.application.secrets.pubnub["subscribe_key"],
       short_url: current_user.short_url,
-      full_name: current_user.card_name,
+      full_name: current_user.full_name,
       num_of_chars: current_user.rn_type.present? ? 1500 : 150
     }
   end

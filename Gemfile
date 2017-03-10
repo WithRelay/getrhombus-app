@@ -16,7 +16,8 @@ gem 'resque-scheduler', :require => "resque/scheduler/server"
 gem 'ar_after_transaction'
 
 # For Authorization
-gem "cancan"
+# gem "cancan"
+gem "cancancan"
 
 gem 'cocoon'
 # bread & butter

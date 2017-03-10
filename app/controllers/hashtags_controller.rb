@@ -12,12 +12,14 @@ class HashtagsController < ApplicationController
       format.js { render partial: 'shared/index.js.erb', locals: { obj: @hashtags } }
        format.html
      end
-    render 'empty_hashtag' unless @hashtags.present?
+    # render 'empty_hashtag' unless @hashtags.present?
+    #authorize! :index, @hashtags
   end
 
   def new
     @hashtag = Hashtag.new
     respond_with(@hashtag)
+    authorize! :new, @hashtag
   end
 
   def edit
@@ -38,6 +40,7 @@ class HashtagsController < ApplicationController
       flash[:error] = @hashtag.errors.messages.present? ? @hashtag.errors.full_messages : "We couldn't create the hashtag"
       respond_with(@hashtag)
     end
+    authorize! :create, @hashtag
   end
 
   def update

@@ -16,7 +16,7 @@
       <div class="w-col w-col-3">
         <div class="customer-properties-div">
           <div class="right-nav-profile-content-wrapper"><%= present(@customer).profile_image %>
-            <div class="dashboard-right-nav signup-box-subheading"><%= "#{@customer.first_name} #{@customer.last_name}"%> <span class="relay-id">RELAY ID</span>
+            <div class="dashboard-right-nav signup-box-subheading"><%= "#{@customer.full_name}"%> <span class="relay-id">RELAY ID</span>
             </div>
             <div class="left-column-text number"> &nbsp; &nbsp;<%= @customer.phone_number %></div>
             <div class="left-column-text"> &nbsp; &nbsp; <%= @customer.email %></div>

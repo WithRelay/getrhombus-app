@@ -35,6 +35,7 @@ class RealtimeStreamService
 
 
     # might need to redo how conv_ref is sent
+    # Sends a message to the given merchant's channel, provided user and merchant numbers
     def publish_to_dashboard(conversation, conv_ref, merchant, customer, msg)
       merchant_id = conversation.merchant_id.to_s
       $pubnub.subscribe(channel: 'messaging_' + Rails.env + '_' + merchant_id) {}

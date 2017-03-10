@@ -15,6 +15,19 @@ class UsersController < ApplicationController
     # Transaction.process_captured_payment(@user, params) if current_user.user_level == 0 && params[:captured_amt].present?
     @last6_transactions = Transaction.includes(:user).where(team_id: current_user.id).order(created_at: :desc).last(6)
     # @token = TextingService.get_twilio_capibility_token if current_user.user_level == 1
+    
+    customers = current_user.merchant_customers
+    new_customers = customers.select{ |c| c.created_at >= 1.week.ago.utc }
+    transactions = Transaction.where( team_id: current_user.id)
+    transactions_today = transactions.select{|t| t.created_at >= Time.current.beginning_of_day}
+
+    @total_transactions = transactions.sum(:amount)
+    @transactions_today = transactions_today.present? ? transactions_today.sum(:amount) : 0  
+    @transactions_today_count = transactions_today.count
+
+    @all_customers_count = customers.count
+    @new_customers_count = new_customers.count
+
   end
 
   # DELETE /users/1
