@@ -118,7 +118,6 @@
           invalid_file = true
         end
       end
-
       # if invalid file attachment is send then it notify with error message
       notify_invalid_attachment if invalid_file
 
