@@ -3,9 +3,9 @@
 class Reminder < Campaign
 
   attr_accessor :customer_id
-  has_many :lists, through: :campaign_lists, dependent: :destroy
-  has_many :campaign_lists, foreign_key: 'reminder_id', dependent: :destroy
+
   belongs_to :user
+  has_many :campaign_lists, foreign_key: 'reminder_id', dependent: :destroy
   # campaign type is set as enum ( 1 refers to reminder_campaign and 0 refers to promoi_campaign)
   before_create :set_campaign_type
 
