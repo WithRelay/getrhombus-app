@@ -39,7 +39,7 @@
     </div>
   </div>
 </div>
-
+<%@surya = 1 %>
 <%= render 'sub_nav' %>
 
 <div class="dashboard-body">
@@ -47,5 +47,4 @@
     <%= render @hashtags %>
   </div>
 </div>
-<script><%= render partial: 'shared/index.js.erb', locals: { obj: @hashtags } %></script>
 <%= will_paginate @hashtags %>
