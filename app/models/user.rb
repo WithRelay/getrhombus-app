@@ -120,7 +120,7 @@ class User < ActiveRecord::Base
   end
 
   def full_name
-    return "#{self.first_name} #{self.last_name}" if self.is_merchant?
+    return "#{self.people.representative[0].try(:first_name)} #{self.people.representative[0].try(:first_name)}" if self.is_merchant?
     return "#{self.card_name}" if self.is_customer?
   end
 
@@ -259,7 +259,11 @@ class User < ActiveRecord::Base
   def get_saas_subscription
     platform_merchant = MerchantCustomer.find_by(customer_id: self.id, merchant_id: User.get_platform_acct_obj.id)
     platform_merchant ? platform_merchant.subscriptions.active.last : nil
-    Subscription.last  #remove this
+  end
+
+  def get_page_access_token
+    page = self.fb_pages.subscribed[0]
+    page.page_access_token
   end
 
   private
