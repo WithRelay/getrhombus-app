@@ -41,12 +41,8 @@ gem 'fullcontact'
 gem 'twitter'
 gem 'omniauth-twitter'
 
-#grouping data
-gem 'groupdate'
-
 #chart generating
 gem "chartkick"
-
 
 # sending email
 gem 'mandrill-api'

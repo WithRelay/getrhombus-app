@@ -167,8 +167,6 @@ GEM
       hashie (>= 2.0, < 4.0)
     globalid (0.3.7)
       activesupport (>= 4.1.0)
-    groupdate (3.2.0)
-      activesupport (>= 3)
     hashie (3.4.6)
     hitimes (1.2.4)
     http (2.2.0)
@@ -430,7 +428,6 @@ DEPENDENCIES
   ffaker
   friendly_id (~> 5.1.0)
   fullcontact
-  groupdate
   httparty
   jbuilder (~> 2.0)
   jquery-rails
