@@ -39,12 +39,10 @@
     </div>
   </div>
 </div>
-<%@surya = 1 %>
 <%= render 'sub_nav' %>
-
 <div class="dashboard-body">
   <div id='objlists'>
     <%= render @hashtags %>
   </div>
+  <%= (will_paginate(@hashtags)).html_safe %>
 </div>
-<%= will_paginate @hashtags %>
