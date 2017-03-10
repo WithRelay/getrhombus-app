@@ -4,8 +4,8 @@ class Conversation < ActiveRecord::Base
   has_many :conversation_refs, dependent: :destroy
   has_many :fb_messages, through: :conversation_refs, source: :textable, source_type: 'FbMessage', dependent: :destroy
   has_many :messages, through: :conversation_refs, source: :textable, source_type: 'Message', dependent: :destroy
-  belongs_to :merchant_conversation, class_name: "User"   
-   
+  belongs_to :merchant_conversation, class_name: "User"
+
   # Timezone should already be set when calling methods in this class.
 
   # plug in charges
@@ -38,7 +38,7 @@ class Conversation < ActiveRecord::Base
       last_message = last_message.textable
       last_message.text = 'image attached' if last_message.present? && last_message.text.blank? && last_message.images.exists?
     end
-    
+
     {
       id: self.id,
       uid_type: self.uid_type,
@@ -50,7 +50,7 @@ class Conversation < ActiveRecord::Base
       last_message_type: last_message.class.name,
       ago: last_message.blank? ? "" : time_in_relative_form(last_message.created_at),
       unread_count: ConversationRef.where(conversation_id: self.id, unread: true).count,
-      #has_messenger: 
+      #has_messenger:
     }
   end
 
@@ -99,17 +99,17 @@ class Conversation < ActiveRecord::Base
 		rescue StandardError => e
 		 	false
 		end
-	end  
+	end
 
   # uid can be user id, phone number or messenger id
   def self.send_message(conv, team, msg, channel, source, media = [])
     @conv = conv
-
-	from = (channel == "FbMessage") ? team.get_page_access_token : team.rhombus_number
+    page_access_token = team.get_page_access_token
+    from = (channel == "FbMessage") ? page_access_token : team.rhombus_number
 
     if @conv.uid_type == "user"
       customer = User.find_by(id: @conv.uid)
-      to = (channel == "FbMessage") ? customer.get_customer_page_specific_id : customer.phone_number
+      to = (channel == "FbMessage") ? customer.get_customer_page_specific_id(page_access_token) : customer.phone_number
     else
       to = @conv.uid
     end
@@ -144,7 +144,7 @@ class Conversation < ActiveRecord::Base
       msg_ary.first.id
     else
       false
-    end    
+    end
   end
 
   # when receiving
@@ -158,7 +158,7 @@ class Conversation < ActiveRecord::Base
     conv = find_or_create_conversation(team_id, uid_type, uid)
     conv_ref = conv.conversation_refs.create(textable: msg_instance, unread: unread, source: source)
     [conv, conv_ref]
-  end 
+  end
 
 	# find the conversation or create one
   def self.find_or_create_conversation(team_id, uid_type, uid)
@@ -172,14 +172,14 @@ class Conversation < ActiveRecord::Base
   end
 
   def self.get_merchant_todays_unread_count(merchant_id, date)
-    find_by_sql(["select count(cr.id) as count from conversations c inner join conversation_refs cr 
+    find_by_sql(["select count(cr.id) as count from conversations c inner join conversation_refs cr
                   on c.id = cr.conversation_id
                   where cr.unread = 1 and c.resolution is null or c.resolution = ''
                   and c.merchant_id = ? and c.created_at >= ? and source = 2", merchant_id, date]).first.count
   end
 
   def self.get_merchant_total_unread_msgs_count(merchant_id)
-    find_by_sql(["select count(cr.id) as count from conversations c inner join conversation_refs cr 
+    find_by_sql(["select count(cr.id) as count from conversations c inner join conversation_refs cr
                   on c.id = cr.conversation_id
                   where cr.unread = 1 and c.resolution is null or c.resolution = ''
                   and c.merchant_id = ? and source = 2", merchant_id]).first.count
@@ -187,17 +187,17 @@ class Conversation < ActiveRecord::Base
 
   def self.get_last_customer_msg_from_last5_convs_today(merchant_id, date)
     find_by_sql(["SELECT b.id as id, a.textable_id, b.uid, b.uid_type, a.created_at as created_at,
-                  CASE WHEN a.textable_type = 'Message' THEN 'SMS' ELSE 'messenger' END as channel 
+                  CASE WHEN a.textable_type = 'Message' THEN 'SMS' ELSE 'messenger' END as channel
                   FROM conversation_refs a
                   INNER JOIN (
                     SELECT e.id as id, max(c.id) as cr_id, e.uid as uid, e.uid_type as uid_type
                     FROM conversation_refs c
                     INNER JOIN (
                       SELECT id, uid, uid_type from conversations d
-                      where d.merchant_id = ? and d.resolution is null or 
+                      where d.merchant_id = ? and d.resolution is null or
                       d.resolution = '' and d.created_at >= ? order by d.created_at desc, id desc limit 5
                       ) e ON e.id = c.conversation_id
-                    where source = 2 GROUP BY c.conversation_id 
+                    where source = 2 GROUP BY c.conversation_id
                   ) b ON a.id = b.cr_id order by a.created_at desc, id desc", merchant_id, date])
   end
 
