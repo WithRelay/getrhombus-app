@@ -31,7 +31,7 @@ class UserPresenter < BasePresenter
   end
 
   def format_customer_name
-    @model.card_name.present? ? @model.card_name.split(" ")[0] : "Customer"
+    @model.full_name.present? ? @model.full_name.split.first : "Customer"
   end
 
 end

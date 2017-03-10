@@ -15,19 +15,20 @@ OLD
 - surya - test validation for url, tax rate on business settings field
 - load more for all index pages
 NEW
-- ovo's task
+- ovo's task (segments for leads and customers)
 - show me devise errors
 - we will need pubnub in other pages outside messages
 - do reminders for messaging page
 - fix alerts html
-- password reset, remove validation and put in an invalid email
+- welcome page
+- emails
 Surya
 - validates_associated in user... any read op on user will run a query
 - catch db error in update action too... add error to base
 - are you using campaign.scss, loading image is provided by edwin
-- def full_name in user.rb .... it is different for merchants. also go through the code and change references to full_name to use this method... there are a number of references in the repo mostly in views and presenters
 - empty state for lists
 - lock down permissions cancancan?
+- i see issues with reminder js
 Dorje
 - customer index empty state counter
 - error alerts styling for forgot password, change password page
@@ -38,10 +39,11 @@ bhishma
 - .where("created_at >= ?", 7.days.ago.to_i)
 - add timezone finder for fb events
 - do messageparser with bhishma tomorrow.
-- needs to go through conversation  FacebookMessengerService.send_text_message(page_access_token, to, text) and wherever else
+- needs to go through conversation  FacebookMessengerService.send_text_message(page_access_token, to, text) and wherever else - see fb_cred
 - when messages get resent do nothing - add db check
 - Conversation.find_or_create_conversation_for_message_and_send_publish(@merchant, user.id, 'fb_page', @uid, text, "FbMessage")
   uid_type can also be user
+  - get_customer_page_specific_id pass in the page instead
 - you are passing user id into conversations not user object
 - have you fixed issue with fb messages not saving in conversations correctly.
 - add uniqueness check to twilio and nexmo events

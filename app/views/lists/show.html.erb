@@ -1,7 +1,7 @@
 <p id="notice"><%= notice %></p>
 <div id="list_info">
 <strong>List name:</strong> <%= @list.name %></br>
-<strong>List owner:</strong> <%= User.find(@list.user_id).first_name  %> </br>
+<strong>List owner:</strong> <%= User.find(@list.user_id).full_name.split.first  %> </br>
 <strong>List created at:</strong> <%= @list.created_at %> </br>
 
 </div>
@@ -19,8 +19,8 @@
 
 <% @users.each do |c| %>
 <tr>
-	<td><%= c[:user].first_name %> </td>
-	<td><%= c[:user].last_name %> </td>
+	<td><%= c[:user].full_name.split.first %> </td>
+	<td><%= c[:user].last_name.split.second || '' %> </td>
 	<td><%= c[:user].email %> </td>
 	<% customer_list = UserList.where(list_id:@list.id,user_id:c[:user].id) %>
 	<td><%= link_to 'Remove user from list', controller:'user_lists', action: 'remove_user', user_id: c[:user].id, list_id:@list.id %>
