@@ -129,7 +129,7 @@ class Conversation < ActiveRecord::Base
 		if msg_instance.send_and_save_message(team, customer, from, to, msg, false, media)
 			re = find_or_create_conversation_for_message(team.id, @conv.uid_type, @conv.uid, msg_instance, false, source)
       msg_hash = message_hash(re[0], msg_instance, re[1], customer, team)
-      [msg_hash, msg_instance]
+      [msg_hash, re.second]
     else 
       false
 		end
@@ -138,9 +138,9 @@ class Conversation < ActiveRecord::Base
   # when sending by platform on behalf of merchant like automated messages (excludes sending from dashboard)
   def self.find_or_create_conversation_for_message_and_send_publish(team, customer, uid_type, uid, msg_to_send, channel, media = [])
     re = find_or_create_conversation(team.id, uid_type, uid)
-    msg_ary = send_message(re[0], team, msg_to_send, channel, 'platform', media)
+    msg_ary = send_message(re, team, msg_to_send, channel, 'platform', media)
     if msg_ary
-      RealtimeStreamService.publish_to_dashboard(re[0], re[1], team, customer, msg_ary.second)
+      RealtimeStreamService.publish_to_dashboard(re, msg_ary.second, team, customer, msg_ary.second)
       msg_ary.first.id
     else
       false
