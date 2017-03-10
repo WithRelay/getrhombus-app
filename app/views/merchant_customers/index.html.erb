@@ -51,7 +51,7 @@
   <div class="customer-dash sub-nav-bar">
     <div class="sub-nav-bar-row w-row">
       <div class="sub-nav-bar-row-column-1 w-clearfix w-col w-col-2">
-        <div class="customer-count shrink-text">10 /<span class="sub-nav-sub-text">
+        <div class="customer-count shrink-text"> <%= @customers.length %> /<span class="sub-nav-sub-text">
         <%= @customers.count %> customers </span>
         </div>
       </div>
@@ -85,6 +85,8 @@
       <div>
         <div id='objlists'>
           <%= render @customers %>
+          <!-- <div class = "pagination" > </div> -->
+          <%= will_paginate(@customers) %>
         </div>
       </div>
     </div>

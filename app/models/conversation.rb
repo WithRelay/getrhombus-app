@@ -105,11 +105,11 @@ class Conversation < ActiveRecord::Base
   def self.send_message(conv, team, msg, channel, source, media = [])
     @conv = conv
 
-		from = (channel == "FbMessage") ? "get messenger cred" : team.rhombus_number
+	from = (channel == "FbMessage") ? team.get_page_access_token : team.rhombus_number
 
     if @conv.uid_type == "user"
       customer = User.find_by(id: @conv.uid)
-      to = (channel == "FbMessage") ? 'get messenger cred' : customer.phone_number
+      to = (channel == "FbMessage") ? customer.get_customer_page_specific_id : customer.phone_number
     else
       to = @conv.uid
     end
@@ -126,21 +126,21 @@ class Conversation < ActiveRecord::Base
       msg_instance.image_ids = media_ids
     end
 
-		if msg_instance.send_and_save_message(team, customer, from, to, msg, false, media)
-			re = find_or_create_conversation_for_message(team.id, @conv.uid_type, @conv.uid, msg_instance, false, source)
+	if msg_instance.send_and_save_message(team, customer, from, to, msg, false, media)
+      re = find_or_create_conversation_for_message(team.id, @conv.uid_type, @conv.uid, msg_instance, false, source)
       msg_hash = message_hash(re[0], msg_instance, re[1], customer, team)
-      [msg_hash, msg_instance]
-    else 
+      [msg_hash, msg_instance, re.second]    # message hash, instance and message conv ref are needed
+    else
       false
-		end
+    end
   end
 
   # when sending by platform on behalf of merchant like automated messages (excludes sending from dashboard)
   def self.find_or_create_conversation_for_message_and_send_publish(team, customer, uid_type, uid, msg_to_send, channel, media = [])
     re = find_or_create_conversation(team.id, uid_type, uid)
-    msg_ary = send_message(re[0], team, msg_to_send, channel, 'platform', media)
+    msg_ary = send_message(re, team, msg_to_send, channel, 'platform', media)
     if msg_ary
-      RealtimeStreamService.publish_to_dashboard(re[0], re[1], team, customer, msg_ary.second)
+      RealtimeStreamService.publish_to_dashboard(re, msg_ary.third, team, customer, msg_ary.second)
       msg_ary.first.id
     else
       false

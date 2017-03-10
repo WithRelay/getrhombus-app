@@ -259,7 +259,16 @@ class User < ActiveRecord::Base
   def get_saas_subscription
     platform_merchant = MerchantCustomer.find_by(customer_id: self.id, merchant_id: User.get_platform_acct_obj.id)
     platform_merchant ? platform_merchant.subscriptions.active.last : nil
-    Subscription.last  #remove this
+  end
+
+  def get_page_access_token
+    @page = self.fb_pages.subscribed[0]
+    @page.page_access_token
+  end
+
+  def get_customer_page_specific_id
+    fb_cred = self.fb_creds.where(fb_page_id: @page.id).last
+    fb_cred.page_access_token
   end
 
   private

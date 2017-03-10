@@ -12,7 +12,7 @@ class CampaignsController < ApplicationController
                                                  page: params[:page])
                                                  .order('updated_at DESC')
    respond_to do |format|
-     format.js { render partial: 'shared/index.js.erb', locals: { obj: @hashtags } }
+     format.js { render partial: 'shared/index.js.erb', locals: { obj: @campaigns } }
       format.html
     end
     render 'empty_campaign' unless @campaigns.present?

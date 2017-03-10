@@ -48,31 +48,26 @@
         text = '' if text.nil?
         timestamp = set_timestamp(@event['timestamp'])
         message_id =  message['mid']
-        message_from = @event['sender']['id']
-        message_to = @event['recipient']['id']
+        @message_from = @event['sender']['id']
+        @message_to = @event['recipient']['id']
         fb_page_id = @current_page.id
-        new_user_id = (@current_page.page_id == message_to)? message_from : message_to
+        new_user_id = (@current_page.page_id == @message_to)? @message_from : @message_to
         add_page_user(@current_page, new_user_id)
 
-        @uid = get_uid
+        get_uid_and_uid_type
         @merchant_id = @merchant.id
-        if (@current_page.page_id == message_from)
-          @user_id =  @merchant_id
-          @user_id_to = @uid unless @uid == @fb_cred.page_specific_id
-        else
-          @user_id = @uid unless @uid == @fb_cred.page_specific_id
-          @user_id_to = @merchant_id
-        end
+
+        get_user_relation
 
         unless FbMessage.find_by(message_id: message_id).present?
           @fb_message = FbMessage.new
           @fb_message.update(message_id: message_id, text: text, seq: seq,
             time_stamp: timestamp, unread: true,
-            from: message_from, to: message_to, fb_page_id: fb_page_id,
+            from: @message_from, to: @message_to, fb_page_id: fb_page_id,
             user_id: @user_id, user_id_to: @user_id_to)
 
           save_attachments if @attachments.present?
-          Conversation.find_or_create_conversation_for_message_and_publish(@merchant, @user_id, 'fb_page', @uid,  @fb_message, true)
+          Conversation.find_or_create_conversation_for_message_and_publish(@merchant, @user_id, @uid_type, @uid,  @fb_message, true)
           @fb_message.save
         end
       rescue StandardError => err
@@ -80,7 +75,15 @@
       end
     end
 
-
+    def get_user_relation
+      if (@current_page.page_id == @message_from)
+        @user_id =  @merchant_id
+        @user_id_to = @uid unless @uid == @fb_cred.page_specific_id
+      else
+        @user_id = @uid unless @uid == @fb_cred.page_specific_id
+        @user_id_to = @merchant_id
+      end
+    end
 
     # set datetime in utc
     def set_timestamp(timestamp)
@@ -94,8 +97,12 @@
     end
 
     # it gives user id from page specific id of user
-    def get_uid
-      @fb_cred.user ? @fb_cred.user_id : @fb_cred.page_specific_id
+    def get_uid_and_uid_type
+      if @fb_cred.user.present?
+        @uid, @uid_type =  @fb_cred.user_id, 'user'
+      else
+        @uid, @uid_type =  @fb_cred.page_specific_id, 'fb_page'
+      end
     end
 
     def save_attachments
@@ -111,7 +118,6 @@
           invalid_file = true
         end
       end
-
       # if invalid file attachment is send then it notify with error message
       notify_invalid_attachment if invalid_file
 
@@ -123,17 +129,18 @@
     def notify_invalid_attachment
       page = @fb_message.fb_page
       if page.page_id != @fb_message.from
-        user = FbCred.find_by_page_specific_id @fb_message.from
+        fb_user = FbCred.find_by_page_specific_id @fb_message.from
         to = @fb_message.from
       else
-        user = page.fb_cred
+        fb_user = page.fb_cred
         to = @fb_message.to
       end
-      user_name = user.name.split.first
+      customer = fb_user.user if fb_user.present?
+      user_name = fb_user.name.split.first
       page_access_token = page.page_access_token
       text = "Sorry #{user_name}, currently we only support image file attachments"
       # FacebookMessengerService.send_text_message(page_access_token, to, text)
-      Conversation.find_or_create_conversation_for_message_and_send_publish(@merchant, user.id, 'fb_page', @uid, text, "FbMessage")
+      Conversation.find_or_create_conversation_for_message_and_send_publish(@merchant, customer, @uid_type, @uid, text, "FbMessage")
     end
 
   end

@@ -2,58 +2,49 @@ Add profile info
 1. validation
 2. still bypassing to other onboarding steps
 3. dont see devise validation error it seems (signup form too)
-
-signup form
+Signup form
 - sign up form can have devise/database error but not showing up. 
-- capture phone number not unique check from database - see application controller
-
-rhombus number form
+Rhombus number form
 - no flash message ... probably in signup and profile info forms
-
-add card info, add subscription, billing info
+Add card info, add subscription, billing info
 - flash message not showing...also needs to show devise error
 
 OLD
 - Header not fully dynamic
 - surya - test client side validations for account settings pages
 - surya - test validation for url, tax rate on business settings field
-- password reset page and validations
-- ovo's task
 - load more for all index pages
-- change password pages (relay-test.webflow.io/change-password) and validations
-Surya
-- validates_associated in user... any read op on user will run a query
-- where do u catch phone number db error
-- are you using campaign.scss, loading image is provided by edwin
--   def full_name in user.rb
-
 NEW
+- ovo's task
 - show me devise errors
 - we will need pubnub in other pages outside messages
 - do reminders for messaging page
 - fix alerts html
 - password reset, remove validation and put in an invalid email
 Surya
-- 500 page not loading properly
-- dont scope api routes under user like lists, group routes together with collection/member so it is easier to track
+- validates_associated in user... any read op on user will run a query
+- catch db error in update action too... add error to base
+- are you using campaign.scss, loading image is provided by edwin
+- def full_name in user.rb .... it is different for merchants. also go through the code and change references to full_name to use this method... there are a number of references in the repo mostly in views and presenters
 - empty state for lists
 - lock down permissions cancancan?
-- reminders.js  url:  "/v1/reminders/" + reminder_id + "/edit" 
-- validate reminders field
-- something wrong with how you submit reminder form 
 Dorje
-- when you run quries on tables with merchant_id, you need to add merchant_id like in MerchantCustomer, Transaction, MerchantContact
-- customer index empty state
-- alerts for forgot password, change password page and probably reset password...
+- customer index empty state counter
+- error alerts styling for forgot password, change password page
 - profile pic, dont show twitter info if not exists and transaction history on customer profile page
+- unless: Proc.new{|u| u.encrypted_password_changed? } might be needed for other merchant validations
 bhishma
 -     "%.2f" %(@model.plan.amount.to_f/100)
-- search for get_coupon_name remove specific check
-- routes in subscriptions.js
-- pre-authorized transaction page... just a url param
+- .where("created_at >= ?", 7.days.ago.to_i)
 - add timezone finder for fb events
-- do messageparser with bhishma tomorrow. 
-- when messages get resent do nothing
+- do messageparser with bhishma tomorrow.
+- needs to go through conversation  FacebookMessengerService.send_text_message(page_access_token, to, text) and wherever else
+- when messages get resent do nothing - add db check
+- Conversation.find_or_create_conversation_for_message_and_send_publish(@merchant, user.id, 'fb_page', @uid, text, "FbMessage")
+  uid_type can also be user
+- you are passing user id into conversations not user object
+- have you fixed issue with fb messages not saving in conversations correctly.
+- add uniqueness check to twilio and nexmo events
 
 
 - add the url for pages you did to the sidebar on dashboard and settings page
@@ -79,10 +70,6 @@ Everyone
 Torchi
 - review merchant customer
 - review saved replies
-- reminders create is a popup, appears on
-	- http://relay-test.webflow.io/customer-reminders, http://relay-test.webflow.io/customer-profile and conversations page
-	- use only one popup across all pages
-	- no need to show customer search dropdown on customers page
 
 Edwin
 - allow red alert to have multiple lines

@@ -10,7 +10,7 @@ class MerchantCustomersController < ApplicationController
   	@new_customer = User.new
     render 'empty_customer' unless @customers
     respond_to do |format|
-      format.js { render partial: 'shared/index.js.erb', locals: { obj: @hashtags } }
+      format.js { render partial: 'shared/index.js.erb', locals: { obj: @customers } }
        format.html
      end
   end
