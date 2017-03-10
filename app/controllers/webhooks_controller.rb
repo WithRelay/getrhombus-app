@@ -43,9 +43,7 @@ class WebhooksController < ApplicationController
 
     def set_time_zone(&block)
       if action_name == 'facebook_events'
-        if params['entry']
-          @merchant = get_merchant
-        end
+        @merchant = get_merchant if params['entry']
       elsif action_name == 'stripe_events'
          @merchant = params['user_id'].present? ? User.find_by(uid: params['user_id']) : User.get_platform_acct_obj
       elsif action_name == 'twilio_events'
@@ -57,8 +55,8 @@ class WebhooksController < ApplicationController
     end
 
     def current_page
-      @required_params =  @required_params = params['entry'].last
-      FbPage.find_by_page_id @required_params['id']
+      required_params = params['entry'].last
+      FbPage.find_by_page_id required_params['id']
     end
 
     def get_merchant
