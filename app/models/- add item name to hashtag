@@ -14,7 +14,8 @@ OLD
 - surya - test client side validations for account settings pages
 - surya - test validation for url, tax rate on business settings field
 - load more for all index pages
-NEW
+
+OTHERS
 - ovo's task (segments for leads and customers)
 - show me devise errors
 - we will need pubnub in other pages outside messages
@@ -22,6 +23,8 @@ NEW
 - fix alerts html
 - welcome page
 - emails
+- do unread previews
+
 Surya
 - validates_associated in user... any read op on user will run a query
 - catch db error in update action too... add error to base
@@ -29,12 +32,14 @@ Surya
 - empty state for lists
 - lock down permissions cancancan?
 - i see issues with reminder js
+
 Dorje
 - customer index empty state counter
 - error alerts styling for forgot password, change password page
 - profile pic, dont show twitter info if not exists and transaction history on customer profile page
 - unless: Proc.new{|u| u.encrypted_password_changed? } might be needed for other merchant validations
-bhishma
+
+Bhishma
 -     "%.2f" %(@model.plan.amount.to_f/100)
 - .where("created_at >= ?", 7.days.ago.to_i)
 - add timezone finder for fb events
