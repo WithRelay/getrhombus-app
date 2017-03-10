@@ -2,12 +2,16 @@ class HashtagsController < ApplicationController
   before_action :set_hashtag, only: [:show, :edit, :update, :destroy]
   include DashboardNotification
   before_action :set_notifications
-  respond_to :html, :js
+  respond_to :html
 
   def index
     @hashtags = current_user.hashtags.paginate(per_page: PAGINATION_PER_PAGE,
                                                page: params[:page])
                                                .order('updated_at DESC')
+    respond_to do |format|
+      format.js { render partial: 'shared/index.js.erb', locals: { obj: @hashtags } }
+       format.html
+     end
     render 'empty_hashtag' unless @hashtags.present?
   end
 

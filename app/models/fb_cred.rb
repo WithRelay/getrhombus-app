@@ -37,7 +37,8 @@ class FbCred < ActiveRecord::Base
           name: full_name, page_specific_id: new_user_id,
           email: link_response[:email], fb_id: link_response[:fb_id],
           time_zone: timezone, gender: gender, profile_pic_url: url,
-          user_id: link_response[:user_id]
+          user_id: link_response[:user_id],
+          fb_page_id: fb_page.id
         )
       else
         FacebookMessengerService.send_auth_link(page_access_token, new_user_id, welcome_text)

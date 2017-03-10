@@ -118,7 +118,6 @@
           invalid_file = true
         end
       end
-
       # if invalid file attachment is send then it notify with error message
       notify_invalid_attachment if invalid_file
 
@@ -136,11 +135,12 @@
         fb_user = page.fb_cred
         to = @fb_message.to
       end
+      customer = fb_user.user if fb_user.present?
       user_name = fb_user.name.split.first
       page_access_token = page.page_access_token
       text = "Sorry #{user_name}, currently we only support image file attachments"
       # FacebookMessengerService.send_text_message(page_access_token, to, text)
-      Conversation.find_or_create_conversation_for_message_and_send_publish(@merchant, page.user.id, 'fb_page', @uid, text, "FbMessage")
+      Conversation.find_or_create_conversation_for_message_and_send_publish(@merchant, customer, @uid_type, @uid, text, "FbMessage")
     end
 
   end

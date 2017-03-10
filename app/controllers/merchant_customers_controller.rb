@@ -1,19 +1,21 @@
 class MerchantCustomersController < ApplicationController
-  
+
   include DashboardNotification
   before_action :set_notifications
 
   def index
-    
 
   	@customers = current_user.merchant_customers
-                             .paginate(page: params[:page], per_page: 10).order(created_at: :desc)
-    @new_customer = User.new
-
+                              .paginate(page: params[:page], per_page: 10).order(created_at: :desc)
+  	@new_customer = User.new
     render 'empty_customer' unless @customers
+    respond_to do |format|
+      format.js { render partial: 'shared/index.js.erb', locals: { obj: @customers } }
+       format.html
+     end
   end
 
-  def show    
+  def show
     @customer_id = params[:customer_id]
   	@customer = User.find_by_id(@customer_id)
 
