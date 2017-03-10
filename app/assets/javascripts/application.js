@@ -93,6 +93,8 @@
 //= require managed-account
 //= require rhombus_number_search
 //= require typeit
+//= require Chart.bundle
+//= require chartkick
 
 // DO NOT REQUIRE TREE AS IT DOESNT GUARANTEE THE DEPENDENCY ORDER OF THESE FILES
 // require_tree .
