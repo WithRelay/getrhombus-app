@@ -1,3 +1,8 @@
+<style>
+  #submitReminderForm {
+      margin-top: 60px;
+  }
+</style>
 <div class="schedule-notification-form-wrapper" id="form-reminder-div">
   <div class="content-sub-wrapper modal w-clearfix">
     <h4 class="modal-header welcome-dash-content-container-header">Customer Notification</h4>
@@ -20,7 +25,7 @@
       <div class="form-group col-xs-6">
         <%= f.text_area :text, class: 'form-control notification-message text-area w-input', id: "Notification-Message" %>
       </div>
-      
+
       <div class="char-count notications" id= "textBoxCounter" ></div>
       <%= f.text_field :date_time, data: { name: "Delivery Date &amp; Time" }, class: 'daterange delivery-date-time-picker text-field w-input', value: present(reminder).to_user_date_time %>
       <div class="notification-frequency radio-button w-radio">
@@ -33,8 +38,8 @@
         <label class="w-form-label" for="Notification Frequency-2">Repeat</label>
       </div>
       <%= f.select :repeat_days, repeat_days_options, {}, selected: reminder.repeat_days, id: 'campaign_repeat_days', class: "dropdown frequency-dropdown w-select" %>
-      <a class="button schedule-notification w-button" href="#" id='submitReminderForm'>Schedule notification</a>
-      <%#= f.submit 'Schedule Notification [Customer name]', id: 'submitReminderForm', class: 'button schedule-notification w-button' %>
+      <!-- <a class="button schedule-notification w-button" href="#" id='submitReminderForm'>Schedule notification</a> -->
+      <%= f.submit 'Schedule Notification', id: 'submitReminderForm', class: 'button schedule-notification w-button' %>
       <div id="new-reminder-div">
         <a class="button cancel-notification w-button update-close-modals" data-parent='form-reminder-div'>Cancel</a>
       </div>

@@ -11,8 +11,8 @@ class MerchantCustomersController < ApplicationController
     render 'empty_customer' unless @customers
     respond_to do |format|
       format.js { render partial: 'shared/index.js.erb', locals: { obj: @customers } }
-       format.html
-     end
+      format.html
+    end
   end
 
   def show
@@ -22,7 +22,7 @@ class MerchantCustomersController < ApplicationController
   	@merchant_customer = MerchantCustomer.find_by(customer_id: @customer_id, merchant_id: current_user.id)
     @transactions = Transaction.where(user_id: @customer_id, team_id: current_user.id).order(created_at: :desc)
 
-    @conversation_refs = ConversationRef.get_last_customer_msg_from_all_merchant_convs(@merchant_customer.merchant_id)
+    @conversation_refs = ConversationRef.get_last_customer_msg_from_all_merchant_convs(current_user.id, @customer_id)
 
     @last_conv_ref = @conversation_refs.present? ? @conversation_refs.first : nil
     @last_message_resolution = @last_conv_ref.present? && @last_conv_ref.resolution.present? ? @last_conv_ref.resolution : "-"

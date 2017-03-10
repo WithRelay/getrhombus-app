@@ -8,7 +8,6 @@ class Campaign < ActiveRecord::Base
   belongs_to :user
   has_many :image_refs, as: :imageable, dependent: :destroy
   has_many :images, through: :image_refs, dependent: :destroy
-  delegate :first_name, :last_name, to: :user
   # enums for campaign's class attributes channel, status, frequency_type and delivery_type
   enum channel: { sms: 0, mms: 1, facebook_messenger: 2, email: 3 }
   enum campaign_type: { promo_campaign: 0, reminder_campaign: 1 }
@@ -31,7 +30,7 @@ class Campaign < ActiveRecord::Base
   before_create :set_campaign_status
 
   def from_user
-    "#{first_name} #{last_name}"
+    self.user.full_name
   end
 
   def update_attributes(*args)
