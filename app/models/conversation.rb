@@ -129,7 +129,7 @@ class Conversation < ActiveRecord::Base
 		if msg_instance.send_and_save_message(team, customer, from, to, msg, false, media)
 			re = find_or_create_conversation_for_message(team.id, @conv.uid_type, @conv.uid, msg_instance, false, source)
       msg_hash = message_hash(re[0], msg_instance, re[1], customer, team)
-      [msg_hash, re.second]
+      [msg_hash, msg_instance, re.second]    # message hash, instance and message conv ref are needed
     else 
       false
 		end
@@ -140,7 +140,7 @@ class Conversation < ActiveRecord::Base
     re = find_or_create_conversation(team.id, uid_type, uid)
     msg_ary = send_message(re, team, msg_to_send, channel, 'platform', media)
     if msg_ary
-      RealtimeStreamService.publish_to_dashboard(re, msg_ary.second, team, customer, msg_ary.second)
+      RealtimeStreamService.publish_to_dashboard(re, msg_ary.third, team, customer, msg_ary.second)
       msg_ary.first.id
     else
       false
