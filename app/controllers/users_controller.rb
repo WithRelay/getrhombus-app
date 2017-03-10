@@ -9,7 +9,9 @@ class UsersController < ApplicationController
   # do i need this?
   load_and_authorize_resource except: [:customer_csv_template]
 
+
   def show
+
     # handle_referrer_and_welcome_email
     # delete_captured_payment_session
     # Transaction.process_captured_payment(@user, params) if current_user.user_level == 0 && params[:captured_amt].present?

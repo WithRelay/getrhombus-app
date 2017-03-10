@@ -92,6 +92,7 @@ Rails.application.routes.draw  do
         get 'businesses' => 'users#businesses'
         get 'notifications' => 'alerts#edit'
         get 'integrations' => 'users#integrations'
+        get 'das' => 'users#das'
         get 'remove_stripe_integration' => 'users#remove_stripe_integration'
         get 'remove_twitter_integration' => 'users#remove_twitter_integration'
         match 'refer_business' => 'users#refer_business', via: [:get, :post]
