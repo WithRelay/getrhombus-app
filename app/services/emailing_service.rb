@@ -158,7 +158,7 @@ class EmailingService
         template_content = []
         message = { "subject" => "Welcome to Relay",
          "merge_language" => "handlebars",
-         "global_merge_vars"=> [    { "name" => "first_name", "content" => user.first_name || 'there' } ],
+         "global_merge_vars"=> [    { "name" => "first_name", "content" => user.full_name.split.first || 'there' } ],
          "bcc_address"=> SENDER,
          "to"=> [ { "email" => user.email } ],
          "from_name" => "Edwin from Relay",
@@ -178,7 +178,7 @@ class EmailingService
         template_name = "proactive-support-email"
         template_content = []
         message = { "subject" => "Get the most out of Relay",
-         "global_merge_vars"=> [    { "name" => "first_name", "content" => user.first_name || 'there' } ],
+         "global_merge_vars"=> [    { "name" => "first_name", "content" => user.full_name.split.first || 'there' } ],
          "merge_language" => "handlebars",
          "bcc_address"=> SENDER,
          "to"=> [ { "email" => user.email } ],
@@ -199,7 +199,7 @@ class EmailingService
         template_name = 'schedule-demo-email'
         template_content = []
         message = { "subject" => "Schedule a live walk-through of Relay",
-         "global_merge_vars"=> [    { "name" => "first_name", "content" => user.first_name || 'there' } ],
+         "global_merge_vars"=> [    { "name" => "first_name", "content" => user.full_name.split.first || 'there' } ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
          "bcc_address"=> SENDER,
@@ -224,7 +224,7 @@ class EmailingService
         template_name = 'free-trial-expiration'
         template_content = []
         message = { "subject" => "Your Relay Trial",
-         "global_merge_vars"=> [    { "name" => "first_name", "content" => user.first_name || 'there' } ],
+         "global_merge_vars"=> [    { "name" => "first_name", "content" => user.full_name.split.first || 'there' } ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
          "bcc_address"=> SENDER,
@@ -245,7 +245,7 @@ class EmailingService
         template_name = 'weekly-activity-summary'
         template_content = []
         message = { "subject" => "Relay: Weekly activity summary",
-         "global_merge_vars"=> [    { "name" => "first_name", "content" => user.first_name || 'there' } ],
+         "global_merge_vars"=> [    { "name" => "first_name", "content" => user.full_name.split.first || 'there' } ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
          "bcc_address"=> SENDER,
@@ -267,7 +267,7 @@ class EmailingService
         template_content = []
         message = { "subject" => "It’s been a month",
          "merge_language" => "handlebars",
-         "global_merge_vars"=> [    { "name" => "first_name", "content" => user.first_name || 'there' } ],
+         "global_merge_vars"=> [    { "name" => "first_name", "content" => user.full_name.split.first || 'there' } ],
          "to"=> [ { "email" => user.email } ],
          "bcc_address"=> SENDER,
          "from_name" => "Edwin from Relay",
@@ -287,7 +287,7 @@ class EmailingService
         template_name = 'three-month-follow-up'
         template_content = []
         message = { "subject" => "It’s been a 3 months",
-         "global_merge_vars"=> [    { "name" => "first_name", "content" => user.first_name || 'there' } ],
+         "global_merge_vars"=> [    { "name" => "first_name", "content" => user.full_name.split.first || 'there' } ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
          "bcc_address"=> SENDER,
@@ -308,7 +308,7 @@ class EmailingService
         template_name = 'offer-to-help'
         template_content = []
         message = { "subject" => "Checking in",
-         "global_merge_vars"=> [    { "name" => "first_name", "content" => user.first_name || 'there' } ],
+         "global_merge_vars"=> [    { "name" => "first_name", "content" => user.full_name.split.first || 'there' } ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
          "bcc_address"=> SENDER,
@@ -329,7 +329,7 @@ class EmailingService
         template_name = 'free-trial-expiration'
         template_content = []
         message = { "subject" => "Cancellation",
-         "global_merge_vars"=> [    { "name" => "first_name", "content" => user.first_name || 'there' } ],
+         "global_merge_vars"=> [    { "name" => "first_name", "content" => user.full_name.split.first || 'there' } ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
          "bcc_address"=> SENDER,

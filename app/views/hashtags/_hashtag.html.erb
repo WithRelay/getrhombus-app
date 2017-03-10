@@ -27,9 +27,9 @@
       <div class="alt-table-column-div w-clearfix">
         <%= present(hashtag).profile_image %>
         <% if hashtag.inactive? %>
-          <div class="deactivated-text shrink-text table-text"><%="#{current_user.first_name} #{current_user.last_name}" %></div>
+          <div class="deactivated-text shrink-text table-text"><%="#{current_user.full_name}" %></div>
         <% else %>
-          <div class="shrink-text table-text"><%="#{current_user.first_name} #{current_user.last_name}" %></div>
+          <div class="shrink-text table-text"><%="#{current_user.full_name}" %></div>
         <% end %>
       </div>
     </div>

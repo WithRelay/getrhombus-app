@@ -72,8 +72,8 @@ class MessageParser
           short_link = 'test' #UrlShortenerService.shorten_link("#{url}/signup?num=#{@received_msg.from}&referrer_id=#{@merchant.id}&referrer=#{merchant_name}")
           send_response("To chat with us or send a payment, sign up here: #{short_link}")
         elsif find_conversation_refs_count < 2 && !is_signup
-          merchant_rep = @merchant.people.where(role: 0).first
-          first_name = (merchant_rep.present?) ? "my name is #{merchant_rep.first_name}, " : ''
+          first_name = @merchant.full_name.split.first
+          first_name = (first_name.present?) ? "my name is #{first_name}, " : ''
           custom_welcome = "Hi there, " + first_name + "how can I assist you today? If you're looking to send a payment, simply reply with the amount. Ex. +10 #donut"
           custom_welcome = @merchant.custom_welcome unless @merchant.custom_welcome.blank?
           send_response(custom_welcome)
@@ -261,7 +261,7 @@ class MessageParser
   end
 
   def send_payment_responses
-    first_name = (@customer.card_name.present?) ? " " + @customer.card_name.split.first : ''
+    first_name = (@customer.full_name.present?) ? " " + @customer.full_name.split.first : ''
     msg_to_send = "Thanks" + first_name + ". A payment of #{amt_in_decimal(@stripe_res.amount)} (#{@stripe_res.currency}) "
     msg_to_send = msg_to_send + (@merchant.tax_percent == "0" ? "was sent to #{@merchant.org_name}." : "plus taxes and fees set by #{@merchant.org_name} was sent.")
     

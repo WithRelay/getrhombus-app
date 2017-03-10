@@ -2,7 +2,7 @@
   <div class="new-table-row w-row">
     <div class="cn w-clearfix w-col w-col-3">
       <div class="name w-clearfix">  <%= present(merchant_customer).profile_image %>
-        <div class="shrink-text table-text"><%= link_to "#{current_user.first_name} #{current_user.last_name} #{merchant_customer.id} ", action: "show" , customer_id: merchant_customer.customer_id %></div>
+        <div class="shrink-text table-text"><%= link_to "#{current_user.full_name}", action: "show" , customer_id: merchant_customer.customer_id %></div>
       </div>
       <div class="cb check-box-column">
         <div class="w-form">

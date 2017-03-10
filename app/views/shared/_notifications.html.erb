@@ -29,7 +29,7 @@
               <%= present(transaction).profile_image %>
             </div>
             <div class="w-col w-col-8">
-              <div class="notification-text-block notifier"><strong class="notifier-name"><%= transaction.user.card_name %></strong>&nbsp;sent you a <strong class="notifier-action">
+              <div class="notification-text-block notifier"><strong class="notifier-name"><%= transaction.user.full_name %></strong>&nbsp;sent you a <strong class="notifier-action">
                 Payment</strong>&nbsp;of $<%= transaction.amount %></div>
             </div>
             <div class="w-col w-col-2">

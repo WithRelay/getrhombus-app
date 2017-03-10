@@ -130,14 +130,14 @@ class User < ActiveRecord::Base
   end
 
   def self.user_title(user)
-    user_first_name = user.people.representative[0]
-    user_first_name.present? ? "#{user_first_name.first_name} from #{user.org_name}" : user.org_name
+    user_first_name = user.full_name.split.first
+    user_first_name.present? ? "#{user_first_name} from #{user.org_name}" : user.org_name
   end
 
   def self.get_conversation_display_name(uid, uid_type)
     if uid_type == "user"
       cus = User.find_by(id: uid)
-      cus ? cus.card_name.present? ? cus.card_name : cus.email : "Relay user"
+      cus ? cus.full_name.present? ? cus.full_name : cus.email : "Relay user"
     else
       # does fb at least give us some info?
       uid_type == 'fb_page' ? "messenger user" : uid
