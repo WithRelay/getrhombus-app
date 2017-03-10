@@ -9,6 +9,7 @@
   <div id='objlists'>
     <%= render @campaigns %>
   </div>
+  <%= (will_paginate(@hashtags)).html_safe %>
 </div>
 
 <div class="sub-nav-bar table-header">
