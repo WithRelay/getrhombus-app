@@ -18,8 +18,16 @@ class UsersController < ApplicationController
     
     customers = current_user.merchant_customers
     new_customers = customers.select{ |c| c.created_at >= 1.week.ago.utc }
-    @all_customers_number = customers.count
-    @new_customers_number = new_customers.count
+    transactions = Transaction.where( team_id: current_user.id)
+    transactions_today = transactions.select{|t| t.created_at >= Time.current.beginning_of_day}
+
+    @total_transactions = transactions.sum(:amount)
+    @transactions_today = transactions_today.present? ? transactions_today.sum(:amount) : 0  
+    @transactions_today_count = transactions_today.count
+
+    @all_customers_count = customers.count
+    @new_customers_count = new_customers.count
+
   end
 
   # DELETE /users/1
