@@ -9,7 +9,7 @@ class FbMessage < ActiveRecord::Base
   has_many :image_refs, as: :imageable, dependent: :destroy
   has_many :images, through: :image_refs
 
-  validates :message_id, uniqueness: true
+  validates :message_id, uniqueness: true, allow_nil: true
 
   has_one :notification_log, class_name: 'NotificationLog', foreign_key: 'channel_id'
 
