@@ -1,5 +1,5 @@
   class FacebookEvent
-    
+
   class << self
 
     def process_event(params, current_page, merchant)
@@ -30,12 +30,12 @@
 
       #access token below is the token given as part
       #of credentials during after successful authentication if requesting permissions for  pages_show_list or manage_pages
-      # to get page access tokens for all the user's pages : https://graph.facebook.com/v2.6/me/accounts?access_token= 
+      # to get page access tokens for all the user's pages : https://graph.facebook.com/v2.6/me/accounts?access_token=
 
       if @params['hub.mode'] == 'subscribe' && @params['hub.verify_token'] == "<facebook_webhook_verify_token>"
         return @params['hub.challenge']
-      end     
-      
+      end
+
       {}
     end
 
@@ -65,9 +65,9 @@
             time_stamp: timestamp, unread: true,
             from: @message_from, to: @message_to, fb_page_id: fb_page_id,
             user_id: @user_id, user_id_to: @user_id_to)
-
+          @customer = User.find @user_id_to
           save_attachments if @attachments.present?
-          Conversation.find_or_create_conversation_for_message_and_publish(@merchant, @user_id, @uid_type, @uid,  @fb_message, true)
+          Conversation.find_or_create_conversation_for_message_and_publish(@merchant, @customer, @uid_type, @uid,  @fb_message, true)
           @fb_message.save
         end
       rescue StandardError => err
@@ -90,7 +90,7 @@
       sec = (timestamp.to_f / 1000).to_s
       DateTime.strptime(sec,'%s')
     end
-        
+
     # Add new user from massenger to FbCred table
     def add_page_user(page, new_user_id)
       @fb_cred = FbCred.find_by(page_specific_id: new_user_id) || FbCred.add_fb_user_from_messenger(page, new_user_id)
@@ -135,12 +135,10 @@
         fb_user = page.fb_cred
         to = @fb_message.to
       end
-      customer = fb_user.user if fb_user.present?
       user_name = fb_user.name.split.first
       page_access_token = page.page_access_token
       text = "Sorry #{user_name}, currently we only support image file attachments"
-      # FacebookMessengerService.send_text_message(page_access_token, to, text)
-      Conversation.find_or_create_conversation_for_message_and_send_publish(@merchant, customer, @uid_type, @uid, text, "FbMessage")
+      Conversation.find_or_create_conversation_for_message_and_send_publish(@merchant, @customer, @uid_type, @uid, text, "FbMessage")
     end
 
   end
