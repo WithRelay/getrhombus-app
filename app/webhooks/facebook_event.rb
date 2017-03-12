@@ -59,17 +59,15 @@
 
         get_user_relation
 
-        unless FbMessage.find_by(message_id: message_id).present?
-          @fb_message = FbMessage.new
-          @fb_message.update(message_id: message_id, text: text, seq: seq,
-            time_stamp: timestamp, unread: true,
-            from: @message_from, to: @message_to, fb_page_id: fb_page_id,
-            user_id: @user_id, user_id_to: @user_id_to)
-          @customer = User.find @user_id_to
-          save_attachments if @attachments.present?
-          Conversation.find_or_create_conversation_for_message_and_publish(@merchant, @customer, @uid_type, @uid,  @fb_message, true)
-          @fb_message.save
-        end
+        @fb_message = FbMessage.new
+        @fb_message.update(message_id: message_id, text: text, seq: seq,
+          time_stamp: timestamp, unread: true,
+          from: @message_from, to: @message_to, fb_page_id: fb_page_id,
+          user_id: @user_id, user_id_to: @user_id_to)
+        @customer = User.where(id: @user_id_to).first
+        save_attachments if @attachments.present?
+        Conversation.find_or_create_conversation_for_message_and_publish(@merchant, @customer, @uid_type, @uid,  @fb_message, true)
+      rescue ActiveRecord::RecordNotUnique
       rescue StandardError => err
         nil
       end
