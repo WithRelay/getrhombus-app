@@ -79,7 +79,7 @@
             <h4 class="welcome-dash-content-container-header">Message Volume</h4>
           </div>
           <div>
-          <%=  area_chart Message.group("DAY(created_at)").count %>
+          <%=  area_chart @messages.count %>
           </div><%#= image_tag "Graph-2.png", class: "chart-place-holder" %>
         </div>
       </div>
