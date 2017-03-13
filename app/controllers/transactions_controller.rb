@@ -14,6 +14,7 @@ class TransactionsController < ApplicationController
       @transactions = Transaction.includes(:user).where(team_id: current_user.id, captured: false)
                                  .where("created_at >= ?", Time.zone.at(7.days.ago).to_i)
                                  .paginate(page: params[:page], per_page: 10).order(created_at: :desc)
+
     elsif current_user.is_merchant?
       @transactions = Transaction.includes(:user).where(team_id: current_user.id, captured: true)
                                  .paginate(page: params[:page], per_page: 10).order(created_at: :desc)
