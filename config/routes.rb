@@ -85,7 +85,9 @@ Rails.application.routes.draw  do
         get 'segments' => 'lists#segments'
         get 'sms-usage' => 'users#sms_usage'
         get 'leads-and-contacts' => 'users#leads_contacts'
-        resources :lists, only: [:index, :create]
+        resources :lists, only: [:index, :create] do
+          collection { post 'delete' => 'lists#destroy' }
+        end
         get 'managed-accounts' => 'users#managed_acct'
         match 'managed-accounts' => "users#create_managed_acct", via: :patch
         match 'update-managed-acct' => 'users#update_managed_acct', via: :patch
