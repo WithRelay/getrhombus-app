@@ -28,6 +28,9 @@ class UsersController < ApplicationController
     @transactions_today = transactions_today.present? ? transactions_today.sum(:amount) : 0  
     @transactions_today_count = transactions_today.count
 
+    @unread_message_count = Conversation.get_merchant_total_unread_msgs_count(current_user)
+    @unread_messages_last_5 = ConversationRef.get_last_msgs_from_all_merchant_convs(current_user)
+    # binding.pry
     @all_customers_count = customers.count
     @new_customers_count = new_customers.count
 
