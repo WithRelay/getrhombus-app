@@ -23,6 +23,23 @@ $(document).on('ready page:load', function() {
     })
   })
 
+  $("#delete-lists").click(function(){
+    FlashHandler.setConfirmationDialog('#delete-lists','Are you sure, you want to delete selected lists?', 'Delete', 'destroy-lists');
+  });
+
+  $("#send-campaign-to-lists").click(function(){
+    var selected_item = getSelectedUserIds();
+    var link = $(this).data('lists-campaign');
+    var link_with_list_ids = link + '?list_id=' + selected_item;
+    window.location = link_with_list_ids;
+  });
+
+  $(document).on('click', '.cancel-yes', function(e){
+    var delete_link = $('#delete-lists').data('delete-list-link');
+    var selected_item = getSelectedUserIds();
+    $.post(delete_link, { list_id: selected_item });
+  });
+
   // Toggles between checking or unchecking all checkboxes
   $("#check_or_uncheck_all").click(function(e){
     if( $(this).is(':checked') ){
@@ -146,11 +163,11 @@ $(document).on('ready page:load', function() {
 
 
   function getSelectedUserIds(){
-    var selected_users = ''; // An array for storing selected users
+    var selected_users = []; // An array for storing selected users
     $('.merchant_customers:checked').each(function(){
-      selected_users += ($(this).data('users'));
+      selected_users.push($(this).data('users'));
     })
-    return selected_users;
+    return selected_users.join(',');
   }
   // Fired on click of the segment button
   // Still under development
