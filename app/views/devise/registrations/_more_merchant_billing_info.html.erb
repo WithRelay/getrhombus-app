@@ -79,7 +79,7 @@
             </div>
             <div class="settings-table-cell-wrapper w-col w-col-3">
                 <div class="invoice-amount settings-table-cell-div">
-                  <div class="content settings-table-text"><%= "$%.2f"%" #{invoice.total.to_f/100}" %></div>
+                  <div class="content settings-table-text"><%= "#{Toolbox::Decimal.to_2dp(invoice.total.to_f/100)}" %></div>
                 </div>
               </div>
               <div class="settings-table-cell-wrapper w-col w-col-3">

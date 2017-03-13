@@ -7,11 +7,12 @@ class Ability
     if user.user_level == 2  # Change this to admin?
        can :manage, :all
     elsif user.is_merchant?
-       can :read, :all 
-       can :manage, Hashtag
+      can :manage, :all  # for now so we can keep working
+      #can :read, :all 
+      #can :manage, Hashtag
     else 
-       can :manage, user
-       can :show, user.merchant_transactions
+      #can :manage, user
+      #can :show, user.merchant_transactions
        #can :manage, user.transactions
        #can :manage, user.messages
     end

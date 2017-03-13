@@ -1,7 +1,7 @@
 
   <% provide(:title, 'Relay - Change Password') %>
 
-<% flash[:error] = devise_error_messages! unless devise_error_messages! == "" %>
+<% flash[:error] = devise_error_messages! unless resource.errors.blank?%>
   
   <div class="blank-page-content-wrapper reset-password">
     <div class="onboarding-form-div sign-in signup">
