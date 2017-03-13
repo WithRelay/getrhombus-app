@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170310100720) do
+ActiveRecord::Schema.define(version: 20170311015228) do
 
   create_table "addresses", force: :cascade do |t|
     t.string   "street_address",   limit: 191
@@ -198,6 +198,7 @@ ActiveRecord::Schema.define(version: 20170310100720) do
   add_index "fb_messages", ["campaign_id"], name: "index_fb_messages_on_campaign_id", using: :btree
   add_index "fb_messages", ["fb_page_id"], name: "index_fb_messages_on_fb_page_id", using: :btree
   add_index "fb_messages", ["from"], name: "index_fb_messages_on_from", using: :btree
+  add_index "fb_messages", ["message_id"], name: "index_fb_messages_on_message_id", unique: true, using: :btree
   add_index "fb_messages", ["to"], name: "index_fb_messages_on_to", using: :btree
   add_index "fb_messages", ["user_id"], name: "index_fb_messages_on_user_id", using: :btree
   add_index "fb_messages", ["user_id_to"], name: "index_fb_messages_on_user_id_to", using: :btree
@@ -431,7 +432,7 @@ ActiveRecord::Schema.define(version: 20170310100720) do
   end
 
   add_index "messages", ["hashtag_id"], name: "index_messages_on_hashtag_id", using: :btree
-  add_index "messages", ["message_id"], name: "index_messages_on_message_id", using: :btree
+  add_index "messages", ["message_id"], name: "index_messages_on_message_id", unique: true, using: :btree
   add_index "messages", ["transaction_id"], name: "index_messages_on_transaction_id", using: :btree
   add_index "messages", ["user_id"], name: "index_messages_on_user_id", using: :btree
   add_index "messages", ["user_id_to"], name: "index_messages_on_user_id_to", using: :btree

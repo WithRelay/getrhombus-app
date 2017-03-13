@@ -68,8 +68,8 @@ class Conversation < ActiveRecord::Base
 	end
 
 	def self.message_hash(conv, msg, conv_ref, customer, merchant=nil)
-    u = msg.user_id == conv.merchant_id ? merchant : customer
-    #u = conv_ref.source == 'customer' ? customer : merchant
+    # u = msg.user_id == conv.merchant_id ? merchant : customer
+    u = conv_ref.source == 'customer' ? customer : merchant
 
     {
       id: msg.id,
@@ -126,7 +126,7 @@ class Conversation < ActiveRecord::Base
       msg_instance.image_ids = media_ids
     end
 
-	if msg_instance.send_and_save_message(team, customer, from, to, msg, false, media)
+    if msg_instance.send_and_save_message(team, customer, from, to, msg, false, media)
       re = find_or_create_conversation_for_message(team.id, @conv.uid_type, @conv.uid, msg_instance, false, source)
       msg_hash = message_hash(re[0], msg_instance, re[1], customer, team)
       [msg_hash, msg_instance, re.second]    # message hash, instance and message conv ref are needed
