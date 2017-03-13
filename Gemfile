@@ -41,6 +41,9 @@ gem 'fullcontact'
 gem 'twitter'
 gem 'omniauth-twitter'
 
+#chart generating
+gem "chartkick"
+
 # sending email
 gem 'mandrill-api'
 

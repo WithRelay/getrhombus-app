@@ -67,6 +67,7 @@
 //= require lists.js
 //= require images.js.erb
 //= require demo
+//= require export_csv
 //= require phone_number_formatter
 //= require clipboard.min
 //= require util_functions
@@ -93,6 +94,8 @@
 //= require managed-account
 //= require rhombus_number_search
 //= require typeit
+//= require Chart.bundle
+//= require chartkick
 
 // DO NOT REQUIRE TREE AS IT DOESNT GUARANTEE THE DEPENDENCY ORDER OF THESE FILES
 // require_tree .

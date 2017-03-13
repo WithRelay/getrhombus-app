@@ -1,4 +1,8 @@
 <%= render 'transaction_nav' %>
+<form id="txn_history_form" method="get" action="transactions/download.csv">
+  <input type="hidden" id="txn_start_date" name="txn_start_date" />
+  <input type="hidden" id="txn_end_date" name="txn_end_date" />
+</form>
 <div class="dashboard-body">
   <div class="table-wrapper">
     <div class="transaction-summary-wrapper">
@@ -12,14 +16,14 @@
         </div>
         <div class="w-col w-col-4">
           <div class="transaction-summary-cell">
-            <h1 class="total-customer-count"><%= "$%.2f"%" #{transactions_total_amount}"  %></h1>
+            <h1 class="total-customer-count"><%= "$#{Toolbox::Decimal.to_2dp(transactions_total_amount)}"  %></h1>
             <h4 class="count-description"> &nbsp; Total Collected</h4>
             <h4 class="count-description transaction-count"> <%= transactions_total_amount_change %></h4>
           </div>
         </div>
         <div class="w-col w-col-4">
           <div class="transaction-summary-cell">
-            <h1 class="total-customer-count"><%= "$%.2f"%" #{transactions_net_sales}"  %></h1>
+            <h1 class="total-customer-count"><%= "$#{Toolbox::Decimal.to_2dp(transactions_net_sales)}"  %></h1>
             <h4 class="count-description"> &nbsp; Net Sales</h4>
             <h4 class="count-description transaction-count"><%= transactions_net_sales_change   %></h4>
           </div>
@@ -92,7 +96,7 @@
           </div>
           <div class="transaction-column w-col w-col-2">
             <div class="transaction-cell w-clearfix">
-              <div class="table-text tran-amount"><%= "%.2f" %  transaction.amount.truncate(2) %></div>
+              <div class="table-text tran-amount"><%= "#{Toolbox::Decimal.to_2dp(transaction.amount)}" %></div>
             </div>
           </div>
           <div class="transaction-column w-col w-col-2">
@@ -110,6 +114,7 @@
     <% end %>
   </div>
 </div>
+
 <!-- <%#= provide(:title, "Rhombus - Transactions") %>
 <div class="loading"><img src="<%#= asset_path 'loading.gif' %>" alt="loading-img"></div>
 
@@ -180,40 +185,4 @@
   </div>
 </div>
 <%#= render 'refund_box' %>
-<form id="txn_history_form" method="get" action="transactions/download.csv">
-  <input type="hidden" id="txn_start_date" name="txn_start_date" />
-  <input type="hidden" id="txn_end_date" name="txn_end_date" />
-</form>
-<script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-<script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
-<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
-<script type="text/javascript">
-  $(function() {
-      $('.title').daterangepicker({
-        cancelClass: 'hide',
-        linkedCalendars: true,
-        /*timePicker: true,
-        timePickerIncrement: 30,
-        singleDatePicker: true,
-        locale: {
-            format: 'MM/DD/YYYY h:mm A'
-        },*/
-       ranges: {
-           'Today': [moment(), moment()],
-           'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-           'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-           'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-           'This Month': [moment().startOf('month'), moment().endOf('month')],
-           'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-        },
-        alwaysShowCalendars: true,
-        //maxDate: new Date
-      })
-        .on('apply.daterangepicker', function(ev, picker) {
-          document.getElementById('txn_start_date').value = picker.startDate.format('YYYY-MM-DD');
-          document.getElementById('txn_end_date').value = picker.endDate.format('YYYY-MM-DD');
-          $('#txn_history_form').submit();
-        });
-  });
-</script>
  -->

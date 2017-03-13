@@ -12,14 +12,14 @@
         </div>
         <div class="w-col w-col-4">
           <div class="transaction-summary-cell">
-            <h1 class="total-customer-count"><%= "$%.2f"%" #{subscriptions_total_amount}"  %></h1>
+            <h1 class="total-customer-count"><%= "#{Toolbox::Decimal.to_2dp(subscriptions_total_amount)}"  %></h1>
             <h4 class="count-description"> &nbsp; Total Collected</h4>
             <h4 class="count-description transaction-count"> <%= subscriptions_total_amount_change %></h4>
           </div>
         </div>
         <div class="w-col w-col-4">
           <div class="transaction-summary-cell">
-            <h1 class="total-customer-count"><%= "$%.2f"%" #{subscriptions_net_sales}"  %></h1>
+            <h1 class="total-customer-count"><%= "#{Toolbox::Decimal.to_2dp(subscriptions_net_sales)}"  %></h1>
             <h4 class="count-description"> &nbsp; Net Sales</h4>
             <h4 class="count-description transaction-count"> <%= subscription_net_sales_change %></h4>
           </div>
@@ -63,7 +63,7 @@
     </div>
     <% @subscriptions.each do |subscription| %>
       <% if subscription.merchant_customer && subscription.merchant_customer.customer %>
-        <% customer = subscription.merchant_customer.customer %>        
+        <% customer = subscription.merchant_customer.customer %>
         <div class="row-wrapper transactions">
           <div class="transactions-table-row w-row" id="<%= subscription.id %>">
             <div class="transaction-column w-clearfix w-col w-col-3">
@@ -83,7 +83,7 @@
               </div>
             </div>
             <div class="transaction-column w-col w-col-2">
-              <div class="transaction-cell">              
+              <div class="transaction-cell">
                 <div class="table-text plan-name"><%= subscription.plan.name %></div>
               </div>
             </div>

@@ -67,7 +67,7 @@ module SubscriptionsHelper
   end
 
   def saas_coupon_value
-     @coupon.amount_off.present? ? "$%.2f"%" #{@coupon.amount_off.to_f/100}" : "#{@coupon.present_off}%"
+     @coupon.amount_off.present? ? "#{Toolbox::Decimal.to_2dp(@coupon.amount_off.to_f/100)}" : "#{@coupon.present_off}%"
   end
 
   def saas_coupon_duration

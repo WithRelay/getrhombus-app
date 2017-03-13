@@ -24,8 +24,8 @@
       </div>
     </div>
   </div>
-  <div class="log-in-sign-up-cta">Don't have a Rhombus account? 
-    <%= link_to signup_path(referrer_uid: 1, value: @params), id: 'signup', class: 'links sign-up-cta-log-in-page', target: '_blank', onClick: 'javascript:window.close()' do%>
+  <div class="log-in-sign-up-cta">Don't have a Rhombus account?
+    <%= link_to new_user_registration_path(referrer_uid: 1, value: @params), id: 'signup', class: 'links sign-up-cta-log-in-page', target: '_blank', onClick: 'javascript:window.close()' do%>
       Sign up
     <%end%>
   </div>

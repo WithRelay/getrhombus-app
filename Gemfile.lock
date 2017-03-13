@@ -93,6 +93,7 @@ GEM
       timers (>= 4.1.1)
     celluloid-supervision (0.20.6)
       timers (>= 4.1.1)
+    chartkick (2.2.3)
     climate_control (0.1.0)
     cocaine (0.5.8)
       climate_control (>= 0.0.3, < 1.0)
@@ -418,6 +419,7 @@ DEPENDENCIES
   bitly
   byebug
   cancancan
+  chartkick
   cocoon
   coffee-rails (~> 4.1.0)
   database_cleaner

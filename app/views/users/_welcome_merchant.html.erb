@@ -77,7 +77,10 @@
         <div class="chart dash-content-container transactions">
           <div class="content-sub-wrapper">
             <h4 class="welcome-dash-content-container-header">Message Volume</h4>
-          </div><img class="chart-place-holder" src="images/Graph-2.png">
+          </div>
+          <div>
+          <%=  area_chart Message.group("DAY(created_at)").count %>
+          </div><%#= image_tag "Graph-2.png", class: "chart-place-holder" %>
         </div>
       </div>
     </div>
