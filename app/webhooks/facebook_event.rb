@@ -67,7 +67,7 @@
             user_id: @user_id, user_id_to: @user_id_to)
 
           save_attachments if @attachments.present?
-          Conversation.find_or_create_conversation_for_message_and_publish(@merchant, @user_id, @uid_type, @uid,  @fb_message, true)
+          Conversation.find_or_create_conversation_for_message_and_publish(@merchant, @user_id, @uid_type, @uid, @fb_message, true)
           @fb_message.save
         end
       rescue StandardError => err
