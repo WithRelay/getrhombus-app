@@ -9,7 +9,7 @@ class CouponPresenter < BasePresenter
   end
 
   def format_amount
-    @model.amount_off.present? ? "$%.2f" %(@model.amount_off.to_f/100) : "#{@model.percent_off}%"
+    @model.amount_off.present? ? "#{Toolbox::Decimal.to_2dp(@model.amount_off.to_f/100)}" : "#{@model.percent_off}%"
 
   end
 

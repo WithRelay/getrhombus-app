@@ -12,14 +12,14 @@
         </div>
         <div class="w-col w-col-4">
           <div class="transaction-summary-cell">
-            <h1 class="total-customer-count"><%= "$%.2f"%" #{transactions_total_amount}"  %></h1>
+            <h1 class="total-customer-count"><%= "$#{Toolbox::Decimal.to_2dp(transactions_total_amount)}"  %></h1>
             <h4 class="count-description"> &nbsp; Total Collected</h4>
             <h4 class="count-description transaction-count"> <%= transactions_total_amount_change %></h4>
           </div>
         </div>
         <div class="w-col w-col-4">
           <div class="transaction-summary-cell">
-            <h1 class="total-customer-count"><%= "$%.2f"%" #{transactions_net_sales}"  %></h1>
+            <h1 class="total-customer-count"><%= "$#{Toolbox::Decimal.to_2dp(transactions_net_sales)}"  %></h1>
             <h4 class="count-description"> &nbsp; Net Sales</h4>
             <h4 class="count-description transaction-count"><%= transactions_net_sales_change   %></h4>
           </div>
@@ -92,7 +92,7 @@
           </div>
           <div class="transaction-column w-col w-col-2">
             <div class="transaction-cell w-clearfix">
-              <div class="table-text tran-amount"><%= "%.2f" %  transaction.amount.truncate(2) %></div>
+              <div class="table-text tran-amount"><%= "#{Toolbox::Decimal.to_2dp(transaction.amount.truncate(2))}" %></div>
             </div>
           </div>
           <div class="transaction-column w-col w-col-2">
