@@ -22,15 +22,19 @@ class UsersController < ApplicationController
     new_customers = customers.select{ |c| c.created_at >= 1.week.ago.utc }
     transactions = Transaction.where( team_id: current_user.id)
     transactions_today = transactions.select{|t| t.created_at >= Time.current.beginning_of_day}
+    
+    @conversations_per_hour = Conversation.conversation_per_hour(current_user)
+
 
     @messages = current_user.messages.where("created_at >=?", 30.days.ago.utc).group("DAY(created_at)").count
     @total_transactions = transactions.sum(:amount)
     @transactions_today = transactions_today.present? ? transactions_today.sum(:amount) : 0  
     @transactions_today_count = transactions_today.count
 
-    @unread_message_count = Conversation.get_merchant_total_unread_msgs_count(current_user)
-    @unread_messages_last_5 = ConversationRef.get_last_msgs_from_all_merchant_convs(current_user)
-    # binding.pry
+    @unread_message_count = Conversation.get_merchant_total_unread_msgs_count(current_user.id)
+    @unread_messages_last_5 = ConversationRef.get_last_msgs_from_all_merchant_convs(current_user.id)
+    # binding.process_captured_payment
+
     @all_customers_count = customers.count
     @new_customers_count = new_customers.count
 
