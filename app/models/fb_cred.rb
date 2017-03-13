@@ -31,8 +31,6 @@ class FbCred < ActiveRecord::Base
       link_response = link_page_specific_user(url)
       welcome_text = "Welcome #{full_name} to Relay-Message Commerce platform"
       if link_response.present?
-        # FacebookMessengerService.send_text_message(page_access_token, new_user_id, welcome_text)
-        # FacebookMessengerService.send_attachment(page_access_token, new_user_id, 'image', 'http://www.compustarltd.com/wp-content/uploads/2015/11/welcome.png')
         fb_cred = FbCred.new(
           name: full_name, page_specific_id: new_user_id,
           email: link_response[:email], fb_id: link_response[:fb_id],
@@ -63,9 +61,9 @@ class FbCred < ActiveRecord::Base
     all_user_fb_cred.each do |cred|
       if extract_profile_pic_identifier(cred.profile_pic_url) == user_identifier
         response = { fb_id: cred.fb_id, email: cred.email, user_id: cred.user_id }
-      end      
-    end  
-    response   
+      end
+    end
+    response
   end
 
   # extract user identifier from profile picture
