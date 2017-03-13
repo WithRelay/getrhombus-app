@@ -9,7 +9,7 @@
   <div id='objlists'>
     <%= render @campaigns %>
   </div>
-  <%= (will_paginate(@campaigns)).html_safe %>
+  <%= will_paginate(@campaigns).html_safe if @campaigns.count > PAGINATION_PER_PAGE %>
 </div>
 
 <div class="sub-nav-bar table-header">
