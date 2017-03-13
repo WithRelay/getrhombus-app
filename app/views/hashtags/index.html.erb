@@ -44,5 +44,5 @@
   <div id='objlists'>
     <%= render @hashtags %>
   </div>
-  <%= (will_paginate(@hashtags)).html_safe %>
+  <%= (will_paginate(@hashtags)).html_safe if @hashtags.count > PAGINATION_PER_PAGE %>
 </div>
