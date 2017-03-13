@@ -23,6 +23,16 @@ $(document).on('ready page:load', function() {
     })
   })
 
+  $("#delete-lists").click(function(){
+    FlashHandler.setConfirmationDialog('#delete-lists','Are you sure, you want to delete selected lists?', 'Delete', 'destroy-lists');
+  });
+
+  $(document).on('click', '.cancel-yes', function(e){
+    var delete_link = $('#delete-lists').data('delete-list-link');
+    var selected_item = getSelectedUserIds();
+    $.post(delete_link, { list_id: selected_item });
+  });
+
   // Toggles between checking or unchecking all checkboxes
   $("#check_or_uncheck_all").click(function(e){
     if( $(this).is(':checked') ){
