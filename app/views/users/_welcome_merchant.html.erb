@@ -79,7 +79,7 @@
             <h4 class="welcome-dash-content-container-header">Message Volume</h4>
           </div>
           <div>
-          <%=  area_chart @data_for_chart %>
+          <%=  area_chart @msg_data_for_chart %>
           </div><%#= image_tag "Graph-2.png", class: "chart-place-holder" %>
         </div>
       </div>
@@ -174,9 +174,10 @@
       <div class="w-row welcome-dash-table-wrapper">
         <div class="w-col w-col-3">
           <div class="average-message-count-per-day customer-contacts-2 welcome-dash-content-container">
-            <h1 class="new-customers">13469</h1>
+            <h1 class="new-customers"><%= @message_counts[:msg_per_day].round(3) %></h1>
             <h4 class="count-description"> &nbsp;Messages per day</h4>
-            <h4 class="count-description transaction-count">Facebook 27% | SMS &nbsp;73%</h4>
+            <h4 class="count-description transaction-count">Facebook <%= @message_counts[:fb_msg_percent].round %>%  |
+               SMS &nbsp;<%= @message_counts[:txt_msg_percent].round %>%</h4>
           </div>
         </div>
         <div class="w-col w-col-3">

@@ -25,8 +25,12 @@ class UsersController < ApplicationController
     
     @conversations_per_hour = Conversation.conversation_per_hour(current_user)
 
-    @data_for_chart = all_messages_count_in_30_days
+    #data for chart, includes both fb_msg and sms 
+    @msg_data_for_chart = all_messages_count_in_30_days
     
+    #message_count method returns hash of message_per_day , fb_percent and sms_percent  
+    @message_counts = message_count
+
     @total_transactions = transactions.sum(:amount)
     @transactions_today = transactions_today.present? ? transactions_today.sum(:amount) : 0  
     @transactions_today_count = transactions_today.count
@@ -38,20 +42,6 @@ class UsersController < ApplicationController
     @all_customers_count = customers.count
     @new_customers_count = new_customers.count
 
-  end
-
-  def all_messages_count_in_30_days
-    txt_messages = all_text_messages.where("created_at >=?", 30.days.ago.utc).group("DAY(created_at)").count
-    fb_messages = all_fb_messages.where("created_at >=?", 30.days.ago.utc).group("DAY(created_at)").count
-    txt_messages.merge(fb_messages){|k, mv, fv| mv + fv}
-  end
-
-  def all_text_messages
-    Message.where("user_id= ? OR user_id_to= ?", current_user.id, current_user.id)
-  end
-
-  def all_fb_messages
-    FbMessage.where("user_id= ? OR user_id_to= ?", current_user.id, current_user.id)
   end
 
   # DELETE /users/1
@@ -100,4 +90,42 @@ private
     # Change this logic at some point
     # current_user.send_welcome_email if current_user.sign_in_count == 1
   end
+
+#These methods below are used to collect data for merchant dashboard
+  def all_messages_count_in_30_days
+    txt_messages = sent_and_received_messages('Message')
+                    .where("created_at >=?", 30.days.ago.utc)
+                    .group("DAY(created_at)").count
+
+    fb_messages = sent_and_received_messages('FbMessage')
+                    .where("created_at >=?", 30.days.ago.utc)
+                    .group("DAY(created_at)").count
+
+    #prepare data for chart 
+    #this will add count of sms and fb_msg on the same day                 
+    txt_messages.merge(fb_messages){|k, mv, fv| mv + fv}
+  end
+
+  def message_count
+    txt_msg, fb_msg = sent_and_received_messages('Message'), 
+                                  sent_and_received_messages('FbMessage')
+    total_msgs_count = txt_msg.count + fb_msg.count
+
+    first_msg_date = txt_msg.first.created_at < fb_msg.first.created_at ? txt_msg.first.created_at : fb_msg.first.created_at 
+    last_msg_date = txt_msg.last.created_at > fb_msg.last.created_at ? txt_msg.last.created_at : fb_msg.last.created_at
+    
+    msg_time_interval = (last_msg_date - first_msg_date)/1.days
+    
+    msg_per_day = total_msgs_count/msg_time_interval
+
+    fb_msg_percent = 100 * fb_msg.count/total_msgs_count
+    txt_msg_percent = 100 * txt_msg.count/total_msgs_count
+
+    {msg_per_day: msg_per_day.round(3), fb_msg_percent: fb_msg_percent.round(2), txt_msg_percent: txt_msg_percent.round(2)} 
+  end
+
+  def sent_and_received_messages(class_name)
+    class_name.constantize.where("user_id= ? OR user_id_to= ?", current_user.id, current_user.id)
+  end
+
 end
