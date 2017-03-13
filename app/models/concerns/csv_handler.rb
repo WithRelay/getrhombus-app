@@ -18,8 +18,8 @@ module CSVHandler
 	end
 
   def get_csv_columns(is_merchant)
-  	return ["Date #{Time.current.zone}", "transaction_number", "from", "to", "amount", "amount_less_fees", "currency"] if is_merchant
-  	["Date #{Time.current.zone}", "transaction_number", "from", "to", "amount", "currency"]
+  	return ["Date (#{Time.current.zone})", "transaction_number", "amount", "amount_less_fees", "currency"] if is_merchant
+  	["Date (#{Time.current.zone})", "transaction_number", "amount", "currency"]
   end
 
   def get_customer_csv_template
