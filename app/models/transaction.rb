@@ -68,7 +68,7 @@ class Transaction < ActiveRecord::Base
   end
 
   def amt_in_decimal(amt)
-    (amt.to_f/100).round(2)
+    big_decimal_2dp(amt.to_f/100)
   end
 
   def big_decimal_2dp(amt)

@@ -1,13 +1,14 @@
 module CSVHandler
   extend ActiveSupport::Concern
 
-  def get_transactions_csv(user_id, user_level, start_date, end_date)
+  def get_transactions_csv(user_id, is_merchant, start_date, end_date)
   	begin
-	  	column_names = get_csv_columns(user_level)
+      column_str = is_merchant ? 'team_id' : 'user_id'
+	  	column_names = get_csv_columns(is_merchant)
 	  	CSV.generate(headers: true) do |csv|
 	      csv << column_names.map.with_index(0) { |e,i| (i == 0) ? e : e.titleize } 
 	      column_names[0] = 'created_at'
-		    Transaction.where("user_id = ? AND created_at BETWEEN ? AND ?", user_id, Time.zone.parse(start_date), Time.zone.parse(end_date)).each do |t|
+		    Transaction.where(column_str + " = ? AND created_at BETWEEN ? AND ?", user_id, Time.zone.parse(start_date), Time.zone.parse(end_date)).each do |t|
 		      csv.add_row t.attributes.slice(*column_names).values
 		    end
 	    end
@@ -16,9 +17,9 @@ module CSVHandler
 	  end
 	end
 
-  def get_csv_columns(user_level)
-  	return ["Date #{Time.current.zone}", "transaction_number", "from", "to", "amount", "amount_less_fees", "currency"] if user_level == 1
-  	["Date (ET)", "transaction_number", "from", "to", "amount", "currency"]
+  def get_csv_columns(is_merchant)
+  	return ["Date #{Time.current.zone}", "transaction_number", "from", "to", "amount", "amount_less_fees", "currency"] if is_merchant
+  	["Date #{Time.current.zone}", "transaction_number", "from", "to", "amount", "currency"]
   end
 
   def get_customer_csv_template
