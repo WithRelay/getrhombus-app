@@ -8,7 +8,7 @@ module CampaignsHelper
     if campaign.persisted?
       { campaign_channel => get_channel_enum_value(campaign.channel) }
     elsif list.present? && campaign.invalid?
-      list_channel = list[0].channel=='messenger' ? 'facebook_messenger' : list[0].channel
+      list_channel = list[0].channel == 'messenger' ? 'facebook_messenger' : list[0].channel
       if list_channel.present?
         { campaign_channel => get_channel_enum_value(list_channel) }
       else
