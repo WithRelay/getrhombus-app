@@ -2,7 +2,7 @@ class ListsController < ApplicationController
   before_action :set_list, only: [:show, :edit, :update, :destroy]
   before_action :find_user_lists, only: [:index]
   include DashboardNotification
-  before_action :set_notifications
+  before_action :set_notifications, except: [:destroy]
   respond_to :html
 
   def index
@@ -39,15 +39,13 @@ class ListsController < ApplicationController
   # Begins by checking to see if a campaign list exists with the list id
   # If not, deletes the list as usual
   def destroy
-    if CampaignList.where(:list_id => @list.id).any?
-      flash[:notice] = "This list cannot be deleted as it is part of a campaign"
-      respond_with(@list)
-    else
-      @list.destroy
+    if get_lists.present? && get_lists.delete_all
       flash[:notice] = "List was successfully deleted"
-      respond_with(@list)
+    else
+      flash[:error] = 'Sorry list cannot deleted'
     end
-  end
+     redirect_to lists_path(current_user)
+   end
 
   def segments
     @segments = current_user.lists.where(segment: true)
@@ -56,6 +54,15 @@ class ListsController < ApplicationController
   private
     def set_list
       @list = List.find(params[:id])
+    end
+
+    def get_lists
+      list_ids = params[:list_id].split(',')
+      # sql query states that find list where id is same as array of ids from params
+      # and check if those lists have associated record campaign_lists or not
+      # it will return the list if there is no associated record campaign_lists
+      List.where(id: list_ids).where('id NOT IN (SELECT list_id FROM campaign_lists where
+                                      list_id IN(?))', list_ids)
     end
 
     def list_params
