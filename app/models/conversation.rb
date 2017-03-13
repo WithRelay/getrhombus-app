@@ -171,6 +171,15 @@ class Conversation < ActiveRecord::Base
     where(merchant_id: team_id, uid_type: uid_type, uid: uid).last
   end
 
+  def self.conversation_per_hour(merchant_id)
+   merchant_conv = Conversation.where(merchant_id: merchant_id)
+   first_conv , last_conv = merchant_conv.first, merchant_conv.last
+   time_diff = (last_conv.created_at - first_conv.created_at)/1.hours
+   total_conv = merchant_conv.count
+   conv_per_hour = total_conv/time_diff
+   conv_per_hour.round(3)
+  end
+
   def self.get_merchant_todays_unread_count(merchant_id, date)
     find_by_sql(["select count(cr.id) as count from conversations c inner join conversation_refs cr
                   on c.id = cr.conversation_id

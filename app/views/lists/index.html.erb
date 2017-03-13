@@ -1,9 +1,6 @@
 <p id="notice"><%= notice %></p>
 
-<div class="customer-dash sub-nav-bar">
-  <div class="sub-nav-options-wrapper w-clearfix"><a class="add sub-nav-button w-button" data-ix="create-customer" href="#">&nbsp; Edit</a><a class="sub-nav-button w-button" data-ix="create-list" href="#"> &nbsp;Delete</a><a class="sub-nav-button w-button" data-ix="create-list" href="#"> &nbsp;Send Campaign</a>
-  </div>
-</div>
+
   <% if @lists.present? %>
   <div class="sub-nav-bar table-header">
     <div class="table-header">
@@ -46,7 +43,9 @@
     </div>
   </div>
   <div class="customer-dash sub-nav-bar">
-    <div class="sub-nav-options-wrapper w-clearfix"><a class="add sub-nav-button w-button" data-ix="create-customer" href="#"><strong>&nbsp; Edit</strong></a><a class="sub-nav-button w-button" data-ix="create-list" href="#"><strong> &nbsp;Delete</strong></a><a class="sub-nav-button w-button" data-ix="create-list" href="#"> &nbsp;<strong>Send Campaign</strong></a>
+    <div class="sub-nav-options-wrapper w-clearfix"><a class="add sub-nav-button w-button" data-ix="create-customer" href="#"><strong>&nbsp; Edit</strong></a>
+      <a class="sub-nav-button w-button" id="delete-lists" href="#" data-delete-list-link="<%= delete_lists_path(current_user) %>"><strong> &nbsp;Delete</strong></a>
+      <a class="sub-nav-button w-button" id="send-campaign-to-lists" data-lists-campaign="<%= new_user_campaign_path(current_user) %>" href="#"> &nbsp;<strong>Send Campaign</strong></a>
     </div>
   </div>
   <div class="dashboard-body">
@@ -62,7 +61,7 @@
           <div class="w-form">
             <form data-name="Email Form 2" id="email-form-2" name="email-form-2">
               <div class="select-all-check-box w-checkbox w-clearfix">
-                <input class="cb table-checkbox w-checkbox-input" id="node" type="checkbox">
+                <input class="cb table-checkbox w-checkbox-input merchant_customers" id="node" type="checkbox" data-users="<%= list.id %>">
                 <label class="checkbox-field-lable w-form-label" for="node">-</label>
               </div>
             </form>

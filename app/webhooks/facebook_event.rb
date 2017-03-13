@@ -66,7 +66,9 @@
           user_id: @user_id, user_id_to: @user_id_to)
         @customer = User.where(id: @user_id_to).first
         save_attachments if @attachments.present?
-        Conversation.find_or_create_conversation_for_message_and_publish(@merchant, @customer, @uid_type, @uid,  @fb_message, true)
+        if @fb_message.persisted?
+          Conversation.find_or_create_conversation_for_message_and_publish(@merchant, @customer, @uid_type, @uid,  @fb_message, true)
+        end
       rescue ActiveRecord::RecordNotUnique
       rescue StandardError => err
         nil

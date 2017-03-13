@@ -88,4 +88,4 @@
       </div>
     </div>
   </div>
-  <%= will_paginate(@customers).html_safe %>
+  <%= will_paginate(@customers).html_safe if @customers.count > PAGINATION_PER_PAGE %>

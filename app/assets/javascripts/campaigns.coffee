@@ -158,6 +158,7 @@ $( document ).on 'ready page:load', ->
       e.preventDefault()
     else
       $('.loading').css({'position': 'absolute', 'z-index': 3, 'margin': '0px'});
+      $('.loading').show();
       getBase64FromImageUrl($('input[name=url]').val())
 
   if $('#Channel').val() == '3'
@@ -213,6 +214,7 @@ $( document ).on 'ready page:load', ->
     img.setAttribute 'crossOrigin', 'anonymous'
     img.onload = (e)->
       $('.loading').css({'position': 'absolute', 'z-index': 3, 'margin': '0px'});
+      $('.loading').show();
       trumbowygHtml = $('#trumbowyg').trumbowyg('html')
       $.ajax(
         url: window.location.protocol + '//'+window.location.host+'/v1/campaigns/upload_images'
@@ -226,8 +228,10 @@ $( document ).on 'ready page:load', ->
             $('.newMessage').append(imageIdHtml)
             $('#trumbowyg').trumbowyg('html', newHtml);
             $('.loading').css({'position': '', 'z-index': '', 'margin': ''});
+            $('.loading').hide();
           else
             $('.loading').css({'position': '', 'z-index': '', 'margin': ''});
+            $('.loading').hide();
             splitHtml = trumbowygHtml.split('src=').pop()
             imageTag = '<img src=' + splitHtml
             newHtml = trumbowygHtml.replace(imageTag, '');
