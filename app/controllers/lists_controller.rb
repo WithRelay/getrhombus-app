@@ -5,8 +5,13 @@ class ListsController < ApplicationController
   before_action :set_notifications, except: [:destroy]
 
   def index
-    @lists = current_user.lists.where(segment: nil)
-    render :empty_list if @lists.empty?
+    @lists = current_user.lists.where(segment: nil).paginate(per_page: PAGINATION_PER_PAGE,
+                                                    page: params[:page])
+    render :empty_list if (@lists.empty? && params[:page].nil?)
+    respond_to do |format|
+      format.js { render partial: 'shared/index.js.erb', locals: { obj: @lists } }
+      format.html
+    end
   end
 
   def show
@@ -32,9 +37,6 @@ class ListsController < ApplicationController
     respond_with(@list)
   end
 
-  # Deletes only lists that are not in an active campaign
-  # Begins by checking to see if a campaign list exists with the list id
-  # If not, deletes the list as usual
   def destroy
     if get_lists.present? && get_lists.delete_all
       flash[:notice] = "List was successfully deleted"
@@ -50,7 +52,7 @@ class ListsController < ApplicationController
 
   private
     def set_list
-      @list = List.find(params[:id])
+      @list = List.find_by_id(params[:id])
     end
 
     def get_lists
