@@ -171,7 +171,7 @@ class MessageParser
         puts 'not payment tag'
         @is_valid_payment_intent ? [@amt_ary[0], "no_tag_amt"] : []
       elsif
-        @tag_amt = to_cents(Toolbox::Decimal.to_2dp(@tag.amount))
+        @tag_amt = to_cents(Toolbox::Decimal.to_2dp(@tag.amount)) # this is a string though
         puts 'this is tag amount'
         puts @tag_amt 
         if @is_valid_payment_intent               # tested

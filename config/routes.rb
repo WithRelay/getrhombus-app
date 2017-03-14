@@ -57,7 +57,9 @@ Rails.application.routes.draw  do
       resources :fb_pages, only: [:index]
       patch 'update_fb_page' => 'fb_pages#update_user_fb_page'
       resources :hashtags, except: [:show]
-      resources :subscriptions, only: [:index, :update, :destroy]
+      resources :subscriptions do
+        get 'download' => 'subscriptions#download_csv', constraints: { format: 'csv' }, on: :collection
+      end
       resources :plans, only: [:index, :destroy]
       resources :alerts, only: [:update]
       resources :saved_replies

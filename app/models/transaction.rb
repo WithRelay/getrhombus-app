@@ -68,7 +68,7 @@ class Transaction < ActiveRecord::Base
   end
 
   def amt_in_decimal(amt)
-    (amt.to_f/100).round(2)
+    big_decimal_2dp(amt.to_f/100)
   end
 
   def big_decimal_2dp(amt)
@@ -170,6 +170,26 @@ class Transaction < ActiveRecord::Base
       # notify platform only. Merchants don't need an email for this.
       [false, "Something went wrong"]
     end
+  end
+
+  def customer_email
+    "#{self.user.email}"
+  end
+
+  def business_name
+    "#{self.team.org_name}"
+  end
+
+  def business_email
+    "#{self.team.email}"
+  end
+
+  def txn_amount
+    "#{big_decimal_2dp(self.amount.to_f/100)}"
+  end
+
+  def txn_amount_less_fees
+    "#{big_decimal_2dp(self.amount_less_fees.to_f/100)}"
   end
 
 end

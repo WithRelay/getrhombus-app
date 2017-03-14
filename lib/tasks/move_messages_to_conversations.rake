@@ -1,6 +1,8 @@
 
 # run after migrations to create/rename the columns, since table need to be redone first
 
+#### need to fix duplicate messages cos of index
+
 desc "move messages to conversations"
 task :move_messages_to_conversations => :environment do
 

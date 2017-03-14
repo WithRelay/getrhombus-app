@@ -1,3 +1,5 @@
+- Test All Pages when there is no data
+
 Add profile info
 1. validation
 2. still bypassing to other onboarding steps
@@ -23,7 +25,6 @@ OTHERS
 - fix alerts html
 - welcome page
 - emails
-- do unread previews
 
 Surya
 - validates_associated in user... any read op on user will run a query
@@ -39,9 +40,9 @@ Dorje
 - unless: Proc.new{|u| u.encrypted_password_changed? } might be needed for other merchant validations
 
 Bhishma
-- "%.2f" %(@model.plan.amount.to_f/100)
 - add timezone finder for fb events
 - do messageparser with bhishma tomorrow.
+- export
 
 
 - add the url for pages you did to the sidebar on dashboard and settings page
@@ -59,7 +60,6 @@ Friday
 - transactions - doneish
 - clean up conversations
 - workflow for sign in, sign up and places where we add card, token, referrer, contact and customer, payment capture
-- clean up below
 
 Everyone
 - popups are repeated... code across the page must be one.
@@ -84,144 +84,8 @@ Bhishma
 
 - coupon pages (add link to transactions dropdown and link under segments)
 - find simple native browser notifications
-- do we need fb_page_id in fb_messages
 - do we store fb_cred even if not a user? - affects my users query with outer join
-- can we message a messenger user just like that...with just creds?
 - position toastrs to right.
 - plan, subscription modals are firing...havent been redone?
 - fix saas_sub method
 - plan subscribers page
-
-
-<%= provide(:title, "Rhombus - Transactions") %>
-<!-- ========== Css Files ========== -->
-<!-- Start Page Loading -->
-<div class="loading"><img src="<%= asset_path 'loading.gif' %>" alt="loading-img"></div>
-<!-- End Page Loading -->
-<%= render 'shared/header_new' %>
-<%= render 'shared/sidebar' %>
-<!-- //////////////////////////////////////////////////////////////////////////// -->
-<!-- START CONTENT -->
-<div class="content">
-  <!-- Start Page Header -->
-  <div class="page-header" style="background: transparent; margin-bottom: 0px;">
-    <div class="title" style="font-weight: normal;">Transactions</div>
-    <!-- CSV upload -->
-    <form id="csv-upload-form" action="/v1/users/add_customers.csv" method="POST">
-      <input type="file" id="csv-file-select" name="csv" accept=".csv"/>
-      <button type="submit" id="csv-upload-button">Upload</button>
-    </form>
-    <%= render 'shared/dashboard_shortcut' %>
-  </div>
-  <!-- End Page Header -->
-  <!-- //////////////////////////////////////////////////////////////////////////// -->
-  <!-- START CONTAINER -->
-  <div class="" id="transactions-column" data-level="<%= current_user.user_level %>">
-    <!-- Start Row -->
-    <div class="row">
-      <!-- Start Panel -->
-      <div class="col-md-12">
-        <% unless @transactions.blank? %>
-        <div class="panel panel-default">
-          <div class="panel-title">
-            <ul class="panel-tools">
-              <li><a class="icon expand-tool"><i class="fa fa-expand"></i></a></li>
-            </ul>
-          </div>
-          <div class="panel-body table-responsive">
-            <table id="transactions-table" class="table table-striped dataTable">
-              <thead>
-                <tr role="row">
-                  <td class="text-center"><i class="fa fa-trash" style="visibility: hidden;"></i></td>
-                  <th>Date (ET)</th>
-                  <th><%= current_user.is_customer? ? "Business" : "Card Name" %></th>
-                  <th>Message</th>
-                  <th>Phone #</th>
-                  <th><%= current_user.is_customer? ? "Rhombus #" : "Amt Paid" %></th>
-                  <th>Last Four</th>
-                </tr>
-              </thead>
-              <tbody>
-                <% @transactions.each do |t| %>
-                <tr role="row">
-                  <td class="details-control" data-txn-num="<%= t.txn_number %>"
-                    data-time="<%= t.created_at.strftime("%I:%M %p") %>"
-                    id="<%= t.txn_number %>"
-                    data-email="<%= t.email %>"
-                    data-tax="<%= t.tax_percent %>"
-                    data-status="<%#= (t.refund_id) ? "Refunded" : "Charged" %>"
-                    data-page="transactions"
-                    ></td>
-                  <td><%= t.created_at.strftime("%m/%d/%Y") %></td>
-                  <td><%= current_user.is_customer? ? t.org_name : t.card_name %></td>
-                  <td><%= t.notes %></td>
-                  <td><%= current_user.is_customer? ? t.org_phone : t.phone_number %></td>
-                  <td><%= current_user.is_customer? ? t.rhombus_number : t.amount_less_fees %></td>
-                  <td><%= t.last4 %></td>
-                </tr>
-                <% end %>
-              </tbody>
-            </table>
-          </div>
-        </div>
-        <% else %>
-        <div class="center">
-          <img src="<%= asset_path 'no-transactions.png' %>" alt="no transaction">
-          <div class="no-user"><%= current_user.is_customer? ? "You have no payments :(" : "You have no transactions :(" %></div>
-        </div>
-        <% end %>
-      </div>
-      <!-- End Panel -->
-      <div style="text-align: center; margin-bottom: 40px;"><%= will_paginate @transactions, :page_links => false %></div>
-    </div>
-    <!-- End Row -->
-  </div>
-  <!-- END CONTAINER -->
-  <!-- //////////////////////////////////////////////////////////////////////////// -->
-  <br><br><br><br><br><br><br><br><br><br><br><br>
-  <br><br><br><br><br><br>
-  <%= render 'shared/dashboard_footer' %>
-</div>
-<!-- End Content -->
-<!-- //////////////////////////////////////////////////////////////////////////// -->
-<%= render 'refund_box' %>
-<!-- should move out of here -->
-<form id="txn_history_form" method="get" action="transactions/download.csv">
-  <input type="hidden" id="txn_start_date" name="txn_start_date" />
-  <input type="hidden" id="txn_end_date" name="txn_end_date" />
-</form>
-<!-- Date picker stuff -->
-<!-- Include Required Prerequisites -->
-<script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-<!-- Include Date Range Picker -->
-<script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
-<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
-<script type="text/javascript">
-  $(function() {
-      $('.title').daterangepicker({
-        cancelClass: 'hide',
-        linkedCalendars: true,
-        /*timePicker: true,
-        timePickerIncrement: 30,
-        singleDatePicker: true,
-        locale: {
-            format: 'MM/DD/YYYY h:mm A'
-        },*/
-       ranges: {
-           'Today': [moment(), moment()],
-           'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-           'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-           'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-           'This Month': [moment().startOf('month'), moment().endOf('month')],
-           'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-        },
-        alwaysShowCalendars: true,
-        //maxDate: new Date
-      })
-        .on('apply.daterangepicker', function(ev, picker) {
-          document.getElementById('txn_start_date').value = picker.startDate.format('YYYY-MM-DD');
-          document.getElementById('txn_end_date').value = picker.endDate.format('YYYY-MM-DD');
-          $('#txn_history_form').submit();
-        });
-  });
-</script>
