@@ -108,7 +108,7 @@
             </div>
           </div>
           <% @unread_messages_last_5.each do |u|%>
-             <div class="w-clearfix welcome-dash-table-header-wrapper">
+            <div class="w-clearfix welcome-dash-table-header-wrapper">
               <div class="unread-column w-clearfix">
                 <div class="table-text"><%= present(u).display_name %></div>
               </div>
@@ -118,7 +118,8 @@
               <div class="preview unread-column w-clearfix">
                 <div class="preview table-text unread-table"><%= u.textable.text %></div>
               </div>
-          <% end %>
+            </div>
+          <% end %>        
         </div>
       </div>
     </div>

@@ -31,7 +31,7 @@ class UsersController < ApplicationController
     #message_count method returns hash of message_per_day , fb_percent and sms_percent  
     @message_counts = message_count
 
-    @avg_handle_time = avg_handle_time.round(2)
+    @avg_handle_time = 1#avg_handle_time.round(2)
 
     @total_transactions = transactions.sum(:amount)
     @transactions_today = transactions_today.present? ? transactions_today.sum(:amount) : 0  
