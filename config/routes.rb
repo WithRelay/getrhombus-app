@@ -85,7 +85,7 @@ Rails.application.routes.draw  do
         get 'segments' => 'lists#segments'
         get 'sms-usage' => 'users#sms_usage'
         get 'leads-and-contacts' => 'users#leads_contacts'
-        resources :lists, only: [:index, :create] do
+        resources :lists, only: [:index, :create, :show] do
           collection { post 'delete' => 'lists#destroy' }
         end
         get 'managed-accounts' => 'users#managed_acct'
