@@ -116,7 +116,7 @@
               <div class="received table-text unread-table">15 mins ago</div>
             </div>
             <div class="preview unread-column w-clearfix">
-              <div class="preview table-text unread-table">u.textable.text</div>
+              <div class="preview table-text unread-table"><%= u.textable.text %></div>
             </div>
           </div>
           <%end%>
@@ -174,7 +174,7 @@
       <div class="w-row welcome-dash-table-wrapper">
         <div class="w-col w-col-3">
           <div class="average-message-count-per-day customer-contacts-2 welcome-dash-content-container">
-            <h1 class="new-customers"><%= @message_counts[:msg_per_day].round(3) %></h1>
+            <h1 class="new-customers"><%= @message_counts[:msg_today] %></h1>
             <h4 class="count-description"> &nbsp;Messages per day</h4>
             <h4 class="count-description transaction-count">Facebook <%= @message_counts[:fb_msg_percent].round %>%  |
                SMS &nbsp;<%= @message_counts[:txt_msg_percent].round %>%</h4>

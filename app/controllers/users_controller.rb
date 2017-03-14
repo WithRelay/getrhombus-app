@@ -38,7 +38,7 @@ class UsersController < ApplicationController
     @transactions_today_count = transactions_today.count
 
     @unread_message_count = Conversation.get_merchant_total_unread_msgs_count(current_user)
-    @unread_messages_last_5 = ConversationRef.get_last_msgs_from_all_merchant_convs(current_user)
+    @unread_messages_last_5 = ConversationRef.get_last_msgs_from_all_merchant_convs(current_user).last(5)
     # binding.process_captured_payment
 
     @all_customers_count = customers.count
@@ -110,20 +110,23 @@ private
 
   def message_count
     txt_msg, fb_msg = sent_and_received_messages('Message'), 
-                                  sent_and_received_messages('FbMessage')
-    total_msgs_count = txt_msg.count + fb_msg.count
+                      sent_and_received_messages('FbMessage')
 
-    first_msg_date = Time.current - 2.days #txt_msg.first.created_at < fb_msg.first.created_at ? txt_msg.first.created_at : fb_msg.first.created_at 
-    last_msg_date = Time.current#txt_msg.last.created_at > fb_msg.last.created_at ? txt_msg.last.created_at : fb_msg.last.created_at
+    txt_msg_today = txt_msg.select {|t| t.created_at >= Time.current.beginning_of_day}
+    fb_msg_today   = fb_msg.select  {|t| t.created_at >= Time.current.beginning_of_day}
+    today_msgs_count = txt_msg_today.count + fb_msg_today.count
+
+    # first_msg_date = Time.current - 2.days #txt_msg.first.created_at < fb_msg.first.created_at ? txt_msg.first.created_at : fb_msg.first.created_at 
+    # last_msg_date = Time.current#txt_msg.last.created_at > fb_msg.last.created_at ? txt_msg.last.created_at : fb_msg.last.created_at
     
-    msg_time_interval = (last_msg_date - first_msg_date)/1.days
+    # msg_time_interval = (last_msg_date - first_msg_date)/1.days
     
-    msg_per_day = total_msgs_count/msg_time_interval
+    # msg_per_day = total_msgs_count/msg_time_interval
 
-    fb_msg_percent = 100 * fb_msg.count/total_msgs_count
-    txt_msg_percent = 100 * txt_msg.count/total_msgs_count
+    fb_msg_percent = fb_msg_today.present? ? 100 * fb_msg_today.count/today_msgs_count : 0
+    txt_msg_percent = txt_msg_today.present? ? 100 * txt_msg_today.count/today_msgs_count : 0
 
-    {msg_per_day: msg_per_day.round(3), fb_msg_percent: fb_msg_percent.round(2), txt_msg_percent: txt_msg_percent.round(2)} 
+    {msg_today: today_msgs_count, fb_msg_percent: fb_msg_percent.round(2), txt_msg_percent: txt_msg_percent.round(2)} 
   end
 
   def sent_and_received_messages(class_name)
