@@ -91,7 +91,7 @@ $(document).on('ready page:load', function() {
       }
     },
     fields: {
-      'lists[list_name]': {
+      'lists[name]': {
         excluded: false,
         verbose: false,
         validators: {
