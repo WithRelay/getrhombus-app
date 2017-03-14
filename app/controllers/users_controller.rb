@@ -38,7 +38,7 @@ class UsersController < ApplicationController
     @transactions_today_count = transactions_today.count
 
     @unread_message_count = Conversation.get_merchant_total_unread_msgs_count(current_user)
-    @unread_messages_last_5 = ConversationRef.get_last_msgs_from_all_merchant_convs(current_user).last(5)
+    @unread_messages_last_5 = ConversationRef.get_last_msgs_from_all_merchant_convs(current_user)
     # binding.process_captured_payment
 
     @all_customers_count = customers.count
