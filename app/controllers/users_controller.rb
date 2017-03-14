@@ -115,7 +115,7 @@ private
     txt_msg_today = txt_msg.select {|t| t.created_at >= Time.current.beginning_of_day}
     fb_msg_today   = fb_msg.select  {|t| t.created_at >= Time.current.beginning_of_day}
     today_msgs_count = txt_msg_today.count + fb_msg_today.count
-
+    @open_convs_yesterday = open_convs_yesterday 
     # first_msg_date = Time.current - 2.days #txt_msg.first.created_at < fb_msg.first.created_at ? txt_msg.first.created_at : fb_msg.first.created_at 
     # last_msg_date = Time.current#txt_msg.last.created_at > fb_msg.last.created_at ? txt_msg.last.created_at : fb_msg.last.created_at
     
@@ -138,6 +138,15 @@ private
                       .average("DATEDIFF(updated_at,created_at)")            
 
     avg.present? ? avg/1.minutes : avg
+  end
+
+  def open_convs_yesterday
+    yesterday_convs = Conversation.where(
+                                  {merchant_id: current_user.id,
+                                   resolution: nil,
+                                   created_at: (Time.current.beginning_of_day - 1.days)..(Time.current.beginning_of_day)
+                                  })
+    yesterday_convs.count
   end
 
 end
