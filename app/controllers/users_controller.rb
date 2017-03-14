@@ -31,6 +31,8 @@ class UsersController < ApplicationController
     #message_count method returns hash of message_per_day , fb_percent and sms_percent  
     @message_counts = message_count
 
+    @avg_handle_time = avg_handle_time.round(2)
+
     @total_transactions = transactions.sum(:amount)
     @transactions_today = transactions_today.present? ? transactions_today.sum(:amount) : 0  
     @transactions_today_count = transactions_today.count
@@ -102,7 +104,7 @@ private
                     .group("DAY(created_at)").count
 
     #prepare data for chart 
-    #this will add count of sms and fb_msg on the same day                 
+    #this will merge count of sms and fb_msg and add the coutes on the same day              
     txt_messages.merge(fb_messages){|k, mv, fv| mv + fv}
   end
 
@@ -126,6 +128,13 @@ private
 
   def sent_and_received_messages(class_name)
     class_name.constantize.where("user_id= ? OR user_id_to= ?", current_user.id, current_user.id)
+  end
+
+  def avg_handle_time
+    avg = Conversation.where(merchant_id: current_user.id).where.not(resolution: nil)
+                      .average("DATEDIFF(updated_at,created_at)")            
+
+    avg.present? ? avg/1.minutes : avg
   end
 
 end
