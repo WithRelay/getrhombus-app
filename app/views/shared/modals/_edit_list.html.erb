@@ -7,7 +7,7 @@
     <%= form_for(:list, url: list_path(current_user, :list_id), html: { class: "edit_create_user_list", id: 'edit_list_form', method: :patch }) do |f| %>
       <%= f.label "List name", class: 'form-label list-name' %>
       <div class='form-group col-xs-6'>
-        <%= f.text_field :list_name, class: 'modal-field text-field w-input form-control', id: 'edit-modal-list-name' %>
+        <%= f.text_field :name, class: 'modal-field text-field w-input form-control', id: 'edit-modal-list-name' %>
         <div class="errorMessageContainer"></div>
       </div>
       <%= f.submit "Update List", class: 'button create-a-list w-button' %>

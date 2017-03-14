@@ -7,12 +7,12 @@
     <a class="close-modal update-close-modals" data-parent='import-customers-div' href="#"></a>
   </div>
   <div class="w-form">
-    <%= form_for('lists', url: v1_lists_path, html: { id: "create_user_list", class: "create-list" }) do |f| %>
+    <%= form_for('lists', url: v1_lists_path, html: { id: "create_user_list", class: "edit_create_user_list" }) do |f| %>
       <%= f.label "List name", class: 'form-label list-name' %>
       <%= f.hidden_field :selected_users, id: 'selectedUsers' %>
       <%= f.hidden_field :list_type, placeholder: 'E.g. VIP customers', id: 'listType' %>
       <div class='form-group col-xs-6'>
-        <%= f.text_field :list_name, class: 'modal-field text-field w-input form-control' %>
+        <%= f.text_field :name, class: 'modal-field text-field w-input form-control' %>
         <div class="errorMessageContainer"></div>
       </div>
       <%= f.submit "Create List", class: 'button create-a-list w-button' %>
