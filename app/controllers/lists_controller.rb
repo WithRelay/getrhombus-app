@@ -1,13 +1,12 @@
 class ListsController < ApplicationController
-  before_action :set_list, only: [:show, :edit, :update, :destroy]
-  before_action :find_user_lists, only: [:index]
   include DashboardNotification
+
+  before_action :set_list, only: [:show, :edit, :update, :destroy]
   before_action :set_notifications, except: [:destroy]
-  respond_to :html
 
   def index
-    respond_with(@lists)
-    render 'empty_list' if @lists.empty? and return
+    @lists = current_user.lists.where(segment: nil)
+    render :empty_list if @lists.empty?
   end
 
   def show
@@ -15,15 +14,14 @@ class ListsController < ApplicationController
   end
 
   def new
-    @list = List.new
-    respond_with(@list)
+    @list = current_user.lists.build
   end
 
   def edit
   end
 
   def create
-    @list = List.new(list_params)
+    @list = current_user.lists.build(list_params)
     flash[:notice] = 'List was successfully created.' if @list.save
     respond_with(@list)
   end
@@ -43,8 +41,8 @@ class ListsController < ApplicationController
     else
       flash[:error] = 'Sorry list cannot deleted'
     end
-     redirect_to lists_path(current_user)
-   end
+    redirect_to lists_path(current_user)
+  end
 
   def segments
     @segments = current_user.lists.where(segment: true)
@@ -61,14 +59,10 @@ class ListsController < ApplicationController
       # and check if those lists have associated record campaign_lists or not
       # it will return the list if there is no associated record campaign_lists
       List.where(id: list_ids).where('id NOT IN (SELECT list_id FROM campaign_lists where
-                                      list_id IN(?))', list_ids)
+      list_id IN(?))', list_ids)
     end
 
     def list_params
       params.require(:list).permit(:id,:name,:user_id)
-    end
-
-    def find_user_lists
-      @lists = List.where(user_id:current_user.id)
     end
 end
