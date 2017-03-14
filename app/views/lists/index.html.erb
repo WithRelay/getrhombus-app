@@ -55,7 +55,7 @@
     <div class="alt-table-row w-row">
       <div class="alt-column w-clearfix w-col w-col-3">
         <div class="title-column-div w-clearfix">
-          <div class="table-text"><%= list.name %></div>
+          <div class="table-text"><%= link_to list.name, list_path(current_user, list) %></div>
         </div>
         <div class="cb check-box-column">
           <div class="w-form">
