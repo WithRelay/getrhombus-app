@@ -11,8 +11,7 @@ class ListsController < ApplicationController
   end
 
   def show
-    @users = @list.get_users
-    respond_with(@list,@users)
+    @list_members = @list.get_users
   end
 
   def new
