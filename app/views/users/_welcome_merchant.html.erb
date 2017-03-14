@@ -107,19 +107,19 @@
               <div class="first-visit headings"> &nbsp;Preview</div>
             </div>
           </div>
-          <% @unread_messages_last_5.each do |u|%>
-          <div class="w-clearfix welcome-dash-table-header-wrapper">
-            <div class="unread-column w-clearfix">
-              <div class="table-text"></div>
+          <% @unread_messages_last_5.each do |u| %>
+            <div class="w-clearfix welcome-dash-table-header-wrapper">
+              <div class="unread-column w-clearfix">
+                <div class="table-text"></div>
+              </div>
+              <div class="payment-time unread-column w-clearfix">
+                <div class="received table-text unread-table">15 mins ago</div>
+              </div>
+              <div class="preview unread-column w-clearfix">
+                <div class="preview table-text unread-table">u.textable.text</div>
+              </div>
             </div>
-            <div class="payment-time unread-column w-clearfix">
-              <div class="received table-text unread-table">15 mins ago</div>
-            </div>
-            <div class="preview unread-column w-clearfix">
-              <div class="preview table-text unread-table">u.textable.text</div>
-            </div>
-          </div>
-          <%end%>
+          <% end %>
 <!--           <div class="w-clearfix welcome-dash-table-header-wrapper">
             <div class="unread-column w-clearfix">
               <div class="table-text">Samuel &nbsp;Mondi</div>

@@ -255,6 +255,42 @@ $(document).ready(function() {
     });
   // validate sign up form
 
+  
+  // validate password change form
+  $('#changePasswordForm')
+  .formValidation({
+    // I am validating Bootstrap form
+    framework: 'bootstrap',
+    live: 'disabled',
+
+    // List of fields and their validation rules!
+    fields: {
+      'user[password]': {
+        validators: {
+          notEmpty: {
+            message: 'The password is required'
+          },
+          stringLength: {
+            min: 8,
+            message: 'Your password should be at least 8 characters'
+          }
+        }
+      },
+      'user[password_confirmation]': {
+        validators: {
+          verbose: false,
+          notEmpty: {
+            message: 'The password confirmation is required'
+          },
+          identical: {
+            field: 'password',
+            message: "The passwords don't match"
+          }
+        }
+      }
+    }
+  });
+
   function set_hidden_fields() {
     if (global_page_params['referrer_id']) document.getElementById('referrer_id').value = global_page_params['referrer_id'];
     if (global_page_params['referrer_uid']) document.getElementById('referrer_uid').value = global_page_params['referrer_uid'];

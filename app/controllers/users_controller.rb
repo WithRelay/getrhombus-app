@@ -112,7 +112,7 @@ private
     total_msgs_count = txt_msg.count + fb_msg.count
 
     first_msg_date = Time.current - 2.days #txt_msg.first.created_at < fb_msg.first.created_at ? txt_msg.first.created_at : fb_msg.first.created_at 
-    last_msg_date = Time.current#txt_msg.last.created_at > fb_msg.last.created_at ? txt_msg.last.created_at : fb_msg.last.created_at
+    last_msg_date = Time.current #txt_msg.last.created_at > fb_msg.last.created_at ? txt_msg.last.created_at : fb_msg.last.created_at
     
     msg_time_interval = (last_msg_date - first_msg_date)/1.days
     
