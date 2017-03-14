@@ -33,7 +33,7 @@ class ListsController < ApplicationController
 
 
   def update
-    if @list.update_attributes(name: list_params[:list_name])
+    if @list.update_attributes(list_params)
       flash[:notice] = 'List was successfully updated.'
     else
       flash[:error] = @list.errors.full_messages
@@ -69,6 +69,6 @@ class ListsController < ApplicationController
     end
 
     def list_params
-      params.require(:list).permit(:list_name)
+      params.require(:list).permit(:name)
     end
 end
