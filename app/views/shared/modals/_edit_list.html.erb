@@ -1,0 +1,19 @@
+<div class="create-list-form-wrapper modal-background" id="edit-list-form">
+  <div class="content-sub-wrapper modal w-clearfix">
+    <h4 class="modal-header welcome-dash-content-container-header">Create List</h4>
+    <a class="close-modal update-close-modals" data-parent='import-customers-div' href="#"></a>
+  </div>
+  <div class="w-form">
+    <%= form_for(:list, url: list_path(current_user, :list_id), html: { class: "edit_create_user_list", id: 'edit_list_form', method: :patch }) do |f| %>
+      <%= f.label "List name", class: 'form-label list-name' %>
+      <div class='form-group col-xs-6'>
+        <%= f.text_field :list_name, class: 'modal-field text-field w-input form-control', id: 'edit-modal-list-name' %>
+        <div class="errorMessageContainer"></div>
+      </div>
+      <%= f.submit "Update List", class: 'button create-a-list w-button' %>
+    <% end %>
+  </div>
+  <div class="modal-instruction-wrapper">
+    <p class="modal-paragraph tips"> &nbsp;TIP: You can create a list based on "Custom segments". You can also send messaging campaigns to members of each list you create. Go to "List" tab on the left navigation to view and edit all your customer OR lead lists.</p>
+  </div>
+</div>
