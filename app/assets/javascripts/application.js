@@ -77,7 +77,6 @@
 //= require refer_a_business
 //= require modernizr
 //= require webflow
-//= require custom
 //= require account_setting
 //= require jquery.lightbox_me
 //= require custom_lightbox
