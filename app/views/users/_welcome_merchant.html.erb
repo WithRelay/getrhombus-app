@@ -79,8 +79,8 @@
             <h4 class="welcome-dash-content-container-header">Message Volume</h4>
           </div>
           <div>
-          <%=  area_chart @msg_data_for_chart %>
-          </div><%#= image_tag "Graph-2.png", class: "chart-place-holder" %>
+            <%= area_chart @msg_data_for_chart %>
+          </div>
         </div>
       </div>
     </div>
@@ -107,63 +107,18 @@
               <div class="first-visit headings"> &nbsp;Preview</div>
             </div>
           </div>
-          <% @unread_messages_last_5.each do |u| %>
-            <div class="w-clearfix welcome-dash-table-header-wrapper">
+          <% @unread_messages_last_5.each do |u|%>
+             <div class="w-clearfix welcome-dash-table-header-wrapper">
               <div class="unread-column w-clearfix">
-                <div class="table-text"></div>
+                <div class="table-text"><%= present(u).display_name %></div>
               </div>
               <div class="payment-time unread-column w-clearfix">
-                <div class="received table-text unread-table">15 mins ago</div>
+                <div class="received table-text unread-table"><%= date_in_words(u.created_at)%></div>
               </div>
               <div class="preview unread-column w-clearfix">
-                <div class="preview table-text unread-table">u.textable.text</div>
+                <div class="preview table-text unread-table"><%= u.textable.text %></div>
               </div>
-            </div>
           <% end %>
-<!--           <div class="w-clearfix welcome-dash-table-header-wrapper">
-            <div class="unread-column w-clearfix">
-              <div class="table-text">Samuel &nbsp;Mondi</div>
-            </div>
-            <div class="payment-time unread-column w-clearfix">
-              <div class="received table-text unread-table">37 mins ago</div>
-            </div>
-            <div class="preview unread-column">
-              <div class="preview table-text unread-table">Are you guys open until 6pm on the weekends?</div>
-            </div>
-          </div>
-          <div class="w-clearfix welcome-dash-table-header-wrapper">
-            <div class="unread-column w-clearfix">
-              <div class="table-text">Mandy Sonola</div>
-            </div>
-            <div class="payment-time unread-column w-clearfix">
-              <div class="received table-text unread-table">1 hour ago</div>
-            </div>
-            <div class="preview unread-column">
-              <div class="preview table-text unread-table">I already texted the payment ahead of my appointment tomorrow please co..</div>
-            </div>
-          </div>
-          <div class="w-clearfix welcome-dash-table-header-wrapper">
-            <div class="unread-column w-clearfix">
-              <div class="table-text">Jeffery Francisco</div>
-            </div>
-            <div class="payment-time unread-column w-clearfix">
-              <div class="received table-text unread-table">90 mins ago</div>
-            </div>
-            <div class="preview unread-column">
-              <div class="preview table-text unread-table">I got a message about a holiday discount, what does it cover and when does..</div>
-            </div>
-          </div>
-          <div class="w-clearfix welcome-dash-table-header-wrapper">
-            <div class="last-row unread-column w-clearfix">
-              <div class="table-text">Bryan Balotelli</div>
-            </div>
-            <div class="last-row payment-time unread-column w-clearfix">
-              <div class="received table-text unread-table">2 hours ago</div>
-            </div>
-            <div class="last-row preview unread-column">
-              <div class="preview table-text unread-table">I'm looking to surprise my wife with a full deluxe reservation &nbsp;next weekend...</div>
-            </div>
-          </div> -->
         </div>
       </div>
     </div>
@@ -174,10 +129,10 @@
       <div class="w-row welcome-dash-table-wrapper">
         <div class="w-col w-col-3">
           <div class="average-message-count-per-day customer-contacts-2 welcome-dash-content-container">
-            <h1 class="new-customers"><%= @message_counts[:msg_per_day].round(3) %></h1>
-            <h4 class="count-description"> &nbsp;Messages per day</h4>
-            <h4 class="count-description transaction-count">Facebook <%= @message_counts[:fb_msg_percent].round %>%  |
-               SMS &nbsp;<%= @message_counts[:txt_msg_percent].round %>%</h4>
+            <h1 class="new-customers"><%= @message_counts[:msg_today] %></h1>
+            <h4 class="count-description"> &nbsp;Messages Today</h4>
+            <h4 class="count-description transaction-count">Facebook <%= @message_counts[:fb_msg_percent] %>%  |
+               SMS &nbsp;<%= @message_counts[:txt_msg_percent] %>%</h4>
           </div>
         </div>
         <div class="w-col w-col-3">
@@ -188,13 +143,13 @@
         </div>
         <div class="w-col w-col-3">
           <div class="average-handle-time customer-contacts-2 welcome-dash-content-container">
-            <h1 class="new-customers">4.89 mins</h1>
+            <h1 class="new-customers"><%= @avg_handle_time %> mins</h1>
             <h4 class="count-description">Average Handle Time</h4>
           </div>
         </div>
         <div class="w-col w-col-3">
           <div class="customer-contacts-2 open-conversations-yesterday welcome-dash-content-container">
-            <h1 class="new-customers">6</h1>
+            <h1 class="new-customers"><%= @open_convs_yesterday%></h1>
             <h4 class="count-description">Open Conversations Yesterday</h4>
           </div>
         </div>

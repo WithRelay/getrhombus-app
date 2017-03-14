@@ -22,6 +22,7 @@
           <div class="form-group col-xs-5">
             <%= f.password_field :password_confirmation, type: "password", :class => "form-control reset-password text-field w-input", placeholder: "Confirm password" %>
           </div>
+          <%= f.hidden_field :page_params, value: "safa" %>
           <%= f.submit "Reset Password",  :class => "button log-in w-button" %>
 
       <% end %>

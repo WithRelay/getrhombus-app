@@ -4,12 +4,12 @@ class User < ActiveRecord::Base
   include DashboardCustomerQueries
   include CSVHandler
 
-  attr_accessor :phone, :captured_amt, :msg_id, :tag_id, :referrer_id, :tos_acceptance, :user_lists
+  attr_accessor :phone, :captured_amt, :msg_id, :tag_id, :referrer_id, :tos_acceptance, :user_lists, :page_params
 
   # validation rules for user attributes
   validates :tos_acceptance, acceptance: true, if: lambda { self.is_merchant? }, on: :update
-  validates_presence_of :org_type, if: lambda { self.is_merchant? }, on: :update, unless: Proc.new{|u| u.encrypted_password_changed? }
-  validates_presence_of :org_name, if: lambda { self.is_merchant? && self.org_type.try(:downcase) != 'individual' }, on: :update, unless: Proc.new{|u| u.encrypted_password_changed? }
+  validates_presence_of :org_type, if:  lambda { binding.pry; self.is_merchant? }, on: :update, unless: Proc.new{ self.encrypted_password_changed? }
+  validates_presence_of :org_name, if: lambda { binding.pry; self.is_merchant? && self.page_params != "passwords" && self.org_type.try(:downcase) != 'individual' }, on: :update
   validates_presence_of :user_level, message: "Please select an account type", on: :create
 
   # Edit pages use the right number field for each user type

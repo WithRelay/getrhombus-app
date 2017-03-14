@@ -30,8 +30,15 @@ $(document).on('ready page:load', function() {
   $("#send-campaign-to-lists").click(function(){
     var selected_item = getSelectedUserIds();
     var link = $(this).data('lists-campaign');
-    var link_with_list_ids = link + '?list_id=' + selected_item;
-    window.location = link_with_list_ids;
+    if (selected_item.length > 1)
+      return setFlashForList('Only 1 list can be selected for sending campaign', 'error');
+    else if (selected_item.length < 1){
+      return setFlashForList('Please select a list to send campaign', 'error');
+    }
+    else{
+      var link_with_list_id = link + '?list_id=' + selected_item;
+      window.location = link_with_list_id;
+    }
   });
 
   $(document).on('click', '.cancel-yes', function(e){
@@ -50,11 +57,32 @@ $(document).on('ready page:load', function() {
     }
   });
 
+  $("#edit-selected-list").click(function(e){
+    var selected_edit_list = getSelectedUserIds();
+    if (selected_edit_list.length > 1)
+      return setFlashForList('Only 1 list can be selected for editing', 'error');
+    else if (selected_edit_list.length < 1){
+      return setFlashForList('Please select a list to edit', 'error');
+    }
+    else{
+      var edit_list_form = $("#edit_list_form").attr("action").split('/');
+      edit_list_form.pop();
+      var list_name = $('.merchant_customers:checked').data("list-name");
+      $("#edit-list-form").lightbox_me({
+        centered: true,
+        onLoad: function() {
+          $('#edit-modal-list-name').val(list_name);
+          $("#edit_list_form").attr("action", edit_list_form.join('/') + '/' + selected_edit_list[0]);
+        }
+      });
+    }
+  });
+
   $('.merchant_customers').click(function(){
     $(this).is(':checked') && $('#create_list_button').removeAttr('disabled')
   });
 
-  $('#create_user_list').formValidation({
+  $('.edit_create_user_list').formValidation({
     framework: 'bootstrap',
     live: 'disabled',
     err: {
@@ -63,7 +91,7 @@ $(document).on('ready page:load', function() {
       }
     },
     fields: {
-      'lists[list_name]': {
+      'lists[name]': {
         excluded: false,
         verbose: false,
         validators: {
@@ -167,7 +195,7 @@ $(document).on('ready page:load', function() {
     $('.merchant_customers:checked').each(function(){
       selected_users.push($(this).data('users'));
     })
-    return selected_users.join(',');
+    return selected_users;
   }
   // Fired on click of the segment button
   // Still under development

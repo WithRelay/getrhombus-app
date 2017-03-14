@@ -26,6 +26,21 @@ class SubscriptionsController < ApplicationController
   def update
   end
 
+   # generate user csv data
+  def download_csv
+    render :template => "static_pages/to_404.html" and return if !current_user
+    t = Transaction.new
+    response = t.get_transactions_csv(current_user.id, current_user.is_merchant?, params[:subs_txn_start_date], params[:subs_txn_end_date], true)
+    if response
+      respond_to do |format|
+        format.csv { send_data response, filename: "relay_subscription_transactions_#{Time.current.strftime("%d-%b-%y")}.csv" }
+      end
+    else
+      # use 500 page after it is built
+      render :template => "static_pages/to_404.html"
+    end
+  end
+
   private
 
     def set_subscription
