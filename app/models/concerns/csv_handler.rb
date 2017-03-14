@@ -1,7 +1,7 @@
 module CSVHandler
   extend ActiveSupport::Concern
 
-  def get_transactions_csv(user_id, is_merchant, start_date, end_date)
+  def get_transactions_csv(user_id, is_merchant, start_date, end_date, subscription = false)
     begin
       column_str = is_merchant ? 'team_id' : 'user_id'
       column_names = get_csv_columns(is_merchant)
@@ -9,7 +9,12 @@ module CSVHandler
         csv << column_names.map.with_index(0) { |e,i| (i == 0) ? e : e.titleize }
         column_names[0] = 'created_at'
         column_names[1] = 'txn_number'
-        Transaction.where(column_str + " = ? AND created_at BETWEEN ? AND ?", user_id, Time.zone.parse(start_date), Time.zone.parse(end_date)).each do |t|
+        transactions = if subscription
+          Transaction.where(column_str + " = ? AND created_at BETWEEN ? AND ?", user_id, Time.zone.parse(start_date), Time.zone.parse(end_date)).where.not(subscription_id: nil)
+        else
+          Transaction.where(column_str + " = ? AND created_at BETWEEN ? AND ?", user_id, Time.zone.parse(start_date), Time.zone.parse(end_date))
+        end
+        transactions.each do |t|
           csv << column_names.map{ |attr| t.send(attr) }
         end
       end
