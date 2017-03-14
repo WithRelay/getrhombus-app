@@ -177,7 +177,7 @@ class Conversation < ActiveRecord::Base
    time_diff = (last_conv.created_at - first_conv.created_at)/1.hours
    total_conv = merchant_conv.count
    conv_per_hour = total_conv/time_diff
-   conv_per_hour.round(3)
+   conv_per_hour.round
   end
 
   def self.get_merchant_todays_unread_count(merchant_id, date)
