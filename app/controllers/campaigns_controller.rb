@@ -22,8 +22,7 @@ class CampaignsController < ApplicationController
   def new
     @campaign = current_user.campaigns.build
     @user_title = User.user_title(current_user)
-    list_id = params[:list_id].split(',')
-    @lists = List.where(id: list_id[0])
+    @lists = current_user.lists.where(id: params[:list_id])
   end
 
   # creates a campaigns, campaign_lists, images if params available, associate inline image with campaign
