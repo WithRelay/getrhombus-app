@@ -30,8 +30,15 @@ $(document).on('ready page:load', function() {
   $("#send-campaign-to-lists").click(function(){
     var selected_item = getSelectedUserIds();
     var link = $(this).data('lists-campaign');
-    var link_with_list_ids = link + '?list_id=' + selected_item;
-    window.location = link_with_list_ids;
+    if (selected_item.length > 1)
+      return setFlashForList('Only 1 list can be selected for sending campaign', 'error');
+    else if (selected_item.length < 1){
+      return setFlashForList('Please select a list to send campaign', 'error');
+    }
+    else{
+      var link_with_list_id = link + '?list_id=' + selected_item;
+      window.location = link_with_list_id;
+    }
   });
 
   $(document).on('click', '.cancel-yes', function(e){
@@ -167,7 +174,7 @@ $(document).on('ready page:load', function() {
     $('.merchant_customers:checked').each(function(){
       selected_users.push($(this).data('users'));
     })
-    return selected_users.join(',');
+    return selected_users;
   }
   // Fired on click of the segment button
   // Still under development

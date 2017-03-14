@@ -1,0 +1,51 @@
+<% list_members.each do |member| %>
+  <div class="customer-dashboard-table-wrapper list-members row-wrapper">
+    <div>
+      <div class="new-table-row w-row">
+        <div class="cn w-clearfix w-col w-col-3">
+          <div class="name w-clearfix">
+            <%= present(member[:user]).profile_image %>
+            <div class="shrink-text table-text"><%= member[:user].full_name %></div>
+          </div>
+          <div class="cb check-box-column">
+            <div class="w-form">
+              <form data-name="Email Form 2" id="email-form-2" name="email-form-2">
+                <div class="select-all-check-box w-checkbox w-clearfix">
+                  <input class="cb table-checkbox w-checkbox-input" id="node" type="checkbox">
+                  <label class="checkbox-field-lable w-form-label" for="node">-</label>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div class="fv w-clearfix w-col w-col-2">
+          <div class="cn column column-2 w-clearfix">
+            <div class="shrink-text table-text">6 months ago</div>
+          </div>
+        </div>
+        <div class="lv w-clearfix w-col w-col-2">
+          <div class="colum-3 column lv w-clearfix">
+            <div class="shrink-text table-text">1 week ago</div>
+          </div>
+        </div>
+        <div class="avs w-clearfix w-col w-col-1">
+          <div class="avs column column-4 w-clearfix">
+            <div class="table-text">$23,04</div>
+          </div>
+        </div>
+        <div class="ts w-clearfix w-col w-col-1">
+          <div class="column column-5 ts w-clearfix">
+            <div class="shrink-text table-text total-spend-text">$400</div>
+          </div>
+        </div>
+        <div class="table-actions w-clearfix w-col w-col-3">
+          <div class="column column-6 left new-row w-clearfix">
+            <div class="frequency shrink-text table-text">Washington</div>
+          </div>
+          <div class="column column-6 new-row"><a class="actions-button notification" href="#">Remove</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

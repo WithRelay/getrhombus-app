@@ -1,47 +1,62 @@
-<p id="notice"><%= notice %></p>
-<div id="list_info">
-<strong>List name:</strong> <%= @list.name %></br>
-<strong>List owner:</strong> <%= User.find(@list.user_id).full_name.split.first  %> </br>
-<strong>List created at:</strong> <%= @list.created_at %> </br>
-
+<div class="customer-dashboard-header list-member sub-nav-bar table-header">
+  <div class="table-header">
+    <div class="table-header">
+      <div class="header new-table-row w-row">
+        <div class="cn w-clearfix w-col w-col-3">
+          <div class="header name w-clearfix">
+            <div class="headings name"> &nbsp; Name</div>
+          </div>
+          <div class="cb check-box-column header"></div>
+        </div>
+        <div class="fv w-clearfix w-col w-col-2">
+          <div class="cn column column-2 header">
+            <div class="first-visit headings"> &nbsp; First visit</div>
+          </div>
+        </div>
+        <div class="lv w-clearfix w-col w-col-2">
+          <div class="colum-3 column header lv">
+            <div class="headings last-visit"> &nbsp;Last visit</div>
+          </div>
+        </div>
+        <div class="avs w-clearfix w-col w-col-1">
+          <div class="avs column column-4 header">
+            <div class="avs headings last-visit"> &nbsp;Average</div>
+          </div>
+        </div>
+        <div class="ts w-clearfix w-col w-col-1">
+          <div class="column column-5 header ts">
+            <div class="headings total-spend-header"> &nbsp; Total Spend</div>
+          </div>
+        </div>
+        <div class="table-actions w-clearfix w-col w-col-3">
+          <div class="column column-6 header new-row w-clearfix">
+            <div class="headings message-customer name">&nbsp; &nbsp;Actions</div>
+          </div>
+          <div class="column column-6 header new-row w-clearfix">
+            <div class="headings location name">&nbsp; &nbsp;Location</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
-
-
-<div id= "customers"> 
-	<strong> Customers in list </strong>
-<table style="width:50%">
-<tr>
-	<th>First name</th>
-	<th>Last name</th>
-	<th>Email </th>
-	<th>Action </th>
-</tr>
-
-<% @users.each do |c| %>
-<tr>
-	<td><%= c[:user].full_name.split.first %> </td>
-	<td><%= c[:user].last_name.split.second || '' %> </td>
-	<td><%= c[:user].email %> </td>
-	<% customer_list = UserList.where(list_id:@list.id,user_id:c[:user].id) %>
-	<td><%= link_to 'Remove user from list', controller:'user_lists', action: 'remove_user', user_id: c[:user].id, list_id:@list.id %>
-	</td>
-</tr>
-
-<% end %>
-
-</table>
-
-<%= link_to 'Edit List', edit_list_path(@list) %>
-<%= link_to 'Back', lists_path %> </br>
+<div class="customer-dash sub-nav-bar">
+  <div class="list-members sub-nav-options-wrapper w-clearfix">
+    <div class="customer-count shrink-text">56 <span class="sub-nav-sub-text">in VIP list</span>
+    </div>
+    <div class="default-sub_header-field-form-div list-members w-form">
+      <form class="add-to-list-form w-clearfix" data-name="Email Form 6" id="email-form-6" name="email-form-6">
+        <input class="add-to-list-field w-input" data-name="Add To List 2" id="Add-to-list-2" maxlength="256" name="Add-to-list-2" placeholder="Add more customers to list" required="required" type="text"><a class="sub-nav-button w-button" href="#"><strong>&nbsp;&nbsp;&nbsp;Update List</strong></a>
+      </form>
+      <div class="w-form-done">
+        <div>Thank you! Your submission has been received!</div>
+      </div>
+      <div class="w-form-fail">
+        <div>Oops! Something went wrong while submitting the form</div>
+      </div>
+    </div>
+  </div>
 </div>
-
-<style>
-table, th, td {
-    border: 1px solid black;
-    border-collapse: collapse;
-}
-th, td {
-    padding: 5px;
-    text-align: left;
-}
-</style>
+<div class="dashboard-body">
+  <%= render partial: 'list_member', locals: { list_members: @list_members } %>
+</div>

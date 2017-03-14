@@ -1,7 +1,3 @@
-<p id="notice"><%= notice %></p>
-
-
-  <% if @lists.present? %>
   <div class="sub-nav-bar table-header">
     <div class="table-header">
       <div class="table-header">
@@ -48,65 +44,7 @@
       <a class="sub-nav-button w-button" id="send-campaign-to-lists" data-lists-campaign="<%= new_user_campaign_path(current_user) %>" href="#"> &nbsp;<strong>Send Campaign</strong></a>
     </div>
   </div>
-  <div class="dashboard-body">
-
-  <% @lists.each do |list| %>
-  <div class="row-wrapper">
-    <div class="alt-table-row w-row">
-      <div class="alt-column w-clearfix w-col w-col-3">
-        <div class="title-column-div w-clearfix">
-          <div class="table-text"><%= list.name %></div>
-        </div>
-        <div class="cb check-box-column">
-          <div class="w-form">
-            <form data-name="Email Form 2" id="email-form-2" name="email-form-2">
-              <div class="select-all-check-box w-checkbox w-clearfix">
-                <input class="cb table-checkbox w-checkbox-input merchant_customers" id="node" type="checkbox" data-users="<%= list.id %>">
-                <label class="checkbox-field-lable w-form-label" for="node">-</label>
-              </div>
-            </form>
-            <div class="w-form-done">
-              <div>Thank you! Your submission has been received!</div>
-            </div>
-            <div class="w-form-fail">
-              <div>Oops! Something went wrong while submitting the form</div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="alt-column w-col w-col-2">
-        <div class="alt-table-column-div w-clearfix">
-          <div class="table-text"> &nbsp; &nbsp; &nbsp;279</div>
-        </div>
-      </div>
-      <div class="alt-column w-col w-col-2">
-        <div class="alt-table-column-div w-clearfix">
-          <div class="table-text">4 months ago</div>
-        </div>
-      </div>
-      <div class="alt-column w-col w-col-2">
-        <div class="alt-table-column-div w-clearfix">
-          <div class="table-text">---</div>
-        </div>
-      </div>
-      <div class="alt-column w-col w-col-2">
-        <div class="alt-table-column-div w-clearfix">
-          <div class="table-text">---</div>
-        </div>
-      </div>
-      <div class="alt-column w-col w-col-1">
-        <div class="alt-table-column-div w-clearfix">
-          <div class="table-text"> &nbsp; &nbsp;0</div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <% end %>
-  <% else %>
-  <div class="blank-page-container w-container">
-    <%= image_tag('011_162.png', class: 'blank-page-icon')%>
-    <h1 class="empty-state-dash hero-h1 home-header">Return to the customer <br>dashboard to create a list or segment</h1>
-    <a class="button error-page-button w-button" href="#">Customer dashboard</a>
-  </div>
-  <% end %>
+<div class="dashboard-body">
+  <%= render @lists %>
 </div>
+<%= will_paginate(@lists).html_safe if @lists.count > PAGINATION_PER_PAGE %>
