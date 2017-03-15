@@ -12,40 +12,37 @@
           </div>
           <span id="price-value"></span>
 
-          <!--<a class="button choose-plan pricing-table-button w-button" href="#" id='subscription_get_started'>Get Started</a>-->
-
           <div class="display-credit-card-wrapper display-credit-card-wrapper-fix">
             <div class="get-started-2 log-in-form w-form">
 
               <%= form_for(current_user, as: resource_name, url: registration_update_user_path(resource_name), html: { method: :patch, class: "w-clearfix", id: "cc-form" }) do |f| %>
 
-                <div id='cc-fields'>
+                <div id='free-account-label'>
+                  <label class="cc-collection-info form-label new paragraph select-plan" for="Card-Number-4">Why collect payment information for a free account?</label>
+                  <label class="cc-collection-paragraph form-label new paragraph select-plan" for="Card-Number-4">Your account is absolutely free - no monthly subscription! However, you will need to purchase SMS credits to message your customers. Reload SMS credits whenever you want.</label>
+                </div>
 
-                  <div class="form-group col-xs-6">
-                    <%= f.number_field :last4, id: "cc-number", type: "tel", class: "form-control card-number text-field w-input", placeholder: "Card number", "x-autocompletetype" => "cc-number", autocompletetype: "cc-number", autocorrect: 'off', spellcheck: 'off', autocapitalize: 'off' %>
-                  </div>
+                <div class="form-group col-xs-6">
+                  <%= f.number_field :last4, id: "cc-number", type: "tel", class: "form-control card-number text-field w-input", placeholder: "Card number", "x-autocompletetype" => "cc-number", autocompletetype: "cc-number", autocorrect: 'off', spellcheck: 'off', autocapitalize: 'off' %>
+                </div>
 
-                  <%= f.hidden_field :exp_month, id: "cc-ex-month" %>
-                  <%= f.hidden_field :exp_year, id: "cc-ex-year" %>
-                  <%= f.hidden_field :card_token, id: "cc-uri" %>
-                  <%= f.hidden_field :card_type, id: "cc-type" %>
-                  <input type="hidden" id='page_params' name="page_params" value="add_subscription">
-                  <input type="hidden" id='plan_name' name="plan[name]">
+                <%= f.hidden_field :exp_month, id: "cc-ex-month" %>
+                <%= f.hidden_field :exp_year, id: "cc-ex-year" %>
+                <%= f.hidden_field :card_token, id: "cc-uri" %>
+                <%= f.hidden_field :card_type, id: "cc-type" %>
+                <input type="hidden" id='page_params' name="page_params" value="add_subscription">
+                <input type="hidden" id='plan_name' name="plan[name]">
 
-                  <div class="form-group col-xs-6">
-                    <%= f.text_field :card_name, id: 'cc-name', type: "text", class: "form-control name-on-card text-field w-input", placeholder: "Name on Card", 'x-autocompletetype' => "off", autocompletetype: 'off', :autocorrect => "off", spellcheck: 'off', autocapitalize: "off", autocomplete: "off" %>
-                  </div>
+                <div class="form-group col-xs-6">
+                  <%= f.text_field :card_name, id: 'cc-name', type: "text", class: "form-control name-on-card text-field w-input", placeholder: "Name on Card", 'x-autocompletetype' => "off", autocompletetype: 'off', :autocorrect => "off", spellcheck: 'off', autocapitalize: "off", autocomplete: "off" %>
+                </div>
 
-                  <div class="form-group col-xs-6">
-                    <input id="cc-exp" type="text" class="form-control month-year text-field w-input" placeholder="MM / YYYY" value="" x-autocompletetype="off" autocompletetype="off" autocorrect="off" spellcheck="off" autocapitalize="off">
-                  </div>
+                <div class="form-group col-xs-6">
+                  <input id="cc-exp" type="text" class="form-control month-year text-field w-input" placeholder="MM / YYYY" value="" x-autocompletetype="off" autocompletetype="off" autocorrect="off" spellcheck="off" autocapitalize="off">
+                </div>
 
-                  <div class="form-group col-xs-6">
-                    <input id="cc-csc" type="tel" class="form-control cvv text-field w-input" placeholder="CVV" value="" autocorrect="off" spellcheck="off" autocapitalize="off" autocomplete="off" maxlength="4">
-                  </div>
-
-                  <label class="form-label paragraph select-plan" for="Card-Number-3">Don't worry, we'll notify you when your trial is about to expire</label>
-
+                <div class="form-group col-xs-6">
+                  <input id="cc-csc" type="tel" class="form-control cvv text-field w-input" placeholder="CVV" value="" autocorrect="off" spellcheck="off" autocapitalize="off" autocomplete="off" maxlength="4">
                 </div>
 
                 <%= f.submit "Start 14-day Trial", class: "button log-in w-button", id: 'cc-submit' %>
@@ -67,7 +64,7 @@
           <h3 class="onboarding-side-bar-h3">You're almost done.</h3>
           <p class="onboarding-side-bar-paragraph">You're moments away from delighting your customers with personalized messages on the messaging apps they love; including Facebook Messenger, and SMS.</p>
           <p class="onboarding-side-bar-paragraph">Create and send amazing marketing campaigns, respond to support questions or new customer inquiries, and best of all, make it easy for your customers to pay you using SMS and Messenger.</p>
-          <p class="credit onboarding-side-bar-paragraph">Enjoy $5 SMS credit during your trial period.</p>
+          <p class="credit onboarding-side-bar-paragraph">Enjoy 100 free messages during your trial period.</p>
           <div class="left-arrow"></div>
         </div>
       </div>

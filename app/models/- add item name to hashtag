@@ -11,11 +11,7 @@ Header
 
 
 taiwo
-cc page onoard
-pretty time
-webhooks
 password
-country - account settings
 
 Add profile info
 1. validation
@@ -56,9 +52,12 @@ Dorje
 - fix unless: Proc.new{ |u| u.encrypted_password_changed? } might be needed for other merchant validations
 - fix relative times (customer and dashboard)
 - the graph isnt working properly...tooltip data is off..see sample...can graph show date on x axis
+- pretty time
+- edit/delete saved replies?
+
 
 Bhishma
-- add timezone finder for fb events
+- is user_id guaranteed on stripe events? your query is wrong... @merchant = params['user_id'].present
 - do messageparser with bhishma tomorrow.
 
 - add the url for pages you did to the sidebar on dashboard and settings page
@@ -92,7 +91,8 @@ Surya
 
 Bhishma
 - reduce repeated calls/queries
-- account-setting form doesnt have two ids.... genereally you replace the one from webflow... we dont necessarily merge the forms...of course there will be 2 ids
+- pls never leave 2 ids on a tag...ask if you aren't sure
+- give datarange picker a descriptive name for the xports
 
 - coupon pages (add link to transactions dropdown and link under segments)
 - find simple native browser notifications

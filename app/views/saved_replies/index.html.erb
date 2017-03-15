@@ -12,27 +12,28 @@
   </div>
 </div>
 <div class="dashboard-body">
-    <div class="saved-reply-table-wrapper">
-      <div class="header new-table-row w-row">
-        <div class="cn w-clearfix w-col w-col-4">
-          <div class="header name w-clearfix">
-            <div class="heading table-text">&nbsp;&nbsp;&nbsp;Created by</div>
-          </div>
-          
+  <div class="saved-reply-table-wrapper">
+    
+    <div class="header new-table-row w-row">
+      <div class="cn w-clearfix w-col w-col-4">
+        <div class="header name w-clearfix">
+          <div class="heading table-text">&nbsp;&nbsp;&nbsp;Created by</div>
         </div>
-        <div class="fv w-clearfix w-col w-col-4">
-          <div class="cn column column-2 header w-clearfix">
-            <div class="heading table-text">&nbsp;&nbsp;&nbsp;Title</div>
-          </div>
-        </div>
-        <div class="lv w-clearfix w-col w-col-4">
-          <div class="colum-3 column header lv w-clearfix">
-            <div class="heading saved-reply-date-created-header table-text">&nbsp;&nbsp;&nbsp;Date created</div>
-          </div>
+        
+      </div>
+      <div class="fv w-clearfix w-col w-col-4">
+        <div class="cn column column-2 header w-clearfix">
+          <div class="heading table-text">&nbsp;&nbsp;&nbsp;Title</div>
         </div>
       </div>
+      <div class="lv w-clearfix w-col w-col-4">
+        <div class="colum-3 column header lv w-clearfix">
+          <div class="heading saved-reply-date-created-header table-text">&nbsp;&nbsp;&nbsp;Date created</div>
+        </div>
+      </div>
+    </div>
 
-      <% @saved_replies.each do |reply| %>
+    <% @saved_replies.each do |reply| %>
 
       <div class="new-table-row saved-replies w-row">
         <div class="cn w-clearfix w-col w-col-4">
@@ -41,7 +42,7 @@
           </div>
           <div class="cb check-box-column">
             <div class="w-form">
-              <form data-name="Email Form 2" id="email-form-2" name="email-form-2">
+              <form id="email-form-2" name="email-form-2">
                 <div class="select-all-check-box w-checkbox w-clearfix">
                   <input class="cb table-checkbox checkboxes w-checkbox-input" id="node" type="checkbox">
                   <label class="checkbox-field-lable w-form-label" for="node">-</label>
@@ -62,24 +63,6 @@
           </div>
         </div>
       </div>
-            <% end %>
-        </div>
-      </div>
-     <!--  <div class="w-col w-col-6">
-        <div class="reply-editor saved-replies-wrapper w-clearfix">
-          <div class="content-sub-wrapper">
-            <h4 class="welcome-dash-content-container-header">Edit</h4>
-          </div>
-          <div class="saved-reply-form w-form">
-            <%#= render partial: 'form', locals: { saved_reply: @saved_replies.first } %>
-            <div class="w-form-done">
-              <div>Thank you! Your submission has been received!</div>
-            </div>
-            <div class="w-form-fail">
-              <div>Oops! Something went wrong while submitting the form</div>
-            </div>
-          </div>
-        </div>
-      </div> -->
-    </div>
+    <% end %>
   </div>
+</div>

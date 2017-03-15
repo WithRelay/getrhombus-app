@@ -94,14 +94,7 @@ $(document).ready(function () {
   })
   .on('success.form.fv', function(e, data) {    
     e.preventDefault();
-    // for add subscription page in onboarding
-    if ($('#add_subscription').length && $('#plan_name').val() == PriceSlider.get_free_plan_name()) {
-      // wipe the fields one more time
-      $('#cc-number, #cc-ex-month, #cc-ex-year, #cc-uri, #cc-type, #cc-name, #cc-exp, #cc-csc').val("");      
-      submit_cc_form();
-    } else {
-      CardHandler.submit_to_stripe(cc_form_id, cc_form_btn, submit_cc_form);  
-    };    
+    CardHandler.submit_to_stripe(cc_form_id, cc_form_btn, submit_cc_form);  
   });
  
   function submit_cc_form() { $(cc_form_id).data('formValidation').defaultSubmit(); };
