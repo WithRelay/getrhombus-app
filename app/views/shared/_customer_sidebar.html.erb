@@ -50,19 +50,22 @@
     </a>
     <div class="left-nav-underline"></div>
     <div class="w-form">
+      <form id="segment-sidebar-form" method="post" class='segment-form' action="#">
         <select class="dropdown segment-parameters w-select" id="customer-filter">
           <option value="new_customers" selected="selected">Customer created</option>
           <option value="last_msg_received">Last message received</option>
           <option value="last_msg_sent">Last message sent</option>
           <option value="last_purchase">Last purchase made</option>
         </select>
-        <select class="dropdown range w-select" data-name="Parameters" id="days-filter" name="Parameters">
+        <select class="dropdown range w-select" id="days-filter" >
           <option value="more_than">More than</option>
           <option value="exactly">Exactly</option>
           <option value="less_than">Less than</option>
           <option value="between">Between</option>
         </select>
-        <input class="day-count text-field w-input" data-name="Days ago" id="num_days" maxlength="256" placeholder="Days ago" required="required" type="text">
+        <div class='form-group col-xs-6'>
+          <input class="day-count text-field w-input form-control" id="num_days" name="number_of_days" placeholder="Days ago" type="text">
+        </div>
         <label class="form-label segment-label" for="segment_filter_by"> &nbsp;Filter segment by</label>
         <select class="dropdown range w-select" id="segment_filter_by">
           <option value="customer_spend" selected="selected">Customer spend</option>
@@ -71,10 +74,13 @@
           <option value="less_than">Less than</option>
           <option value="between">Between</option>
         </select>
-        <input class="amount-text-field text-field w-input" type="number" id="amount_1" maxlength="256" name="Amount-Filter" placeholder="From amount">
-        <input class="amount-text-field text-field w-input" type="number" id="amount_2" maxlength="256" name="Amount-Filter" placeholder="To amount" style="display:none;">
+        <div class='form-group col-xs-6'>
+          <input name="amount_1_segment" class="amount-text-field text-field w-input form-control" type="text" id="amount_1" placeholder="From amount">
+        </div>
+        <input class="amount-text-field text-field w-input" type="number" id="amount_2" maxlength="256" style="display:none;">
+        <input type="submit" class="button create-segment w-button" value="Create Segment"></a>
+      </form>
     </div>
-    <a class="button create-segment w-button" href="#" id="set-segment-name">Create Segment</a>
     <div class='modal-background w-hidden modal-body'>
       <%= render 'shared/modals/new_segment' %>
     </div>
