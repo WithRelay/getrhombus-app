@@ -169,24 +169,22 @@ $(document).on('ready page:load', function() {
 
 
   // Fired on click of create segment button
-  $("#name_segment").click(function(e){
-    $("#segment_create_modal").lightbox_me({
+  $("#set-segment-name").click(function(){
+    $("#new-segment-div").lightbox_me({
       closeClick: true,
       closeEsc: true,
       centered: true,
       onLoad: function() {
         // Populate segment selection before submitting request
-        $("#segment_create_modal").find('input:first')
-        $("#list_type").val("segment")
-        $("#segment_type").val($("#segment_option").val())
-        $("#segment_num_days").val($("#num_days").val())
-        $("#segment_filter").val($("#range").val())
-        $("#amt_filter").val($("#amount_filter").val())
-        $("#amt_1").val($("#amount_1").val())
-        $("#amt_2").val($("#amount_2").val())
+        $("#segment_create_modal").find('input:first');
+        $("#segment_type").val($('#customer-filter option:selected').val());
+        $("#segment_num_days").val($("#num_days").val());
+        $("#segment_filter").val($('#days-filter option:selected').val());
+        $("#amt_filter").val($("#segment_filter_by option:selected").val());
+        $("#lists_amt_1").val($("#amount_1").val());
+        $("#lists_amt_2").val($("#amount_2").val());
       }
     });
-    e.preventDefault();
   });
 
 
@@ -196,6 +194,18 @@ $(document).on('ready page:load', function() {
       selected_users.push($(this).data('users'));
     })
     return selected_users;
+  }
+
+  $("#segment_filter_by").change(function(){
+    checkBetweenSelected('#segment_filter_by', '#amount_2');
+  });
+
+  function checkBetweenSelected(element, hideShowField){
+    if ($(element + ' option:selected').val() == 'between'){
+      $(hideShowField).slideDown(100);
+    }else{
+      $(hideShowField).slideUp(100);
+    }
   }
   // Fired on click of the segment button
   // Still under development

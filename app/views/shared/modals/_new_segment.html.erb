@@ -1,19 +1,22 @@
-
-<%# removed all webflow data attributes %>
-
-<div class="create-segment-form-wrapper">
+<div class="create-segment-form-wrapper" id="new-segment-div">
   <div class="content-sub-wrapper modal w-clearfix">
     <h4 class="modal-header welcome-dash-content-container-header">Create Segment</h4>
-    <%# added data and update-close-modals %>
-    <a class="close-modal update-close-modals" href="#" data-parent="new-segment-div"></a>
+    <a class="close-modal update-close-modals" data-parent="new-segment-div" href="#" ></a>
   </div>
   <p class="modal-content-description">A segment is a group (subset) of your customers defined by filters that you set. Customers that match these filters are automatically added to the group over time.</p>
-  <div class="segment-modal underline-div"></div>
   <div class="create-segment w-form">
-    <form id="email-form-8" name="email-form-8">
+    <%= form_for('lists', url: v1_lists_path, html: { id: "create_segment" }) do |f| %>
       <label class="form-label list-name" for="Segment-Name-2">Segment name</label>
-      <input class="segment-name text-field w-input" id="Segment-Name-2" maxlength="256" name="Segment-Name-2" placeholder="Ex. Customer created 3 days ago" type="text"><a class="button create-segment-button w-button" href="#">Create Segment</a>
-    </form>
+      <%= f.hidden_field :list_type, value: 'segment' %>
+      <%= f.hidden_field :segment_type, id: 'segment_type' %>
+      <%= f.hidden_field :segment_num_days, id: 'segment_num_days' %>
+      <%= f.hidden_field :segment_filter, id: 'segment_filter' %>
+      <%= f.hidden_field :amt_filter, id: 'amt_filter' %>
+      <%= f.hidden_field :amt_1, id: 'lists_amt_1' %>
+      <%= f.hidden_field :amt_2, id: 'lists_amt_2' %>
+      <%= f.text_field :segment_name, class: 'segment-name text-field w-input' %>
+      <%= f.submit 'Create Segment', class: 'button create-segment-button w-button' %>
+    <% end %>
   </div>
   <p class="modal-paragraph segment tips"> &nbsp;TIP: You can setup automated drip campaigns to nurture customers or leads. First create segments for each key group of customers or leads, E.g:leads that became customers 3-6 days ago,followed by leads that became customers 7-14 days ago, etc. Then go to your campaigns page to set up automatic messages.</p><a class="button manage-segments w-button" href="#">Manage segments</a>
 </div>

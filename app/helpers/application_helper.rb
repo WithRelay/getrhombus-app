@@ -31,7 +31,7 @@ module ApplicationHelper
   end
 
   def render_sidebar_partial
-    return concat(render 'shared/customer_sidebar') if customer_index
+    return render 'shared/customer_sidebar' if customer_index
     concat(render 'shared/dashboard_sidebar') unless authenticated_pages || setting_pages || messaging_dashboard || restrict_other_params
     render 'shared/setting_sidebar' if setting_pages
   end
