@@ -24,7 +24,8 @@ class Api::V1::ListsController < API::V1::BaseController
   end
 
   def check_list_name
-    list = current_user.lists.find_by_name(list_params[:name])
+    list_name = list_params[:name] || segment_params[:segment_name]
+    list = current_user.lists.find_by_name(list_name)
     render json: { valid: list.nil? }
   end
 
