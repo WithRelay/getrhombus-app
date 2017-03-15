@@ -10,9 +10,6 @@ settings
 Header
 
 
-taiwo
-password
-
 Add profile info
 1. validation
 2. still bypassing to other onboarding steps
@@ -49,15 +46,14 @@ Surya
 
 Dorje
 - profile pic, dont show twitter info if not exists and transaction history on customer profile page
-- fix unless: Proc.new{ |u| u.encrypted_password_changed? } might be needed for other merchant validations
-- fix relative times (customer and dashboard)
+- pretty time - fix relative times (customer and dashboard)
 - the graph isnt working properly...tooltip data is off..see sample...can graph show date on x axis
-- pretty time
 - edit/delete saved replies?
 
 
 Bhishma
 - is user_id guaranteed on stripe events? your query is wrong... @merchant = params['user_id'].present
+- account balance default to 2 dollars
 - do messageparser with bhishma tomorrow.
 
 - add the url for pages you did to the sidebar on dashboard and settings page
