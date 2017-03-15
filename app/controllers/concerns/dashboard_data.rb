@@ -4,7 +4,7 @@ module DashboardData
 		customers = current_user.merchant_customers
     new_customers = customers.select{ |c| c.created_at >= 1.week.ago.utc }
 
-    transactions = Transaction.where( team_id: current_user.id)
+    transactions = Transaction.where( team_id: merchant_id)
     transactions_today = transactions.select{|t| t.created_at >= Time.current.beginning_of_day}
    
   {
@@ -21,7 +21,7 @@ module DashboardData
 		# Transaction.process_captured_payment(@user, params) if current_user.user_level == 0 && params[:captured_amt].present?
   	#data for chart, includes both fb_msg and sms
    {
-    last6_transactions: Transaction.includes(:user).where(team_id: current_user.id).order(created_at: :desc).last(6),
+    last6_transactions: Transaction.includes(:user).where(team_id: merchant_id).order(created_at: :desc).last(6),
     msg_data_for_chart: all_messages_count_in_30_days
    }
 	end
@@ -37,6 +37,7 @@ module DashboardData
 
 		{
 		 conversations_per_hour: Conversation.conversation_per_hour(current_user),
+
     #message_count method returns hash of message_per_day , fb_percent and sms_percent  
      messages: message_count,
      avg_handle_time: avg_handle_time.round(2),
@@ -75,11 +76,11 @@ module DashboardData
   end
 
   def sent_and_received_messages(class_name)
-    class_name.constantize.where("user_id= ? OR user_id_to= ?", current_user.id, current_user.id)
+    class_name.constantize.where("user_id= ? OR user_id_to= ?", merchant_id, merchant_id)
   end
 
   def avg_handle_time
-    avg = Conversation.where(merchant_id: current_user.id).where.not(resolution: nil)
+    avg = Conversation.where(merchant_id: merchant_id).where.not(resolution: nil)
                       .average("DATEDIFF(updated_at,created_at)")            
 
     avg.present? ? avg/1.minutes : avg
@@ -87,11 +88,15 @@ module DashboardData
 
   def open_convs_yesterday
     yesterday_convs = Conversation.where(
-                                  {merchant_id: current_user.id,
+                                  {merchant_id: merchant_id,
                                    resolution: nil,
                                    created_at: (Time.current.beginning_of_day - 1.days)..(Time.current.beginning_of_day)
                                   })
     yesterday_convs.count
   end
-
+ 
+ private
+ 	def merchant_id
+ 		current_user.id
+ 	end
 end
