@@ -91,6 +91,7 @@
 //= require pagination
 //= require list_checkbox_actions
 //= require managed-account
+//= require custom
 //= require rhombus_number_search
 //= require typeit
 //= require Chart.bundle

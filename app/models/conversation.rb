@@ -173,6 +173,7 @@ class Conversation < ActiveRecord::Base
 
   def self.conversation_per_hour(merchant_id)
    merchant_conv = Conversation.where(merchant_id: merchant_id)
+   return nil unless merchant_conv.present?
    first_conv , last_conv = merchant_conv.first, merchant_conv.last
    time_diff = (last_conv.created_at - first_conv.created_at)/1.hours
    total_conv = merchant_conv.count
