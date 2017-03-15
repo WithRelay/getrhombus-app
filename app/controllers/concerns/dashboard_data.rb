@@ -50,11 +50,11 @@ module DashboardData
   def all_messages_count_in_30_days
     txt_messages = sent_and_received_messages('Message')
                     .where("created_at >=?", 30.days.ago.utc)
-                    .group("DAY(created_at)").count
+                    .group("monthname(created_at)").group("DAY(created_at)").count
 
     fb_messages = sent_and_received_messages('FbMessage')
                     .where("created_at >=?", 30.days.ago.utc)
-                    .group("DAY(created_at)").count
+                    .group("monthname(created_at)").group("DAY(created_at)").count
 
     #prepare data for chart 
     #this will merge count of sms and fb_msg and add the coutes on the same day              
@@ -83,7 +83,7 @@ module DashboardData
     avg = Conversation.where(merchant_id: merchant_id).where.not(resolution: nil)
                       .average("DATEDIFF(updated_at,created_at)")            
 
-    avg.present? ? avg/1.minutes : avg
+    avg.present? ? avg/1.minutes : 1 #returns 1 if there is no data for average
   end
 
   def open_convs_yesterday
