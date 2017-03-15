@@ -4,21 +4,20 @@ module DashboardData
 		customers = current_user.merchant_customers
     new_customers = customers.select{ |c| c.created_at >= 1.week.ago.utc }
 
-    transactions = Transaction.where( team_id: merchant_id)
-    transactions_today = transactions.select{|t| t.created_at >= Time.current.beginning_of_day}
+    transactions = Transaction.where(team_id: merchant_id)
+    transactions_today = transactions.select{ |t| t.created_at >= Time.current.beginning_of_day }
    
-  {
-    all_customers_count: customers.count,
-    new_customers_count: new_customers.count,
-		total_transactions: transactions.sum(:amount),
-    transactions_today: transactions_today.present? ? transactions_today.sum(:amount) : 0,
-    transactions_today_count: transactions_today.count
-  }
+    {
+      all_customers_count: customers.count,
+      new_customers_count: new_customers.count,
+  		total_transactions: transactions.sum(:amount),
+      transactions_today: transactions_today.present? ? transactions_today.sum(:amount) : 0,
+      transactions_today_count: transactions_today.count
+    }
 
 	end
 
 	def chart_and_transactions
-		# Transaction.process_captured_payment(@user, params) if current_user.user_level == 0 && params[:captured_amt].present?
   	#data for chart, includes both fb_msg and sms
    {
     last6_transactions: Transaction.includes(:user).where(team_id: merchant_id).order(created_at: :desc).last(6),
@@ -34,16 +33,13 @@ module DashboardData
 	end
 
 	def msg_performance_section
-
 		{
 		 conversations_per_hour: Conversation.conversation_per_hour(current_user) || 0,
-
-    #message_count method returns hash of message_per_day , fb_percent and sms_percent  
+     #message_count method returns hash of message_per_day , fb_percent and sms_percent  
      messages: message_count,
-     avg_handle_time: avg_handle_time.round(2),
+     avg_handle_time: avg_handle_time.round,
 		 open_convs_yesterday: open_convs_yesterday
 		}
-
 	end
 
 	#These methods below are used to collect data for merchant dashboard
@@ -65,14 +61,14 @@ module DashboardData
     txt_msg, fb_msg = sent_and_received_messages('Message'), 
                       sent_and_received_messages('FbMessage')
 
-    txt_msg_today = txt_msg.select {|t| t.created_at >= Time.current.beginning_of_day}
-    fb_msg_today   = fb_msg.select  {|t| t.created_at >= Time.current.beginning_of_day}
+    txt_msg_today = txt_msg.select { |t| t.created_at >= Time.current.beginning_of_day }
+    fb_msg_today = fb_msg.select { |t| t.created_at >= Time.current.beginning_of_day }
     today_msgs_count = txt_msg_today.count + fb_msg_today.count 
 
     fb_msg_percent = fb_msg_today.present? ? 100 * fb_msg_today.count/today_msgs_count : 0
     txt_msg_percent = txt_msg_today.present? ? 100 * txt_msg_today.count/today_msgs_count : 0
 
-    {msg_today: today_msgs_count, fb_msg_percent: fb_msg_percent.round(2), txt_msg_percent: txt_msg_percent.round(2)} 
+    { msg_today: today_msgs_count, fb_msg_percent: fb_msg_percent.round, txt_msg_percent: txt_msg_percent.round } 
   end
 
   def sent_and_received_messages(class_name)
@@ -88,15 +84,17 @@ module DashboardData
 
   def open_convs_yesterday
     yesterday_convs = Conversation.where(
-                                  {merchant_id: merchant_id,
-                                   resolution: nil,
-                                   created_at: (Time.current.beginning_of_day - 1.days)..(Time.current.beginning_of_day)
+                                  { merchant_id: merchant_id,
+                                    resolution: nil,
+                                    created_at: (Time.current.beginning_of_day - 1.days)..(Time.current.beginning_of_day)
                                   })
     yesterday_convs.count
   end
  
  private
+
  	def merchant_id
  		current_user.id
  	end
+
 end

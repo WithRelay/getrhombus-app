@@ -10,7 +10,12 @@ settings
 Header
 
 
-
+taiwo
+cc page onoard
+pretty time
+webhooks
+password
+country - account settings
 
 Add profile info
 1. validation
@@ -42,17 +47,15 @@ Surya
 - validates_associated in user... any read op on user will run a query -   validates_associated :address, if: lambda { self.bank_accounts.present? }
 - catch db error in update action too... already added error for you
 - are you using campaign.scss, loading image is provided by edwin
-- empty state for lists
 - lock down permissions cancancan?
 - i see issues with reminder js
+- there is a customers file in users...duplicate of merchantcustomer? 
 
 Dorje
-- customer index empty state counter
 - profile pic, dont show twitter info if not exists and transaction history on customer profile page
 - fix unless: Proc.new{ |u| u.encrypted_password_changed? } might be needed for other merchant validations
-- fix stats
 - fix relative times (customer and dashboard)
-- comprehensively handle nils across your queries
+- the graph isnt working properly...tooltip data is off..see sample...can graph show date on x axis
 
 Bhishma
 - add timezone finder for fb events
@@ -60,7 +63,6 @@ Bhishma
 
 - add the url for pages you did to the sidebar on dashboard and settings page
 - card error flash missing in registrations update
-- instead of checking for if the key exists, enforce that that method run for that specific page_params
 - user auth in routes
   
 - new customers in dashboard header

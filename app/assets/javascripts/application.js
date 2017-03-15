@@ -47,7 +47,6 @@
 
 //= require jquery.lightbox_me
 //= require intlTelInput.min
-//= require chartist
 //= require jquery.payment
 //= require cocoon
 //= require jquery_word_counter

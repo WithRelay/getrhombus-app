@@ -43,32 +43,30 @@
           </div>
           <div class="sakes welcome-dash-content-container">
             <% @chart_and_transacs[:last6_transactions].each_with_index do |t, i| %>
-
-            <div class="new-customer-list w-row">
-             <%# @last6_transactions.each_with_index do |t, i| %>
-              <div class="w-col w-col-1">
-                <div class="customer-list-content-div">
-                  <div class="new-customer-table-text"><%= i %></div>
+              <div class="new-customer-list w-row">
+                <div class="w-col w-col-1">
+                  <div class="customer-list-content-div">
+                    <div class="new-customer-table-text"><%= i %></div>
+                  </div>
                 </div>
-              </div>
-              <div class="w-col w-col-6">
-                <div class="customer-list-content-div">
-                  <div class="customer-list-content-div w-clearfix">
-                    <div class="name-text new-customer-table-text"><%= t.user.full_name %></div>
+                <div class="w-col w-col-6">
+                  <div class="customer-list-content-div">
+                    <div class="customer-list-content-div w-clearfix">
+                      <div class="name-text new-customer-table-text"><%= t.user.full_name %></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="w-col w-col-2">
+                  <div class="customer-list-content-div">
+                    <div class="new-customer-table-text"><%= date_in_words_without_ago(t.created_at) %></div>
+                  </div>
+                </div>
+                <div class="w-col w-col-3">
+                  <div class="customer-list-content-div">
+                    <div class="new-customer-table-text">$<%= t.amount %></div>
                   </div>
                 </div>
               </div>
-              <div class="w-col w-col-2">
-                <div class="customer-list-content-div">
-                  <div class="new-customer-table-text"><%= date_in_words_without_ago(t.created_at) %></div>
-                </div>
-              </div>
-              <div class="w-col w-col-3">
-                <div class="customer-list-content-div">
-                  <div class="new-customer-table-text">$<%= t.amount %></div>
-                </div>
-              </div>
-            </div>
             <%end%>
           </div>
         </div>
@@ -79,7 +77,7 @@
             <h4 class="welcome-dash-content-container-header">Message Volume</h4>
           </div>
           <div>
-            <%= area_chart @chart_and_transacs[:msg_data_for_chart] %>
+            <%= area_chart @chart_and_transacs[:msg_data_for_chart], pointSize: 50, curve: false %>
           </div>
         </div>
       </div>
