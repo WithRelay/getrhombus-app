@@ -10,14 +10,16 @@ class TransactionsController < ApplicationController
   respond_to :html
 
   def index
-    if params[:captured] == "false" && current_user.is_merchant?
-      @transactions = Transaction.includes(:user).where(team_id: current_user.id, captured: false)
+    if current_user.is_merchant?
+      if params[:captured] == "false"
+        @transactions = Transaction.includes(:user).where(team_id: current_user.id, captured: false)
                                  .where("created_at >= ?", Time.zone.at(7.days.ago).to_i)
+                                 .where(subscription_id: [nil, ""])
                                  .paginate(page: params[:page], per_page: 10).order(created_at: :desc)
-
-    elsif current_user.is_merchant?
-      @transactions = Transaction.includes(:user).where(team_id: current_user.id, captured: true)
+      else
+        @transactions = Transaction.includes(:user).where(team_id: current_user.id, captured: true, subscription_id: [nil, ""])
                                  .paginate(page: params[:page], per_page: 10).order(created_at: :desc)
+      end
     else
       @transactions = []
     end

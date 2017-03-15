@@ -1,5 +1,17 @@
 - Test All Pages when there is no data
 
+Pages to update:
+Sidebar
+welcome - basic
+customer - with segment stuff
+leads and segment
+settings
+
+Header
+
+
+
+
 Add profile info
 1. validation
 2. still bypassing to other onboarding steps
@@ -27,8 +39,8 @@ OTHERS
 - emails
 
 Surya
-- validates_associated in user... any read op on user will run a query
-- catch db error in update action too... add error to base
+- validates_associated in user... any read op on user will run a query -   validates_associated :address, if: lambda { self.bank_accounts.present? }
+- catch db error in update action too... already added error for you
 - are you using campaign.scss, loading image is provided by edwin
 - empty state for lists
 - lock down permissions cancancan?
@@ -37,13 +49,14 @@ Surya
 Dorje
 - customer index empty state counter
 - profile pic, dont show twitter info if not exists and transaction history on customer profile page
-- unless: Proc.new{|u| u.encrypted_password_changed? } might be needed for other merchant validations
+- fix unless: Proc.new{ |u| u.encrypted_password_changed? } might be needed for other merchant validations
+- fix stats
+- fix relative times (customer and dashboard)
+- comprehensively handle nils across your queries
 
 Bhishma
 - add timezone finder for fb events
 - do messageparser with bhishma tomorrow.
-- export
-
 
 - add the url for pages you did to the sidebar on dashboard and settings page
 - card error flash missing in registrations update
@@ -67,9 +80,6 @@ Everyone
 Torchi
 - review merchant customer
 - review saved replies
-
-Edwin
-- allow red alert to have multiple lines
 
 Surya
 - notifications header issue...not consistent across pages

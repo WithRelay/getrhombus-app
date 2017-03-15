@@ -33,24 +33,24 @@ class RegistrationsController < Devise::RegistrationsController
   def create
     set_captured_payment_session
     build_resource(sign_up_params)
-    error_uniqueness = get_uniquness_error
+    save_resource
     yield resource if block_given?
     if resource.persisted?
       sign_up(resource_name, resource)
       respond_with resource, location: after_sign_up_path_for(resource)
     else
-      flash[:error] = resource.errors.full_messages << error_uniqueness
+      flash[:error] = resource.errors.full_messages
       clean_up_passwords resource
       set_minimum_password_length
       render :new
     end
   end
 
-  def get_uniquness_error
+  def save_resource
     begin
       resource.save
     rescue ActiveRecord::RecordNotUnique
-      'User with the phone number already registered' if $!.message.include?('index_users_on_phone_number')
+      resource.errors.add(:phone_number, "is already in use.") if $!.message.include?('index_users_on_phone_number')
     end
   end
 
