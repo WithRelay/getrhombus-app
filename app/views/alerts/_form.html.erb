@@ -8,55 +8,49 @@
     <h4 class="form-header">Notification settings</h4>
     <div class="flex-underline form-header-underline"></div>
     <div class="account-settings-form-wrapper w-form">
-      <%= form_for([current_user, @alert], html: { class: "w-clearfix", data: { name: "Email Form" }, id: "email-form" }) do |f| %>
+      <%= form_for([current_user, @alert], html: { class: "w-clearfix" }) do |f| %>
         <label class="field-headers form-label settings" for="Business-Name">ALERTS</label>
         <label class="form-label paragraph" for="field">Send me unread message notifications by email every:</label>
-        <%= f.select :interval, options_for_select({ "15 minutes" => "15", "30 minutes" => '30', "1 hour" => "60" }, selected: @alert.interval), {}, class: 'alerts-dropdown w-select', id: 'field' %>
+        <%= f.select :interval, options_for_select({ "15 minutes" => "15", "30 minutes" => '30', "1 hour" => "60" }, selected: @alert.interval), {}, class: 'alerts-dropdown w-select' %>
         <div class="form-check-box w-checkbox">
-          <%= f.check_box :include_sms, data: { name: "Checkbox" }, id: 'w-checkbox-input alert-include-sms checkbox' %>
+          <%= f.check_box :include_sms, class: 'w-checkbox-input checkbox', id: 'alert-include-sms' %>
           <label class="w-form-label" for="checkbox">Include SMS alerts for unread messages</label>
         </div>
         <div id='alert-sms-number'>
           <%= f.hidden_field :sms_number, id: "phone_number" %>
-          <%= f.phone_field :phone, id: "phone SMS-Alerts", type: 'tel', class: 'sms-alerts text-field w-input', data: { name: "SMS Alerts" }, placeholder: '(415) 123 - 4567' %>
+          <%= f.phone_field :phone, id: "phone", type: 'tel', class: 'sms-alerts text-field w-input', placeholder: '(415) 123 - 4567' %>
           <label class="form-label paragraph" for="field-2">You will receive SMS alerts on this phone number</label>
         </div>
         <div class="flex-underline form-section-divider"></div>
         <label class="field-headers form-label settings" for="Website">SYSTEM NOTIFICATIONS</label>
         <label class="form-label paragraph system-notifications" for="Tax-Rate">We notify you, as well as your customers when certain actions take place within Rhombus. These system notifications include:</label>
         <div class="form-check-box w-checkbox">
-          <input checked="checked" class="w-checkbox-input" data-name="Checkbox 2" id="checkbox-2" name="checkbox-2" type="checkbox">
+          <input checked="checked" class="w-checkbox-input" type="checkbox">
           <label class="w-form-label" for="checkbox-2">Notify me when a customer sends a payment</label>
         </div>
         <div class="form-check-box w-checkbox">
-          <input checked="checked" class="w-checkbox-input" data-name="Checkbox 6" id="checkbox-6" name="checkbox-6" type="checkbox">
+          <input checked="checked" class="w-checkbox-input" type="checkbox">
           <label class="w-form-label" for="checkbox-6">Auto send receipts to customers when a payment is made</label>
         </div>
         <div class="form-check-box w-checkbox">
-          <input checked="checked" class="w-checkbox-input" data-name="Checkbox 5" id="checkbox-5" name="checkbox-5" type="checkbox">
+          <input checked="checked" class="w-checkbox-input" type="checkbox">
           <label class="w-form-label" for="checkbox-5">Notify me when a customer creates a subscription</label>
         </div>
         <div class="form-check-box w-checkbox">
-          <input checked="checked" class="w-checkbox-input" data-name="Checkbox 4" id="checkbox-4" name="checkbox-4" type="checkbox">
+          <input checked="checked" class="w-checkbox-input" type="checkbox">
           <label class="w-form-label" for="checkbox-4">Send me weekly activity summary</label>
         </div>
         <div class="form-check-box w-checkbox">
-          <input checked="checked" class="w-checkbox-input" data-name="Checkbox 3" id="checkbox-3" name="checkbox-3" type="checkbox">
+          <input checked="checked" class="w-checkbox-input" type="checkbox">
           <label class="w-form-label" for="checkbox-3">Notify me when my SMS/MMS credits are low (Less than $5)</label>
         </div>
         <div class="flex-underline form-section-divider"></div>
         <label class="field-headers form-label settings" for="Customer-Signup-Auto-Response">welcome greeting</label>
         <label class="form-label paragraph" for="Customer-Signup-Auto-Response">Set a warm greeting that will go out to your customers the first time they text you on Rhombus. It's one of the easy ways to make a great impression.</label>
-        <%= f.text_area :custom_welcome, value: @custom_welcome, class: 'auto-welcome-message-text-area w-input', id: 'Customer-Signup-Auto-Response', data: { name: 'Customer Signup Auto-Response' }, placeholder: "Set welcome message" %>
+        <%= f.text_area :custom_welcome, value: @custom_welcome, class: 'auto-welcome-message-text-area w-input', id: 'Customer-Signup-Auto-Response', placeholder: "Set welcome message" %>
         <div class="form-field-subtext">150</div>
         <%= f.submit 'Save changes', class: 'button save-changes w-button' %>
       <% end %>
-      <div class="w-form-done">
-        <div>Thank you! Your submission has been received!</div>
-      </div>
-      <div class="w-form-fail">
-        <div>Oops! Something went wrong while submitting the form</div>
-      </div>
     </div>
   </div>
 </div>

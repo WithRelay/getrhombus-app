@@ -1,13 +1,13 @@
 - Test All Pages when there is no data
 
-sidebar
+Pages to update:
+Sidebar
 welcome - basic
 customer - with segment stuff
 leads and segment
 settings
 
-header
-
+Header
 
 
 Add profile info
@@ -36,33 +36,28 @@ OTHERS
 - welcome page
 - emails
 
-Taiwo
-fix relative time on dashboard
-
 Surya
-- validates_associated in user... any read op on user will run a query
+- validates_associated in user... any read op on user will run a query -   validates_associated :address, if: lambda { self.bank_accounts.present? }
 - catch db error in update action too... already added error for you
 - are you using campaign.scss, loading image is provided by edwin
-- empty state for lists
 - lock down permissions cancancan?
 - i see issues with reminder js
+- there is a customers file in users...duplicate of merchantcustomer? 
 
 Dorje
-- customer index empty state counter
 - profile pic, dont show twitter info if not exists and transaction history on customer profile page
+- pretty time - fix relative times (customer and dashboard)
+- the graph isnt working properly...tooltip data is off..see sample...can graph show date on x axis
+- edit/delete saved replies?
 
-- fix unless: Proc.new{|u| u.encrypted_password_changed? } might be needed for other merchant validations
-- fix stats
 
 Bhishma
-- add timezone finder for fb events
+- is user_id guaranteed on stripe events? your query is wrong... @merchant = params['user_id'].present
+- account balance default to 2 dollars
 - do messageparser with bhishma tomorrow.
-- export - transactions should be subscriptions nil or ''
-
 
 - add the url for pages you did to the sidebar on dashboard and settings page
 - card error flash missing in registrations update
-- instead of checking for if the key exists, enforce that that method run for that specific page_params
 - user auth in routes
   
 - new customers in dashboard header
@@ -83,9 +78,6 @@ Torchi
 - review merchant customer
 - review saved replies
 
-Edwin
-- allow red alert to have multiple lines
-
 Surya
 - notifications header issue...not consistent across pages
 - campaigns new 
@@ -95,7 +87,8 @@ Surya
 
 Bhishma
 - reduce repeated calls/queries
-- account-setting form doesnt have two ids.... genereally you replace the one from webflow... we dont necessarily merge the forms...of course there will be 2 ids
+- pls never leave 2 ids on a tag...ask if you aren't sure
+- give datarange picker a descriptive name for the xports
 
 - coupon pages (add link to transactions dropdown and link under segments)
 - find simple native browser notifications

@@ -30,8 +30,8 @@
         </div>
         <div class="w-col w-col-6">
           <div class="w-form">
-            <%= form_for :fb_page, url: user_update_fb_page_path(current_user), html: { class: 'w-clearfix', id: "email-form", data: { name: 'Email Form' } }, method: :patch do |f| %>
-              <%= select_tag 'Select Facebook page', options_for_select(@user_fb_pages.map{|p| ["#{p.page_name}", "#{p.id} #{p.subscription_status}"] }), class: "dropdown select-facebook-page w-select", data: { name: "Select Facebook Page" }, id: "Select-Facebook-Page", prompt: 'Select a Facebook Page' %>
+            <%= form_for :fb_page, url: user_update_fb_page_path(current_user), html: { class: 'w-clearfix' } }, method: :patch do |f| %>
+              <%= select_tag 'Select Facebook page', options_for_select(@user_fb_pages.map{|p| ["#{p.page_name}", "#{p.id} #{p.subscription_status}"] }), class: "dropdown select-facebook-page w-select", id: "Select-Facebook-Page", prompt: 'Select a Facebook Page' %>
 
               <p>Subscribed Page:
               <% if subscribed_page.present? %>
@@ -49,7 +49,7 @@
         </div>
       </div>
       <% else %>
-        <p> Please make some facebook page before proceed</p>
+        <p>Please make a facebook page to proceed.</p>
       <%end%>
 
       <%= link_to fb_pages_remove_integration_path, id: 'delete_integration', class: 'pull-right button integrate-button w-button remove_fb_integration' do%>

@@ -1,6 +1,6 @@
  <% provide(:title, 'Relay - Reset Password') %>
 
-<% flash[:error] = devise_error_messages! unless resource.errors.blank?%>
+<% flash[:error] = devise_error_messages! unless resource.errors.blank? %>
   
   <div class="blank-page-content-wrapper reset-password">
     <div class="onboarding-form-div sign-in signup">
@@ -14,8 +14,6 @@
            <div class="form-group col-xs-6">
              <%= f.email_field :email, placeholder: "Email", autofocus: true, class: 'form-control email-address reset-password text-field w-input', data: { name: "Email" } %>
              <div class='messageContainer'></div>
-             
-             <%= f.hidden_field :page_param, value: params[:controller] %>
           </div>
           <%= f.submit "RESET PASSWORD", class: "button log-in w-button", value: "Send reset password email", data: { wait: "Please wait..." } %>
         <% end %>

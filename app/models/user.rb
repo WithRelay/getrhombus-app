@@ -4,22 +4,21 @@ class User < ActiveRecord::Base
   include DashboardCustomerQueries
   include CSVHandler
 
-  attr_accessor :phone, :captured_amt, :msg_id, :tag_id, :referrer_id, :tos_acceptance, :user_lists, :page_params
+  attr_accessor :phone, :captured_amt, :msg_id, :tag_id, :referrer_id, :tos_acceptance, :user_lists
 
   # validation rules for user attributes
-  validates :tos_acceptance, acceptance: true, if: lambda { self.is_merchant? }, on: :update
-  validates_presence_of :org_type, if:  lambda { self.is_merchant? }, on: :update, unless: Proc.new{ self.encrypted_password_changed? }
-  validates_presence_of :org_name, if: lambda { self.is_merchant? && self.page_params != "passwords" && self.org_type.try(:downcase) != 'individual' }, on: :update
+  validates :tos_acceptance, acceptance: true, if: lambda { self.is_merchant? && self.reset_password_token.blank? }, on: :update
+  validates_presence_of :org_type, if: lambda { self.is_merchant? && self.reset_password_token.blank? }, on: :update
+
+  validates_presence_of :org_name, if: lambda { self.is_merchant? && self.org_type.try(:downcase) != 'individual' && self.reset_password_token.blank? }, on: :update
   validates_presence_of :user_level, message: "Please select an account type", on: :create
 
   # Edit pages use the right number field for each user type
-  validates_presence_of :org_phone, numericality: { only_integer: true }, length: { minimum: 10 }, on: :update, if: lambda { self.is_merchant? }
-  validates_presence_of :phone_number, numericality: { only_integer: true }, length: { minimum: 10 }, on: :update, if: lambda { self.is_customer? }
+  validates_presence_of :org_phone, numericality: { only_integer: true }, length: { minimum: 10 }, on: :update, if: lambda { self.is_merchant? && self.reset_password_token.blank? }
   # Sign up form uses phone_number field for both user types
-  validates_presence_of :phone_number, numericality: { only_integer: true }, length: { minimum: 10 }, on: :create, if: lambda { self.is_customer? }
+  validates_presence_of :phone_number, numericality: { only_integer: true }, length: { minimum: 10 }, if: lambda { self.is_customer? }
   # Allow nil added to db migration because merchants don't have phone number. They have org_phone.
-  # And since mysql indexes this field, it indexes nil and only allows one row with nil.
-  # You run into issues with any additional merchants.
+  # And since mysql indexes this field, it indexes nil and only allows one row with nil. You run into issues with any additional merchants.
   validates_uniqueness_of :phone_number, :allow_nil => true, :if => lambda { self.is_customer? }
   validate :phone_number_cannot_be_rhombus_number
 

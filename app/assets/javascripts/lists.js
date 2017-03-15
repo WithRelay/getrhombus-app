@@ -1,28 +1,5 @@
 $(document).on('ready page:load', function() {
 
-
-  $("form#create_segment").submit(function(e){
-    e.preventDefault();
-    var action = $(this).attr('action');
-    var method = $(this).attr('method');
-    var data = $(this).serializeArray();
-
-    // Submit form via Ajax
-    $.ajax({
-      method: method,
-      url: action,
-      data: data,
-      dataType: 'json'
-    }).done(function(msg){
-      console.log("Segment created successfully")
-      $('#segment_create_msg').html("Segment created successfully")
-    })
-    .fail(function(msg){
-      console.log("Segment could not be created")
-      $('#segment_create_msg').html("Segment could not be created")
-    })
-  })
-
   $("#delete-lists").click(function(){
     FlashHandler.setConfirmationDialog('#delete-lists','Are you sure, you want to delete selected lists?', 'Delete', 'destroy-lists');
   });
@@ -31,7 +8,7 @@ $(document).on('ready page:load', function() {
     var selected_item = getSelectedUserIds();
     var link = $(this).data('lists-campaign');
     if (selected_item.length > 1)
-      return setFlashForList('Only 1 list can be selected for sending campaign', 'error');
+    return setFlashForList('Only 1 list can be selected for sending campaign', 'error');
     else if (selected_item.length < 1){
       return setFlashForList('Please select a list to send campaign', 'error');
     }
@@ -60,7 +37,7 @@ $(document).on('ready page:load', function() {
   $("#edit-selected-list").click(function(e){
     var selected_edit_list = getSelectedUserIds();
     if (selected_edit_list.length > 1)
-      return setFlashForList('Only 1 list can be selected for editing', 'error');
+    return setFlashForList('Only 1 list can be selected for editing', 'error');
     else if (selected_edit_list.length < 1){
       return setFlashForList('Please select a list to edit', 'error');
     }
@@ -98,7 +75,7 @@ $(document).on('ready page:load', function() {
           notEmpty: {
             message: 'Campaign name is required'
           },
-            remote: {
+          remote: {
             url: '/v1/lists/check_list_name',
             type: 'GET'
           }
@@ -128,6 +105,95 @@ $(document).on('ready page:load', function() {
       });
     })
   });
+
+  $('#segment-sidebar-form').formValidation({
+    framework: 'bootstrap',
+    live: 'disabled',
+    err: {
+      container: function($field, validator) {
+        return $field.parent().find('.messageContainer');
+      }
+    },
+    fields: {
+      'number_of_days': {
+        validators: {
+          notEmpty: {
+            message: 'number of days is required'
+          }
+        }
+      },
+      'amount_1_segment': {
+        validators: {
+          callback: {
+            callback: function (value, validator, $field) {
+              return { valid: ($field.val() > 0) };
+            }
+          }
+        }
+      }
+    }
+  }).on('success.form.fv', function(e) {
+    e.preventDefault();
+    $("#new-segment-div").lightbox_me({
+      closeClick: true,
+      closeEsc: true,
+      centered: true,
+      onLoad: function() {
+        // Populate segment selection before submitting request
+        $("#segment_create_modal").find('input:first');
+        $("#segment_type").val($('#customer-filter option:selected').val());
+        $("#segment_num_days").val($("#num_days").val());
+        $("#segment_filter").val($('#days-filter option:selected').val());
+        $("#amt_filter").val($("#segment_filter_by option:selected").val());
+        $("#lists_amt_1").val($("#amount_1").val());
+        $("#lists_amt_2").val($("#amount_2").val());
+      }
+    });
+  });
+
+  $('#create_segment').formValidation({
+    framework: 'bootstrap',
+    live: 'disabled',
+    err: {
+      container: function($field, validator) {
+        return $field.parent().find('.messageContainer');
+      }
+    },
+    fields: {
+      'lists[segment_name]': {
+        excluded: false,
+        verbose: false,
+        validators: {
+          notEmpty: {
+            message: 'segment name is required'
+          },
+          remote: {
+            url: '/v1/lists/check_list_name',
+            type: 'GET'
+          }
+        }
+      }
+    }
+  }).on('success.form.fv', function(e) {
+    e.preventDefault();
+      var action = $(this).attr('action');
+      var method = $(this).attr('method');
+      var data = $(this).serializeArray();
+
+      // Submit form via Ajax
+      $.ajax({
+        method: method,
+        url: action,
+        data: data,
+        dataType: 'json'
+      }).done(function(msg){
+        setFlashForList('Segment created successfully', 'notice');
+      })
+      .fail(function(msg){
+        setFlashForList('Sorry segment cannot create', 'error');
+      })
+  });
+
 
   // Fired when the user wants to select checkboxes that fall in a range
   jQuery(function($) {
@@ -168,34 +234,24 @@ $(document).on('ready page:load', function() {
   }
 
 
-  // Fired on click of create segment button
-  $("#name_segment").click(function(e){
-    $("#segment_create_modal").lightbox_me({
-      closeClick: true,
-      closeEsc: true,
-      centered: true,
-      onLoad: function() {
-        // Populate segment selection before submitting request
-        $("#segment_create_modal").find('input:first')
-        $("#list_type").val("segment")
-        $("#segment_type").val($("#segment_option").val())
-        $("#segment_num_days").val($("#num_days").val())
-        $("#segment_filter").val($("#range").val())
-        $("#amt_filter").val($("#amount_filter").val())
-        $("#amt_1").val($("#amount_1").val())
-        $("#amt_2").val($("#amount_2").val())
-      }
-    });
-    e.preventDefault();
-  });
-
-
   function getSelectedUserIds(){
     var selected_users = []; // An array for storing selected users
     $('.merchant_customers:checked').each(function(){
       selected_users.push($(this).data('users'));
     })
     return selected_users;
+  }
+
+  $("#segment_filter_by").change(function(){
+    checkBetweenSelected('#segment_filter_by', '#amount_2');
+  });
+
+  function checkBetweenSelected(element, hideShowField){
+    if ($(element + ' option:selected').val() == 'between'){
+      $(hideShowField).slideDown(100);
+    }else{
+      $(hideShowField).slideUp(100);
+    }
   }
   // Fired on click of the segment button
   // Still under development

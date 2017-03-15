@@ -47,7 +47,6 @@
 
 //= require jquery.lightbox_me
 //= require intlTelInput.min
-//= require chartist
 //= require jquery.payment
 //= require cocoon
 //= require jquery_word_counter
@@ -92,6 +91,7 @@
 //= require pagination
 //= require list_checkbox_actions
 //= require managed-account
+//= require custom
 //= require rhombus_number_search
 //= require typeit
 //= require Chart.bundle

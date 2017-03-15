@@ -33,14 +33,6 @@ var PriceSlider = new function() {
     };
   };
 
-  this.get_free_plan_name = function() {
-    for(var i = 0, len = keys.length; i < len; i++) {
-      if (plans[keys[i]].amt == 0) {
-        return keys[i];
-      }
-    }
-  };
-
   function displayValue() {
     selection = plan_range(pricingSlider.value);
 
@@ -49,14 +41,12 @@ var PriceSlider = new function() {
     priceValueSpan.innerHTML = selection[1];
 
     // for add a subscription page
-    if ($('#page_params').attr("name") == 'add_subscription') {
+    if ($('#page_params').val() == 'add_subscription') {
       if (pricingSlider.value <= 100) {
-        $('#cc-fields').slideUp(300);
+        $('#free-account-label').slideDown(300);
         $('#cc-submit').val('Get Started');
-        $('#cc-form').data('formValidation').resetForm();
-        $('#cc-number, #cc-ex-month, #cc-ex-year, #cc-uri, #cc-type, #cc-name, #cc-exp, #cc-csc').val("");
       } else {
-        $('#cc-fields').slideDown(300);
+        $('#free-account-label').slideUp(300);
         $('#cc-submit').val('Start 14-day Trial');
       };
     };

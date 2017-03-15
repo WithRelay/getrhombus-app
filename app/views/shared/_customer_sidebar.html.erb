@@ -26,10 +26,9 @@
     </a>
 
     <div class="messaging-hidden-menu" data-ix="display-none-on-load">
-    <%= link_to 'Conversations', user_conversations_path(current_user), class: 'dashboard-dropdown-link' %>
+      <%= link_to 'Conversations', user_conversations_path(current_user), class: 'dashboard-dropdown-link' %>
       <%= link_to 'Saved Replirs', user_saved_replies_path(current_user), class: 'dashboard-dropdown-link' %>
       <%= link_to 'Customer Reminders', user_reminders_path(current_user), class: 'dashboard-dropdown-link' %>
-
     </div>
     <%= link_to user_campaigns_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
       <div class="left-nav-tab">&nbsp; &nbsp;Campaigns</div>
@@ -43,7 +42,7 @@
       <a class="dashboard-dropdown-link" href="#">Pre-authorized</a>
       <a class="dashboard-dropdown-link" href="#">Subscriptions</a>
     </div>
-    <%= link_to user_hashtags_path(current_user)  , class: "left-nav-tab-wrapper w-inline-block" do %>
+    <%= link_to user_hashtags_path(current_user), class: "left-nav-tab-wrapper w-inline-block" do %>
       <div class="left-nav-tab">&nbsp; &nbsp;Hashtags</div>
     <%end%>
     <a class="left-nav-tab-wrapper w-inline-block" href="#">
@@ -51,36 +50,38 @@
     </a>
     <div class="left-nav-underline"></div>
     <div class="w-form">
-      <form class="segmentation-wrapper" data-name="Email Form 9" id="email-form-9" name="email-form-9">
-        <select class="dropdown segment-parameters w-select" data-name="Segment Options" id="Segment-Options" name="Segment-Options">
-          <option value="">Segment by</option>
-          <option value="">Customer created</option>
-          <option value="">Last message received</option>
-          <option value="">Last message sent</option>
-          <option value="">Last purchase made</option>
+      <form id="segment-sidebar-form" method="post" class='segment-form' action="#">
+        <select class="dropdown segment-parameters w-select" id="customer-filter">
+          <option value="new_customers" selected="selected">Customer created</option>
+          <option value="last_msg_received">Last message received</option>
+          <option value="last_msg_sent">Last message sent</option>
+          <option value="last_purchase">Last purchase made</option>
         </select>
-        <select class="dropdown range w-select" data-name="Parameters" id="Parameters" name="Parameters">
-          <option value="">More than</option>
-          <option value="">Exactly</option>
-          <option value="">Less than</option>
-          <option value="">Between</option>
+        <select class="dropdown range w-select" id="days-filter" >
+          <option value="more_than">More than</option>
+          <option value="exactly">Exactly</option>
+          <option value="less_than">Less than</option>
+          <option value="between">Between</option>
         </select>
-        <input class="day-count text-field w-input" data-name="Days ago" id="Days-ago" maxlength="256" name="Days-ago" placeholder="Days ago" required="required" type="text">
-        <label class="form-label segment-label" for="Parameters-2"> &nbsp;Filter segment by</label>
-        <select class="dropdown range w-select" data-name="Parameters" id="Parameters-2" name="Parameters">
-          <option value="">Customer spend</option>
-          <option value="">More than</option>
-          <option value="">Exactly</option>
-          <option value="">Less than</option>
-          <option value="">Between</option>
+        <div class='form-group col-xs-6'>
+          <input class="day-count text-field w-input form-control" id="num_days" name="number_of_days" placeholder="Days ago" type="text">
+        </div>
+        <label class="form-label segment-label" for="segment_filter_by"> &nbsp;Filter segment by</label>
+        <select class="dropdown range w-select" id="segment_filter_by">
+          <option value="customer_spend" selected="selected">Customer spend</option>
+          <option value="more_than">More than</option>
+          <option value="exactly">Exactly</option>
+          <option value="less_than">Less than</option>
+          <option value="between">Between</option>
         </select>
-        <input class="amount-text-field text-field w-input" data-name="Amount Filter" id="Amount-Filter" maxlength="256" name="Amount-Filter" placeholder="Amount" required="required" type="email">
+        <div class='form-group col-xs-6'>
+          <input name="amount_1_segment" class="amount-text-field text-field w-input form-control" type="text" id="amount_1" placeholder="From amount">
+        </div>
+        <input class="amount-text-field text-field w-input" type="number" id="amount_2" maxlength="256" style="display:none;">
+        <input type="submit" class="button create-segment w-button" value="Create Segment"></a>
       </form>
-      <div class="w-form-done">
-        <div>Thank you! Your submission has been received!</div>
-      </div>
-      <div class="w-form-fail">
-        <div>Oops! Something went wrong while submitting the form</div>
-      </div>
-    </div><a class="button create-segment w-button" data-ix="create-segment" href="#">Create Segment</a>
+    </div>
+    <div class='modal-background w-hidden modal-body'>
+      <%= render 'shared/modals/new_segment' %>
+    </div>
   </div>
