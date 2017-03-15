@@ -57,11 +57,32 @@ $(document).on('ready page:load', function() {
     }
   });
 
+  $("#edit-selected-list").click(function(e){
+    var selected_edit_list = getSelectedUserIds();
+    if (selected_edit_list.length > 1)
+      return setFlashForList('Only 1 list can be selected for editing', 'error');
+    else if (selected_edit_list.length < 1){
+      return setFlashForList('Please select a list to edit', 'error');
+    }
+    else{
+      var edit_list_form = $("#edit_list_form").attr("action").split('/');
+      edit_list_form.pop();
+      var list_name = $('.merchant_customers:checked').data("list-name");
+      $("#edit-list-form").lightbox_me({
+        centered: true,
+        onLoad: function() {
+          $('#edit-modal-list-name').val(list_name);
+          $("#edit_list_form").attr("action", edit_list_form.join('/') + '/' + selected_edit_list[0]);
+        }
+      });
+    }
+  });
+
   $('.merchant_customers').click(function(){
     $(this).is(':checked') && $('#create_list_button').removeAttr('disabled')
   });
 
-  $('#create_user_list').formValidation({
+  $('.edit_create_user_list').formValidation({
     framework: 'bootstrap',
     live: 'disabled',
     err: {
@@ -70,7 +91,7 @@ $(document).on('ready page:load', function() {
       }
     },
     fields: {
-      'lists[list_name]': {
+      'lists[name]': {
         excluded: false,
         verbose: false,
         validators: {

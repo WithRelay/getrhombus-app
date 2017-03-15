@@ -24,7 +24,7 @@ class Api::V1::ListsController < API::V1::BaseController
   end
 
   def check_list_name
-    list = current_user.lists.find_by_name(list_params[:list_name])
+    list = current_user.lists.find_by_name(list_params[:name])
     render json: { valid: list.nil? }
   end
 
@@ -32,7 +32,7 @@ class Api::V1::ListsController < API::V1::BaseController
   def create
     begin
       if list_params[:list_type] == 'list'
-        list = current_user.lists.build(name: list_params[:list_name])
+        list = current_user.lists.build(name: list_params[:name])
         selected_users_id = list_params[:selected_users].split(",")
         selected_users_id.each { |user_id| list.user_lists.build(user_id: user_id) }
         # list also save associated record
@@ -69,6 +69,11 @@ class Api::V1::ListsController < API::V1::BaseController
     end
   end
 
+
+  def update
+
+  end
+
   private
     # Default method for creating lists
     # @param name The name of the list
@@ -83,7 +88,7 @@ class Api::V1::ListsController < API::V1::BaseController
     end
 
     def list_params
-      params.require(:lists).permit(:selected_users, :list_type, :list_name)
+      params.require(:lists).permit(:selected_users, :list_type, :name)
     end
 
     # Get the SQL query for the segment

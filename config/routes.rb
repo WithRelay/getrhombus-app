@@ -87,7 +87,7 @@ Rails.application.routes.draw  do
         get 'segments' => 'lists#segments'
         get 'sms-usage' => 'users#sms_usage'
         get 'leads-and-contacts' => 'users#leads_contacts'
-        resources :lists, only: [:index, :create, :show] do
+        resources :lists, only: [:index, :create, :show, :update] do
           collection { post 'delete' => 'lists#destroy' }
         end
         get 'managed-accounts' => 'users#managed_acct'
@@ -109,7 +109,7 @@ Rails.application.routes.draw  do
       resources :users, only: [:index] do
         post 'add_customers', on: :collection
       end
-      resources :lists, only: [:create, :edit, :index] do
+      resources :lists, only: [:create, :index] do
         get 'check_list_name', on: :collection
       end
       post 'users/check_password' => 'users#check_password'

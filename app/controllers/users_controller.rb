@@ -31,7 +31,7 @@ class UsersController < ApplicationController
     #message_count method returns hash of message_per_day , fb_percent and sms_percent  
     @message_counts = message_count
 
-    @avg_handle_time = avg_handle_time.round(2)
+    @avg_handle_time = 1#avg_handle_time.round(2)
 
     @total_transactions = transactions.sum(:amount)
     @transactions_today = transactions_today.present? ? transactions_today.sum(:amount) : 0  
@@ -93,7 +93,7 @@ private
     # current_user.send_welcome_email if current_user.sign_in_count == 1
   end
 
-#These methods below are used to collect data for merchant dashboard
+  #These methods below are used to collect data for merchant dashboard
   def all_messages_count_in_30_days
     txt_messages = sent_and_received_messages('Message')
                     .where("created_at >=?", 30.days.ago.utc)
@@ -109,24 +109,17 @@ private
   end
 
   def message_count
-    txt_msg, fb_msg = sent_and_received_messages('Message'), 
-                      sent_and_received_messages('FbMessage')
+    txt_msg, fb_msg = sent_and_received_messages('Message'), sent_and_received_messages('FbMessage')
 
     txt_msg_today = txt_msg.select {|t| t.created_at >= Time.current.beginning_of_day}
     fb_msg_today   = fb_msg.select  {|t| t.created_at >= Time.current.beginning_of_day}
     today_msgs_count = txt_msg_today.count + fb_msg_today.count
     @open_convs_yesterday = open_convs_yesterday 
-    # first_msg_date = Time.current - 2.days #txt_msg.first.created_at < fb_msg.first.created_at ? txt_msg.first.created_at : fb_msg.first.created_at 
-    # last_msg_date = Time.current#txt_msg.last.created_at > fb_msg.last.created_at ? txt_msg.last.created_at : fb_msg.last.created_at
-    
-    # msg_time_interval = (last_msg_date - first_msg_date)/1.days
-    
-    # msg_per_day = total_msgs_count/msg_time_interval
 
     fb_msg_percent = fb_msg_today.present? ? 100 * fb_msg_today.count/today_msgs_count : 0
     txt_msg_percent = txt_msg_today.present? ? 100 * txt_msg_today.count/today_msgs_count : 0
 
-    {msg_today: today_msgs_count, fb_msg_percent: fb_msg_percent.round(2), txt_msg_percent: txt_msg_percent.round(2)} 
+    { msg_today: today_msgs_count, fb_msg_percent: fb_msg_percent.round, txt_msg_percent: txt_msg_percent.round } 
   end
 
   def sent_and_received_messages(class_name)

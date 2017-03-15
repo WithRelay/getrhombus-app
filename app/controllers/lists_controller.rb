@@ -33,8 +33,12 @@ class ListsController < ApplicationController
 
 
   def update
-    flash[:notice] = 'List was successfully updated.' if @list.update(list_params)
-    respond_with(@list)
+    if @list.update_attributes(list_params)
+      flash[:notice] = 'List was successfully updated.'
+    else
+      flash[:error] = @list.errors.full_messages
+    end
+    redirect_to lists_path(current_user)
   end
 
   def destroy
@@ -65,6 +69,6 @@ class ListsController < ApplicationController
     end
 
     def list_params
-      params.require(:list).permit(:id,:name,:user_id)
+      params.require(:list).permit(:name)
     end
 end
