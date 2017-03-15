@@ -36,7 +36,7 @@ module DashboardData
 	def msg_performance_section
 
 		{
-		 conversations_per_hour: Conversation.conversation_per_hour(current_user),
+		 conversations_per_hour: Conversation.conversation_per_hour(current_user) || 0,
 
     #message_count method returns hash of message_per_day , fb_percent and sms_percent  
      messages: message_count,
@@ -83,7 +83,7 @@ module DashboardData
     avg = Conversation.where(merchant_id: merchant_id).where.not(resolution: nil)
                       .average("DATEDIFF(updated_at,created_at)")            
 
-    avg.present? ? avg/1.minutes : 1 #returns 1 if there is no data for average
+    avg.present? ? avg/1.minutes : 0 #returns 0 if there is no data for average
   end
 
   def open_convs_yesterday
