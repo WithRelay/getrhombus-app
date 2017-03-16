@@ -58,7 +58,7 @@
                 </div>
                 <div class="w-col w-col-2">
                   <div class="customer-list-content-div">
-                    <div class="new-customer-table-text"><%= date_in_words_without_ago(t.created_at) %></div>
+                    <div class="new-customer-table-text"><%= time_in_relative_form(t.created_at, 'short_format') %></div>
                   </div>
                 </div>
                 <div class="w-col w-col-3">
