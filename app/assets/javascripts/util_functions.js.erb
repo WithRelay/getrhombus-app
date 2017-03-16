@@ -23,7 +23,7 @@ $(document).ready(function () {
   var clipboard = new Clipboard('#rhombus-number');  
   $(document).on("click", "#rhombus-number", function(e) { 
     e.preventDefault();
-    alert('rhombus-number copied')
+    FlashHandler.copied_no();
   });
 
 });

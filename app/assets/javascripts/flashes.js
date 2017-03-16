@@ -82,8 +82,7 @@ var FlashHandler = new function() {
       </div>\
     </a>')
     close_browser_toastr();
-  }
-
+  };
 
   this.incoming_sms = function(profile_pic, customer_name, message) {
     hideToastr();
@@ -105,7 +104,7 @@ var FlashHandler = new function() {
       </div>\
     </a>')
     close_browser_toastr();
-  }
+  };
 
   this.payment_notification = function(profile_pic, amount, customer_name) {
     hideToastr();
@@ -119,14 +118,14 @@ var FlashHandler = new function() {
       <div class="payment-sender-name shrink-text">'+customer_name+'.</div>\
     </a>')
     close_browser_toastr();
-  }
+  };
 
   this.copied_no = function() {
     hideToastr();
-    $('body').append('<a class="browser-notification-link-block copied w-inline-block" href="#">\
+    $('body').prepend('<a class="browser-notification-link-block copied w-inline-block" href="#" style="position: absolute;">\
       <div class="browser-notification-close payment toaster-font-awesome"></div>\
       <div class="number-copied-text">Phone number copied!</div>\
-    </a>')
+    </a>');
     close_browser_toastr();
   }
 
