@@ -10,6 +10,10 @@ settings
 Header
 
 
+Taiwo
+- review all transactions query, (captured: true and not refunded, include subscriptions): dashboard, customers index, show, transactions index, csv
+
+
 Add profile info
 1. validation
 2. still bypassing to other onboarding steps
@@ -40,19 +44,21 @@ Surya
 - are you using campaign.scss, loading image is provided by edwin
 - lock down permissions cancancan?
 - i see issues with reminder js
-- there is a customers file in users...duplicate of merchantcustomer? 
+- empty segments
 
 Dorje
 - profile pic, dont show twitter info if not exists and transaction history on customer profile page
 - pretty time - fix relative times (customer and dashboard)
-- the graph isnt working properly...tooltip data is off..see sample...can graph show date on x axis
-- convs per hour is broken?
+- the graph isnt working properly...tooltip data is off..see sample...can graph show date on x axis, 
+- convs per hour is broken? 
 - edit/delete saved replies?
-- review all transactions query, (captured: true and not refunded, include subscriptions): dashboard, customers index, show, transactions index, csv
 
 
 Bhishma
 - do messageparser with bhishma tomorrow.
+- empty plans, coupons
+- i dont see alerts
+- actions for sms usage page...should be devise actions?
 
 - add the url for pages you did to the sidebar on dashboard and settings page
 - card error flash missing in registrations update
@@ -83,9 +89,6 @@ Surya
 	- image attachment view/behavior - see implementation in hashtags create
 	- character counter format still incorrect...
 
-Bhishma
-- reduce repeated calls/queries
-- "#{big_decimal_2dp(self.amount/100)}" - fixed
 
 - coupon pages (add link to transactions dropdown and link under segments)
 - find simple native browser notifications
