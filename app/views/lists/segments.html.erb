@@ -3,13 +3,14 @@
    &nbsp;Return to dashboard
   <% end %>
 </div>
+
 <div class="dashboard-body settings">
-  <div class="dash-content-container manage-plans settings w-clearfix">
+  <div class="dash-content-container manage-plans settings">
     <h4 class="form-header">Manage Segments</h4>
     <div class="flex-underline form-header-underline"></div>
     <div class="manage-segments-row w-row">
       <div class="w-col w-col-4">
-        <div class="header settings-row-text">Segment name</div>
+        <div class="editable-row-header header settings-row-text">Segment name</div>
       </div>
       <div class="w-col w-col-2">
         <div class="header settings-row-text">Type</div>
@@ -26,8 +27,13 @@
     </div>
     <% @segments.each do |segment| %>
       <div class="manage-segments-row w-row">
-        <div class="w-col w-col-4">
-          <div class="settings-row-text"><%= segment.name %></div>
+        <div class="w-clearfix w-col w-col-4" id='segment-name-edit-show'>
+          <div class="editable-field-text settings-row-text shrink-text" id="segment-<%= segment.id %>"><%= segment.name %></div>
+          <div class='w-hidden editable-field-icon'>
+            <input class="editable open text-field w-input segment-name" name="segment-name" type="text" value="<%= segment.name %>" data-segment-id="<%= segment.id %>">
+            <a class="cancel-edit save-editable-field" href="#"><strong></strong></a>
+          </div>
+          <a class="edit-field save-editable-field" href="#"></a>
         </div>
         <div class="w-col w-col-2">
           <div class="settings-row-text"><%= segment.origin %></div>
@@ -39,30 +45,9 @@
           <div class="settings-row-text"><%= segment.created_at.strftime('%y/%m/%D') %></div>
         </div>
         <div class="w-col w-col-2">
-          <%= link_to 'Delete', list_path(segment), class: 'button settings-table-row w-button' %>
+          <%= link_to 'Delete', delete_segment_user_path(current_user, list_id: segment.id), class: 'button settings-table-row w-button', method: :delete %>
         </div>
-    </div>
+      </div>
     <% end %>
-
-    <div class="manage-segments-row w-row">
-      <div class="w-col w-col-4">
-        <div class="w-form">
-          <form id="email-form">
-            <input class="text-field w-input" id="Segment-name-5" maxlength="256" name="Segment-name" type="text">
-          </form>
-        </div>
-      </div>
-      <div class="w-col w-col-2">
-        <div class="settings-row-text">Custom</div>
-      </div>
-      <div class="w-col w-col-2">
-        <div class="settings-row-text">180</div>
-      </div>
-      <div class="w-col w-col-2">
-        <div class="settings-row-text">04/19/2016</div>
-      </div>
-      <div class="w-col w-col-2"><a class="button settings-table-row w-button" href="#">Delete</a>
-      </div>
-    </div><a class="button save-changes segments settings-table w-button" href="#">Save changes</a>
   </div>
 </div>
