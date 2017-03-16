@@ -186,11 +186,11 @@ class Transaction < ActiveRecord::Base
   end
 
   def txn_amount
-    "#{big_decimal_2dp(self.amount/100)}"
+    "#{big_decimal_2dp(self.amount)}"
   end
 
   def txn_amount_less_fees
-    "#{big_decimal_2dp(self.amount_less_fees/100)}"
+    "#{big_decimal_2dp(self.amount_less_fees)}"
   end
 
   def relative_time

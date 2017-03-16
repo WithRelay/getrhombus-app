@@ -45,7 +45,7 @@ class WebhooksController < ApplicationController
       if action_name == 'facebook_events'
         @merchant = get_merchant if params['entry']
       elsif action_name == 'stripe_events'
-         @merchant = params['user_id'].present? ? User.find_by(uid: params['user_id']) : User.get_platform_acct_obj
+         @merchant = User.get_platform_acct_obj
       elsif action_name == 'twilio_events'
         @merchant = User.find_by(rhombus_number: params[:To].gsub('+', ''))
       elsif action_name == 'nexmo_events'

@@ -52,8 +52,6 @@ Dorje
 
 
 Bhishma
-- is user_id guaranteed on stripe events? your query is wrong... @merchant = params['user_id'].present
-- account balance default to 2 dollars
 - do messageparser with bhishma tomorrow.
 
 - add the url for pages you did to the sidebar on dashboard and settings page
@@ -87,9 +85,7 @@ Surya
 
 Bhishma
 - reduce repeated calls/queries
-- pls never leave 2 ids on a tag...ask if you aren't sure
-- give datarange picker a descriptive name for the xports
-- "#{big_decimal_2dp(self.amount.to_f/100)}"
+- "#{big_decimal_2dp(self.amount/100)}" - fixed
 
 - coupon pages (add link to transactions dropdown and link under segments)
 - find simple native browser notifications

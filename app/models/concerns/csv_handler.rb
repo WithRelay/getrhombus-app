@@ -14,7 +14,7 @@ module CSVHandler
             .where.not(subscription_id: nil)
         else
           Transaction.where(column_str + " = ? AND created_at BETWEEN ? AND ?", user_id, Time.zone.parse(start_date), Time.zone.parse(end_date))
-            .where(subscription_id: [nil, ""], captured: true)
+            .where(subscription_id: nil, captured: true)
         end
         transactions.each do |t|
           csv << column_names.map{ |attr| t.send(attr) }
