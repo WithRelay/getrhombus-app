@@ -13,21 +13,12 @@ class MerchantCustomerPresenter < BasePresenter
 
   def first_visit_format_created_at
     txn = first_transaction
-    if txn.present?
-      h.time_ago_in_words(txn.created_at) + ' ago'
-    else
-      '-'
-    end
+    txn.present? ? time_in_relative_form(txn.created_at, 'long_format') : '-'
   end
 
  def last_visit_format_created_at
     txn = last_transaction
-    if txn.present?
-      h.time_ago_in_words(txn.created_at) + ' ago'
-    else
-      '-'
-    end
-
+    txn.present? ? time_in_relative_form(txn.created_at, 'long_format') : '-'
   end
   
   def average

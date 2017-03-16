@@ -45,10 +45,10 @@ Surya
 - lock down permissions cancancan?
 - i see issues with reminder js
 - empty segments
+- dont delete segments and lists that have been used.
 
 Dorje
 - profile pic, dont show twitter info if not exists and transaction history on customer profile page
-- pretty time - fix relative times (customer and dashboard)
 - the graph isnt working properly...tooltip data is off..see sample...can graph show date on x axis, 
 - convs per hour is broken? 
 - edit/delete saved replies?
@@ -57,8 +57,7 @@ Dorje
 Bhishma
 - do messageparser with bhishma tomorrow.
 - empty plans, coupons
-- i dont see alerts
-- actions for sms usage page...should be devise actions?
+- sms_usage page
 
 - add the url for pages you did to the sidebar on dashboard and settings page
 - card error flash missing in registrations update

@@ -194,7 +194,7 @@ class Transaction < ActiveRecord::Base
   end
 
   def relative_time
-    time_in_relative_form(self.created_at)
+    time_in_relative_form(self.created_at, 'short_format')
   end
 
 end
