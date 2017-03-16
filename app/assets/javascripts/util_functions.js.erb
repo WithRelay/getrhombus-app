@@ -1,5 +1,5 @@
 var UtilFunctions = new function() {
-    
+
   this.get_card_expiry_date_data = function() {
     return $('input#cc-exp').payment('cardExpiryVal');
   }
@@ -20,8 +20,8 @@ var UtilFunctions = new function() {
 
 $(document).ready(function () {
 
-  var clipboard = new Clipboard('#rhombus-number');  
-  $(document).on("click", "#rhombus-number", function(e) { 
+  var clipboard = new Clipboard('#rhombus-number');
+  $(document).on("click", "#rhombus-number", function(e) {
     e.preventDefault();
     FlashHandler.copied_no();
   });

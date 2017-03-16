@@ -122,7 +122,7 @@ var FlashHandler = new function() {
 
   this.copied_no = function() {
     hideToastr();
-    $('body').prepend('<a class="browser-notification-link-block copied w-inline-block" href="#" style="position: absolute;">\
+    $('body').append('<a class="browser-notification-link-block copied w-inline-block" href="#" style="position: absolute;">\
       <div class="browser-notification-close payment toaster-font-awesome"></div>\
       <div class="number-copied-text">Phone number copied!</div>\
     </a>');
@@ -149,7 +149,6 @@ var FlashHandler = new function() {
   }
 
   function close_browser_toastr() {
-    hideToastr();
     $('.browser-notification-close').on('click', function (e) {
       e.preventDefault();
       $('.browser-notification-link-block').fadeOut(5000);
