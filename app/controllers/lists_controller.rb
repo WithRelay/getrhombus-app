@@ -41,6 +41,16 @@ class ListsController < ApplicationController
     redirect_to lists_path(current_user)
   end
 
+
+  def delete_segment
+    if get_lists.present? && get_lists.delete_all
+      flash[:notice] = "segment was successfully deleted"
+    else
+      flash[:error] = 'Sorry segment cannot deleted'
+    end
+    redirect_to  segments_user_path(current_user)
+  end
+
   def destroy
     if get_lists.present? && get_lists.delete_all
       flash[:notice] = "List was successfully deleted"
@@ -51,7 +61,8 @@ class ListsController < ApplicationController
   end
 
   def segments
-    @segments = current_user.lists.where(segment: true)
+    @segments = current_user.lists.where.not(segment: nil)
+    render :empty_list if @segments.empty?
   end
 
   private
