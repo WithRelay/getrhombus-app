@@ -214,15 +214,15 @@ messagingApp.factory('transactionService', function($http, $q, Upload){
   var base_url = window.location.origin + '/v1/transactions';
   var token = { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content') };
 
-  service.getConversations = function(page){
+  service.getTransactions = function(customer_id){
     var deferred = $q.defer();
-    $http.get(base_url + '.json?page=' + page)
+    $http.get(base_url + '.json?customer_id=' + customer_id)
     .success(function(data) {
-      console.log('console success in service get conversations'); 
+      console.log('console success in service get transactions'); 
       deferred.resolve(data);
     })
     .error(function(data, status, headers, config) { 
-      console.log('console fail in service get conversations'); 
+      console.log('console fail in service get transactions'); 
       deferred.reject("there was an error");
     });
     return deferred.promise;

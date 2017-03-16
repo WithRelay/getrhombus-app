@@ -21,25 +21,26 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
     $scope.open_conversations_count = 0;
     $scope.conversations = {};
     $scope.selected_conversation_messages = [];
-    $scope.current_chat_conversation = false;
+    $scope.current_chat_conversation = false;      // this might not be needed really
+
+    var messages_page = 1;
+    $scope.status = { loading: false, /* loaded: false */ };
+    $scope.selected_conversation = {};
 
     // Message
     $scope.new_message = {}; 
     $scope.new_message.text = "";
-
 
     // Marked As Done
     $scope.marked_as_done = {}; 
     $scope.marked_as_done.reason = "";    
     $scope.marked_as_done.notes = ""; 
 
-
     // counters
     $scope.global_unread_count = 0;
 
     // ajax
     $scope.is_sending = false;
-
 
     // buttons
     $scope.send_msg_btn = "Reply";
@@ -48,10 +49,9 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
     $scope.send_mms_fb_btn = "Send via Facebook";
     $scope.charge_btn = "CHARGE";
 
-
     // Transactions
     $scope.charge_data = { hashtag_id: null };
-
+    $scope.customer_transactions = [];
 
     // Saved Replies
     $scope.saved_replies_list = [];
@@ -438,16 +438,12 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
       }
     };
 
-    var messages_page = 1;
-    $scope.status = { loading: false, /* loaded: false */ };
-    $scope.selected_conversation = {};
-
     $scope.getConversationMessages = function(conversation, from_conversations_list) {
       var deferred = $q.defer();
 
       // don't get messages if user clicks again on current conversation
       if (!(from_conversations_list && conversation.id == $scope.selected_conversation.id)) {
-        //console.log(conversation);
+        
         // highlight conversation
         $scope.current_chat_conversation = conversation;
 
@@ -465,6 +461,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
 
           conversationService.getConversationMessages(conversation.id, messages_page)
           .then(function(data) {
+            // update only if the conversation that requested the message is still selected
             if (conversation.id == $scope.selected_conversation.id) {
               if (data.messages.length > 0) {
                 messages_page += 1;
@@ -484,10 +481,15 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
           }, function(data) {
             $scope.rejectPromise(false, 'get more messages failed', deferred)
           });
-        } else
+        } else {
           deferred.reject();
-      } else
+        }
+
+        // get transactions
+        if (from_conversations_list) $scope.getCustomerTransactions();
+      } else {
         deferred.reject();
+      }
 
       return deferred.promise;
     };
@@ -682,6 +684,24 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
           $scope.charge_btn = "CHARGE";
         });
       }
+    };
+
+    $scope.getCustomerTransactions = function() {
+      if ($scope.selected_conversation.uid_type == 'user') {
+        transactionService.getTransactions($scope.selected_conversation.uid)
+        .then(function (data) {
+          console.log('transactions retrieved');
+          console.log(data)
+          $scope.customer_transactions = data;          
+        }, function (response) {
+          console.log('unable to retrieve transactions');
+          $scope.customer_transactions = [];
+          console.log(response);
+        });
+      } else {
+        $scope.customer_transactions = [];
+      }
+      console.log($scope.selected_conversation)
     };
     // End Transactions
 

@@ -17,9 +17,12 @@ class Refund < ActiveRecord::Base
       elsif !is_admin && txn.team_id != merchant_id
         ["Transaction wasn't created by you.", 403]
       else
+        refund_reason = params[:reason]
+        params[:reason] = 'requested_by_customer' unless STRIPE_REFUND_REASONS.include? params[:reason]
+
         re = PaymentService.refund_charge(params)
         if re.first
-          Refund.create(uri: re.second.id, time: re.second.created, reason: params[:reason], transaction_id: txn.id)
+          Refund.create(uri: re.second.id, time: re.second.created, reason: refund_reason, transaction_id: txn.id)
           send_refund_notification
           ["Payment has been refunded.", 200]
         else 

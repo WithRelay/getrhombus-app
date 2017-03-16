@@ -131,7 +131,8 @@
       <div class="left-column-text"> &nbsp; &nbsp; Customer since: 04/23/2009</div>
       <div class="right-nav-underline"></div>
     </div>
-    <div class="right-nav-tab w-tabs" data-duration-in="300" data-duration-out="100">
+    <%# added id %>
+    <div class="right-nav-tab w-tabs" data-duration-in="300" data-duration-out="100" id='right-sidebar-bottom'>
       <div class="right-nav tab-menu w-tab-menu">
         <a class="tab-link w--current w-inline-block w-tab-link" data-w-tab="Tab 1">
           <div class="messages-tab-link-text">Transactions</div>
@@ -141,56 +142,49 @@
         </a>
       </div>
       <div class="w-tab-content">
+
         <div class="transaction-pane w--tab-active w-tab-pane" data-w-tab="Tab 1">
-          <a class="transactions-div-wrapper w-inline-block" >
+          
+          <a class="transactions-div-wrapper w-inline-block" ng-repeat="transaction in customer_transactions">
             <div class="transaction-div">
               <div class="right-nav-transaction-div-table w-row">
                 <div class="right-nav-transaction-div-column-1 w-col w-col-9">
-                  <div class="right-nav-amount-text">$35.70</div>
-                  <div class="right-nav-amount-desc shrink-text">Chicken Sharwarma</div>
+                  <div class="right-nav-amount-text">${{ transaction.amount }}</div>
+                  <div class="right-nav-amount-desc shrink-text">{{ transaction.notes }}</div>
                 </div>
                 <div class="w-col w-col-3">
-                  <div class="messaging-dash-variable-text transactions-div-table">4m</div>
+                  <div class="messaging-dash-variable-text transactions-div-table">{{ transaction.relative_time }}</div>
                   <%# add refund slider %>
-                  <div class="expand refund-slider"></div>
+                  <div class="expand refund-slider" data-txn-number='{{ transaction.txn_number }}'></div>
                 </div>
               </div>
             </div>
-            <%# added id %>
+          </a>
+
+          <%# added id %>
+          <div id='hold-refundBox'>
+            <%# added id, removed 'select an option', added selected %>
             <div class="hidden-refund-options hide-not-important" id="refundBox">
               <div class="w-form">
-                <form id="email-form-8" name="email-form-8">
+                <form id="email-form-8">
                   <label class="form-label right-nav-form" for="Refund-Amount">Refund Transaction</label>
                   <select class="dropdown w-select" id="Refund-Reason" name="Refund-Reason" required="required">
-                    <option value="">Select reason</option>
                     <option value="canceled_order">Canceled order</option>
                     <option value="returned_goods">Returned goods</option>
                     <option value="accidental_charge">Accidental charge</option>
                     <option value="duplicate">Duplicate</option>
-                    <option value="requested_by_customer">Customer request</option>
+                    <option value="requested_by_customer" selected="selected">Customer request</option>
                     <option value="fraudulent">Fraudulent</option>
                     <option value="other">Other</option>
                   </select>
-                  <input class="button refund w-button" type="submit" value="Refund">
+                  <input class="button refund w-button" id='refund-submit' type="submit" value="Refund">
                 </form>
               </div>
             </div>
-          </a>
-          <a class="transactions-div-wrapper w-inline-block" >
-            <div class="transaction-div">
-              <div class="right-nav-transaction-div-table w-row">
-                <div class="right-nav-transaction-div-column-1 w-col w-col-9">
-                  <div class="right-nav-amount-text">$127.10</div>
-                  <div class="right-nav-amount-desc shrink-text">Chicken Sharwarma</div>
-                </div>
-                <div class="w-col w-col-3">
-                  <div class="messaging-dash-variable-text transactions-div-table">4m</div>
-                  <div class="expand refund-slider"></div>
-                </div>
-              </div>
-            </div>
-          </a>
+          </div>
+
         </div>
+
         <div class="transaction-pane w-tab-pane" data-w-tab="Tab 2">
           <a class="transactions-div-wrapper w-inline-block" >
             <div class="transaction-div">

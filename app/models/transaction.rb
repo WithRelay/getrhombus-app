@@ -2,6 +2,7 @@ class Transaction < ActiveRecord::Base
 
   include Transactionable
   include CSVHandler
+  include PrettyDate
 
   has_one :message
   has_one :refund
@@ -11,14 +12,14 @@ class Transaction < ActiveRecord::Base
   belongs_to :user, counter_cache: true
   belongs_to :team, class_name: "User", counter_cache: true
 
-  # Exclude refunded transactions
+  # Exclude refunded transactions, include subscriptions and only captured transactions
   scope :get_merchant_todays_last5_txns, -> (team_id, date) { self.includes(:user).joins('LEFT JOIN refunds on transactions.id = refunds.transaction_id')
                                                               .where("refunds.transaction_id is null and transactions.team_id = ?
-                                                                       and transactions.created_at >= ?", team_id, date).order(created_at: :desc).limit(5) }
+                                                                       and transactions.created_at >= ? and transactions.captured = 1", team_id, date).order(created_at: :desc).limit(5) }
 
   scope :get_merchant_todays_txn_count, -> (team_id, date) { self.joins('LEFT JOIN refunds on transactions.id = refunds.transaction_id')
                                                               .where("refunds.transaction_id is null and transactions.team_id = ?
-                                                                       and transactions.created_at >= ?", team_id, date).count }
+                                                                       and transactions.created_at >= ? and transactions.captured = 1", team_id, date).count }
 
 
   # send in a hash instead to PaymentService?
@@ -190,6 +191,10 @@ class Transaction < ActiveRecord::Base
 
   def txn_amount_less_fees
     "#{big_decimal_2dp(self.amount_less_fees.to_f/100)}"
+  end
+
+  def relative_time
+    time_in_relative_form(self.created_at)
   end
 
 end

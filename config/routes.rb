@@ -132,7 +132,7 @@ Rails.application.routes.draw  do
       resources :reminders, only: [:create, :edit]
       #--------------------------------------------------------------------------#
       match 'transactions/:txn_number/refund' => 'transactions#refund', via: :post
-      resources :transactions, only: [:create]
+      resources :transactions, only: [:index, :create]
       match 'numbers/search' => 'numbers#search', via: [:get]
       resources :coupons, only: [:index, :update] do
         post 'check_coupon_name', on: :collection

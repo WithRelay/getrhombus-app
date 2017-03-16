@@ -32,8 +32,6 @@ OTHERS
 - show me devise errors
 - we will need pubnub in other pages outside messages
 - do reminders for messaging page
-- fix alerts html
-- welcome page
 - emails
 
 Surya
@@ -48,7 +46,9 @@ Dorje
 - profile pic, dont show twitter info if not exists and transaction history on customer profile page
 - pretty time - fix relative times (customer and dashboard)
 - the graph isnt working properly...tooltip data is off..see sample...can graph show date on x axis
+- convs per hour is broken?
 - edit/delete saved replies?
+- review all transactions query, (captured: true and not refunded, include subscriptions): dashboard, customers index, show, transactions index, csv
 
 
 Bhishma
@@ -89,6 +89,7 @@ Bhishma
 - reduce repeated calls/queries
 - pls never leave 2 ids on a tag...ask if you aren't sure
 - give datarange picker a descriptive name for the xports
+- "#{big_decimal_2dp(self.amount.to_f/100)}"
 
 - coupon pages (add link to transactions dropdown and link under segments)
 - find simple native browser notifications

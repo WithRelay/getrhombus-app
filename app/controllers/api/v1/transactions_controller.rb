@@ -1,6 +1,15 @@
 class Api::V1::TransactionsController < API::V1::BaseController
 
+  def index
+    @transactions = Transaction.where(team_id: current_user.id, captured: true, subscription_id: nil, user_id: params[:customer_id])
+                                .order(created_at: :desc).limit(10)
+                                .select([:amount, :created_at, :txn_number, :notes])
+
+    render json: @transactions.as_json(methods: :relative_time)
+  end
+
   def refund
+    render json: { message: 'all done' } and return
     if params[:type] == "card"  # Because Stripe supports different types
       re = Refund.refund_card_txn(current_user.id, params, current_user.is_platform?)
       render json: { message: re[0] }, status: re[1]

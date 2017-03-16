@@ -50,18 +50,6 @@ $(document).ready(function () {
   if ($('#Messaging-Text-Area').length > 0) {
     BindConversationPlugins.now();
     angular.element(jQuery('#Messaging-Text-Area')).scope().bindEnterToMessagingArea();
-  }
-
-  $(".refund-slider").click(function(e) {
-    var great_granny = $(this).parent().parent().parent();
-    var granny_sibling = great_granny.next();
-
-    if(granny_sibling.is('#refundBox')) {
-     (granny_sibling.is(':hidden')) ? granny_sibling.show() : granny_sibling.hide();
-    } else {
-      great_granny.after($('#refundBox').hide().detach());
-      $('#refundBox').show();
-    };
-  });
-
+  };
+  
 });

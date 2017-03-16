@@ -9,7 +9,6 @@ class Conversation < ActiveRecord::Base
   # Timezone should already be set when calling methods in this class.
 
   # plug in charges
-  # bugs bhishma mentioned
   # profile snapshot -  remove the extra customer since in customer show
 
   # the user texting this merchant
@@ -18,13 +17,13 @@ class Conversation < ActiveRecord::Base
   end
 
   def self.get_open_conversations_count(merchant_id)
-  	where(merchant_id: merchant_id, resolution: [nil, ""]).count
+  	where(merchant_id: merchant_id, resolution: nil).count
   	where(merchant_id: merchant_id).count
   end
 
   # Returns hash with users who sent a message to the given merchant in the last "num_days" days
   def self.get_open_conversations(merchant_id, page)
-####convs = where(merchant_id: merchant_id, resolution: [nil, '']).paginate(page: page, per_page: 25)
+####convs = where(merchant_id: merchant_id, resolution: nil).paginate(page: page, per_page: 25)
   	convs = where(merchant_id: merchant_id).paginate(page: page, per_page: 5)
   	x = convs.map { |conv| conv.conversation_hash }
     # remove these lines and x
@@ -163,7 +162,7 @@ class Conversation < ActiveRecord::Base
 	# find the conversation or create one
   def self.find_or_create_conversation(team_id, uid_type, uid)
     return @conv if @conv.present?
-    Conversation.find_by(merchant_id: team_id, uid_type: uid_type, uid: uid, resolution: [nil, ""]) || Conversation.create(merchant_id: team_id, uid_type: uid_type, uid: uid)
+    Conversation.find_by(merchant_id: team_id, uid_type: uid_type, uid: uid, resolution: nil) || Conversation.create(merchant_id: team_id, uid_type: uid_type, uid: uid)
   end
 
   # find conversation
