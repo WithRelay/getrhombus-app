@@ -67,6 +67,7 @@
 //= require images.js.erb
 //= require demo
 //= require export_csv
+//= require sms-usage
 //= require phone_number_formatter
 //= require clipboard.min
 //= require util_functions

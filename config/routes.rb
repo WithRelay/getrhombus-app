@@ -50,6 +50,8 @@ Rails.application.routes.draw  do
           get "billing-information", to: "registrations#billing_information"
           get "business-settings", to: "registrations#business_settings"
           get "account-settings", to: "registrations#account_settings"
+          get 'auto_recharge' => 'registrations#auto_recharge'
+          get 'add_funds' => 'registrations#add_funds'
         end
       end
 

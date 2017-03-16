@@ -11,7 +11,7 @@ module CSVHandler
         column_names[1] = 'txn_number'
         transactions = if subscription
           Transaction.where(column_str + " = ? AND created_at BETWEEN ? AND ?", user_id, Time.zone.parse(start_date), Time.zone.parse(end_date))
-            .where.not(subscription_id: [nil, ""])
+            .where.not(subscription_id: nil)
         else
           Transaction.where(column_str + " = ? AND created_at BETWEEN ? AND ?", user_id, Time.zone.parse(start_date), Time.zone.parse(end_date))
             .where(subscription_id: [nil, ""], captured: true)

@@ -14,11 +14,11 @@ class UsersController < ApplicationController
   def show
     # handle_referrer_and_welcome_email
     # delete_captured_payment_session
-    
+
     # @token = TextingService.get_twilio_capibility_token if current_user.user_level == 1
     # Transaction.process_captured_payment(@user, params) if current_user.user_level == 0 && params[:captured_amt].present?
-    
-    #all the methods are in concerns/databoard_data 
+
+    #all the methods are in concerns/databoard_data
     @overall_section = overall_section
     @chart_and_transacs = chart_and_transactions
     @unread_preview = unread_preview_section
@@ -35,6 +35,8 @@ class UsersController < ApplicationController
   end
 
   def sms_usage
+    @amount_balance = current_user.account_balance
+    @last4 = current_user.last4
   end
 
   def leads_contacts
