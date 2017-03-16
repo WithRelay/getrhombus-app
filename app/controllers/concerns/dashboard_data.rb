@@ -56,9 +56,8 @@ module DashboardData
     #this will merge count of sms and fb_msg and add the coutes on the same day              
     data = txt_messages.merge(fb_messages){|k, mv, fv| mv + fv}
     
-    #below commente line gives dater formate %d/%m on x-axix 
-    #data.map{|k,v| {k.strftime('%d/%m').to_s.downcase => v } }.reduce(:merge)
-
+    #below commented line gives dater formate %d/%m on x-axix 
+    #data.map{|k,v| {k.strftime('%d_%b').to_s.downcase => v } }.reduce(:merge)
   end
 
   def message_count
