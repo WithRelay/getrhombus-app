@@ -50,6 +50,8 @@ Rails.application.routes.draw  do
           get "billing-information", to: "registrations#billing_information"
           get "business-settings", to: "registrations#business_settings"
           get "account-settings", to: "registrations#account_settings"
+          get 'auto_recharge' => 'registrations#auto_recharge'
+          get 'add_funds' => 'registrations#add_funds'
         end
       end
 
@@ -101,8 +103,6 @@ Rails.application.routes.draw  do
         match 'refer_business' => 'users#refer_business', via: [:get, :post]
         get 'customers' => 'merchant_customers#index'
         get 'customers/:customer_id' => 'merchant_customers#show'
-        get 'auto_recharge' => 'users#auto_recharge'
-        get 'add_funds' => 'users#add_funds'
       end
     end
 

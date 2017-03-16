@@ -7,13 +7,6 @@ module AdditionalUserActions
   def business_information
   end
 
-  def auto_recharge
-  end
-
-  def add_funds
-
-  end
-
   def remove_twitter_integration
     if current_user.twitter_cred.destroy
       flash[:notice] = 'Twitter integration removed successfully'

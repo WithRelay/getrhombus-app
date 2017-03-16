@@ -7,21 +7,16 @@
       <form class="w-clearfix" id="email-form" name="email-form">
         <label class="field-headers form-label settings" for="Business-Name">current balance</label>
         <div class="balance-section settings-info-div">
-          <p class="account-balance settings-details-paragraph">$49.00 remaining in your account</p>
+          <p class="account-balance settings-details-paragraph">$<%= @amount_balance %> remaining in your account</p>
           <p class="settings-details-paragraph">You will receive an email notification when your balance drops below $5</p>
           <p class="auto-recharge-status settings-details-paragraph">Auto-recharge disabled</p>
-          <select class="auto-recharge-options dropdown w-select" id="Auto-Recharge-Amount">
-            <option value="">Choose amount</option>
-            <option value="">$100</option>
-            <option value="">$50</option>
-            <option value="">$20</option>
-            <option value="">$10</option>
-          </select>
+          <%= f.select :auto_reload_amt, options_for_select({'$100': 100, '$50': 50, '$20':20, '$10': 10}),{}, class: "auto-recharge-options dropdown w-select", prompt: 'Choose amount' %>
+
           <div class="form-check-box sms-usage-form w-checkbox w-clearfix">
-            <input class="check-box w-checkbox-input" id="checkbox" name="checkbox" type="checkbox">
+            <%= f.check_box :auto_reload, class: "check-box w-checkbox-input" %>
             <label class="w-form-label" for="checkbox">Enable Auto-recharge</label>
           </div>
-          <%= f.submit " Save changes", class: "save-auto-reload w-button" %>
+          <%= f.submit "Save changes", class: "save-auto-reload w-button" %>
         </div>
       <% end %>
       <%= form_for('user', url: add_funds_user_path, method: :get, html: { id: "add_user_funds", class:'w-clearfix' } ) do |f| %>
@@ -30,8 +25,8 @@
         <div class="form-group col-xs-6">
           <%= f.text_field :account_balance, class: "add-funds-amount-field text-field w-input form-control", id: 'Add-Funds', placeholder: "$0.00" %>
         </div>
-        <select class="dropdown payment-method w-select" id="Expiration-Year-2" name="Expiration-Year-2" required="required">
-          <option value="">visa **** **** **** 3456</option>
+        <select class="dropdown payment-method w-select">
+          <option value="">visa **** **** **** <%= @last4 %></option>
         </select>
         <%= f.submit "Add funds", class: "alt-button button save-changes w-button" %>
       <% end %>

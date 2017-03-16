@@ -98,6 +98,17 @@ class RegistrationsController < Devise::RegistrationsController
 
   def add_card_info; end
 
+  def auto_recharge
+    # logic
+    flash[:notice] = 'Logic are not added yet'
+    redirect_to sms_usage_user_path
+  end
+
+  def add_funds
+    # logic
+    flash[:notice] = 'Logic are not added yet'
+    redirect_to sms_usage_user_path
+  end
 
   protected
 
