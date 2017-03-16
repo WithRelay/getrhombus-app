@@ -1,5 +1,5 @@
 $(document).ready(function () {
-  $('#Date-Range-Picker').daterangepicker({
+  $('#Transaction-Date-Range-Picker').daterangepicker({
     cancelClass: 'hide',
     linkedCalendars: true,
     /*timePicker: true,
@@ -25,7 +25,7 @@ $(document).ready(function () {
     $('#txn_history_form').submit();
   });
 
-  $('#Date-Range-Picker-2').daterangepicker({
+  $('#Subscription-Date-Range-Picker').daterangepicker({
     cancelClass: 'hide',
     linkedCalendars: true,
     /*timePicker: true,
