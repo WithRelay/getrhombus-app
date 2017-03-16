@@ -96,6 +96,7 @@
 //= require typeit
 //= require Chart.bundle
 //= require chartkick
+//= require segment
 //= require refund
 
 // DO NOT REQUIRE TREE AS IT DOESNT GUARANTEE THE DEPENDENCY ORDER OF THESE FILES
