@@ -46,15 +46,18 @@ module DashboardData
   def all_messages_count_in_30_days
     txt_messages = sent_and_received_messages('Message')
                     .where("created_at >=?", 30.days.ago.utc)
-                    .group("monthname(created_at)").group("DAY(created_at)").count
+                    .group("date(created_at)").count
 
     fb_messages = sent_and_received_messages('FbMessage')
                     .where("created_at >=?", 30.days.ago.utc)
-                    .group("monthname(created_at)").group("DAY(created_at)").count
+                    .group("date(created_at)").count
 
     #prepare data for chart 
     #this will merge count of sms and fb_msg and add the coutes on the same day              
-    txt_messages.merge(fb_messages){|k, mv, fv| mv + fv}
+    data = txt_messages.merge(fb_messages){|k, mv, fv| mv + fv}
+    
+    #below commented line gives dater formate %d/%m on x-axix 
+    #data.map{|k,v| {k.strftime('%d_%b').to_s.downcase => v } }.reduce(:merge)
   end
 
   def message_count
