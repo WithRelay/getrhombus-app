@@ -1,12 +1,14 @@
 $(document).on('ready',function(){
 
+//this function used to delete/deactive Hashtag/Reminder/SavedReply
+//It works after the confirmation dialog
+
 	$(document).on('click', '.cancel-yes', function(e){
     e.preventDefault();
 
     var selectedElement = selectCheckedElement();
 		var msg = $(this).parent().find('p').text();
 
-		debugger;
 		if (!selectedElement)
 			return false
 
@@ -29,7 +31,12 @@ $(document).on('ready',function(){
 
   function doAction(selectedElement){
   	var elementForm = selectedElement.closest('form');
-	  elementForm.submit();
+
+		if (elementForm.length == 0)
+			FlashHandler.setFlashMessage('couldnot perform action for the resource','error');
+		else
+			elementForm.submit();
+
 	  $('.cancel-no').click();
   }
 });
