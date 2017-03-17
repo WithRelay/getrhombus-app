@@ -41,3 +41,10 @@ recurring_reminders: # send email for reminder user
   args:
   description: 'Sends campaign to lists of users selected for campaign'
   queue: recurring_reminders
+
+low_account_balance_alert:
+  every: 60m
+  class: 'AccountBalanceAlertJob' # class SendReminderJob is present in app/jobs which represents campaign jobs
+  args:
+  description: 'This job alert merchant if their account balance is less than $5'
+  queue: low_account_balance_alert
