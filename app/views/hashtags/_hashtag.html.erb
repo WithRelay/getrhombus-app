@@ -36,9 +36,9 @@
     <div class="alt-column w-col w-col-2">
       <div class="alt-table-column-div w-clearfix">
       <%if hashtag.inactive? %>
-        <div class="deactivated-text table-text"><%= present(hashtag).date_in_word %></div>
+        <div class="deactivated-text table-text"><%= time_in_relative_form(hashtag.created_at, 'long_format') %></div>
       <% else %>
-        <div class="table-text"><%= present(hashtag).date_in_word %></div>
+        <div class="table-text"><%= time_in_relative_form(hashtag.created_at, 'long_format') %></div>
       <%end%>
       </div>
     </div>

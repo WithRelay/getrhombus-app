@@ -47,7 +47,7 @@ class Conversation < ActiveRecord::Base
       last_message: last_message.blank? ? '' : last_message.text,
       last_message_ts: last_message.blank? ? 0 : last_message.created_at.to_i,
       last_message_type: last_message.class.name,
-      ago: last_message.blank? ? "" : time_in_relative_form(last_message.created_at),
+      ago: last_message.blank? ? "" : time_in_relative_form(last_message.created_at, 'short_format'),
       unread_count: ConversationRef.where(conversation_id: self.id, unread: true).count,
       #has_messenger:
     }

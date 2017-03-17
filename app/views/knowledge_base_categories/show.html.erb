@@ -20,7 +20,7 @@
           <div class="articles-title"><%= item.title %></div>
           <p class="article-preview"><%= item.raw_content %></p>
           <img class="article-author" height="30" src="http://uploads.webflow.com/5767087cbd63608e7eb4abdc/586da5db511381a742ba3da1_Edwin%202.jpg" width="30">
-          <div class="author-info">By <span class="author-name"><%= item.author %></span> &nbsp;| &nbsp;<%= date_in_words(item.created_at)%></div>
+          <div class="author-info">By <span class="author-name"><%= item.author %></span> &nbsp;| &nbsp;<%= time_in_relative_form(item.created_at, 'long_format') %></div>
         </div>
         </a>
       <% end %>

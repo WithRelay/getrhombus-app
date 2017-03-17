@@ -32,7 +32,7 @@
                 <div class="left-column-text recent-activity">Last &nbsp;Contact</div>
               </div>
               <div class="right-column w-col w-col-6">
-                <div class="recent-activity-description"><%= @last_conv_ref ? present(@last_conv_ref).format_created_at : "-" %></div>
+                <div class="recent-activity-description"><%= @last_conv_ref ? time_in_relative_form(@last_conv_ref.created_at, 'long_format') : "-" %></div>
               </div>
             </div>
             <div class="recent-activity right-nav-row w-row">
@@ -164,7 +164,7 @@
                 </div>
                 <div class="w-col w-col-2">
                   <div class="date w-clearfix">
-                    <div class="table-text unread-table"><%= present(transaction).very_short_relative_time %> ago</div>
+                    <div class="table-text unread-table shrink-text"><%= time_in_relative_form(transaction.created_at, 'short_ago_format') %></div>
                   </div>
                 </div>
                 <div class="w-col w-col-3">

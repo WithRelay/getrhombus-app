@@ -15,7 +15,7 @@
               <div class="notification-text-block notifier"><strong class="notifier-name"><%= present(m).get_full_name %></strong> sent you a <strong class="notifier-action">message</strong> via <%= m.channel %></div>
             </div>
             <div class="w-col w-col-2">
-              <div class="notification-text-block notifier"><strong class="notifier-time"><%= present(m).very_short_relative_time %></strong>
+              <div class="notification-text-block notifier"><strong class="notifier-time"><%= time_in_relative_form(m.created_at, 'short_format') %></strong>
               </div>
             </div>
           </div>
@@ -33,7 +33,7 @@
                 Payment</strong>&nbsp;of $<%= transaction.amount %></div>
             </div>
             <div class="w-col w-col-2">
-              <div class="notification-text-block notifier"><strong class="notifier-time"><%= present(transaction).very_short_relative_time %></strong>
+              <div class="notification-text-block notifier"><strong class="notifier-time"><%= time_in_relative_form(transaction.created_at, 'short_format') %></strong>
               </div>
             </div>
           </div>

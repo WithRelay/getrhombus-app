@@ -58,7 +58,7 @@
                 </div>
                 <div class="w-col w-col-2">
                   <div class="customer-list-content-div">
-                    <div class="new-customer-table-text"><%= time_in_relative_form(t.created_at, 'short_format') %></div>
+                    <div class="new-customer-table-text shrink-text"><%= time_in_relative_form(t.created_at, 'medium_format') %></div>
                   </div>
                 </div>
                 <div class="w-col w-col-3">
@@ -77,7 +77,26 @@
             <h4 class="welcome-dash-content-container-header">Message Volume</h4>
           </div>
           <div>
-            <%= area_chart @chart_and_transacs[:msg_data_for_chart], curve: false %>
+            <%= area_chart @chart_and_transacs[:msg_data_for_chart], 
+                library: { 
+                  scales: { 
+                    xAxes: [{
+                      ticks: {
+                        autoSkip: false,
+                        maxRotation: 60,
+                        minRotation: 60
+                      },
+                      time: {
+                        unit: 'day',
+                        displayFormats: {
+                          'day': 'MMM D'
+                        },
+                      }
+                    }]
+                  }
+                }, 
+                curve: false 
+            %>
           </div>
         </div>
       </div>
@@ -111,7 +130,7 @@
                 <div class="shrink-text table-text"><%= present(u).display_name %></div>
               </div>
               <div class="payment-time unread-column w-clearfix">
-                <div class="received shrink-text table-text unread-table"><%= date_in_words(u.created_at)%></div>
+                <div class="received shrink-text table-text unread-table"><%= time_in_relative_form(u.created_at, 'long_format') %></div>
               </div>
               <div class="preview unread-column w-clearfix">
                 <div class="preview shrink-text table-text unread-table"><%= u.textable.text %></div>
