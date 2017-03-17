@@ -77,7 +77,26 @@
             <h4 class="welcome-dash-content-container-header">Message Volume</h4>
           </div>
           <div>
-            <%= area_chart @chart_and_transacs[:msg_data_for_chart], curve: false %>
+            <%= area_chart @chart_and_transacs[:msg_data_for_chart], 
+                library: { 
+                  scales: { 
+                    xAxes: [{
+                      ticks: {
+                        autoSkip: false,
+                        maxRotation: 60,
+                        minRotation: 60
+                      },
+                      time: {
+                        unit: 'day',
+                        displayFormats: {
+                          'day': 'MMM D'
+                        },
+                      }
+                    }]
+                  }
+                }, 
+                curve: false 
+            %>
           </div>
         </div>
       </div>

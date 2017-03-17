@@ -52,9 +52,15 @@ module DashboardData
                     .where("created_at >=?", 30.days.ago.utc)
                     .group("date(created_at)").count
 
+    puts txt_messages.inspect
+
     #prepare data for chart 
     #this will merge count of sms and fb_msg and add the coutes on the same day              
     data = txt_messages.merge(fb_messages){|k, mv, fv| mv + fv}
+
+    puts data.inspect
+
+    data
     
     #below commented line gives dater formate %d/%m on x-axix 
     #data.map{|k,v| {k.strftime('%d_%b').to_s.downcase => v } }.reduce(:merge)
