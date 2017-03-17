@@ -62,14 +62,16 @@ class Api::V1::UsersController < API::V1::BaseController
           from merchant_contacts where merchant_id = ? and uid_type = 'user') as A
 
       inner join users on A.customer_id = users.id
-      where lower(card_name) like concat('%', ?, '%') or phone_number like concat('%', ?, '%')) as B)
+      where lower(card_name) like concat('%', ?, '%') or email like concat('%', ?, '%') or
+      phone_number like concat('%', ?, '%')) as B)
 
       union all
 
       (select uid, 'fb_page', name as title, 'Messenger User'
       from merchant_contacts
       inner join fb_creds on fb_creds.page_specific_id = merchant_contacts.uid
-      where merchant_id = ? and uid_type = 'fb_page' and name <> '' and lower(name) like concat('%', ?, '%'))
+      where merchant_id = ? and uid_type = 'fb_page' and name <> '' and 
+      (lower(name) like concat('%', ?, '%') or lower(email) like concat('%', ?, '%')))
 
       union all
 
@@ -77,7 +79,7 @@ class Api::V1::UsersController < API::V1::BaseController
       from merchant_contacts
       where merchant_id = ? and uid_type = 'phone_number' and uid like concat('%', ?, '%'))",
 
-      current_user.id, current_user.id, q, q, current_user.id, q, current_user.id, q]
+      current_user.id, current_user.id, q, q, q, current_user.id, q, q, current_user.id, q]
 
     render json: { data: results }
   end
