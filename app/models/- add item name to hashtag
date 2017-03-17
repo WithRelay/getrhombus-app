@@ -49,7 +49,7 @@ Surya
 
 Dorje
 - profile pic, dont show twitter info if not exists and transaction history on customer profile page
-- graph empty state....can graph show date on x axis, 
+- graph empty state..
 - convs per hour is broken? 
 - edit/delete saved replies?
 
@@ -57,7 +57,7 @@ Dorje
 Bhishma
 - do messageparser with bhishma tomorrow.
 - empty plans, coupons
-- sms_usage page ... we need to track reloads data, write job for reload
+- sms_usage page ... we need to track reloads data
 
 - add the url for pages you did to the sidebar on dashboard and settings page
 - card error flash missing in registrations update
