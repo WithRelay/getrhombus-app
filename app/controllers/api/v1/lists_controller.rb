@@ -68,7 +68,13 @@ class Api::V1::ListsController < API::V1::BaseController
 
 
   def update
-
+    segment = current_user.lists.where.not(segment: nil).find_by(id: params[:id])
+    message = if segment.present? && segment.update_attributes(name: params[:name])
+                { status: 200, notice: 'List was successfully updated.', name: params[:name] }
+              else
+                { status: 400, error: segment.errors.full_messages }
+              end
+    render json: message
   end
 
   private

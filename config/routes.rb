@@ -87,6 +87,7 @@ Rails.application.routes.draw  do
 
       member do
         get 'segments' => 'lists#segments'
+        delete 'delete-segment' => 'lists#delete_segment'
         get 'sms-usage' => 'users#sms_usage'
         get 'leads-and-contacts' => 'users#leads_contacts'
         resources :lists, only: [:index, :create, :show, :update] do
@@ -111,7 +112,7 @@ Rails.application.routes.draw  do
       resources :users, only: [:index] do
         post 'add_customers', on: :collection
       end
-      resources :lists, only: [:create, :index] do
+      resources :lists, only: [:create, :index, :update] do
         get 'check_list_name', on: :collection
       end
       post 'users/check_password' => 'users#check_password'

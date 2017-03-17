@@ -20,27 +20,27 @@ module PrettyDate
     format_type = time_formats[format_str.to_sym]
   
     case a
-    when 0..1 
-      format_type[:less_then_sec]
+    when 0..1
+      a = a.to_s 
+      str = format_type[:less_then_sec]
     when 2..59 
-      a.to_s + format_type[:sec]
+      a = a.to_s 
+      str = format_type[:sec]
     when 60..3599 
       a = (a/60).to_i.to_s
       str = has_plural_form?(format_str) ? format_type[ a == "1" ? :min : :min_p ] : format_type[:min] 
-      a + str
     when 3600..86399 
       a = (a/(60*60)).to_i.to_s 
       str = has_plural_form?(format_str) ? format_type[ a == "1" ? :hour : :hour_p ] : format_type[:hour] 
-      a + str
     when 86400..604799 
       a = (a/(60*60*24)).to_i.to_s
       str = has_plural_form?(format_str) ? format_type[ a == "1" ? :day : :day_p ] : format_type[:day] 
-      a + str
     else 
       a = (a/(60*60*24*7)).to_i.to_s
       str = has_plural_form?(format_str) ? format_type[ a == "1" ? :week : :week_p ] : format_type[:week] 
-      a + str
     end 
+
+    a + str
   end
 
 end
