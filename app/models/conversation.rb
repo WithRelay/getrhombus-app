@@ -171,12 +171,12 @@ class Conversation < ActiveRecord::Base
   end
 
   def self.conversation_per_hour(merchant_id)
-    merchant_conv = Conversation.where(merchant_id: merchant_id)
+    merchant_conv = Conversation.where(merchant_id: 7)
     return 0 unless merchant_conv.present?
     first_conv, last_conv = merchant_conv.first, merchant_conv.last
     time_diff = (last_conv.created_at - first_conv.created_at)/1.hours
-    return 0 if time_diff.round = 0
-    (merchant_conv.count/time_diff).round
+    is_zero = time_diff.to_i
+    is_zero == 0 ? 0 : (merchant_conv.count/time_diff).round
   end
 
   def self.get_merchant_todays_unread_count(merchant_id, date)
