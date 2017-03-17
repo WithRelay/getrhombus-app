@@ -410,6 +410,9 @@ class EmailingService
 
     def send_demo_notifcation(demo)
     end
+
+    def account_balance_alert(user)
+    end
   end
 
 end
