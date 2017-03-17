@@ -175,7 +175,7 @@ class Conversation < ActiveRecord::Base
     return 0 unless merchant_conv.present?
     first_conv, last_conv = merchant_conv.first, merchant_conv.last
     time_diff = (last_conv.created_at - first_conv.created_at)/1.hours
-    is_zero = time_diff.to_i
+    is_zero = time_diff.to_i   # division by zero or time difference isnt up to an hour
     is_zero == 0 ? 0 : (merchant_conv.count/time_diff).round
   end
 
