@@ -102,7 +102,6 @@ class RegistrationsController < Devise::RegistrationsController
     if params['user']['auto_reload'] == '1'
       auto_reload_amt = params['user']['auto_reload_amt']
       current_user.update(auto_reload_amt: auto_reload_amt, auto_reload: true)
-      auto_reload(auto_reload_amt)
       flash[:notice] = "Auto recharge with #{auto_reload_amt}"
     else
       current_user.update(auto_reload: false)
@@ -119,10 +118,6 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   protected
-
-  def auto_reload(amount)
-    # auto reload recharge
-  end
 
   def create_saas_subscription
     begin
