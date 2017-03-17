@@ -41,23 +41,18 @@ OTHERS
 Surya
 - validates_associated in user... any read op on user will run a query -   validates_associated :address, if: lambda { self.bank_accounts.present? }
 - catch db error in update action too... already added error for you
-- are you using campaign.scss, loading image is provided by edwin
 - lock down permissions cancancan?
 - i see issues with reminder js
 - empty segments
-- dont delete segments and lists that have been used.
 
 Dorje
 - profile pic, dont show twitter info if not exists and transaction history on customer profile page
-- graph empty state..
-- convs per hour is broken? 
+- graph empty state??
 - edit/delete saved replies?
-
 
 Bhishma
 - do messageparser with bhishma tomorrow.
 - empty plans, coupons
-- sms_usage page ... we need to track reloads data
 
 - add the url for pages you did to the sidebar on dashboard and settings page
 - card error flash missing in registrations update

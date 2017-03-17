@@ -36,10 +36,6 @@ Bhishma
 - facebook event, where is conversationref
 -2. you need to check that you are saving user_id and user_id_to properly...depending on the direction of the message...remember i showed you that it was wrong for twilio/nexmo
 3. we need a method in fb_message.rb to send and save a fb message. see Message.rb for a similar method. this should be the only method that sends fb messages to end users. if you are sending messages somewhere else, you need to change it to use this method. this method wraps the messeenger service. the messenger service should not be saving messages/images...it only talks with facebook
-[8:31]  
-4. Whenever you receive a message, we mark it as unread by default.... so Conversation.new.find_or_create_conversation_for_message(@merchant_id, 'fb_page', uid, @fb_message, false) should have true as the last parameter. Messages arent marked as read until the merchant sees it on their dashboard.
-[8:32]  
-so unread should be true inn the snippet below
 
 surya
 - do we always have due_by, transfers_enabled in stripe managed account hash...we need that to be updated too whenever stripe sends an account event - maybe just resave every field we store anyway
@@ -110,21 +106,13 @@ Contact - Inbound
 
 
 
-UI INTEGRATION
-1. Referrer Page/Settings referrer page - refer-a-business
-	- tie in page to backend
-	- tie in logic for Get Started for Free
-2. Demo page - request-date
-	- Save demo data, on save...open new tab with calendly
-3. Welcome Page
-	- graph - leave for now
-4. Customer's page
-	- search bar - search by name
-5. Edit list page
-    - implement adding users
-6. List campaign
-	- send campaign...should prefill campaign list
-7. Deactivate account...store info in popup
+
+
+
+
+
+
+
 
 
 
