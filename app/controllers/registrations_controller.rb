@@ -99,14 +99,22 @@ class RegistrationsController < Devise::RegistrationsController
   def add_card_info; end
 
   def auto_recharge
-    # logic
-    flash[:notice] = 'Logic are not added yet'
+    if params['user']['auto_reload'] == '1'
+      current_user.auto_reload_amt = params['user']['auto_reload_amt']
+      current_user.auto_reload = true
+      flash[:notice] = "Auto recharge with #{current_user.auto_reload_amt}"
+    else
+      current_user.auto_reload = false
+      flash[:notice] = "Auto recharge disabled"
+    end
+    current_user.save
     redirect_to sms_usage_user_path
   end
 
   def add_funds
-    # logic
-    flash[:notice] = 'Logic are not added yet'
+    current_user.account_balance += params['user']['account_balance'].to_i
+    current_user.save
+    flash[:notice] = "Account balanced updated, Now your total balance is: #{current_user.account_balance}"
     redirect_to sms_usage_user_path
   end
 
