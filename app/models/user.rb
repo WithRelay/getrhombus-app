@@ -3,6 +3,7 @@ class User < ActiveRecord::Base
   include DashboardMerchantQueries
   include DashboardCustomerQueries
   include CSVHandler
+  extend UserProfile
 
   attr_accessor :phone, :captured_amt, :msg_id, :tag_id, :referrer_id, :tos_acceptance, :user_lists
 
@@ -133,16 +134,6 @@ class User < ActiveRecord::Base
     user_first_name.present? ? "#{user_first_name} from #{user.org_name}" : user.org_name
   end
 
-  def self.get_conversation_display_name(uid, uid_type)
-    if uid_type == "user"
-      cus = User.find_by(id: uid)
-      cus ? cus.full_name.present? ? cus.full_name : cus.email : "Relay user"
-    else
-      # does fb at least give us some info?
-      uid_type == 'fb_page' ? "messenger user" : uid
-    end
-  end
-
   def can_accept_payments?
     # the last stripe_cred is either a managed acct, a managed acct even if a user had a standalone acct, or a standalone acct
     creds = self.stripe_creds.last
@@ -235,24 +226,6 @@ class User < ActiveRecord::Base
       # notify team
       [false]
     end
-  end
-
-  def self.check_profile_picture(cus)
-    return { type: 'color', value: COLORS.first.first } if cus.nil?
-
-    user_fb_cred = cus.fb_creds
-    if user_fb_cred.present? && user_fb_cred.first.profile_pic_url.present?
-      return { type:'image', value: user_fb_cred.first.profile_pic_url }
-    end
-
-    contact_email = FullContactData.find_by_email(cus.email)
-    if contact_email && contact_email.photo_url.present?
-      return { type: 'image', value: contact_email.photo_url }
-    elsif cus.user_color.blank?
-      cus.user_color = COLORS.sample.first
-      cus.save
-    end
-    { type: 'color', value: cus.user_color }
   end
 
   def get_saas_subscription
