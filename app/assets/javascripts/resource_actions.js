@@ -1,8 +1,6 @@
 $(document).on('ready',function(){
-
 //this function used to delete/deactive Hashtag/Reminder/SavedReply
 //It works after the confirmation dialog
-
 	$(document).on('click', '.cancel-yes', function(e){
     e.preventDefault();
 
