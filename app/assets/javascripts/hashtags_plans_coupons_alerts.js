@@ -74,30 +74,6 @@ $(document).ready(function () {
     return false;
   });
 
-  $(document).on('click', '.cancel-yes', function(e){
-    e.preventDefault();
-    var selectedElement;
-    $('.table-checkbox').each(function( index, element){
-      if ($(this).is(':checked')){
-        selectedElement = $(this);
-      }
-    });
-
-    var msg = $(this).parent().find('p').text()
-    if (selectedElement){
-      if (/deactivate/i.test(msg)){
-        var method_input = selectedElement.parents('.edit_hashtag').find("input[name='_method']");
-        method_input.attr('value','patch');
-      }
-       a = selectedElement.parents('.edit_hashtag')
-      if(a.length == 0){
-        a = selectedElement.parents('.edit_reminder')
-      }
-      a.submit()
-      $('.cancel-no').click();
-    }
-  });
-
   // decimal with two places
   $('#hashtag_amount, #plan_amount').on('input', function(){
     $(this).val(function(_, v) {

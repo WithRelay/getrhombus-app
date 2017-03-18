@@ -8,18 +8,18 @@
 
       <a class="sub-nav-button w-button" data-ix="create-list" href="#"> &nbsp;<strong>Edit</strong></a>
 
-      <a class="sub-nav-button w-button" data-ix="create-list" href="#"> &nbsp;<strong>Delete</strong></a>
+      <a class="sub-nav-button w-button" data-ix="create-list"  id= "delete-saved-reply" href="#"> &nbsp;<strong>Delete</strong></a>
   </div>
 </div>
 <div class="dashboard-body">
   <div class="saved-reply-table-wrapper">
-    
+
     <div class="header new-table-row w-row">
       <div class="cn w-clearfix w-col w-col-4">
         <div class="header name w-clearfix">
           <div class="heading table-text">&nbsp;&nbsp;&nbsp;Created by</div>
         </div>
-        
+
       </div>
       <div class="fv w-clearfix w-col w-col-4">
         <div class="cn column column-2 header w-clearfix">
@@ -37,17 +37,18 @@
 
       <div class="new-table-row saved-replies w-row">
         <div class="cn w-clearfix w-col w-col-4">
-          <div class="name saved-reply-author w-clearfix"><%= present(reply).profile_image %>  
+          <div class="name saved-reply-author w-clearfix"><%= present(reply).profile_image %>
             <div class="shrink-text table-text"><%="#{current_user.full_name}"%></div>
           </div>
           <div class="cb check-box-column">
             <div class="w-form">
-              <form id="email-form-2" name="email-form-2">
+              <%= form_for(reply, url: user_saved_reply_path(current_user, reply), html: { method: :delete }) do |f| %>
                 <div class="select-all-check-box w-checkbox w-clearfix">
+                  <%= f.hidden_field :id %>
                   <input class="cb table-checkbox checkboxes w-checkbox-input" id="node" type="checkbox">
                   <label class="checkbox-field-lable w-form-label" for="node">-</label>
                 </div>
-              </form>
+              <% end %>
             </div>
           </div>
         </div>

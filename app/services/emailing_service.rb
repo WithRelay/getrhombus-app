@@ -412,7 +412,145 @@ class EmailingService
     end
 
     def account_balance_alert(user)
+      begin
+        template_name = 'low-account-balance'
+        template_content = []
+        message = { "subject" => "Low account balance",
+         "global_merge_vars"=> [  { "name" => "first_name", "content" => user.full_name.split.first || 'there' },
+                                  { "name" => "account_balance", "content" => user.account_balance }
+                               ],
+         "merge_language" => "handlebars",
+         "to"=> [ { "email" => user.email } ],
+         "bcc_address"=> SENDER,
+         "from_name" => "Edwin from Relay",
+         "from_email" => FROM_EMAIL[:edwin]
+        }
+        async = true
+        result = MANDRILL.messages.send_template template_name, template_content, message, async
+      rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
+        puts "A mandrill error occurred: #{e.class} - #{e.message}"
+      rescue StandardError => e
+      end
     end
+
+    def merchant_transaction_detail(transaction)
+      begin
+        template_name = 'transaction-details'
+        template_content = []
+        message = { "subject" => "You sent #{transaction.amount} to #{transaction.team.org_name}",
+         "global_merge_vars"=> [  { "name" => "first_name", "content" => transaction.user.full_name.split.first || 'there' },
+                                  { "name" => "merchant_business_name", "content" => transaction.user.org_name },
+                                  { "name" => "transaction_id", "content" => transaction.id },
+                                  { "name" => "date", "content" => transaction.created_at },
+                                  { "name" => "status", "content" => transaction.status },
+                                  { "name" => "payment_method", "content" => '' }
+                                  { "name" => "amount", "content" => transaction.amount },
+                                  { "name" => "discription", "content" => },
+                                  { "name" => "taxes_and_fees", "content" => }
+                               ],
+         "merge_language" => "handlebars",
+         "to"=> [ { "email" => user.email } ],
+         "bcc_address"=> SENDER,
+         "from_name" => "Edwin from Relay",
+         "from_email" => FROM_EMAIL[:edwin]
+        }
+        async = true
+        result = MANDRILL.messages.send_template template_name, template_content, message, async
+      rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
+        puts "A mandrill error occurred: #{e.class} - #{e.message}"
+      rescue StandardError => e
+      end
+    end
+
+    def transaction_receipt(transaction)
+      begin
+        template_name = 'transaction_receipt'
+        template_content = []
+        message = { "subject" => "Receipt",
+         "global_merge_vars"=> [  { "name" => "first_name", "content" => transaction.user.full_name.split.first || 'there' },
+                                  { "name" => "transaction_id", "content" => transaction.id },
+                                  { "name" => "date", "content" => transaction.created_at },
+                                  { "name" => "status", "content" => transaction.status },
+                                  { "name" => "payment_method", "content" => '' }
+                                  { "name" => "amount", "content" => transaction.amount },
+                                  { "name" => "previous_balance", "content" => '' },
+                                  { "name" => "current_balance", "content" => '' }
+                               ],
+         "merge_language" => "handlebars",
+         "to"=> [ { "email" => user.email } ],
+         "bcc_address"=> SENDER,
+         "from_name" => "Edwin from Relay",
+         "from_email" => FROM_EMAIL[:edwin]
+        }
+        async = true
+        result = MANDRILL.messages.send_template template_name, template_content, message, async
+      rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
+        puts "A mandrill error occurred: #{e.class} - #{e.message}"
+      rescue StandardError => e
+      end
+    end
+
+    def transaction_reminder(transaction)
+      begin
+        template_name = 'transaction-details'
+        template_content = []
+        message = { "subject" => "Thank you for using Relay!",
+         "global_merge_vars"=> [  { "name" => "first_name", "content" => transaction.team.full_name.split.first || 'there' },
+                                  { "name" => "merchant_business_name", "content" => transaction.user.org_name },
+                                  { "name" => "transaction_id", "content" => transaction.id },
+                                  { "name" => "date", "content" => transaction.created_at },
+                                  { "name" => "status", "content" => transaction.status },
+                                  { "name" => "payment_method", "content" => '' }
+                                  { "name" => "amount", "content" => transaction.amount },
+                                  { "name" => "discription", "content" => },
+                                  { "name" => "taxes_and_fees", "content" => }
+                               ],
+         "merge_language" => "handlebars",
+         "to"=> [ { "email" => user.email } ],
+         "bcc_address"=> SENDER,
+         "from_name" => "Edwin from Relay",
+         "from_email" => FROM_EMAIL[:edwin]
+        }
+        async = true
+        result = MANDRILL.messages.send_template template_name, template_content, message, async
+      rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
+        puts "A mandrill error occurred: #{e.class} - #{e.message}"
+      rescue StandardError => e
+      end
+    end
+
+    def customer_transaction_detail(transaction)
+      begin
+        template_name = 'transaction-details'
+        template_content = []
+        message = { "subject" => "#{transaction.user.full_name} sent you #{transaction.amount}",
+         "global_merge_vars"=> [  { "name" => "first_name", "content" => transaction.team.full_name.split.first || 'there' },
+                                  { "name" => "merchant_business_name", "content" => transaction.user.org_name },
+                                  { "name" => "transaction_id", "content" => transaction.id },
+                                  { "name" => "date", "content" => transaction.created_at },
+                                  { "name" => "status", "content" => transaction.status },
+                                  { "name" => "payment_method", "content" => '' }
+                                  { "name" => "amount", "content" => transaction.amount },
+                                  { "name" => "discription", "content" => },
+                                  { "name" => "taxes_and_fees", "content" => }
+                               ],
+         "merge_language" => "handlebars",
+         "to"=> [ { "email" => user.email } ],
+         "bcc_address"=> SENDER,
+         "from_name" => "Edwin from Relay",
+         "from_email" => FROM_EMAIL[:edwin]
+        }
+        async = true
+        result = MANDRILL.messages.send_template template_name, template_content, message, async
+      rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
+        puts "A mandrill error occurred: #{e.class} - #{e.message}"
+      rescue StandardError => e
+      end
+    end
+
+    def unread_message_reminders
+    end
+
   end
 
 end

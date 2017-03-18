@@ -22,7 +22,7 @@
             <div class="left-column-text"> &nbsp; &nbsp; <%= @customer.email %></div>
             <div class="left-column-text"> &nbsp; &nbsp; &nbsp; <%= @customer.state_province %></div>
             <div class="left-column-text"> &nbsp; &nbsp; <%= present(@customer).twitter_uid %></div>
-            <div class="left-column-text"> &nbsp; &nbsp; Customer since: <%= present(@merchant_customer).customer_since_date %></div>
+            <div class="left-column-text"> &nbsp; &nbsp; Customer since: adasdasdas</div>
             <div class="right-nav-underline"></div>
           </div>
           <div class="customer-profile profile-info-wrapper">
@@ -65,14 +65,6 @@
               </div>
               <div class="right-column w-col w-col-6">
                 <div class="recent-activity-description"><%= present(@merchant_customer).average %></div>
-              </div>
-            </div>
-            <div class="recent-activity right-nav-row w-row">
-              <div class="left-column w-col w-col-6">
-                <div class="left-column-text recent-activity">Customer since</div>
-              </div>
-              <div class="right-column w-col w-col-6">
-                <div class="recent-activity-description"><%= present(@merchant_customer).customer_since_date %></div>
               </div>
             </div>
             <div class="right-nav-underline"></div>

@@ -77,9 +77,9 @@
             <h4 class="welcome-dash-content-container-header">Message Volume</h4>
           </div>
           <div>
-            <%= area_chart @chart_and_transacs[:msg_data_for_chart], 
-                library: { 
-                  scales: { 
+            <%= area_chart @chart_and_transacs[:msg_data_for_chart],
+                library: {
+                  scales: {
                     xAxes: [{
                       ticks: {
                         autoSkip: false,
@@ -94,8 +94,8 @@
                       }
                     }]
                   }
-                }, 
-                curve: false 
+                },
+                curve: false
             %>
           </div>
         </div>
@@ -136,7 +136,7 @@
                 <div class="preview shrink-text table-text unread-table"><%= u.textable.text %></div>
               </div>
             </div>
-          <% end %>        
+          <% end %>
         </div>
       </div>
     </div>
