@@ -6,6 +6,10 @@ class UserPresenter < BasePresenter
   # https://www.new-bamboo.co.uk/blog/2007/08/31/presenters-conductors-on-rails/
   # http://blog.nhocki.com/2012/05/08/mixing-presenters-and-helpers/
 
+  SYMBOL_TIMES = 4
+
+  private_constant :SYMBOL_TIMES
+
   def org_type_on_managed_acct_page
     @user.org_type == 'Individual' ? 'Individual' : 'Company'
   end
@@ -30,8 +34,23 @@ class UserPresenter < BasePresenter
     html
   end
 
+  def average_transaction
+    user_average_transaction = Transaction.user_average_transaction(@model.id)
+    user_average_transaction.present? ? user_average_transaction : show_empty_symbol
+  end
+
+  def total_transaction
+    user_total_transaction = Transaction.users_total_transaction(@model.id)
+    user_total_transaction.present? ? user_total_transaction : show_empty_symbol
+  end
+
   def format_customer_name
     @model.full_name.present? ? @model.full_name.split.first : "Customer"
   end
 
+  private
+
+  def show_empty_symbol
+    ('-' * SYMBOL_TIMES)
+  end
 end
