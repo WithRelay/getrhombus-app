@@ -59,7 +59,10 @@
       <div class="customer-dashoard sub-nav-options-wrapper w-clearfix">
         <%= link_to ' &nbsp;<strong>SMS Channel</strong>'.html_safe, leads_and_contacts_user_path(current_user, uid_type: 'phone_number'), class: 'sub-nav-button w-button'%>
         <%= link_to ' &nbsp;<strong>Messenger Channel</strong>'.html_safe, leads_and_contacts_user_path(current_user, uid_type: 'messenger'), class: 'import sub-nav-button w-button'%>
-        <a class="sub-nav-button w-button" data-ix="create-list" href="#"> &nbsp;<strong>Create&nbsp;list</strong></a>
+        <a class="sub-nav-button w-button" data-ix="create-list" href="#" id='create_list_button'> &nbsp;<strong>Create&nbsp;list</strong></a>
+        <div class='modal-background w-hidden modal-body new-list-modal'>
+          <%= render 'shared/modals/new_list' %>
+        </div>
       </div>
     </div>
     <div class="sub-nav-bar-search-row w-col w-col-4">
@@ -85,7 +88,7 @@
               <div class="w-form">
                 <form data-name="Email Form 2" id="email-form-2" name="email-form-2">
                   <div class="select-all-check-box w-checkbox w-clearfix">
-                    <input class="cb table-checkbox w-checkbox-input" id="node" type="checkbox">
+                    <input class="cb table-checkbox w-checkbox-input merchant_customers" id="node" type="checkbox" data-users="<%= leads.contacts.id %>">
                     <label class="checkbox-field-lable w-form-label" for="node">-</label>
                   </div>
                 </form>
