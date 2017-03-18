@@ -5,7 +5,6 @@ $(document).ready(function(e){
   var updateField = getOnlyText(updateFieldClass)
   var editField = getOnlyText(editFieldClass)
 
-
   $(document).on('click', editFieldClass, function(e){
     editItem = new EditItem(this, editableTextField);
     editItem.showEditTextBox();
@@ -21,7 +20,7 @@ $(document).ready(function(e){
   });
 
   $(document).on('click', updateFieldClass, function(e){
-    updateItem('.text-field.segment-name');
+    updateItem($(this).parent().find('.text-field.segment-name'));
   });
 
   function EditItem(clickedElement, editableFieldsDiv){
@@ -68,15 +67,15 @@ $(document).ready(function(e){
   }
 
   function updateItem(element){
-    var textField = $(element)
+    var textField = element.data('segment-id')
     $.ajax({
-            method: 'patch', url: '/v1/lists/' + textField.data('segment-id'),
-            dataType: 'json', data: { 'name': textField.val() }
+            method: 'patch', url: '/v1/lists/' + textField,
+            dataType: 'json', data: { 'name': element.val() }
 
           }).done(function(msg){
 
             var flash_key = Object.keys(msg)[1];
-            msg.status == 200 && $('#segment-' + textField.data('segment-id')).text(msg.name);
+            msg.status == 200 && $('#segment-' + element.data('segment-id')).text(msg.name);
             FlashHandler.setFlashMessage( msg[flash_key], flash_key );
 
           }).fail(function(msg){
