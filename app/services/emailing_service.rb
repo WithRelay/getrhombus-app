@@ -413,6 +413,5 @@ class EmailingService
 
     def account_balance_alert(user)
     end
-  end
 
 end

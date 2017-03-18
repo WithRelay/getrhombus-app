@@ -12,7 +12,7 @@ class PlansController < ApplicationController
               .paginate(page: params[:page], per_page: 10)
               .order('plans.created_at DESC')
 
-    respond_with(@plans)
+    render 'empty_manage_plan' unless @plans.present?
   end
 
   def show

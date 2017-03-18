@@ -1,17 +1,18 @@
 class CouponsController < ApplicationController
-  
+
   include DashboardNotification
-  
+
   before_action :set_coupon, only: [:show, :destroy]
   before_action :set_notifications
-  
+
   respond_to :html
 
   def index
     # get subscription id to use to determine if destroy link should show up
     @coupon = Coupon.new
     @coupons = coupons
-    respond_with(@coupons)
+
+    render 'empty_coupon' unless @coupons.present?
   end
 
   def create
@@ -41,6 +42,7 @@ class CouponsController < ApplicationController
 
   def manage_coupons
     @coupons = coupons
+    render 'empty_manage_coupon' unless @coupons.present?
   end
 
   private
