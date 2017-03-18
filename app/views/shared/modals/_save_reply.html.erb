@@ -10,7 +10,7 @@
   <p class="modal-content-description">Create saved replies to frequently asked questions so you can respond to you customers faster. Type '/' on your messaging dashboard to trigger a saved reply.</p>
   <div class="segment-modal underline-div"></div>
   <div class="saved-reply-form w-form">
-    <%= form_for(saved_reply, url: v1_saved_replies_path,:html => { :id => "email-form-8", data: { name: 'email-form-8' } } ) do |f| %>
+    <%= form_for(saved_reply, url: v1_saved_replies_path,:html => { :id => "save-reply-form", data: { name: 'email-form-8' } } ) do |f| %>
        <%= f.text_field :title, placeholder: 'Saved reply title', id: 'Saved-Reply-Title-3', class: 'saved-reply text-field title-create w-input', data: { name: 'Saved Reply Title' } %>
 
        <%= f.text_area :body, placeholder:'Start typing...', id: 'Saved-Replies-Editor-3',

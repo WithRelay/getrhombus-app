@@ -12,9 +12,8 @@ class Api::V1::SavedRepliesController < API::V1::BaseController
 
   def edit
   	 # response = @user_save_reply ? { save_reply:  @user_save_reply, status: 200 } : { save_reply: [], status: 400 }
-    bindding.pry
     responce = SavedReply.find_by_id(params[:id])
-    render json: response
+    render json: responce
   end
 
   def create

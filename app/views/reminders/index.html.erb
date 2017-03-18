@@ -6,7 +6,6 @@
       <%= render partial: 'shared/modals/edit_reminder', locals: { reminder: Reminder.new}  %>
 </div>
 
-
 <div class="customer-dash sub-nav-bar w-clearfix">
 
   <a class="add sub-nav-button w-button modal-loader" href="#" modal-target="new-reminder-modal"> &nbsp;<strong>Set new reminder</strong></a>
@@ -15,7 +14,6 @@
 
   <a class="sub-nav-button w-button" data-ix="create-list"  id = 'delete-reminder' href="#"> &nbsp;<strong>Delete</strong></a>
 </div>
-
 
 <div class="dashboard-body">
 
@@ -83,7 +81,6 @@
   <div class="reminders-by-date row-wrapper">
     <div>
     <% @reminders_upcoming.each do |reminder| %>
-
       <%= render partial: 'list_reminder', locals: {reminder: reminder } %>
     <% end %>
   </div>
