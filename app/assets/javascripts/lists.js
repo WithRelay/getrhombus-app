@@ -117,8 +117,10 @@ $(document).on('ready page:load', function() {
     fields: {
       'number_of_days': {
         validators: {
-          notEmpty: {
-            message: 'number of days is required'
+          callback: {
+            callback: function (value, validator, $field) {
+              return { valid: ($field.val() > 0) };
+            }
           }
         }
       },

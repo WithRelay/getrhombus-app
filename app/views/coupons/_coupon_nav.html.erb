@@ -1,0 +1,12 @@
+<div class="customer-dash sub-nav-bar">
+  <div class="sub-nav-options-wrapper w-clearfix">
+    <a class="w-button sub-nav-button w-button modal-loader", id: 'new-coupon-modal', href="#"> &nbsp;<strong>New coupon</strong></a>
+    <%= link_to user_manage_coupons_path(current_user), class: 'import sub-nav-button w-button' do %>
+      &nbsp; <strong>Edit coupons</strong>
+    <% end %>
+  </div>
+
+  <div class='modal-background w-hidden modal-body'>
+    <%= render partial: 'shared/modals/new_coupon'  %>
+  </div>
+</div>

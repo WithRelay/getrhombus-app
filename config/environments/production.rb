@@ -2,7 +2,7 @@ Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
   #### added
-  config.action_mailer.default_url_options = { :host => 'getrhombus.com' }
+  config.action_mailer.default_url_options = { :host => Rails.application.secrets.url["info"] }
   # ActionMailer Config
   # Setup for production - deliveries, no errors raised
   config.action_mailer.delivery_method = :smtp
@@ -11,11 +11,13 @@ Rails.application.configure do
   config.action_mailer.default :charset => "utf-8"
 
   config.action_mailer.smtp_settings = {
-    address: "smtp.mandrillapp.com",
-    port: 587,
-    domain: "getrhombus.com",
+    address: 'smtp.mandrillapp.com',
+    authentication: :plain,
+    domain: 'getrhombus.com',
+    enable_starttls_auto: true,
+    password: '<redacted_password>',
+    port: '587',
     user_name: <redacted_username>
-    password: "<redacted_password>" 
   }
 
   config.paperclip_defaults = {

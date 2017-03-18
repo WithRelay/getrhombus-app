@@ -1,6 +1,6 @@
 module ApplicationHelper
   include PrettyDate
-  
+
   def present(model, presenter_class=nil)
     klass = presenter_class || "#{model.class}Presenter".constantize
     presenter = klass.new(model, self, current_user)
@@ -32,6 +32,7 @@ module ApplicationHelper
   end
 
   def render_sidebar_partial
+    return render 'shared/leads_sidebar' if ['users-leads_contacts'].include?(params_controller_action)
     return render 'shared/customer_sidebar' if customer_index
     concat(render 'shared/dashboard_sidebar') unless authenticated_pages || setting_pages || messaging_dashboard || restrict_other_params
     render 'shared/setting_sidebar' if setting_pages

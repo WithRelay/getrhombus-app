@@ -31,10 +31,6 @@ class MerchantCustomerPresenter < BasePresenter
   	"$ #{'%.02f' % t = transaction_sum ? transaction_sum : 0}"
   end
 
-  def customer_since_date
-    @model.created_at ? @model.created_at.strftime('%m/%d/%Y') : '-'
-  end
-
 private
 
   def last_transaction
