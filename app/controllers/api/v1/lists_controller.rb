@@ -45,9 +45,9 @@ class Api::V1::ListsController < API::V1::BaseController
         render json: message
       else
         segment_query = get_segment_query(segment_params)
-        @list = save_list(name: segment_params[:segment_name], user_id: current_user.id,
+        list = save_list(name: segment_params[:segment_name], user_id: current_user.id,
                           segment: segment_query)
-        list_errors = get_list_errors(@list)
+        list_errors = get_list_errors(list)
         if list_errors.blank?
            render json: {
               "list" => @list,
@@ -86,7 +86,6 @@ class Api::V1::ListsController < API::V1::BaseController
     def save_list(name:, user_id:, segment:nil)
       l = List.new(name:name, user_id:user_id, segment:segment)
       l.save
-      print "List created is: #{l}"
       return l
     end
 
@@ -104,7 +103,6 @@ class Api::V1::ListsController < API::V1::BaseController
     def get_segment_query(segment_attributes)
       # Pass the current time in the user's time zone
       segment_attributes[:current_time] = Time.current
-      print "Segment type is: #{params[:segment_type]} \n"
       if segment_attributes[:segment_type] == "new_customers"
          DashboardMerchantQueries.get_new_customers(segment_attributes)
       elsif segment_attributes[:segment_type] == "active_customers"

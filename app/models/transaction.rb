@@ -20,7 +20,9 @@ class Transaction < ActiveRecord::Base
   scope :get_merchant_todays_txn_count, -> (team_id, date) { self.joins('LEFT JOIN refunds on transactions.id = refunds.transaction_id')
                                                               .where("refunds.transaction_id is null and transactions.team_id = ?
                                                                        and transactions.created_at >= ? and transactions.captured = 1", team_id, date).count }
+  scope :user_average_transaction, -> (user_id) { self.where(user_id: user_id).average(:amount) }
 
+  scope :users_total_transaction, -> (user_id) { self.where(user_id: user_id).sum(:amount).to_i }
 
   # send in a hash instead to PaymentService?
   def process_payment(amt, merchant, user, msg, hashtag_id, channel, capture=true)
