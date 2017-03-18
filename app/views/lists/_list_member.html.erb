@@ -30,12 +30,12 @@
         </div>
         <div class="avs w-clearfix w-col w-col-1">
           <div class="avs column column-4 w-clearfix">
-            <div class="table-text">$23,04</div>
+            <div class="table-text"><%= present(member[:user]).average_transaction %></div>
           </div>
         </div>
         <div class="ts w-clearfix w-col w-col-1">
           <div class="column column-5 ts w-clearfix">
-            <div class="shrink-text table-text total-spend-text">$400</div>
+            <div class="shrink-text table-text total-spend-text"><%= present(member[:user]).total_transaction %></div>
           </div>
         </div>
         <div class="table-actions w-clearfix w-col w-col-3">
