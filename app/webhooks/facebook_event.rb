@@ -61,8 +61,7 @@
 
         @fb_message = FbMessage.new
         @fb_message.update(message_id: message_id, text: text, seq: seq,
-          time_stamp: timestamp, unread: true,
-          from: @message_from, to: @message_to, fb_page_id: fb_page_id,
+          time_stamp: timestamp, from: @message_from, to: @message_to, fb_page_id: fb_page_id,
           user_id: @user_id, user_id_to: @user_id_to)
         @customer = User.where(id: @user_id_to).first
         save_attachments if @attachments.present?

@@ -12,7 +12,9 @@ Header
 
 Taiwo
 - review all transactions query, (captured: true and not refunded, include subscriptions): dashboard, customers index, show, transactions index, csv
-
+- might need to rewrite unread notifications
+- messaging page
+- flexible payment rates
 
 Add profile info
 1. validation
@@ -44,6 +46,7 @@ Surya
 - lock down permissions cancancan?
 - i see issues with reminder js
 - empty segments
+- manage segment button bug
 
 Dorje
 - profile pic, dont show twitter info if not exists and transaction history on customer profile page
@@ -52,8 +55,9 @@ Dorje
 
 Bhishma
 - do messageparser with bhishma tomorrow.
-- empty plans, coupons
 - has_messenger?  
+- incomplete signup email (the following day), review offer to help
+- autoreload failure
 
 - add the url for pages you did to the sidebar on dashboard and settings page
 - card error flash missing in registrations update
@@ -62,7 +66,6 @@ Bhishma
 - new customers in dashboard header
 
 - EVERYONE CLEAN UP YOUR ROUTES and CONTROLLERS
-
 
 Friday
 - test parser - done

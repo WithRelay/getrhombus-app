@@ -77,7 +77,7 @@ class Conversation < ActiveRecord::Base
       text: (msg.text) ? msg.text : '',
       ts_day_of_the_week: msg.created_at.strftime("%B") + " " + msg.created_at.strftime("%d").to_i.ordinalize,
       ts_time: msg.created_at.strftime('%l:%M %P'),
-      unread: msg.unread,
+      unread: conv_ref.unread,
       images: msg.images.map { |i| { ref: conv_ref.id, url: i.avatar.url } },           # return small version here??
       channel: msg.class.name
   	}
@@ -85,15 +85,7 @@ class Conversation < ActiveRecord::Base
 
   def mark_messages_as_read(ids)
   	begin
-	  	# this can be more efficient
-	  	refs = ConversationRef.includes(:textable).where(id: ids.split(","), conversation_id: self.id)
-	  	ActiveRecord::Base.transaction do
-		  	refs.update_all(unread: false)
-		  	sms_ary, messenger_ary = Array.new, Array.new
-		  	refs.each { |r|	r.textable.class.name == "Message" ? sms_ary.push(r.textable.id) : messenger_ary.push(r.textable.id) }
-		  	Message.where(id: sms_ary).update_all(unread: false)
-		  	FbMessage.where(id: messenger_ary).update_all(unread: false)
-		  end
+	  	refs = ConversationRef.where(id: ids.split(","), conversation_id: self.id).update_all(unread: false)
 		  true
 		rescue StandardError => e
 		 	false
@@ -125,7 +117,7 @@ class Conversation < ActiveRecord::Base
       msg_instance.image_ids = media_ids
     end
 
-    if msg_instance.send_and_save_message(team, customer, from, to, msg, false, media)
+    if msg_instance.send_and_save_message(team, customer, from, to, msg, media)
       re = find_or_create_conversation_for_message(team.id, @conv.uid_type, @conv.uid, msg_instance, false, source)
       msg_hash = message_hash(re[0], msg_instance, re[1], customer, team)
       [msg_hash, msg_instance, re.second]    # message hash, instance and message conv ref are needed
@@ -179,6 +171,7 @@ class Conversation < ActiveRecord::Base
     is_zero == 0 ? 0 : (merchant_conv.count/time_diff).round
   end
 
+  # get the total number of unread messages for a merchant on or after a date
   def self.get_merchant_todays_unread_count(merchant_id, date)
     find_by_sql(["select count(cr.id) as count from conversations c inner join conversation_refs cr
                   on c.id = cr.conversation_id
@@ -186,6 +179,7 @@ class Conversation < ActiveRecord::Base
                   and c.merchant_id = ? and c.created_at >= ? and source = 2", merchant_id, date]).first.count
   end
 
+  # get the total number of unread messages for a merchant
   def self.get_merchant_total_unread_msgs_count(merchant_id)
     find_by_sql(["select count(cr.id) as count from conversations c inner join conversation_refs cr
                   on c.id = cr.conversation_id
@@ -193,6 +187,7 @@ class Conversation < ActiveRecord::Base
                   and c.merchant_id = ? and source = 2", merchant_id]).first.count
   end
 
+  # get the last message from the last 5 conversations a merchant has had on or after a date
   def self.get_last_customer_msg_from_last5_convs_today(merchant_id, date)
     find_by_sql(["SELECT b.id as id, a.textable_id, b.uid, b.uid_type, a.created_at as created_at,
                   CASE WHEN a.textable_type = 'Message' THEN 'SMS' ELSE 'messenger' END as channel
