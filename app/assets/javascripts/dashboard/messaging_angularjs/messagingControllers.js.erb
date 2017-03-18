@@ -47,7 +47,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
     $scope.send_msg_fb_btn = "Send via Facebook";
     $scope.send_mms_btn = "Send";
     $scope.send_mms_fb_btn = "Send via Facebook";
-    $scope.charge_btn = "CHARGE";
+    $scope.charge_btn = "Charge Customer";
 
     // Transactions
     $scope.charge_data = { hashtag_id: null };
@@ -615,6 +615,8 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
       });
     };
 
+    $scope.displayChargeForm();
+
     $scope.openSavedRepliesDiv = function() {
       $('#saved-reply-selection-div').lightbox_me({
         centered: true,
@@ -661,6 +663,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
 
     // function to submit the form after all validation has occurred
     $scope.submitChargeForm = function(isValid) {
+      console.log('adsas')
       if (isValid) {
         $scope.is_sending = true;
         $scope.charge_btn = "Please wait...";
@@ -671,7 +674,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
         $scope.charge_data.capture = ($scope.charge.authorize) ? $scope.charge.authorize : false;
         console.log($scope.charge_data);
 
-        transactionService.createCharge($scope.charge_data)
+        /*transactionService.createCharge($scope.charge_data)
         .then(function (data) {
           console.log('charge complete');
           console.log(data)
@@ -681,8 +684,8 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
         })
         .finally(function() {
           $scope.is_sending = false;
-          $scope.charge_btn = "CHARGE";
-        });
+          $scope.charge_btn = "Charge Customer";
+        });*/
       }
     };
 

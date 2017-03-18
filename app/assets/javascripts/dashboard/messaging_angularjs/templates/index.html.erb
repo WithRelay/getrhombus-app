@@ -304,7 +304,8 @@
       </div>
       <p class="modal-content-description">Saved replies help your team speed up response time to frequently asked questions. Select your saved replies from the drop-down, then personalize and hit send.</p>
       <div class="segment-modal underline-div"></div>
-      <div class="saved-reply-select-form w-form">
+      <%# remove w-form %>
+      <div class="saved-reply-select-form">
         <form id="email-form-3" name="email-form-3">
           <select class="dropdown select-saved-reply w-select" ng-model="saved_replies.reply" ng-options="option.title for option in saved_replies_list track by option.id">
             <option ng-selected="true" value="">Select saved reply</option>
@@ -325,36 +326,41 @@
         <%# added update-close-modals and data %>
         <a class="close-modal update-close-modals" data-parent='charge-a-customer-div'></a>
       </div>
-      <div class="charge-customer-form w-form">
-           <label>
-              <angucomplete-alt id="find-hashtag"
-              placeholder="Hashtag or item name"
-              pause="300"
-              minlength="1"
-              selected-object="hashtagSelected"
-              remote-url="<%= (Rails.env == 'development' ? "http://localhost:3000" : "#{Rails.application.secrets.url["info"]}") + "/v1/hashtags?query=" %>"
-              remote-url-data-field="hashtags"
-              title-field="tag"
-              text-no-results='false'
-              match-class='highlight'
-              input-name='hashtag'
-              description-field='description'
-              text-searching="Finding your tag/item..."
-              <%#= add html notification during ui integration %>
-              <%#= scroll bar added but test option during UI integration and testing %>
-              remote-url-error-callback='hashtagsApiErrorHandler'
-              />
-            </label>
+      <%# remove w-form %>
+      <div class="charge-customer-form">
+        <form id="chargeForm" name="chargeForm" ng-submit="submitChargeForm(chargeForm.$valid)" novalidate>
+          <label>
+            <angucomplete-alt id="find-hashtag"
+            input-class="item-name text-field w-input"
+            placeholder="Hashtag or item name"
+            pause="300"
+            minlength="1"
+            selected-object="hashtagSelected"
+            remote-url="<%= (Rails.env == 'development' ? "http://localhost:3000" : "#{Rails.application.secrets.url["info"]}") + "/v1/hashtags?query=" %>"
+            remote-url-data-field="hashtags"
+            title-field="tag"
+            text-no-results='false'
+            match-class='highlight'
+            input-name='hashtag'
+            description-field='description'
+            text-searching="Finding your tag/item..."
+            <%#= add html notification during ui integration %>
+            <%#= scroll bar added but test option during UI integration and testing %>
+            remote-url-error-callback='hashtagsApiErrorHandler'
+            />
+          </label>
+            
+          <input class="amount-field text-field w-input" type="number" min="1" max='15000' required ng-model='charge.amount' name="amount" placeholder="Amount" step='0.01' ng-pattern="/^\d+(.\d{1,2})?$/" ng-class="{'has-error': chargeForm.amount.$invalid && !chargeForm.amount.$pristine }">
+          <p ng-show="chargeForm.amount.$invalid && !chargeForm.amount.$pristine">A valid amount is required</p>
 
-        <form id="chargeForm" name="email-form-4">
-          <input class="customer-name-or-number text-field w-input" id="Name-or-Number-2" maxlength="256" name="Name-or-Number-2" placeholder="Enter customer&#39;s name or phone number" type="text">
-          <input class="item-name text-field w-input" id="Item-name-4" maxlength="256" name="Item-name-4" placeholder="Item name" required="required" type="email">
-          <input class="amount-field text-field w-input"  id="Amount-4" maxlength="256" name="Amount-4" placeholder="Amount" required="required" type="email">
-          <textarea class="item-description text-area w-input" id="Item-Description-4" maxlength="5000" name="Item-Description-4" placeholder="Item Description"></textarea>
+          <textarea type="text" class="item-description text-area w-input" ng-model='charge.notes' name="notes" placeholder="Item Description" ng-trim='true'></textarea>
+
           <div class="form-check-box w-checkbox">
-            <input class="w-checkbox-input" id="checkbox-4" name="checkbox-4" type="checkbox">
+            <input type="checkbox" class="w-checkbox-input" name="authorize" ng-model='charge.authorize' value="authorize">
             <label class="w-form-label" for="checkbox-4">Authorize only</label>
-          </div><a class="button charge-modal-button w-button">Charge Customer</a>
+          </div>
+      
+          <button class="button charge-modal-button w-button" id="chargeButton" ng-disabled="disableChargeButton(chargeForm)" type="submit">{{charge_btn}}</button>
         </form>
       </div>
       <p class="charge-tips modal-paragraph tips"> &nbsp;TIP: You can use Hashtags to create an item list in Relay. Hashtags allow your customers text an item name to place an order</p>
@@ -366,7 +372,8 @@
     <div class="mark-as-done-form-wrapper">
       <p class="modal-content-description">Label conversations before you close it, so your entire team can stay informed on why a customer or lead reached out.</p>
       <div class="segment-modal underline-div"></div>
-      <div class="mark-as-done-form w-form">
+      <%# remove w-form %>
+      <div class="mark-as-done-form">
         <form class="w-clearfix" id="email-form-6">
           <select class="dropdown message-reason w-select" id="Message-Reason-2" ng-model='marked_as_done.reason'>
             <option value='' disabled selected>Select message reason</option>
@@ -416,7 +423,8 @@
       </div>
       <p class="modal-content-description">Set a reminder or notification that will go out to this customer at a future date. You can use this to automate appointment reminders, or bill payment reminders.</p>
       <div class="segment-modal underline-div"></div>
-      <div class="scheduled-notification-form w-form">
+      <%# remove w-form %>
+      <div class="scheduled-notification-form">
         <form class="w-clearfix" id="email-form-7" name="email-form-7">
           <select class="dropdown w-select" id="Notification-Channel-2" name="Notification-Channel-2" required="required">
             <option value="">Select channel</option>

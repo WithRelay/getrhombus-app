@@ -50,6 +50,7 @@ class Conversation < ActiveRecord::Base
       ago: last_message.blank? ? "" : time_in_relative_form(last_message.created_at, 'short_format'),
       unread_count: ConversationRef.where(conversation_id: self.id, unread: true).count,
       #has_messenger:
+      #has_valid_card:
     }
   end
 

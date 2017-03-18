@@ -12,8 +12,9 @@ Header
 
 Taiwo
 - review all transactions query, (captured: true and not refunded, include subscriptions): dashboard, customers index, show, transactions index, csv
-- might need to rewrite unread notifications
-- messaging page
+- messaging page - charge, lists, snapshot, connection
+- customer - charge, refund
+- transaction - charge
 - flexible payment rates
 
 Add profile info
@@ -47,6 +48,7 @@ Surya
 - i see issues with reminder js
 - empty segments
 - manage segment button bug
+
 
 Dorje
 - profile pic, dont show twitter info if not exists and transaction history on customer profile page
