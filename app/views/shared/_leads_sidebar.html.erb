@@ -1,0 +1,76 @@
+<div class="customer-dashboard side-bar">
+  <div class="dashboard-nav-links">All Customers</div>
+  <h5 class="left-nav signup-box-subheading">customers</h5>
+  <a class="left-nav-tab-wrapper w-inline-block" href="#">
+    <div class="left-nav-tab" data-ix="display-and-hide-customers">&nbsp; &nbsp; Customers &nbsp; &nbsp;</div>
+  </a>
+  <div class="customers-hidden-menu" data-ix="display-none-on-load">
+    <div class="w-form">
+      <form data-name="Email Form 7" id="email-form-7" name="email-form-7">
+        <select class="dropdown segments w-select" data-name="Segment Select" id="Segment-Select" name="Segment-Select">
+          <option value="">Segments</option>
+          <option value="">New customers</option>
+          <option value="">Active customers</option>
+          <option value="">Inactive customers</option>
+          <option value="">Signed up 3 days ago</option>
+        </select>
+      </form>
+    </div>
+  </div>
+  <%= link_to lists_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
+    <div class="left-nav-tab" data-ix="display-and-hide-customers">&nbsp; &nbsp; Lists</div>
+  <% end %>
+
+  <a class="left-nav-tab-wrapper w-inline-block" href="#">
+    <div class="left-nav-tab messaging" data-ix="display-and-hide-left-nav">&nbsp; &nbsp;Messaging &nbsp; &nbsp; </div>
+  </a>
+
+  <div class="messaging-hidden-menu" data-ix="display-none-on-load">
+    <%= link_to 'Conversations', user_conversations_path(current_user), class: 'dashboard-dropdown-link' %>
+    <%= link_to 'Saved Replirs', user_saved_replies_path(current_user), class: 'dashboard-dropdown-link' %>
+    <%= link_to 'Customer Reminders', user_reminders_path(current_user), class: 'dashboard-dropdown-link' %>
+  </div>
+  <%= link_to user_campaigns_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
+    <div class="left-nav-tab">&nbsp; &nbsp;Campaigns</div>
+  <% end %>
+
+  <a class="left-nav-tab-wrapper w-inline-block" data-ix="display-and-hide-transaction-tab" href="#">
+    <div class="left-nav-tab transactions" data-ix="display-and-hide-transaction-tab"> &nbsp;Transactions &nbsp;</div>
+  </a>
+  <div class="transactions-hidden-nav" data-ix="display-none-on-load">
+    <a class="dashboard-dropdown-link" href="#">Charges</a>
+    <a class="dashboard-dropdown-link" href="#">Pre-authorized</a>
+    <a class="dashboard-dropdown-link" href="#">Subscriptions</a>
+  </div>
+  <%= link_to user_hashtags_path(current_user), class: "left-nav-tab-wrapper w-inline-block" do %>
+    <div class="left-nav-tab">&nbsp; &nbsp;Hashtags</div>
+  <%end%>
+  <a class="left-nav-tab-wrapper w-inline-block" href="#">
+    <div class="left-nav-tab">&nbsp; &nbsp;Leads</div>
+  </a>
+  <div class="left-nav-underline"></div>
+  <div class="w-form">
+    <form id="segment-sidebar-form" method="post" class='segment-form' action="#">
+      <label class="form-label segment-label" for="Segment-Options-2">Segment leads</label>
+      <select class="dropdown segment-parameters w-select" id="customer-filter">
+        <option value="new_customers" selected="selected">Customer created</option>
+        <option value="last_msg_received">Last message received</option>
+        <option value="last_msg_sent">Last message sent</option>
+        <option value="last_purchase">Last purchase made</option>
+      </select>
+      <select class="dropdown range w-select" id="days-filter" >
+        <option value="more_than">More than</option>
+        <option value="exactly">Exactly</option>
+        <option value="less_than">Less than</option>
+        <option value="between">Between</option>
+      </select>
+      <div class='form-group col-xs-6'>
+        <input class="day-count text-field w-input form-control" id="num_days" name="number_of_days" placeholder="Days ago" type="text">
+      </div>
+      <input type="submit" class="button create-segment w-button" value="Create Segment"></a>
+    </form>
+  </div>
+  <div class='modal-background w-hidden modal-body'>
+    <%= render 'shared/modals/new_segment' %>
+  </div>
+</div>
