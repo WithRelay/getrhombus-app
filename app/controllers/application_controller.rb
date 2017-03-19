@@ -21,7 +21,8 @@ class ApplicationController < ActionController::Base
       pubnub_subscribe_key: Rails.application.secrets.pubnub["subscribe_key"],
       short_url: current_user.short_url,
       full_name: current_user.full_name,
-      num_of_chars: current_user.rn_type.present? ? 1500 : 150
+      num_of_chars: current_user.rn_type.present? ? 1500 : 150,
+      customer_contact_count: MerchantCustomer.where(merchant_id: current_user.id).count + MerchantContact.where(merchant_id: current_user.id).count
     }
   end
 

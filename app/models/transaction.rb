@@ -12,17 +12,33 @@ class Transaction < ActiveRecord::Base
   belongs_to :user, counter_cache: true
   belongs_to :team, class_name: "User", counter_cache: true
 
-  # Exclude refunded transactions, include subscriptions and only captured transactions
-  scope :get_merchant_todays_last5_txns, -> (team_id, date) { self.includes(:user).joins('LEFT JOIN refunds on transactions.id = refunds.transaction_id')
-                                                              .where("refunds.transaction_id is null and transactions.team_id = ?
-                                                                       and transactions.created_at >= ? and transactions.captured = 1", team_id, date).order(created_at: :desc).limit(5) }
+  # Exclude refunded transactions, include subscriptions since these queries are read only
+  # and include only captured transactions and reloads are included by default..right
+  scope :exclude_refunded_transactions, -> () { self.joins('LEFT JOIN refunds on transactions.id = refunds.transaction_id')
+                                                          .where("refunds.transaction_id is null") }
 
-  scope :get_merchant_todays_txn_count, -> (team_id, date) { self.joins('LEFT JOIN refunds on transactions.id = refunds.transaction_id')
-                                                              .where("refunds.transaction_id is null and transactions.team_id = ?
-                                                                       and transactions.created_at >= ? and transactions.captured = 1", team_id, date).count }
-  scope :user_average_transaction, -> (user_id) { self.where(user_id: user_id).average(:amount) }
+  # add this in queries for transactions that may be refunded. subscriptions arent easily refunded                                                        
+  scope :exclude_subscriptions, -> () { self.where(subscription_id: nil) }
 
-  scope :users_total_transaction, -> (user_id) { self.where(user_id: user_id).sum(:amount).to_i }
+  scope :only_captured_transactions, -> () { self.where(captured: true) }
+  scope :only_uncaptured_transactions, -> () { self.where(captured: false) }
+
+  scope :get_merchant_todays_last5_txns, -> (team_id, date) { self.includes(:user).exclude_refunded_transactions()
+                                                                  .where(team_id: team_id)
+                                                                  .only_captured_transactions().where("transactions.created_at >= ?", date)
+                                                                  .order(created_at: :desc).limit(5) }
+
+  scope :get_merchant_todays_txn_count, -> (team_id, date) { self.exclude_refunded_transactions().only_captured_transactions()
+                                                                  .where("transactions.created_at >= ? and team_id = ?", date, team_id).count }
+  
+  scope :user_average_transaction_with_merchant, -> (user_id, team_id) { big_decimal_2dp(self.exclude_refunded_transactions()
+                                                                                            .only_captured_transactions
+                                                                                            .where(user_id: user_id, team_id: team_id).average(:amount)) }
+
+  scope :user_total_transaction_with_merchant, -> (user_id, team_id) { big_decimal_2dp(self.exclude_refunded_transactions()
+                                                                                          .only_captured_transactions()
+                                                                                          .where(user_id: user_id, team_id: team_id).sum(:amount)) }
+
 
   # send in a hash instead to PaymentService?
   def process_payment(amt, merchant, user, msg, hashtag_id, channel, capture=true)
@@ -31,15 +47,17 @@ class Transaction < ActiveRecord::Base
 
       tax_multiplier = (((@merchant.tax_percent.to_f) / 100) + 1)                                         # default is 0
       @amt_with_taxes = (@amt.to_f * tax_multiplier).round                                                # total amount to charge
+
+      
       @app_fee = ((Rails.application.secrets.app_fee_percent.to_f / 100) * @amt_with_taxes).round         # app fee
       @amt_less_stripe_fee = ((@amt_with_taxes * 0.975) - 30.0).round                                      # 2.5% + 30c
 
-      puts 'got here so far'
+      #puts 'got here so far'
 
       @stripe_res_ary = PaymentService.charge(@amt_with_taxes, @amt_less_stripe_fee, @app_fee, merchant, user, msg.text, capture)
       @stripe_res = @stripe_res_ary[0]
 
-      puts @stripe_res_ary.inspect
+      #puts @stripe_res_ary.inspect
 
       if @stripe_res
         update_transaction_data
@@ -71,10 +89,11 @@ class Transaction < ActiveRecord::Base
   end
 
   def amt_in_decimal(amt)
-    big_decimal_2dp(amt.to_f/100)
+    Transaction.big_decimal_2dp(amt.to_f/100)
   end
 
-  def big_decimal_2dp(amt)
+  def self.big_decimal_2dp(amt)
+    return 0 if amt.nil? || amt == 0
     Toolbox::Decimal.to_2dp(amt)
   end
 
@@ -96,8 +115,8 @@ class Transaction < ActiveRecord::Base
   def send_email_receipt
     # Also need to email merchant here too
     EmailingService.send_receipt(merchant_email: @merchant.email, to: @user.email, merchant_name: @merchant.org_name, transaction_number: self.txn_number,
-                                  text: self.notes, transaction_date: self.created_at, amount: big_decimal_2dp(self.amount),
-                                  amt_with_taxes: big_decimal_2dp(self.amount_with_taxes), org_phone: @merchant.org_phone, currency: @stripe_res.currency)
+                                  text: self.notes, transaction_date: self.created_at, amount: Transaction.big_decimal_2dp(self.amount),
+                                  amt_with_taxes: Transaction.big_decimal_2dp(self.amount_with_taxes), org_phone: @merchant.org_phone, currency: @stripe_res.currency)
     # Log email notification
     self.notification_logs.create(notify_type: 'new_transaction', reason: 'receipt', channel: 'Email')
   end
@@ -188,11 +207,11 @@ class Transaction < ActiveRecord::Base
   end
 
   def txn_amount
-    "#{big_decimal_2dp(self.amount)}"
+    "#{Transaction.big_decimal_2dp(self.amount)}"
   end
 
   def txn_amount_less_fees
-    "#{big_decimal_2dp(self.amount_less_fees)}"
+    "#{Transaction.big_decimal_2dp(self.amount_less_fees)}"
   end
 
   def relative_time

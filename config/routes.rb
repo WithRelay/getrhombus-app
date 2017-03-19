@@ -111,6 +111,7 @@ Rails.application.routes.draw  do
     api_version(module: "Api::V1", path: { value: "v1"}, constraints: { subdomain: "api" }, defaults: { format: "json" }) do
       resources :users, only: [:index] do
         post 'add_customers', on: :collection
+        get 'snapshot', on: :collection
       end
       resources :lists, only: [:create, :index, :update] do
         get 'check_list_name', on: :collection

@@ -50,7 +50,6 @@ class Conversation < ActiveRecord::Base
       ago: last_message.blank? ? "" : time_in_relative_form(last_message.created_at, 'short_format'),
       unread_count: ConversationRef.where(conversation_id: self.id, unread: true).count,
       #has_messenger:
-      #has_valid_card:
     }
   end
 
@@ -68,8 +67,8 @@ class Conversation < ActiveRecord::Base
 	end
 
 	def self.message_hash(conv, msg, conv_ref, customer, merchant=nil)
-    # u = msg.user_id == conv.merchant_id ? merchant : customer
-    u = conv_ref.source == 'customer' ? customer : merchant
+     u = msg.user_id == conv.merchant_id ? merchant : customer
+    #u = conv_ref.source == 'customer' ? customer : merchant
 
     {
       id: msg.id,

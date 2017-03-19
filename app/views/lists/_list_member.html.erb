@@ -5,7 +5,7 @@
         <div class="cn w-clearfix w-col w-col-3">
           <div class="name w-clearfix">
             <%= present(member[:user]).profile_image %>
-            <div class="shrink-text table-text"><%= member[:user].full_name %></div>
+            <div class="shrink-text table-text"><%= present(member[:user]).format_customer_name %></div>
           </div>
           <div class="cb check-box-column">
             <div class="w-form">

@@ -11,7 +11,7 @@ class FullContactData < ActiveRecord::Base
       if d
         row.given_name =  d.given_name
         row.family_name = d.family_name
-        row.website_url = (d.websites) ? d.websites[0].url : nil
+        row.website_url = d.websites.present? ? d.websites[0].url : nil
       end
 
       d = person.demographics
@@ -25,8 +25,8 @@ class FullContactData < ActiveRecord::Base
 
       d = person.photos
       if d
-        row.photo_url = d[0].type_id
-        row.photo_type_id = d[0].url
+        row.photo_url = d[0].present? ? d[0].type_id : nil
+        row.photo_type_id = d[0].present? ? d[0].url : nil
         d.each do |p|
           if p.is_primary == true
             row.photo_url = p.type_id
@@ -38,8 +38,8 @@ class FullContactData < ActiveRecord::Base
 
       d = person.organizations
       if d
-        row.org_name = d[0].name
-        row.org_title = d[0].title
+        row.org_name = d[0].present? ? d[0].name : nil
+        row.org_title = d[0].present? ? d[0].title : nil
         d.each do |o|
           if o.current == true || o.is_primary == true
             row.org_name = o.name
@@ -56,10 +56,6 @@ class FullContactData < ActiveRecord::Base
     rescue StandardError => err
       false
     end
-  end
-
-  # wrap this up and test model and service when integrating front end
-  def self.get_fullcontact_data(email)
   end
 
 end

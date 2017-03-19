@@ -11,6 +11,7 @@ class FullContactSocialData < ActiveRecord::Base
         where(full_contact_data_id: id, type_id: s.type_id).first_or_initialize.tap do |row|
           row.followers = s.followers
           row.type_id = s.type_id
+          row.username = s.username
           row.url = s.url
           row.following = s.following 
           row.full_contact_data_id = id

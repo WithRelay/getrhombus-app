@@ -1,7 +1,6 @@
 class User < ActiveRecord::Base
 
   include DashboardMerchantQueries
-  include DashboardCustomerQueries
   include CSVHandler
   extend UserProfile
 
@@ -167,6 +166,11 @@ class User < ActiveRecord::Base
     # number = TextingService.buy_number({ query: params[rhombus_number] || "", country: params[:rn_country], type: params[:rn_type] })
     number = '202'
     number && self.update(rhombus_number: number) ? true : false
+  end
+
+  def has_valid_card?
+    return false if self.exp_year.blank? && self.exp_month.blank?
+    self.exp_year.to_i >= Time.current.year && self.exp_month.to_i >= Time.current.month
   end
 
   def add_token_to_user(card_token)

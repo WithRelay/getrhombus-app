@@ -35,6 +35,8 @@
 //= require coupon
 //= require subscription
 //= require integrations
+//= require selectize
+//= require angular-selectize
 
 //= require jquery_ujs
 //= require pubnub/pubnub-angular.js
@@ -56,11 +58,7 @@
 //= require trumbowyg_color_plugin
 //= require trumbowyg_emoji_plugin
 //= require trumbowyg.upload.min
-//= require selectize
 //= require jquery.checkboxes-1.2.0.min.js
-//= require jquery.caret.js
-//= require jquery.atwho.js
-//= require bootstrap-select
 //= require powerange
 //= require knowledge_base
 //= require lists.js

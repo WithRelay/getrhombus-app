@@ -7,9 +7,9 @@ var messagingApp = angular.module('PubNubAngularMessagingApp', [
   'templates',
   'messagingControllers',
   'messagingFilters',
-  "angucomplete-alt",
   "ngFileUpload",
   'angular-inview',
+  'selectize',
   'luegg.directives' // Auto scroll module
 ]);
 
@@ -265,6 +265,28 @@ messagingApp.factory('savedReplyService', function($http, $q, Upload){
     })
     .error(function(data, status, headers, config) { 
       console.log('console fail in service get saved replies'); 
+      deferred.reject("there was an error");
+    });
+    return deferred.promise;
+  }
+
+  return service;
+});
+
+messagingApp.factory('userService', function($http, $q, Upload){
+  var service = {};
+  var base_url = window.location.origin + '/v1/users';
+  var token = { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content') };
+
+  service.getSnapshot = function(data){
+    var deferred = $q.defer();
+    $http.get(base_url + '/snapshot.json', { params: data })
+    .success(function(data) {
+      console.log('console success in service get snapshot'); 
+      deferred.resolve(data);
+    })
+    .error(function(data, status, headers, config) { 
+      console.log('console fail in service get snapshot'); 
       deferred.reject("there was an error");
     });
     return deferred.promise;

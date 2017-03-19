@@ -1,10 +1,20 @@
 module TransactionsHelper
-    def transactions
-    today_transactions = Transaction.where(team_id: current_user.id, captured: true)
-      .where("created_at >= ?", Time.current.beginning_of_day).pluck(:amount_with_taxes, :app_fee, :stripe_fee)
-    yesterday_transactions = Transaction.where(team_id: current_user.id, captured: true)
-      .where("created_at < ? && created_at >= ?", Time.current.beginning_of_day, (Time.current.beginning_of_day - 1.days))
-      .pluck(:amount_with_taxes, :app_fee, :stripe_fee)
+  def transactions
+    # Exclude refunded transactions, Exclude subscriptions since these queries are not read only
+    # query is for refundable transactions
+    # you can't refund subscriptions easily.
+    # and include only captured transactions 
+    # account reload txns are included by default..right
+    today_transactions = Transaction.exclude_refunded_transactions().where(team_id: current_user.id).only_captured_transactions()
+                                      .exclude_subscriptions()
+                                      .where("transactions.created_at >= ?", Time.current.beginning_of_day)
+                                      .pluck(:amount_with_taxes, :app_fee, :stripe_fee)
+
+    yesterday_transactions = Transaction.exclude_refunded_transactions().where(team_id: current_user.id).only_captured_transactions()
+                               .exclude_subscriptions()
+                               .where("transactions.created_at < ? && transactions.created_at >= ?", Time.current.beginning_of_day, (Time.current.beginning_of_day - 1.days))
+                               .pluck(:amount_with_taxes, :app_fee, :stripe_fee)
+
     @all_transactions = [today_transactions, yesterday_transactions]
     @all_transactions
   end

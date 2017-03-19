@@ -20,7 +20,15 @@ class MerchantCustomersController < ApplicationController
   	@customer = User.find_by_id(@customer_id)
 
   	@merchant_customer = MerchantCustomer.find_by(customer_id: @customer_id, merchant_id: current_user.id)
-    @transactions = Transaction.where(user_id: @customer_id, team_id: current_user.id).order(created_at: :desc)
+
+    # Exclude refunded transactions, Exclude subscriptions since these queries are not read only
+    # query is for refundable transactions
+    # you can't refund subscriptions easily.
+    # and include only captured transactions 
+    # account reload txns are included by default..right
+    @transactions = Transaction.exclude_refunded_transactions().where(team_id: current_user.id).only_captured_transactions()
+                            .exclude_subscriptions()
+                            .where(user_id: @customer_id).order(created_at: :desc)
 
     @conversation_refs = ConversationRef.get_last_customer_msg_from_all_merchant_convs(current_user.id, @customer_id)
 
