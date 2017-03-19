@@ -44,11 +44,11 @@ class Transaction < ActiveRecord::Base
       method(__method__).parameters.each { |_,arg| instance_variable_set("@#{arg}", binding.local_variable_get(arg)) }
 
       tax_multiplier = (((@merchant.tax_percent.to_f) / 100) + 1)                                         # default is 0
-      @amt_with_taxes = (@amt.to_f * tax_multiplier).round                                                # total amount to charge
+      @amt_with_taxes = (@amt.to_f * tax_multiplier).round                                              # total amount to charge
       
-      fees = calculate_fee_schedule
+      fees = calculate_fees_schedule
       @amt_less_stripe_fee = ((@amt_with_taxes * fees[0]) - fees[1]).round  
-      @app_fee = ((@amt_with_taxes * fees[2]) * fees[3]).round         
+      @app_fee = ((@amt_with_taxes * fees[2]) - fees[3]).round         
                                           
       #puts 'got here so far'
 
@@ -72,7 +72,8 @@ class Transaction < ActiveRecord::Base
     end
   end
 
-  def calculate_fee_schedule
+  def calculate_fees_schedule
+    return 0.029, 30, 0, 0      # take this line out
     @fee_schedule = @merchant.get_stripe_cred.transaction_fee
     percent1, cents1 = @fee_schedule.provider_percent.to_f, @fee_schedule.provider_cents.to_f
     percent2, cents2 = @fee_schedule.platform_percent.to_f, @fee_schedule.platform_cents.to_f

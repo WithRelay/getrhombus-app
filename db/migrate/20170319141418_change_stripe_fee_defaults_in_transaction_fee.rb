@@ -13,9 +13,7 @@ class ChangeStripeFeeDefaultsInTransactionFee < ActiveRecord::Migration
     end
 
     TransactionFee.create(provider: 'stripe');
-    TransactionFee.create(provider: 'stripe', provider_percent: '2.8', provider_cents: 30);
+    TransactionFee.create(provider: 'stripe', provider_percent: '0.028', provider_cents: 30);
 
-    add_column :stripe_creds, :transaction_fee_id, :integer, default: 1, index: true
-    add_column :transactions, :transaction_fee_id, :integer, { index: true, after: :amount_less_fees, default: 1 }
   end
 end
