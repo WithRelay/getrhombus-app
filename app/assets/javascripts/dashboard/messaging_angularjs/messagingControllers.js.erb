@@ -75,8 +75,8 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
                       };
 
     $scope.online = function() {
-      Offline.check();
-      return Offline.state == "up"
+      //Offline.check();
+      return true //Offline.state == "up"
     };
 
     // Get logged in merchant id
