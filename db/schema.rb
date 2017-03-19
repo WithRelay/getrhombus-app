@@ -651,6 +651,8 @@ ActiveRecord::Schema.define(version: 20170319022240) do
     t.boolean  "captured",                           limit: 1,                             default: true
     t.integer  "hashtag_id",                         limit: 4
     t.integer  "subscription_id",                    limit: 4
+    t.string   "rate_percent",                       limit: 191,                           default: "2.9"
+    t.integer  "rate_cents",                         limit: 4,                             default: 30
   end
 
   add_index "transactions", ["created_at"], name: "index_transactions_on_created_at", using: :btree
@@ -767,6 +769,8 @@ ActiveRecord::Schema.define(version: 20170319022240) do
     t.integer  "account_balance",        limit: 4,     default: 2
     t.boolean  "auto_reload",            limit: 1,     default: false
     t.integer  "auto_reload_amt",        limit: 4,     default: 20
+    t.string   "rate_percent",           limit: 191,   default: "2.9"
+    t.integer  "rate_cents",             limit: 4,     default: 30
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
