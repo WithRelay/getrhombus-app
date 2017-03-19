@@ -11,7 +11,8 @@ class Transaction < ActiveRecord::Base
   belongs_to :hashtag
   belongs_to :user, counter_cache: true
   belongs_to :team, class_name: "User", counter_cache: true
-
+  belongs_to :transaction_fee
+  
   # Exclude refunded transactions, include subscriptions since these queries are read only
   # and include only captured transactions and reloads are included by default..right
   scope :exclude_refunded_transactions, -> () { self.joins('LEFT JOIN refunds on transactions.id = refunds.transaction_id')
@@ -44,11 +45,11 @@ class Transaction < ActiveRecord::Base
 
       tax_multiplier = (((@merchant.tax_percent.to_f) / 100) + 1)                                         # default is 0
       @amt_with_taxes = (@amt.to_f * tax_multiplier).round                                                # total amount to charge
-
       
-      @app_fee = ((Rails.application.secrets.app_fee_percent.to_f / 100) * @amt_with_taxes).round         # app fee
-      @amt_less_stripe_fee = ((@amt_with_taxes * 0.975) - 30.0).round                                      # 2.5% + 30c
-
+      fees = calculate_fee_schedule
+      @amt_less_stripe_fee = ((@amt_with_taxes * fees[0]) - fees[1]).round  
+      @app_fee = ((@amt_with_taxes * fees[2]) * fees[3]).round         
+                                          
       #puts 'got here so far'
 
       @stripe_res_ary = PaymentService.charge(@amt_with_taxes, @amt_less_stripe_fee, @app_fee, merchant, user, msg.text, capture)
@@ -71,6 +72,13 @@ class Transaction < ActiveRecord::Base
     end
   end
 
+  def calculate_fee_schedule
+    @fee_schedule = @merchant.get_stripe_cred.transaction_fee
+    percent1, cents1 = @fee_schedule.provider_percent.to_f, @fee_schedule.provider_cents.to_f
+    percent2, cents2 = @fee_schedule.platform_percent.to_f, @fee_schedule.platform_cents.to_f
+    return percent1, cents1, percent2, cents2
+  end
+
   def update_transaction_data
     # storing this in intger, other amount columns need to be changed to integer...consistent with Stripe
     _stripe_fee = @amt_with_taxes - @amt_less_stripe_fee
@@ -82,7 +90,8 @@ class Transaction < ActiveRecord::Base
                 card_name: @stripe_res.source.name, tax_percent: @merchant.tax_percent, destination: @stripe_res.destination,
                 team_id: @merchant.id, user_id: @user.id, notes: @msg.text, hashtag_id: @hashtag_id, captured: @stripe_res.captured,
                 exp_month: @stripe_res.source.exp_month, exp_year: @stripe_res.source.exp_year, card_type: @stripe_res.source.brand,
-                description: "Payment to #{@merchant.email}. #{@merchant.org_name}. rhombus number: #{@merchant.rhombus_number}")
+                description: "Payment to #{@merchant.email}. #{@merchant.org_name}. rhombus number: #{@merchant.rhombus_number}",
+                transaction_fee_id: @fee_schedule.id)
   end
 
   def amt_in_decimal(amt)

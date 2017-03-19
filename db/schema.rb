@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170319022240) do
+ActiveRecord::Schema.define(version: 20170319120619) do
 
   create_table "account_reloads", force: :cascade do |t|
     t.integer  "user_id",        limit: 4
@@ -565,26 +565,27 @@ ActiveRecord::Schema.define(version: 20170319022240) do
   add_index "saved_replies", ["user_id"], name: "index_saved_replies_on_user_id", using: :btree
 
   create_table "stripe_creds", force: :cascade do |t|
-    t.string   "email",             limit: 191
-    t.string   "secret",            limit: 191
-    t.string   "publishable_key",   limit: 191
-    t.string   "uid",               limit: 191
-    t.string   "scope",             limit: 191
-    t.boolean  "livemode",          limit: 1
-    t.string   "refresh_token",     limit: 191
-    t.integer  "user_id",           limit: 4
-    t.integer  "uid_type",          limit: 4
-    t.string   "ip",                limit: 191
-    t.integer  "tos_date",          limit: 4
-    t.string   "user_agent",        limit: 191
-    t.boolean  "charges_enabled",   limit: 1
-    t.boolean  "transfers_enabled", limit: 1
-    t.string   "disabled_reason",   limit: 191
-    t.integer  "due_by",            limit: 4
-    t.string   "fields_needed",     limit: 191
-    t.datetime "created_at",                    null: false
-    t.datetime "updated_at",                    null: false
-    t.string   "account_id",        limit: 191
+    t.string   "email",              limit: 191
+    t.string   "secret",             limit: 191
+    t.string   "publishable_key",    limit: 191
+    t.string   "uid",                limit: 191
+    t.string   "scope",              limit: 191
+    t.boolean  "livemode",           limit: 1
+    t.string   "refresh_token",      limit: 191
+    t.integer  "user_id",            limit: 4
+    t.integer  "uid_type",           limit: 4
+    t.string   "ip",                 limit: 191
+    t.integer  "tos_date",           limit: 4
+    t.string   "user_agent",         limit: 191
+    t.boolean  "charges_enabled",    limit: 1
+    t.boolean  "transfers_enabled",  limit: 1
+    t.string   "disabled_reason",    limit: 191
+    t.integer  "due_by",             limit: 4
+    t.string   "fields_needed",      limit: 191
+    t.datetime "created_at",                                 null: false
+    t.datetime "updated_at",                                 null: false
+    t.string   "account_id",         limit: 191
+    t.integer  "transaction_fee_id", limit: 4,   default: 1
   end
 
   add_index "stripe_creds", ["account_id"], name: "index_stripe_creds_on_account_id", unique: true, using: :btree
@@ -619,6 +620,16 @@ ActiveRecord::Schema.define(version: 20170319022240) do
   add_index "subscriptions", ["plan_id"], name: "fk_rails_4506bac28d", using: :btree
   add_index "subscriptions", ["plan_id"], name: "index_subscriptions_on_plan_id", using: :btree
 
+  create_table "transaction_fees", force: :cascade do |t|
+    t.string   "provider",         limit: 191
+    t.string   "provider_percent", limit: 191, default: "2.9"
+    t.integer  "provider_cents",   limit: 4,   default: 30
+    t.string   "platform_percent", limit: 191, default: "0"
+    t.integer  "platform_cents",   limit: 4,   default: 0
+    t.datetime "created_at",                                   null: false
+    t.datetime "updated_at",                                   null: false
+  end
+
   create_table "transactions", force: :cascade do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -629,6 +640,7 @@ ActiveRecord::Schema.define(version: 20170319022240) do
     t.integer  "app_fee",                            limit: 4,                             default: 0
     t.integer  "stripe_fee",                         limit: 4,                             default: 0
     t.decimal  "amount_less_fees",                                 precision: 8, scale: 2
+    t.integer  "transaction_fee_id",                 limit: 4,                             default: 1
     t.string   "txn_uri",                            limit: 191
     t.string   "txn_number",                         limit: 191
     t.string   "description",                        limit: 191
@@ -651,8 +663,6 @@ ActiveRecord::Schema.define(version: 20170319022240) do
     t.boolean  "captured",                           limit: 1,                             default: true
     t.integer  "hashtag_id",                         limit: 4
     t.integer  "subscription_id",                    limit: 4
-    t.string   "rate_percent",                       limit: 191,                           default: "2.9"
-    t.integer  "rate_cents",                         limit: 4,                             default: 30
   end
 
   add_index "transactions", ["created_at"], name: "index_transactions_on_created_at", using: :btree
@@ -769,8 +779,6 @@ ActiveRecord::Schema.define(version: 20170319022240) do
     t.integer  "account_balance",        limit: 4,     default: 2
     t.boolean  "auto_reload",            limit: 1,     default: false
     t.integer  "auto_reload_amt",        limit: 4,     default: 20
-    t.string   "rate_percent",           limit: 191,   default: "2.9"
-    t.integer  "rate_cents",             limit: 4,     default: 30
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree

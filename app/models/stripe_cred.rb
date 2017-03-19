@@ -2,8 +2,10 @@ class StripeCred < ActiveRecord::Base
 
   # for saving array in fields_needed column http://api.rubyonrails.org/classes/ActiveRecord/Base.html#M001799
   serialize :fields_needed
+  enum uid_type: [:managed, :standalone]
+
   belongs_to :user
-  enum uid_type: [ :managed, :standalone ]
+  belongs_to :transaction_fee  
 
   # saves merchant info from stripe for standalone accounts
   def self.from_omniauth(auth, id)
