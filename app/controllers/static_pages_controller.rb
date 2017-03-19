@@ -59,4 +59,8 @@ class StaticPagesController < ApplicationController
   def refer_a_business; end
 
   def relay_docs; end
+
+  def offline_check
+    head :no_content
+  end
 end

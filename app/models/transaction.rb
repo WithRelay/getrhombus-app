@@ -23,20 +23,17 @@ class Transaction < ActiveRecord::Base
   scope :only_captured_transactions, -> () { self.where(captured: true) }
   scope :only_uncaptured_transactions, -> () { self.where(captured: false) }
 
-  scope :get_merchant_todays_last5_txns, -> (team_id, date) { self.includes(:user).exclude_refunded_transactions()
-                                                                  .where(team_id: team_id)
+  scope :get_merchant_todays_last5_txns, -> (team_id, date) { self.includes(:user).exclude_refunded_transactions().where(team_id: team_id)
                                                                   .only_captured_transactions().where("transactions.created_at >= ?", date)
                                                                   .order(created_at: :desc).limit(5) }
 
   scope :get_merchant_todays_txn_count, -> (team_id, date) { self.exclude_refunded_transactions().only_captured_transactions()
                                                                   .where("transactions.created_at >= ? and team_id = ?", date, team_id).count }
   
-  scope :user_average_transaction_with_merchant, -> (user_id, team_id) { big_decimal_2dp(self.exclude_refunded_transactions()
-                                                                                            .only_captured_transactions
+  scope :user_average_transaction_with_merchant, -> (user_id, team_id) { big_decimal_2dp(self.exclude_refunded_transactions().only_captured_transactions
                                                                                             .where(user_id: user_id, team_id: team_id).average(:amount)) }
 
-  scope :user_total_transaction_with_merchant, -> (user_id, team_id) { big_decimal_2dp(self.exclude_refunded_transactions()
-                                                                                          .only_captured_transactions()
+  scope :user_total_transaction_with_merchant, -> (user_id, team_id) { big_decimal_2dp(self.exclude_refunded_transactions().only_captured_transactions()
                                                                                           .where(user_id: user_id, team_id: team_id).sum(:amount)) }
 
 

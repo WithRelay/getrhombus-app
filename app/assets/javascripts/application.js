@@ -19,6 +19,7 @@
 //= require angularjs/angular-route.min.js
 //= require angularjs/angular-scrollglue.js
 //= require angular-rails-templates
+//= require offline.js
 
 // used for client side form validation
 //
