@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170319005627) do
+ActiveRecord::Schema.define(version: 20170319012916) do
 
   create_table "account_reloads", force: :cascade do |t|
     t.integer  "user_id",        limit: 4
@@ -650,6 +650,8 @@ ActiveRecord::Schema.define(version: 20170319005627) do
     t.boolean  "captured",                           limit: 1,                             default: true
     t.integer  "hashtag_id",                         limit: 4
     t.integer  "subscription_id",                    limit: 4
+    t.string   "rate_percent",                       limit: 191,                           default: "2.9"
+    t.integer  "rate_cents",                         limit: 4,                             default: 30
   end
 
   add_index "transactions", ["created_at"], name: "index_transactions_on_created_at", using: :btree
