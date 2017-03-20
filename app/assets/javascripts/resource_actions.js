@@ -27,13 +27,16 @@ $(document).on('ready',function(){
 			url:  "/v1/saved_replies/" + reply_id + "/edit" ,
 			data:{id: reply_id}
 		}).done(function(res){
-			 var form = $('#save-reply-form');
-			 var doActionn = form.attr("action");
-			 form.find("#Saved-Replies-Editor-3").val(res.body);
-			 form.find("#Saved-Replies-Title-3").val(res.title);
+			 var form = $('#edit-save-reply-form');
+			 var action = form.attr("action");
+			 var newAction = window.location.origin + '/users/' + action.split('/')[2] + '/saved_replies/' + reply_id;
+
+			 form.find("#Edit-Saved-Replies-Editor").val(res.body);
+			 form.find("#Edit-Saved-Reply-Title").val(res.title);
+			 form.attr('action',newAction);
 
 			}).error(function(){
-			 // alert("")
+				FlashHandler.setFlashMessage('Request cannot perform','error');
 		});
 
 	});
