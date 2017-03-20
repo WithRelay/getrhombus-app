@@ -170,11 +170,14 @@
                 </div>
                 <div class="w-col w-col-3">
                   <div class="action w-clearfix">
-                    <div class="actions status modal-loader" modal-target='refund-customer-div'>Refund</div>
+                    <a class="actions status modal-loader" modal-target='refund-customer-div'>Refund</a>
                   </div>
                 </div>
               </div>
              <%end%>
+             <div class = "modal-body refund-customer-div" >
+               <%= render 'shared/modals/refund_customer' %>
+              </div>
           </div>
         </div>
       </div>
