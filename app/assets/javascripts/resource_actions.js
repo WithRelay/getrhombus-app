@@ -20,7 +20,7 @@ $(document).on('ready',function(){
 	});
 
 
-	$('#save-reply-form').formValidation({
+	$('.save-reply-form').formValidation({
 		framework: 'bootstrap',
 		excluded: ':disabled',
 		live: 'disabled',
@@ -46,10 +46,12 @@ $(document).on('ready',function(){
 				}
 			}
 	}).on('success.form.fv', function(e, data) {
-			 	e.preventDefault();
-				// var $modalClose = this.modalClass
-				create_saved_reply($(this).serialize())
-				$('.update-close-modals').click();
+			if (this.id != 'edit-save-reply-form'){
+				e.preventDefault();
+				create_saved_reply($(this).serialize());
+			}
+
+			$('.update-close-modals').click();
 		});
 
 
@@ -79,8 +81,8 @@ $(document).on('ready',function(){
 			 var action = form.attr("action");
 			 var newAction = window.location.origin + '/users/' + action.split('/')[2] + '/saved_replies/' + reply_id;
 
-			 form.find("#Edit-Saved-Replies-Editor").val(res.body);
 			 form.find("#Edit-Saved-Reply-Title").val(res.title);
+			 form.find(".emojionearea-editor").text(res.body);
 			 form.attr('action',newAction);
 
 			}).error(function(){
