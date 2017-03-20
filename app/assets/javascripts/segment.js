@@ -20,7 +20,11 @@ $(document).ready(function(e){
   });
 
   $(document).on('click', updateFieldClass, function(e){
-    updateItem($(this).parent().find('.text-field.segment-name'));
+    debugger;
+    var inputField = $(this).parent().find('.text-field.segment-name')
+    var isValidate = validateElement(inputField)
+    if (isValidate)
+      updateItem(inputField);
   });
 
   function EditItem(clickedElement, editableFieldsDiv){
@@ -64,6 +68,17 @@ $(document).ready(function(e){
     var element = this.clickedElement;
     $(element).parent().hide();
     $(element).parent().parent().find(editableFieldText).show();
+  }
+
+  function validateElement(element){
+    if (element.val() == ''){
+      element.attr('style', 'border: red solid 1px;')
+      return false
+    }
+    else{
+      element.attr('style', '')
+      return true
+    }
   }
 
   function updateItem(element){
