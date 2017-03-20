@@ -20,7 +20,6 @@ $(document).ready(function(e){
   });
 
   $(document).on('click', updateFieldClass, function(e){
-    debugger;
     var inputField = $(this).parent().find('.text-field.segment-name')
     var isValidate = validateElement(inputField)
     if (isValidate)
