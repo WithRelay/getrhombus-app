@@ -154,7 +154,7 @@ $(document).ready(function () {
       //location.reload();
     })
     .fail(function(data, textStatus, errorThrown) {
-      FlashHandler.setFlashMessage(JSON.parse(data.responseText).response, 'error');
+      FlashHandler.setFlashMessage(data.responseJSON.response, 'error');
     })
     .always(function(data, textStatus, response) {
       $('#charge-customer').removeAttr('disabled').val("Charge Customer");
