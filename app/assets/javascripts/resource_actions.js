@@ -1,6 +1,7 @@
 $(document).on('ready',function(){
 //this function used to delete/deactive Hashtag/Reminder/SavedReply
 //It works after the confirmation dialog
+
 	$(document).on('click', '.cancel-yes', function(e){
     e.preventDefault();
 
@@ -17,6 +18,53 @@ $(document).on('ready',function(){
 
 		doAction(selectedElement);
 	});
+
+
+	$('#save-reply-form').formValidation({
+		framework: 'bootstrap',
+		excluded: ':disabled',
+		live: 'disabled',
+		err: {
+					container: function($field, validator) {
+							return $field.parent().find('.messageContainer');
+					}
+			},
+		fields: {
+			'saved_reply[title]': {
+				validators: {
+					notEmpty: {
+						message: 'This Field is required'
+					}
+				}
+			},
+			'saved_reply[body]':{
+				validators: {
+					notEmpty: {
+						message: 'This Field is required'
+						}
+					}
+				}
+			}
+	}).on('success.form.fv', function(e, data) {
+			 	e.preventDefault();
+				// var $modalClose = this.modalClass
+				create_saved_reply($(this).serialize())
+				$('.update-close-modals').click();
+		});
+
+
+	function create_saved_reply(formData){
+		$.ajax({
+			url: window.location.origin + "/v1/saved_replies",
+			method: "POST",
+			data: formData,
+			dataType: 'json'
+		}).done(function(res){
+			FlashHandler.setFlashMessage(res.notice,'notice');
+			}).error(function(res){
+				FlashHandler.setFlashMessage(res.error, 'error');
+		});
+	}
 
 	$('#edit-saved-reply').on('click',function(){
 		var selectedElement = selectCheckedElement();
