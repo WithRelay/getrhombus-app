@@ -19,9 +19,7 @@ Bhishma
 - Messenger - don't touch this yet until we talk
 	- has_one :fb_cred??? - highlighted
 	- using page_id alone can cause problems... - highlighted
-	- redo how messages are saved
 	- review - fb_cred.rb #link facebook page specific user to Merchant
-	- review - dont think we need fb_cred_id in fb_pages 
 	- review - FbCred  page_access_token = (FbPage.find page_id)['page_access_token']
 	- review fb_page.rb where(page_id: page["id"]).first_or_initialize.tap do |row|
 	- review facebook_event.rb current_page = FbPage.find_by_page_id params['id']   in 2 places
@@ -29,21 +27,14 @@ Bhishma
 	- review FbCred.find_by_page_specific_id in facebook_event
 	- review remove_integration
 	- when switching managed page, add that any messenger campaign will now use this page
-- fix registrations controller
 - subscriptions controller needs check for card error
 - in stripe event, #### needs better error handling
-
-- facebook event, where is conversationref
--2. you need to check that you are saving user_id and user_id_to properly...depending on the direction of the message...remember i showed you that it was wrong for twilio/nexmo
-3. we need a method in fb_message.rb to send and save a fb message. see Message.rb for a similar method. this should be the only method that sends fb messages to end users. if you are sending messages somewhere else, you need to change it to use this method. this method wraps the messeenger service. the messenger service should not be saving messages/images...it only talks with facebook
 
 surya
 - do we always have due_by, transfers_enabled in stripe managed account hash...we need that to be updated too whenever stripe sends an account event - maybe just resave every field we store anyway
 - Campaigns
-	- Implement SMS/MMS channel. They are ready. mms testing left
 	- default to sms...then default to email - done
 	- lists with default channels - done
-	- send test to myself for email
 	- restrict campaign list to 1 campaign...if list has default channel...rebuild dropdown - done - i need to test
 	- only 1 image under 4.5mb is attachable...still keep inline image logic for email
 	- When user select messenger option and doesnt have a subcribed page, show alert that campaign wont run unless they select a page
@@ -51,12 +42,8 @@ surya
 	- for default channel, if merchant doesnt have subscribed page, just move on. (merchant can remove facebook integration after creating campaign)
 	- review messenger campaign
 
-Ovo
-- add to list from user profile - http://rhombus-test.webflow.io/customer-profile
-
 Taiwo (review)
 - review additional user actions file
-- clean up routes
 - review referrer... 
     - when do I use id and uid
     - Is everyone getting a uid - i think yes
@@ -64,47 +51,29 @@ Taiwo (review)
 - review account/business/managed acct with surya and edwin
 - review upgrading/downgrading subscription 
 - review stripe_events
-- review where merchant customer is created.... see create_subscription, add-token_to_customer, etc
 - review merchant_customer_id in transactions and invoices
 - review managed account..
-- when a user becomes customer, remove from a contact table/list 
 - subscription (see other fields like tax_percent...save first...compare to plan.rb), subscription controller and stripe customer creation places
 - Review adding token...failing safely.
-- add back stripe connect
 - on subscription - check if user already belongs to merchant??? is this when they text?
 	- customers can create subscriptions over messaging...not dashboard, but can cancel subscription
-- finish message parser and review how messsages are saved
 - final review of updating subscriptions, coupons, plans...do we update subscriptions esp platform??
 - Rake - migrate customer uri to merchant_customer plus drop column...but after migrating merchant_customer
    - remove livemode from users, add to merchant_customer and create rake task to migrate this to merchant..customer
 - signup page doesnt need params...only facebook link page
-- <% if current_user.stripe_creds.empty? %> not needed for connect
 
 Review
 - campaign_user_list (can better track failures) or notification_log or add an email model??
 - notification_log used for transaction, referrer and alert notifications logging
-- remove first_name and last_name assignment in angular code
 - when user logs in through messenger, indicate in referrers
-- change all emails in test db dump
-- unify team and dashboard email issue really
-- indexes for conversations table later
 - create Seeds
 - notifications platform to merchants should have a single conversation and should not be pulled - mark as read too
-- conversations....need origin...cos system to customers should not open conversation....
-- conversation_refs now have direction...so i can remove user_id, user_id_to from messages, fbmessages
-- phone number validation in user.rb
 
 
 Payment Capture - should be for only customers....capture in logic
 - check if /profile affect forms for merchants
 - plug in charge into payment capture workflow
 - let parse_text return cents i guess and just divide by 100 to show
-
-Contact - Inbound
-- sent u a text doesnt have an account 
-- have an account, sent u a text but ref link isnt yours 
-
-
 
 
 

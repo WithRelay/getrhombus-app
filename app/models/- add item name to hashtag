@@ -1,15 +1,18 @@
 - Test All Pages when there is no data
 
-- upon signing up, does an existing contact update to become customer?
-
 Taiwo
-- how will using the master account affect us
-- customer - refund
-
-- messaging lists, reminders
+- do we store fb_cred even if not a user? - affects my users query with outer join
+- how will using the master account affect us (- unify team and dashboard email issue really)
+- create customers/contacts...how about existing customers/contacts. switching stripe_id to merchants.
+  - upon signing up, does an existing contact update to become customer?
+  - review where merchant customer is created.... see create_subscription, add-token_to_customer, etc
 - review transaction model - send_card_error
+- messaging lists, reminders
+- workflow for sign in, sign up and places where we add card, token, referrer, contact and customer, payment capture
 
-- show me devise errors
+
+
+Others
 Add profile info
 1. validation
 2. still bypassing to other onboarding steps
@@ -17,14 +20,17 @@ Add profile info
 Signup form
 - sign up form can have devise/database error but not showing up. 
 Rhombus number form
+- show me devise errors
 - no flash message ... probably in signup and profile info forms
 Add card info, add subscription, billing info
 - flash message not showing...also needs to show devise error
+- card error flash missing in registrations update
+- user auth in routes
+- EVERYONE CLEAN UP YOUR ROUTES and CONTROLLERS
 
 
 Surya
 - load more for all index pages
-- do reminders for messaging page
 - pubnub
 - ovo's task (segments for leads and customers)
 - catch db error in update action too... already added error for you
@@ -34,13 +40,14 @@ Surya
 - review how reminders pull users info
 - lead and contacts including its lists use snapshot
 - do we need to exlude refunded txns in segment queries? review segment queries
+- use conversations in campaigns for sending messages
 
 Dorje
 - graph empty state, graph changes
 - edit/delete saved replies?
 - txn history empty page on customer profile
 - on signup, send email after 15 mins, pull opencnam and fullcontact data and store. background jobs
-- plug in snapshot
+- plug in snapshot for cus profile
 
 Bhishma
 - messageparser
@@ -51,29 +58,3 @@ Bhishma
 - get full contact data by email first time user connects fb account if email is present
 - stop reloading pages if you are using ajax.
 - subscription index...fix profile
-
-- add the url for pages you did to the sidebar on dashboard and settings page
-- card error flash missing in registrations update
-- user auth in routes
-  
-- new customers in dashboard header
-
-- EVERYONE CLEAN UP YOUR ROUTES and CONTROLLERS
-
-Friday
-- test parser - done
-- transactions - doneish
-- clean up conversations
-- workflow for sign in, sign up and places where we add card, token, referrer, contact and customer, payment capture
-
-Everyone
-- popups are repeated... code across the page must be one.
-
-
-- coupon pages (add link to transactions dropdown and link under segments)
-- find simple native browser notifications
-- do we store fb_cred even if not a user? - affects my users query with outer join
-- position toastrs to right.
-- plan, subscription modals are firing...havent been redone?
-- fix saas_sub method
-- plan subscribers page

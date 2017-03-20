@@ -1,6 +1,6 @@
   $(document).ready(function () {
 
-	var txn_num = '', is_conv_page = false, parent_row;
+	var txn_num = '', is_conv_page = false, parent_row,
       btn_html = '', is_cus_profile_page = false;
    
   // transactions page checkbox
@@ -63,7 +63,7 @@
 
       refund_btn.disabled = true;
 
-      if (is_conv_page || is_cus_profile_page)
+      if (is_conv_page)
         refund_btn.value = "Please wait...";
       else {
         btn_html = refund_btn.innerHTML;
@@ -90,7 +90,7 @@
         refund_btn.disabled = false;
         $('#refund-customer-div').trigger('close');
 
-        if (is_conv_page || is_cus_profile_page) {
+        if (is_conv_page) {
           refund_btn.value = "Refund";  
         } else {
           refund_btn.innerHTML = btn_html;
