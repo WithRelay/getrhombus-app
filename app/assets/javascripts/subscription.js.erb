@@ -133,12 +133,12 @@ $(document).ready(function () {
         create: false,
         options: [],
         closeAfterSelect: true,
-        render: { 
-          item: function(item, escape) { 
-            return '<div> <span class="">' + escape(item.email) + " - " + escape(item.card_name) + '</span></div>'; 
+        render: {
+          item: function(item, escape) {
+            return '<div> <span class="">' + escape(item.email) + " - " + escape(item.card_name) + '</span></div>';
           },
-          option: function(item, escape) { 
-            return '<div> <span class="">' + escape(item.email) + " - " + escape(item.card_name) + '</span></div>'; 
+          option: function(item, escape) {
+            return '<div> <span class="">' + escape(item.email) + " - " + escape(item.card_name) + '</span></div>';
           }
         },
         load: function(query, callback) {
@@ -180,6 +180,7 @@ $(document).ready(function () {
       $('#subscriptionForm')[0].reset();
       $('#subscriptionForm').data('formValidation').resetForm();
       $('.update-close-modals').click();
+      location.reload();
     })
     .fail(function(data, textStatus, errorThrown) {
       FlashHandler.setFlashMessage(JSON.parse(data.responseText).response, 'error');
@@ -265,7 +266,6 @@ $('.subscription-checkbox').click(function() {
 
 $('#cancel-subscription').on('click', function(e){
   e.preventDefault();
-  $(this).attr("disabled", true).text("Please wait...");
   $.ajax({
      url: "/v1/subscriptions/"+subscriptionId,
      beforeSend: function(xhr) {
@@ -276,10 +276,13 @@ $('#cancel-subscription').on('click', function(e){
    })
    .done(function(data, textStatus, jqXHR) {
      FlashHandler.setFlashMessage(data.response, 'notice');
-     location.reload();
+     location.reload()
+     // $('.subscription-checkbox').removeAttr('disabled')
+     // $('#'+subscriptionId).remove()
    })
    .fail(function(data, textStatus, errorThrown) {
      FlashHandler.setFlashMessage(JSON.parse(data.responseText).response, 'error');
+     $('#'+subscriptionId).find('#email-form-2').css('display', 'block');
    })
    .always(function(data, textStatus, response) {
      $('#cancel-subscription').removeAttr('disabled').text("Yes, unsubscribe customer");

@@ -10,12 +10,12 @@ $(document).ready(function () {
         create: false,
         options: [],
         closeAfterSelect: true,
-        render: { 
-          item: function(item, escape) { 
-            return '<div> <span class="">' + escape(item.email) + " - " + escape(item.card_name) + '</span></div>'; 
+        render: {
+          item: function(item, escape) {
+            return '<div> <span class="">' + escape(item.email) + " - " + escape(item.card_name) + '</span></div>';
           },
-          option: function(item, escape) { 
-            return '<div> <span class="">' + escape(item.email) + " - " + escape(item.card_name) + '</span></div>'; 
+          option: function(item, escape) {
+            return '<div> <span class="">' + escape(item.email) + " - " + escape(item.card_name) + '</span></div>';
           }
         },
         load: function(query, callback) {
@@ -54,10 +54,10 @@ $(document).ready(function () {
         create: false,
         options: [],
         closeAfterSelect: true,
-        render: { 
-          item: function(item, escape) { 
-            return '<div> <span class="">' + escape(item.name) + '</span></div>'; 
-          } 
+        render: {
+          item: function(item, escape) {
+            return '<div> <span class="">' + escape(item.name) + '</span></div>';
+          }
         },
         load: function(query, callback) {
           if (!query.length) return callback();
@@ -150,8 +150,7 @@ $(document).ready(function () {
     })
     .done(function(data, textStatus, jqXHR) {
       FlashHandler.setFlashMessage(data.response, 'notice');
-      // dont reload...insert to top of row
-      //location.reload();
+      location.reload();
     })
     .fail(function(data, textStatus, errorThrown) {
       FlashHandler.setFlashMessage(data.responseJSON.response, 'error');
