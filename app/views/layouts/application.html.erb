@@ -35,7 +35,7 @@
     <%= javascript_include_tag 'https://js.stripe.com/v2/' %>
     <%= javascript_include_tag 'application', 'data-turbolinks-track' => true  %>
     <%= javascript_include_tag 'https://cdnjs.cloudflare.com/ajax/libs/danialfarid-angular-file-upload/12.2.12/ng-file-upload-all.min.js', integrity: 'sha256-ktd4ChVnmURgRrtZc6nd5lxjjbclQIE29x5Ex4I/76g', crossorigin: 'anonymous' %>
-    
+
     <%= csrf_meta_tags %>
 
   </head>
@@ -45,7 +45,7 @@
     <%= render 'shared/flash_messages' %>
     <%= render_sidebar_partial %>
     <%= yield %>
-    <div id='notifications-info' data-type="<%= current_user.user_level %>" style='display: none;'></div>
+    <div id='notifications-info' data-type="<%= current_user.user_level if current_user %>" style='display: none;'></div>
     <%= render_footer_partial %>
     <%= render 'shared/smooch' %>
     <%= render 'shared/google_analytics' %>
