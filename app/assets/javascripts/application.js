@@ -96,7 +96,7 @@
 //= require Chart.bundle
 //= require chartkick
 //= require segment
-//= require refund
+//= require transactions_refunds
 //= require resource_actions
 
 // DO NOT REQUIRE TREE AS IT DOESNT GUARANTEE THE DEPENDENCY ORDER OF THESE FILES

@@ -16,12 +16,16 @@ class Api::V1::TransactionsController < API::V1::BaseController
   end
 
   def refund
-    render json: { message: 'all done' } and return
-    if params[:type] == "card"  # Because Stripe supports different types
-      re = Refund.refund_card_txn(current_user.id, params, current_user.is_platform?)
-      render json: { message: re[0] }, status: re[1]
-    else
-      render json: { message: "Not Implemented" }, status: 501		
+    begin
+      render json: { error: 'all done' } and return
+      if params[:type] == "card"  # Because Stripe supports different types
+        re = Refund.refund_card_txn(current_user.id, params, current_user.is_platform?)
+        render json: { "#{re.first ? 'message' : 'error'}": re.second }
+      else
+        render json: { error: "Cannot Perform this action." }		
+      end
+    rescue StandardError => e
+      render json: { error: "Something went wrong on our end." }
     end
   end
 

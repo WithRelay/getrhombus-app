@@ -817,7 +817,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
         .then(function (data) {
           console.log('transactions retrieved');
           console.log(data)
-          $scope.customer_transactions = data;          
+          $scope.customer_transactions = data;
         }, function (response) {
           console.log('unable to retrieve transactions');
           $scope.customer_transactions = [];
@@ -827,7 +827,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
         $scope.customer_transactions = [];
       }
       console.log($scope.selected_conversation)
-    };
+    };    
     // End Transactions
 
   }

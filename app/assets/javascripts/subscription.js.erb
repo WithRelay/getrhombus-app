@@ -245,9 +245,9 @@ $(document).ready(function () {
 $('.subscription-checkbox').click(function() {
   if ($(this).is(':checked')) {
     $("#cancel-customer-subscription").removeClass('hide')
-    parent_row = $(this).closest('.transactions-table-row')
-    customer_name = parent_row.find('.customer-name').text()
-    plan_name = parent_row.find('.plan-name').text()
+    var parent_row = $(this).closest('.transactions-table-row')
+    var customer_name = parent_row.find('.customer-name').text()
+    var plan_name = parent_row.find('.plan-name').text()
     $('#customer_name').text(customer_name)
     $('#plan_name').text(plan_name)
     subscriptionId = parent_row.attr('id')
@@ -277,20 +277,6 @@ $('#cancel-subscription').on('click', function(e){
    .always(function(data, textStatus, response) {
      $('#cancel-subscription').removeAttr('disabled').text("Yes, unsubscribe customer");
    });
-});
-
-// transaction checkbox
-$('.transaction-checkbox').click(function() {
-  if ($(this).is(':checked')) {
-    $("#refund-charge").removeClass('hide')
-    parent_row = $(this).closest('.transactions-table-row')
-    amount = parent_row.find('.tran-amount').text()
-    last4 = parent_row.find('.tran-last-four').text()
-    $('#tran-amount').text(amount)
-    $('#last_four').text(last4)
-  } else {
-    $("#refund-charge").addClass('hide')
-  }
 });
 
 });
