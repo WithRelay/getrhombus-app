@@ -35,6 +35,7 @@
 //= require plan
 //= require coupon
 //= require subscription
+//= require transaction
 //= require integrations
 //= require selectize
 //= require angular-selectize
@@ -96,7 +97,7 @@
 //= require Chart.bundle
 //= require chartkick
 //= require segment
-//= require transactions_refunds
+//= require refund
 //= require resource_actions
 
 // DO NOT REQUIRE TREE AS IT DOESNT GUARANTEE THE DEPENDENCY ORDER OF THESE FILES

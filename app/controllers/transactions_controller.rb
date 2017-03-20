@@ -20,7 +20,7 @@ class TransactionsController < ApplicationController
         # Exclude refunded transactions, Exclude subscriptions since these queries are not read only
         # query is for refundable transactions
         # you can't refund subscriptions easily.
-        # and include only captured transactions 
+        # and include only captured transactions
         # account reload txns are included by default..right
         @transactions = Transaction.includes(:user).exclude_subscriptions().only_captured_transactions()
                                     .exclude_refunded_transactions().where(team_id: current_user.id)
