@@ -99,6 +99,7 @@
 //= require segment
 //= require refund
 //= require resource_actions
+//= require notifications
 
 // DO NOT REQUIRE TREE AS IT DOESNT GUARANTEE THE DEPENDENCY ORDER OF THESE FILES
 // require_tree .

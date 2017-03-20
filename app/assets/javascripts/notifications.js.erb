@@ -1,0 +1,53 @@
+$(document).ready(function() {
+
+  // subcribe to messaging channel
+  function subscribe_to_notifications() {
+    var type = $('#notifications-info').data('type');
+    
+    // merchant and up only
+    if (type) {
+      $.ajax({
+        url: window.location.origin + '/get_current_user',
+        type: "GET",
+        dataType: "json"
+      })
+      .done(function(data, textStatus, response) {
+        var merchant_id = data.id;
+        if (merchant_id) {
+          // Initialize PubNub with SSL
+          var pubnub = PUBNUB({
+            publish_key: data.pubnub_publish_key,
+            subscribe_key: data.pubnub_subscribe_key,
+            ssl: true
+          });
+
+          // Subscribe to merchant channel
+          pubnub.subscribe({
+            channel: 'notifications_<%= Rails.env %>_' + merchant_id.toString(),
+            message: function(m) {
+              process_notification(JSON.parse(m))
+            }
+          });  
+        }      
+      })
+      .fail(function(data, textStatus, response) {
+        Offline.check();
+        if (type && Offline.state == "up")
+          FlashHandler.setFlashMessage('Unable to subscribe to your notifications.', 'error');
+      });
+    }
+  }
+
+  subscribe_to_notifications();
+
+  function process_notification(data) {
+    console.log(data)
+    if (data.type == 'campaign_sent') {
+      FlashHandler.schedule_jobs('all sent', 2000)
+    } else if (data.type == 'xyz') {
+
+    }
+  }
+
+
+});

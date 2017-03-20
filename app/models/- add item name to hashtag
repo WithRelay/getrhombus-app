@@ -25,17 +25,14 @@ Add card info, add subscription, billing info
 Surya
 - load more for all index pages
 - do reminders for messaging page
-- we will need pubnub in other pages outside messages
+- pubnub
 - ovo's task (segments for leads and customers)
-- validates_associated in user... any read op on user will run a query -   validates_associated :address, if: lambda { self.bank_accounts.present? }
 - catch db error in update action too... already added error for you
 - lock down permissions cancancan?
 - i see issues with reminder js
-- manage segments empty
 - manage segment button bug
 - review how reminders pull users info
 - lead and contacts including its lists use snapshot
-- avg/total txns is per merchant
 - do we need to exlude refunded txns in segment queries? review segment queries
 
 Dorje
@@ -44,11 +41,6 @@ Dorje
 - txn history empty page on customer profile
 - on signup, send email after 15 mins, pull opencnam and fullcontact data and store. background jobs
 - plug in snapshot
-- customer dashboard
-  - last visit should be last time he sent a message...look in conversation refs
-  - first visit from merchantcustomer table
-  - removed the first and last transaction methods in base presenter
-- index page for customer should have customers name
 
 Bhishma
 - messageparser
@@ -56,9 +48,9 @@ Bhishma
 - emails
   - incomplete signup email (the following day), review offer to help
   - autoreload failure
-- transaction view, customer profile - charge button
 - get full contact data by email first time user connects fb account if email is present
-
+- stop reloading pages if you are using ajax.
+- subscription index...fix profile
 
 - add the url for pages you did to the sidebar on dashboard and settings page
 - card error flash missing in registrations update

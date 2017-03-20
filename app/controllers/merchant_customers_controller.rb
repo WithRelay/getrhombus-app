@@ -29,9 +29,9 @@ class MerchantCustomersController < ApplicationController
     @transactions = Transaction.exclude_refunded_transactions().where(team_id: current_user.id).only_captured_transactions()
                             .exclude_subscriptions()
                             .where(user_id: @customer_id).order(created_at: :desc)
+    @last_transaction = @transactions.first
 
     @conversation_refs = ConversationRef.get_last_customer_msg_from_all_merchant_convs(current_user.id, @customer_id)
-
     @last_conv_ref = @conversation_refs.present? ? @conversation_refs.first : nil
     @last_message_resolution = @last_conv_ref.present? && @last_conv_ref.resolution.present? ? @last_conv_ref.resolution : "-"
   end
