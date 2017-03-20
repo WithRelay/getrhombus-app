@@ -15,205 +15,209 @@ $(document).ready(function() {
     }
   };
 
-  $('#account-settings-form').formValidation({
-    framework: 'bootstrap',
-    excluded: ':disabled',
-    live: 'disabled',
-    err: {
-      container: function($field, validator) {
-        return $field.parent().find('.errorMessageContainer');
-      }
-    },
-    fields: {
-      'user[people_attributes][0][full_name]': {
-        validators: {
-          notEmpty: {
-            message: 'Full name is required'
-          }
+  if ($('#account-settings-form').length) {
+    $('#account-settings-form').formValidation({
+      framework: 'bootstrap',
+      excluded: ':disabled',
+      live: 'disabled',
+      err: {
+        container: function($field, validator) {
+          return $field.parent().find('.errorMessageContainer');
         }
       },
-      'user[phone]': {
-        validators: {
-          callback: {
-            callback: function(value, validator, $field) {
-              if (PhoneNumberFormatter.isValid()) {
-                return {
-                  valid: true, // or false
-                  message: 'Valid number'
-                }
-              } else {
-                return {
-                  valid: false, // or false
-                  message: 'Enter a valid number'
-                }
-              }
-            }
-          }
-        }
-      },
-      'user[email]': {
-        verbose: false,
-        validators: {
-          notEmpty: {
-            message: 'Your email is required'
-          },
-          emailAddress: {
-            message: "The email isn't valid"
-          },
-          remote: {
-            type: 'GET',
-            url: 'https://api.mailgun.net/v2/address/validate?callback=?',
-            crossDomain: true,
-            name: 'address',
-            data: {
-              // Registry a Mailgun account and get a free API key
-              // at https://mailgun.com/signup
-              api_key: '<redacted_api_key>'
-            },
-            dataType: 'jsonp',
-            validKey: 'is_valid',
-            message: "The email isn't valid"
-          }
-        }
-      },
-      'user[current_password]': {
-        verbose: false,
-        validators: {
-          notEmpty: {
-            message: 'The password is required'
-          },
-          remote: {
-            message: 'This password is not valid.',
-            url: '/v1/users/check_password',
-            type: 'POST'
-          }
-        }
-      },
-      'user[password]': {
-        validators: {
-          stringLength: {
-            min: 8,
-            message: 'Your password should be at least 8 characters'
-          }
-        }
-      },
-      'user[password_confirmation]': {
-        validators: {
-          callback: {
-            message: 'Password confirmation should be same as password',
-            callback: function(value, validator, $field) {
-              var password_value = $("[name='user[password]']").val()
-              if (password_value != ''){
-                return password_value  == $field.val();
-              }
-              return true
-            }
-          }
-        }
-      }
-    }
-  });
-
-  $('#businessSetting')
-  .formValidation({
-    framework: 'bootstrap',
-    excluded: ':disabled',
-    live: 'disabled',
-    err: {
-      container: function($field, validator) {
-        return $field.parent().find('.errorMessageContainer');
-      }
-    },
-    fields: {
-      'user[org_name]': {
-        validators: {
-          notEmpty: {
-            message: 'Organization name is required'
-          }
-        }
-      },
-      'user[org_type]': {
-        validators: {
-          notEmpty: {
-            message: 'Required'
-          }
-        }
-      },
-      'user[org_phone]': {
-        validators: {
-          notEmpty: {
-            message: 'Your password is required'
-          }
-        }
-      },
-      'user[street_address]': {
-        validators: {
-          notEmpty: {
-            message: 'street address is required'
-          }
-        }
-      },
-      'user[city]': {
-        validators: {
-          notEmpty: {
-            message: 'city is required'
-          }
-        }
-      },
-      'user[state_province]': {
-        validators: {
-          notEmpty: {
-            message: 'state province is required'
-          }
-        }
-      },
-      'user[zip_code]': {
-        validators: {
-          notEmpty: {
-            message: 'Zip code is required'
-          }
-        },
-      'user[country]': {
+      fields: {
+        'user[people_attributes][0][full_name]': {
           validators: {
             notEmpty: {
-              message: 'Country is required'
+              message: 'Full name is required'
             }
           }
         },
-      'user[url]': {
+        'user[phone]': {
           validators: {
-            uri: {
-              message: 'The url is not valid'
+            callback: {
+              callback: function(value, validator, $field) {
+                if (PhoneNumberFormatter.isValid()) {
+                  return {
+                    valid: true, // or false
+                    message: 'Valid number'
+                  }
+                } else {
+                  return {
+                    valid: false, // or false
+                    message: 'Enter a valid number'
+                  }
+                }
+              }
             }
           }
-        }
-      },
-      'user[tax_percent]': {
-        selector: '#user_tax_percent',
-        // Setting verbose to false ensures that the callback validator is only performed
-        // Its because validation is not working in a normal flow
-        verbose: false,
-        validators: {
-          notEmpty: {
-            message: 'Tax is required'
-          },
-          numeric: {
-            message: 'Not Valid'
-          },
-          callback: {
-            message: 'The sum of percentages must be 100',
-            callback: function(value, validator, $field) {
-              if ($field.val() >= 100) {
-                validator.updateStatus('percentage[]', 'INVALID', 'callback');
-                return false;
+        },
+        'user[email]': {
+          verbose: false,
+          validators: {
+            notEmpty: {
+              message: 'Your email is required'
+            },
+            emailAddress: {
+              message: "The email isn't valid"
+            },
+            remote: {
+              type: 'GET',
+              url: 'https://api.mailgun.net/v2/address/validate?callback=?',
+              crossDomain: true,
+              name: 'address',
+              data: {
+                // Registry a Mailgun account and get a free API key
+                // at https://mailgun.com/signup
+                api_key: '<redacted_api_key>'
+              },
+              dataType: 'jsonp',
+              validKey: 'is_valid',
+              message: "The email isn't valid"
+            }
+          }
+        },
+        'user[current_password]': {
+          verbose: false,
+          validators: {
+            notEmpty: {
+              message: 'The password is required'
+            },
+            remote: {
+              message: 'This password is not valid.',
+              url: '/v1/users/check_password',
+              type: 'POST'
+            }
+          }
+        },
+        'user[password]': {
+          validators: {
+            stringLength: {
+              min: 8,
+              message: 'Your password should be at least 8 characters'
+            }
+          }
+        },
+        'user[password_confirmation]': {
+          validators: {
+            callback: {
+              message: 'Password confirmation should be same as password',
+              callback: function(value, validator, $field) {
+                var password_value = $("[name='user[password]']").val()
+                if (password_value != ''){
+                  return password_value  == $field.val();
+                }
+                return true
               }
-              return true;
             }
           }
         }
       }
-    }
-  });
+    });
+  }
+
+  if ($('#businessSetting').length) {
+    $('#businessSetting')
+    .formValidation({
+      framework: 'bootstrap',
+      excluded: ':disabled',
+      live: 'disabled',
+      err: {
+        container: function($field, validator) {
+          return $field.parent().find('.errorMessageContainer');
+        }
+      },
+      fields: {
+        'user[org_name]': {
+          validators: {
+            notEmpty: {
+              message: 'Organization name is required'
+            }
+          }
+        },
+        'user[org_type]': {
+          validators: {
+            notEmpty: {
+              message: 'Required'
+            }
+          }
+        },
+        'user[org_phone]': {
+          validators: {
+            notEmpty: {
+              message: 'Your password is required'
+            }
+          }
+        },
+        'user[street_address]': {
+          validators: {
+            notEmpty: {
+              message: 'street address is required'
+            }
+          }
+        },
+        'user[city]': {
+          validators: {
+            notEmpty: {
+              message: 'city is required'
+            }
+          }
+        },
+        'user[state_province]': {
+          validators: {
+            notEmpty: {
+              message: 'state province is required'
+            }
+          }
+        },
+        'user[zip_code]': {
+          validators: {
+            notEmpty: {
+              message: 'Zip code is required'
+            }
+          },
+        'user[country]': {
+            validators: {
+              notEmpty: {
+                message: 'Country is required'
+              }
+            }
+          },
+        'user[url]': {
+            validators: {
+              uri: {
+                message: 'The url is not valid'
+              }
+            }
+          }
+        },
+        'user[tax_percent]': {
+          selector: '#user_tax_percent',
+          // Setting verbose to false ensures that the callback validator is only performed
+          // Its because validation is not working in a normal flow
+          verbose: false,
+          validators: {
+            notEmpty: {
+              message: 'Tax is required'
+            },
+            numeric: {
+              message: 'Not Valid'
+            },
+            callback: {
+              message: 'The sum of percentages must be 100',
+              callback: function(value, validator, $field) {
+                if ($field.val() >= 100) {
+                  validator.updateStatus('percentage[]', 'INVALID', 'callback');
+                  return false;
+                }
+                return true;
+              }
+            }
+          }
+        }
+      }
+    });
+  }
 
   $.ajaxSetup({
     cache: false

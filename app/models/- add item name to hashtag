@@ -9,6 +9,7 @@ Taiwo
 - review transaction model - send_card_error
 - messaging lists, reminders
 - workflow for sign in, sign up and places where we add card, token, referrer, contact and customer, payment capture
+- hashtags validation
 
 
 

@@ -658,7 +658,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
       $('#charge-a-customer-div').lightbox_me({
         centered: true,
         onLoad: function() { 
-          $('#chargeForm').find('input:first').focus(); 
+          $('#conversation-chargeForm').find('input:first').focus(); 
           //$scope.is_conversation_selected('Please select a conversation with a customer to continue'); 
         }
       });
@@ -717,7 +717,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
       maxItems: 1,
       render: { item: function(item, escape) { return '<div> <span class="">' + escape(item.name) + '</span></div>'; } },
       onInitialize: function(selectize){
-        $('#chargeForm .form-group').addClass('has-error');
+        $('#conversation-chargeForm .form-group').addClass('has-error');
       },
       load: function(query, callback) {
         if (!query.length) return callback();
@@ -737,9 +737,9 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
       },
       onChange: function(value) {
         if (value)
-          $('#chargeForm .form-group').removeClass('has-error');
+          $('#conversation-chargeForm .form-group').removeClass('has-error');
         else
-          $('#chargeForm .form-group').addClass('has-error');
+          $('#conversation-chargeForm .form-group').addClass('has-error');
       }
     };
 
