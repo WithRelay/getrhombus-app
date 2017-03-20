@@ -134,7 +134,7 @@
 
         <div class="transaction-pane w--tab-active w-tab-pane" data-w-tab="Tab 1">
           
-          <a class="transactions-div-wrapper w-inline-block" ng-repeat="transaction in customer_transactions">
+          <a class="transactions-div-wrapper w-inline-block" ng-repeat="transaction in customer_transactions" data-index="{{ $index }}">
             <div class="transaction-div">
               <div class="right-nav-transaction-div-table w-row">
                 <div class="right-nav-transaction-div-column-1 w-col w-col-9">

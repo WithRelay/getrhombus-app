@@ -1,21 +1,26 @@
 <%# removed all webflow data attributes %>
 
-<div class="refund-customer-form-wrapper w-clearfix" id="refund-customer-div">
+<div class="refund-customer-form-wrapper w-clearfix modal-background .refund-customer-div" id="refund-customer-div">
   <div class="content-sub-wrapper modal w-clearfix">
     <h4 class="modal-header welcome-dash-content-container-header">Refund Customer</h4>
     <%# added update-close-modals and data %>
     <a class="close-refund-modal update-close-modals" data-parent='refund-customer-div'></a>
   </div>
-  <div class="refund-form w-form">
+  <div class="refund-form">
     <form id="email-form-5" name="email-form-5">
-      <select class="dropdown refund-reason w-select" id="Refund-Reason-2" name="Refund-Reason-2" required="required">
-        <option value="">Select a reason</option>
-        <option value="">Canceled order</option>
-        <option value="">Returned goods</option>
-        <option value="">Accidental charge</option>
-        <option value="">Other</option>
+    <%# renamed id, added more options, selected customer request, removed w-form %>
+      <select class="dropdown refund-reason w-select" id="Refund-Reason" name="Refund-Reason-2" required="required">
+        <option value="canceled_order">Canceled order</option>
+        <option value="returned_goods">Returned goods</option>
+        <option value="accidental_charge">Accidental charge</option>
+        <option value="duplicate">Duplicate</option>
+        <option value="requested_by_customer" selected="selected">Customer request</option>
+        <option value="fraudulent">Fraudulent</option>
+        <option value="other">Other</option>
       </select>
     </form>
   </div>
-  <p class="modal-paragraph refund-instructions tips">By issuing this refund, I authorize Relay to debit the refund amount from the bank account linked to my Rhombus account.</p><a class="button refund-button w-button">Issue <span id="tran-amount"></span> refund to card ending <span id="last_four"></span></a>
+  <p class="modal-paragraph refund-instructions tips">By issuing this refund, I authorize Relay to debit the refund amount from the bank account linked to my Rhombus account.</p>
+  <%# added id, changed tag to button %>
+  <button class="button refund-button w-button" id='refund-submit'>Issue <span id="tran-amount"></span> refund to card ending <span id="last_four"></span></button>
 </div>
