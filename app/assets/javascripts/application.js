@@ -35,6 +35,7 @@
 //= require plan
 //= require coupon
 //= require subscription
+//= require transaction
 //= require integrations
 //= require selectize
 //= require angular-selectize

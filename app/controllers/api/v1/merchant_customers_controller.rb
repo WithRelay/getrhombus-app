@@ -1,5 +1,5 @@
 class Api::V1::MerchantCustomersController < API::V1::BaseController
-  
+
   # this is really customers with valid payment info, since they are the ones that can be charged
   def customers
     begin

@@ -1,16 +1,25 @@
 <div class='modal-background w-hidden modal-body new-reminder-modal'>
   <%= render partial: 'shared/modals/new_reminder', locals: { reminder: Reminder.new }  %>
 </div>
-<div class='modal-background w-hidden modal-body new-subscription-modal'>
-  <%= render 'shared/modals/new_subscription' %>
-</div>
 
  <div class="customer-profile sub-nav-bar w-clearfix">
- <a class="add sub-nav-button w-button" href="#">&nbsp; <strong>Charge</strong></a>
- <a class="import sub-nav-button w-button modal-loader" href="#" modal-target= 'new-subscription-modal'>&nbsp; <strong>Create subscription</strong></a>
- <a class="sub-nav-button w-button" href="#"> &nbsp;<strong>Add to&nbsp;list</strong></a>
- <a class="sub-nav-button w-button modal-loader" href="#" modal-target="new-reminder-modal"> &nbsp;<strong>Schedule message</strong></a>
-  </div>
+   <a class="add sub-nav-button w-button modal-loader" href="#" modal-target= "charge-customer-modal">&nbsp; <strong>Charge</strong></a>
+   <div class='modal-background w-hidden modal-body charge-customer-modal'>
+     <%= render 'shared/modals/charge_customer' %>
+   </div>
+   <a class="import sub-nav-button w-button modal-loader" href="#" modal-target= 'new-subscription-modal' >&nbsp; <strong>Create subscription</strong></a>
+   <div class='modal-background w-hidden modal-body new-subscription-modal'>
+     <%= render 'shared/modals/new_subscription' %>
+   </div>
+   <a class="sub-nav-button w-button modal-loader" href="#" modal-target="add-to-list-modal"> &nbsp;<strong>Add to&nbsp;list</strong></a>
+   <div class='modal-background w-hidden modal-body add-to-list-modal'>
+     <%= render 'shared/modals/add_to_list' %>
+   </div>
+   <a class="sub-nav-button w-button modal-loader" href="#" modal-target="schedule-message-modal" > &nbsp;<strong>Schedule message</strong></a>
+   <div class='modal-background w-hidden modal-body schedule-message-modal'>
+     <%= render 'shared/modals/schedule_message' %>
+   </div>
+ </div>
   <div class="customer-profile dashboard-body">
     <div class="customer-profile-section-header w-row">
       <div class="w-col w-col-3">
@@ -165,7 +174,7 @@
                   </div>
                 </div>
               </div>
-             <%end%> 
+             <%end%>
           </div>
         </div>
       </div>

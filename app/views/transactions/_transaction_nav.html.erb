@@ -1,13 +1,16 @@
 <div class="customer-dash sub-nav-bar w-clearfix">
- <!--  <div class="search-bar">
+  <div class="search-bar">
     <div class="w-form">
       <form id="email-form" name="email-form">
         <input class="search-field w-input" id="Search-3" maxlength="256" name="Search-3" placeholder="Search" type="text">
       </form>
     </div>
-  </div> -->
+  </div>
   <div class="sub-nav-options-wrapper transactions w-clearfix">
-    <a class="add sub-nav-button w-button" href="#"> &nbsp;<strong>Charge&nbsp;customer</strong></a>
+    <a class="add sub-nav-button w-button modal-loader" href="#" modal-target= "charge-customer-modal">&nbsp; <strong>Charge&nbsp;customer</strong></a>
+    <div class='modal-background w-hidden modal-body charge-customer-modal'>
+      <%= render 'shared/modals/charge_customer' %>
+    </div>
     <a class="import sub-nav-button w-button modal-loader hide"  href="#" modal-target= 'refund_customer_modal' id="refund-charge">&nbsp; <strong>Refund</strong></a>
     <div class='modal-background w-hidden modal-body refund_customer_modal'>
       <%= render 'shared/modals/refund_customer' %>

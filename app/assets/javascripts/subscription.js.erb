@@ -137,7 +137,7 @@ $(document).ready(function () {
         load: function(query, callback) {
           if (!query.length) return callback();
           $.ajax({
-            url: '/v1/merchant/customers',
+            url: '/v1/merchant_customers/customers',
             type: 'GET',
             dataType: 'json',
             data: {
@@ -292,5 +292,7 @@ $('.transaction-checkbox').click(function() {
     $("#refund-charge").addClass('hide')
   }
 });
+
+
 
 });
