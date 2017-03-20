@@ -7,11 +7,11 @@
   <p class="modal-content-description">Edit saved replies to frequently asked questions so you can respond to you customers faster. Type '/' on your messaging dashboard to trigger a saved reply.</p>
   <div class="segment-modal underline-div"></div>
   <div class="saved-reply-form w-form">
-    <%= form_for(saved_reply,url: user_saved_replies_path(current_user, 12), :html => { :id => "edit-save-reply-form", data: { name: 'email-form-8'}, method: :patch } ) do |f| %>
+    <%= form_for(saved_reply,url: user_saved_replies_path(current_user, 12), :html => {class: 'save-reply-form', :id => "edit-save-reply-form", data: { name: 'email-form-8'}, method: :patch } ) do |f| %>
        <%= f.text_field :title, placeholder: 'Saved reply title', id: 'Edit-Saved-Reply-Title', class: 'saved-reply text-field title-create w-input', data: { name: 'Saved Reply Title' } %>
 
        <%= f.text_area :body, placeholder:'Start typing...', id: 'Edit-Saved-Replies-Editor',
-       class: 'create saved-reply text-area w-input', data: { name: 'Saved-Replies-Editor-3'}   %>
+       class: 'create saved-reply text-area w-input', data: { name: 'Saved-Replies-Editor-3'} %>
 
     <%= f.button "Save", class: 'button send-saved-reply w-button', id: 'send-saved-reply' %>
 
