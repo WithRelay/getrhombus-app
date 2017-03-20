@@ -1,6 +1,41 @@
 $(document).on('ready',function(){
 //this function used to delete/deactive Hashtag/Reminder/SavedReply
 //It works after the confirmation dialog
+
+$('#save-reply-form').formValidation({
+	framework: 'bootstrap',
+	excluded: ':disabled',
+	live: 'disabled',
+	err: {
+				container: function($field, validator) {
+						return $field.parent().find('.messageContainer');
+				}
+		},
+	fields: {
+		'saved_reply[title]': {
+			validators: {
+				notEmpty: {
+					message: 'This Field is required'
+				}
+			}
+		},
+		'saved_reply[body]':{
+			validators: {
+				notEmpty: {
+					message: 'This Field is required'
+					}
+				}
+			}
+		}
+}).on('success.form.fv', function(e, data) {
+		debugger;
+		// if ($(this).attr('class').split(' ')[1] != 'editReminderFrom'){
+		// 	e.preventDefault();
+		// 	var apiController = new ApiController(this, '.update-close-modals');
+		// 	var formData = new FormData(this);
+		// 	apiController.sendRequest(formData);
+	});
+
 	$(document).on('click', '.cancel-yes', function(e){
     e.preventDefault();
 
