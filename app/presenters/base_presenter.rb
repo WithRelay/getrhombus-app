@@ -25,7 +25,7 @@ class BasePresenter < SimpleDelegator
   end
 
   def format_created_at
-    @model.present? ? time_in_relative_form(@model.created_at, 'long_format') : "-"
+    time_in_relative_form(@model.created_at, 'long_format')
   end
 
   def profile_image

@@ -57,7 +57,7 @@
                 <div class="left-column-text recent-activity">Last &nbsp;Transaction</div>
               </div>
               <div class="right-column w-col w-col-7">
-                <div class="recent-activity-description"><%= present(@merchant_customer).last_visit_format_created_at %></div>
+                <div class="recent-activity-description"><%= @last_transaction ? present(@last_transaction).format_created_at : '-' %></div>
               </div>
             </div>
             <div class="recent-activity right-nav-row w-row">
@@ -65,7 +65,9 @@
                 <div class="left-column-text recent-activity">Amount</div>
               </div>
               <div class="right-column w-col w-col-6">
-                <div class="recent-activity-description"><%= present(@customer).total_transaction %></div>
+                <div class="recent-activity-description">
+                  <%= @last_transaction ? present(@last_transaction).format_txn_amount : "-" %>                  
+                </div>
               </div>
             </div>
             <div class="right-nav-underline"></div>
