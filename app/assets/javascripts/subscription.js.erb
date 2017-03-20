@@ -128,12 +128,19 @@ $(document).ready(function () {
       .selectize({
         maxItems: 1,
         valueField: 'id',
-        labelField: 'email',
-        searchField: 'email',
+        searchField: ['email', 'card_name', 'phone_number'],
         plugins: ['remove_button'],
         create: false,
         options: [],
         closeAfterSelect: true,
+        render: { 
+          item: function(item, escape) { 
+            return '<div> <span class="">' + escape(item.email) + " - " + escape(item.card_name) + '</span></div>'; 
+          },
+          option: function(item, escape) { 
+            return '<div> <span class="">' + escape(item.email) + " - " + escape(item.card_name) + '</span></div>'; 
+          }
+        },
         load: function(query, callback) {
           if (!query.length) return callback();
           $.ajax({

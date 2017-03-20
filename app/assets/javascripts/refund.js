@@ -61,10 +61,11 @@
         dataType: 'json'
       })
       .done(function(data, textStatus, response) {
-        handle_ajax_response(data);
+        reset_view();
+        FlashHandler.setFlashMessage(data.response, 'notice');
       })
       .fail(function(jqXHR, textStatus, errorThrow) { 
-        FlashHandler.setFlashMessage('Something went wrong with this request.', 'error');
+        FlashHandler.setFlashMessage(jqXHR.responseJSON.response, 'error');
       })
       .always(function(data, textStatus, response) {
         refund_btn.disabled = false;
@@ -95,15 +96,8 @@
     } else {
       parent_row.parent().slideUp(500, function() { parent_row.parent().remove(); });
       $('.checkboxes').attr('disabled', false);
-    };
+    }
   };
 
-  function handle_ajax_response(data) {
-    if (data.message) {
-      reset_view();
-      FlashHandler.setFlashMessage(data.message, 'notice');
-    } else
-      FlashHandler.setFlashMessage(data.error, 'error'); 
-  };
 
 });

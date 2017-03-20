@@ -1,15 +1,23 @@
 $(document).ready(function () {
+
   if ($('#transaction-customer-id').length > 0) {
     $('#transaction-customer-id')
       .selectize({
         maxItems: 1,
         valueField: 'id',
-        labelField: 'card_name',
-        searchField: ['card_name', 'phone_number'],
+        searchField: ['email', 'card_name', 'phone_number'],
         plugins: ['remove_button'],
         create: false,
         options: [],
         closeAfterSelect: true,
+        render: { 
+          item: function(item, escape) { 
+            return '<div> <span class="">' + escape(item.email) + " - " + escape(item.card_name) + '</span></div>'; 
+          },
+          option: function(item, escape) { 
+            return '<div> <span class="">' + escape(item.email) + " - " + escape(item.card_name) + '</span></div>'; 
+          }
+        },
         load: function(query, callback) {
           if (!query.length) return callback();
           $.ajax({
@@ -39,16 +47,22 @@ $(document).ready(function () {
       .selectize({
         maxItems: 1,
         valueField: 'id',
-        labelField: 'name',
-        searchField: 'name',
+        labelField: 'tag',
+        placeholder: 'Select an item',
+        searchField: ['name', 'tag'],
         plugins: ['remove_button'],
         create: false,
         options: [],
         closeAfterSelect: true,
+        render: { 
+          item: function(item, escape) { 
+            return '<div> <span class="">' + escape(item.name) + '</span></div>'; 
+          } 
+        },
         load: function(query, callback) {
           if (!query.length) return callback();
           $.ajax({
-            url: '/v1/hashtags',
+            url: '/v1/hashtags.json',
             type: 'GET',
             dataType: 'json',
             data: {
@@ -59,7 +73,7 @@ $(document).ready(function () {
               callback();
             },
             success: function(res) {
-              callback(res['customers']);
+              callback(res['hashtags']);
             }
           });
         }
@@ -85,8 +99,8 @@ $(document).ready(function () {
               callback: {
                 message: 'Please select a customer',
                 callback: function(value, validator, $field) {
-                  var plans = validator.getFieldElements('transaction[user_id]').val();
-                  return (plans !== '');
+                  var user_id = validator.getFieldElements('transaction[user_id]').val();
+                  return (user_id !== '');
                 }
               }
             }
@@ -94,10 +108,7 @@ $(document).ready(function () {
           'transaction[amount]' :{
             validators: {
               notEmpty: {
-                message: 'Quantity is required'
-              },
-              integer: {
-                message: 'The value is not an integer'
+                message: 'Amount is required'
               }
             }
           },
@@ -109,8 +120,8 @@ $(document).ready(function () {
                 callback: {
                   message: 'Please select a item',
                   callback: function(value, validator, $field) {
-                    var items = validator.getFieldElements('transaction[hashtag_id]').val();
-                    return (items !== '');
+                    var hashtag_id = validator.getFieldElements('transaction[hashtag_id]').val();
+                    return (hashtag_id !== '');
                   }
                 }
               }
@@ -129,23 +140,24 @@ $(document).ready(function () {
 
   function chargeCustomer() {
    $.ajax({
-      url: "/v1/merchant_customers",
+      url: "/v1/transactions",
       beforeSend: function(xhr) {
         xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
       },
-      type: "PATCH",
+      type: "POST",
       data: $('#chargeForm').serialize(),
       dataType: "json"
     })
     .done(function(data, textStatus, jqXHR) {
       FlashHandler.setFlashMessage(data.response, 'notice');
-      location.reload();
+      // dont reload...insert to top of row
+      //location.reload();
     })
     .fail(function(data, textStatus, errorThrown) {
       FlashHandler.setFlashMessage(JSON.parse(data.responseText).response, 'error');
     })
     .always(function(data, textStatus, response) {
-      $('#submit-update-coupon').removeAttr('disabled').val("Charge Customer");
+      $('#charge-customer').removeAttr('disabled').val("Charge Customer");
     });
   };
 

@@ -97,7 +97,7 @@ class User < ActiveRecord::Base
 
   has_one :address, as: :addressable
   accepts_nested_attributes_for :address
-  validates_associated :address, if: lambda { self.bank_accounts.present? }
+  validates_associated :address, if: lambda { self.address.present? }
 
   has_many :people
   accepts_nested_attributes_for :people, allow_destroy: true  # reject_if: ->(attrs) { attrs['city'].blank? || attrs['street'].blank? }
