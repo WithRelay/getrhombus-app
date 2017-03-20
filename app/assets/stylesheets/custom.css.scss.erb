@@ -44,6 +44,31 @@ $success-color: #43e50f;
     text-align: left !important;
 }
 
+.selectize-control.single .selectize-input [data-value] {
+    text-shadow: 0 1px 0 rgba(0, 51, 83, 0.3);
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    background-color: #1b9dec;
+    background-image: -moz-linear-gradient(top, #1da7ee, #178ee9);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#1da7ee), to(#178ee9));
+    background-image: -webkit-linear-gradient(top, #1da7ee, #178ee9);
+    background-image: -o-linear-gradient(top, #1da7ee, #178ee9);
+    background-image: linear-gradient(to bottom, #1da7ee, #178ee9);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff1da7ee', endColorstr='#ff178ee9', GradientType=0);
+    -webkit-box-shadow: 0 1px 0 rgba(0,0,0,0.2), inset 0 1px rgba(255,255,255,0.03);
+    box-shadow: 0 1px 0 rgba(0,0,0,0.2), inset 0 1px rgba(255,255,255,0.03);
+}
+.selectize-control.single .selectize-input > div {
+    cursor: pointer;
+    margin: 0 3px 3px 0;
+    padding: 2px 6px;
+    background: #1da7ee;
+    color: #ffffff;
+    border: 1px solid #0073bb;
+}
+
 #new-image-previews{
   width: 490px;
   margin-top: 15px;
@@ -52,11 +77,16 @@ $success-color: #43e50f;
 .selectize-dropdown-content {
   display: block !important;
   background-color: white !important;
-  width: 100% !important;
+  width: 100%;
   border: 1px solid #1f8cec !important;
   margin-left: -60px !important;
   margin-top: 15px !important;
   text-align: left !important;
+}
+
+#start-conversation-form .selectize-dropdown-content {
+  margin-left: -30px !important;
+  margin-top: 7px !important;
 }
 
 #termsAndCondition{
@@ -82,9 +112,11 @@ $success-color: #43e50f;
   border-color: $success-color !important;
 }
 
-.has-error .form-control
-{
+.has-error {
   border-color: $error-color !important;
+  .form-control {
+    border-color: $error-color !important;
+  }
 }
 
 .help-block{
@@ -118,6 +150,10 @@ $success-color: #43e50f;
 /* For messaging page */
 .message-counter {
   text-align: center;
+}
+
+.messaging-snapshot.leads.unverified {
+  margin-left: 5px;
 }
 
 .disabled {

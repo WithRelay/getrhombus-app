@@ -38,6 +38,8 @@ class Hashtag < ActiveRecord::Base
   # caching needed for this
   def mentions_count
     # because hashtag_id will exist in a transaction that was created by a text message. so avoid duplicates
+    # and some hashtad transactions wont have messages
+    
     in_txns_not_in_msg_count = Hashtag.find_by_sql(["SELECT count(*) as count FROM transactions t LEFT JOIN messages m
                                           on m.transaction_id = t.id
                                           WHERE t.hashtag_id = ? and m.transaction_id IS NULL", self.id]).first.count

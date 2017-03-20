@@ -4,7 +4,10 @@ module DashboardData
 		customers = current_user.merchant_customers
     new_customers = customers.select{ |c| c.created_at >= 1.week.ago.utc }
 
-    transactions = Transaction.where(team_id: merchant_id)
+    # Exclude refunded transactions, include subscriptions since these queries are read only
+    # Otherwise you will need to exclude subscriptions which aren't easily refundable
+    # and include only captured transactions and account reload txns are included by default..right
+    transactions = Transaction.exclude_refunded_transactions().only_captured_transactions().where(team_id: current_user.id)
     transactions_today = transactions.select{ |t| t.created_at >= Time.current.beginning_of_day }
    
     {
@@ -17,10 +20,15 @@ module DashboardData
 
 	end
 
+  # Exclude refunded transactions, include subscriptions since these queries are read only
+  # Otherwise you will need to exclude subscriptions which aren't easily refundable
+  # and include only captured transactions and account reload txns are included by default..right
 	def chart_and_transactions
   	#data for chart, includes both fb_msg and sms
    {
-    last6_transactions: Transaction.includes(:user).where(team_id: merchant_id).order(created_at: :desc).last(6),
+    last6_transactions: Transaction.includes(:user).exclude_refunded_transactions().only_captured_transactions()
+                                    .where(team_id: current_user.id)
+                                    .order(created_at: :desc).last(6),
     msg_data_for_chart: all_messages_count_in_30_days
    }
 	end

@@ -11,33 +11,4 @@ class MerchantCustomerPresenter < BasePresenter
     html
   end
 
-  def first_visit_format_created_at
-    txn = first_transaction
-    txn.present? ? time_in_relative_form(txn.created_at, 'long_format') : '-'
-  end
-
- def last_visit_format_created_at
-    txn = last_transaction
-    txn.present? ? time_in_relative_form(txn.created_at, 'long_format') : '-'
-  end
-  
-  def average
-  	transaction_avg = Transaction.where(user_id: @model.customer_id, team_id: @model.merchant_id, captured: true).average(:amount)
-  	"$ #{'%.02f' % t = transaction_avg ? transaction_avg : 0 }"
-  end
-
-  def total
-  	transaction_sum = Transaction.where(user_id: @model.customer_id, team_id: @model.merchant_id, captured: true).sum(:amount)
-  	"$ #{'%.02f' % t = transaction_sum ? transaction_sum : 0}"
-  end
-
-private
-
-  def last_transaction
-    Transaction.where(user_id: @model.customer_id, team_id: @model.merchant_id).last
-  end
-
-  def first_transaction
-    Transaction.where(user_id: @model.customer_id, team_id: @model.merchant_id).first
-  end
 end

@@ -88,9 +88,9 @@ $(document).ready(function() {
       $('.plan-name.editable.open').parent().find('.cancel-edit-plan').click()
     }
     var parent = $(this).parent();
-    parent.addClass('hide');
+    parent.css('display','none');
     parent = parent.parent(); 
-    parent.find(".plan-name-save-span").removeClass('hide');
+    parent.find(".plan-name-save-span").css('display','block');
     var $el = parent.find('.plan-name');
     current_plan_name = $el.text();
     var $input = $('<input class="plan-name editable open text-field w-input" placeholder="Plan name" />').val( current_plan_name );
@@ -116,8 +116,8 @@ $(document).ready(function() {
   });
 
   function revert_to_text() {
-    save_icon_parent.addClass('hide');
-    save_icon_grandparent.find(".plan-name-edit-span").removeClass('hide');
+    save_icon_parent.css('display','none');
+    save_icon_grandparent.find(".plan-name-edit-span").css('display','block');
     var $span = $('<span class="editable-field-text settings-row-text plan-name" />').text( plan_name );
     plan_name_input.replaceWith( $span );
   }

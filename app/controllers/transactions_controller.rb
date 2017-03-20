@@ -12,13 +12,19 @@ class TransactionsController < ApplicationController
   def index
     if current_user.is_merchant?
       if params[:captured] == "false"
-        @transactions = Transaction.includes(:user).where(team_id: current_user.id, captured: false)
+        @transactions = Transaction.includes(:user).where(team_id: current_user.id).only_uncaptured_transactions()
                                  .where("created_at >= ?", Time.zone.at(7.days.ago).to_i)
-                                 .where(subscription_id: nil)
+                                 .exclude_subscriptions()
                                  .paginate(page: params[:page], per_page: 10).order(created_at: :desc)
       else
-        @transactions = Transaction.includes(:user).where(team_id: current_user.id, captured: true, subscription_id: nil)
-                                 .paginate(page: params[:page], per_page: 10).order(created_at: :desc)
+        # Exclude refunded transactions, Exclude subscriptions since these queries are not read only
+        # query is for refundable transactions
+        # you can't refund subscriptions easily.
+        # and include only captured transactions
+        # account reload txns are included by default..right
+        @transactions = Transaction.includes(:user).exclude_subscriptions().only_captured_transactions()
+                                    .exclude_refunded_transactions().where(team_id: current_user.id)
+                                    .paginate(page: params[:page], per_page: 10).order(created_at: :desc)
       end
     else
       @transactions = []

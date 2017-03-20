@@ -19,6 +19,7 @@
 //= require angularjs/angular-route.min.js
 //= require angularjs/angular-scrollglue.js
 //= require angular-rails-templates
+//= require offline.js
 
 // used for client side form validation
 //
@@ -34,7 +35,10 @@
 //= require plan
 //= require coupon
 //= require subscription
+//= require transaction
 //= require integrations
+//= require selectize
+//= require angular-selectize
 
 //= require jquery_ujs
 //= require pubnub/pubnub-angular.js
@@ -56,11 +60,7 @@
 //= require trumbowyg_color_plugin
 //= require trumbowyg_emoji_plugin
 //= require trumbowyg.upload.min
-//= require selectize
 //= require jquery.checkboxes-1.2.0.min.js
-//= require jquery.caret.js
-//= require jquery.atwho.js
-//= require bootstrap-select
 //= require powerange
 //= require knowledge_base
 //= require lists.js

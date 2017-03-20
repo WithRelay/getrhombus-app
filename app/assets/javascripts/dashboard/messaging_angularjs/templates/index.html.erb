@@ -12,27 +12,9 @@
   <div class="messaging side-bar" id='conversations-list'>
     <div class="conversation-list-menu">
       <div class="w-form">
-        <form id="email-form-10" name="email-form-10">
-          <input class="start-conversation-field w-input" id="Start-Conversation-Field" maxlength="256" name="Start-Conversation-Field" placeholder="Start new conversation" type="text">
-          <label>
-            <angucomplete-alt id="find-recipient"
-            placeholder="Start new conversation"
-            pause="300"
-            minlength="3"
-            selected-object="recipientSelected"
-            remote-url="<%= (Rails.env == 'development' ? "http://localhost:3000" : "#{Rails.application.secrets.url["info"]}") + "/v1/users?query=" %>"
-            remote-url-data-field="data"
-            title-field="title"
-            text-no-results='false'
-            match-class='highlight'
-            input-name='recipient'
-            description-field='description'
-            text-searching="Finding your customers/contacts..."
-            <%#= add html notification during ui integration %>
-            <%#= scroll bar added but test option during UI integration and testing %>
-            remote-url-error-callback='searchRecipientsApiErrorHandler'
-            />
-          </label>
+        <%# changed input field and id %>
+        <form id="start-conversation-form">
+          <selectize class="start-conversation-field w-input" config='start_conversation_config' ng-model="start_conversation.recipient" option='start_conversation_options'></selectize>
         </form>
         <%# removed 2 div from here %>
       </div>
@@ -49,7 +31,7 @@
             <div class="w-clearfix">
               <%# combined color and image div into the same a tag %>
               <div ng-class="{ 'no-image-found-placeholder' : true, 'radius-color-{{conversation.profile_image.value}}' : true }" ng-if="conversation.profile_image.type == 'color'">
-                <div class="customer-initial">{{ conversation.uid_type == 'user' ? conversation.full_name.charAt(0) : '#' }}</div>
+                <div class="customer-initial">{{ conversation.full_name.charAt(0) }}</div>
               </div>
               
               <div ng-class="conversation.last_message_type === 'Message' ? 'channel-indicator-2' : 'channel-indicator'" ng-if="
@@ -120,15 +102,22 @@
   </div>
 
   <div class="right side-bar">
-    <div class="right-nav-profile-content-wrapper">
-      <%= image_tag('Customer-1.jpg', class: 'profile-picture-right-nav', width: 60) %>
-      <div class="dashboard-right-nav signup-box-subheading">MICHAEL RANDY <span class="relay-id">VERIFIED</span>
+    <div ng-if='customer_contact_count == 0'>{{ customer_contact_count_message }}</div>
+    <div class="right-nav-profile-content-wrapper" ng-if='snapshot != undefined && customer_contact_count > 0'>
+      
+      <img ng-if="snapshot.profile_image.type == 'image'" class="profile-picture-right-nav" src="{{snapshot.profile_image.value}}" width="60">
+      
+      <div ng-if="snapshot.profile_image.type == 'color'" class="chat-wwindow no-image-found-placeholder radius-color-{{snapshot.profile_image.value}}">
+        <div class="customer-initial">{{ snapshot.full_name.charAt(0) }}</div>
       </div>
-      <div class="left-column-text number"> &nbsp; &nbsp;+1 <redacted_phone_number></div>
-      <div class="left-column-text"> &nbsp; &nbsp;<redacted_email></div>
-      <div class="left-column-text"> &nbsp; &nbsp; &nbsp;Washington, DC</div>
-      <div class="left-column-text"> &nbsp; &nbsp; @mrandy</div>
-      <div class="left-column-text"> &nbsp; &nbsp; Customer since: 04/23/2009</div>
+      
+      <div class="dashboard-right-nav signup-box-subheading">{{ snapshot.full_name.toUpperCase() }}<span ng-class="{ 'messaging-snapshot': true, 'relay-id' : true, 'leads unverified' : snapshot.verified == 'UNVERIFIED' }">{{ snapshot.verified }}</span>
+      </div>
+      <div class="left-column-text number"> &nbsp; &nbsp;{{ snapshot.phone_number }}</div>
+      <div class="left-column-text"> &nbsp; &nbsp;{{ snapshot.email }}</div>
+      <div class="left-column-text"> &nbsp; &nbsp; &nbsp; {{ snapshot.location }}</div>
+      <div class="left-column-text"> &nbsp; &nbsp; {{ snapshot.twitter }}</div>
+      <div class="left-column-text"> &nbsp; &nbsp; {{ snapshot.since.type }} since: {{ snapshot.since.date }}</div>
       <div class="right-nav-underline"></div>
     </div>
     <%# added id %>
@@ -241,9 +230,13 @@
             <%# added height %>
             <img ng-if="message.profile_image.type == 'image'" class="messaging-bubble right-nav-profile-picture" src="{{message.profile_image.value}}" width="35" height='35'>
             
-            <div class="chat-wwindow no-image-found-placeholder" ng-if="message.profile_image.type == 'color'">
-              <div class="customer-initial">{{ selected_conversation.uid_type == 'user' ? selected_conversation.full_name.charAt(0) : '#' }}</div>
+            <div ng-class="{ 'chat-wwindow no-image-found-placeholder' : true, 'radius-color-{{message.profile_image.value}}' : true }" ng-if="message.profile_image.type == 'color'">
+              <div class="customer-initial">{{ selected_conversation.full_name.charAt(0) }}</div>
             </div>
+
+            <!--<div class="chat-wwindow no-image-found-placeholder" ng-if="message.profile_image.type == 'color'">
+              <div class="customer-initial">{{ selected_conversation.full_name.charAt(0) }}</div>
+            </div>-->
           </div>
 
           <div class="w-col w-col-10">
@@ -281,7 +274,7 @@
           <div class="w-clearfix w-col w-col-2">
             <%# added height %>
             <img ng-if="message.profile_image.type == 'image'" class="agent-picture messaging-bubble right-nav-profile-picture" src="{{message.profile_image.value}}" width="35" height='35'>
-            <div class="agent chat-wwindow no-image-found-placeholder" ng-if="message.profile_image.type == 'color'">
+            <div ng-class="{ 'agent chat-wwindow no-image-found-placeholder' : true, 'radius-color-{{message.profile_image.value}}' : true }" ng-if="message.profile_image.type == 'color'">
               <div class="customer-initial">{{ merchant.full_name.charAt(0) }}</div>
             </div>
           </div>
@@ -304,7 +297,8 @@
       </div>
       <p class="modal-content-description">Saved replies help your team speed up response time to frequently asked questions. Select your saved replies from the drop-down, then personalize and hit send.</p>
       <div class="segment-modal underline-div"></div>
-      <div class="saved-reply-select-form w-form">
+      <%# remove w-form %>
+      <div class="saved-reply-select-form">
         <form id="email-form-3" name="email-form-3">
           <select class="dropdown select-saved-reply w-select" ng-model="saved_replies.reply" ng-options="option.title for option in saved_replies_list track by option.id">
             <option ng-selected="true" value="">Select saved reply</option>
@@ -325,36 +319,25 @@
         <%# added update-close-modals and data %>
         <a class="close-modal update-close-modals" data-parent='charge-a-customer-div'></a>
       </div>
-      <div class="charge-customer-form w-form">
-           <label>
-              <angucomplete-alt id="find-hashtag"
-              placeholder="Hashtag or item name"
-              pause="300"
-              minlength="1"
-              selected-object="hashtagSelected"
-              remote-url="<%= (Rails.env == 'development' ? "http://localhost:3000" : "#{Rails.application.secrets.url["info"]}") + "/v1/hashtags?query=" %>"
-              remote-url-data-field="hashtags"
-              title-field="tag"
-              text-no-results='false'
-              match-class='highlight'
-              input-name='hashtag'
-              description-field='description'
-              text-searching="Finding your tag/item..."
-              <%#= add html notification during ui integration %>
-              <%#= scroll bar added but test option during UI integration and testing %>
-              remote-url-error-callback='hashtagsApiErrorHandler'
-              />
-            </label>
+      <%# remove w-form class %>
+      <div class="charge-customer-form">
+        <form id="chargeForm" name="chargeForm" ng-submit="submitChargeForm(chargeForm.$valid)" novalidate>
 
-        <form id="chargeForm" name="email-form-4">
-          <input class="customer-name-or-number text-field w-input" id="Name-or-Number-2" maxlength="256" name="Name-or-Number-2" placeholder="Enter customer&#39;s name or phone number" type="text">
-          <input class="item-name text-field w-input" id="Item-name-4" maxlength="256" name="Item-name-4" placeholder="Item name" required="required" type="email">
-          <input class="amount-field text-field w-input"  id="Amount-4" maxlength="256" name="Amount-4" placeholder="Amount" required="required" type="email">
-          <textarea class="item-description text-area w-input" id="Item-Description-4" maxlength="5000" name="Item-Description-4" placeholder="Item Description"></textarea>
+          <div class="form-group col-xs-6">
+            <selectize class="form-control dropdown w-select" config='hashtag_config' ng-model="charge.hashtag_id" options='hashtag_config_options'></selectize>
+          </div>
+            
+          <input class="amount-field text-field w-input" type="number" min="1" max='15000' ng-model='charge.amount' name="amount" placeholder="$10.20" step='0.01' ng-pattern="/^\d+(.\d{1,2})?$/" ng-class="{'has-error': chargeForm.amount.$invalid && !chargeForm.amount.$pristine }">
+          <%#<span ng-show="chargeForm.amount.$invalid && !chargeForm.amount.$pristine">A valid amount is required</span>%>
+
+          <textarea type="text" class="item-description text-area w-input" ng-model='charge.notes' name="notes" placeholder="Item Description" ng-trim='true'></textarea>
+
           <div class="form-check-box w-checkbox">
-            <input class="w-checkbox-input" id="checkbox-4" name="checkbox-4" type="checkbox">
+            <input type="checkbox" class="w-checkbox-input" name="authorize" ng-model='charge.authorize' value="authorize">
             <label class="w-form-label" for="checkbox-4">Authorize only</label>
-          </div><a class="button charge-modal-button w-button">Charge Customer</a>
+          </div>
+      
+          <button class="button charge-modal-button w-button" id="chargeButton" ng-disabled="disableChargeButton(chargeForm)" type="submit">{{charge_btn}}</button>
         </form>
       </div>
       <p class="charge-tips modal-paragraph tips"> &nbsp;TIP: You can use Hashtags to create an item list in Relay. Hashtags allow your customers text an item name to place an order</p>
@@ -366,7 +349,8 @@
     <div class="mark-as-done-form-wrapper">
       <p class="modal-content-description">Label conversations before you close it, so your entire team can stay informed on why a customer or lead reached out.</p>
       <div class="segment-modal underline-div"></div>
-      <div class="mark-as-done-form w-form">
+      <%# remove w-form %>
+      <div class="mark-as-done-form">
         <form class="w-clearfix" id="email-form-6">
           <select class="dropdown message-reason w-select" id="Message-Reason-2" ng-model='marked_as_done.reason'>
             <option value='' disabled selected>Select message reason</option>
@@ -416,7 +400,8 @@
       </div>
       <p class="modal-content-description">Set a reminder or notification that will go out to this customer at a future date. You can use this to automate appointment reminders, or bill payment reminders.</p>
       <div class="segment-modal underline-div"></div>
-      <div class="scheduled-notification-form w-form">
+      <%# remove w-form %>
+      <div class="scheduled-notification-form">
         <form class="w-clearfix" id="email-form-7" name="email-form-7">
           <select class="dropdown w-select" id="Notification-Channel-2" name="Notification-Channel-2" required="required">
             <option value="">Select channel</option>

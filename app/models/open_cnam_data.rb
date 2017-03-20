@@ -9,8 +9,4 @@ class OpenCnamData < ActiveRecord::Base
     end
   end
 
-  # wrap this up and test model and service when integrating front end
-  def self.get_opecnam_data(phone)
-  end
-
 end

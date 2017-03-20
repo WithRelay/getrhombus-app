@@ -1,6 +1,6 @@
 class Api::V1::SavedRepliesController < API::V1::BaseController
 
-  before_action :set_save_reply, except: [:index]
+  before_action :set_save_reply, except: [:index, :edit]
 
   def index
     begin
@@ -11,8 +11,9 @@ class Api::V1::SavedRepliesController < API::V1::BaseController
   end
 
   def edit
-  	response = @user_save_reply ? { save_reply:  @user_save_reply, status: 200 } : { save_reply: [], status: 400 }
-  	render json: response
+  	 # response = @user_save_reply ? { save_reply:  @user_save_reply, status: 200 } : { save_reply: [], status: 400 }
+    responce = SavedReply.find_by_id(params[:id])
+    render json: responce
   end
 
   def create
@@ -21,7 +22,7 @@ class Api::V1::SavedRepliesController < API::V1::BaseController
       render json:{ notice: "Reply is saved", status: 200 }
     else
       render json:{ error: saved_reply.errors.messages , data: saved_reply , status: 500}
-    end 
+    end
   end
 
   def update
@@ -30,7 +31,7 @@ class Api::V1::SavedRepliesController < API::V1::BaseController
     render json: response
   end
 
-  private 
+  private
 
   def set_save_reply
     @user_save_reply = current_user.saved_replies.find_by_id(params[:saved_reply][:id])
@@ -40,4 +41,4 @@ class Api::V1::SavedRepliesController < API::V1::BaseController
     params.require(:saved_reply).permit(:title, :body)
   end
 
-end 
+end

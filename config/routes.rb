@@ -111,6 +111,7 @@ Rails.application.routes.draw  do
     api_version(module: "Api::V1", path: { value: "v1"}, constraints: { subdomain: "api" }, defaults: { format: "json" }) do
       resources :users, only: [:index] do
         post 'add_customers', on: :collection
+        get 'snapshot', on: :collection
       end
       resources :lists, only: [:create, :index, :update] do
         get 'check_list_name', on: :collection
@@ -118,10 +119,7 @@ Rails.application.routes.draw  do
       post 'users/check_password' => 'users#check_password'
       match 'hashtags' => 'hashtags#index', via: :get
       match 'hashtags/:id/images/:image_id' => 'hashtags#image_delete', via: :delete
-      match 'saved_replies' => 'saved_replies#index', via: :get
-      post 'saved_replies/edit' => 'saved_replies#edit'
-      patch 'saved_replies/update' => 'saved_replies#update'
-      post 'saved_replies/create' => 'saved_replies#create'
+      resources :saved_replies
       # Campaign Routes
       patch 'campaigns/change_status/:id' => 'campaigns#change_status'
       delete 'campaigns/delete/:id' => 'campaigns#delete_campaign'
@@ -144,7 +142,7 @@ Rails.application.routes.draw  do
         post 'check_plan_name', on: :collection
       end
       resources :subscriptions, only: [:create, :update, :destroy]
-      match 'merchant/customers' => 'merchant_customers#customers', via: :get
+      match 'merchant_customers/customers' => 'merchant_customers#customers', via: :get
       match 'referrers/invite_business' => 'referrers#invite_business', via: :post
       resources :demos, only: [:create]
       resources :conversations, only: [:index, :show] do

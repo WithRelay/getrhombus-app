@@ -67,8 +67,8 @@ class Conversation < ActiveRecord::Base
 	end
 
 	def self.message_hash(conv, msg, conv_ref, customer, merchant=nil)
-    # u = msg.user_id == conv.merchant_id ? merchant : customer
-    u = conv_ref.source == 'customer' ? customer : merchant
+     u = msg.user_id == conv.merchant_id ? merchant : customer
+    #u = conv_ref.source == 'customer' ? customer : merchant
 
     {
       id: msg.id,

@@ -60,6 +60,9 @@ task :move_txns_table_to_one_row => :environment do
   platform_txns.delete_all
 end
 
+### NOTE the fee change....also recalculate the rate_percent
+### Now use transaction fee table to store fees
+
 # split amount_less_fess into amount_less_stripe_fees, app_fee
 # then remove amount_less_fees
 

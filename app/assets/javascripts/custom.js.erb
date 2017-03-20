@@ -1,9 +1,21 @@
 $(document).ready(function() {
 
-  // help change user controller to handle captured payments for signin
-  // help add tag_id to captured payments in signin and signup and in the forms
-
   var global_page_params = PageParameter.get_params();
+
+/*
+  window.Offline.options = {
+    interceptRequests: false,
+    requests: false,
+    checks: { xhr: { url: '/offline-check' } }
+  };
+
+  var delay = 10000;
+  setTimeout(function retry() {
+    if(Offline.state == "up") 
+      Offline.check();
+    setTimeout(retry, delay);
+  }, delay);
+*/
 
   $('#type-it').typeIt({
     strings: ["customers", "shift workers", "candidates", "students", "donors", "employees", "hotel guests"],

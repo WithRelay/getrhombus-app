@@ -1,0 +1,152 @@
+$(document).ready(function () {
+  if ($('#transaction-customer-id').length > 0) {
+    $('#transaction-customer-id')
+      .selectize({
+        maxItems: 1,
+        valueField: 'id',
+        labelField: 'card_name',
+        searchField: ['card_name', 'phone_number'],
+        plugins: ['remove_button'],
+        create: false,
+        options: [],
+        closeAfterSelect: true,
+        load: function(query, callback) {
+          if (!query.length) return callback();
+          $.ajax({
+            url: '/v1/merchant_customers/customers',
+            type: 'GET',
+            dataType: 'json',
+            data: {
+              query: query
+            },
+            error: function() {
+              FlashHandler.setFlashMessage('Something went wrong...Unable to find your customer', 'error');
+              callback();
+            },
+            success: function(res) {
+              callback(res['customers']);
+            }
+          });
+        }
+      })
+      .on('change', function(e) {
+        $('#chargeForm').formValidation('resetField', 'transaction[user_id]');
+      })
+  }
+
+  if ($('#search-hashtag').length > 0) {
+    $('#search-hashtag')
+      .selectize({
+        maxItems: 1,
+        valueField: 'id',
+        labelField: 'name',
+        searchField: 'name',
+        plugins: ['remove_button'],
+        create: false,
+        options: [],
+        closeAfterSelect: true,
+        load: function(query, callback) {
+          if (!query.length) return callback();
+          $.ajax({
+            url: '/v1/hashtags',
+            type: 'GET',
+            dataType: 'json',
+            data: {
+              query: query
+            },
+            error: function() {
+              FlashHandler.setFlashMessage('Something went wrong...Unable to find your item', 'error');
+              callback();
+            },
+            success: function(res) {
+              callback(res['customers']);
+            }
+          });
+        }
+      })
+      .on('change', function(e) {
+        $('#chargeForm').formValidation('resetField', 'transaction[hashtag_id]');
+      })
+  }
+
+  if ($('#chargeForm').length > 0) {
+    $('#chargeForm')
+      .formValidation({
+        framework: 'bootstrap',
+        excluded: ':disabled',
+        live: 'disabled',
+        // List of fields and their validation rules
+        fields: {
+          'transaction[user_id]':{
+            validators: {
+              notEmpty: {
+                message: 'Customer is required'
+              },
+              callback: {
+                message: 'Please select a customer',
+                callback: function(value, validator, $field) {
+                  var plans = validator.getFieldElements('transaction[user_id]').val();
+                  return (plans !== '');
+                }
+              }
+            }
+          },
+          'transaction[amount]' :{
+            validators: {
+              notEmpty: {
+                message: 'Quantity is required'
+              },
+              integer: {
+                message: 'The value is not an integer'
+              }
+            }
+          },
+          'transaction[hashtag_id]':{
+            validators: {
+                notEmpty: {
+                  message: 'Please select a item'
+                },
+                callback: {
+                  message: 'Please select a item',
+                  callback: function(value, validator, $field) {
+                    var items = validator.getFieldElements('transaction[hashtag_id]').val();
+                    return (items !== '');
+                  }
+                }
+              }
+            }
+          }
+      })
+      .on('success.form.fv', function(e, data) {
+        e.preventDefault();
+        $("#charge-customer").attr("disabled", true).val("Please wait...");
+        chargeCustomer();
+      })
+      .on('err.validator.fv', function(e) {
+        $('.help-block').hide();
+      });
+  }
+
+  function chargeCustomer() {
+   $.ajax({
+      url: "/v1/merchant_customers",
+      beforeSend: function(xhr) {
+        xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
+      },
+      type: "PATCH",
+      data: $('#chargeForm').serialize(),
+      dataType: "json"
+    })
+    .done(function(data, textStatus, jqXHR) {
+      FlashHandler.setFlashMessage(data.response, 'notice');
+      location.reload();
+    })
+    .fail(function(data, textStatus, errorThrown) {
+      FlashHandler.setFlashMessage(JSON.parse(data.responseText).response, 'error');
+    })
+    .always(function(data, textStatus, response) {
+      $('#submit-update-coupon').removeAttr('disabled').val("Charge Customer");
+    });
+  };
+
+})

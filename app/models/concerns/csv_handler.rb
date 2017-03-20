@@ -13,8 +13,8 @@ module CSVHandler
           Transaction.where(column_str + " = ? AND created_at BETWEEN ? AND ?", user_id, Time.zone.parse(start_date), Time.zone.parse(end_date))
             .where.not(subscription_id: nil)
         else
-          Transaction.where(column_str + " = ? AND created_at BETWEEN ? AND ?", user_id, Time.zone.parse(start_date), Time.zone.parse(end_date))
-            .where(subscription_id: nil, captured: true)
+          Transaction.exclude_refunded_transactions().where(column_str + " = ? AND created_at BETWEEN ? AND ?", user_id, Time.zone.parse(start_date), Time.zone.parse(end_date))
+            .only_captured_transactions().exclude_subscriptions()
         end
         transactions.each do |t|
           csv << column_names.map{ |attr| t.send(attr) }

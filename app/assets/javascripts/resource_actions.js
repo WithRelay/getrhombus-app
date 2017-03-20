@@ -18,6 +18,26 @@ $(document).on('ready',function(){
 		doAction(selectedElement);
 	});
 
+	$('#edit-saved-reply').on('click',function(){
+		var selectedElement = selectCheckedElement();
+		var elementForm = selectedElement.closest('form');
+		var reply_id = elementForm.find('#saved_reply_id').val();
+
+		$.ajax({
+			url:  "/v1/saved_replies/" + reply_id + "/edit" ,
+			data:{id: reply_id}
+		}).done(function(res){
+			 var form = $('#save-reply-form');
+			 var doActionn = form.attr("action");
+			 form.find("#Saved-Replies-Editor-3").val(res.body);
+			 form.find("#Saved-Replies-Title-3").val(res.title);
+
+			}).error(function(){
+			 // alert("")
+		});
+
+	});
+
   function selectCheckedElement(){
 		var checkedElement = false;
   	$('.table-checkbox').each(function( index, element){

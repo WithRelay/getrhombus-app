@@ -1,7 +1,14 @@
 class Api::V1::TransactionsController < API::V1::BaseController
 
   def index
-    @transactions = Transaction.where(team_id: current_user.id, captured: true, subscription_id: nil, user_id: params[:customer_id])
+    # Exclude refunded transactions, Exclude subscriptions since these queries are not read only
+    # query is for refundable transactions
+    # you can't refund subscriptions easily.
+    # and include only captured transactions 
+    # account reload txns are included by default..right
+    @transactions = Transaction.exclude_refunded_transactions().exclude_subscriptions()
+                                .only_captured_transactions()
+                                .where(user_id: params[:customer_id], team_id: current_user.id)
                                 .order(created_at: :desc).limit(10)
                                 .select([:amount, :created_at, :txn_number, :notes])
 
@@ -19,12 +26,15 @@ class Api::V1::TransactionsController < API::V1::BaseController
   end
 
   def create
-    setup_charge_data
-    re = process_dashboard_txn(@amount, current_user, @customer, params[:notes], @hashtag, params[:capture])
-    if re[0]
-      render json: { message: "Charge created" }, status: 200
+    if setup_charge_data
+      re = Transaction.new.process_dashboard_txn(@amount, current_user, @customer, params[:notes], @hashtag, params[:capture])
+      if re[0]
+        render json: { message: "Charge created" }, status: 200
+      else
+        render json: { error: re[1] }, status: 500
+      end
     else
-      render json: { error: re[1] }, status: 500
+      render json: { error: "User doesn't have a valid card" }, status: 500
     end
   end
 
@@ -36,15 +46,12 @@ class Api::V1::TransactionsController < API::V1::BaseController
     end
 
     def setup_charge_data
-      @customer = User.find_by(id: data[:uid])
-      data[:amount] = data[:amount].round(2)
-      if data[:hashtag_id].present?
-        @hashtag = current_user.hashtags.where(id: data[:hashtag_id]).first
-      else
-        @hashtag = Hashtag.new(skip_tag_validation: true)
-        @hashtag.save(name: params[:item_name], description: params[:notes], amount: data[:amount], user_id: current_user.id, tag_type: 1, enable_tweet: 0)
-      end
-      @amount = Toolbox::Decimal.to_cents(data[:amount])
+      @customer = User.find_by(id: params[:user_id])
+      return false unless @customer.has_valid_card?
+      params[:amount] = params[:amount].round(2)
+      @hashtag = current_user.hashtags.where(id: params[:hashtag_id]).first
+      @amount = Toolbox::Decimal.to_cents(params[:amount])
+      true
     end
 
 end

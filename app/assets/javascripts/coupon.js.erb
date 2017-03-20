@@ -109,9 +109,10 @@ $(document).ready(function () {
       $('.coupon-name.editable.open').parent().find('.cancel-edit-coupon').click()
     }
     var parent = $(this).parent();
-    parent.addClass('hide');
+    console.log(parent)
+    parent.css('display','none');
     parent = parent.parent(); 
-    parent.find(".coupon-name-save-span").removeClass('hide');
+    parent.find(".coupon-name-save-span").css('display','block');
     var $el = parent.find('.coupon-name');
     current_coupon_name = $el.text();
     var $input = $('<input class="coupon-name editable open text-field w-input" placeholder="coupon name" />').val( current_coupon_name );
@@ -122,6 +123,7 @@ $(document).ready(function () {
   $('body').on('click', '.coupon-name-save-icon, .cancel-edit-coupon', function(e) {
     e.stopImmediatePropagation();
     save_icon_parent = $(this).parent();
+    console.log(save_icon_parent)
     save_icon_grandparent = save_icon_parent.parent();
     coupon_name_input = save_icon_grandparent.find('.coupon-name');
     cancel_edit = 'cancel-edit cancel-edit-coupon save-editable-field';
@@ -137,8 +139,8 @@ $(document).ready(function () {
   });
 
   function revert_to_text() {
-    save_icon_parent.addClass('hide');
-    save_icon_grandparent.find(".coupon-name-edit-span").removeClass('hide');
+    save_icon_parent.css('display','none');
+    save_icon_grandparent.find(".coupon-name-edit-span").css('display','block');
     var $span = $('<span class="editable-field-text settings-row-text coupon-name" />').text( coupon_name );
     coupon_name_input.replaceWith( $span );
   }
