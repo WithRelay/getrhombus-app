@@ -154,7 +154,7 @@
                 </div>
                 <div class="w-col w-col-2">
                   <div class="amount w-clearfix">
-                    <div class="shrink-text table-text unread-table">$<%= transaction.amount || 0 %></div>
+                    <div class="shrink-text table-text unread-table tran-amount">$<%= transaction.amount || 0 %></div>
                   </div>
                 </div>
                 <div class="w-col w-col-2">
@@ -164,12 +164,13 @@
                 </div>
                 <div class="w-col w-col-3">
                   <div class="action w-clearfix">
-                    <a class="actions status modal-loader" modal-target='refund-customer-div'>Refund</a>
+                    <a class="actions status modal-loader customer-profile-refund-btn" modal-target= 'refund_customer_modal' data-txn-number="<%= transaction.txn_number %>"
+                    data-txn-last4="<%= transaction.last4 %>">Refund</a>
                   </div>
                 </div>
               </div>
-             <%end%>
-             <div class="modal-background w-hidden modal-body refund-customer-div" >
+             <% end %>
+              <div class='modal-background w-hidden modal-body refund_customer_modal'>
                <%= render 'shared/modals/refund_customer' %>
              </div>
           </div>

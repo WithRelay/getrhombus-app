@@ -1,22 +1,40 @@
   $(document).ready(function () {
 
 	var txn_num = '', is_conv_page = false, parent_row;
-      btn_html = '';
+      btn_html = '', is_cus_profile_page = false;
    
   // transactions page checkbox
   $('.transaction-checkbox').click(function() {
     if ($(this).is(':checked')) {
       $("#refund-charge").removeClass('hide');
-      txn_num = this.dataset.txnNumber;
+      
       is_conv_page = false;
+      is_cus_profile_page = false;
+      
       parent_row = $(this).closest('.transactions-table-row');
       var amount = parent_row.find('.tran-amount').text();
       var last4 = parent_row.find('.tran-last-four').text();
+      txn_num = this.dataset.txnNumber;
+      
       $('#tran-amount').text(amount);
       $('#last_four').text(last4);      
     } else {
       $("#refund-charge").addClass('hide');
     }
+  });
+
+  // customer profile page refund
+  $('.customer-profile-refund-btn').click(function() {
+      is_conv_page = false;
+      is_cus_profile_page = true;
+
+      parent_row = $(this).closest('.customer-profile-trasaction-table');
+      var amount = parent_row.find('.tran-amount').text();
+      var last4 = this.dataset.txnLast4;
+      txn_num = this.dataset.txnNumber;
+      
+      $('#tran-amount').text(amount);
+      $('#last_four').text(last4);      
   });
 
   // for conversations page
@@ -27,6 +45,7 @@
 
     txn_num = e.currentTarget.dataset.txnNumber;
     is_conv_page = true;
+    is_cus_profile_page = false;
 
     if (granny_sibling.is('#refundBox')) {
       (granny_sibling.is(':hidden')) ? granny_sibling.show() : granny_sibling.hide();
@@ -44,7 +63,7 @@
 
       refund_btn.disabled = true;
 
-      if (is_conv_page)
+      if (is_conv_page || is_cus_profile_page)
         refund_btn.value = "Please wait...";
       else {
         btn_html = refund_btn.innerHTML;
@@ -69,12 +88,13 @@
       })
       .always(function(data, textStatus, response) {
         refund_btn.disabled = false;
-        if (is_conv_page) {
+        $('#refund-customer-div').trigger('close');
+
+        if (is_conv_page || is_cus_profile_page) {
           refund_btn.value = "Refund";  
         } else {
-          $('#refund-customer-div').trigger('close');
           refund_btn.innerHTML = btn_html;
-        }        
+        }
       });
     } else {
       FlashHandler.setFlashMessage('This transaction has no transaction number.', 'error');
@@ -93,6 +113,8 @@
           scope.customer_transactions.splice(index, 1); 
         }); 
       });
+    } else if (is_cus_profile_page) {
+      parent_row.slideUp(500, function() { parent_row.remove(); });
     } else {
       parent_row.parent().slideUp(500, function() { parent_row.parent().remove(); });
       $('.checkboxes').attr('disabled', false);
