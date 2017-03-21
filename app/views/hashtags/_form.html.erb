@@ -65,8 +65,9 @@
   <div class="dashboard-body editor">
     <div class="dash-content-container message-editor">
       <div class="w-form">
-        
-        <%= f.text_area :response, class: "message-editor text-area w-input", placeholder: "Type message", id: "hashtag-response-textarea" %>
+        <div class='form-group col-xs-6'>
+          <%= f.text_area :response, class: "form-control message-editor text-area w-input", placeholder: "Type message", id: "hashtag-response-textarea" %>
+        </div>
           
       </div>
       <div class="editor-button-container">

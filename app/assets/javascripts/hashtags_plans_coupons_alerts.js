@@ -21,6 +21,9 @@ $(document).ready(function () {
     msg_emoji_box[0].emojioneArea.on("blur paste keyup emojibtn.click", function(button, event) {
       emoji_area_text_length = 320 - msg_emoji_box[0].emojioneArea.getText().length;
       $('#char-count').text(emoji_area_text_length.toString() + " characters");
+    })
+    .on('change', function(e) {
+      $('#new_hashtag').formValidation('resetField', 'hashtag[response]');
     });
 
   };
@@ -148,6 +151,13 @@ $(document).ready(function () {
           }
         }
       },
+      'hashtag[response]': {
+        validators: {
+          notEmpty: {
+            message: 'text is required'
+          }
+        }
+      }
     }
   })
   .on('err.validator.fv', function(e, data) {
