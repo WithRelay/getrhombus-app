@@ -39,11 +39,6 @@ class UsersController < ApplicationController
     @last4 = current_user.last4
   end
 
-  def leads_contacts
-    uid_type = params[:uid_type] || 'phone_number'
-    @leads_contacts = current_user.merchant_contacts.where(uid_type: uid_type).includes(:contacts)
-  end
-
 private
   # Use callbacks to share common setup or constraints between actions.
   def set_user
