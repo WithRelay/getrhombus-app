@@ -92,6 +92,7 @@ Rails.application.routes.draw  do
         get 'sms-usage' => 'users#sms_usage'
         resources :lists, only: [:index, :create, :show, :update] do
           collection { post 'delete' => 'lists#destroy' }
+          member { delete 'remove-customer' => 'lists#remove_customer_contact' }
         end
         get 'managed-accounts' => 'users#managed_acct'
         match 'managed-accounts' => "users#create_managed_acct", via: :patch
