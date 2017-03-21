@@ -4,12 +4,12 @@ drip_campaign_emails:
   args:
   description: "This job runs our drip campaigns."
   queue: drip_campaigns
-welcome_email:
-  every: 15m
-  class: "WelcomeEmailJob"
-  args:
-  description: "This job send welcome message to new user."
-  queue: welcome_email
+# welcome_email:
+#   every: 15m
+#   class: "WelcomeEmailJob"
+#   args:
+#   description: "This job send welcome message to new user."
+#   queue: welcome_email
 # weekly_activity_summary:
 #   cron: '0 11 * * 1' #“At 11:00 on Monday.”
 #   class: "WeeklyActivitySummaryJob"
