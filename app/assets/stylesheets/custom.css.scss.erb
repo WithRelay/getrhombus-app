@@ -102,7 +102,7 @@ $success-color: #43e50f;
 }
 
 <% COLORS.each do |color| %>
-  .radius-color-<%= COLORS.index(color) %> {
+  .radius-color-<%= color[0] %> {
     background-color: <%= color[1] %> !important;
   }
 <% end %>
