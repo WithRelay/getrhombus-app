@@ -5,20 +5,22 @@
   <div class="content-sub-wrapper modal w-clearfix">
     <h4 class="modal-header welcome-dash-content-container-header">Create Saved reply</h4>
     <%# added data and update-close-modals %>
-    <a class="close-modal update-close-modals" data-parent="new-saved-reply-div" href="#"></a>
+    <a class="close-modal update-close-modals" data-parent="new-saved-reply"></a>
   </div>
   <p class="modal-content-description">Create saved replies to frequently asked questions so you can respond to you customers faster. Type '/' on your messaging dashboard to trigger a saved reply.</p>
   <div class="segment-modal underline-div"></div>
   <div class="saved-reply-form w-form">
-    <%= form_for(saved_reply, url: v1_saved_replies_path,:html => { :id => "save-reply-form", data: { name: 'email-form-8' } } ) do |f| %>
-       <%= f.text_field :title, placeholder: 'Saved reply title', id: 'Saved-Reply-Title-3', class: 'saved-reply text-field title-create w-input', data: { name: 'Saved Reply Title' } %>
-
+    <%= form_for(saved_reply, url: v1_saved_replies_path,:html => { class: 'save-reply-form', :id => "save-reply-form", data: { name: 'email-form-8' } } ) do |f| %>
+      <div class="form-group col-xs-6">
+       <%= f.text_field :title, placeholder: 'Saved reply title', id: 'Saved-Reply-Title-3', class: 'form-control saved-reply text-field title-create w-input', data: { name: 'Saved Reply Title' } %>
+     </div>
+      <div class="form-group col-xs-6">
        <%= f.text_area :body, placeholder:'Start typing...', id: 'Saved-Replies-Editor-3',
-       class: 'create saved-reply text-area w-input', data: { name: 'Saved-Replies-Editor-3'}   %>
-
+       class: 'form-control create saved-reply text-area w-input', data: { name: 'Saved-Replies-Editor-3'}   %>
+     </div>
     <%= f.button "Save", class: 'button send-saved-reply w-button', id: 'send-saved-reply' %>
 
-    <%= f.button "Cancel", id: 'saved-reply-cancel', class: "button cancel-saved-reply w-button update-close-modals", data_parent: 'new-saved-reply-div'  %>
+    <%= f.button "Cancel", id: 'saved-reply-cancel', class: "button cancel-saved-reply w-button update-close-modals", data:{ parent: 'new-saved-reply'} %>
 
     <%end%>
   </div>

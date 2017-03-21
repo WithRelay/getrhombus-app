@@ -1,8 +1,9 @@
 class User < ActiveRecord::Base
 
+  extend UserProfile
   include DashboardMerchantQueries
   include CSVHandler
-  extend UserProfile
+  include AddTokenToUser
 
   attr_accessor :phone, :captured_amt, :msg_id, :tag_id, :referrer_id, :tos_acceptance, :user_lists
 
@@ -97,7 +98,7 @@ class User < ActiveRecord::Base
 
   has_one :address, as: :addressable
   accepts_nested_attributes_for :address
-  validates_associated :address, if: lambda { self.bank_accounts.present? }
+  validates_associated :address, if: lambda { self.address.present? }
 
   has_many :people
   accepts_nested_attributes_for :people, allow_destroy: true  # reject_if: ->(attrs) { attrs['city'].blank? || attrs['street'].blank? }
@@ -105,8 +106,7 @@ class User < ActiveRecord::Base
   before_validation :the_titleizer
   before_create :set_merchant_org_phone          # only create because the actual org_phone field is used in edit view
 
-  after_commit :create_user_alert, on: :create, if: lambda { is_merchant? }
-  after_commit :update_phone_in_db, on: :update
+  after_commit :do_signup_stuff, on: :create
 
   enum status: { inactive: 0, active: 1 }
 
@@ -173,65 +173,6 @@ class User < ActiveRecord::Base
     self.exp_year.to_i >= Time.current.year && self.exp_month.to_i >= Time.current.month
   end
 
-  def add_token_to_user(card_token)
-    begin
-      # platform acct shouldn't really be doing this
-      unless is_platform?
-        res = []
-        platform_acct = User.get_platform_acct_obj
-
-        # Two scenarios
-        # 1. a merchant user who is a customer of platform
-        # 2. a customer user who is a customer of the platform and/or merchant(s)
-        # Note that a customer user becomes a customer of merchant when a subscription is created
-
-        cu = MerchantCustomer.where(customer_id: self.id)
-        hash = { email: self.email, card_token: card_token, is_new_customer: true, is_platform_customer: true, is_merchant: is_merchant? }
-
-        # when blank, add only to platform. Blank indicates signing up
-        if cu.blank?
-          re = PaymentService.add_token_to_stripe_customer(hash)
-        else
-          hash[:is_new_customer] = false
-          if hash[:is_merchant]
-            hash[:stripe_customer_id] = cu.first.stripe_customer_id
-            # is merchant, so update on platform
-            re = PaymentService.add_token_to_stripe_customer(hash)
-          else
-            cu.each do |c|
-              hash[:stripe_customer_id] = c.stripe_customer_id
-              # can be on platform or merchant (stripe managed) account
-              hash[:is_platform_customer] = c.merchant_id == platform_acct.id
-              if hash[:is_platform_customer]
-                re = PaymentService.add_token_to_stripe_customer(hash)
-              else
-                re = PaymentService.add_token_to_stripe_customer(hash, get_stripe_cred.uid)
-              end
-            end
-          end
-        end
-
-        # create new merchant_customer for stripe customer
-        if cu.blank?
-          if re.first
-            MerchantCustomer.create(merchant_id: platform_acct.id, customer_id: self.id, stripe_customer_id: re[1].id)
-          else
-            # since new customer are always platform customer so is_platform is always true
-            PaymentService.delete_customer(re[1].id, get_stripe_cred.uid, true)
-          end
-        end
-        re
-      else
-        [true]
-      end
-    rescue StandardError => e
-      # since new customer are always platform customer so is_platform is always true
-      PaymentService.delete_customer(re[1].id, get_stripe_cred.uid, true) if (res.length > 0 && cu.blank?)
-      # notify team
-      [false]
-    end
-  end
-
   def get_saas_subscription
     platform_merchant = MerchantCustomer.find_by(customer_id: self.id, merchant_id: User.get_platform_acct_obj.id)
     platform_merchant ? platform_merchant.subscriptions.active.last : nil
@@ -271,43 +212,12 @@ class User < ActiveRecord::Base
     self.org_name = self.org_name.strip unless self.org_name.blank?
   end
 
-  def send_welcome_email
-    owner = User.find_by(email: Rails.application.secrets.team_email)
-    if is_merchant?
-      EmailingService.send_welcome_email(self.email, owner.rhombus_number, "merchant")
-    elsif self.user_level == 0
-      ref = self.referrers.first
-      message = Message.new
-      unless ref.blank?
-        referrer = User.find_by(id: ref.referrer_id)
-        EmailingService.send_welcome_email_with_referral(referrer.email, self.email, referrer.org_name, referrer.rhombus_number, owner.rhombus_number)
-        text = "Thanks for signing up! Please add a payment card to your Rhombus profile (if you haven't done so).
-        You can chat with us anytime via sms or to make a payment, just text the amount & description/hashtag. Ex. +10 #donut"
-        message.send_and_save_message(referrer.rn_type, referrer.rhombus_number, self.phone_number, text)
-      else
-        EmailingService.send_welcome_email(self.email, owner.rhombus_number, "customer")
-        text = "Thanks for signing up! Please add a payment card to your Rhombus profile (if you haven't done so).
-        You can chat with a local business anytime by texting their Rhombus number or to make a payment, just text the amount &
-        description/hashtag. Ex. +10 #donut"
-        message.send_and_save_message(owner.rn_type, owner.rhombus_number, self.phone_number, text)
-      end
-    end
-  end
-
-  # move to background job
-  def update_phone_in_db
-    if is_merchant?
-      # is this phone_number or rhombus_number?
-      if x = self.previous_changes['phone_number']
-        ActiveRecord::Base.connection.execute("UPDATE messages SET messages.from = #{x[1]} WHERE messages.from = #{x[0]}")
-        ActiveRecord::Base.connection.execute("UPDATE messages SET messages.to = #{x[1]} WHERE messages.to = #{x[0]}")
-        # add transaction columns here too
-      end
-    end
-  end
-
-  def create_user_alert
-    Alert.create_with(user_id: self.id).find_or_create_by(user_id: self.id)
+  def do_signup_stuff
+    Alert.create_with(user_id: self.id).find_or_create_by(user_id: self.id) if self.is_merchant?
+    WelcomeEmailJob.set(wait: SIGNUP_EMAIL_DELAY.minutes).perform_later(self)
+    GetIntelligenceDataJob.perform_later(self.email, 'FullContact')
+    GetIntelligenceDataJob.perform_later(self.phone_number, 'OpenCNAM') if self.is_customer?
+    GetIntelligenceDataJob.perform_later(self.org_phone, 'OpenCNAM') if self.is_merchant?
   end
 
 end

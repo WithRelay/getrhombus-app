@@ -58,8 +58,9 @@ class PaymentService
       end
     end
     
-    def charge(amount_with_taxes, amt_less_stripe_fee, app_fee, merchant, customer, msg, capture, stripe_cred)
+    def charge(amount_with_taxes, amt_less_stripe_fee, app_fee, merchant, customer, msg, capture)
       #begin
+        stripe_cred = merchant.get_stripe_cred
         currency = merchant.currency ? merchant.currency : "usd"
 
         puts merchant.inspect

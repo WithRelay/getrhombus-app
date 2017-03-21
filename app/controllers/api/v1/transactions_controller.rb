@@ -16,25 +16,34 @@ class Api::V1::TransactionsController < API::V1::BaseController
   end
 
   def refund
-    render json: { message: 'all done' } and return
-    if params[:type] == "card"  # Because Stripe supports different types
-      re = Refund.refund_card_txn(current_user.id, params, current_user.is_platform?)
-      render json: { message: re[0] }, status: re[1]
-    else
-      render json: { message: "Not Implemented" }, status: 501		
+    begin
+      render(json: { response: 'all done' }, status: 500) and return
+      if params[:type] == "card"  # Because Stripe supports different types
+        re = Refund.refund_card_txn(current_user.id, params, current_user.is_platform?)
+        render json: { response: re.second }, status: (re.first ? 200 : 500)
+      else
+        render json: { response: "Cannot Perform this action." }, status: 500	
+      end
+    rescue StandardError => e
+      render json: { response: "Something went wrong on our end." }, status: 500
     end
   end
 
   def create
-    if setup_charge_data
-      re = Transaction.new.process_dashboard_txn(@amount, current_user, @customer, params[:notes], @hashtag, params[:capture])
-      if re[0]
-        render json: { message: "Charge created" }, status: 200
+    begin
+      render(json: { response: 'asdasdsa' }, status: 200) and return
+      if setup_charge_data
+        re = Transaction.new.process_dashboard_txn(@amount, current_user, @customer, params[:notes], @hashtag, params[:capture])
+        if re.first
+          render json: { response: "Charge created" }, status: 200
+        else
+          render json: { response: re.second }, status: 500
+        end
       else
-        render json: { error: re[1] }, status: 500
+        render json: { response: "User doesn't have a valid card" }, status: 500
       end
-    else
-      render json: { error: "User doesn't have a valid card" }, status: 500
+    rescue StandardError => e
+      render json: { response: "Something went wrong on our end." }, status: 500
     end
   end
 

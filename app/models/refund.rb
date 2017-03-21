@@ -10,12 +10,12 @@ class Refund < ActiveRecord::Base
       txn = Transaction.where(txn_number: params[:txn_number]).first 
       
       if txn.nil?
-        ["Transaction doesnt exists.", 404]
+        [false, "Transaction doesnt exists."]
       elsif txn.refund.nil?
-        ["Transaction has already been refunded.", 403]
+        [false, "Transaction has already been refunded."]
       # temp option for admin refunds
       elsif !is_admin && txn.team_id != merchant_id
-        ["Transaction wasn't created by you.", 403]
+        [false, "Transaction wasn't created by you."]
       else
         refund_reason = params[:reason]
         params[:reason] = 'requested_by_customer' unless STRIPE_REFUND_REASONS.include? params[:reason]
@@ -24,14 +24,14 @@ class Refund < ActiveRecord::Base
         if re.first
           Refund.create(uri: re.second.id, time: re.second.created, reason: refund_reason, transaction_id: txn.id)
           send_refund_notification
-          ["Payment has been refunded.", 200]
+          [true, "Payment has been refunded."]
         else 
-          ["We're unable to refund this transaction. Please try again later.", 500]
+          [false, "We're unable to refund this transaction. Please try again later."]
         end
       end     
     rescue StandardError => err
       # notify team of error
-      ["We're unable to refund this transaction. Please try again later.", 500]
+      [false, "We're unable to refund this transaction. Please try again later."]
     end 
   end
 

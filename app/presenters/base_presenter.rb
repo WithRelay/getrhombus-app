@@ -25,7 +25,7 @@ class BasePresenter < SimpleDelegator
   end
 
   def format_created_at
-    @model.present? ? time_in_relative_form(@model.created_at, 'long_format') : "-"
+    time_in_relative_form(@model.created_at, 'long_format')
   end
 
   def profile_image
@@ -68,31 +68,33 @@ class BasePresenter < SimpleDelegator
     User.get_conversation_display_name(customer_id, 'user')
   end
 
-  def first_visit_format_created_at
-    txn = first_transaction
-    txn.present? ? time_in_relative_form(txn.created_at, 'long_format') : '-'
+  def customer_first_visit_formatted
+    if @model.class == MerchantCustomer
+      x = @model
+    else 
+      x = MerchantCustomer.find_by(customer_id: @model.id, merchant_id: @user.id)
+      return "-" unless x
+    end
+    
+    time_in_relative_form(x.created_at, 'long_format')
   end
 
-  def last_visit_format_created_at
-    txn = last_transaction
-    txn.present? ? time_in_relative_form(txn.created_at, 'long_format') : '-'
-  end
+  def customer_last_visit_formatted
+    data_ary = []
+    id = @model.class == MerchantCustomer ? @model.customer_id : @model.id
 
+    ['Message', 'FbMessage'].each do |x|
+      last_date = x.constantize.where(user_id: id, user_id_to: @user.id).pluck(:created_at).last  
+      data_ary.push(last_date) if last_date.present?
+    end 
+
+    time_in_relative_form(data_ary.max, 'long_format')
+  end
 
   private
 
   def show_empty_symbol
     ('-' * SYMBOL_TIMES)
-  end
-
-  # includes all transaction types
-  # capture, refunds, reloads and subscriptions
-  def last_transaction
-    Transaction.where(user_id: @model.customer_id, team_id: @model.merchant_id).last
-  end
-
-  def first_transaction
-    Transaction.where(user_id: @model.customer_id, team_id: @model.merchant_id).first
   end
 
 end

@@ -21,6 +21,23 @@ module UserProfile
     end
   end
 
+  def get_user_location(uid, uid_type)
+    if ['user', 'phone_number'].include? uid_type
+      u_num = uid
+      if uid_type == 'user'
+        u = User.find_by(id: uid)
+        u_num = u ? u.is_merchant? ? u.org_phone : u.phone_number : '-'
+      end
+      x = TwilioNumberData.find_by(phone_number: u_num)
+      x.present? && x.city.present? && x.state.present? ? x.city.titleize + " " + x.state : '-'
+    elsif uid_type == 'fb_page'
+      x = FbCred.find_by(page_specific_id: uid)
+      return "-" if x.blank? && x.email.blank?
+      x = FullContactData.find_by(email: data[:email])
+      x.present? && x.city.present? ? x.city : '-'
+    end
+  end
+
   def check_profile_picture(cus)
     return { type: 'color', value: COLORS.first.first } if cus.nil?
 
@@ -45,10 +62,7 @@ module UserProfile
     
     # 1 & 2
     data[:verified] = (u && uid_type == 'user') ? 'VERIFIED' : 'UNVERIFIED'
-    puts u.inspect
-    puts 'dsadsadsa'
     data[:profile_image] = check_profile_picture(u)
-    puts check_profile_picture(u).inspect
 
     # 6 more data points
     if uid_type == 'user'      
@@ -61,8 +75,7 @@ module UserProfile
       data[:since] = { date: '-', relative: '-' , type: 'Customer'}
       data[:since] = { date: x.created_at.strftime('%m/%d/%Y'), relative: time_in_relative_form(x.created_at, 'long_format'), type: 'Customer'} if x && x.created_at.present? 
       
-      x = TwilioNumberData.find_by(phone_number: data[:phone_number])
-      data[:location] = x.present? && x.city.present? && x.state.present? ? x.city.titleize + " " + x.state : '-'
+      data[:location] = get_user_location(uid, uid_type)
       
       x = FullContactData.find_by(email: data[:email])
       x = x.full_contact_social_datas.find_by(type_id: 'twitter') if x.present?
@@ -79,7 +92,7 @@ module UserProfile
       data[:since] = { date: x.created_at.strftime('%m/%d/%Y'), relative: time_in_relative_form(x.created_at, 'long_format'), type: 'Contact'} if x && x.created_at.present? 
       
       x = TwilioNumberData.find_by(phone_number: uid)
-      data[:location] = x && x.city.present? && x.state.present? ? x.city.titleize + " " + x.state : '-'
+      data[:location] = get_user_location(uid, uid_type)
       
       data[:twitter] = '-'
 

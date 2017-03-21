@@ -34,7 +34,6 @@ class FbMessage < ActiveRecord::Base
         end
         true
       else
-        self.notification_log = NotificationLog.create(notify_type: 'message sending failed', channel: 'facebook messenger', reason: 'Message sending has been failed.')
         false
       end
     rescue StandardError => err

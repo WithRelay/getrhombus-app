@@ -1,4 +1,4 @@
-class OneTimeReminderJob < ActiveJob::Base
+class OneTimeReminderJob < ApplicationJob
   @queue = :one_time_reminder
 
   def perform(reminder_id)

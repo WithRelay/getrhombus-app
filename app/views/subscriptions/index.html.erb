@@ -72,7 +72,7 @@
           <div class="transactions-table-row w-row" id="<%= subscription.id %>">
             <div class="transaction-column w-clearfix w-col w-col-3">
               <div class="card-name transaction-cell">
-                <div class="table-profile-picture radius-color-<%= rand(1..8)%>"></div>
+                <%= present(subscription.merchant_customer).profile_image %>
                 <div class="table-text customer-name"><%= customer.card_name %></div>
               </div>
               <div class="cb check-box-column">

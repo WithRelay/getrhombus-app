@@ -38,7 +38,7 @@
               conversation.last_message"></div>
     
               <%# added height %>
-              <img ng-if="conversation.profile_image.type == 'image'" class="customer-profile-picture" src="{{conversation.profile_image.value}}" width="30" height='30'>
+              <img ng-if="conversation.profile_image.type == 'image'" class="customer-profile-picture" ng-src="{{conversation.profile_image.value}}" width="30" height='30'>
 
             </div>
           </div>
@@ -105,7 +105,7 @@
     <div ng-if='customer_contact_count == 0'>{{ customer_contact_count_message }}</div>
     <div class="right-nav-profile-content-wrapper" ng-if='snapshot != undefined && customer_contact_count > 0'>
       
-      <img ng-if="snapshot.profile_image.type == 'image'" class="profile-picture-right-nav" src="{{snapshot.profile_image.value}}" width="60">
+      <img ng-if="snapshot.profile_image.type == 'image'" class="profile-picture-right-nav" ng-src="{{snapshot.profile_image.value}}" width="60">
       
       <div ng-if="snapshot.profile_image.type == 'color'" class="chat-wwindow no-image-found-placeholder radius-color-{{snapshot.profile_image.value}}">
         <div class="customer-initial">{{ snapshot.full_name.charAt(0) }}</div>
@@ -134,7 +134,7 @@
 
         <div class="transaction-pane w--tab-active w-tab-pane" data-w-tab="Tab 1">
           
-          <a class="transactions-div-wrapper w-inline-block" ng-repeat="transaction in customer_transactions">
+          <a class="transactions-div-wrapper w-inline-block" ng-repeat="transaction in customer_transactions" data-index="{{ $index }}">
             <div class="transaction-div">
               <div class="right-nav-transaction-div-table w-row">
                 <div class="right-nav-transaction-div-column-1 w-col w-col-9">
@@ -228,7 +228,7 @@
         <div class="w-row">
           <div class="customer-messaging-bubble-picture-wrapper w-clearfix w-col w-col-2">
             <%# added height %>
-            <img ng-if="message.profile_image.type == 'image'" class="messaging-bubble right-nav-profile-picture" src="{{message.profile_image.value}}" width="35" height='35'>
+            <img ng-if="message.profile_image.type == 'image'" class="messaging-bubble right-nav-profile-picture" ng-src="{{message.profile_image.value}}" width="35" height='35'>
             
             <div ng-class="{ 'chat-wwindow no-image-found-placeholder' : true, 'radius-color-{{message.profile_image.value}}' : true }" ng-if="message.profile_image.type == 'color'">
               <div class="customer-initial">{{ selected_conversation.full_name.charAt(0) }}</div>
@@ -243,7 +243,7 @@
 
             <!-- image -->
             <div class="chat-bubble-image-wrapper customer" ng-if='message.images.length'>
-              <img ng-repeat="image in message.images track by imageTrackingFunction(image)" class="chat-bubble-image" src="{{ message.images[$index].url }}">
+              <img ng-repeat="image in message.images track by imageTrackingFunction(image)" class="chat-bubble-image" ng-src="{{ message.images[$index].url }}">
             </div>
             <!-- text -->
             <div ng-class="{ 'customer-message' : true, 'fb-messenger': message.channel == 'FbMessage', 'message-bubble' : true }" ng-if='message.text.length'>
@@ -263,7 +263,7 @@
 
             <!-- images -->
             <div class="chat-bubble-image-wrapper" ng-if='message.images.length'>
-              <img ng-repeat="image in message.images track by imageTrackingFunction(image)" class="chat-bubble-image" src="{{ message.images[$index].url }}">
+              <img ng-repeat="image in message.images track by imageTrackingFunction(image)" class="chat-bubble-image" ng-src="{{ message.images[$index].url }}">
             </div>
             <!-- text -->
             <div class="agent-messaging message-bubble" ng-if='message.text.length'>
@@ -273,7 +273,7 @@
           </div>
           <div class="w-clearfix w-col w-col-2">
             <%# added height %>
-            <img ng-if="message.profile_image.type == 'image'" class="agent-picture messaging-bubble right-nav-profile-picture" src="{{message.profile_image.value}}" width="35" height='35'>
+            <img ng-if="message.profile_image.type == 'image'" class="agent-picture messaging-bubble right-nav-profile-picture" ng-src="{{message.profile_image.value}}" width="35" height='35'>
             <div ng-class="{ 'agent chat-wwindow no-image-found-placeholder' : true, 'radius-color-{{message.profile_image.value}}' : true }" ng-if="message.profile_image.type == 'color'">
               <div class="customer-initial">{{ merchant.full_name.charAt(0) }}</div>
             </div>
@@ -321,7 +321,7 @@
       </div>
       <%# remove w-form class %>
       <div class="charge-customer-form">
-        <form id="chargeForm" name="chargeForm" ng-submit="submitChargeForm(chargeForm.$valid)" novalidate>
+        <form id="conversation-chargeForm" name="chargeForm" ng-submit="submitChargeForm(chargeForm.$valid)" novalidate>
 
           <div class="form-group col-xs-6">
             <selectize class="form-control dropdown w-select" config='hashtag_config' ng-model="charge.hashtag_id" options='hashtag_config_options'></selectize>

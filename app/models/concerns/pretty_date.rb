@@ -15,6 +15,8 @@ module PrettyDate
   end
 
   def time_in_relative_form(time, format_str)
+    return "-" unless time.is_a? Time
+     
     a = (Time.current - time).abs.to_i
     
     format_type = time_formats[format_str.to_sym]

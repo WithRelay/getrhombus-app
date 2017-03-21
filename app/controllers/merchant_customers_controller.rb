@@ -1,6 +1,7 @@
 class MerchantCustomersController < ApplicationController
 
   include DashboardNotification
+  include UserProfile
   before_action :set_notifications
 
   def index
@@ -16,23 +17,23 @@ class MerchantCustomersController < ApplicationController
   end
 
   def show
-    @customer_id = params[:customer_id]
-  	@customer = User.find_by_id(@customer_id)
-
-  	@merchant_customer = MerchantCustomer.find_by(customer_id: @customer_id, merchant_id: current_user.id)
-
+    customer_id = params[:customer_id]
+  	@customer = User.find_by_id(customer_id)
+    @user_snapshot = get_user_snapshot(customer_id,"user",current_user.id)
+  	@merchant_customer = MerchantCustomer.find_by(customer_id: customer_id, merchant_id: current_user.id)
     # Exclude refunded transactions, Exclude subscriptions since these queries are not read only
     # query is for refundable transactions
     # you can't refund subscriptions easily.
-    # and include only captured transactions 
+    # and include only captured transactions
     # account reload txns are included by default..right
     @transactions = Transaction.exclude_refunded_transactions().where(team_id: current_user.id).only_captured_transactions()
                             .exclude_subscriptions()
-                            .where(user_id: @customer_id).order(created_at: :desc)
+                            .where(user_id: customer_id).order(created_at: :desc)
+    @last_transaction = @transactions.first
 
-    @conversation_refs = ConversationRef.get_last_customer_msg_from_all_merchant_convs(current_user.id, @customer_id)
-
+    @conversation_refs = ConversationRef.get_last_customer_msg_from_all_merchant_convs(current_user.id, customer_id)
     @last_conv_ref = @conversation_refs.present? ? @conversation_refs.first : nil
     @last_message_resolution = @last_conv_ref.present? && @last_conv_ref.resolution.present? ? @last_conv_ref.resolution : "-"
   end
 end
+    

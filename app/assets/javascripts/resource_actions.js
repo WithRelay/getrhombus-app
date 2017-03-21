@@ -1,6 +1,7 @@
 $(document).on('ready',function(){
 //this function used to delete/deactive Hashtag/Reminder/SavedReply
 //It works after the confirmation dialog
+
 	$(document).on('click', '.cancel-yes', function(e){
     e.preventDefault();
 
@@ -18,6 +19,56 @@ $(document).on('ready',function(){
 		doAction(selectedElement);
 	});
 
+	if ($('.save-reply-form').length) {
+		$('.save-reply-form').formValidation({
+			framework: 'bootstrap',
+			excluded: ':disabled',
+			live: 'disabled',
+			err: {
+						container: function($field, validator) {
+								return $field.parent().find('.messageContainer');
+						}
+				},
+			fields: {
+				'saved_reply[title]': {
+					validators: {
+						notEmpty: {
+							message: 'This Field is required'
+						}
+					}
+				},
+				'saved_reply[body]':{
+					validators: {
+						notEmpty: {
+							message: 'This Field is required'
+							}
+						}
+					}
+				}
+		}).on('success.form.fv', function(e, data) {
+			if (this.id != 'edit-save-reply-form'){
+				e.preventDefault();
+				create_saved_reply($(this).serialize());
+			}
+
+			$('.update-close-modals').click();
+		});
+	}
+
+
+	function create_saved_reply(formData){
+		$.ajax({
+			url: window.location.origin + "/v1/saved_replies",
+			method: "POST",
+			data: formData,
+			dataType: 'json'
+		}).done(function(res){
+			FlashHandler.setFlashMessage(res.notice,'notice');
+			}).error(function(res){
+				FlashHandler.setFlashMessage(res.error, 'error');
+		});
+	}
+
 	$('#edit-saved-reply').on('click',function(){
 		var selectedElement = selectCheckedElement();
 		var elementForm = selectedElement.closest('form');
@@ -27,13 +78,16 @@ $(document).on('ready',function(){
 			url:  "/v1/saved_replies/" + reply_id + "/edit" ,
 			data:{id: reply_id}
 		}).done(function(res){
-			 var form = $('#save-reply-form');
-			 var doActionn = form.attr("action");
-			 form.find("#Saved-Replies-Editor-3").val(res.body);
-			 form.find("#Saved-Replies-Title-3").val(res.title);
+			 var form = $('#edit-save-reply-form');
+			 var action = form.attr("action");
+			 var newAction = window.location.origin + '/users/' + action.split('/')[2] + '/saved_replies/' + reply_id;
+
+			 form.find("#Edit-Saved-Reply-Title").val(res.title);
+			 form.find(".emojionearea-editor").text(res.body);
+			 form.attr('action',newAction);
 
 			}).error(function(){
-			 // alert("")
+				FlashHandler.setFlashMessage('Request cannot perform','error');
 		});
 
 	});
