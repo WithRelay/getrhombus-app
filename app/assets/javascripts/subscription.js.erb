@@ -177,9 +177,6 @@ $(document).ready(function () {
     })
     .done(function(data, textStatus, jqXHR) {
       FlashHandler.setFlashMessage(data.response, 'notice');
-      $('#subscriptionForm')[0].reset();
-      $('#subscriptionForm').data('formValidation').resetForm();
-      $('.update-close-modals').click();
       location.reload();
     })
     .fail(function(data, textStatus, errorThrown) {
@@ -277,8 +274,6 @@ $('#cancel-subscription').on('click', function(e){
    .done(function(data, textStatus, jqXHR) {
      FlashHandler.setFlashMessage(data.response, 'notice');
      location.reload()
-     // $('.subscription-checkbox').removeAttr('disabled')
-     // $('#'+subscriptionId).remove()
    })
    .fail(function(data, textStatus, errorThrown) {
      FlashHandler.setFlashMessage(JSON.parse(data.responseText).response, 'error');

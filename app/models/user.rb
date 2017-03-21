@@ -191,23 +191,6 @@ class User < ActiveRecord::Base
     fb_cred.page_specific_id
   end
 
-  def self.get_user_location(uid, uid_type)
-    if ['user', 'phone_number'].include? uid_type
-      u_num = uid
-      if uid_type == 'user'
-        u = User.find_by(id: uid)
-        u_num = u ? u.is_merchant? ? u.org_phone : u.phone_number : '-'
-      end
-      x = TwilioNumberData.find_by(phone_number: u_num)
-      x.present? && x.city.present? && x.state.present? ? x.city.titleize + " " + x.state : '-'
-    elsif uid_type == 'fb_page'
-      x = FbCred.find_by(page_specific_id: uid)
-      return "-" if x.blank? && x.email.blank?
-      x = FullContactData.find_by(email: data[:email])
-      x.present? && x.city.present? ? x.city : '-'
-    end
-  end
-
   private
 
   # Some users sign up with Rhombus numbers

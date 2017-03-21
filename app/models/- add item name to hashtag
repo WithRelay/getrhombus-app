@@ -1,7 +1,7 @@
 - Test All Pages when there is no data
 
 Taiwo
-- do we store fb_cred even if not a user? - affects my users query with outer join
+- do you update fb_cred for a user who didnt sign up when they sent messages in the past...but later signs up?
 - how will using the master account affect us (- unify team and dashboard email issue really)
 - create customers/contacts...how about existing customers/contacts. switching stripe_id to merchants.
   - upon signing up, does an existing contact update to become customer?
@@ -10,6 +10,9 @@ Taiwo
 - messaging lists, reminders
 - workflow for sign in, sign up and places where we add card, token, referrer, contact and customer, payment capture
 - hashtags validation
+- reload page on refund success
+- jobs - opencnam on message if hasnt been checked before, fullcontact on signup
+- send in object into user profile objects
 
 
 
@@ -42,6 +45,7 @@ Surya
 - lead and contacts including its lists use snapshot
 - do we need to exlude refunded txns in segment queries? review segment queries
 - use conversations in campaigns for sending messages
+- why is there no merchant_contact controller?
 
 Dorje
 - graph empty state, graph changes
@@ -56,6 +60,5 @@ Bhishma
 - emails
   - incomplete signup email (the following day), review offer to help
   - autoreload failure
-- get full contact data by email first time user connects fb account if email is present
-- stop reloading pages if you are using ajax.
+- get full contact data by email first time user signs up or when fb account is connected if email is present
 - subscription index...fix profile
