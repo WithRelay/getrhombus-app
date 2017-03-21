@@ -8,6 +8,8 @@ class List < ActiveRecord::Base
   # default channel for contacting users on the list
   enum channel: [:sms, :messenger, :email]
 
+  enum list_type: [:customer, :contact]
+
   # List origin specifies whether the list is system generated
   # or created by a merchant (user)
   enum origin: [:merchant, :system]

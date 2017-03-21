@@ -1,3 +1,8 @@
+<style>
+.selectize-dropdown-content {
+  margin-left: -12px !important;
+}
+</style>
 <div class="customer-dashboard-header list-member sub-nav-bar table-header">
   <div class="table-header">
     <div class="table-header">
@@ -52,5 +57,8 @@
   </div>
 </div>
 <div class="dashboard-body">
+  <div id="list-channel-for-list-memebers">
+    <%= @list.list_type %>
+  </div>
   <%= render partial: 'list_member', locals: { list_members: @list_members } %>
 </div>

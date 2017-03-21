@@ -9,8 +9,8 @@ class ListsController < ApplicationController
                                                     page: params[:page])
     render :empty_list if (@lists.empty? && params[:page].nil?)
     respond_to do |format|
-      format.js { render partial: 'shared/index.js.erb', locals: { obj: @lists } }
       format.html
+      format.js { render partial: 'shared/index.js.erb', locals: { obj: @lists } }
     end
   end
 
@@ -31,6 +31,9 @@ class ListsController < ApplicationController
     respond_with(@list)
   end
 
+  def remove_customer_contact
+
+  end
 
   def update
     if @list.update_attributes(list_params)
@@ -71,7 +74,7 @@ class ListsController < ApplicationController
     end
 
     def get_lists
-      list_ids = params[:list_id].split(',')
+      list_ids = params[:list_id].split(',').flatten
       # sql query states that find list where id is same as array of ids from params
       # and check if those lists have associated record campaign_lists or not
       # it will return the list if there is no associated record campaign_lists

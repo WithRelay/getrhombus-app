@@ -1,5 +1,9 @@
+# - you need a query for message volume for the last 7 days, last 90 days
+# - you need a query for total conversations to date
+# - you need a query for transaction this week...which will also be graphed by amount and data
+
 module DashboardData
-	
+
 	def overall_section
 		customers = current_user.merchant_customers
     new_customers = customers.select{ |c| c.created_at >= 1.week.ago.utc }
@@ -9,7 +13,10 @@ module DashboardData
     # and include only captured transactions and account reload txns are included by default..right
     transactions = Transaction.exclude_refunded_transactions().only_captured_transactions().where(team_id: current_user.id)
     transactions_today = transactions.select{ |t| t.created_at >= Time.current.beginning_of_day }
-   
+
+		#weekly transactions
+		transactions_weekly = transactions.select{|t| t.created_at >= 7.days.ago.utc }
+
     {
       all_customers_count: customers.count,
       new_customers_count: new_customers.count,
@@ -17,7 +24,10 @@ module DashboardData
       transactions_today: transactions_today.present? ? transactions_today.sum(:amount) : 0,
       transactions_today_count: transactions_today.count
     }
+	end
 
+	def total_conversations
+		Conversation.where(merchant_id: current_user.id).count
 	end
 
   # Exclude refunded transactions, include subscriptions since these queries are read only
@@ -29,8 +39,8 @@ module DashboardData
     last6_transactions: Transaction.includes(:user).exclude_refunded_transactions().only_captured_transactions()
                                     .where(team_id: current_user.id)
                                     .order(created_at: :desc).last(6),
-    msg_data_for_chart: all_messages_count_in_30_days
-   }
+    msg_data_for_chart: message_volume(30)
+	  }
 	end
 
 	def unread_preview_section
@@ -43,7 +53,7 @@ module DashboardData
 	def msg_performance_section
 		{
 		 conversations_per_hour: Conversation.conversation_per_hour(current_user),
-     #message_count method returns hash of message_per_day , fb_percent and sms_percent  
+     #message_count method returns hash of message_per_day , fb_percent and sms_percent
      messages: message_count,
      avg_handle_time: avg_handle_time.round,
 		 open_convs_yesterday: open_convs_yesterday
@@ -51,35 +61,32 @@ module DashboardData
 	end
 
 	#These methods below are used to collect data for merchant dashboard
-  def all_messages_count_in_30_days
+  def message_volume(days)
     txt_messages = sent_and_received_messages('Message')
-                    .where("created_at >=?", 30.days.ago.utc)
+                    .where("created_at >=?", days.days.ago.utc)
                     .group("date(created_at)").count
 
     fb_messages = sent_and_received_messages('FbMessage')
-                    .where("created_at >=?", 30.days.ago.utc)
+                    .where("created_at >=?", days.days.ago.utc)
                     .group("date(created_at)").count
 
-    #prepare data for chart 
-    #this will merge count of sms and fb_msg and add the coutes on the same day              
+    #prepare data for chart
+    #this will merge count of sms and fb_msg and add the coutes on the same day
     data = txt_messages.merge(fb_messages){|k, mv, fv| mv + fv}
-    
-    #below commented line gives dater formate %d/%m on x-axix 
-    #data.map{|k,v| {k.strftime('%d_%b').to_s.downcase => v } }.reduce(:merge)
   end
 
   def message_count
-    txt_msg, fb_msg = sent_and_received_messages('Message'), 
+    txt_msg, fb_msg = sent_and_received_messages('Message'),
                       sent_and_received_messages('FbMessage')
 
     txt_msg_today = txt_msg.select { |t| t.created_at >= Time.current.beginning_of_day }
     fb_msg_today = fb_msg.select { |t| t.created_at >= Time.current.beginning_of_day }
-    today_msgs_count = txt_msg_today.count + fb_msg_today.count 
+    today_msgs_count = txt_msg_today.count + fb_msg_today.count
 
     fb_msg_percent = fb_msg_today.present? ? 100 * fb_msg_today.count/today_msgs_count : 0
     txt_msg_percent = txt_msg_today.present? ? 100 * txt_msg_today.count/today_msgs_count : 0
 
-    { msg_today: today_msgs_count, fb_msg_percent: fb_msg_percent.round, txt_msg_percent: txt_msg_percent.round } 
+    { msg_today: today_msgs_count, fb_msg_percent: fb_msg_percent.round, txt_msg_percent: txt_msg_percent.round }
   end
 
   def sent_and_received_messages(class_name)
@@ -88,7 +95,7 @@ module DashboardData
 
   def avg_handle_time
     avg = Conversation.where(merchant_id: merchant_id).where.not(resolution: nil)
-                      .average("DATEDIFF(updated_at,created_at)")            
+                      .average("DATEDIFF(updated_at,created_at)")
 
     avg.present? ? avg/1.minutes : 0 #returns 0 if there is no data for average
   end
@@ -101,7 +108,7 @@ module DashboardData
                                   })
     yesterday_convs.count
   end
- 
+
  private
 
  	def merchant_id

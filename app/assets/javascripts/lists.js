@@ -204,6 +204,7 @@ $(document).on('ready page:load', function() {
 
   // Fired on click on create list button
   $("#create_list_button").click(function(e){
+    var listType = window.location.pathname.split('/').pop() == 'customers' ? 'customer' : 'contact'
     if (!isAnyCheckboxSelected('.merchant_customers')){
       setFlashForList('Please select customer from the table', 'error');
     }
@@ -215,7 +216,8 @@ $(document).on('ready page:load', function() {
         centered: true,
         onLoad: function() {
           $("#selectedUsers").val(user_ids);
-          $("#listType").val("list");
+          $("#listCategory").val("list");
+          $("#listType").val(listType);
         }
       });
     }
@@ -255,31 +257,44 @@ $(document).on('ready page:load', function() {
       $(hideShowField).slideUp(100);
     }
   }
-  // Fired on click of the segment button
-  // Still under development
 
+  function checkContactPage(){
+    return $('#list-channel-for-list-memebers').text().trim() == 'contact'
+  }
 
-  //   num_checkboxes_selected = 0;
-  //   $(".customer_checkboxes" ).change(function() {
-  //
-  //     var input = $(this);
-  //     var state = (input.prop("checked"))
-  //     if (state == true){
-  //       num_checkboxes_selected +=1;
-  //       selected_users.push(input.val());
-  //       console.log("Input checked is : ", input.val());
-  //
-  //     } else{
-  //       num_checkboxes_selected -=1;
-  //       element_index = selected_users.indexOf(input.val())
-  //       selected_users.splice(element_index, 1);
-  //     }
-  //   if (selected_users.length > 0){
-  //     console.log("There is a selected checkbox.", selected_users);
-  //     $("#create_list_button").prop('disabled', false);
-  //   }else{
-  //     console.log("No selected checkboxes");
-  //     $("#create_list_button").prop('disabled', true);
-  //   }
-  // })
+  $('.list-member-delete').click(function(e){
+    if ($(this).data('method') != 'delete')
+      FlashHandler.setConfirmationDialog('#delete-list-memebers','Are you sure, you want to delete user from lists?', 'Delete', 'destroy-list-members');
+      return false;
+  });
+
+  var labelFieldSelectize = checkContactPage() ? 'phone_number' : 'email'
+  $('.add-to-list-field').selectize({
+    maxItems: 1,
+    valueField: 'id',
+    labelField: labelFieldSelectize,
+    searchField: labelFieldSelectize,
+    create: false,
+    options: [],
+    closeAfterSelect: true,
+    load: function(query, callback) {
+      var listURL = checkContactPage() ? 'contacts' : 'customers'
+      if (!query.length) return callback();
+      $.ajax({
+        url: '/v1/'+ listURL +'.json',
+        type: 'GET',
+        dataType: 'json',
+        data: {
+          query: query, list_id: window.location.pathname.split('/').pop()
+        },
+        error: function() {
+          FlashHandler.setFlashMessage('Something went wrong...Unable to find any customer', 'error');
+          callback();
+        },
+        success: function(res) {
+          callback(res);
+        }
+      });
+    }
+  });
 });
