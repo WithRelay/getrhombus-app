@@ -13,6 +13,8 @@ module DashboardData
     # and include only captured transactions and account reload txns are included by default..right
     transactions = Transaction.exclude_refunded_transactions().only_captured_transactions().where(team_id: current_user.id)
     transactions_today = transactions.select{ |t| t.created_at >= Time.current.beginning_of_day }
+
+		#weekly transactions
 		transactions_weekly = transactions.select{|t| t.created_at >= 7.days.ago.utc }
 
     {
@@ -22,7 +24,10 @@ module DashboardData
       transactions_today: transactions_today.present? ? transactions_today.sum(:amount) : 0,
       transactions_today_count: transactions_today.count
     }
+	end
 
+	def total_conversations
+		Conversation.where(merchant_id: current_user.id).count
 	end
 
   # Exclude refunded transactions, include subscriptions since these queries are read only
@@ -94,10 +99,6 @@ module DashboardData
 
     avg.present? ? avg/1.minutes : 0 #returns 0 if there is no data for average
   end
-
-	def total_conversations
-		Conversation.where(merchant_id: current_user.id).count
-	end
 
   def open_convs_yesterday
     yesterday_convs = Conversation.where(
