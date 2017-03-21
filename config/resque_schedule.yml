@@ -5,7 +5,7 @@ drip_campaign_emails:
   description: "This job runs our drip campaigns."
   queue: drip_campaigns
 welcome_email:
-  every: 30s
+  every: 15m
   class: "WelcomeEmailJob"
   args:
   description: "This job send welcome message to new user."

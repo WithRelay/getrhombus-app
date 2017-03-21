@@ -106,6 +106,7 @@ class User < ActiveRecord::Base
   before_validation :the_titleizer
   before_create :set_merchant_org_phone          # only create because the actual org_phone field is used in edit view
 
+  after_commit :schedule_welcome_job, on: :create
   after_commit :create_user_alert, on: :create, if: lambda { is_merchant? }
   after_commit :update_phone_in_db, on: :update
 
@@ -200,10 +201,10 @@ class User < ActiveRecord::Base
       x = TwilioNumberData.find_by(phone_number: u_num)
       x.present? && x.city.present? && x.state.present? ? x.city.titleize + " " + x.state : '-'
     elsif uid_type == 'fb_page'
-      x = FbCred.find_by(page_specific_id: uid)   
+      x = FbCred.find_by(page_specific_id: uid)
       return "-" if x.blank? && x.email.blank?
       x = FullContactData.find_by(email: data[:email])
-      x.present? && x.city.present? ? x.city : '-'  
+      x.present? && x.city.present? ? x.city : '-'
     end
   end
 
@@ -267,6 +268,10 @@ class User < ActiveRecord::Base
 
   def create_user_alert
     Alert.create_with(user_id: self.id).find_or_create_by(user_id: self.id)
+  end
+
+  def schedule_welcome_job
+    WelcomeEmailJob.perform
   end
 
 end
