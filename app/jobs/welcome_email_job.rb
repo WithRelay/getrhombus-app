@@ -1,7 +1,7 @@
 class WelcomeEmailJob < ApplicationJob
   queue_as :welcome_email
 
-  def self.perform(user)
+  def perform(user)
     owner = User.get_platform_acct_obj
     if user.is_merchant?
       EmailingService.send_welcome_email(user.email, owner.rhombus_number, "merchant")

@@ -107,7 +107,6 @@ class User < ActiveRecord::Base
   before_create :set_merchant_org_phone          # only create because the actual org_phone field is used in edit view
 
   after_commit :do_signup_stuff, on: :create
-  after_commit :update_phone_in_db, on: :update
 
   enum status: { inactive: 0, active: 1 }
 
@@ -211,18 +210,6 @@ class User < ActiveRecord::Base
     self.url = self.url.strip unless self.url.blank?
     self.custom_welcome = self.custom_welcome.strip unless self.custom_welcome.blank?
     self.org_name = self.org_name.strip unless self.org_name.blank?
-  end
-
-  # move to background job
-  def update_phone_in_db
-    if is_merchant?
-      # is this phone_number or rhombus_number?
-      if x = self.previous_changes['phone_number']
-        ActiveRecord::Base.connection.execute("UPDATE messages SET messages.from = #{x[1]} WHERE messages.from = #{x[0]}")
-        ActiveRecord::Base.connection.execute("UPDATE messages SET messages.to = #{x[1]} WHERE messages.to = #{x[0]}")
-        # add transaction columns here too
-      end
-    end
   end
 
   def do_signup_stuff

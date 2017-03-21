@@ -1,5 +1,5 @@
 # sends email to campaign user list as scheduled
-class SendNowCampaignJob < ActiveJob::Base
+class SendNowCampaignJob < ApplicationJob
   queue_as :send_now_reminder
 
   def perform(campaign_id)
