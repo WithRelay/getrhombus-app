@@ -10,10 +10,7 @@ Taiwo
 - messaging lists, reminders
 - workflow for sign in, sign up and places where we add card, token, referrer, contact and customer, payment capture
 - hashtags validation
-- reload page on refund success
-- jobs - opencnam on message if hasnt been checked before, fullcontact on signup
 - send in object into user profile objects
-- only one welcome email?
 - conversation from system
 
 
@@ -45,22 +42,16 @@ Surya
 - manage segment button bug
 - review how reminders pull users info
 - lead and contacts including its lists use snapshot
-- do we need to exlude refunded txns in segment queries? review segment queries
+- do we need to exclude refunded txns in segment queries? review segment queries
 - use conversations in campaigns for sending messages
-- why is there no merchant_contact controller?
 
 Dorje
-- graph empty state, graph changes
-- edit/delete saved replies?
+- graph - empty state and changes
 - txn history empty page on customer profile
-- on signup, send email after 15 mins, pull opencnam and fullcontact data and store. background jobs
-- plug in snapshot for cus profile
 
 Bhishma
 - messageparser
 - has_messenger?  
-- emails
-  - incomplete signup email (the following day), review offer to help
-  - autoreload failure
-- get full contact data by email first time user signs up or when fb account is connected if email is present
-- subscription index...fix profile
+- the 5 emails from edwin (incomplete signup email (the following day), review offer to help, autoreload failure)
+- get full contact data when fb account is connected if email is present
+- do you update fb_cred for a user who didnt sign up when they sent messages in the past...but later signs up?
