@@ -268,9 +268,6 @@ $(document).on('ready page:load', function() {
       return false;
   });
 
-  $(document).on('.cancel-yes', 'click', function(){
-
-  });
   var labelFieldSelectize = checkContactPage() ? 'phone_number' : 'email'
   $('.add-to-list-field').selectize({
     maxItems: 1,
