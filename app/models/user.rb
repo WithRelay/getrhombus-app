@@ -254,7 +254,7 @@ class User < ActiveRecord::Base
   end
 
   def schedule_welcome_job
-    WelcomeEmailJob.perform
+    WelcomeEmailJob.set(wait: 15.minutes).perform_later(self)
   end
 
 end
