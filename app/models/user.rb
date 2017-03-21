@@ -106,7 +106,7 @@ class User < ActiveRecord::Base
   before_validation :the_titleizer
   before_create :set_merchant_org_phone          # only create because the actual org_phone field is used in edit view
 
-  after_commit :schedule_welcome_job, on: :create
+  after_commit :schedule_welcome_email_job, on: :create
   after_commit :create_user_alert, on: :create, if: lambda { is_merchant? }
   after_commit :update_phone_in_db, on: :update
 
@@ -214,29 +214,6 @@ class User < ActiveRecord::Base
     self.org_name = self.org_name.strip unless self.org_name.blank?
   end
 
-  def send_welcome_email
-    owner = User.find_by(email: Rails.application.secrets.team_email)
-    if is_merchant?
-      EmailingService.send_welcome_email(self.email, owner.rhombus_number, "merchant")
-    elsif self.user_level == 0
-      ref = self.referrers.first
-      message = Message.new
-      unless ref.blank?
-        referrer = User.find_by(id: ref.referrer_id)
-        EmailingService.send_welcome_email_with_referral(referrer.email, self.email, referrer.org_name, referrer.rhombus_number, owner.rhombus_number)
-        text = "Thanks for signing up! Please add a payment card to your Rhombus profile (if you haven't done so).
-        You can chat with us anytime via sms or to make a payment, just text the amount & description/hashtag. Ex. +10 #donut"
-        message.send_and_save_message(referrer.rn_type, referrer.rhombus_number, self.phone_number, text)
-      else
-        EmailingService.send_welcome_email(self.email, owner.rhombus_number, "customer")
-        text = "Thanks for signing up! Please add a payment card to your Rhombus profile (if you haven't done so).
-        You can chat with a local business anytime by texting their Rhombus number or to make a payment, just text the amount &
-        description/hashtag. Ex. +10 #donut"
-        message.send_and_save_message(owner.rn_type, owner.rhombus_number, self.phone_number, text)
-      end
-    end
-  end
-
   # move to background job
   def update_phone_in_db
     if is_merchant?
@@ -253,7 +230,7 @@ class User < ActiveRecord::Base
     Alert.create_with(user_id: self.id).find_or_create_by(user_id: self.id)
   end
 
-  def schedule_welcome_job
+  def schedule_welcome_email_job
     WelcomeEmailJob.set(wait: 15.minutes).perform_later(self)
   end
 

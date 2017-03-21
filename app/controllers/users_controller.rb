@@ -70,7 +70,5 @@ private
   def handle_referrer_and_welcome_email
     Referrer.save_referrer_with_id(session[:referrer_id], current_user.id) if session[:referrer_id].present?
     Referrer.save_referrer_with_uid(session[:referrer_uid], current_user.id) if session[:referrer_uid].present?
-    # Change this logic at some point
-    # current_user.send_welcome_email if current_user.sign_in_count == 1
   end
 end
