@@ -86,10 +86,10 @@ Rails.application.routes.draw  do
       end
 
       member do
+        get 'contacts' => 'merchant_contacts#index'
         get 'segments' => 'lists#segments'
         delete 'delete-segment' => 'lists#delete_segment'
         get 'sms-usage' => 'users#sms_usage'
-        get 'leads-and-contacts' => 'users#leads_contacts'
         resources :lists, only: [:index, :create, :show, :update] do
           collection { post 'delete' => 'lists#destroy' }
         end
@@ -113,6 +113,8 @@ Rails.application.routes.draw  do
         post 'add_customers', on: :collection
         get 'snapshot', on: :collection
       end
+      resources :contacts, only: [:index]
+      resources :customers, only: [:index]
       resources :lists, only: [:create, :index, :update] do
         get 'check_list_name', on: :collection
       end
