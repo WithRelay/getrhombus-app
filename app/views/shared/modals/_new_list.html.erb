@@ -1,6 +1,6 @@
 <%# removed all webflow data attributes %>
 
-<div class="create-list-form-wrapper  modal-background" id="import-customers-div">
+<div class="create-list-form-wrapper modal-background" id="import-customers-div">
   <div class="content-sub-wrapper modal w-clearfix">
     <h4 class="modal-header welcome-dash-content-container-header">Create List</h4>
     <%# added data and update-close-modals %>
@@ -10,6 +10,8 @@
     <%= form_for('lists', url: v1_lists_path, html: { id: "create_user_list", class: "edit_create_user_list" }) do |f| %>
       <%= f.label "List name", class: 'form-label list-name' %>
       <%= f.hidden_field :selected_users, id: 'selectedUsers' %>
+      <%= f.hidden_field :list_category, placeholder: 'E.g. VIP customers', id: 'listCategory' %>
+      <%= f.hidden_field :list_channel, placeholder: 'E.g. VIP customers', id: 'listChannel', value: get_list_channel %>
       <%= f.hidden_field :list_type, placeholder: 'E.g. VIP customers', id: 'listType' %>
       <div class='form-group col-xs-6'>
         <%= f.text_field :name, class: 'modal-field text-field w-input form-control' %>
