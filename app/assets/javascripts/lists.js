@@ -261,6 +261,16 @@ $(document).on('ready page:load', function() {
   function checkContactPage(){
     return $('#list-channel-for-list-memebers').text().trim() == 'contact'
   }
+
+  $('.list-member-delete').click(function(e){
+    if ($(this).data('method') != 'delete')
+      FlashHandler.setConfirmationDialog('#delete-list-memebers','Are you sure, you want to delete user from lists?', 'Delete', 'destroy-list-members');
+      return false;
+  });
+
+  $(document).on('.cancel-yes', 'click', function(){
+
+  });
   var labelFieldSelectize = checkContactPage() ? 'phone_number' : 'email'
   $('.add-to-list-field').selectize({
     maxItems: 1,
