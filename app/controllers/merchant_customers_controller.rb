@@ -21,7 +21,6 @@ class MerchantCustomersController < ApplicationController
   	@customer = User.find_by_id(customer_id)
     @user_snapshot = get_user_snapshot(customer_id,"user",current_user.id)
   	@merchant_customer = MerchantCustomer.find_by(customer_id: customer_id, merchant_id: current_user.id)
-    binding.pry
     # Exclude refunded transactions, Exclude subscriptions since these queries are not read only
     # query is for refundable transactions
     # you can't refund subscriptions easily.
