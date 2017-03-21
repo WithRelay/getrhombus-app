@@ -15,3 +15,5 @@ COLORS = [
 		  ].freeze
 
 PAGINATION_PER_PAGE = 25
+
+SIGNUP_EMAIL_DELAY = 15  # in minutes, must be integer

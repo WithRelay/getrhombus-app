@@ -106,8 +106,7 @@ class User < ActiveRecord::Base
   before_validation :the_titleizer
   before_create :set_merchant_org_phone          # only create because the actual org_phone field is used in edit view
 
-  after_commit :schedule_welcome_email_job, on: :create
-  after_commit :create_user_alert, on: :create, if: lambda { is_merchant? }
+  after_commit :do_signup_stuff, on: :create
   after_commit :update_phone_in_db, on: :update
 
   enum status: { inactive: 0, active: 1 }
@@ -226,12 +225,12 @@ class User < ActiveRecord::Base
     end
   end
 
-  def create_user_alert
-    Alert.create_with(user_id: self.id).find_or_create_by(user_id: self.id)
-  end
-
-  def schedule_welcome_email_job
-    WelcomeEmailJob.set(wait: 15.minutes).perform_later(self)
+  def do_signup_stuff
+    Alert.create_with(user_id: self.id).find_or_create_by(user_id: self.id) if self.is_merchant?
+    WelcomeEmailJob.set(wait: SIGNUP_EMAIL_DELAY.minutes).perform_later(self)
+    GetIntelligenceDataJob.perform_later(self.email, 'FullContact')
+    GetIntelligenceDataJob.perform_later(self.phone_number, 'OpenCNAM') if self.is_customer?
+    GetIntelligenceDataJob.perform_later(self.org_phone, 'OpenCNAM') if self.is_merchant?
   end
 
 end

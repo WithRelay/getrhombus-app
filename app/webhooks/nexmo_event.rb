@@ -28,7 +28,8 @@ class NexmoEvent
         if user.present?
           uid, uid_type = user.id, 'user'
         else
-          uid, uid_type = @params[:From].gsub('+', ''), 'phone_number'
+          uid, uid_type = @params[:msisdn], 'phone_number'
+          OpenCnamData.find_record_or_get_intelligence_data(@params[:msisdn])
         end
         Conversation.find_or_create_conversation_for_message_and_publish(@merchant, user, uid_type, uid, @message, true)
       rescue ActiveRecord::RecordNotUnique

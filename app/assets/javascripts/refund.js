@@ -1,7 +1,7 @@
   $(document).ready(function () {
 
 	var txn_num = '', is_conv_page = false, parent_row,
-      btn_html = '', is_cus_profile_page = false;
+      btn_html = '';
    
   // transactions page checkbox
   $('.transaction-checkbox').click(function() {
@@ -9,7 +9,6 @@
       $("#refund-charge").removeClass('hide');
       
       is_conv_page = false;
-      is_cus_profile_page = false;
       
       parent_row = $(this).closest('.transactions-table-row');
       var amount = parent_row.find('.tran-amount').text();
@@ -26,7 +25,6 @@
   // customer profile page refund
   $('.customer-profile-refund-btn').click(function() {
       is_conv_page = false;
-      is_cus_profile_page = true;
 
       parent_row = $(this).closest('.customer-profile-trasaction-table');
       var amount = parent_row.find('.tran-amount').text();
@@ -45,7 +43,6 @@
 
     txn_num = e.currentTarget.dataset.txnNumber;
     is_conv_page = true;
-    is_cus_profile_page = false;
 
     if (granny_sibling.is('#refundBox')) {
       (granny_sibling.is(':hidden')) ? granny_sibling.show() : granny_sibling.hide();
@@ -80,8 +77,8 @@
         dataType: 'json'
       })
       .done(function(data, textStatus, response) {
-        reset_view();
         FlashHandler.setFlashMessage(data.response, 'notice');
+        reset_view();
       })
       .fail(function(jqXHR, textStatus, errorThrow) { 
         FlashHandler.setFlashMessage(jqXHR.responseJSON.response, 'error');
@@ -89,12 +86,7 @@
       .always(function(data, textStatus, response) {
         refund_btn.disabled = false;
         $('#refund-customer-div').trigger('close');
-
-        if (is_conv_page) {
-          refund_btn.value = "Refund";  
-        } else {
-          refund_btn.innerHTML = btn_html;
-        }
+        (is_conv_page) ? refund_btn.value = "Refund" : refund_btn.innerHTML = btn_html;        
       });
     } else {
       FlashHandler.setFlashMessage('This transaction has no transaction number.', 'error');
@@ -113,11 +105,8 @@
           scope.customer_transactions.splice(index, 1); 
         }); 
       });
-    } else if (is_cus_profile_page) {
-      parent_row.slideUp(500, function() { parent_row.remove(); });
     } else {
-      parent_row.parent().slideUp(500, function() { parent_row.parent().remove(); });
-      $('.checkboxes').attr('disabled', false);
+      location.reload();
     }
   };
 
