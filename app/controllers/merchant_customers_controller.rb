@@ -36,3 +36,4 @@ class MerchantCustomersController < ApplicationController
     @last_message_resolution = @last_conv_ref.present? && @last_conv_ref.resolution.present? ? @last_conv_ref.resolution : "-"
   end
 end
+    
