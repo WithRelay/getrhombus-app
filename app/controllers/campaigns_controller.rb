@@ -11,14 +11,15 @@ class CampaignsController < ApplicationController
     @campaigns = current_user.campaigns.paginate(per_page: PAGINATION_PER_PAGE,
                                                  page: params[:page])
                                                  .order('updated_at DESC')
-    render 'empty_campaign' unless @campaigns.present?
 
-      if @campaigns.present?
-        respond_to do |format|
-          format.js { render partial: 'shared/index.js.erb', locals: { obj: @campaigns } }
-          format.html
-        end
+    if @campaigns.present?
+      respond_to do |format|
+        format.js { render partial: 'shared/index.js.erb', locals: { obj: @campaigns } }
+        format.html
       end
+    else
+      render 'empty_campaign'
+    end
   end
 
   # initializing campaign as association way using build method.
