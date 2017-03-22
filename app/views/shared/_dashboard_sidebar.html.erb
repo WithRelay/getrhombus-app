@@ -1,13 +1,13 @@
-<div class="side-bar">
+<div class=" customer-dashboard side-bar">
     <div class="dashboard-nav-links">All Customers</div>
     <h5 class="left-nav signup-box-subheading"><%= params[:controller]%></h5>
     <a class="left-nav-tab-wrapper w-inline-block" href="#">
-      <div class="left-nav-tab">&nbsp; &nbsp; Customers &nbsp; &nbsp;</div>
+      <div class="left-nav-tab" data-ix="display-and-hide-customers">&nbsp; &nbsp; Customers &nbsp; &nbsp;</div>
     </a>
-    <div class="customers-hidden-menu">
+    <div class="customers-hidden-menu" data-ix="display-none-on-load">
       <div class="w-form">
-        <form id="email-form-7" name="email-form-7">
-          <select class="dropdown segments w-select" id="field-5" name="field-5">
+        <form data-name="Email Form 7" id="email-form-7" name="email-form-7">
+          <select class="dropdown segments w-select" data-name="Segment Select" id="Segment-Select" name="Segment-Select">
             <option value="">Segments</option>
             <option value="">New customers</option>
             <option value="">Active customers</option>
@@ -20,9 +20,11 @@
     <%= link_to lists_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
       <div class="left-nav-tab" data-ix="display-and-hide-customers">&nbsp; &nbsp; Lists</div>
     <% end %>
+
     <a class="left-nav-tab-wrapper w-inline-block" href="#">
-      <div class="left-nav-tab messaging">&nbsp; &nbsp;Messaging &nbsp; &nbsp; </div>
+      <div class="left-nav-tab messaging" data-ix="display-and-hide-left-nav">&nbsp; &nbsp;Messaging &nbsp; &nbsp; </div>
     </a>
+
     <div class="messaging-hidden-menu" data-ix="display-none-on-load">
       <%= link_to 'Conversations', user_conversations_path(current_user), class: 'dashboard-dropdown-link' %>
       <%= link_to 'Saved Replirs', user_saved_replies_path(current_user), class: 'dashboard-dropdown-link' %>
@@ -31,16 +33,16 @@
     <%= link_to user_campaigns_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
       <div class="left-nav-tab">&nbsp; &nbsp;Campaigns</div>
     <% end %>
+
     <a class="left-nav-tab-wrapper w-inline-block" data-ix="display-and-hide-transaction-tab" href="#">
       <div class="left-nav-tab transactions" data-ix="display-and-hide-transaction-tab"> &nbsp;Transactions &nbsp;</div>
     </a>
-    <div class="transactions-hidden-nav">
+    <div class="transactions-hidden-nav" data-ix="display-none-on-load">
       <a class="dashboard-dropdown-link" href="#">Charges</a>
-      <!-- <a class="dashboard-dropdown-link" href="#">Pre-authorized</a> -->
-      <%= link_to "Pre-authorized", user_transactions_path(captured: false, user_id: current_user.id ),class:"dashboard-dropdown-link" %>
+      <a class="dashboard-dropdown-link" href="#">Pre-authorized</a>
       <a class="dashboard-dropdown-link" href="#">Subscriptions</a>
     </div>
-    <%= link_to user_hashtags_path(current_user)  , class: "left-nav-tab-wrapper w-inline-block" do %>
+    <%= link_to user_hashtags_path(current_user), class: "left-nav-tab-wrapper w-inline-block" do %>
       <div class="left-nav-tab">&nbsp; &nbsp;Hashtags</div>
     <%end%>
     <a class="left-nav-tab-wrapper w-inline-block" href="#">
