@@ -50,9 +50,10 @@
     <div class="customer-count shrink-text">56 <span class="sub-nav-sub-text">in VIP list</span>
     </div>
     <div class="default-sub_header-field-form-div list-members w-form">
-      <form class="add-to-list-form w-clearfix" id="email-form-6" name="email-form-6">
-        <input class="add-to-list-field w-input" id="Add-to-list-2" maxlength="256" name="Add-to-list-2" placeholder="Add more customers to list" required="required" type="text"><a class="sub-nav-button w-button" href="#"><strong>&nbsp;&nbsp;&nbsp;Update List</strong></a>
-      </form>
+      <%= form_for 'lists', url: update_user_list_list_path(current_user, @list), html: { class: 'add-to-list-form w-clearfix' } do |f| %>
+        <%= f.text_field :list_member, class: "add-to-list-field w-input", placeholder: "Add more customers to list" %>
+        <%= f.submit 'Update List'.html_safe, class: 'sub-nav-button w-button', id: 'update-list-memebers' %>
+      <% end %>
     </div>
   </div>
 </div>
