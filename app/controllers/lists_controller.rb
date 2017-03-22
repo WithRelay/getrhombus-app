@@ -1,7 +1,7 @@
 class ListsController < ApplicationController
   include DashboardNotification
 
-  before_action :set_list, only: [:show, :edit, :update, :destroy]
+  before_action :set_list, only: [:show, :edit, :update, :destroy, :update_user_list]
   before_action :set_notifications, except: [:destroy]
 
   def index
@@ -42,6 +42,17 @@ class ListsController < ApplicationController
       flash[:error] = @list.errors.full_messages
     end
     redirect_to lists_path(current_user)
+  end
+
+  def update_user_list
+    list_member_id = params[:lists][:list_member]
+    @list.user_lists.build(user_id: list_member_id)
+    if list_member_id.present? && @list.save
+      flash[:notice] = 'List was successfully updated.'
+    else
+      flash[:error] = 'List member could not updated'
+    end
+    redirect_to list_path(current_user, @list)
   end
 
 
