@@ -11,6 +11,7 @@ Taiwo
 - workflow for sign in, sign up and places where we add card, token, referrer, contact and customer, payment capture
 - send in object into user profile objects - test that we save 3 queries
 - conversation from system
+- see if update resource will catch the error 
 
 
 
@@ -46,6 +47,7 @@ Surya
 - do some more routes cleanup if possible
 - when you uncomment this line in routes  # authenticate :user, -> (user) { CheckUser::RouteAuthentication.new(user).should_authenticate? } do, pages become unreachable i believe.
 - campaign toastrs - plug and play. already wrote the code for you. see realtimeservice.rb and notifications.js
+- tooltip for campaigns
 
 
 

@@ -22,8 +22,7 @@ class RegistrationsController < Devise::RegistrationsController
       bypass_sign_in resource, scope: resource_name
       redirect_to url || after_update_path_for(resource)
     else
-      flash[:error] = message.is_a?(Stripe::InvalidRequestError) ?
-                      set_flash_message[:error].message : set_flash_message[:error]
+      flash[:error] = message.is_a?(Stripe::InvalidRequestError) ? set_flash_message[:error].message : set_flash_message[:error]
       clean_up_passwords resource
       set_minimum_password_length
       redirect_to previous_url
