@@ -42,7 +42,8 @@
           <div class="column column-6 left new-row w-clearfix">
             <div class="frequency shrink-text table-text">Washington</div>
           </div>
-          <div class="column column-6 new-row"><a class="actions-button notification" href="#">Remove</a>
+          <div class="column column-6 new-row">
+            <%= link_to 'Remove', remove_customer_list_path(current_user, @list), class: "actions-button notification list-member-delete" %>
           </div>
         </div>
       </div>

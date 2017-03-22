@@ -8,13 +8,17 @@
       <%= f.label :name, class: 'editor-options form-label' do %>
          &nbsp; Name
       <% end %>
-      <%= f.text_field :name, class: 'editor item-name-field text-field w-input', placeholder: 'E.g. Cheese Burger' %>
+      <div class='form-group col-xs-6'>
+        <%= f.text_field :name, class: 'form-control editor item-name-field text-field w-input', placeholder: 'E.g. Cheese Burger' %>
+      </div>
 
     
       <%= f.label :hashtag, class: 'editor-options form-label' do %>
          &nbsp; Hashtag
       <% end %>
-      <%= f.text_field :tag, class: 'editor text-field w-input', placeholder: 'E.g. #CheeseBurger' %>
+      <div class='form-group col-xs-6'>
+        <%= f.text_field :tag, class: 'form-control editor text-field w-input', placeholder: 'E.g. #CheeseBurger' %>
+      </div>
       
 
       <%= f.label :description, class: "editor-options form-label" do %>
@@ -38,7 +42,9 @@
           <label class="check-radio-text w-form-label" for="radio">Allow customers to send any amount&nbsp;</label>
         </div>
         
-        <%= f.text_field :amount, class: "editor text-field w-input", placeholder: "Enter amount (USD)" %>
+        <div class='form-group col-xs-6'>
+          <%= f.text_field :amount, class: "form-control editor text-field w-input", placeholder: "Enter amount (USD)" %>
+        </div>
         
         <div id='interval-settings'>
           <%= f.select :interval, options_for_select(present(@hashtag).get_tag_interval_options, selected: present(@hashtag).get_interval_string), {}, { id: "plan_interval", class: "dropdown editor-dropdown w-select" } %>
@@ -59,8 +65,9 @@
   <div class="dashboard-body editor">
     <div class="dash-content-container message-editor">
       <div class="w-form">
-        
-        <%= f.text_area :response, class: "message-editor text-area w-input", placeholder: "Type message", id: "hashtag-response-textarea" %>
+        <div class='form-group col-xs-6'>
+          <%= f.text_area :response, class: "form-control message-editor text-area w-input", placeholder: "Type message", id: "hashtag-response-textarea" %>
+        </div>
           
       </div>
       <div class="editor-button-container">

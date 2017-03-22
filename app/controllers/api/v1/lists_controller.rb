@@ -32,8 +32,8 @@ class Api::V1::ListsController < API::V1::BaseController
   # Handles creation of a list via Ajax
   def create
     begin
-      if list_params[:list_type] == 'list'
-        list = current_user.lists.build(name: list_params[:name])
+      if list_params[:list_category] == 'list'
+        list = current_user.lists.build(name: list_params[:name], list_type: list_params[:list_type])
         selected_users_id = list_params[:selected_users].split(",")
         selected_users_id.each { |user_id| list.user_lists.build(user_id: user_id) }
         # list also save associated record
@@ -90,11 +90,11 @@ class Api::V1::ListsController < API::V1::BaseController
     end
 
     def list_params
-      params.require(:lists).permit(:selected_users, :list_type, :name)
+      params.require(:lists).permit(:selected_users, :list_category, :name, :list_type)
     end
 
     def segment_params
-      params.require(:lists).permit(:segment_type, :list_type, :segment_num_days,
+      params.require(:lists).permit(:segment_type, :list_category, :segment_num_days,
                                     :segment_filter, :amt_filter, :amt_1, :amt_2,
                                     :segment_name).merge({ current_time: Time.current })
     end

@@ -6,6 +6,7 @@ $(document).ready(function(e){
   var editField = getOnlyText(editFieldClass)
 
   $(document).on('click', editFieldClass, function(e){
+    hidePreviousField();
     editItem = new EditItem(this, editableTextField);
     editItem.showEditTextBox();
     editItem.showTextInTextBox(editableFieldText);
@@ -32,15 +33,23 @@ $(document).ready(function(e){
     this.showEditTextBox = showEditTextBox, this.showTextInTextBox = showTextInTextBox;
     this.removeTextBox = removeTextBox, this.getIcon = getIcon;
     this.toggleValue = 160;
+    this.hidePreviousField = hidePreviousField;
+  }
+
+  function hidePreviousField(){
+    element = $(editableTextField + ':visible').find('a.save-editable-field')
+    element.length > 0 && element.click();
   }
 
   function showEditTextBox(){
     var textBox = this.editableDiv.find( this.editableFieldsDiv );
-    textBox.slideToggle(this.toggleValue);
+    textBox.show(this.toggleValue);
+    var inputBox = textBox.find('.text-field')
+    inputBox.val(this.editableDiv.find( editableFieldText ).text());
   }
 
   function showTextInTextBox(fieldText){
-    this.editableDiv.find( fieldText ).slideToggle(this.toggleValue);
+    this.editableDiv.find( fieldText ).hide(this.toggleValue);
   }
 
   function replaceIconWithSave(html){
@@ -67,6 +76,7 @@ $(document).ready(function(e){
     var element = this.clickedElement;
     $(element).parent().hide();
     $(element).parent().parent().find(editableFieldText).show();
+    $(element).parent().find('.editable').attr('style', '')
   }
 
   function validateElement(element){

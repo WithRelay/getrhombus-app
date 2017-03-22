@@ -21,6 +21,9 @@ $(document).ready(function () {
     msg_emoji_box[0].emojioneArea.on("blur paste keyup emojibtn.click", function(button, event) {
       emoji_area_text_length = 320 - msg_emoji_box[0].emojioneArea.getText().length;
       $('#char-count').text(emoji_area_text_length.toString() + " characters");
+    })
+    .on('change', function(e) {
+      $('#new_hashtag').formValidation('resetField', 'hashtag[response]');
     });
 
   };
@@ -75,27 +78,11 @@ $(document).ready(function () {
   });
 
   // decimal with two places
-  $('#hashtag_amount, #Plan-Amount, #charge-amount').on('input', function(){
+  $('#hashtag_amount, #Plan-Amount, #charge-amount').on('input', function(e){
     $(this).val(function(_, v) {
       return decimal_with_up_to_two_places(v);
     });
   });
-
-  // if hashtag isn't for payment, hide payment settings
-  $('#hashtag_tag_type').change(function(){
-    if (this.value == '0') {
-      $('.hashtag-payment-settings').slideUp(200);
-      $('#interval-settings').slideUp(200);
-      $('#hashtag_amount').val('');
-    } else {
-      if (this.value == '1') {
-        $('#interval-settings').slideUp(200);
-      } else {
-        $('#interval-settings').slideDown(200);
-      }
-      $('.hashtag-payment-settings').slideDown(200);
-    }
-  }).change();
 
   coupon_type_value.on('input', function(){
     var v = this.value;
@@ -120,4 +107,79 @@ $(document).ready(function () {
   });
 
 
+  // validate link_facebook form
+  $('#new_hashtag')
+  .formValidation({
+    framework: 'bootstrap',
+    excluded: ':disabled',
+    live: 'disabled',
+    fields: {
+      'hashtag[name]': {
+        validators: {
+          notEmpty: {
+            message: 'Name  is required'
+          }
+        },
+      },
+      'hashtag[tag]': {
+        validators: {
+          notEmpty: {
+            message: 'tag  is required'
+          }
+        },
+      },
+      'hashtag[amount]': {
+        validators: {
+          callback: {
+            callback: function (value, validator, $field) {
+              if ($('#hashtag_tag_type').val() != 0) {
+                if ($('#hashtag_amount').val().length > 0) {
+                  return {
+                    valid: true,
+                    //message: 'Valid number'
+                  }
+                } else {
+                  return {
+                    valid: false,
+                    message: "amount is required"
+                  }
+                }
+              } else {
+                return { valid: true }
+              }
+            }
+          }
+        }
+      },
+      'hashtag[response]': {
+        validators: {
+          notEmpty: {
+            message: 'text is required'
+          }
+        }
+      }
+    }
+  })
+  .on('err.validator.fv', function(e, data) {
+  })
+  .on('success.form.fv', function(e, data) {
+    e.preventDefault();
+  });
+
+  // if hashtag isn't for payment, hide payment settings
+  $('#hashtag_tag_type').change(function(){
+    if (this.value == '0') {
+      $('.hashtag-payment-settings').slideUp(200);
+      $('#interval-settings').slideUp(200);
+      $('#hashtag_amount').val('');
+    } else {
+      if (this.value == '1') {
+        $('#interval-settings').slideUp(200);
+      } else {
+        $('#interval-settings').slideDown(200);
+      }
+      $('.hashtag-payment-settings').slideDown(200);
+    }
+    $('#new_hashtag').formValidation('revalidateField', 'hashtag[amount]');
+  }).change();
 });

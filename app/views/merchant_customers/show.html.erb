@@ -24,14 +24,18 @@
     <div class="customer-profile-section-header w-row">
       <div class="w-col w-col-3">
         <div class="customer-properties-div">
-          <div class="right-nav-profile-content-wrapper"><%#= present(@customer).profile_image %>
-            <div class="dashboard-right-nav signup-box-subheading"><%#= "#{@customer.full_name}"%> <span class="relay-id">RELAY ID</span>
+          <div class="right-nav-profile-content-wrapper">
+            <%#= present(@customer).profile_image %>
+            <!-- we may need present method to dispaly color  -->
+          <%= image_tag(@user_snapshot[:profile_image][:value], class: 'class: profile-picture-right-nav', width: 50 )%>
+
+            <div class="dashboard-right-nav signup-box-subheading"><%= "#{@user_snapshot[:full_name]}"%> <span class="relay-id"><%= "#{@user_snapshot[:verified]}" %></span>
             </div>
-            <div class="left-column-text number"> &nbsp; &nbsp;<%#= @customer.phone_number %></div>
-            <div class="left-column-text"> &nbsp; &nbsp; <%#= @customer.email %></div>
-            <div class="left-column-text"> &nbsp; &nbsp; &nbsp; <%#= @customer.state_province %></div>
-            <div class="left-column-text"> &nbsp; &nbsp; <%#= present(@customer).twitter_uid %></div>
-            <div class="left-column-text"> &nbsp; &nbsp; Customer since: adasdasdas</div>
+            <div class="left-column-text number"> &nbsp; &nbsp;<%= "#{@user_snapshot[:phone_number]}" %></div>
+            <div class="left-column-text"> &nbsp; &nbsp; <%= "#{@user_snapshot[:email]}" %></div>
+            <div class="left-column-text"> &nbsp; &nbsp; &nbsp; <%= "#{@user_snapshot[:location]}" %></div>
+            <div class="left-column-text"> &nbsp; &nbsp; <%= "#{@user_snapshot[:twitter]}" %></div>
+            <div class="left-column-text"> &nbsp; &nbsp; Customer since: <%= "#{@user_snapshot[:since][:date]}"%></div>
             <div class="right-nav-underline"></div>
           </div>
           <div class="customer-profile profile-info-wrapper">

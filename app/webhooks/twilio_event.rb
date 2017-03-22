@@ -6,7 +6,6 @@ class TwilioEvent
       @params = params
       @merchant = merchant
       @data = TextingService.fetch_message_details(@params[:MessageSid])         # fetch additional message data
-
       if (@data && @data.direction == "outbound-api") || (!@data && !["received", "receiving"].include?(@params[:SmsStatus]))
         update_sent_message
       elsif @params[:SmsStatus] == 'received'
@@ -27,11 +26,12 @@ class TwilioEvent
     # when message is sent to rhombus
     def save_received_message
       begin
+        @phone_number = @params[:From].gsub('+', '')
         user = get_user
         @message_id = @params[:MessageSid]
         @message = Message.create(
           to: @params[:To].gsub('+', ''),
-          from: @params[:From].gsub('+', ''),
+          from: @phone_number,
           status: @params[:SmsStatus],
           user_id: user.nil? ? nil : user.id,
           user_id_to: @merchant.id,
@@ -55,10 +55,13 @@ class TwilioEvent
         if user.present?
           uid, uid_type = user.id, 'user'
         else
-          uid, uid_type = @params[:From].gsub('+', ''), 'phone_number'
+          uid, uid_type = @phone_number, 'phone_number'
+          OpenCnamData.find_record_or_get_intelligence_data(@phone_number)
         end
+
         Conversation.find_or_create_conversation_for_message_and_publish(@merchant, user, uid_type, uid, @message, true)
         MessageParser.new.process_message(@merchant, user, @message, 'Message')
+
       rescue ActiveRecord::RecordNotUnique
       end
     end
@@ -74,7 +77,7 @@ class TwilioEvent
     end
 
     def get_user
-      User.find_by(phone_number:  @params[:From].gsub('+', ''))
+      User.find_by(phone_number:  @phone_number)
     end
 
     def save_media
