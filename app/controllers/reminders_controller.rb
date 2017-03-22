@@ -5,9 +5,10 @@ class RemindersController < ApplicationController
 
   def index
     @reminder = params[:id].present? ? Reminder.find_by_id(params[:id]) : Reminder.new
-    @reminders_today = current_user.reminders.active.where("date_time >= ? AND date_time < ?",Time.current.beginning_of_day, Time.current.beginning_of_day + 1.days)
-    @reminders_tomorrow = current_user.reminders.active.where("date_time >= ? AND date_time < ?", Time.current.beginning_of_day + 1.days, Time.current.beginning_of_day + 2.days)
-    @reminders_upcoming = current_user.reminders.active.where("date_time >= ?", Time.current.beginning_of_day + 2.days)
+    reminders = current_user.reminders.active
+    @reminders_today = reminders.where("date_time >= ? AND date_time < ?",Time.current.beginning_of_day, Time.current.beginning_of_day + 1.days)
+    @reminders_tomorrow = reminders.where("date_time >= ? AND date_time < ?", Time.current.beginning_of_day + 1.days, Time.current.beginning_of_day + 2.days)
+    @reminders_upcoming = reminders.where("date_time >= ?", Time.current.beginning_of_day + 2.days)
 
     render('empty_reminder', locals: { reminder: current_user.reminders.build }) unless (@reminders_today.present? || @reminders_tomorrow.present? || @reminders_upcoming.present?)
   end
