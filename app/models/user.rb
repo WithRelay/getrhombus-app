@@ -34,6 +34,7 @@ class User < ActiveRecord::Base
 
   has_many :customer_merchants, class_name: 'MerchantCustomer', foreign_key: 'customer_id'
   has_many :merchant_customers, class_name: 'MerchantCustomer', foreign_key: 'merchant_id'
+  has_many :customers, class_name: 'User', through: :merchant_customers
 
   has_many :merchant_contacts, class_name: 'MerchantContact', foreign_key: 'merchant_id'
 

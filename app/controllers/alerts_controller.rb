@@ -1,5 +1,8 @@
 class AlertsController < ApplicationController
+  include DashboardNotification
+
   before_action :set_alert, only: [:show, :edit, :update, :destroy]
+  before_action :set_notifications
 
   respond_to :html
 

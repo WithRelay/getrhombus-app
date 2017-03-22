@@ -107,7 +107,7 @@ $(document).ready(function () {
   });
 
 
-  // validate link_facebook form
+  // validate hashtag form
   $('#new_hashtag')
   .formValidation({
     framework: 'bootstrap',
@@ -115,9 +115,15 @@ $(document).ready(function () {
     live: 'disabled',
     fields: {
       'hashtag[name]': {
+        verbose: false,
         validators: {
           notEmpty: {
             message: 'Name  is required'
+          },
+          remote: {
+            message: 'Hashtag name is already taken.',
+            url: '/v1/campaigns/check_hashtag_name',
+            type: 'POST'
           }
         },
       },
