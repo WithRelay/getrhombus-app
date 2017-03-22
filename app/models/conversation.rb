@@ -8,9 +8,6 @@ class Conversation < ActiveRecord::Base
 
   # Timezone should already be set when calling methods in this class.
 
-  # plug in charges
-  # profile snapshot -  remove the extra customer since in customer show
-
   # the user texting this merchant
   def user
     User.find_by(id: self.uid) if self.uid_type == "user"

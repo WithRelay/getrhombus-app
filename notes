@@ -3,8 +3,6 @@ Jacob: Our Sales Team is available Monday through Saturday, 8AM to 8PM and on Su
 
 current stripe api version - 2014-03-28
 https://www.getrhombus.com/receive_delivery_report
-- <redacted_webhook_url>      - voice
-- <redacted_webhook_url>      - messaging
 
 - charge payment service for connect/managed - done
 	- fix how we store amounts - just job left
