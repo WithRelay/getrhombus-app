@@ -113,15 +113,18 @@ Rails.application.routes.draw  do
       resources :users, only: [:index] do
         post 'add_customers', on: :collection
         get 'snapshot', on: :collection
+        post 'check_password', on: :collection
       end
       resources :contacts, only: [:index]
       resources :customers, only: [:index]
       resources :lists, only: [:create, :index, :update] do
         get 'check_list_name', on: :collection
       end
-      post 'users/check_password' => 'users#check_password'
-      match 'hashtags' => 'hashtags#index', via: :get
-      match 'hashtags/:id/images/:image_id' => 'hashtags#image_delete', via: :delete
+      resources :hashtags, only: [:index] do 
+        get 'check_hashtag_name', on: :collection
+        delete 'images/:image_id' => "hashtags#image_delete", on: :member
+      end 
+
       resources :saved_replies
       # Campaign Routes
       patch 'campaigns/change_status/:id' => 'campaigns#change_status'
@@ -135,8 +138,10 @@ Rails.application.routes.draw  do
       # reminder routes
       resources :reminders, only: [:create, :edit]
       #--------------------------------------------------------------------------#
-      match 'transactions/:txn_number/refund' => 'transactions#refund', via: :post
-      resources :transactions, only: [:index, :create]
+      
+      resources :transactions, only: [:index, :create] do
+        post '/:txn_number/refund' => 'transactions#refund', on: :collection
+      end
       match 'numbers/search' => 'numbers#search', via: [:get]
       resources :coupons, only: [:index, :update] do
         post 'check_coupon_name', on: :collection
