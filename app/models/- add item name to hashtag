@@ -11,6 +11,7 @@ Taiwo
 - workflow for sign in, sign up and places where we add card, token, referrer, contact and customer, payment capture
 - send in object into user profile objects - test that we save 3 queries
 - conversation from system
+- unable to subscribe to notifications on 404 page
 
 
 
@@ -26,7 +27,6 @@ Rhombus number form
 Add card info, add subscription, billing info
 - flash message not showing...also needs to show devise error
 - card error flash missing in registrations update
-- user auth in routes
 - EVERYONE CLEAN UP YOUR ROUTES and CONTROLLERS
 
 
@@ -39,13 +39,13 @@ Surya
 - use conversations in campaigns for sending messages
 
 - pubnub
-- catch db error in update action too... already added error for you
 - group your campaigns v1 routes
 - load more for all index pages      
 - still able to bypass onboarding to any page if i know the url. or i can go back to onboarding if i know the url (edited)
 - do some more routes cleanup if possible
 - when you uncomment this line in routes  # authenticate :user, -> (user) { CheckUser::RouteAuthentication.new(user).should_authenticate? } do, pages become unreachable i believe.
 - campaign toastrs - plug and play. already wrote the code for you. see realtimeservice.rb and notifications.js
+- tooltip for campaigns
 
 
 

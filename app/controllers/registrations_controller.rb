@@ -23,8 +23,7 @@ class RegistrationsController < Devise::RegistrationsController
       redirect_to url || after_update_path_for(resource)
     else
       set_flash_message = set_update_flash_messages(message)
-      flash[:error] = message.is_a?(Stripe::InvalidRequestError) ?
-                      set_flash_message[:error].message : set_flash_message[:error]
+      flash[:error] = message.is_a?(Stripe::InvalidRequestError) ? set_flash_message[:error].message : set_flash_message[:error]
       clean_up_passwords resource
       set_minimum_password_length
       redirect_to previous_url
@@ -150,7 +149,7 @@ class RegistrationsController < Devise::RegistrationsController
   def set_update_flash_messages(msg = '')
     page_params = { add_profile_info: {
                                         success: 'profile updated',
-                                        error: 'Unable to update your profile',
+                                        error: resource.errors.full_messages,
                                         profile_info: true
                                       },
                     add_subscription: {
@@ -159,8 +158,8 @@ class RegistrationsController < Devise::RegistrationsController
                                         subscription: true
                                       },
                     add_rhombus_number: {
-                                          success: 'We are unable to provision a number for you',
-                                          error: 'Rhombus number added',
+                                          success: 'Rhombus number added',
+                                          error: 'We are unable to provision a number for you.',
                                           rhombus_number: true
                                         },
                     add_card_info: {
@@ -181,7 +180,7 @@ class RegistrationsController < Devise::RegistrationsController
                     business_settings: {
                                         success: 'account updated',
                                         business_settings: true,
-                                        error: 'We are unable to update business settings. Please try again'
+                                        error: resource.errors.full_messages
                                        }
                   }
     page_params[params[:page_params].to_sym]
@@ -204,6 +203,7 @@ class RegistrationsController < Devise::RegistrationsController
       end
     rescue ActiveRecord::RecordNotUnique
       resource.errors.add(:phone_number, "is already in use.") if $!.message.include?('index_users_on_phone_number')
+      false
     end
   end
 end

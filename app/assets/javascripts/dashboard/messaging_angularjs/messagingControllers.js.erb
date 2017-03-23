@@ -9,8 +9,8 @@ var messagingControllers = angular.module('messagingControllers', [
 
 
 messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub', 'Upload', '$timeout', '$q',
-                                                        'savedReplyService',  'conversationService', 'transactionService', 'userService',
-  function($scope, $http, Pubnub, Upload, $timeout, $q, savedReplyService, conversationService, transactionService, userService) {
+                                                        'savedReplyService',  'conversationService', 'transactionService', 'userService', 'listService',
+  function($scope, $http, Pubnub, Upload, $timeout, $q, savedReplyService, conversationService, transactionService, userService, listService) {
 
     // Messages  // remove
     // Conversations
@@ -34,8 +34,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
     $scope.new_message.text = "";
 
     // Marked As Done
-    $scope.marked_as_done = {}; 
-    $scope.marked_as_done.reason = "";    
+    $scope.marked_as_done = { reason: null }; 
     $scope.marked_as_done.notes = ""; 
 
     // counters
@@ -55,10 +54,13 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
     $scope.charge_data = {};
     $scope.customer_transactions = [];
 
+    // Lists
+    $scope.merchant_lists = [];
+    $scope.lists_dropdown = { selected: null };    
+
     // Saved Replies
     $scope.saved_replies_list = [];
-    $scope.saved_replies = {};
-    $scope.saved_replies.reply = null;
+    $scope.saved_replies = { reply: null };
 
     // selectize
     var start_conversation_selectize;
@@ -78,6 +80,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
       //Offline.check();
       return true //Offline.state == "up"
     };
+
 
     // Get logged in merchant id
     $http.get(window.location.origin + '/get_current_user').success(function(data) {
@@ -220,7 +223,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
 
       // get initial conversations
       $scope.loadConversations();
-
+      $scope.getMerchantLists();
 
 
       // Get latest conversations for this merchant
@@ -451,7 +454,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
 
     $scope.closeConversation = function(data) {
       if ($scope.is_conversation_selected() && $scope.online()) {
-        if ($scope.marked_as_done.reason == "") {
+        if (!$scope.marked_as_done.reason) {
           alert('select a reason');
         } else {    
           var hash = { conversation: { notes: $scope.marked_as_done.notes, resolution: $scope.marked_as_done.reason } };
@@ -829,6 +832,43 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
       console.log($scope.selected_conversation)
     };    
     // End Transactions
+
+    $scope.getMerchantLists = function() {
+      if ($scope.online()) {
+        listService.getLists({ query: '', type: 'list' })
+        .then(function (data) {
+          console.log('lists retrieved');
+          console.log(data)
+          $scope.merchant_lists = data['lists'];
+        }, function (response) {
+          console.log('unable to retrieve transactions');
+          $scope.merchant_lists = [];
+          console.log(response);
+        });
+      } else {
+        $scope.merchant_lists = [];
+      }
+    };    
+
+    $scope.AddUserToList = function(data) {
+      if ($scope.is_conversation_selected() && $scope.online()) {
+        if (!$scope.lists_dropdown.selected) {
+          alert('select a list');
+        } else {    
+          /*var hash = { conversation: { notes: $scope.marked_as_done.notes, resolution: $scope.marked_as_done.reason } };
+          listService.addUserToList($scope.selected_conversation.id, hash)
+          .then(function(data) {
+            $scope.selected_conversation_messages = []
+            $scope.selected_conversation = {};
+          }, function(data) {
+            alert('unable to add user to list');
+          })
+          .finally(function() { $('#mark-as-done-div').trigger('close'); });*/
+          console.log($scope.lists_dropdown)
+        };
+      };
+    };
+    // End lists
 
   }
 
