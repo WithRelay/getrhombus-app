@@ -4,12 +4,13 @@ drip_campaign_emails:
   args:
   description: "This job runs our drip campaigns."
   queue: drip_campaigns
-# weekly_activity_summary:
-#   cron: '0 11 * * 1' #“At 11:00 on Monday.”
-#   class: "WeeklyActivitySummaryJob"
-#   args:
-#   description: "This job send weekly activity summary."
-#   queue: weekly_activity_summary
+
+weekly_activity_summary:
+  cron: '0 8 * * 1' #“At 8:00 on Monday.”
+  class: "WeeklyActivitySummaryJob"
+  args:
+  description: "This job send weekly activity summary."
+  queue: weekly_activity_summary
 # alert_emails:
 #   #every: 15m
 #   every: 15s

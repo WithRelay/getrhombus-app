@@ -8,6 +8,24 @@ class EmailingService
    FROM_EMAIL= { edwin: "<redacted_email>", ovo: '<redacted_email>' }
   class << self
 
+    def send_weekly_mail(merchant, mail_data)
+      template_name = "weekly-summary-template"
+      message = { "subject" => "Weekly Activity Summary",
+                  "merge_language" => "handlebars",
+                  "bcc_address"=> SENDER,
+                  "to"=> [ { "email" => to } ],
+                  "from_name" => "Rhombus",
+                  "from_email" => SENDER,
+                  "global_merge_vars" => [
+                                            { "name" => "merchant_first_name", "content" => merchant.first_name},
+                                            { "name" => "from_data", "content" => mail_data[:from_date]},
+                                            { "name" => "till_data", "content" => mail_date[:till_date]},
+                                            # { "name" => }
+                                        ]
+
+                }
+    end
+
     def send_email_campaign(campaign_hash)
       # Email camapign is not only used to send email campaign but also facebook messenger camapign
       # and facebook messenger camapaign do not contain subject
