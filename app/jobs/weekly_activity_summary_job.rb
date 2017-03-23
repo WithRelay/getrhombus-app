@@ -10,7 +10,7 @@ class WeeklyActivitySummaryJob
       merchants = User.where(user_level: 1)
       merchants.each do |merchant|
         mail_data = mail_data_to_merchant(merchant)
-        # sendmail(last_week_customers)
+        EmailingService.send_weekly_mail(merchant, mail_data)
       end
     end
 
@@ -27,7 +27,12 @@ class WeeklyActivitySummaryJob
                             }
       end
       #have to use UserProfile for fullname/ profile etc.
-      { merchant_name: merchant.first_name, merchant_email: merchant.email, customers_list: customers_array }
+      { merchant_name: merchant.first_name,
+         merchant_email: merchant.email,
+         customers_list: customers_array,
+         from_data: 7.days.ago.strftime("%A, %B %d"),
+         till_data: Time.now.strftime("%A, %B %d")
+        }
     end
   end
 end
