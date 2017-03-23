@@ -320,7 +320,7 @@ messagingApp.factory('listService', function($http, $q, Upload){
       method: 'POST',
       url: base_url + '.json',
       headers: token,
-      //data: { transaction: data }
+      //data: data
     })
     .success(function(data) { 
       console.log("in service pass for add user to list");
@@ -332,6 +332,20 @@ messagingApp.factory('listService', function($http, $q, Upload){
     });
     return deferred.promise;
   };
+
+  service.getListsForCustomer = function(data){
+    var deferred = $q.defer();
+    $http.get(base_url + '.json', { params: data })
+    .success(function(data) {
+      console.log('console success in service get customer lists'); 
+      deferred.resolve(data);
+    })
+    .error(function(data, status, headers, config) { 
+      console.log('console fail in service get customer lists'); 
+      deferred.reject("there was an error");
+    });
+    return deferred.promise;
+  }
 
   return service;
 });

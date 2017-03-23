@@ -35,7 +35,7 @@ Rails.application.routes.draw  do
     end
   end
 
- authenticate :user, -> (user) { CheckUser::RouteAuthentication.new(user).should_authenticate? } do
+ #authenticate :user, -> (user) { CheckUser::RouteAuthentication.new(user).should_authenticate? } do
     get 'user_lists/remove_user' => 'user_lists#remove_user'
     get 'fb_pages/remove_integration' => 'fb_pages#remove_integration'
     get 'link_facebook' => 'link_fb_accounts#link_facebook'
@@ -175,7 +175,7 @@ Rails.application.routes.draw  do
         get 'rating', on: :member
       end
     end
-  end
+  #end
 
 
   ## catch all other to 404

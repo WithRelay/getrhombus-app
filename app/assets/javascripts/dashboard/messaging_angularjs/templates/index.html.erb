@@ -478,7 +478,7 @@
     <%# removed w-form %>
     <div class="add-to-list-modal-form">
       <form class="w-clearfix" id="email-form-5">
-        <select class="dropdown w-select" id="Add-to-list-dropdown-2" ng-model="lists_dropdown.selected" ng-options="option.name for option in merchant_lists track by option.id">
+        <select class="dropdown w-select" id="Add-to-list-dropdown-2" ng-model="lists_dropdown.list" ng-options="option.name for option in merchant_lists track by option.id">
             <option ng-selected="true" disabled value="">Select a list</option>
         </select>
         <a class="add-to-list-modal-button button w-button" ng-click='AddUserToList()'>Add customer to List</a>
