@@ -5,7 +5,7 @@ class EmailingService
 
   # Note there are a number of global settings for this email in the mandrill account
    SENDER = Rails.application.secrets.team_email
-   FROM_EMAIL= { edwin: "<redacted_email>", ovo: '<redacted_email>' }
+   FROM_EMAIL= { edwin: "<redacted_email>", ovo: '<redacted_email>', surya: '<redacted_email>' }
   class << self
 
     def send_weekly_mail(merchant, mail_data)
@@ -596,6 +596,120 @@ class EmailingService
       end
     end
 
+    def incomplete_sign_up(user)
+      begin
+        mandrill = Mandrill::API.new MANDRILL_API_KEY
+        template_name = 'incomplete-sign-up'
+        template_content = []
+        message = { "subject" => "Incomplete account setup",
+         "global_merge_vars"=> [  { "name" => "first_name", "content" => user.full_name.split.first || 'there' }
+                               ],
+         "merge_language" => "handlebars",
+         "to"=> [ { "email" => user.email } ],
+         "bcc_address"=> SENDER,
+         "from_name" => "Edwin from Relay",
+         "from_email" => FROM_EMAIL[:edwin]
+        }
+        async = true
+        result = mandrill.messages.send_template template_name, template_content, message, async
+      rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
+        puts "A mandrill error occurred: #{e.class} - #{e.message}"
+      rescue StandardError => e
+      end
+    end
+
+    def auto_reload_failure(user)
+
+      begin
+        mandrill = Mandrill::API.new MANDRILL_API_KEY
+        template_name = 'auto-reload-failure'
+        template_content = []
+        message = { "subject" => "Auto-reload Failure",
+         "global_merge_vars"=> [  { "name" => "first_name", "content" => user.full_name.split.first || 'there' }
+                               ],
+         "merge_language" => "handlebars",
+         "to"=> [ { "email" => user.email } ],
+         "bcc_address"=> SENDER,
+         "from_name" => "Edwin from Relay",
+         "from_email" => FROM_EMAIL[:edwin]
+        }
+        async = true
+        result = mandrill.messages.send_template template_name, template_content, message, async
+      rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
+        puts "A mandrill error occurred: #{e.class} - #{e.message}"
+      rescue StandardError => e
+      end
+    end
+
+    def customer_sign_up(user)
+      begin
+        mandrill = Mandrill::API.new MANDRILL_API_KEY
+        template_name = 'customer-sign-up'
+        template_content = []
+        message = { "subject" => "Welcome to Relay",
+         "global_merge_vars"=> [  { "name" => "first_name", "content" => user.full_name.split.first || 'there' }
+                               ],
+         "merge_language" => "handlebars",
+         "to"=> [ { "email" => user.email } ],
+         "bcc_address"=> SENDER,
+         "from_name" => "Edwin from Relay",
+         "from_email" => FROM_EMAIL[:edwin]
+        }
+        async = true
+        result = mandrill.messages.send_template template_name, template_content, message, async
+      rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
+        puts "A mandrill error occurred: #{e.class} - #{e.message}"
+      rescue StandardError => e
+      end
+    end
+
+    def customer_sign_up(user)
+      begin
+        mandrill = Mandrill::API.new MANDRILL_API_KEY
+        template_name = 'customer-sign-up-from-referral-link'
+        template_content = []
+        message = { "subject" => "Welcome to Relay",
+         "global_merge_vars"=> [  { "name" => "first_name", "content" => user.full_name.split.first || 'there' },
+                                  {"name" => "business_name", "content" => user.org_name},
+                                  {"name" => "relay_number", "content" => user.rhombus_number}
+                               ],
+         "merge_language" => "handlebars",
+         "to"=> [ { "email" => user.email } ],
+         "bcc_address"=> SENDER,
+         "from_name" => "Edwin from Relay",
+         "from_email" => FROM_EMAIL[:surya]
+        }
+        async = true
+        result = mandrill.messages.send_template template_name, template_content, message, async
+      rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
+        puts "A mandrill error occurred: #{e.class} - #{e.message}"
+      rescue StandardError => e
+      end
+    end
+
+    def customer_added_to_relay
+      begin
+        mandrill = Mandrill::API.new MANDRILL_API_KEY
+        template_name = 'customer-added-to-relay'
+        template_content = []
+        message = { "subject" => "Best way to reach us",
+         "global_merge_vars"=> [  { "name" => "first_name", "content" => user.full_name.split.first || 'there' },
+                                  {"name" => "business_name", "content" => user.org_name},
+                                  {"name" => "relay_number", "content" => user.rhombus_number}
+                               ],
+         "merge_language" => "handlebars",
+         "to"=> [ { "email" => user.email } ],
+         "bcc_address"=> SENDER,
+         "from_name" => "",
+         "from_email" => FROM_EMAIL[:surya]
+        }
+        async = true
+        result = mandrill.messages.send_template template_name, template_content, message, async
+      rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
+        puts "A mandrill error occurred: #{e.class} - #{e.message}"
+      rescue StandardError => e
+      end
+    end
   end
 
 end
