@@ -10,13 +10,17 @@ $(document).on('ready page:load', function() {
      }).done(function(res){
       var form = $('.editReminderFrom');
       var action = form.attr("action");
+      var reminder = res.reminder
+      var reminder_lists = res.reminder_lists;
       var newAction = window.location.origin + '/users/' + action.split('/')[2] + '/reminders/' + reminder_id;
-
-      form.find("#Notification-Message").val(res.text);
-      form.find(".emojionearea-editor").text(res.text);
+      customtersSearch(reminder_lists);
+      var selectField = $('.editReminderFrom .search-customers-and-contacts')[0].selectize;
+      selectField.addItem(reminder_lists[0].id, false);
+      form.find("#Notification-Message").val(reminder.text);
+      form.find(".emojionearea-editor").text(reminder.text);
       form.attr("action", newAction);
 
-      var raw_date_time = res.date_time;
+      var raw_date_time = reminder.date_time;
       var date_time = new Date(raw_date_time);
       var formated_date_time = formatDate(date_time);
       form.find("#reminder-date-time").val(formated_date_time);
@@ -36,14 +40,20 @@ $(document).on('ready page:load', function() {
     return  date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate() + "  " + strTime;
   }
   //
-  
+
+  $('#set-new-reminder-loader').click(function(){
+    customtersSearch();
+  });
+function customtersSearch(option = []){
+  var labelSearchField = option.length < 1 ? 'description' : 'phone_number'
+  var valueField = option.length < 1 ? 'uid' : 'id'
   $('.search-customers-and-contacts').selectize({
     maxItems: 1,
-    valueField: 'uid',
-    labelField: 'description',
-    searchField: 'description',
+    valueField: valueField,
+    labelField: labelSearchField,
+    searchField: labelSearchField,
     create: false,
-    options: [],
+    options: option,
     closeAfterSelect: true,
     load: function(query, callback) {
       if (!query.length) return callback();
@@ -64,6 +74,8 @@ $(document).on('ready page:load', function() {
       });
     }
   });
+}
+
 
   $('#delete-reminder').click(function(e){
       e.preventDefault

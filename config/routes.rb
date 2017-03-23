@@ -22,7 +22,20 @@ Rails.application.routes.draw  do
     match 'events/facebook' => 'webhooks#facebook_events', via: [:get, :post]
   #end
 
- # authenticate :user, -> (user) { CheckUser::RouteAuthentication.new(user).should_authenticate? } do
+  resources :users, only: :show do
+    ## devise routes
+    devise_scope :user do
+      member do
+        get 'add-subscription' => 'registrations#add_subscription'
+        get 'add-rhombus-number' => 'registrations#add_rhombus_number'
+        get 'add-profile-info' => 'registrations#add_profile_info'
+        get 'add-card-info' => 'registrations#add_card_info'
+        patch "registration/update", to: "registrations#update"
+      end
+    end
+  end
+
+ authenticate :user, -> (user) { CheckUser::RouteAuthentication.new(user).should_authenticate? } do
     get 'user_lists/remove_user' => 'user_lists#remove_user'
     get 'fb_pages/remove_integration' => 'fb_pages#remove_integration'
     get 'link_facebook' => 'link_fb_accounts#link_facebook'
@@ -42,11 +55,6 @@ Rails.application.routes.draw  do
       ## devise routes
       devise_scope :user do
         member do
-          get 'add-subscription' => 'registrations#add_subscription'
-          get 'add-rhombus-number' => 'registrations#add_rhombus_number'
-          get 'add-profile-info' => 'registrations#add_profile_info'
-          get 'add-card-info' => 'registrations#add_card_info'
-          patch "registration/update", to: "registrations#update"
           get "billing-information", to: "registrations#billing_information"
           get "business-settings", to: "registrations#business_settings"
           get "account-settings", to: "registrations#account_settings"
@@ -167,7 +175,7 @@ Rails.application.routes.draw  do
         get 'rating', on: :member
       end
     end
-  #end
+  end
 
 
   ## catch all other to 404

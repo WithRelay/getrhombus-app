@@ -11,10 +11,10 @@ class RegistrationsController < Devise::RegistrationsController
     #prev_unconfirmed_email = resource.unconfirmed_email if resource.respond_to?(:unconfirmed_email)
 
     message = check_params_with_update
-    set_flash_message = set_update_flash_messages(message)
     url = request.referrer if setting_pages_present?
     yield resource if block_given?
     if message.blank? && update_resource(resource, account_update_params)
+      set_flash_message = set_update_flash_messages(message)
       update_stripe_email if set_flash_message[:account_settings].present?
       # flash_key = update_needs_confirmation?(resource, prev_unconfirmed_email) ? :update_needs_confirmation : :updated
       # set_flash_message :notice, flash_key
@@ -22,6 +22,7 @@ class RegistrationsController < Devise::RegistrationsController
       bypass_sign_in resource, scope: resource_name
       redirect_to url || after_update_path_for(resource)
     else
+      set_flash_message = set_update_flash_messages(message)
       flash[:error] = message.is_a?(Stripe::InvalidRequestError) ? set_flash_message[:error].message : set_flash_message[:error]
       clean_up_passwords resource
       set_minimum_password_length
@@ -148,7 +149,7 @@ class RegistrationsController < Devise::RegistrationsController
   def set_update_flash_messages(msg = '')
     page_params = { add_profile_info: {
                                         success: 'profile updated',
-                                        error: 'Unable to update your profile',
+                                        error: resource.errors.full_messages,
                                         profile_info: true
                                       },
                     add_subscription: {
@@ -157,8 +158,8 @@ class RegistrationsController < Devise::RegistrationsController
                                         subscription: true
                                       },
                     add_rhombus_number: {
-                                          success: 'We are unable to provision a number for you',
-                                          error: 'Rhombus number added',
+                                          success: 'Rhombus number added',
+                                          error: 'We are unable to provision a number for you.',
                                           rhombus_number: true
                                         },
                     add_card_info: {
@@ -173,13 +174,13 @@ class RegistrationsController < Devise::RegistrationsController
                                         },
                     account_settings: {
                                         success: 'account updated',
-                                        error: 'We are unable to update account. Please try again',
+                                        error: resource.errors.full_messages,
                                         account_settings: true
                                       },
                     business_settings: {
                                         success: 'account updated',
                                         business_settings: true,
-                                        error: 'We are unable to update business settings. Please try again'
+                                        error: resource.errors.full_messages
                                        }
                   }
     page_params[params[:page_params].to_sym]
@@ -194,10 +195,15 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   def update_resource(resource, user_params)
-    if set_update_flash_messages[:account_settings].present?
-      resource.update_with_password(user_params)
-    else
-      resource.update_without_password(user_params)
+    begin
+      if set_update_flash_messages[:account_settings].present?
+        resource.update_with_password(user_params)
+      else
+        resource.update_without_password(user_params)
+      end
+    rescue ActiveRecord::RecordNotUnique
+      resource.errors.add(:phone_number, "is already in use.") if $!.message.include?('index_users_on_phone_number')
+      false
     end
   end
 end

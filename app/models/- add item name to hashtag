@@ -11,7 +11,7 @@ Taiwo
 - workflow for sign in, sign up and places where we add card, token, referrer, contact and customer, payment capture
 - send in object into user profile objects - test that we save 3 queries
 - conversation from system
-- see if update resource will catch the error 
+- unable to subscrive to notifications on 404 page
 
 
 
@@ -27,7 +27,6 @@ Rhombus number form
 Add card info, add subscription, billing info
 - flash message not showing...also needs to show devise error
 - card error flash missing in registrations update
-- user auth in routes
 - EVERYONE CLEAN UP YOUR ROUTES and CONTROLLERS
 
 
@@ -40,7 +39,6 @@ Surya
 - use conversations in campaigns for sending messages
 
 - pubnub
-- catch db error in update action too... already added error for you
 - group your campaigns v1 routes
 - load more for all index pages      
 - still able to bypass onboarding to any page if i know the url. or i can go back to onboarding if i know the url (edited)
