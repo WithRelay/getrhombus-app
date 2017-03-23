@@ -5,7 +5,6 @@ class WeeklyActivitySummaryJob
 
   @queue = :weekly_activity_summary
 
-
   class << self
     def perform
       merchants = User.where(user_level: 1)
