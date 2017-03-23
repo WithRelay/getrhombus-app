@@ -19,12 +19,12 @@ class WeeklyActivitySummaryJob
     def mail_data_to_merchant(merchant = User.first)
       Time.zone = merchant.time_zone
       customers_array = []
-      last_week_customers = merchant.customers.where('merchant_customers.created_at >= ?', 60.days.ago.utc)
+      last_week_customers = merchant.customers.where('merchant_customers.created_at >= ?', 7.days.ago.utc)
       last_week_customers.each do |c|
         customers_array  << {
                                full_name: get_conversation_display_name(c.id, 'user'),
                                profile_pic: check_profile_picture(c),
-                               customer_email: c.email     
+                               customer_email: c.email
                             }
       end
       #have to use UserProfile for fullname/ profile etc.
