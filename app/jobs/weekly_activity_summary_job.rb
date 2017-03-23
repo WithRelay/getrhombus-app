@@ -20,19 +20,20 @@ class WeeklyActivitySummaryJob
       customers_array = []
       last_week_customers = merchant.customers.where('merchant_customers.created_at >= ?', 7.days.ago.utc)
       last_week_customers.each do |c|
+        # have to use UserProfile for fullname/profile pic etc.
         customers_array  << {
                                full_name: get_conversation_display_name(c.id, 'user'),
                                profile_pic: check_profile_picture(c),
                                customer_email: c.email
                             }
       end
-      #have to use UserProfile for fullname/ profile etc.
+      
       { merchant_name: merchant.first_name,
-         merchant_email: merchant.email,
-         customers_list: customers_array,
-         from_data: 7.days.ago.strftime("%A, %B %d"),
-         till_data: Time.now.strftime("%A, %B %d")
-        }
+        merchant_email: merchant.email,
+        customers_list: customers_array,
+        from_data: 7.days.ago.strftime("%A, %B %d"),
+        till_data: Time.current.strftime("%A, %B %d")
+      }
     end
   end
 end
