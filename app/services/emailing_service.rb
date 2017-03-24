@@ -5,7 +5,7 @@ class EmailingService
 
   # Note there are a number of global settings for this email in the mandrill account
    SENDER = Rails.application.secrets.team_email
-   FROM_EMAIL= { edwin: "<redacted_email>", ovo: '<redacted_email>', surya: '<redacted_email>' }
+   FROM_EMAIL= { edwin: "<redacted_email>", surya: '<redacted_email>', taiwo: '<redacted_email>' }
   class << self
 
     def send_weekly_mail(merchant, mail_data)
@@ -59,7 +59,6 @@ class EmailingService
 
     def send_welcome_email(to, rhombus_team_number, user_type)
       begin
-        mandrill = Mandrill::API.new MANDRILL_API_KEY
         template_name = (user_type == "merchant") ? "welcome-email-merchants" : "welcome-email-customers"
         template_content = []
         message = { "subject" => "Welcome to Rhombus",
@@ -107,7 +106,6 @@ class EmailingService
 
     def send_payment_notification(options = {})
       begin
-        mandrill = Mandrill::API.new MANDRILL_API_KEY
         template_name = 'payment-notification-merchants'
         template_content = []
         message = { "subject"=>"You received a payment with Rhombus",
@@ -176,7 +174,7 @@ class EmailingService
         template_content = []
         message = { "subject" => "Welcome to Relay",
          "merge_language" => "handlebars",
-         "global_merge_vars"=> [    { "name" => "first_name", "content" => user.full_name.split.first || 'there' } ],
+         "global_merge_vars"=> [    { "name" => "first_name", "content" => user.first_name || 'there' } ],
          "bcc_address"=> SENDER,
          "to"=> [ { "email" => user.email } ],
          "from_name" => "Edwin from Relay",
@@ -196,12 +194,12 @@ class EmailingService
         template_name = "proactive-support-email"
         template_content = []
         message = { "subject" => "Get the most out of Relay",
-         "global_merge_vars"=> [    { "name" => "first_name", "content" => user.full_name.split.first || 'there' } ],
+         "global_merge_vars"=> [    { "name" => "first_name", "content" => user.first_name || 'there' } ],
          "merge_language" => "handlebars",
          "bcc_address"=> SENDER,
          "to"=> [ { "email" => user.email } ],
-         "from_name" => "Ovo from Relay",
-         "from_email" => FROM_EMAIL[:ovo]
+         "from_name" => "Taiwo from Relay",
+         "from_email" => FROM_EMAIL[:taiwo]
         }
         async = true
         result = MANDRILL.messages.send_template template_name, template_content, message, async
@@ -217,12 +215,12 @@ class EmailingService
         template_name = 'schedule-demo-email'
         template_content = []
         message = { "subject" => "Schedule a live walk-through of Relay",
-         "global_merge_vars"=> [    { "name" => "first_name", "content" => user.full_name.split.first || 'there' } ],
+         "global_merge_vars"=> [    { "name" => "first_name", "content" => user.first_name || 'there' } ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
          "bcc_address"=> SENDER,
-         "from_name" => "Ovo from Relay",
-         "from_email" => FROM_EMAIL[:ovo]
+         "from_name" => "Taiwo from Relay",
+         "from_email" => FROM_EMAIL[:taiwo]
         }
         async = true
         result = MANDRILL.messages.send_template template_name, template_content, message, async
@@ -242,7 +240,7 @@ class EmailingService
         template_name = 'free-trial-expiration'
         template_content = []
         message = { "subject" => "Your Relay Trial",
-         "global_merge_vars"=> [    { "name" => "first_name", "content" => user.full_name.split.first || 'there' } ],
+         "global_merge_vars"=> [    { "name" => "first_name", "content" => user.first_name || 'there' } ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
          "bcc_address"=> SENDER,
@@ -263,7 +261,7 @@ class EmailingService
         template_name = 'weekly-activity-summary'
         template_content = []
         message = { "subject" => "Relay: Weekly activity summary",
-         "global_merge_vars"=> [    { "name" => "first_name", "content" => user.full_name.split.first || 'there' } ],
+         "global_merge_vars"=> [    { "name" => "first_name", "content" => user.first_name || 'there' } ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
          "bcc_address"=> SENDER,
@@ -285,7 +283,7 @@ class EmailingService
         template_content = []
         message = { "subject" => "It’s been a month",
          "merge_language" => "handlebars",
-         "global_merge_vars"=> [    { "name" => "first_name", "content" => user.full_name.split.first || 'there' } ],
+         "global_merge_vars"=> [    { "name" => "first_name", "content" => user.first_name || 'there' } ],
          "to"=> [ { "email" => user.email } ],
          "bcc_address"=> SENDER,
          "from_name" => "Edwin from Relay",
@@ -305,7 +303,7 @@ class EmailingService
         template_name = 'three-month-follow-up'
         template_content = []
         message = { "subject" => "It’s been a 3 months",
-         "global_merge_vars"=> [    { "name" => "first_name", "content" => user.full_name.split.first || 'there' } ],
+         "global_merge_vars"=> [    { "name" => "first_name", "content" => user.first_name || 'there' } ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
          "bcc_address"=> SENDER,
@@ -326,7 +324,7 @@ class EmailingService
         template_name = 'offer-to-help'
         template_content = []
         message = { "subject" => "Checking in",
-         "global_merge_vars"=> [    { "name" => "first_name", "content" => user.full_name.split.first || 'there' } ],
+         "global_merge_vars"=> [    { "name" => "first_name", "content" => user.first_name || 'there' } ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
          "bcc_address"=> SENDER,
@@ -347,7 +345,7 @@ class EmailingService
         template_name = 'free-trial-expiration'
         template_content = []
         message = { "subject" => "Cancellation",
-         "global_merge_vars"=> [    { "name" => "first_name", "content" => user.full_name.split.first || 'there' } ],
+         "global_merge_vars"=> [    { "name" => "first_name", "content" => user.first_name || 'there' } ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
          "bcc_address"=> SENDER,
@@ -364,7 +362,6 @@ class EmailingService
 
     def send_unread_message_alert(options = {})
       begin
-        mandrill = Mandrill::API.new MANDRILL_API_KEY
         template_name = 'unread-messages'
         template_content = []
         message = { "subject"=>"Unread Message Notification",
@@ -377,7 +374,7 @@ class EmailingService
          "from_email" => SENDER
         }
         async = true
-        result = mandrill.messages.send_template template_name, template_content, message, async
+        result = MANDRILL.messages.send_template template_name, template_content, message, async
       rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
         puts "A mandrill error occurred: #{e.class} - #{e.message}"
       rescue StandardError => e
@@ -431,12 +428,14 @@ class EmailingService
 
     def account_balance_alert(user)
       begin
-        mandrill = Mandrill::API.new MANDRILL_API_KEY
         template_name = 'low-account-balance-template'
         template_content = []
         message = { "subject" => "Low account balance",
-         "global_merge_vars" => [  { name: "first_name", content: user.full_name.split.first || 'there' },
-                                  { name: "current_balance", content: user.account_balance }
+         "global_merge_vars" => [  { name: "first_name", content: user.first_name || 'there' },
+                                  { name: "current_balance", content: user.account_balance },
+                                  { name: "recharge_account_link", content: 'https://www.withrelay.com/recharge_account_link'},
+                                  { name: "set_auto_recharge_link", content: 'https://www.withrelay.com/set_auto_recharge_link'},
+                                  { name: "help_center_link", content: 'https://www.withrelay.com/relay-docs'}
                                ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
@@ -445,31 +444,32 @@ class EmailingService
          "from_email" => FROM_EMAIL[:edwin]
         }
         async = true
-        result = mandrill.messages.send_template template_name, template_content, message, async
+        result = MANDRILL.messages.send_template template_name, template_content, message, async
       rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
         puts "A mandrill error occurred: #{e.class} - #{e.message}"
       rescue StandardError => e
       end
     end
 
-    def customer_receipt(transaction)
+    def customer_receipt(options = {})
       begin
-        mandrill = Mandrill::API.new MANDRILL_API_KEY
         template_name = 'customer-receipt-template'
         template_content = []
-        message = { "subject" => "You sent #{transaction.amount} to #{transaction.team.org_name}",
-         "global_merge_vars"=> [  { "name" => "first_name", "content" => transaction.user.full_name.split.first || 'there' },
-                                  { "name" => "merchant_business_name", "content" => transaction.user.org_name },
-                                  { "name" => "transaction_id", "content" => transaction.txn_number },
-                                  { "name" => "date", "content" => transaction.created_at },
-                                  { "name" => "status", "content" => transaction.status },
-                                  { "name" => "payment_method", "content" => "Visa **** **** **** #{transaction.last4} (Expiry #{transaction.exp_month}/#{transaction.exp_year})" },
-                                  { "name" => "amount", "content" => transaction.amount },
-                                  { "name" => "discription", "content" => ''},
-                                  { "name" => "taxes_and_fees", "content" => '' },
-                                  { "name" => "total", "content" => transaction.amount },
-                                  { "name" => "relay_number", "content" => transaction.team.rhombus_number },
-                                  { "name" => "merchant_email", "content" => transaction.team.email }
+        message = { "subject" => "You sent #{options['amount']} to #{options['org_name']}",
+         "global_merge_vars"=> [  { "name" => "first_name", "content" => transaction.user.first_name || 'there' },
+                                  { "name" => "merchant_business_name", "content" => options['org_name'] },
+                                  { "name" => "transaction_id", "content" => options['txn_number'] },
+                                  { "name" => "date", "content" => options['created_at'] },
+                                  { "name" => "status", "content" => options['status'] },
+                                  { "name" => "payment_method", "content" => "Visa **** **** **** #{options['last4']} (Expiry #{options['exp_month']}/#{options['exp_year']})" },
+                                  { "name" => "amount", "content" => options['amount'] },
+                                  { "name" => "discription", "content" => options['discription']},
+                                  { "name" => "taxes_and_fees", "content" => options['taxes_and_fees'] },
+                                  { "name" => "total", "content" => options['amount'] },
+                                  { "name" => "relay_number", "content" => options['rhombus_number'] },
+                                  { "name" => "merchant_email", "content" => options['merchant_email'] }
+                                  { "name" => "transaction_history_link", "content" => "https://www.withrelay.com/transaction_history_link"},
+                                  { "name" => "use_relay_link", "content" => "https://www.withrelay.com/use_relay_link"}
                                ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
@@ -478,27 +478,28 @@ class EmailingService
          "from_email" => FROM_EMAIL[:edwin]
         }
         async = true
-        result = mandrill.messages.send_template template_name, template_content, message, async
+        result = MANDRILL.messages.send_template template_name, template_content, message, async
       rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
         puts "A mandrill error occurred: #{e.class} - #{e.message}"
       rescue StandardError => e
       end
     end
 
-    def transaction_receipt(transaction)
+    # not completed
+    def transaction_receipt(options = {})
       begin
-        mandrill = Mandrill::API.new MANDRILL_API_KEY
-        template_name = 'transaction_receipt'
+        template_name = 'transaction-receipt'
         template_content = []
         message = { "subject" => "Receipt",
-         "global_merge_vars"=> [  { "name" => "first_name", "content" => transaction.user.full_name.split.first || 'there' },
-                                  { "name" => "transaction_id", "content" => transaction.id },
-                                  { "name" => "date", "content" => transaction.created_at },
-                                  { "name" => "status", "content" => transaction.status },
-                                  { "name" => "payment_method", "content" => '' },
-                                  { "name" => "amount", "content" => transaction.amount },
-                                  { "name" => "previous_balance", "content" => '' },
-                                  { "name" => "current_balance", "content" => '' }
+         "global_merge_vars"=> [  { "name" => "first_name", "content" => options['user_first_name'] || 'there' },
+                                  { "name" => "customer_name", "content" => options['customer_name'] },
+                                  { "name" => "transaction_id", "content" => options['transaction_id'] },
+                                  { "name" => "date", "content" => options['created_at'] },
+                                  { "name" => "status", "content" => options['status'] },
+                                  { "name" => "payment_method", "content" => options['payment_method'] },
+                                  { "name" => "amount", "content" => options['amount'] },
+                                  { "name" => "previous_balance", "content" => options['previous_balance'] },
+                                  { "name" => "current_balance", "content" => options['current_balance'] }
                                ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
@@ -507,28 +508,32 @@ class EmailingService
          "from_email" => FROM_EMAIL[:edwin]
         }
         async = true
-        result = mandrill.messages.send_template template_name, template_content, message, async
+        result = MANDRILL.messages.send_template template_name, template_content, message, async
       rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
         puts "A mandrill error occurred: #{e.class} - #{e.message}"
       rescue StandardError => e
       end
     end
 
-    def subscription_receipt(invoice)
+    def subscription_receipt(options = {})
       begin
-        mandrill = Mandrill::API.new MANDRILL_API_KEY
         template_name = 'subscription-receipt-template'
         template_content = []
         message = { "subject" => "Thank you for using Relay!",
-         "global_merge_vars"=> [  { "name" => "first_name", "content" => invoice.team.full_name.split.first || 'there' },
+         "global_merge_vars"=> [  { "name" => "first_name", "content" => options['first_name'] || 'there' },
                                   { "name" => "year", "content" => Time.current.year },
-                                  { "name" => "invoice_id", "content" => invoice.stripe_invoice_id },
-                                  { "name" => "date", "content" => invoice.date },#February 23, 2017 | 1:30pm
-                                  { "name" => "status", "content" => invoice.subscription.status },
-                                  { "name" => "payment_method", "content" => '' },
-                                  { "name" => "amount", "content" => invoice.sub_total },
-                                  { "name" => "total", "content" => invoice.total },
-                                  { "name" => "taxes_and_fees", "content" => invoice.tax + invoice.application_fee}
+                                  { "name" => "invoice_id", "content" => options['stripe_invoice_id'] },
+                                  { "name" => "date", "content" => options['date'] },#February 23, 2017 | 1:30pm
+                                  { "name" => "status", "content" => options['status'] },
+                                  { "name" => "payment_method", "content" => options['payment_method'] },
+                                  { "name" => "amount", "content" => options['sub_total'] },
+                                  { "name" => "total", "content" => options['total'] },
+                                  { "name" => "taxes_and_fees", "content" => options['tax'] + options['application_fee'] },
+                                  { "name" => "pdf_download_link", "content" => "https://www.withrelay.com/pdf_download_link"},
+                                  { "name" => "history_link", "content" => "https://www.withrelay.com/history_link"},
+                                  { "name" => "help_center_link", "content" => "https://www.withrelay.com/help_center_link"},
+                                  { "name" => "email_link", "content" => "mail_to:<redacted_email>"},
+                                  { "name" => "refer_business_link", "content" => "https://www.withrelay.com/refer_business_link"}
                                ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
@@ -537,28 +542,31 @@ class EmailingService
          "from_email" => FROM_EMAIL[:edwin]
         }
         async = true
-        result = mandrill.messages.send_template template_name, template_content, message, async
+        result = MANDRILL.messages.send_template template_name, template_content, message, async
       rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
         puts "A mandrill error occurred: #{e.class} - #{e.message}"
       rescue StandardError => e
       end
     end
 
-    def customer_transaction_detail(transaction)
+    def customer_transaction_detail(options={})
       begin
-        mandrill = Mandrill::API.new MANDRILL_API_KEY
         template_name = 'transaction-notification-template'
         template_content = []
-        message = { "subject" => "#{transaction.user.full_name} sent you #{transaction.amount}",
-         "global_merge_vars"=> [  { "name" => "customer_name", "content" => transaction.user.full_name },
-                                  { "name" => "first_name", "content" => transaction.team.full_name.split.first || 'there' },
-                                  { "name" => "transaction_id", "content" => transaction.id },
-                                  { "name" => "date", "content" => transaction.created_at },
-                                  { "name" => "status", "content" => transaction.status },
-                                  { "name" => "payment_method", "content" => "Visa **** **** **** #{transaction.last4} (Expiry #{transaction.exp_month}/#{transaction.exp_year})" },
-                                  { "name" => "amount", "content" => transaction.amount },
-                                  { "name" => "discription", "content" => transaction.discription},
-                                  { "name" => "taxes_and_fees", "content" => transaction.amount_less_fees}
+        message = { "subject" => "#{options['customer_name']} sent you #{options['amount']}",
+         "global_merge_vars"=> [  { "name" => "customer_name", "content" => options['custome_name'] },
+                                  { "name" => "first_name", "content" => options['first_name'] || 'there' },
+                                  { "name" => "transaction_id", "content" => options['id'] },
+                                  { "name" => "date", "content" => options['created_at'] },
+                                  { "name" => "status", "content" => options['status'] },
+                                  { "name" => "payment_method", "content" => "Visa **** **** **** #{options['last4']} (Expiry #{options['exp_month']}/#{options['exp_year']})" },
+                                  { "name" => "amount", "content" => options['amount'] },
+                                  { "name" => "discription", "content" => options['discription']},
+                                  { "name" => "taxes_and_fees", "content" => options['amount_less_fees']},
+                                  { "name" => "transaction_details_link", "content" => "https://www.withrelay.com/transaction_details_link"},
+                                  { "name" => "help_center_link", "content" => "https://www.withrelay.com/help_center_link"},
+                                  { "name" => "email_link", "content" => "mail_to:<redacted_email>"},
+                                  { "name" => "refer_business_link", "content" => "https://www.withrelay.com/refer_business_link"}
                                ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
@@ -567,7 +575,7 @@ class EmailingService
          "from_email" => FROM_EMAIL[:edwin]
         }
         async = true
-        result = mandrill.messages.send_template template_name, template_content, message, async
+        result = MANDRILL.messages.send_template template_name, template_content, message, async
       rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
         puts "A mandrill error occurred: #{e.class} - #{e.message}"
       rescue StandardError => e
@@ -576,11 +584,10 @@ class EmailingService
 
     def unread_message_reminders(user)
       begin
-        mandrill = Mandrill::API.new MANDRILL_API_KEY
         template_name = 'unread-messages-template'
         template_content = []
         message = { "subject" => "You have unread messages",
-         "global_merge_vars"=> [  { "name" => "first_name", "content" => user.full_name.split.first || 'there' }
+         "global_merge_vars"=> [  { "name" => "first_name", "content" => user.first_name || 'there' }
                                ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
@@ -589,7 +596,7 @@ class EmailingService
          "from_email" => FROM_EMAIL[:edwin]
         }
         async = true
-        result = mandrill.messages.send_template template_name, template_content, message, async
+        result = MANDRILL.messages.send_template template_name, template_content, message, async
       rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
         puts "A mandrill error occurred: #{e.class} - #{e.message}"
       rescue StandardError => e
@@ -598,11 +605,10 @@ class EmailingService
 
     def incomplete_sign_up(user)
       begin
-        mandrill = Mandrill::API.new MANDRILL_API_KEY
         template_name = 'incomplete-sign-up'
         template_content = []
         message = { "subject" => "Incomplete account setup",
-         "global_merge_vars"=> [  { "name" => "first_name", "content" => user.full_name.split.first || 'there' }
+         "global_merge_vars"=> [  { "name" => "first_name", "content" => user.first_name || 'there' }
                                ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
@@ -611,7 +617,7 @@ class EmailingService
          "from_email" => FROM_EMAIL[:edwin]
         }
         async = true
-        result = mandrill.messages.send_template template_name, template_content, message, async
+        result = MANDRILL.messages.send_template template_name, template_content, message, async
       rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
         puts "A mandrill error occurred: #{e.class} - #{e.message}"
       rescue StandardError => e
@@ -619,13 +625,11 @@ class EmailingService
     end
 
     def auto_reload_failure(user)
-
       begin
-        mandrill = Mandrill::API.new MANDRILL_API_KEY
         template_name = 'auto-reload-failure'
         template_content = []
         message = { "subject" => "Auto-reload Failure",
-         "global_merge_vars"=> [  { "name" => "first_name", "content" => user.full_name.split.first || 'there' }
+         "global_merge_vars"=> [  { "name" => "first_name", "content" => user.first_name || 'there' }
                                ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
@@ -634,20 +638,20 @@ class EmailingService
          "from_email" => FROM_EMAIL[:edwin]
         }
         async = true
-        result = mandrill.messages.send_template template_name, template_content, message, async
+        result = MANDRILL.messages.send_template template_name, template_content, message, async
       rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
         puts "A mandrill error occurred: #{e.class} - #{e.message}"
       rescue StandardError => e
+        puts e
       end
     end
 
     def customer_sign_up(user)
       begin
-        mandrill = Mandrill::API.new MANDRILL_API_KEY
         template_name = 'customer-sign-up'
         template_content = []
         message = { "subject" => "Welcome to Relay",
-         "global_merge_vars"=> [  { "name" => "first_name", "content" => user.full_name.split.first || 'there' }
+         "global_merge_vars"=> [  { "name" => "first_name", "content" => user.first_name || 'there' }
                                ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
@@ -656,20 +660,19 @@ class EmailingService
          "from_email" => FROM_EMAIL[:edwin]
         }
         async = true
-        result = mandrill.messages.send_template template_name, template_content, message, async
+        result = MANDRILL.messages.send_template template_name, template_content, message, async
       rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
         puts "A mandrill error occurred: #{e.class} - #{e.message}"
       rescue StandardError => e
       end
     end
 
-    def customer_sign_up(user)
+    def customer_sign_up_from_referral_link(user)
       begin
-        mandrill = Mandrill::API.new MANDRILL_API_KEY
         template_name = 'customer-sign-up-from-referral-link'
         template_content = []
         message = { "subject" => "Welcome to Relay",
-         "global_merge_vars"=> [  { "name" => "first_name", "content" => user.full_name.split.first || 'there' },
+         "global_merge_vars"=> [  { "name" => "first_name", "content" => user.first_name || 'there' },
                                   {"name" => "business_name", "content" => user.org_name},
                                   {"name" => "relay_number", "content" => user.rhombus_number}
                                ],
@@ -680,7 +683,7 @@ class EmailingService
          "from_email" => FROM_EMAIL[:surya]
         }
         async = true
-        result = mandrill.messages.send_template template_name, template_content, message, async
+        result = MANDRILL.messages.send_template template_name, template_content, message, async
       rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
         puts "A mandrill error occurred: #{e.class} - #{e.message}"
       rescue StandardError => e
@@ -689,22 +692,21 @@ class EmailingService
 
     def customer_added_to_relay
       begin
-        mandrill = Mandrill::API.new MANDRILL_API_KEY
         template_name = 'customer-added-to-relay'
         template_content = []
         message = { "subject" => "Best way to reach us",
-         "global_merge_vars"=> [  { "name" => "first_name", "content" => user.full_name.split.first || 'there' },
+         "global_merge_vars"=> [  { "name" => "first_name", "content" => user.first_name || 'there' },
                                   {"name" => "business_name", "content" => user.org_name},
                                   {"name" => "relay_number", "content" => user.rhombus_number}
                                ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
          "bcc_address"=> SENDER,
-         "from_name" => "",
+         "from_name" => "Surya from Relay",
          "from_email" => FROM_EMAIL[:surya]
         }
         async = true
-        result = mandrill.messages.send_template template_name, template_content, message, async
+        result = MANDRILL.messages.send_template template_name, template_content, message, async
       rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
         puts "A mandrill error occurred: #{e.class} - #{e.message}"
       rescue StandardError => e
