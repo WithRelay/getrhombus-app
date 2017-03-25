@@ -1,6 +1,6 @@
 var PriceSlider = new function() {
 
-  var pricingSlider, priceValueSpan, amount, selection; //currentAmount,  
+  var pricingSlider, priceValueSpan, amount, selection; //currentAmount,
   var plans = { PlanA: { amt: 0, min: 0, max: 100 },
                 PlanB: { amt: 50, min: 101, max: 1000 },
                 PlanC: { amt: 75, min: 1001, max: 2500 },
@@ -63,7 +63,7 @@ var PriceSlider = new function() {
       $('#pricing-range').val(plan_range(pricingSlider.value)[0]);
     } else {
       $('#select_plan').attr('href', '/users/sign_up?signup_plan=' + plan_range((pricingSlider.value)[0]));
-    } 
+    }
     */
   };
 
@@ -77,7 +77,7 @@ var PriceSlider = new function() {
 
   function planInfo(amount) {
     return '<div class="customer-count-text">\
-      <strong>'+ pricingSlider.value +'</strong>\
+      <strong>'+ parseInt(pricingSlider.value).toLocaleString('en-US') +'</strong>\
       <span class="customer-count-text-alt">customers</span></div>\
       <div class="price-table underline-div"></div>\
       <h1 class="plan-amount">$'+ amount +'/Month</h1>'
@@ -86,5 +86,5 @@ var PriceSlider = new function() {
 };
 
 $(document).ready(function() {
-  PriceSlider.bind_slider(); 
+  PriceSlider.bind_slider();
 });
