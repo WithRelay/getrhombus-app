@@ -8,6 +8,8 @@
   <h1 class="empty-state-dash hero-h1 home-header">To send your first campaign create a list or
     <br>
     segment from the customer dashboard</h1>
-    <a class="button error-page-button w-button" href="#">Customer dashboard</a>
+    <%= link_to customers_user_path(current_user), class: "button error-page-button w-button" do %>
+      <strong> Customer dashboard</strong>
+    <% end %>
 </div>
 </div>
