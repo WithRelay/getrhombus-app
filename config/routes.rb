@@ -35,7 +35,7 @@ Rails.application.routes.draw  do
     end
   end
 
- #authenticate :user, -> (user) { CheckUser::RouteAuthentication.new(user).should_authenticate? } do
+ # authenticate :user, -> (user) { CheckUser::RouteAuthentication.new(user).should_authenticate? } do
     get 'user_lists/remove_user' => 'user_lists#remove_user'
     get 'fb_pages/remove_integration' => 'fb_pages#remove_integration'
     get 'link_facebook' => 'link_fb_accounts#link_facebook'
@@ -129,10 +129,10 @@ Rails.application.routes.draw  do
       resources :lists, only: [:create, :index, :update] do
         get 'check_list_name', on: :collection
       end
-      resources :hashtags, only: [:index] do 
+      resources :hashtags, only: [:index] do
         get 'check_hashtag_name', on: :collection
         delete 'images/:image_id' => "hashtags#image_delete", on: :member
-      end 
+      end
 
       resources :saved_replies
       # Campaign Routes
@@ -147,7 +147,7 @@ Rails.application.routes.draw  do
       # reminder routes
       resources :reminders, only: [:create, :edit]
       #--------------------------------------------------------------------------#
-      
+
       resources :transactions, only: [:index, :create] do
         post '/:txn_number/refund' => 'transactions#refund', on: :collection
       end
@@ -175,7 +175,7 @@ Rails.application.routes.draw  do
         get 'rating', on: :member
       end
     end
-  #end
+  # end
 
 
   ## catch all other to 404

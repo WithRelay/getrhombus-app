@@ -27,7 +27,7 @@ class WeeklyActivitySummaryJob
                                customer_email: c.email
                             }
       end
-      
+
       { merchant_name: merchant.first_name,
         merchant_email: merchant.email,
         customers_list: customers_array,
@@ -35,5 +35,15 @@ class WeeklyActivitySummaryJob
         till_data: Time.current.strftime("%A, %B %d")
       }
     end
+
+    def weekly_transactions
+        transactions = Transaction.exclude_refunded_transactions().only_captured_transactions()
+                                  .where('team_id =? AND created_at >=?', current_user.id, 7.days.ago.utc)
+    end
+
+    def message_datas
+      message_count('weekly')
+    end
+
   end
 end

@@ -21,8 +21,7 @@
 $(document).ready(function(){
   if ($('.pagination').length) {
     $(window).scroll(function() {
-      var url;
-      url = $('.pagination .next_page').attr('href');
+      var url = $('.pagination a.next_page').attr('href');
       if (url && $(window).scrollTop() > $(document).height() - $(window).height() - 50) {
         return $.getScript(url);
       }

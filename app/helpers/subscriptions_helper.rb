@@ -147,4 +147,10 @@ module SubscriptionsHelper
     end
   end
 
+  def create_plan_field
+    if controller.controller_name == 'subscriptions'
+      '<a class="create-new-plan modal-loader"  href="#" modal-target= "new-plan-modal">Create a new plan</a>'.html_safe
+    end
+  end
+
 end
