@@ -35,6 +35,8 @@ class KnowledgeBaseCategoriesController < ApplicationController
 
   def show
     @kb_list = @knowledge_base_category.knowledge_bases
+  rescue StandardError
+    redirect_to to_404_path
   end
 
   private
@@ -42,7 +44,7 @@ class KnowledgeBaseCategoriesController < ApplicationController
   def kb_params
     params.require(:knowledge_base_category).permit(:name)
   end
-  
+
   def set_kb
     @knowledge_base_category = KnowledgeBaseCategory.find_by(slug: params[:slug])
   end
