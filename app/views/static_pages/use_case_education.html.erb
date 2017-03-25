@@ -1,8 +1,8 @@
 <div class="use-case-image-wrapper-education">
   <h1 class="alt hero-h1 home-header use-case-header">Modern school communication <br>using text messages</h1>
-  <h5 class="footer-cta-subheading signup-box-subheading use-case">FOR UNIVERSITIES, COLLEGES, HIGH-SCHOOL/K-12</h5>
-  <a class="button use-case-button w-button" href="#">Get started for free</a>
-  <a class="button demo-request use-case-button w-button" href="#">Schedule Demo</a>
+<h5 class="footer-cta-subheading signup-box-subheading use-case">FOR UNIVERSITIES, COLLEGES, HIGH-SCHOOL/K-12</h5>
+  <%= link_to 'Get started for free', new_user_registration_path, class: 'button use-case-button w-button' %>
+  <%= link_to 'Schedule Demo', request_demo_path, class: 'button demo-request use-case-button w-button' %>
 </div>
 <div class="home sub-hero-div use-case">
     <h1 class="sub-hero-header">Send &amp; receive important messages from students, <br>parents and staff on any mobile device</h1>
@@ -125,7 +125,9 @@
         </div>
       </div>
     </div>
-    <div class="div-cta-container virtual-terminal w-container"><a class="button div-cta w-button" href="#">Get started free</a><a class="button demo div-cta w-button" href="#">Schedule a demo</a>
+    <div class="div-cta-container virtual-terminal w-container">
+      <%= link_to 'Get started for free', new_user_registration_path, class: 'button div-cta w-button' %>
+      <%= link_to 'Schedule Demo', request_demo_path, class: 'button demo div-cta w-button' %>
     </div>
   </div>
 <%= render 'shared/get_started_form'%>

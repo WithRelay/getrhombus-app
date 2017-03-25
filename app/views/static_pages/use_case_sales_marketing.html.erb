@@ -1,8 +1,8 @@
 <div class="use-case-image-wrapper-sales">
 <h1 class="alt hero-h1 home-header use-case-header">Increase your sales conversion by 30%, and <br>retain existing customers using text messages</h1>
       <h5 class="footer-cta-subheading signup-box-subheading use-case">agencies, sales staff, in-house marketing teams</h5>
-        <a class="button use-case-button w-button" href="users/sign_up">Get started for free</a>
-        <a class="button demo-request use-case-button w-button" href="request-demo">Schedule Demo</a>
+      <%= link_to 'Get started for free', new_user_registration_path, class: 'button use-case-button w-button' %>
+      <%= link_to 'Schedule Demo', request_demo_path, class: 'button demo-request use-case-button w-button' %>
     </div>
 <div class="home sub-hero-div use-case">
   <h1 class="sub-hero-header">Communicate with prospects and customers effectively. <br>Guaranteed 98% open rates for mobile messages.</h1>
@@ -126,7 +126,7 @@
     </div>
   </div>
   <div class="div-cta-container virtual-terminal w-container">
-    <a class="button div-cta w-button" href="users/sign_up">Get started free</a>
+    <%= link_to 'Get started for free', new_user_registration_path, class: 'button div-cta w-button' %>
     <%= link_to 'Schedule a demo', request_demo_path, class: 'button demo div-cta w-button' %>
   </div>
 </div>
