@@ -24,6 +24,7 @@ module ApplicationHelper
   end
 
   def header_class
+    return 'bg-hero features-alt-hero hero' if "static_pages-features" == params_controller_action
     "static_pages-home" == params_controller_action ? 'default hero' : 'hero use-case'
   end
 
