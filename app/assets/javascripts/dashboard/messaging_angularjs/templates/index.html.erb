@@ -26,17 +26,17 @@
 
       <a class="message-tab w-inline-block" ng-repeat="(identifier, conversation) in conversations | filterConversationList:query | orderObjectBy:'last_message_ts':true" ng-click="getConversationMessages(conversation, true)">
         <div class="message-tab-content-wrapper w-row">
-          
+
           <div class="message-tab-picture-column w-col w-col-2">
             <div class="w-clearfix">
               <%# combined color and image div into the same a tag %>
               <div ng-class="{ 'no-image-found-placeholder' : true, 'radius-color-{{conversation.profile_image.value}}' : true }" ng-if="conversation.profile_image.type == 'color'">
                 <div class="customer-initial">{{ conversation.full_name.charAt(0) }}</div>
               </div>
-              
+
               <div ng-class="conversation.last_message_type === 'Message' ? 'channel-indicator-2' : 'channel-indicator'" ng-if="
               conversation.last_message"></div>
-    
+
               <%# added height %>
               <img ng-if="conversation.profile_image.type == 'image'" class="customer-profile-picture" ng-src="{{conversation.profile_image.value}}" width="30" height='30'>
 
@@ -52,7 +52,7 @@
 
         </div>
       </a>
-      
+
     </div>
   </div>
 
@@ -104,13 +104,13 @@
   <div class="right side-bar">
     <div ng-if='customer_contact_count == 0'>{{ customer_contact_count_message }}</div>
     <div class="right-nav-profile-content-wrapper" ng-if='snapshot != undefined && customer_contact_count > 0'>
-      
+
       <img ng-if="snapshot.profile_image.type == 'image'" class="profile-picture-right-nav" ng-src="{{snapshot.profile_image.value}}" width="60">
-      
+
       <div ng-if="snapshot.profile_image.type == 'color'" class="chat-wwindow no-image-found-placeholder radius-color-{{snapshot.profile_image.value}}">
         <div class="customer-initial">{{ snapshot.full_name.charAt(0) }}</div>
       </div>
-      
+
       <div class="dashboard-right-nav signup-box-subheading">{{ snapshot.full_name.toUpperCase() }}<span ng-class="{ 'messaging-snapshot': true, 'relay-id' : true, 'leads unverified' : snapshot.verified == 'UNVERIFIED' }">{{ snapshot.verified }}</span>
       </div>
       <div class="left-column-text number"> &nbsp; &nbsp;{{ snapshot.phone_number }}</div>
@@ -133,7 +133,7 @@
       <div class="w-tab-content">
 
         <div class="transaction-pane w--tab-active w-tab-pane" data-w-tab="Tab 1">
-          
+
           <a class="transactions-div-wrapper w-inline-block" ng-repeat="transaction in customer_transactions" data-index="{{ $index }}">
             <div class="transaction-div">
               <div class="right-nav-transaction-div-table w-row">
@@ -210,7 +210,7 @@
   <div class="dashboard-body messaging w-clearfix" id='messages-box' when-scrolled-up="getConversationMessages(selected_conversation, false)" scroll-bottom-on="status.loaded" in-view-container>
 
     <%# <div ng-show="status.loading" class="me"><span>loading...</span></div> %>
-    
+
     <%# added this wrapping div %>
     <!-- message ng-repeat -->
     <div ng-repeat="message in selected_conversation_messages track by messageTrackingFunction(message)" on-finish-render>
@@ -229,7 +229,7 @@
           <div class="customer-messaging-bubble-picture-wrapper w-clearfix w-col w-col-2">
             <%# added height %>
             <img ng-if="message.profile_image.type == 'image'" class="messaging-bubble right-nav-profile-picture" ng-src="{{message.profile_image.value}}" width="35" height='35'>
-            
+
             <div ng-class="{ 'chat-wwindow no-image-found-placeholder' : true, 'radius-color-{{message.profile_image.value}}' : true }" ng-if="message.profile_image.type == 'color'">
               <div class="customer-initial">{{ selected_conversation.full_name.charAt(0) }}</div>
             </div>
@@ -286,9 +286,9 @@
     </div>
     <!-- end message ng-repeat -->
   </div>
-  
+
   <!-- [if lte IE 9]><script src="https://cdnjs.cloudflare.com/ajax/libs/placeholders/3.0.2/placeholders.min.js"></script><![endif] -->
-    
+
   <div class="modal-body w-hidden" id='saved-reply-selection-div'>
     <%# removed all webflow data attributes %>
     <div class="saved-reply-selection-wrapper w-clearfix">
@@ -310,7 +310,7 @@
     </div>
   </div>
 
-  
+
   <div class="modal-body w-hidden" id='charge-a-customer-div'>
     <%# removed all webflow data attributes %>
     <div class="charge-customer-form-wrapper">
@@ -326,7 +326,7 @@
           <div class="form-group col-xs-6">
             <selectize class="form-control dropdown w-select" config='hashtag_config' ng-model="charge.hashtag_id" options='hashtag_config_options'></selectize>
           </div>
-            
+
           <input class="amount-field text-field w-input" type="number" min="1" max='15000' ng-model='charge.amount' name="amount" placeholder="$10.20" step='0.01' ng-pattern="/^\d+(.\d{1,2})?$/" ng-class="{'has-error': chargeForm.amount.$invalid && !chargeForm.amount.$pristine }">
           <%#<span ng-show="chargeForm.amount.$invalid && !chargeForm.amount.$pristine">A valid amount is required</span>%>
 
@@ -336,7 +336,7 @@
             <input type="checkbox" class="w-checkbox-input" name="authorize" ng-model='charge.authorize' value="authorize">
             <label class="w-form-label" for="checkbox-4">Authorize only</label>
           </div>
-      
+
           <button class="button charge-modal-button w-button" id="chargeButton" ng-disabled="disableChargeButton(chargeForm)" type="submit">{{charge_btn}}</button>
         </form>
       </div>
@@ -449,9 +449,9 @@
         <form class="w-clearfix" id="email-form-9" name="email-form-9">
           <textarea class="file-description text-area w-input" id="File-Description-2" maxlength="5000" name="File-Description-2" placeholder="Add description (optional)" ng-model="mms_text" ng-trim="true"></textarea>
           <div class="file-sender split-button-wrapper">
-            
+
             <a class="message-window-tabs send-button split-button w-button" ng-click="sendMMS('Message')">{{send_mms_btn}}</a>
-            
+
             <div class="w-dropdown">
               <div class="split-dropdown w-dropdown-toggle"><span class="font-icon-split"></span>
               </div>
@@ -485,5 +485,3 @@
       </form>
     </div>
   </div>
-
-

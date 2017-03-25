@@ -12,14 +12,7 @@ class CampaignsController < ApplicationController
                                                  page: params[:page])
                                                  .order('updated_at DESC')
 
-    if @campaigns.present?
-      respond_to do |format|
-        format.js { render partial: 'shared/index.js.erb', locals: { obj: @campaigns } }
-        format.html
-      end
-    else
-      render 'empty_campaign'
-    end
+    @campaigns.present? ? render_requested_format(@campaigns) : render(:empty_campaign)
   end
 
   # initializing campaign as association way using build method.

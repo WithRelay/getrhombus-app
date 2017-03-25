@@ -34,6 +34,13 @@ class ApplicationController < ActionController::Base
 
   protected
 
+    def render_requested_format(obj)
+      respond_to do |format|
+        format.js { render partial: 'shared/index.js.erb', locals: { obj: obj } }
+        format.html
+      end
+    end
+
     def set_time_zone(&block)
       Time.use_zone(current_user.time_zone, &block)
     end
