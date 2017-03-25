@@ -1188,7 +1188,7 @@ h4 {
 }
 
 .hero.bg-hero {
-  background-image: url('/Blue-Wave-2-Background.png');
+  background-image: url('Blue-Wave-2-Background.png');
   background-position: 0px -144px;
   background-size: cover;
   background-repeat: no-repeat;
@@ -1206,8 +1206,8 @@ h4 {
 
 .hero.bg-hero.referral {
   background-color: #fff;
-  background-image: -webkit-linear-gradient(270deg, rgba(141, 162, 183, .5), rgba(141, 162, 183, .5)), url('/work-4.jpg');
-  background-image: linear-gradient(180deg, rgba(141, 162, 183, .5), rgba(141, 162, 183, .5)), url('/work-4.jpg');
+  background-image: -webkit-linear-gradient(270deg, rgba(141, 162, 183, .5), rgba(141, 162, 183, .5)), url('work-4.jpg');
+  background-image: linear-gradient(180deg, rgba(141, 162, 183, .5), rgba(141, 162, 183, .5)), url('work-4.jpg');
   background-position: 0px 0px, 0px -125px;
   background-size: auto, cover;
   background-repeat: repeat, no-repeat;
@@ -1224,7 +1224,7 @@ h4 {
 }
 
 .hero.alt-2 {
-  background-image: url('/Blue-Wave-Background.png');
+  background-image: url('Blue-Wave-Background.png');
   background-position: 0px -313px;
   background-size: cover;
 }
@@ -2057,8 +2057,8 @@ h4 {
   margin-left: 100px;
   border-radius: 4px;
   background-color: #fff;
-  background-image: -webkit-linear-gradient(270deg, rgba(0, 0, 0, .5), rgba(0, 0, 0, .5)), url('/Texting-2.jpg');
-  background-image: linear-gradient(180deg, rgba(0, 0, 0, .5), rgba(0, 0, 0, .5)), url('/Texting-2.jpg');
+  background-image: -webkit-linear-gradient(270deg, rgba(0, 0, 0, .5), rgba(0, 0, 0, .5)), url('Texting-2.jpg');
+  background-image: linear-gradient(180deg, rgba(0, 0, 0, .5), rgba(0, 0, 0, .5)), url('Texting-2.jpg');
   background-position: 0px 0px, 0px 0px;
   background-size: auto, cover;
 }
@@ -3056,7 +3056,7 @@ h4 {
 
 .default-content-section-2.table-section.customer_management {
   padding-bottom: 100px;
-  background-image: url('/Arrow.svg');
+  background-image: url('Arrow.svg');
   background-position: -100px 0px;
   background-size: auto;
   background-repeat: no-repeat;
@@ -6268,7 +6268,7 @@ h4 {
   padding-right: 0px;
   padding-left: 3px;
   float: left;
-  background-image: url('/Whitebox.png');
+  background-image: url('Whitebox.png');
   background-position: 0px 0px;
   background-size: 38px;
   font-family: 'Akkurat regular', sans-serif;
@@ -7604,7 +7604,7 @@ h4 {
   border: 1px solid #1f8cec;
   border-radius: 3px;
   background-color: #fff;
-  background-image: url('/Whitebox.png');
+  background-image: url('Whitebox.png');
   background-position: 0px 0px;
   background-size: 38px;
   font-family: 'Akkurat regular', sans-serif;
@@ -8223,7 +8223,7 @@ h4 {
   margin-left: 2px;
   border: 1px solid #1f8cec;
   border-radius: 3px;
-  background-image: url('/Whitebox.png');
+  background-image: url('Whitebox.png');
   background-position: 0px 0px;
   background-size: 38px;
   font-family: 'Akkurat regular', sans-serif;
@@ -8372,7 +8372,7 @@ h4 {
   width: 47%;
   height: 45px;
   float: left;
-  background-image: url('/Whitebox.png');
+  background-image: url('Whitebox.png');
   background-position: 0px 0px;
   background-size: 38px;
   font-family: 'Akkurat regular', sans-serif;
@@ -8532,7 +8532,7 @@ h4 {
   float: left;
   border: 1px solid #1f8cec;
   border-radius: 3px;
-  background-image: url('/Whitebox.png');
+  background-image: url('Whitebox.png');
   background-position: 0px 0px;
   background-size: 38px;
   font-family: 'Akkurat regular', sans-serif;
@@ -8552,7 +8552,7 @@ h4 {
   margin-left: 2px;
   border: 1px solid #1f8cec;
   border-radius: 3px;
-  background-image: url('/Whitebox.png');
+  background-image: url('Whitebox.png');
   background-position: 0px 0px;
   background-size: cover;
   font-family: 'Akkurat regular', sans-serif;
@@ -8641,7 +8641,7 @@ h4 {
   float: none;
   border: 1px solid #1f8cec;
   border-radius: 3px;
-  background-image: url('/Whitebox.png');
+  background-image: url('Whitebox.png');
   background-position: 0px 0px;
   background-size: 38px;
   font-family: 'Akkurat regular', sans-serif;
@@ -8660,7 +8660,7 @@ h4 {
   margin-left: 10%;
   border: 1px solid #1f8cec;
   border-radius: 3px;
-  background-image: url('/Whitebox.png');
+  background-image: url('Whitebox.png');
   background-position: 0px 0px;
   background-size: 38px;
   font-family: 'Akkurat regular', sans-serif;
@@ -8685,7 +8685,7 @@ h4 {
   margin-left: 10%;
   border: 1px solid #1f8cec;
   border-radius: 3px;
-  background-image: url('/Whitebox.png');
+  background-image: url('Whitebox.png');
   background-position: 0px 0px;
   background-size: 38px;
   font-family: 'Akkurat regular', sans-serif;
@@ -9446,7 +9446,7 @@ h4 {
   margin-left: 10px;
   float: left;
   border: 1px solid #1f8cec;
-  background-image: url('/Whitebox.png');
+  background-image: url('Whitebox.png');
   background-position: 0px 0px;
   background-size: 38px;
   font-family: 'Akkurat regular', sans-serif;
@@ -11370,7 +11370,7 @@ h4 {
 }
 
 .def-row-content-wrapper.picture-bg {
-  background-image: url('/working.jpeg');
+  background-image: url('working.jpeg');
   background-position: 0px 0px;
   background-size: cover;
   background-repeat: no-repeat;
@@ -11444,18 +11444,18 @@ h4 {
   margin-left: 10%;
   padding-top: 100px;
   border-radius: 3px;
-  background-image: url('/work-6.jpg');
+  background-image: url('work-6.jpg');
   background-position: 0px 0px;
   background-size: cover;
   background-repeat: no-repeat;
 }
 
 .use-case-div.alt {
-  background-image: url('/working.jpeg');
+  background-image: url('working.jpeg');
 }
 
 .use-case-div.alt-2 {
-  background-image: url('/Charity.jpg');
+  background-image: url('Charity.jpg');
   background-size: cover;
 }
 
@@ -11979,16 +11979,16 @@ h4 {
   margin: 0% 6% 0px;
   border-radius: 3px;
   background-color: transparent;
-  background-image: -webkit-linear-gradient(270deg, rgba(0, 0, 0, .18), rgba(0, 0, 0, .18)), url('/Use-Case-2.jpg');
-  background-image: linear-gradient(180deg, rgba(0, 0, 0, .18), rgba(0, 0, 0, .18)), url('/Use-Case-2.jpg');
+  background-image: -webkit-linear-gradient(270deg, rgba(0, 0, 0, .18), rgba(0, 0, 0, .18)), url('Use-Case-2.jpg');
+  background-image: linear-gradient(180deg, rgba(0, 0, 0, .18), rgba(0, 0, 0, .18)), url('Use-Case-2.jpg');
   background-position: 0px 0px, 0px 0px;
   background-size: auto, cover;
   background-repeat: repeat, no-repeat;
 }
 
 .use-case-image-wrapper.education {
-  background-image: -webkit-linear-gradient(270deg, null, null), url('/Velocity-Garage.jpg');
-  background-image: linear-gradient(180deg, null, null), url('/Velocity-Garage.jpg');
+  background-image: -webkit-linear-gradient(270deg, null, null), url('Velocity-Garage.jpg');
+  background-image: linear-gradient(180deg, null, null), url('Velocity-Garage.jpg');
 }
 
 .use-case-image-wrapper-content {
@@ -12033,8 +12033,8 @@ h4 {
   height: 700px;
   margin: 0% 6% 0px;
   border-radius: 3px;
-  background-image: -webkit-linear-gradient(270deg, rgba(0, 0, 0, .25), rgba(0, 0, 0, .25)), url('/use-case-4.jpg');
-  background-image: linear-gradient(180deg, rgba(0, 0, 0, .25), rgba(0, 0, 0, .25)), url('/use-case-4.jpg');
+  background-image: -webkit-linear-gradient(270deg, rgba(0, 0, 0, .25), rgba(0, 0, 0, .25)), url('use-case-4.jpg');
+  background-image: linear-gradient(180deg, rgba(0, 0, 0, .25), rgba(0, 0, 0, .25)), url('use-case-4.jpg');
   background-position: 0px 0px, 0px 0px;
   background-size: auto, cover;
   background-repeat: repeat, no-repeat;
@@ -12046,8 +12046,8 @@ h4 {
   margin-right: 6%;
   margin-left: 6%;
   border-radius: 3px;
-  background-image: -webkit-linear-gradient(270deg, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2)), url('/working.jpeg');
-  background-image: linear-gradient(180deg, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2)), url('/working.jpeg');
+  background-image: -webkit-linear-gradient(270deg, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2)), url('working.jpeg');
+  background-image: linear-gradient(180deg, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2)), url('working.jpeg');
   background-position: 0px 0px, 0px 0px;
   background-size: auto, cover;
   background-repeat: repeat, no-repeat;
@@ -12063,8 +12063,8 @@ h4 {
   margin-right: 6%;
   margin-left: 6%;
   border-radius: 3px;
-  background-image: -webkit-linear-gradient(270deg, rgba(0, 0, 0, .25), rgba(0, 0, 0, .25)), url('/Velocity-Garage.jpg');
-  background-image: linear-gradient(180deg, rgba(0, 0, 0, .25), rgba(0, 0, 0, .25)), url('/Velocity-Garage.jpg');
+  background-image: -webkit-linear-gradient(270deg, rgba(0, 0, 0, .25), rgba(0, 0, 0, .25)), url('Velocity-Garage.jpg');
+  background-image: linear-gradient(180deg, rgba(0, 0, 0, .25), rgba(0, 0, 0, .25)), url('Velocity-Garage.jpg');
   background-position: 0px 0px, 1px 0px;
   background-size: auto, cover;
   background-repeat: repeat, no-repeat;
@@ -12076,8 +12076,8 @@ h4 {
   margin-right: 6%;
   margin-left: 6%;
   border-radius: 3px;
-  background-image: -webkit-linear-gradient(270deg, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2)), url('/photo-1449247666642-264389f5f5b1.jpg');
-  background-image: linear-gradient(180deg, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2)), url('/photo-1449247666642-264389f5f5b1.jpg');
+  background-image: -webkit-linear-gradient(270deg, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2)), url('photo-1449247666642-264389f5f5b1.jpg');
+  background-image: linear-gradient(180deg, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2)), url('photo-1449247666642-264389f5f5b1.jpg');
   background-position: 0px 0px, 0px 0px;
   background-size: auto, cover;
 }
@@ -12444,8 +12444,8 @@ h4 {
   margin-right: 6%;
   margin-left: 6%;
   border-radius: 3px;
-  background-image: -webkit-linear-gradient(270deg, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2)), url('/Charity.jpg');
-  background-image: linear-gradient(180deg, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2)), url('/Charity.jpg');
+  background-image: -webkit-linear-gradient(270deg, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2)), url('Charity.jpg');
+  background-image: linear-gradient(180deg, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2)), url('Charity.jpg');
   background-position: 0px 0px, 0px 0px;
   background-size: auto, cover;
   background-repeat: repeat, no-repeat;
@@ -12467,8 +12467,8 @@ h4 {
   margin-right: 6%;
   margin-left: 6%;
   border-radius: 3px;
-  background-image: -webkit-linear-gradient(270deg, rgba(0, 0, 0, .15), rgba(0, 0, 0, .15)), url('/photo-1449247666642-264389f5f5b1.jpg');
-  background-image: linear-gradient(180deg, rgba(0, 0, 0, .15), rgba(0, 0, 0, .15)), url('/photo-1449247666642-264389f5f5b1.jpg');
+  background-image: -webkit-linear-gradient(270deg, rgba(0, 0, 0, .15), rgba(0, 0, 0, .15)), url('photo-1449247666642-264389f5f5b1.jpg');
+  background-image: linear-gradient(180deg, rgba(0, 0, 0, .15), rgba(0, 0, 0, .15)), url('photo-1449247666642-264389f5f5b1.jpg');
   background-position: 0px 0px, 0px 0px;
   background-size: auto, cover;
 }
