@@ -1,49 +1,60 @@
-    <div class="dashboard-nav-links">All Customers</div>
-    <h5 class="left-nav signup-box-subheading"><%= params[:controller]%></h5>
-    <a class="left-nav-tab-wrapper w-inline-block" href="#">
-      <div class="left-nav-tab" data-ix="display-and-hide-customers">&nbsp; &nbsp; Customers &nbsp; &nbsp;</div>
-    </a>
-    <div class="customers-hidden-menu" data-ix="display-none-on-load">
-      <div class="w-form">
-        <form data-name="Email Form 7" id="email-form-7" name="email-form-7">
-          <select class="dropdown segments w-select" data-name="Segment Select" id="Segment-Select" name="Segment-Select">
-            <option value="">Segments</option>
-            <option value="">New customers</option>
-            <option value="">Active customers</option>
-            <option value="">Inactive customers</option>
-            <option value="">Signed up 3 days ago</option>
-          </select>
-        </form>
+<div class="customer-dashboard side-bar w-clearfix">
+  <div class="dashboard-logo-wrapper">
+    <%= link_to root_url do %>
+      <%= image_tag('Relay-Transparent.png', width: 50, class: 'dashboard-logo') %>
+    <% end %>
+  </div>
+  <h5 class="left-nav signup-box-subheading"><%= params[:controller]%></h5>
+  <a class="left-nav-tab-wrapper w-inline-block" href="#">
+    <div class="left-nav-tab">Customers &nbsp; &nbsp;</div>
+  </a>
+  <div class="customers-hidden-menu">
+    <div class="w-form">
+      <form data-name="Email Form 7" id="email-form-7" name="email-form-7">
+        <select class="dropdown segments w-select" data-name="Segment Select" id="Segment-Select" name="Segment-Select">
+          <option value="">Segments</option>
+          <option value="">New customers</option>
+          <option value="">Active customers</option>
+          <option value="">Inactive customers</option>
+          <option value="">Signed up 3 days ago</option>
+        </select>
+      </form>
+      <div class="w-form-done">
+        <div>Thank you! Your submission has been received!</div>
+      </div>
+      <div class="w-form-fail">
+        <div>Oops! Something went wrong while submitting the form</div>
       </div>
     </div>
-    <%= link_to lists_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
-      <div class="left-nav-tab" data-ix="display-and-hide-customers">&nbsp; &nbsp; Lists</div>
-    <% end %>
-
-    <a class="left-nav-tab-wrapper w-inline-block" href="#">
-      <div class="left-nav-tab messaging" data-ix="display-and-hide-left-nav">&nbsp; &nbsp;Messaging &nbsp; &nbsp; </div>
-    </a>
-
-    <div class="messaging-hidden-menu" data-ix="display-none-on-load">
-      <%= link_to 'Conversations', user_conversations_path(current_user), class: 'dashboard-dropdown-link' %>
-      <%= link_to 'Saved Replirs', user_saved_replies_path(current_user), class: 'dashboard-dropdown-link' %>
-      <%= link_to 'Customer Reminders', user_reminders_path(current_user), class: 'dashboard-dropdown-link' %>
+  </div>
+  <a class="left-nav-tab-wrapper w-inline-block" href="#">
+    <div class="left-nav-tab" data-ix="display-and-hide-customers">Lists</div>
+  </a>
+  <a class="left-nav-tab-wrapper w-inline-block" href="#">
+    <div class="left-nav-tab messaging" data-ix="display-and-hide-left-nav">Messaging &nbsp; &nbsp; <span class="sidebar-dropdown-icon">+</span>
     </div>
-    <%= link_to user_campaigns_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
-      <div class="left-nav-tab">&nbsp; &nbsp;Campaigns</div>
-    <% end %>
+  </a>
+  <div class="messaging-hidden-menu" data-ix="display-none-on-load">
+    <%= link_to 'Conversations', user_conversations_path(current_user), class: 'conversations dashboard-dropdown-link' %>
+    <%= link_to 'Saved replies', user_saved_replies_path(current_user), class: 'dashboard-dropdown-link saved-rep' %>
+    <%= link_to 'Scheduled messages', user_reminders_path(current_user), class: 'dashboard-dropdown-link scheduled-msgs' %>
+  </div>
 
-    <a class="left-nav-tab-wrapper w-inline-block" data-ix="display-and-hide-transaction-tab" href="#">
-      <div class="left-nav-tab transactions" data-ix="display-and-hide-transaction-tab"> &nbsp;Transactions &nbsp;</div>
-    </a>
-    <div class="transactions-hidden-nav" data-ix="display-none-on-load">
-      <a class="dashboard-dropdown-link" href="#">Charges</a>
-      <a class="dashboard-dropdown-link" href="#">Pre-authorized</a>
-      <a class="dashboard-dropdown-link" href="#">Subscriptions</a>
+  <%= link_to user_campaigns_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
+    <div class="left-nav-tab">Campaigns</div>
+  <% end %>
+
+  <%= link_to user_transactions_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
+    <div class="left-nav-tab transactions" data-ix="display-and-hide-transaction-tab">Transactions&nbsp;&nbsp; &nbsp;<span class="sidebar-dropdown-icon">+</span>
     </div>
-    <%= link_to user_hashtags_path(current_user), class: "left-nav-tab-wrapper w-inline-block" do %>
-      <div class="left-nav-tab">&nbsp; &nbsp;Hashtags</div>
-    <%end%>
-    <%= link_to contacts_user_path(current_user), class: "left-nav-tab-wrapper w-inline-block" do %>
-      <div class="left-nav-tab">&nbsp; &nbsp;Leads</div>
-    <% end %>
+  <% end %>
+
+  <div class="transactions-hidden-nav" data-ix="display-none-on-load"><a class="charges dashboard-dropdown-link" href="#">Charges</a><a class="dashboard-dropdown-link preauth" href="#">Pre-authorized</a><a class="dashboard-dropdown-link subscription" href="#">Subscriptions</a>
+  </div>
+  <a class="left-nav-tab-wrapper w-inline-block" href="#">
+    <div class="left-nav-tab">Hashtags</div>
+  </a>
+  <a class="left-nav-tab-wrapper w-inline-block" href="#">
+    <div class="left-nav-tab">Leads</div>
+  </a>
+</div>

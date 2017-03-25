@@ -5,32 +5,23 @@
   </div>
 </div>
 <div class="dashboard-nav w-clearfix">
-  <div class="dashboard-logo-wrapper">
-    <%= link_to root_url do %>
-      <%= image_tag('relay-6.png', class: 'dashboard-logo', width: 50) %>
-    <% end %>
-  </div>
   <div class="dashboard-nav-links-wrapper">
     <a class="w-clearfix w-inline-block" href="#">
-        <div class="dash-header-links">
-          <%= link_to user_path(current_user), class: 'header-links-fix' do %>
-             &nbsp;<strong>Dashboard</strong>
-          <% end %>
-        </div>
-
-        <div class="dash-header-links new-link">
-          <%= link_to customers_user_path(current_user), class: 'header-links-fix' do %>
-             &nbsp;<strong>All &nbsp;customers</strong>
-          <% end %>
-        </div>
-        <div class="dash-header-links new-link">
-          <%= link_to customers_user_path(current_user), class: 'header-links-fix' do %>
-             &nbsp;<strong>New &nbsp;customers</strong>
-          <% end %>
-        </div>
+      <%= link_to user_path(current_user), class: 'dash-header-links' do %>
+         &nbsp;<strong>Dashboard</strong>
+      <% end %>
+      <%= link_to customers_user_path(current_user), class: 'dash-header-links new-link' do %>
+         &nbsp;<strong>All &nbsp;customers</strong>
+      <% end %>
+      <%= link_to customers_user_path(current_user), class: 'dash-header-links new-link' do %>
+         &nbsp;<strong>New &nbsp;customers</strong>
+      <% end %>
       <%= render "shared/rhombus_number" %>
     </a>
   </div>
-
-  <%= render 'shared/settings_dropdown' %>
+  <div class="dashboard-nav-links-wrapper new-tab right-nav settings-dropdown">
+    <div class="dropdown-wrapper w-dropdown" data-delay="0">
+      <%= render 'shared/settings_dropdown' %>
+    </div>
+  </div>
 </div>
