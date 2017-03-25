@@ -27,12 +27,12 @@ var FlashHandler = new function() {
     }
   }
 
-  // toast message for error, success, notice
-  var typeObj = { 'notice': 'success', 'warning': 'info', 'error':'error', 'errors': 'error' };
+  // toast message for error, success, notice, alert
+  var typeObj = { 'notice': 'success', 'warning': 'info', 'error':'error', 'errors': 'error', 'alert': 'error' };
   this.setFlashMessage = function(msg, type){
     var messageToSet = typeObj[type] || 'Attention';
     showToastr(messageToSet, arrayToString(msg));
-    if (type !== 'error') { $('.toasters').fadeOut(7000);}
+    if (typeObj[type] !== 'error') { $('.toasters').fadeOut(7000);}
     $('.toaster-font-awesome').on('click', function (e) {
       e.preventDefault();
       $('.toasters').fadeOut(3000);
