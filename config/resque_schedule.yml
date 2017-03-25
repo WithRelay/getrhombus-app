@@ -1,28 +1,31 @@
 drip_campaign_emails:
-  cron: '0 11 * * *' # “At 11:00 on every day”
+  cron: '0 11 * * * America/New_York' # “At 11:00 every day”
   class: "DripCampaignJob"
   args:
   description: "This job runs our drip campaigns."
   queue: drip_campaigns
 
 weekly_activity_summary:
-  cron: '0 8 * * 1' #“At 8:00 on Monday.”
+  cron: '0 11 * * 1 America/New_York' #“At 11am Eastern Time on Monday.”
   class: "WeeklyActivitySummaryJob"
   args:
   description: "This job send weekly activity summary."
   queue: weekly_activity_summary
+  
 # alert_emails:
 #   #every: 15m
 #   every: 15s
 #   class: "MessageAlertJob"
 #   args:
 #   description: "This job alerts merchants of unread messages."
+
 # card_expired_emails:
 #   cron: "0 12 * * * America/New_York"
 #   every: 15s
 #   class: "CardExpiredJob"
 #   args:
 #   description: "This job notifies customers of expired or soon-to-expire cards."
+
 recurring_campaigns: # send email for campaign list
   cron: '5 * * * *'
   class: 'RecurringCampaignJob' # class RecurringCampaignJob is present in app/jobs which represents campaign jobs

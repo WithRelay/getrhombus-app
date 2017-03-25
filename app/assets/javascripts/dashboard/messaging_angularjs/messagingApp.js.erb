@@ -209,7 +209,7 @@ messagingApp.factory('conversationService', function($http, $q, Upload){
 });
 
 
-messagingApp.factory('transactionService', function($http, $q, Upload){
+messagingApp.factory('transactionService', function($http, $q){
   var service = {};
   var base_url = window.location.origin + '/v1/transactions';
   var token = { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content') };
@@ -251,7 +251,7 @@ messagingApp.factory('transactionService', function($http, $q, Upload){
   return service;
 });
 
-messagingApp.factory('savedReplyService', function($http, $q, Upload){
+messagingApp.factory('savedReplyService', function($http, $q){
   var service = {};
   var base_url = window.location.origin + '/v1/saved_replies';
   var token = { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content') };
@@ -273,12 +273,12 @@ messagingApp.factory('savedReplyService', function($http, $q, Upload){
   return service;
 });
 
-messagingApp.factory('userService', function($http, $q, Upload){
+messagingApp.factory('userService', function($http, $q) {
   var service = {};
   var base_url = window.location.origin + '/v1/users';
   var token = { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content') };
 
-  service.getSnapshot = function(data){
+  service.getSnapshot = function(data) {
     var deferred = $q.defer();
     $http.get(base_url + '/snapshot.json', { params: data })
     .success(function(data) {
@@ -295,7 +295,7 @@ messagingApp.factory('userService', function($http, $q, Upload){
   return service;
 });
 
-messagingApp.factory('listService', function($http, $q, Upload){
+messagingApp.factory('listService', function($http, $q) {
   var service = {};
   var base_url = window.location.origin + '/v1/lists';
   var token = { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content') };
@@ -320,7 +320,7 @@ messagingApp.factory('listService', function($http, $q, Upload){
       method: 'POST',
       url: base_url + '.json',
       headers: token,
-      //data: { transaction: data }
+      //data: data
     })
     .success(function(data) { 
       console.log("in service pass for add user to list");
@@ -330,6 +330,48 @@ messagingApp.factory('listService', function($http, $q, Upload){
       console.log('in service fail for add user to list');
       deferred.reject(data);
     });
+    return deferred.promise;
+  };
+
+  service.getListsForCustomer = function(data){
+    var deferred = $q.defer();
+    $http.get(base_url + '.json', { params: data })
+    .success(function(data) {
+      console.log('console success in service get customer lists'); 
+      deferred.resolve(data);
+    })
+    .error(function(data, status, headers, config) { 
+      console.log('console fail in service get customer lists'); 
+      deferred.reject("there was an error");
+    });
+    return deferred.promise;
+  }
+
+  return service;
+});
+
+messagingApp.factory('reminderService', function($http, $q) {
+  var service = {};
+  var base_url = window.location.origin + '/v1/reminders';
+  var token = { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content') };
+
+  service.createReminder = function(data) {
+    var deferred = $q.defer();
+    $http({
+      method: 'POST',
+      url: base_url + '.json',
+      headers: token,
+      //data: data
+    })
+    .success(function(data) { 
+      console.log("in service pass for create reminder");
+      deferred.resolve(data);
+    })
+    .error(function(data) { 
+      console.log('in service fail for create reminder');
+      deferred.reject(data);
+    });
+    
     return deferred.promise;
   };
 
