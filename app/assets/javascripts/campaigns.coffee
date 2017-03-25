@@ -30,6 +30,7 @@ class @DatePicker
       $(this.element).daterangepicker
         timePicker: time,
         timePickerIncrement: 60,
+        drops: "up",
         singleDatePicker: YES,
         locale: { format: setFormat },
         minDate: min

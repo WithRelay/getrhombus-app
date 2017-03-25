@@ -7,11 +7,9 @@ Taiwo
   - upon signing up, does an existing contact update to become customer?
   - review where merchant customer is created.... see create_subscription, add-token_to_customer, etc
 - review transaction model - send_card_error
-- messaging lists, reminders
+- messaging lists, reminders (shells created)
 - workflow for sign in, sign up and places where we add card, token, referrer, contact and customer, payment capture
-- send in object into user profile objects - test that we save 3 queries
 - conversation from system
-- unable to subscribe to notifications on 404 page
 
 
 

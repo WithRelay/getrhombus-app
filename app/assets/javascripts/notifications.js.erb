@@ -30,11 +30,7 @@ $(document).ready(function() {
           });  
         }      
       })
-      .fail(function(data, textStatus, response) {
-        Offline.check();
-        if (type && Offline.state == "up")
-          FlashHandler.setFlashMessage('Unable to subscribe to your notifications.', 'error');
-      });
+      .fail(function(data, textStatus, response) {});
     }
   }
 

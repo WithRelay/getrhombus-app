@@ -147,7 +147,7 @@
       <div class="w-row welcome-dash-table-wrapper">
         <div class="w-col w-col-3">
           <div class="average-message-count-per-day customer-contacts-2 welcome-dash-content-container">
-            <h1 class="new-customers"><%= @msg_perform[:messages][:msg_today] %></h1>
+            <h1 class="new-customers"><%= @msg_perform[:messages][:msg_count] %></h1>
             <h4 class="count-description"> &nbsp;Messages Today</h4>
             <h4 class="count-description transaction-count">Facebook <%= @msg_perform[:messages][:fb_msg_percent] %>%  |
                SMS &nbsp;<%= @msg_perform[:messages][:txt_msg_percent] %>%</h4>

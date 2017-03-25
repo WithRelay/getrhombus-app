@@ -65,7 +65,8 @@ class BasePresenter < SimpleDelegator
 
   def format_customer_name
     customer_id = @model.class == MerchantCustomer ? @model.customer_id : @model.id
-    User.get_conversation_display_name(customer_id, 'user')
+    user_obj = @model.class == MerchantCustomer ? nil : @model
+    User.get_conversation_display_name(customer_id, 'user', user_obj)
   end
 
   def customer_first_visit_formatted
