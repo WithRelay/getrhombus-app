@@ -76,7 +76,7 @@ module ApplicationHelper
 
   def unauthenticate_controller
     static_controllers = ['static_pages', 'contact_forms' ]
-    static_controllers.include?(params[:controller]) unless relay_docs_pages
+    static_controllers.include?(params[:controller]) #unless relay_docs_pages
   end
 
   def restrict_static_pages
