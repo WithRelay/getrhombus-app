@@ -34,10 +34,6 @@ class StaticPagesController < ApplicationController
 
   def relay_docs; end
 
-	def creating_campaigns_in_relay
-		@url = action_name.split('_').join("-")
-	end
-
   def platform_integrations; end
 
   def request_demo; end
@@ -56,7 +52,7 @@ class StaticPagesController < ApplicationController
 
   def use_case_customer_support; end
 
-  def refer_a_business; end
+  # def refer_a_business; end
 
   def relay_docs; end
 

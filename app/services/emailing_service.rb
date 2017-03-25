@@ -423,9 +423,6 @@ class EmailingService
     def first_time_message_auto_response(user)
     end
 
-    def send_demo_notifcation(demo)
-    end
-
     def account_balance_alert(user)
       begin
         template_name = 'low-account-balance-template'
@@ -467,7 +464,7 @@ class EmailingService
                                   { "name" => "taxes_and_fees", "content" => options['taxes_and_fees'] },
                                   { "name" => "total", "content" => options['amount'] },
                                   { "name" => "relay_number", "content" => options['rhombus_number'] },
-                                  { "name" => "merchant_email", "content" => options['merchant_email'] }
+                                  { "name" => "merchant_email", "content" => options['merchant_email'] },
                                   { "name" => "transaction_history_link", "content" => "https://www.withrelay.com/transaction_history_link"},
                                   { "name" => "use_relay_link", "content" => "https://www.withrelay.com/use_relay_link"}
                                ],

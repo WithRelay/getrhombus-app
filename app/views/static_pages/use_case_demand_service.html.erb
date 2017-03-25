@@ -1,8 +1,8 @@
 <div class="use-case-image-wrapper-on-demand">
-  <h1 class="alt hero-h1 home-header use-case-header">Mobile messaging <br>for your home services or on-demand <br>delivery business</h1> 
+  <h1 class="alt hero-h1 home-header use-case-header">Mobile messaging <br>for your home services or on-demand <br>delivery business</h1>
   <h5 class="footer-cta-subheading signup-box-subheading use-case">LOGISTICS, FOOD DELIVERY SERVICES, ON-DEMAND BUSINESS</h5>
-  <a class="button use-case-button w-button" href="#">Get started for free</a>
-  <a class="button demo-request use-case-button w-button" href="#">Schedule Demo</a>
+  <%= link_to 'Get started for free', new_user_registration_path, class: 'button use-case-button w-button' %>
+  <%= link_to 'Schedule Demo', request_demo_path, class: 'button demo-request use-case-button w-button' %>
   </div>
 <div class="home sub-hero-div use-case">
     <h1 class="sub-hero-header">Accept service or delivery requests from customers, <br>and dispatch your workforce using simple text messages.</h1>
@@ -125,7 +125,9 @@
         </div>
       </div>
     </div>
-    <div class="div-cta-container virtual-terminal w-container"><a class="button div-cta w-button" href="#">Get started free</a><a class="button demo div-cta w-button" href="#">Schedule a demo</a>
+    <div class="div-cta-container virtual-terminal w-container">
+      <%= link_to 'Get started for free', new_user_registration_path, class: 'button div-cta w-button' %>
+      <%= link_to 'Schedule Demo', request_demo_path, class: 'button demo div-cta w-button' %>
     </div>
   </div>
 <%= render 'shared/get_started_form'%>

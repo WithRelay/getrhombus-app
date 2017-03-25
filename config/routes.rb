@@ -4,12 +4,9 @@ Rails.application.routes.draw  do
 
   # Dynamic action for static_controller routes eg: home_page will generate as home-page
   StaticPagesController.action_methods.each do |action|
-    unless action == 'creating_campaigns_in_relay'
-      get action.split('_').join('-') => "static_pages##{action}"
-    end
+    get action.split('_').join('-') => "static_pages##{action}"
   end
 
-  get 'relay-docs/creating-campaigns-in-relay' => 'static_pages#creating_campaigns_in_relay'
   get "relay-docs-categories/:slug" => "knowledge_base_categories#show"
 
   devise_for :users, controllers: { registrations: "registrations", omniauth_callbacks: "omniauth_callbacks", sessions: 'sessions' }
