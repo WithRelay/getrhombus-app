@@ -1,7 +1,7 @@
 <div class="fixed-navbar w-nav" data-animation="default" data-collapse="medium" data-duration="400" data-easing="ease-out" data-easing2="ease-in" data-ix="fixed-nav-display-none">
   <div class="navbar-content-wrapper w-container">
     <%= link_to root_url, class: 'brand-container w-nav-brand' do %>
-      <%= image_tag('Relay-Transparent.png', class: 'logo-icon', width: 60) %>
+    <%= image_tag('Relay-Transparent.png', class: 'logo-icon', width: 60) %>
     <% end %>
     <div class="hamburger-menu-wrapper w-nav-button">
       <div class="hamburger-menu w-icon-nav-menu"></div>
@@ -18,119 +18,117 @@
           <div class="dropdown-row w-row">
             <div class="dropdown-column-1 w-col w-col-6">
               <%= link_to use_case_customer_support_path, class: 'alt-dropdown-links w-inline-block' do %>
-               <h4 class="dropdown-header">Customer support</h4>
-               <p class="dropdpwn-paragraph">Provide personalized customer support with 3x better engagement</p>
-             <% end %>
+              <h4 class="dropdown-header">Customer support</h4>
+              <p class="dropdpwn-paragraph">Provide personalized customer support with 3x better engagement</p>
+              <% end %>
             </div>
             <div class="dropdown-column-2 w-col w-col-6">
               <%= link_to use_case_staffing_employment_path, class: 'alt-dropdown-links w-inline-block' do %>
-                <h4 class="dropdown-header">Staffing &amp; Recruitment</h4>
-                <p class="dropdpwn-paragraph">Accelerate candidate recruitment &amp; shift management using mobile messages</p>
+              <h4 class="dropdown-header">Staffing &amp; Recruitment</h4>
+              <p class="dropdpwn-paragraph">Accelerate candidate recruitment &amp; shift management using mobile messages</p>
               <% end %>
             </div>
           </div>
           <div class="dropdown-row w-row">
             <div class="dropdown-column-1 w-col w-col-6">
               <%= link_to use_case_demand_service_path, class: 'alt-dropdown-links w-inline-block' do %>
-                <h4 class="dropdown-header">On-demand Services</h4>
-                <p class="dropdpwn-paragraph">Send &amp; receive time sensitive messages to your mobile workforce</p>
+              <h4 class="dropdown-header">On-demand Services</h4>
+              <p class="dropdpwn-paragraph">Send &amp; receive time sensitive messages to your mobile workforce</p>
               <% end %>
             </div>
             <div class="dropdown-column-2 w-col w-col-6">
               <%= link_to use_case_education_path, class: 'alt-dropdown-links w-inline-block' do %>
-                <h4 class="dropdown-header">Education</h4>
-                <p class="dropdpwn-paragraph">Application deadlines, course notifications, school-wide alerts and more via text messages</p>
+              <h4 class="dropdown-header">Education</h4>
+              <p class="dropdpwn-paragraph">Application deadlines, course notifications, school-wide alerts and more via text messages</p>
               <% end %>
             </div>
           </div>
           <div class="dropdown-row w-row">
             <div class="dropdown-column-1 w-col w-col-6">
               <%= link_to use_case_non_profit_path, class: 'alt-dropdown-links w-inline-block' do %>
-                <h4 class="dropdown-header">Non-profits</h4>
-                <p class="dropdpwn-paragraph">Accept payments and engage donors via text messages</p>
+              <h4 class="dropdown-header">Non-profits</h4>
+              <p class="dropdpwn-paragraph">Accept payments and engage donors via text messages</p>
               <% end %>
             </div>
             <div class="dropdown-column-2 w-col w-col-6">
               <%= link_to use_case_sales_marketing_path, class: 'alt-dropdown-links w-inline-block' do %>
-                <h4 class="dropdown-header">Sales &amp; Marketing</h4>
-                <p class="dropdpwn-paragraph">Segment customers or leads, and set up automated drip campaigns via mobile messages</p>
+              <h4 class="dropdown-header">Sales &amp; Marketing</h4>
+              <p class="dropdpwn-paragraph">Segment customers or leads, and set up automated drip campaigns via mobile messages</p>
               <% end %>
             </div>
           </div>
         </nav>
       </div>
       <%= link_to 'Request a Demo', request_demo_url, class: 'nav-link w-nav-link' %>
-      
       <%= render 'shared/sign_in_sign_out' %>
     </nav>
   </div>
 </div>
 
-
-<div class="hero use-case" data-ix="show-fixed-navbar">
-    <div class="alt-navbar nav-bar w-nav" data-animation="default" data-collapse="medium" data-duration="400">
-      <div class="navbar-content-wrapper w-container">
-        <%= link_to root_url, class: 'brand-container w-nav-brand' do %>
-          <%= image_tag('Relay-Transparent.png', class: 'logo-icon', width: 60) %>
-        <% end %>
-        <div class="hamburger-menu-wrapper w-nav-button">
-          <div class="hamburger-menu w-icon-nav-menu"></div>
-        </div>
-        <nav class="hamburger nav-menu w-nav-menu" role="navigation">
-          <%= link_to 'Features', features_url, class: 'nav-link w-nav-link' %>
-          <%= link_to 'pricing', pricing_url, class: 'nav-link w-nav-link' %>
-          <div class="w-dropdown" data-delay="200" data-hover="1">
-            <div class="use-case-dropdown w-dropdown-toggle">
-              <div class="use-case-dropdown-text">Use Cases</div>
-              <div class="w-icon-dropdown-toggle"></div>
-            </div>
-            <nav class="dropdown-options-wrapper w-dropdown-list">
-              <div class="dropdown-row w-row">
-                <div class="dropdown-column-1 w-col w-col-6">
-                  <%= link_to use_case_customer_support_path, class: 'alt-dropdown-links w-inline-block' do %>
-                   <h4 class="dropdown-header">Customer support</h4>
-                   <p class="dropdpwn-paragraph">Provide personalized customer support with 3x better engagement</p>
-                 <% end %>
-                </div>
-                <div class="dropdown-column-2 w-col w-col-6">
-                  <%= link_to use_case_staffing_employment_path, class: 'alt-dropdown-links w-inline-block' do %>
-                    <h4 class="dropdown-header">Staffing &amp; Recruitment</h4>
-                    <p class="dropdpwn-paragraph">Accelerate candidate recruitment &amp; shift management using mobile messages</p>
-                  <% end %>
-                </div>
-              </div>
-              <div class="dropdown-row w-row">
-                <div class="dropdown-column-1 w-col w-col-6">
-                  <%= link_to use_case_demand_service_path, class: 'alt-dropdown-links w-inline-block' do %>
-                    <h4 class="dropdown-header">On-demand Services</h4>
-                    <p class="dropdpwn-paragraph">Send &amp; receive time sensitive messages to your mobile workforce</p>
-                  <% end %>
-                </div>
-                <div class="dropdown-column-2 w-col w-col-6">
-                  <%= link_to use_case_education_path, class: 'alt-dropdown-links w-inline-block' do %>
-                    <h4 class="dropdown-header">Education</h4>
-                    <p class="dropdpwn-paragraph">Application deadlines, course notifications, school-wide alerts and more via text messages</p>
-                  <% end %>
-              </div>
-              </div>
-              <div class="dropdown-row w-row">
-                <div class="dropdown-column-1 w-col w-col-6">
-                    <%= link_to use_case_non_profit_path, class: 'alt-dropdown-links w-inline-block' do %>
-                      <h4 class="dropdown-header">Non-profits</h4>
-                      <p class="dropdpwn-paragraph">Accept payments and engage donors via text messages</p>
-                    <% end %>
-                  </div>
-                <div class="dropdown-column-2 w-col w-col-6">
-                  <%= link_to use_case_sales_marketing_path, class: 'alt-dropdown-links w-inline-block' do %>
-                    <h4 class="dropdown-header">Sales &amp; Marketing</h4>
-                    <p class="dropdpwn-paragraph">Segment customers or leads, and set up automated drip campaigns via mobile messages</p>
-                  <% end %>
-                </div>
-              </div>
-            </nav>
-          </div>
-          <%= link_to 'Request a Demo', request_demo_url, class: 'nav-link w-nav-link' %>
-          <%= render 'shared/sign_in_sign_out' %>
-        </nav>
+<div class="default hero" data-ix="show-fixed-navbar">
+  <div class="alt-navbar nav-bar w-nav" data-animation="default" data-collapse="medium" data-duration="400">
+    <div class="navbar-content-wrapper w-container">
+      <%= link_to root_url, class: 'brand-container w-nav-brand' do %>
+      <%= image_tag('Relay-Transparent.png', class: 'logo-icon', width: 60) %>
+      <% end %>
+      <div class="hamburger-menu-wrapper w-nav-button">
+        <div class="hamburger-menu w-icon-nav-menu"></div>
       </div>
+      <nav class="hamburger nav-menu w-nav-menu" role="navigation">
+        <%= link_to 'Features', features_url, class: 'nav-link w-nav-link' %>
+        <%= link_to 'pricing', pricing_url, class: 'nav-link w-nav-link' %>
+        <div class="w-dropdown" data-delay="200" data-hover="1">
+          <div class="use-case-dropdown w-dropdown-toggle">
+            <div class="use-case-dropdown-text">Use Cases</div>
+            <div class="w-icon-dropdown-toggle"></div>
+          </div>
+          <nav class="dropdown-options-wrapper w-dropdown-list">
+            <div class="dropdown-row w-row">
+              <div class="dropdown-column-1 w-col w-col-6">
+                <%= link_to use_case_customer_support_path, class: 'alt-dropdown-links w-inline-block' do %>
+                <h4 class="dropdown-header">Customer support</h4>
+                <p class="dropdpwn-paragraph">Provide personalized customer support with 3x better engagement</p>
+                <% end %>
+              </div>
+              <div class="dropdown-column-2 w-col w-col-6">
+                <%= link_to use_case_staffing_employment_path, class: 'alt-dropdown-links w-inline-block' do %>
+                <h4 class="dropdown-header">Staffing &amp; Recruitment</h4>
+                <p class="dropdpwn-paragraph">Accelerate candidate recruitment &amp; shift management using mobile messages</p>
+                <% end %>
+              </div>
+            </div>
+            <div class="dropdown-row w-row">
+              <div class="dropdown-column-1 w-col w-col-6">
+                <%= link_to use_case_demand_service_path, class: 'alt-dropdown-links w-inline-block' do %>
+                <h4 class="dropdown-header">On-demand Services</h4>
+                <p class="dropdpwn-paragraph">Send &amp; receive time sensitive messages to your mobile workforce</p>
+                <% end %>
+              </div>
+              <div class="dropdown-column-2 w-col w-col-6">
+                <%= link_to use_case_education_path, class: 'alt-dropdown-links w-inline-block' do %>
+                <h4 class="dropdown-header">Education</h4>
+                <p class="dropdpwn-paragraph">Application deadlines, course notifications, school-wide alerts and more via text messages</p>
+                <% end %>
+              </div>
+            </div>
+            <div class="dropdown-row w-row">
+              <div class="dropdown-column-1 w-col w-col-6">
+                <%= link_to use_case_non_profit_path, class: 'alt-dropdown-links w-inline-block' do %>
+                <h4 class="dropdown-header">Non-profits</h4>
+                <p class="dropdpwn-paragraph">Accept payments and engage donors via text messages</p>
+                <% end %>
+              </div>
+              <div class="dropdown-column-2 w-col w-col-6">
+                <%= link_to use_case_sales_marketing_path, class: 'alt-dropdown-links w-inline-block' do %>
+                <h4 class="dropdown-header">Sales &amp; Marketing</h4>
+                <p class="dropdpwn-paragraph">Segment customers or leads, and set up automated drip campaigns via mobile messages</p>
+                <% end %>
+              </div>
+            </div>
+          </nav>
+        </div>
+        <%= link_to 'Request a Demo', request_demo_url, class: 'nav-link w-nav-link' %>
+        <%= render 'shared/sign_in_sign_out' %>
+      </nav>
     </div>
+  </div>
