@@ -12,9 +12,7 @@
     <%= f.text_field :coupon_id, class: 'form-control subscriber-name text-field w-input', id: 'subscription-select-coupon', placeholder: "Select a coupon" %>
   </div>
 
-  <a class="create-new-plan modal-loader"  href="#" modal-target= 'new-plan-modal'>
-    Create a new plan
-  </a>
+  <%= create_plan_field %>
 
   <label class="form-label" for="Number-of-subscriptions">
     Number of subscriptions

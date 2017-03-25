@@ -113,6 +113,9 @@ $(document).ready(function() {
           }
         }
       }
+    })
+    .on('success.form.fv', function(e, data) {
+      PhoneNumberFormatter.set_phone_number();
     });
   }
 

@@ -295,6 +295,47 @@ messagingApp.factory('userService', function($http, $q, Upload){
   return service;
 });
 
+messagingApp.factory('listService', function($http, $q, Upload){
+  var service = {};
+  var base_url = window.location.origin + '/v1/lists';
+  var token = { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content') };
+
+  service.getLists = function(data){
+    var deferred = $q.defer();
+    $http.get(base_url + '.json', { params: data })
+    .success(function(data) {
+      console.log('console success in service get lists'); 
+      deferred.resolve(data);
+    })
+    .error(function(data, status, headers, config) { 
+      console.log('console fail in service get lists'); 
+      deferred.reject("there was an error");
+    });
+    return deferred.promise;
+  }
+
+  service.addUserToList = function(data){
+    var deferred = $q.defer();
+    $http({
+      method: 'POST',
+      url: base_url + '.json',
+      headers: token,
+      //data: { transaction: data }
+    })
+    .success(function(data) { 
+      console.log("in service pass for add user to list");
+      deferred.resolve(data);
+    })
+    .error(function(data) { 
+      console.log('in service fail for add user to list');
+      deferred.reject(data);
+    });
+    return deferred.promise;
+  };
+
+  return service;
+});
+
 
 
 

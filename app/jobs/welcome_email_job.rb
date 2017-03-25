@@ -22,6 +22,7 @@ class WelcomeEmailJob < ApplicationJob
           description/hashtag. Ex. +10 #donut"
           message.send_and_save_message(owner, user, owner.rhombus_number, user.phone_number, text)
         end
+      end
       rescue StandardError => e
       end
 	  end
