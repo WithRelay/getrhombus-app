@@ -54,7 +54,7 @@ module DashboardData
 		{
 		 conversations_per_hour: Conversation.conversation_per_hour(current_user),
      #message_count method returns hash of message_per_day , fb_percent and sms_percent
-     messages: message_count,
+     messages: message_count('today'),
      avg_handle_time: avg_handle_time.round,
 		 open_convs_yesterday: open_convs_yesterday
 		}
@@ -75,18 +75,23 @@ module DashboardData
     data = txt_messages.merge(fb_messages){|k, mv, fv| mv + fv}
   end
 
-  def message_count
-    txt_msg, fb_msg = sent_and_received_messages('Message'),
+  def message_count(time)
+    txt_msg_total, fb_msg_total = sent_and_received_messages('Message'),
                       sent_and_received_messages('FbMessage')
+		if time == 'today'
+	    txt_msg = txt_msg_total.select { |t| t.created_at >= Time.current.beginning_of_day }
+	    fb_msg = fb_msg_total.select { |t| t.created_at >= Time.current.beginning_of_day }
+		elsif time == 'weekly'
+			txt_msg = txt_msg_total.select { |t| t.created_at >= 7.days.ago.utc }
+	    fb_msg = fb_msg_total.select { |t| t.created_at >= 7.days.ago.utc }
+		end
 
-    txt_msg_today = txt_msg.select { |t| t.created_at >= Time.current.beginning_of_day }
-    fb_msg_today = fb_msg.select { |t| t.created_at >= Time.current.beginning_of_day }
-    today_msgs_count = txt_msg_today.count + fb_msg_today.count
+		msgs_count = txt_msg.count + fb_msg.count
 
-    fb_msg_percent = fb_msg_today.present? ? 100 * fb_msg_today.count/today_msgs_count : 0
-    txt_msg_percent = txt_msg_today.present? ? 100 * txt_msg_today.count/today_msgs_count : 0
+    fb_msg_percent = fb_msg.present? ? 100 * fb_msg.count/msgs_count : 0
+    txt_msg_percent = txt_msg.present? ? 100 * txt_msg.count/msgs_count : 0
 
-    { msg_today: today_msgs_count, fb_msg_percent: fb_msg_percent.round, txt_msg_percent: txt_msg_percent.round }
+    { msg_count: msgs_count, fb_msg_percent: fb_msg_percent.round, txt_msg_percent: txt_msg_percent.round }
   end
 
   def sent_and_received_messages(class_name)
