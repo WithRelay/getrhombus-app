@@ -43,7 +43,7 @@ $(document).ready(function(e){
 
   function showEditTextBox(){
     var textBox = this.editableDiv.find( this.editableFieldsDiv );
-    textBox.show(this.toggleValue);
+    textBox.fadeIn(this.toggleValue);
     var inputBox = textBox.find('.text-field')
     inputBox.val(this.editableDiv.find( editableFieldText ).text());
   }
