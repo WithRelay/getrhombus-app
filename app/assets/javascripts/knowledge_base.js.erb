@@ -21,7 +21,7 @@ $(document).ready(function () {
     if ($(this).attr('disabled') !== 'disabled') {
       count_vote(vote, $('html').data("article-url"));
       voteButtonCheck(vote)
-    } 
+    }
   })
 
   function voteButtonCheck(vote) {
@@ -56,14 +56,14 @@ $(document).ready(function () {
     } else if (query == new_query) {
     } else {
       query = "";
-      $('#kb-search-title, #kb-search-results').html("");  
+      $('#kb-search-title, #kb-search-results').html("");
       $("#kb-content").show();
     }
   };
 
   function setKB(kbList) {
     $("#kb-content").hide();
-    $('#kb-search-results').html("");  
+    $('#kb-search-results').html("");
     if (kbList.length == 0) {
       $('#kb-search-title').html('<div class="search_value w-container">We couldn\'t find any results for: ' + query + '</div>');
     } else {
@@ -71,13 +71,15 @@ $(document).ready(function () {
       $.each(kbList, function(index, item) {
         var created_at = moment(item.created_at, "YYYYMMDD").fromNow();
         $('#kb-search-results').append(
-          '<div class="article static-page-content-wrapper w-container">\
-            <a href="' + item.url + '">' + item.title + '</a>\
-            <p class="article-preview">' + item.raw_content.substring(0,29) + '</p>\
+          '<a class="static-page-content-link-block w-inline-block" href="' + item.url + '">\
+            <div class="article static-page-content-wrapper w-container">\
+            <div class="articles-title">' + item.title + '</div>\
+            <p class="article-text preview">' + item.raw_content.substring(0,29) + '</p>\
             <img class="article-author" height="30" src="http://uploads.webflow.com/5767087cbd63608e7eb4abdc/586da5db511381a742ba3da1_Edwin%202.jpg" width="30">\
             <div class="author-info">By <span class="author-name">' + item.author + '</span> &nbsp;| &nbsp;' + created_at + '</div>\
-          </div>');
-      });  
+            </div>\
+          </a>');
+      });
     }
   };
 
