@@ -11,7 +11,7 @@ $(document).ready(function() {
 
   var delay = 10000;
   setTimeout(function retry() {
-    if(Offline.state == "up") 
+    if(Offline.state == "up")
       Offline.check();
     setTimeout(retry, delay);
   }, delay);
@@ -36,11 +36,11 @@ $(document).ready(function() {
       // I am validating Bootstrap form
       framework: 'bootstrap',
       live: 'disabled',
-      err: {
-          container: function($field, validator) {
-              return $field.parent().find('.messageContainer');
-          }
-        },
+      // err: {
+      //     container: function($field, validator) {
+      //         return $field.parent().find('.messageContainer');
+      //     }
+      //   },
       // List of fields and their validation rules
       fields: {
         'user[email]': {
@@ -269,7 +269,7 @@ $(document).ready(function() {
     });
   // validate sign up form
 
-  
+
   // validate password change form
   $('#changePasswordForm')
   .formValidation({
@@ -304,7 +304,7 @@ $(document).ready(function() {
       }
     }
   });
-  
+
 
   function set_hidden_fields() {
     if (global_page_params['referrer_id']) document.getElementById('referrer_id').value = global_page_params['referrer_id'];
