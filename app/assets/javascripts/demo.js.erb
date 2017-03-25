@@ -95,7 +95,7 @@ $(document).ready(function () {
       timeout: 10000
     })
     .always(function(data, textStatus, response) {
-      FlashHandler.setFlashMessage(data.response, 'notice');
+      // FlashHandler.setFlashMessage(data.response, 'notice');
       $('#commit_demo').attr("disabled", false).val("Schedule Demo");
       $('.calendly-badge-content').click();
     });
