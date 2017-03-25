@@ -91,7 +91,7 @@ module ApplicationHelper
   end
 
   def relay_docs_pages
-    controller_actions = ['static_pages-relay_docs', 'static_pages-creating_campaigns_in_relay']
+    controller_actions = ['static_pages-relay_docs', "knowledge_base_categories-show"]
     controller_actions.include?(params_controller_action)
   end
 
