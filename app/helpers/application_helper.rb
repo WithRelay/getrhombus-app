@@ -23,6 +23,10 @@ module ApplicationHelper
     return render 'shared/messaging_header' if messaging_dashboard
   end
 
+  def header_class
+    "static_pages-home" == params_controller_action ? 'default hero' : 'hero use-case'
+  end
+
   # def render_customer_sidebar
   #   concat(render 'shared/customer_sidebar') if params_controller_action == 'users-customers' || params_controller_action == 'merchant_customers-index'
   # end
