@@ -7,16 +7,8 @@ class HashtagsController < ApplicationController
   def index
     @hashtags = current_user.hashtags.paginate(per_page: PAGINATION_PER_PAGE,
                                                page: params[:page])
-                                               .order('updated_at DESC')
-    if @hastags.present?
-      respond_to do |format|
-        format.js { render partial: 'shared/index.js.erb', locals: { obj: @hashtags } }
-         format.html
-       end
-    else
-      render 'empty_hashtag'
-    end
-    #authorize! :index, @hashtags
+                                              #  .order('updated_at DESC')
+    @hashtags.present? ? render_requested_format(@hashtags) : render(:empty_hashtag)
   end
 
   def new
@@ -75,6 +67,7 @@ class HashtagsController < ApplicationController
 
 
   private
+
     def set_hashtag
       @hashtag = Hashtag.find(params[:id])
     end

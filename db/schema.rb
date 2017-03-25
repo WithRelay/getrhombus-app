@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170321081647) do
+ActiveRecord::Schema.define(version: 20170325060026) do
 
   create_table "account_reloads", force: :cascade do |t|
     t.integer  "user_id",        limit: 4
@@ -73,11 +73,11 @@ ActiveRecord::Schema.define(version: 20170321081647) do
     t.datetime "created_at",            null: false
     t.datetime "updated_at",            null: false
     t.integer  "reminder_id", limit: 4
+    t.integer  "customer_id", limit: 4
   end
 
   add_index "campaign_lists", ["campaign_id"], name: "fk_rails_98c7cf7ca4", using: :btree
   add_index "campaign_lists", ["list_id", "campaign_id"], name: "index_campaign_lists_on_list_id_and_campaign_id", using: :btree
-  add_index "campaign_lists", ["reminder_id"], name: "index_campaign_lists_on_reminder_id", using: :btree
 
   create_table "campaign_user_lists", force: :cascade do |t|
     t.integer  "user_id",     limit: 4
@@ -434,7 +434,6 @@ ActiveRecord::Schema.define(version: 20170321081647) do
   end
 
   add_index "messages", ["hashtag_id"], name: "index_messages_on_hashtag_id", using: :btree
-  add_index "messages", ["message_id"], name: "index_messages_on_message_id", unique: true, using: :btree
   add_index "messages", ["transaction_id"], name: "index_messages_on_transaction_id", using: :btree
   add_index "messages", ["user_id"], name: "index_messages_on_user_id", using: :btree
 
@@ -605,9 +604,8 @@ ActiveRecord::Schema.define(version: 20170321081647) do
     t.integer  "merchant_customer_id",    limit: 4
   end
 
-  add_index "subscriptions", ["coupon_id"], name: "index_subscriptions_on_coupon_id", using: :btree
-  add_index "subscriptions", ["merchant_customer_id"], name: "index_subscriptions_on_merchant_customer_id", using: :btree
-  add_index "subscriptions", ["plan_id"], name: "index_subscriptions_on_plan_id", using: :btree
+  add_index "subscriptions", ["coupon_id"], name: "fk_rails_ddc53c9490", using: :btree
+  add_index "subscriptions", ["plan_id"], name: "fk_rails_fc223f21da", using: :btree
 
   create_table "transaction_fees", force: :cascade do |t|
     t.string   "provider",         limit: 191
@@ -658,7 +656,7 @@ ActiveRecord::Schema.define(version: 20170321081647) do
   add_index "transactions", ["hashtag_id"], name: "index_transactions_on_hashtag_id", using: :btree
   add_index "transactions", ["referenced_customer_transaction_id"], name: "index_transactions_on_referenced_customer_transaction_id", using: :btree
   add_index "transactions", ["subscription_id"], name: "index_transactions_on_subscription_id", using: :btree
-  add_index "transactions", ["team_id"], name: "index_transactions_on_team_id", using: :btree
+  add_index "transactions", ["team_id"], name: "fk_rails_0e0853dbc8", using: :btree
   add_index "transactions", ["txn_number"], name: "index_transactions_on_txn_number", using: :btree
   add_index "transactions", ["user_id"], name: "index_transactions_on_user_id", using: :btree
 

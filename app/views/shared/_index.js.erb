@@ -1,5 +1,7 @@
+$('#objlists').append('<%= j render obj %>');
 <% if obj.next_page %>
-  $('.pagination').replaceWith('<%= j will_paginate(obj) %>');
+  $('.pagination').replaceWith('<%= j will_paginate obj %>');
 <% else %>
+  $(window).off('scroll');
   $('.pagination').remove();
 <% end %>
