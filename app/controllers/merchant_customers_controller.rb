@@ -19,7 +19,7 @@ class MerchantCustomersController < ApplicationController
   def show
     customer_id = params[:customer_id]
   	@customer = User.find_by_id(customer_id)
-    @user_snapshot = get_user_snapshot(customer_id,"user",current_user.id)
+    @user_snapshot = get_user_snapshot(customer_id, "user", current_user.id, @customer)
   	@merchant_customer = MerchantCustomer.find_by(customer_id: customer_id, merchant_id: current_user.id)
 
     # Exclude refunded transactions, Exclude subscriptions since these queries are not read only

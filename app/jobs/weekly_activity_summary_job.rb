@@ -22,7 +22,7 @@ class WeeklyActivitySummaryJob
       last_week_customers.each do |c|
         # have to use UserProfile for fullname/profile pic etc.
         customers_array  << {
-                               full_name: get_conversation_display_name(c.id, 'user'),
+                               full_name: get_conversation_display_name(c.id, 'user', c),
                                profile_pic: check_profile_picture(c),
                                customer_email: c.email
                             }

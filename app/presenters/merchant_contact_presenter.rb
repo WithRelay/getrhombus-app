@@ -6,6 +6,6 @@ class MerchantContactPresenter < BasePresenter
   end
 
   def contact_details
-    User.get_user_snapshot(@model.uid, @model.uid_type, @user.id)
+    User.get_user_snapshot(@model.uid, @model.uid_type, @user.id, @model)
   end
 end
