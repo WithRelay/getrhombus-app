@@ -92,7 +92,7 @@ module ApplicationHelper
     settings_action = ['registrations-billing_information', 'registrations-account_settings',
                         'alerts-edit', 'plans-index','registrations-business_settings',
                        'users-integrations', 'users-managed_acct', 'users-sms_usage', 'lists-segments',
-                       'coupons-manage_coupons', 'coupons-index', 'coupons-manage_coupons']
+                       'coupons-manage_coupons', 'coupons-index', 'coupons-manage_coupons', 'users-refer_business']
     settings_action.include?(params_controller_action)
   end
 

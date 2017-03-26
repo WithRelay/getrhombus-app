@@ -82,14 +82,6 @@ $(document).ready(function () {
                   }
               }
           },
-          'referrer[country]': {
-            selector: '#referrer_country',
-            validators: {
-              notEmpty: {
-                message: 'Select Country'
-              }
-            }
-          },
           'referrer[phone]': {
               validators: {
                   callback: {
