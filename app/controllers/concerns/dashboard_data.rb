@@ -4,7 +4,11 @@
 
 module DashboardData
 
-	def overall_section
+	def messages
+		messages_7days = message_volume(7)
+	end
+
+	def customers_and_trasactions
 		customers = current_user.merchant_customers
     new_customers = customers.select{ |c| c.created_at >= 1.week.ago.utc }
 
@@ -31,6 +35,14 @@ module DashboardData
     ConversationResolution.where(merchant_id: merchant_id).count
 	end
 
+	def transactions
+		{
+			recent_trancs: Transaction.includes(:user).exclude_refunded_transactions().only_captured_transactions()
+                                    .where(team_id: merchant_id).order(created_at: :desc).last(6),
+																		
+		}
+	end
+
   # Exclude refunded transactions, include subscriptions since these queries are read only
   # Otherwise you will need to exclude subscriptions which aren't easily refundable
   # and include only captured transactions and account reload txns are included by default..right
@@ -43,7 +55,7 @@ module DashboardData
 	  }
 	end
 
-	def msg_performance_section
+	def analytics_section
     data = conversations_handling_time
 		{
 		  conversations_per_hour: data[:conversations_per_hour],
