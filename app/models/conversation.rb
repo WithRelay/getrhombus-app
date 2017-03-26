@@ -20,7 +20,7 @@ class Conversation < ActiveRecord::Base
   # Returns hash with users who sent a message to the given merchant in the last "num_days" days
   def self.get_open_conversations(merchant_id, page)
   	convs = where(merchant_id: merchant_id, is_resolved: false)
-                            .paginate(page: page, per_page: 5).order(updated_at: :desc)
+                            .paginate(page: page, per_page: 7).order(updated_at: :desc)
 
   	x = convs.map { |conv| conv.conversation_hash }
 
@@ -76,6 +76,8 @@ class Conversation < ActiveRecord::Base
       text: (msg.text) ? msg.text : '',
       ts_day_of_the_week: msg.created_at.strftime("%B") + " " + msg.created_at.strftime("%d").to_i.ordinalize,
       ts_time: msg.created_at.strftime('%l:%M %P'),
+      ts: msg.created_at.to_i,
+      ago: Conversation.new.time_in_relative_form(msg.created_at, 'short_format'),
       unread: conv_ref.unread,
       images: msg.images.map { |i| { ref: conv_ref.id, url: i.avatar.url } },           # return small version here??
       channel: msg.class.name

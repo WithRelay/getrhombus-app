@@ -22,7 +22,6 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
     $scope.open_conversations_count = 0;
     $scope.conversations = {};
     $scope.selected_conversation_messages = [];
-    $scope.current_chat_conversation = false;      // this might not be needed really
     $scope.start_conversation = {}
 
     var messages_page = 1;
@@ -123,6 +122,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
               console.log('hi')
               $scope.conversations[re.conversation.id].last_message = re.conversation.last_message
               $scope.conversations[re.conversation.id].last_message_ts = re.conversation.last_message_ts
+              $scope.conversations[re.conversation.id].ago = re.conversation.ago
 
               console.log($scope.conversations[re.conversation.id].last_message)
               console.log(re.conversation.last_message)
@@ -480,7 +480,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
       var message = $scope.selected_conversation_messages[index];
       if (message.unread) {
         message.unread = false;
-        $scope.markMessagesAsRead($scope.current_chat_conversation.id, message.id);
+        $scope.markMessagesAsRead($scope.selected_conversation.id, message.id);
       }
     };
 
@@ -489,10 +489,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
 
       // don't get messages if user clicks again on current conversation
       if (!(from_conversations_list && conversation.id == $scope.selected_conversation.id) && $scope.online()) {
-        
-        // highlight conversation
-        $scope.current_chat_conversation = conversation;
-
+      
         // a new conversation is selected, reset
         if ($scope.selected_conversation.id != conversation.id) {
           messages_page = 1;
@@ -588,7 +585,14 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
           conversationService.sendConversationMessage(conversation_id, $scope.new_message.text, channel)
           .then(function(data) {
             // ensure we still have the right conversation
-            if ($scope.selected_conversation.id == conversation_id) $scope.selected_conversation_messages.push(data);
+            if ($scope.selected_conversation.id == conversation_id) {
+              $scope.selected_conversation_messages.push(data);
+              /*
+              $scope.conversations[conversation_id].last_message = data;
+              $scope.conversations[conversation_id].last_message_ts = data.ts;
+              $scope.conversations[conversation_id].ago = data.ago;
+              */
+            }
             $scope.new_message.text = '';
             BindConversationPlugins.get_emoji_box()[0].emojioneArea.setText('');
             console.log('sent message');
