@@ -638,8 +638,14 @@ ActiveRecord::Schema.define(version: 20170326143850) do
     t.integer  "merchant_customer_id",    limit: 4
   end
 
+<<<<<<< HEAD
+  add_index "subscriptions", ["coupon_id"], name: "index_subscriptions_on_coupon_id", using: :btree
+  add_index "subscriptions", ["merchant_customer_id"], name: "index_subscriptions_on_merchant_customer_id", using: :btree
+  add_index "subscriptions", ["plan_id"], name: "index_subscriptions_on_plan_id", using: :btree
+=======
   add_index "subscriptions", ["coupon_id"], name: "fk_rails_ddc53c9490", using: :btree
   add_index "subscriptions", ["plan_id"], name: "fk_rails_fc223f21da", using: :btree
+>>>>>>> 7988d8e0ff418e460d749f56590d11ce7d528646
 
   create_table "transaction_fees", force: :cascade do |t|
     t.string   "provider",         limit: 191
@@ -690,7 +696,11 @@ ActiveRecord::Schema.define(version: 20170326143850) do
   add_index "transactions", ["hashtag_id"], name: "index_transactions_on_hashtag_id", using: :btree
   add_index "transactions", ["referenced_customer_transaction_id"], name: "index_transactions_on_referenced_customer_transaction_id", using: :btree
   add_index "transactions", ["subscription_id"], name: "index_transactions_on_subscription_id", using: :btree
+<<<<<<< HEAD
+  add_index "transactions", ["team_id"], name: "index_transactions_on_team_id", using: :btree
+=======
   add_index "transactions", ["team_id"], name: "fk_rails_0e0853dbc8", using: :btree
+>>>>>>> 7988d8e0ff418e460d749f56590d11ce7d528646
   add_index "transactions", ["txn_number"], name: "index_transactions_on_txn_number", using: :btree
   add_index "transactions", ["user_id"], name: "index_transactions_on_user_id", using: :btree
 
