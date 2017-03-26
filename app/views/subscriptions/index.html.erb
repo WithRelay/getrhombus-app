@@ -1,4 +1,4 @@
-<%= render 'subscription_nav' %>
+<%= render partial: 'subscription_nav', locals: { subscriptions: @subscriptions} %>
 <form id="subs_txn_history_form" method="get" action="subscriptions/download.csv">
   <input type="hidden" id="subs_txn_start_date" name="subs_txn_start_date" />
   <input type="hidden" id="subs_txn_end_date" name="subs_txn_end_date" />
