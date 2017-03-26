@@ -2,7 +2,7 @@
   <div class="dashboard-logo-wrapper">
     <%= image_tag 'Relay-Transparent-500x300.png', class: 'dashboard-logo', width: '50' %>
   </div>
-  <h5 class="left-nav signup-box-subheading"><%= params[:controller].upcase %></h5>
+  <h5 class="left-nav signup-box-subheading"><%= sidebar_name "#{params[:controller]}-#{params[:action]}" %></h5>
 
   <%= link_to account_settings_user_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
     <div class="left-nav-tab" data-ix="display-and-hide-customers">Account</div>
