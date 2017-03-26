@@ -7,7 +7,7 @@
         <a class="plan-name-edit-icon edit-field save-editable-field" href="#"></a>
       </span>
       <span class='plan-name-save-span' data-plan-id='<%= plan.id %>' style='display: none;'>
-        <a class="cancel-edit cancel-edit-plan save-editable-field" href="#"><strong></strong></a>        
+        <a class="cancel-edit cancel-edit-plan save-editable-field" href="#"><strong></strong></a>
         <a class="save-editable-field plan-name-save-icon" href="#"></a>
       </span>
     </div>
@@ -18,7 +18,7 @@
       <div class="settings-row-text"><%= plan.interval %></div>
     </div>
     <div class="w-col w-col-2">
-      <div class="settings-row-text">100</div>
+      <div class="settings-row-text"><%= subscribed_customer_count(plan) %></div>
     </div>
     <div class="w-col w-col-2">
       <% if plan.subscription_id.blank? %>
