@@ -12,7 +12,6 @@ Taiwo
 - conversation from system
 
 
-
 Others
 Add profile info
 1. validation
@@ -26,7 +25,6 @@ Add card info, add subscription, billing info
 - flash message not showing...also needs to show devise error
 - card error flash missing in registrations update
 - EVERYONE CLEAN UP YOUR ROUTES and CONTROLLERS
-
 
 
 Surya

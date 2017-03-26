@@ -214,7 +214,7 @@ class User < ActiveRecord::Base
   end
 
   def do_signup_stuff
-    Alert.create_with(user_id: self.id).find_or_create_by(user_id: self.id) if self.is_merchant?
+    Alert.find_or_create_by(user_id: self.id) if self.is_merchant?
     WelcomeEmailJob.set(wait: SIGNUP_EMAIL_DELAY.minutes).perform_later(self)
     GetIntelligenceDataJob.perform_later(self.email, 'FullContact')
     GetIntelligenceDataJob.perform_later(self.phone_number, 'OpenCNAM') if self.is_customer?

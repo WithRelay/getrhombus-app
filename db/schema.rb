@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170325060026) do
+ActiveRecord::Schema.define(version: 20170325190909) do
 
   create_table "account_reloads", force: :cascade do |t|
     t.integer  "user_id",        limit: 4
@@ -125,18 +125,30 @@ ActiveRecord::Schema.define(version: 20170325060026) do
   add_index "conversation_refs", ["conversation_id"], name: "index_conversation_refs_on_conversation_id", using: :btree
   add_index "conversation_refs", ["textable_type", "textable_id"], name: "index_conversation_refs_on_textable_type_and_textable_id", using: :btree
 
-  create_table "conversations", force: :cascade do |t|
-    t.integer  "merchant_id",           limit: 4
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.text     "notes",                 limit: 65535
-    t.string   "uid",                   limit: 191
-    t.string   "uid_type",              limit: 191
-    t.integer  "message_resolution_id", limit: 4
-    t.string   "resolution",            limit: 191
+  create_table "conversation_resolutions", force: :cascade do |t|
+    t.integer  "merchant_id",                  limit: 4
+    t.integer  "conversation_id",              limit: 4
+    t.integer  "merchant_conversation_ref_id", limit: 4
+    t.integer  "uid_conversation_ref_id",      limit: 4
+    t.string   "resolution",                   limit: 191
+    t.text     "notes",                        limit: 65535
+    t.datetime "created_at",                                 null: false
+    t.datetime "updated_at",                                 null: false
   end
 
-  add_index "conversations", ["message_resolution_id"], name: "index_conversations_on_message_resolution_id", using: :btree
+  add_index "conversation_resolutions", ["conversation_id"], name: "index_conversation_resolutions_on_conversation_id", using: :btree
+  add_index "conversation_resolutions", ["merchant_conversation_ref_id"], name: "index_conversation_resolutions_on_merchant_conversation_ref_id", using: :btree
+  add_index "conversation_resolutions", ["merchant_id"], name: "index_conversation_resolutions_on_merchant_id", using: :btree
+  add_index "conversation_resolutions", ["uid_conversation_ref_id"], name: "index_conversation_resolutions_on_uid_conversation_ref_id", using: :btree
+
+  create_table "conversations", force: :cascade do |t|
+    t.integer  "merchant_id", limit: 4
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "uid",         limit: 191
+    t.string   "uid_type",    limit: 191
+    t.boolean  "is_resolved", limit: 1,   default: false
+  end
 
   create_table "coupons", force: :cascade do |t|
     t.integer  "user_id",            limit: 4
