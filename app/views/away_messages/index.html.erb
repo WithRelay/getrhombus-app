@@ -5,7 +5,7 @@
     <h4 class="form-header">Away Messages</h4>
     <div class="flex-underline form-header-underline"></div>
     <div class="account-settings-form-wrapper w-form">
-      <form class="w-clearfix" data-name="Email Form" id="email-form" name="email-form">
+      <%= form_for @away_message, url: user_away_messages_path(current_user), html: { class: 'w-clearfix' } do |f| %>
         <label class="form-label paragraph" for="field">Send an automatic reply to customers and contacts when they message you outside business hours. Set your business hours below:</label>
         <div class="enable-away-messages form-check-box w-checkbox">
           <input class="w-checkbox-input" data-name="Checkbox" id="checkbox" name="checkbox" type="checkbox">
@@ -106,7 +106,7 @@
         <label class="form-label paragraph" for="Away-Message-Auto-Response">Compose the message that will go out to customers and contacts when they message you outside business hours.</label>
         <textarea class="auto-welcome-message-text-area w-input" data-name="Away Message Auto-Response" id="Away-Message-Auto-Response" maxlength="5000" name="Away-Message-Auto-Response" placeholder="Type message"></textarea>
         <div class="form-field-subtext">150</div><a class="button save-changes w-button" href="#">Save changes</a>
-      </form>
+      <% end %>
       <div class="w-form-done">
         <div>Thank you! Your submission has been received!</div>
       </div>
