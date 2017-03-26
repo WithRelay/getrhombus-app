@@ -5,7 +5,7 @@
     <h4 class="form-header">Away Messages</h4>
     <div class="flex-underline form-header-underline"></div>
     <div class="account-settings-form-wrapper w-form">
-      <form class="w-clearfix" data-name="Email Form" id="email-form" name="email-form">
+      <%= form_for @away_message, url: user_away_messages_path(current_user), html: { class: 'w-clearfix' } do |f| %>
         <label class="form-label paragraph" for="field">Send an automatic reply to customers and contacts when they message you outside business hours. Set your business hours below:</label>
         <div class="enable-away-messages form-check-box w-checkbox">
           <input class="w-checkbox-input" data-name="Checkbox" id="checkbox" name="checkbox" type="checkbox">
@@ -28,14 +28,11 @@
             <label class="away-row-day field-headers form-label settings" for="Website">Monday</label>
           </div>
           <div class="w-col w-col-5">
-            <select class="away dropdown w-select" data-name="Open Time" id="Open-Time" name="Open-Time">
+            <%= select_tag "ct_week", options_for_select(time_for_ct_weeks), class: 'away dropdown w-select' %>
 
-            </select>
           </div>
           <div class="w-col w-col-5">
-            <select class="away dropdown w-select" data-name="Open Time 2" id="Open-Time-2" name="Open-Time-2">
-
-            </select>
+            <%= select_tag "ot_week", options_for_select(time_for_ot_weeks), class: 'away dropdown w-select' %>
           </div>
         </div>
         <div class="business-hours-row w-row">
@@ -43,14 +40,10 @@
             <label class="away-row-day field-headers form-label settings" for="Website">tuesday</label>
           </div>
           <div class="w-col w-col-5">
-            <select class="away dropdown w-select" data-name="Open Time 13" id="Open-Time-13" name="Open-Time-13">
-
-            </select>
+            <%= select_tag "ct_week", options_for_select(time_for_ct_weeks), class: 'away dropdown w-select' %>
           </div>
           <div class="w-col w-col-5">
-            <select class="away dropdown w-select" data-name="Open Time 14" id="Open-Time-14" name="Open-Time-14">
-
-            </select>
+            <%= select_tag "ot_week", options_for_select(time_for_ot_weeks), class: 'away dropdown w-select' %>
           </div>
         </div>
         <div class="business-hours-row w-row">
@@ -58,14 +51,10 @@
             <label class="away-row-day field-headers form-label settings" for="Website">Wednesday</label>
           </div>
           <div class="w-col w-col-5">
-            <select class="away dropdown w-select" data-name="Open Time 11" id="Open-Time-11" name="Open-Time-11">
-
-            </select>
+            <%= select_tag "ct_week", options_for_select(time_for_ct_weeks), class: 'away dropdown w-select' %>
           </div>
           <div class="w-col w-col-5">
-            <select class="away dropdown w-select" data-name="Open Time 12" id="Open-Time-12" name="Open-Time-12">
-
-            </select>
+            <%= select_tag "ot_week", options_for_select(time_for_ot_weeks), class: 'away dropdown w-select' %>
           </div>
         </div>
         <div class="business-hours-row w-row">
@@ -73,14 +62,10 @@
             <label class="away-row-day field-headers form-label settings" for="Website">Thursday</label>
           </div>
           <div class="w-col w-col-5">
-            <select class="away dropdown w-select" data-name="Open Time 9" id="Open-Time-9" name="Open-Time-9">
-
-            </select>
+            <%= select_tag "ct_week", options_for_select(time_for_ct_weeks), class: 'away dropdown w-select' %>
           </div>
           <div class="w-col w-col-5">
-            <select class="away dropdown w-select" data-name="Open Time 10" id="Open-Time-10" name="Open-Time-10">
-
-            </select>
+            <%= select_tag "ot_week", options_for_select(time_for_ot_weeks), class: 'away dropdown w-select' %>
           </div>
         </div>
         <div class="business-hours-row w-row">
@@ -88,14 +73,10 @@
             <label class="away-row-day field-headers form-label settings" for="Website">Friday</label>
           </div>
           <div class="w-col w-col-5">
-            <select class="away dropdown w-select" data-name="Open Time 7" id="Open-Time-7" name="Open-Time-7">
-
-            </select>
+            <%= select_tag "ct_week", options_for_select(time_for_ct_weeks), class: 'away dropdown w-select' %>
           </div>
           <div class="w-col w-col-5">
-            <select class="away dropdown w-select" data-name="Open Time 8" id="Open-Time-8" name="Open-Time-8">
-
-            </select>
+            <%= select_tag "ot_week", options_for_select(time_for_ot_weeks), class: 'away dropdown w-select' %>
           </div>
         </div>
         <div class="business-hours-row w-row">
@@ -103,14 +84,10 @@
             <label class="away-row-day field-headers form-label settings weekend" for="Website">Saturday</label>
           </div>
           <div class="w-col w-col-5">
-            <select class="away dropdown w-select" data-name="Open Time 5" id="Open-Time-5" name="Open-Time-5">
-
-            </select>
+            <%= select_tag "ct_week", options_for_select(time_for_ct_weeks), class: 'away dropdown w-select' %>
           </div>
           <div class="w-col w-col-5">
-            <select class="away dropdown w-select" data-name="Open Time 6" id="Open-Time-6" name="Open-Time-6">
-
-            </select>
+            <%= select_tag "ot_week", options_for_select(time_for_ot_weeks), class: 'away dropdown w-select' %>
           </div>
         </div>
         <div class="business-hours-row w-row">
@@ -118,14 +95,10 @@
             <label class="away-row-day field-headers form-label settings weekend" for="Website">Sunday</label>
           </div>
           <div class="w-col w-col-5">
-            <select class="away dropdown w-select" data-name="Open Time 3" id="Open-Time-3" name="Open-Time-3">
-
-            </select>
+            <%= select_tag "ct_week", options_for_select(time_for_ct_weeks), class: 'away dropdown w-select' %>
           </div>
           <div class="w-col w-col-5">
-            <select class="away dropdown w-select" data-name="Open Time 4" id="Open-Time-4" name="Open-Time-4">
-
-            </select>
+            <%= select_tag "ot_week", options_for_select(time_for_ot_weeks), class: 'away dropdown w-select' %>
           </div>
         </div>
         <div class="flex-underline form-section-divider"></div>
@@ -133,7 +106,7 @@
         <label class="form-label paragraph" for="Away-Message-Auto-Response">Compose the message that will go out to customers and contacts when they message you outside business hours.</label>
         <textarea class="auto-welcome-message-text-area w-input" data-name="Away Message Auto-Response" id="Away-Message-Auto-Response" maxlength="5000" name="Away-Message-Auto-Response" placeholder="Type message"></textarea>
         <div class="form-field-subtext">150</div><a class="button save-changes w-button" href="#">Save changes</a>
-      </form>
+      <% end %>
       <div class="w-form-done">
         <div>Thank you! Your submission has been received!</div>
       </div>
