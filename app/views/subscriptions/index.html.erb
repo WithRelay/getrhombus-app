@@ -1,4 +1,4 @@
-<%= render 'subscription_nav' %>
+<%= render partial: 'subscription_nav', locals: { subscriptions: @subscriptions} %>
 <form id="subs_txn_history_form" method="get" action="subscriptions/download.csv">
   <input type="hidden" id="subs_txn_start_date" name="subs_txn_start_date" />
   <input type="hidden" id="subs_txn_end_date" name="subs_txn_end_date" />
@@ -71,7 +71,7 @@
         <div class="row-wrapper transactions">
           <div class="transactions-table-row w-row" id="<%= subscription.id %>">
             <div class="transaction-column w-clearfix w-col w-col-3">
-              <div class="card-name transaction-cell">
+              <div class="card-name transaction-cell subs-card-name">
                 <%= present(subscription.merchant_customer).profile_image %>
                 <div class="table-text customer-name"><%= customer.card_name %></div>
               </div>
@@ -88,7 +88,7 @@
             </div>
             <div class="transaction-column w-col w-col-2">
               <div class="transaction-cell">
-                <div class="table-text plan-name"><%= subscription.plan.name %></div>
+                <div class="table-text plan-name shrink-text"><%= subscription.plan.name %></div>
               </div>
             </div>
             <div class="transaction-column w-col w-col-2">

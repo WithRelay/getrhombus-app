@@ -5,6 +5,6 @@
   <h1 class="empty-state-dash hero-h1 home-header">To see your first subscription
     <br>
     please subscribe the plan</h1>
-    <a class="button error-page-button w-button" href="#">Customer dashboard</a>
+    <%= link_to 'Customer dashboard', customers_user_path(current_user), class: 'button error-page-button w-button' %>
 </div>
 </div>

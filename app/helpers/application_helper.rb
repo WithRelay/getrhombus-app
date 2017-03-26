@@ -23,6 +23,11 @@ module ApplicationHelper
     return render 'shared/messaging_header' if messaging_dashboard
   end
 
+  def header_class
+    return 'bg-hero features-alt-hero hero' if "static_pages-features" == params_controller_action
+    "static_pages-home" == params_controller_action ? 'default hero' : 'hero use-case'
+  end
+
   # def render_customer_sidebar
   #   concat(render 'shared/customer_sidebar') if params_controller_action == 'users-customers' || params_controller_action == 'merchant_customers-index'
   # end
@@ -86,7 +91,8 @@ module ApplicationHelper
   def setting_pages
     settings_action = ['registrations-billing_information', 'registrations-account_settings',
                         'alerts-edit', 'plans-index','registrations-business_settings',
-                       'users-integrations', 'users-managed_acct', 'users-sms_usage', 'lists-segments']
+                       'users-integrations', 'users-managed_acct', 'users-sms_usage', 'lists-segments',
+                       'coupons-manage_coupons', 'coupons-index', 'users-refer_business', 'fb_pages-index']
     settings_action.include?(params_controller_action)
   end
 

@@ -1,55 +1,107 @@
-<div class="side-bar">
-  <div class="dashboard-nav-links">All Customers</div>
-  <h5 class="left-nav signup-box-subheading">billing info</h5>
+<div class="side-bar w-clearfix">
+  <div class="dashboard-logo-wrapper">
+    <%= image_tag 'Relay-Transparent-500x300.png', class: 'dashboard-logo', width: '50' %>
+  </div>
+  <h5 class="left-nav signup-box-subheading"><%= params[:controller].upcase %></h5>
 
   <%= link_to account_settings_user_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
-    <div class="left-nav-tab" data-ix="display-and-hide-customers">&nbsp; &nbsp; Account</div>
+    <div class="left-nav-tab" data-ix="display-and-hide-customers">Account</div>
   <% end %>
 
   <%= link_to business_settings_user_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
-    <div class="left-nav-tab"> &nbsp; Business</div>
+    <div class="left-nav-tab">Business</div>
   <% end %>
 
   <%= link_to notifications_user_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
-    <div class="left-nav-tab"> &nbsp; Notifications</div>
+    <div class="left-nav-tab">Notifications</div>
   <% end %>
 
   <%= link_to user_plans_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
-    <div class="left-nav-tab"> &nbsp; Manage plans</div>
+    <div class="left-nav-tab">Manage plans</div>
   <% end %>
 
   <%= link_to segments_user_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
-    <div class="left-nav-tab"> &nbsp; Manage segments</div>
+    <div class="left-nav-tab">Manage segments</div>
   <% end %>
 
   <%= link_to integrations_user_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
-    <div class="left-nav-tab"> &nbsp; Integrations</div>
+    <div class="left-nav-tab">Integrations</div>
   <% end %>
 
   <%= link_to billing_information_user_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
-    <div class="left-nav-tab"> &nbsp; Billing Information</div>
+    <div class="left-nav-tab">Billing Information</div>
   <% end %>
 
   <%= link_to managed_accounts_user_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
-    <div class="left-nav-tab"> &nbsp; Bank account</div>
+    <div class="left-nav-tab">Bank account</div>
   <% end %>
 
   <%= link_to sms_usage_user_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
-    <div class="left-nav-tab"> &nbsp; SMS usage</div>
+    <div class="left-nav-tab">SMS usage</div>
   <% end %>
 
   <%= link_to user_subscriptions_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
-    <div class="left-nav-tab"> &nbsp; Free subscriptions</div>
+    <div class="left-nav-tab">Free subscriptions</div>
   <% end %>
 
   <h5 class="left-nav rhom-number signup-box-subheading">RHOMBUS NUMBER</h5>
   <div class="left-nav-underline"></div>
   <a class="left-nav-tab-wrapper w-inline-block" href="#">
-    <div class="left-nav-tab"> &nbsp; + <redacted_phone_number></div>
+    <div class="left-nav-tab">+ <redacted_phone_number></div>
   </a>
   <h5 class="left-nav rhom-number signup-box-subheading">OTHER</h5>
   <div class="left-nav-underline"></div>
   <a class="left-nav-tab-wrapper w-inline-block" href="#">
-    <div class="left-nav-tab">&nbsp; &nbsp;Help</div>
+    <div class="left-nav-tab">Help</div>
   </a>
 </div>
+
+<!-- <div class="side-bar w-clearfix">
+  <div class="dashboard-logo-wrapper"><img class="dashboard-logo" src="images/Relay-Transparent-500x300.png" width="50">
+  </div>
+  <h5 class="left-nav signup-box-subheading">manage plans</h5>
+  <a class="left-nav-tab-wrapper w-inline-block" href="#">
+    <div class="left-nav-tab" data-ix="display-and-hide-customers">Account</div>
+  </a>
+  <a class="left-nav-tab-wrapper w-inline-block" href="#">
+    <div class="left-nav-tab">Business</div>
+  </a>
+  <a class="left-nav-tab-wrapper w-inline-block" href="#">
+    <div class="left-nav-tab">Notifications</div>
+  </a>
+  <a class="left-nav-tab-wrapper w-inline-block" href="#">
+    <div class="left-nav-tab">Away message</div>
+  </a>
+  <a class="left-nav-tab-wrapper w-inline-block" href="#">
+    <div class="left-nav-tab">Manage plans</div>
+  </a>
+  <a class="left-nav-tab-wrapper w-inline-block" href="#">
+    <div class="left-nav-tab">Manage segments</div>
+  </a>
+  <a class="left-nav-tab-wrapper w-inline-block" href="#">
+    <div class="left-nav-tab">Integrations</div>
+  </a>
+  <a class="left-nav-tab-wrapper w-inline-block" href="#">
+    <div class="left-nav-tab">Billing Information</div>
+  </a>
+  <a class="left-nav-tab-wrapper w-inline-block" href="#">
+    <div class="left-nav-tab">Bank account</div>
+  </a>
+  <a class="left-nav-tab-wrapper w-inline-block" href="#">
+    <div class="left-nav-tab">SMS usage</div>
+  </a>
+  <a class="left-nav-tab-wrapper w-inline-block" href="#">
+    <div class="left-nav-tab">Free subscriptions</div>
+  </a>
+  <h5 class="left-nav rhom-number signup-box-subheading">RHOMBUS NUMBER</h5>
+  <div class="left-nav-underline"></div>
+  <a class="left-nav-tab-wrapper w-inline-block" href="#">
+    <div class="left-nav-tab">+1 <redacted_phone_number></div>
+  </a>
+  <h5 class="left-nav rhom-number signup-box-subheading">OTHER</h5>
+  <div class="left-nav-underline"></div>
+  <a class="left-nav-tab-wrapper w-inline-block" href="#">
+    <div class="left-nav-tab">Help</div>
+  </a>
+</div>
+ -->

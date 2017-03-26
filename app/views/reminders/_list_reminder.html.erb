@@ -1,48 +1,48 @@
 <div class="new-table-row w-row">
-          <div class="cn w-clearfix w-col w-col-3">
-            <div class="name w-clearfix">
-              <%= present(reminder).profile_image %>
-                <div class="shrink-text table-text"><%= reminder.from_user %></div>
-            </div>
-            <div class="cb check-box-column">
-              <div class="w-form">
-              <%= form_for(reminder, url: user_reminder_path(current_user, reminder), html: { method: :delete }) do |f| %>
-                  <div class="select-all-check-box w-checkbox w-clearfix">
-                      <%= f.hidden_field :id %>
-                      <input class="cb checkboxes table-checkbox w-checkbox-input hashtag-check-box" id="node" type="checkbox">
-                      <label class="checkbox-field-lable w-form-label" for="node">-</label>
-                  </div>
-               <% end %>
-              </div>
-            </div>
+  <div class="cn w-clearfix w-col w-col-3">
+    <div class="name w-clearfix">
+      <%= present(reminder).profile_image %>
+        <div class="shrink-text table-text"><%= reminder.from_user %></div>
+    </div>
+    <div class="cb check-box-column">
+      <div class="w-form">
+      <%= form_for(reminder, url: user_reminder_path(current_user, reminder), html: { method: :delete }) do |f| %>
+          <div class="select-all-check-box w-checkbox w-clearfix">
+              <%= f.hidden_field :id %>
+              <input class="cb checkboxes table-checkbox w-checkbox-input hashtag-check-box" id="node" type="checkbox">
+              <label class="checkbox-field-lable w-form-label" for="node">-</label>
           </div>
-          <div class="fv w-clearfix w-col w-col-2">
-            <div class="cn column column-2 w-clearfix">
-              <div class="shrink-text table-text">+1 (202) 345 - 5898</div>
-            </div>
-          </div>
-          <div class="lv w-clearfix w-col w-col-2">
-            <div class="colum-3 column lv">
-              <div class="table-text"><%= present(reminder).get_channel %></div>
-            </div>
-          </div>
-          <div class="avs w-clearfix w-col w-col-1">
-            <div class="avs column column-4 w-clearfix">
-              <div class="table-text"><%= present(reminder).get_time%></div>
-            </div>
-          </div>
-          <div class="ts w-clearfix w-col w-col-1">
-            <div class="column column-5 ts w-clearfix">
-              <div class="table-text total-spend-text">Once</div>
-            </div>
-          </div>
-          <div class="table-actions w-clearfix w-col w-col-3">
-            <div class="column column-6 left new-row">
-              <div class="frequency table-text shrink-text">
-                time format needs fixing
-              </div>
-            </div>
-            <div class="column column-6 new-row"><a class="actions-button cancel" href="#">Cancel</a>
-            </div>
-          </div>
-        </div>
+       <% end %>
+      </div>
+    </div>
+  </div>
+  <div class="fv w-clearfix w-col w-col-2">
+    <div class="cn column column-2 w-clearfix">
+      <div class="shrink-text table-text">+1 (202) 345 - 5898</div>
+    </div>
+  </div>
+  <div class="lv w-clearfix w-col w-col-2">
+    <div class="colum-3 column lv">
+      <div class="table-text"><%= present(reminder).get_channel %></div>
+    </div>
+  </div>
+  <div class="avs w-clearfix w-col w-col-1">
+    <div class="avs column column-4 w-clearfix">
+      <div class="table-text"><%= present(reminder).get_time%></div>
+    </div>
+  </div>
+  <div class="ts w-clearfix w-col w-col-1">
+    <div class="column column-5 ts w-clearfix">
+      <div class="table-text total-spend-text">Once</div>
+    </div>
+  </div>
+  <div class="table-actions w-clearfix w-col w-col-3">
+    <div class="column column-6 left new-row">
+      <div class="frequency table-text shrink-text">
+        time format needs fixing
+      </div>
+    </div>
+    <div class="column column-6 new-row"><a class="actions-button cancel" href="#">Cancel</a>
+    </div>
+  </div>
+</div>

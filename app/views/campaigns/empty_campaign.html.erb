@@ -1,5 +1,9 @@
 <div class="customer-dash sub-nav-bar">
-  <div class="sub-nav-options-wrapper w-clearfix"><a class="add sub-nav-button w-button" data-ix="create-customer" href="#"> &nbsp;<strong>New campaign</strong></a><a class="import sub-nav-button w-button" data-ix="import-customers" href="#">&nbsp; <strong>Deactivate</strong></a><a class="sub-nav-button w-button" data-ix="create-list" href="#"> &nbsp;<strong>Resend</strong></a><a class="sub-nav-button w-button" data-ix="create-list" href="#"> &nbsp;<strong>Delete</strong></a>
+  <div class="sub-nav-options-wrapper w-clearfix">
+    <%= link_to ' &nbsp;<strong>New campaign</strong>'.html_safe, new_user_campaign_path(current_user), class: 'add sub-nav-button w-button' %>
+    <a class="import sub-nav-button w-button" data-ix="import-customers" href="#">&nbsp; <strong>Deactivate</strong></a>
+    <a class="sub-nav-button w-button" data-ix="create-list" href="#"> &nbsp;<strong>Resend</strong></a>
+    <a class="sub-nav-button w-button" data-ix="create-list" href="#"> &nbsp;<strong>Delete</strong></a>
   </div>
 </div>
 <div class="dashboard-body">
@@ -8,6 +12,8 @@
   <h1 class="empty-state-dash hero-h1 home-header">To send your first campaign create a list or
     <br>
     segment from the customer dashboard</h1>
-    <a class="button error-page-button w-button" href="#">Customer dashboard</a>
+    <%= link_to customers_user_path(current_user), class: "button error-page-button w-button" do %>
+      <strong> Customer dashboard</strong>
+    <% end %>
 </div>
 </div>

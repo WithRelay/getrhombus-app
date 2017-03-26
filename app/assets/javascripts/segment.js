@@ -1,4 +1,4 @@
-$(document).ready(function(e){
+$(document).on('ready page:load', function() {
 
   var editFieldClass = '.edit-field', editableTextField = '.editable-field-icon';
   var editableFieldText = '.editable-field-text', updateFieldClass = '.update-field';
@@ -14,10 +14,15 @@ $(document).ready(function(e){
     $(this).removeClass(editField)
   });
 
+  $('.delete-segment-link').click(function(e){
+    FlashHandler.setConfirmationDialog(".delete-hidden-segment-link",'Are you sure, you want to remove ?' , 'Delete', 'isDestroy');
+    return false;
+  });
+
   $( '.cancel-edit' ).click(function(){
     editItem = new EditItem(this, editableTextField);
     editItem.replaceIconWithSave('');
-    editItem.removeTextBox('.text-field');
+    editItem.removeTextBox();
   });
 
   $(document).on('click', updateFieldClass, function(e){
@@ -70,7 +75,7 @@ $(document).ready(function(e){
     return element.replace('.', '')
   }
 
-  function removeTextBox(textField){
+  function removeTextBox(){
     this.getIcon().addClass(editField);
     this.getIcon().removeClass(updateField);
     var element = this.clickedElement;
@@ -99,9 +104,13 @@ $(document).ready(function(e){
           }).done(function(msg){
 
             var flash_key = Object.keys(msg)[1];
-            msg.status == 200 && $('#segment-' + element.data('segment-id')).text(msg.name);
+            var segmentElement = $('#segment-' + element.data('segment-id'));
+            msg.status == 200 && segmentElement.text(msg.name);
             FlashHandler.setFlashMessage( msg[flash_key], flash_key );
-
+            var cancelElement = segmentElement.parent().find('.cancel-edit')[0]
+            editItem = new EditItem(cancelElement, editableTextField);
+            editItem.replaceIconWithSave('');
+            editItem.removeTextBox('.text-field');
           }).fail(function(msg){
             FlashHandler.setFlashMessage( 'Sorry semgent cannot updated', 'error' );
           });

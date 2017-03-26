@@ -69,8 +69,13 @@ $(document).on('ready',function(){
 		});
 	}
 
-	$('#edit-saved-reply').on('click',function(){
+	$('#edit-saved-reply').on('click',function(e){
 		var selectedElement = selectCheckedElement();
+		if (selectedElement == false){
+			FlashHandler.setFlashMessage('record not selected','error');
+			return false;
+		}
+
 		var elementForm = selectedElement.closest('form');
 		var reply_id = elementForm.find('#saved_reply_id').val();
 
