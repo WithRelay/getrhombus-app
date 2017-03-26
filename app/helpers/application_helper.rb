@@ -91,7 +91,8 @@ module ApplicationHelper
   def setting_pages
     settings_action = ['registrations-billing_information', 'registrations-account_settings',
                         'alerts-edit', 'plans-index','registrations-business_settings',
-                       'users-integrations', 'users-managed_acct', 'users-sms_usage', 'lists-segments']
+                       'users-integrations', 'users-managed_acct', 'users-sms_usage', 'lists-segments',
+                       'coupons-manage_coupons', 'coupons-index', 'coupons-manage_coupons']
     settings_action.include?(params_controller_action)
   end
 
