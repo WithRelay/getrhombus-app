@@ -13826,6 +13826,8 @@ h4 {
   padding: 18px 30px;
   background-color: #1f8cec;
   text-align: center;
+  right: 1% !important;
+  margin-right: 1% !important;
 }
 
 .customer-name-browser-notification {

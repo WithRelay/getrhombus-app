@@ -1,10 +1,15 @@
 <%= form_for [current_user, @hashtag], :html => { :multipart => true } do |f| %>
-  
+
   <div class="editor side-bar">
+
+    <div class="dashboard-logo-wrapper">
+      <%= image_tag 'Relay-Transparent-500x300.png', class: 'dashboard-logo', width: '50' %>
+    </div>
+
     <div class="dashboard-nav-links">All Customers</div>
     <h5 class="left-nav signup-box-subheading">CREATE HASHTAG</h5>
     <div class="campaign-editor-options w-form">
-          
+
       <%= f.label :name, class: 'editor-options form-label' do %>
          &nbsp; Name
       <% end %>
@@ -12,20 +17,19 @@
         <%= f.text_field :name, class: 'form-control editor item-name-field text-field w-input', placeholder: 'E.g. Cheese Burger' %>
       </div>
 
-    
+
       <%= f.label :hashtag, class: 'editor-options form-label' do %>
          &nbsp; Hashtag
       <% end %>
       <div class='form-group col-xs-6'>
         <%= f.text_field :tag, class: 'form-control editor text-field w-input', placeholder: 'E.g. #CheeseBurger' %>
       </div>
-      
 
       <%= f.label :description, class: "editor-options form-label" do %>
          &nbsp; Description
       <% end %>
       <%= f.text_area :description, class: 'hashtag-description-area text-area w-input', placeholder: 'E.g. Burger with bacon & extra bun' %>
-              
+
       <label class="editor-options form-label" > &nbsp; Type</label>
       <%= f.select :tag_type, options_for_select(present(@hashtag).get_tag_type_options, selected: present(@hashtag).get_tag_type_value), {}, { class: "dropdown editor-dropdown w-select" } %>
 
@@ -41,17 +45,17 @@
           <%= f.radio_button :charge_amount, 0, class: "w-radio-input", checked: @hashtag.new_record? || @hashtag.allow_customers_to_override_amount? %>
           <label class="check-radio-text w-form-label" for="radio">Allow customers to send any amount&nbsp;</label>
         </div>
-        
+
         <div class='form-group col-xs-6'>
           <%= f.text_field :amount, class: "form-control editor text-field w-input", placeholder: "Enter amount (USD)" %>
         </div>
-        
+
         <div id='interval-settings'>
           <%= f.select :interval, options_for_select(present(@hashtag).get_tag_interval_options, selected: present(@hashtag).get_interval_string), {}, { id: "plan_interval", class: "dropdown editor-dropdown w-select" } %>
         </div>
       </div>
 
-      
+
       <div class="check-box editor w-checkbox w-clearfix">
         <%= f.check_box :enable_tweet, class: "w-checkbox-input" %><label class="check-radio-text w-form-label" for="Deliver-now-2">Enable Tweet</label>
       </div>
@@ -68,7 +72,7 @@
         <div class='form-group col-xs-6'>
           <%= f.text_area :response, class: "form-control message-editor text-area w-input", placeholder: "Type message", id: "hashtag-response-textarea" %>
         </div>
-          
+
       </div>
       <div class="editor-button-container">
         <div class="w-row">
@@ -82,10 +86,10 @@
             <%= f.submit present(@hashtag).get_submit_text, id: 'create-hashtag-btn', class: "button editor-buttons w-button" %>
           </div>
         </div>
-                
+
         <!-- for new images -->
         <div id='new-image-previews'>
-        </div> 
+        </div>
 
         <!-- for already attached images -->
         <div id='image-previews' data-model-id='hashtags_<%= @hashtag.id %>'>
@@ -104,6 +108,6 @@
     <div class="editor-date"><%= todays_date %></div>
   </div>
   <div class="alt hashtags sub-nav-bar"></div>
-  
-  
+
+
   <!-- [if lte IE 9]><script src="https://cdnjs.cloudflare.com/ajax/libs/placeholders/3.0.2/placeholders.min.js"></script><![endif] -->
