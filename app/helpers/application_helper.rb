@@ -7,6 +7,17 @@ module ApplicationHelper
     block_given? ? yield(presenter) : presenter
   end
 
+  def sidebar_name(param)
+    sidebar_name_hash = {
+                          'reminders-index' => 'Reminder',
+                          'saved_replies-index' => 'Saved Replies',
+                          'hashtags-index' => 'Hashtags',
+                          # 'hashtags-create' => 'Create Hashtags',
+
+                        }
+    sidebar_name_hash["#{param}"]
+  end
+
   def todays_date
     Time.current.strftime('%B %d, %Y')
   end
