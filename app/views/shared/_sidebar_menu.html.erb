@@ -4,7 +4,7 @@
       <%= image_tag('Relay-Transparent.png', width: 50, class: 'dashboard-logo') %>
     <% end %>
   </div>
-  <h5 class="left-nav signup-box-subheading"><%= params[:controller]%></h5>
+  <h5 class="left-nav signup-box-subheading"><%= sidebar_name "#{params[:controller]}-#{params[:action]}" %></h5>
   <a class="left-nav-tab-wrapper w-inline-block" href="#">
     <div class="left-nav-tab">Customers &nbsp; &nbsp;</div>
   </a>
