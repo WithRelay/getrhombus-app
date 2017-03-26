@@ -16,7 +16,20 @@ module ApplicationHelper
                           'hashtags-index' => 'Hashtags',
                           'merchant_customers-index' => 'Customers',
                           'users-show' => 'Main',
-                          'merchant_contacts-index' => 'Leads | Contacts'
+                          'merchant_contacts-index' => 'Leads | Contacts',
+                          'registrations-billing_information' => 'Billing Info',
+                          'registrations-account_settings'=> 'Account Info',
+                          'alerts-edit' => 'Notifications',
+                          'plans-index' => 'Manage Plans',
+                          'registrations-business_settings'=> 'Business Setting',
+                          'users-integrations' => 'Integrations',
+                          'users-managed_acct' => 'Manage Account',
+                          'users-sms_usage' => 'SMS Usage',
+                          'lists-segments'=> 'Manage Segment',
+                          'coupons-manage_coupons' => 'Manage Coupons',
+                          'coupons-index' => 'Coupons',
+                          'users-refer_business' => 'Refer Business',
+                          'fb_pages-index' => 'FB Integrations'
                         }
     sidebar_name_hash["#{param}"]
   end
