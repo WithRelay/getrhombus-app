@@ -8,10 +8,12 @@
     <div class='modal-background w-hidden modal-body refund_customer_modal'>
       <%= render 'shared/modals/refund_customer' %>
     </div>
-    <div class="date-range-wrapper w-clearfix w-form">
-      <form class="date-picker-form w-clearfix" id="email-form-3" name="email-form-3">
-        <input class="date-picker-field w-input" id="Transaction-Date-Range-Picker" maxlength="256" placeholder="Date Picker " type="text">
-      </form>
-    </div>
+    <% if transactions.present? %>
+      <div class="date-range-wrapper w-clearfix w-form">
+        <form class="date-picker-form w-clearfix" id="email-form-3" name="email-form-3">
+          <input class="date-picker-field w-input" id="Transaction-Date-Range-Picker" maxlength="256" placeholder="Date Picker " type="text">
+        </form>
+      </div>
+    <% end %>
   </div>
 </div>

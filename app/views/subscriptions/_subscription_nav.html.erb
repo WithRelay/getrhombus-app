@@ -1,13 +1,6 @@
 <div class="customer-dash sub-nav-bar w-clearfix">
-  <!-- <div class="search-bar">
-    <div class="w-form">
-      <form data-name="Email Form" id="email-form" name="email-form">
-        <input class="search-field w-input" data-name="Search 3" id="Search-3" maxlength="256" name="Search-3" placeholder="Search" type="text">
-      </form>
-    </div>
-  </div> -->
   <div class="sub-nav-options-wrapper transactions w-clearfix">
-    <a class="w-button sub-nav-button modal-loader"  href="#" modal-target= 'new-plan-modal'> &nbsp;<strong>Create plan</strong></a>
+    <a class="w-button sub-nav-button add modal-loader"  href="#" modal-target= 'new-plan-modal'> &nbsp;<strong>Create plan</strong></a>
     <a class="w-button sub-nav-button modal-loader"  href="#" modal-target= 'new-subscription-modal'>&nbsp;<strong>Create subscription</strong></a>
     <!-- <a class="export sub-nav-button w-button" href="#">&nbsp; Export</a> -->
     <div class='modal-background w-hidden modal-body new-plan-modal'>
@@ -20,10 +13,12 @@
     <div class='modal-background w-hidden modal-body cancel-subscription-modal'>
       <%= render 'shared/modals/confirmation' %>
     </div>
-    <div class="date-range-wrapper w-clearfix w-form">
-      <form class="date-picker-form w-clearfix" id="email-form-3" name="email-form-3">
-        <input class="date-picker-field w-input" id="Subscription-Date-Range-Picker" maxlength="256" placeholder="Date Picker" type="text">
-      </form>
-    </div>
+    <% if subscriptions.present? %>
+      <div class="date-range-wrapper w-clearfix w-form">
+        <form class="date-picker-form w-clearfix" id="email-form-3" name="email-form-3">
+          <input class="date-picker-field w-input" id="Subscription-Date-Range-Picker" maxlength="256" placeholder="Date Picker" type="text">
+        </form>
+      </div>
+    <% end %>
   </div>
 </div>
