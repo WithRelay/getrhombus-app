@@ -94,7 +94,7 @@
                   <div class="said-text">said:</div>
                   <p class="conversation-preview"><%= present(conversation_ref).format_textable_text %></p>
                   <div class="message-channel"> &nbsp; Sent from</div>
-                  <div class="channel-name message-channel"><%= conversation_ref.channel %></div>
+                  <div class="channel-name message-channel"><%= present(conversation_ref).channel %></div>
                   <div class="message-channel time-received"><%= present(conversation_ref).format_created_at %></div>
                   <div class="status"><%= present(conversation_ref).format_resolution %></div>
                 </div>

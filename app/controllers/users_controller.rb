@@ -21,7 +21,6 @@ class UsersController < ApplicationController
     #all the methods are in concerns/databoard_data
     @overall_section = overall_section
     @chart_and_transacs = chart_and_transactions
-    @unread_preview = unread_preview_section
     @msg_perform = msg_performance_section
   end
 

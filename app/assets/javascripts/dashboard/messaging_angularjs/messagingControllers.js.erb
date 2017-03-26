@@ -460,7 +460,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
 
     $scope.closeConversation = function(data) {
       if ($scope.is_conversation_selected() && $scope.online()) {
-        var hash = { conversation: { notes: $scope.marked_as_done.notes, resolution: $scope.marked_as_done.reason } };
+        var hash = { conversation_resolution: { notes: $scope.marked_as_done.notes, resolution: $scope.marked_as_done.reason } };
         conversationService.closeConversation($scope.selected_conversation.id, hash)
         .then(function(data) {
           $scope.selected_conversation_messages = []

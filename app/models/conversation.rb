@@ -2,9 +2,9 @@ class Conversation < ActiveRecord::Base
   include PrettyDate
 
   has_many :conversation_refs, dependent: :destroy
+  has_many :conversation_resolutions, dependent: :destroy
   has_many :fb_messages, through: :conversation_refs, source: :textable, source_type: 'FbMessage', dependent: :destroy
   has_many :messages, through: :conversation_refs, source: :textable, source_type: 'Message', dependent: :destroy
-  belongs_to :merchant_conversation, class_name: "User"
 
   # Timezone should already be set when calling methods in this class.
 
@@ -14,22 +14,24 @@ class Conversation < ActiveRecord::Base
   end
 
   def self.get_open_conversations_count(merchant_id)
-  	where(merchant_id: merchant_id, resolution: nil).count
-  	where(merchant_id: merchant_id).count
+  	where(merchant_id: merchant_id, is_resolved: false).count
   end
 
   # Returns hash with users who sent a message to the given merchant in the last "num_days" days
   def self.get_open_conversations(merchant_id, page)
-####convs = where(merchant_id: merchant_id, resolution: nil).paginate(page: page, per_page: 25)
-  	convs = where(merchant_id: merchant_id).paginate(page: page, per_page: 5)
+  	convs = where(merchant_id: merchant_id, is_resolved: false)
+                            .paginate(page: page, per_page: 5).order(updated_at: :desc)
+
   	x = convs.map { |conv| conv.conversation_hash }
-    # remove these lines and x
+
+    # remove these lines and x variable above
   	x.first[:profile_image] = { type: 'image', value: 'http://lorempixel.com/400/200/' } if x.present?
     x
 	end
 
   def conversation_hash
     last_message = ConversationRef.where(conversation_id: self.id).last
+    
     if last_message.present?
       last_message = last_message.textable
       last_message.text = 'image attached' if last_message.present? && last_message.text.blank? && last_message.images.exists?
@@ -64,7 +66,7 @@ class Conversation < ActiveRecord::Base
 	end
 
 	def self.message_hash(conv, msg, conv_ref, customer, merchant=nil)
-     u = msg.user_id == conv.merchant_id ? merchant : customer
+    u = msg.user_id == conv.merchant_id ? merchant : customer
     #u = conv_ref.source == 'customer' ? customer : merchant
 
     {
@@ -144,45 +146,42 @@ class Conversation < ActiveRecord::Base
   # find or create conversation and attach new message
   def self.find_or_create_conversation_for_message(team_id, uid_type, uid, msg_instance, unread, source)
     conv = find_or_create_conversation(team_id, uid_type, uid)
+    # basically, only customer and merchant messages should start new conversations
+    conv.update(is_resolved: false) if ['customer', 'merchant'].include? source
     conv_ref = conv.conversation_refs.create(textable: msg_instance, unread: unread, source: source)
+    update_conversation_resolution(team_id, conv.id, conv_ref.id, source)
     [conv, conv_ref]
+  end
+
+  def self.update_conversation_resolution(team_id, conv_id, conv_ref_id, source)
+    conv_res = ConversationResolution.where(conversation_id: conv.id, resolution: nil).last
+    conv_res = ConversationResolution.new unless conv_res 
+
+    key = source == 'customer' ? :uid_conversation_ref_id : :merchant_conversation_ref_id
+    conv_res[key] = conv_ref_id    
+    conv_res.save(merchant_id: team_id, conversation_id: conv_id)
   end
 
 	# find the conversation or create one
   def self.find_or_create_conversation(team_id, uid_type, uid)
-    return @conv if @conv.present?
-    Conversation.find_by(merchant_id: team_id, uid_type: uid_type, uid: uid, resolution: nil) || Conversation.create(merchant_id: team_id, uid_type: uid_type, uid: uid)
-  end
-
-  # find conversation
-  def self.find_last_conversation(team_id, uid_type, uid)
-    where(merchant_id: team_id, uid_type: uid_type, uid: uid).last
-  end
-
-  def self.conversation_per_hour(merchant_id)
-    merchant_conv = Conversation.where(merchant_id: 7)
-    return 0 unless merchant_conv.present?
-    first_conv, last_conv = merchant_conv.first, merchant_conv.last
-    time_diff = (last_conv.created_at - first_conv.created_at)/1.hours
-    is_zero = time_diff.to_i   # division by zero or time difference isnt up to an hour
-    is_zero == 0 ? 0 : (merchant_conv.count/time_diff).round
+    @conv.present? ? @conv : Conversation.find_or_create_by(merchant_id: team_id, uid_type: uid_type, uid: uid)
   end
 
   # get the total number of unread messages for a merchant on or after a date
   def self.get_merchant_todays_unread_count(merchant_id, date)
     find_by_sql(["select count(cr.id) as count from conversations c inner join conversation_refs cr
-                  on c.id = cr.conversation_id
-                  where cr.unread = 1 and c.resolution is null or c.resolution = ''
-                  and c.merchant_id = ? and c.created_at >= ? and source = 2", merchant_id, date]).first.count
+                  on c.id = cr.conversation_id where cr.unread = 1 and c.is_resolved is false
+                  and c.merchant_id = ? and cr.created_at >= ? and source = 2", merchant_id, date]).first.count
   end
 
+=begin
   # get the total number of unread messages for a merchant
   def self.get_merchant_total_unread_msgs_count(merchant_id)
     find_by_sql(["select count(cr.id) as count from conversations c inner join conversation_refs cr
-                  on c.id = cr.conversation_id
-                  where cr.unread = 1 and c.resolution is null or c.resolution = ''
+                  on c.id = cr.conversation_id where cr.unread = 1 and c.is_resolved is false
                   and c.merchant_id = ? and source = 2", merchant_id]).first.count
   end
+=end
 
   # get the last message from the last 5 conversations a merchant has had on or after a date
   def self.get_last_customer_msg_from_last5_convs_today(merchant_id, date)
@@ -194,8 +193,8 @@ class Conversation < ActiveRecord::Base
                     FROM conversation_refs c
                     INNER JOIN (
                       SELECT id, uid, uid_type from conversations d
-                      where d.merchant_id = ? and d.resolution is null or
-                      d.resolution = '' and d.created_at >= ? order by d.created_at desc, id desc limit 5
+                      where d.merchant_id = ? and d.is_resolved is false
+                      and d.updated_at >= ? order by d.updated_at desc, id desc limit 5
                       ) e ON e.id = c.conversation_id
                     where source = 2 GROUP BY c.conversation_id
                   ) b ON a.id = b.cr_id order by a.created_at desc, id desc", merchant_id, date])
