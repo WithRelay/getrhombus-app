@@ -7,13 +7,16 @@ module ApplicationHelper
     block_given? ? yield(presenter) : presenter
   end
 
+# add key and value for the sidebar name {key= controller-action and value = given name }
+# this method is called in _sidebar_menu partial file
   def sidebar_name(param)
     sidebar_name_hash = {
                           'reminders-index' => 'Reminder',
                           'saved_replies-index' => 'Saved Replies',
                           'hashtags-index' => 'Hashtags',
-                          # 'hashtags-create' => 'Create Hashtags',
-
+                          'merchant_customers-index' => 'Customers',
+                          'users-show' => 'Main',
+                          'merchant_contacts-index' => 'Leads | Contacts'
                         }
     sidebar_name_hash["#{param}"]
   end
