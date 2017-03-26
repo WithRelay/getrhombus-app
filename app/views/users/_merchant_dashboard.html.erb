@@ -1,0 +1,264 @@
+<div class="sub-nav-bar"></div>
+  <div class="dashboard-body">
+    <div class="chart-wrapper dash-content-container">
+      <div class="message-stats-in-graph-wrapper w-clearfix">
+        <div class="_90-days-ago group-volume">
+          <div class="_30-days _90 message-volume-count">1.48m</div>
+          <div class="message-days-text">90 DAYS</div>
+        </div>
+        <div class="_30-days-ago group-volume">
+          <div class="_30-days message-volume-count">890,259</div>
+          <div class="alt message-days-text">30 DAYS</div>
+        </div>
+        <div class="_7-days-ago group-volume">
+          <div class="_7-days message-volume-count">29,300</div>
+          <div class="message-days-text">7 DAYS</div>
+        </div>
+        <h4 class="date-time shrink-text welcome-dash-content-container-header">Thursday, 11 Aug 2016, 9:30 AM</h4>
+      </div>
+      <div class="graph-header-row w-row">
+        <div class="w-col w-col-6">
+          <div class="message-graph-header-text">Daily Message Volume</div>
+        </div>
+        <div class="w-col w-col-6">
+          <div class="conversation-to-date-text">286,000 Total Conversations to Date</div>
+        </div>
+      </div>
+      <div class="chart-container"><img class="chart-placeholder-2" src="images/Sample-Chart-3.png">
+      </div>
+    </div>
+    <div class="dash-content-container scheduled-campaigns-notifications">
+      <div class="content-sub-wrapper">
+        <h4 class="welcome-dash-content-container-header">Analytics</h4>
+      </div>
+      <div class="w-row welcome-dash-table-wrapper">
+        <div class="w-col w-col-3">
+          <div class="average-message-count-per-day customer-contacts-2 welcome-dash-content-container">
+            <h1 class="new-customers"><%= @msg_perform[:messages][:msg_count] %></h1>
+            <h4 class="count-description"> &nbsp;Messages Today</h4>
+            <h4 class="count-description transaction-count">Facebook <%= @msg_perform[:messages][:fb_msg_percent] %>%  |
+               SMS &nbsp;<%= @msg_perform[:messages][:txt_msg_percent] %>%</h4>
+          </div>
+        </div>
+        <div class="w-col w-col-3">
+          <div class="average-conversations-per-hour customer-contacts-2 welcome-dash-content-container">
+            <h1 class="new-customers"><%= @msg_perform[:conversations_per_hour] %></h1>
+            <h4 class="count-description"> &nbsp;Conversations per hour</h4>
+          </div>
+        </div>
+        <div class="w-col w-col-3">
+          <div class="average-handle-time customer-contacts-2 welcome-dash-content-container">
+            <h1 class="new-customers"><%= @msg_perform[:avg_handle_time] %> mins</h1>
+            <h4 class="count-description">Average Handle Time</h4>
+          </div>
+        </div>
+        <div class="w-col w-col-3">
+          <div class="customer-contacts-2 open-conversations-yesterday welcome-dash-content-container">
+            <h1 class="new-customers"><%= @msg_perform[:open_convs_yesterday]%></h1>
+            <h4 class="count-description">Open Conversations Yesterday</h4>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="w-row welcome-dash-content-table">
+      <div class="new-transaction-column w-col w-col-4">
+        <div class="dash-content-container recent transactions">
+          <div class="content-sub-wrapper">
+            <h4 class="welcome-dash-content-container-header">Recent Transactions</h4>
+          </div>
+          <div class="sakes welcome-dash-content-container">
+            <div class="new-customer-list w-row">
+              <div class="w-col w-col-1">
+                <div class="customer-list-content-div">
+                  <div class="new-customer-table-text">1</div>
+                </div>
+              </div>
+              <div class="w-col w-col-6">
+                <div class="customer-list-content-div">
+                  <div class="customer-list-content-div">
+                    <div class="name-text new-customer-table-text shrink-text">Ashley Sila</div>
+                  </div>
+                </div>
+              </div>
+              <div class="w-col w-col-2">
+                <div class="customer-list-content-div">
+                  <div class="new-customer-table-text shrink-text">3 hrs</div>
+                </div>
+              </div>
+              <div class="w-col w-col-3">
+                <div class="customer-list-content-div">
+                  <div class="new-customer-table-text">$26</div>
+                </div>
+              </div>
+            </div>
+            <div class="new-customer-list w-row">
+              <div class="w-col w-col-1">
+                <div class="customer-list-content-div">
+                  <div class="new-customer-table-text">2</div>
+                </div>
+              </div>
+              <div class="w-col w-col-6">
+                <div class="customer-list-content-div">
+                  <div class="customer-list-content-div">
+                    <div class="name-text new-customer-table-text shrink-text">Robert Francisco</div>
+                  </div>
+                </div>
+              </div>
+              <div class="w-col w-col-2">
+                <div class="customer-list-content-div">
+                  <div class="new-customer-table-text shrink-text">5 hrs</div>
+                </div>
+              </div>
+              <div class="w-col w-col-3">
+                <div class="customer-list-content-div">
+                  <div class="new-customer-table-text">$12</div>
+                </div>
+              </div>
+            </div>
+            <div class="new-customer-list w-row">
+              <div class="w-col w-col-1">
+                <div class="customer-list-content-div">
+                  <div class="new-customer-table-text">3</div>
+                </div>
+              </div>
+              <div class="w-col w-col-6">
+                <div class="customer-list-content-div">
+                  <div class="customer-list-content-div">
+                    <div class="name-text new-customer-table-text shrink-text">Francis Chamberlin</div>
+                  </div>
+                </div>
+              </div>
+              <div class="w-col w-col-2">
+                <div class="customer-list-content-div">
+                  <div class="new-customer-table-text shrink-text">8 hrs</div>
+                </div>
+              </div>
+              <div class="w-col w-col-3">
+                <div class="customer-list-content-div">
+                  <div class="new-customer-table-text">$150</div>
+                </div>
+              </div>
+            </div>
+            <div class="new-customer-list w-row">
+              <div class="w-col w-col-1">
+                <div class="customer-list-content-div">
+                  <div class="new-customer-table-text">4</div>
+                </div>
+              </div>
+              <div class="w-col w-col-6">
+                <div class="customer-list-content-div">
+                  <div class="customer-list-content-div">
+                    <div class="name-text new-customer-table-text shrink-text">Samantha Groves</div>
+                  </div>
+                </div>
+              </div>
+              <div class="w-col w-col-2">
+                <div class="customer-list-content-div">
+                  <div class="new-customer-table-text shrink-text">11 hrs</div>
+                </div>
+              </div>
+              <div class="w-col w-col-3">
+                <div class="customer-list-content-div">
+                  <div class="new-customer-table-text">$47.20</div>
+                </div>
+              </div>
+            </div>
+            <div class="new-customer-list w-row">
+              <div class="w-col w-col-1">
+                <div class="customer-list-content-div">
+                  <div class="new-customer-table-text">5</div>
+                </div>
+              </div>
+              <div class="w-col w-col-6">
+                <div class="customer-list-content-div">
+                  <div class="customer-list-content-div">
+                    <div class="name-text new-customer-table-text shrink-text">Taiwo Muyiwa</div>
+                  </div>
+                </div>
+              </div>
+              <div class="w-col w-col-2">
+                <div class="customer-list-content-div">
+                  <div class="new-customer-table-text shrink-text">15 hrs</div>
+                </div>
+              </div>
+              <div class="w-col w-col-3">
+                <div class="customer-list-content-div">
+                  <div class="new-customer-table-text">$70</div>
+                </div>
+              </div>
+            </div>
+            <div class="new-customer-list w-row">
+              <div class="w-col w-col-1">
+                <div class="customer-list-content-div">
+                  <div class="new-customer-table-text">6</div>
+                </div>
+              </div>
+              <div class="w-col w-col-6">
+                <div class="customer-list-content-div">
+                  <div class="customer-list-content-div">
+                    <div class="name-text new-customer-table-text shrink-text">Adelaide Brown</div>
+                  </div>
+                </div>
+              </div>
+              <div class="w-col w-col-2">
+                <div class="customer-list-content-div">
+                  <div class="new-customer-table-text shrink-text">19 hrs</div>
+                </div>
+              </div>
+              <div class="w-col w-col-3">
+                <div class="customer-list-content-div">
+                  <div class="new-customer-table-text">$51.29</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="column-2 new-transaction-column w-col w-col-8">
+        <div class="chart dash-content-container transaction-chart transactions">
+          <div>
+            <div class="graph-header-row w-row">
+              <div class="w-col w-col-6">
+                <div class="message-graph-header-text">Weekly Transactions</div>
+              </div>
+              <div class="w-col w-col-6">
+                <div class="conversation-to-date-text">$18,000 Transactions this Week</div>
+              </div>
+            </div>
+          </div><img class="chart-place-holder" src="images/Graph-screen-shot.png">
+        </div>
+      </div>
+    </div>
+    <div class="dash-content-container">
+      <div class="content-sub-wrapper">
+        <h4 class="welcome-dash-content-container-header">Customers &amp; Transactions</h4>
+      </div>
+      <div class="w-row welcome-dash-table-wrapper">
+        <div class="w-col w-col-3">
+          <div class="overview welcome-dash-content-container">
+            <h1 class="total-customer-count"><%= @overall_section[:all_customers_count] %></h1>
+            <h4 class="count-description">All Customers</h4>
+          </div>
+        </div>
+        <div class="w-col w-col-3">
+          <div class="customer-contacts-2 welcome-dash-content-container">
+            <h1 class="new-customers"><%= @overall_section[:new_customers_count] %></h1>
+            <h4 class="count-description"> &nbsp;New Customers this Week</h4>
+          </div>
+        </div>
+        <div class="w-col w-col-3">
+          <div class="customer-contacts-3 welcome-dash-content-container">
+            <h1 class="new-contacts">$<%= @overall_section[:total_transactions] %></h1>
+            <h4 class="count-description">Transactions to Date</h4>
+          </div>
+        </div>
+        <div class="w-col w-col-3">
+          <div class="column-4 overview welcome-dash-content-container">
+            <h1 class="total-customer-count">$<%= @overall_section[:transactions_today] %></h1>
+            <h4 class="count-description"> &nbsp; Transactions Today</h4>
+            <h4 class="count-description transaction-count"> &nbsp; <%= @overall_section[:transactions_today_count] %> Transactions</h4>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
