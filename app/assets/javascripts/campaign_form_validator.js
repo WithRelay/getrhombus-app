@@ -32,13 +32,11 @@ $(document).on('ready page:load', function() {
               if ($('#Channel').val() == 3) {
                 if ($('#campaign_subject').val().length > 0) {
                   return {
-                    valid: true,
-                    //message: 'Valid number'
+                    valid: true
                   }
                 } else {
                   return {
-                    valid: false,
-                    message: "Subject is required"
+                    valid: false
                   }
                 }
               } else {
@@ -93,8 +91,17 @@ $(document).on('ready page:load', function() {
 
   $("#trumbowyg").on('change', function(e) {
     $('#campaignForm').formValidation('resetField', 'campaign[text]');
+    $('#campaignForm').formValidation('resetField', 'campaign[name]');
   });
 
+  $("#send-campaign-users").click(function(){
+    $('#campaignForm').formValidation('resetField', 'campaign[text]');
+  });
+
+  $('#Channel').on('change', function(e) {
+    $('#campaignForm').formValidation('resetField', 'campaign[name]');
+    $('#campaignForm').formValidation('resetField', 'campaign[subject]');
+  });
 
   // this is actually for campaigns not lists but uses lists
   // http://selectize.github.io/selectize.js/
