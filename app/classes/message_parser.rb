@@ -93,7 +93,7 @@ class MessageParser
   def find_conversation_refs_count
     uid = (@customer.present?) ? @customer.id : @received_msg.from
     uid_type = (@customer.present?) ? 'user' : (channel == 'Message') ? 'phone_number' : 'fb_page'
-    last_conv = Conversation.find_last_conversation(@merchant.id, uid_type, uid)
+    last_conv = Conversation.find_by(merchant_id: @merchant.id, uid_type: uid_type, uid: uid)
     last_conv.present? ? last_conv.conversation_refs.count : 0
   end
 

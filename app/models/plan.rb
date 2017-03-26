@@ -24,7 +24,7 @@ class Plan < ActiveRecord::Base
 
       # dont send team/merchant in hash
       hash.delete(:team)
-            
+
       # save so validations run before calling Stripe
       self.statement_descriptor = descriptor
       self.merchant_id = team.id
@@ -38,7 +38,7 @@ class Plan < ActiveRecord::Base
       hash[:id] = self.id
       hash[:name] = self.name
       hash[:trial_period_days] = self.trial_period_days
-      hash[:statement_descriptor] = self.statement_descriptor
+      hash[:statement_descriptor] = self.statement_descriptor.gsub("'", "")
       hash[:currency] = self.currency
 
       res = PaymentService.create_plan(hash, uid, is_platform)
@@ -62,16 +62,15 @@ class Plan < ActiveRecord::Base
 
   def update_plan(hash, team)
     begin
-
       old_name = self.name
       old_descriptor = self.statement_descriptor
-      new_descriptor = (hash[:name] + "-" + team.org_name)[0..21]
+      new_descriptor = (hash[:name] + "-" + team.org_name)[0..21].gsub("'", "")
 
       # save so validations run before calling Stripe api
       self.name = hash[:name]
       self.statement_descriptor = new_descriptor
       return false if !self.save
-      
+
       hash[:statement_descriptor] = new_descriptor
       res = PaymentService.update_plan(self.id, hash, team.get_stripe_cred.uid, team.is_platform?)
 

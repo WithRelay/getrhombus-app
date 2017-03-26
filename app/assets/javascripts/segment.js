@@ -1,4 +1,4 @@
-$(document).ready(function(e){
+$(document).on('ready page:load', function() {
 
   var editFieldClass = '.edit-field', editableTextField = '.editable-field-icon';
   var editableFieldText = '.editable-field-text', updateFieldClass = '.update-field';
@@ -12,6 +12,11 @@ $(document).ready(function(e){
     editItem.showTextInTextBox(editableFieldText);
     editItem.replaceIconWithSave('');
     $(this).removeClass(editField)
+  });
+
+  $('.delete-segment-link').click(function(e){
+    FlashHandler.setConfirmationDialog(".delete-hidden-segment-link",'Are you sure, you want to remove ?' , 'Delete', 'isDestroy');
+    return false;
   });
 
   $( '.cancel-edit' ).click(function(){

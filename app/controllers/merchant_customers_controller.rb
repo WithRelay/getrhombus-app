@@ -32,7 +32,14 @@ class MerchantCustomersController < ApplicationController
 
     @conversation_refs = ConversationRef.get_last_customer_msg_from_all_merchant_convs(current_user.id, customer_id)
     @last_conv_ref = @conversation_refs.present? ? @conversation_refs.first : nil
-    @last_message_resolution = @last_conv_ref.present? && @last_conv_ref.resolution.present? ? @last_conv_ref.resolution : "-"
+
+    # refactor this at some point
+    if @last_conv_ref.present?
+      @last_message_resolution = @last_conv_ref.uid_conversation_resolution.resolution
+      @last_message_resolution.present? ? @last_message_resolution : "-"
+    else
+      "-"
+    end
   end
 end
     

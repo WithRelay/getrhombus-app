@@ -25,7 +25,10 @@ class Api::V1::ConversationsController < API::V1::BaseController
   end
 
   def close
-    if @conversation.update(close_conversation_params)
+    # set resolution, mark all messages read, set is_resolved flag.
+    conv_ref = @conversation.conversation_resolutions.last
+    if conv_ref.save(conversation_resolution_params) && @conversation.save(is_resolved: true)
+      @conversation.conversation_refs.update_all(unread: false)
       render json: {}, status: 200
     else
       render json: {}, status: 500
@@ -67,8 +70,8 @@ class Api::V1::ConversationsController < API::V1::BaseController
       @conversation = Conversation.find_by(id: params[:id]) or not_found
     end
 
-    def close_conversation_params
-      params.require(:conversation).permit(:notes, :resolution).tap do |param|
+    def conversation_resolution_params
+      params.require(:conversation_resolution).permit(:notes, :resolution).tap do |param|
         param[:notes] = param[:notes].present? ? param[:notes] : nil 
       end
     end

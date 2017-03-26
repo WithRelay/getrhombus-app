@@ -151,7 +151,7 @@ var FlashHandler = new function() {
   function close_browser_toastr() {
     $('.browser-notification-close').on('click', function (e) {
       e.preventDefault();
-      $('.browser-notification-link-block').fadeOut(5000);
+      $('.browser-notification-link-block').fadeOut(3000);
     } );
   }
 

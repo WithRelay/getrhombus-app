@@ -11,7 +11,7 @@ module DashboardData
     # Exclude refunded transactions, include subscriptions since these queries are read only
     # Otherwise you will need to exclude subscriptions which aren't easily refundable
     # and include only captured transactions and account reload txns are included by default..right
-    transactions = Transaction.exclude_refunded_transactions().only_captured_transactions().where(team_id: current_user.id)
+    transactions = Transaction.exclude_refunded_transactions().only_captured_transactions().where(team_id: merchant_id)
     transactions_today = transactions.select{ |t| t.created_at >= Time.current.beginning_of_day }
 
 		#weekly transactions
@@ -27,7 +27,8 @@ module DashboardData
 	end
 
 	def total_conversations
-		Conversation.where(merchant_id: current_user.id).count
+		#Conversation.where(merchant_id: merchant_id).count
+    ConversationResolution.where(merchant_id: merchant_id).count
 	end
 
   # Exclude refunded transactions, include subscriptions since these queries are read only
@@ -35,28 +36,21 @@ module DashboardData
   # and include only captured transactions and account reload txns are included by default..right
 	def chart_and_transactions
   	#data for chart, includes both fb_msg and sms
-   {
-    last6_transactions: Transaction.includes(:user).exclude_refunded_transactions().only_captured_transactions()
-                                    .where(team_id: current_user.id)
-                                    .order(created_at: :desc).last(6),
-    msg_data_for_chart: message_volume(30)
-	  }
-	end
-
-	def unread_preview_section
-		{
-			message_count: Conversation.get_merchant_total_unread_msgs_count(current_user),
-	    messages_last_5: ConversationRef.get_last_msgs_from_all_merchant_convs(current_user)
+    {
+      last6_transactions: Transaction.includes(:user).exclude_refunded_transactions().only_captured_transactions()
+                                    .where(team_id: merchant_id).order(created_at: :desc).last(6),
+      msg_data_for_chart: message_volume(30)
 	  }
 	end
 
 	def msg_performance_section
+    data = conversations_handling_time
 		{
-		 conversations_per_hour: Conversation.conversation_per_hour(current_user),
-     #message_count method returns hash of message_per_day , fb_percent and sms_percent
-     messages: message_count('today'),
-     avg_handle_time: avg_handle_time.round,
-		 open_convs_yesterday: open_convs_yesterday
+		  conversations_per_hour: data[:conversations_per_hour],
+      #message_count method returns hash of message_per_day , fb_percent and sms_percent
+      messages: message_count('today'),
+      avg_handle_time: data[:average_handle_time],
+		  open_convs_yesterday: open_convs_yesterday
 		}
 	end
 
@@ -98,19 +92,21 @@ module DashboardData
     class_name.constantize.where("user_id= ? OR user_id_to= ?", merchant_id, merchant_id)
   end
 
-  def avg_handle_time
-    avg = Conversation.where(merchant_id: merchant_id).where.not(resolution: nil)
-                      .average("DATEDIFF(updated_at,created_at)")
+  def conversations_handling_time
+    data = ConversationResolution.total_minutes_to_resolve_conversations(merchant_id)
+    if data.count == 0 || data.minutes_diff_total.blank? || data.minutes_diff_total == 0
+      x, y = 0, 0
+    else
+      x = (data.minutes_diff_total/data.count.to_f).round(2)
+      y = (data.count.to_f/(data.minutes_diff_total/60)).round(2)
+    end
 
-    avg.present? ? avg/1.minutes : 0 #returns 0 if there is no data for average
+    { average_handle_time: "%g" % x, conversations_per_hour: "%g" % y }
   end
 
   def open_convs_yesterday
-    yesterday_convs = Conversation.where(
-                                  { merchant_id: merchant_id,
-                                    resolution: nil,
-                                    created_at: (Time.current.beginning_of_day - 1.days)..(Time.current.beginning_of_day)
-                                  })
+    yesterday_convs = ConversationResolution.where(merchant_id: merchant_id)
+                            .where(created_at: (Time.current.beginning_of_day - 1.days)..(Time.current.beginning_of_day))
     yesterday_convs.count
   end
 
