@@ -37,7 +37,6 @@ module ApplicationHelper
   end
 
   def render_sidebar_partial
-    binding.pry
     return render 'shared/leads_sidebar' if ['merchant_contacts-index'].include?(params_controller_action)
     return render 'shared/customer_sidebar' if customer_index
     concat(render 'shared/dashboard_sidebar') unless authenticated_pages || setting_pages || messaging_dashboard || restrict_other_params
