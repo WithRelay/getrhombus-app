@@ -1,4 +1,4 @@
-module AwayMessages
+module AwayMessagesHelper
 
   def time_for_ct_weeks
     hour = 1
