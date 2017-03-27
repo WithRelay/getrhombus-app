@@ -15,11 +15,8 @@ module DashboardData
     # Exclude refunded transactions, include subscriptions since these queries are read only
     # Otherwise you will need to exclude subscriptions which aren't easily refundable
     # and include only captured transactions and account reload txns are included by default..right
-    transactions = Transaction.exclude_refunded_transactions().only_captured_transactions().where(team_id: merchant_id)
-    transactions_today = transactions.select{ |t| t.created_at >= Time.current.beginning_of_day }
-
-		#weekly transactions
-		transactions_weekly = transactions.select{|t| t.created_at >= 7.days.ago.utc }
+    transactions = all_trasactions
+    transactions_today = transactions.where('transactions.created_at >=?', Time.current.beginning_of_day)
 
     {
       all_customers_count: customers.count,
@@ -36,10 +33,13 @@ module DashboardData
 	end
 
 	def transactions
+		transactions = all_trasactions
+		#weekly transactions
+		transactions_weekly = transactions.where 'transactions.created_at >=?', 7.days.ago.utc
 		{
 			recent_trancs: Transaction.includes(:user).exclude_refunded_transactions().only_captured_transactions()
                                     .where(team_id: merchant_id).order(created_at: :desc).last(6),
-																		
+			this_week_tranc: transactions_weekly.sum(:amount)
 		}
 	end
 
@@ -121,6 +121,10 @@ module DashboardData
                             .where(created_at: (Time.current.beginning_of_day - 1.days)..(Time.current.beginning_of_day))
     yesterday_convs.count
   end
+
+	def all_trasactions
+		Transaction.exclude_refunded_transactions().only_captured_transactions().where(team_id: merchant_id)
+	end
 
  private
 
