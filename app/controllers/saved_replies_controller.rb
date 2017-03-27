@@ -9,7 +9,7 @@ class SavedRepliesController < ApplicationController
 
   def index
     @saved_replies = current_user.saved_replies
-    render 'empty_saved_reply' if @saved_replies
+    render 'empty_saved_reply' unless @saved_replies
   end
 
   def create
