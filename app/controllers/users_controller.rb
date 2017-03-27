@@ -22,7 +22,7 @@ class UsersController < ApplicationController
     @overall_section = customers_and_trasactions
     @msg_perform = analytics_section
     @transactions = transactions
-    @chart_and_transacs = chart_and_transactions
+    @messages_data = messages_datas
 
   end
 
