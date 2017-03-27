@@ -20,5 +20,6 @@
       <%= f.submit 'Create Segment', class: 'button create-segment-button w-button' %>
     <% end %>
   </div>
-  <p class="modal-paragraph segment tips"> &nbsp;TIP: You can setup automated drip campaigns to nurture customers or leads. First create segments for each key group of customers or leads, E.g:leads that became customers 3-6 days ago,followed by leads that became customers 7-14 days ago, etc. Then go to your campaigns page to set up automatic messages.</p><a class="button manage-segments w-button" href="#">Manage segments</a>
+  <p class="modal-paragraph segment tips"> &nbsp;TIP: You can setup automated drip campaigns to nurture customers or leads. First create segments for each key group of customers or leads, E.g:leads that became customers 3-6 days ago,followed by leads that became customers 7-14 days ago, etc. Then go to your campaigns page to set up automatic messages.</p>
+  <%= link_to 'Manage segments', segments_user_path(current_user), class: 'button manage-segments w-button' %>
 </div>
