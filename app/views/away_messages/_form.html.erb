@@ -21,11 +21,10 @@
       <label class="away-row-day field-headers form-label settings" for="Website">Monday</label>
     </div>
     <div class="w-col w-col-5">
-      <%= select_tag "mon_ct", options_for_select(time_for_ct_weeks), class: 'away dropdown w-select' %>
-
+      <%= f.select :mon_ot, time_for_ot_weeks, {}, class: 'away dropdown w-select' %>
     </div>
     <div class="w-col w-col-5">
-      <%= select_tag "mon_ot", options_for_select(time_for_ot_weeks), class: 'away dropdown w-select' %>
+      <%= f.select :mon_ct, time_for_ct_weeks, {}, class: 'away dropdown w-select' %>
     </div>
   </div>
   <div class="business-hours-row w-row">
@@ -33,10 +32,10 @@
       <label class="away-row-day field-headers form-label settings" for="Website">tuesday</label>
     </div>
     <div class="w-col w-col-5">
-      <%= select_tag "tue_ct", options_for_select(time_for_ct_weeks), class: 'away dropdown w-select' %>
+      <%= f.select :tue_ot, time_for_ot_weeks, {}, class: 'away dropdown w-select' %>
     </div>
     <div class="w-col w-col-5">
-      <%= select_tag "mon_ot", options_for_select(time_for_ot_weeks), class: 'away dropdown w-select' %>
+      <%= f.select :tue_ct, time_for_ct_weeks, {}, class: 'away dropdown w-select' %>
     </div>
   </div>
   <div class="business-hours-row w-row">
@@ -44,10 +43,10 @@
       <label class="away-row-day field-headers form-label settings" for="Website">Wednesday</label>
     </div>
     <div class="w-col w-col-5">
-      <%= select_tag "wed_ct", options_for_select(time_for_ct_weeks), class: 'away dropdown w-select' %>
+      <%= f.select :wed_ot, time_for_ot_weeks, {}, class: 'away dropdown w-select' %>
     </div>
     <div class="w-col w-col-5">
-      <%= select_tag "wed_ot", options_for_select(time_for_ot_weeks), class: 'away dropdown w-select' %>
+      <%= f.select :wed_ct, time_for_ct_weeks, {}, class: 'away dropdown w-select' %>
     </div>
   </div>
   <div class="business-hours-row w-row">
@@ -55,10 +54,10 @@
       <label class="away-row-day field-headers form-label settings" for="Website">Thursday</label>
     </div>
     <div class="w-col w-col-5">
-      <%= select_tag "thurs_ct", options_for_select(time_for_ct_weeks), class: 'away dropdown w-select' %>
+      <%= f.select :thur_ot, time_for_ot_weeks, {}, class: 'away dropdown w-select' %>
     </div>
     <div class="w-col w-col-5">
-      <%= select_tag "thurs_ot", options_for_select(time_for_ot_weeks), class: 'away dropdown w-select' %>
+      <%= f.select :thur_ct, time_for_ct_weeks, {}, class: 'away dropdown w-select' %>
     </div>
   </div>
   <div class="business-hours-row w-row">
@@ -66,10 +65,10 @@
       <label class="away-row-day field-headers form-label settings" for="Website">Friday</label>
     </div>
     <div class="w-col w-col-5">
-      <%= select_tag "fri_ct", options_for_select(time_for_ct_weeks), class: 'away dropdown w-select' %>
+      <%= f.select :fri_ot, time_for_ot_weeks, {}, class: 'away dropdown w-select' %>
     </div>
     <div class="w-col w-col-5">
-      <%= select_tag "fri_ot", options_for_select(time_for_ot_weeks), class: 'away dropdown w-select' %>
+      <%= f.select :fri_ct, time_for_ct_weeks, {}, class: 'away dropdown w-select' %>
     </div>
   </div>
   <div class="business-hours-row w-row">
@@ -77,10 +76,10 @@
       <label class="away-row-day field-headers form-label settings weekend" for="Website">Saturday</label>
     </div>
     <div class="w-col w-col-5">
-      <%= select_tag "sat_ct", options_for_select(time_for_ct_weeks), class: 'away dropdown w-select' %>
+      <%= f.select :sat_ot, time_for_ot_weeks, {}, class: 'away dropdown w-select' %>
     </div>
     <div class="w-col w-col-5">
-      <%= select_tag "sat_ot", options_for_select(time_for_ot_weeks), class: 'away dropdown w-select' %>
+      <%= f.select :sat_ct, time_for_ct_weeks, {}, class: 'away dropdown w-select' %>
     </div>
   </div>
   <div class="business-hours-row w-row">
@@ -88,10 +87,10 @@
       <label class="away-row-day field-headers form-label settings weekend" for="Website">Sunday</label>
     </div>
     <div class="w-col w-col-5">
-      <%= select_tag "sun_ct", options_for_select(time_for_ct_weeks), class: 'away dropdown w-select' %>
+      <%= f.select :sat_ot, time_for_ot_weeks, {}, class: 'away dropdown w-select' %>
     </div>
     <div class="w-col w-col-5">
-      <%= select_tag "sun_ot", options_for_select(time_for_ot_weeks), class: 'away dropdown w-select' %>
+      <%= f.select :sat_ct, time_for_ct_weeks, {}, class: 'away dropdown w-select' %>
     </div>
   </div>
   <div class="flex-underline form-section-divider"></div>
