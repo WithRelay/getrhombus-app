@@ -8,6 +8,11 @@ module AwayMessagesHelper
     get_time_ct_ot('AM')
   end
 
+  def default_message
+    message = %Q{We're away at the moment and will get back to you when we return ☺.}
+    @away_message.response ? @away_message.response : message
+  end
+
   def get_time_ct_ot(time_am_pm)
     hour = 1
     minute = 0
