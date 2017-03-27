@@ -1,11 +1,163 @@
 <%= provide(:title, "Relay - Dashboard") %>
-  <div class="sub-nav-bar">
-    <h4 class="date-time welcome-dash-content-container-header">Thursday, 11 Aug 2016, 9:30 AM</h4>
-  </div>
+<div class="sub-nav-bar"></div>
   <div class="dashboard-body">
+    <div class="chart-wrapper dash-content-container">
+      <div class="message-stats-in-graph-wrapper w-clearfix">
+        <div class="_90-days-ago group-volume">
+          <div class="_30-days _90 message-volume-count"><%= @messages_data[:msg_90_days][:msg_count][:total]%></div>
+          <div class="message-days-text">90 DAYS</div>
+        </div>
+        <div class="_30-days-ago group-volume">
+          <div class="_30-days message-volume-count"><%= @messages_data[:msg_30_days][:msg_count][:total]%></div>
+          <div class="alt message-days-text">30 DAYS</div>
+        </div>
+        <div class="_7-days-ago group-volume">
+          <div class="_7-days message-volume-count"><%= @messages_data[:msg_7_days][:msg_count][:total]%></div>
+          <div class="message-days-text">7 DAYS</div>
+        </div>
+        <h4 class="date-time shrink-text welcome-dash-content-container-header">Thursday, 11 Aug 2016, 9:30 AM</h4>
+      </div>
+      <div class="graph-header-row w-row">
+        <div class="w-col w-col-6">
+          <div class="message-graph-header-text">Daily Message Volume</div>
+        </div>
+        <div class="w-col w-col-6">
+          <div class="conversation-to-date-text"><%= @messages_data[:total_convs] %> Total Conversations to Date</div>
+        </div>
+      </div>
+      <div class="chart-container">
+        <!-- <img class="chart-placeholder-2" src="images/Sample-Chart-3.png"> -->
+        <%= area_chart @messages_data[:msg_7_days][:chart_data],
+            library: {
+              scales: {
+                xAxes: [{
+                  ticks: {
+                    autoSkip: false,
+                    maxRotation: 60,
+                    minRotation: 60
+                  },
+                  time: {
+                    unit: 'day',
+                    displayFormats: {
+                      'day': 'MMM D'
+                    },
+                  }
+                }]
+              }
+            },
+            curve: false
+        %>
+      </div>
+    </div>
+    <div class="dash-content-container scheduled-campaigns-notifications">
+      <div class="content-sub-wrapper">
+        <h4 class="welcome-dash-content-container-header">Analytics</h4>
+      </div>
+      <div class="w-row welcome-dash-table-wrapper">
+        <div class="w-col w-col-3">
+          <div class="average-message-count-per-day customer-contacts-2 welcome-dash-content-container">
+            <h1 class="new-customers"><%= @msg_perform[:messages][:total] %></h1>
+            <h4 class="count-description"> &nbsp;Messages Today</h4>
+            <h4 class="count-description transaction-count">Facebook <%= @msg_perform[:messages][:fb_msg_percent] %>%  |
+               SMS &nbsp;<%= @msg_perform[:messages][:txt_msg_percent] %>%</h4>
+          </div>
+        </div>
+        <div class="w-col w-col-3">
+          <div class="average-conversations-per-hour customer-contacts-2 welcome-dash-content-container">
+            <h1 class="new-customers"><%= @msg_perform[:conversations_per_hour] %></h1>
+            <h4 class="count-description"> &nbsp;Conversations per hour</h4>
+          </div>
+        </div>
+        <div class="w-col w-col-3">
+          <div class="average-handle-time customer-contacts-2 welcome-dash-content-container">
+            <h1 class="new-customers"><%= @msg_perform[:avg_handle_time] %> mins</h1>
+            <h4 class="count-description">Average Handle Time</h4>
+          </div>
+        </div>
+        <div class="w-col w-col-3">
+          <div class="customer-contacts-2 open-conversations-yesterday welcome-dash-content-container">
+            <h1 class="new-customers"><%= @msg_perform[:open_convs_yesterday]%></h1>
+            <h4 class="count-description">Open Conversations Yesterday</h4>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="w-row welcome-dash-content-table">
+      <div class="new-transaction-column w-col w-col-4">
+        <div class="dash-content-container recent transactions">
+          <div class="content-sub-wrapper">
+            <h4 class="welcome-dash-content-container-header">Recent Transactions</h4>
+          </div>
+          <div class="sakes welcome-dash-content-container">
+            <% @transactions[:recent_trancs].each_with_index do |t,i|%>
+            <div class="new-customer-list w-row">
+              <div class="w-col w-col-1">
+                <div class="customer-list-content-div">
+                  <div class="new-customer-table-text"><%= i+1 %></div>
+                </div>
+              </div>
+              <div class="w-col w-col-6">
+                <div class="customer-list-content-div">
+                  <div class="customer-list-content-div">
+                    <div class="name-text new-customer-table-text shrink-text"><%= t.user.full_name %></div>
+                  </div>
+                </div>
+              </div>
+              <div class="w-col w-col-2">
+                <div class="customer-list-content-div">
+                  <div class="new-customer-table-text shrink-text"><%= time_in_relative_form(t.created_at, 'medium_format') %> </div>
+                </div>
+              </div>
+              <div class="w-col w-col-3">
+                <div class="customer-list-content-div">
+                  <div class="new-customer-table-text">$<%= t.amount %></div>
+                </div>
+              </div>
+            </div>
+            <%end%>
+          </div>
+        </div>
+      </div>
+      <div class="column-2 new-transaction-column w-col w-col-8">
+        <div class="chart dash-content-container transaction-chart transactions">
+          <div>
+            <div class="graph-header-row w-row">
+              <div class="w-col w-col-6">
+                <div class="message-graph-header-text">Weekly Transactions</div>
+              </div>
+              <div class="w-col w-col-6">
+                <div class="conversation-to-date-text">$<%= @transactions[:this_week_tranc] %> Transactions this Week</div>
+              </div>
+            </div>
+          </div>
+          <%#= image_tag 'Graph-screen-shot.png', class: "chart-place-holder" %>
+          <div  class= "chart-container">
+            <%= line_chart @transactions[:tranc_chart_data], height: "200px",
+            library: {
+              scales: {
+                xAxes: [{
+                  ticks: {
+                    autoSkip: false,
+                    maxRotation: 60,
+                    minRotation: 60
+                  },
+                  time: {
+                    unit: 'day',
+                    displayFormats: {
+                      'day': 'MMM D'
+                    },
+                  }
+                  }]
+                }
+              },
+              curve: false%>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="dash-content-container">
       <div class="content-sub-wrapper">
-        <h4 class="welcome-dash-content-container-header">Overview</h4>
+        <h4 class="welcome-dash-content-container-header">Customers &amp; Transactions</h4>
       </div>
       <div class="w-row welcome-dash-table-wrapper">
         <div class="w-col w-col-3">
@@ -35,111 +187,10 @@
         </div>
       </div>
     </div>
-    <div class="w-row welcome-dash-content-table">
-      <div class="new-transaction-column w-col w-col-4">
-        <div class="dash-content-container transactions">
-          <div class="content-sub-wrapper">
-            <h4 class="welcome-dash-content-container-header">Recent Transactions</h4>
-          </div>
-          <div class="sakes welcome-dash-content-container">
-            <% @chart_and_transacs[:last6_transactions].each_with_index do |t, i| %>
-              <div class="new-customer-list w-row">
-                <div class="w-col w-col-1">
-                  <div class="customer-list-content-div">
-                    <div class="new-customer-table-text"><%= i %></div>
-                  </div>
-                </div>
-                <div class="w-col w-col-6">
-                  <div class="customer-list-content-div">
-                    <div class="customer-list-content-div w-clearfix">
-                      <div class="name-text new-customer-table-text shrink-text"><%= t.user.full_name %></div>
-                    </div>
-                  </div>
-                </div>
-                <div class="w-col w-col-2">
-                  <div class="customer-list-content-div">
-                    <div class="new-customer-table-text shrink-text"><%= time_in_relative_form(t.created_at, 'medium_format') %></div>
-                  </div>
-                </div>
-                <div class="w-col w-col-3">
-                  <div class="customer-list-content-div">
-                    <div class="new-customer-table-text shrink-text">$<%= t.amount %></div>
-                  </div>
-                </div>
-              </div>
-            <%end%>
-          </div>
-        </div>
-      </div>
-      <div class="column-2 new-transaction-column w-col w-col-8">
-        <div class="chart dash-content-container transactions">
-          <div class="content-sub-wrapper">
-            <h4 class="welcome-dash-content-container-header">Message Volume</h4>
-          </div>
-          <div>
-            <%= area_chart @chart_and_transacs[:msg_data_for_chart],
-                library: {
-                  scales: {
-                    xAxes: [{
-                      ticks: {
-                        autoSkip: false,
-                        maxRotation: 60,
-                        minRotation: 60
-                      },
-                      time: {
-                        unit: 'day',
-                        displayFormats: {
-                          'day': 'MMM D'
-                        },
-                      }
-                    }]
-                  }
-                },
-                curve: false
-            %>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="dash-content-container scheduled-campaigns-notifications">
-      <div class="content-sub-wrapper">
-        <h4 class="welcome-dash-content-container-header">Message Performance</h4>
-      </div>
-      <div class="w-row welcome-dash-table-wrapper">
-        <div class="w-col w-col-3">
-          <div class="average-message-count-per-day customer-contacts-2 welcome-dash-content-container">
-            <h1 class="new-customers"><%= @msg_perform[:messages][:msg_count] %></h1>
-            <h4 class="count-description"> &nbsp;Messages Today</h4>
-            <h4 class="count-description transaction-count">Facebook <%= @msg_perform[:messages][:fb_msg_percent] %>%  |
-               SMS &nbsp;<%= @msg_perform[:messages][:txt_msg_percent] %>%</h4>
-          </div>
-        </div>
-        <div class="w-col w-col-3">
-          <div class="average-conversations-per-hour customer-contacts-2 welcome-dash-content-container">
-            <h1 class="new-customers"><%= @msg_perform[:conversations_per_hour] %></h1>
-            <h4 class="count-description"> &nbsp;Conversations per hour</h4>
-          </div>
-        </div>
-        <div class="w-col w-col-3">
-          <div class="average-handle-time customer-contacts-2 welcome-dash-content-container">
-            <h1 class="new-customers"><%= @msg_perform[:avg_handle_time] %> mins</h1>
-            <h4 class="count-description">Average Handle Time</h4>
-          </div>
-        </div>
-        <div class="w-col w-col-3">
-          <div class="customer-contacts-2 open-conversations-yesterday welcome-dash-content-container">
-            <h1 class="new-customers"><%= @msg_perform[:open_convs_yesterday]%></h1>
-            <h4 class="count-description">Open Conversations Yesterday</h4>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 
-
-    <script type="text/javascript">
-      $("#customer-csv-template-link").click(function(){
-        $('#customer-csv-template').submit();
-      });
-    </script>
+<script type="text/javascript">
+  $("#customer-csv-template-link").click(function(){
+    $('#customer-csv-template').submit();
+  });
+</script>
