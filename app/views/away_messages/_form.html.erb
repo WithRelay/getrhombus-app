@@ -1,0 +1,104 @@
+<%= form_for [current_user, away_message], html: { class: 'w-clearfix' } do |f| %>
+  <label class="form-label paragraph" for="field">Send an automatic reply to customers and contacts when they message you outside business hours. Set your business hours below:</label>
+  <div class="enable-away-messages form-check-box w-checkbox">
+    <%= f.check_box :enabled, class: 'w-checkbox-input', id: 'enable-away-message' %>
+    <label class="w-form-label" for="checkbox">Enable Away Messages</label>
+  </div>
+  <div class="flex-underline form-section-divider"></div>
+  <div class="business-hours-row w-row">
+    <div class="w-col w-col-2">
+      <label class="away-row field-headers form-label settings" for="Website">DAY</label>
+    </div>
+    <div class="w-col w-col-5">
+      <label class="away-row field-headers form-label settings" for="Website">OPEN TIME</label>
+    </div>
+    <div class="w-col w-col-5">
+      <label class="away-row field-headers form-label settings" for="Website">CLOSE TIME</label>
+    </div>
+  </div>
+  <div class="business-hours-row w-row">
+    <div class="w-col w-col-2">
+      <label class="away-row-day field-headers form-label settings" for="Website">Monday</label>
+    </div>
+    <div class="w-col w-col-5">
+      <%= select_tag "mon_ct", options_for_select(time_for_ct_weeks), class: 'away dropdown w-select' %>
+
+    </div>
+    <div class="w-col w-col-5">
+      <%= select_tag "mon_ot", options_for_select(time_for_ot_weeks), class: 'away dropdown w-select' %>
+    </div>
+  </div>
+  <div class="business-hours-row w-row">
+    <div class="w-col w-col-2">
+      <label class="away-row-day field-headers form-label settings" for="Website">tuesday</label>
+    </div>
+    <div class="w-col w-col-5">
+      <%= select_tag "tue_ct", options_for_select(time_for_ct_weeks), class: 'away dropdown w-select' %>
+    </div>
+    <div class="w-col w-col-5">
+      <%= select_tag "mon_ot", options_for_select(time_for_ot_weeks), class: 'away dropdown w-select' %>
+    </div>
+  </div>
+  <div class="business-hours-row w-row">
+    <div class="w-col w-col-2">
+      <label class="away-row-day field-headers form-label settings" for="Website">Wednesday</label>
+    </div>
+    <div class="w-col w-col-5">
+      <%= select_tag "wed_ct", options_for_select(time_for_ct_weeks), class: 'away dropdown w-select' %>
+    </div>
+    <div class="w-col w-col-5">
+      <%= select_tag "wed_ot", options_for_select(time_for_ot_weeks), class: 'away dropdown w-select' %>
+    </div>
+  </div>
+  <div class="business-hours-row w-row">
+    <div class="w-col w-col-2">
+      <label class="away-row-day field-headers form-label settings" for="Website">Thursday</label>
+    </div>
+    <div class="w-col w-col-5">
+      <%= select_tag "thurs_ct", options_for_select(time_for_ct_weeks), class: 'away dropdown w-select' %>
+    </div>
+    <div class="w-col w-col-5">
+      <%= select_tag "thurs_ot", options_for_select(time_for_ot_weeks), class: 'away dropdown w-select' %>
+    </div>
+  </div>
+  <div class="business-hours-row w-row">
+    <div class="w-col w-col-2">
+      <label class="away-row-day field-headers form-label settings" for="Website">Friday</label>
+    </div>
+    <div class="w-col w-col-5">
+      <%= select_tag "fri_ct", options_for_select(time_for_ct_weeks), class: 'away dropdown w-select' %>
+    </div>
+    <div class="w-col w-col-5">
+      <%= select_tag "fri_ot", options_for_select(time_for_ot_weeks), class: 'away dropdown w-select' %>
+    </div>
+  </div>
+  <div class="business-hours-row w-row">
+    <div class="w-col w-col-2">
+      <label class="away-row-day field-headers form-label settings weekend" for="Website">Saturday</label>
+    </div>
+    <div class="w-col w-col-5">
+      <%= select_tag "sat_ct", options_for_select(time_for_ct_weeks), class: 'away dropdown w-select' %>
+    </div>
+    <div class="w-col w-col-5">
+      <%= select_tag "sat_ot", options_for_select(time_for_ot_weeks), class: 'away dropdown w-select' %>
+    </div>
+  </div>
+  <div class="business-hours-row w-row">
+    <div class="w-col w-col-2">
+      <label class="away-row-day field-headers form-label settings weekend" for="Website">Sunday</label>
+    </div>
+    <div class="w-col w-col-5">
+      <%= select_tag "sun_ct", options_for_select(time_for_ct_weeks), class: 'away dropdown w-select' %>
+    </div>
+    <div class="w-col w-col-5">
+      <%= select_tag "sun_ot", options_for_select(time_for_ot_weeks), class: 'away dropdown w-select' %>
+    </div>
+  </div>
+  <div class="flex-underline form-section-divider"></div>
+  <div id="away-message-text-area" data-ix="display-none-on-load">
+    <label class="field-headers form-label settings" for="Customer-Signup-Auto-Response">away message</label>
+    <label class="form-label paragraph" for="Away-Message-Auto-Response">Compose the message that will go out to customers and contacts when they message you outside business hours.</label>
+    <textarea class="auto-welcome-message-text-area w-input" data-name="Away Message Auto-Response" id="Away-Message-Auto-Response" maxlength="5000" name="Away-Message-Auto-Response" placeholder="Type message"></textarea>
+    <div class="form-field-subtext" id="away-message-counter"></div><a class="button save-changes w-button" href="#">Save changes</a>
+  </div>
+<% end %>
