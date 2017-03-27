@@ -67,150 +67,32 @@
             <h4 class="welcome-dash-content-container-header">Recent Transactions</h4>
           </div>
           <div class="sakes welcome-dash-content-container">
+            <% @transactions[:recent_trancs].each_with_index do |t,i|%>
             <div class="new-customer-list w-row">
               <div class="w-col w-col-1">
                 <div class="customer-list-content-div">
-                  <div class="new-customer-table-text">1</div>
+                  <div class="new-customer-table-text"><%= i+1 %></div>
                 </div>
               </div>
               <div class="w-col w-col-6">
                 <div class="customer-list-content-div">
                   <div class="customer-list-content-div">
-                    <div class="name-text new-customer-table-text shrink-text">Ashley Sila</div>
+                    <div class="name-text new-customer-table-text shrink-text"><%= t.user.full_name %></div>
                   </div>
                 </div>
               </div>
               <div class="w-col w-col-2">
                 <div class="customer-list-content-div">
-                  <div class="new-customer-table-text shrink-text">3 hrs</div>
+                  <div class="new-customer-table-text shrink-text"><%= time_in_relative_form(t.created_at, 'medium_format') %> </div>
                 </div>
               </div>
               <div class="w-col w-col-3">
                 <div class="customer-list-content-div">
-                  <div class="new-customer-table-text">$26</div>
+                  <div class="new-customer-table-text">$<%= t.amount %></div>
                 </div>
               </div>
             </div>
-            <div class="new-customer-list w-row">
-              <div class="w-col w-col-1">
-                <div class="customer-list-content-div">
-                  <div class="new-customer-table-text">2</div>
-                </div>
-              </div>
-              <div class="w-col w-col-6">
-                <div class="customer-list-content-div">
-                  <div class="customer-list-content-div">
-                    <div class="name-text new-customer-table-text shrink-text">Robert Francisco</div>
-                  </div>
-                </div>
-              </div>
-              <div class="w-col w-col-2">
-                <div class="customer-list-content-div">
-                  <div class="new-customer-table-text shrink-text">5 hrs</div>
-                </div>
-              </div>
-              <div class="w-col w-col-3">
-                <div class="customer-list-content-div">
-                  <div class="new-customer-table-text">$12</div>
-                </div>
-              </div>
-            </div>
-            <div class="new-customer-list w-row">
-              <div class="w-col w-col-1">
-                <div class="customer-list-content-div">
-                  <div class="new-customer-table-text">3</div>
-                </div>
-              </div>
-              <div class="w-col w-col-6">
-                <div class="customer-list-content-div">
-                  <div class="customer-list-content-div">
-                    <div class="name-text new-customer-table-text shrink-text">Francis Chamberlin</div>
-                  </div>
-                </div>
-              </div>
-              <div class="w-col w-col-2">
-                <div class="customer-list-content-div">
-                  <div class="new-customer-table-text shrink-text">8 hrs</div>
-                </div>
-              </div>
-              <div class="w-col w-col-3">
-                <div class="customer-list-content-div">
-                  <div class="new-customer-table-text">$150</div>
-                </div>
-              </div>
-            </div>
-            <div class="new-customer-list w-row">
-              <div class="w-col w-col-1">
-                <div class="customer-list-content-div">
-                  <div class="new-customer-table-text">4</div>
-                </div>
-              </div>
-              <div class="w-col w-col-6">
-                <div class="customer-list-content-div">
-                  <div class="customer-list-content-div">
-                    <div class="name-text new-customer-table-text shrink-text">Samantha Groves</div>
-                  </div>
-                </div>
-              </div>
-              <div class="w-col w-col-2">
-                <div class="customer-list-content-div">
-                  <div class="new-customer-table-text shrink-text">11 hrs</div>
-                </div>
-              </div>
-              <div class="w-col w-col-3">
-                <div class="customer-list-content-div">
-                  <div class="new-customer-table-text">$47.20</div>
-                </div>
-              </div>
-            </div>
-            <div class="new-customer-list w-row">
-              <div class="w-col w-col-1">
-                <div class="customer-list-content-div">
-                  <div class="new-customer-table-text">5</div>
-                </div>
-              </div>
-              <div class="w-col w-col-6">
-                <div class="customer-list-content-div">
-                  <div class="customer-list-content-div">
-                    <div class="name-text new-customer-table-text shrink-text">Taiwo Muyiwa</div>
-                  </div>
-                </div>
-              </div>
-              <div class="w-col w-col-2">
-                <div class="customer-list-content-div">
-                  <div class="new-customer-table-text shrink-text">15 hrs</div>
-                </div>
-              </div>
-              <div class="w-col w-col-3">
-                <div class="customer-list-content-div">
-                  <div class="new-customer-table-text">$70</div>
-                </div>
-              </div>
-            </div>
-            <div class="new-customer-list w-row">
-              <div class="w-col w-col-1">
-                <div class="customer-list-content-div">
-                  <div class="new-customer-table-text">6</div>
-                </div>
-              </div>
-              <div class="w-col w-col-6">
-                <div class="customer-list-content-div">
-                  <div class="customer-list-content-div">
-                    <div class="name-text new-customer-table-text shrink-text">Adelaide Brown</div>
-                  </div>
-                </div>
-              </div>
-              <div class="w-col w-col-2">
-                <div class="customer-list-content-div">
-                  <div class="new-customer-table-text shrink-text">19 hrs</div>
-                </div>
-              </div>
-              <div class="w-col w-col-3">
-                <div class="customer-list-content-div">
-                  <div class="new-customer-table-text">$51.29</div>
-                </div>
-              </div>
-            </div>
+            <%end%>
           </div>
         </div>
       </div>
@@ -225,7 +107,7 @@
                 <div class="conversation-to-date-text">$18,000 Transactions this Week</div>
               </div>
             </div>
-          </div><img class="chart-place-holder" src="images/Graph-screen-shot.png">
+          </div><%= image_tag 'Graph-screen-shot.png', class: "chart-place-holder" %>
         </div>
       </div>
     </div>
