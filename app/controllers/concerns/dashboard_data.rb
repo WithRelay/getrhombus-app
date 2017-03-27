@@ -4,8 +4,13 @@
 
 module DashboardData
 
-	def messages
-		messages_7days = message_volume(7)
+	def messages_datas
+		{
+			msg_7_days:{chart_data: message_volume(7) , msg_count: message_count(7)},
+			msg_30_days:{chart_data: message_volume(30), msg_count: message_count(30)},
+			msg_90_days:{chart_data: message_volume(90), msg_count: message_count(90)},
+			total_convs: total_conversations
+		}
 	end
 
 	def customers_and_trasactions
@@ -27,33 +32,30 @@ module DashboardData
     }
 	end
 
-	def total_conversations
-		#Conversation.where(merchant_id: merchant_id).count
-    ConversationResolution.where(merchant_id: merchant_id).count
-	end
-
 	def transactions
 		transactions = all_trasactions
+		binding.pry
 		#weekly transactions
 		transactions_weekly = transactions.where 'transactions.created_at >=?', 7.days.ago.utc
 		{
 			recent_trancs: Transaction.includes(:user).exclude_refunded_transactions().only_captured_transactions()
                                     .where(team_id: merchant_id).order(created_at: :desc).last(6),
-			this_week_tranc: transactions_weekly.sum(:amount)
+			this_week_tranc: transactions_weekly.sum(:amount),
+			tranc_chart_data: transactions_weekly.pluck(:amount,:created_at)
 		}
 	end
 
   # Exclude refunded transactions, include subscriptions since these queries are read only
   # Otherwise you will need to exclude subscriptions which aren't easily refundable
   # and include only captured transactions and account reload txns are included by default..right
-	def chart_and_transactions
-  	#data for chart, includes both fb_msg and sms
-    {
-      last6_transactions: Transaction.includes(:user).exclude_refunded_transactions().only_captured_transactions()
-                                    .where(team_id: merchant_id).order(created_at: :desc).last(6),
-      msg_data_for_chart: message_volume(30)
-	  }
-	end
+	# def chart_and_transactions
+  # 	#data for chart, includes both fb_msg and sms
+  #   {
+  #     last6_transactions: Transaction.includes(:user).exclude_refunded_transactions().only_captured_transactions()
+  #                                   .where(team_id: merchant_id).order(created_at: :desc).last(6),
+  #     msg_data_for_chart: message_volume(30)
+	#   }
+	# end
 
 	def analytics_section
     data = conversations_handling_time
@@ -69,35 +71,35 @@ module DashboardData
 	#These methods below are used to collect data for merchant dashboard
   def message_volume(days)
     txt_messages = sent_and_received_messages('Message')
-                    .where("created_at >=?", days.days.ago.utc)
-                    .group("date(created_at)").count
+                    								.where("created_at >=?", days.days.ago.utc)
+		fb_messages = sent_and_received_messages('FbMessage')
+																		.where("created_at >=?", days.days.ago.utc)
 
-    fb_messages = sent_and_received_messages('FbMessage')
-                    .where("created_at >=?", days.days.ago.utc)
-                    .group("date(created_at)").count
+		grouped_txt_data = txt_messages.group("date(created_at)").count
+		grouped_fb_data = fb_messages.group("date(created_at)").count
 
     #prepare data for chart
     #this will merge count of sms and fb_msg and add the coutes on the same day
-    data = txt_messages.merge(fb_messages){|k, mv, fv| mv + fv}
+    data = grouped_txt_data.merge(grouped_fb_data){|k, mv, fv| mv + fv}
   end
 
   def message_count(time)
     txt_msg_total, fb_msg_total = sent_and_received_messages('Message'),
                       sent_and_received_messages('FbMessage')
-		if time == 'today'
+
+		if(time.class == String && time == 'today')
 	    txt_msg = txt_msg_total.select { |t| t.created_at >= Time.current.beginning_of_day }
 	    fb_msg = fb_msg_total.select { |t| t.created_at >= Time.current.beginning_of_day }
-		elsif time == 'weekly'
-			txt_msg = txt_msg_total.select { |t| t.created_at >= 7.days.ago.utc }
-	    fb_msg = fb_msg_total.select { |t| t.created_at >= 7.days.ago.utc }
+		elsif(time.class == Fixnum)
+			txt_msg = txt_msg_total.select { |t| t.created_at >= time.days.ago.utc }
+	    fb_msg = fb_msg_total.select { |t| t.created_at >= time.days.ago.utc }
 		end
 
 		msgs_count = txt_msg.count + fb_msg.count
-
     fb_msg_percent = fb_msg.present? ? 100 * fb_msg.count/msgs_count : 0
     txt_msg_percent = txt_msg.present? ? 100 * txt_msg.count/msgs_count : 0
 
-    { msg_count: msgs_count, fb_msg_percent: fb_msg_percent.round, txt_msg_percent: txt_msg_percent.round }
+    { total: msgs_count, fb_msg_percent: fb_msg_percent.round, txt_msg_percent: txt_msg_percent.round }
   end
 
   def sent_and_received_messages(class_name)
@@ -124,6 +126,11 @@ module DashboardData
 
 	def all_trasactions
 		Transaction.exclude_refunded_transactions().only_captured_transactions().where(team_id: merchant_id)
+	end
+
+	def total_conversations
+		#Conversation.where(merchant_id: merchant_id).count
+    ConversationResolution.where(merchant_id: merchant_id).count
 	end
 
  private
