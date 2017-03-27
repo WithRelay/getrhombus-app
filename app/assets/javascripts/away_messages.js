@@ -2,7 +2,7 @@ $(document).on('ready page:load', function() {
 
   var autoResponseTextBox = '#Away-Message-Auto-Response'
 
-  $('#enable-away-message').is(":checked") && $('#away-message-text-area').slideDown();
+  $('#enable-away-message').is(':checked') && $('#away-message-text-area').show();
 
   if ($(autoResponseTextBox).length > 0){
     enableEmojiCounter(autoResponseTextBox)
