@@ -1,4 +1,4 @@
-<%= form_for [current_user, away_message], html: { class: 'w-clearfix' } do |f| %>
+<%= form_for [current_user, away_message], html: { class: 'w-clearfix', id: 'away-message-form' } do |f| %>
   <label class="form-label paragraph" for="field">Send an automatic reply to customers and contacts when they message you outside business hours. Set your business hours below:</label>
   <div class="enable-away-messages form-check-box w-checkbox">
     <%= f.check_box :enabled, class: 'w-checkbox-input', id: 'enable-away-message' %>
@@ -100,6 +100,6 @@
     <label class="form-label paragraph" for="Away-Message-Auto-Response">Compose the message that will go out to customers and contacts when they message you outside business hours.</label>
     <%= f.text_area :response, class: 'auto-welcome-message-text-area w-input', placeholder: "Type message", id: 'Away-Message-Auto-Response' %>
     <div class="form-field-subtext" id="away-message-counter"></div>
-    <%= f.submit 'Save changes', class: 'button save-changes w-button' %>
+    <%= f.submit 'Save changes', class: 'button save-changes w-button', id: 'save-away-message-button' %>
   </div>
 <% end %>
