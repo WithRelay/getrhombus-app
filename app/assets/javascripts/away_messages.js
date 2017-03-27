@@ -4,12 +4,10 @@ $(document).ready(function(){
 
   if ($(autoResponseTextBox).length > 0){
     enableEmojiCounter(autoResponseTextBox)
+    $(autoResponseTextBox)[0].emojioneArea.on('focus', function(){
+      $('.emojionearea-editor').counter({ type: 'char', append: false, target: '#away-message-counter' })
+    });
   }
-
-  $(autoResponseTextBox)[0].emojioneArea.on('focus', function(){
-    $('.emojionearea-editor').counter({ type: 'char', append: false, target: '#away-message-counter' })
-  });
-
   $('#enable-away-message').click(function(){
     if($(this).is(":checked"))
       $('#away-message-text-area').slideDown();
