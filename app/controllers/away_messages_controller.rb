@@ -14,7 +14,6 @@ class AwayMessagesController < ApplicationController
   end
 
   def update
-    binding.pry
     @away_message = current_user.away_message
     @away_message.update_attributes(message_params) ? success_message_with_path : error_mesage_with_path
   end
