@@ -7,7 +7,6 @@ class CreateAwayMessages < ActiveRecord::Migration
   def change
     create_table :away_messages do |t|
       t.integer :user_id
-      # t.text :msg_response, default: %Q{We're away at the moment and will get back to you when we return .}
 
       t.string :sun_ct, default: WEEK_CT_VALUE
       t.string :sun_ot, default: WEEK_OT_VALUE
