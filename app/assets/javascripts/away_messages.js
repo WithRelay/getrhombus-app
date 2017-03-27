@@ -5,6 +5,7 @@ $(document).ready(function(){
   if ($(autoResponseTextBox).length > 0){
     enableEmojiCounter(autoResponseTextBox)
     $(autoResponseTextBox)[0].emojioneArea.on('focus', function(){
+      $('#undefined_counter').each(function(){ $(this).remove() });
       $('.emojionearea-editor').counter({ type: 'char', append: false, target: '#away-message-counter' })
     });
   }

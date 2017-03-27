@@ -96,6 +96,7 @@ $(document).on('ready page:load', function() {
 
   $("#send-campaign-users").click(function(){
     $('#campaignForm').formValidation('resetField', 'campaign[text]');
+    $('#campaignForm').formValidation('resetField', 'campaign[name]');
   });
 
   $('#Channel').on('change', function(e) {

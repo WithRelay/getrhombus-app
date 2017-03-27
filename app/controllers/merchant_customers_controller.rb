@@ -9,11 +9,7 @@ class MerchantCustomersController < ApplicationController
   	@customers = current_user.merchant_customers
                               .paginate(page: params[:page], per_page: 10).order(created_at: :desc)
   	@new_customer = User.new
-    render 'empty_customer' unless @customers
-    respond_to do |format|
-      format.js { render partial: 'shared/index.js.erb', locals: { obj: @customers } }
-      format.html
-    end
+    @customers.present? ? render_requested_format(@customers) : render(:empty_customer)
   end
 
   def show
@@ -42,4 +38,3 @@ class MerchantCustomersController < ApplicationController
     end
   end
 end
-    
