@@ -19,9 +19,11 @@ class UsersController < ApplicationController
     # Transaction.process_captured_payment(@user, params) if current_user.user_level == 0 && params[:captured_amt].present?
 
     #all the methods are in concerns/databoard_data
-    @overall_section = overall_section
-    @chart_and_transacs = chart_and_transactions
-    @msg_perform = msg_performance_section
+    @overall_section = customers_and_trasactions
+    @msg_perform = analytics_section
+    @transactions = transactions
+    @messages_data = messages_datas
+
   end
 
   # DELETE /users/1

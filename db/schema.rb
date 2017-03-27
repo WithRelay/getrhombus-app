@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170326143850) do
+ActiveRecord::Schema.define(version: 20170327034838) do
 
   create_table "account_reloads", force: :cascade do |t|
     t.integer  "user_id",        limit: 4
@@ -50,22 +50,24 @@ ActiveRecord::Schema.define(version: 20170326143850) do
 
   create_table "away_messages", force: :cascade do |t|
     t.integer  "user_id",    limit: 4
-    t.string   "sun_ct",     limit: 191, default: "5:00 PM"
-    t.string   "sun_ot",     limit: 191, default: "9:00 AM"
-    t.string   "mon_ct",     limit: 191, default: "5:00 PM"
-    t.string   "mon_ot",     limit: 191, default: "9:00 AM"
-    t.string   "tue_ct",     limit: 191, default: "5:00 PM"
-    t.string   "tue_ot",     limit: 191, default: "9:00 AM"
-    t.string   "wed_ct",     limit: 191, default: "5:00 PM"
-    t.string   "wed_ot",     limit: 191, default: "9:00 AM"
-    t.string   "thur_ct",    limit: 191, default: "5:00 PM"
-    t.string   "thur_ot",    limit: 191, default: "9:00 AM"
-    t.string   "fri_ct",     limit: 191, default: "5:00 PM"
-    t.string   "fri_ot",     limit: 191, default: "9:00 AM"
-    t.string   "sat_ct",     limit: 191, default: "5:00 PM"
-    t.string   "sat_ot",     limit: 191, default: "9:00 AM"
-    t.datetime "created_at",                                 null: false
-    t.datetime "updated_at",                                 null: false
+    t.string   "sun_ct",     limit: 191,   default: "5:00 PM"
+    t.string   "sun_ot",     limit: 191,   default: "9:00 AM"
+    t.string   "mon_ct",     limit: 191,   default: "5:00 PM"
+    t.string   "mon_ot",     limit: 191,   default: "9:00 AM"
+    t.string   "tue_ct",     limit: 191,   default: "5:00 PM"
+    t.string   "tue_ot",     limit: 191,   default: "9:00 AM"
+    t.string   "wed_ct",     limit: 191,   default: "5:00 PM"
+    t.string   "wed_ot",     limit: 191,   default: "9:00 AM"
+    t.string   "thur_ct",    limit: 191,   default: "5:00 PM"
+    t.string   "thur_ot",    limit: 191,   default: "9:00 AM"
+    t.string   "fri_ct",     limit: 191,   default: "5:00 PM"
+    t.string   "fri_ot",     limit: 191,   default: "9:00 AM"
+    t.string   "sat_ct",     limit: 191,   default: "5:00 PM"
+    t.string   "sat_ot",     limit: 191,   default: "9:00 AM"
+    t.datetime "created_at",                                   null: false
+    t.datetime "updated_at",                                   null: false
+    t.boolean  "enabled",    limit: 1
+    t.text     "response",   limit: 65535
   end
 
   add_index "away_messages", ["user_id"], name: "index_away_messages_on_user_id", using: :btree

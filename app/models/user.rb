@@ -62,7 +62,7 @@ class User < ActiveRecord::Base
     end
   end
 
-  has_many :away_messages
+  has_one :away_message
   has_many :hashtags
 
   has_many :messages

@@ -1,4 +1,3 @@
-<%= provide(:title, "Relay - Dashboard") %>
 <div class="sub-nav-bar"></div>
   <div class="dashboard-body">
     <div class="chart-wrapper dash-content-container">
@@ -27,7 +26,7 @@
       </div>
       <div class="chart-container">
         <!-- <img class="chart-placeholder-2" src="images/Sample-Chart-3.png"> -->
-        <%= area_chart @messages_data[:msg_30_days][:chart_data],
+        <%= area_chart @messages_data[:msg_7_days][:chart_data],
             library: {
               scales: {
                 xAxes: [{
@@ -132,7 +131,7 @@
           </div>
           <%#= image_tag 'Graph-screen-shot.png', class: "chart-place-holder" %>
           <div  class= "chart-container">
-            <%= line_chart @transactions[:tranc_chart_data], height: "250px",
+            <%= line_chart @transactions[:tranc_chart_data], height: "200px",
             library: {
               scales: {
                 xAxes: [{
@@ -188,9 +187,3 @@
       </div>
     </div>
   </div>
-
-<script type="text/javascript">
-  $("#customer-csv-template-link").click(function(){
-    $('#customer-csv-template').submit();
-  });
-</script>

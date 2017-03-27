@@ -1,5 +1,5 @@
 $(document).on('ready page:load', function() {
-  var htmlContent = $('#Channel').html()
+  var htmlContent = '<option value="0">SMS</option> <option value="1">MMS</option> <option value="3">Email</option>'
   var url = window.location.pathname.split('/')
   var campaignId = (url[url.length-1]=='edit') ? ('?id=' + url[url.length-2]) : ''
   $('#campaignForm').formValidation({
@@ -96,6 +96,7 @@ $(document).on('ready page:load', function() {
 
   $("#send-campaign-users").click(function(){
     $('#campaignForm').formValidation('resetField', 'campaign[text]');
+    $('#campaignForm').formValidation('resetField', 'campaign[name]');
   });
 
   $('#Channel').on('change', function(e) {
