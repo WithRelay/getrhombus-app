@@ -17,6 +17,11 @@
 .has-error .trumbowyg-editor{
   border: red solid 1px;
 }
+.dashboard-nav{
+  left: 20%;
+  width: 80%;
+  min-width: 80%;
+}
 </style>
 <div class="campaign-editor-options w-form">
   <%= form_for [current_user, @campaign], html: { multipart: true, id: 'campaignForm', class: 'w-clearfix' } do |f| %>
