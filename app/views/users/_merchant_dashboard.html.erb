@@ -130,6 +130,27 @@
             </div>
           </div>
           <%#= image_tag 'Graph-screen-shot.png', class: "chart-place-holder" %>
+          <div  class= "chart-container">
+            <%= line_chart @transactions[:tranc_chart_data], height: "200px",
+            library: {
+              scales: {
+                xAxes: [{
+                  ticks: {
+                    autoSkip: false,
+                    maxRotation: 60,
+                    minRotation: 60
+                  },
+                  time: {
+                    unit: 'day',
+                    displayFormats: {
+                      'day': 'MMM D'
+                    },
+                  }
+                  }]
+                }
+              },
+              curve: false%>
+          </div>
         </div>
       </div>
     </div>
