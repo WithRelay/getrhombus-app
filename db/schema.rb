@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170326143850) do
+ActiveRecord::Schema.define(version: 20170327034838) do
 
   create_table "account_reloads", force: :cascade do |t|
     t.integer  "user_id",        limit: 4
@@ -49,22 +49,24 @@ ActiveRecord::Schema.define(version: 20170326143850) do
 
   create_table "away_messages", force: :cascade do |t|
     t.integer  "user_id",    limit: 4
-    t.string   "sun_ct",     limit: 191, default: "5:00 PM"
-    t.string   "sun_ot",     limit: 191, default: "9:00 AM"
-    t.string   "mon_ct",     limit: 191, default: "5:00 PM"
-    t.string   "mon_ot",     limit: 191, default: "9:00 AM"
-    t.string   "tue_ct",     limit: 191, default: "5:00 PM"
-    t.string   "tue_ot",     limit: 191, default: "9:00 AM"
-    t.string   "wed_ct",     limit: 191, default: "5:00 PM"
-    t.string   "wed_ot",     limit: 191, default: "9:00 AM"
-    t.string   "thur_ct",    limit: 191, default: "5:00 PM"
-    t.string   "thur_ot",    limit: 191, default: "9:00 AM"
-    t.string   "fri_ct",     limit: 191, default: "5:00 PM"
-    t.string   "fri_ot",     limit: 191, default: "9:00 AM"
-    t.string   "sat_ct",     limit: 191, default: "5:00 PM"
-    t.string   "sat_ot",     limit: 191, default: "9:00 AM"
-    t.datetime "created_at",                                 null: false
-    t.datetime "updated_at",                                 null: false
+    t.string   "sun_ct",     limit: 191,   default: "5:00 PM"
+    t.string   "sun_ot",     limit: 191,   default: "9:00 AM"
+    t.string   "mon_ct",     limit: 191,   default: "5:00 PM"
+    t.string   "mon_ot",     limit: 191,   default: "9:00 AM"
+    t.string   "tue_ct",     limit: 191,   default: "5:00 PM"
+    t.string   "tue_ot",     limit: 191,   default: "9:00 AM"
+    t.string   "wed_ct",     limit: 191,   default: "5:00 PM"
+    t.string   "wed_ot",     limit: 191,   default: "9:00 AM"
+    t.string   "thur_ct",    limit: 191,   default: "5:00 PM"
+    t.string   "thur_ot",    limit: 191,   default: "9:00 AM"
+    t.string   "fri_ct",     limit: 191,   default: "5:00 PM"
+    t.string   "fri_ot",     limit: 191,   default: "9:00 AM"
+    t.string   "sat_ct",     limit: 191,   default: "5:00 PM"
+    t.string   "sat_ot",     limit: 191,   default: "9:00 AM"
+    t.datetime "created_at",                                   null: false
+    t.datetime "updated_at",                                   null: false
+    t.boolean  "enabled",    limit: 1
+    t.text     "response",   limit: 65535
   end
 
   add_index "away_messages", ["user_id"], name: "index_away_messages_on_user_id", using: :btree
@@ -638,14 +640,8 @@ ActiveRecord::Schema.define(version: 20170326143850) do
     t.integer  "merchant_customer_id",    limit: 4
   end
 
-<<<<<<< HEAD
-  add_index "subscriptions", ["coupon_id"], name: "index_subscriptions_on_coupon_id", using: :btree
-  add_index "subscriptions", ["merchant_customer_id"], name: "index_subscriptions_on_merchant_customer_id", using: :btree
-  add_index "subscriptions", ["plan_id"], name: "index_subscriptions_on_plan_id", using: :btree
-=======
   add_index "subscriptions", ["coupon_id"], name: "fk_rails_ddc53c9490", using: :btree
   add_index "subscriptions", ["plan_id"], name: "fk_rails_fc223f21da", using: :btree
->>>>>>> 7988d8e0ff418e460d749f56590d11ce7d528646
 
   create_table "transaction_fees", force: :cascade do |t|
     t.string   "provider",         limit: 191
@@ -696,11 +692,7 @@ ActiveRecord::Schema.define(version: 20170326143850) do
   add_index "transactions", ["hashtag_id"], name: "index_transactions_on_hashtag_id", using: :btree
   add_index "transactions", ["referenced_customer_transaction_id"], name: "index_transactions_on_referenced_customer_transaction_id", using: :btree
   add_index "transactions", ["subscription_id"], name: "index_transactions_on_subscription_id", using: :btree
-<<<<<<< HEAD
-  add_index "transactions", ["team_id"], name: "index_transactions_on_team_id", using: :btree
-=======
   add_index "transactions", ["team_id"], name: "fk_rails_0e0853dbc8", using: :btree
->>>>>>> 7988d8e0ff418e460d749f56590d11ce7d528646
   add_index "transactions", ["txn_number"], name: "index_transactions_on_txn_number", using: :btree
   add_index "transactions", ["user_id"], name: "index_transactions_on_user_id", using: :btree
 
