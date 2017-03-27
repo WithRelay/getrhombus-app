@@ -35,11 +35,13 @@ module DashboardData
 	def transactions
 		transactions = all_trasactions
 		transactions_weekly = transactions.where 'transactions.created_at >=?', 7.days.ago.utc
+		chart_data = transactions_weekly.group('date(transactions.created_at)')
+																		.sum(:amount)
 		{
 			recent_trancs: Transaction.includes(:user).exclude_refunded_transactions().only_captured_transactions()
                                     .where(team_id: merchant_id).order(created_at: :desc).last(6),
 			this_week_tranc: transactions_weekly.sum(:amount),
-			tranc_chart_data: transactions_weekly.pluck(:amount,:created_at)
+			tranc_chart_data: chart_data
 		}
 	end
 
