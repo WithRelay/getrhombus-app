@@ -1,11 +1,11 @@
 module AwayMessagesHelper
 
   def time_for_ct_weeks
-    get_time_ct_ot('AM')
+    get_time_ct_ot('PM')
   end
 
   def time_for_ot_weeks
-    get_time_ct_ot('PM')
+    get_time_ct_ot('AM')
   end
 
   def get_time_ct_ot(time_am_pm)
