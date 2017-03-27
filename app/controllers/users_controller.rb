@@ -20,8 +20,10 @@ class UsersController < ApplicationController
 
     #all the methods are in concerns/databoard_data
     @overall_section = customers_and_trasactions
-    @chart_and_transacs = chart_and_transactions
     @msg_perform = analytics_section
+    @transactions = transactions
+    @chart_and_transacs = chart_and_transactions
+
   end
 
   # DELETE /users/1
