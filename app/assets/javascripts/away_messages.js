@@ -1,6 +1,8 @@
-$(document).ready(function(){
+$(document).on('ready page:load', function() {
 
   var autoResponseTextBox = '#Away-Message-Auto-Response'
+
+  $('#enable-away-message').is(":checked") && $('#away-message-text-area').slideDown();
 
   if ($(autoResponseTextBox).length > 0){
     enableEmojiCounter(autoResponseTextBox)
@@ -10,8 +12,11 @@ $(document).ready(function(){
     });
   }
   $('#enable-away-message').click(function(){
-    if($(this).is(":checked"))
+    if($(this).is(":checked")){
       $('#away-message-text-area').slideDown();
+    }else{
+      $('#away-message-text-area').hide();
+    }
   });
 
   $('#save-away-message-button').click(function(e){
