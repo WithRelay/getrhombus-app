@@ -104,7 +104,7 @@
                 <div class="message-graph-header-text">Weekly Transactions</div>
               </div>
               <div class="w-col w-col-6">
-                <div class="conversation-to-date-text">$18,000 Transactions this Week</div>
+                <div class="conversation-to-date-text">$<%= @transactions[:this_week_tranc] %> Transactions this Week</div>
               </div>
             </div>
           </div><%= image_tag 'Graph-screen-shot.png', class: "chart-place-holder" %>
