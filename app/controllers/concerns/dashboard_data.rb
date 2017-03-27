@@ -34,8 +34,6 @@ module DashboardData
 
 	def transactions
 		transactions = all_trasactions
-		binding.pry
-		#weekly transactions
 		transactions_weekly = transactions.where 'transactions.created_at >=?', 7.days.ago.utc
 		{
 			recent_trancs: Transaction.includes(:user).exclude_refunded_transactions().only_captured_transactions()
