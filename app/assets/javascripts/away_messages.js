@@ -1,5 +1,14 @@
 $(document).ready(function(){
-  enableEmojiCounter("#Away-Message-Auto-Response")
+
+  var autoResponseTextBox = '#Away-Message-Auto-Response'
+
+  if ($(autoResponseTextBox).length > 0){
+    enableEmojiCounter(autoResponseTextBox)
+  }
+
+  $(autoResponseTextBox)[0].emojioneArea.on('focus', function(){
+    $('.emojionearea-editor').counter({ type: 'char', append: false, target: '#away-message-counter' })
+  });
 
   $('#enable-away-message').click(function(){
     if($(this).is(":checked"))
@@ -8,6 +17,5 @@ $(document).ready(function(){
 
   function enableEmojiCounter(element){
     $(element).emojioneArea();
-    $(element).counter({ type: 'char', append: false, goal: 150, target: '#away-message-counter' })
   }
 })
