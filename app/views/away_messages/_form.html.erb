@@ -97,8 +97,8 @@
   <div id="away-message-text-area" data-ix="display-none-on-load">
     <label class="field-headers form-label settings" for="Customer-Signup-Auto-Response">away message</label>
     <label class="form-label paragraph" for="Away-Message-Auto-Response">Compose the message that will go out to customers and contacts when they message you outside business hours.</label>
-    <%= f.text_area :response, class: 'auto-welcome-message-text-area w-input', placeholder: "Type message", id: 'Away-Message-Auto-Response' %>
+    <%= f.text_area :response, class: 'auto-welcome-message-text-area w-input', placeholder: "Type message", id: 'Away-Message-Auto-Response', value: default_message %>
     <div class="form-field-subtext" id="away-message-counter"></div>
-    <%= f.submit 'Save changes', class: 'button save-changes w-button', id: 'save-away-message-button' %>
   </div>
+  <%= f.submit 'Save changes', class: 'button save-changes w-button', id: 'save-away-message-button' %>
 <% end %>
