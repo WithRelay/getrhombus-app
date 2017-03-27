@@ -3,15 +3,15 @@
     <div class="chart-wrapper dash-content-container">
       <div class="message-stats-in-graph-wrapper w-clearfix">
         <div class="_90-days-ago group-volume">
-          <div class="_30-days _90 message-volume-count">1.48m</div>
+          <div class="_30-days _90 message-volume-count"><%= @messages_data[:msg_90_days][:msg_count][:total]%></div>
           <div class="message-days-text">90 DAYS</div>
         </div>
         <div class="_30-days-ago group-volume">
-          <div class="_30-days message-volume-count">890,259</div>
+          <div class="_30-days message-volume-count"><%= @messages_data[:msg_30_days][:msg_count][:total]%></div>
           <div class="alt message-days-text">30 DAYS</div>
         </div>
         <div class="_7-days-ago group-volume">
-          <div class="_7-days message-volume-count">29,300</div>
+          <div class="_7-days message-volume-count"><%= @messages_data[:msg_7_days][:msg_count][:total]%></div>
           <div class="message-days-text">7 DAYS</div>
         </div>
         <h4 class="date-time shrink-text welcome-dash-content-container-header">Thursday, 11 Aug 2016, 9:30 AM</h4>
@@ -21,10 +21,31 @@
           <div class="message-graph-header-text">Daily Message Volume</div>
         </div>
         <div class="w-col w-col-6">
-          <div class="conversation-to-date-text">286,000 Total Conversations to Date</div>
+          <div class="conversation-to-date-text"><%= @messages_data[:total_convs] %> Total Conversations to Date</div>
         </div>
       </div>
-      <div class="chart-container"><img class="chart-placeholder-2" src="images/Sample-Chart-3.png">
+      <div class="chart-container">
+        <!-- <img class="chart-placeholder-2" src="images/Sample-Chart-3.png"> -->
+        <%= area_chart @messages_data[:msg_7_days][:chart_data],
+            library: {
+              scales: {
+                xAxes: [{
+                  ticks: {
+                    autoSkip: false,
+                    maxRotation: 60,
+                    minRotation: 60
+                  },
+                  time: {
+                    unit: 'day',
+                    displayFormats: {
+                      'day': 'MMM D'
+                    },
+                  }
+                }]
+              }
+            },
+            curve: false
+        %>
       </div>
     </div>
     <div class="dash-content-container scheduled-campaigns-notifications">
@@ -34,7 +55,7 @@
       <div class="w-row welcome-dash-table-wrapper">
         <div class="w-col w-col-3">
           <div class="average-message-count-per-day customer-contacts-2 welcome-dash-content-container">
-            <h1 class="new-customers"><%= @msg_perform[:messages][:msg_count] %></h1>
+            <h1 class="new-customers"><%= @msg_perform[:messages][:total] %></h1>
             <h4 class="count-description"> &nbsp;Messages Today</h4>
             <h4 class="count-description transaction-count">Facebook <%= @msg_perform[:messages][:fb_msg_percent] %>%  |
                SMS &nbsp;<%= @msg_perform[:messages][:txt_msg_percent] %>%</h4>
@@ -107,7 +128,8 @@
                 <div class="conversation-to-date-text">$<%= @transactions[:this_week_tranc] %> Transactions this Week</div>
               </div>
             </div>
-          </div><%= image_tag 'Graph-screen-shot.png', class: "chart-place-holder" %>
+          </div>
+          <%#= image_tag 'Graph-screen-shot.png', class: "chart-place-holder" %>
         </div>
       </div>
     </div>
