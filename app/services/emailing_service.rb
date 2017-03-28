@@ -452,24 +452,26 @@ class EmailingService
       begin
         template_name = 'customer-receipt-template'
         template_content = []
-        message = { "subject" => "You sent #{options['amount']} to #{options['org_name']}",
-         "global_merge_vars"=> [  { "name" => "first_name", "content" => transaction.user.first_name || 'there' },
-                                  { "name" => "merchant_business_name", "content" => options['org_name'] },
-                                  { "name" => "transaction_id", "content" => options['txn_number'] },
-                                  { "name" => "date", "content" => options['created_at'] },
-                                  { "name" => "status", "content" => options['status'] },
-                                  { "name" => "payment_method", "content" => "Visa **** **** **** #{options['last4']} (Expiry #{options['exp_month']}/#{options['exp_year']})" },
-                                  { "name" => "amount", "content" => options['amount'] },
-                                  { "name" => "discription", "content" => options['discription']},
-                                  { "name" => "taxes_and_fees", "content" => options['taxes_and_fees'] },
-                                  { "name" => "total", "content" => options['amount'] },
-                                  { "name" => "relay_number", "content" => options['rhombus_number'] },
-                                  { "name" => "merchant_email", "content" => options['merchant_email'] },
-                                  { "name" => "transaction_history_link", "content" => "https://www.withrelay.com/transaction_history_link"},
-                                  { "name" => "use_relay_link", "content" => "https://www.withrelay.com/use_relay_link"}
+        message = { "subject" => "You sent #{options[:amount]} to #{options[:org_name]}",
+         "global_merge_vars"=> [  { "name" => "first_name", "content" => options[:user_first_name] || 'there' },
+                                  { "name" => "merchant_business_name", "content" => options[:org_name] },
+                                  { "name" => "transaction_id", "content" => options[:txn_number] },
+                                  { "name" => "date", "content" => options[:created_at] },
+                                  { "name" => "status", "content" => options[:status] },
+                                  { "name" => "payment_method", "content" => "Visa **** **** **** #{options[:last4]} (Expiry #{options[:exp_month]}/#{options[:exp_year]})" },
+                                  { "name" => "amount", "content" => options[:amount] },
+                                  { "name" => "discription", "content" => options[:discription]},
+                                  { "name" => "taxes_and_fees", "content" => options[:taxes_and_fees] },
+                                  { "name" => "total", "content" => options[:amount] },
+                                  { "name" => "relay_number", "content" => options[:rhombus_number] },
+                                  { "name" => "merchant_email", "content" => options[:merchant_email] },
+                                  { "name" => "currency", "content" => options[:currency] },
+                                  { "name" => "currency_symbol", "content" => options[:currency_symbol] },
+                                  { "name" => "transaction_link", "content" => "https://www.withrelay.com/transaction_history_link"},
+                                  { "name" => "relay_link", "content" => "https://www.withrelay.com/use_relay_link"}
                                ],
          "merge_language" => "handlebars",
-         "to"=> [ { "email" => user.email } ],
+         "to"=> [ { "email" => options[:user_email] } ],
          "bcc_address"=> SENDER,
          "from_name" => "Edwin from Relay",
          "from_email" => FROM_EMAIL[:edwin]
@@ -483,23 +485,26 @@ class EmailingService
     end
 
     # not completed
+    # old template on mailchimp
     def transaction_receipt(options = {})
       begin
         template_name = 'transaction-receipt'
         template_content = []
         message = { "subject" => "Receipt",
-         "global_merge_vars"=> [  { "name" => "first_name", "content" => options['user_first_name'] || 'there' },
-                                  { "name" => "customer_name", "content" => options['customer_name'] },
-                                  { "name" => "transaction_id", "content" => options['transaction_id'] },
-                                  { "name" => "date", "content" => options['created_at'] },
-                                  { "name" => "status", "content" => options['status'] },
-                                  { "name" => "payment_method", "content" => options['payment_method'] },
-                                  { "name" => "amount", "content" => options['amount'] },
-                                  { "name" => "previous_balance", "content" => options['previous_balance'] },
-                                  { "name" => "current_balance", "content" => options['current_balance'] }
+         "global_merge_vars"=> [  { "name" => "first_name", "content" => options[:user_first_name] || 'there' },
+                                  { "name" => "customer_name", "content" => options[:customer_name] },
+                                  { "name" => "transaction_id", "content" => options[:transaction_id] },
+                                  { "name" => "date", "content" => options[:created_at] },
+                                  { "name" => "status", "content" => options[:status] },
+                                  { "name" => "payment_method", "content" => options[:payment_method] },
+                                  { "name" => "amount", "content" => options[:amount] },
+                                  { "name" => "previous_balance", "content" => options[:previous_balance] },
+                                  { "name" => "current_balance", "content" => options[:current_balance] },
+                                  { "name" => "currency", "content" => options[:currency] },
+                                  { "name" => "currency_symbol", "content" => options[:currency_symbol] }
                                ],
          "merge_language" => "handlebars",
-         "to"=> [ { "email" => user.email } ],
+         "to"=> [ { "email" => options[:user_email] } ],
          "bcc_address"=> SENDER,
          "from_name" => "Edwin from Relay",
          "from_email" => FROM_EMAIL[:edwin]
@@ -517,23 +522,25 @@ class EmailingService
         template_name = 'subscription-receipt-template'
         template_content = []
         message = { "subject" => "Thank you for using Relay!",
-         "global_merge_vars"=> [  { "name" => "first_name", "content" => options['first_name'] || 'there' },
+         "global_merge_vars"=> [  { "name" => "first_name", "content" => options[:first_name] || 'there' },
                                   { "name" => "year", "content" => Time.current.year },
-                                  { "name" => "invoice_id", "content" => options['stripe_invoice_id'] },
-                                  { "name" => "date", "content" => options['date'] },#February 23, 2017 | 1:30pm
-                                  { "name" => "status", "content" => options['status'] },
-                                  { "name" => "payment_method", "content" => options['payment_method'] },
-                                  { "name" => "amount", "content" => options['sub_total'] },
-                                  { "name" => "total", "content" => options['total'] },
-                                  { "name" => "taxes_and_fees", "content" => options['tax'] + options['application_fee'] },
+                                  { "name" => "invoice_id", "content" => options[:stripe_invoice_id] },
+                                  { "name" => "date", "content" => options[:date] },#February 23, 2017 | 1:30pm
+                                  { "name" => "status", "content" => options[:status] },
+                                  { "name" => "payment_method", "content" => options[:payment_method] },
+                                  { "name" => "amount", "content" => options[:sub_total] },
+                                  { "name" => "total", "content" => options[:total] },
+                                  { "name" => "taxes_and_fees", "content" => options[:tax_and_fees] },
+                                  { "name" => "currency", "content" => options[:currency] },
+                                  { "name" => "currency_symbol", "content" => options[:currency_symbol] },
                                   { "name" => "pdf_download_link", "content" => "https://www.withrelay.com/pdf_download_link"},
                                   { "name" => "history_link", "content" => "https://www.withrelay.com/history_link"},
                                   { "name" => "help_center_link", "content" => "https://www.withrelay.com/help_center_link"},
-                                  { "name" => "email_link", "content" => "mail_to:<redacted_email>"},
+                                  { "name" => "email_link", "content" => "mailto:<redacted_email>"},
                                   { "name" => "refer_business_link", "content" => "https://www.withrelay.com/refer_business_link"}
                                ],
          "merge_language" => "handlebars",
-         "to"=> [ { "email" => user.email } ],
+         "to"=> [ { "email" => options[:user_email] } ],
          "bcc_address"=> SENDER,
          "from_name" => "Edwin from Relay",
          "from_email" => FROM_EMAIL[:edwin]
@@ -550,23 +557,25 @@ class EmailingService
       begin
         template_name = 'transaction-notification-template'
         template_content = []
-        message = { "subject" => "#{options['customer_name']} sent you #{options['amount']}",
-         "global_merge_vars"=> [  { "name" => "customer_name", "content" => options['custome_name'] },
-                                  { "name" => "first_name", "content" => options['first_name'] || 'there' },
-                                  { "name" => "transaction_id", "content" => options['id'] },
-                                  { "name" => "date", "content" => options['created_at'] },
-                                  { "name" => "status", "content" => options['status'] },
-                                  { "name" => "payment_method", "content" => "Visa **** **** **** #{options['last4']} (Expiry #{options['exp_month']}/#{options['exp_year']})" },
-                                  { "name" => "amount", "content" => options['amount'] },
-                                  { "name" => "discription", "content" => options['discription']},
-                                  { "name" => "taxes_and_fees", "content" => options['amount_less_fees']},
-                                  { "name" => "transaction_details_link", "content" => "https://www.withrelay.com/transaction_details_link"},
-                                  { "name" => "help_center_link", "content" => "https://www.withrelay.com/help_center_link"},
-                                  { "name" => "email_link", "content" => "mail_to:<redacted_email>"},
-                                  { "name" => "refer_business_link", "content" => "https://www.withrelay.com/refer_business_link"}
+        message = { "subject" => "#{options[:customer_name]} sent you #{options[:amount]}",
+         "global_merge_vars"=> [  { "name" => "customer_name", "content" => options[:custome_name] },
+                                  { "name" => "first_name", "content" => options[:first_name] || 'there' },
+                                  { "name" => "transaction_id", "content" => options[:id] },
+                                  { "name" => "date", "content" => options[:created_at] },
+                                  { "name" => "status", "content" => options[:status] },
+                                  { "name" => "payment_method", "content" => "Visa **** **** **** #{options[:last4]} (Expiry #{options[:exp_month]}/#{options[:exp_year]})" },
+                                  { "name" => "amount", "content" => options[:amount] },
+                                  { "name" => "discription", "content" => options[:discription]},
+                                  { "name" => "taxes_and_fees", "content" => options[:amount_less_fees]},
+                                  { "name" => "currency", "content" => options[:currency] },
+                                  { "name" => "currency_symbol", "content" => options[:currency_symbol] },
+                                  { "name" => "transaction_link", "content" => "https://www.withrelay.com/transaction_link"},
+                                  { "name" => "help_link", "content" => "https://www.withrelay.com/help_link"},
+                                  { "name" => "email_link", "content" => "mailto:<redacted_email>"},
+                                  { "name" => "refer_link", "content" => "https://www.withrelay.com/refer_link"}
                                ],
          "merge_language" => "handlebars",
-         "to"=> [ { "email" => user.email } ],
+         "to"=> [ { "email" => options[:user_email] } ],
          "bcc_address"=> SENDER,
          "from_name" => "Edwin from Relay",
          "from_email" => FROM_EMAIL[:edwin]
@@ -687,7 +696,7 @@ class EmailingService
       end
     end
 
-    def customer_added_to_relay
+    def customer_added_to_relay(user)
       begin
         template_name = 'customer-added-to-relay'
         template_content = []
