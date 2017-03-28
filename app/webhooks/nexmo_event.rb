@@ -31,7 +31,11 @@ class NexmoEvent
           uid, uid_type = @params[:msisdn], 'phone_number'
           OpenCnamData.find_record_or_get_intelligence_data(@params[:msisdn])
         end
+        
         Conversation.find_or_create_conversation_for_message_and_publish(@merchant, user, uid_type, uid, @message, true)
+        @merchant.away_message.check_office_hours(@merchant, user, uid_type, uid, "Message")
+        MessageParser.new.process_message(@merchant, user, @message, 'Message')
+
       rescue ActiveRecord::RecordNotUnique
       end
     end

@@ -5,7 +5,8 @@ class User < ActiveRecord::Base
   include CSVHandler
   include AddTokenToUser
 
-  attr_accessor :phone, :captured_amt, :msg_id, :tag_id, :referrer_id, :tos_acceptance, :user_lists
+  attr_accessor :phone, :captured_amt, :msg_id, :tag_id
+  attr_accessor :referrer_id, :tos_acceptance, :user_lists, :area_code
 
   # validation rules for user attributes
   validates :tos_acceptance, acceptance: true, if: lambda { self.is_merchant? && self.reset_password_token.blank? }, on: :update
@@ -163,11 +164,12 @@ class User < ActiveRecord::Base
     #creds.where(uid_type: ((creds.length == 2) ? 'managed' : 'standalone') ).first
   end
 
-  def buy_number(params)
-    # area code is saved as rhombus number till a number is bought
-    # number = TextingService.buy_number({ query: params[rhombus_number] || "", country: params[:rn_country], type: params[:rn_type] })
-    number = '202'
-    number && self.update(rhombus_number: number) ? true : false
+  def buy_number(params)    
+    number = TextingService.buy_number({ query: params["area_code"] || "", country: params["rn_country"], type: params["rn_type"] })
+    return false unless number
+    self.rhombus_number = number[0]
+    self.rn_friendly_name = number[1]
+    self.save
   end
 
   def has_valid_card?
@@ -178,6 +180,9 @@ class User < ActiveRecord::Base
   def get_saas_subscription
     platform_merchant = MerchantCustomer.find_by(customer_id: self.id, merchant_id: User.get_platform_acct_obj.id)
     platform_merchant ? platform_merchant.subscriptions.active.last : nil
+
+    # remove this
+    true
   end
 
   def get_page_access_token
@@ -214,12 +219,17 @@ class User < ActiveRecord::Base
     self.org_name = self.org_name.strip unless self.org_name.blank?
   end
 
-  def do_signup_stuff
-    Alert.find_or_create_by(user_id: self.id) if self.is_merchant?
+  def do_signup_stuff    
+    if self.is_merchant?
+      Alert.find_or_create_by(user_id: self.id) 
+      response = "We're away at the moment and will get back to you when we return :)."
+      AwayMessage.find_or_create_by(user_id: self.id, response: response)
+      GetIntelligenceDataJob.perform_later(self.org_phone, 'OpenCNAM')
+    end
+
     WelcomeEmailJob.set(wait: SIGNUP_EMAIL_DELAY.minutes).perform_later(self)
     GetIntelligenceDataJob.perform_later(self.email, 'FullContact')
-    GetIntelligenceDataJob.perform_later(self.phone_number, 'OpenCNAM') if self.is_customer?
-    GetIntelligenceDataJob.perform_later(self.org_phone, 'OpenCNAM') if self.is_merchant?
+    GetIntelligenceDataJob.perform_later(self.phone_number, 'OpenCNAM') if self.is_customer?    
   end
 
 end

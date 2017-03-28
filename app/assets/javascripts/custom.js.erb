@@ -165,8 +165,43 @@ $(document).ready(function() {
     });
 
 
-  $('.chartjs-hidden-iframe').css('z-index', 0)
+  $('.chartjs-hidden-iframe').css('z-index', 0);
 
+    // validate form
+  $('#add-profile-info')
+  .formValidation({
+    framework: 'bootstrap',
+    live: 'disabled',
+
+    // List of fields and their validation rules
+    fields: {
+      'user[people_attributes][0][full_name]': {
+        validators: {
+          notEmpty: {
+            message: 'Your full name is required'
+          }
+        }
+      },
+      'user[org_name]': {
+        validators: {
+          notEmpty: {
+            message: 'Your business name is required'
+          }
+        }
+      }
+    }
+  })
+  .on('err.field.fv', function(e, data) {
+    // $(e.target)  --> The field element
+    // data.fv      --> The FormValidation instance
+    // data.field   --> The field name
+    // data.element --> The field element
+
+    // Hide the messages
+    data.element
+      .data('fv.messages')
+      .find('.help-block[data-fv-for="' + data.field + '"]').hide();
+  });
 
   // validate sign up form
   $('#signupForm')

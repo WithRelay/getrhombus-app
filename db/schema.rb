@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170327034838) do
+ActiveRecord::Schema.define(version: 20170328050226) do
 
   create_table "account_reloads", force: :cascade do |t|
     t.integer  "user_id",        limit: 4
@@ -58,15 +58,15 @@ ActiveRecord::Schema.define(version: 20170327034838) do
     t.string   "tue_ot",     limit: 191,   default: "9:00 AM"
     t.string   "wed_ct",     limit: 191,   default: "5:00 PM"
     t.string   "wed_ot",     limit: 191,   default: "9:00 AM"
-    t.string   "thur_ct",    limit: 191,   default: "5:00 PM"
-    t.string   "thur_ot",    limit: 191,   default: "9:00 AM"
+    t.string   "thu_ct",     limit: 191,   default: "5:00 PM"
+    t.string   "thu_ot",     limit: 191,   default: "9:00 AM"
     t.string   "fri_ct",     limit: 191,   default: "5:00 PM"
     t.string   "fri_ot",     limit: 191,   default: "9:00 AM"
     t.string   "sat_ct",     limit: 191,   default: "5:00 PM"
     t.string   "sat_ot",     limit: 191,   default: "9:00 AM"
     t.datetime "created_at",                                   null: false
     t.datetime "updated_at",                                   null: false
-    t.boolean  "enabled",    limit: 1
+    t.boolean  "enabled",    limit: 1,     default: false
     t.text     "response",   limit: 65535
   end
 
@@ -792,6 +792,7 @@ ActiveRecord::Schema.define(version: 20170327034838) do
     t.text     "description",            limit: 65535
     t.string   "use_rhombus_for",        limit: 191
     t.string   "rhombus_number",         limit: 191
+    t.string   "rn_friendly_name",       limit: 191
     t.string   "rn_type",                limit: 191
     t.string   "rn_country",             limit: 191
     t.string   "tax_percent",            limit: 191

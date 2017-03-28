@@ -119,9 +119,9 @@ module DashboardData
   end
 
   def open_convs_yesterday
-    yesterday_convs = ConversationResolution.where(merchant_id: merchant_id)
-                            .where(created_at: (Time.current.beginning_of_day - 1.days)..(Time.current.beginning_of_day))
-    yesterday_convs.count
+    ConversationResolution.where(merchant_id: merchant_id)
+                          .where(created_at: (Time.current.beginning_of_day - 1.days)..(Time.current.beginning_of_day))
+                          .count
   end
 
 	def all_trasactions
@@ -129,7 +129,6 @@ module DashboardData
 	end
 
 	def total_conversations
-		#Conversation.where(merchant_id: merchant_id).count
     ConversationResolution.where(merchant_id: merchant_id).count
 	end
 
