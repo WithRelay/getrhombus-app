@@ -11,8 +11,13 @@ $(document).on('ready page:load', function() {
 
   // for closing all modals
   $('.update-close-modals').click(function(e){
-    $('#' + e.target.dataset.parent).trigger('close');
+    if (e.target.dataset.parent == "new-customer-div"){
+      $('.create-customer-form-wrapper').trigger('close')
+    }
+    else{
+      $('#' + e.target.dataset.parent).trigger('close');
+    }
     e.preventDefault();
   });
-  
+
 });
