@@ -130,7 +130,6 @@ $('#delete-reminder').click(function(e){
 
 
 	$('#edit-reminder').on('click', function(){
-		debugger;
 		var selectedElement = selectCheckedElement();
 
 		if (selectedElement == false){
@@ -140,8 +139,8 @@ $('#delete-reminder').click(function(e){
 			$("#edit-reminder-modal").lightbox_me({
 				centered: true
 			});
-		}
 
+		}
 		var elementForm = selectedElement.closest('form');
 		var reminder_id = elementForm.find("#reminder_id").val();
 
@@ -149,6 +148,7 @@ $('#delete-reminder').click(function(e){
 			 url:  "/v1/reminders/" + reminder_id + "/edit" ,
 			 data:{id: reminder_id}
 		 }).done(function(res){
+			debugger;
 			var form = $('.editReminderFrom');
 			var action = form.attr("action");
 			var reminder = res.reminder
@@ -189,4 +189,40 @@ $('#delete-reminder').click(function(e){
 
 	  $('.cancel-no').click();
   }
+
+	$('#set-new-reminder-loader').click(function(){
+    customtersSearch();
+  });
+function customtersSearch(option = []){
+  var labelSearchField = option.length < 1 ? 'description' : 'phone_number'
+  var valueField = option.length < 1 ? 'uid' : 'id'
+  $('.search-customers-and-contacts').selectize({
+    maxItems: 1,
+    valueField: valueField,
+    labelField: labelSearchField,
+    searchField: labelSearchField,
+    create: false,
+    options: option,
+    closeAfterSelect: true,
+    load: function(query, callback) {
+      if (!query.length) return callback();
+      $.ajax({
+        url: '/v1/users.json',
+        type: 'GET',
+        dataType: 'json',
+        data: {
+          query: query
+        },
+        error: function() {
+          FlashHandler.setFlashMessage('Something went wrong...Unable to find any customer', 'error');
+          callback();
+        },
+        success: function(res) {
+          callback(res['data']);
+        }
+      });
+    }
+  });
+}
+
 });
