@@ -1,15 +1,19 @@
-
-  <div class="messaging sub-nav-bar">
+  <div class="messaging sub-nav-bar z-index-1">
     <div class="w-row">
       <div class="w-col w-col-4"></div>
       <div class="sub-nav-bar-messaging-dash-column-2 w-col w-col-4">
-        <div class="customer-name-text subheader" ng-if="current_chat_conversation != false">Conversation with {{current_chat_conversation.full_name}}</div>
+        <div class="customer-name-text subheader" ng-if="Object.keys(selected_conversation).length">Conversation with {{current_chat_conversation.full_name}}</div>
       </div>
       <div class="w-col w-col-4"></div>
     </div>
   </div>
 
   <div class="messaging side-bar" id='conversations-list'>
+    <div class="conversation-list-menu logo-area w-clearfix">
+      <div class="dashboard-logo-wrapper">
+        <%= image_tag('Relay-Transparent.png', class: 'dashboard-logo', width: 50) %>
+      </div>
+    </div>
     <div class="conversation-list-menu">
       <div class="w-form">
         <%# changed input field and id %>
@@ -20,11 +24,11 @@
       </div>
       <div class="open-conversation-text">Open (289)</div>
     </div>
-    <!--<div class="w-tabs" data-duration-in="300" data-duration-out="100"></div>-->
+    <div class="w-tabs" data-duration-in="300" data-duration-out="100"></div>
     <%# added id %>
     <div class="conversation-list-wrapper" id='conversation-list-wrapper' when-scrolled-down="loadConversations()">
 
-      <a class="message-tab w-inline-block" ng-repeat="(identifier, conversation) in conversations | filterConversationList:query | orderObjectBy:'last_message_ts':true" ng-click="getConversationMessages(conversation, true)">
+      <a class="message-tab w-inline-block" ng-repeat="(identifier, conversation) in conversations | filterConversationList:query | orderObjectBy:'last_message_ts':true" ng-click="getConversationMessages(conversation, true)" ng-class="{ 'message-tab': true, 'w-inline-block': true, 'conversation_selected': conversation.id == selected_conversation.id }">
         <div class="message-tab-content-wrapper w-row">
 
           <div class="message-tab-picture-column w-col w-col-2">
@@ -59,11 +63,12 @@
   <%# added id %>
   <div class="text-window-wrapper" id='messaging-page-textarea'>
     <div class="w-form">
+      <form>
         <div class="message-input-box-row w-row">
           <div class="message-input-box-column-1 w-col w-col-1">
             <div class="message-input-box-dropdown w-dropdown" data-delay="0">
               <div class="message-input-box-dropdown-toggle w-dropdown-toggle">
-                <div class="message-input-box-button-text"></div>
+                <div class="message-input-box-button-text">+</div>
                 <input type="file" id="file-picker" ngf-select="handleFile($file, $invalidFiles)" ng-model="pic_file" ngf-accept="'image/*'" ngf-max-size="1MB" class='hide'>
               </div>
               <nav class="message-input-dropdown-list-wrapper w-dropdown-list">
@@ -98,12 +103,13 @@
             <textarea class="message-text-box text-area w-input" id="Messaging-Text-Area" placeholder="Type your message..." ng-model="new_message.text"></textarea>
           </div>
         </div>
+      </form>
     </div>
   </div>
 
-  <div class="right side-bar">
+  <div class="right side-bar z-index-1">
     <div ng-if='customer_contact_count == 0'>{{ customer_contact_count_message }}</div>
-    <div class="right-nav-profile-content-wrapper" ng-if='snapshot != undefined && customer_contact_count > 0'>
+    <div class="right-nav-profile-content-wrapper" ng-if='customer_contact_count > 0'>
 
       <img ng-if="snapshot.profile_image.type == 'image'" class="profile-picture-right-nav" ng-src="{{snapshot.profile_image.value}}" width="60">
 
@@ -120,6 +126,7 @@
       <div class="left-column-text"> &nbsp; &nbsp; {{ snapshot.since.type }} since: {{ snapshot.since.date }}</div>
       <div class="right-nav-underline"></div>
     </div>
+
     <%# added id %>
     <div class="right-nav-tab w-tabs" data-duration-in="300" data-duration-out="100" id='right-sidebar-bottom'>
       <div class="right-nav tab-menu w-tab-menu">
@@ -127,9 +134,10 @@
           <div class="messages-tab-link-text">Transactions</div>
         </a>
         <a class="right tab-link w-inline-block w-tab-link" data-w-tab="Tab 2">
-          <div class="messages-tab-link-text">Segments</div>
+          <div class="messages-tab-link-text">Subscribed Lists</div>
         </a>
       </div>
+
       <div class="w-tab-content">
 
         <div class="transaction-pane w--tab-active w-tab-pane" data-w-tab="Tab 1">
@@ -234,9 +242,6 @@
               <div class="customer-initial">{{ selected_conversation.full_name.charAt(0) }}</div>
             </div>
 
-            <!--<div class="chat-wwindow no-image-found-placeholder" ng-if="message.profile_image.type == 'color'">
-              <div class="customer-initial">{{ selected_conversation.full_name.charAt(0) }}</div>
-            </div>-->
           </div>
 
           <div class="w-col w-col-10">
@@ -271,7 +276,7 @@
             </div>
 
           </div>
-          <div class="w-clearfix w-col w-col-2">
+          <div class="w-col w-col-2">
             <%# added height %>
             <img ng-if="message.profile_image.type == 'image'" class="agent-picture messaging-bubble right-nav-profile-picture" ng-src="{{message.profile_image.value}}" width="35" height='35'>
             <div ng-class="{ 'agent chat-wwindow no-image-found-placeholder' : true, 'radius-color-{{message.profile_image.value}}' : true }" ng-if="message.profile_image.type == 'color'">

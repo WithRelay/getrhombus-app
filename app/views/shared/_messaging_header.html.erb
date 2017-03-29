@@ -1,30 +1,29 @@
-  <div class="dashboard-nav w-clearfix">
-    <div class="dashboard-logo-wrapper">
-      <%= link_to root_url do %>
-        <%= image_tag('relay-6.png', class: 'dashboard-logo', width: 50) %>
-      <% end %>
-    </div>
+  <div class="dashboard-nav messaging w-clearfix">
+    
     <div class="dashboard-nav-links-wrapper">
-      <a class="w-clearfix w-inline-block">
+      <div class="w-clearfix w-inline-block">
         <%#=  Added class %>
         <div class="dash-header-links">
-          <a href="<%= user_path(current_user) %>" class="header-links-fix"> &nbsp; <strong>Dashboard</strong></a>
+          <a href="<%= user_path(current_user) %>" class="important-text-47 link_no_underline"> &nbsp; Dashboard</a>
         </div>
         <div class="dash-header-links new-link">
-          <a href="<%= customers_user_path(current_user) %>" class="header-links-fix"> &nbsp;<strong>All &nbsp;customers</strong></a>
+          <a href="<%= customers_user_path(current_user) %>" class="important-text-48 link_no_underline"> &nbsp;customers</a>
         </div>
         <div class="dash-header-links new-link">
-          <a href="<%= contacts_user_path(current_user) %>" class="header-links-fix"> &nbsp;&nbsp;<strong>Contacts</strong></a>
+          <a href="<%= user_reminders_path(current_user) %>" class="important-text-49 link_no_underline"> &nbsp;&nbsp;scheduled messages</a>
         </div>
         <div class="dash-header-links new-link">
-          <a href="<%= lists_path(current_user) %>" class="header-links-fix"> &nbsp;&nbsp;<strong>List</strong></a>
+          <a href="<%= lists_path(current_user) %>" class="important-text-50 link_no_underline"> &nbsp;&nbsp;Lists</a>
+        </div>
+        <div class="dash-header-links new-link">
+          <a href="<%= user_campaigns_path(current_user) %>" class="important-text-50 link_no_underline"> &nbsp;&nbsp;Campaigns</a>
         </div>
 
-          <%= render "shared/rhombus_number" %>
+        <%= render "shared/rhombus_number" %>
 
-      </a>
+      </div>
     </div>
 
-      <%= render 'shared/settings_dropdown' %>
+    <%= render 'shared/settings_dropdown' %>
 
   </div>

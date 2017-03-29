@@ -69,11 +69,42 @@ $(document).on('ready',function(){
 		});
 	}
 
+	// Confirmation dialog box for destroy saved reply
+	$('#delete-saved-reply').click(function(evt) {
+		var selectedElement = selectCheckedElement();
+		if(selectedElement == false){
+			FlashHandler.setFlashMessage('Please select a reply first','error');
+			return false;
+		}
+		else if (!$('#delete-saved-reply').attr('isDestroy')) {
+			FlashHandler.setConfirmationDialog('#delete-saved-reply','Confirmation Needed', 'Are you sure?', 'isDestroy' )
+			return false;
+		}
+	});
+
+$('#delete-reminder').click(function(e){
+	var selectedElement = selectCheckedElement();
+	if(selectedElement == false){
+		FlashHandler.setFlashMessage('Please selcect a reminder first','error');
+		return false;
+	}
+	else {
+	      e.preventDefault
+	      FlashHandler.setConfirmationDialog('#delete-reminder','Are you sure, you want to delete the Reminder?', 'Delete', 'isDistroy');
+	      return false;
+			}
+	});
+
 	$('#edit-saved-reply').on('click',function(e){
 		var selectedElement = selectCheckedElement();
 		if (selectedElement == false){
 			FlashHandler.setFlashMessage('record not selected','error');
 			return false;
+		}
+		else{
+			$("#edit-saved-reply-modal").lightbox_me({
+				centered: true
+			});
 		}
 
 		var elementForm = selectedElement.closest('form');
@@ -94,6 +125,7 @@ $(document).on('ready',function(){
 			}).error(function(){
 				FlashHandler.setFlashMessage('Request cannot perform','error');
 		});
+
 
 	});
 

@@ -9,10 +9,14 @@
           <%= form_for(@user, as: resource_name, url: registration_update_user_path(@user), html: { method: :patch, class: "w-clearfix rhombusFocus", id: 'add-profile-info' }) do |f| %>
 
             <%= f.fields_for :people do |f| %>
-              <%= f.text_field :full_name, class: 'login text-field w-input', placeholder: 'Full name' %>
+              <div class="form-group">
+                <%= f.text_field :full_name, class: 'form-control login text-field w-input', placeholder: 'Full name' %>
+              </div>
             <% end %>
 
-            <%= f.text_field :org_name, class: 'login text-field w-input', placeholder: 'Business name' %>
+            <div class="form-group">
+              <%= f.text_field :org_name, class: 'form-control login text-field w-input', placeholder: 'Business name' %>
+            </div>
 
             <label class="form-label" for="Company-Size-2">Team size</label>
             <%= f.select :team_size, select_team_size, {}, class: 'form-control dropdown w-select' %>
