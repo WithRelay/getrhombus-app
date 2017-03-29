@@ -4,7 +4,9 @@
       <div class="name w-clearfix">
         <% contact_details = present(merchant_contact).contact_details %>
         <%= profile_image(contact_details[:profile_image]) %>
-        <div class="shrink-text table-text"><%= contact_details[:full_name] %></div>
+        <div class="shrink-text table-text">
+          <%= link_to contact_details[:full_name], "/users/#{current_user.id}/customers/#{merchant_contact.uid}" %>
+        </div>
       </div>
       <div class="cb check-box-column">
         <div class="w-form">
