@@ -47,7 +47,7 @@ var FlashHandler = new function() {
     $('body').prepend('<div class="'+class_name+'">\
       <div class="toaster-row w-row">\
         <div class="toaster-row-column-1 w-col w-col-11">\
-          <div class="shrink-text toaster-text">\
+          <div class="toaster-text">\
             '+message+'\
           </div>\
         </div>\
@@ -73,7 +73,7 @@ var FlashHandler = new function() {
           <img class="browser-notification customer-profile-picture" height="40" src="'+profile_pic+'" width="40">\
         </div>\
         <div class="browser-notification-row-column-2 w-clearfix w-col w-col-8">\
-          <div class="browser-notification customer-name-text shrink-text">\
+          <div class="browser-notification customer-name-text">\
             <strong class="customer-name-browser-notification">'+customer_name+'</strong>\
           </div>\
           <div class="break-word browser-notification-preview word-wrap">'+message+'</div>\
@@ -95,7 +95,7 @@ var FlashHandler = new function() {
           <img class="browser-notification customer-profile-picture" height="40" src="'+profile_pic+'" width="40">\
         </div>\
         <div class="browser-notification-row-column-2 w-clearfix w-col w-col-8">\
-          <div class="browser-notification customer-name-text shrink-text">\
+          <div class="browser-notification customer-name-text">\
             <strong class="customer-name-browser-notification">'+customer_name+'</strong>\
           </div>\
           <div class="break-word browser-notification-preview word-wrap">'+message+'</div>\
@@ -115,7 +115,7 @@ var FlashHandler = new function() {
       <img class="browser-notification customer-profile-picture" height="40" src="'+profile_pic+'" width="40">\
       <div class="payment-notification-amount">$'+amount+'</div>\
       <div class="browser-notification-close payment toaster-font-awesome"></div>\
-      <div class="payment-sender-name shrink-text">'+customer_name+'.</div>\
+      <div class="payment-sender-name">'+customer_name+'.</div>\
     </a>')
     close_browser_toastr();
   };
@@ -142,7 +142,7 @@ var FlashHandler = new function() {
       <img class="browser-notification customer-profile-picture next-receipient scheduled-jobs" height="40" src="http://uploads.webflow.com/58977e002a25945021983468/58977e002a2594502198351f_49%20(1).jpg" width="40">\
       <img class="browser-notification customer-profile-picture next-receipient scheduled-jobs" height="40" src="http://uploads.webflow.com/58977e002a25945021983468/58977e002a2594502198357c_49%20(2).jpg" width="40">\
       <div class="recipient-count-browser">\
-        <div class="number-of-recipient shrink-text">+'+no_of_recipient+'</div>\
+        <div class="number-of-recipient">+'+no_of_recipient+'</div>\
       </div>\
     </a>')
     $('.scheduled-jobs').fadeOut(10000);
