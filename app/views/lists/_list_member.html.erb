@@ -6,7 +6,11 @@
           <div class="name w-clearfix">
             <%= present(member[:user]).profile_image %>
             <div class="shrink-text table-text", style="margin-top: 3px;">
-              <%= link_to present(member[:user]).format_customer_name, "/users/#{current_user.id}/customers/#{member[:user].id}" %>
+              <% if member[:user].card_name.present? %>
+                <%= present(member[:user]).format_customer_name %>
+              <% else %>
+                <%= link_to present(member[:user]).format_customer_name, "/users/#{current_user.id}/customers/#{member[:user].id}" %>
+              <% end %>
             </div>
           </div>
           <div class="cb check-box-column">
