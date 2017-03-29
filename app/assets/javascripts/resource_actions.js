@@ -193,6 +193,7 @@ $('#delete-reminder').click(function(e){
 	$('#set-new-reminder-loader').click(function(){
     customtersSearch();
   });
+
 function customtersSearch(option = []){
   var labelSearchField = option.length < 1 ? 'description' : 'phone_number'
   var valueField = option.length < 1 ? 'uid' : 'id'
