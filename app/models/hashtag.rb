@@ -29,10 +29,11 @@ class Hashtag < ActiveRecord::Base
 
   # You need a new plan if this is a recurring hashtag
   def create_plan_for_recurring_tag(merchant)
-    return true if !self.recurring_payment_tag?
-    plan = Plan.new({ interval: self.interval, interval_count: self.interval_count, hashtag_id: self.id,
-                      amount: Toolbox::Decimal.to_cents(self.amount), name: generate_resource_name("Plan") })   
-    plan.create_plan({ team: merchant })
+    return true
+    #return true if !self.recurring_payment_tag?
+    #plan = Plan.new({ interval: self.interval, interval_count: self.interval_count, hashtag_id: self.id,
+    #                  amount: Toolbox::Decimal.to_cents(self.amount), name: generate_resource_name("Plan") })   
+    #plan.create_plan({ team: merchant })
   end
 
   # caching needed for this

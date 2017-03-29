@@ -26,6 +26,23 @@ Oswald Durant Arts Center
 - 4hr min $115/hr for residents. $135/hr, 2 staff members ($47/hr), app fee $25, security dep $500, $50 alcohol license
 - 4hr min $135/hr, 2 staff members ($47/hr), app fee $25, security dep $500, $50 alcohol license
 
+
+    fields: {
+      'campaign[name]': {
+        verbose: false,
+        validators: {
+          notEmpty: {
+            message: 'Campaign name is required'
+          },
+          remote: {
+            message: 'Campaign name already taken.',
+            url: '/v1/campaigns/check_campaign_name' + campaignId,
+            type: 'POST'
+          }
+        }
+      },
+
+      
 Surya
 - lock down permissions cancancan?
 - i see issues with reminder js
