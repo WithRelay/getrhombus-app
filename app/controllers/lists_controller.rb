@@ -1,7 +1,7 @@
 class ListsController < ApplicationController
   include DashboardNotification
 
-  before_action :set_list, only: [:show, :edit, :update, :destroy, :update_user_list]
+  before_action :set_list, only: [:show, :edit, :update, :destroy, :update_user_list, :remove_customer_contact]
   before_action :set_notifications, except: [:destroy]
 
   def index
@@ -20,6 +20,10 @@ class ListsController < ApplicationController
 
   def show
     @list_members = @list.get_users
+    unless @list_members.present?
+      flash[:error] = 'There are no members in the lists'
+      redirect_to lists_path(current_user)
+    end
   end
 
   def new
