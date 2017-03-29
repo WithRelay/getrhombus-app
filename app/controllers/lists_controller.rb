@@ -1,7 +1,7 @@
 class ListsController < ApplicationController
   include DashboardNotification
 
-  before_action :set_list, only: [:show, :edit, :update, :destroy, :update_user_list]
+  before_action :set_list, only: [:show, :edit, :update, :destroy, :update_user_list, :remove_customer_contact]
   before_action :set_notifications, except: [:destroy]
 
   def index
@@ -20,6 +20,10 @@ class ListsController < ApplicationController
 
   def show
     @list_members = @list.get_users
+    unless @list_members.present?
+      flash[:error] = 'There are no members in the lists'
+      redirect_to lists_path(current_user)
+    end
   end
 
   def new
@@ -32,11 +36,15 @@ class ListsController < ApplicationController
   def create
     @list = current_user.lists.build(list_params)
     flash[:notice] = 'List was successfully created.' if @list.save
-    respond_with(@list)
+    redirect_to list_path(current_user, @list)
   end
 
   def remove_customer_contact
-
+    get_list = get_lists(params[:list_members])
+    unless get_list.present?
+      @list.user_lists.find_by(user_id: params[:list_members]).delete
+    end
+    redirect_to list_path(current_user, @list)
   end
 
   def update
@@ -61,7 +69,8 @@ class ListsController < ApplicationController
 
 
   def delete_segment
-    if get_lists.present? && get_lists.delete_all
+    get_all_list = get_lists(params[:list_id].split(',').flatten)
+    if get_all_list.present? && get_all_list.delete_all
       flash[:notice] = "segment was successfully deleted"
     else
       flash[:error] = 'Sorry segment cannot deleted'
@@ -70,7 +79,8 @@ class ListsController < ApplicationController
   end
 
   def destroy
-    if get_lists.present? && get_lists.delete_all
+    get_all_list = get_lists(params[:list_id].split(',').flatten)
+    if get_all_list.present? && get_all_list.delete_all
       flash[:notice] = "List was successfully deleted"
     else
       flash[:error] = 'Sorry list cannot deleted'
@@ -88,8 +98,7 @@ class ListsController < ApplicationController
       @list = List.find_by_id(params[:id])
     end
 
-    def get_lists
-      list_ids = params[:list_id].split(',').flatten
+    def get_lists(list_ids)
       # sql query states that find list where id is same as array of ids from params
       # and check if those lists have associated record campaign_lists or not
       # it will return the list if there is no associated record campaign_lists

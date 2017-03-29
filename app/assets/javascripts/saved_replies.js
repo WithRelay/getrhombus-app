@@ -10,11 +10,4 @@ $(document).ready(function() {
     pickerPosition: 'bottom',
   });
 
-  // Confirmation dialog box for destroy saved reply
-  $('#delete-saved-reply').click(function(evt) {
-    if (!$('#delete-saved-reply').attr('isDestroy')) {
-      FlashHandler.setConfirmationDialog('#delete-saved-reply','Confirmation Needed', 'Are you sure?', 'isDestroy' )
-      return false;
-    }
-  });
 });

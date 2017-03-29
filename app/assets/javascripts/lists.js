@@ -1,7 +1,13 @@
 $(document).on('ready page:load', function() {
 
   $("#delete-lists").click(function(){
-    FlashHandler.setConfirmationDialog('#delete-lists','Are you sure, you want to delete selected lists?', 'Delete', 'destroy-lists');
+    var selectedUsers = getSelectedUserIds();
+    if (selectedUsers.length > 0){
+      FlashHandler.setConfirmationDialog('#delete-lists','Are you sure, you want to delete selected lists?', 'Delete', 'destroy-lists');
+    }
+    else {
+      setFlashForList('Select a list to Delete', 'error');
+    }
   });
 
   $("#send-campaign-to-lists").click(function(){
@@ -57,6 +63,7 @@ $(document).on('ready page:load', function() {
 
   $('.merchant_customers').click(function(){
     $(this).is(':checked') && $('#create_list_button').removeAttr('disabled')
+    $(':checkbox').not(this).attr('checked', false);
   });
 
   $('.edit_create_user_list').formValidation({
@@ -97,6 +104,7 @@ $(document).on('ready page:load', function() {
       }).done(function(msg){
         (msg.status == 404) && setFlashForList(msg.error.replace(/[\["\]']/g, ''), 'error');
         if (msg.status == 200){
+          window.location = msg.redirect_url;
           setFlashForList('List successfully Created', 'notice');
           $('.close-modal').click();
         }
@@ -189,6 +197,7 @@ $(document).on('ready page:load', function() {
         data: data,
         dataType: 'json'
       }).done(function(msg){
+        $('.update-close-modals').click();
         setFlashForList('Segment created successfully', 'notice');
       })
       .fail(function(msg){
@@ -263,9 +272,11 @@ $(document).on('ready page:load', function() {
   }
 
   $('.list-member-delete').click(function(e){
-    if ($(this).data('method') != 'delete')
-      FlashHandler.setConfirmationDialog('#delete-list-memebers','Are you sure, you want to delete user from lists?', 'Delete', 'destroy-list-members');
-      return false;
+    e.preventDefault();
+    var element = $($(this).parent().children()[0]);
+    var id  = element.attr('id').split('-')
+    element.attr('href', element.attr('href')+'?list_members='+id[id.length-1]);
+    FlashHandler.setConfirmationDialog('#'+element.attr('id'), 'Are you sure, you want to delete user from lists?', 'Delete', 'destroy-list-members');
   });
 
   var labelFieldSelectize = checkContactPage() ? 'phone_number' : 'email'

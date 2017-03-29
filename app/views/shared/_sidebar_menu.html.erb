@@ -21,9 +21,9 @@
       </form>
     </div>
   </div>
-  <a class="left-nav-tab-wrapper w-inline-block" href="#">
+  <%= link_to lists_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
     <div class="left-nav-tab" data-ix="display-and-hide-customers">Lists</div>
-  </a>
+  <% end %>
   <a class="left-nav-tab-wrapper w-inline-block" href="#">
     <div class="left-nav-tab messaging" data-ix="display-and-hide-left-nav">Messaging &nbsp; &nbsp; <span class="sidebar-dropdown-icon">+</span>
     </div>

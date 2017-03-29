@@ -119,12 +119,13 @@ $(document).ready(function () {
         validators: {
           notEmpty: {
             message: 'Name  is required'
-          },
-          remote: {
-            message: 'Hashtag name is already taken.',
-            url: '/v1/campaigns/check_hashtag_name',
-            type: 'POST'
-          }
+           }
+          //,
+          // remote: {
+          //   message: 'Hashtag name is already taken.',
+          //   url: '/v1/campaigns/check_hashtag_name',
+          //   type: 'POST'
+          // }
         },
       },
       'hashtag[tag]': {

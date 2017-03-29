@@ -5,7 +5,13 @@
         <div class="cn w-clearfix w-col w-col-3">
           <div class="name w-clearfix">
             <%= present(member[:user]).profile_image %>
-            <div class="shrink-text table-text"><%= present(member[:user]).format_customer_name %></div>
+            <div class="shrink-text table-text", style="margin-top: 3px;">
+              <% if member[:user].card_name.present? %>
+                <%= present(member[:user]).format_customer_name %>
+              <% else %>
+                <%= link_to present(member[:user]).format_customer_name, "/users/#{current_user.id}/customers/#{member[:user].id}" %>
+              <% end %>
+            </div>
           </div>
           <div class="cb check-box-column">
             <div class="w-form">
@@ -43,7 +49,8 @@
             <div class="frequency shrink-text table-text">Washington</div>
           </div>
           <div class="column column-6 new-row">
-            <%= link_to 'Remove', remove_customer_list_path(current_user, @list), class: "actions-button notification list-member-delete" %>
+            <%= link_to 'Remove', remove_customer_list_path(current_user, @list), id: "list-member-delete-#{member[:user].id}", class: 'w-hidden', method: :delete %>
+            <%= link_to 'Remove', '#', class: "actions-button notification list-member-delete", data: { user_id: member[:user].id } %>
           </div>
         </div>
       </div>
