@@ -75,6 +75,11 @@ $(document).on('ready',function(){
 			FlashHandler.setFlashMessage('record not selected','error');
 			return false;
 		}
+		else{
+
+			$("#edit-saved-reply-modal").lightbox_me({
+				centered: true
+			});
 
 		var elementForm = selectedElement.closest('form');
 		var reply_id = elementForm.find('#saved_reply_id').val();
@@ -94,6 +99,7 @@ $(document).on('ready',function(){
 			}).error(function(){
 				FlashHandler.setFlashMessage('Request cannot perform','error');
 		});
+	}
 
 	});
 
