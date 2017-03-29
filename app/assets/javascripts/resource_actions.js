@@ -69,6 +69,21 @@ $(document).on('ready',function(){
 		});
 	}
 
+	// Confirmation dialog box for destroy saved reply
+	$('#delete-saved-reply').click(function(evt) {
+		var selectedElement = selectCheckedElement();
+		if(selectedElement == false){
+			FlashHandler.setFlashMessage('record not selected','error');
+			return false;
+		}
+		else{
+		if (!$('#delete-saved-reply').attr('isDestroy')) {
+			FlashHandler.setConfirmationDialog('#delete-saved-reply','Confirmation Needed', 'Are you sure?', 'isDestroy' )
+			return false;
+		}
+	}
+	});
+
 	$('#edit-saved-reply').on('click',function(e){
 		var selectedElement = selectCheckedElement();
 		if (selectedElement == false){
@@ -76,10 +91,10 @@ $(document).on('ready',function(){
 			return false;
 		}
 		else{
-
 			$("#edit-saved-reply-modal").lightbox_me({
 				centered: true
 			});
+		}
 
 		var elementForm = selectedElement.closest('form');
 		var reply_id = elementForm.find('#saved_reply_id').val();
@@ -99,7 +114,7 @@ $(document).on('ready',function(){
 			}).error(function(){
 				FlashHandler.setFlashMessage('Request cannot perform','error');
 		});
-	}
+
 
 	});
 
