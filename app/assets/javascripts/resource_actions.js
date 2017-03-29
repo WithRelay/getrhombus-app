@@ -96,6 +96,7 @@ $('#delete-reminder').click(function(e){
 	});
 
 	$('#edit-saved-reply').on('click',function(e){
+
 		var selectedElement = selectCheckedElement();
 		if (selectedElement == false){
 			FlashHandler.setFlashMessage('record not selected','error');
@@ -125,9 +126,49 @@ $('#delete-reminder').click(function(e){
 			}).error(function(){
 				FlashHandler.setFlashMessage('Request cannot perform','error');
 		});
-
-
 	});
+
+
+	$('#edit-reminder').on('click', function(){
+		debugger;
+		var selectedElement = selectCheckedElement();
+
+		if (selectedElement == false){
+			FlashHandler.setFlashMessage('record not selected','error');
+			return false;
+		}else{
+			$("#edit-reminder-modal").lightbox_me({
+				centered: true
+			});
+		}
+
+		var elementForm = selectedElement.closest('form');
+		var reminder_id = elementForm.find("#reminder_id").val();
+
+		 $.ajax({
+			 url:  "/v1/reminders/" + reminder_id + "/edit" ,
+			 data:{id: reminder_id}
+		 }).done(function(res){
+			var form = $('.editReminderFrom');
+			var action = form.attr("action");
+			var reminder = res.reminder
+			var reminder_lists = res.reminder_lists;
+			var newAction = window.location.origin + '/users/' + action.split('/')[2] + '/reminders/' + reminder_id;
+			customtersSearch(reminder_lists);
+			var selectField = $('.editReminderFrom .search-customers-and-contacts')[0].selectize;
+			selectField.addItem(reminder_lists[0].id, false);
+			form.find("#Notification-Message").val(reminder.text);
+			form.find(".emojionearea-editor").text(reminder.text);
+			form.attr("action", newAction);
+
+			var raw_date_time = reminder.date_time;
+			var date_time = new Date(raw_date_time);
+			var formated_date_time = formatDate(date_time);
+			form.find("#reminder-date-time").val(formated_date_time);
+		 }).error(function(){
+				// alert("")
+		 })
+	 });
 
   function selectCheckedElement(){
 		var checkedElement = false;
