@@ -50,7 +50,7 @@ class RegistrationsController < Devise::RegistrationsController
     begin
       resource.save
     rescue ActiveRecord::RecordNotUnique
-      resource.errors.add(:phone_number, "is already in use.") if $!.message.include?('index_users_on_phone_number')
+      resource.errors.add(:phone_number, "is already in use") if $!.message.include?('index_users_on_phone_number')
     end
   end
 
@@ -78,7 +78,9 @@ class RegistrationsController < Devise::RegistrationsController
       subscription = create_saas_subscription
       msg = (subscription.third ? subscription.third : "We are unable to start a subscription for you") unless subscription.first
     elsif set_update_flash_messages[:rhombus_number].present? && current_user.is_merchant?
-      current_user.buy_number(params)
+      unless current_user.buy_number(params['user'])
+       msg = 'Something went wrong. We were unable to provision a number for you. A member of our support team will contact you shortly.'
+      end
     elsif set_update_flash_messages[:card_info].present? && current_user.is_customer?
       set_captured_payment_session
       user_card = current_user.add_token_to_user(params[:user][:card_token])
@@ -159,7 +161,7 @@ class RegistrationsController < Devise::RegistrationsController
                                       },
                     add_rhombus_number: {
                                           success: 'Rhombus number added',
-                                          error: 'We are unable to provision a number for you.',
+                                          error: 'Something went wrong. We were unable to provision a number for you. A member of our support team will contact you shortly.',
                                           rhombus_number: true
                                         },
                     add_card_info: {
@@ -202,7 +204,7 @@ class RegistrationsController < Devise::RegistrationsController
         resource.update_without_password(user_params)
       end
     rescue ActiveRecord::RecordNotUnique
-      resource.errors.add(:phone_number, "is already in use.") if $!.message.include?('index_users_on_phone_number')
+      resource.errors.add(:phone_number, "is already in use") if $!.message.include?('index_users_on_phone_number')
       false
     end
   end

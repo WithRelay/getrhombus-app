@@ -67,7 +67,7 @@ Rails.application.routes.draw  do
       resources :subscriptions do
         get 'download' => 'subscriptions#download_csv', constraints: { format: 'csv' }, on: :collection
       end
-      resource :away_message, only: [:create, :show, :update]
+      resource :away_message, only: [:show, :update]
       resources :plans, only: [:index, :destroy]
       resources :alerts, only: [:update]
       resources :saved_replies

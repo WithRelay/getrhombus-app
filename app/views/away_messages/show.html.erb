@@ -4,14 +4,8 @@
   <div class="dash-content-container settings">
     <h4 class="form-header">Away Messages</h4>
     <div class="flex-underline form-header-underline"></div>
-    <div class="account-settings-form-wrapper w-form">
-        <%= render partial: 'form', locals: { away_message: @away_message } %>
-      <div class="w-form-done">
-        <div>Thank you! Your submission has been received!</div>
-      </div>
-      <div class="w-form-fail">
-        <div>Oops! Something went wrong while submitting the form</div>
-      </div>
+    <div class="account-settings-form-wrapper">
+      <%= render partial: 'form', locals: { away_message: @away_message } %>
     </div>
   </div>
 </div>

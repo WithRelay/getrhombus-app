@@ -60,6 +60,7 @@ class TwilioEvent
         end
 
         Conversation.find_or_create_conversation_for_message_and_publish(@merchant, user, uid_type, uid, @message, true)
+        @merchant.away_message.check_office_hours(@merchant, user, uid_type, uid, "Message")
         MessageParser.new.process_message(@merchant, user, @message, 'Message')
 
       rescue ActiveRecord::RecordNotUnique
