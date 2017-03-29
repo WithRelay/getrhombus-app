@@ -38,7 +38,7 @@ class Api::V1::ListsController < API::V1::BaseController
         selected_users_id.each { |user_id| list.user_lists.build(user_id: user_id) }
         # list also save associated record
         message = if list.save
-                    { notice: 'List saved successfully', status: 200 }
+                    { notice: 'List saved successfully', status: 200, redirect_url: list_url(current_user, list) }
                   else
                     { error: list.errors.full_messages.to_json, status: 404 }
                   end
