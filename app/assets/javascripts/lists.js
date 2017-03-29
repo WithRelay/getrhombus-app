@@ -104,6 +104,7 @@ $(document).on('ready page:load', function() {
       }).done(function(msg){
         (msg.status == 404) && setFlashForList(msg.error.replace(/[\["\]']/g, ''), 'error');
         if (msg.status == 200){
+          window.location = msg.redirect_url;
           setFlashForList('List successfully Created', 'notice');
           $('.close-modal').click();
         }
@@ -196,6 +197,7 @@ $(document).on('ready page:load', function() {
         data: data,
         dataType: 'json'
       }).done(function(msg){
+        $('.update-close-modals').click();
         setFlashForList('Segment created successfully', 'notice');
       })
       .fail(function(msg){
