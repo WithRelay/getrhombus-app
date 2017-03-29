@@ -39,8 +39,8 @@ Surya
 - do some more routes cleanup if possible
 - when you uncomment this line in routes  # authenticate :user, -> (user) { CheckUser::RouteAuthentication.new(user).should_authenticate? } do, pages become unreachable i believe.
 - campaign toastrs - plug and play. already wrote the code for you. see realtimeservice.rb and notifications.js
-- tooltip for campaigns
-- time comparisons are tricky
+- tooltip for campaigns - leave for noe
+- time comparisons are tricky...make sure to do to_i because rails compares time as floats
 
 Dorje
 - graph - empty state and changes
