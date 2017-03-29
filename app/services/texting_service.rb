@@ -41,33 +41,26 @@ class TextingService
     end
 
     def buy_number(params)
-      #begin  
+      begin  
         client = Twilio::REST::Client.new TWILIO_API_KEY, TWILIO_API_SECRET
         re = search_number(params)
-        puts re.inspect
-        puts 'asdsadjhasdkhasjkdhasjkdhkjhjkah'
         if re[:number].present?
           re = client.account.incoming_phone_numbers.create(phone_number: re[:number], voice_application_sid: TWILIO_RHOMBUS_APP_SID,
                 sms_application_sid: TWILIO_RHOMBUS_APP_SID)    
-          puts re.inspect
-          puts re.phone_number
-          puts 'xxxxxxxxxxxxxxx'
           return re.phone_number.gsub('+', ''), re.friendly_name
         end
-      #rescue StandardError => e
-      #end
+      rescue StandardError => e
+      end
       false
     end
 
     def search_number(params)
-     # begin
+      begin
         # https://www.twilio.com/help/faq/phone-numbers/which-countries-does-twilio-have-phone-numbers-in-and-what-are-their-capabilities
         client = Twilio::REST::Client.new TWILIO_API_KEY, TWILIO_API_SECRET
         
         search_params = {}
         search_params[ ((['US', 'CA'].include? params[:country]) ? 'area_code' : 'contains').to_sym ] = params[:query]
-        puts params.inspect
-        puts 'adasdas'
         data = twilio_list[params[:country].to_sym][:types][params[:type].to_sym]
         data[:capabilities].each { |c| search_params[(c + '_enabled').to_sym] = "true" }
         search_params[:exclude_all_address_required] = "true" if data[:address_required] == ""
@@ -81,15 +74,16 @@ class TextingService
         end
 
         { number: number.nil? ? '' : number.phone_number  }
-      #rescue StandardError => e
-       # { error: e.message }
-      #end
+      rescue StandardError => e
+        { error: e.message }
+      end
     end
 
     def number_lookup(num)
       begin
         client = Twilio::REST::Client.new TWILIO_API_KEY, TWILIO_API_SECRET
         number = client.lookups.v1.phone_numbers(num).fetch
+        #number.national_format
         [number.phone_number[1..-1], number.country_code]
       rescue StandardError => e
         false
