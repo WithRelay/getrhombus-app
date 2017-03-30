@@ -18,19 +18,19 @@
       </div>
 
 
-      <%= f.label :hashtag, class: 'editor-options form-label' do %>
+      <%= f.label :hashtag, class: 'editor-options form-label lebel_padding' do %>
          &nbsp; Hashtag
       <% end %>
       <div class='form-group col-xs-6'>
         <%= f.text_field :tag, class: 'form-control editor text-field w-input', placeholder: 'E.g. #CheeseBurger' %>
       </div>
 
-      <%= f.label :description, class: "editor-options form-label" do %>
+      <%= f.label :description, class: "editor-options form-label lebel_padding" do %>
          &nbsp; Description
       <% end %>
       <%= f.text_area :description, class: 'hashtag-description-area text-area w-input', placeholder: 'E.g. Burger with bacon & extra bun' %>
 
-      <label class="editor-options form-label" > &nbsp; Type</label>
+      <label class="editor-options form-label lebel_padding" > &nbsp; Type</label>
       <%= f.select :tag_type, options_for_select(present(@hashtag).get_tag_type_options, selected: present(@hashtag).get_tag_type_value), {}, { class: "dropdown editor-dropdown w-select" } %>
 
       <div class="hashtag-payment-settings">
@@ -56,7 +56,7 @@
       </div>
 
 
-      <div class="check-box editor w-checkbox w-clearfix">
+      <div class="check-box editor w-checkbox w-clearfix lebel_padding">
         <%= f.check_box :enable_tweet, class: "w-checkbox-input" %><label class="check-radio-text w-form-label" for="Deliver-now-2">Enable Tweet</label>
       </div>
 
