@@ -67,16 +67,6 @@ $(document).ready(function () {
     $(buttonId).text(status[statusName])
   }
 
-  $('#delete-hashtag').click(function(e) {
-    FlashHandler.setConfirmationDialog('#delete-hashtag','Are you sure, you want to remove the hashtag?', 'Delete', 'isDistroy');
-    return false;
-  });
-
-  $('#deactivate-hashtag').click(function() {
-    FlashHandler.setConfirmationDialog('#deactivate-hashtag','Are you sure, you want to deactivate the hashtag?', 'Deactivate', 'isDeactivate');
-    return false;
-  });
-
   // decimal with two places
   $('#hashtag_amount, #Plan-Amount, #charge-amount').on('input', function(e){
     $(this).val(function(_, v) {
