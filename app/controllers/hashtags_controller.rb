@@ -5,7 +5,7 @@ class HashtagsController < ApplicationController
   respond_to :html
 
   def index
-    @hashtags = current_user.hashtags.paginate(per_page: PAGINATION_PER_PAGE,
+    @hashtags = current_user.hashtags.order(created_at: :desc).paginate(per_page: PAGINATION_PER_PAGE,
                                                page: params[:page])
                                               #  .order('updated_at DESC')
     @hashtags.present? ? render_requested_format(@hashtags) : render(:empty_hashtag)
