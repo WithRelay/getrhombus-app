@@ -97,7 +97,7 @@ $('#delete-reminder').click(function(e){
 	$('#delete-hashtag').click(function(e) {
 		var selectedElement = selectCheckedElement();
 		if(selectedElement == false){
-			FlashHandler.setFlashMessage('Please selcect a hashtag to delete','error');
+			FlashHandler.setFlashMessage('Select a hashtag to delete','error');
 			return false;
 		}else{
 			FlashHandler.setConfirmationDialog('#delete-hashtag','Are you sure, you want to remove the hashtag?', 'Delete', 'isDistroy');
@@ -109,7 +109,7 @@ $('#delete-reminder').click(function(e){
   $('#deactivate-hashtag').click(function() {
 		var selectedElement = selectCheckedElement();
 		if(selectedElement == false){
-			FlashHandler.setFlashMessage('Please selcect a hashtag to deactivate','error');
+			FlashHandler.setFlashMessage('Select a hashtag to deactivate','error');
 			return false;
 		}else{
 	    FlashHandler.setConfirmationDialog('#deactivate-hashtag','Are you sure, you want to deactivate the hashtag?', 'Deactivate', 'isDeactivate');
