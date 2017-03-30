@@ -2,7 +2,9 @@
 <div class="dashboard-body">
   <div class="blank-page-container w-container">
     <%= image_tag 'Wallet.png', class: 'blank-page-icon' %>
-    <h1 class="empty-state-dash hero-h1 home-header">You have no transactions. <br>Connect your bank account to get started</h1>
+    <h1 class="empty-state-dash hero-h1 home-header">
+      <%= empty_transaction_text %>
+    </h1>
     <%= link_to 'Customer dashboard', account_settings_user_path(current_user), class: 'button error-page-button w-button' %>
   </div>
 </div>
