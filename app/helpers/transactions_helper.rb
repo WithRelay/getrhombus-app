@@ -61,4 +61,12 @@ module TransactionsHelper
     end
   end
 
+  def empty_transaction_text
+    if params[:captured] == 'false'
+      "You have no pre-authorized transactions.".html_safe
+    else
+      "You have no transactions. <br>Connect your bank account to get started".html_safe
+    end
+  end
+
 end
