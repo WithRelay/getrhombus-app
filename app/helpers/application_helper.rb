@@ -32,7 +32,9 @@ module ApplicationHelper
                           'fb_pages-index' => 'FB Integrations',
                           'lists-show' => @list.try(:name),
                           # 'merchant_contacts-index' => 'Leads & Contacts',
-                          'campaigns-index' => 'Campaigns'
+                          'campaigns-index' => 'Campaigns',
+                          'transactions-index' => "Charges",
+                          'subscriptions-index' => 'subscriptions'
                         }
     sidebar_name_hash["#{param}"]
   end
