@@ -248,5 +248,4 @@ function customtersSearch(option = []){
     }
   });
 }
-
 });
