@@ -64,6 +64,7 @@ $(document).on('ready',function(){
 			dataType: 'json'
 		}).done(function(res){
 			FlashHandler.setFlashMessage(res.notice,'notice');
+			location.reload();
 			}).error(function(res){
 				FlashHandler.setFlashMessage(res.error, 'error');
 		});
@@ -85,7 +86,7 @@ $(document).on('ready',function(){
 $('#delete-reminder').click(function(e){
 	var selectedElement = selectCheckedElement();
 	if(selectedElement == false){
-	FlashHandler.setFlashMessage('Select a reminder to delet','error');
+	FlashHandler.setFlashMessage('Select a reminder to delete','error');
 	return false;
 }else {
 	      e.preventDefault
