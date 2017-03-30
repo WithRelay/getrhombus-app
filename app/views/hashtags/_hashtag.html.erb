@@ -3,9 +3,9 @@
     <div class="alt-column w-clearfix w-col w-col-3">
       <div class="title-column-div w-clearfix">
       <% if hashtag.inactive? %>
-        <div class=" deactivated-text shrink-text table-text"><%= hashtag.id %></div>
+        <div class=" deactivated-text shrink-text table-text"><%= hashtag.tag %></div>
       <% else %>
-        <div class="shrink-text table-text"><%= hashtag.id %></div>
+        <div class="shrink-text table-text"><%= hashtag.tag %></div>
       <% end %>
       </div>
       <div class="alt-table cb check-box-column">
