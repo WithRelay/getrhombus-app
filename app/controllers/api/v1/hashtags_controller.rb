@@ -17,7 +17,7 @@ class Api::V1::HashtagsController < API::V1::BaseController
 
   # Check uniqueness of campaign name from remote post request from campaign_form_validator.js
   def check_hashtag_name
-    render json: { valid: current_user.hashtags.where("lower(name) = ?", params[:hashtag][:name].downcase).exist? }
+    render json: { valid: current_user.hashtags.where("lower(name) = ?", params[:hashtag][:name].downcase).blank? }
   end
 
   def create

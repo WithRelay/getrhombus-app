@@ -73,7 +73,9 @@
             <div class="transaction-column w-clearfix w-col w-col-3">
               <div class="card-name transaction-cell subs-card-name">
                 <%= present(subscription.merchant_customer).profile_image %>
-                <div class="table-text customer-name"><%= customer.card_name %></div>
+                <div class="table-text customer-name">
+                  <%= link_to "#{present(subscription.merchant_customer).format_customer_name}", "customers/#{subscription.merchant_customer.customer_id}", class: 'non-underline-link', action: "show" %>
+                </div>
               </div>
               <div class="cb check-box-column">
                 <div class="w-form">

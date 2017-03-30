@@ -1,320 +1,210 @@
+<div class="customer-profile dashboard-nav w-clearfix">
+  <div class="dashboard-logo-wrapper">
+    <%= link_to root_url do %>
+      <%= image_tag 'Relay-Transparent-500x300.png', class: "dashboard-logo", width: "50" %>
+    <% end %>
+  </div>
+  <div class="dashboard-nav-links-wrapper messaging-dashboard">
+    <a class="w-clearfix w-inline-block" href="#">
+      <%= link_to user_path(current_user), class: 'dash-header-links' do %>
+         &nbsp;<strong>Dashboard</strong>
+      <% end %>
+      <%= link_to customers_user_path(current_user), class: 'dash-header-links new-link' do %>
+         &nbsp;<strong>All &nbsp;customers</strong>
+      <% end %>
+      <%= link_to customers_user_path(current_user), class: 'dash-header-links new-link' do %>
+         &nbsp;<strong>New &nbsp;customers</strong>
+      <% end %>
+      <%= render "shared/rhombus_number" %>
+    </a>
+  </div>
+  <div class="dashboard-nav-links-wrapper new-tab right-nav settings-dropdown">
+    <div class="dropdown-wrapper w-dropdown" data-delay="0">
+      <%= render 'shared/settings_dropdown' %>
+    </div>
+  </div>
+</div>
 <div class='modal-background w-hidden modal-body new-reminder-modal'>
   <%= render partial: 'shared/modals/new_reminder', locals: { reminder: Reminder.new }  %>
 </div>
 
- <div class="customer-profile sub-nav-bar w-clearfix">
-   <a class="add sub-nav-button w-button modal-loader" href="#" modal-target= "charge-customer-modal">&nbsp; <strong>Charge</strong></a>
-   <div class='modal-background w-hidden modal-body charge-customer-modal'>
-     <%= render 'shared/modals/charge_customer' %>
-   </div>
-   <a class="import sub-nav-button w-button modal-loader" href="#" modal-target= 'new-subscription-modal' >&nbsp; <strong>Create subscription</strong></a>
-   <div class='modal-background w-hidden modal-body new-subscription-modal'>
-     <%= render 'shared/modals/new_subscription' %>
-   </div>
-   <a class="sub-nav-button w-button modal-loader" href="#" modal-target="add-to-list-modal"> &nbsp;<strong>Add to&nbsp;list</strong></a>
-   <div class='modal-background w-hidden modal-body add-to-list-modal'>
-     <%= render 'shared/modals/add_to_list' %>
-   </div>
-   <a class="sub-nav-button w-button modal-loader" href="#" modal-target="schedule-message-modal" > &nbsp;<strong>Schedule message</strong></a>
-   <div class='modal-background w-hidden modal-body schedule-message-modal'>
-     <%= render 'shared/modals/schedule_message' %>
-   </div>
- </div>
-  <div class="customer-profile dashboard-body">
-    <div class="customer-profile-section-header w-row">
-      <div class="w-col w-col-3">
-        <div class="customer-properties-div">
-          <div class="right-nav-profile-content-wrapper">
-            <%#= present(@customer).profile_image %>
-            <!-- we may need present method to dispaly color  -->
-          <%= image_tag(@user_snapshot[:profile_image][:value], class: 'class: profile-picture-right-nav', width: 50 )%>
+<div class="customer-profile sub-nav-bar w-clearfix">
+  <a class="add sub-nav-button w-button modal-loader" href="#" modal-target= "charge-customer-modal">&nbsp; <strong>Charge</strong></a>
+  <div class='modal-background w-hidden modal-body charge-customer-modal'>
+   <%= render 'shared/modals/charge_customer' %>
+  </div>
+  <a class="import sub-nav-button w-button modal-loader" href="#" modal-target= 'new-subscription-modal' >&nbsp; <strong>Create subscription</strong></a>
+  <div class='modal-background w-hidden modal-body new-subscription-modal'>
+   <%= render 'shared/modals/new_subscription' %>
+  </div>
+  <a class="sub-nav-button w-button modal-loader" href="#" modal-target="add-to-list-modal"> &nbsp;<strong>Add to&nbsp;list</strong></a>
+  <div class='modal-background w-hidden modal-body add-to-list-modal'>
+   <%= render 'shared/modals/add_to_list' %>
+  </div>
+  <a class="sub-nav-button w-button modal-loader" href="#" modal-target="schedule-message-modal" > &nbsp;<strong>Schedule message</strong></a>
+  <div class='modal-background w-hidden modal-body schedule-message-modal'>
+   <%= render 'shared/modals/schedule_message' %>
+  </div>
+</div>
+<div class="customer-profile dashboard-body">
+  <div class="customer-profile-section-header w-row">
+    <div class="w-col w-col-3">
+      <div class="customer-properties-div">
+        <div class="right-nav-profile-content-wrapper">
+          <%#= present(@customer).profile_image %>
+          <!-- we may need present method to dispaly color  -->
+          <%= image_tag(@user_snapshot[:profile_image][:value], class: 'class: profile-picture-right-nav', width: 60 )%>
 
-            <div class="dashboard-right-nav signup-box-subheading"><%= "#{@user_snapshot[:full_name]}"%> <span class="relay-id"><%= "#{@user_snapshot[:verified]}" %></span>
-            </div>
-            <div class="left-column-text number"> &nbsp; &nbsp;<%= "#{@user_snapshot[:phone_number]}" %></div>
-            <div class="left-column-text"> &nbsp; &nbsp; <%= "#{@user_snapshot[:email]}" %></div>
-            <div class="left-column-text"> &nbsp; &nbsp; &nbsp; <%= "#{@user_snapshot[:location]}" %></div>
-            <div class="left-column-text"> &nbsp; &nbsp; <%= "#{@user_snapshot[:twitter]}" %></div>
-            <div class="left-column-text"> &nbsp; &nbsp; Customer since: <%= "#{@user_snapshot[:since][:date]}"%></div>
-            <div class="right-nav-underline"></div>
+          <div class="dashboard-right-nav signup-box-subheading"><%= "#{@user_snapshot[:full_name]}"%> <span class="relay-id"><%= "#{@user_snapshot[:verified]}" %></span>
           </div>
-          <div class="customer-profile profile-info-wrapper">
-            <h1 class="dashboard-right-nav recent-activity signup-box-subheading">RECENT ACTIVITY</h1>
-            <div class="recent-activity right-nav-row w-row">
-              <div class="left-column w-col w-col-6">
-                <div class="left-column-text recent-activity">Last &nbsp;Contact</div>
-              </div>
-              <div class="right-column w-col w-col-6">
-                <div class="recent-activity-description"><%= @last_conv_ref ? time_in_relative_form(@last_conv_ref.created_at, 'long_format') : "-" %></div>
-              </div>
+          <div class="left-column-text number"> &nbsp; &nbsp;<%= "#{@user_snapshot[:phone_number]}" %></div>
+          <div class="left-column-text"> &nbsp; &nbsp; <%= "#{@user_snapshot[:email]}" %></div>
+          <div class="left-column-text"> &nbsp; &nbsp; &nbsp; <%= "#{@user_snapshot[:location]}" %></div>
+          <div class="left-column-text"> &nbsp; &nbsp; <%= "#{@user_snapshot[:twitter]}" %></div>
+          <div class="left-column-text"> &nbsp; &nbsp; Customer since: <%= "#{@user_snapshot[:since][:date]}"%></div>
+          <div class="right-nav-underline"></div>
+        </div>
+        <div class="customer-profile profile-info-wrapper">
+          <h1 class="dashboard-right-nav recent-activity signup-box-subheading">RECENT ACTIVITY</h1>
+          <div class="recent-activity right-nav-row w-row">
+            <div class="left-column w-col w-col-6">
+              <div class="left-column-text recent-activity">Last &nbsp;Contact</div>
             </div>
-            <div class="recent-activity right-nav-row w-row">
-              <div class="left-column w-col w-col-5">
-                <div class="left-column-text recent-activity">Reason</div>
-              </div>
-              <div class="right-column w-col w-col-7">
-                <div class="recent-activity-description"><%= @last_message_resolution %></div>
-              </div>
+            <div class="right-column w-col w-col-6">
+              <div class="recent-activity-description"><%= @last_conv_ref ? time_in_relative_form(@last_conv_ref.created_at, 'long_format') : "-" %></div>
             </div>
-            <div class="payment recent-activity right-nav-row w-row">
-              <div class="left-column w-col w-col-5">
-                <div class="left-column-text recent-activity">Last &nbsp;Transaction</div>
-              </div>
-              <div class="right-column w-col w-col-7">
-                <div class="recent-activity-description"><%= @last_transaction ? present(@last_transaction).format_created_at : '-' %></div>
-              </div>
-            </div>
-            <div class="recent-activity right-nav-row w-row">
-              <div class="left-column w-col w-col-6">
-                <div class="left-column-text recent-activity">Amount</div>
-              </div>
-              <div class="right-column w-col w-col-6">
-                <div class="recent-activity-description">
-                  <%= @last_transaction ? present(@last_transaction).format_txn_amount : "-" %>
-                </div>
-              </div>
-            </div>
-            <div class="right-nav-underline"></div>
           </div>
+          <div class="recent-activity right-nav-row w-row">
+            <div class="left-column w-col w-col-5">
+              <div class="left-column-text recent-activity">Reason</div>
+            </div>
+            <div class="right-column w-col w-col-7">
+              <div class="recent-activity-description"><%= @last_message_resolution %></div>
+            </div>
+          </div>
+          <div class="payment recent-activity right-nav-row w-row">
+            <div class="left-column w-col w-col-5">
+              <div class="left-column-text recent-activity">Last &nbsp;Transaction</div>
+            </div>
+            <div class="right-column w-col w-col-7">
+              <div class="recent-activity-description"><%= @last_transaction ? present(@last_transaction).format_created_at : '-' %></div>
+            </div>
+          </div>
+          <div class="recent-activity right-nav-row w-row">
+            <div class="left-column w-col w-col-6">
+              <div class="left-column-text recent-activity">Amount</div>
+            </div>
+            <div class="right-column w-col w-col-6">
+              <div class="recent-activity-description">
+                <%= @last_transaction ? present(@last_transaction).format_txn_amount : "-" %>
+              </div>
+            </div>
+          </div>
+          <div class="right-nav-underline"></div>
         </div>
       </div>
-      <div class="w-col w-col-5">
-        <div class="customer-profile-section-header-div">
-          <h4 class="welcome-dash-content-container-header">Conversation History</h4>
-        </div>
-        <% @conversation_refs.each do |conversation_ref| %>
-          <a class="conversation-history-link-wrapper w-inline-block" href="#">
-            <div class="customer-profile-conversation-history top w-container">
-              <div class="conversation-content-wrapper w-row">
-                <div class="w-col w-col-1">
-                  <div class="icon-cell"></div>
-                </div>
-                <div class="w-clearfix w-col w-col-11">
-                  <div class="customer-name-conversation-tab"><%= present(@customer).format_customer_name %></div>
-                  <div class="said-text">said:</div>
-                  <p class="conversation-preview"><%= present(conversation_ref).format_textable_text %></p>
-                  <div class="message-channel"> &nbsp; Sent from</div>
-                  <div class="channel-name message-channel"><%= present(conversation_ref).channel %></div>
-                  <div class="message-channel time-received"><%= present(conversation_ref).format_created_at %></div>
-                  <div class="status"><%= present(conversation_ref).format_resolution %></div>
-                </div>
-              </div>
-            </div>
-          </a>
-        <% end %>
+    </div>
+    <div class="w-col w-col-5">
+      <div class="customer-profile-section-header-div">
+        <h4 class="welcome-dash-content-container-header">Conversation History</h4>
       </div>
-      <div class="w-col w-col-4">
-        <div class="customer-transactions-div overlow-div">
-          <div class="customer-profile-section-header-div transaction-history-section">
-            <h4 class="welcome-dash-content-container-header">Transaction History</h4>
-          </div>
-          <div class="transaction-summary-table w-row">
-            <div class="w-col w-col-6">
-              <div class="customer-profile-box total-spend">
-                <div class="total-spend-text transaction-history-box-headers">
-                  <%= present(@customer).total_transaction %>
-                </div>
-                <div class="table-description">Total Spend</div>
+      <% @conversation_refs.each do |conversation_ref| %>
+        <a class="conversation-history-link-wrapper w-inline-block" href="#">
+          <div class="customer-profile-conversation-history top w-container">
+            <div class="conversation-content-wrapper w-row">
+              <div class="w-col w-col-1">
+                <div class="icon-cell"></div>
               </div>
-            </div>
-            <div class="w-col w-col-6">
-              <div class="average-spend customer-profile-box">
-                <div class="average-spend-text transaction-history-box-headers">
-                  <%= present(@customer).average_transaction %>
-                </div>
-                <div class="table-description">Average Spend</div>
+              <div class="w-clearfix w-col w-col-11">
+                <div class="customer-name-conversation-tab"><%= present(@customer).format_customer_name %></div>
+                <div class="said-text">said:</div>
+                <p class="conversation-preview"><%= present(conversation_ref).format_textable_text %></p>
+                <div class="message-channel"> &nbsp; Sent from</div>
+                <div class="channel-name message-channel"><%= present(conversation_ref).channel %></div>
+                <div class="message-channel time-received"><%= present(conversation_ref).format_created_at %></div>
+                <div class="status"><%= present(conversation_ref).format_resolution %></div>
               </div>
             </div>
           </div>
-          <div class="customer-profile-transactions">
+        </a>
+      <% end %>
+    </div>
+    <div class="w-col w-col-4">
+      <div class="customer-transactions-div overlow-div">
+        <div class="customer-profile-section-header-div transaction-history-section">
+          <h4 class="welcome-dash-content-container-header">Transaction History</h4>
+        </div>
+        <div class="transaction-summary-table w-row">
+          <div class="w-col w-col-6">
+            <div class="customer-profile-box total-spend">
+              <div class="total-spend-text transaction-history-box-headers">
+                <%= present(@customer).total_transaction %>
+              </div>
+              <div class="table-description">Total Spend</div>
+            </div>
+          </div>
+          <div class="w-col w-col-6">
+            <div class="average-spend customer-profile-box">
+              <div class="average-spend-text transaction-history-box-headers">
+                <%= present(@customer).average_transaction %>
+              </div>
+              <div class="table-description">Average Spend</div>
+            </div>
+          </div>
+        </div>
+        <div class="customer-profile-transactions">
+          <div class="customer-profile-trasaction-table w-row">
+            <div class="w-col w-col-5">
+              <div class="description header">
+                <div class="headings transaction-description"> &nbsp; Description</div>
+              </div>
+            </div>
+            <div class="w-col w-col-2">
+              <div class="amount header">
+                <div class="headings transaction-amount">Amount</div>
+              </div>
+            </div>
+            <div class="w-col w-col-2">
+              <div class="date header">
+                <div class="headings transaction-time">Time</div>
+              </div>
+            </div>
+            <div class="w-col w-col-3">
+              <div class="action header">
+                <div class="actions headings">Actions</div>
+              </div>
+            </div>
+          </div>
+          <% @transactions.each do |transaction| %>
             <div class="customer-profile-trasaction-table w-row">
               <div class="w-col w-col-5">
-                <div class="description header">
-                  <div class="headings transaction-description"> &nbsp; Description</div>
+                <div class="description w-clearfix">
+                  <div class="shrink-text table-text unread-table"><%= transaction.description %></div>
                 </div>
               </div>
               <div class="w-col w-col-2">
-                <div class="amount header">
-                  <div class="headings transaction-amount">Amount</div>
+                <div class="amount w-clearfix">
+                  <div class="shrink-text table-text unread-table tran-amount">$<%= transaction.amount || 0 %></div>
                 </div>
               </div>
               <div class="w-col w-col-2">
-                <div class="date header">
-                  <div class="headings transaction-time">Time</div>
+                <div class="date w-clearfix">
+                  <div class="table-text unread-table shrink-text"><%= time_in_relative_form(transaction.created_at, 'short_ago_format') %></div>
                 </div>
               </div>
               <div class="w-col w-col-3">
-                <div class="action header">
-                  <div class="actions headings">Actions</div>
+                <div class="action w-clearfix">
+                  <a class="actions status modal-loader customer-profile-refund-btn" modal-target= 'refund_customer_modal' data-txn-number="<%= transaction.txn_number %>"
+                  data-txn-last4="<%= transaction.last4 %>">Refund</a>
                 </div>
               </div>
             </div>
-            <% @transactions.each do |transaction| %>
-              <div class="customer-profile-trasaction-table w-row">
-                <div class="w-col w-col-5">
-                  <div class="description w-clearfix">
-                    <div class="shrink-text table-text unread-table"><%= transaction.description %></div>
-                  </div>
-                </div>
-                <div class="w-col w-col-2">
-                  <div class="amount w-clearfix">
-                    <div class="shrink-text table-text unread-table tran-amount">$<%= transaction.amount || 0 %></div>
-                  </div>
-                </div>
-                <div class="w-col w-col-2">
-                  <div class="date w-clearfix">
-                    <div class="table-text unread-table shrink-text"><%= time_in_relative_form(transaction.created_at, 'short_ago_format') %></div>
-                  </div>
-                </div>
-                <div class="w-col w-col-3">
-                  <div class="action w-clearfix">
-                    <a class="actions status modal-loader customer-profile-refund-btn" modal-target= 'refund_customer_modal' data-txn-number="<%= transaction.txn_number %>"
-                    data-txn-last4="<%= transaction.last4 %>">Refund</a>
-                  </div>
-                </div>
-              </div>
-             <% end %>
-              <div class='modal-background w-hidden modal-body refund_customer_modal'>
-               <%= render 'shared/modals/refund_customer' %>
-             </div>
-          </div>
+           <% end %>
+            <div class='modal-background w-hidden modal-body refund_customer_modal'>
+             <%= render 'shared/modals/refund_customer' %>
+           </div>
         </div>
       </div>
     </div>
   </div>
-  <div class="dashboard-nav w-clearfix">
-    <div class="dashboard-logo-wrapper">
-      <%= link_to root_url do %>
-        <%= image_tag('relay-6.png', class: 'dashboard-logo', width: 50) %>
-      <% end %>
-    </div>
-    <div class="dashboard-nav-links-wrapper">
-      <a class="w-clearfix w-inline-block" href="#">
-        <div class="dash-header-links"> &nbsp; <strong>Dashboard</strong>
-        </div>
-        <div class="dash-header-links new-link"> &nbsp;<strong>All &nbsp;customers</strong>
-        </div>
-        <div class="dash-header-links new-link">&nbsp; &nbsp;<strong>Transactions</strong>
-        </div>
-        <div class="dash-header-links new-link">&nbsp; &nbsp;<strong>List</strong>
-        </div>
-        <div class="dash-header-links new-link">&nbsp; &nbsp;<strong>Conversations</strong>
-        </div>
-        <div class="dash-header-links new-link relay-nav-number-display">+ 1 <redacted_phone_number></div>
-      </a>
-    </div>
-    <div class="dashboard-nav-links-wrapper new-tab right-nav settings-dropdown">
-      <div class="dropdown-wrapper w-dropdown" data-delay="0">
-        <div class="w-dropdown-toggle">
-          <div class="dropdown-wrapper-text"><strong class="settings-header-tab-text">Settings &nbsp;&nbsp;</strong>
-          </div>
-        </div>
-        <nav class="dropdown-content-wrapper w-dropdown-list"><a class="dropdown-link header w-dropdown-link" href="#">Rebecca Caldwell</a><a class="content-link dropdown-link w-dropdown-link" href="#"><span class="business-name-settings-dropdown">Joan's Coffee</span><br><span class="account-owner-email-settings-dropdown"><redacted_email></span></a><a class="dropdown-link w-dropdown-link" href="#">Settings</a><a class="dropdown-link w-dropdown-link" href="#">Billing Information</a><a class="dropdown-link sign-out w-dropdown-link" href="#">Sign out</a>
-        </nav>
-      </div>
-    </div>
-    <div class="dashboard-nav-links-wrapper new-tab right-nav settings-dropdown">
-      <div class="dropdown-wrapper w-dropdown" data-delay="0">
-        <div class="notifications-navbar-dropdown w-dropdown-toggle">
-          <div class="dropdown-wrapper-text"><strong> &nbsp;&nbsp;<span class="notification-counter">200</span></strong>
-          </div>
-        </div>
-        <nav class="dropdown-content-wrapper notifications-dropdown-wrapper w-dropdown-list"><a class="dropdown-link header notifications-dropdown-header w-clearfix w-dropdown-link" href="#">Today <span class="unread-notification-count">Unread (3)</span></a>
-          <a class="dashboard-header-notification-wrapper w-inline-block" href="#">
-            <div class="w-row">
-              <div class="w-col w-col-2"><img class="notifier-picture" height="30" src="images/49-1.jpg" width="30">
-              </div>
-              <div class="w-col w-col-8">
-                <div class="notification-text-block notifier"><strong class="notifier-name">James Gordon</strong> sent your a <strong class="notifier-action">message</strong> via messenger</div>
-              </div>
-              <div class="w-col w-col-2">
-                <div class="notification-text-block notifier"><strong class="notifier-time">5m</strong>
-                </div>
-              </div>
-            </div>
-          </a>
-          <a class="dashboard-header-notification-wrapper older w-inline-block" href="#">
-            <div class="w-row">
-              <div class="w-col w-col-2">
-                <div class="no-image-notifier-placeholder">
-                  <div class="customer-initial">M</div>
-                </div>
-              </div>
-              <div class="w-col w-col-8">
-                <div class="notification-text-block notifier"><strong class="notifier-name">Mensah Joseph</strong>&nbsp;sent your a <strong class="notifier-action">Payment </strong>via messenger</div>
-              </div>
-              <div class="w-col w-col-2">
-                <div class="notification-text-block notifier"><strong class="notifier-time">5m</strong>
-                </div>
-              </div>
-            </div>
-          </a>
-          <a class="dashboard-header-notification-wrapper older w-inline-block" href="#">
-            <div class="w-row">
-              <div class="w-col w-col-2"><img class="notifier-picture" height="30" src="images/31.jpg" width="30">
-              </div>
-              <div class="w-col w-col-8">
-                <div class="notification-text-block notifier"><strong class="notifier-name">Francesca Totti</strong>&nbsp;sent your a <strong class="notifier-action">message</strong> via SMS</div>
-              </div>
-              <div class="w-col w-col-2">
-                <div class="notification-text-block notifier"><strong class="notifier-time">5m</strong>
-                </div>
-              </div>
-            </div>
-          </a><a class="dropdown-link header notifications-dropdown-header older w-clearfix w-dropdown-link" href="#">Yesterday <span class="unread-notification-count">Unread (1)</span></a>
-          <a class="dashboard-header-notification-wrapper w-inline-block" href="#">
-            <div class="w-row">
-              <div class="w-col w-col-2"><img class="notifier-picture" height="30" src="images/81.jpg" width="30">
-              </div>
-              <div class="w-col w-col-8">
-                <div class="notification-text-block notifier"><strong class="notifier-name">Brendan Fraser</strong>&nbsp;sent your a <strong class="notifier-action">Payment</strong> via SMS</div>
-              </div>
-              <div class="w-col w-col-2">
-                <div class="notification-text-block notifier"><strong class="notifier-time">1d</strong>
-                </div>
-              </div>
-            </div>
-          </a>
-          <a class="dashboard-header-notification-wrapper older w-inline-block" href="#">
-            <div class="w-row">
-              <div class="w-col w-col-2"><img class="notifier-picture" height="30" src="images/49-1.jpg" width="30">
-              </div>
-              <div class="w-col w-col-8">
-                <div class="notification-text-block notifier"><strong class="notifier-name">James Gordon</strong> sent your a <strong class="notifier-action">message</strong> via messenger</div>
-              </div>
-              <div class="w-col w-col-2">
-                <div class="notification-text-block notifier"><strong class="notifier-time">1d</strong>
-                </div>
-              </div>
-            </div>
-          </a><a class="dropdown-link header notifications-dropdown-header w-clearfix w-dropdown-link" href="#">Earlier <span class="unread-notification-count">Unread (16)</span></a>
-          <a class="dashboard-header-notification-wrapper w-inline-block" href="#">
-            <div class="w-row">
-              <div class="w-col w-col-2"><img class="notifier-picture" height="30" src="images/49-2.jpg" width="30">
-              </div>
-              <div class="w-col w-col-8">
-                <div class="notification-text-block notifier"><strong class="notifier-name">Jacqueline&nbsp;Krantz</strong>&nbsp;sent your a <strong class="notifier-action">message</strong> via SMS</div>
-              </div>
-              <div class="w-col w-col-2">
-                <div class="notification-text-block notifier"><strong class="notifier-time">1w</strong>
-                </div>
-              </div>
-            </div>
-          </a>
-          <a class="dashboard-header-notification-wrapper older w-inline-block" href="#">
-            <div class="w-row">
-              <div class="w-col w-col-2"><img class="notifier-picture" height="30" src="images/37.jpg" width="30">
-              </div>
-              <div class="w-col w-col-8">
-                <div class="notification-text-block notifier"><strong class="notifier-name">Bryanna Choi</strong>&nbsp;sent your a <strong class="notifier-action">message</strong> via messenger</div>
-              </div>
-              <div class="w-col w-col-2">
-                <div class="notification-text-block notifier"><strong class="notifier-time">7w<br></strong>
-                </div>
-              </div>
-            </div>
-          </a>
-        </nav>
-      </div>
-    </div>
-  </div>
+</div>

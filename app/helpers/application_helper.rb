@@ -11,7 +11,7 @@ module ApplicationHelper
 # this method is called in _sidebar_menu partial file
   def sidebar_name(param)
     sidebar_name_hash = {
-                          'reminders-index' => 'Reminder',
+                          'reminders-index' => 'Scheduled Messages',
                           'saved_replies-index' => 'Saved Replies',
                           'hashtags-index' => 'Hashtags',
                           'merchant_customers-index' => 'Customers',
@@ -31,7 +31,8 @@ module ApplicationHelper
                           'users-refer_business' => 'Refer Business',
                           'fb_pages-index' => 'FB Integrations',
                           'lists-show' => @list.try(:name),
-                          'merchant_contacts-index' => 'Leads & Contacts'
+                          # 'merchant_contacts-index' => 'Leads & Contacts',
+                          'campaigns-index' => 'Campaigns'
                         }
     sidebar_name_hash["#{param}"]
   end

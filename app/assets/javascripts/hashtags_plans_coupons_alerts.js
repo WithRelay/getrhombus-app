@@ -116,14 +116,16 @@ $(document).ready(function () {
     fields: {
       'hashtag[name]': {
         verbose: false,
+        threshold: 2,
         validators: {
           notEmpty: {
             message: 'Name  is required'
-          },
+           },
           remote: {
             message: 'Hashtag name is already taken.',
-            url: '/v1/campaigns/check_hashtag_name',
-            type: 'POST'
+            url: '/v1/hashtags/check_hashtag_name',
+            type: 'GET',
+            delay: 1500     // Send Ajax request every 1.5 seconds
           }
         },
       },
@@ -165,11 +167,6 @@ $(document).ready(function () {
         }
       }
     }
-  })
-  .on('err.validator.fv', function(e, data) {
-  })
-  .on('success.form.fv', function(e, data) {
-    e.preventDefault();
   });
 
   // if hashtag isn't for payment, hide payment settings

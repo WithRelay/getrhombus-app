@@ -8,50 +8,6 @@ class EmailingService
    FROM_EMAIL= { edwin: "<redacted_email>", surya: '<redacted_email>', taiwo: '<redacted_email>' }
   class << self
 
-    def send_weekly_mail(options = {})
-      template_name = "weekly-summary-template"
-      template_content = []
-        message = { "subject" => "Weekly Summary",
-         "global_merge_vars"=> [  { "name" => "first_name", "content" => options[:first_name] || 'there' },
-                                  { "name" => "week_stamp", "content" => options[:week_stamp] },
-                                  { "name" => "new_people_count", "content" => options[:new_people_count] },
-                                  { "name" => "transactions_count", "content" => options[:transactions_count] },
-                                  { "name" => "currency_symbol", "content" => options[:currency_symbol] },
-                                  { "name" => "total_amount", "content" => options[:total_amount] },
-                                  { "name" => "net_sales", "content" => options[:net_sales] },
-                                  { "name" => "subscription_count", "content" => options[:subscription_count] },
-                                  { "name" => "subscription_charges", "content" => options[:subscription_charges] },
-                                  { "name" => "net_charges", "content" => options[:net_charges] },
-                                  { "name" => "messages_count", "content" => options[:messages_count] },
-                                  { "name" => "message_difference", "content" => options[:message_difference] },
-                                  { "name" => "sms_percent", "content" => options[:sms_percent] },
-                                  { "name" => "fb_message_percent", "content" => options[:fb_message_percent] },
-                                  { "name" => "open_conversation_count", "content" => options[:open_conversation_count] },
-                                  { "name" => "invoice_id", "content" => options[:stripe_invoice_id] },
-                                  { "name" => "date", "content" => options[:date] },#February 23, 2017 | 1:30pm
-                                  { "name" => "status", "content" => options[:status] },
-                                  { "name" => "payment_method", "content" => options[:payment_method] },
-                                  { "name" => "amount", "content" => options[:sub_total] },
-                                  { "name" => "total", "content" => options[:total] },
-                                  { "name" => "taxes_and_fees", "content" => options[:tax_and_fees] },
-                                  { "name" => "currency", "content" => options[:currency] },
-                                  { "name" => "currency_symbol", "content" => options[:currency_symbol] },
-                                  { "name" => "dashboard_link", "content" => "https://www.withrelay.com/dashboard_link"}
-                               ],
-         "merge_language" => "handlebars",
-         "to"=> [ { "email" => options[:user_email] } ],
-         "bcc_address"=> SENDER,
-         "from_name" => "Edwin from Relay",
-         "from_email" => FROM_EMAIL[:edwin]
-        }
-        async = true
-        result = MANDRILL.messages.send_template template_name, template_content, message, async
-      rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
-        puts "A mandrill error occurred: #{e.class} - #{e.message}"
-      rescue StandardError => e
-      end
-    end
-
     def send_email_campaign(campaign_hash)
       # Email camapign is not only used to send email campaign but also facebook messenger camapign
       # and facebook messenger camapaign do not contain subject
@@ -744,6 +700,48 @@ class EmailingService
       rescue StandardError => e
       end
     end
-  end
+
+    def send_weekly_mail(options = {})
+      template_name = "weekly-summary-template"
+      remaining_people_count = options[:new_people_count] > 5 ? "+#{options[:new_people_count] - 5} more" : ""
+      template_content = []
+        message = { "subject" => "Weekly Summary",
+         "global_merge_vars"=> [  { "name" => "first_name", "content" => options[:first_name] || 'there' },
+                                  { "name" => "week_stamp", "content" => options[:week_stamp] },
+                                  { "name" => "new_people_count", "content" => options[:new_people_count] },
+                                  { "name" => "remaining_people_count", "content" => remaining_people_count},
+                                  { "name" => "transactions_count", "content" => options[:transactions_count] },
+                                  { "name" => "currency_symbol", "content" => options[:currency_symbol] },
+                                  { "name" => "total_amount", "content" => options[:total_amount] },
+                                  { "name" => "net_sales", "content" => options[:net_sales] },
+                                  { "name" => "subscription_count", "content" => options[:subscription_count] },
+                                  { "name" => "subscription_charges", "content" => options[:subscription_charges] },
+                                  { "name" => "net_charges", "content" => options[:net_charges] },
+                                  { "name" => "messages_count", "content" => options[:messages_count] },
+                                  { "name" => "message_difference", "content" => options[:message_difference] },
+                                  { "name" => "sms_percent", "content" => options[:sms_percent] },
+                                  { "name" => "fb_message_percent", "content" => options[:fb_message_percent] },
+                                  { "name" => "open_conversation_count", "content" => options[:open_conversation_count] },
+                                  { "name" => "taxes_and_fees", "content" => options[:tax_and_fees] },
+                                  { "name" => "currency", "content" => options[:currency] },
+                                  { "name" => "currency_symbol", "content" => options[:currency_symbol] },
+                                  { "name" => "dashboard_link", "content" => "https://www.withrelay.com/dashboard_link"},
+                                  { "name" => "peoples_list", "content" => options[:peoples_list]}
+                               ],
+         "merge_language" => "handlebars",
+         "to"=> [ { "email" => options[:user_email] } ],
+         "bcc_address"=> SENDER,
+         "from_name" => "Edwin from Relay",
+         "from_email" => FROM_EMAIL[:edwin]
+        }
+        async = true
+        result = MANDRILL.messages.send_template template_name, template_content, message, async
+      rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
+        puts "A mandrill error occurred: #{e.class} - #{e.message}"
+      rescue StandardError => e
+      end
+    end
+
 
 end
+

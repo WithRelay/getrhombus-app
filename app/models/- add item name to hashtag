@@ -26,6 +26,23 @@ Oswald Durant Arts Center
 - 4hr min $115/hr for residents. $135/hr, 2 staff members ($47/hr), app fee $25, security dep $500, $50 alcohol license
 - 4hr min $135/hr, 2 staff members ($47/hr), app fee $25, security dep $500, $50 alcohol license
 
+
+    fields: {
+      'campaign[name]': {
+        verbose: false,
+        validators: {
+          notEmpty: {
+            message: 'Campaign name is required'
+          },
+          remote: {
+            message: 'Campaign name already taken.',
+            url: '/v1/campaigns/check_campaign_name' + campaignId,
+            type: 'POST'
+          }
+        }
+      },
+
+      
 Surya
 - lock down permissions cancancan?
 - i see issues with reminder js
@@ -39,8 +56,8 @@ Surya
 - do some more routes cleanup if possible
 - when you uncomment this line in routes  # authenticate :user, -> (user) { CheckUser::RouteAuthentication.new(user).should_authenticate? } do, pages become unreachable i believe.
 - campaign toastrs - plug and play. already wrote the code for you. see realtimeservice.rb and notifications.js
-- tooltip for campaigns
-- time comparisons are tricky
+- tooltip for campaigns - leave for noe
+- time comparisons are tricky...make sure to do to_i because rails compares time as floats
 
 Dorje
 - graph - empty state and changes
