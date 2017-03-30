@@ -85,15 +85,37 @@ $(document).on('ready',function(){
 $('#delete-reminder').click(function(e){
 	var selectedElement = selectCheckedElement();
 	if(selectedElement == false){
-		FlashHandler.setFlashMessage('Please selcect a reminder first','error');
-		return false;
-	}
-	else {
+	FlashHandler.setFlashMessage('Select a reminder to delet','error');
+	return false;
+}else {
 	      e.preventDefault
 	      FlashHandler.setConfirmationDialog('#delete-reminder','Are you sure, you want to delete the Reminder?', 'Delete', 'isDistroy');
 	      return false;
 			}
 	});
+
+	$('#delete-hashtag').click(function(e) {
+		var selectedElement = selectCheckedElement();
+		if(selectedElement == false){
+			FlashHandler.setFlashMessage('Please selcect a hashtag to delete','error');
+			return false;
+		}else{
+			FlashHandler.setConfirmationDialog('#delete-hashtag','Are you sure, you want to remove the hashtag?', 'Delete', 'isDistroy');
+			return false;
+		}
+
+  });
+
+  $('#deactivate-hashtag').click(function() {
+		var selectedElement = selectCheckedElement();
+		if(selectedElement == false){
+			FlashHandler.setFlashMessage('Please selcect a hashtag to deactivate','error');
+			return false;
+		}else{
+	    FlashHandler.setConfirmationDialog('#deactivate-hashtag','Are you sure, you want to deactivate the hashtag?', 'Deactivate', 'isDeactivate');
+	    return false;
+		}
+  });
 
 	$('#edit-saved-reply').on('click',function(e){
 
