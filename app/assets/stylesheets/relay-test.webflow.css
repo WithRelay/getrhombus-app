@@ -13706,6 +13706,7 @@ h4 {
   font-family: 'Fontawesome webfont', sans-serif;
   color: #1f8cec;
   font-size: 13px;
+  cursor: pointer;
 }
 
 .toaster-font-awesome.failure {
