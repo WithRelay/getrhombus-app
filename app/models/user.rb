@@ -164,7 +164,7 @@ class User < ActiveRecord::Base
     #creds.where(uid_type: ((creds.length == 2) ? 'managed' : 'standalone') ).first
   end
 
-  def buy_number(params)    
+  def buy_number(params)
     number = TextingService.buy_number({ query: params["area_code"] || "", country: params["rn_country"], type: params["rn_type"] })
     return false unless number
     self.rhombus_number = number[0]
@@ -180,9 +180,6 @@ class User < ActiveRecord::Base
   def get_saas_subscription
     platform_merchant = MerchantCustomer.find_by(customer_id: self.id, merchant_id: User.get_platform_acct_obj.id)
     platform_merchant ? platform_merchant.subscriptions.active.last : nil
-
-    # remove this
-    true
   end
 
   def get_page_access_token
@@ -219,9 +216,9 @@ class User < ActiveRecord::Base
     self.org_name = self.org_name.strip unless self.org_name.blank?
   end
 
-  def do_signup_stuff    
+  def do_signup_stuff
     if self.is_merchant?
-      Alert.find_or_create_by(user_id: self.id) 
+      Alert.find_or_create_by(user_id: self.id)
       response = "We're away at the moment and will get back to you when we return :)."
       AwayMessage.find_or_create_by(user_id: self.id, response: response)
       GetIntelligenceDataJob.perform_later(self.org_phone, 'OpenCNAM')
@@ -229,7 +226,7 @@ class User < ActiveRecord::Base
 
     WelcomeEmailJob.set(wait: SIGNUP_EMAIL_DELAY.minutes).perform_later(self)
     GetIntelligenceDataJob.perform_later(self.email, 'FullContact')
-    GetIntelligenceDataJob.perform_later(self.phone_number, 'OpenCNAM') if self.is_customer?    
+    GetIntelligenceDataJob.perform_later(self.phone_number, 'OpenCNAM') if self.is_customer?
   end
 
 end
