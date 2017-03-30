@@ -51,7 +51,7 @@
         <div class="right-nav-profile-content-wrapper">
           <%#= present(@customer).profile_image %>
           <!-- we may need present method to dispaly color  -->
-          <%= image_tag(@user_snapshot[:profile_image][:value], class: 'class: profile-picture-right-nav', width: 50 )%>
+          <%= image_tag(@user_snapshot[:profile_image][:value], class: 'class: profile-picture-right-nav', width: 60 )%>
 
           <div class="dashboard-right-nav signup-box-subheading"><%= "#{@user_snapshot[:full_name]}"%> <span class="relay-id"><%= "#{@user_snapshot[:verified]}" %></span>
           </div>
