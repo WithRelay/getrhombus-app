@@ -199,6 +199,8 @@ $( document ).on 'ready page:load', ->
   if $("#Deliver-now").is(":checked")
     $('.scheduleOption').hide()
     $('.daterange').val('')
+  else
+    $('.scheduleOption').show();
 
   # Mainly for edit actions so the view shows properly
   frequency_type = if $('#oneTimeFrequency').is(':checked') then '#oneTimeFrequency' else '#recurringFrequency'

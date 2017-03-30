@@ -1,8 +1,11 @@
 <div class="editor side-bar w-clearfix">
-  <div class = "container">
-    <%= present(@campaign).show_info.html_safe %>
-    <h5 class="left-nav signup-box-subheading">EDIT CAMPAIGN</h5>
-    <%= render 'shared/flash_messages' %>
-    <%= render "campaign_form" %>
+  <div class="dashboard-logo-wrapper">
+    <%= link_to root_url do%>
+      <%= image_tag('Relay-Transparent-500x300.png', class: 'dashboard-logo', width: 50) %>
+    <% end %>
   </div>
+  <%= present(@campaign).show_info.html_safe %>
+  <h5 class="left-nav signup-box-subheading">EDIT CAMPAIGN</h5>
+  <%= render 'shared/flash_messages' %>
+  <%= render 'campaign_form' %>
 </div>
