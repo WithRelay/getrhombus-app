@@ -1,6 +1,8 @@
 <div class="side-bar w-clearfix">
   <div class="dashboard-logo-wrapper">
-    <%= image_tag 'Relay-Transparent-500x300.png', class: 'dashboard-logo', width: '50' %>
+    <%= link_to root_url do %>
+      <%= image_tag 'Relay-Transparent-500x300.png', class: 'dashboard-logo', width: '50' %>
+    <% end %>
   </div>
   <h5 class="left-nav signup-box-subheading"><%= sidebar_name "#{params[:controller]}-#{params[:action]}" %></h5>
 
