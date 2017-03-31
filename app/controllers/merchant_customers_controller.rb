@@ -38,19 +38,20 @@ class MerchantCustomersController < ApplicationController
     # else
     #   "-"
     # end
-    end
+  end
 
-    def recent_activity
-      last_conv_ref = @conversation_refs.present? ? conversation_refs.first : nil
-      last_message_resolution = last_conv_ref.uid_conversation_resolution.resolution if last_conv_ref.present?
-      {
-        last_transaction: @transactions.first,
-        last_conv_ref: last_conv_ref,
-        last_message_resolution: last_message_resolution.present? ? @last_message_resolution : "--"
-      }
-    end
+  private
+  def recent_activity
+    last_conv_ref = @conversation_refs.present? ? conversation_refs.first : nil
+    last_message_resolution = last_conv_ref.uid_conversation_resolution.resolution if last_conv_ref.present?
+    {
+      last_transaction: @transactions? @transactions.first : nil ,
+      last_conv_ref: last_conv_ref,
+      last_message_resolution: last_message_resolution.present? ? @last_message_resolution : nil
+    }.compact
+  end
 
-    def customer_id
-      params[:customer_id]
-    end
+  def customer_id
+    params[:customer_id]
+  end
 end
