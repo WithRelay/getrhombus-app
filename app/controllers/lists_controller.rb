@@ -6,7 +6,7 @@ class ListsController < ApplicationController
 
   def index
     @lists = current_user.lists.where(segment: nil).paginate(per_page: PAGINATION_PER_PAGE,
-                                                    page: params[:page])
+                                                    page: params[:page]).order(created_at: :desc)
 
     if @lists.present?
       respond_to do |format|
