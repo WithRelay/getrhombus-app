@@ -1,0 +1,58 @@
+<% if @transactions.empty? %>
+<div class="no-profile-data-text profile-conversations">
+  Customer or contact has no transactions to date
+</div>
+<%else%>
+<div class="customer-profile-transactions">
+  <div class="customer-profile-trasaction-table w-row">
+    <div class="w-col w-col-5">
+      <div class="description header">
+        <div class="headings transaction-description"> &nbsp; Description</div>
+      </div>
+    </div>
+    <div class="w-col w-col-2">
+      <div class="amount header">
+        <div class="headings transaction-amount">Amount</div>
+      </div>
+    </div>
+    <div class="w-col w-col-2">
+      <div class="date header">
+        <div class="headings transaction-time">Time</div>
+      </div>
+    </div>
+    <div class="w-col w-col-3">
+      <div class="action header">
+        <div class="actions headings">Actions</div>
+      </div>
+    </div>
+  </div>
+  <% @transactions.each do |transaction| %>
+    <div class="customer-profile-trasaction-table w-row">
+      <div class="w-col w-col-5">
+        <div class="description w-clearfix">
+          <div class="shrink-text table-text unread-table"><%= transaction.description %></div>
+        </div>
+      </div>
+      <div class="w-col w-col-2">
+        <div class="amount w-clearfix">
+          <div class="shrink-text table-text unread-table tran-amount">$<%= transaction.amount || 0 %></div>
+        </div>
+      </div>
+      <div class="w-col w-col-2">
+        <div class="date w-clearfix">
+          <div class="table-text unread-table shrink-text"><%= time_in_relative_form(transaction.created_at, 'short_ago_format') %></div>
+        </div>
+      </div>
+      <div class="w-col w-col-3">
+        <div class="action w-clearfix">
+          <a class="actions status modal-loader customer-profile-refund-btn" modal-target= 'refund_customer_modal' data-txn-number="<%= transaction.txn_number %>"
+          data-txn-last4="<%= transaction.last4 %>">Refund</a>
+        </div>
+      </div>
+    </div>
+   <% end %>
+    <div class='modal-background w-hidden modal-body refund_customer_modal'>
+     <%= render 'shared/modals/refund_customer' %>
+   </div>
+</div>
+<%end%>
