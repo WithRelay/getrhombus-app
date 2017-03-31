@@ -13,7 +13,6 @@ class MerchantCustomersController < ApplicationController
   end
 
   def show
-    customer_id = params[:customer_id]
   	@customer = User.find_by_id(customer_id)
     @user_snapshot = get_user_snapshot(customer_id, "user", current_user.id, @customer)
   	@merchant_customer = MerchantCustomer.find_by(customer_id: customer_id, merchant_id: current_user.id)
@@ -24,17 +23,34 @@ class MerchantCustomersController < ApplicationController
     @transactions = Transaction.exclude_refunded_transactions().where(team_id: current_user.id).only_captured_transactions()
                             .exclude_subscriptions()
                             .where(user_id: customer_id).order(created_at: :desc)
-    @last_transaction = @transactions.first
 
     @conversation_refs = ConversationRef.get_last_customer_msg_from_all_merchant_convs(current_user.id, customer_id)
-    @last_conv_ref = @conversation_refs.present? ? @conversation_refs.first : nil
-
-    # refactor this at some point
-    if @last_conv_ref.present?
-      @last_message_resolution = @last_conv_ref.uid_conversation_resolution.resolution
-      @last_message_resolution.present? ? @last_message_resolution : "-"
-    else
-      "-"
+    @recent_activity = recent_activity
+    # @last_transaction = @transactions.first
+    #
+    # @conversation_refs = ConversationRef.get_last_customer_msg_from_all_merchant_convs(current_user.id, customer_id)
+    # @last_conv_ref = @conversation_refs.present? ? @conversation_refs.first : nil
+    #
+    # # refactor this at some point
+    # if @last_conv_ref.present?
+    #   @last_message_resolution = @last_conv_ref.uid_conversation_resolution.resolution
+    #   @last_message_resolution.present? ? @last_message_resolution : "-"
+    # else
+    #   "-"
+    # end
     end
-  end
+
+    def recent_activity
+      last_conv_ref = @conversation_refs.present? ? conversation_refs.first : nil
+      last_message_resolution = last_conv_ref.uid_conversation_resolution.resolution if last_conv_ref.present?
+      {
+        last_transaction: @transactions.first,
+        last_conv_ref: last_conv_ref,
+        last_message_resolution: last_message_resolution.present? ? @last_message_resolution : "--"
+      }
+    end
+
+    def customer_id
+      params[:customer_id]
+    end
 end
