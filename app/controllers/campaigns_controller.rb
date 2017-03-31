@@ -10,7 +10,7 @@ class CampaignsController < ApplicationController
   def index
     @campaigns = current_user.campaigns.paginate(per_page: PAGINATION_PER_PAGE,
                                                  page: params[:page])
-                                                 .order('updated_at DESC')
+                                                 .order(updated_at: :desc, created_at: :desc)
 
     @campaigns.present? ? render_requested_format(@campaigns) : render(:empty_campaign)
   end

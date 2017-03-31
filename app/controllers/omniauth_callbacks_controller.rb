@@ -4,7 +4,7 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
   def stripe_connect
     if current_user.is_merchant?
-        if StripeCred.from_omniauth(request.env["omniauth.auth"], current_user.id)
+        if StandaloneStripeCred.from_omniauth(request.env["omniauth.auth"], current_user.id)
            redirect_to integrations_user_path(current_user)
            set_flash_message(:notice, :success, :kind => "Stripe Connect") if is_navigational_format?
            return

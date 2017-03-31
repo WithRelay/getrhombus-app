@@ -24,8 +24,8 @@ class PaymentService
         owner = User.find_by(email: Rails.application.secrets.team_email)
         unless hash[:is_merchant]
           customer = User.find_by(email: hash[:email])
-          #message = Message.new
-          #message.send_and_save_message(owner.rn_type, owner.rhombus_number, customer.phone_number, "We were unable to update your card info on Rhombus because: #{err[:message]}.")
+          msg_to_send = "We were unable to update your card info on Rhombus because: #{err[:message]}."
+          #Conversation.find_or_create_conversation_for_message_and_send_publish(team, customer, 'user', customer.id, msg_to_send, "Message")
         end
         # redo this email
         # Notification.token_failure_notification(err, hash[:email]).deliver_now
@@ -58,6 +58,7 @@ class PaymentService
       end
     end
     
+    # refactor this since i now have two models
     def charge(amount_with_taxes, amt_less_stripe_fee, app_fee, merchant, customer, msg, capture)
       #begin
         stripe_cred = merchant.get_stripe_cred

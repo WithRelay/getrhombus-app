@@ -33,7 +33,7 @@ module AddTokenToUser
               if hash[:is_platform_customer]
                 re = PaymentService.add_token_to_stripe_customer(hash)
               else
-                re = PaymentService.add_token_to_stripe_customer(hash, get_stripe_cred.uid)
+                re = PaymentService.add_token_to_stripe_customer(hash, get_stripe_cred.account_id)
               end
             end
           end
@@ -45,7 +45,7 @@ module AddTokenToUser
             MerchantCustomer.create(merchant_id: platform_acct.id, customer_id: self.id, stripe_customer_id: re[1].id)
           else
             # since new customer are always platform customer so is_platform is always true
-            PaymentService.delete_customer(re[1].id, get_stripe_cred.uid, true)
+            PaymentService.delete_customer(re[1].id, get_stripe_cred.account_id, true)
           end
         end
         re
@@ -54,7 +54,58 @@ module AddTokenToUser
       end
     rescue StandardError => e
       # since new customer are always platform customer so is_platform is always true
-      PaymentService.delete_customer(re[1].id, get_stripe_cred.uid, true) if (res.length > 0 && cu.blank?)
+      PaymentService.delete_customer(re[1].id, get_stripe_cred.account_id, true) if (res.length > 0 && cu.blank?)
+      # notify team
+      [false]
+    end
+  end
+
+  def add_token_for_customer
+
+
+  end
+
+
+  # a merchant user who is a customer of platform
+  def add_token_for_merchant
+    begin
+      # platform acct shouldn't really be doing this
+      unless is_platform?
+        res = []
+        platform_acct = User.get_platform_acct_obj
+
+        cu = MerchantCustomer.where(customer_id: self.id, merchant_id: platform_acct.id).first
+        hash = { email: self.email, card_token: card_token, is_new_customer: true, is_platform_customer: true, is_merchant: true }
+
+        # when blank, add only to platform. blank indicates signing up
+        if cu.blank?
+          re = PaymentService.add_token_to_stripe_customer(hash)
+        else
+          hash[:is_new_customer] = false
+          hash[:stripe_customer_id] = cu.stripe_customer_id
+          # is merchant, so update on platform
+          re = PaymentService.add_token_to_stripe_customer(hash)
+        end
+
+        # create new merchant_customer for stripe customer
+        if cu.blank?
+          if re.first
+            MerchantCustomer.create(merchant_id: platform_acct.id, customer_id: self.id, stripe_customer_id: re[1].id)
+          else
+            # since a merchant is always a platform customer, so send in true
+            # we are deleting customer in case customer was created but token wasn't added
+            PaymentService.delete_customer(re[1].id, platform_acct.get_stripe_cred.cred.account_id, true)
+          end
+        end
+        re
+      else
+        [true]
+      end
+    rescue StandardError => e
+      # since a merchant is always a platform customer, so send in true
+      # we are deleting customer in case customer was created but token wasn't added
+      # cu.blank? ... delete only if customer didn't exists before... 
+      PaymentService.delete_customer(re[1].id, platform_acct.get_stripe_cred.cred.account_id, true) if (res.length > 0 && cu.blank?)
       # notify team
       [false]
     end

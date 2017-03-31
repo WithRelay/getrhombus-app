@@ -231,7 +231,17 @@ class MessageParser
   end
 
   def merchant_supports_payment?
-    return true if @merchant.can_accept_payments?
+    cred_data = @merchant.get_stripe_cred
+    
+    if cred_data.type == 'standalone'
+      status = true 
+    elsif cred_data.type == 'managed'
+      status = cred_data.cred.can_accept_payments?
+    elsif cred_data.type == nil
+      status = false
+    end
+
+    return true if status
     # notify user and send to merchant dashboard
     # send_response("Thank you for sending a payment with Rhombus, but the merchant hasn't completed the account to receive payments.")
     # notify merchant via Email?    false

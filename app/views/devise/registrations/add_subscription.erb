@@ -2,8 +2,8 @@
   <div class="onboarding-table-column-1 w-col w-col-8">
     <div class="onboarding-form-section">
       <div class="choose-plan onboarding-form-div sign-in signup w-clearfix">
-        <div class="choose-plan def-row-content-wrapper">
-          <img src="http://uploads.webflow.com/5767087cbd63608e7eb4abdc/587e5fef406151a55b9105b0_Relay%20Transparent%20500x300.png" width="50">
+        <div class="choose-plan def-row-content-wrapper onboarding">
+          <%= image_tag 'Relay-Transparent-500x300.png', width: "60" %>
           <h1 class="first-content-section-sub-header pricing-header">Select a plan to get started</h1>
           <div class="flex-underline form-header-underline"></div>
           <p class="def-content-section-paragraph pricing-paragraph">How many customers do you have?</p>
@@ -11,10 +11,8 @@
             <input type="text" name="plan[name]" id="pricing-range" amountValue="0">
           </div>
           <span id="price-value"></span>
-
-          <div class="display-credit-card-wrapper display-credit-card-wrapper-fix">
+          <div class="display-credit-card-wrapper onboarding-form">
             <div class="get-started-2 log-in-form w-form">
-
               <%= form_for(current_user, as: resource_name, url: registration_update_user_path(resource_name), html: { method: :patch, class: "w-clearfix", id: "cc-form" }) do |f| %>
 
                 <div id='free-account-label'>
@@ -48,10 +46,8 @@
                 <%= f.submit "Start 14-day Trial", class: "button log-in w-button", id: 'cc-submit' %>
 
               <% end %>
-
             </div>
           </div>
-
         </div>
       </div>
     </div>

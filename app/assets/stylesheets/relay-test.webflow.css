@@ -13661,7 +13661,8 @@ h4 {
 }
 
 .toaster-text {
-  margin-top: 15px;
+  margin: auto;
+  text-align: center;
   font-family: 'Akkurat regular', sans-serif;
   color: #637280;
   font-size: 13px;
@@ -13706,6 +13707,7 @@ h4 {
   font-family: 'Fontawesome webfont', sans-serif;
   color: #1f8cec;
   font-size: 13px;
+  cursor: pointer;
 }
 
 .toaster-font-awesome.failure {

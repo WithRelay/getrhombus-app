@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170328050226) do
+ActiveRecord::Schema.define(version: 20170331061448) do
 
   create_table "account_reloads", force: :cascade do |t|
     t.integer  "user_id",        limit: 4
@@ -602,16 +602,32 @@ ActiveRecord::Schema.define(version: 20170328050226) do
 
   add_index "saved_replies", ["user_id"], name: "index_saved_replies_on_user_id", using: :btree
 
-  create_table "stripe_creds", force: :cascade do |t|
+  create_table "standalone_stripe_creds", force: :cascade do |t|
     t.string   "email",              limit: 191
+    t.string   "account_id",         limit: 191
     t.string   "secret",             limit: 191
     t.string   "publishable_key",    limit: 191
-    t.string   "uid",                limit: 191
     t.string   "scope",              limit: 191
     t.boolean  "livemode",           limit: 1
     t.string   "refresh_token",      limit: 191
     t.integer  "user_id",            limit: 4
-    t.integer  "uid_type",           limit: 4
+    t.integer  "transaction_fee_id", limit: 4,   default: 2
+    t.datetime "created_at",                                 null: false
+    t.datetime "updated_at",                                 null: false
+  end
+
+  add_index "standalone_stripe_creds", ["account_id"], name: "index_standalone_stripe_creds_on_account_id", using: :btree
+  add_index "standalone_stripe_creds", ["transaction_fee_id"], name: "index_standalone_stripe_creds_on_transaction_fee_id", using: :btree
+  add_index "standalone_stripe_creds", ["user_id"], name: "index_standalone_stripe_creds_on_user_id", using: :btree
+
+  create_table "stripe_creds", force: :cascade do |t|
+    t.string   "account_id",         limit: 191
+    t.string   "secret",             limit: 191
+    t.string   "publishable_key",    limit: 191
+    t.string   "scope",              limit: 191
+    t.boolean  "livemode",           limit: 1
+    t.string   "refresh_token",      limit: 191
+    t.integer  "user_id",            limit: 4
     t.string   "ip",                 limit: 191
     t.integer  "tos_date",           limit: 4
     t.string   "user_agent",         limit: 191
@@ -622,12 +638,10 @@ ActiveRecord::Schema.define(version: 20170328050226) do
     t.string   "fields_needed",      limit: 191
     t.datetime "created_at",                                 null: false
     t.datetime "updated_at",                                 null: false
-    t.string   "account_id",         limit: 191
     t.integer  "transaction_fee_id", limit: 4,   default: 1
   end
 
   add_index "stripe_creds", ["account_id"], name: "index_stripe_creds_on_account_id", unique: true, using: :btree
-  add_index "stripe_creds", ["uid"], name: "index_stripe_creds_on_uid", using: :btree
   add_index "stripe_creds", ["user_id"], name: "index_stripe_creds_on_user_id", using: :btree
 
   create_table "subscriptions", force: :cascade do |t|

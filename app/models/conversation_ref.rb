@@ -10,9 +10,10 @@ class ConversationRef < ActiveRecord::Base
   # the last message in all conversations within a thread between a merchant and customer
   def self.get_last_customer_msg_from_all_merchant_convs(merchant_id, customer_id)
     conv = Conversation.find_by(merchant_id: merchant_id, uid_type: 'user', uid: customer_id)
+    return [] unless conv
     conv_ref_ids = conv.conversation_resolutions.pluck(:uid_conversation_ref_id)
     ConversationRef.includes(:textable).where(id: conv_ref_ids).order(created_at: :desc)
-  end  
+  end
 
 =begin
   # the last message in all conversations a merchant has had
@@ -33,7 +34,7 @@ class ConversationRef < ActiveRecord::Base
     return [] if data.blank?
     ActiveRecord::Associations::Preloader.new.preload(data, :textable)
     data
-  end  
+  end
 =end
 
   # get all unread messages for which the merchant hasn't received an unread notification
@@ -49,7 +50,7 @@ class ConversationRef < ActiveRecord::Base
     ActiveRecord::Associations::Preloader.new.preload(data[0..2], :textable)
     data
   end
-  
-  
-  
+
+
+
 end

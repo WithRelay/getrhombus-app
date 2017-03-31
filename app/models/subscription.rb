@@ -19,7 +19,7 @@ class Subscription < ActiveRecord::Base
       res = []
       team = hash[:team]
       is_platform = team.is_platform?
-      uid = team.get_stripe_cred.uid
+      account_id = team.get_stripe_cred.cred.account_id
 
       hash[:application_fee_percent] = Rails.application.secrets.app_fee_percent unless is_platform
       
@@ -35,7 +35,7 @@ class Subscription < ActiveRecord::Base
       hash[:tax_percent] = hash[:team].tax_percent
       hash.delete(:team)
 
-      res = PaymentService.create_subscription(hash, uid, is_platform)
+      res = PaymentService.create_subscription(hash, account_id, is_platform)
       if res.first
         self.update(
           stripe_subscription_id: res.second.id,
@@ -65,7 +65,7 @@ class Subscription < ActiveRecord::Base
 
   def cancel_subscription(team, at_period_end = false)
     begin
-      res = PaymentService.cancel_subscription(self.stripe_subscription_id, team.get_stripe_cred.uid, team.is_platform?, at_period_end)
+      res = PaymentService.cancel_subscription(self.stripe_subscription_id, team.get_stripe_cred.cred.account_id, team.is_platform?, at_period_end)
       if res.first && self.update(status: res.second.status, cancel_at_period_end: res.second.cancel_at_period_end)
         true
       else
@@ -80,7 +80,7 @@ class Subscription < ActiveRecord::Base
  
   def update_subscription(team, coupon_id)
     begin
-      res = PaymentService.update_subscription(self.stripe_subscription_id, team.get_stripe_cred.uid, team.is_platform?, coupon_id)
+      res = PaymentService.update_subscription(self.stripe_subscription_id, team.get_stripe_cred.cred.account_id, team.is_platform?, coupon_id)
       if res
         coupon = Coupon.find_by(stripe_coupon_id: res[:discount][:coupon][:id])
          self.update(coupon_id: coupon.id, status: res.status, cancel_at_period_end: res.cancel_at_period_end)

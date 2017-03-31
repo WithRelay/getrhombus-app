@@ -32,7 +32,9 @@ module ApplicationHelper
                           'fb_pages-index' => 'FB Integrations',
                           'lists-show' => @list.try(:name),
                           # 'merchant_contacts-index' => 'Leads & Contacts',
-                          'campaigns-index' => 'Campaigns'
+                          'campaigns-index' => 'Campaigns',
+                          'transactions-index' => "Charges",
+                          'subscriptions-index' => 'subscriptions'
                         }
     sidebar_name_hash["#{param}"]
   end
@@ -122,7 +124,7 @@ module ApplicationHelper
     settings_action = ['registrations-billing_information', 'registrations-account_settings',
                         'alerts-edit', 'plans-index','registrations-business_settings',
                        'users-integrations', 'users-managed_acct', 'users-sms_usage', 'lists-segments',
-                       'coupons-manage_coupons', 'coupons-index', 'users-refer_business', 'fb_pages-index']
+                       'coupons-manage_coupons', 'users-refer_business', 'fb_pages-index']
     settings_action.include?(params_controller_action)
   end
 

@@ -64,36 +64,59 @@ $(document).on('ready',function(){
 			dataType: 'json'
 		}).done(function(res){
 			FlashHandler.setFlashMessage(res.notice,'notice');
+			location.reload();
 			}).error(function(res){
 				FlashHandler.setFlashMessage(res.error, 'error');
 		});
 	}
 
-	// Confirmation dialog box for destroy saved reply
-	$('#delete-saved-reply').click(function(evt) {
-		var selectedElement = selectCheckedElement();
-		if(selectedElement == false){
-			FlashHandler.setFlashMessage('Please select a reply first','error');
-			return false;
-		}
-		else if (!$('#delete-saved-reply').attr('isDestroy')) {
-			FlashHandler.setConfirmationDialog('#delete-saved-reply','Confirmation Needed', 'Are you sure?', 'isDestroy' )
-			return false;
-		}
-	});
+  // Confirmation dialog box for destroy saved reply
+  $('#delete-saved-reply').click(function(evt) {
+    var selectedElement = selectCheckedElement();
+    if(selectedElement == false){
+      FlashHandler.setFlashMessage('Please select a reply first','error');
+      return false;
+    }
+    else if (!$('#delete-saved-reply').attr('isDestroy')) {
+      FlashHandler.setConfirmationDialog('#delete-saved-reply','Are you sure, you want to delete the selected item?', 'Delete', 'isDestroy' )
+      return false;
+    }
+  });
 
 $('#delete-reminder').click(function(e){
 	var selectedElement = selectCheckedElement();
 	if(selectedElement == false){
-		FlashHandler.setFlashMessage('Please selcect a reminder first','error');
-		return false;
-	}
-	else {
+	FlashHandler.setFlashMessage('Select a reminder to delete','error');
+	return false;
+}else {
 	      e.preventDefault
 	      FlashHandler.setConfirmationDialog('#delete-reminder','Are you sure, you want to delete the Reminder?', 'Delete', 'isDistroy');
 	      return false;
 			}
 	});
+
+	$('#delete-hashtag').click(function(e) {
+		var selectedElement = selectCheckedElement();
+		if(selectedElement == false){
+			FlashHandler.setFlashMessage('Select a hashtag to delete','error');
+			return false;
+		}else{
+			FlashHandler.setConfirmationDialog('#delete-hashtag','Are you sure, you want to remove the hashtag?', 'Delete', 'isDistroy');
+			return false;
+		}
+
+  });
+
+  $('#deactivate-hashtag').click(function() {
+		var selectedElement = selectCheckedElement();
+		if(selectedElement == false){
+			FlashHandler.setFlashMessage('Select a hashtag to deactivate','error');
+			return false;
+		}else{
+	    FlashHandler.setConfirmationDialog('#deactivate-hashtag','Are you sure, you want to deactivate the hashtag?', 'Deactivate', 'isDeactivate');
+	    return false;
+		}
+  });
 
 	$('#edit-saved-reply').on('click',function(e){
 
@@ -225,5 +248,4 @@ function customtersSearch(option = []){
     }
   });
 }
-
 });
