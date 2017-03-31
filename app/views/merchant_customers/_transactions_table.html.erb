@@ -1,8 +1,8 @@
 <% if @transactions.empty? %>
 <div class="no-profile-data-text profile-conversations">
-  Customer or contact has no transactions to date
+  Customer has no transactions to date.
 </div>
-<%else%>
+<% else %>
 <div class="customer-profile-transactions">
   <div class="customer-profile-trasaction-table w-row">
     <div class="w-col w-col-5">
@@ -55,4 +55,4 @@
      <%= render 'shared/modals/refund_customer' %>
    </div>
 </div>
-<%end%>
+<% end %>

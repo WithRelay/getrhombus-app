@@ -74,7 +74,7 @@ class Transaction < ActiveRecord::Base
 
   def calculate_fees_schedule
     return 0.029, 30, 0, 0      # take this line out
-    @fee_schedule = @merchant.get_stripe_cred.transaction_fee
+    @fee_schedule = @merchant.get_stripe_cred.cred.transaction_fee
     percent1, cents1 = @fee_schedule.provider_percent.to_f, @fee_schedule.provider_cents.to_f
     percent2, cents2 = @fee_schedule.platform_percent.to_f, @fee_schedule.platform_cents.to_f
     return percent1, cents1, percent2, cents2

@@ -11,7 +11,6 @@ Taiwo
 - workflow for sign in, sign up and places where we add card, token, referrer, contact and customer, payment capture
 - update balance on message and number buying - create and call a method
 - weekly email no users
-- get stripe cred references
 
 
 Others
