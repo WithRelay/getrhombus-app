@@ -58,6 +58,7 @@ class PaymentService
       end
     end
     
+    # refactor this since i now have two models
     def charge(amount_with_taxes, amt_less_stripe_fee, app_fee, merchant, customer, msg, capture)
       #begin
         stripe_cred = merchant.get_stripe_cred

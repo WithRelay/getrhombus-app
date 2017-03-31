@@ -18,7 +18,7 @@ class Plan < ActiveRecord::Base
       team = hash[:team]
       is_platform = team.is_platform?
       # uid = '<redacted_stripe_account_id>' #use this for testing
-      uid = team.get_stripe_cred.uid # use this for real use
+      uid = team.get_stripe_cred.account_id # use this for real use
 
       descriptor = (self.name + "-" + team.org_name)[0..21]
 
@@ -72,7 +72,7 @@ class Plan < ActiveRecord::Base
       return false if !self.save
 
       hash[:statement_descriptor] = new_descriptor
-      res = PaymentService.update_plan(self.id, hash, team.get_stripe_cred.uid, team.is_platform?)
+      res = PaymentService.update_plan(self.id, hash, team.get_stripe_cred.account_id, team.is_platform?)
 
       if res.first
         update_plan_segment if self.customer_id.blank?
@@ -91,7 +91,7 @@ class Plan < ActiveRecord::Base
 
   def delete_plan(team)
     begin
-      res = PaymentService.delete_plan(self.id, team.get_stripe_cred.uid, team.is_platform?).first
+      res = PaymentService.delete_plan(self.id, team.get_stripe_cred.account_id, team.is_platform?).first
       delete_plan_segment if res
       res
     rescue StandardError => e

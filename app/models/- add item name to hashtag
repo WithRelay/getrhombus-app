@@ -9,8 +9,9 @@ Taiwo
 - review transaction model - send_card_error
 - messaging lists, reminders (shells created)
 - workflow for sign in, sign up and places where we add card, token, referrer, contact and customer, payment capture
-- update balance on message and number buying
+- update balance on message and number buying - create and call a method
 - weekly email no users
+- get stripe cred references
 
 
 Others
@@ -21,10 +22,6 @@ Add card info, add subscription, billing info
 
 - <redacted_phone_number> ms nikky
 - nannie j lee recreation center 703 746 5550
-
-Oswald Durant Arts Center 
-- 4hr min $115/hr for residents. $135/hr, 2 staff members ($47/hr), app fee $25, security dep $500, $50 alcohol license
-- 4hr min $135/hr, 2 staff members ($47/hr), app fee $25, security dep $500, $50 alcohol license
 
 
     fields: {
@@ -42,7 +39,7 @@ Oswald Durant Arts Center
         }
       },
 
-      
+
 Surya
 - lock down permissions cancancan?
 - i see issues with reminder js
@@ -58,10 +55,11 @@ Surya
 - campaign toastrs - plug and play. already wrote the code for you. see realtimeservice.rb and notifications.js
 - tooltip for campaigns - leave for noe
 - time comparisons are tricky...make sure to do to_i because rails compares time as floats
+- stop update source files. - emojionearea
 
 Dorje
-- graph - empty state and changes
-- txn history empty page on customer profile
+- graph - empty state - ask edwin
+- txn history empty page on customer profile - ask edwin
 - weekly summary template
 
 Bhishma

@@ -29,7 +29,7 @@ module UsersHelper
   end
 
   def stripe_standalone_cred
-    current_user.stripe_creds.where(uid_type: 1)[0]
+    current_user.standalone_stripe_cred
   end
 
   def country_list
