@@ -108,32 +108,7 @@
       <div class="customer-profile-section-header-div">
         <h4 class="welcome-dash-content-container-header">Conversation History</h4>
       </div>
-      <% if @conversation_refs.empty? %>
-        <div class="no-profile-data-text profile-conversations">
-          You have no conversations with this customer.
-        </div>
-      <% else %>
-        <% @conversation_refs.each do |conversation_ref| %>
-          <a class="conversation-history-link-wrapper w-inline-block" href="#">
-            <div class="customer-profile-conversation-history top w-container">
-              <div class="conversation-content-wrapper w-row">
-                <div class="w-col w-col-1">
-                  <div class="icon-cell"></div>
-                </div>
-                <div class="w-clearfix w-col w-col-11">
-                  <div class="customer-name-conversation-tab"><%= present(@customer).format_customer_name %></div>
-                  <div class="said-text">said:</div>
-                  <p class="conversation-preview"><%= present(conversation_ref).format_textable_text %></p>
-                  <div class="message-channel"> &nbsp; Sent from</div>
-                  <div class="channel-name message-channel"><%= present(conversation_ref).channel %></div>
-                  <div class="message-channel time-received"><%= present(conversation_ref).format_created_at %></div>
-                  <div class="status"><%= present(conversation_ref).format_resolution %></div>
-                </div>
-              </div>
-            </div>
-          </a>
-        <% end %>
-      <% end %>
+      <%= render 'conversation_history' %>
     </div>
     <div class="w-col w-col-4">
       <div class="customer-transactions-div overlow-div">
@@ -158,58 +133,7 @@
             </div>
           </div>
         </div>
-        <div class="customer-profile-transactions">
-          <div class="customer-profile-trasaction-table w-row">
-            <div class="w-col w-col-5">
-              <div class="description header">
-                <div class="headings transaction-description"> &nbsp; Description</div>
-              </div>
-            </div>
-            <div class="w-col w-col-2">
-              <div class="amount header">
-                <div class="headings transaction-amount">Amount</div>
-              </div>
-            </div>
-            <div class="w-col w-col-2">
-              <div class="date header">
-                <div class="headings transaction-time">Time</div>
-              </div>
-            </div>
-            <div class="w-col w-col-3">
-              <div class="action header">
-                <div class="actions headings">Actions</div>
-              </div>
-            </div>
-          </div>
-          <% @transactions.each do |transaction| %>
-            <div class="customer-profile-trasaction-table w-row">
-              <div class="w-col w-col-5">
-                <div class="description w-clearfix">
-                  <div class="shrink-text table-text unread-table"><%= transaction.description %></div>
-                </div>
-              </div>
-              <div class="w-col w-col-2">
-                <div class="amount w-clearfix">
-                  <div class="shrink-text table-text unread-table tran-amount">$<%= transaction.amount || 0 %></div>
-                </div>
-              </div>
-              <div class="w-col w-col-2">
-                <div class="date w-clearfix">
-                  <div class="table-text unread-table shrink-text"><%= time_in_relative_form(transaction.created_at, 'short_ago_format') %></div>
-                </div>
-              </div>
-              <div class="w-col w-col-3">
-                <div class="action w-clearfix">
-                  <a class="actions status modal-loader customer-profile-refund-btn" modal-target= 'refund_customer_modal' data-txn-number="<%= transaction.txn_number %>"
-                  data-txn-last4="<%= transaction.last4 %>">Refund</a>
-                </div>
-              </div>
-            </div>
-           <% end %>
-            <div class='modal-background w-hidden modal-body refund_customer_modal'>
-             <%= render 'shared/modals/refund_customer' %>
-           </div>
-        </div>
+        <%= render 'transactions_table' %>
       </div>
     </div>
   </div>
