@@ -13661,7 +13661,8 @@ h4 {
 }
 
 .toaster-text {
-  margin-top: 15px;
+  margin: auto;
+  text-align: center;
   font-family: 'Akkurat regular', sans-serif;
   color: #637280;
   font-size: 13px;
