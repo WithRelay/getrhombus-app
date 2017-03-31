@@ -96,6 +96,7 @@ class User < ActiveRecord::Base
   accepts_nested_attributes_for :bank_accounts
   validates_associated :bank_accounts, if: lambda { self.bank_accounts.present? }
 
+  has_one :standalone_stripe_cred
   has_many :stripe_creds
   accepts_nested_attributes_for :stripe_creds
 
@@ -136,10 +137,28 @@ class User < ActiveRecord::Base
     user_first_name.present? ? "#{user_first_name} from #{user.org_name}" : user.org_name
   end
 
-  def can_accept_payments?
-    # the last stripe_cred is either a managed acct, a managed acct even if a user had a standalone acct, or a standalone acct
-    creds = self.stripe_creds.last
-    creds.present? ? creds.charges_enabled && creds.disabled_reason.blank? : false
+  # refactor this since i now have two models
+  def get_stripe_cred
+    # platform acct is a standalone account
+    # merchants could have a standalone account (prior to v1.5) and a managed account 
+    # managed account takes priority
+
+    # remove this eventually
+    return { type: 'standalone', cred: User.find_by(id: 23) }
+    ##
+    
+    return { type: 'standalone', cred: self.standalone_stripe_cred } if is_platform?
+
+    # check for managed account first
+    cred = self.stripe_creds
+    return { type: 'managed', cred: cred.first } if cred.present?
+
+    # check for standalone
+    cred = self.standalone_stripe_cred
+    return { type: 'standalone', cred: cred } if cred.present?
+    
+    # has no payment account
+    { type: nil, cred: nil }  
   end
 
   def self.platform_email
@@ -150,18 +169,6 @@ class User < ActiveRecord::Base
     # you can change this temporarily to <redacted_email> or <redacted_email>
     # User.find_by(email: User.platform_email)
     User.find_by(email: "<redacted_email>") || User.find_by(email: "<redacted_email>")
-  end
-
-  def get_stripe_cred
-    # platform acct is a standalone account and only one record exists for platform
-    # merchants could have 2 records. Managed, Standalone (prior to v1.5)
-
-    return User.find_by(id: 23)
-
-    # this shoulnd be the actual code
-    #return self.stripe_creds.first if is_platform?
-    #creds = self.stripe_creds
-    #creds.where(uid_type: ((creds.length == 2) ? 'managed' : 'standalone') ).first
   end
 
   def buy_number(params)

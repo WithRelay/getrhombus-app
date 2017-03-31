@@ -10,7 +10,8 @@ class ConversationRef < ActiveRecord::Base
   # the last message in all conversations within a thread between a merchant and customer
   def self.get_last_customer_msg_from_all_merchant_convs(merchant_id, customer_id)
     conv = Conversation.find_by(merchant_id: merchant_id, uid_type: 'user', uid: customer_id)
-    conv_ref_ids = conv.conversation_resolutions.pluck(:uid_conversation_ref_id) if conv
+    return [] unless conv
+    conv_ref_ids = conv.conversation_resolutions.pluck(:uid_conversation_ref_id)
     ConversationRef.includes(:textable).where(id: conv_ref_ids).order(created_at: :desc)
   end
 

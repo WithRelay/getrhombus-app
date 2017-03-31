@@ -33,7 +33,7 @@ module AddTokenToUser
               if hash[:is_platform_customer]
                 re = PaymentService.add_token_to_stripe_customer(hash)
               else
-                re = PaymentService.add_token_to_stripe_customer(hash, get_stripe_cred.uid)
+                re = PaymentService.add_token_to_stripe_customer(hash, get_stripe_cred.account_id)
               end
             end
           end
@@ -45,7 +45,7 @@ module AddTokenToUser
             MerchantCustomer.create(merchant_id: platform_acct.id, customer_id: self.id, stripe_customer_id: re[1].id)
           else
             # since new customer are always platform customer so is_platform is always true
-            PaymentService.delete_customer(re[1].id, get_stripe_cred.uid, true)
+            PaymentService.delete_customer(re[1].id, get_stripe_cred.account_id, true)
           end
         end
         re
@@ -54,7 +54,7 @@ module AddTokenToUser
       end
     rescue StandardError => e
       # since new customer are always platform customer so is_platform is always true
-      PaymentService.delete_customer(re[1].id, get_stripe_cred.uid, true) if (res.length > 0 && cu.blank?)
+      PaymentService.delete_customer(re[1].id, get_stripe_cred.account_id, true) if (res.length > 0 && cu.blank?)
       # notify team
       [false]
     end
