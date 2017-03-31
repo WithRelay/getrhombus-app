@@ -9,7 +9,7 @@ class CreateStandaloneStripeCreds < ActiveRecord::Migration
       t.boolean :livemode
       t.string :refresh_token
       t.references :user, index: true
-      t.references :transaction_fee, index: true, default: 2 
+      t.references :transaction_fee, index: true, default: 2
 
       t.timestamps null: false
     end

@@ -137,7 +137,6 @@ class User < ActiveRecord::Base
     user_first_name.present? ? "#{user_first_name} from #{user.org_name}" : user.org_name
   end
 
-  # refactor this since i now have two models
   def get_stripe_cred
     # platform acct is a standalone account
     # merchants could have a standalone account (prior to v1.5) and a managed account 
