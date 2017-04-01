@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170331061448) do
+ActiveRecord::Schema.define(version: 20170401115931) do
 
   create_table "account_reloads", force: :cascade do |t|
     t.integer  "user_id",        limit: 4
@@ -462,6 +462,8 @@ ActiveRecord::Schema.define(version: 20170331061448) do
     t.string   "to",                limit: 191
     t.string   "message_timestamp", limit: 191
     t.string   "message_price",     limit: 191
+    t.string   "price_unit",        limit: 191
+    t.string   "relay_price",       limit: 191
     t.string   "status",            limit: 191
     t.string   "error_text",        limit: 191
     t.string   "error_code",        limit: 191
@@ -472,7 +474,6 @@ ActiveRecord::Schema.define(version: 20170331061448) do
     t.text     "text",              limit: 65535
     t.string   "num_segments",      limit: 191
     t.integer  "num_media",         limit: 4,     default: 0
-    t.string   "price_unit",        limit: 191
     t.integer  "hashtag_id",        limit: 4
   end
 
@@ -772,7 +773,7 @@ ActiveRecord::Schema.define(version: 20170331061448) do
     t.string   "reset_password_token",   limit: 191
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          limit: 4,     default: 0
+    t.integer  "sign_in_count",          limit: 4,                              default: 0
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip",     limit: 191
@@ -820,18 +821,18 @@ ActiveRecord::Schema.define(version: 20170331061448) do
     t.string   "stripe_refresh_token",   limit: 191
     t.string   "first_name",             limit: 191
     t.string   "last_name",              limit: 191
-    t.integer  "status",                 limit: 4,     default: 1
+    t.integer  "status",                 limit: 4,                              default: 1
     t.string   "referrer_num",           limit: 191
     t.string   "url",                    limit: 191
     t.text     "custom_welcome",         limit: 65535
     t.string   "short_url",              limit: 191
     t.string   "currency",               limit: 191
-    t.string   "time_zone",              limit: 191,   default: "Eastern Time (US & Canada)"
+    t.string   "time_zone",              limit: 191,                            default: "Eastern Time (US & Canada)"
     t.string   "user_color",             limit: 191
     t.string   "team_size",              limit: 191
-    t.integer  "account_balance",        limit: 4,     default: 2
-    t.boolean  "auto_reload",            limit: 1,     default: false
-    t.integer  "auto_reload_amt",        limit: 4,     default: 20
+    t.decimal  "account_balance",                      precision: 16, scale: 8, default: 2.0
+    t.boolean  "auto_reload",            limit: 1,                              default: false
+    t.integer  "auto_reload_amt",        limit: 4,                              default: 2000
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree

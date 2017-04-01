@@ -145,19 +145,15 @@ class User < ActiveRecord::Base
     # remove this eventually
     return { type: 'standalone', cred: User.find_by(id: 23) }
     ##
-    
     return { type: 'standalone', cred: self.standalone_stripe_cred } if is_platform?
-
-    # check for managed account first
-    cred = self.stripe_creds
-    return { type: 'managed', cred: cred.first } if cred.present?
-
-    # check for standalone ... this is legacy
-    cred = self.standalone_stripe_cred
-    return { type: 'standalone', cred: cred } if cred.present?
     
-    # has no payment account
-    { type: nil, cred: nil }  
+    cred = self.stripe_creds   # check for managed account first
+    return { type: 'managed', cred: cred.first } if cred.present?
+    
+    cred = self.standalone_stripe_cred  # check for standalone ... this is legacy
+    return { type: 'standalone', cred: cred } if cred.present?
+
+    { type: nil, cred: nil }  # has no payment account
   end
 
   def self.platform_email
@@ -175,7 +171,7 @@ class User < ActiveRecord::Base
     return false unless number
     self.rhombus_number = number[0]
     self.rn_friendly_name = number[1]
-    self.save
+    self.update_account_balance(NUMBER_PRICE)
   end
 
   def has_valid_card?
@@ -197,6 +193,10 @@ class User < ActiveRecord::Base
     page = FbPage.find_by(page_access_token: page_access_token)
     fb_cred = self.fb_creds.where(fb_page_id: page.id).last
     fb_cred.page_specific_id
+  end
+
+  def update_account_balance(amt)
+    self.update(account_balance: (self.account_balance - amt.to_f).round(6))
   end
 
   private

@@ -25,9 +25,11 @@ class Message < ActiveRecord::Base
 
       if true #merchant.rn_type.present?      # this is twilio
         if response = TextingService.send_sms(from, to, message, media_ary)
+          price = (media_ary.blank?) ? SMS_PRICE_SENT : MMS_PRICE_SENT
           self.update_attributes(status: response.status, message_id: response.sid, message_timestamp: response.date_updated, message_price: response.price,
                 error_code: response.error_code, error_text: response.error_message, price_unit: response.price_unit, num_segments: response.num_segments,
-                num_media: response.num_media)
+                num_media: response.num_media, relay_price: price)
+          merchant.update_account_balance(price)
         else
           Notification.text_failure_notification(response, from, to, message).deliver_now                         # Notify team of failure
           false
@@ -35,9 +37,10 @@ class Message < ActiveRecord::Base
       else
         response = TextingService.send_sms_nexmo(from, to, message, self.id)
         if response && response.code == 200 && response["messages"].first["status"] == "0"
-            self.update_attributes(status: response['messages'].first['status'], message_id: response['messages'].first['message-id'],
+          self.update_attributes(status: response['messages'].first['status'], message_id: response['messages'].first['message-id'],
                 message_price: response['messages'].first['message-price'], num_segments: response['message-count'],
-                error_text: response["error-text"])
+                error_text: response["error-text"], relay_price: SMS_PRICE_SENT)
+          merchant.update_account_balance(SMS_PRICE_SENT)
         else
           Notification.text_failure_notification(response["messages"].first, from, to, message).deliver_now               # Notify team of failure
           false

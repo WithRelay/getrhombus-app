@@ -46,14 +46,6 @@ class RegistrationsController < Devise::RegistrationsController
     end
   end
 
-  def save_resource
-    begin
-      resource.save
-    rescue ActiveRecord::RecordNotUnique
-      resource.errors.add(:phone_number, "is already in use") if $!.message.include?('index_users_on_phone_number')
-    end
-  end
-
   def add_profile_info
     @user = current_user
     @user.people = [@user.people.first || Person.new]
@@ -75,24 +67,14 @@ class RegistrationsController < Devise::RegistrationsController
   def check_params_with_update
     msg = nil
     if set_update_flash_messages[:subscription].present? && current_user.is_merchant?
-      subscription = create_saas_subscription
-      msg = (subscription.third ? subscription.third : "We are unable to start a subscription for you") unless subscription.first
+      #subscription = create_saas_subscription
+      msg = ''# (subscription.third ? subscription.third : "We are unable to start a subscription for you") unless subscription.first
     elsif set_update_flash_messages[:rhombus_number].present? && current_user.is_merchant?
       unless current_user.buy_number(params['user'])
        msg = 'Something went wrong. We were unable to provision a number for you. A member of our support team will contact you shortly.'
       end
-    elsif set_update_flash_messages[:card_info].present? 
-      if current_user.is_customer?
-        set_captured_payment_session
-        user_card = current_user.add_token_to_customer(params[:user][:card_token])
-      else current_user.is_merchant?
-        user_card = current_user.add_token_to_merchant(params[:user][:card_token])
-      end
-      msg = (user_card.third ? user_card.third : "We are unable to add your card to your profile.") unless user_card.first
-
-
-    ###### refactor this
-    elsif set_update_flash_messages[:billing_info].present?
+    elsif set_update_flash_messages[:card_info].present? || set_update_flash_messages[:billing_info].present?
+      set_captured_payment_session if current_user.is_customer? && set_update_flash_messages[:card_info].present?
       add_token = current_user.add_token_to_user(params[:user][:card_token])
       msg = (add_token.third ? add_token.third : "We are unable to add your card to your profile.") unless add_token.first
     end
@@ -130,7 +112,8 @@ class RegistrationsController < Devise::RegistrationsController
 
   def create_saas_subscription
     begin
-      token_res = (params[:user][:card_token].present?) ? current_user.add_token_to_user(params[:user][:card_token]) : [true]
+      # or you can check if the selected plan is the free plan
+      token_res = params[:user][:card_token].present? ? current_user.add_token_to_user(params[:user][:card_token]) : [true]
       if token_res.first
         @platform_acct = User.get_platform_acct_obj
         merchant_customer = MerchantCustomer.find_by(customer_id: current_user.id, merchant_id: @platform_acct.id)
@@ -201,6 +184,14 @@ class RegistrationsController < Devise::RegistrationsController
 
   def previous_url
     request.referrer || root_path
+  end
+
+  def save_resource
+    begin
+      resource.save
+    rescue ActiveRecord::RecordNotUnique
+      resource.errors.add(:phone_number, "is already in use") if $!.message.include?('index_users_on_phone_number')
+    end
   end
 
   def update_resource(resource, user_params)

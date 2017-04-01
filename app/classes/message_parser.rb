@@ -233,11 +233,11 @@ class MessageParser
   def merchant_supports_payment?
     cred_data = @merchant.get_stripe_cred
     
-    if cred_data.type == 'standalone'
+    if cred_data[:type] == 'standalone'
       status = true 
-    elsif cred_data.type == 'managed'
+    elsif cred_data[:type] == 'managed'
       status = cred_data.cred.can_accept_payments?
-    elsif cred_data.type == nil
+    elsif cred_data[:type] == nil
       status = false
     end
 

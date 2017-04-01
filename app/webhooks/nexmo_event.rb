@@ -11,6 +11,8 @@ class NexmoEvent
     # save inbound
     def save_message
       begin
+        num_segments = @params["concat-total"].present? ? @params["concat-total"].to_i : 1
+
         user = get_user
         @message_id = @params[:messageId]
         @message = Message.create(
@@ -20,8 +22,9 @@ class NexmoEvent
           user_id_to: @merchant.id,
           message_id: @message_id,
           text: @params[:text].strip,
-          num_segments: @params["concat-total"] || 1,
+          num_segments: num_segments,
           message_timestamp: @params["message-timestamp"]
+          relay_price: SMS_PRICE_RECEIVED
         )
 
         # create or add to existing conversation
@@ -34,6 +37,7 @@ class NexmoEvent
         
         Conversation.find_or_create_conversation_for_message_and_publish(@merchant, user, uid_type, uid, @message, true)
         @merchant.away_message.check_office_hours(@merchant, user, uid_type, uid, "Message")
+        @merchant.update_account_balance(SMS_PRICE_RECEIVED * num_segments)
         MessageParser.new.process_message(@merchant, user, @message, 'Message')
 
       rescue ActiveRecord::RecordNotUnique

@@ -5,14 +5,13 @@ Taiwo
 - how will using the master account affect us (- unify team and dashboard email issue really)
 - create customers/contacts...how about existing customers/contacts. switching stripe_id to merchants.
   - upon signing up, does an existing contact update to become customer?
-  - review where merchant customer is created.... see create_subscription, add-token_to_customer, etc
+  - review where merchant customer is created.... see create_subscription, add-token_to_customer, etc, csv, add a customer, tran
 - review transaction model - send_card_error
 - messaging lists, reminders (shells created)
 - workflow for sign in, sign up and places where we add card, token, referrer, contact and customer, payment capture
-- update balance on message and number buying - create and call a method
 - weekly email no users
-- app fee for subscriptions, app fee for managed account
-- StandaloneMerchantCustomer - merchant_id is platform - do i need this...since this is just platform...can put in merchantcustomer
+- app fee for subscriptions, app fee for managed account, review charge service
+- associated validation
 
 
 Others

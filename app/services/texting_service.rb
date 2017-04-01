@@ -46,7 +46,7 @@ class TextingService
         re = search_number(params)
         if re[:number].present?
           re = client.account.incoming_phone_numbers.create(phone_number: re[:number], voice_application_sid: TWILIO_RHOMBUS_APP_SID,
-                sms_application_sid: TWILIO_RHOMBUS_APP_SID)    
+                sms_application_sid: TWILIO_RHOMBUS_APP_SID)   
           return re.phone_number.gsub('+', ''), re.friendly_name
         end
       rescue StandardError => e

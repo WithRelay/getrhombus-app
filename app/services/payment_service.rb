@@ -21,11 +21,11 @@ class PaymentService
         return [true, cu]
       rescue Stripe::CardError => e
         # Since it's a decline, Stripe::CardError will be caught
-        owner = User.find_by(email: Rails.application.secrets.team_email)
         unless hash[:is_merchant]
+          platform_acct = User.get_platform_acct_obj
           customer = User.find_by(email: hash[:email])
           msg_to_send = "We were unable to update your card info on Rhombus because: #{err[:message]}."
-          #Conversation.find_or_create_conversation_for_message_and_send_publish(team, customer, 'user', customer.id, msg_to_send, "Message")
+          Conversation.find_or_create_conversation_for_message_and_send_publish(platform_acct.rhombus_number, customer, 'user', customer.id, msg_to_send, "Message")
         end
         # redo this email
         # Notification.token_failure_notification(err, hash[:email]).deliver_now
