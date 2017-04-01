@@ -29,7 +29,7 @@ $(document).ready(function () {
     })
     .on('cancel.daterangepicker', function(ev, picker) {
       $(this).val('');
-    });  
+    });
   }
 
   // validate coupon form
@@ -87,7 +87,7 @@ $(document).ready(function () {
       });
 
   }
-  
+
   $('#coupon-name').keyup(function(e){
     $('#couponForm').formValidation('revalidateField', 'coupon[name]');
   });
@@ -105,13 +105,13 @@ $(document).ready(function () {
 
   $('body').on('click', '.coupon-name-edit-icon', function(e) {
     e.stopImmediatePropagation();
-    if ($('.coupon-name.editable.open').length > 0) { 
+    if ($('.coupon-name.editable.open').length > 0) {
       $('.coupon-name.editable.open').parent().find('.cancel-edit-coupon').click()
     }
     var parent = $(this).parent();
     console.log(parent)
     parent.css('display','none');
-    parent = parent.parent(); 
+    parent = parent.parent();
     parent.find(".coupon-name-save-span").css('display','block');
     var $el = parent.find('.coupon-name');
     current_coupon_name = $el.text();
@@ -165,18 +165,18 @@ $(document).ready(function () {
       });
   };
 
-  $(document).on('click', '.delete-coupon', function(evt) {
-    var selector = '.' + evt.target.classList[evt.target.classList.length - 1 ];
-
-    if (!$(selector).attr('isDestroy')) {
-      evt.stopImmediatePropagation();
-      FlashHandler.setConfirmationDialog(selector,
-       'Deleting this coupon will not affect discounts for customers who have already redeemed the coupon, but new redemptions of the coupon won\'t be allowed.',
-       'Delete coupon', 'isDestroy'
-      );
-      return false;
-    }
-  });
-
 });
 
+$(document).on('click', '.delete-coupon', function(evt) {
+  var selector = '.' + evt.target.classList[evt.target.classList.length - 1 ];
+  if (!$(selector).attr('isDestroy')) {
+    evt.stopImmediatePropagation();
+    FlashHandler.setConfirmationDialog(
+      selector,
+      'Deleting this coupon will not affect discounts for customers who have already redeemed the coupon, but new redemptions of the coupon won\'t be allowed.',
+      'Delete coupon',
+      'isDestroy'
+    );
+    return false;
+  }
+});

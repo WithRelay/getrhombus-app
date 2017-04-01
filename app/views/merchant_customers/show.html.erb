@@ -53,7 +53,13 @@
         <div class="right-nav-profile-content-wrapper">
           <%#= present(@customer).profile_image %>
           <!-- we may need present method to dispaly color  -->
-          <%= image_tag(@user_snapshot[:profile_image][:value], class: 'class: profile-picture-right-nav', width: 60 )%>
+          <%if @user_snapshot[:profile_image][:type] == 'color' %>
+          <div class= "rignt-sidebar-placeholder-container" style="background: <%= @user_snapshot[:profile_image][:value] %>">
+            <div class="side-bar-profile-image-placeholder-text">#</div>
+          </div>
+          <% else %>
+            <%= image_tag(@user_snapshot[:profile_image][:value], class: 'profile-picture-right-nav', width: 60 )%>
+          <%end%>
 
           <div class="dashboard-right-nav signup-box-subheading"><%= "#{@user_snapshot[:full_name]}"%> <span class="relay-id"><%= "#{@user_snapshot[:verified]}" %></span>
           </div>
@@ -64,44 +70,7 @@
           <div class="left-column-text"> &nbsp; &nbsp; Customer since: <%= "#{@user_snapshot[:since][:date]}"%></div>
           <div class="right-nav-underline"></div>
         </div>
-        <div class="customer-profile profile-info-wrapper">
-          <h1 class="dashboard-right-nav recent-activity signup-box-subheading">RECENT ACTIVITY</h1>
-          <div class="recent-activity right-nav-row w-row">
-            <div class="left-column w-col w-col-6">
-              <div class="left-column-text recent-activity">Last &nbsp;Contact</div>
-            </div>
-            <div class="right-column w-col w-col-6">
-              <div class="recent-activity-description"><%= @last_conv_ref ? time_in_relative_form(@last_conv_ref.created_at, 'long_format') : "-" %></div>
-            </div>
-          </div>
-          <div class="recent-activity right-nav-row w-row">
-            <div class="left-column w-col w-col-5">
-              <div class="left-column-text recent-activity">Reason</div>
-            </div>
-            <div class="right-column w-col w-col-7">
-              <div class="recent-activity-description"><%= @last_message_resolution %></div>
-            </div>
-          </div>
-          <div class="payment recent-activity right-nav-row w-row">
-            <div class="left-column w-col w-col-5">
-              <div class="left-column-text recent-activity">Last &nbsp;Transaction</div>
-            </div>
-            <div class="right-column w-col w-col-7">
-              <div class="recent-activity-description"><%= @last_transaction ? present(@last_transaction).format_created_at : '-' %></div>
-            </div>
-          </div>
-          <div class="recent-activity right-nav-row w-row">
-            <div class="left-column w-col w-col-6">
-              <div class="left-column-text recent-activity">Amount</div>
-            </div>
-            <div class="right-column w-col w-col-6">
-              <div class="recent-activity-description">
-                <%= @last_transaction ? present(@last_transaction).format_txn_amount : "-" %>
-              </div>
-            </div>
-          </div>
-          <div class="right-nav-underline"></div>
-        </div>
+        <%= render 'recent_activity' %>
       </div>
     </div>
     <div class="w-col w-col-5">

@@ -70,18 +70,18 @@ $(document).on('ready',function(){
 		});
 	}
 
-	// Confirmation dialog box for destroy saved reply
-	$('#delete-saved-reply').click(function(evt) {
-		var selectedElement = selectCheckedElement();
-		if(selectedElement == false){
-			FlashHandler.setFlashMessage('Please select a reply first','error');
-			return false;
-		}
-		else if (!$('#delete-saved-reply').attr('isDestroy')) {
-			FlashHandler.setConfirmationDialog('#delete-saved-reply','Confirmation Needed', 'Are you sure?', 'isDestroy' )
-			return false;
-		}
-	});
+  // Confirmation dialog box for destroy saved reply
+  $('#delete-saved-reply').click(function(evt) {
+    var selectedElement = selectCheckedElement();
+    if(selectedElement == false){
+      FlashHandler.setFlashMessage('Please select a reply first','error');
+      return false;
+    }
+    else if (!$('#delete-saved-reply').attr('isDestroy')) {
+      FlashHandler.setConfirmationDialog('#delete-saved-reply','Are you sure, you want to delete the selected item?', 'Delete', 'isDestroy' )
+      return false;
+    }
+  });
 
 $('#delete-reminder').click(function(e){
 	var selectedElement = selectCheckedElement();

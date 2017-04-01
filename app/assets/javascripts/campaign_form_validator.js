@@ -136,6 +136,7 @@ $(document).on('ready page:load', function() {
     openOnFocus: false,
     maxOptions: 5,
     maxItems: 1,
+    create: false,
     options: campaign_lists,
     closeAfterSelect: true,
     render: {
