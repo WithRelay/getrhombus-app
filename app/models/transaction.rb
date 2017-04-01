@@ -43,27 +43,32 @@ class Transaction < ActiveRecord::Base
     begin
       method(__method__).parameters.each { |_,arg| instance_variable_set("@#{arg}", binding.local_variable_get(arg)) }
 
-      tax_multiplier = (((@merchant.tax_percent.to_f) / 100) + 1)                                         # default is 0
-      @amt_with_taxes = (@amt.to_f * tax_multiplier).round                                              # total amount to charge
+      # taxes
+      tax_multiplier = (((@merchant.tax_percent.to_f) / 100) + 1)                 
+      @amt_with_taxes = (@amt.to_f * tax_multiplier).round                        
       
+      # fees
       fees = calculate_fees_schedule
-      @amt_less_stripe_fee = ((@amt_with_taxes * fees[0]) - fees[1]).round  
-      @app_fee = ((@amt_with_taxes * fees[2]) - fees[3]).round         
-                                          
+      @stripe_fee = ((@amt_with_taxes * fees[0]) - fees[1]).round  
+      @app_fee = merchant.is_platform? ? 0 : ((@amt_with_taxes * fees[2]) - fees[3]).round 
+      amount_less_fees = (@amount_with_taxes - @stripe_fee - @app_fee).round
+
       #puts 'got here so far'
 
-      @stripe_res_ary = PaymentService.charge(@amt_with_taxes, @amt_less_stripe_fee, @app_fee, merchant, user, msg.text, capture)
+      # charge
+      @stripe_res_ary = PaymentService.charge(@amt_with_taxes, amount_less_fees, merchant, user, msg.text, capture)
       @stripe_res = @stripe_res_ary[0]
 
       #puts @stripe_res_ary.inspect
 
+      # handle response
       if @stripe_res
         update_transaction_data
         [true, "Transaction done"]
       else
         # true if it is a card decline...we text only customers. Merchant might not have textable number on file.
-        #send_card_error_text if @stripe_res_ary[3] && user.is_customer?
-        #send_payment_failure_email(@stripe_res_ary[1], @stripe_res_ary[3])
+        # send_card_error_text if @stripe_res_ary[3] && user.is_customer?
+        # send_payment_failure_email(@stripe_res_ary[1], @stripe_res_ary[3])
         [false, @stripe_res_ary[2]]
       end
     rescue StandardError => err
@@ -73,7 +78,7 @@ class Transaction < ActiveRecord::Base
   end
 
   def calculate_fees_schedule
-    return 0.029, 30, 0, 0      # take this line out
+    return 2.9, 30, 0, 0      # take this line out
     @fee_schedule = @merchant.get_stripe_cred[:cred].transaction_fee
     percent1, cents1 = @fee_schedule.provider_percent.to_f, @fee_schedule.provider_cents.to_f
     percent2, cents2 = @fee_schedule.platform_percent.to_f, @fee_schedule.platform_cents.to_f
@@ -81,10 +86,8 @@ class Transaction < ActiveRecord::Base
   end
 
   def update_transaction_data
-    # storing this in intger, other amount columns need to be changed to integer...consistent with Stripe
-    _stripe_fee = @amt_with_taxes - @amt_less_stripe_fee
-
-    self.update(app_fee: amt_in_decimal(@app_fee), stripe_fee: _stripe_fee,
+    # app_fee, stripe_fee are integers
+    self.update(app_fee: @app_fee, stripe_fee: @stripe_fee,
                 amount: amt_in_decimal(@amt), amount_with_taxes: amt_in_decimal(@stripe_res.amount),
                 currency: @stripe_res.currency, txn_uri: @stripe_res.id, txn_number: generate_txn_number,
                 status: @stripe_res.status, txn_available_at: @stripe_res.created, last4: @stripe_res.source.last4,

@@ -25,3 +25,6 @@ SMS_PRICE_RECEIVED = 0.015
 MMS_PRICE_SENT = 0.02
 MMS_PRICE_RECEIVED = 0.04
 NUMBER_PRICE = 1
+
+# Transactions before this date cannot be refunded
+V1_5_LIVE_DATE = Time.now.utc 

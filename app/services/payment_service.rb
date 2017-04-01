@@ -58,52 +58,48 @@ class PaymentService
       end
     end
     
-    # refactor this since i now have two models
-    def charge(amount_with_taxes, amt_less_stripe_fee, app_fee, merchant, customer, msg, capture)
+    def charge(amount_with_taxes, amt_less_fees, merchant, customer, msg, capture)
       #begin
         stripe_cred = merchant.get_stripe_cred
         currency = merchant.currency ? merchant.currency : "usd"
+        # the platform always has a stripe_customer_id for a user making payment 
+        merchant_customer = MerchantCustomer.find_by(merchant_id: User.get_platform_acct_obj.id, customer_id: customer.id)
 
         puts merchant.inspect
-        puts "putting strupe cred"
+        puts "putting stripe cred"
         puts stripe_cred
 
-        #if stripe_cred.standalone? 
-        if stripe_cred 
-          # 1. need to backward support merchant's with standalone connect stripe_account
-  #######!! 2. Platform account is a standalone account. For charging merchants or regular customers. Do we still get the discount with this?? I think so.
-        
-          # You use merchant/customer or platform/merchant combination for standalone account
- ########!! Merchant and customer relationship in MerchantCustomer might not exists when it gets here for merchant/customer....so fix
-          merchant_customer = MerchantCustomer.find_by(merchant_id: merchant.id, customer_id: customer.id)            
+        # 1. need to backward support merchant's with standalone connect stripe_account
+        # 2. platform account is a standalone account. For charging merchants or regular customers. 
+        # 3. managed accounts
 
-          #unless merchant.is_platform?
-          unless true
+        if stripe_cred #stripe_cred[:type] == 'standalone'     
+          unless true #merchant.is_platform?
             re = Stripe::Charge.create({
               amount: amount_with_taxes, currency: currency,
-              customer: merchant_customer.stripe_customer_id, metadata: { "message" => msg },
+              customer: merchant_customer.stripe_customer_id, 
+              metadata: { "message" => msg },
               description: "Payment from #{customer.email}. Card name: #{customer.card_name}. Last four: #{customer.last4}.",
-            }, { stripe_account: stripe_cred.uid })
+            }, { stripe_account: stripe_cred[:cred].account_id })
           else
-            # do i create charge on platform in standalone?? i guess for platform
             re = Stripe::Charge.create({
               amount: amount_with_taxes, currency: currency,
-              customer: merchant_customer.stripe_customer_id, metadata: { "message" => msg },
+              customer: merchant_customer.stripe_customer_id, 
+              metadata: { "message" => msg },
               description: "Payment from #{customer.email}. Card name: #{customer.card_name}. Last four: #{customer.last4}.",
    ########!! statement_descriptor: '', # should already be on our stripe account, can still set this here...get from Edwin
             })
           end
-        else
-          # You use platform and customer for managed account charges
-          # Platform and customer relationship in MerchantCustomer will always exists when it gets here
-          merchant_customer = MerchantCustomer.find_by(merchant_id: User.get_platform_acct_obj.id, customer_id: customer.id)
+        elsif stripe_cred[:type] == 'managed'         
           re = Stripe::Charge.create({
-            amount: amt_less_stripe_fee, currency: currency,
-            customer: merchant_customer.stripe_customer_id, capture: capture,
+            customer: merchant_customer.stripe_customer_id,
+            capture: capture, currency: currency, amount: amount_with_taxes,             
             description: "Payment from #{customer.email}. Card name: #{customer.card_name}. Last four: #{customer.last4}.",      
-            destination: stripe_cred.uid, metadata: { "message" => msg },
+            destination: {
+              amount: amt_less_fees, account: stripe_cred[:cred].account_id,
+            }, 
+            metadata: { "message" => msg },
  ########!! statement_descriptor: '', # we will set this here...get from Edwin
-            application_fee: app_fee
           })
         end
 
@@ -134,7 +130,7 @@ class PaymentService
     def refund_charge(hash)
       begin
         ch = Stripe::Charge.retrieve(hash[:charge_id])
-        re = ch.refunds.create(reason: hash[:reason], refund_application_fee: true, reverse_transfer: true)
+        re = ch.refunds.create(reason: hash[:reason], reverse_transfer: true)
         [true, re]
       rescue Stripe::StripeError => e
         # might need to specify that this is a stripe error

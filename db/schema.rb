@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170401115931) do
+ActiveRecord::Schema.define(version: 20170401133858) do
 
   create_table "account_reloads", force: :cascade do |t|
     t.integer  "user_id",        limit: 4
@@ -675,12 +675,12 @@ ActiveRecord::Schema.define(version: 20170401115931) do
 
   create_table "transaction_fees", force: :cascade do |t|
     t.string   "provider",         limit: 191
-    t.string   "provider_percent", limit: 191, default: "0.029"
+    t.string   "provider_percent", limit: 191, default: "2.9"
     t.integer  "provider_cents",   limit: 4,   default: 30
     t.string   "platform_percent", limit: 191, default: "0"
     t.integer  "platform_cents",   limit: 4,   default: 0
-    t.datetime "created_at",                                     null: false
-    t.datetime "updated_at",                                     null: false
+    t.datetime "created_at",                                   null: false
+    t.datetime "updated_at",                                   null: false
   end
 
   create_table "transactions", force: :cascade do |t|

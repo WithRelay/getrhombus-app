@@ -9,9 +9,10 @@ Taiwo
 - review transaction model - send_card_error
 - messaging lists, reminders (shells created)
 - workflow for sign in, sign up and places where we add card, token, referrer, contact and customer, payment capture
-- weekly email no users
-- app fee for subscriptions, app fee for managed account, review charge service
+- app fee for subscriptions
 - associated validation
+- only time customer is merchant customer is for subscriptions...interesting...so in merchantcustomer should
+i duplicate ordinary customers?
 
 
 Others
@@ -68,4 +69,5 @@ Bhishma
 - the 5 emails from edwin (incomplete signup email (the following day), review offer to help, autoreload failure)
 - get full contact data when fb account is connected if email is present
 - do you update fb_cred for a user who didnt sign up when they sent messages in the past...but later signs up?
-- awaymessage
+- awaymessage for messenger
+- weekly email no users
