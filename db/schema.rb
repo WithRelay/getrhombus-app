@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170401133858) do
+ActiveRecord::Schema.define(version: 20170401153343) do
 
   create_table "account_reloads", force: :cascade do |t|
     t.integer  "user_id",        limit: 4
@@ -830,7 +830,7 @@ ActiveRecord::Schema.define(version: 20170401133858) do
     t.string   "time_zone",              limit: 191,                            default: "Eastern Time (US & Canada)"
     t.string   "user_color",             limit: 191
     t.string   "team_size",              limit: 191
-    t.decimal  "account_balance",                      precision: 16, scale: 8, default: 2.0
+    t.decimal  "account_balance",                      precision: 16, scale: 8, default: 2.5
     t.boolean  "auto_reload",            limit: 1,                              default: false
     t.integer  "auto_reload_amt",        limit: 4,                              default: 2000
   end
