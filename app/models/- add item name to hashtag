@@ -11,7 +11,8 @@ Taiwo
 - workflow for sign in, sign up and places where we add card, token, referrer, contact and customer, payment capture
 - update balance on message and number buying - create and call a method
 - weekly email no users
-- app fee for subscriptions
+- app fee for subscriptions, app fee for managed account
+- StandaloneMerchantCustomer - merchant_id is platform - do i need this...since this is just platform...can put in merchantcustomer
 
 
 Others

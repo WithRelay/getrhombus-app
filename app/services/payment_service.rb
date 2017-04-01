@@ -85,6 +85,7 @@ class PaymentService
               description: "Payment from #{customer.email}. Card name: #{customer.card_name}. Last four: #{customer.last4}.",
             }, { stripe_account: stripe_cred.uid })
           else
+            # do i create charge on platform in standalone?? i guess for platform
             re = Stripe::Charge.create({
               amount: amount_with_taxes, currency: currency,
               customer: merchant_customer.stripe_customer_id, metadata: { "message" => msg },
