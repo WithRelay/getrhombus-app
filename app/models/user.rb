@@ -152,7 +152,7 @@ class User < ActiveRecord::Base
     cred = self.stripe_creds
     return { type: 'managed', cred: cred.first } if cred.present?
 
-    # check for standalone
+    # check for standalone ... this is legacy
     cred = self.standalone_stripe_cred
     return { type: 'standalone', cred: cred } if cred.present?
     

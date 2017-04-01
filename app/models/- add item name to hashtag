@@ -11,6 +11,7 @@ Taiwo
 - workflow for sign in, sign up and places where we add card, token, referrer, contact and customer, payment capture
 - update balance on message and number buying - create and call a method
 - weekly email no users
+- app fee for subscriptions
 
 
 Others
@@ -38,6 +39,7 @@ Add card info, add subscription, billing info
         }
       },
 
+    contacts dont have customer profile page
 
 Surya
 - lock down permissions cancancan?
@@ -54,11 +56,10 @@ Surya
 - campaign toastrs - plug and play. already wrote the code for you. see realtimeservice.rb and notifications.js
 - tooltip for campaigns - leave for noe
 - time comparisons are tricky...make sure to do to_i because rails compares time as floats
-- stop update source files. - emojionearea
+- stop updatinig source files. - emojionearea
 
 Dorje
 - graph - empty state - ask edwin
-- txn history empty page on customer profile - ask edwin
 - weekly summary template
 
 Bhishma

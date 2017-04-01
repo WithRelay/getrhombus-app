@@ -81,10 +81,17 @@ class RegistrationsController < Devise::RegistrationsController
       unless current_user.buy_number(params['user'])
        msg = 'Something went wrong. We were unable to provision a number for you. A member of our support team will contact you shortly.'
       end
-    elsif set_update_flash_messages[:card_info].present? && current_user.is_customer?
-      set_captured_payment_session
-      user_card = current_user.add_token_to_user(params[:user][:card_token])
+    elsif set_update_flash_messages[:card_info].present? 
+      if current_user.is_customer?
+        set_captured_payment_session
+        user_card = current_user.add_token_to_customer(params[:user][:card_token])
+      else current_user.is_merchant?
+        user_card = current_user.add_token_to_merchant(params[:user][:card_token])
+      end
       msg = (user_card.third ? user_card.third : "We are unable to add your card to your profile.") unless user_card.first
+
+
+    ###### refactor this
     elsif set_update_flash_messages[:billing_info].present?
       add_token = current_user.add_token_to_user(params[:user][:card_token])
       msg = (add_token.third ? add_token.third : "We are unable to add your card to your profile.") unless add_token.first

@@ -5,7 +5,7 @@
         <% contact_details = present(merchant_contact).contact_details %>
         <%= profile_image(contact_details[:profile_image]) %>
         <div class="shrink-text table-text">
-          <%= link_to contact_details[:full_name], "/users/#{current_user.id}/customers/#{merchant_contact.uid}" %>
+          <%= contact_details[:full_name] %>
         </div>
       </div>
       <div class="cb check-box-column">
