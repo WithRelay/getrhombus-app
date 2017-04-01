@@ -3,5 +3,8 @@ class MerchantCustomer < ActiveRecord::Base
   belongs_to :customer, class_name: "User"
   has_many :subscriptions, inverse_of: :merchant_customer
   # has_many :invoices
+
+
+  #def self.add_to
 end
 

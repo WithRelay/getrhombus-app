@@ -61,4 +61,34 @@ module AddTokenToUser
     end
   end
 
+  def add_token_for_new_customer(hash)
+    res = PaymentService.add_token_to_stripe_customer(hash)
+    if res.first
+      MerchantCustomer.create(merchant_id: platform_acct.id, customer_id: self.id, stripe_customer_id: res[1].id)
+    else
+      # since a merchant is always a platform customer, so send in true
+      # we are deleting customer in case customer was created but token wasn't added
+      PaymentService.delete_customer(res[1].id, platform_acct.get_stripe_cred[:cred].account_id, true)
+    end
+    res
+  end
+
+  def add_token_for_customer_without_payment_info(hash)
+    cu.each do |c|
+      hash[:stripe_customer_id] = c.stripe_customer_id
+      hash[:is_platform_customer] = c.merchant_id == platform_acct.id
+      if hash[:is_platform_customer]
+        res = PaymentService.add_token_to_stripe_customer(hash)
+      else
+        res = PaymentService.add_token_to_stripe_customer(hash, c.merchant.get_stripe_cred[:cred].account_id)
+      end
+      cu.update(:stripe_customer_id
+      break unless res.first
+    end
+    res
+  end
+
+  def update_token_for_existing_customer
+  end
+
 end

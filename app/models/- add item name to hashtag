@@ -69,3 +69,24 @@ Bhishma
 - do you update fb_cred for a user who didnt sign up when they sent messages in the past...but later signs up?
 - awaymessage for messenger
 - weekly email no users
+
+
+
+cu = MerchantCustomer.where(customer_id: self.id)
+
+if blank
+	# signing up for the first time and from sign up page
+else
+	cu.each do x
+		if stripe_uri is blank
+			# is new customer in hash
+			do x
+		else 
+			# not new customer in hash
+			do y
+		end
+
+	end
+
+	# 
+

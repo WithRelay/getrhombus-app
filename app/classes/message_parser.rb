@@ -71,7 +71,7 @@ class MessageParser
           url = Rails.application.secrets.url["info"]
           short_link = 'test' #UrlShortenerService.shorten_link("#{url}/signup?num=#{@received_msg.from}&referrer_id=#{@merchant.id}&referrer=#{merchant_name}")
           send_response("To chat with us or send a payment, sign up here: #{short_link}")
-        elsif find_conversation_refs_count < 2 && !is_signup
+        elsif get_conversation_refs_count < 2 && !is_signup
           first_name = @merchant.full_name.split.first
           first_name = (first_name.present?) ? "my name is #{first_name}, " : ''
           custom_welcome = "Hi there, " + first_name + "how can I assist you today? If you're looking to send a payment, simply reply with the amount. Ex. +10 #donut"
@@ -90,11 +90,11 @@ class MessageParser
 
   private
 
-  def find_conversation_refs_count
+  def get_conversation_refs_count
     uid = (@customer.present?) ? @customer.id : @received_msg.from
     uid_type = (@customer.present?) ? 'user' : (channel == 'Message') ? 'phone_number' : 'fb_page'
-    last_conv = Conversation.find_by(merchant_id: @merchant.id, uid_type: uid_type, uid: uid)
-    last_conv.present? ? last_conv.conversation_refs.count : 0
+    conv = Conversation.find_by(merchant_id: @merchant.id, uid_type: uid_type, uid: uid)
+    conv.present? ? conv.conversation_refs.count : 0
   end
 
   # check if text is a payment
@@ -190,11 +190,12 @@ class MessageParser
 
   def parse_user
     if @customer.present?  
-      if @customer.card_token.blank?                            #tested
+      re = @customer.has_valid_card?
+      if !re.first                            #tested
         # notify user and send to merchant dashboard
         # send_response notify and send sign in link with payment capture
         # payment capture notice if cant ovveride_tag_amt
-        puts 'no card token'
+        puts 'no card on file or card has expired'
       elsif @amt_ary[1] == "cant_override_tag_amt"            # tested
         # notify user and send to merchant dashboard
         #send_response notify of cant_override_tag_amt 
