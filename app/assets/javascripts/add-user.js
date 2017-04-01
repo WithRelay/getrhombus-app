@@ -128,8 +128,8 @@ $(document).ready(function() {
   //     if ($('#cc-number').val() == "") {
   //       $.each(["#cc-name", "#cc-exp", "#cc-csc"], function(index, val) { $(val).val(''); });
   //       submit_create_user_form();
-  //     } else 
-  //       CardHandler.submit_to_stripe(create_user_form, create_user_submit, submit_create_user_form);  
+  //     } else
+  //       CardHandler.submit_to_stripe(create_user_form, create_user_submit, submit_create_user_form);
   //   });
 
 
