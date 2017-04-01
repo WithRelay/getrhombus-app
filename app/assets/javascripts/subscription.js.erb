@@ -122,6 +122,9 @@ $(document).ready(function () {
     });
   }
 
+  $('#subscription-plan-id-selectized').on('focus', function(){
+    $('#subscriptionForm').formValidation('resetField', 'subscription[plan_id]');
+  })
 
   if ($('#subscription-customer-id').length > 0) {
     $('#subscription-customer-id')

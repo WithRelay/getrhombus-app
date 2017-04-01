@@ -189,7 +189,6 @@ $(document).on('ready page:load', function() {
       var action = $(this).attr('action');
       var method = $(this).attr('method');
       var data = $(this).serializeArray();
-
       // Submit form via Ajax
       $.ajax({
         method: method,
@@ -199,6 +198,9 @@ $(document).on('ready page:load', function() {
       }).done(function(msg){
         $('.update-close-modals').click();
         setFlashForList('Segment created successfully', 'notice');
+        // $('#segment-sidebar-form')[0].reset()
+        // this.reset()
+        location.reload()
       })
       .fail(function(msg){
         setFlashForList('Sorry segment cannot create', 'error');
