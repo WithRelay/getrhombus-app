@@ -217,9 +217,12 @@ class StripeEvent
     def customer_source_updated
       # customer source info/customer's card info
       @source = @hash[:data][:object]
+      
       # find customer
-      merchant_customer = MerchantCustomer.find_by(stripe_customer_id: @source[:customer])
-      @data = User.find merchant_customer.customer_id
+      mc = MerchantCustomer.find_by(managed_stripe_customer_id: @source[:customer]) 
+      mc = MerchantCustomer.find_by(platform_stripe_customer_id: @source[:customer]) unless mc
+
+      @data = mc.customer
       update_customer_source
       # find customer and admin
       # Notify them (admin) (customer)

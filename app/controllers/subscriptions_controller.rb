@@ -9,7 +9,7 @@ class SubscriptionsController < ApplicationController
     @subscriptions = Subscription.includes(merchant_customer: [:customer]).includes(:plan, :coupon)
                                       .where.not(status: 'canceled')
                                       .where('merchant_customers.merchant_id' => current_user.id)
-                                      .where.not('merchant_customers.stripe_customer_id' => nil)
+                                      .where.not('merchant_customers.managed_stripe_customer_id' => nil)
                                       .paginate(page: params[:page], per_page: 10)
                                       .order(created_at: :desc)
     @plan = Plan.new

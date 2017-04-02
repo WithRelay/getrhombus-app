@@ -61,7 +61,7 @@ class PaymentService
       #begin
         stripe_cred = merchant.get_stripe_cred
         currency = merchant.currency ? merchant.currency : "usd"
-        # the platform always has a stripe_customer_id for a user making payment 
+        # the platform always has a platform stripe_customer_id for a user making payment 
         merchant_customer = MerchantCustomer.find_by(merchant_id: User.get_platform_acct_obj.id, customer_id: customer.id)
 
         puts merchant.inspect
@@ -76,14 +76,14 @@ class PaymentService
           unless true #merchant.is_platform?
             re = Stripe::Charge.create({
               amount: amount_with_taxes, currency: currency,
-              customer: merchant_customer.stripe_customer_id, 
+              customer: merchant_customer.platform_stripe_customer_id, 
               metadata: { "message" => msg },
               description: "Payment from #{customer.email}. Card name: #{customer.card_name}. Last four: #{customer.last4}.",
             }, { stripe_account: stripe_cred[:cred].account_id })
           else
             re = Stripe::Charge.create({
               amount: amount_with_taxes, currency: currency,
-              customer: merchant_customer.stripe_customer_id, 
+              customer: merchant_customer.platform_stripe_customer_id, 
               metadata: { "message" => msg },
               description: "Payment from #{customer.email}. Card name: #{customer.card_name}. Last four: #{customer.last4}.",
    ########!! statement_descriptor: '', # should already be on our stripe account, can still set this here...get from Edwin
@@ -91,7 +91,7 @@ class PaymentService
           end
         elsif stripe_cred[:type] == 'managed'         
           re = Stripe::Charge.create({
-            customer: merchant_customer.stripe_customer_id,
+            customer: merchant_customer.platform_stripe_customer_id,
             capture: capture, currency: currency, amount: amount_with_taxes,             
             description: "Payment from #{customer.email}. Card name: #{customer.card_name}. Last four: #{customer.last4}.",      
             destination: {

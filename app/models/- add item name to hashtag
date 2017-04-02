@@ -6,13 +6,10 @@ Taiwo
 - create customers/contacts...how about existing customers/contacts. switching stripe_id to merchants.
   - upon signing up, does an existing contact update to become customer?
   - review where merchant customer is created.... see create_subscription, add-token_to_customer, etc, csv, add a customer, tran
-  - only time customer is merchant customer is for subscriptions...interesting...so in merchantcustomer should
-	i duplicate ordinary customers?
 - messaging lists, reminders (shells created)
 - workflow for sign in, sign up and places where we add card, token, referrer, contact and customer, payment capture
 - app fee for subscriptions - platform fee,
 - associated validation
-- review modules in concerns
 
 Others
 Add card info, add subscription, billing info

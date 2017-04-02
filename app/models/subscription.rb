@@ -29,7 +29,7 @@ class Subscription < ActiveRecord::Base
       end
       
       merchant_customer = MerchantCustomer.find self.merchant_customer_id
-      hash[:customer] = merchant_customer.stripe_customer_id
+      hash[:customer] = merchant_customer.managed_stripe_customer_id
       hash[:plan] = self.plan_id
       hash[:quantity] = self.quantity
       hash[:tax_percent] = hash[:team].tax_percent

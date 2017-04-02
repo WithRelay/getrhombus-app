@@ -75,7 +75,7 @@ class RegistrationsController < Devise::RegistrationsController
       end
     elsif set_update_flash_messages[:card_info].present? || set_update_flash_messages[:billing_info].present?
       set_captured_payment_session if current_user.is_customer? && set_update_flash_messages[:card_info].present?
-      add_token = current_user.add_token_to_user(params[:user][:card_token])
+      add_token = current_user.add_token_for_user(params[:user][:card_token])
       msg = (add_token.third ? add_token.third : "We are unable to add your card to your profile.") unless add_token.first
     end
     msg
