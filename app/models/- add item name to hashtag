@@ -12,6 +12,7 @@ Taiwo
 - workflow for sign in, sign up and places where we add card, token, referrer, contact and customer, payment capture
 - app fee for subscriptions - platform fee,
 - associated validation
+- review modules in concerns
 
 Others
 Add card info, add subscription, billing info
@@ -85,8 +86,6 @@ else
 			# not new customer in hash
 			do y
 		end
-
 	end
-
-	# 
+end 
 

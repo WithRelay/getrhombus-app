@@ -6,5 +6,6 @@ class MerchantCustomer < ActiveRecord::Base
 
 
   #def self.add_to
+  # check that the ids are unique...no duplicate records or will first_or_initalize catch it anyway
 end
 

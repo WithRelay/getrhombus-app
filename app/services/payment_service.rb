@@ -5,10 +5,16 @@ class PaymentService
     # Create or update customer on Stripe
     def add_token_to_stripe_customer(hash, stripe_account_id = "")
       begin
-        if hash[:is_new_customer]
-          cu = Stripe::Customer.create(email: hash[:email], source: hash[:card_token])
+        if hash[:new_customer]
+          if hash[:platform_customer]
+            # create on platform
+            cu = Stripe::Customer.create(email: hash[:email], source: hash[:card_token])
+          else
+            # create on managed account
+            cu = Stripe::Customer.create({email: hash[:email], source: hash[:card_token]}, { stripe_account: stripe_account_id })
+          end
         else 
-          if hash[:is_platform_customer]
+          if hash[:platform_customer]
             cu = Stripe::Customer.retrieve(hash[:stripe_customer_id])
           else
             cu = Stripe::Customer.retrieve(hash[:stripe_customer_id], { stripe_account: stripe_account_id })
@@ -19,14 +25,7 @@ class PaymentService
           cu.save
         end
         return [true, cu]
-      rescue Stripe::CardError => e
-        # Since it's a decline, Stripe::CardError will be caught
-        unless hash[:is_merchant]
-          platform_acct = User.get_platform_acct_obj
-          customer = User.find_by(email: hash[:email])
-          msg_to_send = "We were unable to update your card info on Rhombus because: #{err[:message]}."
-          Conversation.find_or_create_conversation_for_message_and_send_publish(platform_acct.rhombus_number, customer, 'user', customer.id, msg_to_send, "Message")
-        end
+      rescue Stripe::CardError => e   # Since it's a decline, Stripe::CardError will be caught
         # redo this email
         # Notification.token_failure_notification(err, hash[:email]).deliver_now
         [false, e, e.json_body[:error][:message]]
