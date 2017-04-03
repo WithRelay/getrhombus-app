@@ -32,7 +32,7 @@ $(document).ready(function () {
                 }
               }
           },
-          'referrer[referrer_email]': {
+          'referrer[email]': {
               verbose: false,
               validators: {
                   notEmpty: {
@@ -120,6 +120,7 @@ $(document).ready(function () {
     $('.help-block').hide();
   });
 
+/*
   function referBusiness() {
     $.ajax({
        url: "/v1/referrers/invite_business.json",
@@ -140,5 +141,15 @@ $(document).ready(function () {
        $('#referrer-submit').removeAttr('disabled').val("Invite business");
      });
   };
+*/
+
+  // submit referrer
+  /*$("#new_referrer").on("ajax:success", function(e, data, status, xhr) {
+    alert('received referral info. pls share the link and refer more');
+    console.log(data.referrer.link)
+  }).on("ajax:error", function(e, xhr, status, error) {
+    alert('unable to save referral info');
+  });*/
+  // submit referrer
 
 })

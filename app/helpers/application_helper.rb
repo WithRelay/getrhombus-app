@@ -31,7 +31,6 @@ module ApplicationHelper
                           'users-refer_business' => 'Refer Business',
                           'fb_pages-index' => 'FB Integrations',
                           'lists-show' => @list.try(:name),
-                          # 'merchant_contacts-index' => 'Leads & Contacts',
                           'campaigns-index' => 'Campaigns',
                           'transactions-index' => "Charges",
                           'subscriptions-index' => 'subscriptions'
@@ -143,7 +142,7 @@ module ApplicationHelper
   end
 
   def restrict_devise_actions
-    restricted_actions = ['devise/sessions-new', 'devise/sessions-create', 'registrations-new', 'registrations-create',
+    restricted_actions = ['sessions-new', 'sessions-create', 'registrations-new', 'registrations-create',
                            'registrations-edit', 'devise/passwords-new', 'devise/passwords-create', 'registrations-add_card_info',
                            'registrations-add_profile_info', 'registrations-add_subscription',
                            'registrations-add_rhombus_number', 'merchant_customers-show',

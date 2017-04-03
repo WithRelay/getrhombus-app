@@ -69,7 +69,7 @@ class MessageParser
         if is_signup = is_signup?
           merchant_name = @merchant.org_name.present? ? @merchant.org_name : "Rhombus"
           url = Rails.application.secrets.url["info"]
-          short_link = 'test' #UrlShortenerService.shorten_link("#{url}/signup?num=#{@received_msg.from}&referrer_id=#{@merchant.id}&referrer=#{merchant_name}")
+          short_link = 'test' #UrlShortenerService.shorten_link("#{url}/signup?num=#{@received_msg.from}&referrer_uid=#{@merchant.relay_uid}&referrer=#{merchant_name}")
           send_response("To chat with us or send a payment, sign up here: #{short_link}")
         elsif get_conversation_refs_count < 2 && !is_signup
           first_name = @merchant.full_name.split.first
@@ -298,7 +298,7 @@ class MessageParser
 
   def send_sign_up_link
     short_link = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?amt=#{amt_ary[0]}&num=#{@received_msg.from}
-                                      &referrer_id=#{@merchant.id}&referrer=#{@merchant.org_name}&msg_id=#{@received_msg.id}")
+                                      &referrer_uid=#{@merchant.relay_uid}&referrer=#{@merchant.org_name}&msg_id=#{@received_msg.id}")
     send_response("Hi there, thanks for reaching out...to send a payment, sign up here. Thanks! => #{short_link}")
   end
 

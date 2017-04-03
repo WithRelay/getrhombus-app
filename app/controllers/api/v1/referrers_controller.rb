@@ -1,4 +1,6 @@
 class Api::V1::ReferrersController < API::V1::BaseController
+
+=begin
   def invite_business
     begin
       status = 500
@@ -19,4 +21,5 @@ class Api::V1::ReferrersController < API::V1::BaseController
     def referrer_params
       params.require(:referrer).permit(:referrer_name, :referrer_email, :email, :phone_number, :country, :org_name)
     end
+=end
 end

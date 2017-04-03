@@ -25,18 +25,6 @@ module AdditionalUserActions
     redirect_to integrations_user_path(current_user)
   end
 
-  def refer_business
-    if params[:referrer].present?
-      @referrer = Referrer.new(referrer_params)
-      if @referrer.save
-        flash[:notice] = 'Business invitation created successfully'
-      else
-        flash[:error] = 'Business invitation is not created'
-      end
-      redirect_to refer_business_user_path
-    end
-  end
-
   def managed_acct
     @user.address || @user.build_address
     @user.bank_accounts.present? || @user.bank_accounts.build
@@ -120,11 +108,11 @@ module AdditionalUserActions
 
   def build_user_link
     # if it includes a captured payment, also check if msg_id is present, tag_id is optional
-    # referrer_id is the merchant the payment is going to
+    # referrer_uid is the merchant the payment is going to
     path = add_card_info_user_path(current_user)
     if params[:user][:captured_amt].present?
       path = add_card_info_user_path(current_user, amt: params[:user][:captured_amt], 
-                                                   referrer_id: params[:user][:referrer_id],
+                                                   referrer_uid: params[:user][:referrer_uid],
                                                    msg_id: params[:user][:msg_id], tag_id: params[:user][:tag_id]) 
     end
     path
@@ -136,19 +124,18 @@ module AdditionalUserActions
   def set_captured_payment_session
     session[:captured_amt] = params[:user][:captured_amt]
     session[:msg_id] = params[:user][:msg_id]
-    session[:referrer_id] = params[:user][:referrer_id]
+    session[:referrer_uid] = params[:user][:referrer_uid]
     session[:tag_id] = params[:user][:tag_id]
   end
 
   def delete_captured_payment_session
     session.delete(:captured_amt)
-    session.delete(:referrer_id)
+    session.delete(:referrer_uid)
     session.delete(:tag_id)
     session.delete(:msg_id)
   end
 
   def add_or_update_user_referrer
-    Referrer.save_referrer_with_id(params[:user][:referrer_id], current_user.id) if params[:user][:referrer_id].present?
     Referrer.save_referrer_with_uid(params[:user][:referrer_uid], current_user.id) if params[:user][:referrer_uid].present?
   end
 
@@ -165,8 +152,23 @@ module AdditionalUserActions
     end
   end
 
-  def referrer_params
-    params.require(:referrer).permit(:referrer_email, :referrer_id, :email, :phone_number, :country, :referrer_name, :org_name,
-                                        :ip, :city, :region, :postal, :uid)
+  def refer_business
+    if params[:referrer].present?
+      @referrer = Referrer.new(referrer_params)
+      if @referrer.save
+        flash[:notice] = 'Referral was successful'
+      else
+        flash[:error] = 'Referral failed'
+      end
+      redirect_to refer_business_user_path
+    end
   end
+
+  def referrer_params
+    params.require(:referrer).permit(:referrer_email, :email, :phone_number, :country, :referrer_name, :org_name,
+                                        :ip, :city, :region, :postal).tap do |r|
+      r[:referrer_uid] = current_user.relay_uid
+    end
+  end
+  
 end

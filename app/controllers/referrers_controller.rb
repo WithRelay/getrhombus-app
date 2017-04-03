@@ -22,7 +22,6 @@ class ReferrersController < ApplicationController
 
   def create
     @referrer = Referrer.new(referrer_params)
-    @referrer.get_referrer_link
     @referrer.save
     ##### send email to referrer and referree here..
     #@referrer.notification_log = NotificationLog.create(notify_type: 'user_referral_from_form', channel: 'email', reason: 'Refer a new user.')
@@ -51,6 +50,6 @@ class ReferrersController < ApplicationController
 
     def referrer_params
       params.require(:referrer).permit(:referrer_email, :email, :phone_number, :country, :referrer_name, :org_name,
-                                        :ip, :city, :region, :postal, :uid)
+                                        :ip, :city, :region, :postal, :referrer_uid)
     end
 end

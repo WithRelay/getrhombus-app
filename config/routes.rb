@@ -1,6 +1,7 @@
 Rails.application.routes.draw  do
 
   root 'static_pages#home'
+  get "homepage_referrer" => 'referrers#homepage_referrer'
 
   # Dynamic action for static_controller routes eg: home_page will generate as home-page
   StaticPagesController.action_methods.each do |action|
@@ -39,12 +40,9 @@ Rails.application.routes.draw  do
     get 'get_current_user' => 'application#get_current_user'
     post 'redirect' => 'link_fb_accounts#redirect'
 
-    get "homepage_referrer" => 'referrers#homepage_referrer'
     get "resque" => Resque::Server, anchor: false, constraints: lambda { |req|
       req.env['warden'].authenticated? and req.env['warden'].user.id == 23
     }
-
-    resources :referrers, only: [:new, :create]
 
     # user routes
     resources :users, only: :show do
@@ -157,7 +155,6 @@ Rails.application.routes.draw  do
       end
       resources :subscriptions, only: [:create, :update, :destroy]
       resources :merchant_customers, only: [:index, :create]
-      match 'referrers/invite_business' => 'referrers#invite_business', via: :post
       resources :demos, only: [:create]
       resources :conversations, only: [:index, :show] do
         get 'find', on: :collection

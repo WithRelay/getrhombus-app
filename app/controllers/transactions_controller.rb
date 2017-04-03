@@ -26,9 +26,8 @@ class TransactionsController < ApplicationController
                                     .paginate(page: params[:page], per_page: 10).order(created_at: :desc)
       end
     elsif current_user.is_customer?
-      # @token = TextingService.get_twilio_capibility_token if current_user.user_level == 1
       # Transaction.process_captured_payment(@user, params) if session[:captured_amt].present?
-      # delete_captured_payment_session
+      delete_captured_payment_session
       @transactions = []
     end
     render 'empty_transaction' unless @transactions.present?

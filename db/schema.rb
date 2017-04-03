@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170402003325) do
+ActiveRecord::Schema.define(version: 20170403031753) do
 
   create_table "account_reloads", force: :cascade do |t|
     t.integer  "user_id",        limit: 4
@@ -561,7 +561,7 @@ ActiveRecord::Schema.define(version: 20170402003325) do
     t.string   "referrer_email", limit: 191
     t.string   "email",          limit: 191
     t.string   "phone_number",   limit: 191
-    t.integer  "referrer_id",    limit: 4
+    t.string   "referrer_uid",   limit: 191
     t.integer  "referee_id",     limit: 4
     t.string   "country",        limit: 191
     t.string   "postal",         limit: 191
@@ -571,7 +571,6 @@ ActiveRecord::Schema.define(version: 20170402003325) do
     t.string   "link",           limit: 191
     t.string   "referrer_name",  limit: 191
     t.string   "org_name",       limit: 191
-    t.string   "uid",            limit: 191
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false
   end
@@ -580,8 +579,6 @@ ActiveRecord::Schema.define(version: 20170402003325) do
   add_index "referrers", ["link"], name: "index_referrers_on_link", using: :btree
   add_index "referrers", ["referee_id"], name: "index_referrers_on_referee_id", using: :btree
   add_index "referrers", ["referrer_email"], name: "index_referrers_on_referrer_email", using: :btree
-  add_index "referrers", ["referrer_id"], name: "index_referrers_on_referrer_id", using: :btree
-  add_index "referrers", ["uid"], name: "index_referrers_on_uid", using: :btree
 
   create_table "refunds", force: :cascade do |t|
     t.string   "uri",            limit: 255
@@ -834,11 +831,13 @@ ActiveRecord::Schema.define(version: 20170402003325) do
     t.decimal  "account_balance",                      precision: 16, scale: 8, default: 2.5
     t.boolean  "auto_reload",            limit: 1,                              default: false
     t.integer  "auto_reload_amt",        limit: 4,                              default: 2000
+    t.string   "relay_uid",              limit: 191
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["phone_number"], name: "index_users_on_phone_number", unique: true, using: :btree
+  add_index "users", ["relay_uid"], name: "index_users_on_relay_uid", unique: true, using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   add_index "users", ["rhombus_number"], name: "index_users_on_rhombus_number", unique: true, using: :btree
 

@@ -106,7 +106,7 @@ module CSVHandler
                 end
               end
             else
-              ref = Referrer.where(referrer_id: self.id, referee_id: user.id).first_or_initialize
+              ref = Referrer.where(referrer_uid: self.relay_id, referee_id: user.id).first_or_initialize
               ref.save
               # send email or text here
             end

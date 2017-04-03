@@ -10,7 +10,7 @@ Taiwo
 - messaging lists (check endpoint in create customer), reminders (shells created)
 - workflow for sign in, sign up and places like referrer, payment/subscription, contact and customer
 - app fee for subscriptions - platform fee,
-- check all referrers stuff - including messenger, review get_referrer_link
+
 
 Others
 Add card info, add subscription, billing info
@@ -68,15 +68,18 @@ Bhishma
 - get full contact data when fb account is connected if email is present
 - do you update fb_cred for a user who didnt sign up when they sent messages in the past...but later signs up?
 - weekly email no users
-- remove referrer
+- remove referrer from messenger
 
 
 
 
 
 Referrers
-- referrer id is used for payment
-- referrer_uid is used for links merchants can then share
-- save referrer once devise create/signs in user
+- referrer_uid for identifying merchant in referrals
+- save referrer once when devise create/signs in user
+- we have homepage referrer for people coming from 3rd party sites
+- we have users referring businesses
+- we have non-users referring businesses - not active at the moment
+
 
 

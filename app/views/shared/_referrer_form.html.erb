@@ -5,22 +5,22 @@
     
     <label class="field-headers form-label settings" for="name">referrer details</label>
     <div class="form-group col-xs-6">
-      <%= f.text_field 'referrer_name', placeholder: 'Your full name', class: 'form-control full-name settings text-field w-input', value: current_user.present? ? current_user.full_name : '' %>
+      <%= f.text_field :referrer_name, placeholder: 'Your full name', class: 'form-control full-name settings text-field w-input', value: current_user.present? ? current_user.full_name : '' %>
     </div>
 
     <div class="form-group col-xs-6">
-      <%= f.text_field 'referrer_email', placeholder: 'Your email address', class: 'form-control settings text-field w-input', value: current_user.present? ? current_user.email : '' %>
+      <%= f.text_field :referrer_email, placeholder: 'Your email address', class: 'form-control settings text-field w-input', value: current_user.present? ? current_user.email : '' %>
     </div>
     <div class="flex-underline form-section-divider"></div>
 
     <label class="field-headers form-label settings" for="Referee-Business-Name">i'm referring</label>
 
     <div class="form-group col-xs-6">
-      <%= f.text_field 'org_name', placeholder: 'Name of the business you\'re referring', class: 'form-control full-name settings text-field w-input'%>
+      <%= f.text_field :org_name, placeholder: 'Name of the business you\'re referring', class: 'form-control full-name settings text-field w-input'%>
     </div>
 
     <div class="form-group col-xs-6">
-      <%= f.text_field 'referee_email', placeholder: 'Contact person\'s email address', class: 'form-control settings text-field w-input' %>
+      <%= f.text_field :email, placeholder: 'Contact person\'s email address', class: 'form-control settings text-field w-input' %>
     </div>
 
     <div class="form-group col-xs-6">

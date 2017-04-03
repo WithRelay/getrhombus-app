@@ -4,9 +4,10 @@ class User < ActiveRecord::Base
   include DashboardMerchantQueries
   include CSVHandler
   include AddTokenToUser
+  include Transactionable
 
   attr_accessor :phone, :captured_amt, :msg_id, :tag_id
-  attr_accessor :referrer_id, :referrer_uid, :tos_acceptance, :area_code
+  attr_accessor :referrer_uid, :tos_acceptance, :area_code
 
   # validation rules for user attributes
   validates :tos_acceptance, acceptance: true, if: lambda { self.is_merchant? && self.reset_password_token.blank? }, on: :update
@@ -31,7 +32,7 @@ class User < ActiveRecord::Base
   has_many :merchant_transactions, class_name: 'Transaction', foreign_key: 'team_id'
 
   has_many :referrers, class_name: 'Referrer', foreign_key: 'referee_id'
-  has_many :referees, class_name: 'Referrer', foreign_key: 'referrer_id'
+  has_many :referees, class_name: 'Referrer', primary_key: :relay_uid, foreign_key: :referrer_uid
 
   has_many :customer_merchants, class_name: 'MerchantCustomer', foreign_key: 'customer_id'
   has_many :merchant_customers, class_name: 'MerchantCustomer', foreign_key: 'merchant_id'
@@ -172,6 +173,7 @@ class User < ActiveRecord::Base
     return false unless number
     self.rhombus_number = number[0]
     self.rn_friendly_name = number[1]
+    # get_uid_and_referrer_link
     self.update_account_balance(NUMBER_PRICE)
   end
 
@@ -237,5 +239,12 @@ class User < ActiveRecord::Base
     GetIntelligenceDataJob.perform_later(self.email, 'FullContact')
     GetIntelligenceDataJob.perform_later(self.phone_number, 'OpenCNAM') if self.is_customer?
   end
+
+  # This is the link merchants can share...also dashboard link
+  def get_uid_and_referrer_link
+    self.relay_uid = generate_uid
+    self.short_url = "dasd" #UrlShorternerService.shorten_link("https://www.withrelay.com/signup?referrer_uid=#{self.relay_uid}")
+  end
+
 
 end

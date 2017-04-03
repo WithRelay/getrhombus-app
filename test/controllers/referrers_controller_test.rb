@@ -18,7 +18,7 @@ class ReferrersControllerTest < ActionController::TestCase
 
   test "should create referrer" do
     assert_difference('Referrer.count') do
-      post :create, referrer: { business_name: @referrer.business_name, country: @referrer.country, email: @referrer.email, link: @referrer.link, phone_number: @referrer.phone_number, referee_id: @referrer.referee_id, referrer_email: @referrer.referrer_email, referrer_id: @referrer.referrer_id, referrer_name: @referrer.referrer_name }
+      post :create, referrer: { business_name: @referrer.business_name, country: @referrer.country, email: @referrer.email, link: @referrer.link, phone_number: @referrer.phone_number, referee_id: @referrer.referee_id, referrer_email: @referrer.referrer_email, referrer_name: @referrer.referrer_name }
     end
 
     assert_redirected_to referrer_path(assigns(:referrer))
@@ -35,7 +35,7 @@ class ReferrersControllerTest < ActionController::TestCase
   end
 
   test "should update referrer" do
-    patch :update, id: @referrer, referrer: { business_name: @referrer.business_name, country: @referrer.country, email: @referrer.email, link: @referrer.link, phone_number: @referrer.phone_number, referee_id: @referrer.referee_id, referrer_email: @referrer.referrer_email, referrer_id: @referrer.referrer_id, referrer_name: @referrer.referrer_name }
+    patch :update, id: @referrer, referrer: { business_name: @referrer.business_name, country: @referrer.country, email: @referrer.email, link: @referrer.link, phone_number: @referrer.phone_number, referee_id: @referrer.referee_id, referrer_email: @referrer.referrer_email, referrer_name: @referrer.referrer_name }
     assert_redirected_to referrer_path(assigns(:referrer))
   end
 
