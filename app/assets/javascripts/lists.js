@@ -27,7 +27,8 @@ $(document).on('ready page:load', function() {
   $(document).on('click', '.cancel-yes', function(e){
     var delete_link = $('#delete-lists').data('delete-list-link');
     var selected_item = getSelectedUserIds();
-    $.post(delete_link, { list_id: selected_item });
+    if (delete_link)
+      $.post(delete_link, { list_id: selected_item });
   });
 
   // Toggles between checking or unchecking all checkboxes
