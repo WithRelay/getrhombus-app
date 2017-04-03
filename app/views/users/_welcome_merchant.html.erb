@@ -27,26 +27,7 @@
       </div>
       <div class="chart-container">
         <!-- <img class="chart-placeholder-2" src="images/Sample-Chart-3.png"> -->
-        <%= area_chart @messages_data[:msg_30_days][:chart_data],
-            library: {
-              scales: {
-                xAxes: [{
-                  ticks: {
-                    autoSkip: false,
-                    maxRotation: 60,
-                    minRotation: 60
-                  },
-                  time: {
-                    unit: 'day',
-                    displayFormats: {
-                      'day': 'MMM D'
-                    },
-                  }
-                }]
-              }
-            },
-            curve: false
-        %>
+        <%= message_graph %>
       </div>
     </div>
     <div class="dash-content-container scheduled-campaigns-notifications">
