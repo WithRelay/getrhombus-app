@@ -35,4 +35,35 @@ module UsersHelper
   def country_list
     CountriesList::COUNTRIES_LIST.collect { |c| [ c[:name], c[:code] ] }
   end
+
+  def message_graph
+    if @messages_data[:msg_30_days][:chart_data].empty?
+
+    '<div class= "no-chart-data"">
+      <p class="empty-view-short-paragraph">No data.
+        <a href="#" class="links">Send your first message</a>
+        to view chart activity</p>
+      </div>'.html_safe
+    else
+    area_chart @messages_data[:msg_30_days][:chart_data],
+        library: {
+          scales: {
+            xAxes: [{
+              ticks: {
+                autoSkip: false,
+                maxRotation: 60,
+                minRotation: 60
+              },
+              time: {
+                unit: 'day',
+                displayFormats: {
+                  'day': 'MMM D'
+                },
+              }
+            }]
+          }
+        },
+        curve: false
+      end
+  end
 end
