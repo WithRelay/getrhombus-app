@@ -131,13 +131,19 @@ Rails.application.routes.draw  do
 
       resources :saved_replies
       # Campaign Routes
-      patch 'campaigns/change_status/:id' => 'campaigns#change_status'
-      delete 'campaigns/delete/:id' => 'campaigns#delete_campaign'
-      post 'campaigns/check_campaign_name' => 'campaigns#check_campaign_name'
-      match 'campaigns/:id/images/:image_id' => 'campaigns#image_delete', via: :delete
-      post 'campaigns/send_test_email' => 'campaigns#send_test_email'
-      match 'campaigns/upload_images' => 'campaigns#upload_images', via: :post
-      match 'campaigns/upload_from_url' => 'campaigns#upload_from_url', via: :post
+      resources :campaigns, only: [] do
+        member do
+          patch 'change_status'
+          delete 'delete_campaign'
+          delete 'campaigns/:id/images/:image_id' => 'campaigns#image_delete'
+        end
+        collection do
+          post 'send_test_email'
+          post 'check_campaign_name'
+          post 'upload_images'
+          post 'upload_from_url'
+        end
+      end
       #--------------------------------------------------------------------------#
       # reminder routes
       resources :reminders, only: [:create, :edit]
