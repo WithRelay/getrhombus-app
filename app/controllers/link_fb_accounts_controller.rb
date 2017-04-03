@@ -4,6 +4,8 @@ class LinkFbAccountsController < ApplicationController
   before_action :set_notifications
 
   def link_facebook
+    page = JSON.parse FacebookMessengerService.get_page_response(params[:account_linking_token])
+    @referrer = FbPage.find_by(page_id: page['id']).user.relay_uid
   end
 
   def redirect
