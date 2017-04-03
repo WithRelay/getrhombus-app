@@ -59,12 +59,14 @@ module DashboardData
 
 	def analytics_section
     data = conversations_handling_time
+
+		avg_handle_time = data[:average_handle_time] != "0" ? data[:average_handle_time] + ' mins' : '-'
 		{
 		  conversations_per_hour: data[:conversations_per_hour],
       #message_count method returns hash of message_per_day , fb_percent and sms_percent
       messages: message_count('today'),
-      avg_handle_time: data[:average_handle_time],
-		  open_convs_yesterday: open_convs_yesterday
+      avg_handle_time: avg_handle_time,
+		  open_convs_yesterday: open_convs_yesterday == 0 ? '-' : open_convs_yesterday
 		}
 	end
 
@@ -137,5 +139,10 @@ module DashboardData
  	def merchant_id
  		current_user.id
  	end
+
+	def has_bank_account?
+		account = current_user.get_stripe_cred
+		account[:type] != nil
+	end
 
 end
