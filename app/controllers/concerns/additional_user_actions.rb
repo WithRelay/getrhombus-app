@@ -118,31 +118,38 @@ module AdditionalUserActions
     stripe_params
   end
 
-
   def build_user_link
     # if it includes a captured payment, also check if msg_id is present, tag_id is optional
     # referrer_id is the merchant the payment is going to
     path = add_card_info_user_path(current_user)
-    path = add_card_info_user_path(current_user, amt: session[:captured_amt], referrer_id: session[:referrer_id],
-                                                  msg_id: session[:msg_id], tag_id: session[:tag_id]) if session[:captured_amt].present?
-    delete_captured_payment_session
+    if params[:user][:captured_amt].present?
+      path = add_card_info_user_path(current_user, amt: params[:user][:captured_amt], 
+                                                   referrer_id: params[:user][:referrer_id],
+                                                   msg_id: params[:user][:msg_id], tag_id: params[:user][:tag_id]) 
+    end
     path
   end
 
+  # using this to hold data till we get to transactions page for customer
+  # could rebuild the link but we don't want users refreshing the page and trigerring more payments
+  # since i will delete this session data the first time
   def set_captured_payment_session
     session[:captured_amt] = params[:user][:captured_amt]
     session[:msg_id] = params[:user][:msg_id]
     session[:referrer_id] = params[:user][:referrer_id]
-    session[:referrer_uid] = params[:user][:referrer_uid]
     session[:tag_id] = params[:user][:tag_id]
   end
 
   def delete_captured_payment_session
     session.delete(:captured_amt)
     session.delete(:referrer_id)
-    session.delete(:referrer_uid)
     session.delete(:tag_id)
     session.delete(:msg_id)
+  end
+
+  def add_or_update_user_referrer
+    Referrer.save_referrer_with_id(params[:user][:referrer_id], current_user.id) if params[:user][:referrer_id].present?
+    Referrer.save_referrer_with_uid(params[:user][:referrer_uid], current_user.id) if params[:user][:referrer_uid].present?
   end
 
   def customer_csv_template

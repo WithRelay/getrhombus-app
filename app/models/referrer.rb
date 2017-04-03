@@ -5,7 +5,7 @@ class Referrer < ActiveRecord::Base
   belongs_to :referrer, class_name: "User"
   belongs_to :referee, class_name: "User"
 
-
+  # This is the link merchants can share...also dashboard link
   def get_referrer_link
     begin
       if ref = where(referrer_email: self.referrer_email).first

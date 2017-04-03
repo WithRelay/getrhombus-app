@@ -6,11 +6,11 @@ Taiwo
 - create customers/contacts...how about existing customers/contacts. switching stripe_id to merchants.
   - upon signing up, does an existing contact update to become customer?
   - review where merchant customer is created
-  	- see create_subscription, add-token_to_customer, etc, csv, add a customer, tran
+  	- see create_subscription, csv
 - messaging lists (check endpoint in create customer), reminders (shells created)
-- workflow for sign in, sign up and places where we add card, token, referrer, contact and customer, payment capture
+- workflow for sign in, sign up and places like referrer, payment/subscription, contact and customer
 - app fee for subscriptions - platform fee,
-- check all referrers stuff and saving 
+- check all referrers stuff - including messenger, review get_referrer_link
 
 Others
 Add card info, add subscription, billing info
@@ -68,4 +68,15 @@ Bhishma
 - get full contact data when fb account is connected if email is present
 - do you update fb_cred for a user who didnt sign up when they sent messages in the past...but later signs up?
 - weekly email no users
+- remove referrer
+
+
+
+
+
+Referrers
+- referrer id is used for payment
+- referrer_uid is used for links merchants can then share
+- save referrer once devise create/signs in user
+
 

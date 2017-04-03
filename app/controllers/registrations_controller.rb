@@ -31,12 +31,12 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   def create
-    set_captured_payment_session
     build_resource(sign_up_params)
     save_resource
     yield resource if block_given?
     if resource.persisted?
       sign_up(resource_name, resource)
+      add_or_update_user_referrer
       respond_with resource, location: after_sign_up_path_for(resource)
     else
       flash[:error] = resource.errors.full_messages

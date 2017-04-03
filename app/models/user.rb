@@ -6,7 +6,7 @@ class User < ActiveRecord::Base
   include AddTokenToUser
 
   attr_accessor :phone, :captured_amt, :msg_id, :tag_id
-  attr_accessor :referrer_id, :tos_acceptance, :area_code
+  attr_accessor :referrer_id, :referrer_uid, :tos_acceptance, :area_code
 
   # validation rules for user attributes
   validates :tos_acceptance, acceptance: true, if: lambda { self.is_merchant? && self.reset_password_token.blank? }, on: :update
@@ -232,6 +232,7 @@ class User < ActiveRecord::Base
       GetIntelligenceDataJob.perform_later(self.org_phone, 'OpenCNAM')
     end
 
+    MerchantCustomer.add_or_update_merchant_customer([User.get_platform_acct_obj.id], self.id)
     WelcomeEmailJob.set(wait: SIGNUP_EMAIL_DELAY.minutes).perform_later(self)
     GetIntelligenceDataJob.perform_later(self.email, 'FullContact')
     GetIntelligenceDataJob.perform_later(self.phone_number, 'OpenCNAM') if self.is_customer?

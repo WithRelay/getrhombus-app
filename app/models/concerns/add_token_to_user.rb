@@ -14,9 +14,9 @@ module AddTokenToUser
       
       merchant_customers = MerchantCustomer.where(customer_id: self.id)
 
-      if merchant_customers.blank?            # when blank, add only to platform. blank indicates signing up
+      if merchant_customers.blank?            # This step doesn't really happen
         res = add_token_for_new_customer(hash) 
-      elsif merchant_customers.present?       # user added that was added from csv, add a customer or referral link
+      else                                  
         platform_acct = User.get_platform_acct_obj
         merchant_customers.each do |mc|
           # can be on platform or merchant managed account. merchant is always on platform.
