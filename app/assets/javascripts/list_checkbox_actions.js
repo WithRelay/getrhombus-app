@@ -29,7 +29,6 @@ $(document).ready(function(){
   }
 
   $(document).on('click', '.cancel-yes', function(e){
-    debugger;
     if (getCurrentURL() == 'campaigns'){
       resource = new Resource(getResourceActionUrl());
       resource.updateOrDelete();
@@ -38,18 +37,18 @@ $(document).ready(function(){
 
   function getResourceActionUrl(){
     if ($('.cancel-yes').text() == "Please wait...Delete"){
-      action_url ='/v1/' + getCurrentURL() + '/delete/' + getSelectedCheckbox('.checkboxes')
+      action_url ='/v1/' + getCurrentURL() + '/'+ getSelectedCheckbox('.checkboxes') + '/delete_campaign/'
       return { 'url': action_url, 'method': 'delete' }
     }
       else{
-        action_url = '/v1/' + getCurrentURL() + '/change_status/' + getSelectedCheckbox('.checkboxes')
+        action_url = '/v1/' + getCurrentURL() + '/' + getSelectedCheckbox('.checkboxes') + '/change_status/'
         return { 'url': action_url, 'method': 'patch' }
       }
   }
 
   function getCurrentURL(){
     url = window.location.pathname.split('/');
-    return url[url.length-1];
+    return url[url.length-2];
   }
 
   function getSelectedCheckbox(checkbox_class){
@@ -86,8 +85,8 @@ $(document).ready(function(){
       // set flash message title and message
       // first argument is title and second is text message.
       FlashHandler.setFlashMessage( msg[flash_key], flash_key );
+      location.reload();
     }).fail(function(msg){ alert('Sorry request could not complete'); });
-    window.location.reload()
     $('.cancel-no').click();
   }
     else{
