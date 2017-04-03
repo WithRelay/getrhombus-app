@@ -139,13 +139,13 @@ class User < ActiveRecord::Base
 
   def get_stripe_cred
     # platform acct is a standalone account
-    # merchants could have a standalone account (prior to v1.5) and a managed account 
+    # merchants could have a standalone account (prior to v1.5) and a managed account
     # managed account takes priority
 
     # remove this eventually
     return { type: 'standalone', cred: User.find_by(id: 23) }
     ##
-    
+
     return { type: 'standalone', cred: self.standalone_stripe_cred } if is_platform?
 
     # check for managed account first
@@ -155,9 +155,9 @@ class User < ActiveRecord::Base
     # check for standalone
     cred = self.standalone_stripe_cred
     return { type: 'standalone', cred: cred } if cred.present?
-    
+
     # has no payment account
-    { type: nil, cred: nil }  
+    { type: nil, cred: nil }
   end
 
   def self.platform_email
@@ -199,6 +199,10 @@ class User < ActiveRecord::Base
     fb_cred.page_specific_id
   end
 
+  def user_segments
+    self.lists.where.not(segment: nil)
+  end
+
   private
 
   # Some users sign up with Rhombus numbers
@@ -234,5 +238,4 @@ class User < ActiveRecord::Base
     GetIntelligenceDataJob.perform_later(self.email, 'FullContact')
     GetIntelligenceDataJob.perform_later(self.phone_number, 'OpenCNAM') if self.is_customer?
   end
-
 end
