@@ -45,18 +45,18 @@ module UsersHelper
         to view chart activity</p>
       </div>'.html_safe
     else
-    area_chart @messages_data[:msg_30_days][:chart_data],
+      area_chart @messages_data[:msg_30_days][:chart_data],
         library: {
           scales: {
             xAxes: [{
               ticks: {
                 autoSkip: false,
-                maxRotation: 60,
                 minRotation: 60
               },
               time: {
                 unit: 'day',
                 displayFormats: {
+                  maxRotation: 60,
                   'day': 'MMM D'
                 },
               }
@@ -65,5 +65,33 @@ module UsersHelper
         },
         curve: false
       end
+  end
+
+  def transactions_graph
+    if @transactions[:tranc_chart_data].empty?
+      '<div class="no-chart-data transactions">
+        <p class="empty-view-short-paragraph">No data. <a href="#" class="links">Connect your bank account</a>&nbsp;to view chart activity</p>
+      </div>'.html_safe
+    else
+      line_chart @transactions[:tranc_chart_data], height: "250px",
+          library: {
+            scales: {
+              xAxes: [{
+                ticks: {
+                  autoSkip: false,
+                  maxRotation: 60,
+                  minRotation: 60
+                },
+                time: {
+                  unit: 'day',
+                  displayFormats: {
+                    'day': 'MMM D'
+                  },
+                }
+                }]
+              }
+            },
+            curve: false
+    end
   end
 end
