@@ -6,10 +6,11 @@ Taiwo
 - create customers/contacts...how about existing customers/contacts. switching stripe_id to merchants.
   - upon signing up, does an existing contact update to become customer?
   - review where merchant customer is created.... see create_subscription, add-token_to_customer, etc, csv, add a customer, tran
-- messaging lists, reminders (shells created)
+- messaging lists (check endpoint in create customer), reminders (shells created)
 - workflow for sign in, sign up and places where we add card, token, referrer, contact and customer, payment capture
 - app fee for subscriptions - platform fee,
-- associated validation
+- check all referrers stuff and saving 
+- check for unique error on add customer
 
 Others
 Add card info, add subscription, billing info
@@ -58,6 +59,8 @@ Surya
 Dorje
 - graph - empty state - ask edwin
 - weekly summary template
+- lossless compression
+- fix validation message for create customer - just the first 3 fields
 
 Bhishma
 - messageparser
@@ -65,24 +68,5 @@ Bhishma
 - the 5 emails from edwin (incomplete signup email (the following day), review offer to help, autoreload failure)
 - get full contact data when fb account is connected if email is present
 - do you update fb_cred for a user who didnt sign up when they sent messages in the past...but later signs up?
-- awaymessage for messenger
 - weekly email no users
-
-
-
-cu = MerchantCustomer.where(customer_id: self.id)
-
-if blank
-	# signing up for the first time and from sign up page
-else
-	cu.each do x
-		if stripe_uri is blank
-			# is new customer in hash
-			do x
-		else 
-			# not new customer in hash
-			do y
-		end
-	end
-end 
 

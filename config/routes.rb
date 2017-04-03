@@ -118,7 +118,6 @@ Rails.application.routes.draw  do
     ## api
     api_version(module: "Api::V1", path: { value: "v1"}, constraints: { subdomain: "api" }, defaults: { format: "json" }) do
       resources :users, only: [:index] do
-        post 'add_customers', on: :collection
         get 'snapshot', on: :collection
         post 'check_password', on: :collection
       end
@@ -157,7 +156,7 @@ Rails.application.routes.draw  do
         post 'check_plan_name', on: :collection
       end
       resources :subscriptions, only: [:create, :update, :destroy]
-      resources :merchant_customers, only: [:index]
+      resources :merchant_customers, only: [:index, :create]
       match 'referrers/invite_business' => 'referrers#invite_business', via: :post
       resources :demos, only: [:create]
       resources :conversations, only: [:index, :show] do

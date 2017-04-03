@@ -6,7 +6,7 @@ class User < ActiveRecord::Base
   include AddTokenToUser
 
   attr_accessor :phone, :captured_amt, :msg_id, :tag_id
-  attr_accessor :referrer_id, :tos_acceptance, :user_lists, :area_code
+  attr_accessor :referrer_id, :tos_acceptance, :area_code
 
   # validation rules for user attributes
   validates :tos_acceptance, acceptance: true, if: lambda { self.is_merchant? && self.reset_password_token.blank? }, on: :update
@@ -21,8 +21,8 @@ class User < ActiveRecord::Base
   validates_presence_of :phone_number, numericality: { only_integer: true }, length: { minimum: 10 }, if: lambda { self.is_customer? }
   # Allow nil added to db migration because merchants don't have phone number. They have org_phone.
   # And since mysql indexes this field, it indexes nil and only allows one row with nil. You run into issues with any additional merchants.
-  validates_uniqueness_of :phone_number, :allow_nil => true, :if => lambda { self.is_customer? }
-  validate :phone_number_cannot_be_rhombus_number
+  #validates_uniqueness_of :phone_number, :allow_nil => true, :if => lambda { self.is_customer? }
+  #validate :phone_number_cannot_be_rhombus_number
 
   # include default devise modules. Others available are: :token_authenticatable, :lockable, :timeoutable and :confirmable,
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable, :omniauthable, :omniauth_providers => [:facebook, :twitter, :stripe_connect]
@@ -91,10 +91,11 @@ class User < ActiveRecord::Base
   # A user can have belong to more than one list and also own multiple lists (Admins)
   has_many :lists
   has_many :user_lists
+  accepts_nested_attributes_for :user_lists
 
   has_many :bank_accounts
   accepts_nested_attributes_for :bank_accounts
-  validates_associated :bank_accounts, if: lambda { self.bank_accounts.present? }
+  validates_associated :bank_accounts
 
   has_one :standalone_stripe_cred
   has_many :stripe_creds
@@ -102,7 +103,7 @@ class User < ActiveRecord::Base
 
   has_one :address, as: :addressable
   accepts_nested_attributes_for :address
-  validates_associated :address, if: lambda { self.address.present? }
+  validates_associated :address
 
   has_many :people
   accepts_nested_attributes_for :people, allow_destroy: true  # reject_if: ->(attrs) { attrs['city'].blank? || attrs['street'].blank? }
@@ -110,7 +111,7 @@ class User < ActiveRecord::Base
   before_validation :the_titleizer
   before_create :set_merchant_org_phone          # only create because the actual org_phone field is used in edit view
 
-  after_commit :do_signup_stuff, on: :create
+  #after_commit :do_signup_stuff, on: :create
 
   enum status: { inactive: 0, active: 1 }
 
