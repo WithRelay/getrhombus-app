@@ -8,8 +8,9 @@ Taiwo
   - review where merchant customer is created
   	- see create_subscription, csv
 - messaging lists (check endpoint in create customer), reminders (shells created)
-- workflow for sign in, sign up and places like referrer, payment/subscription, contact and customer
-- app fee for subscriptions - platform fee,
+- workflow for sign in, sign up and places like payment/subscription, contact and customer
+- app fee for subscriptions - platform fee
+- contacts dont have customer profile page
 
 
 Others
@@ -37,7 +38,6 @@ Add card info, add subscription, billing info
         }
       },
 
-    contacts dont have customer profile page
 
 Surya
 - lock down permissions cancancan?
@@ -45,7 +45,6 @@ Surya
 - review how reminders pull users info
 - do we need to exclude refunded txns in segment queries? review segment queries
 - use conversations in campaigns for sending messages
-
 - group your campaigns v1 routes
 - load more for all index pages      
 - still able to bypass onboarding to any page if i know the url. or i can go back to onboarding if i know the url (edited)
