@@ -47,7 +47,7 @@ class Api::V1::CampaignsController < API::V1::BaseController
 
   # Check uniqueness of campaign name from remote post request from campaign_form_validator.js
   def check_campaign_name
-    render json: { valid: params[:campaign][:name].present? || find_campaign_by_name.blank? }
+    render json: { valid: find_campaign_by_name.blank? }
   end
 
   # uplaoding image from local and url
