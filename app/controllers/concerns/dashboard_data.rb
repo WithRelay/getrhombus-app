@@ -36,6 +36,9 @@ module DashboardData
 		transactions = all_transactions
 		transactions_weekly = transactions.where 'transactions.created_at >=?', 7.days.ago.utc
 
+		# if merchant(current_user) has no bank account then the transactions data for the UI set to me
+		# empty hash
+		
 		if has_bank_account?
 			chart_data = transactions_weekly.group('date(transactions.created_at)')
 																				.sum(:amount)
