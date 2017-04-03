@@ -4,7 +4,6 @@ one:
   referrer_email: MyString
   email: MyString
   phone_number: MyString
-  referrer_id: 1
   referee_id: 1
   country: MyString
   link: MyString
@@ -15,7 +14,6 @@ two:
   referrer_email: MyString
   email: MyString
   phone_number: MyString
-  referrer_id: 1
   referee_id: 1
   country: MyString
   link: MyString

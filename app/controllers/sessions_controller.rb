@@ -3,7 +3,7 @@ class SessionsController < Devise::SessionsController
   include AdditionalUserActions
 
   def create
-    set_captured_payment_session
+    add_or_update_user_referrer
     super
   end
 end

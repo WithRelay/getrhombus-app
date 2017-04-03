@@ -71,6 +71,7 @@
 //= require phone_number_formatter
 //= require clipboard.min
 //= require util_functions
+//= require location.js
 //= require stripe.js.erb
 //= require credit_card_form
 //= require price_slider

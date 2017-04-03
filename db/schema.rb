@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170331061448) do
+ActiveRecord::Schema.define(version: 20170403031753) do
 
   create_table "account_reloads", force: :cascade do |t|
     t.integer  "user_id",        limit: 4
@@ -429,11 +429,12 @@ ActiveRecord::Schema.define(version: 20170331061448) do
   add_index "merchant_contacts", ["uid"], name: "index_merchant_contacts_on_uid", using: :btree
 
   create_table "merchant_customers", force: :cascade do |t|
-    t.integer  "merchant_id",        limit: 4
-    t.integer  "customer_id",        limit: 4
-    t.datetime "created_at",                     null: false
-    t.datetime "updated_at",                     null: false
-    t.string   "stripe_customer_id", limit: 191
+    t.integer  "merchant_id",                 limit: 4
+    t.integer  "customer_id",                 limit: 4
+    t.string   "platform_stripe_customer_id", limit: 191
+    t.string   "managed_stripe_customer_id",  limit: 191
+    t.datetime "created_at",                              null: false
+    t.datetime "updated_at",                              null: false
   end
 
   add_index "merchant_customers", ["customer_id"], name: "index_merchant_customers_on_customer_id", using: :btree
@@ -455,6 +456,8 @@ ActiveRecord::Schema.define(version: 20170331061448) do
     t.string   "to",                limit: 191
     t.string   "message_timestamp", limit: 191
     t.string   "message_price",     limit: 191
+    t.string   "price_unit",        limit: 191
+    t.string   "relay_price",       limit: 191
     t.string   "status",            limit: 191
     t.string   "error_text",        limit: 191
     t.string   "error_code",        limit: 191
@@ -465,7 +468,6 @@ ActiveRecord::Schema.define(version: 20170331061448) do
     t.text     "text",              limit: 65535
     t.string   "num_segments",      limit: 191
     t.integer  "num_media",         limit: 4,     default: 0
-    t.string   "price_unit",        limit: 191
     t.integer  "hashtag_id",        limit: 4
   end
 
@@ -549,7 +551,7 @@ ActiveRecord::Schema.define(version: 20170331061448) do
     t.string   "referrer_email", limit: 191
     t.string   "email",          limit: 191
     t.string   "phone_number",   limit: 191
-    t.integer  "referrer_id",    limit: 4
+    t.string   "referrer_uid",   limit: 191
     t.integer  "referee_id",     limit: 4
     t.string   "country",        limit: 191
     t.string   "postal",         limit: 191
@@ -559,7 +561,6 @@ ActiveRecord::Schema.define(version: 20170331061448) do
     t.string   "link",           limit: 191
     t.string   "referrer_name",  limit: 191
     t.string   "org_name",       limit: 191
-    t.string   "uid",            limit: 191
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false
   end
@@ -568,8 +569,6 @@ ActiveRecord::Schema.define(version: 20170331061448) do
   add_index "referrers", ["link"], name: "index_referrers_on_link", using: :btree
   add_index "referrers", ["referee_id"], name: "index_referrers_on_referee_id", using: :btree
   add_index "referrers", ["referrer_email"], name: "index_referrers_on_referrer_email", using: :btree
-  add_index "referrers", ["referrer_id"], name: "index_referrers_on_referrer_id", using: :btree
-  add_index "referrers", ["uid"], name: "index_referrers_on_uid", using: :btree
 
   create_table "refunds", force: :cascade do |t|
     t.string   "uri",            limit: 191
@@ -658,12 +657,12 @@ ActiveRecord::Schema.define(version: 20170331061448) do
 
   create_table "transaction_fees", force: :cascade do |t|
     t.string   "provider",         limit: 191
-    t.string   "provider_percent", limit: 191, default: "0.029"
+    t.string   "provider_percent", limit: 191, default: "2.9"
     t.integer  "provider_cents",   limit: 4,   default: 30
     t.string   "platform_percent", limit: 191, default: "0"
     t.integer  "platform_cents",   limit: 4,   default: 0
-    t.datetime "created_at",                                     null: false
-    t.datetime "updated_at",                                     null: false
+    t.datetime "created_at",                                   null: false
+    t.datetime "updated_at",                                   null: false
   end
 
   create_table "transactions", force: :cascade do |t|
@@ -754,7 +753,7 @@ ActiveRecord::Schema.define(version: 20170331061448) do
     t.string   "reset_password_token",   limit: 191
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          limit: 4,     default: 0
+    t.integer  "sign_in_count",          limit: 4,                              default: 0
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip",     limit: 191
@@ -802,23 +801,25 @@ ActiveRecord::Schema.define(version: 20170331061448) do
     t.string   "stripe_refresh_token",   limit: 191
     t.string   "first_name",             limit: 191
     t.string   "last_name",              limit: 191
-    t.integer  "status",                 limit: 4,     default: 1
+    t.integer  "status",                 limit: 4,                              default: 1
     t.string   "referrer_num",           limit: 191
     t.string   "url",                    limit: 191
     t.text     "custom_welcome",         limit: 65535
     t.string   "short_url",              limit: 191
     t.string   "currency",               limit: 191
-    t.string   "time_zone",              limit: 191,   default: "Eastern Time (US & Canada)"
+    t.string   "time_zone",              limit: 191,                            default: "Eastern Time (US & Canada)"
     t.string   "user_color",             limit: 191
     t.string   "team_size",              limit: 191
-    t.integer  "account_balance",        limit: 4,     default: 2
-    t.boolean  "auto_reload",            limit: 1,     default: false
-    t.integer  "auto_reload_amt",        limit: 4,     default: 20
+    t.decimal  "account_balance",                      precision: 16, scale: 8, default: 2.5
+    t.boolean  "auto_reload",            limit: 1,                              default: false
+    t.integer  "auto_reload_amt",        limit: 4,                              default: 2000
+    t.string   "relay_uid",              limit: 191
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["phone_number"], name: "index_users_on_phone_number", unique: true, using: :btree
+  add_index "users", ["relay_uid"], name: "index_users_on_relay_uid", unique: true, using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   add_index "users", ["rhombus_number"], name: "index_users_on_rhombus_number", unique: true, using: :btree
 

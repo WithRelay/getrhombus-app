@@ -16,4 +16,15 @@ COLORS = [
 
 PAGINATION_PER_PAGE = 25
 
-SIGNUP_EMAIL_DELAY = 15  # in minutes, must be integer
+# in minutes, must be integer
+SIGNUP_EMAIL_DELAY = 15  
+
+# All in dollars. 04/01/17
+SMS_PRICE_SENT = 0.015
+SMS_PRICE_RECEIVED = 0.015
+MMS_PRICE_SENT = 0.02
+MMS_PRICE_RECEIVED = 0.04
+NUMBER_PRICE = 1
+
+# Transactions before this date cannot be refunded
+V1_5_LIVE_DATE = Time.now.utc 

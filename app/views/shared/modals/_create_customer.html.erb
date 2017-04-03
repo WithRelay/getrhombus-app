@@ -1,4 +1,4 @@
- <%= render 'shared/flash_messages' %>
+<%= render 'shared/flash_messages' %>
  <div class="create-customer-form-wrapper  w-clearfix modal-background" id="new-customer-div">
   <%# removed all webflow data attributes %>
 
@@ -9,52 +9,74 @@
       <a class="close-modal update-close-modals" data-parent='new-customer-div' href="#"></a>
     </div>
     <div class="get-started-2 log-in-form w-form">
-        <%= form_for @new_customer, url: add_customers_v1_users_url, html: {class: "modal-form w-clearfix", id: "create-user-form", name: "email-form"} do |f| %>
+        <%= form_for @new_customer, url: v1_merchant_customers_url, html: { class: "modal-form w-clearfix", id: "create-user-form" } do |f| %>
         <label class="form-label modal" for="Full-name-2">Basic Information</label>
 
-        <input class="modal-field text-field w-input" id="user_full_name" maxlength="256" name="Full-name-2" placeholder="Full name" required="required" type="text">
+        <%= f.fields_for @new_customer.people.build do |p|%>
+          <div class="form-group col-xs-6">
+            <%= p.text_field :full_name, class: "form-control modal-field text-field w-input", placeholder:"Full name" %>
+          </div>
+        <% end %>
 
-        <%#= f.fields_for @new_customer.people.build do |ff|%>
-          <%#= ff.text_field :full_name, class: "modal-field text-field w-input", id:"user_full_name", placeholder:"Full name", required: "required" %>
-          <%#end%>
+        <div class="form-group col-xs-6">
+          <%= f.text_field :email, class: "form-control modal-field text-field w-input", placeholder: "Email" %>
+        </div>
 
-          <%= f.hidden_field :first_name , id: "firstName"%>
-          <%= f.hidden_field :last_name, id: "lastName" %>
-        <!-- <input class="modal-field text-field w-input" id="Email-2" maxlength="256" name="Email" placeholder="Email" required="required" type="text">
- -->
-        <%= f.text_field :email, class: "modal-field text-field w-input", id: "Email-2" , placeholder: "Email" , required: "required" %>
+        <div class="form-group col-xs-6">
+          <%= f.text_field :phone, class: "form-control modal-field text-field w-input", placeholder: "Phone number", id: 'phone' %>
+        </div>
+        <%= f.hidden_field :phone_number, :id => "phone_number" %>
 
-        <%= f.text_field :phone_number, class:"modal-field text-field w-input", id: "Phone-2", placeholder: "Phone number", required: "required" %>
-
-        <%= f.select :lists, ['VIP', 'First-time Customers', 'San Francisco'], {}, class: 'dropdown w-select', data: { name:'List-Selection-2'}, id: 'List-Selection-2' %>
-
-        <div class="form underline-div"></div>
-         <%#= f.fields_for @new_customer.build_address  do |ff| %>
-        <label class="form-label modal" for="Street-Address-3">Address (optional)</label>
-
-        <%= f.text_field :street_address, class: "modal-field text-field w-input", id: "Street-Address-3", placeholder: "Street address, APT" %>
-
-
-       <%= f.text_field :city, class: "city modal-field text-field w-input", id: "City-3"%>
-
-        <%= f.text_field :state_province, class: "modal-field state-province text-field w-input", id: "State-3", placeholder: "State: E.g. (MA)" %>
-
-
-        <%= f.select :country, [['United State', 'US'], ['Canada', 'CA']], {}, class: 'dropdown w-select', id:'Country-3' %>
-
-        <%#end%>
+        <%= f.fields_for @new_customer.user_lists.build do |ul|%>
+          <%= ul.select :list_id, [], { prompt: 'Add user to list' }, class: 'dropdown w-select' %>
+        <% end %>
 
         <div class="form underline-div"></div>
+
+        <%= f.fields_for @new_customer.build_address do |a| %>
+
+          <label class="form-label modal" for="Street-Address-3">Address (optional)</label>
+
+          <%= a.text_field :street_address, class: "modal-field text-field w-input", placeholder: "Street address, APT" %>
+
+          <%= a.text_field :city, class: "city modal-field text-field w-input", placeholder: 'City' %>
+
+          <%= a.text_field :state_province, class: "modal-field state-province text-field w-input", placeholder: "State: E.g. (MA)" %>
+          
+          <%= a.select :country, country_list, { prompt: 'Select your country' }, { class: 'dropdown w-select' } %>
+          </div>
+
+        <% end %>
+
+        <div class="form underline-div"></div>
+
         <label class="form-label modal" for="Card-Number-3">Payment Information (optional)</label>
+        <div class="form-group col-xs-6">
 
-        <!-- <input class="card-number modal text-field w-input" id="Card-Number-3" maxlength="256" name="Card-Number-3" placeholder="Card number" type="text">
+          <div class="form-group col-xs-6">
+            <%= f.number_field :last4, id: "cc-number", type: "tel", class: "form-control card-number modal text-field w-input", placeholder: "Card number", "x-autocompletetype" => "cc-number", autocompletetype: "cc-number", autocorrect: 'off', spellcheck: 'off', autocapitalize: 'off' %>
+          </div>
 
-        <input class="card-name modal text-field w-input" id="Name-on-Card-3" maxlength="256" name="Name-on-Card-3" placeholder="Name on card" type="text">
-        <input class="month-year text-field w-input" id="Month-Year-3" maxlength="256" name="Month-Year-3" placeholder="MM / YYYY" required="required" type="text">
-        <input class="cvv modal text-field w-input" id="CVV-3" maxlength="256" name="CVV-3" placeholder="CVV" type="text">
- -->
-        <%= f.submit "Create customer", class: "button create-customer w-button"  %>
-              <%# added update-close-modals and data %>
+          <div class="form-group col-xs-6">
+            <%= f.text_field :card_name, id: 'cc-name', type: "text", class: "form-control card-name modal text-field w-input", placeholder: "Name on Card", 'x-autocompletetype' => "off", autocompletetype: 'off', autocorrect: "off", spellcheck: 'off', autocapitalize: "off", autocomplete: "off" %>
+          </div>
+
+          <div class="form-group col-xs-6">
+            <input id="cc-exp" type="text" class="form-control month-year text-field w-input" placeholder="MM / YYYY" value="" x-autocompletetype="off" autocompletetype="off" autocorrect="off" spellcheck="off" autocapitalize="off">
+          </div>
+
+          <div class="form-group col-xs-6">
+            <input id="cc-csc" type="tel" class="form-control cvv modal text-field w-input" placeholder="CVV" value="" autocorrect="off" spellcheck="off" autocapitalize="off" autocomplete="off" maxlength="4">
+          </div>
+
+          <%= f.hidden_field :exp_month, id: "cc-ex-month" %>
+          <%= f.hidden_field :exp_year, id: "cc-ex-year" %>
+          <%= f.hidden_field :card_token, id: "cc-uri" %>
+          <%= f.hidden_field :card_type, id: "cc-type" %>
+
+        <%= f.submit "Create customer", class: "button create-customer w-button", id: 'create-user-submit' %>
+        
+        <%# added update-close-modals and data %>
         <input class="button cancel log-in w-button update-close-modals" data-parent='new-customer-div' type="submit" value="Cancel">
 
       <%end%>

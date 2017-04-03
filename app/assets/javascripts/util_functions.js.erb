@@ -2,19 +2,20 @@ var UtilFunctions = new function() {
 
   this.get_card_expiry_date_data = function() {
     return $('input#cc-exp').payment('cardExpiryVal');
-  }
+  };
 
+  this.get_ipinfo_url = function() {
+    return "https://ipinfo.io/?token=ae79647534348f";
+  };
+
+/*
   this.set_first_and_last_names = function() {
   	var full_name = $('#user_full_name').val().trim().replace(/\s{2,}/g,' ').split(' ');
     $('#firstName').val(full_name[0]);
     full_name.shift();
     $('#lastName').val(full_name.join(' '));
-  }
-
-  this.get_ipinfo_url = function() {
-  	return "https://ipinfo.io/?token=ae79647534348f";
-  }
-
+  };
+*/
 }
 
 

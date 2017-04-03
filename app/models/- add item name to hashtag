@@ -5,12 +5,11 @@ Taiwo
 - how will using the master account affect us (- unify team and dashboard email issue really)
 - create customers/contacts...how about existing customers/contacts. switching stripe_id to merchants.
   - upon signing up, does an existing contact update to become customer?
-  - review where merchant customer is created.... see create_subscription, add-token_to_customer, etc
-- review transaction model - send_card_error
-- messaging lists, reminders (shells created)
-- workflow for sign in, sign up and places where we add card, token, referrer, contact and customer, payment capture
-- update balance on message and number buying - create and call a method
-- weekly email no users
+  - review where merchant customer is created
+  	- see create_subscription, csv
+- messaging lists (check endpoint in create customer), reminders (shells created)
+- workflow for sign in, sign up and places like referrer, payment/subscription, contact and customer
+- app fee for subscriptions - platform fee,
 
 
 Others
@@ -38,6 +37,7 @@ Add card info, add subscription, billing info
         }
       },
 
+    contacts dont have customer profile page
 
 Surya
 - lock down permissions cancancan?
@@ -54,12 +54,12 @@ Surya
 - campaign toastrs - plug and play. already wrote the code for you. see realtimeservice.rb and notifications.js
 - tooltip for campaigns - leave for noe
 - time comparisons are tricky...make sure to do to_i because rails compares time as floats
-- stop update source files. - emojionearea
 
 Dorje
 - graph - empty state - ask edwin
-- txn history empty page on customer profile - ask edwin
 - weekly summary template
+- lossless compression
+- fix validation message for create customer - just the first 3 fields
 
 Bhishma
 - messageparser
@@ -67,4 +67,19 @@ Bhishma
 - the 5 emails from edwin (incomplete signup email (the following day), review offer to help, autoreload failure)
 - get full contact data when fb account is connected if email is present
 - do you update fb_cred for a user who didnt sign up when they sent messages in the past...but later signs up?
-- awaymessage
+- weekly email no users
+- remove referrer from messenger
+
+
+
+
+
+Referrers
+- referrer_uid for identifying merchant in referrals
+- save referrer once when devise create/signs in user
+- we have homepage referrer for people coming from 3rd party sites
+- we have users referring businesses
+- we have non-users referring businesses - not active at the moment
+
+
+

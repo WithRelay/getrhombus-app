@@ -16,7 +16,7 @@ module Transactionable
     loop do
       # http://stackoverflow.com/questions/88311/how-best-to-generate-a-random-string-in-ruby?rq=1
       random_token = Toolbox::StringGen.generate_random_string(8)
-      break unless Referrer.unscoped.exists?(uid: random_token)
+      break unless User.unscoped.exists?(relay_uid: random_token)
     end
     random_token
   end

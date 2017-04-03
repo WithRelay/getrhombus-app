@@ -4,7 +4,7 @@ class FacebookMessengerService
 
     # for messenger_account_linking
     def send_auth_link(page_access_token, recipient_id, welcome_text)
-      link_url = (Rails.env == 'production')? "https://www.getrhombus.com/link_facebook" : "https://bad02d8c.ngrok.io/link_facebook"
+      link_url = (Rails.env == 'production')? "https://www.getrhombus.com/link_facebook" : "https://a7dad973.ngrok.io/link_facebook"
       body = {
         recipient:{
           id: recipient_id
@@ -32,19 +32,25 @@ class FacebookMessengerService
     # update new user from messenger's email from account linking
     def update_user_fb_cred(referee, params)
       account_linking_token = params['account_linking_token']
-      subscribed_page = FbPage.subscribed.first
-      referrer = User.find subscribed_page[:user_id]
-      Referrer.save_referrer_with_id(referrer.id, referee.id)
-      token = subscribed_page[:page_access_token]
-
-      response = get_page_scope_id(account_linking_token, token)
-      if response.is_a? String
-        response = JSON.parse response
-      end
+      @subscribed_pages = FbPage.subscribed
+      response = get_page_response account_linking_token
       if response
+        response = JSON.parse response
         psid = response['recipient']
         fb_cred = FbCred.find_by(page_specific_id: psid)
         fb_cred.update(email: params['email'], user_id: referee.id) if fb_cred
+      end
+    end
+
+    def get_page_response(account_linking_token)
+      @subscribed_pages.each do | subscribed_page|
+        token = subscribed_page[:page_access_token]
+        response = get_page_scope_id(account_linking_token, token)
+        if response['recipient'].present?
+          # referrer = User.find subscribed_page[:user_id]
+          # Referrer.save_referrer_with_id(referrer.id, referee.id)
+          return response
+        end
       end
     end
 

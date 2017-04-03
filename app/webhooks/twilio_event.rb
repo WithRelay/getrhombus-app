@@ -26,9 +26,19 @@ class TwilioEvent
     # when message is sent to rhombus
     def save_received_message
       begin
+        num_media = @params[:NumMedia].to_i
+        num_segments = @params[:NumSegments].to_i
+
+        if num_media > 0
+          price, price_multiplier = MMS_PRICE_RECEIVED, MMS_PRICE_RECEIVED * num_media
+        else
+          price, price_multiplier = SMS_PRICE_RECEIVED, SMS_PRICE_RECEIVED * num_segments
+        end    
+        
         @phone_number = @params[:From].gsub('+', '')
         user = get_user
         @message_id = @params[:MessageSid]
+
         @message = Message.create(
           to: @params[:To].gsub('+', ''),
           from: @phone_number,
@@ -37,11 +47,12 @@ class TwilioEvent
           user_id_to: @merchant.id,
           message_id: @message_id,
           text: @params[:Body].strip,
-          num_segments: @params[:NumSegments],
-          num_media: @params[:NumMedia],
+          num_segments: num_segments,
+          num_media: num_media,
           price_unit: @data.price_unit,
           message_timestamp: @data.date_updated,
           message_price: @data.price,
+          relay_price: price,
           error_text: @data.error_message,
           error_code: @data.error_code
         )
@@ -49,7 +60,7 @@ class TwilioEvent
         # save user info on twilio_number_data
         add_or_update_twilio_number_data
         # save media/mms if present
-        save_media if @params[:NumMedia].to_i > 0
+        save_media if num_media > 0
 
         # create or add to existing conversation, send to real time service
         if user.present?
@@ -61,6 +72,7 @@ class TwilioEvent
 
         Conversation.find_or_create_conversation_for_message_and_publish(@merchant, user, uid_type, uid, @message, true)
         @merchant.away_message.check_office_hours(@merchant, user, uid_type, uid, "Message")
+        @merchant.update_account_balance(price_multiplier)
         MessageParser.new.process_message(@merchant, user, @message, 'Message')
 
       rescue ActiveRecord::RecordNotUnique

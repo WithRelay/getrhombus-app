@@ -32,7 +32,8 @@ class Api::V1::TransactionsController < API::V1::BaseController
   def create
     begin
       render(json: { response: 'asdasdsa' }, status: 200) and return
-      if setup_charge_data
+      re = setup_charge_data
+      if re.first
         re = Transaction.new.process_dashboard_txn(@amount, current_user, @customer, params[:notes], @hashtag, params[:capture])
         if re.first
           render json: { response: "Charge created" }, status: 200
@@ -40,7 +41,7 @@ class Api::V1::TransactionsController < API::V1::BaseController
           render json: { response: re.second }, status: 500
         end
       else
-        render json: { response: "User doesn't have a valid card" }, status: 500
+        render json: { response: re.second }, status: 500
       end
     rescue StandardError => e
       render json: { response: "Something went wrong on our end." }, status: 500

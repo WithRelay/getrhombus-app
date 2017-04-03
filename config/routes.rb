@@ -1,6 +1,7 @@
 Rails.application.routes.draw  do
 
   root 'static_pages#home'
+  get "homepage_referrer" => 'referrers#homepage_referrer'
 
   # Dynamic action for static_controller routes eg: home_page will generate as home-page
   StaticPagesController.action_methods.each do |action|
@@ -39,12 +40,9 @@ Rails.application.routes.draw  do
     get 'get_current_user' => 'application#get_current_user'
     post 'redirect' => 'link_fb_accounts#redirect'
 
-    get "homepage_referrer" => 'referrers#homepage_referrer'
     get "resque" => Resque::Server, anchor: false, constraints: lambda { |req|
       req.env['warden'].authenticated? and req.env['warden'].user.id == 23
     }
-
-    resources :referrers, only: [:new, :create]
 
     # user routes
     resources :users, only: :show do
@@ -118,7 +116,6 @@ Rails.application.routes.draw  do
     ## api
     api_version(module: "Api::V1", path: { value: "v1"}, constraints: { subdomain: "api" }, defaults: { format: "json" }) do
       resources :users, only: [:index] do
-        post 'add_customers', on: :collection
         get 'snapshot', on: :collection
         post 'check_password', on: :collection
       end
@@ -157,8 +154,7 @@ Rails.application.routes.draw  do
         post 'check_plan_name', on: :collection
       end
       resources :subscriptions, only: [:create, :update, :destroy]
-      match 'merchant_customers/customers' => 'merchant_customers#customers', via: :get
-      match 'referrers/invite_business' => 'referrers#invite_business', via: :post
+      resources :merchant_customers, only: [:index, :create]
       resources :demos, only: [:create]
       resources :conversations, only: [:index, :show] do
         get 'find', on: :collection

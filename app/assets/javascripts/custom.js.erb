@@ -341,7 +341,6 @@ $(document).ready(function() {
   });
 
   function set_hidden_fields() {
-    if (global_page_params['referrer_id']) document.getElementById('referrer_id').value = global_page_params['referrer_id'];
     if (global_page_params['referrer_uid']) document.getElementById('referrer_uid').value = global_page_params['referrer_uid'];
     if (global_page_params['msg_id']) document.getElementById('msg_id').value = global_page_params['msg_id'];
     if (global_page_params['tag_id']) document.getElementById('tag_id').value = global_page_params['tag_id'];
@@ -356,7 +355,7 @@ $(document).ready(function() {
 
     function send_payload(payload) {
       var xhr = new XMLHttpRequest(); // Set up the request.
-      xhr.open('POST', '/v1/users/add_customers.csv', true); // Open the connection.
+      xhr.open('POST', '/v1/merchant_customers.csv', true); // Open the connection.
       xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
       xhr.onload = function() {
         if (xhr.readyState === 4) {
@@ -393,14 +392,5 @@ $(document).ready(function() {
   });
   // end csv file upload
 
-
-  // submit referrer
-  $("#new_referrer").on("ajax:success", function(e, data, status, xhr) {
-    alert('received referral info. pls share the link and refer more');
-    console.log(data.referrer.link)
-  }).on("ajax:error", function(e, xhr, status, error) {
-    alert('unable to save referral info');
-  });
-  // submit referrer
 
 });

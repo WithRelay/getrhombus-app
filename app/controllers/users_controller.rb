@@ -10,20 +10,12 @@ class UsersController < ApplicationController
   # do i need this?
   load_and_authorize_resource except: [:customer_csv_template]
 
-
   def show
-    # handle_referrer_and_welcome_email
-    # delete_captured_payment_session
-
-    # @token = TextingService.get_twilio_capibility_token if current_user.user_level == 1
-    # Transaction.process_captured_payment(@user, params) if current_user.user_level == 0 && params[:captured_amt].present?
-
     #all the methods are in concerns/databoard_data
     @overall_section = customers_and_trasactions
     @msg_perform = analytics_section
     @transactions = transactions
     @messages_data = messages_datas
-
   end
 
   # DELETE /users/1
@@ -63,8 +55,4 @@ private
       stripe_creds_attributes: [:id, :charges_enabled, :transfers_enabled])
   end
 
-  def handle_referrer_and_welcome_email
-    Referrer.save_referrer_with_id(session[:referrer_id], current_user.id) if session[:referrer_id].present?
-    Referrer.save_referrer_with_uid(session[:referrer_uid], current_user.id) if session[:referrer_uid].present?
-  end
 end

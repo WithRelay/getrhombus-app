@@ -21,7 +21,7 @@ $(document).ready(function () {
         load: function(query, callback) {
           if (!query.length) return callback();
           $.ajax({
-            url: '/v1/merchant_customers/customers',
+            url: '/v1/merchant_customers.json',
             type: 'GET',
             dataType: 'json',
             data: {

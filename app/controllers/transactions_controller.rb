@@ -1,6 +1,7 @@
 class TransactionsController < ApplicationController
 
   include DashboardNotification
+  include AdditionalUserActions
 
   before_action :set_notifications, except: [:download_csv]
   before_action :set_transaction, only: [:show]
@@ -18,15 +19,15 @@ class TransactionsController < ApplicationController
                                  .paginate(page: params[:page], per_page: 10).order(created_at: :desc)
       else
         # Exclude refunded transactions, Exclude subscriptions since these queries are not read only
-        # query is for refundable transactions
-        # you can't refund subscriptions easily.
-        # and include only captured transactions
-        # account reload txns are included by default.right
+        # query is for refundable transactions. You can't refund subscriptions easily.
+        # and include only captured transactions. Account reload txns are included by default.right
         @transactions = Transaction.includes(:user).exclude_subscriptions().only_captured_transactions()
                                     .exclude_refunded_transactions().where(team_id: current_user.id)
                                     .paginate(page: params[:page], per_page: 10).order(created_at: :desc)
       end
-    else
+    elsif current_user.is_customer?
+      # Transaction.process_captured_payment(@user, params) if session[:captured_amt].present?
+      delete_captured_payment_session
       @transactions = []
     end
     render 'empty_transaction' unless @transactions.present?

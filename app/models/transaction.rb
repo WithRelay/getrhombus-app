@@ -38,32 +38,36 @@ class Transaction < ActiveRecord::Base
                                                                                           .where(user_id: user_id, team_id: team_id).sum(:amount)) }
 
 
-  # send in a hash instead to PaymentService?
   def process_payment(amt, merchant, user, msg, hashtag_id, channel, capture=true)
     begin
       method(__method__).parameters.each { |_,arg| instance_variable_set("@#{arg}", binding.local_variable_get(arg)) }
 
-      tax_multiplier = (((@merchant.tax_percent.to_f) / 100) + 1)                                         # default is 0
-      @amt_with_taxes = (@amt.to_f * tax_multiplier).round                                              # total amount to charge
+      # taxes
+      tax_multiplier = (((@merchant.tax_percent.to_f) / 100) + 1)                 
+      @amt_with_taxes = (@amt.to_f * tax_multiplier).round                        
       
+      # fees
       fees = calculate_fees_schedule
-      @amt_less_stripe_fee = ((@amt_with_taxes * fees[0]) - fees[1]).round  
-      @app_fee = ((@amt_with_taxes * fees[2]) - fees[3]).round         
-                                          
+      @stripe_fee = ((@amt_with_taxes * fees[0]) - fees[1]).round  
+      @app_fee = merchant.is_platform? ? 0 : ((@amt_with_taxes * fees[2]) - fees[3]).round 
+      amount_less_fees = (@amount_with_taxes - @stripe_fee - @app_fee).round
+
       #puts 'got here so far'
 
-      @stripe_res_ary = PaymentService.charge(@amt_with_taxes, @amt_less_stripe_fee, @app_fee, merchant, user, msg.text, capture)
+      # charge
+      @stripe_res_ary = PaymentService.charge(@amt_with_taxes, amount_less_fees, merchant, user, msg.text, capture)
       @stripe_res = @stripe_res_ary[0]
 
       #puts @stripe_res_ary.inspect
 
+      # handle response
       if @stripe_res
         update_transaction_data
-        [true, "Transaction done"]
+        [true, "Charge created"]
       else
         # true if it is a card decline...we text only customers. Merchant might not have textable number on file.
-        #send_card_error_text if @stripe_res_ary[3] && user.is_customer?
-        #send_payment_failure_email(@stripe_res_ary[1], @stripe_res_ary[3])
+        # send_card_error_text if @stripe_res_ary[3] && user.is_customer?
+        # send_payment_failure_email(@stripe_res_ary[1], @stripe_res_ary[3])
         [false, @stripe_res_ary[2]]
       end
     rescue StandardError => err
@@ -73,18 +77,16 @@ class Transaction < ActiveRecord::Base
   end
 
   def calculate_fees_schedule
-    return 0.029, 30, 0, 0      # take this line out
-    @fee_schedule = @merchant.get_stripe_cred.cred.transaction_fee
+    return 2.9, 30, 0, 0      # take this line out
+    @fee_schedule = @merchant.get_stripe_cred[:cred].transaction_fee
     percent1, cents1 = @fee_schedule.provider_percent.to_f, @fee_schedule.provider_cents.to_f
     percent2, cents2 = @fee_schedule.platform_percent.to_f, @fee_schedule.platform_cents.to_f
     return percent1, cents1, percent2, cents2
   end
 
   def update_transaction_data
-    # storing this in intger, other amount columns need to be changed to integer...consistent with Stripe
-    _stripe_fee = @amt_with_taxes - @amt_less_stripe_fee
-
-    self.update(app_fee: amt_in_decimal(@app_fee), stripe_fee: _stripe_fee,
+    # app_fee, stripe_fee are integers
+    self.update(app_fee: @app_fee, stripe_fee: @stripe_fee,
                 amount: amt_in_decimal(@amt), amount_with_taxes: amt_in_decimal(@stripe_res.amount),
                 currency: @stripe_res.currency, txn_uri: @stripe_res.id, txn_number: generate_txn_number,
                 status: @stripe_res.status, txn_available_at: @stripe_res.created, last4: @stripe_res.source.last4,
@@ -105,18 +107,18 @@ class Transaction < ActiveRecord::Base
   end
 
   def send_card_error_text
-    # change text based on capture or not
-    # if @capture
-
-    msg = @channel.constantize.new
-    msg.send_and_save_message(@merchant.rn_type, @merchant.rhombus_number, @user.phone_number, "Your payment to #{@merchant.org_name} failed because: #{err[:message]}")
-    # Send to merchant's messaging channel
-    RealtimeStreamService.send_message_via_number(@user.phone_number, @merchant.rhombus_number, msg.text, msg.created_at, true)
+    if @capture
+      msg_to_send = "Your payment to #{@merchant.org_name} failed because: #{@stripe_res_ary[2]}"
+    else
+      msg_to_send = ''
+    end
+    Conversation.find_or_create_conversation_for_message_and_send_publish(@merchant, @customer, 'user', @customer.id, msg_to_send, @channel)
   end
 
   def send_text_receipt(msg_to_send)
     msg_id = Conversation.find_or_create_conversation_for_message_and_send_publish(@merchant, @customer, 'user', @customer.id, msg_to_send, @channel)
-    self.notification_logs.create(notify_type: 'new_transaction', reason: 'receipt', channel: @channel, channel_id: msg_id)
+    # Log receipt notification
+    self.notification_logs.create(notify_type: 'new_transaction', reason: 'receipt', channel: @channel, channel_id: msg_id) if msg_id
   end
 
   def send_email_receipt
@@ -144,16 +146,16 @@ class Transaction < ActiveRecord::Base
 
   def handle_captured_txn
     begin
-      unless @stripe_res
+      if @stripe_res
+        send_text_receipt
+        send_email_receipt
         # notify platform...should we email merchant too? could be a security measure.
         [true, "Payment successful"]
       else
-        send_text_receipt
-        send_email_receipt
-        unless @stripe_res_ary[3]
-          [false, 'Unable to process txn because: ' + @stripe_res_ary[2]]
+        if @stripe_res_ary[3]
+          [false, 'Unable to complete transaction because: ' + @stripe_res_ary[2]]
         else
-          [false, 'Stripe is unable to provess this transaction.']
+          [false, 'Stripe is unable to complete this transaction.']
         end
       end
     rescue StandardError => err
@@ -164,13 +166,18 @@ class Transaction < ActiveRecord::Base
 
   def handle_uncaptured_txn
     begin
-      unless @stripe_res
-        # notify platform...should we email merchant too? could be a security measure.
-        [false, "can't authorize card"]
-      else
-        #send_text_receipt
+      if @stripe_res
+        send_text_receipt
         send_email_receipt
-        [true, 'card is authorized']
+        # notify platform...should we email merchant too? could be a security measure.
+        [true, 'Transaction is authorized']
+      else
+        if @stripe_res_ary[3]
+          [false, 'Unable to authorize transaction because: ' + @stripe_res_ary[2]]
+        else
+          # notify platform...should we email merchant too? could be a security measure.
+          [false, "Unable to authorize transaction"]        
+        end        
       end
     rescue StandardError => err
       # notify platform...should we email merchant too? could be a security measure.
@@ -185,7 +192,7 @@ class Transaction < ActiveRecord::Base
       method(__method__).parameters.each { |_,arg| instance_variable_set("@#{arg}", binding.local_variable_get(arg)) if arg != :charge_id }
       payment_ary = PaymentService.process_captured_charge(charge_id)
       if payment_ary[0]
-        # will capture change transaction status and date???
+        ###### will capture change transaction status and date???
         self.update(captured: true)
         send_text_receipt("adasdsa")
         send_email_receipt
@@ -214,11 +221,12 @@ class Transaction < ActiveRecord::Base
   end
 
   def txn_amount
-    "#{Transaction.big_decimal_2dp(self.amount)}"
+    "#{Transaction.big_decimal_2dp(self.amount_with_taxes)}"
   end
 
   def txn_amount_less_fees
-    "#{Transaction.big_decimal_2dp(self.amount_less_fees)}"
+    amt = self.amount_with_taxes - self.app_fee.to_f/100 - self.stripe_fee.to_f/100
+    "#{Transaction.big_decimal_2dp(amt)}"
   end
 
   def relative_time

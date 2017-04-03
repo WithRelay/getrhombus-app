@@ -2,7 +2,7 @@ class CouponsController < ApplicationController
 
   include DashboardNotification
 
-  before_action :set_coupon, only: [:show, :destroy]
+  before_action :set_coupon, only: [ :destroy]
   before_action :set_notifications
 
   respond_to :html
@@ -31,13 +31,14 @@ class CouponsController < ApplicationController
     unless Subscription.exists?(coupon_id: @coupon.id)
       if @coupon.delete_coupon
         @coupon.destroy
-        redirect_to user_coupons_path, flash: { notice: 'Coupon was deleted' }
+        flash[:notice] = 'Coupon was deleted'
       else
-        redirect_to user_coupons_path, flash: { error: "We couldn't delete the coupon" }
+        flash[:error] = "We couldn't delete the coupon"
       end
     else
-      redirect_to user_coupons_path, flash: { warning: "You can't delete a used Coupon..." }
+      flash[:warning] = "You can't delete a used Coupon..."
     end
+    redirect_to user_manage_coupons_path(current_user)
   end
 
   def manage_coupons

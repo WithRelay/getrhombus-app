@@ -122,6 +122,9 @@ $(document).ready(function () {
     });
   }
 
+  $('#subscription-plan-id-selectized').on('focus', function(){
+    $('#subscriptionForm').formValidation('resetField', 'subscription[plan_id]');
+  })
 
   if ($('#subscription-customer-id').length > 0) {
     $('#subscription-customer-id')
@@ -144,7 +147,7 @@ $(document).ready(function () {
         load: function(query, callback) {
           if (!query.length) return callback();
           $.ajax({
-            url: '/v1/merchant_customers/customers',
+            url: '/v1/merchant_customers.json',
             type: 'GET',
             dataType: 'json',
             data: {
