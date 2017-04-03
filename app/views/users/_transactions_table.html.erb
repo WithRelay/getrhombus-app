@@ -1,0 +1,32 @@
+<% if @transactions[:recent_trancs].empty?%>
+  <div class="no-chart-data transactions">
+    <p class="empty-view-short-paragraph no-recent-transactions">No data. <a href="#" class="links">Connect your bank account</a>&nbsp;to process payments</p>
+  </div>
+<%else%>
+  <% @transactions[:recent_trancs].each_with_index do |t,i|%>
+    <div class="new-customer-list w-row">
+      <div class="w-col w-col-1">
+        <div class="customer-list-content-div">
+          <div class="new-customer-table-text"><%= i+1 %></div>
+        </div>
+      </div>
+      <div class="w-col w-col-6">
+        <div class="customer-list-content-div">
+          <div class="customer-list-content-div">
+            <div class="name-text new-customer-table-text shrink-text"><%= t.user.full_name %></div>
+          </div>
+        </div>
+      </div>
+      <div class="w-col w-col-2">
+        <div class="customer-list-content-div">
+          <div class="new-customer-table-text shrink-text"><%= time_in_relative_form(t.created_at, 'medium_format') %> </div>
+        </div>
+      </div>
+      <div class="w-col w-col-3">
+        <div class="customer-list-content-div">
+          <div class="new-customer-table-text">$<%= t.amount %></div>
+        </div>
+      </div>
+    </div>
+  <%end%>
+<%end%>
