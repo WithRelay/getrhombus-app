@@ -26,7 +26,6 @@
         </div>
       </div>
       <div class="chart-container">
-        <!-- <img class="chart-placeholder-2" src="images/Sample-Chart-3.png"> -->
         <%= message_graph %>
       </div>
     </div>
@@ -70,32 +69,7 @@
             <h4 class="welcome-dash-content-container-header">Recent Transactions</h4>
           </div>
           <div class="sakes welcome-dash-content-container">
-            <% @transactions[:recent_trancs].each_with_index do |t,i|%>
-            <div class="new-customer-list w-row">
-              <div class="w-col w-col-1">
-                <div class="customer-list-content-div">
-                  <div class="new-customer-table-text"><%= i+1 %></div>
-                </div>
-              </div>
-              <div class="w-col w-col-6">
-                <div class="customer-list-content-div">
-                  <div class="customer-list-content-div">
-                    <div class="name-text new-customer-table-text shrink-text"><%= t.user.full_name %></div>
-                  </div>
-                </div>
-              </div>
-              <div class="w-col w-col-2">
-                <div class="customer-list-content-div">
-                  <div class="new-customer-table-text shrink-text"><%= time_in_relative_form(t.created_at, 'medium_format') %> </div>
-                </div>
-              </div>
-              <div class="w-col w-col-3">
-                <div class="customer-list-content-div">
-                  <div class="new-customer-table-text">$<%= t.amount %></div>
-                </div>
-              </div>
-            </div>
-            <%end%>
+            <%=  render 'transactions_table'%>
           </div>
         </div>
       </div>
