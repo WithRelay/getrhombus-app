@@ -12,7 +12,7 @@ class UsersController < ApplicationController
 
   def show
     #all the methods are in concerns/databoard_data
-    @overall_section = customers_and_trasactions
+    @overall_section = customers_and_transactions
     @msg_perform = analytics_section
     @transactions = transactions
     @messages_data = messages_datas
