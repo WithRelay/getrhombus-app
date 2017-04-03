@@ -5,12 +5,12 @@ Taiwo
 - how will using the master account affect us (- unify team and dashboard email issue really)
 - create customers/contacts...how about existing customers/contacts. switching stripe_id to merchants.
   - upon signing up, does an existing contact update to become customer?
-  - review where merchant customer is created.... see create_subscription, add-token_to_customer, etc, csv, add a customer, tran
+  - review where merchant customer is created
+  	- see create_subscription, add-token_to_customer, etc, csv, add a customer, tran
 - messaging lists (check endpoint in create customer), reminders (shells created)
 - workflow for sign in, sign up and places where we add card, token, referrer, contact and customer, payment capture
 - app fee for subscriptions - platform fee,
 - check all referrers stuff and saving 
-- check for unique error on add customer
 
 Others
 Add card info, add subscription, billing info
@@ -54,7 +54,6 @@ Surya
 - campaign toastrs - plug and play. already wrote the code for you. see realtimeservice.rb and notifications.js
 - tooltip for campaigns - leave for noe
 - time comparisons are tricky...make sure to do to_i because rails compares time as floats
-- stop updatinig source files. - emojionearea
 
 Dorje
 - graph - empty state - ask edwin

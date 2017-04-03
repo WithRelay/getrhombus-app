@@ -2,11 +2,11 @@ $(document).ready(function() {
   var create_user_form = '#create-user-form',
       create_user_submit = '#create-user-submit';
 
-  $('#user_address_country').selectize({
+  var country_selectize = $('#user_address_country').selectize({
     closeAfterSelect: true,
   });
 
-  $('#user_user_list_list_id').selectize({
+  var user_list_selectize = $('#user_user_list_list_id').selectize({
     valueField: 'id',
     labelField: 'name',
     searchField: 'name',
@@ -201,17 +201,15 @@ $(document).ready(function() {
       // Show only message associated with current validator
       .filter('[data-fv-validator="' + data.validator + '"]').show();
   })
-  ///// add a customer
   .on('success.form.fv', function(e) {
     e.preventDefault();
-    
     // if good above and card number is present, send card details to stripe
     if ($('#cc-number').val() == "") {
       $.each(["#cc-name", "#cc-exp", "#cc-csc"], function(index, val) { $(val).val(''); });
       submit_create_user_form();
     } else
       CardHandler.submit_to_stripe(create_user_form, create_user_submit, submit_create_user_form);
-    });
+  });
 
 
   function submit_create_user_form() {
@@ -229,6 +227,9 @@ $(document).ready(function() {
     })
     .done(function(data, textStatus, jqXHR) {
       FlashHandler.setFlashMessage('Customer created successfully', 'notice');
+      $(create_user_form)[0].reset();
+      user_list_selectize[0].selectize.clear();
+      country_selectize[0].selectize.clear();
       $('.close-modal').click();
     })
     .fail(function(data, textStatus, errorThrown) {
