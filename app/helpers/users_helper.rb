@@ -35,4 +35,63 @@ module UsersHelper
   def country_list
     CountriesList::COUNTRIES_LIST.collect { |c| [ c[:name], c[:code] ] }
   end
+
+  def message_graph
+    if @messages_data[:msg_30_days][:chart_data].empty?
+      htm = '<div class= "no-chart-data">
+      <p class="empty-view-short-paragraph">No data. '
+      htm += link_to('Send your first message', user_conversations_path(current_user), class: 'links' ).to_s
+      htm += ' to view chart activity</p></div>'
+      htm.html_safe
+    else
+      area_chart @messages_data[:msg_30_days][:chart_data],
+        library: {
+          scales: {
+            xAxes: [{
+              ticks: {
+                autoSkip: false,
+                minRotation: 60
+              },
+              time: {
+                unit: 'day',
+                displayFormats: {
+                  maxRotation: 60,
+                  'day': 'MMM D'
+                },
+              }
+            }]
+          }
+        },
+        curve: false
+      end
+  end
+
+  def transactions_graph
+    if @transactions[:tranc_chart_data].empty?
+      htm = '<div class="no-chart-data transactions"><p class="empty-view-short-paragraph">No data.'
+      htm += link_to('Connect your bank account',user_bank_accounts_path(current_user), class: "links").to_s
+      htm += '&nbsp;to view chart activity</p></div>'
+      htm.html_safe
+    else
+      line_chart @transactions[:tranc_chart_data], height: "250px",
+          library: {
+            scales: {
+              xAxes: [{
+                ticks: {
+                  autoSkip: false,
+                  maxRotation: 60,
+                  minRotation: 60
+                },
+                time: {
+                  unit: 'day',
+                  displayFormats: {
+                    'day': 'MMM D'
+                  },
+                }
+                }]
+              }
+            },
+            curve: false
+    end
+  end
 end

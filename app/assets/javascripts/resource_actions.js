@@ -4,7 +4,6 @@ $(document).on('ready',function(){
 
 	$(document).on('click', '.cancel-yes', function(e){
     e.preventDefault();
-
     var selectedElement = selectCheckedElement();
 		var msg = $(this).parent().find('p').text();
 
@@ -15,8 +14,9 @@ $(document).on('ready',function(){
 		  var method_input = selectedElement.parents('.edit_hashtag').find("input[name='_method']");
 	    method_input.attr('value','patch');
 		}
-
-		doAction(selectedElement);
+    if (!window.location.pathname.match(/campaigns/)){
+      doAction(selectedElement);
+    }
 	});
 
 	if ($('.save-reply-form').length) {
@@ -171,7 +171,6 @@ $('#delete-reminder').click(function(e){
 			 url:  "/v1/reminders/" + reminder_id + "/edit" ,
 			 data:{id: reminder_id}
 		 }).done(function(res){
-			debugger;
 			var form = $('.editReminderFrom');
 			var action = form.attr("action");
 			var reminder = res.reminder

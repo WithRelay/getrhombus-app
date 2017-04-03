@@ -141,21 +141,21 @@ class User < ActiveRecord::Base
 
   def get_stripe_cred
     # platform acct is a standalone account
-    # merchants could have a standalone account (prior to v1.5) and a managed account 
-    # managed account takes priority
+     # merchants could have a standalone account (prior to v1.5) and a managed account
+     # managed account takes priority
 
-    # remove this eventually
-    return { type: 'standalone', cred: User.find_by(id: 23) }
-    ##
-    return { type: 'standalone', cred: self.standalone_stripe_cred } if is_platform?
-    
-    cred = self.stripe_creds   # check for managed account first
-    return { type: 'managed', cred: cred.first } if cred.present?
-    
-    cred = self.standalone_stripe_cred  # check for standalone ... this is legacy
-    return { type: 'standalone', cred: cred } if cred.present?
+     # remove this eventually
+     return { type: 'standalone', cred: User.find_by(id: 23) }
+     ##
+     return { type: 'standalone', cred: self.standalone_stripe_cred } if is_platform?
 
-    { type: nil, cred: nil }  # has no payment account
+     cred = self.stripe_creds   # check for managed account first
+     return { type: 'managed', cred: cred.first } if cred.present?
+
+     cred = self.standalone_stripe_cred  # check for standalone ... this is legacy
+     return { type: 'standalone', cred: cred } if cred.present?
+
+     { type: nil, cred: nil }  # has no payment account
   end
 
   def self.platform_email
@@ -197,6 +197,10 @@ class User < ActiveRecord::Base
     page = FbPage.find_by(page_access_token: page_access_token)
     fb_cred = self.fb_creds.where(fb_page_id: page.id).last
     fb_cred.page_specific_id
+  end
+
+  def user_segments
+    self.lists.where.not(segment: nil)
   end
 
   def update_account_balance(amt)
@@ -245,6 +249,4 @@ class User < ActiveRecord::Base
     self.relay_uid = generate_uid
     self.short_url = "dasd" #UrlShorternerService.shorten_link("https://www.withrelay.com/signup?referrer_uid=#{self.relay_uid}")
   end
-
-
 end
