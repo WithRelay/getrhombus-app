@@ -22,12 +22,12 @@ class Referrer < ActiveRecord::Base
 
   def self.save_referrer_with_id(referrer, referee)
     ref = where(referrer_id: referrer, referee_id: referee).first
-    create(referrer_id: referrer, referee_id: referee) if !ref
+    create(referrer_id: referrer, referee_id: referee) unless ref
   end
 
   def self.save_referrer_with_uid(referrer, referee)
     ref = where(uid: referrer, referee_id: referee).first
-    create(uid: referrer, referee_id: referee) if !ref
+    create(uid: referrer, referee_id: referee) unless ref
   end
 
   # we use this on Stripe's website or anywhere else necessary
