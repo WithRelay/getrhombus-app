@@ -6,9 +6,8 @@ module SegmentsHelper
 
   def number_of_users(segment)
     if segment.merchant?
-      segment.get_users.count
+      segment.get_users
     elsif (segment.name == 'Inactive Customers')
-      binding.pry
       customers = eval(segment.segment)
       customers.present? ? customers : current_user.merchant_customers.pluck(:customer_id) +
                                        current_user.merchant_contacts.pluck(:uid)
