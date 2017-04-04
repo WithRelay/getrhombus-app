@@ -135,7 +135,7 @@ Rails.application.routes.draw  do
         member do
           patch 'change_status'
           delete 'delete_campaign'
-          delete 'campaigns/:id/images/:image_id' => 'campaigns#image_delete'
+          delete 'images/:image_id' => 'campaigns#image_delete'
         end
         collection do
           post 'send_test_email'
@@ -152,7 +152,9 @@ Rails.application.routes.draw  do
       resources :transactions, only: [:index, :create] do
         post '/:txn_number/refund' => 'transactions#refund', on: :collection
       end
-      match 'numbers/search' => 'numbers#search', via: [:get]
+      resources :numbers, only: [] do
+        get 'search' => 'numbers#search', on: :collection
+      end
       resources :coupons, only: [:index, :update] do
         post 'check_coupon_name', on: :collection
       end
