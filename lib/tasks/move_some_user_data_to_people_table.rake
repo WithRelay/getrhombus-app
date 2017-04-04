@@ -1,7 +1,11 @@
 # run after migrations since we need the people table
 # then run the migration below to remove the unwanted columns afterwards.
 
-#  remove columns
+# remove columns
+# will just delete first_name and last_name for customers, we dont need it
+# we also dont really have addresses for them.
+# but going forward customer address and person is in the respective tables
+# 
 =begin
   def change
     remove_column :users, :first_name

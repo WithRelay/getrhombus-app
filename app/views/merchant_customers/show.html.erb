@@ -51,15 +51,13 @@
     <div class="w-col w-col-3">
       <div class="customer-properties-div">
         <div class="right-nav-profile-content-wrapper">
-          <%#= present(@customer).profile_image %>
-          <!-- we may need present method to dispaly color  -->
-          <%if @user_snapshot[:profile_image][:type] == 'color' %>
-          <div class= "rignt-sidebar-placeholder-container" style="background: <%= @user_snapshot[:profile_image][:value] %>">
-            <div class="side-bar-profile-image-placeholder-text">#</div>
-          </div>
+          <% if @user_snapshot[:profile_image][:type] == 'color' %>
+            <div class= "rignt-sidebar-placeholder-container" style="background: <%= @user_snapshot[:profile_image][:value] %>">
+              <div class="side-bar-profile-image-placeholder-text"><%= @user_snapshot[:full_name][0] %></div>
+            </div>
           <% else %>
             <%= image_tag(@user_snapshot[:profile_image][:value], class: 'profile-picture-right-nav', width: 60 )%>
-          <%end%>
+          <% end %>
 
           <div class="dashboard-right-nav signup-box-subheading"><%= "#{@user_snapshot[:full_name]}"%> <span class="relay-id"><%= "#{@user_snapshot[:verified]}" %></span>
           </div>

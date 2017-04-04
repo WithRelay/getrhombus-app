@@ -113,6 +113,7 @@ module CSVHandler
           end
         else
           # send text here
+          # MerchantCustomer
         end
       end
       response

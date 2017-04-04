@@ -6,7 +6,7 @@
     <a class="close-modal update-close-modals" data-parent='import-customers-div' href="#"></a>
   </div>
   <div class="modal-instruction-wrapper">
-    <p class="modal-paragraph">To import your customers, use this <a class="template-link" href="#">template file</a> and format your customers' information as specified in the template example.</p>
+    <p class="modal-paragraph">To import your customers, use this <%= link_to 'template file', customer_template_users_path(format: :csv), class: 'template-link' %> and format your customers' information as specified in the template example.</p>
   </div><a class="button file-upload w-button" href="#">Choose file from computer</a>
   <div class="file-name">No file chosen.</div>
   <div class="w-form">

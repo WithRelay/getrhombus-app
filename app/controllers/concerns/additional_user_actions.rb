@@ -139,19 +139,6 @@ module AdditionalUserActions
     Referrer.save_referrer_with_uid(params[:user][:referrer_uid], current_user.id) if params[:user][:referrer_uid].present?
   end
 
-  def customer_csv_template
-    render :template => "static_pages/to_404.html" and return if !current_user
-    response = current_user.get_customer_csv_template
-    if response
-      respond_to do |format|
-        format.csv { send_data response, filename: "customer_template.csv" }
-      end
-    else
-      # use 500 page after it is built
-      render :template => "static_pages/to_404.html"
-    end
-  end
-
   def refer_business
     if params[:referrer].present?
       @referrer = Referrer.new(referrer_params)

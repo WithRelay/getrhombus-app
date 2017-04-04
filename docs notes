@@ -1,0 +1,185 @@
+Notes
+1. Referrers
+- referrer_uid for identifying merchant in referrals
+- save referrer once when devise creates or signs in user
+- we have homepage referrer for people coming from 3rd party sites
+- we have users referring businesses
+- we have non-users referring businesses - not active at the moment
+
+2. MerchantCustomer
+- current users before v1.5 who are have referrer_num, or have made payment will become customers of merchant and platform
+and the stripe id will be moved into platform_stripe_account_id
+
+3. MerchantContact
+
+4. FB Messenger 
+question: when a customer does account linking, there is a way to try to identify them if they have a rhombus account and have connected their facebook account right?
+before sending account linking url we check that if link not found then we send it
+so you use the facebook image url hack to try to identify them?
+yes i found that's the one solution to link the existing account
+ok
+so if the hack doesnt work, we send the link
+and if user logs in, we can identify them?
+yes exactly
+ok
+let me think about this
+so what happens if user doesn't sign in
+you just store the fb cred in fb_creds table but without a user id?
+account remains unlinked
+yes
+ok
+i think i better understand what's going on
+but you send the sign in link only once?
+yes
+you also only check for the facebook hack once?
+yes
+alright... here is the next change... do the facebook hack check each time a user sends a message and we don't know who they are. we need this because it is possible a user later connects their facebook account and we are not aware
+
+taiwo [7:38 PM] 
+alright... here is the next change... do the facebook hack check each time a user sends a message and we don't know who they are. we need this because it is possible a user later connects their facebook account and we are not aware
+
+[7:38]  
+does that make sense?
+
+bhishma [7:41 PM] 
+yes
+if you said so then i will add
+
+taiwo [7:41 PM] 
+hold on
+
+[7:42]  
+actually before you do that... i have another question
+
+[7:42]  
+just trying to understand what's going on
+
+[7:43]  
+when a user connects their fb account... you store it in fb_creds right?
+
+[7:45]  
+?
+
+bhishma [7:46 PM] 
+yes
+
+taiwo [7:48 PM] 
+ok and when they send a message in messenger... you look into fb-creds for the profile_pic_url and if you find it, do you create a new row for the page_specific_id but with the user_id now set ?
+
+bhishma [7:50 PM] 
+sorry, i don't understand what you are saying
+
+taiwo [7:51 PM] 
+i mean if you are able to identify the user through the fb hack, do you create a new fb_creds record to hold the page_specific_id for the current facebook page the use is messaging from?
+
+[7:51]  
+or do you attach it to the fb account record (the one with the fb_id from when the user connected their facbook account)? (edited)
+
+bhishma [7:57 PM] 
+update the fb_Cred with the user id
+
+taiwo [7:58 PM] 
+you mean you update the fb_cred that was created from when the user connected their facebook account?
+
+[7:58]  
+or you created a new record to store the page_specific_id and just add the user_id?
+
+[7:58]  
+confused...which one do you do
+
+bhishma [7:59 PM] 
+i mean when new user message us and if we link them with profile pic hack then we create the fbcred with user id
+
+taiwo [7:59 PM] 
+ok that's fine
+
+[8:00]  
+and if you can't link then or they don't sign in, you still create a record but without user-id right?
+
+bhishma [8:00 PM] 
+yes
+
+taiwo [8:00 PM] 
+ok i get it... i have a few more questions
+
+[8:01]  
+so each time a user sends a message, we should check and see if we can use the hack.. because they could have connected their facebook account at some point after the first message
+
+[8:05]  
+when you finish that, let me know
+
+[8:08]  
+bhishma
+
+[8:08]  
+maybe we can do it another way
+
+[8:08]  
+a more efficient way i think
+
+[8:09]  
+hold off on what you are doing... i think i have a better way
+
+bhishma [8:11 PM] 
+you mean leave as it is
+
+taiwo [8:11 PM] 
+yes
+
+bhishma [8:11 PM] 
+ok
+
+taiwo [8:12 PM] 
+i have a better way to do it... that is more efficient
+
+[8:12]  
+typing it up
+
+[8:14]  
+question
+
+[8:14]  
+when you send the sign in link after receiving the first user message and the user signs in, do you update the user_id in the fb_cred for the user's page_specific_id?
+
+bhishma [8:14 PM] 
+yes i do
+
+taiwo [8:14 PM] 
+i'm assuming the first message from the user creates a fb-cred record
+
+bhishma [8:14 PM] 
+page specific id is same
+
+taiwo [8:15 PM] 
+ok so you just update
+
+[8:15]  
+alright i have a good solution and i think you will agree it makes sense
+
+[8:16]  
+1. when you connect your facebook account, we should run through the fb_creds to see if we can do the hack in reverse, if we
+match any fb_creds for page_specific_ids, we update the user_id.
+2. When you receive a message and it is the first message from that user to that merchant on that day, rerun the facebook hack or send the link again
+
+[8:16]  
+makes sense?
+
+[8:16]  
+running the hack once or sending the link ones isnt sufficient, so we should do it once a day.
+
+ok so you don't touch the row that was created from when they connected their facebook account?
+no
+
+- alright, so it means each time a user sends a message from another merchant and it is not the first
+message...it is possible they might have connected their facebook at some point...so you can check for the
+facebook connect 
+- next thing to do...when you send the sign in link after receiving the first user message and the user signs in,
+do you update the user_id in the fb_cred for the user's page_specific_id
+- merchant customer, merchant contact?? on message only
+
+better way to do this
+1. when you connect your facebook account, we run through the fb_creds to see if we can do the hack in reverse, if we 
+match any fb_creds, we update the user_id.
+2. When you receive a message and it is the first message from that user to that merchant on that day, rerun the facebook hack or send the link again
+
+

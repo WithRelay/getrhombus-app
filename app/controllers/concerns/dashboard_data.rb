@@ -40,16 +40,15 @@ module DashboardData
 		# empty hash
 		
 		if has_bank_account?
-			chart_data = transactions_weekly.group('date(transactions.created_at)')
-																				.sum(:amount)
+			chart_data = transactions_weekly.group('date(transactions.created_at)').sum(:amount)
 			recent_transactions = Transaction.includes(:user).exclude_refunded_transactions().only_captured_transactions()
-																		.where(team_id: merchant_id).order(created_at: :desc).last(6)
+																		    .where(team_id: merchant_id).order(created_at: :desc).last(6)
 		else
 			chart_data, recent_transactions = {}, {}
 		end
 
 		{
-			recent_trancs: recent_transactions,
+			recent_trans: recent_transactions,
 			this_week_tranc: transactions_weekly.sum(:amount),
 			tranc_chart_data: chart_data
 		}

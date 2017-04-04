@@ -67,9 +67,14 @@ module UsersHelper
   end
 
   def transactions_graph
-    if @transactions[:tranc_chart_data].empty?
-      htm = '<div class="no-chart-data transactions"><p class="empty-view-short-paragraph">No data.'
-      htm += link_to('Connect your bank account',user_bank_accounts_path(current_user), class: "links").to_s
+    if current_user.get_stripe_cred[:type].nil?
+      htm = '<div class="no-chart-data transactions"><p class="empty-view-short-paragraph">No data. '
+      htm += link_to('Connect your bank account', user_bank_accounts_path(current_user), class: "links").to_s
+      htm += '&nbsp;to view chart activity</p></div>'
+      htm.html_safe
+    elsif @transactions[:tranc_chart_data].empty?
+      htm = '<div class="no-chart-data transactions"><p class="empty-view-short-paragraph">No data. '
+      htm += link_to('Charge a customer', user_transactions_path(current_user), class: "links").to_s
       htm += '&nbsp;to view chart activity</p></div>'
       htm.html_safe
     else

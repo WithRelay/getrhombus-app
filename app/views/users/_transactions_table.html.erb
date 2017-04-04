@@ -1,11 +1,18 @@
-<% if @transactions[:recent_trancs].empty?%>
+
+<% if current_user.get_stripe_cred[:type].nil? %>
   <div class="no-chart-data transactions">
     <p class="empty-view-short-paragraph no-recent-transactions">No data.
-       <%= link_to('Connect your bank account',user_bank_accounts_path(current_user), class: "links") %>
+       <%= link_to('Connect your bank account', user_bank_accounts_path(current_user), class: "links") %>
        &nbsp;to process payments</p>
   </div>
-<%else%>
-  <% @transactions[:recent_trancs].each_with_index do |t,i|%>
+<% elsif !@transactions[:recent_trans].empty? %>
+  <div class="no-chart-data transactions">
+    <p class="empty-view-short-paragraph no-recent-transactions">No data. You can 
+    <%= link_to('Charge a customer', user_transactions_path(current_user), class: "links") %>
+       &nbsp;to see data.</p>
+  </div>
+<% else %>
+  <% @transactions[:recent_trans].each_with_index do |t,i|%>
     <div class="new-customer-list w-row">
       <div class="w-col w-col-1">
         <div class="customer-list-content-div">
@@ -30,5 +37,5 @@
         </div>
       </div>
     </div>
-  <%end%>
-<%end%>
+  <% end %>
+<% end %>
