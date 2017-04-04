@@ -57,7 +57,8 @@ class FbCred < ActiveRecord::Base
   private
 
   def self.send_auth_link(page_access_token, new_user_id, welcome_text)
-    if FbMessage.where(text: '').last.images.empty? && FbMessage.where(text: '').last.created_at > 1.days.ago
+    last_account_link_message = FbMessage.where(text: '', to: new_user_id).last
+    if last_account_link_message.nil? || (last_account_link_message.images.empty? && last_account_link_message.created_at < 1.days.ago)
       FacebookMessengerService.send_auth_link(page_access_token, new_user_id, welcome_text)
     end
   end
