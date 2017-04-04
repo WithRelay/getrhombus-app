@@ -31,7 +31,7 @@ class FbCred < ActiveRecord::Base
       link_response = link_page_specific_user(url)
       welcome_text = "Welcome #{full_name} to Relay-Message Commerce platform"
       @fb_cred = FbCred.find_or_initialize_by(page_specific_id: new_user_id)
-      unless link_response.present?
+      if link_response.present?
         @fb_cred.update(
           name: full_name, gender: gender,
           email: link_response[:email],
@@ -56,7 +56,7 @@ class FbCred < ActiveRecord::Base
   private
 
   def self.send_auth_link(page_access_token, new_user_id, welcome_text)
-    if @fb_cred.updated_at > 1.days.ago
+    if FbMessage.where(text: '').last.images.empty? && FbMessage.where(text: '').last.created_at > 1.days.ago
       FacebookMessengerService.send_auth_link(page_access_token, new_user_id, welcome_text)
     end
   end
