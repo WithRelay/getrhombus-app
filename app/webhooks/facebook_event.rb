@@ -94,7 +94,8 @@
 
     # Add new user from massenger to FbCred table
     def add_page_user(page, new_user_id)
-      @fb_cred = FbCred.find_by(page_specific_id: new_user_id) || FbCred.add_fb_user_from_messenger(page, new_user_id)
+      linked_fb_cred = FbCred.where(page_specific_id: new_user_id).where.not(user_id: nil)[0]
+      @fb_cred = linked_fb_cred || FbCred.add_fb_user_from_messenger(page, new_user_id)
     end
 
     # it gives user id from page specific id of user
