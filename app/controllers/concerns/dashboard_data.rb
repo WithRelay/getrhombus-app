@@ -13,14 +13,14 @@ module DashboardData
 		}
 	end
 
-	def customers_and_trasactions
+	def customers_and_transactions
 		customers = current_user.merchant_customers
     new_customers = customers.select{ |c| c.created_at >= 1.week.ago.utc }
 
     # Exclude refunded transactions, include subscriptions since these queries are read only
     # Otherwise you will need to exclude subscriptions which aren't easily refundable
     # and include only captured transactions and account reload txns are included by default..right
-    transactions = all_trasactions
+    transactions = all_transactions
     transactions_today = transactions.where('transactions.created_at >=?', Time.current.beginning_of_day)
 
     {
@@ -33,13 +33,23 @@ module DashboardData
 	end
 
 	def transactions
-		transactions = all_trasactions
+		transactions = all_transactions
 		transactions_weekly = transactions.where 'transactions.created_at >=?', 7.days.ago.utc
-		chart_data = transactions_weekly.group('date(transactions.created_at)')
-																		.sum(:amount)
+
+		# if merchant(current_user) has no bank account then the transactions data for the UI set to me
+		# empty hash
+		
+		if has_bank_account?
+			chart_data = transactions_weekly.group('date(transactions.created_at)')
+																				.sum(:amount)
+			recent_transactions = Transaction.includes(:user).exclude_refunded_transactions().only_captured_transactions()
+																		.where(team_id: merchant_id).order(created_at: :desc).last(6)
+		else
+			chart_data, recent_transactions = {}, {}
+		end
+
 		{
-			recent_trancs: Transaction.includes(:user).exclude_refunded_transactions().only_captured_transactions()
-                                    .where(team_id: merchant_id).order(created_at: :desc).last(6),
+			recent_trancs: recent_transactions,
 			this_week_tranc: transactions_weekly.sum(:amount),
 			tranc_chart_data: chart_data
 		}
@@ -126,7 +136,7 @@ module DashboardData
                           .count
   end
 
-	def all_trasactions
+	def all_transactions
 		Transaction.exclude_refunded_transactions().only_captured_transactions().where(team_id: merchant_id)
 	end
 
