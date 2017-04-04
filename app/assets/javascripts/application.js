@@ -102,5 +102,7 @@
 //= require resource_actions
 //= require notifications
 //= require away_messages
+
+//= require simple-scrollbar.min.js
 // DO NOT REQUIRE TREE AS IT DOESNT GUARANTEE THE DEPENDENCY ORDER OF THESE FILES
 // require_tree .
