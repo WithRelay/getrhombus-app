@@ -28,7 +28,7 @@ class User < ActiveRecord::Base
   # include default devise modules. Others available are: :token_authenticatable, :lockable, :timeoutable and :confirmable,
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable, :omniauthable, :omniauth_providers => [:facebook, :twitter, :stripe_connect]
 
-  has_many :customer_transactions
+  has_many :customer_transactions, class_name: 'Transaction', foreign_key: 'user_id'
   has_many :merchant_transactions, class_name: 'Transaction', foreign_key: 'team_id'
 
   has_many :referrers, class_name: 'Referrer', foreign_key: 'referee_id'
@@ -112,7 +112,7 @@ class User < ActiveRecord::Base
   before_validation :the_titleizer
   before_create :set_merchant_org_phone          # only create because the actual org_phone field is used in edit view
 
-  #after_commit :do_signup_stuff, on: :create
+  after_commit :do_signup_stuff, on: :create
 
   enum status: { inactive: 0, active: 1 }
 
@@ -236,12 +236,27 @@ class User < ActiveRecord::Base
       response = "We're away at the moment and will get back to you when we return :)."
       AwayMessage.find_or_create_by(user_id: self.id, response: response)
       GetIntelligenceDataJob.perform_later(self.org_phone, 'OpenCNAM')
+      new_customer = %Q{MerchantContact.where('created_at <= ? AND merchant_id = ?', Time.now + 7.days,
+                       #{user_id}) + MerchantCustomer.where('created_at <= ? And merchant_id = ?',
+                       Time.now + 7.days, #{user_id})}
+      self.lists.create!(name: 'New customers', segment: new_customer, origin: 1)
+      customer = %Q{Transaction.where("created_at <= ? AND user_id IN(?) AND team_id = ?",
+                    Time.now + 30.days, MerchantCustomer.where(merchant_id: #{user_id})
+                    .pluck(:customer_id) + MerchantContact.where(merchant_id: #{user_id})
+                    .pluck(:uid), #{user_id}) | FbMessage.where("created_at <=? AND
+                    user_id_to = ? AND user_id IN(?)", Time.now + 30.days, #{user_id},
+                    MerchantCustomer.where(merchant_id: #{user_id}).pluck(:customer_id))}
+      self.lists.create!(name: 'Active Customers', segment: customer, origin: 1)
+      self.lists.create!(name: 'Inactive Customers', segment: customer, origin: 1)
     end
-
     MerchantCustomer.add_or_update_merchant_customer([User.get_platform_acct_obj.id], self.id)
     WelcomeEmailJob.set(wait: SIGNUP_EMAIL_DELAY.minutes).perform_later(self)
     GetIntelligenceDataJob.perform_later(self.email, 'FullContact')
     GetIntelligenceDataJob.perform_later(self.phone_number, 'OpenCNAM') if self.is_customer?
+  end
+
+  def user_id
+    self.id
   end
 
   # This is the link merchants can share...also dashboard link

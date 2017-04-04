@@ -103,5 +103,6 @@
 //= require notifications
 //= require away_messages
 //= require csv_upload
+//= require simple-scrollbar.min.js
 // DO NOT REQUIRE TREE AS IT DOESNT GUARANTEE THE DEPENDENCY ORDER OF THESE FILES
 // require_tree .

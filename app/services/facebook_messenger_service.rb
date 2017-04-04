@@ -4,7 +4,7 @@ class FacebookMessengerService
 
     # for messenger_account_linking
     def send_auth_link(page_access_token, recipient_id, welcome_text)
-      link_url = (Rails.env == 'production')? "https://www.getrhombus.com/link_facebook" : "https://a7dad973.ngrok.io/link_facebook"
+      link_url = (Rails.env == 'production')? "https://www.getrhombus.com/link_facebook" : "https://a9063d61.ngrok.io/link_facebook"
       body = {
         recipient:{
           id: recipient_id
@@ -32,7 +32,6 @@ class FacebookMessengerService
     # update new user from messenger's email from account linking
     def update_user_fb_cred(referee, params)
       account_linking_token = params['account_linking_token']
-      @subscribed_pages = FbPage.subscribed
       response = get_page_response account_linking_token
       if response
         response = JSON.parse response
@@ -43,7 +42,8 @@ class FacebookMessengerService
     end
 
     def get_page_response(account_linking_token)
-      @subscribed_pages.each do | subscribed_page|
+      subscribed_pages = FbPage.subscribed
+      subscribed_pages.each do | subscribed_page|
         token = subscribed_page[:page_access_token]
         response = get_page_scope_id(account_linking_token, token)
         if response['recipient'].present?

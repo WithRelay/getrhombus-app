@@ -31,7 +31,7 @@ class WebhooksController < ApplicationController
     res = {}
 
     begin
-      res = FacebookEvent.process_event(params, @current_page, @merchant)
+      res = FacebookEvent.process_event(params, current_page, @merchant)
     rescue StandardError => e
       # email platform
     end
@@ -39,7 +39,7 @@ class WebhooksController < ApplicationController
     render json: res
   end
 
-  private 
+  private
 
     def set_time_zone(&block)
       if action_name == 'facebook_events'
@@ -60,8 +60,7 @@ class WebhooksController < ApplicationController
     end
 
     def get_merchant
-      @current_page = current_page
-      @merchant = @current_page.user
+      @merchant = current_page.user
     end
 
 end
