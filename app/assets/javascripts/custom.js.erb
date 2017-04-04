@@ -17,6 +17,9 @@ $(document).ready(function() {
   }, delay);
 */
 
+var el = document.querySelector('.dashboard-body');
+ SimpleScrollbar.initEl(el);
+
   $('#type-it').typeIt({
     strings: ["customers", "shift workers", "candidates", "students", "donors", "employees", "hotel guests"],
     speed: 120,
