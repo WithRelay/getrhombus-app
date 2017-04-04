@@ -106,14 +106,14 @@ module CSVHandler
                 end
               end
             else
-              ref = Referrer.where(referrer_uid: self.relay_id, referee_id: user.id).first_or_initialize
-              ref.save
+              # merchant customer for merchant and platform
+              Referrer.save_referrer_with_uid(self.relay_id, user.id)
               # send email or text here
             end
           end
         else
           # send text here
-          # MerchantCustomer
+          # MerchantCustomer for merchant only
         end
       end
       response

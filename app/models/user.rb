@@ -236,18 +236,18 @@ class User < ActiveRecord::Base
       response = "We're away at the moment and will get back to you when we return :)."
       AwayMessage.find_or_create_by(user_id: self.id, response: response)
       GetIntelligenceDataJob.perform_later(self.org_phone, 'OpenCNAM')
-      new_customer = %Q{MerchantContact.where('created_at <= ? AND merchant_id = ?', Time.now + 7.days,
+      customer = %Q{MerchantContact.where('created_at <= ? AND merchant_id = ?', Time.current + 7.days,
                        #{user_id}) + MerchantCustomer.where('created_at <= ? And merchant_id = ?',
-                       Time.now + 7.days, #{user_id})}
-      self.lists.create!(name: 'New customers', segment: new_customer, origin: 1)
+                       Time.current + 7.days, #{user_id})}
+      self.lists.create(name: 'New customers', segment: customer, origin: 1)
       customer = %Q{Transaction.where("created_at <= ? AND user_id IN(?) AND team_id = ?",
-                    Time.now + 30.days, MerchantCustomer.where(merchant_id: #{user_id})
+                    Time.current + 30.days, MerchantCustomer.where(merchant_id: #{user_id})
                     .pluck(:customer_id) + MerchantContact.where(merchant_id: #{user_id})
                     .pluck(:uid), #{user_id}) | FbMessage.where("created_at <=? AND
-                    user_id_to = ? AND user_id IN(?)", Time.now + 30.days, #{user_id},
+                    user_id_to = ? AND user_id IN(?)", Time.current + 30.days, #{user_id},
                     MerchantCustomer.where(merchant_id: #{user_id}).pluck(:customer_id))}
-      self.lists.create!(name: 'Active Customers', segment: customer, origin: 1)
-      self.lists.create!(name: 'Inactive Customers', segment: customer, origin: 1)
+      self.lists.create(name: 'Active Customers', segment: customer, origin: 1)
+      self.lists.create(name: 'Inactive Customers', segment: customer, origin: 1)
     end
     MerchantCustomer.add_or_update_merchant_customer([User.get_platform_acct_obj.id], self.id)
     WelcomeEmailJob.set(wait: SIGNUP_EMAIL_DELAY.minutes).perform_later(self)

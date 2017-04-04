@@ -13,6 +13,9 @@ Taiwo
 - workflow for sign in, sign up and places like payment/subscription, contact and customer
 - app fee for subscriptions - platform fee
 - contacts dont have customer profile page
+- referrers should also trigger merchant customer (no need to send in platform)
+  - when there is a referrer_uid and i can find a merchant account for it
+- handle page specific id in facebook signup link
 
 
 Others

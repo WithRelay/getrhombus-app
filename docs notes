@@ -5,12 +5,20 @@ Notes
 - we have homepage referrer for people coming from 3rd party sites
 - we have users referring businesses
 - we have non-users referring businesses - not active at the moment
+- we have referrer uid in facebook signup link
 
 2. MerchantCustomer
 - current users before v1.5 who are have referrer_num, or have made payment will become customers of merchant and platform
 and the stripe id will be moved into platform_stripe_account_id
+- on sign up - add to platform - DONE
+- on referrer_uid and there is a merchant account - no need to send in platform since that happens automatically on sign up
+- when you send a message and have an account - no need to send in platform since that happens automatically on sign up
+- from csv upload - send in platform id too - DONE
+- from add a customer - send in platform id too - DONE
 
 3. MerchantContact
+- when you send a message and have no account
+- records set to inactive if user switches to merchantcustomer
 
 4. FB Messenger 
 question: when a customer does account linking, there is a way to try to identify them if they have a rhombus account and have connected their facebook account right?
@@ -181,5 +189,182 @@ better way to do this
 1. when you connect your facebook account, we run through the fb_creds to see if we can do the hack in reverse, if we 
 match any fb_creds, we update the user_id.
 2. When you receive a message and it is the first message from that user to that merchant on that day, rerun the facebook hack or send the link again
+
+ok so you just update
+
+[8:15]  
+alright i have a good solution and i think you will agree it makes sense
+
+[8:16]  
+1. when you connect your facebook account, we should run through the fb_creds to see if we can do the hack in reverse, if we
+match any fb_creds for page_specific_ids, we update the user_id.
+2. When you receive a message and it is the first message from that user to that merchant on that day, rerun the facebook hack or send the link again
+
+[8:16]  
+makes sense?
+
+[8:16]  
+running the hack once or sending the link ones isnt sufficient, so we should do it once a day.
+
+bhishma [8:17 PM] 
+you mean add cron job to do so
+
+taiwo [8:18 PM] 
+let me see
+
+[8:19]  
+we don't need cron job for this... maybe for the first one but step 1 isnt that intensive to need to do it in the background..so it should be synchronous. we don't want cron for number 2 for user, because identifying a customer is something we need to do as soon as possible
+
+[8:20]  
+so no crons for any of these steps
+
+[8:20]  
+for step 2, if that's the first fb_message between the merchant and customer on that day, then redo facebook hack or resend link if we don't know their account
+
+[8:21]  
+for step 1, when you connect your facebook account, we should attempt to update any page_specific-id fb_creds that has the same profile_pic_url... it is like a reverse hack
+
+[8:22]  
+so facebook account is checking for messenger accounts...
+
+[8:22]  
+makes sense?
+
+[8:24]  
+are you clear on what you need to do?
+
+bhishma [8:31 PM] 
+i think yes
+
+taiwo [8:31 PM] 
+what part dont you understand?
+
+bhishma [8:42 PM] 
+i will start this, and asked you if i get spop (edited)
+
+taiwo [8:42 PM] 
+ok... just want to sure you understand the reason I'm saying you should do this
+
+[8:42]  
+so you dont feel lost
+
+[8:43]  
+quick question
+
+[8:44]  
+when you send a message from messenger, facebook sends the profile pic url right?
+
+bhishma [8:46 PM] 
+no
+we can track user info using page specific id and page id
+
+taiwo [8:46 PM] 
+oh
+
+[8:46]  
+wait
+
+[8:46]  
+i thought that the profile pic hack involves checking the profile pic from facebook account with the profile pic from messenger?
+
+[8:46]  
+no?
+
+bhishma [8:48 PM] 
+name: full_name, page_specific_id: new_user_id,
+         time_zone: timezone, gender: gender, profile_pic_url: url
+we can get these details from messenger
+
+taiwo [8:49 PM] 
+let's talk here https://cuboulder.zoom.us/j/636398639
+
+bhishma [8:49 PM] 
+when user link facebook through oauth process we save the profile pic url, right
+and again when the relay user send message through messenger we check the pic match or not if match then we linked the cred to the user
+
+taiwo [8:50 PM] 
+so we get profile pic url from messenger each time someone's sends message from messenger right?
+
+bhishma [8:53 PM] 
+messenger didn't directly send it but we can get it
+FacebookMessengerService.get_user_info(page_token, page_specific_user_id)
+
+taiwo [8:54 PM] 
+oh ok
+
+[8:54]  
+but for the first message, you try to retrieve it?
+
+[8:54]  
+and then you don't do for other messages right?
+
+bhishma [8:55 PM] 
+yes
+
+taiwo [8:56 PM] 
+ok
+
+[8:56]  
+so here's what i'm saying you should do
+
+[8:58]  
+1. when i connect my facebook account, check all page_specific_id fb_creds records that have the same profile_pic_url as the facebook account and add the user_id to it if it doesnt have one.
+
+[8:58]  
+is this clear?
+
+[9:00]  
+what you are currently doing is that when a user sends a message, you check their messenger profile_pic_url with a facebook account.
+
+[9:00]  
+that's fine... but also do the reverse when someone connects their facebook account (edited)
+
+[9:00]  
+does this make sense?
+
+bhishma [9:02 PM] 
+yes
+
+taiwo [9:03 PM] 
+that way we are trying every means possible to figure out who the user is
+
+[9:05]  
+RHOMBUSV1-217
+
+[9:05]  
+pls push commits to that jira key
+
+taiwo [9:12 PM] 
+and for the second task, instead of checking if it is the first message ever, check if it is the first message of the day
+
+[9:12]  
+then run your hack or send login link
+
+[9:12]  
+that's it
+
+bhishma [9:13 PM] 
+ok
+
+taiwo [9:13 PM] 
+first message of the day between the merchant and the customer
+
+taiwo [9:36 PM] 
+bhishma... there is one more improvement we can make...see jira task
+
+[9:37]  
+you're offline...internet issues?
+
+bhishma [10:25 PM] 
+i am working on it
+
+taiwo [10:25 PM] 
+ok. I had another suggestion...added to jira
+
+bhishma [11:40 PM] 
+i have to go for now i will contonue tomorrow task 1 and 2 is almost complete and 3 is complete
+
+
+----- Today April 4th, 2017 -----
 
 
