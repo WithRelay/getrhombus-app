@@ -58,7 +58,6 @@ Rails.application.routes.draw  do
         end
       end
 
-      get 'customer_template' => "users#customer_csv_template", on: :collection
       resources :fb_pages, only: [:index]
       patch 'update_fb_page' => 'fb_pages#update_user_fb_page'
       resources :hashtags, except: [:show]
@@ -99,6 +98,7 @@ Rails.application.routes.draw  do
           member { post 'update-user-list' => 'lists#update_user_list' }
           member { delete 'remove-customer' => 'lists#remove_customer_contact' }
         end
+        get 'customer_template' => "users#customer_csv_template"
         get 'managed-accounts' => 'users#managed_acct'
         match 'managed-accounts' => "users#create_managed_acct", via: :patch
         match 'update-managed-acct' => 'users#update_managed_acct', via: :patch

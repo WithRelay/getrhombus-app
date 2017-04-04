@@ -5,10 +5,10 @@ class UsersController < ApplicationController
   include DashboardData
 
   before_action :set_user
-  before_action :set_notifications
+  before_action :set_notifications, except: [:customer_csv_template]
 
   # do i need this?
-  #load_and_authorize_resource except: [:customer_csv_template]
+  load_and_authorize_resource except: [:customer_csv_template]
 
   def show
     #all the methods are in concerns/databoard_data
@@ -16,23 +16,6 @@ class UsersController < ApplicationController
     @msg_perform = analytics_section
     @transactions = transactions
     @messages_data = messages_datas
-  end
-
-  def customer_csv_template
-    render json: {} and return
-
-=begin
-    render :template => "static_pages/to_404.html" and return if !current_user
-    response = current_user.get_customer_csv_template
-    #if response
-      respond_to do |format|
-        format.csv { send_data response, filename: "customer_template.csv" }
-      end
-    #else
-      # use 500 page after it is built
-     # render :template => "static_pages/to_404.html"
-    #end
-=end
   end
 
   # DELETE /users/1
