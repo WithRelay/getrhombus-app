@@ -30,27 +30,36 @@ class FbCred < ActiveRecord::Base
       gender = user_data['gender']
       link_response = link_page_specific_user(url)
       welcome_text = "Welcome #{full_name} to Relay-Message Commerce platform"
-      if link_response.present?
-        fb_cred = FbCred.new(
-          name: full_name, page_specific_id: new_user_id,
-          email: link_response[:email], fb_id: link_response[:fb_id],
-          time_zone: timezone, gender: gender, profile_pic_url: url,
+      @fb_cred = FbCred.find_or_initialize_by(page_specific_id: new_user_id)
+      unless link_response.present?
+        @fb_cred.update(
+          name: full_name, gender: gender,
+          email: link_response[:email],
+          time_zone: timezone, profile_pic_url: url,
+          fb_id: link_response[:fb_id],
           user_id: link_response[:user_id],
           fb_page_id: fb_page.id
         )
       else
-        FacebookMessengerService.send_auth_link(page_access_token, new_user_id, welcome_text)
-        fb_cred = FbCred.new(
-          name: full_name, page_specific_id: new_user_id,
-          time_zone: timezone, gender: gender, profile_pic_url: url
+        send_auth_link(page_access_token, new_user_id, welcome_text)
+        @fb_cred.update(
+          name: full_name,time_zone: timezone,
+          gender: gender, profile_pic_url: url,
+          fb_page_id: fb_page.id
         )
       end
-      fb_cred if fb_cred.save
+      @fb_cred if @fb_cred.save
     rescue StandardError => err
     end
   end
 
   private
+
+  def self.send_auth_link(page_access_token, new_user_id, welcome_text)
+    if @fb_cred.updated_at > 1.days.ago
+      FacebookMessengerService.send_auth_link(page_access_token, new_user_id, welcome_text)
+    end
+  end
 
   #link facebook page specific user to Merchant
   def self.link_page_specific_user(pic_url)
