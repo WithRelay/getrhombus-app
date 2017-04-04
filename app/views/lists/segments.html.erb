@@ -39,14 +39,16 @@
           <div class="settings-row-text"><%= segment_created_as(segment) %></div>
         </div>
         <div class="w-col w-col-2">
-          <div class="settings-row-text"><%= segment.get_users.count %></div>
+          <div class="settings-row-text"><%= number_of_users(segment).count %></div>
         </div>
         <div class="w-col w-col-2">
           <div class="settings-row-text"><%= segment.created_at.strftime('%Y/%m/%d') %></div>
         </div>
         <div class="w-col w-col-2">
-          <%= link_to '', delete_segment_user_path(current_user, list_id: segment.id), class: 'w-hidden delete-hidden-segment-link', method: :delete %>
-          <%= link_to 'Delete', '#', class: 'button settings-table-row w-button delete-segment-link' %>
+          <% unless segment.origin? %>
+            <%= link_to '', delete_segment_user_path(current_user, list_id: segment.id), class: 'w-hidden delete-hidden-segment-link', method: :delete %>
+            <%= link_to 'Delete', '#', class: 'button settings-table-row w-button delete-segment-link', style: 'pointer-events: none;' %>
+          <% end %>
         </div>
       </div>
     <% end %>
