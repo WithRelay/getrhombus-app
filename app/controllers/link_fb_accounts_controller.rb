@@ -9,7 +9,7 @@ class LinkFbAccountsController < ApplicationController
     @psid = response['recipient']
   end
 
-  def redirect
+  def fb_redirect
     user = User.find_by_email(@params[:email])
     if user && user.valid_password?(@params[:password])
       FacebookMessengerService.update_user_fb_cred(user, @params)
