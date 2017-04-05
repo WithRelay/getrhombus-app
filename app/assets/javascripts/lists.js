@@ -41,6 +41,26 @@ $(document).on('ready page:load', function() {
     }
   });
 
+  $.ajax({
+    method: 'GET',
+    url: '/v1/lists/merchant_segment',
+    data: {},
+    dataType: 'json'
+  }).done(function(data){
+      $.each(data, function(index, value){
+        $('#Segment-Select-lists').append($('<option>',
+          {
+            value: value.id,
+            text: value.name
+          }
+        ))
+      });
+  }).fail(function(msg){
+    debugger;
+
+    setFlashForList(msg, 'error');
+  });
+
   $("#edit-selected-list").click(function(e){
     var selected_edit_list = getSelectedUserIds();
     if (selected_edit_list.length > 1)
