@@ -13,6 +13,7 @@ class FbCred < ActiveRecord::Base
         fb_cred.profile_pic_url = FacebookMessengerService.get_profile_pic(auth.credentials.token, auth.uid)
         fb_cred.time_zone = (User.find id).time_zone
         fb_cred.save
+        GetIntelligenceDataJob.perform_later(fb_cred.email, 'FullContact')
         reverse_link_account(fb_cred)
       end
       true
