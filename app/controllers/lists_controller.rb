@@ -89,8 +89,12 @@ class ListsController < ApplicationController
   end
 
   def segments
-    @segments = current_user.lists.where.not(segment: nil)
+    @segments = current_user.user_segments
     render :empty_list if @segments.empty?
+  end
+
+  def segment_list
+    @segment = current_user.user_segments.where(id: params[:id])
   end
 
   private
