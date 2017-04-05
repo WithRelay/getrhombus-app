@@ -99,6 +99,7 @@ Rails.application.routes.draw  do
             post 'delete' => 'lists#destroy'
           end
           member do
+            get 'segment_list'
             post 'update-user-list' => 'lists#update_user_list'
             delete 'remove-customer' => 'lists#remove_customer_contact'
           end
