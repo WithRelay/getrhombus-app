@@ -53,9 +53,9 @@ $(document).ready(function () {
         if (xhr.status === 200) {
           reset_file_picker();
         } else {
-          console.log('Something went wrong on our end.')
+          //console.log('Something went wrong on our end.')
         }
-        console.log(JSON.parse(xhr.responseText));
+        //console.log(JSON.parse(xhr.responseText));
         button.text("Import customers").prop('disabled', false);
       }
     };

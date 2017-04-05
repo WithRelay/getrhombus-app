@@ -75,6 +75,8 @@ class TextingService
         end
 
         { number: number.nil? ? '' : number.phone_number  }
+      rescue Twilio::REST::RestException
+        { error: "Twilio cannot provision the number." }
       rescue StandardError => e
         { error: e.message }
       end
