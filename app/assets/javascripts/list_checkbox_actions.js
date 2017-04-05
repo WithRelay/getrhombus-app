@@ -2,18 +2,25 @@ $(document).ready(function(){
 
   $('.delete-resource').click(function(e){
     var statusName = campaignStatusName()
-    if (statusName){
+    if (statusName != "inactive"){
       FlashHandler.setConfirmationDialog('.delete-resource','Are you sure, you want to remove the ' + getCurrentURL(), 'Delete', 'isDestroy');
-    }else{
+    }else if(statusName){
+      FlashHandler.setFlashMessage( 'Inactive campaign cannot be deleted', 'error' );
+    }
+    else{
       showUncheckError();
     }
   });
 
   $('.deactivate-resource').click(function(e){
+    debugger;
     var statusName = campaignStatusName()
     var text = { paused: 'Activate', active: 'Deactivate' }
-    if (statusName){
+    if (statusName != "inactive"){
       FlashHandler.setConfirmationDialog('.deactivate-resource','Are you sure, you want to '+ text[statusName] +' the campaign?', text[statusName], 'isDestroy');
+    }
+    else if(statusName){
+      FlashHandler.setFlashMessage( 'Inactive campaign cannot be activate', 'error' );
     }
     else{
       showUncheckError();
@@ -29,6 +36,7 @@ $(document).ready(function(){
   }
 
   $(document).on('click', '.cancel-yes', function(e){
+    debugger;
     if (getCurrentURL() == 'campaigns'){
       resource = new Resource(getResourceActionUrl());
       resource.updateOrDelete();
@@ -41,6 +49,7 @@ $(document).ready(function(){
       return { 'url': action_url, 'method': 'delete' }
     }
       else{
+        debugger;
         action_url = '/v1/' + getCurrentURL() + '/' + getSelectedCheckbox('.checkboxes') + '/change_status/'
         return { 'url': action_url, 'method': 'patch' }
       }
@@ -48,7 +57,7 @@ $(document).ready(function(){
 
   function getCurrentURL(){
     url = window.location.pathname.split('/');
-    return url[url.length-2];
+    return url.pop();
   }
 
   function getSelectedCheckbox(checkbox_class){

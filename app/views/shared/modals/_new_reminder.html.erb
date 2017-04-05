@@ -5,7 +5,7 @@
 </style>
 <div class="schedule-notification-form-wrapper" id="form-reminder-div">
   <div class="content-sub-wrapper modal w-clearfix">
-    <h4 class="modal-header welcome-dash-content-container-header">Customer Notification</h4>
+    <h4 class="modal-header welcome-dash-content-container-header">Schedule Message</h4>
   </div>
 
   <p class="modal-content-description">Set a reminder or notification that will go out to this customer at a future date. You can use this to automate appointment reminders, or bill payment reminders.</p>
@@ -23,7 +23,7 @@
       </div>
 
       <div class="form-group col-xs-6">
-        <%= f.text_area :text, class: 'form-control notification-message text-area w-input', id: "Notification-Message" %>
+        <%= f.text_area :text, class: 'form-control notification-message text-area w-input', id: "Notification-Message", placeholder: "Enter notification message" %>
       </div>
 
       <div class="char-count notications" id= "textBoxCounter" ></div>
