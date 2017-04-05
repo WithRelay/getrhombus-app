@@ -1,7 +1,6 @@
 $(document).ready(function() {
   var create_user_form = '#create-user-form',
       create_user_submit = '#create-user-submit';
-
   var country_selectize = $('#user_address_country').selectize({
     closeAfterSelect: true,
   });
@@ -194,6 +193,7 @@ $(document).ready(function() {
     }
   })
   .on('err.validator.fv', function(e, data) {
+    $('.help-block').hide();
     data.element
       .data('fv.messages')
       // Hide all the messages
@@ -213,7 +213,6 @@ $(document).ready(function() {
 
 
   function submit_create_user_form() {
-
     PhoneNumberFormatter.set_phone_number();
 
     $.ajax({

@@ -25,6 +25,6 @@ class WelcomeEmailJob < ApplicationJob
       end
       rescue StandardError => e
       end
-	  end
+    end
 
 end
