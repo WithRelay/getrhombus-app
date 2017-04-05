@@ -77,6 +77,11 @@ class Api::V1::ListsController < API::V1::BaseController
     render json: message
   end
 
+def merchant_segment
+    segment_list = current_user.is_merchant? ? current_user.user_segments : []
+    render json: segment_list
+  end
+
   private
     # Default method for creating lists
     # @param name The name of the list
