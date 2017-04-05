@@ -49,7 +49,7 @@ module CSVHandler
       headers = [:first_name, :last_name, :email, :phone_number, :street_address, :city, :state_province, :country, :postal_code]
 
       CSV::Converters[:blank_to_nil] = lambda do |field|
-        field && field.empty? ? nil : field
+        field && field.blank? ? nil : field
       end
 
       CSV.foreach(file, headers: true, skip_blanks: true, header_converters: :symbol, converters: [:all, :blank_to_nil], skip_lines: /^(?:[,:;]\s*)+$/) do |row|
@@ -60,12 +60,12 @@ module CSVHandler
         if !headers_checked
           headers_ary = row.map { |v| v[0] }
           if headers.length != headers_ary.length
-            response.push(['The File Headers', "Unable to proceed because the number of headers are incorrect."])
+            response.push(['The File Headers', ["Unable to proceed because the number of headers are incorrect."]])
             break
           end
 
           if headers.to_set != headers_ary.to_set
-            response.push(["The File Headers", "Unable to proceed because the headers are incorrect."])
+            response.push(["The File Headers", ["Unable to proceed because the headers are incorrect."]])
             break
           end
 
@@ -108,11 +108,11 @@ module CSVHandler
               else
                 ActiveRecord::Base.transaction do
                   @customer = User.create(email: row[:email], password: row[:password], phone_number: row[:phone_number], user_level: row[:user_level])
-                  if @customer.persisted? && (row[:first_name].present? || row[:last_name].present?)
+                  if @customer.persisted? && (row[:first_name] || row[:last_name])
                     person = @customer.people.create(first_name: row[:first_name], last_name: row[:last_name]) 
-                    if person.persisted? && (row[:street_address].present? || row[:city].present? || row[:postal_code].present? || row[:state_province].present? || row[:country].present?)
+                    if person.persisted? && (row[:street_address] || row[:city] || row[:postal_code] || row[:state_province] || row[:country])
                       person.create_address(street_address: row[:street_address], city: row[:city], postal_code: row[:postal_code], 
-                                          state_province: row[:state_province], country: row[:country])
+                                             state_province: row[:state_province], country: row[:country])
                     end
                   end
                 end
@@ -125,7 +125,7 @@ module CSVHandler
                 end
                 error = true
               else
-                MerchantCustomer.add_or_update_merchant_customer([self.id, User.get_platform_acct_obj.id], @customer.id)
+                MerchantCustomer.add_or_update_merchant_customer(self.id, @customer.id)
                 Referrer.save_referrer_with_uid(self.relay_uid, @customer.id)
                 # send email or text here
               end
@@ -143,7 +143,7 @@ module CSVHandler
           end
         else
           # send text here
-          MerchantCustomer.add_or_update_merchant_customer([self.id, User.get_platform_acct_obj.id], @customer.id)
+          MerchantCustomer.add_or_update_merchant_customer(self.id, @customer.id)
         end
       end
 
@@ -156,7 +156,7 @@ module CSVHandler
       response
     rescue StandardError => e
       # email platform
-      ['File Upload', "Something went wrong on our end."]
+      ['File Upload', ["Something went wrong on our end."]]
     end
   end
 

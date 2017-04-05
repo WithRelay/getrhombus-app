@@ -13,8 +13,8 @@ and the stripe id will be moved into platform_stripe_account_id
 - on sign up - add to platform - DONE
 - on referrer_uid and there is a merchant account - no need to send in platform since that happens automatically on sign up
 - when you send a message and have an account - no need to send in platform since that happens automatically on sign up
-- from csv upload - send in platform id too - DONE
-- from add a customer - send in platform id too - DONE
+- from csv upload - send in platform id too - DONE - no need to send in platform since that happens automatically on sign up
+- from add a customer - send in platform id too - DONE - no need to send in platform since that happens automatically on sign up
 
 3. MerchantContact
 - when you send a message and have no account
