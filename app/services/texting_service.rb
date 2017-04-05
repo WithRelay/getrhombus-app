@@ -49,6 +49,7 @@ class TextingService
                 sms_application_sid: TWILIO_RHOMBUS_APP_SID)   
           return re.phone_number.gsub('+', ''), re.friendly_name
         end
+      rescue Twilio::REST::RestException
       rescue StandardError => e
       end
       false
@@ -74,6 +75,8 @@ class TextingService
         end
 
         { number: number.nil? ? '' : number.phone_number  }
+      rescue Twilio::REST::RestException
+        { error: "Twilio cannot provision the number." }
       rescue StandardError => e
         { error: e.message }
       end
@@ -85,6 +88,8 @@ class TextingService
         number = client.lookups.v1.phone_numbers(num).fetch
         #number.national_format
         [number.phone_number[1..-1], number.country_code]
+      rescue Twilio::REST::RestException
+        false
       rescue StandardError => e
         false
       end

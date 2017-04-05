@@ -6,11 +6,16 @@
     </div>
     <div class="w-col w-col-6">
       <div class="customer-dashoard sub-nav-options-wrapper w-clearfix">
-        <a class="w-button sub-nav-button modal-loader"  href="#" modal-target= 'new-customer-modal'>&nbsp;<strong>Create customer</strong></a>
-      <div class='modal-background w-hidden modal-body new-customer-modal'>
-        <%= render 'shared/modals/create_customer' %>
-      </div>
-        <a class="import sub-nav-button w-button" data-ix="import-customers" href="#">&nbsp; <strong>Import customers</strong></a>
+        
+        <a class="w-button sub-nav-button modal-loader"  href="#" modal-target='new-customer-modal'>&nbsp;<strong>Create customer</strong></a>
+        <div class='modal-background w-hidden modal-body new-customer-modal'>
+          <%= render 'shared/modals/create_customer' %>
+        </div>
+        
+        <a class="import sub-nav-button w-button" href="#" modal-target='import-customers-modal'>&nbsp; <strong>Import customers</strong></a>
+        <div class='modal-background w-hidden modal-body import-customers-modal'>
+          <%= render 'shared/modals/import_customers' %>
+        </div>
       </div>
     </div>
     <div class="sub-nav-bar-search-row w-col w-col-4">

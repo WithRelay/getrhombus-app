@@ -55,8 +55,8 @@ class WebhooksController < ApplicationController
     end
 
     def current_page
-      required_params = params['entry'].last
-      FbPage.find_by_page_id required_params['id']
+      required_params = params['entry'].try(:last)
+      FbPage.find_by_page_id required_params['id'] if required_params
     end
 
     def get_merchant

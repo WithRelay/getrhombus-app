@@ -84,7 +84,7 @@
 //= require saved_replies
 //= require custom_trumbowyg_plugin
 //= require campaigns
-//= require date_picker
+//= require daterangepicker
 //= require image_validator
 //= require campaign_form_validator
 //= require reminders
@@ -102,7 +102,7 @@
 //= require resource_actions
 //= require notifications
 //= require away_messages
-
+//= require csv_upload
 //= require simple-scrollbar.min.js
 // DO NOT REQUIRE TREE AS IT DOESNT GUARANTEE THE DEPENDENCY ORDER OF THESE FILES
 // require_tree .

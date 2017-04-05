@@ -5,7 +5,6 @@ class MerchantCustomersController < ApplicationController
   before_action :set_notifications
 
   def index
-
   	@customers = current_user.merchant_customers
                               .paginate(page: params[:page], per_page: 10).order(created_at: :desc)
   	@new_customer = User.new
@@ -26,32 +25,21 @@ class MerchantCustomersController < ApplicationController
 
     @conversation_refs = ConversationRef.get_last_customer_msg_from_all_merchant_convs(current_user.id, customer_id)
     @recent_activity = recent_activity
-    # @last_transaction = @transactions.first
-    #
-    # @conversation_refs = ConversationRef.get_last_customer_msg_from_all_merchant_convs(current_user.id, customer_id)
-    # @last_conv_ref = @conversation_refs.present? ? @conversation_refs.first : nil
-    #
-    # # refactor this at some point
-    # if @last_conv_ref.present?
-    #   @last_message_resolution = @last_conv_ref.uid_conversation_resolution.resolution
-    #   @last_message_resolution.present? ? @last_message_resolution : "-"
-    # else
-    #   "-"
-    # end
   end
 
   private
-  def recent_activity
-    last_conv_ref = @conversation_refs.present? ? conversation_refs.first : nil
-    last_message_resolution = last_conv_ref.uid_conversation_resolution.resolution if last_conv_ref.present?
-    {
-      last_transaction: @transactions? @transactions.first : nil ,
-      last_conv_ref: last_conv_ref,
-      last_message_resolution: last_message_resolution.present? ? @last_message_resolution : nil
-    }.compact
-  end
 
-  def customer_id
-    params[:customer_id]
-  end
+    def recent_activity
+      last_conv_ref = @conversation_refs.present? ? @conversation_refs.first : nil
+      last_message_resolution = last_conv_ref.uid_conversation_resolution.resolution if last_conv_ref.present?
+      {
+        last_transaction: @transactions ? @transactions.first : nil,
+        last_conv_ref: last_conv_ref,
+        last_message_resolution: last_message_resolution.present? ? @last_message_resolution : nil
+      }.compact
+    end
+
+    def customer_id
+      params[:customer_id]
+    end
 end

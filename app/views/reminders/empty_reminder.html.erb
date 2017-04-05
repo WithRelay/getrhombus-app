@@ -1,7 +1,10 @@
+<div class="customer-dash sub-nav-bar w-clearfix">
+  <a class="add sub-nav-button w-button modal-loader" href="#"> &nbsp;<strong>Set new reminder</strong></a>
+</div>
 <div class="dashboard-body">
   <div class="blank-page-container w-container">
     <%= image_tag('020_200.png', class: 'blank-page-icon') %>
-    <h1 class="empty-state-dash hero-h1 home-header">You have no scheduled customer messages”<br>reminders</h1>
+    <h1 class="empty-state-dash hero-h1 home-header">You have no scheduled messages </h1>
     <div class='modal-background w-hidden modal-body'>
       <%= render partial: 'shared/modals/new_reminder', locals: { reminder: Reminder.new }  %>
     </div>

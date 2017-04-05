@@ -38,7 +38,7 @@ Rails.application.routes.draw  do
     get 'fb_pages/remove_integration' => 'fb_pages#remove_integration'
     get 'link_facebook' => 'link_fb_accounts#link_facebook'
     get 'get_current_user' => 'application#get_current_user'
-    post 'redirect' => 'link_fb_accounts#redirect'
+    post 'fb_redirect' => 'link_fb_accounts#fb_redirect' #facebook account link redirect
 
     get "resque" => Resque::Server, anchor: false, constraints: lambda { |req|
       req.env['warden'].authenticated? and req.env['warden'].user.id == 23
@@ -58,7 +58,6 @@ Rails.application.routes.draw  do
         end
       end
 
-      get 'customer_template' => "users#customer_csv_template", constraints: { format: 'csv' }, on: :collection
       resources :fb_pages, only: [:index]
       patch 'update_fb_page' => 'fb_pages#update_user_fb_page'
       resources :hashtags, except: [:show]
@@ -104,6 +103,7 @@ Rails.application.routes.draw  do
             delete 'remove-customer' => 'lists#remove_customer_contact'
           end
         end
+        get 'customer_template' => "users#customer_csv_template"
         get 'managed-accounts' => 'users#managed_acct'
         match 'managed-accounts' => "users#create_managed_acct", via: :patch
         match 'update-managed-acct' => 'users#update_managed_acct', via: :patch

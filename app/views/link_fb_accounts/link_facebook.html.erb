@@ -3,7 +3,7 @@
     <a class="form-logo w-inline-block" href="#"><img src="assets/Relay-Transparent-500x300.png" width="50">
     </a>
     <div class="log-in-form w-form">
-      <%= form_tag redirect_path(redirect_uri: @params['redirect_uri'], account_linking_token: @params['account_linking_token']), :method => :post, id: '', class: 'w-clearfix' do %>
+      <%= form_tag fb_redirect_path(redirect_uri: @params['redirect_uri'], account_linking_token: @params['account_linking_token']), :method => :post, id: '', class: 'w-clearfix' do %>
         <%= email_field_tag :email, params[:email], type:'email', class: 'email-address text-field w-input', placeholder: 'Email address' %>
         <%= password_field_tag :password, params[:password], type: 'password', class: 'login password text-field w-input', placeholder: 'Password' %>
         <%= submit_tag 'Log In', class: 'button log-in w-button' %>

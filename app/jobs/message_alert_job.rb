@@ -37,7 +37,7 @@ class MessageAlertJob
 
 
 
-            # You should need to touch anything below here
+            # You should not need to touch anything below here
             r.notification_logs.create(notify_type: 'new_alert', channel: 'Email', reason: 'unread_messages')
             if r.include_sms && r.sms_number.present?
               platform = User.get_platform_acct_obj              

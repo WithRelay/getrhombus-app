@@ -5,7 +5,7 @@ class UsersController < ApplicationController
   include DashboardData
 
   before_action :set_user
-  before_action :set_notifications
+  before_action :set_notifications, except: [:customer_csv_template]
 
   # do i need this?
   load_and_authorize_resource except: [:customer_csv_template]

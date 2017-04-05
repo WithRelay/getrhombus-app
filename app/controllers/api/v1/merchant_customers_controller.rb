@@ -20,8 +20,8 @@ class Api::V1::MerchantCustomersController < API::V1::BaseController
       response = 'User Added'
 
       if params[:format] == 'csv'
-        # TODO
-        #### review csv logic
+        #CsvCustomerImportJob.perform_later(current_user, params['csv'].tempfile)
+        #response = "CSV file uploaded."
         response = current_user.upload_customer_csv(params['csv'].tempfile)
       elsif params[:format] == 'json'
         @customer = User.find_by(email: params[:user][:email])
@@ -103,7 +103,7 @@ class Api::V1::MerchantCustomersController < API::V1::BaseController
 
     def add_to_merchant_customer_and_referrer
       MerchantCustomer.add_or_update_merchant_customer([current_user.id, User.get_platform_acct_obj.id], @customer.id)
-      Referrer.save_referrer_with_id(current_user.id, @customer.id)
+      Referrer.save_referrer_with_uid(current_user.relay_uid, @customer.id)
     end
 
 end
