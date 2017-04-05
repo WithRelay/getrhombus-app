@@ -98,7 +98,7 @@ module ApplicationHelper
   end
 
   def campaign_restrict_params
-    restrict_params = ['campaigns-index']
+    restrict_params = ['campaigns-index', 'campaigns-filter_campaign']
     restrict_params.include?(params_controller_action)
   end
 
