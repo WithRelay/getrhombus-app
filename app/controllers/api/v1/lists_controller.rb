@@ -78,7 +78,7 @@ class Api::V1::ListsController < API::V1::BaseController
   end
 
 def merchant_segment
-    segment_list = current_user.is_merchant? ? current_user.user_segments : []
+    segment_list = current_user.present? && current_user.is_merchant? ? current_user.user_segments : []
     render json: segment_list
   end
 
