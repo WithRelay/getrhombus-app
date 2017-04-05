@@ -56,9 +56,14 @@ $(document).on('ready page:load', function() {
         ))
       });
   }).fail(function(msg){
-    debugger;
-
     setFlashForList(msg, 'error');
+  });
+
+  $('#Segment-Select-lists').on('change', function(){
+    if (this.value){
+      var window_location = window.location.pathname.split('/')
+      window.location = '/' + window_location[1] + '/' + window_location[2]  + '/lists/' + this.value + '/segment_list';
+    }
   });
 
   $("#edit-selected-list").click(function(e){
