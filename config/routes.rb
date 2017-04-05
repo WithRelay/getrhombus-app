@@ -38,7 +38,7 @@ Rails.application.routes.draw  do
     get 'fb_pages/remove_integration' => 'fb_pages#remove_integration'
     get 'link_facebook' => 'link_fb_accounts#link_facebook'
     get 'get_current_user' => 'application#get_current_user'
-    post 'redirect' => 'link_fb_accounts#redirect'
+    post 'fb_redirect' => 'link_fb_accounts#fb_redirect' #facebook account link redirect
 
     get "resque" => Resque::Server, anchor: false, constraints: lambda { |req|
       req.env['warden'].authenticated? and req.env['warden'].user.id == 23

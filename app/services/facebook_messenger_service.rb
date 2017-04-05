@@ -47,8 +47,6 @@ class FacebookMessengerService
         token = subscribed_page[:page_access_token]
         response = get_page_scope_id(account_linking_token, token)
         if response['recipient'].present?
-          # referrer = User.find subscribed_page[:user_id]
-          # Referrer.save_referrer_with_id(referrer.id, referee.id)
           return response
         end
       end

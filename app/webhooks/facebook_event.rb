@@ -31,7 +31,6 @@
       #access token below is the token given as part
       #of credentials during after successful authentication if requesting permissions for  pages_show_list or manage_pages
       # to get page access tokens for all the user's pages : https://graph.facebook.com/v2.6/me/accounts?access_token=
-
       if @params['hub.mode'] == 'subscribe' && @params['hub.verify_token'] == "<facebook_webhook_verify_token>"
         return @params['hub.challenge']
       end

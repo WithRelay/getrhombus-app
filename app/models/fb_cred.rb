@@ -13,6 +13,8 @@ class FbCred < ActiveRecord::Base
         fb_cred.profile_pic_url = FacebookMessengerService.get_profile_pic(auth.credentials.token, auth.uid)
         fb_cred.time_zone = (User.find id).time_zone
         fb_cred.save
+        GetIntelligenceDataJob.perform_later(fb_cred.email, 'FullContact')
+        reverse_link_account(fb_cred)
       end
       true
     rescue StandardError => err
@@ -31,7 +33,7 @@ class FbCred < ActiveRecord::Base
       link_response = link_page_specific_user(url)
       welcome_text = "Welcome #{full_name} to Relay-Message Commerce platform"
       @fb_cred = FbCred.find_or_initialize_by(page_specific_id: new_user_id)
-      unless link_response.present?
+      if link_response.present?
         @fb_cred.update(
           name: full_name, gender: gender,
           email: link_response[:email],
@@ -56,7 +58,8 @@ class FbCred < ActiveRecord::Base
   private
 
   def self.send_auth_link(page_access_token, new_user_id, welcome_text)
-    if @fb_cred.updated_at > 1.days.ago
+    last_account_link_message = FbMessage.where(text: '', to: new_user_id).last
+    if last_account_link_message.nil? || (last_account_link_message.images.empty? && last_account_link_message.created_at < Time.current.beginning_of_day)
       FacebookMessengerService.send_auth_link(page_access_token, new_user_id, welcome_text)
     end
   end
@@ -73,6 +76,17 @@ class FbCred < ActiveRecord::Base
       end
     end
     response
+  end
+
+  def self.reverse_link_account(fb_cred)
+    user_identifier = extract_profile_pic_identifier(fb_cred.profile_pic_url)
+    unlinked_fb_creds = FbCred.where(fb_id: nil)
+                                        .where.not(page_specific_id: nil)
+    unlinked_fb_creds.each do |cred|
+      if extract_profile_pic_identifier(cred.profile_pic_url) == user_identifier
+        cred.update(fb_id: fb_cred.fb_id, email: fb_cred.email, user_id: fb_cred.user_id)
+      end
+    end
   end
 
   # extract user identifier from profile picture
