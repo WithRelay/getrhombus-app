@@ -20,8 +20,8 @@ class Api::V1::MerchantCustomersController < API::V1::BaseController
       response = 'User Added'
 
       if params[:format] == 'csv'
-        # TODO
-        #### review csv logic
+        #CsvCustomerImportJob.perform_later(current_user, params['csv'].tempfile)
+        #response = "CSV file uploaded."
         response = current_user.upload_customer_csv(params['csv'].tempfile)
       elsif params[:format] == 'json'
         @customer = User.find_by(email: params[:user][:email])

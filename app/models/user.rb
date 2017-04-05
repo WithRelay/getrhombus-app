@@ -11,19 +11,24 @@ class User < ActiveRecord::Base
 
   # validation rules for user attributes
   validates :tos_acceptance, acceptance: true, if: lambda { self.is_merchant? && self.reset_password_token.blank? }, on: :update
-  validates_presence_of :org_type, if: lambda { self.is_merchant? && self.reset_password_token.blank? }, on: :update
+  validates :org_type, presence: true, if: lambda { self.is_merchant? && self.reset_password_token.blank? }, on: :update
 
   validates_presence_of :org_name, if: lambda { self.is_merchant? && self.org_type.try(:downcase) != 'individual' && self.reset_password_token.blank? }, on: :update
   validates_presence_of :user_level, message: "Please select an account type", on: :create
 
-  # Edit pages use the right number field for each user type
-  validates_presence_of :org_phone, numericality: { only_integer: true }, length: { minimum: 10 }, on: :update, if: lambda { self.is_merchant? && self.reset_password_token.blank? }
-  # Sign up form uses phone_number field for both user types
-  validates_presence_of :phone_number, numericality: { only_integer: true }, length: { minimum: 10 }, if: lambda { self.is_customer? }
-  # Allow nil added to db migration because merchants don't have phone number. They have org_phone.
-  # And since mysql indexes this field, it indexes nil and only allows one row with nil. You run into issues with any additional merchants.
-  validates_uniqueness_of :phone_number, :allow_nil => true, :if => lambda { self.is_customer? }
   validate :phone_number_cannot_be_rhombus_number
+
+  # Edit pages use the right number field for each user type
+  validates :org_phone, numericality: { only_integer: true }, length: { minimum: 10 }, on: :update, if: lambda { self.is_merchant? && self.reset_password_token.blank? }
+  validates :phone_number, presence: true, numericality: { only_integer: true }, length: { minimum: 10 }, on: :update, if: lambda { self.is_customer? && self.reset_password_token.blank? }
+  
+  # Sign up form uses phone_number field for both user types
+  validates :phone_number, presence: true, numericality: { only_integer: true }, length: { minimum: 10 }, on: :create
+  
+  # Allow nil added to db migration because merchants don't have phone number. They have org_phone.
+  # And since mysql indexes this field, it indexes nil and only allows one row with nil. 
+  # You run into issues with any additional merchants.
+  #validates_uniqueness_of :phone_number, allow_nil: true, if: lambda { self.is_customer? }
 
   # include default devise modules. Others available are: :token_authenticatable, :lockable, :timeoutable and :confirmable,
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable, :omniauthable, :omniauth_providers => [:facebook, :twitter, :stripe_connect]
@@ -112,7 +117,7 @@ class User < ActiveRecord::Base
   before_validation :the_titleizer
   before_create :set_merchant_org_phone          # only create because the actual org_phone field is used in edit view
 
-  after_commit :do_signup_stuff, on: :create
+  #after_commit :do_signup_stuff, on: :create
 
   enum status: { inactive: 0, active: 1 }
 
@@ -231,10 +236,11 @@ class User < ActiveRecord::Base
   end
 
   def do_signup_stuff
+    user_id = self.id
     if self.is_merchant?
-      Alert.find_or_create_by(user_id: self.id)
+      Alert.find_or_create_by(user_id: user_id)
       response = "We're away at the moment and will get back to you when we return :)."
-      AwayMessage.find_or_create_by(user_id: self.id, response: response)
+      AwayMessage.find_or_create_by(user_id: user_id, response: response)
       GetIntelligenceDataJob.perform_later(self.org_phone, 'OpenCNAM')
       customer = %Q{MerchantContact.where('created_at <= ? AND merchant_id = ?', Time.current + 7.days,
                        #{user_id}) + MerchantCustomer.where('created_at <= ? And merchant_id = ?',
@@ -249,14 +255,10 @@ class User < ActiveRecord::Base
       self.lists.create(name: 'Active Customers', segment: customer, origin: 1)
       self.lists.create(name: 'Inactive Customers', segment: customer, origin: 1)
     end
-    MerchantCustomer.add_or_update_merchant_customer([User.get_platform_acct_obj.id], self.id)
+    MerchantCustomer.add_or_update_merchant_customer([User.get_platform_acct_obj.id], user_id)
     WelcomeEmailJob.set(wait: SIGNUP_EMAIL_DELAY.minutes).perform_later(self)
     GetIntelligenceDataJob.perform_later(self.email, 'FullContact')
     GetIntelligenceDataJob.perform_later(self.phone_number, 'OpenCNAM') if self.is_customer?
-  end
-
-  def user_id
-    self.id
   end
 
   # This is the link merchants can share...also dashboard link

@@ -39,86 +39,124 @@ module CSVHandler
     end
   end
 
+  # https://andrew.coffee/blog/skipping-blank-lines-in-ruby-csv-parsing.html
+  # http://technicalpickles.com/posts/parsing-csv-with-ruby/
   def upload_customer_csv(file)
     begin
-
-      headers_checked = false
       response = []
+      headers_checked = false
+      error_hash = {}
       headers = [:first_name, :last_name, :email, :phone_number, :street_address, :city, :state_province, :country, :postal_code]
 
-      CSV.foreach(file, headers: true, skip_blanks: true, header_converters: :symbol, skip_lines: /^(?:[,:]\s*)+$/) do |row|
+      CSV::Converters[:blank_to_nil] = lambda do |field|
+        field && field.empty? ? nil : field
+      end
+
+      CSV.foreach(file, headers: true, skip_blanks: true, header_converters: :symbol, converters: [:all, :blank_to_nil], skip_lines: /^(?:[,:;]\s*)+$/) do |row|
 
         error = false
+
+        # Validate headers
         if !headers_checked
           headers_ary = row.map { |v| v[0] }
-          raise StandardError, "Unable to proceed because the number of headers are incorrect." if headers.length != headers_ary.length
-          raise StandardError, "Unable to proceed because the headers are incorrect." if headers.to_set != headers_ary.to_set
+          if headers.length != headers_ary.length
+            response.push(['The File Headers', "Unable to proceed because the number of headers are incorrect."])
+            break
+          end
+
+          if headers.to_set != headers_ary.to_set
+            response.push(["The File Headers", "Unable to proceed because the headers are incorrect."])
+            break
+          end
+
           headers_checked = true
           next
         end
 
         row = row.to_hash
-        user = User.where(email: row[:email])
+        @customer = User.where(email: row[:email])
 
-        if user.blank?
+        if @customer.blank?
           # don't process the dummy data we put in the template file
-          unless row[:email] == '<redacted_email>'
-            error_message = "Unable to add customer with email: #{row[:email]} because"
+          unless row[:email] == '<redacted_email>' && row[:email].blank?
+            error_hash[row[:email]] = []
 
-            # Validate number
-            valid_num = TextingService.number_lookup(row[:phone_number])
-            if valid_num.present?
-              row[:phone_number] = valid_num[0]
-            else
-              response.push(error_message + " phone_number is invalid.")
-              error = true
-            end
-
-            # Validate email
-            if !EmailValidatorService.verify_email(row[:email])
-              response.push(error_message + " email is invalid.")
-              error = true
-            end
-
-            # set user_level and password
-            row[:user_level] = 0
-            row[:password] = Toolbox::StringGen.generate_random_string(8)
-
-            # validate user data against db
-            if error
-              user = User.new(row)
-              user.valid?
-            else
-              ActiveRecord::Base.transaction do
-                user = User.create(email: row[:email], password: row[:password], phone_number: row[:phone_number], user_level: row[:user_level])
-                person = Person.create(first_name: row[:first_name], last_name: row[:last_name])
-                user.persons = person
-                person.address = Address.create(street_address: row[:street_address], city: row[:city],
-                                  postal_code: row[:postal_code], state_province: row[:state_province], country: row[:country])
+            begin
+              # Validate number
+              valid_num = TextingService.number_lookup(row[:phone_number])
+              if valid_num.present?
+                row[:phone_number] = valid_num[0]
+              else
+                error_hash[row[:email]].push('Phone number is invalid.')
+                error = true
               end
-            end
 
-            # check for user errors
-            if user.errors.messages.present? || error
-              user.errors.messages.each do |k,v|
-                v.each do |r|
-                  response.push(error_message + " #{k} #{r}.")
+              # Validate email
+              unless EmailValidatorService.verify_email(row[:email])
+                error_hash[row[:email]].push('Email is invalid.')
+                error = true
+              end
+
+              # set user_level and password
+              row[:user_level] = 0
+              row[:password] = Toolbox::StringGen.generate_random_string(8)
+
+              # validate user data against db
+              if error
+                @customer = User.new(email: row[:email], password: row[:password], phone_number: row[:phone_number], user_level: row[:user_level])
+                @customer.valid?
+              else
+                ActiveRecord::Base.transaction do
+                  @customer = User.create(email: row[:email], password: row[:password], phone_number: row[:phone_number], user_level: row[:user_level])
+                  if @customer.persisted? && (row[:first_name].present? || row[:last_name].present?)
+                    person = @customer.people.create(first_name: row[:first_name], last_name: row[:last_name]) 
+                    if person.persisted? && (row[:street_address].present? || row[:city].present? || row[:postal_code].present? || row[:state_province].present? || row[:country].present?)
+                      person.create_address(street_address: row[:street_address], city: row[:city], postal_code: row[:postal_code], 
+                                          state_province: row[:state_province], country: row[:country])
+                    end
+                  end
                 end
               end
-            else
-              # merchant customer for merchant and platform
-              Referrer.save_referrer_with_uid(self.relay_id, user.id)
-              # send email or text here
+
+              # check for @customer errors
+              if @customer.errors.messages.present? || error
+                @customer.errors.messages.each do |k,v|
+                  v.each { |r| error_hash[row[:email]].push("#{k}.humanize.downcase #{r}.") }
+                end
+                error = true
+              else
+                MerchantCustomer.add_or_update_merchant_customer([self.id, User.get_platform_acct_obj.id], @customer.id)
+                Referrer.save_referrer_with_uid(self.relay_uid, @customer.id)
+                # send email or text here
+              end
+            rescue ActiveRecord::RecordNotUnique => e
+              msg = e.original_exception.message
+              error_hash[row[:email]].push("Phone number is already in use.") if msg.include?('index_users_on_phone_number')
+              error_hash[row[:email]].push("Email is already in use.") if msg.include?('index_users_on_email')
+              error = true
+            rescue StandardError => e
+              error = true
+              error_hash[row[:email]].push("Something went wrong on our end.")
             end
+
+            error_hash.delete(row[:email]) unless error
           end
         else
           # send text here
-          # MerchantCustomer for merchant only
+          MerchantCustomer.add_or_update_merchant_customer([self.id, User.get_platform_acct_obj.id], @customer.id)
         end
+      end
+
+      # change hash to array
+      error_hash.each do |key, value|
+        ary = []
+        value.each { |v| ary.push(v) }          
+        response.push([key, ary])  
       end
       response
     rescue StandardError => e
-      e.message
+      # email platform
+      ['File Upload', "Something went wrong on our end."]
     end
   end
 

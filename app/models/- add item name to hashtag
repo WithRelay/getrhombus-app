@@ -16,6 +16,7 @@ Taiwo
 - referrers should also trigger merchant customer (no need to send in platform)
   - when there is a referrer_uid and i can find a merchant account for it
 - handle page specific id in facebook signup link
+- reset password token issue
 
 
 Others
@@ -65,14 +66,10 @@ Dorje
 
 Bhishma
 - messageparser
-- has_messenger?  
 - the 5 emails from edwin (incomplete signup email (the following day), review offer to help, autoreload failure)
-- get full contact data when fb account is connected if email is present
 - do you update fb_cred for a user who didnt sign up when they sent messages in the past...but later signs up?
   - if you add the page specific id in the url, i can find them.
-- weekly email no users
-- remove referrer from messenger
-- post 'redirect' => 'link_fb_accounts#redirect'
+- weekly email no users, unread messages
 
 
 

@@ -7,11 +7,12 @@
   </div>
   <div class="modal-instruction-wrapper">
     <p class="modal-paragraph">To import your customers, use this <%= link_to 'template file', customer_template_user_path(format: :csv), class: 'template-link' %> and format your customers' information as specified in the template example.</p>
-  </div><a class="button file-upload w-button" href="#">Choose file from computer</a>
-  <div class="file-name">No file chosen.</div>
+  </div><a class="button file-upload w-button" href="#" id='csv-file-select-btn'>Choose file from computer</a>
+  <div class="file-name" id='csv-file-name'>No file chosen.</div>
+  <input type="file" accept=".csv" id='csv-file-select' class="hide" />
   <div class="w-form">
     <form class="import-form" id="email-form-5" name="email-form-5">
-      <a class="button import-customers w-button" href="#">Import customers</a>
+      <a class="button import-customers w-button" href="#" id='csv-upload-button'>Import customers</a>
     </form>    
   </div>
   <p class="modal-paragraph segment tips"> &nbsp;TIP: Import customers who have opted to receive messages from your business. You are responsible making sure your customers have granted you permission to send them messages.</p>
