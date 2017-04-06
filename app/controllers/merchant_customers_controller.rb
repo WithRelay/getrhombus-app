@@ -27,6 +27,11 @@ class MerchantCustomersController < ApplicationController
     @recent_activity = recent_activity
   end
 
+  def segment_users
+    @merchant_customer = current_user.user_segments.find_by(id: params[:id]).get_users
+    @new_customer = User.new
+  end
+
   private
 
     def recent_activity
