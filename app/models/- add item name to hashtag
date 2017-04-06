@@ -3,13 +3,13 @@
 Taiwo
 - how will using the master account affect us (- unify team and dashboard email issue really)
 - messaging lists (check endpoint in create customer and you now save mc_id in user list), reminders (shells created)
-- upon signing up, does an existing contact update to become customer?
 
+- upon signing up, does an existing contact update to become customer?
 - review where merchant customer, contacts, referrers are created
 - see create_subscription/transaction 
   - should i check when they send a message and are a user...no cos it leaves out dashboard charges
       but dashboard charges means the person is already your customer...so no point doing merchant customer when payment is done. it should be merchant_customer or merchant_contact when message is received.
-  - add a customer, sign up, referrer link (include messenger), csv
+  - add a customer - done, sign up - done, referrer link (include messenger) - done, csv - done
 - workflow for sign in, sign up and places like payment/subscription, contact and customer
 - app fee for subscriptions - platform fee
 - reset password token issue
@@ -49,11 +49,13 @@ Surya
 - time comparisons are tricky...make sure to do to_i because rails compares time as floats
 - segment dropdown for leads
 - contacts/customer support for user_lists, campaign_lists, etc
+- is list being loaded via js or preloaded in db? should run only for merchants
 
 Dorje
 - weekly summary template
-- contacts profile page
 - fix validation message for create customer - just the first 3 fields
+- contacts profile page
+- sidebars with links...customers should see only Transactions, Account and Billing Info
 
 Bhishma
 - messageparser

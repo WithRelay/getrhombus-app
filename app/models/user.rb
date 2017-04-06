@@ -118,7 +118,7 @@ class User < ActiveRecord::Base
   before_validation :the_titleizer
   before_create :set_merchant_org_phone          # only create because the actual org_phone field is used in edit view
 
-  after_commit :do_signup_stuff, on: :create
+  #after_commit :do_signup_stuff, on: :create
 
   enum status: { inactive: 0, active: 1 }
 
