@@ -59,7 +59,6 @@ Surya
 - time comparisons are tricky...make sure to do to_i because rails compares time as floats
 
 Dorje
-- graph - empty state - fixed the implementation for you
 - weekly summary template
 - lossless compression
 - fix validation message for create customer - just the first 3 fields
@@ -70,6 +69,11 @@ Bhishma
 - do you update fb_cred for a user who didnt sign up when they sent messages in the past...but later signs up?
   - if you add the page specific id in the url, i can find them.
 - weekly email no users, unread messages
+ - last_account_link_message.created_at < Time.current.beginning_of_day
+
+
+- segment dropdown for leads
+- the welcome text should only be for sms...we have something for messenger
 
 
 

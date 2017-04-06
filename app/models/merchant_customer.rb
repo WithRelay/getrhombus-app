@@ -8,11 +8,9 @@ class MerchantCustomer < ActiveRecord::Base
   has_many :subscriptions, inverse_of: :merchant_customer
   # has_many :invoices
 
-  def self.add_or_update_merchant_customer(merchant_ids, customer_id)
+  def self.add_or_update_merchant_customer(merchant_id, customer_id)
     begin
-      merchant_ids.each do |mid|
-        where(merchant_id: mid, customer_id: customer_id).first_or_initialize.tap { |row| row.save }
-      end
+      where(merchant_id: merchant_id, customer_id: customer_id).first_or_initialize.tap { |row| row.save }
     rescue StandardError => err
     end
   end

@@ -256,7 +256,7 @@ class User < ActiveRecord::Base
       self.lists.create(name: 'Active Customers', segment: customer, origin: 1)
       self.lists.create(name: 'Inactive Customers', segment: customer, origin: 1)
     end
-    MerchantCustomer.add_or_update_merchant_customer([User.get_platform_acct_obj.id], user_id)
+    MerchantCustomer.add_or_update_merchant_customer(User.get_platform_acct_obj.id, user_id)
     WelcomeEmailJob.set(wait: SIGNUP_EMAIL_DELAY.minutes).perform_later(self)
     GetIntelligenceDataJob.perform_later(self.email, 'FullContact')
     GetIntelligenceDataJob.perform_later(self.phone_number, 'OpenCNAM') if self.is_customer?
