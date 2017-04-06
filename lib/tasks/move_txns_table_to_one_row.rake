@@ -66,6 +66,8 @@ end
 # split amount_less_fess into amount_less_stripe_fees, app_fee
 # then remove amount_less_fees
 
+# fix how we store amounts - just job left....only some columns are not needed and some are integers
+
 #amount_with_taxes
 # stripe_fee, app_fee = amount_less_fees
 

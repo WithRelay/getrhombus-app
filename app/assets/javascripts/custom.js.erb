@@ -17,12 +17,12 @@ $(document).ready(function() {
   }, delay);
 */
 
-//add simple scroll bar
-var dashboard = document.querySelector('.dashboard-body');
- SimpleScrollbar.initEl(dashboard);
+  //add simple scroll bar
+  var dashboard = document.querySelector('.dashboard-body');
+  //SimpleScrollbar.initEl(dashboard);
 
- var customer_sidebar = document.querySelector('.customer-dashboard');
- SimpleScrollbar.initEl(customer_sidebar);
+  var customer_sidebar = document.querySelector('.customer-dashboard');
+  //SimpleScrollbar.initEl(customer_sidebar);
 
   $('#type-it').typeIt({
     strings: ["customers", "shift workers", "candidates", "students", "donors", "employees", "hotel guests"],
@@ -348,6 +348,8 @@ var dashboard = document.querySelector('.dashboard-body');
   });
 
   function set_hidden_fields() {
+    if (global_page_params['page_specific_id']) document.getElementById('page_specific_id').value = global_page_params['page_specific_id'];
+    if (global_page_params['captured_amt']) document.getElementById('captured_amt').value = global_page_params['captured_amt'];
     if (global_page_params['referrer_uid']) document.getElementById('referrer_uid').value = global_page_params['referrer_uid'];
     if (global_page_params['msg_id']) document.getElementById('msg_id').value = global_page_params['msg_id'];
     if (global_page_params['tag_id']) document.getElementById('tag_id').value = global_page_params['tag_id'];

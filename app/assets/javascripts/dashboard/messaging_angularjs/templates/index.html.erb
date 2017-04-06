@@ -28,7 +28,15 @@
     <%# added id %>
     <div class="conversation-list-wrapper" id='conversation-list-wrapper' when-scrolled-down="loadConversations()">
 
-      <a class="message-tab w-inline-block" ng-repeat="(identifier, conversation) in conversations | filterConversationList:query | orderObjectBy:'last_message_ts':true" ng-click="getConversationMessages(conversation, true)" ng-class="{ 'message-tab': true, 'w-inline-block': true, 'conversation_selected': conversation.id == selected_conversation.id }">
+      <div class="conversation-list-empty-wrapper" ng-if="customer_contact_count == 0">
+        <a class="button empty-conversation-button w-button" href="/users/{{ merchant.id }}/customers">Add customers to start a conversation</a>
+      </div>
+
+      <div class="conversation-list-empty-wrapper" ng-if="customer_contact_count > 0 && open_conversations_count == 0">
+        <a class="button empty-conversation-button start-new w-button" ng-click='focusOnStartConversationField()'>Start new conversation</a>
+      </div>
+
+      <a ng-if="customer_contact_count > 0 && open_conversations_count > 0" class="message-tab w-inline-block" ng-repeat="(identifier, conversation) in conversations | filterConversationList:query | orderObjectBy:'last_message_ts':true" ng-click="getConversationMessages(conversation, true)" ng-class="{ 'message-tab': true, 'w-inline-block': true, 'conversation_selected': conversation.id == selected_conversation.id }">
         <div class="message-tab-content-wrapper w-row">
 
           <div class="message-tab-picture-column w-col w-col-2">
@@ -111,11 +119,11 @@
     <div ng-if='customer_contact_count == 0'>{{ customer_contact_count_message }}</div>
     <div class="right-nav-profile-content-wrapper" ng-if='customer_contact_count > 0'>
 
-      <img ng-if="snapshot.profile_image.type == 'image'" class="profile-picture-right-nav" ng-src="{{snapshot.profile_image.value}}" width="60">
-
-      <div ng-if="snapshot.profile_image.type == 'color'" class="chat-wwindow no-image-found-placeholder radius-color-{{snapshot.profile_image.value}}">
-        <div class="customer-initial">{{ snapshot.full_name.charAt(0) }}</div>
+      <div ng-if="snapshot.profile_image.type == 'color'" class="rignt-sidebar-placeholder-container radius-color-{{snapshot.profile_image.value}}">
+        <div class="side-bar-profile-image-placeholder-text">{{ snapshot.full_name.charAt(0) }}</div>
       </div>
+
+      <img ng-if="snapshot.profile_image.type == 'image'" class="profile-picture-right-nav" ng-src="{{snapshot.profile_image.value}}" width="60">
 
       <div class="dashboard-right-nav signup-box-subheading">{{ snapshot.full_name.toUpperCase() }}<span ng-class="{ 'messaging-snapshot': true, 'relay-id' : true, 'leads unverified' : snapshot.verified == 'UNVERIFIED' }">{{ snapshot.verified }}</span>
       </div>
@@ -142,7 +150,22 @@
 
         <div class="transaction-pane w--tab-active w-tab-pane" data-w-tab="Tab 1">
 
-          <a class="transactions-div-wrapper w-inline-block" ng-repeat="transaction in customer_transactions" data-index="{{ $index }}">
+          <div ng-if="!merchant.can_accept_payments">
+            <div class="no-data-right-side-bar">
+              <p class="empty-view-short-paragraph">Connect your bank account to view recent transactions &amp; issue refunds right here.</p>
+            </div>
+            <a class="button right-nav-add-to-list w-button" href="#">&nbsp;&nbsp;&nbsp;&nbsp;Connect bank account</a>
+          </div>
+
+          <div ng-if="merchant.can_accept_payments && !Object.keys(selected_conversation).length" class="alt no-data-right-side-bar">
+            <p class="empty-view-short-paragraph">Select a conversation to see transaction data</p>
+          </div>
+
+          <div ng-if="merchant.can_accept_payments && Object.keys(selected_conversation).length && !customer_transactions.length" class="alt no-data-right-side-bar">
+            <p class="empty-view-short-paragraph">There are no recent transactions from this customer or contact</p>
+          </div>
+
+          <a ng-if="merchant.can_accept_payments && Object.keys(selected_conversation).length && customer_transactions.length" class="transactions-div-wrapper w-inline-block" ng-repeat="transaction in customer_transactions" data-index="{{ $index }}">
             <div class="transaction-div">
               <div class="right-nav-transaction-div-table w-row">
                 <div class="right-nav-transaction-div-column-1 w-col w-col-9">
@@ -217,11 +240,17 @@
   <%# added id %>
   <div class="dashboard-body messaging w-clearfix" id='messages-box' when-scrolled-up="getConversationMessages(selected_conversation, false)" scroll-bottom-on="status.loaded" in-view-container>
 
-    <%# <div ng-show="status.loading" class="me"><span>loading...</span></div> %>
+    <div class="welcome-to-relay-div" ng-if="customer_contact_count > 0">
+      <img src="<%= asset_path "019_076.png" %>">
+      <p class="welcome-message-text-area-paragraph">Hi {{ merchant.first_name }}, to get the most out of Relay add or import your customers</p>
+      <a class="button messaging-dash-welcome-div w-button" href="/users/{{ merchant.id }}/customers">Add a customer</a>
+      <a class="alt button messaging-dash-welcome-div w-button" href="/users/{{ merchant.id }}/customers">Import customers</a>
+    </div>
 
+    <%# <div ng-show="status.loading" class="me"><span>loading...</span></div> %>
     <%# added this wrapping div %>
     <!-- message ng-repeat -->
-    <div ng-repeat="message in selected_conversation_messages track by messageTrackingFunction(message)" on-finish-render>
+    <div ng-if="customer_contact_count == 0" ng-repeat="message in selected_conversation_messages track by messageTrackingFunction(message)" on-finish-render>
 
       <div class="conversation-date-wrapper" ng-if="($index != 0) && !selected_conversation_messages[$index - 1].unread && selected_conversation_messages[$index].unread">
         <div class="conversation-date">New Messages</div>
@@ -290,6 +319,7 @@
 
     </div>
     <!-- end message ng-repeat -->
+
   </div>
 
   <!-- [if lte IE 9]><script src="https://cdnjs.cloudflare.com/ajax/libs/placeholders/3.0.2/placeholders.min.js"></script><![endif] -->

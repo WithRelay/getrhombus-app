@@ -71,7 +71,7 @@ class MessageParser
           url = Rails.application.secrets.url["info"]
           short_link = 'test' #UrlShortenerService.shorten_link("#{url}/signup?num=#{@received_msg.from}&referrer_uid=#{@merchant.relay_uid}&referrer=#{merchant_name}")
           send_response("To chat with us or send a payment, sign up here: #{short_link}")
-        elsif get_conversation_refs_count < 2 && !is_signup
+        elsif @channel == 'Message' && get_conversation_refs_count < 2 && !is_signup
           first_name = @merchant.full_name.split.first
           first_name = (first_name.present?) ? "my name is #{first_name}, " : ''
           custom_welcome = "Hi there, " + first_name + "how can I assist you today? If you're looking to send a payment, simply reply with the amount. Ex. +10 #donut"

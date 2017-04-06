@@ -6,7 +6,7 @@ class User < ActiveRecord::Base
   include AddTokenToUser
   include Transactionable
 
-  attr_accessor :phone, :captured_amt, :msg_id, :tag_id
+  attr_accessor :phone, :captured_amt, :msg_id, :tag_id, :page_specific_id
   attr_accessor :referrer_uid, :tos_acceptance, :area_code
 
   # validation rules for user attributes
@@ -131,7 +131,8 @@ class User < ActiveRecord::Base
 
   def full_name
     return "#{self.card_name}" if self.is_customer?
-    "#{self.people.representative[0].try(:first_name)} #{self.people.representative[0].try(:last_name)}"
+    rep = self.people.representative[0]
+    "#{rep.try(:first_name)} #{rep.try(:last_name)}".squish
   end
 
   def is_platform?
@@ -161,6 +162,15 @@ class User < ActiveRecord::Base
      return { type: 'standalone', cred: cred } if cred.present?
 
      { type: nil, cred: nil }  # has no payment account
+  end
+
+  def can_accept_payments?(skip_check_managed_acct_status = false)
+    cred = self.get_stripe_cred
+    return false if cred[:type].nil?
+    return true if cred[:type] == 'standalone'
+    return true if cred[:type] == 'managed' && skip_check_managed_acct_status
+    return true if cred[:type] == 'managed' && cred[:cred].can_accept_payments?
+    false
   end
 
   def self.platform_email

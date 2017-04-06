@@ -36,7 +36,7 @@ class RegistrationsController < Devise::RegistrationsController
     yield resource if block_given?
     if resource.persisted?
       sign_up(resource_name, resource)
-      add_or_update_user_referrer
+      add_to_merchant_customer_and_referrer_and_fb_cred
       respond_with resource, location: after_sign_up_path_for(resource)
     else
       flash[:error] = resource.errors.full_messages

@@ -24,7 +24,7 @@
             </div>
 
             <%= f.hidden_field :phone_number, :id => "phone_number" %>
-
+            <%= f.hidden_field :page_specific_id, id: "page_specific_id", value: params[:user] ? params[:user][:page_specific_id] : '' %>
             <%= f.hidden_field :captured_amt, id: "captured_amt", value: params[:user] ? params[:user][:captured_amt] : '' %>
             <%= f.hidden_field :referrer_uid, id: "referrer_uid", value: params[:user] ? params[:user][:referrer_uid] : '' %>
             <%= f.hidden_field :msg_id, id: "msg_id", value: params[:user] ? params[:user][:msg_id] : '' %>

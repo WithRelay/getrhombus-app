@@ -74,7 +74,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
     //snapshot
     $scope.customer_contact_count = 0;
     $scope.customer_contact_count_message = 'You no get customers bro.';
-    $scope.snapshot = { full_name: 'John Doe', verified: 'UNVERIFIED', phone_number: '<redacted_phone_number>', 
+    $scope.snapshot = { full_name: 'John Doe', verified: 'VERIFIED', phone_number: '<redacted_phone_number>', 
                         email: '<redacted_email>', location: 'John City', twitter: '@jdoe',
                         since: { date: '12/12/2012', type: 'Customer' },
                         profile_image: { type: 'color', value: 'yellow' }
@@ -89,6 +89,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
     // Get logged in merchant id
     $http.get(window.location.origin + '/get_current_user').success(function(data) {
 
+      console.log(data)
       $scope.merchant = data;
       $scope.char_limit = data.num_of_chars;
       $scope.customer_contact_count = data.customer_contact_count;
@@ -208,11 +209,11 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
               // Build conversation list and count initial global unread
               angular.forEach(data.conversations, function(value, key) {
                 $scope.conversations[value.id] = value;
-                $scope.open_conversations_count += 1;
+                $scope.open_conversations_count += 1;  // why here 
                 $scope.global_unread_count += value.unread_count;
               });
 
-              $scope.open_conversations_count = data.count;
+              $scope.open_conversations_count = data.count; /// and why here too
               conversation_page += 1;
               console.log('loaded conversations')
             } else {
@@ -356,8 +357,9 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
     })
     .error(function(data, status, headers, config) { alert('Error while trying to connect to the messaging system.'); });
 
-
-
+    $scope.focusOnStartConversationField = function() {
+      start_conversation_selectize.focus();
+    };
 
     $scope.getSavedReplies = function() {
       if ($scope.online()) {
