@@ -24,7 +24,6 @@ class User < ActiveRecord::Base
 
   # Sign up form uses phone_number field for both user types
   validates :phone_number, presence: true, numericality: { only_integer: true }, length: { minimum: 10 }, on: :create
-  validate :validates_person_full_message
 
   # Allow nil added to db migration because merchants don't have phone number. They have org_phone.
   # And since mysql indexes this field, it indexes nil and only allows one row with nil.
@@ -136,13 +135,18 @@ class User < ActiveRecord::Base
     "#{rep.try(:first_name)} #{rep.try(:last_name)}".squish
   end
 
+  def first_name
+    first_name = self.full_name.split.first
+    first_name.present? ? first_name : nil
+  end
+
   def is_platform?
     #email == User.platform_email
     self.email == '<redacted_email>' || self.email == '<redacted_email>'
   end
 
   def self.user_title(user)
-    user_first_name = user.full_name.split.first
+    user_first_name = user.first_name
     user_first_name.present? ? "#{user_first_name} from #{user.org_name}" : user.org_name
   end
 
@@ -268,9 +272,10 @@ class User < ActiveRecord::Base
     GetIntelligenceDataJob.perform_later(self.phone_number, 'OpenCNAM') if self.is_customer?
   end
 
-  def validates_person_full_message
-    errors.add(:full_name, 'is required') if self.people[0].try(:full_name).present?
-  end
+  #def validates_person_full_message
+    # leave out. but this code needs to be changed
+    #errors.add(:full_name, 'is required') if self.people[0].try(:full_name).present?
+  #end
 
   # This is the link merchants can share...also dashboard link
   def get_uid_and_referrer_link
