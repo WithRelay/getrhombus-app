@@ -12,17 +12,11 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
                                                         'savedReplyService',  'conversationService', 'transactionService', 'userService', 'listService', 'reminderService',
   function($scope, $http, Pubnub, Upload, $timeout, $q, savedReplyService, conversationService, transactionService, userService, listService, reminderService) {
 
-    // Messages  // remove
     // Conversations
-    //$scope.num_message_history = 200;   // remove
-    //$scope.char_limit = 150;
-    //$scope.active_user_number = 0;    //remove
-
-    //$scope.active_user_count = 0;   // remove
     $scope.open_conversations_count = 0;
     $scope.conversations = {};
     $scope.selected_conversation_messages = [];
-    $scope.start_conversation = {}
+    $scope.start_conversation = {};
 
     var messages_page = 1;
     $scope.status = { loading: false, /* loaded: false */ };
@@ -34,9 +28,6 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
 
     // Marked As Done
     $scope.marked_as_done = { reason: 'account_reactivation', notes: '' }; 
-
-    // counters
-    $scope.global_unread_count = 0;
 
     // ajax
     $scope.is_sending = false;
@@ -54,6 +45,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
 
     // Lists
     $scope.merchant_lists = [];
+    $scope.no_list_message = 'See the lists each customer is subscribed to right here. Use lists to send group messages.';
     $scope.lists_dropdown = { list: null }; 
     $scope.lists_for_customer = [];
 
@@ -71,28 +63,17 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
     $scope.start_conversation_options = [];
     $scope.hashtag_config_options = [];
 
-    //snapshot
-    $scope.customer_contact_count = 0;
-    $scope.customer_contact_count_message = 'You no get customers bro.';
-    $scope.snapshot = { full_name: 'John Doe', verified: 'VERIFIED', phone_number: '<redacted_phone_number>', 
-                        email: '<redacted_email>', location: 'John City', twitter: '@jdoe',
-                        since: { date: '12/12/2012', type: 'Customer' },
-                        profile_image: { type: 'color', value: 'yellow' }
-                      };
-
     $scope.online = function() {
       //Offline.check();
-      return true //Offline.state == "up"
+      //Offline.state == "up"
+      return true;
     };
-
 
     // Get logged in merchant id
     $http.get(window.location.origin + '/get_current_user').success(function(data) {
 
       console.log(data)
       $scope.merchant = data;
-      $scope.char_limit = data.num_of_chars;
-      $scope.customer_contact_count = data.customer_contact_count;
 
       // Initialize PubNub with SSL
       Pubnub.init({
@@ -107,18 +88,15 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
       // Subscribe to merchant channel
       Pubnub.subscribe({
         channel: 'messaging_<%= Rails.env %>_' + $scope.merchant.id,
-        message: function(m){
+        message: function(m) {
           var re = JSON.parse(m);
 
           $scope.$apply(function() {
             if (!$scope.conversations[re.conversation.id]) {
-              // add conversation object
+              // add conversation object and update count
               $scope.conversations[re.conversation.id] = re.conversation;
-
-              // update counts
-              // $scope.active_user_count += 1;  // remove
-              // also add new conversations count here
-              // $scope.open_conversations_count += 1; // should this be here?
+              $scope.open_conversations_count += 1;
+              //$scope.global_unread_count += re.conversation.unread_count;
             } else {
               console.log('hi')
               $scope.conversations[re.conversation.id].last_message = re.conversation.last_message
@@ -129,69 +107,16 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
               console.log(re.conversation.last_message)
 
               if (re.message.source == 'customer') {
-                $scope.global_unread_count += 1;
+                //$scope.global_unread_count += 1;
                 $scope.conversations[re.conversation.id].unread_count += 1;
               }
             }
 
-            if (re.conversation.id == $scope.selected_conversation.id)
+            if (re.conversation.id == $scope.selected_conversation.id) {
               $scope.selected_conversation_messages.push(re.message);
-
-
-
-
-            /*if (re.conversation.id == $scope.selected_conversation.id) {
-              $scope.selected_conversation_messages.push(re.message);
-              // update conversation object
-              $scope.conversations[re.conversation.id] = re.conversation;
               //$scope.markMessagesAsRead(conversation.id, re.message.id);
-            } else {
-              if (!$scope.conversations[re.conversation.id]) {
-                //$scope.users[re.user_number] = {user_number: re.user_number, first_name: json_response.first_name, last_name: json_response.last_name, email: json_response.email, profile_image: json_response.profile_image, last_message: json_response.message, last_message_ts: json_response.ts_int, unread_count: 0};
-                $scope.conversations[re.conversation.id] = re.conversation;
-
-                //$scope.active_user_count += 1;  // remove
-                // also add new conversations count here
-                $scope.open_conversations_count += 1; // should this be here?
-
-              }
-              if (re.message.source == 'user') {
-                $scope.global_unread_count += 1;
-                //$scope.conversations[re.conuser_number].unread_count += 1;
-                //$scope.users[re.user_number].last_message = re.message;
-                //$scope.users[re.user_number].last_message_ts = parseInt(re.ts_int);
-              }
-            }*/
-          });
-
-
-          /*$scope.$apply(function() {
-            if (json_response.user_number == $scope.active_user_number) {
-              $scope.selected_user_messages.push({user_number: json_response.user_number, user_level: json_response.user_level, profile_image: json_response.profile_image, text: json_response.message, ts_day_of_the_week: json_response.ts_day_of_the_week, ts_time: json_response.ts_time, unread: false});
-              if (json_response.user_level == 0) {
-                $scope.users[json_response.user_number].last_message = json_response.message;
-                $scope.users[json_response.user_number].last_message_ts = parseInt(json_response.ts_int);
-              }
-              //$http.get(window.location.origin + '/users/' + merchant_id + '/mark_user_messages_for_merchant_as_read/' + $scope.active_user_number);
-            } else {
-              // names now in person model
-              if (!$scope.users[json_response.user_number]) {
-                $scope.users[json_response.user_number] = {user_number: json_response.user_number, first_name: json_response.first_name, last_name: json_response.last_name, email: json_response.email, profile_image: json_response.profile_image, last_message: json_response.message, last_message_ts: json_response.ts_int, unread_count: 0};
-
-                //$scope.active_user_count += 1;  // remove
-                $scope.open_conversations_count += 1; // should this be here?
-
-              }
-              if (json_response.user_level == 0) {
-                $scope.global_unread_count += 1;
-                $scope.users[json_response.user_number].unread_count += 1;
-                $scope.users[json_response.user_number].last_message = json_response.message;
-                $scope.users[json_response.user_number].last_message_ts = parseInt(json_response.ts_int);
-              }
             }
-          });*/
-
-          console.log(re)
+          });
         }
       });
 
@@ -205,21 +130,20 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
 
           conversationService.getConversations(conversation_page, select_conversation)
           .then(function(data) {
-            if (data.conversations.length > 0) {
+            if (data.count) {
               // Build conversation list and count initial global unread
               angular.forEach(data.conversations, function(value, key) {
                 $scope.conversations[value.id] = value;
-                $scope.open_conversations_count += 1;  // why here 
-                $scope.global_unread_count += value.unread_count;
+                //$scope.global_unread_count += value.unread_count;
               });
 
-              $scope.open_conversations_count = data.count; /// and why here too
               conversation_page += 1;
               console.log('loaded conversations')
             } else {
               console.log('you have no conversations');
             }
 
+            $scope.open_conversations_count = data.count;
             $scope.selectConversation(data);
           }, function(data) {
             console.log('unable to retrieve your conversations')
@@ -230,132 +154,10 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
       // get initial conversations
       $scope.loadConversations();
       $scope.getMerchantLists();
-
-
-      // Get latest conversations for this merchant
-      //$http.get(window.location.origin + '/users/' + merchant_id + '/json_get_latest_active_messaging') //remove
-      /*$http.get(window.location.origin + '/v1/conversations.json?page=1')
-      .success(function(data) {
-
-        //var user_list = {};  // remove
-        var conversation_list = {};
-        // Build user list and count initial global unread   //remove
-        // Build conversation list and count initial global unread
-        //angular.forEach(data.users, function(value, key) {    // remove
-        angular.forEach(data.conversations, function(value, key) {
-          //user_list[value.user_number] = value;    // remove
-          conversation_list[value.id] = value;
-          //$scope.active_user_count += 1;   // remove
-          $scope.open_conversations_count += 1; // should this be here?
-          $scope.global_unread_count += value.unread_count;
-        });
-
-        $scope.open_conversations_count = data.count;
-        //$scope.users = user_list;  // remove
-        $scope.conversations = conversation_list;
-
-        //$scope.getUserMessages = function(user) {  //remove
-        $scope.getConversationMessages = function(conversation) {
-          //$http.get(window.location.origin + '/users/' + merchant_id + '/json_get_user_messages_by_merchant/' + user.user_number + '?limit=' + (user.unread_count + $scope.num_message_history)) // remove
-          $http.get(window.location.origin + '/v1/conversations/' + conversation.id + '.json?page=1')
-          .success(function(data) {
-            //$scope.active_user_number = user.user_number;      //remove
-            $scope.active_conversation_id = conversation.id;
-            console.log(data)
-
-            //$scope.selected_user = user;   // remove
-            $scope.selected_conversation = conversation;
-
-            //$scope.selected_user_messages = data.messages;  // remove
-            $scope.selected_conversation_messages = data.messages;
-
-            // dopnt think this is used
-            //$scope.current_chat_user = user;  // remove
-            $scope.current_chat_conversation = conversation;
-            $scope.update_unread_messages(data.unread_ids);
-            /*
-            // Mark messages as read
-            //$scope.global_unread_count = (($scope.global_unread_count - $scope.users[user.user_number].unread_count) > 0) ? $scope.global_unread_count - $scope.users[user.user_number].unread_count : 0;  // remove
-            var unread_ids = data.unread_ids.split(",");
-            var unread_diff = $scope.global_unread_count - unread_ids.length;
-            $scope.global_unread_count = (unread_diff > 0) ? unread_diff : 0;
-            //$scope.users[user.user_number].unread_count = 0;   //remove
-            $scope.conversations[conversation.id].unread_count -= unread_ids.length;
-            //$http.get(window.location.origin + '/users/' + merchant_id + '/mark_user_messages_for_merchant_as_read/' + user.user_number); //remove
-            /*$http({
-              method: 'POST',
-              url: window.location.origin + '/v1/conversations/' + conversation.id + '/mark_messages_as_read?ids=' + data.unread_ids,
-              headers: {
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-              },
-            }).then(function successCallback(response) { console.log("marked as read") }, function errorCallback(response) {});
-            */
-          //});
-        //};
-
-        $scope.update_unread_messages = function(unread_ids) {
-          // Mark messages as read
-          var unread_ids = unread_ids.split(",");
-          var unread_diff = $scope.global_unread_count - unread_ids.length;
-          $scope.global_unread_count = (unread_diff > 0) ? unread_diff : 0;
-          $scope.conversations[$scope.active_conversation_id].unread_count -= unread_ids.length;
-          /*$http({
-            method: 'POST',
-            url: window.location.origin + '/v1/conversations/' + conversation.id + '/mark_messages_as_read?ids=' + data.unread_ids,
-            headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content') },
-          }).then(function successCallback(response) { console.log("marked as read") }, function errorCallback(response) {});
-          */
-        };
-
-
-        $scope.sendMessage = function(new_message) {
-          $scope.is_sending = true;
-          $scope.send_msg_btn = "Sending...";
-          console.log(new_message)
-          // twilio allow 1600 characters
-          /*if ((new_message == undefined) || (new_message.text == '') || (new_message.text.length > $scope.char_limit)) {
-            alert('Maximum ' + $scope.char_limit + ' characters.');
-          } else {
-            $http({
-              method: 'POST',
-              url: window.location.origin + '/v1/conversations/' + $scope.active_conversation_id + '/send_merchant_message.json',
-              data: { msg: encodeURIComponent(new_message.text), to: to, channel: channel, uid_type: uid_type },
-              headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content') },
-            }).then(function successCallback(response) {
-              $scope.selected_conversation_messages.push(response);
-              console.log('message response');
-              console.log(response);
-              new_message.text = '';
-            }, function errorCallback(response) { alert('The message could not be sent, please try again.') });
-
-            // remove
-            /*$http.get(window.location.origin + '/conversations/' + $scope.active_conversation_id + '/send_merchant_message/' + $scope.selected_user.user_number + '?message=' + encodeURIComponent(new_message.text))
-            .success(function(data) {
-              if (data.success) {
-                $scope.selected_user_messages.push({user_number: merchant_id, user_level: data.user_level,
-                                                    profile_image: data.profile_image, text: new_message.text,
-                                                    ts_day_of_the_week: data.ts_day_of_the_week, ts_time: data.ts_time,
-                                                    unread: false});
-                new_message.text = '';
-              } else {
-                alert('The message could not be sent, please try again.');
-              }
-            }).
-            error(function(data, status, headers, config) {
-              alert('The message could not be sent, please try again.');
-            });*/
-          //}
-          $scope.is_sending = false;
-          $scope.send_msg_btn = "Reply";
-        };
-
-
-
-      /*
-      })
-      .error(function(data, status, headers, config) { alert('Error while trying to connect to the messaging system.'); });*/
     })
-    .error(function(data, status, headers, config) { alert('Error while trying to connect to the messaging system.'); });
+    .error(function(data, status, headers, config) { 
+      alert('Error while trying to connect to the messaging system.'); 
+    });
 
     $scope.focusOnStartConversationField = function() {
       start_conversation_selectize.focus();
@@ -379,11 +181,10 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
       if ($scope.online()) {
         userService.getSnapshot({ uid: $scope.selected_conversation.uid, uid_type: $scope.selected_conversation.uid_type })
         .then(function(data) {
-          $scope.customer_contact_count = $scope.merchant.customer_contact_count;
+          $scope.no_social_data = false;
           $scope.snapshot = data;
         }, function(data) {
-          $scope.customer_contact_count = 0;
-          $scope.customer_contact_count_message = 'Unable to retrieve data.';
+          $scope.no_social_data = true;
         });
       }
     };
@@ -465,8 +266,9 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
         var hash = { conversation_resolution: { notes: $scope.marked_as_done.notes, resolution: $scope.marked_as_done.reason } };
         conversationService.closeConversation($scope.selected_conversation.id, hash)
         .then(function(data) {
-          $scope.selected_conversation_messages = []
+          $scope.selected_conversation_messages = [];
           $scope.selected_conversation = {};
+          $scope.conversation_selected = false;
           delete $scope.conversations[$scope.selected_conversation.id];
         }, function(data) {
           alert('unable to close conversation');
@@ -481,13 +283,15 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
     $scope.messageInView = function(index) {
       var message = $scope.selected_conversation_messages[index];
       if (message.unread) {
-        message.unread = false;
+        message.unread = false;   // doing this here simply because i don't want to make excessive server calls even if there is a failure
         $scope.markMessagesAsRead($scope.selected_conversation.id, message.id);
       }
     };
 
     $scope.getConversationMessages = function(conversation, from_conversations_list) {
       var deferred = $q.defer();
+
+      $scope.conversation_selected = true;
 
       // don't get messages if user clicks again on current conversation
       if (!(from_conversations_list && conversation.id == $scope.selected_conversation.id) && $scope.online()) {
@@ -554,10 +358,10 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
       if ($scope.online()) {
         conversationService.markMessageAsRead(conversation_id, unread_ids)
         .then(function(re) {
-          var unread_ids = unread_ids.split(",");
-          var unread_diff = $scope.global_unread_count - unread_ids.length;
-          $scope.global_unread_count = (unread_diff > 0) ? unread_diff : 0;
-          $scope.conversations[conversation_id].unread_count -= unread_ids.length;
+          //var unread_ids = unread_ids.split(",");
+          //var unread_diff = $scope.global_unread_count - unread_ids.length;
+          //$scope.global_unread_count = (unread_diff > 0) ? unread_diff : 0;
+          $scope.conversations[conversation_id].unread_count -= unread_ids.split(",").length;
           console.log('marked as read');
         }, function(re) {
           console.log('markes as read Failed');
@@ -579,8 +383,8 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
         $scope[btn] = "Sending...";
         console.log($scope.new_message);
 
-        if (($scope.new_message.text == '') || ($scope.new_message.text.length > $scope.char_limit)) {
-          alert('enter up to ' + $scope.char_limit + ' characters.');
+        if (($scope.new_message.text == '') || ($scope.new_message.text.length > $scope.merchant.num_of_chars)) {
+          alert('enter up to ' + $scope.merchant.num_of_chars + ' characters.');
           $scope.enable_msg_btn(btn, channel);
         } else {
           var conversation_id = $scope.selected_conversation.id;
@@ -611,7 +415,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
     };
 
     $scope.is_conversation_selected = function(msg, show_alert) {
-      var state = $scope.selected_conversation.id !== undefined;
+      var state = $scope.conversation_selected;
       if (!state && !show_alert) FlashHandler.setFlashMessage(msg || 'select a conversation', 'error');
       return state;
     }
@@ -849,10 +653,12 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
         listService.getLists({ query: '', type: 'list' })
         .then(function (data) {
           console.log('merchant lists retrieved');
-          console.log(data)
+          console.log(data);
           $scope.merchant_lists = data['lists'];
+          if (!data['lists'].length) $scope.no_list_message = 'See the lists each customer is subscribed to right here. Use lists to send group messages.';
         }, function (response) {
-          console.log('unable to retrieve merchant lists');
+          $scope.no_list_message = 'Unable to retrieve your lists :(';
+          $scope.merchant_lists = [];
         });
       }
     };    

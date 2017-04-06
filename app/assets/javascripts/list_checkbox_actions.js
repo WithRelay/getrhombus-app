@@ -13,7 +13,6 @@ $(document).ready(function(){
   });
 
   $('.deactivate-resource').click(function(e){
-    debugger;
     var statusName = campaignStatusName()
     var text = { paused: 'Activate', active: 'Deactivate' }
     if (statusName != "inactive"){
@@ -36,7 +35,6 @@ $(document).ready(function(){
   }
 
   $(document).on('click', '.cancel-yes', function(e){
-    debugger;
     if (getCurrentURL() == 'campaigns'){
       resource = new Resource(getResourceActionUrl());
       resource.updateOrDelete();
@@ -49,7 +47,6 @@ $(document).ready(function(){
       return { 'url': action_url, 'method': 'delete' }
     }
       else{
-        debugger;
         action_url = '/v1/' + getCurrentURL() + '/' + getSelectedCheckbox('.checkboxes') + '/change_status/'
         return { 'url': action_url, 'method': 'patch' }
       }

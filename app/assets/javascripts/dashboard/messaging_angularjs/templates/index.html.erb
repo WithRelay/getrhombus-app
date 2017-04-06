@@ -2,7 +2,7 @@
     <div class="w-row">
       <div class="w-col w-col-4"></div>
       <div class="sub-nav-bar-messaging-dash-column-2 w-col w-col-4">
-        <div class="customer-name-text subheader" ng-if="Object.keys(selected_conversation).length">Conversation with {{current_chat_conversation.full_name}}</div>
+        <div class="customer-name-text subheader" ng-if="conversation_selected">Conversation with {{current_chat_conversation.full_name}}</div>
       </div>
       <div class="w-col w-col-4"></div>
     </div>
@@ -22,21 +22,21 @@
         </form>
         <%# removed 2 div from here %>
       </div>
-      <div class="open-conversation-text">Open (289)</div>
+      <div class="open-conversation-text">Open ({{open_conversations_count}})</div>
     </div>
     <div class="w-tabs" data-duration-in="300" data-duration-out="100"></div>
     <%# added id %>
     <div class="conversation-list-wrapper" id='conversation-list-wrapper' when-scrolled-down="loadConversations()">
 
-      <div class="conversation-list-empty-wrapper" ng-if="customer_contact_count == 0">
+      <div class="conversation-list-empty-wrapper" ng-if="!merchant.customer_contact_count">
         <a class="button empty-conversation-button w-button" href="/users/{{ merchant.id }}/customers">Add customers to start a conversation</a>
       </div>
 
-      <div class="conversation-list-empty-wrapper" ng-if="customer_contact_count > 0 && open_conversations_count == 0">
+      <div class="conversation-list-empty-wrapper" ng-if="merchant.customer_contact_count && !open_conversations_count">
         <a class="button empty-conversation-button start-new w-button" ng-click='focusOnStartConversationField()'>Start new conversation</a>
       </div>
 
-      <a ng-if="customer_contact_count > 0 && open_conversations_count > 0" class="message-tab w-inline-block" ng-repeat="(identifier, conversation) in conversations | filterConversationList:query | orderObjectBy:'last_message_ts':true" ng-click="getConversationMessages(conversation, true)" ng-class="{ 'message-tab': true, 'w-inline-block': true, 'conversation_selected': conversation.id == selected_conversation.id }">
+      <a ng-if="merchant.customer_contact_count && open_conversations_count" class="message-tab w-inline-block" ng-repeat="(identifier, conversation) in conversations | filterConversationList:query | orderObjectBy:'last_message_ts':true" ng-click="getConversationMessages(conversation, true)" ng-class="{ 'message-tab': true, 'w-inline-block': true, 'conversation_selected': conversation.id == selected_conversation.id }">
         <div class="message-tab-content-wrapper w-row">
 
           <div class="message-tab-picture-column w-col w-col-2">
@@ -116,8 +116,21 @@
   </div>
 
   <div class="right side-bar z-index-1">
-    <div ng-if='customer_contact_count == 0'>{{ customer_contact_count_message }}</div>
-    <div class="right-nav-profile-content-wrapper" ng-if='customer_contact_count > 0'>
+    
+    <div ng-if='!conversation_selected || no_social_data || !open_conversations_count'>
+      <div class="right-nav-profile-content-wrapper">
+        <div class="empty-profile-preview-wrapper">
+          <div class="rignt-sidebar-placeholder-container radius-color-red">
+            <div class="side-bar-profile-image-placeholder-text">#</div>
+          </div>
+          <div ng-if='no_social_data' class="contact-chat-no-data left-column-text number">No social data</div>
+          <div ng-if='!conversation_selected && !open_conversations_count' class="no-profile-data-text">Start new conversation to view social data</div>
+          <div ng-if='!conversation_selected && open_conversations_count' class="no-profile-data-text">Select a conversation to view social data</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="right-nav-profile-content-wrapper" ng-if='conversation_selected && !no_social_data'>
 
       <div ng-if="snapshot.profile_image.type == 'color'" class="rignt-sidebar-placeholder-container radius-color-{{snapshot.profile_image.value}}">
         <div class="side-bar-profile-image-placeholder-text">{{ snapshot.full_name.charAt(0) }}</div>
@@ -157,15 +170,15 @@
             <a class="button right-nav-add-to-list w-button" href="#">&nbsp;&nbsp;&nbsp;&nbsp;Connect bank account</a>
           </div>
 
-          <div ng-if="merchant.can_accept_payments && !Object.keys(selected_conversation).length" class="alt no-data-right-side-bar">
+          <div ng-if="merchant.can_accept_payments && !conversation_selected" class="alt no-data-right-side-bar">
             <p class="empty-view-short-paragraph">Select a conversation to see transaction data</p>
           </div>
 
-          <div ng-if="merchant.can_accept_payments && Object.keys(selected_conversation).length && !customer_transactions.length" class="alt no-data-right-side-bar">
+          <div ng-if="merchant.can_accept_payments && conversation_selected && !customer_transactions.length" class="alt no-data-right-side-bar">
             <p class="empty-view-short-paragraph">There are no recent transactions from this customer or contact</p>
           </div>
 
-          <a ng-if="merchant.can_accept_payments && Object.keys(selected_conversation).length && customer_transactions.length" class="transactions-div-wrapper w-inline-block" ng-repeat="transaction in customer_transactions" data-index="{{ $index }}">
+          <a ng-if="merchant.can_accept_payments && conversation_selected && customer_transactions.length" class="transactions-div-wrapper w-inline-block" ng-repeat="transaction in customer_transactions" data-index="{{ $index }}">
             <div class="transaction-div">
               <div class="right-nav-transaction-div-table w-row">
                 <div class="right-nav-transaction-div-column-1 w-col w-col-9">
@@ -206,33 +219,48 @@
         </div>
 
         <div class="transaction-pane w-tab-pane" data-w-tab="Tab 2">
-          <a class="transactions-div-wrapper w-inline-block" >
-            <div class="transaction-div">
-              <div class="right-nav-transaction-div-table w-row">
-                <div class="w-col w-col-8">
-                  <div class="right-nav-amount-text">VIP Customer</div>
-                  <div class="right-nav-amount-desc">Automatically added 3 days ago</div>
+          
+          <div ng-if="merchant_lists.length">
+            <div ng-if="conversation_selected">
+              <div ng-if="list_for_customers.length">
+                <a class="transactions-div-wrapper w-inline-block" >
+                <div class="transaction-div">
+                  <div class="right-nav-transaction-div-table w-row">
+                    <div class="w-col w-col-8">
+                      <div class="right-nav-amount-text">New York Customer</div>
+                      <div class="right-nav-amount-desc">Added 1 week ago</div>
+                    </div>
+                    <div class="w-col w-col-4">
+                      <div class="messaging-dash-variable-text transactions-div-table">&nbsp;&nbsp;&nbsp;List</div>
+                    </div>
+                  </div>
                 </div>
-                <div class="w-col w-col-4">
-                  <div class="messaging-dash-variable-text transactions-div-table">&nbsp;&nbsp;&nbsp;Segment</div>
-                </div>
+                </a>
               </div>
-            </div>
-          </a>
-          <a class="transactions-div-wrapper w-inline-block" >
-            <div class="transaction-div">
-              <div class="right-nav-transaction-div-table w-row">
-                <div class="w-col w-col-8">
-                  <div class="right-nav-amount-text">New York Customer</div>
-                  <div class="right-nav-amount-desc">Added 1 week ago</div>
-                </div>
-                <div class="w-col w-col-4">
-                  <div class="messaging-dash-variable-text transactions-div-table">&nbsp;&nbsp;&nbsp;List</div>
-                </div>
+
+              <div ng-if="!list_for_customers.length" class="alt no-data-right-side-bar">
+                <p class="empty-view-short-paragraph">Customer or contact is not subscribed to any lists. Use lists to group your customers and
+                  <br>send them campaigns</p>
               </div>
+              <a class="button right-nav-add-to-list w-button" ng-click='addToListDiv()'>&nbsp;&nbsp;&nbsp;&nbsp;Add customer to new list</a>
             </div>
-          </a><a class="button right-nav-add-to-list w-button" ng-click='addToListDiv()'>&nbsp;&nbsp;&nbsp;&nbsp;Add customer to new list</a>
+
+            <div ng-if="!conversation_selected">
+              <div class="no-data-right-side-bar">
+                <p class="empty-view-short-paragraph">Select a conversation to see customer/contact lists.</p>
+              </div>  
+            </div>
+          </div>
+
+          <div ng-if="!merchant_lists.length">
+            <div class="no-data-right-side-bar">
+              <p class="empty-view-short-paragraph">{{ no_list_message }}</p>
+            </div>
+            <a ng-if="no_list_message[0] == 'S'" class="button right-nav-add-to-list w-button" href="/users/{{ merchant.id }}/lists">&nbsp;&nbsp;&nbsp;&nbsp;Create your first customer list</a>            
+          </div>
+
         </div>
+
       </div>
     </div>
   </div>
@@ -240,7 +268,7 @@
   <%# added id %>
   <div class="dashboard-body messaging w-clearfix" id='messages-box' when-scrolled-up="getConversationMessages(selected_conversation, false)" scroll-bottom-on="status.loaded" in-view-container>
 
-    <div class="welcome-to-relay-div" ng-if="customer_contact_count > 0">
+    <div class="welcome-to-relay-div" ng-if="!merchant.customer_contact_count">
       <img src="<%= asset_path "019_076.png" %>">
       <p class="welcome-message-text-area-paragraph">Hi {{ merchant.first_name }}, to get the most out of Relay add or import your customers</p>
       <a class="button messaging-dash-welcome-div w-button" href="/users/{{ merchant.id }}/customers">Add a customer</a>
@@ -250,7 +278,7 @@
     <%# <div ng-show="status.loading" class="me"><span>loading...</span></div> %>
     <%# added this wrapping div %>
     <!-- message ng-repeat -->
-    <div ng-if="customer_contact_count == 0" ng-repeat="message in selected_conversation_messages track by messageTrackingFunction(message)" on-finish-render>
+    <div ng-if="merchant.customer_contact_count" ng-repeat="message in selected_conversation_messages track by messageTrackingFunction(message)" on-finish-render>
 
       <div class="conversation-date-wrapper" ng-if="($index != 0) && !selected_conversation_messages[$index - 1].unread && selected_conversation_messages[$index].unread">
         <div class="conversation-date">New Messages</div>
@@ -309,7 +337,7 @@
             <%# added height %>
             <img ng-if="message.profile_image.type == 'image'" class="agent-picture messaging-bubble right-nav-profile-picture" ng-src="{{message.profile_image.value}}" width="35" height='35'>
             <div ng-class="{ 'agent chat-wwindow no-image-found-placeholder' : true, 'radius-color-{{message.profile_image.value}}' : true }" ng-if="message.profile_image.type == 'color'">
-              <div class="customer-initial">{{ merchant.full_name.charAt(0) }}</div>
+              <div class="customer-initial">{{ merchant.first_name.charAt(0) }}</div>
             </div>
           </div>
         </div>

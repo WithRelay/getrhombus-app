@@ -5,6 +5,32 @@ module DashboardMerchantQueries
 	# These queries need to be tmezone aware and need to use conversation model and need
 	# to use referrers table where necessary
 
+	def segment_dynamic_customers 
+		"MerchantCustomer.where('created_at >= ? AND merchant_id = ?', Time.current - 7.days, #{self.id})"
+  end
+
+  def segment_dynamic_contacts 
+  	"MerchantContact.where('created_at >= ? AND merchant_id = ?', Time.current - 7.days, #{self.id})"
+  end
+
+  def new_segment_customers 
+  	merchant_id = self.id
+   %Q{Transaction.where("created_at >= ? AND user_id IN(?) AND team_id = ?",
+      Time.current - 30.days, MerchantCustomer.where(merchant_id: #{merchant_id})
+      .pluck(:customer_id) | FbMessage.where("created_at >=? AND
+      user_id_to = ? AND user_id IN(?)", Time.current - 30.days, #{merchant_id},
+      MerchantCustomer.where(merchant_id: #{merchant_id}).pluck(:customer_id)),
+      #{merchant_id})}
+  end
+
+  def new_segment_contacts 
+  	merchant_id = self.id
+  	%Q{Transaction.where("created_at >= ? AND user_id IN(?) AND team_id = ?",
+        Time.current - 30.days, MerchantContact.where(merchant_id: #{merchant_id})
+        .pluck(:uid) | FbMessage.where("created_at >= ? AND
+        user_id_to = ? AND user_id IN(?)", Time.current - 30.days, #{merchant_id},
+        MerchantContact.where(merchant_id: #{merchant_id}).pluck(:uid)), #{merchant_id})}
+  end
 
 	# Customers who have paid
 	@@customers_query_txns = "(SELECT transactions.created_at, @users_ids := users.id as user_id, users.card_name, users.email, 

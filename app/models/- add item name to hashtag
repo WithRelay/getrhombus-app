@@ -4,8 +4,6 @@ Taiwo
 - how will using the master account affect us (- unify team and dashboard email issue really)
 - messaging lists (check endpoint in create customer and you now save mc_id in user list), reminders (shells created)
 - upon signing up, does an existing contact update to become customer?
-- messaging page
-  - counters
 
 - review where merchant customer, contacts, referrers are created
 - see create_subscription/transaction 
@@ -15,14 +13,7 @@ Taiwo
 - workflow for sign in, sign up and places like payment/subscription, contact and customer
 - app fee for subscriptions - platform fee
 - reset password token issue
-- add card name as person name for customers
-
-
-Others
-Add card info, add subscription, billing info
-- flash message not showing...also needs to show devise error
-- card error flash missing in registrations update
-- EVERYONE CLEAN UP YOUR ROUTES and CONTROLLERS
+- add card name as person name for customers, validation for people might need to be scoped
 
 - <redacted_phone_number> ms nikky
 - nannie j lee recreation center 703 746 5550
@@ -57,6 +48,7 @@ Surya
 - tooltip for campaigns - leave for noe
 - time comparisons are tricky...make sure to do to_i because rails compares time as floats
 - segment dropdown for leads
+- contacts/customer support for user_lists, campaign_lists, etc
 
 Dorje
 - weekly summary template

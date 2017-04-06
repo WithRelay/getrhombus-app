@@ -1,6 +1,5 @@
 class Person < ActiveRecord::Base
 
-  attr_accessor :full_name
   has_one :address, as: :addressable, dependent: :destroy
   belongs_to :user
   accepts_nested_attributes_for :address#, reject_if: :all_blank

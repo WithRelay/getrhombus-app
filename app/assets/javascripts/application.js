@@ -106,3 +106,9 @@
 //= require simple-scrollbar.min.js
 // DO NOT REQUIRE TREE AS IT DOESNT GUARANTEE THE DEPENDENCY ORDER OF THESE FILES
 // require_tree .
+
+
+/* Page Loading */
+$(window).load(function() {
+  $("#loading-placeholder").fadeOut(750);
+})
