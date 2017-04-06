@@ -93,10 +93,6 @@ class ListsController < ApplicationController
     render :empty_list if @segments.empty?
   end
 
-  def segment_list
-    @segment = current_user.user_segments.where(id: params[:id])
-  end
-
   private
     def set_list
       @list = List.find_by_id(params[:id])
