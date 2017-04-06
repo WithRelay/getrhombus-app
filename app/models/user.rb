@@ -118,7 +118,7 @@ class User < ActiveRecord::Base
   before_validation :the_titleizer
   before_create :set_merchant_org_phone          # only create because the actual org_phone field is used in edit view
 
-  #after_commit :do_signup_stuff, on: :create
+  after_commit :do_signup_stuff, on: :create
 
   enum status: { inactive: 0, active: 1 }
 
@@ -243,18 +243,32 @@ class User < ActiveRecord::Base
       response = "We're away at the moment and will get back to you when we return :)."
       AwayMessage.find_or_create_by(user_id: user_id, response: response)
       GetIntelligenceDataJob.perform_later(self.org_phone, 'OpenCNAM')
-      customer = %Q{MerchantContact.where('created_at <= ? AND merchant_id = ?', Time.current + 7.days,
-                       #{user_id}) + MerchantCustomer.where('created_at <= ? And merchant_id = ?',
-                       Time.current + 7.days, #{user_id})}
-      self.lists.create(name: 'New customers', segment: customer, origin: 1)
-      customer = %Q{Transaction.where("created_at <= ? AND user_id IN(?) AND team_id = ?",
-                    Time.current + 30.days, MerchantCustomer.where(merchant_id: #{user_id})
-                    .pluck(:customer_id) + MerchantContact.where(merchant_id: #{user_id})
-                    .pluck(:uid), #{user_id}) | FbMessage.where("created_at <=? AND
-                    user_id_to = ? AND user_id IN(?)", Time.current + 30.days, #{user_id},
-                    MerchantCustomer.where(merchant_id: #{user_id}).pluck(:customer_id))}
-      self.lists.create(name: 'Active Customers', segment: customer, origin: 1)
-      self.lists.create(name: 'Inactive Customers', segment: customer, origin: 1)
+      segment_dynamic_customers = "MerchantCustomer.where('created_at >= ? AND merchant_id = ?',
+                                  Time.now - 7.days, #{user_id})"
+
+      segment_dynamic_contacts = "MerchantContact.where('created_at >= ? AND merchant_id = ?',
+                                  Time.now - 7.days, #{user_id})"
+
+      self.lists.create(name: 'New customers', segment: segment_dynamic_customers, origin: 1, list_type: 0)
+      self.lists.create(name: 'New customers', segment: segment_dynamic_contacts, origin: 1, list_type: 1)
+
+      new_segment_customers = %Q{Transaction.where("created_at >= ? AND user_id IN(?) AND team_id = ?",
+                                Time.current - 30.days, MerchantCustomer.where(merchant_id: #{user_id})
+                                .pluck(:customer_id) | FbMessage.where("created_at >=? AND
+                                user_id_to = ? AND user_id IN(?)", Time.current - 30.days, #{user_id},
+                                MerchantCustomer.where(merchant_id: #{user_id}).pluck(:customer_id)),
+                                #{user_id})}
+
+      new_segment_contacts = %Q{Transaction.where("created_at >= ? AND user_id IN(?) AND team_id = ?",
+                                Time.current - 30.days, MerchantContact.where(merchant_id: #{user_id})
+                                .pluck(:uid) | FbMessage.where("created_at >=? AND
+                                user_id_to = ? AND user_id IN(?)", Time.current - 30.days, #{user_id},
+                                MerchantContact.where(merchant_id: #{user_id}).pluck(:uid)),#{user_id})}
+
+      self.lists.create(name: 'Active Customers', segment: new_segment_customers, origin: 1, list_type: 0)
+      self.lists.create(name: 'Active Customers', segment: new_segment_contacts, origin: 1, list_type: 1)
+      self.lists.create(name: 'Inactive Customers', segment: new_segment_customers, origin: 1, list_type: 0)
+      self.lists.create(name: 'Inactive Customers', segment: new_segment_contacts, origin: 1, list_type: 1)
     end
     MerchantCustomer.add_or_update_merchant_customer(User.get_platform_acct_obj.id, user_id)
     WelcomeEmailJob.set(wait: SIGNUP_EMAIL_DELAY.minutes).perform_later(self)
@@ -263,7 +277,7 @@ class User < ActiveRecord::Base
   end
 
   def validates_person_full_message
-    errors.add(:full_name, 'is required') unless self.people[0].full_name.present?
+    errors.add(:full_name, 'is required') if self.people[0].try(:full_name).present?
   end
 
   # This is the link merchants can share...also dashboard link
