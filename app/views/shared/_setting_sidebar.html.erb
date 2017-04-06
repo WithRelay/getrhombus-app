@@ -46,6 +46,10 @@
     <div class="left-nav-tab">Free subscriptions</div>
   <% end %>
 
+  <%= link_to user_away_message_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
+    <div class="left-nav-tab">Away messages</div>
+  <% end %>
+
   <h5 class="left-nav rhom-number signup-box-subheading">RHOMBUS NUMBER</h5>
   <div class="left-nav-underline"></div>
   <a class="left-nav-tab-wrapper w-inline-block" href="#">
