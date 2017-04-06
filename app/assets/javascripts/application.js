@@ -109,6 +109,4 @@
 
 
 /* Page Loading */
-$(window).load(function() {
-  $("#loading-placeholder").fadeOut(750);
-})
+$(window).load(function() { $("#loading-placeholder").fadeOut(800); });
