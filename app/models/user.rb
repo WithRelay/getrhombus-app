@@ -21,12 +21,13 @@ class User < ActiveRecord::Base
   # Edit pages use the right number field for each user type
   validates :org_phone, numericality: { only_integer: true }, length: { minimum: 10 }, on: :update, if: lambda { self.is_merchant? && self.reset_password_token.blank? }
   validates :phone_number, presence: true, numericality: { only_integer: true }, length: { minimum: 10 }, on: :update, if: lambda { self.is_customer? && self.reset_password_token.blank? }
-  
+
   # Sign up form uses phone_number field for both user types
   validates :phone_number, presence: true, numericality: { only_integer: true }, length: { minimum: 10 }, on: :create
-  
+  validate :validates_person_full_message
+
   # Allow nil added to db migration because merchants don't have phone number. They have org_phone.
-  # And since mysql indexes this field, it indexes nil and only allows one row with nil. 
+  # And since mysql indexes this field, it indexes nil and only allows one row with nil.
   # You run into issues with any additional merchants.
   validates_uniqueness_of :phone_number, allow_nil: true, if: lambda { self.is_customer? }
 
@@ -259,6 +260,10 @@ class User < ActiveRecord::Base
     WelcomeEmailJob.set(wait: SIGNUP_EMAIL_DELAY.minutes).perform_later(self)
     GetIntelligenceDataJob.perform_later(self.email, 'FullContact')
     GetIntelligenceDataJob.perform_later(self.phone_number, 'OpenCNAM') if self.is_customer?
+  end
+
+  def validates_person_full_message
+    errors.add(:full_name, 'is required') unless self.people[0].full_name.present?
   end
 
   # This is the link merchants can share...also dashboard link
