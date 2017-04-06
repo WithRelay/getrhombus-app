@@ -90,6 +90,9 @@ Rails.application.routes.draw  do
 
       member do
         get 'contacts' => 'merchant_contacts#index'
+        resources :merchant_customers, only: [] do
+          member { get 'segment_users' }
+        end
         get 'segments' => 'lists#segments'
         delete 'delete-segment' => 'lists#delete_segment'
         get 'sms-usage' => 'users#sms_usage'
@@ -98,7 +101,6 @@ Rails.application.routes.draw  do
             post 'delete' => 'lists#destroy'
           end
           member do
-            get 'segment_list'
             post 'update-user-list' => 'lists#update_user_list'
             delete 'remove-customer' => 'lists#remove_customer_contact'
           end
