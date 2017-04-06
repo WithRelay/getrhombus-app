@@ -33,7 +33,8 @@ module ApplicationHelper
                           'lists-show' => @list.try(:name),
                           'campaigns-index' => 'Campaigns',
                           'transactions-index' => "Charges",
-                          'subscriptions-index' => 'subscriptions'
+                          'subscriptions-index' => 'subscriptions',
+                          'lists-index' => 'List'
                         }
     sidebar_name_hash["#{param}"]
   end
@@ -123,7 +124,8 @@ module ApplicationHelper
     settings_action = ['registrations-billing_information', 'registrations-account_settings',
                         'alerts-edit', 'plans-index','registrations-business_settings',
                        'users-integrations', 'users-managed_acct', 'users-sms_usage', 'lists-segments',
-                       'coupons-manage_coupons', 'users-refer_business', 'fb_pages-index']
+                       'coupons-manage_coupons', 'users-refer_business', 'fb_pages-index',
+                       'away_messages-show']
     settings_action.include?(params_controller_action)
   end
 
