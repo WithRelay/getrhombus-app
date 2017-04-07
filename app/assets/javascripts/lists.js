@@ -2,11 +2,14 @@ $(document).on('ready page:load', function() {
 
   $("#delete-lists").click(function(){
     var selectedUsers = getSelectedUserIds();
-    if (selectedUsers.length > 0){
-      FlashHandler.setConfirmationDialog('#delete-lists','Are you sure, you want to delete selected lists?', 'Delete', 'destroy-lists');
+    if (selectedUsers.length < 1){
+      setFlashForList('Select a list to Delete', 'error');
+    }
+    else if (selectedUsers.length > 1) {
+      setFlashForList('Only 1 list can be deleted at a time', 'error');
     }
     else {
-      setFlashForList('Select a list to Delete', 'error');
+      FlashHandler.setConfirmationDialog('#delete-lists','Are you sure, you want to delete selected lists?', 'Delete', 'destroy-lists');
     }
   });
 
