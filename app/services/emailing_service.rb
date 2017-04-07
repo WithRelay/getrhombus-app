@@ -347,6 +347,7 @@ class EmailingService
         template_name = 'unread-messages'
         template_content = []
         message = { "subject"=>"Unread Message Notification",
+         "global_merge_vars"=> [ { "name" => "customer_first_name", "content" => options[:customer_first_name] },
          "global_merge_vars"=> [ { "name" => "unread_count", "content" => options[:unread_count] },
                                  { "name" => "pluralize_msg", "content" => options[:pluralize_msg] } ],
          "merge_language" => "handlebars",
