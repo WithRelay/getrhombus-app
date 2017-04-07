@@ -7,7 +7,7 @@ class StripeCred < ActiveRecord::Base
   belongs_to :transaction_fee  
 
   def can_accept_payments?
-    creds.charges_enabled && creds.disabled_reason.blank?
+    charges_enabled && disabled_reason.blank?
   end
 
 end

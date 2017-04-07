@@ -20,9 +20,10 @@ class ApplicationController < ActionController::Base
       pubnub_publish_key: Rails.application.secrets.pubnub["publish_key"],
       pubnub_subscribe_key: Rails.application.secrets.pubnub["subscribe_key"],
       short_url: current_user.short_url,
-      full_name: current_user.full_name,
+      first_name: current_user.first_name || 'there',
       num_of_chars: current_user.rn_type.present? ? 1500 : 150,
-      customer_contact_count: MerchantCustomer.where(merchant_id: current_user.id).count + MerchantContact.where(merchant_id: current_user.id).count
+      customer_contact_count: MerchantCustomer.where(merchant_id: current_user.id).count + MerchantContact.where(merchant_id: current_user.id).count,
+      can_accept_payments: current_user.can_accept_payments?(true)
     }
   end
 

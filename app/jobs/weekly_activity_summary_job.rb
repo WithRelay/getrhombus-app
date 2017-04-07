@@ -28,7 +28,7 @@ class WeeklyActivitySummaryJob
                             }
       end
 
-      { merchant_name: merchant.first_name,
+      { merchant_name: merchant.first_name || 'there',
         merchant_email: merchant.email,
         customers_list: customers_array,
         from_data: 7.days.ago.strftime("%A, %B %d"),

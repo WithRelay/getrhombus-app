@@ -1,26 +1,31 @@
 Notes
 1. Referrers
 - referrer_uid for identifying merchant in referrals
+- you need to find the merchant account with the referrer_uid first
 - save referrer once when devise creates or signs in user
 - we have homepage referrer for people coming from 3rd party sites
 - we have users referring businesses
 - we have non-users referring businesses - not active at the moment
 - we have referrer uid in facebook signup link
+- we have referrer in csv, merchant customer and bitly link
 
 2. MerchantCustomer
 - current users before v1.5 who are have referrer_num, or have made payment will become customers of merchant and platform
 and the stripe id will be moved into platform_stripe_account_id
 - on sign up - add to platform - DONE
-- on referrer_uid and there is a merchant account - no need to send in platform since that happens automatically on sign up
+- on referrer_uid and there is a merchant account - DONE no need to send in platform since that happens automatically on sign up
 - when you send a message and have an account - no need to send in platform since that happens automatically on sign up
-- from csv upload - send in platform id too - DONE - no need to send in platform since that happens automatically on sign up
-- from add a customer - send in platform id too - DONE - no need to send in platform since that happens automatically on sign up
+- from csv upload - DONE - no need to send in platform since that happens automatically on sign up
+- from add a customer - DONE - no need to send in platform since that happens automatically on sign up
 
 3. MerchantContact
 - when you send a message and have no account
 - records set to inactive if user switches to merchantcustomer
 
 4. FB Messenger 
+- using referrer_uid and page_specific_id to know user who signs up.
+
+
 question: when a customer does account linking, there is a way to try to identify them if they have a rhombus account and have connected their facebook account right?
 before sending account linking url we check that if link not found then we send it
 so you use the facebook image url hack to try to identify them?

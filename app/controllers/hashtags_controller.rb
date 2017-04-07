@@ -23,6 +23,7 @@ class HashtagsController < ApplicationController
   def create
     @hashtag = Hashtag.new(hashtag_params)
     @hashtag.user_id = current_user.id
+    @hashtag.status = 1
     if @hashtag.save
       if @hashtag.create_plan_for_recurring_tag(current_user)
         redirect_to user_hashtags_path, flash: { notice: "Hashtag created!" }

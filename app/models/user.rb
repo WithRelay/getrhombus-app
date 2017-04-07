@@ -6,7 +6,7 @@ class User < ActiveRecord::Base
   include AddTokenToUser
   include Transactionable
 
-  attr_accessor :phone, :captured_amt, :msg_id, :tag_id
+  attr_accessor :phone, :captured_amt, :msg_id, :tag_id, :page_specific_id
   attr_accessor :referrer_uid, :tos_acceptance, :area_code
 
   # validation rules for user attributes
@@ -24,7 +24,6 @@ class User < ActiveRecord::Base
 
   # Sign up form uses phone_number field for both user types
   validates :phone_number, presence: true, numericality: { only_integer: true }, length: { minimum: 10 }, on: :create
-  validate :validates_person_full_message
 
   # Allow nil added to db migration because merchants don't have phone number. They have org_phone.
   # And since mysql indexes this field, it indexes nil and only allows one row with nil.
@@ -118,7 +117,7 @@ class User < ActiveRecord::Base
   before_validation :the_titleizer
   before_create :set_merchant_org_phone          # only create because the actual org_phone field is used in edit view
 
-  after_commit :do_signup_stuff, on: :create
+  #after_commit :do_signup_stuff, on: :create
 
   enum status: { inactive: 0, active: 1 }
 
@@ -132,7 +131,13 @@ class User < ActiveRecord::Base
 
   def full_name
     return "#{self.card_name}" if self.is_customer?
-    "#{self.people.representative[0].try(:first_name)} #{self.people.representative[0].try(:last_name)}"
+    rep = self.people.representative[0]
+    "#{rep.try(:first_name)} #{rep.try(:last_name)}".squish
+  end
+
+  def first_name
+    first_name = self.full_name.split.first
+    first_name.present? ? first_name : nil
   end
 
   def is_platform?
@@ -141,7 +146,7 @@ class User < ActiveRecord::Base
   end
 
   def self.user_title(user)
-    user_first_name = user.full_name.split.first
+    user_first_name = user.first_name
     user_first_name.present? ? "#{user_first_name} from #{user.org_name}" : user.org_name
   end
 
@@ -162,6 +167,15 @@ class User < ActiveRecord::Base
      return { type: 'standalone', cred: cred } if cred.present?
 
      { type: nil, cred: nil }  # has no payment account
+  end
+
+  def can_accept_payments?(skip_check_managed_acct_status = false)
+    cred = self.get_stripe_cred
+    return false if cred[:type].nil?
+    return true if cred[:type] == 'standalone'
+    return true if cred[:type] == 'managed' && skip_check_managed_acct_status
+    return true if cred[:type] == 'managed' && cred[:cred].can_accept_payments?
+    false
   end
 
   def self.platform_email
@@ -243,32 +257,14 @@ class User < ActiveRecord::Base
       response = "We're away at the moment and will get back to you when we return :)."
       AwayMessage.find_or_create_by(user_id: user_id, response: response)
       GetIntelligenceDataJob.perform_later(self.org_phone, 'OpenCNAM')
-      segment_dynamic_customers = "MerchantCustomer.where('created_at >= ? AND merchant_id = ?',
-                                  Time.now - 7.days, #{user_id})"
-
-      segment_dynamic_contacts = "MerchantContact.where('created_at >= ? AND merchant_id = ?',
-                                  Time.now - 7.days, #{user_id})"
-
-      self.lists.create(name: 'New customers', segment: segment_dynamic_customers, origin: 1, list_type: 0)
-      self.lists.create(name: 'New customers', segment: segment_dynamic_contacts, origin: 1, list_type: 1)
-
-      new_segment_customers = %Q{Transaction.where("created_at >= ? AND user_id IN(?) AND team_id = ?",
-                                Time.current - 30.days, MerchantCustomer.where(merchant_id: #{user_id})
-                                .pluck(:customer_id) | FbMessage.where("created_at >=? AND
-                                user_id_to = ? AND user_id IN(?)", Time.current - 30.days, #{user_id},
-                                MerchantCustomer.where(merchant_id: #{user_id}).pluck(:customer_id)),
-                                #{user_id})}
-
-      new_segment_contacts = %Q{Transaction.where("created_at >= ? AND user_id IN(?) AND team_id = ?",
-                                Time.current - 30.days, MerchantContact.where(merchant_id: #{user_id})
-                                .pluck(:uid) | FbMessage.where("created_at >=? AND
-                                user_id_to = ? AND user_id IN(?)", Time.current - 30.days, #{user_id},
-                                MerchantContact.where(merchant_id: #{user_id}).pluck(:uid)),#{user_id})}
-
-      self.lists.create(name: 'Active Customers', segment: new_segment_customers, origin: 1, list_type: 0)
-      self.lists.create(name: 'Active Customers', segment: new_segment_contacts, origin: 1, list_type: 1)
-      self.lists.create(name: 'Inactive Customers', segment: new_segment_customers, origin: 1, list_type: 0)
-      self.lists.create(name: 'Inactive Customers', segment: new_segment_contacts, origin: 1, list_type: 1)
+      self.lists.create([
+        { name: 'New customers', segment: segment_dynamic_customers, origin: 1, list_type: 0 },
+        {name: 'New customers', segment: segment_dynamic_contacts, origin: 1, list_type: 1 },
+        { name: 'Active Customers', segment: new_segment_customers, origin: 1, list_type: 0 },
+        { name: 'Active Customers', segment: new_segment_contacts, origin: 1, list_type: 1 },
+        { name: 'Inactive Customers', segment: new_segment_customers, origin: 1, list_type: 0 },
+        { name: 'Inactive Customers', segment: new_segment_contacts, origin: 1, list_type: 1 }
+      ])
     end
     MerchantCustomer.add_or_update_merchant_customer(User.get_platform_acct_obj.id, user_id)
     WelcomeEmailJob.set(wait: SIGNUP_EMAIL_DELAY.minutes).perform_later(self)
@@ -276,9 +272,10 @@ class User < ActiveRecord::Base
     GetIntelligenceDataJob.perform_later(self.phone_number, 'OpenCNAM') if self.is_customer?
   end
 
-  def validates_person_full_message
-    errors.add(:full_name, 'is required') if self.people[0].try(:full_name).present?
-  end
+  #def validates_person_full_message
+    # leave out. but this code needs to be changed
+    #errors.add(:full_name, 'is required') if self.people[0].try(:full_name).present?
+  #end
 
   # This is the link merchants can share...also dashboard link
   def get_uid_and_referrer_link

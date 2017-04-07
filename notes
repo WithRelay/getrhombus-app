@@ -4,9 +4,6 @@ Jacob: Our Sales Team is available Monday through Saturday, 8AM to 8PM and on Su
 current stripe api version - 2014-03-28
 https://www.getrhombus.com/receive_delivery_report
 
-- charge payment service for connect/managed - done
-	- fix how we store amounts - just job left
-
 
 
 Bhishma
@@ -41,36 +38,18 @@ surya
 	- review messenger campaign
 
 Taiwo (review)
-- review additional user actions file
-- review referrer... 
-    - when do I use id and uid
-    - Is everyone getting a uid - i think yes
-    - do I store the referral and then store seperately when someone signs up?
 - review account/business/managed acct with surya and edwin
 - review upgrading/downgrading subscription 
 - review stripe_events
-- review merchant_customer_id in transactions and invoices
-- review managed account..
 - subscription (see other fields like tax_percent...save first...compare to plan.rb), subscription controller and stripe customer creation places
-- Review adding token...failing safely.
 - on subscription - check if user already belongs to merchant??? is this when they text?
 	- customers can create subscriptions over messaging...not dashboard, but can cancel subscription
 - final review of updating subscriptions, coupons, plans...do we update subscriptions esp platform??
-- Rake - migrate customer uri to merchant_customer plus drop column...but after migrating merchant_customer
-   - remove livemode from users, add to merchant_customer and create rake task to migrate this to merchant..customer
-- signup page doesnt need params...only facebook link page
 
 Review
-- campaign_user_list (can better track failures) or notification_log or add an email model??
 - notification_log used for transaction, referrer and alert notifications logging
-- when user logs in through messenger, indicate in referrers
-- create Seeds
-- notifications platform to merchants should have a single conversation and should not be pulled - mark as read too
 
 
-Payment Capture - should be for only customers....capture in logic
-- check if /profile affect forms for merchants
-- plug in charge into payment capture workflow
 - let parse_text return cents i guess and just divide by 100 to show
 
 
