@@ -87,10 +87,10 @@ $(document).on('ready page:load', function() {
     }
   });
 
-  $('.merchant_customers').click(function(){
-    $(this).is(':checked') && $('#create_list_button').removeAttr('disabled')
-    $(':checkbox').not(this).attr('checked', false);
-  });
+  // $('.merchant_customers').click(function(){
+  //   $(this).is(':checked') && $('#create_list_button').removeAttr('disabled')
+  //   $(':checkbox').not(this).attr('checked', false);
+  // });
 
   $('.edit_create_user_list').formValidation({
     framework: 'bootstrap',
