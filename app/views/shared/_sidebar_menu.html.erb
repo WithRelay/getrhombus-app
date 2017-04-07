@@ -1,6 +1,6 @@
 <!-- <div class="customer-dashboard side-bar w-clearfix"> -->
   <div class="dashboard-logo-wrapper">
-    <%= link_to root_url do %>
+    <%= link_to user_path(current_user) do %>
       <%= image_tag('Relay-Transparent.png', width: 50, class: 'dashboard-logo') %>
     <% end %>
   </div>
