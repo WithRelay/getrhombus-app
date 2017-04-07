@@ -1,16 +1,21 @@
 <%#= link_to 'Active', filter_campaign_user_campaigns_path(current_user, status: 'active') %>
 <%#= link_to 'Inactive', filter_campaign_user_campaigns_path(current_user, status: 'inactive') %>
 <%#= link_to 'Sent', filter_campaign_user_campaigns_path(current_user, status: 'sent') %>
-<%#= link_to 'Paused', filter_campaign_user_campaigns_path(current_user, status: 'paused') %>
 <div class="dashboard-nav w-clearfix">
   <div class="dashboard-nav-links-wrapper">
     <a class="w-clearfix w-inline-block" href="#">
-      <div class="dash-header-links"> &nbsp; <strong>Active</strong>
-      </div>
-      <div class="dash-header-links new-link"> &nbsp;&nbsp;<strong>Inactive</strong>
-      </div>
-      <div class="dash-header-links new-link">&nbsp; &nbsp;<strong>Sent</strong>
-      </div>
+      <%= link_to filter_campaign_user_campaigns_path(current_user, status: 'active') do %>
+        <div class="dash-header-links"> &nbsp; <strong>Active</strong>
+        </div>
+      <% end %>
+      <%= link_to filter_campaign_user_campaigns_path(current_user, status: 'inactive') do %>
+        <div class="dash-header-links new-link"> &nbsp;&nbsp;<strong>Inactive</strong>
+        </div>
+      <% end %>
+      <%= link_to filter_campaign_user_campaigns_path(current_user, status: 'sent') do %>
+        <div class="dash-header-links new-link">&nbsp; &nbsp;<strong>Sent</strong>
+        </div>
+      <% end %>
       <%= render "shared/rhombus_number" %>
     </a>
   </div>

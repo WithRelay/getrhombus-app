@@ -90,13 +90,20 @@ Rails.application.routes.draw  do
 
       member do
         get 'contacts' => 'merchant_contacts#index'
+        resources :merchant_customers, only: [] do
+          member { get 'segment_users' }
+        end
         get 'segments' => 'lists#segments'
         delete 'delete-segment' => 'lists#delete_segment'
         get 'sms-usage' => 'users#sms_usage'
         resources :lists, only: [:index, :create, :show, :update] do
-          collection { post 'delete' => 'lists#destroy' }
-          member { post 'update-user-list' => 'lists#update_user_list' }
-          member { delete 'remove-customer' => 'lists#remove_customer_contact' }
+          collection do
+            post 'delete' => 'lists#destroy'
+          end
+          member do
+            post 'update-user-list' => 'lists#update_user_list'
+            delete 'remove-customer' => 'lists#remove_customer_contact'
+          end
         end
         get 'customer_template' => "users#customer_csv_template"
         get 'managed-accounts' => 'users#managed_acct'
@@ -122,7 +129,10 @@ Rails.application.routes.draw  do
       resources :contacts, only: [:index]
       resources :customers, only: [:index]
       resources :lists, only: [:create, :index, :update] do
-        get 'check_list_name', on: :collection
+        collection do
+          get 'check_list_name'
+          get 'merchant_segment' => 'lists#merchant_segment'
+        end
       end
       resources :hashtags, only: [:index] do
         get 'check_hashtag_name', on: :collection

@@ -10,7 +10,15 @@
 }
 
 /* Header End */
-.segment-name{
+
+#loading-placeholder {
+  z-index: 10000;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+}
+
+.segment-name {
   width: 59% !important;
 }
 
@@ -134,6 +142,9 @@ $success-color: #43e50f;
   }
 <% end %>
 
+.add-to-list-form{
+  margin-left: 16px;
+}
 
 .has-success .form-control{
   border-color: $success-color !important;
@@ -285,10 +296,6 @@ textarea { resize: none;}
   margin-top: -20px;
 }
 /* end for images */
-
-#messages-box {
-  padding-bottom: 200px;
-}
 
 /* For slider */
 .slider-wrapper{

@@ -3,7 +3,7 @@
     <div class="cn w-clearfix w-col w-col-3">
       <div class="name w-clearfix subs-card-name"><%= present(merchant_customer).profile_image %>
         <div class="shrink-text table-text">
-          <%= link_to "#{present(merchant_customer).format_customer_name}", "#{merchant_customer.customer_id}", class: 'non-underline-link' %>
+          <%= link_to "#{present(merchant_customer).format_customer_name}", customers_user_path + "/" + merchant_customer.customer_id.to_s, class: 'non-underline-link' %>
 
           </div>
       </div>

@@ -41,6 +41,31 @@ $(document).on('ready page:load', function() {
     }
   });
 
+  $.ajax({
+    method: 'GET',
+    url: '/v1/lists/merchant_segment',
+    data: {},
+    dataType: 'json'
+  }).done(function(data){
+      $.each(data, function(index, value){
+        $('#Segment-Select-lists').append($('<option>',
+          {
+            value: value.id,
+            text: value.name
+          }
+        ))
+      });
+  }).fail(function(msg){
+    setFlashForList(msg, 'error');
+  });
+
+  $('#Segment-Select-lists').on('change', function(){
+    if (this.value){
+      var window_location = window.location.pathname.split('/')
+      window.location = '/' + window_location[1] + '/' + window_location[2]  + '/merchant_customers/' + this.value + '/segment_users';
+    }
+  });
+
   $("#edit-selected-list").click(function(e){
     var selected_edit_list = getSelectedUserIds();
     if (selected_edit_list.length > 1)

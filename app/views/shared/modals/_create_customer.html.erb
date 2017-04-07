@@ -1,5 +1,4 @@
-<%= render 'shared/flash_messages' %>
- <div class="create-customer-form-wrapper  w-clearfix modal-background" id="new-customer-div">
+<div class="create-customer-form-wrapper  w-clearfix modal-background" id="new-customer-div">
   <%# removed all webflow data attributes %>
 
   <div class="modal-form-wrapper">
@@ -27,9 +26,11 @@
         </div>
         <%= f.hidden_field :phone_number, :id => "phone_number" %>
 
-        <%= f.fields_for @new_customer.user_lists.build do |ul|%>
-          <%= ul.select :list_id, [], { prompt: 'Add user to list' }, class: 'dropdown w-select' %>
-        <% end %>
+        <div class="form-group col-xs-6" style="margin-top: 3%;">
+          <%= f.fields_for @new_customer.user_lists.build do |ul|%>
+            <%= ul.select :list_id, [], { prompt: 'Add user to list' }, class: 'dropdown w-select' %>
+          <% end %>
+        </div>
 
         <div class="form underline-div"></div>
 
@@ -42,7 +43,7 @@
           <%= a.text_field :city, class: "city modal-field text-field w-input", placeholder: 'City' %>
 
           <%= a.text_field :state_province, class: "modal-field state-province text-field w-input", placeholder: "State: E.g. (MA)" %>
-          
+
           <%= a.select :country, country_list, { prompt: 'Select your country' }, { class: 'dropdown w-select' } %>
           </div>
 
@@ -75,7 +76,7 @@
           <%= f.hidden_field :card_type, id: "cc-type" %>
 
         <%= f.submit "Create customer", class: "button create-customer w-button", id: 'create-user-submit' %>
-        
+
         <%# added update-close-modals and data %>
         <input class="button cancel log-in w-button update-close-modals" data-parent='new-customer-div' type="submit" value="Cancel">
 

@@ -2,6 +2,10 @@
 # run after migrations since we need the stripe cred table
 # then run the migration below to remove the unwanted columns afterwards.
 
+# Rake - migrate customer uri to merchant_customer plus drop column...but after migrating merchant_customer
+# remove livemode from users, add to merchant_customer and create rake task to migrate this to merchant..customer....
+# no i need it for users card
+
 #  Dont remove stripe_livemode since it is used by customers and now merchants will use it too
 #  def change
 #     remove_column :users, :provider

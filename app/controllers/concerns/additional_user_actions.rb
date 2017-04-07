@@ -135,8 +135,18 @@ module AdditionalUserActions
     session.delete(:msg_id)
   end
 
-  def add_or_update_user_referrer
-    Referrer.save_referrer_with_uid(params[:user][:referrer_uid], current_user.id) if params[:user][:referrer_uid].present?
+  def add_to_merchant_customer_and_referrer_and_fb_cred
+    if params[:user][:referrer_uid].present?
+      merchant = User.find_by(relay_uid: params[:user][:referrer_uid])
+      if merchant
+        Referrer.save_referrer_with_uid(merchant.id, current_user.id) 
+        MerchantCustomer.add_or_update_merchant_customer(merchant.id, current_user.id)
+      end
+    end
+
+    if params[:user][:page_specific_id].present?
+      FbCred.where(page_specific_id: params[:user][:page_specific_id]).update_all(user_id: current_user.id)
+    end
   end
 
   def customer_csv_template

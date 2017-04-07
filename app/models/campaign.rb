@@ -98,7 +98,7 @@ class Campaign < ActiveRecord::Base
   end
 
   def date_time_validate
-    # date_time.utc will convert date_time to utc and Time.now is current time and .utc will convert to utc
+    # date_time.utc will convert date_time to utc and Time.current is current time and .utc will convert to utc
     # no need to convert to datetime object because rails tries to save date time by storing to date time format
     # so the self object date_time attribute returns the date time which is formatted in rails date time
     errors.add(:date_time, 'should be 30 minutes greater than current date time') if is_time_greater_than_now?

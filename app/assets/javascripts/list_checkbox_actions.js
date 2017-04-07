@@ -2,9 +2,12 @@ $(document).ready(function(){
 
   $('.delete-resource').click(function(e){
     var statusName = campaignStatusName()
-    if (statusName){
+    if (statusName != "inactive"){
       FlashHandler.setConfirmationDialog('.delete-resource','Are you sure, you want to remove the ' + getCurrentURL(), 'Delete', 'isDestroy');
-    }else{
+    }else if(statusName){
+      FlashHandler.setFlashMessage( 'Inactive campaign cannot be deleted', 'error' );
+    }
+    else{
       showUncheckError();
     }
   });
@@ -12,8 +15,11 @@ $(document).ready(function(){
   $('.deactivate-resource').click(function(e){
     var statusName = campaignStatusName()
     var text = { paused: 'Activate', active: 'Deactivate' }
-    if (statusName){
+    if (statusName != "inactive"){
       FlashHandler.setConfirmationDialog('.deactivate-resource','Are you sure, you want to '+ text[statusName] +' the campaign?', text[statusName], 'isDestroy');
+    }
+    else if(statusName){
+      FlashHandler.setFlashMessage( 'Inactive campaign cannot be activate', 'error' );
     }
     else{
       showUncheckError();
@@ -48,7 +54,7 @@ $(document).ready(function(){
 
   function getCurrentURL(){
     url = window.location.pathname.split('/');
-    return url[url.length-2];
+    return url.pop();
   }
 
   function getSelectedCheckbox(checkbox_class){

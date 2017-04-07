@@ -10,14 +10,9 @@
   <% end %>
   <div class="customers-hidden-menu">
     <div class="w-form">
-      <form data-name="Email Form 7" id="email-form-7" name="email-form-7">
-        <select class="dropdown segments w-select" data-name="Segment Select" id="Segment-Select" name="Segment-Select">
-          <option value="">Segments</option>
-          <option value="">New customers</option>
-          <option value="">Active customers</option>
-          <option value="">Inactive customers</option>
-        </select>
-      </form>
+      <select class="dropdown segments w-select" data-name="Segment Select" id="Segment-Select-lists" name="Segment-Select">
+        <option value="">Segments</option>
+      </select>
     </div>
   </div>
   <%= link_to lists_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
@@ -50,5 +45,5 @@
   <%end%>
 
   <%= link_to contacts_user_path(current_user), class: "left-nav-tab-wrapper w-inline-block" do %>
-    <div class="left-nav-tab">Leads</div>
+    <div class="left-nav-tab">Leads & Contacts</div>
   <% end %>

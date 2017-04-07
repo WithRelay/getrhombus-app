@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170403031753) do
+ActiveRecord::Schema.define(version: 20170406212952) do
 
   create_table "account_reloads", force: :cascade do |t|
     t.integer  "user_id",        limit: 4
@@ -351,32 +351,34 @@ ActiveRecord::Schema.define(version: 20170403031753) do
   end
 
   create_table "invoices", force: :cascade do |t|
-    t.integer "date",                 limit: 4
-    t.string  "stripe_invoice_id",    limit: 191
-    t.integer "coupon_id",            limit: 4
-    t.integer "subscription_id",      limit: 4
-    t.integer "transaction_id",       limit: 4
-    t.integer "total",                limit: 4
-    t.integer "subtotal",             limit: 4
-    t.integer "tax",                  limit: 4
-    t.string  "tax_percent",          limit: 191
-    t.integer "application_fee",      limit: 4,   default: 0
-    t.integer "amount_due",           limit: 4
-    t.string  "currency",             limit: 191
-    t.integer "starting_balance",     limit: 4
-    t.integer "ending_balance",       limit: 4
-    t.integer "period_start",         limit: 4
-    t.integer "period_end",           limit: 4
-    t.string  "statement_descriptor", limit: 191
-    t.boolean "paid",                 limit: 1
-    t.boolean "closed",               limit: 1
-    t.boolean "attempted",            limit: 1
-    t.integer "attempt_count",        limit: 4
-    t.integer "next_payment_attempt", limit: 4
-    t.boolean "forgiven",             limit: 1
-    t.boolean "livemode",             limit: 1
-    t.integer "team_id",              limit: 4
-    t.integer "customer_id",          limit: 4
+    t.integer  "date",                 limit: 4
+    t.string   "stripe_invoice_id",    limit: 191
+    t.integer  "coupon_id",            limit: 4
+    t.integer  "subscription_id",      limit: 4
+    t.integer  "transaction_id",       limit: 4
+    t.integer  "total",                limit: 4
+    t.integer  "subtotal",             limit: 4
+    t.integer  "tax",                  limit: 4
+    t.string   "tax_percent",          limit: 191
+    t.integer  "application_fee",      limit: 4,   default: 0
+    t.integer  "amount_due",           limit: 4
+    t.string   "currency",             limit: 191
+    t.integer  "starting_balance",     limit: 4
+    t.integer  "ending_balance",       limit: 4
+    t.integer  "period_start",         limit: 4
+    t.integer  "period_end",           limit: 4
+    t.string   "statement_descriptor", limit: 191
+    t.boolean  "paid",                 limit: 1
+    t.boolean  "closed",               limit: 1
+    t.boolean  "attempted",            limit: 1
+    t.integer  "attempt_count",        limit: 4
+    t.integer  "next_payment_attempt", limit: 4
+    t.boolean  "forgiven",             limit: 1
+    t.boolean  "livemode",             limit: 1
+    t.integer  "team_id",              limit: 4
+    t.integer  "customer_id",          limit: 4
+    t.datetime "created_at",                                   null: false
+    t.datetime "updated_at",                                   null: false
   end
 
   add_index "invoices", ["coupon_id"], name: "fk_rails_d904f32fa0", using: :btree
@@ -738,19 +740,21 @@ ActiveRecord::Schema.define(version: 20170403031753) do
   add_index "twilio_number_data", ["phone_number"], name: "index_twilio_number_data_on_phone_number", unique: true, using: :btree
 
   create_table "twitter_creds", force: :cascade do |t|
-    t.string  "nickname",        limit: 191
-    t.string  "name",            limit: 191
-    t.string  "location",        limit: 191
-    t.string  "image_url",       limit: 191
-    t.string  "description",     limit: 191
-    t.string  "website_url",     limit: 191
-    t.string  "url",             limit: 191
-    t.integer "followers_count", limit: 4,   default: 0
-    t.integer "friends_count",   limit: 4,   default: 0
-    t.string  "uid",             limit: 191
-    t.string  "token",           limit: 191
-    t.string  "secret",          limit: 191
-    t.integer "user_id",         limit: 4
+    t.string   "nickname",        limit: 191
+    t.string   "name",            limit: 191
+    t.string   "location",        limit: 191
+    t.string   "image_url",       limit: 191
+    t.string   "description",     limit: 191
+    t.string   "website_url",     limit: 191
+    t.string   "url",             limit: 191
+    t.integer  "followers_count", limit: 4,   default: 0
+    t.integer  "friends_count",   limit: 4,   default: 0
+    t.string   "uid",             limit: 191
+    t.string   "token",           limit: 191
+    t.string   "secret",          limit: 191
+    t.integer  "user_id",         limit: 4
+    t.datetime "created_at",                              null: false
+    t.datetime "updated_at",                              null: false
   end
 
   add_index "twitter_creds", ["user_id"], name: "index_twitter_creds_on_user_id", unique: true, using: :btree
