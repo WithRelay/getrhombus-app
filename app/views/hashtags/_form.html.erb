@@ -3,7 +3,9 @@
   <div class="editor side-bar">
 
     <div class="dashboard-logo-wrapper">
-      <%= image_tag 'Relay-Transparent-500x300.png', class: 'dashboard-logo', width: '50' %>
+      <%= link_to user_path(current_user) do %>
+        <%= image_tag 'Relay-Transparent-500x300.png', class: "dashboard-logo", width: "50" %>
+      <% end %>
     </div>
 
     <div class="dashboard-nav-links">All Customers</div>

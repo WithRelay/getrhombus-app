@@ -1,6 +1,6 @@
 <div class="customer-profile dashboard-nav w-clearfix">
   <div class="dashboard-logo-wrapper">
-    <%= link_to root_url do %>
+    <%= link_to user_path(current_user) do %>
       <%= image_tag 'Relay-Transparent-500x300.png', class: "dashboard-logo", width: "50" %>
     <% end %>
   </div>
