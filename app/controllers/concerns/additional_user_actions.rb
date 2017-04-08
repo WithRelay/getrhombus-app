@@ -139,8 +139,8 @@ module AdditionalUserActions
     if params[:user][:referrer_uid].present?
       merchant = User.find_by(relay_uid: params[:user][:referrer_uid])
       if merchant
-        Referrer.save_referrer_with_uid(merchant.id, current_user) 
-        MerchantCustomer.add_or_update_merchant_customer(merchant.id, current_user.id)
+        Referrer.save_referrer_with_uid(merchant.id, current_user.id) 
+        MerchantCustomer.add_or_update_merchant_customer(merchant.id, current_user)
       end
     end
 
