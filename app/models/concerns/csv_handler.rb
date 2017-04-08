@@ -125,7 +125,7 @@ module CSVHandler
                 end
                 error = true
               else
-                MerchantCustomer.add_or_update_merchant_customer(self.id, @customer.id)
+                MerchantCustomer.add_or_update_merchant_customer(self.id, @customer)
                 Referrer.save_referrer_with_uid(self.relay_uid, @customer.id)
                 # send email or text here
               end
@@ -143,7 +143,7 @@ module CSVHandler
           end
         else
           # send text here
-          MerchantCustomer.add_or_update_merchant_customer(self.id, @customer.id)
+          MerchantCustomer.add_or_update_merchant_customer(self.id, @customer)
         end
       end
 

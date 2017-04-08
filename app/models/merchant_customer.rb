@@ -8,9 +8,17 @@ class MerchantCustomer < ActiveRecord::Base
   has_many :subscriptions, inverse_of: :merchant_customer
   # has_many :invoices
 
-  def self.add_or_update_merchant_customer(merchant_id, customer_id)
+  def self.add_or_update_merchant_customer(merchant_id, customer)
     begin
-      where(merchant_id: merchant_id, customer_id: customer_id).first_or_initialize.tap { |row| row.save }
+      # check for number and set is_customer
+      MerchantContact.where(uid_type: 'phone_number', uid: customer.phone_number).update_all(is_customer: true)
+
+      # check for page_specific_ids and set is_customer
+      creds = FbCred.where(user_id: customer.id).pluck(:page_specific_id)
+      MerchantContact.where(uid_type: 'fb_page', uid: creds).update_all(is_customer: true) if creds.present?
+
+      # add as customer
+      find_or_create_by(merchant_id: merchant_id, customer_id: customer.id)
     rescue StandardError => err
     end
   end

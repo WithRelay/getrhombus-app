@@ -65,9 +65,8 @@
         @customer = User.where(id: @user_id_to).first
         save_attachments if @attachments.present?
         if @fb_message.persisted?
-          Conversation.find_or_create_conversation_for_message_and_publish(@merchant, @customer, @uid_type, @uid,  @fb_message, true)
+          Conversation.find_or_create_conversation_for_message_and_publish(@merchant, @customer, @uid_type, @uid, @fb_message, true)
           @merchant.away_message.check_office_hours(@merchant, @customer, @uid_type, @uid, "FbMessage")
-
         end
       rescue ActiveRecord::RecordNotUnique
       rescue StandardError => err

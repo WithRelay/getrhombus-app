@@ -72,7 +72,6 @@ class Conversation < ActiveRecord::Base
     {
       id: msg.id,
       source: msg.user_id == conv.merchant_id ? "merchant" : 'customer',  # or conv_ref.source
-      profile_image: User.check_profile_picture(u),
       text: (msg.text) ? msg.text : '',
       ts_day_of_the_week: msg.created_at.strftime("%B") + " " + msg.created_at.strftime("%d").to_i.ordinalize,
       ts_time: msg.created_at.strftime('%l:%M %P'),
@@ -200,6 +199,14 @@ class Conversation < ActiveRecord::Base
                       ) e ON e.id = c.conversation_id
                     where source = 2 GROUP BY c.conversation_id
                   ) b ON a.id = b.cr_id order by a.created_at desc, id desc", merchant_id, date])
+  end
+
+  def self.update_conv_contact_to_user(psid, customer)
+    where(uid: psid, uid_type: 'fb_page').each do |c|
+      c.uid_type = 'user'
+      c.uid = customer.id
+      RealtimeStreamService.update_conversation_properties(c.id, customer, c.merchant_id, "#{psid}-fb_page") if c.save
+    end
   end
 
   def self.publish_test_conversation

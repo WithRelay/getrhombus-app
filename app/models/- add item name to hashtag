@@ -4,7 +4,6 @@ Taiwo
 - how will using the master account affect us (- unify team and dashboard email issue really)
 - messaging lists (check endpoint in create customer and you now save mc_id in user list), reminders (shells created)
 
-- upon signing up, does an existing contact update to become customer?
 - review where merchant customer, contacts, referrers are created
 - see create_subscription/transaction 
   - should i check when they send a message and are a user...no cos it leaves out dashboard charges
@@ -12,7 +11,6 @@ Taiwo
   - add a customer - done, sign up - done, referrer link (include messenger) - done, csv - done
 - workflow for sign in, sign up and places like payment/subscription, contact and customer
 - app fee for subscriptions - platform fee
-- reset password token issue
 
 
 - <redacted_phone_number> ms nikky
@@ -50,6 +48,7 @@ Surya
 - segment dropdown for leads
 - contacts/customer support for user_lists, campaign_lists, etc
 - is list being loaded via js or preloaded in db? should run only for merchants
+- merchant_contacts index -> we use fb_page not messenger
 
 Dorje
 - weekly summary template
@@ -60,10 +59,10 @@ Dorje
 Bhishma
 - messageparser
 - the 5 emails from edwin (incomplete signup email (the following day), review offer to help, autoreload failure)
-- do you update fb_cred for a user who didnt sign up when they sent messages in the past...but later signs up?
-  - if you add the page specific id in the url, i can find them.
 - weekly email no users, unread messages
- - when user logs in through messenger, indicate in referrers and merchantcustomer
+- when user logs in through messenger, connects facebook account and reverse link works - indicate merchantcustomer, update conversations. 
+- Add merchantcustomer/merchantcontact when message received
+- fb_cred.time_zone = (User.find id).time_zone
 
 
 

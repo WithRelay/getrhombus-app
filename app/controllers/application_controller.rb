@@ -16,14 +16,14 @@ class ApplicationController < ActionController::Base
     render :json => {
       success: current_user.present?,
       id: current_user.present? ? current_user.id : nil,
-      user_number: current_user.present? ? current_user.rhombus_number : nil,
       pubnub_publish_key: Rails.application.secrets.pubnub["publish_key"],
       pubnub_subscribe_key: Rails.application.secrets.pubnub["subscribe_key"],
       short_url: current_user.short_url,
       first_name: current_user.first_name || 'there',
       num_of_chars: current_user.rn_type.present? ? 1500 : 150,
       customer_contact_count: MerchantCustomer.where(merchant_id: current_user.id).count + MerchantContact.where(merchant_id: current_user.id).count,
-      can_accept_payments: current_user.can_accept_payments?(true)
+      can_accept_payments: current_user.can_accept_payments?(true),
+      profile_image: User.check_profile_picture(current_user),
     }
   end
 

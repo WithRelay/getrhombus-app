@@ -36,7 +36,7 @@ class User < ActiveRecord::Base
   has_many :customer_transactions, class_name: 'Transaction', foreign_key: 'user_id'
   has_many :merchant_transactions, class_name: 'Transaction', foreign_key: 'team_id'
 
-  has_many :referrers, class_name: 'Referrer', foreign_key: 'referee_id'
+  has_one :referrer, class_name: 'Referrer', foreign_key: 'referee_id'
   has_many :referees, class_name: 'Referrer', primary_key: :relay_uid, foreign_key: :referrer_uid
 
   has_many :customer_merchants, class_name: 'MerchantCustomer', foreign_key: 'customer_id'
@@ -258,15 +258,15 @@ class User < ActiveRecord::Base
       AwayMessage.find_or_create_by(user_id: user_id, response: response)
       GetIntelligenceDataJob.perform_later(self.org_phone, 'OpenCNAM')
       self.lists.create([
-        { name: 'New customers', segment: segment_dynamic_customers, origin: 1, list_type: 0 },
-        {name: 'New customers', segment: segment_dynamic_contacts, origin: 1, list_type: 1 },
+        { name: 'New Customers', segment: segment_dynamic_customers, origin: 1, list_type: 0 },
+        { name: 'New Contacts', segment: segment_dynamic_contacts, origin: 1, list_type: 1 },
         { name: 'Active Customers', segment: new_segment_customers, origin: 1, list_type: 0 },
-        { name: 'Active Customers', segment: new_segment_contacts, origin: 1, list_type: 1 },
+        { name: 'Active Contacts', segment: new_segment_contacts, origin: 1, list_type: 1 },
         { name: 'Inactive Customers', segment: new_segment_customers, origin: 1, list_type: 0 },
-        { name: 'Inactive Customers', segment: new_segment_contacts, origin: 1, list_type: 1 }
+        { name: 'Inactive Contacts', segment: new_segment_contacts, origin: 1, list_type: 1 }
       ])
     end
-    MerchantCustomer.add_or_update_merchant_customer(User.get_platform_acct_obj.id, user_id)
+    MerchantCustomer.add_or_update_merchant_customer(User.get_platform_acct_obj.id, self)
     WelcomeEmailJob.set(wait: SIGNUP_EMAIL_DELAY.minutes).perform_later(self)
     GetIntelligenceDataJob.perform_later(self.email, 'FullContact')
     GetIntelligenceDataJob.perform_later(self.phone_number, 'OpenCNAM') if self.is_customer?

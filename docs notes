@@ -24,7 +24,7 @@ and the stripe id will be moved into platform_stripe_account_id
 
 4. FB Messenger 
 - using referrer_uid and page_specific_id to know user who signs up.
-
+- update conversation when customer connects fb account, signs up or signs in and connects account
 
 question: when a customer does account linking, there is a way to try to identify them if they have a rhombus account and have connected their facebook account right?
 before sending account linking url we check that if link not found then we send it

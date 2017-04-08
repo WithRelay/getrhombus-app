@@ -59,7 +59,7 @@ messagingApp.directive("mySrc", function() {
         img.onload = function() {
           element.hide();
           element[0].src = attrs.mySrc;
-          element.fadeIn('slow')
+          element.fadeIn('slow');
         };
       };
 
@@ -69,7 +69,9 @@ messagingApp.directive("mySrc", function() {
 });
 
 var hasScrollReachedBottom = function(element) {
-  return element.scrollTop + $(element).innerHeight() >= element.scrollHeight;
+  // not perfect
+  //return element.scrollTop + $(element).innerHeight() >= element.scrollHeight;
+  return element.scrollTop <= element.scrollHeight - element.clientHeight;
 };
 
 messagingApp.directive('onFinishRender', function ($timeout) {

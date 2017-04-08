@@ -7,7 +7,7 @@ class WelcomeEmailJob < ApplicationJob
       if user.is_merchant?
         EmailingService.send_welcome_email(user.email, owner.rhombus_number, "merchant")
       elsif user.is_customer?
-        ref = user.referrers.first
+        ref = user.referrer
         message = Message.new
         unless ref.blank?
           referrer = User.find_by(relay_uid: ref.referrer_uid)

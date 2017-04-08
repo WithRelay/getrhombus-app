@@ -2,7 +2,7 @@
     <div class="w-row">
       <div class="w-col w-col-4"></div>
       <div class="sub-nav-bar-messaging-dash-column-2 w-col w-col-4">
-        <div class="customer-name-text subheader" ng-if="conversation_selected">Conversation with {{current_chat_conversation.full_name}}</div>
+        <div class="customer-name-text subheader" ng-if="conversation_selected">Conversation with {{selected_conversation.full_name}}</div>
       </div>
       <div class="w-col w-col-4"></div>
     </div>
@@ -50,7 +50,7 @@
               conversation.last_message"></div>
 
               <%# added height %>
-              <img ng-if="conversation.profile_image.type == 'image'" class="customer-profile-picture" ng-src="{{conversation.profile_image.value}}" width="30" height='30'>
+              <img ng-if="conversation.profile_image.type == 'image'" class="customer-profile-picture" my-src="{{conversation.profile_image.value}}" width="30" height='30' >
 
             </div>
           </div>
@@ -136,7 +136,7 @@
         <div class="side-bar-profile-image-placeholder-text">{{ snapshot.full_name.charAt(0) }}</div>
       </div>
 
-      <img ng-if="snapshot.profile_image.type == 'image'" class="profile-picture-right-nav" ng-src="{{snapshot.profile_image.value}}" width="60">
+      <img ng-if="snapshot.profile_image.type == 'image'" class="profile-picture-right-nav" my-src="{{snapshot.profile_image.value}}" width="60">
 
       <div class="dashboard-right-nav signup-box-subheading">{{ snapshot.full_name.toUpperCase() }}<span ng-class="{ 'messaging-snapshot': true, 'relay-id' : true, 'leads unverified' : snapshot.verified == 'UNVERIFIED' }">{{ snapshot.verified }}</span>
       </div>
@@ -266,7 +266,7 @@
   </div>
 
   <%# added id %>
-  <div class="dashboard-body messaging w-clearfix" id='messages-box' when-scrolled-up="getConversationMessages(selected_conversation, false)" scroll-bottom-on="status.loaded" in-view-container>
+  <div class="dashboard-body messaging w-clearfix" id='messages-box' when-scrolled-up="getConversationMessages(selected_conversation, false)" <%#= scroll-bottom-on="status.loaded" %> in-view-container>
 
     <div class="welcome-to-relay-div" ng-if="!merchant.customer_contact_count">
       <img src="<%= asset_path "019_076.png" %>">
@@ -278,24 +278,25 @@
     <%# <div ng-show="status.loading" class="me"><span>loading...</span></div> %>
     <%# added this wrapping div %>
     <!-- message ng-repeat -->
-    <div ng-if="merchant.customer_contact_count" ng-repeat="message in selected_conversation_messages track by messageTrackingFunction(message)" on-finish-render>
+    <div class="clear_both_float" ng-if="merchant.customer_contact_count" ng-repeat="message in selected_conversation_messages track by messageTrackingFunction(message)" on-finish-render>
 
       <div class="conversation-date-wrapper" ng-if="($index != 0) && !selected_conversation_messages[$index - 1].unread && selected_conversation_messages[$index].unread">
         <div class="conversation-date">New Messages</div>
       </div>
 
-      <div class="conversation-date-wrapper" ng-if="($index == 0) || (selected_conversation_messages[$index - 1].ts_day_of_the_week != selected_conversation_messages[$index].ts_day_of_the_week)">
+      <div  class="conversation-date-wrapper" ng-if="($index == 0) || (selected_conversation_messages[$index - 1].ts_day_of_the_week != selected_conversation_messages[$index].ts_day_of_the_week)">
         <div class="conversation-date">{{message.ts_day_of_the_week}}</div>
       </div>
 
       <!-- user -->
       <div class="customer-messaging-bubble w-clearfix" ng-if="(message.source == 'customer')">
         <div class="w-row">
+        
           <div class="customer-messaging-bubble-picture-wrapper w-clearfix w-col w-col-2">
             <%# added height %>
-            <img ng-if="message.profile_image.type == 'image'" class="messaging-bubble right-nav-profile-picture" ng-src="{{message.profile_image.value}}" width="35" height='35'>
+            <img ng-if="selected_conversation.profile_image.type == 'image'" class="messaging-bubble right-nav-profile-picture" my-src="{{selected_conversation.profile_image.value}}" width="35" height='35'>
 
-            <div ng-class="{ 'chat-wwindow no-image-found-placeholder' : true, 'radius-color-{{message.profile_image.value}}' : true }" ng-if="message.profile_image.type == 'color'">
+            <div ng-class="{ 'chat-wwindow no-image-found-placeholder' : true, 'radius-color-{{selected_conversation.profile_image.value}}' : true }" ng-if="selected_conversation.profile_image.type == 'color'">
               <div class="customer-initial">{{ selected_conversation.full_name.charAt(0) }}</div>
             </div>
 
@@ -305,7 +306,7 @@
 
             <!-- image -->
             <div class="chat-bubble-image-wrapper customer" ng-if='message.images.length'>
-              <img ng-repeat="image in message.images track by imageTrackingFunction(image)" class="chat-bubble-image" ng-src="{{ message.images[$index].url }}">
+              <img ng-repeat="image in message.images track by imageTrackingFunction(image)" class="chat-bubble-image" my-src="{{ message.images[$index].url }}">
             </div>
             <!-- text -->
             <div ng-class="{ 'customer-message' : true, 'fb-messenger': message.channel == 'FbMessage', 'message-bubble' : true }" ng-if='message.text.length'>
@@ -325,7 +326,7 @@
 
             <!-- images -->
             <div class="chat-bubble-image-wrapper" ng-if='message.images.length'>
-              <img ng-repeat="image in message.images track by imageTrackingFunction(image)" class="chat-bubble-image" ng-src="{{ message.images[$index].url }}">
+              <img ng-repeat="image in message.images track by imageTrackingFunction(image)" class="chat-bubble-image" my-src="{{ message.images[$index].url }}">
             </div>
             <!-- text -->
             <div class="agent-messaging message-bubble" ng-if='message.text.length'>
@@ -335,8 +336,8 @@
           </div>
           <div class="w-col w-col-2">
             <%# added height %>
-            <img ng-if="message.profile_image.type == 'image'" class="agent-picture messaging-bubble right-nav-profile-picture" ng-src="{{message.profile_image.value}}" width="35" height='35'>
-            <div ng-class="{ 'agent chat-wwindow no-image-found-placeholder' : true, 'radius-color-{{message.profile_image.value}}' : true }" ng-if="message.profile_image.type == 'color'">
+            <img ng-if="merchant.profile_image.type == 'image'" class="agent-picture messaging-bubble right-nav-profile-picture" my-src="{{merchant.profile_image.value}}" width="35" height='35'>
+            <div ng-class="{ 'agent chat-wwindow no-image-found-placeholder' : true, 'radius-color-{{merchant.profile_image.value}}' : true }" ng-if="merchant.profile_image.type == 'color'">
               <div class="customer-initial">{{ merchant.first_name.charAt(0) }}</div>
             </div>
           </div>

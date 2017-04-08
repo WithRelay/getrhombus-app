@@ -13,14 +13,13 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
   function($scope, $http, Pubnub, Upload, $timeout, $q, savedReplyService, conversationService, transactionService, userService, listService, reminderService) {
 
     // Conversations
-    $scope.open_conversations_count = 0;
     $scope.conversations = {};
-    $scope.selected_conversation_messages = [];
     $scope.start_conversation = {};
-
+    $scope.selected_conversation = {};
+    $scope.open_conversations_count = 0;
+    $scope.selected_conversation_messages = [];
     var messages_page = 1;
     $scope.status = { loading: false, /* loaded: false */ };
-    $scope.selected_conversation = {};
 
     // Message
     $scope.new_message = {}; 
@@ -90,32 +89,44 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
         channel: 'messaging_<%= Rails.env %>_' + $scope.merchant.id,
         message: function(m) {
           var re = JSON.parse(m);
-
           $scope.$apply(function() {
-            if (!$scope.conversations[re.conversation.id]) {
-              // add conversation object and update count
-              $scope.conversations[re.conversation.id] = re.conversation;
-              $scope.open_conversations_count += 1;
-              //$scope.global_unread_count += re.conversation.unread_count;
-            } else {
-              console.log('hi')
-              $scope.conversations[re.conversation.id].last_message = re.conversation.last_message
-              $scope.conversations[re.conversation.id].last_message_ts = re.conversation.last_message_ts
-              $scope.conversations[re.conversation.id].ago = re.conversation.ago
+            if (re.type == 'new-message') {
+              if (!$scope.conversations[re.conversation.id]) {
+                // add conversation object and update count
+                $scope.conversations[re.conversation.id] = re.conversation;
+                $scope.open_conversations_count += 1;
+                //$scope.global_unread_count += re.conversation.unread_count;
+              } else {
+                console.log('hi')
+                $scope.conversations[re.conversation.id].last_message = re.conversation.last_message
+                $scope.conversations[re.conversation.id].last_message_ts = re.conversation.last_message_ts
+                $scope.conversations[re.conversation.id].ago = re.conversation.ago
 
-              console.log($scope.conversations[re.conversation.id].last_message)
-              console.log(re.conversation.last_message)
+                console.log($scope.conversations[re.conversation.id].last_message)
+                console.log(re.conversation.last_message)
 
-              if (re.message.source == 'customer') {
-                //$scope.global_unread_count += 1;
-                $scope.conversations[re.conversation.id].unread_count += 1;
-              }
-            }
+                if (re.message.source == 'customer') {
+                  //$scope.global_unread_count += 1;
+                  $scope.conversations[re.conversation.id].unread_count += 1;
+                }
+              };
 
-            if (re.conversation.id == $scope.selected_conversation.id) {
-              $scope.selected_conversation_messages.push(re.message);
-              //$scope.markMessagesAsRead(conversation.id, re.message.id);
-            }
+              if (re.conversation.id == $scope.selected_conversation.id) {
+                $scope.selected_conversation_messages.push(re.message);
+                //$scope.markMessagesAsRead(conversation.id, re.message.id);
+              };
+            } else if (re.type == 'update-conv-properties') {
+              if ($scope.conversations[re.id]) {
+                $scope.conversations[re.id].full_name = re.full_name;
+                $scope.conversations[re.id].profile_image = re.profile_image;
+                $scope.conversations[re.id].uid = re.selectize.uid;
+                $scope.conversations[re.id].uid_type = re.selectize.uid_type;
+
+                // update customer/contact option in selectize list
+                start_conversation_selectize.updateOption(re.old_selectize_val, re.selectize);
+                if (re.id == selected_conversation.id) $scope.performUserActions();
+              };
+            };
           });
         }
       });
@@ -334,18 +345,20 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
           deferred.reject();
         }
 
-        // get transactions, snapshot and lists
-        if (from_conversations_list) {
-          $scope.getCustomerTransactions();
-          $scope.getSnapshot();
-          $scope.getCustomerLists();
-          $scope.buildChannelDropdown();
-        }
+        if (from_conversations_list) $scope.performUserActions();
       } else {
         deferred.reject();
       }
 
       return deferred.promise;
+    };
+
+    // get transactions, snapshot and lists, build channel dropdown
+    $scope.performUserActions = function() {
+      $scope.getCustomerTransactions();
+      $scope.getSnapshot();
+      $scope.getCustomerLists();
+      $scope.buildChannelDropdown();
     };
 
     $scope.rejectPromise = function(status, msg, obj) {

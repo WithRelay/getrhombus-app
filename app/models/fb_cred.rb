@@ -81,7 +81,7 @@ class FbCred < ActiveRecord::Base
   def self.reverse_link_account(fb_cred)
     user_identifier = extract_profile_pic_identifier(fb_cred.profile_pic_url)
     unlinked_fb_creds = FbCred.where(fb_id: nil)
-                                        .where.not(page_specific_id: nil)
+                              .where.not(page_specific_id: nil)
     unlinked_fb_creds.each do |cred|
       if extract_profile_pic_identifier(cred.profile_pic_url) == user_identifier
         cred.update(fb_id: fb_cred.fb_id, email: fb_cred.email, user_id: fb_cred.user_id)
