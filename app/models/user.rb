@@ -6,8 +6,9 @@ class User < ActiveRecord::Base
   include AddTokenToUser
   include Transactionable
 
-  attr_accessor :phone, :captured_amt, :msg_id, :tag_id, :page_specific_id
-  attr_accessor :referrer_uid, :tos_acceptance, :area_code
+  attr_accessor :phone, :msg_id, :captured_amt 
+  attr_accessor :tag_id, :referrer_uid, :tos_acceptance
+  attr_accessor :area_code, :card_token, :page_specific_id
 
   # validation rules for user attributes
   validates :tos_acceptance, acceptance: true, if: lambda { self.is_merchant? && self.reset_password_token.blank? }, on: :update
@@ -158,23 +159,20 @@ class User < ActiveRecord::Base
      # remove this eventually
      return { type: 'standalone', cred: User.find_by(id: 23) }
      ##
-     return { type: 'standalone', cred: self.standalone_stripe_cred } if is_platform?
 
+     return { type: 'standalone', cred: self.standalone_stripe_cred } if is_platform?
      cred = self.stripe_creds   # check for managed account first
      return { type: 'managed', cred: cred.first } if cred.present?
-
      cred = self.standalone_stripe_cred  # check for standalone ... this is legacy
      return { type: 'standalone', cred: cred } if cred.present?
-
      { type: nil, cred: nil }  # has no payment account
   end
 
   def can_accept_payments?(skip_check_managed_acct_status = false)
     cred = self.get_stripe_cred
-    return false if cred[:type].nil?
-    return true if cred[:type] == 'standalone'
     return true if cred[:type] == 'managed' && skip_check_managed_acct_status
     return true if cred[:type] == 'managed' && cred[:cred].can_accept_payments?
+    return true if cred[:type] == 'standalone'
     false
   end
 
@@ -198,7 +196,7 @@ class User < ActiveRecord::Base
   end
 
   def has_valid_card?
-    return [false, 'No valid card on file'] if self.card_token.blank? || self.exp_year.blank? || self.exp_month.blank?
+    return [false, 'No valid card on file'] if self.exp_year.blank? || self.exp_month.blank?
     return [true] if self.exp_year.to_i >= Time.current.year && self.exp_month.to_i >= Time.current.month
     return [false, 'Card has expired.']
   end

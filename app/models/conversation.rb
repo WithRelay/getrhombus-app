@@ -37,10 +37,17 @@ class Conversation < ActiveRecord::Base
       last_message.text = 'image attached' if last_message.present? && last_message.text.blank? && last_message.images.exists?
     end
 
+    if self.uid_type == 'user'
+      mcid = MerchantCustomer.find_by(merchant_id: self.id, customer_id: self.uid)
+    else
+      mcid = MerchantContact.find_by(merchant_id: self.id, uid: self.uid, uid_type: self.uid_type)
+    end
+
     {
       id: self.id,
       uid_type: self.uid_type,
       uid: self.uid,
+      mcid: mcid ? mcid.id : nil,
       full_name: User.get_conversation_display_name(self.uid, self.uid_type),
       profile_image: User.check_profile_picture(user),
       last_message: last_message.blank? ? '' : last_message.text,

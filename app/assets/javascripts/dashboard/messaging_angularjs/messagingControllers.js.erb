@@ -97,7 +97,6 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
                 $scope.open_conversations_count += 1;
                 //$scope.global_unread_count += re.conversation.unread_count;
               } else {
-                console.log('hi')
                 $scope.conversations[re.conversation.id].last_message = re.conversation.last_message
                 $scope.conversations[re.conversation.id].last_message_ts = re.conversation.last_message_ts
                 $scope.conversations[re.conversation.id].ago = re.conversation.ago
@@ -750,6 +749,15 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
       $scope.scheduled_message.channel = $scope.customer_channel_list[0]; 
     };
     // End reminders
+
+    $scope.getProfileLink = function() {
+      if ($scope.selected_conversation.mcid) {
+        var type = ($scope.selected_conversation.uid_type == 'user') ? '/customers/' : '/contacts/';
+        return '/users/' + $scope.merchant.id + type + $scope.selected_conversation.mcid;
+      } else {
+        return "#";
+      }
+    };
 
   }
 

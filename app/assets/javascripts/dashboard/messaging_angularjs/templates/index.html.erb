@@ -29,7 +29,7 @@
     <div class="conversation-list-wrapper" id='conversation-list-wrapper' when-scrolled-down="loadConversations()">
 
       <div class="conversation-list-empty-wrapper" ng-if="!merchant.customer_contact_count">
-        <a class="button empty-conversation-button w-button" href="/users/{{ merchant.id }}/customers">Add customers to start a conversation</a>
+        <a class="button empty-conversation-button w-button" ng-href="/users/{{ merchant.id }}/customers">Add customers to start a conversation</a>
       </div>
 
       <div class="conversation-list-empty-wrapper" ng-if="merchant.customer_contact_count && !open_conversations_count">
@@ -138,7 +138,10 @@
 
       <img ng-if="snapshot.profile_image.type == 'image'" class="profile-picture-right-nav" my-src="{{snapshot.profile_image.value}}" width="60">
 
-      <div class="dashboard-right-nav signup-box-subheading">{{ snapshot.full_name.toUpperCase() }}<span ng-class="{ 'messaging-snapshot': true, 'relay-id' : true, 'leads unverified' : snapshot.verified == 'UNVERIFIED' }">{{ snapshot.verified }}</span>
+      <div class="dashboard-right-nav signup-box-subheading">
+      <a ng-if="selected_conversation.mcid" class="link_no_underline" ng-href="{{ getProfileLink() }}">{{ snapshot.full_name.toUpperCase() }}</a>
+      <span ng-if="!selected_conversation.mcid">{{ snapshot.full_name.toUpperCase() }}</span>
+      <span ng-class="{ 'messaging-snapshot': true, 'relay-id' : true, 'leads unverified' : snapshot.verified == 'UNVERIFIED' }">{{ snapshot.verified }}</span>
       </div>
       <div class="left-column-text number"> &nbsp; &nbsp;{{ snapshot.phone_number }}</div>
       <div class="left-column-text"> &nbsp; &nbsp;{{ snapshot.email }}</div>
@@ -256,7 +259,7 @@
             <div class="no-data-right-side-bar">
               <p class="empty-view-short-paragraph">{{ no_list_message }}</p>
             </div>
-            <a ng-if="no_list_message[0] == 'S'" class="button right-nav-add-to-list w-button" href="/users/{{ merchant.id }}/lists">&nbsp;&nbsp;&nbsp;&nbsp;Create your first customer list</a>            
+            <a ng-if="no_list_message[0] == 'S'" class="button right-nav-add-to-list w-button" ng-href="/users/{{ merchant.id }}/lists">&nbsp;&nbsp;&nbsp;&nbsp;Create your first customer list</a>            
           </div>
 
         </div>
@@ -271,8 +274,8 @@
     <div class="welcome-to-relay-div" ng-if="!merchant.customer_contact_count">
       <img src="<%= asset_path "019_076.png" %>">
       <p class="welcome-message-text-area-paragraph">Hi {{ merchant.first_name }}, to get the most out of Relay add or import your customers</p>
-      <a class="button messaging-dash-welcome-div w-button" href="/users/{{ merchant.id }}/customers">Add a customer</a>
-      <a class="alt button messaging-dash-welcome-div w-button" href="/users/{{ merchant.id }}/customers">Import customers</a>
+      <a class="button messaging-dash-welcome-div w-button" ng-href="/users/{{ merchant.id }}/customers">Add a customer</a>
+      <a class="alt button messaging-dash-welcome-div w-button" ng-href="/users/{{ merchant.id }}/customers">Import customers</a>
     </div>
 
     <%# <div ng-show="status.loading" class="me"><span>loading...</span></div> %>

@@ -12,49 +12,66 @@ class Subscription < ActiveRecord::Base
   scope :active, -> { where(status: 'active') }
 
   def create_subscription(hash)
-
     begin
       return [false] if !self.save
 
       res = []
       team = hash[:team]
       is_platform = team.is_platform?
-      account_id = team.get_stripe_cred[:cred].account_id
+      cred = team.get_stripe_cred
 
-      hash[:application_fee_percent] = Rails.application.secrets.app_fee_percent unless is_platform
-      
-      if self.coupon_id.present?
-        coupon = Coupon.find self.coupon_id
-        hash[:coupon] = coupon.stripe_coupon_id 
-      end
-      
-      merchant_customer = MerchantCustomer.find self.merchant_customer_id
-      hash[:customer] = merchant_customer.managed_stripe_customer_id
-      hash[:plan] = self.plan_id
-      hash[:quantity] = self.quantity
-      hash[:tax_percent] = hash[:team].tax_percent
-      hash.delete(:team)
+      if is_platform || (team.is_merchant? && cred[:type] == 'managed')
 
-      res = PaymentService.create_subscription(hash, account_id, is_platform)
-      if res.first
-        self.update(
-          stripe_subscription_id: res.second.id,
-          status: res.second.status,
-          stripe_livemode: res.second.livemode,
-          trial_end: res.second.trial_end,
-          trial_start: res.second.trial_start,
-          current_period_start: res.second.current_period_start,
-          current_period_end: res.second.current_period_end,
-          canceled_at: res.second.canceled_at,
-          cancel_at_period_end: res.second.cancel_at_period_end,
-          ended_at: res.second.ended_at
-        )        
+        unless is_platform
+          fee_schedule = cred[:cred].transaction_fee
+          hash[:application_fee_percent] = fee_schedule.subscription_percent.to_f.round(2)
+        end
+
+        if self.coupon_id.present?
+          coupon = Coupon.find_by self.coupon_id
+          hash[:coupon] = coupon.stripe_coupon_id if coupon
+        end
+        
+        merchant_customer = MerchantCustomer.find self.merchant_customer_id
+        # need to check that customer has been added to merchant account on stripe. Platform not needed.
+        if team.is_merchant?
+
+        end        
+
+        hash[:customer] = merchant_customer.managed_stripe_customer_id
+        hash[:plan] = self.plan_id
+        hash[:quantity] = self.quantity
+        hash[:tax_percent] = hash[:team].tax_percent
+        hash.delete(:team)
+
+        res = PaymentService.create_subscription(hash, cred[:cred].account_id, is_platform)
+        if res.first
+          self.update(
+            stripe_subscription_id: res.second.id,
+            transaction_fee_id: fee_schedule ? fee_schedule.id : nil,
+            application_fee_percent: hash[:application_fee_percent]
+            status: res.second.status,
+            stripe_livemode: res.second.livemode,
+            trial_end: res.second.trial_end,
+            trial_start: res.second.trial_start,
+            current_period_start: res.second.current_period_start,
+            current_period_end: res.second.current_period_end,
+            canceled_at: res.second.canceled_at,
+            cancel_at_period_end: res.second.cancel_at_period_end,
+            ended_at: res.second.ended_at,
+            created: res.second.created,
+            start: res.second.start
+          )        
+        else
+          # notify team via email
+          # in case something went wrong after we created a subscription
+          self.cancel_subscription(team, false)
+        end
+        res
       else
-        # notify team via email
-        # should this be for only standard error caught?
-        self.cancel_subscription(team, false)
+        errors[:base] << "Your account doesn't support creating subscriptions."
+        [false]
       end
-      res
     rescue StandardError => e
       # if StandardError happened after Stripe was called, delete subscription on Stripe
       self.cancel_subscription(team, false) if res.length > 0

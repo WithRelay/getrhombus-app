@@ -2,7 +2,7 @@ module CheckUserProfile
   def check_user_redirect
     current_user.reload
     if current_user.is_customer?
-      return build_user_link if current_user.card_token.blank?
+      return build_user_link if current_user.card_id.blank?
       return user_transactions_path(current_user)
     else
       return add_profile_info_user_path(current_user) if current_user.org_name.blank?

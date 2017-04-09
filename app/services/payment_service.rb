@@ -74,10 +74,15 @@ class PaymentService
 
         if stripe_cred #stripe_cred[:type] == 'standalone'     
           unless true #merchant.is_platform?
+
+            token = Stripe::Token.create(
+                  { customer: merchant_customer.platform_stripe_customer_id },
+                  { stripe_account: stripe_cred[:cred].account_id } )
+
             re = Stripe::Charge.create({
               amount: amount_with_taxes, currency: currency,
-              customer: merchant_customer.platform_stripe_customer_id, 
               metadata: { "message" => msg },
+              source: token.id,
               description: "Payment from #{customer.email}. Card name: #{customer.card_name}. Last four: #{customer.last4}.",
             }, { stripe_account: stripe_cred[:cred].account_id })
           else
