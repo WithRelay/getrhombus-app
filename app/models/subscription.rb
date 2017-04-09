@@ -31,12 +31,12 @@ class Subscription < ActiveRecord::Base
           coupon = Coupon.find_by self.coupon_id
           hash[:coupon] = coupon.stripe_coupon_id if coupon
         end
-        
+
         merchant_customer = MerchantCustomer.find self.merchant_customer_id
         # need to check that customer has been added to merchant account on stripe. Platform not needed.
         if team.is_merchant?
 
-        end        
+        end
 
         hash[:customer] = merchant_customer.managed_stripe_customer_id
         hash[:plan] = self.plan_id
@@ -49,7 +49,7 @@ class Subscription < ActiveRecord::Base
           self.update(
             stripe_subscription_id: res.second.id,
             transaction_fee_id: fee_schedule ? fee_schedule.id : nil,
-            application_fee_percent: hash[:application_fee_percent]
+            application_fee_percent: hash[:application_fee_percent],
             status: res.second.status,
             stripe_livemode: res.second.livemode,
             trial_end: res.second.trial_end,
@@ -61,7 +61,7 @@ class Subscription < ActiveRecord::Base
             ended_at: res.second.ended_at,
             created: res.second.created,
             start: res.second.start
-          )        
+          )
         else
           # notify team via email
           # in case something went wrong after we created a subscription
@@ -94,7 +94,7 @@ class Subscription < ActiveRecord::Base
       false
     end
   end
- 
+
   def update_subscription(team, coupon_id)
     begin
       res = PaymentService.update_subscription(self.stripe_subscription_id, team.get_stripe_cred[:cred].account_id, team.is_platform?, coupon_id)
