@@ -15,15 +15,19 @@ module AddTokenToUser
       # order so platform is first...platform generally have stripe customer id first
       merchant_customers = MerchantCustomer.where(customer_id: self.id).order(merchant_id: :asc)
 
-      if merchant_customers.blank?            # This step doesn't really happen
+      # remove this
+      if merchant_customers.blank?            # This step doesn't really happen anymore
         res = add_token_for_new_customer(hash) 
       else
-        ### test, can i reuse the same token more than once??                                  
+        ### test, can i reuse the same tokesn more than once??                                  
         platform_acct = User.get_platform_acct_obj
         merchant_customers.each do |mc|
+          
           # can be on platform or merchant managed account. merchant is always on platform.
           is_platform = mc.merchant_id == platform_acct.id
           cred = mc.merchant.get_stripe_cred
+          # create new tokens for managed account since the js token is for platform
+          hash[:card_token] = nil unless is_platform          
 
           # we don't create customers on standalone accounts since we share platform customer with those
           if (is_platform && mc.platform_stripe_customer_id.blank?) || (!is_platform && cred[:type] == 'managed' && mc.managed_stripe_customer_id.blank?)

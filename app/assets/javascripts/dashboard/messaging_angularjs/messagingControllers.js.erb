@@ -751,12 +751,8 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
     // End reminders
 
     $scope.getProfileLink = function() {
-      if ($scope.selected_conversation.mcid) {
-        var type = ($scope.selected_conversation.uid_type == 'user') ? '/customers/' : '/contacts/';
-        return '/users/' + $scope.merchant.id + type + $scope.selected_conversation.mcid;
-      } else {
-        return "#";
-      }
+      var type = ($scope.selected_conversation.uid_type == 'user') ? '/customers/' : '/contacts/';
+      return '/users/' + $scope.merchant.id + type + $scope.selected_conversation.mcid;
     };
 
   }
