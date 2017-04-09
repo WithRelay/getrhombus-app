@@ -18,40 +18,44 @@ class Plan < ActiveRecord::Base
       team = hash[:team]
       is_platform = team.is_platform?
       # account_id = '<redacted_stripe_account_id>' #use this for testing
-      account_id = team.get_stripe_cred[:cred].account_id # use this for real use
+      cred = team.get_stripe_cred
 
-      descriptor = (self.name + "-" + team.org_name)[0..21]
+      if is_platform || (team.is_merchant? && cred[:type] == 'managed')
+        descriptor = (self.name + "-" + team.org_name)[0..21]
 
-      # dont send team/merchant in hash
-      hash.delete(:team)
+        # dont send team/merchant in hash
+        hash.delete(:team)
 
-      # save so validations run before calling Stripe
-      self.statement_descriptor = descriptor
-      self.merchant_id = team.id
-      self.currency = team.currency
-      return false if !self.save
+        # save so validations run before calling Stripe
+        self.statement_descriptor = descriptor
+        self.merchant_id = team.id
+        self.currency = team.currency
+        return false if !self.save
 
-      hash[:interval] = self.interval
-      hash[:interval_count] = self.interval_count
-      # amount should pass in cent
-      hash[:amount] = self.amount
-      hash[:id] = self.id
-      hash[:name] = self.name
-      hash[:trial_period_days] = self.trial_period_days
-      hash[:statement_descriptor] = self.statement_descriptor.gsub("'", "")
-      hash[:currency] = self.currency
+        hash[:interval] = self.interval
+        hash[:interval_count] = self.interval_count
+        # amount should pass in cent
+        hash[:amount] = self.amount
+        hash[:id] = self.id
+        hash[:name] = self.name
+        hash[:trial_period_days] = self.trial_period_days
+        hash[:statement_descriptor] = self.statement_descriptor.gsub("'", "")
+        hash[:currency] = self.currency
 
-      res = PaymentService.create_plan(hash, account_id, is_platform)
-      if res.first && self.update(stripe_livemode: res.second.livemode)
-        create_plan_segment if self.customer_id.blank?
-        true
+        res = PaymentService.create_plan(hash, cred[:cred].account_id, is_platform)
+        if res.first && self.update(stripe_livemode: res.second.livemode)
+          create_plan_segment if self.customer_id.blank?
+          true
+        else
+          # if StandardError happens in create_plan after Stripe was called or update fails above
+          self.delete_plan(team)
+          #notify team via email
+          false
+        end
       else
-        # if StandardError happens in create_plan after Stripe was called or update fails above
-        self.delete_plan(team)
-        #notify team via email
+        errors[:base] << "Your account doesn't support creating plans."
         false
       end
-
     rescue StandardError => e
       # if StandardError happens here after Stripe was called, delete plan on Stripe
       self.delete_plan(team) if res.length > 0

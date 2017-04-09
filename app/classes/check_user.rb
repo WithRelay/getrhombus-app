@@ -6,12 +6,16 @@ module CheckUser
     end
 
     def should_authenticate?
-      return true if @user.is_customer?
+      return user_stripe_card_id if @user.is_customer?
       return merchant_details_present?  if @user.is_merchant?
     end
 
+    def user_stripe_card_id
+      @user.card_id.present?
+    end 
+
     def merchant_details_present?
-      @user.get_saas_subscription.present? && @user.rhombus_number.present?
+      @user.card_id.present? && @user.get_saas_subscription.present? && @user.rhombus_number.present?
     end
   end
 end

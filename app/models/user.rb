@@ -196,7 +196,7 @@ class User < ActiveRecord::Base
   end
 
   def has_valid_card?
-    return [false, 'No valid card on file'] if self.exp_year.blank? || self.exp_month.blank?
+    return [false, 'No valid card on file'] if self.card_id.blank? && self.exp_year.blank? || self.exp_month.blank?
     return [true] if self.exp_year.to_i >= Time.current.year && self.exp_month.to_i >= Time.current.month
     return [false, 'Card has expired.']
   end

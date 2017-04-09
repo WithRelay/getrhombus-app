@@ -59,7 +59,8 @@ Surya
 Dorje
 - weekly summary template
 - fix validation message for create customer - just the first 3 fields
-- sidebars with links...customers should see only Transactions, Account and Billing Info
+- sidebars with links...customers should see only Transactions, businesses, Account and Billing Info
+- replace scroll bar
 
 Bhishma
 - messageparser
