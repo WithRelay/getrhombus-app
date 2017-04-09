@@ -12,8 +12,8 @@ class MerchantCustomersController < ApplicationController
   end
 
   def show
-    @merchant_customer = @merchant_customer = MerchantCustomer.find_by(merchant_id: params[:id], customer_id: params[:merchant_customer_id])
-    @customer = @merchant_customer.try(:customer)
+    @merchant_customer = MerchantCustomer.find_by(id: params[:merchant_customer_id])
+    @customer = @merchant_customer.customer
     @user_snapshot = get_user_snapshot(@customer.id, "user", current_user.id, @customer)
 
 
@@ -45,7 +45,4 @@ class MerchantCustomersController < ApplicationController
       }.compact
     end
 
-    def customer_id
-      params[:customer_id]
-    end
 end
