@@ -44,23 +44,23 @@ $(document).on('ready page:load', function() {
     }
   });
 
-  $.ajax({
-    method: 'GET',
-    url: '/v1/lists/merchant_segment',
-    data: {},
-    dataType: 'json'
-  }).done(function(data){
-      $.each(data, function(index, value){
-        $('#Segment-Select-lists').append($('<option>',
-          {
-            value: value.id,
-            text: value.name
-          }
-        ))
-      });
-  }).fail(function(msg){
-    setFlashForList(msg, 'error');
-  });
+  customersDropdownOptions('#contacts-segment-list', url_params = '?list_type=contacts');
+  customersDropdownOptions('#Segment-Select-lists');
+
+  function customersDropdownOptions(element, url_params = ''){
+    $.ajax({
+      method: 'GET',
+      url: '/v1/lists/merchant_segment' + url_params,
+      data: {},
+      dataType: 'json'
+    }).done(function(data){
+        $.each(data, function(index, value){
+          $(element).append($('<option>', { value: value.id, text: value.name }))
+        });
+    }).fail(function(msg){
+      setFlashForList(msg, 'error');
+    });
+  }
 
   $('#Segment-Select-lists').on('change', function(){
     if (this.value){
