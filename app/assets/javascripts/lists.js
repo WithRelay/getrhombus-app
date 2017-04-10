@@ -62,6 +62,13 @@ $(document).on('ready page:load', function() {
     });
   }
 
+  $('#contacts-segment-list').on('change', function(){
+    if (this.value){
+      var window_location = window.location.pathname.split('/')
+      window.location = '/' + window_location[1] + '/' + window_location[2]  + '/merchant_contacts/' + this.value + '/segment_users';
+    }
+  });
+
   $('#Segment-Select-lists').on('change', function(){
     if (this.value){
       var window_location = window.location.pathname.split('/')
