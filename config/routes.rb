@@ -93,6 +93,9 @@ Rails.application.routes.draw  do
         resources :merchant_customers, only: [] do
           member { get 'segment_users' }
         end
+        resources :merchant_contacts, only: [] do
+          member { get 'segment_users' }
+        end
         get 'segments' => 'lists#segments'
         delete 'delete-segment' => 'lists#delete_segment'
         get 'sms-usage' => 'users#sms_usage'
