@@ -8,4 +8,8 @@ class MerchantContactsController < ApplicationController
     @new_customer = User.new
     render 'merchant_contact_empty' unless @merchant_contacts.present?
   end
+
+  def segment_users
+    @merchant_contacts = current_user.user_segments.contact.find_by(id: params[:id]).get_users
+  end
 end
