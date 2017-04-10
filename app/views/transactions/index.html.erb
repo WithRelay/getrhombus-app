@@ -72,7 +72,7 @@
             <div class="card-name transaction-cell w-clearfix">
               <%= present(transaction).profile_image %>
               <div class="shrink-text table-text transaction-table">
-                <%= link_to "#{present(transaction).transaction_user_name}", "customers/#{transaction.user.id}", class: 'non-underline-link', action: "show" %>
+                <%= link_to "#{present(transaction).transaction_user_name}", "customers/#{get_merchant_customer_id transaction}", class: 'non-underline-link', action: "show" %>
               </div>
             </div>
             <div class="cb check-box-column">

@@ -69,4 +69,9 @@ module TransactionsHelper
     end
   end
 
+  def get_merchant_customer_id(transaction)
+    merchant_customer = MerchantCustomer.find_by(merchant_id: transaction.team_id, customer_id: transaction.user_id)
+    merchant_customer.id
+  end
+
 end

@@ -19,7 +19,9 @@ class List < ActiveRecord::Base
   	if segment.present? && self.origin? && self.customer?
       return User.where(id: eval(self.segment).pluck(:user_id)) if self.name == 'Active Customers'
       return User.where(id: eval(self.segment).pluck(:customer_id)) if self.name == 'New customers'
-  	elsif segment.present?
+  	elsif self.contact?
+      # return self.merchant_contacts.where(id: eval(self.segment).pluck(:user_id)) if self.name == 'Active Customers'
+    else
       user_lists = User.find_by_sql([segment, {id: self.user_id}])
   		return generate_list_users user_lists, type="segment"
     end

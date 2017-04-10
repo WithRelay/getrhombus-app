@@ -1,11 +1,11 @@
-<div>
+  <div>
   <div class="new-table-row w-row">
     <div class="cn w-clearfix w-col w-col-3">
       <div class="name w-clearfix">
         <% contact_details = present(merchant_contact).contact_details %>
         <%= profile_image(contact_details[:profile_image]) %>
         <div class="shrink-text table-text">
-          <%= contact_details[:full_name] %>
+          <%=link_to contact_details[:full_name], merchant_contact_path(merchant_contact) %>
         </div>
       </div>
       <div class="cb check-box-column">

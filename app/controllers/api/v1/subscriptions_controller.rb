@@ -3,8 +3,8 @@ class Api::V1::SubscriptionsController < API::V1::BaseController
   def create
     begin
       status = 500
-      res = customer_has_valid_card?
-      if res.first
+      check_customer_card = customer_has_valid_card?
+      if check_customer_card.first
         @subscription = Subscription.new(subscription_params)
         res = @subscription.create_subscription({ team: current_user })
         if res.first
@@ -23,7 +23,7 @@ class Api::V1::SubscriptionsController < API::V1::BaseController
       end
     rescue StandardError => e
       response = 'Something went wrong on our end.'
-    end       
+    end
     render json: { response: response }, status: status
   end
 
@@ -37,7 +37,7 @@ class Api::V1::SubscriptionsController < API::V1::BaseController
         status = 200
       else
         response = (coupon.nil?) ? 'Invalid Discount code' : 'We couldn\'t change discount'
-      end      
+      end
     rescue StandardError => e
       response = 'Something went wrong on our end.'
     end
@@ -67,7 +67,7 @@ class Api::V1::SubscriptionsController < API::V1::BaseController
   end
 
   def customer_has_valid_card?
-    MerchantCustomer.find_by(params[:merchant_customer_id]).customer.has_valid_card?
+    MerchantCustomer.find(params[:subscription][:merchant_customer_id]).customer.has_valid_card?
   end
 
 end
