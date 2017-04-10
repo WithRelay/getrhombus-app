@@ -26,7 +26,7 @@ class Api::V1::MerchantCustomersController < API::V1::BaseController
       elsif params[:format] == 'json'
         @customer = User.find_by(email: params[:user][:email])
         if @customer.present?
-          add_to_merchant_customer_and_referrer
+          add_to_merchant_customer_and_referrer(false)
         else
           params[:user][:password] = Toolbox::StringGen.generate_random_string(8)
           params[:user][:user_level] = 0
@@ -101,9 +101,9 @@ class Api::V1::MerchantCustomersController < API::V1::BaseController
       @address_params[:street_address].present? || @address_params[:state_province].present? || @address_params[:city].present? || @address_params[:country].present? || @address_params[:postal_code].present?
     end
 
-    def add_to_merchant_customer_and_referrer
-      MerchantCustomer.add_or_update_merchant_customer(current_user.id, @customer.id)
-      Referrer.save_referrer_with_uid(current_user.relay_uid, @customer.id)
+    def add_to_merchant_customer_and_referrer(with_referrer=true)
+      MerchantCustomer.add_or_update_merchant_customer(current_user.id, @customer)
+      Referrer.save_referrer_with_uid(current_user.relay_uid, @customer.id) if with_referrer
     end
 
 end

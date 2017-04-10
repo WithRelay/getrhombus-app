@@ -140,12 +140,13 @@ module AdditionalUserActions
       merchant = User.find_by(relay_uid: params[:user][:referrer_uid])
       if merchant
         Referrer.save_referrer_with_uid(merchant.id, current_user.id) 
-        MerchantCustomer.add_or_update_merchant_customer(merchant.id, current_user.id)
+        MerchantCustomer.add_or_update_merchant_customer(merchant.id, current_user)
       end
     end
 
     if params[:user][:page_specific_id].present?
       FbCred.where(page_specific_id: params[:user][:page_specific_id]).update_all(user_id: current_user.id)
+      Conversation.update_conv_contact_to_user(params[:user][:page_specific_id], current_user)
     end
   end
 

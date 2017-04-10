@@ -116,7 +116,7 @@ Rails.application.routes.draw  do
         get 'remove_twitter_integration' => 'users#remove_twitter_integration'
         match 'refer_business' => 'users#refer_business', via: [:get, :post]
         get 'customers' => 'merchant_customers#index'
-        get 'customers/:customer_id' => 'merchant_customers#show'
+        get 'customers/:merchant_customer_id' => 'merchant_customers#show'
       end
     end
 

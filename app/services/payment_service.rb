@@ -5,6 +5,15 @@ class PaymentService
     # Create or update customer on Stripe
     def add_token_to_stripe_customer(hash, stripe_account_id = "")
       begin
+        if hash[:card_token].blank?
+          # token creation raises error if it fails
+          # platform should already have customer source at this point
+          # should be card_id here???
+          # SHOULD THIS BE CREATED OFF PLATFORM CUSTOMER? I THINK YES
+          hash[:card_token] = Stripe::Token.create({ customer: merchant_customer.platform_stripe_customer_id },
+                                                   { stripe_account: stripe_cred[:cred].account_id } ).id
+        end
+
         if hash[:new_customer]
           if hash[:platform_customer]
             # create on platform
@@ -74,10 +83,15 @@ class PaymentService
 
         if stripe_cred #stripe_cred[:type] == 'standalone'     
           unless true #merchant.is_platform?
+            # token creation raises error if it fails
+            token = Stripe::Token.create(
+                  { customer: merchant_customer.platform_stripe_customer_id },
+                  { stripe_account: stripe_cred[:cred].account_id } )
+
             re = Stripe::Charge.create({
               amount: amount_with_taxes, currency: currency,
-              customer: merchant_customer.platform_stripe_customer_id, 
               metadata: { "message" => msg },
+              source: token.id,
               description: "Payment from #{customer.email}. Card name: #{customer.card_name}. Last four: #{customer.last4}.",
             }, { stripe_account: stripe_cred[:cred].account_id })
           else

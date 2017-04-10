@@ -12,20 +12,30 @@ module AddTokenToUser
       
       hash = { email: self.email, card_token: card_token, new_customer: true, platform_customer: true } 
       
-      merchant_customers = MerchantCustomer.where(customer_id: self.id)
+      # order so platform is first...platform generally have stripe customer id first
+      merchant_customers = MerchantCustomer.where(customer_id: self.id).order(merchant_id: :asc)
 
-      if merchant_customers.blank?            # This step doesn't really happen
+      # remove this
+      if merchant_customers.blank?            # This step doesn't really happen anymore
         res = add_token_for_new_customer(hash) 
-      else                                  
+      else
+        ### test, can i reuse the same tokesn more than once??                                  
         platform_acct = User.get_platform_acct_obj
         merchant_customers.each do |mc|
+          
           # can be on platform or merchant managed account. merchant is always on platform.
           is_platform = mc.merchant_id == platform_acct.id
-      
-          if (is_platform && mc.platform_stripe_customer_id.blank?) || (!is_platform && mc.managed_stripe_customer_id.blank?)
-            res = add_token_for_customer_without_payment_info(mc, hash, is_platform, merchant_customers)
+          cred = mc.merchant.get_stripe_cred
+          # create new tokens for managed account since the js token is for platform
+          hash[:card_token] = nil unless is_platform          
+
+          # we don't create customers on standalone accounts since we share platform customer with those
+          if (is_platform && mc.platform_stripe_customer_id.blank?) || (!is_platform && cred[:type] == 'managed' && mc.managed_stripe_customer_id.blank?)
+            res = add_token_for_customer_without_payment_info(mc, hash, is_platform, merchant_customers, cred)
+          elsif (is_platform && mc.platform_stripe_customer_id.present?) || (!is_platform && cred[:type] == 'managed' && mc.managed_stripe_customer_id.present?)
+            res = update_token_for_existing_customer(mc, hash, is_platform, merchant_customers, cred)
           else
-            res = update_token_for_existing_customer(mc, hash, is_platform, merchant_customers)
+            res = [true]
           end
           break unless res.first
         end
@@ -54,14 +64,14 @@ module AddTokenToUser
   end
 
   ### test, can i reuse the same token more than once??
-  def add_token_for_customer_without_payment_info(mc, hash, is_platform, merchant_customers)
+  def add_token_for_customer_without_payment_info(mc, hash, is_platform, merchant_customers, cred)
     hash[:new_customer] = true
     hash[:platform_customer] = is_platform
         
     if is_platform
       res = PaymentService.add_token_to_stripe_customer(hash)
     else
-      res = PaymentService.add_token_to_stripe_customer(hash, mc.merchant.get_stripe_cred[:cred].account_id)
+      res = PaymentService.add_token_to_stripe_customer(hash, cred[:cred].account_id)
     end
     
     # update merchant_customer info for stripe customer. either platform or managed accounts.
@@ -73,13 +83,13 @@ module AddTokenToUser
       end
     else
       # delete customer on the platform or merchant account in case customer was created but token wasn't added
-      PaymentService.delete_customer(res.second.id, mc.merchant.get_stripe_cred[:cred].account_id, is_platform)
+      PaymentService.delete_customer(res.second.id, cred[:cred].account_id, is_platform)
     end
     res
   end
 
   ### test, can i reuse the same token more than once??
-  def update_token_for_existing_customer(mc, hash, is_platform, merchant_customers)
+  def update_token_for_existing_customer(mc, hash, is_platform, merchant_customers, cred)
     hash[:new_customer] = false
     hash[:platform_customer] = is_platform 
     hash[:stripe_customer_id] = is_platform ? mc.platform_stripe_customer_id : mc.managed_stripe_customer_id
@@ -87,7 +97,7 @@ module AddTokenToUser
     if is_platform
       res = PaymentService.add_token_to_stripe_customer(hash)
     else
-      res = PaymentService.add_token_to_stripe_customer(hash, mc.merchant.get_stripe_cred[:cred].account_id)
+      res = PaymentService.add_token_to_stripe_customer(hash, cred[:cred].account_id)
     end
     res
   end

@@ -145,7 +145,7 @@ class StripeEvent
       charge = PaymentService.retrieve_charge(@hash[:charge]) if @hash[:charge]
       # a transaction should not already exist but we need to check if it does so we don't send out emails again
       # A tranasaction has only one log unlike subscriptions
-      txn = Transaction.includes(:notification_logs).where(txn_uri: charge.id).first_or_initialize if charge.first
+      txn = Transaction.includes(:notification_logs).where(txn_uri: charge.id).first_or_initialize if charge.try(:first)
 
       # if we havent notified customer before
       # for now, we have only one line for each invoice - the subscription
@@ -217,24 +217,27 @@ class StripeEvent
     def customer_source_updated
       # customer source info/customer's card info
       @source = @hash[:data][:object]
-      
+
       # find customer
-      mc = MerchantCustomer.find_by(managed_stripe_customer_id: @source[:customer]) 
+      mc = MerchantCustomer.find_by(managed_stripe_customer_id: @source[:customer])
       mc = MerchantCustomer.find_by(platform_stripe_customer_id: @source[:customer]) unless mc
 
-      @data = mc.customer
-      update_customer_source
-      # find customer and admin
-      # Notify them (admin) (customer)
-      # update notification log if we need it
+      if mc
+        @data = mc.customer
+        update_customer_source
+        # find customer and admin
+        # Notify them (admin) (customer)
+        # update notification log if we need it
+      end
     end
 
     def update_customer_source
       @data.last4 = @source[:last4]
+      @data.card_id = @source[:id]
       @data.exp_month = @source[:exp_month]
       @data.exp_year = @source[:exp_year]
-      @data.card_name = @source[:name]
-      @data.card_type = @source[:type]
+      @data.card_type = @source[:brand] if @source[:brand].present?
+      @data.card_name = @source[:name] if @source[:name].present?
       @data.save
     end
 
@@ -261,7 +264,7 @@ class StripeEvent
         next_plan.update(status: false) if res.first
       end
     end
-=end 
+=end
 
     def account_updated
       user_params = response_user_params.merge(bank_accont_details)

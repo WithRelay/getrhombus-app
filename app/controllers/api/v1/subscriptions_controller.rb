@@ -3,22 +3,27 @@ class Api::V1::SubscriptionsController < API::V1::BaseController
   def create
     begin
       status = 500
-      @subscription = Subscription.new(subscription_params)
-      res = @subscription.create_subscription({ team: current_user })
-      if res.first
-        response = 'Subscription created successfully'
-        status = 200
-      else
-        if @subscription.errors.messages.present?
-          response = @subscription.errors.full_messages
+      check_customer_card = customer_has_valid_card?
+      if check_customer_card.first
+        @subscription = Subscription.new(subscription_params)
+        res = @subscription.create_subscription({ team: current_user })
+        if res.first
+          response = 'Subscription created successfully'
+          status = 200
         else
-          response = (res.second == 'card_error') ? res.third : 'Something went wrong'
+          if @subscription.errors.messages.present?
+            response = @subscription.errors.full_messages
+          else
+            response = (res.second == 'card_error') ? res.third : 'Unable to create subscription.'
+          end
+          @subscription.destroy
         end
-        @subscription.destroy
+      else
+        response = check_customer_card.second
       end
     rescue StandardError => e
       response = 'Something went wrong on our end.'
-    end       
+    end
     render json: { response: response }, status: status
   end
 
@@ -32,7 +37,7 @@ class Api::V1::SubscriptionsController < API::V1::BaseController
         status = 200
       else
         response = (coupon.nil?) ? 'Invalid Discount code' : 'We couldn\'t change discount'
-      end      
+      end
     rescue StandardError => e
       response = 'Something went wrong on our end.'
     end
@@ -59,6 +64,10 @@ class Api::V1::SubscriptionsController < API::V1::BaseController
 
   def subscription_params
     params.require(:subscription).permit(:quantity, :plan_id, :coupon_id, :merchant_customer_id)
+  end
+
+  def customer_has_valid_card?
+    MerchantCustomer.find(params[:subscription][:merchant_customer_id]).customer.has_valid_card?
   end
 
 end

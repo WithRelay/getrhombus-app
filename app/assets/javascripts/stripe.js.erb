@@ -33,11 +33,13 @@ var CardHandler = new function() {
       form_btn.attr("disabled", false).val(form_btn_text);
       show_stripe_error_field(response.error.param);
     } else {
-      $('#cc-number').val(response['card']['last4']);
-      $('#cc-ex-month').val(response['card']['exp_month']);
-      $('#cc-ex-year').val(response['card']['exp_year']);
+      $('#cc-number').val(response.card.last4);
+      $('#cc-ex-month').val(response.card.exp_month);
+      $('#cc-ex-year').val(response.card.exp_year);
       $('#cc-uri').val(response.id);
-      $('#cc-type').val(response['card']['brand']);
+      $('#cc-livemode').val(response.livemode);
+      $('#cc-id').val(response.card.id);
+      $('#cc-type').val(response.card.brand);
       form_submission_function();
     }
   }

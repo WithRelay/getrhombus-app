@@ -1,4 +1,7 @@
 
+### remove the customer uri column after migration
+### get card_id from stripe api to store in card_id column
+
 desc "move customer to merchant customer"
 task :move_customer_to_merchant_customer => :environment do
 

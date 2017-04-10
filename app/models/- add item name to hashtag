@@ -1,18 +1,21 @@
-- Test All Pages when there is no data
-
 Taiwo
 - how will using the master account affect us (- unify team and dashboard email issue really)
 - messaging lists (check endpoint in create customer and you now save mc_id in user list), reminders (shells created)
 
-- upon signing up, does an existing contact update to become customer?
 - review where merchant customer, contacts, referrers are created
 - see create_subscription/transaction 
   - should i check when they send a message and are a user...no cos it leaves out dashboard charges
       but dashboard charges means the person is already your customer...so no point doing merchant customer when payment is done. it should be merchant_customer or merchant_contact when message is received.
   - add a customer - done, sign up - done, referrer link (include messenger) - done, csv - done
 - workflow for sign in, sign up and places like payment/subscription, contact and customer
+
+- emails
+- stripe events
+
 - app fee for subscriptions - platform fee
-- reset password token issue
+  - what of when user sends text for subscriptions...check for managed account
+  - pass a with token param into add_token  for cases where we need to make a new token
+- should create shared user on platform and managed account and standaone acct??
 
 
 - <redacted_phone_number> ms nikky
@@ -43,27 +46,29 @@ Surya
 - use conversations in campaigns for sending messages
 - load more for all index pages      
 - still able to bypass onboarding to any page if i know the url. or i can go back to onboarding if i know the url (edited)
-- when you uncomment this line in routes  # authenticate :user, -> (user) { CheckUser::RouteAuthentication.new(user).should_authenticate? } do, pages become unreachable i believe.
+- when you uncomment this line in routes  # authenticate :user, -> (user) { CheckUser::RouteAuthentication.new(user).should_authenticate? } do, pages become unreachable i believe. review/remove CheckUser in classes folder
 - campaign toastrs - plug and play. already wrote the code for you. see realtimeservice.rb and notifications.js
 - tooltip for campaigns - leave for noe
 - time comparisons are tricky...make sure to do to_i because rails compares time as floats
 - segment dropdown for leads
 - contacts/customer support for user_lists, campaign_lists, etc
 - is list being loaded via js or preloaded in db? should run only for merchants
+- merchant_contacts index -> we use fb_page not messenger
+- campaign_id in messages?
 
 Dorje
 - weekly summary template
 - fix validation message for create customer - just the first 3 fields
-- contacts profile page
-- sidebars with links...customers should see only Transactions, Account and Billing Info
+- sidebars with links...customers should see only Transactions, businesses, Account and Billing Info
+- replace scroll bar
 
 Bhishma
 - messageparser
 - the 5 emails from edwin (incomplete signup email (the following day), review offer to help, autoreload failure)
-- do you update fb_cred for a user who didnt sign up when they sent messages in the past...but later signs up?
-  - if you add the page specific id in the url, i can find them.
 - weekly email no users, unread messages
- - when user logs in through messenger, indicate in referrers and merchantcustomer
+- when user logs in through messenger or connects facebook account and reverse link works - indicate merchantcustomer, update conversations. 
+- Add merchantcustomer/merchantcontact when message received
+- fb_cred.time_zone = (User.find id).time_zone
 
 
 
