@@ -15,6 +15,16 @@
       </select>
     </div>
   </div>
+  <%= link_to customers_user_path(current_user), class: "left-nav-tab-wrapper w-inline-block" do %>
+    <div class="left-nav-tab">Contacts &nbsp; &nbsp;</div>
+  <% end %>
+  <div class="customers-hidden-menu">
+    <div class="w-form">
+      <select class="dropdown segments w-select" data-name="Segment Select" id="contacts-segment-list" name="Segment-Select">
+        <option value="">Segments</option>
+      </select>
+    </div>
+  </div>
   <%= link_to lists_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
     <div class="left-nav-tab" data-ix="display-and-hide-customers">Lists</div>
   <% end %>
