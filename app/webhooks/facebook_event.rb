@@ -100,8 +100,10 @@
     def get_uid_and_uid_type
       if @fb_cred.user.present?
         @uid, @uid_type =  @fb_cred.user_id, 'user'
+        MerchantCustomer.add_or_update_merchant_customer(@merchant.id, @fb_cred.user)
       else
         @uid, @uid_type =  @fb_cred.page_specific_id, 'fb_page'
+        MerchantContact.add_or_update_merchant_contact(@merchant.id, @uid, @uid_type)
       end
     end
 
