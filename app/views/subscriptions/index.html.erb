@@ -74,7 +74,7 @@
               <div class="card-name transaction-cell subs-card-name">
                 <%= present(subscription.merchant_customer).profile_image %>
                 <div class="table-text customer-name">
-                  <%= link_to "#{present(subscription.merchant_customer).format_customer_name}", "customers/#{subscription.merchant_customer.customer_id}", class: 'non-underline-link', action: "show" %>
+                  <%= link_to "#{present(subscription.merchant_customer).format_customer_name}", "customers/#{subscription.merchant_customer.id}", class: 'non-underline-link', action: "show" %>
                 </div>
               </div>
               <div class="cb check-box-column">
