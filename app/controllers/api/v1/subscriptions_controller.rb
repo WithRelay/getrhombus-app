@@ -67,7 +67,7 @@ class Api::V1::SubscriptionsController < API::V1::BaseController
   end
 
   def customer_has_valid_card?
-    MerchantCustomer.find_by(params[:merchant_customer_id]).customer.has_valid_card?
+    MerchantCustomer.find(params[:subscription][:merchant_customer_id]).customer.has_valid_card?
   end
 
 end
