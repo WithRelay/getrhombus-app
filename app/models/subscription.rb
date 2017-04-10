@@ -13,14 +13,14 @@ class Subscription < ActiveRecord::Base
 
   def create_subscription(hash)
     begin
-      return [false] if !self.save
+      return [false] unless self.save
 
       res = []
       team = hash[:team]
       is_platform = team.is_platform?
       cred = team.get_stripe_cred
 
-      if is_platform || (team.is_merchant? && cred[:type] == 'managed')
+      if is_platform || (team.is_merchant? && cred[:cred][:type] == 'managed')
 
         unless is_platform
           fee_schedule = cred[:cred].transaction_fee
@@ -38,13 +38,15 @@ class Subscription < ActiveRecord::Base
 
         end
 
-        hash[:customer] = merchant_customer.managed_stripe_customer_id
+        # hash[:customer] = merchant_customer.managed_stripe_customer_id
+        hash[:customer] = merchant_customer.platform_stripe_customer_id
         hash[:plan] = self.plan_id
         hash[:quantity] = self.quantity
         hash[:tax_percent] = hash[:team].tax_percent
         hash.delete(:team)
 
-        res = PaymentService.create_subscription(hash, cred[:cred].account_id, is_platform)
+        # res = PaymentService.create_subscription(hash, cred[:cred].account_id, is_platform)
+        res = PaymentService.create_subscription(hash, cred[:cred].uid, is_platform)
         if res.first
           self.update(
             stripe_subscription_id: res.second.id,
