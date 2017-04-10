@@ -89,7 +89,11 @@ Rails.application.routes.draw  do
       end
 
       member do
+        resources :merchant_contacts, path: :contacts, only: [:index, :show]
+
         get 'contacts' => 'merchant_contacts#index'
+        get 'contacts/:merchant_contact_id' => 'merchant_contacts#show'
+
         resources :merchant_customers, only: [] do
           member { get 'segment_users' }
         end
