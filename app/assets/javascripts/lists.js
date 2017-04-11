@@ -259,7 +259,7 @@ $(document).on('ready page:load', function() {
     }
     else{
       user_ids = getSelectedUserIds();
-      $("#import-customers-div").lightbox_me({
+      $("#new-list-modal-div").lightbox_me({
         closeClick: true,
         closeEsc: true,
         centered: true,
