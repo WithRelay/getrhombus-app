@@ -29,8 +29,9 @@ class MerchantCustomersController < ApplicationController
   end
 
   def segment_users
-    @merchant_customer = current_user.user_segments.customer.find_by(id: params[:id]).get_users
+    @customers = current_user.user_segments.customer.find_by(id: params[:id]).get_users
     @new_customer = User.new
+    @customers.present? ? render_requested_format(@customers) : render(:empty_customer)
   end
 
   private

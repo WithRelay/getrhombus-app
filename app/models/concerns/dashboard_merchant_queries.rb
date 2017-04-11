@@ -5,38 +5,33 @@ module DashboardMerchantQueries
 	# These queries need to be tmezone aware and need to use conversation model and need
 	# to use referrers table where necessary
 
-	def segment_dynamic_customers 
-		"MerchantCustomer.where('created_at >= ? AND merchant_id = ?', Time.current - 7.days, #{self.id})"
+	def segment_dynamic_customers
+		"MerchantCustomer.where('created_at >= ? AND merchant_id = ?', Time.current - 7.days, #{self.id}).pluck(:uid)"
   end
 
-  def segment_dynamic_contacts 
-  	"MerchantContact.where('created_at >= ? AND merchant_id = ?', Time.current - 7.days, #{self.id})"
+  def segment_dynamic_contacts
+  	"MerchantContact.where('created_at >= ? AND merchant_id = ?', Time.current - 7.days, #{self.id}).pluck(:customer_id)"
   end
 
-  def new_segment_customers 
+  def new_segment_customers
+    merchant_id = self.id
+   %Q{Transaction.where("created_at >= ? AND user_id IN(?) AND team_id = ?", Time.current - 30.days,
+      MerchantCustomer.where(merchant_id: #{merchant_id}).pluck(:customer_id), #{merchant_id}).pluck(:user_id) |
+      FbMessage.where("created_at >=? AND user_id_to = ? AND user_id IN(?)", Time.current - 30.days,
+      #{merchant_id}, MerchantCustomer.where(merchant_id: #{merchant_id}).pluck(:customer_id)).pluck(:user_id)}
+  end
+
+  def new_segment_contacts
   	merchant_id = self.id
-   %Q{Transaction.where("created_at >= ? AND user_id IN(?) AND team_id = ?",
-      Time.current - 30.days, MerchantCustomer.where(merchant_id: #{merchant_id})
-      .pluck(:customer_id) | FbMessage.where("created_at >=? AND
-      user_id_to = ? AND user_id IN(?)", Time.current - 30.days, #{merchant_id},
-      MerchantCustomer.where(merchant_id: #{merchant_id}).pluck(:customer_id)),
-      #{merchant_id})}
-  end
-
-  def new_segment_contacts 
-  	merchant_id = self.id
-  	%Q{Transaction.where("created_at >= ? AND user_id IN(?) AND team_id = ?",
-        Time.current - 30.days, MerchantContact.where(merchant_id: #{merchant_id})
-        .pluck(:uid) | FbMessage.where("created_at >= ? AND
-        user_id_to = ? AND user_id IN(?)", Time.current - 30.days, #{merchant_id},
-        MerchantContact.where(merchant_id: #{merchant_id}).pluck(:uid)), #{merchant_id})}
+  	%Q{FbMessage.where("created_at >= ? AND user_id_to = ?", Time.current - 30.days,
+      #{merchant_id}).where(from: MerchantContact.where(merchant_id: #{merchant_id}).pluck(:uid))}
   end
 
 	# Customers who have paid
-	@@customers_query_txns = "(SELECT transactions.created_at, @users_ids := users.id as user_id, users.card_name, users.email, 
-		users.phone_number, SUM(transactions.amount) AS total_spend, MIN(transactions.created_at) AS first_visit, 
+	@@customers_query_txns = "(SELECT transactions.created_at, @users_ids := users.id as user_id, users.card_name, users.email,
+		users.phone_number, SUM(transactions.amount) AS total_spend, MIN(transactions.created_at) AS first_visit,
 		AVG(transactions.amount) AS avg_spend, max(transactions.created_at) AS last_visit,
-		SUM(transactions.created_at BETWEEN NOW() - INTERVAL 30 DAY AND NOW()) AS last_30 
+		SUM(transactions.created_at BETWEEN NOW() - INTERVAL 30 DAY AND NOW()) AS last_30
 		FROM transactions INNER JOIN users ON transactions.referenced_user_id = users.id
 		WHERE user_id = ? "
 
@@ -62,7 +57,7 @@ module DashboardMerchantQueries
 				"ON (t1.max_id = t.id) " \
 				"INNER JOIN users u ON(t.referenced_user_id = u.id) " \
 				"#{DashboardMerchantQueries.get_amount_filter(
-				 	params[:amt_filter], params[:amt_1], params[:amt_2])}" 
+				 	params[:amt_filter], params[:amt_1], params[:amt_2])}"
 		return query
 	end
 
@@ -91,10 +86,10 @@ module DashboardMerchantQueries
 					"WHERE u.id= m.customer_id " \
 					"AND m.merchant_id = :id"
 			return query
-		end	
+		end
 	end
 
-	# Gets the list of active customers 
+	# Gets the list of active customers
 	# active customers are customers that have sent a message to the merchant
 	# or had a transaction with the merchant within the last n days
 	# @param num_days The number of days for which active is defined
@@ -139,7 +134,7 @@ module DashboardMerchantQueries
 		query
 	end
 
-	# Gets the list of inactive customers 
+	# Gets the list of inactive customers
 	# Inactive customers are customers that have not sent a message to the merchant
 	# or had a transaction with the merchant within the last n days
 	# @return An array of the user id and email of inactive customers.
@@ -179,10 +174,10 @@ module DashboardMerchantQueries
 			") messages " \
 			"ON (transactions.user_id = messages.user_id) " \
 			"INNER JOIN users ON (users.id = transactions.user_id) " \
-			"WHERE transactions.created_at > DATE_SUB('#{params[:current_time]}', INTERVAL #{num_days} DAY) 
+			"WHERE transactions.created_at > DATE_SUB('#{params[:current_time]}', INTERVAL #{num_days} DAY)
 			 OR messages.created_at > DATE_SUB('#{params[:current_time]}', INTERVAL #{params[:segment_num_days]} DAY) " \
 			") " \
-			"AND u.id = m.customer_id" 
+			"AND u.id = m.customer_id"
 		query
 	end
 
@@ -266,16 +261,16 @@ module DashboardMerchantQueries
 				"AND m.created_at #{
 					DashboardMerchantQueries.get_range(filter)
 				} " \
-				"DATE_SUB(now(), INTERVAL #{num_of_days} DAY) " 
+				"DATE_SUB(now(), INTERVAL #{num_of_days} DAY) "
 		return query
 	end
 
 	# Gets all customers or contants of a merchant
 	# @params[:segment_type] The name of the table storing the information
-	# 'merchant_customers' for a merchant's customers or 
+	# 'merchant_customers' for a merchant's customers or
 	# 'merchant_contacts' for a merchant's contacts
 	def DashboardMerchantQueries.get_all_segment(params)
-		table = nil 
+		table = nil
 		if (params[:segment_type == 'all_customers'])
 			table = "merchant_customers"
 		else
@@ -284,7 +279,7 @@ module DashboardMerchantQueries
 		query = "SELECT u.id, u.first_name, u.last_name u.email, u.phone_number " \
 				"FROM users u, #{table} m " \
 				"WHERE u.id= m.customer_id " \
-				"AND m.merchant_id = :id " 
+				"AND m.merchant_id = :id "
 		return query
 	end
 
@@ -295,11 +290,11 @@ module DashboardMerchantQueries
 				"FROM users u, merchant_contacts m " \
 				"WHERE u.id= m.customer_id " \
 				"AND m.merchant_id = :id " \
-				"AND m.customer_id NOT IN 
+				"AND m.customer_id NOT IN
 				 	(
 				 	SELECT customer_id
 				 	FROM merchant_customers
-				 	where merchant_id = :id 
+				 	where merchant_id = :id
 				 	)"
 		return query
 	end
@@ -310,11 +305,11 @@ module DashboardMerchantQueries
 		"FROM users u, merchant_contacts m " \
 		"WHERE u.id= m.customer_id " \
 		"AND m.merchant_id = :id " \
-		"AND m.customer_id IN 
+		"AND m.customer_id IN
 		 	(
 		 	SELECT customer_id
 		 	FROM merchant_customers
-		 	where merchant_id = :id 
+		 	where merchant_id = :id
 		 	)"
 		return query
 	end
@@ -331,7 +326,7 @@ module DashboardMerchantQueries
 			symbol = ">"
 		end
 		return symbol
-	end	
+	end
 
 	# Returns a SQL statement for filtering the total amount spent by a customer
 	# by amount range
@@ -352,6 +347,5 @@ module DashboardMerchantQueries
 		end
 		return sql_statement
 	end
-			
-end
 
+end
