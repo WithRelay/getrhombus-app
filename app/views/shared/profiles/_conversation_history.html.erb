@@ -1,6 +1,6 @@
 <% if @conversation_refs.empty? %>
   <div class="no-profile-data-text profile-conversations">
-    You have no conversations with this customer.
+    You have no conversations with this <%=  contact_or_customer %>.
   </div>
 <% else %>
   <% @conversation_refs.each do |conversation_ref| %>
