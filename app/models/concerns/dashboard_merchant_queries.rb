@@ -10,7 +10,7 @@ module DashboardMerchantQueries
   end
 
   def segment_dynamic_contacts
-  	"MerchantContact.where('created_at >= ? AND merchant_id = ?', Time.current - 7.days, #{self.id}).pluck(:customer_id)"
+  	"MerchantContact.where('created_at >= ? AND merchant_id = ?', Time.current - 7.days, #{self.id})"
   end
 
   def new_segment_customers
