@@ -6,7 +6,7 @@ class User < ActiveRecord::Base
   include AddTokenToUser
   include Transactionable
 
-  attr_accessor :phone, :msg_id, :captured_amt 
+  attr_accessor :phone, :msg_id, :captured_amt
   attr_accessor :tag_id, :referrer_uid, :tos_acceptance
   attr_accessor :area_code, :card_token, :page_specific_id
 
