@@ -44,8 +44,10 @@ $(document).on('ready page:load', function() {
     }
   });
 
-  customersDropdownOptions('#contacts-segment-list', url_params = '?list_type=contacts');
-  customersDropdownOptions('#Segment-Select-lists');
+  if ($('#Segment-Select-lists').length > 0){
+    customersDropdownOptions('#contacts-segment-list', url_params = '?list_type=contacts');
+    customersDropdownOptions('#Segment-Select-lists');
+  }
 
   function customersDropdownOptions(element, url_params = ''){
     $.ajax({

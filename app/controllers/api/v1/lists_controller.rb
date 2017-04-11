@@ -78,7 +78,7 @@ class Api::V1::ListsController < API::V1::BaseController
   end
 
   def merchant_segment
-    unless current_user.nil? && !current_user.is_merchant?
+    unless current_user.nil? && !current_user.try(:is_merchant?)
       segment_list = current_user.user_segments
       user_segments = params[:list_type].present? ? segment_list.contact : segment_list.customer
       render json: user_segments
