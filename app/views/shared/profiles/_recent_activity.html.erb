@@ -1,0 +1,44 @@
+<% if @recent_activity.empty? %>
+<div class="no-profile-data-text profile-conversations">
+  Customer has no recent activity.
+</div>
+<% else %>
+<div class="customer-profile profile-info-wrapper">
+  <h1 class="dashboard-right-nav recent-activity signup-box-subheading">RECENT ACTIVITY</h1>
+  <div class="recent-activity right-nav-row w-row">
+    <div class="left-column w-col w-col-6">
+      <div class="left-column-text recent-activity">Last &nbsp;Contact</div>
+    </div>
+    <div class="right-column w-col w-col-6">
+      <div class="recent-activity-description"><%= @recent_activity[:last_conv_ref] ? time_in_relative_form(@recent_activity[:last_conv_ref].created_at, 'long_format') : "--" %></div>
+    </div>
+  </div>
+  <div class="recent-activity right-nav-row w-row">
+    <div class="left-column w-col w-col-5">
+      <div class="left-column-text recent-activity">Reason</div>
+    </div>
+    <div class="right-column w-col w-col-7">
+      <div class="recent-activity-description"><%= @recent_activity[:last_message_resolution] ? @recent_activity[:last_message_resolution] : '--' %></div>
+    </div>
+  </div>
+  <div class="payment recent-activity right-nav-row w-row">
+    <div class="left-column w-col w-col-5">
+      <div class="left-column-text recent-activity">Last &nbsp;Transaction</div>
+    </div>
+    <div class="right-column w-col w-col-7">
+      <div class="recent-activity-description"><%= @recent_activity[:last_transaction] ? present(@recent_activity[:last_transaction]).format_created_at : '--' %></div>
+    </div>
+  </div>
+  <div class="recent-activity right-nav-row w-row">
+    <div class="left-column w-col w-col-6">
+      <div class="left-column-text recent-activity">Amount</div>
+    </div>
+    <div class="right-column w-col w-col-6">
+      <div class="recent-activity-description">
+        <%= @recent_activity[:last_transaction] ? present(@recent_activity[:last_transaction]).format_txn_amount : "--" %>
+      </div>
+    </div>
+  </div>
+  <div class="right-nav-underline"></div>
+</div>
+<%end%>
