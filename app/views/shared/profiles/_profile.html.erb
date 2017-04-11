@@ -68,14 +68,14 @@
           <div class="left-column-text"> &nbsp; &nbsp; Customer since: <%= "#{@user_snapshot[:since][:date]}"%></div>
           <div class="right-nav-underline"></div>
         </div>
-        <%= render 'recent_activity' %>
+        <%= render 'shared/profiles/recent_activity' %>
       </div>
     </div>
     <div class="w-col w-col-5">
       <div class="customer-profile-section-header-div">
         <h4 class="welcome-dash-content-container-header">Conversation History</h4>
       </div>
-      <%= render 'conversation_history' %>
+      <%= render 'shared/profiles/conversation_history' %>
     </div>
     <div class="w-col w-col-4">
       <div class="customer-transactions-div overlow-div">
@@ -100,7 +100,7 @@
             </div>
           </div>
         </div>
-        <%= render 'transactions_table' %>
+        <%= render 'shared/profiles/transactions_table' %>
       </div>
     </div>
   </div>
