@@ -23,9 +23,8 @@ module DashboardMerchantQueries
 
   def new_segment_contacts
   	merchant_id = self.id
-  	%Q{FbMessage.where("created_at >= ? AND user_id_to = ? AND from IN(?)",
-       Time.current - 30.days, #{merchant_id}, MerchantContact.where(merchant_id: #{merchant_id})
-       .pluck(:uid)))}
+  	%Q{FbMessage.where("created_at >= ? AND user_id_to = ?", Time.current - 30.days,
+      #{merchant_id}).where(from: MerchantContact.where(merchant_id: #{merchant_id}).pluck(:uid))}
   end
 
 	# Customers who have paid
