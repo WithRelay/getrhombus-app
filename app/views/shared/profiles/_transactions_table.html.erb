@@ -1,4 +1,4 @@
-<% if @transactions.empty? %>
+<% if transactions.empty? %>
 <div class="no-profile-data-text profile-conversations">
   <%= contact_or_customer %> has no transactions to date.
 </div>
@@ -26,7 +26,7 @@
       </div>
     </div>
   </div>
-  <% @transactions.each do |transaction| %>
+  <% transactions.each do |transaction| %>
     <div class="customer-profile-trasaction-table w-row">
       <div class="w-col w-col-5">
         <div class="description w-clearfix">

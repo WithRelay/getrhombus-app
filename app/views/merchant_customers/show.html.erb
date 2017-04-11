@@ -1,1 +1,7 @@
-<%= render 'shared/profiles/profile'%>
+<%= render partial: 'shared/profiles/profile', locals: {
+                                                        user: @customer,
+                                                        user_snapshot: @user_snapshot,
+                                                        transactions: @transactions,
+                                                        conversation_refs: @conversation_refs,
+                                                        recent_activity: @recent_activity
+                                                        }%>
