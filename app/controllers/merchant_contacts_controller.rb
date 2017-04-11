@@ -11,9 +11,9 @@ class MerchantContactsController < ApplicationController
   end
 
   def segment_users
-    @merchant_contacts = current_user.user_segments.contact.find_by(id: params[:id]).get_users
+    @customers = current_user.user_segments.contact.find_by(id: params[:id]).get_users
     @new_customer = User.new
-    render 'merchant_contact_empty' unless @merchant_contacts.present?
+    render 'merchant_contact_empty' unless @customers.present?
   end
 
   def show
