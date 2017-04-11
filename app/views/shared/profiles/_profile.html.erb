@@ -51,31 +51,31 @@
     <div class="w-col w-col-3">
       <div class="customer-properties-div">
         <div class="right-nav-profile-content-wrapper">
-          <% if @user_snapshot[:profile_image][:type] == 'color' %>
-            <div class= "rignt-sidebar-placeholder-container" style="background: <%= @user_snapshot[:profile_image][:value] %>">
-              <div class="side-bar-profile-image-placeholder-text"><%= @user_snapshot[:full_name][0] %></div>
+          <% if user_snapshot[:profile_image][:type] == 'color' %>
+            <div class= "rignt-sidebar-placeholder-container" style="background: <%= user_snapshot[:profile_image][:value] %>">
+              <div class="side-bar-profile-image-placeholder-text"><%= user_snapshot[:full_name][0] %></div>
             </div>
           <% else %>
-            <%= image_tag(@user_snapshot[:profile_image][:value], class: 'profile-picture-right-nav', width: 60 )%>
+            <%= image_tag(user_snapshot[:profile_image][:value], class: 'profile-picture-right-nav', width: 60 )%>
           <% end %>
 
-          <div class="dashboard-right-nav signup-box-subheading"><%= "#{@user_snapshot[:full_name]}"%> <span class="relay-id"><%= "#{@user_snapshot[:verified]}" %></span>
+          <div class="dashboard-right-nav signup-box-subheading"><%= "#{user_snapshot[:full_name]}"%> <span class="relay-id"><%= "#{user_snapshot[:verified]}" %></span>
           </div>
-          <div class="left-column-text number"> &nbsp; &nbsp;<%= "#{@user_snapshot[:phone_number]}" %></div>
-          <div class="left-column-text"> &nbsp; &nbsp; <%= "#{@user_snapshot[:email]}" %></div>
-          <div class="left-column-text"> &nbsp; &nbsp; &nbsp; <%= "#{@user_snapshot[:location]}" %></div>
-          <div class="left-column-text"> &nbsp; &nbsp; <%= "#{@user_snapshot[:twitter]}" %></div>
-          <div class="left-column-text"> &nbsp; &nbsp; Customer since: <%= "#{@user_snapshot[:since][:date]}"%></div>
+          <div class="left-column-text number"> &nbsp; &nbsp;<%= "#{user_snapshot[:phone_number]}" %></div>
+          <div class="left-column-text"> &nbsp; &nbsp; <%= "#{user_snapshot[:email]}" %></div>
+          <div class="left-column-text"> &nbsp; &nbsp; &nbsp; <%= "#{user_snapshot[:location]}" %></div>
+          <div class="left-column-text"> &nbsp; &nbsp; <%= "#{user_snapshot[:twitter]}" %></div>
+          <div class="left-column-text"> &nbsp; &nbsp; Customer since: <%= "#{user_snapshot[:since][:date]}"%></div>
           <div class="right-nav-underline"></div>
         </div>
-        <%= render 'shared/profiles/recent_activity' %>
+        <%= render partial: 'shared/profiles/recent_activity', locals: {recent_activity: recent_activity} %>
       </div>
     </div>
     <div class="w-col w-col-5">
       <div class="customer-profile-section-header-div">
         <h4 class="welcome-dash-content-container-header">Conversation History</h4>
       </div>
-      <%= render 'shared/profiles/conversation_history' %>
+      <%= render partial: 'shared/profiles/conversation_history', locals: {conversation_refs: conversation_refs} %>
     </div>
     <div class="w-col w-col-4">
       <div class="customer-transactions-div overlow-div">
@@ -86,7 +86,7 @@
           <div class="w-col w-col-6">
             <div class="customer-profile-box total-spend">
               <div class="total-spend-text transaction-history-box-headers">
-                <%= present(@customer).total_transaction %>
+                <%= present(user).total_transaction %>
               </div>
               <div class="table-description">Total Spend</div>
             </div>
@@ -94,13 +94,13 @@
           <div class="w-col w-col-6">
             <div class="average-spend customer-profile-box">
               <div class="average-spend-text transaction-history-box-headers">
-                <%= present(@customer).average_transaction %>
+                <%= present(user).average_transaction %>
               </div>
               <div class="table-description">Average Spend</div>
             </div>
           </div>
         </div>
-        <%= render 'shared/profiles/transactions_table' %>
+        <%= render partial: 'shared/profiles/transactions_table', locals: {transactions: transactions} %>
       </div>
     </div>
   </div>
