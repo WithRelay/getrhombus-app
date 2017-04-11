@@ -42,7 +42,7 @@ class MerchantCustomersController < ApplicationController
       {
         last_transaction: @transactions ? @transactions.first : nil,
         last_conv_ref: last_conv_ref,
-        last_message_resolution: last_message_resolution.present? ? @last_message_resolution : nil
+        last_message_resolution: last_message_resolution.present? ? last_message_resolution : nil
       }.compact
     end
 
