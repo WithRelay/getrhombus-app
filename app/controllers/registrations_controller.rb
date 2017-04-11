@@ -67,8 +67,8 @@ class RegistrationsController < Devise::RegistrationsController
   def check_params_with_update
     msg = nil
     if set_update_flash_messages[:subscription].present? && current_user.is_merchant?
-      #subscription = create_saas_subscription
-      msg = ''# (subscription.third ? subscription.third : "We are unable to start a subscription for you") unless subscription.first
+      subscription = create_saas_subscription
+      msg = (subscription.third ? subscription.third : "We are unable to start a subscription for you") unless subscription.first
     elsif set_update_flash_messages[:rhombus_number].present? && current_user.is_merchant?
       unless current_user.buy_number(params['user'])
        msg = 'Something went wrong. We were unable to provision a number for you. A member of our support team will contact you shortly.'
@@ -113,7 +113,7 @@ class RegistrationsController < Devise::RegistrationsController
   def create_saas_subscription
     begin
       # or you can check if the selected plan is the free plan
-      token_res = params[:user][:card_token].present? ? current_user.add_token_to_user(params[:user][:card_token]) : [true]
+      token_res = params[:user][:card_token].present? ? current_user.add_token_for_user(params[:user][:card_token]) : [true]
       if token_res.first
         @platform_acct = User.get_platform_acct_obj
         merchant_customer = MerchantCustomer.find_by(customer_id: current_user.id, merchant_id: @platform_acct.id)
@@ -127,7 +127,7 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   def get_plan_id
-    Plan.find_by(name: params[:plan][:name], merchant_id: @platform_acct.id, status: 1)
+    Plan.find_by(name: params[:plan][:name], merchant_id: @platform_acct.id, status: 1).try(:id)
   end
 
   def after_update_path_for(resource)
