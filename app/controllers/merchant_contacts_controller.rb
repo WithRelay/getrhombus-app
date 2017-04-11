@@ -18,17 +18,10 @@ class MerchantContactsController < ApplicationController
 
   def show
     merchant_contact = MerchantContact.find_by_id(params[:id])
-    @customer = merchant_contact.contacts
-    @user_snapshot = get_user_snapshot(@customer.id, "user", current_user.id, @customer)
-
-
-    # Exclude refunded transactions, Exclude subscriptions since these queries are not read only
-    # query is for refundable transactions You can't refund subscriptions easily.
-    # and include only captured transactions. account reload txns are included by default..right
-    @transactions = []
-    @conversation_refs = ConversationRef.get_last_customer_msg_from_all_merchant_convs(current_user.id, @customer.id)
+    @contact = merchant_contact.contacts
+    @user_snapshot = get_user_snapshot(@contact.id, "user", current_user.id, @contact)
+    @conversation_refs = ConversationRef.get_last_customer_msg_from_all_merchant_convs(current_user.id, @contact.id)
     @recent_activity = recent_activity
-
   end
 
   private
@@ -39,7 +32,7 @@ class MerchantContactsController < ApplicationController
       {
         last_transaction: @transactions ? @transactions.first : nil,
         last_conv_ref: last_conv_ref,
-        last_message_resolution: last_message_resolution.present? ? @last_message_resolution : nil
+        last_message_resolution: last_message_resolution.present? ? last_message_resolution : nil
       }.compact
     end
 end
