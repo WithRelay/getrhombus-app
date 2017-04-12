@@ -47,7 +47,7 @@
         <div class="w-col w-col-2">
           <% unless segment.origin? %>
             <%= link_to '', delete_segment_user_path(current_user, list_id: segment.id), class: 'w-hidden delete-hidden-segment-link', method: :delete %>
-            <%= link_to 'Delete', '#', class: 'button settings-table-row w-button delete-segment-link', style: 'pointer-events: none;' %>
+            <%= link_to 'Delete', '#', class: 'button settings-table-row w-button delete-segment-link' %>
           <% end %>
         </div>
       </div>
