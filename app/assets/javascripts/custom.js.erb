@@ -18,17 +18,15 @@ $(document).ready(function() {
 */
 
 
-  //add simple scroll bar
-
-  // var dashboard = document.getElementByClassName('dashboard-body');
-  // Ps.initialize(dashboard);
+  //add perfectScrollbar
   var dashboard = document.querySelector('.dashboard-body');
   dashboard && $(dashboard).perfectScrollbar();
-  // dashboard && SimpleScrollbar.initEl(dashboard);
 
   var customer_sidebar = document.querySelector('.customer-dashboard');
   customer_sidebar && $(customer_sidebar).perfectScrollbar();
 
+  var setting_sidebar = $('.side-bar.w-clearfix');
+  setting_sidebar && $(setting_sidebar).perfectScrollbar();
 
   $('#type-it').typeIt({
     strings: ["customers", "shift workers", "candidates", "students", "donors", "employees", "hotel guests"],
