@@ -102,9 +102,9 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   def add_funds
-    current_user.account_balance += params['user']['account_balance'].to_i
+    current_user.account_balance += params['user']['account_balance'].to_f
     current_user.save
-    flash[:notice] = "Account balanced updated, Now your total balance is: #{current_user.account_balance}"
+    flash[:notice] = "Account balanced updated, Now your total balance is: #{Toolbox::Decimal.to_cents(current_user.account_balance)}"
     redirect_to sms_usage_user_path
   end
 
