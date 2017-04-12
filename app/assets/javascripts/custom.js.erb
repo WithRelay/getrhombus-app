@@ -19,11 +19,15 @@ $(document).ready(function() {
 
 
   //add simple scroll bar
+
+  // var dashboard = document.getElementByClassName('dashboard-body');
+  // Ps.initialize(dashboard);
   var dashboard = document.querySelector('.dashboard-body');
-  dashboard && SimpleScrollbar.initEl(dashboard);
+  dashboard && $(dashboard).perfectScrollbar();
+  // dashboard && SimpleScrollbar.initEl(dashboard);
 
   var customer_sidebar = document.querySelector('.customer-dashboard');
-  customer_sidebar && SimpleScrollbar.initEl(customer_sidebar);
+  customer_sidebar && $(customer_sidebar).perfectScrollbar();
 
 
   $('#type-it').typeIt({
