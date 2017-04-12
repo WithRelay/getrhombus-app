@@ -6,14 +6,14 @@ module DashboardMerchantQueries
 	# to use referrers table where necessary
 
 	def segment_dynamic_customers
-		"MerchantCustomer.where('created_at >= ? AND merchant_id = ?', Time.current - 7.days, #{self.id}).pluck(:uid)"
+		"MerchantCustomer.where('created_at >= ? AND merchant_id = ?', Time.current - 7.days, #{self.id}).pluck(:customer_id)"
   end
 
   def segment_dynamic_contacts
-  	"MerchantContact.where('created_at >= ? AND merchant_id = ?', Time.current - 7.days, #{self.id})"
+  	"MerchantContact.where('created_at >= ? AND merchant_id = ?', Time.current - 7.days, #{self.id}).pluck(:uid)"
   end
 
-  def new_segment_customers
+  def new_customers_segment
     merchant_id = self.id
    %Q{Transaction.where("created_at >= ? AND user_id IN(?) AND team_id = ?", Time.current - 30.days,
       MerchantCustomer.where(merchant_id: #{merchant_id}).pluck(:customer_id), #{merchant_id}).pluck(:user_id) |
@@ -21,10 +21,26 @@ module DashboardMerchantQueries
       #{merchant_id}, MerchantCustomer.where(merchant_id: #{merchant_id}).pluck(:customer_id)).pluck(:user_id)}
   end
 
-  def new_segment_contacts
+  def inactive_customers_segment
+    merchant_id = self.id
+   %Q{User.find_by(id: #{merchant_id}).merchant_customers.where("customer_id NOT IN(?)",
+      Transaction.where("created_at >= ? AND user_id IN(?) AND team_id = ?", Time.current - 30.days,
+      MerchantCustomer.where(merchant_id: #{merchant_id}).pluck(:customer_id), #{merchant_id}).pluck(:user_id) |
+      FbMessage.where("created_at >=? AND user_id_to = ? AND user_id IN(?)", Time.current - 30.days,
+      #{merchant_id}, MerchantCustomer.where(merchant_id: #{merchant_id}).pluck(:customer_id)).pluck(:user_id))}
+  end
+
+  def inactive_contacts_segment
   	merchant_id = self.id
-  	%Q{FbMessage.where("created_at >= ? AND user_id_to = ?", Time.current - 30.days,
-      #{merchant_id}).where(from: MerchantContact.where(merchant_id: #{merchant_id}).pluck(:uid))}
+  	%Q{User.find_by(id: #{merchant_id}).merchant_contacts.where.not(uid:
+      (FbMessage.where("created_at >= ? AND user_id_to = ?", Time.current - 30.days,
+      #{merchant_id}).where(from: MerchantContact.where(merchant_id: #{merchant_id}).pluck(:uid))))}
+  end
+
+  def active_contacts_segment
+    merchant_id = self.id
+    %Q{MerchantContact.where(merchant_id: #{merchant_id}, uid: FbMessage.where("created_at >= ? AND user_id_to = ?", Time.current - 30.days,
+      #{merchant_id}).where(from: MerchantContact.where(merchant_id: #{merchant_id}).pluck(:uid)))}
   end
 
 	# Customers who have paid
