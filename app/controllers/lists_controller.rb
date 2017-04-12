@@ -75,17 +75,17 @@ class ListsController < ApplicationController
     else
       flash[:error] = 'Sorry segment cannot deleted'
     end
-    redirect_to  segments_user_path(current_user)
+    redirect_to segments_user_path(current_user)
   end
 
   def destroy
-    get_all_list = get_lists(params[:list_id].split(',').flatten)
+    get_all_list = get_lists(params[:list_id])
     if get_all_list.present? && get_all_list.delete_all
       flash[:notice] = "List was successfully deleted"
     else
       flash[:error] = 'Sorry list cannot deleted'
     end
-    redirect_to lists_path(current_user)
+    render js: "window.location = #{lists_path(current_user).to_json}"
   end
 
   def segments
