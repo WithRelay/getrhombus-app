@@ -259,6 +259,8 @@ GEM
     passenger (5.1.2)
       rack
       rake (>= 0.8.1)
+    perfect-scrollbar-rails (0.6.15)
+      railties (>= 3.2, < 6.0)
     pnotify-rails (3.0.0)
     pry (0.10.4)
       coderay (~> 1.1.0)
@@ -443,6 +445,7 @@ DEPENDENCIES
   opencnam
   paperclip!
   passenger
+  perfect-scrollbar-rails (~> 0.6.10)
   pnotify-rails
   pry
   pubnub (~> 4.0.7)
