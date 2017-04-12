@@ -152,4 +152,9 @@ module ApplicationHelper
                          ]
     restricted_actions.include?(params_controller_action)
   end
+
+  def dynamic_pages_overflow_hidden
+    return 'overflow: hidden;' unless params[:controller] == 'static_pages'
+  end
+
 end
