@@ -56,6 +56,8 @@ Surya
 - is list being loaded via js or preloaded in db? should run only for merchants
 - merchant_contacts index -> we use fb_page not messenger
 - campaign_id in messages?
+- user_segments = params[:list_type].present? ? segment_list.contact : segment_list.customer
+- return self.merchant_contacts.where(id: eval(self.segment).pluck(:user_id)) if self.name == 'Active Customers'
 
 Dorje
 - weekly summary template
