@@ -16,6 +16,7 @@ Taiwo
   - what of when user sends text for subscriptions...check for managed account
   - pass a with token param into add_token  for cases where we need to make a new token
 - should create shared user on platform and managed account and standaone acct??
+- merge platform_customer_id with managed account customer id??
 
 
 - <redacted_phone_number> ms nikky
@@ -55,6 +56,8 @@ Surya
 - is list being loaded via js or preloaded in db? should run only for merchants
 - merchant_contacts index -> we use fb_page not messenger
 - campaign_id in messages?
+- user_segments = params[:list_type].present? ? segment_list.contact : segment_list.customer
+- return self.merchant_contacts.where(id: eval(self.segment).pluck(:user_id)) if self.name == 'Active Customers'
 
 Dorje
 - weekly summary template
@@ -67,8 +70,6 @@ Bhishma
 - the 5 emails from edwin (incomplete signup email (the following day), review offer to help, autoreload failure)
 - weekly email no users, unread messages
 - when user logs in through messenger or connects facebook account and reverse link works - indicate merchantcustomer, update conversations. 
-- Add merchantcustomer/merchantcontact when message received
-- fb_cred.time_zone = (User.find id).time_zone
 
 
 
