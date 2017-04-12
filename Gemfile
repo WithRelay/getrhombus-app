@@ -19,6 +19,9 @@ gem 'ar_after_transaction'
 # gem "cancan"
 gem "cancancan"
 
+#perfect scrollbar
+gem 'perfect-scrollbar-rails', '~> 0.6.10'
+
 gem 'cocoon'
 # bread & butter
 gem "stripe"
