@@ -44,7 +44,7 @@
             <div class="shrink-text table-text"><%="#{current_user.full_name}"%></div>
           </div>
           <div class="cb check-box-column">
-            <div class="w-form">
+            <div>
               <%= form_for(reply, url: user_saved_reply_path(current_user, reply), html: { method: :delete } ) do |f| %>
                 <div class="select-all-check-box w-checkbox w-clearfix">
                   <%= f.hidden_field :id %>

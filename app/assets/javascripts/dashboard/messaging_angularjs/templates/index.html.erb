@@ -15,7 +15,7 @@
       </div>
     </div>
     <div class="conversation-list-menu">
-      <div class="w-form">
+      <div>
         <%# changed input field and id %>
         <form id="start-conversation-form">
           <selectize class="start-conversation-field w-input" config='start_conversation_config' ng-model="start_conversation.recipient" option='start_conversation_options'></selectize>
@@ -70,7 +70,7 @@
 
   <%# added id %>
   <div class="text-window-wrapper" id='messaging-page-textarea'>
-    <div class="w-form">
+    <div>
       <form>
         <div class="message-input-box-row w-row">
           <div class="message-input-box-column-1 w-col w-col-1">
@@ -116,7 +116,7 @@
   </div>
 
   <div class="right side-bar z-index-1">
-    
+
     <div ng-if='!conversation_selected || no_social_data || !open_conversations_count'>
       <div class="right-nav-profile-content-wrapper">
         <div class="empty-profile-preview-wrapper">
@@ -201,7 +201,7 @@
           <div id='hold-refundBox'>
             <%# added id, removed 'select an option', added selected %>
             <div class="hidden-refund-options hide-not-important" id="refundBox">
-              <div class="w-form">
+              <div>
                 <form id="email-form-8">
                   <label class="form-label right-nav-form" for="Refund-Amount">Refund Transaction</label>
                   <select class="dropdown w-select" id="Refund-Reason" name="Refund-Reason" required="required">
@@ -222,7 +222,7 @@
         </div>
 
         <div class="transaction-pane w-tab-pane" data-w-tab="Tab 2">
-          
+
           <div ng-if="merchant_lists.length">
             <div ng-if="conversation_selected">
               <div ng-if="list_for_customers.length">
@@ -251,7 +251,7 @@
             <div ng-if="!conversation_selected">
               <div class="no-data-right-side-bar">
                 <p class="empty-view-short-paragraph">Select a conversation to see customer/contact lists.</p>
-              </div>  
+              </div>
             </div>
           </div>
 
@@ -259,7 +259,7 @@
             <div class="no-data-right-side-bar">
               <p class="empty-view-short-paragraph">{{ no_list_message }}</p>
             </div>
-            <a ng-if="no_list_message[0] == 'S'" class="button right-nav-add-to-list w-button" ng-href="/users/{{ merchant.id }}/lists">&nbsp;&nbsp;&nbsp;&nbsp;Create your first customer list</a>            
+            <a ng-if="no_list_message[0] == 'S'" class="button right-nav-add-to-list w-button" ng-href="/users/{{ merchant.id }}/lists">&nbsp;&nbsp;&nbsp;&nbsp;Create your first customer list</a>
           </div>
 
         </div>
@@ -294,7 +294,7 @@
       <!-- user -->
       <div class="customer-messaging-bubble w-clearfix" ng-if="(message.source == 'customer')">
         <div class="w-row">
-        
+
           <div class="customer-messaging-bubble-picture-wrapper w-clearfix w-col w-col-2">
             <%# added height %>
             <img ng-if="selected_conversation.profile_image.type == 'image'" class="messaging-bubble right-nav-profile-picture" my-src="{{selected_conversation.profile_image.value}}" width="35" height='35'>
@@ -357,7 +357,7 @@
   <!-- [if lte IE 9]><script src="https://cdnjs.cloudflare.com/ajax/libs/placeholders/3.0.2/placeholders.min.js"></script><![endif] -->
 
   <div class="modal-body w-hidden" id='saved-reply-selection-div'>
-    <%# removed all webflow data attributes %>
+
     <div class="saved-reply-selection-wrapper w-clearfix">
       <div class="content-sub-wrapper modal w-clearfix">
         <h4 class="modal-header welcome-dash-content-container-header">Select Saved Reply</h4>
@@ -379,7 +379,7 @@
 
 
   <div class="modal-body w-hidden" id='charge-a-customer-div'>
-    <%# removed all webflow data attributes %>
+
     <div class="charge-customer-form-wrapper">
       <div class="content-sub-wrapper modal w-clearfix">
         <h4 class="modal-header welcome-dash-content-container-header">Charge customer</h4>
@@ -412,7 +412,7 @@
   </div>
 
   <div class="modal-body w-hidden" id='mark-as-done-div'>
-    <%# removed all webflow data attributes %>
+
     <div class="mark-as-done-form-wrapper">
       <p class="modal-content-description">Label conversations before you close it, so your entire team can stay informed on why a customer or lead reached out.</p>
       <div class="segment-modal underline-div"></div>
@@ -458,7 +458,7 @@
   </div>
 
   <div class="modal-body w-hidden" id='new-reminder-div'>
-    <%# removed all webflow data attributes %>
+
 
     <div class="schedule-notification-form-wrapper" id="schedule-message-div">
       <div class="content-sub-wrapper modal w-clearfix">
@@ -467,27 +467,27 @@
       </div>
       <p class="modal-content-description">Set a reminder or notification that will go out to this customer at a future date. You can use this to automate appointment reminders, or bill payment reminders.</p>
       <div class="segment-modal underline-div"></div>
-      <div class="scheduled-notification-form w-form">
+      <div class="scheduled-notification-form">
         <form class="w-clearfix" id="email-form-7" name="email-form-7">
 
           <select class="dropdown frequency-dropdown w-select" ng-model='scheduled_message.channel' ng-options='option.title for option in customer_channel_list track by option.id'></select>
-          
+
           <textarea class="notification-message text-area w-input" id="Notification-Message-2" placeholder="Enter notification message" ng-model='scheduled_message.text'></textarea>
           <div class="char-count notications">150 characters</div>
-          
+
           <input class="daterange delivery-date-time-picker text-field w-input" placeholder="Notification Delivery Date &amp; Time" type="text" ng-model='scheduled_message.date_time'>
-          
+
           <%# removed data attrs, changed name attr and id %>
           <div class="notification-frequency radio-button w-radio">
             <input class="w-radio-input" id="oneTimeFrequency" type="radio" value="0" name="reminder[frequency_type]" checked='checked' ng-model="scheduled_message.frequency_type">
             <label class="w-form-label" for="Notification Frequency">Send once</label>
           </div>
-          
+
           <div class="notification-frequency radio-button repeat w-radio">
             <input class="w-radio-input" type="radio" value="1" id="recurringFrequency" name="reminder[frequency_type]" ng-model='scheduled_message.frequency_type'>
             <label class="w-form-label" for="Notification Frequency-2">Repeat</label>
           </div>
-          
+
           <%# changed  id %>
           <select class="dropdown frequency-dropdown w-select" id='campaign_repeat_days' ng-model='scheduled_message.repeat_days'>
             <option value="3">3 days</option>
@@ -509,7 +509,7 @@
 
 
   <div class="modal-body w-hidden" id='mms-file-preview-div'>
-    <%# removed all webflow data attributes %>
+
     <div class="mms-file-preview-wrapper">
       <div class="content-sub-wrapper modal w-clearfix">
         <h4 class="modal-header welcome-dash-content-container-header">Send file</h4>
@@ -517,7 +517,7 @@
       <div class="file-name image-preview">{{selected_file.name}}</div>
       <div class="image-preview-wrapper"><img class="image-file-preview" ngf-thumbnail="pic_file" src='<%= asset_path "Relay-Image-Placeholder.png" %>' width="254">
       </div>
-      <div class="w-form">
+      <div>
         <form class="w-clearfix" id="email-form-9" name="email-form-9">
           <textarea class="file-description text-area w-input" id="File-Description-2" maxlength="5000" name="File-Description-2" placeholder="Add description (optional)" ng-model="mms_text" ng-trim="true"></textarea>
           <div class="file-sender split-button-wrapper">
@@ -540,14 +540,14 @@
     </div>
   </div>
 
-  <%# removed all webflow data attributes %>
+
   <div class="add-to-list-form-wrapper" id="add-to-list-div">
     <div class="content-sub-wrapper modal w-clearfix">
       <h4 class="modal-header welcome-dash-content-container-header">Add to list</h4>
       <%# added data and update-close-modals %>
       <a class="close-refund-modal update-close-modals" data-parent='add-to-list-div'></a>
     </div>
-    <%# removed w-form %>
+
     <div class="add-to-list-modal-form">
       <form class="w-clearfix" id="email-form-5">
         <select class="dropdown w-select" id="Add-to-list-dropdown-2" ng-model="lists_dropdown.list" ng-options="option.name for option in merchant_lists track by option.id">

@@ -22,7 +22,7 @@
   min-width: 80%;
 }
 </style>
-<div class="campaign-editor-options w-form">
+<div class="campaign-editor-options">
   <%= form_for [current_user, @campaign], html: { multipart: true, id: 'campaignForm', class: 'w-clearfix' } do |f| %>
 
     <div class='form-group col-xs-6'>
@@ -68,7 +68,7 @@
     <div class="dash-content-container message-editor">
       <div class='form-group col-xs-6'>
         <div class='newMessage'>
-          <div class="w-form">
+          <div>
             <%= f.text_area :text, id: 'trumbowyg', class: 'form-control message-editor text-area w-input', data: { name: 'Editor Text Area' } %>
             <div class="errorMessageContainer"></div>
           </div>
@@ -105,7 +105,7 @@
     </div>
     <div class="editor-date"><%= todays_date %></div>
     <div class="alt campaign-editor sub-nav-bar w-clearfix emailSubject">
-      <div class="w-form">
+      <div>
         <div class='form-group col-xs-6'>
           <%= f.text_field :subject, class: "form-control email-subject text-field w-input", data: { name: "Email Subject" }, id: "campaign_subject", placeholder: 'Email subject'  %>
           <div class="errorMessageContainer"></div>

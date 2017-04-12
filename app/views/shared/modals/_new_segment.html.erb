@@ -4,7 +4,7 @@
     <a class="close-modal update-close-modals" data-parent="new-segment-div" href="#" ></a>
   </div>
   <p class="modal-content-description">A segment is a group (subset) of your customers defined by filters that you set. Customers that match these filters are automatically added to the group over time.</p>
-  <div class="create-segment w-form">
+  <div class="create-segment">
     <%= form_for('lists', url: v1_lists_path, html: { id: "create_segment" }) do |f| %>
       <label class="form-label list-name" for="Segment-Name-2">Segment name</label>
       <%= f.hidden_field :list_type, value: 'segment' %>

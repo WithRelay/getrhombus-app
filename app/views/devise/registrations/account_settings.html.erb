@@ -12,7 +12,7 @@
     <h4 class="form-header">Account Information</h4>
     <div class="flex-underline form-header-underline"></div>
     <%= form_for(current_user, as: resource_name, url: registration_update_user_path(resource_name), html: { method: :patch, id: "account-settings-form", class: "form-horizontal rhombusFocus" }) do |f| %>
-    <div class="account-settings-form-wrapper w-form">
+    <div class="account-settings-form-wrapper">
 
       <label class="field-headers form-label settings" for="name">Basic details</label>
       <div class="company-rep-div w-clearfix">

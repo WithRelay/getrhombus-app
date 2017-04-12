@@ -11,7 +11,7 @@
   <p class="modal-content-description">Set a reminder or notification that will go out to this customer at a future date. You can use this to automate appointment reminders, or bill payment reminders.</p>
   <div class="segment-modal underline-div"></div>
 
-  <div class="scheduled-notification-form w-form">
+  <div class="scheduled-notification-form">
     <%= form_for reminder, url: user_reminder_path(current_user, 12), html: { class: "w-clearfix editReminderFrom reminderForm", id: "reminderFrom",  name: "email-form-7", method: :patch }  do |f| %>
 
       <div class="form-group col-xs-6">
