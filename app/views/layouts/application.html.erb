@@ -39,8 +39,7 @@
     <%= csrf_meta_tags %>
 
   </head>
-
-  <body class="<%= add_body_class %>" > <%#= needed for conversations page body %>
+  <body class="<%= add_body_class %>", style= "<%= dynamic_pages_overflow_hidden %>" > <%#= needed for conversations page body %>
     <%= render_header_partial %>
     <%= render 'shared/flash_messages' %>
     <%= render_sidebar_partial %>
