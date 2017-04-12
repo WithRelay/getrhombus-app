@@ -16,16 +16,17 @@ class List < ActiveRecord::Base
 
   # Gets the users that belong to a standard list or segment
   def get_users
-  	if segment.present? && self.origin? && self.customer?
-      return User.where(id: eval(self.segment).pluck(:user_id)) if self.name == 'Active Customers'
-      return User.where(id: eval(self.segment).pluck(:customer_id)) if self.name == 'New customers'
-  	elsif self.contact?
-      # return self.merchant_contacts.where(id: eval(self.segment).pluck(:user_id)) if self.name == 'Active Customers'
-    else
-      user_lists = User.find_by_sql([segment, {id: self.user_id}])
-  		return generate_list_users user_lists, type="segment"
+    if self.segment?
+    	if self.customer?
+        return User.where(id: eval(self.segment)) if self.name == 'Active Customers'
+        return User.where(id: eval(self.segment)) if self.name == 'New customers'
+    	elsif self.contact?
+        return eval(self.segment) if self.name == 'New Contacts'
+      else
+        user_lists = User.find_by_sql([segment, {id: self.user_id}])
+    		return generate_list_users user_lists, type="segment"
+      end
     end
-
     generate_list_users self.user_lists
   end
 

@@ -29,8 +29,9 @@ class MerchantCustomersController < ApplicationController
   end
 
   def segment_users
-    @merchant_customer = current_user.user_segments.customer.find_by(id: params[:id]).get_users
+    @customers = current_user.user_segments.customer.find_by(id: params[:id]).get_users
     @new_customer = User.new
+    @customers.present? ? render_requested_format(@customers) : render(:empty_customer)
   end
 
   private
@@ -41,7 +42,7 @@ class MerchantCustomersController < ApplicationController
       {
         last_transaction: @transactions ? @transactions.first : nil,
         last_conv_ref: last_conv_ref,
-        last_message_resolution: last_message_resolution.present? ? @last_message_resolution : nil
+        last_message_resolution: last_message_resolution.present? ? last_message_resolution : nil
       }.compact
     end
 

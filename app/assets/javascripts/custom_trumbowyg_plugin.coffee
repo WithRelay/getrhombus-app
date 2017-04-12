@@ -13,7 +13,6 @@ class @CustomTrumbowygPlugin
         [ 'preformatted' ]
         [ 'emoji' ]
         [ 'horizontalRule' ]
-        [ 'fullscreen' ]
       ]
       plugins: upload:
         serverPath: root_url + '/v1/campaigns/upload_images'
