@@ -1,12 +1,47 @@
+
+<%= provide(:title, "Relay - Customers") %>
+<div class="customer-dashboard-header sub-nav-bar table-header">
+  <div class="table-header">
+    <div class="table-header">
+      <div class="header new-table-row w-row">
+        <div class="cn w-clearfix w-col w-col-3">
+          <div class="header name w-clearfix">
+            <div class="headings name"> &nbsp; Name</div>
+          </div>
+        </div>
+        <div class="fv w-clearfix w-col w-col-3">
+          <div class="cn column column-2 header">
+            <div class="first-visit headings"> &nbsp; First visit</div>
+          </div>
+        </div>
+        <div class="lv w-clearfix w-col w-col-2">
+          <div class="colum-3 column header lv">
+            <div class="headings last-visit"> &nbsp;Last visit</div>
+          </div>
+        </div>
+        <div class="avs w-clearfix w-col w-col-2">
+          <div class="avs column column-4 header">
+            <div class="avs headings last-visit"> &nbsp;Average</div>
+          </div>
+        </div>
+        <div class="ts w-clearfix w-col w-col-2">
+          <div class="column column-5 header ts">
+            <div class="headings total-spend-header">&nbsp; Total Spend</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="dashboard-body">
  <div class="customer-dashboard-table-wrapper row-wrapper">
-
         <% @business.each do |merchant_customer| %>
         <div class="new-table-row w-row">
           <div class="cn w-clearfix w-col w-col-3">
-            <div class="name w-clearfix subs-card-name"><%= present(merchant_customer).profile_image %>
+            <div class="name w-clearfix subs-card-name"><%= present(merchant_customer).profile_image(current_user) %>
               <div class="shrink-text table-text">
-                <%= link_to "#{present(merchant_customer).format_customer_name}", customers_user_path + "/" + merchant_customer.id.to_s, class: 'non-underline-link' %>
+                <%= link_to "#{present(merchant_customer).format_merchant_name}", customers_user_path + "/" + merchant_customer.id.to_s, class: 'non-underline-link' %>
               </div>
             </div>
             <!-- <div class="cb check-box-column">
