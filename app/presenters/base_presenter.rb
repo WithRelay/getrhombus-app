@@ -69,14 +69,20 @@ class BasePresenter < SimpleDelegator
     User.get_conversation_display_name(customer_id, 'user', user_obj)
   end
 
+  def format_merchant_name
+    merchant_id = @model.class == MerchantCustomer ? @model.merchant_id : @model.id
+    user_obj = @model.class == MerchantCustomer ? nil : @model
+    User.get_conversation_display_name(merchant_id, 'user', user_obj)
+  end
+
   def customer_first_visit_formatted
     if @model.class == MerchantCustomer
       x = @model
-    else 
+    else
       x = MerchantCustomer.find_by(customer_id: @model.id, merchant_id: @user.id)
       return "-" unless x
     end
-    
+
     time_in_relative_form(x.created_at, 'long_format')
   end
 
@@ -85,9 +91,9 @@ class BasePresenter < SimpleDelegator
     id = @model.class == MerchantCustomer ? @model.customer_id : @model.id
 
     ['Message', 'FbMessage'].each do |x|
-      last_date = x.constantize.where(user_id: id, user_id_to: @user.id).pluck(:created_at).last  
+      last_date = x.constantize.where(user_id: id, user_id_to: @user.id).pluck(:created_at).last
       data_ary.push(last_date) if last_date.present?
-    end 
+    end
 
     time_in_relative_form(data_ary.max, 'long_format')
   end
