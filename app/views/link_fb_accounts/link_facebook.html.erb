@@ -2,7 +2,7 @@
   <div class="onboarding-form-div sign-in">
     <a class="form-logo w-inline-block" href="#"><img src="assets/Relay-Transparent-500x300.png" width="50">
     </a>
-    <div class="log-in-form w-form">
+    <div class="log-in-form">
       <%= form_tag fb_redirect_path(redirect_uri: @params['redirect_uri'], account_linking_token: @params['account_linking_token']), :method => :post, id: '', class: 'w-clearfix' do %>
         <%= email_field_tag :email, params[:email], type:'email', class: 'email-address text-field w-input', placeholder: 'Email address' %>
         <%= password_field_tag :password, params[:password], type: 'password', class: 'login password text-field w-input', placeholder: 'Password' %>
@@ -11,7 +11,7 @@
     </div>
     <div class="login-form-row w-row">
       <div class="log-in-form-row-column-1 w-col w-col-6">
-        <div class="w-form">
+        <div>
           <form data-name="Email Form 2" id="email-form-2" name="email-form-2">
             <div class="footer-cta form-check-box login-form w-checkbox">
               <input class="w-checkbox-input" data-name="Checkbox 4" id="checkbox-4" name="checkbox-4" type="checkbox">

@@ -49,7 +49,7 @@
   <div class="list-members sub-nav-options-wrapper w-clearfix">
     <div class="customer-count shrink-text"><%= @list_members.count %> <span class="sub-nav-sub-text">in <%= @list.name %> list</span>
     </div>
-    <div class="default-sub_header-field-form-div list-members w-form">
+    <div class="default-sub_header-field-form-div list-members">
       <%= form_for 'lists', url: update_user_list_list_path(current_user, @list), html: { class: 'add-to-list-form w-clearfix' } do |f| %>
         <%= f.text_field :list_member, class: "add-to-list-field w-input", placeholder: "Add more customers to list" %>
         <%= f.submit 'Update List'.html_safe, class: 'sub-nav-button w-button', id: 'update-list-memebers' %>

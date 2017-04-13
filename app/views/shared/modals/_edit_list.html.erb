@@ -3,7 +3,7 @@
     <h4 class="modal-header welcome-dash-content-container-header">Create List</h4>
     <a class="close-modal update-close-modals" data-parent='import-customers-div' href="#"></a>
   </div>
-  <div class="w-form">
+  <div>
     <%= form_for(:list, url: list_path(current_user, :list_id), html: { id: 'edit_list_form', class: "edit_create_user_list", method: :patch }) do |f| %>
       <%= f.label "List name", class: 'form-label list-name' %>
       <div class='form-group col-xs-6'>

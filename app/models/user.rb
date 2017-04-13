@@ -118,7 +118,7 @@ class User < ActiveRecord::Base
   before_validation :the_titleizer
   before_create :set_merchant_org_phone          # only create because the actual org_phone field is used in edit view
 
-  #after_commit :do_signup_stuff, on: :create
+  after_commit :do_signup_stuff, on: :create
 
   enum status: { inactive: 0, active: 1 }
 
@@ -258,10 +258,10 @@ class User < ActiveRecord::Base
       self.lists.create([
         { name: 'New Customers', segment: segment_dynamic_customers, origin: 1, list_type: 0 },
         { name: 'New Contacts', segment: segment_dynamic_contacts, origin: 1, list_type: 1 },
-        { name: 'Active Customers', segment: new_segment_customers, origin: 1, list_type: 0 },
-        { name: 'Active Contacts', segment: new_segment_contacts, origin: 1, list_type: 1 },
-        { name: 'Inactive Customers', segment: new_segment_customers, origin: 1, list_type: 0 },
-        { name: 'Inactive Contacts', segment: new_segment_contacts, origin: 1, list_type: 1 }
+        { name: 'Active Customers', segment: new_customers_segment, origin: 1, list_type: 0 },
+        { name: 'Active Contacts', segment: active_contacts_segment, origin: 1, list_type: 1 },
+        { name: 'Inactive Customers', segment: inactive_customers_segment, origin: 1, list_type: 0 },
+        { name: 'Inactive Contacts', segment: inactive_contacts_segment, origin: 1, list_type: 1 }
       ])
     end
     MerchantCustomer.add_or_update_merchant_customer(User.get_platform_acct_obj.id, self)

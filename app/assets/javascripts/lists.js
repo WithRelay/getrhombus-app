@@ -147,7 +147,7 @@ $(document).on('ready page:load', function() {
           $('.close-modal').click();
         }
       }).fail(function(msg){
-        setFlashForList(msg, 'error');
+        setFlashForList('Sorry list could not created please try again', 'error');
       });
     })
   });

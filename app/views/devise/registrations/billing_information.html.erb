@@ -7,7 +7,7 @@
     <h4 class="form-header">Billing Information</h4>
     <div class="flex-underline form-header-underline"></div>
 
-    <div class="account-settings-form-wrapper w-form">
+    <div class="account-settings-form-wrapper">
 
       <%= form_for(current_user, as: resource_name, url: registration_update_user_path(resource_name), html: { method: :patch, id: "cc-form", class: 'w-clearfix', autocomplete: "off" }) do |f| %>
 

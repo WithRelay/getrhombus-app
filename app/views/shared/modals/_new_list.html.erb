@@ -6,7 +6,7 @@
     <%# added data and update-close-modals %>
     <a class="close-modal update-close-modals" data-parent='new-list-modal-div' href="#"></a>
   </div>
-  <div class="w-form">
+  <div>
     <%= form_for('lists', url: v1_lists_path, html: { id: "create_user_list", class: "edit_create_user_list" }) do |f| %>
       <%= f.label "List name", class: 'form-label list-name' %>
       <%= f.hidden_field :selected_users, id: 'selectedUsers' %>

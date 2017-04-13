@@ -5,7 +5,7 @@
   <div class="dash-content-container settings">
     <h4 class="form-header">Business Information</h4>
     <div class="flex-underline form-header-underline"></div>
-    <div class="account-settings-form-wrapper w-form">
+    <div class="account-settings-form-wrapper">
       <%= form_for(current_user, as: resource_name, url: registration_update_user_path(resource_name), html: { method: :patch, id: "businessSetting", class: "w-clearfix" }) do |f| %>
 
         <label class="field-headers form-label settings" for="Business-Name">Basic details</label>

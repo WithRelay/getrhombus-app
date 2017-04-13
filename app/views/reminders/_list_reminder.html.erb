@@ -7,7 +7,7 @@
       </div>
     </div>
     <div class="cb check-box-column">
-      <div class="w-form">
+      <div>
       <%= form_for(reminder, url: user_reminder_path(current_user, reminder), html: { method: :delete }) do |f| %>
           <div class="select-all-check-box w-checkbox w-clearfix">
               <%= f.hidden_field :id %>
