@@ -33,7 +33,7 @@ Rails.application.routes.draw  do
     end
   end
 
- # authenticate :user, -> (user) { CheckUser::RouteAuthentication.new(user).should_authenticate? } do
+  #authenticate :user, -> (user) { CheckUser::RouteAuthentication.new(user).should_authenticate? } do
     get 'user_lists/remove_user' => 'user_lists#remove_user'
     get 'fb_pages/remove_integration' => 'fb_pages#remove_integration'
     get 'link_facebook' => 'link_fb_accounts#link_facebook'
@@ -45,85 +45,104 @@ Rails.application.routes.draw  do
     }
 
     # user routes
+
     resources :users, only: :show do
 
-      ## devise routes
-      devise_scope :user do
-        member do
+      authenticate :user, -> (user) { user.is_customer? } do
+        devise_scope :user do
           get "billing-information", to: "registrations#billing_information"
-          get "business-settings", to: "registrations#business_settings"
           get "account-settings", to: "registrations#account_settings"
-          get 'auto_recharge' => 'registrations#auto_recharge'
-          get 'add_funds' => 'registrations#add_funds'
+        end
+        member do
+          get 'business' => 'merchant_customers#business'
+        end
+        resources :transactions do
+          get 'download' => 'transactions#download_csv', constraints: { format: 'csv' }, on: :collection
         end
       end
 
-      resources :fb_pages, only: [:index]
-      patch 'update_fb_page' => 'fb_pages#update_user_fb_page'
-      resources :hashtags, except: [:show]
-      resources :subscriptions do
-        get 'download' => 'subscriptions#download_csv', constraints: { format: 'csv' }, on: :collection
-      end
-      resource :away_message, only: [:show, :update]
-      resources :plans, only: [:index, :destroy]
-      resources :alerts, only: [:update]
-      resources :saved_replies
-      resources :bank_accounts
-      resources :addresses
-      resources :people
-      resources :transactions do
-        get 'download' => 'transactions#download_csv', constraints: { format: 'csv' }, on: :collection
-      end
-
-      authenticate :user, -> (user) { user.is_platform? } do
-        resources :knowledge_base_categories, param: :slug, only: [:index, :edit, :update, :new, :create]
-        resources :coupons, only: [:index, :create, :destroy]
-        get 'manage-coupons' => 'coupons#manage_coupons'
-      end
-
-      # authenticate resources if a user is merchant
-      authenticate :user, -> (user) { user.is_merchant? } do
-        resources :conversations, only: [:index]
-        resources :campaigns, except: [:show] { collection { get 'filter_campaign' } }
-        resources :reminders, except: [:show, :new] { member { put 'change_status' } }
-      end
-
-      member do
-        resources :merchant_contacts, path: :contacts, only: [:index, :show]
-
-        get 'contacts' => 'merchant_contacts#index'
-        get 'contacts/:merchant_contact_id' => 'merchant_contacts#show'
-
-        resources :merchant_customers, path: :customers, only: [] do
-          member { get 'segment_users' }
-        end
-        resources :merchant_contacts, path: :contacts, only: [] do
-          member { get 'segment_users' }
-        end
-        get 'segments' => 'lists#segments'
-        delete 'delete-segment' => 'lists#delete_segment'
-        get 'sms-usage' => 'users#sms_usage'
-        resources :lists, only: [:index, :create, :show, :update] do
-          collection do
-            post 'delete' => 'lists#destroy'
-          end
+      authenticate :user, -> (user) {user.is_merchant? || user.is_platform? } do
+        ## devise routes
+        devise_scope :user do
           member do
-            post 'update-user-list' => 'lists#update_user_list'
-            delete 'remove-customer' => 'lists#remove_customer_contact'
+            #show to merchant and customers both
+            get "billing-information", to: "registrations#billing_information"
+
+            get "business-settings", to: "registrations#business_settings"
+
+            get "account-settings", to: "registrations#account_settings"
+            get 'auto_recharge' => 'registrations#auto_recharge'
+            get 'add_funds' => 'registrations#add_funds'
           end
         end
-        get 'customer_template' => "users#customer_csv_template"
-        get 'managed-accounts' => 'users#managed_acct'
-        match 'managed-accounts' => "users#create_managed_acct", via: :patch
-        match 'update-managed-acct' => 'users#update_managed_acct', via: :patch
-        get 'businesses' => 'users#businesses'
-        get 'notifications' => 'alerts#edit'
-        get 'integrations' => 'users#integrations'
-        get 'remove_stripe_integration' => 'users#remove_stripe_integration'
-        get 'remove_twitter_integration' => 'users#remove_twitter_integration'
-        match 'refer_business' => 'users#refer_business', via: [:get, :post]
-        get 'customers' => 'merchant_customers#index'
-        get 'customers/:merchant_customer_id' => 'merchant_customers#show'
+
+        resources :fb_pages, only: [:index]
+        patch 'update_fb_page' => 'fb_pages#update_user_fb_page'
+        resources :hashtags, except: [:show]
+        resources :subscriptions do
+          get 'download' => 'subscriptions#download_csv', constraints: { format: 'csv' }, on: :collection
+        end
+        resource :away_message, only: [:show, :update]
+        resources :plans, only: [:index, :destroy]
+        resources :alerts, only: [:update]
+        resources :saved_replies
+        resources :bank_accounts
+        resources :addresses
+        resources :people
+        resources :transactions do
+          get 'download' => 'transactions#download_csv', constraints: { format: 'csv' }, on: :collection
+        end
+
+        authenticate :user, -> (user) { user.is_platform? } do
+          resources :knowledge_base_categories, param: :slug, only: [:index, :edit, :update, :new, :create]
+          resources :coupons, only: [:index, :create, :destroy]
+          get 'manage-coupons' => 'coupons#manage_coupons'
+        end
+
+        # authenticate resources if a user is merchant
+        authenticate :user, -> (user) { user.is_merchant?} do
+          resources :conversations, only: [:index]
+          resources :campaigns, except: [:show] { collection { get 'filter_campaign' } }
+          resources :reminders, except: [:show, :new] { member { put 'change_status' } }
+        end
+
+        member do
+          resources :merchant_contacts, path: :contacts, only: [:index, :show]
+
+          get 'contacts' => 'merchant_contacts#index'
+          get 'contacts/:merchant_contact_id' => 'merchant_contacts#show'
+
+          resources :merchant_customers, path: :customers, only: [] do
+            member { get 'segment_users' }
+          end
+          resources :merchant_contacts, path: :contacts, only: [] do
+            member { get 'segment_users' }
+          end
+          get 'segments' => 'lists#segments'
+          delete 'delete-segment' => 'lists#delete_segment'
+          get 'sms-usage' => 'users#sms_usage'
+          resources :lists, only: [:index, :create, :show, :update] do
+            collection do
+              post 'delete' => 'lists#destroy'
+            end
+            member do
+              post 'update-user-list' => 'lists#update_user_list'
+              delete 'remove-customer' => 'lists#remove_customer_contact'
+            end
+          end
+          get 'customer_template' => "users#customer_csv_template"
+          get 'managed-accounts' => 'users#managed_acct'
+          match 'managed-accounts' => "users#create_managed_acct", via: :patch
+          match 'update-managed-acct' => 'users#update_managed_acct', via: :patch
+        #  get 'businesses' => 'users#businesses'
+          get 'notifications' => 'alerts#edit'
+          get 'integrations' => 'users#integrations'
+          get 'remove_stripe_integration' => 'users#remove_stripe_integration'
+          get 'remove_twitter_integration' => 'users#remove_twitter_integration'
+          match 'refer_business' => 'users#refer_business', via: [:get, :post]
+          get 'customers' => 'merchant_customers#index'
+          get 'customers/:merchant_customer_id' => 'merchant_customers#show'
+        end
       end
     end
 

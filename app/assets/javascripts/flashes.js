@@ -32,10 +32,24 @@ var FlashHandler = new function() {
   this.setFlashMessage = function(msg, type){
     var messageToSet = typeObj[type] || 'Attention';
     showToastr(messageToSet, arrayToString(msg));
-    if (typeObj[type] !== 'error') { $('.toasters').fadeOut(7000);}
+    if (typeObj[type] !== 'error') {
+      $('.toasters').animate({
+        opacity: 'hide', // animate fadeOut
+        width: 'hide',  // animate slideUp
+        height: 'hide'
+      }, 'slow', 'linear', function() {
+        $(this).remove();
+      });
+    }
     $('.toaster-font-awesome').on('click', function (e) {
       e.preventDefault();
-      $('.toasters').fadeOut(3000);
+      $('.toasters').animate({
+        opacity: 'hide', // animate fadeOut
+        width: 'hide',  // animate slideUp
+        height: 'hide'
+      }, 'slow', 'linear', function() {
+        $(this).remove();
+      });
     } );
   };
 
@@ -145,13 +159,24 @@ var FlashHandler = new function() {
         <div class="number-of-recipient">+'+no_of_recipient+'</div>\
       </div>\
     </a>')
-    $('.scheduled-jobs').fadeOut(10000);
+    $('.scheduled-jobs').animate({
+      opacity: 'hide', // animate fadeOut
+      width: 'hide'  // animate slideUp
+    }, 'slow', 'linear', function() {
+      $(this).remove();
+    });
   }
 
   function close_browser_toastr() {
     $('.browser-notification-close').on('click', function (e) {
       e.preventDefault();
-      $('.browser-notification-link-block').fadeOut(3000);
+      $('.browser-notification-link-block').animate({
+        opacity: 'hide', // animate fadeOut
+        width: 'hide',  // animate slideUp
+        height: 'hide'
+      }, 'slow', 'linear', function() {
+        $(this).remove();
+      });
     } );
   }
 

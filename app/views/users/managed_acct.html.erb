@@ -7,7 +7,7 @@
   <div class="dash-content-container settings w-clearfix">
     <h4 class="form-header">Setup Payments</h4>
     <div class="flex-underline form-header-underline"></div>
-    <div class="account-settings-form-wrapper w-form">
+    <div class="account-settings-form-wrapper">
       <%= form_for @user, url: { action: url_for_create_update }, html: { id: 'managed-account-form', class: 'w-clearfix' } do |f| %>
       <label class="form-label paragraph payment-setup-section-header" for="Organization-Type">Take a minute to answer a few questions and then you'll be ready to accept payments</label>
       <label class="field-headers form-label settings" for="Stripe-Countries">Where are you based?</label>

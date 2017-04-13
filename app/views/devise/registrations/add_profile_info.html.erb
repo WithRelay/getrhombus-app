@@ -4,7 +4,7 @@
       <div class="get-started-2 onboarding-form-div sign-in signup">
         <h4 class="form-header">Business Information</h4>
         <div class="flex-underline form-header-underline"></div>
-        <div class="get-started-2 log-in-form w-form">
+        <div class="get-started-2 log-in-form">
 
           <%= form_for(@user, as: resource_name, url: registration_update_user_path(@user), html: { method: :patch, class: "w-clearfix rhombusFocus", id: 'add-profile-info' }) do |f| %>
 

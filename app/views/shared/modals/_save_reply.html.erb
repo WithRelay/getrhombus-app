@@ -9,7 +9,7 @@
   </div>
   <p class="modal-content-description">Create saved replies to frequently asked questions so you can respond to you customers faster. Type '/' on your messaging dashboard to trigger a saved reply.</p>
   <div class="segment-modal underline-div"></div>
-  <div class="saved-reply-form w-form">
+  <div class="saved-reply-form">
     <%= form_for(saved_reply, url: v1_saved_replies_path,:html => { class: 'save-reply-form', :id => "save-reply-form", data: { name: 'email-form-8' } } ) do |f| %>
       <div class="form-group col-xs-6">
        <%= f.text_field :title, placeholder: 'Saved reply title', id: 'Saved-Reply-Title-3', class: 'form-control saved-reply text-field title-create w-input', data: { name: 'Saved Reply Title' } %>

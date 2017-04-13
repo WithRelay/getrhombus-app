@@ -8,7 +8,7 @@ class UsersController < ApplicationController
   before_action :set_notifications, except: [:customer_csv_template]
 
   # do i need this?
-  load_and_authorize_resource except: [:customer_csv_template]
+  # load_and_authorize_resource except: [:customer_csv_template]
 
   def show
     #all the methods are in concerns/databoard_data

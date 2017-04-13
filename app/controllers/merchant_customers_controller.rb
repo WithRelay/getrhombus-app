@@ -6,16 +6,19 @@ class MerchantCustomersController < ApplicationController
 
   def index
     @customers = current_user.merchant_customers
-                              .paginate(page: params[:page], per_page: 10).order(created_at: :desc)
+                              #.paginate(page: params[:page], per_page: 10).order(created_at: :desc)
     @new_customer = User.new
     @customers.present? ? render_requested_format(@customers) : render(:empty_customer)
+  end
+
+  def business
+    @business = MerchantCustomer.where(customer_id: current_user.id)
   end
 
   def show
     @merchant_customer = MerchantCustomer.find_by(id: params[:merchant_customer_id])
     @customer = @merchant_customer.customer
     @user_snapshot = get_user_snapshot(@customer.id, "user", current_user.id, @customer)
-
 
     # Exclude refunded transactions, Exclude subscriptions since these queries are not read only
     # query is for refundable transactions You can't refund subscriptions easily.
