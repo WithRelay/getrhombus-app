@@ -11,6 +11,9 @@ class MerchantCustomersController < ApplicationController
     @customers.present? ? render_requested_format(@customers) : render(:empty_customer)
   end
 
+  def business
+  end
+
   def show
     @merchant_customer = MerchantCustomer.find_by(id: params[:merchant_customer_id])
     @customer = @merchant_customer.customer
