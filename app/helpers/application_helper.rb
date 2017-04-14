@@ -112,7 +112,7 @@ module ApplicationHelper
   end
 
   def unauthenticate_controller
-    static_controllers = ['static_pages', 'contact_forms' ]
+    static_controllers = ['static_pages']
     static_controllers.include?(params[:controller]) #unless relay_docs_pages
   end
 

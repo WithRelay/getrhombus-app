@@ -64,12 +64,14 @@ Dorje
 - fix validation message for create customer - just the first 3 fields
 - sidebars with links...customers should see only Transactions, businesses, Account and Billing Info
 - replace scroll bar
+- on the dashboard side: transactions, businesses. on the settings side: account settings, billing info???
 
 Bhishma
 - messageparser
 - the 5 emails from edwin (incomplete signup email (the following day), review offer to help, autoreload failure)
 - weekly email no users, unread messages
 - when user logs in through messenger or connects facebook account and reverse link works - indicate merchantcustomer, update conversations. 
+- cancel button for subscription
 
 
 
