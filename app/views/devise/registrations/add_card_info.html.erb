@@ -8,7 +8,7 @@
           <h4 class="card-info form-header">Payment Information</h4>
           <div class="flex-underline form-header-underline"></div>
           <div class="customer-card-info display-credit-card-wrapper">
-            <div class="get-started-2 log-in-form w-form">
+            <div class="get-started-2 log-in-form">
               <%= form_for(current_user, as: resource_name, url: registration_update_user_path(resource_name), html: { method: :patch, id: "cc-form", autocomplete: "off", class: 'w-clearfix' }) do |f| %>
 
                 <label class="form-label paragraph" for="Card-Number-5">Messaging businesses with Relay is free. Add your debit/credit card information to your profile to allow send payments to via text</label>

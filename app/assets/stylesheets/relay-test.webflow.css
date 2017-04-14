@@ -13613,7 +13613,6 @@ h4 {
   position: fixed !important;
   right: 0;
   z-index: 10000 !important;
-  margin: 64px 32px 0px auto !important;
   width: 500px;
   height: auto;
   min-height: 50px;
@@ -13627,7 +13626,6 @@ h4 {
 
 .toasters.failure {
   position: static;
-  margin: 64px 32px 0px auto !important;
   top: 0px;
   right: 0px;
   height: auto;
@@ -13828,8 +13826,6 @@ h4 {
   padding: 18px 30px;
   background-color: #1f8cec;
   text-align: center;
-  right: 1% !important;
-  margin-right: 1% !important;
 }
 
 .customer-name-browser-notification {

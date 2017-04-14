@@ -5,11 +5,13 @@
     <% end %>
   </div>
   <h5 class="left-nav signup-box-subheading"><%= sidebar_name "#{params[:controller]}-#{params[:action]}" %></h5>
+
+  <% if current_user.is_merchant? %>
   <%= link_to customers_user_path(current_user), class: "left-nav-tab-wrapper w-inline-block" do %>
     <div class="left-nav-tab">Customers &nbsp; &nbsp;</div>
   <% end %>
   <div class="customers-hidden-menu">
-    <div class="w-form">
+    <div>
       <select class="dropdown segments w-select" data-name="Segment Select" id="Segment-Select-lists" name="Segment-Select">
         <option value="">Segments</option>
       </select>
@@ -19,7 +21,7 @@
     <div class="left-nav-tab">Contacts &nbsp; &nbsp;</div>
   <% end %>
   <div class="customers-hidden-menu">
-    <div class="w-form">
+    <div>
       <select class="dropdown segments w-select" data-name="Segment Select" id="contacts-segment-list" name="Segment-Select">
         <option value="">Segments</option>
       </select>
@@ -41,7 +43,10 @@
   <%= link_to user_campaigns_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
     <div class="left-nav-tab">Campaigns</div>
   <% end %>
-    <a class="left-nav-tab-wrapper w-inline-block" data-ix="display-and-hide-transaction-tab" href="#">
+
+  <% end %>
+
+  <a class="left-nav-tab-wrapper w-inline-block" data-ix="display-and-hide-transaction-tab" href="#">
     <div class="left-nav-tab transactions" data-ix="display-and-hide-transaction-tab">Transactions&nbsp;&nbsp; &nbsp;<span class="sidebar-dropdown-icon">+</span>
     </div>
   </a>
@@ -50,6 +55,15 @@
     <%= link_to 'Pre-authorized', user_transactions_path(current_user, captured: false), class: 'preauth dashboard-dropdown-link' %>
     <%= link_to 'Subscriptions', user_subscriptions_path(current_user ), class: 'subscription dashboard-dropdown-link' %>
   </div>
+
+
+  <% if current_user.is_customer? %>
+    <%= link_to business_user_path(current_user), class: "left-nav-tab-wrapper w-inline-block" do %>
+      <div class="left-nav-tab">Business</div>
+    <% end %>
+  <% end %>
+
+  <% if current_user.is_merchant? %>
   <%= link_to user_hashtags_path(current_user),  class: "left-nav-tab-wrapper w-inline-block" do %>
     <div class="left-nav-tab">Hashtags</div>
   <%end%>
@@ -57,3 +71,4 @@
   <%= link_to contacts_user_path(current_user), class: "left-nav-tab-wrapper w-inline-block" do %>
     <div class="left-nav-tab">Leads & Contacts</div>
   <% end %>
+  <%end%>

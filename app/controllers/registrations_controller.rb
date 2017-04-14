@@ -93,7 +93,7 @@ class RegistrationsController < Devise::RegistrationsController
     if params['user']['auto_reload'] == '1'
       auto_reload_amt = params['user']['auto_reload_amt']
       current_user.update(auto_reload_amt: auto_reload_amt, auto_reload: true)
-      flash[:notice] = "Auto recharge with #{auto_reload_amt}"
+      flash[:notice] = "Auto recharge enabled with #{auto_reload_amt}"
     else
       current_user.update(auto_reload: false)
       flash[:notice] = "Auto recharge disabled"
@@ -102,9 +102,9 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   def add_funds
-    current_user.account_balance += params['user']['account_balance'].to_i
+    current_user.account_balance += params['user']['account_balance'].to_f
     current_user.save
-    flash[:notice] = "Account balanced updated, Now your total balance is: #{current_user.account_balance}"
+    flash[:notice] = "Account balanced updated, Now your total balance is: #{Toolbox::Decimal.to_cents(current_user.account_balance)}"
     redirect_to sms_usage_user_path
   end
 

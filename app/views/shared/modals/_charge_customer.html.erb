@@ -1,12 +1,12 @@
-
 <%# removed all webflow data attributes %>
+
 <div class="charge-customer-form-wrapper" id="charge-a-customer-div">
   <div class="content-sub-wrapper modal w-clearfix">
     <h4 class="modal-header welcome-dash-content-container-header">Charge customer</h4>
     <%# added update-close-modals and data %>
     <a class="close-modal update-close-modals" data-parent='charge-a-customer-div'></a>
   </div>
-  <div class="charge-customer-form w-form">
+  <div class="charge-customer-form">
     <%= form_for('transaction', html: { id: 'chargeForm', class: 'w-clearfix' }) do |f| %>
       <div class="form-group col-xs-6">
          <%= transaction_customer_field(f) %>

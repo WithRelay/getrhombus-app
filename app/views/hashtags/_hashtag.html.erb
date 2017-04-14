@@ -9,7 +9,7 @@
       <% end %>
       </div>
       <div class="alt-table cb check-box-column">
-        <div class="w-form">
+        <div>
           <%= form_for(hashtag, url: user_hashtag_path(current_user, hashtag), html: { method: :delete }) do |f| %>
             <div class="select-all-check-box w-checkbox w-clearfix">
               <%= f.hidden_field :id %>

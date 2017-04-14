@@ -6,15 +6,15 @@
 <div class="w-row">
   <div class="onboarding-table-column-1 w-col w-col-8">
     <div class="onboarding-form-section">
-      
+
       <div class="onboarding-form-div sign-in signup">
         <%= link_to root_url, class: 'form-logo w-inline-block' do %>
           <%= image_tag('Relay-Transparent-500x300.png', width: 50) %>
         <% end %>
-        
-        <div class="log-in-form w-form">
+
+        <div class="log-in-form">
           <%= form_for(resource, as: resource_name, url: registration_path(resource_name, params[:value]), html: { id: 'signupForm', class: 'w-clearfix' } ) do |f| %>
-            
+
             <div class="form-group col-xs-5">
               <%= f.email_field :email, id: "email", class: "form-control email-address text-field w-input", placeholder: "Email address" %>
             </div>
@@ -41,7 +41,7 @@
             <%= f.submit "SIGN UP", class: "button log-in w-button", value: 'continue' %>
         <% end %>
         </div>
-        
+
         <div class="log-in-sign-up-cta">Already have a Rhombus account? <a class="links sign-up-cta-log-in-page" href="/users/sign_in">Sign in.</a>
         </div>
 

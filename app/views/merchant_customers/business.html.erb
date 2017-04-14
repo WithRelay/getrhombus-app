@@ -1,0 +1,82 @@
+
+<%= provide(:title, "Relay - Customers") %>
+<div class="customer-dashboard-header sub-nav-bar table-header">
+  <div class="table-header">
+    <div class="table-header">
+      <div class="header new-table-row w-row">
+        <div class="cn w-clearfix w-col w-col-3">
+          <div class="header name w-clearfix">
+            <div class="headings name"> &nbsp; Name</div>
+          </div>
+        </div>
+        <div class="fv w-clearfix w-col w-col-3">
+          <div class="cn column column-2 header">
+            <div class="first-visit headings"> &nbsp; First visit</div>
+          </div>
+        </div>
+        <div class="lv w-clearfix w-col w-col-2">
+          <div class="colum-3 column header lv">
+            <div class="headings last-visit"> &nbsp;Last visit</div>
+          </div>
+        </div>
+        <div class="avs w-clearfix w-col w-col-2">
+          <div class="avs column column-4 header">
+            <div class="avs headings last-visit"> &nbsp;Average</div>
+          </div>
+        </div>
+        <div class="ts w-clearfix w-col w-col-2">
+          <div class="column column-5 header ts">
+            <div class="headings total-spend-header">&nbsp; Total Spend</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="dashboard-body">
+ <div class="customer-dashboard-table-wrapper row-wrapper">
+        <% @business.each do |merchant_customer| %>
+        <div class="new-table-row w-row">
+          <div class="cn w-clearfix w-col w-col-3">
+            <div class="name w-clearfix subs-card-name"><%= present(merchant_customer).profile_image(current_user) %>
+              <div class="shrink-text table-text">
+                <%= link_to "#{present(merchant_customer).format_merchant_name}", customers_user_path + "/" + merchant_customer.id.to_s, class: 'non-underline-link' %>
+              </div>
+            </div>
+            <!-- <div class="cb check-box-column">
+              <div class="w-form">
+                <form data-name="Email Form 2" id="email-form-2" name="email-form-2">
+                  <div class="select-all-check-box w-checkbox w-clearfix">
+                    <input class="cb table-checkbox w-checkbox-input merchant_customers" id="node" type="checkbox" data-users="<%= merchant_customer.customer.id %>">
+                    <label class="checkbox-field-lable w-form-label" for="node">-</label>
+                  </div>
+                </form>
+              </div>
+            </div> -->
+          </div>
+          <div class="fv w-clearfix w-col w-col-3">
+            <div class="cn column column-2 w-clearfix">
+              <div class="shrink-text table-text"><%= present(merchant_customer).customer_first_visit_formatted %></div>
+            </div>
+          </div>
+          <div class="lv w-clearfix w-col w-col-2">
+            <div class="colum-3 column lv w-clearfix">
+              <div class="shrink-text table-text"><%= present(merchant_customer).customer_last_visit_formatted %></div>
+            </div>
+          </div>
+          <div class="avs w-clearfix w-col w-col-2">
+            <div class="avs column column-4 w-clearfix">
+              <div class="shrink-text table-text"><%= present(merchant_customer).average_transaction %></div>
+            </div>
+          </div>
+          <div class="ts w-clearfix w-col w-col-2">
+            <div class="column column-5 ts w-clearfix">
+              <div class="shrink-text table-text total-spend-text"><%= present(merchant_customer).total_transaction %></div>
+            </div>
+          </div>
+        </div>
+        <% end %>
+
+  </div>
+</div>

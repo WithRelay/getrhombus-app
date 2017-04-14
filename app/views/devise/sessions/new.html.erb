@@ -9,30 +9,30 @@
         <% end %>
 
 
-        <div class="log-in-form w-form">
+        <div class="log-in-form">
           <%= form_for(resource, as: resource_name, html: { id: 'signinForm', class: 'w-clearfix' }, url: session_path(resource_name)) do |f| %>
             <div class= "form-group col-xs-5">
               <%= f.email_field :email, id: 'Email-2', class: "form-control rhombusFocus login text-field w-input", placeholder: "Email" %>
             </div>
-    
+
             <div class="form-group col-xs-5">
               <%= f.password_field :password, class: "form-control rhombusFocus login text-field w-input", placeholder: "Password", id: 'Password-2' %>
             </div>
-            
+
             <%= f.hidden_field :captured_amt, id: "captured_amt", value: params[:user] ? params[:user][:captured_amt] : '' %>
             <%= f.hidden_field :referrer_uid, id: "referrer_uid", value: params[:user] ? params[:user][:referrer_uid] : '' %>
             <%= f.hidden_field :msg_id, id: "msg_id", value: params[:user] ? params[:user][:msg_id] : '' %>
             <%= f.hidden_field :tag_id, id: "tag_id", value: params[:user] ? params[:user][:tag_id] : '' %>
-            
+
             <%= f.submit 'Sign in', class: 'button log-in w-button' %>
-            
+
             <%#= f.label :remember_me %>
             <%#= f.check_box :remember_me, id: "checkbox1", checked: devise_mapping.rememberable? %>
         </div>
 
             <div class="def login-form-row w-row">
               <div class="log-in-form-row-column-1 w-col w-col-6">
-                <div class="w-form">
+                <div>
                     <div class="footer-cta form-check-box login-form w-checkbox">
                       <%= f.check_box :remember_me, id: "checkbox1", checked: devise_mapping.rememberable?, class: "w-checkbox-input" %>
                       <%= f.label :remember_me, class: "w-form-label", for: "checkbox-3" %>
