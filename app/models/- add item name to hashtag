@@ -63,8 +63,9 @@ Dorje
 - weekly summary template
 - fix validation message for create customer - just the first 3 fields
 - sidebars with links...customers should see only Transactions, businesses, Account and Billing Info
-- replace scroll bar
-- on the dashboard side: transactions, businesses. on the settings side: account settings, billing info???
+- review perfect scroll bar
+- profile image on business page is for business
+- onboarding routes for customers
 
 Bhishma
 - messageparser
