@@ -178,7 +178,17 @@ $(document).on('ready page:load', function() {
             }
           }
         }
+      },
+      'customer_spend': {
+        validators: {
+          callback: {
+            callback: function (value, validator, $field) {
+              return { valid: ($field.find(':selected').text() != "Customer spend") };
+            }
+          }
+        }
       }
+
     }
   }).on('success.form.fv', function(e) {
     e.preventDefault();
