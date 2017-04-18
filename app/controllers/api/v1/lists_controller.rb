@@ -1,4 +1,5 @@
 class Api::V1::ListsController < API::V1::BaseController
+  include CustomerSegmentQueries
 
   def index
     begin
@@ -44,7 +45,7 @@ class Api::V1::ListsController < API::V1::BaseController
                   end
         render json: message
       else
-        segment_query = get_segment_query(segment_params)
+        segment_query = get_segment_query
         list = save_list(name: segment_params[:segment_name], user_id: current_user.id,
                           segment: segment_query)
         list_errors = get_list_errors(list)
@@ -105,37 +106,32 @@ class Api::V1::ListsController < API::V1::BaseController
 
     def segment_params
       params.require(:lists).permit(:segment_type, :list_category, :segment_num_days,
-                                    :segment_filter, :amt_filter, :amt_1, :amt_2,
-                                    :segment_name).merge({ current_time: Time.current })
+                                    :segment_filter, :amt_filter, :amt_1, :amt_2, :segment_name)
     end
 
     # Get the SQL query for the segment
-    def get_segment_query(segment_attributes)
-      # Pass the current time in the user's time zone
-      segment_attributes[:current_time] = Time.current
-      if segment_attributes[:segment_type] == "new_customers"
-         DashboardMerchantQueries.get_new_customers(segment_attributes)
-      elsif segment_attributes[:segment_type] == "active_customers"
-        DashboardMerchantQueries.get_active_customers(segment_attributes)
-      elsif segment_attributes[:segment_type] == "inactive_customers"
-        DashboardMerchantQueries.get_inactive_customers(segment_attributes)
-      elsif segment_attributes[:segment_type] == "all_contacts"
-         DashboardMerchantQueries.get_all_segment(segment_attributes)
-      elsif segment_attributes[:segment_type] == "all_customers"
-        DashboardMerchantQueries.get_all_segment(segment_attributes)
-      elsif segment_attributes[:segment_type] == "contacts_with_account"
-        DashboardMerchantQueries.get_contacts_with_account
-      elsif segment_attributes[:segment_type] == "contacts_without_account"
-        DashboardMerchantQueries.get_contacts_without_account
-      elsif segment_attributes[:segment_type] == "last_purchase"
-        DashboardMerchantQueries.get_last_transactions(segment_attributes)
-      elsif segment_attributes[:segment_type] == "last_msg_received"
-        DashboardMerchantQueries.get_last_msg_received(segment_attributes)
-      elsif segment_attributes[:segment_type] == "last_msg_sent"
-        DashboardMerchantQueries.get_last_msg_sent(segment_attributes)
-      end
+    def get_segment_query
+      @filter_params = segment_params
+      self.send(segment_type_mapper) if segment_type_mapper.present?
     end
 
+    def customer_spend_mapper
+      {
+        'exactly' => :spend_exactly,
+        'more_than' => :spend_more_than_less_than,
+        'less_than' => :spend_more_than_less_than,
+      }
+    end
+
+    def segment_type_mapper
+      return :message_recieved_spend if segment_params[:segment_type] == 'last_msg_received'
+      return :message_send_spend if segment_params[:segment_type] == 'last_msg_sent'
+      return :purchase_made_with_spend if segment_params[:segment_type] == 'last_purchase'
+      segment_filter_params = { 'new_customers_exactly' => :spend_exactly,
+                                'new_customers_less_than' => :spend_more_than_less_than,
+                                'new_customers_more_than' => :spend_more_than_less_than }
+      segment_filter_params["#{segment_params[:segment_type]}_#{segment_params[:segment_filter]}"]
+    end
     # Returns an array of errors that were generated in
     # the process of creating the list
     # @param list_obj A list object
