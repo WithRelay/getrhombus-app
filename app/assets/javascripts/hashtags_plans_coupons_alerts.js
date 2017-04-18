@@ -7,21 +7,29 @@ $(document).ready(function () {
 
   // emojionearea
   if ($("#hashtag-response-textarea").length) {
-
     // for edit page - initialize count
-    emoji_area_text_length = (320 - $('#hashtag-response-textarea').val().length).toString() + " characters";
-    $('#char-count').text(emoji_area_text_length);
+    // emoji_area_text_length = (320 - $('#hashtag-response-textarea').val().length).toString() + " characters";
+    // $('#char-count').text(emoji_area_text_length);
 
-    msg_emoji_box = $('#hashtag-response-textarea').emojioneArea({
+  var msg_emoji_box =  $('#hashtag-response-textarea').emojioneArea({
       pickerPosition: "bottom"
     });
 
-    // paste - when you paste, keyup - so counter is more realtime
-    // emojibtn.click - as the name implies, blur - good measure, last resort, catch all
-    msg_emoji_box[0].emojioneArea.on("blur paste keyup emojibtn.click", function(button, event) {
-      emoji_area_text_length = 320 - msg_emoji_box[0].emojioneArea.getText().length;
-      $('#char-count').text(emoji_area_text_length.toString() + " characters");
+    $(window).load(function(){
+      $('.emojionearea-editor').counter({
+        count: "up",
+        goal: 300,
+        target: '#char-count'
+      });
     })
+
+
+    // paste - when you paste, keyup - so counter is more realtime
+    // // emojibtn.click - as the name implies, blur - good measure, last resort, catch all
+   msg_emoji_box[0].emojioneArea.on("blur paste keyup emojibtn.click", function(button, event) {
+    //   emoji_area_text_length = 320 - msg_emoji_box[0].emojioneArea.getText().length;
+    //   $('#char-count').text(emoji_area_text_length.toString() + " characters");
+     })
     .on('change', function(e) {
       $('#new_hashtag').formValidation('resetField', 'hashtag[response]');
     });
