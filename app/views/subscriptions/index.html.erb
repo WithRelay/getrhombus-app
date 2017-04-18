@@ -72,7 +72,7 @@
           <div class="transactions-table-row w-row" id="<%= subscription.id %>">
             <div class="transaction-column w-clearfix w-col w-col-3">
               <div class="card-name transaction-cell subs-card-name">
-                <%= present(subscription.merchant_customer).profile_image %>
+                <%= present(subscription.merchant_customer).profile_image(customer) %>
                 <div class="table-text customer-name">
                   <%= link_to "#{present(subscription.merchant_customer).format_customer_name}", "customers/#{subscription.merchant_customer.id}", class: 'non-underline-link', action: "show" %>
                 </div>
