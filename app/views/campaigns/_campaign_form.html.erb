@@ -1,26 +1,24 @@
 <style>
-.selectize-dropdown-content {
-  margin-left: -33px !important;
-  width: 195px;
-  position: absolute;
-}
-.selectize-control .form-control .editor .text-field .w-input .single{
-  padding-top: 16px;
-}
-.name{
-  width: 100% !important;
-  border-bottom: none !important;
-  height: 16px !important;
-  background: #1b9dec !important;
-}
-.has-error .trumbowyg-editor{
-  border: red solid 1px;
-}
-.dashboard-nav{
-  left: 20%;
-  width: 80%;
-  min-width: 80%;
-}
+  .selectize-dropdown-content {
+    margin-left: -33px !important;
+    width: 80%;
+    position: absolute;
+    margin-top: 2px !important;
+  }
+  .name{
+    width: 100% !important;
+    border-bottom: none !important;
+    height: 16px !important;
+    background: #1b9dec !important;
+  }
+  .has-error .trumbowyg-editor{
+    border: red solid 1px;
+  }
+  .dashboard-nav{
+    left: 20%;
+    width: 80%;
+    min-width: 80%;
+  }
 </style>
 <div class="campaign-editor-options">
   <%= form_for [current_user, @campaign], html: { multipart: true, id: 'campaignForm', class: 'w-clearfix' } do |f| %>
