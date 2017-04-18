@@ -25,7 +25,6 @@
       <div class="form-group col-xs-6">
         <%= f.text_area :text, class: 'form-control notification-message text-area w-input', id: "Notification-Message", placeholder: "Enter notification message" %>
       </div>
-
       <div class="char-count notications" id= "textBoxCounter" ></div>
       <%= f.text_field :date_time, data: { name: "Delivery Date &amp; Time" }, class: 'daterange delivery-date-time-picker text-field w-input', value: present(reminder).to_user_date_time %>
       <div class="notification-frequency radio-button w-radio">
