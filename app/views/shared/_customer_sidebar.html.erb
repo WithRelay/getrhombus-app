@@ -9,7 +9,7 @@
           <option value="last_msg_sent">Last message sent</option>
           <option value="last_purchase">Last purchase made</option>
         </select>
-        <select class="dropdown range w-select" id="days-filter" >
+        <select class="dropdown range w-select" id="days-filter">
           <option value="more_than">More than</option>
           <option value="exactly">Exactly</option>
           <option value="less_than">Less than</option>
@@ -19,13 +19,15 @@
           <input class="day-count text-field w-input form-control" id="num_days" name="number_of_days" placeholder="Days ago" type="text">
         </div>
         <label class="form-label segment-label" for="segment_filter_by"> &nbsp;Filter segment by</label>
-        <select class="dropdown range w-select" id="segment_filter_by">
-          <option value="customer_spend" selected="selected">Customer spend</option>
-          <option value="more_than">More than</option>
-          <option value="exactly">Exactly</option>
-          <option value="less_than">Less than</option>
-          <op tion value="between">Between</option>
-        </select>
+        <div class='form-group col-xs-6'>
+          <select class="dropdown range w-select form-control" id="segment_filter_by" name="customer_spend">
+            <option value="customer_spend" selected="selected">Customer spend</option>
+            <option value="more_than">More than</option>
+            <option value="exactly">Exactly</option>
+            <option value="less_than">Less than</option>
+            <op tion value="between">Between</option>
+          </select>
+        </div>
         <div class='form-group col-xs-6'>
           <input name="amount_1_segment" class="amount-text-field text-field w-input form-control" type="text" id="amount_1" placeholder="From amount">
         </div>
