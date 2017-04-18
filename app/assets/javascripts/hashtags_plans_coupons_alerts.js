@@ -17,9 +17,10 @@ $(document).ready(function () {
 
     $(window).load(function(){
       $('.emojionearea-editor').counter({
-        count: "up",
+        count: "down",
         goal: 300,
-        target: '#char-count'
+        target: '#char-count',
+        msg: 'character(s)'
       });
     })
 
