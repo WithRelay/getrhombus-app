@@ -64,10 +64,9 @@ class Campaign
       $('#sendTestCampaign').hide()
       $('#textBoxCounter').html($('#textBoxCounter').html().replace('upload an image', ''))
       $('.welcome-dash-content-container-header').hide()
-      $('.emojionearea-editor').counter({ type: 'char', append: false, target: '#textBoxCounter' })
+      $('.newMessage .emojionearea-editor').counter({ type: 'char', append: false, target: '#textBoxCounter', goal: 1600 })
     else
       removeDiv()
-      $('.emojionearea-editor').counter({ type: 'char', append: false, target: '#textBoxCounter' })
       $('.emailSubject').hide()
       $('#select-images').val('')
       $('#new-image-previews').html('')
@@ -76,6 +75,7 @@ class Campaign
       $('#textBoxCounter').html($('#textBoxCounter').html().replace('upload an image', ''))
       $('.welcome-dash-content-container-header').hide()
       trumbowygSetting(false, @textArea)
+      $('.newMessage .emojionearea-editor').counter({ type: 'char', append: false, target: '#textBoxCounter', goal: 1600 })
 
   isEmailChecked = (channel) ->
     $(channel).val() == EMAIL_CHANNEL
@@ -131,7 +131,7 @@ $( document ).on 'ready page:load', ->
   campaign = new Campaign({ pickerPosition: "bottom", tonesStyle: "bullet" })
   campaign.datePicker(new DatePicker( '.daterange', true, { time: true, select: true } ))
   window.onload = ->
-    $('.newMessage .emojionearea-editor').counter({ type: 'char', append: false, target: '#textBoxCounter' })
+    $('.newMessage .emojionearea-editor').counter({ type: 'char', append: false, target: '#textBoxCounter', goal: 1600 })
 
   $(document).on 'change', 'input[name=file]', ->
     # this is for client side validation of locally uploaded images
