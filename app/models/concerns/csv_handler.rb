@@ -13,7 +13,7 @@ module CSVHandler
           Transaction.where(column_str + " = ? AND created_at BETWEEN ? AND ?", user_id, Time.zone.parse(start_date), Time.zone.parse(end_date))
             .where.not(subscription_id: nil)
         else
-          Transaction.exclude_refunded_transactions().where(column_str + " = ? AND created_at BETWEEN ? AND ?", user_id, Time.zone.parse(start_date), Time.zone.parse(end_date))
+          Transaction.exclude_refunded_transactions().where(column_str + " = ? AND transactions.created_at BETWEEN ? AND ?", user_id, Time.zone.parse(start_date), Time.zone.parse(end_date))
             .only_captured_transactions().exclude_subscriptions()
         end
         transactions.each do |t|
@@ -26,7 +26,7 @@ module CSVHandler
   end
 
   def get_csv_columns(is_merchant)
-    return ["Date #{Time.current.zone}", "transaction_number", "customer_email", "txn_amount", "txn_amount_less_fees", "card_name", "last4", "notes", "currency"] if is_merchant
+    return ["Date (#{Time.current.zone})", "transaction_number", "customer_email", "txn_amount", "txn_amount_less_fees", "card_name", "last4", "notes", "currency"] if is_merchant
     ["Date #{Time.current.zone}", "transaction_number", "business_email", "business_name", "txn_amount", "card_name", "last4", "notes", "currency"]
   end
 

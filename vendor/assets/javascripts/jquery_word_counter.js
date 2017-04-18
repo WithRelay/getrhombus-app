@@ -1,9 +1,4 @@
-/*! word-and-character-counter.js
- v2.4 (c) Wilkins Fernandez
- MIT License
- */
 // jscs:disable maximumLineLength
-// line no. 184 to 192 customize
 (function ($) {
   "use strict";
   $.fn.extend({
@@ -55,7 +50,7 @@
 
           // Insert counter after or before text area/box
           $countObj = $("<span id=" + counterID + "/>");
-          var counterDiv = $("<div/>").attr("id", objID + "_counter").append($countObj)
+          var counterDiv = $("<div role='status'/>").attr("id", objID + "_counter").append($countObj)
               .append(" " + methods.setMsg());
           if (options.containerClass && options.containerClass.length) {
 
@@ -74,16 +69,19 @@
                 $(options.target).prepend(counterDiv);
           }
 
+          // Set aria-controls attribute of text area/box
+          $obj.attr('aria-controls', objID + '_counter');
+
           // Bind methods to events
           methods.bind($obj);
         },
 
         // Bind everything!
         bind: function ($obj) {
-          $obj.bind(
+          $obj.on(
               "keypress.counter keydown.counter keyup.counter blur.counter focus.counter change.counter paste.counter",
               methods.updateCounter);
-          $obj.bind("keydown.counter", methods.doStopTyping);
+          $obj.on("keydown.counter", methods.doStopTyping);
           $obj.trigger("keydown");
         },
 
@@ -165,6 +163,7 @@
           }
         },
         updateCounter: function (e) {
+
           // If the element has the contentedtiable attribute, use the text value.
           // Otherwise use an input value
           var $value = ($(this).attr("contentEditable") == "true") ? $(this).text() : $(this).val();
@@ -179,35 +178,15 @@
 
             // ...down
             if (options.count === defaults.count) {
-              // This area is customize
-             // this do not effects other place we have used. I have check the campaign_channel id
-              if ($('#Channel').length > 0){
-                // 0 represents for sms and 1 for mms
-                if ($('#Channel').val()=="0" || $('#Channel').val()=="1"){
-                  countIndex = 1600 - $value.length;
-                }
-                // value 2 represent for facebook messenger
-                else if (($('#Channel').val()=="2")){
-                  countIndex = 320 - $value.length;
-                }
-                // else conditions is for other values like email
-                else {
-                  countIndex = options.goal - $value.length;
-                }
+              countIndex = options.goal - $value.length;
+
+              // Prevent negative counter
+              if (countIndex <= 0) {
+                $countObj.text("0");
+              } else {
+                $countObj.text(countIndex);
               }
-              else {
-                countIndex = options.goal - $value.length;
-              }
-              // we need negative count so comment the original code and customize
-              // if (countIndex <= 0) {
-              //   $countObj.text(countIndex);
-              // } else {
-              //   $countObj.text(countIndex);
-              // }
-             $countObj.text(countIndex);
-             // This section is being modified because we need custom message in plugin
-             // The custom is only if character is 0 and pass in .html function parameter
-             if (countIndex==0) $countObj.parent().html('<span id="undefined_count">0</span> Characters')
+
               // ...up
             } else if (options.count === "up") {
               countIndex = $value.length;
@@ -242,11 +221,9 @@
             }
           }
         },
-        updateNewCounter: function(e, value){
-          countIndex = 400
-        },
         /* Stops the ability to type */
         doStopTyping: function (e) {
+
           // backspace, delete, tab, left, up, right, down, end, home, spacebar
           var keys = [46, 8, 9, 35, 36, 37, 38, 39, 40, 32];
           if (methods.isGoalReached(e)) {
@@ -272,12 +249,15 @@
           if (noLimit) {
             return false;
           }
+
           // Counting down
           if (options.count === defaults.count) {
             _goal = 0;
             return (countIndex <= _goal);
           } else {
+
             // Counting up
+            _goal = options.goal;
             return (countIndex >= _goal);
           }
         },

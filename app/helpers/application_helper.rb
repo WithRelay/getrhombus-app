@@ -76,7 +76,7 @@ module ApplicationHelper
   end
 
   def authenticated_pages
-     unauthenticate_controller || restrict_devise_actions || relay_docs_pages || link_facebook
+     unauthenticate_controller || restrict_devise_actions || relay_docs_pages || link_facebook || csv_actions
   end
 
   def link_facebook
@@ -112,8 +112,13 @@ module ApplicationHelper
   end
 
   def unauthenticate_controller
-    static_controllers = ['static_pages', 'contact_forms' ]
+    static_controllers = ['static_pages']
     static_controllers.include?(params[:controller]) #unless relay_docs_pages
+  end
+
+  def csv_actions
+    csv_actions = ['transactions-download_csv', 'subscriptions-download_csv', 'users-customer_csv_template']
+    csv_actions.include?(params_controller_action)
   end
 
   def restrict_static_pages
