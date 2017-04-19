@@ -8,21 +8,20 @@ $(document).ready(function () {
   // emojionearea
   if ($("#hashtag-response-textarea").length) {
 
-    // for edit page - initialize count
-    emoji_area_text_length = (320 - $('#hashtag-response-textarea').val().length).toString() + " characters";
-    $('#char-count').text(emoji_area_text_length);
-
-    msg_emoji_box = $('#hashtag-response-textarea').emojioneArea({
+    var msg_emoji_box =  $('#hashtag-response-textarea').emojioneArea({
       pickerPosition: "bottom"
     });
 
-    // paste - when you paste, keyup - so counter is more realtime
-    // emojibtn.click - as the name implies, blur - good measure, last resort, catch all
-    msg_emoji_box[0].emojioneArea.on("blur paste keyup emojibtn.click", function(button, event) {
-      emoji_area_text_length = 320 - msg_emoji_box[0].emojioneArea.getText().length;
-      $('#char-count').text(emoji_area_text_length.toString() + " characters");
-    })
-    .on('change', function(e) {
+    $(window).load(function(){
+      $('.emojionearea-editor').counter({
+        count: "down",
+        goal: 300,
+        target: '#char-count',
+        msg: 'character(s)'
+      });
+    });
+
+    msg_emoji_box[0].emojioneArea.on('change', function(e) {
       $('#new_hashtag').formValidation('resetField', 'hashtag[response]');
     });
 
@@ -163,13 +162,13 @@ $(document).ready(function () {
   $('#hashtag_tag_type').change(function(){
     if (this.value == '0') {
       $('.hashtag-payment-settings').slideUp(200);
-      $('#interval-settings').slideUp(200);
+      $('#interval-settings').hide();
       $('#hashtag_amount').val('');
     } else {
       if (this.value == '1') {
-        $('#interval-settings').slideUp(200);
+        $('#interval-settings').hide();
       } else {
-        $('#interval-settings').slideDown(200);
+        $('#interval-settings').show();
       }
       $('.hashtag-payment-settings').slideDown(200);
     }

@@ -57,11 +57,12 @@ var FlashHandler = new function() {
     hideToastr();
 
     var class_name = (type === 'error') ? 'failure toasters' : 'toasters' ,
-        close_button_class = (type === 'error') ? 'failure toaster-font-awesome' : 'toaster-font-awesome'
+        close_button_class = (type === 'error') ? 'failure toaster-font-awesome' : 'toaster-font-awesome',
+        message_class = (type === 'error') ? 'break-word failure toaster-text word-wrap' : 'break-word toaster-text word-wrap'
     $('body').prepend('<div class="'+class_name+'">\
       <div class="toaster-row w-row">\
         <div class="toaster-row-column-1 w-col w-col-11">\
-          <div class="toaster-text">\
+          <div class="'+ message_class +'">\
             '+message+'\
           </div>\
         </div>\

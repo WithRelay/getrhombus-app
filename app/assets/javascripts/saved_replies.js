@@ -9,6 +9,4 @@ $(document).ready(function() {
   var reply_body_emoji_box = $('#Edit-Saved-Replies-Editor').emojioneArea({
     pickerPosition: 'bottom',
   });
-
-
 });

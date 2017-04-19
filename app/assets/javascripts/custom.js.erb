@@ -28,6 +28,11 @@ $(document).ready(function() {
   var setting_sidebar = $('.side-bar.w-clearfix');
   setting_sidebar && $(setting_sidebar).perfectScrollbar();
 
+  $('.modal-body') && $('.modal-body').perfectScrollbar();
+
+  $('#create-hashtag-sidebar') && $("#create-hashtag-sidebar").perfectScrollbar();
+
+
   $('#type-it').typeIt({
     strings: ["customers", "shift workers", "candidates", "students", "donors", "employees", "hotel guests"],
     speed: 120,

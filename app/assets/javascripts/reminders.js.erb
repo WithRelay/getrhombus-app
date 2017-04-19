@@ -29,21 +29,10 @@ $(document).on('ready page:load', function() {
   //    });
   // });
 
-  function formatDate(date) {
-    var hours = date.getHours();
-    var minutes = date.getMinutes();
-    var ampm = hours >= 12 ? 'PM' : 'AM';
-    hours = hours % 12;
-    hours = hours ? hours : 12; // the hour '0' should be '12'
-    minutes = minutes < 10 ? '0'+minutes : minutes;
-    var strTime = hours + ':' + minutes + ' ' + ampm;
-    return  date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate() + "  " + strTime;
-  }
-  //
-
   $('#set-new-reminder-loader').click(function(){
     customtersSearch();
   });
+
 function customtersSearch(option = []){
   var labelSearchField = option.length < 1 ? 'description' : 'phone_number'
   var valueField = option.length < 1 ? 'uid' : 'id'
@@ -84,6 +73,25 @@ function customtersSearch(option = []){
   //   });
 //
   $('.notification-message').emojioneArea();
+
+
+  $(window).load(function(){
+    $('#form-reminder-div .notification-message').find('.emojionearea-editor').counter({
+      count: "down",
+      goal: 150,
+      target: '#textBoxCounter',
+      msg: 'character(s)'
+    });
+  });
+
+  $(window).load(function(){
+    $('#edit-reminder-div .notification-message').find('.emojionearea-editor').counter({
+      count: "down",
+      goal: 150,
+      target: '#textBoxCounter1',
+      msg: 'character(s)'
+    });
+  });
 
   $('.reminderForm').submit(function(){
     $(this).formValidation('revalidateField', 'reminder[text]');

@@ -1,5 +1,5 @@
 
-<%= provide(:title, "Relay - Customers") %>
+<%= provide(:title, "Relay - Businesses") %>
 <div class="customer-dashboard-header sub-nav-bar table-header">
   <div class="table-header">
     <div class="table-header">
@@ -41,7 +41,7 @@
           <div class="cn w-clearfix w-col w-col-3">
             <div class="name w-clearfix subs-card-name"><%= present(merchant_customer).profile_image(current_user) %>
               <div class="shrink-text table-text">
-                <%= link_to "#{present(merchant_customer).format_merchant_name}", customers_user_path + "/" + merchant_customer.id.to_s, class: 'non-underline-link' %>
+                <%= present(merchant_customer).format_merchant_name %>
               </div>
             </div>
             <!-- <div class="cb check-box-column">

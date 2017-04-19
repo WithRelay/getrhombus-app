@@ -49,24 +49,7 @@
     </div>
   </div>
 </div>
-<div class="customer-dash sub-nav-bar">
-  <div class="sub-nav-bar-row w-row">
-    <div class="sub-nav-bar-row-column-1 w-clearfix w-col w-col-2">
-      <div class="customer-count shrink-text"><%= @merchant_contacts.count %> of<span class="sub-nav-sub-text">/<%= @merchant_contacts.count %> leads</span>
-      </div>
-    </div>
-    <div class="w-col w-col-6">
-      <div class="customer-dashoard sub-nav-options-wrapper w-clearfix">
-        <%= link_to ' &nbsp;<strong>SMS Channel</strong>'.html_safe, contacts_user_path(current_user, uid_type: 'phone_number'), class: 'sub-nav-button w-button'%>
-        <%= link_to ' &nbsp;<strong>Messenger Channel</strong>'.html_safe, contacts_user_path(current_user, uid_type: 'messenger'), class: 'import sub-nav-button w-button'%>
-        <a class="sub-nav-button w-button" data-ix="create-list" href="#" id='create_list_button'> &nbsp;<strong>Create&nbsp;list</strong></a>
-        <div class='modal-background w-hidden modal-body new-list-modal'>
-          <%= render 'shared/modals/new_list' %>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+<%= render 'sub_nav_bar' %>
 <div class="dashboard-body">
   <div class="customer-dashboard-table-wrapper row-wrapper">
     <%= render @merchant_contacts %>

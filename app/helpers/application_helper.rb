@@ -34,7 +34,8 @@ module ApplicationHelper
                           'campaigns-index' => 'Campaigns',
                           'transactions-index' => "Charges",
                           'subscriptions-index' => 'subscriptions',
-                          'lists-index' => 'List'
+                          'lists-index' => 'List',
+                          'merchant_customers-business' => 'Businesses'
                         }
     sidebar_name_hash["#{param}"]
   end
@@ -159,7 +160,7 @@ module ApplicationHelper
   end
 
   def dynamic_pages_overflow_hidden
-    return 'overflow: hidden;' unless params[:controller] == 'static_pages' || params[:controller] == 'reminders'
+    return 'overflow: hidden;' unless params[:controller] == 'static_pages' # || params[:controller] == 'reminders'
   end
 
 end
