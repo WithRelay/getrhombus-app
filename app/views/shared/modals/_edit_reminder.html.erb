@@ -23,7 +23,7 @@
       <div class="form-group col-xs-6">
         <%= f.text_area :text, class: 'form-control notification-message text-area w-input form-control', id: "Notification-Message" %>
       </div>
-      <div class="char-count notications" id= "textBoxCounter" ></div>
+      <div class="char-count notications" id= "textBoxCounter1" ></div>
       <%= f.text_field :date_time, data: { name: "Delivery Date &amp; Time" }, class: 'daterange delivery-date-time-picker text-field w-input', id:'reminder-date-time' %>
       <div class="notification-frequency radio-button w-radio">
         <%= f.radio_button :frequency_type, 0, id: 'oneTimeFrequency', class: 'w-radio-input', data: { name: "Notification Frequency" }, checked: is_one_time_checked?(reminder) %>
