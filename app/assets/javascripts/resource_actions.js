@@ -2,6 +2,17 @@ $(document).on('ready',function(){
 //this function used to delete/deactive Hashtag/Reminder/SavedReply
 //It works after the confirmation dialog
 
+function formatDate(date) {
+	var hours = date.getHours();
+	var minutes = date.getMinutes();
+	var ampm = hours >= 12 ? 'PM' : 'AM';
+	hours = hours % 12;
+	hours = hours ? hours : 12; // the hour '0' should be '12'
+	minutes = minutes < 10 ? '0'+minutes : minutes;
+	var strTime = hours + ':' + minutes + ' ' + ampm;
+	return  date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate() + "  " + strTime;
+}
+
 	$(document).on('click', '.cancel-yes', function(e){
     e.preventDefault();
     var selectedElement = selectCheckedElement();
@@ -104,7 +115,6 @@ $('#delete-reminder').click(function(e){
 			FlashHandler.setConfirmationDialog('#delete-hashtag','Are you sure, you want to remove the hashtag?', 'Delete', 'isDistroy');
 			return false;
 		}
-
   });
 
   $('#deactivate-hashtag').click(function() {
