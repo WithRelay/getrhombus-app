@@ -24,10 +24,6 @@ Rails.application.routes.draw  do
     ## devise routes
     devise_scope :user do
       member do
-        get 'add-subscription' => 'registrations#add_subscription'
-        get 'add-rhombus-number' => 'registrations#add_rhombus_number'
-        get 'add-profile-info' => 'registrations#add_profile_info'
-        get 'add-card-info' => 'registrations#add_card_info'
         patch "registration/update", to: "registrations#update"
       end
     end
@@ -55,19 +51,24 @@ Rails.application.routes.draw  do
         end
         member do
           get 'business' => 'merchant_customers#business'
+          get 'add-card-info' => 'registrations#add_card_info'
         end
         resources :transactions do
           get 'download' => 'transactions#download_csv', constraints: { format: 'csv' }, on: :collection
         end
       end
 
-      authenticate :user, -> (user) {user.is_merchant? || user.is_platform? } do
+      authenticate :user, -> (user) {user.is_merchant? } do
         ## devise routes
         devise_scope :user do
           member do
+
+            get 'add-subscription' => 'registrations#add_subscription'
+            get 'add-rhombus-number' => 'registrations#add_rhombus_number'
+            get 'add-profile-info' => 'registrations#add_profile_info'
+
             #show to merchant and customers both
             get "billing-information", to: "registrations#billing_information"
-
             get "business-settings", to: "registrations#business_settings"
 
             get "account-settings", to: "registrations#account_settings"
