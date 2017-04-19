@@ -34,7 +34,8 @@ module ApplicationHelper
                           'campaigns-index' => 'Campaigns',
                           'transactions-index' => "Charges",
                           'subscriptions-index' => 'subscriptions',
-                          'lists-index' => 'List'
+                          'lists-index' => 'List',
+                          'merchant_customers-business' => 'Businesses'
                         }
     sidebar_name_hash["#{param}"]
   end
