@@ -1,38 +1,11 @@
-<!-- <div class="customer-dash sub-nav-bar">
-  <div class="sub-nav-bar-row w-row">
-    <div class="sub-nav-bar-row-column-1 w-clearfix w-col w-col-2">
-      <div class="customer-count shrink-text"><span class="sub-nav-sub-text">Customers</span>
-      </div>
-    </div>
-    <div class="w-col w-col-6">
-      <div class="customer-dashoard sub-nav-options-wrapper w-clearfix">
-
-        <a class="w-button sub-nav-button modal-loader"  href="#" modal-target='new-customer-modal'>&nbsp;<strong>Create customer</strong></a>
-        <div class='modal-background w-hidden modal-body new-customer-modal'>
-          <%= render 'shared/modals/create_customer' %>
-        </div>
-
-        <a class="import sub-nav-button w-button" href="#" modal-target='import-customers-modal'>&nbsp; <strong>Import customers</strong></a>
-        <div class='modal-background w-hidden modal-body import-customers-modal'>
-          <%= render 'shared/modals/import_customers' %>
-        </div>
-      </div>
-    </div>
-    <div class="sub-nav-bar-search-row w-col w-col-4">
-      <div class="customer-dash search-bar-form-wrapper">
-        <form data-name="Email Form" id="email-form" name="email-form">
-          <input class="search-field w-input" data-name="Search 7" id="Search-7" maxlength="256" name="Search-7" placeholder="Search" type="text">
-        </form>
-      </div>
-    </div>
-  </div>
-</div> -->
+<%= render 'sub_nav_bar' %>
 <div class="dashboard-body">
   <div class="blank-page-container w-container">
     <%= image_tag('011_086.png', class: 'blank-page-icon') %>
     <h1 class="empty-state-dash hero-h1 home-header"> You have no Contacts </h1>
     <%= link_to 'Return to Dashboard',user_path(current_user), class: "button error-page-button w-button"  %>
     <h5 class="connect-facebook footer-cta-subheading signup-box-subheading">
-      <a href="#" class="connect-facebook-messenger-link">or connect facebook messenger</a></h5>
+      <%= link_to 'or connect facebook messenger', integrations_user_path(current_user), class: 'connect-facebook-messenger-link' %>
+    </h5>
   </div>
 </div>
