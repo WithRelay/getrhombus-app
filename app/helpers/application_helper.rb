@@ -159,7 +159,7 @@ module ApplicationHelper
   end
 
   def dynamic_pages_overflow_hidden
-    return 'overflow: hidden;' unless params[:controller] == 'static_pages' || params[:controller] == 'reminders'
+    return 'overflow: hidden;' unless params[:controller] == 'static_pages' # || params[:controller] == 'reminders'
   end
 
 end
