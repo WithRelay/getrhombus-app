@@ -123,11 +123,11 @@ class User < ActiveRecord::Base
   enum status: { inactive: 0, active: 1 }
 
   def is_merchant?
-    user_level == 1
+    user_level == 1 || self.is_platform?
   end
 
   def is_customer?
-    user_level == 0
+    user_level == 0 || self.is_platform?
   end
 
   def full_name
