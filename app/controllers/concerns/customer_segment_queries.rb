@@ -10,6 +10,7 @@ module CustomerSegmentQueries
 
   def get_segment_query
     @filter_params = segment_params
+    binding.pry
     unless segment_type_mapper.nil? && segment_filter_mapper.nil?
       segment_filter_mapper + self.send(segment_type_mapper)
     end
@@ -38,12 +39,12 @@ module CustomerSegmentQueries
   end
 
   def created_less_than_more_than
-    "AND u.created_at #{map_customer_filter_to_operator} DATE_SUB(NOW(), INTERVAL \
+    "AND m_c.created_at #{map_customer_filter_to_operator} DATE_SUB(NOW(), INTERVAL \
     #{@filter_params[:segment_num_days]} DAY)"
   end
 
   def created_exactly
-    "AND CAST(u.created_at as DATE) = \
+    "AND CAST(m_c.created_at as DATE) = \
     CAST(DATE_SUB(CONVERT_TZ(NOW(), '#{Time.zone.name}', '#{team.time_zone}'), INTERVAL \
     #{@filter_params[:segment_num_days]} DAY) as DATE)"
   end
