@@ -110,28 +110,6 @@ class Api::V1::ListsController < API::V1::BaseController
     end
 
     # Get the SQL query for the segment
-    def get_segment_query
-      @filter_params = segment_params
-      self.send(segment_type_mapper) if segment_type_mapper.present?
-    end
-
-    def customer_spend_mapper
-      {
-        'exactly' => :spend_exactly,
-        'more_than' => :spend_more_than_less_than,
-        'less_than' => :spend_more_than_less_than,
-      }
-    end
-
-    def segment_type_mapper
-      return :message_recieved_spend if segment_params[:segment_type] == 'last_msg_received'
-      return :message_send_spend if segment_params[:segment_type] == 'last_msg_sent'
-      return :purchase_made_with_spend if segment_params[:segment_type] == 'last_purchase'
-      segment_filter_params = { 'new_customers_exactly' => :spend_exactly,
-                                'new_customers_less_than' => :spend_more_than_less_than,
-                                'new_customers_more_than' => :spend_more_than_less_than }
-      segment_filter_params["#{segment_params[:segment_type]}_#{segment_params[:segment_filter]}"]
-    end
     # Returns an array of errors that were generated in
     # the process of creating the list
     # @param list_obj A list object
