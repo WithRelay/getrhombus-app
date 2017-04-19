@@ -54,6 +54,7 @@
 //= require jquery.payment
 //= require cocoon
 //= require jquery_word_counter
+//= require jquery-ui.min
 //= require trumbowyg.min
 //= require emojify
 //= require emojionearea
