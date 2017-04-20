@@ -1,5 +1,6 @@
 class Api::V1::ListsController < API::V1::BaseController
   include CustomerSegmentQueries
+  include ContactSegmentQueries
 
   def index
     begin
@@ -45,7 +46,8 @@ class Api::V1::ListsController < API::V1::BaseController
                   end
         render json: message
       else
-        segment_query = get_segment_query
+        @filter_params = segment_params
+        segment_query = segment_params[:list_type] == 'contact' ? contact_segment_query : customer_segment_query
         list = save_list(name: segment_params[:segment_name], user_id: current_user.id,
                           segment: segment_query)
         list_errors = get_list_errors(list)
@@ -106,7 +108,8 @@ class Api::V1::ListsController < API::V1::BaseController
 
     def segment_params
       params.require(:lists).permit(:segment_type, :list_category, :segment_num_days,
-                                    :segment_filter, :amt_filter, :amt_1, :amt_2, :segment_name)
+                                    :segment_filter, :amt_filter, :amt_1, :amt_2, :segment_name,
+                                    :list_type)
     end
 
     # Get the SQL query for the segment
