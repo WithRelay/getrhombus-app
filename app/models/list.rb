@@ -24,8 +24,8 @@ class List < ActiveRecord::Base
         # return generate_list_users user_lists, type="segment"
       elsif self.merchant?
         query = self.segment.gsub('NOW()', "'#{Time.current}'")
-        User.find_by_sql(query) if self.customer?
-        MerchantContact.find_by_sql(query) if self.contact?
+        return User.find_by_sql(query) if self.customer?
+        return MerchantContact.find_by_sql(query) if self.contact?
       end
     end
     generate_list_users self.user_lists
