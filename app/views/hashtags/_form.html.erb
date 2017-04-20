@@ -9,7 +9,7 @@
     </div>
 
     <div class="dashboard-nav-links">All Customers</div>
-    <h5 class="left-nav signup-box-subheading">CREATE HASHTAG</h5>
+    <h5 class="left-nav signup-box-subheading shrink-text">CREATE HASHTAG</h5>
     <div class="campaign-editor-options">
 
       <%= f.label :name, class: 'editor-options form-label' do %>
@@ -57,7 +57,6 @@
         </div>
       </div>
 
-
       <div class="check-box editor w-checkbox w-clearfix lebel_padding padding_tweet_enable">
         <%= f.check_box :enable_tweet, class: "w-checkbox-input" %><label class="check-radio-text w-form-label" for="Deliver-now-2">Enable Tweet</label>
       </div>
@@ -72,11 +71,11 @@
     <div class="dash-content-container message-editor">
       <div>
         <div class='form-group col-xs-6'>
-          <%= f.text_area :response, class: "form-control message-editor text-area w-input", placeholder: "Type message", id: "hashtag-response-textarea", maxlength: 10 %>
+          <%= f.text_area :response, class: "form-control message-editor text-area w-input", placeholder: "Type message", id: "hashtag-response-textarea" %>
         </div>
 
       </div>
-      <div class="editor-button-container">
+      <div class="editor-button-container" style="margin-top: 2%">
         <div class="w-row">
           <div class="w-col w-col-6">
             <%# added id %>

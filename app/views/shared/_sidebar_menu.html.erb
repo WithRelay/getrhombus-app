@@ -4,7 +4,7 @@
       <%= image_tag('Relay-Transparent.png', width: 50, class: 'dashboard-logo') %>
     <% end %>
   </div>
-  <h5 class="left-nav signup-box-subheading"><%= sidebar_name "#{params[:controller]}-#{params[:action]}" %></h5>
+  <h5 class="left-nav signup-box-subheading shrink-text"><%= sidebar_name "#{params[:controller]}-#{params[:action]}" %></h5>
 
   <% if current_user.is_merchant? %>
   <%= link_to customers_user_path(current_user), class: "left-nav-tab-wrapper w-inline-block" do %>

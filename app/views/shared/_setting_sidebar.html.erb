@@ -4,7 +4,7 @@
       <%= image_tag 'Relay-Transparent-500x300.png', class: 'dashboard-logo', width: '50' %>
     <% end %>
   </div>
-  <h5 class="left-nav signup-box-subheading"><%= sidebar_name "#{params[:controller]}-#{params[:action]}" %></h5>
+  <h5 class="left-nav signup-box-subheading shrink-text"><%= sidebar_name "#{params[:controller]}-#{params[:action]}" %></h5>
 
   <% if current_user.is_customer? %>
 
@@ -80,7 +80,7 @@
 <!-- <div class="side-bar w-clearfix">
   <div class="dashboard-logo-wrapper"><img class="dashboard-logo" src="images/Relay-Transparent-500x300.png" width="50">
   </div>
-  <h5 class="left-nav signup-box-subheading">manage plans</h5>
+  <h5 class="left-nav signup-box-subheading shrink-text">manage plans</h5>
   <a class="left-nav-tab-wrapper w-inline-block" href="#">
     <div class="left-nav-tab" data-ix="display-and-hide-customers">Account</div>
   </a>

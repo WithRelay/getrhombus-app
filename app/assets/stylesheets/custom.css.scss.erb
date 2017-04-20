@@ -146,8 +146,8 @@ $success-color: #43e50f;
 }
 .campaign-buttons-list{
   float: right;
-  margin-top: -43px;
-  width: 277px;
+   margin-top: -5%;
+  // width: 277px;
 }
 .campaign-button{
   margin-top: 8px !important;
@@ -171,7 +171,7 @@ $success-color: #43e50f;
 .has-error {
   border-color: $error-color !important;
   .form-control {
-    border-color: $error-color !important;
+    border: 1px solid $error-color !important;
   }
 }
 
@@ -276,19 +276,6 @@ textarea { resize: none;}
 .button.remove_fb_integration {
   margin-top: 40px;
   margin-right: -4%;
-}
-
-.browser-notification-link-block {
-  position: fixed !important;
-  margin: 5% auto !important;
-  left: 35%;
-  z-index: 10000 !important;
-}
-
-.browser-notification-link-block.copied {
-  top: 0 !important;
-  right: 0 !important;
-  margin-right: 0 !important;
 }
 
 .cancel-subscription-wrapper {
@@ -435,7 +422,21 @@ textarea { resize: none;}
 /* end create customer */
 
 .toasters {
-  margin: 64px 0 0px auto !important;
+  margin: 5% auto !important;
+  z-index: 10000 !important;
+  top: 0 !important;
+  margin-right: 0 !important;
+}
+
+.browser-notification-link-block {
+  position: absolute;
+  right: -500px;
+  margin: 5% auto !important;
+  z-index: 10000 !important;
+}
+
+.browser-notification-link-block.copied {
+  top: 0 !important;
   margin-right: 0 !important;
 }
 

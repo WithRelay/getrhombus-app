@@ -33,23 +33,15 @@ var FlashHandler = new function() {
     var messageToSet = typeObj[type] || 'Attention';
     showToastr(messageToSet, arrayToString(msg));
     if (typeObj[type] !== 'error') {
-      $('.toasters').animate({
-        opacity: 'hide', // animate fadeOut
-        width: 'hide',  // animate slideUp
-        height: 'hide'
-      }, 'slow', 'linear', function() {
-        $(this).remove();
-      });
+      setTimeout(
+        function()
+        {
+          closeToastrAnimation('.toasters')
+        }, 6000);
     }
     $('.toaster-font-awesome').on('click', function (e) {
       e.preventDefault();
-      $('.toasters').animate({
-        opacity: 'hide', // animate fadeOut
-        width: 'hide',  // animate slideUp
-        height: 'hide'
-      }, 'slow', 'linear', function() {
-        $(this).remove();
-      });
+      closeToastrAnimation('.toasters')
     } );
   };
 
@@ -59,7 +51,7 @@ var FlashHandler = new function() {
     var class_name = (type === 'error') ? 'failure toasters' : 'toasters' ,
         close_button_class = (type === 'error') ? 'failure toaster-font-awesome' : 'toaster-font-awesome',
         message_class = (type === 'error') ? 'break-word failure toaster-text word-wrap' : 'break-word toaster-text word-wrap'
-    $('body').prepend('<div class="'+class_name+'">\
+    $('body').append('<div class="'+class_name+'" style="right: -500px;">\
       <div class="toaster-row w-row">\
         <div class="toaster-row-column-1 w-col w-col-11">\
           <div class="'+ message_class +'">\
@@ -71,6 +63,7 @@ var FlashHandler = new function() {
         </div>\
       </div>\
     </div>');
+    toastrAnimation("." + class_name)
   }
 
   function hideToastr(){
@@ -96,6 +89,7 @@ var FlashHandler = new function() {
         </div>\
       </div>\
     </a>')
+    toastrAnimation('.browser-notification-link-block')
     close_browser_toastr();
   };
 
@@ -118,6 +112,7 @@ var FlashHandler = new function() {
         </div>\
       </div>\
     </a>')
+    toastrAnimation('.browser-notification-link-block')
     close_browser_toastr();
   };
 
@@ -132,6 +127,7 @@ var FlashHandler = new function() {
       <div class="browser-notification-close payment toaster-font-awesome"></div>\
       <div class="payment-sender-name">'+customer_name+'.</div>\
     </a>')
+    toastrAnimation('.browser-notification-link-block')
     close_browser_toastr();
   };
 
@@ -140,7 +136,8 @@ var FlashHandler = new function() {
     $('body').append('<a class="browser-notification-link-block copied w-inline-block" href="#" style="position: absolute;">\
       <div class="browser-notification-close payment toaster-font-awesome"></div>\
       <div class="number-copied-text">Phone number copied!</div>\
-    </a>');
+    </a>')
+    toastrAnimation('.browser-notification-link-block')
     close_browser_toastr();
   }
 
@@ -149,7 +146,7 @@ var FlashHandler = new function() {
     if (focused === false) {
       browserNotification('New Campaign sent', message);
     }
-    $('body').append('<a class="browser-notification-link-block scheduled-jobs w-inline-block" href="#">\
+    $('body').append('<a class="browser-notification-link-block scheduled-jobs w-inline-block" href="#" style="right: 0;">\
       <div class="scheduled-jobs-notification-description">'+message+'</div>\
       <img class="browser-notification customer-profile-picture scheduled-jobs" height="40" src="http://uploads.webflow.com/58977e002a25945021983468/58977e002a2594502198356c_81.jpg" width="40">\
       <img class="browser-notification customer-profile-picture next-receipient scheduled-jobs" height="40" src="http://uploads.webflow.com/58977e002a25945021983468/58977e002a25945021983515_Ovo.jpg" width="40">\
@@ -160,25 +157,31 @@ var FlashHandler = new function() {
         <div class="number-of-recipient">+'+no_of_recipient+'</div>\
       </div>\
     </a>')
-    $('.scheduled-jobs').animate({
-      opacity: 'hide', // animate fadeOut
-      width: 'hide'  // animate slideUp
-    }, 'slow', 'linear', function() {
-      $(this).remove();
-    });
+    setTimeout(
+        function()
+        {
+          closeToastrAnimation('.browser-notification-link-block')
+        }, 5000);
+  }
+
+  function toastrAnimation(class_name) {
+    class_name = class_name.split(' ').join('.')
+    $(class_name).animate({
+      right: 0
+    })
   }
 
   function close_browser_toastr() {
     $('.browser-notification-close').on('click', function (e) {
       e.preventDefault();
-      $('.browser-notification-link-block').animate({
-        opacity: 'hide', // animate fadeOut
-        width: 'hide',  // animate slideUp
-        height: 'hide'
-      }, 'slow', 'linear', function() {
-        $(this).remove();
-      });
+      closeToastrAnimation('.browser-notification-link-block', 'slow')
     } );
+  }
+
+  function closeToastrAnimation(class_name) {
+    $(class_name).animate({
+      right: -500
+    });
   }
 
   // Confirmation Dialog for event

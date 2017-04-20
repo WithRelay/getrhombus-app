@@ -23,7 +23,6 @@ class HashtagsController < ApplicationController
   def create
     @hashtag = Hashtag.new(hashtag_params)
     @hashtag.user_id = current_user.id
-    @hashtag.status = 1
     if @hashtag.save
       if @hashtag.create_plan_for_recurring_tag(current_user)
         redirect_to user_hashtags_path, flash: { notice: "Hashtag created!" }
@@ -40,6 +39,7 @@ class HashtagsController < ApplicationController
   end
 
   def update
+
     if @hashtag.update(hashtag_params)
       redirect_to user_hashtags_path, flash: { notice: "Hashtag Updated!" }
     else
@@ -78,7 +78,7 @@ class HashtagsController < ApplicationController
         :enable_tweet, :description, images_attributes: [:avatar]).tap do |h|
           h[:charge_amount] = h[:charge_amount].to_i
           h[:tag_type] = h[:tag_type].to_i
-          h[:status] = h[:status].to_i
+          h[:status] = h[:status] || 1
           if h[:tag_type] == 2
             interval_ary = h[:interval].split("_")
             h[:interval] = interval_ary[0]
