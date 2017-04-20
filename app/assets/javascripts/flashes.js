@@ -33,11 +33,15 @@ var FlashHandler = new function() {
     var messageToSet = typeObj[type] || 'Attention';
     showToastr(messageToSet, arrayToString(msg));
     if (typeObj[type] !== 'error') {
-      closeToastrAnimation('.toasters', 7000)
+      setTimeout(
+        function()
+        {
+          closeToastrAnimation('.toasters')
+        }, 6000);
     }
     $('.toaster-font-awesome').on('click', function (e) {
       e.preventDefault();
-      closeToastrAnimation('.toasters', 'slow')
+      closeToastrAnimation('.toasters')
     } );
   };
 
@@ -47,7 +51,7 @@ var FlashHandler = new function() {
     var class_name = (type === 'error') ? 'failure toasters' : 'toasters' ,
         close_button_class = (type === 'error') ? 'failure toaster-font-awesome' : 'toaster-font-awesome',
         message_class = (type === 'error') ? 'break-word failure toaster-text word-wrap' : 'break-word toaster-text word-wrap'
-    $('body').append('<div class="'+class_name+'">\
+    $('body').append('<div class="'+class_name+'" style="right: -500px;">\
       <div class="toaster-row w-row">\
         <div class="toaster-row-column-1 w-col w-col-11">\
           <div class="'+ message_class +'">\
@@ -154,12 +158,18 @@ var FlashHandler = new function() {
       </div>\
     </a>')
     toastrAnimation('.browser-notification-link-block')
-    closeToastrAnimation('.browser-notification-link-block', 7000)
+    setTimeout(
+        function()
+        {
+          closeToastrAnimation('.browser-notification-link-block')
+        }, 5000);
   }
 
   function toastrAnimation(class_name) {
     class_name = class_name.split(' ').join('.')
-    $(class_name).hide().show("slide", { direction: "left" }, 'slow');
+    $(class_name).animate({
+      right: 0
+    })
   }
 
   function close_browser_toastr() {
@@ -169,13 +179,9 @@ var FlashHandler = new function() {
     } );
   }
 
-  function closeToastrAnimation(class_name, time) {
+  function closeToastrAnimation(class_name) {
     $(class_name).animate({
-      opacity: 'hide', // animate fadeOut
-      width: 'hide',  // animate slideUp
-      height: 'hide'
-    }, time, 'linear', function() {
-      $(this).remove();
+      right: -500
     });
   }
 
