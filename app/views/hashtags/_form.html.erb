@@ -84,7 +84,7 @@
             <%= file_field_tag "hashtag[images_attributes][][avatar]", type: :file, id: "select-images", class: 'hide', accept: "image/*" %>
           </div>
           <div class="w-clearfix w-col w-col-6">
-            <%= f.submit present(@hashtag).get_submit_text, id: 'create-hashtag-btn', class: "button editor-buttons w-button" %>
+            <%= f.submit present(@hashtag).get_submit_text, id: 'create-hashtag-btn', class: "button editor-buttons w-button campaign-button" %>
           </div>
         </div>
 
