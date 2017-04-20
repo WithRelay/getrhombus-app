@@ -18,7 +18,8 @@ module ContactSegmentQueries
 
   def message_send_received
     "select * from merchant_contacts as c inner join messages as m on #{map_message} = c.uid \
-    where c.merchant_id = #{team_id} AND #{map_merchant_message} = c.merchant_id"
+    where c.merchant_id = #{team_id} AND #{map_merchant_message} = #{team_id} AND \
+    m.created_at #{map_operators} DATE_SUB(NOW(), INTERVAL #{@filter_params[:segment_num_days]} DAY)"
   end
 
   def team_id
