@@ -9,7 +9,7 @@ class SavedRepliesController < ApplicationController
 
   def index
     @saved_replies = current_user.saved_replies.order(created_at: :desc)
-    render 'empty_saved_reply' unless @saved_replies
+    render 'empty_saved_reply' unless @saved_replies.present?
   end
 
   def create
