@@ -1,7 +1,10 @@
 <!-- ========== Css Files ========== -->
 <% provide(:title, 'Rhombus - Payment Info') %>
 <div class="settings sub-nav-bar w-clearfix">
-  <a class="dashboard-return sub-nav-button w-button" href="#"> &nbsp;<strong>Return to dashboard</strong></a></div>
+  <%= link_to user_path(current_user) , class: 'dashboard-return sub-nav-button w-button' do %>
+   &nbsp;Return to dashboard
+  <% end %>
+</div>
 <div class="dashboard-body settings w-clearfix">
   <div class="dash-content-container settings">
     <h4 class="form-header">Billing Information</h4>
