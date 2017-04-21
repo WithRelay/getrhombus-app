@@ -80,7 +80,10 @@
               <div class='attach-image-container w-col-2'>
                 <a class="attach-text" href="#" id='select-images-button'></a>
               </div>
+            </div>
+            </div>
               <!-- for new images -->
+              <div class = "w-col-12" id = "image-wrapper">
               <%= f.file_field :avatar, id: 'select-images', class: 'w-hidden' %>
               <div id='new-image-previews'>
               </div>
@@ -93,7 +96,7 @@
                 <% end %>
               </div>
             </div>
-          </div>
+
           <div class="w-clearfix w-col w-col-8 campaign-buttons-list">
             <%= f.submit 'Create campaign', class: 'button editor-buttons w-button campaign-button', id: 'send-campaign-users' %>
             <%= f.submit 'Send me a test', id: 'sendTestCampaign', class: 'alt button editor-buttons w-button campaign-button' %>
