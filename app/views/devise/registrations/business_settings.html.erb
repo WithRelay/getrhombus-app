@@ -1,5 +1,8 @@
 <% provide(:title, 'Rhombus - Merchant Profile') %>
-<div class="settings sub-nav-bar w-clearfix"><a class="dashboard-return sub-nav-button w-button" href="#"> &nbsp;<strong>Return to dashboard</strong></a>
+<div class="settings sub-nav-bar w-clearfix">
+  <%= link_to user_path(current_user) , class: 'dashboard-return sub-nav-button w-button' do %>
+   &nbsp;Return to dashboard
+  <% end %>
 </div>
 <div class="dashboard-body settings">
   <div class="dash-content-container settings">
