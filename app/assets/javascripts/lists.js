@@ -329,6 +329,11 @@ $(document).on('ready page:load', function() {
     FlashHandler.setConfirmationDialog('#'+element.attr('id'), 'Are you sure, you want to delete user from lists?', 'Delete', 'destroy-list-members');
   });
 
+  $('.create-segment').click(function(){
+    var listType = window.location.pathname.split('/').pop() == 'customers' ? 'customer' : 'contact'
+    $('#segmentListType').val(listType)
+  });
+
   var labelFieldSelectize = checkContactPage() ? 'phone_number' : 'email'
   $('.add-to-list-field').selectize({
     maxItems: 1,
