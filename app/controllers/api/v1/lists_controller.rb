@@ -1,6 +1,5 @@
 class Api::V1::ListsController < API::V1::BaseController
-  include CustomerSegmentQueries
-  include ContactSegmentQueries
+  include CustomerSegmentQueries, ContactSegmentQueries
 
   def index
     begin
@@ -46,10 +45,7 @@ class Api::V1::ListsController < API::V1::BaseController
                   end
         render json: message
       else
-        @filter_params = segment_params
-        segment_query = segment_params[:list_type] == 'contact' ? contact_segment_query : customer_segment_query
-        list = save_list(name: segment_params[:segment_name], user_id: current_user.id,
-                          segment: segment_query)
+        list = save_list
         list_errors = get_list_errors(list)
         if list_errors.blank?
            render json: {
@@ -96,8 +92,11 @@ class Api::V1::ListsController < API::V1::BaseController
     # @param user_id The user_id
     # @param segment A boolean indicating if this list is a segment
     # default is nil (i.e. list)
-    def save_list(name:, user_id:, segment:nil)
-      l = List.new(name:name, user_id:user_id, segment:segment)
+    def save_list
+      @filter_params = segment_params
+      segment_query = segment_params[:list_type] == 'contact' ? contact_segment_query : customer_segment_query
+      l = List.new(name: segment_params[:segment_name], user_id: current_user.id,
+                   segment: segment_query, list_type: segment_params[:list_type])
       l.save
       return l
     end
