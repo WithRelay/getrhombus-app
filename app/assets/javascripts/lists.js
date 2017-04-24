@@ -39,8 +39,10 @@ $(document).on('ready page:load', function() {
     if( $(this).is(':checked') ){
       $('#create_list_button').removeAttr('disabled');
       $(".merchant_customers").prop('checked', true);
+      $(".list_members").prop('checked', true);
     }else{
       $(".merchant_customers").prop('checked', false);
+      $(".list_members").prop('checked', false);
     }
   });
 
