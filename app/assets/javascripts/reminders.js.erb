@@ -98,6 +98,8 @@ function customtersSearch(option = []){
     $(this).formValidation('revalidateField', 'reminder[customer_id]');
   });
 
+
+
   $('.reminderForm').formValidation({
     framework: 'bootstrap',
     excluded: ':disabled',
@@ -120,10 +122,14 @@ function customtersSearch(option = []){
           callback: {
             message: 'Please select a customer',
             callback: function(value, validator, $field) {
-              var customer = validator.getFieldElements('reminder[customer_id]').val();
+              // var customer = validator.getFieldElements('reminder[customer_id]');
+              var customer = $('.search-customers-and-contacts .items .item').text();
               return { valid: (customer !== '') };
             }
-          }
+          },
+          // notEmpty: {
+          //   message: 'select a customer'
+          // }
         }
       }
     }
