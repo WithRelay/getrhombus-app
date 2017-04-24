@@ -136,6 +136,7 @@ function customtersSearch(option = []){
         var apiController = new ApiController(this, '.update-close-modals');
         var formData = new FormData(this);
         apiController.sendRequest(formData);
+        location.reload();
       }
     })
 
