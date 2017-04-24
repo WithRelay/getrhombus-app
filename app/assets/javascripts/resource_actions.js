@@ -31,19 +31,7 @@ function formatDate(date) {
 	});
 
 
-	function create_saved_reply(formData){
-		$.ajax({
-			url: window.location.origin + "/v1/saved_replies",
-			method: "POST",
-			data: formData,
-			dataType: 'json'
-		}).done(function(res){
-			FlashHandler.setFlashMessage(res.notice,'notice');
-			location.reload();
-			}).error(function(res){
-				FlashHandler.setFlashMessage(res.error, 'error');
-		});
-	}
+
 
   // Confirmation dialog box for destroy saved reply
   $('#delete-saved-reply').click(function(evt) {
