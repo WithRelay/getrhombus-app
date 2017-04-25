@@ -24,8 +24,14 @@ $(document).ready(function() {
     });
   }
 
-  //if ($('.save-reply-form').length) {
-    $('#save-reply-form').formValidation({
+  $('.save-reply-form').submit(function(){
+    $(this).formValidation('revalidateField', 'saved_reply[body]');
+  });
+
+formValidation('.save-reply-form');
+function formValidation(form){
+  if ($(form).length) {
+    $(form).formValidation({
       framework: 'bootstrap',
       excluded: ':disabled',
       live: 'disabled',
@@ -60,7 +66,7 @@ $(document).ready(function() {
 
       $('.update-close-modals').click();
     });
-  // }
-
+  }
+}
 
 });
