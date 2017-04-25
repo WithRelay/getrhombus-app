@@ -5,7 +5,7 @@
         <div class="cn w-clearfix w-col w-col-3">
           <div class="name w-clearfix">
             <%= present(member[:user]).profile_image %>
-            <div class="shrink-text table-text", style="margin-top: 3px;">
+            <div class="shrink-text table-text">
               <%= link_to present(member[:user]).format_customer_name, "/users/#{current_user.id}/customers/#{member[:user].id}", class: "non-underline-link" %>
             </div>
           </div>
@@ -13,7 +13,7 @@
             <div>
               <form data-name="Email Form 2" id="email-form-2" name="email-form-2">
                 <div class="select-all-check-box w-checkbox w-clearfix">
-                  <input class="cb table-checkbox w-checkbox-input" id="node" type="checkbox">
+                  <input class="cb table-checkbox w-checkbox-input list_members" id="node" type="checkbox" data-members= "<%= member[:user].id %>">
                   <label class="checkbox-field-lable w-form-label" for="node">-</label>
                 </div>
               </form>
