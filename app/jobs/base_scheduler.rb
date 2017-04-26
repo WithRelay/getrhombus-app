@@ -19,7 +19,7 @@ module BaseScheduler
         # check campaign job is present or not if it is already present no need to rescheule
         # if it is not present caompares current time and return boolean
         job_schedule.present? ? false : date_time_now <= date_time_campaign
-      elsif campaign.date_time <= Time.current
+      elsif campaign.date_time.to_i <= Time.current.to_i
         campaign_time = Time.current.strftime('%Y-%m-%d ') + campaign.date_time.in_time_zone.strftime("%H:%M")
         dynamic_date_time = Time.parse(campaign_time).in_time_zone
         job_schedule.present? ? false : date_time_now <= dynamic_date_time
