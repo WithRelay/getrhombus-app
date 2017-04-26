@@ -3,7 +3,8 @@
     <div class="cn w-clearfix w-col w-col-3">
       <div class="name w-clearfix">
         <% contact_details = present(merchant_contact).contact_details %>
-        <%= profile_image(contact_details[:profile_image]) %>
+        <%#= profile_image(contact_details[:profile_image]) %>
+        <%= present(merchant_contact).profile_image(current_user)%>
         <div class="shrink-text table-text">
           <%=link_to contact_details[:full_name], merchant_contact_path(merchant_contact) %>
         </div>
