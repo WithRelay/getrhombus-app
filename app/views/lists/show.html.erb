@@ -66,5 +66,5 @@
   <div id="list-channel-for-list-memebers">
   <%= @list.list_type %>
   </div>
-  <%= render partial: 'list_member', locals: { list_members: @list_members } %>
+  <%= render partial: list_show_partial, locals: { list_members: @list_members } %>
 </div>
