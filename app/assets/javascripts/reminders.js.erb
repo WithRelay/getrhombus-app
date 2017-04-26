@@ -1,33 +1,64 @@
 $(document).on('ready page:load', function() {
 
-  // $('#edit-reminder').on('click', function(){
-  //   var selectedElement = $('.table-checkbox:checked').closest('form');
-  //   var reminder_id = selectedElement.find("#reminder_id").val();
-  //
-  //    $.ajax({
-  //      url:  "/v1/reminders/" + reminder_id + "/edit" ,
-  //      data:{id: reminder_id}
-  //    }).done(function(res){
-  //     var form = $('.editReminderFrom');
-  //     var action = form.attr("action");
-  //     var reminder = res.reminder
-  //     var reminder_lists = res.reminder_lists;
-  //     var newAction = window.location.origin + '/users/' + action.split('/')[2] + '/reminders/' + reminder_id;
-  //     customtersSearch(reminder_lists);
-  //     var selectField = $('.editReminderFrom .search-customers-and-contacts')[0].selectize;
-  //     selectField.addItem(reminder_lists[0].id, false);
-  //     form.find("#Notification-Message").val(reminder.text);
-  //     form.find(".emojionearea-editor").text(reminder.text);
-  //     form.attr("action", newAction);
-  //
-  //     var raw_date_time = reminder.date_time;
-  //     var date_time = new Date(raw_date_time);
-  //     var formated_date_time = formatDate(date_time);
-  //     form.find("#reminder-date-time").val(formated_date_time);
-  //    }).error(function(){
-  //       // alert("")
-  //    });
-  // });
+  $('#edit-reminder').on('click', function(){
+  	var selectedElement = selectCheckedElement();
+
+  	if (selectedElement == false){
+  		FlashHandler.setFlashMessage('record not selected','error');
+  		return false;
+  	}else{
+  		$("#edit-reminder-modal").lightbox_me({
+  			centered: true
+  		});
+
+  	}
+  	var elementForm = selectedElement.closest('form');
+  	var reminder_id = elementForm.find("#reminder_id").val();
+
+  	 $.ajax({
+  		 url:  "/v1/reminders/" + reminder_id + "/edit" ,
+  		 data:{id: reminder_id}
+  	 }).done(function(res){
+  		var form = $('.editReminderFrom');
+  		var action = form.attr("action");
+  		var reminder = res.reminder
+  		var reminder_lists = res.reminder_lists;
+  		var newAction = window.location.origin + '/users/' + action.split('/')[2] + '/reminders/' + reminder_id;
+  		customtersSearch(reminder_lists);
+  		var selectField = $('.editReminderFrom .search-customers-and-contacts')[0].selectize;
+  		selectField.addItem(reminder_lists[0].id, false);
+  		form.find("#Notification-Message").val(reminder.text);
+  		form.find(".emojionearea-editor").text(reminder.text);
+  		form.attr("action", newAction);
+
+  		var raw_date_time = reminder.date_time;
+  		var date_time = new Date(raw_date_time);
+  		var formated_date_time = formatDate(date_time);
+  		form.find("#reminder-date-time").val(formated_date_time);
+  	 }).error(function(){
+  			// alert("")
+  	 })
+   });
+
+  function selectCheckedElement(){
+    var checkedElement = false;
+    $('.table-checkbox').each(function( index, element){
+      if ( $(this).is(':checked') )
+       checkedElement =  $(this);
+    });
+    return checkedElement;
+  }
+
+  function formatDate(date) {
+  	var hours = date.getHours();
+  	var minutes = date.getMinutes();
+  	var ampm = hours >= 12 ? 'PM' : 'AM';
+  	hours = hours % 12;
+  	hours = hours ? hours : 12; // the hour '0' should be '12'
+  	minutes = minutes < 10 ? '0'+minutes : minutes;
+  	var strTime = hours + ':' + minutes + ' ' + ampm;
+  	return  date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate() + "  " + strTime;
+  }
 
   $('#set-new-reminder-loader').click(function(){
     customtersSearch();
@@ -38,7 +69,7 @@ function customtersSearch(option = []){
   var valueField = option.length < 1 ? 'uid' : 'id'
   $('.search-customers-and-contacts').selectize({
     maxItems: 1,
-    valueField: valueField,
+    valueField: valueField.split(','),
     labelField: labelSearchField,
     searchField: labelSearchField,
     create: false,
@@ -58,6 +89,8 @@ function customtersSearch(option = []){
           callback();
         },
         success: function(res) {
+          if (res['data'][0].uid_type)
+            res['data'][0].uid += ',' + res['data'][0].uid_type
           callback(res['data']);
         }
       });
