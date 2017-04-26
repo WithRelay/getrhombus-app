@@ -4,6 +4,7 @@
       <div class="new-table-row w-row">
         <div class="cn w-clearfix w-col w-col-3">
           <div class="name w-clearfix">
+            <% profile = customer_contact_details(member[:user]) %>
             <%= present(member[:user]).profile_image %>
             <div class="shrink-text table-text">
               <%= link_to present(member[:user]).format_customer_name, "/users/#{current_user.id}/customers/#{member[:user].id}", class: "non-underline-link" %>
