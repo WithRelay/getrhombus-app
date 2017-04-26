@@ -36,7 +36,10 @@ class Api::V1::ListsController < API::V1::BaseController
       if list_params[:list_category] == 'list'
         list = current_user.lists.build(name: list_params[:name], list_type: list_params[:list_type])
         selected_users_id = list_params[:selected_users].split(",")
-        selected_users_id.each { |user_id| list.user_lists.build(user_id: user_id) }
+        customer_type = list_params[:list_type] == 'contact' ? 'MerchantContact' : 'User'
+        selected_users_id.each { |user_id| list.user_lists.build(customer_contact_id: user_id,
+                                                                customer_contact_type: customer_type)
+                               }
         # list also save associated record
         message = if list.save
                     { notice: 'List saved successfully', status: 200, redirect_url: list_url(current_user, list) }
