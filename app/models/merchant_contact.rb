@@ -1,6 +1,7 @@
 class MerchantContact < ActiveRecord::Base
   belongs_to :merchant, class_name: "User"
   belongs_to :contacts, class_name: "User", foreign_key: 'uid'
+  has_many :user_lists, as: :customer_contact
 
   def self.add_or_update_merchant_contact(merchant_id, uid, uid_type)
     begin
