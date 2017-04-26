@@ -29,12 +29,13 @@ class BasePresenter < SimpleDelegator
   end
 
   def profile_image(current_user = @model.user )
+    # need current_user param to be passed for MerchantContact/MerchantCustomer only
     user = find_user(current_user)
 
     profile_pic = User.check_profile_picture(user)
     if profile_pic[:type] == "image"
           html = h.image_tag(profile_pic[:value], class: 'table-profile-picture', width: 24)
-          html = h.image_tag(profile_pic[:value], class: 'campaigns table-profile-picture', width: 24) if @model.class == Hashtag
+          html = h.image_tag(profile_pic[:value], class: 'campaigns table-profile-picture', width: 24) if need_campaign_class?
     elsif profile_pic[:type] == "color"
       class_name_value = "table-profile-picture radius-color-#{profile_pic[:value]}"
       class_name = ['Reminder', 'Transaction'].include?(@model.class.to_s) ? class_name_value : "campaigns #{class_name_value}"
@@ -114,6 +115,11 @@ class BasePresenter < SimpleDelegator
     else
       @model.user
     end
+  end
+
+  def need_campaign_class?
+    [Hashtag, MerchantContact, MerchantCustomer].include?(@model.class)
+    # @model.class == Hashtag || @model.class == MerchantContact || @model.class = MerchantCustomer
   end
 
 end
