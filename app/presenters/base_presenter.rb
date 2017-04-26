@@ -28,8 +28,10 @@ class BasePresenter < SimpleDelegator
     time_in_relative_form(@model.created_at, 'long_format')
   end
 
-  def profile_image
-    profile_pic = User.check_profile_picture(@model.user)
+  def profile_image(current_user = @model.user )
+    user = find_user(current_user)
+
+    profile_pic = User.check_profile_picture(user)
     if profile_pic[:type] == "image"
           html = h.image_tag(profile_pic[:value], class: 'table-profile-picture', width: 24)
           html = h.image_tag(profile_pic[:value], class: 'campaigns table-profile-picture', width: 24) if @model.class == Hashtag
@@ -102,6 +104,16 @@ class BasePresenter < SimpleDelegator
 
   def show_empty_symbol
     ('-' * SYMBOL_TIMES)
+  end
+
+  def find_user(current_user)
+    if @model.class == MerchantCustomer
+      return current_user.is_merchant? ? @model.customer : @model.merchant
+    elsif  @model.class == MerchantContact
+      return current_user.is_merchant? ? @model.contacts : @model.merchant
+    else
+      @model.user
+    end
   end
 
 end
