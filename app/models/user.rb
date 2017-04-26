@@ -98,7 +98,7 @@ class User < ActiveRecord::Base
 
   # A user can have belong to more than one list and also own multiple lists (Admins)
   has_many :lists
-  has_many :user_lists
+  has_many :user_lists, as: :customer_contact
   accepts_nested_attributes_for :user_lists
 
   has_many :bank_accounts
