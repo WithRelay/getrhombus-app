@@ -38,6 +38,6 @@ class List < ActiveRecord::Base
     # @param type The type of list. Default type is "list"
     # @return An array of user objects
     def generate_list_users user_lists, type="list"
-      user_lists.map { |cus|  { user: (type == "list") ? cus.user : cus } }
+      user_lists.map { |cus|  { user: (type == "list") ? cus.customer_contact : cus } }
     end
 end
