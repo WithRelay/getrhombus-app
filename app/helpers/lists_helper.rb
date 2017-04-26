@@ -7,4 +7,20 @@ module ListsHelper
             end
     return value
   end
+
+  def customer_contact_details(list_user)
+    if @list.contact?
+      User.get_user_snapshot(list_user.uid, list_user.uid_type, current_user.id)
+    else
+      list_user
+    end
+  end
+
+  def list_show_partial
+    if @list.contact?
+      'list_contact'
+    else
+      'list_member'
+    end
+  end
 end

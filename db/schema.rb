@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170425083714) do
+ActiveRecord::Schema.define(version: 20170426083014) do
 
   create_table "account_reloads", force: :cascade do |t|
     t.integer  "user_id",        limit: 4
@@ -99,7 +99,6 @@ ActiveRecord::Schema.define(version: 20170425083714) do
     t.datetime "updated_at",                     null: false
     t.integer  "reminder_id",          limit: 4
     t.integer  "merchant_customer_id", limit: 4
-    t.integer  "merchant_contact_id",  limit: 4, null: false
   end
 
   add_index "campaign_lists", ["campaign_id"], name: "index_campaign_lists_on_campaign_id", using: :btree
@@ -759,14 +758,14 @@ ActiveRecord::Schema.define(version: 20170425083714) do
   add_index "twitter_creds", ["user_id"], name: "index_twitter_creds_on_user_id", unique: true, using: :btree
 
   create_table "user_lists", force: :cascade do |t|
-    t.integer  "user_id",    limit: 4
-    t.datetime "created_at",           null: false
-    t.datetime "updated_at",           null: false
-    t.integer  "list_id",    limit: 4
+    t.datetime "created_at",                        null: false
+    t.datetime "updated_at",                        null: false
+    t.integer  "list_id",               limit: 4
+    t.string   "customer_contact_type", limit: 191
+    t.integer  "customer_contact_id",   limit: 4
   end
 
   add_index "user_lists", ["list_id"], name: "index_user_lists_on_list_id", using: :btree
-  add_index "user_lists", ["user_id"], name: "index_user_lists_on_user_id", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                  limit: 191
@@ -860,5 +859,4 @@ ActiveRecord::Schema.define(version: 20170425083714) do
   add_foreign_key "transactions", "hashtags"
   add_foreign_key "transactions", "subscriptions"
   add_foreign_key "transactions", "users", column: "team_id"
-  add_foreign_key "user_lists", "users"
 end

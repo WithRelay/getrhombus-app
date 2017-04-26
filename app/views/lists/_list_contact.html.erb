@@ -5,9 +5,9 @@
         <div class="cn w-clearfix w-col w-col-3">
           <div class="name w-clearfix">
             <% profile = customer_contact_details(member[:user]) %>
-            <%= present(member[:user]).profile_image %>
+            <%#= present(member[:user]).profile_image %>
             <div class="shrink-text table-text">
-              <%= link_to present(member[:user]).format_customer_name, "/users/#{current_user.id}/customers/#{member[:user].id}", class: "non-underline-link" %>
+              <%= link_to profile[:full_name], "/users/#{current_user.id}/customers/#{member[:user].id}", class: "non-underline-link" %>
             </div>
           </div>
           <div class="cb check-box-column">
@@ -23,27 +23,27 @@
         </div>
         <div class="fv w-clearfix w-col w-col-2">
           <div class="cn column column-2 w-clearfix">
-            <div class="shrink-text table-text"><%= present(member[:user]).customer_first_visit_formatted %></div>
+            <div class="shrink-text table-text"><%= profile[:since][:date] %></div>
           </div>
         </div>
         <div class="lv w-clearfix w-col w-col-2">
           <div class="colum-3 column lv w-clearfix">
-            <div class="shrink-text table-text"><%= present(member[:user]).customer_last_visit_formatted %></div>
+            <div class="shrink-text table-text"><%= profile[:since][:relative] %></div>
           </div>
         </div>
         <div class="avs w-clearfix w-col w-col-1">
           <div class="avs column column-4 w-clearfix">
-            <div class="table-text"><%= present(member[:user]).average_transaction %></div>
+            <div class="table-text">---</div>
           </div>
         </div>
         <div class="ts w-clearfix w-col w-col-1">
           <div class="column column-5 ts w-clearfix">
-            <div class="shrink-text table-text total-spend-text"><%= present(member[:user]).total_transaction %></div>
+            <div class="shrink-text table-text total-spend-text">--</div>
           </div>
         </div>
         <div class="table-actions w-clearfix w-col w-col-3">
           <div class="column column-6 left new-row w-clearfix">
-            <div class="frequency shrink-text table-text">Washington</div>
+            <div class="frequency shrink-text table-text"><%= profile[:location] %></div>
           </div>
           <div class="column column-6 new-row">
             <%= link_to 'Remove', remove_customer_list_path(current_user, @list), id: "list-member-delete-#{member[:user].id}", class: 'w-hidden', method: :delete %>

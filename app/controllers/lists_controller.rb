@@ -40,9 +40,12 @@ class ListsController < ApplicationController
   end
 
   def remove_customer_contact
-    get_list = get_lists(params[:list_members])
+    get_list = get_lists(params[:id])
     unless get_list.present?
-      @list.user_lists.find_by(user_id: params[:list_members]).delete
+      @list.user_lists.find_by(customer_contact_id: params[:list_members]).delete
+      flash[:notice] = "member in the list successfully deleted"
+    else
+      flash[:error] = "member in the list could not deleted"
     end
     redirect_to list_path(current_user, @list)
   end
