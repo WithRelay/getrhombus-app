@@ -22,23 +22,6 @@ Taiwo
 - <redacted_phone_number> ms nikky
 - nannie j lee recreation center 703 746 5550
 
-
-    fields: {
-      'campaign[name]': {
-        verbose: false,
-        validators: {
-          notEmpty: {
-            message: 'Campaign name is required'
-          },
-          remote: {
-            message: 'Campaign name already taken.',
-            url: '/v1/campaigns/check_campaign_name' + campaignId,
-            type: 'POST'
-          }
-        }
-      },
-
-
 Surya
 - lock down permissions cancancan?
 - i see issues with reminder js
@@ -56,15 +39,12 @@ Surya
 - is list being loaded via js or preloaded in db? should run only for merchants
 - merchant_contacts index -> we use fb_page not messenger
 - campaign_id in messages?
-- user_segments = params[:list_type].present? ? segment_list.contact : segment_list.customer
 - return self.merchant_contacts.where(id: eval(self.segment).pluck(:user_id)) if self.name == 'Active Customers'
 
 Dorje
 - weekly summary template
 - fix validation message for create customer - just the first 3 fields
 - sidebars with links...customers should see only Transactions, businesses, Account and Billing Info
-- review perfect scroll bar
-- profile image on business page is for business
 - onboarding routes for customers
 
 Bhishma
@@ -72,7 +52,6 @@ Bhishma
 - the 5 emails from edwin (incomplete signup email (the following day), review offer to help, autoreload failure)
 - weekly email no users, unread messages
 - when user logs in through messenger or connects facebook account and reverse link works - indicate merchantcustomer, update conversations. 
-- cancel button for subscription
 
 
 
