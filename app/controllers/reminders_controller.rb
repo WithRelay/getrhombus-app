@@ -13,8 +13,7 @@ class RemindersController < ApplicationController
     render('empty_reminder', locals: { reminder: current_user.reminders.build }) unless (@reminders_today.present? || @reminders_tomorrow.present? || @reminders_upcoming.present?)
   end
 
-  def edit
-  end
+  def edit; end
 
   def update
     if @reminder.update(reminder_params)
