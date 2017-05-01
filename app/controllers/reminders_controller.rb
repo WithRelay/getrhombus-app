@@ -60,5 +60,4 @@ class RemindersController < ApplicationController
                                    end
   end
 
-
 end
