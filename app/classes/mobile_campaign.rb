@@ -31,20 +31,17 @@ class MobileCampaign
   private
 
   def send_to_contact(merchant_contact_obj)
-    contact_details = User.get_user_snapshot(merchant_contact_obj.uid, merchant_contact_obj.uid_type,
-                                            @campaign.user.id)
-    send_by_mobile(contact_details[:phone_number])
+    send_by_mobile(uid_type: merchant_contact_obj.uid_type, uid: merchant_contact_obj.uid)
   end
 
   def send_to_customer(user_obj)
-    send_by_mobile(user_obj.phone_number)
+    send_by_mobile(customer: user_obj)
   end
 
-  def send_by_mobile(phone_number)
+  def send_by_mobile(customer: nil, uid_type: nil, uid: nil)
     media_link_urls = media_urls
     Conversation.find_or_create_conversation_for_message_and_send_publish(
-              @campaign.user, nil, customer[:user].uid,
-              @campaign.text, customer[:user].uid_type)
+                 @campaign.user, customer, uid_type, uid, @campaign.text, 'SMS', media_link_urls)
   end
 
   def merchant_rhombus_number
