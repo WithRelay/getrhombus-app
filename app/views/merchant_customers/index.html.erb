@@ -51,14 +51,13 @@
 
  <%= render partial: 'customer_nav', locals: { customers: @customers } %>
 
-
   <div class="dashboard-body">
    <div class="customer-dashboard-table-wrapper row-wrapper">
       <div>
         <div id='objlists'>
           <%= render @customers %>
+           <%= will_paginate(@customers).html_safe if @customers.count > 10 %>
         </div>
       </div>
     </div>
   </div>
-  <%= will_paginate(@customers).html_safe if @customers.count > PAGINATION_PER_PAGE %>
