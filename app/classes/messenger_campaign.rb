@@ -12,9 +12,15 @@ class MessengerCampaign
     failure_list = []
     @campaign.lists.each do |list|
       list.get_users.each do |customer|
-        @user_fb_creds = customer[:user].fb_creds
-        user_fb_cred_id = get_page_specific_id if @user_fb_creds.present?
-        send_message = fb_message_sender(page_access_token, user_fb_cred_id)
+        send_message = if customer[:user].is_a?(User)
+                          Conversation.find_or_create_conversation_for_message_and_send_publish(
+                                    @campaign.user, customer, '', '',
+                                    @campaign.text, '', media = [])
+                      else
+                         Conversation.find_or_create_conversation_for_message_and_send_publish(
+                                   @campaign.user, nil, customer[:user].uid,
+                                   @campaign.text, customer[:user].uid_type)
+                      end
       failure_list.push(customer[:user]) unless send_message && list.channel.present?
       end
     end
@@ -48,13 +54,13 @@ class MessengerCampaign
     subscribed_pages[0].page_access_token if subscribed_pages.present?
   end
 
-  def fb_message_sender(token, fb_id)
-    token_fb_id = (token.present? && fb_id.present?)
-    if token_fb_id
-      return @facebook_messenger.send_text_message(token, fb_id, @campaign.text)
-      send_fb_images(token, fb_id) if @campaign.images.present?
-    else
-      token_fb_id
-    end
-  end
+  # def fb_message_sender(token, fb_id)
+  #   token_fb_id = (token.present? && fb_id.present?)
+  #   if token_fb_id
+  #     return @facebook_messenger.send_text_message(token, fb_id, @campaign.text)
+  #     send_fb_images(token, fb_id) if @campaign.images.present?
+  #   else
+  #     token_fb_id
+  #   end
+  # end
 end
