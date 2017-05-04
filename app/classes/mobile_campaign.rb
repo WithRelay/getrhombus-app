@@ -42,8 +42,9 @@ class MobileCampaign
 
   def send_by_mobile(phone_number)
     media_link_urls = media_urls
-    @message_obj.send_and_save_message(rn_type, merchant_rhombus_number, phone_number,
-                                         message, media_link_urls)
+    Conversation.find_or_create_conversation_for_message_and_send_publish(
+              @campaign.user, nil, customer[:user].uid,
+              @campaign.text, customer[:user].uid_type)
   end
 
   def merchant_rhombus_number
