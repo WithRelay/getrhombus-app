@@ -1,7 +1,7 @@
 
   <div class="new-table-row w-row">
     <div class="cn w-clearfix w-col w-col-3">
-      <div class="name w-clearfix subs-card-name"><%= merchant_customer.id %><%= present(merchant_customer).profile_image(current_user) %>
+      <div class="name w-clearfix subs-card-name"><%= present(merchant_customer).profile_image(current_user) %>
         <div class="shrink-text table-text">
           <%= link_to "#{present(merchant_customer).format_customer_name}", customers_user_path + "/" + merchant_customer.id.to_s, class: 'non-underline-link' %>
         </div>
