@@ -25,7 +25,7 @@ class MerchantCustomersController < ApplicationController
     # and include only captured transactions. account reload txns are included by default..right
     @transactions = Transaction.exclude_refunded_transactions().where(team_id: current_user.id).only_captured_transactions()
                             .exclude_subscriptions()
-                            .where(user_id: @customer.id).order(created_at: :desc)
+                            .where(user_id: @customer.id).order(created_at: :desc).paginate(:page => params[:page], :per_page => 10)
 
     @conversation_refs = ConversationRef.get_last_customer_msg_from_all_merchant_convs(current_user.id, @customer.id)
     @recent_activity = recent_activity
