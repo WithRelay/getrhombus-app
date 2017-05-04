@@ -20,12 +20,13 @@
 // });
 $(document).ready(function(){
   if ($('.pagination').length) {
-    $(window).scroll(function() {
+    $('.dashboard-body').scroll(function() {
       var url = $('.pagination a.next_page').attr('href');
-      if (url && $(window).scrollTop() > $(document).height() - $(window).height() - 50) {
+
+      if (url && $('.dashboard-body').scrollTop() > $(document).height() - $('.dashboard-body').height() - 50) {
         return $.getScript(url);
       }
     });
-    $(window).scroll();
+    $('.dashboard-body').scroll();
   }
 })
