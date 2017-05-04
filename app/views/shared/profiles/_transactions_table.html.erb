@@ -26,6 +26,7 @@
       </div>
     </div>
   </div>
+
   <% transactions.each do |transaction| %>
     <div class="customer-profile-trasaction-table w-row">
       <div class="w-col w-col-5">
@@ -51,6 +52,7 @@
       </div>
     </div>
    <% end %>
+     <%= will_paginate transactions %>
     <div class='modal-background w-hidden modal-body refund_customer_modal'>
      <%= render 'shared/modals/refund_customer' %>
    </div>

@@ -18,4 +18,9 @@ module ListsHelper
       'list_member'
     end
   end
+
+  def customer_profile_path(customer_id)
+    merchant_customer_id = MerchantCustomer.find_by(merchant_id: current_user.id, customer_id: customer_id).try(:id)
+    "/users/#{current_user.id}/customers/#{merchant_customer_id}"
+  end
 end

@@ -7,7 +7,7 @@
             <% profile = customer_contact_details(member[:user]) %>
             <%= present(member[:user]).profile_image %>
             <div class="shrink-text table-text">
-              <%= link_to present(member[:user]).format_customer_name, "/users/#{current_user.id}/customers/#{member[:user].id}", class: "non-underline-link" %>
+              <%= link_to present(member[:user]).format_customer_name, customer_profile_path(member[:user].id), class: "non-underline-link" %>
             </div>
           </div>
           <div class="cb check-box-column">

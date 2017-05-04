@@ -99,6 +99,7 @@ ActiveRecord::Schema.define(version: 20170426083014) do
     t.datetime "updated_at",                     null: false
     t.integer  "reminder_id",          limit: 4
     t.integer  "merchant_customer_id", limit: 4
+    t.integer  "merchant_contact_id",  limit: 4, null: false
   end
 
   add_index "campaign_lists", ["campaign_id"], name: "index_campaign_lists_on_campaign_id", using: :btree

@@ -65,19 +65,18 @@ class Plan < ActiveRecord::Base
   end
 
   def update_plan(hash, team)
+    old_name = self.name
+    old_descriptor = self.statement_descriptor
     begin
-      old_name = self.name
-      old_descriptor = self.statement_descriptor
       new_descriptor = (hash[:name] + "-" + team.org_name)[0..21].gsub("'", "")
 
       # save so validations run before calling Stripe api
       self.name = hash[:name]
       self.statement_descriptor = new_descriptor
-      return false if !self.save
+      return false unless self.save
 
       hash[:statement_descriptor] = new_descriptor
       res = PaymentService.update_plan(self.id, hash, team.get_stripe_cred[:cred].account_id, team.is_platform?)
-
       if res.first
         update_plan_segment if self.customer_id.blank?
       else
@@ -89,6 +88,7 @@ class Plan < ActiveRecord::Base
       res.first
     rescue StandardError => e
       # notify team via email
+      self.update(name: old_name, statement_descriptor: old_descriptor)
       false
     end
   end
