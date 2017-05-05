@@ -6,7 +6,7 @@ class MerchantCustomersController < ApplicationController
 
   def index
     @customers = current_user.merchant_customers
-                             .paginate(page: params[:page], per_page: 15).order(created_at: :desc)
+                             .paginate(page: params[:page], per_page: PAGINATION_PER_PAGE).order(created_at: :desc)
     @new_customer = User.new
     @customers.present? ? render_requested_format(@customers) : render(:empty_customer)
   end
