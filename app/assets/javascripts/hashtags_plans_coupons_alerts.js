@@ -151,7 +151,7 @@ $(document).ready(function () {
       'hashtag[response]': {
         validators: {
           notEmpty: {
-            message: 'text is required'
+            message: ' '
           }
         }
       }

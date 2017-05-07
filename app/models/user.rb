@@ -56,7 +56,8 @@ class User < ActiveRecord::Base
       campaign = super(args[0])
       unless args.blank?
         # build campaign lists of campaign
-        args[0][:list_name].split(',').each{ |l| campaign.campaign_lists.build(list_id: l) } if args[0][:list_name].present?
+        list = args[0][:list_name]
+        campaign.campaign_lists.build(list_id: list) if list.present?
         # build avatar of campaigns
         if args[1].present?
           campaign.images.build(avatar: args[1][:avatar], uploaded_as: 1) if (!campaign.sms? && args[1][:avatar].present?) && campaign.valid?
@@ -97,7 +98,7 @@ class User < ActiveRecord::Base
 
   # A user can have belong to more than one list and also own multiple lists (Admins)
   has_many :lists
-  has_many :user_lists
+  has_many :user_lists, as: :customer_contact
   accepts_nested_attributes_for :user_lists
 
   has_many :bank_accounts

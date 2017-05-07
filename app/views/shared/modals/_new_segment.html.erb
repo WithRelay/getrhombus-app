@@ -7,7 +7,7 @@
   <div class="create-segment">
     <%= form_for('lists', url: v1_lists_path, html: { id: "create_segment" }) do |f| %>
       <label class="form-label list-name" for="Segment-Name-2">Segment name</label>
-      <%= f.hidden_field :list_type, value: 'segment' %>
+      <%= f.hidden_field :list_type, value: 'segment', id: 'segmentListType' %>
       <%= f.hidden_field :segment_type, id: 'segment_type' %>
       <%= f.hidden_field :segment_num_days, id: 'segment_num_days' %>
       <%= f.hidden_field :segment_filter, id: 'segment_filter' %>

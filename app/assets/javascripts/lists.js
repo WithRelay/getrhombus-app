@@ -39,8 +39,10 @@ $(document).on('ready page:load', function() {
     if( $(this).is(':checked') ){
       $('#create_list_button').removeAttr('disabled');
       $(".merchant_customers").prop('checked', true);
+      $(".list_members").prop('checked', true);
     }else{
       $(".merchant_customers").prop('checked', false);
+      $(".list_members").prop('checked', false);
     }
   });
 
@@ -327,6 +329,11 @@ $(document).on('ready page:load', function() {
     var id  = element.attr('id').split('-')
     element.attr('href', element.attr('href')+'?list_members='+id[id.length-1]);
     FlashHandler.setConfirmationDialog('#'+element.attr('id'), 'Are you sure, you want to delete user from lists?', 'Delete', 'destroy-list-members');
+  });
+
+  $('.create-segment').click(function(){
+    var listType = window.location.pathname.split('/').pop() == 'customers' ? 'customer' : 'contact'
+    $('#segmentListType').val(listType)
   });
 
   var labelFieldSelectize = checkContactPage() ? 'phone_number' : 'email'

@@ -6,18 +6,6 @@
   </div>
   <h5 class="left-nav signup-box-subheading shrink-text"><%= sidebar_name "#{params[:controller]}-#{params[:action]}" %></h5>
 
-  <% if current_user.is_customer? %>
-
-    <%= link_to account_settings_user_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
-      <div class="left-nav-tab" data-ix="display-and-hide-customers">Account</div>
-    <% end %>
-
-    <%= link_to billing_information_user_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
-      <div class="left-nav-tab">Billing Information</div>
-    <% end %>
-
-  <% end %>
-
   <% if current_user.is_merchant? || current_user.is_platform? %>
 
     <%= link_to account_settings_user_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
@@ -63,6 +51,17 @@
     <%= link_to user_away_message_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
       <div class="left-nav-tab">Away messages</div>
     <% end %>
+
+  <% elsif current_user.is_customer? %>
+
+    <%= link_to account_settings_user_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
+      <div class="left-nav-tab" data-ix="display-and-hide-customers">Account</div>
+    <% end %>
+
+    <%= link_to billing_information_user_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
+      <div class="left-nav-tab">Billing Information</div>
+
+  <% end %>
   <% end %>
 
   <h5 class="left-nav rhom-number signup-box-subheading">RHOMBUS NUMBER</h5>

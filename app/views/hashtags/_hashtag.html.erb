@@ -5,7 +5,7 @@
       <% if hashtag.inactive? %>
         <div class=" deactivated-text shrink-text table-text"><%= hashtag.tag %></div>
       <% else %>
-        <div class="shrink-text table-text"><%= hashtag.tag %></div>
+        <div class="shrink-text table-text"><%= link_to hashtag.tag, edit_user_hashtag_path(current_user,hashtag) %></div>
       <% end %>
       </div>
       <div class="alt-table cb check-box-column">

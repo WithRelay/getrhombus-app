@@ -38,18 +38,9 @@
       </div>
     </div>
   </div>
-  <div class="customer-dash sub-nav-bar">
-    <div class="sub-nav-options-wrapper w-clearfix">
-      <a class="add sub-nav-button w-button" data-ix="create-customer" href="#" id="edit-selected-list">
-        <strong>&nbsp; Edit</strong>
-      </a>
-      <div class='modal-background w-hidden modal-body edit-list-modal'>
-        <%= render 'shared/modals/edit_list' %>
-      </div>
-      <a class="sub-nav-button w-button" id="delete-lists" href="#" data-delete-list-link="<%= delete_lists_path(current_user) %>"><strong> &nbsp;Delete</strong></a>
-      <a class="sub-nav-button w-button" id="send-campaign-to-lists" data-lists-campaign="<%= new_user_campaign_path(current_user) %>" href="#"> &nbsp;<strong>Send Campaign</strong></a>
-    </div>
-  </div>
+
+  <%= render 'sub_nav_bar' %>
+
 <div class="dashboard-body">
   <%= render @lists %>
 </div>

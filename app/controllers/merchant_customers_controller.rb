@@ -6,7 +6,7 @@ class MerchantCustomersController < ApplicationController
 
   def index
     @customers = current_user.merchant_customers
-                              #.paginate(page: params[:page], per_page: 10).order(created_at: :desc)
+                             .paginate(page: params[:page], per_page: PAGINATION_PER_PAGE).order(created_at: :desc)
     @new_customer = User.new
     @customers.present? ? render_requested_format(@customers) : render(:empty_customer)
   end
@@ -25,7 +25,7 @@ class MerchantCustomersController < ApplicationController
     # and include only captured transactions. account reload txns are included by default..right
     @transactions = Transaction.exclude_refunded_transactions().where(team_id: current_user.id).only_captured_transactions()
                             .exclude_subscriptions()
-                            .where(user_id: @customer.id).order(created_at: :desc)
+                            .where(user_id: @customer.id).order(created_at: :desc).paginate(:page => params[:page], :per_page => 10)
 
     @conversation_refs = ConversationRef.get_last_customer_msg_from_all_merchant_convs(current_user.id, @customer.id)
     @recent_activity = recent_activity

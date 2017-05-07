@@ -17,9 +17,9 @@ class UserPresenter < BasePresenter
   def profile_image
     profile_pic = User.check_profile_picture(@model)
     if profile_pic[:type] == "image"
-      html = h.image_tag(profile_pic[:value], class: 'profile-picture-right-nav', width: 50 )
+      html = h.image_tag(profile_pic[:value], class: 'table-profile-picture', width: 50 )
     elsif profile_pic[:type] == "color"
-      class_name = "profile-picture-right-nav radius-color-#{profile_pic[:value]}" if @model.class.to_s == 'User'
+      class_name = "table-profile-picture radius-color-#{profile_pic[:value]}" if @model.class.to_s == 'User'
       html = ("<div class='"+class_name+"'></div>").html_safe
     end
     html

@@ -14,7 +14,7 @@ module ChannelCampaign
       channel_class = channel_string_class.constantize
       @failure_user_list = channel_class.new(@campaign).send_campaign
       unless @campaign.reminder_campaign?
-        retry_other_channel unless retry_campaign?
+        retry_other_channel if retry_campaign?
       end
       update_campaign
     end
@@ -22,12 +22,12 @@ module ChannelCampaign
     private
 
     def retry_campaign?
-      @campaign.test? || @campaign.lists[0].try(:channel).nil?
+      (!@campaign.test? && @failure_user_list.present?)
     end
 
     def channel_string_class
       # channel mappers maps campaign channel to its respective class
-      return channel_mapper[@campaign.channel]
+      channel_mapper[@campaign.channel]
     end
 
     def retry_other_channel

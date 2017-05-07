@@ -3,7 +3,12 @@ class Api::V1::RemindersController < API::V1::BaseController
 
   def create
     reminder = current_user.reminders.build(reminder_params)
-    reminder_campaign = reminder.campaign_lists.build(customer_id: params[:reminder][:customer_id])
+    customer_contact = params[:reminder][:customer_id].split(',')
+    reminder_campaign = if customer_contact[1] == 'user'
+                          reminder.campaign_lists.build(merchant_customer_id: customer_contact[0])
+                        else
+                          reminder.campaign_lists.build(merchant_contact_id: customer_contact[0])
+                        end
     saved_reminder = reminder.save
     reminder.enqueue_jobs if saved_reminder
     status = saved_reminder ? { status: 200 } : { status: 400 }
@@ -12,8 +17,10 @@ class Api::V1::RemindersController < API::V1::BaseController
   end
 
   def edit
-    reminder = Reminder.find_by_id(params[:id])
-    user = User.where(id: reminder.campaign_lists[0].customer_id).select('id, phone_number')
+    reminder = current_user.reminders.find_by_id(params[:id])
+    customer_id = reminder.campaign_lists[0].merchant_customer_id
+    contact_customer = customer_id.present? ? customer_id : reminder.campaign_lists[0].merchant_contact_id
+    user = User.where(id: contact_customer).select('id, phone_number')
     render json: { reminder: reminder, reminder_lists: user }
   end
 

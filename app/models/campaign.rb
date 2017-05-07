@@ -105,7 +105,7 @@ class Campaign < ActiveRecord::Base
   end
 
   def is_time_greater_than_now?
-    (date_time - 30.minutes) < Time.current if date_time.present?
+    (date_time - 30.minutes).to_i < Time.current.to_i if date_time.present?
   end
 
   def is_campaign_date_selected?
@@ -122,7 +122,7 @@ class Campaign < ActiveRecord::Base
   end
 
   def is_campaign_date_less?
-    Time.current < self.date_time
+    Time.current.to_i < self.date_time.to_i
   end
 
   def set_campaign_status

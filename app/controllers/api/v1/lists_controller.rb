@@ -1,5 +1,5 @@
 class Api::V1::ListsController < API::V1::BaseController
-  include CustomerSegmentQueries
+  include CustomerSegmentQueries, ContactSegmentQueries
 
   def index
     begin
@@ -34,9 +34,13 @@ class Api::V1::ListsController < API::V1::BaseController
   def create
     begin
       if list_params[:list_category] == 'list'
-        list = current_user.lists.build(name: list_params[:name], list_type: list_params[:list_type])
+        list = current_user.lists.build(name: list_params[:name], list_type: list_params[:list_type],
+                                        channel: list_params[:channel])
         selected_users_id = list_params[:selected_users].split(",")
-        selected_users_id.each { |user_id| list.user_lists.build(user_id: user_id) }
+        customer_type = list_params[:list_type] == 'contact' ? 'MerchantContact' : 'User'
+        selected_users_id.each { |user_id| list.user_lists.build(customer_contact_id: user_id,
+                                                                customer_contact_type: customer_type)
+                               }
         # list also save associated record
         message = if list.save
                     { notice: 'List saved successfully', status: 200, redirect_url: list_url(current_user, list) }
@@ -45,9 +49,7 @@ class Api::V1::ListsController < API::V1::BaseController
                   end
         render json: message
       else
-        segment_query = get_segment_query
-        list = save_list(name: segment_params[:segment_name], user_id: current_user.id,
-                          segment: segment_query)
+        list = save_list
         list_errors = get_list_errors(list)
         if list_errors.blank?
            render json: {
@@ -94,19 +96,23 @@ class Api::V1::ListsController < API::V1::BaseController
     # @param user_id The user_id
     # @param segment A boolean indicating if this list is a segment
     # default is nil (i.e. list)
-    def save_list(name:, user_id:, segment:nil)
-      l = List.new(name:name, user_id:user_id, segment:segment)
+    def save_list
+      @filter_params = segment_params
+      segment_query = segment_params[:list_type] == 'contact' ? contact_segment_query : customer_segment_query
+      l = List.new(name: segment_params[:segment_name], user_id: current_user.id,
+                   segment: segment_query, list_type: segment_params[:list_type])
       l.save
       return l
     end
 
     def list_params
-      params.require(:lists).permit(:selected_users, :list_category, :name, :list_type)
+      params.require(:lists).permit(:selected_users, :list_category, :name, :list_type, :list_channel)
     end
 
     def segment_params
       params.require(:lists).permit(:segment_type, :list_category, :segment_num_days,
-                                    :segment_filter, :amt_filter, :amt_1, :amt_2, :segment_name)
+                                    :segment_filter, :amt_filter, :amt_1, :amt_2, :segment_name,
+                                    :list_type)
     end
 
     # Get the SQL query for the segment

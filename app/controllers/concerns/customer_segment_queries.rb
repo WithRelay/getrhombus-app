@@ -1,6 +1,6 @@
 module CustomerSegmentQueries
 
-  OPERATORS = {'more_than' => '>', 'less_than' => '<', 'exactly' => '='}
+  OPERATORS = { 'more_than' => '>', 'less_than' => '<', 'exactly' => '=' }
 
   LAST_MESSAGE = %w(last_msg_received last_msg_sent)
 
@@ -8,9 +8,8 @@ module CustomerSegmentQueries
 
   @filter_params = {}
 
-  def get_segment_query
+  def customer_segment_query
     @filter_params = segment_params
-    binding.pry
     unless segment_type_mapper.nil? && segment_filter_mapper.nil?
       segment_filter_mapper + self.send(segment_type_mapper)
     end
@@ -20,22 +19,19 @@ module CustomerSegmentQueries
 
   def purchase_made_less_more_exactly
     "AND (CAST(t.created_at as DATE) #{map_amount_filter_to_operator} \
-    CAST(DATE_SUB(CONVERT_TZ(NOW(), '#{Time.zone.name}', '#{team.time_zone}'), \
-    INTERVAL #{@filter_params[:segment_num_days]} DAY) as DATE))"
+    CAST(DATE_SUB(NOW(), INTERVAL #{@filter_params[:segment_num_days]} DAY) as DATE))"
   end
 
   def message_recieved_less_more_exactly
     inner_join_transaction_user + "INNER JOIN messages as m on m.user_id = u.id WHERE \
     CAST(m.created_at as DATE) #{map_customer_filter_to_operator} \
-    CAST(DATE_SUB(CONVERT_TZ(NOW(), '#{Time.zone.name}', '#{team.time_zone}'), INTERVAL \
-    #{@filter_params[:segment_num_days]} DAY) as DATE) AND "
+    CAST(DATE_SUB(NOW(), INTERVAL #{@filter_params[:segment_num_days]} DAY) as DATE) AND "
   end
 
   def message_send_less_more_exactly
     inner_join_transaction_user + "INNER JOIN messages as m on m.user_id_to = u.id WHERE \
     CAST(m.created_at as DATE) #{map_customer_filter_to_operator} \
-    CAST(DATE_SUB(CONVERT_TZ(NOW(), '#{Time.zone.name}', '#{team.time_zone}')), INTERVAL \
-    #{@filter_params[:segment_num_days]} DAY) as DATE) AND "
+    CAST(DATE_SUB(NOW(), INTERVAL #{@filter_params[:segment_num_days]} DAY) as DATE) AND "
   end
 
   def created_less_than_more_than
@@ -44,8 +40,7 @@ module CustomerSegmentQueries
   end
 
   def created_exactly
-    "AND CAST(m_c.created_at as DATE) = \
-    CAST(DATE_SUB(CONVERT_TZ(NOW(), '#{Time.zone.name}', '#{team.time_zone}'), INTERVAL \
+    "AND CAST(m_c.created_at as DATE) = CAST(DATE_SUB(NOW(), INTERVAL \
     #{@filter_params[:segment_num_days]} DAY) as DATE)"
   end
 

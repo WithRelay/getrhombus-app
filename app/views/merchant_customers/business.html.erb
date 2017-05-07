@@ -41,7 +41,7 @@
           <div class="cn w-clearfix w-col w-col-3">
             <div class="name w-clearfix subs-card-name"><%= present(merchant_customer).profile_image(current_user) %>
               <div class="shrink-text table-text">
-                <%= present(merchant_customer).format_merchant_name %>
+                <%= link_to "#{present(merchant_customer).format_merchant_name}", "customers/#{merchant_customer.id}", class: 'non-underline-link', action: "show" %>
               </div>
             </div>
             <!-- <div class="cb check-box-column">

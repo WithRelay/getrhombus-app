@@ -478,6 +478,11 @@ $(document).on('ready page:load', function() {
   $('#managed-account-form').formValidation({
       framework: 'bootstrap',
       live: 'disabled',
+      err: {
+        container: function($field, validator) {
+          return $field.parent().find('.messageContainer').hide();
+        }
+      },
       fields: {
         'user[address_attributes][street_address]': {
           validators: {
