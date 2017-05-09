@@ -10,14 +10,15 @@
           <a class="w-button sub-nav-button modal-loader"  href="#" modal-target='new-customer-modal'>&nbsp;<strong>Create customer</strong></a>
           <a class="import sub-nav-button w-button modal-loader" modal-target="import-customers-modal" href="#">&nbsp; <strong>Import customers</strong></a>
 
-          <% unless @merchant_customer.empty? %>
+          <% unless customers.empty? %>
             <button class="sub-nav-button w-button" modal-target='new-list-modal' id='create_list_button'> &nbsp;<strong>Create&nbsp;list</strong></button>
+
+            <div class='modal-background w-hidden modal-body new-list-modal'>
+              <%= render 'shared/modals/new_list' %>
+            </div>
           <% end %>
           <div class='modal-background w-hidden modal-body new-customer-modal'>
             <%= render 'shared/modals/create_customer' %>
-          </div>
-          <div class='modal-background w-hidden modal-body new-list-modal'>
-            <%= render 'shared/modals/new_list' %>
           </div>
           <div class='modal-background w-hidden modal-body import-customers-modal'>
             <%= render 'shared/modals/import_customers' %>
