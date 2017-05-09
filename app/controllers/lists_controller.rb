@@ -61,8 +61,9 @@ class ListsController < ApplicationController
 
   def update_user_list
     list_member_id = params[:lists][:list_member]
-    @list.user_lists.build(user_id: list_member_id)
-    if list_member_id.present? && @list.save
+    member_id = MerchantCustomer.find(list_member_id).customer.id
+    @list.user_lists.build(customer_contact_type: "User", customer_contact_id: member_id)
+    if member_id.present? && @list.save
       flash[:notice] = 'List was successfully updated.'
     else
       flash[:error] = 'List member could not updated'
