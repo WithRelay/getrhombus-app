@@ -24,9 +24,6 @@
     </div>
   </div>
 </div>
-<div class='modal-background w-hidden modal-body new-reminder-modal'>
-  <%= render partial: 'shared/modals/new_reminder', locals: { reminder: Reminder.new }  %>
-</div>
 
 <div class="customer-profile sub-nav-bar w-clearfix">
   <a class="add sub-nav-button w-button modal-loader" href="#" modal-target= "charge-customer-modal">&nbsp; <strong>Charge</strong></a>
@@ -43,7 +40,7 @@
   </div>
   <a class="sub-nav-button w-button modal-loader" href="#" modal-target="schedule-message-modal" > &nbsp;<strong>Schedule message</strong></a>
   <div class='modal-background w-hidden modal-body schedule-message-modal'>
-   <%= render 'shared/modals/schedule_message' %>
+    <%= render partial: 'shared/modals/new_reminder', locals: { reminder: Reminder.new }  %>
   </div>
 </div>
 <div class="customer-profile dashboard-body">
