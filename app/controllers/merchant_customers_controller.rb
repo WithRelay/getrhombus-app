@@ -12,7 +12,7 @@ class MerchantCustomersController < ApplicationController
   end
 
   def business
-    @business = MerchantCustomer.where(customer_id: current_user.id).
+    @business = MerchantCustomer.where(customer_id: current_user.id)
                                 .paginate(page: params[:page], per_page: PAGINATION_PER_PAGE).order(created_at: :desc)
   end
 
