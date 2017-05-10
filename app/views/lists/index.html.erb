@@ -43,5 +43,6 @@
 
 <div class="dashboard-body">
   <%= render @lists %>
+  <%= index_footer %>
 </div>
 <%= will_paginate(@lists).html_safe if @lists.count > PAGINATION_PER_PAGE %>
