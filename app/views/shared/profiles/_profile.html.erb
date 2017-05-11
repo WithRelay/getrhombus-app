@@ -1,30 +1,10 @@
-<div class="customer-profile dashboard-nav w-clearfix">
-  <div class="dashboard-logo-wrapper">
-    <%= link_to user_path(current_user) do %>
-      <%= image_tag 'Relay-Transparent-500x300.png', class: "dashboard-logo", width: "50" %>
-    <% end %>
-  </div>
-  <div class="dashboard-nav-links-wrapper messaging-dashboard">
-    <a class="w-clearfix w-inline-block" href="#">
-      <%= link_to user_path(current_user), class: 'dash-header-links' do %>
-         &nbsp;<strong>Dashboard</strong>
-      <% end %>
-      <%= link_to customers_user_path(current_user), class: 'dash-header-links new-link' do %>
-         &nbsp;<strong>All &nbsp;customers</strong>
-      <% end %>
-      <%= link_to customers_user_path(current_user), class: 'dash-header-links new-link' do %>
-         &nbsp;<strong>New &nbsp;customers</strong>
-      <% end %>
-      <%= render "shared/rhombus_number" %>
-    </a>
-  </div>
-  <div class="dashboard-nav-links-wrapper new-tab right-nav settings-dropdown">
-    <div class="dropdown-wrapper w-dropdown" data-delay="0">
-      <%= render 'shared/settings_dropdown' %>
-    </div>
-  </div>
-</div>
-
+<style type="text/css">
+  .dashboard-nav {
+    width: 100%;
+    left: 0;
+  }
+</style>
+<%=render 'shared/authenticated_header'%>
 <div class="customer-profile sub-nav-bar w-clearfix">
   <a class="add sub-nav-button w-button modal-loader" href="#" modal-target= "charge-customer-modal">&nbsp; <strong>Charge</strong></a>
   <div class='modal-background w-hidden modal-body charge-customer-modal'>
