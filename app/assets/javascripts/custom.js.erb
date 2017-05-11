@@ -17,10 +17,12 @@ $(document).ready(function() {
   }, delay);
 */
   //Add plain footer to index pages
-    (".dashboard-body.objlists") &&
-      $(".dashboard-body.objlists").append('<div style="height: 50px;"></div>');
-      $(".dashboard-body").append('<div style="height: 50px;"></div>');
+    if ($(".dashboard-body")){
 
+    $(".dashboard-body.objlists") && $(".dashboard-body.objlists").append('<div style="height: 50px;"></div>');
+
+    !$(".dashboard-body.objlists") && $(".dashboard-body").append('<div style="height: 50px;"></div>');
+    }
 
   //add perfectScrollbar
   var dashboard = document.querySelector('.dashboard-body');
