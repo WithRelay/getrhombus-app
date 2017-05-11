@@ -55,7 +55,10 @@
 
   </div>
   <%= f.submit "Save changes", id: "ba-submit", class: "btn-rhombus button save-changes w-button" %>
-  <a class="button deactivate w-button" href="#">Deactivate/Pause Account</a>
+  <a class="button deactivate w-button  modal-loader" href="#" modal-target="deactivate-account-modal">Deactivate/Pause Account</a>
   <% end %>
+</div>
+<div class='modal-background w-hidden modal-body deactivate-account-modal'>
+  <%= render 'shared/modals/deactivate_account' %>
 </div>
 </div>
