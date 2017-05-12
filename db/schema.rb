@@ -99,7 +99,7 @@ ActiveRecord::Schema.define(version: 20170426083014) do
     t.datetime "updated_at",                     null: false
     t.integer  "reminder_id",          limit: 4
     t.integer  "merchant_customer_id", limit: 4
-    t.integer  "merchant_contact_id",  limit: 4, null: false
+    t.integer  "merchant_contact_id",  limit: 4
   end
 
   add_index "campaign_lists", ["campaign_id"], name: "index_campaign_lists_on_campaign_id", using: :btree
@@ -381,10 +381,10 @@ ActiveRecord::Schema.define(version: 20170426083014) do
     t.datetime "updated_at",                                   null: false
   end
 
-  add_index "invoices", ["coupon_id"], name: "fk_rails_1489735805", using: :btree
+  add_index "invoices", ["coupon_id"], name: "fk_rails_e6f65a3c2c", using: :btree
   add_index "invoices", ["stripe_invoice_id"], name: "index_invoices_on_stripe_invoice_id", using: :btree
-  add_index "invoices", ["subscription_id"], name: "fk_rails_8a85263dc0", using: :btree
-  add_index "invoices", ["transaction_id"], name: "fk_rails_497f2b74ce", using: :btree
+  add_index "invoices", ["subscription_id"], name: "fk_rails_49bc030147", using: :btree
+  add_index "invoices", ["transaction_id"], name: "fk_rails_b20d90b857", using: :btree
 
   create_table "knowledge_base_categories", force: :cascade do |t|
     t.string   "name",       limit: 191
