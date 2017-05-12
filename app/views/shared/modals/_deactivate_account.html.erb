@@ -5,10 +5,10 @@
   <p class="cancel-subscription modal-content-description">We're sad to see you go. Please take a moment to tell us why, so we can improve the software to meet your future needs.</p>
   <div class="segment-modal underline-div"></div>
   <div>
-    <form class="deactivation-form" id="deactivation-form">
+    <%= form_tag(user_deactivate_path(current_user)) do %>
       <label class="form-label" for="field-7">What prompted you to deactivate your account?</label>
       <div class="form-group">
-        <select class="form-control dropdown w-select" id="prompt" name="Prompt">
+        <select class="form-control dropdown w-select" id="prompt" name="Prompt" required>
           <option value="">Select one...</option>
           <option value="">Pricing</option>
           <option value="">Inadequate Features</option>
@@ -17,13 +17,13 @@
         </select>
       </div>
       <div class="form-group">
-        <textarea class="form-control deactivation-comments text-area w-input" id="reason" name="Resson" placeholder="Please include some details or suggestions for improvement"></textarea>
+        <input class="form-control deactivation-comments text-area w-input" id="reason" name="Resson" placeholder="Please include some details or suggestions for improvement" required>
       </div>
       <div class="form-group">
-        <input class="form-control enter-cancel-field text-field w-input" id="confirm" maxlength="256" name="Confirm" placeholder="Type the word &quot;DEACTIVATE&quot;" type="text">
+        <input class="form-control enter-cancel-field text-field w-input" id="confirm" maxlength="256" name="Confirm" placeholder="Type the word &quot;DEACTIVATE&quot;" type="text" required pattern="/^DEACTIVATE$/">
       </div>
-      <input type="submit" value="Deactivate/Pause account", class="button deactivate-account-button w-button" >
-    </form>
+      <%= submit_tag 'Deactivate/Pause account', class: 'button deactivate-account-button w-button' %>
+    <% end %>
   </div>
   <%# added update-close-modals and data %>
   <a class="button cancel deactivate-account-button w-button update-close-modals" data-parent='deactivate-account' href="#">Cancel</a>

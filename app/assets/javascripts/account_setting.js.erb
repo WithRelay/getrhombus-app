@@ -119,42 +119,6 @@ $(document).ready(function() {
     });
   }
 
-  if ($('#deactivation-form').length) {
-    $('#deactivation-form')
-    .formValidation({
-      framework: 'bootstrap',
-      excluded: ':disabled',
-      live: 'disabled',
-      fields: {
-        'Prompt': {
-          validators: {
-            notEmpty: {
-              message: 'Required'
-            }
-          }
-        },
-        'Reason': {
-          validators: {
-            notEmpty: {
-              message: 'The content is required and cannot be empty'
-            },
-            stringLength: {
-              max: 5000,
-              message: 'The reason must be less than 5000 characters long'
-            }
-          }
-        },
-        'Confirm': {
-          validators: {
-            notEmpty: {
-              message: 'Required'
-            }
-          }
-        }
-      }
-    })
-  }
-
   if ($('#businessSetting').length) {
     $('#businessSetting')
     .formValidation({
