@@ -4,31 +4,77 @@
 # encoding: utf-8
 
 # Seeds for users
+# User.delete_all
 
- # User.delete_all
+unless true
+	# id = 1, platform
+	 User.create!(
+	 	email:"<redacted_email>",
+	 	password: "samepassword",
+	 	user_level:1,
+	 	first_name:"Rhombus",
+	 	last_name:"Relay",
+	 	phone_number: '<redacted_phone_number>'
+	 	# is_active: 1
+	 )
 
-	binding.pry
-	# User.create!(
-	# 	email:"<redacted_email>",
-	# 	password: "samepassword",
-	# 	user_level:1,
-	# 	first_name:"Rhombus",
-	# 	last_name:"Relay",
-	# 	phone_number: '<redacted_phone_number>'
-	# 	# is_active: 1
-	# )
-	#
-	# 20.times do
-	#  User.create!(
-	# 	 email: FFaker::Internet.email,
-	# 	 password: "samepassword",
-	# 	 user_level: %w(1 0).sample.to_i,
-	# 	 first_name: FFaker::Name.first_name,
-	# 	 last_name: FFaker::Name.last_name,
-	# 	 phone_number: FFaker::PhoneNumber.short_phone_number.tr('-','').to_i
-	# 	#  is_active: 1
-	#  )
-	# end
+#a standard merchant
+#id = 2
+ 	User.create!(
+ 		email:"<redacted_email>",
+ 		password: "samepassword",
+ 		user_level:1,
+ 		first_name:"Mr.",
+ 		last_name:"Merchant",
+ 		phone_number: '<redacted_phone_number>'
+ 		# is_active: 1
+ 	)
+
+#a standard customer
+# id = 3
+	User.create!(
+		email:"<redacted_email>",
+		password: "password",
+		user_level:0,
+		first_name:"Mr.",
+		last_name:"Customer",
+		phone_number: '<redacted_phone_number>'
+		# is_active: 1
+	)
+end
+#other merchant and non-merchant
+#all even numbered ids are merchant and all odd(except 1) are customer
+	10.times do
+	 User.create!(
+		 email: FFaker::Internet.email,
+		 password: "samepassword",
+		 user_level: 1,
+		 first_name: FFaker::Name.first_name,
+		 last_name: FFaker::Name.last_name,
+		 phone_number: FFaker::PhoneNumber.short_phone_number.tr('-','').to_i
+		#  is_active: 1
+	 )
+
+	 User.create!(
+		 email: FFaker::Internet.email,
+		 password: "samepassword",
+		 user_level: 0,
+		 first_name: FFaker::Name.first_name,
+		 last_name: FFaker::Name.last_name,
+		 phone_number: FFaker::PhoneNumber.short_phone_number.tr('-','').to_i
+		#  is_active: 1
+	 )
+
+	end
+
+	#50 saved_replies for Mr. Merchant
+	50.times do
+		SavedReply.create!(
+			title: FFaker::Lorem.word,
+			body: FFaker::Lorem.paragraph($nbSentences = 2),
+			user_id: 2
+		)
+	end
 
 # Transaction.create!(
 # 	created_at: '2016-11-10 00:20:51',
