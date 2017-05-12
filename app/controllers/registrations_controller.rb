@@ -108,6 +108,18 @@ class RegistrationsController < Devise::RegistrationsController
     redirect_to sms_usage_user_path
   end
 
+  def deactivate_account
+    saas_sub = current_user.get_saas_subscription
+    if saas_sub && saas_sub.cancel_subscription(current_user) || saas_sub.nil?
+      current_user.update(status: 0)
+      flash[:notice] = 'Your account is deactivate'
+      redirect_to logout_path
+    else
+      flash[:error] = 'Something went wrong'
+      redirect_to user_account_settings_path
+    end
+  end
+
   protected
 
   def create_saas_subscription
