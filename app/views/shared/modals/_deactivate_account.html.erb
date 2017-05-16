@@ -20,9 +20,9 @@
         <input class="form-control deactivation-comments text-area w-input" id="reason" name="Resson" placeholder="Please include some details or suggestions for improvement" required>
       </div>
       <div class="form-group">
-        <input class="form-control enter-cancel-field text-field w-input" id="confirm" maxlength="256" name="Confirm" placeholder="Type the word &quot;DEACTIVATE&quot;" type="text" required pattern="/^DEACTIVATE$/">
+        <input class="form-control enter-cancel-field text-field w-input" id="confirm" maxlength="256" name="Confirm" placeholder="Type the word &quot;DEACTIVATE&quot;" type="text" required>
       </div>
-      <%= submit_tag 'Deactivate/Pause account', class: 'button deactivate-account-button w-button' %>
+      <%= submit_tag 'Deactivate/Pause account', class: 'button deactivate-account-button w-button', id: 'deactivate-account-button' %>
     <% end %>
   </div>
   <%# added update-close-modals and data %>
