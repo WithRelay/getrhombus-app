@@ -70,9 +70,27 @@ end
 	#50 saved_replies for Mr. Merchant
 	50.times do
 		SavedReply.create!(
-			title: FFaker::Lorem.word,
+			title: FFaker::Lorem.word + %w('' ' ' '_' '-' '--').sample + FFaker::Lorem.word,
 			body: FFaker::Lorem.paragraph($nbSentences = 2),
 			user_id: 2
+		)
+
+
+		name = FFaker::Name.name
+		tag_type= [0,1,2].sample
+		Hashtag.create!(
+			description: FFaker::Lorem.paragraph($nbSentences = 2),
+			amount: rand(500..15000),
+			response: FFaker::Lorem.paragraph,
+			name: name,
+			tag: name.delete(' ') + rand(100).to_s,
+			charge_amount: [0,1].sample,
+			user_id: 2,
+			interval_count: tag_type != 0 ? rand(2..5) : nil,
+			interval: tag_type == 2 ? %w(weekly biweekly yearly).sample : nil,
+			tag_type: tag_type,
+			status: 1,
+			enable_tweet: nil,
 		)
 	end
 
@@ -90,9 +108,9 @@ end
 # 	updated_at: '2016-11-19 00:20:51',
 # 	referenced_user_id: 40,
 # 	user_id: 40,
-# 	team_id: 7,
 # 	description: "Milk",
 # 	amount: 25
+# 	team_id: 7,
 # )
 # Transaction.create!(
 # 	created_at: '2016-11-10 00:20:51',
