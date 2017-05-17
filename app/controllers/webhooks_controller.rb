@@ -8,7 +8,8 @@ class WebhooksController < ApplicationController
       # Verify the event by fetching it from Stripe
       #event = Stripe::Event.retrieve(params[:id])
       #if params[:id] == event[:id]
-        StripeEvent.process_event(params)
+        type = (request.original_fullpath.include? 'platform') ? 'platform' : 'connect'
+        StripeEvent.process_event(params, type)
       #end
     #rescue StandardError => e
       # email platform

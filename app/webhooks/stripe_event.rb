@@ -3,8 +3,9 @@ class StripeEvent
   class << self
     # Methods sending emails out to merchant/customers must be idempotent except for invoice failed
 
-    def process_event(hash)
+    def process_event(hash, type)
       @hash = hash[:data][:object] if hash[:data]
+      @stripe_event_for = type
       # send works like message passing to class hierarchy until method reacts
       # it accepts a parameter that need to be pass in symbol or string which calls method.
       # if we pass string it will internally converts to symbol.
@@ -117,7 +118,9 @@ class StripeEvent
       @data = Invoice.where(stripe_invoice_id: @hash[:id]).first_or_initialize
 
       # Ensure all these exists else it isnt ours. They should.
-      merchant_customer = MerchantCustomer.find_by(stripe_customer_id:  @hash[:customer])
+      key = (@stripe_event_for == 'platform') ? :platform_stripe_customer_id : :merchant_stripe_customer_id
+      merchant_customer = MerchantCustomer.find_by(key => @hash[:customer])
+
       if merchant_customer
         # update merchant_customer
         @data.team_id = merchant_customer.merchant_id

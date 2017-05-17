@@ -14,7 +14,8 @@ Rails.application.routes.draw  do
 
   # events/hooks routess
   #constraints subdomain: 'hooks' do
-    post 'events/stripe' => 'webhooks#stripe_events'
+    post 'events/stripe/platform' => 'webhooks#stripe_events'
+    post 'events/stripe/connect' => 'webhooks#stripe_events'
     post 'events/twilio' => 'webhooks#twilio_events'
     match'events/nexmo' => 'webhooks#nexmo_events', via: [:get, :post]
     match 'events/facebook' => 'webhooks#facebook_events', via: [:get, :post]
