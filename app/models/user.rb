@@ -202,7 +202,7 @@ class User < ActiveRecord::Base
 
   def get_saas_subscription
     platform_merchant = MerchantCustomer.find_by(customer_id: self.id, merchant_id: User.get_platform_acct_obj.id)
-    platform_merchant ? platform_merchant.subscriptions.active.last : nil
+    platform_merchant ? platform_merchant.subscriptions.last : nil
   end
 
   def get_page_access_token
