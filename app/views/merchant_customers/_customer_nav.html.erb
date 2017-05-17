@@ -1,20 +1,25 @@
  <div class="customer-dash sub-nav-bar">
     <div class="sub-nav-bar-row w-row">
       <div class="sub-nav-bar-row-column-1 w-clearfix w-col w-col-2">
-        <div class="customer-count shrink-text"> <%= customers.length %> /<span class="sub-nav-sub-text">
-        <%= customers.count %> customers </span>
+        <div class="customer-count shrink-text"> <%= customers.try(:length) %> /<span class="sub-nav-sub-text">
+        <%= customers.try(:count) %> customers </span>
         </div>
       </div>
       <div class="sub-nav-bar-row-column-2 w-col w-col-6">
         <div class="customer-dashoard sub-nav-options-wrapper w-clearfix">
           <a class="w-button sub-nav-button modal-loader"  href="#" modal-target='new-customer-modal'>&nbsp;<strong>Create customer</strong></a>
           <a class="import sub-nav-button w-button modal-loader" modal-target="import-customers-modal" href="#">&nbsp; <strong>Import customers</strong></a>
-          <button class="sub-nav-button w-button" modal-target='new-list-modal' id='create_list_button'> &nbsp;<strong>Create&nbsp;list</strong></button>
+
+          <% unless customers.empty? %>
+            <button class="sub-nav-button w-button" modal-target='new-list-modal' id='create_list_button'> &nbsp;<strong>Create&nbsp;list</strong></button>
+
+            <div class='modal-background w-hidden modal-body new-list-modal'>
+              <%= render 'shared/modals/new_list' %>
+            </div>
+          <% end %>
+          
           <div class='modal-background w-hidden modal-body new-customer-modal'>
             <%= render 'shared/modals/create_customer' %>
-          </div>
-          <div class='modal-background w-hidden modal-body new-list-modal'>
-            <%= render 'shared/modals/new_list' %>
           </div>
           <div class='modal-background w-hidden modal-body import-customers-modal'>
             <%= render 'shared/modals/import_customers' %>

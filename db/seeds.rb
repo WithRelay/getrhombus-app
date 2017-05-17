@@ -1,200 +1,288 @@
 #---
-# Database seed of users 
+# Database seed of users
 #---
 # encoding: utf-8
 
 # Seeds for users
 # User.delete_all
 
-Transaction.create!(
-	created_at: '2016-11-10 00:20:51',
-	updated_at: '2016-11-10 00:20:51',
-	referenced_user_id: 4,
-	user_id: 4,
-	team_id: 7,
-	description: "Baggles purchase",
-	amount: 20
-)
-Transaction.create!(
-	created_at: '2016-11-19 00:20:51',
-	updated_at: '2016-11-19 00:20:51',
-	referenced_user_id: 40,
-	user_id: 40,
-	team_id: 7,
-	description: "Milk",
-	amount: 25
-)
-Transaction.create!(
-	created_at: '2016-11-10 00:20:51',
-	updated_at: '2016-11-10 00:20:51',
-	referenced_user_id: 40,
-	user_id: 40,
-	team_id: 7,
-	description: "Ballons",
-	amount: 21.40
-)
-Transaction.create!(
-	created_at: '2016-11-20 00:20:51',
-	updated_at: '2016-11-20 00:20:51',
-	referenced_user_id: 36,
-	user_id: 36,
-	team_id: 7,
-	description: "Fish and Chips",
-	amount: 20.89
-)
-Transaction.create!(
-	created_at: '2016-11-30 00:20:51',
-	updated_at: '2016-11-30 00:20:51',
-	referenced_user_id: 35,
-	user_id: 35,
-	team_id: 7,
-	description: "Eggplants",
-	amount: 15
-)
-Transaction.create!(
-	created_at: '2016-11-01 00:20:51',
-	updated_at: '2016-11-01 00:20:51',
-	referenced_user_id: 39,
-	user_id: 39,
-	team_id: 7,
-	description: "Suya and Banana",
-	amount: 50
-)
-Transaction.create!(
-	created_at: '2016-11-25 00:20:51',
-	updated_at: '2016-11-25 00:20:51',
-	referenced_user_id: 36,
-	user_id: 36,
-	team_id: 7,
-	description: "Eba & Amala",
-	amount: 25
-)
-Transaction.create!(
-	created_at: '2016-11-24 00:20:51',
-	updated_at: '2016-11-24 00:20:51',
-	referenced_user_id: 33,
-	user_id: 33,
-	team_id: 7,
-	description: "Baked beans",
-	amount: 5.15
-)
-Transaction.create!(
-	created_at: '2016-11-05 00:20:51',
-	updated_at: '2016-11-05 00:20:51',
-	referenced_user_id: 29,
-	user_id: 29,
-	team_id: 7,
-	description: "Sweet potato",
-	amount: 30
-)
-Transaction.create!(
-	created_at: '2016-11-20 00:20:51',
-	updated_at: '2016-11-20 00:20:51',
-	referenced_user_id: 25,
-	user_id: 25,
-	team_id: 7,
-	description: "Chicken and eggs",
-	amount: 20
-)
-Transaction.create!(
-	created_at: '2016-11-10 00:20:51',
-	updated_at: '2016-11-10 00:20:51',
-	referenced_user_id: 24,
-	user_id: 24,
-	team_id: 7,
-	description: "Akara and Kose",
-	amount: 15.89
-)
-Transaction.create!(
-	created_at: '2016-11-25 00:20:51',
-	updated_at: '2016-11-25 00:20:51',
-	referenced_user_id: 30,
-	user_id: 30,
-	team_id: 7,
-	description: "Watermelons",
-	amount: 25
-)
-Transaction.create!(
-	created_at: '2016-10-10 00:20:51',
-	updated_at: '2016-10-10 00:20:51',
-	referenced_user_id: 41,
-	user_id: 41,
-	team_id: 7,
-	description: "Broomsticks",
-	amount: 20
-)
-Transaction.create!(
-	created_at: '2016-11-14 00:20:51',
-	updated_at: '2016-11-14 00:20:51',
-	referenced_user_id: 22,
-	user_id: 22,
-	team_id: 7,
-	description: "Fish and chips",
-	amount: 30
-)
-Transaction.create!(
-	created_at: '2016-11-25 00:20:51',
-	updated_at: '2016-11-25 00:20:51',
-	referenced_user_id: 21,
-	user_id: 21,
-	team_id: 7,
-	description: "Chicken and eggs",
-	amount: 24
-)
-Transaction.create!(
-	created_at: '2016-10-10 00:20:51',
-	updated_at: '2016-10-10 00:20:51',
-	referenced_user_id: 4,
-	user_id: 4,
-	team_id: 7,
-	description: "Baggles purchase",
-	amount: 20
-)
-Transaction.create!(
-	created_at: '2016-11-10 00:20:51',
-	updated_at: '2016-11-10 00:20:51',
-	referenced_user_id: 12,
-	user_id: 12,
-	team_id: 7,
-	description: "Space heater",
-	amount: 30
-)
-Transaction.create!(
-	created_at: '2016-11-10 00:20:51',
-	updated_at: '2016-11-10 00:20:51',
-	referenced_user_id: 4,
-	user_id: 4,
-	team_id: 7,
-	description: "Baggles purchase",
-	amount: 20
-)
-Transaction.create!(
-	created_at: '2016-11-25 00:20:51',
-	updated_at: '2016-11-25 00:20:51',
-	referenced_user_id: 6,
-	user_id: 6,
-	team_id: 7,
-	description: "Oistein fish fry",
-	amount: 30
-)
-Transaction.create!(
-	created_at: '2016-11-20 00:20:51',
-	updated_at: '2016-11-20 00:20:51',
-	referenced_user_id: 33,
-	user_id: 33,
-	team_id: 7,
-	description: "Breaded cake",
-	amount: 25
-)
-Transaction.create!(
-	created_at: '2016-11-23 00:20:51',
-	updated_at: '2016-11-23 00:20:51',
-	referenced_user_id: 33,
-	user_id: 33,
-	team_id: 7,
-	description: "Sweet potato pie",
-	amount: 28
-)
+unless true
+	# id = 1, platform
+	 User.create!(
+	 	email:"<redacted_email>",
+	 	password: "samepassword",
+	 	user_level:1,
+	 	first_name:"Rhombus",
+	 	last_name:"Relay",
+	 	phone_number: '<redacted_phone_number>'
+	 	# is_active: 1
+	 )
+
+#a standard merchant
+#id = 2
+ 	User.create!(
+ 		email:"<redacted_email>",
+ 		password: "samepassword",
+ 		user_level:1,
+ 		first_name:"Mr.",
+ 		last_name:"Merchant",
+ 		phone_number: '<redacted_phone_number>'
+ 		# is_active: 1
+ 	)
+
+#a standard customer
+# id = 3
+	User.create!(
+		email:"<redacted_email>",
+		password: "password",
+		user_level:0,
+		first_name:"Mr.",
+		last_name:"Customer",
+		phone_number: '<redacted_phone_number>'
+		# is_active: 1
+	)
+end
+#other merchant and non-merchant
+#all even numbered ids are merchant and all odd(except 1) are customer
+	10.times do
+	 User.create!(
+		 email: FFaker::Internet.email,
+		 password: "samepassword",
+		 user_level: 1,
+		 first_name: FFaker::Name.first_name,
+		 last_name: FFaker::Name.last_name,
+		 phone_number: FFaker::PhoneNumber.short_phone_number.tr('-','').to_i
+		#  is_active: 1
+	 )
+
+	 User.create!(
+		 email: FFaker::Internet.email,
+		 password: "samepassword",
+		 user_level: 0,
+		 first_name: FFaker::Name.first_name,
+		 last_name: FFaker::Name.last_name,
+		 phone_number: FFaker::PhoneNumber.short_phone_number.tr('-','').to_i
+		#  is_active: 1
+	 )
+
+	end
+
+	#50 saved_replies for Mr. Merchant
+	50.times do
+		SavedReply.create!(
+			title: FFaker::Lorem.word + %w('' ' ' '_' '-' '--').sample + FFaker::Lorem.word,
+			body: FFaker::Lorem.paragraph($nbSentences = 2),
+			user_id: 2
+		)
+
+
+		name = FFaker::Name.name
+		tag_type= [0,1,2].sample
+		Hashtag.create!(
+			description: FFaker::Lorem.paragraph($nbSentences = 2),
+			amount: rand(500..15000),
+			response: FFaker::Lorem.paragraph,
+			name: name,
+			tag: name.delete(' ') + rand(100).to_s,
+			charge_amount: [0,1].sample,
+			user_id: 2,
+			interval_count: tag_type != 0 ? rand(2..5) : nil,
+			interval: tag_type == 2 ? %w(weekly biweekly yearly).sample : nil,
+			tag_type: tag_type,
+			status: 1,
+			enable_tweet: nil,
+		)
+	end
+
+# Transaction.create!(
+# 	created_at: '2016-11-10 00:20:51',
+# 	updated_at: '2016-11-10 00:20:51',
+# 	referenced_user_id: 4,
+# 	user_id: 4,
+# 	team_id: 7,
+# 	description: "Baggles purchase",
+# 	amount: 20
+# )
+# Transaction.create!(
+# 	created_at: '2016-11-19 00:20:51',
+# 	updated_at: '2016-11-19 00:20:51',
+# 	referenced_user_id: 40,
+# 	user_id: 40,
+# 	description: "Milk",
+# 	amount: 25
+# 	team_id: 7,
+# )
+# Transaction.create!(
+# 	created_at: '2016-11-10 00:20:51',
+# 	updated_at: '2016-11-10 00:20:51',
+# 	referenced_user_id: 40,
+# 	user_id: 40,
+# 	team_id: 7,
+# 	description: "Ballons",
+# 	amount: 21.40
+# )
+# Transaction.create!(
+# 	created_at: '2016-11-20 00:20:51',
+# 	updated_at: '2016-11-20 00:20:51',
+# 	referenced_user_id: 36,
+# 	user_id: 36,
+# 	team_id: 7,
+# 	description: "Fish and Chips",
+# 	amount: 20.89
+# )
+# Transaction.create!(
+# 	created_at: '2016-11-30 00:20:51',
+# 	updated_at: '2016-11-30 00:20:51',
+# 	referenced_user_id: 35,
+# 	user_id: 35,
+# 	team_id: 7,
+# 	description: "Eggplants",
+# 	amount: 15
+# )
+# Transaction.create!(
+# 	created_at: '2016-11-01 00:20:51',
+# 	updated_at: '2016-11-01 00:20:51',
+# 	referenced_user_id: 39,
+# 	user_id: 39,
+# 	team_id: 7,
+# 	description: "Suya and Banana",
+# 	amount: 50
+# )
+# Transaction.create!(
+# 	created_at: '2016-11-25 00:20:51',
+# 	updated_at: '2016-11-25 00:20:51',
+# 	referenced_user_id: 36,
+# 	user_id: 36,
+# 	team_id: 7,
+# 	description: "Eba & Amala",
+# 	amount: 25
+# )
+# Transaction.create!(
+# 	created_at: '2016-11-24 00:20:51',
+# 	updated_at: '2016-11-24 00:20:51',
+# 	referenced_user_id: 33,
+# 	user_id: 33,
+# 	team_id: 7,
+# 	description: "Baked beans",
+# 	amount: 5.15
+# )
+# Transaction.create!(
+# 	created_at: '2016-11-05 00:20:51',
+# 	updated_at: '2016-11-05 00:20:51',
+# 	referenced_user_id: 29,
+# 	user_id: 29,
+# 	team_id: 7,
+# 	description: "Sweet potato",
+# 	amount: 30
+# )
+# Transaction.create!(
+# 	created_at: '2016-11-20 00:20:51',
+# 	updated_at: '2016-11-20 00:20:51',
+# 	referenced_user_id: 25,
+# 	user_id: 25,
+# 	team_id: 7,
+# 	description: "Chicken and eggs",
+# 	amount: 20
+# )
+# Transaction.create!(
+# 	created_at: '2016-11-10 00:20:51',
+# 	updated_at: '2016-11-10 00:20:51',
+# 	referenced_user_id: 24,
+# 	user_id: 24,
+# 	team_id: 7,
+# 	description: "Akara and Kose",
+# 	amount: 15.89
+# )
+# Transaction.create!(
+# 	created_at: '2016-11-25 00:20:51',
+# 	updated_at: '2016-11-25 00:20:51',
+# 	referenced_user_id: 30,
+# 	user_id: 30,
+# 	team_id: 7,
+# 	description: "Watermelons",
+# 	amount: 25
+# )
+# Transaction.create!(
+# 	created_at: '2016-10-10 00:20:51',
+# 	updated_at: '2016-10-10 00:20:51',
+# 	referenced_user_id: 41,
+# 	user_id: 41,
+# 	team_id: 7,
+# 	description: "Broomsticks",
+# 	amount: 20
+# )
+# Transaction.create!(
+# 	created_at: '2016-11-14 00:20:51',
+# 	updated_at: '2016-11-14 00:20:51',
+# 	referenced_user_id: 22,
+# 	user_id: 22,
+# 	team_id: 7,
+# 	description: "Fish and chips",
+# 	amount: 30
+# )
+# Transaction.create!(
+# 	created_at: '2016-11-25 00:20:51',
+# 	updated_at: '2016-11-25 00:20:51',
+# 	referenced_user_id: 21,
+# 	user_id: 21,
+# 	team_id: 7,
+# 	description: "Chicken and eggs",
+# 	amount: 24
+# )
+# Transaction.create!(
+# 	created_at: '2016-10-10 00:20:51',
+# 	updated_at: '2016-10-10 00:20:51',
+# 	referenced_user_id: 4,
+# 	user_id: 4,
+# 	team_id: 7,
+# 	description: "Baggles purchase",
+# 	amount: 20
+# )
+# Transaction.create!(
+# 	created_at: '2016-11-10 00:20:51',
+# 	updated_at: '2016-11-10 00:20:51',
+# 	referenced_user_id: 12,
+# 	user_id: 12,
+# 	team_id: 7,
+# 	description: "Space heater",
+# 	amount: 30
+# )
+# Transaction.create!(
+# 	created_at: '2016-11-10 00:20:51',
+# 	updated_at: '2016-11-10 00:20:51',
+# 	referenced_user_id: 4,
+# 	user_id: 4,
+# 	team_id: 7,
+# 	description: "Baggles purchase",
+# 	amount: 20
+# )
+# Transaction.create!(
+# 	created_at: '2016-11-25 00:20:51',
+# 	updated_at: '2016-11-25 00:20:51',
+# 	referenced_user_id: 6,
+# 	user_id: 6,
+# 	team_id: 7,
+# 	description: "Oistein fish fry",
+# 	amount: 30
+# )
+# Transaction.create!(
+# 	created_at: '2016-11-20 00:20:51',
+# 	updated_at: '2016-11-20 00:20:51',
+# 	referenced_user_id: 33,
+# 	user_id: 33,
+# 	team_id: 7,
+# 	description: "Breaded cake",
+# 	amount: 25
+# )
+# Transaction.create!(
+# 	created_at: '2016-11-23 00:20:51',
+# 	updated_at: '2016-11-23 00:20:51',
+# 	referenced_user_id: 33,
+# 	user_id: 33,
+# 	team_id: 7,
+# 	description: "Sweet potato pie",
+# 	amount: 28
+# )
 
 # User.new(
 # 	email: '<redacted_email>',

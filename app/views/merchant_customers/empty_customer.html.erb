@@ -1,4 +1,4 @@
- <%= render partial: 'customer_nav', locals: { customers: @merchant_customer } %>
+ <%= render partial: 'customer_nav', locals: { customers: @merchant_customer || @customers } %>
 
   <div class="dashboard-body">
     <div class="blank-page-container w-container">

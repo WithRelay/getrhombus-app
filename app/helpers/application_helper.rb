@@ -163,4 +163,7 @@ module ApplicationHelper
     return 'overflow: hidden;' unless params[:controller] == 'static_pages' # || params[:controller] == 'reminders'
   end
 
+  def index_footer
+    return %Q{<div style="height: 50px"></div>}.html_safe
+  end
 end
