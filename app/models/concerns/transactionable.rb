@@ -11,7 +11,7 @@ module Transactionable
     random_token
   end
 
-  def self.generate_uid
+  def generate_uid
     random_token = ''
     loop do
       # http://stackoverflow.com/questions/88311/how-best-to-generate-a-random-string-in-ruby?rq=1
