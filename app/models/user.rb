@@ -128,7 +128,7 @@ class User < ActiveRecord::Base
   end
 
   def is_customer?
-    user_level == 0 || self.is_platform?
+    user_level == 0
   end
 
   def full_name
