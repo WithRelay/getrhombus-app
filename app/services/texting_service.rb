@@ -96,7 +96,8 @@ class TextingService
     end
 
     def twilio_list
-      {       
+      { 
+=begin      
         AU: {
           name: "Australia",
           types: {
@@ -126,7 +127,8 @@ class TextingService
               address_required: ""
             },
           }
-        },  
+        }, 
+=end 
         CA: {
           name: "Canada",
           types: {
@@ -142,6 +144,7 @@ class TextingService
             },
           }
         }, 
+=begin      
         CL: {
           name: "Chile",
           types: {
@@ -332,6 +335,7 @@ class TextingService
             },
           }
         },
+=end     
         US: {
           name: "United States",
           types: {
@@ -369,7 +373,6 @@ class TextingService
         false
       end
     end
-
 
     def receive_call
       response = Twilio::TwiML::Response.new do |r|

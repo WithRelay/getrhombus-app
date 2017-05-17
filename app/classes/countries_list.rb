@@ -1,5 +1,6 @@
 class CountriesList
   COUNTRIES_LIST = [ 
+=begin
     {name: 'Afghanistan', code: 'AF'}, 
     {name: 'Åland Islands', code: 'AX'}, 
     {name: 'Albania', code: 'AL'}, 
@@ -38,7 +39,9 @@ class CountriesList
     {name: 'Burundi', code: 'BI'}, 
     {name: 'Cambodia', code: 'KH'}, 
     {name: 'Cameroon', code: 'CM'}, 
+=end
     {name: 'Canada', code: 'CA'}, 
+=begin
     {name: 'Cape Verde', code: 'CV'}, 
     {name: 'Cayman Islands', code: 'KY'}, 
     {name: 'Central African Republic', code: 'CF'}, 
@@ -229,7 +232,9 @@ class CountriesList
     {name: 'Ukraine', code: 'UA'}, 
     {name: 'United Arab Emirates', code: 'AE'}, 
     {name: 'United Kingdom', code: 'GB'}, 
+=end
     {name: 'United States', code: 'US'}, 
+=begin
     {name: 'United States Minor Outlying Islands', code: 'UM'}, 
     {name: 'Uruguay', code: 'UY'}, 
     {name: 'Uzbekistan', code: 'UZ'}, 
@@ -243,5 +248,6 @@ class CountriesList
     {name: 'Yemen', code: 'YE'}, 
     {name: 'Zambia', code: 'ZM'}, 
     {name: 'Zimbabwe', code: 'ZW'} 
+=end
   ]
 end
