@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170426083014) do
+ActiveRecord::Schema.define(version: 20170517173354) do
 
   create_table "account_reloads", force: :cascade do |t|
     t.integer  "user_id",        limit: 4
@@ -848,21 +848,14 @@ ActiveRecord::Schema.define(version: 20170426083014) do
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   add_index "users", ["rhombus_number"], name: "index_users_on_rhombus_number", unique: true, using: :btree
 
-  add_foreign_key "alerts", "users"
   add_foreign_key "coupons", "users"
   add_foreign_key "fb_messages", "campaigns"
   add_foreign_key "fb_messages", "fb_pages"
   add_foreign_key "hashtags", "users"
-  add_foreign_key "invoices", "coupons"
-  add_foreign_key "invoices", "subscriptions"
-  add_foreign_key "invoices", "transactions"
   add_foreign_key "lists", "users"
   add_foreign_key "message_resolutions", "users"
   add_foreign_key "messages", "hashtags"
   add_foreign_key "refunds", "transactions"
-  add_foreign_key "subscriptions", "coupons"
-  add_foreign_key "subscriptions", "plans"
   add_foreign_key "transactions", "hashtags"
   add_foreign_key "transactions", "subscriptions"
-  add_foreign_key "transactions", "users", column: "team_id"
 end
