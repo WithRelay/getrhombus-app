@@ -5,10 +5,10 @@ class Plan < ActiveRecord::Base
   belongs_to :customer, class_name: "User"
   belongs_to :hashtag, -> { where tag_type: 3 }
 
-  #validates_presence_of :name, :interval, :interval_count, :amount
-  #validates :name, uniqueness: { case_sensitive: false, scope: :merchant_id }
-  #validates_numericality_of :amount, :interval_count, greater_than_or_equal_to: 0, only_integer: true
-  #validate :amount_greater_than_15000
+  validates_presence_of :name, :interval, :interval_count, :amount
+  validates :name, uniqueness: { case_sensitive: false, scope: :merchant_id }
+  validates_numericality_of :amount, :interval_count, greater_than_or_equal_to: 0, only_integer: true
+  validate :amount_greater_than_15000
 
   enum status: { inactive: 0, active: 1 }
 
