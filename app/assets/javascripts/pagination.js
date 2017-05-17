@@ -21,11 +21,11 @@
 $(document).ready(function(){
   if ($('.pagination').length) {
     $('.dashboard-body').scroll(function() {
-      var url = $('.pagination a.next_page').attr('href');
-
-      if (url && $('.dashboard-body').scrollTop() > $(document).height() - $('.dashboard-body').height() - 50) {
-        return $.getScript(url);
-      }
+      $('.pagination a').live('click',function(){
+        if (url && $('.dashboard-body').scrollTop() > $(document).height() - $('.dashboard-body').height() - 50) {
+          return $.getScript(url);
+        }  
+      });
     });
     $('.dashboard-body').scroll();
   }
