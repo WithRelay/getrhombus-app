@@ -1,19 +1,20 @@
 var PriceSlider = new function() {
 
   var pricingSlider, priceValueSpan, amount, selection; //currentAmount,
-  var plans = { PlanA: { amt: 0, min: 0, max: 100 },
-                PlanB: { amt: 50, min: 101, max: 1000 },
-                PlanC: { amt: 75, min: 1001, max: 2500 },
-                PlanD: { amt: 90, min: 2501, max: 5000 },
-                PlanE: { amt: 105, min: 5001, max: 7500 },
-                PlanF: { amt: 120, min: 7501, max: 10000 },
-                PlanG: { amt: 145, min: 10001, max: 15000 },
-                PlanH: { amt: 195, min: 15001, max: 20000 },
-                PlanI: { amt: 240, min: 20001, max: 30000 },
-                PlanJ: { amt: 295, min: 30001, max: 35000 },
-                PlanK: { amt: 350, min: 35001, max: 40000 },
-                PlanL: { amt: 400, min: 40001, max: 45000 },
-                PlanM: { amt: 450, min: 45001, max: 50000 },
+  var plans = { 1: { amt: 0, min: 0, max: 100 },
+                2: { amt: 50, min: 101, max: 1000 },
+                3: { amt: 75, min: 1001, max: 2500 },
+                4: { amt: 90, min: 2501, max: 5000 },
+                5: { amt: 105, min: 5001, max: 7500 },
+                6: { amt: 120, min: 7501, max: 10000 },
+                7: { amt: 145, min: 10001, max: 15000 },
+                8: { amt: 195, min: 15001, max: 20000 },
+                9: { amt: 240, min: 20001, max: 25000 },
+                10: { amt: 295, min: 25001, max: 30000 },
+                11: { amt: 350, min: 30001, max: 35000 },
+                12: { amt: 400, min: 35001, max: 40000 },
+                13: { amt: 450, min: 40001, max: 45000 },
+                14: { amt: 500, min: 45001, max: 50000 },
               };
   var keys = Object.keys(plans);
 
@@ -37,7 +38,7 @@ var PriceSlider = new function() {
     selection = plan_range(pricingSlider.value);
 
     // also used by the credit_card_form_js to skip validation
-    $('#plan_name').val(selection[0]);
+    $('#plan_id').val(selection[0]);
     priceValueSpan.innerHTML = selection[1];
 
     // for add a subscription page

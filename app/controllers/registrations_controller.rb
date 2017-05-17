@@ -139,7 +139,7 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   def get_plan_id
-    Plan.find_by(name: params[:plan][:name], merchant_id: @platform_acct.id, status: 1).try(:id)
+    Plan.find_by(id: params[:plan][:id], status: 1).try(:id)
   end
 
   def after_update_path_for(resource)
