@@ -49,10 +49,10 @@ Rails.application.routes.draw  do
         devise_scope :user do
           get "billing-information", to: "registrations#billing_information"
           get "account-settings", to: "registrations#account_settings"
+          member { get 'add-card-info' => 'registrations#add_card_info' }
         end
         member do
           get 'business' => 'merchant_customers#business'
-          get 'add-card-info' => 'registrations#add_card_info'
         end
         resources :transactions do
           get 'download' => 'transactions#download_csv', constraints: { format: 'csv' }, on: :collection
@@ -73,8 +73,8 @@ Rails.application.routes.draw  do
             get "business-settings", to: "registrations#business_settings"
 
             get "account-settings", to: "registrations#account_settings"
-            get 'auto_recharge' => 'registrations#auto_recharge'
-            get 'add_funds' => 'registrations#add_funds'
+            post 'auto_recharge' => 'registrations#auto_recharge'
+            post 'add_funds' => 'registrations#add_funds'
           end
         end
 

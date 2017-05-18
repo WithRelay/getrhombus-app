@@ -80,6 +80,9 @@ $(document).ready(function() {
       'user[phone]': {
         validators: {
           callback: {
+            notEmpty: {
+              message: 'Phone number is required '
+            },
             callback: function(value, validator, $field) {
               if (PhoneNumberFormatter.isValid()) {
                 return {
@@ -193,7 +196,7 @@ $(document).ready(function() {
     }
   })
   .on('err.validator.fv', function(e, data) {
-    $('.help-block').hide();
+    // $('.help-block').hide();
     data.element
       .data('fv.messages')
       // Hide all the messages
