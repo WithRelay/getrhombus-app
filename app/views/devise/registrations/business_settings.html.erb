@@ -18,21 +18,21 @@
         <label class="form-label paragraph" for="Organization-Type">Your business name will appear on both your customer’s card statement &amp; receipts. If your business doesn't have a name, enter your product or services and your city, e.g. “Bakery - New York”</label>
 
         <div class="form-group col-xs-6 inline-display">
-          <%= f.select :org_type, options_for_select([['Business', 'Business'], ['Nonprofit', 'Nonprofit'], ['Education (K-12)', 'Education (K-12)'], ['Education (Universities &amp; Colleges)'.html_safe, 'Education (Universities &amp; Colleges)']]), { prompt: 'Organization Type' }, class: 'form-control organization-type w-select' %>
+          <%= f.select :org_type, options_for_select([['Business', 'Business'], ['Nonprofit', 'Nonprofit'], ['Education (K-12)', 'Education (K-12)'], ['Education (Universities & Colleges)', 'Education (Universities & Colleges)']]), { prompt: 'Organization Type' }, class: 'form-control organization-type w-select' %>
         </div>
 
         <select class="form-control business-category organization-type w-select" name="user[org_category]">
           <option value="" class='hide'>Business category (optional)</option>
-          <option value="Beauty &amp; Spas">Beauty &amp; Spas</option>
+          <option value="Beauty & Spas">Beauty &amp; Spas</option>
           <option value="Charity">Charity</option>
           <option value="Cleaning Service">Cleaning Service</option>
           <option value="Coffee Shop">Coffee Shop</option>
           <option value="Concierge Services">Concierge Services</option>
           <option value="Ecommerce">Ecommerce</option>
           <option value="Financial Services">Financial Services</option>
-          <option value="Home &amp; Repair Services">Home &amp; Repair Services</option>
-          <option value="Hotel &amp; Travel">Hotel &amp; Travel</option>
-          <option value="Health &amp; Fitness">Health &amp; Fitness</option>
+          <option value="Home & Repair Services">Home &amp; Repair Services</option>
+          <option value="Hotel & Travel">Hotel &amp; Travel</option>
+          <option value="Health & Fitness">Health &amp; Fitness</option>
           <option value="Individual">Individual</option>
           <option value="Local Services">Local Services</option>
           <option value="On-demand Delivery">On-demand Delivery</option>
@@ -41,7 +41,7 @@
           <option value="Religious Organization">Religious Organization</option>
           <option value="Restaurant">Restaurant</option>
           <option value="Retail">Retail</option>
-          <option value="Taxi &amp; Limousine">Taxi &amp; Limousine</option>
+          <option value="Taxi & Limousine">Taxi &amp; Limousine</option>
           <option value="Other">Other</option>
         </select>
 

@@ -18,19 +18,21 @@ class StripeManagedAccountService < Struct.new( :user, :params )
 
   # creates stripe managed and individual account
   def create_account
-    # create managed individual and company account self.send method accepts parameter and calls function
-    account = Stripe::Account.create(send(string_method_name))
-  rescue Stripe::StripeError => e; e
-  rescue StandardError => e; e # returns error object to retrieve error message is e.message. handle stripe create account error
+    begin
+      # create managed individual and company account self.send method accepts parameter and calls function
+      account = Stripe::Account.create(send(string_method_name))
+    rescue Stripe::StripeError => e; e
+    rescue StandardError => e; e # returns error object to retrieve error message is e.message. handle stripe create account error
   end
 
   # creates external account after creation of account. account parameter is send from module additiona_user_Action
   def create_external_account(account)
-    # calls dynamic function name with send method and creates external accounts
-    bank_account = account.external_accounts.create(send(external_string_method_name))
-    bank_account
-  rescue Stripe::StripeError => e; e
-  rescue StandardError => e; e # error object contains message attribute
+    begin
+      # calls dynamic function name with send method and creates external accounts
+      bank_account = account.external_accounts.create(send(external_string_method_name))
+      bank_account
+    rescue Stripe::StripeError => e; e
+    rescue StandardError => e; e # error object contains message attribute
   end
 
   def update_account_email

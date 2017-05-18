@@ -28,7 +28,7 @@
       <div class="flex-underline form-section-divider"></div>
       <label class="field-headers form-label settings" for="field">Account details</label>
       <div class="form-group col-xs-6">
-        <%= f.select :org_type, options_for_select(connect_org_type(f.object), selected: present(current_user).org_type_on_managed_acct_page), {}, class: 'business-type dropdown w-select', id: 'user_org_type' %>
+        <%= f.select :org_type, options_for_select(connect_org_type(f.object)), {}, class: 'business-type dropdown w-select', id: 'user_org_type' %>
         <div class="messageContainer"></div>
       </div>
       <div class="form-group col-xs-6">
