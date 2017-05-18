@@ -31,7 +31,7 @@
                 <%= f.hidden_field :livemode, id: "cc-livemode" %>
                 <%= f.hidden_field :card_type, id: "cc-type" %>
                 <input type="hidden" id='page_params' name="page_params" value="add_subscription">
-                <input type="hidden" id='plan_name' name="plan[name]">
+                <input type="hidden" id='plan_id' name="plan[id]">
 
                 <div class="form-group col-xs-6">
                   <%= f.text_field :card_name, id: 'cc-name', type: "text", class: "form-control name-on-card text-field w-input", placeholder: "Name on Card", 'x-autocompletetype' => "off", autocompletetype: 'off', :autocorrect => "off", spellcheck: 'off', autocapitalize: "off", autocomplete: "off" %>

@@ -128,7 +128,7 @@ class User < ActiveRecord::Base
   end
 
   def is_customer?
-    user_level == 0 || self.is_platform?
+    user_level == 0
   end
 
   def full_name
@@ -143,8 +143,7 @@ class User < ActiveRecord::Base
   end
 
   def is_platform?
-    #email == User.platform_email
-    self.email == '<redacted_email>' || self.email == '<redacted_email>'
+    email == User.platform_email
   end
 
   def self.user_title(user)
@@ -178,13 +177,12 @@ class User < ActiveRecord::Base
   end
 
   def self.platform_email
-    Rails.application.secrets.dashboard_email
+    #Rails.application.secrets.dashboard_email
+    Rails.application.secrets.team_email
   end
 
   def self.get_platform_acct_obj
-    # you can change this temporarily to <redacted_email> or <redacted_email>
-    # User.find_by(email: User.platform_email)
-    User.find_by(email: "<redacted_email>") || User.find_by(email: "<redacted_email>")
+    User.find_by(email: User.platform_email)
   end
 
   def buy_number(params)
@@ -192,7 +190,7 @@ class User < ActiveRecord::Base
     return false unless number
     self.rhombus_number = number[0]
     self.rn_friendly_name = number[1]
-    # get_uid_and_referrer_link
+    get_uid_and_referrer_link
     self.update_account_balance(NUMBER_PRICE)
   end
 
@@ -204,7 +202,7 @@ class User < ActiveRecord::Base
 
   def get_saas_subscription
     platform_merchant = MerchantCustomer.find_by(customer_id: self.id, merchant_id: User.get_platform_acct_obj.id)
-    platform_merchant ? platform_merchant.subscriptions.active.last : nil
+    platform_merchant ? platform_merchant.subscriptions.last : nil
   end
 
   def get_page_access_token

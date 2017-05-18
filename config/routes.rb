@@ -14,7 +14,8 @@ Rails.application.routes.draw  do
 
   # events/hooks routess
   #constraints subdomain: 'hooks' do
-    post 'events/stripe' => 'webhooks#stripe_events'
+    post 'events/stripe/platform' => 'webhooks#stripe_events'
+    post 'events/stripe/connect' => 'webhooks#stripe_events'
     post 'events/twilio' => 'webhooks#twilio_events'
     match'events/nexmo' => 'webhooks#nexmo_events', via: [:get, :post]
     match 'events/facebook' => 'webhooks#facebook_events', via: [:get, :post]
@@ -37,7 +38,7 @@ Rails.application.routes.draw  do
     post 'fb_redirect' => 'link_fb_accounts#fb_redirect' #facebook account link redirect
 
     get "resque" => Resque::Server, anchor: false, constraints: lambda { |req|
-      req.env['warden'].authenticated? and req.env['warden'].user.id == 23
+      req.env['warden'].authenticated? and req.env['warden'].user.email == User.platform_email
     }
 
     # user routes
@@ -72,8 +73,8 @@ Rails.application.routes.draw  do
             get "business-settings", to: "registrations#business_settings"
 
             get "account-settings", to: "registrations#account_settings"
-            get 'auto_recharge' => 'registrations#auto_recharge'
-            get 'add_funds' => 'registrations#add_funds'
+            post 'auto_recharge' => 'registrations#auto_recharge'
+            post 'add_funds' => 'registrations#add_funds'
           end
         end
 

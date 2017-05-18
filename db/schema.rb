@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170426083014) do
+ActiveRecord::Schema.define(version: 20170518013602) do
 
   create_table "account_reloads", force: :cascade do |t|
     t.integer  "user_id",        limit: 4
@@ -45,6 +45,7 @@ ActiveRecord::Schema.define(version: 20170426083014) do
     t.datetime "updated_at",                              null: false
   end
 
+  add_index "alerts", ["user_id"], name: "fk_rails_6637a8d260", using: :btree
   add_index "alerts", ["user_id"], name: "index_alerts_on_user_id", using: :btree
 
   create_table "away_messages", force: :cascade do |t|
@@ -99,7 +100,7 @@ ActiveRecord::Schema.define(version: 20170426083014) do
     t.datetime "updated_at",                     null: false
     t.integer  "reminder_id",          limit: 4
     t.integer  "merchant_customer_id", limit: 4
-    t.integer  "merchant_contact_id",  limit: 4
+    t.integer  "merchant_contact_id",  limit: 4, null: false
   end
 
   add_index "campaign_lists", ["campaign_id"], name: "index_campaign_lists_on_campaign_id", using: :btree
@@ -381,10 +382,10 @@ ActiveRecord::Schema.define(version: 20170426083014) do
     t.datetime "updated_at",                                   null: false
   end
 
-  add_index "invoices", ["coupon_id"], name: "fk_rails_e6f65a3c2c", using: :btree
+  add_index "invoices", ["coupon_id"], name: "fk_rails_d904f32fa0", using: :btree
   add_index "invoices", ["stripe_invoice_id"], name: "index_invoices_on_stripe_invoice_id", using: :btree
-  add_index "invoices", ["subscription_id"], name: "fk_rails_49bc030147", using: :btree
-  add_index "invoices", ["transaction_id"], name: "fk_rails_b20d90b857", using: :btree
+  add_index "invoices", ["subscription_id"], name: "fk_rails_2fe0fa30e5", using: :btree
+  add_index "invoices", ["transaction_id"], name: "fk_rails_ca7e31fd1d", using: :btree
 
   create_table "knowledge_base_categories", force: :cascade do |t|
     t.string   "name",       limit: 191
@@ -431,9 +432,11 @@ ActiveRecord::Schema.define(version: 20170426083014) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "uid_type",    limit: 191
+    t.boolean  "is_customer", limit: 1,   default: false
   end
 
   add_index "merchant_contacts", ["merchant_id"], name: "index_merchant_contacts_on_merchant_id", using: :btree
+  add_index "merchant_contacts", ["uid"], name: "index_merchant_contacts_on_customer_id", using: :btree
   add_index "merchant_contacts", ["uid"], name: "index_merchant_contacts_on_uid", using: :btree
 
   create_table "merchant_customers", force: :cascade do |t|
@@ -582,9 +585,9 @@ ActiveRecord::Schema.define(version: 20170426083014) do
   add_index "referrers", ["referrer_email"], name: "index_referrers_on_referrer_email", using: :btree
 
   create_table "refunds", force: :cascade do |t|
-    t.string   "uri",            limit: 191
-    t.string   "time",           limit: 191
-    t.string   "reason",         limit: 191
+    t.string   "uri",            limit: 255
+    t.string   "time",           limit: 255
+    t.string   "reason",         limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "transaction_id", limit: 4
@@ -668,8 +671,10 @@ ActiveRecord::Schema.define(version: 20170426083014) do
     t.datetime "updated_at",                                                              null: false
   end
 
+  add_index "subscriptions", ["coupon_id"], name: "fk_rails_56c77d859b", using: :btree
   add_index "subscriptions", ["coupon_id"], name: "index_subscriptions_on_coupon_id", using: :btree
   add_index "subscriptions", ["merchant_customer_id"], name: "index_subscriptions_on_merchant_customer_id", using: :btree
+  add_index "subscriptions", ["plan_id"], name: "fk_rails_4506bac28d", using: :btree
   add_index "subscriptions", ["plan_id"], name: "index_subscriptions_on_plan_id", using: :btree
 
   create_table "transaction_fees", force: :cascade do |t|
@@ -713,15 +718,16 @@ ActiveRecord::Schema.define(version: 20170426083014) do
     t.integer  "referenced_merchant_transaction_id", limit: 4
     t.integer  "team_id",                            limit: 4
     t.string   "currency",                           limit: 191
+    t.boolean  "captured",                           limit: 1,                             default: true
     t.integer  "hashtag_id",                         limit: 4
     t.integer  "subscription_id",                    limit: 4
-    t.boolean  "captured",                           limit: 1,                             default: true
   end
 
   add_index "transactions", ["created_at"], name: "index_transactions_on_created_at", using: :btree
   add_index "transactions", ["hashtag_id"], name: "index_transactions_on_hashtag_id", using: :btree
   add_index "transactions", ["referenced_customer_transaction_id"], name: "index_transactions_on_referenced_customer_transaction_id", using: :btree
   add_index "transactions", ["subscription_id"], name: "index_transactions_on_subscription_id", using: :btree
+  add_index "transactions", ["team_id"], name: "fk_rails_669ffc34df", using: :btree
   add_index "transactions", ["team_id"], name: "index_transactions_on_team_id", using: :btree
   add_index "transactions", ["txn_number"], name: "index_transactions_on_txn_number", using: :btree
   add_index "transactions", ["user_id"], name: "index_transactions_on_user_id", using: :btree
@@ -843,21 +849,14 @@ ActiveRecord::Schema.define(version: 20170426083014) do
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   add_index "users", ["rhombus_number"], name: "index_users_on_rhombus_number", unique: true, using: :btree
 
-  add_foreign_key "alerts", "users"
   add_foreign_key "coupons", "users"
   add_foreign_key "fb_messages", "campaigns"
   add_foreign_key "fb_messages", "fb_pages"
   add_foreign_key "hashtags", "users"
-  add_foreign_key "invoices", "coupons"
-  add_foreign_key "invoices", "subscriptions"
-  add_foreign_key "invoices", "transactions"
   add_foreign_key "lists", "users"
   add_foreign_key "message_resolutions", "users"
   add_foreign_key "messages", "hashtags"
   add_foreign_key "refunds", "transactions"
-  add_foreign_key "subscriptions", "coupons"
-  add_foreign_key "subscriptions", "plans"
   add_foreign_key "transactions", "hashtags"
   add_foreign_key "transactions", "subscriptions"
-  add_foreign_key "transactions", "users", column: "team_id"
 end

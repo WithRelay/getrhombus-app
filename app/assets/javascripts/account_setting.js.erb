@@ -226,5 +226,11 @@ $(document).ready(function() {
     cache: false
   });
 
+  $('#deactivate-account-button').on('click', function(){
+    if(!$('#confirm').val().match(/^DEACTIVATE$/)) {
+      FlashHandler.setFlashMessage('Type the word "DEACTIVATE"', 'error');
+      return false;
+    }
+  })
 
 })

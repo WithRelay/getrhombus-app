@@ -16,13 +16,15 @@ $(document).ready(function() {
     setTimeout(retry, delay);
   }, delay);
 */
+
+
+  // FlashHandler.setFlashMessage('Customer created successfully', 'error');
+
   //Add plain footer to index pages
-    if ($(".dashboard-body")){
-
+  if ($(".dashboard-body")){
     $(".dashboard-body.objlists") && $(".dashboard-body.objlists").append('<div style="height: 50px;"></div>');
-
     !$(".dashboard-body.objlists") && $(".dashboard-body").append('<div style="height: 50px;"></div>');
-    }
+  }
 
   //add perfectScrollbar
   var dashboard = document.querySelector('.dashboard-body');

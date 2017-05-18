@@ -102,7 +102,7 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   def add_funds
-    current_user.account_balance += params['user']['account_balance'].to_f
+    current_user.account_balance += params['user']['rechage_amount'].to_f
     current_user.save
     flash[:notice] = "Account balanced updated, Now your total balance is: #{Toolbox::Decimal.to_cents(current_user.account_balance)}"
     redirect_to sms_usage_user_path
@@ -139,7 +139,7 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   def get_plan_id
-    Plan.find_by(name: params[:plan][:name], merchant_id: @platform_acct.id, status: 1).try(:id)
+    Plan.find_by(id: params[:plan][:id], status: 1).try(:id)
   end
 
   def after_update_path_for(resource)

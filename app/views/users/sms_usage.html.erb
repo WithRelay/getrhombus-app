@@ -8,7 +8,7 @@
     <h4 class="form-header">SMS &amp; MMS usage</h4>
     <div class="flex-underline form-header-underline"></div>
     <div class="account-settings-form-wrapper">
-      <%= form_for('user', url: auto_recharge_user_path, method: :get, html: { id: "auto_recharge", class:'w-clearfix' } ) do |f| %>
+      <%= form_for('user', url: auto_recharge_user_path, method: :post, html: { id: "auto_recharge", class:'w-clearfix' } ) do |f| %>
       <form class="w-clearfix" id="email-form" name="email-form">
         <label class="field-headers form-label settings" for="Business-Name">current balance</label>
         <div class="balance-section settings-info-div">
@@ -24,11 +24,11 @@
           <%= f.submit "Save changes", class: "save-auto-reload w-button" %>
         </div>
       <% end %>
-      <%= form_for('user', url: add_funds_user_path, method: :get, html: { id: "add_user_funds", class:'w-clearfix' } ) do |f| %>
+      <%= form_for('user', url: add_funds_user_path, method: :post, html: { id: "add_user_funds", class:'w-clearfix' } ) do |f| %>
         <div class="flex-underline form-section-divider"></div>
         <label class="field-headers form-label settings" for="Add-Funds">add funds</label>
         <div class="form-group col-xs-6">
-          <%= f.text_field :account_balance, class: "add-funds-amount-field text-field w-input form-control", id: 'Add-Funds', placeholder: "$0.00" %>
+          <%= f.text_field :rechage_amount, class: "add-funds-amount-field text-field w-input form-control", id: 'Add-Funds', placeholder: "$0.00", value: '' %>
         </div>
         <select class="dropdown payment-method w-select">
           <option value="">visa **** **** **** <%= @last4 %></option>
