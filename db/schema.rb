@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170517173354) do
+ActiveRecord::Schema.define(version: 20170518013602) do
 
   create_table "account_reloads", force: :cascade do |t|
     t.integer  "user_id",        limit: 4
@@ -100,7 +100,7 @@ ActiveRecord::Schema.define(version: 20170517173354) do
     t.datetime "updated_at",                     null: false
     t.integer  "reminder_id",          limit: 4
     t.integer  "merchant_customer_id", limit: 4
-    t.integer  "merchant_contact_id",  limit: 4
+    t.integer  "merchant_contact_id",  limit: 4, null: false
   end
 
   add_index "campaign_lists", ["campaign_id"], name: "index_campaign_lists_on_campaign_id", using: :btree
@@ -432,6 +432,7 @@ ActiveRecord::Schema.define(version: 20170517173354) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "uid_type",    limit: 191
+    t.boolean  "is_customer", limit: 1,   default: false
   end
 
   add_index "merchant_contacts", ["merchant_id"], name: "index_merchant_contacts_on_merchant_id", using: :btree
