@@ -28,7 +28,7 @@
         <div class="flex-underline form-section-divider"></div>
         <label class="field-headers form-label settings" for="Add-Funds">add funds</label>
         <div class="form-group col-xs-6">
-          <%= f.text_field :account_balance, class: "add-funds-amount-field text-field w-input form-control", id: 'Add-Funds', placeholder: "$0.00" %>
+          <%= f.text_field :account_balance, class: "add-funds-amount-field text-field w-input form-control", id: 'Add-Funds', placeholder: "$0.00", value: '' %>
         </div>
         <select class="dropdown payment-method w-select">
           <option value="">visa **** **** **** <%= @last4 %></option>
