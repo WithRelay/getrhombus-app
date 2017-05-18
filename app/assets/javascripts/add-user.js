@@ -193,7 +193,7 @@ $(document).ready(function() {
     }
   })
   .on('err.validator.fv', function(e, data) {
-    $('.help-block').hide();
+    // $('.help-block').hide();
     data.element
       .data('fv.messages')
       // Hide all the messages
