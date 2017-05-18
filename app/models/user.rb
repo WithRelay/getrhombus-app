@@ -157,7 +157,7 @@ class User < ActiveRecord::Base
      # managed account takes priority
 
      # remove this eventually
-     return { type: 'standalone', cred: User.find_by(id: 23) }
+     return { type: 'standalone', cred: User.get_platform_acct_obj }
      ##
 
      return { type: 'standalone', cred: self.standalone_stripe_cred } if is_platform?
