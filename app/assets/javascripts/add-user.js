@@ -80,6 +80,9 @@ $(document).ready(function() {
       'user[phone]': {
         validators: {
           callback: {
+            notEmpty: {
+              message: 'Phone number is required '
+            },
             callback: function(value, validator, $field) {
               if (PhoneNumberFormatter.isValid()) {
                 return {
