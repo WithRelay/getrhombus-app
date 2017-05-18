@@ -39,27 +39,29 @@
         <%= f.text_field :org_tax_id, id: 'org-tax-id', class: 'text-field w-input form-control', placeholder: 'EIN (Tax ID)' %>
         <div class="messageContainer"></div>
       </div>
+
       <div class="flex-underline form-section-divider"></div>
+      
       <label class="field-headers form-label settings" for="Business-Name">BUSINESS ADDRESS</label>
       <%= f.fields_for :address do |a| %>
-      <div class="form-group col-xs-6">
-        <%= a.text_field :street_address, id: 'company-street', placeholder: 'Street Address', class: 'form-control settings street-name text-field w-input' %>
-        <div class="messageContainer"></div>
-      </div>
-      <div class="form-group col-xs-6">
-        <%= a.text_field :city, id: 'company-city', class: 'apt_suite settings text-field w-input form-control', placeholder: 'City' %>
-        <div class="messageContainer"></div>
-      </div>
-      <div id='company-state-div'>
         <div class="form-group col-xs-6">
-          <%= a.text_field :state_province, id: 'company-state', class: 'settings street-name text-field w-input form-control', placeholder: 'State/Province' %>
+          <%= a.text_field :street_address, id: 'company-street', placeholder: 'Street Address', class: 'form-control settings street-name text-field w-input' %>
           <div class="messageContainer"></div>
         </div>
-      </div>
-      <div class="form-group col-xs-6">
-        <%= a.text_field :postal_code, id: 'company-postal-code', class: 'apt_suite settings text-field w-input form-control', placeholder: 'Zip/Postal code' %>
-        <div class="messageContainer"></div>
-      </div>
+        <div class="form-group col-xs-6">
+          <%= a.text_field :city, id: 'company-city', class: 'apt_suite settings text-field w-input form-control', placeholder: 'City' %>
+          <div class="messageContainer"></div>
+        </div>
+        <div id='company-state-div'>
+          <div class="form-group col-xs-6">
+            <%= a.text_field :state_province, id: 'company-state', class: 'settings street-name text-field w-input form-control', placeholder: 'State/Province' %>
+            <div class="messageContainer"></div>
+          </div>
+        </div>
+        <div class="form-group col-xs-6">
+          <%= a.text_field :postal_code, id: 'company-postal-code', class: 'apt_suite settings text-field w-input form-control', placeholder: 'Zip/Postal code' %>
+          <div class="messageContainer"></div>
+        </div>
       <% end %>
 
       <label class="field-headers form-label settings" for="Website">other INFORMATION</label>
@@ -73,38 +75,40 @@
 
       <div class="bank-div">
         <%= f.fields_for :bank_accounts do |b| %>
-        <%= b.hidden_field :currency, id: 'bank-currency', value: b.object.currency %>
-        <select id="bank-currency-select" class="currency dropdown w-select"></select>
-        <%= b.hidden_field :country, id: 'account-country', value: b.object.country %>
-        <select id="account-country-select" class='bank-country dropdown w-select'></select>
+          <%= b.hidden_field :currency, id: 'bank-currency', value: b.object.currency %>
+          <select id="bank-currency-select" class="currency dropdown w-select"></select>
+          <%= b.hidden_field :country, id: 'account-country', value: b.object.country %>
+          <select id="account-country-select" class='bank-country dropdown w-select'></select>
+        
+          <div id='routing-number-div'>
+            <div class="form-group col-xs-6">
+              <%= b.text_field :routing_number, id: 'routing-number', class: 'routing-number settings short-field text-field w-input form-control', placeholder: 'Routing number' %>
+              <div class="messageContainer"></div>
+            </div>
+          </div>
+          <!-- <div id='institution-number-div'> -->
+          <div class="form-group col-xs-6">
+            <%= b.text_field :institution_number, id: 'institution-number', placeholder: 'Bank code', class: 'settings short-field text-field w-input form-control' %>
+          </div>
+          <!-- </div> -->
+          <div class="form-group col-xs-6">
+            <%= b.text_field :account_number, id: 'account-number', class: 'settings short-field text-field w-input form-control', placeholder: 'Account number' %>
+            <div class="messageContainer"></div>
+          </div>
+        <% end %>
       </div>
-
-      <div id='routing-number-div'>
-        <div class="form-group col-xs-6">
-          <%= b.text_field :routing_number, id: 'routing-number', class: 'routing-number settings short-field text-field w-input form-control', placeholder: 'Routing number' %>
-          <div class="messageContainer"></div>
-        </div>
-      </div>
-      <!-- <div id='institution-number-div'> -->
-      <div class="form-group col-xs-6">
-        <%= b.text_field :institution_number, id: 'institution-number', placeholder: 'Bank code', class: 'settings short-field text-field w-input form-control' %>
-      </div>
-      <!-- </div> -->
-      <div class="form-group col-xs-6">
-        <%= b.text_field :account_number, id: 'account-number', class: 'settings short-field text-field w-input form-control', placeholder: 'Account number' %>
-        <div class="messageContainer"></div>
-      </div>
-      <% end %>
-    </div>
 
     <div class="flex-underline form-section-divider"></div>
     <label class="field-headers form-label settings" for="name-2">company representative (you)</label>
+    
     <div class="company-rep-div w-clearfix">
       <fieldset id="user-people">
         <%= f.fields_for :people do |p| %>
           <%= render "person_fields", f: p %>
         <% end %>
       </fieldset>
+<%
+=begin %>
       <div id='owners-title'>OWNERS IF ANY <br></div>
       <label class="field-headers form-label other-owners settings" for="Zip-2">all other individuals who own more than 25% of the company</label>
       <div id='add-owner-link'>
@@ -112,15 +116,18 @@
         'data-association-insertion-node' => "#user-people", 'data-association-insertion-method' => "append",
         :wrap_object => Proc.new { |p| p.build_address; p } %>
       </div>
+<%
+=end %>
     </div>
+
     <fieldset id='termsAndCondition'>
       <%= f.fields_for :stripe_creds do |c| %>
         <div class='w-hidden'>
           <% if c.object.persisted? %>
           <%= c.check_box :charges_enabled, disabled: true %>
           <%= c.check_box :transfers_enabled, disabled: true %>
-          <div><%= c.object.disabled_reason %></div>
-          <div><%= c.object.due_by %></div>
+          <div><%= c.object.disabled_reason %> disabled reason</div>
+          <div><%= c.object.due_by %> due by</div>
           <div><%= c.object.fields_needed %></div>
           <% end %>
           <%= c.hidden_field :ip %>

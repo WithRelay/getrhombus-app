@@ -22,7 +22,7 @@ gem "cancancan"
 #perfect scrollbar
 gem 'perfect-scrollbar-rails', '~> 0.6.10'
 
-gem 'cocoon'
+#gem 'cocoon'
 # bread & butter
 gem "stripe"
 gem 'omniauth-stripe-connect'
