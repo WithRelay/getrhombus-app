@@ -38,7 +38,7 @@ Rails.application.routes.draw  do
     post 'fb_redirect' => 'link_fb_accounts#fb_redirect' #facebook account link redirect
 
     get "resque" => Resque::Server, anchor: false, constraints: lambda { |req|
-      req.env['warden'].authenticated? and req.env['warden'].user.id == 23
+      req.env['warden'].authenticated? and req.env['warden'].user.email == User.platform_email
     }
 
     # user routes
