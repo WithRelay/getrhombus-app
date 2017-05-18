@@ -36,6 +36,7 @@ class Subscription < ActiveRecord::Base
 
         end
 
+        # needs to be either or
         # hash[:customer] = merchant_customer.managed_stripe_customer_id
         hash[:customer] = merchant_customer.platform_stripe_customer_id
         hash[:plan] = self.plan_id
@@ -45,6 +46,7 @@ class Subscription < ActiveRecord::Base
 
         # res = PaymentService.create_subscription(hash, cred[:cred].account_id, is_platform)
         res = PaymentService.create_subscription(hash, cred[:cred].uid, is_platform)
+        puts res.inspect
         if res.first
           self.update(
             stripe_subscription_id: res.second.id,
