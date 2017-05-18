@@ -23,7 +23,7 @@ class NexmoEvent
           message_id: @message_id,
           text: @params[:text].strip,
           num_segments: num_segments,
-          message_timestamp: @params["message-timestamp"]
+          message_timestamp: @params["message-timestamp"],
           relay_price: SMS_PRICE_RECEIVED
         )
 
@@ -36,7 +36,7 @@ class NexmoEvent
           MerchantContact.add_or_update_merchant_contact(@merchant.id, uid, uid_type)
           OpenCnamData.find_record_or_get_intelligence_data(uid)
         end
-        
+
         Conversation.find_or_create_conversation_for_message_and_publish(@merchant, user, uid_type, uid, @message, true)
         @merchant.away_message.check_office_hours(@merchant, user, uid_type, uid, "Message")
         @merchant.update_account_balance(SMS_PRICE_RECEIVED * num_segments)
