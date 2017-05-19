@@ -28,7 +28,7 @@ class UsersController < ApplicationController
   end
 
   def sms_usage
-    @amount_balance = current_user.account_balance
+    @amount_balance = Toolbox::Decimal.to_2dp current_user.account_balance
     @last4 = current_user.last4
   end
 
