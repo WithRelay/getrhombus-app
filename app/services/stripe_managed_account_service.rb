@@ -21,8 +21,15 @@ class StripeManagedAccountService < Struct.new( :user, :params )
     begin
       # create managed individual and company account self.send method accepts parameter and calls function
       account = Stripe::Account.create(send(string_method_name))
-    rescue Stripe::StripeError => e; e
-    rescue StandardError => e; e # returns error object to retrieve error message is e.message. handle stripe create account error
+      puts account.inspect
+      account
+    rescue Stripe::StripeError => e
+      puts e.inspect
+      e
+    rescue StandardError => e # returns error object to retrieve error message is e.message. handle stripe create account error
+      puts e.inspect
+      e
+    end
   end
 
   # creates external account after creation of account. account parameter is send from module additiona_user_Action
