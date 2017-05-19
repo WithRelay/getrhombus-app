@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170518201632) do
+ActiveRecord::Schema.define(version: 20170519035749) do
 
   create_table "account_reloads", force: :cascade do |t|
     t.integer  "user_id",        limit: 4
@@ -615,13 +615,12 @@ ActiveRecord::Schema.define(version: 20170518201632) do
     t.boolean  "livemode",           limit: 1
     t.string   "refresh_token",      limit: 191
     t.integer  "user_id",            limit: 4
-    t.integer  "transaction_fee_id", limit: 4,   default: 2
-    t.datetime "created_at",                                 null: false
-    t.datetime "updated_at",                                 null: false
+    t.integer  "transaction_fee_id", limit: 4
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
   end
 
   add_index "standalone_stripe_creds", ["account_id"], name: "index_standalone_stripe_creds_on_account_id", using: :btree
-  add_index "standalone_stripe_creds", ["transaction_fee_id"], name: "index_standalone_stripe_creds_on_transaction_fee_id", using: :btree
   add_index "standalone_stripe_creds", ["user_id"], name: "index_standalone_stripe_creds_on_user_id", using: :btree
 
   create_table "stripe_creds", force: :cascade do |t|
@@ -632,6 +631,7 @@ ActiveRecord::Schema.define(version: 20170518201632) do
     t.boolean  "livemode",           limit: 1
     t.string   "refresh_token",      limit: 191
     t.integer  "user_id",            limit: 4
+    t.integer  "transaction_fee_id", limit: 4
     t.string   "ip",                 limit: 191
     t.integer  "tos_date",           limit: 4
     t.string   "user_agent",         limit: 191
@@ -640,9 +640,8 @@ ActiveRecord::Schema.define(version: 20170518201632) do
     t.string   "disabled_reason",    limit: 191
     t.integer  "due_by",             limit: 4
     t.string   "fields_needed",      limit: 191
-    t.datetime "created_at",                                 null: false
-    t.datetime "updated_at",                                 null: false
-    t.integer  "transaction_fee_id", limit: 4,   default: 1
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
   end
 
   add_index "stripe_creds", ["account_id"], name: "index_stripe_creds_on_account_id", unique: true, using: :btree

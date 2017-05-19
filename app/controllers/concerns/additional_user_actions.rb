@@ -4,9 +4,6 @@ module AdditionalUserActions
   def integrations
   end
 
-  def business_information
-  end
-
   def remove_twitter_integration
     if current_user.twitter_cred.destroy
       flash[:notice] = 'Twitter integration removed successfully'
@@ -48,6 +45,11 @@ module AdditionalUserActions
     stripe_managed = StripeManagedAccountService.new(current_user, full_user_params)
     action = { 'create_managed_acct'=> [:create_account, :create_external_account],
                'update_managed_acct'=> [:update_account, :check_update_or_create] }
+
+    puts params[:action]
+
+    return
+
     account = stripe_managed.send(action[params[:action]][0])
     if account.is_a?(Stripe::Account)
       external_account = stripe_managed.send(action[params[:action]][1], account)
