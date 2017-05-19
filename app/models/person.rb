@@ -1,8 +1,8 @@
 class Person < ActiveRecord::Base
 
   has_one :address, as: :addressable, dependent: :destroy
-  belongs_to :user
   accepts_nested_attributes_for :address#, reject_if: :all_blank
+  belongs_to :user  
   before_validation :the_titleizer
 
   enum role: { representative: '0', owner: '1' }

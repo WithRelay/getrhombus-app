@@ -5,7 +5,7 @@ class WelcomeEmailJob < ApplicationJob
     begin
       owner = User.get_platform_acct_obj
       if user.is_merchant?
-        EmailingService.send_welcome_email(user.email, owner.rhombus_number, "merchant")
+        EmailingService.welcome_email(user)
       elsif user.is_customer?
         ref = user.referrer
         message = Message.new

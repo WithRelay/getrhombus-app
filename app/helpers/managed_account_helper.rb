@@ -1,7 +1,7 @@
 module ManagedAccountHelper
 
   def url_for_create_update
-    if current_user.stripe_creds.present?
+    if current_user.stripe_creds.persisted.present?
       'update_managed_acct'
     else
       'create_managed_acct'
@@ -11,17 +11,24 @@ module ManagedAccountHelper
   def connect_org_type(account)
     if account.org_type.present?
       selected_org_type = {}
-      valid_org_type.each{|k, v| selected_org_type[k] = k if v.include?(account.org_type); }
-      selected_org_type
-    else
-      { 'Individual' => 'Individual', 'Organization' => 'Organization' }
+      valid_org_type.each do |k, v| 
+        if v.include?(account.org_type)
+          if v.is_a? Array
+            k = 'Organization'
+            v = 'Company'
+          end
+          selected_org_type[k] = v
+          return selected_org_type
+        end
+      end 
     end
+
+    { 'Individual' => 'Individual', 'Organization' => 'Company' }
   end
 
   def valid_org_type
-    { 'Individual' => 'Individual', 'Organization' => ["Business", "Nonprofit",
-                                                       "Education",
-                                                       "[K12] Education [University & Colleges"]
+    { 'Individual' => 'Individual', 'Company' => ["Business", "Nonprofit",
+                                                  "Education (K-12)", "Education (Universities & Colleges)"]
     }
   end
 

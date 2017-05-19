@@ -5,7 +5,7 @@ class EmailingService
 
   # Note there are a number of global settings for this email in the mandrill account
    SENDER = Rails.application.secrets.team_email
-   FROM_EMAIL= { edwin: "<redacted_email>", surya: '<redacted_email>', taiwo: '<redacted_email>' }
+   FROM_EMAIL= { edwin: "<redacted_email>", taiwo: '<redacted_email>' }
   class << self
 
     def send_email_campaign(campaign_hash)
@@ -669,7 +669,7 @@ class EmailingService
          "to"=> [ { "email" => user.email } ],
          "bcc_address"=> SENDER,
          "from_name" => "Edwin from Relay",
-         "from_email" => FROM_EMAIL[:surya]
+         "from_email" => FROM_EMAIL[:email]
         }
         async = true
         result = MANDRILL.messages.send_template template_name, template_content, message, async
@@ -691,8 +691,8 @@ class EmailingService
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
          "bcc_address"=> SENDER,
-         "from_name" => "Surya from Relay",
-         "from_email" => FROM_EMAIL[:surya]
+         "from_name" => "Edwin from Relay",
+         "from_email" => FROM_EMAIL[:email]
         }
         async = true
         result = MANDRILL.messages.send_template template_name, template_content, message, async

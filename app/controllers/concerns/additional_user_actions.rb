@@ -4,9 +4,6 @@ module AdditionalUserActions
   def integrations
   end
 
-  def business_information
-  end
-
   def remove_twitter_integration
     if current_user.twitter_cred.destroy
       flash[:notice] = 'Twitter integration removed successfully'
@@ -38,7 +35,7 @@ module AdditionalUserActions
     if check_user_validation.present?
       flash[:error] = check_user_validation
     else
-      flash[:notice] = 'Account connected susseccfully'
+      flash[:notice] = 'Account connected successfully'
     end
     managed_acct
     render :managed_acct

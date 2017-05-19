@@ -106,7 +106,7 @@ class User < ActiveRecord::Base
   validates_associated :bank_accounts
 
   has_one :standalone_stripe_cred
-  has_many :stripe_creds
+  has_many :stripe_creds, -> { extending PersistedExtension }
   accepts_nested_attributes_for :stripe_creds
 
   has_one :address, as: :addressable
@@ -157,7 +157,7 @@ class User < ActiveRecord::Base
      # managed account takes priority
 
      # remove this eventually
-     return { type: 'standalone', cred: User.find_by(id: 23) }
+     return { type: 'standalone', cred: User.get_platform_acct_obj }
      ##
 
      return { type: 'standalone', cred: self.standalone_stripe_cred } if is_platform?

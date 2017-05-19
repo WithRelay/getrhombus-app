@@ -18,19 +18,35 @@ class StripeManagedAccountService < Struct.new( :user, :params )
 
   # creates stripe managed and individual account
   def create_account
-    # create managed individual and company account self.send method accepts parameter and calls function
-    account = Stripe::Account.create(send(string_method_name))
-  rescue Stripe::StripeError => e; e
-  rescue StandardError => e; e # returns error object to retrieve error message is e.message. handle stripe create account error
+    begin
+      # create managed individual and company account self.send method accepts parameter and calls function
+      puts 'adsadas'
+      puts send(string_method_name)
+      account = Stripe::Account.create(send(string_method_name))
+      puts account.inspect
+      account
+    rescue Stripe::StripeError => e
+      puts e.inspect
+      e
+    rescue StandardError => e # returns error object to retrieve error message is e.message. handle stripe create account error
+      puts e.inspect
+      e
+    end
   end
 
   # creates external account after creation of account. account parameter is send from module additiona_user_Action
   def create_external_account(account)
-    # calls dynamic function name with send method and creates external accounts
-    bank_account = account.external_accounts.create(send(external_string_method_name))
-    bank_account
-  rescue Stripe::StripeError => e; e
-  rescue StandardError => e; e # error object contains message attribute
+    begin
+      # calls dynamic function name with send method and creates external accounts
+      puts 'wwwwwwwwwwwwwwwwwwwww'
+      puts send(external_string_method_name)
+      bank_account = account.external_accounts.create(send(external_string_method_name))
+      bank_account
+    rescue Stripe::StripeError => e
+     e
+    rescue StandardError => e
+     e # error object contains message attribute
+    end
   end
 
   def update_account_email
@@ -92,7 +108,7 @@ class StripeManagedAccountService < Struct.new( :user, :params )
   # country with bank code are countries in constant BANK_CODE_COUNTRIES
   def country_with_bank_code_individual_account; common_individual_account end
 
-  def country_with_bank_code_company_account; common_individual_account end
+  def country_with_bank_code_company_account; common_company_account end
 
   # org_type comes in upcase as a params but stripe need in downcase
   def params_org_type; params[:org_type].downcase end
@@ -104,7 +120,7 @@ class StripeManagedAccountService < Struct.new( :user, :params )
   # returns common company account hash for countries in constant common_countries
   def common_company_account
     company_account = managed_company_account
-    # for finland stripe complains to send 8 digit ssn/personal_id. it is not require
+    # for finland stripe complains to send 8 digit ssn/personal_id. it is not required
     company_account[:legal_entity].delete(:personal_id_number) if address[:country] == COMMON_COUNTRIES[1]
     company_account # return modified hash if condition met
   end
@@ -124,17 +140,17 @@ class StripeManagedAccountService < Struct.new( :user, :params )
 
   def country_with_bank_code_external_accounts
     bank_code_countries = basic_external_accounts
-    bank_code_countries[:external_account].merge( { bank_code: bank_account[:institution_number]  } )
+    bank_code_countries[:external_account].merge( { bank_code: bank_account[:institution_number]  } ) # dont think this line is needed
     bank_code_countries[:external_account][:routing_number] = routing_number_bank_code_countries
     bank_code_countries
   end
 
   def routing_number_bank_code_countries
     bank_code_external = basic_external_accounts[:external_account][:routing_number]
-    if  BANK_CODE_COUNTRIES[1] == address[:country]
+    if BANK_CODE_COUNTRIES[1] == address[:country]
       bank_code_external + bank_account[:institution_number]
     else
-      "#{bank_code_external}-#{bank_account[:institution_number]}" if  BANK_CODE_COUNTRIES[1] != address[:country]
+      "#{bank_code_external}-#{bank_account[:institution_number]}" if BANK_CODE_COUNTRIES[1] != address[:country]
     end
   end
 
@@ -200,7 +216,7 @@ class StripeManagedAccountService < Struct.new( :user, :params )
     additional_owner
   end
 
-  # required hash is prepared as mention in the sripe documentation.Please follow below link.
+  # required hash is prepared as mention in the stripe documentation. Please follow below link.
   # https://stripe.com/docs/api#account_object
   # TODO function is too lengthy feel free to make small without changing its behaviour. We do not have test
   def managed_company_account

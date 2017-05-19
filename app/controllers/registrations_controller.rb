@@ -81,7 +81,9 @@ class RegistrationsController < Devise::RegistrationsController
     msg
   end
 
-  def business_settings; end
+  def business_settings
+    current_user.address = current_user.address || Address.new
+  end
 
   def add_rhombus_number; end
 
@@ -104,7 +106,7 @@ class RegistrationsController < Devise::RegistrationsController
   def add_funds
     current_user.account_balance += params['user']['rechage_amount'].to_f
     current_user.save
-    flash[:notice] = "Account balanced updated, Now your total balance is: #{Toolbox::Decimal.to_cents(current_user.account_balance)}"
+    flash[:notice] = "Account balance updated, Now your total balance is: #{Toolbox::Decimal.to_cents(current_user.account_balance)}"
     redirect_to sms_usage_user_path
   end
 

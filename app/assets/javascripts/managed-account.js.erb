@@ -323,7 +323,7 @@ $(document).on('ready page:load', function() {
       // End format company details
 
       // rep/owners address
-      var address_details = ['street', 'city', 'state', 'postal', 'country'];
+      var address_details = ['street', 'suite', 'city', 'state', 'postal', 'country'];
 
       // hide all address fields
       if (hash.without_address) {
@@ -473,6 +473,8 @@ $(document).on('ready page:load', function() {
     insertedItem.find('.person-country-select').replaceWith(clone)
     clone.val(value).trigger('change');
   });
+
+  
   // validate managed account create update form
   $('#managed-account-form').formValidation({
       framework: 'bootstrap',
