@@ -48,30 +48,31 @@
         <div class="flex-underline form-section-divider"></div>
 
         <label class="field-headers form-label settings" for="Street-Address">ADDRESS INFORMATION</label>
-        <div class="form-group col-xs-6">
-          <%= f.text_field :street_address, type: "text", class: "form-control settings street-name text-field w-input", placeholder: "Street Address" %>
-        </div>
+        <%= f.fields_for :address do |a| %>
+          <div class="form-group col-xs-6">
+            <%= a.text_field :street_address, type: "text", class: "form-control settings street-name text-field w-input", placeholder: "Street Address" %>
+          </div>
 
-        <div class="form-group col-xs-6">
-          <%= f.text_field :suite, type: "text", class: "form-control apt_suite settings text-field w-input", placeholder: "Suite" %>
-        </div>
+          <div class="form-group col-xs-6">
+            <%= a.text_field :suite, type: "text", class: "form-control apt_suite settings text-field w-input", placeholder: "Suite" %>
+          </div>
 
-        <div class="form-group col-xs-6">
-          <%= f.text_field :city, class: "form-control city settings text-field w-input", placeholder: "City" %>
-        </div>
+          <div class="form-group col-xs-6">
+            <%= a.text_field :city, class: "form-control city settings text-field w-input", placeholder: "City" %>
+          </div>
 
-        <div class="form-group col-xs-6">
-          <%= f.text_field :state_province, class: "form-control settings state text-field w-input", placeholder: "State/Province" %>
-        </div>
+          <div class="form-group col-xs-6">
+            <%= a.text_field :state_province, class: "form-control settings state text-field w-input", placeholder: "State/Province" %>
+          </div>
 
-        <div class="form-group col-xs-6">
-          <%= f.text_field :zip_code, class: "form-control settings text-field w-input zip", placeholder: "Zip/Postal code" %>
-        </div>
+          <div class="form-group col-xs-6">
+            <%= a.text_field :postal_code, class: "form-control settings text-field w-input zip", placeholder: "Zip/Postal code" %>
+          </div>
 
-        <div class="form-group col-xs-6">
-          <%= f.select :country, country_list, { prompt: 'Select your country' }, { class: 'form-control country_dropdown w-select' } %>
-        </div>
-
+          <div class="form-group col-xs-6">
+            <%= a.select :country, country_list, { prompt: 'Select your country' }, { class: 'form-control country_dropdown w-select' } %>
+          </div>
+        <% end %>
         <div class="flex-underline form-section-divider"></div>
         <label class="field-headers form-label settings" for="Website">other INFORMATION</label>
 

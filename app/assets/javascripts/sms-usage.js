@@ -5,7 +5,7 @@ $(document).ready(function() {
 
     // List of fields and their validation rules!
     fields: {
-      'user[account_balance]' :{
+      'user[rechage_amount]' :{
         validators: {
           notEmpty: {
             message: 'Invalid'
@@ -26,4 +26,5 @@ $(document).ready(function() {
   .on('err.validator.fv', function(e) {
     $('.help-block').hide();
   });
+
 })
