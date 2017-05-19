@@ -1,8 +1,3 @@
-<style>
-label-margin{
-  margin-bottom: 5px;
-}
-</style>
 <div class="settings sub-nav-bar w-clearfix">
   <%= link_to user_path(current_user) , class: 'dashboard-return sub-nav-button w-button' do %>
    &nbsp;Return to dashboard
@@ -22,7 +17,7 @@ label-margin{
         <div class="form-group col-xs-6">
           <%= f.label :country, class:"form-control form-label label-margin"%>
           <%= a.select :country, options_for_select(connect_country(a.object), selected: a.object.country), {}, class: 'rhombusFocus dropdown w-select form-control', id: 'managed-acct-country' %>
-          <!-- <div class="messageContainer"></div> -->
+          <div class="messageContainer"></div>
 
         </div>
       <% end %>
@@ -115,6 +110,12 @@ label-margin{
       <div class="form-group col-xs-6">
         <label class="form-label label-margin"> Account number: </label>
         <%= b.text_field :account_number, id: 'account-number', class: 'settings short-field text-field w-input form-control', placeholder: 'Account number' %>
+        <div class="messageContainer"></div>
+      </div>
+
+      <div class="form-group col-xs-6">
+        <label class="form-label label-margin"> Confirm Account number: </label>
+        <%= b.text_field :account_number_confirmation, id: 'account-number', class: 'settings short-field text-field w-input form-control', placeholder: 'Account number' %>
         <div class="messageContainer"></div>
       </div>
       <% end %>
