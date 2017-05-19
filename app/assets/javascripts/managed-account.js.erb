@@ -475,7 +475,7 @@ $(document).on('ready page:load', function() {
     clone.val(value).trigger('change');
   });
 */
-  
+
   // validate managed account create update form
   $('#managed-account-form').formValidation({
       framework: 'bootstrap',
@@ -493,6 +493,39 @@ $(document).on('ready page:load', function() {
             }
           }
         },
+
+        'user[description]':{
+          validators: {
+            notEmpty: {
+              message: 'Business description is required'
+            }
+          }
+        },
+
+        'user[org_type]':{
+          validators: {
+            notEmpty: {
+              message: 'Business type is required'
+            }
+          }
+        },
+
+        'user[org_name]':{
+          validators: {
+            notEmpty: {
+              message: 'Business name is required'
+            }
+          }
+        },
+
+        'user[org_tax_id]':{
+          validators: {
+            notEmpty: {
+              message: 'Business Tax Id is required'
+            }
+          }
+        },
+
         'user[address_attributes][country]': {
           validators: {
             notEmpty: {
@@ -500,6 +533,7 @@ $(document).on('ready page:load', function() {
             }
           }
         },
+
         'user[address_attributes][city]': {
           validators: {
             notEmpty: {
@@ -528,6 +562,19 @@ $(document).on('ready page:load', function() {
             }
           }
         },
+
+        'user[bank_accounts_attributes][0][account_number_confirmation]': {
+          validators: {
+            notEmpty: {
+              message: 'Confirm Account Number'
+            },
+            identical: {
+                field: 'account_number',
+                message: 'The Account number and its confirm are not the same'
+            }
+          }
+        },
+
         'user[people_attributes][0][address_attributes][postal_code]': {
           validators: {
             notEmpty: {
