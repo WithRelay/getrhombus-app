@@ -50,8 +50,7 @@ private
       bank_accounts_attributes: [:id, :routing_number, :country, :currency, :account_number,
                                  :institution_number],
       people_attributes: [:id, :gender, :business_name, :full_name, :dob, :last4, :role, :_destroy,
-      address_attributes: [:street_address, :suite, :state_province, :id, :country, :postal_code, :state_province,
-                           :city]],
+      address_attributes: [:street_address, :suite, :id, :city, :state_province, :postal_code, :country],
       stripe_creds_attributes: [:id, :charges_enabled, :transfers_enabled])
   end
 
