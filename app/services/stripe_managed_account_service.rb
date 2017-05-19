@@ -20,6 +20,8 @@ class StripeManagedAccountService < Struct.new( :user, :params )
   def create_account
     begin
       # create managed individual and company account self.send method accepts parameter and calls function
+      puts 'adsadas'
+      puts send(string_method_name)
       account = Stripe::Account.create(send(string_method_name))
       puts account.inspect
       account
@@ -36,6 +38,8 @@ class StripeManagedAccountService < Struct.new( :user, :params )
   def create_external_account(account)
     begin
       # calls dynamic function name with send method and creates external accounts
+      puts 'wwwwwwwwwwwwwwwwwwwww'
+      puts send(external_string_method_name)
       bank_account = account.external_accounts.create(send(external_string_method_name))
       bank_account
     rescue Stripe::StripeError => e
