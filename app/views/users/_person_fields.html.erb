@@ -1,10 +1,17 @@
 <div class='nested-fields'>
-    <%= f.text_field :full_name, id: 'name-2', placeholder: 'Full name', class: 'settings short-field text-field w-input' %>
-    <%= f.text_field :dob, id: 'Date-of-birth', placeholder: 'Date of birth', class: 'userDateOfBirth settings short-field text-field w-input' %>
-    <% if f.index == 0 %>
-      <%= f.text_field :last4, placeholder: "SSN", class: 'settings short-field ssn text-field w-input', id: "SSN" %>
-    <% end %>
+  <label class="form-label label-margin">Full Name</label>
+  <%= f.text_field :full_name, id: 'name-2', placeholder: 'Full name', class: 'settings short-field text-field w-input' %>
+  <label class="form-label label-margin">Date of Birth</label>
+  <%= f.text_field :dob, id: 'Date-of-birth', placeholder: 'Date of birth', class: 'userDateOfBirth settings short-field text-field w-input' %>
+  <% if f.index == 0 %>
+    <label class="form-label label-margin rep-pii-label">SSN</label>
+    <%= f.text_field :last4, placeholder: "SSN", class: 'settings short-field ssn text-field w-input rep-pii', id: "SSN" %>
+  <% end %>
 
+  <%= f.hidden_field :role, value: f.index == 0 ? '0' : '1' %>
+
+<%
+=begin %>
   <fieldset class='gender-fieldset'>
     <div class="managed-account-gender">
       <%= f.label :gender, 'Male', value: 'male', class: 'gender-label' %>
@@ -13,10 +20,6 @@
       <%= f.radio_button :gender, 'female', class: 'gender-input'  %>
     </div>
   </fieldset>
-
-  <%= f.hidden_field :role, value: f.index == 0 ? '0' : '1' %>
-
-  <%= puts f.inspect %>
   
   <%= f.fields_for :address do |a| %>
     <div class="col-xs-5">
@@ -25,21 +28,21 @@
       </div>
     </div>
 
-      <div class="col-xs-5">
-        <div class='person-suite-div'>
-          <%= a.text_field :suite, placeholder: 'Suite', class: 'person-country-select apt_suite settings text-field w-input' %>
-        </div>
+    <div class="col-xs-5">
+      <div class='person-suite-div'>
+        <%= a.text_field :suite, placeholder: 'Suite', class: 'person-country-select apt_suite settings text-field w-input' %>
       </div>
+     </div>
 
-      <div class="col-xs-10">
-        <div class="person-country-div">
-          <%= a.hidden_field :country, class: 'person-country' %>
-        </div>
+    <div class="col-xs-10">
+      <div class="person-country-div">
+        <%= a.hidden_field :country, class: 'person-country' %>
       </div>
+    </div>
 
     <div class="col-xs-5">
       <div class='person-city-div'>
-        <%= a.text_field :city, placeholder: 'City', class: 'city settings text-field w-input' %>
+        <%= a.text_field :city, class: 'city settings text-field w-input' %>
       </div>
     </div>
 
@@ -56,8 +59,6 @@
     </div>
   <% end %>
 
-<%
-=begin %>
   <div class="col-xs-5">
     <% if f.object.persisted? %>
       <% if f.index != 0 %>
@@ -69,5 +70,4 @@
   </div>
 <%
 =end %>
-
 </div>

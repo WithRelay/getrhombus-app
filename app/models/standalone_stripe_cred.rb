@@ -2,6 +2,12 @@ class StandaloneStripeCred < ActiveRecord::Base
 
   belongs_to :user
   belongs_to :transaction_fee  
+  before_create :set_transaction_fee_id
+
+  # the default
+  def set_transaction_fee_id
+    self.transaction_fee_id = 1
+  end
 
   # saves merchant info from stripe for standalone accounts
   def self.from_omniauth(auth, id)

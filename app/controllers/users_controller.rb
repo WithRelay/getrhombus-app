@@ -28,8 +28,9 @@ class UsersController < ApplicationController
   end
 
   def sms_usage
-    @amount_balance = Toolbox::Decimal.to_2dp current_user.account_balance
+    @amount_balance = Toolbox::Decimal.to_int_or_2dp current_user.account_balance
     @last4 = current_user.last4
+    @card_type = current_user.card_type
   end
 
 private
@@ -40,16 +41,15 @@ private
 
   def full_user_params
     nested_user_params = user_params
-    tos_params = { ip: request.remote_ip, user_agent: request.user_agent, uid_type: 0, tos_date: Time.current }
+    tos_params = { ip: request.remote_ip, user_agent: request.user_agent, tos_date: Time.current }
     nested_user_params[:stripe_creds_attributes]["0"].merge!(tos_params)
     nested_user_params
   end
 
   def user_params
     params.require(:user).permit(:id, :org_type, :org_name, :url, :org_tax_id, :description, :tos_acceptance,
-      bank_accounts_attributes: [:id, :routing_number, :country, :currency, :account_number,
-                                 :institution_number],
-      people_attributes: [:id, :gender, :business_name, :full_name, :dob, :last4, :role, :_destroy],
+      bank_accounts_attributes: [:id, :routing_number, :country, :currency, :account_number, :institution_number],
+      people_attributes: [:id, :gender, :business_name, :full_name, :dob, :last4, :role, :_destroy, address_attributes: [:street_address, :suite, :id, :city, :state_province, :postal_code, :country]],
       address_attributes: [:street_address, :suite, :id, :city, :state_province, :postal_code, :country],
       stripe_creds_attributes: [:id, :charges_enabled, :transfers_enabled])
   end

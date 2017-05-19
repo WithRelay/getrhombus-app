@@ -5,7 +5,7 @@ $(document).ready(function() {
 
     // List of fields and their validation rules!
     fields: {
-      'user[rechage_amount]' :{
+      'user[recharge_amount]' :{
         validators: {
           notEmpty: {
             message: 'Invalid'

@@ -106,7 +106,7 @@ class User < ActiveRecord::Base
   validates_associated :bank_accounts
 
   has_one :standalone_stripe_cred
-  has_many :stripe_creds
+  has_many :stripe_creds, -> { extending PersistedExtension }
   accepts_nested_attributes_for :stripe_creds
 
   has_one :address, as: :addressable
