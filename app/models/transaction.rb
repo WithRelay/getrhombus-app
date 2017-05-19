@@ -103,7 +103,7 @@ class Transaction < ActiveRecord::Base
 
   def self.big_decimal_2dp(amt)
     return 0 if amt.nil? || amt == 0
-    Toolbox::Decimal.to_2dp(amt)
+    Toolbox::Decimal.to_int_or_2dp(amt)
   end
 
   def send_card_error_text

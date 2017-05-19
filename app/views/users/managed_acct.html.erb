@@ -19,10 +19,10 @@ label-margin{
 
 
       <%= f.fields_for :address do |a| %>
-          <div class="form-group col-xs-6">
-            <%= f.label :country, class:"form-control form-label label-margin"%>
-            <%= a.select :country, options_for_select(connect_country(a.object), selected: a.object.country), {}, class: 'rhombusFocus dropdown w-select form-control', id: 'managed-acct-country' %>
-            <!-- <div class="messageContainer"></div> -->
+        <div class="form-group col-xs-6">
+          <%= f.label :country, class:"form-control form-label label-margin"%>
+          <%= a.select :country, options_for_select(connect_country(a.object), selected: a.object.country), {}, class: 'rhombusFocus dropdown w-select form-control', id: 'managed-acct-country' %>
+          <!-- <div class="messageContainer"></div> -->
 
         </div>
       <% end %>
@@ -128,6 +128,8 @@ label-margin{
           <%= render "person_fields", f: p %>
         <% end %>
       </fieldset>
+<%
+=begin %>
       <div id='owners-title'>OWNERS IF ANY <br></div>
       <label class="field-headers form-label other-owners settings" for="Zip-2">all other individuals who own more than 25% of the company</label>
       <div id='add-owner-link'>
@@ -136,6 +138,9 @@ label-margin{
         :wrap_object => Proc.new { |p| p.build_address; p } %>
       </div>
     </div>
+<%
+=end %>
+
     <fieldset id='termsAndCondition'>
       <%= f.fields_for :stripe_creds do |c| %>
         <div class='w-hidden'>

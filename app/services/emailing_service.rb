@@ -411,8 +411,8 @@ class EmailingService
         template_name = 'low-account-balance-template'
         template_content = []
         message = { "subject" => "Low account balance",
-         "global_merge_vars" => [  { name: "first_name", content: user.first_name || 'there' },
-                                  { name: "current_balance", content: user.account_balance },
+         "global_merge_vars" => [ { name: "first_name", content: user.first_name || 'there' },
+                                  { name: "current_balance", content: Toolbox::Decimal.to_int_or_2dp(user.account_balance) },
                                   { name: "recharge_account_link", content: 'https://www.withrelay.com/recharge_account_link'},
                                   { name: "set_auto_recharge_link", content: 'https://www.withrelay.com/set_auto_recharge_link'},
                                   { name: "help_center_link", content: 'https://www.withrelay.com/relay-docs'}

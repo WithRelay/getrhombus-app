@@ -14,8 +14,8 @@
         <div class="balance-section settings-info-div">
           <p class="account-balance settings-details-paragraph">$<%= @amount_balance %> remaining in your account</p>
           <p class="settings-details-paragraph">You will receive an email notification when your balance drops below $5</p>
-          <p class="auto-recharge-status settings-details-paragraph">Auto-recharge disabled</p>
-          <%= f.select :auto_reload_amt, options_for_select({'$100': 10000, '$50': 5000, '$20':2000, '$10': 1000}),{}, class: "auto-recharge-options dropdown w-select", prompt: 'Choose amount' %>
+          <p class="auto-recharge-status settings-details-paragraph"><%= current_user.auto_reload ? 'Auto-recharge enabled' : 'Auto-recharge disabled' %></p>
+          <%= f.select :auto_reload_amt, options_for_select({'$100': 10000, '$50': 5000, '$20':2000, '$10': 1000}, selected: current_user.auto_reload_amt),{}, class: "auto-recharge-options dropdown w-select", prompt: 'Choose amount' %>
 
           <div class="form-check-box sms-usage-form w-checkbox w-clearfix">
             <%= f.check_box :auto_reload, class: "check-box w-checkbox-input" %>
@@ -31,7 +31,7 @@
           <%= f.text_field :rechage_amount, class: "add-funds-amount-field text-field w-input form-control", id: 'Add-Funds', placeholder: "0.00", value: '' %>
         </div>
         <select class="dropdown payment-method w-select">
-          <option value="">visa **** **** **** <%= @last4 %></option>
+          <option value=""><%= @card_type %> **** **** **** <%= @last4 %></option>
         </select>
         <%= f.submit "Add funds", class: "alt-button button save-changes w-button" %>
       <% end %>
