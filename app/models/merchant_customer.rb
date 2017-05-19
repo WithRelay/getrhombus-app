@@ -11,14 +11,14 @@ class MerchantCustomer < ActiveRecord::Base
   def self.add_or_update_merchant_customer(merchant_id, customer)
     begin
       # check for number and set is_customer
-      MerchantContact.where(uid_type: 'phone_number', uid: customer.phone_number).update_all(is_customer: true)
+      MerchantContact.where(uid_type: 'phone_number', uid: customer.phone_number).update_all(is_customer: true) if customer.phone_number.present?
 
       # check for page_specific_ids and set is_customer
       creds = FbCred.where(user_id: customer.id).pluck(:page_specific_id)
       MerchantContact.where(uid_type: 'fb_page', uid: creds).update_all(is_customer: true) if creds.present?
 
       # add as customer
-      find_or_create_by(merchant_id: merchant_id, customer_id: customer.id)
+      find_or_create_by(merchant_id: merchant_id, customer_id: customer.id) if merchant_id.present? && customer && customer.id.present?
     rescue StandardError => err
     end
   end

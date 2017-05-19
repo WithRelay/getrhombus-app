@@ -15,7 +15,8 @@ module Toolbox
 
       def to_int_or_2dp(amt)
     	  amt = sprintf("%.2f", amt)
-        amt.split(".").first if amt.include? ".00"
+        amt = amt.split(".").first if amt.include? ".00"
+        amt
       end
 
       def to_cents(var)

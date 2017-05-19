@@ -5,7 +5,7 @@ class MerchantContact < ActiveRecord::Base
 
   def self.add_or_update_merchant_contact(merchant_id, uid, uid_type)
     begin
-      find_or_create_by(merchant_id: merchant_id, uid: uid, uid_type: uid_type)
+      find_or_create_by(merchant_id: merchant_id, uid: uid, uid_type: uid_type) if merchant_id.present? && uid.present?
     rescue StandardError => err
     end
   end
