@@ -67,7 +67,7 @@ $(document).ready(function () {
   }
 
   // decimal with two places
-  $('#hashtag_amount, #Plan-Amount, #charge-amount').on('input', function(e){
+  $('#hashtag_amount, #Plan-Amount, #charge-amount, #Add-Funds').on('input', function(e){
     $(this).val(function(_, v) {
       return decimal_with_up_to_two_places(v);
     });
