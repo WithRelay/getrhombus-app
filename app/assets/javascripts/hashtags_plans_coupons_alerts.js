@@ -36,24 +36,30 @@ $(document).ready(function () {
   });
 
   function positive_integer_only(v) { 
-    if (v.match(/^[1-9]\d*$/)) return v;
-    else if (/^[a-z]+$/i.test(v)) return '';
-    else return v.slice(0, -1); 
+    if (!(/^(\d+)$/.test(v))) return '';
+    else {
+      if (v.match(/^[1-9]\d*$/)) return v;
+      else return v.slice(0, -1); 
+    }
   };
 
   function positive_integer_less_than_100(v) { 
-    if (v.match(/^[1-9]\d*$/) && parseInt(v) < 101) return v;
-    else if (/^[a-z]+$/i.test(v)) return '';
-    else return v.slice(0, -1); 
+    if (!(/^(\d+)$/.test(v))) return '';
+    else {
+      if (v.match(/^[1-9]\d*$/) && parseInt(v) < 101) return v;
+      else return v.slice(0, -1); 
+    }
   };
 
   function decimal_with_up_to_two_places(v) {
-    if (v.slice(-1) == '.' && (v.match(/[.]/g) || []).length == 1 && v.length > 1) return v;
-    // http://stackoverflow.com/questions/30606348/check-if-a-given-value-is-a-positive-number-or-float-with-maximum-two-decimal-pl
-    // http://stackoverflow.com/questions/25053605/regex-to-allow-only-a-single-dot-in-a-textbox
-    else if (v.match(/^\d+(.\d{1,2})?$/)) return v;
-    else if (/^[a-z]+$/i.test(v)) return '';
-    else return v.slice(0, -1);
+    if (!(/^(\d+)(\.)?(\d+)?$/.test(v))) return '';
+    else {
+      if (v.slice(-1) == '.' && (v.match(/[.]/g) || []).length == 1 && v.length > 1) return v;
+      // http://stackoverflow.com/questions/30606348/check-if-a-given-value-is-a-positive-number-or-float-with-maximum-two-decimal-pl
+      // http://stackoverflow.com/questions/25053605/regex-to-allow-only-a-single-dot-in-a-textbox
+      else if (v.match(/^\d+(.\d{1,2})?$/)) return v;
+      else return parseFloat(v).toFixed(2);
+    }
   };
 
   //disable checkbox
@@ -77,7 +83,6 @@ $(document).ready(function () {
 
   // decimal with two places
   $('#hashtag_amount, #Plan-Amount, #charge-amount, #Add-Funds').on('input', function(e) {
-    console.log('dasdas')
     $(this).val(function(_, v) {
       return decimal_with_up_to_two_places(v);
     });
