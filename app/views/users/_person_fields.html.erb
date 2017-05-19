@@ -1,10 +1,12 @@
 <div class='nested-fields'>
+  <label class="form-label label-margin">Full Name</label>
     <%= f.text_field :full_name, id: 'name-2', placeholder: 'Full name', class: 'settings short-field text-field w-input' %>
+    <label class="form-label label-margin">Date of Birth</label>
     <%= f.text_field :dob, id: 'Date-of-birth', placeholder: 'Date of birth', class: 'userDateOfBirth settings short-field text-field w-input' %>
     <% if f.index == 0 %>
-      <%= f.text_field :last4, placeholder: "SSN", class: 'settings short-field ssn text-field w-input', id: "SSN" %>
+    <label class="form-label label-margin">SSN</label>
+      <%= f.text_field :last4, placeholder: "SSN", id: 'City-2', class: 'settings short-field ssn text-field w-input', id: "SSN" %>
     <% end %>
-
   <fieldset class='gender-fieldset'>
     <div class="managed-account-gender">
       <%= f.label :gender, 'Male', value: 'male', class: 'gender-label' %>
@@ -15,7 +17,6 @@
   </fieldset>
 
   <%= f.hidden_field :role, value: f.index == 0 ? '0' : '1' %>
-  
   <%= f.fields_for :address do |a| %>
     <div class="col-xs-5">
       <div class='person-street-div'>
@@ -24,9 +25,8 @@
     </div>
 
       <div class="col-xs-5">
-        <div class='person-suite-div'>
-          <%= a.text_field :suite, placeholder: 'Suite', class: 'person-country-select apt_suite settings text-field w-input' %>
-        </div>
+        <label class="form-label label-margin">Country:</label>
+        <select class="person-country-select apt_suite settings text-field w-input"></select>
       </div>
 
       <div class="col-xs-10">
@@ -37,7 +37,7 @@
 
     <div class="col-xs-5">
       <div class='person-city-div'>
-        <%= a.text_field :city, placeholder: 'City', class: 'city settings text-field w-input' %>
+        <%= a.text_field :city, class: 'city settings text-field w-input' %>
       </div>
     </div>
 
@@ -53,9 +53,6 @@
       </div>
     </div>
   <% end %>
-
-<%
-=begin %>
   <div class="col-xs-5">
     <% if f.object.persisted? %>
       <% if f.index != 0 %>
@@ -65,7 +62,4 @@
       <%= link_to_remove_association "remove", f %>
     <% end %>
   </div>
-<%
-=end %>
-
 </div>
