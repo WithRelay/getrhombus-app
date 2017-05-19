@@ -548,6 +548,23 @@ $(document).on('ready page:load', function() {
             }
           }
         },
+
+        'user[address_attributes][postal_code]': {
+          validators: {
+            notEmpty: {
+              message: 'Valid Postal code is required'
+            }
+          }
+        },
+
+        'user[url]': {
+          validators: {
+            notEmpty: {
+              message: 'Bussiness website url is required'
+            }
+          }
+        },
+
         // 'user[tos_acceptance]': {
         //   validators: {
         //     notEmpty: {
@@ -559,6 +576,30 @@ $(document).on('ready page:load', function() {
           validators: {
             notEmpty: {
               message: 'Account Number is required'
+            }
+          }
+        },
+
+        'user[bank_accounts_attributes][0][currency]': {
+          validators: {
+            notEmpty: {
+              message: 'Select a currency'
+            }
+          }
+        },
+
+        'user[bank_accounts_attributes][0][routing_number]': {
+          validators: {
+            notEmpty: {
+              message: 'Routing number is required'
+            }
+          }
+        },
+
+        'user[bank_accounts_attributes][0][institution_number]': {
+          validators: {
+            notEmpty: {
+              message: 'Bank code is required'
             }
           }
         },
@@ -582,13 +623,32 @@ $(document).on('ready page:load', function() {
             }
           }
         },
+
         'user[people_attributes][0][address_attributes][state_province]': {
             validators: {
               notEmpty: {
                 message: 'state field is required'
               }
             }
-          }
+          },
+
+          'user[people_attributes][0][dob]': {
+            validators: {
+              notEmpty: {
+                message: 'Full name is required'
+              }
+            }
+          },
+
+          'user[people_attributes][0][last4]': {
+            validators: {
+              notEmpty: {
+                message: 'Full name is required'
+              }
+            }
+          },
+
+
       }
     })
-});
+})
