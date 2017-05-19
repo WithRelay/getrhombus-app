@@ -38,8 +38,11 @@ class StripeManagedAccountService < Struct.new( :user, :params )
       # calls dynamic function name with send method and creates external accounts
       bank_account = account.external_accounts.create(send(external_string_method_name))
       bank_account
-    rescue Stripe::StripeError => e; e
-    rescue StandardError => e; e # error object contains message attribute
+    rescue Stripe::StripeError => e
+     e
+    rescue StandardError => e
+     e # error object contains message attribute
+    end
   end
 
   def update_account_email

@@ -86,11 +86,13 @@
               <div class="messageContainer"></div>
             </div>
           </div>
-          <!-- <div id='institution-number-div'> -->
+          
           <div class="form-group col-xs-6">
+            <div id='institution-number-div'>
             <%= b.text_field :institution_number, id: 'institution-number', placeholder: 'Bank code', class: 'settings short-field text-field w-input form-control' %>
+            </div>
           </div>
-          <!-- </div> -->
+          
           <div class="form-group col-xs-6">
             <%= b.text_field :account_number, id: 'account-number', class: 'settings short-field text-field w-input form-control', placeholder: 'Account number' %>
             <div class="messageContainer"></div>
