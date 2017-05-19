@@ -41,6 +41,7 @@ class StripeManagedAccountService < Struct.new( :user, :params )
       puts 'wwwwwwwwwwwwwwwwwwwww'
       puts send(external_string_method_name)
       bank_account = account.external_accounts.create(send(external_string_method_name))
+      puts bank_account
       bank_account
     rescue Stripe::StripeError => e
      e
@@ -226,23 +227,24 @@ class StripeManagedAccountService < Struct.new( :user, :params )
       business_name: params[:org_name], managed: true, country: address[:country],
       product_description: params[:description],
       tos_acceptance: { ip: stripe_cred[:ip], date: stripe_cred[:tos_date].to_i, user_agent: stripe_cred[:user_agent] },
-      legal_entity: { type: params_org_type, first_name: full_name[0], last_name: full_name[1],
-                      gender: people[:gender],  phone_number: user.phone_number, business_name: people[:business_name],
+      support_phone: user.org_phone[1..10],
+      legal_entity: { business_name: params[:org_name], type: params_org_type, 
+                      first_name: full_name[0], last_name: full_name[1],
+                      gender: people[:gender],  phone_number: user.org_phone[1..10],
                       business_tax_id: params[:org_tax_id], personal_id_number: people[:last4],
-                      personal_address: { city: people_address[:city],
-                                          country: people_address[:country],
-                                          postal_code: people_address[:postal_code],
-                                          state: people_address[:state_province],
-                                          line1: people_address[:street_address]
-                                        },
+                      #personal_address: { city: people_address[:city], country: people_address[:country],
+                      #                    postal_code: people_address[:postal_code], state: people_address[:state_province],
+                      #                    line1: people_address[:street_address]
+                      #                  },
                       dob: { day: dob[2], month: dob[1], year: dob[0] },
                       address: { state: address[:state_province], postal_code: address[:postal_code],
                                  city: address[:city], line1: address[:street_address]
                                },
-                      address_kana: {}, address_kanji: {}, personal_address_kana: {}, personal_address_kanji: {},
-                      verification: {}, ssn_last_4_provided: {}, business_tax_id_provided: {},
-                      business_vat_id_provided: {}, personal_id_number_provided: {},
-                      additional_owners: additional_owners
+                      #address_kana: {}, address_kanji: {}, personal_address_kana: {}, personal_address_kanji: {},
+                      #verification: {}, 
+                      #ssn_last_4_provided: {}, business_tax_id_provided: {},
+                      #business_vat_id_provided: {}, personal_id_number_provided: {},
+                      #additional_owners: additional_owners
                     }
     }
   end
