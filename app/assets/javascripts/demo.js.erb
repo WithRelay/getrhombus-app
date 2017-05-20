@@ -10,6 +10,10 @@ $(document).ready(function () {
         validators: {
           notEmpty: {
             message: 'Required'
+          },
+          regexp: {
+            regexp: /^(([A-Za-z]+[\-\']?)*([A-Za-z]+)?\s)+([A-Za-z]+[\-\']?)*([A-Za-z]+)?$/,
+            message: 'Invalid Full Name'
           }
         }
       },

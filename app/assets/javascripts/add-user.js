@@ -72,8 +72,8 @@ $(document).ready(function() {
             message: 'Full name is required '
           },
           regexp: {
-            regexp: /^[a-z]([-']?[a-z]+)*( [a-z]([-']?[a-z]+)*)+$/,
-            message: 'Full name can consists first and last name of alphabetical characters with spaces'
+            regexp: /^(([A-Za-z]+[\-\']?)*([A-Za-z]+)?\s)+([A-Za-z]+[\-\']?)*([A-Za-z]+)?$/,
+            message: 'Invalid Full Name'
           }
         }
       },
