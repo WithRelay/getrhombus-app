@@ -60,11 +60,15 @@ module SubscriptionsHelper
   end
 
   def saas_coupon_value
-     @coupon.amount_off.present? ? "#{Toolbox::Decimal.to_int_or_2dp(@coupon.amount_off.to_f/100)}" : "#{@coupon.present_off}%"
+     @coupon.amount_off.present? ? "$#{Toolbox::Decimal.to_int_or_2dp(@coupon.amount_off.to_f/100)}" : "#{@coupon.present_off}%"
   end
 
   def saas_coupon_duration
-    "#{@coupon.duration_in_months} months"
+    if @coupon.duration == 'once'
+      "Once"
+    else
+      "#{@coupon.duration_in_months} months"
+    end
   end
 
   def saas_coupon_end_date
