@@ -128,7 +128,7 @@
 }
 .selectize-input,
 .selectize-control.single .selectize-input.input-active {
-  background: '#ffffff';
+  background: #ffffff;
   cursor: text;
   display: inline-block;
 }
@@ -234,7 +234,7 @@
   position: absolute;
   z-index: 10;
   border: 1px solid #d0d0d0;
-  background: '#ffffff';
+  background: #ffffff;
   margin: -1px 0 0 0;
   border-top: 0 none;
   -webkit-box-sizing: border-box;
@@ -265,7 +265,7 @@
 }
 .selectize-dropdown .optgroup-header {
   color: #303030;
-  background: '#ffffff';
+  background: #ffffff;
   cursor: default;
 }
 .selectize-dropdown .active {

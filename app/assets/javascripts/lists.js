@@ -96,9 +96,6 @@ $(document).on('ready page:load', function() {
         onLoad: function() {
           $('#edit-modal-list-name').val(list_name);
           $("#edit_list_form").attr("action", edit_list_form.join('/') + '/' + selected_edit_list[0]);
-        },
-        overlayCSS: {
-          background: '#ffffff', opacity: .8
         }
       });
     }
@@ -210,9 +207,6 @@ $(document).on('ready page:load', function() {
         $("#amt_filter").val($("#segment_filter_by option:selected").val());
         $("#lists_amt_1").val($("#amount_1").val());
         $("#lists_amt_2").val($("#amount_2").val());
-      },
-      overlayCSS: {
-        background: '#ffffff', opacity: .8
       }
     });
   });
@@ -285,9 +279,6 @@ $(document).on('ready page:load', function() {
           $("#selectedUsers").val(user_ids);
           $("#listCategory").val("list");
           $("#listType").val(listType);
-        },
-        overlayCSS: {
-          background: '#ffffff', opacity: .8
         }
       });
     }
