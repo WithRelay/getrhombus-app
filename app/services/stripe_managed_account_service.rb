@@ -66,6 +66,8 @@ class StripeManagedAccountService < Struct.new( :user, :params )
     puts 'sadsa'
     puts send("update_#{params_org_type}_managed_account")
     account.update_attributes(send("update_#{params_org_type}_managed_account"))
+    puts 'adasdasdasdas'
+    puts account
     account.save
   rescue Stripe::StripeError => e; e
   rescue StandardError => e; e
@@ -86,6 +88,8 @@ class StripeManagedAccountService < Struct.new( :user, :params )
   def update_external_accounts(account)
     bank_account = account.external_accounts.retrieve(user.bank_accounts[0].stripe_bank_account_id)
     bank_account.update_attributes(send(external_string_method_name))
+    puts 'adasdasdasdas'
+    puts bank_account
     bank_account.save
     bank_account
   rescue Stripe::StripeError => e; e
