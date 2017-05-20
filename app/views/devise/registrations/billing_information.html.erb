@@ -20,19 +20,25 @@
         <br>A sales tax will be included in your monthly subscription charge if this is a legal requirement in your ZIP code.</label>
 
         <div class="form-group col-xs-6">
+          <label class="form-label control-label" for="cc-number">Card Number</label>
           <%= f.number_field :last4, id: "cc-number", type: "tel", class: "form-control card-number text-field w-input form-control cc-num", placeholder: "Card number", "x-autocompletetype" => "cc-number", autocompletetype: "cc-number", autocorrect: 'off', spellcheck: 'off', autocapitalize: 'off' %>
         </div>
 
         <div class="form-group col-xs-6">
-          <%= f.text_field :card_name, id: 'cc-name', class: "form-control name-on-card text-field w-input form-control", placeholder: "Name on Card", 'x-autocompletetype' => "off", autocompletetype: 'off', :autocorrect => "off", spellcheck: 'off', autocapitalize: "off", autocomplete: "off" %>
-        </div>
+          <label class="form-label control-label" for="cc-name">Card Name</label>
+            <%= f.text_field :card_name, id: 'cc-name', class: "form-control name-on-card text-field w-input form-control", placeholder: "Name on Card", 'x-autocompletetype' => "off", autocompletetype: 'off', :autocorrect => "off", spellcheck: 'off', autocapitalize: "off", autocomplete: "off" %>
+          </div>
 
-        <div class="form-group col-xs-6">
-          <input id="cc-exp" type="text", class="form-control month-year text-field w-input" placeholder="MM / YYYY" value="" x-autocompletetype="off" autocompletetype="off" autocorrect="off" spellcheck="off" autocapitalize="off">
-        </div>
+          <div class="col-xs-6">
+            <div class="form-group col-xs-6">
+            <label class="form-label control-label" for="cc-exp">Card Expiration Date</label>
+            <input id="cc-exp" type="text", class="form-control month-year text-field w-input" placeholder="MM / YYYY" value="" x-autocompletetype="off" autocompletetype="off" autocorrect="off" spellcheck="off" autocapitalize="off">
+          </div>
 
-        <div class="form-group col-xs-6">
-          <input id="cc-csc" type="tel" class="form-control cvv text-field w-input form-control" placeholder="CVC" value="" autocorrect="off" spellcheck="off" autocapitalize="off" autocomplete="off" maxlength="4">
+          <div class="form-group col-xs-6">
+            <label class="form-label control-label" for="cc-csc" id="cvc-label">CVC</label>
+            <input id="cc-csc" type="tel" class="form-control cvv text-field w-input form-control" placeholder="CVC" value="" autocorrect="off" spellcheck="off" autocapitalize="off" autocomplete="off" maxlength="4">
+          </div>
         </div>
 
         <input type="hidden" name="page_params" value="update_billing_info">

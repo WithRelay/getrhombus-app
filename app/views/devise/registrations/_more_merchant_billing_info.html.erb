@@ -33,6 +33,7 @@
 
         <%= form_for('subscription', method: 'POST', :html=> { id: 'coupon-update-form'}) do |f| %>
           <div class="form-group col-xs-6">
+            <label class="form-label" for="update-plan-id">Coupon Code</label>
             <%= f.text_field :coupon, id: 'update-plan-id', class: 'form-control coupon-code text-field w-input', placeholder: 'Enter Coupon Code' %>
           </div>
           <%= f.submit 'Apply Discount', class: 'alt-button button discount-code save-changes w-button', id: 'submit-update-coupon', saas_sub_id: get_saas_sub_id %>
