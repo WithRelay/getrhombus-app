@@ -40,10 +40,6 @@ module SubscriptionsHelper
     "Plan amount: <strong>$#{get_saas_plan_amount}</strong> USD/#{subscription_plan_interval}".html_safe
   end
 
-  def subscription_customer_count
-    "You are currently on the #{saas_plan_name.try(:humanize)}: #{saas_customers} customers"
-  end
-
   def saas_coupon
     @coupon = @saas_sub.coupon
     {
