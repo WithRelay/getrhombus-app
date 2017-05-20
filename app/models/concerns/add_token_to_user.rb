@@ -64,19 +64,17 @@ module AddTokenToUser
     res
   end
 
-  # on platform only...also merchant not known 
   def add_token_for_merchant_customer_from_platform_customer(mc)
-    platform_acct = User.get_platform_acct_obj
-    platform_customer = MerchantCustomer.find_by(merchant_id: platform_acct.id, customer_id: mc.customer_id)
-    hash = { email: self.email, card_token: nil, new_customer: true, platform_customer: false } 
+    platform_customer = MerchantCustomer.includes(:customer).find_by(merchant_id: User.get_platform_acct_obj.id, customer_id: mc.customer_id)
+    
+    hash = { email: platform_customer.customer.email, card_token: nil, new_customer: true, platform_customer: false } 
 
     res = PaymentService.add_token_to_stripe_customer(hash, self.get_stripe_cred[:cred], platform_customer.platform_stripe_customer_id)
     if res.first
-      # create new merchant_customer for stripe customer
-      MerchantCustomer.create(merchant_id: platform_acct.id, customer_id: self.id, platform_stripe_customer_id: res.second.id)
+      mc.update(managed_stripe_customer_id: res.second.id, platform_stripe_customer_id: platform_customer.platform_stripe_customer_id)
     else
       # we are deleting customer in case customer was created but token wasn't added
-      PaymentService.delete_customer(res.second.id, platform_acct.get_stripe_cred[:cred], true)
+      PaymentService.delete_customer(res.second.id, self.get_stripe_cred[:cred], false)
     end
     res
   end

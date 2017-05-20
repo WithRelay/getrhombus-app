@@ -21,7 +21,7 @@ module SubscriptionsHelper
   end
 
   def saas_sub_status
-    saas_sub.status.try(:capitalize)
+    saas_sub ? saas_sub.status.try(:capitalize) : ''
   end
 
   def subscription_time_period
@@ -33,15 +33,11 @@ module SubscriptionsHelper
   end
 
   def subscription_plan_interval
-    @saas_sub.plan.interval
+    @saas_sub ? @saas_sub.plan.interval : ''
   end
 
   def subscription_plan_amount
     "Plan amount: <strong>$#{get_saas_plan_amount}</strong> USD/#{subscription_plan_interval}".html_safe
-  end
-
-  def subscription_customer_count
-    "You are currently on the #{saas_plan_name.try(:humanize)}: #{saas_customers} customers"
   end
 
   def saas_coupon

@@ -31,13 +31,19 @@ class Subscription < ActiveRecord::Base
         end
 
         merchant_customer = MerchantCustomer.find self.merchant_customer_id
+
         # Need to check that customer has been added to merchant account on stripe. 
         # Platform not needed since they are added when they add a card.
-        if team.is_merchant?
+        unless is_platform
           if merchant_customer.managed_stripe_customer_id.blank?
-            
+            token_res = team.add_token_for_merchant_customer_from_platform_customer(merchant_customer) 
+            # can return a adding card error here in token_res.third...so you bubble up this specific error
+            return token_res unless token_res.first
           end
         end
+
+        # see if merchant_customer is reloaded here
+        puts merchant_customer.inspect
 
         hash[:customer] = is_platform ? merchant_customer.platform_stripe_customer_id : merchant_customer.managed_stripe_customer_id
         hash[:plan] = self.plan_id
@@ -45,7 +51,6 @@ class Subscription < ActiveRecord::Base
         hash[:tax_percent] = hash[:team].tax_percent
         hash.delete(:team)
 
-        # res = PaymentService.create_subscription(hash, cred[:cred], is_platform)
         res = PaymentService.create_subscription(hash, cred[:cred], is_platform)
         
         if res.first

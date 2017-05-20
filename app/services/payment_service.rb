@@ -3,7 +3,7 @@ class PaymentService
   class << self
 
     # Create or update customer on Stripe
-    def add_token_to_stripe_customer(hash, cred = {}, merchant_customer = "")
+    def add_token_to_stripe_customer(hash, cred = {}, platform_stripe_customer_id = "")
       begin
         if hash[:card_token].blank?
           # platform should already have customer source at this point, it is only for a merchant that it can be blank
@@ -11,7 +11,7 @@ class PaymentService
           
           # token creation raises error if it fails
           # I believe this should be created off platform stripe customer id??? 
-          hash[:card_token] = Stripe::Token.create({ customer: merchant_customer.platform_stripe_customer_id },
+          hash[:card_token] = Stripe::Token.create({ customer: platform_stripe_customer_id },
                                                    { stripe_account: cred.account_id } ).id
         end
 
