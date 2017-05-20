@@ -31,7 +31,8 @@ class Subscription < ActiveRecord::Base
         end
 
         merchant_customer = MerchantCustomer.find self.merchant_customer_id
-        # need to check that customer has been added to merchant account on stripe. Platform not needed.
+        # Need to check that customer has been added to merchant account on stripe. 
+        # Platform not needed since they are added when they add a card.
         if team.is_merchant?
 
         end

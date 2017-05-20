@@ -12,20 +12,21 @@ module AddTokenToUser
       
       hash = { email: self.email, card_token: card_token, new_customer: true, platform_customer: true } 
       
-      # order so platform is first...platform generally have stripe customer id first
+      # order so platform is first...platform generally have stripe customer id first and has the lowest merchant (user) id
       merchant_customers = MerchantCustomer.where(customer_id: self.id).order(merchant_id: :asc)
 
-      # remove this
-      if merchant_customers.blank?            # This step doesn't really happen anymore
+      # This step doesn't really happen anymore since merchant customer between platform and customer
+      # happens at sign up
+      if merchant_customers.blank?            
         res = add_token_for_new_customer(hash) 
-      else
-        ### test, can i reuse the same tokesn more than once??                                  
+      else                                 
         platform_acct = User.get_platform_acct_obj
         merchant_customers.each do |mc|
           
           # can be on platform or merchant managed account. merchant is always on platform.
           is_platform = mc.merchant_id == platform_acct.id
           cred = mc.merchant.get_stripe_cred
+          
           # create new tokens for managed account since the js token is for platform
           hash[:card_token] = nil unless is_platform          
 
@@ -63,7 +64,6 @@ module AddTokenToUser
     res
   end
 
-  ### test, can i reuse the same token more than once??
   def add_token_for_customer_without_payment_info(mc, hash, is_platform, merchant_customers, cred)
     hash[:new_customer] = true
     hash[:platform_customer] = is_platform
@@ -88,7 +88,6 @@ module AddTokenToUser
     res
   end
 
-  ### test, can i reuse the same token more than once??
   def update_token_for_existing_customer(mc, hash, is_platform, merchant_customers, cred)
     hash[:new_customer] = false
     hash[:platform_customer] = is_platform 

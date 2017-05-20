@@ -6,10 +6,11 @@ class PaymentService
     def add_token_to_stripe_customer(hash, stripe_account_id = "")
       begin
         if hash[:card_token].blank?
+          # platform should already have customer source at this point, it is only for a merchant that it can be blank
+          # should be card_id here if customer has several card... but for now just the id works
+          
           # token creation raises error if it fails
-          # platform should already have customer source at this point
-          # should be card_id here???
-          # SHOULD THIS BE CREATED OFF PLATFORM CUSTOMER? I THINK YES
+          # I believe this should be created off platform stripe customer id??? 
           hash[:card_token] = Stripe::Token.create({ customer: merchant_customer.platform_stripe_customer_id },
                                                    { stripe_account: stripe_cred[:cred].account_id } ).id
         end
@@ -70,6 +71,7 @@ class PaymentService
       #begin
         stripe_cred = merchant.get_stripe_cred
         currency = merchant.currency ? merchant.currency : "usd"
+
         # the platform always has a platform stripe_customer_id for a user making payment 
         merchant_customer = MerchantCustomer.find_by(merchant_id: User.get_platform_acct_obj.id, customer_id: customer.id)
 
@@ -78,15 +80,15 @@ class PaymentService
         puts stripe_cred
 
         # 1. need to backward support merchant's with standalone connect stripe_account
-        # 2. platform account is a standalone account. For charging merchants or regular customers. 
+        # 2. platform account is identified as a standalone account. For charging merchants or regular customers. 
         # 3. managed accounts
 
         if stripe_cred #stripe_cred[:type] == 'standalone'     
           unless true #merchant.is_platform?
+
             # token creation raises error if it fails
-            token = Stripe::Token.create(
-                  { customer: merchant_customer.platform_stripe_customer_id },
-                  { stripe_account: stripe_cred[:cred].account_id } )
+            token = Stripe::Token.create({ customer: merchant_customer.platform_stripe_customer_id },
+                                         { stripe_account: stripe_cred[:cred].account_id } )
 
             re = Stripe::Charge.create({
               amount: amount_with_taxes, currency: currency,
