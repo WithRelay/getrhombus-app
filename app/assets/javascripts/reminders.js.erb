@@ -8,7 +8,10 @@ $(document).on('ready page:load', function() {
   		return false;
   	}else{
   		$("#edit-reminder-modal").lightbox_me({
-  			centered: true
+  			centered: true,
+        overlayCSS: {
+          background: '#ffffff', opacity: .8
+        }
   		});
 
   	}

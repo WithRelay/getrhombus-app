@@ -1,7 +1,7 @@
 <div class="create-list-form-wrapper modal-background" id="edit-list-form">
   <div class="content-sub-wrapper modal w-clearfix">
     <h4 class="modal-header welcome-dash-content-container-header">Create List</h4>
-    <a class="close-modal update-close-modals" data-parent='import-customers-div' href="#"></a>
+    <a class="close-modal update-close-modals" data-parent='edit-list-form' href="#"></a>
   </div>
   <div>
     <%= form_for(:list, url: list_path(current_user, :list_id), html: { id: 'edit_list_form', class: "edit_create_user_list", method: :patch }) do |f| %>

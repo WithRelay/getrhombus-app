@@ -4,7 +4,10 @@ $(document).on('ready page:load', function() {
     var target = $(this).attr('modal-target');
     var modal = target ? $('.' + target) : $(this).parents().find('.modal-body');
     $(modal).lightbox_me({
-        centered: true
+        centered: true,
+        overlayCSS: {
+          background: '#ffffff', opacity: .8
+        }
       });
     e.preventDefault();
   });

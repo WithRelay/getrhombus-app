@@ -196,7 +196,10 @@ var FlashHandler = new function() {
     </div>');
 
     $('.cancel-subscription-wrapper').lightbox_me({
-      centered: true
+      centered: true,
+      overlayCSS: {
+        background: '#ffffff', opacity: .8
+      }
     });
 
     $('.cancel-no').on('click', function(e){
