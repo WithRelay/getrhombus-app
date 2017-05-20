@@ -29,7 +29,7 @@
     <div class="conversation-list-wrapper" id='conversation-list-wrapper' when-scrolled-down="loadConversations()">
 
       <div class="conversation-list-empty-wrapper" ng-if="!merchant.customer_contact_count">
-        <a class="button empty-conversation-button w-button" ng-href="/users/{{ merchant.id }}/customers">Add customers to start a conversation</a>
+        <a class="button messaging-dash-welcome-div w-button" ng-href="/users/{{ merchant.id }}/customers">Add customers to start a conversation</a>
       </div>
 
       <div class="conversation-list-empty-wrapper" ng-if="merchant.customer_contact_count && !open_conversations_count">
@@ -270,13 +270,6 @@
 
   <%# added id %>
   <div class="dashboard-body messaging w-clearfix" id='messages-box' when-scrolled-up="getConversationMessages(selected_conversation, false)" <%#= scroll-bottom-on="status.loaded" %> in-view-container>
-
-    <div class="welcome-to-relay-div" ng-if="!merchant.customer_contact_count">
-      <img src="<%= asset_path "019_076.png" %>">
-      <p class="welcome-message-text-area-paragraph">Hi {{ merchant.first_name }}, to get the most out of Relay add or import your customers</p>
-      <a class="button messaging-dash-welcome-div w-button" ng-href="/users/{{ merchant.id }}/customers">Add a customer</a>
-      <a class="alt button messaging-dash-welcome-div w-button" ng-href="/users/{{ merchant.id }}/customers">Import customers</a>
-    </div>
 
     <%# <div ng-show="status.loading" class="me"><span>loading...</span></div> %>
     <%# added this wrapping div %>
