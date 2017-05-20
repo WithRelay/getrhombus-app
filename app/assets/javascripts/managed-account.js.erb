@@ -587,13 +587,14 @@ $(document).on('ready page:load', function() {
           }
         },
 
-        // 'user[tos_acceptance]': {
-        //   validators: {
-        //     notEmpty: {
-        //       message: 'You must accept the terms'
-        //     }
-        //   }
-        // },
+        'user[tos_acceptance]': {
+          validators: {
+            choice: {
+              message: 'You must accept the terms'
+            }
+          }
+        },
+
         'user[bank_accounts_attributes][0][account_number]': {
           validators: {
             notEmpty: {
@@ -658,9 +659,13 @@ $(document).on('ready page:load', function() {
           validators: {
             notEmpty: {
               message: 'SSN is required'
+            },
+            digitNine: {
+              message: 'SSN shoud be 9-digit number'
             }
           }
-        },
+        }
+        
       }
     })
 //*/
