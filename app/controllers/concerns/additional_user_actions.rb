@@ -52,7 +52,6 @@ module AdditionalUserActions
     else
       account
     end
-    render :managed_acct
   end
 
   def update_managed_acct
@@ -62,7 +61,6 @@ module AdditionalUserActions
     else
       flash[:notice] = 'User updated'
     end
-    managed_acct
     render :managed_acct
   end
 
