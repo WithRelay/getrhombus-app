@@ -20,6 +20,10 @@ module SubscriptionsHelper
     current_user.customers.count + current_user.merchant_contacts.only_contact.count
   end
 
+  def saas_sub_status
+    saas_sub.status.try(:capitalize)
+  end
+
   def subscription_time_period
     unless @saas_sub.nil?
       start_date = @saas_sub.current_period_start.present? ? Time.zone.at(@saas_sub.current_period_start).strftime("%B %d, %Y") : ''
