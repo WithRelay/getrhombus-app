@@ -3,7 +3,7 @@ class PaymentService
   class << self
 
     # Create or update customer on Stripe
-    def add_token_to_stripe_customer(hash, stripe_account_id = "")
+    def add_token_to_stripe_customer(hash, cred = {}, merchant_customer = "")
       begin
         if hash[:card_token].blank?
           # platform should already have customer source at this point, it is only for a merchant that it can be blank
@@ -12,7 +12,7 @@ class PaymentService
           # token creation raises error if it fails
           # I believe this should be created off platform stripe customer id??? 
           hash[:card_token] = Stripe::Token.create({ customer: merchant_customer.platform_stripe_customer_id },
-                                                   { stripe_account: stripe_cred[:cred].account_id } ).id
+                                                   { stripe_account: cred.account_id } ).id
         end
 
         if hash[:new_customer]
@@ -21,13 +21,13 @@ class PaymentService
             cu = Stripe::Customer.create(email: hash[:email], source: hash[:card_token])
           else
             # create on managed account
-            cu = Stripe::Customer.create({email: hash[:email], source: hash[:card_token]}, { stripe_account: stripe_account_id })
+            cu = Stripe::Customer.create({email: hash[:email], source: hash[:card_token]}, { stripe_account: cred.account_id })
           end
         else 
           if hash[:platform_customer]
             cu = Stripe::Customer.retrieve(hash[:stripe_customer_id])
           else
-            cu = Stripe::Customer.retrieve(hash[:stripe_customer_id], { stripe_account: stripe_account_id })
+            cu = Stripe::Customer.retrieve(hash[:stripe_customer_id], { stripe_account: cred.account_id })
           end
           
           cu.email = hash[:email]
@@ -55,7 +55,7 @@ class PaymentService
         if is_platform
           cu = Stripe::Customer.retrieve(customer_id)
         else
-          cu = Stripe::Customer.retrieve(customer_id, { stripe_account: cred.stripe_account_id })
+          cu = Stripe::Customer.retrieve(customer_id, { stripe_account: cred.account_id })
         end
 
         cu.delete
@@ -164,10 +164,10 @@ class PaymentService
           re = Stripe::Subscription.create(hash)
         else
           # is this where we create merchant-customer relationship?
-          tkn = Stripe::Token.create({ customer: hash[:customer] }, { stripe_account: cred.stripe_account_id })
-          customer = Stripe::Customer.create({ source: tkn.id }, { stripe_account: cred.stripe_account_id })
+          tkn = Stripe::Token.create({ customer: hash[:customer] }, { stripe_account: cred.account_id })
+          customer = Stripe::Customer.create({ source: tkn.id }, { stripe_account: cred.account_id })
           hash[:customer] = customer.id
-          re = Stripe::Subscription.create(hash, { stripe_account: cred.stripe_account_id })
+          re = Stripe::Subscription.create(hash, { stripe_account: cred.account_id })
         end
 
         [true, re]
@@ -187,7 +187,7 @@ class PaymentService
           sbtn = Stripe::Subscription.retrieve(subscription_id)
           sbtn.delete(at_period_end: at_period_end) # cancel at period end
         else
-          sbtn = Stripe::Subscription.retrieve(subscription_id, { stripe_account: cred.stripe_account_id })
+          sbtn = Stripe::Subscription.retrieve(subscription_id, { stripe_account: cred.account_id })
           sbtn.delete(at_period_end: at_period_end)
         end
         [true, res]
@@ -204,7 +204,7 @@ class PaymentService
           sbtn = Stripe::Subscription.retrieve(subscription_id)
           sbtn.coupon = coupon_id
         else
-          sbtn = Stripe::Subscription.retrieve(subscription_id, { stripe_account: cred.stripe_account_id })
+          sbtn = Stripe::Subscription.retrieve(subscription_id, { stripe_account: cred.account_id })
           sbtn.coupon = coupon_id
         end
         sbtn.save
@@ -220,7 +220,7 @@ class PaymentService
         if platform
           p = Stripe::Plan.create(hash)
         else
-          p = Stripe::Plan.create(hash, { stripe_account: cred.stripe_account_id } )
+          p = Stripe::Plan.create(hash, { stripe_account: cred.account_id } )
         end
         [true, p]
       rescue Stripe::StripeError => e
@@ -236,7 +236,7 @@ class PaymentService
         if platform
           plan = Stripe::Plan.retrieve(plan_id)
         else
-          plan = Stripe::Plan.retrieve(plan_id, { stripe_account: cred.stripe_account_id })
+          plan = Stripe::Plan.retrieve(plan_id, { stripe_account: cred.account_id })
         end
         plan.delete
         [true]
@@ -253,7 +253,7 @@ class PaymentService
         if platform
           p = Stripe::Plan.retrieve(plan_id)
         else
-          p = Stripe::Plan.retrieve(plan_id, { stripe_account: cred.stripe_account_id })
+          p = Stripe::Plan.retrieve(plan_id, { stripe_account: cred.account_id })
         end
 
         p.name = hash[:name]
