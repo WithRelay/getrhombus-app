@@ -20,6 +20,10 @@ module SubscriptionsHelper
     current_user.customers.count + current_user.merchant_contacts.only_contact.count
   end
 
+  def saas_sub_status
+    saas_sub.status.try(:capitalize)
+  end
+
   def subscription_time_period
     unless @saas_sub.nil?
       start_date = @saas_sub.current_period_start.present? ? Time.zone.at(@saas_sub.current_period_start).strftime("%B %d, %Y") : ''
@@ -56,11 +60,15 @@ module SubscriptionsHelper
   end
 
   def saas_coupon_value
-     @coupon.amount_off.present? ? "#{Toolbox::Decimal.to_int_or_2dp(@coupon.amount_off.to_f/100)}" : "#{@coupon.present_off}%"
+     @coupon.amount_off.present? ? "$#{Toolbox::Decimal.to_int_or_2dp(@coupon.amount_off.to_f/100)}" : "#{@coupon.present_off}%"
   end
 
   def saas_coupon_duration
-    "#{@coupon.duration_in_months} months"
+    if @coupon.duration == 'once'
+      "Once"
+    else
+      "#{@coupon.duration_in_months} months"
+    end
   end
 
   def saas_coupon_end_date

@@ -42,7 +42,7 @@ class Plan < ActiveRecord::Base
         hash[:statement_descriptor] = self.statement_descriptor.gsub("'", "")
         hash[:currency] = self.currency
 
-        res = PaymentService.create_plan(hash, cred[:cred].account_id, is_platform)
+        res = PaymentService.create_plan(hash, cred[:cred], is_platform)
         if res.first && self.update(stripe_livemode: res.second.livemode)
           create_plan_segment if self.customer_id.blank?
           true
@@ -76,7 +76,7 @@ class Plan < ActiveRecord::Base
       return false unless self.save
 
       hash[:statement_descriptor] = new_descriptor
-      res = PaymentService.update_plan(self.id, hash, team.get_stripe_cred[:cred].account_id, team.is_platform?)
+      res = PaymentService.update_plan(self.id, hash, team.get_stripe_cred[:cred], team.is_platform?)
       if res.first
         update_plan_segment if self.customer_id.blank?
       else
@@ -95,7 +95,7 @@ class Plan < ActiveRecord::Base
 
   def delete_plan(team)
     begin
-      res = PaymentService.delete_plan(self.id, team.get_stripe_cred[:cred].account_id, team.is_platform?).first
+      res = PaymentService.delete_plan(self.id, team.get_stripe_cred[:cred], team.is_platform?).first
       delete_plan_segment if res
       res
     rescue StandardError => e

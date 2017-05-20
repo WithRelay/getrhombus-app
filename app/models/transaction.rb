@@ -77,7 +77,7 @@ class Transaction < ActiveRecord::Base
   end
 
   def calculate_fees_schedule
-    return 2.9, 30, 0, 0      # take this line out
+    return Rails.application.secrets.fee_schedule if @merchant.is_platform?
     @fee_schedule = @merchant.get_stripe_cred[:cred].transaction_fee
     percent1, cents1 = @fee_schedule.provider_percent.to_f, @fee_schedule.provider_cents.to_f
     percent2, cents2 = @fee_schedule.platform_percent.to_f, @fee_schedule.platform_cents.to_f

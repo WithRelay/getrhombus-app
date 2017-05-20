@@ -31,7 +31,8 @@ class Subscription < ActiveRecord::Base
         end
 
         merchant_customer = MerchantCustomer.find self.merchant_customer_id
-        # need to check that customer has been added to merchant account on stripe. Platform not needed.
+        # Need to check that customer has been added to merchant account on stripe. 
+        # Platform not needed since they are added when they add a card.
         if team.is_merchant?
 
         end
@@ -44,8 +45,8 @@ class Subscription < ActiveRecord::Base
         hash[:tax_percent] = hash[:team].tax_percent
         hash.delete(:team)
 
-        # res = PaymentService.create_subscription(hash, cred[:cred].account_id, is_platform)
-        res = PaymentService.create_subscription(hash, cred[:cred].uid, is_platform)
+        # res = PaymentService.create_subscription(hash, cred[:cred], is_platform)
+        res = PaymentService.create_subscription(hash, cred[:cred], is_platform)
         
         if res.first
           self.update(
@@ -84,7 +85,7 @@ class Subscription < ActiveRecord::Base
 
   def cancel_subscription(team, at_period_end = false)
     begin
-      res = PaymentService.cancel_subscription(self.stripe_subscription_id, team.get_stripe_cred[:cred].account_id, team.is_platform?, at_period_end)
+      res = PaymentService.cancel_subscription(self.stripe_subscription_id, team.get_stripe_cred[:cred], team.is_platform?, at_period_end)
       if res.first && self.update(status: res.second.status, cancel_at_period_end: res.second.cancel_at_period_end)
         true
       else
@@ -99,7 +100,7 @@ class Subscription < ActiveRecord::Base
 
   def update_subscription(team, coupon_id)
     begin
-      res = PaymentService.update_subscription(self.stripe_subscription_id, team.get_stripe_cred[:cred].account_id, team.is_platform?, coupon_id)
+      res = PaymentService.update_subscription(self.stripe_subscription_id, team.get_stripe_cred[:cred], team.is_platform?, coupon_id)
       if res
         coupon = Coupon.find_by(stripe_coupon_id: res[:discount][:coupon][:id])
          self.update(coupon_id: coupon.id, status: res.status, cancel_at_period_end: res.cancel_at_period_end)
