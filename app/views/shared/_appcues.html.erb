@@ -5,9 +5,5 @@
         name: "<%= current_user.first_name || there %>", // Current user's name
         email: "<%= current_user.email %>", // Current user's email
         created_at: <%= current_user.created_at.to_i %>, // Unix timestamp of user signup date
-
-        // Additional user properties.
-        // is_trial: "<%= current_user.is_trial %>",
-        // plan: "<%= current_user.plan %>"
     });
 </script>
