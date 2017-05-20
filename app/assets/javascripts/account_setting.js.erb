@@ -152,38 +152,45 @@ $(document).ready(function() {
             }
           }
         },
-        'user[street_address]': {
+        'user[address_attributes][country]': {
+            validators: {
+              notEmpty: {
+                message: 'Country is required'
+              }
+            }
+          },
+        'user[address_attributes][street_address]': {
           validators: {
             notEmpty: {
               message: 'street address is required'
             }
           }
         },
-        'user[city]': {
+        'user[address_attributes][city]': {
           validators: {
             notEmpty: {
               message: 'city is required'
             }
           }
         },
-        'user[state_province]': {
+        'user[address_attributes][state_province]': {
           validators: {
             notEmpty: {
-              message: 'state province is required'
+              message: 'State province is required'
             }
           }
         },
-        'user[zip_code]': {
+        'user[address_attributes][suite]': {
+          validators: {
+            notEmpty: {
+              message: 'Suite is required'
+            }
+          }
+        },
+        'user[address_attributes][postal_code]': {
           validators: {
             notEmpty: {
               message: 'Zip code is required'
-            }
-          },
-        'user[country]': {
-            validators: {
-              notEmpty: {
-                message: 'Country is required'
-              }
             }
           },
         'user[url]': {

@@ -82,7 +82,7 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   def business_settings
-    current_user.address = current_user.address || Address.new
+    current_user.address ||= Address.new
   end
 
   def add_rhombus_number; end
