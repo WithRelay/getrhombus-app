@@ -119,7 +119,7 @@ class User < ActiveRecord::Base
   before_validation :the_titleizer
   before_create :set_merchant_org_phone          # only create because the actual org_phone field is used in edit view
 
-  after_commit :do_signup_stuff, on: :create
+  #after_commit :do_signup_stuff, on: :create
 
   enum status: { inactive: 0, active: 1 }
 
@@ -152,16 +152,12 @@ class User < ActiveRecord::Base
   end
 
   def get_stripe_cred
-    # platform acct is a standalone account
-     # merchants could have a standalone account (prior to v1.5) and a managed account
-     # managed account takes priority
+    # platform acct is identified as standalone account but it really isnt
+    # merchants could have a standalone account (prior to v1.5) and a managed account
+    # managed account takes priority
 
-     # remove this eventually
-     return { type: 'standalone', cred: User.get_platform_acct_obj }
-     ##
-
-     return { type: 'standalone', cred: self.standalone_stripe_cred } if is_platform?
-     cred = self.stripe_creds   # check for managed account first
+     return { type: 'standalone', cred: {} } if is_platform?
+     cred = self.stripe_creds   # check for managed account first, we support just one account for now
      return { type: 'managed', cred: cred.first } if cred.present?
      cred = self.standalone_stripe_cred  # check for standalone ... this is legacy
      return { type: 'standalone', cred: cred } if cred.present?
