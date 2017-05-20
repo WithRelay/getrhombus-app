@@ -34,12 +34,12 @@ class Subscription < ActiveRecord::Base
         # Need to check that customer has been added to merchant account on stripe. 
         # Platform not needed since they are added when they add a card.
         if team.is_merchant?
-
+          if merchant_customer.managed_stripe_customer_id.blank?
+            
+          end
         end
 
-        # needs to be either or
-        # hash[:customer] = merchant_customer.managed_stripe_customer_id
-        hash[:customer] = merchant_customer.platform_stripe_customer_id
+        hash[:customer] = is_platform ? merchant_customer.platform_stripe_customer_id : merchant_customer.managed_stripe_customer_id
         hash[:plan] = self.plan_id
         hash[:quantity] = self.quantity
         hash[:tax_percent] = hash[:team].tax_percent
