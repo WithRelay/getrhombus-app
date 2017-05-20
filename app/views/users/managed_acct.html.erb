@@ -124,7 +124,7 @@
 
       <div class="form-group col-xs-6">
         <label class="form-label label-margin">Confirm account number</label>
-        <%= b.text_field :account_number_confirmation, id: 'account-number', class: 'settings short-field text-field w-input form-control' %>
+        <%= b.text_field :account_number_confirmation, class: 'settings short-field text-field w-input form-control' %>
         <div class="messageContainer w-col-12"></div>
       </div>
       <% end %>
@@ -152,26 +152,23 @@
 =end %>
 
     <fieldset id='termsAndCondition'>
-
       <%= f.fields_for :stripe_creds do |c| %>
-        <div class='w-hidden'>
-          <% if c.object.persisted? %>
-          <%= c.check_box :charges_enabled, disabled: true %>
-          <%= c.check_box :transfers_enabled, disabled: true %>
+        <% if c.object.persisted? %>
+          <%= c.check_box :charges_enabled, disabled: true %> Charges Enabled
+          <%= c.check_box :transfers_enabled, disabled: true %> Transfers Enabled
           <div><%= c.object.disabled_reason %></div>
           <div><%= c.object.due_by %></div>
           <div><%= c.object.fields_needed %></div>
-          <% end %>
-          <%= c.hidden_field :ip %>
-        </div>
+        <% end %>
       <% end %>
     </fieldset>
 
     <div class="check-box editor w-checkbox w-clearfix">
-      <%= f.check_box :tos_acceptance, class: "w-checkbox-input manage-acc-check-box", disabled: f.object.stripe_creds.first.persisted?, checked: f.object.stripe_creds.first.persisted? %>
-      <%= f.label 'Accept Terms and Service', class: "w-form-label form-label manage-acc-term-condition", for: "checkbox-3" %>
+      <% if f.object.stripe_creds.first.new_record? %>
+        <%= f.check_box :tos_acceptance, class: "w-checkbox-input manage-acc-check-box" %>
+        <%= f.label 'Accept Terms and Service', class: "w-form-label form-label manage-acc-term-condition", for: "checkbox-3" %>
+      <% end %>
     </div>
-
     <%= f.submit :save, id: 'saveManagedAccount', class: 'button payment-setup save-changes w-button' %>
     <% end %>
   </div>

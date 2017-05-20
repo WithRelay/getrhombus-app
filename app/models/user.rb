@@ -7,7 +7,7 @@ class User < ActiveRecord::Base
   include Transactionable
 
   attr_accessor :phone, :msg_id, :captured_amt
-  attr_accessor :tag_id, :referrer_uid, :tos_acceptance
+  attr_accessor :tag_id, :referrer_uid, :tos_acceptance, :customer_source
   attr_accessor :area_code, :card_token, :page_specific_id
 
   # validation rules for user attributes

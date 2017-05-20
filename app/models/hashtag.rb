@@ -4,8 +4,6 @@ class Hashtag < ActiveRecord::Base
 
 	belongs_to :user
 
-  attr_accessor :skip_tag_validation
-
   # test this again
   has_many :image_refs, as: :imageable, dependent: :destroy
   has_many :images, through: :image_refs
@@ -15,7 +13,7 @@ class Hashtag < ActiveRecord::Base
   has_many :plans
 
 	# validations
-	validates :tag, presence: true, uniqueness: { case_sensitive: false, scope: :user_id }, unless: :skip_tag_validation
+	validates :tag, presence: true, uniqueness: { case_sensitive: false, scope: :user_id }
   validates :name, presence: true, uniqueness: { case_sensitive: false, scope: :user_id }
 	validates :amount, presence: true, numericality: true, unless: lambda { self.non_payment_tag? }
   validates :response, length: { maximum: 320 }

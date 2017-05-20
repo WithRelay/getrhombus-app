@@ -656,20 +656,20 @@ class EmailingService
       end
     end
 
-    def customer_sign_up_from_referral_link(user)
+    def customer_sign_up_from_referral_link(user, merchant)
       begin
         template_name = 'customer-sign-up-from-referral-link'
         template_content = []
         message = { "subject" => "Welcome to Relay",
          "global_merge_vars"=> [  { "name" => "first_name", "content" => user.first_name || 'there' },
-                                  {"name" => "business_name", "content" => user.org_name},
-                                  {"name" => "relay_number", "content" => user.rhombus_number}
+                                  {"name" => "business_name", "content" => merchant.org_name},
+                                  {"name" => "relay_number", "content" => merchant.rhombus_number}
                                ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
          "bcc_address"=> SENDER,
          "from_name" => "Edwin from Relay",
-         "from_email" => FROM_EMAIL[:email]
+         "from_email" => FROM_EMAIL[:edwin]
         }
         async = true
         result = MANDRILL.messages.send_template template_name, template_content, message, async
@@ -679,20 +679,20 @@ class EmailingService
       end
     end
 
-    def customer_added_to_relay(user)
+    def customer_added_to_relay(user, merchant)
       begin
         template_name = 'customer-added-to-relay'
         template_content = []
         message = { "subject" => "Best way to reach us",
          "global_merge_vars"=> [  { "name" => "first_name", "content" => user.first_name || 'there' },
-                                  {"name" => "business_name", "content" => user.org_name},
-                                  {"name" => "relay_number", "content" => user.rhombus_number}
+                                  {"name" => "business_name", "content" => merchant.org_name},
+                                  {"name" => "relay_number", "content" => merchant.rhombus_number}
                                ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
          "bcc_address"=> SENDER,
          "from_name" => "Edwin from Relay",
-         "from_email" => FROM_EMAIL[:email]
+         "from_email" => FROM_EMAIL[:edwin]
         }
         async = true
         result = MANDRILL.messages.send_template template_name, template_content, message, async

@@ -9,7 +9,7 @@ module UsersHelper
   end
 
   def business_type_list
-    ['Business', 'Nonprofit', 'Education', '[K12] Education [University & Colleges]', 'Individual']
+    { 'Organization' => 'Company', 'Individual' => 'Individual' }
   end
 
   def twilio_countries

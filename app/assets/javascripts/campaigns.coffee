@@ -8,6 +8,7 @@ class @DatePicker
     @time = time
     date = new Date();
     @minimumDate = dateSelect.select
+    @maximumDate = dateSelect.max
     dateRangeValue = $('.daterange').val()
     # if dateRangeValue == undefined || dateRangeValue == ""
     @today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
@@ -22,6 +23,10 @@ class @DatePicker
       min = today
     else
       min = false
+    if @maximumDate
+      max = today
+    else
+      max = false
     if $(@element).length > 0
       if time
         setFormat = RAILS_DATE_FORMAT
@@ -33,7 +38,8 @@ class @DatePicker
         drops: "up",
         singleDatePicker: YES,
         locale: { format: setFormat },
-        minDate: min
+        minDate: min,
+        maxDate: max
 
 class Campaign
 

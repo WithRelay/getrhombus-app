@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170519035749) do
+ActiveRecord::Schema.define(version: 20170520182439) do
 
   create_table "account_reloads", force: :cascade do |t|
     t.integer  "user_id",        limit: 4
@@ -627,9 +627,7 @@ ActiveRecord::Schema.define(version: 20170519035749) do
     t.string   "account_id",         limit: 191
     t.string   "secret",             limit: 191
     t.string   "publishable_key",    limit: 191
-    t.string   "scope",              limit: 191
     t.boolean  "livemode",           limit: 1
-    t.string   "refresh_token",      limit: 191
     t.integer  "user_id",            limit: 4
     t.integer  "transaction_fee_id", limit: 4
     t.string   "ip",                 limit: 191

@@ -30,6 +30,7 @@ class Api::V1::MerchantCustomersController < API::V1::BaseController
         else
           params[:user][:password] = Toolbox::StringGen.generate_random_string(8)
           params[:user][:user_level] = 0
+          params[:user][:customer_source] = { id: current_user.id, method: 'added' }
           @customer = User.create(api_v1_user_params)
           if @customer.errors.present?
             response = @customer.errors.full_messages

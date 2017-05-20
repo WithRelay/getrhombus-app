@@ -37,7 +37,6 @@ module AdditionalUserActions
     else
       flash[:notice] = 'Account connected successfully'
     end
-    managed_acct
     render :managed_acct
   end
 
@@ -53,6 +52,7 @@ module AdditionalUserActions
     else
       account
     end
+    render :managed_acct
   end
 
   def update_managed_acct
@@ -92,12 +92,16 @@ module AdditionalUserActions
     stripe_params[:stripe_creds_attributes]['0'].merge!({ disabled_reason: account_verification.disabled_reason,
                                                           due_by: account_verification.due_by,
                                                           fields_needed: account_verification.fields_needed,
-                                                          account_id: account.id
+                                                          account_id: account.id,
+                                                          livemode: Rails.env.production?,
+                                                          charges_enabled: account.charges_enabled,
+                                                          transfers_enabled: account.transfers_enabled
                                                         })
     unless bank_account.methods.include?(:message)
       stripe_params[:bank_accounts_attributes]['0'].merge!({ stripe_bank_account_id: bank_account.id,
                                                              bank_name: bank_account.bank_name,
                                                              status: bank_account.status,
+                                                             livemode: Rails.env.production?,
                                                              fingerprint: bank_account.fingerprint })
     end
     stripe_params

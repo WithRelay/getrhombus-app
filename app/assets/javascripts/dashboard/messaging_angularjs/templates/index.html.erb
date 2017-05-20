@@ -29,7 +29,7 @@
     <div class="conversation-list-wrapper" id='conversation-list-wrapper' when-scrolled-down="loadConversations()">
 
       <div class="conversation-list-empty-wrapper" ng-if="!merchant.customer_contact_count">
-        <a class="button messaging-dash-welcome-div w-button" ng-href="/users/{{ merchant.id }}/customers">Add customers to start a conversation</a>
+        <a class="button empty-conversation-button w-button" ng-href="/users/{{ merchant.id }}/customers">Add customers to start a conversation</a>
       </div>
 
       <div class="conversation-list-empty-wrapper" ng-if="merchant.customer_contact_count && !open_conversations_count">

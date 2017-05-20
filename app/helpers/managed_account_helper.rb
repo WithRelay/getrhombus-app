@@ -11,25 +11,15 @@ module ManagedAccountHelper
   def connect_org_type(account)
     if account.org_type.present?
       selected_org_type = {}
-      valid_org_type.each do |k, v| 
-        if v.include?(account.org_type)
-          if v.is_a? Array
-            k = 'Organization'
-            v = 'Company'
-          end
+      business_type_list.each do |k, v| 
+        if v == account.org_type
           selected_org_type[k] = v
           return selected_org_type
         end
       end 
     end
 
-    { 'Individual' => 'Individual', 'Organization' => 'Company' }
-  end
-
-  def valid_org_type
-    { 'Individual' => 'Individual', 'Company' => ["Business", "Nonprofit",
-                                                  "Education (K-12)", "Education (Universities & Colleges)"]
-    }
+    business_type_list
   end
 
   def connect_country(user)

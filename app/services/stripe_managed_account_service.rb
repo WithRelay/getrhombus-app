@@ -193,9 +193,7 @@ class StripeManagedAccountService < Struct.new( :user, :params )
     { external_account: { object: 'bank_account', country: bank_account[:country],
                                                   currency: bank_account[:currency],
                                                   account_number: bank_account[:account_number],
-                                                  routing_number: bank_account[:routing_number],
-                                                  account_holder_type: params[:org_type],
-                                                  account_holder_name: people[:full_name]
+                                                  routing_number: bank_account[:routing_number]
                         }
     }
   end

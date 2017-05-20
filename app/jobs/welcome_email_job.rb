@@ -3,27 +3,34 @@ class WelcomeEmailJob < ApplicationJob
 
   def perform(user)
     begin
-      owner = User.get_platform_acct_obj
-      if user.is_merchant?
+      if user.is_merchant? && !user.is_platform?
         EmailingService.welcome_email(user)
       elsif user.is_customer?
-        ref = user.referrer
-        message = Message.new
-        unless ref.blank?
-          referrer = User.find_by(relay_uid: ref.referrer_uid)
-          EmailingService.send_welcome_email_with_referral(referrer.email, user.email, referrer.org_name, referrer.rhombus_number, owner.rhombus_number)
-          text = "Thanks for signing up! Please add a payment card to your Rhombus profile (if you haven't done so).
-          You can chat with us anytime via sms or to make a payment, just text the amount & description/hashtag. Ex. +10 #donut"
-          message.send_and_save_message(referrer, user, referrer.rhombus_number, user.phone_number, text)
+        if user.customer_source.present?
+          sender = User.find_by(id: user.customer_source.id)
+
+          if user.customer_source.method == 'added'
+            insert = (sender.first_name ? ", it's #{sender.first_name}" : '')
+            text = "Hi#{insert} from #{sender.org_name}. You can now reach us on this number. If you have any questions or \
+            will like to place an order, simply text us here."
+            EmailingService.customer_added_to_relay(user, sender)
+          elsif user.customer_source.method == 'referred'
+            text = "Thanks for signing up! Please add a payment card to your Relay profile (if you haven't done so). \
+            You can chat with us anytime via sms or to make a payment, just text the amount & description/hashtag. Ex. +10 #donut"
+            EmailingService.customer_sign_up_from_referral_link(user, sender)
+          end
         else
-          EmailingService.send_welcome_email(user.email, owner.rhombus_number, "customer")
-          text = "Thanks for signing up! Please add a payment card to your Rhombus profile (if you haven't done so).
-          You can chat with a local business anytime by texting their Rhombus number or to make a payment, just text the amount &
+          sender = User.get_platform_acct_obj
+          text = "Thanks for signing up! Please add a payment card to your Relay profile (if you haven't done so). \
+          You can chat with a local business anytime by texting their Relay number or to make a payment, just text the amount & \
           description/hashtag. Ex. +10 #donut"
-          message.send_and_save_message(owner, user, owner.rhombus_number, user.phone_number, text)
+          EmailingService.customer_sign_up(user)
         end
+
+        Conversation.find_or_create_conversation_for_message_and_send_publish(sender, user, 'user', user.id, text, 'Message')
       end
       rescue StandardError => e
+        # send us error message
       end
     end
 
