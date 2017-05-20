@@ -481,6 +481,20 @@ $(document).on('ready page:load', function() {
 */
 
 //*
+
+(function($) {
+    FormValidation.Validator.digitNine = {
+        validate: function(validator, $field, options) {
+            // ... Do your logic checking
+            value = $field.val()
+            if ( /^\d+$/.test(value) && value.length == 9) {
+                return true    // or
+            }
+            return false
+        }
+    };
+}(window.jQuery));
+
   // validate managed account create update form
   $('#managed-account-form').formValidation({
       framework: 'bootstrap',
@@ -527,6 +541,9 @@ $(document).on('ready page:load', function() {
           validators: {
             notEmpty: {
               message: 'Business Tax ID is required'
+            },
+            digitNine:{
+              message: "Tax ID should be 9-digit number"
             }
           }
         },
