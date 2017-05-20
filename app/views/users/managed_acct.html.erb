@@ -151,7 +151,7 @@
 <%
 =end %>
 
-    <fieldset id='termsAndCondition'>
+    <div id='termsAndCondition'>
       <%= f.fields_for :stripe_creds do |c| %>
         <% if c.object.persisted? %>
           <%= c.check_box :charges_enabled, disabled: true %> Charges Enabled
@@ -162,7 +162,7 @@
         <% end %>
         <%= c.hidden_field :ip %>
       <% end %>
-    </fieldset>
+    </div>
 
     <div class="check-box editor w-checkbox w-clearfix">
       <% if f.object.stripe_creds.first.new_record? %>
