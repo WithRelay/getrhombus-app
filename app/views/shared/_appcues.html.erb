@@ -1,0 +1,13 @@
+<script src="//fast.appcues.com/25715.js"></script>
+<script>
+    // NOTE: These values should be specific to the current user.
+    Appcues.identify("<%= current_user.id %>", { // Unique identifier for current user
+        name: "<%= current_user.first_name || there %>", // Current user's name
+        email: "<%= current_user.email %>", // Current user's email
+        created_at: <%= current_user.created_at.to_i %>, // Unix timestamp of user signup date
+
+        // Additional user properties.
+        // is_trial: "<%= current_user.is_trial %>",
+        // plan: "<%= current_user.plan %>"
+    });
+</script>

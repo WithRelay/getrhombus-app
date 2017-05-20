@@ -29,6 +29,8 @@
       <%= f.radio_button :gender, 'female', class: 'gender-input'  %>
     </div>
   </fieldset>
+<%
+=end %>
 
   <%= f.fields_for :address do |a| %>
     <div class="col-xs-5">
@@ -68,6 +70,8 @@
     </div>
   <% end %>
 
+<%
+=begin %>
   <div class="col-xs-5">
     <% if f.object.persisted? %>
       <% if f.index != 0 %>

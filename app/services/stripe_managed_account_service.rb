@@ -53,14 +53,18 @@ class StripeManagedAccountService < Struct.new( :user, :params )
   def update_account_email
     account = retrieve_account
     account.update_attributes({ email: user.email })
+    puts 'adasdasdasdas'
+    puts account
     account.save
   rescue Stripe::StripeError => e; e
   rescue StandardError => e; e
   end
 
   def update_account
-    # NOTE while updating account attributes falls in legal_entity cannot be updated
+    # NOTE while updating account attributes, fields in legal_entity cannot be updated
     account = retrieve_account
+    puts 'sadsa'
+    puts send("update_#{params_org_type}_managed_account")
     account.update_attributes(send("update_#{params_org_type}_managed_account"))
     account.save
   rescue Stripe::StripeError => e; e
@@ -230,21 +234,22 @@ class StripeManagedAccountService < Struct.new( :user, :params )
       support_phone: user.org_phone[1..10],
       legal_entity: { business_name: params[:org_name], type: params_org_type, 
                       first_name: full_name[0], last_name: full_name[1],
-                      gender: people[:gender],  phone_number: user.org_phone[1..10],
+                      #gender: people[:gender], # not needed for u.s, canada
+                      phone_number: user.org_phone[1..10],
                       business_tax_id: params[:org_tax_id], personal_id_number: people[:last4],
-                      #personal_address: { city: people_address[:city], country: people_address[:country],
-                      #                    postal_code: people_address[:postal_code], state: people_address[:state_province],
-                      #                    line1: people_address[:street_address]
-                      #                  },
+                      personal_address: { city: people_address[:city], country: people_address[:country],
+                                          postal_code: people_address[:postal_code], state: people_address[:state_province],
+                                          line1: people_address[:street_address]
+                                        },
                       dob: { day: dob[2], month: dob[1], year: dob[0] },
                       address: { state: address[:state_province], postal_code: address[:postal_code],
                                  city: address[:city], line1: address[:street_address]
                                },
-                      #address_kana: {}, address_kanji: {}, personal_address_kana: {}, personal_address_kanji: {},
-                      #verification: {}, 
-                      #ssn_last_4_provided: {}, business_tax_id_provided: {},
-                      #business_vat_id_provided: {}, personal_id_number_provided: {},
-                      #additional_owners: additional_owners
+                      #address_kana: {}, address_kanji: {}, personal_address_kana: {}, personal_address_kanji: {},  # for japan i think
+                      verification: {}, 
+                      ssn_last_4_provided: {}, business_tax_id_provided: {},
+                      business_vat_id_provided: {}, personal_id_number_provided: {},
+                      #additional_owners: additional_owners  # for Europe
                     }
     }
   end

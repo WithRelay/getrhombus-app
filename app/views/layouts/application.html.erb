@@ -40,6 +40,7 @@
 
   </head>
   <body class="<%= add_body_class %>", style= "<%= dynamic_pages_overflow_hidden %>" > <%#= needed for conversations page body %>
+    <%= render 'shared/appcues' if current_user %>
     <%= render_header_partial %>
     <%= render 'shared/flash_messages' %>
     <%= render_sidebar_partial %>
@@ -48,10 +49,7 @@
     <%= render_footer_partial %>
     <%= render 'shared/smooch' %>
     <%= render 'shared/google_analytics' %>
-    <%= render 'shared/flash_messages' %>
-    <% if current_user %>
-      <%= render 'shared/onboardtips' %>
-    <% end %>
+    <%= render 'shared/flash_messages' %>      
   </body>
 
 

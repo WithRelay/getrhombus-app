@@ -27,7 +27,7 @@ module AdditionalUserActions
     @user.bank_accounts.present? || @user.bank_accounts.build
     @user.stripe_creds.present? || @user.stripe_creds.build
     @user.people.present? || @user.people.build
-    #@user.people.each_with_index { |p,i| @user.people[i].address || @user.people[i].build_address }
+    @user.people.each_with_index { |p,i| @user.people[i].address || @user.people[i].build_address }
   end
 
   def create_managed_acct
@@ -67,9 +67,9 @@ module AdditionalUserActions
   end
 
   def save_managed_connect_acccount(account, bank_account)
-    account_keys = account.keys
     save_params = params_with_stripe(account, bank_account)
     unless params[:action] == 'update_managed_acct'
+      account_keys = account.keys
       save_params[:stripe_creds_attributes]['0'].merge!({ secret: account_keys.secret,
                                                           publishable_key: account_keys.publishable
                                                         })
