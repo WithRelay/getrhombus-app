@@ -1,0 +1,24 @@
+<script type="text/javascript">
+  OnboardTipsSiteKey = "154803d30e6549b74bdf43cd56d4c15f6523191c";
+  //OnboardTipsIdentify = {};
+  //*
+  // If your user is logged in, enter in the details below and then
+  // remove the "OnboardTipsIdentify = {};" line above
+  OnboardTipsIdentify = {
+      user_id : "<%= current_user.id %>", // This should be an integer
+      user_email : "<%= current_user.email %>", // This should be a string
+      user_name : "<%= current_user.first_name || 'there' %>", // This should be a string
+      //user_username : 'myusername', // This should be a string
+      user_created_at : "<%= current_user.created_at.to_i %>", // This should be a Unix timestamp (integer)
+      //user_hash : '2b88c15274dfb995d32255df37d9a195' // This should be a string (optional)
+  };
+  //*/
+  !function(){var t=document.createElement("script");t.type="text/javascript",t.
+  async=!0,t.edit=document.location.search.indexOf("edit=true")>-1,t.edit=t.edit?t.
+  edit:"undefined"!=typeof Storage?localStorage.getItem("edit"):!1,t.src=t.
+  edit?"https://onboardtips.com/onboardtips.js?s=154803d30e6549b74bdf43cd56d4c15f6523191c"
+  :"https://s3.amazonaws.com/onboard-tips/154803d30e6549b74bdf43cd56d4c15f6523191c-onboardtips.min.js",t.onload=t.onreadystatechange=function(
+  ){var t=this.readyState;if(!t||"complete"==t||"loaded"==t)try{OnboardTips.
+  identify(OnboardTipsIdentify)}catch(e){}};var e=document.getElementsByTagName(
+  "script")[0];e.parentNode.insertBefore(t,e)}();
+</script>

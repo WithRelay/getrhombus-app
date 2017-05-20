@@ -32,9 +32,9 @@ module AddTokenToUser
 
           # we don't create customers on standalone accounts since we share platform customer with those
           if (is_platform && mc.platform_stripe_customer_id.blank?) || (!is_platform && cred[:type] == 'managed' && mc.managed_stripe_customer_id.blank?)
-            res = add_token_for_customer_without_payment_info(mc, hash, is_platform, merchant_customers, cred)
+            res = add_token_for_customer_without_payment_info(mc, hash, is_platform, cred, merchant_customers)
           elsif (is_platform && mc.platform_stripe_customer_id.present?) || (!is_platform && cred[:type] == 'managed' && mc.managed_stripe_customer_id.present?)
-            res = update_token_for_existing_customer(mc, hash, is_platform, merchant_customers, cred)
+            res = update_token_for_existing_customer(mc, hash, is_platform, cred)
           else
             res = [true]
           end
@@ -59,19 +59,36 @@ module AddTokenToUser
       MerchantCustomer.create(merchant_id: platform_acct.id, customer_id: self.id, platform_stripe_customer_id: res.second.id)
     else
       # we are deleting customer in case customer was created but token wasn't added
+      PaymentService.delete_customer(res.second.id, '', true)
+    end
+    res
+  end
+
+  # on platform only...also merchant not known 
+  def add_token_for_merchant_customer_from_platform_customer(mc)
+    platform_acct = User.get_platform_acct_obj
+    platform_customer = MerchantCustomer.find_by(merchant_id: platform_acct.id, customer_id: mc.customer_id)
+    hash = { email: self.email, card_token: nil, new_customer: true, platform_customer: false } 
+
+    res = PaymentService.add_token_to_stripe_customer(hash, self.get_stripe_cred[:cred], platform_customer.platform_stripe_customer_id)
+    if res.first
+      # create new merchant_customer for stripe customer
+      MerchantCustomer.create(merchant_id: platform_acct.id, customer_id: self.id, platform_stripe_customer_id: res.second.id)
+    else
+      # we are deleting customer in case customer was created but token wasn't added
       PaymentService.delete_customer(res.second.id, platform_acct.get_stripe_cred[:cred], true)
     end
     res
   end
 
-  def add_token_for_customer_without_payment_info(mc, hash, is_platform, merchant_customers, cred)
+  def add_token_for_customer_without_payment_info(mc, hash, is_platform, cred, merchant_customers)
     hash[:new_customer] = true
     hash[:platform_customer] = is_platform
         
     if is_platform
       res = PaymentService.add_token_to_stripe_customer(hash)
     else
-      res = PaymentService.add_token_to_stripe_customer(hash, cred[:cred].account_id)
+      res = PaymentService.add_token_to_stripe_customer(hash, cred[:cred], mc.platform_stripe_customer_id)
     end
     
     # update merchant_customer info for stripe customer. either platform or managed accounts.
@@ -88,7 +105,7 @@ module AddTokenToUser
     res
   end
 
-  def update_token_for_existing_customer(mc, hash, is_platform, merchant_customers, cred)
+  def update_token_for_existing_customer(mc, hash, is_platform, cred)
     hash[:new_customer] = false
     hash[:platform_customer] = is_platform 
     hash[:stripe_customer_id] = is_platform ? mc.platform_stripe_customer_id : mc.managed_stripe_customer_id
@@ -96,7 +113,7 @@ module AddTokenToUser
     if is_platform
       res = PaymentService.add_token_to_stripe_customer(hash)
     else
-      res = PaymentService.add_token_to_stripe_customer(hash, cred[:cred].account_id)
+      res = PaymentService.add_token_to_stripe_customer(hash, cred[:cred].account_id, mc.platform_stripe_customer_id)
     end
     res
   end
