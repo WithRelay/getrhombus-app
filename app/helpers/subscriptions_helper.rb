@@ -13,38 +13,31 @@ module SubscriptionsHelper
   end
 
   def saas_plan_name
-    (Plan.find saas_sub.plan_id).name if saas_sub.present?
+    saas_sub.plan.name if saas_sub.present?
   end
 
-  def saas_customers
-    customer_count_map = {
-      'PlanA' => '[0-100]',
-      'PlanB'=> '[101-1,000]',
-      'PlanC' => '[1,001-2,500]',
-      'PlanD' => '[2,501-5,000]',
-      'PlanE' => '[5,001-7,500]',
-      'PlanF' => '[7,501-10,000]',
-      'PlanG' => '[10,001-15,000]',
-      'PlanH' => '[15,001-20,000]',
-      'PlanI' => '[20,001-30,000]',
-      'PlanJ' => '[30,001-35,000]',
-      'PlanK' => '[35,001-40,000]',
-      'PlanL' => '[40,001-45,000]',
-      'PlanM' => '[45,001-50,000]'
-    }
-    customer_count_map[saas_plan_name]
+  def saas_customers_contacts_count
+    current_user.customers.count + current_user.merchant_contacts.only_contact.count
+  end
+
+  def saas_sub_status
+    saas_sub.status.try(:capitalize)
   end
 
   def subscription_time_period
     unless @saas_sub.nil?
       start_date = @saas_sub.current_period_start.present? ? Time.zone.at(@saas_sub.current_period_start).strftime("%B %d, %Y") : ''
       end_date = saas_sub.current_period_end.present? ? Time.zone.at(@saas_sub.current_period_end).strftime("%B %d, %Y") : ''
-      "Time period: #{start_date} - #{end_date} (#{@saas_sub.plan.interval})"
+      "Time period: #{start_date} - #{end_date} (#{subscription_plan_interval})"
     end
   end
 
+  def subscription_plan_interval
+    @saas_sub.plan.interval
+  end
+
   def subscription_plan_amount
-    "Plan amount: <strong>$#{get_saas_plan_amount}</strong> USD/year".html_safe
+    "Plan amount: <strong>$#{get_saas_plan_amount}</strong> USD/#{subscription_plan_interval}".html_safe
   end
 
   def subscription_customer_count
