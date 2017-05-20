@@ -1,3 +1,8 @@
+<style>
+.messageContainer w-col-12.help-block{
+  height: 20px;
+}
+</style>
 <div class="settings sub-nav-bar w-clearfix">
   <%= link_to user_path(current_user) , class: 'dashboard-return sub-nav-button w-button' do %>
    &nbsp;Return to dashboard
@@ -17,7 +22,7 @@
         <div class="form-group col-xs-6">
           <%= f.label :country, class:"form-control form-label label-margin"%>
           <%= a.select :country, options_for_select(connect_country(a.object), selected: a.object.country), {}, class: 'rhombusFocus dropdown w-select form-control', id: 'managed-acct-country' %>
-          <div class="messageContainer"></div>
+          <div class="messageContainer w-col-"></div>
 
         </div>
       <% end %>
@@ -28,7 +33,7 @@
       <div class="form-group col-xs-6 ">
         <label class="form-label label-margin">Tell us about your business</label>
         <%= f.text_area :description, class: 'text-area w-input your-product form-control', id: 'About-your-business', placeholder: 'Tell us about your business. What do you sell, when do you charge your customers?' %>
-        <div class="messageContainer"></div>
+        <div class="messageContainer w-col-12"></div>
       </div>
 
       <div class="flex-underline form-section-divider"></div>
@@ -36,19 +41,19 @@
       <div class="form-group col-xs-6">
         <label class="form-label label-margin">Your business type</label>
         <%= f.select :org_type, options_for_select(connect_org_type(f.object)), {}, class: 'business-type dropdown w-select', id: 'user_org_type' %>
-        <div class="messageContainer"></div>
+        <div class="messageContainer w-col-12"></div>
       </div>
 
       <div class="form-group col-xs-6" id="org-name-div">
         <label class="form-label label-margin">Your legal name</label>
         <%= f.text_field :org_name, id: 'org-name', class: 'text-field w-input form-control', placeholder: 'Company, Inc.' %>
-        <div class="messageContainer"></div>
+        <div class="messageContainer w-col-12 w-col-12"></div>
       </div>
 
       <div class="form-group col-xs-6">
         <label class="form-label label-margin" id='org-tax-id-label'>EIN (Tax ID)</label>
         <%= f.text_field :org_tax_id, id: 'org-tax-id', class: 'text-field w-input form-control', placeholder: 'EIN (Tax ID)' %>
-        <div class="messageContainer"></div>
+        <div class="messageContainer w-col-12"></div>
       </div>
 
       <div class="flex-underline form-section-divider"></div>
@@ -56,28 +61,28 @@
       <%= f.fields_for :address do |a| %>
       <div class="form-group col-xs-6">
         <%= a.text_field :street_address, id: 'company-street', placeholder: 'Street Address', class: 'form-control settings street-name text-field w-input' %>
-        <div class="messageContainer"></div>
+        <div class="messageContainer street-name"></div>
       </div>
       <div class="form-group col-xs-6">
         <%= a.text_field :city, id: 'company-city', class: 'apt_suite settings text-field w-input form-control', placeholder: 'City' %>
-        <div class="messageContainer"></div>
+        <div class="messageContainer w-col-6"></div>
       </div>
       <div id='company-state-div'>
         <div class="form-group col-xs-6">
           <%= a.text_field :state_province, id: 'company-state', class: 'settings street-name text-field w-input form-control', placeholder: 'State/Province' %>
-          <div class="messageContainer"></div>
+          <div class="messageContainer street-name"></div>
         </div>
       </div>
       <div class="form-group col-xs-6">
         <%= a.text_field :postal_code, id: 'company-postal-code', class: 'apt_suite settings text-field w-input form-control', placeholder: 'Zip/Postal code' %>
-        <div class="messageContainer"></div>
+        <div class="messageContainer w-col-6"></div>
       </div>
       <% end %>
 
       <label class="field-headers form-label settings" for="Website">other INFORMATION</label>
       <div class="form-group col-xs-6">
         <%= f.text_field :url, class: 'settings short-field text-field w-input form-control', id: 'Website', placeholder: 'Website' %>
-        <div class="messageContainer"></div>
+        <div class="messageContainer w-col-12"></div>
       </div>
       <div class="flex-underline form-section-divider"></div>
       <label class="field-headers form-label settings" for="Website-2">BANK DETAILS</label>
@@ -97,25 +102,25 @@
         <div class="form-group col-xs-6">
           <label class="form-label label-margin" id='routing-number-label'>Routing number:</label>
           <%= b.text_field :routing_number, id: 'routing-number', class: 'routing-number settings short-field text-field w-input form-control', placeholder: 'Routing number' %>
-          <div class="messageContainer"></div>
+          <div class="messageContainer w-col-12"></div>
         </div>
       </div>
-      
+
       <div class="form-group col-xs-6" id='institution-number-div'>
         <label class="form-label label-margin" id='institution-number-label'>Bank code</label>
         <%= b.text_field :institution_number, id: 'institution-number', placeholder: 'Bank code', class: 'settings short-field text-field w-input form-control' %>
       </div>
-      
+
       <div class="form-group col-xs-6">
         <label class="form-label label-margin" id='account-number-label'>Account number</label>
         <%= b.text_field :account_number, id: 'account-number', class: 'settings short-field text-field w-input form-control', placeholder: 'Account number' %>
-        <div class="messageContainer"></div>
+        <div class="messageContainer w-col-12"></div>
       </div>
 
       <div class="form-group col-xs-6">
         <label class="form-label label-margin">Confirm account number</label>
         <%= b.text_field :account_number_confirmation, id: 'account-number', class: 'settings short-field text-field w-input form-control' %>
-        <div class="messageContainer"></div>
+        <div class="messageContainer w-col-12"></div>
       </div>
       <% end %>
     </div>
@@ -142,7 +147,7 @@
 =end %>
 
     <fieldset id='termsAndCondition'>
-      
+
       <%= f.fields_for :stripe_creds do |c| %>
         <div class='w-hidden'>
           <% if c.object.persisted? %>
