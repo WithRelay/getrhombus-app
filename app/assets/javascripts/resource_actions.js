@@ -89,7 +89,10 @@ $('#delete-reminder').click(function(e){
 		}
 		else{
 			$("#edit-saved-reply-modal").lightbox_me({
-				centered: true
+				centered: true,
+        overlayCSS: {
+          background: '#ffffff', opacity: .8
+        }
 			});
 		}
 
