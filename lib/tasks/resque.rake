@@ -5,6 +5,24 @@ require 'resque/scheduler/tasks'
 namespace :resque do
   task setup: :environment do
     require 'resque'
+
+    #Resque.before_perform do
+      #ActiveRecord::Base.clear_active_connections!
+    #end
+
+    Resque.before_fork do
+      logfile = File.open(File.join(Rails.root, 'log', 'resque.log'), 'a')
+      logfile.sync = true unless Rails.env.production?
+      Resque.logger = MonoLogger.new(logfile)
+      Resque.logger.formatter = Resque::VerboseFormatter.new
+      Resque.logger.level = MonoLogger::DEBUG
+      Resque.logger.info "Resque Logger Initialized!"
+    end
+
+    #Resque.after_fork do
+      #ActiveRecord::Base.establish_connection
+    #end
+
   end
 
   task setup_schedule: :setup do

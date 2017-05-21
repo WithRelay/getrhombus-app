@@ -681,6 +681,7 @@ class EmailingService
 
     def customer_added_to_relay(user, merchant)
       begin
+        puts 'in added emaillllllllllllllllllllll'
         template_name = 'customer-added-to-relay'
         template_content = []
         message = { "subject" => "Best way to reach us",

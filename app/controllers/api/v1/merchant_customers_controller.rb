@@ -15,7 +15,7 @@ class Api::V1::MerchantCustomersController < API::V1::BaseController
   end
 
   def create
-    begin
+    #begin
       status = 200
       response = 'User Added'
 
@@ -30,9 +30,9 @@ class Api::V1::MerchantCustomersController < API::V1::BaseController
         else
           params[:user][:password] = Toolbox::StringGen.generate_random_string(8)
           params[:user][:user_level] = 0
-          params[:user][:customer_source] = { id: current_user.id, method: 'added' }
-          @customer = User.create(api_v1_user_params)
-          if @customer.errors.present?
+          @customer = User.new(api_v1_user_params)
+          @customer.customer_source = { id: current_user.id, method: 'added' }
+          unless @customer.save
             response = @customer.errors.full_messages
             status = 500
           else
@@ -40,26 +40,35 @@ class Api::V1::MerchantCustomersController < API::V1::BaseController
             @customer.people.create(@person_params) if api_v1_person_params[:full_name].present?
             @customer.user_lists.create(@user_list_params) if api_v1_user_list_params[:list_id].present?
             add_to_merchant_customer_and_referrer
-            re = @customer.add_token_for_user(@user_params[:card_token], false) if @user_params[:card_token].present?
-            unless re.first
-              status = 500
-              response = "Customer has been added but we are unable to add the customer's card"
-              response += re.third ? ' because: ' + re.third : '.'
+            if @user_params[:card_token].present?
+              re = @customer.add_token_for_user(@user_params[:card_token], false) 
+              puts '<redacted_phone_number>'
+              puts re
+              unless re.first
+                status = 500
+                response = "Customer has been added but we are unable to add the customer's card"
+                response += re.third ? ' because: ' + re.third : '.'
+              end
             end
           end
+          puts 'qqqqqqqqqqqqqqqqqqqqqq'
+          puts @customer.inspect
         end
       end
-    rescue ActiveRecord::RecordNotUnique => e
-      status = 500
-      msg = e.original_exception.message
-      response = "Customer's phone number is already in use." if msg.include?('index_users_on_phone_number')
-      response = "Customer's email is already in use." if msg.include?('index_users_on_email')
-    rescue StandardError => e
-      status = 500
-      response = 'Something went wrong on our end.'
-    end
 
-    render json: { response: response }, status: status
+      puts '<redacted_phone_number>'
+      puts response
+    #rescue ActiveRecord::RecordNotUnique => e
+    #  status = 500
+    #  msg = e.original_exception.message
+    #  response = "Customer's phone number is already in use." if msg.include?('index_users_on_phone_number')
+    #  response = "Customer's email is already in use." if msg.include?('index_users_on_email')
+    #rescue StandardError => e
+    #  status = 500
+    #  response = 'Something went wrong on our end.'
+    #end
+
+    render json: { response: response }#, status: status
   end
 
   private

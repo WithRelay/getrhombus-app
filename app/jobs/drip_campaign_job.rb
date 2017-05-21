@@ -3,9 +3,6 @@ class DripCampaignJob
   @queue = :drip_campaigns
 
   def self.perform
-    
-    # if we get mysql has gone away errors
-    # ActiveRecord::Base.clear_active_connections!
    
     User.where(user_level: 1).each do |user|
 

@@ -3,8 +3,6 @@ class MessageAlertJob
 
   def self.perform
     begin
-      # if we get mysql has gone away errors
-      # ActiveRecord::Base.clear_active_connections!
 
       # Add FB messages here
       results =  Alert.select('alerts.id as id, alert.user_id, u.email, u.rhombus_number, u.rn_type, sms_number, include_sms, alerts.interval, u.time_zone')

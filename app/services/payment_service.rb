@@ -34,18 +34,26 @@ class PaymentService
           cu.source = hash[:card_token]
           cu.save
         end
+        puts 'asddddddddddddd'
+        puts cu
         return [true, cu]
       rescue Stripe::CardError => e   # Since it's a decline, Stripe::CardError will be caught
         # redo this email
         # Notification.token_failure_notification(err, hash[:email]).deliver_now
+        puts 'bbbbbbbbbbbbb'
+        puts e.inspect
         [false, e, e.json_body[:error][:message]]
       rescue Stripe::StripeError => e
         # send this only to platform
         # Notification.token_failure_notification(e.json_body[:error], ....).deliver_now
+        puts 'ccccccccccccccccccccccccccc'
+        puts e.inspect
         [false, e]
       rescue StandardError => e
         # send this only to platform
         #Notification.token_failure_notification(e, .....).deliver_now
+        puts 'ddddddddddddddddddddddddd'
+        puts e.inspect
         [false, e]
       end
     end

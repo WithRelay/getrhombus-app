@@ -41,7 +41,7 @@ recurring_reminders: # send email for reminder user
   queue: recurring_reminders
 
 low_account_balance_alert:
-  every: '0 12 * * * America/New_York' # “At 12:00 every day”
+  cron: '0 12 * * * America/New_York' # “At 12:00 every day”
   class: 'AccountBalanceAlertJob' # class SendReminderJob is present in app/jobs which represents campaign jobs
   args:
   description: 'This job alert merchant if their account balance is less than $5'

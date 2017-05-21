@@ -84,6 +84,8 @@ class User < ActiveRecord::Base
   # LEAVE THIS FOR LATER
   #has_many :next_plans
 
+  #<redacted_phone_number>
+
   has_one :twitter_cred
   has_many :fb_creds
 
@@ -119,7 +121,7 @@ class User < ActiveRecord::Base
   before_validation :the_titleizer
   before_create :set_merchant_org_phone          # only create because the actual org_phone field is used in edit view
 
-  #after_commit :do_signup_stuff, on: :create
+  after_commit :do_signup_stuff, on: :create
 
   enum status: { inactive: 0, active: 1 }
 
@@ -132,9 +134,13 @@ class User < ActiveRecord::Base
   end
 
   def full_name
-    return "#{self.card_name}" if self.is_customer?
-    rep = self.people.representative[0]
-    "#{rep.try(:first_name)} #{rep.try(:last_name)}".squish
+    if self.is_customer?
+      return "#{self.card_name}" if self.card_name.present?
+      _person = self.people[0]
+    else
+      _person = self.people.representative[0]
+    end
+    _person.present? ? _person.full_name : ''
   end
 
   def first_name
@@ -244,6 +250,7 @@ class User < ActiveRecord::Base
   end
 
   def do_signup_stuff
+=begin
     user_id = self.id
     if self.is_merchant?
       Alert.find_or_create_by(user_id: user_id)
@@ -259,10 +266,12 @@ class User < ActiveRecord::Base
         { name: 'Inactive Contacts', segment: inactive_contacts_segment, origin: 1, list_type: 1 }
       ])
     end
-    MerchantCustomer.add_or_update_merchant_customer(User.get_platform_acct_obj.id, self)
-    WelcomeEmailJob.set(wait: SIGNUP_EMAIL_DELAY.minutes).perform_later(self)
-    GetIntelligenceDataJob.perform_later(self.email, 'FullContact')
-    GetIntelligenceDataJob.perform_later(self.phone_number, 'OpenCNAM') if self.is_customer?
+=end
+    #MerchantCustomer.add_or_update_merchant_customer(User.get_platform_acct_obj.id, self)
+    #WelcomeEmailJob.set(wait: SIGNUP_EMAIL_DELAY.minutes).perform_later(self, self.customer_source)
+    WelcomeEmailJob.set(wait: 10.seconds).perform_later(self, self.customer_source)
+    #GetIntelligenceDataJob.perform_later(self.email, 'FullContact')
+    #GetIntelligenceDataJob.perform_later(self.phone_number, 'OpenCNAM') if self.is_customer?
   end
 
   #def validates_person_full_message

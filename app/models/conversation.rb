@@ -139,7 +139,8 @@ class Conversation < ActiveRecord::Base
     msg_ary = send_message(re, team, msg_to_send, channel, 'platform', media)
     if msg_ary
       RealtimeStreamService.messages(re, msg_ary.third, team, customer, msg_ary.second)
-      msg_ary.first.id
+      puts msg_ary.inspect
+      msg_ary.first[:id]
     else
       false
     end
@@ -162,7 +163,7 @@ class Conversation < ActiveRecord::Base
   end
 
   def self.update_conversation_resolution(team_id, conv_id, conv_ref_id, source)
-    conv_res = ConversationResolution.where(conversation_id: conv.id, resolution: nil).last
+    conv_res = ConversationResolution.where(conversation_id: conv_id, resolution: nil).last
     conv_res = ConversationResolution.new unless conv_res 
 
     key = source == 'customer' ? :uid_conversation_ref_id : :merchant_conversation_ref_id

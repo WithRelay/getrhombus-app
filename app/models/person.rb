@@ -14,9 +14,7 @@ class Person < ActiveRecord::Base
   end
 
   def full_name
-    x = self.first_name || ''
-    y = self.last_name || ''
-    (x + y) == "" ? nil : x + " " + y
+    "#{self.first_name} #{self.last_name}".squish
   end
 
   private

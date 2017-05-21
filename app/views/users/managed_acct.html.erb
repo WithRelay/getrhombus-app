@@ -133,11 +133,11 @@
     <div class="flex-underline form-section-divider"></div>
     <label class="field-headers form-label settings" for="name-2">company representative (you)</label>
     <div class="company-rep-div w-clearfix">
-      <fieldset id="user-people">
+      <div id="user-people">
         <%= f.fields_for :people do |p| %>
           <%= render "person_fields", f: p %>
         <% end %>
-      </fieldset>
+      </div>
 <%
 =begin %>
       <div id='owners-title'>OWNERS IF ANY <br></div>
@@ -170,7 +170,7 @@
         <%= f.label 'Accept Terms and Service', class: "w-form-label form-label manage-acc-term-condition", for: "checkbox-3" %>
       <% end %>
     </div>
-    <%= f.submit :save, id: 'saveManagedAccount', class: 'button payment-setup save-changes w-button' %>
+    <%= f.submit :Save, id: 'saveManagedAccount', class: 'button payment-setup save-changes w-button' %>
     <% end %>
   </div>
 </div>
