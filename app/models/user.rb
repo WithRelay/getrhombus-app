@@ -250,7 +250,7 @@ class User < ActiveRecord::Base
   end
 
   def do_signup_stuff
-=begin
+#=begin
     user_id = self.id
     if self.is_merchant?
       Alert.find_or_create_by(user_id: user_id)
@@ -266,12 +266,12 @@ class User < ActiveRecord::Base
         { name: 'Inactive Contacts', segment: inactive_contacts_segment, origin: 1, list_type: 1 }
       ])
     end
-=end
-    #MerchantCustomer.add_or_update_merchant_customer(User.get_platform_acct_obj.id, self)
+#=end
+    MerchantCustomer.add_or_update_merchant_customer(User.get_platform_acct_obj.id, self)
     #WelcomeEmailJob.set(wait: SIGNUP_EMAIL_DELAY.minutes).perform_later(self, self.customer_source)
     WelcomeEmailJob.set(wait: 10.seconds).perform_later(self, self.customer_source)
-    #GetIntelligenceDataJob.perform_later(self.email, 'FullContact')
-    #GetIntelligenceDataJob.perform_later(self.phone_number, 'OpenCNAM') if self.is_customer?
+    GetIntelligenceDataJob.perform_later(self.email, 'FullContact')
+    GetIntelligenceDataJob.perform_later(self.phone_number, 'OpenCNAM') if self.is_customer?
   end
 
   #def validates_person_full_message
