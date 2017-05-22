@@ -2,18 +2,21 @@
 
   <div class="form-group col-xs-6">
     <label class="form-label label-margin">Full Name</label>
-    <%= f.text_field :full_name, id: 'name-2', placeholder: 'Full name', class: 'settings short-field text-field w-input form-control', name: "full-name" %>
+    <%= f.text_field :full_name, id: 'name-2', placeholder: 'Full name', class: 'settings short-field text-field w-input form-control' %>
+    <div class="messageContainer w-col-12"></div>
   </div>
 
   <div class="form-group col-xs-6">
     <label class="form-label label-margin">Date of Birth</label>
     <%= f.text_field :dob, id: 'Date-of-birth', placeholder: 'Date of birth', class: 'userDateOfBirth settings short-field text-field w-input form-control' %>
+    <div class="messageContainer w-col-12"></div>
   </div>
 
   <% if f.index == 0 %>
   <div class="form-group col-xs-6">
     <label class="form-label label-margin rep-pii-label">SSN</label>
     <%= f.text_field :last4, placeholder: "SSN", class: 'settings short-field ssn text-field w-input rep-pii form-control', id: "SSN" %>
+    <div class="messageContainer w-col-12"></div>
   </div>
   <% end %>
 
