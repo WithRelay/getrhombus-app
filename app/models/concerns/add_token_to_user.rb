@@ -20,8 +20,8 @@ module AddTokenToUser
         res = add_token_for_new_customer(hash) 
       else                                 
         is_platform, platform_customer = false, nil
-        merchant_customers.each do |mc|
 
+        merchant_customers.each do |mc|
           cred = mc.merchant.get_stripe_cred  
 
           # can be on platform or merchant managed account. merchant is always on platform.

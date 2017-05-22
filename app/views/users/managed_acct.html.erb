@@ -11,9 +11,9 @@
       <%= form_for @user, url: { action: url_for_create_update }, html: { id: 'managed-account-form', class: 'w-clearfix' } do |f| %>
       <label class="form-label paragraph payment-setup-section-header" for="Organization-Type">Take a minute to answer a few questions and then you'll be ready to accept payments</label>
 
-      <% if @user.stripe_creds.exists? && managed_account_status_exists(@user.stripe_creds.last) %>
+      <% if @stripe_creds.first && managed_account_status_exists(@stripe_creds.first) %>
         <div class="settings-info-div">
-          <%= managed_account_status(@user.stripe_creds.last) %>
+          <%= managed_account_status(@stripe_creds.first) %>
         </div>
       <% end %>
 
@@ -157,14 +157,14 @@
 <%
 =end %>
 
-    <div id='termsAndCondition'>
+    <div>
       <%= f.fields_for :stripe_creds do |c| %>
         <%= c.hidden_field :ip %>
       <% end %>
     </div>
 
     <div class="check-box editor w-checkbox w-clearfix">
-      <% if f.object.stripe_creds.first.new_record? %>
+      <% if @stripe_creds.first && @stripe_creds.first.new_record? %>
         <%= f.check_box :tos_acceptance, class: "w-checkbox-input manage-acc-check-box" %>
         <%= f.label 'Accept Terms and Service', class: "w-form-label form-label manage-acc-term-condition", for: "checkbox-3" %>
       <% end %>
