@@ -61,7 +61,8 @@ module ManagedAccountHelper
   end
 
   def due_by(account)
-    Time.at(account.due_by).in_time_zone(current_user.time_zone)
+    due_by_date = Time.at(account.due_by).in_time_zone(current_user.time_zone)
+    "#{due_by_date.strftime('%a, %d %b %Y %H:%M:%S')} (#{current_user.time_zone})"
   end
 
   def managed_account_status_exists(account)
