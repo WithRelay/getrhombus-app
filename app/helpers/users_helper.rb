@@ -56,6 +56,10 @@ module UsersHelper
     '1001 - 3000 employees', '3001 - 5000 employees', '5000+ employees']
   end
 
+  def exp_date
+    (current_user.exp_month && current_user.exp_year) ? "#{current_user.exp_month}/#{current_user.exp_year}" : ""
+  end
+
   def stripe_standalone_cred
     current_user.standalone_stripe_cred
   end
