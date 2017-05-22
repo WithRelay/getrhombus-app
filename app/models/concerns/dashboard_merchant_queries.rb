@@ -13,7 +13,7 @@ module DashboardMerchantQueries
   	"MerchantContact.where('created_at >= ? AND merchant_id = ?', Time.current - 7.days, #{self.id}).pluck(:uid)"
   end
 
-  def new_customers_segment
+  def active_customers_segment
     merchant_id = self.id
    %Q{Transaction.where("created_at >= ? AND user_id IN(?) AND team_id = ?", Time.current - 30.days,
       MerchantCustomer.where(merchant_id: #{merchant_id}).pluck(:customer_id), #{merchant_id}).pluck(:user_id) |

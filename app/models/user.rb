@@ -260,7 +260,7 @@ class User < ActiveRecord::Base
       self.lists.create([
         { name: 'New Customers', segment: segment_dynamic_customers, origin: 1, list_type: 0 },
         { name: 'New Contacts', segment: segment_dynamic_contacts, origin: 1, list_type: 1 },
-        { name: 'Active Customers', segment: new_customers_segment, origin: 1, list_type: 0 },
+        { name: 'Active Customers', segment: active_customers_segment, origin: 1, list_type: 0 },
         { name: 'Active Contacts', segment: active_contacts_segment, origin: 1, list_type: 1 },
         { name: 'Inactive Customers', segment: inactive_customers_segment, origin: 1, list_type: 0 },
         { name: 'Inactive Contacts', segment: inactive_contacts_segment, origin: 1, list_type: 1 }
