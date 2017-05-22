@@ -1,4 +1,3 @@
-
 <div class="settings sub-nav-bar w-clearfix">
   <%= link_to user_path(current_user) , class: 'dashboard-return sub-nav-button w-button' do %>
    &nbsp;Return to dashboard
@@ -11,6 +10,13 @@
     <div class="account-settings-form-wrapper">
       <%= form_for @user, url: { action: url_for_create_update }, html: { id: 'managed-account-form', class: 'w-clearfix' } do |f| %>
       <label class="form-label paragraph payment-setup-section-header" for="Organization-Type">Take a minute to answer a few questions and then you'll be ready to accept payments</label>
+
+      <% if @user.stripe_creds.exists? && managed_account_status_exists(@user.stripe_creds.last) %>
+        <div class="settings-info-div">
+          <%= managed_account_status(@user.stripe_creds.last) %>
+        </div>
+      <% end %>
+
       <label class="field-headers form-label settings" for="Stripe-Countries">Where are you based?</label>
 
 
