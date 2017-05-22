@@ -596,14 +596,6 @@ $(document).on('ready page:load', function() {
           }
         },
 
-        'user[bank_accounts_attributes][0][account_number]': {
-          validators: {
-            notEmpty: {
-              message: 'Account Number is required'
-            }
-          }
-        },
-
         'user[bank_accounts_attributes][0][currency]': {
           validators: {
             notEmpty: {
@@ -614,6 +606,14 @@ $(document).on('ready page:load', function() {
 
         'user[bank_accounts_attributes][0][routing_number]': {
           validators: {
+            callback: {
+              message: 'Enter a valid Routing number',
+              callback: function(value, validator, $field){
+                var selectedCountry = $('#managed-acct-country').val();
+                return Stripe.bankAccount.validateRoutingNumber(value, selectedCountry)
+              }
+            },
+
             notEmpty: {
               message: 'Routing number is required'
             }
@@ -631,6 +631,22 @@ $(document).on('ready page:load', function() {
                   }
                   return true;
               }
+            }
+          }
+        },
+
+        'user[bank_accounts_attributes][0][account_number]': {
+          validators: {
+            callback: {
+              message: "Enter a valid Account number",
+              callback: function(value, validator, $field){
+                var selectedCountry = $('#managed-acct-country').val();
+                return Stripe.bankAccount.validateAccountNumber(value, selectedCountry);
+              }
+            },
+
+            notEmpty: {
+              message: 'Account Number is required'
             }
           }
         },
@@ -673,7 +689,6 @@ $(document).on('ready page:load', function() {
             }
           }
         }
-
       }
     })
 //
