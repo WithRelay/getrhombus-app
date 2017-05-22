@@ -1,0 +1,36 @@
+<div class="bank-div">
+<div class="form-group col-xs-6">
+<label class="form-label label-margin" id='bank-currency-select-label'>Bank account currency</label>
+<%= b.hidden_field :currency, id: 'bank-currency', value: b.object.currency %>
+<select id="bank-currency-select" class="currency dropdown w-select form-control"></select>
+</div>
+
+<%= b.hidden_field :country, id: 'account-country', value: b.object.country %>
+<select id="account-country-select" class='bank-country dropdown w-select'></select>
+</div>
+
+<div id='routing-number-div'>
+<div class="form-group col-xs-6">
+<label class="form-label label-margin" id='routing-number-label'>Routing number:</label>
+<%= b.text_field :routing_number, id: 'routing-number', class: 'routing-number settings short-field text-field w-input form-control', placeholder: 'Routing number' %>
+<div class="messageContainer w-col-12"></div>
+</div>
+</div>
+
+<div class="form-group col-xs-6" id='institution-number-div'>
+<label class="form-label label-margin" id='institution-number-label'>Bank code</label>
+<%= b.text_field :institution_number, id: 'institution-number', placeholder: 'Bank code', class: 'settings short-field text-field w-input form-control' %>
+<div class="messageContainer w-col-12"></div>
+</div>
+
+<div class="form-group col-xs-6">
+<label class="form-label label-margin" id='account-number-label'>Account number</label>
+<%= b.text_field :account_number, id: 'account-number', class: 'settings short-field text-field w-input form-control', placeholder: 'Account number' %>
+<div class="messageContainer w-col-12"></div>
+</div>
+
+<div class="form-group col-xs-6">
+<label class="form-label label-margin">Confirm account number</label>
+<%= b.text_field :account_number_confirmation, class: 'settings short-field text-field w-input form-control' %>
+<div class="messageContainer w-col-12"></div>
+</div>
