@@ -59,7 +59,7 @@ module AddTokenToUser
       MerchantCustomer.create(merchant_id: platform_acct.id, customer_id: self.id, platform_stripe_customer_id: res.second.id)
     else
       # we are deleting customer in case customer was created but token wasn't added
-      PaymentService.delete_customer(res.second.id, '', true)
+      PaymentService.delete_customer(res.second.id, '', true) if res.second.is_a?(Stripe::Customer)
     end
     res
   end
@@ -74,7 +74,7 @@ module AddTokenToUser
       mc.update(managed_stripe_customer_id: res.second.id, platform_stripe_customer_id: platform_customer.platform_stripe_customer_id)
     else
       # we are deleting customer in case customer was created but token wasn't added
-      PaymentService.delete_customer(res.second.id, self.get_stripe_cred[:cred], false)
+      PaymentService.delete_customer(res.second.id, self.get_stripe_cred[:cred], false) if res.second.is_a?(Stripe::Customer)
     end
     res
   end
@@ -98,7 +98,7 @@ module AddTokenToUser
       end
     else
       # delete customer on the platform or merchant account in case customer was created but token wasn't added
-      PaymentService.delete_customer(res.second.id, cred[:cred], is_platform)
+      PaymentService.delete_customer(res.second.id, cred[:cred], is_platform) if res.second.is_a?(Stripe::Customer)
     end
     res
   end

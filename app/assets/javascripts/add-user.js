@@ -87,7 +87,7 @@ $(document).ready(function() {
               if (PhoneNumberFormatter.isValid()) {
                 return {
                   valid: true, // or false
-                  message: 'Valid number'
+                  message: ''
                 }
               } else {
                 return {
@@ -107,12 +107,12 @@ $(document).ready(function() {
               if (!$("#cc-number").val().length || $("#cc-name").val().length) {
                 return {
                   valid: true,    // or false
-                  message: 'Card name is valid'
+                  message: ''
                 }
               } else {
                 return {
                   valid: false,    // or false
-                  message: 'Customer card name is required'
+                  message: 'Card name is required'
                 }
               }
             }
@@ -127,7 +127,7 @@ $(document).ready(function() {
               if (!$("#cc-number").val().length || $.payment.validateCardNumber(value)) {
                 return {
                   valid: true,    // or false
-                  message: 'Valid number'
+                  message: ''
                 }
               } else {
                 return {
@@ -148,7 +148,7 @@ $(document).ready(function() {
               if (!$("#cc-number").val().length || $.payment.validateCardExpiry(y.month, y.year)) {
                 return {
                   valid: true,    // or false
-                  message: 'Valid date'
+                  message: ''
                 }
               } else {
                 return {
@@ -168,7 +168,7 @@ $(document).ready(function() {
               if (!$("#cc-number").val().length || $.payment.validateCardCVC(value)) {
                 return {
                   valid: true,    // or false
-                  message: 'Valid csc'
+                  message: ''
                 }
               } else {
                 return {

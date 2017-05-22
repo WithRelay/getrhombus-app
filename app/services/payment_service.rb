@@ -5,6 +5,10 @@ class PaymentService
     # Create or update customer on Stripe
     def add_token_to_stripe_customer(hash, cred = {}, platform_stripe_customer_id = "")
       begin
+        puts '<redacted_phone_number>'
+        puts hash
+        puts platform_stripe_customer_id
+        puts '--------------------------------------'
         if hash[:card_token].blank?
           # platform should already have customer source at this point, it is only for a merchant that it can be blank
           # should be card_id here if customer has several card... but for now just the id works
