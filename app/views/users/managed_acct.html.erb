@@ -95,55 +95,22 @@
       <label class="field-headers form-label settings" for="Website-2">BANK DETAILS</label>
       <label class="form-label paragraph" for="Currency">Currencies without a bank account will be converted and sent to your default bank account.</label>
 
-      <div class="bank-div">
-        <%= f.fields_for :bank_accounts do |b| %>
 
-        <div class="form-group col-xs-6">
-          <label class="form-label label-margin" id='bank-currency-select-label'>Bank account currency</label>
-          <%= b.hidden_field :currency, id: 'bank-currency', value: b.object.currency %>
-          <select id="bank-currency-select" class="currency dropdown w-select form-control"></select>
-        </div>
-
-        <%= b.hidden_field :country, id: 'account-country', value: b.object.country %>
-        <select id="account-country-select" class='bank-country dropdown w-select'></select>
-      </div>
-
-      <div id='routing-number-div'>
-        <div class="form-group col-xs-6">
-          <label class="form-label label-margin" id='routing-number-label'>Routing number:</label>
-          <%= b.text_field :routing_number, id: 'routing-number', class: 'routing-number settings short-field text-field w-input form-control', placeholder: 'Routing number' %>
-          <div class="messageContainer w-col-12"></div>
-        </div>
-      </div>
-
-      <div class="form-group col-xs-6" id='institution-number-div'>
-        <label class="form-label label-margin" id='institution-number-label'>Bank code</label>
-        <%= b.text_field :institution_number, id: 'institution-number', placeholder: 'Bank code', class: 'settings short-field text-field w-input form-control' %>
-        <div class="messageContainer w-col-12"></div>
-      </div>
-
-      <div class="form-group col-xs-6">
-        <label class="form-label label-margin" id='account-number-label'>Account number</label>
-        <%= b.text_field :account_number, id: 'account-number', class: 'settings short-field text-field w-input form-control', placeholder: 'Account number' %>
-        <div class="messageContainer w-col-12"></div>
-      </div>
-
-      <div class="form-group col-xs-6">
-        <label class="form-label label-margin">Confirm account number</label>
-        <%= b.text_field :account_number_confirmation, class: 'settings short-field text-field w-input form-control' %>
-        <div class="messageContainer w-col-12"></div>
-      </div>
+        <%= f.fields_for :bank_accounts do |bank| %>
+          <%= render "bank_fields", b: bank %>
       <% end %>
-    </div>
 
-    <div class="flex-underline form-section-divider"></div>
-    <label class="field-headers form-label settings" for="name-2">company representative (you)</label>
-    <div class="company-rep-div w-clearfix">
-      <div id="user-people">
-        <%= f.fields_for :people do |p| %>
-          <%= render "person_fields", f: p %>
-        <% end %>
+
+      <div class="flex-underline form-section-divider"></div>
+      <label class="field-headers form-label settings" for="name-2">company representative (you)</label>
+      <div class="company-rep-div w-clearfix">
+        <div id="user-people">
+          <%= f.fields_for :people do |p| %>
+            <%= render "person_fields", f: p %>
+          <% end %>
+        </div>
       </div>
+
 <%
 =begin %>
       <div id='owners-title'>OWNERS IF ANY <br></div>
@@ -165,8 +132,13 @@
 
     <div class="check-box editor w-checkbox w-clearfix">
       <% if @stripe_creds.first && @stripe_creds.first.new_record? %>
-        <%= f.check_box :tos_acceptance, class: "w-checkbox-input manage-acc-check-box" %>
-        <%= f.label 'Accept Terms and Service', class: "w-form-label form-label manage-acc-term-condition", for: "checkbox-3" %>
+        <div class="form-group">
+          <label class= "w-form-label form-label manage-acc-term-condition form-control">
+            <%= f.check_box :tos_acceptance, class: "w-checkbox-input", name: "term"%>
+            Accept Terms and Service
+          </label>
+        </div>
+        <%#= f.label 'Accept Terms and Service', class: "w-form-label form-label manage-acc-term-condition", for: "checkbox-3" %>
       <% end %>
     </div>
     <%= f.submit :Save, id: 'saveManagedAccount', class: 'button payment-setup save-changes w-button' %>
