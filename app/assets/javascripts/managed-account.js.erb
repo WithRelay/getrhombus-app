@@ -1,4 +1,4 @@
-// for turbolinks page:load works
+``// for turbolinks page:load works
 $(document).on('ready page:load', function() {
   //https://support.stripe.com/questions/what-bank-account-information-should-platforms-provide-for-managed-accounts-in-different-countries
   //https://stripe.com/docs/connect/required-verification-information
@@ -480,7 +480,7 @@ $(document).on('ready page:load', function() {
   });
 */
 
-/*
+
 
 (function($) {
     FormValidation.Validator.digitNine = {
@@ -589,7 +589,7 @@ $(document).on('ready page:load', function() {
 
         'user[tos_acceptance]': {
           validators: {
-            choice: {
+            notEmpty: {
               message: 'You must accept the terms'
             }
           }
@@ -621,8 +621,15 @@ $(document).on('ready page:load', function() {
 
         'user[bank_accounts_attributes][0][institution_number]': {
           validators: {
-            notEmpty: {
-              message: 'Bank code is required'
+            callback: {
+              message: 'Bank code is required',
+              callback: function (value, validator, $field){
+                  var selectedCountry = $('#managed-acct-country').val();
+                  if(selectedCountry === "CA" && value === ""){
+                    return false;
+                  }
+                  return true;
+              }
             }
           }
         },
@@ -665,8 +672,8 @@ $(document).on('ready page:load', function() {
             }
           }
         }
-        
+
       }
     })
-//*/
+//
 })
