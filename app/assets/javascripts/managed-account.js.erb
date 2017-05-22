@@ -563,6 +563,7 @@ $(document).on('ready page:load', function() {
             }
           }
         },
+
         'user[address_attributes][state_province]': {
           validators: {
             notEmpty: {
@@ -587,8 +588,14 @@ $(document).on('ready page:load', function() {
           }
         },
 
-        'user[tos_acceptance]': {
+        'tos_acceptance': {
           validators: {
+            callback:{
+              callback: function(value,validator,$field){
+                debugger;
+              }
+            },
+
             notEmpty: {
               message: 'You must accept the terms'
             }
@@ -634,7 +641,7 @@ $(document).on('ready page:load', function() {
           }
         },
 
-        'user[bank_accounts_attributes][0][account_number_confirmation]': {
+        account_number_confirmation: {
           validators: {
             notEmpty: {
               message: 'Confirm Account Number'
@@ -646,7 +653,7 @@ $(document).on('ready page:load', function() {
           }
         },
 
-        'user[people_attributes][0][full_name]': {
+        'full-name': {
           validators: {
             notEmpty: {
               message: 'Full name is required'
