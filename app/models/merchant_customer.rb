@@ -6,21 +6,26 @@ class MerchantCustomer < ActiveRecord::Base
   belongs_to :merchant, class_name: "User"
   belongs_to :customer, class_name: "User"
   has_many :subscriptions, inverse_of: :merchant_customer
+
+  enum is_platform: { platform: 0, managed: 1 }
+
   # has_many :invoices
 
-  def self.add_or_update_merchant_customer(merchant_id, customer)
+  def self.add_or_update_merchant_customer(merchant, customer)
     begin
       # check for number and set is_customer
-      MerchantContact.where(uid_type: 'phone_number', uid: customer.phone_number).update_all(is_customer: true) if customer.phone_number.present?
+      MerchantContact.where(uid_type: 'phone_number', uid: customer.phone_number).update_all(is_customer: true) if customer.try(:phone_number).present?
 
       # check for page_specific_ids and set is_customer
       creds = FbCred.where(user_id: customer.id).pluck(:page_specific_id)
       MerchantContact.where(uid_type: 'fb_page', uid: creds).update_all(is_customer: true) if creds.present?
 
       # add as customer
-      find_or_create_by(merchant_id: merchant_id, customer_id: customer.id) if merchant_id.present? && customer && customer.id.present?
+      if merchant.try(:id).present? && customer.try(:id).present?
+        _is_platform = (merchant.email == User.platform_email) ? 0 : 1
+        find_or_create_by(merchant_id: merchant.id, customer_id: customer.id, is_platform: _is_platform) 
+      end
     rescue StandardError => err
     end
   end
 end
-

@@ -65,7 +65,7 @@ class TwilioEvent
         # create or add to existing conversation, send to real time service
         if user.present?
           uid, uid_type = user.id, 'user'
-          MerchantCustomer.add_or_update_merchant_customer(@merchant.id, user)
+          MerchantCustomer.add_or_update_merchant_customer(@merchant, user)
         else
           uid, uid_type = @phone_number, 'phone_number'
           MerchantContact.add_or_update_merchant_contact(@merchant.id, uid, uid_type)

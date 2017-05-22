@@ -112,7 +112,7 @@ class Api::V1::MerchantCustomersController < API::V1::BaseController
     end
 
     def add_to_merchant_customer_and_referrer(with_referrer=true)
-      MerchantCustomer.add_or_update_merchant_customer(current_user.id, @customer)
+      MerchantCustomer.add_or_update_merchant_customer(current_user, @customer)
       Referrer.save_referrer_with_uid(current_user.relay_uid, @customer.id) if with_referrer
     end
 

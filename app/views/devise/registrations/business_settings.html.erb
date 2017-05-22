@@ -18,10 +18,10 @@
         <label class="form-label paragraph" for="Organization-Type">Your business name will appear on both your customer’s card statement &amp; receipts. If your business doesn't have a name, enter your product or services and your city, e.g. “Bakery - New York”</label>
 
         <div class="form-group col-xs-6 inline-display">
-          <%= f.select :org_type, options_for_select(business_type_list), { prompt: 'Organization Type' }, class: 'form-control organization-type w-select' %>
+          <%= f.select :org_type, options_for_select(business_type_list, f.object.org_type), { prompt: 'Organization Type' }, class: 'form-control organization-type w-select' %>
         </div>
 
-        <%= f.select :org_category, options_for_select(business_categories), { prompt: 'Business category (optional)' }, class: 'form-control business-category organization-type w-select' %>
+        <%= f.select :org_category, options_for_select(business_categories, f.object.org_category), { prompt: 'Business category (optional)' }, class: 'form-control business-category organization-type w-select' %>
 
         <div class="flex-underline form-section-divider"></div>
 

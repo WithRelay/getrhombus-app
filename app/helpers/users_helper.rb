@@ -57,7 +57,7 @@ module UsersHelper
   end
 
   def exp_date
-    (current_user.exp_month && current_user.exp_year) ? "#{current_user.exp_month}/#{current_user.exp_year}" : ""
+    (current_user.exp_month.present? && current_user.exp_year.present?) ? "#{current_user.exp_month}/#{current_user.exp_year}" : ""
   end
 
   def stripe_standalone_cred

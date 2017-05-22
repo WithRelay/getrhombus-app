@@ -16,6 +16,7 @@ var CardHandler = new function() {
 
     form_btn = $(btn_id);
     form_btn_text = form_btn.val();        // So the button can be reset on fail
+    console.log(form_btn_text)
     form_btn.attr("disabled", true).val("Please wait...");
 
     Stripe.card.createToken({

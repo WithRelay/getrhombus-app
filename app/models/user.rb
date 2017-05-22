@@ -267,7 +267,7 @@ class User < ActiveRecord::Base
       ])
     end
 #=end
-    MerchantCustomer.add_or_update_merchant_customer(User.get_platform_acct_obj.id, self)
+    MerchantCustomer.add_or_update_merchant_customer(User.get_platform_acct_obj, self)
     #WelcomeEmailJob.set(wait: SIGNUP_EMAIL_DELAY.minutes).perform_later(self, self.customer_source)
     WelcomeEmailJob.set(wait: 10.seconds).perform_later(self, self.customer_source)
     GetIntelligenceDataJob.perform_later(self.email, 'FullContact')
