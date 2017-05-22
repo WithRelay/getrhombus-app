@@ -2,7 +2,7 @@ module DashboardMerchantQueries
 	extend ActiveSupport::Concern
 
 	#################
-	# These queries need to be tmezone aware and need to use conversation model and need
+	# These queries need to be timezone aware and need to use conversation model and need
 	# to use referrers table where necessary
 
 	def segment_dynamic_customers
@@ -10,7 +10,7 @@ module DashboardMerchantQueries
   end
 
   def segment_dynamic_contacts
-  	"MerchantContact.where('created_at >= ? AND merchant_id = ?', Time.current - 7.days, #{self.id}).pluck(:uid)"
+  	"MerchantContact.where('created_at >= ? AND merchant_id = ? AND is_customer = false', Time.current - 7.days, #{self.id}).pluck(:uid)"
   end
 
   def active_customers_segment

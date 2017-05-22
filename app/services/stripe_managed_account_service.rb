@@ -234,9 +234,10 @@ class StripeManagedAccountService < Struct.new( :user, :params )
       product_description: params[:description],
       tos_acceptance: { ip: stripe_cred[:ip], date: stripe_cred[:tos_date].to_i, user_agent: stripe_cred[:user_agent] },
       support_phone: user.org_phone[1..10],
+      decline_charge_on: { cvc_failure: true },
       legal_entity: { business_name: params[:org_name], type: params_org_type, 
                       first_name: full_name[0], last_name: full_name[1],
-                      #gender: people[:gender], # not needed for u.s, canada
+                      #gender: people[:gender], # not needed for U.S, Canada
                       phone_number: user.org_phone[1..10],
                       business_tax_id: params[:org_tax_id], personal_id_number: people[:last4],
                       personal_address: { city: people_address[:city], country: people_address[:country],
@@ -247,7 +248,7 @@ class StripeManagedAccountService < Struct.new( :user, :params )
                       address: { state: address[:state_province], postal_code: address[:postal_code],
                                  city: address[:city], line1: address[:street_address]
                                },
-                      #address_kana: {}, address_kanji: {}, personal_address_kana: {}, personal_address_kanji: {},  # for japan i think
+                      #address_kana: {}, address_kanji: {}, personal_address_kana: {}, personal_address_kanji: {},  # for Japan i think
                       verification: {}, 
                       ssn_last_4_provided: {}, business_tax_id_provided: {},
                       business_vat_id_provided: {}, personal_id_number_provided: {},

@@ -138,6 +138,7 @@ Rails.application.routes.draw  do
           end
           get 'customer_template' => "users#customer_csv_template"
           get 'managed-accounts' => 'users#managed_acct'
+          get 'update-managed-acct' => 'users#managed_acct'
           match 'managed-accounts' => "users#create_managed_acct", via: :patch
           match 'update-managed-acct' => 'users#update_managed_acct', via: :patch
         #  get 'businesses' => 'users#businesses'
