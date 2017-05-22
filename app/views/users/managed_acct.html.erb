@@ -60,29 +60,8 @@
 
       <div class="flex-underline form-section-divider"></div>
       <label class="field-headers form-label settings" for="Business-Name">BUSINESS ADDRESS</label>
-      <%= f.fields_for :address do |a| %>
-
-      <div class = "w-col-12">
-        <div class="form-group col-xs-6">
-          <%= a.text_field :street_address, id: 'company-street', placeholder: 'Street Address', class: 'form-control settings street-name text-field w-input' %>
-          <!-- <div class="messageContainer w-col-4"></div> -->
-        </div>
-        <div class="form-group col-xs-6">
-          <%= a.text_field :city, id: 'company-city', class: 'apt_suite settings text-field w-input form-control', placeholder: 'City' %>
-          <!-- <div class="messageContainer w-col-4"></div> -->
-        </div>
-      </div>
-
-      <div id='company-state-div'>
-        <div class="form-group col-xs-6">
-          <%= a.text_field :state_province, id: 'company-state', class: 'settings street-name text-field w-input form-control', placeholder: 'State/Province' %>
-          <!-- <div class="messageContainer street-name"></div> -->
-        </div>
-      </div>
-      <div class="form-group col-xs-6">
-        <%= a.text_field :postal_code, id: 'company-postal-code', class: 'apt_suite settings text-field w-input form-control', placeholder: 'Zip/Postal code' %>
-        <!-- <div class="messageContainer w-col-6"></div> -->
-      </div>
+      <%= f.fields_for :address do |address| %>
+          <%= render "address_fields", a: address %>
       <% end %>
 
       <label class="field-headers form-label settings" for="Website">other INFORMATION</label>
@@ -94,8 +73,6 @@
       <div class="flex-underline form-section-divider"></div>
       <label class="field-headers form-label settings" for="Website-2">BANK DETAILS</label>
       <label class="form-label paragraph" for="Currency">Currencies without a bank account will be converted and sent to your default bank account.</label>
-
-
         <%= f.fields_for :bank_accounts do |bank| %>
           <%= render "bank_fields", b: bank %>
       <% end %>
@@ -132,11 +109,12 @@
 
     <div class="check-box editor w-checkbox w-clearfix">
       <% if @stripe_creds.first && @stripe_creds.first.new_record? %>
-        <div class="form-group">
+        <div class="form-group col-xs-6">
           <label class= "w-form-label form-label manage-acc-term-condition form-control">
-            <%= f.check_box :tos_acceptance, class: "w-checkbox-input", name: "term"%>
+            <%= f.check_box :tos_acceptance, class: "w-checkbox-input"%>
             Accept Terms and Service
           </label>
+          <div class="messageContainer w-col-12"></div>
         </div>
         <%#= f.label 'Accept Terms and Service', class: "w-form-label form-label manage-acc-term-condition", for: "checkbox-3" %>
       <% end %>
