@@ -12,6 +12,34 @@ module UsersHelper
     { 'Organization' => 'Company', 'Individual' => 'Individual' }
   end
 
+  def business_categories
+    {
+      'Beauty & Spas' => 'Beauty & Spas',
+      'Charity' => 'Charity',
+      'Cleaning Service' => 'Cleaning Service',
+      'Coffee Shop' => 'Coffee Shop',
+      'Concierge Services' => 'Concierge Services',
+      'Ecommerce' => 'Ecommerce',
+      'Education (K-12)' => 'Education (K-12)',
+      'Education (Universities & Colleges)' => 'Education (Universities & Colleges)',
+      'Financial Services' => 'Financial Services',
+      'Home & Repair Services' => 'Home & Repair Services',
+      'Hotel & Travel' => 'Hotel & Travel',
+      'Health & Fitness' => 'Health & Fitness',
+      'Individual' => 'Individual',
+      'Local Services' => 'Local Services',
+      'Non Profit' => 'Non Profit',
+      'On-demand Delivery' => 'On-demand Delivery',
+      'Pets' => 'Pets',
+      'Professional Services' => 'Professional Services',
+      'Religious Organization' => 'Religious Organization',
+      'Restaurant' => 'Restaurant',
+      'Retail' => 'Retail',
+      'Taxi & Limousine' => 'Taxi & Limousine',
+      'Other' => 'Other'
+    }
+  end
+
   def twilio_countries
     TextingService.twilio_list.keys.map do |k|
       [TextingService.twilio_list[k][:name], k]
@@ -26,6 +54,10 @@ module UsersHelper
     ['1 - 5 employees', '6 - 20 employees', '21 - 50 employees', '51 - 100 employees',
     '101 - 200 employees', '201 - 500 employees', '501 - 1000 employees',
     '1001 - 3000 employees', '3001 - 5000 employees', '5000+ employees']
+  end
+
+  def exp_date
+    (current_user.exp_month && current_user.exp_year) ? "#{current_user.exp_month}/#{current_user.exp_year}" : ""
   end
 
   def stripe_standalone_cred

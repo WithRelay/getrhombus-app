@@ -21,32 +21,7 @@
           <%= f.select :org_type, options_for_select(business_type_list), { prompt: 'Organization Type' }, class: 'form-control organization-type w-select' %>
         </div>
 
-        <select class="form-control business-category organization-type w-select" name="user[org_category]">
-          <option value="" class='hide'>Business category (optional)</option>
-          <option value="Beauty & Spas">Beauty &amp; Spas</option>
-          <option value="Charity">Charity</option>
-          <option value="Cleaning Service">Cleaning Service</option>
-          <option value="Coffee Shop">Coffee Shop</option>
-          <option value="Concierge Services">Concierge Services</option>
-          <option value="Ecommerce">Ecommerce</option>
-          <option value="Education (K-12)">Education (K-12)</option>
-          <option value="Education (Universities & Colleges)">Education (Universities &amp; Colleges)</option>
-          <option value="Financial Services">Financial Services</option>
-          <option value="Home & Repair Services">Home &amp; Repair Services</option>
-          <option value="Hotel & Travel">Hotel &amp; Travel</option>
-          <option value="Health & Fitness">Health &amp; Fitness</option>
-          <option value="Individual">Individual</option>
-          <option value="Local Services">Local Services</option>
-          <option value="Non Profit">Non Profit</option>
-          <option value="On-demand Delivery">On-demand Delivery</option>
-          <option value="Pets">Pets</option>
-          <option value="Professional Services">Professional Services</option>
-          <option value="Religious Organization">Religious Organization</option>
-          <option value="Restaurant">Restaurant</option>
-          <option value="Retail">Retail</option>
-          <option value="Taxi & Limousine">Taxi &amp; Limousine</option>
-          <option value="Other">Other</option>
-        </select>
+        <%= f.select :org_category, options_for_select(business_categories), { prompt: 'Business category (optional)' }, class: 'form-control business-category organization-type w-select' %>
 
         <div class="flex-underline form-section-divider"></div>
 
