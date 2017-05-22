@@ -588,14 +588,8 @@ $(document).on('ready page:load', function() {
           }
         },
 
-        'tos_acceptance': {
+        'user[tos_acceptance]': {
           validators: {
-            callback:{
-              callback: function(value,validator,$field){
-                debugger;
-              }
-            },
-
             notEmpty: {
               message: 'You must accept the terms'
             }
@@ -641,7 +635,7 @@ $(document).on('ready page:load', function() {
           }
         },
 
-        account_number_confirmation: {
+        'user[bank_accounts_attributes][0][account_number_confirmation]': {
           validators: {
             notEmpty: {
               message: 'Confirm Account Number'
@@ -653,7 +647,7 @@ $(document).on('ready page:load', function() {
           }
         },
 
-        'full-name': {
+        'user[people_attributes][0][full_name]': {
           validators: {
             notEmpty: {
               message: 'Full name is required'
