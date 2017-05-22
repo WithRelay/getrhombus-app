@@ -157,6 +157,12 @@
 <%
 =end %>
 
+    <div id='termsAndCondition'>
+      <%= f.fields_for :stripe_creds do |c| %>
+        <%= c.hidden_field :ip %>
+      <% end %>
+    </div>
+
     <div class="check-box editor w-checkbox w-clearfix">
       <% if f.object.stripe_creds.first.new_record? %>
         <%= f.check_box :tos_acceptance, class: "w-checkbox-input manage-acc-check-box" %>
