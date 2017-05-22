@@ -157,19 +157,6 @@
 <%
 =end %>
 
-    <div id='termsAndCondition'>
-      <%= f.fields_for :stripe_creds do |c| %>
-        <% if c.object.persisted? %>
-          <%= c.check_box :charges_enabled, disabled: true %> Charges Enabled
-          <%= c.check_box :transfers_enabled, disabled: true %> Transfers Enabled
-          <div><%= c.object.disabled_reason %></div>
-          <div><%= c.object.due_by %></div>
-          <div><%= c.object.fields_needed %></div>
-        <% end %>
-        <%= c.hidden_field :ip %>
-      <% end %>
-    </div>
-
     <div class="check-box editor w-checkbox w-clearfix">
       <% if f.object.stripe_creds.first.new_record? %>
         <%= f.check_box :tos_acceptance, class: "w-checkbox-input manage-acc-check-box" %>
