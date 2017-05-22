@@ -679,7 +679,7 @@ class EmailingService
       end
     end
 
-    def customer_added_to_relay(user, merchant)
+    def customer_added_to_relay(user, merchant, customer_email, temp_password)
       begin
         puts 'in added emaillllllllllllllllllllll'
         template_name = 'customer-added-to-relay'
@@ -687,7 +687,9 @@ class EmailingService
         message = { "subject" => "Best way to reach us",
          "global_merge_vars"=> [  { "name" => "first_name", "content" => user.first_name || 'there' },
                                   {"name" => "business_name", "content" => merchant.org_name},
-                                  {"name" => "relay_number", "content" => merchant.rhombus_number}
+                                  {"name" => "relay_number", "content" => merchant.rhombus_number},
+                                  {"name" => "customer_email", "content" => customer_email},
+                                  {"name" => "temp_password", "content" => temp_password}
                                ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
