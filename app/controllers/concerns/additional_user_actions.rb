@@ -25,8 +25,7 @@ module AdditionalUserActions
   def managed_acct
     @user.address || @user.build_address
     @user.bank_accounts.present? || @user.bank_accounts.build
-    @stripe_creds = @user.stripe_creds
-    @stripe_creds.present? || @user.stripe_creds.build
+    @user.stripe_creds.present? || @user.stripe_creds.build
     @user.people.present? || @user.people.build
     @user.people.each_with_index { |p,i| @user.people[i].address || @user.people[i].build_address }
   end
@@ -56,6 +55,7 @@ module AdditionalUserActions
   end
 
   def update_managed_acct
+    puts 'ssss'
     check_user_validation = user_valid_to_update
     if check_user_validation.present?
       flash[:error] = check_user_validation
