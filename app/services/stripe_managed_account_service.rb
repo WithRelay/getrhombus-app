@@ -234,7 +234,7 @@ class StripeManagedAccountService < Struct.new( :user, :params )
       product_description: params[:description],
       tos_acceptance: { ip: stripe_cred[:ip], date: stripe_cred[:tos_date].to_i, user_agent: stripe_cred[:user_agent] },
       support_phone: user.org_phone[1..10],
-      decline_charge_on: { cvc_failure: true },
+      decline_charge_on: { cvc_failure: true, avs_failure: false },
       legal_entity: { business_name: params[:org_name], type: params_org_type, 
                       first_name: full_name[0], last_name: full_name[1],
                       #gender: people[:gender], # not needed for U.S, Canada

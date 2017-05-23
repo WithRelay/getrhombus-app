@@ -685,17 +685,20 @@ class EmailingService
         template_name = 'customer-added-to-relay'
         template_content = []
         message = { "subject" => "Best way to reach us",
-         "global_merge_vars"=> [  { "name" => "first_name", "content" => user.first_name || 'there' },
+          "global_merge_vars"=> [  { "name" => "first_name", "content" => user.first_name || 'there' },
                                   {"name" => "business_name", "content" => merchant.org_name},
                                   {"name" => "relay_number", "content" => merchant.rhombus_number},
                                   {"name" => "customer_email", "content" => user.email},
                                   {"name" => "temp_password", "content" => temp_password}
                                ],
-         "merge_language" => "handlebars",
-         "to"=> [ { "email" => user.email } ],
-         "bcc_address"=> SENDER,
-         "from_name" => "#{merchant.first_name} from #{merchant.org_name}",
-         "from_email" => FROM_EMAIL[:edwin]
+          "merge_language" => "handlebars",
+          "to"=> [ { "email" => user.email } ],
+          "bcc_address"=> SENDER,
+          "from_name" => "#{merchant.first_name} from #{merchant.org_name}",
+          "from_email" => FROM_EMAIL[:edwin],
+          "headers" => {
+            "Reply-To" => merchant.email
+          },
         }
         async = true
         result = MANDRILL.messages.send_template template_name, template_content, message, async
