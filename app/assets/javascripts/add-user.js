@@ -41,6 +41,15 @@ $(document).ready(function() {
   $(create_user_form).formValidation({
     framework: 'bootstrap',
     live: 'disabled',
+    err: {
+      container: function($field, validator) {
+        if($field.attr("id") == "cc-epx" || $field.attr("id") == "cc-csc"){
+          return $('#cardDate');
+        }
+        return $field.parent().find('.messageContainer').show();
+      }
+    },
+
     fields: {
       'user[email]': {
         validators: {
@@ -124,7 +133,7 @@ $(document).ready(function() {
         validators: {
           callback: {
             callback: function (value, validator, $field) {
-              if (!$("#cc-number").val().length || $.payment.validateCardNumber(value)) {
+              if (value == '' || $.payment.validateCardNumber(value)) {
                 return {
                   valid: true,    // or false
                   message: ''
@@ -145,7 +154,7 @@ $(document).ready(function() {
           callback: {
             callback: function (value, validator, $field) {
               var y = UtilFunctions.get_card_expiry_date_data();
-              if (!$("#cc-number").val().length || $.payment.validateCardExpiry(y.month, y.year)) {
+              if (value == "" || $.payment.validateCardExpiry(y.month, y.year)) {
                 return {
                   valid: true,    // or false
                   message: ''
