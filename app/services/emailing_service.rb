@@ -679,7 +679,7 @@ class EmailingService
       end
     end
 
-    def customer_added_to_relay(user, merchant, customer_email, temp_password)
+    def customer_added_to_relay(user, merchant, temp_password)
       begin
         puts 'in added emaillllllllllllllllllllll'
         template_name = 'customer-added-to-relay'
@@ -688,13 +688,13 @@ class EmailingService
          "global_merge_vars"=> [  { "name" => "first_name", "content" => user.first_name || 'there' },
                                   {"name" => "business_name", "content" => merchant.org_name},
                                   {"name" => "relay_number", "content" => merchant.rhombus_number},
-                                  {"name" => "customer_email", "content" => customer_email},
+                                  {"name" => "customer_email", "content" => user.email},
                                   {"name" => "temp_password", "content" => temp_password}
                                ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
          "bcc_address"=> SENDER,
-         "from_name" => "Edwin from Relay",
+         "from_name" => "#{merchant.first_name} from #{merchant.org_name}",
          "from_email" => FROM_EMAIL[:edwin]
         }
         async = true
