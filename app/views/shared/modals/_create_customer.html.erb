@@ -11,6 +11,10 @@
   .intl-tel-input{
     margin-bottom: 15px;
   }
+  .help-block{
+    margin-top: -5px;
+    margin-left: 5%;
+  }
 </style>
 <div class="create-customer-form-wrapper  w-clearfix modal-background" id="new-customer-div">
 <%# removed all webflow data attributes %>
@@ -28,15 +32,18 @@
         <%= f.fields_for @new_customer.people.build do |p|%>
           <div class="form-group col-xs-6">
             <%= p.text_field :full_name, class: "form-control modal-field text-field w-input", placeholder:"Full name" %>
+            <div class="messageContainer w-col-12"></div>
           </div>
         <% end %>
 
         <div class="form-group col-xs-6">
           <%= f.text_field :email, class: "form-control modal-field text-field w-input", placeholder: "Email" %>
+          <div class="messageContainer w-col-12"></div>
         </div>
 
         <div class="form-group col-xs-6">
           <%= f.text_field :phone, class: "form-control modal-field text-field w-input", placeholder: "Phone number", id: 'phone' %>
+          <div class="messageContainer w-col-12"></div>
         </div>
         <%= f.hidden_field :phone_number, :id => "phone_number" %>
 
@@ -66,22 +73,27 @@
         <div class="form underline-div"></div>
 
         <label class="form-label modal" for="Card-Number-3">Payment Information (optional)</label>
-        <div class="form-group col-xs-6">
 
           <div class="form-group col-xs-6">
             <%= f.number_field :last4, id: "cc-number", type: "tel", class: "form-control card-number modal text-field w-input", placeholder: "Card number", "x-autocompletetype" => "cc-number", autocompletetype: "cc-number", autocorrect: 'off', spellcheck: 'off', autocapitalize: 'off' %>
+            <div class="messageContainer w-col-12"></div>
           </div>
 
           <div class="form-group col-xs-6">
             <%= f.text_field :card_name, id: 'cc-name', type: "text", class: "form-control card-name modal text-field w-input", placeholder: "Name on Card", 'x-autocompletetype' => "off", autocompletetype: 'off', autocorrect: "off", spellcheck: 'off', autocapitalize: "off", autocomplete: "off" %>
+            <div class="messageContainer w-col-12"></div>
           </div>
 
-          <div class="form-group col-xs-6">
-            <input id="cc-exp" type="text" class="form-control month-year text-field w-input" placeholder="MM / YYYY" value="" x-autocompletetype="off" autocompletetype="off" autocorrect="off" spellcheck="off" autocapitalize="off">
-          </div>
+          <div class= "row">
+            <div class="form-group col-xs-6">
+              <input id="cc-exp" type="text" class="form-control month-year text-field w-input" placeholder="MM / YYYY" value="" x-autocompletetype="off" autocompletetype="off" autocorrect="off" spellcheck="off" autocapitalize="off">
+              <!-- <div class="messageContainer w-col-4"></div> -->
+            </div>
 
-          <div class="form-group col-xs-6">
-            <input id="cc-csc" type="tel" class="form-control cvv modal text-field w-input" placeholder="CVV" value="" autocorrect="off" spellcheck="off" autocapitalize="off" autocomplete="off" maxlength="4">
+            <div class="form-group col-xs-6">
+              <input id="cc-csc" type="tel" class="form-control cvv modal text-field w-input" placeholder="CVV" value="" autocorrect="off" spellcheck="off" autocapitalize="off" autocomplete="off" maxlength="4">
+              <!-- <div class="messageContainer w-col-4"></div> -->
+            </div>
           </div>
 
           <%= f.hidden_field :exp_month, id: "cc-ex-month" %>
