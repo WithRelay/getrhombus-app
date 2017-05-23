@@ -118,6 +118,15 @@
         </div>
       <% end %>
     </div>
+    <a class="attach-text pull-left" href="#" id='select-images-button'></a>
+    <%= file_field_tag "", type: :file, id: "select-images", class: 'hide', accept: "image/*" %>
+    <!-- for new images -->
+    <div id='new-image-previews'>
+    </div>
+
+    <!-- for already attached images -->
+    <div id='image-previews' data-model-id='managed_account_<%= @stripe_creds.first.id %>'>
+    </div>
     <%= f.submit :Save, id: 'saveManagedAccount', class: 'button payment-setup save-changes w-button' %>
     <% end %>
   </div>
