@@ -41,6 +41,12 @@ $(document).ready(function() {
   $(create_user_form).formValidation({
     framework: 'bootstrap',
     live: 'disabled',
+    err: {
+      container: function($field, validator) {
+        return $field.parent().find('.messageContainer').show();
+      }
+    },
+    
     fields: {
       'user[email]': {
         validators: {
@@ -102,21 +108,25 @@ $(document).ready(function() {
       'cc-name': {
         selector: '#cc-name',
         validators: {
-          callback: {
-            callback: function (value, validator, $field) {
-              if (!$("#cc-number").val().length || $("#cc-name").val().trim().length) {
-                return {
-                  valid: true,    // or false
-                  message: ''
-                }
-              } else {
-                return {
-                  valid: false,    // or false
-                  message: 'Card name is required'
-                }
-              }
-            }
-          }
+          //callback: {
+          //   callback: function (value, validator, $field) {
+          //     if (!$("#cc-number").val().length || $("#cc-name").val().trim().length) {
+          //       return {
+          //         valid: true,    // or false
+          //         message: ''
+          //       }
+          //     } else {
+          //       return {
+          //         valid: false,    // or false
+          //         message: 'Card name is required'
+          //       }
+          //     }
+          //   }
+          // },
+
+        notEmpty: {
+          message: "Card name is required"
+        }
         }
       },
       'cc-number': {
@@ -124,7 +134,7 @@ $(document).ready(function() {
         validators: {
           callback: {
             callback: function (value, validator, $field) {
-              if (!$("#cc-number").val().length || $.payment.validateCardNumber(value)) {
+              if ($.payment.validateCardNumber(value)) {
                 return {
                   valid: true,    // or false
                   message: ''
@@ -136,7 +146,11 @@ $(document).ready(function() {
                 }
               }
             }
-          }
+          },
+
+        notEmpty: {
+          message: "Card number is required"
+        }
         }
       },
       'cc-exp': {
@@ -157,6 +171,10 @@ $(document).ready(function() {
                 }
               }
             }
+          },
+
+          notEmpty: {
+            message: "Enter a valid data"
           }
         }
       },
