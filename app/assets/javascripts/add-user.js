@@ -43,6 +43,9 @@ $(document).ready(function() {
     live: 'disabled',
     err: {
       container: function($field, validator) {
+        if($field.attr("id") == "cc-epx" || $field.attr("id") == "cc-csc"){
+          return $('#cardDate');
+        }
         return $field.parent().find('.messageContainer').show();
       }
     },
@@ -123,7 +126,6 @@ $(document).ready(function() {
               }
             }
           }
-          
         }
       },
       'cc-number': {
