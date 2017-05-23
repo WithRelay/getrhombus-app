@@ -104,7 +104,7 @@ $(document).ready(function() {
         validators: {
           callback: {
             callback: function (value, validator, $field) {
-              if (!$("#cc-number").val().length || $("#cc-name").val().length) {
+              if (!$("#cc-number").val().length || $("#cc-name").val().trim().length) {
                 return {
                   valid: true,    // or false
                   message: ''

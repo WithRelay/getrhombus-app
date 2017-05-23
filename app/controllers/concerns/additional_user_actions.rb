@@ -55,7 +55,6 @@ module AdditionalUserActions
   end
 
   def update_managed_acct
-    puts 'ssss'
     check_user_validation = user_valid_to_update
     if check_user_validation.present?
       flash[:error] = check_user_validation
