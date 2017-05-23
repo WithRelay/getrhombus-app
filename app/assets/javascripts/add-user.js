@@ -46,7 +46,7 @@ $(document).ready(function() {
         return $field.parent().find('.messageContainer').show();
       }
     },
-    
+
     fields: {
       'user[email]': {
         validators: {
@@ -108,25 +108,22 @@ $(document).ready(function() {
       'cc-name': {
         selector: '#cc-name',
         validators: {
-          //callback: {
-          //   callback: function (value, validator, $field) {
-          //     if (!$("#cc-number").val().length || $("#cc-name").val().trim().length) {
-          //       return {
-          //         valid: true,    // or false
-          //         message: ''
-          //       }
-          //     } else {
-          //       return {
-          //         valid: false,    // or false
-          //         message: 'Card name is required'
-          //       }
-          //     }
-          //   }
-          // },
-
-        notEmpty: {
-          message: "Card name is required"
-        }
+          callback: {
+            callback: function (value, validator, $field) {
+              if (!$("#cc-number").val().length || $("#cc-name").val().trim().length) {
+                return {
+                  valid: true,    // or false
+                  message: ''
+                }
+              } else {
+                return {
+                  valid: false,    // or false
+                  message: 'Card name is required'
+                }
+              }
+            }
+          }
+          
         }
       },
       'cc-number': {
@@ -134,7 +131,7 @@ $(document).ready(function() {
         validators: {
           callback: {
             callback: function (value, validator, $field) {
-              if ($.payment.validateCardNumber(value)) {
+              if (value == '' || $.payment.validateCardNumber(value)) {
                 return {
                   valid: true,    // or false
                   message: ''
@@ -146,11 +143,7 @@ $(document).ready(function() {
                 }
               }
             }
-          },
-
-        notEmpty: {
-          message: "Card number is required"
-        }
+          }
         }
       },
       'cc-exp': {
@@ -159,7 +152,7 @@ $(document).ready(function() {
           callback: {
             callback: function (value, validator, $field) {
               var y = UtilFunctions.get_card_expiry_date_data();
-              if (!$("#cc-number").val().length || $.payment.validateCardExpiry(y.month, y.year)) {
+              if (value == "" || $.payment.validateCardExpiry(y.month, y.year)) {
                 return {
                   valid: true,    // or false
                   message: ''
@@ -171,10 +164,6 @@ $(document).ready(function() {
                 }
               }
             }
-          },
-
-          notEmpty: {
-            message: "Enter a valid data"
           }
         }
       },
