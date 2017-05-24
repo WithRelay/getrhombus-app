@@ -178,7 +178,7 @@ $(document).ready(function() {
         validators: {
           callback: {
             callback: function (value, validator, $field) {
-              if (!$("#cc-csc").val().length || $.payment.validateCardCVC(value)) {
+              if (!$field.val().length || $.payment.validateCardCVC(value)) {
                 return {
                   valid: true,    // or false
                   message: ''
