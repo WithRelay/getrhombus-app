@@ -43,7 +43,7 @@ $(document).ready(function() {
     live: 'disabled',
     err: {
       container: function($field, validator) {
-        if($field.attr("id") == "cc-epx" ){
+        if($field.attr("id") == "cc-exp" ){
           return '#cardDate';
         }
 
