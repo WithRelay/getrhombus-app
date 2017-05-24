@@ -92,10 +92,10 @@
 
             <div class="form-group col-xs-6">
               <input id="cc-csc" type="tel" class="form-control cvv modal text-field w-input" placeholder="CVV" value="" autocorrect="off" spellcheck="off" autocapitalize="off" autocomplete="off" maxlength="4">
-
             </div>
-            <div class="messageContainer w-col-4" id="cardDate"></div>
-
+            <div class= "form-group col-xs-6">
+              <div class="messageContainer w-col-4" id="cardDate"></div>
+            </div>
           <%= f.hidden_field :exp_month, id: "cc-ex-month" %>
           <%= f.hidden_field :exp_year, id: "cc-ex-year" %>
           <%= f.hidden_field :card_token, id: "cc-uri" %>
