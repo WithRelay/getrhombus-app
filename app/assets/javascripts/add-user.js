@@ -43,8 +43,12 @@ $(document).ready(function() {
     live: 'disabled',
     err: {
       container: function($field, validator) {
-        if($field.attr("id") == "cc-epx" || $field.attr("id") == "cc-csc"){
-          return $('#cardDate');
+        if($field.attr("id") == "cc-epx" ){
+          return '#cardDate';
+        }
+
+        if($field.attr("id") == "cc-csc"){
+          return '#cardCvv';
         }
         return $field.parent().find('.messageContainer').show();
       }
