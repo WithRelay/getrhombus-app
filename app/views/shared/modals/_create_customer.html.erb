@@ -93,9 +93,13 @@
             <div class="form-group col-xs-6">
               <input id="cc-csc" type="tel" class="form-control cvv modal text-field w-input" placeholder="CVV" value="" autocorrect="off" spellcheck="off" autocapitalize="off" autocomplete="off" maxlength="4">
             </div>
-            <div class= "form-group col-xs-6 w-col-12">
-              <div class="messageContainer w-col-6" id="cardDate"></div>
-              <div class="messageContainer w-col-6" id="cardCvv"></div>
+            <div class="row">
+            <div class= "form-group col-xs-6">
+                <div class="month-year w-col-4" id="cardDate"></div>
+            </div>
+            <div class= "form-group col-xs-6">
+                <div class="cvv w-col-4" id="cardCvv"></div>
+            </div>
             </div>
           <%= f.hidden_field :exp_month, id: "cc-ex-month" %>
           <%= f.hidden_field :exp_year, id: "cc-ex-year" %>
