@@ -43,8 +43,12 @@ $(document).ready(function() {
     live: 'disabled',
     err: {
       container: function($field, validator) {
-        if($field.attr("id") == "cc-epx" || $field.attr("id") == "cc-csc"){
-          return $('#cardDate');
+        if($field.attr("id") == "cc-exp" ){
+          return '#cardDate';
+        }
+
+        if($field.attr("id") == "cc-csc"){
+          return '#cardCvv';
         }
         return $field.parent().find('.messageContainer').show();
       }
@@ -174,7 +178,7 @@ $(document).ready(function() {
         validators: {
           callback: {
             callback: function (value, validator, $field) {
-              if (!$("#cc-number").val().length || $.payment.validateCardCVC(value)) {
+              if (!$field.val().length || $.payment.validateCardCVC(value)) {
                 return {
                   valid: true,    // or false
                   message: ''
