@@ -35,12 +35,14 @@
 
     startbutton.addEventListener('click', function(ev){
       $('.cam-image').attr('class', 'cam-image show');
+      $('#photo').slideDown(240);
       takepicture();
       ev.preventDefault();
     }, false);
 
     deletephoto.addEventListener('click', function(ev){
-      $('.cam-image').attr('class', 'cam-image hide');
+      $('#photo').slideUp(240);
+      // $('.cam-image').attr('class', 'cam-image hide');
       clearphoto();
       ev.preventDefault();
     }, false);
