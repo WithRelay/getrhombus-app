@@ -1,0 +1,20 @@
+<div class="webcam-modal-content modal-background" id="webcam-modal">
+  <div class="content-sub-wrapper modal w-clearfix">
+    <h4 class="modal-header welcome-dash-content-container-header">Capture Image</h4>
+    <a class="close-modal update-close-modals" data-parent='webcam-modal' href="#"></a>
+  </div>
+  <div class="webcam-content">
+    <div class="web-camera">
+      <video id="video">Video stream not available.</video>
+    </div>
+    <a id="startbutton" class="w-button"><i class="material-icons">camera_alt</i></a>
+
+    <canvas id="canvas" style="display: none;">
+    </canvas>
+
+    <div class="cam-image hide">
+      <a href="#" id="delete-photo" title="Delete Photo"><i class="material-icons">delete</i></a>
+      <img id="photo" alt="The screen capture will appear in this box.">
+    </div>
+  </div>
+</div>
