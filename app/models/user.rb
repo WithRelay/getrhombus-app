@@ -73,6 +73,7 @@ class User < ActiveRecord::Base
 
   has_one :away_message
   has_many :hashtags
+  has_many :documents
 
   has_many :messages
   has_many :merchant_conversations, class_name: 'Conversation', foreign_key: 'merchant_id'
