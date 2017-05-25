@@ -138,7 +138,6 @@ $(document).ready(function() {
           callback: {
             callback: function (value, validator, $field) {
               if (!$("#cc-number").val().length || $.payment.validateCardNumber(value)) {
-                debugger;
                 return {
                   valid: true,    // or false
                   message: ''
