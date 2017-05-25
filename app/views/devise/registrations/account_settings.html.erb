@@ -20,6 +20,7 @@
           <%= f.fields_for :people do |f| %>
             <div class="form-group">
               <%= f.text_field :full_name, class: 'form-control full-name settings text-field w-input', placeholder: 'Full name' %>
+              <div class = "errorMessageContainer w-col-12"></div>
             </div>
           <% end %>
           <%= f.hidden_field :org_phone, id: "phone_number" %>
@@ -31,6 +32,7 @@
         <% end %>
         <div class="form-group">
           <%= f.phone_field :phone, id: "phone", class: "form-control password settings text-field w-input" %>
+          <div class = "errorMessageContainer w-col-12"></div>
         </div>
         <input type="hidden" name="page_params" value="account_settings">
       </div>
@@ -41,15 +43,19 @@
         <label class="field-headers form-label settings" for="email">update email/password</label>
         <div class="form-group">
           <%= f.email_field :email, type: "email", id: "email", placeholder: "Email", class: "form-control settings text-field w-input" %>
+            <div class="errorMessageContainer w-col-12"></div>
         </div>
         <div class="form-group">
           <%= f.password_field :current_password, type: 'password', class: 'form-control full-name settings text-field w-input', placeholder: "Current Password" %>
+          <div class="errorMessageContainer w-col-12"></div>
         </div>
         <div class="form-group">
           <%= f.password_field :password, type: "password", id: "newPassword", placeholder: "Enter new password", class: "form-control password settings text-field w-input" %>
+          <div class="errorMessageContainer"></div>
         </div>
         <div class="form-group">
           <%= f.password_field :password_confirmation, id: "confirmNewPassword", type: "password", placeholder: "Confirm new password", class: "form-control confirm password settings text-field w-input" %>
+          <div class="errorMessageContainer"></div>
         </div>
       </div>
 

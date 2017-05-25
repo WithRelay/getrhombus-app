@@ -22,7 +22,7 @@ $(document).ready(function() {
       live: 'disabled',
       err: {
         container: function($field, validator) {
-          return $field.parent().find('.errorMessageContainer');
+          return $field.parent().find('.errorMessageContainer').show();
         }
       },
       fields: {
