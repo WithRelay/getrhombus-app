@@ -137,7 +137,7 @@ $(document).ready(function() {
         validators: {
           callback: {
             callback: function (value, validator, $field) {
-              if (value == '' || $.payment.validateCardNumber(value)) {
+              if (!$("#cc-number").val().length || $.payment.validateCardNumber(value)) {
                 return {
                   valid: true,    // or false
                   message: ''
@@ -158,7 +158,7 @@ $(document).ready(function() {
           callback: {
             callback: function (value, validator, $field) {
               var y = UtilFunctions.get_card_expiry_date_data();
-              if (value == "" || $.payment.validateCardExpiry(y.month, y.year)) {
+              if (!$("#cc-number").val().length || $.payment.validateCardExpiry(y.month, y.year)) {
                 return {
                   valid: true,    // or false
                   message: ''
@@ -178,7 +178,7 @@ $(document).ready(function() {
         validators: {
           callback: {
             callback: function (value, validator, $field) {
-              if (!$field.val().length || $.payment.validateCardCVC(value)) {
+              if (!$("#cc-number").val().length || $.payment.validateCardCVC(value)) {
                 return {
                   valid: true,    // or false
                   message: ''

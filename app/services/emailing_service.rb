@@ -694,7 +694,7 @@ class EmailingService
           "merge_language" => "handlebars",
           "to"=> [ { "email" => user.email } ],
           "bcc_address"=> SENDER,
-          "from_name" => "#{merchant.first_name} from #{merchant.org_name}",
+          "from_name" => User.user_title(merchant),
           "from_email" => FROM_EMAIL[:edwin],
           "headers" => {
             "Reply-To" => merchant.email

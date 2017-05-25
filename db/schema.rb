@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170522010738) do
+ActiveRecord::Schema.define(version: 20170525122322) do
 
   create_table "account_reloads", force: :cascade do |t|
     t.integer  "user_id",        limit: 4
@@ -204,6 +204,16 @@ ActiveRecord::Schema.define(version: 20170522010738) do
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false
   end
+
+  create_table "documents", force: :cascade do |t|
+    t.string   "attachment_file_name",    limit: 191
+    t.string   "attachment_content_type", limit: 191
+    t.integer  "attachment_file_size",    limit: 4
+    t.datetime "attachment_updated_at"
+    t.integer  "user_id",                 limit: 4
+  end
+
+  add_index "documents", ["user_id"], name: "index_documents_on_user_id", using: :btree
 
   create_table "fb_creds", force: :cascade do |t|
     t.string   "email",            limit: 191

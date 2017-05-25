@@ -41,36 +41,34 @@ module CSVHandler
 
   # https://andrew.coffee/blog/skipping-blank-lines-in-ruby-csv-parsing.html
   # http://technicalpickles.com/posts/parsing-csv-with-ruby/
-  def upload_customer_csv(file)
+  def upload_customer_csv(file_path)
     begin
-      response = []
-      headers_checked = false
-      error_hash = {}
-      headers = [:first_name, :last_name, :email, :phone_number, :street_address, :city, :state_province, :country, :postal_code]
+      response, headers_checked, error_hash = [], false, {}
 
       CSV::Converters[:blank_to_nil] = lambda do |field|
         field && field.blank? ? nil : field
       end
 
-      CSV.foreach(file, headers: true, skip_blanks: true, header_converters: :symbol, converters: [:all, :blank_to_nil], skip_lines: /^(?:[,:;]\s*)+$/) do |row|
+      headers = [:first_name, :last_name, :email, :phone_number, :street_address, :city, :state_province, :country, :postal_code]
+      file_data = CSV.read(file_path, headers: true, skip_blanks: true, header_converters: :symbol, converters: [:all, :blank_to_nil], skip_lines: /^(?:[,:;]\s*)+$/)
+      file_headers = file_data.headers
 
+      file_data.each do |row|
         error = false
 
         # Validate headers
         if !headers_checked
-          headers_ary = row.map { |v| v[0] }
-          if headers.length != headers_ary.length
+          if headers.length != file_headers.length
             response.push(['The File Headers', ["Unable to proceed because the number of headers are incorrect."]])
             break
           end
 
-          if headers.to_set != headers_ary.to_set
+          if headers.to_set != file_headers.to_set
             response.push(["The File Headers", ["Unable to proceed because the headers are incorrect."]])
             break
           end
 
           headers_checked = true
-          next
         end
 
         row = row.to_hash
@@ -130,11 +128,13 @@ module CSVHandler
                 # send email or text here
               end
             rescue ActiveRecord::RecordNotUnique => e
+              puts e.inspect
               msg = e.original_exception.message
               error_hash[row[:email]].push("Phone number is already in use.") if msg.include?('index_users_on_phone_number')
               error_hash[row[:email]].push("Email is already in use.") if msg.include?('index_users_on_email')
               error = true
             rescue StandardError => e
+              puts e.inspect
               error = true
               error_hash[row[:email]].push("Something went wrong on our end.")
             end
@@ -153,8 +153,11 @@ module CSVHandler
         value.each { |v| ary.push(v) }          
         response.push([key, ary])  
       end
+      puts 'are there any errors?'
+      puts response.inspect
       response
     rescue StandardError => e
+      puts e.inspect
       # email platform
       ['File Upload', ["Something went wrong on our end."]]
     end

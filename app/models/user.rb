@@ -73,6 +73,7 @@ class User < ActiveRecord::Base
 
   has_one :away_message
   has_many :hashtags
+  has_many :documents
 
   has_many :messages
   has_many :merchant_conversations, class_name: 'Conversation', foreign_key: 'merchant_id'
@@ -226,7 +227,7 @@ class User < ActiveRecord::Base
     self.update(account_balance: (self.account_balance - amt.to_f).round(6))
   end
 
-  private
+  #private
 
   # Some users sign up with Rhombus numbers
   def phone_number_cannot_be_rhombus_number
@@ -256,10 +257,10 @@ class User < ActiveRecord::Base
       Alert.find_or_create_by(user_id: user_id)
       response = "We're away at the moment and will get back to you when we return :)."
       AwayMessage.find_or_create_by(user_id: user_id, response: response)
-      GetIntelligenceDataJob.perform_later(self.org_phone, 'OpenCNAM')
+      #GetIntelligenceDataJob.perform_later(self.org_phone, 'OpenCNAM')
       self.lists.create([
-        { name: 'New Customers', segment: segment_dynamic_customers, origin: 1, list_type: 0 },
-        { name: 'New Contacts', segment: segment_dynamic_contacts, origin: 1, list_type: 1 },
+        { name: 'New Customers', segment: new_customers_segment, origin: 1, list_type: 0 },
+        { name: 'New Contacts', segment: new_contacts_segment, origin: 1, list_type: 1 },
         { name: 'Active Customers', segment: active_customers_segment, origin: 1, list_type: 0 },
         { name: 'Active Contacts', segment: active_contacts_segment, origin: 1, list_type: 1 },
         { name: 'Inactive Customers', segment: inactive_customers_segment, origin: 1, list_type: 0 },
@@ -267,11 +268,11 @@ class User < ActiveRecord::Base
       ])
     end
 #=end
-    MerchantCustomer.add_or_update_merchant_customer(User.get_platform_acct_obj, self)
+   # MerchantCustomer.add_or_update_merchant_customer(User.get_platform_acct_obj, self)
     #WelcomeEmailJob.set(wait: SIGNUP_EMAIL_DELAY.minutes).perform_later(self, self.customer_source)
-    WelcomeEmailJob.set(wait: 10.seconds).perform_later(self, self.customer_source)
-    GetIntelligenceDataJob.perform_later(self.email, 'FullContact')
-    GetIntelligenceDataJob.perform_later(self.phone_number, 'OpenCNAM') if self.is_customer?
+    #WelcomeEmailJob.set(wait: 10.seconds).perform_later(self, self.customer_source)
+    #GetIntelligenceDataJob.perform_later(self.email, 'FullContact')
+    #GetIntelligenceDataJob.perform_later(self.phone_number, 'OpenCNAM') if self.is_customer?
   end
 
   #def validates_person_full_message
@@ -283,5 +284,13 @@ class User < ActiveRecord::Base
   def get_uid_and_referrer_link
     self.relay_uid = generate_uid
     self.short_url = "dasd" #UrlShorternerService.shorten_link("https://www.withrelay.com/signup?referrer_uid=#{self.relay_uid}")
+  end
+
+
+  def x
+    Transaction.where("created_at >= ? AND user_id IN(?) AND team_id = ?", Time.current - 30.days,
+      MerchantCustomer.where(merchant_id: 110).pluck(:customer_id), 110).pluck(:user_id) |
+      FbMessage.where("created_at >=? AND user_id_to = ? AND user_id IN(?)", Time.current - 30.days,
+      110, MerchantCustomer.where(merchant_id: 110).pluck(:customer_id)).pluck(:user_id)
   end
 end
