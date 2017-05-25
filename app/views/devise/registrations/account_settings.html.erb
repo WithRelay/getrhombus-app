@@ -26,7 +26,6 @@
           <%= f.hidden_field :org_phone, id: "phone_number" %>
 
         <% else %>
-
             <%= f.hidden_field :phone_number, id: "phone_number" %>
 
         <% end %>
@@ -51,12 +50,20 @@
         </div>
         <div class="form-group">
           <%= f.password_field :password, type: "password", id: "newPassword", placeholder: "Enter new password", class: "form-control password settings text-field w-input" %>
-          <div class="errorMessageContainer"></div>
         </div>
         <div class="form-group">
           <%= f.password_field :password_confirmation, id: "confirmNewPassword", type: "password", placeholder: "Confirm new password", class: "form-control confirm password settings text-field w-input" %>
-          <div class="errorMessageContainer"></div>
         </div>
+
+        <div class="row">
+        <div class= "form-group col-xs-6">
+            <div class="password w-col-4" id="password"></div>
+        </div>
+        <div class= "form-group col-xs-6">
+            <div class="password w-col-4" id="confirm-password"></div>
+        </div>
+        </div>
+
       </div>
 
   </div>
