@@ -118,6 +118,31 @@
         </div>
       <% end %>
     </div>
+    <a class="attach-text pull-left" href="#" id='select-images-button'></a>
+    <a class="button w-button" href="#" id='webcam-capture'>Webcam</a>
+    <%= file_field_tag "", type: :file, id: "select-images", class: 'hide', accept: "image/*" %>
+
+    <div class="webcam-content hide">
+      <div class="camera">
+        <video id="video">Video stream not available.</video>
+        <a id="startbutton" class="w-button"><i class="material-icons">camera_alt</i></a>
+      </div>
+      <canvas id="canvas" style="display: none;">
+      </canvas>
+
+      <div class="cam-image hide">
+        <a href="#" id="delete-photo" title="Delete Photo"><i class="material-icons">delete</i></a>
+        <img id="photo" alt="The screen capture will appear in this box.">
+      </div>
+    </div>
+
+    <!-- for new images -->
+    <div id='new-image-previews'>
+    </div>
+
+    <!-- for already attached images -->
+    <div id='image-previews'>
+    </div>
     <%= f.submit :Save, id: 'saveManagedAccount', class: 'button payment-setup save-changes w-button' %>
     <% end %>
   </div>

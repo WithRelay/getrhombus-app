@@ -105,6 +105,7 @@
 //= require away_messages
 //= require csv_upload
 //= require perfect-scrollbar
+//= require capture
 // DO NOT REQUIRE TREE AS IT DOESNT GUARANTEE THE DEPENDENCY ORDER OF THESE FILES
 // require_tree .
 
