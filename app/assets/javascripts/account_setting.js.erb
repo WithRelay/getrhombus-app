@@ -22,6 +22,14 @@ $(document).ready(function() {
       live: 'disabled',
       err: {
         container: function($field, validator) {
+          if($field.attr("id") == "newPassword" ){
+            return '#password';
+          }
+
+          if($field.attr("id") == "confirmNewPassword"){
+            return '#confirm-password';
+          }
+
           return $field.parent().find('.errorMessageContainer').show();
         }
       },
