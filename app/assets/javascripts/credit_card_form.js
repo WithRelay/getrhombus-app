@@ -1,5 +1,5 @@
 $(document).ready(function () {
-  
+
   var cc_form_btn = '#cc-submit', cc_form_id = "#cc-form";
 
   $('input#cc-number').payment('formatCardNumber');
@@ -9,6 +9,18 @@ $(document).ready(function () {
   $(cc_form_id).formValidation({
     framework: 'bootstrap',
     live: 'disabled',
+    err: {
+      container: function($field, validator) {
+        if($field.attr("id") == "cc-exp" ){
+          return '#cardDate';
+        }
+
+        if($field.attr("id") == "cc-csc"){
+          return '#cardCvv';
+        }
+        return $field.parent().find('.messageContainer').show();
+      }
+    },
     fields: {
       'cc-name': {
         selector: '#cc-name',
@@ -88,15 +100,15 @@ $(document).ready(function () {
     // data.element --> The field element
 
     // Hide the messages
-    data.element
-      .data('fv.messages')
-      .find('.help-block[data-fv-for="' + data.field + '"]').hide();
+    // data.element
+    //   .data('fv.messages')
+    //   .find('.help-block[data-fv-for="' + data.field + '"]').hide();
   })
-  .on('success.form.fv', function(e, data) {    
+  .on('success.form.fv', function(e, data) {
     e.preventDefault();
-    CardHandler.submit_to_stripe(cc_form_id, cc_form_btn, submit_cc_form);  
+    CardHandler.submit_to_stripe(cc_form_id, cc_form_btn, submit_cc_form);
   });
- 
+
   function submit_cc_form() { $(cc_form_id).data('formValidation').defaultSubmit(); };
 
   // Simply populates credit card and bank account fields with test data

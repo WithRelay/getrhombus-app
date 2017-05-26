@@ -1,20 +1,26 @@
-<div class="webcam-modal-content modal-background" id="webcam-modal">
+<div class="webcam-modal-content w-clearfix modal-background" id="webcam-modal">
   <div class="content-sub-wrapper modal w-clearfix">
     <h4 class="modal-header welcome-dash-content-container-header">Capture Image</h4>
-    <a class="close-modal update-close-modals" data-parent='webcam-modal' href="#"></a>
+    <a class="close-modal update-close-modals" data-parent='webcam-modal' href="#" id="webcam-close"></a>
   </div>
-  <div class="webcam-content">
-    <div class="web-camera">
-      <video id="video">Video stream not available.</video>
-    </div>
-    <a id="startbutton" class="w-button"><i class="material-icons">camera_alt</i></a>
+  <div class="container">
+    <div class="app">
 
-    <canvas id="canvas" style="display: none;">
-    </canvas>
+      <video id="camera-stream"></video>
+      <img id="snap">
 
-    <div class="cam-image hide">
-      <a href="#" id="delete-photo" title="Delete Photo"><i class="material-icons">delete</i></a>
-      <img id="photo" alt="The screen capture will appear in this box.">
+      <p id="error-message"></p>
+
+      <div class="controls">
+        <a href="#" id="delete-photo" title="Delete Photo" class="disabled"><i class="material-icons">delete</i></a>
+        <a href="#" id="take-photo" title="Take Photo"><i class="material-icons">camera_alt</i></a>
+        <a href="#" class="hide" id="download-photo" download="selfie.png" title="Save Photo" class="disabled"><i class="material-icons">file_download</i></a>
+      </div>
+
+      <!-- Hidden canvas element. Used for taking snapshot of video. -->
+      <canvas></canvas>
+
     </div>
   </div>
+  <a class="button w-button hide" href="#" id='select-capture-image' modal-target= 'new-webcam-modal'>Select Image</a>
 </div>

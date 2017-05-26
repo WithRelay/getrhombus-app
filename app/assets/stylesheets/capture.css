@@ -1,19 +1,178 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:400,700');
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
-
-.camera {
-  margin-top: 10%;
-  margin-bottom: 250px;
+.webcam-modal-content {
+  display: block;
+  width: 600px;
+  min-height: 420px;
+  margin-right: auto;
+  margin-left: auto;
+  padding-bottom: 30px;
+  border: 1px solid #e6e5e5;
+  border-radius: 3px;
+  background-color: #fff;
+  text-align: center;
 }
 
-a#startbutton {
-  border-radius: 50%;
-  color: #fff;
-  background-color: #111;
+#select-capture-image {
+  margin-top: 3%;
+  margin-right: 30%;
+}
+
+#webcam-capture {
+  width: 8.5%;
+  margin-right: 65%;
+  color: #8da2b7;
+  background-color: transparent;
+}
+
+.webcam-icon {
+  font-size: 50px;
+  margin: -11px 0 0 -10px;
+}
+
+.attach-image {
+  position: static;
+  display: inline-block;
+  width: 22px;
+  margin-top: 12px;
+  margin-right: 15px;
+  float: none;
+  font-family: 'Fontawesome webfont', sans-serif;
+  color: #8da2b7;
+  font-size: 45px;
   text-decoration: none;
-  padding: 15px;
-  margin-left: 130px;
-  line-height: 0;
-  opacity: 0.7;
-  outline: none;
-  -webkit-tap-highlight-color: transparent;
 }
+
+.container{
+  max-width: 1000px;
+  background-color: #efefef;
+}
+
+.app{
+    width: 100%;
+    position: relative;
+}
+
+.app video#camera-stream{
+    display: none;
+    width: 100%;
+}
+
+.app img#snap{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 10;
+    display: none;
+}
+
+.app #error-message{
+    width: 100%;
+    background-color: #ccc;
+    color: #9b9b9b;
+    font-size: 28px;
+    padding: 200px 100px;
+    text-align: center;
+    display: none;
+}
+
+.app .controls{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 20;
+
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding: 30px;
+    display: none;
+}
+
+.app .controls a{
+    border-radius: 50%;
+    color: #fff;
+    background-color: #111;
+    text-decoration: none;
+    padding: 15px;
+    line-height: 0;
+    opacity: 0.7;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.app .controls a:hover{
+    opacity: 1;
+}
+
+.app .controls a.disabled{
+    background-color: #555;
+    opacity: 0.5;
+    cursor: default;
+    pointer-events: none;
+}
+
+.app .controls a.disabled:hover{
+    opacity: 0.5;
+}
+
+.app .controls a i{
+    font-size: 18px;
+}
+
+.app .controls #take-photo i{
+    font-size: 32px;
+}
+
+.app canvas{
+    display: none;
+}
+
+
+
+.app video#camera-stream.visible,
+.app img#snap.visible,
+.app #error-message.visible
+{
+    display: block;
+}
+
+.app .controls.visible{
+    display: flex;
+}
+
+
+
+@media(max-width: 1000px){
+    .app #start-camera.visible{
+        display: block;
+    }
+
+    .app .controls a i{
+        font-size: 16px;
+    }
+
+    .app .controls #take-photo i{
+        font-size: 24px;
+    }
+}
+
+
+@media(max-width: 600px){
+    .app #error-message{
+        padding: 80px 50px;
+        font-size: 18px;
+    }
+
+    .app .controls a i{
+        font-size: 12px;
+    }
+
+    .app .controls #take-photo i{
+        font-size: 18px;
+    }
+}
+

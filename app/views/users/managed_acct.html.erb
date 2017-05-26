@@ -118,8 +118,12 @@
         </div>
       <% end %>
     </div>
-    <a class="attach-text pull-left" href="#" id='select-images-button'></a>
-    <a class="button w-button modal-loader" href="#" id='webcam-capture' modal-target= 'new-webcam-modal'>Webcam</a>
+
+    <div class="flex-underline form-section-divider"></div>
+    <label class="field-headers form-label settings" for="name-2">Upload Profile Picture (you)</label>
+
+    <a class="attach-image pull-left" href="#" id='select-images-button'></a>
+    <a class="button w-button modal-loader" href="#" id='webcam-capture' modal-target= 'new-webcam-modal'><i class="material-icons webcam-icon">photo_camera</i></a>
     <%= file_field_tag "", type: :file, id: "select-images", class: 'hide', accept: "image/*" %>
 
     <div class='modal-background w-hidden modal-body new-webcam-modal'>
