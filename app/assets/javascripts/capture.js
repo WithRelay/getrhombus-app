@@ -1,130 +1,189 @@
-(function() {
-  // The width and height of the captured photo. We will set the
-  // width to the value defined here, but the height will be
-  // calculated based on the aspect ratio of the input stream.
+$(document).ready(function () {
+  // References to all the element we will need.
+  var video = document.querySelector('#camera-stream'),
+      image = document.querySelector('#snap'),
+      start_camera = document.querySelector('#webcam-capture'),
+      stop_camera = document.querySelector('#webcam-close'),
+      controls = document.querySelector('.controls'),
+      take_photo_btn = document.querySelector('#take-photo'),
+      delete_photo_btn = document.querySelector('#delete-photo'),
+      download_photo_btn = document.querySelector('#download-photo'),
 
-  var width = 480;    // We will scale the photo width to this
-  var height = 0;     // This will be computed based on the input stream
-
-  // |streaming| indicates whether or not we're currently streaming
-  // video from the camera. Obviously, we start at false.
-
-  var streaming = false;
-
-  // The various HTML elements we need to configure or control. These
-  // will be set by the startup() function.
-
-  var video = null;
-  var canvas = null;
-  var photo = null;
-  var startbutton = null;
-  var deletephoto = null;
-
-  function startup() {
-    video = document.getElementById('video');
-    canvas = document.getElementById('canvas');
-    photo = document.getElementById('photo');
-    startbutton = document.getElementById('startbutton');
-    deletephoto = document.getElementById('delete-photo');
+      error_message = document.querySelector('#error-message'),
+      MediaStream;
 
 
-    navigator.getMedia = ( navigator.getUserMedia ||
-                           navigator.webkitGetUserMedia ||
-                           navigator.mozGetUserMedia ||
-                           navigator.msGetUserMedia);
-
-    startbutton.addEventListener('click', function(ev){
-      $('.cam-image').attr('class', 'cam-image show');
-      $('#photo').slideDown(240);
-      takepicture();
-      ev.preventDefault();
-    }, false);
-
-    deletephoto.addEventListener('click', function(ev){
-      $('#photo').slideUp(240);
-      // $('.cam-image').attr('class', 'cam-image hide');
-      clearphoto();
-      ev.preventDefault();
-    }, false);
+  // The getUserMedia interface is used for handling camera input.
+  // Some browsers need a prefix so here we're covering all the options
+  navigator.getMedia = ( navigator.getUserMedia ||
+                        navigator.webkitGetUserMedia ||
+                        navigator.mozGetUserMedia ||
+                        navigator.msGetUserMedia);
 
 
-  $('#webcam-capture').on('click', function(){
-    canPlay();
-  });
+  // Mobile browsers cannot play video without user input,
+  // so here we're using a button to start it manually.
+  if (start_camera) {
+    start_camera.addEventListener("click", function(e){
+      if(!navigator.getMedia){
+        displayErrorMessage("Your browser doesn't have support for the navigator.getUserMedia interface.");
+      }
+      else{
+        // Request the camera.
+        navigator.getMedia(
+          {
+            video: true
+          },
+          // Success Callback
+          function(stream){
+
+            // Create an object URL for the video stream and
+            // set it as src of our HTLM video element.
+            MediaStream = stream.getTracks()[0];
+            video.src = window.URL.createObjectURL(stream);
+
+            // Play the video element to start the stream.
+            video.play();
+            video.onplay = function() {
+              showVideo();
+            };
+
+          },
+          // Error Callback
+          function(err){
+            displayErrorMessage("There was an error with accessing the camera stream: " + err.name, err);
+          }
+        );
+
+      }
+    });
+
+    stop_camera.addEventListener("click", function(e){
+      MediaStream.stop();
+      $('#select-capture-image').attr('class', 'button w-button hide');
+    });
+
+    $("#webcam-close").visibilityChanged({
+      callback: function(element, visible) {
+        if (!visible && MediaStream) {
+          MediaStream.stop();
+          $('#select-capture-image').attr('class', 'button w-button hide');
+        }
+      }
+    });
+
+    take_photo_btn.addEventListener("click", function(e){
+
+      e.preventDefault();
+
+      var snap = takeSnapshot();
+
+      // Show image.
+      image.setAttribute('src', snap);
+      image.classList.add("visible");
+
+      // Enable delete and save buttons
+      delete_photo_btn.classList.remove("disabled");
+      download_photo_btn.classList.remove("disabled");
+      $('#select-capture-image').attr('class', 'button w-button');
+      $('#select-capture-image').attr('img-data', snap);
+      // Set the href attribute of the download button to the snap url.
+      download_photo_btn.href = snap;
+
+      // Pause video playback of stream.
+      video.pause();
+
+    });
+
+
+    delete_photo_btn.addEventListener("click", function(e){
+
+      e.preventDefault();
+
+      // Hide image.
+      image.setAttribute('src', "");
+      image.classList.remove("visible");
+
+      // Disable delete and save buttons
+      delete_photo_btn.classList.add("disabled");
+      download_photo_btn.classList.add("disabled");
+      $('#select-capture-image').attr('class', 'button w-button hide');
+
+      // Resume playback of stream.
+      video.play();
+    });
+
+    $('#select-capture-image').on("click", function(e){
+      e.preventDefault();
+      imgUri = $('#select-capture-image').attr('img-data');
+      read_webcam_img_picker(imgUri)
+      stop_camera.click();
+    });
   }
 
-  // Fill the photo with an indication that none has been
-  // captured.
+  function showVideo(){
+    // Display the video stream and the controls.
 
-  function clearphoto() {
-    var context = canvas.getContext('2d');
-    context.fillStyle = "#AAA";
-    context.fillRect(0, 0, canvas.width, canvas.height);
-
-    var data = canvas.toDataURL('image/png');
-    photo.setAttribute('src', data);
+    hideUI();
+    video.classList.add("visible");
+    controls.classList.add("visible");
   }
 
-  // Capture a photo by fetching the current contents of the video
-  // and drawing it into a canvas, then converting that to a PNG
-  // format data URL. By drawing it on an offscreen canvas and then
-  // drawing that to the screen, we can change its size and/or apply
-  // other changes before drawing it.
 
-  function takepicture() {
-    var context = canvas.getContext('2d');
+  function takeSnapshot(){
+    // Here we're using a trick that involves a hidden canvas element.
+
+    var hidden_canvas = document.querySelector('canvas'),
+        context = hidden_canvas.getContext('2d');
+
+    var width = video.videoWidth,
+        height = video.videoHeight;
+
     if (width && height) {
-      canvas.width = width;
-      canvas.height = height;
+
+      // Setup a canvas with the same dimensions as the video.
+      hidden_canvas.width = width;
+      hidden_canvas.height = height;
+
+      // Make a copy of the current frame in the video on the canvas.
       context.drawImage(video, 0, 0, width, height);
 
-      var data = canvas.toDataURL('image/png');
-      photo.setAttribute('src', data);
-    } else {
-      clearphoto();
+      // Turn the canvas image into a dataURL that can be used as a src for our photo.
+      return hidden_canvas.toDataURL('image/png');
     }
   }
 
-  function canPlay() {
-    video.addEventListener('canplay', function(ev){
-      if (!streaming) {
-        height = video.videoHeight / (video.videoWidth/width);
 
-        // Firefox currently has a bug where the height can't be read from
-        // the video, so we will make assumptions if this happens.
+  function displayErrorMessage(error_msg, error){
+    error = error || "";
+    if(error){
+      console.log(error);
+    }
 
-        if (isNaN(height)) {
-          height = width / (4/3);
-        }
+    error_message.innerText = error_msg;
 
-        video.setAttribute('width', width);
-        video.setAttribute('height', height);
-        canvas.setAttribute('width', width);
-        canvas.setAttribute('height', height);
-        streaming = true;
-      }
-    }, false);
-
-    navigator.getMedia(
-      {
-        video: true,
-        audio: false
-      },
-      function(stream) {
-        if (navigator.mozGetUserMedia) {
-          video.mozSrcObject = stream;
-        } else {
-          var vendorURL = window.URL || window.webkitURL;
-          video.src = vendorURL.createObjectURL(stream);
-        }
-        video.play();
-      },
-      function(err) {
-        console.log("An error occured! " + err);
-      }
-    );
+    hideUI();
+    error_message.classList.add("visible");
   }
 
-  window.addEventListener('load', startup, false);
 
-})();
+  function hideUI(){
+    // Helper function for clearing the app UI.
+
+    controls.classList.remove("visible");
+    start_camera.classList.remove("visible");
+    video.classList.remove("visible");
+    snap.classList.remove("visible");
+    error_message.classList.remove("visible");
+  }
+
+  function read_webcam_img_picker(img_uri) {
+    new_image_previews = $('#new-image-previews').html("");
+    div = "<div class='images'>" +
+            "<div href='#' class='deleteImagePreview' title='Profile Picture'>x</div>" +
+            "<img class='editor-thumbnail' src='" + img_uri + "'" + "title='Profile Picture' />" +
+            '<div class="editor-file-name shrink-text">Profile.png</div>' +
+          "</div>";
+    new_image_previews.prepend(div);
+  }
+})
