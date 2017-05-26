@@ -5,11 +5,11 @@ module DashboardMerchantQueries
 	# These queries need to be timezone aware and need to use conversation model and need
 	# to use referrers table where necessary
 
-	def segment_dynamic_customers
+	def new_customers_segment
 		"MerchantCustomer.where('created_at >= ? AND merchant_id = ?', Time.current - 7.days, #{self.id}).pluck(:customer_id)"
   end
 
-  def segment_dynamic_contacts
+  def new_contacts_segment
   	"MerchantContact.where('created_at >= ? AND merchant_id = ? AND is_customer = false', Time.current - 7.days, #{self.id}).pluck(:uid)"
   end
 

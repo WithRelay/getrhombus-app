@@ -3,7 +3,8 @@ class CsvCustomerImportJob < ApplicationJob
 
   def perform(merchant, file)
     begin
-      merchant.upload_customer_csv(file)
+      path = Paperclip.io_adapters.for(file.attachment).path
+      merchant.upload_customer_csv(path)
     rescue StandardError => e
     end
   end
