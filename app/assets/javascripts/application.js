@@ -106,6 +106,7 @@
 //= require csv_upload
 //= require perfect-scrollbar
 //= require capture
+//= require visibility_changed
 // DO NOT REQUIRE TREE AS IT DOESNT GUARANTEE THE DEPENDENCY ORDER OF THESE FILES
 // require_tree .
 
