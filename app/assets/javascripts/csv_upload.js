@@ -13,6 +13,7 @@ $(document).ready(function () {
         alert("Please upload one csv file");
       else {
         file = file[0];
+        console.log(file.type)
         if (file.type.match('csv')) {
           $('#csv-file-name').text(file.name);
           return;

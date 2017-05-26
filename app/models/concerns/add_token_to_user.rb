@@ -13,7 +13,7 @@ module AddTokenToUser
       hash = { email: self.email, card_token: card_token, new_customer: true, platform_customer: true } 
       
       # order so platform is first
-      merchant_customers = MerchantCustomer.includes(:merchant).where(customer_id: self.id).order(is_platform: :asc)
+      merchant_customers = MerchantCustomer.includes(:merchant).where(customer_id: self.id).order(is_platform: :desc)
 
       # This step doesn't really happen anymore since merchant customer between platform and customer happens at sign up
       if merchant_customers.blank?            

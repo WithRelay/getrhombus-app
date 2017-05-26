@@ -13,17 +13,21 @@ class MerchantCustomer < ActiveRecord::Base
 
   def self.add_or_update_merchant_customer(merchant, customer)
     begin
-      # check for number and set is_customer
-      MerchantContact.where(uid_type: 'phone_number', uid: customer.phone_number).update_all(is_customer: true) if customer.try(:phone_number).present?
+      if merchant.try(:id)
+        # check for number and set is_customer
+        if customer.try(:phone_number).present?
+          merchant.merchant_contacts.where(uid_type: 'phone_number', uid: customer.phone_number).update_all(is_customer: 1)
+        end
+        
+        if customer.try(:id)
+          # check for page_specific_ids and set is_customer
+          creds = FbCred.where(user_id: customer.id).pluck(:page_specific_id)
+          merchant.merchant_contacts.where(uid_type: 'fb_page', uid: creds).update_all(is_customer: 1) if creds.present?
 
-      # check for page_specific_ids and set is_customer
-      creds = FbCred.where(user_id: customer.id).pluck(:page_specific_id)
-      MerchantContact.where(uid_type: 'fb_page', uid: creds).update_all(is_customer: true) if creds.present?
-
-      # add as customer
-      if merchant.try(:id).present? && customer.try(:id).present?
-        _is_platform = (merchant.email == User.platform_email) ? 0 : 1
-        find_or_create_by(merchant_id: merchant.id, customer_id: customer.id, is_platform: _is_platform) 
+          # add as customer if necessary
+          _is_platform = merchant.email == User.platform_email ? 0 : 1
+          find_or_create_by(merchant_id: merchant.id, customer_id: customer.id, is_platform: _is_platform) 
+        end
       end
     rescue StandardError => err
     end

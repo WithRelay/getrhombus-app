@@ -288,9 +288,23 @@ class User < ActiveRecord::Base
 
 
   def x
-    Transaction.where("created_at >= ? AND user_id IN(?) AND team_id = ?", Time.current - 30.days,
+    Transaction.where("created_at >= ? AND user_id IN(?) AND team_id = ?", Time.current - 222230.days,
       MerchantCustomer.where(merchant_id: 110).pluck(:customer_id), 110).pluck(:user_id) |
-      FbMessage.where("created_at >=? AND user_id_to = ? AND user_id IN(?)", Time.current - 30.days,
+      FbMessage.where("created_at >=? AND user_id_to = ? AND user_id IN(?)", Time.current - 222230.days,
+      110, MerchantCustomer.where(merchant_id: 110).pluck(:customer_id)).pluck(:user_id) |
+      Message.where("created_at >=? AND user_id_to = ? AND user_id IN(?)", Time.current - 222230.days,
       110, MerchantCustomer.where(merchant_id: 110).pluck(:customer_id)).pluck(:user_id)
+  end
+
+  def y
+    User.paginate_by_sql('select distinct id from 
+  ( select user_id as id, created_at from transactions where user_id in (122,124,125,126,127) and team_id = 110
+  UNION 
+  select user_id as id, created_at from fb_messages where user_id in (122,124,125,126,127) and user_id_to = 110
+  UNION 
+  select user_id as id, created_at from messages where user_id in (122,124,125,126,127) and user_id_to = 110
+    ) active_users
+order by created_at', :page => 1, :per_page => 2)
+
   end
 end

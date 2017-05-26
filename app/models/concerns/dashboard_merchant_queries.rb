@@ -14,6 +14,17 @@ module DashboardMerchantQueries
   end
 
   def active_customers_segment
+    'select distinct id from 
+		  ( select user_id as id, created_at from transactions where user_id in (?) and team_id = ?
+		  UNION 
+		  select user_id as id, created_at from fb_messages where user_id in (?) and user_id_to = ?
+		  UNION 
+		  select user_id as id, created_at from messages where user_id in (?) and user_id_to = ?
+		    ) active_users
+		order by created_at'
+  end
+
+  def active_customers_segment1
     merchant_id = self.id
    %Q{Transaction.where("created_at >= ? AND user_id IN(?) AND team_id = ?", Time.current - 30.days,
       MerchantCustomer.where(merchant_id: #{merchant_id}).pluck(:customer_id), #{merchant_id}).pluck(:user_id) |
