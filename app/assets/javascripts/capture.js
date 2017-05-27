@@ -178,6 +178,7 @@ $(document).ready(function () {
   }
 
   function read_webcam_img_picker(img_uri) {
+    $('#select-images').val('');
     new_image_previews = $('#new-image-previews').html("");
     div = "<div class='images'>" +
             "<div href='#' class='deleteImagePreview' title='Profile Picture'>x</div>" +
