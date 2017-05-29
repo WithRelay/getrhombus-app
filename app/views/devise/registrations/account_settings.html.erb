@@ -24,10 +24,8 @@
             </div>
           <% end %>
           <%= f.hidden_field :org_phone, id: "phone_number" %>
-
         <% else %>
             <%= f.hidden_field :phone_number, id: "phone_number" %>
-
         <% end %>
         <div class="form-group">
           <%= f.phone_field :phone, id: "phone", class: "form-control password settings text-field w-input" %>
@@ -59,6 +57,7 @@
         <div class= "form-group col-xs-6">
             <div class="password w-col-4" id="password"></div>
         </div>
+
         <div class= "form-group col-xs-6">
             <div class="password w-col-4" id="confirm-password"></div>
         </div>
