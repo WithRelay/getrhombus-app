@@ -30,6 +30,10 @@ $(document).ready(function() {
             return '#confirm-password';
           }
 
+          if($field.attr('id') == "phone"){
+              return $field.parent().parent().find('.errorPhone').show();
+          }
+
           return $field.parent().find('.errorMessageContainer').show();
         }
       },

@@ -4,8 +4,11 @@ class StripeCred < ActiveRecord::Base
   serialize :fields_needed
 
   belongs_to :user
-  belongs_to :transaction_fee  
+  belongs_to :transaction_fee
   before_create :set_transaction_fee_id
+
+  has_one :image_ref, as: :imageable, dependent: :destroy
+  has_one :image, through: :image_ref
 
   # the default
   def set_transaction_fee_id

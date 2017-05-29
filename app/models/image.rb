@@ -7,6 +7,7 @@ class Image < ActiveRecord::Base
   has_many :image_refs, dependent: :destroy
   has_many :users, through: :image_refs, source: :imageable, source_type: 'User' #, dependent: :destroy
   has_many :hashtags, through: :image_refs, source: :imageable, source_type: 'Hashtag' #, dependent: :destroy
+  has_one :stripe_cred, through: :image_ref, source: :imageable, source_type: 'StripeCred' #, dependent: :destroy
   has_many :messages, through: :image_refs, source: :imageable, source_type: 'Message' #, dependent: :destroy
   has_many :fb_messages, through: :image_refs, source: :imageable, source_type: 'FbMessage' #, dependent: :destroy
 
