@@ -52,7 +52,7 @@ $(document).ready(function() {
         }
 
         if($field.attr('id') == "phone"){
-            return $field.parent().parent().find('.messageContainer').show();
+            return $field.parent().parent().find('.errorPhone').show();
         }
 
         return $field.parent().find('.messageContainer').show();
