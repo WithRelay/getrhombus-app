@@ -50,6 +50,11 @@ $(document).ready(function() {
         if($field.attr("id") == "cc-csc"){
           return '#cardCvv';
         }
+
+        if($field.attr('id') == "phone"){
+            return $field.parent().parent().find('.messageContainer').show();
+        }
+
         return $field.parent().find('.messageContainer').show();
       }
     },
