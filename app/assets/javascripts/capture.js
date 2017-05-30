@@ -60,14 +60,14 @@ $(document).ready(function () {
 
     stop_camera.addEventListener("click", function(e){
       MediaStream.stop();
-      $('#select-capture-image').attr('class', 'button w-button hide');
+      // $('#select-capture-image').attr('class', 'button w-button hide');
     });
 
     $("#webcam-close").visibilityChanged({
       callback: function(element, visible) {
         if (!visible && MediaStream) {
           MediaStream.stop();
-          $('#select-capture-image').attr('class', 'button w-button hide');
+          // $('#select-capture-image').attr('class', 'button w-button hide');
         }
       }
     });
@@ -149,6 +149,7 @@ $(document).ready(function () {
       context.drawImage(video, 0, 0, width, height);
 
       // Turn the canvas image into a dataURL that can be used as a src for our photo.
+      debugger
       return hidden_canvas.toDataURL('image/png');
     }
   }
