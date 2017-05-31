@@ -46,6 +46,8 @@ module AdditionalUserActions
                'update_managed_acct'=> [:update_account, :check_update_or_create] }
     account = stripe_managed.send(action[params[:action]][0])
     if account.is_a?(Stripe::Account)
+      #save file id on people data is remaining
+      stripe_managed.upload_file
       external_account = stripe_managed.send(action[params[:action]][1], account)
       @user.update(save_managed_connect_acccount(account, external_account))
       external_account.is_a?(Stripe::BankAccount) ? account : external_account
@@ -110,9 +112,9 @@ module AdditionalUserActions
     # referrer_uid is the merchant the payment is going to
     path = add_card_info_user_path(current_user)
     if params[:user][:captured_amt].present?
-      path = add_card_info_user_path(current_user, amt: params[:user][:captured_amt], 
+      path = add_card_info_user_path(current_user, amt: params[:user][:captured_amt],
                                                    referrer_uid: params[:user][:referrer_uid],
-                                                   msg_id: params[:user][:msg_id], tag_id: params[:user][:tag_id]) 
+                                                   msg_id: params[:user][:msg_id], tag_id: params[:user][:tag_id])
     end
     path
   end
@@ -138,7 +140,7 @@ module AdditionalUserActions
     if params[:user][:referrer_uid].present?
       merchant = User.find_by(relay_uid: params[:user][:referrer_uid])
       if merchant
-        Referrer.save_referrer_with_uid(merchant.id, current_user.id) 
+        Referrer.save_referrer_with_uid(merchant.id, current_user.id)
         MerchantCustomer.add_or_update_merchant_customer(merchant, current_user)
       end
     end
@@ -180,5 +182,5 @@ module AdditionalUserActions
       r[:referrer_uid] = current_user.relay_uid
     end
   end
-  
+
 end
