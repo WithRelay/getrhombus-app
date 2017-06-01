@@ -237,6 +237,27 @@ class EmailingService
       end
     end
 
+    # Free Trial Expiration Notice (11 days after sign-up)
+    def free_trial_expiration_notice(user)
+      begin
+        template_name = 'free-trial-expiration-notice'
+        template_content = []
+        message = { "subject" => "#{user.first_name || 'Hey there'}, your Relay trial ends in 3 days",
+         "global_merge_vars"=> [    { "name" => "first_name", "content" => user.first_name || 'there' } ],
+         "merge_language" => "handlebars",
+         "to"=> [ { "email" => user.email } ],
+         "bcc_address"=> SENDER,
+         "from_name" => "Edwin from Relay",
+         "from_email" => FROM_EMAIL[:edwin]
+        }
+        async = true
+        result = MANDRILL.messages.send_template template_name, template_content, message, async
+      rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
+        puts "A mandrill error occurred: #{e.class} - #{e.message}"
+      rescue StandardError => e
+      end
+    end
+
     # Weekly Activity Summary (HTML Template, Every Monday - 11am)
     def weekly_activity_summary(user)
       begin
@@ -681,7 +702,6 @@ class EmailingService
 
     def customer_added_to_relay(user, merchant, temp_password)
       begin
-        puts 'in added emaillllllllllllllllllllll'
         template_name = 'customer-added-to-relay'
         template_content = []
         message = { "subject" => "Best way to reach us",
