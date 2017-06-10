@@ -48,7 +48,7 @@ low_account_balance_alert:
   queue: low_account_balance_alert
 
 hosted_sms:
-  cron: '0 11 * * * America/New_York' # “At 11:00 every day”
+  every: 15m
   class: 'HostedSmsJob'
   args:
   description: 'Update response of the hosted sms service'
