@@ -13,33 +13,31 @@ class HostedSmsService
   end
 
   def get_status(h)
-    response = HTTParty.get(
-      h.url,
-      basic_auth: { username: <redacted_username>
-      headers: { 'Content-Type' => 'application/json' }
-    )
+    @client = Twilio::REST::Client.new(TWILIO_API_KEY, TWILIO_API_SECRET)
+    response = @client.preview.hosted_numbers.hosted_number_orders(h.sid).fetch
     update_status(h, response)
   end
 
   def request_loa(h)
-    response = HTTParty.post(
-      h.url,
-      basic_auth: { username: <redacted_username>
-      headers: { 'Content-Type' => 'application/json' },
-      body: {
-        Status:'pending-loa'
-      }.to_json
-    )
+    # response = HTTParty.post(
+    #   h.url,
+    #   basic_auth: { username: <redacted_username>
+    #   headers: { 'Content-Type' => 'application/json' },
+    #   body: {
+    #     Status:'pending-loa'
+    #   }.to_json
+    # )
+    # update_status(h, response)
+    @client = Twilio::REST::Client.new(TWILIO_API_KEY, TWILIO_API_SECRET)
+    hosted_number_order = @client.preview.hosted_numbers.hosted_number_orders(h.sid)
+    response = hosted_number_order.update(status: 'pending-loa')
     update_status(h, response)
   end
 
-  def update(h, body)
-    response = HTTParty.post(
-      h.url,
-      basic_auth: { username: <redacted_username>
-      headers: { 'Content-Type' => 'application/json' },
-      body: body.to_json
-    )
+  def update(h, options)
+    @client = Twilio::REST::Client.new(TWILIO_API_KEY, TWILIO_API_SECRET)
+    hosted_number_order = @client.preview.hosted_numbers.hosted_number_orders(h.sid)
+    response = hosted_number_order.update(options)
     update_status(h, response)
   end
 
