@@ -770,12 +770,69 @@ class EmailingService
     end
 
     def send_completed_notice(hosted_number_order)
+      user = User.find_by(email: hosted_number_order[:email])
+      begin
+        template_name = 'send-ompleted-notice'
+        template_content = []
+        message = { "subject" => "Hosted nomber request completed",
+         "global_merge_vars"=> [  { "name" => "first_name", "content" => user.first_name || 'there' }
+                               ],
+         "merge_language" => "handlebars",
+         "to"=> [ { "email" => user.email } ],
+         "bcc_address"=> SENDER,
+         "from_name" => "#{ user.get_platform_acct_obj.first_name } from Relay",
+         "from_email" => user.platform_email
+        }
+        async = true
+        result = MANDRILL.messages.send_template template_name, template_content, message, async
+      rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
+        puts "A mandrill error occurred: #{e.class} - #{e.message}"
+      rescue StandardError => e
+      end
     end
 
     def send_action_required_notice(hosted_number_order)
+      user = User.find_by(email: hosted_number_order[:email])
+      begin
+        template_name = 'send-action-required-notice'
+        template_content = []
+        message = { "subject" => "Hosted nomber request completed",
+         "global_merge_vars"=> [  { "name" => "first_name", "content" => user.first_name || 'there' }
+                               ],
+         "merge_language" => "handlebars",
+         "to"=> [ { "email" => user.email } ],
+         "bcc_address"=> SENDER,
+         "from_name" => "#{ user.get_platform_acct_obj.first_name } from Relay",
+         "from_email" => user.platform_email
+        }
+        async = true
+        result = MANDRILL.messages.send_template template_name, template_content, message, async
+      rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
+        puts "A mandrill error occurred: #{e.class} - #{e.message}"
+      rescue StandardError => e
+      end
     end
 
     def send_failed_notice(hosted_number_order)
+      user = User.find_by(email: hosted_number_order[:email])
+      begin
+        template_name = 'send-failed-notice'
+        template_content = []
+        message = { "subject" => "Hosted nomber request completed",
+         "global_merge_vars"=> [  { "name" => "first_name", "content" => user.first_name || 'there' }
+                               ],
+         "merge_language" => "handlebars",
+         "to"=> [ { "email" => user.email } ],
+         "bcc_address"=> SENDER,
+         "from_name" => "#{ user.get_platform_acct_obj.first_name } from Relay",
+         "from_email" => user.platform_email
+        }
+        async = true
+        result = MANDRILL.messages.send_template template_name, template_content, message, async
+      rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
+        puts "A mandrill error occurred: #{e.class} - #{e.message}"
+      rescue StandardError => e
+      end
     end
 
 end
