@@ -769,5 +769,13 @@ class EmailingService
       end
     end
 
+    def send_completed_notice(hosted_number_order)
+    end
+
+    def send_action_required_notice(hosted_number_order)
+    end
+
+    def send_failed_notice(hosted_number_order)
+    end
 
 end
