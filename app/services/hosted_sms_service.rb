@@ -4,6 +4,7 @@ class HostedSmsService
   TWILIO_API_SECRET = Rails.application.secrets.twilio["secret"]
 
   def init_hosted_sms(options)
+    # @client.preview.hosted_numbers.hosted_number_orders.create(phone_number: '<redacted_phone_number>' ,type:'local' ,iso_country:'US' , address_sid:'AD577a66551b627230456bca51d5f82a89' , email:'<redacted_email>' , sms_capability:true , friendly_name:'Rhombus')
     begin
       @client = Twilio::REST::Client.new(TWILIO_API_KEY, TWILIO_API_SECRET)
       response = @client.preview.hosted_numbers.hosted_number_orders.create(options)
@@ -59,7 +60,8 @@ class HostedSmsService
         date_created: response[:date_created],
         account_sid: response[:account_sid],
         email: response[:email],
-        signing_document_sid: response[:signing_document_sid]
+        signing_document_sid: response[:signing_document_sid],
+        status_events: {}
       )
     end
 
