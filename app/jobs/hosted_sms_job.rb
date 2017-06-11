@@ -4,15 +4,24 @@ class HostedSmsJob
 
   def self.perform
 
-    # if we get mysql has gone away errors
-    #ActiveRecord::Base.clear_active_connections!
-
     HostedSms.all.each do |h|
-      # time.now.in_time_zone format year month is > card date then notify
-      unless h.status == 'Completed' || h.status == 'Failed'
-        HostedSmsService.get_status(h)
-      elsif h.status == 'Received' && !h.signing_document_sid
+      HostedSmsService.get_status(h)
+      if h.status == 'Pending LOA' && !h.status_events[:loa_sent]
         HostedSmsService.request_loa(h)
+        h.status_events[:loa_sent] = true
+        h.save
+      elsif h.status == 'Completed' && !h.status_events[:completed_notice_sent]
+        EmailingService.send_completed_notice(h)
+        h.status_events[:completed_notice_sent] = true
+        h.save
+      elsif h.status == 'Action Required' && !h.status_events[:action_required_notice_sent]
+        EmailingService.send_action_required_notice(h)
+        h.status_events[:action_required_notice_sent] = true
+        h.save
+      elsif h.status == 'Failed' && !h.status_events[:failed_notice_sent]
+        EmailingService.send_failed_notice(h)
+        h.status_events[:failed_notice_sent] = true
+        h.save
       end
     end
   end
