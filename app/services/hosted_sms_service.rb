@@ -2,14 +2,21 @@ class HostedSmsService
   class <<self
   TWILIO_API_KEY = Rails.application.secrets.twilio["key"]
   TWILIO_API_SECRET = Rails.application.secrets.twilio["secret"]
+  ADDRESS_SID = 'AD577a66551b627230456bca51d5f82a89'
 
   def init_hosted_sms(options)
-    # @client.preview.hosted_numbers.hosted_number_orders.create(phone_number: '<redacted_phone_number>' ,type:'local' ,iso_country:'US' , address_sid:'AD577a66551b627230456bca51d5f82a89' , email:'<redacted_email>' , sms_capability:true , friendly_name:'Rhombus')
+    # @client.preview.hosted_numbers.hosted_number_orders.create(
+    # phone_number: '<redacted_phone_number>' ,
+    # type:'local' ,iso_country:'US' , address_sid:ADDRESS_SID ,
+    # email: merchant_email ,
+    # cc_emails: ['team_email'], sms_capability:true , friendly_name: 'Business_name_number')
     begin
       @client = Twilio::REST::Client.new(TWILIO_API_KEY, TWILIO_API_SECRET)
       response = @client.preview.hosted_numbers.hosted_number_orders.create(options)
       create_hosted_number_order(response)
+      [true, 'Hosted number order started']
     rescue StandardError => err
+      [false, err.message]
     end
   end
 
@@ -29,17 +36,14 @@ class HostedSmsService
     #   }.to_json
     # )
     # update_status(h, response)
-    @client = Twilio::REST::Client.new(TWILIO_API_KEY, TWILIO_API_SECRET)
-    hosted_number_order = @client.preview.hosted_numbers.hosted_number_orders(h.sid)
-    response = hosted_number_order.update(status: 'pending-loa')
-    update_status(h, response)
-  end
-
-  def update(h, options)
-    @client = Twilio::REST::Client.new(TWILIO_API_KEY, TWILIO_API_SECRET)
-    hosted_number_order = @client.preview.hosted_numbers.hosted_number_orders(h.sid)
-    response = hosted_number_order.update(options)
-    update_status(h, response)
+    begin
+      @client = Twilio::REST::Client.new(TWILIO_API_KEY, TWILIO_API_SECRET)
+      hosted_number_order = @client.preview.hosted_numbers.hosted_number_orders(h.sid)
+      response = hosted_number_order.update(status: 'pending-loa')
+      update_status(h, response)
+    rescue StandardError => e
+      # sent email to team about error
+    end
   end
 
   private

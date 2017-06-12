@@ -774,14 +774,14 @@ class EmailingService
       begin
         template_name = 'send-ompleted-notice'
         template_content = []
-        message = { "subject" => "Hosted nomber request completed",
+        message = { "subject" => "Hosted number request completed",
          "global_merge_vars"=> [  { "name" => "first_name", "content" => user.first_name || 'there' }
                                ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
          "bcc_address"=> SENDER,
-         "from_name" => "#{ user.get_platform_acct_obj.first_name } from Relay",
-         "from_email" => user.platform_email
+         "from_name" => "Edwin from Relay",
+         "from_email" => User.platform_email
         }
         async = true
         result = MANDRILL.messages.send_template template_name, template_content, message, async
@@ -792,18 +792,16 @@ class EmailingService
     end
 
     def send_action_required_notice(hosted_number_order)
-      user = User.find_by(email: hosted_number_order[:email])
       begin
         template_name = 'send-action-required-notice'
         template_content = []
-        message = { "subject" => "Hosted nomber request completed",
-         "global_merge_vars"=> [  { "name" => "first_name", "content" => user.first_name || 'there' }
+        message = { "subject" => "Hosted SMS action required",
+         "global_merge_vars"=> [  { "name" => "first_name", "content" => 'team' }
                                ],
          "merge_language" => "handlebars",
-         "to"=> [ { "email" => user.email } ],
-         "bcc_address"=> SENDER,
-         "from_name" => "#{ user.get_platform_acct_obj.first_name } from Relay",
-         "from_email" => user.platform_email
+         "to"=> [ { "email" => User.platform_email } ],
+         "from_name" => "Email from Relay",
+         "from_email" => User.platform_email
         }
         async = true
         result = MANDRILL.messages.send_template template_name, template_content, message, async
@@ -818,14 +816,14 @@ class EmailingService
       begin
         template_name = 'send-failed-notice'
         template_content = []
-        message = { "subject" => "Hosted nomber request completed",
+        message = { "subject" => "Hosted number order failed",
          "global_merge_vars"=> [  { "name" => "first_name", "content" => user.first_name || 'there' }
                                ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
          "bcc_address"=> SENDER,
-         "from_name" => "#{ user.get_platform_acct_obj.first_name } from Relay",
-         "from_email" => user.platform_email
+         "from_name" => "Edwin from Relay",
+         "from_email" => User.platform_email
         }
         async = true
         result = MANDRILL.messages.send_template template_name, template_content, message, async
