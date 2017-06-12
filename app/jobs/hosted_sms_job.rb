@@ -4,7 +4,7 @@ class HostedSmsJob
 
   def self.perform
 
-    HostedSms.where.not(status: 'Completed').each do |h|
+    HostedSms.not_completed.each do |h|
       HostedSmsService.get_status(h)
       if h.status == 'Pending LOA' && !h.status_events[:loa_sent]
         HostedSmsService.request_loa(h)
