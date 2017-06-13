@@ -1,5 +1,5 @@
 require 'uri'
-  
+
   # help thorough implementation needed per doc above
 
 class TextingService
@@ -17,14 +17,14 @@ class TextingService
     def send_sms_nexmo(from, to, message, client_ref)
       begin
         # encode the nexmo uri
-        uri = URI.encode_www_form([["api_key",NEXMO_API_KEY], ["api_secret", NEXMO_API_SECRET], ["from", from], ["to", to], ["text", message], ['client-ref', client_ref]])  
-        # ["status-report-req", 1] 
+        uri = URI.encode_www_form([["api_key",NEXMO_API_KEY], ["api_secret", NEXMO_API_SECRET], ["from", from], ["to", to], ["text", message], ['client-ref', client_ref]])
+        # ["status-report-req", 1]
         response = HTTParty.post('https://rest.nexmo.com/sms/json?'+ uri, :headers => {"Content-Type" => "application/x-www-form-urlencoded"} )
       rescue StandardError => err
         return err
       end
     end
-  
+
     def send_sms(from, to, body, media_ary = [])
       begin
         sender = from.chr == "+" ? from : "+" + from
@@ -34,19 +34,21 @@ class TextingService
         data = { from: sender, to: recipient, body: body, application_sid: TWILIO_RHOMBUS_APP_SID }
         # 5MB max size, 10 images max
         data[:media_url] = media_ary if media_ary.present?
-        message = client.account.messages.create(data)
+        # https://www.twilio.com/docs/api/rest/message
+        message = client.api.messages.create(data)
       rescue StandardError => err
         return err
       end
     end
 
     def buy_number(params)
-      begin  
+      begin
         client = Twilio::REST::Client.new TWILIO_API_KEY, TWILIO_API_SECRET
         re = search_number(params)
         if re[:number].present?
-          re = client.account.incoming_phone_numbers.create(phone_number: re[:number], voice_application_sid: TWILIO_RHOMBUS_APP_SID,
-                sms_application_sid: TWILIO_RHOMBUS_APP_SID)   
+          # https://www.twilio.com/docs/api/rest/incoming-phone-numbers
+          re = client.incoming_phone_numbers.create(phone_number: re[:number], voice_application_sid: TWILIO_RHOMBUS_APP_SID,
+                sms_application_sid: TWILIO_RHOMBUS_APP_SID)
           return re.phone_number.gsub('+', ''), re.friendly_name
         end
       rescue Twilio::REST::RestException
@@ -59,7 +61,7 @@ class TextingService
       begin
         # https://www.twilio.com/help/faq/phone-numbers/which-countries-does-twilio-have-phone-numbers-in-and-what-are-their-capabilities
         client = Twilio::REST::Client.new TWILIO_API_KEY, TWILIO_API_SECRET
-        
+
         search_params = {}
         search_params[ ((['US', 'CA'].include? params[:country]) ? 'area_code' : 'contains').to_sym ] = params[:query]
         data = twilio_list[params[:country].to_sym][:types][params[:type].to_sym]
@@ -67,11 +69,12 @@ class TextingService
         search_params[:exclude_all_address_required] = "true" if data[:address_required] == ""
 
         if params[:type] == 'local'
-          number = client.account.available_phone_numbers(params[:country]).local.list(search_params).first
+          # https://www.twilio.com/docs/api/rest/available-phone-numbers
+          number = client.api.available_phone_numbers(params[:country]).local.list(search_params).first
         elsif params[:type] == 'toll_free'
-          number = client.account.available_phone_numbers(params[:country]).toll_free.list(search_params).first
+          number = client.api.available_phone_numbers(params[:country]).toll_free.list(search_params).first
         elsif params[:type] == 'mobile'
-          number = client.account.available_phone_numbers(params[:country]).mobile.list(search_params).first
+          number = client.api.available_phone_numbers(params[:country]).mobile.list(search_params).first
         end
 
         { number: number.nil? ? '' : number.phone_number  }
@@ -96,8 +99,8 @@ class TextingService
     end
 
     def twilio_list
-      { 
-=begin      
+      {
+=begin
         AU: {
           name: "Australia",
           types: {
@@ -127,8 +130,8 @@ class TextingService
               address_required: ""
             },
           }
-        }, 
-=end 
+        },
+=end
         CA: {
           name: "Canada",
           types: {
@@ -143,8 +146,8 @@ class TextingService
               address_required: ""
             },
           }
-        }, 
-=begin      
+        },
+=begin
         CL: {
           name: "Chile",
           types: {
@@ -177,7 +180,7 @@ class TextingService
         },
         FI: {
           name: "Finland",
-          types: {      
+          types: {
             mobile: {
               capabilities: ["sms"],
               reach: "global",
@@ -209,7 +212,7 @@ class TextingService
           name: "Hong Kong",
           types: {
             mobile: {
-              capabilities: ["sms"], 
+              capabilities: ["sms"],
               reach: "domestic",
               address_required: ""
             },
@@ -219,7 +222,7 @@ class TextingService
           name: "Hungary",
           types: {
             mobile: {
-              capabilities: ["sms"], 
+              capabilities: ["sms"],
               reach: "global",
               address_required: ""
             },
@@ -335,7 +338,7 @@ class TextingService
             },
           }
         },
-=end     
+=end
         US: {
           name: "United States",
           types: {
@@ -350,15 +353,16 @@ class TextingService
               address_required: ""
             },
           }
-        },      
+        },
       }
-    end  
+    end
 
     def release_number(num)
-      begin  
+      begin
         client = Twilio::REST::Client.new TWILIO_API_KEY, TWILIO_API_SECRET
-        client.account.incoming_phone_numbers.list({phone_number: num}).each { |n| n.delete }
-        true    
+        # https://www.twilio.com/docs/api/rest/incoming-phone-numbers
+        client.incoming_phone_numbers.list({phone_number: num}).each { |n| n.delete }
+        true
       rescue StandardError => e
         false
       end
@@ -368,7 +372,8 @@ class TextingService
     def fetch_message_details(message_id)
       begin
         client = Twilio::REST::Client.new TWILIO_API_KEY, TWILIO_API_SECRET
-        client.account.messages(message_id).fetch
+        # https://www.twilio.com/docs/api/rest/message
+        client.api.messages(message_id).fetch
       rescue StandardError => e
         false
       end
