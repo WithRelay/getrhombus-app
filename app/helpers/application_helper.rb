@@ -45,7 +45,7 @@ module ApplicationHelper
   end
 
   def total_alerts
-    @todays_txns_count + @todays_unread_convs_count
+    @todays_txns_count.to_i + @todays_unread_convs_count.to_i
   end
 
   def render_header_partial
