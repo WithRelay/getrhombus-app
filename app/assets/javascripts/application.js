@@ -94,7 +94,7 @@
 //= require list_checkbox_actions
 //= require managed-account
 //= require custom
-//= require rhombus_number_search
+//= require phone_number_setup
 //= require typeit
 //= require Chart.bundle
 //= require chartkick
