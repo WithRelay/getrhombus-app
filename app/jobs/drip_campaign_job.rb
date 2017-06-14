@@ -3,7 +3,7 @@ class DripCampaignJob
   @queue = :drip_campaigns
 
   def self.perform
-   
+
     User.where(user_level: 1).each do |user|
 
       diff_in_days = (((Time.current.change(hour: 0) - user.created_at.change(hour: 0)) / 1.day).to_i) - 1
@@ -20,6 +20,9 @@ class DripCampaignJob
       # Connect Facebook Messenger (9 days after sign-up)
       elsif diff_in_days == 9
         EmailingService.connect_facebook_messenger(user)
+      # Free Trial Expiration Notice (11 days after sign-up)
+      elsif diff_in_days == 11
+        EmailingService.free_trial_expiration_notice(user)
       # Add Bank Account (12 days after sign-up)
       elsif diff_in_days == 12
         EmailingService.add_bank_account(user)

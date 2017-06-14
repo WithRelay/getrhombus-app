@@ -47,6 +47,7 @@ class User < ActiveRecord::Base
   has_many :merchant_contacts, class_name: 'MerchantContact', foreign_key: 'merchant_id'
 
   has_many :reminders, -> { where campaign_type: 1 }
+  has_one :hosted_sms
 
   # this block is for customizing build method for user.campaign which allow also to save list
   has_many :campaigns, -> { where campaign_type: 0 } do

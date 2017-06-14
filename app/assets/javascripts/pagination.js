@@ -23,6 +23,7 @@ $(document).ready(function(){
     $('.dashboard-body').scroll(function() {
       var url = $('.pagination .next_page a').attr('href')
         if (url && $('.dashboard-body').scrollTop() > $(document).height() - $('.dashboard-body').height() - 50) {
+          $('.pagination').text("Fetching more...")
           return $.getScript(url);
         }
       });

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170611223601) do
+ActiveRecord::Schema.define(version: 20170612015755) do
 
   create_table "account_reloads", force: :cascade do |t|
     t.integer  "user_id",        limit: 4
@@ -343,6 +343,33 @@ ActiveRecord::Schema.define(version: 20170611223601) do
   add_index "hashtags", ["user_id", "tag"], name: "index_hashtags_on_user_id_and_tag", using: :btree
   add_index "hashtags", ["user_id"], name: "index_hashtags_on_user_id", using: :btree
 
+  create_table "hosted_sms", force: :cascade do |t|
+    t.string   "phone_number",              limit: 191
+    t.string   "account_sid",               limit: 191
+    t.string   "address_sid",               limit: 191
+    t.string   "email",                     limit: 191
+    t.string   "friendly_name",             limit: 191
+    t.string   "incoming_phone_number_sid", limit: 191
+    t.string   "sid",                       limit: 191
+    t.string   "signing_document_sid",      limit: 191
+    t.string   "status",                    limit: 191
+    t.string   "unique_name",               limit: 191
+    t.string   "url",                       limit: 191
+    t.datetime "created_at",                                                   null: false
+    t.datetime "updated_at",                                                   null: false
+    t.string   "cc_emails",                 limit: 191,   default: "--- []\n"
+    t.text     "capabilities",              limit: 65535
+    t.text     "status_events",             limit: 65535
+    t.integer  "user_id",                   limit: 4
+  end
+
+  add_index "hosted_sms", ["account_sid"], name: "index_hosted_sms_on_account_sid", using: :btree
+  add_index "hosted_sms", ["email"], name: "index_hosted_sms_on_email", using: :btree
+  add_index "hosted_sms", ["incoming_phone_number_sid"], name: "index_hosted_sms_on_incoming_phone_number_sid", using: :btree
+  add_index "hosted_sms", ["phone_number"], name: "index_hosted_sms_on_phone_number", using: :btree
+  add_index "hosted_sms", ["sid"], name: "index_hosted_sms_on_sid", using: :btree
+  add_index "hosted_sms", ["signing_document_sid"], name: "index_hosted_sms_on_signing_document_sid", using: :btree
+
   create_table "image_refs", force: :cascade do |t|
     t.integer  "imageable_id",   limit: 4
     t.string   "imageable_type", limit: 191
@@ -537,21 +564,20 @@ ActiveRecord::Schema.define(version: 20170611223601) do
   add_index "open_cnam_data", ["phone_number"], name: "index_open_cnam_data_on_phone_number", unique: true, using: :btree
 
   create_table "people", force: :cascade do |t|
-    t.string   "first_name",    limit: 191
-    t.string   "last_name",     limit: 191
-    t.integer  "role",          limit: 4
-    t.string   "dob",           limit: 191
-    t.string   "last4",         limit: 191
-    t.string   "stripe_pii_id", limit: 191
-    t.boolean  "livemode",      limit: 1
-    t.integer  "user_id",       limit: 4
-    t.datetime "created_at",                null: false
-    t.datetime "updated_at",                null: false
-    t.string   "gender",        limit: 191
-    t.string   "business_name", limit: 191
+    t.string   "first_name",     limit: 191
+    t.string   "last_name",      limit: 191
+    t.integer  "role",           limit: 4
+    t.string   "dob",            limit: 191
+    t.string   "last4",          limit: 191
+    t.string   "stripe_file_id", limit: 191
+    t.boolean  "livemode",       limit: 1
+    t.integer  "user_id",        limit: 4
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+    t.string   "gender",         limit: 191
+    t.string   "business_name",  limit: 191
   end
 
-  add_index "people", ["stripe_pii_id"], name: "index_people_on_stripe_pii_id", using: :btree
   add_index "people", ["user_id"], name: "index_people_on_user_id", using: :btree
 
   create_table "plans", force: :cascade do |t|

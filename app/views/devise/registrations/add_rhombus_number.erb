@@ -5,30 +5,47 @@
         <h4 class="form-header">Setup phone number</h4>
         <div class="flex-underline form-header-underline"></div>
         <div class="get-started-2 log-in-form">
-
           <%= form_for(current_user, as: resource_name, url: registration_update_user_path(resource_name), html: { method: :patch, class: "w-clearfix", id: "search_number_form" }) do |f| %>
 
-            <label class="form-label" for="Country-3">In what country would you like your number?</label>
+            <select class="dropdown w-select" data-name="Number Type" id="hosted_sms_select" required="required">
+              <option value="use-existing-landline">Use my existing landline or toll-free number</option>
+              <option value="new-phone-number">Use a new phone number</option>
+            </select>
 
-            <%= f.select :rn_country,  options_for_select(twilio_countries, selected: 'US'), {}, class: 'dropdown w-select', id: "searchNumberCountry" %>
+            <label class="form-label" id="number-label">What is your current landline or toll-free number?</label>
+            <%= f.text_field :phone_number, id: 'number-input-field', :class => "login text-field w-input", placeholder: "E.g. 415-123-4567" %>
 
-            <div id='searchOptions'>
+            <div class="virtual-number-div hide">
 
-              <%= f.select :rn_type, [], {}, class: 'dropdown w-select hide-not-important', id: "searchNumberType" %>
+              <label class="form-label" for="Country-3">In what country would you like your number?</label>
 
-              <label class="form-label" for="Area-Code-2" id='searchNumberFieldLabel'>Enter preferred area code:</label>
-              <%= f.text_field :area_code, id: 'searchNumberField', :class => "login text-field w-input", placeholder: "Enter area code" %>
+              <%= f.select :rn_country,  options_for_select(twilio_countries, selected: 'US'), {}, class: 'dropdown w-select', id: "searchNumberCountry" %>
 
-              <div class="area-code-availability flex-underline form-header-underline"></div>
+              <div id='searchOptions'>
 
-              <input type="hidden" name="page_params" value="add_rhombus_number">
+                <%= f.select :rn_type, [], {}, class: 'dropdown w-select hide-not-important', id: "searchNumberType" %>
 
-              <label class="form-label paragraph" for="Area-Code-Unavailable-CTA-2">Area code availability depends on the telecom network providers. What would you like to do if your preferred area code is unavailable?</label>
-              <select class="dropdown w-select" id="areaCodeUnavailable" >
-                <option value="random">Give me any area code</option>
-                <option value="try_again">Let me try another area code</option>
-              </select>
+                <label class="form-label" for="Area-Code-2" id='searchNumberFieldLabel'>Enter preferred area code:</label>
+                <%= f.text_field :area_code, id: 'searchNumberField', :class => "login text-field w-input", placeholder: "Enter area code" %>
 
+                <div class="area-code-availability flex-underline form-header-underline"></div>
+
+                <input type="hidden" name="page_params" value="add_rhombus_number">
+
+                <label class="form-label paragraph" for="Area-Code-Unavailable-CTA-2">Area code availability depends on the telecom network providers. What would you like to do if your preferred area code is unavailable?</label>
+                <select class="dropdown w-select" id="areaCodeUnavailable" >
+                  <option value="random">Give me any area code</option>
+                  <option value="try_again">Let me try another area code</option>
+                </select>
+              </div>
+
+            </div>
+
+            <div class="hosted-number-div">
+              <label class="form-label" >In what country would you like your number?</label>
+              <%= f.select :rn_country,  options_for_select([["Canada", :CA], ["United States", :US]], selected: 'US'), {}, class: 'dropdown w-select' %>
+              <label class="form-label" >Number type?</label>
+              <%= f.select :rn_type, options_for_select([["Landline number", :landline], ["Toll-free number", :tollfree]], selected: 'landline'), {}, class: 'dropdown w-select' %>
             </div>
 
             <%= f.submit "Continue", id: "searchNumberBtn", class: "button log-in w-button" %>
@@ -45,8 +62,8 @@
         <div class="whats-new-content-wrapper">
           <h4 class="onboarding-side-bar-h4">get started: step 2</h4>
           <h3 class="onboarding-side-bar-h3">Let's setup your phone number</h3>
-          <p class="onboarding-side-bar-paragraph">You can exchange SMS and MMS messages with customers using your Relay assigned phone number.</p>
-          <p class="onboarding-side-bar-paragraph">To ditch those long phone calls faster, display your Relay number on your web site, Yelp or Angie's List profile, including fliers and signs.</p>
+          <p class="onboarding-side-bar-paragraph">You can enable two-way messaging and payments on your existing business landline, or toll free number.&nbsp;</p>
+          <p class="onboarding-side-bar-paragraph">To get the most out of Relay, update your web site, Yelp or Angie's List profile, and let your customers know they can contact your team via text.</p>
           <div class="left-arrow"></div>
         </div>
       </div>

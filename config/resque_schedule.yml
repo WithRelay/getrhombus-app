@@ -11,7 +11,7 @@ weekly_activity_summary:
   args:
   description: "This job send weekly activity summary."
   queue: weekly_activity_summary
-  
+
 # alert_emails:
 #   #every: 15m
 #   every: 15s
@@ -46,3 +46,10 @@ low_account_balance_alert:
   args:
   description: 'This job alert merchant if their account balance is less than $5'
   queue: low_account_balance_alert
+
+hosted_sms:
+  every: 15m
+  class: 'HostedSmsJob'
+  args:
+  description: 'Update response of the hosted sms service'
+  queue: hosted_sms

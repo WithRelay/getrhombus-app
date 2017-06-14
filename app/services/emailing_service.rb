@@ -8,6 +8,97 @@ class EmailingService
    FROM_EMAIL= { edwin: "<redacted_email>", taiwo: '<redacted_email>' }
   class << self
 
+    def send_completed_notice(hosted_number_order)
+
+      user = hosted_number_order.user
+      begin
+        template_name = 'hosted-sms-activated'
+        template_content = []
+        message = { "subject" => "Your phone number is activated",
+         "global_merge_vars"=> [  { "name" => "first_name", "content" => user.first_name || 'there' }
+                               ],
+         "merge_language" => "handlebars",
+         "to"=> [ { "email" => user.email } ],
+         "bcc_address"=> SENDER,
+         "from_name" => "Edwin from Relay",
+         "from_email" => User.platform_email
+        }
+        async = true
+        result = MANDRILL.messages.send_template template_name, template_content, message, async
+      rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
+        puts "A mandrill error occurred: #{e.class} - #{e.message}"
+      rescue StandardError => e
+      end
+    end
+
+    def send_action_required_notice(hosted_number_order)
+      user = hosted_number_order.user
+      begin
+        template_name = 'hosted-sms-action-required'
+        template_content = []
+        message = { "subject" => "Hosted SMS action required",
+         "global_merge_vars"=> [  { "name" => "first_name", "content" => 'team' },
+                                  { "name" => "hosted_number_order", "content" => "#{hosted_number_order.id}"},
+                                  { "name" => "hosted_number", "content" => "#{hosted_number_order.phone_number}"}
+                               ],
+         "merge_language" => "handlebars",
+         "to"=> [ { "email" => User.platform_email } ],
+         "from_name" => "Email from Relay",
+         "from_email" => User.platform_email
+        }
+        async = true
+        result = MANDRILL.messages.send_template template_name, template_content, message, async
+      rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
+        puts "A mandrill error occurred: #{e.class} - #{e.message}"
+      rescue StandardError => e
+      end
+    end
+
+    def hosted_sms_progress_notice(hosted_number_order)
+      user = hosted_number_order.user
+      begin
+        template_name = 'hosted-sms-progress'
+        template_content = []
+        message = { "subject" => "Status: Phone number activation in progress",
+         "global_merge_vars"=> [  { "name" => "first_name", "content" => 'team' },
+                                  { "name" => "virtual_number", "content" => user.rn_friendly_name }
+                               ],
+         "merge_language" => "handlebars",
+         "to"=> [ { "email" => user.email } ],
+         "from_name" => "Email from Relay",
+         "from_email" => User.platform_email
+        }
+        async = true
+        result = MANDRILL.messages.send_template template_name, template_content, message, async
+      rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
+        puts "A mandrill error occurred: #{e.class} - #{e.message}"
+      rescue StandardError => e
+      end
+    end
+
+    def send_failed_notice(hosted_number_order)
+      user = hosted_number_order.user
+      begin
+        template_name = 'hosted-sms-failed'
+        template_content = []
+        message = { "subject" => "Status: Relay phone number activation",
+         "global_merge_vars"=> [  { "name" => "first_name", "content" => user.first_name || 'there' },
+                                  { "name" => "virtual_number", "content" => user.rn_friendly_name }
+                               ],
+         "merge_language" => "handlebars",
+         "to"=> [ { "email" => user.email } ],
+         "bcc_address"=> SENDER,
+         "from_name" => "Edwin from Relay",
+         "from_email" => User.platform_email
+        }
+        async = true
+        result = MANDRILL.messages.send_template template_name, template_content, message, async
+      rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
+        puts "A mandrill error occurred: #{e.class} - #{e.message}"
+      rescue StandardError => e
+      end
+    end
+
     def send_email_campaign(campaign_hash)
       # Email camapign is not only used to send email campaign but also facebook messenger camapign
       # and facebook messenger camapaign do not contain subject
@@ -222,6 +313,27 @@ class EmailingService
         template_name = 'free-trial-expiration'
         template_content = []
         message = { "subject" => "Your Relay Trial",
+         "global_merge_vars"=> [    { "name" => "first_name", "content" => user.first_name || 'there' } ],
+         "merge_language" => "handlebars",
+         "to"=> [ { "email" => user.email } ],
+         "bcc_address"=> SENDER,
+         "from_name" => "Edwin from Relay",
+         "from_email" => FROM_EMAIL[:edwin]
+        }
+        async = true
+        result = MANDRILL.messages.send_template template_name, template_content, message, async
+      rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
+        puts "A mandrill error occurred: #{e.class} - #{e.message}"
+      rescue StandardError => e
+      end
+    end
+
+    # Free Trial Expiration Notice (11 days after sign-up)
+    def free_trial_expiration_notice(user)
+      begin
+        template_name = 'free-trial-expiration-notice'
+        template_content = []
+        message = { "subject" => "#{user.first_name || 'Hey there'}, your Relay trial ends in 3 days",
          "global_merge_vars"=> [    { "name" => "first_name", "content" => user.first_name || 'there' } ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
@@ -681,7 +793,6 @@ class EmailingService
 
     def customer_added_to_relay(user, merchant, temp_password)
       begin
-        puts 'in added emaillllllllllllllllllllll'
         template_name = 'customer-added-to-relay'
         template_content = []
         message = { "subject" => "Best way to reach us",
@@ -748,6 +859,5 @@ class EmailingService
       rescue StandardError => e
       end
     end
-
 
 end

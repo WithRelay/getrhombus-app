@@ -34,6 +34,21 @@ class StripeManagedAccountService < Struct.new( :user, :params )
     end
   end
 
+  def upload_file
+    begin
+      Stripe::FileUpload.create(
+        :purpose => 'identity_document',
+        :file => image
+      )
+    rescue Stripe::StripeError => e
+      puts e.inspect
+      e
+    rescue StandardError => e
+      puts e.inspect
+      e
+    end
+  end
+
   # creates external account after creation of account. account parameter is send from module additiona_user_Action
   def create_external_account(account)
     begin
@@ -107,6 +122,9 @@ class StripeManagedAccountService < Struct.new( :user, :params )
 
   # returns people hash
   def people; params[:people_attributes]['0'] end
+
+  # returns image object
+  def image; params[:stripe_creds_attributes]['0'][:avatar] end
 
   # returns bank account hash
   def bank_account; params[:bank_accounts_attributes]['0'] end
@@ -235,7 +253,7 @@ class StripeManagedAccountService < Struct.new( :user, :params )
       tos_acceptance: { ip: stripe_cred[:ip], date: stripe_cred[:tos_date].to_i, user_agent: stripe_cred[:user_agent] },
       support_phone: user.org_phone[1..10],
       decline_charge_on: { cvc_failure: true, avs_failure: false },
-      legal_entity: { business_name: params[:org_name], type: params_org_type, 
+      legal_entity: { business_name: params[:org_name], type: params_org_type,
                       first_name: full_name[0], last_name: full_name[1],
                       #gender: people[:gender], # not needed for U.S, Canada
                       phone_number: user.org_phone[1..10],
@@ -249,7 +267,7 @@ class StripeManagedAccountService < Struct.new( :user, :params )
                                  city: address[:city], line1: address[:street_address]
                                },
                       #address_kana: {}, address_kanji: {}, personal_address_kana: {}, personal_address_kanji: {},  # for Japan i think
-                      verification: {}, 
+                      verification: {},
                       ssn_last_4_provided: {}, business_tax_id_provided: {},
                       business_vat_id_provided: {}, personal_id_number_provided: {},
                       #additional_owners: additional_owners  # for Europe
