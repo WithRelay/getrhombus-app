@@ -13,14 +13,6 @@ class MerchantContactsController < ApplicationController
   
   def show
     @merchant_contact = MerchantContact.find_by_id(params[:id])
-
-    # this line is wrong... what is contacts? contacts dont have user objects
-    # @contact = merchant_contact.contacts
-    # incorrect parameters...see right params below, you are in contacts, there is no way you should be passing in 'user' here
-    # please see methods for right parameters
-    # @user_snapshot = get_user_snapshot(@contact.id, "user", current_user.id, @contact)
-    # remove the commented lines after reading
-
     @user_snapshot = get_user_snapshot(@merchant_contact.uid, @merchant_contact.uid_type, current_user.id)
     @conversation_refs = ConversationRef.get_last_customer_msg_from_all_merchant_convs(current_user.id, @merchant_contact.uid, @merchant_contact.uid_type)
     @recent_activity = recent_activity

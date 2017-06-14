@@ -17,7 +17,7 @@ module SubscriptionsHelper
   end
 
   def saas_customers_contacts_count
-    current_user.customers.count + current_user.merchant_contacts.only_contact.count
+    current_user.merchant_customers.count + current_user.merchant_contacts.only_contact.count
   end
 
   def saas_sub_status
