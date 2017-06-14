@@ -38,6 +38,8 @@ class EmailingService
         template_content = []
         message = { "subject" => "Hosted SMS action required",
          "global_merge_vars"=> [  { "name" => "first_name", "content" => 'team' },
+                                  { "name" => "hosted_number_order", "content" => "#{hosted_number_order.id}"},
+                                  { "name" => "hosted_number", "content" => "#{hosted_number_order.phone_number}"}
                                ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => User.platform_email } ],
