@@ -1,20 +1,24 @@
-<% list_members.each do |member| %>
+<% list_members.each do |merchant_contact| %>
   <div class="customer-dashboard-table-wrapper list-members row-wrapper">
     <div>
       <div class="new-table-row w-row">
         <div class="cn w-clearfix w-col w-col-3">
           <div class="name w-clearfix">
-            <% profile = customer_contact_details(member[:user]) %>
-            <%#= present(member[:user]).profile_image %>
+
+            <% profile = User.get_user_snapshot(merchant_contact.uid, merchant_contact.uid_type, current_user.id) %>
+            
+            <%# you already have image info in profile above no need to use present %>
+            <%#= present(merchant_contact[:user]).profile_image %>
+
             <div class="shrink-text table-text">
-              <%= link_to profile[:full_name], "/users/#{current_user.id}/customers/#{member[:user].id}", class: "non-underline-link" %>
+              <%= link_to profile[:full_name], user_merchant_customer_path(current_user, merchant_contact), class: "non-underline-link" %>
             </div>
           </div>
           <div class="cb check-box-column">
             <div>
               <form data-name="Email Form 2" id="email-form-2" name="email-form-2">
                 <div class="select-all-check-box w-checkbox w-clearfix">
-                  <input class="cb table-checkbox w-checkbox-input list_members" id="node" type="checkbox" data-members= "<%= member[:user].id %>">
+                  <%# <input class="cb table-checkbox w-checkbox-input list_members" id="node" type="checkbox"> %>
                   <label class="checkbox-field-lable w-form-label" for="node">-</label>
                 </div>
               </form>
@@ -33,7 +37,7 @@
         </div>
         <div class="avs w-clearfix w-col w-col-1">
           <div class="avs column column-4 w-clearfix">
-            <div class="table-text">---</div>
+            <div class="table-text">--</div>
           </div>
         </div>
         <div class="ts w-clearfix w-col w-col-1">
@@ -46,8 +50,9 @@
             <div class="frequency shrink-text table-text"><%= profile[:location] %></div>
           </div>
           <div class="column column-6 new-row">
-            <%= link_to 'Remove', remove_customer_list_path(current_user, @list), id: "list-member-delete-#{member[:user].id}", class: 'w-hidden', method: :delete %>
-            <%= link_to 'Remove', '#', class: "actions-button notification list-member-delete", data: { user_id: member[:user].id } %>
+            <%= link_to '', remove_member_user_user_lists_path(current_user, member_id: merchant_contact.id, list_type: @list.list_type, list_id: @list.id), id: "list-member-delete-#{merchant_contact.id}", class: 'w-hidden', method: :delete %>
+
+            <%= link_to 'Remove', '#', class: "actions-button notification list-member-delete" %>
           </div>
         </div>
       </div>

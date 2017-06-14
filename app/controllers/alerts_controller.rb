@@ -33,7 +33,7 @@ class AlertsController < ApplicationController
   def update
     @alert.update(alert_params)
     current_user.update_attribute(:custom_welcome, params[:alert][:custom_welcome].strip)
-    redirect_to notifications_user_path, notice: "Updated"  #respond_with(@alert)
+    redirect_to user_notifications_path, notice: "Updated"  #respond_with(@alert)
   end
 
   def destroy

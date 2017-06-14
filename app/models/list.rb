@@ -1,43 +1,31 @@
 class List < ActiveRecord::Base
+  include SegmentQueries
+  
   belongs_to :user
+  serialize :segment, JSON
   has_many :user_lists
   validates :name, presence: true, uniqueness: { case_sensitive: false, scope: :user_id }
   has_many :campaigns, through: :campaign_lists
   has_many :campaign_lists
+  has_many :campaign_recipients
 
-  # default channel for contacting users on the list
-  enum channel: [:sms, :messenger, :email]
-
+  # default channel for contacts based list/segments since contacts come from a specific channel
+  enum channel: [:sms, :messenger]
   enum list_type: [:customer, :contact]
-
-  # List origin specifies whether the list is system generated
-  # or created by a merchant (user)
+  # List origin specifies whether the list is system generated or created by a merchant (user)
   enum origin: [:merchant, :system]
 
-  # Gets the users that belong to a standard list or segment
-  def get_users
-    if self.segment?
-      if self.origin?
-        return User.where(id: eval(self.segment)) if self.customer?
-        return eval(self.segment) if self.contact?
-        # user_lists = User.find_by_sql([segment, {id: self.user_id}])
-        # return generate_list_users user_lists, type="segment"
-      elsif self.merchant?
-        query = self.segment.gsub('NOW()', "'#{Time.current}'")
-        return User.find_by_sql(query) if self.customer?
-        return MerchantContact.find_by_sql(query) if self.contact?
-      end
-    end
-    generate_list_users self.user_lists
-  end
+  # Gets the merchant customers or merchant contacts that belong to a standard list or segment
+  def get_mcs(page=1)
+    class_name = self.customer? ? "MerchantCustomer" : "MerchantContact"
 
-  private
-    # Gets the users in the list or segment
-    # @param user_lists An array or collection of users
-    # based on the query or user lists
-    # @param type The type of list. Default type is "list"
-    # @return An array of user objects
-    def generate_list_users user_lists, type="list"
-      user_lists.map { |cus|  { user: (type == "list") ? cus.customer_contact : cus } }
+    if self.segment.present?
+      self.segment['merchant_id'] = self.user_id
+      self.segment["time"] = Time.current.beginning_of_day - self.segment['days'].days if self.segment['days'].present?  
+      class_name.constantize.paginate_by_sql(send(self.segment['base_query'], self.segment), page: page, per_page: PAGINATION_PER_PAGE)
+    else
+      mcs_list = self.user_lists.pluck(:customer_contact_id)
+      class_name.constantize.where(id: mcs_list).paginate(page: page, per_page: PAGINATION_PER_PAGE)
     end
+  end
 end

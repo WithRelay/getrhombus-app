@@ -4,34 +4,33 @@
     <div>
       <form id="segment-sidebar-form" method="post" class='segment-form' action="#">
         <select class="dropdown segment-parameters w-select" id="customer-filter">
-          <option value="new_customers" selected="selected">Customer created</option>
-          <option value="last_msg_received">Last message received</option>
-          <option value="last_msg_sent">Last message sent</option>
-          <option value="last_purchase">Last purchase made</option>
+          <option value="customer_created" selected="selected">Customer created</option>
+          <option value="customer_last_message_received">Last message received</option>
+          <option value="customer_last_message_sent">Last message sent</option>
+          <option value="last_payment_made">Last payment made</option>
         </select>
         <select class="dropdown range w-select" id="days-filter">
           <option value="more_than">More than</option>
           <option value="exactly">Exactly</option>
           <option value="less_than">Less than</option>
-          <option value="between">Between</option>
+          <%#<option value="between">Between</option>%>
         </select>
         <div class='form-group col-xs-6'>
           <input class="day-count text-field w-input form-control" id="num_days" name="number_of_days" placeholder="Days ago" type="text">
         </div>
-        <label class="form-label segment-label" for="segment_filter_by"> &nbsp;Filter segment by</label>
+        <label class="form-label segment-label" for="segment_filter_by"> &nbsp;Filter segment by Customer Spend (Optional)</label>
         <div class='form-group col-xs-6'>
           <select class="dropdown range w-select form-control" id="segment_filter_by" name="customer_spend">
-            <option value="customer_spend" selected="selected">Customer spend</option>
             <option value="more_than">More than</option>
             <option value="exactly">Exactly</option>
             <option value="less_than">Less than</option>
-            <op tion value="between">Between</option>
+            <%#<option value="between">Between</option>%>
           </select>
         </div>
         <div class='form-group col-xs-6'>
-          <input name="amount_1_segment" class="amount-text-field text-field w-input form-control" type="text" id="amount_1" placeholder="From amount">
+          <input name="amount_1_segment" class="amount-text-field text-field w-input form-control" type="text" id="amount_1" placeholder="amount">
         </div>
-        <input class="amount-text-field text-field w-input" type="number" id="amount_2" maxlength="256" style="display:none;">
+        <%#<input class="amount-text-field text-field w-input" type="number" id="amount_2" maxlength="256" style="display:none;"> %>
         <input type="submit" class="button create-segment w-button" value="Create Segment"></a>
       </form>
     </div>

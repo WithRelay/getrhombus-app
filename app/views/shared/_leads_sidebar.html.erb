@@ -5,16 +5,15 @@
     <form id="segment-sidebar-form" method="post" class='segment-form' action="#">
       <label class="form-label segment-label" for="Segment-Options-2">Segment leads</label>
       <select class="dropdown segment-parameters w-select" id="customer-filter">
-        <option value="new_customers" selected="selected">Customer created</option>
-        <option value="last_msg_received">Last message received</option>
-        <option value="last_msg_sent">Last message sent</option>
-        <option value="last_purchase">Last purchase made</option>
+        <option value="contact_created" selected="selected">Contact created</option>
+        <option value="contact_last_message_received">Last message received</option>
+        <option value="contact_last_message_sent">Last message sent</option>
       </select>
       <select class="dropdown range w-select" id="days-filter" >
         <option value="more_than">More than</option>
         <option value="exactly">Exactly</option>
         <option value="less_than">Less than</option>
-        <option value="between">Between</option>
+        <%#<option value="between">Between</option>%>
       </select>
       <div class='form-group col-xs-6'>
         <input class="day-count text-field w-input form-control" id="num_days" name="number_of_days" placeholder="Days ago" type="text">

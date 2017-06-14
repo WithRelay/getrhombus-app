@@ -10,7 +10,7 @@ class Api::V1::CampaignsController < API::V1::BaseController
   def delete_campaign
     campaign = current_user.campaigns.find_by_id(params[:id])
     if campaign.present?
-      campaign.campaign_user_lists.delete_all
+      campaign.campaign_recipients.delete_all
       campaign.campaign_lists.delete_all
       campaign.delete
       campaign.destroy_campaign_jobs

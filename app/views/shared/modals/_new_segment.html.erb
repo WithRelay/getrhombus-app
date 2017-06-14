@@ -7,13 +7,19 @@
   <div class="create-segment">
     <%= form_for('lists', url: v1_lists_path, html: { id: "create_segment" }) do |f| %>
       <label class="form-label list-name" for="Segment-Name-2">Segment name</label>
+      
       <%= f.hidden_field :list_type, value: 'segment', id: 'segmentListType' %>
+      <%= f.hidden_field :list_channel, id: 'listChannel' %>
+
       <%= f.hidden_field :segment_type, id: 'segment_type' %>
-      <%= f.hidden_field :segment_num_days, id: 'segment_num_days' %>
       <%= f.hidden_field :segment_filter, id: 'segment_filter' %>
+      <%= f.hidden_field :segment_num_days, id: 'segment_num_days' %>      
+
+      <%= f.hidden_field :additional_segment_type, id: 'additional_segment_type' %>
       <%= f.hidden_field :amt_filter, id: 'amt_filter' %>
       <%= f.hidden_field :amt_1, id: 'lists_amt_1' %>
-      <%= f.hidden_field :amt_2, id: 'lists_amt_2' %>
+      <%#= f.hidden_field :amt_2, id: 'lists_amt_2' %>
+
       <div class='form-group col-xs-6'>
         <%= f.text_field :segment_name, class: 'form-control segment-name text-field w-input' %>
       </div>
@@ -21,5 +27,5 @@
     <% end %>
   </div>
   <p class="modal-paragraph segment tips"> &nbsp;TIP: You can setup automated drip campaigns to nurture customers or leads. First create segments for each key group of customers or leads, E.g:leads that became customers 3-6 days ago,followed by leads that became customers 7-14 days ago, etc. Then go to your campaigns page to set up automatic messages.</p>
-  <%= link_to 'Manage segments', segments_user_path(current_user), class: 'button manage-segments w-button' %>
+  <%= link_to 'Manage segments', user_segments_path(current_user), class: 'button manage-segments w-button' %>
 </div>

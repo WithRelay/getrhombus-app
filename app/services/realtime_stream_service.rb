@@ -37,9 +37,9 @@ class RealtimeStreamService
 
     def campaign_notification
       Time.zone = current_user.time_zone
-      campaign_user_list = CampaignUserList.where("CAST(created_at as DATE) = ?",
+      campaign_recipients = CampaignRecipient.where("CAST(created_at as DATE) = ?",
                            Time.current.in_time_zone.strftime("%Y-%m-%d"))
-      campaign_user_list.each do |list|
+      campaign_recipients.each do |list|
         list.campaign.campaign_lists.count
         campaign_time = list.campaign.date_time.strftime("%I:%M")
         { campaign_sent: "Your campaign scheduled for #{campaign_time} was sent"}

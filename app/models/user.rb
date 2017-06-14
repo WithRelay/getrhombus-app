@@ -1,10 +1,10 @@
 class User < ActiveRecord::Base
 
   extend UserProfile
-  include DashboardMerchantQueries
   include CSVHandler
   include AddTokenToUser
   include Transactionable
+  include SegmentQueries
 
   attr_accessor :phone, :msg_id, :captured_amt
   attr_accessor :tag_id, :referrer_uid, :tos_acceptance, :customer_source
@@ -103,6 +103,7 @@ class User < ActiveRecord::Base
   has_many :lists
   has_many :user_lists, as: :customer_contact
   accepts_nested_attributes_for :user_lists
+  has_many :segments, -> { where.not(segment: nil) }, class_name: 'List'
 
   has_many :bank_accounts
   accepts_nested_attributes_for :bank_accounts
@@ -219,10 +220,6 @@ class User < ActiveRecord::Base
     fb_cred.try(:page_specific_id)
   end
 
-  def user_segments
-    self.lists.where.not(segment: nil)
-  end
-
   def update_account_balance(amt)
     self.update(account_balance: (self.account_balance - amt.to_f).round(6))
   end
@@ -259,12 +256,12 @@ class User < ActiveRecord::Base
       AwayMessage.find_or_create_by(user_id: user_id, response: response)
       #GetIntelligenceDataJob.perform_later(self.org_phone, 'OpenCNAM')
       self.lists.create([
-        { name: 'New Customers', segment: new_customers_segment, origin: 1, list_type: 0 },
-        { name: 'New Contacts', segment: new_contacts_segment, origin: 1, list_type: 1 },
-        { name: 'Active Customers', segment: active_customers_segment, origin: 1, list_type: 0 },
-        { name: 'Active Contacts', segment: active_contacts_segment, origin: 1, list_type: 1 },
-        { name: 'Inactive Customers', segment: inactive_customers_segment, origin: 1, list_type: 0 },
-        { name: 'Inactive Contacts', segment: inactive_contacts_segment, origin: 1, list_type: 1 }
+        { name: 'New Customers', segment: new_customers_default_segment_data, origin: 1, list_type: 0 },
+        { name: 'New Contacts', segment: new_contacts_default_segment_data, origin: 1, list_type: 1 },
+        { name: 'Active Customers', segment: active_customers_default_segment_data, origin: 1, list_type: 0 },
+        { name: 'Active Contacts', segment: active_contacts_default_segment_data, origin: 1, list_type: 1 },
+        { name: 'Inactive Customers', segment: inactive_customers_default_segment_data, origin: 1, list_type: 0 },
+        { name: 'Inactive Contacts', segment: inactive_contacts_default_segment_data, origin: 1, list_type: 1 }
       ])
     end
 #=end
@@ -284,27 +281,5 @@ class User < ActiveRecord::Base
   def get_uid_and_referrer_link
     self.relay_uid = generate_uid
     self.short_url = "dasd" #UrlShorternerService.shorten_link("https://www.withrelay.com/signup?referrer_uid=#{self.relay_uid}")
-  end
-
-
-  def x
-    Transaction.where("created_at >= ? AND user_id IN(?) AND team_id = ?", Time.current - 222230.days,
-      MerchantCustomer.where(merchant_id: 110).pluck(:customer_id), 110).pluck(:user_id) |
-      FbMessage.where("created_at >=? AND user_id_to = ? AND user_id IN(?)", Time.current - 222230.days,
-      110, MerchantCustomer.where(merchant_id: 110).pluck(:customer_id)).pluck(:user_id) |
-      Message.where("created_at >=? AND user_id_to = ? AND user_id IN(?)", Time.current - 222230.days,
-      110, MerchantCustomer.where(merchant_id: 110).pluck(:customer_id)).pluck(:user_id)
-  end
-
-  def y
-    User.paginate_by_sql('select distinct id from 
-  ( select user_id as id, created_at from transactions where user_id in (122,124,125,126,127) and team_id = 110
-  UNION 
-  select user_id as id, created_at from fb_messages where user_id in (122,124,125,126,127) and user_id_to = 110
-  UNION 
-  select user_id as id, created_at from messages where user_id in (122,124,125,126,127) and user_id_to = 110
-    ) active_users
-order by created_at', :page => 1, :per_page => 2)
-
   end
 end

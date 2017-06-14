@@ -149,10 +149,10 @@ var FlashHandler = new function() {
     $('body').append('<a class="browser-notification-link-block scheduled-jobs w-inline-block" href="#" style="right: 0;">\
       <div class="scheduled-jobs-notification-description">'+message+'</div>\
       <img class="browser-notification customer-profile-picture scheduled-jobs" height="40" src="http://uploads.webflow.com/58977e002a25945021983468/58977e002a2594502198356c_81.jpg" width="40">\
-      <img class="browser-notification customer-profile-picture next-receipient scheduled-jobs" height="40" src="http://uploads.webflow.com/58977e002a25945021983468/58977e002a25945021983515_Ovo.jpg" width="40">\
-      <img class="browser-notification customer-profile-picture next-receipient scheduled-jobs" height="40" src="http://uploads.webflow.com/58977e002a25945021983468/58977e002a25945021983540_31.jpg" width="40">\
-      <img class="browser-notification customer-profile-picture next-receipient scheduled-jobs" height="40" src="http://uploads.webflow.com/58977e002a25945021983468/58977e002a2594502198351f_49%20(1).jpg" width="40">\
-      <img class="browser-notification customer-profile-picture next-receipient scheduled-jobs" height="40" src="http://uploads.webflow.com/58977e002a25945021983468/58977e002a2594502198357c_49%20(2).jpg" width="40">\
+      <img class="browser-notification customer-profile-picture next-recipient scheduled-jobs" height="40" src="http://uploads.webflow.com/58977e002a25945021983468/58977e002a25945021983515_Ovo.jpg" width="40">\
+      <img class="browser-notification customer-profile-picture next-recipient scheduled-jobs" height="40" src="http://uploads.webflow.com/58977e002a25945021983468/58977e002a25945021983540_31.jpg" width="40">\
+      <img class="browser-notification customer-profile-picture next-recipient scheduled-jobs" height="40" src="http://uploads.webflow.com/58977e002a25945021983468/58977e002a2594502198351f_49%20(1).jpg" width="40">\
+      <img class="browser-notification customer-profile-picture next-recipient scheduled-jobs" height="40" src="http://uploads.webflow.com/58977e002a25945021983468/58977e002a2594502198357c_49%20(2).jpg" width="40">\
       <div class="recipient-count-browser">\
         <div class="number-of-recipient">+'+no_of_recipient+'</div>\
       </div>\

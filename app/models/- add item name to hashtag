@@ -66,3 +66,118 @@ Bhishma
 
 
 
+
+
+select uid, uid_type#, concat(uid,uid_type) as combined
+from 
+(select * from
+   (
+      (select c.uid, c.uid_type, m.created_at from conversations c
+       inner join conversation_refs cr on c.id = cr.conversation_id
+       inner join messages m on m.id = cr.textable_id
+       where c.uid in (select uid from merchant_contacts where merchant_id = 110 and is_customer = false and uid_type = 'phone_number')   
+       and c.uid_type = 'phone_number' and cr.textable_type = 'Message' and source = 2
+       and cr.created_at > "2014-04-10 11:40:41"
+      )
+      union all
+      (
+      select c.uid, c.uid_type, m.created_at from conversations c
+       inner join conversation_refs cr on c.id = cr.conversation_id
+       inner join fb_messages m on m.id = cr.textable_id
+       where c.uid in (select uid from merchant_contacts where merchant_id = 110 and is_customer = false and uid_type = 'fb_page')   
+       and c.uid_type = 'fb_page' and cr.textable_type = 'FbMessage' and source = 2
+       and cr.created_at > "2014-04-10 11:40:41"
+      )
+      ) uids where uid is not null and uid_type is not null order by uids.created_at
+) z 
+#group by concat(uid,uid_type)#combined
+  
+ #   2017-05-22 02:35:32 125 message
+#2017-04-05 23:54:36 126 fb-message
+#2017-05-22 03:29:29 127 message
+
+
+
+select id#, created_at 
+from 
+(select user_ids.id, user_ids.created_at 
+#, amount, t.created_at 
+from (
+      (select m.user_id as id, m.created_at from conversations c
+       inner join conversation_refs cr on c.id = cr.conversation_id
+       inner join messages m on m.id = cr.textable_id
+       where c.uid in (select customer_id from merchant_customers where merchant_id = 110)   
+       and c.uid_type = 'user' and cr.textable_type = 'Message' and source = 2
+       and cr.created_at > "2014-04-10 11:40:41"
+      )
+      union all
+      (
+      select m.user_id as id, m.created_at from conversations c
+       inner join conversation_refs cr on c.id = cr.conversation_id
+       inner join fb_messages m on m.id = cr.textable_id
+       where c.uid in (select customer_id from merchant_customers where merchant_id = 110)   
+       and c.uid_type = 'user' and cr.textable_type = 'FbMessage' and source = 2
+       and cr.created_at > "2014-04-10 11:40:41"
+      )
+      ) user_ids 
+      inner join transactions t on user_ids.id = t.user_id where t.amount > 0 order by t.created_at
+     # order by user_ids.created_at
+      ) z #group by id
+  
+ #   2017-05-22 02:35:32 125 message
+#2017-04-05 23:54:36 126 fb-message
+#2017-05-22 03:29:29 127 message
+
+  
+  def customer_message_string(data, source)
+    str = "select id from
+            (select uids.id, uids.created_at from 
+              (
+                (#{customer_message_subquery_string(data, 'messages', 'Message', source)})
+                 union all
+                (#{customer_message_subquery_string(data, 'fb_messages', 'FbMessage', source)})
+              ) uids "
+
+    str += data.amount.present? ? transactions_substring(data) : " order by uids.created_at "
+    str += ') ids group by id '
+  end
+
+  def customer_message_subquery_string(data, table, model, source)
+    #{}" select m.user_id as id, m.created_at from conversations c
+    " select c.uid as id, cr.created_at from conversations c
+      inner join conversation_refs cr on c.id = cr.conversation_id
+      inner join #{table} m on m.id = cr.textable_id
+      where c.uid in (select customer_id from merchant_customers where merchant_id = #{data.merchant_id})   
+      and c.uid_type = 'user' and cr.textable_type = '#{model}' and source = #{source}
+      and cr.created_at #{get_base_filter(data.base_filter)} #{data.time} "
+  end
+
+    def contact_message_string(data, source)
+    "select uid, uid_type from
+      (select * from 
+        (
+          (#{contact_message_subquery_string(data, 'messages', 'Message', source, 'phone_number')})
+           union all
+          (#{contact_message_subquery_string(data, 'fb_messages', 'FbMessage', source, 'fb_page')})
+        ) uids order by uids.created_at 
+      ) ids group by concat(uid,uid_type) "
+  end
+  
+    def contact_message_subquery_string(data, table, model, source, uid_type)
+    "select c.uid, c.uid_type, cr.created_at from conversations c
+      inner join conversation_refs cr on c.id = cr.conversation_id
+      inner join #{table} m on m.id = cr.textable_id
+      where c.uid in 
+      (select uid from merchant_contacts where merchant_id = #{data.merchant_id} 
+      and is_customer = false and uid_type = '#{uid_type}' and uid is not null)   
+      and c.uid_type = '#{uid_type}' and cr.textable_type = '#{model}' and source = #{source}
+      and cr.created_at #{get_base_filter(data.base_filter)} #{data.time} "
+  end
+
+
+
+
+
+
+
+

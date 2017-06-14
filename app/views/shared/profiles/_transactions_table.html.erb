@@ -52,9 +52,11 @@
       </div>
     </div>
    <% end %>
-     <%= will_paginate transactions %>
+    
+    <%= will_paginate transactions %>
+    
     <div class='modal-background w-hidden modal-body refund_customer_modal'>
-     <%= render 'shared/modals/refund_customer' %>
-   </div>
+      <%= render 'shared/modals/refund_customer' %>
+    </div>
 </div>
 <% end %>

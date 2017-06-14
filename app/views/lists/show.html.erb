@@ -13,7 +13,7 @@
           </div>
           <div class="cb check-box-column header">
             <div class="select-all-check-box w-checkbox w-clearfix">
-              <input class="cb table-checkbox w-checkbox-input" id="check_or_uncheck_all" type="checkbox">
+              <%# <input class="cb table-checkbox w-checkbox-input" type="checkbox"> %>
               <label class="checkbox-field-lable w-form-label" for="check_or_uncheck_all">-</label>
             </div>
           </div>
@@ -50,21 +50,23 @@
     </div>
   </div>
 </div>
+
 <div class="customer-dash sub-nav-bar">
   <div class="list-members sub-nav-options-wrapper w-clearfix">
-    <div class="customer-count shrink-text"><%= @list_members.count %> <span class="sub-nav-sub-text">in <%= @list.name %> list</span>
+
+    <div class="customer-count shrink-text"><%= @list_members.total_entries %> <span class="sub-nav-sub-text">in <%= @list.name %> list</span>
     </div>
     <div class="default-sub_header-field-form-div list-members">
-      <%= form_for 'lists', url: update_user_list_list_path(current_user, @list), html: { class: 'add-to-list-form w-clearfix' } do |f| %>
-        <%= f.text_field :list_member, class: "add-to-list-field w-input", placeholder: "Add more customers to list" %>
-        <%= f.submit 'Update List'.html_safe, class: 'sub-nav-button w-button', id: 'update-list-memebers' %>
+      <%= form_for 'lists', url: add_member_user_list_path(current_user, @list), html: { class: 'add-to-list-form w-clearfix' } do |f| %>
+        <%= f.text_field :member_id, class: "add-to-list-field w-input", placeholder: "Add more customers to list" %>
+        <%= f.text_field :list_type, class: "w-hidden", value: @list.list_type %>
+        <%= f.submit 'Update List'.html_safe, class: 'sub-nav-button w-button' %>
       <% end %>
     </div>
   </div>
 </div>
-<div class="dashboard-body">
-  <div id="list-channel-for-list-memebers">
-  <%= @list.list_type %>
-  </div>
+
+<div class="dashboard-body" >
+  <div id="list-data" data-list-type="<%= @list.list_type %>" data-list-id="<%= @list.id %>" data-list-channel="<%= @list.channel %>"><%= @list.list_type %></div>
   <%= render partial: list_show_partial, locals: { list_members: @list_members } %>
 </div>

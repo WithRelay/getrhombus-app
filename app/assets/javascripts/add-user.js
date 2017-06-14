@@ -240,7 +240,7 @@ $(document).ready(function() {
     PhoneNumberFormatter.set_phone_number();
 
     $.ajax({
-      url: "/v1/merchant_customers.json",
+      url: "/v1/customers.json",
       beforeSend: function(xhr) {
         xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
       },

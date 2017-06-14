@@ -1,6 +1,7 @@
 module DashboardMerchantQueries
 	extend ActiveSupport::Concern
 
+=begin
 	#################
 	# These queries need to be timezone aware and need to use conversation model and need
 	# to use referrers table where necessary
@@ -374,5 +375,5 @@ module DashboardMerchantQueries
 		end
 		return sql_statement
 	end
-
+=end
 end

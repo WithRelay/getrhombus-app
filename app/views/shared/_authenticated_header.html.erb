@@ -7,10 +7,10 @@
       <%= link_to user_path(current_user), class: 'dash-header-links' do %>
          &nbsp;<strong>Dashboard</strong>
       <% end %>
-      <%= link_to customers_user_path(current_user), class: 'dash-header-links new-link' do %>
+      <%= link_to user_merchant_customers_path(current_user), class: 'dash-header-links new-link' do %>
          &nbsp;<strong>All &nbsp;customers</strong>
       <% end %>
-      <%= link_to customers_user_path(current_user), class: 'dash-header-links new-link' do %>
+      <%= link_to user_merchant_customers_path(current_user), class: 'dash-header-links new-link' do %>
          &nbsp;<strong>New &nbsp;customers</strong>
       <% end %>
       <%= render "shared/rhombus_number" %>

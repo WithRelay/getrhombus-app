@@ -1,10 +1,4 @@
-<style type="text/css">
-  .dashboard-nav {
-    width: 100%;
-    left: 0;
-  }
-</style>
-<%=render 'shared/authenticated_header'%>
+
 <div class="customer-profile sub-nav-bar w-clearfix">
   <a class="add sub-nav-button w-button modal-loader" href="#" modal-target= "charge-customer-modal">&nbsp; <strong>Charge</strong></a>
   <div class='modal-background w-hidden modal-body charge-customer-modal'>
@@ -45,14 +39,41 @@
           <div class="left-column-text"> &nbsp; &nbsp; Customer since: <%= "#{user_snapshot[:since][:date]}"%></div>
           <div class="right-nav-underline"></div>
         </div>
-        <%= render partial: 'shared/profiles/recent_activity', locals: {recent_activity: recent_activity} %>
+        <%= render partial: 'shared/profiles/recent_activity', locals: { recent_activity: recent_activity } %>
       </div>
     </div>
     <div class="w-col w-col-5">
       <div class="customer-profile-section-header-div">
         <h4 class="welcome-dash-content-container-header">Conversation History</h4>
       </div>
-      <%= render partial: 'shared/profiles/conversation_history', locals: {conversation_refs: conversation_refs} %>
+
+      <% if conversation_refs.empty? %>
+        <div class="no-profile-data-text profile-conversations">
+          You have no conversations with this <%= contact_or_customer %>.
+        </div>
+      <% else %>
+        <% conversation_refs.each do |conversation_ref| %>
+          <a class="conversation-history-link-wrapper w-inline-block" href="#">
+            <div class="customer-profile-conversation-history top w-container">
+              <div class="conversation-content-wrapper w-row">
+                <div class="w-col w-col-1">
+                  <div class="icon-cell"></div>
+                </div>
+                <div class="w-clearfix w-col w-col-11">
+                  <div class="customer-name-conversation-tab"><%= "#{user_snapshot[:full_name]}" %></div>
+                  <div class="said-text">said:</div>
+                  <p class="conversation-preview"><%= present(conversation_ref).format_textable_text %></p>
+                  <div class="message-channel"> &nbsp; Sent from</div>
+                  <div class="channel-name message-channel"><%= present(conversation_ref).channel %></div>
+                  <div class="message-channel time-received"><%= present(conversation_ref).format_created_at %></div>
+                  <div class="status"><%= present(conversation_ref).format_resolution %></div>
+                </div>
+              </div>
+            </div>
+          </a>
+        <% end %>
+      <% end %>
+
     </div>
     <div class="w-col w-col-4">
       <div class="customer-transactions-div overlow-div">
@@ -63,7 +84,7 @@
           <div class="w-col w-col-6">
             <div class="customer-profile-box total-spend">
               <div class="total-spend-text transaction-history-box-headers">
-                <%= present(user).total_transaction %>
+                <%= customer ? present(@merchant_customer).total_transaction : '-' %>
               </div>
               <div class="table-description">Total Spend</div>
             </div>
@@ -71,13 +92,13 @@
           <div class="w-col w-col-6">
             <div class="average-spend customer-profile-box">
               <div class="average-spend-text transaction-history-box-headers">
-                <%= present(user).average_transaction %>
+                <%= customer ? present(@merchant_customer).average_transaction : '-' %>
               </div>
               <div class="table-description">Average Spend</div>
             </div>
           </div>
         </div>
-        <%= render partial: 'shared/profiles/transactions_table', locals: {transactions: transactions} %>
+        <%= render partial: 'shared/profiles/transactions_table', locals: { transactions: transactions } %>
       </div>
     </div>
   </div>

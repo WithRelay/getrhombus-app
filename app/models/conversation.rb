@@ -133,6 +133,8 @@ class Conversation < ActiveRecord::Base
     end
   end
 
+  ########### add a parameters for source?? cos of campaigns
+
   # when sending by platform on behalf of merchant like automated messages (excludes sending from dashboard)
   def self.find_or_create_conversation_for_message_and_send_publish(team, customer, uid_type, uid, msg_to_send, channel, media = [])
     re = find_or_create_conversation(team.id, uid_type, uid)

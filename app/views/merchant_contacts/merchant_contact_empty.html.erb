@@ -5,7 +5,7 @@
     <h1 class="empty-state-dash hero-h1 home-header"> You have no Contacts </h1>
     <%= link_to 'Return to Dashboard',user_path(current_user), class: "button error-page-button w-button"  %>
     <h5 class="connect-facebook footer-cta-subheading signup-box-subheading">
-      <%= link_to 'or connect facebook messenger', integrations_user_path(current_user), class: 'connect-facebook-messenger-link' %>
+      <%= link_to 'or connect facebook messenger', user_integrations_path(current_user), class: 'connect-facebook-messenger-link' %>
     </h5>
   </div>
 </div>

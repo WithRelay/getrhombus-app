@@ -5,6 +5,6 @@ module SegmentsHelper
   end
 
   def number_of_users(segment)
-    segment.get_users
+    segment.get_mcs.total_entries
   end
 end

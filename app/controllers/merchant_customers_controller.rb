@@ -12,30 +12,23 @@ class MerchantCustomersController < ApplicationController
   end
 
   def business
-    @business = MerchantCustomer.where(customer_id: current_user.id)
+    @businesses = MerchantCustomer.where(customer_id: current_user.id)
                                 .paginate(page: params[:page], per_page: PAGINATION_PER_PAGE).order(created_at: :desc)
   end
 
   def show
-    @merchant_customer = MerchantCustomer.find_by(id: params[:merchant_customer_id])
-    @customer = @merchant_customer.customer
-    @user_snapshot = get_user_snapshot(@customer.id, "user", current_user.id, @customer)
+    @merchant_customer = MerchantCustomer.find_by(id: params[:id])
+    @user_snapshot = get_user_snapshot(@merchant_customer.customer_id, "user", current_user.id)
 
     # Exclude refunded transactions, Exclude subscriptions since these queries are not read only
     # query is for refundable transactions You can't refund subscriptions easily.
     # and include only captured transactions. account reload txns are included by default..right
     @transactions = Transaction.exclude_refunded_transactions().where(team_id: current_user.id).only_captured_transactions()
-                            .exclude_subscriptions()
-                            .where(user_id: @customer.id).order(created_at: :desc).paginate(:page => params[:page], :per_page => 10)
+                                .exclude_subscriptions()
+                                .where(user_id: @merchant_customer.customer_id).order(created_at: :desc).paginate(:page => params[:page], :per_page => 10)
 
-    @conversation_refs = ConversationRef.get_last_customer_msg_from_all_merchant_convs(current_user.id, @customer.id)
+    @conversation_refs = ConversationRef.get_last_customer_msg_from_all_merchant_convs(current_user.id, @merchant_customer.customer_id, 'user')
     @recent_activity = recent_activity
-  end
-
-  def segment_users
-    @merchant_customer = current_user.user_segments.customer.find_by(id: params[:id]).get_users
-    @new_customer = User.new
-    @merchant_customer.present? ? render_requested_format(@merchant_customer) : render(:empty_customer)
   end
 
   private

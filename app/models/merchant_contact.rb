@@ -1,6 +1,5 @@
 class MerchantContact < ActiveRecord::Base
   belongs_to :merchant, class_name: "User"
-  belongs_to :contacts, class_name: "User", foreign_key: 'uid'
   has_many :user_lists, as: :customer_contact
 
   scope :only_contact, -> { where(is_customer: false) }

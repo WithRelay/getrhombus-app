@@ -1,2 +1,2 @@
-class SavedReplyPresenter < BasePresenter
+class SasvedReplyPresenter < BasePresenter
 end

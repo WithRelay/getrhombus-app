@@ -47,7 +47,7 @@ $(document).ready(function () {
 
   function send_payload(payload) {
     var xhr = new XMLHttpRequest(); // Set up the request.
-    xhr.open('POST', '/v1/merchant_customers.csv', true); // Open the connection.
+    xhr.open('POST', '/v1/customers.csv', true); // Open the connection.
     xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
     xhr.onload = function() {
       if (xhr.readyState === 4) {

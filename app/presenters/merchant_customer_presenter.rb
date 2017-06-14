@@ -1,1 +1,2 @@
-class MerchantCustomerPresenter < BasePresenter;end
+class MerchantCustomerPresenter < BasePresenter
+end

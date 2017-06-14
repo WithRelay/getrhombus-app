@@ -1,7 +1,7 @@
 $(document).on('ready page:load', function() {
 
   $("#delete-lists").click(function(){
-    var selectedUsers = getSelectedUserIds();
+    var selectedUsers = getSelectedUserIds(); // why are you selecting users?
     if (selectedUsers.length < 1){
       setFlashForList('Select a list to Delete', 'error');
     }
@@ -10,6 +10,20 @@ $(document).on('ready page:load', function() {
     }
     else {
       FlashHandler.setConfirmationDialog('#delete-lists','Are you sure, you want to delete selected lists?', 'Delete', 'destroy-lists');
+    }
+  });
+
+  $(document).on('click', '.cancel-yes', function(e){
+    var delete_link = $('#delete-lists').data('delete-list-link') + "/" + "id_should_go_here";
+    var selected_item = getSelectedUserIds(); /// this doesnt look right
+    if (delete_link) {
+      $.ajax({
+        url: delete_link,
+        type: 'DELETE'
+      });
+
+      // remove this and handle ajax response above
+      //$.post(delete_link, { list_id: selected_item }); 
     }
   });
 
@@ -27,56 +41,22 @@ $(document).on('ready page:load', function() {
     }
   });
 
-  $(document).on('click', '.cancel-yes', function(e){
-    var delete_link = $('#delete-lists').data('delete-list-link');
-    var selected_item = getSelectedUserIds();
-    if (delete_link)
-      $.post(delete_link, { list_id: selected_item });
-  });
-
   // Toggles between checking or unchecking all checkboxes
   $("#check_or_uncheck_all").click(function(e){
-    if( $(this).is(':checked') ){
+    if ( $(this).is(':checked') ) {
       $('#create_list_button').removeAttr('disabled');
       $(".merchant_customers").prop('checked', true);
-      $(".list_members").prop('checked', true);
-    }else{
+    } else {
+      $('#create_list_button').attr('disabled', true);
       $(".merchant_customers").prop('checked', false);
-      $(".list_members").prop('checked', false);
     }
   });
 
-  if ($('#Segment-Select-lists').length > 0){
-    customersDropdownOptions('#contacts-segment-list', url_params = '?list_type=contacts');
-    customersDropdownOptions('#Segment-Select-lists');
-  }
-
-  function customersDropdownOptions(element, url_params = ''){
-    $.ajax({
-      method: 'GET',
-      url: '/v1/lists/merchant_segment' + url_params,
-      data: {},
-      dataType: 'json'
-    }).done(function(data){
-        $.each(data, function(index, value){
-          $(element).append($('<option>', { value: value.id, text: value.name }))
-        });
-    }).fail(function(msg){
-      setFlashForList(msg, 'error');
-    });
-  }
-
-  $('#contacts-segment-list').on('change', function(){
+  $('#Segment-Select-lists, #contacts-segment-list').on('change', function(e){
     if (this.value){
-      var window_location = window.location.pathname.split('/')
-      window.location = '/' + window_location[1] + '/' + window_location[2]  + '/contacts/' + this.value + '/segment_users';
-    }
-  });
-
-  $('#Segment-Select-lists').on('change', function(){
-    if (this.value){
-      var window_location = window.location.pathname.split('/')
-      window.location = '/' + window_location[1] + '/' + window_location[2]  + '/customers/' + this.value + '/segment_users';
+      var listType = e.currentTarget.dataset.listType,
+          window_location = window.location.pathname.split('/');
+      window.location = '/' + window_location[1] + '/' + window_location[2]  + '/segments/' + this.value + "?list_type=" + listType;
     }
   });
 
@@ -152,7 +132,7 @@ $(document).on('ready page:load', function() {
           $('.close-modal').click();
         }
       }).fail(function(msg){
-        setFlashForList('Sorry list could not created please try again', 'error');
+        setFlashForList('Unable to create list', 'error');
       });
     })
   });
@@ -203,13 +183,16 @@ $(document).on('ready page:load', function() {
       centered: true,
       onLoad: function() {
         // Populate segment selection before submitting request
+        $("#listChannel").val($('#contact-channel').data('contact-channel'));
         $("#segment_create_modal").find('input:first');
         $("#segment_type").val($('#customer-filter option:selected').val());
         $("#segment_num_days").val($("#num_days").val());
         $("#segment_filter").val($('#days-filter option:selected').val());
+
+        $("#additional_segment_type").val('customer_spend');
         $("#amt_filter").val($("#segment_filter_by option:selected").val());
         $("#lists_amt_1").val($("#amount_1").val());
-        $("#lists_amt_2").val($("#amount_2").val());
+        //$("#lists_amt_2").val($("#amount_2").val());
       },
       overlayCSS: {
         background: '#ffffff', opacity: .8
@@ -259,7 +242,7 @@ $(document).on('ready page:load', function() {
         location.reload()
       })
       .fail(function(msg){
-        setFlashForList('Sorry segment cannot create', 'error');
+        setFlashForList('Unable to create segment', 'error');
       })
   });
 
@@ -285,6 +268,7 @@ $(document).on('ready page:load', function() {
           $("#selectedUsers").val(user_ids);
           $("#listCategory").val("list");
           $("#listType").val(listType);
+          $("#listChannel").val($('#contact-channel').data('contact-channel'));
         },
         overlayCSS: {
           background: '#ffffff', opacity: .8
@@ -305,8 +289,7 @@ $(document).on('ready page:load', function() {
 
   function setFlashForList(msg, title){
     FlashHandler.setFlashMessage(msg, title);
-  }
-
+  };
 
   function getSelectedUserIds(){
     var selected_users = []; // An array for storing selected users
@@ -328,16 +311,22 @@ $(document).on('ready page:load', function() {
     }
   }
 
-  function checkContactPage(){
-    return $('#list-channel-for-list-memebers').text().trim() == 'contact'
-  }
+  function getListType() {
+    return $("#list-data").data('list-type');
+  };
 
-  $('.list-member-delete').click(function(e){
+  function getListID() {
+    return $("#list-data").data('list-id');
+  };
+
+  function getListChannel() {
+    return $("#list-data").data('list-channel');
+  };
+
+  $('.list-member-delete').click(function(e) {
     e.preventDefault();
-    var element = $($(this).parent().children()[0]);
-    var id  = element.attr('id').split('-')
-    element.attr('href', element.attr('href')+'?list_members='+id[id.length-1]);
-    FlashHandler.setConfirmationDialog('#'+element.attr('id'), 'Are you sure, you want to delete user from lists?', 'Delete', 'destroy-list-members');
+    var id = $(this).parent().children()[0].id;
+    FlashHandler.setConfirmationDialog(id, 'Are you sure you want to delete this member?', 'Delete', 'destroy-list-members');
   });
 
   $('.create-segment').click(function(){
@@ -345,31 +334,39 @@ $(document).on('ready page:load', function() {
     $('#segmentListType').val(listType)
   });
 
-  var labelFieldSelectize = checkContactPage() ? 'phone_number' : 'email'
+  var labelFieldSelectize = getListType() == 'contact' ? 'title' : ['email', 'description', 'card_name']
   $('.add-to-list-field').selectize({
     maxItems: 1,
     valueField: 'id',
-    labelField: labelFieldSelectize,
     searchField: labelFieldSelectize,
     create: false,
     options: [],
     closeAfterSelect: true,
+    render: {
+      item: function(item, escape) {
+        return '<div> <span class="">' + escape(item.title) + " - " + escape(item.description) + '</span></div>';
+      },
+      option: function(item, escape) {
+        return '<div> <span class="">' + escape(item.title) + " - " + escape(item.description) + '</span></div>';
+      }
+    },
     load: function(query, callback) {
-      var listURL = checkContactPage() ? 'contacts' : 'customers'
+      var listURL = getListType() == 'contact' ? 'contacts' : 'customers';
+
       if (!query.length) return callback();
       $.ajax({
         url: '/v1/'+ listURL +'.json',
         type: 'GET',
         dataType: 'json',
         data: {
-          query: query, list_id: window.location.pathname.split('/').pop()
+          query: query, list_id: getListID(), channel: getListChannel()
         },
         error: function() {
-          FlashHandler.setFlashMessage('Something went wrong...Unable to find any customer', 'error');
+          FlashHandler.setFlashMessage('Something went wrong...Unable to find any ' + getListType(), 'error');
           callback();
         },
         success: function(res) {
-          callback(res);
+          callback(res['data']);
         }
       });
     }

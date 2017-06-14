@@ -150,11 +150,10 @@ module ApplicationHelper
   end
 
   def restrict_devise_actions
-    restricted_actions = ['sessions-new', 'sessions-create', 'registrations-new', 'registrations-create',
-                           'registrations-edit', 'devise/passwords-new', 'devise/passwords-create', 'registrations-add_card_info',
-                           'registrations-add_profile_info', 'registrations-add_subscription',
-                           'registrations-add_rhombus_number', 'merchant_customers-show',
-                           'devise/passwords-edit', 'devise/passwords-update', ''
+    restricted_actions = ['registrations-add_profile_info', 'registrations-add_subscription',
+                          'sessions-new', 'sessions-create', 'registrations-new', 'registrations-create',
+                          'registrations-add_rhombus_number', 'devise/passwords-edit', 'devise/passwords-update',
+                          'registrations-edit', 'devise/passwords-new', 'devise/passwords-create', 'registrations-add_card_info'
                          ]
     restricted_actions.include?(params_controller_action)
   end
@@ -166,4 +165,5 @@ module ApplicationHelper
   def index_footer
     return %Q{<div style="height: 50px"></div>}.html_safe
   end
+  
 end

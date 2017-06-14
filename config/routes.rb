@@ -31,7 +31,6 @@ Rails.application.routes.draw  do
   end
 
   #authenticate :user, -> (user) { CheckUser::RouteAuthentication.new(user).should_authenticate? } do
-    get 'user_lists/remove_user' => 'user_lists#remove_user'
     get 'fb_pages/remove_integration' => 'fb_pages#remove_integration'
     get 'link_facebook' => 'link_fb_accounts#link_facebook'
     get 'get_current_user' => 'application#get_current_user'
@@ -60,10 +59,12 @@ Rails.application.routes.draw  do
       end
 
       authenticate :user, -> (user) {user.is_merchant? } do
+        
         ## devise routes
         devise_scope :user do
+          post 'deactivate' => 'registrations#deactivate_account'
+          
           member do
-
             get 'add-subscription' => 'registrations#add_subscription'
             get 'add-rhombus-number' => 'registrations#add_rhombus_number'
             get 'add-profile-info' => 'registrations#add_profile_info'
@@ -78,16 +79,15 @@ Rails.application.routes.draw  do
           end
         end
 
-        devise_scope :user do
-          post 'deactivate' => 'registrations#deactivate_account'
-        end
-
         resources :fb_pages, only: [:index]
         patch 'update_fb_page' => 'fb_pages#update_user_fb_page'
         resources :hashtags, except: [:show]
         resources :subscriptions do
           get 'download' => 'subscriptions#download_csv', constraints: { format: 'csv' }, on: :collection
         end
+        resources :conversations, only: [:index]
+        resources :campaigns, except: [:show] { collection { get 'filter_campaign' } }
+        resources :reminders, except: [:show, :new] { member { put 'change_status' } }
         resource :away_message, only: [:show, :update]
         resources :plans, only: [:index, :destroy]
         resources :alerts, only: [:update]
@@ -104,52 +104,26 @@ Rails.application.routes.draw  do
           resources :coupons, only: [:index, :create, :destroy]
           get 'manage-coupons' => 'coupons#manage_coupons'
         end
+                      
+        resources :merchant_contacts, path: :contacts, only: [:index, :show]
+        resources :merchant_customers, path: :customers, only: [:index, :show]
+        get 'sms-usage' => 'users#sms_usage'
+             
+        get 'segments' => 'lists#segments'
+        get 'segments/:id' => 'lists#show'
+        resources :user_lists, only: [] { collection { delete 'remove_member' } }
+        resources :lists, only: [:index, :show, :destroy] { member { post 'add_member' } }
 
-        # authenticate resources if a user is merchant
-        authenticate :user, -> (user) { user.is_merchant?} do
-          resources :conversations, only: [:index]
-          resources :campaigns, except: [:show] { collection { get 'filter_campaign' } }
-          resources :reminders, except: [:show, :new] { member { put 'change_status' } }
-        end
-
-        member do
-          resources :merchant_contacts, path: :contacts, only: [:index, :show]
-
-          get 'contacts' => 'merchant_contacts#index'
-          get 'contacts/:merchant_contact_id' => 'merchant_contacts#show'
-
-          resources :merchant_customers, path: :customers, only: [] do
-            member { get 'segment_users' }
-          end
-          resources :merchant_contacts, path: :contacts, only: [] do
-            member { get 'segment_users' }
-          end
-          get 'segments' => 'lists#segments'
-          delete 'delete-segment' => 'lists#delete_segment'
-          get 'sms-usage' => 'users#sms_usage'
-          resources :lists, only: [:index, :create, :show, :update] do
-            collection do
-              post 'delete' => 'lists#destroy'
-            end
-            member do
-              post 'update-user-list' => 'lists#update_user_list'
-              delete 'remove-customer' => 'lists#remove_customer_contact'
-            end
-          end
-          get 'customer_template' => "users#customer_csv_template"
-          get 'managed-accounts' => 'users#managed_acct'
-          get 'update-managed-acct' => 'users#managed_acct'
-          match 'managed-accounts' => "users#create_managed_acct", via: :patch
-          match 'update-managed-acct' => 'users#update_managed_acct', via: :patch
-        #  get 'businesses' => 'users#businesses'
-          get 'notifications' => 'alerts#edit'
-          get 'integrations' => 'users#integrations'
-          get 'remove_stripe_integration' => 'users#remove_stripe_integration'
-          get 'remove_twitter_integration' => 'users#remove_twitter_integration'
-          match 'refer_business' => 'users#refer_business', via: [:get, :post]
-          get 'customers' => 'merchant_customers#index'
-          get 'customers/:merchant_customer_id' => 'merchant_customers#show'
-        end
+        get 'customer_template' => "users#customer_csv_template"
+        get 'managed-accounts' => 'users#managed_acct'
+        get 'update-managed-acct' => 'users#managed_acct'
+        match 'managed-accounts' => "users#create_managed_acct", via: :patch
+        match 'update-managed-acct' => 'users#update_managed_acct', via: :patch
+        get 'notifications' => 'alerts#edit'
+        get 'integrations' => 'users#integrations'
+        get 'remove_stripe_integration' => 'users#remove_stripe_integration'
+        get 'remove_twitter_integration' => 'users#remove_twitter_integration'
+        match 'refer_business' => 'users#refer_business', via: [:get, :post]
       end
     end
 
@@ -159,13 +133,9 @@ Rails.application.routes.draw  do
         get 'snapshot', on: :collection
         post 'check_password', on: :collection
       end
-      resources :contacts, only: [:index]
-      resources :customers, only: [:index]
-      resources :lists, only: [:create, :index, :update] do
-        collection do
-          get 'check_list_name'
-          get 'merchant_segment' => 'lists#merchant_segment'
-        end
+
+      resources :lists, only: [:create, :index, :update, :destroy] do
+        get 'check_list_name', on: :collection
       end
       resources :hashtags, only: [:index] do
         get 'check_hashtag_name', on: :collection
@@ -205,7 +175,8 @@ Rails.application.routes.draw  do
         post 'check_plan_name', on: :collection
       end
       resources :subscriptions, only: [:create, :update, :destroy]
-      resources :merchant_customers, only: [:index, :create]
+      resources :merchant_customers,  path: :customers, only: [:index, :create]
+      resources :merchant_contacts,  path: :contacts, only: [:index]
       resources :demos, only: [:create]
       resources :conversations, only: [:index, :show] do
         get 'find', on: :collection

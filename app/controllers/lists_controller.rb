@@ -1,115 +1,90 @@
 class ListsController < ApplicationController
   include DashboardNotification
 
-  before_action :set_list, only: [:show, :edit, :update, :destroy, :update_user_list, :remove_customer_contact]
-  before_action :set_notifications, except: [:destroy]
+  before_action :set_list, only: [:show, :destroy, :add_member]
+  before_action :set_notifications, except: [:destroy, :add_member]
 
   def index
     @lists = current_user.lists.where(segment: nil).paginate(per_page: PAGINATION_PER_PAGE,
                                                     page: params[:page]).order(created_at: :desc)
 
     if @lists.present?
-      respond_to do |format|
-        format.html
-        format.js { render partial: 'shared/index.js.erb', locals: { obj: @lists } }
-      end
+      render_requested_format(@lists)
+    else
+      render :empty_list
+    end
+  end
+
+  # segment type list index action
+  def segments
+    @segments = current_user.segments.paginate(per_page: PAGINATION_PER_PAGE,
+                                                page: params[:page]).order(created_at: :desc)
+    
+    if @segments.present?
+      render_requested_format(@segments)
     else
       render :empty_list
     end
   end
 
   def show
-    @list_members = @list.get_users
-    unless @list_members.present?
+    @list_members = @list.get_mcs
+
+    # segment
+    if @list.segment.present?
+      @new_customer = User.new
+      if @list.contact?
+        @uid_type = @segment.sms? ? 'phone_number' : 'fb_page'
+        @channel = @uid_type == 'phone_number' ? 'sms' : 'messenger'
+      end
+    end
+    
+    if @list_members.blank?
       flash[:error] = 'There are no members in the lists'
-      redirect_to lists_path(current_user)
-    end
-  end
-
-  def new
-    @list = current_user.lists.build
-  end
-
-  def edit
-  end
-
-  def create
-    @list = current_user.lists.build(list_params)
-    flash[:notice] = 'List was successfully created.' if @list.save
-    redirect_to list_path(current_user, @list)
-  end
-
-  def remove_customer_contact
-    get_list = get_lists(params[:id])
-    unless get_list.present?
-      @list.user_lists.find_by(customer_contact_id: params[:list_members]).delete
-      flash[:notice] = "member in the list successfully deleted"
+      # redirect_to lists_path(current_user)   or to customers for segments
+      # render that there are no members in the lists
     else
-      flash[:error] = "member in the list could not deleted"
+      render_requested_format(@mcs)
     end
-    redirect_to list_path(current_user, @list)
   end
 
-  def update
-    if @list.update_attributes(list_params)
-      flash[:notice] = 'List was successfully updated.'
+  def add_member
+    cc_id = params[:lists][:member_id]
+    cc_type = 'MerchantCustomer' if params[:lists][:list_type] == 'customer'
+    cc_type = 'MerchantContact' if params[:lists][:list_type] == 'contact'
+    unless UserList.exists?(list_id: @list.id, customer_contact_type: cc_type, customer_contact_id: cc_id)
+      @user_list = UserList.new(list_id: @list.id, customer_contact_type: cc_type, customer_contact_id: cc_id)
+      if @user_list.save
+        flash[:notice] = 'Member has been added.'
+      else
+        flash[:error] = 'Unable to add member to list.'
+      end
     else
-      flash[:error] = @list.errors.full_messages
+      flash[:notice] = 'Member is already a part of this list.'
     end
-    redirect_to lists_path(current_user)
+    redirect_to user_list_path(current_user, @list)
   end
 
-  def update_user_list
-    list_member_id = params[:lists][:list_member]
-    @list.user_lists.build(customer_contact_type: "User", customer_contact_id: list_member_id)
-    if list_member_id.present? && @list.save
-      flash[:notice] = 'List was successfully updated.'
-    else
-      flash[:error] = 'List member could not updated'
-    end
-    redirect_to list_path(current_user, @list)
-  end
-
-
-  def delete_segment
-    get_all_list = get_lists(params[:list_id].split(',').flatten)
-    if get_all_list.present? && get_all_list.delete_all
-      flash[:notice] = "segment was successfully deleted"
-    else
-      flash[:error] = 'Sorry segment cannot deleted'
-    end
-    redirect_to segments_user_path(current_user)
-  end
-
+  # this is used by segments only. Static lists use ajax to delete.
   def destroy
-    get_all_list = get_lists(params[:list_id])
-    if get_all_list.present? && get_all_list.delete_all
-      flash[:notice] = "List was successfully deleted"
+    if @list.system?
+      flash[:error] = 'You cannot delete a system generated segment.'
+    elsif @list.campaign_lists.present?
+      flash[:error] = 'Unable to delete a segment that has been attached to a campaign'
     else
-      flash[:error] = 'Sorry list cannot deleted'
+     @list.destroy 
+      if @list.destroyed?
+        flash[:success] = 'Segment has been deleted'
+      else
+        flash[:error] = 'Unable to delete segment'
+      end
     end
-    render js: "window.location = #{lists_path(current_user).to_json}"
-  end
 
-  def segments
-    @segments = current_user.user_segments
-    render :empty_list if @segments.empty?
+    redirect_to user_segments_path(current_user)
   end
 
   private
     def set_list
-      @list = List.find_by_id(params[:id])
-    end
-
-    def get_lists(list_ids)
-      # sql query states that find list where id is same as array of ids from params
-      # and check if those lists have associated record campaign_lists or not
-      # it will return the list if there is no associated record campaign_lists
-      List.where(id: list_ids).where('id NOT IN (SELECT list_id FROM campaign_lists where
-      list_id IN(?))', list_ids)
-    end
-
-    def list_params
-      params.require(:list).permit(:name)
+      @list = List.find_by(id: params[:id])
     end
 end

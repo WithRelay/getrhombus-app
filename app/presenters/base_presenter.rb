@@ -28,9 +28,8 @@ class BasePresenter < SimpleDelegator
     time_in_relative_form(@model.created_at, 'long_format')
   end
 
-  def profile_image(current_user = @model.user )
-    # need current_user param to be passed for MerchantContact/MerchantCustomer only
-    user = find_user(current_user)
+  def profile_image
+    user = find_user
 
     profile_pic = User.check_profile_picture(user)
     if profile_pic[:type] == "image"
@@ -55,50 +54,33 @@ class BasePresenter < SimpleDelegator
   end
 
   def average_transaction
-    customer_id = @model.class == MerchantCustomer ? @model.customer_id : @model.id
-    user_average_transaction = Transaction.user_average_transaction_with_merchant(customer_id, @user.id)
+    user_average_transaction = Transaction.user_average_transaction_with_merchant(@model.customer_id, @user.id)
     user_average_transaction != 0 ? "$ " + user_average_transaction.to_s : show_empty_symbol
   end
 
   def total_transaction
-    customer_id = @model.class == MerchantCustomer ? @model.customer_id : @model.id
-    user_total_transaction = Transaction.user_total_transaction_with_merchant(customer_id, @user.id)
+    user_total_transaction = Transaction.user_total_transaction_with_merchant(@model.customer_id, @user.id)
     user_total_transaction != 0 ? "$ " + user_total_transaction.to_s : show_empty_symbol
   end
 
   def format_customer_name
-    customer_id = @model.class == MerchantCustomer ? @model.customer_id : @model.id
-    user_obj = @model.class == MerchantCustomer ? nil : @model
-    User.get_conversation_display_name(customer_id, 'user', user_obj)
+    User.get_conversation_display_name(@model.customer_id, 'user')
   end
 
   def format_merchant_name
-    merchant_id = @model.class == MerchantCustomer ? @model.merchant_id : @model.id
-    user_obj = @model.class == MerchantCustomer ? nil : @model
-    User.get_conversation_display_name(merchant_id, 'user', user_obj)
+    User.get_conversation_display_name(@model.merchant_id , 'user')
   end
 
   def customer_first_visit_formatted
-    if @model.class == MerchantCustomer
-      x = @model
-    else
-      x = MerchantCustomer.find_by(customer_id: @model.id, merchant_id: @user.id)
-      return "-" unless x
-    end
-
-    time_in_relative_form(x.created_at, 'long_format')
+    time_in_relative_form(@model.created_at, 'long_format')
   end
 
   def customer_last_visit_formatted
-    data_ary = []
-    id = @model.class == MerchantCustomer ? @model.customer_id : @model.id
+    time_in_relative_form(@model.updated_at, 'long_format')
+  end
 
-    ['Message', 'FbMessage'].each do |x|
-      last_date = x.constantize.where(user_id: id, user_id_to: @user.id).pluck(:created_at).last
-      data_ary.push(last_date) if last_date.present?
-    end
-
-    time_in_relative_form(data_ary.max, 'long_format')
+  def get_customer_location
+    User.get_user_location(@model.customer_id, 'user', uid_obj=nil)
   end
 
   private
@@ -107,11 +89,11 @@ class BasePresenter < SimpleDelegator
     ('-' * SYMBOL_TIMES)
   end
 
-  def find_user(current_user)
+  def find_user
     if @model.class == MerchantCustomer
-      return current_user.is_merchant? ? @model.customer : @model.merchant
+      return @user.is_merchant? ? @model.customer : @model.merchant
     elsif  @model.class == MerchantContact
-      return current_user.is_merchant? ? @model.contacts : @model.merchant
+      return @user.is_merchant? ? nil : @model.merchant
     else
       @model.user
     end
@@ -119,7 +101,6 @@ class BasePresenter < SimpleDelegator
 
   def need_campaign_class?
     [Hashtag, MerchantContact, MerchantCustomer].include?(@model.class)
-    # @model.class == Hashtag || @model.class == MerchantContact || @model.class = MerchantCustomer
   end
 
 end

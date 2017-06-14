@@ -72,7 +72,7 @@ module ChannelCampaign
     # updates campaign details after sending campaign success.
     def update_campaign
       @campaign.send_count = @campaign.send_count + 1
-      @campaign.lists.each { |list| @campaign.campaign_user_lists.build(get_user_id) }
+      @campaign.lists.each { |list| @campaign.campaign_recipients.build(get_user_id) }
       @campaign.save(validate: false)
       @campaign.update_attribute('status', 3) if is_recurring_campaign_completed? || @campaign.one_time?
     end
