@@ -10,7 +10,7 @@ class MerchantContactsController < ApplicationController
     @new_customer = User.new
     render 'merchant_contact_empty' unless @merchant_contacts.present?
   end
-  
+
   def show
     @merchant_contact = MerchantContact.find_by_id(params[:id])
     @user_snapshot = get_user_snapshot(@merchant_contact.uid, @merchant_contact.uid_type, current_user.id)
