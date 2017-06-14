@@ -772,9 +772,9 @@ class EmailingService
     def send_completed_notice(hosted_number_order)
       user = User.find_by(email: hosted_number_order[:email])
       begin
-        template_name = 'send-ompleted-notice'
+        template_name = 'hosted-sms-activated'
         template_content = []
-        message = { "subject" => "Hosted number request completed",
+        message = { "subject" => "Your phone number is activated",
          "global_merge_vars"=> [  { "name" => "first_name", "content" => user.first_name || 'there' }
                                ],
          "merge_language" => "handlebars",
@@ -793,10 +793,31 @@ class EmailingService
 
     def send_action_required_notice(hosted_number_order)
       begin
-        template_name = 'send-action-required-notice'
+        template_name = 'hosted-sms-action-required'
         template_content = []
         message = { "subject" => "Hosted SMS action required",
-         "global_merge_vars"=> [  { "name" => "first_name", "content" => 'team' }
+         "global_merge_vars"=> [  { "name" => "first_name", "content" => 'team' },
+                               ],
+         "merge_language" => "handlebars",
+         "to"=> [ { "email" => User.platform_email } ],
+         "from_name" => "Email from Relay",
+         "from_email" => User.platform_email
+        }
+        async = true
+        result = MANDRILL.messages.send_template template_name, template_content, message, async
+      rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
+        puts "A mandrill error occurred: #{e.class} - #{e.message}"
+      rescue StandardError => e
+      end
+    end
+
+    def hosted_sms_progress_notice(hosted_number_order)
+      begin
+        template_name = 'hosted-sms-progress'
+        template_content = []
+        message = { "subject" => "Status: Phone number activation in progress",
+         "global_merge_vars"=> [  { "name" => "first_name", "content" => 'team' },
+                                  { "name" => "virtual_number", "content" => '' }
                                ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => User.platform_email } ],
@@ -814,10 +835,11 @@ class EmailingService
     def send_failed_notice(hosted_number_order)
       user = User.find_by(email: hosted_number_order[:email])
       begin
-        template_name = 'send-failed-notice'
+        template_name = 'hosted-sms-failed'
         template_content = []
-        message = { "subject" => "Hosted number order failed",
-         "global_merge_vars"=> [  { "name" => "first_name", "content" => user.first_name || 'there' }
+        message = { "subject" => "Status: Relay phone number activation",
+         "global_merge_vars"=> [  { "name" => "first_name", "content" => user.first_name || 'there' },
+                                  { "name" => "virtual_number", "content" => '' }
                                ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],

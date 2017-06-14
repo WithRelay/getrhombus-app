@@ -11,6 +11,7 @@ class HostedSmsJob
         h.status_events[:loa_sent] = true
         h.status_events[:loa_sent_at] = Time.now
         h.save
+        EmailingService.hosted_sms_progress_notice(h)
       elsif h.status == 'Completed' && !h.status_events[:completed_notice_sent]
         EmailingService.send_completed_notice(h)
         h.status_events[:completed_notice_sent] = true
