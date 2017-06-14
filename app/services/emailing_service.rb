@@ -817,7 +817,7 @@ class EmailingService
         template_content = []
         message = { "subject" => "Status: Phone number activation in progress",
          "global_merge_vars"=> [  { "name" => "first_name", "content" => 'team' },
-                                  { "name" => "virtual_number", "content" => '' }
+                                  { "name" => "virtual_number", "content" => hosted_number_order.friendly_name }
                                ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => User.platform_email } ],
@@ -839,7 +839,7 @@ class EmailingService
         template_content = []
         message = { "subject" => "Status: Relay phone number activation",
          "global_merge_vars"=> [  { "name" => "first_name", "content" => user.first_name || 'there' },
-                                  { "name" => "virtual_number", "content" => '' }
+                                  { "name" => "virtual_number", "content" => hosted_number_order.friendly_name }
                                ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
