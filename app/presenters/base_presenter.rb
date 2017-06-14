@@ -54,12 +54,12 @@ class BasePresenter < SimpleDelegator
   end
 
   def average_transaction
-    user_average_transaction = Transaction.user_average_transaction_with_merchant(@model.customer_id, @user.id)
+    user_average_transaction = Transaction.user_average_transaction_with_merchant(@model.customer_id, @model.merchant_id)
     user_average_transaction != 0 ? "$ " + user_average_transaction.to_s : show_empty_symbol
   end
 
   def total_transaction
-    user_total_transaction = Transaction.user_total_transaction_with_merchant(@model.customer_id, @user.id)
+    user_total_transaction = Transaction.user_total_transaction_with_merchant(@model.customer_id, @model.merchant_id)
     user_total_transaction != 0 ? "$ " + user_total_transaction.to_s : show_empty_symbol
   end
 
