@@ -33,12 +33,12 @@ class BasePresenter < SimpleDelegator
 
     profile_pic = User.check_profile_picture(user)
     if profile_pic[:type] == "image"
-          html = h.image_tag(profile_pic[:value], class: 'table-profile-picture', width: 24)
-          html = h.image_tag(profile_pic[:value], class: 'campaigns table-profile-picture', width: 24) if need_campaign_class?
+      html = h.image_tag(profile_pic[:value], class: 'table-profile-picture', width: 24)
+      html = h.image_tag(profile_pic[:value], class: 'campaigns table-profile-picture', width: 24) if need_campaign_class?
     elsif profile_pic[:type] == "color"
       class_name_value = "table-profile-picture radius-color-#{profile_pic[:value]}"
       class_name = ['Reminder', 'Transaction'].include?(@model.class.to_s) ? class_name_value : "campaigns #{class_name_value}"
-      html = ("<div class='"+class_name+"'></div>").html_safe
+      html = ("<div class='"+ class_name + "'></div>").html_safe
     end
     html
   end
@@ -100,7 +100,7 @@ class BasePresenter < SimpleDelegator
   end
 
   def need_campaign_class?
-    [Hashtag, MerchantContact, MerchantCustomer].include?(@model.class)
+    [Hashtag, MerchantCustomer].include?(@model.class)
   end
 
 end
