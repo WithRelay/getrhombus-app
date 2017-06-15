@@ -44,7 +44,10 @@ class ListsController < ApplicationController
       # redirect_to lists_path(current_user)   or to customers for segments
       # render that there are no members in the lists
     else
-      render_requested_format(@mcs)
+      respond_to do |format|
+        format.js { render partial: 'shared/index.js.erb', locals: { obj: obj } }
+        format.html { render template: render_controller_action }
+      end
     end
   end
 
@@ -86,5 +89,19 @@ class ListsController < ApplicationController
   private
     def set_list
       @list = List.find_by(id: params[:id])
+    end
+
+    def render_controller_action
+
+      # add @list_type here
+
+      return 'lists/show' if @list.segment.blank?
+      if @list.customer?
+        @merchant_customers = @list_members
+        "merchant_customers/index"
+      else
+        @merchant_contacts = @list_members
+        "merchant_contacts/index"
+      end
     end
 end

@@ -4,9 +4,10 @@ class MerchantContactsController < ApplicationController
   before_action :set_notifications
 
   def index
-    @uid_type = params[:uid_type] == "fb_page" ? 'fb_page' : 'phone_number'
-    @channel = @uid_type == 'phone_number' ? 'sms' : 'messenger'
-    @merchant_contacts = current_user.merchant_contacts.only_contact.where(uid_type: @uid_type)
+    uid_type = params[:uid_type] == "fb_page" ? 'fb_page' : 'phone_number'
+    @channel = uid_type == 'phone_number' ? 'sms' : 'messenger'
+    @list_type = 'contact'
+    @merchant_contacts = current_user.merchant_contacts.only_contact.where(uid_type: uid_type)
     @new_customer = User.new
     render 'merchant_contact_empty' unless @merchant_contacts.present?
   end

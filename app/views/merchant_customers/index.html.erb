@@ -49,14 +49,14 @@
     </div>
   </div>
 
- <%= render partial: 'shared/customer_nav', locals: { customers: @customers } %>
+ <%= render partial: 'merchant_customers/customer_nav', locals: { merchant_customers: @merchant_customers } %>
 
-  <div class="dashboard-body">
+  <div class="dashboard-body" id="list-data" data-list-channel='<%= @channel %>' data-list-type='<%= @list_type %>'>
    <div class="customer-dashboard-table-wrapper row-wrapper">
       <div>
         <div id='objlists'>
-          <%= render @customers %>
-           <%= will_paginate(@customers).try(:html_safe) if @customers.count > PAGINATION_PER_PAGE %>
+          <%= render @merchant_customers %>
+           <%= will_paginate(@merchant_customers).try(:html_safe) if @merchant_customers.count > PAGINATION_PER_PAGE %>
         </div>
       </div>
     </div>

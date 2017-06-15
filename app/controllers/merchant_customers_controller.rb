@@ -5,10 +5,11 @@ class MerchantCustomersController < ApplicationController
   before_action :set_notifications
 
   def index
-    @customers = current_user.merchant_customers
-                             .paginate(page: params[:page], per_page: PAGINATION_PER_PAGE).order(created_at: :desc)
+    @list_type = 'customer'
     @new_customer = User.new
-    @customers.present? ? render_requested_format(@customers) : render(:empty_customer)
+    @merchant_customers = current_user.merchant_customers
+                             .paginate(page: params[:page], per_page: PAGINATION_PER_PAGE).order(created_at: :desc)
+    @merchant_customers.present? ? render_requested_format(@merchant_customers) : render(:empty_customer)
   end
 
   def business

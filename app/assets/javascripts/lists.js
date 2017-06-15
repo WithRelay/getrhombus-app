@@ -54,10 +54,9 @@ $(document).on('ready page:load', function() {
 
   $('#Segment-Select-lists, #contacts-segment-list').on('change', function(e){
     if (this.value){
-      var listType = e.currentTarget.dataset.listType,
-          window_location = window.location.pathname.split('/');
-      window.location = '/' + window_location[1] + '/' + window_location[2]  + '/segments/' + this.value + "?list_type=" + listType;
-    }
+      var listType = e.currentTarget.dataset.listType, window_location = window.location.pathname.split('/');
+      window.location = '/' + window_location[1] + '/' + window_location[2]  + '/segments/' + this.value;
+    };
   });
 
   $("#edit-selected-list").click(function(e){
@@ -183,7 +182,7 @@ $(document).on('ready page:load', function() {
       centered: true,
       onLoad: function() {
         // Populate segment selection before submitting request
-        $("#listChannel").val($('#contact-channel').data('contact-channel'));
+        $("#listChannel").val(getListChannel());
         $("#segment_create_modal").find('input:first');
         $("#segment_type").val($('#customer-filter option:selected').val());
         $("#segment_num_days").val($("#num_days").val());
@@ -253,12 +252,10 @@ $(document).on('ready page:load', function() {
   });
 
   // Fired on click on create list button
-  $("#create_list_button").click(function(e){
-    var listType = window.location.pathname.split('/').pop() == 'customers' ? 'customer' : 'contact'
-    if (!isAnyCheckboxSelected('.merchant_customers')){
+  $("#create_list_button").click(function(e) {
+    if (!isAnyCheckboxSelected('.merchant_customers')) {
       setFlashForList('Please select customer from the table', 'error');
-    }
-    else{
+    } else {
       user_ids = getSelectedUserIds();
       $("#new-list-modal-div").lightbox_me({
         closeClick: true,
@@ -267,8 +264,8 @@ $(document).on('ready page:load', function() {
         onLoad: function() {
           $("#selectedUsers").val(user_ids);
           $("#listCategory").val("list");
-          $("#listType").val(listType);
-          $("#listChannel").val($('#contact-channel').data('contact-channel'));
+          $("#listType").val(getListType());
+          $("#listChannel").val(getListChannel());
         },
         overlayCSS: {
           background: '#ffffff', opacity: .8
@@ -304,12 +301,12 @@ $(document).on('ready page:load', function() {
   });
 
   function checkBetweenSelected(element, hideShowField){
-    if ($(element + ' option:selected').val() == 'between'){
+    if ($(element + ' option:selected').val() == 'between') {
       $(hideShowField).slideDown(100);
-    }else{
+    } else {
       $(hideShowField).slideUp(100);
-    }
-  }
+    };
+  };
 
   function getListType() {
     return $("#list-data").data('list-type');
@@ -329,9 +326,8 @@ $(document).on('ready page:load', function() {
     FlashHandler.setConfirmationDialog(id, 'Are you sure you want to delete this member?', 'Delete', 'destroy-list-members');
   });
 
-  $('.create-segment').click(function(){
-    var listType = window.location.pathname.split('/').pop() == 'customers' ? 'customer' : 'contact'
-    $('#segmentListType').val(listType)
+  $('.create-segment').click(function() {
+    $('#segmentListType').val(getListType());
   });
 
   var labelFieldSelectize = getListType() == 'contact' ? 'title' : ['email', 'description', 'card_name']

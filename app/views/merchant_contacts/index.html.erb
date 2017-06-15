@@ -50,9 +50,9 @@
   </div>
 </div>
 
-<%= render 'shared/contact_nav' %>
+<%= render 'merchant_contacts/contact_nav' %>
 
-<div class="dashboard-body">
+<div class="dashboard-body" id="list-data" data-list-channel='<%= @channel %>' data-list-type='<%= @list_type %>'>
   <div class="customer-dashboard-table-wrapper row-wrapper">
     <%= render @merchant_contacts %>
   </div>
