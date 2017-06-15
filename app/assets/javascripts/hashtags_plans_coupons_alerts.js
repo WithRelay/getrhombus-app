@@ -35,19 +35,19 @@ $(document).ready(function () {
     this.value = positive_integer_only(this.value);
   });
 
-  function positive_integer_only(v) { 
+  function positive_integer_only(v) {
     if (!(/^(\d+)$/.test(v))) return '';
     else {
       if (v.match(/^[1-9]\d*$/)) return v;
-      else return v.slice(0, -1); 
+      else return v.slice(0, -1);
     }
   };
 
-  function positive_integer_less_than_100(v) { 
+  function positive_integer_less_than_100(v) {
     if (!(/^(\d+)$/.test(v))) return '';
     else {
       if (v.match(/^[1-9]\d*$/) && parseInt(v) < 101) return v;
-      else return v.slice(0, -1); 
+      else return v.slice(0, -1);
     }
   };
 
@@ -82,11 +82,11 @@ $(document).ready(function () {
   }
 
   // decimal with two places
-  $('#hashtag_amount, #Plan-Amount, #charge-amount, #Add-Funds').on('input', function(e) {
-    $(this).val(function(_, v) {
-      return decimal_with_up_to_two_places(v);
+    $('#hashtag_amount, #amount_1 ,#Plan-Amount, #charge-amount, #Add-Funds').on('input', function(e) {
+      $(this).val(function(_, v) {
+        return decimal_with_up_to_two_places(v);
+      });
     });
-  });
 
   coupon_type_value.on('input', function(){
     var v = this.value;
