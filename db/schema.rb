@@ -421,10 +421,10 @@ ActiveRecord::Schema.define(version: 20170612015755) do
     t.datetime "updated_at",                                   null: false
   end
 
-  add_index "invoices", ["coupon_id"], name: "fk_rails_e6f65a3c2c", using: :btree
+  add_index "invoices", ["coupon_id"], name: "fk_rails_fd37f25ad2", using: :btree
   add_index "invoices", ["stripe_invoice_id"], name: "index_invoices_on_stripe_invoice_id", using: :btree
-  add_index "invoices", ["subscription_id"], name: "fk_rails_49bc030147", using: :btree
-  add_index "invoices", ["transaction_id"], name: "fk_rails_b20d90b857", using: :btree
+  add_index "invoices", ["subscription_id"], name: "fk_rails_bd9e2a19f5", using: :btree
+  add_index "invoices", ["transaction_id"], name: "fk_rails_cda92171cd", using: :btree
 
   create_table "knowledge_base_categories", force: :cascade do |t|
     t.string   "name",       limit: 191
