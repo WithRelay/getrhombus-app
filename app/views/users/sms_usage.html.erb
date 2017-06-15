@@ -7,6 +7,11 @@
   <div class="dash-content-container settings">
     <h4 class="form-header">SMS &amp; MMS usage</h4>
     <div class="flex-underline form-header-underline"></div>
+    <% if current_user.hosted_sms.present? %>
+      <div class="settings-info-div">
+      <p class="settings-details-paragraph">hosted_sms_status_notice(current_user.hosted_sms)</p>
+      </div>
+    <% end %>
     <div class="account-settings-form-wrapper">
       <%= form_for('user', url: auto_recharge_user_path, method: :post, html: { id: "auto_recharge", class:'w-clearfix' } ) do |f| %>
       <form class="w-clearfix" id="email-form" name="email-form">
