@@ -11,7 +11,7 @@ class ListsController < ApplicationController
     if @lists.present?
       render_requested_format(@lists)
     else
-      render :empty_list
+      render :no_lists
     end
   end
 
@@ -23,7 +23,7 @@ class ListsController < ApplicationController
     if @segments.present?
       render_requested_format(@segments)
     else
-      render :empty_list
+      render :no_lists
     end
   end
 
@@ -92,10 +92,9 @@ class ListsController < ApplicationController
     end
 
     def render_controller_action
-
-      # add @list_type here
-
       return 'lists/show' if @list.segment.blank?
+      @selected_segment = @list.segment['base_query']
+      @list_type = @list.list_type
       if @list.customer?
         @merchant_customers = @list_members
         "merchant_customers/index"
