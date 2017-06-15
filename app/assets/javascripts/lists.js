@@ -103,7 +103,7 @@ $(document).on('ready page:load', function() {
         verbose: false,
         validators: {
           notEmpty: {
-            message: 'Campaign name is required'
+            message: 'List name is required'
           },
           remote: {
             url: '/v1/lists/check_list_name',
