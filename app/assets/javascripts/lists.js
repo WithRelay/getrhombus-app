@@ -154,25 +154,6 @@ $(document).on('ready page:load', function() {
           }
         }
       },
-      // 'amount_1_segment': {
-      //   validators: {
-      //     callback: {
-      //       callback: function (value, validator, $field) {
-      //         return { valid: ($field.val() > 0) };
-      //       }
-      //     }
-      //   }
-      // // },
-      // 'customer_spend': {
-      //   validators: {
-      //     callback: {
-      //       callback: function (value, validator, $field) {
-      //         return { valid: ($field.find(':selected').text() != "Customer spend") };
-      //       }
-      //     }
-      //   }
-      // }
-
     }
   }).on('success.form.fv', function(e) {
     e.preventDefault();
@@ -327,7 +308,7 @@ $(document).on('ready page:load', function() {
   });
 
   $('.create-segment').click(function() {
-    $('#segmentListType').val(getListType());
+    $('#listType').val(getListType());
   });
 
   var labelFieldSelectize = getListType() == 'contact' ? 'title' : ['email', 'description', 'card_name']
