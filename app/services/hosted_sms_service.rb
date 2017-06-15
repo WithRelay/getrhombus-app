@@ -31,9 +31,12 @@ class HostedSmsService
     end
 
     def get_status(h)
-      @client = Twilio::REST::Client.new(TWILIO_API_KEY, TWILIO_API_SECRET)
-      response = @client.preview.hosted_numbers.hosted_number_orders(h.sid).fetch
-      update_status(h, response)
+      begin
+        @client = Twilio::REST::Client.new(TWILIO_API_KEY, TWILIO_API_SECRET)
+        response = @client.preview.hosted_numbers.hosted_number_orders(h.sid).fetch
+        update_status(h, response)
+      rescue StandardError => err
+      end
     end
 
     def request_loa(h)

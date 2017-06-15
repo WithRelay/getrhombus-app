@@ -23,7 +23,7 @@ $(document).on('ready page:load', function() {
       });
 
       // remove this and handle ajax response above
-      //$.post(delete_link, { list_id: selected_item }); 
+      //$.post(delete_link, { list_id: selected_item });
     }
   });
 
@@ -155,15 +155,15 @@ $(document).on('ready page:load', function() {
           }
         }
       },
-      'amount_1_segment': {
-        validators: {
-          callback: {
-            callback: function (value, validator, $field) {
-              return { valid: ($field.val() > 0) };
-            }
-          }
-        }
-      },
+      // 'amount_1_segment': {
+      //   validators: {
+      //     callback: {
+      //       callback: function (value, validator, $field) {
+      //         return { valid: ($field.val() > 0) };
+      //       }
+      //     }
+      //   }
+      // },
       'customer_spend': {
         validators: {
           callback: {
