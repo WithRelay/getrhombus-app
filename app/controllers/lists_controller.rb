@@ -65,7 +65,7 @@ class ListsController < ApplicationController
     redirect_to user_list_path(current_user, @list)
   end
 
-  # this is used by segments only. Static lists use ajax to delete.
+  # this is used by segments/lists
   def destroy
     if @list.system?
       flash[:error] = 'You cannot delete a system generated segment.'

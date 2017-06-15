@@ -14,7 +14,7 @@ COLORS = [
 		  	['red','#FF5252']
 		  ].freeze
 
-PAGINATION_PER_PAGE = 25
+PAGINATION_PER_PAGE = 5
 
 # in minutes, must be integer
 SIGNUP_EMAIL_DELAY = 1  

@@ -45,7 +45,8 @@
         <div class="column column-6 left new-row w-clearfix">
           <div class="frequency shrink-text table-text"><%= contact_details[:location] %></div>
         </div>
-        <div class="column column-6 new-row"><a class="actions-button notification" href="#">Message &nbsp; </a>
+        <div class="column column-6 new-row">
+        <%= link_to "Message ", user_conversations_path(current_user, uid: merchant_contact.uid, type:'start_conversation', uid_type: merchant_contact.uid_type), class: "actions-button notification" %>
         </div>
       </div>
     </div>
