@@ -131,4 +131,15 @@ module UsersHelper
             curve: false
     end
   end
+
+  def hosted_sms_status_notice(h)
+    if(h.status == 'Completed')
+      'Congratulations! Your business phone number has been activated in Relay. You can now receive two-way messages and payments from customers using your existing landline number.'
+    elsif (h.status == 'Failed')
+      'Unfortunately, we are unable to activate Relay on your existing phone number.'
+    else
+      'Your phone number activation is in progress; this may take up to 2 hours to complete. In the meantime, use the temporary number on your dashboard to get started. We\'ll notify you once your landline is activated'
+    end
+
+  end
 end
