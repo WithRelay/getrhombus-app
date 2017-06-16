@@ -30,7 +30,7 @@ class TransactionsController < ApplicationController
       delete_captured_payment_session
       @transactions = []
     end
-    render 'empty_transaction' unless @transactions.present?
+    @transactions.present? ? render_requested_format(@transactions) : render(:empty_transaction)
   end
 
   # generate user csv data
