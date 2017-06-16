@@ -1,0 +1,50 @@
+<% if subscription.merchant_customer && subscription.merchant_customer.customer %>
+  <% customer = subscription.merchant_customer.customer %>
+  <div class="row-wrapper transactions">
+    <div class="transactions-table-row w-row" id="<%= subscription.id %>">
+      <div class="transaction-column w-clearfix w-col w-col-3">
+        <div class="card-name transaction-cell subs-card-name">
+          <%= present(subscription.merchant_customer).profile_image %>
+          <div class="table-text customer-name">
+            <%= link_to "#{present(subscription.merchant_customer).format_customer_name}", "customers/#{subscription.merchant_customer.id}", class: 'non-underline-link', action: "show" %>
+          </div>
+        </div>
+        <div class="cb check-box-column">
+          <div>
+            <form data-name="Email Form 2" id="email-form-2" name="email-form-2">
+              <div class="select-all-check-box w-checkbox w-clearfix">
+                <input class="cb table-checkbox checkboxes w-checkbox-input subscription-checkbox" id="node" type="checkbox">
+                <label class="checkbox-field-lable w-form-label" for="node">-</label>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="transaction-column w-col w-col-2">
+        <div class="transaction-cell">
+          <div class="table-text plan-name shrink-text"><%= subscription.plan.name %></div>
+        </div>
+      </div>
+      <div class="transaction-column w-col w-col-2">
+        <div class="transaction-cell">
+          <div class="table-text"><%= subscription.created_at.strftime('%d/%m/%Y') %></div>
+        </div>
+      </div>
+      <div class="transaction-column w-col w-col-2">
+        <div class="transaction-cell w-clearfix">
+          <div class="table-text tran-amount"><%= present(subscription).get_amount %></div>
+        </div>
+      </div>
+      <div class="transaction-column w-col w-col-2">
+        <div class="transaction-cell w-clearfix">
+          <div class="table-text tran-email"><%= customer.email %></div>
+        </div>
+      </div>
+      <div class="transaction-column w-col w-col-1">
+        <div class="transaction-cell w-clearfix">
+          <div class="table-text tran-last-four"><%= customer.last4 %></div>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

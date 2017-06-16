@@ -1,0 +1,38 @@
+<div class="row-wrapper">
+  <div class="alt-table-row w-row">
+    <div class="alt-column w-clearfix w-col w-col-3">
+      <div class="title-column-div w-clearfix">
+        <div class="shrink-text table-text"><%= coupon.name %></div>
+      </div>
+      <div class="alt-table cb check-box-column">
+      </div>
+    </div>
+    <div class="alt-column w-col w-col-2">
+      <div class="alt-table-column-div w-clearfix">
+        <%= present(coupon).coupon_type %>
+      </div>
+    </div>
+    <div class="alt-column w-col w-col-2">
+      <div class="alt-table-column-div w-clearfix">
+        <div class="table-text">
+          <%= present(coupon).format_amount %>
+        </div>
+      </div>
+    </div>
+    <div class="alt-column w-col w-col-2">
+      <div class="alt-table-column-div w-clearfix">
+        <div class="shrink-text table-text"><%= coupon.duration.capitalize %></div>
+      </div>
+    </div>
+    <div class="alt-column w-col w-col-2">
+      <div class="alt-table-column-div w-clearfix">
+        <div class="shrink-text table-text"><%= present(coupon).zone_timestamp %></div>
+      </div>
+    </div>
+    <div class="alt-column w-col w-col-1">
+      <div class="alt-table-column-div w-clearfix">
+        <div class="table-text"> <%= coupon.max_redemptions %></div>
+      </div>
+    </div>
+  </div>
+</div>

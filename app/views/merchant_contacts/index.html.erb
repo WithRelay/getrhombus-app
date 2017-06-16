@@ -54,6 +54,15 @@
 
 <div class="dashboard-body" id="list-data" data-list-channel='<%= @channel %>' data-list-type='<%= @list_type %>'>
   <div class="customer-dashboard-table-wrapper row-wrapper">
-    <%= render @merchant_contacts %>
+    <div id='objlists'>
+      <%= render @merchant_contacts %>
+    </div>
+    <div id="with-button" class="hide">
+      <%= will_paginate %>
+    </div>
+
+    <% if @merchant_contacts.next_page %>
+      <div id="load_more_contacts" class="show_more button w-button" data-loading-text="Loding more Contacts" title="Click here to load more contacts">Show More</div>
+    <% end %>
   </div>
 </div>

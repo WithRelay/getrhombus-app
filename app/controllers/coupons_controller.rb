@@ -5,14 +5,14 @@ class CouponsController < ApplicationController
   before_action :set_coupon, only: [:destroy]
   before_action :set_notifications, only: [:index, :manage_coupons]
 
-  respond_to :html
+  respond_to :html, :js
 
   def index
     # get subscription id to use to determine if destroy link should show up
     @coupon = Coupon.new
     @coupons = coupons
 
-    render 'empty_coupon' unless @coupons.present?
+    @coupons.present? ? render_requested_format(@coupons) : render(:empty_coupon)
   end
 
   def create
@@ -52,7 +52,7 @@ class CouponsController < ApplicationController
         .joins("LEFT JOIN subscriptions s ON s.coupon_id = coupons.id")
         .select('coupons.id, name, amount_off, percent_off, currency, duration, duration_in_months, max_redemptions,
                   percent_off, redeem_by, coupons.created_at, s.id as subscription_id')
-        .paginate(page: params[:page], per_page: 25)
+        .paginate(page: params[:page], per_page: 10)
         .order('coupons.created_at DESC')
     end
 

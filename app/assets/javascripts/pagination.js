@@ -11,7 +11,7 @@ jQuery(function() {
       $.getScript(more_items_url)
         .done(function(script) {})
         .fail(function() {
-          flashError('Sorry we couldn\'t load more items');
+          FlashHandler.setFlashMessage('Sorry we couldn\'t load more items', 'error');
         })
         .always(function() {
           $this.text('Show more');
@@ -19,15 +19,3 @@ jQuery(function() {
     });
   }
 });
-$(document).ready(function(){
-  if ($('.pagination').length) {
-    $('.dashboard-body').scroll(function() {
-      var url = $('.pagination .next_page a').attr('href')
-        if (url && $('.dashboard-body').scrollTop() > $(document).height() - $('.dashboard-body').height() - 50) {
-          $('.pagination').text("Fetching more...")
-          return $.getScript(url);
-        }
-      });
-    $('.dashboard-body').scroll();
-  }
-})

@@ -1,5 +1,5 @@
   <div class="dashboard-nav messaging w-clearfix">
-    
+
     <div class="dashboard-nav-links-wrapper">
       <div class="w-clearfix w-inline-block">
         <%#=  Added class %>
@@ -7,7 +7,7 @@
           <a href="<%= user_path(current_user) %>" class="important-text-47 link_no_underline"> &nbsp; Dashboard</a>
         </div>
         <div class="dash-header-links new-link">
-          <a href="<%= customers_user_path(current_user) %>" class="important-text-48 link_no_underline"> &nbsp;customers</a>
+          <a href="<%= user_merchant_customers_path(current_user) %>" class="important-text-48 link_no_underline"> &nbsp;customers</a>
         </div>
         <div class="dash-header-links new-link">
           <a href="<%= user_reminders_path(current_user) %>" class="important-text-49 link_no_underline"> &nbsp;&nbsp;scheduled messages</a>
