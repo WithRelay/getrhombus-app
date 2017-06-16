@@ -6,7 +6,7 @@
     <h1 class="empty-state-dash hero-h1 home-header">
       Return to the customer <br> dashboard to create a list or segment
     </h1>
-      <%= link_to customers_user_path(current_user), class: "button error-page-button w-button" do %>
+      <%= link_to user_merchant_customers_path(current_user), class: "button error-page-button w-button" do %>
         <strong> Customer dashboard</strong>
       <% end %>
   </div>
