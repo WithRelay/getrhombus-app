@@ -11,7 +11,7 @@ jQuery(function() {
       $.getScript(more_items_url)
         .done(function(script) {})
         .fail(function() {
-          flashError('Sorry we couldn\'t load more items');
+          FlashHandler.setFlashMessage('Sorry we couldn\'t load more items', 'error');
         })
         .always(function() {
           $this.text('Show more');
