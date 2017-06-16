@@ -1,6 +1,6 @@
 module DashboardNotification
   def set_notifications
-    unless current_user.nil?
+    if request.format.html?
       beginning_of_day = Time.current.beginning_of_day
       @todays_last5_txns = Transaction.get_merchant_todays_last5_txns(current_user.id, beginning_of_day)
       @todays_txns_count = Transaction.get_merchant_todays_txn_count(current_user.id, beginning_of_day)

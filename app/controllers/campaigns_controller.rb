@@ -2,7 +2,7 @@
 # MMS/SMS, email and facebook messeger
 class CampaignsController < ApplicationController
   include DashboardNotification
-  before_action :set_notifications
+  before_action :set_notifications, except: [:create, :update]
   before_action :find_campaign, only: [ :update, :destroy, :change_status ]
   before_action :check_campaign_status, only: [ :update, :destroy, :change_status]
 

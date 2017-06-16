@@ -2,15 +2,14 @@ $(document).on('ready page:load', function() {
 
   $("#delete-lists").click(function(){
     var selectedUsers = getSelectedUserIds(); // why are you selecting users?
-    if (selectedUsers.length < 1){
+
+    if (selectedUsers.length < 1) {
       setFlashForList('Select a list to Delete', 'error');
-    }
-    else if (selectedUsers.length > 1) {
+    } else if (selectedUsers.length > 1) {
       setFlashForList('Only 1 list can be deleted at a time', 'error');
-    }
-    else {
+    } else {
       FlashHandler.setConfirmationDialog('#delete-lists','Are you sure, you want to delete selected lists?', 'Delete', 'destroy-lists');
-    }
+    };
   });
 
   $(document).on('click', '.cancel-yes', function(e){
@@ -30,15 +29,15 @@ $(document).on('ready page:load', function() {
   $("#send-campaign-to-lists").click(function(){
     var selected_item = getSelectedUserIds();
     var link = $(this).data('lists-campaign');
-    if (selected_item.length > 1)
-    return setFlashForList('Only 1 list can be selected for sending campaign', 'error');
-    else if (selected_item.length < 1){
+    
+    if (selected_item.length > 1) {
+      return setFlashForList('Only 1 list can be selected for sending campaign', 'error');
+    } else if (selected_item.length < 1) {
       return setFlashForList('Please select a list to send campaign', 'error');
-    }
-    else{
+    } else {
       var link_with_list_id = link + '?list_id=' + selected_item;
       window.location = link_with_list_id;
-    }
+    };
   });
 
   // Toggles between checking or unchecking all checkboxes
@@ -53,20 +52,20 @@ $(document).on('ready page:load', function() {
   });
 
   $('#Segment-Select-lists, #contacts-segment-list').on('change', function(e){
-    if (this.value){
-      var listType = e.currentTarget.dataset.listType, window_location = window.location.pathname.split('/');
+    if (this.value) {
+      var window_location = window.location.pathname.split('/');
       window.location = '/' + window_location[1] + '/' + window_location[2]  + '/segments/' + this.value;
     };
   });
 
   $("#edit-selected-list").click(function(e){
     var selected_edit_list = getSelectedUserIds();
-    if (selected_edit_list.length > 1)
-    return setFlashForList('Only 1 list can be selected for editing', 'error');
-    else if (selected_edit_list.length < 1){
+
+    if (selected_edit_list.length > 1) {
+      return setFlashForList('Only 1 list can be selected for editing', 'error');
+    } else if (selected_edit_list.length < 1) {
       return setFlashForList('Please select a list to edit', 'error');
-    }
-    else{
+    } else {
       var edit_list_form = $("#edit_list_form").attr("action").split('/');
       edit_list_form.pop();
       var list_name = $('.merchant_customers:checked').data("list-name");
@@ -226,7 +225,6 @@ $(document).on('ready page:load', function() {
       })
   });
 
-
   // Fired when the user wants to select checkboxes that fall in a range
   jQuery(function($) {
     $('#merchant_customers').checkboxes('range', true);
@@ -271,9 +269,9 @@ $(document).on('ready page:load', function() {
 
   function getSelectedUserIds(){
     var selected_users = []; // An array for storing selected users
-    $('.merchant_customers:checked').each(function(){
+    $('.merchant_customers:checked').each(function() {
       selected_users.push($(this).data('users'));
-    })
+    });
     return selected_users;
   }
 

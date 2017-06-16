@@ -1,4 +1,5 @@
 module CheckUserProfile
+
   def check_user_redirect
     current_user.reload
     if current_user.is_customer?
@@ -11,4 +12,5 @@ module CheckUserProfile
       return user_conversations_path(current_user)
     end
   end
+  
 end

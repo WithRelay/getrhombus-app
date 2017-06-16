@@ -2,8 +2,8 @@ class CouponsController < ApplicationController
 
   include DashboardNotification
 
-  before_action :set_coupon, only: [ :destroy]
-  before_action :set_notifications
+  before_action :set_coupon, only: [:destroy]
+  before_action :set_notifications, only: [:index, :manage_coupons]
 
   respond_to :html
 

@@ -1,7 +1,7 @@
 class SubscriptionsController < ApplicationController
   include DashboardNotification
-  before_action :set_notifications
-  before_action :set_subscription, only: [:show, :edit, :update]
+  before_action :set_notifications, only: [:index]
+  before_action :set_subscription, only: [:show, :edit]
 
   respond_to :html
 
@@ -14,16 +14,6 @@ class SubscriptionsController < ApplicationController
                                       .order(created_at: :desc)
     @plan = Plan.new
     render 'empty_subscription' unless @subscriptions.present?
-  end
-
-  def show
-    respond_with(@subscription)
-  end
-
-  def edit
-  end
-
-  def update
   end
 
    # generate user csv data
