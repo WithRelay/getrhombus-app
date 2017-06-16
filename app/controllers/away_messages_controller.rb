@@ -1,7 +1,7 @@
 class AwayMessagesController < ApplicationController
 
   include DashboardNotification
-  before_action :set_notifications
+  before_action :set_notifications, only: [:show]
 
   def show
     @away_message = current_user.away_message

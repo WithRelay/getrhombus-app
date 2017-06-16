@@ -28,27 +28,15 @@ Surya
 - review how reminders pull users info
 - do we need to exclude refunded txns in segment queries? review segment queries
 - use conversations in campaigns for sending messages
-- load more for all index pages      
 - still able to bypass onboarding to any page if i know the url. or i can go back to onboarding if i know the url (edited)
 - when you uncomment this line in routes  # authenticate :user, -> (user) { CheckUser::RouteAuthentication.new(user).should_authenticate? } do, pages become unreachable i believe. review/remove CheckUser in classes folder
 - campaign toastrs - plug and play. already wrote the code for you. see realtimeservice.rb and notifications.js
 - tooltip for campaigns - leave for noe
 - time comparisons are tricky...make sure to do to_i because rails compares time as floats
-- segment dropdown for leads
-- contacts/customer support for user_lists, campaign_lists, etc
-- is list being loaded via js or preloaded in db? should run only for merchants
-- merchant_contacts index -> we use fb_page not messenger
 - campaign_id in messages?
-- return self.merchant_contacts.where(id: eval(self.segment).pluck(:user_id)) if self.name == 'Active Customers'
-
-+        <div class="customer-count shrink-text"> <%= customers.try(:length) %> /<span class="sub-nav-sub-text">
-+        <%= customers.try(:count) %> customers </span>
 
 Dorje
 - weekly summary template
-- fix validation message for create customer - just the first 3 fields
-- sidebars with links...customers should see only Transactions, businesses, Account and Billing Info
-- onboarding routes for customers
 
 Bhishma
 - messageparser

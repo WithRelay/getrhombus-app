@@ -41,45 +41,15 @@
 
 <%= render 'coupon_nav' %>
 
-<div class="dashboard-body">
-  <% @coupons.each do |coupon| %>
-  <div class="row-wrapper">
-    <div class="alt-table-row w-row">
-      <div class="alt-column w-clearfix w-col w-col-3">
-        <div class="title-column-div w-clearfix">
-          <div class="shrink-text table-text"><%= coupon.name %></div>
-        </div>
-        <div class="alt-table cb check-box-column">
-        </div>
-      </div>
-      <div class="alt-column w-col w-col-2">
-        <div class="alt-table-column-div w-clearfix">
-          <%= present(coupon).coupon_type %>
-        </div>
-      </div>
-      <div class="alt-column w-col w-col-2">
-        <div class="alt-table-column-div w-clearfix">
-          <div class="table-text">
-            <%= present(coupon).format_amount %>
-          </div>
-        </div>
-      </div>
-      <div class="alt-column w-col w-col-2">
-        <div class="alt-table-column-div w-clearfix">
-          <div class="shrink-text table-text"><%= coupon.duration.capitalize %></div>
-        </div>
-      </div>
-      <div class="alt-column w-col w-col-2">
-        <div class="alt-table-column-div w-clearfix">
-          <div class="shrink-text table-text"><%= present(coupon).zone_timestamp %></div>
-        </div>
-      </div>
-      <div class="alt-column w-col w-col-1">
-        <div class="alt-table-column-div w-clearfix">
-          <div class="table-text"> <%= coupon.max_redemptions %></div>
-        </div>
-      </div>
-    </div>
+<div class="dashboard-body" >
+  <div id='objlists'>
+    <%= render @coupons %>
   </div>
+  <div id="with-button" class="hide">
+    <%= will_paginate %>
+  </div>
+
+  <% if @coupons.next_page %>
+    <div id="load_more_coupons" class="show_more button w-button" data-loading-text="Loding more Coupons" title="Click here to load more coupons" style="margin-top: 5%">Show More</div>
   <% end %>
 </div>

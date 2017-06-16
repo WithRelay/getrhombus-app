@@ -91,6 +91,7 @@ Rails.application.routes.draw  do
         resource :away_message, only: [:show, :update]
         resources :plans, only: [:index, :destroy]
         resources :alerts, only: [:update]
+        get 'notifications' => 'alerts#edit'
         resources :saved_replies
         resources :bank_accounts
         resources :addresses
@@ -119,7 +120,6 @@ Rails.application.routes.draw  do
         get 'update-managed-acct' => 'users#managed_acct'
         match 'managed-accounts' => "users#create_managed_acct", via: :patch
         match 'update-managed-acct' => 'users#update_managed_acct', via: :patch
-        get 'notifications' => 'alerts#edit'
         get 'integrations' => 'users#integrations'
         get 'remove_stripe_integration' => 'users#remove_stripe_integration'
         get 'remove_twitter_integration' => 'users#remove_twitter_integration'
