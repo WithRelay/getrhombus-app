@@ -19,7 +19,7 @@ class ListsController < ApplicationController
   def segments
     @segments = current_user.segments.paginate(per_page: PAGINATION_PER_PAGE,
                                                 page: params[:page]).order(created_at: :desc)
-    
+
     if @segments.present?
       render_requested_format(@segments)
     else
@@ -38,7 +38,7 @@ class ListsController < ApplicationController
         @channel = @uid_type == 'phone_number' ? 'sms' : 'messenger'
       end
     end
-    
+
     if @list_members.blank?
       flash[:error] = 'There are no members in the lists'
       # redirect_to lists_path(current_user)   or to customers for segments
@@ -75,15 +75,15 @@ class ListsController < ApplicationController
     elsif @list.campaign_lists.present?
       flash[:error] = 'Unable to delete a segment that has been attached to a campaign'
     else
-     @list.destroy 
+     @list.destroy
       if @list.destroyed?
         flash[:success] = 'Segment has been deleted'
       else
         flash[:error] = 'Unable to delete segment'
       end
     end
-
-    redirect_to user_segments_path(current_user)
+    binding.pry
+    redirect_to user_lists_path(current_user)
   end
 
   private
