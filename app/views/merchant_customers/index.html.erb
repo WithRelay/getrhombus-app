@@ -56,8 +56,14 @@
       <div>
         <div id='objlists'>
           <%= render @merchant_customers %>
-           <%= will_paginate(@merchant_customers).try(:html_safe) if @merchant_customers.count > PAGINATION_PER_PAGE %>
         </div>
+        <div id="with-button" class="hide">
+          <%= will_paginate %>
+        </div>
+
+        <% if @merchant_customers.next_page %>
+          <div id="load_more_customers" class="show_more button w-button" data-loading-text="Loding more Customers" title="Click here to load more customers">Show More</div>
+        <% end %>
       </div>
     </div>
   </div>

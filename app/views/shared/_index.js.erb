@@ -4,4 +4,5 @@ $('#objlists').append('<%= j render obj %>');
 <% else %>
   $(window).off('scroll');
   $('.pagination').remove();
+  $('.pagination, .show_more').remove();
 <% end %>
