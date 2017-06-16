@@ -187,6 +187,7 @@ var FlashHandler = new function() {
   // Confirmation Dialog for event
   this.setConfirmationDialog = function (selector, confirmText, confirmDialog, isConfirm){
     hideToastr();
+
     $('body').append('<div class="cancel-subscription-wrapper w-clearfix">\
       <p class="cancel-subscription modal-content-description">'+confirmText+'</p>\
       <div class="modal-underline underline-div"></div>\
