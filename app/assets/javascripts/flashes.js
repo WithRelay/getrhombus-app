@@ -187,7 +187,6 @@ var FlashHandler = new function() {
   // Confirmation Dialog for event
   this.setConfirmationDialog = function (selector, confirmText, confirmDialog, isConfirm){
     hideToastr();
-
     $('body').append('<div class="cancel-subscription-wrapper w-clearfix">\
       <p class="cancel-subscription modal-content-description">'+confirmText+'</p>\
       <div class="modal-underline underline-div"></div>\
@@ -209,9 +208,9 @@ var FlashHandler = new function() {
     })
 
     $('.cancel-yes').on('click', function(){
-      $(selector).attr(isConfirm, true);
+      $('#' + selector).attr(isConfirm, true);
       $('.cancel-yes')[0].innerHTML = 'Please wait...';
-      $(selector)[0].click();
+      $('#' + selector).click();
     })
   };
 
