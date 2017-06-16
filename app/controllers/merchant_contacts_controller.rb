@@ -7,9 +7,10 @@ class MerchantContactsController < ApplicationController
     uid_type = params[:uid_type] == "fb_page" ? 'fb_page' : 'phone_number'
     @channel = uid_type == 'phone_number' ? 'sms' : 'messenger'
     @list_type = 'contact'
-    @merchant_contacts = current_user.merchant_contacts.only_contact.where(uid_type: uid_type)
     @new_customer = User.new
-    render 'merchant_contact_empty' unless @merchant_contacts.present?
+    @merchant_contacts = current_user.merchant_contacts.only_contact.where(uid_type: uid_type)
+                             .paginate(page: params[:page], per_page: PAGINATION_PER_PAGE).order(created_at: :desc)
+    @merchant_contacts.present? ? render_requested_format(@merchant_contacts) : render(:merchant_contact_empty)
   end
 
   def show
