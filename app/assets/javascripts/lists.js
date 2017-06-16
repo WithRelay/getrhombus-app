@@ -11,23 +11,8 @@ $(document).on('ready page:load', function() {
     else {
       var selected_item = getSelectedUserIds();
       var id = 'list-delete-' + selected_item[0];
-      debugger;
       FlashHandler.setConfirmationDialog(id,'Are you sure, you want to delete selected lists?', 'Delete', 'destroy-lists');
     }
-  });
-
-  $(document).on('click', '.cancel-yes', function(e){
-    // var delete_link = $('#delete-lists').data('delete-list-link') + "/" + "id_should_go_here";
-    // var selected_item = getSelectedUserIds(); /// this doesnt look right
-    // if (delete_link) {
-    //   $.ajax({
-    //     url: delete_link,
-    //     type: 'DELETE'
-    //   });
-
-      // remove this and handle ajax response above
-      //$.post(delete_link, { list_id: selected_item });
-    //}
   });
 
   $("#send-campaign-to-lists").click(function(){
