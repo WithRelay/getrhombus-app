@@ -14,9 +14,10 @@ $(document).on('ready page:load', function() {
     $(this).removeClass(editField)
   });
 
-  $('.delete-segment-link').click(function(e){
-    FlashHandler.setConfirmationDialog(".delete-hidden-segment-link",'Are you sure, you want to remove ?' , 'Delete', 'isDestroy');
-    return false;
+  $('.delete-segment-link').click(function(e) {
+    e.preventDefault();
+    var id = $(this).parent().children()[0].id;
+    FlashHandler.setConfirmationDialog(id, 'Are you sure you want to delete this segment?', 'Delete', 'isDestroy');
   });
 
   $( '.cancel-edit' ).click(function(){
@@ -96,24 +97,25 @@ $(document).on('ready page:load', function() {
   }
 
   function updateItem(element){
-    var textField = element.data('segment-id')
+    var textField = element.data('segment-id');
     $.ajax({
-            method: 'patch', url: '/v1/lists/' + textField,
-            dataType: 'json', data: { 'name': element.val() }
-
-          }).done(function(msg){
-
-            var flash_key = Object.keys(msg)[1];
-            var segmentElement = $('#segment-' + element.data('segment-id'));
-            msg.status == 200 && segmentElement.text(msg.name);
-            FlashHandler.setFlashMessage( msg[flash_key], flash_key );
-            var cancelElement = segmentElement.parent().find('.cancel-edit')[0]
-            editItem = new EditItem(cancelElement, editableTextField);
-            editItem.replaceIconWithSave('');
-            editItem.removeTextBox('.text-field');
-          }).fail(function(msg){
-            FlashHandler.setFlashMessage( 'Sorry semgent cannot updated', 'error' );
-          });
+      method: 'patch', 
+      url: '/v1/lists/' + textField,
+      dataType: 'json', data: { 'name': element.val() }
+    })
+    .done(function(msg) {
+      var flash_key = Object.keys(msg)[1];
+      var segmentElement = $('#segment-' + element.data('segment-id'));
+      msg.status == 200 && segmentElement.text(msg.name);
+      FlashHandler.setFlashMessage( msg[flash_key], flash_key );
+      var cancelElement = segmentElement.parent().find('.cancel-edit')[0]
+      editItem = new EditItem(cancelElement, editableTextField);
+      editItem.replaceIconWithSave('');
+      editItem.removeTextBox('.text-field');
+    })
+    .fail(function(msg) {
+      FlashHandler.setFlashMessage('Unable to update segment name', 'error' );
+    });
   }
 
 });

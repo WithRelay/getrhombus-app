@@ -1,18 +1,16 @@
 $(document).on('ready page:load', function() {
 
   $("#delete-lists").click(function(){
-    var selectedUsers = getSelectedObjectIds(); // why are you selecting users?
+    var selected_objects = getSelectedObjectIds();
 
-    if (selectedUsers.length < 1) {
+    if (selected_objects.length < 1) {
       setFlashForList('Select a list to Delete', 'error');
-    } else if (selectedUsers.length > 1) {
+    } else if (selected_objects.length > 1) {
       setFlashForList('Only 1 list can be deleted at a time', 'error');
-    }
-    else {
-      var selected_item = getSelectedObjectIds();
-      var id = 'list-delete-' + selected_item[0];
+    } else {
+      var id = '#list-delete-' + selected_objects[0];
       FlashHandler.setConfirmationDialog(id,'Are you sure, you want to delete selected lists?', 'Delete', 'destroy-lists');
-    }
+    };
   });
 
   $("#send-campaign-to-lists").click(function(){
@@ -222,13 +220,13 @@ $(document).on('ready page:load', function() {
     if (!isAnyCheckboxSelected('.obj-checkbox-selector')) {
       setFlashForList('Please select customer from the table', 'error');
     } else {
-      user_ids = getSelectedObjectIds();
+      obj_ids = getSelectedObjectIds();
       $("#new-list-modal-div").lightbox_me({
         closeClick: true,
         closeEsc: true,
         centered: true,
         onLoad: function() {
-          $("#selectedUsers").val(user_ids);
+          $("#selectedUsers").val(obj_ids);
           $("#listCategory").val("list");
           $("#listType").val(getListType());
           $("#listChannel").val(getListChannel());
@@ -256,11 +254,11 @@ $(document).on('ready page:load', function() {
 
   // used by contacts, customers, lists index pages
   function getSelectedObjectIds(){
-    var selected_users = []; // An array for storing selected users
+    var selected_objects = []; // An array for storing selected objects
     $('.obj-checkbox-selector:checked').each(function() {
-      selected_users.push($(this).data('users'));
+      selected_objects.push($(this).data('obj-id'));
     });
-    return selected_users;
+    return selected_objects;
   }
 
   $("#segment_filter_by").change(function(){
