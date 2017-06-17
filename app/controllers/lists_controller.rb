@@ -61,13 +61,13 @@ class ListsController < ApplicationController
     if @list.system?
       flash[:error] = 'You cannot delete a system generated segment.'
     elsif @list.campaign_lists.present?
-      flash[:error] = 'Unable to delete a segment that has been attached to a campaign'
+      flash[:error] = 'Unable to delete a list/segment that has been attached to a campaign'
     else
      @list.destroy
       if @list.destroyed?
-        flash[:success] = 'Segment has been deleted'
+        flash[:success] = 'List/Segment has been deleted'
       else
-        flash[:error] = 'Unable to delete segment'
+        flash[:error] = 'Unable to delete list/segment'
       end
     end
     
