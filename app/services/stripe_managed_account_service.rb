@@ -42,9 +42,11 @@ class StripeManagedAccountService < Struct.new( :user, :params )
       )
     rescue Stripe::StripeError => e
       puts e.inspect
+      # email team
       e
     rescue StandardError => e
       puts e.inspect
+      # email team
       e
     end
   end
@@ -124,7 +126,7 @@ class StripeManagedAccountService < Struct.new( :user, :params )
   def people; params[:people_attributes]['0'] end
 
   # returns image object
-  def image; params[:stripe_creds_attributes]['0'][:avatar] end
+  def image; params[:avatar] end
 
   # returns bank account hash
   def bank_account; params[:bank_accounts_attributes]['0'] end
@@ -267,7 +269,7 @@ class StripeManagedAccountService < Struct.new( :user, :params )
                                  city: address[:city], line1: address[:street_address]
                                },
                       #address_kana: {}, address_kanji: {}, personal_address_kana: {}, personal_address_kanji: {},  # for Japan i think
-                      verification: {},
+                      verification: { document: user.people.first.stripe_file_id },
                       ssn_last_4_provided: {}, business_tax_id_provided: {},
                       business_vat_id_provided: {}, personal_id_number_provided: {},
                       #additional_owners: additional_owners  # for Europe

@@ -2,6 +2,7 @@ class UsersController < ApplicationController
 
   include DashboardNotification
   include AdditionalUserActions
+  include ManagedAccountActions
   include DashboardData
 
   before_action :set_user
@@ -27,12 +28,6 @@ class UsersController < ApplicationController
     end
   end
 
-  def sms_usage
-    @amount_balance = Toolbox::Decimal.to_int_or_2dp current_user.account_balance
-    @last4 = current_user.last4
-    @card_type = current_user.card_type
-  end
-
 private
   # Use callbacks to share common setup or constraints between actions.
   def set_user
@@ -43,7 +38,6 @@ private
     nested_user_params = user_params
     tos_params = { ip: request.remote_ip, user_agent: request.user_agent, tos_date: Time.current }
     nested_user_params[:stripe_creds_attributes]["0"].merge!(tos_params)
-    nested_user_params[:stripe_creds_attributes]["0"].merge!(image_params)
     nested_user_params
   end
 
@@ -53,10 +47,6 @@ private
       people_attributes: [:id, :gender, :business_name, :full_name, :dob, :last4, :role, :_destroy, address_attributes: [:street_address, :suite, :id, :city, :state_province, :postal_code, :country]],
       address_attributes: [:street_address, :suite, :id, :city, :state_province, :postal_code, :country],
       stripe_creds_attributes: [:id, :charges_enabled, :transfers_enabled])
-  end
-
-  def image_params
-    { avatar: params[:user][:stripe_creds_attributes]['0'][:avatar] }
   end
 
 end

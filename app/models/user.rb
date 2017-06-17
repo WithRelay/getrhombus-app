@@ -40,14 +40,12 @@ class User < ActiveRecord::Base
   has_one :referrer, class_name: 'Referrer', foreign_key: 'referee_id'
   has_many :referees, class_name: 'Referrer', primary_key: :relay_uid, foreign_key: :referrer_uid
 
+  has_many :merchant_contacts, class_name: 'MerchantContact', foreign_key: 'merchant_id'
   has_many :customer_merchants, class_name: 'MerchantCustomer', foreign_key: 'customer_id'
   has_many :merchant_customers, class_name: 'MerchantCustomer', foreign_key: 'merchant_id'
-  has_many :customers, class_name: 'User', through: :merchant_customers
 
-  has_many :merchant_contacts, class_name: 'MerchantContact', foreign_key: 'merchant_id'
-
-  has_many :reminders, -> { where campaign_type: 1 }
   has_one :hosted_sms
+  has_many :reminders, -> { where campaign_type: 1 }
 
   # this block is for customizing build method for user.campaign which allow also to save list
   has_many :campaigns, -> { where campaign_type: 0 } do
@@ -72,9 +70,9 @@ class User < ActiveRecord::Base
     end
   end
 
-  has_one :away_message
   has_many :hashtags
   has_many :documents
+  has_one :away_message
 
   has_many :messages
   has_many :merchant_conversations, class_name: 'Conversation', foreign_key: 'merchant_id'
@@ -92,17 +90,14 @@ class User < ActiveRecord::Base
   has_many :fb_creds
 
   has_one :alert, dependent: :destroy
-  has_many :fb_pages,dependent: :destroy
+  has_many :fb_pages, dependent: :destroy
 
   has_many :saved_replies
   has_many :message_resolutions
 
-  has_many :image_refs, as: :imageable
-  has_many :images, through: :image_refs
-
   # A user can have belong to more than one list and also own multiple lists (Admins)
   has_many :lists
-  has_many :user_lists, as: :customer_contact
+  has_many :user_lists
   accepts_nested_attributes_for :user_lists
   has_many :segments, -> { where.not(segment: nil) }, class_name: 'List'
 
@@ -129,7 +124,7 @@ class User < ActiveRecord::Base
   enum status: { inactive: 0, active: 1 }
 
   def is_merchant?
-    user_level == 1 || self.is_platform?
+    user_level == 1 || is_platform?
   end
 
   def is_customer?
@@ -137,8 +132,8 @@ class User < ActiveRecord::Base
   end
 
   def full_name
-    if self.is_customer?
-      return "#{self.card_name}" if self.card_name.present?
+    if is_customer?
+      return "#{card_name}" if card_name.present?
       _person = self.people[0]
     else
       _person = self.people.representative[0]
@@ -147,7 +142,7 @@ class User < ActiveRecord::Base
   end
 
   def first_name
-    first_name = self.full_name.split.first
+    first_name = full_name.split.first
     first_name.present? ? first_name : nil
   end
 

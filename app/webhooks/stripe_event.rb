@@ -271,11 +271,11 @@ class StripeEvent
 
     def account_updated
       user_params = response_user_params.merge(bank_accont_details)
-      managed_accout_user.update(user_params)
+      managed_account_user.update(user_params)
     rescue => e
     end
 
-    def managed_accout_user; StripeCred.find_by_account_id(@hash[:id]).user end
+    def managed_account_user; StripeCred.find_by_account_id(@hash[:id]).user end
 
     def response_user_params
       account = Stripe::Account.retrieve(@hash[:id])

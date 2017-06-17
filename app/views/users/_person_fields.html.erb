@@ -13,11 +13,11 @@
   </div>
 
   <% if f.index == 0 %>
-  <div class="form-group col-xs-6">
-    <label class="form-label label-margin rep-pii-label">SSN</label>
-    <%= f.text_field :last4, placeholder: "SSN", class: 'settings short-field ssn text-field w-input rep-pii form-control', id: "SSN" %>
-    <div class="messageContainer w-col-12"></div>
-  </div>
+    <div class="form-group col-xs-6">
+      <label class="form-label label-margin rep-pii-label">SSN</label>
+      <%= f.text_field :last4, placeholder: "SSN", class: 'settings short-field ssn text-field w-input rep-pii form-control', id: "SSN" %>
+      <div class="messageContainer w-col-12"></div>
+    </div>
   <% end %>
 
   <%= f.hidden_field :role, value: f.index == 0 ? '0' : '1' %>
@@ -72,6 +72,32 @@
       </div>
     </div>
   <% end %>
+
+  <div class="flex-underline form-section-divider"></div>
+  <label class="field-headers form-label settings" for="name-2">Upload Profile Picture (you)</label>
+
+  <a class="attach-image pull-left" href="#" id='select-images-button'></a>
+  <a class="button w-button modal-loader" href="#" id='webcam-capture' modal-target= 'new-webcam-modal'><i class="material-icons webcam-icon">photo_camera</i></a>
+  <%= f.file_field :avatar, type: :file, id: "select-images", class: 'w-hidden', accept: "image/*" %>
+
+  <div class='modal-background w-hidden modal-body new-webcam-modal'>
+    <%= render 'shared/modals/webcam_modal' %>
+  </div>
+
+  <!-- for new images -->
+  <div id='new-image-previews'>
+  </div>
+
+  <!-- for already attached images -->
+  <% if @image %>
+    <div>
+      <%= div_for @image do |image| %>
+        <%= present(image).image_url %>
+        <%= present(image).image_name %>
+      <% end %>
+    </div>
+  <% end %>
+
 
 <%
 =begin %>

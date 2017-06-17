@@ -1,10 +1,12 @@
 class Person < ActiveRecord::Base
 
-  has_one :address, as: :addressable, dependent: :destroy
-  accepts_nested_attributes_for :address#, reject_if: :all_blank
   belongs_to :user  
   before_validation :the_titleizer
+  has_one :image, through: :image_ref
+  has_one :image_ref, as: :imageable, dependent: :destroy
+  has_one :address, as: :addressable, dependent: :destroy
 
+  accepts_nested_attributes_for :address#, reject_if: :all_blank
   enum role: { representative: '0', owner: '1' }
 
   def full_name=(params_value)

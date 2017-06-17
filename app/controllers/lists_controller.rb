@@ -32,7 +32,7 @@ class ListsController < ApplicationController
     else
       respond_to do |format|
         format.js { render partial: 'list_members.js.erb', locals: { obj: @list_members } }
-        format.html { render template: render_controller_action }
+        format.html { render template: render_show_controller_action }
       end
     end
   end
@@ -77,7 +77,7 @@ class ListsController < ApplicationController
       @list = List.find_by(id: params[:id])
     end
 
-    def render_controller_action
+    def render_show_controller_action
       return 'lists/show' if @list.segment.blank?
       @selected_segment = @list.segment['base_query']
       @list_type = @list.list_type

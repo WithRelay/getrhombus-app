@@ -5,16 +5,15 @@ class Image < ActiveRecord::Base
   IMAGE_VERSIONS = { thumb: '100x100>', square: '200x200#', medium: '300x300>' }
 
   has_many :image_refs, dependent: :destroy
-  has_many :users, through: :image_refs, source: :imageable, source_type: 'User' #, dependent: :destroy
+  has_one :person, through: :image_ref, source: :imageable, source_type: 'Person' #, dependent: :destroy
   has_many :hashtags, through: :image_refs, source: :imageable, source_type: 'Hashtag' #, dependent: :destroy
-  has_one :stripe_cred, through: :image_ref, source: :imageable, source_type: 'StripeCred' #, dependent: :destroy
   has_many :messages, through: :image_refs, source: :imageable, source_type: 'Message' #, dependent: :destroy
   has_many :fb_messages, through: :image_refs, source: :imageable, source_type: 'FbMessage' #, dependent: :destroy
 
   has_attached_file :avatar, styles: lambda { |i| i.instance.uploaded_as.present? ?
                                               IMAGE_VERSIONS : Hash[*Image::IMAGE_VERSIONS.first]
                                             }
-  # Validate the attached image is image/jpg, image/png, etc
+
   validates_attachment_content_type :avatar, :content_type => /\Aimage\/.*\Z/
   validate :campaign_file_attachment, if: proc { |i| i.uploaded_as.present? }
 

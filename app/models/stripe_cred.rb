@@ -7,9 +7,6 @@ class StripeCred < ActiveRecord::Base
   belongs_to :transaction_fee
   before_create :set_transaction_fee_id
 
-  has_one :image_ref, as: :imageable, dependent: :destroy
-  has_one :image, through: :image_ref
-
   # the default
   def set_transaction_fee_id
     self.transaction_fee_id = 1

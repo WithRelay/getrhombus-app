@@ -1,4 +1,4 @@
-<% if @list.segment? %>
+<% if @list.segment.present? %>
   $('#objlists').append('<%= j render @list_members %>');
 <% elsif @list.customer? %>
   $('#objlists').append('<%= j render(partial: "lists/list_customer", locals: { list_members: @list_members }) %>');
