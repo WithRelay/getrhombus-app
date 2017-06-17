@@ -44,5 +44,12 @@
   <div id='objlists'>
     <%= render @hashtags %>
   </div>
-  <%= (will_paginate(@hashtags)).html_safe if @hashtags.count > PAGINATION_PER_PAGE %>
+  <div id="with-button" class="hide">
+    <%= will_paginate %>
+  </div>
+
+  <% if @hashtags.next_page %>
+    <div id="load_more_hashtags" class="show_more button w-button" data-loading-text="Loding more hashtags" title="Click here to load more hashtags" style="position: relative;right: 17%;text-align: center;margin-top: 4%;">Show More</div>
+  <% end %>
+</div>
 </div>

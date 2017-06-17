@@ -1,50 +1,58 @@
-  <div class="sub-nav-bar table-header">
+<div class="sub-nav-bar table-header">
+  <div class="table-header">
     <div class="table-header">
-      <div class="table-header">
-        <div class="header new-table-row w-row">
-          <div class="cn w-clearfix w-col w-col-3">
-            <div class="header name w-clearfix">
-              <div class="headings name"> &nbsp; List name</div>
-            </div>
-            <div class="cb check-box-column header"></div>
+      <div class="header new-table-row w-row">
+        <div class="cn w-clearfix w-col w-col-3">
+          <div class="header name w-clearfix">
+            <div class="headings name"> &nbsp; List name</div>
           </div>
-          <div class="fv w-clearfix w-col w-col-2">
-            <div class="cn column column-2 header">
-              <div class="first-visit headings"> &nbsp; Members</div>
-            </div>
-          </div>
-          <div class="lv w-clearfix w-col w-col-2">
-            <div class="colum-3 column header lv">
-              <div class="headings last-visit"> &nbsp;Created</div>
-            </div>
-          </div>
-          
-          <div class="avs w-clearfix w-col w-col-2">
-            <div class="avs column column-4 header">
-              <div class="avs headings last-visit"> &nbsp;List Type</div>
-            </div>
-          </div>
-          
-          <div class="avs w-clearfix w-col w-col-1">
-            <div class="avs column column-4 header">
-              <div class="avs headings last-visit"> &nbsp;Campaigns</div>
-            </div>
-          </div>
-
-          <div class="avs w-clearfix w-col w-col-1">
-            <div class="avs column column-4 header">
-              <div class="avs headings last-visit"> &nbsp;Last sent</div>
-            </div>
-          </div>
-          
+          <div class="cb check-box-column header"></div>
         </div>
+        <div class="fv w-clearfix w-col w-col-2">
+          <div class="cn column column-2 header">
+            <div class="first-visit headings"> &nbsp; Members</div>
+          </div>
+        </div>
+        <div class="lv w-clearfix w-col w-col-2">
+          <div class="colum-3 column header lv">
+            <div class="headings last-visit"> &nbsp;Created</div>
+          </div>
+        </div>
+
+        <div class="avs w-clearfix w-col w-col-2">
+          <div class="avs column column-4 header">
+            <div class="avs headings last-visit"> &nbsp;List Type</div>
+          </div>
+        </div>
+
+        <div class="avs w-clearfix w-col w-col-1">
+          <div class="avs column column-4 header">
+            <div class="avs headings last-visit"> &nbsp;Campaigns</div>
+          </div>
+        </div>
+
+        <div class="avs w-clearfix w-col w-col-1">
+          <div class="avs column column-4 header">
+            <div class="avs headings last-visit"> &nbsp;Last sent</div>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
-  
-  <%= render 'sub_nav_bar' %>
-
-<div class="dashboard-body">
-  <%= render @lists %>
 </div>
-<%= will_paginate(@lists).html_safe if @lists.count > PAGINATION_PER_PAGE %>
+
+<%= render 'sub_nav_bar' %>
+
+<div>
+  <div class="dashboard-body" id="objlists">
+    <%= render @lists %>
+  </div>
+  <div id="with-button" class="hide">
+    <%= will_paginate %>
+  </div>
+
+  <% if @lists.next_page %>
+    <div id="load_more_lists" class="show_more button w-button" data-loading-text="Loding more lists" title="Click here to load more lists" style="position: relative;right: 17%;text-align: center;margin-top: 14%;">Show More</div>
+  <% end %>
+</div>

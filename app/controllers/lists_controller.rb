@@ -8,11 +8,7 @@ class ListsController < ApplicationController
     @lists = current_user.lists.where(segment: nil).paginate(per_page: PAGINATION_PER_PAGE,
                                                     page: params[:page]).order(created_at: :desc)
 
-    if @lists.present?
-      render_requested_format(@lists)
-    else
-      render :no_lists
-    end
+    @lists.present? ? render_requested_format(@lists) : render(:no_lists)
   end
 
   # segment type list index action
@@ -20,11 +16,7 @@ class ListsController < ApplicationController
     @segments = current_user.segments.paginate(per_page: PAGINATION_PER_PAGE,
                                                 page: params[:page]).order(created_at: :desc)
 
-    if @segments.present?
-      render_requested_format(@segments)
-    else
-      render :no_lists
-    end
+    @segments.present? ? render_requested_format(@segments) : render(:no_lists)
   end
 
   def show
