@@ -17,6 +17,7 @@ class List < ActiveRecord::Base
 
   # Gets the merchant customers or merchant contacts that belong to a standard list or segment
   def get_mcs(page=1)
+    page = page.present? ? page : 1
     class_name = self.customer? ? MerchantCustomer : MerchantContact
 
     if self.segment.present?

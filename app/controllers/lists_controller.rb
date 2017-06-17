@@ -17,7 +17,7 @@ class ListsController < ApplicationController
 
   def show
     @list_members = @list.get_mcs(params[:page])
-
+    
     # segment
     if @list.segment.present?
       @new_customer = User.new
