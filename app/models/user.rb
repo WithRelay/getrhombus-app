@@ -174,7 +174,7 @@ class User < ActiveRecord::Base
   end
 
   def can_accept_payments?(skip_check_managed_acct_status = false)
-    cred = self.get_stripe_cred
+    cred = get_stripe_cred
     return true if cred[:type] == 'managed' && skip_check_managed_acct_status
     return true if cred[:type] == 'managed' && cred[:cred].can_accept_payments?
     return true if cred[:type] == 'standalone'
@@ -193,15 +193,15 @@ class User < ActiveRecord::Base
   def buy_number(params)
     number = TextingService.buy_number({ query: params["area_code"] || "", country: params["rn_country"], type: params["rn_type"] })
     return false unless number
-    self.rhombus_number = number[0]
-    self.rn_friendly_name = number[1]
-    get_uid_and_referrer_link
-    self.update_account_balance(NUMBER_PRICE)
+    rhombus_number = number[0]
+    rn_friendly_name = number[1]
+    generate_uid_and_referrer_link
+    update_account_balance(NUMBER_PRICE)
   end
 
   def has_valid_card?
-    return [false, 'No valid card on file'] if self.card_id.blank? && self.exp_year.blank? || self.exp_month.blank?
-    return [true] if self.exp_year.to_i >= Time.current.year && self.exp_month.to_i >= Time.current.month
+    return [false, 'No valid card on file'] if card_id.blank? && (exp_year.blank? || exp_month.blank?)
+    return [true] if exp_year.to_i >= Time.current.year && exp_month.to_i >= Time.current.month
     return [false, 'Card has expired.']
   end
 
@@ -279,7 +279,7 @@ class User < ActiveRecord::Base
   #end
 
   # This is the link merchants can share...also dashboard link
-  def get_uid_and_referrer_link
+  def generate_uid_and_referrer_link
     self.relay_uid = generate_uid
     self.short_url = "dasd" #UrlShorternerService.shorten_link("https://www.withrelay.com/signup?referrer_uid=#{self.relay_uid}")
   end
