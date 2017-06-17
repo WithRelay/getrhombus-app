@@ -170,12 +170,13 @@ $('#delete-reminder').click(function(e){
   	var elementForm = selectedElement.closest('form');
 
 		if (elementForm.length == 0)
-			FlashHandler.setFlashMessage('couldnot perform action for the resource','error');
+			FlashHandler.setFlashMessage('could not perform action for the resource','error');
 		else
 			elementForm.submit();
 
 	  $('.cancel-no').click();
   }
+  
 //
 // 	$('#set-new-reminder-loader').click(function(){
 //     customtersSearch();

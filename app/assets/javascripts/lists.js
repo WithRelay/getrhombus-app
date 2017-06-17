@@ -9,20 +9,20 @@ $(document).on('ready page:load', function() {
       setFlashForList('Only 1 list can be deleted at a time', 'error');
     } else {
       var id = '#list-delete-' + selected_objects[0];
-      FlashHandler.setConfirmationDialog(id,'Are you sure, you want to delete selected lists?', 'Delete', 'destroy-lists');
+      FlashHandler.setConfirmationDialog(id, 'Are you sure, you want to delete selected lists?', 'Delete', 'destroy-lists');
     };
   });
 
   $("#send-campaign-to-lists").click(function(){
-    var selected_item = getSelectedObjectIds();
+    var selected_objects = getSelectedObjectIds();
     var link = $(this).data('lists-campaign');
 
-    if (selected_item.length > 1) {
+    if (selected_objects.length > 1) {
       return setFlashForList('Only 1 list can be selected for sending campaign', 'error');
-    } else if (selected_item.length < 1) {
+    } else if (selected_objects.length < 1) {
       return setFlashForList('Please select a list to send campaign', 'error');
     } else {
-      var link_with_list_id = link + '?list_id=' + selected_item;
+      var link_with_list_id = link + '?list_id=' + selected_objects[0];
       window.location = link_with_list_id;
     };
   });
