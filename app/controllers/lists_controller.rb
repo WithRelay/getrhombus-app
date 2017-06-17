@@ -34,7 +34,7 @@ class ListsController < ApplicationController
     else
       @list_members = @list_members.paginate(per_page: PAGINATION_PER_PAGE, page: params[:page]).order(created_at: :desc)
       respond_to do |format|
-        format.js { render partial: 'list_members.js.erb', locals: { obj: @list_members, list: @list } }
+        format.js { render partial: 'list_members.js.erb', locals: { obj: @list_members } }
         format.html { render template: render_controller_action }
       end
     end
