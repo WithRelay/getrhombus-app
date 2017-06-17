@@ -82,8 +82,8 @@ class ListsController < ApplicationController
         flash[:error] = 'Unable to delete segment'
       end
     end
-    binding.pry
-    redirect_to user_lists_path(current_user)
+    
+    redirect_to ((@list.segment.blank?) ? user_lists_path(current_user) : user_segments_path(current_user))
   end
 
   private

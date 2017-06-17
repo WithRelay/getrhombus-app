@@ -1,7 +1,7 @@
 $(document).on('ready page:load', function() {
 
   $("#delete-lists").click(function(){
-    var selectedUsers = getSelectedUserIds(); // why are you selecting users?
+    var selectedUsers = getSelectedObjectIds(); // why are you selecting users?
 
     if (selectedUsers.length < 1) {
       setFlashForList('Select a list to Delete', 'error');
@@ -9,14 +9,14 @@ $(document).on('ready page:load', function() {
       setFlashForList('Only 1 list can be deleted at a time', 'error');
     }
     else {
-      var selected_item = getSelectedUserIds();
+      var selected_item = getSelectedObjectIds();
       var id = 'list-delete-' + selected_item[0];
       FlashHandler.setConfirmationDialog(id,'Are you sure, you want to delete selected lists?', 'Delete', 'destroy-lists');
     }
   });
 
   $("#send-campaign-to-lists").click(function(){
-    var selected_item = getSelectedUserIds();
+    var selected_item = getSelectedObjectIds();
     var link = $(this).data('lists-campaign');
 
     if (selected_item.length > 1) {
@@ -33,10 +33,10 @@ $(document).on('ready page:load', function() {
   $("#check_or_uncheck_all").click(function(e){
     if ( $(this).is(':checked') ) {
       $('#create_list_button').removeAttr('disabled');
-      $(".merchant_customers").prop('checked', true);
+      $(".obj-checkbox-selector").prop('checked', true);
     } else {
       $('#create_list_button').attr('disabled', true);
-      $(".merchant_customers").prop('checked', false);
+      $(".obj-checkbox-selector").prop('checked', false);
     }
   });
 
@@ -48,7 +48,7 @@ $(document).on('ready page:load', function() {
   });
 
   $("#edit-selected-list").click(function(e){
-    var selected_edit_list = getSelectedUserIds();
+    var selected_edit_list = getSelectedObjectIds();
 
     if (selected_edit_list.length > 1) {
       return setFlashForList('Only 1 list can be selected for editing', 'error');
@@ -57,7 +57,7 @@ $(document).on('ready page:load', function() {
     } else {
       var edit_list_form = $("#edit_list_form").attr("action").split('/');
       edit_list_form.pop();
-      var list_name = $('.merchant_customers:checked').data("list-name");
+      var list_name = $('.obj-checkbox-selector:checked').data("list-name");
       $("#edit-list-form").lightbox_me({
         centered: true,
         onLoad: function() {
@@ -71,7 +71,7 @@ $(document).on('ready page:load', function() {
     }
   });
 
-  // $('.merchant_customers').click(function(){
+  // $('.obj-checkbox-selector').click(function(){
   //   $(this).is(':checked') && $('#create_list_button').removeAttr('disabled')
   //   $(':checkbox').not(this).attr('checked', false);
   // });
@@ -215,16 +215,14 @@ $(document).on('ready page:load', function() {
   });
 
   // Fired when the user wants to select checkboxes that fall in a range
-  jQuery(function($) {
-    $('#merchant_customers').checkboxes('range', true);
-  });
+  $('.multi-checkbox-select-class').checkboxes('range', true);
 
   // Fired on click on create list button
   $("#create_list_button").click(function(e) {
-    if (!isAnyCheckboxSelected('.merchant_customers')) {
+    if (!isAnyCheckboxSelected('.obj-checkbox-selector')) {
       setFlashForList('Please select customer from the table', 'error');
     } else {
-      user_ids = getSelectedUserIds();
+      user_ids = getSelectedObjectIds();
       $("#new-list-modal-div").lightbox_me({
         closeClick: true,
         closeEsc: true,
@@ -256,9 +254,10 @@ $(document).on('ready page:load', function() {
     FlashHandler.setFlashMessage(msg, title);
   };
 
-  function getSelectedUserIds(){
+  // used by contacts, customers, lists index pages
+  function getSelectedObjectIds(){
     var selected_users = []; // An array for storing selected users
-    $('.merchant_customers:checked').each(function() {
+    $('.obj-checkbox-selector:checked').each(function() {
       selected_users.push($(this).data('users'));
     });
     return selected_users;

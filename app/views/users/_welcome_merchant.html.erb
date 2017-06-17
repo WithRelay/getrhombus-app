@@ -4,15 +4,15 @@
     <div class="chart-wrapper dash-content-container">
       <div class="message-stats-in-graph-wrapper w-clearfix">
         <div class="_90-days-ago group-volume">
-          <div class="_30-days _90 message-volume-count"><%= @messages_data[:msg_90_days][:msg_count][:total]%></div>
+          <div class="_30-days _90 message-volume-count"><%= @dashboard_messages_data[:msg_90_days][:msg_count][:total]%></div>
           <div class="message-days-text">90 DAYS</div>
         </div>
         <div class="_30-days-ago group-volume">
-          <div class="_30-days message-volume-count"><%= @messages_data[:msg_30_days][:msg_count][:total]%></div>
+          <div class="_30-days message-volume-count"><%= @dashboard_messages_data[:msg_30_days][:msg_count][:total]%></div>
           <div class="alt message-days-text">30 DAYS</div>
         </div>
         <div class="_7-days-ago group-volume">
-          <div class="_7-days message-volume-count"><%= @messages_data[:msg_7_days][:msg_count][:total]%></div>
+          <div class="_7-days message-volume-count"><%= @dashboard_messages_data[:msg_7_days][:msg_count][:total]%></div>
           <div class="message-days-text">7 DAYS</div>
         </div>
         <h4 class="date-time shrink-text welcome-dash-content-container-header">Thursday, 11 Aug 2016, 9:30 AM</h4>
@@ -22,7 +22,7 @@
           <div class="message-graph-header-text">Daily Message Volume</div>
         </div>
         <div class="w-col w-col-6">
-          <div class="conversation-to-date-text"><%= @messages_data[:total_convs] %> Total Conversations to Date</div>
+          <div class="conversation-to-date-text"><%= @dashboard_messages_data[:total_convs] %> Total Conversations to Date</div>
         </div>
       </div>
       <div class="chart-container">
@@ -36,27 +36,27 @@
       <div class="w-row welcome-dash-table-wrapper">
         <div class="w-col w-col-3">
           <div class="average-message-count-per-day customer-contacts-2 welcome-dash-content-container">
-            <h1 class="new-customers"><%= @msg_perform[:messages][:total] %></h1>
+            <h1 class="new-customers"><%= @dashboard_msg_perform[:messages][:total] %></h1>
             <h4 class="count-description"> &nbsp;Messages Today</h4>
-            <h4 class="count-description transaction-count">Facebook <%= @msg_perform[:messages][:fb_msg_percent] %>%  |
-               SMS &nbsp;<%= @msg_perform[:messages][:txt_msg_percent] %>%</h4>
+            <h4 class="count-description transaction-count">Facebook <%= @dashboard_msg_perform[:messages][:fb_msg_percent] %>%  |
+               SMS &nbsp;<%= @dashboard_msg_perform[:messages][:txt_msg_percent] %>%</h4>
           </div>
         </div>
         <div class="w-col w-col-3">
           <div class="average-conversations-per-hour customer-contacts-2 welcome-dash-content-container">
-            <h1 class="new-customers"><%= @msg_perform[:conversations_per_hour] %></h1>
+            <h1 class="new-customers"><%= @dashboard_msg_perform[:conversations_per_hour] %></h1>
             <h4 class="count-description"> &nbsp;Conversations per hour</h4>
           </div>
         </div>
         <div class="w-col w-col-3">
           <div class="average-handle-time customer-contacts-2 welcome-dash-content-container">
-            <h1 class="new-customers"><%=  @msg_perform[:avg_handle_time] %> </h1>
+            <h1 class="new-customers"><%=  @dashboard_msg_perform[:avg_handle_time] %> </h1>
             <h4 class="count-description">Average Handle Time</h4>
           </div>
         </div>
         <div class="w-col w-col-3">
           <div class="customer-contacts-2 open-conversations-yesterday welcome-dash-content-container">
-            <h1 class="new-customers"><%= @msg_perform[:open_convs_yesterday]%></h1>
+            <h1 class="new-customers"><%= @dashboard_msg_perform[:open_convs_yesterday]%></h1>
             <h4 class="count-description">Open Conversations Yesterday</h4>
           </div>
         </div>
@@ -81,7 +81,7 @@
                 <div class="message-graph-header-text">Weekly Transactions</div>
               </div>
               <div class="w-col w-col-6">
-                <div class="conversation-to-date-text">$<%= @transactions[:this_week_tranc] %> Transactions this Week</div>
+                <div class="conversation-to-date-text">$<%= @dashboard_transactions[:this_week_tranc] %> Transactions this Week</div>
               </div>
             </div>
           </div>
@@ -99,27 +99,27 @@
       <div class="w-row welcome-dash-table-wrapper">
         <div class="w-col w-col-3">
           <div class="overview welcome-dash-content-container">
-            <h1 class="total-customer-count"><%= @overall_section[:all_customers_count] %></h1>
+            <h1 class="total-customer-count"><%= @dashboard_overall_section[:all_customers_count] %></h1>
             <h4 class="count-description">All Customers</h4>
           </div>
         </div>
         <div class="w-col w-col-3">
           <div class="customer-contacts-2 welcome-dash-content-container">
-            <h1 class="new-customers"><%= @overall_section[:new_customers_count] %></h1>
+            <h1 class="new-customers"><%= @dashboard_overall_section[:new_customers_count] %></h1>
             <h4 class="count-description"> &nbsp;New Customers this Week</h4>
           </div>
         </div>
         <div class="w-col w-col-3">
           <div class="customer-contacts-3 welcome-dash-content-container">
-            <h1 class="new-contacts">$<%= @overall_section[:total_transactions] %></h1>
+            <h1 class="new-contacts">$<%= @dashboard_overall_section[:total_transactions] %></h1>
             <h4 class="count-description">Transactions to Date</h4>
           </div>
         </div>
         <div class="w-col w-col-3">
           <div class="column-4 overview welcome-dash-content-container">
-            <h1 class="total-customer-count">$<%= @overall_section[:transactions_today] %></h1>
+            <h1 class="total-customer-count">$<%= @dashboard_overall_section[:transactions_today] %></h1>
             <h4 class="count-description"> &nbsp; Transactions Today</h4>
-            <h4 class="count-description transaction-count"> &nbsp; <%= @overall_section[:transactions_today_count] %> Transactions</h4>
+            <h4 class="count-description transaction-count"> &nbsp; <%= @dashboard_overall_section[:transactions_today_count] %> Transactions</h4>
           </div>
         </div>
       </div>

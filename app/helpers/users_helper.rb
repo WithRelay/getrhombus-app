@@ -69,14 +69,14 @@ module UsersHelper
   end
 
   def message_graph
-    if @messages_data[:msg_30_days][:chart_data].empty?
+    if @dashboard_messages_data[:msg_30_days][:chart_data].empty?
       htm = '<div class= "no-chart-data">
       <p class="empty-view-short-paragraph">No data. '
       htm += link_to('Send your first message', user_conversations_path(current_user), class: 'links' ).to_s
       htm += ' to view chart activity</p></div>'
       htm.html_safe
     else
-      area_chart @messages_data[:msg_30_days][:chart_data],
+      area_chart @dashboard_messages_data[:msg_30_days][:chart_data],
         library: {
           scales: {
             xAxes: [{
@@ -104,13 +104,13 @@ module UsersHelper
       htm += link_to('Connect your bank account', user_bank_accounts_path(current_user), class: "links").to_s
       htm += '&nbsp;to view chart activity</p></div>'
       htm.html_safe
-    elsif @transactions[:tranc_chart_data].empty?
+    elsif @dashboard_transactions[:tranc_chart_data].empty?
       htm = '<div class="no-chart-data transactions"><p class="empty-view-short-paragraph">No data. '
       htm += link_to('Charge a customer', user_transactions_path(current_user), class: "links").to_s
       htm += '&nbsp;to view chart activity</p></div>'
       htm.html_safe
     else
-      line_chart @transactions[:tranc_chart_data], height: "250px",
+      line_chart @dashboard_transactions[:tranc_chart_data], height: "250px",
           library: {
             scales: {
               xAxes: [{

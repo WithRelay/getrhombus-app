@@ -11,11 +11,11 @@ class UsersController < ApplicationController
   # load_and_authorize_resource except: [:customer_csv_template]
 
   def show
-    #all the methods are in concerns/databoard_data
-    @overall_section = customers_and_transactions
-    @msg_perform = analytics_section
-    @transactions = transactions
-    @messages_data = messages_datas
+    #all the methods are in concerns/dashboard_data
+    @dashboard_overall_section = dashboard_customers_and_transactions
+    @dashboard_msg_perform = dashboard_analytics_section
+    @dashboard_transactions = dashboard_transactions
+    @dashboard_messages_data = dashboard_messages_data
   end
 
   # DELETE /users/1
