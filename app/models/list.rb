@@ -17,16 +17,16 @@ class List < ActiveRecord::Base
 
   # Gets the merchant customers or merchant contacts that belong to a standard list or segment
   def get_mcs(page=1)
-    class_name = self.customer? ? "MerchantCustomer" : "MerchantContact"
+    class_name = self.customer? ? MerchantCustomer : MerchantContact
 
     if self.segment.present?
       self.segment['merchant_id'] = self.user_id
       self.segment["time"] = Time.current.beginning_of_day - self.segment['days'].days if self.segment['days'].present?
-      class_name.constantize.paginate_by_sql(send(self.segment['base_query'], self.segment), page: page, per_page: PAGINATION_PER_PAGE)
+      class_name.paginate_by_sql(send(self.segment['base_query'], self.segment), page: page, per_page: PAGINATION_PER_PAGE)
     else
-      mcs_list = self.user_lists.pluck(:customer_contact_id)
-
-      class_name.constantize.where(id: mcs_list).paginate(page: page, per_page: PAGINATION_PER_PAGE)
+      class_name.joins("inner join user_lists on user_lists.customer_contact_id = #{class_name.table_name}.id")      
+                .select("#{class_name.table_name}.*").where("user_lists.list_id = #{self.id}")
+                .paginate(page: page, per_page: PAGINATION_PER_PAGE)      
     end
   end
 end
