@@ -16,7 +16,7 @@ class ListsController < ApplicationController
   end
 
   def show
-    @list_members = @list.get_mcs
+    @list_members = @list.get_mcs(params[:page])
 
     # segment
     if @list.segment.present?
@@ -32,7 +32,6 @@ class ListsController < ApplicationController
       # redirect_to lists_path(current_user)   or to customers for segments
       # render that there are no members in the lists
     else
-      @list_members = @list_members.paginate(per_page: PAGINATION_PER_PAGE, page: params[:page]).order(created_at: :desc)
       respond_to do |format|
         format.js { render partial: 'list_members.js.erb', locals: { obj: @list_members } }
         format.html { render template: render_controller_action }

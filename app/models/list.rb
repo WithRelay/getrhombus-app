@@ -26,7 +26,7 @@ class List < ActiveRecord::Base
     else
       mcs_list = self.user_lists.pluck(:customer_contact_id)
 
-      class_name.constantize.where(id: mcs_list)
+      class_name.constantize.where(id: mcs_list).paginate(page: page, per_page: PAGINATION_PER_PAGE)
     end
   end
 end
