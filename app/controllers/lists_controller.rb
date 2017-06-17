@@ -32,8 +32,9 @@ class ListsController < ApplicationController
       # redirect_to lists_path(current_user)   or to customers for segments
       # render that there are no members in the lists
     else
+      @list_members = @list_members.paginate(per_page: PAGINATION_PER_PAGE, page: params[:page]).order(created_at: :desc)
       respond_to do |format|
-        format.js { render partial: 'shared/index.js.erb', locals: { obj: obj } }
+        format.js { render partial: 'list_members.js.erb', locals: { obj: @list_members, list: @list } }
         format.html { render template: render_controller_action }
       end
     end
@@ -70,7 +71,7 @@ class ListsController < ApplicationController
         flash[:error] = 'Unable to delete segment'
       end
     end
-    
+
     redirect_to ((@list.segment.blank?) ? user_lists_path(current_user) : user_segments_path(current_user))
   end
 

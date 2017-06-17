@@ -1,0 +1,10 @@
+<% if @list.customer? %>
+  $('#objlists').append('<%= j render(partial: "lists/list_customer", locals: { list_members: @list_members }) %>');
+<% else %>
+  $('#objlists').append('<%= j render(partial: "lists/list_contact", locals: { list_members: @list_members }) %>');
+<% end %>
+<% if obj.next_page %>
+  $('.pagination').replaceWith('<%= j will_paginate obj %>');
+<% else %>
+  $('.pagination, .show_more').remove();
+<% end %>
