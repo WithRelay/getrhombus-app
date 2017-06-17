@@ -10,7 +10,7 @@ module AdditionalUserActions
     else
       flash[:error] = 'Something went wrong'
     end
-    redirect_to integrations_user_path(current_user)
+    redirect_to user_integrations_path(current_user)
   end
 
   def remove_stripe_integration
@@ -19,7 +19,7 @@ module AdditionalUserActions
     else
       flash[:error] = 'Something went wrong'
     end
-    redirect_to integrations_user_path(current_user)
+    redirect_to user_integrations_path(current_user)
   end
 
   def managed_acct
@@ -173,7 +173,7 @@ module AdditionalUserActions
       else
         flash[:error] = 'Referral failed'
       end
-      redirect_to refer_business_user_path
+      redirect_to user_refer_business_path
     end
   end
 

@@ -27,7 +27,7 @@ class List < ActiveRecord::Base
     else
       class_name.joins("inner join user_lists on user_lists.customer_contact_id = #{class_name.table_name}.id")      
                 .select("#{class_name.table_name}.*").where("user_lists.list_id = #{self.id}")
-                .paginate(page: page, per_page: PAGINATION_PER_PAGE)      
+                .paginate(page: page, per_page: PAGINATION_PER_PAGE)   
     end
   end
 end

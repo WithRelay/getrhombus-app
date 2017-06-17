@@ -28,27 +28,23 @@
       <div class="left-nav-tab">Manage segments</div>
     <% end %>
 
-  <% end %>
-<%
-=begin
-%>
-    <%= link_to integrations_user_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
+    <%= link_to user_integrations_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
       <div class="left-nav-tab">Integrations</div>
     <% end %>
 
-    <%= link_to billing_information_user_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
+    <%= link_to user_billing_information_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
       <div class="left-nav-tab">Billing Information</div>
     <% end %>
 
-    <%= link_to managed_accounts_user_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
+    <%= link_to user_managed_accounts_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
       <div class="left-nav-tab">Bank account</div>
     <% end %>
 
-    <%= link_to sms_usage_user_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
+    <%= link_to user_sms_usage_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
       <div class="left-nav-tab">SMS usage</div>
     <% end %>
 
-    <%= link_to refer_business_user_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
+    <%= link_to user_refer_business_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
       <div class="left-nav-tab">Free subscriptions</div>
     <% end %>
 
@@ -58,23 +54,20 @@
 
   <% elsif current_user.is_customer? %>
 
-    <%= link_to account_settings_user_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
+    <%= link_to user_account_settings_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
       <div class="left-nav-tab" data-ix="display-and-hide-customers">Account</div>
     <% end %>
 
-    <%= link_to billing_information_user_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
+    <%= link_to user_billing_information_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
       <div class="left-nav-tab">Billing Information</div>
     <% end %>
+    
   <% end %>
-  
-<%
-=end
-%>
 
   <h5 class="left-nav rhom-number signup-box-subheading">RHOMBUS NUMBER</h5>
   <div class="left-nav-underline"></div>
   <a class="left-nav-tab-wrapper w-inline-block" href="#">
-    <div class="left-nav-tab">+ <redacted_phone_number></div>
+    <div class="left-nav-tab"><%= current_user.rn_friendly_name || current_user.rhombus_number %></div>
   </a>
   <h5 class="left-nav rhom-number signup-box-subheading">OTHER</h5>
   <div class="left-nav-underline"></div>
