@@ -59,8 +59,15 @@
 
     <div class="reminders-by-date row-wrapper">
       <div>
-          <% @reminders_today.each do |reminder| %>
-          <%= render partial: 'list_reminder', locals: {reminder: reminder } %>
+        <div id='reminders_today'>
+          <%= render @reminders_today %>
+        </div>
+        <div id="with-button" class="hide">
+          <%= will_paginate(@reminders_today) %>
+        </div>
+
+        <% if @reminders_today.next_page %>
+          <div id="load_more_reminders_today" class="show_more button w-button text-center" data-loading-text="Loding more Reminders" title="Click here to load more reminders">Show More</div>
         <% end %>
       </div>
     </div>
@@ -70,8 +77,15 @@
 
   <div class="reminders-by-date row-wrapper">
     <div>
-      <% @reminders_tomorrow.each do |reminder| %>
-         <%= render partial: 'list_reminder', locals: {reminder: reminder } %>
+      <div id='reminders_tomorrow'>
+        <%= render @reminders_tomorrow %>
+      </div>
+      <div id="with-button" class="hide">
+        <%= will_paginate(@reminders_tomorrow) %>
+      </div>
+
+      <% if @reminders_tomorrow.next_page %>
+        <div id="load_more_reminders_tomorrow" class="show_more button w-button text-center" data-loading-text="Loding more Reminders" title="Click here to load more reminders">Show More</div>
       <% end %>
     </div>
   </div>
@@ -80,9 +94,17 @@
 
   <div class="reminders-by-date row-wrapper">
     <div>
-    <% @reminders_upcoming.each do |reminder| %>
-      <%= render partial: 'list_reminder', locals: {reminder: reminder } %>
-    <% end %>
+      <div id='reminders_upcoming'>
+        <%= render @reminders_upcoming %>
+      </div>
+      <div id="with-button" class="hide">
+        <%= will_paginate(@reminders_upcoming) %>
+      </div>
+
+      <% if @reminders_upcoming.next_page %>
+        <div id="load_more_reminders_upcoming" class="show_more button w-button text-center" data-loading-text="Loding more Reminders" title="Click here to load more reminders">Show More</div>
+      <% end %>
+    </div>
   </div>
 </div>
 </div>
