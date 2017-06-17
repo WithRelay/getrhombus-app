@@ -16,7 +16,7 @@ class ListsController < ApplicationController
   end
 
   def show
-    @list_members = @list.get_mcs
+    @list_members = @list.get_mcs(params[:page])
 
     # segment
     if @list.segment.present?
@@ -33,7 +33,7 @@ class ListsController < ApplicationController
       # render that there are no members in the lists
     else
       respond_to do |format|
-        format.js { render partial: 'shared/index.js.erb', locals: { obj: obj } }
+        format.js { render partial: 'list_members.js.erb', locals: { obj: @list_members } }
         format.html { render template: render_controller_action }
       end
     end
@@ -70,7 +70,7 @@ class ListsController < ApplicationController
         flash[:error] = 'Unable to delete list/segment'
       end
     end
-    
+
     redirect_to ((@list.segment.blank?) ? user_lists_path(current_user) : user_segments_path(current_user))
   end
 

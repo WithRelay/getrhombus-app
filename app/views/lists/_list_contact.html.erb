@@ -5,7 +5,7 @@
         <div class="cn w-clearfix w-col w-col-3">
           <div class="name w-clearfix">
             <% profile = present(merchant_contact).contact_details %>
-            
+
             <%= profile_image_color(profile, true) %>
             <div class="shrink-text table-text">
               <%= link_to profile[:full_name], user_merchant_customer_path(current_user, merchant_contact), class: "non-underline-link" %>

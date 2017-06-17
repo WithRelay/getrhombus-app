@@ -68,5 +68,14 @@
 
 <div class="dashboard-body" >
   <div id="list-data" data-list-type="<%= @list.list_type %>" data-list-id="<%= @list.id %>" data-list-channel="<%= @list.channel %>"><%= @list.list_type %></div>
-  <%= render partial: list_show_partial, locals: { list_members: @list_members } %>
+  <div id='objlists'>
+    <%= render partial: list_show_partial, locals: { list_members: @list_members } %>
+  </div>
+  <div id="with-button" class="hide">
+    <%= will_paginate(@list_members) %>
+  </div>
+
+  <% if @list_members.next_page %>
+    <div id="load_more_list_members" class="show_more button w-button" data-loading-text="Loding more list_members" style="margin-top: 4%;text-align: center;">Show More</div>
+  <% end %>
 </div>
