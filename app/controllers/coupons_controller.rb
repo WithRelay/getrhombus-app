@@ -2,8 +2,8 @@ class CouponsController < ApplicationController
 
   include DashboardNotification
 
-  before_action :set_coupon, only: [ :destroy]
-  before_action :set_notifications
+  before_action :set_coupon, only: [:destroy]
+  before_action :set_notifications, only: [:index, :manage_coupons]
 
   respond_to :html, :js
 
@@ -52,7 +52,7 @@ class CouponsController < ApplicationController
         .joins("LEFT JOIN subscriptions s ON s.coupon_id = coupons.id")
         .select('coupons.id, name, amount_off, percent_off, currency, duration, duration_in_months, max_redemptions,
                   percent_off, redeem_by, coupons.created_at, s.id as subscription_id')
-        .paginate(page: params[:page], per_page: 10)
+        .paginate(page: params[:page], per_page: PAGINATION_PER_PAGE)
         .order('coupons.created_at DESC')
     end
 

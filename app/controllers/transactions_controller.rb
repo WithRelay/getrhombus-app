@@ -16,14 +16,16 @@ class TransactionsController < ApplicationController
         @transactions = Transaction.includes(:user).where(team_id: current_user.id).only_uncaptured_transactions()
                                  .where("created_at >= ?", Time.zone.at(7.days.ago).to_i)
                                  .exclude_subscriptions()
-                                 .paginate(page: params[:page], per_page: 10).order(created_at: :desc)
+                                 .paginate(page: params[:page], per_page: PAGINATION_PER_PAGE)
+                                 .order(created_at: :desc)
       else
         # Exclude refunded transactions, Exclude subscriptions since these queries are not read only
         # query is for refundable transactions. You can't refund subscriptions easily.
         # and include only captured transactions. Account reload txns are included by default.right
         @transactions = Transaction.includes(:user).exclude_subscriptions().only_captured_transactions()
                                     .exclude_refunded_transactions().where(team_id: current_user.id)
-                                    .paginate(page: params[:page], per_page: 10).order(created_at: :desc)
+                                    .paginate(page: params[:page], per_page: PAGINATION_PER_PAGE)
+                                    .order(created_at: :desc)
       end
     elsif current_user.is_customer?
       # Transaction.process_captured_payment(@user, params) if session[:captured_amt].present?

@@ -1,7 +1,7 @@
 class SubscriptionsController < ApplicationController
   include DashboardNotification
-  before_action :set_notifications
-  before_action :set_subscription, only: [:show, :edit, :update]
+  before_action :set_notifications, only: [:index]
+  before_action :set_subscription, only: [:show, :edit]
 
   respond_to :html, :js
 
@@ -11,19 +11,9 @@ class SubscriptionsController < ApplicationController
                                       .where.not(status: 'canceled')
                                       .where('merchant_customers.merchant_id' => current_user.id)
                                       .where.not('merchant_customers.platform_stripe_customer_id' => nil)
-                                      .paginate(page: params[:page], per_page: 10)
+                                      .paginate(page: params[:page], per_page: PAGINATION_PER_PAGE)
                                       .order(created_at: :desc)
     @subscriptions.present? ? render_requested_format(@subscriptions) : render(:empty_subscription)
-  end
-
-  def show
-    respond_with(@subscription)
-  end
-
-  def edit
-  end
-
-  def update
   end
 
    # generate user csv data

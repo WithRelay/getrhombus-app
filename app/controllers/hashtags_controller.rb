@@ -1,7 +1,8 @@
 class HashtagsController < ApplicationController
-  before_action :set_hashtag, only: [:show, :edit, :update, :destroy]
   include DashboardNotification
-  before_action :set_notifications
+  before_action :set_notifications, only: [:index, :new, :edit]
+
+  before_action :set_hashtag, only: [:edit, :update, :destroy]
   respond_to :html
 
   def index
@@ -39,7 +40,6 @@ class HashtagsController < ApplicationController
   end
 
   def update
-
     if @hashtag.update(hashtag_params)
       redirect_to user_hashtags_path, flash: { notice: "Hashtag Updated!" }
     else
