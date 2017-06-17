@@ -9,7 +9,13 @@
   <div id='objlists'>
     <%= render @campaigns %>
   </div>
-  <%= will_paginate(@campaigns).html_safe if @campaigns.count > PAGINATION_PER_PAGE %>
+  <div id="with-button" class="hide">
+    <%= will_paginate %>
+  </div>
+
+  <% if @campaigns.next_page %>
+    <div id="load_more_campaigns" class="show_more button w-button" data-loading-text="Loding more campaigns" style="margin-top: 4%;text-align: center;">Show More</div>
+  <% end %>
 </div>
 
 <div class="sub-nav-bar table-header">
