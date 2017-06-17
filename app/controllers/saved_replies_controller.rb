@@ -10,7 +10,7 @@ class SavedRepliesController < ApplicationController
   def index
     @saved_replies = current_user.saved_replies.order(created_at: :desc)
                                 .paginate(per_page: PAGINATION_PER_PAGE, page: params[:page])
-    render 'empty_saved_reply' unless @saved_replies.present?
+    @saved_replies.present? ? render_requested_format(@saved_replies) : render(:empty_saved_reply)
   end
 
   def create

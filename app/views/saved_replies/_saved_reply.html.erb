@@ -1,0 +1,29 @@
+<div class="new-table-row saved-replies w-row">
+  <div class="cn w-clearfix w-col w-col-4">
+    <div class="name saved-reply-author w-clearfix"><%= present(saved_reply).profile_image %>
+      <div class="shrink-text table-text"><%="#{current_user.full_name}"%></div>
+    </div>
+    <div class="cb check-box-column">
+      <div>
+        <%= form_for(saved_reply, url: user_saved_reply_path(current_user, saved_reply), html: { method: :delete } ) do |f| %>
+          <div class="select-all-check-box w-checkbox w-clearfix">
+            <%= f.hidden_field :id %>
+            <input class="cb table-checkbox checkboxes w-checkbox-input" id="node" type="checkbox">
+            <label class="checkbox-field-lable w-form-label" for="node">-</label>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  <div class="fv w-clearfix w-col w-col-4">
+    <div class="cn column column-2 w-clearfi">
+      <div class="table-text shrink-text">
+      <%= saved_reply.title %></div>
+    </div>
+  </div>
+  <div class="lv w-clearfix w-col w-col-4">
+    <div class="colum-3 column lv">
+      <div class="shrink-text table-text"><%= present(saved_reply).date_in_word %></div>
+    </div>
+  </div>
+</div>

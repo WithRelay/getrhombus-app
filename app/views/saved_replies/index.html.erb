@@ -37,38 +37,15 @@
       </div>
     </div>
 
-    <% @saved_replies.each do |reply| %>
-      <div class="new-table-row saved-replies w-row">
-        <div class="cn w-clearfix w-col w-col-4">
-          <div class="name saved-reply-author w-clearfix"><%= present(reply).profile_image %>
-            <div class="shrink-text table-text"><%="#{current_user.full_name}"%></div>
-          </div>
-          <div class="cb check-box-column">
-            <div>
-              <%= form_for(reply, url: user_saved_reply_path(current_user, reply), html: { method: :delete } ) do |f| %>
-                <div class="select-all-check-box w-checkbox w-clearfix">
-                  <%= f.hidden_field :id %>
-                  <input class="cb table-checkbox checkboxes w-checkbox-input" id="node" type="checkbox">
-                  <label class="checkbox-field-lable w-form-label" for="node">-</label>
-                </div>
-              <% end %>
-            </div>
-          </div>
-        </div>
-        <div class="fv w-clearfix w-col w-col-4">
-          <div class="cn column column-2 w-clearfi">
-            <div class="table-text shrink-text">
-            <%= reply.title %></div>
-          </div>
-        </div>
-        <div class="lv w-clearfix w-col w-col-4">
-          <div class="colum-3 column lv">
-            <div class="shrink-text table-text"><%= present(reply).date_in_word %></div>
-          </div>
-        </div>
-      </div>
+    <div id='objlists'>
+      <%= render @saved_replies %>
+    </div>
+    <div id="with-button" class="hide">
+      <%= will_paginate %>
+    </div>
+
+    <% if @saved_replies.next_page %>
+      <div id="load_more_saved_replies" class="show_more button w-button" data-loading-text="Loding more saved_replies" title="Click here to load more saved_replies">Show More </div>
     <% end %>
-    <%= (will_paginate(@saved_replies)).html_safe if @saved_replies.count > PAGINATION_PER_PAGE %>
-    <%= index_footer %>
   </div>
 </div>
