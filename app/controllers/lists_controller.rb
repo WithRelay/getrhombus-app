@@ -16,8 +16,7 @@ class ListsController < ApplicationController
   end
 
   def show
-    # @list_members = @list.get_mcs(params[:page])
-    @list_members = []
+    @list_members = @list.get_mcs(params[:page])
 
     # segment
     if @list.segment.present?
