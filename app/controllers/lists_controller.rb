@@ -16,8 +16,9 @@ class ListsController < ApplicationController
   end
 
   def show
-    @list_members = @list.get_mcs(params[:page])
-    
+    # @list_members = @list.get_mcs(params[:page])
+    @list_members = []
+
     # segment
     if @list.segment.present?
       @new_customer = User.new
@@ -28,9 +29,7 @@ class ListsController < ApplicationController
     end
 
     if @list_members.blank?
-      flash[:error] = 'There are no members in the lists'
-      # redirect_to lists_path(current_user)   or to customers for segments
-      # render that there are no members in the lists
+      render(:no_members)
     else
       respond_to do |format|
         format.js { render partial: 'list_members.js.erb', locals: { obj: @list_members } }

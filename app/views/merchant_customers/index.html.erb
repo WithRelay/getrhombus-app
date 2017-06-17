@@ -58,7 +58,7 @@
           <%= render @merchant_customers %>
         </div>
         <div id="with-button" class="hide">
-          <%= will_paginate %>
+          <%= will_paginate(@merchant_customers) %>
         </div>
 
         <% if @merchant_customers.next_page %>
