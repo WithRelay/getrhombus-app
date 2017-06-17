@@ -5,9 +5,8 @@ class MerchantCustomer < ActiveRecord::Base
 
   belongs_to :merchant, class_name: "User"
   belongs_to :customer, class_name: "User"
-  has_many :subscriptions, inverse_of: :merchant_customer
-
   enum is_platform: { platform: 0, managed: 1 }
+  has_many :subscriptions, inverse_of: :merchant_customer  
 
   # has_many :invoices
 
@@ -25,8 +24,7 @@ class MerchantCustomer < ActiveRecord::Base
           merchant.merchant_contacts.where(uid_type: 'fb_page', uid: creds).update_all(is_customer: 1) if creds.present?
 
           # add as customer if necessary
-          _is_platform = merchant.email == User.platform_email ? 0 : 1
-          find_or_create_by(merchant_id: merchant.id, customer_id: customer.id, is_platform: _is_platform) 
+          find_or_create_by(merchant_id: merchant.id, customer_id: customer.id, is_platform: merchant.is_platform?).touch
         end
       end
     rescue StandardError => err

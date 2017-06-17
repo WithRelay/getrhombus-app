@@ -102,12 +102,11 @@ class Conversation < ActiveRecord::Base
   # uid can be user id, phone number or messenger id
   def self.send_message(conv, team, msg, channel, source, media = [])
     @conv = conv
-    page_access_token = team.get_page_access_token
-    from = (channel == "FbMessage") ? page_access_token : team.rhombus_number
+    from = (channel == "FbMessage") ? team.get_page_access_token : team.rhombus_number
 
     if @conv.uid_type == "user"
       customer = User.find_by(id: @conv.uid)
-      to = (channel == "FbMessage") ? customer.get_customer_page_specific_id(page_access_token) : customer.phone_number
+      to = (channel == "FbMessage") ? customer.get_customer_page_specific_id(from) : customer.phone_number
     else
       to = @conv.uid
     end
