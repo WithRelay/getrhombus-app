@@ -3,13 +3,13 @@
     <div class="alt-column w-clearfix w-col w-col-3">
       <div class="title-column-div w-clearfix">
         <div class="shrink-text table-text"><%= link_to list.name, user_list_path(current_user, list), class: "non-underline-link" %></div>
-        <%= link_to '', user_list_path(user_id: current_user, id: list), id: "list-delete-#{list.id}", class: 'w-hidden', method: :delete %>
+        <%= link_to '', user_list_path(current_user, list), id: "list-delete-#{list.id}", class: 'w-hidden', method: :delete %>
       </div>
       <div class="cb check-box-column">
         <div>
           <form id="email-form-2" name="email-form-2">
             <div class="select-all-check-box w-checkbox w-clearfix">
-              <input class="cb table-checkbox w-checkbox-input obj-checkbox-selector" id="node" type="checkbox" data-users="<%= list.id %>" data-list-name="<%= list.name %>">
+              <input class="cb table-checkbox w-checkbox-input obj-checkbox-selector" id="node" type="checkbox" data-obj-id="<%= list.id %>" data-list-name="<%= list.name %>">
               <label class="checkbox-field-lable w-form-label" for="node">-</label>
             </div>
           </form>
