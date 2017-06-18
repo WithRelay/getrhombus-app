@@ -26,7 +26,6 @@ Bhishma
 - in stripe event, #### needs better error handling
 
 surya
-- do we always have due_by, transfers_enabled in stripe managed account hash...we need that to be updated too whenever stripe sends an account event - maybe just resave every field we store anyway
 - Campaigns
 	- default to sms...then default to email - done
 	- lists with default channels - done

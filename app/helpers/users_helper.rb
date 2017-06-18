@@ -140,6 +140,5 @@ module UsersHelper
     else
       'Your phone number activation is in progress; this may take up to 2 hours to complete. In the meantime, use the temporary number on your dashboard to get started. We\'ll notify you once your landline is activated'
     end
-
   end
 end

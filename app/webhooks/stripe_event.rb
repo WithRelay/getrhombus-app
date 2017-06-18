@@ -285,10 +285,11 @@ class StripeEvent
         address_attributes: { street_address: address_params[:street], city: address_params[:city],
                               state_province: address_params[:state],
                               country: address_params[:country], postal_code: address_params[:zip] },
-        stripe_creds_attributes: { fields_needed: account.verification.fields_needed,
-                                   disabled_reason: account.verification.disabled_reason,
-                                   charges_enabled: @hash[:charge_enabled],
-                                   due_by: account.verification.due_by
+        stripe_creds_attributes: { 
+                                    charges_enabled: @hash[:charges_enabled],
+                                    transfers_enabled: @hash[:payouts_enabled],
+                                    account_verification: account.verification,
+                                    legal_entity_verification: account.legal_entity.verification
                                  }
       }
     end

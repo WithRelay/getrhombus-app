@@ -1,7 +1,8 @@
 class StripeCred < ActiveRecord::Base
 
   # for saving array in fields_needed column http://api.rubyonrails.org/classes/ActiveRecord/Base.html#M001799
-  serialize :fields_needed
+  serialize :legal_entity_verification, Hash
+  serialize :account_verification, Hash
 
   belongs_to :user
   belongs_to :transaction_fee

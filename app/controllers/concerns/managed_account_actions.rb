@@ -92,9 +92,9 @@ module ManagedAccountActions
   def params_with_stripe(account, bank_account)
     account_verification = account.verification
     stripe_params = full_user_params
-    stripe_params[:stripe_creds_attributes]['0'].merge!({ disabled_reason: account_verification.disabled_reason,
-                                                          due_by: account_verification.due_by,
-                                                          fields_needed: account_verification.fields_needed,
+    stripe_params[:stripe_creds_attributes]['0'].merge!({ 
+                                                          account_verification: account.verification,
+                                                          legal_entity_verification: account.legal_entity.verification,
                                                           account_id: account.id,
                                                           livemode: Rails.env.production?,
                                                           charges_enabled: account.charges_enabled,

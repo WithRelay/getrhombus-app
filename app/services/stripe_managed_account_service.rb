@@ -269,7 +269,7 @@ class StripeManagedAccountService < Struct.new( :user, :params )
                                  city: address[:city], line1: address[:street_address]
                                },
                       #address_kana: {}, address_kanji: {}, personal_address_kana: {}, personal_address_kanji: {},  # for Japan i think
-                      verification: { document: user.people.first.stripe_file_id },
+                      verification: { document: user.people.representative.first.stripe_file_id },
                       ssn_last_4_provided: {}, business_tax_id_provided: {},
                       business_vat_id_provided: {}, personal_id_number_provided: {},
                       #additional_owners: additional_owners  # for Europe
