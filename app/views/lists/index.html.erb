@@ -44,8 +44,8 @@
 
 <%= render 'sub_nav_bar' %>
 
-<div>
-  <div class="dashboard-body" id="objlists">
+<div class="dashboard-body">
+  <div id="objlists">
     <%= render @lists %>
   </div>
   <div id="with-button" class="hide">
@@ -53,6 +53,8 @@
   </div>
 
   <% if @lists.next_page %>
-    <div id="load_more_lists" class="show_more button w-button" data-loading-text="Loding more lists" title="Click here to load more lists" style="position: relative;right: 17%;text-align: center;margin-top: 14%;">Show More</div>
+    <div id="load_more_lists" class="show_more load-more-wrapper" data-loading-text="Loding more lists" style="margin-top: 5%;" >
+      <a class="load-more-rows-button w-button" href="#">&nbsp;&nbsp;&nbsp;Load more</a>
+    </div>
   <% end %>
 </div>
