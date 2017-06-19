@@ -45,7 +45,9 @@
     </div>
 
     <% if @saved_replies.next_page %>
-      <div id="load_more_saved_replies" class="show_more button w-button" data-loading-text="Loding more saved_replies" title="Click here to load more saved_replies">Show More </div>
+      <div id="load_more_saved_replies" class="show_more load-more-wrapper" data-loading-text="Loding more saved_replies" >
+      <a class="load-more-rows-button w-button" href="#">&nbsp;&nbsp;&nbsp;Load more</a>
+    </div>
     <% end %>
   </div>
 </div>
