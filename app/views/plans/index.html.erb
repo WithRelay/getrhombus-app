@@ -30,7 +30,9 @@
     </div>
 
     <% if @plans.next_page %>
-      <div id="load_more_plans" class="show_more button w-button" data-loading-text="Loding more Plans" title="Click here to load more plans">Show More </div>
+      <div id="load_more_plans" class="show_more load-more-wrapper" data-loading-text="Loding more Plans" >
+        <a class="load-more-rows-button w-button" href="#">&nbsp;&nbsp;&nbsp;Load more</a>
+      </div>
     <% end %>
   </div>
 </div>
