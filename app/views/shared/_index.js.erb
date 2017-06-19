@@ -1,4 +1,9 @@
 $('#objlists').append('<%= j render obj %>');
+if ($('.customer-count-now').length > 0) {
+  $('.customer-count-now').text($('.customer').length)
+} else if ($('.contact-count-now').length > 0) {
+  $('.contact-count-now').text($('.contact').length)
+}
 <% if obj.next_page %>
   $('.pagination').replaceWith('<%= j will_paginate obj %>');
 <% else %>
