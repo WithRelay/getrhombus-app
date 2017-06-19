@@ -1,4 +1,5 @@
 class Plan < ActiveRecord::Base
+  include SegmentQueries
 
   has_many :subscriptions
   belongs_to :merchant, class_name: "User"
@@ -112,8 +113,7 @@ class Plan < ActiveRecord::Base
   # Creates a plan segment
   # This is called after a new plan is created.
   def create_plan_segment
-    segment = DashboardMerchantQueries.get_plan_users(self.id)
-    List.create(name:self.name, user_id: self.merchant_id, segment: segment, origin: 1)
+    List.create(name:self.name, user_id: self.merchant_id, segment: plan_segment_data(self.id), origin: 1, list_type: 0)
   end
 
   def update_plan_segment
