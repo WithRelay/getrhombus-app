@@ -73,7 +73,9 @@
     </div>
 
     <% if @transactions.next_page %>
-      <div id="load_more_transactions" class="show_more button w-button" data-loading-text="Loding more transactions" title="Click here to load more transactions">Show More</div>
+      <div id="load_more_transactions" class="show_more load-more-wrapper" data-loading-text="Loding more transactions" >
+        <a class="load-more-rows-button w-button" href="#">&nbsp;&nbsp;&nbsp;Load more</a>
+      </div>
     <% end %>
   </div>
 </div>
