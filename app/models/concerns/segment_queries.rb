@@ -60,19 +60,13 @@ module SegmentQueries
   end
 
   # Creates a segment for a plan
-  # @param plan_id The id of the plan for which a segment is to be
-  def DashboardMerchantQueries.get_plan_users(plan_id)
-    query = "SELECT u.id, u.email AS email, " \
-        "u.first_name, u.last_name, u.phone_number " \
-        "FROM merchant_customers m " \
-        "INNER JOIN users u " \
-        "ON (u.id = m.customer_id) "\
-        "WHERE m.customer_id IN ( "  \
-          "SELECT s.merchant_customer_id " \
-          "FROM subscriptions s " \
-          "where s.plan_id = #{plan_id} " \
-          ") "
-    return query
+  def plan_segment(data)
+    "select mc.* from merchant_customers mc inner join subscriptions s on mc.id = s.merchant_customer_id where mc.merchant_id = #{data["merchant_id"]}
+      and s.plan_id = #{data["plan_id"]}"
+  end
+
+  def plan_segment_data(plan_id)
+    { base_query: "plan_segment", plan_id: plan_id }
   end
 
   def customer_last_message_received(data)
