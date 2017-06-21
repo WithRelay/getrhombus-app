@@ -8,22 +8,19 @@ class CampaignsController < ApplicationController
 
   # @campaigns contains array of campaign of the associated users
   def index
-    @campaigns = current_user.campaigns.paginate(per_page: PAGINATION_PER_PAGE,
-                                                 page: params[:page])
-                                                 .order(updated_at: :desc, created_at: :desc)
-
+    @campaigns = current_user.campaigns.paginate(per_page: PAGINATION_PER_PAGE, page: params[:page]).order(updated_at: :desc)
     @campaigns.present? ? render_requested_format(@campaigns) : render(:empty_campaign)
   end
 
   # initializing campaign as association way using build method.
   def new
     @campaign = current_user.campaigns.build
-    @user_title = User.user_title(current_user)
+    @user_title = current_user.user_title
     @lists = current_user.lists.where(id: params[:list_id])
   end
 
   # creates a campaigns, campaign_lists, images if params available, associate inline image with campaign
-  # NOTE: build method is being overide please go through user model has_many :campaigns relationship
+  # NOTE: build method is being overidden in user model has_many :campaigns relationship
   def create
     @campaign = current_user.campaigns.build(campaign_params, image_params)
     if @campaign.save
