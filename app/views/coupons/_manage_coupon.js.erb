@@ -1,4 +1,4 @@
-$('#objlists').append('<%= j render @manage_coupons %>');
+$('#objlists').append('<%= j render partial: "manage_coupon", collection: @manage_coupons %>');
 <% if obj.next_page %>
   $('.pagination').replaceWith('<%= j will_paginate obj %>');
 <% else %>
