@@ -7,7 +7,7 @@ module SegmentQueries
   end
 
   def new_customers_default_segment_data
-    { base_query: "new_customers_default_segment", days: 7 }
+    { base_query: "new_customers_default_segment", base_val: 7 }
   end
        
   # 2. Active customer - a transaction or message in the last 30 days. 
@@ -17,7 +17,7 @@ module SegmentQueries
   end
 
   def active_customers_default_segment_data
-    { base_query: "active_customers_default_segment", days: 30 }
+    { base_query: "active_customers_default_segment", base_val: 30 }
   end
 
   # 3. Inactive customer - no transaction or message in the last 30 days. 
@@ -27,7 +27,7 @@ module SegmentQueries
   end
 
   def inactive_customers_default_segment_data
-    { base_query: "inactive_customers_default_segment", days: 30 }
+    { base_query: "inactive_customers_default_segment", base_val: 30 }
   end
 
   # 1. New contacts - last 7 days
@@ -36,7 +36,7 @@ module SegmentQueries
   end
 
   def new_contacts_default_segment_data
-    { base_query: "new_contacts_default_segment", days: 7 }
+    { base_query: "new_contacts_default_segment", base_val: 7 }
   end
 
   # 2. Active contacts - a message in the last 30 days. 
@@ -46,7 +46,7 @@ module SegmentQueries
   end
 
   def active_contacts_default_segment_data
-    { base_query: "active_contacts_default_segment", days: 30 }
+    { base_query: "active_contacts_default_segment", base_val: 30 }
   end
 
   # 3. Inactive contacts - no message in the last 30 days. 
@@ -56,7 +56,7 @@ module SegmentQueries
   end
 
   def inactive_contacts_default_segment_data
-    { base_query: "inactive_contacts_default_segment", days: 30 }
+    { base_query: "inactive_contacts_default_segment", base_val: 30 }
   end
 
   # Creates a segment for a plan
@@ -94,7 +94,7 @@ module SegmentQueries
   end
 
   def last_payment_made(data)
-    str = " select mc.id, distinct(mc.customer_id) from merchant_customers mc 
+    str = " select distinct(mc.customer_id), mc.id from merchant_customers mc 
             inner join transactions t on t.user_id = mc.customer_id "
 
     if data["additional_val"].present?  # amount for now
@@ -146,7 +146,7 @@ module SegmentQueries
     if user_type == 'contact'
       str = " select * from merchant_contacts mc "
     else
-      str = " select mc.id, distinct(mc.customer_id) from merchant_customers mc "
+      str = " select distinct(mc.customer_id), mc.id from merchant_customers mc "
     end
 
     # note contacts will never have amount for transactions
