@@ -49,7 +49,7 @@ class CouponsController < ApplicationController
         format.html
       end
     else
-      render 'empty_manage_coupon' unless @coupons.present?
+      render 'empty_manage_coupon'
     end
   end
 
