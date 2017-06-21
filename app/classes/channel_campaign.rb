@@ -47,7 +47,7 @@ module ChannelCampaign
     def get_user_id
       user_id_list = []
       @campaign.lists.each do |list|
-        list.get_users.each{ |customer| user_id_list.push({ user_id: customer[:user].id }) }
+        list.get_mcs.each{ |customer| user_id_list.push({ user_id: customer[:user].id }) }
       end
       user_id_list
     end

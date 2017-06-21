@@ -150,9 +150,9 @@ class User < ActiveRecord::Base
     email == User.platform_email
   end
 
-  def self.user_title(user)
-    user_first_name = user.first_name
-    user_first_name.present? ? "#{user_first_name} from #{user.org_name}" : user.org_name
+  def user_title
+    user_first_name = first_name
+    user_first_name.present? ? "#{user_first_name} from #{org_name}" : org_name
   end
 
   def get_stripe_cred
