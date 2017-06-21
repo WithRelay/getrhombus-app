@@ -1,0 +1,27 @@
+<div class="manage-segments-row w-row">
+  <div class="w-clearfix w-col w-col-4">
+    <span class='editable-field-text settings-row-text coupon-name'><%= manage_coupon.name %></span>
+    <span class="coupon-name-edit-span">
+      <a class="coupon-name-edit-icon edit-field save-editable-field" href="#"></a>
+    </span>
+    <span class='coupon-name-save-span' data-coupon-id='<%= manage_coupon.id %>' style='display: none;'>
+      <a class="cancel-edit cancel-edit-coupon save-editable-field" href="#"><strong></strong></a>
+      <a class="save-editable-field coupon-name-save-icon" href="#"></a>
+    </span>
+
+  </div>
+  <div class="w-col w-col-2">
+    <div class="settings-row-text"><%= present(manage_coupon).coupon_type_on_manage %></div>
+  </div>
+  <div class="w-col w-col-2">
+    <div class="settings-row-text"><%= manage_coupon.max_redemptions %></div>
+  </div>
+  <div class="w-col w-col-2">
+    <div class="settings-row-text"><%= present(manage_coupon).date_created %></div>
+  </div>
+   <% if manage_coupon.subscription_id.blank? %>
+    <div class="w-col w-col-2">
+      <%= link_to 'Delete Coupon', user_coupon_path(current_user, manage_coupon), method: :delete, class: "button settings-table-row w-button delete-coupon coupon#{manage_coupon.id}"%>
+    </div>
+  <% end %>
+</div>

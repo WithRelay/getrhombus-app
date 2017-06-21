@@ -22,33 +22,16 @@
         <div class="header settings-row-text">Actions</div>
       </div>
     </div>
-    <% @coupons.each do |coupon| %>
-      <div class="manage-segments-row w-row">
-        <div class="w-clearfix w-col w-col-4">
-          <span class='editable-field-text settings-row-text coupon-name'><%= coupon.name %></span>
-          <span class="coupon-name-edit-span">
-            <a class="coupon-name-edit-icon edit-field save-editable-field" href="#"></a>
-          </span>
-          <span class='coupon-name-save-span' data-coupon-id='<%= coupon.id %>' style='display: none;'>
-            <a class="cancel-edit cancel-edit-coupon save-editable-field" href="#"><strong></strong></a>
-            <a class="save-editable-field coupon-name-save-icon" href="#"></a>
-          </span>
+    <div id='objlists'>
+      <%= render partial: "manage_coupon", collection: @manage_coupons %>
+    </div>
+    <div id="with-button" class="hide">
+      <%= will_paginate(@manage_coupons) %>
+    </div>
 
-        </div>
-        <div class="w-col w-col-2">
-          <div class="settings-row-text"><%= present(coupon).coupon_type_on_manage %></div>
-        </div>
-        <div class="w-col w-col-2">
-          <div class="settings-row-text"><%= coupon.max_redemptions %></div>
-        </div>
-        <div class="w-col w-col-2">
-          <div class="settings-row-text"><%= present(coupon).date_created %></div>
-        </div>
-         <% if coupon.subscription_id.blank? %>
-          <div class="w-col w-col-2">
-            <%= link_to 'Delete Coupon', user_coupon_path(current_user, coupon), method: :delete, class: "button settings-table-row w-button delete-coupon coupon#{coupon.id}"%>
-          </div>
-        <% end %>
+    <% if @manage_coupons.next_page %>
+      <div id="load_more_coupons" class="show_more load-more-wrapper" data-loading-text="Loding more coupons" style="margin-top: 5%">
+        <a class="" href="#">&nbsp;&nbsp;&nbsp;Load more</a>
       </div>
     <% end %>
   </div>

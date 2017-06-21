@@ -1,0 +1,6 @@
+$('#objlists').append('<%= j render @manage_coupons %>');
+<% if obj.next_page %>
+  $('.pagination').replaceWith('<%= j will_paginate obj %>');
+<% else %>
+  $('.pagination, .show_more').remove();
+<% end %>
