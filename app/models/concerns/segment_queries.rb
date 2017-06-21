@@ -94,7 +94,7 @@ module SegmentQueries
   end
 
   def last_payment_made(data)
-    str = " select distinct(mc.customer_id), mc.id from merchant_customers mc 
+    str = " select distinct(mc.customer_id), mc.id, mc.created_at, mc.updated_at from merchant_customers mc 
             inner join transactions t on t.user_id = mc.customer_id "
 
     if data["additional_val"].present?  # amount for now
@@ -110,18 +110,19 @@ module SegmentQueries
   private
 
   def customer_message_string(data, source)
-    str = "select id, customer_id from
-            (select uids.id, uids.created_at, uids.customer_id from 
+    str = "select id, customer_id, created_at, updated_at from
+            (select uids.* from 
               (
-                select mc.id as id, mc.customer_id, cr.created_at from merchant_customers mc 
+                select mc.id as id, mc.customer_id, cr.created_at as message_time, mc.created_at as created_at, mc.updated_at
+                from merchant_customers mc 
                 inner join conversations c on mc.customer_id = c.uid and c.uid_type = 'user' and mc.merchant_id = c.merchant_id
                 inner join conversation_refs cr on c.id = cr.conversation_id    
                 where mc.merchant_id = #{data["merchant_id"]} and mc.customer_id is not null
                 and cr.source = #{source} and cr.created_at #{get_base_filter(data["base_filter"])} '#{data["time"]}' 
               ) uids "
 
-    str += data["additional_val"].present? ? transactions_substring(data) : " order by uids.created_at "
-    str += ') ids group by uids.customer_id '
+    str += data["additional_val"].present? ? transactions_substring(data) : " order by uids.message_time "
+    str += ') ids group by ids.customer_id '
   end
 
   def transactions_substring(data)
@@ -146,7 +147,7 @@ module SegmentQueries
     if user_type == 'contact'
       str = " select * from merchant_contacts mc "
     else
-      str = " select distinct(mc.customer_id), mc.id from merchant_customers mc "
+      str = " select distinct(mc.customer_id), mc.id, mc.created_at, mc.updated_at from merchant_customers mc "
     end
 
     # note contacts will never have amount for transactions
