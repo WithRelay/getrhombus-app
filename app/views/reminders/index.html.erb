@@ -57,17 +57,19 @@
         </div>
       </div>
 
+    <div class="reminder-dates" style="margin-top: 36px;">Today <span class="reminder-count">(<%= @reminders_today.count %>)</span>
+    </div>
     <div class="reminders-by-date row-wrapper">
       <div>
         <div id='reminders_today'>
           <%= render @reminders_today %>
         </div>
-        <div id="with-button" class="hide">
-          <%= will_paginate(@reminders_today) %>
+        <div id="with-button-reminders" class="hide today">
+          <%= will_paginate(@reminders_today, param_name: 'reminders_today') %>
         </div>
 
         <% if @reminders_today.next_page %>
-          <div id="load_more_reminders_today" class="show_more load-more-wrapper" data-loading-text="Loding more reminders_today" >
+          <div id="load_more_reminders_today" class="show_more load-more-wrapper" data-loading-text="Loding more reminders" >
             <a class="load-more-rows-button w-button" href="#">&nbsp;&nbsp;&nbsp;Load more</a>
           </div>
         <% end %>
@@ -82,12 +84,12 @@
       <div id='reminders_tomorrow'>
         <%= render @reminders_tomorrow %>
       </div>
-      <div id="with-button" class="hide">
-        <%= will_paginate(@reminders_tomorrow) %>
+      <div id="with-button-reminders" class="hide tomorrow">
+        <%= will_paginate(@reminders_tomorrow, param_name: 'reminders_tomorrow') %>
       </div>
 
       <% if @reminders_tomorrow.next_page %>
-        <div id="load_more_reminders_tomorrow" class="show_more load-more-wrapper" data-loading-text="Loding more reminders_tomorrow" >
+        <div id="load_more_reminders_tomorrow" class="show_more load-more-wrapper" data-loading-text="Loding more reminders" >
           <a class="load-more-rows-button w-button" href="#">&nbsp;&nbsp;&nbsp;Load more</a>
         </div>
       <% end %>
@@ -101,12 +103,12 @@
       <div id='reminders_upcoming'>
         <%= render @reminders_upcoming %>
       </div>
-      <div id="with-button" class="hide">
-        <%= will_paginate(@reminders_upcoming) %>
+      <div id="with-button-reminders" class="hide upcoming">
+        <%= will_paginate(@reminders_upcoming, param_name: 'reminders_upcoming') %>
       </div>
 
       <% if @reminders_upcoming.next_page %>
-        <div id="load_more_reminders_upcoming" class="show_more load-more-wrapper" data-loading-text="Loding more reminders_upcoming" >
+        <div id="load_more_reminders_upcoming" class="show_more load-more-wrapper" data-loading-text="Loding more reminders" >
           <a class="load-more-rows-button w-button" href="#">&nbsp;&nbsp;&nbsp;Load more</a>
         </div>
       <% end %>

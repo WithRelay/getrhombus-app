@@ -3,31 +3,22 @@ var id = $('div[select="true"]').attr('id');
 if (id == 'load_more_reminders_upcoming') {
   $('#reminders_upcoming').append("<%= j render @reminders_upcoming %>");
   <% if @reminders_upcoming.next_page %>
-    $('.pagination').replaceWith('<%= j will_paginate @reminders_upcoming %>');
-    <% if @reminders_upcoming.next_page == @reminders_upcoming.total_pages%>
-      $('.pagination, #load_more_reminders_upcoming').remove();
-    <% end %>
+    $('.upcoming').find('.pagination').replaceWith('<%= j will_paginate @reminders_upcoming, param_name: 'reminders_upcoming' %>');
   <% else %>
-    $('.pagination, #load_more_reminders_upcoming').remove();
+    $('.upcoming, #load_more_reminders_upcoming').remove();
   <% end %>
 } else if( id == 'load_more_reminders_tomorrow') {
   $('#reminders_tomorrow').append("<%= j render @reminders_tomorrow %>");
   <% if @reminders_tomorrow.next_page %>
-    $('.pagination').replaceWith('<%= j will_paginate @reminders_tomorrow %>');
-    <% if @reminders_tomorrow.next_page == @reminders_tomorrow.total_pages %>
-      $('.pagination, #load_more_reminders_tomorrow').remove();
-    <% end %>
+    $('.tomorrow').find('.pagination').replaceWith('<%= j will_paginate @reminders_tomorrow, param_name: 'reminders_tomorrow' %>');
   <% else %>
-    $('.pagination, #load_more_reminders_tomorrow').remove();
+    $('.tomorrow, #load_more_reminders_tomorrow').remove();
   <% end %>
 } else {
   $('#reminders_today').append("<%= j render @reminders_today %>");
   <% if @reminders_today.next_page %>
-    $('.pagination').replaceWith('<%= j will_paginate @reminders_today %>');
-    <% if @reminders_today.next_page == @reminders_today.total_pages %>
-      $('.pagination, #load_more_reminders_today').remove();
-    <% end %>
+    $('.today').find('.pagination').replaceWith('<%= j will_paginate @reminders_today, param_name: 'reminders_today' %>');
   <% else %>
-    $('.pagination, #load_more_reminders_today').remove();
+    $('.today, #load_more_reminders_today').remove();
   <% end %>
 }

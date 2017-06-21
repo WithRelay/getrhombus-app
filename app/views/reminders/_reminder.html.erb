@@ -2,8 +2,8 @@
   <div class="cn w-clearfix w-col w-col-3">
     <div class="name w-clearfix">
       <%= present(reminder).profile_image %>
-        <div class="shrink-text table-text">
-          <%= link_to reminder.from_user, "customers/#{reminder.user.id}"%>
+      <div class="shrink-text table-text">
+        <%= link_to reminder.from_user, "customers/#{reminder.user.id}"%>
       </div>
     </div>
     <div class="cb check-box-column">
