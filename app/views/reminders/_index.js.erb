@@ -2,21 +2,21 @@
 var id = $('div[select="true"]').attr('id');
 if (id == 'load_more_reminders_upcoming') {
   $('#reminders_upcoming').append("<%= j render @reminders_upcoming %>");
-  <% if @reminders_upcoming.next_page %>
+  <% if @reminders_upcoming.present? && @reminders_upcoming.next_page %>
     $('.upcoming').find('.pagination').replaceWith('<%= j will_paginate @reminders_upcoming, param_name: 'reminders_upcoming' %>');
   <% else %>
     $('.upcoming, #load_more_reminders_upcoming').remove();
   <% end %>
 } else if( id == 'load_more_reminders_tomorrow') {
   $('#reminders_tomorrow').append("<%= j render @reminders_tomorrow %>");
-  <% if @reminders_tomorrow.next_page %>
+  <% if @reminders_tomorrow.present? && @reminders_tomorrow.next_page %>
     $('.tomorrow').find('.pagination').replaceWith('<%= j will_paginate @reminders_tomorrow, param_name: 'reminders_tomorrow' %>');
   <% else %>
     $('.tomorrow, #load_more_reminders_tomorrow').remove();
   <% end %>
 } else {
   $('#reminders_today').append("<%= j render @reminders_today %>");
-  <% if @reminders_today.next_page %>
+  <% if @reminders_today.present? && @reminders_today.next_page %>
     $('.today').find('.pagination').replaceWith('<%= j will_paginate @reminders_today, param_name: 'reminders_today' %>');
   <% else %>
     $('.today, #load_more_reminders_today').remove();

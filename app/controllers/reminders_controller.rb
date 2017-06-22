@@ -6,12 +6,23 @@ class RemindersController < ApplicationController
   def index
     @reminder = params[:id].present? ? Reminder.find_by_id(params[:id]) : Reminder.new
     reminders = current_user.reminders.active
-    @reminders_tomorrow = reminders.where("date_time >= ? AND date_time < ?", Time.current.beginning_of_day + 1.days, Time.current.beginning_of_day + 2.days)
+    if params[:reminders_tomorrow].nil? && params[:reminders_upcoming].nil? && params[:reminders_today].nil?
+      @reminders_tomorrow = reminders.where("date_time >= ? AND date_time < ?", Time.current.beginning_of_day + 1.days, Time.current.beginning_of_day + 2.days)
                             .paginate(page: params[:reminders_tomorrow], per_page: PAGINATION_PER_PAGE).order(created_at: :desc)
-    @reminders_upcoming = reminders.where("date_time >= ?", Time.current.beginning_of_day + 2.days)
+
+      @reminders_upcoming = reminders.where("date_time >= ?", Time.current.beginning_of_day + 2.days)
                             .paginate(page: params[:reminders_upcoming], per_page: PAGINATION_PER_PAGE).order(created_at: :desc)
-    @reminders_today = reminders.where("date_time >= ? AND date_time < ?",Time.current.beginning_of_day, Time.current.beginning_of_day + 1.days)
+      @reminders_today = reminders.where("date_time >= ? AND date_time < ?",Time.current.beginning_of_day, Time.current.beginning_of_day + 1.days)
                          .paginate(page: params[:reminders_today], per_page: PAGINATION_PER_PAGE).order(created_at: :desc)
+    else
+      @reminders_tomorrow = params[:reminders_tomorrow].present? ? reminders.where("date_time >= ? AND date_time < ?", Time.current.beginning_of_day + 1.days, Time.current.beginning_of_day + 2.days)
+                              .paginate(page: params[:reminders_tomorrow], per_page: PAGINATION_PER_PAGE).order(created_at: :desc) : []
+
+      @reminders_upcoming = params[:reminders_upcoming].present? ? reminders.where("date_time >= ?", Time.current.beginning_of_day + 2.days)
+                            .paginate(page: params[:reminders_upcoming], per_page: PAGINATION_PER_PAGE).order(created_at: :desc) : []
+      @reminders_today = params[:reminders_today].present? ? reminders.where("date_time >= ? AND date_time < ?",Time.current.beginning_of_day, Time.current.beginning_of_day + 1.days)
+                         .paginate(page: params[:reminders_today], per_page: PAGINATION_PER_PAGE).order(created_at: :desc) : []
+    end
     unless (@reminders_today.present? || @reminders_tomorrow.present? || @reminders_upcoming.present?)
       render('empty_reminder', locals: { reminder: current_user.reminders.build })
     else
