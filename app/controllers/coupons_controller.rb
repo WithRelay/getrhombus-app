@@ -45,7 +45,7 @@ class CouponsController < ApplicationController
     @manage_coupons = coupons
     if @manage_coupons.present?
       respond_to do |format|
-        format.js { render partial: 'manage_coupon.js.erb', locals: { obj: @manage_coupons } }
+        format.js { render partial: 'coupon_manage.js.erb', locals: { obj: @manage_coupons } }
         format.html
       end
     else
