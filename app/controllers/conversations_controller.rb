@@ -3,6 +3,16 @@ class ConversationsController < ApplicationController
   before_action :set_notifications
 
 	def index
+    pubnub = Pubnub.new(
+      publish_key: Rails.application.secrets.pubnub["publish_key"],
+      subscribe_key: Rails.application.secrets.pubnub["subscribe_key"],
+      uuid: "uuid-#{current_user.id}",
+      heartbeatInterval: 30
+    )
+    pubnub.subscribe(
+      channels: ['messaging_' + Rails.env + '_' + current_user.id.to_s],
+      with_presence: true
+    )
 	end
 
   def receive_voice_twilio
