@@ -6,7 +6,7 @@ class RealtimeStreamService
     # Sends a message to the given merchant's channel, provided user and merchant numbers
     def messages(conversation, conv_ref, merchant, customer, msg)
       merchant_id = conversation.merchant_id.to_s
-      $pubnub.subscribe(channel: 'messaging_' + Rails.env + '_' + merchant_id) {}
+      # $pubnub.subscribe(channel: 'messaging_' + Rails.env + '_' + merchant_id) {}
       $pubnub.publish(channel: 'messaging_' + Rails.env + '_' + merchant_id,
                       message: { type: 'new-message',
                                  message: Conversation.message_hash(conversation, msg, conv_ref, customer),
