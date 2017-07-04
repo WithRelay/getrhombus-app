@@ -87,7 +87,8 @@ $(document).on('ready page:load', function() {
   });
   //
 
-  $('.show_more').on('click', function(){
+  $('.reminders-by-date .show_more').on('click', function(){
+    debugger
     $('.show_more').attr('select', false);
     this.setAttribute('select', true);
   })
@@ -200,7 +201,7 @@ $(document).on('ready page:load', function() {
   //     return false;
   //   });
   //
-  
+
   $('.notification-message').emojioneArea();
 
 
@@ -280,7 +281,7 @@ $(document).on('ready page:load', function() {
     this.modalClass = modalId;
     this.formData = $(element).serialize();
   };
-  
+
   // Checks whether the form is validated or not and return true/false
   function checkFormValid(element){
     return $(element ).data('formValidation').isValid();
@@ -314,8 +315,8 @@ $(document).on('ready page:load', function() {
           $($modalClose).click(); // closing modal after success
         }
       })
-      .fail(function(msg){ 
-        alert('Sorry request could not complete'); 
+      .fail(function(msg){
+        alert('Sorry request could not complete');
       });
     }
   }
