@@ -42,8 +42,15 @@ class CouponsController < ApplicationController
   end
 
   def manage_coupons
-    @coupons = coupons
-    render 'empty_manage_coupon' unless @coupons.present?
+    @manage_coupons = coupons
+    if @manage_coupons.present?
+      respond_to do |format|
+        format.js { render partial: 'coupon_manage.js.erb', locals: { obj: @manage_coupons } }
+        format.html
+      end
+    else
+      render 'empty_manage_coupon'
+    end
   end
 
   private

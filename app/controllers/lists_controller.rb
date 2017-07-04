@@ -21,6 +21,8 @@ class ListsController < ApplicationController
     # segment
     if @list.segment.present?
       @new_customer = User.new
+      @selected_segment = @list.segment['base_query']
+      @list_type = @list.list_type
       if @list.contact?
         @uid_type = @segment.sms? ? 'phone_number' : 'fb_page'
         @channel = @uid_type == 'phone_number' ? 'sms' : 'messenger'
@@ -79,8 +81,6 @@ class ListsController < ApplicationController
 
     def render_show_controller_action
       return 'lists/show' if @list.segment.blank?
-      @selected_segment = @list.segment['base_query']
-      @list_type = @list.list_type
       if @list.customer?
         @merchant_customers = @list_members
         "merchant_customers/index"

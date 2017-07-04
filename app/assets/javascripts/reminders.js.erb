@@ -1,6 +1,94 @@
 $(document).on('ready page:load', function() {
 
-  $('.show_more').on('click', function(){
+  //Started GET "/users/110/campaigns/undefined" for 127.0.0.1 at 2017-06-19 23:53:55 -0400
+
+
+  // this is for campaigns
+  var url = window.location.pathname.split('/');
+  var campaignId = (url[url.length-1] == 'edit') ? ('?id=' + url[url.length-2]) : '';
+  $('#campaignForm').formValidation({
+    framework: 'bootstrap',
+    excluded: ':disabled',
+    live: 'disabled',
+    err: {
+      container: function($field, validator) {
+        return $field.parent().find('.messageContainer');
+      }
+    },
+    fields: {
+      'campaign[name]': {
+        verbose: false,
+        validators: {
+          notEmpty: {
+            message: 'Campaign name is required'
+          },
+          remote: {
+            message: 'Campaign name is already taken.',
+            url: '/v1/campaigns/check_campaign_name' + campaignId,
+            type: 'POST'
+          }
+        }
+      },
+      'campaign[subject]': {
+        validators: {
+          callback: {
+            callback: function (value, validator, $field) {
+              if ($('#campaign-channel').val() == 3) {
+                if ($('#campaign_subject').val().length > 0) {
+                  return {
+                    valid: true
+                  }
+                } else {
+                  return {
+                    valid: false
+                  }
+                }
+              } else {
+                return { valid: true }
+              }
+            }
+          }
+        }
+      },
+      'campaign[list_name]': {
+        validators: {
+          notEmpty: {
+            message: 'This field is required'
+          }
+        }
+      },
+      'campaign[text]': {
+        validators: {
+          notEmpty: {
+            message: 'This field is required'
+          }
+        }
+      }
+    }
+  }).on('success.form.fv', function(e, data) {
+    if ($( '#sendTestCampaign' ).attr('active')) {
+      e.preventDefault();
+      var originalURL = this.action;
+      // assign url of form
+      var originalMethod = $('input[name="_method"]').val();
+      if ($('input[name="_method"]').val() == 'patch') {
+        $('input[name="_method"]').val('post');
+      };
+      this.action = window.location.origin + '/v1/campaigns/send_test_email';
+      var formData = new FormData(this);
+      // initialize a class apicontroller
+      var apiController = new ApiController(this);
+      // calls instance method sendRequest with parameter formdata
+      apiController.sendRequest(formData);
+      this.action = originalURL;
+      $('input[name="_method"]').val(originalMethod);
+      $('#sendTestCampaign').removeAttr('active');
+    };
+  });
+  //
+
+  $('.reminders-by-date .show_more').on('click', function(){
+    debugger
     $('.show_more').attr('select', false);
     this.setAttribute('select', true);
   })
@@ -72,39 +160,39 @@ $(document).on('ready page:load', function() {
     customtersSearch();
   });
 
-function customtersSearch(option = []){
-  var labelSearchField = option.length < 1 ? 'description' : 'phone_number'
-  var valueField = option.length < 1 ? 'uid' : 'id'
-  $('.search-customers-and-contacts').selectize({
-    maxItems: 1,
-    valueField: valueField.split(','),
-    labelField: labelSearchField,
-    searchField: labelSearchField,
-    create: false,
-    options: option,
-    closeAfterSelect: true,
-    load: function(query, callback) {
-      if (!query.length) return callback();
-      $.ajax({
-        url: '/v1/users.json',
-        type: 'GET',
-        dataType: 'json',
-        data: {
-          query: query
-        },
-        error: function() {
-          FlashHandler.setFlashMessage('Something went wrong...Unable to find any customer', 'error');
-          callback();
-        },
-        success: function(res) {
-          if (res['data'][0].uid_type)
-            res['data'][0].uid += ',' + res['data'][0].uid_type
-          callback(res['data']);
-        }
-      });
-    }
-  });
-}
+  function customtersSearch(option = []){
+    var labelSearchField = option.length < 1 ? 'description' : 'phone_number'
+    var valueField = option.length < 1 ? 'uid' : 'id'
+    $('.search-customers-and-contacts').selectize({
+      maxItems: 1,
+      valueField: valueField.split(','),
+      labelField: labelSearchField,
+      searchField: labelSearchField,
+      create: false,
+      options: option,
+      closeAfterSelect: true,
+      load: function(query, callback) {
+        if (!query.length) return callback();
+        $.ajax({
+          url: '/v1/users.json',
+          type: 'GET',
+          dataType: 'json',
+          data: {
+            query: query
+          },
+          error: function() {
+            FlashHandler.setFlashMessage('Something went wrong...Unable to find any customer', 'error');
+            callback();
+          },
+          success: function(res) {
+            if (res['data'][0].uid_type)
+              res['data'][0].uid += ',' + res['data'][0].uid_type
+            callback(res['data']);
+          }
+        });
+      }
+    });
+  }
 
 
   // $('#delete-reminder').click(function(e){
@@ -112,7 +200,8 @@ function customtersSearch(option = []){
   //     FlashHandler.setConfirmationDialog('#delete-reminder','Are you sure, you want to delete the Reminder?', 'Delete', 'isDistroy');
   //     return false;
   //   });
-//
+  //
+
   $('.notification-message').emojioneArea();
 
 
@@ -158,7 +247,7 @@ function customtersSearch(option = []){
           }
         }
       },
-  'reminder[customer_id]':{
+      'reminder[customer_id]':{
         validators: {
           callback: {
             message: 'Please select a customer',
@@ -172,57 +261,63 @@ function customtersSearch(option = []){
       }
     }
   }).on('success.form.fv', function(e, data) {
-      if ($(this).attr('class').split(' ')[1] != 'editReminderFrom'){
-        e.preventDefault();
-        var apiController = new ApiController(this, '.update-close-modals');
-        var formData = new FormData(this);
-        apiController.sendRequest(formData);
-        location.reload();
-      }
-    })
+    if ($(this).attr('class').split(' ')[1] != 'editReminderFrom') {
+      e.preventDefault();
+      var apiController = new ApiController(this, '.update-close-modals');
+      var formData = new FormData(this);
+      apiController.sendRequest(formData);
+      location.reload();
+    };
+  });
 
-// Class ApiController handle all call to http verb to the server
-// First argument is the dom object it self and second contains the modal id
-function ApiController(element, modalId = ''){
-  // assigning properties to RemoteCall
-  this.url = element.action;
-  this.method = element.method;
-  this.dataType = 'json';
-  this.domElementId = '#' + element.id;
-  this.modalClass = modalId;
-  this.formData = $(element).serialize();
-}
-// Checks whether the form is validated or not and return true/false
-function checkFormValid(element){
-  return $(element ).data('formValidation').isValid();
-}
-// defining instance method sendRequest for class ApiController
-// Send remote request and fetch response.
-ApiController.prototype.sendRequest = function(data=''){
-  // assigning modal class for closing modal after response success
-  // The variable has sigil $ beacause local variable inside ajax call are not accessible.
-  // for more deails http://stackoverflow.com/questions/14496680/this-object-not-available-in-ajax-callback
-  var postData = ((data !='') ? data : this.formData)
-  var $modalClose = this.modalClass
+  // Class ApiController handle all call to http verb to the server
+  // First argument is the dom object it self and second contains the modal id
+  function ApiController(element, modalId = '') {
+    // assigning properties to RemoteCall
+    this.url = element.action;
+    this.method = element.method;
+    this.dataType = 'json';
+    this.domElementId = '#' + element.id;
+    this.modalClass = modalId;
+    this.formData = $(element).serialize();
+  };
 
-  if (checkFormValid(this.domElementId)){
-    $.ajax({ method: this.method,
-             url: this.url,
-             contentType: false,
-             processData: false,
-             dataType: this.dataType,
-             data: postData
-          }).done(function(msg){
-              // key in index 1 contains title/flash message key please see api/controllers/reminders for more details.
-              var flash_key = Object.keys(msg)[1]
-              // set flash message title and message
-              // first argument is title and second is text message.
-              FlashHandler.setFlashMessage( msg[flash_key], flash_key );
-              if (flash_key!='error'){
-                $("#reminderForm").trigger('reset');
-                $($modalClose).click()// closing modal after succession
-              }
-          }).fail(function(msg){ alert('Sorry request could not complete'); });
+  // Checks whether the form is validated or not and return true/false
+  function checkFormValid(element){
+    return $(element ).data('formValidation').isValid();
   }
-}
+
+  // defining instance method sendRequest for class ApiController
+  // Send remote request and fetch response.
+  ApiController.prototype.sendRequest = function(data=''){
+    // assigning modal class for closing modal after response success
+    // The variable has sigil $ beacause local variable inside ajax call are not accessible.
+    // for more deails http://stackoverflow.com/questions/14496680/this-object-not-available-in-ajax-callback
+    var postData = ((data !='') ? data : this.formData)
+    var $modalClose = this.modalClass
+
+    if (checkFormValid(this.domElementId)){
+      $.ajax({ method: this.method,
+         url: this.url,
+         contentType: false,
+         processData: false,
+         dataType: this.dataType,
+         data: postData
+      })
+      .done(function(msg){
+        // key in index 1 contains title/flash message key please see api/controllers/reminders for more details.
+        var flash_key = Object.keys(msg)[1]
+        // set flash message title and message
+        // first argument is title and second is text message.
+        FlashHandler.setFlashMessage( msg[flash_key], flash_key );
+        if (flash_key != 'error') {
+          $("#reminderForm").trigger('reset');
+          $($modalClose).click(); // closing modal after success
+        }
+      })
+      .fail(function(msg){
+        alert('Sorry request could not complete');
+      });
+    }
+  }
 });

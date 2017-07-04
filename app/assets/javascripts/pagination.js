@@ -6,15 +6,43 @@ jQuery(function() {
     $('.show_more').show().click(function() {
       var more_items_url = $('.next_page').attr('href');
       var $this = $(this);
+      var content = $this.html();
       var data_loading_text = $this.attr('data-loading-text');
-      $this.text(data_loading_text);
+      var loading_button = '<a class="load-more-rows-button w-button" href="#">&nbsp;&nbsp;&nbsp;' + data_loading_text + '</a>'
+      $this.html(loading_button);
       $.getScript(more_items_url)
         .done(function(script) {})
         .fail(function() {
           FlashHandler.setFlashMessage('Sorry we couldn\'t load more items', 'error');
         })
         .always(function() {
-          $this.text('Show more');
+          $this.html(content);
+        })
+    });
+  }
+
+  if ($('#with-button-reminders').size() > 0) {
+    $('.show_more').show().click(function() {
+      var more_items_url = "";
+      if (this.id == "load_more_reminders_upcoming") {
+        more_items_url = $('.upcoming').find('.next_page').attr('href');
+      } else if (this.id == "load_more_reminders_tomorrow") {
+        more_items_url = $('.tomorrow').find('.next_page').attr('href');
+      } else {
+        more_items_url = $('.today').find('.next_page').attr('href');
+      }
+      var $this = $(this);
+      var content = $this.html();
+      var data_loading_text = $this.attr('data-loading-text');
+      var loading_button = '<a class="load-more-rows-button w-button" href="#">&nbsp;&nbsp;&nbsp;' + data_loading_text + '</a>'
+      $this.html(loading_button);
+      $.getScript(more_items_url)
+        .done(function(script) {})
+        .fail(function() {
+          FlashHandler.setFlashMessage('Sorry we couldn\'t load more items', 'error');
+        })
+        .always(function() {
+          $this.html(content);
         })
     });
   }

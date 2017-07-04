@@ -36,7 +36,7 @@
 
     <label class="channel editor-options form-label" for="Channel"> &nbsp; Message channel</label>
 
-    <%= f.select :channel, channel_list(@campaign, @lists), {}, selected: get_channel_enum_value(@campaign.channel), class: 'dropdown editor-dropdown w-select', id: 'Channel', data: { name: 'Channel' } %>
+    <%= f.select :channel, channel_list(@campaign, @lists), {}, selected: get_channel_enum_value(@campaign.channel), class: 'dropdown editor-dropdown w-select', id: 'campaign-channel', data: { name: 'Channel' } %>
 
     <div class="frequency radio-button w-clearfix w-radio">
       <%= f.radio_button :frequency_type, 0, id: 'oneTimeFrequency', checked: is_one_time_checked?(@campaign), class: 'w-radio-input', data: { name: 'Radio 2' } %>

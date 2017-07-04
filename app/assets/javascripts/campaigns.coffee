@@ -170,18 +170,18 @@ $( document ).on 'ready page:load', ->
       $('.loading').show();
       getBase64FromImageUrl($('input[name=url]').val())
 
-  if $('#Channel').val() == '3'
+  if $('#campaign-channel').val() == '3'
     $('.emailSubject').show()
     $('.welcome-dash-content-container-header').show()
     $('#sendTestCampaign').show();
     new CustomTrumbowygPlugin('#trumbowyg')
     campaign.showFileBrowser()
-  else if $('#Channel').val() == '1'
+  else if $('#campaign-channel').val() == '1'
     $('#sendTestCampaign').hide();
     campaign.showFileBrowser()
     $('.emailSubject').hide()
     campaign.textAreaEmojis()
-  else if $('#Channel').val() == '2'
+  else if $('#campaign-channel').val() == '2'
     $('#sendTestCampaign').hide();
     $('.emailSubject').hide()
     campaign.showFileBrowser()
@@ -194,7 +194,7 @@ $( document ).on 'ready page:load', ->
     $('#select-images').val('')
     $('#new-image-previews').html('')
 
-  $( '#Channel' ).change ->
+  $( '#campaign-channel' ).change ->
     campaign.showHideEditor(this)
 
   $( '#oneTimeFrequency' ).click ->
@@ -228,7 +228,7 @@ $( document ).on 'ready page:load', ->
       $('.loading').show();
       trumbowygHtml = $('#trumbowyg').trumbowyg('html')
       $.ajax(
-        url: window.location.protocol + '//'+window.location.host+'/v1/campaigns/upload_images'
+        url: window.location.protocol + '//'+ window.location.host + '/v1/campaigns/upload_images'
         type: 'POST'
         data: img_url: e.target.src
         dataType: 'json').done (data) ->
