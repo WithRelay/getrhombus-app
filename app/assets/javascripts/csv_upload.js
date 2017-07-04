@@ -10,7 +10,7 @@ $(document).ready(function () {
     file = this.files; // Get the selected files from the input.
     if (file && file.length) {
       if (file.length > 1)
-        alert("Please upload one csv file");
+        Flashhandler.setflashmessage("Please upload one csv file", 'error');
       else {
         file = file[0];
         console.log(file.type)
@@ -18,7 +18,7 @@ $(document).ready(function () {
           $('#csv-file-name').text(file.name);
           return;
         } else
-          alert("Can't upload file type");
+          Flashhandler.setflashmessage("Can't upload file type",'error');
       }
     }
 
@@ -37,7 +37,7 @@ $(document).ready(function () {
     e.preventDefault();
 
     if (file) {
-      button.text("Uploading...").prop('disabled', true);  
+      button.text("Uploading...").prop('disabled', true);
       var formData = new FormData(); // Create a new FormData object.
       formData.append('csv', file, file.name); // Add the file to the request.
       send_payload(formData);
