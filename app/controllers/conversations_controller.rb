@@ -6,8 +6,7 @@ class ConversationsController < ApplicationController
     pubnub = Pubnub.new(
       publish_key: Rails.application.secrets.pubnub["publish_key"],
       subscribe_key: Rails.application.secrets.pubnub["subscribe_key"],
-      uuid: "uuid-#{current_user.id}",
-      heartbeatInterval: 30
+      uuid: "uuid-#{current_user.id}"
     )
     pubnub.subscribe(
       channels: ['messaging_' + Rails.env + '_' + current_user.id.to_s],
