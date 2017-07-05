@@ -7,6 +7,7 @@ class RealtimeStreamService
     def messages(conversation, conv_ref, merchant, customer, msg)
       merchant_id = conversation.merchant_id.to_s
       # $pubnub.subscribe(channel: 'messaging_' + Rails.env + '_' + merchant_id) {}
+      # check merchant_presence_on_channel if it returns false then send sms/message to the merchant
       $pubnub.publish(channel: 'messaging_' + Rails.env + '_' + merchant_id,
                       message: { type: 'new-message',
                                  message: Conversation.message_hash(conversation, msg, conv_ref, customer),
@@ -44,6 +45,18 @@ class RealtimeStreamService
         campaign_time = list.campaign.date_time.strftime("%I:%M")
         { campaign_sent: "Your campaign scheduled for #{campaign_time} was sent"}
       end
+    end
+
+    def merchant_presence_on_channel(merchant_id)
+      status = {}
+      $pubnub.here_now(
+        channel: 'messaging_' + Rails.env + '_' + merchant_id.to_s,
+      ) do |envelope|
+        status = envelope.status
+      end
+      response = JSON.parse status[:server_response].body
+      merchant_uuid = "uuid-#{merchant_id}"
+      response.uuids.include? merchant_uuid
     end
   end
 end
