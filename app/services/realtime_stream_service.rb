@@ -6,6 +6,17 @@ class RealtimeStreamService
     # Sends a message to the given merchant's channel, provided user and merchant numbers
     def messages(conversation, conv_ref, merchant, customer, msg)
       merchant_id = conversation.merchant_id.to_s
+      response = {}
+      $pubnub.here_now(
+        channels: ['messaging_' + Rails.env + '_' + merchant_id],
+      )do |envelope|
+        response = JSON.parse envelope.status[:server_response].body
+      end
+      unless response['uuids'].include? "uuid-#{merchant_id}"
+        puts 'merchant offline'
+      else
+        puts 'merchant online'
+      end
       # $pubnub.subscribe(channel: 'messaging_' + Rails.env + '_' + merchant_id) {}
       # check merchant_presence_on_channel if it returns false then send sms/message to the merchant
       $pubnub.publish(channel: 'messaging_' + Rails.env + '_' + merchant_id,
