@@ -89,7 +89,7 @@ $(document).ready(function(){
       // first argument is title and second is text message.
       FlashHandler.setFlashMessage( msg[flash_key], flash_key );
       location.reload();
-    }).fail(function(msg){ alert('Sorry request could not complete'); });
+    }).fail(function(msg){ Flashhandler.setflashmessage('Sorry request could not complete', 'error'); });
     $('.cancel-no').click();
   }
     else{
