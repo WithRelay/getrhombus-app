@@ -13,9 +13,14 @@ class RealtimeStreamService
         response = JSON.parse envelope.status[:server_response].body
       end
       unless response['uuids'].include? "uuid-#{merchant_id}"
-        puts 'merchant offline'
-      else
-        puts 'merchant online'
+        # puts 'merchant offline'
+        EmailingService.send_unread_message_alert({
+          pluralize_msg: '',
+          unread_count: 1,
+          customer_first_name: User.find(merchant_id).first_name
+        })
+      # else
+      #   puts 'merchant online'
       end
       # $pubnub.subscribe(channel: 'messaging_' + Rails.env + '_' + merchant_id) {}
       # check merchant_presence_on_channel if it returns false then send sms/message to the merchant

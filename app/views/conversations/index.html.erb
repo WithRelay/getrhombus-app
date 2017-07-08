@@ -5,29 +5,32 @@
 </div>
 <script src="https://cdn.pubnub.com/sdk/javascript/pubnub.4.12.0.js"></script>
 <script type="text/javascript">
+  var uuid = "uuid-<%= current_user.id %>";
   var pubnub = new PubNub ({
     publish_key: '<%= Rails.application.secrets.pubnub["publish_key"] %>',
     subscribe_key: '<%= Rails.application.secrets.pubnub["subscribe_key"] %>',
-    uuid: "uuid-<%= current_user.id %>",
+    uuid: uuid,
     presenceTimeout: 120,
     heartbeatInterval: 30
-  })
+  });
+  var channel = "<%= 'messaging_' + Rails.env + '_' + current_user.id.to_s %>";
+  $(window).focus(function(e) {
+    pubnub.subscribe({
+      channels: [channel],
+      withPresence: true
+    });
+  });
   $(window).blur(function(e) {
     pubnub.unsubscribe({
-      channels: ["<%= 'messaging_' + Rails.env + '_' + current_user.id.to_s %>"],
-      uuid: "uuid-<%= current_user.id %>"
+      channels: [channel],
+      uuid: uuid
     });
   });
   $(window).unload(function() {
     pubnub.unsubscribe({
-      channels: ["<%= 'messaging_' + Rails.env + '_' + current_user.id.to_s %>"],
-      uuid: "uuid-<%= current_user.id %>"
+      channels: [channel],
+      uuid: uuid
     });
   });
-  $(window).focus(function(e) {
-    pubnub.subscribe({
-      channels: ["<%= 'messaging_' + Rails.env + '_' + current_user.id.to_s %>"],
-      withPresence: true
-    });
-  });
+
 </script>
