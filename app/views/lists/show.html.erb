@@ -58,7 +58,7 @@
     </div>
     <div class="default-sub_header-field-form-div list-members">
       <%= form_for 'lists', url: add_member_user_list_path(current_user, @list), html: { class: 'add-to-list-form w-clearfix' } do |f| %>
-        <%= f.text_field :member_id, class: "add-to-list-field w-input", placeholder: "Add more customers to list" %>
+        <%= f.text_field :member_id, class: "add-to-list-field w-input", placeholder: "Add more members to list" %>
         <%= f.text_field :list_type, class: "w-hidden", value: @list.list_type %>
         <%= f.submit 'Update List'.html_safe, class: 'sub-nav-button w-button' %>
       <% end %>
@@ -68,7 +68,7 @@
 
 <div class="dashboard-body" >
   <div id="list-data" data-list-type="<%= @list.list_type %>" data-list-id="<%= @list.id %>" data-list-channel="<%= @list.channel %>"><%= @list.list_type %></div>
-  <div id='objlists'>
+  <div id='objlists' data-object-type='list'>
     <%= render partial: list_show_partial, locals: { list_members: @list_members } %>
   </div>
   <div id="with-button" class="hide">

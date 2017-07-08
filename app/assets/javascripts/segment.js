@@ -101,7 +101,8 @@ $(document).on('ready page:load', function() {
     $.ajax({
       method: 'patch', 
       url: '/v1/lists/' + textField,
-      dataType: 'json', data: { 'name': element.val() }
+      dataType: 'json', 
+      data: { list: { name: element.val() } }
     })
     .done(function(msg) {
       var flash_key = Object.keys(msg)[1];
@@ -114,7 +115,7 @@ $(document).on('ready page:load', function() {
       editItem.removeTextBox('.text-field');
     })
     .fail(function(msg) {
-      FlashHandler.setFlashMessage('Unable to update segment name', 'error' );
+      FlashHandler.setFlashMessage('Unable to update segment name', 'error');
     });
   }
 

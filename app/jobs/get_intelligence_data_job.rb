@@ -1,5 +1,5 @@
 class GetIntelligenceDataJob < ApplicationJob
-	@queue = :get_intelligence_data
+	queue_as = :get_intelligence_data
 
 	def perform(data, type)
 		begin

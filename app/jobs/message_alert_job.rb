@@ -1,7 +1,8 @@
 class MessageAlertJob
-  @queue = :message_alerts
+  @queue = Rails.env + "_message_alerts"
 
   def self.perform
+    ActiveRecord::Base.clear_active_connections!
     begin
 
       # Add FB messages here

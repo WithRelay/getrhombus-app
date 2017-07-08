@@ -4,29 +4,30 @@ module CampaignsHelper
     # Switching between channels is probably dangerous for persisted campaigns
     # Ex: Email content can't become sms
     channel_list = { SMS: 0, MMS: 1, Email: 3, 'Facebook Messenger' => 2 }
-    campaign_channel = campaign.channel=='facebook_messenger' ? 'Facebook Messenger' : campaign.channel
+
     if campaign.persisted?
-      { campaign_channel => get_channel_enum_value(campaign.channel) }
-    elsif list.present? && campaign.invalid?
-      list_channel = list[0].channel == 'messenger' ? 'facebook_messenger' : list[0].channel
-      if list_channel.present?
-        { campaign_channel => get_channel_enum_value(list_channel) }
-      else
-        channel_list
-      end
-    else
-      # if fb page subscription is not present mms channel will be not visible
-      channel_list.delete('Facebook Messenger') unless current_user.fb_pages.subscribed.present?
-      channel_list
+      { format_campaign_channel(campaign.channel) => get_channel_enum_value(campaign.channel) }
+    elsif list.present? && campaign.invalid? && list[0].contact?
+      { format_campaign_channel(list[0].channel) => get_channel_enum_value(list[0].channel) }
+    else 
+      # if merchant hasn't connect fb_page
+      channel_list.except('Facebook Messenger') unless current_user.get_page_access_token.present?
     end
   end
 
-  def reminder_channel(reminder)
-    { SMS: 0, "Facebook Messenger" => 2 }
+  def format_campaign_channel(channel)
+    return 'SMS' if channel == 'sms' || channel == 'mms'
+    return 'Email' if channel == 'email'
+    'Facebook Messenger'
   end
 
-  # enums normally return keys. we need the value for the dropdown
+  def reminder_channels
+    channel_list = { SMS: 0, "Facebook Messenger" => 2 }
+    channel_list.except("Facebook Messenger") unless current_user.get_page_access_token.present?
+  end
+
   def get_channel_enum_value(channel)
+    channel = 'facebook_messenger' if channel == 'messenger'
     Campaign.channels[channel]
   end
 
@@ -39,8 +40,11 @@ module CampaignsHelper
   end
 
   def repeat_days_options
-    { 'Repeat every'=> 0, '7 days' => 7, '14 days' => 14, '30 days' => 30,
-      '60 days' => 60, '90 days' => 90
-    }
+    { 'Repeat every'=> 0, '7 days' => 7, '14 days' => 14, '30 days' => 30, '60 days' => 60, '90 days' => 90 }
+  end
+
+  def campaign_last_sent(campaign)
+    last_sent = campaign.campaign_recipients.last
+    last_sent.present? ? time_in_relative_form(last_sent.created_at, 'long_format') : "-"
   end
 end

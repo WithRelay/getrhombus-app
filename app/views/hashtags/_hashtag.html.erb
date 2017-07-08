@@ -10,13 +10,11 @@
       </div>
       <div class="alt-table cb check-box-column">
         <div>
-          <%= form_for(hashtag, url: user_hashtag_path(current_user, hashtag), html: { method: :delete }) do |f| %>
+          <%= link_to '', user_hashtag_path(current_user, hashtag), id: "hashtag-delete-#{hashtag.id}", class: 'w-hidden', method: :delete %>
+          <%= form_for(hashtag, url: change_status_user_hashtag_path(current_user, hashtag)) do |f| %>
             <div class="select-all-check-box w-checkbox w-clearfix">
-              <%= f.hidden_field :id %>
-              <% if hashtag.active? %>
-                <%= f.hidden_field :status , value: 'inactive' %>
-              <% end %>
-              <input class="cb table-checkbox checkboxes w-checkbox-input hashtag-check-box" id="node" type="checkbox">
+              <%= f.hidden_field :status , class: 'resource-status', value: hashtag.active? ? 'inactive' : 'active' %>
+              <input class="cb table-checkbox checkboxes w-checkbox-input hashtag-check-box" id="node" type="checkbox" data-obj-id="<%= hashtag.id %>">
               <label class="checkbox-field-lable w-form-label" for="node">-</label>
             </div>
           <% end %>

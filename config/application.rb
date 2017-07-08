@@ -34,6 +34,9 @@ module Rhombus
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
 
+    #added
+    config.active_job.queue_name_prefix = Rails.env
+
     # added
     I18n.enforce_available_locales = true
 

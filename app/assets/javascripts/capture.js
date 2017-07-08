@@ -119,7 +119,7 @@ $(document).ready(function () {
       read_webcam_img_picker(imgUri)
       stop_camera.click();
     });
-  }
+  };
 
   function showVideo(){
     // Display the video stream and the controls.
@@ -127,7 +127,7 @@ $(document).ready(function () {
     hideUI();
     video.classList.add("visible");
     controls.classList.add("visible");
-  }
+  };
 
 
   function takeSnapshot(){
@@ -149,15 +149,15 @@ $(document).ready(function () {
       context.drawImage(video, 0, 0, width, height);
 
       // Turn the canvas image into a dataURL that can be used as a src for our photo.
-      debugger
+      //debugger
       return hidden_canvas.toDataURL('image/png');
-    }
-  }
+    };
+  };
 
 
   function displayErrorMessage(error_msg, error){
     error = error || "";
-    if(error){
+    if (error) {
       console.log(error);
     }
 
@@ -165,7 +165,7 @@ $(document).ready(function () {
 
     hideUI();
     error_message.classList.add("visible");
-  }
+  };
 
 
   function hideUI(){
@@ -176,7 +176,7 @@ $(document).ready(function () {
     video.classList.remove("visible");
     snap.classList.remove("visible");
     error_message.classList.remove("visible");
-  }
+  };
 
   function read_webcam_img_picker(img_uri) {
     $('#select-images').val('');
@@ -187,5 +187,5 @@ $(document).ready(function () {
             '<div class="editor-file-name shrink-text">Profile.png</div>' +
           "</div>";
     new_image_previews.prepend(div);
-  }
+  };
 })

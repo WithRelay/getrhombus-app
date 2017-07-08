@@ -3,14 +3,8 @@ $(document).ready(function() {
   FormValidation.Validator.password = {
     validate: function(validator, $field, options) {
       var value = $field.val();
-      if (value === "") {
-        return false;
-      }
-
-      if (value.length < 8) {
-        return false;
-      }
-
+      if (value === "") return false;
+      if (value.length < 8) return false;
       return true;
     }
   };

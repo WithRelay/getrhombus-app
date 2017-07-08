@@ -21,7 +21,7 @@
   }
 </style>
 <div class="campaign-editor-options">
-  <%= form_for [current_user, @campaign], html: { multipart: true, id: 'campaignForm', class: 'w-clearfix' } do |f| %>
+  <%= form_for [current_user, @campaign], html: { multipart: true, id: 'campaignForm', class: 'w-clearfix', data: { persisted: @campaign.persisted?, channel: @campaign.channel } } do |f| %>
 
     <div class='form-group col-xs-6'>
       <%= f.text_field :name, class: 'form-control editor text-field w-input', id: 'Campaign-name', placeholder: 'Campaign name'  %>
@@ -30,34 +30,34 @@
 
     <div class='form-group col-xs-6'>
       <label class="editor-options form-label" for="List"> &nbsp; List</label>
-      <%= f.text_field :list_name, id: 'List', 'data-lists_data' => "#{@lists.to_json}", placeholder: "Choose a list", class: 'form-control editor text-field w-input', data: { name: 'List' } %>
+      <%= f.text_field :list_id, id: 'campaign-list', 'data-list-data' => "#{@lists.to_json}", placeholder: "Choose a list", class: 'form-control editor text-field w-input' %>
       <div class="errorMessageContainer"></div>
     </div>
 
     <label class="channel editor-options form-label" for="Channel"> &nbsp; Message channel</label>
 
-    <%= f.select :channel, channel_list(@campaign, @lists), {}, selected: get_channel_enum_value(@campaign.channel), class: 'dropdown editor-dropdown w-select', id: 'campaign-channel', data: { name: 'Channel' } %>
+    <%= f.select :channel, channel_list(@campaign, @lists), { selected: get_channel_enum_value(@campaign.channel) }, class: 'dropdown editor-dropdown w-select', id: 'campaign-channel' %>
 
     <div class="frequency radio-button w-clearfix w-radio">
-      <%= f.radio_button :frequency_type, 0, id: 'oneTimeFrequency', checked: is_one_time_checked?(@campaign), class: 'w-radio-input', data: { name: 'Radio 2' } %>
+      <%= f.radio_button :frequency_type, 0, checked: is_one_time_checked?(@campaign), class: 'w-radio-input', id: 'campaignOneTimeFrequency' %>
       <label class="check-radio-text w-form-label" for="radio">Send once</label>
     </div>
 
     <div class="frequency radio-button w-clearfix w-radio">
-      <%= f.radio_button :frequency_type, 1, id: 'recurringFrequency',  checked: is_recurring_checked?(@campaign), class: 'w-radio-input' %>
+      <%= f.radio_button :frequency_type, 1, checked: is_recurring_checked?(@campaign), class: 'w-radio-input', id: 'campaignRecurringFrequency' %>
       <label class="check-radio-text w-form-label" for="radio">Repeat message</label>
     </div>
 
     <div class="editor underline-div"></div>
 
     <div class="check-box editor w-checkbox w-clearfix">
-      <%= f.check_box :deliver_now, id: 'Deliver-now', class: 'w-checkbox-input', data: { name: 'Deliver now' } %>
+      <%= f.check_box :deliver_now, id: 'Deliver-now', class: 'w-checkbox-input' %>
       <label class="check-radio-text w-form-label" for="Deliver-now">Deliver Immediately</label>
     </div>
 
     <div class='scheduleOption'>
-      <%= f.text_field :date_time, class: 'daterange editor text-field w-input', id: 'Date-Picker', value: present(@campaign).to_user_date_time, data: { name: "Date Picker" } %>
-      <%= f.select :repeat_days, repeat_days_options, {}, selected: @campaign.repeat_days, id: 'campaign_repeat_days', class: 'dropdown editor-dropdown w-select', data: { name: 'Interval' } %>
+      <%= f.text_field :date_time, class: 'daterange editor text-field w-input', id: 'Date-Picker', value: present(@campaign).to_user_date_time %>
+      <%= f.select :repeat_days, repeat_days_options, { selected: @campaign.repeat_days }, class: 'dropdown editor-dropdown w-select', id: 'campaign_repeat_days' %>
     </div>
 
     <p class="editor-paragraph tips"> &nbsp;TIP: Set your messages to deliver at the most appropriate time for your customers</p>
@@ -67,7 +67,7 @@
       <div class='form-group col-xs-6'>
         <div class='newMessage'>
           <div>
-            <%= f.text_area :text, id: 'trumbowyg', class: 'form-control message-editor text-area w-input', data: { name: 'Editor Text Area' } %>
+            <%= f.text_area :text, id: 'trumbowyg', class: 'form-control message-editor text-area w-input' %>
             <div class="errorMessageContainer"></div>
           </div>
         </div>
@@ -98,7 +98,7 @@
             </div>
 
           <div class="w-clearfix w-col w-col-8 campaign-buttons-list">
-            <%= f.submit 'Create campaign', class: 'button editor-buttons w-button campaign-button', id: 'send-campaign-users' %>
+            <%= f.submit 'Save campaign', class: 'button editor-buttons w-button campaign-button', id: 'send-campaign-users' %>
             <%= f.submit 'Send me a test', id: 'sendTestCampaign', class: 'alt button editor-buttons w-button campaign-button' %>
           </div>
         </div>
@@ -108,11 +108,11 @@
     <div class="alt campaign-editor sub-nav-bar w-clearfix emailSubject">
       <div>
         <div class='form-group col-xs-6'>
-          <%= f.text_field :subject, class: "form-control email-subject text-field w-input", data: { name: "Email Subject" }, id: "campaign_subject", placeholder: 'Email subject'  %>
+          <%= f.text_field :subject, class: "form-control email-subject text-field w-input", id: "campaign_subject", placeholder: 'Email subject'  %>
           <div class="errorMessageContainer"></div>
         </div>
       </div>
-      <h4 class="sender welcome-dash-content-container-header w-hidden"><%= @user_title %></h4>
+      <h4 class="sender welcome-dash-content-container-header w-hidden"><%= current_user.user_title %></h4>
     </div>
   </div>
   <% end %>

@@ -1,18 +1,30 @@
 <div class="new-table-row w-row">
   <div class="cn w-clearfix w-col w-col-3">
     <div class="name w-clearfix">
-      <%= present(reminder).profile_image %>
-        <div class="shrink-text table-text">
-          <%= link_to reminder.from_user, "customers/#{reminder.user.id}"%>
+      <% name_and_number = present(reminder).get_display_name_and_number_and_recipient_hash %>
+
+      <%= present(reminder.user_lists.first.customer_contact).profile_image %>
+
+      <div class="shrink-text table-text">
+        <%= link_to name_and_number[:name], present(reminder).recipient_profile_link %>
       </div>
+
     </div>
     <div class="cb check-box-column">
       <div>
-      <%= form_for(reminder, url: user_reminder_path(current_user, reminder), html: { method: :delete }) do |f| %>
+      <%= link_to '', user_reminder_path(current_user, reminder), id: "reminder-delete-#{reminder.id}", class: 'w-hidden', method: :delete %>
+      <%= form_for(reminder, url: user_reminder_path(current_user, reminder)) do |f| %>
           <div class="select-all-check-box w-checkbox w-clearfix">
-              <%= f.hidden_field :id %>
-              <input class="cb checkboxes table-checkbox w-checkbox-input hashtag-check-box" id="node" type="checkbox">
-              <label class="checkbox-field-lable w-form-label" for="node">-</label>
+            <%= f.hidden_field :id %>
+            <input class="cb checkboxes table-checkbox w-checkbox-input hashtag-check-box" id="reminder_id_<%= reminder.id %>" type="checkbox"
+                   data-recipient="<%= name_and_number[:recipient].to_json %>" 
+                   data-date-time="<%= reminder.date_time.strftime("%Y-%m-%d %l:%M %p") %>" 
+                   data-text="<%= reminder.text %>" 
+                   data-channel="<%= Reminder.channels[reminder.channel] %>" 
+                   data-frequency="<%= Reminder.frequency_types[reminder.frequency_type] %>"
+                   data-repeat-days="<%= reminder.repeat_days %>" 
+                   data-obj-id="<%= reminder.id %>" >
+            <label class="checkbox-field-lable w-form-label" for="node">-</label>
           </div>
        <% end %>
       </div>
@@ -20,7 +32,7 @@
   </div>
   <div class="fv w-clearfix w-col w-col-2">
     <div class="cn column column-2 w-clearfix">
-      <div class="shrink-text table-text">+1 (202) 345 - 5898</div>
+      <div class="shrink-text table-text"><%= name_and_number[:number] %></div>
     </div>
   </div>
   <div class="lv w-clearfix w-col w-col-2">
@@ -30,21 +42,23 @@
   </div>
   <div class="avs w-clearfix w-col w-col-1">
     <div class="avs column column-4 w-clearfix">
-      <div class="table-text"><%= present(reminder).get_time%></div>
+      <div class="table-text" id='reminder_date_time_<%= reminder.id %>'><%= reminder.date_time.strftime("%-I:%M %p") %></div>
     </div>
   </div>
   <div class="ts w-clearfix w-col w-col-1">
     <div class="column column-5 ts w-clearfix">
-      <div class="table-text total-spend-text">Once</div>
+      <div class="table-text total-spend-text" id='reminder_frequency_<%= reminder.id %>'><%= reminder.one_time? ? 'Once' : 'Repeat' %></div>
     </div>
   </div>
   <div class="table-actions w-clearfix w-col w-col-3">
     <div class="column column-6 left new-row">
-      <div class="frequency table-text shrink-text">
-        time format needs fixing
-      </div>
+      <div class="frequency table-text shrink-text"><%= present(reminder).format_last_visit %></div>
     </div>
-    <div class="column column-6 new-row"><a class="actions-button cancel" href="#">Cancel</a>
+    <div class="column column-6 new-row">
+      <%= form_for(reminder, url: change_status_user_reminder_path(current_user, reminder), html: { class: 'reminder-change-status' }) do |f| %>
+        <%= f.hidden_field :id %>
+        <%= f.submit (reminder.active? ? 'Pause' : 'Activate'), class: 'actions-button cancel' %>
+      <% end %>
     </div>
   </div>
 </div>
