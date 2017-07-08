@@ -24,8 +24,6 @@ Taiwo
 
 Surya
 - lock down permissions cancancan?
-- i see issues with reminder js
-- review how reminders pull users info
 - do we need to exclude refunded txns in segment queries? review segment queries
 - still able to bypass onboarding to any page if i know the url. or i can go back to onboarding if i know the url (edited)
 - when you uncomment this line in routes  # authenticate :user, -> (user) { CheckUser::RouteAuthentication.new(user).should_authenticate? } do, pages become unreachable i believe. review/remove CheckUser in classes folder

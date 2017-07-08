@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170704153043) do
+ActiveRecord::Schema.define(version: 20170708153448) do
 
   create_table "account_reloads", force: :cascade do |t|
     t.integer  "user_id",        limit: 4
@@ -245,7 +245,6 @@ ActiveRecord::Schema.define(version: 20170704153043) do
     t.string   "to",             limit: 191
     t.datetime "created_at",                   null: false
     t.datetime "updated_at",                   null: false
-    t.integer  "campaign_id",    limit: 4
     t.integer  "seq",            limit: 4
     t.integer  "fb_page_id",     limit: 4
     t.integer  "user_id",        limit: 4
@@ -253,7 +252,6 @@ ActiveRecord::Schema.define(version: 20170704153043) do
     t.integer  "hashtag_id",     limit: 4
   end
 
-  add_index "fb_messages", ["campaign_id"], name: "index_fb_messages_on_campaign_id", using: :btree
   add_index "fb_messages", ["fb_page_id"], name: "index_fb_messages_on_fb_page_id", using: :btree
   add_index "fb_messages", ["from"], name: "index_fb_messages_on_from", using: :btree
   add_index "fb_messages", ["message_id"], name: "index_fb_messages_on_message_id", unique: true, using: :btree
@@ -885,8 +883,6 @@ ActiveRecord::Schema.define(version: 20170704153043) do
   add_index "users", ["rhombus_number"], name: "index_users_on_rhombus_number", unique: true, using: :btree
 
   add_foreign_key "coupons", "users"
-  add_foreign_key "fb_messages", "campaigns"
-  add_foreign_key "fb_messages", "fb_pages"
   add_foreign_key "hashtags", "users"
   add_foreign_key "lists", "users"
   add_foreign_key "message_resolutions", "users"

@@ -6,10 +6,11 @@ class WeeklyActivitySummaryJob
   @queue = Rails.env + "_weekly_activity_summary"
 
   class << self
+    
     def perform
       ActiveRecord::Base.clear_active_connections!
-      merchants = User.where(user_level: 1)
-      merchants.each do |merchant|
+      
+      User.where(user_level: 1).each do |merchant|
         mail_data = mail_data_to_merchant(merchant)
         EmailingService.send_weekly_mail(merchant, mail_data)
       end
@@ -23,7 +24,7 @@ class WeeklyActivitySummaryJob
       
       last_week_customers.each do |mc|
         # have to use UserProfile for fullname/profile pic etc.
-        customers_array  << {
+        customers_array << {
                                full_name: get_conversation_display_name(mc.customer_id, 'user', mc.customer),
                                profile_pic: check_profile_picture(mc.customer),
                                customer_email: mc.customer.email
