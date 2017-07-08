@@ -262,12 +262,13 @@ class User < ActiveRecord::Base
         { name: 'Inactive Contacts', segment: inactive_contacts_default_segment_data, origin: origin, list_type: List.list_types[:contact], campaign_type: campaign_type }
       ])
     end
-#=end
-   # MerchantCustomer.add_or_update_merchant_customer(User.get_platform_acct_obj, self)
+
+    MerchantCustomer.add_or_update_merchant_customer(User.get_platform_acct_obj, self, false)
     #WelcomeEmailJob.set(wait: SIGNUP_EMAIL_DELAY.minutes).perform_later(self, self.customer_source)
-    #WelcomeEmailJob.set(wait: 10.seconds).perform_later(self, self.customer_source)
+    WelcomeEmailJob.set(wait: 10.seconds).perform_later(self, self.customer_source)
     #GetIntelligenceDataJob.perform_later(self.email, 'FullContact')
     #GetIntelligenceDataJob.perform_later(self.phone_number, 'OpenCNAM') if self.is_customer?
+#=end
   end
 
   #def validates_person_full_message

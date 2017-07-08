@@ -251,10 +251,6 @@ $(document).ready(function() {
     })
     .done(function(data, textStatus, jqXHR) {
       FlashHandler.setFlashMessage('Customer created successfully', 'notice');
-      /*$(create_user_form)[0].reset();
-      user_list_selectize[0].selectize.clear();
-      country_selectize[0].selectize.clear();
-      $('.close-modal').click();*/
       location.reload();
     })
     .fail(function(data, textStatus, errorThrown) {
