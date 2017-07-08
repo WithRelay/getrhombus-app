@@ -86,7 +86,8 @@ $(document).on('ready page:load', function() {
   });
   //
 
-  $('.show_more').on('click', function(){
+  $('.reminders-by-date .show_more').on('click', function(){
+    debugger
     $('.show_more').attr('select', false);
     this.setAttribute('select', true);
   });
@@ -192,6 +193,7 @@ $(document).on('ready page:load', function() {
       (this.value == '0') ? $('#newReminderRepeatDays').hide() : $('#newReminderRepeatDays').show();  
     };
   });
+
 
   $('#delete-reminder').click(function(e) {
     var selectedElement = CheckedItem.get();

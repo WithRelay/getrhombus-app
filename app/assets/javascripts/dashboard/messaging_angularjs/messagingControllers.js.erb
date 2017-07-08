@@ -111,7 +111,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
           $scope.saved_replies.reply = data[0];
           console.log('saved replies retrieved');
         }, function(data) {
-          alert('unable to get saved replies');
+          Flashhandler.setflashmessage('unable to get saved replies', 'error');
         });
       }
     };
@@ -211,7 +211,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
           $scope.conversation_selected = false;
           delete $scope.conversations[$scope.selected_conversation.id];
         }, function(data) {
-          alert('unable to close conversation');
+          Flashhandler.setflashmessage('unable to close conversation','error');
         })
         .finally(function() { $('#mark-as-done-div').trigger('close'); });
       };
@@ -326,7 +326,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
         console.log($scope.new_message);
 
         if (($scope.new_message.text == '') || ($scope.new_message.text.length > $scope.merchant.num_of_chars)) {
-          alert('enter up to ' + $scope.merchant.num_of_chars + ' characters.');
+          Flashhandler.setflashmessage('enter up to ' + $scope.merchant.num_of_chars + ' characters.', 'error');
           $scope.enable_msg_btn(btn, channel);
         } else {
           var conversation_id = $scope.selected_conversation.id;
@@ -623,7 +623,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
     $scope.AddUserToList = function() {
       if ($scope.is_conversation_selected() && $scope.online()) {
         if (!$scope.lists_dropdown.list) {
-          alert('select a list');
+          Flashhandler.setflashmessage('select a list','error');
         } else {
           /*
           var hash = { list_id: $scope.lists_dropdown.list.id,
@@ -672,10 +672,10 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
           reminderService.createReminder(hash)
           .then(function(data) {
             console.log(data)
-            alert('reminder created');
+            Flashhandler.setflashmessage('reminder created', 'notice');
           }, function(data) {
             console.log(data)
-            alert('unable to create reminder');
+            Flashhandler.setflashmessage('unable to create reminder', 'notice');
           });
           //*/
         };

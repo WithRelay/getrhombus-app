@@ -45,7 +45,7 @@ class CouponsController < ApplicationController
     @manage_coupons = coupons
     if @manage_coupons.present?
       respond_to do |format|
-        format.js { render partial: 'manage_coupon.js.erb', locals: { obj: @manage_coupons } }
+        format.js { render partial: 'coupon_manage.js.erb', locals: { obj: @manage_coupons } }
         format.html
       end
     else
@@ -59,7 +59,7 @@ class CouponsController < ApplicationController
         .joins("LEFT JOIN subscriptions s ON s.coupon_id = coupons.id")
         .select('coupons.id, name, amount_off, percent_off, currency, duration, duration_in_months, max_redemptions,
                   percent_off, redeem_by, coupons.created_at, s.id as subscription_id')
-        .paginate(page: params[:page], per_page: 2)
+        .paginate(page: params[:page], per_page: PAGINATION_PER_PAGE)
         .order('coupons.created_at DESC')
     end
 
