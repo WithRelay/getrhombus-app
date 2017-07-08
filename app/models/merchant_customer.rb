@@ -10,9 +10,9 @@ class MerchantCustomer < ActiveRecord::Base
 
   # has_many :invoices
 
-  def self.add_or_update_merchant_customer(merchant, customer, for_merchant = true)
+  def self.add_or_update_merchant_customer(merchant, customer, platform_create = false)
     begin
-      return true if merchant.is_platform? && for_merchant
+      return true if merchant.is_platform? && platform_create
 
       if merchant.try(:id)
         # check for number and set is_customer
