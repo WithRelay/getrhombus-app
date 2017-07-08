@@ -58,17 +58,17 @@ class Api::V1::MerchantCustomersController < API::V1::BaseController
 
       puts '<redacted_phone_number>'
       puts response
-    #rescue ActiveRecord::RecordNotUnique => e
-    #  status = 500
-    #  msg = e.original_exception.message
-    #  response = "Customer's phone number is already in use." if msg.include?('index_users_on_phone_number')
-    #  response = "Customer's email is already in use." if msg.include?('index_users_on_email')
-    #rescue StandardError => e
-    #  status = 500
-    #  response = 'Something went wrong on our end.'
-    #end
+    rescue ActiveRecord::RecordNotUnique => e
+      status = 500
+      msg = e.original_exception.message
+      response = "Customer's phone number is already in use." if msg.include?('index_users_on_phone_number')
+      response = "Customer's email is already in use." if msg.include?('index_users_on_email')
+    rescue StandardError => e
+      status = 500
+      response = 'Something went wrong on our end.'
+    end
 
-    render json: { response: response }#, status: status
+    render json: { response: response }, status: status
   end
 
   private

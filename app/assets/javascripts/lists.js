@@ -138,7 +138,7 @@ $(document).on('ready page:load', function() {
       centered: true,
       onLoad: function() {
         // Populate segment selection before submitting request
-        $("#listChannel").val(getListChannel());
+        $("#segmentChannel").val(getListChannel());
         $("#segment_create_modal").find('input:first');
         $("#segment_type").val($('#customer-filter option:selected').val());
         $("#segment_num_days").val($("#num_days").val());
@@ -192,8 +192,6 @@ $(document).on('ready page:load', function() {
       }).done(function(msg){
         $('.update-close-modals').click();
         setFlashForList('Segment created successfully', 'notice');
-        // $('#segment-sidebar-form')[0].reset()
-        // this.reset()
         location.reload()
       })
       .fail(function(msg){
@@ -216,7 +214,6 @@ $(document).on('ready page:load', function() {
         centered: true,
         onLoad: function() {
           $("#selectedUsers").val(obj_ids);
-          $("#listCategory").val("list");
           $("#listType").val(getListType());
           $("#listChannel").val(getListChannel());
         },
@@ -275,8 +272,9 @@ $(document).on('ready page:load', function() {
     FlashHandler.setConfirmationDialog("#" + id, 'Are you sure you want to delete this member?', 'Delete', 'destroy-list-members');
   });
 
-  $('.create-segment').click(function() {
-    $('#listType').val(getListType());
+  $('.create-segment-modal-btn').click(function() {
+    $('#segmentType').val(getListType());
+    $("#segmentChannel").val(getListChannel());
   });
 
   var labelFieldSelectize = getListType() == 'contact' ? 'title' : ['email', 'description', 'card_name']

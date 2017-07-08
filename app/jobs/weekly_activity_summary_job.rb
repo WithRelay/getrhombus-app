@@ -6,7 +6,7 @@ class WeeklyActivitySummaryJob
   @queue = Rails.env + "_weekly_activity_summary"
 
   class << self
-    
+
     def perform
       ActiveRecord::Base.clear_active_connections!
       
@@ -17,7 +17,7 @@ class WeeklyActivitySummaryJob
     end
 
     #  private
-    def mail_data_to_merchant(merchant = User.first)
+    def mail_data_to_merchant(merchant)
       customers_array = []
       Time.zone = merchant.time_zone
       last_week_customers = merchant.merchant_customers.includes(:customer).where('merchant_customers.created_at >= ?', 7.days.ago.utc)
