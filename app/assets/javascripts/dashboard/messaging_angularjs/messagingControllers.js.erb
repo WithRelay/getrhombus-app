@@ -635,7 +635,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
             // return the lists object
             //$scope.lists_for_customer.push(data);
           }, function(data) {
-            alert('unable to add user to list');
+            FlashHandler.setFlashMessage('unable to add user to list', 'error');
           })
           .finally(function() { $('#mark-as-done-div').trigger('close'); });
           //*/
@@ -652,7 +652,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
           $scope.lists_for_customer = data
         }, function(data) {
           $scope.lists_for_customer = [];
-          alert('unable to retrieve lists for conversation');
+          FlashHandler.setFlashMessage('unable to retrieve lists for conversation', 'error');
         });
         //*/
       };

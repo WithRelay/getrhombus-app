@@ -60,7 +60,7 @@ var CheckedItem = new function() {
         location.reload();
       })
       .fail(function(msg){ 
-        alert('Unable to complete request'); 
+        FlashHandler.setFlashMessage('Unable to complete request', 'error'); 
         $('.cancel-no').click();
       });
     } else {

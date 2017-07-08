@@ -144,13 +144,13 @@ $( document ).on 'ready page:load', ->
     uploadedImage = new ImageValidator
     uploadedImage.imageObj = this.files[0]
     if !uploadedImage.validateImage()
-      alert 'Only image file formats with extension: jpg, jpeg, png, PNG, JPG, JPEG are allowed.'
+      FlashHandler.setFlashMessage 'Only image file formats with extension: jpg, jpeg, png, PNG, JPG, JPEG are allowed.', 'error'
       window.invalid_image = true
     else if !uploadedImage.validateSize()
-      alert 'invalid upload size. upload image should be less than 4.5 mb'
+      FlashHandler.setFlashMessage 'invalid upload size. upload image should be less than 4.5 mb', 'error'
       window.invalid_image = true
     else if !uploadedImage.validateTotalSize()
-      alert 'invalid upload size. Total upload image should be less than 25 mb'
+      FlashHandler.setFlashMessage 'invalid upload size. Total upload image should be less than 25 mb', 'error'
       window.invalid_image = true
     else
       reader = new FileReader
@@ -163,7 +163,7 @@ $( document ).on 'ready page:load', ->
 
   $(document).on 'click', 'form .trumbowyg-modal-submit',(e) ->
     if window.invalid_image
-      alert 'Please upload image format with jpg/jpeg/png less than 4.5 mb'
+      FlashHandler.setFlashMessage 'Please upload image format with jpg/jpeg/png less than 4.5 mb', 'error'
       e.preventDefault()
     else
       $('.loading').css({'position': 'absolute', 'z-index': 3, 'margin': '0px'});
@@ -246,6 +246,6 @@ $( document ).on 'ready page:load', ->
             imageTag = '<img src=' + splitHtml
             newHtml = trumbowygHtml.replace(imageTag, '');
             $('#trumbowyg').trumbowyg('html', newHtml);
-            alert 'sorry only jpeg and png images are supported with less than 4.5 mb'
+            FlashHandler.setFlashMessage 'sorry only jpeg and png images are supported with less than 4.5 mb', 'error'
     img.src = url
     return

@@ -145,10 +145,10 @@ $(document).ready(function () {
 
   // submit referrer
   /*$("#new_referrer").on("ajax:success", function(e, data, status, xhr) {
-    alert('received referral info. pls share the link and refer more');
+    FlashHandler.setFlashMessage('received referral info. pls share the link and refer more', 'notice');
     console.log(data.referrer.link)
   }).on("ajax:error", function(e, xhr, status, error) {
-    alert('unable to save referral info');
+    FlashHandler.setFlashMessage('unable to save referral info', 'error');
   });*/
   // submit referrer
 
