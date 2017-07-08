@@ -1,8 +1,9 @@
 class DripCampaignJob
 
-  @queue = :drip_campaigns
+  @queue = Rails.env + "_drip_campaigns"
 
   def self.perform
+    ActiveRecord::Base.clear_active_connections!
 
     User.where(user_level: 1).each do |user|
 

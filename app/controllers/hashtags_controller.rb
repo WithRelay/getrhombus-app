@@ -6,9 +6,7 @@ class HashtagsController < ApplicationController
   respond_to :html
 
   def index
-    @hashtags = current_user.hashtags.order(created_at: :desc).paginate(per_page: PAGINATION_PER_PAGE,
-                                               page: params[:page])
-                                              #  .order('updated_at DESC')
+    @hashtags = current_user.hashtags.order(created_at: :desc).paginate(per_page: PAGINATION_PER_PAGE, page: params[:page])
     @hashtags.present? ? render_requested_format(@hashtags) : render(:empty_hashtag)
   end
 
@@ -48,12 +46,26 @@ class HashtagsController < ApplicationController
     end
   end
 
+  def change_status
+    hashtag = current_user.hashtags.find_by_id(params[:id])
+    if hashtag.present?
+      status = hashtag.active? ? 0 : 1
+      hashtag.update_attribute('status', status)
+    end
+    flash[:notice] = "Hashtag status has been changed"
+    redirect_to user_hashtags_path
+  end
+
   def destroy
-    if !@hashtag.is_mentioned?
+    flash[:error] = "We cannot delete the hashtag"
+    redirect_to user_hashtags_path
+    return
+
+    unless @hashtag.is_mentioned?
       re = @hashtag.delete_plan_for_recurring_tag(current_user)
       if re.first
         if @hashtag.destroy
-          redirect_to(user_hashtags_path, flash: { notice: "Hashtag Deleted" }) and return
+          flash[:notice] = "Hashtag Deleted"
         else
           flash[:error] = "We cannot delete the hashtag"
         end
@@ -63,7 +75,7 @@ class HashtagsController < ApplicationController
     else
       flash[:error] = 'We cannot delete a hashtag that has been mentioned'
     end
-    respond_with(@hashtag)
+    redirect_to user_hashtags_path
   end
 
 

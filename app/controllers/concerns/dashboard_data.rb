@@ -112,8 +112,8 @@ module DashboardData
     if data.count == 0 || data.minutes_diff_total.blank? || data.minutes_diff_total == 0
       x, y = 0, 0
     else
-      x = (data.minutes_diff_total/data.length.to_f).round(2)
-      y = (data.length.to_f/(data.minutes_diff_total/60)).round(2)
+      x = (data.minutes_diff_total/data.count.to_f).round(2)
+      y = (data.count.to_f/(data.minutes_diff_total/60)).round(2)
     end
 
     { average_handle_time: "%g" % x, conversations_per_hour: "%g" % y }

@@ -2,8 +2,8 @@ $(document).on('ready page:load', function() {
 
   //Started GET "/users/110/campaigns/undefined" for 127.0.0.1 at 2017-06-19 23:53:55 -0400
 
-
-  // this is for campaigns
+  // checked
+  // this is for campaigns but in here because it uses APICONTROLLER 
   var url = window.location.pathname.split('/');
   var campaignId = (url[url.length-1] == 'edit') ? ('?id=' + url[url.length-2]) : '';
   $('#campaignForm').formValidation({
@@ -50,7 +50,7 @@ $(document).on('ready page:load', function() {
           }
         }
       },
-      'campaign[list_name]': {
+      'campaign[list_id]': {
         validators: {
           notEmpty: {
             message: 'This field is required'
@@ -65,7 +65,8 @@ $(document).on('ready page:load', function() {
         }
       }
     }
-  }).on('success.form.fv', function(e, data) {
+  })
+  .on('success.form.fv', function(e, data) {
     if ($( '#sendTestCampaign' ).attr('active')) {
       e.preventDefault();
       var originalURL = this.action;
@@ -76,9 +77,7 @@ $(document).on('ready page:load', function() {
       };
       this.action = window.location.origin + '/v1/campaigns/send_test_email';
       var formData = new FormData(this);
-      // initialize a class apicontroller
       var apiController = new ApiController(this);
-      // calls instance method sendRequest with parameter formdata
       apiController.sendRequest(formData);
       this.action = originalURL;
       $('input[name="_method"]').val(originalMethod);
@@ -87,123 +86,129 @@ $(document).on('ready page:load', function() {
   });
   //
 
-  $('.show_more').on('click', function(){
+  $('.reminders-by-date .show_more').on('click', function(){
+    debugger
     $('.show_more').attr('select', false);
     this.setAttribute('select', true);
-  })
-
-  $('#edit-reminder').on('click', function(){
-  	var selectedElement = selectCheckedElement();
-
-  	if (selectedElement == false){
-  		FlashHandler.setFlashMessage('record not selected','error');
-  		return false;
-  	}else{
-  		$("#edit-reminder-modal").lightbox_me({
-  			centered: true,
-        overlayCSS: {
-          background: '#ffffff', opacity: .8
-        }
-  		});
-
-  	}
-  	var elementForm = selectedElement.closest('form');
-  	var reminder_id = elementForm.find("#reminder_id").val();
-
-  	 $.ajax({
-  		 url:  "/v1/reminders/" + reminder_id + "/edit" ,
-  		 data:{id: reminder_id}
-  	 }).done(function(res){
-  		var form = $('.editReminderFrom');
-  		var action = form.attr("action");
-  		var reminder = res.reminder
-  		var reminder_lists = res.reminder_lists;
-  		var newAction = window.location.origin + '/users/' + action.split('/')[2] + '/reminders/' + reminder_id;
-  		customtersSearch(reminder_lists);
-  		var selectField = $('.editReminderFrom .search-customers-and-contacts')[0].selectize;
-  		selectField.addItem(reminder_lists[0].id, false);
-  		form.find("#Notification-Message").val(reminder.text);
-  		form.find(".emojionearea-editor").text(reminder.text);
-  		form.attr("action", newAction);
-
-  		var raw_date_time = reminder.date_time;
-  		var date_time = new Date(raw_date_time);
-  		var formated_date_time = formatDate(date_time);
-  		form.find("#reminder-date-time").val(formated_date_time);
-  	 }).error(function(){
-  			// alert("")
-  	 })
-   });
-
-  function selectCheckedElement(){
-    var checkedElement = false;
-    $('.table-checkbox').each(function( index, element){
-      if ( $(this).is(':checked') )
-       checkedElement =  $(this);
-    });
-    return checkedElement;
-  }
-
-  function formatDate(date) {
-  	var hours = date.getHours();
-  	var minutes = date.getMinutes();
-  	var ampm = hours >= 12 ? 'PM' : 'AM';
-  	hours = hours % 12;
-  	hours = hours ? hours : 12; // the hour '0' should be '12'
-  	minutes = minutes < 10 ? '0'+minutes : minutes;
-  	var strTime = hours + ':' + minutes + ' ' + ampm;
-  	return  date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate() + "  " + strTime;
-  }
-
-  $('#set-new-reminder-loader').click(function(){
-    customtersSearch();
   });
 
-  function customtersSearch(option = []){
-    var labelSearchField = option.length < 1 ? 'description' : 'phone_number'
-    var valueField = option.length < 1 ? 'uid' : 'id'
-    $('.search-customers-and-contacts').selectize({
-      maxItems: 1,
-      valueField: valueField.split(','),
-      labelField: labelSearchField,
-      searchField: labelSearchField,
-      create: false,
-      options: option,
-      closeAfterSelect: true,
-      load: function(query, callback) {
-        if (!query.length) return callback();
-        $.ajax({
-          url: '/v1/users.json',
-          type: 'GET',
-          dataType: 'json',
-          data: {
-            query: query
-          },
-          error: function() {
-            FlashHandler.setFlashMessage('Something went wrong...Unable to find any customer', 'error');
-            callback();
-          },
-          success: function(res) {
-            if (res['data'][0].uid_type)
-              res['data'][0].uid += ',' + res['data'][0].uid_type
-            callback(res['data']);
-          }
-        });
+  var reminder_channel_options;
+  // eventually we should check if customer has connected facebook account before rendering this option
+  function rebuild_reminder_channels(uid_type) {
+    reminder_channel_options = '<option value="0">SMS</option><option value="2">Facebook Messenger</option>';
+    
+    if (uid_type == 'user') {
+      if (UserDetails.object() && UserDetails.object().has_messenger) {
+        reminder_channel_options = '<option value="0">SMS</option><option value="2">Facebook Messenger</option>';
+      } else {
+        reminder_channel_options = '<option value="0">SMS</option>';
+      };
+    } else if (uid_type == 'phone_number') {
+      reminder_channel_options = '<option value="0">SMS</option>';
+    } else if (uid_type == 'fb_page') {
+      reminder_channel_options = '<option value="2">Facebook Messenger</option>';
+    };
+
+    $('#New-Notification-Channel').html(reminder_channel_options);
+  };
+
+  $('#edit-reminder').on('click', function() {
+  	var selectedElement = CheckedItem.get();
+
+  	if (!selectedElement) {
+  		FlashHandler.setFlashMessage('Please select an item', 'error');
+  		return false;
+  	};
+
+    var form = $('#editReminderForm');
+  	var reminder_id = selectedElement.closest('form').find("#reminder_id").val(); 
+    var edit_reminder_selectize = form.find('.search-customers-and-contacts')[0].selectize;
+    
+    edit_reminder_selectize.clear();
+    edit_reminder_selectize.addOption(selectedElement.data('recipient'));
+    edit_reminder_selectize.addItem(selectedElement.data('recipient').unique_identifier);
+    edit_reminder_selectize.disable();                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+
+    form.find("#reminder-date-time").val(selectedElement.data('date-time'));
+    form.find("#Notification-Message").val(selectedElement.data('text'));
+    
+    $("#Edit-Notification-Channel option:selected").removeAttr("selected");
+    $("#Edit-Notification-Channel option[value='" + selectedElement.data('channel') + "']").attr('selected', true);
+
+		form.find(".emojionearea-editor").text(selectedElement.data('text'));
+    form.attr("action", window.location.origin + '/v1/reminders/' + reminder_id);
+    $('#editReminderRepeatDays').val(selectedElement.data('repeat-days'));
+    $('#edit_reminder_frequency_type_' + selectedElement.data('frequency')).click();
+
+    $("#edit-reminder-modal").lightbox_me({
+      centered: true,
+      overlayCSS: {
+        background: '#ffffff', opacity: .8
       }
     });
-  }
+  });
+
+  $('.search-customers-and-contacts').selectize({
+    maxItems: 1,
+    valueField: 'unique_identifier',
+    searchField: ['title', 'description'],
+    placeholder: 'Find a customer or contact',
+    options: [],
+    create: false,
+    closeAfterSelect: true,
+    render: {
+      item: function(item, escape) {
+        return '<div> <span class="">' + escape(item.title) + " - " + escape(item.description) + '</span></div>';
+      },
+      option: function(item, escape) {
+        return '<div> <span class="">' + escape(item.title) + " - " + escape(item.description) + '</span></div>';
+      }
+    },
+    onItemRemove: function() { rebuild_reminder_channels(); },
+    onItemAdd: function(value, $item) { rebuild_reminder_channels(this.options[value].uid_type); },
+    load: function(query, callback) {
+      if (!query.length) return callback();
+      $.ajax({
+        url: '/v1/users.json',
+        type: 'GET',
+        dataType: 'json',
+        data: {
+          query: query
+        },
+        error: function() {
+          FlashHandler.setFlashMessage('Something went wrong...Unable to find any recipients', 'error');
+          callback();
+        },
+        success: function(res) {
+          callback(res['data']);
+        }
+      });
+    }
+  });
+
+  $('.editReminderFrequency, .newReminderFrequency').click(function(e) {
+    if (this.className.indexOf('editReminderFrequency') > -1) {
+      (this.value == '0') ? $('#editReminderRepeatDays').hide() : $('#editReminderRepeatDays').show();
+    } else {
+      (this.value == '0') ? $('#newReminderRepeatDays').hide() : $('#newReminderRepeatDays').show();  
+    };
+  });
 
 
-  // $('#delete-reminder').click(function(e){
-  //     e.preventDefault
-  //     FlashHandler.setConfirmationDialog('#delete-reminder','Are you sure, you want to delete the Reminder?', 'Delete', 'isDistroy');
-  //     return false;
-  //   });
-  //
-  
+  $('#delete-reminder').click(function(e) {
+    var selectedElement = CheckedItem.get();
+    if (!selectedElement) {
+      FlashHandler.setFlashMessage('Select a reminder to delete', 'error');
+    } else {
+      var id = '#reminder-delete-' + selectedElement.data('obj-id');
+      FlashHandler.setConfirmationDialog(id, 'Are you sure you want to delete the Reminder?', 'Delete');
+    };
+    return false;
+  });
+
   $('.notification-message').emojioneArea();
 
-
+  // checked
   $(window).load(function(){
     $('#form-reminder-div .notification-message').find('.emojionearea-editor').counter({
       count: "down",
@@ -213,6 +218,7 @@ $(document).on('ready page:load', function() {
     });
   });
 
+  // checked
   $(window).load(function(){
     $('#edit-reminder-div .notification-message').find('.emojionearea-editor').counter({
       count: "down",
@@ -222,101 +228,92 @@ $(document).on('ready page:load', function() {
     });
   });
 
-  $('.reminderForm').submit(function(){
+  $('.reminderForm').submit(function(e) {
     $(this).formValidation('revalidateField', 'reminder[text]');
-    $(this).formValidation('revalidateField', 'reminder[customer_id]');
+    $(this).formValidation('revalidateField', 'reminder[mc_id]');
   });
-
-
 
   $('.reminderForm').formValidation({
     framework: 'bootstrap',
     excluded: ':disabled',
     live: 'disabled',
     err: {
-          container: function($field, validator) {
-              return $field.parent().find('.messageContainer');
-          }
-      },
+      container: function($field, validator) {
+        return $field.parent().find('.messageContainer');
+      }
+    },
     fields: {
       'reminder[text]': {
         validators: {
           notEmpty: {
-            message: 'This Field is required'
+            message: 'This field is required'
           }
         }
       },
-      'reminder[customer_id]':{
+      'reminder[mc_id]':{
         validators: {
           callback: {
             message: 'Please select a customer',
             callback: function(value, validator, $field) {
-              // var customer = validator.getFieldElements('reminder[customer_id]');
-              var customer = $('.search-customers-and-contacts .items .item').text();
-              return { valid: (customer !== '') };
+              return { valid: $field[0].selectize.isFull() };
             }
           }
         }
       }
     }
   }).on('success.form.fv', function(e, data) {
-    if ($(this).attr('class').split(' ')[1] != 'editReminderFrom') {
-      e.preventDefault();
-      var apiController = new ApiController(this, '.update-close-modals');
-      var formData = new FormData(this);
-      apiController.sendRequest(formData);
-      location.reload();
-    };
+    e.preventDefault();
+    var apiController = new ApiController(this);
+    var formData = new FormData(this);
+    apiController.sendRequest(formData);
   });
 
-  // Class ApiController handle all call to http verb to the server
-  // First argument is the dom object it self and second contains the modal id
-  function ApiController(element, modalId = '') {
+  // checked
+  // First argument is the dom object itself and second contains the modal id
+  function ApiController(element) {
     // assigning properties to RemoteCall
     this.url = element.action;
     this.method = element.method;
     this.dataType = 'json';
     this.domElementId = '#' + element.id;
-    this.modalClass = modalId;
     this.formData = $(element).serialize();
   };
-  
-  // Checks whether the form is validated or not and return true/false
-  function checkFormValid(element){
-    return $(element ).data('formValidation').isValid();
-  }
 
-  // defining instance method sendRequest for class ApiController
-  // Send remote request and fetch response.
-  ApiController.prototype.sendRequest = function(data=''){
+  // checked
+  ApiController.prototype.sendRequest = function(data = '') {
     // assigning modal class for closing modal after response success
-    // The variable has sigil $ beacause local variable inside ajax call are not accessible.
-    // for more deails http://stackoverflow.com/questions/14496680/this-object-not-available-in-ajax-callback
-    var postData = ((data !='') ? data : this.formData)
-    var $modalClose = this.modalClass
+    // The variable has sigil $ because local variable inside ajax call are not accessible.
+    // for more details http://stackoverflow.com/questions/14496680/this-object-not-available-in-ajax-callback
+    var postData = ((data != '') ? data : this.formData);
+    var form_id = this.domElementId;
 
-    if (checkFormValid(this.domElementId)){
-      $.ajax({ method: this.method,
-         url: this.url,
-         contentType: false,
-         processData: false,
-         dataType: this.dataType,
-         data: postData
+    if ($(this.domElementId).data('formValidation').isValid()) {
+      $.ajax({ 
+        method: this.method,
+        url: this.url,
+        contentType: false,
+        processData: false,
+        dataType: this.dataType,
+        data: postData
       })
-      .done(function(msg){
-        // key in index 1 contains title/flash message key please see api/controllers/reminders for more details.
-        var flash_key = Object.keys(msg)[1]
-        // set flash message title and message
-        // first argument is title and second is text message.
-        FlashHandler.setFlashMessage( msg[flash_key], flash_key );
-        if (flash_key != 'error') {
-          $("#reminderForm").trigger('reset');
-          $($modalClose).click(); // closing modal after success
-        }
+      .done(function(data) {
+        FlashHandler.setFlashMessage(data.notice, 'notice');
+        if (form_id == '#newReminderForm') {
+          location.reload();
+        } else if (form_id == '#editReminderForm') {
+          $('.update-close-modals').click();
+          $('#reminder_date_time_' + data.id).text(data.time);
+          $('#reminder_frequency_' + data.id).text(data.frequency_text);
+          $('#reminder_id_' + data.id).data('text', data.text).attr('data-text', data.text)
+                                      .data('date-time', data.date_time).attr('data-date-time', data.date_time)
+                                      .data('frequency', data.frequency).attr('data-frequency', data.frequency)
+                                      .data('repeat-days', data.repeat_days).attr('data-repeat-days', data.repeat_days);
+        };
+
       })
-      .fail(function(msg){ 
-        alert('Sorry request could not complete'); 
+      .fail(function(data) { 
+        FlashHandler.setFlashMessage(data.responseJSON.error, 'error'); 
       });
-    }
+    };
   }
 });

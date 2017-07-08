@@ -7,7 +7,7 @@ var FlashHandler = new function() {
     focused = (e || event).type === "focus";
   }
 
-// ask for the enable browser notification permission
+  // ask for the enable browser notification permission
   this.notificationPermission = function () {
     if(Notification.permission !== 'granted'){
       Notification.requestPermission();
@@ -185,15 +185,16 @@ var FlashHandler = new function() {
   }
 
   // Confirmation Dialog for event
-  this.setConfirmationDialog = function (selector, confirmText, confirmDialog, isConfirm){
+  this.setConfirmationDialog = function (selector, confirmText, confirmBtnText, isConfirm){
     hideToastr();
 
+    $('.cancel-subscription-wrapper').remove();  
     $('body').append('<div class="cancel-subscription-wrapper w-clearfix">\
-      <p class="cancel-subscription modal-content-description">'+confirmText+'</p>\
-      <div class="modal-underline underline-div"></div>\
-      <a class="button cancel-yes w-button" href="#">'+confirmDialog+'</a>\
-      <a class="button cancel-no w-button" href="#">Cancel</a>\
-    </div>');
+                        <p class="cancel-subscription modal-content-description">' + confirmText + '</p>\
+                        <div class="modal-underline underline-div"></div>\
+                        <a class="button cancel-yes w-button" href="#">'+ confirmBtnText + '</a>\
+                        <a class="button cancel-no w-button" href="#">Cancel</a>\
+                      </div>');
 
     $('.cancel-subscription-wrapper').lightbox_me({
       centered: true,
@@ -202,17 +203,10 @@ var FlashHandler = new function() {
       }
     });
 
-    $('.cancel-no').on('click', function(e){
-      $('.cancel-subscription-wrapper').remove();
-      $('.js_lb_overlay').remove();
-      return false;
-    })
-
-    $('.cancel-yes').on('click', function(){
-      if (isConfirm) $(selector).attr(isConfirm, true);
-      $('.cancel-yes')[0].innerHTML = 'Please wait...';
-      $(selector).click();
-    })
+    $(document).one('click', '.cancel-yes', function(e) {
+      e.preventDefault();
+      CheckedItem.process(confirmBtnText, selector, isConfirm);
+    });
   };
 
   // when multiple flash message are present it converts it to multiline flash message
@@ -224,6 +218,8 @@ var FlashHandler = new function() {
     } else {
       return value;
     }
-  }
+  };
+
+  
 
 }

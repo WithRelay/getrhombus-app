@@ -1,8 +1,9 @@
 class HostedSmsJob
 
-  @queue = :hosted_sms
+  @queue = Rails.env + "_hosted_sms"
 
   def self.perform
+    ActiveRecord::Base.clear_active_connections!
 
     HostedSms.not_completed.each do |h|
       HostedSmsService.get_status(h)

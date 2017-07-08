@@ -1,85 +1,69 @@
-# Class responsible for sending camapaigns to a group of users by channel emails, mms/sms, facebook messenger
+# Class responsible for sending campaigns to a group of users by channel emails, mms/sms, facebook messenger
 module ChannelCampaign
   class SendCampaign
 
     def initialize(campaign)
-      @campaign = campaign # campaign object
-      @failure_user_list = []
+      @campaign = campaign
     end
 
     def send_channel_campaign
-      # declare constant with a string eg: string EmailCampaign will act like contant EmailCampaign
-      # all channels classes like messenger_campaign, mobile_campaign, email_campaign
-      # and has a common method send campaign which send campaign to a group of users
       channel_class = channel_string_class.constantize
-      @failure_user_list = channel_class.new(@campaign).send_campaign
-      unless @campaign.reminder_campaign?
-        retry_other_channel if retry_campaign?
+      @recipients = get_recipients
+      
+      if @recipients.present?
+        @results = channel_class.new(@campaign, @recipients).send_campaign
+        @recipients = @results[:recipients]
+        update_campaign(@campaign.channel) unless @campaign.test? || @recipients.blank?   # should come before retrying
+        email_fallback if retry_campaign?
       end
-      update_campaign
     end
 
     private
 
+    # test emails, contacts based list & email shouldn't retry....
     def retry_campaign?
-      (!@campaign.test? && @failure_user_list.present?)
+      !@campaign.test? && @results[:retry_list].present? && @campaign.lists.first.customer? && @campaign.channel != 'email'
     end
 
     def channel_string_class
-      # channel mappers maps campaign channel to its respective class
       channel_mapper[@campaign.channel]
     end
 
-    def retry_other_channel
-      # valid_retry_channel contains ["MobileCampaign", "MobileCampaign", "MessengerCampaign"]
-      valid_retry_channel = channel_mapper.values[1..3]
-      # valid_retry_channel[2] contains "MessengerCampaign"
-      if @failure_user_list.present? && valid_retry_channel.include?(channel_string_class)
-        if valid_retry_channel[2].include?(channel_string_class)
-          retry_email_campaign unless retry_mobile_campaign
-        elsif valid_retry_channel[0].include?(channel_string_class)
-          retry_email_campaign
-        end
-      end
+    def get_recipients
+      return [{ email: @campaign.user.email }] if @campaign.test?
+      @campaign.lists.first.get_mcs             # relationally campaigns can have more lists...but not in practice
     end
 
-    # returns array of user_id list hash eg: [{ user_id: 1 }, { user_id: 2 }]
-    def get_user_id
-      user_id_list = []
-      @campaign.lists.each do |list|
-        list.get_mcs.each{ |customer| user_id_list.push({ user_id: customer[:user].id }) }
-      end
-      user_id_list
+    def email_fallback
+      @results = EmailCampaign.new(@campaign, @results.second).send_campaign 
+      should_update_campaign = @recipients.blank? && @results[:recipients].present?
+      @recipients = @results[:recipients]
+      update_campaign('email', should_update_campaign)
     end
 
-    def retry_email_campaign
-      EmailCampaign.new(@campaign, @failure_user_list).send_failure ? update_campaign : false
-    end
-
-    def retry_mobile_campaign
-      MobileCampaign.new(@campaign, @failure_user_list).send_failure ? update_campaign : false
-    end
-
-    # The key in channel mapper is enum channels of campaign please refer to campaign model
-    # Value of the key is string which is same as class name
+    # The key in channel mapper is enum channels of campaign.
+    # Refer to campaign model. Values are strings which are the class names
     def channel_mapper
-      {
-        'email' => 'EmailCampaign', 'mms' => 'MobileCampaign', 'sms' => 'MobileCampaign',
-        'facebook_messenger' => 'MessengerCampaign'
-      }
+      { 'email' => 'EmailCampaign', 'mms' => 'MobileCampaign', 'sms' => 'MobileCampaign', 'facebook_messenger' => 'MobileCampaign' }
     end
 
     # updates campaign details after sending campaign success.
-    def update_campaign
-      @campaign.send_count = @campaign.send_count + 1
-      @campaign.lists.each { |list| @campaign.campaign_recipients.build(get_user_id) }
-      @campaign.save(validate: false)
-      @campaign.update_attribute('status', 3) if is_recurring_campaign_completed? || @campaign.one_time?
+    def update_campaign(channel, update_campaign = true)
+      # sent count is needed in campaigns so it can be used to update campaign recipients
+      if update_campaign
+        @campaign.increment(:sent_count) 
+        @campaign.status = 3 if @campaign.one_time?
+        @campaign.next_send_at += @campaign.repeat_days.days if @campaign.recurring?
+        @campaign.save(validate: false)
+      end
+
+      # relationally campaigns can have more lists...but not in practice
+      list_id = @campaign.lists.first.id
+      @recipients.each do |r|
+        l.campaign_recipients.find_or_create_by({ campaign_id: @campaign.id, sent_count: @campaign.sent_count, list_id: list_id,
+                                                  customer_contact_type: r.class.to_s, customer_contact_id: r.id, channel: channel }) 
+      end
     end
 
-    # Check if recurring campaign is completed or not by comparing repeat days and send count.
-    def is_recurring_campaign_completed?
-      @campaign.repeat_days == @campaign.send_count if @campaign.recurring?
-    end
   end
 end

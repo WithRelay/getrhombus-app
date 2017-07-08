@@ -113,7 +113,8 @@ class Plan < ActiveRecord::Base
   # Creates a plan segment
   # This is called after a new plan is created.
   def create_plan_segment
-    List.create(name:self.name, user_id: self.merchant_id, segment: plan_segment_data(self.id), origin: 1, list_type: 0)
+    List.create(name:self.name, user_id: self.merchant_id, segment: plan_segment_data(self.id), 
+                origin: List.origins[:system], list_type: List.origins[:customer], campaign_type: List.campaign_types[:campaign])
   end
 
   def update_plan_segment

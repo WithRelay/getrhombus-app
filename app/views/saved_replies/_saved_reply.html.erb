@@ -5,10 +5,11 @@
     </div>
     <div class="cb check-box-column">
       <div>
+        <%= link_to '', user_saved_reply_path(current_user, saved_reply), id: "saved_reply-delete-#{saved_reply.id}", class: 'w-hidden', method: :delete %>
         <%= form_for(saved_reply, url: user_saved_reply_path(current_user, saved_reply), html: { method: :delete } ) do |f| %>
           <div class="select-all-check-box w-checkbox w-clearfix">
             <%= f.hidden_field :id %>
-            <input class="cb table-checkbox checkboxes w-checkbox-input" id="node" type="checkbox">
+            <input class="cb table-checkbox checkboxes w-checkbox-input" id="node" type="checkbox" data-title='<%= saved_reply.title %>' data-body='<%= saved_reply.body %>' data-obj-id="<%= saved_reply.id %>" >
             <label class="checkbox-field-lable w-form-label" for="node">-</label>
           </div>
         <% end %>

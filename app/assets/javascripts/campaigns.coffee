@@ -51,7 +51,7 @@ class Campaign
   constructor: (emojiConfig)->
     @textArea = '#trumbowyg'
     @emojiConfig = emojiConfig
-    @oneTime = '#oneTimeFrequency'; @deliverNow = '#Deliver-now'; @schedule = '.scheduleOption'
+    @oneTime = '#campaignOneTimeFrequency'; @deliverNow = '#Deliver-now'; @schedule = '.scheduleOption'
 
   showHideEditor: (element)->
     if isEmailChecked(element)
@@ -147,7 +147,7 @@ $( document ).on 'ready page:load', ->
       alert 'Only image file formats with extension: jpg, jpeg, png, PNG, JPG, JPEG are allowed.'
       window.invalid_image = true
     else if !uploadedImage.validateSize()
-      alert 'invalid upload size. upload image should be less than 4 mb'
+      alert 'invalid upload size. upload image should be less than 4.5 mb'
       window.invalid_image = true
     else if !uploadedImage.validateTotalSize()
       alert 'invalid upload size. Total upload image should be less than 25 mb'
@@ -197,10 +197,10 @@ $( document ).on 'ready page:load', ->
   $( '#campaign-channel' ).change ->
     campaign.showHideEditor(this)
 
-  $( '#oneTimeFrequency' ).click ->
+  $( '#campaignOneTimeFrequency' ).click ->
     $('#campaign_repeat_days').hide()
 
-  $('#recurringFrequency').click ->
+  $('#campaignRecurringFrequency').click ->
     $('#campaign_repeat_days').show()
     campaign.hideShowScheduler()
 
@@ -210,11 +210,10 @@ $( document ).on 'ready page:load', ->
   else
     $('.scheduleOption').show();
 
-  # Mainly for edit actions so the view shows properly
-  frequency_type = if $('#oneTimeFrequency').is(':checked') then '#oneTimeFrequency' else '#recurringFrequency'
+  frequency_type = if $('#campaignOneTimeFrequency').is(':checked') then '#campaignOneTimeFrequency' else '#campaignRecurringFrequency'
   $(frequency_type).trigger('click')
 
-  $( '#oneTimeFrequency, #Deliver-now' ).click ->
+  $( '#campaignOneTimeFrequency, #Deliver-now' ).click ->
     if !$("#Deliver-now").is(":checked")
       campaign.datePicker(new DatePicker( '.daterange', true, { time: true, select: true } ))
     campaign.hideShowScheduler()
@@ -235,7 +234,7 @@ $( document ).on 'ready page:load', ->
           if data.status == 200
             lastSrc = $('#trumbowyg').trumbowyg('html').split('src="').pop()
             newHtml = trumbowygHtml.replace(lastSrc, data.image_url + '">');
-            imageIdHtml = '<input type="hidden" name="campaign[image_id][]" value="'+data.image_id+'">'
+            imageIdHtml = '<input type="hidden" name="campaign[image_id][]" value="' + data.image_id + '">'
             $('.newMessage').append(imageIdHtml)
             $('#trumbowyg').trumbowyg('html', newHtml);
             $('.loading').css({'position': '', 'z-index': '', 'margin': ''});
@@ -247,6 +246,6 @@ $( document ).on 'ready page:load', ->
             imageTag = '<img src=' + splitHtml
             newHtml = trumbowygHtml.replace(imageTag, '');
             $('#trumbowyg').trumbowyg('html', newHtml);
-            alert 'sorry only jpeg and png images are supported with less than 5 mb'
+            alert 'sorry only jpeg and png images are supported with less than 4.5 mb'
     img.src = url
     return

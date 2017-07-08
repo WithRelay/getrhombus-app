@@ -20,14 +20,6 @@ class Api::V1::HashtagsController < API::V1::BaseController
     render json: { valid: current_user.hashtags.where("lower(name) = ?", params[:hashtag][:name].downcase).blank? }
   end
 
-  def create
-    if Hashtag.create(name: params[:name] , tag: params[:tag])
-      render json: output
-    else
-      render json: { "error": "unable to create hashtag" }, status: 500
-    end
-  end
-
   def image_delete
     image_ref = find_image_ref(imageable_type: 'Hashtag', image_id: params[:image_id])
     image_ref.delete if image_ref

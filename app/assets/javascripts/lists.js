@@ -9,7 +9,7 @@ $(document).on('ready page:load', function() {
       setFlashForList('Only 1 list can be deleted at a time', 'error');
     } else {
       var id = '#list-delete-' + selected_objects[0];
-      FlashHandler.setConfirmationDialog(id, 'Are you sure, you want to delete selected lists?', 'Delete', 'destroy-lists');
+      FlashHandler.setConfirmationDialog(id, 'Are you sure you want to delete the selected list?', 'Delete', 'destroy-lists');
     };
   });
 
@@ -55,6 +55,7 @@ $(document).on('ready page:load', function() {
     } else {
       var edit_list_form = $("#edit_list_form").attr("action").split('/');
       edit_list_form.pop();
+      console.log(edit_list_form)
       var list_name = $('.obj-checkbox-selector:checked').data("list-name");
       $("#edit-list-form").lightbox_me({
         centered: true,
@@ -68,11 +69,6 @@ $(document).on('ready page:load', function() {
       });
     }
   });
-
-  // $('.obj-checkbox-selector').click(function(){
-  //   $(this).is(':checked') && $('#create_list_button').removeAttr('disabled')
-  //   $(':checkbox').not(this).attr('checked', false);
-  // });
 
   $('.edit_create_user_list').formValidation({
     framework: 'bootstrap',
@@ -98,28 +94,21 @@ $(document).on('ready page:load', function() {
       }
     }
   }).on('success.form.fv', function(e, data) {
-    // Submission of the create list form
+    // this only applies to creating. edit uses normal http.
     $("form#create_user_list").submit(function(e){
       e.preventDefault();
-      var action = $(this).attr('action');
-      var method = $(this).attr('method');
-      // Submit form via Ajax
       $.ajax({
-        method: method,
-        url: action,
+        method: $(this).attr('method'),
+        url: $(this).attr('action'),
         data: $(this).serializeArray(),
         dataType: 'json'
-      }).done(function(msg){
-        (msg.status == 404) && setFlashForList(msg.error.replace(/[\["\]']/g, ''), 'error');
-        if (msg.status == 200){
-          window.location = msg.redirect_url;
-          setFlashForList('List successfully Created', 'notice');
-          $('.close-modal').click();
-        }
+      }).done(function(data, msg) {
+        setFlashForList('List successfully created', 'notice');
+        window.location = data.redirect_url;
       }).fail(function(msg){
-        setFlashForList('Unable to create list', 'error');
+        setFlashForList('Unable to complete request', 'error');
       });
-    })
+    });
   });
 
   $('#segment-sidebar-form').formValidation({
@@ -239,16 +228,11 @@ $(document).on('ready page:load', function() {
     e.preventDefault();
   });
 
-  function isAnyCheckboxSelected(checkbox_class){
+  function isAnyCheckboxSelected(checkbox_class) {
     return $(checkbox_class).is(':checked') || $('#check_or_uncheck_all').is(':checked');
-  }
-  // On click of the cancel button close out the lightbox
-  $(".cancel").click(function(e){
-    $("#list_create_modal").hide();
-    $("#segment_create_modal").hide();
-  });
+  };
 
-  function setFlashForList(msg, title){
+  function setFlashForList(msg, title) {
     FlashHandler.setFlashMessage(msg, title);
   };
 
@@ -259,7 +243,7 @@ $(document).on('ready page:load', function() {
       selected_objects.push($(this).data('obj-id'));
     });
     return selected_objects;
-  }
+  };
 
   $("#segment_filter_by").change(function(){
     checkBetweenSelected('#segment_filter_by', '#amount_2');
@@ -288,7 +272,7 @@ $(document).on('ready page:load', function() {
   $('.list-member-delete').click(function(e) {
     e.preventDefault();
     var id = $(this).parent().children()[0].id;
-    FlashHandler.setConfirmationDialog(id, 'Are you sure you want to delete this member?', 'Delete', 'destroy-list-members');
+    FlashHandler.setConfirmationDialog("#" + id, 'Are you sure you want to delete this member?', 'Delete', 'destroy-list-members');
   });
 
   $('.create-segment').click(function() {

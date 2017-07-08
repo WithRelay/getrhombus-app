@@ -19,9 +19,7 @@ class Conversation < ActiveRecord::Base
 
   # Returns hash with users who sent a message to the given merchant in the last "num_days" days
   def self.get_open_conversations(merchant_id, page)
-  	convs = where(merchant_id: merchant_id, is_resolved: false)
-                            .paginate(page: page, per_page: 7).order(updated_at: :desc)
-
+  	convs = where(merchant_id: merchant_id, is_resolved: false).paginate(page: page, per_page: 7).order(updated_at: :desc)
   	x = convs.map { |conv| conv.conversation_hash }
 
     # remove these lines and x variable above
@@ -101,43 +99,47 @@ class Conversation < ActiveRecord::Base
 
   # uid can be user id, phone number or messenger id
   def self.send_message(conv, team, msg, channel, source, media = [])
-    @conv = conv
-    from = (channel == "FbMessage") ? team.get_page_access_token : team.rhombus_number
+    begin
+      @conv = conv
+      from = (channel == "FbMessage") ? team.get_page_access_token : team.rhombus_number
 
-    if @conv.uid_type == "user"
-      customer = User.find_by(id: @conv.uid)
-      to = (channel == "FbMessage") ? customer.get_customer_page_specific_id(from) : customer.phone_number
-    else
-      to = @conv.uid
-    end
-
-    msg_instance = channel.constantize.new
-
-    # Relate message to files
-    if media.present?
-      media_ids = []
-      media.map! do |m|
-        media_ids.push(m.id)
-        m.avatar.url
+      if @conv.uid_type == "user"
+        customer = User.find_by(id: @conv.uid)
+        to = (channel == "FbMessage") ? customer.get_customer_page_specific_id(from) : customer.phone_number
+      else
+        to = @conv.uid
       end
-      msg_instance.image_ids = media_ids
-    end
 
-    if msg_instance.send_and_save_message(team, customer, from, to, msg, media)
-      re = find_or_create_conversation_for_message(team.id, @conv.uid_type, @conv.uid, msg_instance, false, source)
-      msg_hash = message_hash(re[0], msg_instance, re[1], customer, team)
-      [msg_hash, msg_instance, re.second]    # message hash, instance and message conv ref are needed
-    else
+      return false unless from.present? && to.present?
+      msg_instance = channel.constantize.new
+
+      # Relate message to files
+      if media.present?
+        media_ids = []
+        media.map! do |m|
+          media_ids.push(m.id)
+          m.avatar.url
+        end
+        msg_instance.image_ids = media_ids
+      end
+
+      if msg_instance.send_and_save_message(team, customer, from, to, msg, media)
+        re = find_or_create_conversation_for_message(team.id, @conv.uid_type, @conv.uid, msg_instance, false, source)
+        msg_hash = message_hash(re[0], msg_instance, re[1], customer, team)
+        [msg_hash, msg_instance, re.second]    # message hash, instance and message conv ref are needed
+      else
+        false
+      end
+    rescue StandardError
+      # notify team
       false
     end
   end
 
-  ########### add a parameters for source?? cos of campaigns
-
-  # when sending by platform on behalf of merchant like automated messages (excludes sending from dashboard)
-  def self.find_or_create_conversation_for_message_and_send_publish(team, customer, uid_type, uid, msg_to_send, channel, media = [])
+  # when sending by platform on behalf of merchant like automated messages, campaigns (excludes sending from dashboard)
+  def self.find_or_create_conversation_for_message_and_send_publish(team, customer, uid_type, uid, msg_to_send, channel, media = [], source = 'platform')
     re = find_or_create_conversation(team.id, uid_type, uid)
-    msg_ary = send_message(re, team, msg_to_send, channel, 'platform', media)
+    msg_ary = send_message(re, team, msg_to_send, channel, source, media)
     if msg_ary
       RealtimeStreamService.messages(re, msg_ary.third, team, customer, msg_ary.second)
       puts msg_ary.inspect
@@ -181,17 +183,9 @@ class Conversation < ActiveRecord::Base
   def self.get_merchant_todays_unread_count(merchant_id, date)
     find_by_sql(["select count(cr.id) as count from conversations c inner join conversation_refs cr
                   on c.id = cr.conversation_id where cr.unread = 1 and c.is_resolved is false
-                  and c.merchant_id = ? and cr.created_at >= ? and source = 2", merchant_id, date]).first.count
+                  and c.merchant_id = ? and cr.created_at >= ? and source = #{ConversationRef.sources[:customer]}", merchant_id, date])
+                .first.count
   end
-
-=begin
-  # get the total number of unread messages for a merchant
-  def self.get_merchant_total_unread_msgs_count(merchant_id)
-    find_by_sql(["select count(cr.id) as count from conversations c inner join conversation_refs cr
-                  on c.id = cr.conversation_id where cr.unread = 1 and c.is_resolved is false
-                  and c.merchant_id = ? and source = 2", merchant_id]).first.count
-  end
-=end
 
   # get the last message from the last 5 conversations a merchant has had on or after a date
   def self.get_last_customer_msg_from_last5_convs_today(merchant_id, date)
@@ -206,7 +200,7 @@ class Conversation < ActiveRecord::Base
                       where d.merchant_id = ? and d.is_resolved is false
                       and d.updated_at >= ? order by d.updated_at desc, id desc limit 5
                       ) e ON e.id = c.conversation_id
-                    where source = 2 GROUP BY c.conversation_id
+                    where source = #{ConversationRef.sources[:customer]} GROUP BY c.conversation_id
                   ) b ON a.id = b.cr_id order by a.created_at desc, id desc", merchant_id, date])
   end
 

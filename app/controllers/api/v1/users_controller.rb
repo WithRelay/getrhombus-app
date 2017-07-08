@@ -7,7 +7,7 @@ class Api::V1::UsersController < API::V1::BaseController
     results = User.find_by_sql [
       "(select mc.customer_id as uid, 'user' as uid_type,
         coalesce(NULLIF(u.card_name, ''), u.email) as title, u.phone_number as description,
-        CONCAT(uid, '-', 'user') AS unique_identifier
+        CONCAT(mc.id, '-', 'MerchantCustomer') AS unique_identifier
         from merchant_customers mc       
         inner join users u on mc.customer_id = u.id
         where mc.merchant_id = ? and
@@ -17,17 +17,17 @@ class Api::V1::UsersController < API::V1::BaseController
       union all
 
       (select uid, 'fb_page', name as title, 'Messenger Contact', 
-      CONCAT(uid, '-', 'fb_page') AS unique_identifier
-      from merchant_contacts
-      inner join fb_creds on fb_creds.page_specific_id = merchant_contacts.uid
-      where merchant_id = ? and uid_type = 'fb_page' and is_customer = false
+      CONCAT(mc.id, '-', 'MerchantContact') AS unique_identifier
+      from merchant_contacts mc
+      inner join fb_creds on fb_creds.page_specific_id = mc.uid
+      where merchant_id = ? and uid_type = 'fb_page' and is_customer = false and
       (lower(name) like concat('%', ?, '%') or lower(email) like concat('%', ?, '%')))
 
       union all
 
       (select uid, 'phone_number', uid as title, 'SMS Contact' as description, 
-      CONCAT(uid, '-', 'phone_number') AS unique_identifier
-      from merchant_contacts
+      CONCAT(mc.id, '-', 'MerchantContact') AS unique_identifier
+      from merchant_contacts mc
       where merchant_id = ? and uid_type = 'phone_number' and is_customer = false and uid like concat('%', ?, '%'))",
 
       current_user.id, q, q, q, current_user.id, q, q, current_user.id, q]

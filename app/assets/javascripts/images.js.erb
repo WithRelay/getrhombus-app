@@ -15,7 +15,7 @@ $(document).ready(function () {
     function invalid_actions(msg) {
     	input.value = "";
       new_image_previews.html("");
-      alert(msg);
+      Flashhandler.setflashmessage(msg, 'error');
     }
 
     // http://stackoverflow.com/questions/23402187/multiple-files-upload-and-using-file-reader-to-preview
@@ -95,11 +95,10 @@ $(document).ready(function () {
         dataType: "json"
     })
       .done(function(data, textStatus, jqXHR) {
-        console.log(data.response);
         $(delete_link).parent().slideUp(400, function() { delete_link.remove(); });
       })
       .fail(function(data, textStatus, errorThrown) {
-        alert('Unable to delete file')
+        FlashHandler.setFlashMessage('Unable to delete file', 'error');
         delete_link.style.pointerEvents = 'auto';
       })
       .always(function(data, textStatus, response) {});

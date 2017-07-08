@@ -10,7 +10,7 @@
             <div class="cb check-box-column header">
               <div>
                 <div class="select-all-check-box w-checkbox w-clearfix">
-                  <input class="cb table-checkbox w-checkbox-input" id="check_or_uncheck_all" type="checkbox">
+                  <input class="cb table-checkbox checkboxes w-checkbox-input" id="check_or_uncheck_all" type="checkbox">
                   <label class="checkbox-field-lable w-form-label" for="check_or_uncheck_all">-</label>
                 </div>
               </div>
@@ -54,7 +54,7 @@
   <div class="dashboard-body" id="list-data" data-list-channel='<%= @channel %>' data-list-type='<%= @list_type %>'>
    <div class="customer-dashboard-table-wrapper row-wrapper">
       <div>
-        <div id='objlists' class="multi-checkbox-select-class">
+        <div id='objlists' class="multi-checkbox-select-class" data-object-type='merchant_customer'>
           <%= render @merchant_customers %>
         </div>
         <div id="with-button" class="hide">

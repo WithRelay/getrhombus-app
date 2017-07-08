@@ -1,5 +1,7 @@
 $(document).ready(function () {
 
+  // all reviewed
+
   //  Hashtags, plans, coupons, Alerts
   var coupon_type_value  = $('#coupon-type-value');
   var coupon_type = $('#coupon-type');
@@ -7,7 +9,6 @@ $(document).ready(function () {
 
   // emojionearea
   if ($("#hashtag-response-textarea").length) {
-
     var msg_emoji_box =  $('#hashtag-response-textarea').emojioneArea({
       pickerPosition: "bottom"
     });
@@ -24,7 +25,6 @@ $(document).ready(function () {
     msg_emoji_box[0].emojioneArea.on('change', function(e) {
       $('#new_hashtag').formValidation('resetField', 'hashtag[response]');
     });
-
   };
 
   // no spaces
@@ -62,31 +62,35 @@ $(document).ready(function () {
     }
   };
 
-  //disable checkbox
-  $('.checkboxes').click(function(){
-    if ($(this).is(':checked')){
-      $('.checkboxes').attr('disabled', true);
-      if ($('#activate-deactivate-campaign').length > 0){
-          var statusName = $(this).parent().find('.resource-status').text();
-          changeButtonName('#activate-deactivate-campaign', statusName)
-      }
-      $(this).attr('disabled', false);
+  // delete hashtag button
+  $('#delete-hashtag').click(function(e) {
+    var selectedElement = CheckedItem.get();
+    if (selectedElement == false) {
+      FlashHandler.setFlashMessage('Select a hashtag to delete', 'error');
     } else {
-      $('.checkboxes').attr('disabled', false);
+      var id = '#hashtag-delete-' + selectedElement.data('obj-id');
+      FlashHandler.setConfirmationDialog(id, 'Are you sure you want to delete this hashtag?', 'Delete');
     };
+    return false;
   });
 
-  function changeButtonName(buttonId, statusName){
-    var status = { paused: '  Activate', active: '  Deactivate' }
-    $(buttonId).text(status[statusName])
-  }
+  // deactivate hashtag button 
+  $('#deactivate-hashtag').click(function() {
+    var selectedElement = CheckedItem.get();
+    if (selectedElement == false) {
+      FlashHandler.setFlashMessage('Select a hashtag to change status', 'error');
+    } else {
+      FlashHandler.setConfirmationDialog('#deactivate-hashtag', 'Are you sure you want to change hashtag status?', 'Change');
+    };
+    return false;
+  });
 
   // decimal with two places
-    $('#hashtag_amount, #amount_1 ,#Plan-Amount, #charge-amount, #Add-Funds').on('input', function(e) {
-      $(this).val(function(_, v) {
-        return decimal_with_up_to_two_places(v);
-      });
+  $('#hashtag_amount, #amount_1 ,#Plan-Amount, #charge-amount, #Add-Funds').on('input', function(e) {
+    $(this).val(function(_, v) {
+      return decimal_with_up_to_two_places(v);
     });
+  });
 
   coupon_type_value.on('input', function(){
     var v = this.value;
@@ -109,7 +113,6 @@ $(document).ready(function () {
     coupon_type_value.val('').attr('name', name_value);
     coupon_type_value.attr('placeholder', placeholder_value);
   });
-
 
   // validate hashtag form
   $('#new_hashtag')

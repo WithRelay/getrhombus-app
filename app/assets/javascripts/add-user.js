@@ -1,6 +1,7 @@
 $(document).ready(function() {
   var create_user_form = '#create-user-form',
       create_user_submit = '#create-user-submit';
+      
   var country_selectize = $('#user_address_country').selectize({
     closeAfterSelect: true,
   });
@@ -20,7 +21,7 @@ $(document).ready(function() {
     load: function(query, callback) {
       if (!query.length) return callback();
       $.ajax({
-        url: '/v1/lists.json?type=list',
+        url: '/v1/lists.json?list_mode=list',
         type: 'GET',
         dataType: 'json',
         data: {

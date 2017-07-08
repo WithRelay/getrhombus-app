@@ -45,18 +45,18 @@ class User < ActiveRecord::Base
   has_many :merchant_customers, class_name: 'MerchantCustomer', foreign_key: 'merchant_id'
 
   has_one :hosted_sms
-  has_many :reminders, -> { where campaign_type: 1 }
+  has_many :reminders, -> { where campaign_type: Campaign.campaign_types[:reminder_campaign] }
 
   # this block is for customizing build method for user.campaign which allow also to save list
-  has_many :campaigns, -> { where campaign_type: 0 } do
+  has_many :campaigns, -> { where campaign_type: Campaign.campaign_types[:promo_campaign] } do
     # overiding association build function like user.campaigns.build will hit here
     def build(*args)
       # calls parent build action and send arguments first from the splat operator
       campaign = super(args[0])
       unless args.blank?
         # build campaign lists of campaign
-        list = args[0][:list_name]
-        campaign.campaign_lists.build(list_id: list) if list.present?
+        list_id = args[0][:list_id]
+        campaign.campaign_lists.build(list_id: list_id) if list_id.present?
         # build avatar of campaigns
         if args[1].present?
           campaign.images.build(avatar: args[1][:avatar], uploaded_as: 1) if (!campaign.sms? && args[1][:avatar].present?) && campaign.valid?
@@ -251,13 +251,15 @@ class User < ActiveRecord::Base
       response = "We're away at the moment and will get back to you when we return :)."
       AwayMessage.find_or_create_by(user_id: user_id, response: response)
       #GetIntelligenceDataJob.perform_later(self.org_phone, 'OpenCNAM')
+      origin = List.origins[:system]
+      campaign_type = List.campaign_types[:campaign]
       self.lists.create([
-        { name: 'New Customers', segment: new_customers_default_segment_data, origin: 1, list_type: 0 },
-        { name: 'New Contacts', segment: new_contacts_default_segment_data, origin: 1, list_type: 1 },
-        { name: 'Active Customers', segment: active_customers_default_segment_data, origin: 1, list_type: 0 },
-        { name: 'Active Contacts', segment: active_contacts_default_segment_data, origin: 1, list_type: 1 },
-        { name: 'Inactive Customers', segment: inactive_customers_default_segment_data, origin: 1, list_type: 0 },
-        { name: 'Inactive Contacts', segment: inactive_contacts_default_segment_data, origin: 1, list_type: 1 }
+        { name: 'New Customers', segment: new_customers_default_segment_data, origin: origin, list_type: List.list_types[:customer], campaign_type: campaign_type },
+        { name: 'New Contacts', segment: new_contacts_default_segment_data, origin: origin, list_type: List.list_types[:contact], campaign_type: campaign_type },
+        { name: 'Active Customers', segment: active_customers_default_segment_data, origin: origin, list_type: List.list_types[:customer], campaign_type: campaign_type },
+        { name: 'Active Contacts', segment: active_contacts_default_segment_data, origin: origin, list_type: List.list_types[:contact], campaign_type: campaign_type },
+        { name: 'Inactive Customers', segment: inactive_customers_default_segment_data, origin: origin, list_type: List.list_types[:customer], campaign_type: campaign_type },
+        { name: 'Inactive Contacts', segment: inactive_contacts_default_segment_data, origin: origin, list_type: List.list_types[:contact], campaign_type: campaign_type }
       ])
     end
 #=end

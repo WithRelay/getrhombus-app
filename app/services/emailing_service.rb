@@ -3,13 +3,12 @@ class EmailingService
   require 'mandrill' # it is need to run QUEUE=* rake resque:work
   MANDRILL = Mandrill::API.new Rails.application.secrets.mandrill["key"]
 
-  # Note there are a number of global settings for this email in the mandrill account
-   SENDER = Rails.application.secrets.team_email
-   FROM_EMAIL= { edwin: "<redacted_email>", taiwo: '<redacted_email>' }
+  # Note there are a number of global settings for these emails in the mandrill account
+  FROM_EMAIL = { edwin: "<redacted_email>", taiwo: '<redacted_email>' }
+  
   class << self
 
     def send_completed_notice(hosted_number_order)
-
       user = hosted_number_order.user
       begin
         template_name = 'hosted-sms-activated'
@@ -19,7 +18,7 @@ class EmailingService
                                ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
-         "bcc_address"=> SENDER,
+         "bcc_address"=> User.platform_email,
          "from_name" => "Edwin from Relay",
          "from_email" => User.platform_email
         }
@@ -87,7 +86,7 @@ class EmailingService
                                ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
-         "bcc_address"=> SENDER,
+         "bcc_address"=> User.platform_email,
          "from_name" => "Edwin from Relay",
          "from_email" => User.platform_email
         }
@@ -99,13 +98,14 @@ class EmailingService
       end
     end
 
-    def send_email_campaign(campaign_hash)
-      # Email camapign is not only used to send email campaign but also facebook messenger camapign
-      # and facebook messenger camapaign do not contain subject
-      campaign_hash[:subject] = "Rhombus Campaign" if campaign_hash[:subject].blank?
-      message = campaign_hash.merge(FROM_EMAIL)
-      response = MANDRILL.messages.send(message)
-      ['sent', 'queued'].include?(response[0]['status']) ? true : false
+    def send_email_campaign(campaign_hash, async)
+      begin
+        message = campaign_hash.merge({ "from_email" => User.platform_email })
+        response = MANDRILL.messages.send(message, async)
+      rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
+        puts "A mandrill error occurred: #{e.class} - #{e.message}"
+      rescue StandardError => e
+      end
     end
 
     def send_welcome_email_with_referral(merchant_email, to, merchant_name, rhombus_number, rhombus_team_number)
@@ -117,10 +117,10 @@ class EmailingService
                                   { "name" => "rhombus_number", "content" => rhombus_number },
                                   { "name" => "merchant_name", "content" => merchant_name } ],
          "merge_language" => "handlebars",
-         "bcc_address"=> SENDER,
+         "bcc_address"=> User.platform_email,
          "to"=> [ { "email" => to } ],
          "from_name" => "Rhombus",
-         "from_email" => SENDER
+         "from_email" => User.platform_email
         }
         async = true
         result = MANDRILL.messages.send_template template_name, template_content, message, async
@@ -138,9 +138,9 @@ class EmailingService
          "merge_language" => "handlebars",
          "global_merge_vars" => [ { "name" => "rhombus_team_number", "content" => rhombus_team_number } ],
          "to"=> [ { "email" => to } ],
-         "bcc_address"=> SENDER,
+         "bcc_address"=> User.platform_email,
          "from_name" => "Rhombus",
-         "from_email" => SENDER
+         "from_email" => User.platform_email
         }
         async = true
         result = MANDRILL.messages.send_template template_name, template_content, message, async
@@ -167,7 +167,7 @@ class EmailingService
          "merge_language" => "handlebars",
          "to"=> [ { "email" => options[:to] } ],
          "from_name" => options[:merchant_name],
-         "from_email" => SENDER
+         "from_email" => User.platform_email
         }
         async = true
         result = MANDRILL.messages.send_template template_name, template_content, message, async
@@ -201,7 +201,7 @@ class EmailingService
          "merge_language" => "handlebars",
          "to"=> [ { "email" => options[:to] } ],
          "from_name" => "Rhombus",
-         "from_email" => SENDER
+         "from_email" => User.platform_email
         }
         async = true
         result = mandrill.messages.send_template template_name, template_content, message, async
@@ -213,7 +213,7 @@ class EmailingService
 
     def charge_failure_notification(options = {})
       begin
-        recipient = (options[:to_merchant]) ? options[:to] : SENDER
+        recipient = (options[:to_merchant]) ? options[:to] : User.platform_email
         template_name = 'charge-failure'
         template_content = []
         message = { "subject"=>"Charge Failure",
@@ -228,9 +228,9 @@ class EmailingService
                                   { "name" => "dump", "content" => options[:dump].to_s } ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => recipient } ],
-         "bcc_address"=> SENDER,
+         "bcc_address"=> User.platform_email,
          "from_name" => "Rhombus",
-         "from_email" => SENDER
+         "from_email" => User.platform_email
         }
         async = true
         result = MANDRILL.messages.send_template template_name, template_content, message, async
@@ -248,7 +248,7 @@ class EmailingService
         message = { "subject" => "Welcome to Relay",
          "merge_language" => "handlebars",
          "global_merge_vars"=> [    { "name" => "first_name", "content" => user.first_name || 'there' } ],
-         "bcc_address"=> SENDER,
+         "bcc_address"=> User.platform_email,
          "to"=> [ { "email" => user.email } ],
          "from_name" => "Edwin from Relay",
          "from_email" => FROM_EMAIL[:edwin]
@@ -269,7 +269,7 @@ class EmailingService
         message = { "subject" => "Get the most out of Relay",
          "global_merge_vars"=> [    { "name" => "first_name", "content" => user.first_name || 'there' } ],
          "merge_language" => "handlebars",
-         "bcc_address"=> SENDER,
+         "bcc_address"=> User.platform_email,
          "to"=> [ { "email" => user.email } ],
          "from_name" => "Taiwo from Relay",
          "from_email" => FROM_EMAIL[:taiwo]
@@ -291,7 +291,7 @@ class EmailingService
          "global_merge_vars"=> [    { "name" => "first_name", "content" => user.first_name || 'there' } ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
-         "bcc_address"=> SENDER,
+         "bcc_address"=> User.platform_email,
          "from_name" => "Taiwo from Relay",
          "from_email" => FROM_EMAIL[:taiwo]
         }
@@ -316,7 +316,7 @@ class EmailingService
          "global_merge_vars"=> [    { "name" => "first_name", "content" => user.first_name || 'there' } ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
-         "bcc_address"=> SENDER,
+         "bcc_address"=> User.platform_email,
          "from_name" => "Edwin from Relay",
          "from_email" => FROM_EMAIL[:edwin]
         }
@@ -337,7 +337,7 @@ class EmailingService
          "global_merge_vars"=> [    { "name" => "first_name", "content" => user.first_name || 'there' } ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
-         "bcc_address"=> SENDER,
+         "bcc_address"=> User.platform_email,
          "from_name" => "Edwin from Relay",
          "from_email" => FROM_EMAIL[:edwin]
         }
@@ -358,9 +358,9 @@ class EmailingService
          "global_merge_vars"=> [    { "name" => "first_name", "content" => user.first_name || 'there' } ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
-         "bcc_address"=> SENDER,
+         "bcc_address"=> User.platform_email,
          "from_name" => "Relay Report",
-         "from_email" => SENDER
+         "from_email" => User.platform_email
         }
         async = true
         result = MANDRILL.messages.send_template template_name, template_content, message, async
@@ -379,7 +379,7 @@ class EmailingService
          "merge_language" => "handlebars",
          "global_merge_vars"=> [    { "name" => "first_name", "content" => user.first_name || 'there' } ],
          "to"=> [ { "email" => user.email } ],
-         "bcc_address"=> SENDER,
+         "bcc_address"=> User.platform_email,
          "from_name" => "Edwin from Relay",
          "from_email" => FROM_EMAIL[:edwin]
         }
@@ -400,7 +400,7 @@ class EmailingService
          "global_merge_vars"=> [    { "name" => "first_name", "content" => user.first_name || 'there' } ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
-         "bcc_address"=> SENDER,
+         "bcc_address"=> User.platform_email,
          "from_name" => "Edwin from Relay",
          "from_email" => FROM_EMAIL[:edwin]
         }
@@ -421,7 +421,7 @@ class EmailingService
          "global_merge_vars"=> [    { "name" => "first_name", "content" => user.first_name || 'there' } ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
-         "bcc_address"=> SENDER,
+         "bcc_address"=> User.platform_email,
          "from_name" => "Edwin from Relay",
          "from_email" => FROM_EMAIL[:edwin]
         }
@@ -442,7 +442,7 @@ class EmailingService
          "global_merge_vars"=> [    { "name" => "first_name", "content" => user.first_name || 'there' } ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
-         "bcc_address"=> SENDER,
+         "bcc_address"=> User.platform_email,
          "from_name" => "Edwin from Relay",
          "from_email" => FROM_EMAIL[:edwin]
         }
@@ -464,9 +464,9 @@ class EmailingService
                                 { "name" => "pluralize_msg", "content" => options[:pluralize_msg] } ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => options[:to] } ],
-         "bcc_address"=> SENDER,
+         "bcc_address"=> User.platform_email,
          "from_name" => "Rhombus",
-         "from_email" => SENDER
+         "from_email" => User.platform_email
         }
         async = true
         result = MANDRILL.messages.send_template template_name, template_content, message, async
@@ -531,7 +531,7 @@ class EmailingService
                                ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
-         "bcc_address"=> SENDER,
+         "bcc_address"=> User.platform_email,
          "from_name" => "Edwin from Relay",
          "from_email" => FROM_EMAIL[:edwin]
         }
@@ -567,7 +567,7 @@ class EmailingService
                                ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => options[:user_email] } ],
-         "bcc_address"=> SENDER,
+         "bcc_address"=> User.platform_email,
          "from_name" => "Edwin from Relay",
          "from_email" => FROM_EMAIL[:edwin]
         }
@@ -600,7 +600,7 @@ class EmailingService
                                ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => options[:user_email] } ],
-         "bcc_address"=> SENDER,
+         "bcc_address"=> User.platform_email,
          "from_name" => "Edwin from Relay",
          "from_email" => FROM_EMAIL[:edwin]
         }
@@ -631,12 +631,12 @@ class EmailingService
                                   { "name" => "pdf_download_link", "content" => "https://www.withrelay.com/pdf_download_link"},
                                   { "name" => "history_link", "content" => "https://www.withrelay.com/history_link"},
                                   { "name" => "help_center_link", "content" => "https://www.withrelay.com/help_center_link"},
-                                  { "name" => "email_link", "content" => "mailto:<redacted_email>"},
+                                  { "name" => "email_link", "content" => "mailto:#{User.platform_email}"},
                                   { "name" => "refer_business_link", "content" => "https://www.withrelay.com/refer_business_link"}
                                ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => options[:user_email] } ],
-         "bcc_address"=> SENDER,
+         "bcc_address"=> User.platform_email,
          "from_name" => "Edwin from Relay",
          "from_email" => FROM_EMAIL[:edwin]
         }
@@ -666,12 +666,12 @@ class EmailingService
                                   { "name" => "currency_symbol", "content" => options[:currency_symbol] },
                                   { "name" => "transaction_link", "content" => "https://www.withrelay.com/transaction_link"},
                                   { "name" => "help_link", "content" => "https://www.withrelay.com/help_link"},
-                                  { "name" => "email_link", "content" => "mailto:<redacted_email>"},
+                                  { "name" => "email_link", "content" => "mailto:#{User.platform_email}"},
                                   { "name" => "refer_link", "content" => "https://www.withrelay.com/refer_link"}
                                ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => options[:user_email] } ],
-         "bcc_address"=> SENDER,
+         "bcc_address"=> User.platform_email,
          "from_name" => "Edwin from Relay",
          "from_email" => FROM_EMAIL[:edwin]
         }
@@ -692,7 +692,7 @@ class EmailingService
                                ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
-         "bcc_address"=> SENDER,
+         "bcc_address"=> User.platform_email,
          "from_name" => "Edwin from Relay",
          "from_email" => FROM_EMAIL[:edwin]
         }
@@ -713,7 +713,7 @@ class EmailingService
                                ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
-         "bcc_address"=> SENDER,
+         "bcc_address"=> User.platform_email,
          "from_name" => "Edwin from Relay",
          "from_email" => FROM_EMAIL[:edwin]
         }
@@ -734,7 +734,7 @@ class EmailingService
                                ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
-         "bcc_address"=> SENDER,
+         "bcc_address"=> User.platform_email,
          "from_name" => "Edwin from Relay",
          "from_email" => FROM_EMAIL[:edwin]
         }
@@ -756,7 +756,7 @@ class EmailingService
                                ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
-         "bcc_address"=> SENDER,
+         "bcc_address"=> User.platform_email,
          "from_name" => "Edwin from Relay",
          "from_email" => FROM_EMAIL[:edwin]
         }
@@ -779,7 +779,7 @@ class EmailingService
                                ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
-         "bcc_address"=> SENDER,
+         "bcc_address"=> User.platform_email,
          "from_name" => "Edwin from Relay",
          "from_email" => FROM_EMAIL[:edwin]
         }
@@ -804,7 +804,7 @@ class EmailingService
                                ],
           "merge_language" => "handlebars",
           "to"=> [ { "email" => user.email } ],
-          "bcc_address"=> SENDER,
+          "bcc_address"=> User.platform_email,
           "from_name" => merchant.user_title,
           "from_email" => FROM_EMAIL[:edwin],
           "headers" => {
@@ -848,7 +848,7 @@ class EmailingService
                                ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => options[:user_email] } ],
-         "bcc_address"=> SENDER,
+         "bcc_address"=> User.platform_email,
          "from_name" => "Edwin from Relay",
          "from_email" => FROM_EMAIL[:edwin]
         }

@@ -6,7 +6,7 @@ module PrettyDate
       short_format: { less_then_sec: '1s', sec: 's', min: 'm', hour: 'h', day: 'd', week: 'w' },
       short_ago_format: { less_then_sec: '1s ago', sec: 's ago', min: 'm ago', hour: 'h ago', day: 'd ago', week: 'w ago' },
       medium_format: { less_then_sec: '1 sec', sec: ' secs', min: ' min', min_p: ' mins', hour: ' hr', hour_p: ' hrs', day: ' day', day_p: ' days', week: ' week', week_p: ' weeks' },
-      long_format: { less_then_sec: ' 1 sec ago', sec: ' secs ago', min: ' minute ago', min_p: ' minutes ago', hour: ' hour ago', hour_p: ' hours ago', day: ' day ago', day_p: ' days ago', week: ' week ago', week_p: ' weeks ago' }
+      long_format: { less_then_sec: '1 sec ago', sec: ' secs ago', min: ' minute ago', min_p: ' minutes ago', hour: ' hour ago', hour_p: ' hours ago', day: ' day ago', day_p: ' days ago', week: ' week ago', week_p: ' weeks ago' }
     }
   end
 
@@ -23,8 +23,7 @@ module PrettyDate
   
     case a
     when 0..1
-      a = a.to_s 
-      str = format_type[:less_then_sec]
+     return format_type[:less_then_sec]
     when 2..59 
       a = a.to_s 
       str = format_type[:sec]

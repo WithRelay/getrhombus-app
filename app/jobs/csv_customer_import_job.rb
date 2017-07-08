@@ -1,5 +1,5 @@
 class CsvCustomerImportJob < ApplicationJob
-  @queue = :csv_customer_import
+  @queue = Rails.env + "_csv_customer_import"
 
   def perform(merchant, file)
     begin
