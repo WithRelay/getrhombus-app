@@ -5,13 +5,13 @@ class ListsController < ApplicationController
   before_action :set_notifications, except: [:destroy, :add_member]
 
   def index
-    @lists = current_user.lists.where(segment: nil).paginate(per_page: PAGINATION_PER_PAGE, page: params[:page]).order(created_at: :desc)
+    @lists = current_user.lists.campaign.where(segment: nil).paginate(per_page: PAGINATION_PER_PAGE, page: params[:page]).order(created_at: :desc)
     @lists.present? ? render_requested_format(@lists) : render(:no_lists)
   end
 
   # segment type list index action
   def segments
-    @lists = current_user.segments.paginate(per_page: PAGINATION_PER_PAGE, page: params[:page]).order(created_at: :desc)
+    @lists = current_user.segments.campaign.paginate(per_page: PAGINATION_PER_PAGE, page: params[:page]).order(created_at: :desc)
     @lists.present? ? render_requested_format(@lists) : render(:no_lists)
   end
 

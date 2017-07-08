@@ -11,7 +11,6 @@
 // about supported directives.
 
 // Angular js libraries and dependencies and other js
-//
 //= require pubnub/pubnub.min.js
 //= require jquery
 //= require lodash.min
@@ -22,11 +21,12 @@
 //= require offline.js
 
 // used for client side form validation
-//
 //= require formValidation.min
 //= require bootstrap-formvalidator.min
 //= require url-parameters
 //= require moment
+//= require user_details
+//= require notifications    
 
 // We need to place these js before jquery ujs for workable confirmation dialog box
 //= require flashes
@@ -91,7 +91,7 @@
 //= require reminders
 //= require add-user
 //= require pagination
-//= require list_checkbox_actions
+//= require campaign_checkbox_actions
 //= require managed-account
 //= require custom
 //= require phone_number_setup
@@ -101,7 +101,6 @@
 //= require segment
 //= require refund
 //= require resource_actions
-//= require notifications
 //= require away_messages
 //= require csv_upload
 //= require perfect-scrollbar

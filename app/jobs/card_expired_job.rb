@@ -1,10 +1,12 @@
 class CardExpiredJob
 
-  @queue = :card_expired
+  @queue = Rails.env + "_card_expired"
 
   def self.perform
+    ActiveRecord::Base.clear_active_connections!
+
     
-    # if we get mysql has gone away errors
+    # if we get mysql has gone away errors..see resque task
     #ActiveRecord::Base.clear_active_connections!
     
     User.all.each do |user|

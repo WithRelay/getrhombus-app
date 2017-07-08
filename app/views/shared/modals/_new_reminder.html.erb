@@ -1,46 +1,50 @@
 <style>
   #submitReminderForm {
-      margin-top: 60px;
+    margin-top: 60px;
   }
 </style>
+
 <div class="schedule-notification-form-wrapper" id="form-reminder-div">
+  
   <div class="content-sub-wrapper modal w-clearfix">
     <h4 class="modal-header welcome-dash-content-container-header">Schedule Message</h4>
       <a class="close-modal update-close-modals" data-parent='form-reminder-div' ></a>
   </div>
 
-
   <p class="modal-content-description">Set a reminder or notification that will go out to this customer at a future date. You can use this to automate appointment reminders, or bill payment reminders.</p>
   <div class="segment-modal underline-div"></div>
 
   <div class="scheduled-notification-form">
-    <%= form_for reminder, url: v1_reminders_url, html: { class: "w-clearfix reminderForm", id: "reminderForm",  name: "email-form-7" }  do |f| %>
-
+    <%= form_for reminder, url: v1_reminders_url, html: { class: "w-clearfix reminderForm", id: "newReminderForm" }  do |f| %>
       <div class="form-group col-xs-6">
-        <%= f.select :channel, reminder_channel(reminder), {}, selected: get_channel_enum_value(reminder), class: 'form-control dropdown w-select', data: { name: 'Notification Channel', id: 'Notification-Channel' } %>
+        <%= f.text_field :mc_id, class: 'form-control search-customers-and-contacts text-field w-input', id: 'reminder-customer-list' %>
       </div>
 
       <div class="form-group col-xs-6">
-        <%= customer_list_field(f) %>
+        <%= f.select :channel, reminder_channels, {}, class: 'form-control dropdown w-select', id: 'New-Notification-Channel' %>
       </div>
 
       <div class="form-group col-xs-6">
         <%= f.text_area :text, class: 'form-control notification-message text-area w-input', id: "Notification-Message", placeholder: "Enter notification message" %>
       </div>
       <div class="char-count notications" id= "textBoxCounter" ></div>
-      <%= f.text_field :date_time, data: { name: "Delivery Date &amp; Time" }, class: 'daterange delivery-date-time-picker text-field w-input', value: present(reminder).to_user_date_time %>
+      <%= f.text_field :date_time, class: 'daterange delivery-date-time-picker text-field w-input' %>
+
       <div class="notification-frequency radio-button w-radio">
-        <%= f.radio_button :frequency_type, 0, id: 'oneTimeFrequency', class: 'w-radio-input', data: { name: "Notification Frequency" }, checked: is_one_time_checked?(reminder) %>
+        <%= f.radio_button :frequency_type, 0, class: 'w-radio-input newReminderFrequency' %>
         <label class="w-form-label" for="Notification Frequency">Send once</label>
       </div>
 
       <div class="notification-frequency radio-button repeat w-radio">
-        <%= f.radio_button :frequency_type, 1, id: 'recurringFrequency', class: 'w-radio-input', data: { name: "Notification Frequency" }, checked: is_recurring_checked?(reminder) %>
+        <%= f.radio_button :frequency_type, 1, class: 'w-radio-input newReminderFrequency', checked: true %>
         <label class="w-form-label" for="Notification Frequency-2">Repeat</label>
       </div>
-      <%= f.select :repeat_days, repeat_days_options, {}, selected: reminder.repeat_days, id: 'campaign_repeat_days', class: "dropdown frequency-dropdown w-select" %>
+
+      <%= f.select :repeat_days, repeat_days_options, {}, selected: reminder.repeat_days, class: "dropdown frequency-dropdown w-select", id: 'newReminderRepeatDays' %>
+
       <!-- <a class="button schedule-notification w-button" href="#" id='submitReminderForm'>Schedule notification</a> -->
       <%= f.submit 'Schedule Notification', id: 'submitReminderForm', class: 'button schedule-notification w-button' %>
+
       <div id="new-reminder-div">
         <a class="button cancel-notification w-button update-close-modals" data-parent='form-reminder-div'>Cancel</a>
       </div>

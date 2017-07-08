@@ -1,215 +1,102 @@
-$(document).on('ready',function(){
-//this function used to delete/deactive Hashtag/Reminder/SavedReply
-//It works after the confirmation dialog
-
-  function formatDate(date) {
-    var hours = date.getHours();
-    var minutes = date.getMinutes();
-    var ampm = hours >= 12 ? 'PM' : 'AM';
-    hours = hours % 12;
-    hours = hours ? hours : 12; // the hour '0' should be '12'
-    minutes = minutes < 10 ? '0'+minutes : minutes;
-    var strTime = hours + ':' + minutes + ' ' + ampm;
-    return  date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate() + "  " + strTime;
-  }
-
-  $(document).on('click', '.cancel-yes', function(e){
-    e.preventDefault();
-    var selectedElement = selectCheckedElement();
-   var msg = $(this).parent().find('p').text();
-
-   if (!selectedElement)
-     return false
-
-    if (/deactivate/i.test(msg)){
-     var method_input = selectedElement.parents('.edit_hashtag').find("input[name='_method']");
-      method_input.attr('value','patch');
-   }
-    if (!window.location.pathname.match(/campaigns/)){
-      doAction(selectedElement);
-    }
-  });
-
-
-
-
-  // Confirmation dialog box for destroy saved reply
-  $('#delete-saved-reply').click(function(evt) {
-    var selectedElement = selectCheckedElement();
-    if(selectedElement == false){
-      FlashHandler.setFlashMessage('Please select a reply first','error');
+var CheckedItem = new function() {
+  this.get = function() {
+    var selectedElement = false;
+    $('.table-checkbox' + ':checkbox:checked').each(function(index, element) {
+      selectedElement = $(this);
       return false;
-    }
-    else if (!$('#delete-saved-reply').attr('isDestroy')) {
-      FlashHandler.setConfirmationDialog('#delete-saved-reply','Are you sure, you want to delete the selected item?', 'Delete', 'isDestroy' )
-      return false;
-    }
-  });
-
-$('#delete-reminder').click(function(e){
-  var selectedElement = selectCheckedElement();
-  if(selectedElement == false){
-  FlashHandler.setFlashMessage('Select a reminder to delete','error');
-  return false;
-}else {
-        e.preventDefault
-        FlashHandler.setConfirmationDialog('#delete-reminder','Are you sure, you want to delete the Reminder?', 'Delete', 'isDistroy');
-        return false;
-     }
-  });
-
-  $('#delete-hashtag').click(function(e) {
-   var selectedElement = selectCheckedElement();
-   if(selectedElement == false){
-     FlashHandler.setFlashMessage('Select a hashtag to delete','error');
-     return false;
-   }else{
-     FlashHandler.setConfirmationDialog('#delete-hashtag','Are you sure, you want to remove the hashtag?', 'Delete', 'isDistroy');
-     return false;
-   }
-  });
-
-  $('#deactivate-hashtag').click(function() {
-   var selectedElement = selectCheckedElement();
-   if(selectedElement == false){
-     FlashHandler.setFlashMessage('Select a hashtag to deactivate','error');
-     return false;
-   }else{
-      FlashHandler.setConfirmationDialog('#deactivate-hashtag','Are you sure, you want to deactivate the hashtag?', 'Deactivate', 'isDeactivate');
-      return false;
-   }
-  });
-
-  $('#edit-saved-reply').on('click',function(e){
-   var selectedElement = selectCheckedElement();
-   if (selectedElement == false){
-     FlashHandler.setFlashMessage('record not selected','error');
-     return false;
-   }
-   else{
-     $("#edit-saved-reply-modal").lightbox_me({
-       centered: true,
-        overlayCSS: {
-          background: '#ffffff', opacity: .8
-        }
-     });
-    }
-
-   var elementForm = selectedElement.closest('form');
-   var reply_id = elementForm.find('#saved_reply_id').val();
-
-   $.ajax({
-     url:  "/v1/saved_replies/" + reply_id + "/edit" ,
-     data:{id: reply_id}
-   }).done(function(res){
-      var form = $('#edit-save-reply-form');
-      var action = form.attr("action");
-      var newAction = window.location.origin + '/users/' + action.split('/')[2] + '/saved_replies/' + reply_id;
-
-      form.find("#Edit-Saved-Reply-Title").val(res.title);
-      form.find(".emojionearea-editor").text(res.body);
-      form.attr('action',newAction);
-
-     }).error(function(){
-      FlashHandler.setFlashMessage('Request cannot perform','error');
-   });
-  });
-
-
-  // $('#edit-reminder').on('click', function(){
-  //   var selectedElement = selectCheckedElement();
-  //
-  //   if (selectedElement == false){
-  //    FlashHandler.setFlashMessage('record not selected','error');
-  //    return false;
-  //   }else{
-  //    $("#edit-reminder-modal").lightbox_me({
-  //      centered: true
-  //    });
-  //
-  //   }
-  //   var elementForm = selectedElement.closest('form');
-  //   var reminder_id = elementForm.find("#reminder_id").val();
-  //
-  //    $.ajax({
-  //     url:  "/v1/reminders/" + reminder_id + "/edit" ,
-  //     data:{id: reminder_id}
-  //    }).done(function(res){
-  //    var form = $('.editReminderFrom');
-  //    var action = form.attr("action");
-  //    var reminder = res.reminder
-  //    var reminder_lists = res.reminder_lists;
-  //    var newAction = window.location.origin + '/users/' + action.split('/')[2] + '/reminders/' + reminder_id;
-  //    customtersSearch(reminder_lists);
-  //    var selectField = $('.editReminderFrom .search-customers-and-contacts')[0].selectize;
-  //    selectField.addItem(reminder_lists[0].id, false);
-  //    form.find("#Notification-Message").val(reminder.text);
-  //    form.find(".emojionearea-editor").text(reminder.text);
-  //    form.attr("action", newAction);
-  //
-  //    var raw_date_time = reminder.date_time;
-  //    var date_time = new Date(raw_date_time);
-  //    var formated_date_time = formatDate(date_time);
-  //    form.find("#reminder-date-time").val(formated_date_time);
-  //    }).error(function(){
-  //      // alert("")
-  //    })
-  //  });
-
-  function selectCheckedElement(){
-   var checkedElement = false;
-    $('.table-checkbox').each(function( index, element){
-     if ( $(this).is(':checked') )
-      checkedElement =  $(this);
     });
-    return checkedElement;
-  }
+    return selectedElement;
+  };
 
-  function doAction(selectedElement){
-    var elementForm = selectedElement.closest('form');
+  this.process = function(confirmBtnText, selector, isConfirm) {
+    var selectedElement = CheckedItem.get();
+    if (!selectedElement) return false;
 
-   if (elementForm.length == 0)
-     FlashHandler.setFlashMessage('could not perform action for the resource','error');
-   else
-     elementForm.submit();
+    var yes_button = $('.cancel-yes'),
+        msg = yes_button.parent().find('p').text(),
+        obj_type = CheckedItem.obj_type();
+    
+    yes_button[0].innerHTML = 'Please wait...';
 
-    $('.cancel-no').click();
-  }
+    if (obj_type == 'campaign') {
+      resource = new Resource(getCampaignActionUrl(selectedElement, msg));
+      resource.updateOrDelete();
+    } else if (obj_type == 'hashtag' && confirmBtnText.toLowerCase().indexOf('change') > -1) {
+      selectedElement.parents('.edit_' + obj_type).submit();
+    } else {
+      if (isConfirm) $(selector).attr(isConfirm, true);
+      $(selector).click();
+    };
+  };
 
-//
-//  $('#set-new-reminder-loader').click(function(){
-//     customtersSearch();
-//   });
-//
-// function customtersSearch(option = []){
-//   var labelSearchField = option.length < 1 ? 'description' : 'phone_number'
-//   var valueField = option.length < 1 ? 'uid' : 'id'
-//   $('.search-customers-and-contacts').selectize({
-//     maxItems: 1,
-//     valueField: valueField,
-//     labelField: labelSearchField,
-//     searchField: labelSearchField,
-//     create: false,
-//     options: option,
-//     closeAfterSelect: true,
-//     load: function(query, callback) {
-//       if (!query.length) return callback();
-//       $.ajax({
-//         url: '/v1/users.json',
-//         type: 'GET',
-//         dataType: 'json',
-//         data: {
-//           query: query
-//         },
-//         error: function() {
-//           FlashHandler.setFlashMessage('Something went wrong...Unable to find any customer', 'error');
-//           callback();
-//         },
-//         success: function(res) {
-//           callback(res['data']);
-//         }
-//       });
-//     }
-//   });
-// }
+  this.obj_type = function() {
+    return $('#objlists').data('object-type');
+  };
+
+  function getCampaignActionUrl(selectedElement, msg) {
+    var checked_item_id = selectedElement.parent().find('.resource-id').text();
+    
+    if (/delete/i.test(msg))
+      return { id: checked_item_id, 'url': '/v1/campaigns/' + checked_item_id + '/delete_campaign/', 'method': 'delete' };
+    else
+      return { id: checked_item_id, 'url': '/v1/campaigns/' + checked_item_id + '/change_status/', 'method': 'patch' };
+  };
+
+  function Resource(element) {
+    this.postData = element.id;
+    this.url = element.url;
+    this.method = element.method;
+  };
+
+  Resource.prototype.updateOrDelete = function() {
+    if (this.postData != undefined) {
+      $.ajax({ 
+        method: this.method,
+        url: this.url,
+        dataType: 'json',
+        data: { 'id': this.postData }
+      }).done(function(data) {
+        FlashHandler.setFlashMessage(data.notice, 'notice');
+        location.reload();
+      })
+      .fail(function(msg){ 
+        alert('Unable to complete request'); 
+        $('.cancel-no').click();
+      });
+    } else {
+      FlashHandler.setFlashMessage('Please select and item you want to update/delete', 'error');
+      $('.cancel-no').click();
+    }
+  };
+};
+
+
+$(document).on('ready',function() {
+
+  // used by several index pages
+  $('.checkboxes').click(function() {
+    if ($(this).is(':checked')){
+      $('.checkboxes').attr('disabled', true);
+
+      // campaign, hashtag index pages specific
+      if ($('#activate-deactivate-campaign').length > 0) {
+        var statusName = $(this).parent().find('.resource-status').text();
+        var status = { paused: '  Activate', active: '  Pause' };  
+        $('#activate-deactivate-campaign').text(status[statusName]);
+      } else if ($('#deactivate-hashtag').length) {
+        var statusName = $(this).parent().find('.resource-status').val();
+        var status = { active: '  <strong>Activate</strong>', inactive: '  <strong>Deactivate</strong>' };
+        $('#deactivate-hashtag').html(status[statusName]);
+      };
+
+      $(this).attr('disabled', false);
+    } else {
+      $('.checkboxes').attr('disabled', false);
+    };
+  });
+
+  $(document).on('click', '.cancel-no', function(e){
+    $('.cancel-subscription-wrapper').trigger('close');
+  });
+
 });

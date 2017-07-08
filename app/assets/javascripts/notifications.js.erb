@@ -1,38 +1,26 @@
 $(document).ready(function() {
 
   // subcribe to messaging channel
-  function subscribe_to_notifications() {
-    var type = $('#notifications-info').data('type');
-    
+  function subscribe_to_notifications() {    
+    var merchant_data = UserDetails.object();
     // merchant and up only
-    if (type) {
-      $.ajax({
-        url: window.location.origin + '/get_current_user',
-        type: "GET",
-        dataType: "json"
-      })
-      .done(function(data, textStatus, response) {
-        var merchant_id = data.id;
-        if (merchant_id) {
-          // Initialize PubNub with SSL
-          var pubnub = PUBNUB({
-            publish_key: data.pubnub_publish_key,
-            subscribe_key: data.pubnub_subscribe_key,
-            ssl: true
-          });
+    if (merchant_data) {
+      // Initialize PubNub with SSL
+      var pubnub = PUBNUB({
+        publish_key: merchant_data.pubnub_publish_key,
+        subscribe_key: merchant_data.pubnub_subscribe_key,
+        ssl: true
+      });
 
-          // Subscribe to merchant channel
-          pubnub.subscribe({
-            channel: 'notifications_<%= Rails.env %>_' + merchant_id.toString(),
-            message: function(m) {
-              process_notification(JSON.parse(m))
-            }
-          });  
-        }      
-      })
-      .fail(function(data, textStatus, response) {});
-    }
-  }
+      // Subscribe to merchant channel
+      pubnub.subscribe({
+        channel: 'notifications_<%= Rails.env %>_' + merchant_data.id.toString(),
+        message: function(m) {
+          process_notification(JSON.parse(m))
+        }
+      });    
+    };  
+  };
 
   subscribe_to_notifications();
 

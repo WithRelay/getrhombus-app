@@ -1,40 +1,54 @@
 $(document).on('ready page:load', function() {
   
+  // checked
   var htmlContent = '<option value="0">SMS</option> <option value="1">MMS</option> <option value="3">Email</option>';
   var dropDownOption = { 'sms': [ '0', 'SMS'], 'messenger': ['2', 'Facebook Messenger'], 'email': ['3', 'Email'] };
+  // For edit action, get lists data for preloading text input
+  var ajax_data, campaign_list_field = $('#campaign-list'), campaign_list = campaign_list_field.data("list-data");
 
-  $( '#sendTestCampaign' ).click(function(e){
+  // checked
+  $( '#sendTestCampaign' ).click(function(e) {
     e.preventDefault();
-    $(this).attr('active', 'true')
+    $(this).attr('active', 'true');
     $( 'form#campaignForm' ).submit();
   });
 
-
+  // checked-ish
   // review all these event handlers
   $("#trumbowyg").on('change', function(e) {
     $('#campaignForm').formValidation('resetField', 'campaign[text]');
     $('#campaignForm').formValidation('resetField', 'campaign[name]'); // is this needed?
   });
 
-  $("#send-campaign-users").click(function(){
+  // checked-ish
+  $("#send-campaign-users").click(function() {
     $('#campaignForm').formValidation('resetField', 'campaign[text]');
     $('#campaignForm').formValidation('resetField', 'campaign[name]');
   });
 
+  // checked-ish
   $('#campaign-channel').on('change', function(e) {
     $('#campaignForm').formValidation('resetField', 'campaign[name]');
     $('#campaignForm').formValidation('resetField', 'campaign[subject]');
   });
 
-  // this is actually for campaigns not lists but uses lists
+  function is_campaign_saved() {
+    return $('#campaignForm').data('persisted');
+  };
+
+  function current_campaign_list_type() {
+    return campaign_list[0].list_type;
+  };
+
+  function current_campaign_channel_is_email() {
+    return $('#campaignForm').data('channel') == 'email';
+  };
+
+  // checked
   // http://selectize.github.io/selectize.js/
-
-  // For edit action, get lists data for preloading text input
-  var x = $('#List'), campaign_lists = x.data("lists_data");
-
   // Can be undefined for new action
-  campaign_lists = (campaign_lists) ? campaign_lists : [];
-  var lists_selectize = x.selectize({
+  campaign_list = (campaign_list) ? campaign_list : [];
+  var lists_selectize = campaign_list_field.selectize({
     valueField: 'id',
     labelField: 'name',
     searchField: 'name',
@@ -42,7 +56,7 @@ $(document).on('ready page:load', function() {
     maxOptions: 5,
     maxItems: 1,
     create: false,
-    options: campaign_lists,
+    options: campaign_list,
     closeAfterSelect: true,
     render: {
       item: function(item, escape) {
@@ -53,36 +67,50 @@ $(document).on('ready page:load', function() {
     onItemAdd: function(value, $item) { createDynamicDropdown(lists_selectize[0].selectize.options[value]); },
     load: function(query, callback) {
       if (query.length < 2) return callback();
+      ajax_data = { query: encodeURIComponent(query) };
+
+      // if campaign is already saved and has email channel, query for only customer-based list. contacts dont have emails
+      // you could possibly restrict the list based on the channel of the existing campaign for sms/messenger too
+      if (is_campaign_saved() && current_campaign_channel_is_email()) 
+        ajax_data.list_type = current_campaign_list_type();
+      
       $.ajax({
-        url: window.location.protocol + "//" + window.location.host + "/v1/lists.json?query=" + encodeURIComponent(query),
+        url: window.location.protocol + "//" + window.location.host + "/v1/lists.json",
+        data: ajax_data,
+        success: function(res) { callback(res['lists']); console.log(res) },
         error: function() {
           FlashHandler.setFlashMessage('Something went wrong...Unable to find your lists', 'error');
           callback();
-        },
-        success: function(res) { 
-          callback(res['lists']);
-        }
+        }        
       });
     }
-  }).on('change', function(e) {
-    $('#campaignForm').formValidation('resetField', 'campaign[list_name]');
   })
+  .on('change', function(e) {
+    $('#campaignForm').formValidation('resetField', 'campaign[list_id]');
+  });
 
+  // checked
   function createDynamicDropdown(list_obj) {
-    if (list_obj && list_obj.list_type == 'contact') {
-      var listOption = dropDownOption[list_obj.channel];
-      if (listOption) {
-        var newHtmlContent = '<option value="'+ listOption[0] + '" >' +  listOption[1]  + "</option>";
-        $('#campaign-channel').html(newHtmlContent);
+    // you cannot change the channel of an existing campaign
+    if (!is_campaign_saved()) {
+      if (list_obj && list_obj.list_type == 'contact') {
+        var listOption = dropDownOption[list_obj.channel];
+        if (listOption) {
+          var newHtmlContent = '<option value="'+ listOption[0] + '" >' +  listOption[1]  + "</option>";
+          $('#campaign-channel').html(newHtmlContent);
+        };
+      } else {
+        return $('#campaign-channel').html(htmlContent);
       }
-    } else {
-      return $('#campaign-channel').html(htmlContent);
-    }
+    };
     $('#campaign-channel').change();
   };
 
+  // checked
   // prefill form with previous lists
-  $.each(campaign_lists, function (index, val) {
+  $.each(campaign_list, function (index, val) {
     lists_selectize[0].selectize.addItem(val['id']);
   });
+
+  
 });

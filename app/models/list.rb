@@ -1,19 +1,22 @@
 class List < ActiveRecord::Base
+  
   include SegmentQueries
 
   belongs_to :user
   serialize :segment, JSON
-  has_many :user_lists
-  validates :name, presence: true, uniqueness: { case_sensitive: false, scope: :user_id }
-  has_many :campaigns, through: :campaign_lists
+
   has_many :campaign_lists
   has_many :campaign_recipients
+  has_many :user_lists, dependent: :destroy
+  has_many :campaigns, through: :campaign_lists
+  
+  validates :name, presence: true, uniqueness: { case_sensitive: false, scope: :user_id }, unless: lambda { reminder? }
 
-  # default channel for contacts based list/segments since contacts come from a specific channel
-  enum channel: [:sms, :messenger]
+  enum channel: [:sms, :messenger]          # default channel for contacts based list/segments since contacts come from a specific channel
+  enum origin: [:merchant, :system]         # list origin specifies whether the list is system generated or created by a merchant (user)
   enum list_type: [:customer, :contact]
-  # List origin specifies whether the list is system generated or created by a merchant (user)
-  enum origin: [:merchant, :system]
+  enum campaign_type: [:campaign, :reminder]
+
 
   # Gets the merchant customers or merchant contacts that belong to a standard list or segment
   def get_mcs(page=1)
@@ -29,5 +32,7 @@ class List < ActiveRecord::Base
                 .select("#{class_name.table_name}.*").where("user_lists.list_id = #{self.id}")
                 .paginate(page: page, per_page: PAGINATION_PER_PAGE)
     end
+
+    [MerchantCustomer.find(32)]
   end
 end

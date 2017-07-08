@@ -196,7 +196,6 @@ $(document).ready(function () {
     .formValidation({
       framework: 'bootstrap',
       live: 'disabled',
-      // List of fields and their validation rules
       fields: {
         'subscription[coupon]':{
           validators: {
@@ -220,7 +219,7 @@ $(document).ready(function () {
 
   function updateCoupon() {
    $.ajax({
-      url: "/v1/subscriptions/"+subscriptionId,
+      url: "/v1/subscriptions/" + subscriptionId,
       beforeSend: function(xhr) {
         xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
       },
@@ -250,42 +249,41 @@ $(document).ready(function () {
   });
 */
 
-$('.subscription-checkbox').click(function() {
-  if ($(this).is(':checked')) {
-    $("#cancel-customer-subscription").removeClass('hide')
-    var parent_row = $(this).closest('.transactions-table-row')
-    var customer_name = parent_row.find('.customer-name').text()
-    var plan_name = parent_row.find('.plan-name').text()
-    $('#customer_name').text(customer_name)
-    $('#plan_name').text(plan_name)
-    subscriptionId = parent_row.attr('id')
-  } else {
-    $("#cancel-customer-subscription").addClass('hide')
-  }
-});
+  $('.subscription-checkbox').click(function() {
+    if ($(this).is(':checked')) {
+      $("#cancel-customer-subscription").removeClass('hide');
+      var parent_row = $(this).closest('.transactions-table-row');
+      var customer_name = parent_row.find('.customer-name').text();
+      var plan_name = parent_row.find('.plan-name').text();
+      $('#customer_name').text(customer_name);
+      $('#plan_name').text(plan_name);
+      subscriptionId = parent_row.attr('id');
+    } else {
+      $("#cancel-customer-subscription").addClass('hide');
+    }
+  });
 
-$('#cancel-subscription').on('click', function(e){
-  e.preventDefault();
-  $.ajax({
-     url: "/v1/subscriptions/"+subscriptionId,
-     beforeSend: function(xhr) {
-       xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
-     },
-     type: "DELETE",
-     dataType: "json"
-   })
-   .done(function(data, textStatus, jqXHR) {
-     FlashHandler.setFlashMessage(data.response, 'notice');
-     location.reload()
-   })
-   .fail(function(data, textStatus, errorThrown) {
-     FlashHandler.setFlashMessage(JSON.parse(data.responseText).response, 'error');
-     $('#'+subscriptionId).find('#email-form-2').css('display', 'block');
-   })
-   .always(function(data, textStatus, response) {
-     $('#cancel-subscription').removeAttr('disabled').text("Yes, unsubscribe customer");
-   });
-});
-
+  $('#cancel-subscription').on('click', function(e) {
+    e.preventDefault();
+    $.ajax({
+       url: "/v1/subscriptions/" + subscriptionId,
+       beforeSend: function(xhr) {
+         xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
+       },
+       type: "DELETE",
+       dataType: "json"
+     })
+     .done(function(data, textStatus, jqXHR) {
+       FlashHandler.setFlashMessage(data.response, 'notice');
+       location.reload()
+     })
+     .fail(function(data, textStatus, errorThrown) {
+       FlashHandler.setFlashMessage(JSON.parse(data.responseText).response, 'error');
+       $('#' + subscriptionId).find('#email-form-2').css('display', 'block');
+     })
+     .always(function(data, textStatus, response) {
+       $('#cancel-subscription').removeAttr('disabled').text("Yes, unsubscribe customer");
+     });
+  });
 
 });

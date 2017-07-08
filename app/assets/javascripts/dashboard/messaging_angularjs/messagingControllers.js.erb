@@ -68,106 +68,36 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
       return true;
     };
 
-    // Get logged in merchant id
-    $http.get(window.location.origin + '/get_current_user').success(function(data) {
+    // need to keep track of when at the end of conversations
+    var conversation_page = 1;
+    $scope.loadConversations = function() {
+      if ($scope.online()) {
+        var params = PageParameter.get_params(), select_conversation = {};
+        if (params['type'] == 'start_conversation')
+          select_conversation = { uid: params['uid'], uid_type: params['uid_type'] };
 
-      console.log(data)
-      $scope.merchant = data;
+        conversationService.getConversations(conversation_page, select_conversation)
+        .then(function(data) {
+          if (data.count) {
+            // Build conversation list and count initial global unread
+            angular.forEach(data.conversations, function(value, key) {
+              $scope.conversations[value.id] = value;
+              //$scope.global_unread_count += value.unread_count;
+            });
 
-      // Initialize PubNub with SSL
-      Pubnub.init({
-        publish_key: data.pubnub_publish_key,
-        subscribe_key: data.pubnub_subscribe_key,
-        ssl: true/*,
-        error: function (error) {
-          console.log('Error:', error);
-        }*/
-      });
+            conversation_page += 1;
+            console.log('loaded conversations')
+          } else {
+            console.log('you have no conversations');
+          }
 
-      // Subscribe to merchant channel
-      Pubnub.subscribe({
-        channel: 'messaging_<%= Rails.env %>_' + $scope.merchant.id,
-        message: function(m) {
-          var re = JSON.parse(m);
-          $scope.$apply(function() {
-            if (re.type == 'new-message') {
-              if (!$scope.conversations[re.conversation.id]) {
-                // add conversation object and update count
-                $scope.conversations[re.conversation.id] = re.conversation;
-                $scope.open_conversations_count += 1;
-                //$scope.global_unread_count += re.conversation.unread_count;
-              } else {
-                $scope.conversations[re.conversation.id].last_message = re.conversation.last_message
-                $scope.conversations[re.conversation.id].last_message_ts = re.conversation.last_message_ts
-                $scope.conversations[re.conversation.id].ago = re.conversation.ago
-
-                console.log($scope.conversations[re.conversation.id].last_message)
-                console.log(re.conversation.last_message)
-
-                if (re.message.source == 'customer') {
-                  //$scope.global_unread_count += 1;
-                  $scope.conversations[re.conversation.id].unread_count += 1;
-                }
-              };
-
-              if (re.conversation.id == $scope.selected_conversation.id) {
-                $scope.selected_conversation_messages.push(re.message);
-                //$scope.markMessagesAsRead(conversation.id, re.message.id);
-              };
-            } else if (re.type == 'update-conv-properties') {
-              if ($scope.conversations[re.id]) {
-                $scope.conversations[re.id].full_name = re.full_name;
-                $scope.conversations[re.id].profile_image = re.profile_image;
-                $scope.conversations[re.id].uid = re.selectize.uid;
-                $scope.conversations[re.id].uid_type = re.selectize.uid_type;
-
-                // update customer/contact option in selectize list
-                start_conversation_selectize.updateOption(re.old_selectize_val, re.selectize);
-                if (re.id == selected_conversation.id) $scope.performUserActions();
-              };
-            };
-          });
-        }
-      });
-
-      // need to keep track of when at the end of conversations
-      var conversation_page = 1;
-      $scope.loadConversations = function() {
-        if ($scope.online()) {
-          var params = PageParameter.get_params(), select_conversation = {};
-          if (params['type'] == 'start_conversation')
-            select_conversation = { uid: params['uid'], uid_type: params['uid_type'] };
-
-          conversationService.getConversations(conversation_page, select_conversation)
-          .then(function(data) {
-            if (data.count) {
-              // Build conversation list and count initial global unread
-              angular.forEach(data.conversations, function(value, key) {
-                $scope.conversations[value.id] = value;
-                //$scope.global_unread_count += value.unread_count;
-              });
-
-              conversation_page += 1;
-              console.log('loaded conversations')
-            } else {
-              console.log('you have no conversations');
-            }
-
-            $scope.open_conversations_count = data.count;
-            $scope.selectConversation(data);
-          }, function(data) {
-            console.log('unable to retrieve your conversations')
-          });
-        }
-      };
-
-      // get initial conversations
-      $scope.loadConversations();
-      $scope.getMerchantLists();
-    })
-    .error(function(data, status, headers, config) {
-      Flashhandler.setflashmessage('Error while trying to connect to the messaging system.', 'error');
-    });
+          $scope.open_conversations_count = data.count;
+          $scope.selectConversation(data);
+        }, function(data) {
+          console.log('unable to retrieve your conversations')
+        });
+      }
+    };
 
     $scope.focusOnStartConversationField = function() {
       start_conversation_selectize.focus();
@@ -607,7 +537,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
       load: function(query, callback) {
         if (!query.length) return callback();
         $.ajax({
-          url: '/v1/users?query=',
+          url: '/v1/users',
           type: 'GET',
           dataType: 'json',
           data: { query: query },
@@ -623,8 +553,8 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
       onChange: function(value) {
         // Start new conversation
         if (value) {
-          value = value.split('-');
-          $scope.startConversation({ uid: value[0], uid_type: value[1] });
+          var obj = start_conversation_selectize.options[value];
+          $scope.startConversation({ uid: obj.uid, uid_type: obj.uid_type });
         }
       }
     };
@@ -768,6 +698,71 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
     $scope.getProfileLink = function() {
       var type = ($scope.selected_conversation.uid_type == 'user') ? '/customers/' : '/contacts/';
       return '/users/' + $scope.merchant.id + type + $scope.selected_conversation.mcid;
+    };
+
+    // Get logged in merchant id
+    $scope.merchant = $('#user-details').data('user-info');
+    if (Object.keys($scope.merchant).length) {
+
+      // Initialize PubNub with SSL
+      Pubnub.init({
+        publish_key: $scope.merchant.pubnub_publish_key,
+        subscribe_key: $scope.merchant.pubnub_subscribe_key,
+        ssl: true/*,
+        error: function (error) {
+          console.log('Error:', error);
+        }*/
+      });
+
+      // Subscribe to merchant channel
+      Pubnub.subscribe({
+        channel: 'messaging_<%= Rails.env %>_' + $scope.merchant.id,
+        message: function(m) {
+          var re = JSON.parse(m);
+          $scope.$apply(function() {
+            if (re.type == 'new-message') {
+              if (!$scope.conversations[re.conversation.id]) {
+                // add conversation object and update count
+                $scope.conversations[re.conversation.id] = re.conversation;
+                $scope.open_conversations_count += 1;
+                //$scope.global_unread_count += re.conversation.unread_count;
+              } else {
+                $scope.conversations[re.conversation.id].last_message = re.conversation.last_message
+                $scope.conversations[re.conversation.id].last_message_ts = re.conversation.last_message_ts
+                $scope.conversations[re.conversation.id].ago = re.conversation.ago
+
+                console.log($scope.conversations[re.conversation.id].last_message)
+                console.log(re.conversation.last_message)
+
+                if (re.message.source == 'customer') {
+                  //$scope.global_unread_count += 1;
+                  $scope.conversations[re.conversation.id].unread_count += 1;
+                }
+              };
+
+              if (re.conversation.id == $scope.selected_conversation.id) {
+                $scope.selected_conversation_messages.push(re.message);
+                //$scope.markMessagesAsRead(conversation.id, re.message.id);
+              };
+            } else if (re.type == 'update-conv-properties') {
+              if ($scope.conversations[re.id]) {
+                $scope.conversations[re.id].full_name = re.full_name;
+                $scope.conversations[re.id].profile_image = re.profile_image;
+                $scope.conversations[re.id].uid = re.selectize.uid;
+                $scope.conversations[re.id].uid_type = re.selectize.uid_type;
+
+                // update customer/contact option in selectize list
+                start_conversation_selectize.updateOption(re.old_selectize_val, re.selectize);
+                if (re.id == selected_conversation.id) $scope.performUserActions();
+              };
+            };
+          });
+        }
+      });     
+
+      // get initial conversations
+      $scope.loadConversations();
+      $scope.getMerchantLists();
     };
 
   }

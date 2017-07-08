@@ -3,15 +3,14 @@ require 'resque/failure/multiple'
 require 'resque/failure/redis'
 
 config = YAML.load_file(Rails.root.join('config', 'resque.yml'))
-schedule = YAML.load_file(Rails.root.join('config', 'resque_schedule.yml'))
 
-# set a custom namespace for redis (optional)
-Resque.redis.namespace = "resque:relay"
 # configure redis connection
 Resque.redis = config[Rails.env]
 
-# configure the schedule
-Resque.schedule = schedule
+# set a custom namespace for redis (optional)
+Resque.redis.namespace = "resque:relay"
+
+Resque.schedule = YAML.load(ERB.new(File.read(Rails.root.join('config', 'resque_schedule.yml'))).result)
 
 Resque::Failure::Multiple.classes = [Resque::Failure::Redis]
 Resque::Failure.backend = Resque::Failure::Multiple

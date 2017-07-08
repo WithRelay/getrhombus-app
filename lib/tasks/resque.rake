@@ -6,10 +6,6 @@ namespace :resque do
   task setup: :environment do
     require 'resque'
 
-    #Resque.before_perform do
-      #ActiveRecord::Base.clear_active_connections!
-    #end
-
     Resque.before_fork do
       logfile = File.open(File.join(Rails.root, 'log', 'resque.log'), 'a')
       logfile.sync = true unless Rails.env.production?
@@ -19,9 +15,9 @@ namespace :resque do
       Resque.logger.info "Resque Logger Initialized!"
     end
 
-    #Resque.after_fork do
-      #ActiveRecord::Base.establish_connection
-    #end
+    Resque.after_fork do
+      ActiveRecord::Base.establish_connection
+    end
 
   end
 
@@ -38,7 +34,7 @@ namespace :resque do
 
     # The schedule doesn't need to be stored in a YAML, it just needs to
     # be a hash.  YAML is usually the easiest.
-    # Resque.schedule = YAML.load_file(Rails.root.join 'config', 'resque_schedule.yml')
+    # Resque.schedule = YAML.load(ERB.new(File.read(Rails.root.join('config', 'resque_schedule.yml'))).result)
 
     # If your schedule already has +queue+ set for each job, you don't
     # need to require your jobs.  This can be an advantage since it's
@@ -49,4 +45,27 @@ namespace :resque do
   end
 
   task scheduler: :setup_schedule
+
+  # see http://stackoverflow.com/questions/5880962/how-to-destroy-jobs-enqueued-by-resque-workers - old version
+  # see https://github.com/defunkt/resque/issues/49
+  # see http://redis.io/commands - new commands
+  desc 'Clear pending tasks'
+  task clear: :environment do
+    Resque.queues.each do |queue_name|
+      puts "Clearing #{queue_name}..."
+      Resque.remove_queue(queue_name)
+    end
+
+    # in case of scheduler - doesn't break if no scheduler module is installed
+    puts "Clearing delayed..." 
+    Resque.reset_delayed_queue
+
+    puts 'Clearing stats...'
+    Resque.redis.set 'stat:failed', 0
+    Resque.redis.set 'stat:processed', 0
+
+    # OR https://coderwall.com/p/ohxdmw/clearing-dead-stuck-zombie-resque-workers
+    puts 'Clearing zombie workers...'
+    Resque.workers.each(&:prune_dead_workers)
+  end
 end

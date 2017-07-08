@@ -33,7 +33,6 @@ Rails.application.routes.draw  do
   #authenticate :user, -> (user) { CheckUser::RouteAuthentication.new(user).should_authenticate? } do
     get 'fb_pages/remove_integration' => 'fb_pages#remove_integration'
     get 'link_facebook' => 'link_fb_accounts#link_facebook'
-    get 'get_current_user' => 'application#get_current_user'
     post 'fb_redirect' => 'link_fb_accounts#fb_redirect' #facebook account link redirect
 
     get "resque" => Resque::Server, anchor: false, constraints: lambda { |req|
@@ -81,13 +80,15 @@ Rails.application.routes.draw  do
 
         resources :fb_pages, only: [:index]
         patch 'update_fb_page' => 'fb_pages#update_user_fb_page'
-        resources :hashtags, except: [:show]
+        resources :hashtags, except: [:show] do
+          patch 'change_status', on: :member
+        end
         resources :subscriptions do
           get 'download' => 'subscriptions#download_csv', constraints: { format: 'csv' }, on: :collection
         end
         resources :conversations, only: [:index]
         resources :campaigns, except: [:show] { collection { get 'filter_campaign' } }
-        resources :reminders, except: [:show, :new] { member { put 'change_status' } }
+        resources :reminders, only: [:index, :destroy] { member { patch 'change_status' } }
         resource :away_message, only: [:show, :update]
         resources :plans, only: [:index, :destroy]
         resources :alerts, only: [:update]
@@ -134,7 +135,7 @@ Rails.application.routes.draw  do
         post 'check_password', on: :collection
       end
 
-      resources :lists, only: [:create, :index, :update, :destroy] do
+      resources :lists, only: [:create, :index, :update] do
         get 'check_list_name', on: :collection
       end
       resources :hashtags, only: [:index] do
@@ -142,7 +143,7 @@ Rails.application.routes.draw  do
         delete 'images/:image_id' => "hashtags#image_delete", on: :member
       end
 
-      resources :saved_replies
+      resources :saved_replies, only: [:index, :create]
       # Campaign Routes
       resources :campaigns, only: [] do
         member do
@@ -159,7 +160,7 @@ Rails.application.routes.draw  do
       end
       #--------------------------------------------------------------------------#
       # reminder routes
-      resources :reminders, only: [:create, :edit]
+      resources :reminders, only: [:create, :update]
       #--------------------------------------------------------------------------#
 
       resources :transactions, only: [:index, :create] do

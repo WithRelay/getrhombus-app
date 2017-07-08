@@ -45,7 +45,7 @@
     <%= render 'shared/flash_messages' %>
     <%= render_sidebar_partial %>
     <%= yield %>
-    <div id='notifications-info' data-type="<%= current_user.user_level if current_user %>" style='display: none;'></div>
+    <div id='user-details' data-user-info="<%= get_current_user_info %>" style='display: none;'></div>
     <%= render_footer_partial %>
     <%= render 'shared/smooch' %>
     <%= render 'shared/google_analytics' %>    

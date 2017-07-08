@@ -6,7 +6,7 @@
   </div>
 </div>
 <div class="dashboard-body">
-  <div id='objlists'>
+  <div id='objlists' style="margin-top: 40px;" data-object-type='campaign'>
     <%= render @campaigns %>
   </div>
   <div id="with-button" class="hide">
@@ -64,6 +64,6 @@
   <div class="sub-nav-options-wrapper w-clearfix">
     <%= link_to ' &nbsp;New campaign'.html_safe, new_user_campaign_path(current_user), class: 'add sub-nav-button w-button' %>
     <a class="import sub-nav-button w-button deactivate-resource" id="activate-deactivate-campaign" href="#">&nbsp; Deactivate</a>
-    <a class="import sub-nav-button w-button delete-resource" data-ix="cancel-subscription" href="#"> &nbsp;Delete</a>
+    <a class="import sub-nav-button w-button delete-resource" href="#"> &nbsp;Delete</a>
   </div>
 </div>

@@ -1,7 +1,8 @@
 class AccountBalanceAlertJob
-	@queue = :low_account_balance_alert
+	@queue = Rails.env + "_low_account_balance_alert"
 
 	def self.perform
+		ActiveRecord::Base.clear_active_connections!
 		User.where(user_level: 1).each do |user|
 			if user.account_balance < 5
 				recharge(user.auto_reload_amt) if user.auto_reload

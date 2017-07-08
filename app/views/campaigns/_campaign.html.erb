@@ -27,7 +27,7 @@
     <div class="alt-column w-col w-col-2">
       <div class="alt-table-column-div w-clearfix">
         <%= present(campaign).profile_image %>
-        <div class="shrink-text table-text"><%= campaign.from_user %></div>
+        <div class="shrink-text table-text"><%= campaign.user.full_name %></div>
       </div>
     </div>
     <div class="alt-column w-col w-col-2">
@@ -37,12 +37,12 @@
     </div>
     <div class="alt-column w-col w-col-2">
       <div class="alt-table-column-div w-clearfix">
-        <div class="table-text">1 week ago</div>
+        <div class="table-text"><%= campaign_last_sent(campaign) %></div>
       </div>
     </div>
     <div class="alt-column w-col w-col-2">
       <div class="alt-table-column-div w-clearfix">
-        <div class="shrink-text table-text"><%= campaign.channel.capitalize %></div>
+        <div class="shrink-text table-text"><%= present(campaign).channel_text %></div>
       </div>
     </div>
     <div class="alt-column w-col w-col-1">

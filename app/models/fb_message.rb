@@ -18,22 +18,24 @@ class FbMessage < ActiveRecord::Base
   belongs_to :fb_page
 
 
-  # For sending and saving all outbound text messages
-  def send_and_save_message(merchant, user, page_access_token, recipient_id, message, media_url)
+  # For sending and saving all outbound text message
+  # from = merchant page_access_token, to = recipient_id
+  def send_and_save_message(merchant, user, from, recipient_id, message, media_url)
     begin
       # save message before sending
       user = (user.present?) ? user.id : nil
+      self.update_attributes(user_id: merchant.id, user_id_to: user, from: from, to: to, text: message)
 
-      if response = FacebookMessengerService.send_text_message(page_access_token, recipient_id, message)
-        response = JSON.parse(response)
-        self.update_attributes(user_id: merchant.id, user_id_to: user, text: message, message_id: response['message_id'], to: response['recipient_id'])
+      if response = FacebookMessengerService.send_text_message(from, to, message)
+        self.update_attributes(message_id: JSON.parse(response)['message_id'])
 
         if media_url.present?
           attachment_type = "image" #now we only support image file attachment
-          FacebookMessengerService.send_attachment(page_access_token, recipient_id, attachment_type, media_url)
+          FacebookMessengerService.send_attachment(from, to, attachment_type, media_url)
         end
         true
       else
+        Notification.text_failure_notification(response, from, to, message).deliver_now        # Notify team of failure
         false
       end
     rescue StandardError => err

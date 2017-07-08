@@ -12,8 +12,8 @@
         <div class="dash-header-links new-link"> &nbsp;&nbsp;<strong>Inactive</strong>
         </div>
       <% end %>
-      <%= link_to filter_campaign_user_campaigns_path(current_user, status: 'sent') do %>
-        <div class="dash-header-links new-link">&nbsp; &nbsp;<strong>Sent</strong>
+      <%= link_to filter_campaign_user_campaigns_path(current_user, status: 'paused') do %>
+        <div class="dash-header-links new-link">&nbsp; &nbsp;<strong>Paused</strong>
         </div>
       <% end %>
       <%= render "shared/rhombus_number" %>

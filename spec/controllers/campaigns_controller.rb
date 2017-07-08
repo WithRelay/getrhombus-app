@@ -16,7 +16,7 @@ RSpec.describe CampaignsController, type: :controller do
 
   describe 'test class method create, edit, update' do
     let(:list) { FactoryGirl.create :list1 }
-    let(:campaign_params) { FactoryGirl.attributes_for(:campaign).merge({ list_name: list.id }) }
+    let(:campaign_params) { FactoryGirl.attributes_for(:campaign).merge({ list_id: list.id }) }
     before(:each){ post :create, user_id: merchant_user1, campaign: campaign_params }
 
     describe '.create' do

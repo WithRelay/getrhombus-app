@@ -3,10 +3,11 @@ class WeeklyActivitySummaryJob
   include DashboardData
   extend UserProfile
 
-  @queue = :weekly_activity_summary
+  @queue = Rails.env + "_weekly_activity_summary"
 
   class << self
     def perform
+      ActiveRecord::Base.clear_active_connections!
       merchants = User.where(user_level: 1)
       merchants.each do |merchant|
         mail_data = mail_data_to_merchant(merchant)
