@@ -1,8 +1,7 @@
 class HashtagsController < ApplicationController
   include DashboardNotification
-  before_action :set_notifications, only: [:index, :new, :edit]
-
-  before_action :set_hashtag, only: [:edit, :update, :destroy]
+  before_action :set_notifications, only: [:index, :new, :edit, :create]
+  before_action :set_hashtag, only: [:edit, :update, :destroy, :change_status]
   respond_to :html
 
   def index
@@ -47,10 +46,9 @@ class HashtagsController < ApplicationController
   end
 
   def change_status
-    hashtag = current_user.hashtags.find_by_id(params[:id])
-    if hashtag.present?
-      status = hashtag.active? ? 0 : 1
-      hashtag.update_attribute('status', status)
+    if @hashtag.present?
+      status = @hashtag.active? ? 0 : 1
+      @hashtag.update_attribute('status', status)
     end
     flash[:notice] = "Hashtag status has been changed"
     redirect_to user_hashtags_path

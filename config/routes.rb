@@ -22,11 +22,8 @@ Rails.application.routes.draw  do
   #end
 
   resources :users, only: :show do
-    ## devise routes
     devise_scope :user do
-      member do
-        patch "registration/update", to: "registrations#update"
-      end
+      patch "registration/update", to: "registrations#update", on: :member
     end
   end
 
@@ -49,17 +46,13 @@ Rails.application.routes.draw  do
           get "account-settings", to: "registrations#account_settings"
           member { get 'add-card-info' => 'registrations#add_card_info' }
         end
-        member do
-          get 'business' => 'merchant_customers#business'
-        end
+        get 'business' => 'merchant_customers#business', on: :member
         resources :transactions do
           get 'download' => 'transactions#download_csv', constraints: { format: 'csv' }, on: :collection
         end
       end
 
-      authenticate :user, -> (user) {user.is_merchant? } do
-        
-        ## devise routes
+      authenticate :user, -> (user) {user.is_merchant? } do        
         devise_scope :user do
           post 'deactivate' => 'registrations#deactivate_account'
           
@@ -67,11 +60,9 @@ Rails.application.routes.draw  do
             get 'add-subscription' => 'registrations#add_subscription'
             get 'add-rhombus-number' => 'registrations#add_rhombus_number'
             get 'add-profile-info' => 'registrations#add_profile_info'
-
             #show to merchant and customers both
             get "billing-information", to: "registrations#billing_information"
             get "business-settings", to: "registrations#business_settings"
-
             get "account-settings", to: "registrations#account_settings"
             post 'auto_recharge' => 'registrations#auto_recharge'
             post 'add_funds' => 'registrations#add_funds'
@@ -94,9 +85,6 @@ Rails.application.routes.draw  do
         resources :alerts, only: [:update]
         get 'notifications' => 'alerts#edit'
         resources :saved_replies
-        resources :bank_accounts
-        resources :addresses
-        resources :people
         resources :transactions do
           get 'download' => 'transactions#download_csv', constraints: { format: 'csv' }, on: :collection
         end
@@ -144,7 +132,6 @@ Rails.application.routes.draw  do
       end
 
       resources :saved_replies, only: [:index, :create]
-      # Campaign Routes
       resources :campaigns, only: [] do
         member do
           patch 'change_status'
@@ -158,11 +145,8 @@ Rails.application.routes.draw  do
           post 'upload_from_url'
         end
       end
-      #--------------------------------------------------------------------------#
-      # reminder routes
+      
       resources :reminders, only: [:create, :update]
-      #--------------------------------------------------------------------------#
-
       resources :transactions, only: [:index, :create] do
         post '/:txn_number/refund' => 'transactions#refund', on: :collection
       end

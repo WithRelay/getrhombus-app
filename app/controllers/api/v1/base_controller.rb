@@ -28,10 +28,6 @@ class API::V1::BaseController < ApplicationController
 
   private
 
-  def current_user_id
-    current_user.id
-  end
-
   def find_image_ref(find_by_hash)
      ImageRef.where(find_by_hash).first
   end

@@ -18,14 +18,6 @@ class Api::V1::CouponsController < API::V1::BaseController
     end
   end
 
-  def valid_coupon(coupons)
-    array_of_coupons = []
-    coupons.each do |c|
-      array_of_coupons << c if c.is_valid?
-    end
-    array_of_coupons
-  end
-
   def update
     @coupon = Coupon.find(params[:id])
     begin
