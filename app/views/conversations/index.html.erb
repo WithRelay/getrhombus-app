@@ -15,6 +15,15 @@
   });
   var channel = "<%= 'messaging_' + Rails.env + '_' + current_user.id.to_s %>";
 
+  // If page is visible right now
+  if( ifvisible.now() ){
+    console.log("Hello! I am subscribed!!");
+    pubnub.subscribe({
+      channels: [channel],
+      withPresence: true
+    });
+  }
+
   ifvisible.on("blur", function(){
     console.log("Hello! I am unsubscribed!!");
     pubnub.unsubscribe({
