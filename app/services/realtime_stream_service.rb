@@ -13,7 +13,7 @@ class RealtimeStreamService
         response = JSON.parse envelope.status[:server_response].body
       end
       unless response['uuids'].include? "uuid-#{merchant_id}"
-        # puts 'merchant offline'
+        puts 'merchant offline'
         EmailingService.send_unread_message_alert({
           pluralize_msg: '',
           unread_count: 1,

@@ -14,22 +14,20 @@
     heartbeatInterval: 30
   });
   var channel = "<%= 'messaging_' + Rails.env + '_' + current_user.id.to_s %>";
-  $(window).focus(function(e) {
+
+  ifvisible.on("blur", function(){
+    console.log("Hello! I am unsubscribed!!");
+    pubnub.unsubscribe({
+      channels: [channel],
+      uuid: uuid
+    });
+  });
+
+  ifvisible.on("focus", function(){
+    console.log("Hello! I am subscribed!!");
     pubnub.subscribe({
       channels: [channel],
       withPresence: true
-    });
-  });
-  $(window).blur(function(e) {
-    pubnub.unsubscribe({
-      channels: [channel],
-      uuid: uuid
-    });
-  });
-  $(window).unload(function() {
-    pubnub.unsubscribe({
-      channels: [channel],
-      uuid: uuid
     });
   });
 
