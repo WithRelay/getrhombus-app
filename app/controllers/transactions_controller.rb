@@ -5,10 +5,9 @@ class TransactionsController < ApplicationController
 
   before_action :set_notifications, except: [:download_csv]
   before_action :set_transaction, only: [:show]
-
-  # why am I not authorizing user?
-  #load_and_authorize_resource :except => [:download_csv]
   respond_to :html
+
+  load_and_authorize_resource  
 
   def index
     if current_user.is_merchant?

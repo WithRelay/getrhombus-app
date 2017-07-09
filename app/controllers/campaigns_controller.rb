@@ -1,11 +1,12 @@
 class CampaignsController < ApplicationController
-  load_and_authorize_resource
-
+  
   include DashboardNotification
   
   before_action :set_notifications, except: [:update]
   before_action :find_campaign, only: [:update]
   before_action :check_campaign_status, only: [:update]
+
+  load_and_authorize_resource
 
   def index
     @campaigns = current_user.campaigns#.is_active_or_paused

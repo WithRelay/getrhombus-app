@@ -18,7 +18,7 @@ Rails.application.routes.draw  do
 
 #=begin
   #authenticate :user, -> (user) { CheckUser::RouteAuthentication.new(user).should_authenticate? } do
-  #authenticate :user, -> (user) { user.is_merchant? } do
+  authenticate :user, -> (user) { user.is_merchant? } do
     ########## scope this to user.....
     get 'fb_pages/remove_integration' => 'fb_pages#remove_integration'
     get 'link_facebook' => 'link_fb_accounts#link_facebook'
@@ -35,7 +35,7 @@ Rails.application.routes.draw  do
         get 'download' => 'transactions#download_csv', constraints: { format: 'csv' }, on: :collection
       end
     end
-  #end
+  end
 =begin
   authenticate :user, -> (user) { user.is_platform? } do
     resources :users, only: :show do
@@ -47,7 +47,7 @@ Rails.application.routes.draw  do
   end
 =end
 
-  #authenticate :user, -> (user) { user.is_merchant? } do        
+  authenticate :user, -> (user) { user.is_merchant? } do        
     resources :users, only: :show do
       devise_scope :user do
         post 'deactivate' => 'registrations#deactivate_account'        
@@ -96,9 +96,8 @@ Rails.application.routes.draw  do
       get 'remove_twitter_integration' => 'users#remove_twitter_integration'
       match 'refer_business' => 'users#refer_business', via: [:get, :post]
     end
-  #end
+  end
 
-=begin
   authenticate :user, -> (user) { user.is_customer? } do
     resources :users, only: :show do
       devise_scope :user do
@@ -107,7 +106,7 @@ Rails.application.routes.draw  do
       get 'business' => 'merchant_customers#business', on: :member
     end
   end
-=end
+
   api_version(module: "Api::V1", path: { value: "v1"}, constraints: { subdomain: "api" }, defaults: { format: "json" }) do
     resources :users, only: [:index] do
       get 'snapshot', on: :collection

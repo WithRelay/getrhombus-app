@@ -3,19 +3,17 @@ class Ability
 
   def initialize(user)
 
-    user ||= User.new # guest user (not logged in)
+    user ||= User.new       # guest user (not logged in)
     if user.is_platform?
       can :manage, :all
     elsif user.is_merchant?
+      can :manage, User, id: user.id
       can :manage, Transaction, team_id: user.id
-      cannot :manage, [User, Hashtag, Campaign, Reminder], user_id: user.id
-    else 
-      #can :manage, user
-      #can :show, user.merchant_transactions
-       #can :manage, user.transactions
-       #can :manage, user.messages
+      can :manage, [Hashtag, Campaign, Reminder], user_id: user.id
+    elsif user.is_customer?
+      can :manage, User, id: user.id
+      can :manage, [Transaction], user_id: user.id
     end
-
 
     # Define abilities for the passed in user here. For example:
     #
