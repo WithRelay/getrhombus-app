@@ -10,8 +10,10 @@ class MerchantCustomer < ActiveRecord::Base
 
   # has_many :invoices
 
-  def self.add_or_update_merchant_customer(merchant, customer)
+  def self.add_or_update_merchant_customer(merchant, customer, platform_create = false)
     begin
+      return true if merchant.is_platform? && platform_create
+
       if merchant.try(:id)
         # check for number and set is_customer
         if customer.try(:phone_number).present?
@@ -24,10 +26,22 @@ class MerchantCustomer < ActiveRecord::Base
           merchant.merchant_contacts.where(uid_type: 'fb_page', uid: creds).update_all(is_customer: 1) if creds.present?
 
           # add as customer if necessary
-          find_or_create_by(merchant_id: merchant.id, customer_id: customer.id, is_platform: merchant.is_platform?).touch
+          platform = merchant.is_platform? ? :platform : :managed
+          mc = find_by(merchant_id: merchant.id, customer_id: customer.id, is_platform: platform)
+          if !mc
+            create!(merchant_id: merchant.id, customer_id: customer.id, is_platform: platform)
+          else
+            mc.touch
+          end
+
+          return true
         end
       end
     rescue StandardError => err
+      #email team
     end
+
+    false
   end
+
 end

@@ -1,5 +1,8 @@
 class CampaignsController < ApplicationController
+  load_and_authorize_resource
+
   include DashboardNotification
+  
   before_action :set_notifications, except: [:update]
   before_action :find_campaign, only: [:update]
   before_action :check_campaign_status, only: [:update]

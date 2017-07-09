@@ -4,6 +4,7 @@ class PendingCampaignsJob
   
   def self.perform
     ActiveRecord::Base.clear_active_connections!
+    
     begin
       # recurring 
         # 1. next_send_at >= now and < tomorrow (excludes recurring from earlier today or in future dates)
@@ -14,16 +15,16 @@ class PendingCampaignsJob
         # 3. and date_time >= now and < tomorrow (excludes one time from earlier today or in future dates)
         
       now = Time.now.utc.to_s(:db)
-      # +15 minutes since all campaigns are on the hour and job run 15 mins to the hour
-      tomorrow = (Time.now.tomorrow.beginning_of_day.utc + 15.minutes).to_s(:db) 
+      # +20 minutes since all campaigns are on the hour and job run 15 mins to the hour.
+      tomorrow = (Time.now.tomorrow.beginning_of_day.utc + 20.minutes).to_s(:db) 
 
       # date typecast can be improved
       campaigns = Campaign.active
-                        .where("(frequency_type = ? and next_send_at is not null and next_send_at >= ?) OR 
-                                (frequency_type = ? and deliver_now = false and date_time is not null and date(date_time) > date(created_at) 
-                                  and date_time >= ?)",                                 
-                                Campaign.frequency_types['recurring'], now,
-                                Campaign.frequency_types['one_time'], now)
+                          .where("(frequency_type = ? and next_send_at is not null and next_send_at >= ?) OR 
+                                  (frequency_type = ? and deliver_now = false and date_time is not null and date(date_time) > date(created_at) 
+                                    and date_time >= ?)",                                 
+                                  Campaign.frequency_types['recurring'], now,
+                                  Campaign.frequency_types['one_time'], now)
                           #.where("(frequency_type = ? and next_send_at is not null and next_send_at >= ? and next_send_at < ?) OR 
                            #       (frequency_type = ? and deliver_now = false and date_time is not null and date(date_time) > date(created_at) 
                             #        and date_time >= ? and date_time < ?)",                                 

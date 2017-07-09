@@ -18,6 +18,12 @@ class ApplicationController < ActionController::Base
 
   protected
 
+  def x
+    if request.format.html?
+
+    end
+  end
+
   def render_requested_format(obj)
     respond_to do |format|
       format.js { render partial: 'shared/index.js.erb', locals: { obj: obj } }

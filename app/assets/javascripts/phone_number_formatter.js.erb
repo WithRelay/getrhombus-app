@@ -29,6 +29,7 @@ var PhoneNumberFormatter = new function() {
 
   this.set_phone_number = function(with_plus) { 
     var number = PhoneNumberFormatter.getNumber();
+    //console.log(input.intlTelInput("getNumber", intlTelInputUtils.numberFormat.NATIONAL))
     if (!with_plus && number) number = number.replace("+", '');
     if (number) $('#phone_number').val(number); 
   }

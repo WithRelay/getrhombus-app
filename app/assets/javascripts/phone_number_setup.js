@@ -40,11 +40,11 @@ $(document).ready(function () {
 
   function get_status (status) {
     if(status.match('of type voip')) {
-      return 'Unfortunately, we are unable to activate Relay on your existing phone number, as VOIP number activations are currently not supported.'
+      return 'Unfortunately, we are unable to activate Relay on your existing phone number as VOIP number activations are currently not supported.'
     } else {
       return 'Unfortunately, we are unable to activate Relay on your existing phone number.'
-    }
-  }
+    };
+  };
 
   var get_number = function(area_code, country, code_unavailable) {
     $.ajax({
@@ -71,7 +71,7 @@ $(document).ready(function () {
       }
     })
     .fail(function(data, textStatus, errorThrown) {
-    FlashHandler.setFlashMessage("We are unable to search for any numbers.", 'error');
+      FlashHandler.setFlashMessage("We are unable to search for any numbers.", 'error');
     })
     .always(function(data, textStatus, response) {
       searchNumBtn.val('Submit').prop("disabled", false);
@@ -100,7 +100,7 @@ $(document).ready(function () {
   //// for number search
 
   $('#hosted_sms_select').on('change', function(){
-    if (this.value == 'use-existing-landline'){
+    if (this.value == 'use-existing-landline') {
       $('#number-label').text('What is your current landline or toll-free number?')
       $('.virtual-number-div').hide("slow");
       $('.hosted-number-div').show("slow");
@@ -109,6 +109,6 @@ $(document).ready(function () {
       $('.virtual-number-div').attr('class', 'virtual-number-div');
       $('.virtual-number-div').show("slow");
       $('.hosted-number-div').hide("slow");
-    }
+    };
   })
 });

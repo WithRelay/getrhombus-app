@@ -1,4 +1,5 @@
 class UsersController < ApplicationController
+  load_and_authorize_resource
 
   include DashboardNotification
   include AdditionalUserActions
@@ -6,10 +7,7 @@ class UsersController < ApplicationController
   include DashboardData
 
   before_action :set_user
-  before_action :set_notifications, except: [:customer_csv_template]
-
-  # do i need this?
-  # load_and_authorize_resource except: [:customer_csv_template]
+  before_action :set_notifications, except: [:customer_csv_template, :remove_twitter_integration, :remove_stripe_integration]
 
   def show
     #all the methods are in concerns/dashboard_data

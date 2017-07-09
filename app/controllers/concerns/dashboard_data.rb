@@ -121,7 +121,7 @@ module DashboardData
 
   def get_open_convs_yesterday
     ConversationResolution.where(merchant_id: merchant_id)
-                          .where(created_at: (Time.current.beginning_of_day - 1.days)..(Time.current.beginning_of_day))
+                          .where("created_at >= ? and created_at < ?", Time.current.beginning_of_day - 1.days, Time.current.beginning_of_day)
                           .count
   end
 

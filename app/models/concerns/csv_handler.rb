@@ -10,10 +10,10 @@ module CSVHandler
         column_names[0] = 'created_at'
         column_names[1] = 'txn_number'
         transactions = if subscription
-          Transaction.where(column_str + " = ? AND created_at BETWEEN ? AND ?", user_id, Time.zone.parse(start_date), Time.zone.parse(end_date))
+          Transaction.where(column_str + " = ? AND created_at >= ? AND created_at < ?", user_id, Time.zone.parse(start_date), Time.zone.parse(end_date) + 1.days)
             .where.not(subscription_id: nil)
         else
-          Transaction.exclude_refunded_transactions().where(column_str + " = ? AND transactions.created_at BETWEEN ? AND ?", user_id, Time.zone.parse(start_date), Time.zone.parse(end_date))
+          Transaction.exclude_refunded_transactions().where(column_str + " = ? AND transactions.created_at >= ? AND transactions.created_at < ?", user_id, Time.zone.parse(start_date), Time.zone.parse(end_date) + 1.days)
             .only_captured_transactions().exclude_subscriptions()
         end
         transactions.each do |t|

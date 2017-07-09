@@ -16,8 +16,7 @@ gem 'resque-scheduler', :require => "resque/scheduler/server"
 gem 'ar_after_transaction'
 
 # For Authorization
-# gem "cancan"
-gem "cancancan"
+gem 'cancancan', '~> 1.10'
 
 #perfect scrollbar
 gem 'perfect-scrollbar-rails', '~> 0.6.10'

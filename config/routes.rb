@@ -2,13 +2,8 @@ Rails.application.routes.draw  do
 
   root 'static_pages#home'
   get "homepage_referrer" => 'referrers#homepage_referrer'
-
-  # Dynamic action for static_controller routes eg: home_page will generate as home-page
-  StaticPagesController.action_methods.each do |action|
-    get action.split('_').join('-') => "static_pages##{action}"
-  end
-
   get "relay-docs-categories/:slug" => "knowledge_base_categories#show"
+  StaticPagesController.action_methods.each { |action| get action.split('_').join('-') => "static_pages##{action}" }
 
   devise_for :users, controllers: { registrations: "registrations", omniauth_callbacks: "omniauth_callbacks", sessions: 'sessions' }
 
@@ -21,180 +16,158 @@ Rails.application.routes.draw  do
     match 'events/facebook' => 'webhooks#facebook_events', via: [:get, :post]
   #end
 
-  resources :users, only: :show do
-    ## devise routes
-    devise_scope :user do
-      member do
-        patch "registration/update", to: "registrations#update"
-      end
-    end
-  end
-
+#=begin
   #authenticate :user, -> (user) { CheckUser::RouteAuthentication.new(user).should_authenticate? } do
+  #authenticate :user, -> (user) { user.is_merchant? } do
+    ########## scope this to user.....
     get 'fb_pages/remove_integration' => 'fb_pages#remove_integration'
     get 'link_facebook' => 'link_fb_accounts#link_facebook'
     post 'fb_redirect' => 'link_fb_accounts#fb_redirect' #facebook account link redirect
-
-    get "resque" => Resque::Server, anchor: false, constraints: lambda { |req|
-      req.env['warden'].authenticated? and req.env['warden'].user.email == User.platform_email
-    }
-
-    # user routes
+    ############
 
     resources :users, only: :show do
-
-      authenticate :user, -> (user) { user.is_customer? } do
-        devise_scope :user do
-          get "billing-information", to: "registrations#billing_information"
-          get "account-settings", to: "registrations#account_settings"
-          member { get 'add-card-info' => 'registrations#add_card_info' }
-        end
-        member do
-          get 'business' => 'merchant_customers#business'
-        end
-        resources :transactions do
-          get 'download' => 'transactions#download_csv', constraints: { format: 'csv' }, on: :collection
-        end
+      devise_scope :user do
+        patch "registration/update", to: "registrations#update", on: :member
+        get "account-settings", to: "registrations#account_settings", on: :member
+        get "billing-information", to: "registrations#billing_information"
       end
-
-      authenticate :user, -> (user) {user.is_merchant? } do
-        
-        ## devise routes
-        devise_scope :user do
-          post 'deactivate' => 'registrations#deactivate_account'
-          
-          member do
-            get 'add-subscription' => 'registrations#add_subscription'
-            get 'add-rhombus-number' => 'registrations#add_rhombus_number'
-            get 'add-profile-info' => 'registrations#add_profile_info'
-
-            #show to merchant and customers both
-            get "billing-information", to: "registrations#billing_information"
-            get "business-settings", to: "registrations#business_settings"
-
-            get "account-settings", to: "registrations#account_settings"
-            post 'auto_recharge' => 'registrations#auto_recharge'
-            post 'add_funds' => 'registrations#add_funds'
-          end
-        end
-
-        resources :fb_pages, only: [:index]
-        patch 'update_fb_page' => 'fb_pages#update_user_fb_page'
-        resources :hashtags, except: [:show] do
-          patch 'change_status', on: :member
-        end
-        resources :subscriptions do
-          get 'download' => 'subscriptions#download_csv', constraints: { format: 'csv' }, on: :collection
-        end
-        resources :conversations, only: [:index]
-        resources :campaigns, except: [:show] { collection { get 'filter_campaign' } }
-        resources :reminders, only: [:index, :destroy] { member { patch 'change_status' } }
-        resource :away_message, only: [:show, :update]
-        resources :plans, only: [:index, :destroy]
-        resources :alerts, only: [:update]
-        get 'notifications' => 'alerts#edit'
-        resources :saved_replies
-        resources :bank_accounts
-        resources :addresses
-        resources :people
-        resources :transactions do
-          get 'download' => 'transactions#download_csv', constraints: { format: 'csv' }, on: :collection
-        end
-
-        authenticate :user, -> (user) { user.is_platform? } do
-          resources :knowledge_base_categories, param: :slug, only: [:index, :edit, :update, :new, :create]
-          resources :coupons, only: [:index, :create, :destroy]
-          get 'manage-coupons' => 'coupons#manage_coupons'
-        end
-                      
-        resources :merchant_contacts, path: :contacts, only: [:index, :show]
-        resources :merchant_customers, path: :customers, only: [:index, :show]
-        get 'sms-usage' => 'users#sms_usage'
-             
-        get 'segments' => 'lists#segments'
-        get 'segments/:id' => 'lists#show'
-        resources :user_lists, only: [] { collection { delete 'remove_member' } }
-        resources :lists, only: [:index, :show, :destroy] { member { post 'add_member' } }
-
-        get 'customer_template' => "users#customer_csv_template"
-        get 'managed-accounts' => 'users#managed_acct'
-        get 'update-managed-acct' => 'users#managed_acct'
-        match 'managed-accounts' => "users#create_managed_acct", via: :patch
-        match 'update-managed-acct' => 'users#update_managed_acct', via: :patch
-        get 'integrations' => 'users#integrations'
-        get 'remove_stripe_integration' => 'users#remove_stripe_integration'
-        get 'remove_twitter_integration' => 'users#remove_twitter_integration'
-        match 'refer_business' => 'users#refer_business', via: [:get, :post]
+      resources :transactions do
+        get 'download' => 'transactions#download_csv', constraints: { format: 'csv' }, on: :collection
       end
     end
+  #end
+=begin
+  authenticate :user, -> (user) { user.is_platform? } do
+    resources :users, only: :show do
+      resources :knowledge_base_categories, param: :slug, only: [:index, :edit, :update, :new, :create]
+      resources :coupons, only: [:index, :create, :destroy]
+      get 'manage-coupons' => 'coupons#manage_coupons'
+      mount Resque::Server.new, :at => "/resque"
+    end
+  end
+=end
 
-    ## api
-    api_version(module: "Api::V1", path: { value: "v1"}, constraints: { subdomain: "api" }, defaults: { format: "json" }) do
-      resources :users, only: [:index] do
-        get 'snapshot', on: :collection
-        post 'check_password', on: :collection
-      end
-
-      resources :lists, only: [:create, :index, :update] do
-        get 'check_list_name', on: :collection
-      end
-      resources :hashtags, only: [:index] do
-        get 'check_hashtag_name', on: :collection
-        delete 'images/:image_id' => "hashtags#image_delete", on: :member
-      end
-
-      resources :saved_replies, only: [:index, :create]
-      # Campaign Routes
-      resources :campaigns, only: [] do
+  #authenticate :user, -> (user) { user.is_merchant? } do        
+    resources :users, only: :show do
+      devise_scope :user do
+        post 'deactivate' => 'registrations#deactivate_account'        
         member do
-          patch 'change_status'
-          delete 'delete_campaign'
-          delete 'images/:image_id' => 'campaigns#image_delete'
-        end
-        collection do
-          post 'send_test_email'
-          post 'check_campaign_name'
-          post 'upload_images'
-          post 'upload_from_url'
+          get 'add-subscription' => 'registrations#add_subscription'
+          get 'add-rhombus-number' => 'registrations#add_rhombus_number'
+          get 'add-profile-info' => 'registrations#add_profile_info'
+          get "business-settings", to: "registrations#business_settings"
+          post 'auto_recharge' => 'registrations#auto_recharge'
+          post 'add_funds' => 'registrations#add_funds'
         end
       end
-      #--------------------------------------------------------------------------#
-      # reminder routes
-      resources :reminders, only: [:create, :update]
-      #--------------------------------------------------------------------------#
 
-      resources :transactions, only: [:index, :create] do
-        post '/:txn_number/refund' => 'transactions#refund', on: :collection
+      resources :fb_pages, only: [:index]
+      patch 'update_fb_page' => 'fb_pages#update_user_fb_page'
+      resources :hashtags, except: [:show] do
+        patch 'change_status', on: :member
       end
-      resources :numbers, only: [] do
-        get 'search' => 'numbers#search', on: :collection
-        get 'hosted_number_order' => 'numbers#hosted_number_order', on: :collection
+      resources :subscriptions do
+        get 'download' => 'subscriptions#download_csv', constraints: { format: 'csv' }, on: :collection
       end
-      resources :coupons, only: [:index, :update] do
-        post 'check_coupon_name', on: :collection
+      resources :conversations, only: [:index]
+      resources :campaigns, except: [:show] { collection { get 'filter_campaign' } }
+      resources :reminders, only: [:index, :destroy] { member { patch 'change_status' } }
+      resource :away_message, only: [:show, :update]
+      resources :plans, only: [:index, :destroy]
+      resources :alerts, only: [:update]
+      get 'notifications' => 'alerts#edit'
+      resources :saved_replies 
+      resources :merchant_contacts, path: :contacts, only: [:index, :show]
+      resources :merchant_customers, path: :customers, only: [:index, :show]
+      get 'sms-usage' => 'users#sms_usage'
+           
+      get 'segments' => 'lists#segments'
+      get 'segments/:id' => 'lists#show'
+      resources :user_lists, only: [] { collection { delete 'remove_member' } }
+      resources :lists, only: [:index, :show, :destroy] { member { post 'add_member' } }
+
+      get 'customer_template' => "users#customer_csv_template"
+      get 'managed-accounts' => 'users#managed_acct'
+      get 'update-managed-acct' => 'users#managed_acct'
+      match 'managed-accounts' => "users#create_managed_acct", via: :patch
+      match 'update-managed-acct' => 'users#update_managed_acct', via: :patch
+      get 'integrations' => 'users#integrations'
+      get 'remove_stripe_integration' => 'users#remove_stripe_integration'
+      get 'remove_twitter_integration' => 'users#remove_twitter_integration'
+      match 'refer_business' => 'users#refer_business', via: [:get, :post]
+    end
+  #end
+
+=begin
+  authenticate :user, -> (user) { user.is_customer? } do
+    resources :users, only: :show do
+      devise_scope :user do
+        member { get 'add-card-info' => 'registrations#add_card_info' }
       end
-      resources :plans, only: [:index, :create, :update] do
-        post 'check_plan_name', on: :collection
+      get 'business' => 'merchant_customers#business', on: :member
+    end
+  end
+=end
+  api_version(module: "Api::V1", path: { value: "v1"}, constraints: { subdomain: "api" }, defaults: { format: "json" }) do
+    resources :users, only: [:index] do
+      get 'snapshot', on: :collection
+      post 'check_password', on: :collection
+    end
+
+    resources :lists, only: [:create, :index, :update] do
+      get 'check_list_name', on: :collection
+    end
+    resources :hashtags, only: [:index] do
+      get 'check_hashtag_name', on: :collection
+      delete 'images/:image_id' => "hashtags#image_delete", on: :member
+    end
+
+    resources :saved_replies, only: [:index, :create]
+    resources :campaigns, only: [] do
+      member do
+        patch 'change_status'
+        delete 'delete_campaign'
+        delete 'images/:image_id' => 'campaigns#image_delete'
       end
-      resources :subscriptions, only: [:create, :update, :destroy]
-      resources :merchant_customers,  path: :customers, only: [:index, :create]
-      resources :merchant_contacts,  path: :contacts, only: [:index]
-      resources :demos, only: [:create]
-      resources :conversations, only: [:index, :show] do
-        get 'find', on: :collection
-        member do
-          post 'messages'
-          post 'mms'
-          post 'mark_messages_as_read'
-          post 'close'
-        end
-      end
-      resources :knowledge_bases, param: :url, only: [:index] do
-        get 'rating', on: :member
+      collection do
+        post 'send_test_email'
+        post 'check_campaign_name'
+        post 'upload_images'
+        post 'upload_from_url'
       end
     end
-  # end
-
+    
+    resources :reminders, only: [:create, :update]
+    resources :transactions, only: [:index, :create] do
+      post '/:txn_number/refund' => 'transactions#refund', on: :collection
+    end
+    resources :numbers, only: [] do
+      get 'search' => 'numbers#search', on: :collection
+      get 'hosted_number_order' => 'numbers#hosted_number_order', on: :collection
+    end
+    resources :coupons, only: [:index, :update] do
+      post 'check_coupon_name', on: :collection
+    end
+    resources :plans, only: [:index, :create, :update] do
+      post 'check_plan_name', on: :collection
+    end
+    resources :subscriptions, only: [:create, :update, :destroy]
+    resources :merchant_customers,  path: :customers, only: [:index, :create]
+    resources :merchant_contacts,  path: :contacts, only: [:index]
+    resources :demos, only: [:create]
+    resources :conversations, only: [:index, :show] do
+      get 'find', on: :collection
+      member do
+        post 'messages'
+        post 'mms'
+        post 'mark_messages_as_read'
+        post 'close'
+      end
+    end
+    resources :knowledge_bases, param: :url, only: [:index] do
+      get 'rating', on: :member
+    end
+  end
 
   ## catch all other to 404
   get "/*other", to: 'static_pages#to_404'     #all non-existent routes go to 404

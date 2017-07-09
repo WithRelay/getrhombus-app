@@ -15,60 +15,59 @@ class Api::V1::MerchantCustomersController < API::V1::BaseController
   end
 
   def create
-    #begin
-      status = 200
-      response = 'User Added'
+    begin
+      status, error, response = 200, nil, 'User Added'
 
       if params[:format] == 'csv'
         doc = current_user.documents.create(attachment: params['csv'])
         CsvCustomerImportJob.perform_later(current_user, doc)
         response = "CSV file uploaded."
       elsif params[:format] == 'json'
-        @customer = User.find_by(email: params[:user][:email])
-        if @customer.present?
-          add_to_merchant_customer_and_referrer(false)
-        else
-          params[:user][:password] = Toolbox::StringGen.generate_random_string(8)
-          params[:user][:user_level] = 0
-          @customer = User.new(api_v1_user_params)
-          @customer.customer_source = { id: current_user.id, method: 'added' }
-          unless @customer.save
-            response = @customer.errors.full_messages
-            status = 500
+        ActiveRecord::Base.transaction do
+          @customer = User.find_by(email: params[:user][:email])
+          if @customer.present?
+            raise StandardError unless add_to_merchant_customer_and_referrer(false)
           else
-            @customer.create_address(@address_params) if any_address_params_present?
-            @customer.people.create(@person_params) if api_v1_person_params[:full_name].present?
-            @customer.user_lists.create(@user_list_params) if api_v1_user_list_params[:list_id].present?
-            add_to_merchant_customer_and_referrer
+            params[:user][:password] = Toolbox::StringGen.generate_random_string(8)
+            params[:user][:user_level] = 0
+            @customer = User.new(api_v1_user_params)
+            @customer.customer_source = { id: current_user.id, method: 'added' }
+            @customer.save!
+            raise StandardError unless add_to_merchant_customer_and_referrer
+            @customer.user_lists.create!(@user_list_params) if api_v1_user_list_params[:list_id].present?
+            @customer.create_address!(@address_params) if any_address_params_present?
+            @customer.people.create!(@person_params) if api_v1_person_params[:full_name].present?              
             if @user_params[:card_token].present?
               re = @customer.add_token_for_user(@user_params[:card_token], false) 
               puts '<redacted_phone_number>'
               puts re
+              puts 'need to test that this is bubbled outside'
               unless re.first
-                status = 500
-                response = "Customer has been added but we are unable to add the customer's card"
-                response += re.third ? ' because: ' + re.third : '.'
+                error = "Customer has been added but we are unable to add the customer's card"
+                error += re.third ? ' because: ' + re.third : '.'
+                raise StandardError
               end
             end
+            puts 'qqqqqqqqqqqqqqqqqqqqqq'
+            puts @customer.inspect
           end
-          puts 'qqqqqqqqqqqqqqqqqqqqqq'
-          puts @customer.inspect
         end
       end
 
       puts '<redacted_phone_number>'
       puts response
-    #rescue ActiveRecord::RecordNotUnique => e
-    #  status = 500
-    #  msg = e.original_exception.message
-    #  response = "Customer's phone number is already in use." if msg.include?('index_users_on_phone_number')
-    #  response = "Customer's email is already in use." if msg.include?('index_users_on_email')
-    #rescue StandardError => e
-    #  status = 500
-    #  response = 'Something went wrong on our end.'
-    #end
+    rescue ActiveRecord::RecordNotUnique => e
+      status = 500
+      msg = e.original_exception.message
+      response = "Customer's phone number is already in use." if msg.include?('index_users_on_phone_number')
+      response = "Customer's email is already in use." if msg.include?('index_users_on_email')
+    rescue StandardError => e
+      status = 500
+      customer_errors = @customer.errors.full_messages
+      response = customer_errors.present? ? customer_errors : (error || 'Something went wrong on our end.')
+    end
 
-    render json: { response: response }#, status: status
+    render json: { response: response }, status: status
   end
 
   private
@@ -112,8 +111,9 @@ class Api::V1::MerchantCustomersController < API::V1::BaseController
     end
 
     def add_to_merchant_customer_and_referrer(with_referrer=true)
-      MerchantCustomer.add_or_update_merchant_customer(current_user, @customer)
       Referrer.save_referrer_with_uid(current_user.relay_uid, @customer.id) if with_referrer
+      # the status from this method is important
+      MerchantCustomer.add_or_update_merchant_customer(current_user, @customer)
     end
 
 end

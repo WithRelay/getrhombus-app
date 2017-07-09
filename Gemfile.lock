@@ -419,7 +419,7 @@ DEPENDENCIES
   aws-sdk
   bitly
   byebug
-  cancancan
+  cancancan (~> 1.10)
   chartkick
   coffee-rails (~> 4.1.0)
   database_cleaner

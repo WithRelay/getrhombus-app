@@ -227,13 +227,13 @@ $(document).ready(function() {
     e.preventDefault();
     console.log('form submitted')
     // if good above and card number is present, send card details to stripe
-    /*
+    //*
     if ($('#cc-number').val() == "") {
       $.each(["#cc-name", "#cc-exp", "#cc-csc"], function(index, val) { $(val).val(''); });
       submit_create_user_form();
     } else
       CardHandler.submit_to_stripe(create_user_form, create_user_submit, submit_create_user_form);
-    */
+    //*/
   });
 
 
@@ -251,10 +251,6 @@ $(document).ready(function() {
     })
     .done(function(data, textStatus, jqXHR) {
       FlashHandler.setFlashMessage('Customer created successfully', 'notice');
-      /*$(create_user_form)[0].reset();
-      user_list_selectize[0].selectize.clear();
-      country_selectize[0].selectize.clear();
-      $('.close-modal').click();*/
       location.reload();
     })
     .fail(function(data, textStatus, errorThrown) {

@@ -31,7 +31,7 @@
           <br>
           <span class="account-owner-email-settings-dropdown"><%= current_user.email %></span></a>
           <%= link_to 'Settings', account_settings_user_path(current_user), class: 'dropdown-link w-dropdown-link' %>
-          <%= link_to 'Billing Information', billing_information_user_path(current_user), class: 'dropdown-link w-dropdown-link' %>
+          <%= link_to 'Billing Information', user_billing_information_path(current_user), class: 'dropdown-link w-dropdown-link' %>
         <%= link_to('Sign out', destroy_user_session_path, class: 'dropdown-link sign-out w-dropdown-link', method: :delete) %>
       </nav>
     </div>
