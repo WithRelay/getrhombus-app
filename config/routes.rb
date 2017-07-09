@@ -32,12 +32,6 @@ Rails.application.routes.draw  do
     get 'link_facebook' => 'link_fb_accounts#link_facebook'
     post 'fb_redirect' => 'link_fb_accounts#fb_redirect' #facebook account link redirect
 
-    get "resque" => Resque::Server, anchor: false, constraints: lambda { |req|
-      req.env['warden'].authenticated? and req.env['warden'].user.email == User.platform_email
-    }
-
-    # user routes
-
     resources :users, only: :show do
 
       authenticate :user, -> (user) { user.is_customer? } do
@@ -93,6 +87,7 @@ Rails.application.routes.draw  do
           resources :knowledge_base_categories, param: :slug, only: [:index, :edit, :update, :new, :create]
           resources :coupons, only: [:index, :create, :destroy]
           get 'manage-coupons' => 'coupons#manage_coupons'
+          mount Resque::Server.new, :at => "/resque"
         end
                       
         resources :merchant_contacts, path: :contacts, only: [:index, :show]
@@ -116,7 +111,6 @@ Rails.application.routes.draw  do
       end
     end
 
-    ## api
     api_version(module: "Api::V1", path: { value: "v1"}, constraints: { subdomain: "api" }, defaults: { format: "json" }) do
       resources :users, only: [:index] do
         get 'snapshot', on: :collection
@@ -178,7 +172,6 @@ Rails.application.routes.draw  do
       end
     end
   # end
-
 
   ## catch all other to 404
   get "/*other", to: 'static_pages#to_404'     #all non-existent routes go to 404

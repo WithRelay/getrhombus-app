@@ -15,8 +15,8 @@ class PendingCampaignsJob
         # 3. and date_time >= now and < tomorrow (excludes one time from earlier today or in future dates)
         
       now = Time.now.utc.to_s(:db)
-      # +15 minutes since all campaigns are on the hour and job run 15 mins to the hour
-      tomorrow = (Time.now.tomorrow.beginning_of_day.utc + 15.minutes).to_s(:db) 
+      # +20 minutes since all campaigns are on the hour and job run 15 mins to the hour.
+      tomorrow = (Time.now.tomorrow.beginning_of_day.utc + 20.minutes).to_s(:db) 
 
       # date typecast can be improved
       campaigns = Campaign.active
