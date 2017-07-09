@@ -3,7 +3,6 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
   before_action :configure_permitted_parameters, if: :devise_controller?
-  before_action :update_presence_status
   around_action :set_time_zone, if: :current_user
 
   include CheckUserProfile
@@ -18,29 +17,6 @@ class ApplicationController < ActionController::Base
   end
 
   protected
-
-  def update_presence_status
-    if current_user.present? && current_user.is_merchant?
-      pubnub = Pubnub.new(
-        publish_key: Rails.application.secrets.pubnub["publish_key"],
-        subscribe_key: Rails.application.secrets.pubnub["subscribe_key"],
-        uuid: "uuid-#{current_user.id}",
-        presenceTimeout: 120,
-        heartbeatInterval: 30
-      )
-      if params[:controller] == 'conversations' && params[:action] == 'index'
-        pubnub.subscribe(
-          channels: ['messaging_' + Rails.env + '_' + current_user.id.to_s],
-          with_presence: true
-        )
-      else
-        pubnub.unsubscribe(
-          channels: ['messaging_' + Rails.env + '_' + current_user.id.to_s],
-          uuid: "uuid-#{current_user.id}"
-        )
-      end
-    end
-  end
 
   def render_requested_format(obj)
     respond_to do |format|
