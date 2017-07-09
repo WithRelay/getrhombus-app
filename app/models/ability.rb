@@ -4,12 +4,11 @@ class Ability
   def initialize(user)
 
     user ||= User.new # guest user (not logged in)
-    if user.user_level == 2  # Change this to admin?
-       can :manage, :all
+    if user.is_platform?
+      can :manage, :all
     elsif user.is_merchant?
-      can :manage, :all  # for now so we can keep working
-      #can :read, :all 
-      #can :manage, Hashtag
+      can :manage, Transaction, team_id: user.id
+      cannot :manage, [User, Hashtag, Campaign, Reminder], user_id: user.id
     else 
       #can :manage, user
       #can :show, user.merchant_transactions
