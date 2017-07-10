@@ -51,15 +51,16 @@ class CampaignsController < ApplicationController
   end
 
   def filter_campaign
-    @campaigns = current_user.campaigns.where('status = ?', Campaign.statuses[params[:status]])
-                             .paginate(per_page: 1, page: params[:page]).order(updated_at: :desc)
+    # @campaigns = current_user.campaigns.where('status = ?', Campaign.statuses[params[:status]])
+                             # .paginate(per_page: 1, page: params[:page]).order(updated_at: :desc)
+    @campaigns = []
     if @campaigns.present?
       respond_to do |format|
         format.js { render partial: 'shared/index.js.erb', locals: { obj: @campaigns } }
         format.html { render(:index) }
       end
     else
-      render(:empty_campaign)
+      (params[:status] == 'active') ? render(:empty_campaign) : render(:empty_filter_campaign)
     end
   end
 
