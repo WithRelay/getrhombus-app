@@ -3,6 +3,7 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
   before_action :configure_permitted_parameters, if: :devise_controller?
+  before_action :check_current_user
   around_action :set_time_zone, if: :current_user
 
   include CheckUserProfile
@@ -21,6 +22,12 @@ class ApplicationController < ActionController::Base
     respond_to do |format|
       format.js { render partial: 'shared/index.js.erb', locals: { obj: obj } }
       format.html
+    end
+  end
+
+  def check_current_user
+    if current_user.present? && params[:user_id].present? && current_user.id != params[:user_id].to_i
+      redirect_to to_404_path
     end
   end
 
