@@ -26,7 +26,7 @@
 //= require url-parameters
 //= require moment
 //= require user_details
-//= require notifications    
+//= require notifications
 
 // We need to place these js before jquery ujs for workable confirmation dialog box
 //= require flashes
@@ -106,6 +106,7 @@
 //= require perfect-scrollbar
 //= require capture
 //= require visibility_changed
+//= require ifvisible.min.js
 // DO NOT REQUIRE TREE AS IT DOESNT GUARANTEE THE DEPENDENCY ORDER OF THESE FILES
 // require_tree .
 

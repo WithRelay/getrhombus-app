@@ -15,7 +15,7 @@ class ApplicationController < ActionController::Base
     #redirect_to "/404.html"#, :alert => exception.message
     render :template => "static_pages/to_404"
   end
-  
+
   protected
 
   def x
@@ -42,8 +42,8 @@ class ApplicationController < ActionController::Base
       :password, :password_confirmation, :last4, :exp_month,  :exp_year, :card_name, :card_type,
       :rhombus_number, :team_size, :use_rhombus_for, :rn_type, :rn_country, :phone_number, :card_id,
       :org_name, :org_category, :org_phone, :currency, :tax_percent, :url, :custom_welcome, :livemode,
-      :time_zone, :org_type, 
-      address_attributes: [:street_address, :suite, :id, :city, :state_province, :postal_code, :country], 
+      :time_zone, :org_type,
+      address_attributes: [:street_address, :suite, :id, :city, :state_province, :postal_code, :country],
       people_attributes: [:id, :full_name]
     )}
   end

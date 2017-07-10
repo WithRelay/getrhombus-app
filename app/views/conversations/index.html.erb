@@ -1,5 +1,43 @@
 <%= provide(:title, "Rhombus - Conversations") %>
 <div ng-app="PubNubAngularMessagingApp">
 	<%= render 'shared/messaging_header' %>
-  <div ng-view></div>  
+  <div ng-view></div>
 </div>
+<script src="https://cdn.pubnub.com/sdk/javascript/pubnub.4.12.0.js"></script>
+<script type="text/javascript">
+  var uuid = "uuid-<%= current_user.id %>";
+  var pubnub = new PubNub ({
+    publish_key: '<%= Rails.application.secrets.pubnub["publish_key"] %>',
+    subscribe_key: '<%= Rails.application.secrets.pubnub["subscribe_key"] %>',
+    uuid: uuid,
+    presenceTimeout: 120,
+    heartbeatInterval: 30
+  });
+  var channel = "<%= 'messaging_' + Rails.env + '_' + current_user.id.to_s %>";
+
+  // If page is visible right now
+  if( ifvisible.now() ){
+    console.log("Hello! I am subscribed!!");
+    pubnub.subscribe({
+      channels: [channel],
+      withPresence: true
+    });
+  }
+
+  ifvisible.on("blur", function(){
+    console.log("Hello! I am unsubscribed!!");
+    pubnub.unsubscribe({
+      channels: [channel],
+      uuid: uuid
+    });
+  });
+
+  ifvisible.on("focus", function(){
+    console.log("Hello! I am subscribed!!");
+    pubnub.subscribe({
+      channels: [channel],
+      withPresence: true
+    });
+  });
+
+</script>

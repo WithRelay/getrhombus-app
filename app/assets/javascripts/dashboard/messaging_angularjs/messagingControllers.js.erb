@@ -68,6 +68,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
       return true;
     };
 
+
     // need to keep track of when at the end of conversations
     var conversation_page = 1;
     $scope.loadConversations = function() {
@@ -758,7 +759,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
             };
           });
         }
-      });     
+      });
 
       // get initial conversations
       $scope.loadConversations();

@@ -6,7 +6,24 @@ class RealtimeStreamService
     # Sends a message to the given merchant's channel, provided user and merchant numbers
     def messages(conversation, conv_ref, merchant, customer, msg)
       merchant_id = conversation.merchant_id.to_s
-      $pubnub.subscribe(channel: 'messaging_' + Rails.env + '_' + merchant_id) {}
+      response = {}
+      $pubnub.here_now(
+        channels: ['messaging_' + Rails.env + '_' + merchant_id],
+      )do |envelope|
+        response = JSON.parse envelope.status[:server_response].body
+      end
+      unless response['uuids'].include? "uuid-#{merchant_id}"
+        puts 'merchant offline'
+        EmailingService.send_unread_message_alert({
+          pluralize_msg: '',
+          unread_count: 1,
+          customer_first_name: User.find(merchant_id).first_name
+        })
+      # else
+      #   puts 'merchant online'
+      end
+      # $pubnub.subscribe(channel: 'messaging_' + Rails.env + '_' + merchant_id) {}
+      # check merchant_presence_on_channel if it returns false then send sms/message to the merchant
       $pubnub.publish(channel: 'messaging_' + Rails.env + '_' + merchant_id,
                       message: { type: 'new-message',
                                  message: Conversation.message_hash(conversation, msg, conv_ref, customer),
@@ -44,6 +61,18 @@ class RealtimeStreamService
         campaign_time = list.campaign.date_time.strftime("%I:%M")
         { campaign_sent: "Your campaign scheduled for #{campaign_time} was sent"}
       end
+    end
+
+    def merchant_presence_on_channel(merchant_id)
+      status = {}
+      $pubnub.here_now(
+        channel: 'messaging_' + Rails.env + '_' + merchant_id.to_s,
+      ) do |envelope|
+        status = envelope.status
+      end
+      response = JSON.parse status[:server_response].body
+      merchant_uuid = "uuid-#{merchant_id}"
+      response.uuids.include? merchant_uuid
     end
   end
 end
