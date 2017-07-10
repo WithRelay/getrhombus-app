@@ -5,6 +5,7 @@ class ApplicationController < ActionController::Base
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :check_current_user
   around_action :set_time_zone, if: :current_user
+  before_filter :prepare_exception_notifier
 
   include CheckUserProfile
 
@@ -46,5 +47,12 @@ class ApplicationController < ActionController::Base
       address_attributes: [:street_address, :suite, :id, :city, :state_province, :postal_code, :country],
       people_attributes: [:id, :full_name]
     )}
+  end
+
+  private
+  def prepare_exception_notifier
+    request.env["exception_notifier.exception_data"] = {
+      :current_user => current_user
+    }
   end
 end
