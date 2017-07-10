@@ -9,9 +9,13 @@ module CampaignsHelper
       { format_campaign_channel(campaign.channel) => get_channel_enum_value(campaign.channel) }
     elsif list.present? && campaign.invalid? && list[0].contact?
       { format_campaign_channel(list[0].channel) => get_channel_enum_value(list[0].channel) }
-    else 
+    else
       # if merchant hasn't connect fb_page
-      channel_list.except('Facebook Messenger') unless current_user.get_page_access_token.present?
+      unless current_user.get_page_access_token.present?
+        channel_list.except('Facebook Messenger')
+      else
+        channel_list
+      end
     end
   end
 
@@ -23,7 +27,11 @@ module CampaignsHelper
 
   def reminder_channels
     channel_list = { SMS: 0, "Facebook Messenger" => 2 }
-    channel_list.except("Facebook Messenger") unless current_user.get_page_access_token.present?
+    unless current_user.get_page_access_token.present?
+      channel_list.except("Facebook Messenger")
+    else
+      channel_list
+    end
   end
 
   def get_channel_enum_value(channel)
