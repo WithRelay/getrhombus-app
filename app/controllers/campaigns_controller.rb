@@ -1,7 +1,7 @@
 class CampaignsController < ApplicationController
-  
+
   include DashboardNotification
-  
+
   before_action :set_notifications, except: [:update]
   before_action :find_campaign, only: [:update]
   before_action :check_campaign_status, only: [:update]
@@ -10,7 +10,7 @@ class CampaignsController < ApplicationController
 
   def index
     @campaigns = current_user.campaigns#.is_active_or_paused
-                             .paginate(per_page: PAGINATION_PER_PAGE, page: params[:page]).order(updated_at: :desc)
+                             .paginate(per_page: 1, page: params[:page]).order(updated_at: :desc)
     @campaigns.present? ? render_requested_format(@campaigns) : render(:empty_campaign)
   end
 
@@ -52,7 +52,15 @@ class CampaignsController < ApplicationController
 
   def filter_campaign
     @campaigns = current_user.campaigns.where('status = ?', Campaign.statuses[params[:status]])
-    render 'index'
+                             .paginate(per_page: 1, page: params[:page]).order(updated_at: :desc)
+    if @campaigns.present?
+      respond_to do |format|
+        format.js { render partial: 'shared/index.js.erb', locals: { obj: @campaigns } }
+        format.html { render(:index) }
+      end
+    else
+      render(:empty_campaign)
+    end
   end
 
   private
@@ -75,7 +83,7 @@ class CampaignsController < ApplicationController
                           c[:channel] = c[:channel].to_i
                           c[:frequency_type] = c[:frequency_type].to_i
                           c[:deliver_now] = c[:deliver_now] == '1' ? true : false
-                          
+
                           c[:repeat_days] = nil if c[:frequency_type] == 0
                           c[:date_time] = nil if c[:frequency_type] == 0 && c[:deliver_now]
                           c[:subject] = nil unless c[:channel] == 3
