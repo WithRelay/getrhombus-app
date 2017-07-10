@@ -36,7 +36,7 @@ Rails.application.routes.draw  do
       end
     end
   end
-=begin
+#=begin
   authenticate :user, -> (user) { user.is_platform? } do
     resources :users, only: :show do
       resources :knowledge_base_categories, param: :slug, only: [:index, :edit, :update, :new, :create]
@@ -45,7 +45,7 @@ Rails.application.routes.draw  do
       mount Resque::Server.new, :at => "/resque"
     end
   end
-=end
+#=end
 
   authenticate :user, -> (user) { user.is_merchant? } do        
     resources :users, only: :show do

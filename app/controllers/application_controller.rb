@@ -12,17 +12,10 @@ class ApplicationController < ActionController::Base
   end
 
   rescue_from CanCan::AccessDenied do |exception|
-    #redirect_to "/404.html"#, :alert => exception.message
-    render :template => "static_pages/to_404"
+    redirect_to to_404_path, alert: exception.message
   end
 
   protected
-
-  def x
-    if request.format.html?
-
-    end
-  end
 
   def render_requested_format(obj)
     respond_to do |format|

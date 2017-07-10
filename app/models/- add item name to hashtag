@@ -23,7 +23,6 @@ Taiwo
 - nannie j lee recreation center 703 746 5550
 
 Surya
-- lock down permissions cancancan?
 - do we need to exclude refunded txns in segment queries? review segment queries
 - still able to bypass onboarding to any page if i know the url. or i can go back to onboarding if i know the url (edited)
 - when you uncomment this line in routes  # authenticate :user, -> (user) { CheckUser::RouteAuthentication.new(user).should_authenticate? } do, pages become unreachable i believe. review/remove CheckUser in classes folder
