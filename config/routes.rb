@@ -40,17 +40,17 @@ Rails.application.routes.draw  do
   authenticate :user, -> (user) { user.is_platform? } do
     resources :users, only: :show do
       resources :knowledge_base_categories, param: :slug, only: [:index, :edit, :update, :new, :create]
-      resources :coupons, only: [:index, :create, :destroy]
+      resources :coupons, only: [:index, :destroy]
       get 'manage-coupons' => 'coupons#manage_coupons'
       mount Resque::Server.new, :at => "/resque"
     end
   end
 #=end
 
-  authenticate :user, -> (user) { user.is_merchant? } do        
+  authenticate :user, -> (user) { user.is_merchant? } do
     resources :users, only: :show do
       devise_scope :user do
-        post 'deactivate' => 'registrations#deactivate_account'        
+        post 'deactivate' => 'registrations#deactivate_account'
         member do
           get 'add-subscription' => 'registrations#add_subscription'
           get 'add-rhombus-number' => 'registrations#add_rhombus_number'
@@ -76,11 +76,11 @@ Rails.application.routes.draw  do
       resources :plans, only: [:index, :destroy]
       resources :alerts, only: [:update]
       get 'notifications' => 'alerts#edit'
-      resources :saved_replies 
+      resources :saved_replies
       resources :merchant_contacts, path: :contacts, only: [:index, :show]
       resources :merchant_customers, path: :customers, only: [:index, :show]
       get 'sms-usage' => 'users#sms_usage'
-           
+
       get 'segments' => 'lists#segments'
       get 'segments/:id' => 'lists#show'
       resources :user_lists, only: [] { collection { delete 'remove_member' } }
@@ -135,7 +135,7 @@ Rails.application.routes.draw  do
         post 'upload_from_url'
       end
     end
-    
+
     resources :reminders, only: [:create, :update]
     resources :transactions, only: [:index, :create] do
       post '/:txn_number/refund' => 'transactions#refund', on: :collection
@@ -144,7 +144,7 @@ Rails.application.routes.draw  do
       get 'search' => 'numbers#search', on: :collection
       get 'hosted_number_order' => 'numbers#hosted_number_order', on: :collection
     end
-    resources :coupons, only: [:index, :update] do
+    resources :coupons, only: [:index, :create, :update] do
       post 'check_coupon_name', on: :collection
     end
     resources :plans, only: [:index, :create, :update] do

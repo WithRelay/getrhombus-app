@@ -6,7 +6,7 @@ $(document).ready(function () {
   var tomorrow = new Date(date.getFullYear(), date.getMonth(), date.getDate()+1);
   var maxDate = new Date(date.getFullYear() + 4, date.getMonth(), date.getDate());
   var redeem_by_input = $('input[name="coupon[redeem_by]"]');
-  
+
   if (redeem_by_input.length > 0) {
     redeem_by_input.daterangepicker({
       autoUpdateInput: false,
@@ -83,6 +83,11 @@ $(document).ready(function () {
           .removeClass('has-warning')
           .addClass('has-success')
       })
+      .on('success.form.fv', function(e, data) {
+          e.preventDefault();
+          $('#create-coupon').attr("disabled", true).val("Please wait...");
+          addCoupon();
+      })
       .on('err.validator.fv', function(e) {
         $('.help-block').hide();
       });
@@ -138,6 +143,32 @@ $(document).ready(function () {
       updateCouponName(this);
     }
   });
+
+  // create Coupon using modal through api call
+  function addCoupon(){
+    $.ajax({
+        url: "/v1/coupons.json",
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
+        },
+        type: "POST",
+        data: $('#couponForm').serialize(),
+        dataType: "json"
+      })
+      .done(function(data, textStatus, jqXHR) {
+        FlashHandler.setFlashMessage(data.response, 'notice');
+        $('#couponForm')[0].reset();
+        $('#couponForm').data('formValidation').resetForm();
+        $('.update-close-modals').click();
+      })
+      .fail(function(data, textStatus, errorThrown) {
+        FlashHandler.setFlashMessage(JSON.parse(data.responseText).response, 'error');
+        $('#create-coupon').attr("disabled", false).val("Create Coupon");
+      })
+    .always(function(data, textStatus, response) {
+        $('#create-coupon').attr("disabled", false).val("Create Coupon");
+      });
+  };
 
   function revert_to_text() {
     save_icon_parent.css('display','none');

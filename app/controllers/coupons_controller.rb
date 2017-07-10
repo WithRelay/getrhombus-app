@@ -15,18 +15,6 @@ class CouponsController < ApplicationController
     @coupons.present? ? render_requested_format(@coupons) : render(:empty_coupon)
   end
 
-  def create
-    @coupon = Coupon.new(coupon_params)
-    if @coupon.create_coupon({ team: current_user })
-      redirect_to user_coupons_path, flash: { notice: 'Coupon was created' }
-    else
-      # revoke amount_off from cent
-      @coupon.destroy     # revoke created coupon on error
-      flash[:error] = @coupon.errors.messages.present? ? @coupon.errors.full_messages : "We couldn't create the coupon"
-      render :new
-    end
-  end
-
   def destroy
     unless Subscription.exists?(coupon_id: @coupon.id)
       if @coupon.delete_coupon
@@ -65,16 +53,6 @@ class CouponsController < ApplicationController
 
     def set_coupon
       @coupon = Coupon.find(params[:id])
-    end
-
-    def coupon_params
-      params.require(:coupon).permit(:name, :amount_off, :duration, :duration_in_months, :max_redemptions,
-        :percent_off, :redeem_by).tap{ |coupon|
-        # amount_off should be in cent
-        # round to take care of inaccurate floating point math. see 100 * 1.1
-        coupon[:amount_off] = (100 * coupon[:amount_off].to_f).round if coupon[:amount_off].present?
-        coupon[:redeem_by] = Time.zone.parse(coupon[:redeem_by]).to_i if coupon[:redeem_by].present?
-      }
     end
 
 end
