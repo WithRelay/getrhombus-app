@@ -74,7 +74,7 @@ var CheckedItem = new function() {
 $(document).on('ready',function() {
 
   // used by several index pages
-  $('.checkboxes').click(function() {
+  $(document).on("click", ".checkboxes", function() {
     if ($(this).is(':checked')){
       $('.checkboxes').attr('disabled', true);
 
