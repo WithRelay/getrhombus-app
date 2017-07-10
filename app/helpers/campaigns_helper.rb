@@ -27,7 +27,11 @@ module CampaignsHelper
 
   def reminder_channels
     channel_list = { SMS: 0, "Facebook Messenger" => 2 }
-    channel_list.except("Facebook Messenger") unless current_user.get_page_access_token.present?
+    unless current_user.get_page_access_token.present?
+      channel_list.except("Facebook Messenger")
+    else
+      channel_list
+    end
   end
 
   def get_channel_enum_value(channel)
