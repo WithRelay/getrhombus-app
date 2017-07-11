@@ -160,6 +160,7 @@ $(document).ready(function () {
         $('#couponForm')[0].reset();
         $('#couponForm').data('formValidation').resetForm();
         $('.update-close-modals').click();
+        location.reload();
       })
       .fail(function(data, textStatus, errorThrown) {
         FlashHandler.setFlashMessage(JSON.parse(data.responseText).response, 'error');
