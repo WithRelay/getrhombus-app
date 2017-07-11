@@ -29,7 +29,7 @@ Rails.application.routes.draw  do
       get "account-settings", to: "users#account_settings"
       get "billing-information", to: "users#billing_information"
       devise_scope :user do
-        patch "registration/update"
+        patch "registration/update" => "registrations#update"
       end
       resources :transactions, only: [:index] do
         get 'download' => 'transactions#download_csv', constraints: { format: 'csv' }, on: :collection

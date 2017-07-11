@@ -5,6 +5,8 @@ class RegistrationsController < Devise::RegistrationsController
 
   def update
     self.resource = resource_class.to_adapter.get!(send(:"current_#{resource_name}").to_key)
+    puts current_user.email_changed?
+    puts '-------------------------'
     #prev_unconfirmed_email = resource.unconfirmed_email if resource.respond_to?(:unconfirmed_email)
 
     message = check_params_with_update
@@ -54,7 +56,7 @@ class RegistrationsController < Devise::RegistrationsController
       msg = (subscription.third ? subscription.third : "We are unable to start a subscription for you") unless subscription.first
     elsif set_update_flash_messages[:rhombus_number].present? && current_user.is_merchant?
       unless current_user.buy_number(params['user'])
-       msg = 'Something went wrong. We were unable to provision a number for you. A member of our support team will contact you shortly.'
+        msg = 'Something went wrong. We were unable to provision a number for you. A member of our support team will contact you shortly.'
       end
     elsif set_update_flash_messages[:card_info].present? || set_update_flash_messages[:billing_info].present?
       set_captured_payment_session if current_user.is_customer? && set_update_flash_messages[:card_info].present?
@@ -79,7 +81,7 @@ class RegistrationsController < Devise::RegistrationsController
   def add_funds
     current_user.account_balance += params['user']['recharge_amount'].to_f
     current_user.save
-    flash[:notice] = "Account balance updated, Now your total balance is: #{Toolbox::Decimal.to_int_or_2dp(current_user.account_balance)}"
+    flash[:notice] = "Account balance updated. Your total balance is $#{Toolbox::Decimal.to_int_or_2dp(current_user.account_balance)}"
     redirect_to sms_usage_user_path
   end
 
@@ -87,7 +89,7 @@ class RegistrationsController < Devise::RegistrationsController
     saas_sub = current_user.get_saas_subscription
     if saas_sub && saas_sub.cancel_subscription(current_user) || saas_sub.nil?
       current_user.update(status: 0)
-      flash[:notice] = 'Your account is deactivate'
+      flash[:notice] = 'Your account is deactivated'
       redirect_to logout_path
     else
       flash[:error] = 'Something went wrong'
