@@ -160,7 +160,7 @@ class RegistrationsController < Devise::RegistrationsController
                                       },
                     business_settings: {
                                         success: 'account updated',
-                                        error: resource.errors.full_messages
+                                        error: resource.errors.full_messages,
                                         business_settings: true,                                        
                                        }
                   }
