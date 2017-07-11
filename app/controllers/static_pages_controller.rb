@@ -56,7 +56,10 @@ class StaticPagesController < ApplicationController
 
   def create_a_relay_account; end
 
-  def relay_docs; end
+  def relay_docs
+		knowledge_base_categories = KnowledgeBaseCategory.all
+		apple = 1;
+	end
 
   def offline_check
     head :no_content
