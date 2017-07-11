@@ -54,6 +54,8 @@ class StaticPagesController < ApplicationController
 
   # def refer_a_business; end
 
+  def create_a_relay_account; end
+
   def relay_docs; end
 
   def offline_check

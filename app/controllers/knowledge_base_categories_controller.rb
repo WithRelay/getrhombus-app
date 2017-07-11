@@ -1,5 +1,9 @@
 class KnowledgeBaseCategoriesController < ApplicationController
+  
+  include DashboardNotification
+
   before_action :set_kb, only: [:edit, :show, :update]
+  before_action :set_notifications
 
   def index
     @knowledge_base_categories = KnowledgeBaseCategory.all

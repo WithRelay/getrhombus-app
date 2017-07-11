@@ -5,24 +5,28 @@ class RegistrationsController < Devise::RegistrationsController
 
   def update
     self.resource = resource_class.to_adapter.get!(send(:"current_#{resource_name}").to_key)
-    puts current_user.email_changed?
-    puts '-------------------------'
     #prev_unconfirmed_email = resource.unconfirmed_email if resource.respond_to?(:unconfirmed_email)
 
     message = check_params_with_update
+    email_changed = params[:page_params] == 'account_settings' && params[:user][:email] != current_user.email    
     url = request.referrer if setting_pages_present?
+
     yield resource if block_given?
     if message.blank? && update_resource(resource, account_update_params)
+      
       set_flash_message = set_update_flash_messages(message)
-      update_stripe_email if set_flash_message[:account_settings].present? #only if email changed
+      update_stripe_email if email_changed
+
       # flash_key = update_needs_confirmation?(resource, prev_unconfirmed_email) ? :update_needs_confirmation : :updated
       # set_flash_message :notice, flash_key
       flash[:notice] = set_flash_message[:success] if is_flashing_format?
       bypass_sign_in resource, scope: resource_name
+
       redirect_to url || after_update_path_for(resource)
     else
       set_flash_message = set_update_flash_messages(message)
       flash[:error] = message.is_a?(Stripe::InvalidRequestError) ? set_flash_message[:error].message : set_flash_message[:error]
+      
       clean_up_passwords resource
       set_minimum_password_length
       redirect_to previous_url ###### will this throw and error for notifcations????????

@@ -17,11 +17,11 @@ module ApplicationHelper
                           'merchant_customers-index' => 'Customers',
                           'users-show' => 'Main',
                           'merchant_contacts-index' => 'Leads | Contacts',
-                          'registrations-billing_information' => 'Billing Info',
-                          'registrations-account_settings'=> 'Account Info',
+                          'users-billing_information' => 'Billing Info',
+                          'users-account_settings'=> 'Account Info',
                           'alerts-edit' => 'Notifications',
                           'plans-index' => 'Manage Plans',
-                          'registrations-business_settings'=> 'Business Setting',
+                          'users-business_settings'=> 'Business Setting',
                           'users-integrations' => 'Integrations',
                           'users-managed_acct' => 'Manage Account',
                           'users-sms_usage' => 'SMS Usage',
@@ -127,8 +127,8 @@ module ApplicationHelper
   end
 
   def setting_pages
-    settings_action = ['registrations-billing_information', 'registrations-account_settings',
-                        'alerts-edit', 'plans-index','registrations-business_settings',
+    settings_action = ['users-billing_information', 'users-account_settings',
+                       'alerts-edit', 'plans-index','users-business_settings',
                        'users-integrations', 'users-managed_acct', 'users-sms_usage', 'lists-segments',
                        'coupons-manage_coupons', 'users-refer_business', 'fb_pages-index',
                        'away_messages-show']
@@ -150,10 +150,10 @@ module ApplicationHelper
   end
 
   def restrict_devise_actions
-    restricted_actions = ['registrations-add_profile_info', 'registrations-add_subscription',
+    restricted_actions = ['users-add_profile_info', 'users-add_subscription',
                           'sessions-new', 'sessions-create', 'registrations-new', 'registrations-create',
-                          'registrations-add_rhombus_number', 'devise/passwords-edit', 'devise/passwords-update',
-                          'registrations-edit', 'devise/passwords-new', 'devise/passwords-create', 'registrations-add_card_info'
+                          'users-add_rhombus_number', 'devise/passwords-edit', 'devise/passwords-update',
+                          'registrations-edit', 'devise/passwords-new', 'devise/passwords-create', 'users-add_card_info'
                          ]
     restricted_actions.include?(params_controller_action)
   end
