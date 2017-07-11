@@ -13,7 +13,7 @@
           <span id="price-value"></span>
           <div class="display-credit-card-wrapper onboarding-form">
             <div class="get-started-2 log-in-form">
-              <%= form_for(current_user, as: resource_name, url: registration_update_user_path(resource_name), html: { method: :patch, class: "w-clearfix", id: "cc-form" }) do |f| %>
+              <%= form_for(current_user, url: user_registration_update_path(current_user), html: { method: :patch, class: "w-clearfix", id: "cc-form" }) do |f| %>
 
                 <div id='free-account-label'>
                   <label class="cc-collection-info form-label new paragraph select-plan" for="Card-Number-4">Why collect payment information for a free account?</label>

@@ -1,8 +1,31 @@
 module AdditionalUserActions
   extend ActiveSupport::Concern
 
-  def integrations
+  def add_rhombus_number; end
+
+  def add_subscription; end
+
+  def add_card_info; end
+
+  def add_profile_info
+    @user = current_user
+    @user.people = [@user.people.first || Person.new]
   end
+
+  def business_settings
+    current_user.address ||= Address.new
+  end
+
+  def account_settings
+    if current_user.is_merchant?
+      @user = current_user
+      @user.people = [@user.people.first || Person.new]
+    end
+  end
+
+  def billing_information; end
+
+  def integrations; end
 
   def remove_twitter_integration
     if current_user.twitter_cred.destroy

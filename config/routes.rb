@@ -1,66 +1,67 @@
 Rails.application.routes.draw  do
 
-  root 'static_pages#home'
-  get "homepage_referrer" => 'referrers#homepage_referrer'
-  get "relay-docs-categories/:slug" => "knowledge_base_categories#show"
-  StaticPagesController.action_methods.each { |action| get action.split('_').join('-') => "static_pages##{action}" }
+  #root 'static_pages#home'
+  #get "homepage_referrer" => 'referrers#homepage_referrer'
+  #get "relay-docs-categories/:slug" => "knowledge_base_categories#show"
+  #StaticPagesController.action_methods.each { |action| get action.split('_').join('-') => "static_pages##{action}" }
 
   devise_for :users, controllers: { registrations: "registrations", omniauth_callbacks: "omniauth_callbacks", sessions: 'sessions' }
 
   # events/hooks routess
   #constraints subdomain: 'hooks' do
-    post 'events/stripe/platform' => 'webhooks#stripe_events'
-    post 'events/stripe/connect' => 'webhooks#stripe_events'
-    post 'events/twilio' => 'webhooks#twilio_events'
-    match'events/nexmo' => 'webhooks#nexmo_events', via: [:get, :post]
-    match 'events/facebook' => 'webhooks#facebook_events', via: [:get, :post]
+   # post 'events/stripe/platform' => 'webhooks#stripe_events'
+   # post 'events/stripe/connect' => 'webhooks#stripe_events'
+   # post 'events/twilio' => 'webhooks#twilio_events'
+   # match'events/nexmo' => 'webhooks#nexmo_events', via: [:get, :post]
+   # match 'events/facebook' => 'webhooks#facebook_events', via: [:get, :post]
   #end
 
-#=begin
   #authenticate :user, -> (user) { CheckUser::RouteAuthentication.new(user).should_authenticate? } do
-  authenticate :user, -> (user) { user.is_merchant? } do
+  authenticate :user do
     ########## scope this to user.....
-    get 'fb_pages/remove_integration' => 'fb_pages#remove_integration'
-    get 'link_facebook' => 'link_fb_accounts#link_facebook'
-    post 'fb_redirect' => 'link_fb_accounts#fb_redirect' #facebook account link redirect
+    #get 'fb_pages/remove_integration' => 'fb_pages#remove_integration'
+    #get 'link_facebook' => 'link_fb_accounts#link_facebook'
+    #post 'fb_redirect' => 'link_fb_accounts#fb_redirect' #facebook account link redirect
     ############
 
-    resources :users, only: :show do
+    resources :users, only: [] do
+      get "/" => 'users#show'
+      get "account-settings", to: "users#account_settings"    # fixed
+      get "billing-information", to: "users#billing_information"
       devise_scope :user do
-        patch "registration/update", to: "registrations#update", on: :member
-        get "account-settings", to: "registrations#account_settings", on: :member
-        get "billing-information", to: "registrations#billing_information"
+        patch "registration/update", to: "registrations#update"   # why are we using this when we can use the one above ... cos of user_id??? we have current_user??????????
       end
-      resources :transactions do
+      resources :transactions, only: [:index] do
         get 'download' => 'transactions#download_csv', constraints: { format: 'csv' }, on: :collection
       end
     end
   end
-#=begin
+
   authenticate :user, -> (user) { user.is_platform? } do
-    resources :users, only: :show do
+    resources :users, only: [] do
       resources :knowledge_base_categories, param: :slug, only: [:index, :edit, :update, :new, :create]
       resources :coupons, only: [:index, :create, :destroy]
       get 'manage-coupons' => 'coupons#manage_coupons'
       mount Resque::Server.new, :at => "/resque"
     end
   end
-#=end
 
   authenticate :user, -> (user) { user.is_merchant? } do        
-    resources :users, only: :show do
+    resources :users, only: [] do
       devise_scope :user do
-        post 'deactivate' => 'registrations#deactivate_account'        
-        member do
-          get 'add-subscription' => 'registrations#add_subscription'
-          get 'add-rhombus-number' => 'registrations#add_rhombus_number'
-          get 'add-profile-info' => 'registrations#add_profile_info'
-          get "business-settings", to: "registrations#business_settings"
-          post 'auto_recharge' => 'registrations#auto_recharge'
-          post 'add_funds' => 'registrations#add_funds'
-        end
+        post 'deactivate'
+        post 'auto_recharge'
+        post 'add_funds'
       end
-
+      get 'sms-usage'
+      get 'add-rhombus-number'
+      get 'add-subscription'
+      get 'add-profile-info'
+      get "business-settings"
+      get 'integrations'
+      get 'customer_template'
+      get 'remove_stripe_integration'
+      get 'remove_twitter_integration'
       resources :fb_pages, only: [:index]
       patch 'update_fb_page' => 'fb_pages#update_user_fb_page'
       resources :hashtags, except: [:show] do
@@ -79,34 +80,26 @@ Rails.application.routes.draw  do
       resources :saved_replies 
       resources :merchant_contacts, path: :contacts, only: [:index, :show]
       resources :merchant_customers, path: :customers, only: [:index, :show]
-      get 'sms-usage' => 'users#sms_usage'
-           
       get 'segments' => 'lists#segments'
       get 'segments/:id' => 'lists#show'
       resources :user_lists, only: [] { collection { delete 'remove_member' } }
       resources :lists, only: [:index, :show, :destroy] { member { post 'add_member' } }
-
-      get 'customer_template' => "users#customer_csv_template"
       get 'managed-accounts' => 'users#managed_acct'
       get 'update-managed-acct' => 'users#managed_acct'
-      match 'managed-accounts' => "users#create_managed_acct", via: :patch
-      match 'update-managed-acct' => 'users#update_managed_acct', via: :patch
-      get 'integrations' => 'users#integrations'
-      get 'remove_stripe_integration' => 'users#remove_stripe_integration'
-      get 'remove_twitter_integration' => 'users#remove_twitter_integration'
+      patch 'managed-accounts' => "users#create_managed_acct"
+      patch 'update-managed-acct' => 'users#update_managed_acct'
       match 'refer_business' => 'users#refer_business', via: [:get, :post]
     end
   end
 
   authenticate :user, -> (user) { user.is_customer? } do
-    resources :users, only: :show do
-      devise_scope :user do
-        member { get 'add-card-info' => 'registrations#add_card_info' }
-      end
-      get 'business' => 'merchant_customers#business', on: :member
+    resources :users, only: [] do
+      get 'add-card-info'
+      get 'business' => 'merchant_customers#business'
     end
   end
 
+#=begin
   api_version(module: "Api::V1", path: { value: "v1"}, constraints: { subdomain: "api" }, defaults: { format: "json" }) do
     resources :users, only: [:index] do
       get 'snapshot', on: :collection
@@ -167,7 +160,7 @@ Rails.application.routes.draw  do
       get 'rating', on: :member
     end
   end
-
+#=end
   ## catch all other to 404
   get "/*other", to: 'static_pages#to_404'     #all non-existent routes go to 404
 

@@ -9,7 +9,7 @@
     <h4 class="form-header">Business Information</h4>
     <div class="flex-underline form-header-underline"></div>
     <div class="account-settings-form-wrapper">
-      <%= form_for(current_user, as: resource_name, url: registration_update_user_path(resource_name), html: { method: :patch, id: "businessSetting", class: "w-clearfix" }) do |f| %>
+      <%= form_for(current_user, url: user_registration_update_path(current_user), html: { method: :patch, id: "businessSetting", class: "w-clearfix" }) do |f| %>
 
         <label class="field-headers form-label settings" for="Business-Name">Basic details</label>
           <div class="form-group col-xs-6">
