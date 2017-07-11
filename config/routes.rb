@@ -133,8 +133,8 @@ Rails.application.routes.draw  do
       post '/:txn_number/refund' => 'transactions#refund', on: :collection
     end
     resources :numbers, only: [] do
-      get 'search' => 'numbers#search', on: :collection
-      get 'hosted_number_order' => 'numbers#hosted_number_order', on: :collection
+      get 'search', on: :collection
+      get 'hosted_number_order', on: :collection
     end
     resources :coupons, only: [:index, :create, :update] do
       post 'check_coupon_name', on: :collection
