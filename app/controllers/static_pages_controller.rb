@@ -1,62 +1,22 @@
-# renders all static pages as mention in its action
 class StaticPagesController < ApplicationController
-	def home; end
 
-	def about; end
+  [:home, :about, :privacy, :customers, :pricing, :faqs, :terms, :to_404, :request_demo, :features].each do |method_name|
+    send :define_method, method_name do
+      # do nothing
+    end
+  end
 
-	def privacy; end
+  [:use_case_education, :use_case_non_profit, :use_case_demand_service, :use_case_sales_marketing, :use_case_staffing_employment].each do |method_name|
+    send :define_method, method_name do
+      # do nothing
+    end
+  end
 
-	def customers; end
-
-	def pricing; end
-
-	def faqs; end
-
-	def terms; end
-
-	def to_404; end
-
-  def request_demo; end
-
-  def features; end
-
-  def use_case_education; end
-
-  def use_case_non_profit; end
-
-  def use_case_demand_service; end
-
-  def use_case_sales_marketing; end
-
-  def use_case_staffing_employment; end
-
-  def refer_a_business; end
-
-  def relay_docs; end
-
-  def platform_integrations; end
-
-  def request_demo; end
-
-  def features; end
-
-  def use_case_education; end
-
-  def use_case_non_profit; end
-
-  def use_case_demand_service; end
-
-  def use_case_sales_marketing; end
-
-  def use_case_staffing_employment; end
-
-  def use_case_customer_support; end
-
-  # def refer_a_business; end
-
-  def create_a_relay_account; end
-
-  def relay_docs; end
+  [:refer_a_business, :relay_docs, :platform_integrations, :use_case_customer_support, :create_a_relay_account].each do |method_name|
+    send :define_method, method_name do
+      # do nothing
+    end
+  end
 
   def offline_check
     head :no_content

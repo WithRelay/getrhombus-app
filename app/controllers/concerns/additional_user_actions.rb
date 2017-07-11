@@ -1,12 +1,12 @@
 module AdditionalUserActions
   extend ActiveSupport::Concern
 
-  def add_rhombus_number; end
-
-  def add_subscription; end
-
-  def add_card_info; end
-
+  [:add_rhombus_number, :add_subscription, :add_card_info, :billing_information, :integrations].each do |method_name|
+    send :define_method, method_name do
+      # do nothing
+    end
+  end
+  
   def add_profile_info
     @user = current_user
     @user.people = [@user.people.first || Person.new]
@@ -22,10 +22,6 @@ module AdditionalUserActions
       @user.people = [@user.people.first || Person.new]
     end
   end
-
-  def billing_information; end
-
-  def integrations; end
 
   def remove_twitter_integration
     if current_user.twitter_cred.destroy
@@ -49,18 +45,6 @@ module AdditionalUserActions
     @amount_balance = Toolbox::Decimal.to_int_or_2dp current_user.account_balance
     @last4 = current_user.last4
     @card_type = current_user.card_type
-  end
-
-  def build_user_link
-    # if it includes a captured payment, also check if msg_id is present, tag_id is optional
-    # referrer_uid is the merchant the payment is going to
-    path = user_add_card_info_path(current_user)
-    if params[:user][:captured_amt].present?
-      path = user_add_card_info_path(current_user, amt: params[:user][:captured_amt],
-                                                   referrer_uid: params[:user][:referrer_uid],
-                                                   msg_id: params[:user][:msg_id], tag_id: params[:user][:tag_id])
-    end
-    path
   end
 
   # using this to hold data till we get to transactions page for customer

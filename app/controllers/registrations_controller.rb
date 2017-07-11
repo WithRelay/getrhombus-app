@@ -123,11 +123,7 @@ class RegistrationsController < Devise::RegistrationsController
     Plan.find_by(id: params[:plan][:id], status: 1).try(:id)
   end
 
-  def after_update_path_for(resource)
-    check_user_redirect || root_path
-  end
-
-  def after_sign_up_path_for(resource)
+  def after_sign_up_path_for(resource) # after_update_path_for(resource)
     check_user_redirect || root_path
   end
 

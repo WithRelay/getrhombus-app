@@ -3,9 +3,9 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
   before_action :configure_permitted_parameters, if: :devise_controller?
-  before_action :check_current_user
-  around_action :set_time_zone, if: :current_user
   before_action :prepare_exception_notifier
+  #before_action :check_current_user_and_path
+  around_action :set_time_zone, if: :current_user
 
   include CheckUserProfile
 
@@ -17,7 +17,7 @@ class ApplicationController < ActionController::Base
     #ExceptionNotifier.notify_exception(exception, env: request.env, data: { message: "was doing something wrong"})
     redirect_to_404(exception.message)
   end
-
+  
   rescue_from ActiveRecord::RecordNotFound do
     redirect_to_404("We're unable to find the requested record.")
   end
@@ -48,9 +48,16 @@ class ApplicationController < ActionController::Base
     redirect_to to_404_path, alert: message
   end
 
-  def check_current_user
-    if request.format.html? && request.get? && current_user.present? && params[:user_id].present? && current_user.id != params[:user_id].to_i
-      redirect_to_404('Forbidden. That simple.')
+  def check_current_user_and_path
+    # Avoid js or api json requests, forms, static pages and guest user
+    if request.format.html? && request.get? && controller_name != "static_pages" && current_user.present? 
+      # target only pages users actually see.
+      if params[:user_id].present? && current_user.id != params[:user_id].to_i
+        redirect_to_404('Forbidden. That simple.')
+      else
+        redirect_path = check_user_redirect(false)
+        redirect_to redirect_path if redirect_path.present?
+      end
     end
   end
 
