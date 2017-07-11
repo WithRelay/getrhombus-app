@@ -75,7 +75,7 @@ class RegistrationsController < Devise::RegistrationsController
       current_user.update(auto_reload: false)
       flash[:notice] = "Auto recharge disabled"
     end
-    redirect_to sms_usage_user_path
+    redirect_to user_sms_usage_path
   end
 
   def add_funds

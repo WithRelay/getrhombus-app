@@ -54,9 +54,9 @@ module AdditionalUserActions
   def build_user_link
     # if it includes a captured payment, also check if msg_id is present, tag_id is optional
     # referrer_uid is the merchant the payment is going to
-    path = add_card_info_user_path(current_user)
+    path = user_add_card_info_path(current_user)
     if params[:user][:captured_amt].present?
-      path = add_card_info_user_path(current_user, amt: params[:user][:captured_amt],
+      path = user_add_card_info_path(current_user, amt: params[:user][:captured_amt],
                                                    referrer_uid: params[:user][:referrer_uid],
                                                    msg_id: params[:user][:msg_id], tag_id: params[:user][:tag_id])
     end
@@ -91,7 +91,7 @@ module AdditionalUserActions
       merchant = User.find_by(relay_uid: params[:user][:referrer_uid])
       if merchant
         Referrer.save_referrer_with_uid(merchant.relay_uid, current_user.id)
-        MerchantCustomer.add_or_update_merchant_customer(merchant, current_user) 
+        MerchantCustomer.add_or_update_merchant_customer(merchant, current_user)
       end
     end
   end

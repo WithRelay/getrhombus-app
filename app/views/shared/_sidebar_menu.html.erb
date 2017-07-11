@@ -8,11 +8,11 @@
   <h5 class="left-nav signup-box-subheading shrink-text"><%= sidebar_name "#{params[:controller]}-#{params[:action]}" %></h5>
 
   <% if current_user.is_merchant? %>
-    
+
     <%= link_to user_merchant_customers_path(current_user), class: "left-nav-tab-wrapper w-inline-block" do %>
       <div class="left-nav-tab">Customers &nbsp; &nbsp;</div>
     <% end %>
-    
+
     <div class="customers-hidden-menu">
       <div>
         <select class="dropdown segments w-select" data-name="Segment Select" id="Segment-Select-lists" name="Segment-Select">
@@ -23,11 +23,11 @@
         </select>
       </div>
     </div>
-    
+
     <%= link_to user_merchant_contacts_path(current_user), class: "left-nav-tab-wrapper w-inline-block" do %>
       <div class="left-nav-tab">Contacts &nbsp; &nbsp;</div>
     <% end %>
-    
+
     <div class="customers-hidden-menu">
       <div>
         <select class="dropdown segments w-select" data-name="Segment Select" id="contacts-segment-list" name="Segment-Select">
@@ -38,16 +38,16 @@
         </select>
       </div>
     </div>
-    
+
     <%= link_to user_lists_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
       <div class="left-nav-tab" data-ix="display-and-hide-customers">Lists</div>
     <% end %>
-    
+
     <a class="left-nav-tab-wrapper w-inline-block" href="#">
       <div class="left-nav-tab messaging" data-ix="display-and-hide-left-nav">Messaging &nbsp; &nbsp; <span class="sidebar-dropdown-icon">+</span>
       </div>
     </a>
-    
+
     <div class="messaging-hidden-menu" data-ix="display-none-on-load">
       <%= link_to 'Conversations', user_conversations_path(current_user), class: 'conversations dashboard-dropdown-link' %>
       <%= link_to 'Saved replies', user_saved_replies_path(current_user), class: 'dashboard-dropdown-link saved-rep' %>
@@ -72,7 +72,7 @@
 
 
   <% if current_user.is_customer? %>
-    <%= link_to business_user_path(current_user), class: "left-nav-tab-wrapper w-inline-block" do %>
+    <%= link_to user_business_path(current_user), class: "left-nav-tab-wrapper w-inline-block" do %>
       <div class="left-nav-tab">Business</div>
     <% end %>
   <% end %>
