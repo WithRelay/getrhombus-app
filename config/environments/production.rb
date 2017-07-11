@@ -31,6 +31,22 @@ Rails.application.configure do
   }
   #### added
 
+  Rails.application.config.middleware.use ExceptionNotification::Rack,
+  :email => {
+    :deliver_with => :deliver, # Rails >= 4.2.1 do not need this option since it defaults to :deliver_now
+    :email_prefix => "team",
+    :sender_address => %{"notifier" <'<redacted_email>'>},
+    :exception_recipients => %w{'<redacted_email>'}
+  },
+  :slack => {
+    :webhook_url => "<redacted_webhook_url>",
+    :channel => "#exception_notifier"
+    # :additional_parameters => {
+    #   :icon_url => "http://image.jpg",
+    #   :mrkdwn => true
+    # }
+  }
+
 
   # Code is not reloaded between requests.
   config.cache_classes = true
@@ -47,7 +63,7 @@ Rails.application.configure do
 
   # Enable Rack::Cache to put a simple HTTP cache in front of your application
   # Add `rack-cache` to your Gemfile before enabling this.
-  # For large-scale production use, consider using a caching reverse proxy like 
+  # For large-scale production use, consider using a caching reverse proxy like
   # NGINX, varnish or squid.
   # config.action_dispatch.rack_cache = true
 

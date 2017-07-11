@@ -1,20 +1,20 @@
 Rails.application.routes.draw  do
 
-  #root 'static_pages#home'
-  #get "homepage_referrer" => 'referrers#homepage_referrer'
-  #get "relay-docs-categories/:slug" => "knowledge_base_categories#show"
-  #StaticPagesController.action_methods.each { |action| get action.split('_').join('-') => "static_pages##{action}" }
+  root 'static_pages#home'
+  get "homepage_referrer" => 'referrers#homepage_referrer'
+  get "relay-docs-categories/:slug" => "knowledge_base_categories#show"
+  StaticPagesController.action_methods.each { |action| get action.split('_').join('-') => "static_pages##{action}" }
 
   devise_for :users, controllers: { registrations: "registrations", omniauth_callbacks: "omniauth_callbacks", sessions: 'sessions' }
 
   # events/hooks routess
-  #constraints subdomain: 'hooks' do
-   # post 'events/stripe/platform' => 'webhooks#stripe_events'
-   # post 'events/stripe/connect' => 'webhooks#stripe_events'
-   # post 'events/twilio' => 'webhooks#twilio_events'
-   # match'events/nexmo' => 'webhooks#nexmo_events', via: [:get, :post]
-   # match 'events/facebook' => 'webhooks#facebook_events', via: [:get, :post]
-  #end
+  constraints subdomain: 'hooks' do
+    post 'events/stripe/platform' => 'webhooks#stripe_events'
+    post 'events/stripe/connect' => 'webhooks#stripe_events'
+    post 'events/twilio' => 'webhooks#twilio_events'
+    match'events/nexmo' => 'webhooks#nexmo_events', via: [:get, :post]
+    match 'events/facebook' => 'webhooks#facebook_events', via: [:get, :post]
+  end
 
   #authenticate :user, -> (user) { CheckUser::RouteAuthentication.new(user).should_authenticate? } do
   authenticate :user do
@@ -26,10 +26,10 @@ Rails.application.routes.draw  do
 
     resources :users, only: [] do
       get "/" => 'users#show'
-      get "account-settings", to: "users#account_settings"    # fixed
+      get "account-settings", to: "users#account_settings"
       get "billing-information", to: "users#billing_information"
       devise_scope :user do
-        patch "registration/update", to: "registrations#update"   # why are we using this when we can use the one above ... cos of user_id??? we have current_user??????????
+        patch "registration/update"
       end
       resources :transactions, only: [:index] do
         get 'download' => 'transactions#download_csv', constraints: { format: 'csv' }, on: :collection
@@ -40,7 +40,7 @@ Rails.application.routes.draw  do
   authenticate :user, -> (user) { user.is_platform? } do
     resources :users, only: [] do
       resources :knowledge_base_categories, param: :slug, only: [:index, :edit, :update, :new, :create]
-      resources :coupons, only: [:index, :create, :destroy]
+      resources :coupons, only: [:index, :destroy]
       get 'manage-coupons' => 'coupons#manage_coupons'
       mount Resque::Server.new, :at => "/resque"
     end
@@ -77,7 +77,7 @@ Rails.application.routes.draw  do
       resources :plans, only: [:index, :destroy]
       resources :alerts, only: [:update]
       get 'notifications' => 'alerts#edit'
-      resources :saved_replies 
+      resources :saved_replies
       resources :merchant_contacts, path: :contacts, only: [:index, :show]
       resources :merchant_customers, path: :customers, only: [:index, :show]
       get 'segments' => 'lists#segments'
@@ -99,7 +99,6 @@ Rails.application.routes.draw  do
     end
   end
 
-#=begin
   api_version(module: "Api::V1", path: { value: "v1"}, constraints: { subdomain: "api" }, defaults: { format: "json" }) do
     resources :users, only: [:index] do
       get 'snapshot', on: :collection
@@ -128,7 +127,7 @@ Rails.application.routes.draw  do
         post 'upload_from_url'
       end
     end
-    
+
     resources :reminders, only: [:create, :update]
     resources :transactions, only: [:index, :create] do
       post '/:txn_number/refund' => 'transactions#refund', on: :collection
@@ -137,7 +136,7 @@ Rails.application.routes.draw  do
       get 'search' => 'numbers#search', on: :collection
       get 'hosted_number_order' => 'numbers#hosted_number_order', on: :collection
     end
-    resources :coupons, only: [:index, :update] do
+    resources :coupons, only: [:index, :create, :update] do
       post 'check_coupon_name', on: :collection
     end
     resources :plans, only: [:index, :create, :update] do
@@ -160,7 +159,7 @@ Rails.application.routes.draw  do
       get 'rating', on: :member
     end
   end
-#=end
+
   ## catch all other to 404
   get "/*other", to: 'static_pages#to_404'     #all non-existent routes go to 404
 

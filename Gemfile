@@ -21,6 +21,9 @@ gem 'cancancan', '~> 1.10'
 #perfect scrollbar
 gem 'perfect-scrollbar-rails', '~> 0.6.10'
 
+gem 'exception_notification'
+gem 'slack-notifier'
+
 #gem 'cocoon'
 # bread & butter
 gem "stripe"
