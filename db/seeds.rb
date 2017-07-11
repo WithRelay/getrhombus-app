@@ -3,27 +3,41 @@
 #---
 # encoding: utf-8
 
+
+
+KnowledgeBaseCategory.create(id: 1, name: 'Getting Started & Setup', slug:'getting_started_setup', image:'014_118.png')
+KnowledgeBaseCategory.create(id: 2, name: 'Features Explained', slug:'features_explained', image:'017_228.png')
+KnowledgeBaseCategory.create(id: 3, name: 'Phone Number', slug:'phone_number', image:'017_015.png')
+KnowledgeBaseCategory.create(id: 4, name: 'Payments &amp; Transactions', slug:'payments_and_transactions', image:'014_014.png')
+KnowledgeBaseCategory.create(id: 5, name: 'Pricing', slug:'pricing', image:'014_124.png')
+KnowledgeBaseCategory.create(id: 6, name: 'My Account', slug:'my_account', image:'011_001.png')
+KnowledgeBaseCategory.create(id: 7, name: 'Use Cases', slug:'use_cases', image:'004_010.png')
+KnowledgeBaseCategory.create(id: 8, name: 'API', slug:'api', image:'007_052.png')
+KnowledgeBaseCategory.create(id: 9, name: 'Privacy &amp; Terms', slug:'privacy_and_term', image:'013_008.png')
+
 # Seeds for users
 # User.delete_all
 
 #Plan.delete_all
 platform_acct_id = User.get_platform_acct_obj.id
-Plan.create([
-	{ id: 1, status: 1, amount: 0, currency: 'usd', interval: 'month', interval_count: 1, stripe_livemode: 0, name: 'A - 0 - 100', statement_descriptor: 'Relay', trial_period_days: 0, merchant_id: platform_acct_id },
-	{ id: 2, status: 1, amount: 5000, currency: 'usd', interval: 'month', interval_count: 1, stripe_livemode: 0, name: 'B - 101 - 1000', statement_descriptor: 'Relay', trial_period_days: 14, merchant_id: platform_acct_id },
-	{ id: 3, status: 1, amount: 7500, currency: 'usd', interval: 'month', interval_count: 1, stripe_livemode: 0, name: 'C - 1001 - 2500', statement_descriptor: 'Relay', trial_period_days: 14, merchant_id: platform_acct_id },
-	{ id: 4, status: 1, amount: 9000, currency: 'usd', interval: 'month', interval_count: 1, stripe_livemode: 0, name: 'D - 2501 - 5000', statement_descriptor: 'Relay', trial_period_days: 14, merchant_id: platform_acct_id },
-	{ id: 5, status: 1, amount: 10500, currency: 'usd', interval: 'month', interval_count: 1, stripe_livemode: 0, name: 'E - 5001 - 7500', statement_descriptor: 'Relay', trial_period_days: 14, merchant_id: platform_acct_id },
-	{ id: 6, status: 1, amount: 12000, currency: 'usd', interval: 'month', interval_count: 1, stripe_livemode: 0, name: 'F - 7501 - 10000', statement_descriptor: 'Relay', trial_period_days: 14, merchant_id: platform_acct_id },
-	{ id: 7, status: 1, amount: 14500, currency: 'usd', interval: 'month', interval_count: 1, stripe_livemode: 0, name: 'G - 10001 - 15000', statement_descriptor: 'Relay', trial_period_days: 14, merchant_id: platform_acct_id },
-	{ id: 8, status: 1, amount: 19500, currency: 'usd', interval: 'month', interval_count: 1, stripe_livemode: 0, name: 'H - 15001 - 20000', statement_descriptor: 'Relay', trial_period_days: 14, merchant_id: platform_acct_id },
-	{ id: 9, status: 1, amount: 24000, currency: 'usd', interval: 'month', interval_count: 1, stripe_livemode: 0, name: 'I - 20001 - 25000', statement_descriptor: 'Relay', trial_period_days: 14, merchant_id: platform_acct_id },
-	{ id: 10, status: 1, amount: 29500, currency: 'usd', interval: 'month', interval_count: 1, stripe_livemode: 0, name: 'J - 250001 - 30000', statement_descriptor: 'Relay', trial_period_days: 14, merchant_id: platform_acct_id },
-	{ id: 11, status: 1, amount: 35000, currency: 'usd', interval: 'month', interval_count: 1, stripe_livemode: 0, name: 'K - 30001 - 35000', statement_descriptor: 'Relay', trial_period_days: 14, merchant_id: platform_acct_id },
-	{ id: 12, status: 1, amount: 40000, currency: 'usd', interval: 'month', interval_count: 1, stripe_livemode: 0, name: 'L - 350001 - 40000', statement_descriptor: 'Relay', trial_period_days: 14, merchant_id: platform_acct_id },
-	{ id: 13, status: 1, amount: 45000, currency: 'usd', interval: 'month', interval_count: 1, stripe_livemode: 0, name: 'M - 40001 - 45000', statement_descriptor: 'Relay', trial_period_days: 14, merchant_id: platform_acct_id },
-	{ id: 14, status: 1, amount: 50000, currency: 'usd', interval: 'month', interval_count: 1, stripe_livemode: 0, name: 'N - 45001 - 50000', statement_descriptor: 'Relay', trial_period_days: 14, merchant_id: platform_acct_id },
-])
+# Plan.create([
+# 	{ id: 1, status: 1, amount: 0, currency: 'usd', interval: 'month', interval_count: 1, stripe_livemode: 0, name: 'A - 0 - 100', statement_descriptor: 'Relay', trial_period_days: 0, merchant_id: platform_acct_id },
+# 	{ id: 2, status: 1, amount: 5000, currency: 'usd', interval: 'month', interval_count: 1, stripe_livemode: 0, name: 'B - 101 - 1000', statement_descriptor: 'Relay', trial_period_days: 14, merchant_id: platform_acct_id },
+# 	{ id: 3, status: 1, amount: 7500, currency: 'usd', interval: 'month', interval_count: 1, stripe_livemode: 0, name: 'C - 1001 - 2500', statement_descriptor: 'Relay', trial_period_days: 14, merchant_id: platform_acct_id },
+# 	{ id: 4, status: 1, amount: 9000, currency: 'usd', interval: 'month', interval_count: 1, stripe_livemode: 0, name: 'D - 2501 - 5000', statement_descriptor: 'Relay', trial_period_days: 14, merchant_id: platform_acct_id },
+# 	{ id: 5, status: 1, amount: 10500, currency: 'usd', interval: 'month', interval_count: 1, stripe_livemode: 0, name: 'E - 5001 - 7500', statement_descriptor: 'Relay', trial_period_days: 14, merchant_id: platform_acct_id },
+# 	{ id: 6, status: 1, amount: 12000, currency: 'usd', interval: 'month', interval_count: 1, stripe_livemode: 0, name: 'F - 7501 - 10000', statement_descriptor: 'Relay', trial_period_days: 14, merchant_id: platform_acct_id },
+# 	{ id: 7, status: 1, amount: 14500, currency: 'usd', interval: 'month', interval_count: 1, stripe_livemode: 0, name: 'G - 10001 - 15000', statement_descriptor: 'Relay', trial_period_days: 14, merchant_id: platform_acct_id },
+# 	{ id: 8, status: 1, amount: 19500, currency: 'usd', interval: 'month', interval_count: 1, stripe_livemode: 0, name: 'H - 15001 - 20000', statement_descriptor: 'Relay', trial_period_days: 14, merchant_id: platform_acct_id },
+# 	{ id: 9, status: 1, amount: 24000, currency: 'usd', interval: 'month', interval_count: 1, stripe_livemode: 0, name: 'I - 20001 - 25000', statement_descriptor: 'Relay', trial_period_days: 14, merchant_id: platform_acct_id },
+# 	{ id: 10, status: 1, amount: 29500, currency: 'usd', interval: 'month', interval_count: 1, stripe_livemode: 0, name: 'J - 250001 - 30000', statement_descriptor: 'Relay', trial_period_days: 14, merchant_id: platform_acct_id },
+# 	{ id: 11, status: 1, amount: 35000, currency: 'usd', interval: 'month', interval_count: 1, stripe_livemode: 0, name: 'K - 30001 - 35000', statement_descriptor: 'Relay', trial_period_days: 14, merchant_id: platform_acct_id },
+# 	{ id: 12, status: 1, amount: 40000, currency: 'usd', interval: 'month', interval_count: 1, stripe_livemode: 0, name: 'L - 350001 - 40000', statement_descriptor: 'Relay', trial_period_days: 14, merchant_id: platform_acct_id },
+# 	{ id: 13, status: 1, amount: 45000, currency: 'usd', interval: 'month', interval_count: 1, stripe_livemode: 0, name: 'M - 40001 - 45000', statement_descriptor: 'Relay', trial_period_days: 14, merchant_id: platform_acct_id },
+# 	{ id: 14, status: 1, amount: 50000, currency: 'usd', interval: 'month', interval_count: 1, stripe_livemode: 0, name: 'N - 45001 - 50000', statement_descriptor: 'Relay', trial_period_days: 14, merchant_id: platform_acct_id },
+# ])
+
+
 
 
 =begin
