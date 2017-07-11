@@ -14,7 +14,6 @@
     <% end %>
     <div class="account-settings-form-wrapper">
       <%= form_for('user', url: user_auto_recharge_path, method: :post, html: { id: "auto_recharge", class:'w-clearfix' } ) do |f| %>
-      <form class="w-clearfix" id="email-form" name="email-form">
         <label class="field-headers form-label settings" for="Business-Name">current balance</label>
         <div class="balance-section settings-info-div">
           <p class="account-balance settings-details-paragraph">$<%= @amount_balance %> remaining in your account</p>

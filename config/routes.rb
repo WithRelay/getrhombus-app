@@ -46,12 +46,12 @@ Rails.application.routes.draw  do
     end
   end
 
-  authenticate :user, -> (user) { user.is_merchant? } do        
+  authenticate :user, -> (user) { user.is_merchant? } do
     resources :users, only: [] do
       devise_scope :user do
-        post 'deactivate'
-        post 'auto_recharge'
-        post 'add_funds'
+        post 'deactivate' => "registrations#deactivate"
+        post 'auto_recharge' => "registrations#auto_recharge"
+        post 'add_funds' => "registrations#add_funds"
       end
       get 'sms-usage'
       get 'add-rhombus-number'
