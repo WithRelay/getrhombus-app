@@ -12,21 +12,33 @@ class HostedSmsService
       # cc_emails: ['team_email'], sms_capability:true, friendly_name: 'Business_name_number')
       params = params[:user].permit(:phone_number, :rn_country)
       begin
-        @client = Twilio::REST::Client.new(TWILIO_API_KEY, TWILIO_API_SECRET)
-        response = @client.preview.hosted_numbers.hosted_number_orders.create(
-          cc_emails: [],
-          phone_number: params[:phone_number],
-          type: 'local',
-          iso_country: params[:rn_country],
-          address_sid: ADDRESS_SID,
-          email: user.email,
-          sms_capability: true
-        )
-        create_hosted_number_order(user, response)
-        [true, 'Hosted number order started']
+        if hosted_sms_order_present?(params[:phone_number])
+          [false, 'A hosted sms request has been issued for this number']
+        else
+          @client = Twilio::REST::Client.new(TWILIO_API_KEY, TWILIO_API_SECRET)
+          response = @client.preview.hosted_numbers.hosted_number_orders.create(
+            cc_emails: [],
+            phone_number: params[:phone_number],
+            type: 'local',
+            iso_country: params[:rn_country],
+            address_sid: ADDRESS_SID,
+            email: user.email,
+            sms_capability: true
+          )
+          create_hosted_number_order(user, response)
+          [true, 'Hosted number order started']
+        end
       rescue StandardError => err
         # email team here
         [false, err.message]
+      end
+    end
+
+    def hosted_sms_order_present?(phone)
+      if HostedSms.find_by(phone_number: phone)
+        true
+      else
+        false
       end
     end
 
