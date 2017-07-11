@@ -5,7 +5,7 @@ class ApplicationController < ActionController::Base
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :check_current_user
   around_action :set_time_zone, if: :current_user
-  before_filter :prepare_exception_notifier
+  before_action :prepare_exception_notifier
 
   include CheckUserProfile
 
@@ -14,6 +14,7 @@ class ApplicationController < ActionController::Base
   end
 
   rescue_from CanCan::AccessDenied do |exception|
+    #ExceptionNotifier.notify_exception(exception, env: request.env, data: { message: "was doing something wrong"})
     redirect_to_404(exception.message)
   end
 
@@ -48,7 +49,7 @@ class ApplicationController < ActionController::Base
   end
 
   def check_current_user
-    if request.format.html? && current_user.present? && params[:user_id].present? && current_user.id != params[:user_id].to_i
+    if request.format.html? && request.get? && current_user.present? && params[:user_id].present? && current_user.id != params[:user_id].to_i
       redirect_to_404('Forbidden. That simple.')
     end
   end
@@ -59,7 +60,7 @@ class ApplicationController < ActionController::Base
 
   def prepare_exception_notifier
     request.env["exception_notifier.exception_data"] = {
-      :current_user => current_user
+      current_user: current_user
     }
   end
 

@@ -37,6 +37,19 @@ module Rhombus
     #added
     config.active_job.queue_name_prefix = Rails.env
 
+    #added
+    Rails.application.config.middleware.use ExceptionNotification::Rack,
+    ignore_cascade_pass: false,
+    email: {
+      deliver_with: :deliver, # Rails >= 4.2.1 do not need this option since it defaults to :deliver_now
+      email_prefix: "Application Error",
+      sender_address: %{"Exception Notifier" <'<redacted_email>'>},
+      exception_recipients: %w{'<redacted_email>'}
+    },
+    slack: {
+      webhook_url: '<redacted_webhook_url>'
+    }
+
     # added
     I18n.enforce_available_locales = true
 
