@@ -5,27 +5,27 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
   def stripe_connect
     if current_user.is_merchant?
       if StandaloneStripeCred.from_omniauth(request.env["omniauth.auth"], current_user.id)
-        redirect_to integrations_user_path(current_user)
+        redirect_to user_integrations_path(current_user)
         set_flash_message(:notice, :success, :kind => "Stripe Connect") if is_navigational_format?
         return
       else
-        redirect_to integrations_user_path(current_user), alert: "We were unable to connect your account to Stripe. Please try again"
+        redirect_to user_integrations_path(current_user), alert: "We were unable to connect your account to Stripe. Please try again"
       end
     else
-      redirect_to integrations_user_path(current_user), alert: "We were unable to connect your account to Stripe. Please try again"
+      redirect_to user_integrations_path(current_user), alert: "We were unable to connect your account to Stripe. Please try again"
     end
   end
 
   def twitter
     if current_user.is_merchant?
       if TwitterCred.from_omniauth(request.env["omniauth.auth"], current_user.id) == true
-        redirect_to integrations_user_path(current_user)
+        redirect_to user_integrations_path(current_user)
         set_flash_message(:notice, :success, :kind => "Twitter") if is_navigational_format?
         return
       end
-      redirect_to integrations_user_path(current_user), alert: "We were unable to connect your account to Twitter. Please try again"
+      redirect_to user_integrations_path(current_user), alert: "We were unable to connect your account to Twitter. Please try again"
     else
-      redirect_to integrations_user_path(current_user), alert: "You cannot connect your Twitter account."
+      redirect_to user_integrations_path(current_user), alert: "You cannot connect your Twitter account."
     end
   end
 
@@ -36,13 +36,13 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
         redirect_to user_fb_pages_path(current_user), flash: { notice: "You have connected Messenger to Rhombus" }
         return
       end
-      redirect_to integrations_user_path(current_user), flash: { error: "We were unable to connect your account to Facebook account. Please try again" }
+      redirect_to user_integrations_path(current_user), flash: { error: "We were unable to connect your account to Facebook account. Please try again" }
     else
-      redirect_to integrations_user_path(current_user), flash: { error: "You cannot connect your Facebook account." }
+      redirect_to user_integrations_path(current_user), flash: { error: "You cannot connect your Facebook account." }
     end
   end
 
-  private 
+  private
 
   def check_user_present
     unless current_user.present?

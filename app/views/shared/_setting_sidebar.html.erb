@@ -8,11 +8,11 @@
 
   <% if current_user.is_merchant? || current_user.is_platform? %>
 
-    <%= link_to account_settings_user_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
+    <%= link_to user_account_settings_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
       <div class="left-nav-tab" data-ix="display-and-hide-customers">Account</div>
     <% end %>
 
-    <%= link_to business_settings_user_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
+    <%= link_to user_business_settings_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
       <div class="left-nav-tab">Business</div>
     <% end %>
 
@@ -61,7 +61,7 @@
     <%= link_to user_billing_information_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
       <div class="left-nav-tab">Billing Information</div>
     <% end %>
-    
+
   <% end %>
 
   <h5 class="left-nav rhom-number signup-box-subheading">RHOMBUS NUMBER</h5>

@@ -1,6 +1,6 @@
 class CampaignsController < ApplicationController
-  
-  before_action :find_campaign, only: [:update]  
+
+  before_action :find_campaign, only: [:update]
   load_and_authorize_resource
 
   include DashboardNotification
@@ -10,7 +10,7 @@ class CampaignsController < ApplicationController
 
   def index
     @campaigns = current_user.campaigns#.is_active_or_paused
-                             .paginate(per_page: 1, page: params[:page]).order(updated_at: :desc)
+                             .paginate(per_page: PAGINATION_PER_PAGE, page: params[:page]).order(updated_at: :desc)
     @campaigns.present? ? render_requested_format(@campaigns) : render(:empty_campaign)
   end
 
@@ -52,8 +52,8 @@ class CampaignsController < ApplicationController
 
   def filter_campaign
     @campaigns = current_user.campaigns.where('status = ?', Campaign.statuses[params[:status]])
-                             .paginate(per_page: 1, page: params[:page]).order(updated_at: :desc)
-                             
+                             .paginate(per_page: PAGINATION_PER_PAGE, page: params[:page]).order(updated_at: :desc)
+
     if @campaigns.present?
       respond_to do |format|
         format.js { render partial: 'shared/index.js.erb', locals: { obj: @campaigns } }

@@ -83,7 +83,7 @@ class FbPagesController < ApplicationController
       # @user_fb_pages.destroy_all
       # wipe fb_creds related to the current_user
       current_user.fb_creds.destroy_all             # oauth fb_cred of current user including page specific fb_creds
-      redirect_to integrations_user_path(current_user), flash: { notice: 'You have disconnected Facebook from Relay.' }
+      redirect_to user_integrations_path(current_user), flash: { notice: 'You have disconnected Facebook from Relay.' }
     else
       redirect_to user_fb_pages_path(current_user), flash: { error: 'Unable to disconnect Facebook from Relay.' }
     end
@@ -106,7 +106,7 @@ class FbPagesController < ApplicationController
 
   def check_cred_present
     if @fb_cred.nil?
-      redirect_to integrations_user_path(current_user),  flash: { error: 'Your facebook account is not connected with Relay' }
+      redirect_to user_integrations_path(current_user),  flash: { error: 'Your facebook account is not connected with Relay' }
     end
   end
 
