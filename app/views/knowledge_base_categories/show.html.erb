@@ -15,7 +15,7 @@
 
     <div id='kb-list'>
       <% @kb_list.each do |item| %>
-        <a href="<%= item.url %>">
+        <a href="<%= "/relay-docs/#{item.slug}" %>">
           <div class="article static-page-content-wrapper w-container">
           <div class="articles-title"><%= item.title %></div>
           <p class="article-preview"><%= item.raw_content[0..100] %></p>

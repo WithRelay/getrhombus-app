@@ -2,6 +2,7 @@ Rails.application.routes.draw  do
 
   root 'static_pages#home'
   get "homepage_referrer" => 'referrers#homepage_referrer'
+  get "relay-docs/:slug" => "knowledge_bases#show"
   get "relay-docs-categories/:slug" => "knowledge_base_categories#show"
   StaticPagesController.action_methods.each { |action| get action.split('_').join('-') => "static_pages##{action}" }
 

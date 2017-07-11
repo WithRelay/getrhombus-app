@@ -1,9 +1,8 @@
 class KnowledgeBaseCategoriesController < ApplicationController
-  
-  include DashboardNotification
+  before_action :set_kbc, only: [:edit, :show, :update]
 
-  before_action :set_kb, only: [:edit, :show, :update]
-  before_action :set_notifications
+  include DashboardNotification
+  before_action :set_notifications, except: [:show]
 
   def index
     @knowledge_base_categories = KnowledgeBaseCategory.all
@@ -49,7 +48,7 @@ class KnowledgeBaseCategoriesController < ApplicationController
     params.require(:knowledge_base_category).permit(:name)
   end
 
-  def set_kb
+  def set_kbc
     @knowledge_base_category = KnowledgeBaseCategory.find_by(slug: params[:slug])
   end
 

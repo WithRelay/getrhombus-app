@@ -7,48 +7,52 @@
 <div id="kb-content">
   <div class="static-page-def-section">
     <h1 class="sub-hero-header">Choose a category or browse FAQs below</h1>
+    
     <div class="customer-interactions-table no-icon-row w-row">
-      <% KnowledgeBaseCategory.first(3).each do |category|%>
-      <div class="w-col w-col-4">
-        <div>
-          <a class="docs-category-link-block w-inline-block" href="#">
-            <div class="docs features-div-paragraph-wrapper">
-              <%= image_tag category.image, class: 'relay-docs-row-icon'%>
-              <h3 class="features-div-header-text use-case"><%= category.name %></h3>
-            </div>
-          </a>
+      <% KnowledgeBaseCategory.first(3).each do |category| %>
+        <div class="w-col w-col-4">
+          <div>
+            <a class="docs-category-link-block w-inline-block" href="<%= "/relay-docs-categories/#{category.slug}" %>">
+              <div class="docs features-div-paragraph-wrapper">
+                <%= image_tag category.image_name, class: 'relay-docs-row-icon'%>
+                <h3 class="features-div-header-text use-case"><%= category.name %></h3>
+              </div>
+            </a>
+          </div>
         </div>
-      </div>
       <%end%>
     </div>
+    
     <div class="customer-interactions-table no-icon-row w-row">
-      <% KnowledgeBaseCategory.find([4,5,6]).each do |category|%>
-      <div class="w-col w-col-4">
-        <div>
-          <a class="docs-category-link-block w-inline-block" href="#">
-            <div class="docs features-div-paragraph-wrapper">
-              <%= image_tag category.image, class: 'relay-docs-row-icon'%>
-              <h3 class="features-div-header-text use-case"><%= category.name %></h3>
-            </div>
-          </a>
+      <% KnowledgeBaseCategory.offset(3).limit(3).each do |category| %>
+        <div class="w-col w-col-4">
+          <div>
+            <a class="docs-category-link-block w-inline-block" href="<%= "/relay-docs-categories/#{category.slug}" %>">
+              <div class="docs features-div-paragraph-wrapper">
+                <%= image_tag category.image_name, class: 'relay-docs-row-icon'%>
+                <h3 class="features-div-header-text use-case"><%= category.name %></h3>
+              </div>
+            </a>
+          </div>
         </div>
-      </div>
       <%end%>
     </div>
+
     <div class="customer-interactions-table no-icon-row w-row">
-      <% KnowledgeBaseCategory.last(3).each do |category|%>
-      <div class="w-col w-col-4">
-        <div>
-          <a class="docs-category-link-block w-inline-block" href="#">
-            <div class="docs features-div-paragraph-wrapper">
-              <%= image_tag category.image, class: 'relay-docs-row-icon'%>
-              <h3 class="features-div-header-text use-case"><%= category.name %></h3>
-            </div>
-          </a>
+      <% KnowledgeBaseCategory.last(3).each do |category| %>
+        <div class="w-col w-col-4">
+          <div>
+            <a class="docs-category-link-block w-inline-block" href="<%= "/relay-docs-categories/#{category.slug}" %>">
+              <div class="docs features-div-paragraph-wrapper">
+                <%= image_tag category.image_name, class: 'relay-docs-row-icon'%>
+                <h3 class="features-div-header-text use-case"><%= category.name %></h3>
+              </div>
+            </a>
+          </div>
         </div>
-      </div>
       <%end%>
     </div>
+
   </div>
 </div>
 

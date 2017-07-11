@@ -50,7 +50,7 @@ class ApplicationController < ActionController::Base
 
   def check_current_user_and_path
     # Avoid js or api json requests, forms, static pages and guest user
-    if request.format.html? && request.get? && controller_name != "static_pages" && current_user.present? 
+    if request.format.html? && request.get? && ['static_pages', 'knowledge_base_categories', 'knowledge_bases'].exclude?(controller_name) && current_user.present? 
       # target only pages users actually see.
       if params[:user_id].present? && current_user.id != params[:user_id].to_i
         redirect_to_404('Forbidden. That simple.')

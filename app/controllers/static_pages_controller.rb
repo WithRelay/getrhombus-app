@@ -12,7 +12,7 @@ class StaticPagesController < ApplicationController
     end
   end
 
-  [:refer_a_business, :relay_docs, :platform_integrations, :use_case_customer_support, :create_a_relay_account].each do |method_name|
+  [:refer_a_business, :relay_docs, :platform_integrations, :use_case_customer_support].each do |method_name|
     send :define_method, method_name do
       # do nothing
     end

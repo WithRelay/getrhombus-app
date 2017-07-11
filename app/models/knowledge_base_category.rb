@@ -5,6 +5,6 @@ class KnowledgeBaseCategory < ActiveRecord::Base
 
   has_many :knowledge_bases
   validates_presence_of :name
-  validates :name, uniqueness: { case_sensitive: false}
+  validates :name, uniqueness: { case_sensitive: false }
   
 end

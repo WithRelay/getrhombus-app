@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170711043452) do
+ActiveRecord::Schema.define(version: 20170711144552) do
 
   create_table "account_reloads", force: :cascade do |t|
     t.integer  "user_id",        limit: 4
@@ -46,6 +46,7 @@ ActiveRecord::Schema.define(version: 20170711043452) do
     t.datetime "updated_at",                              null: false
   end
 
+  add_index "alerts", ["user_id"], name: "fk_rails_6637a8d260", using: :btree
   add_index "alerts", ["user_id"], name: "index_alerts_on_user_id", using: :btree
 
   create_table "away_messages", force: :cascade do |t|
@@ -418,17 +419,17 @@ ActiveRecord::Schema.define(version: 20170711043452) do
     t.datetime "updated_at",                                   null: false
   end
 
-  add_index "invoices", ["coupon_id"], name: "fk_rails_fd37f25ad2", using: :btree
+  add_index "invoices", ["coupon_id"], name: "fk_rails_d904f32fa0", using: :btree
   add_index "invoices", ["stripe_invoice_id"], name: "index_invoices_on_stripe_invoice_id", using: :btree
-  add_index "invoices", ["subscription_id"], name: "fk_rails_bd9e2a19f5", using: :btree
-  add_index "invoices", ["transaction_id"], name: "fk_rails_cda92171cd", using: :btree
+  add_index "invoices", ["subscription_id"], name: "fk_rails_2fe0fa30e5", using: :btree
+  add_index "invoices", ["transaction_id"], name: "fk_rails_ca7e31fd1d", using: :btree
 
   create_table "knowledge_base_categories", force: :cascade do |t|
     t.string   "name",       limit: 191
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
     t.string   "slug",       limit: 191
-    t.string   "image",      limit: 191
+    t.string   "image_name", limit: 191
   end
 
   add_index "knowledge_base_categories", ["name"], name: "index_knowledge_base_categories_on_name", unique: true, using: :btree
@@ -440,7 +441,7 @@ ActiveRecord::Schema.define(version: 20170711043452) do
     t.string   "author_url",                 limit: 191
     t.integer  "upvotes",                    limit: 4,     default: 0
     t.integer  "downvotes",                  limit: 4,     default: 0
-    t.string   "url",                        limit: 191
+    t.string   "slug",                       limit: 191
     t.text     "raw_content",                limit: 65535
     t.integer  "knowledge_base_category_id", limit: 4
     t.datetime "created_at",                                           null: false
@@ -474,6 +475,7 @@ ActiveRecord::Schema.define(version: 20170711043452) do
   end
 
   add_index "merchant_contacts", ["merchant_id"], name: "index_merchant_contacts_on_merchant_id", using: :btree
+  add_index "merchant_contacts", ["uid"], name: "index_merchant_contacts_on_customer_id", using: :btree
   add_index "merchant_contacts", ["uid"], name: "index_merchant_contacts_on_uid", using: :btree
 
   create_table "merchant_customers", force: :cascade do |t|
@@ -575,7 +577,6 @@ ActiveRecord::Schema.define(version: 20170711043452) do
     t.string   "business_name",  limit: 191
   end
 
-  add_index "people", ["stripe_file_id"], name: "index_people_on_stripe_file_id", using: :btree
   add_index "people", ["user_id"], name: "index_people_on_user_id", using: :btree
 
   create_table "plans", force: :cascade do |t|
@@ -623,9 +624,9 @@ ActiveRecord::Schema.define(version: 20170711043452) do
   add_index "referrers", ["referrer_email"], name: "index_referrers_on_referrer_email", using: :btree
 
   create_table "refunds", force: :cascade do |t|
-    t.string   "uri",            limit: 191
-    t.string   "time",           limit: 191
-    t.string   "reason",         limit: 191
+    t.string   "uri",            limit: 255
+    t.string   "time",           limit: 255
+    t.string   "reason",         limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "transaction_id", limit: 4
@@ -705,8 +706,10 @@ ActiveRecord::Schema.define(version: 20170711043452) do
     t.datetime "updated_at",                                                              null: false
   end
 
+  add_index "subscriptions", ["coupon_id"], name: "fk_rails_56c77d859b", using: :btree
   add_index "subscriptions", ["coupon_id"], name: "index_subscriptions_on_coupon_id", using: :btree
   add_index "subscriptions", ["merchant_customer_id"], name: "index_subscriptions_on_merchant_customer_id", using: :btree
+  add_index "subscriptions", ["plan_id"], name: "fk_rails_4506bac28d", using: :btree
   add_index "subscriptions", ["plan_id"], name: "index_subscriptions_on_plan_id", using: :btree
 
   create_table "transaction_fees", force: :cascade do |t|
@@ -750,15 +753,16 @@ ActiveRecord::Schema.define(version: 20170711043452) do
     t.integer  "referenced_merchant_transaction_id", limit: 4
     t.integer  "team_id",                            limit: 4
     t.string   "currency",                           limit: 191
+    t.boolean  "captured",                           limit: 1,                             default: true
     t.integer  "hashtag_id",                         limit: 4
     t.integer  "subscription_id",                    limit: 4
-    t.boolean  "captured",                           limit: 1,                             default: true
   end
 
   add_index "transactions", ["created_at"], name: "index_transactions_on_created_at", using: :btree
   add_index "transactions", ["hashtag_id"], name: "index_transactions_on_hashtag_id", using: :btree
   add_index "transactions", ["referenced_customer_transaction_id"], name: "index_transactions_on_referenced_customer_transaction_id", using: :btree
   add_index "transactions", ["subscription_id"], name: "index_transactions_on_subscription_id", using: :btree
+  add_index "transactions", ["team_id"], name: "fk_rails_669ffc34df", using: :btree
   add_index "transactions", ["team_id"], name: "index_transactions_on_team_id", using: :btree
   add_index "transactions", ["txn_number"], name: "index_transactions_on_txn_number", using: :btree
   add_index "transactions", ["user_id"], name: "index_transactions_on_user_id", using: :btree
