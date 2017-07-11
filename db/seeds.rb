@@ -15,6 +15,34 @@ KnowledgeBaseCategory.create(id: 7, name: 'Use Cases', slug:'use_cases', image:'
 KnowledgeBaseCategory.create(id: 8, name: 'API', slug:'api', image:'007_052.png')
 KnowledgeBaseCategory.create(id: 9, name: 'Privacy &amp; Terms', slug:'privacy_and_term', image:'013_008.png')
 
+KnowledgeBase.create(
+              id: 1,
+              title: 'Create a Relay account for your business',
+              author: 'Edwin',
+              author_url: string,
+              url: string,
+              raw_content: 'Thank you for choosing Relay! To signup as a business please follow this link. All Relay plans come with a 14-day trial, including SMS credits to help you get started quickly.
+                            If you’re not ready to choose a subscription plan, you can also sign-up for a limited free account that includes two-way messaging and payments from 25 contacts and/or customers, via SMS or Facebook Messenger.
+                            Why collect payment information for a free account?
+                            The free account is absolutely free — this means no monthly subscription! However, you will need to purchase SMS credits to message your customers, or connect your Facebook Messenger account.
+                            Still have questions? We’ll be happy to walk you through Relay features relevant to your business use case, and answer all your questions. Schedule a demo here. You can also text us here [relay_dashboard_number] 😃 ',
+              knowledge_base_category_id: 1)
+
+KnowledgeBase.create(
+              id: 2,
+              title: 'Create a Relay customer account',
+              author: 'Edwin',
+              author_url: '',
+              url: '',
+              raw_content: 'Thank you for choosing Relay! To signup as a business please follow this link. All Relay plans come with a 14-day trial, including SMS credits to help you get started quickly.
+                            If you’re not ready to choose a subscription plan, you can also sign-up for a limited free account that includes two-way messaging and payments from 25 contacts and/or customers, via SMS or Facebook Messenger.
+                            Why collect payment information for a free account?
+                            The free account is absolutely free — this means no monthly subscription! However, you will need to purchase SMS credits to message your customers, or connect your Facebook Messenger account.
+                            Still have questions? We’ll be happy to walk you through Relay features relevant to your business use case, and answer all your questions. Schedule a demo here. You can also text us here [relay_dashboard_number] 😃 ',
+              knowledge_base_category_id: 1)
+
+
+
 # Seeds for users
 # User.delete_all
 
