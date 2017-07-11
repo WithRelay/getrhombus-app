@@ -147,28 +147,25 @@ $(document).ready(function () {
   // create Coupon using modal through api call
   function addCoupon(){
     $.ajax({
-        url: "/v1/coupons.json",
-        beforeSend: function(xhr) {
-          xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
-        },
-        type: "POST",
-        data: $('#couponForm').serialize(),
-        dataType: "json"
-      })
-      .done(function(data, textStatus, jqXHR) {
-        FlashHandler.setFlashMessage(data.response, 'notice');
-        $('#couponForm')[0].reset();
-        $('#couponForm').data('formValidation').resetForm();
-        $('.update-close-modals').click();
-        location.reload();
-      })
-      .fail(function(data, textStatus, errorThrown) {
-        FlashHandler.setFlashMessage(JSON.parse(data.responseText).response, 'error');
-        $('#create-coupon').attr("disabled", false).val("Create Coupon");
-      })
+      url: "/v1/coupons.json",
+      beforeSend: function(xhr) {
+        xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
+      },
+      type: "POST",
+      data: $('#couponForm').serialize(),
+      dataType: "json"
+    })
+    .done(function(data, textStatus, jqXHR) {
+      FlashHandler.setFlashMessage(data.response, 'notice');
+      $('.update-close-modals').click();
+      location.reload();
+    })
+    .fail(function(data, textStatus, errorThrown) {
+      FlashHandler.setFlashMessage(data.responseJSON.response, 'error');
+    })
     .always(function(data, textStatus, response) {
-        $('#create-coupon').attr("disabled", false).val("Create Coupon");
-      });
+      $('#create-coupon').attr("disabled", false).val("Create Coupon");
+    });
   };
 
   function revert_to_text() {
@@ -191,7 +188,7 @@ $(document).ready(function () {
         revert_to_text();
       })
       .fail(function(data, textStatus, errorThrown) {
-        FlashHandler.setFlashMessage(JSON.parse(data.responseText).response, 'error');
+        FlashHandler.setFlashMessage(data.responseJSON.response, 'error');
       })
       .always(function(data, textStatus, response) {
         coupon_save_icon.disabled = false;
@@ -206,7 +203,7 @@ $(document).on('click', '.delete-coupon', function(evt) {
     evt.stopImmediatePropagation();
     FlashHandler.setConfirmationDialog(
       selector,
-      'Deleting this coupon will not affect discounts for customers who have already redeemed the coupon, but new redemptions of the coupon won\'t be allowed.',
+      'Deleting this coupon will not affect discounts for customers who have already redeemed the coupon but new redemptions of the coupon won\'t be allowed.',
       'Delete coupon',
       'isDestroy'
     );
