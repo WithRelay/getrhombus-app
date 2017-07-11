@@ -24,11 +24,8 @@ Taiwo
 
 Surya
 - do we need to exclude refunded txns in segment queries? review segment queries
-- still able to bypass onboarding to any page if i know the url. or i can go back to onboarding if i know the url (edited)
-- when you uncomment this line in routes  # authenticate :user, -> (user) { CheckUser::RouteAuthentication.new(user).should_authenticate? } do, pages become unreachable i believe. review/remove CheckUser in classes folder
 - campaign toastrs - plug and play. already wrote the code for you. see realtimeservice.rb and notifications.js
-- tooltip for campaigns - leave for noe
-- time comparisons are tricky...make sure to do to_i because rails compares time as floats
+- tooltip for campaigns - leave for now
 
 Dorje
 - weekly summary template

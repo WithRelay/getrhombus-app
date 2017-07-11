@@ -13,7 +13,7 @@ class TransactionsController < ApplicationController
     if current_user.is_merchant?
       if params[:captured] == "false"
         @transactions = Transaction.includes(:user).where(team_id: current_user.id).only_uncaptured_transactions()
-                                 .where("created_at >= ?", Time.zone.at(7.days.ago).to_i)
+                                 .where("created_at >= ?", Time.zone.at(7.days.ago))
                                  .exclude_subscriptions()
                                  .paginate(page: params[:page], per_page: PAGINATION_PER_PAGE)
                                  .order(created_at: :desc)

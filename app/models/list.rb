@@ -25,7 +25,7 @@ class List < ActiveRecord::Base
 
     if self.segment.present?
       self.segment['merchant_id'] = self.user_id
-      self.segment["time"] = Time.current.beginning_of_day - self.segment['base_val'].to_i.days if self.segment['base_val'].present?
+      self.segment["time"] = Time.current.beginning_of_day.utc - self.segment['base_val'].to_i.days if self.segment['base_val'].present?
       class_name.paginate_by_sql(send(self.segment['base_query'], self.segment), page: page, per_page: PAGINATION_PER_PAGE)
     else
       class_name.joins("inner join user_lists on user_lists.customer_contact_id = #{class_name.table_name}.id")

@@ -471,6 +471,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$http', 'Pubnub
         text += " " + text_to_insert.trim();
         box.emojioneArea.setText(text);
         $scope.new_message.text = text;
+        $('.update-close-modals').click();
       }
     };
 

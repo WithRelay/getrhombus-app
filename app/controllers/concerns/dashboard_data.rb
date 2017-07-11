@@ -36,17 +36,17 @@ module DashboardData
 		all_txns = all_transactions
     chart_data, recent_transactions = {}, {}
 
-		# weekly_transactions = all_txns.where('transactions.created_at >=?', 7.days.ago.utc)
+		# weekly_transactions = all_txns.where('transactions.created_at >= ?', 7.days.ago.utc)
 		# if merchant(current_user) has no bank account then the transactions data for the UI set to empty hash		
 		if has_bank_account?
-			chart_data = all_txns.where('transactions.created_at >=?', 7.days.ago.utc).group('date(transactions.created_at)').sum(:amount)
+			chart_data = all_txns.where('transactions.created_at >= ?', 7.days.ago.utc).group('date(transactions.created_at)').sum(:amount)
 			recent_transactions = Transaction.includes(:user).exclude_refunded_transactions().only_captured_transactions()
 																		    .where(team_id: merchant_id).order(created_at: :desc).last(6)			
 		end
 
 		{
 			recent_trans: recent_transactions,
-			this_week_tranc: all_txns.where('transactions.created_at >=?', 7.days.ago.utc).sum(:amount),
+			this_week_tranc: all_txns.where('transactions.created_at >= ?', 7.days.ago.utc).sum(:amount),
 			tranc_chart_data: chart_data
 		}
 	end
