@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170708153448) do
+ActiveRecord::Schema.define(version: 20170711043452) do
 
   create_table "account_reloads", force: :cascade do |t|
     t.integer  "user_id",        limit: 4
@@ -428,6 +428,7 @@ ActiveRecord::Schema.define(version: 20170708153448) do
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
     t.string   "slug",       limit: 191
+    t.string   "image",      limit: 191
   end
 
   add_index "knowledge_base_categories", ["name"], name: "index_knowledge_base_categories_on_name", unique: true, using: :btree
