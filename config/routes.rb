@@ -7,14 +7,14 @@ Rails.application.routes.draw  do
 
   devise_for :users, controllers: { registrations: "registrations", omniauth_callbacks: "omniauth_callbacks", sessions: 'sessions' }
 
-  # events/hooks routess
-  constraints subdomain: 'hooks' do
+  # events/hooks routes
+  #constraints subdomain: 'hooks' do
     post 'events/stripe/platform' => 'webhooks#stripe_events'
     post 'events/stripe/connect' => 'webhooks#stripe_events'
     post 'events/twilio' => 'webhooks#twilio_events'
     match'events/nexmo' => 'webhooks#nexmo_events', via: [:get, :post]
     match 'events/facebook' => 'webhooks#facebook_events', via: [:get, :post]
-  end
+  #end
 
   #authenticate :user, -> (user) { CheckUser::RouteAuthentication.new(user).should_authenticate? } do
   authenticate :user do
