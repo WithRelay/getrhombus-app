@@ -13,7 +13,7 @@ class HostedSmsService
       params = params[:user].permit(:phone_number, :rn_country)
       begin
         if hosted_sms_order_present?(params[:phone_number])
-          [false, 'Hosted sms already activated on this phone number']
+          [false, 'A hosted sms request has been issued for this number']
         else
           @client = Twilio::REST::Client.new(TWILIO_API_KEY, TWILIO_API_SECRET)
           response = @client.preview.hosted_numbers.hosted_number_orders.create(
