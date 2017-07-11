@@ -8,7 +8,7 @@ class RegistrationsController < Devise::RegistrationsController
     #prev_unconfirmed_email = resource.unconfirmed_email if resource.respond_to?(:unconfirmed_email)
 
     message = check_params_with_update
-    email_changed = params[:page_params] == 'account_settings' && params[:user][:email] != current_user.email    
+    email_changed = set_update_flash_messages[:account_settings] && params[:user][:email] != current_user.email    
     url = request.referrer if setting_pages_present?
 
     yield resource if block_given?
@@ -55,15 +55,15 @@ class RegistrationsController < Devise::RegistrationsController
 
   def check_params_with_update
     msg = nil
-    if set_update_flash_messages[:subscription].present? && current_user.is_merchant?
+    if set_update_flash_messages[:subscription] && current_user.is_merchant?
       subscription = create_saas_subscription
       msg = (subscription.third ? subscription.third : "We are unable to start a subscription for you") unless subscription.first
-    elsif set_update_flash_messages[:rhombus_number].present? && current_user.is_merchant?
+    elsif set_update_flash_messages[:rhombus_number] && current_user.is_merchant?
       unless current_user.buy_number(params['user'])
         msg = 'Something went wrong. We were unable to provision a number for you. A member of our support team will contact you shortly.'
       end
-    elsif set_update_flash_messages[:card_info].present? || set_update_flash_messages[:billing_info].present?
-      set_captured_payment_session if current_user.is_customer? && set_update_flash_messages[:card_info].present?
+    elsif set_update_flash_messages[:card_info] || set_update_flash_messages[:billing_info]
+      set_captured_payment_session if current_user.is_customer? && set_update_flash_messages[:card_info]
       add_token = current_user.add_token_for_user(params[:user][:card_token])
       msg = (add_token.third ? add_token.third : "We are unable to add your card to your profile.") unless add_token.first
     end
@@ -160,15 +160,15 @@ class RegistrationsController < Devise::RegistrationsController
                                       },
                     business_settings: {
                                         success: 'account updated',
-                                        business_settings: true,
                                         error: resource.errors.full_messages
+                                        business_settings: true,                                        
                                        }
                   }
     page_params[params[:page_params].to_sym]
   end
 
   def setting_pages_present?
-    set_update_flash_messages[:business_settings].present? || set_update_flash_messages[:billing_info].present? || set_update_flash_messages[:account_settings]
+    set_update_flash_messages[:business_settings] || set_update_flash_messages[:billing_info] || set_update_flash_messages[:account_settings]
   end
 
   def previous_url
@@ -185,7 +185,7 @@ class RegistrationsController < Devise::RegistrationsController
 
   def update_resource(resource, user_params)
     begin
-      if set_update_flash_messages[:account_settings].present?
+      if set_update_flash_messages[:account_settings]
         resource.update_with_password(user_params)
       else
         resource.update_without_password(user_params)
