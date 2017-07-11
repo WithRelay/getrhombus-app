@@ -16,7 +16,6 @@ Rails.application.routes.draw  do
     match 'events/facebook' => 'webhooks#facebook_events', via: [:get, :post]
   #end
 
-  #authenticate :user, -> (user) { CheckUser::RouteAuthentication.new(user).should_authenticate? } do
   authenticate :user do
     ########## scope this to user.....
     #get 'fb_pages/remove_integration' => 'fb_pages#remove_integration'
