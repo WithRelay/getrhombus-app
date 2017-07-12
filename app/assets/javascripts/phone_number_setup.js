@@ -10,13 +10,14 @@ $(document).ready(function () {
     this.disabled = true;
     if (hosted_sms_select.value == 'use-existing-landline') {
       // hide invalid error (remove red border around form field)
-      
+      $('#phone').removeClass('red-border');
       if (!PhoneNumberFormatter.isValid()) {
+        $('#phone').addClass('red-border');
         // show invalid error (red border around form field)
         this.disabled = false;
       } else {
         this.value = "Checking...";
-        var data = { phone_number: PhoneNumberFormatter.getNumber(), country: $('#hosted-number-country').val(), 
+        var data = { phone_number: PhoneNumberFormatter.getNumber(), country: $('#hosted-number-country').val(),
                    friendly_name: PhoneNumberFormatter.getNationalFormatNumber() };
         hosted_number_order(data);
       };
