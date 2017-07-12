@@ -1,6 +1,5 @@
 class HostedSmsService
   class <<self
-    include Rails.application.routes.url_helpers
 
     TWILIO_API_KEY = Rails.application.secrets.twilio["key"]
     TWILIO_API_SECRET = Rails.application.secrets.twilio["secret"]
