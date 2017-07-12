@@ -116,6 +116,10 @@ $(document).ready(function () {
   }).change();
   //// for number search
 
+  $('#phone').on('input', function(){
+    $('#phone').removeClass('red-border');
+  })
+
   $('#hosted_sms_select').on('change', function(){
     if (this.value == 'use-existing-landline') {
       $('.virtual-number-div').hide("slow");
