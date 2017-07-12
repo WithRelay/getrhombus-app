@@ -11,17 +11,18 @@ class HostedSmsService
       # type:'local', iso_country:'US', address_sid:ADDRESS_SID ,
       # email: merchant_email,
       # cc_emails: ['team_email'], sms_capability:true, friendly_name: 'Business_name_number')
-      user_params = params[:user].permit(:phone_number, :rn_country)
+      params = params.permit(:phone_number, :country, :friendly_name)
       begin
         if HostedSms.exists?(user_id: user.id, phone_number: params[:phone_number])
           [false, 'A hosted sms request has been issued for this number']
+        elsif User.exists?(rhombus_number: params[:phone_number].gsub('+', ''))
+          [false, 'This number is already in use']
         else
           @client = Twilio::REST::Client.new(TWILIO_API_KEY, TWILIO_API_SECRET)
           response = @client.preview.hosted_numbers.hosted_number_orders.create(
-            cc_emails: [],
-            phone_number: user_params[:phone_number],
-            type: 'local',
-            iso_country: user_params[:rn_country],
+            cc_emails: [User.platform_email],
+            phone_number: params[:phone_number],
+            iso_country: params[:country],
             address_sid: ADDRESS_SID,
             email: user.email,
             sms_capability: true,

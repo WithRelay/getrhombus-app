@@ -8,27 +8,40 @@ $(document).ready(function () {
   searchNumBtn.click(function(e) {
     e.preventDefault();
     this.disabled = true;
-    this.value = "Searching...";
-    if (hosted_sms_select.value == 'use-existing-landline'){
-      var data = $('#search_number_form').serializeArray();
-      data.push({name: 'friendly_name', value: PhoneNumberFormatter.getNationalFormatNumber()});
-      hosted_number_order(data)
+    if (hosted_sms_select.value == 'use-existing-landline') {
+      // hide invalid error (remove red border around form field)
+      
+      if (!PhoneNumberFormatter.isValid()) {
+        // show invalid error (red border around form field)
+        this.disabled = false;
+      } else {
+        this.value = "Checking...";
+        var data = { phone_number: PhoneNumberFormatter.getNumber(), country: $('#hosted-number-country').val(), 
+                   friendly_name: PhoneNumberFormatter.getNationalFormatNumber() };
+        hosted_number_order(data);
+      };
     } else {
+      this.value = "Searching...";
       get_number(searchNumberField.val(), searchNumberCountry.val(), areaCodeUnavailable.val());
-    }
+    };
   });
 
-  var hosted_number_order = function (data) {
+  var hosted_number_order = function (ajax_data) {
     $.ajax({
       url: "/v1/numbers/hosted_number_order.json",
-      data: data,
+      data: ajax_data,
       type: 'GET',
       dataType: "json"
     })
     .done(function(data, textStatus, jqXHR) {
       if (data.res[0]) {
-
         FlashHandler.setFlashMessage('Your phone number activation is in progress; this may take up to 2 hours to complete. In the meantime, use the temporary number on your dashboard to get started. We\'ll notify you once your landline is activated', 'success');
+        // Continue normal workflow because we still need to issue a regular number to the merchant while hosted number is being activated
+        searchNumberCountry.val(ajax_data.country).change();
+        searchNumberType.val('local');            // only local numbers for now
+        searchNumberField.val('');
+        // uncomment later
+        //setTimeout(function(){ $('#search_number_form').submit(); }, 2000);
       } else {
         FlashHandler.setFlashMessage(get_status(data.res[1]), 'error');
       }
@@ -104,11 +117,9 @@ $(document).ready(function () {
 
   $('#hosted_sms_select').on('change', function(){
     if (this.value == 'use-existing-landline') {
-      // $('#number-label').text('What is your current landline or toll-free number?')
       $('.virtual-number-div').hide("slow");
       $('.hosted-number-div').show("slow");
     } else {
-      // $('#number-label').text('New phone number')
       $('.virtual-number-div').attr('class', 'virtual-number-div');
       $('.virtual-number-div').show("slow");
       $('.hosted-number-div').hide("slow");

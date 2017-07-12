@@ -7,23 +7,20 @@
         <div class="get-started-2 log-in-form">
           <%= form_for(current_user, url: user_registration_update_path(current_user), html: { method: :patch, class: "w-clearfix", id: "search_number_form" }) do |f| %>
 
-            <select class="dropdown w-select" data-name="Number Type" id="hosted_sms_select" required="required">
+            <select class="dropdown w-select" data-name="Number Type" id="hosted_sms_select">
               <option value="use-existing-landline">Use my existing landline or toll-free number</option>
               <option value="new-phone-number">Use a new phone number</option>
             </select>
 
             <div class="virtual-number-div hide">
-
               <label class="form-label" for="Country-3">In what country would you like your number?</label>
-
               <%= f.select :rn_country,  options_for_select(twilio_countries, selected: 'US'), {}, class: 'dropdown w-select', id: "searchNumberCountry" %>
 
               <div id='searchOptions'>
-
                 <%= f.select :rn_type, [], {}, class: 'dropdown w-select hide-not-important', id: "searchNumberType" %>
 
                 <label class="form-label" for="Area-Code-2" id='searchNumberFieldLabel'>Enter preferred area code:</label>
-                <%= f.text_field :area_code, id: 'searchNumberField', :class => "login text-field w-input", placeholder: "Enter area code" %>
+                <%= f.text_field :area_code, id: 'searchNumberField', class: "login text-field w-input", placeholder: "Enter area code" %>
 
                 <div class="area-code-availability flex-underline form-header-underline"></div>
 
@@ -40,12 +37,13 @@
 
             <div class="hosted-number-div">
               <label class="form-label" id="number-label">What is your current landline or toll-free number?</label>
-              <%= f.phone_field :phone_number, id: "phone", class: "form-control login phone text-field w-input", placeholder: 'Phone Number' %>
-              <%= f.hidden_field :phone_number, :id => "phone_number" %>
-              <label class="form-label" >In what country would you like your number?</label>
-              <%= f.select :rn_country,  options_for_select([["Canada", :CA], ["United States", :US]], selected: 'US'), {}, class: 'dropdown w-select' %>
-              <label class="form-label" >Number type?</label>
-              <%= f.select :rn_type, options_for_select([["Landline number", :landline], ["Toll-free number", :tollfree]], selected: 'landline'), {}, class: 'dropdown w-select' %>
+              <input type="text" id='phone' class="form-control login phone text-field w-input" placeholder='Phone Number'>
+                                          
+              <label class="form-label" >In what country is the number?</label>
+              <select class='dropdown w-select' id='hosted-number-country'>
+                <option value="US">United States</option>
+                <option value="CA">Canada</option>
+              </select>
             </div>
 
             <%= f.submit "Continue", id: "searchNumberBtn", class: "button log-in w-button" %>
