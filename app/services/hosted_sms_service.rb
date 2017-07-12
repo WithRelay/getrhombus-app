@@ -27,8 +27,8 @@ class HostedSmsService
             email: user.email,
             sms_capability: true,
             friendly_name: params[:friendly_name],
-            SmsUrl: events_twilio_url,
-            SmsMethod: 'POST'
+            sms_url: events_twilio_url,
+            sms_method: 'POST'
           )
           create_hosted_number_order(user, response)
           [true, 'Hosted number order started']
