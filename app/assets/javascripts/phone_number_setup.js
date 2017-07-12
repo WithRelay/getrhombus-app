@@ -11,7 +11,7 @@ $(document).ready(function () {
     this.value = "Searching...";
     if (hosted_sms_select.value == 'use-existing-landline'){
       var data = $('#search_number_form').serializeArray();
-      data.push({name: 'friendly_name', value: get_formatted_number()});
+      data.push({name: 'friendly_name', value: PhoneNumberFormatter.getNationalFormatNumber()});
       hosted_number_order(data)
     } else {
       get_number(searchNumberField.val(), searchNumberCountry.val(), areaCodeUnavailable.val());
@@ -39,11 +39,6 @@ $(document).ready(function () {
     .always(function(data, textStatus, response) {
       searchNumBtn.val('Submit').prop("disabled", false);
     });
-  }
-
-  function get_formatted_number() {
-    PhoneNumberFormatter.init('#phone');
-    return PhoneNumberFormatter.getNationalFormatNumber();
   }
 
   function get_status (status) {
