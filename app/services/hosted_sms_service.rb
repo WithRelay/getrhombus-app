@@ -1,10 +1,12 @@
 class HostedSmsService
   class <<self
+    include Rails.application.routes.url_helpers
+
     TWILIO_API_KEY = Rails.application.secrets.twilio["key"]
     TWILIO_API_SECRET = Rails.application.secrets.twilio["secret"]
     ADDRESS_SID = 'AD577a66551b627230456bca51d5f82a89'
 
-    def init_hosted_sms(user, params)
+    def init_hosted_sms(user, params, events_twilio_url)
       # @client.preview.hosted_numbers.hosted_number_orders.create(
       # phone_number: '<redacted_phone_number>' ,
       # type:'local', iso_country:'US', address_sid:ADDRESS_SID ,
@@ -24,7 +26,9 @@ class HostedSmsService
             address_sid: ADDRESS_SID,
             email: user.email,
             sms_capability: true,
-            friendly_name: params[:friendly_name]
+            friendly_name: params[:friendly_name],
+            sms_url: events_twilio_url,
+            sms_method: 'POST'
           )
           create_hosted_number_order(user, response)
           [true, 'Hosted number order started']
