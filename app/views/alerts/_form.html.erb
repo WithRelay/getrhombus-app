@@ -16,6 +16,7 @@
           <%= f.check_box :include_sms, class: 'w-checkbox-input checkbox', id: 'alert-include-sms' %>
           <label class="w-form-label" for="checkbox">Include SMS alerts for unread messages</label>
         </div>
+
         <div id='alert-sms-number'>
           <%= f.hidden_field :sms_number, id: "phone_number" %>
           <%= f.phone_field :phone, id: "phone", type: 'tel', class: 'sms-alerts text-field w-input', placeholder: '(415) 123 - 4567' %>
@@ -54,3 +55,16 @@
     </div>
   </div>
 </div>
+<script>
+$('#phone').selectize({
+    plugins: ['remove_button'],
+    delimiter: ',',
+    persist: false,
+    create: function(input) {
+        return {
+            value: input,
+            text: input
+        }
+    }
+});
+</script>
