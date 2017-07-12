@@ -8,12 +8,12 @@ class RegistrationsController < Devise::RegistrationsController
     #prev_unconfirmed_email = resource.unconfirmed_email if resource.respond_to?(:unconfirmed_email)
 
     message = check_params_with_update
-    email_changed = set_update_flash_messages[:account_settings] && params[:user][:email] != current_user.email    
+    email_changed = set_update_flash_messages[:account_settings] && params[:user][:email] != current_user.email
     url = request.referrer if setting_pages_present?
 
     yield resource if block_given?
     if message.blank? && update_resource(resource, account_update_params)
-      
+
       set_flash_message = set_update_flash_messages(message)
       update_stripe_email if email_changed
 
@@ -26,7 +26,7 @@ class RegistrationsController < Devise::RegistrationsController
     else
       set_flash_message = set_update_flash_messages(message)
       flash[:error] = message.is_a?(Stripe::InvalidRequestError) ? set_flash_message[:error].message : set_flash_message[:error]
-      
+
       clean_up_passwords resource
       set_minimum_password_length
       redirect_to previous_url ###### will this throw and error for notifcations????????
@@ -86,7 +86,7 @@ class RegistrationsController < Devise::RegistrationsController
     current_user.account_balance += params['user']['recharge_amount'].to_f
     current_user.save
     flash[:notice] = "Account balance updated. Your total balance is $#{Toolbox::Decimal.to_int_or_2dp(current_user.account_balance)}"
-    redirect_to sms_usage_user_path
+    redirect_to user_sms_usage_path
   end
 
   def deactivate
@@ -161,7 +161,7 @@ class RegistrationsController < Devise::RegistrationsController
                     business_settings: {
                                         success: 'account updated',
                                         error: resource.errors.full_messages,
-                                        business_settings: true,                                        
+                                        business_settings: true,
                                        }
                   }
     page_params[params[:page_params].to_sym]
