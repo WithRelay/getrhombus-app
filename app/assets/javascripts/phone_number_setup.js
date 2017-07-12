@@ -118,7 +118,16 @@ $(document).ready(function () {
 
   $('#phone').on('input', function(){
     $('#phone').removeClass('red-border');
+    this.value = positive_integer_only(this.value);
   })
+
+  function positive_integer_only(v) {
+    if (!(/^(\d+)$/.test(v))) return '';
+    else {
+      if (v.match(/^[1-9]\d*$/)) return v;
+      else return v.slice(0, -1);
+    }
+  };
 
   $('#hosted_sms_select').on('change', function(){
     if (this.value == 'use-existing-landline') {
