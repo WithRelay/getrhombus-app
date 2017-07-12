@@ -11,7 +11,7 @@ $(document).ready(function () {
     this.value = "Searching...";
     if (hosted_sms_select.value == 'use-existing-landline'){
       var data = $('#search_number_form').serializeArray();
-      data.push({name: 'friendly_name', value: '<redacted_phone_number>'});
+      data.push({name: 'friendly_name', value: get_formatted_number()});
       hosted_number_order(data)
     } else {
       get_number(searchNumberField.val(), searchNumberCountry.val(), areaCodeUnavailable.val());
@@ -39,6 +39,11 @@ $(document).ready(function () {
     .always(function(data, textStatus, response) {
       searchNumBtn.val('Submit').prop("disabled", false);
     });
+  }
+
+  function get_formatted_number() {
+    PhoneNumberFormatter.init('#phone');
+    return PhoneNumberFormatter.getNationalFormatNumber();
   }
 
   function get_status (status) {
@@ -104,11 +109,11 @@ $(document).ready(function () {
 
   $('#hosted_sms_select').on('change', function(){
     if (this.value == 'use-existing-landline') {
-      $('#number-label').text('What is your current landline or toll-free number?')
+      // $('#number-label').text('What is your current landline or toll-free number?')
       $('.virtual-number-div').hide("slow");
       $('.hosted-number-div').show("slow");
     } else {
-      $('#number-label').text('New phone number')
+      // $('#number-label').text('New phone number')
       $('.virtual-number-div').attr('class', 'virtual-number-div');
       $('.virtual-number-div').show("slow");
       $('.hosted-number-div').hide("slow");

@@ -12,9 +12,6 @@
               <option value="new-phone-number">Use a new phone number</option>
             </select>
 
-            <label class="form-label" id="number-label">What is your current landline or toll-free number?</label>
-            <%= f.text_field :phone_number, id: 'number-input-field', :class => "login text-field w-input", placeholder: "E.g. 415-123-4567" %>
-
             <div class="virtual-number-div hide">
 
               <label class="form-label" for="Country-3">In what country would you like your number?</label>
@@ -42,6 +39,9 @@
             </div>
 
             <div class="hosted-number-div">
+              <label class="form-label" id="number-label">What is your current landline or toll-free number?</label>
+              <%= f.phone_field :phone_number, id: "phone", class: "form-control login phone text-field w-input", placeholder: 'Phone Number' %>
+              <%= f.hidden_field :phone_number, :id => "phone_number" %>
               <label class="form-label" >In what country would you like your number?</label>
               <%= f.select :rn_country,  options_for_select([["Canada", :CA], ["United States", :US]], selected: 'US'), {}, class: 'dropdown w-select' %>
               <label class="form-label" >Number type?</label>
