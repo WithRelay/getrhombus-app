@@ -10,7 +10,9 @@ $(document).ready(function () {
     this.disabled = true;
     this.value = "Searching...";
     if (hosted_sms_select.value == 'use-existing-landline'){
-      hosted_number_order($('#search_number_form').serialize())
+      var data = $('#search_number_form').serializeArray();
+      data.push({name: 'friendly_name', value: '<redacted_phone_number>'});
+      hosted_number_order(data)
     } else {
       get_number(searchNumberField.val(), searchNumberCountry.val(), areaCodeUnavailable.val());
     }
@@ -18,13 +20,14 @@ $(document).ready(function () {
 
   var hosted_number_order = function (data) {
     $.ajax({
-      url: window.location.origin + "/v1/numbers/hosted_number_order.json",
+      url: "/v1/numbers/hosted_number_order.json",
       data: data,
       type: 'GET',
       dataType: "json"
     })
     .done(function(data, textStatus, jqXHR) {
       if (data.res[0]) {
+
         FlashHandler.setFlashMessage('Your phone number activation is in progress; this may take up to 2 hours to complete. In the meantime, use the temporary number on your dashboard to get started. We\'ll notify you once your landline is activated', 'success');
       } else {
         FlashHandler.setFlashMessage(get_status(data.res[1]), 'error');
