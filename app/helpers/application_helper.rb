@@ -159,11 +159,11 @@ module ApplicationHelper
   end
 
   def dynamic_pages_overflow_hidden
-    return 'overflow: hidden;' unless params[:controller] == 'static_pages' # || params[:controller] == 'reminders'
+    return 'overflow: hidden;' unless params[:controller] == 'static_pages' || params[:controller] == 'knowledge_base_categories'
   end
 
   def index_footer
     return %Q{<div style="height: 50px"></div>}.html_safe
   end
-  
+
 end
