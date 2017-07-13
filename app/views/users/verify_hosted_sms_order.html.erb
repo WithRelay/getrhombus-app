@@ -1,0 +1,17 @@
+ <% provide(:title, 'Relay - Verify Hosted Sms Order') %>
+
+<div class="blank-page-content-wrapper">
+  <div class="onboarding-form-div sign-in signup" style="padding-bottom: 85px;">
+    <%= link_to root_url, class: 'form-logo w-inline-block' do %>
+      <%= image_tag('Relay-Transparent-500x300.png', width: 50, class: 'password-reset-logo') %>
+    <% end %>
+    <div class="flex-underline form-header-underline"></div>
+    <div class="password-reset-instructions">Enter your verification code below to verify the order of Hosted Sms Service.</div>
+    <div class="log-in-form">
+      <form method="post" action= <%= current_user.hosted_sms.try(:url) %> id="verify-hosted-sms-order" >
+        <input type="text" name="VerificationCode" placeholder="Enter your verification code" autofocus="true" class="text-field w-input">
+        <input type="submit" name="Verify" class="button log-in w-button" value="SUBMIT" >
+      </form>
+    </div>
+  </div>
+</div>

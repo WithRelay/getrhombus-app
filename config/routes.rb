@@ -55,6 +55,7 @@ Rails.application.routes.draw  do
       end
       get 'sms-usage'
       get 'add-rhombus-number'
+      get 'verify-hosted-sms-order'
       get 'add-subscription'
       get 'add-profile-info'
       get "business-settings"

@@ -1,12 +1,12 @@
 module AdditionalUserActions
   extend ActiveSupport::Concern
 
-  [:add_rhombus_number, :add_subscription, :add_card_info, :billing_information, :integrations].each do |method_name|
+  [:add_rhombus_number, :verify_hosted_sms_order, :add_subscription, :add_card_info, :billing_information, :integrations].each do |method_name|
     send :define_method, method_name do
       # do nothing
     end
   end
-  
+
   def add_profile_info
     @user = current_user
     @user.people = [@user.people.first || Person.new]
