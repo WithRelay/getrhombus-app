@@ -9,11 +9,8 @@ $(document).ready(function () {
     e.preventDefault();
     this.disabled = true;
     if (hosted_sms_select.value == 'use-existing-landline') {
-      // hide invalid error (remove red border around form field)
-      $('#phone').removeClass('red-border');
       if (!PhoneNumberFormatter.isValid()) {
         $('#phone').addClass('red-border');
-        // show invalid error (red border around form field)
         this.disabled = false;
       } else {
         this.value = "Checking...";
@@ -41,7 +38,6 @@ $(document).ready(function () {
         searchNumberCountry.val(ajax_data.country).change();
         searchNumberType.val('local');            // only local numbers for now
         searchNumberField.val('');
-        // window.location.href = "verify-hosted-sms-order";
         // uncomment later
         //setTimeout(function(){ $('#search_number_form').submit(); }, 2000);
       } else {
@@ -116,19 +112,6 @@ $(document).ready(function () {
     searchNumberType.html(html);
   }).change();
   //// for number search
-
-  $('#phone').on('input', function(){
-    $('#phone').removeClass('red-border');
-    this.value = positive_integer_only(this.value);
-  })
-
-  function positive_integer_only(v) {
-    if (!(/^(\d+)$/.test(v))) return '';
-    else {
-      if (v.match(/^[1-9]\d*$/)) return v;
-      else return v.slice(0, -1);
-    }
-  };
 
   $('#hosted_sms_select').on('change', function(){
     if (this.value == 'use-existing-landline') {

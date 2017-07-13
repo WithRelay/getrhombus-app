@@ -32,16 +32,8 @@ $(document).ready(function () {
 
   // Positive integer only
   $('#duration-in-months, #max-redemptions, #subscription_quantity').on('input', function(){
-    this.value = positive_integer_only(this.value);
+    this.value = UtilFunctions.positive_integer_only(this.value);
   });
-
-  function positive_integer_only(v) {
-    if (!(/^(\d+)$/.test(v))) return '';
-    else {
-      if (v.match(/^[1-9]\d*$/)) return v;
-      else return v.slice(0, -1);
-    }
-  };
 
   function positive_integer_less_than_100(v) {
     if (!(/^(\d+)$/.test(v))) return '';
