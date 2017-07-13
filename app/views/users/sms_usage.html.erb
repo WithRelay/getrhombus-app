@@ -14,11 +14,11 @@
         <p class="settings-details-paragraph" style="margin-top: 20px;">
           <%= hosted_sms_status_notice(current_user.hosted_sms) %>
         </p>
-        <%if current_user.hosted_sms.status == 'received' || current_user.hosted_sms.status == 'pending-verification' %>
-        <div>
-          <a class="button w-button" href= <%= user_verify_hosted_sms_order_url %> >Verification Link</a>
-        </div>
-      <%end%>
+        <% if current_user.hosted_sms.status == 'received' || current_user.hosted_sms.status == 'pending-verification' %>
+          <div>
+            <a class="button w-button" href= <%= user_verify_hosted_sms_order_url %> >Verification Link</a>
+          </div>
+        <% end %>
       </div>
     <% end %>
     <div class="account-settings-form-wrapper">

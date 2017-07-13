@@ -46,4 +46,10 @@ $(document).ready(function () {
   PhoneNumberFormatter.init('#phone');
   var number = $('#phone_number').val();
   if (number) $("#phone").intlTelInput("setNumber", "+" + number);
+
+  $('#phone').on('input', function() {
+    $(this).removeClass('red-border');
+    this.value = UtilFunctions.positive_integer_only(this.value);
+  });
+
 });
