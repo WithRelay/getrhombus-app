@@ -19,12 +19,14 @@
 
         <div id='alert-sms-number'>
           <%= f.hidden_field :sms_number, id: "phone_number" %>
-          <%= f.phone_field :phone, id: "phone", type: 'tel', class: 'sms-alerts text-field w-input', placeholder: '(415) 123 - 4567' %>
+          <%= f.phone_field :phone, id: "phone", type: 'tel', class: 'sms-alerts text-field w-input col-md-6', placeholder: '(415) 123 - 4567' %>
+            <button class="button" style="width: 60px; margin-top:-6.9%; margin-right: 27%;">Add</button>
           <label class="form-label paragraph" for="field-2">You will receive SMS alerts on this phone number</label>
+          <input id="phone_numbers">
         </div>
         <div class="flex-underline form-section-divider"></div>
         <label class="field-headers form-label settings" for="Website">SYSTEM NOTIFICATIONS</label>
-        <label class="form-label paragraph system-notifications" for="Tax-Rate">We notify you, as well as your customers when certain actions take place within Rhombus. These system notifications include:</label>
+        <label class="form-label paragraph syste-notifications" for="Tax-Rate">We notify you, as well as your customers when certain actions take place within Rhombus. These system notifications include:</label>
         <div class="form-check-box w-checkbox">
           <input checked="checked" class="w-checkbox-input" type="checkbox">
           <label class="w-form-label" for="checkbox-2">Notify me when a customer sends a payment</label>
@@ -55,16 +57,16 @@
     </div>
   </div>
 </div>
+
 <script>
-$('#phone').selectize({
-    plugins: ['remove_button'],
-    delimiter: ',',
-    persist: false,
-    create: function(input) {
-        return {
-            value: input,
-            text: input
-        }
-    }
-});
+var $select = $('#phone_numbers').selectize({
+            plugins: ['remove_button'],
+            create: function(input){
+              var phone_number = $('#phone').val();
+              return {
+                value: phone_number,
+                text: phone_number
+              }
+      }});
+
 </script>
