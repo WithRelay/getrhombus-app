@@ -8,7 +8,7 @@ var UtilFunctions = new function() {
     return "https://ipinfo.io/?token=ae79647534348f";
   };
 
-  this.positive_integer_only = function() {
+  this.positive_integer_only = function(v) {
     if (!(/^(\d+)$/.test(v))) return '';
     else {
       if (v.match(/^[1-9]\d*$/)) return v;
