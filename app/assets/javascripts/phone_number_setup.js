@@ -123,4 +123,10 @@ $(document).ready(function () {
       $('.hosted-number-div').hide("slow");
     };
   })
+
+
+  $('#verify-hosted-sms-order').on('submit', function(){
+    redirect_url = this.attr('redirect_url');
+    window.location = redirect_url
+  })
 });
