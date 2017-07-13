@@ -20,9 +20,9 @@
         <div id='alert-sms-number'>
           <%= f.hidden_field :sms_number, id: "phone_number" %>
           <%= f.phone_field :phone, id: "phone", type: 'tel', class: 'sms-alerts text-field w-input col-md-6', placeholder: '(415) 123 - 4567' %>
-            <button class="button" style="width: 60px; margin-top:-6.9%; margin-right: 27%;" id= 'add-number'>Add</button>
+            <div class="button" style="width: 60px; margin-top:-6.9%; margin-right: 27%;" id= 'alert-add-number'>Add</div>
           <label class="form-label paragraph" for="field-2">You will receive SMS alerts on this phone number</label>
-          <input id="phone_numbers">
+          <input id="alert_phone_numbers">
         </div>
         <div class="flex-underline form-section-divider"></div>
         <label class="field-headers form-label settings" for="Website">SYSTEM NOTIFICATIONS</label>
@@ -59,15 +59,22 @@
 </div>
 
 <script>
-var $select = $('#phone_numbers').selectize({
+var $alert_phone_numbers_selectize = $('#alert_phone_numbers').selectize({
             plugins: ['remove_button'],
-            create: function(input){
-              var phone_number = $('#phone').val();
-              return {
-                value: phone_number,
-                text: phone_number
-              }
-            }
-          });
+            options: [],
+            labelField: 'number',
+            valueField: 'number',
+            create: false,            
+          })[0].selectize;
+
+$('#alert-add-number').click(function() {
+  if (PhoneNumberFormatter.isValid()) {
+    var number = PhoneNumberFormatter.getNumber();
+    $alert_phone_numbers_selectize.addOption({ number: number  });
+    $alert_phone_numbers_selectize.addItem(number);
+  } else {
+    $('#phone').addClass('red-border')
+  }
+});
 
 </script>
