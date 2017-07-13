@@ -20,7 +20,7 @@
         <div id='alert-sms-number'>
           <%= f.hidden_field :sms_number, id: "phone_number" %>
           <%= f.phone_field :phone, id: "phone", type: 'tel', class: 'sms-alerts text-field w-input col-md-6', placeholder: '(415) 123 - 4567' %>
-            <button class="button" style="width: 60px; margin-top:-6.9%; margin-right: 27%;">Add</button>
+            <button class="button" style="width: 60px; margin-top:-6.9%; margin-right: 27%;" id= 'add-number'>Add</button>
           <label class="form-label paragraph" for="field-2">You will receive SMS alerts on this phone number</label>
           <input id="phone_numbers">
         </div>
@@ -67,6 +67,7 @@ var $select = $('#phone_numbers').selectize({
                 value: phone_number,
                 text: phone_number
               }
-      }});
+            }
+          });
 
 </script>
