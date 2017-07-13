@@ -5,7 +5,7 @@ class EmailingService
 
   # Note there are a number of global settings for these emails in the mandrill account
   FROM_EMAIL = { edwin: "<redacted_email>", taiwo: '<redacted_email>' }
-  
+
   class << self
 
     def send_completed_notice(hosted_number_order)
@@ -58,7 +58,7 @@ class EmailingService
       begin
         template_name = 'hosted-sms-progress'
         template_content = []
-        message = { "subject" => "Status: Phone number activation in progress",
+        message = { "subject" => "Status: Complete your phone number activation",
          "global_merge_vars"=> [  { "name" => "first_name", "content" => 'team' },
                                   { "name" => "virtual_number", "content" => user.rn_friendly_name }
                                ],

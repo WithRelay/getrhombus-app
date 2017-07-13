@@ -41,6 +41,7 @@ $(document).ready(function () {
         searchNumberCountry.val(ajax_data.country).change();
         searchNumberType.val('local');            // only local numbers for now
         searchNumberField.val('');
+        // window.location.href = "verify-hosted-sms-order";
         // uncomment later
         //setTimeout(function(){ $('#search_number_form').submit(); }, 2000);
       } else {
