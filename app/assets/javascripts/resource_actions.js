@@ -10,22 +10,23 @@ var CheckedItem = new function() {
 
   this.process = function(confirmBtnText, selector, isConfirm) {
     var selectedElement = CheckedItem.get();
-    if (!selectedElement) return false;
 
     var yes_button = $('.cancel-yes'),
         msg = yes_button.parent().find('p').text(),
         obj_type = CheckedItem.obj_type();
-    
+
     yes_button[0].innerHTML = 'Please wait...';
+    if (!selectedElement) {
+      if (isConfirm) $(selector).attr(isConfirm, true);
+      $(selector)[0].click();
+      return false
+    }
 
     if (obj_type == 'campaign') {
       resource = new Resource(getCampaignActionUrl(selectedElement, msg));
       resource.updateOrDelete();
     } else if (obj_type == 'hashtag' && confirmBtnText.toLowerCase().indexOf('change') > -1) {
       selectedElement.parents('.edit_' + obj_type).submit();
-    } else {
-      if (isConfirm) $(selector).attr(isConfirm, true);
-      $(selector).click();
     };
   };
 
@@ -35,7 +36,7 @@ var CheckedItem = new function() {
 
   function getCampaignActionUrl(selectedElement, msg) {
     var checked_item_id = selectedElement.parent().find('.resource-id').text();
-    
+
     if (/delete/i.test(msg))
       return { id: checked_item_id, 'url': '/v1/campaigns/' + checked_item_id + '/delete_campaign/', 'method': 'delete' };
     else
@@ -50,7 +51,7 @@ var CheckedItem = new function() {
 
   Resource.prototype.updateOrDelete = function() {
     if (this.postData != undefined) {
-      $.ajax({ 
+      $.ajax({
         method: this.method,
         url: this.url,
         dataType: 'json',
@@ -59,8 +60,8 @@ var CheckedItem = new function() {
         FlashHandler.setFlashMessage(data.notice, 'notice');
         location.reload();
       })
-      .fail(function(msg){ 
-        FlashHandler.setFlashMessage('Unable to complete request', 'error'); 
+      .fail(function(msg){
+        FlashHandler.setFlashMessage('Unable to complete request', 'error');
         $('.cancel-no').click();
       });
     } else {
@@ -81,7 +82,7 @@ $(document).on('ready',function() {
       // campaign, hashtag index pages specific
       if ($('#activate-deactivate-campaign').length > 0) {
         var statusName = $(this).parent().find('.resource-status').text();
-        var status = { paused: '  Activate', active: '  Pause' };  
+        var status = { paused: '  Activate', active: '  Pause' };
         $('#activate-deactivate-campaign').text(status[statusName]);
       } else if ($('#deactivate-hashtag').length) {
         var statusName = $(this).parent().find('.resource-status').val();
