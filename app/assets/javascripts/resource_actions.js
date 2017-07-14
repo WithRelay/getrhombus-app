@@ -16,15 +16,14 @@ var CheckedItem = new function() {
         obj_type = CheckedItem.obj_type();
 
     yes_button[0].innerHTML = 'Please wait...';
-
-    if (obj_type == 'campaign') {
+    if (!selectedElement){
+      if (isConfirm) $(selector).attr(isConfirm, true);
+      $(selector)[0].click();
+    } else if (obj_type == 'campaign') {
       resource = new Resource(getCampaignActionUrl(selectedElement, msg));
       resource.updateOrDelete();
     } else if (obj_type == 'hashtag' && confirmBtnText.toLowerCase().indexOf('change') > -1) {
       selectedElement.parents('.edit_' + obj_type).submit();
-    } else{
-      if (isConfirm) $(selector).attr(isConfirm, true);
-      $(selector)[0].click();
     };
   };
 
