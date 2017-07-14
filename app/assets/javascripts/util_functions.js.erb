@@ -8,6 +8,14 @@ var UtilFunctions = new function() {
     return "https://ipinfo.io/?token=ae79647534348f";
   };
 
+  this.positive_integer_only = function(v) {
+    if (!(/^(\d+)$/.test(v))) return '';
+    else {
+      if (v.match(/^[1-9]\d*$/)) return v;
+      else return v.slice(0, -1);
+    }
+  };
+
 /*
   this.set_first_and_last_names = function() {
   	var full_name = $('#user_full_name').val().trim().replace(/\s{2,}/g,' ').split(' ');
@@ -16,7 +24,7 @@ var UtilFunctions = new function() {
     $('#lastName').val(full_name.join(' '));
   };
 */
-}
+};
 
 
 $(document).ready(function () {

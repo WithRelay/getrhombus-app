@@ -9,11 +9,8 @@ $(document).ready(function () {
     e.preventDefault();
     this.disabled = true;
     if (hosted_sms_select.value == 'use-existing-landline') {
-      // hide invalid error (remove red border around form field)
-      $('#phone').removeClass('red-border');
       if (!PhoneNumberFormatter.isValid()) {
         $('#phone').addClass('red-border');
-        // show invalid error (red border around form field)
         this.disabled = false;
       } else {
         this.value = "Checking...";
@@ -41,7 +38,6 @@ $(document).ready(function () {
         searchNumberCountry.val(ajax_data.country).change();
         searchNumberType.val('local');            // only local numbers for now
         searchNumberField.val('');
-        // window.location.href = "verify-hosted-sms-order";
         // uncomment later
         //setTimeout(function(){ $('#search_number_form').submit(); }, 2000);
       } else {
@@ -117,19 +113,6 @@ $(document).ready(function () {
   }).change();
   //// for number search
 
-  $('#phone').on('input', function(){
-    $('#phone').removeClass('red-border');
-    this.value = positive_integer_only(this.value);
-  })
-
-  function positive_integer_only(v) {
-    if (!(/^(\d+)$/.test(v))) return '';
-    else {
-      if (v.match(/^[1-9]\d*$/)) return v;
-      else return v.slice(0, -1);
-    }
-  };
-
   $('#hosted_sms_select').on('change', function(){
     if (this.value == 'use-existing-landline') {
       $('.virtual-number-div').hide("slow");
@@ -140,4 +123,33 @@ $(document).ready(function () {
       $('.hosted-number-div').hide("slow");
     };
   })
+
+
+  if ($('#verify-hosted-sms-order').length > 0) {
+    $('#verify-hosted-sms-order')
+      .formValidation({
+        framework: 'bootstrap',
+        live: 'disabled',
+        // List of fields and their validation rules
+        fields: {
+          'VerificationCode': {
+            validators: {
+              notEmpty: {
+                message: 'Verification code is required'
+              }
+            }
+          }
+        }
+      })
+      .on('success.validator.fv', function(e, data) {
+          data.element // Get the field element
+          .removeClass('has-warning')
+          .addClass('has-success')
+      })
+      .on('success.form.fv', function(e, data) {
+          e.preventDefault();
+          $('#create-coupon').attr("disabled", true).val("Please wait...");
+          addCoupon();
+      });
+  }
 });
