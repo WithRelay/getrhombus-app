@@ -9,7 +9,9 @@
     <div class="password-reset-instructions">Enter your phone number verification code</div>
     <div class="log-in-form">
       <form method="post" action= <%= current_user.hosted_sms.try(:url) %> id="verify-hosted-sms-order" redirect_url= <%= user_sms_usage_path(current_user) %> >
-        <input type="text" name="VerificationCode" placeholder="Verification code" autofocus="true" required="true" class="text-field w-input">
+        <div class="form-group">
+          <input type="text" name="VerificationCode" placeholder="Verification code" autofocus="true" class="form-control text-field w-input">
+        </div>
         <input type="submit" name="Verify" class="button log-in w-button" value="Verify & Continue" >
       </form>
     </div>

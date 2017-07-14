@@ -125,8 +125,31 @@ $(document).ready(function () {
   })
 
 
-  $('#verify-hosted-sms-order').on('submit', function(){
-    redirect_url = this.attr('redirect_url');
-    window.location = redirect_url
-  })
+  if ($('#verify-hosted-sms-order').length > 0) {
+    $('#verify-hosted-sms-order')
+      .formValidation({
+        framework: 'bootstrap',
+        live: 'disabled',
+        // List of fields and their validation rules
+        fields: {
+          'VerificationCode': {
+            validators: {
+              notEmpty: {
+                message: 'Verification code is required'
+              }
+            }
+          }
+        }
+      })
+      .on('success.validator.fv', function(e, data) {
+          data.element // Get the field element
+          .removeClass('has-warning')
+          .addClass('has-success')
+      })
+      .on('success.form.fv', function(e, data) {
+          e.preventDefault();
+          $('#create-coupon').attr("disabled", true).val("Please wait...");
+          addCoupon();
+      });
+  }
 });
