@@ -1,5 +1,4 @@
 $(document).ready(function () {
-
   // validate notfications form
   $('.edit_alert')
     .formValidation({
@@ -26,8 +25,8 @@ $(document).ready(function () {
                         }
                       } else {
                         $("#phone_number, #phone").val('');
-                        return { 
-                            valid: true 
+                        return {
+                            valid: true
                         }
                       }
                     }
@@ -36,7 +35,7 @@ $(document).ready(function () {
           }
       }
     })
-    .on('success.form.fv', function(e, data) { 
+    .on('success.form.fv', function(e, data) {
       PhoneNumberFormatter.set_phone_number();
     });
 
@@ -57,5 +56,3 @@ $(document).ready(function () {
 
 
 })
-
-                          
