@@ -27,6 +27,8 @@ var CheckedItem = new function() {
       resource.updateOrDelete();
     } else if (obj_type == 'hashtag' && confirmBtnText.toLowerCase().indexOf('change') > -1) {
       selectedElement.parents('.edit_' + obj_type).submit();
+    } else{
+      $(selector)[0].click();
     };
   };
 
