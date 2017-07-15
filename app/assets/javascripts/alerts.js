@@ -6,37 +6,45 @@ $(document).ready(function () {
       live: 'disabled',
       // List of fields and their validation rules!
       fields: {
-        'alert[phone]': {
-            row: '.form-group',
-            validators: {
-                callback: {
-                    callback: function (value, validator, $field) {
-                      if ($("#alert-include-sms").is(':checked')) {
-                        if (PhoneNumberFormatter.isValid()) {
-                            return {
-                                valid: true,    // or false
-                                message: 'Valid number'
-                            }
-                        } else {
-                            return {
-                                valid: false,    // or false
-                                message: 'Enter a valid sms-enabled number.'
-                            }
-                        }
-                      } else {
-                        $("#phone_number, #phone").val('');
-                        return {
-                            valid: true
-                        }
-                      }
+        'alert[sms_numbers]': {
+          row: '.form-group',
+          validators: {
+            callback: {
+              callback: function (value, validator, $field) {
+                if ($("#alert-include-sms").is(':checked')) {
+                  if (PhoneNumberFormatter.isValid()) {
+                    return {
+                      valid: true,    // or false
+                      message: 'Valid number'
                     }
+                  } else {
+                    return {
+                      valid: false,    // or false
+                      message: 'Enter a valid sms-enabled number.'
+                    }
+                  }
+                } else {
+                  $("#phone_number, #phone").val('');
+                  return {
+                    valid: true
+                  }
                 }
+              }
             }
           }
+        },
+        'alert[emails]': {
+          row: '.form-group',
+          validators: {
+            callback: {
+              callback: function (value, validator, $field) {
+              }
+            }
+          }
+        }
       }
     })
     .on('success.form.fv', function(e, data) {
-      PhoneNumberFormatter.set_phone_number();
     });*/
 
   $('#alert-include-sms').change(function() {
@@ -74,19 +82,51 @@ $(document).ready(function () {
   });
 
   $('#alerts-add-email').click(function() {
-    console.log('ads')
-    $('#alerts-enter-email').mailgun_validator({
-       api_key: '<redacted_api_key>',
-       success: function(data) {
-        console.log(data)
-       },
-       error: function(data) {
-        console.log(data)
-       }
+    var email = $('#alerts-enter-email').val().trim();
+    
+    if (!email.length) {
+      show_email_invalid();
+      return;
+    };
+
+    $.ajax({
+      type: "GET",
+      url: 'https://api.mailgun.net/v3/address/validate',
+      data: { address: email, api_key: '<redacted_api_key>' },
+      dataType: "jsonp",
+      crossDomain: true,
+      success: function(data, status_text) {
+        data.is_valid ? add_email_to_selectize_emails(email) : show_email_invalid();
+      },
+      error: function(request, status_text, error) {
+        add_email_to_selectize_emails(email);
+      }
     });
-    /*var email = $('#email').val();
-     $alert_emails_selectize.addOption({email: email});
-     $alert_emails_selectize.addItem(email);*/
+  });
+
+  $('#alerts-enter-email').on('input', function() {
+    $(this).removeClass('red-border');
+    $("#alerts-email-validation-message").hide();
+  });
+
+  function show_email_invalid() {
+    $('#alerts-enter-email').addClass('red-border');
+    $("#alerts-email-validation-message").show();
+  };
+
+  function add_email_to_selectize_emails(email) {
+    $alert_emails_selectize.addOption({email: email});
+    $alert_emails_selectize.addItem(email);
+  };
+
+  $.each($('#alert_phone_numbers').attr('data-numbers').split(','), function (index, val) {
+    $alert_phone_numbers_selectize.addOption({ number: val  });
+    $alert_phone_numbers_selectize.addItem(val);
+  });
+
+  $.each($('#alert_emails').attr('data-emails').split(','), function (index, val) {
+    $alert_phone_numbers_selectize.addOption({ email: val  });
+    $alert_phone_numbers_selectize.addItem(val);
   });
 
 
