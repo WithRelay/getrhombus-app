@@ -24,6 +24,19 @@ var UtilFunctions = new function() {
     $('#lastName').val(full_name.join(' '));
   };
 */
+  // returns truthy or falsy value
+  // takes numbers, strings, null, boolean, objects
+  this.is_present = function(val) { 
+    if (typeof(val) === "boolean") return val;
+    if (val instanceof Object) return Object.keys(val).length;
+    if ($.isNumeric(val)) val = val.toString();
+    return val && val.trim().length;
+  };
+
+  this.is_blank = function(val) { 
+    return !UtilFunctions.is_present(val);
+  };
+
 };
 
 

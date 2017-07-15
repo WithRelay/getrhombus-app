@@ -100,6 +100,7 @@
 //= require chartkick
 //= require segment
 //= require refund
+//= require alerts
 //= require resource_actions
 //= require away_messages
 //= require csv_upload

@@ -1,11 +1,9 @@
 class Alert < ActiveRecord::Base
   belongs_to :user
 
-  attr_accessor :custom_welcome, :phone, :email
+  attr_accessor :custom_welcome
   has_many :notification_logs, as: :notifiable
+  serialize :sms_numbers, Array
+  serialize :emails, Array
 
-  # Because empty should save as nil
-  def sms_number=(v)
-    write_attribute(:sms_number, v.present? ? v : nil)
-  end
 end

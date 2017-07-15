@@ -31,24 +31,27 @@ class MessageAlertJob
             # For each, convert time to merchant timezone before formatting
             received_at = conv_refs.first.created_at.in_time_zone(r.time_zone)
             # send_unread_message_alert method needs to change
-            EmailingService.send_unread_message_alert({
-              customer_first_name: r.user.first_name || 'there',
-              unread_count: conv_refs.length,
-              to: r.email,
-              pluralize_msg: pluralize_msg
-            })
+            r.emails.each do |email|
+              EmailingService.send_unread_message_alert({
+                customer_first_name: 'Hi there',
+                unread_count: conv_refs.length,
+                to: email,
+                pluralize_msg: pluralize_msg
+              })
+            end
 
 
 
 
             # You should not need to touch anything below here
             r.notification_logs.create(notify_type: 'new_alert', channel: 'Email', reason: 'unread_messages')
-            if r.include_sms && r.sms_number.present?
+            if r.include_sms
               platform = User.get_platform_acct_obj
               msg_to_send = "Relay Notification: You have #{conv_refs.length} new unread " + pluralize_msg + " on your dashboard."
-              re = Conversation.find_or_create_conversation_for_message_and_send_publish(platform, nil, 'phone_number', r.sms_number, msg_to_send, 'Message')
-              if re
-                r.notification_logs.create(notify_type: 'new_alert', channel: 'Message', channel_id: re, reason: 'unread_messages')
+
+              r.sms_numbers.each do |sms_number|
+                re = Conversation.find_or_create_conversation_for_message_and_send_publish(platform, nil, 'phone_number', sms_number, msg_to_send, 'Message')
+                r.notification_logs.create(notify_type: 'new_alert', channel: 'Message', channel_id: re, reason: 'unread_messages') if re
               end
             end
 
