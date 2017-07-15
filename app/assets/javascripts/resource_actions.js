@@ -68,30 +68,26 @@ var CheckedItem = new function() {
   };
 };
 
+// used by several index pages
+$(document).on("click", ".checkboxes", function() {
+  if ($(this).is(':checked')){
+    $('.checkboxes').attr('disabled', true);
 
-$(document).on('ready',function() {
-
-  // used by several index pages
-  $(document).on("click", ".checkboxes", function() {
-    if ($(this).is(':checked')){
-      $('.checkboxes').attr('disabled', true);
-
-      // campaign, hashtag index pages specific
-      if ($('#activate-deactivate-campaign').length > 0) {
-        var statusName = $(this).parent().find('.resource-status').text();
-        var status = { paused: '  Activate', active: '  Pause' };
-        $('#activate-deactivate-campaign').text(status[statusName]);
-      } else if ($('#deactivate-hashtag').length) {
-        var statusName = $(this).parent().find('.resource-status').val();
-        var status = { active: '  <strong>Activate</strong>', inactive: '  <strong>Deactivate</strong>' };
-        $('#deactivate-hashtag').html(status[statusName]);
-      };
-
-      $(this).attr('disabled', false);
-    } else {
-      $('.checkboxes').attr('disabled', false);
+    // campaign, hashtag index pages specific
+    if ($('#activate-deactivate-campaign').length > 0) {
+      var statusName = $(this).parent().find('.resource-status').text();
+      var status = { paused: '  Activate', active: '  Pause' };
+      $('#activate-deactivate-campaign').text(status[statusName]);
+    } else if ($('#deactivate-hashtag').length) {
+      var statusName = $(this).parent().find('.resource-status').val();
+      var status = { active: '  <strong>Activate</strong>', inactive: '  <strong>Deactivate</strong>' };
+      $('#deactivate-hashtag').html(status[statusName]);
     };
-  });
+
+    $(this).attr('disabled', false);
+  } else {
+    $('.checkboxes').attr('disabled', false);
+  };
 });
 
 $(document).on('click', '.cancel-no', function(e){
