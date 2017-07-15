@@ -39,7 +39,6 @@
 //= require integrations
 //= require selectize
 //= require angular-selectize
-//= require mailgun_validator
 
 //= require jquery_ujs
 //= require pubnub/pubnub-angular.js

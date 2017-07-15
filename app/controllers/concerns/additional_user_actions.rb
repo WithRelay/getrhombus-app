@@ -48,11 +48,11 @@ module AdditionalUserActions
   end
 
   def verify_hosted_sms
-    response = HostedSmsService.post_varification(current_user.hosted_sms, params.permit(:VerificationCode))
-    if response['status'] == 'verified'
+    response = HostedSmsService.post_verification(current_user.hosted_sms, params.permit(:VerificationCode))
+    if response && response['status'] == 'verified'
       flash[:notice] = 'Your phone number has been Verified'
       redirect_to user_path(current_user)
-    elsif
+    else
       flash[:error] = response['message']
       redirect_to user_verify_hosted_sms_order_path(current_user)
     end

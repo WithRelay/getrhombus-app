@@ -39,7 +39,7 @@ class HostedSmsService
       end
     end
 
-    def post_varification(h, params)
+    def post_verification(h, params)
       begin
         response = HTTParty.post(h.try(:url), :body => params.to_json, :headers => { 'Content-Type' => 'application/json' })
       rescue StandardError => err

@@ -72,23 +72,28 @@ $(document).ready(function () {
             })[0].selectize;
 
   $('#alerts-add-number').click(function() {
+    set_button_status(this, true, 'Validating...');
     if (PhoneNumberFormatter.isValid()) {
       var number = PhoneNumberFormatter.getNumber();
       $alert_phone_numbers_selectize.addOption({ number: number  });
       $alert_phone_numbers_selectize.addItem(number);
     } else {
       $('#phone').addClass('red-border');
-    }
+    };
+    set_button_status(this, false, 'Add number');
   });
 
   $('#alerts-add-email').click(function() {
+    set_button_status(this, true, 'Validating...');
     var email = $('#alerts-enter-email').val().trim();
     
     if (!email.length) {
       show_email_invalid();
+      set_button_status(this, false, 'Add Email');
       return;
     };
 
+    var $this = this;
     $.ajax({
       type: "GET",
       url: 'https://api.mailgun.net/v3/address/validate',
@@ -100,11 +105,15 @@ $(document).ready(function () {
       },
       error: function(request, status_text, error) {
         add_email_to_selectize_emails(email);
-      }
+      },
+      complete: function() {
+        set_button_status($this, false, 'Add Email');
+      },
+      timeout: 6000
     });
   });
 
-  $('#alerts-enter-email').on('input', function() {
+  $('#alerts-enter-email').on('focus', function() {
     $(this).removeClass('red-border');
     $("#alerts-email-validation-message").hide();
   });
@@ -114,20 +123,29 @@ $(document).ready(function () {
     $("#alerts-email-validation-message").show();
   };
 
+  function set_button_status(btn, disabled, text) {
+    btn.disabled = disabled;
+    btn.textContent = text;
+  };
+
   function add_email_to_selectize_emails(email) {
     $alert_emails_selectize.addOption({email: email});
     $alert_emails_selectize.addItem(email);
   };
-
-  $.each($('#alert_phone_numbers').attr('data-numbers').split(','), function (index, val) {
-    $alert_phone_numbers_selectize.addOption({ number: val  });
-    $alert_phone_numbers_selectize.addItem(val);
-  });
-
-  $.each($('#alert_emails').attr('data-emails').split(','), function (index, val) {
-    $alert_phone_numbers_selectize.addOption({ email: val  });
-    $alert_phone_numbers_selectize.addItem(val);
-  });
-
-
+  
+  var preset_data = $('#alert_emails').attr('data-numbers');
+  if (UtilFunctions.is_present(preset_data)) {
+    $.each(preset_data, function (index, val) {
+      $alert_phone_numbers_selectize.addOption({ number: val  });
+      $alert_phone_numbers_selectize.addItem(val);
+    });  
+  };
+  
+  preset_data = $('#alert_emails').attr('data-emails');
+  if (UtilFunctions.is_present(preset_data)) {
+    $.each(preset_data, function (index, val) {
+      $alert_phone_numbers_selectize.addOption({ email: val  });
+      $alert_phone_numbers_selectize.addItem(val);
+    });
+  };
 })
