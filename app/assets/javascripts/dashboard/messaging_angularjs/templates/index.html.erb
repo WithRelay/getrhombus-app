@@ -281,6 +281,7 @@
     <%# <div ng-show="status.loading" class="me"><span>loading...</span></div> %>
     <%# added this wrapping div %>
     <!-- message ng-repeat -->
+    <%# using customer track by so angular is faster when you go back to an older conversation %>
     <div class="clear_both_float" ng-if="merchant.customer_contact_count" ng-repeat="message in selected_conversation_messages track by messageTrackingFunction(message)" on-finish-render>
 
       <div class="conversation-date-wrapper" ng-if="($index != 0) && !selected_conversation_messages[$index - 1].unread && selected_conversation_messages[$index].unread">

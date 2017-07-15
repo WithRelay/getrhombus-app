@@ -78,6 +78,8 @@ class TwilioEvent
         MessageParser.new.process_message(@merchant, user, @message, 'Message')
 
       rescue ActiveRecord::RecordNotUnique
+      #rescue StandardError => e
+       # puts e.inspect
       end
     end
 
@@ -92,7 +94,7 @@ class TwilioEvent
     end
 
     def get_user
-      User.find_by(phone_number:  @phone_number)
+      User.find_by(phone_number: @phone_number)
     end
 
     def save_media
@@ -100,8 +102,9 @@ class TwilioEvent
       num_media.times do |i|
         media_url = @params["MediaUrl#{i}"]
         if %w{image/jpeg image/png image/gif}.include?( @params["MediaContentType#{i}"])
-          image = @message.images.new
+          image = Image.new
           image.avatar_for_twilio_media(media_url)
+          @message.images = [image]
         end
       end
     end

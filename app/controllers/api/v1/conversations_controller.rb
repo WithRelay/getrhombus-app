@@ -16,7 +16,8 @@ class Api::V1::ConversationsController < API::V1::BaseController
 	end
 
   def show
-    messages_ary = Conversation.get_conversation_messages(@conversation, params[:page])
+    #sleep 5
+    messages_ary = Conversation.get_conversation_messages(@conversation, params[:conv_ref_id])
     render json: { messages: messages_ary[0], unread_ids: messages_ary[1] }  
   end
 

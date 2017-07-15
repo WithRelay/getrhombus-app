@@ -13,23 +13,29 @@ var messagingApp = angular.module('PubNubAngularMessagingApp', [
   'luegg.directives' // Auto scroll module
 ]);
 
-messagingApp.directive('whenScrolledUp', ['$timeout', function($timeout) {
+messagingApp.directive('whenScrolledUp', ['$timeout', function($timeout, $scope) {
   return function(scope, elm, attr) {
-    var raw = elm[0];    
+    var raw = elm[0];   
     var debounced = _.debounce(function() {
       console.log('debounced')
-      if (raw.scrollTop <= 0) {
+      if (!scope.retrieving_messages_for_scroll && raw.scrollTop <= 0) {
+        console.log('retrieving')
+        scope.retrieving_messages_for_scroll = true;
         var sh = raw.scrollHeight;
-        scope.$apply(attr.whenScrolledUp).then(function() {
-          $timeout(function() {
-            raw.scrollTop = raw.scrollHeight - sh;
-            console.log('fired')
-          });
+        scope.$apply(attr.whenScrolledUp).then(function(same_conversation_is_selected) {
+          console.log(same_conversation_is_selected);
+          if (same_conversation_is_selected) {
+            $timeout(function() {
+              raw.scrollTop = raw.scrollHeight - sh;
+              scope.retrieving_messages_for_scroll = false;
+              console.log('complete');
+            });
+          };
         });
       }
     }, 350);
 
-   elm.bind('scroll', debounced);  
+    elm.bind('scroll', debounced);
   };
 }]);
 
@@ -134,9 +140,9 @@ messagingApp.factory('conversationService', function($http, $q, Upload){
     return deferred.promise;
   }
 
-  service.getConversationMessages = function(conversation_id, page){
+  service.getConversationMessages = function(conversation_id, conv_ref_id){
     var deferred = $q.defer();
-    $http.get(base_url + "/" + conversation_id + '.json?page=' + page)
+    $http.get(base_url + "/" + conversation_id + '.json', { params: { conv_ref_id: conv_ref_id } })
     .success(function(data) { 
       console.log('console success in service get conversation messages');
       deferred.resolve(data);

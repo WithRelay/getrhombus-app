@@ -19,7 +19,7 @@ class Conversation < ActiveRecord::Base
 
   # Returns hash with users who sent a message to the given merchant in the last "num_days" days
   def self.get_open_conversations(merchant_id, page)
-  	convs = where(merchant_id: merchant_id, is_resolved: false).paginate(page: page, per_page: 7).order(updated_at: :desc)
+  	convs = where(merchant_id: merchant_id, is_resolved: false).paginate(page: page, per_page: 7).order(updated_at: :desc, id: :desc)
   	x = convs.map { |conv| conv.conversation_hash }
 
     # remove these lines and x variable above
@@ -57,9 +57,11 @@ class Conversation < ActiveRecord::Base
     }
   end
 
-	def self.get_conversation_messages(conv, page)
+	def self.get_conversation_messages(conv, conv_ref_id)
     customer = User.find_by(id: conv.uid) if conv.uid_type == "user"
-		convs_refs = conv.conversation_refs.paginate(page: page, per_page: 7).includes(textable: [:images]).order(created_at: :desc, id: :desc)
+    where_str = conv_ref_id.present? ? 'conversation_refs.id < ?' : ''
+		convs_refs = conv.conversation_refs.where(where_str, conv_ref_id).limit(7)
+                                       .includes(textable: [:images]).order(created_at: :desc, id: :desc)
 		latest_messages = Array.new
 		unread_ids = []
 
@@ -76,6 +78,7 @@ class Conversation < ActiveRecord::Base
 
     {
       id: msg.id,
+      conv_ref_id: conv_ref.id,
       source: msg.user_id == conv.merchant_id ? "merchant" : 'customer',  # or conv_ref.source
       text: (msg.text) ? msg.text : '',
       ts_day_of_the_week: msg.created_at.strftime("%B") + " " + msg.created_at.strftime("%d").to_i.ordinalize,
@@ -83,7 +86,7 @@ class Conversation < ActiveRecord::Base
       ts: msg.created_at.to_i,
       ago: Conversation.new.time_in_relative_form(msg.created_at, 'short_format'),
       unread: conv_ref.unread,
-      images: msg.images.map { |i| { ref: conv_ref.id, url: i.avatar.url } },           # return small version here??
+      images: msg.images.map { |i| { id: i.id, url: i.avatar(:thumb) } },
       channel: msg.class.name
   	}
 	end
@@ -158,9 +161,9 @@ class Conversation < ActiveRecord::Base
   # find or create conversation and attach new message
   def self.find_or_create_conversation_for_message(team_id, uid_type, uid, msg_instance, unread, source)
     conv = find_or_create_conversation(team_id, uid_type, uid)
-    # basically, only customer and merchant messages should start new conversations
-    conv.update(is_resolved: false) if ['customer', 'merchant'].include? source
     conv_ref = conv.conversation_refs.create(textable: msg_instance, unread: unread, source: source)
+    # basically, only customer and merchant messages should start new conversations
+    conv.update(is_resolved: false, updated_at: conv_ref.created_at) if ['customer', 'merchant'].include? source
     update_conversation_resolution(team_id, conv.id, conv_ref.id, source)
     [conv, conv_ref]
   end

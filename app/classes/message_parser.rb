@@ -9,6 +9,7 @@ class MessageParser
   # customer can be nil
   def process_message(merchant, customer, received_msg, channel)
     #begin
+      return if received_msg.text.blank?
 
       # tested
       puts 'in function'

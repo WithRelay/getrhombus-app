@@ -20,14 +20,14 @@ class RealtimeStreamService
       if response.blank? || response['uuids'].blank? || !(response['uuids'].include? "uuid-#{merchant_id}")
         puts 'merchant offline'
         puts '<redacted_phone_number>'
-        EmailingService.send_unread_message_alert({
-          pluralize_msg: '',
-          unread_count: 1,
+        #EmailingService.send_unread_message_alert({
+         # pluralize_msg: '',
+          #unread_count: 1,
           # customer_first_name: customer.first_name      ########## remove thiss??????????? ask edwin
-        })
+        #})
       end
 
-      # $pubnub.subscribe(channel: 'messaging_' + Rails.env + '_' + merchant_id) {} remove???????????
+      # $pubnub.subscribe(channel: 'messaging_' + Rails.env + '_' + merchant_id) {} remove??????????? not needed
       # check merchant_presence_on_channel if it returns false then send sms/message to the merchant
       $pubnub.publish(channel: 'messaging_' + Rails.env + '_' + merchant_id,
                       message: { type: 'new-message',
@@ -51,6 +51,7 @@ class RealtimeStreamService
     # type: campaign_sent, new_payment, new_message_sms, new_message_messenger
     # payload is a hash with the data needed in the client. must include one of the types above
     def notifications(payload, merchant_id)
+      #$pubnub.subscribe(channel: 'notifications_' + Rails.env + '_' + merchant_id) {} remove???????????????????? not needed
       $pubnub.publish(channel: 'notifications_' + Rails.env + '_' + merchant_id.to_s, message: payload)
     end
 

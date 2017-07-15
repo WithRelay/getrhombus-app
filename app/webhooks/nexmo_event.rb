@@ -43,6 +43,8 @@ class NexmoEvent
         MessageParser.new.process_message(@merchant, user, @message, 'Message')
 
       rescue ActiveRecord::RecordNotUnique
+      rescue StandardError => e
+        puts e.inspect
       end
     end
 
@@ -56,7 +58,7 @@ class NexmoEvent
     private
 
       def get_user
-        User.find_by(phone_number:  @params[:msisdn])
+        User.find_by(phone_number: @params[:msisdn])
       end
 
   end
