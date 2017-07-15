@@ -24,7 +24,9 @@
         <div class="header settings-row-text">Actions</div>
       </div>
     </div>
-    <%= render partial: 'plans' %>
+    <div id='objlists' data-object-type='plan'>
+      <%= render partial: @plans %>
+    </div>
     <div id="with-button" class="hide">
       <%= will_paginate %>
     </div>
