@@ -86,7 +86,7 @@ class Conversation < ActiveRecord::Base
       ts: msg.created_at.to_i,
       ago: Conversation.new.time_in_relative_form(msg.created_at, 'short_format'),
       unread: conv_ref.unread,
-      images: msg.images.map { |i| { id: i.id, url: i.avatar(:thumb) } },
+      images: msg.images.map { |i| { id: i.id, url: i.avatar.url } },         
       channel: msg.class.name
   	}
 	end
