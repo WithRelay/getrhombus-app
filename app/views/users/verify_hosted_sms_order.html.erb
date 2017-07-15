@@ -8,12 +8,12 @@
     <div class="flex-underline form-header-underline"></div>
     <div class="password-reset-instructions">Enter your phone number verification code</div>
     <div class="log-in-form">
-      <form method="post" action= <%= current_user.hosted_sms.try(:url) %> id="verify-hosted-sms-order" redirect_url= <%= user_sms_usage_path(current_user) %> >
+      <%= form_tag user_verify_hosted_sms_path(current_user), id: "verify-hosted-sms-order" do %>
         <div class="form-group">
           <input type="text" name="VerificationCode" placeholder="Verification code" autofocus="true" class="form-control text-field w-input">
         </div>
-        <input type="submit" name="Verify" class="button log-in w-button" value="Verify & Continue" >
-      </form>
+        <input type="submit" name="Verify" class="button log-in w-button" value="Verify & Continue" id="submit-verification-code" >
+      <% end %>
     </div>
   </div>
 </div>

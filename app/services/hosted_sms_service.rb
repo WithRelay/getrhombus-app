@@ -39,6 +39,13 @@ class HostedSmsService
       end
     end
 
+    def post_varification(h, params)
+      begin
+        response = HTTParty.post(h.try(:url), :body => params.to_json, :headers => { 'Content-Type' => 'application/json' })
+      rescue StandardError => err
+      end
+    end
+
     def get_status(h)
       begin
         @client = Twilio::REST::Client.new(TWILIO_API_KEY, TWILIO_API_SECRET)
