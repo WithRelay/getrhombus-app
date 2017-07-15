@@ -11,48 +11,47 @@
       <%= form_for([current_user, @alert], html: { class: "w-clearfix", id: 'alert-form' }) do |f| %>
         <label class="field-headers form-label settings" for="Business-Name">ALERTS</label>
         <label class="form-label paragraph" for="field">Send me unread message notifications by email every:</label>
-        <%= f.select :interval, options_for_select({ "15 minutes" => "15", "30 minutes" => '30', "1 hour" => "60" }, selected: @alert.interval), {}, class: 'alerts-dropdown w-select' %>
+        <%= f.select :interval, options_for_select({ "15 minutes" => "15", "30 minutes" => '30', "1 hour" => "60" }, selected: @alert.interval), {}, class: 'alerts-dropdown w-select' %>        
+
+        <div class="form-group">
+          <label class="field-headers form-label settings" for="email">Email</label>
+          <%= f.email_field :email, id: "alerts-enter-email", type: 'email', name: 'email', class: 'form-control sms-alerts text-field w-input col-md-6', placeholder: 'Enter email' %>
+        </div>
+        <div class="button save-changes w-button" id='alerts-add-email'>Add Email</div>
+        <div><%= f.text_field :emails, id: "alert_emails" %></div>        
+
         <div class="form-check-box w-checkbox">
           <%= f.check_box :include_sms, class: 'w-checkbox-input checkbox', id: 'alert-include-sms' %>
           <label class="w-form-label" for="checkbox">Include SMS alerts for unread messages</label>
         </div>
+        <div id='alert-sms-number'>          
+          <%= f.phone_field :phone, id: "phone", type: 'tel', class: 'sms-alerts text-field w-input col-md-6', placeholder: 'Enter phone number' %>
+          <div class="button save-changes w-button" id='alerts-add-number'>Add number</div>
+          <div class="form-label paragraph" id="alerts-sms-numbers-label">You will receive SMS alerts to the number(s) in this list</div>
+          <div><input id="alert_phone_numbers" class='sms-alerts col-md-6'></div>          
+        </div>          
 
-        <div id='alert-sms-number'>
-          <%= f.hidden_field :sms_number, id: "phone_number" %>
-          <%= f.phone_field :phone, id: "phone", type: 'tel', class: 'sms-alerts text-field w-input col-md-6', placeholder: '(415) 123 - 4567' %>
-            <div class="button" id= 'alert-add-number'>Add</div>
-          <label class="form-label paragraph" for="field-2">You will receive SMS alerts on this phone number</label>
-          <input id="alert_phone_numbers">
-        </div>
-        <div class="button" id= 'alert-add-emails'>Add</div>
-          <div class="form-group">
-            <label class="col-xs-3 control-label">Email address</label>
-              <%= f.email_field :email, id: "email", type: 'email', name: 'email', class: 'form-control sms-alerts text-field w-input col-md-6', placeholder: 'email' %>
-            </div>
-
-
-          <input id="alert_emails">
         <div class="flex-underline form-section-divider"></div>
         <label class="field-headers form-label settings" for="Website">SYSTEM NOTIFICATIONS</label>
         <label class="form-label paragraph syste-notifications" for="Tax-Rate">We notify you, as well as your customers when certain actions take place within Rhombus. These system notifications include:</label>
         <div class="form-check-box w-checkbox">
-          <input checked="checked" class="w-checkbox-input" type="checkbox">
+          <input checked="checked" class="w-checkbox-input" type="checkbox" disabled>
           <label class="w-form-label" for="checkbox-2">Notify me when a customer sends a payment</label>
         </div>
         <div class="form-check-box w-checkbox">
-          <input checked="checked" class="w-checkbox-input" type="checkbox">
+          <input checked="checked" class="w-checkbox-input" type="checkbox" disabled>
           <label class="w-form-label" for="checkbox-6">Auto send receipts to customers when a payment is made</label>
         </div>
         <div class="form-check-box w-checkbox">
-          <input checked="checked" class="w-checkbox-input" type="checkbox">
+          <input checked="checked" class="w-checkbox-input" type="checkbox" disabled>
           <label class="w-form-label" for="checkbox-5">Notify me when a customer creates a subscription</label>
         </div>
         <div class="form-check-box w-checkbox">
-          <input checked="checked" class="w-checkbox-input" type="checkbox">
+          <input checked="checked" class="w-checkbox-input" type="checkbox" disabled>
           <label class="w-form-label" for="checkbox-4">Send me weekly activity summary</label>
         </div>
         <div class="form-check-box w-checkbox">
-          <input checked="checked" class="w-checkbox-input" type="checkbox">
+          <input checked="checked" class="w-checkbox-input" type="checkbox" disabled>
           <label class="w-form-label" for="checkbox-3">Notify me when my SMS/MMS credits are low (Less than $5)</label>
         </div>
         <div class="flex-underline form-section-divider"></div>
@@ -65,54 +64,3 @@
     </div>
   </div>
 </div>
-
-
-<script>
-//width: 60px; margin-top:-6.9%; margin-right: 27%
-$(document).ready(function() {
-var $alert_phone_numbers_selectize = $('#alert_phone_numbers').selectize({
-            plugins: ['remove_button'],
-            options: [],
-            labelField: 'number',
-            valueField: 'number',
-            create: false,
-          })[0].selectize;
-
-var $alert_emails_selectize = $('#alert_emails').selectize({
-            plugins: ['remove_button'],
-            options: [],
-            labelField: 'email',
-            valueField: 'email',
-            create: false,
-          })[0].selectize;
-
-$('#alert-add-number').click(function() {
-  if (PhoneNumberFormatter.isValid()) {
-    var number = PhoneNumberFormatter.getNumber();
-    $alert_phone_numbers_selectize.addOption({ number: number  });
-    $alert_phone_numbers_selectize.addItem(number);
-  } else {
-    $('#phone').addClass('red-border')
-  }
-});
-
-$('#alert-form').formValidation({
-       framework: 'bootstrap',
-       fields: {
-           'email': {
-               validators: {
-                   emailAddress: {
-                   }
-               }
-           }
-       }
-     });
-
-$('#alert-add-emails').click(function(){
-  var email = $('#email').val();
-   $alert_emails_selectize.addOption({email: email});
-   $alert_emails_selectize.addItem(email);
-});
-
-});
-</script>

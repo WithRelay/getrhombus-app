@@ -18,10 +18,8 @@ Rails.application.routes.draw  do
   #end
 
   authenticate :user do
-    ########## scope this to user.....
     get 'link_facebook' => 'link_fb_accounts#link_facebook'
     post 'fb_redirect' => 'link_fb_accounts#fb_redirect' #facebook account link redirect
-    ############
 
     resources :users, only: [] do
       get "/" => 'users#show'
@@ -51,7 +49,6 @@ Rails.application.routes.draw  do
         post 'deactivate' => "registrations#deactivate"
         post 'auto_recharge' => "registrations#auto_recharge"
         post 'add_funds' => "registrations#add_funds"
-        get 'fb_pages/remove_integration' => 'fb_pages#remove_integration'
       end
       get 'sms-usage'
       get 'add-rhombus-number'
@@ -63,6 +60,7 @@ Rails.application.routes.draw  do
       get 'customer_template'
       get 'remove_stripe_integration'
       get 'remove_twitter_integration'
+      get 'fb_pages/remove_integration'
       resources :fb_pages, only: [:index]
       patch 'update_fb_page' => 'fb_pages#update_user_fb_page'
       resources :hashtags, except: [:show] do
