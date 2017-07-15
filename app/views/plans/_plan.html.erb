@@ -1,0 +1,26 @@
+<div class="manage-plans-row w-row">
+  <div class="w-clearfix w-col w-col-4">
+    <span class='editable-field-text settings-row-text plan-name'><%= plan.name %></span>
+    <span class="plan-name-edit-span">
+      <a class="plan-name-edit-icon edit-field save-editable-field" href="#"></a>
+    </span>
+    <span class='plan-name-save-span' data-plan-id='<%= plan.id %>' style='display: none;'>
+      <a class="cancel-edit cancel-edit-plan save-editable-field" href="#"><strong></strong></a>
+      <a class="save-editable-field plan-name-save-icon" href="#"></a>
+    </span>
+  </div>
+  <div class="w-col w-col-2">
+    <div class="settings-row-text"><%= present(plan).format_amount %></div>
+  </div>
+  <div class="w-col w-col-2">
+    <div class="settings-row-text"><%= plan.interval %></div>
+  </div>
+  <div class="w-col w-col-2">
+    <div class="settings-row-text"><%= subscribed_customer_count(plan) %></div>
+  </div>
+  <div class="w-col w-col-2">
+    <% if plan.subscription_id.blank? %>
+      <%= link_to 'Delete Plan', user_plan_path(current_user, plan), method: :delete, class: "button settings-table-row w-button delete-plan plan#{plan.id}" %>
+    <% end %>
+  </div>
+</div>
