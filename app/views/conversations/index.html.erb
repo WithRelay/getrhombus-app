@@ -3,17 +3,18 @@
 	<%= render 'shared/messaging_header' %>
   <div ng-view></div>
 </div>
+<!--
 <script src="https://cdn.pubnub.com/sdk/javascript/pubnub.4.12.0.js"></script>
 <script type="text/javascript">
   var uuid = "uuid-<%= current_user.id %>";
   var pubnub = new PubNub ({
-    publish_key: '<%= Rails.application.secrets.pubnub["publish_key"] %>',
-    subscribe_key: '<%= Rails.application.secrets.pubnub["subscribe_key"] %>',
+    publish_key: '<%#= Rails.application.secrets.pubnub["publish_key"] %>',
+    subscribe_key: '<%#= Rails.application.secrets.pubnub["subscribe_key"] %>',
     uuid: uuid,
     presenceTimeout: 120,
     heartbeatInterval: 30
   });
-  var channel = "<%= 'messaging_' + Rails.env + '_' + current_user.id.to_s %>";
+  var channel = "<%#= 'messaging_' + Rails.env + '_' + current_user.id.to_s %>";
 
   // If page is visible right now
   if( ifvisible.now() ){
@@ -41,3 +42,4 @@
   });
 
 </script>
+-->
