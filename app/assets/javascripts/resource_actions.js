@@ -92,9 +92,8 @@ $(document).on('ready',function() {
       $('.checkboxes').attr('disabled', false);
     };
   });
+});
 
-  $(document).on('click', '.cancel-no', function(e){
-    $('.cancel-subscription-wrapper').trigger('close');
-  });
-
+$(document).on('click', '.cancel-no', function(e){
+  $('.cancel-subscription-wrapper').trigger('close');
 });
