@@ -47,6 +47,17 @@ module AdditionalUserActions
     @card_type = current_user.card_type
   end
 
+  def verify_hosted_sms
+    response = HostedSmsService.post_varification(current_user.hosted_sms, params.permit(:VerificationCode))
+    if response['status'] == 'verified'
+      flash[:notice] = 'Your phone number has been Verified'
+      redirect_to user_path(current_user)
+    elsif
+      flash[:error] = response['message']
+      redirect_to user_verify_hosted_sms_order_path(current_user)
+    end
+  end
+
   # using this to hold data till we get to transactions page for customer
   # could rebuild the link but we don't want users refreshing the page and trigerring more payments
   # since i will delete this session data the first time

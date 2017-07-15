@@ -147,9 +147,7 @@ $(document).ready(function () {
           .addClass('has-success')
       })
       .on('success.form.fv', function(e, data) {
-          e.preventDefault();
-          $('#create-coupon').attr("disabled", true).val("Please wait...");
-          addCoupon();
+          $('#submit-verification-code').attr("disabled", true).val("Please wait...");
       });
   }
 });
