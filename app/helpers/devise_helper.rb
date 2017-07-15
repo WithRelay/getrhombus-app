@@ -33,7 +33,9 @@ module DeviseHelper
       customer_contact_count: MerchantCustomer.where(merchant_id: current_user.id).count + MerchantContact.where(merchant_id: current_user.id).count,
       can_accept_payments: current_user.can_accept_payments?(true),
       profile_image: User.check_profile_picture(current_user),
-      has_messenger: current_user.get_page_access_token
+      has_messenger: current_user.get_page_access_token,
+      message_channel: "messaging_" + Rails.env + "_" + current_user.id.to_s,
+      message_uuid: "uuid-" + current_user.id.to_s,
     }.to_json
   end
 end

@@ -6,7 +6,7 @@ $(document).ready(function() {
     // merchant and up only
     if (!jQuery.isEmptyObject( merchant_data )) {
       // Initialize PubNub with SSL
-      var pubnub = PUBNUB({
+      var pubnub = new PubNub({
         publish_key: merchant_data.pubnub_publish_key,
         subscribe_key: merchant_data.pubnub_subscribe_key,
         ssl: true
@@ -16,6 +16,7 @@ $(document).ready(function() {
       pubnub.subscribe({
         channel: 'notifications_<%= Rails.env %>_' + merchant_data.id.toString(),
         message: function(m) {
+          ///////////////???????????????// this needs to be .each or something
           process_notification(JSON.parse(m))
         }
       });

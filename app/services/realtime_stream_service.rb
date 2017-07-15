@@ -6,28 +6,33 @@ class RealtimeStreamService
     # Sends a message to the given merchant's channel, provided user and merchant numbers
     def messages(conversation, conv_ref, merchant, customer, msg)
       merchant_id = conversation.merchant_id.to_s
-      response = {}
+      response = nil
+
       $pubnub.here_now(
-        channels: ['messaging_' + Rails.env + '_' + merchant_id],
-      )do |envelope|
+        channel: 'messaging_' + Rails.env + '_' + merchant_id,
+      ) do |envelope|
+        puts envelope.inspect
+        puts '=----------------------------------------------=------'
         response = JSON.parse envelope.status[:server_response].body
+        puts response
       end
-      unless response['uuids'].include? "uuid-#{merchant_id}"
+
+      if response.blank? || response['uuids'].blank? || !(response['uuids'].include? "uuid-#{merchant_id}")
         puts 'merchant offline'
+        puts '<redacted_phone_number>'
         EmailingService.send_unread_message_alert({
           pluralize_msg: '',
           unread_count: 1,
-          customer_first_name: User.find(merchant_id).first_name
+          # customer_first_name: customer.first_name      ########## remove thiss??????????? ask edwin
         })
-      # else
-      #   puts 'merchant online'
       end
-      # $pubnub.subscribe(channel: 'messaging_' + Rails.env + '_' + merchant_id) {}
+
+      # $pubnub.subscribe(channel: 'messaging_' + Rails.env + '_' + merchant_id) {} remove???????????
       # check merchant_presence_on_channel if it returns false then send sms/message to the merchant
       $pubnub.publish(channel: 'messaging_' + Rails.env + '_' + merchant_id,
                       message: { type: 'new-message',
                                  message: Conversation.message_hash(conversation, msg, conv_ref, customer),
-                                 conversation: conversation.conversation_hash }.to_json) {}
+                                 conversation: conversation.conversation_hash })
     end
 
     def update_conversation_properties(conversation_id, customer, merchant_id, old_selectize_val)
@@ -40,18 +45,16 @@ class RealtimeStreamService
                                               description: customer.phone_number,
                                               unique_identifier: "#{customer.id}-user",
                                               title: customer.card_name.present? ? customer.card_name : customer.email }
-                                }.to_json) {}
+                                })
     end
 
     # type: campaign_sent, new_payment, new_message_sms, new_message_messenger
     # payload is a hash with the data needed in the client. must include one of the types above
     def notifications(payload, merchant_id)
-      merchant_id = merchant_id.to_s
-      $pubnub.subscribe(channel: 'notifications_' + Rails.env + '_' + merchant_id) {}
-      $pubnub.publish(channel: 'notifications_' + Rails.env + '_' + merchant_id,
-                      message: payload.to_json) {}
+      $pubnub.publish(channel: 'notifications_' + Rails.env + '_' + merchant_id.to_s, message: payload)
     end
 
+    ### this isnt being used???????????????
     def campaign_notification
       Time.zone = current_user.time_zone
       campaign_recipients = CampaignRecipient.where("CAST(created_at as DATE) = ?",
@@ -63,16 +66,5 @@ class RealtimeStreamService
       end
     end
 
-    def merchant_presence_on_channel(merchant_id)
-      status = {}
-      $pubnub.here_now(
-        channel: 'messaging_' + Rails.env + '_' + merchant_id.to_s,
-      ) do |envelope|
-        status = envelope.status
-      end
-      response = JSON.parse status[:server_response].body
-      merchant_uuid = "uuid-#{merchant_id}"
-      response.uuids.include? merchant_uuid
-    end
   end
 end

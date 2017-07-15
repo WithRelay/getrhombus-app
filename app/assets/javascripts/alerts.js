@@ -55,28 +55,42 @@ $(document).ready(function () {
     };
   }).change();
 
-  var $alert_phone_numbers_selectize = $('#alert_phone_numbers').selectize({
+  if ($('#alert_phone_numbers').length) {
+    var $alert_phone_numbers_selectize = $('#alert_phone_numbers').selectize({
             plugins: ['remove_button'],
             options: [],
             labelField: 'number',
             valueField: 'number',
             create: false,
           })[0].selectize;
+    var preset_numbers_data = $('#alert_phone_numbers').attr('data-numbers').trim();
+    if (preset_numbers_data.length) {
+      $.each(preset_numbers_data.split(','), function (index, number) {
+        add_data_to_selectize($alert_phone_numbers_selectize, 'number', number);
+      });  
+    };
+  };
 
-  var $alert_emails_selectize = $('#alert_emails').selectize({
+  if ($('#alert_emails').length) {
+    var $alert_emails_selectize = $('#alert_emails').selectize({
               plugins: ['remove_button'],
               options: [],
               labelField: 'email',
               valueField: 'email',
               create: false,
             })[0].selectize;
+    var preset_email_data = $('#alert_emails').attr('data-emails').trim();
+    if (preset_numbers_data.length) {
+      $.each(preset_email_data.split(','), function (index, email) {
+        add_data_to_selectize($alert_emails_selectize, 'email', email)
+      });
+    };
+  };
 
   $('#alerts-add-number').click(function() {
     set_button_status(this, true, 'Validating...');
     if (PhoneNumberFormatter.isValid()) {
-      var number = PhoneNumberFormatter.getNumber();
-      $alert_phone_numbers_selectize.addOption({ number: number  });
-      $alert_phone_numbers_selectize.addItem(number);
+      add_data_to_selectize($alert_phone_numbers_selectize, 'number', PhoneNumberFormatter.getNumber());
     } else {
       $('#phone').addClass('red-border');
     };
@@ -101,10 +115,10 @@ $(document).ready(function () {
       dataType: "jsonp",
       crossDomain: true,
       success: function(data, status_text) {
-        data.is_valid ? add_email_to_selectize_emails(email) : show_email_invalid();
+        data.is_valid ? add_data_to_selectize($alert_emails_selectize, 'email', email) : show_email_invalid();
       },
       error: function(request, status_text, error) {
-        add_email_to_selectize_emails(email);
+        add_data_to_selectize($alert_emails_selectize, 'email', email)
       },
       complete: function() {
         set_button_status($this, false, 'Add Email');
@@ -128,24 +142,11 @@ $(document).ready(function () {
     btn.textContent = text;
   };
 
-  function add_email_to_selectize_emails(email) {
-    $alert_emails_selectize.addOption({email: email});
-    $alert_emails_selectize.addItem(email);
+  function add_data_to_selectize(selectize_field, name, data) {
+    var hash = {};
+    hash[name] = data;
+    selectize_field.addOption(hash);
+    selectize_field.addItem(data);
   };
-  
-  var preset_data = $('#alert_emails').attr('data-numbers');
-  if (UtilFunctions.is_present(preset_data)) {
-    $.each(preset_data, function (index, val) {
-      $alert_phone_numbers_selectize.addOption({ number: val  });
-      $alert_phone_numbers_selectize.addItem(val);
-    });  
-  };
-  
-  preset_data = $('#alert_emails').attr('data-emails');
-  if (UtilFunctions.is_present(preset_data)) {
-    $.each(preset_data, function (index, val) {
-      $alert_phone_numbers_selectize.addOption({ email: val  });
-      $alert_phone_numbers_selectize.addItem(val);
-    });
-  };
+
 })
