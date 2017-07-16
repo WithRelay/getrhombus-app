@@ -223,6 +223,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
     };
 
     $scope.messageTrackingFunction = function(message) { 
+      console.log(message.text)
       console.log(message.channel + "-" + message.id.toString()); 
       return message.channel + "-" + message.id.toString(); 
     };
@@ -733,29 +734,29 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
           console.log(envelope)
           var re = envelope.message;
           if (re.type == 'new-message') {
-                if (!$scope.conversations[re.conversation.id]) {
-                  // add conversation object and update count
-                  $scope.conversations[re.conversation.id] = re.conversation;
-                  $scope.open_conversations_count += 1;
-                  //$scope.global_unread_count += re.conversation.unread_count;
-                } else {
-                  $scope.conversations[re.conversation.id].last_message = re.conversation.last_message
-                  $scope.conversations[re.conversation.id].last_message_ts = re.conversation.last_message_ts
-                  $scope.conversations[re.conversation.id].ago = re.conversation.ago
+            if (!$scope.conversations[re.conversation.id]) {
+              // add conversation object and update count
+              $scope.conversations[re.conversation.id] = re.conversation;
+              $scope.open_conversations_count += 1;
+              //$scope.global_unread_count += re.conversation.unread_count;
+            } else {
+              $scope.conversations[re.conversation.id].last_message = re.conversation.last_message
+              $scope.conversations[re.conversation.id].last_message_ts = re.conversation.last_message_ts
+              $scope.conversations[re.conversation.id].ago = re.conversation.ago
 
-                  console.log($scope.conversations[re.conversation.id].last_message)
-                  console.log(re.conversation.last_message)
+              console.log($scope.conversations[re.conversation.id].last_message)
+              console.log(re.conversation.last_message)
 
-                  if (re.message.source == 'customer') {
-                    //$scope.global_unread_count += 1;
-                    $scope.conversations[re.conversation.id].unread_count += 1;
-                  }
-                };
+              if (re.message.source == 'customer') {
+                //$scope.global_unread_count += 1;
+                $scope.conversations[re.conversation.id].unread_count += 1;
+              }
+            };
 
-                if (re.conversation.id == $scope.selected_conversation.id) {
-                  $scope.selected_conversation_messages.push(re.message);
-                  //$scope.markMessagesAsRead(conversation.id, re.message.id);
-                };
+            if (re.conversation.id == $scope.selected_conversation.id) {
+              $scope.selected_conversation_messages.push(re.message);
+              //$scope.markMessagesAsRead(conversation.id, re.message.id);
+            };
           } else if (re.type == 'update-conv-properties') {
             if ($scope.conversations[re.id]) {
               $scope.conversations[re.id].full_name = re.full_name;

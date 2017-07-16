@@ -99,14 +99,17 @@ class TwilioEvent
 
     def save_media
       num_media = @params[:NumMedia].to_i
+      images_ary = []
       num_media.times do |i|
         media_url = @params["MediaUrl#{i}"]
         if %w{image/jpeg image/png image/gif}.include?( @params["MediaContentType#{i}"])
           image = Image.new
           image.avatar_for_twilio_media(media_url)
-          @message.images = [image]
+          images_ary << image
         end
       end
+
+      @message.images = images_ary if images_ary.present?
     end
 
   end

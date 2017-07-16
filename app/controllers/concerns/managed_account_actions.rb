@@ -46,8 +46,7 @@ module ManagedAccountActions
       file_upload = stripe_managed.upload_file
       return false unless file_upload.is_a?(Stripe::FileUpload)
       person = @user.people.representative.first
-      # some checks should go here
-      person.image.destroy if person.image.present?
+      # this also removes any existing image
       person.image = Image.create(avatar: image_params[:avatar])
       person.update_column(:stripe_file_id, file_upload.id)
     end
