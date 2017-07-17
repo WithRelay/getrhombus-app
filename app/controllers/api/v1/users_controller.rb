@@ -8,15 +8,15 @@ class Api::V1::UsersController < API::V1::BaseController
       "(select mc.customer_id as uid, 'user' as uid_type,
         coalesce(NULLIF(u.card_name, ''), u.email) as title, u.phone_number as description,
         CONCAT(mc.id, '-', 'MerchantCustomer') AS unique_identifier
-        from merchant_customers mc       
+        from merchant_customers mc
         inner join users u on mc.customer_id = u.id
         where mc.merchant_id = ? and
         (lower(u.card_name) like concat('%', ?, '%') or u.email like concat('%', ?, '%') or
-        u.phone_number like concat('%', ?, '%'))) 
+        u.phone_number like concat('%', ?, '%')))
 
       union all
 
-      (select uid, 'fb_page', name as title, 'Messenger Contact', 
+      (select uid, 'fb_page', name as title, 'Messenger Contact',
       CONCAT(mc.id, '-', 'MerchantContact') AS unique_identifier
       from merchant_contacts mc
       inner join fb_creds on fb_creds.page_specific_id = mc.uid
@@ -25,7 +25,7 @@ class Api::V1::UsersController < API::V1::BaseController
 
       union all
 
-      (select uid, 'phone_number', uid as title, 'SMS Contact' as description, 
+      (select uid, 'phone_number', uid as title, 'SMS Contact' as description,
       CONCAT(mc.id, '-', 'MerchantContact') AS unique_identifier
       from merchant_contacts mc
       where merchant_id = ? and uid_type = 'phone_number' and is_customer = false and uid like concat('%', ?, '%'))",
@@ -42,6 +42,11 @@ class Api::V1::UsersController < API::V1::BaseController
 
   def snapshot
     render json: User.get_user_snapshot(params[:uid], params[:uid_type], current_user.id)
+  end
+
+  def update_merchant_status
+    res = $redis_merchant_status.set(params[:merchant_id], params[:status])
+    render json: { valid: res }
   end
 
 end

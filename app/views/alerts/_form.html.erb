@@ -9,38 +9,45 @@
     <div class="flex-underline form-header-underline"></div>
     <div class="account-settings-form-wrapper">
       <%= form_for([current_user, @alert], html: { class: "w-clearfix", id: 'alert-form' }) do |f| %>
+      <label class="field-headers form-label settings" for="Website">SEND ALERTS OPTIONS</label>
+      <div class="form-check-box w-checkbox">
+        <input class="w-checkbox-input" type="checkbox" id="send-alert">
+        <label class="w-form-label" >send alert</label>
+      </div>
+
         <label class="field-headers form-label settings" for="Business-Name">ALERTS</label>
         <label class="form-label paragraph" for="field">Send me unread message notifications by email every:</label>
-        <%= f.select :interval, options_for_select({ "15 minutes" => "15", "30 minutes" => '30', "1 hour" => "60" }, selected: @alert.interval), {}, class: 'alerts-dropdown w-select' %>        
+        <%= f.select :interval, options_for_select({ "15 minutes" => "15", "30 minutes" => '30', "1 hour" => "60" }, selected: @alert.interval), {}, class: 'alerts-dropdown w-select' %>
 
         <div class="form-group">
           <label class="field-headers form-label settings" for="email">Email</label>
-          <input id="alerts-enter-email" type='email' class='form-control sms-alerts text-field w-input col-md-6' placeholder='Enter email' />
+          <input id="alerts-enter-email" type='email' name= "email-alert" class='form-control sms-alerts text-field w-input col-md-6' placeholder='Enter email' />
           <div id='alerts-email-validation-message'>Email isn't valid</div>
         </div>
+
         <button class="button save-changes w-button" id='alerts-add-email' type="button">Add Email</button>
         <div class="form-group">
-          <%= f.text_field :emails, id: "alert_emails", value: '', data: { emails: @emails } %>
-        </div>        
+          <%= f.text_field :emails, class:"form-control add-alert-atrribute text-field w-input", value: '', data: { emails: @emails}, name: 'selectize-email-field' %>
+        </div>
 
         <div class="form-check-box w-checkbox">
           <%= f.check_box :include_sms, class: 'w-checkbox-input checkbox', id: 'alert-include-sms' %>
           <label class="w-form-label" for="checkbox">Include SMS alerts for unread messages</label>
         </div>
 
-        <div id='alert-sms-number'>          
-          <input id="phone" type='tel' class='sms-alerts text-field w-input col-md-6' placeholder='Enter phone number' %>          
+        <div id='alert-sms-number'>
+          <input id="phone" type='tel' class='sms-alerts text-field w-input col-md-6' placeholder='Enter phone number' %>
           <button class="button save-changes w-button" id='alerts-add-number' type="button">Add number</button>
           <div class="form-label paragraph" id="alerts-sms-numbers-label">You will receive SMS alerts to the number(s) in this list</div>
-          <div class="form-group"><%= f.text_field :sms_numbers, id: "alert_phone_numbers", class: 'sms-alerts col-md-6', value: '', data: { numbers: @sms_numbers } %></div>
-        </div>          
+          <div class="form-group"><%= f.text_field :sms_numbers, id: "alert_phone_numbers", class: 'form-control add-alert-atrribute text-field w-input', value: '', data: { numbers: @sms_numbers }, name:'selectize-numbers-field' %></div>
+        </div>
 
         <div class="flex-underline form-section-divider"></div>
         <label class="field-headers form-label settings" for="Website">SYSTEM NOTIFICATIONS</label>
         <label class="form-label paragraph syste-notifications" for="Tax-Rate">We notify you, as well as your customers when certain actions take place within Rhombus. These system notifications include:</label>
         <div class="form-check-box w-checkbox">
           <input checked="checked" class="w-checkbox-input" type="checkbox" disabled>
-          <label class="w-form-label" for="checkbox-2">Notify me when a customer sends a payment</label>
+          <label class="w-form-label" for="checkbox-2" id= "sms-alert">Notify me when a customer sends a payment</label>
         </div>
         <div class="form-check-box w-checkbox">
           <input checked="checked" class="w-checkbox-input" type="checkbox" disabled>

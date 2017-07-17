@@ -1,30 +1,21 @@
 $(document).ready(function () {
   // validate notfications form
-  /*$('#alert-form')
-    .formValidation({
+$('#alert-form').formValidation({
       framework: 'bootstrap',
       live: 'disabled',
       // List of fields and their validation rules!
       fields: {
-        'alert[sms_numbers]': {
+        'email-alert': {
           row: '.form-group',
           validators: {
             callback: {
-              callback: function (value, validator, $field) {
-                if ($("#alert-include-sms").is(':checked')) {
-                  if (PhoneNumberFormatter.isValid()) {
-                    return {
-                      valid: true,    // or false
-                      message: 'Valid number'
-                    }
-                  } else {
-                    return {
-                      valid: false,    // or false
-                      message: 'Enter a valid sms-enabled number.'
-                    }
+              callback:function(value,validator, $field){
+                if($('#send-alert').is(':checked') && $('#alerts-enter-email').val() == ''){
+                  return {
+                    valid: false,
+                    message: 'Add aleast one valid email'
                   }
-                } else {
-                  $("#phone_number, #phone").val('');
+                }else{
                   return {
                     valid: true
                   }
@@ -33,20 +24,32 @@ $(document).ready(function () {
             }
           }
         },
-        'alert[emails]': {
+
+        'alert[phone]': {
           row: '.form-group',
           validators: {
             callback: {
-              callback: function (value, validator, $field) {
+              callback:function(value,validator, $field){
+                if($('#send-alert').is(':checked') && $('#sms-alert') && $('#alert_phone_numbers').val() == ''){
+                  return {
+                    valid: false,
+                    message: 'Add aleast one valid number'
+                  }
+                }else{
+                  return {
+                    valid: true
+                  }
+                }
               }
             }
           }
         }
       }
-    })
-    .on('success.form.fv', function(e, data) {
-    });*/
-
+      });
+  // $('#email-checkbox').on('click', funtion(){
+  //   if($(this).is(':check')){
+  //   }
+  // })
   $('#alert-include-sms').change(function() {
     if (this.checked) {
       $('#alert-sms-number').slideDown(200);
@@ -67,7 +70,7 @@ $(document).ready(function () {
     if (preset_numbers_data.length) {
       $.each(preset_numbers_data.split(','), function (index, number) {
         add_data_to_selectize($alert_phone_numbers_selectize, 'number', number);
-      });  
+      });
     };
   };
 
@@ -100,7 +103,7 @@ $(document).ready(function () {
   $('#alerts-add-email').click(function() {
     set_button_status(this, true, 'Validating...');
     var email = $('#alerts-enter-email').val().trim();
-    
+
     if (!email.length) {
       show_email_invalid();
       set_button_status(this, false, 'Add Email');
