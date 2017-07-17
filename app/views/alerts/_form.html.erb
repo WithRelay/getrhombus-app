@@ -11,8 +11,8 @@
       <%= form_for([current_user, @alert], html: { class: "w-clearfix", id: 'alert-form' }) do |f| %>
       <label class="field-headers form-label settings" for="Website">SEND ALERTS OPTIONS</label>
       <div class="form-check-box w-checkbox">
-        <input class="w-checkbox-input" type="checkbox">
-        <label class="w-form-label" id="send-alert">send alert</label>
+        <input class="w-checkbox-input" type="checkbox" id="send-alert">
+        <label class="w-form-label" >send alert</label>
       </div>
 
         <label class="field-headers form-label settings" for="Business-Name">ALERTS</label>
@@ -47,7 +47,7 @@
         <label class="form-label paragraph syste-notifications" for="Tax-Rate">We notify you, as well as your customers when certain actions take place within Rhombus. These system notifications include:</label>
         <div class="form-check-box w-checkbox">
           <input checked="checked" class="w-checkbox-input" type="checkbox" disabled>
-          <label class="w-form-label" for="checkbox-2">Notify me when a customer sends a payment</label>
+          <label class="w-form-label" for="checkbox-2" id= "sms-alert">Notify me when a customer sends a payment</label>
         </div>
         <div class="form-check-box w-checkbox">
           <input checked="checked" class="w-checkbox-input" type="checkbox" disabled>
