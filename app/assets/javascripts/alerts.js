@@ -1,55 +1,51 @@
 $(document).ready(function () {
   // validate notfications form
-$('#alert-form').formValidation({
-      framework: 'bootstrap',
-      live: 'disabled',
-      // List of fields and their validation rules!
-      fields: {
-        'email-alert': {
-          row: '.form-group',
-          validators: {
-            callback: {
-              callback:function(value,validator, $field){
-                if($('#send-alert').is(':checked') && $('#alerts-enter-email').val() == ''){
-                  return {
-                    valid: false,
-                    message: 'Add aleast one valid email'
-                  }
-                }else{
-                  return {
-                    valid: true
-                  }
+  $('#alert-form').formValidation({
+    framework: 'bootstrap',
+    live: 'disabled',
+    // List of fields and their validation rules!
+    fields: {
+      'email-alert': {
+        row: '.form-group',
+        validators: {
+          callback: {
+            callback:function(value,validator, $field){
+              if($('#send-alert').is(':checked') && $('#alerts-enter-email').val() == ''){
+                return {
+                  valid: false,
+                  message: 'Add aleast one valid email'
+                }
+              }else{
+                return {
+                  valid: true
                 }
               }
             }
           }
-        },
-
-        'alert[phone]': {
-          row: '.form-group',
-          validators: {
-            callback: {
-              callback:function(value,validator, $field){
-                if($('#send-alert').is(':checked') && $('#sms-alert') && $('#alert_phone_numbers').val() == ''){
-                  return {
-                    valid: false,
-                    message: 'Add aleast one valid number'
-                  }
-                }else{
-                  return {
-                    valid: true
-                  }
+        }
+      },
+      'alert[phone]': {
+        row: '.form-group',
+        validators: {
+          callback: {
+            callback:function(value,validator, $field){
+              if($('#send-alert').is(':checked') && $('#sms-alert') && $('#alert_phone_numbers').val() == ''){
+                return {
+                  valid: false,
+                  message: 'Add aleast one valid number'
+                }
+              }else{
+                return {
+                  valid: true
                 }
               }
             }
           }
         }
       }
-      });
-  // $('#email-checkbox').on('click', funtion(){
-  //   if($(this).is(':check')){
-  //   }
-  // })
+    }
+  });
+  
   $('#alert-include-sms').change(function() {
     if (this.checked) {
       $('#alert-sms-number').slideDown(200);
