@@ -34,6 +34,9 @@
         <input type="hidden" name="page_params" value="account_settings">
       </div>
 
+      <div class="form-group">
+        <%= f.select :time_zone, get_time_zone_lists, {}, class: 'form-control dropdown w-select' %>
+      </div>
 
       <div class="update-email-password-div w-clearfix">
         <div class="flex-underline form-section-divider"></div>
