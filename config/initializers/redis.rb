@@ -1,1 +1,1 @@
-$redis = Redis::Namespace.new("relay", :redis => Redis.new)
+$redis_merchant_status = Redis::Namespace.new("relay-#{Rails.env}-merchant-status", :redis => Redis.new)

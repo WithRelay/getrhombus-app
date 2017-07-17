@@ -45,7 +45,7 @@ class Api::V1::UsersController < API::V1::BaseController
   end
 
   def update_merchant_status
-    res = $redis.set(params[:merchant_id], params[:status])
+    res = $redis_merchant_status.set(params[:merchant_id], params[:status])
     render json: { valid: res }
   end
 

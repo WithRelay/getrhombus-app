@@ -6,7 +6,7 @@ class RealtimeStreamService
     # Sends a message to the given merchant's channel, provided user and merchant numbers
     def messages(conversation, conv_ref, merchant, customer, msg)
       merchant_id = conversation.merchant_id.to_s
-      if $redis.get(merchant_id) == 'offline'
+      if $redis_merchant_status.get(merchant_id) == 'offline'
         puts 'merchant offline'
         # EmailingService.send_unread_message_alert({
         #  pluralize_msg: '',
