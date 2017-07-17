@@ -3,6 +3,9 @@ class Api::V1::ConversationsController < API::V1::BaseController
   before_action :check_user
 
 	def index
+    # mark merchant as online
+    $redis_merchant_status.set(current_user.id.to_s, 'online') 
+
     if params[:select_conversation].present?
       conv = JSON.parse(params[:select_conversation]) 
       # Add check for if they are a user or contact, we dont want to create conversations for folks who dont exists

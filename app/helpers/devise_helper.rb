@@ -35,7 +35,6 @@ module DeviseHelper
       profile_image: User.check_profile_picture(current_user),
       has_messenger: current_user.get_page_access_token,
       message_channel: "messaging_" + Rails.env + "_" + current_user.id.to_s,
-      message_uuid: "uuid-" + current_user.id.to_s,
     }.to_json
   end
 end

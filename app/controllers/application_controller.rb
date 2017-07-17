@@ -3,8 +3,7 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
   before_action :configure_permitted_parameters, if: :devise_controller?
-  before_action :prepare_exception_notifier, :update_merchant_status
-  #before_action :check_current_user_and_path
+  before_action :prepare_exception_notifier#, :check_current_user_and_path
   around_action :set_time_zone, if: :current_user
 
   include CheckUserProfile
@@ -71,10 +70,6 @@ class ApplicationController < ActionController::Base
     }
   end
 
-  def update_merchant_status
-    if current_user.present? && current_user.is_merchant? && params[:controller] == 'sessions' && params[:action] == 'destroy'
-      $redis_merchant_status.set(current_user.id, 'offline')
-    end
-  end
+ 
 
 end

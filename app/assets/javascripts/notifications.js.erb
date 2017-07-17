@@ -5,6 +5,7 @@ $(document).ready(function() {
     var merchant_data = UserDetails.object();
     // merchant and up only
     if (!jQuery.isEmptyObject( merchant_data )) {
+      
       // Initialize PubNub with SSL
       var pubnub = new PubNub({
         publish_key: merchant_data.pubnub_publish_key,
@@ -12,13 +13,15 @@ $(document).ready(function() {
         ssl: true
       });
 
+      pubnub.addListener({
+        message: function(data) {
+          process_notification(data.message);
+        }
+      })      
+
       // Subscribe to merchant channel
       pubnub.subscribe({
         channel: 'notifications_<%= Rails.env %>_' + merchant_data.id.toString(),
-        message: function(m) {
-          ///////////////???????????????// this needs to be .each or something
-          process_notification(JSON.parse(m))
-        }
       });
     };
   };

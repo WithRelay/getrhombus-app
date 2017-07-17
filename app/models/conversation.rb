@@ -144,7 +144,7 @@ class Conversation < ActiveRecord::Base
     re = find_or_create_conversation(team.id, uid_type, uid)
     msg_ary = send_message(re, team, msg_to_send, channel, source, media)
     if msg_ary
-      RealtimeStreamService.messages(re, msg_ary.third, team, customer, msg_ary.second)
+      RealtimeStreamService.messages(re, msg_ary.third, customer, msg_ary.second)
       puts msg_ary.inspect
       msg_ary.first[:id]
     else
@@ -155,7 +155,7 @@ class Conversation < ActiveRecord::Base
   # when receiving
   def self.find_or_create_conversation_for_message_and_publish(team, customer, uid_type, uid, msg_instance, unread)
     re = find_or_create_conversation_for_message(team.id, uid_type, uid, msg_instance, unread, 'customer')
-    RealtimeStreamService.messages(re[0], re[1], team, customer, msg_instance)
+    RealtimeStreamService.messages(re[0], re[1], customer, msg_instance)
   end
 
   # find or create conversation and attach new message
@@ -218,9 +218,8 @@ class Conversation < ActiveRecord::Base
   def self.publish_test_conversation
     conversation = Conversation.first
     conv_ref = ConversationRef.first
-    merchant = User.find 23
     customer = User.find 22
     msg = Message.find 280
-    RealtimeStreamService.messages(conversation, conv_ref, merchant, customer, msg)
+    RealtimeStreamService.messages(conversation, conv_ref, customer, msg)
   end
 end

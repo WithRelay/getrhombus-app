@@ -44,9 +44,11 @@ class Api::V1::UsersController < API::V1::BaseController
     render json: User.get_user_snapshot(params[:uid], params[:uid_type], current_user.id)
   end
 
-  def update_merchant_status
-    res = $redis_merchant_status.set(params[:merchant_id], params[:status])
-    render json: { valid: res }
+  def update_status
+    if "OK" != $redis_merchant_status.set(params[:id], params[:status])
+      # Notify team here
+    end
+    head :no_content
   end
 
 end

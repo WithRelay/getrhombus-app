@@ -2,13 +2,13 @@ require 'ar_after_transaction'
 require 'resque/failure/multiple'
 require 'resque/failure/redis'
 
-config = YAML.load_file(Rails.root.join('config', 'resque.yml'))
+config = YAML.load_file(Rails.root.join('config', 'redis.yml'))
 
 # configure redis connection
 Resque.redis = config[Rails.env]
 
 # set a custom namespace for redis (optional)
-Resque.redis.namespace = "resque:relay"
+Resque.redis.namespace = "resque:relay-#{Rails.env}"
 
 Resque.schedule = YAML.load(ERB.new(File.read(Rails.root.join('config', 'resque_schedule.yml'))).result)
 

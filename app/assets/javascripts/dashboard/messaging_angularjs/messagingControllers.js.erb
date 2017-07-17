@@ -712,35 +712,19 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
     };
 
     $scope.subscribe_merchant = function() {
-      $scope.unsubscribe_merchant();
       Pubnub.subscribe({
         channels: [$scope.merchant.message_channel],
-        withPresence: true,
-        //restore: true,
         triggerEvents: ['message'],
       });
-    }
-
-    $scope.unsubscribe_merchant = function() {
-      Pubnub.unsubscribe({
-        channels: [$scope.merchant.message_channel],
-        uuid: $scope.merchant.message_uuid,
-      });
-    }
+    };
 
     $scope.update_merchant_status = function(status) {
-      var merchant_id = $scope.merchant.id;
       $.ajax({
-        url: '/v1/users/update_merchant_status.json',
-        type: 'POST',
+        url: '/v1/users/' + $scope.merchant.id.toString() + '/update_status.json',
         dataType: 'json',
-        data: { merchant_id: merchant_id, status: status },
-        error: function() {
-          console.log('Something went wrong...Unable to find any recipients');
-        },
-        success: function(res) {
-          console.log('Done');
-        }
+        data: { status: status },
+        error: function() { console.log('Something went wrong...Unable to update merchant status'); },
+        success: function() { console.log('Merchant status updated'); }
       });
     }
 
@@ -798,28 +782,27 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
       Pubnub.init({
         publishKey: $scope.merchant.pubnub_publish_key,
         subscribeKey: $scope.merchant.pubnub_subscribe_key,
-        ssl: true,
-        uuid: $scope.merchant.message_uuid,
-        presenceTimeout: 120,
-        heartbeatInterval: 30,
+        ssl: true
       });
 
-      console.log("Hello! I am online!!");
-      $scope.update_merchant_status('offline')
+      // get initial conversations
+      $scope.loadConversations();
+      $scope.getMerchantLists();   
+      console.log("Hello! I am active!!");
 
-      ifvisible.on("blur", function(){
-        console.log("Hello! I am offline!!");
-        $scope.update_merchant_status('offline')
+      ifvisible.on("blur", function() {
+        console.log("Hello! I am inactive!!");
+        $scope.update_merchant_status('offline');
       });
 
-      ifvisible.on("focus", function(){
-        console.log("Hello! I am online!!");
-        $scope.update_merchant_status('offline')
+      ifvisible.on("focus", function() {
+        console.log("Hello! I am active!!");
+        $scope.update_merchant_status('online');
       });
 
-      ifvisible.onEvery(20, function(){
-        console.log("Hello! I am online!!");
-        $scope.update_merchant_status('online')
+      ifvisible.onEvery(20, function() {
+        console.log("Hello! I am active!!");
+        $scope.update_merchant_status('online');
       });
     };
 
