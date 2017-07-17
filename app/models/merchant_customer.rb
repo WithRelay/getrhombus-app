@@ -26,7 +26,7 @@ class MerchantCustomer < ActiveRecord::Base
           merchant.merchant_contacts.where(uid_type: 'fb_page', uid: creds).update_all(is_customer: 1) if creds.present?
 
           # add as customer if necessary
-          platform = merchant.is_platform? ? :platform : :managed
+          platform = merchant.is_platform? ? 0 : 1
           mc = find_by(merchant_id: merchant.id, customer_id: customer.id, is_platform: platform)
           if !mc
             create!(merchant_id: merchant.id, customer_id: customer.id, is_platform: platform)

@@ -6,8 +6,8 @@ class AwayMessage < ActiveRecord::Base
   	if self.enabled?
   		cur_time = Time.current
   		cur_day = cur_time.strftime("%A")[0..2].downcase
-      within_office_hours = cur_time.to_i >= Time.parse(self[cur_day + "_ot"]).to_i  
-      within_office_hours = within_office_hours && cur_time.to_i <= Time.parse(self[cur_day + "_ct"]).to_i
+      within_office_hours = cur_time.to_i >= Time.zone.parse(self[cur_day + "_ot"]).to_i  
+      within_office_hours = within_office_hours && cur_time.to_i <= Time.zone.parse(self[cur_day + "_ct"]).to_i
   		
       unless within_office_hours
   			text = self.response || "We're away at the moment and will get back to you when we return :)."

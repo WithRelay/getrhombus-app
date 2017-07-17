@@ -223,8 +223,8 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
     };
 
     $scope.messageTrackingFunction = function(message) { 
-      console.log(message.text)
-      console.log(message.channel + "-" + message.id.toString()); 
+      //console.log(message.text)
+      //console.log(message.channel + "-" + message.id.toString()); 
       return message.channel + "-" + message.id.toString(); 
     };
     $scope.imageTrackingFunction = function(image) { return 'Image-' + image.id.toString(); };
