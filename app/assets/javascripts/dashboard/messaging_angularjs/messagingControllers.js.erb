@@ -222,10 +222,10 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
       };
     };
 
-    $scope.messageTrackingFunction = function(message) { 
+    $scope.messageTrackingFunction = function(message) {
       console.log(message.text)
-      console.log(message.channel + "-" + message.id.toString()); 
-      return message.channel + "-" + message.id.toString(); 
+      console.log(message.channel + "-" + message.id.toString());
+      return message.channel + "-" + message.id.toString();
     };
     $scope.imageTrackingFunction = function(image) { return 'Image-' + image.id.toString(); };
 
@@ -245,7 +245,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
 
       // track if messages are being retrived because of scrolling
       if (from_conversations_list) $scope.retrieving_messages_for_scroll = false;
-      
+
       // don't get messages if user clicks again on current conversation
       if (!(from_conversations_list && conversation.id == $scope.selected_conversation.id) && $scope.online()) {
 
@@ -728,6 +728,22 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
       });
     }
 
+    $scope.update_merchant_status = function(status) {
+      var merchant_id = $scope.merchant.id;
+      $.ajax({
+        url: '/v1/users/update_merchant_status.json',
+        type: 'POST',
+        dataType: 'json',
+        data: { merchant_id: merchant_id, status: status },
+        error: function() {
+          console.log('Something went wrong...Unable to find any recipients');
+        },
+        success: function(res) {
+          console.log('Done');
+        }
+      });
+    }
+
     $scope.setup_pubnub = function() {
       $rootScope.$on(Pubnub.getMessageEventNameFor($scope.merchant.message_channel), function (ngEvent, envelope) {
         $scope.$apply(function () {
@@ -788,25 +804,27 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
         heartbeatInterval: 30,
       });
 
-      // Subscribe to merchant channel
-      if ( ifvisible.now() ) {
-        // get initial conversations
-        $scope.loadConversations();
-        $scope.getMerchantLists();        
-        console.log("Hello! I am subscribed!!");
-      };
-
-      ifvisible.on("focus", function(){
-        console.log("Hello! I am resubscribed!!");
-        $scope.subscribe_merchant();
-      });
+      if( ifvisible.now() ){
+        console.log("Hello! I am online!!");
+        $scope.update_merchant_status('offline')
+      }
 
       ifvisible.on("blur", function(){
-        console.log("Hello! I am unsubscribed!!");
-        $scope.unsubscribe_merchant();
+        console.log("Hello! I am offline!!");
+        $scope.update_merchant_status('offline')
+      });
+
+      ifvisible.on("focus", function(){
+        console.log("Hello! I am online!!");
+        $scope.update_merchant_status('offline')
+      });
+
+      ifvisible.onEvery(20, function(){
+        console.log("Hello! I am online!!");
+        $scope.update_merchant_status('online')
       });
     };
-  
+
   }
 
 ]);
