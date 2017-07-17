@@ -47,6 +47,12 @@ $(document).ready(function () {
     .on('success.form.fv', function(e, data) {
     });*/
 
+  $('#email-checkbox').on('click', funtion(){
+    if($(this).is(':check')){
+      $('#email-field-alert').show();
+    }
+  })
+
   $('#alert-include-sms').change(function() {
     if (this.checked) {
       $('#alert-sms-number').slideDown(200);
@@ -67,7 +73,7 @@ $(document).ready(function () {
     if (preset_numbers_data.length) {
       $.each(preset_numbers_data.split(','), function (index, number) {
         add_data_to_selectize($alert_phone_numbers_selectize, 'number', number);
-      });  
+      });
     };
   };
 
@@ -100,7 +106,7 @@ $(document).ready(function () {
   $('#alerts-add-email').click(function() {
     set_button_status(this, true, 'Validating...');
     var email = $('#alerts-enter-email').val().trim();
-    
+
     if (!email.length) {
       show_email_invalid();
       set_button_status(this, false, 'Add Email');
