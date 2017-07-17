@@ -62,6 +62,13 @@ $(document).ready(function() {
             }
           }
         },
+        'user[time_zone]': {
+          validators: {
+            notEmpty: {
+              message: 'Your timezone is required'
+            }
+          }
+        },
         'user[email]': {
           verbose: false,
           validators: {

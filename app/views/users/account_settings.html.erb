@@ -35,7 +35,8 @@
       </div>
 
       <div class="form-group">
-        <%= f.select :time_zone, get_time_zone_lists, {}, class: 'form-control dropdown w-select' %>
+        <%= f.select :time_zone, get_time_zone_lists, { selected: current_user.time_zone }, class: 'form-control dropdown w-select' %>
+        <div class="errorMessageContainer w-col-12"></div>
       </div>
 
       <div class="update-email-password-div w-clearfix">
