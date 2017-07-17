@@ -814,11 +814,6 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
         $scope.update_merchant_status('offline')
       });
 
-      ifvisible.on("focus", function(){
-        console.log("Hello! I am online!!");
-        $scope.update_merchant_status('offline')
-      });
-
       ifvisible.onEvery(20, function(){
         console.log("Hello! I am online!!");
         $scope.update_merchant_status('online')
