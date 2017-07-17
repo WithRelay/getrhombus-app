@@ -103,6 +103,7 @@ Rails.application.routes.draw  do
     resources :users, only: [:index] do
       get 'snapshot', on: :collection
       post 'check_password', on: :collection
+      post 'update_merchant_status', on: :collection
     end
 
     resources :lists, only: [:create, :index, :update] do
