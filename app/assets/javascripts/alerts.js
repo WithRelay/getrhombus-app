@@ -5,40 +5,47 @@ $('#alert-form').formValidation({
       live: 'disabled',
       // List of fields and their validation rules!
       fields: {
-        'selectize-email-field': {
+        'email-alert': {
           row: '.form-group',
           validators: {
             callback: {
               callback:function(value,validator, $field){
-
+                if($('#send-alert').is(':checked') && $('#alerts-enter-email').val() == ''){
+                  return {
+                    valid: false,
+                    message: 'Add aleast one valid email'
+                  }
+                }else{
+                  return {
+                    valid: true
+                  }
+                }
               }
             }
           }
         },
-        
-        'selectize-email-field': {
+
+        'alert[phone]': {
           row: '.form-group',
           validators: {
             callback: {
               callback:function(value,validator, $field){
-
-              }
-            }
-          }
-        },
-        'selectize-numbers-field': {
-          row: '.form-group',
-          validators: {
-            callback: {
-              callback: function (value, validator, $field) {
+                if($('#send-alert').is(':checked') && $('#sms-alert') && $('#alert_phone_numbers').val() == ''){
+                  return {
+                    valid: false,
+                    message: 'Add aleast one valid number'
+                  }
+                }else{
+                  return {
+                    valid: true
+                  }
+                }
               }
             }
           }
         }
       }
-    });
-
-    debugger;
+      });
   // $('#email-checkbox').on('click', funtion(){
   //   if($(this).is(':check')){
   //   }
