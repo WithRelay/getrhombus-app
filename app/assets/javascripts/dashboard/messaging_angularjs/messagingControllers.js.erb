@@ -736,7 +736,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
         dataType: 'json',
         data: { merchant_id: merchant_id, status: status },
         error: function() {
-          console.log('Something went wrong...Unable to find any recipients');
+          console.log('Something went wrong...');
         },
         success: function(res) {
           console.log('Done');
