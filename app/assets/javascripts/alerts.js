@@ -47,12 +47,10 @@ $(document).ready(function () {
     .on('success.form.fv', function(e, data) {
     });*/
 
-  $('#email-checkbox').on('click', funtion(){
-    if($(this).is(':check')){
-      $('#email-field-alert').show();
-    }
-  })
-
+  // $('#email-checkbox').on('click', funtion(){
+  //   if($(this).is(':check')){
+  //   }
+  // })
   $('#alert-include-sms').change(function() {
     if (this.checked) {
       $('#alert-sms-number').slideDown(200);
