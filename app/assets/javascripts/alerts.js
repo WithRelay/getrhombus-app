@@ -1,39 +1,32 @@
 $(document).ready(function () {
   // validate notfications form
-  /*$('#alert-form')
-    .formValidation({
+$('#alert-form').formValidation({
       framework: 'bootstrap',
       live: 'disabled',
       // List of fields and their validation rules!
       fields: {
-        'alert[sms_numbers]': {
+        'selectize-email-field': {
           row: '.form-group',
           validators: {
             callback: {
-              callback: function (value, validator, $field) {
-                if ($("#alert-include-sms").is(':checked')) {
-                  if (PhoneNumberFormatter.isValid()) {
-                    return {
-                      valid: true,    // or false
-                      message: 'Valid number'
-                    }
-                  } else {
-                    return {
-                      valid: false,    // or false
-                      message: 'Enter a valid sms-enabled number.'
-                    }
-                  }
-                } else {
-                  $("#phone_number, #phone").val('');
-                  return {
-                    valid: true
-                  }
-                }
+              callback:function(value,validator, $field){
+
               }
             }
           }
         },
-        'alert[emails]': {
+        
+        'selectize-email-field': {
+          row: '.form-group',
+          validators: {
+            callback: {
+              callback:function(value,validator, $field){
+
+              }
+            }
+          }
+        },
+        'selectize-numbers-field': {
           row: '.form-group',
           validators: {
             callback: {
@@ -43,10 +36,9 @@ $(document).ready(function () {
           }
         }
       }
-    })
-    .on('success.form.fv', function(e, data) {
-    });*/
+    });
 
+    debugger;
   // $('#email-checkbox').on('click', funtion(){
   //   if($(this).is(':check')){
   //   }
