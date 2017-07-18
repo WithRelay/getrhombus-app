@@ -20,7 +20,7 @@
 
         <div class="form-group">
           <label class="field-headers form-label settings" for="email">Email</label>
-          <input id="alerts-enter-email" type='email' name= "email-alert" class='form-control sms-alerts text-field w-input col-md-6' placeholder='Enter email' >
+          <input id="alerts-enter-email" type='email' name= "email-alert" class='form-control sms-alerts text-field w-input w-col-6' placeholder='Enter email' >
           <button class="button save-changes w-button" id='alerts-add-email'>Add Email</button>
           <div id='alerts-email-validation-message'>Email isn't valid</div>
         </div>
@@ -28,6 +28,7 @@
         <div class="form-group">
           <button class="button save-changes w-button" id='alerts-add-email'>Add Email</button>
         </div>
+
         <div class="form-group alerts">
           <%= f.text_field :emails, class: "form-control text-field w-input", value: '', data: { emails: @emails}, name: 'selectize-email-field', placeholder: 'Email', id: 'selectize-email-field' %>
         </div>
