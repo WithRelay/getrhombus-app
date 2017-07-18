@@ -29,7 +29,7 @@
         </div>
 
         <div class="form-group alerts">
-          <%= f.text_field :emails, class: "form-control text-field w-input", value: '', data: { emails: @emails}, name: 'selectize-email-field', placeholder: 'Email', id: 'selectize-email-field' %>
+          <%= f.text_field :emails, id: 'alert_emails', class: "form-control text-field w-input", value: '', data: { emails: @emails}, name: 'selectize-email-field', placeholder: 'Email' %>
         </div>
 
         <div class="form-check-box w-checkbox">

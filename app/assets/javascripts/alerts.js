@@ -2,15 +2,16 @@ $(document).ready(function () {
   // validate notfications form
   $('#alert-form').formValidation({
     framework: 'bootstrap',
+    excluded: ':disabled',
     live: 'disabled',
     // List of fields and their validation rules!
     fields: {
-      'email-alert': {
+      'selectize-email-field': {
         row: '.form-group',
         validators: {
           callback: {
             callback:function(value,validator, $field){
-              if($('#send-alert').is(':checked') && $('#selectize-email-field').val() == ''){
+              if($('#send-alert').is(':checked') && $('#alerts-enter-email').val() == ''){
                 return {
                   valid: false,
                   message: 'Add aleast one valid email'
@@ -24,12 +25,12 @@ $(document).ready(function () {
           }
         }
       },
-      'alert[phone]': {
+      'selectize-numbers-field': {
         row: '.form-group',
         validators: {
           callback: {
             callback:function(value,validator, $field){
-              if($('#send-alert').is(':checked') && $('#sms-alert') && $('#alert_phone_numbers').val() == ''){
+              if($('#alert-include-sms').is(':checked') && $('#sms-alert') && $('#alert_phone_numbers').val() == ''){
                 return {
                   valid: false,
                   message: 'Add aleast one valid number'
@@ -87,6 +88,7 @@ $(document).ready(function () {
   };
 
   $('#alerts-add-number').click(function() {
+    $('#alert-form').formValidation('resetField', 'selectize-numbers-field');
     set_button_status(this, true, 'Validating...');
     if (PhoneNumberFormatter.isValid()) {
       add_data_to_selectize($alert_phone_numbers_selectize, 'number', PhoneNumberFormatter.getNumber());
@@ -97,6 +99,7 @@ $(document).ready(function () {
   });
 
   $('#alerts-add-email').click(function() {
+    $('#alert-form').formValidation('resetField', 'selectize-email-field');
     set_button_status(this, true, 'Validating...');
     var email = $('#alerts-enter-email').val().trim();
 
