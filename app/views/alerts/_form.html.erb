@@ -20,13 +20,15 @@
 
         <div class="form-group">
           <label class="field-headers form-label settings" for="email">Email</label>
-          <input id="alerts-enter-email" type='email' name= "email-alert" class='form-control sms-alerts text-field w-input col-md-6' placeholder='Enter email' />
+          <input id="alerts-enter-email" type='email' name= "email-alert" class='form-control sms-alerts text-field w-input col-md-6' placeholder='Enter email' >
           <div id='alerts-email-validation-message'>Email isn't valid</div>
         </div>
 
-        <button class="button save-changes w-button" id='alerts-add-email' type="button">Add Email</button>
         <div class="form-group">
-          <%= f.text_field :emails, class: "form-control add-alert-atrribute text-field w-input", value: '', data: { emails: @emails}, name: 'selectize-email-field' %>
+          <button class="button save-changes w-button" id='alerts-add-email'>Add Email</button>
+        </div>
+        <div class="form-group alerts">
+          <%= f.text_field :emails, class: "form-control text-field w-input", value: '', data: { emails: @emails}, name: 'selectize-email-field', placeholder: 'Email' %>
         </div>
 
         <div class="form-check-box w-checkbox">
@@ -35,11 +37,15 @@
         </div>
 
         <div id='alert-sms-number'>
-          <input id="phone" type='tel' class='sms-alerts text-field w-input col-md-6' placeholder='Enter phone number' %>
-          <button class="button save-changes w-button" id='alerts-add-number' type="button">Add number</button>
-          <div class="form-label paragraph" id="alerts-sms-numbers-label">You will receive SMS alerts to the number(s) in this list</div>
           <div class="form-group">
-            <%= f.text_field :sms_numbers, id: "alert_phone_numbers", class: 'form-control add-alert-atrribute text-field w-input', value: '', data: { numbers: @sms_numbers }, name: 'selectize-numbers-field' %>
+            <input id="phone" type='tel' name='alert[phone]' class='form-control sms-alerts text-field w-input col-md-6' placeholder='Enter phone number' %>
+          </div>
+          <div class="form-group">
+            <button class="button save-changes w-button" id='alerts-add-number'>Add number</button>
+          </div>
+          <div class="form-label paragraph" id="alerts-sms-numbers-label">You will receive SMS alerts to the number(s) in this list</div>
+          <div class="form-group alerts">
+            <%= f.text_field :sms_numbers, id: "alert_phone_numbers", class: 'form-control text-field w-input', value: '', data: { numbers: @sms_numbers }, name: 'selectize-numbers-field', placeholder: 'Phone' %>
           </div>
         </div>
 
