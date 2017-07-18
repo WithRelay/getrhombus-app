@@ -10,7 +10,7 @@ $(document).ready(function () {
         validators: {
           callback: {
             callback:function(value,validator, $field){
-              if($('#send-alert').is(':checked') && $('#alerts-enter-email').val() == ''){
+              if($('#send-alert').is(':checked') && $('#selectize-email-field').val() == ''){
                 return {
                   valid: false,
                   message: 'Add aleast one valid email'
@@ -45,7 +45,7 @@ $(document).ready(function () {
       }
     }
   });
-  
+
   $('#alert-include-sms').change(function() {
     if (this.checked) {
       $('#alert-sms-number').slideDown(200);
