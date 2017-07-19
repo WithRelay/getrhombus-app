@@ -22,8 +22,8 @@ class AlertsController < ApplicationController
 
   def edit
     @custom_welcome = current_user.custom_welcome
-    @sms_numbers = @alert.sms_numbers.join(',')
-    @emails = @alert.emails.join(',')
+    @sms_numbers = @alert.sms_numbers.try(:join, ',')
+    @emails = @alert.emails.try(:join, ',')
   end
 
   def create
