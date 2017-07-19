@@ -29,7 +29,7 @@
         </div>
 
         <div class="form-group alerts">
-          <%= f.text_field :emails, id: 'alert_emails', class: "form-control text-field w-input", value: '', data: { emails: @emails}, name: 'selectize-email-field', placeholder: 'Email' %>
+          <%= f.text_field :emails, id: 'alert_emails', class: "form-control text-field w-input", value: '', data: { emails: @emails}, placeholder: 'Email' %>
         </div>
 
         <div class="form-check-box w-checkbox">
@@ -46,7 +46,7 @@
           </div>
           <div class="form-label paragraph" id="alerts-sms-numbers-label">You will receive SMS alerts to the number(s) in this list</div>
           <div class="form-group alerts">
-            <%= f.text_field :sms_numbers, id: "alert_phone_numbers", class: 'form-control text-field w-input', value: '', data: { numbers: @sms_numbers }, name: 'selectize-numbers-field', placeholder: 'Phone' %>
+            <%= f.text_field :sms_numbers, id: "alert_phone_numbers", class: 'form-control text-field w-input', value: '', data: { numbers: @sms_numbers }, placeholder: 'Phone' %>
           </div>
         </div>
 

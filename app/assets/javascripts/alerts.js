@@ -6,7 +6,7 @@ $(document).ready(function () {
     live: 'disabled',
     // List of fields and their validation rules!
     fields: {
-      'selectize-email-field': {
+      'alert[emails]': {
         row: '.form-group',
         validators: {
           callback: {
@@ -25,7 +25,7 @@ $(document).ready(function () {
           }
         }
       },
-      'selectize-numbers-field': {
+      'alert[sms_numbers]': {
         row: '.form-group',
         validators: {
           callback: {
@@ -88,7 +88,7 @@ $(document).ready(function () {
   };
 
   $('#alerts-add-number').click(function() {
-    $('#alert-form').formValidation('resetField', 'selectize-numbers-field');
+    $('#alert-form').formValidation('resetField', 'alert[sms_numbers]');
     set_button_status(this, true, 'Validating...');
     if (PhoneNumberFormatter.isValid()) {
       add_data_to_selectize($alert_phone_numbers_selectize, 'number', PhoneNumberFormatter.getNumber());
@@ -99,7 +99,7 @@ $(document).ready(function () {
   });
 
   $('#alerts-add-email').click(function() {
-    $('#alert-form').formValidation('resetField', 'selectize-email-field');
+    $('#alert-form').formValidation('resetField', 'alert[emails]');
     set_button_status(this, true, 'Validating...');
     var email = $('#alerts-enter-email').val().trim();
 
