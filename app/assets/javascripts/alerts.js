@@ -11,7 +11,8 @@ $(document).ready(function () {
         validators: {
           callback: {
             callback:function(value,validator, $field){
-              if($('#send-alert').is(':checked') && $('#alerts-enter-email').val() == ''){
+              debugger
+              if($('#send-alert').is(':checked') && value == ''){
                 return {
                   valid: false,
                   message: 'Add aleast one valid email'
@@ -30,7 +31,7 @@ $(document).ready(function () {
         validators: {
           callback: {
             callback:function(value,validator, $field){
-              if($('#alert-include-sms').is(':checked') && $('#sms-alert') && $('#alert_phone_numbers').val() == ''){
+              if($('#send-alert').is(':checked') && $('#alert-include-sms').is(':checked') && $('#sms-alert') && value == ''){
                 return {
                   valid: false,
                   message: 'Add aleast one valid number'
