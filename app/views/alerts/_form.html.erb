@@ -16,7 +16,7 @@
         </div>
 
         <label class="form-label paragraph" for="field">Send me unread message notifications by email every:</label>
-        <%= f.select :interval, options_for_select({ "15 minutes" => "15", "30 minutes" => '30', "1 hour" => "60" }, selected: @alert.interval), {}, class: 'alerts-dropdown w-select' %>
+          <%= f.select :interval, options_for_select({ "15 minutes" => "15", "30 minutes" => '30', "1 hour" => "60" }, selected: @alert.interval), {}, class: 'alerts-dropdown w-select' %>
 
         <div class="form-group">
           <label class="field-headers form-label settings" for="email">Email</label>
@@ -25,11 +25,11 @@
         </div>
 
         <div class="form-group">
-          <button class="button save-changes w-button" id='alerts-add-email'>Add Email</button>
+          <button class="button save-changes w-button" id='alerts-add-email' type="button">Add Email</button>
         </div>
 
         <div class="form-group alerts">
-          <%= f.text_field :emails, class: "form-control text-field w-input", value: '', data: { emails: @emails}, name: 'selectize-email-field', placeholder: 'Email', id: 'selectize-email-field' %>
+          <%= f.text_field :emails, id: 'alert_emails', class: "form-control text-field w-input", value: @emails, placeholder: 'Email' %>
         </div>
 
         <div class="form-check-box w-checkbox">
@@ -39,14 +39,14 @@
 
         <div id='alert-sms-number'>
           <div class="form-group">
-            <input id="phone" type='tel' name='alert[phone]' class='form-control sms-alerts text-field w-input col-md-6' placeholder='Enter phone number' %>
+            <input id="phone" type='tel' class='form-control sms-alerts text-field w-input col-md-6' placeholder='Enter phone number' %>
           </div>
           <div class="form-group">
-            <button class="button save-changes w-button" id='alerts-add-number'>Add number</button>
+            <button class="button save-changes w-button" id='alerts-add-number' type="button">Add number</button>
           </div>
           <div class="form-label paragraph" id="alerts-sms-numbers-label">You will receive SMS alerts to the number(s) in this list</div>
           <div class="form-group alerts">
-            <%= f.text_field :sms_numbers, id: "alert_phone_numbers", class: 'form-control text-field w-input', value: '', data: { numbers: @sms_numbers }, name: 'selectize-numbers-field', placeholder: 'Phone' %>
+            <%= f.text_field :sms_numbers, id: "alert_phone_numbers", class: 'form-control text-field w-input', value: @sms_numbers, placeholder: 'Phone' %>
           </div>
         </div>
 
@@ -55,7 +55,7 @@
         <label class="form-label paragraph syste-notifications" for="Tax-Rate">We notify you, as well as your customers when certain actions take place within Rhombus. These system notifications include:</label>
         <div class="form-check-box w-checkbox">
           <input checked="checked" class="w-checkbox-input" type="checkbox" disabled>
-          <label class="w-form-label" for="checkbox-2" id= "sms-alert">Notify me when a customer sends a payment</label>
+          <label class="w-form-label" for="checkbox-2">Notify me when a customer sends a payment</label>
         </div>
         <div class="form-check-box w-checkbox">
           <input checked="checked" class="w-checkbox-input" type="checkbox" disabled>

@@ -22,8 +22,8 @@ class AlertsController < ApplicationController
 
   def edit
     @custom_welcome = current_user.custom_welcome
-    @sms_numbers = @alert.sms_numbers.join(',')
-    @emails = @alert.emails.join(',')
+    @sms_numbers = @alert.sms_numbers.try(:join, ',')
+    @emails = @alert.emails.try(:join, ',')
   end
 
   def create
@@ -50,8 +50,8 @@ class AlertsController < ApplicationController
 
     def alert_params
       params.require(:alert).permit(:send_alert, :interval, :include_sms, :sms_numbers, :emails, :custom_welcome).tap do |p|
-        p[:sms_numbers] = p[:sms_numbers].split(',')
-        p[:emails] = p[:emails].split(',')
+        p[:sms_numbers] = p[:sms_numbers].try(:split, ',')
+        p[:emails] = p[:emails].try(:split, ',')
       end
     end
 end

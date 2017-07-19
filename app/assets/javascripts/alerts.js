@@ -1,19 +1,21 @@
 $(document).ready(function () {
-  // validate notfications form
+  
+  // validate notifications form
   $('#alert-form').formValidation({
     framework: 'bootstrap',
+    excluded: ':disabled',
     live: 'disabled',
     // List of fields and their validation rules!
     fields: {
-      'email-alert': {
+      'alert[emails]': {
         row: '.form-group',
         validators: {
           callback: {
-            callback:function(value,validator, $field){
-              if($('#send-alert').is(':checked') && $('#selectize-email-field').val() == ''){
+            callback:function(value, validator, $field){
+              if($('#send-alert').is(':checked') && value == ''){
                 return {
                   valid: false,
-                  message: 'Add aleast one valid email'
+                  message: 'Add at least one valid email'
                 }
               }else{
                 return {
@@ -24,15 +26,15 @@ $(document).ready(function () {
           }
         }
       },
-      'alert[phone]': {
+      'alert[sms_numbers]': {
         row: '.form-group',
         validators: {
           callback: {
-            callback:function(value,validator, $field){
-              if($('#send-alert').is(':checked') && $('#sms-alert') && $('#alert_phone_numbers').val() == ''){
+            callback:function(value, validator, $field){
+              if($('#send-alert').is(':checked') && $('#alert-include-sms').is(':checked') && value == ''){
                 return {
                   valid: false,
-                  message: 'Add aleast one valid number'
+                  message: 'Add at least one valid number'
                 }
               }else{
                 return {
@@ -47,12 +49,13 @@ $(document).ready(function () {
   });
 
   $('#alert-include-sms').change(function() {
-    if (this.checked) {
-      $('#alert-sms-number').slideDown(200);
-    } else {
-      $('#alert-sms-number').slideUp(200);
-    };
+    $('#alert-form').formValidation('resetField', 'alert[sms_numbers]');
+    (this.checked) ? $('#alert-sms-number').slideDown(200) : $('#alert-sms-number').slideUp(200);
   }).change();
+
+  $('#send-alert').change(function() {
+    $('#alert-form').formValidation('resetField', 'alert[emails]');
+  });
 
   if ($('#alert_phone_numbers').length) {
     var $alert_phone_numbers_selectize = $('#alert_phone_numbers').selectize({
@@ -62,12 +65,6 @@ $(document).ready(function () {
             valueField: 'number',
             create: false,
           })[0].selectize;
-    var preset_numbers_data = $('#alert_phone_numbers').attr('data-numbers').trim();
-    if (preset_numbers_data.length) {
-      $.each(preset_numbers_data.split(','), function (index, number) {
-        add_data_to_selectize($alert_phone_numbers_selectize, 'number', number);
-      });
-    };
   };
 
   if ($('#alert_emails').length) {
@@ -78,15 +75,10 @@ $(document).ready(function () {
               valueField: 'email',
               create: false,
             })[0].selectize;
-    var preset_email_data = $('#alert_emails').attr('data-emails').trim();
-    if (preset_numbers_data.length) {
-      $.each(preset_email_data.split(','), function (index, email) {
-        add_data_to_selectize($alert_emails_selectize, 'email', email)
-      });
-    };
   };
 
   $('#alerts-add-number').click(function() {
+    $('#alert-form').formValidation('resetField', 'alert[sms_numbers]');
     set_button_status(this, true, 'Validating...');
     if (PhoneNumberFormatter.isValid()) {
       add_data_to_selectize($alert_phone_numbers_selectize, 'number', PhoneNumberFormatter.getNumber());
@@ -97,6 +89,7 @@ $(document).ready(function () {
   });
 
   $('#alerts-add-email').click(function() {
+    $('#alert-form').formValidation('resetField', 'alert[emails]');
     set_button_status(this, true, 'Validating...');
     var email = $('#alerts-enter-email').val().trim();
 
