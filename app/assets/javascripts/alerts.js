@@ -11,7 +11,7 @@ $(document).ready(function () {
         row: '.form-group',
         validators: {
           callback: {
-            callback:function(value,v alidator, $field){
+            callback:function(value, validator, $field){
               if($('#send-alert').is(':checked') && value == ''){
                 return {
                   valid: false,
