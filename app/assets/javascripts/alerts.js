@@ -11,7 +11,6 @@ $(document).ready(function () {
         validators: {
           callback: {
             callback:function(value,validator, $field){
-              debugger
               if($('#send-alert').is(':checked') && value == ''){
                 return {
                   valid: false,
@@ -49,6 +48,7 @@ $(document).ready(function () {
   });
 
   $('#alert-include-sms').change(function() {
+    $('#alert-form').formValidation('resetField', 'alert[sms_numbers]');
     if (this.checked) {
       $('#alert-sms-number').slideDown(200);
     } else {
