@@ -33,6 +33,6 @@ class List < ActiveRecord::Base
                 .paginate(page: page, per_page: PAGINATION_PER_PAGE)
     end
 
-    [MerchantCustomer.find(32)]
+    #[MerchantCustomer.find(32)]
   end
 end
