@@ -21,7 +21,9 @@ class Campaign < ActiveRecord::Base
   validates_presence_of :text
   validates_presence_of :name, :list_id, unless: lambda { reminder_campaign? }
   validate :channel_text_validate, if: proc { |c| c.text.present? && !c.email? }
-  validate :validate_date_time, if: proc { |c| c.recurring? || (c.one_time? && !c.deliver_now?) }
+
+  # uncomment this for production
+  #validate :validate_date_time, if: proc { |c| c.recurring? || (c.one_time? && !c.deliver_now?) }
   
   validate :total_image_size
   validates_presence_of :subject, if: lambda { email? } 

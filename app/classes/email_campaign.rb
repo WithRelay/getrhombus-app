@@ -24,8 +24,9 @@ class EmailCampaign
     inlined_images = inline_images
     attached_images = @campaign.images.attachment.map{ |image| create_image_params(image) }
 
-    message_hash = { html: @campaign.text, headers: { "Reply-To" => @campaign.user.email },
-                     subject: @campaign.subject, from_name: @campaign.user.user_title }
+    message_hash = { headers: { "Reply-To" => @campaign.user.email },
+                     html: @campaign.text, from_name: @campaign.user.user_title,
+                     subject: @campaign.subject.present? ? @campaign.subject : "Message from #{@campaign.user.org_name}" }
     message_hash.merge!({ images: inlined_images }) if inlined_images.present?    
     message_hash.merge!({ attachments: attached_images }) if attached_images.present?
     

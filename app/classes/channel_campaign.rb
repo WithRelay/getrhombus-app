@@ -35,7 +35,7 @@ module ChannelCampaign
     end
 
     def email_fallback
-      @results = EmailCampaign.new(@campaign, @results.second).send_campaign 
+      @results = EmailCampaign.new(@campaign, @results[:retry_list]).send_campaign 
       should_update_campaign = @recipients.blank? && @results[:recipients].present?
       @recipients = @results[:recipients]
       update_campaign('email', should_update_campaign)
@@ -60,7 +60,7 @@ module ChannelCampaign
       # relationally campaigns can have more lists...but not in practice
       list_id = @campaign.lists.first.id
       @recipients.each do |r|
-        l.campaign_recipients.find_or_create_by({ campaign_id: @campaign.id, sent_count: @campaign.sent_count, list_id: list_id,
+        CampaignRecipient.find_or_create_by({ campaign_id: @campaign.id, sent_count: @campaign.sent_count, list_id: list_id,
                                                   customer_contact_type: r.class.to_s, customer_contact_id: r.id, channel: channel }) 
       end
     end

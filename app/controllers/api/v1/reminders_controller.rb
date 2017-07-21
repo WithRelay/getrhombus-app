@@ -47,6 +47,7 @@ class Api::V1::RemindersController < API::V1::BaseController
                                     c[:channel] = c[:channel].to_i
                                     c[:frequency_type] = c[:frequency_type].to_i
                                     c[:repeat_days] = nil if c[:frequency_type] == 0
+                                    #c[:date_time] = "2017-07-21 14:21 PM".in_time_zone(current_user.time_zone) 
                                     c[:date_time] = c[:date_time].present? ? c[:date_time].in_time_zone(current_user.time_zone) : nil
                                   end
   end

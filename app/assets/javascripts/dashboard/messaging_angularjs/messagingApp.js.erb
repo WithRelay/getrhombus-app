@@ -369,7 +369,7 @@ messagingApp.factory('reminderService', function($http, $q) {
       method: 'POST',
       url: base_url + '.json',
       headers: token,
-      //data: data
+      data: data
     })
     .success(function(data) { 
       console.log("in service pass for create reminder");

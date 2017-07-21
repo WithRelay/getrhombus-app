@@ -36,9 +36,9 @@ class Conversation < ActiveRecord::Base
     end
 
     if self.uid_type == 'user'
-      mcid = MerchantCustomer.find_by(merchant_id: self.id, customer_id: self.uid)
+      mcid = MerchantCustomer.find_by(merchant_id: self.merchant_id, customer_id: self.uid)
     else
-      mcid = MerchantContact.find_by(merchant_id: self.id, uid: self.uid, uid_type: self.uid_type)
+      mcid = MerchantContact.find_by(merchant_id: self.merchant_id, uid: self.uid, uid_type: self.uid_type)
     end
 
     {
@@ -133,7 +133,8 @@ class Conversation < ActiveRecord::Base
       else
         false
       end
-    rescue StandardError
+    rescue StandardError => e
+      puts e.inspect
       # notify team
       false
     end

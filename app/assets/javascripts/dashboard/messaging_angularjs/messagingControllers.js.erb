@@ -672,29 +672,30 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
 
     // reminders
     $scope.createReminder = function() {
-      //if ($scope.is_conversation_selected() && $scope.online()) {
+      if ($scope.is_conversation_selected() && $scope.online()) {
         if ($scope.scheduled_message.text == "") {
-          console.log('enter a message');
+          FlashHandler.setFlashMessage('Please enter a message', 'error');
         } else {
           var hash = angular.copy($scope.scheduled_message);
-          hash.channel = hash.channel.id
-          console.log(hash)
+          hash.channel = hash.channel.id;
+          hash.mc_id = $scope.selected_conversation.mcid.toString() + "-" + ($scope.selected_conversation.uid_type == 'user' ? 'MerchantCustomer' : 'MerchantContact');
           //*
-          reminderService.createReminder(hash)
+          reminderService.createReminder({ reminder: hash })
           .then(function(data) {
             console.log(data)
-            FlashHandler.setFlashMessage('reminder created', 'notice');
+            FlashHandler.setFlashMessage('Reminder created', 'notice');
           }, function(data) {
             console.log(data)
-            FlashHandler.setFlashMessage('unable to create reminder', 'notice');
+            FlashHandler.setFlashMessage(data.error, 'error');
           });
           //*/
         };
+      }
     };
 
     $scope.buildChannelDropdown = function() {
       if ($scope.selected_conversation.uid_type == 'user') {
-        $scope.customer_channel_list = [ { id: '0', title: 'SMS'}, { id: '3', title: 'Email'} ];
+        $scope.customer_channel_list = [ { id: '0', title: 'SMS'}, /*{ id: '3', title: 'Email'}*/ ];
         if ($scope.selected_conversation.has_messenger)
           $scope.customer_channel_list.splice(1, 0, { id: '2', title: 'Facebook Messenger'});
       } else if ($scope.selected_conversation.uid_type == 'fb_page') {

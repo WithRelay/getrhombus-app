@@ -4,7 +4,7 @@ class MobileCampaign
     @campaign = campaign
     @failure_recipients = []
     @recipients = recipients
-    @channel = ['sms', 'mms'].include? campaign.channel ? 'Message' : 'FbMessage'
+    @channel = ['sms', 'mms'].include?(campaign.channel) ? 'Message' : 'FbMessage'
   end
 
   def send_campaign
@@ -27,8 +27,7 @@ class MobileCampaign
   end
 
   def send_by_mobile(customer, uid_type, uid)
-    Conversation.find_or_create_conversation_for_message_and_send_publish(
-                 @campaign.user, customer, uid_type, uid, @campaign.text, @channel, media_urls_ary, 'campaign')
+    Conversation.find_or_create_conversation_for_message_and_send_publish(@campaign.user, customer, uid_type, uid, @campaign.text, @channel, media_urls_ary, 'campaign')
   end
 
   def media_urls_ary

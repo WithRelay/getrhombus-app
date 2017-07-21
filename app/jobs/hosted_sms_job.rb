@@ -7,7 +7,7 @@ class HostedSmsJob
 
     HostedSms.not_completed.each do |h|
       HostedSmsService.get_status(h)
-      if (h.status.downcase == 'pending-loa' && !h.status_events[:loa_sent]
+      if h.status.downcase == 'pending-loa' && !h.status_events[:loa_sent]
         HostedSmsService.request_loa(h)
         h.status_events[:loa_sent] = true
         h.status_events[:loa_sent_at] = Time.now
