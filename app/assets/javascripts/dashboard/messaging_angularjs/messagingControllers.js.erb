@@ -681,7 +681,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
           hash.channel = hash.channel.id;
           hash.mc_id = $scope.selected_conversation.mcid.toString() + "-" + ($scope.selected_conversation.uid_type == 'user' ? 'MerchantCustomer' : 'MerchantContact');
           console.log(hash)
-          /*
+          //*
           reminderService.createReminder({ reminder: hash })
           .then(function(data) {
             console.log(data)
