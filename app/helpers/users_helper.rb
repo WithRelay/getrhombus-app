@@ -69,6 +69,9 @@ module UsersHelper
   end
 
   def message_graph
+    Chartkick.options = {
+      colors: ["rgba(74, 144, 226, .3)", "rgb(74, 144, 226)"]
+    }
     if @dashboard_messages_data[:msg_30_days][:chart_data].empty?
       htm = '<div class= "no-chart-data">
       <p class="empty-view-short-paragraph">No data. '
@@ -77,10 +80,12 @@ module UsersHelper
       htm.html_safe
     else
       area_chart @dashboard_messages_data[:msg_30_days][:chart_data],
+        label: "Messages",
         library: {
           scales: {
             xAxes: [{
               ticks: {
+                beginAtZero: true,
                 autoSkip: false,
                 minRotation: 60
               },
@@ -91,7 +96,21 @@ module UsersHelper
                   'day': 'MMM D'
                 },
               }
+            }],
+            yAxes: [{
+              ticks: {
+                beginAtZero: true
+              }
             }]
+          },
+          tooltips: {
+            backgroundColor: 'rgb(243, 243, 243, .8)',
+            displayColors: true,
+            bodyFontColor: 'green',
+            titleMarginBottom: 6,
+            titleFontStyle: 'bold',
+            titleFontColor: 'rgb(7, 46, 91)',
+            bodySpacing: 5,
           }
         },
         curve: false
@@ -111,24 +130,40 @@ module UsersHelper
       htm.html_safe
     else
       line_chart @dashboard_transactions[:tranc_chart_data], height: "250px",
-          library: {
-            scales: {
-              xAxes: [{
-                ticks: {
-                  autoSkip: false,
+        label: "Transactions",
+        library: {
+          scales: {
+            xAxes: [{
+              ticks: {
+                beginAtZero: true,
+                autoSkip: false,
+                minRotation: 60
+              },
+              time: {
+                unit: 'day',
+                displayFormats: {
                   maxRotation: 60,
-                  minRotation: 60
+                  'day': 'MMM D'
                 },
-                time: {
-                  unit: 'day',
-                  displayFormats: {
-                    'day': 'MMM D'
-                  },
-                }
-                }]
               }
-            },
-            curve: false
+            }],
+            yAxes: [{
+              ticks: {
+                beginAtZero: true
+              }
+            }]
+          },
+          tooltips: {
+            backgroundColor: 'rgb(243, 243, 243, .8)',
+            displayColors: true,
+            bodyFontColor: 'green',
+            titleMarginBottom: 6,
+            titleFontStyle: 'bold',
+            titleFontColor: 'rgb(7, 46, 91)',
+            bodySpacing: 5,
+          }
+        },
+        curve: false
     end
   end
 
