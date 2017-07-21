@@ -484,17 +484,17 @@
 
           <%# removed data attrs, changed name attr and id %>
           <div class="notification-frequency radio-button w-radio">
-            <input class="w-radio-input" id="newReminderOneTimeFrequency" type="radio" value="0" name="reminder[frequency_type]" checked='checked' ng-model="scheduled_message.frequency_type">
+            <input class="w-radio-input newReminderFrequency" type="radio" value="0" name="reminder[frequency_type]" ng-model="scheduled_message.frequency_type">
             <label class="w-form-label" for="Notification Frequency">Send once</label>
           </div>
 
           <div class="notification-frequency radio-button repeat w-radio">
-            <input class="w-radio-input" id="newReminderRecurringFrequency" type="radio" value="1" name="reminder[frequency_type]" ng-model='scheduled_message.frequency_type'>
+            <input class="w-radio-input newReminderFrequency" type="radio" value="1" name="reminder[frequency_type]" ng-model='scheduled_message.frequency_type'>
             <label class="w-form-label" for="Notification Frequency-2">Repeat</label>
           </div>
 
           <%# changed  id %>
-          <select class="dropdown frequency-dropdown w-select" id='newReminderRepeatDays'  ng-model='scheduled_message.repeat_days'>
+          <select class="dropdown frequency-dropdown w-select hide-not-important" id='newReminderRepeatDays' ng-model='scheduled_message.repeat_days'>
             <option value="3">3 days</option>
             <option value="7">7 days</option>
             <option value="14">14 days</option>

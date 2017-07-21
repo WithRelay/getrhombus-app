@@ -34,7 +34,8 @@ class @DatePicker
         setFormat = 'YYYY-MM-DD'
       $(this.element).daterangepicker
         timePicker: time,
-        timePickerIncrement: 60,
+        #timePickerIncrement: 60,   uncomment for production
+        timePickerIncrement: 1,
         drops: "up",
         singleDatePicker: YES,
         locale: { format: setFormat },

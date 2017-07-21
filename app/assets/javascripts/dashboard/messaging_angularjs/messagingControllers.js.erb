@@ -48,6 +48,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
     $scope.lists_for_customer = [];
 
     // Scheduled Messages
+    $('#newReminderRecurringFrequency').prop('checked', true);
     $scope.customer_channel_list = [ { title: 'SMS', id:"0" } ];
     $scope.scheduled_message = { frequency_type: "0", text: '', repeat_days: '3',
                                  channel: $scope.customer_channel_list[0] };
@@ -679,11 +680,13 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
           var hash = angular.copy($scope.scheduled_message);
           hash.channel = hash.channel.id;
           hash.mc_id = $scope.selected_conversation.mcid.toString() + "-" + ($scope.selected_conversation.uid_type == 'user' ? 'MerchantCustomer' : 'MerchantContact');
-          //*
+          console.log(hash)
+          /*
           reminderService.createReminder({ reminder: hash })
           .then(function(data) {
             console.log(data)
             FlashHandler.setFlashMessage('Reminder created', 'notice');
+            $('.update-close-modals').click();
           }, function(data) {
             console.log(data)
             FlashHandler.setFlashMessage(data.error, 'error');
