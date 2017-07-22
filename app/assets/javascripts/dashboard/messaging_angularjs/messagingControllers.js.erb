@@ -213,9 +213,9 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
         conversationService.closeConversation($scope.selected_conversation.id, hash)
         .then(function(data) {
           $scope.selected_conversation_messages = [];
+          delete $scope.conversations[$scope.selected_conversation.id];
           $scope.selected_conversation = {};
           $scope.conversation_selected = false;
-          delete $scope.conversations[$scope.selected_conversation.id];
         }, function(data) {
           FlashHandler.setFlashMessage('Unable to close conversation :(','error');
         })
