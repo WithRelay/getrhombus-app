@@ -8,8 +8,7 @@ class EmailingService
 
   class << self
 
-    def send_completed_notice(hosted_number_order)
-      user.buy_number(user)
+    def send_completed_notice(user)
       begin
         template_name = 'hosted-sms-activated'
         template_content = []
@@ -31,7 +30,6 @@ class EmailingService
     end
 
     def send_action_required_notice(hosted_number_order)
-      user = hosted_number_order.user
       begin
         template_name = 'hosted-sms-action-required'
         template_content = []
@@ -53,14 +51,13 @@ class EmailingService
       end
     end
 
-    def hosted_sms_progress_notice(hosted_number_order)
-      user = hosted_number_order.user
+    def hosted_sms_progress_notice(user)
       begin
         template_name = 'hosted-sms-progress'
         template_content = []
         message = { "subject" => "Status: Complete your phone number activation",
          "global_merge_vars"=> [  { "name" => "first_name", "content" => 'team' },
-                                  { "name" => "virtual_number", "content" => user.rhombus_number }
+                                  { "name" => "virtual_number", "content" => user.rn_friendly_name }
                                ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
@@ -75,8 +72,7 @@ class EmailingService
       end
     end
 
-    def send_failed_notice(hosted_number_order)
-      user = hosted_number_order.user
+    def send_failed_notice(user)
       begin
         template_name = 'hosted-sms-failed'
         template_content = []

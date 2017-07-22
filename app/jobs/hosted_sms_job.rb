@@ -5,7 +5,7 @@ class HostedSmsJob
   def self.perform
     ActiveRecord::Base.clear_active_connections!
 
-    HostedSms.not_completed.each do |h|
+    HostedSms.includes(:user).not_completed.each do |h|
       HostedSmsService.get_status(h)
       if h.status.downcase == 'pending-loa' && !h.status_events[:loa_sent]
         HostedSmsService.request_loa(h)
@@ -13,17 +13,17 @@ class HostedSmsJob
         h.status_events[:loa_sent_at] = Time.now
         h.save
       elsif h.status.downcase == 'completed' && !h.status_events[:completed_notice_sent]
-        EmailingService.send_completed_notice(h)
+        EmailingService.send_completed_notice(h.user)
         h.status_events[:completed_notice_sent] = true
         h.status_events[:completed_notice_sent_at] = Time.now
         h.save
       elsif h.status.downcase == 'action-required' && !h.status_events[:action_required_notice_sent]
-        EmailingService.send_action_required_notice(h)
+        EmailingService.send_action_required_notice(h.user)
         h.status_events[:action_required_notice_sent] = true
         h.status_events[:action_required_notice_sent_at] = Time.now
         h.save
       elsif h.status.downcase == 'failed' && !h.status_events[:failed_notice_sent]
-        EmailingService.send_failed_notice(h)
+        EmailingService.send_failed_notice(h.user)
         h.status_events[:failed_notice_sent] = true
         h.status_events[:failed_notice_sent_at] = Time.now
         h.save
