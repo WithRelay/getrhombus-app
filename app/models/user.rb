@@ -191,6 +191,7 @@ class User < ActiveRecord::Base
     rhombus_number = number[0]
     rn_friendly_name = number[1]
     generate_uid_and_referrer_link
+    EmailingService.hosted_sms_progress_notice(h) if self.hosted_sms.present?
     update_account_balance(NUMBER_PRICE)
   end
 
