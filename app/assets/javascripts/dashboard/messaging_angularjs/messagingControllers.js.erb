@@ -217,7 +217,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
           $scope.conversation_selected = false;
           delete $scope.conversations[$scope.selected_conversation.id];
         }, function(data) {
-          FlashHandler.setFlashMessage('unable to close conversation','error');
+          FlashHandler.setFlashMessage('Unable to close conversation :(','error');
         })
         .finally(function() { $('#mark-as-done-div').trigger('close'); });
       };

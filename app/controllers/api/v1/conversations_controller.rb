@@ -31,10 +31,12 @@ class Api::V1::ConversationsController < API::V1::BaseController
   def close
     # set resolution, mark all messages read, set is_resolved flag.
     conv_ref = @conversation.conversation_resolutions.last
-    if conv_ref.save(conversation_resolution_params) && @conversation.save(is_resolved: true)
-      @conversation.conversation_refs.update_all(unread: false)
+    if conv_ref.update_attributes(conversation_resolution_params) && @conversation.update_attributes(is_resolved: true)
+      # uncomment for deployment
+      #@conversation.conversation_refs.update_all(unread: false)
       render json: {}, status: 200
     else
+      # email team here
       render json: {}, status: 500
     end
   end

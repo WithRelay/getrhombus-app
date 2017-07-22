@@ -20,11 +20,12 @@ class Conversation < ActiveRecord::Base
   # Returns hash with users who sent a message to the given merchant in the last "num_days" days
   def self.get_open_conversations(merchant_id, page)
   	convs = where(merchant_id: merchant_id, is_resolved: false).paginate(page: page, per_page: 7).order(updated_at: :desc, id: :desc)
-  	x = convs.map { |conv| conv.conversation_hash }
+  	convs.map { |conv| conv.conversation_hash }
 
-    # remove these lines and x variable above
-  	x.first[:profile_image] = { type: 'image', value: 'http://lorempixel.com/400/200/' } if x.present?
-    x
+    # this is for test.
+    #x = convs.map { |conv| conv.conversation_hash }
+  	#x.first[:profile_image] = { type: 'image', value: 'http://lorempixel.com/400/200/' } if x.present?
+    #x
 	end
 
   def conversation_hash
@@ -43,8 +44,8 @@ class Conversation < ActiveRecord::Base
 
     {
       id: self.id,
-      uid_type: self.uid_type,
       uid: self.uid,
+      uid_type: self.uid_type,
       mcid: mcid ? mcid.id : nil,
       full_name: User.get_conversation_display_name(self.uid, self.uid_type),
       profile_image: User.check_profile_picture(user),
@@ -72,9 +73,9 @@ class Conversation < ActiveRecord::Base
     [latest_messages, unread_ids.join(",")]
 	end
 
-	def self.message_hash(conv, msg, conv_ref, customer, merchant=nil)
+	def self.message_hash(conv, msg, conv_ref, customer, merchant = nil)
     u = msg.user_id == conv.merchant_id ? merchant : customer
-    #u = conv_ref.source == 'customer' ? customer : merchant
+    #u = conv_ref.source == 'customer' ? customer : merchant      # alternative
 
     {
       id: msg.id,
@@ -163,8 +164,9 @@ class Conversation < ActiveRecord::Base
   def self.find_or_create_conversation_for_message(team_id, uid_type, uid, msg_instance, unread, source)
     conv = find_or_create_conversation(team_id, uid_type, uid)
     conv_ref = conv.conversation_refs.create(textable: msg_instance, unread: unread, source: source)
+    
     # basically, only customer and merchant messages should start new conversations
-    conv.update(is_resolved: false, updated_at: conv_ref.created_at) if ['customer', 'merchant'].include? source
+    conv.update(is_resolved: false, updated_at: conv_ref.created_at) if ['customer', 'merchant'].include?(source)
     update_conversation_resolution(team_id, conv.id, conv_ref.id, source)
     [conv, conv_ref]
   end
@@ -175,7 +177,9 @@ class Conversation < ActiveRecord::Base
 
     key = source == 'customer' ? :uid_conversation_ref_id : :merchant_conversation_ref_id
     conv_res[key] = conv_ref_id    
-    conv_res.save(merchant_id: team_id, conversation_id: conv_id)
+    conv_res.merchant_id = team_id
+    conv_res.conversation_id = conv_id
+    conv_res.save
   end
 
 	# find the conversation or create one
