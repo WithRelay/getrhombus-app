@@ -20,8 +20,7 @@
 
         <div class="form-group">
           <label class="field-headers form-label settings" for="email">Email</label>
-          <input id="alerts-enter-email" type='email' name= "email-alert" class='form-control sms-alerts text-field w-input w-col-6' placeholder='Enter email' >
-          <div id='alerts-email-validation-message'>Email isn't valid</div>
+          <input id="alerts-enter-email" type='email' class='form-control sms-alerts text-field w-input w-col-6' placeholder='Enter email' >
         </div>
 
         <div class="form-group">
@@ -32,7 +31,7 @@
           <%= f.text_field :emails, id: 'alert_emails', class: "form-control text-field w-input", value: @emails, placeholder: 'Email' %>
         </div>
 
-        <div class="form-check-box w-checkbox">
+        <div class="form-check-box w-checkbox sms-alert-checkbox">
           <%= f.check_box :include_sms, class: 'w-checkbox-input checkbox', id: 'alert-include-sms' %>
           <label class="w-form-label" for="checkbox">Include SMS alerts for unread messages</label>
         </div>
