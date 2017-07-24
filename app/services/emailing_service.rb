@@ -51,13 +51,13 @@ class EmailingService
       end
     end
 
-    def hosted_sms_progress_notice(user)
+    def hosted_sms_progress_notice(user, rhombus_number)
       begin
         template_name = 'hosted-sms-progress'
         template_content = []
         message = { "subject" => "Status: Complete your phone number activation",
          "global_merge_vars"=> [  { "name" => "first_name", "content" => 'team' },
-                                  { "name" => "virtual_number", "content" => user.rn_friendly_name }
+                                  { "name" => "virtual_number", "content" => rhombus_number }
                                ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
@@ -78,7 +78,7 @@ class EmailingService
         template_content = []
         message = { "subject" => "Status: Relay phone number activation",
          "global_merge_vars"=> [  { "name" => "first_name", "content" => user.first_name || 'there' },
-                                  { "name" => "virtual_number", "content" => user.rn_friendly_name }
+                                  { "name" => "virtual_number", "content" => user.rhombus_number }
                                ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],

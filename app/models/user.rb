@@ -187,7 +187,7 @@ class User < ActiveRecord::Base
 
   def buy_number(params)
     number = TextingService.buy_number({ query: params["area_code"] || "", country: params["rn_country"], type: params["rn_type"] })
-    EmailingService.hosted_sms_progress_notice(self) if self.hosted_sms.present?
+    EmailingService.hosted_sms_progress_notice(self, number[0]) if self.hosted_sms.present?
     return false unless number
     rhombus_number = number[0]
     rn_friendly_name = number[1]
