@@ -78,7 +78,7 @@ class EmailingService
         template_content = []
         message = { "subject" => "Status: Relay phone number activation",
          "global_merge_vars"=> [  { "name" => "first_name", "content" => user.first_name || 'there' },
-                                  { "name" => "virtual_number", "content" => user.rhombus_number }
+                                  { "name" => "virtual_number", "content" => user.rn_friendly_name }
                                ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
