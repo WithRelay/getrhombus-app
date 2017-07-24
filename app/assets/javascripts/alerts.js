@@ -121,10 +121,12 @@ $(document).ready(function () {
 
   $('#alerts-enter-email').on('focus', function() {
     $(this).removeClass('red-border');
+    $("#alerts-email-validation-message").hide();
   });
 
   function show_email_invalid() {
     $('#alerts-enter-email').addClass('red-border');
+    $("#alerts-email-validation-message").show();
   };
 
   function set_button_status(btn, disabled, text) {

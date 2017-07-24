@@ -37,16 +37,17 @@ class Conversation < ActiveRecord::Base
     end
 
     if self.uid_type == 'user'
-      mcid = MerchantCustomer.find_by(merchant_id: self.merchant_id, customer_id: self.uid)
+      mc = MerchantCustomer.find_by(merchant_id: self.merchant_id, customer_id: self.uid)
     else
-      mcid = MerchantContact.find_by(merchant_id: self.merchant_id, uid: self.uid, uid_type: self.uid_type)
+      mc = MerchantContact.find_by(merchant_id: self.merchant_id, uid: self.uid, uid_type: self.uid_type)
     end
 
     {
       id: self.id,
       uid: self.uid,
       uid_type: self.uid_type,
-      mcid: mcid ? mcid.id : nil,
+      mc_id: mc ? mc.id.to_s : nil,
+      mc_type: mc ? mc.class.to_s : nil,
       full_name: User.get_conversation_display_name(self.uid, self.uid_type),
       profile_image: User.check_profile_picture(user),
       last_message: last_message.blank? ? '' : last_message.text,

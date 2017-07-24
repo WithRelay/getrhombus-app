@@ -619,7 +619,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
     // Lists
     $scope.getMerchantLists = function() {
       if ($scope.online()) {
-        listService.getLists({ query: '', type: 'list' })
+        listService.getLists({ query: '', list_mode: 'list' })
         .then(function (data) {
           console.log('merchant lists retrieved');
           console.log(data);
@@ -657,14 +657,14 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
 
     $scope.getCustomerLists = function() {
       if ($scope.is_conversation_selected() && $scope.online()) {
-        /*
-        var hash = { uid_type: $scope.selected_conversation.uid_type, uid: $scope.selected_conversation.uid };
+        //*
+        var hash = { customer_contact_id: $scope.selected_conversation.mc_id, customer_contact_type: $scope.selected_conversation.mc_type };
         listService.getListsForCustomer(hash)
         .then(function(data) {
           $scope.lists_for_customer = data
         }, function(data) {
           $scope.lists_for_customer = [];
-          FlashHandler.setFlashMessage('unable to retrieve lists for conversation', 'error');
+          FlashHandler.setFlashMessage('Unable to retrieve lists for conversation', 'error');
         });
         //*/
       };
@@ -679,7 +679,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
         } else {
           var hash = angular.copy($scope.scheduled_message);
           hash.channel = hash.channel.id;
-          hash.mc_id = $scope.selected_conversation.mcid.toString() + "-" + ($scope.selected_conversation.uid_type == 'user' ? 'MerchantCustomer' : 'MerchantContact');
+          hash.mc_id = $scope.selected_conversation.mc_id + "-" + $scope.selected_conversation.mc_type;
           console.log(hash)
           //*
           reminderService.createReminder({ reminder: hash })
@@ -712,7 +712,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
 
     $scope.getProfileLink = function() {
       var type = ($scope.selected_conversation.uid_type == 'user') ? '/customers/' : '/contacts/';
-      return '/users/' + $scope.merchant.id + type + $scope.selected_conversation.mcid;
+      return '/users/' + $scope.merchant.id + type + $scope.selected_conversation.mc_id;
     };
 
     $scope.subscribe_merchant = function() {

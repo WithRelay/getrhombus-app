@@ -7,9 +7,9 @@ class Api::V1::ListsController < API::V1::BaseController
         
         list_mode = ""
         if params[:list_mode] == "list"
-          list_type = " and segment is null "
+          list_mode = " and segment is null "
         elsif params[:list_mode] == 'segment'
-          list_type = " and segment is not null "
+          list_mode = " and segment is not null "
         end
 
         res = current_user.lists.campaign.where("lower(name) like ? " + list_mode + list_type , "%#{params[:query].downcase}%")
