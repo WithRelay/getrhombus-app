@@ -109,6 +109,7 @@ Rails.application.routes.draw  do
     resources :lists, only: [:create, :index, :update] do
       get 'check_list_name', on: :collection
     end
+    resources :user_lists, only: [:index, :create]
     resources :hashtags, only: [:index] do
       get 'check_hashtag_name', on: :collection
       delete 'images/:image_id' => "hashtags#image_delete", on: :member

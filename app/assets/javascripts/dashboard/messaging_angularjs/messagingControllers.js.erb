@@ -9,8 +9,8 @@ var messagingControllers = angular.module('messagingControllers', [
 
 
 messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$http', 'Pubnub', 'Upload', '$timeout', '$q',
-                                                        'savedReplyService',  'conversationService', 'transactionService', 'userService', 'listService', 'reminderService',
-  function($scope, $rootScope, $http, Pubnub, Upload, $timeout, $q, savedReplyService, conversationService, transactionService, userService, listService, reminderService) {
+                                                        'savedReplyService',  'conversationService', 'transactionService', 'userService', 'listService', 'userListService', 'reminderService',
+  function($scope, $rootScope, $http, Pubnub, Upload, $timeout, $q, savedReplyService, conversationService, transactionService, userService, listService, userListService, reminderService) {
 
     // Conversations
     $scope.conversations = {};
@@ -45,13 +45,11 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
     $scope.merchant_lists = [];
     $scope.no_list_message = 'See the lists each customer is subscribed to right here. Use lists to send group messages.';
     $scope.lists_dropdown = { list: null };
-    $scope.lists_for_customer = [];
+    $scope.customer_lists = [];
 
     // Scheduled Messages
-    $('#newReminderRecurringFrequency').prop('checked', true);
-    $scope.customer_channel_list = [ { title: 'SMS', id:"0" } ];
-    $scope.scheduled_message = { frequency_type: "0", text: '', repeat_days: '3',
-                                 channel: $scope.customer_channel_list[0] };
+    $scope.customer_channel_list = [ { id: "0", title: 'SMS' }, { id: '2', title: 'Facebook Messenger'} ];
+    $scope.scheduled_message = { frequency_type: "1", text: '', repeat_days: '3', channel: $scope.customer_channel_list[0] };
 
     // Saved Replies
     $scope.saved_replies_list = [];
@@ -117,7 +115,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
           $scope.saved_replies.reply = data[0];
           console.log('saved replies retrieved');
         }, function(data) {
-          FlashHandler.setFlashMessage('unable to get saved replies', 'error');
+          FlashHandler.setFlashMessage('Unable to get saved replies', 'error');
         });
       }
     };
@@ -295,12 +293,11 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
       return deferred.promise;
     };
 
-    // get transactions, snapshot and lists, build channel dropdown
+    // get transactions, snapshot and lists
     $scope.performUserActions = function() {
-      $scope.getCustomerTransactions();
       $scope.getSnapshot();
       $scope.getCustomerLists();
-      $scope.buildChannelDropdown();
+      $scope.getCustomerTransactions();
     };
 
     $scope.rejectPromise = function(status, msg, obj) {
@@ -339,7 +336,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
         console.log($scope.new_message);
 
         if (($scope.new_message.text == '') || ($scope.new_message.text.length > $scope.merchant.num_of_chars)) {
-          FlashHandler.setFlashMessage('enter up to ' + $scope.merchant.num_of_chars + ' characters.', 'error');
+          FlashHandler.setFlashMessage('Enter up to ' + $scope.merchant.num_of_chars + ' characters.', 'error');
           $scope.enable_msg_btn(btn, channel);
         } else {
           var conversation_id = $scope.selected_conversation.id;
@@ -369,7 +366,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
 
     $scope.is_conversation_selected = function(msg, show_alert) {
       var state = $scope.conversation_selected;
-      if (!state && !show_alert) FlashHandler.setFlashMessage(msg || 'select a conversation', 'error');
+      if (!state && !show_alert) FlashHandler.setFlashMessage(msg || 'Select a conversation', 'error');
       return state;
     }
 
@@ -409,7 +406,6 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
           // wipe file picker?
           console.log('mms sent');
           console.log(data)
-          $('#mms-file-preview-div').trigger('close');
         }, function (response) {
           console.log('unable to send mms');
         })
@@ -423,7 +419,6 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
 
 
     // Modals
-    // Transactions
     $scope.displayChargeForm = function() {
       $('#charge-a-customer-div').lightbox_me({
         centered: true,
@@ -488,7 +483,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
     // End Modals
 
     $scope.disableChargeButton = function(chargeForm) {
-      //return !$scope.is_conversation_selected('', true) ||
+      //return !$scope.is_conversation_selected('', true) || chargeForm.$invalid || $scope.is_sending;
       return  chargeForm.$invalid || $scope.is_sending;
     };
 
@@ -571,6 +566,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
       }
     };
 
+    // Transactions
     // function to submit the form after all validation has occurred
     $scope.submitChargeForm = function(isValid) {
       if (isValid && $scope.online()) {
@@ -616,6 +612,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
     };
     // End Transactions
 
+
     // Lists
     $scope.getMerchantLists = function() {
       if ($scope.online()) {
@@ -635,41 +632,55 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
     $scope.AddUserToList = function() {
       if ($scope.is_conversation_selected() && $scope.online()) {
         if (!$scope.lists_dropdown.list) {
-          FlashHandler.setFlashMessage('select a list','error');
+          FlashHandler.setFlashMessage('Select a list', 'error');
         } else {
-          /*
-          var hash = { list_id: $scope.lists_dropdown.list.id,
-                        uid_type: $scope.selected_conversation.uid_type,
-                        uid: $scope.selected_conversation.uid
-                      };
-          listService.addUserToList(hash)
+          var list = $scope.lists_dropdown.list;
+          var hash = { user_list: { list_id: list.id, customer_contact_id: $scope.selected_conversation.mc_id, customer_contact_type: $scope.selected_conversation.mc_type } };
+
+          userListService.addUserToList(hash)
           .then(function(data) {
-            // return the lists object
-            //$scope.lists_for_customer.push(data);
+            $scope.customer_lists.push({ id: list.id, name: list.name, user_added: data.user_added });
+            FlashHandler.setFlashMessage(data.message, 'notice');
           }, function(data) {
-            FlashHandler.setFlashMessage('unable to add user to list', 'error');
+            FlashHandler.setFlashMessage(data.message, 'error');
           })
-          .finally(function() { $('#mark-as-done-div').trigger('close'); });
-          //*/
+          .finally(function() { $('#Add-to-list-dropdown').trigger('close'); });
         };
       };
     };
 
     $scope.getCustomerLists = function() {
       if ($scope.is_conversation_selected() && $scope.online()) {
-        //*
         var hash = { customer_contact_id: $scope.selected_conversation.mc_id, customer_contact_type: $scope.selected_conversation.mc_type };
-        listService.getListsForCustomer(hash)
+        userListService.getCustomerLists(hash)
         .then(function(data) {
-          $scope.lists_for_customer = data
+          console.log(data);
+          console.log('got customer lists');
+          $scope.customer_lists = data;
         }, function(data) {
-          $scope.lists_for_customer = [];
+          $scope.customer_lists = [];
           FlashHandler.setFlashMessage('Unable to retrieve lists for conversation', 'error');
         });
-        //*/
       };
     };
+
+    $scope.filterMerchantLists = function(list) {
+      // user should not already be in the list
+      if (_.find($scope.customer_lists, { id: list.id })) return false;
+      
+      if (list.list_type == 'customer' && $scope.selected_conversation.uid_type == 'user') {
+        return true;
+      } else if (list.list_type == 'contact') {
+        if ($scope.selected_conversation.uid_type == 'phone_number' && list.channel == 'sms') {
+          return true;  
+        } else if ($scope.selected_conversation.uid_type == 'fb_page' && list.list_type == 'messenger') {
+          return true;
+        }
+      };
+      return false;
+    };
     // End lists
+
 
     // reminders
     $scope.createReminder = function() {
@@ -696,19 +707,17 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
       }
     };
 
-    $scope.buildChannelDropdown = function() {
-      if ($scope.selected_conversation.uid_type == 'user') {
-        $scope.customer_channel_list = [ { id: '0', title: 'SMS'}, /*{ id: '3', title: 'Email'}*/ ];
-        if ($scope.selected_conversation.has_messenger)
-          $scope.customer_channel_list.splice(1, 0, { id: '2', title: 'Facebook Messenger'});
-      } else if ($scope.selected_conversation.uid_type == 'fb_page') {
-        $scope.customer_channel_list = [ { id: '2', title: 'Facebook Messenger'} ];
-      } else if ($scope.selected_conversation.uid_type == 'phone_number') {
-        $scope.customer_channel_list = [ { id: '0', title: 'SMS'} ];
+    $scope.filterReminderChannelDropdown = function(channel) {
+      if (channel.id == '0' && ($scope.selected_conversation.uid_type == 'user' || $scope.selected_conversation.uid_type == 'phone_number')) {
+        return true;
+      } else if (channel.id == '2' && ($scope.selected_conversation.uid_type == 'fb_page' || 
+                                      ($scope.selected_conversation.uid_type == 'user' && $scope.selected_conversation.has_messenger))) {
+        return true;
       };
-      $scope.scheduled_message.channel = $scope.customer_channel_list[0];
+      return false;
     };
     // End reminders
+
 
     $scope.getProfileLink = function() {
       var type = ($scope.selected_conversation.uid_type == 'user') ? '/customers/' : '/contacts/';

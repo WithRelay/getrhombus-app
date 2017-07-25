@@ -225,23 +225,23 @@
 
           <div ng-if="merchant_lists.length">
             <div ng-if="conversation_selected">
-              <div ng-if="list_for_customers.length">
-                <a class="transactions-div-wrapper w-inline-block" >
-                <div class="transaction-div">
-                  <div class="right-nav-transaction-div-table w-row">
-                    <div class="w-col w-col-8">
-                      <div class="right-nav-amount-text">New York Customer</div>
-                      <div class="right-nav-amount-desc">Added 1 week ago</div>
-                    </div>
-                    <div class="w-col w-col-4">
-                      <div class="messaging-dash-variable-text transactions-div-table">&nbsp;&nbsp;&nbsp;List</div>
+              <div ng-if="customer_lists.length">
+                <a class="transactions-div-wrapper w-inline-block" ng-repeat="list in customer_lists">
+                  <div class="transaction-div">
+                    <div class="right-nav-transaction-div-table w-row">
+                      <div class="w-col w-col-8">
+                        <div class="right-nav-amount-text">{{ list.name }}</div>
+                        <div class="right-nav-amount-desc">{{ list.user_added }}</div>
+                      </div>
+                      <div class="w-col w-col-4">
+                        <div class="messaging-dash-variable-text transactions-div-table">&nbsp;&nbsp;&nbsp;List</div>
+                      </div>
                     </div>
                   </div>
-                </div>
                 </a>
               </div>
 
-              <div ng-if="!list_for_customers.length" class="alt no-data-right-side-bar">
+              <div ng-if="!customer_lists.length" class="alt no-data-right-side-bar">
                 <p class="empty-view-short-paragraph">Customer or contact is not subscribed to any lists. Use lists to group your customers and
                   <br>send them campaigns</p>
               </div>
@@ -475,7 +475,7 @@
       <div class="scheduled-notification-form">
         <form class="w-clearfix" id="email-form-7" name="email-form-7">
 
-          <select class="dropdown frequency-dropdown w-select" ng-model='scheduled_message.channel' ng-options='option.title for option in customer_channel_list track by option.id'></select>
+          <select class="dropdown frequency-dropdown w-select" ng-model='scheduled_message.channel' ng-options='option.title for option in customer_channel_list | filter: filterReminderChannelDropdown track by option.id'></select>
 
           <textarea class="notification-message text-area w-input" id="Notification-Message-2" placeholder="Enter notification message" ng-model='scheduled_message.text'></textarea>
           <div class="char-count notications">150 characters</div>
@@ -494,7 +494,7 @@
           </div>
 
           <%# changed  id %>
-          <select class="dropdown frequency-dropdown w-select hide-not-important" id='newReminderRepeatDays' ng-model='scheduled_message.repeat_days'>
+          <select class="dropdown frequency-dropdown w-select" id='newReminderRepeatDays' ng-model='scheduled_message.repeat_days'>
             <option value="3">3 days</option>
             <option value="7">7 days</option>
             <option value="14">14 days</option>
@@ -556,7 +556,7 @@
 
     <div class="add-to-list-modal-form">
       <form class="w-clearfix" id="email-form-5">
-        <select class="dropdown w-select" id="Add-to-list-dropdown-2" ng-model="lists_dropdown.list" ng-options="option.name for option in merchant_lists track by option.id">
+        <select class="dropdown w-select" id="Add-to-list-dropdown" ng-model="lists_dropdown.list" ng-options="option.name for option in merchant_lists | filter: filterMerchantLists track by option.id">
             <option ng-selected="true" disabled value="">Select a list</option>
         </select>
         <a class="add-to-list-modal-button button w-button" ng-click='AddUserToList()'>Add customer to List</a>

@@ -35,4 +35,5 @@ class List < ActiveRecord::Base
 
     #[MerchantCustomer.find(32)]
   end
+
 end
