@@ -18,7 +18,7 @@ class MerchantContact < ActiveRecord::Base
     merchant = User.find self.merchant_id
     merchant_page_id = merchant.fb_pages.subscribed.last.id
     # response = FacebookMessengerService.get_user_info(current_page_token, self.uid)
-    contact_page_id = FbPage.find_by(page_specific_id: self.uid).id
+    contact_page_id = FbPage.find_by(page_specific_id: self.uid).fb_page_id
     merchant_page_id == contact_page_id
   end
 
