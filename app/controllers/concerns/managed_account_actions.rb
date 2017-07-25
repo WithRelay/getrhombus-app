@@ -7,7 +7,7 @@ module ManagedAccountActions
     @user.stripe_creds.present? || @user.stripe_creds.build
     @user.people.present? || @user.people.build
     @user.people.each_with_index { |p,i| @user.people[i].address || @user.people[i].build_address }
-    @image = @user.people.representative.first.image
+    @image = @user.people.representative.try(:first).try(:image)
   end
 
   def create_managed_acct
@@ -51,7 +51,7 @@ module ManagedAccountActions
       person.update_column(:stripe_file_id, file_upload.id)
     end
 
-    return true     
+    return true
   end
 
   def user_valid_to_update
@@ -91,7 +91,7 @@ module ManagedAccountActions
   def params_with_stripe(account, bank_account)
     account_verification = account.verification
     stripe_params = full_user_params
-    stripe_params[:stripe_creds_attributes]['0'].merge!({ 
+    stripe_params[:stripe_creds_attributes]['0'].merge!({
                                                           account_verification: account.verification,
                                                           legal_entity_verification: account.legal_entity.verification,
                                                           account_id: account.id,
