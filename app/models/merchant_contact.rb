@@ -14,4 +14,11 @@ class MerchantContact < ActiveRecord::Base
     end
   end
 
+  def page_specific_id_valid?
+    merchant = User.find self.merchant_id
+    current_page_token = merchant.fb_pages.subscribed.last.page_access_token
+    response = FacebookMessengerService.get_user_info(current_page_token, self.uid)
+    response.present? ? true : false
+  end
+
 end
