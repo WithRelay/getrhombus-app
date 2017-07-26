@@ -3,16 +3,20 @@ $(document).ready(function() {
     framework: 'bootstrap',
     live: 'disabled',
 
+    err: {
+      container: '.messageContainer'
+    },
+
     // List of fields and their validation rules!
     fields: {
       'user[recharge_amount]' :{
         validators: {
           notEmpty: {
-            message: 'Invalid'
+            message: 'Invalid Amount'
           },
           regexp: {
             regexp: /^\s*(?=.*[1-9])\d*(?:\.\d{1,2})?\s*$/g,
-            message: 'Invalid'
+            message: 'Invalid Amount'
           }
         }
       }
@@ -24,7 +28,7 @@ $(document).ready(function() {
     .addClass('has-success')
   })
   .on('err.validator.fv', function(e) {
-    $('.help-block').hide();
+    // $('.help-block').hide();
   });
 
 })

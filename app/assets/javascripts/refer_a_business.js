@@ -116,9 +116,9 @@ $(document).ready(function () {
       $('#referrerForm').formValidation('resetField', 'referrer[phone]');
     }
   })
-  .on('err.validator.fv', function(e) {
-    $('.help-block').hide();
-  });
+  // .on('err.validator.fv', function(e) {
+  //   $('.help-block').hide();
+  // });
 
 /*
   function referBusiness() {
