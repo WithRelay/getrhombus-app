@@ -50,10 +50,10 @@ class Conversation < ActiveRecord::Base
       mc_type: mc ? mc.class.to_s : nil,
       full_name: User.get_conversation_display_name(self.uid, self.uid_type),
       profile_image: User.check_profile_picture(user),
-      last_message: last_message.blank? ? '' : last_message.text,
-      last_message_ts: last_message.blank? ? 0 : last_message.created_at.to_i,
-      last_message_type: last_message.class.name,
-      ago: last_message.blank? ? "" : time_in_relative_form(last_message.created_at, 'short_format'),
+      last_message: last_message ? last_message.text : '',
+      last_message_ts: last_message ? last_message.created_at.to_i : 0,
+      last_message_type: last_message ? last_message.class.to_s : nil,
+      ago: last_message ? time_in_relative_form(last_message.created_at, 'short_format') : '',
       unread_count: ConversationRef.where(conversation_id: self.id, unread: true).count,
       #has_messenger:
     }

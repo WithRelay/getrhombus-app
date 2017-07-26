@@ -36,7 +36,7 @@
         <a class="button empty-conversation-button start-new w-button" ng-click='focusOnStartConversationField()'>Start new conversation</a>
       </div>
 
-      <a ng-if="merchant.customer_contact_count && open_conversations_count" class="message-tab w-inline-block" ng-repeat="(identifier, conversation) in conversations | filterConversationList:query | orderObjectBy:'last_message_ts':true" ng-click="getConversationMessages(conversation, true)" ng-class="{ 'message-tab': true, 'w-inline-block': true, 'conversation_selected': conversation.id == selected_conversation.id }">
+      <a ng-if="merchant.customer_contact_count && open_conversations_count" class="message-tab w-inline-block" ng-repeat="(identifier, conversation) in filteredConversations" ng-click="getConversationMessages(conversation, true)" ng-class="{ 'message-tab': true, 'w-inline-block': true, 'conversation_selected': conversation.id == selected_conversation.id }">
         <div class="message-tab-content-wrapper w-row">
 
           <div class="message-tab-picture-column w-col w-col-2">
@@ -47,7 +47,7 @@
               </div>
 
               <div ng-class="conversation.last_message_type === 'Message' ? 'channel-indicator-2' : 'channel-indicator'" ng-if="
-              conversation.last_message"></div>
+              conversation.last_message_type"></div>
 
               <%# added height %>
               <img ng-if="conversation.profile_image.type == 'image'" class="customer-profile-picture" my-src="{{conversation.profile_image.value}}" width="30" height='30' >
@@ -77,7 +77,7 @@
             <div class="message-input-box-dropdown w-dropdown" data-delay="0">
               <div class="message-input-box-dropdown-toggle w-dropdown-toggle">
                 <div class="message-input-box-button-text">+</div>
-                <input type="file" id="file-picker" ngf-select="handleFile($file, $invalidFiles)" ng-model="pic_file" ngf-accept="'image/*'" ngf-max-size="1MB" class='hide'>
+                <input type="file" id="file-picker" ngf-select="handleFile($file, $invalidFiles)" ng-model="mms_file.file" ngf-accept="'image/*'" ngf-max-size="1MB" class='hide'>
               </div>
               <nav class="message-input-dropdown-list-wrapper w-dropdown-list">
                 <div class="message-input-box-option-div-wrapper">
@@ -521,11 +521,11 @@
         <h4 class="modal-header welcome-dash-content-container-header">Send file</h4>
       </div>
       <div class="file-name image-preview">{{selected_file.name}}</div>
-      <div class="image-preview-wrapper"><img class="image-file-preview" ngf-thumbnail="pic_file" src='<%= asset_path "Relay-Image-Placeholder.png" %>' width="254">
+      <div class="image-preview-wrapper"><img class="image-file-preview" ngf-thumbnail="mms_file.file" src='<%= asset_path "Relay-Image-Placeholder.png" %>' width="254">
       </div>
       <div>
         <form class="w-clearfix" id="email-form-9" name="email-form-9">
-          <textarea class="file-description text-area w-input" id="File-Description-2" maxlength="5000" name="File-Description-2" placeholder="Add description (optional)" ng-model="mms_text" ng-trim="true"></textarea>
+          <textarea class="file-description text-area w-input" id="File-Description-2" maxlength="5000" name="File-Description-2" placeholder="Add description (optional)" ng-model="mms_text.text" ng-trim="true"></textarea>
           <div class="file-sender split-button-wrapper">
 
             <a class="message-window-tabs send-button split-button w-button" ng-click="sendMMS('Message')">{{send_mms_btn}}</a>

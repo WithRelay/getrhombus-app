@@ -54,8 +54,6 @@ class Api::V1::ConversationsController < API::V1::BaseController
     end
   end
 
-  # help in dasboard_mms...need params from and params to from dashboard
-  # add optional text
   def mms
     begin      
       raise StandardError if params[:avatar].blank?

@@ -73,9 +73,8 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
     var conversation_page = 1;
     $scope.loadConversations = function() {
       if ($scope.online()) {
-        var params = PageParameter.get_params(), select_conversation = {};
-        if (params['type'] == 'start_conversation')
-          select_conversation = { uid: params['uid'], uid_type: params['uid_type'] };
+        var params = PageParameter.get_params(), select_conversation;
+        if (params['type'] == 'start_conversation') select_conversation = { uid: params['uid'], uid_type: params['uid_type'] };
 
         conversationService.getConversations(conversation_page, select_conversation)
         .then(function(data) {
@@ -133,69 +132,50 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
       }
     };
 
+    $scope.$watch(function () {
+      $scope.filteredConversations = $scope.$eval("conversations | filterConversationList:query | orderObjectBy:'last_message_ts'");
+    });
+
     $scope.selectConversation = function(data) {
       if (data.select_conversation !== undefined) {
-        $timeout(function() {
-          var select_conversation;
-          // check if conversation to select is already in the conversations list that was just loaded
-          for (var i = 0, len = data.conversations.length; i < len; i++) {
-            if (data.select_conversation.uid == data.conversations[i].uid && data.select_conversation.uid_type == data.conversations[i].uid_type) {
-              select_conversation = data.conversations[i];
-              break;
-            }
-          }
-
-          // if not displayed push into conversations. Move to top.
-          var convs_keys = Object.keys($scope.conversations);
-          if (select_conversation === undefined) {
-            // are there conversations in view?
-            if (convs_keys.length) data.select_conversation.last_message_ts = $scope.conversations[convs_keys[0]].last_message_ts + 1;
-            $scope.conversations[data.select_conversation.id] = data.select_conversation;
-          } else
-            select_conversation.last_message_ts = $scope.conversations[convs_keys[0]].last_message_ts + 1;
-
-          $scope.clickFirstConversation();
-        });
+        //$timeout(function() {
+          if ($scope.filteredConversations.length) data.select_conversation.last_message_ts = $scope.filteredConversations[0].last_message_ts + 1;
+          $scope.conversations[data.select_conversation.id] = data.select_conversation;
+          $timeout(function() { $scope.clickFirstConversation(); });
+        //});
       }
     };
 
     $scope.startConversation = function(data) {
       if ($scope.online()) {
-        var convs_keys = Object.keys($scope.conversations);
-
-        // is conversation already in view?
-        for (var i = 0, len = convs_keys.length; i < len; i++) {
-          if (data.uid == $scope.conversations[convs_keys[i]].uid && data.uid_type == $scope.conversations[convs_keys[i]].uid_type) {
-            $scope.conversations[convs_keys[i]].last_message_ts = $scope.conversations[convs_keys[0]].last_message_ts + 1;
-            $scope.clickFirstConversation();
-            console.log('found conversation in view');
-            return;
-          }
-        };
+        if ($scope.findConversationInView(data)) return;
 
         conversationService.findConversation(data)
         .then(function(conv) {
-          convs_keys = Object.keys($scope.conversations);       // get updated keys
-
-          // one more check like above...this conversation could have been opened before this ajax came back.
-          for (var i = 0, len = convs_keys.length; i < len; i++) {
-            if (data.uid == $scope.conversations[convs_keys[i]].uid && data.uid_type == $scope.conversations[convs_keys[i]].uid_type) {
-              $scope.conversations[convs_keys[i]].last_message_ts = $scope.conversations[convs_keys[0]].last_message_ts + 1;;
-              $scope.clickFirstConversation();
-              console.log('found conversation in view');
-              return;
-            }
-          };
-
-          // are there messages already loaded
-          if (convs_keys.length) conv.last_message_ts = $scope.conversations[convs_keys[0]].last_message_ts + 1;
+          // check one more time
+          if ($scope.findConversationInView(data)) return; 
+          
+          // are there conversations already loaded
+          if ($scope.filteredConversations.length) conv.last_message_ts = $scope.filteredConversations[0].last_message_ts + 1;
           $scope.conversations[conv.id] = conv;
-          $scope.clickFirstConversation();
           console.log('started conversation');
+          $timeout(function() { $scope.clickFirstConversation(); });
         }, function() {
           console.log('unable to start conversations');
         });
       }
+    };
+
+    $scope.findConversationInView = function(data) {
+      // is conversation already in view?
+      for (var i = 0, len = $scope.filteredConversations.length; i < len; i++) {
+        if (data.uid == $scope.filteredConversations[i].uid && data.uid_type == $scope.filteredConversations[i].uid_type) {
+          $scope.conversations[$scope.filteredConversations[i].id].last_message_ts = $scope.filteredConversations[0].last_message_ts + 1;
+          console.log('found conversation in view');
+          $timeout(function() { $scope.clickFirstConversation(); });
+          return true;
+        }
+      };
     };
 
     $scope.clickFirstConversation = function() {
@@ -400,7 +380,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
         $scope[btn] = "Sending...";
         var file = $scope.selected_file;
         var conversation_id = $scope.selected_conversation.id;
-        conversationService.sendConversationMMS(conversation_id, file, $scope.mms_text, channel)
+        conversationService.sendConversationMMS(conversation_id, file, $scope.mms_text.text, channel)
         .then(function (data) {
           if ($scope.selected_conversation.id == conversation_id) $scope.selected_conversation_messages.push(data.data);
           // wipe file picker?
