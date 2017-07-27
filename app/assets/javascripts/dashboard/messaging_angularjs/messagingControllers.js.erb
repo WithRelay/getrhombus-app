@@ -101,6 +101,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
           if (first_call) {
             $scope.setup_pubnub();          
             $scope.selectConversation(data);
+            //$(window).load(function() { $("#loading-placeholder").fadeOut(800); });
           };
         }, function(data) {
           console.log('unable to retrieve your conversations')
