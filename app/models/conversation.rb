@@ -51,7 +51,7 @@ class Conversation < ActiveRecord::Base
       full_name: User.get_conversation_display_name(self.uid, self.uid_type),
       profile_image: User.check_profile_picture(user),
       last_message: last_message ? last_message.text : '',
-      last_message_ts: last_message ? last_message.created_at.to_i : 0,
+      last_message_ts: last_message.try(:created_at).to_i,
       last_message_type: last_message ? last_message.class.to_s : nil,
       ago: last_message ? time_in_relative_form(last_message.created_at, 'short_format') : '',
       unread_count: ConversationRef.where(conversation_id: self.id, unread: true).count,
@@ -185,7 +185,7 @@ class Conversation < ActiveRecord::Base
 
 	# find the conversation or create one
   def self.find_or_create_conversation(team_id, uid_type, uid)
-    @conv.present? ? @conv : Conversation.find_or_create_by(merchant_id: team_id, uid_type: uid_type, uid: uid)
+    @conv || Conversation.find_or_create_by(merchant_id: team_id, uid_type: uid_type, uid: uid)
   end
 
   # get the total number of unread messages for a merchant on or after a date

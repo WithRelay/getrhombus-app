@@ -138,12 +138,10 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
 
     $scope.selectConversation = function(data) {
       if (data.select_conversation !== undefined) {
-        //$timeout(function() {
-          if ($scope.filteredConversations.length) data.select_conversation.last_message_ts = $scope.filteredConversations[0].last_message_ts + 1;
-          $scope.conversations[data.select_conversation.id] = data.select_conversation;
-          $timeout(function() { $scope.clickFirstConversation(); });
-        //});
-      }
+        if ($scope.filteredConversations.length) data.select_conversation.last_message_ts = $scope.filteredConversations[0].last_message_ts + 1;
+        $scope.conversations[data.select_conversation.id] = data.select_conversation;
+        $timeout(function() { $scope.clickFirstConversation(); });
+      };
     };
 
     $scope.startConversation = function(data) {

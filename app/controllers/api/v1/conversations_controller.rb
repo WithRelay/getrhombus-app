@@ -3,17 +3,23 @@ class Api::V1::ConversationsController < API::V1::BaseController
   before_action :check_user
 
 	def index
-    # mark merchant as online
     $redis_merchant_status.set(current_user.id.to_s, 'online') 
 
     if params[:select_conversation].present?
       conv = JSON.parse(params[:select_conversation]) 
-      # Add check for if they are a user or contact, we dont want to create conversations for folks who dont exists
-      conv = conv["uid"].present? ? Conversation.find_or_create_conversation(current_user.id, conv["uid_type"], conv["uid"]) : nil
+      if conv['uid'].present? && conv['uid_type'].present?
+        if ((conv['uid_type'] == 'user' && MerchantCustomer.exists?(customer_id: conv['uid'], merchant_id: current_user.id)) || 
+            (conv['uid_type'] != 'user' && MerchantContact.exists?(uid: conv['uid'], uid_type: conv['uid_type'], merchant_id: current_user.id))) 
+          conv = Conversation.find_or_create_conversation(current_user.id, conv["uid_type"], conv["uid"])
+        else 
+          conv = nil
+        end
+      else
+        conv = nil
+      end
     end
 
-    re = { conversations: Conversation.get_open_conversations(current_user.id, params[:page]), 
-            count: Conversation.get_open_conversations_count(current_user.id)  }
+    re = { conversations: Conversation.get_open_conversations(current_user.id, params[:page]), count: Conversation.get_open_conversations_count(current_user.id) }
     re[:select_conversation] = conv.conversation_hash if conv
     render json: re, status: 200
 	end
@@ -25,13 +31,17 @@ class Api::V1::ConversationsController < API::V1::BaseController
   end
 
   def find
-    render json: Conversation.find_or_create_conversation(current_user.id, params[:uid_type], params[:uid]), status: 200
+    conv = Conversation.find_or_create_conversation(current_user.id, params[:uid_type], params[:uid])
+    render json: conv.conversation_hash, status: 200
   end
 
   def close
-    # set resolution, mark all messages read, set is_resolved flag.
+    # set resolution if any, mark all messages read, set is_resolved flag.
+    
     conv_ref = @conversation.conversation_resolutions.last
-    if conv_ref.update_attributes(conversation_resolution_params) && @conversation.update_attributes(is_resolved: true)
+    # you can have conversations without messages and so won't have a resolution object
+    if !conv_ref || conv_ref.update_attributes(conversation_resolution_params)
+      @conversation.update_attributes(is_resolved: true)
       @conversation.conversation_refs.update_all(unread: false)
       render json: {}, status: 200
     else
@@ -45,7 +55,6 @@ class Api::V1::ConversationsController < API::V1::BaseController
   end
 
   def messages
-    # test that user is present here
     re = Conversation.send_message(@conversation, current_user, params[:msg], params[:channel], 'merchant') if params[:msg].present?
     if re
       render json: re.first, status: 200
