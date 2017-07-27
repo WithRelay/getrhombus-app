@@ -71,10 +71,14 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
 
     // need to keep track of when at the end of conversations
     var conversation_page = 1;
-    $scope.loadConversations = function() {
+    $scope.loadConversations = function(first_call) {
       if ($scope.online()) {
-        var params = PageParameter.get_params(), select_conversation;
-        if (params['type'] == 'start_conversation') select_conversation = { uid: params['uid'], uid_type: params['uid_type'] };
+        var select_conversation;
+        
+        if (first_call) {
+          var params = PageParameter.get_params();
+          if (params['type'] == 'start_conversation') select_conversation = { uid: params['uid'], uid_type: params['uid_type'] };
+        };
 
         conversationService.getConversations(conversation_page, select_conversation)
         .then(function(data) {
@@ -93,9 +97,11 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
             console.log('you have no conversations');
           }
 
-          $scope.setup_pubnub();
           $scope.open_conversations_count = data.count;
-          $scope.selectConversation(data);
+          if (first_call) {
+            $scope.setup_pubnub();          
+            $scope.selectConversation(data);
+          };
         }, function(data) {
           console.log('unable to retrieve your conversations')
         });
@@ -137,7 +143,10 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
     });
 
     $scope.selectConversation = function(data) {
+      console.log(data)
+      console.log('yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy')
       if (data.select_conversation !== undefined) {
+        console.log('yooooooooooooooooo')
         if ($scope.filteredConversations.length) data.select_conversation.last_message_ts = $scope.filteredConversations[0].last_message_ts + 1;
         $scope.conversations[data.select_conversation.id] = data.select_conversation;
         $timeout(function() { $scope.clickFirstConversation(); });
@@ -777,7 +786,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
       });
 
       // get initial conversations
-      $scope.loadConversations();
+      $scope.loadConversations(true);
       $scope.getMerchantLists();   
       console.log("Hello! I am active!!");
 
