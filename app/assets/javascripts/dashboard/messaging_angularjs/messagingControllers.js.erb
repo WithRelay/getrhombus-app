@@ -354,18 +354,24 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
     // MMS
     // Twilio supports only gif, png and jpeg
     $scope.handleFile = function(file, errFiles) {
-      $scope.errFile = errFiles && errFiles[0];
-      console.log(errFiles)
       if (file) {
         if (file.type.match('image')) {
-          $scope.selected_file = file;
-          // show preview
-          $('#mms-file-preview-div').lightbox_me({ centered: true })
-        } else
-          console.log('unsupported type');
-      } else if (errFiles.length > 0) {
-        if(errFiles[0].$errorMessages.maxSize) console.log('file size is too large');
-      }
+          $('#mms-file-preview-div').lightbox_me({ 
+            centered: true,
+            overlayCSS: {
+              background: '#ffffff', opacity: .8
+            }, 
+          });
+          return;
+        } else {
+          FlashHandler.setFlashMessage('Sorry, only image files are supported :(', 'error');
+        }
+      } else if (errFiles.length) {
+        if (errFiles[0].$errorMessages.maxSize) {
+          FlashHandler.setFlashMessage('Please select a file under 1MB', 'error');
+        }
+      };
+      $scope.mms_file.file = '';
     };
 
 
@@ -374,20 +380,17 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
         $scope.is_sending = true;
         var btn = (channel == 'Message') ? 'send_mms_btn' : 'send_mms_fb_btn';
         $scope[btn] = "Sending...";
-        var file = $scope.selected_file;
         var conversation_id = $scope.selected_conversation.id;
-        conversationService.sendConversationMMS(conversation_id, file, $scope.mms_text.text, channel)
+        conversationService.sendConversationMMS(conversation_id, $scope.mms_file.file, $scope.mms_text.text, channel)
         .then(function (data) {
           if ($scope.selected_conversation.id == conversation_id) $scope.selected_conversation_messages.push(data.data);
-          // wipe file picker?
-          console.log('mms sent');
-          console.log(data)
         }, function (response) {
-          console.log('unable to send mms');
+          FlashHandler.setFlashMessage('Sorry, unable to send mms :(', 'error');
         })
         .finally(function() {
+          $scope.mms_file.file = '';
           $scope.enable_msg_btn(btn, channel);
-          $('#mms-img-preview-div').trigger('close');
+          $('#mms-file-preview-div').trigger('close');
         });
       }
     };
