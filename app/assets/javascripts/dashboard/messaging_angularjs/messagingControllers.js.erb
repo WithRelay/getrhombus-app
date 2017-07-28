@@ -329,6 +329,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
               $scope.selected_conversation_messages.push(data);
               $scope.conversations[conversation_id].last_message = data.text;
               $scope.conversations[conversation_id].last_message_ts = data.ts;
+              $scope.conversations[conversation_id].last_message_type = data.channel;
               $scope.conversations[conversation_id].ago = data.ago;
             }
             $scope.new_message.text = '';
