@@ -116,6 +116,7 @@ class Conversation < ActiveRecord::Base
       end
     rescue StandardError => e
       puts e.inspect
+      puts 'eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
       # notify team
       false
     end

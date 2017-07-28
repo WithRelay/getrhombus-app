@@ -52,6 +52,9 @@ class Message < ActiveRecord::Base
         end
       end
     rescue StandardError => err
+      puts err.inspect
+
+      puts 'eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeerrrrrrrrrrrrrrrrrrrrrrrrrr'
       false
     end
   end
