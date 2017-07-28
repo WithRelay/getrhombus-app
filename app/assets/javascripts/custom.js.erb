@@ -2,24 +2,6 @@ $(document).ready(function() {
 
   var global_page_params = PageParameter.get_params();
 
-/*
-  window.Offline.options = {
-    interceptRequests: false,
-    requests: false,
-    checks: { xhr: { url: '/offline-check' } }
-  };
-
-  var delay = 10000;
-  setTimeout(function retry() {
-    if(Offline.state == "up")
-      Offline.check();
-    setTimeout(retry, delay);
-  }, delay);
-*/
-
-
-  // FlashHandler.setFlashMessage('Customer created successfully', 'error');
-
   //Add plain footer to index pages
   if ($(".dashboard-body")){
     $(".dashboard-body.objlists") && $(".dashboard-body.objlists").append('<div style="height: 50px;"></div>');

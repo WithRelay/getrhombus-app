@@ -1,4 +1,4 @@
-class Api::V1::PlansController < API::V1::BaseController
+class Api::V1::PlansController < Api::V1::BaseController
   before_action :set_plan, only: [:update]
 
   def check_plan_name

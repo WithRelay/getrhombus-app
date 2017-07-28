@@ -100,10 +100,12 @@ Rails.application.routes.draw  do
   end
 
   api_version(module: "Api::V1", path: { value: "v1"}, constraints: { subdomain: "api" }, defaults: { format: "json" }) do
+    get 'offline_check' => "base#offline_check"
+
     resources :users, only: [:index] do
       get 'snapshot', on: :collection
       post 'check_password', on: :collection
-      get 'update_status', on: :member
+      get 'update_merchant_status', on: :member
     end
 
     resources :lists, only: [:create, :index, :update] do

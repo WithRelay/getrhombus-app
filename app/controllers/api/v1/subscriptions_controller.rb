@@ -1,4 +1,4 @@
-class Api::V1::SubscriptionsController < API::V1::BaseController
+class Api::V1::SubscriptionsController < Api::V1::BaseController
 
   def create
     begin

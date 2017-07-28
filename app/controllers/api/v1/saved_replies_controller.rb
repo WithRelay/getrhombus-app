@@ -1,4 +1,4 @@
-class Api::V1::SavedRepliesController < API::V1::BaseController
+class Api::V1::SavedRepliesController < Api::V1::BaseController
 
   before_action :set_save_reply, except: [:index]
 

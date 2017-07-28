@@ -1,4 +1,4 @@
-class Api::V1::CouponsController < API::V1::BaseController
+class Api::V1::CouponsController < Api::V1::BaseController
 
   def check_coupon_name
     res = current_user.coupons.where("lower(name) = ?", params[:coupon][:name].downcase)

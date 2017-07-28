@@ -3,8 +3,8 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
   before_action :configure_permitted_parameters, if: :devise_controller?
-  before_action :prepare_exception_notifier#, :check_current_user_and_path
-  around_action :set_time_zone, if: :current_user
+  before_action :prepare_exception_notifier#, :check_current_user_and_path, if: :ping_controller_actions? 
+  around_action :set_time_zone, if: :ping_controller_actions? && :current_user
 
   include CheckUserProfile
 
@@ -45,6 +45,11 @@ class ApplicationController < ActionController::Base
 
   def redirect_to_404(message)
     redirect_to to_404_path, alert: message
+  end
+  
+  # for pinging states. Should avoid loading current_user
+  def ping_controller_actions?
+    ['offline_check', 'update_merchant_status'].exclude?(action_name)
   end
 
   def check_current_user_and_path

@@ -1,4 +1,4 @@
-class Api::V1::ConversationsController < API::V1::BaseController
+class Api::V1::ConversationsController < Api::V1::BaseController
   before_action :set_conversation, except: [:index, :find, :mark_conv_ref_as_read]
   before_action :check_user
 

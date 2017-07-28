@@ -1,4 +1,4 @@
-class Api::V1::RemindersController < API::V1::BaseController
+class Api::V1::RemindersController < Api::V1::BaseController
   before_action :set_reminder, only: [:update]
 
   def create

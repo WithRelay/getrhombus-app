@@ -1,4 +1,4 @@
-class Api::V1::CampaignsController < API::V1::BaseController
+class Api::V1::CampaignsController < Api::V1::BaseController
 
   def image_delete
     image_ref = find_image_ref(imageable_type: 'Campaign', image_id: params[:image_id])

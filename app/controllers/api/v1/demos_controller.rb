@@ -1,4 +1,4 @@
-class Api::V1::DemosController < API::V1::BaseController
+class Api::V1::DemosController < Api::V1::BaseController
 
   def create
     Demo.create(demo_params)

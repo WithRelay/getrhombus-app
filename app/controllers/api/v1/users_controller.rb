@@ -1,4 +1,4 @@
-class Api::V1::UsersController < API::V1::BaseController
+class Api::V1::UsersController < Api::V1::BaseController
 
   # customer and contacts combined. Ex: for reminders or starting conversations
   def index
@@ -44,7 +44,7 @@ class Api::V1::UsersController < API::V1::BaseController
     render json: User.get_user_snapshot(params[:uid], params[:uid_type], current_user.id)
   end
 
-  def update_status
+  def update_merchant_status
     if "OK" != $redis_merchant_status.set(params[:id], params[:status])
       # Notify team here
     end

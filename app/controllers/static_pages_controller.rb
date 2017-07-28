@@ -18,7 +18,4 @@ class StaticPagesController < ApplicationController
     end
   end
 
-  def offline_check
-    head :no_content
-  end
 end

@@ -1,4 +1,4 @@
-class Api::V1::ReferrersController < API::V1::BaseController
+class Api::V1::ReferrersController < Api::V1::BaseController
 
 =begin
   def invite_business

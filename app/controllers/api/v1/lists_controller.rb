@@ -1,4 +1,4 @@
-class Api::V1::ListsController < API::V1::BaseController
+class Api::V1::ListsController < Api::V1::BaseController
 
   def index
     begin

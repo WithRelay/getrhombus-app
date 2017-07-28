@@ -1,4 +1,4 @@
-class Api::V1::TransactionsController < API::V1::BaseController
+class Api::V1::TransactionsController < Api::V1::BaseController
 
   def index
     # Exclude refunded transactions, Exclude subscriptions since these queries are not read only

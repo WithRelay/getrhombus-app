@@ -1,4 +1,4 @@
-class Api::V1::KnowledgeBasesController < API::V1::BaseController
+class Api::V1::KnowledgeBasesController < Api::V1::BaseController
   
   def index
   	if params[:query].present? 

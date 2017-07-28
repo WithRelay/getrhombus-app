@@ -1,4 +1,4 @@
-class API::V1::BaseController < ApplicationController
+class Api::V1::BaseController < ApplicationController
 
   # before_action :http_basic_authentication
   # do current_user or token test here and set as current_user
@@ -24,6 +24,10 @@ class API::V1::BaseController < ApplicationController
       headers['Access-Control-Max-Age'] = '1728000'
       render :text => '', :content_type => 'text/plain'
     end
+  end
+
+  def offline_check
+    head :no_content
   end
 
   private

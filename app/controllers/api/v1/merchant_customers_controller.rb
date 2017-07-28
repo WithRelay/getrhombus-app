@@ -1,4 +1,4 @@
-class Api::V1::MerchantCustomersController < API::V1::BaseController
+class Api::V1::MerchantCustomersController < Api::V1::BaseController
 
   def index
     begin

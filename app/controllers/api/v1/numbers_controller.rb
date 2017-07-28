@@ -1,4 +1,4 @@
-class Api::V1::NumbersController < API::V1::BaseController
+class Api::V1::NumbersController < Api::V1::BaseController
 
   def search
     if current_user && current_user.user_level == 1

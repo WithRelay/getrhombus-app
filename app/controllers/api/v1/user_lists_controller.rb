@@ -1,4 +1,4 @@
-class Api::V1::UserListsController < API::V1::BaseController
+class Api::V1::UserListsController < Api::V1::BaseController
   
   def index
     user_lists = UserList.joins(:list)

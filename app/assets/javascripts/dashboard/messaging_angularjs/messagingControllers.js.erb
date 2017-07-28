@@ -65,9 +65,9 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
     $scope.retrieving_messages_for_scroll = false;
 
     $scope.online = function() {
-      //Offline.check();
-      //Offline.state == "up";
-      return true;
+      // this might need to be throttling since it runs quite a number of times
+      Offline.check();
+      return Offline.state == "up";
     };
 
     // need to keep track of when at the end of conversations
@@ -719,7 +719,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
 
     $scope.update_merchant_status = function(status) {
       $.ajax({
-        url: '/v1/users/' + $scope.merchant.id.toString() + '/update_status.json',
+        url: '/v1/users/' + $scope.merchant.id.toString() + '/update_merchant_status.json',
         dataType: 'json',
         data: { status: status },
         error: function() { console.log('Something went wrong...Unable to update merchant status'); },
