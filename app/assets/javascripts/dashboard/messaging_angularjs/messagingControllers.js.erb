@@ -198,6 +198,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
           delete $scope.conversations[$scope.selected_conversation.id];
           $scope.selected_conversation = {};
           $scope.conversation_selected = false;
+          $scope.open_conversations_count -= 1;
         }, function(data) {
           FlashHandler.setFlashMessage('Unable to close conversation :(','error');
         })
@@ -466,7 +467,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
       valueField: 'id',
       labelField: 'tag',
       searchField: ['name', 'tag'],
-      placeholder: 'Select an item',
+      placeholder: 'Select an item...',
       options: [],
       preload: 'focus',
       required: true,
@@ -502,7 +503,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
     $scope.start_conversation_config = {
       valueField: 'unique_identifier',
       searchField: ['title', 'description'],
-      placeholder: 'Start conversation',
+      placeholder: 'Start conversation...',
       options: [],
       maxItems: 1,
       onInitialize: function (selectize) {
