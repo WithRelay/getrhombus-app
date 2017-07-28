@@ -77,7 +77,7 @@
             <div class="message-input-box-dropdown w-dropdown" data-delay="0">
               <div class="message-input-box-dropdown-toggle w-dropdown-toggle">
                 <div class="message-input-box-button-text">+</div>
-                <input type="file" id="file-picker" ngf-select="handleFile($file, $invalidFiles)" ng-model="mms_file.file" ngf-accept="'image/*'" ngf-max-size="1MB" class='hide'>
+                <input type="file" id="file-picker" ngf-select="handleFile($file, $invalidFiles)" ng-model="mms.file" ngf-accept="'image/*'" ngf-max-size="1MB" class='hide'>
               </div>
               <nav class="message-input-dropdown-list-wrapper w-dropdown-list">
                 <div class="message-input-box-option-div-wrapper">
@@ -521,8 +521,8 @@
       <div class="content-sub-wrapper modal w-clearfix">
         <h4 class="modal-header welcome-dash-content-container-header">Send file</h4>
       </div>
-      <div class="file-name image-preview">{{mms_file.file.name}}</div>
-      <div class="image-preview-wrapper"><img class="image-file-preview" ngf-thumbnail="mms_file.file" src='<%= asset_path "Relay-Image-Placeholder.png" %>' width="254">
+      <div class="file-name image-preview">{{mms.file.name}}</div>
+      <div class="image-preview-wrapper"><img class="image-file-preview" ngf-thumbnail="mms.file" src='<%= asset_path "Relay-Image-Placeholder.png" %>' width="254">
       </div>
       <div>
         <form class="w-clearfix" id="email-form-9" name="email-form-9">
