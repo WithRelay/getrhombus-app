@@ -251,7 +251,7 @@ class User < ActiveRecord::Base
       Alert.find_or_create_by(user_id: user_id) { |alert| alert.emails = [self.email] }
       response = "We're away at the moment and will get back to you when we return :)."
       AwayMessage.find_or_create_by(user_id: user_id, response: response)
-      #GetIntelligenceDataJob.perform_later(self.org_phone, 'OpenCNAM')
+      GetIntelligenceDataJob.perform_later(self.org_phone, 'OpenCNAM')
       origin = List.origins[:system]
       campaign_type = List.campaign_types[:campaign]
       self.lists.create([
@@ -267,8 +267,8 @@ class User < ActiveRecord::Base
     MerchantCustomer.add_or_update_merchant_customer(User.get_platform_acct_obj, self, true)
     #WelcomeEmailJob.set(wait: SIGNUP_EMAIL_DELAY.minutes).perform_later(self, self.customer_source)
     WelcomeEmailJob.set(wait: 10.seconds).perform_later(self, self.customer_source)
-    #GetIntelligenceDataJob.perform_later(self.email, 'FullContact')
-    #GetIntelligenceDataJob.perform_later(self.phone_number, 'OpenCNAM') if self.is_customer?
+    GetIntelligenceDataJob.perform_later(self.email, 'FullContact')
+    GetIntelligenceDataJob.perform_later(self.phone_number, 'OpenCNAM') if self.is_customer?
 #=end
   end
 
