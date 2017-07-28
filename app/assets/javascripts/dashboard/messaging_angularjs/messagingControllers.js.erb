@@ -689,8 +689,8 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
     $scope.filterReminderChannelDropdown = function(channel) {
       if (channel.id == '0' && ($scope.selected_conversation.uid_type == 'user' || $scope.selected_conversation.uid_type == 'phone_number')) {
         return true;
-      } else if (channel.id == '2' && ($scope.selected_conversation.uid_type == 'fb_page' || 
-                                      ($scope.selected_conversation.uid_type == 'user' && $scope.selected_conversation.has_messenger))) {
+      } else if (channel.id == '2' && ($scope.selected_conversation.uid_type == 'fb_page' || $scope.selected_conversation.uid_type == 'user')
+                                      && $scope.selected_conversation.has_messenger) {
         return true;
       };
       return false;
