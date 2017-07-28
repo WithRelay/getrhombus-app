@@ -153,7 +153,7 @@ Rails.application.routes.draw  do
       member do
         post 'messages'
         post 'mms'
-        post 'mark_messages_as_read'
+        post 'mark_conv_ref_as_read'
         post 'close'
       end
     end

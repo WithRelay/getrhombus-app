@@ -83,15 +83,12 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
         conversationService.getConversations(conversation_page, select_conversation)
         .then(function(data) {
           if (data.count) {
-            // Build conversation list and count initial global unread
-            console.log("conversations")
-            console.log(data.conversations)
             angular.forEach(data.conversations, function(value, key) {
               $scope.conversations[value.id] = value;
-              //$scope.global_unread_count += value.unread_count;
             });
 
             conversation_page += 1;
+            console.log(data.conversations)
             console.log('loaded conversations')
           } else {
             console.log('you have no conversations');
@@ -101,7 +98,6 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
           if (first_call) {
             $scope.setup_pubnub();          
             $scope.selectConversation(data);
-            //$(window).load(function() { $("#loading-placeholder").fadeOut(800); });
           };
         }, function(data) {
           console.log('unable to retrieve your conversations')
@@ -210,18 +206,26 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
     };
 
     $scope.messageTrackingFunction = function(message) {
-      //console.log(message.text)
+      //console.log(message.text);
       //console.log(message.channel + "-" + message.id.toString());
       return message.channel + "-" + message.id.toString();
     };
     $scope.imageTrackingFunction = function(image) { return 'Image-' + image.id.toString(); };
 
-    $scope.messageInView = function(index) {
-      var message = $scope.selected_conversation_messages[index];
-      if (message.unread) {
-        message.unread = false;   // doing this here simply because i don't want to make excessive server calls even if there is a failure
-        $scope.markMessagesAsRead($scope.selected_conversation.id, message.id);
-      }
+    $scope.messageInView = function(index, in_view) {
+      if (in_view && $scope.selected_conversation_messages[index].unread && $scope.online()) {
+        // doing this here simply because I don't want to make excessive server calls even if there is a failure
+        $scope.selected_conversation_messages[index].unread = false;   
+        var conversation_id = $scope.selected_conversation.id;
+
+        conversationService.markMessageAsRead(conversation_id, $scope.selected_conversation_messages[index].conv_ref_id)
+        .then(function(re) {
+          $scope.conversations[conversation_id].unread_count -= 1;
+          console.log('marked as read');
+        }, function(re) {
+          console.log('marked as read failed');
+        });
+      };
     };
 
     $scope.getConversationMessages = function(conversation, from_conversations_list) {
@@ -254,11 +258,9 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
             if (same_conversation_is_still_selected) {
               if (data.messages.length > 0) {
                 for (var i = 0, len = data.messages.length; i < len; i++) {
-                  data.messages[i].unread = false;
                   $scope.selected_conversation_messages.unshift(data.messages[i]);
-                }
+                };
                 //$scope.status.loaded = ($scope.selected_conversation_messages.length > 0);  // might not need this line
-                //$scope.markMessagesAsRead(conversation.id, data.unread_ids);
                 $scope.status.loading = false;
                 console.log(data.messages)
                 deferred.resolve(same_conversation_is_still_selected);
@@ -292,21 +294,6 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
       $scope.status.loading = status;
       console.log(msg);
       obj.reject();
-    }
-
-    $scope.markMessagesAsRead = function(conversation_id, unread_ids) {
-      if ($scope.online()) {
-        conversationService.markMessageAsRead(conversation_id, unread_ids)
-        .then(function(re) {
-          //var unread_ids = unread_ids.split(",");
-          //var unread_diff = $scope.global_unread_count - unread_ids.length;
-          //$scope.global_unread_count = (unread_diff > 0) ? unread_diff : 0;
-          $scope.conversations[conversation_id].unread_count -= unread_ids.split(",").length;
-          console.log('marked as read');
-        }, function(re) {
-          console.log('markes as read Failed');
-        });
-      }
     };
 
     $scope.bindEnterToMessagingArea = function() {
@@ -732,32 +719,20 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
     $scope.setup_pubnub = function() {
       $rootScope.$on(Pubnub.getMessageEventNameFor($scope.merchant.message_channel), function (ngEvent, envelope) {
         $scope.$apply(function () {
-          console.log(envelope)
+          //console.log(envelope)
           var re = envelope.message;
           if (re.type == 'new-message') {
             if (!$scope.conversations[re.conversation.id]) {
-              // add conversation object and update count
-              $scope.conversations[re.conversation.id] = re.conversation;
+              $scope.conversations[re.conversation.id] = re.conversation;  // add conversation object and update count
               $scope.open_conversations_count += 1;
-              //$scope.global_unread_count += re.conversation.unread_count;
             } else {
-              $scope.conversations[re.conversation.id].last_message = re.conversation.last_message
-              $scope.conversations[re.conversation.id].last_message_ts = re.conversation.last_message_ts
-              $scope.conversations[re.conversation.id].ago = re.conversation.ago
-
-              console.log($scope.conversations[re.conversation.id].last_message)
-              console.log(re.conversation.last_message)
-
-              if (re.message.source == 'customer') {
-                //$scope.global_unread_count += 1;
-                $scope.conversations[re.conversation.id].unread_count += 1;
-              }
+              $scope.conversations[re.conversation.id].last_message = re.conversation.last_message;
+              $scope.conversations[re.conversation.id].last_message_ts = re.conversation.last_message_ts;
+              $scope.conversations[re.conversation.id].ago = re.conversation.ago;
+              if (re.message.source == 'customer') $scope.conversations[re.conversation.id].unread_count += 1;
             };
 
-            if (re.conversation.id == $scope.selected_conversation.id) {
-              $scope.selected_conversation_messages.push(re.message);
-              //$scope.markMessagesAsRead(conversation.id, re.message.id);
-            };
+            if (re.conversation.id == $scope.selected_conversation.id) $scope.selected_conversation_messages.push(re.message);
           } else if (re.type == 'update-conv-properties') {
             if ($scope.conversations[re.id]) {
               $scope.conversations[re.id].full_name = re.full_name;

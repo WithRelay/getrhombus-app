@@ -26,8 +26,7 @@ class Api::V1::ConversationsController < API::V1::BaseController
 
   def show
     #sleep 5
-    messages_ary = Conversation.get_conversation_messages(@conversation, params[:conv_ref_id])
-    render json: { messages: messages_ary[0], unread_ids: messages_ary[1] }  
+    render json: { messages: Conversation.get_conversation_messages(@conversation, params[:conv_ref_id]) }  
   end
 
   def find
@@ -50,8 +49,14 @@ class Api::V1::ConversationsController < API::V1::BaseController
     end
   end
 
-  def mark_messages_as_read
-    render json: {}, status: @conversation.mark_messages_as_read(params[:ids]) ? 200 : 500 
+  def mark_conv_ref_as_read
+    begin
+      #ConversationRef.where(id: params[:id], conversation_id: @conversation.id).update_all(unread: false)
+      render json: {}
+    rescue StandardError => e
+      # email team
+      render json: {}, status: 500
+    end    
   end
 
   def messages

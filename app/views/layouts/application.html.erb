@@ -15,23 +15,6 @@
     <!--  CSS files -->
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true  %>
 
-    <!--  Js files -->
-   <!-- <%#= javascript_include_tag 'https://ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js' %>
-    <script>
-      WebFont.load( { google: { families: ["Lato:100,100italic,300,300italic,400,400italic,700,700italic,900,900italic",
-                                           "Open Sans:300,300italic,400,400italic,600,600italic,700,700italic,800,800italic",
-                                           "Montserrat:400,700","Nunito:300,regular,700",
-                                           "Alegreya Sans:100,300,regular,500,700",
-                                           "Fira Sans:300,regular,500,700",
-                                           "Roboto:100,300,regular,500,700",
-                                           "Raleway:100,200,300,regular,500,700",
-                                           "Lobster:regular",
-                                           "Lobster Two:regular,700",
-                                           "Fira Sans:300,regular,500",
-                                           "Montserrat Alternates:regular"]}
-                                         });
-   </script>-->
-
     <%= javascript_include_tag 'https://js.stripe.com/v2/' %>
     <%= javascript_include_tag 'application', 'data-turbolinks-track' => true  %>
     <%= javascript_include_tag 'https://cdnjs.cloudflare.com/ajax/libs/danialfarid-angular-file-upload/12.2.12/ng-file-upload-all.min.js', integrity: 'sha256-ktd4ChVnmURgRrtZc6nd5lxjjbclQIE29x5Ex4I/76g', crossorigin: 'anonymous' %>
@@ -39,7 +22,7 @@
     <%= csrf_meta_tags %>
 
   </head>
-  <body class="<%= add_body_class %>", style="<%= dynamic_pages_overflow_hidden %>" > <%#= needed for conversations page body %>
+  <body style="<%= dynamic_pages_overflow_hidden %>" class="<%= add_body_class %>"> <%#= needed for conversations page body %>
     <%= render 'shared/appcues' if current_user %>
     <%= render_header_partial %>
     <%= render 'shared/flash_messages' %>
@@ -54,6 +37,4 @@
   <script type="text/javascript">
     $(window).load(function() { $("#loading-placeholder").fadeOut(800); });
   </script>
-
-
 </html>

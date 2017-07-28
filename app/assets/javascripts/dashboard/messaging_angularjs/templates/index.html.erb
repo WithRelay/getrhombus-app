@@ -103,7 +103,7 @@
                   <a class="message-input-box-option-buttons w-inline-block" ng-click="sendConversationMessage('FbMessage')">
                     <div class="message-input-options-text"> &nbsp; &nbsp;{{send_msg_fb_btn}}</div>
                   </a>
-                </div>
+                </div>f
               </nav>
             </div>
           </div>
@@ -288,7 +288,7 @@
         <div class="conversation-date">New Messages</div>
       </div>
 
-      <div  class="conversation-date-wrapper" ng-if="($index == 0) || (selected_conversation_messages[$index - 1].ts_day_of_the_week != selected_conversation_messages[$index].ts_day_of_the_week)">
+      <div class="conversation-date-wrapper" ng-if="($index == 0) || (selected_conversation_messages[$index - 1].ts_day_of_the_week != selected_conversation_messages[$index].ts_day_of_the_week)">
         <div class="conversation-date">{{message.ts_day_of_the_week}}</div>
       </div>
 
@@ -306,7 +306,7 @@
 
           </div>
 
-          <div class="w-col w-col-10">
+          <div class="w-col w-col-10" in-view="messageInView($index, $inview)">
 
             <!-- image -->
             <div class="chat-bubble-image-wrapper customer" ng-if='message.images.length'>
@@ -326,7 +326,8 @@
       <!-- merchant -->
       <div class="agent-messaging-bubble w-clearfix" ng-if="(message.source != 'customer')">
         <div class="w-row">
-          <div class="w-col w-col-10">
+
+          <div class="w-col w-col-10" in-view="messageInView($index, $inview)">
 
             <!-- images -->
             <div class="chat-bubble-image-wrapper" ng-if='message.images.length'>
@@ -338,6 +339,7 @@
             </div>
 
           </div>
+
           <div class="w-col w-col-2">
             <%# added height %>
             <img ng-if="merchant.profile_image.type == 'image'" class="agent-picture messaging-bubble right-nav-profile-picture" my-src="{{merchant.profile_image.value}}" width="35" height='35'>
@@ -358,7 +360,7 @@
   <!-- [if lte IE 9]><script src="https://cdnjs.cloudflare.com/ajax/libs/placeholders/3.0.2/placeholders.min.js"></script><![endif] -->
 
   <div class="modal-body w-hidden" id='saved-reply-selection-div'>
-  <%# removed all webflow data attributes %>
+    <%# removed all webflow data attributes %>
 
     <div class="saved-reply-selection-wrapper w-clearfix">
       <div class="content-sub-wrapper modal w-clearfix">
@@ -381,7 +383,7 @@
 
 
   <div class="modal-body w-hidden" id='charge-a-customer-div'>
-  <%# removed all webflow data attributes %>
+    <%# removed all webflow data attributes %>
 
     <div class="charge-customer-form-wrapper">
       <div class="content-sub-wrapper modal w-clearfix">
@@ -415,7 +417,7 @@
   </div>
 
   <div class="modal-body w-hidden" id='mark-as-done-div'>
-  <%# removed all webflow data attributes %>
+    <%# removed all webflow data attributes %>
 
     <div class="mark-as-done-form-wrapper">
       <p class="modal-content-description">Label conversations before you close it, so your entire team can stay informed on why a customer or lead reached out.</p>
@@ -462,7 +464,7 @@
   </div>
 
   <div class="modal-body w-hidden" id='new-reminder-div'>
-  <%# removed all webflow data attributes %>
+    <%# removed all webflow data attributes %>
 
 
     <div class="schedule-notification-form-wrapper" id="schedule-message-div">
@@ -514,7 +516,7 @@
 
 
   <div class="modal-body w-hidden" id='mms-file-preview-div'>
-  <%# removed all webflow data attributes %>
+    <%# removed all webflow data attributes %>
 
     <div class="mms-file-preview-wrapper">
       <div class="content-sub-wrapper modal w-clearfix">

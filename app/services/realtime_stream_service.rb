@@ -20,7 +20,7 @@ class RealtimeStreamService
       #$pubnub.subscribe(channel: 'messaging_' + Rails.env + '_' + merchant_id)  
       $pubnub.publish(channel: 'messaging_' + Rails.env + '_' + merchant_id,
                       message: { type: 'new-message',
-                                 message: Conversation.message_hash(conversation, msg, conv_ref, customer),
+                                 message: Conversation.message_hash(conversation, msg, conv_ref),
                                  conversation: conversation.conversation_hash })
     end
 

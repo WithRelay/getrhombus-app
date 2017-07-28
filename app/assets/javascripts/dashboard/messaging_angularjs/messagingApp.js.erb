@@ -154,11 +154,11 @@ messagingApp.factory('conversationService', function($http, $q, Upload){
     return deferred.promise;
   };
 
-  service.markMessageAsRead = function(conversation_id, unread_ids) {
+  service.markMessageAsRead = function(conversation_id, unread_id) {
     var deferred = $q.defer();
     $http({
       method: 'POST',
-      url: base_url + "/" + conversation_id + '/mark_messages_as_read.json?ids=' + unread_ids,
+      url: base_url + "/" + conversation_id + '/mark_conv_ref_as_read.json?id=' + unread_id,
       headers: token,
     })
     .success(function(data) { 

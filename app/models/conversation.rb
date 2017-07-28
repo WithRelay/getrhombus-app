@@ -60,24 +60,12 @@ class Conversation < ActiveRecord::Base
   end
 
 	def self.get_conversation_messages(conv, conv_ref_id)
-    customer = User.find_by(id: conv.uid) if conv.uid_type == "user"
     where_str = conv_ref_id.present? ? 'conversation_refs.id < ?' : ''
-		convs_refs = conv.conversation_refs.where(where_str, conv_ref_id).limit(7)
-                                       .includes(textable: [:images]).order(created_at: :desc, id: :desc)
-		latest_messages = Array.new
-		unread_ids = []
-
-		convs_refs.each do |cr|
-			unread_ids.push(cr.id) if cr.unread
-			latest_messages.push(message_hash(conv, cr.textable, cr, customer, nil))
-    end
-    [latest_messages, unread_ids.join(",")]
+		convs_refs = conv.conversation_refs.where(where_str, conv_ref_id).includes(textable: [:images]).order(created_at: :desc, id: :desc).limit(7)
+    convs_refs.map { |cr| message_hash(conv, cr.textable, cr) }
 	end
 
-	def self.message_hash(conv, msg, conv_ref, customer, merchant = nil)
-    u = msg.user_id == conv.merchant_id ? merchant : customer
-    #u = conv_ref.source == 'customer' ? customer : merchant      # alternative
-
+	def self.message_hash(conv, msg, conv_ref)
     {
       id: msg.id,
       conv_ref_id: conv_ref.id,
@@ -92,16 +80,7 @@ class Conversation < ActiveRecord::Base
       channel: msg.class.name
   	}
 	end
-
-  def mark_messages_as_read(ids)
-  	begin
-	  	refs = ConversationRef.where(id: ids.split(","), conversation_id: self.id).update_all(unread: false)
-		  true
-		rescue StandardError => e
-		 	false
-		end
-	end
-
+  
   # uid can be user id, phone number or messenger id
   def self.send_message(conv, team, msg, channel, source, media = [])
     begin
@@ -130,7 +109,7 @@ class Conversation < ActiveRecord::Base
 
       if msg_instance.send_and_save_message(team, customer, from, to, msg, media)
         re = find_or_create_conversation_for_message(team.id, @conv.uid_type, @conv.uid, msg_instance, false, source)
-        msg_hash = message_hash(re[0], msg_instance, re[1], customer, team)
+        msg_hash = message_hash(re[0], msg_instance, re[1])
         [msg_hash, msg_instance, re.second]    # message hash, instance and message conv ref are needed
       else
         false
@@ -148,7 +127,6 @@ class Conversation < ActiveRecord::Base
     msg_ary = send_message(re, team, msg_to_send, channel, source, media)
     if msg_ary
       RealtimeStreamService.messages(re, msg_ary.third, customer, msg_ary.second)
-      puts msg_ary.inspect
       msg_ary.first[:id]
     else
       false
@@ -173,14 +151,9 @@ class Conversation < ActiveRecord::Base
   end
 
   def self.update_conversation_resolution(team_id, conv_id, conv_ref_id, source)
-    conv_res = ConversationResolution.where(conversation_id: conv_id, resolution: nil).last
-    conv_res = ConversationResolution.new unless conv_res 
-
+    conv_res = ConversationResolution.where(conversation_id: conv_id, resolution: nil).last || ConversationResolution.new
     key = source == 'customer' ? :uid_conversation_ref_id : :merchant_conversation_ref_id
-    conv_res[key] = conv_ref_id    
-    conv_res.merchant_id = team_id
-    conv_res.conversation_id = conv_id
-    conv_res.save
+    conv_res.update_attributes(key => conv_ref_id, merchant_id: team_id, conversation_id: conv_id)
   end
 
 	# find the conversation or create one

@@ -2,7 +2,6 @@ class MerchantContact < ActiveRecord::Base
   belongs_to :merchant, class_name: "User"
   has_many :user_lists, as: :customer_contact
   scope :only_contact, -> { where(is_customer: false) }
-  scope :facebook_contacts, -> { where(uid_type: 'fb_page') }
 
   def self.add_or_update_merchant_contact(merchant_id, uid, uid_type)
     begin
