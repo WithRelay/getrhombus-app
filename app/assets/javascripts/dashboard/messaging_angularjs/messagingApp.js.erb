@@ -159,7 +159,7 @@ messagingApp.factory('conversationService', function($http, $q, Upload){
     var deferred = $q.defer();
     $http({
       method: 'POST',
-      url: base_url + "/" + conversation_id + '/mark_conv_ref_as_read.json?id=' + unread_id,
+      url: base_url + "/" + conversation_id + '/mark_conv_ref_as_read.json?ref_id=' + unread_id,
       headers: token,
     })
     .success(function(data) { 

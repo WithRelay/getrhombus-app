@@ -700,7 +700,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
 
     $scope.getProfileLink = function() {
       var type = ($scope.selected_conversation.uid_type == 'user') ? '/customers/' : '/contacts/';
-      return '/users/' + $scope.merchant.id + type + $scope.selected_conversation.mc_id;
+      return '/users/' + $scope.merchant.id + type + ($scope.selected_conversation.mc_id || '');
     };
 
     $scope.subscribe_merchant = function() {

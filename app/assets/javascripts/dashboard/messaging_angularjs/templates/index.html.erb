@@ -2,7 +2,7 @@
     <div class="w-row">
       <div class="w-col w-col-4"></div>
       <div class="sub-nav-bar-messaging-dash-column-2 w-col w-col-4">
-        <div class="customer-name-text subheader" ng-if="conversation_selected">Conversation with {{selected_conversation.full_name}}</div>
+        <div class="customer-name-text subheader" ng-if="conversation_selected">Conversation with <a class="link_no_underline" ng-href="{{ getProfileLink() }}">{{ selected_conversation.full_name }}</a></div>
       </div>
       <div class="w-col w-col-4"></div>
     </div>
@@ -139,8 +139,7 @@
       <img ng-if="snapshot.profile_image.type == 'image'" class="profile-picture-right-nav" my-src="{{snapshot.profile_image.value}}" width="60">
 
       <div class="dashboard-right-nav signup-box-subheading">
-      <a ng-if="selected_conversation.mcid" class="link_no_underline" ng-href="{{ getProfileLink() }}">{{ snapshot.full_name.toUpperCase() }}</a>
-      <span ng-if="!selected_conversation.mcid">{{ snapshot.full_name.toUpperCase() }}</span>
+      <a class="link_no_underline" ng-href="{{ getProfileLink() }}">{{ snapshot.full_name.toUpperCase() }}</a>
       <span ng-class="{ 'messaging-snapshot': true, 'relay-id' : true, 'leads unverified' : snapshot.verified == 'UNVERIFIED' }">{{ snapshot.verified }}</span>
       </div>
       <div class="left-column-text number" ng-show="snapshot.phone_number.length && snapshot.phone_number != '-'"> &nbsp; &nbsp;{{ snapshot.phone_number }}</div>

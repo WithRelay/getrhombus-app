@@ -1,5 +1,5 @@
 class Api::V1::ConversationsController < API::V1::BaseController
-  before_action :set_conversation, except: [:index, :find]
+  before_action :set_conversation, except: [:index, :find, :mark_conv_ref_as_read]
   before_action :check_user
 
 	def index
@@ -51,7 +51,7 @@ class Api::V1::ConversationsController < API::V1::BaseController
 
   def mark_conv_ref_as_read
     begin
-      #ConversationRef.where(id: params[:id], conversation_id: @conversation.id).update_all(unread: false)
+      #ConversationRef.where(id: params[:ref_id], conversation_id: params[:id]).update_all(unread: false)
       render json: {}
     rescue StandardError => e
       # email team
