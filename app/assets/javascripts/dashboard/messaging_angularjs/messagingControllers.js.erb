@@ -21,8 +21,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
     $scope.status = { loading: false, /* loaded: false */ };
 
     // Message
-    $scope.new_message = {};
-    $scope.new_message.text = "";
+    var text_to_send = '';
     $scope.mms = {};
     $scope.mms.text = "";
 
@@ -299,15 +298,9 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
     };
 
     $scope.bindEnterToMessagingArea = function() {
-      //console.log('in binddddddddddddddddddddddddddddddddddd');
-      BindConversationPlugins.get_emoji_box()[0].emojioneArea.on("keyup", function(btn, e) {
-        BindConversationPlugins.update_textarea();
-        //console.log('in emoji boxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
-        if (e.keyCode == 13) {
-          //console.log('in enterrrrrrrrrrrrrrrrrrrrrrrrrrr')
-          $scope.sendConversationMessage('Message');
-        }
-      });
+      BindConversationPlugins.get_emoji_box()[0].emojioneArea
+      .on("keydown", function(btn, e) { if (e.keyCode == 13) e.preventDefault(); })
+      .on("keyup", function(btn, e) { if (e.keyCode == 13) $scope.sendConversationMessage('Message'); });
     };
 
     $scope.sendConversationMessage = function(channel) {
@@ -315,14 +308,14 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
         $scope.is_sending = true;
         var btn = (channel == 'Message') ? 'send_msg_btn' : 'send_msg_fb_btn';
         $scope[btn] = "Sending...";
-        console.log($scope.new_message);
 
-        if (($scope.new_message.text == '') || ($scope.new_message.text.length > $scope.merchant.num_of_chars)) {
+        text_to_send = BindConversationPlugins.get_emoji_box()[0].emojioneArea.getText().trim();
+        if ((text_to_send == '') || (text_to_send.length > $scope.merchant.num_of_chars)) {
           FlashHandler.setFlashMessage('Enter up to ' + $scope.merchant.num_of_chars + ' characters.', 'error');
           $scope.enable_msg_btn(btn, channel);
         } else {
           var conversation_id = $scope.selected_conversation.id;
-          conversationService.sendConversationMessage(conversation_id, $scope.new_message.text, channel)
+          conversationService.sendConversationMessage(conversation_id, text_to_send, channel)
           .then(function(data) {
             // ensure we still have the right conversation
             if ($scope.selected_conversation.id == conversation_id) {
@@ -331,10 +324,8 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
               $scope.conversations[conversation_id].last_message_ts = data.ts;
               $scope.conversations[conversation_id].last_message_type = data.channel;
               $scope.conversations[conversation_id].ago = data.ago;
+              BindConversationPlugins.get_emoji_box()[0].emojioneArea.setText('');
             }
-            $scope.new_message.text = '';
-            BindConversationPlugins.get_emoji_box()[0].emojioneArea.setText('');
-            console.log('sent message');
             console.log(data)
           }, function(data) {
             console.log('unable to send message');
@@ -458,12 +449,10 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
 
     $scope.insertTextIntoMessageBox = function(text_to_insert) {
       if (text_to_insert && text_to_insert.trim().length) {
-        var box = BindConversationPlugins.get_emoji_box()[0], text = box.emojioneArea.getText();
-        text += " " + text_to_insert.trim();
-        box.emojioneArea.setText(text);
-        $scope.new_message.text = text;
+        var text = BindConversationPlugins.get_emoji_box()[0].emojioneArea.getText().trim() + " " + text_to_insert.trim();
+        BindConversationPlugins.get_emoji_box()[0].emojioneArea.setText(text);
         $('.update-close-modals').click();
-      }
+      };
     };
 
     // End Modals

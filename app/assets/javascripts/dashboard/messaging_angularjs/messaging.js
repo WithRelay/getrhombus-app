@@ -30,26 +30,12 @@ var BindConversationPlugins = new function() {
       }*/
     });
 
-    // paste - when you paste, emojibtn.click - as the name implies
-    msg_emoji_box[0].emojioneArea.on("paste emojibtn.click", function(button, e) { update_actual_text_box(); })
-    .on("keydown", function(btn, e) { if (e.keyCode == 13) e.preventDefault(); });
+    angular.element('#Messaging-Text-Area').scope().bindEnterToMessagingArea();
   };
 
-  // update the angular field that is hidden
-  function update_actual_text_box() {
-    $('#Messaging-Text-Area').val(msg_emoji_box[0].emojioneArea.getText());
-    angular.element(jQuery('#Messaging-Text-Area')).triggerHandler('change');
-  };
-
-  this.update_textarea = function() { update_actual_text_box(); };
   this.get_emoji_box = function() { return msg_emoji_box; };
 };
 
 $(document).ready(function () {
-
-  if ($('#Messaging-Text-Area').length > 0) {
-    BindConversationPlugins.now();
-    angular.element(jQuery('#Messaging-Text-Area')).scope().bindEnterToMessagingArea();
-  };
-  
+  if ($('#Messaging-Text-Area').length) BindConversationPlugins.now();
 });

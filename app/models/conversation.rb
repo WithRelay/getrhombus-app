@@ -52,7 +52,7 @@ class Conversation < ActiveRecord::Base
       profile_image: User.check_profile_picture(user),
       last_message: last_message ? last_message.text : '',
       last_message_ts: last_message.try(:created_at).to_i,
-      last_message_type: last_message ? last_message.class.name : nil,
+      last_message_type: last_message ? last_message.class.name : nil,  # channel
       ago: last_message ? time_in_relative_form(last_message.created_at, 'short_format') : '',
       unread_count: ConversationRef.where(conversation_id: self.id, unread: true).count,
       #has_messenger:
@@ -116,7 +116,6 @@ class Conversation < ActiveRecord::Base
       end
     rescue StandardError => e
       puts e.inspect
-      puts 'eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
       # notify team
       false
     end

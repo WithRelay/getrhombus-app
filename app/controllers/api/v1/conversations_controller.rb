@@ -61,8 +61,6 @@ class Api::V1::ConversationsController < Api::V1::BaseController
 
   def messages
     re = Conversation.send_message(@conversation, current_user, params[:msg], params[:channel], 'merchant') if params[:msg].present?
-    puts re.inspect
-    puts 'ssssssssssssssss'
     if re
       render json: re.first, status: 200
     else 
