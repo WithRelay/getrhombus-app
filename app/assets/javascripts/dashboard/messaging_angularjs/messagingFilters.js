@@ -3,7 +3,6 @@
 /* Filters */
 
 angular.module('messagingFilters', [])
-  //.filter('filterUserList', function() {  //remove
   .filter('filterConversationList', function() {
     return function(items, query) {
       var filtered = [];

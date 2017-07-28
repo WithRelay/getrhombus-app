@@ -59,7 +59,7 @@
             <div class="customer-name-text shrink-text w-clearfix">{{conversation.full_name}} <span class="message-delivery-time">{{conversation.ago}}</span>
             </div>
             <div class="break-word message word-wrap">{{conversation.last_message}}</div>
-            <div class="message-counter" ng-show="conversation.unread_count > 0">{{conversation.unread_count}}</div>
+            <div class="message-counter" ng-show="conversation.unread_count > 0" animate-model-change model="{{conversation.unread_count}}">{{conversation.unread_count}}</div>
           </div>
 
         </div>

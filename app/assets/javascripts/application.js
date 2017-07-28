@@ -43,6 +43,7 @@
 //= require jquery_ujs
 //= require pubnub/pubnub-angular.js
 //= require angular-inview
+//= require ng-animate-model-change
 //= require_tree ./dashboard/messaging_angularjs/templates
 //= require dashboard/messaging_angularjs/messaging.js
 //= require dashboard/messaging_angularjs/messagingApp.js.erb
