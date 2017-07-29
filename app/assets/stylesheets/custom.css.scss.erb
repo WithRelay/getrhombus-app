@@ -492,9 +492,17 @@ textarea { resize: none;}
 
 .toasters {
   margin: 5% auto !important;
+  position: fixed !important;
   z-index: 10000 !important;
-  top: 0 !important;
-  margin-right: 0 !important;
+  bottom: 0px;
+}
+
+.toaster-text {
+  margin-top: 0 !important;
+}
+
+.toasters.default {
+  right: 0;
 }
 
 .browser-notification-link-block {

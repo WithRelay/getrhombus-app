@@ -133,10 +133,19 @@ var FlashHandler = new function() {
 
   this.copied_no = function() {
     hideToastr();
-    $('body').append('<a class="browser-notification-link-block copied w-inline-block" href="#" style="position: absolute;">\
-      <div class="browser-notification-close payment toaster-font-awesome"></div>\
-      <div class="number-copied-text">Phone number copied!</div>\
-    </a>')
+    $('body').append(
+      '<div class="default toasters">\
+        <div class="break-word shrink-text toaster-text word-wrap">\
+          <a href="#" class="toaster-action">Phone number copied to clipboard</a>.\
+        </div>\
+      </div>'
+    )
+    setTimeout(
+      function()
+      {
+        closeToastrAnimation('.toasters.default')
+      },
+      5000);
     toastrAnimation('.browser-notification-link-block')
     close_browser_toastr();
   }
@@ -158,10 +167,11 @@ var FlashHandler = new function() {
       </div>\
     </a>')
     setTimeout(
-        function()
-        {
-          closeToastrAnimation('.browser-notification-link-block')
-        }, 5000);
+      function()
+      {
+        closeToastrAnimation('.browser-notification-link-block')
+      },
+      5000);
   }
 
   function toastrAnimation(class_name) {
@@ -179,16 +189,14 @@ var FlashHandler = new function() {
   }
 
   function closeToastrAnimation(class_name) {
-    $(class_name).animate({
-      right: -500
-    });
+    $(class_name).animate({bottom: 1000}, 2000);
   }
 
   // Confirmation Dialog for event
   this.setConfirmationDialog = function (selector, confirmText, confirmBtnText, isConfirm){
     hideToastr();
 
-    $('.cancel-subscription-wrapper').remove();  
+    $('.cancel-subscription-wrapper').remove();
     $('body').append('<div class="cancel-subscription-wrapper w-clearfix">\
                         <p class="cancel-subscription modal-content-description">' + confirmText + '</p>\
                         <div class="modal-underline underline-div"></div>\
@@ -220,6 +228,6 @@ var FlashHandler = new function() {
     }
   };
 
-  
+
 
 }
