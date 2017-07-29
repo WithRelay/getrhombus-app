@@ -25,8 +25,8 @@ messagingApp.directive('whenScrolledUp', ['$timeout', function($timeout, $scope)
         var sh = raw.scrollHeight;
         scope.$apply(attr.whenScrolledUp).then(function() {
           $timeout(function() {
-            raw.scrollTop = raw.scrollHeight - sh;
             $('.dashboard-body').perfectScrollbar('update');
+            raw.scrollTop = raw.scrollHeight - sh;
             scope.retrieving_messages_for_scroll = false;
             console.log('complete');
           });
@@ -87,8 +87,8 @@ messagingApp.directive('onFinishRender', function ($timeout) {
       if (scope.$last === true) {
         if (hasScrollReachedBottom(raw.parentElement)) {
           $timeout(function() {
-            raw.parentElement.scrollTop = raw.parentElement.scrollHeight;
             $('.dashboard-body').perfectScrollbar('update');
+            raw.parentElement.scrollTop = raw.parentElement.scrollHeight;
           });
         }
       }
