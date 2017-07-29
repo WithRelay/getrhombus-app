@@ -31,18 +31,13 @@ var FlashHandler = new function() {
   var typeObj = { 'notice': 'success', 'warning': 'info', 'error':'error', 'errors': 'error', 'alert': 'error' };
   this.setFlashMessage = function(msg, type){
     var messageToSet = typeObj[type] || 'Attention';
-    showToastr(messageToSet, arrayToString(msg));
-    if (typeObj[type] !== 'error') {
-      setTimeout(
-        function()
-        {
-          closeToastrAnimation('.toasters')
-        }, 6000);
-    }
-    $('.toaster-font-awesome').on('click', function (e) {
-      e.preventDefault();
-      closeToastrAnimation('.toasters')
-    } );
+    showToastr(messageToSet, arrayToString(msg))
+    setTimeout(
+      function()
+      {
+        closeToastrAnimation('.toasters')
+      }, 6000);
+
   };
 
   function showToastr(type, message) {
@@ -50,17 +45,10 @@ var FlashHandler = new function() {
 
     var class_name = (type === 'error') ? 'failure toasters' : 'toasters' ,
         close_button_class = (type === 'error') ? 'failure toaster-font-awesome' : 'toaster-font-awesome',
-        message_class = (type === 'error') ? 'break-word failure toaster-text word-wrap' : 'break-word toaster-text word-wrap'
-    $('body').append('<div class="'+class_name+'" style="right: -500px;">\
-      <div class="toaster-row w-row">\
-        <div class="toaster-row-column-1 w-col w-col-11">\
-          <div class="'+ message_class +'">\
-            '+message+'\
-          </div>\
-        </div>\
-        <div class="toaster-row-column-2 w-clearfix w-col w-col-1">\
-          <div class="'+close_button_class+'"></div>\
-        </div>\
+        message_class = (type === 'error') ? 'break-word failure toaster-text word-wrap' : 'break-word shrink-text toaster-text word-wrap'
+    $('body').append('<div class="'+class_name+'" style="bottom: -500px;">\
+      <div class="'+ message_class +'">\
+        '+message+'\
       </div>\
     </div>');
     toastrAnimation("." + class_name)
@@ -146,7 +134,7 @@ var FlashHandler = new function() {
         closeToastrAnimation('.toasters.default')
       },
       5000);
-    toastrAnimation('.browser-notification-link-block')
+    toastrAnimation('.default.toasters')
     close_browser_toastr();
   }
 
@@ -177,8 +165,8 @@ var FlashHandler = new function() {
   function toastrAnimation(class_name) {
     class_name = class_name.split(' ').join('.')
     $(class_name).animate({
-      right: 0
-    })
+      bottom: $( window ).height() - 120
+    }, 2000)
   }
 
   function close_browser_toastr() {
@@ -189,7 +177,7 @@ var FlashHandler = new function() {
   }
 
   function closeToastrAnimation(class_name) {
-    $(class_name).animate({bottom: 1000}, 2000);
+    $(class_name).animate({bottom: -500}, 2000);
   }
 
   // Confirmation Dialog for event
