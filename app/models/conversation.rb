@@ -7,8 +7,7 @@ class Conversation < ActiveRecord::Base
   has_many :fb_messages, through: :conversation_refs, source: :textable, source_type: 'FbMessage', dependent: :destroy
   has_many :messages, through: :conversation_refs, source: :textable, source_type: 'Message', dependent: :destroy
 
-  # the user texting this merchant
-  def user
+  def user # the user texting this merchant
     User.find_by(id: self.uid)
   end
 
@@ -92,8 +91,11 @@ class Conversation < ActiveRecord::Base
         customer = @conv.user
         to = (channel == "FbMessage") ? customer.get_customer_page_specific_id(from) : customer.phone_number
       else
-        mc = MerchantContact.find_by(merchant_id: @conv.merchant_id, uid: @conv.uid, uid_type: @conv.uid_type)
-        to = mc.uid if mc.page_specific_id_valid?(team)
+        to = @conv.uid
+        if channel == "FbMessage"
+          mc = MerchantContact.find_by(merchant_id: @conv.merchant_id, uid: @conv.uid, uid_type: @conv.uid_type)
+          to = nil unless mc.page_specific_id_valid?(team)
+        end
       end
 
       return false unless from.present? && to.present?
