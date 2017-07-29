@@ -1,33 +1,32 @@
-module Toolbox
+# frozen_string_literal: true
 
+module Toolbox
+  # Generate random string
   module StringGen
     class << self
-
       def generate_random_string(length)
-        SecureRandom.random_number(36**length).to_s(36).rjust(length, "0")
+        SecureRandom.random_number(36**length).to_s(36).rjust(length, '0')
       end
-
     end
   end
 
+  # Module to process decimal
   module Decimal
     class << self
-
       def to_int_or_2dp(amt)
-    	  amt = sprintf("%.2f", amt)
-        amt = amt.split(".").first if amt.include? ".00"
+        amt = format('%.2f', amt || 0)
+        amt = amt.split('.').first if amt.include? '.00'
         amt
       end
 
       def to_cents(var)
-        ((var.to_f.abs)*100).round        # 100 * 1.1
+        ((var.to_f.abs)*100).round
       end
 
       def cents_to_int_or_2dp(var)
-        var = "%g" % (var.to_f / 100.00)
-        (var.include? ".") ? to_int_or_2dp(var) : var
+        var = '%g' % (var.to_f / 100.00)
+        var.include?('.') ? to_int_or_2dp(var) : var
       end
-
     end
   end
 end
