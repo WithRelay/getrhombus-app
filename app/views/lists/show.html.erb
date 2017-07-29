@@ -68,7 +68,7 @@
 
 <div class="dashboard-body" >
   <div id="list-data" data-list-type="<%= @list.list_type %>" data-list-id="<%= @list.id %>" data-list-channel="<%= @list.channel %>"><%= @list.list_type %></div>
-  <div id='objlists' data-object-type='list'>
+  <div id='objlists' data-object-type='list-members'>
     <%= render partial: list_show_partial, locals: { list_members: @list_members } %>
   </div>
   <div id="with-button" class="hide">

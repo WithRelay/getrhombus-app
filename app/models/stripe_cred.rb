@@ -12,11 +12,6 @@ class StripeCred < ActiveRecord::Base
   def set_transaction_fee_id
     self.transaction_fee_id = 1
   end
-
-  def can_accept_payments?
-    charges_enabled && disabled_reason.blank?
-  end
-
 end
 
 

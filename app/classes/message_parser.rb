@@ -67,8 +67,9 @@ class MessageParser
         send_deprecation_warning if is_old_format
 
       elsif @customer.blank?            # checked
-        if is_signup = is_signup?
-          merchant_name = @merchant.org_name.present? ? @merchant.org_name : "Rhombus"
+        is_signup = is_signup?
+        if is_signup
+          merchant_name = @merchant.org_name.present? ? @merchant.org_name : "Relay"
           url = Rails.application.secrets.url["info"]
           short_link = 'test' #UrlShortenerService.shorten_link("#{url}/signup?num=#{@received_msg.from}&referrer_uid=#{@merchant.relay_uid}&referrer=#{merchant_name}")
           send_response("To chat with us or send a payment, sign up here: #{short_link}")
@@ -114,26 +115,27 @@ class MessageParser
     (amt_dollar_ary[0] || amt_dollar_ary[1].present?) ? amt_dollar_ary : amt_plus_array
   end
   
+  # tested
   # check for payment with this format. Ex: $20 fee
   def is_payment_dollar?
     amount = @received_msg.text.split(" ", 2).first[1..-1]
     dollar = @received_msg.text.chr == "$" ? "$" : false
     return to_cents(amount), dollar if is_number?(amount) && dollar.present?
+    # return false since this means amount is invalid or dollar wasn't present
     return false, dollar
   end
 
+  # tested
   def is_number?(var)
-    begin
-      true if Float(var)
-    rescue StandardError => err
-      false
-    end
+    Float(var) rescue nil
   end
 
+  # tested
   def to_cents(var)
     Toolbox::Decimal.to_cents(var)
   end
 
+  # tested
   # scan for hashtag and + sign and amt.
   # amt could be invalid, so still track if + was present so user can be notified of payment format.
   def is_payment_plus?
@@ -154,10 +156,11 @@ class MessageParser
     return amt, plus_present
   end
 
-  def is_amount_under_limit?              #tested
+  #tested
+  def is_amount_under_limit?              
     return true if @amt_ary[0] >= 100 && @amt_ary[0] <= 1500000
     # notify user and send to merchant dashboard
-    send_response("Sorry, we are unable to make payments above 15,000 dollars. But you can send in smaller amounts. Thanks!")
+    send_response("Please send an amount between 1 dollar and 15,000 dollars. Thanks!")
     # notify merchant via Email?
     false
   end
@@ -168,11 +171,11 @@ class MessageParser
       @is_valid_payment_intent ? [@amt_ary[0], "no_tag"] : []
     else   
       @received_msg.update(hashtag_id: @tag.id)                       # update message with tag
-      if @tag.non_payment_tag?                                    # tested
+      if @tag.non_payment_tag?                                        # tested
         puts 'not payment tag'
         @is_valid_payment_intent ? [@amt_ary[0], "no_tag_amt"] : []
       elsif
-        @tag_amt = to_cents(Toolbox::Decimal.to_int_or_2dp(@tag.amount)) # this is a string though
+        @tag_amt = to_cents(Toolbox::Decimal.to_int_or_2dp(@tag.amount))    # this is a string though
         puts 'this is tag amount'
         puts @tag_amt 
         if @is_valid_payment_intent               # tested
@@ -226,27 +229,18 @@ class MessageParser
 
   def send_deprecation_warning
     puts 'send deprecation warning'
-    send_response("We're improving your payment experience on Rhombus by replacing the $ sign with a + tag. Ex. You can now text +10 instead of $10.")
+    send_response("We're improving your payment experience on Relay by replacing the $ sign with a + tag. Ex. You can now text +10 instead of $10.")
     send_response('With the + tag, you can now place the amount anywhere in the message. Ex. "cheese burgers +8 yay!", instead of "$8 cheese burgers')
     send_response("Btw, hashtags are awesome! You can now use hashtags to specify the item you're paying for or the campaign you're donating towards. Ex. +5 #CheeseBurgers")
     send_response("This helps your local business know exactly what you are paying for!")
   end
 
   def merchant_supports_payment?
-    cred_data = @merchant.get_stripe_cred
-    
-    if cred_data[:type] == 'standalone'
-      status = true 
-    elsif cred_data[:type] == 'managed'
-      status = cred_data.cred.can_accept_payments?
-    elsif cred_data[:type] == nil
-      status = false
-    end
-
-    return true if status
+    return true if @merchant.can_accept_payments?
     # notify user and send to merchant dashboard
     # send_response("Thank you for sending a payment with Rhombus, but the merchant hasn't completed the account to receive payments.")
-    # notify merchant via Email?    false
+    # notify merchant via Email?    
+    # false
   end
 
   def process_payment
