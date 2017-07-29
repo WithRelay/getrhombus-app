@@ -1,16 +1,14 @@
 class Conversation < ActiveRecord::Base
   include PrettyDate
 
+  belongs_to :merchant, class_name: 'User'
   has_many :conversation_refs, dependent: :destroy
   has_many :conversation_resolutions, dependent: :destroy
   has_many :fb_messages, through: :conversation_refs, source: :textable, source_type: 'FbMessage', dependent: :destroy
   has_many :messages, through: :conversation_refs, source: :textable, source_type: 'Message', dependent: :destroy
 
-  # Timezone should already be set when calling methods in this class.
-
-  # the user texting this merchant
-  def user
-    User.find_by(id: self.uid) if self.uid_type == "user"
+  def user # the user texting this merchant
+    User.find_by(id: self.uid)
   end
 
   def self.get_open_conversations_count(merchant_id)
@@ -38,24 +36,26 @@ class Conversation < ActiveRecord::Base
 
     if self.uid_type == 'user'
       mc = MerchantCustomer.find_by(merchant_id: self.merchant_id, customer_id: self.uid)
+      has_messenger = self.user.try(:get_customer_page_specific_id, self.merchant.get_page_access_token) && true
     else
       mc = MerchantContact.find_by(merchant_id: self.merchant_id, uid: self.uid, uid_type: self.uid_type)
+      has_messenger = mc.page_specific_id_valid?
     end
 
     {
       id: self.id,
       uid: self.uid,
       uid_type: self.uid_type,
+      has_messenger: has_messenger,
       mc_id: mc ? mc.id.to_s : nil,
       mc_type: mc ? mc.class.name : nil,
-      full_name: User.get_conversation_display_name(self.uid, self.uid_type),
       profile_image: User.check_profile_picture(user),
       last_message: last_message ? last_message.text : '',
       last_message_ts: last_message.try(:created_at).to_i,
       last_message_type: last_message ? last_message.class.name : nil,  # channel
+      full_name: User.get_conversation_display_name(self.uid, self.uid_type),
       ago: last_message ? time_in_relative_form(last_message.created_at, 'short_format') : '',
-      unread_count: ConversationRef.where(conversation_id: self.id, unread: true, source: ConversationRef.sources[:customer]).count,
-      #has_messenger:
+      unread_count: ConversationRef.where(conversation_id: self.id, unread: true, source: ConversationRef.sources[:customer]).count
     }
   end
 
@@ -88,10 +88,14 @@ class Conversation < ActiveRecord::Base
       from = (channel == "FbMessage") ? team.get_page_access_token : team.rhombus_number
 
       if @conv.uid_type == "user"
-        customer = User.find_by(id: @conv.uid)
+        customer = @conv.user
         to = (channel == "FbMessage") ? customer.get_customer_page_specific_id(from) : customer.phone_number
       else
         to = @conv.uid
+        if channel == "FbMessage"
+          mc = MerchantContact.find_by(merchant_id: @conv.merchant_id, uid: @conv.uid, uid_type: @conv.uid_type)
+          to = nil unless mc.page_specific_id_valid?(team)
+        end
       end
 
       return false unless from.present? && to.present?

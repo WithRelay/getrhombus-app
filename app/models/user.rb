@@ -207,14 +207,13 @@ class User < ActiveRecord::Base
   end
 
   def get_page_access_token
-    page = self.fb_pages.subscribed[0]
-    page.try(:page_access_token)
+    self.fb_pages.subscribed.last.try(:page_access_token)
   end
 
   def get_customer_page_specific_id(page_access_token)
-    page = FbPage.find_by(page_access_token: page_access_token)
-    fb_cred = self.fb_creds.where(fb_page_id: page.id).last
-    fb_cred.try(:page_specific_id)
+    return unless page_access_token
+    (page = FbPage.find_by(page_access_token: page_access_token)) || return
+    self.fb_creds.where(fb_page_id: page.id).last.try(:page_specific_id)
   end
 
   def update_account_balance(amt)
