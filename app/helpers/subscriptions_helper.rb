@@ -1,5 +1,4 @@
 module SubscriptionsHelper
-
   def saas_sub
     @saas_sub = current_user.get_saas_subscription
   end
@@ -9,7 +8,8 @@ module SubscriptionsHelper
   end
 
   def get_saas_plan_amount
-    (Plan.find @saas_sub.plan_id).amount/100 if current_user.is_merchant? && @saas_sub.present?
+    return unless current_user.is_merchant? && @saas_sub.present?
+    (Plan.find @saas_sub.plan_id).amount / 100
   end
 
   def saas_plan_name
@@ -25,11 +25,18 @@ module SubscriptionsHelper
   end
 
   def subscription_time_period
-    unless @saas_sub.nil?
-      start_date = @saas_sub.current_period_start.present? ? Time.zone.at(@saas_sub.current_period_start).strftime("%B %d, %Y") : ''
-      end_date = saas_sub.current_period_end.present? ? Time.zone.at(@saas_sub.current_period_end).strftime("%B %d, %Y") : ''
-      "Time period: #{start_date} - #{end_date} (#{subscription_plan_interval})"
-    end
+    return if @saas_sub.nil?
+    "Time period: #{start_date} - #{end_date} (#{subscription_plan_interval})"
+  end
+
+  def start_date
+    return '' unless @saas_sub.current_period_start.present?
+    Time.zone.at(@saas_sub.current_period_start).strftime('%B %d, %Y')
+  end
+
+  def end_date
+    return '' unless saas_sub.current_period_end.present?
+    Time.zone.at(@saas_sub.current_period_end).strftime('%B %d, %Y')
   end
 
   def subscription_plan_interval
@@ -56,12 +63,16 @@ module SubscriptionsHelper
   end
 
   def saas_coupon_value
-     @coupon.amount_off.present? ? "$#{Toolbox::Decimal.to_int_or_2dp(@coupon.amount_off.to_f/100)}" : "#{@coupon.present_off}%"
+    if @coupon.amount_off.present?
+      "$#{Toolbox::Decimal.to_int_or_2dp(@coupon.amount_off.to_f / 100)}"
+    else
+      "#{@coupon.present_off}%"
+    end
   end
 
   def saas_coupon_duration
     if @coupon.duration == 'once'
-      "Once"
+      'Once'
     else
       "#{@coupon.duration_in_months} months"
     end
@@ -69,10 +80,10 @@ module SubscriptionsHelper
 
   def saas_coupon_end_date
     if @coupon.duration_in_months
-      end_date = (@coupon.duration_in_months).months
-      "#{(@saas_sub.created_at + end_date).strftime("%B %d, %Y")}"
+      end_date = @coupon.duration_in_months.months
+      (@saas_sub.created_at + end_date).strftime('%B %d, %Y').to_s
     else
-      "#{(@saas_sub.created_at).strftime("%B %d, %Y")}"
+      @saas_sub.created_at.strftime('%B %d, %Y').to_s
     end
   end
 

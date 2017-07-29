@@ -1,4 +1,3 @@
-
 <%= render 'shared/loading' %>
 
 <div class="dashboard-nav w-clearfix">
@@ -6,7 +5,7 @@
     <a class="w-clearfix w-inline-block" href="#">
       <% unless params[:controller] == 'users' %>
         <%= link_to user_path(current_user), class: 'dash-header-links' do %>
-          &nbsp;<strong>Dashboard</strong>
+          <strong>Dashboard</strong>
         <% end %>
       <% end %>
       <%= render "shared/rhombus_number" %>

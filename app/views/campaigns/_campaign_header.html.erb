@@ -5,15 +5,15 @@
   <div class="dashboard-nav-links-wrapper">
     <a class="w-clearfix w-inline-block" href="#">
       <%= link_to filter_campaign_user_campaigns_path(current_user, status: 'active') do %>
-        <div class="dash-header-links">&nbsp; <strong>Active</strong>
+        <div class="dash-header-links"> <strong>Active</strong>
         </div>
       <% end %>
       <%= link_to filter_campaign_user_campaigns_path(current_user, status: 'inactive') do %>
-        <div class="dash-header-links new-link">&nbsp;&nbsp;<strong>Inactive</strong>
+        <div class="dash-header-links new-link"><strong>Inactive</strong>
         </div>
       <% end %>
       <%= link_to filter_campaign_user_campaigns_path(current_user, status: 'paused') do %>
-        <div class="dash-header-links new-link">&nbsp; &nbsp;<strong>Paused</strong>
+        <div class="dash-header-links new-link"> <strong>Paused</strong>
         </div>
       <% end %>
       <%= render "shared/rhombus_number" %>
