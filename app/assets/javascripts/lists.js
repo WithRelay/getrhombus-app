@@ -104,7 +104,7 @@ $(document).on('ready page:load', function() {
         dataType: 'json'
       }).done(function(data, msg) {
         setFlashForList('List successfully created', 'notice');
-        window.location = data.redirect_url;
+        window.location = window.location.origin + data.redirect_url;
       }).fail(function(msg){
         setFlashForList('Unable to complete request', 'error');
       });
@@ -189,12 +189,12 @@ $(document).on('ready page:load', function() {
         url: action,
         data: data,
         dataType: 'json'
-      }).done(function(msg){
+      }).done(function(data) {
         $('.update-close-modals').click();
         setFlashForList('Segment created successfully', 'notice');
-        location.reload()
+        window.location = window.location.origin + data.redirect_url;
       })
-      .fail(function(msg){
+      .fail(function(data) {
         setFlashForList('Unable to create segment', 'error');
       })
   });

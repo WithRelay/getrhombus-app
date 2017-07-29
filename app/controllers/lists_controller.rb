@@ -19,7 +19,7 @@ class ListsController < ApplicationController
     @list_members = @list.get_mcs(params[:page])
 
     # segment
-    if @list.segment.present?
+    if @list.is_segment?
       @new_customer = User.new
       @selected_segment = @list.segment['base_query']
       @list_type = @list.list_type
@@ -71,7 +71,7 @@ class ListsController < ApplicationController
       end
     end
 
-    redirect_to ((@list.segment.blank?) ? user_lists_path(current_user) : user_segments_path(current_user))
+    redirect_to ((!@list.is_segment?) ? user_lists_path(current_user) : user_segments_path(current_user))
   end
 
   private
@@ -80,7 +80,7 @@ class ListsController < ApplicationController
     end
 
     def render_show_controller_action
-      return 'lists/show' if @list.segment.blank?
+      return 'lists/show' if !@list.is_segment?
       if @list.customer?
         @merchant_customers = @list_members
         "merchant_customers/index"
