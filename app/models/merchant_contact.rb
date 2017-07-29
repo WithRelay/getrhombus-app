@@ -13,13 +13,11 @@ class MerchantContact < ActiveRecord::Base
     end
   end
 
-  def page_specific_id_valid?
-    merchant = User.find self.merchant_id
-    merchant_page_id = merchant.fb_pages.subscribed.last
-    return nil unless merchant_page
-
-    contact_page_id = FbPage.find_by(page_specific_id: self.uid).fb_page_id
-    merchant_page_id == contact_page_id
+  def page_specific_id_valid?(merchant = nil)
+    merchant = User.find self.merchant_id unless merchant
+    merchant_page_id = merchant.fb_pages.subscribed.last.try(:id)
+    return false unless merchant_page_id
+    merchant_page.id == FbPage.find_by(page_specific_id: self.uid).try(:fb_page_id)
   end
 
 end
