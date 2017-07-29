@@ -70,6 +70,8 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
     // need to keep track of when at the end of conversations
     var conversation_page = 1;
     $scope.loadConversations = function(first_call) {
+      var deferred = $q.defer();
+      
       if ($scope.online()) {
         var select_conversation;
         
@@ -86,10 +88,12 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
             });
 
             conversation_page += 1;
-            console.log(data.conversations)
-            console.log('loaded conversations')
+            console.log(data.conversations);
+            console.log('loaded conversations');
+            deferred.resolve();
           } else {
             console.log('you have no conversations');
+            deferred.reject();
           }
 
           $scope.open_conversations_count = data.count;
@@ -98,9 +102,14 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
             $scope.selectConversation(data);
           };
         }, function(data) {
-          console.log('unable to retrieve your conversations')
+          console.log('unable to retrieve your conversations');
+          deferred.reject();
         });
+      } else {
+        deferred.reject();
       }
+
+      return deferred.promise;
     };
 
     $scope.focusOnStartConversationField = function() {
