@@ -54,14 +54,14 @@ class Conversation < ActiveRecord::Base
       last_message_ts: last_message.try(:created_at).to_i,
       last_message_type: last_message ? last_message.class.name : nil,  # channel
       ago: last_message ? time_in_relative_form(last_message.created_at, 'short_format') : '',
-      unread_count: ConversationRef.where(conversation_id: self.id, unread: true).count,
+      unread_count: ConversationRef.where(conversation_id: self.id, unread: true, source: ConversationRef.sources[:customer]).count,
       #has_messenger:
     }
   end
 
 	def self.get_conversation_messages(conv, conv_ref_id)
     where_str = conv_ref_id.present? ? 'conversation_refs.id < ?' : ''
-		convs_refs = conv.conversation_refs.where(where_str, conv_ref_id).includes(textable: [:images]).order(created_at: :desc, id: :desc).limit(7)
+		convs_refs = conv.conversation_refs.where(where_str, conv_ref_id).includes(textable: [:images]).order(created_at: :desc, id: :desc).limit(10)
     convs_refs.map { |cr| message_hash(conv, cr.textable, cr) }
 	end
 
