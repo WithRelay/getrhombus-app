@@ -1,6 +1,6 @@
 <div class="settings sub-nav-bar w-clearfix">
   <%= link_to user_path(current_user) , class: 'dashboard-return sub-nav-button w-button' do %>
-   &nbsp;Return to dashboard
+   &nbsp;Return to dashboard
   <% end %>
 </div>
 <div class="dashboard-body settings">
@@ -103,7 +103,7 @@
 
     <div>
       <%= f.fields_for :stripe_creds do |c| %>
-        <%= c.hidden_field :ip %>        
+        <%= c.hidden_field :ip %>
       <% end %>
     </div>
 
