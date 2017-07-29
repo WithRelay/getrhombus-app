@@ -4,14 +4,10 @@
 <div class="dashboard-nav w-clearfix">
   <div class="dashboard-nav-links-wrapper">
     <a class="w-clearfix w-inline-block" href="#">
-      <%= link_to user_path(current_user), class: 'dash-header-links' do %>
-         &nbsp;<strong>Dashboard</strong>
-      <% end %>
-      <%= link_to user_merchant_customers_path(current_user), class: 'dash-header-links new-link' do %>
-         &nbsp;<strong>All &nbsp;customers</strong>
-      <% end %>
-      <%= link_to user_merchant_customers_path(current_user), class: 'dash-header-links new-link' do %>
-         &nbsp;<strong>New &nbsp;customers</strong>
+      <% unless params[:controller] == 'users' %>
+        <%= link_to user_path(current_user), class: 'dash-header-links' do %>
+          &nbsp;<strong>Dashboard</strong>
+        <% end %>
       <% end %>
       <%= render "shared/rhombus_number" %>
     </a>

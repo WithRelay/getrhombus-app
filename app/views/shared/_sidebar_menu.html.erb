@@ -44,11 +44,11 @@
     <% end %>
 
     <a class="left-nav-tab-wrapper w-inline-block" href="#">
-      <div class="left-nav-tab messaging" data-ix="display-and-hide-left-nav">Messaging &nbsp; &nbsp; <span class="sidebar-dropdown-icon">+</span>
+      <div class="left-nav-tab messaging" id="display-and-hide-left-nav">Messaging &nbsp; &nbsp; <span class="sidebar-dropdown-icon">+</span>
       </div>
     </a>
 
-    <div class="messaging-hidden-menu" data-ix="display-none-on-load">
+    <div class="messaging-hidden-menu hide">
       <%= link_to 'Conversations', user_conversations_path(current_user), class: 'conversations dashboard-dropdown-link' %>
       <%= link_to 'Saved replies', user_saved_replies_path(current_user), class: 'dashboard-dropdown-link saved-rep' %>
       <%= link_to 'Scheduled messages', user_reminders_path(current_user), class: 'dashboard-dropdown-link scheduled-msgs' %>
@@ -60,11 +60,11 @@
 
   <% end %>
 
-  <a class="left-nav-tab-wrapper w-inline-block" data-ix="display-and-hide-transaction-tab" href="#">
-    <div class="left-nav-tab transactions" data-ix="display-and-hide-transaction-tab">Transactions&nbsp;&nbsp; &nbsp;<span class="sidebar-dropdown-icon">+</span>
+  <a class="left-nav-tab-wrapper w-inline-block" href="#" >
+    <div class="left-nav-tab transactions" id="display-and-hide-transaction-tab">Transactions&nbsp;&nbsp; &nbsp;<span class="sidebar-dropdown-icon">+</span>
     </div>
   </a>
-  <div class="transactions-hidden-nav" data-ix="display-none-on-load">
+  <div class="transactions-hidden-nav hide">
     <%= link_to 'Charges', user_transactions_path(current_user), class: 'charges dashboard-dropdown-link' %>
     <%= link_to 'Pre-authorized', user_transactions_path(current_user, captured: false), class: 'preauth dashboard-dropdown-link' %>
     <%= link_to 'Subscriptions', user_subscriptions_path(current_user ), class: 'subscription dashboard-dropdown-link' %>
