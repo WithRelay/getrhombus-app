@@ -100,10 +100,13 @@
                   <a class="message-input-box-option-buttons w-inline-block" ng-click='openSavedRepliesDiv()'>
                     <div class="message-input-options-text"> &nbsp; &nbsp;Saved reply</div>
                   </a>
-                  <a class="message-input-box-option-buttons w-inline-block" ng-click="sendConversationMessage('FbMessage')">
+                  <a class="message-input-box-option-buttons w-inline-block" ng-if="merchant.has_messenger" ng-click="sendConversationMessage('FbMessage')">
                     <div class="message-input-options-text"> &nbsp; &nbsp;{{send_msg_fb_btn}}</div>
                   </a>
-                </div>f
+                  <a class="message-input-box-option-buttons w-inline-block" ng-if="!merchant.has_messenger" ng-href='/users/{{merchant.id}}/integrations'>
+                    <div class="message-input-options-text"> &nbsp; &nbsp;Connect Facebook</div>
+                  </a>
+                </div>
               </nav>
             </div>
           </div>

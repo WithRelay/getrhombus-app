@@ -4,9 +4,9 @@
       <div class="dropdown-wrapper-text"><strong> &nbsp;&nbsp;<span class="notification-counter"><%= total_alerts %></span></strong>
       </div>
     </div>
-    <nav class="dropdown-content-wrapper notifications-dropdown-wrapper w-dropdown-list"><a class="dropdown-link header notifications-dropdown-header w-clearfix w-dropdown-link" href="#">Messages<span class="unread-notification-count">Unread (<%= @todays_unread_convs_count %>)</span></a>
+    <nav class="dropdown-content-wrapper notifications-dropdown-wrapper w-dropdown-list"><a class="dropdown-link header notifications-dropdown-header w-clearfix w-dropdown-link">Messages<span class="unread-notification-count">Unread (<%= @todays_unread_convs_count %>)</span></a>
       <% @todays_last_msgs_from_last5_convs.each do |m| %>
-        <a class="dashboard-header-notification-wrapper w-inline-block" href="#">
+        <a class="dashboard-header-notification-wrapper w-inline-block">
           <div class="w-row">
             <div class="w-col w-col-2">
               <%= present(m).profile_image %>
@@ -21,9 +21,9 @@
           </div>
         </a>
       <% end %>
-      <a class="dropdown-link header notifications-dropdown-header older w-clearfix w-dropdown-link" href="#">Transactions<span class="unread-notification-count">New (<%= @todays_txns_count %>)</span></a>
+      <a class="dropdown-link header notifications-dropdown-header older w-clearfix w-dropdown-link">Transactions<span class="unread-notification-count">New (<%= @todays_txns_count %>)</span></a>
       <% @todays_last5_txns.each do |transaction| %>
-        <a class="dashboard-header-notification-wrapper w-inline-block" href="#">
+        <a class="dashboard-header-notification-wrapper w-inline-block">
           <div class="w-row">
             <div class="w-col w-col-2">
               <%= present(transaction).profile_image %>
