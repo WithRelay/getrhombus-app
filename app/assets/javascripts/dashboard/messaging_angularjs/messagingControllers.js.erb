@@ -232,8 +232,6 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
     $scope.getConversationMessages = function(conversation, from_conversations_list) {
       var deferred = $q.defer();
       $scope.conversation_selected = true;
-      // track if same conversation is still selected while ajax is running
-      var same_conversation_is_still_selected = false;
 
       // track if messages are being retrived because of scrolling
       if (from_conversations_list) $scope.retrieving_messages_for_scroll = false;
@@ -242,9 +240,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
       if (!(from_conversations_list && conversation.id == $scope.selected_conversation.id) && $scope.online()) {
 
         // a new conversation is selected, reset
-        if ($scope.selected_conversation.id != conversation.id) {
-          $scope.selected_conversation_messages = [];
-        }
+        if ($scope.selected_conversation.id != conversation.id) $scope.selected_conversation_messages = [];
 
         // Pull messages if you click on another conversation, even if the current one is loading
         // Pull messages for the current conversation if it isnt loading
@@ -255,8 +251,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
           var oldest_thread_msg = $scope.selected_conversation_messages[0] ? $scope.selected_conversation_messages[0].conv_ref_id : '';
           conversationService.getConversationMessages(conversation.id, oldest_thread_msg)
           .then(function(data) {
-            same_conversation_is_still_selected = (conversation.id == $scope.selected_conversation.id);
-            if (same_conversation_is_still_selected) {
+            if (conversation.id == $scope.selected_conversation.id) {
               if (data.messages.length > 0) {
                 for (var i = 0, len = data.messages.length; i < len; i++) {
                   $scope.selected_conversation_messages.unshift(data.messages[i]);
@@ -264,11 +259,13 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
                 //$scope.status.loaded = ($scope.selected_conversation_messages.length > 0);  // might not need this line
                 $scope.status.loading = false;
                 console.log(data.messages)
-                deferred.resolve(same_conversation_is_still_selected);
-              } else
+                deferred.resolve();
+              } else {
                 $scope.rejectPromise(false, 'no messages', deferred);
-            } else
+              }
+            } else {
               $scope.rejectPromise(false, 'viewing another conversation', deferred);
+            }
           }, function(data) {
             $scope.rejectPromise(false, 'get more messages failed', deferred);
           });
@@ -381,7 +378,10 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
         var conversation_id = $scope.selected_conversation.id;
         conversationService.sendConversationMMS(conversation_id, $scope.mms.file, $scope.mms.text, channel)
         .then(function (data) {
-          if ($scope.selected_conversation.id == conversation_id) $scope.selected_conversation_messages.push(data.data);
+          if ($scope.selected_conversation.id == conversation_id) {
+            $scope.selected_conversation_messages.push(data.data);
+            $scope.mms.text = '';
+          }
         }, function (response) {
           FlashHandler.setFlashMessage('Sorry, unable to send mms :(', 'error');
         })
@@ -693,7 +693,6 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
     };
     // End reminders
 
-
     $scope.getProfileLink = function() {
       var type = ($scope.selected_conversation.uid_type == 'user') ? '/customers/' : '/contacts/';
       return '/users/' + $scope.merchant.id + type + ($scope.selected_conversation.mc_id || '');
@@ -722,16 +721,8 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
           //console.log(envelope)
           var re = envelope.message;
           if (re.type == 'new-message') {
-            if (!$scope.conversations[re.conversation.id]) {
-              $scope.conversations[re.conversation.id] = re.conversation;  // add conversation object and update count
-              $scope.open_conversations_count += 1;
-            } else {
-              $scope.conversations[re.conversation.id].last_message = re.conversation.last_message;
-              $scope.conversations[re.conversation.id].last_message_ts = re.conversation.last_message_ts;
-              $scope.conversations[re.conversation.id].ago = re.conversation.ago;
-              if (re.message.source == 'customer') $scope.conversations[re.conversation.id].unread_count += 1;
-            };
-
+            $scope.conversations[re.conversation.id] = re.conversation;
+            if (!$scope.conversations[re.conversation.id]) $scope.open_conversations_count += 1;            
             if (re.conversation.id == $scope.selected_conversation.id) $scope.selected_conversation_messages.push(re.message);
           } else if (re.type == 'update-conv-properties') {
             if ($scope.conversations[re.id]) {
