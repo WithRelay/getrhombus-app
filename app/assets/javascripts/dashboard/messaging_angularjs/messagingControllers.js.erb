@@ -744,7 +744,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
     // Get logged in merchant id
     $scope.merchant = $('#user-details').data('user-info');
     if (Object.keys($scope.merchant).length) {
-
+      console.log($scope.merchant)
       // Initialize PubNub with SSL
       Pubnub.init({
         publishKey: $scope.merchant.pubnub_publish_key,
