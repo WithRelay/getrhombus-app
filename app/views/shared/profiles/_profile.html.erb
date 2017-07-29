@@ -46,7 +46,6 @@
             <div class="left-column-text"> &nbsp; &nbsp; <%= user_snapshot[:twitter] %></div>
           <% end %>
           <div class="left-column-text"> &nbsp; &nbsp; <%= contact_or_customer %> since: <%= user_snapshot[:since][:date] %></div>
-          <div class="right-nav-underline"></div>
         </div>
         <%= render partial: 'shared/profiles/recent_activity', locals: { recent_activity: recent_activity } %>
       </div>
