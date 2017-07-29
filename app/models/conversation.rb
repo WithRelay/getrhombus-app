@@ -39,7 +39,7 @@ class Conversation < ActiveRecord::Base
       has_messenger = self.user.try(:get_customer_page_specific_id, self.merchant.get_page_access_token) && true
     else
       mc = MerchantContact.find_by(merchant_id: self.merchant_id, uid: self.uid, uid_type: self.uid_type)
-      has_messenger = mc.page_specific_id_valid?
+      has_messenger = mc.try(:page_specific_id_valid?)
     end
 
     {

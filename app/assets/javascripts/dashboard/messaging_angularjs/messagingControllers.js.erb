@@ -297,7 +297,11 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
     $scope.bindEnterToMessagingArea = function() {
       BindConversationPlugins.get_emoji_box()[0].emojioneArea
       .on("keydown", function(btn, e) { if (e.keyCode == 13) e.preventDefault(); })
-      .on("keyup", function(btn, e) { if (e.keyCode == 13) $scope.sendConversationMessage('Message'); });
+      .on("keyup", function(btn, e) { 
+        if (e.keyCode == 13) {
+          $scope.sendConversationMessage($scope.conversation.uid_type == 'user' ? 'Message' : 'FbMessage'); 
+        }
+      });
     };
 
     $scope.sendConversationMessage = function(channel) {
@@ -744,7 +748,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
     // Get logged in merchant id
     $scope.merchant = $('#user-details').data('user-info');
     if (Object.keys($scope.merchant).length) {
-
+      console.log($scope.merchant)
       // Initialize PubNub with SSL
       Pubnub.init({
         publishKey: $scope.merchant.pubnub_publish_key,
