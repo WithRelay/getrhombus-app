@@ -60,7 +60,7 @@ class Api::V1::TransactionsController < Api::V1::BaseController
       has_valid_card = @customer.has_valid_card?
       return has_valid_card unless has_valid_card.first
       params[:amount] = params[:amount].round(2)
-      @hashtag = current_user.hashtags.where(id: params[:hashtag_id]).first
+      @hashtag = Hashtag.find_by(id: params[:hashtag_id], user_id: current_user.id)
       @amount = Toolbox::Decimal.to_cents(params[:amount])
       [true]
     end

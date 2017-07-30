@@ -175,7 +175,7 @@ class MessageParser
         puts 'not payment tag'
         @is_valid_payment_intent ? [@amt_ary[0], "no_tag_amt"] : []
       elsif
-        @tag_amt = to_cents(Toolbox::Decimal.to_int_or_2dp(@tag.amount))    # this is a string though
+        @tag_amt = to_cents(@tag.amount)    # this is a string though
         puts 'this is tag amount'
         puts @tag_amt 
         if @is_valid_payment_intent               # tested
@@ -314,7 +314,7 @@ class MessageParser
 
   def handle_subscription_through_text
     begin
-      merchant_plan = @tag.plans.last
+      merchant_plan = @tag.merchant_plan
       if merchant_plan.present?                                 
         # if can override amount and amt isnt the same, create plan and create subscription
         if @tag.allow_customers_to_override_amount? && @original_amt != @tag_amt      
@@ -352,6 +352,8 @@ class MessageParser
           subscription.destroy
           return [false, "", res.third] if res.second == 'card_error' 
         end
+      else
+        # email team
       end
     rescue StandardError => e
     end     
