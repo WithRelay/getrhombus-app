@@ -79,6 +79,8 @@ class User < ActiveRecord::Base
   has_many :customer_conversations, -> { where uid_type: 'user' }, class_name: 'Conversation', foreign_key: 'uid'
 
   has_many :merchant_plans, class_name: 'Plan', foreign_key: 'merchant_id'
+  # merchant only plans
+  has_many :merchant_only_plans, -> { where customer_id: nil }, class_name: 'Plan', foreign_key: 'merchant_id'
   has_many :customer_plans, class_name: 'Plan', foreign_key: 'customer_id'
   has_many :coupons
   # LEAVE THIS FOR LATER
@@ -171,7 +173,7 @@ class User < ActiveRecord::Base
   def can_accept_payments?(skip_check_managed_acct_status = false)
     cred = get_stripe_cred
     return true if cred[:type] == 'managed' && skip_check_managed_acct_status
-    return true if cred[:type] == 'managed' && cred[:cred].can_accept_payments?
+    return true if cred[:type] == 'managed' && cred[:cred].charges_enabled?
     return true if cred[:type] == 'standalone'
     false
   end

@@ -11,6 +11,8 @@ class Hashtag < ActiveRecord::Base
   has_many :messages
   belongs_to :txn, class_name: :Transaction
   has_many :plans
+  # merchant can't change plan attached to hashtag
+  has_one :merchant_plan, -> { where customer_id: nil }
 
 	# validations
 	validates :tag, presence: true, uniqueness: { case_sensitive: false, scope: :user_id }
@@ -57,7 +59,7 @@ class Hashtag < ActiveRecord::Base
 
   def delete_plan_for_recurring_tag(merchant)
     return [true] if !self.recurring_payment_tag?
-    plan = self.plans.where(customer_id: nil, merchant_id: merchant.id).first
+    plan = self.merchant_plan
     return [true] if plan.blank?
     if plan.has_subscription? 
       return [true] if plan.delete_plan(merchant) && plan.destroy

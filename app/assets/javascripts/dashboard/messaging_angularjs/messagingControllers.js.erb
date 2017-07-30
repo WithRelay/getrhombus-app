@@ -24,18 +24,18 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
     var text_to_send = '';
     $scope.mms = {};
     $scope.mms.text = "";
+    $scope.is_sending = false;
+    $scope.retrieving_messages_for_scroll = false;
 
     // Marked As Done
     $scope.marked_as_done = { reason: 'account_reactivation', notes: '' };
-
-    // ajax
-    $scope.is_sending = false;
 
     // buttons
     $scope.send_msg_btn = "Reply";
     $scope.send_msg_fb_btn = "Send via Facebook";
     $scope.send_mms_btn = "Send";
     $scope.send_mms_fb_btn = "Send via Facebook";
+    $scope.send_btns_disabled = false;
     $scope.charge_btn = "Charge Customer";
 
     // Transactions
@@ -61,8 +61,6 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
     $scope.start_conversation_options = [];
     $scope.hashtag_config_options = [];
 
-    $scope.retrieving_messages_for_scroll = false;
-
     $scope.online = function() {
       // this might need to be throttling since it runs quite a number of times
       Offline.check();
@@ -72,6 +70,8 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
     // need to keep track of when at the end of conversations
     var conversation_page = 1;
     $scope.loadConversations = function(first_call) {
+      var deferred = $q.defer();
+      
       if ($scope.online()) {
         var select_conversation;
         
@@ -88,10 +88,12 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
             });
 
             conversation_page += 1;
-            console.log(data.conversations)
-            console.log('loaded conversations')
+            console.log(data.conversations);
+            console.log('loaded conversations');
+            deferred.resolve();
           } else {
             console.log('you have no conversations');
+            deferred.reject();
           }
 
           $scope.open_conversations_count = data.count;
@@ -100,9 +102,14 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
             $scope.selectConversation(data);
           };
         }, function(data) {
-          console.log('unable to retrieve your conversations')
+          console.log('unable to retrieve your conversations');
+          deferred.reject();
         });
+      } else {
+        deferred.reject();
       }
+
+      return deferred.promise;
     };
 
     $scope.focusOnStartConversationField = function() {
@@ -229,11 +236,29 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
       };
     };
 
+    $scope.canSendFbMessage = function(from_conversations_list, conversation) {
+      BindConversationPlugins.get_emoji_box()[0].emojioneArea.enable();
+      $scope.send_btns_disabled = false;
+      if (from_conversations_list && conversation.uid_type == "fb_page") {
+        if (!$scope.merchant.has_messenger) {
+          FlashHandler.setFlashMessage("You don't have a facebook page connected :(", 'error');
+          $scope.send_btns_disabled = true;
+          BindConversationPlugins.get_emoji_box()[0].emojioneArea.disable();
+        } else if (!conversation.has_messenger) {
+          FlashHandler.setFlashMessage("Contact messaged you from a different facebook page :(", 'error');
+          BindConversationPlugins.get_emoji_box()[0].emojioneArea.disable();
+          $scope.send_btns_disabled = true;
+        };
+      };
+    };
+
     $scope.getConversationMessages = function(conversation, from_conversations_list) {
+      $scope.canSendFbMessage();
+
       var deferred = $q.defer();
       $scope.conversation_selected = true;
 
-      // track if messages are being retrived because of scrolling
+      // track if messages are being retrieved because of scrolling
       if (from_conversations_list) $scope.retrieving_messages_for_scroll = false;
 
       // don't get messages if user clicks again on current conversation
@@ -299,13 +324,18 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
       .on("keydown", function(btn, e) { if (e.keyCode == 13) e.preventDefault(); })
       .on("keyup", function(btn, e) { 
         if (e.keyCode == 13) {
-          $scope.sendConversationMessage($scope.conversation.uid_type == 'user' ? 'Message' : 'FbMessage'); 
+          $scope.sendConversationMessage($scope.selected_conversation.uid_type == 'fb_page' ? 'FbMessage' : 'Message'); 
         }
       });
     };
 
     $scope.sendConversationMessage = function(channel) {
       if ($scope.is_conversation_selected() && !$scope.is_sending && $scope.online()) {
+        if (channel == 'FbMessage' && $scope.selected_conversation.uid_type == 'user' && !$scope.selected_conversation.has_messenger) {
+          FlashHandler.setFlashMessage("Customer hasn't messaged you on your current Facebook page :(", 'error');
+          return;
+        };        
+
         $scope.is_sending = true;
         var btn = (channel == 'Message') ? 'send_msg_btn' : 'send_msg_fb_btn';
         $scope[btn] = "Sending...";
@@ -461,11 +491,6 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
 
     // End Modals
 
-    $scope.disableChargeButton = function(chargeForm) {
-      //return !$scope.is_conversation_selected('', true) || chargeForm.$invalid || $scope.is_sending;
-      return  chargeForm.$invalid || $scope.is_sending;
-    };
-
     $scope.hashtag_config = {
       valueField: 'id',
       labelField: 'tag',
@@ -546,6 +571,11 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
     };
 
     // Transactions
+    $scope.disableChargeButton = function(chargeForm) {
+      //return !$scope.is_conversation_selected('', true) || $scope.selected_conversation.uid_type != 'user' || chargeForm.$invalid || $scope.is_sending;
+      return  chargeForm.$invalid || $scope.is_sending;
+    };
+
     // function to submit the form after all validation has occurred
     $scope.submitChargeForm = function(isValid) {
       if (isValid && $scope.online()) {

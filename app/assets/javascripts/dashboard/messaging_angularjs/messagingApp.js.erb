@@ -14,7 +14,7 @@ var messagingApp = angular.module('PubNubAngularMessagingApp', [
   'luegg.directives' // Auto scroll module
 ]);
 
-messagingApp.directive('whenScrolledUp', ['$timeout', function($timeout, $scope) {
+messagingApp.directive('whenScrolledUp', ['$timeout', function($timeout) {
   return function(scope, elm, attr) {
     var raw = elm[0];   
     var debounced = _.debounce(function() {
@@ -38,15 +38,19 @@ messagingApp.directive('whenScrolledUp', ['$timeout', function($timeout, $scope)
   };
 }]);
 
-messagingApp.directive('whenScrolledDown', function() {
+messagingApp.directive('whenScrolledDown', ['$timeout', function($timeout) {
   return function(scope, elm, attr) {
     var raw = elm[0];        
     elm.bind('scroll', _.throttle(function() {
       if (hasScrollReachedBottom(raw))
-        scope.$apply(attr.whenScrolledDown);
+        scope.$apply(attr.whenScrolledDown).then(function() {
+          $timeout(function() {
+            $('#conversation-list-wrapper').perfectScrollbar('update');
+          });
+        });
     }, 350));
   };
-});
+}]);
 
 messagingApp.directive("mySrc", function() {
   return {

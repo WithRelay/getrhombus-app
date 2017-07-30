@@ -9,18 +9,19 @@ var CheckedItem = new function() {
   };
 
   this.process = function(confirmBtnText, selector, isConfirm) {
-    var selectedElement = CheckedItem.get();
-    var yes_button = $('.cancel-yes'),
-        msg = yes_button.parent().find('p').text(),
-        obj_type = CheckedItem.obj_type();
-    yes_button[0].innerHTML = 'Please wait...';
-    if (obj_type == 'plan' || obj_type == 'coupon' || obj_type == 'fb_page') {
+    var yes_button = $('.cancel-yes').html('Please wait...'), obj_type = CheckedItem.obj_type();
+
+    if (['plan', 'coupon', 'fb_page', 'list-members'].indexOf(obj_type) > -1) {
       if (isConfirm) $(selector).attr(isConfirm, true);
       $(selector)[0].click();
-    }
-    if (!selectedElement) return false;
+      return;
+    };
 
+    var selectedElement = CheckedItem.get();
+    if (!selectedElement) return false;
+    
     if (obj_type == 'campaign') {
+      var msg = yes_button.parent().find('p').text(),
       resource = new Resource(getCampaignActionUrl(selectedElement, msg));
       resource.updateOrDelete();
     } else if (obj_type == 'hashtag' && confirmBtnText.toLowerCase().indexOf('change') > -1) {

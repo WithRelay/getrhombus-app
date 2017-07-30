@@ -100,7 +100,7 @@
                   <a class="message-input-box-option-buttons w-inline-block" ng-click='openSavedRepliesDiv()'>
                     <div class="message-input-options-text"> &nbsp; &nbsp;Saved reply</div>
                   </a>
-                  <a class="message-input-box-option-buttons w-inline-block" ng-if="merchant.has_messenger" ng-click="sendConversationMessage('FbMessage')">
+                  <a class="message-input-box-option-buttons w-inline-block" ng-if="merchant.has_messenger" ng-click="!send_btns_disabled && sendConversationMessage('FbMessage')">
                     <div class="message-input-options-text"> &nbsp; &nbsp;{{send_msg_fb_btn}}</div>
                   </a>
                   <a class="message-input-box-option-buttons w-inline-block" ng-if="!merchant.has_messenger" ng-href='/users/{{merchant.id}}/integrations'>
@@ -118,7 +118,7 @@
     </div>
   </div>
 
-  <div class="right side-bar z-index-1">
+  <div class="right side-bar z-index-1" id='conversation-user-data'>
 
     <div ng-if='!conversation_selected || no_social_data || !open_conversations_count'>
       <div class="right-nav-profile-content-wrapper">
@@ -531,13 +531,13 @@
           <textarea class="file-description text-area w-input" id="File-Description-2" maxlength="5000" name="File-Description-2" placeholder="Add description (optional)" ng-model="mms_text.text" ng-trim="true"></textarea>
           <div class="file-sender split-button-wrapper">
 
-            <a class="message-window-tabs send-button split-button w-button" ng-click="sendMMS('Message')">{{send_mms_btn}}</a>
+            <a class="message-window-tabs send-button split-button w-button" ng-click="!send_btns_disabled && sendMMS('Message')">{{send_mms_btn}}</a>
 
             <div class="w-dropdown">
               <div class="split-dropdown w-dropdown-toggle"><span class="font-icon-split"></span>
               </div>
               <nav class="dropdown-options-wrapper split-button w-dropdown-list">
-                <a class="dropdown-link split-button w-dropdown-link" ng-click="sendMMS('FbMessage')"> &nbsp; &nbsp;{{send_mms_fb_btn}}</a>
+                <a class="dropdown-link split-button w-dropdown-link" ng-click="!send_btns_disabled && sendMMS('FbMessage')"> &nbsp; &nbsp;{{send_mms_fb_btn}}</a>
               </nav>
             </div>
 

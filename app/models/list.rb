@@ -17,13 +17,16 @@ class List < ActiveRecord::Base
   enum list_type: [:customer, :contact]
   enum campaign_type: [:campaign, :reminder]
 
+  def is_segment?
+    self.segment.present?
+  end
 
   # Gets the merchant customers or merchant contacts that belong to a standard list or segment
   def get_mcs(page=1)
     page = page.present? ? page : 1
     class_name = self.customer? ? MerchantCustomer : MerchantContact
 
-    if self.segment.present?
+    if self.is_segment?
       self.segment['merchant_id'] = self.user_id
       self.segment["time"] = Time.current.beginning_of_day.utc - self.segment['base_val'].to_i.days if self.segment['base_val'].present?
       class_name.paginate_by_sql(send(self.segment['base_query'], self.segment), page: page, per_page: PAGINATION_PER_PAGE)

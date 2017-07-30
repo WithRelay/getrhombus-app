@@ -44,7 +44,8 @@ class Api::V1::ListsController < Api::V1::BaseController
 
         # list also save associated record
         if list.save
-          render json: { notice: 'List saved successfully', redirect_url: user_lists_url(current_user) }
+          str = list.is_segment? ? 'segments' : 'lists'
+          render json: { notice: 'List saved successfully', redirect_url: "/users/#{current_user.id}/#{str}/#{list.id}" }
         else
           render json: { error: list.errors.full_messages.to_json }, status: 500
         end
@@ -64,7 +65,7 @@ class Api::V1::ListsController < Api::V1::BaseController
   def update
     # handle both static list and segments
     list = current_user.lists.find_by(id: params[:id])
-    text = list.segment.present? ? 'Segment' : 'List'
+    text = list.is_segment? ? 'Segment' : 'List'
     if list.present? && list.update_attributes(name: params[:list][:name])
       msg = { notice: "#{text} was successfully updated" }
     else
@@ -72,7 +73,7 @@ class Api::V1::ListsController < Api::V1::BaseController
       status = 500
     end
 
-    if list.segment.present?
+    if list.is_segment?
       render json: msg, status: status || 200
     else
       redirect_to user_lists_path(current_user), flash: msg

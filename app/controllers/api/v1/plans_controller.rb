@@ -9,9 +9,9 @@ class Api::V1::PlansController < Api::V1::BaseController
   def index
     begin
       if params[:name]
-        res = current_user.merchant_plans.where("lower(name) like ?", "%#{params[:name].downcase}%")
+        res = current_user.merchant_only_plans.where("lower(name) like ?", "%#{params[:name].downcase}%")
       else
-        res = current_user.merchant_plans
+        res = current_user.merchant_only_plans
       end
       render json: { "plans" => res }, status: 200
     rescue StandardError => e
