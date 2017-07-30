@@ -165,8 +165,8 @@ var FlashHandler = new function() {
   function toastrAnimation(class_name) {
     class_name = class_name.split(' ').join('.')
     $(class_name).animate({
-      bottom: $( window ).height() - 120
-    }, 2000)
+      bottom: 20
+    }, 1000)
   }
 
   function close_browser_toastr() {
