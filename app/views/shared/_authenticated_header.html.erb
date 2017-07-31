@@ -4,9 +4,14 @@
   <div class="dashboard-nav-links-wrapper">
     <a class="w-clearfix w-inline-block" href="#">
       <% unless params[:controller] == 'users' %>
-        <%= link_to user_path(current_user), class: 'dash-header-links' do %>
-          <strong>Dashboard</strong>
-        <% end %>
+        <%= link_to user_path(current_user) do %>
+          <div class="dash-header-links"><strong class="important-text-69">Dashboard</strong></div>
+            <% end %>
+          <div class="dash-header-links new-link"><strong class="important-text-70">All &nbsp;customers</strong></div>
+          <div class="dash-header-links new-link"><strong class="important-text-71">Transactions</strong></div>
+          <div class="dash-header-links new-link"><strong class="important-text-72">List</strong></div>
+          <div class="dash-header-links new-link"><strong class="important-text-73">Conversations</strong></div>
+          <div class="dash-header-links new-link relay-nav-number-display">+ 1 <redacted_phone_number></div>
       <% end %>
       <%= render "shared/rhombus_number" %>
     </a>
