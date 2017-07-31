@@ -1,18 +1,18 @@
 
 <div class="customer-profile sub-nav-bar w-clearfix">
-  <a class="add sub-nav-button w-button modal-loader" href="#" modal-target= "charge-customer-modal">&nbsp; <strong>Charge</strong></a>
+  <a class="add sub-nav-button w-button modal-loader" href="#" modal-target= "charge-customer-modal"><strong>Charge</strong></a>
   <div class='modal-background w-hidden modal-body charge-customer-modal'>
    <%= render 'shared/modals/charge_customer' %>
   </div>
-  <a class="import sub-nav-button w-button modal-loader" href="#" modal-target= 'new-subscription-modal' >&nbsp; <strong>Create subscription</strong></a>
+  <a class="import sub-nav-button w-button modal-loader" href="#" modal-target= 'new-subscription-modal' ><strong>Create subscription</strong></a>
   <div class='modal-background w-hidden modal-body new-subscription-modal'>
    <%= render 'shared/modals/new_subscription' %>
   </div>
-  <a class="sub-nav-button w-button modal-loader" href="#" modal-target="add-to-list-modal"> &nbsp;<strong>Add to&nbsp;list</strong></a>
+  <a class="sub-nav-button w-button modal-loader" href="#" modal-target="add-to-list-modal"><strong>Add to list</strong></a>
   <div class='modal-background w-hidden modal-body add-to-list-modal'>
    <%= render 'shared/modals/add_to_list' %>
   </div>
-  <a class="sub-nav-button w-button modal-loader" href="#" modal-target="schedule-message-modal" >&nbsp;<strong>Schedule message</strong></a>
+  <a class="sub-nav-button w-button modal-loader" href="#" modal-target="schedule-message-modal" ><strong>Schedule message</strong></a>
   <div class='modal-background w-hidden modal-body schedule-message-modal'>
     <%= render partial: 'shared/modals/new_reminder', locals: { reminder: Reminder.new }  %>
   </div>
@@ -34,18 +34,18 @@
           </div>
 
           <% if user_snapshot[:phone_number].present? && user_snapshot[:phone_number] != "-" %>
-            <div class="left-column-text number"> &nbsp; &nbsp;<%= user_snapshot[:phone_number] %></div>
+            <div class="left-column-text number"><%= user_snapshot[:phone_number] %></div>
           <% end %>
           <% if user_snapshot[:email].present? && user_snapshot[:email] != "-" %>
-            <div class="left-column-text"> &nbsp; &nbsp; <%= user_snapshot[:email] %></div>
+            <div class="left-column-text"><%= user_snapshot[:email] %></div>
           <% end %>
           <% if user_snapshot[:location].present? && user_snapshot[:location] != "-" %>
-            <div class="left-column-text">  &nbsp; &nbsp; <%= user_snapshot[:location] %></div>
+            <div class="left-column-text"><%= user_snapshot[:location] %></div>
           <% end %>
           <% if user_snapshot[:twitter].present? && user_snapshot[:twitter] != "-" %>
-            <div class="left-column-text"> &nbsp; &nbsp; <%= user_snapshot[:twitter] %></div>
+            <div class="left-column-text"><%= user_snapshot[:twitter] %></div>
           <% end %>
-          <div class="left-column-text"> &nbsp; &nbsp; <%= contact_or_customer %> since: <%= user_snapshot[:since][:date] %></div>
+          <div class="left-column-text"><%= contact_or_customer %> since: <%= user_snapshot[:since][:date] %></div>
         </div>
         <%= render partial: 'shared/profiles/recent_activity', locals: { recent_activity: recent_activity } %>
       </div>
