@@ -9,7 +9,7 @@ h1 {
 h2 {
   margin-top: 20px;
   margin-bottom: 20px;
-  font-family: 'Alegreya Sans', sans-serif;
+  font-family: 'Alegreya Sans';
   font-size: 35px;
   line-height: 36px;
   font-weight: 500;
@@ -85,15 +85,15 @@ h4 {
   -webkit-transition: color 500ms ease;
   transition: color 500ms ease;
   font-family: 'Akkurat regular', sans-serif;
-  color: #2e2e7f;
-  font-size: 13px;
+  color: #141d67;
+  font-size: 14px;
   font-weight: 400;
   text-decoration: none;
   text-transform: capitalize;
 }
 
 .nav-link:hover {
-  color: #e04e50;
+  color: #0f55eb;
 }
 
 .nav-link.pricing {
@@ -193,17 +193,22 @@ h4 {
 }
 
 .button.signup.fixed {
-  border-color: #1f8cec;
+  padding-top: 7px;
+  padding-bottom: 7px;
+  border-color: #141d67;
   border-radius: 3px;
-  background-color: #1280e0;
-  color: #fff;
+  background-color: transparent;
+  -webkit-transition-property: background-color;
+  transition-property: background-color;
+  font-family: 'Akkurat regular', sans-serif;
+  color: #141d67;
   font-size: 13px;
   text-decoration: none;
 }
 
 .button.signup.fixed:hover {
-  border-color: #1271c4;
-  background-color: #1271c4;
+  border-color: #0f55eb;
+  background-color: rgba(15, 85, 235, .1);
 }
 
 .button.signup.alt-nav-button {
@@ -268,6 +273,9 @@ h4 {
   padding-right: 30px;
   padding-left: 30px;
   float: none;
+  border-color: #0f55eb;
+  background-color: #0f55eb;
+  font-family: 'Maisonneue book', sans-serif;
   text-align: center;
   text-decoration: none;
 }
@@ -314,13 +322,16 @@ h4 {
   padding-right: 20px;
   padding-left: 20px;
   float: right;
+  border-color: #0f55eb;
+  background-color: #0f55eb;
   text-align: center;
 }
 
 .button.log-in.cancel {
-  border-color: #8da2b7;
+  border-color: #62676d;
   background-color: transparent;
-  color: #8da2b7;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #62676d;
 }
 
 .button.log-in.cancel:hover {
@@ -343,8 +354,9 @@ h4 {
   padding-top: 7px;
   padding-bottom: 0px;
   float: right;
-  background-color: #1f8cec;
-  font-family: 'Akkurat light regular', sans-serif;
+  border-color: #0f55eb;
+  background-color: #0f55eb;
+  font-family: 'Maisonneue book', sans-serif;
   font-size: 12px;
   text-align: center;
 }
@@ -357,10 +369,10 @@ h4 {
   width: auto;
   float: right;
   border-width: 1px;
-  border-color: #1f8cec;
+  border-color: #0f55eb;
   background-color: transparent;
-  font-family: 'Akkurat light regular', sans-serif;
-  color: #1280e0;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #0f55eb;
 }
 
 .button.editor-buttons.alt:hover {
@@ -375,7 +387,9 @@ h4 {
   margin-left: 10%;
   padding-top: 10px;
   float: left;
-  font-family: Lato, sans-serif;
+  border-color: #0f55eb;
+  background-color: #0f55eb;
+  font-family: 'Maisonneue book', sans-serif;
   font-size: 14px;
   text-align: center;
 }
@@ -391,9 +405,9 @@ h4 {
 .button.save-changes.alt-button.discount-code {
   right: 26%;
   width: 29%;
-  border-color: #1f8cec;
+  border-color: #0f55eb;
   background-color: transparent;
-  color: #1f8cec;
+  color: #0f55eb;
 }
 
 .button.save-changes.alt-button.discount-code:hover {
@@ -481,6 +495,8 @@ h4 {
   margin-left: 10%;
   padding-top: 12px;
   float: right;
+  border-color: #0f55eb;
+  background-color: #0f55eb;
   text-decoration: none;
 }
 
@@ -491,8 +507,10 @@ h4 {
   margin-top: 20px;
   padding-top: 12px;
   float: none;
-  font-family: 'Akkurat regular', sans-serif;
-  font-weight: 100;
+  border-color: #0f55eb;
+  background-color: #0f55eb;
+  font-family: 'Maisonneue book', sans-serif;
+  font-weight: 400;
   text-decoration: none;
 }
 
@@ -533,6 +551,9 @@ h4 {
   margin-right: 0%;
   margin-bottom: 20px;
   float: none;
+  border-color: #0f55eb;
+  background-color: #0f55eb;
+  font-family: 'Maisonneue book', sans-serif;
 }
 
 .button.import-customers {
@@ -540,6 +561,8 @@ h4 {
   margin-right: 0%;
   margin-left: 10%;
   float: none;
+  background-color: #0f55eb;
+  font-family: 'Maisonneue book', sans-serif;
   text-align: center;
   text-decoration: none;
 }
@@ -549,6 +572,9 @@ h4 {
   margin-right: 0%;
   margin-left: 10%;
   float: none;
+  border-color: #0f55eb;
+  background-color: #0f55eb;
+  font-family: 'Maisonneue book', sans-serif;
   text-align: center;
   text-decoration: none;
 }
@@ -557,7 +583,10 @@ h4 {
   width: 80%;
   margin: 15px 10% 30px;
   float: none;
-  font-size: 13px;
+  border-color: #0f55eb;
+  background-color: #0f55eb;
+  font-family: 'Maisonneue book', sans-serif;
+  font-size: 14px;
 }
 
 .button.refund-button {
@@ -565,14 +594,19 @@ h4 {
   margin-right: 10%;
   margin-bottom: 20px;
   margin-left: 10%;
+  border-color: #0f55eb;
+  background-color: #0f55eb;
+  font-family: 'Maisonneue book', sans-serif;
 }
 
 .button.file-upload {
   width: 80%;
   margin: 20px 10% 10px;
   float: right;
+  border-color: #0f55eb;
   background-color: transparent;
-  color: #1280e0;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #0f55eb;
   text-align: center;
   text-decoration: none;
 }
@@ -589,6 +623,9 @@ h4 {
   margin-right: 0%;
   margin-left: 20px;
   float: none;
+  border-color: #0f55eb;
+  background-color: #0f55eb;
+  font-family: 'Maisonneue book', sans-serif;
   font-size: 12px;
   text-align: center;
 }
@@ -598,6 +635,9 @@ h4 {
   margin-right: 10%;
   margin-left: 10%;
   float: none;
+  border-color: #0f55eb;
+  background-color: #0f55eb;
+  font-family: 'Maisonneue book', sans-serif;
   text-decoration: none;
 }
 
@@ -605,9 +645,10 @@ h4 {
   margin-top: 30px;
   margin-right: 0%;
   float: none;
-  border-color: #1f8cec;
+  border-color: #0f55eb;
   background-color: transparent;
-  color: #1280e0;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #0f55eb;
 }
 
 .button.manage-segments:hover {
@@ -619,6 +660,9 @@ h4 {
   width: 80%;
   margin: 10px 10% 30px;
   float: none;
+  border-color: #0f55eb;
+  background-color: #0f55eb;
+  font-family: 'Maisonneue book', sans-serif;
 }
 
 .button.manage-plans {
@@ -626,9 +670,10 @@ h4 {
   margin-top: 10px;
   margin-right: 0%;
   float: none;
-  border-color: #1f8cec;
+  border-color: #0f55eb;
   background-color: transparent;
-  color: #1f8cec;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #0f55eb;
 }
 
 .button.manage-plans:hover {
@@ -642,6 +687,9 @@ h4 {
   margin-bottom: 20px;
   margin-left: 10%;
   float: none;
+  border-color: #0f55eb;
+  background-color: #0f55eb;
+  font-family: 'Maisonneue book', sans-serif;
 }
 
 .button.cancel-yes {
@@ -649,6 +697,9 @@ h4 {
   height: 38px;
   margin-top: 20px;
   margin-right: 10%;
+  border-color: #0f55eb;
+  background-color: #0f55eb;
+  font-family: 'Maisonneue book', sans-serif;
 }
 
 .button.cancel-no {
@@ -658,7 +709,8 @@ h4 {
   margin-right: 2%;
   border-color: #1f8cec;
   background-color: transparent;
-  color: #1f8cec;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #0f55eb;
 }
 
 .button.cancel-no:hover {
@@ -715,6 +767,9 @@ h4 {
   width: 20%;
   height: 38px;
   margin-right: 10%;
+  border-color: #0f55eb;
+  background-color: #0f55eb;
+  font-family: 'Maisonneue book', sans-serif;
 }
 
 .button.cancel-saved-reply {
@@ -722,9 +777,10 @@ h4 {
   height: 38px;
   margin-left: 10%;
   float: left;
-  border-color: #1f8cec;
+  border-color: #0f55eb;
   background-color: transparent;
-  color: #1f8cec;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #0f55eb;
 }
 
 .button.cancel-saved-reply:hover {
@@ -737,7 +793,10 @@ h4 {
   margin-top: 5px;
   margin-right: 10%;
   margin-left: 10%;
-  font-size: 13px;
+  border-color: #0f55eb;
+  background-color: #0f55eb;
+  font-family: 'Maisonneue book', sans-serif;
+  font-size: 14px;
   text-align: center;
 }
 
@@ -746,7 +805,10 @@ h4 {
   height: 38px;
   min-width: 32%;
   margin-right: 10%;
-  font-size: 12px;
+  border-color: #0f55eb;
+  background-color: #0f55eb;
+  font-family: 'Maisonneue book', sans-serif;
+  font-size: 14px;
 }
 
 .button.cancel-mark-as-done {
@@ -756,9 +818,10 @@ h4 {
   margin-right: 10%;
   margin-left: 10%;
   float: left;
-  border-color: #1f8cec;
+  border-color: #0f55eb;
   background-color: transparent;
-  color: #1f8cec;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #0f55eb;
 }
 
 .button.cancel-mark-as-done:hover {
@@ -770,6 +833,9 @@ h4 {
   width: auto;
   height: 38px;
   margin-right: 10%;
+  border-color: #0f55eb;
+  background-color: #0f55eb;
+  font-family: 'Maisonneue book', sans-serif;
 }
 
 .button.cancel-notification {
@@ -777,9 +843,10 @@ h4 {
   height: 38px;
   margin-left: 10%;
   float: left;
-  border-color: #1f8cec;
+  border-color: #0f55eb;
   background-color: transparent;
-  color: #1f8cec;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #0f55eb;
 }
 
 .button.cancel-notification:hover {
@@ -792,8 +859,10 @@ h4 {
   height: 38px;
   margin-right: 0%;
   float: none;
+  border-color: #0f55eb;
   background-color: transparent;
-  color: #1f8cec;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #0f55eb;
 }
 
 .button.settings-table-row:hover {
@@ -807,6 +876,8 @@ h4 {
   margin-top: 30px;
   margin-right: 0%;
   margin-bottom: 20px;
+  background-color: #0f55eb;
+  font-family: 'Maisonneue book', sans-serif;
 }
 
 .button.integrate-button.remove-integration {
@@ -831,9 +902,10 @@ h4 {
   height: 38px;
   margin-left: 0%;
   float: none;
-  border-color: #1f8cec;
+  border-color: #0f55eb;
   background-color: transparent;
-  color: #1f8cec;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #0f55eb;
 }
 
 .button.add-people:hover {
@@ -846,9 +918,10 @@ h4 {
   margin-top: 20px;
   padding-top: 10px;
   float: right;
-  border-color: #1f8cec;
+  border-color: #0f55eb;
   background-color: transparent;
-  color: #1f8cec;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #0f55eb;
 }
 
 .button.deactivate:hover {
@@ -861,6 +934,9 @@ h4 {
   height: 38px;
   margin-top: 30px;
   margin-right: 10%;
+  border-color: #0f55eb;
+  background-color: #0f55eb;
+  font-family: 'Maisonneue book', sans-serif;
 }
 
 .button.deactivate-account-button:hover {
@@ -870,9 +946,10 @@ h4 {
 
 .button.deactivate-account-button.cancel {
   margin-right: 2%;
-  border-color: #1f8cec;
+  border-color: #0f55eb;
   background-color: transparent;
-  color: #1f8cec;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #0f55eb;
 }
 
 .button.deactivate-account-button.cancel:hover {
@@ -886,6 +963,9 @@ h4 {
   margin-right: 10%;
   margin-left: 10%;
   float: none;
+  border-color: #0f55eb;
+  background-color: #0f55eb;
+  font-family: 'Maisonneue book', sans-serif;
 }
 
 .button.div-cta {
@@ -896,28 +976,31 @@ h4 {
   padding-right: 25px;
   padding-left: 25px;
   float: none;
-  border-color: #1f8cec;
+  border-color: #0f55eb;
   background-color: transparent;
-  font-family: 'Akkurat light regular', sans-serif;
-  color: #1280e0;
+  -webkit-transition: background-color 250ms ease;
+  transition: background-color 250ms ease;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #0f55eb;
   text-decoration: none;
 }
 
 .button.div-cta:hover {
-  border-color: #2e2e7f;
-  color: #2e2e7f;
+  border-color: #0f55eb;
+  background-color: rgba(15, 85, 235, .1);
+  color: #0f55eb;
 }
 
 .button.div-cta.demo {
   margin-left: 1%;
-  border-color: #1280e0;
-  background-color: #1280e0;
+  border-color: #0f55eb;
+  background-color: #0f55eb;
   color: #fff;
 }
 
 .button.div-cta.demo:hover {
-  border-color: #1271c4;
-  background-color: #1271c4;
+  border-color: #0f55eb;
+  background-color: #0f55eb;
 }
 
 .button.div-cta.hero {
@@ -929,9 +1012,17 @@ h4 {
   margin-top: 25px;
   margin-left: 2%;
   padding-top: 12px;
+  border-color: #0f55eb;
   background-color: transparent;
+  -webkit-transition: background-color 250ms ease;
+  transition: background-color 250ms ease;
   font-family: 'Akkurat regular', sans-serif;
+  color: #0f55eb;
   font-weight: 400;
+}
+
+.button.div-cta.hero-alt-button:hover {
+  background-color: rgba(15, 85, 235, .1);
 }
 
 .button.use-case-button {
@@ -941,19 +1032,21 @@ h4 {
   padding-right: 20px;
   padding-left: 20px;
   float: none;
-  font-family: Lato, sans-serif;
+  border-color: #0f55eb;
+  background-color: #0f55eb;
+  font-family: 'Maisonneue book', sans-serif;
 }
 
 .button.use-case-button.demo-request {
   margin-left: 1%;
   padding-top: 12px;
   background-color: #fff;
-  color: #1280e0;
+  color: #0f55eb;
 }
 
 .button.use-case-button.demo-request:hover {
   background-color: #f0f6fb;
-  color: #1271c4;
+  color: #0f55eb;
 }
 
 .button.error-page-button {
@@ -961,8 +1054,11 @@ h4 {
   margin-top: 0px;
   margin-right: 0%;
   margin-bottom: 20px;
-  padding-top: 10px;
+  padding-top: 11px;
   float: none;
+  border-color: #0f55eb;
+  background-color: #0f55eb;
+  font-family: 'Maisonneue book', sans-serif;
 }
 
 .button.right-nav-add-to-list {
@@ -972,10 +1068,10 @@ h4 {
   margin-bottom: 30px;
   padding-top: 12px;
   float: none;
-  border-color: #1f8cec;
+  border-color: #0f55eb;
   background-color: transparent;
   font-family: 'Fontawesome webfont', sans-serif;
-  color: #1f8cec;
+  color: #0f55eb;
   font-weight: 400;
 }
 
@@ -989,9 +1085,10 @@ h4 {
   height: 38px;
   padding-top: 8px;
   float: none;
-  border-color: #1f8cec;
+  border-color: #0f55eb;
   background-color: #fff;
-  color: #1f8cec;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #0f55eb;
 }
 
 .button.facebook:hover {
@@ -1012,8 +1109,10 @@ h4 {
   width: auto;
   height: 36px;
   margin-right: 2%;
+  border-color: #0f55eb;
   background-color: transparent;
-  color: #1f8cec;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #0f55eb;
 }
 
 .button.cancel-send:hover {
@@ -1086,10 +1185,10 @@ h4 {
   padding-right: 25px;
   padding-left: 25px;
   float: none;
-  border-color: #1f8cec;
+  border-color: #0f55eb;
   background-color: transparent;
   font-family: 'Fontawesome webfont', sans-serif;
-  color: #1f8cec;
+  color: #0f55eb;
   font-weight: 400;
 }
 
@@ -1110,12 +1209,15 @@ h4 {
   margin-right: 2%;
   padding-top: 8px;
   float: none;
+  border-color: #0f55eb;
+  background-color: #0f55eb;
+  font-family: 'Maisonneue book', sans-serif;
 }
 
 .button.messaging-dash-welcome-div.alt {
-  border-color: #1f8cec;
+  border-color: #0f55eb;
   background-color: transparent;
-  color: #1f8cec;
+  color: #0f55eb;
 }
 
 .button.messaging-dash-welcome-div.alt:hover {
@@ -1241,6 +1343,7 @@ h4 {
 
 .hero.help-center.alt {
   padding-top: 2%;
+  background-color: #0f55eb;
 }
 
 .hero.default {
@@ -1266,8 +1369,8 @@ h4 {
   width: auto;
   margin: 0px 10% 20px;
   padding-bottom: 20px;
-  font-family: 'Akkurat light regular', sans-serif;
-  color: #2e2e7f;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #060606;
   font-size: 30px;
   line-height: 42px;
 }
@@ -1279,7 +1382,8 @@ h4 {
 .hero-h1.home-header.pricing-hero {
   margin-bottom: 0px;
   padding-bottom: 0px;
-  color: #2e2e7f;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #060606;
 }
 
 .hero-h1.home-header.policy-terms {
@@ -1298,6 +1402,7 @@ h4 {
 .hero-h1.home-header.use-case-header.alt {
   margin-bottom: 3%;
   padding-top: 15%;
+  font-family: 'Maisonneue book', sans-serif;
 }
 
 .hero-h1.home-header.relay-docs-index {
@@ -1314,12 +1419,15 @@ h4 {
 .hero-h1.home-header.empty-state-dash {
   margin-bottom: 60px;
   padding-bottom: 0px;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #62676d;
   font-size: 22px;
   line-height: 30px;
 }
 
 .hero-h1.home-header.schedule-demo-header {
-  color: #1f8cec;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #0f55eb;
 }
 
 .signup-bar {
@@ -1352,8 +1460,10 @@ h4 {
   border: 1px solid #1f8cec;
   border-radius: 3px;
   background-color: #faffbd;
-  font-family: 'Akkurat regular', sans-serif;
-  color: #455a64;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #060606;
+  font-size: 15px;
+  text-decoration: none;
 }
 
 .text-field:focus {
@@ -1371,10 +1481,10 @@ h4 {
 .text-field.login {
   width: 80%;
   margin: 10px 10% 15px;
-  border: 1px solid #1f8cec;
+  border: 1px solid #0f55eb;
   border-radius: 3px;
-  font-family: 'Akkurat regular', sans-serif;
-  color: #455a64;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #060606;
 }
 
 .text-field.login.cc-card-name {
@@ -1432,6 +1542,7 @@ h4 {
   margin-right: 10%;
   margin-bottom: 20px;
   margin-left: 10%;
+  border-color: #0f55eb;
   text-align: left;
 }
 
@@ -1450,10 +1561,10 @@ h4 {
   width: 80%;
   margin-right: 10%;
   margin-left: 10%;
-  border: 1px solid #1f8cec;
+  border: 1px solid #0f55eb;
   border-radius: 3px;
-  font-family: 'Akkurat regular', sans-serif;
-  color: #8da2b7;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #060606;
 }
 
 .text-field.card-number.modal {
@@ -1477,10 +1588,10 @@ h4 {
   margin-right: 3%;
   margin-left: 0%;
   float: left;
-  border: 1px solid #1f8cec;
+  border: 1px solid #0f55eb;
   border-radius: 3px;
   background-color: #fff;
-  font-family: 'Akkurat regular', sans-serif;
+  font-family: 'Maisonneue book', sans-serif;
 }
 
 .text-field.cvv.modal {
@@ -1496,7 +1607,7 @@ h4 {
   margin-left: 20px;
   border: 1px solid #1f8cec;
   background-color: #fff;
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .text-field.editor.list {
@@ -1527,20 +1638,25 @@ h4 {
   margin-right: 10%;
   margin-bottom: 20px;
   margin-left: 10%;
+  border-color: #0f55eb;
   background-color: #fff;
-  font-family: 'Akkurat regular', sans-serif;
+  font-family: 'Maisonneue book', sans-serif;
 }
 
 .text-field.settings.full-name {
-  border: 1px solid #1f8cec;
+  border: 1px solid #0f55eb;
   background-color: #fff;
-  color: #8da2b7;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #060606;
+  font-size: 15px;
 }
 
 .text-field.settings.password {
   width: 39%;
   margin-right: 0%;
   float: left;
+  border-color: #0f55eb;
+  font-family: 'Maisonneue book', sans-serif;
 }
 
 .text-field.settings.password.confirm {
@@ -1553,10 +1669,10 @@ h4 {
   width: 47%;
   margin-right: 3%;
   float: left;
-  border: 1px solid #1f8cec;
+  border: 1px solid #0f55eb;
   background-color: #fff;
-  font-family: 'Akkurat regular', sans-serif;
-  color: #8da2b7;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #060606;
 }
 
 .text-field.settings.apt_suite {
@@ -1564,9 +1680,9 @@ h4 {
   width: 30%;
   margin-left: 0%;
   float: left;
-  border: 1px solid #1f8cec;
+  border: 1px solid #0f55eb;
   background-color: #fff;
-  color: #8da2b7;
+  color: #060606;
 }
 
 .text-field.settings.city {
@@ -1574,9 +1690,9 @@ h4 {
   width: 25%;
   margin-right: 3%;
   float: left;
-  border: 1px solid #1f8cec;
+  border: 1px solid #0f55eb;
   background-color: #fff;
-  color: #8da2b7;
+  color: #060606;
 }
 
 .text-field.settings.state {
@@ -1585,9 +1701,9 @@ h4 {
   margin-right: 3%;
   margin-left: 0%;
   float: left;
-  border: 1px solid #1f8cec;
+  border: 1px solid #0f55eb;
   background-color: #fff;
-  color: #8da2b7;
+  color: #060606;
 }
 
 .text-field.settings.zip {
@@ -1595,9 +1711,9 @@ h4 {
   width: 24%;
   margin-left: 0%;
   float: left;
-  border: 1px solid #1f8cec;
+  border: 1px solid #0f55eb;
   background-color: #fff;
-  color: #8da2b7;
+  color: #060606;
 }
 
 .text-field.settings.zip.company-rep {
@@ -1609,7 +1725,7 @@ h4 {
   float: none;
   border: 1px solid #1f8cec;
   background-color: #fff;
-  color: #8da2b7;
+  color: #060606;
 }
 
 .text-field.settings.re-enter-password {
@@ -1640,11 +1756,11 @@ h4 {
   width: 80%;
   margin-right: 10%;
   margin-left: 10%;
-  border: 1px solid #1f8cec;
+  border: 1px solid #0f55eb;
   border-radius: 3px;
   background-color: #fff;
-  font-family: 'Akkurat regular', sans-serif;
-  color: #8da2b7;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #060606;
 }
 
 .text-field.coupon {
@@ -1660,14 +1776,17 @@ h4 {
   margin-left: 10%;
   float: left;
   border-radius: 3px;
-  font-family: 'Akkurat regular', sans-serif;
-  color: #8da2b7;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #62676d;
 }
 
 .text-field.footer-cta-field {
   margin-bottom: 20px;
   border: 1px solid #1f8cec;
   background-color: #fff;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #060606;
+  font-size: 15px;
 }
 
 .text-field.month-year {
@@ -1675,7 +1794,7 @@ h4 {
   margin-right: 3%;
   margin-left: 10%;
   float: left;
-  border: 1px solid #1f8cec;
+  border: 1px solid #0f55eb;
   background-color: #fff;
   text-align: left;
 }
@@ -1701,6 +1820,7 @@ h4 {
   margin-right: 10%;
   margin-bottom: 20px;
   margin-left: 10%;
+  border-color: #0f55eb;
   background-color: #fff;
   text-align: left;
 }
@@ -1710,6 +1830,7 @@ h4 {
   margin-right: 10%;
   margin-bottom: 20px;
   margin-left: 10%;
+  border-color: #0f55eb;
   text-align: left;
 }
 
@@ -1725,12 +1846,14 @@ h4 {
   margin-right: 10%;
   margin-bottom: 20px;
   margin-left: 10%;
+  border-color: #0f55eb;
   text-align: left;
 }
 
 .text-field.editable {
   width: 80%;
   margin: 0px 10% 20px;
+  border-color: #0f55eb;
   background-color: #fff;
   color: #455a64;
 }
@@ -1743,6 +1866,7 @@ h4 {
   margin-bottom: 0px;
   margin-left: 5%;
   float: left;
+  color: #060606;
 }
 
 .text-field.plan-amount {
@@ -1783,6 +1907,7 @@ h4 {
   width: 80%;
   margin-right: 10%;
   margin-left: 10%;
+  border-color: #0f55eb;
   background-color: #faffbd;
 }
 
@@ -1803,6 +1928,7 @@ h4 {
   width: 80%;
   margin-right: 10%;
   margin-left: 10%;
+  border-color: #0f55eb;
   background-color: #fff;
   text-align: left;
 }
@@ -1814,8 +1940,8 @@ h4 {
   border-color: #1f8cec;
   background-color: rgba(221, 229, 237, .3);
   box-shadow: inset 1px 1px 3px 0 rgba(0, 0, 0, .16);
-  color: #495b70;
-  font-size: 13px;
+  color: #060606;
+  font-size: 12px;
 }
 
 .text-field.amount-text-field {
@@ -1824,8 +1950,8 @@ h4 {
   margin-left: 20px;
   background-color: rgba(221, 229, 237, .3);
   box-shadow: inset 1px 1px 3px 0 rgba(0, 0, 0, .16);
-  color: #495b70;
-  font-size: 13px;
+  color: #060606;
+  font-size: 12px;
 }
 
 .text-field.right-nav {
@@ -1846,9 +1972,11 @@ h4 {
   border-right-style: none;
   border-left-style: none;
   background-color: #fff;
+  font-size: 14px;
 }
 
 .text-field.email-address {
+  border-color: #0f55eb;
   background-color: #fff;
 }
 
@@ -1882,9 +2010,11 @@ h4 {
 
 .text-field.coupon-code {
   width: 50%;
+  border-color: #0f55eb;
 }
 
 .text-field.search-customers-and-contacts {
+  border-color: #0f55eb;
   background-color: rgba(221, 229, 237, .4);
   box-shadow: inset 1px 1px 3px 0 rgba(0, 0, 0, .16);
 }
@@ -1927,7 +2057,7 @@ h4 {
 }
 
 .word-mark-temp {
-  font-family: 'Alegreya Sans', sans-serif;
+  font-family: 'Alegreya Sans';
   color: #1f8ceb;
   font-weight: 700;
 }
@@ -2100,7 +2230,7 @@ h4 {
   -webkit-align-self: flex-start;
   -ms-flex-item-align: start;
   align-self: flex-start;
-  font-family: 'Alegreya Sans', sans-serif;
+  font-family: 'Alegreya Sans';
   color: #fff;
   font-size: 30px;
   font-weight: 300;
@@ -2131,7 +2261,7 @@ h4 {
   margin-bottom: 40px;
   padding-right: 20%;
   padding-left: 20%;
-  font-family: 'Alegreya Sans', sans-serif;
+  font-family: 'Alegreya Sans';
   color: #fff;
   font-size: 18px;
   font-weight: 400;
@@ -2255,7 +2385,7 @@ h4 {
 }
 
 .default-content-section.integrations-upcoming {
-  background-color: #1f8cec;
+  background-color: #0f55eb;
 }
 
 .flex-rich-text {
@@ -2487,17 +2617,16 @@ h4 {
   margin-bottom: 5px;
   padding-bottom: 0px;
   padding-left: 5%;
-  font-family: 'Akkurat light regular', sans-serif;
-  color: #1280e0;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #0f55eb;
   font-size: 20px;
   text-align: left;
 }
 
 .first-content-section-sub-header.transaction-fee-amount {
-  margin-top: 50px;
-  margin-bottom: 20px;
+  margin: 50px 10% 20px;
   padding-left: 0%;
-  font-family: 'Akkurat light regular', sans-serif;
+  font-family: 'Maisonneue book', sans-serif;
   color: #e04e50;
   font-size: 40px;
 }
@@ -2505,6 +2634,8 @@ h4 {
 .first-content-section-sub-header.transaction-fee-table-subheader {
   margin-bottom: 20px;
   padding-bottom: 0px;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #060606;
 }
 
 .first-content-section-sub-header.transaction-fee-table-subheader.team-info {
@@ -2536,6 +2667,8 @@ h4 {
 .first-content-section-sub-header.footer-cta-header {
   margin-top: 20px;
   margin-bottom: 0px;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #141d67;
 }
 
 .first-content-section-sub-header.value-prop-details-text {
@@ -2574,8 +2707,8 @@ h4 {
 
 .first-content-section-sub-header.pricing-header {
   margin: 40px 10% 20px;
-  font-family: 'Akkurat light regular', sans-serif;
-  color: #2e2e7f;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #060606;
   text-align: center;
 }
 
@@ -2593,8 +2726,11 @@ h4 {
 
 .first-content-section-sub-header.alt.about-relay-mission {
   margin-top: 75px;
-  color: #1f8cec;
-  text-align: center;
+  margin-left: 7%;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #0f55eb;
+  line-height: 30px;
+  text-align: left;
 }
 
 .first-section-icon {
@@ -2885,8 +3021,8 @@ h4 {
   padding-left: 0%;
   -webkit-transition: color 300ms ease;
   transition: color 300ms ease;
-  font-family: 'Akkurat regular', sans-serif;
-  color: #1280e0;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #0f55eb;
   font-size: 14px;
   text-align: left;
   text-decoration: none;
@@ -2921,8 +3057,8 @@ h4 {
   -webkit-transition-duration: 350ms;
   transition-duration: 350ms;
   font-family: 'Akkurat regular', sans-serif;
-  color: #8da2b7;
-  font-size: 14px;
+  color: #060606;
+  font-size: 15px;
 }
 
 .links.footer-links:hover {
@@ -2932,6 +3068,7 @@ h4 {
 
 .links.footer-links.blog-links {
   padding-left: 10px;
+  font-size: 14px;
 }
 
 .links.footer-links.email-address {
@@ -2968,6 +3105,7 @@ h4 {
 
 .links.sign-up-cta-log-in-page {
   font-family: 'Akkurat regular', sans-serif;
+  color: #0f55eb;
   font-size: 14px;
 }
 
@@ -2977,8 +3115,9 @@ h4 {
   padding-top: 8px;
   padding-bottom: 10px;
   border-bottom: 1px solid #e6e5e5;
-  font-family: 'Akkurat regular', sans-serif;
-  color: #8da2b7;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #62676d;
+  font-size: 14px;
   font-weight: 400;
 }
 
@@ -2989,8 +3128,8 @@ h4 {
 .links.faqs.alt {
   border-bottom-style: solid;
   border-bottom-color: hsla(0, 2%, 90%, .6);
-  color: #8da2b7;
-  font-size: 13px;
+  color: #62676d;
+  font-size: 14px;
 }
 
 .links.faqs.alt:hover {
@@ -3001,6 +3140,8 @@ h4 {
   margin-right: 0%;
   margin-left: 0%;
   float: right;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #0f55eb;
 }
 
 .links.subscription-receipt {
@@ -3039,7 +3180,7 @@ h4 {
 .default-content-section-2.value-prop-details.features {
   padding-top: 140px;
   padding-bottom: 100px;
-  background-color: #1f8cec;
+  background-color: #0f55eb;
   background-image: none;
 }
 
@@ -3142,14 +3283,15 @@ h4 {
 
 .signup-box-subheading {
   margin-bottom: 20px;
-  font-family: 'Akkurat regular', sans-serif;
-  color: #8da2b7;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #060606;
   font-size: 11px;
   letter-spacing: 2px;
 }
 
 .signup-box-subheading.premium-table {
   margin-left: 40px;
+  font-family: 'Maisonneue book', sans-serif;
   color: rgba(240, 246, 251, .8);
   text-align: left;
 }
@@ -3179,7 +3321,8 @@ h4 {
 
 .signup-box-subheading.dashboard-right-nav {
   margin-bottom: 0px;
-  color: #495b70;
+  font-family: 'Akkurat bold', sans-serif;
+  color: #060606;
   text-align: left;
 }
 
@@ -3198,8 +3341,8 @@ h4 {
   margin-top: 62px;
   margin-bottom: 25px;
   margin-left: 25px;
-  color: #8da2b7;
-  font-size: 10px;
+  color: #62676d;
+  font-size: 11px;
   text-transform: uppercase;
 }
 
@@ -3231,7 +3374,8 @@ h4 {
   top: 40px;
   margin-top: 40px;
   margin-bottom: 0px;
-  color: #8da2b7;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #060606;
   text-align: center;
 }
 
@@ -3247,12 +3391,14 @@ h4 {
 .signup-box-subheading.footer-cta-subheading {
   margin-top: 20px;
   margin-bottom: 20px;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #060606;
   text-transform: uppercase;
 }
 
 .signup-box-subheading.footer-cta-subheading.use-case {
   margin-bottom: 30px;
-  color: #e6e5e5;
+  color: #fff;
 }
 
 .signup-box-subheading.footer-cta-subheading.blank-page {
@@ -3322,7 +3468,7 @@ h4 {
 .footer-heading {
   margin-bottom: 12px;
   font-family: 'Akkurat bold', sans-serif;
-  color: #1f8cec;
+  color: #0f55eb;
   font-size: 14px;
   font-weight: 400;
   text-align: left;
@@ -3358,7 +3504,7 @@ h4 {
   margin-top: 15px;
   margin-bottom: 60px;
   font-family: 'Akkurat regular', sans-serif;
-  color: rgba(141, 162, 183, .6);
+  color: #060606;
   font-size: 12px;
   font-style: normal;
   text-align: left;
@@ -3568,7 +3714,9 @@ h4 {
   padding-top: 8px;
   padding-bottom: 8px;
   border-top: 1px dotted hsla(0, 0%, 100%, .5);
+  font-family: 'Maisonneue book', sans-serif;
   color: #fff;
+  font-size: 15px;
   text-align: left;
 }
 
@@ -3595,9 +3743,9 @@ h4 {
 .transaction-fee-table-description {
   padding-right: 5%;
   padding-left: 5%;
-  font-family: 'Akkurat regular', sans-serif;
-  color: rgba(141, 162, 183, .9);
-  font-size: 14px;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #060606;
+  font-size: 15px;
   text-align: left;
 }
 
@@ -3643,8 +3791,9 @@ h4 {
   margin-top: 7px;
   margin-left: 18px;
   float: left;
-  font-family: 'Akkurat regular', sans-serif;
-  color: #8da2b7;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #060606;
+  font-size: 15px;
 }
 
 .countries:hover {
@@ -3693,7 +3842,7 @@ h4 {
   float: left;
   border: 1px solid #1f8cec;
   border-radius: 6px;
-  color: #1f8cec;
+  color: #0f55eb;
   font-size: 9px;
   text-align: center;
 }
@@ -3768,7 +3917,7 @@ h4 {
   padding-bottom: 100px;
   border-bottom-color: rgba(141, 162, 183, .28);
   border-left-style: solid;
-  border-left-color: rgba(141, 162, 183, .7);
+  border-left-color: rgba(141, 162, 183, .22);
   background-color: #fff;
   text-align: center;
 }
@@ -3796,7 +3945,7 @@ h4 {
   padding-top: 0px;
   padding-bottom: 50px;
   border-right-color: rgba(141, 162, 183, .28);
-  background-color: #f8fafb;
+  background-color: #fff;
 }
 
 .side-bar.editor {
@@ -3950,7 +4099,7 @@ h4 {
   min-height: 80vh;
   min-width: 54%;
   padding-bottom: 50px;
-  background-color: #f0f4f7;
+  background-color: #fff;
 }
 
 .dashboard-body.welcome {
@@ -4077,7 +4226,7 @@ h4 {
   margin-top: 12px;
   margin-left: 25px;
   float: left;
-  border-radius: 5px;
+  border-radius: 4px;
 }
 
 .table-profile-picture.welcome-dash {
@@ -4099,7 +4248,7 @@ h4 {
   padding-right: 0px;
   float: left;
   font-family: 'Fontawesome webfont', sans-serif;
-  color: #495b70;
+  color: #060606;
   font-size: 13px;
   text-decoration: none;
 }
@@ -4165,6 +4314,10 @@ h4 {
   margin-left: 25px;
 }
 
+.table-text.frequency.sent-reminder {
+  color: #62676d;
+}
+
 .table-text.alt-table {
   margin-top: 30px;
   margin-left: 15px;
@@ -4215,12 +4368,12 @@ h4 {
 }
 
 .table-text.sent-reminder {
-  color: rgba(141, 162, 183, .8);
+  color: #62676d;
   text-decoration: line-through;
 }
 
 .table-text.heading {
-  color: #8da2b7;
+  color: #62676d;
   text-decoration: none;
 }
 
@@ -4231,6 +4384,9 @@ h4 {
 .table-text.shrink-text {
   width: 70%;
   padding-right: 0px;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #060606;
+  font-size: 13px;
   text-align: left;
 }
 
@@ -4281,6 +4437,7 @@ h4 {
 
 .row-wrapper.customer-dashboard-table-wrapper {
   top: 50px;
+  overflow: auto;
 }
 
 .row-wrapper.customer-dashboard-table-wrapper.list-members {
@@ -4333,11 +4490,12 @@ h4 {
   margin-top: 10px;
   margin-left: 20px;
   float: left;
-  border-radius: 5px;
+  border-radius: 3px;
 }
 
 .customer-profile-picture.browser-notification {
   margin-left: 25px;
+  border-radius: 6px;
 }
 
 .customer-profile-picture.browser-notification.scheduled-jobs {
@@ -4345,6 +4503,7 @@ h4 {
   display: inline-block;
   float: none;
   border: 0px solid #fff;
+  border-radius: 6px;
 }
 
 .customer-profile-picture.browser-notification.scheduled-jobs.nested {
@@ -4353,7 +4512,8 @@ h4 {
 }
 
 .customer-profile-picture.browser-notification.scheduled-jobs.next-receipient {
-  margin-left: 1px;
+  margin-left: 2px;
+  border-radius: 6px;
 }
 
 .customer-name-text {
@@ -4383,7 +4543,7 @@ h4 {
   margin-right: 0px;
   margin-left: 0px;
   float: none;
-  color: #495b70;
+  color: #060606;
   font-size: 12px;
   text-align: center;
 }
@@ -4403,6 +4563,9 @@ h4 {
   position: relative;
   margin-bottom: 8px;
   padding-right: 10px;
+  font-family: 'Akkurat regular', sans-serif;
+  color: #060606;
+  font-size: 13px;
 }
 
 .customer-name-text.shrink-text.browser-notification {
@@ -4435,6 +4598,8 @@ h4 {
   margin-right: 0px;
   padding-right: 0px;
   float: none;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #62676d;
 }
 
 .messaging-dash-variable-text {
@@ -4451,7 +4616,7 @@ h4 {
   margin-right: 0px;
   float: none;
   font-family: 'Fontawesome webfont', sans-serif;
-  color: #8da2b7;
+  color: #62676d;
   text-align: right;
 }
 
@@ -4505,22 +4670,22 @@ h4 {
   margin-right: 10px;
   padding-top: 6px;
   float: left;
-  border: 1px solid #8da2b7;
+  border: 1px solid #0f55eb;
   border-radius: 2px;
-  background-color: #fdfdfe;
-  -webkit-transition: background-color 200ms ease;
-  transition: background-color 200ms ease;
-  font-family: 'Fontawesome webfont', sans-serif;
-  color: rgba(73, 91, 112, .7);
+  background-color: #fff;
+  -webkit-transition: background-color 250ms ease;
+  transition: background-color 250ms ease;
+  font-family: 'Akkurat light regular', sans-serif;
+  color: #0f55eb;
   font-size: 12px;
   text-decoration: none;
 }
 
 .sub-nav-button:hover {
-  border-color: #455a64;
-  background-color: #f0f4f7;
+  border-color: #0f55eb;
+  background-color: rgba(15, 85, 235, .11);
   box-shadow: inset 1px 1px 3px 0 #e6e5e5;
-  color: #455a64;
+  color: #0f55eb;
 }
 
 .sub-nav-button.mark {
@@ -4734,7 +4899,7 @@ h4 {
   margin-right: auto;
   margin-left: auto;
   float: none;
-  border-radius: 5px;
+  border-radius: 3px;
 }
 
 .right-nav-profile-picture.messaging-bubble.agent-picture {
@@ -4781,7 +4946,7 @@ h4 {
   border-radius: 3px;
   background-color: rgba(221, 229, 237, .3);
   box-shadow: inset 1px 1px 3px 0 rgba(0, 0, 0, .16);
-  font-family: 'Akkurat regular', sans-serif;
+  font-family: 'Maisonneue book', sans-serif;
   color: #495b70;
   font-size: 13px;
 }
@@ -4821,7 +4986,7 @@ h4 {
   margin-top: 0px;
   margin-left: 0px;
   padding-right: 30px;
-  padding-left: 30px;
+  padding-left: 10px;
   float: left;
   border-radius: 0px;
   background-color: transparent;
@@ -4946,13 +5111,17 @@ h4 {
 }
 
 .dash-header-links {
-  margin-top: 15px;
+  margin-top: 10px;
   margin-left: 0px;
+  padding: 4px 15px;
   float: left;
+  border: 1px solid #0f55eb;
+  border-radius: 3px;
+  background-color: #fff;
   -webkit-transition: background-color 300ms ease;
   transition: background-color 300ms ease;
-  font-family: 'Fontawesome webfont', sans-serif;
-  color: #2e2e7f;
+  font-family: 'Akkurat regular', sans-serif;
+  color: #0f55eb;
   font-size: 12px;
   font-weight: 400;
   text-decoration: none;
@@ -4960,39 +5129,45 @@ h4 {
 }
 
 .dash-header-links:hover {
-  color: #1f8cec;
+  background-color: rgba(15, 85, 235, .1);
+  color: #0f55eb;
 }
 
 .dash-header-links:focus {
-  color: #1f8cec;
+  background-color: rgba(15, 85, 235, .1);
+  color: #0f55eb;
 }
 
 .dash-header-links.new-link {
-  margin-left: 30px;
-  color: #2e2e7f;
+  margin-left: 10px;
+  color: #0f55eb;
   font-size: 12px;
   text-decoration: none;
 }
 
 .dash-header-links.new-link:hover {
-  color: #1f8cec;
+  background-color: rgba(15, 85, 235, .1);
+  color: #0f55eb;
 }
 
 .dash-header-links.new-link:focus {
-  color: #1f8cec;
+  color: #0f55eb;
 }
 
 .dash-header-links.new-link.relay-nav-number-display {
   margin-top: 12px;
-  padding: 2px 10px;
+  margin-left: 10px;
+  padding: 4px 15px;
   border: 1px none #8da2b7;
-  border-radius: 10px;
-  background-color: #f8f9fb;
-  color: #2e2e7f;
+  border-radius: 3px;
+  background-color: rgba(15, 85, 235, .1);
+  color: #0f55eb;
 }
 
 .dash-header-links.new-link.relay-nav-number-display:hover {
-  color: #1f8cec;
+  border-radius: 6px;
+  background-color: rgba(15, 85, 235, .15);
+  color: #0f55eb;
 }
 
 .dash-header-links.right-float {
@@ -5067,7 +5242,7 @@ h4 {
   border-left: 1px solid #e6e5e5;
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
-  background-color: #f0f4f7;
+  background-color: #fff;
 }
 
 .text-window-wrapper.customer-profile {
@@ -5163,10 +5338,13 @@ h4 {
 }
 
 .left-column-text {
-  margin-top: 5px;
+  margin-top: 0px;
   margin-left: 0px;
-  font-family: 'Fontawesome webfont', sans-serif;
-  color: #8da2b7;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(221, 229, 237, .8);
+  font-family: 'Maisonneue book', sans-serif;
+  color: #060606;
   font-size: 12px;
   text-align: left;
 }
@@ -5178,8 +5356,9 @@ h4 {
 
 .left-column-text.recent-activity {
   margin-top: 0px;
-  font-family: 'Fontawesome webfont', sans-serif;
-  color: #8da2b7;
+  border-bottom-style: none;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #62676d;
   font-size: 12px;
 }
 
@@ -5189,13 +5368,18 @@ h4 {
 
 .left-column-text.number {
   margin-top: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(221, 229, 237, .8);
+  font-family: 'Maisonneue book', sans-serif;
+  color: #060606;
 }
 
 .left-column-text.number.contact-chat-no-data {
   padding: 4px 10px;
   border-radius: 3px;
   background-color: #f8fafc;
-  color: rgba(141, 162, 183, .65);
+  color: #62676d;
 }
 
 .right-column-text {
@@ -5219,8 +5403,8 @@ h4 {
 
 .recent-activity-description {
   margin-right: 9px;
-  font-family: 'Fontawesome webfont', sans-serif;
-  color: #2e2e7f;
+  font-family: 'Akkurat bold', sans-serif;
+  color: #060606;
   font-size: 12px;
 }
 
@@ -5275,13 +5459,14 @@ h4 {
   margin-right: 10%;
   margin-left: 10%;
   border-style: solid;
-  border-color: #1f8cec;
+  border-color: #0f55eb;
   border-right-width: 1px;
   border-bottom-width: 1px;
   border-left-width: 1px;
   border-radius: 3px;
-  font-family: 'Akkurat regular', sans-serif;
-  color: #8da2b7;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #060606;
+  font-size: 15px;
   text-align: left;
 }
 
@@ -5300,6 +5485,7 @@ h4 {
   width: 80%;
   margin-right: 10%;
   margin-left: 10%;
+  border-color: #0f55eb;
 }
 
 .text-area.view-saved-reply {
@@ -5319,10 +5505,12 @@ h4 {
   width: 80%;
   height: 200px;
   margin: 20px 10%;
-  border: 1px solid #1f8cec;
+  border: 1px solid #0f55eb;
   border-radius: 3px;
   background-color: #faffbd;
-  font-family: 'Akkurat regular', sans-serif;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #060606;
+  font-size: 15px;
   text-align: left;
 }
 
@@ -5334,6 +5522,9 @@ h4 {
   border: 1px solid #1f8cec;
   border-radius: 3px;
   background-color: #fff;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #060606;
+  font-size: 15px;
 }
 
 .text-area.deactivation-comments {
@@ -5342,8 +5533,10 @@ h4 {
   margin-top: 20px;
   margin-right: 10%;
   margin-left: 10%;
-  border: 1px solid #1f8cec;
+  border: 1px solid #0f55eb;
   background-color: #faffbd;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #060606;
   text-align: left;
 }
 
@@ -5357,7 +5550,8 @@ h4 {
   border-bottom: 1px solid #e6e5e5;
   border-top-style: none;
   border-top-width: 0px;
-  color: #8da2b7;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #060606;
 }
 
 .text-area.mark-done {
@@ -5370,8 +5564,9 @@ h4 {
   border: 1px solid #1f8cec;
   border-radius: 3px;
   background-color: #faffbd;
-  color: #495b70;
-  font-size: 14px;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #060606;
+  font-size: 15px;
   text-align: left;
 }
 
@@ -5381,8 +5576,10 @@ h4 {
   margin-right: 10%;
   margin-bottom: 20px;
   margin-left: 10%;
-  border: 1px solid #1f8cec;
+  border: 1px solid #0f55eb;
   border-radius: 3px;
+  font-family: 'Maisonneue book', sans-serif;
+  font-size: 15px;
 }
 
 .text-area.message-text-box {
@@ -5391,17 +5588,21 @@ h4 {
   padding-top: 15px;
   padding-right: 15px;
   padding-left: 15px;
-  border: 1px solid #1f8cec;
+  border: 1px solid #0f55eb;
   border-radius: 6px;
-  background-color: #fff;
+  background-color: #faffbd;
   box-shadow: inset 1px 1px 3px 0 #e6e5e5;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #060606;
+  font-size: 15px;
 }
 
 .text-area.hashtag-description-area {
   width: 80%;
   margin-left: 20px;
   border: 1px solid #1f8cec;
-  font-size: 12px;
+  font-family: 'Maisonneue book', sans-serif;
+  font-size: 13px;
 }
 
 .message-window-tabs {
@@ -5463,12 +5664,16 @@ h4 {
   border-right: 1px solid #1280e0;
   border-top-right-radius: 0px;
   border-bottom-right-radius: 0px;
+  background-color: #0f55eb;
   -webkit-transition: background-color 250ms ease;
   transition: background-color 250ms ease;
+  font-family: 'Maisonneue book', sans-serif;
+  font-size: 14px;
+  text-align: justify;
 }
 
 .message-window-tabs.send-button.split-button:hover {
-  background-color: #1271c4;
+  background-color: #0f55eb;
 }
 
 .new-message-count {
@@ -5498,12 +5703,12 @@ h4 {
   padding: 15px;
   border: 1px solid #e6e5e5;
   border-radius: 5px;
-  background-color: #fff;
+  background-color: #f0f4f7;
 }
 
 .message-bubble.customer-message.fb-messenger {
-  border-color: #1f8cec;
-  background-color: #1f8cec;
+  border-color: #0f55eb;
+  background-color: #0f55eb;
 }
 
 .message-bubble.agent-messaging {
@@ -5511,9 +5716,9 @@ h4 {
   min-height: 45px;
   min-width: 100%;
   padding: 15px;
-  border: 1px none #000;
+  border: 1px none #495b70;
   border-radius: 5px;
-  background-color: #637280;
+  background-color: #495b70;
 }
 
 .message-date-time {
@@ -5522,7 +5727,7 @@ h4 {
   margin-left: 19%;
   float: left;
   font-family: 'Fontawesome webfont', sans-serif;
-  color: rgba(141, 162, 183, .7);
+  color: #62676d;
   font-size: 11px;
   text-align: right;
 }
@@ -5531,7 +5736,8 @@ h4 {
   margin-right: 19%;
   margin-left: 25px;
   float: right;
-  color: rgba(141, 162, 183, .7);
+  font-family: 'Fontawesome webfont', sans-serif;
+  color: #62676d;
 }
 
 .chat-text {
@@ -5539,8 +5745,8 @@ h4 {
   margin-bottom: 2px;
   margin-left: 0px;
   padding: 0px;
-  font-family: 'Fontawesome webfont', sans-serif;
-  color: #495b70;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #060606;
   font-size: 13px;
   line-height: 22px;
 }
@@ -5660,18 +5866,18 @@ h4 {
   margin-left: 5px;
   -webkit-transition: opacity 300ms ease;
   transition: opacity 300ms ease;
-  font-family: 'Akkurat regular', sans-serif;
-  color: #455a64;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #060606;
   font-size: 13px;
   text-decoration: none;
 }
 
 .left-nav-tab:hover {
-  color: #455a64;
+  color: #0f55eb;
 }
 
 .left-nav-tab:focus {
-  color: #1f8cec;
+  color: #0f55eb;
 }
 
 .left-nav-tab.hidden {
@@ -5985,6 +6191,7 @@ h4 {
   border-bottom-style: none;
   border-bottom-width: 0px;
   background-color: transparent;
+  color: #62676d;
 }
 
 .headings.name.actions {
@@ -6001,6 +6208,7 @@ h4 {
 
 .headings.first-visit {
   margin-left: 10px;
+  color: #62676d;
 }
 
 .headings.avs {
@@ -6016,23 +6224,28 @@ h4 {
 
 .headings.transaction-description {
   margin-top: 10px;
+  color: #62676d;
 }
 
 .headings.transaction-amount {
   margin-top: 10px;
+  color: #62676d;
 }
 
 .headings.transaction-time {
   margin-top: 10px;
+  color: #62676d;
 }
 
 .headings.actions {
   margin-top: 10px;
+  color: #62676d;
   text-align: center;
 }
 
 .headings.total-spend-header {
   margin-left: 0px;
+  color: #62676d;
   text-align: left;
 }
 
@@ -6044,6 +6257,7 @@ h4 {
 .headings.last-visit {
   width: auto;
   margin-left: 10px;
+  color: #62676d;
   text-align: left;
 }
 
@@ -6055,12 +6269,14 @@ h4 {
 
 .headings.recipient {
   margin-left: 30px;
+  color: #62676d;
 }
 
 .headings.id {
   width: 70%;
   margin-left: 0px;
   float: none;
+  color: #62676d;
   text-align: right;
 }
 
@@ -6427,8 +6643,8 @@ h4 {
   right: 50px;
   width: auto;
   margin: 20px 0px 0px 80px;
-  font-family: 'Akkurat regular', sans-serif;
-  color: #2e2e7f;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #060606;
   font-size: 14px;
   font-weight: 400;
 }
@@ -6460,8 +6676,8 @@ h4 {
 .welcome-dash-content-container-header.date-time.shrink-text {
   position: static;
   margin-left: 5px;
-  font-family: 'Akkurat light regular', sans-serif;
-  color: #8da2b7;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #62676d;
   text-align: left;
 }
 
@@ -6480,7 +6696,7 @@ h4 {
   margin-top: 19px;
   margin-left: 10%;
   float: left;
-  font-family: 'Akkurat regular', sans-serif;
+  font-family: 'Maisonneue book', sans-serif;
   font-size: 16px;
   font-weight: 400;
   text-align: center;
@@ -6493,8 +6709,8 @@ h4 {
   margin-left: 0px;
   padding-left: 25px;
   float: left;
-  font-family: 'Akkurat regular', sans-serif;
-  color: #637280;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #060606;
   font-size: 14px;
   font-weight: 100;
 }
@@ -6573,7 +6789,7 @@ h4 {
 
 .welcome-dash-content-container.customer-contacts-2.open-conversations-yesterday {
   border-radius: 6px;
-  background-color: rgba(16, 116, 174, .83);
+  background-color: #0f55eb;
 }
 
 .welcome-dash-content-container.customer-contacts-3 {
@@ -6650,7 +6866,7 @@ h4 {
   position: relative;
   top: 10px;
   margin-top: 0px;
-  font-family: 'Akkurat regular', sans-serif;
+  font-family: 'Maisonneue book', sans-serif;
   color: #8da2b7;
   font-size: 13px;
 }
@@ -6667,9 +6883,13 @@ h4 {
   text-align: left;
 }
 
+.new-customer-table-text.name-text.shrink-text {
+  font-family: 'Maisonneue book', sans-serif;
+}
+
 .total-customer-count {
   margin-top: 80px;
-  font-family: 'Akkurat regular', sans-serif;
+  font-family: 'Maisonneue book', sans-serif;
   color: #fff;
 }
 
@@ -6689,7 +6909,7 @@ h4 {
 
 .count-description.transaction-count {
   margin-top: 0px;
-  color: rgba(221, 229, 237, .73);
+  color: rgba(221, 229, 237, .82);
   font-size: 11px;
 }
 
@@ -6704,13 +6924,13 @@ h4 {
 
 .new-customers {
   margin-top: 80px;
-  font-family: 'Akkurat regular', sans-serif;
+  font-family: 'Maisonneue book', sans-serif;
   color: #fff;
 }
 
 .new-contacts {
   margin-top: 80px;
-  font-family: 'Akkurat regular', sans-serif;
+  font-family: 'Maisonneue book', sans-serif;
   color: #fff;
 }
 
@@ -7125,6 +7345,10 @@ h4 {
   text-align: center;
 }
 
+.average-spend.customer-profile-box {
+  background-color: #0f55eb;
+}
+
 .conversation-content-wrapper {
   margin-top: 10px;
   margin-right: 20px;
@@ -7135,15 +7359,16 @@ h4 {
   margin-top: 10px;
   margin-right: 30px;
   margin-left: 20px;
-  font-family: 'Akkurat light regular', sans-serif;
-  color: #495b70;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #62676d;
+  font-size: 13px;
 }
 
 .icon-cell {
   margin-top: 20px;
   margin-left: 20px;
   font-family: 'Fontawesome webfont', sans-serif;
-  color: #8da2b7;
+  color: #2fbb8a;
   font-size: 12px;
 }
 
@@ -7152,7 +7377,7 @@ h4 {
   margin-top: 10px;
   margin-left: 20px;
   font-family: 'Fontawesome webfont', sans-serif;
-  color: rgba(141, 162, 183, .77);
+  color: #62676d;
   font-size: 12px;
 }
 
@@ -7163,6 +7388,7 @@ h4 {
 
 .message-channel.time-received {
   margin-left: 5px;
+  color: #060606;
 }
 
 .status {
@@ -7170,13 +7396,16 @@ h4 {
   top: 10px;
   margin-top: 10px;
   margin-right: 20px;
-  padding: 2px 6px;
+  padding: 4px 8px;
   float: right;
-  border: 1px solid #8da2b7;
+  border-style: solid;
+  border-width: 1px;
+  border-color: rgba(15, 85, 235, .1);
   border-radius: 8px;
-  font-family: 'Fontawesome webfont', sans-serif;
-  color: #8da2b7;
-  font-size: 12px;
+  background-color: rgba(15, 85, 235, .1);
+  font-family: 'Akkurat regular', sans-serif;
+  color: #0f55eb;
+  font-size: 13px;
 }
 
 .status.message-reason {
@@ -7205,16 +7434,16 @@ h4 {
   margin-top: 10px;
   margin-left: 20px;
   font-family: 'Akkurat bold', sans-serif;
-  color: #8da2b7;
-  font-size: 12px;
+  color: #060606;
+  font-size: 13px;
 }
 
 .said-text {
   display: inline-block;
   margin-left: 5px;
-  font-family: 'Akkurat regular', sans-serif;
-  color: rgba(141, 162, 183, .77);
-  font-size: 12px;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #62676d;
+  font-size: 13px;
 }
 
 .transaction-history-box-headers {
@@ -7229,19 +7458,21 @@ h4 {
   top: 45px;
   padding-right: 5px;
   padding-left: 5px;
+  font-family: 'Maisonneue book', sans-serif;
 }
 
 .transaction-history-box-headers.average-spend-text {
   top: 45px;
   padding-right: 5px;
   padding-left: 5px;
+  font-family: 'Maisonneue book', sans-serif;
 }
 
 .table-description {
   position: relative;
   top: 55px;
   font-family: 'Akkurat regular', sans-serif;
-  color: #f0f6fb;
+  color: #fff;
   font-size: 11px;
 }
 
@@ -7296,7 +7527,7 @@ h4 {
   bottom: 0px;
   width: auto;
   height: auto;
-  background-color: #1f8cec;
+  background-color: #0f55eb;
 }
 
 .onboarding-form-section {
@@ -7372,8 +7603,8 @@ h4 {
   display: block;
   margin-right: auto;
   margin-left: auto;
-  font-family: 'Akkurat regular', sans-serif;
-  color: #8da2b7;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #62676d;
 }
 
 .log-in-sign-up-cta.signup {
@@ -7403,14 +7634,14 @@ h4 {
 }
 
 .onboarding-side-bar-h4 {
-  font-family: 'Akkurat regular', sans-serif;
+  font-family: 'Maisonneue book', sans-serif;
   color: #dde5ed;
   font-size: 12px;
   text-transform: uppercase;
 }
 
 .onboarding-side-bar-h3 {
-  font-family: 'Akkurat light regular', sans-serif;
+  font-family: 'Maisonneue book', sans-serif;
   color: #fff;
   font-size: 18px;
 }
@@ -7421,8 +7652,9 @@ h4 {
 
 .onboarding-side-bar-paragraph {
   margin-bottom: 15px;
-  font-family: 'Fontawesome webfont', sans-serif;
+  font-family: 'Maisonneue book', sans-serif;
   color: #dde5ed;
+  font-size: 15px;
 }
 
 .onboarding-side-bar-paragraph.credit {
@@ -7440,8 +7672,8 @@ h4 {
 .form-label {
   margin-right: 10%;
   margin-left: 10%;
-  font-family: 'Akkurat light regular', sans-serif;
-  color: #637280;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #62676d;
   font-size: 14px;
   text-align: left;
   text-transform: none;
@@ -7450,8 +7682,8 @@ h4 {
 .form-label.paragraph {
   margin-right: 10%;
   margin-bottom: 20px;
-  font-family: 'Akkurat regular', sans-serif;
-  color: #8da2b7;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #62676d;
   font-size: 14px;
   font-weight: 400;
 }
@@ -7484,12 +7716,12 @@ h4 {
 }
 
 .form-label.paragraph.select-plan.new.cc-collection-info {
-  color: #1f8cec;
+  color: #0f55eb;
   text-align: center;
 }
 
 .form-label.paragraph.select-plan.new.cc-collection-paragraph {
-  font-family: 'Fontawesome webfont', sans-serif;
+  font-family: 'Maisonneue book', sans-serif;
   color: #495b70;
   font-size: 12px;
 }
@@ -7513,6 +7745,7 @@ h4 {
 
 .form-label.modal {
   margin-bottom: 10px;
+  color: #060606;
 }
 
 .form-label.list-name {
@@ -7546,8 +7779,9 @@ h4 {
 
 .form-label.settings.field-headers {
   margin-bottom: 20px;
-  font-family: 'Akkurat regular', sans-serif;
-  font-size: 12px;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #060606;
+  font-size: 13px;
   text-transform: uppercase;
 }
 
@@ -7562,12 +7796,13 @@ h4 {
 
 .form-label.settings.field-headers.away-row-day {
   margin: 10px 0%;
-  color: #2e2e7f;
+  color: #060606;
+  font-size: 13px;
   text-transform: capitalize;
 }
 
 .form-label.settings.field-headers.away-row-day.weekend {
-  color: #1f8cec;
+  color: #0f55eb;
 }
 
 .form-label.number-of-subs {
@@ -7586,12 +7821,13 @@ h4 {
 .form-label.right-nav-form {
   margin-top: 0px;
   font-family: 'Akkurat regular', sans-serif;
-  color: #495b70;
+  color: #62676d;
   font-size: 12px;
   font-weight: 400;
 }
 
 .form-label.validation-error-message {
+  font-family: 'Maisonneue book', sans-serif;
   color: #e04e50;
   font-weight: 400;
 }
@@ -7602,14 +7838,15 @@ h4 {
   margin-right: 10%;
   margin-bottom: 15px;
   margin-left: 10%;
-  border: 1px solid #1f8cec;
+  border: 1px solid #0f55eb;
   border-radius: 3px;
   background-color: #fff;
   background-image: url('../images/Whitebox.png');
   background-position: 0px 0px;
   background-size: 38px;
-  font-family: 'Akkurat regular', sans-serif;
-  color: #455a64;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #060606;
+  font-size: 15px;
 }
 
 .dropdown.expiration {
@@ -7632,6 +7869,7 @@ h4 {
   height: 33px;
   margin-top: 15px;
   margin-left: 20px;
+  color: #060606;
   font-size: 12px;
 }
 
@@ -7648,12 +7886,14 @@ h4 {
 .dropdown.segment-parameters {
   height: 33px;
   margin-left: 20px;
+  color: #060606;
   font-size: 12px;
 }
 
 .dropdown.range {
   height: 33px;
   margin-left: 20px;
+  color: #060606;
   font-size: 12px;
 }
 
@@ -7690,7 +7930,7 @@ h4 {
   margin-right: 0%;
   margin-bottom: 25px;
   margin-left: 20px;
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .dropdown.coupon-type {
@@ -7729,8 +7969,8 @@ h4 {
 
 .form-header {
   margin-top: 60px;
-  font-family: 'Akkurat regular', sans-serif;
-  color: #2e2e7f;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #060606;
   font-size: 18px;
   font-weight: 400;
 }
@@ -7741,6 +7981,7 @@ h4 {
 
 .form-header.card-info {
   margin-top: 40px;
+  font-family: 'Maisonneue book', sans-serif;
 }
 
 .onboarding-sidebar-logo {
@@ -7767,7 +8008,7 @@ h4 {
 
 .new-table-row:hover {
   border: 1px solid #1f8cec;
-  background-color: #f8fafc;
+  background-color: #e6e5e5;
 }
 
 .new-table-row.header:hover {
@@ -7842,7 +8083,9 @@ h4 {
   margin-left: 10px;
   padding-right: 12px;
   padding-left: 12px;
-  color: rgba(73, 91, 112, .8);
+  border-color: #62676d;
+  border-radius: 8px;
+  color: #62676d;
 }
 
 .actions-button.notification:hover {
@@ -7875,8 +8118,8 @@ h4 {
 .actions-button.view-list {
   left: -25px;
   top: 15px;
-  border-color: #1f8cec;
-  color: #1280e0;
+  border-color: #62676d;
+  color: #62676d;
 }
 
 .sub-nav-options-wrapper {
@@ -8004,8 +8247,8 @@ h4 {
   margin-right: 10%;
   margin-bottom: 20px;
   margin-left: 10%;
-  font-family: 'Akkurat light regular', sans-serif;
-  color: #8da2b7;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #62676d;
   text-align: center;
 }
 
@@ -8030,8 +8273,8 @@ h4 {
   padding: 10px 20px;
   border: 1px dashed #8da2b7;
   background-color: rgba(248, 249, 251, .38);
-  font-family: 'Akkurat light regular', sans-serif;
-  color: #495b70;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #62676d;
   text-align: center;
 }
 
@@ -8045,8 +8288,9 @@ h4 {
 }
 
 .modal-paragraph.tips {
+  border-color: #62676d;
   font-family: 'Fontawesome webfont', sans-serif;
-  color: rgba(73, 91, 112, .6);
+  color: #62676d;
   font-size: 12px;
 }
 
@@ -8066,6 +8310,9 @@ h4 {
   margin-top: 20px;
   margin-right: 10%;
   margin-left: 10%;
+  font-family: 'Fontawesome webfont', sans-serif;
+  color: #62676d;
+  font-size: 12px;
 }
 
 .template-link {
@@ -8365,6 +8612,7 @@ h4 {
   margin-top: 41px;
   margin-left: 20px;
   padding-left: 0px;
+  color: #62676d;
   font-size: 12px;
   text-align: center;
 }
@@ -8402,6 +8650,8 @@ h4 {
   width: 80%;
   margin-bottom: 20px;
   margin-left: 20px;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #62676d;
 }
 
 .editor {
@@ -8454,9 +8704,9 @@ h4 {
   margin-right: 20px;
   margin-left: 20px;
   float: none;
-  font-family: 'Akkurat regular', sans-serif;
-  color: #8da2b7;
-  font-size: 12px;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #62676d;
+  font-size: 13px;
 }
 
 .char-count.notications {
@@ -8516,7 +8766,7 @@ h4 {
   margin-right: 15px;
   float: none;
   font-family: 'Fontawesome webfont', sans-serif;
-  color: #8da2b7;
+  color: #62676d;
   font-size: 18px;
   text-decoration: none;
 }
@@ -8572,6 +8822,8 @@ h4 {
   margin-right: 0%;
   margin-bottom: 10px;
   margin-left: 20px;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #62676d;
 }
 
 .radio-button.notification-frequency {
@@ -8581,6 +8833,8 @@ h4 {
   margin-bottom: 20px;
   margin-left: 10%;
   float: left;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #62676d;
   text-align: left;
 }
 
@@ -8593,6 +8847,8 @@ h4 {
   width: 80%;
   margin-bottom: 15px;
   margin-left: 20px;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #62676d;
 }
 
 .account-settings-form-wrapper {
@@ -8609,8 +8865,8 @@ h4 {
 
 .form-field-subtext {
   margin: -15px 10% 20px;
-  font-family: 'Akkurat light regular', sans-serif;
-  color: #8da2b7;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #62676d;
   font-size: 12px;
   text-align: left;
 }
@@ -8640,13 +8896,13 @@ h4 {
   margin-bottom: 20px;
   margin-left: 3%;
   float: none;
-  border: 1px solid #1f8cec;
+  border: 1px solid #0f55eb;
   border-radius: 3px;
   background-image: url('../images/Whitebox.png');
   background-position: 0px 0px;
   background-size: 38px;
-  font-family: 'Akkurat regular', sans-serif;
-  color: #8da2b7;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #060606;
 }
 
 .organization-type.business-category {
@@ -8659,13 +8915,13 @@ h4 {
   height: 45px;
   margin-right: 10%;
   margin-left: 10%;
-  border: 1px solid #1f8cec;
+  border: 1px solid #0f55eb;
   border-radius: 3px;
   background-image: url('../images/Whitebox.png');
   background-position: 0px 0px;
   background-size: 38px;
   font-family: 'Akkurat regular', sans-serif;
-  color: #8da2b7;
+  color: #060606;
 }
 
 .auto-welcome-message-text-area {
@@ -8674,8 +8930,8 @@ h4 {
   margin: 20px 10%;
   border: 1px solid #1f8cec;
   border-radius: 3px;
-  font-family: 'Akkurat regular', sans-serif;
-  color: #8da2b7;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #060606;
   text-align: left;
 }
 
@@ -8697,8 +8953,8 @@ h4 {
   margin-top: 15px;
   margin-right: 10%;
   margin-left: 10%;
-  font-family: 'Akkurat regular', sans-serif;
-  color: #637280;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #62676d;
   text-align: left;
 }
 
@@ -8706,6 +8962,9 @@ h4 {
   width: 80%;
   margin-bottom: 15px;
   margin-left: 10%;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #060606;
+  font-size: 15px;
 }
 
 .form-check-box.footer-cta.login-form {
@@ -8724,10 +8983,11 @@ h4 {
 
 .form-check-box.enable-away-messages {
   margin-bottom: 25px;
+  color: #060606;
 }
 
 .settings-link {
-  color: #1f8cec;
+  color: #0f55eb;
   text-decoration: none;
 }
 
@@ -8772,7 +9032,7 @@ h4 {
   margin-top: 20px;
   margin-bottom: 5px;
   margin-left: 4%;
-  color: #2e2e7f;
+  color: #000;
   font-size: 14px;
   text-align: left;
 }
@@ -8782,13 +9042,13 @@ h4 {
   margin-bottom: 5px;
   margin-left: 4%;
   font-family: 'Akkurat light regular', sans-serif;
-  color: #495b70;
+  color: #62676d;
   text-align: left;
 }
 
 .settings-details-paragraph.account-balance {
   font-family: 'Akkurat regular', sans-serif;
-  color: #2e2e7f;
+  color: #060606;
   font-size: 14px;
 }
 
@@ -8797,8 +9057,8 @@ h4 {
   margin-left: 4%;
   float: none;
   font-family: 'Akkurat regular', sans-serif;
-  color: #1280e0;
-  font-size: 12px;
+  color: #0f55eb;
+  font-size: 13px;
 }
 
 .settings-table {
@@ -8874,8 +9134,8 @@ h4 {
 }
 
 .settings-table-text.content {
-  font-family: 'Akkurat light regular', sans-serif;
-  color: #495b70;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #62676d;
 }
 
 .settings-table-text.content.status-text {
@@ -8961,7 +9221,7 @@ h4 {
 }
 
 .terms-link {
-  color: #1f8cec;
+  color: #0f55eb;
   text-decoration: none;
 }
 
@@ -9016,11 +9276,11 @@ h4 {
 .sub-hero-header {
   width: auto;
   margin: 30px 10% 50px;
-  font-family: 'Akkurat light regular', sans-serif;
-  color: #2e2e7f;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #141d67;
   font-size: 25px;
   line-height: 38px;
-  font-weight: 400;
+  font-weight: 200;
   text-align: center;
 }
 
@@ -9120,6 +9380,11 @@ h4 {
 
 .customer-count.sub-text.hashtag-index {
   float: left;
+}
+
+.customer-count.shrink-text {
+  font-family: 'Maisonneue book', sans-serif;
+  color: #060606;
 }
 
 .default-sub_header-text-field {
@@ -9311,9 +9576,11 @@ h4 {
   width: 82%;
   margin-right: 30px;
   margin-left: 0px;
-  font-family: 'Akkurat regular', sans-serif;
-  color: #495b70;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #62676d;
+  font-size: 15px;
   line-height: 22px;
+  font-weight: 600;
   text-align: left;
 }
 
@@ -9321,9 +9588,9 @@ h4 {
   width: 100%;
   margin-right: 15px;
   margin-bottom: 30px;
-  font-family: 'Akkurat regular', sans-serif;
-  color: rgba(141, 162, 183, .95);
-  font-size: 14px;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #62676d;
+  font-size: 15px;
   line-height: 22px;
 }
 
@@ -9333,6 +9600,7 @@ h4 {
   margin-left: 40px;
   padding-right: 10px;
   padding-left: 10px;
+  color: #000;
   text-align: center;
 }
 
@@ -9659,12 +9927,12 @@ h4 {
 }
 
 .time-text {
-  color: #495b70;
+  color: #060606;
   font-style: normal;
 }
 
 .channel-and-time {
-  color: #495b70;
+  color: #060606;
   font-weight: 400;
 }
 
@@ -9691,7 +9959,7 @@ h4 {
 }
 
 .transaction-summary-cell.subscriptions {
-  background-color: #1074ae;
+  background-color: #2fbb8a;
 }
 
 .transaction-summary-cell.transcation-count {
@@ -9778,14 +10046,19 @@ h4 {
   margin-top: 20px;
   margin-right: 10%;
   margin-left: 10%;
-  font-family: 'Akkurat regular', sans-serif;
-  color: #495b70;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #62676d;
   font-size: 12px;
   text-align: left;
 }
 
 .modal-content-description.create-plan {
   text-align: center;
+}
+
+.modal-content-description.cancel-subscription {
+  color: #62676d;
+  font-size: 12px;
 }
 
 .modal-content-description.mark-as-done {
@@ -9861,8 +10134,8 @@ h4 {
   margin-right: 10%;
   margin-bottom: 15px;
   float: right;
-  font-family: 'Akkurat light regular', sans-serif;
-  color: #8da2b7;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #62676d;
   font-size: 12px;
   text-decoration: none;
 }
@@ -9899,7 +10172,7 @@ h4 {
 }
 
 .text-highlight {
-  color: #1f8cec;
+  color: #0f55eb;
 }
 
 .saved-replies-table {
@@ -10188,7 +10461,7 @@ h4 {
 .dropdown-wrapper-text {
   margin-top: -3px;
   font-family: 'Fontawesome webfont', sans-serif;
-  color: #2e2e7f;
+  color: #060606;
   font-size: 12px;
 }
 
@@ -10233,9 +10506,9 @@ h4 {
 .dropdown-link {
   margin-top: 0px;
   padding: 7px 26px 5px 20px;
-  font-family: 'Akkurat regular', sans-serif;
-  color: #637280;
-  font-size: 13px;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #060606;
+  font-size: 14px;
 }
 
 .dropdown-link:hover {
@@ -10251,7 +10524,9 @@ h4 {
   margin-top: 0px;
   padding-top: 15px;
   padding-bottom: 10px;
-  color: #1f8cec;
+  font-family: 'Akkurat regular', sans-serif;
+  color: #060606;
+  font-size: 14px;
 }
 
 .dropdown-link.header:hover {
@@ -10259,7 +10534,7 @@ h4 {
 }
 
 .dropdown-link.header.notifications-dropdown-header {
-  margin-top: 0px;
+  margin-top: -5px;
   padding-top: 18px;
   border-top: 1px solid rgba(31, 140, 236, .5);
   border-bottom: 1px none #1f8cec;
@@ -10280,7 +10555,7 @@ h4 {
   padding-top: 20px;
   padding-bottom: 20px;
   border: 1px none #1f8cec;
-  background-color: rgba(240, 246, 251, .4);
+  background-color: rgba(15, 85, 235, .1);
 }
 
 .dropdown-link.content-link.notification-content {
@@ -10297,7 +10572,7 @@ h4 {
   padding-top: 15px;
   padding-bottom: 15px;
   border-top: 1px solid #e6e5e5;
-  font-family: 'Akkurat regular', sans-serif;
+  font-family: 'Maisonneue book', sans-serif;
 }
 
 .segmentation-wrapper {
@@ -10321,24 +10596,31 @@ h4 {
 .settings-row-text {
   margin-top: 16px;
   margin-bottom: 20px;
-  font-family: 'Akkurat regular', sans-serif;
+  font-family: 'Maisonneue book', sans-serif;
   color: #637280;
 }
 
 .settings-row-text.header {
   margin-bottom: 30px;
-  color: #8da2b7;
+  color: #060606;
 }
 
 .settings-row-text.header.editable-row-header {
   margin-left: 8%;
+  color: #060606;
   text-align: left;
 }
 
 .settings-row-text.editable-field-text {
   margin-left: 8%;
   float: left;
+  font-family: 'Maisonneue book', sans-serif;
   text-align: left;
+}
+
+.settings-row-text.editable-field-text.shrink-text {
+  font-family: 'Maisonneue book', sans-serif;
+  color: #62676d;
 }
 
 .manage-segments-row {
@@ -10362,8 +10644,8 @@ h4 {
   margin-right: 50%;
   margin-left: 20px;
   float: left;
-  font-family: 'Akkurat regular', sans-serif;
-  color: #637280;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #060606;
   text-align: left;
 }
 
@@ -10371,8 +10653,8 @@ h4 {
   width: 80%;
   margin-left: 20px;
   float: left;
-  font-family: 'Akkurat regular', sans-serif;
-  color: #8da2b7;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #62676d;
   font-size: 14px;
   text-align: left;
 }
@@ -10386,7 +10668,8 @@ h4 {
 }
 
 .authentication-column-header {
-  color: #8da2b7;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #060606;
   font-size: 14px;
   text-align: left;
   text-transform: uppercase;
@@ -10415,6 +10698,11 @@ h4 {
   font-weight: 400;
 }
 
+.authentication-column-text.name-tag.shrink-text {
+  border-color: #0f55eb;
+  color: #0f55eb;
+}
+
 .authentication-column-text.connected_to_text {
   margin-left: 70px;
   float: none;
@@ -10424,6 +10712,11 @@ h4 {
   font-family: 'Akkurat regular', sans-serif;
   color: #8da2b7;
   text-align: left;
+}
+
+.authentication-column-paragraph.shrink-text {
+  font-family: 'Maisonneue book', sans-serif;
+  color: #62676d;
 }
 
 .add-people-button {
@@ -10480,12 +10773,30 @@ h4 {
 }
 
 .featues-div-header-wrapper {
+  display: block;
+  width: 90px;
+  height: 90px;
   min-height: 60px;
-  padding-left: 0px;
+  margin-right: auto;
+  margin-left: auto;
+  padding-right: 20px;
+  padding-left: 20px;
   border-bottom: 1px none #e6e5e5;
-  border-top-left-radius: 3px;
-  border-top-right-radius: 3px;
+  border-radius: 50px;
+  background-color: rgba(15, 85, 235, .1);
   text-align: center;
+}
+
+.featues-div-header-wrapper._2 {
+  background-color: rgba(255, 192, 0, .35);
+}
+
+.featues-div-header-wrapper._3 {
+  background-color: rgba(224, 78, 80, .17);
+}
+
+.featues-div-header-wrapper._4 {
+  background-color: rgba(47, 187, 138, .35);
 }
 
 .features-div-paragraph-wrapper {
@@ -10581,8 +10892,9 @@ h4 {
 
 .feature-div-paragraph {
   width: 100%;
-  font-family: 'Akkurat regular', sans-serif;
-  color: rgba(141, 162, 183, .95);
+  font-family: 'Maisonneue book', sans-serif;
+  color: #62676d;
+  font-size: 15px;
   text-align: center;
 }
 
@@ -10611,6 +10923,8 @@ h4 {
 
 .feature-div-paragraph.alt {
   margin-left: 15px;
+  color: #62676d;
+  font-size: 15px;
   text-align: left;
 }
 
@@ -10619,16 +10933,16 @@ h4 {
   left: 75px;
   top: 25px;
   margin-top: 0px;
-  font-family: 'Akkurat regular', sans-serif;
-  color: #23557e;
-  font-size: 14px;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #141d67;
+  font-size: 18px;
   font-weight: 400;
   text-align: center;
   text-transform: capitalize;
 }
 
 .features-div-header-text.use-case {
-  color: #1f8cec;
+  color: #0f55eb;
   text-align: center;
 }
 
@@ -10638,6 +10952,8 @@ h4 {
 
 .features-div-header-text.alt {
   margin-left: 15px;
+  color: #141d67;
+  line-height: 25px;
   text-align: left;
 }
 
@@ -10671,7 +10987,7 @@ h4 {
 }
 
 .features-div-icon {
-  margin-top: 25px;
+  margin-top: 20px;
   float: none;
 }
 
@@ -10680,8 +10996,8 @@ h4 {
   top: 30px;
   margin-top: 0px;
   margin-bottom: 20px;
-  font-family: 'Akkurat regular', sans-serif;
-  color: #23557e;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #141d67;
   font-size: 18px;
   font-weight: 400;
   text-align: left;
@@ -10748,8 +11064,9 @@ h4 {
 .alt-hero-heading.v2 {
   margin-top: 80px;
   padding-right: 0px;
-  color: #1f8cec;
-  font-size: 30px;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #141d67;
+  font-size: 35px;
 }
 
 .alt-hero-heading.alt {
@@ -10759,6 +11076,8 @@ h4 {
 
 .alt-hero-heading.alt.features {
   margin-top: 100px;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #141d67;
 }
 
 .alt-hero-paragraph {
@@ -10810,16 +11129,17 @@ h4 {
 
 .alt-hero-cta-button.home.footer-cta-button {
   width: 80%;
-  border-color: #1280e0;
-  background-color: #1280e0;
+  border-color: #0f55eb;
+  background-color: #0f55eb;
   box-shadow: none;
+  font-family: 'Maisonneue book', sans-serif;
   color: #fff;
   text-decoration: none;
 }
 
 .alt-hero-cta-button.home.footer-cta-button:hover {
-  border-color: #1271c4;
-  background-color: #1271c4;
+  border-color: #0f55eb;
+  background-color: #0f55eb;
 }
 
 .alt-hero-cta-button.table-section-div {
@@ -10863,16 +11183,16 @@ h4 {
 .alt-hero-cta-button.features.hero-button {
   display: inline-block;
   float: none;
-  border-color: #1280e0;
-  background-color: #1280e0;
-  font-family: 'Akkurat regular', sans-serif;
+  border-color: #0f55eb;
+  background-color: #0f55eb;
+  font-family: 'Maisonneue book', sans-serif;
   color: #fff;
   text-decoration: none;
 }
 
 .alt-hero-cta-button.features.hero-button:hover {
-  border-color: #1271c4;
-  background-color: #1271c4;
+  border-color: #0f55eb;
+  background-color: #0f55eb;
 }
 
 .hero-images-div {
@@ -11071,44 +11391,47 @@ h4 {
 
 .profile-picture-right-nav {
   margin-bottom: 15px;
-  border-radius: 5px;
+  border-radius: 3px;
 }
 
 .tab-link {
-  padding-right: 35px;
-  padding-left: 35px;
-  border: 1px solid #1f8cec;
-  border-radius: 3px 0px 0px 3px;
+  padding-right: 25px;
+  padding-left: 25px;
+  border: 1px solid #0f55eb;
+  border-radius: 3px;
   background-color: #fff;
 }
 
 .tab-link.w--current {
   width: auto;
-  padding-right: 35px;
-  padding-left: 35px;
-  border-color: #1f8cec;
+  padding-right: 25px;
+  padding-left: 25px;
+  border-color: #0f55eb;
   border-bottom-style: solid;
   border-bottom-width: 1px;
-  border-radius: 3px 0px 0px 3px;
-  background-color: rgba(221, 229, 237, .4);
+  border-radius: 3px;
+  background-color: rgba(15, 85, 235, .1);
   box-shadow: inset 1px 1px 3px 0 rgba(141, 162, 183, .16);
   color: #1f8cec;
   text-align: center;
 }
 
 .tab-link.right {
-  padding-right: 35px;
-  padding-left: 35px;
-  border-color: #1f8cec;
+  margin-right: 0px;
+  margin-left: 5px;
+  padding-right: 25px;
+  padding-left: 25px;
+  border-color: #0f55eb;
   border-left-style: solid;
-  border-radius: 0px 3px 3px 0px;
+  border-radius: 3px;
 }
 
 .tab-link.right.w--current {
-  padding-right: 35px;
-  padding-left: 35px;
-  border-top-left-radius: 0px;
-  border-bottom-left-radius: 0px;
+  margin-right: 0px;
+  margin-left: 5px;
+  padding-right: 25px;
+  padding-left: 25px;
+  border-radius: 3px;
 }
 
 .right-nav-tab {
@@ -11159,8 +11482,8 @@ h4 {
 }
 
 .messages-tab-link-text {
-  font-family: 'Fontawesome webfont', sans-serif;
-  color: #495b70;
+  font-family: 'Akkurat regular', sans-serif;
+  color: #0f55eb;
 }
 
 .transaction-pane {
@@ -11204,15 +11527,22 @@ h4 {
 }
 
 .right-nav-amount-text {
-  color: #495b70;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #060606;
   font-size: 14px;
   text-align: left;
 }
 
 .right-nav-amount-desc {
   margin-top: 5px;
-  color: #8da2b7;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #62676d;
   text-align: left;
+}
+
+.right-nav-amount-desc.shrink-text {
+  font-family: 'Maisonneue book', sans-serif;
+  color: #62676d;
 }
 
 .expand {
@@ -11367,7 +11697,7 @@ h4 {
   width: 100%;
   margin-left: 0px;
   float: left;
-  background-color: #1280e0;
+  background-color: #0f55eb;
 }
 
 .def-row-content-wrapper.picture-bg {
@@ -11550,8 +11880,8 @@ h4 {
   position: relative;
   top: 30px;
   margin-top: 30px;
-  font-family: 'Akkurat regular', sans-serif;
-  color: #8da2b7;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #62676d;
   text-align: center;
 }
 
@@ -11564,7 +11894,7 @@ h4 {
   position: relative;
   top: -25px;
   margin-left: 30px;
-  font-family: 'Akkurat regular', sans-serif;
+  font-family: 'Maisonneue book', sans-serif;
   font-size: 16px;
 }
 
@@ -11608,7 +11938,7 @@ h4 {
 .plan-amount {
   width: auto;
   margin: 0px 10% 20px;
-  font-family: 'Akkurat regular', sans-serif;
+  font-family: 'Maisonneue book', sans-serif;
   color: #e04e50;
   font-size: 25px;
   font-weight: 100;
@@ -11623,8 +11953,8 @@ h4 {
 .integrations-header-paragraph {
   margin-top: 20px;
   margin-bottom: 30px;
-  font-family: 'Akkurat light regular', sans-serif;
-  color: #8da2b7;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #000;
   font-size: 18px;
 }
 
@@ -11682,14 +12012,14 @@ h4 {
 }
 
 .integration-paragraph {
-  font-family: 'Akkurat regular', sans-serif;
-  color: #2e2e7f;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #000;
   font-size: 12px;
 }
 
 .integration-paragraph.press {
-  font-family: 'Akkurat regular', sans-serif;
-  color: #2e2e7f;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #060606;
   font-size: 12px;
   text-align: left;
 }
@@ -11697,8 +12027,8 @@ h4 {
 .integration-name {
   margin-top: 0px;
   margin-bottom: 5px;
-  font-family: 'Akkurat regular', sans-serif;
-  color: #8da2b7;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #060606;
   font-size: 13px;
   text-transform: uppercase;
 }
@@ -11710,8 +12040,8 @@ h4 {
 .upcoming-integration-text {
   width: auto;
   float: none;
-  font-family: 'Akkurat regular', sans-serif;
-  color: #2e2e7f;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #060606;
   font-size: 12px;
 }
 
@@ -11790,7 +12120,7 @@ h4 {
 .team-name {
   margin-top: 30px;
   margin-left: 0px;
-  font-family: 'Akkurat light regular', sans-serif;
+  font-family: 'Maisonneue book', sans-serif;
   color: #e04e50;
   font-size: 18px;
   text-align: center;
@@ -11798,8 +12128,8 @@ h4 {
 
 .title {
   margin-top: 10px;
-  font-family: 'Akkurat regular', sans-serif;
-  color: #637180;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #060606;
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 2px;
@@ -11808,19 +12138,21 @@ h4 {
 
 .use-case-dropdown {
   margin-top: -18px;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #060606;
 }
 
 .use-case-dropdown-text {
   -webkit-transition: color 500ms ease;
   transition: color 500ms ease;
-  font-family: 'Akkurat regular', sans-serif;
-  color: #2e2e7f;
-  font-size: 13px;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #141d67;
+  font-size: 14px;
   font-weight: 400;
 }
 
 .use-case-dropdown-text:hover {
-  color: #e04e50;
+  color: #0f55eb;
 }
 
 .use-case-dropdown-text.alt {
@@ -11832,6 +12164,7 @@ h4 {
 }
 
 .dropdown-options-wrapper.w--open {
+  top: 49px;
   right: -200px;
   width: 500px;
   margin-right: 0px;
@@ -11840,7 +12173,8 @@ h4 {
   border-style: none solid solid;
   border-width: 1px;
   border-color: #e6e5e5;
-  background-color: #fff;
+  border-radius: 6px;
+  background-color: #0f55eb;
   box-shadow: 1px 1px 3px 0 #e6e5e5;
   text-align: center;
 }
@@ -11872,18 +12206,18 @@ h4 {
   -webkit-transition: color 400ms ease;
   transition: color 400ms ease;
   font-family: 'Akkurat regular', sans-serif;
-  color: rgba(141, 162, 183, .85);
-  font-size: 12px;
+  color: #dde5ed;
+  font-size: 13px;
 }
 
 .dropdpwn-paragraph:hover {
-  color: #637280;
+  color: #fff;
 }
 
 .dropdown-header {
   margin-top: 0px;
-  font-family: 'Akkurat light regular', sans-serif;
-  color: #1f8cec;
+  font-family: 'Akkurat regular', sans-serif;
+  color: #fff;
   font-size: 16px;
   font-weight: 400;
 }
@@ -11951,16 +12285,16 @@ h4 {
 
 .privacy-terms-content {
   margin-top: 30px;
-  font-family: 'Akkurat light regular', sans-serif;
-  color: #637280;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #62676d;
   font-size: 15px;
   line-height: 25px;
 }
 
 .privacy-terms-content-headers {
-  font-family: 'Akkurat regular', sans-serif;
-  color: #1f8cec;
-  font-size: 14px;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #0f55eb;
+  font-size: 15px;
 }
 
 .dropdown-icon.alt {
@@ -12101,7 +12435,7 @@ h4 {
   padding-left: 12px;
   float: none;
   border-left: 1px solid #fff;
-  font-family: 'Akkurat light regular', sans-serif;
+  font-family: 'Maisonneue book', sans-serif;
   color: hsla(0, 0%, 100%, .7);
   font-size: 24px;
   text-align: left;
@@ -12129,6 +12463,8 @@ h4 {
   width: 80%;
   margin-right: 10%;
   margin-left: 10%;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #060606;
 }
 
 .relay-docs-row-icon {
@@ -12140,8 +12476,8 @@ h4 {
   margin-top: 30px;
   margin-bottom: 50px;
   margin-left: 70px;
-  font-family: 'Akkurat regular', sans-serif;
-  color: #2e2e7f;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #000;
   font-size: 18px;
 }
 
@@ -12168,20 +12504,26 @@ h4 {
   display: inline-block;
   padding-right: 13px;
   font-family: 'Fontawesome webfont', sans-serif;
-  color: #8da2b7;
+  color: #060606;
   font-size: 13px;
+}
+
+.breadcrumb-text.follow-on {
+  color: #060606;
 }
 
 .article-text {
   margin-bottom: 20px;
-  font-family: 'Akkurat light regular', sans-serif;
-  color: #637280;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #62676d;
   font-size: 15px;
   line-height: 25px;
   font-weight: 100;
 }
 
 .article-text.preview {
+  font-family: 'Maisonneue book', sans-serif;
+  color: #62676d;
   line-height: 23px;
   text-decoration: none;
 }
@@ -12194,9 +12536,9 @@ h4 {
 .articles-title {
   display: block;
   margin-bottom: 20px;
-  font-family: 'Akkurat regular', sans-serif;
-  color: #1f8cec;
-  font-size: 15px;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #0f55eb;
+  font-size: 18px;
   text-decoration: none;
 }
 
@@ -12217,8 +12559,8 @@ h4 {
   display: inline-block;
   margin-bottom: 0px;
   padding-bottom: 0px;
-  font-family: 'Akkurat regular', sans-serif;
-  color: rgba(141, 162, 183, .8);
+  font-family: 'Maisonneue book', sans-serif;
+  color: #8da2b7;
   font-size: 13px;
   text-decoration: none;
 }
@@ -12228,7 +12570,9 @@ h4 {
 }
 
 .author-name {
-  color: #2e2e7f;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #060606;
+  font-weight: 600;
 }
 
 .article-wrapper {
@@ -12249,8 +12593,8 @@ h4 {
 
 .article-h1 {
   margin-bottom: 40px;
-  font-family: 'Akkurat light regular', sans-serif;
-  color: #637280;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #060606;
   font-size: 34px;
 }
 
@@ -12272,8 +12616,8 @@ h4 {
 }
 
 .article-rating-header {
-  font-family: 'Akkurat light regular', sans-serif;
-  color: #2e2e7f;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #060606;
   font-weight: 400;
 }
 
@@ -12348,7 +12692,7 @@ h4 {
   top: 22px;
   right: 14px;
   margin-top: 0px;
-  font-family: 'Akkurat regular', sans-serif;
+  font-family: 'Maisonneue book', sans-serif;
   color: #fff;
   text-align: right;
   text-decoration: none;
@@ -12430,8 +12774,8 @@ h4 {
 .connect-facebook-messenger-link {
   -webkit-transition: color 300ms ease;
   transition: color 300ms ease;
-  font-family: 'Akkurat light regular', sans-serif;
-  color: #1f8cec;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #0f55eb;
   text-decoration: none;
 }
 
@@ -12516,37 +12860,60 @@ h4 {
 .dashboard-dropdown-link.conversations {
   margin-bottom: 2px;
   padding-top: 12px;
-  border-left: 4px solid #1f8cec;
-  color: #455a64;
+  padding-left: 35px;
+  border-left: 1px none #ffd966;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #62676d;
+  font-size: 13px;
 }
 
 .dashboard-dropdown-link.saved-rep {
   padding-top: 6px;
   padding-bottom: 6px;
-  border-left: 4px solid #f8b5cc;
+  padding-left: 35px;
+  border-left: 4px none #e04e50;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #62676d;
+  font-size: 13px;
 }
 
 .dashboard-dropdown-link.scheduled-msgs {
   padding-top: 6px;
   padding-bottom: 7px;
-  border-left: 4px solid #b3d4fc;
+  padding-left: 35px;
+  border-left: 4px none #1f8cec;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #62676d;
+  font-size: 13px;
 }
 
 .dashboard-dropdown-link.charges {
   padding-top: 12px;
-  border-left: 4px solid #2ecc71;
+  padding-left: 35px;
+  border-left: 4px none #2ecc71;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #62676d;
+  font-size: 13px;
 }
 
 .dashboard-dropdown-link.preauth {
   padding-top: 6px;
   padding-bottom: 6px;
-  border-left: 4px solid #ffd966;
+  padding-left: 35px;
+  border-left: 4px none #b2d9fa;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #62676d;
+  font-size: 13px;
 }
 
 .dashboard-dropdown-link.subscription {
   padding-top: 6px;
   padding-bottom: 8px;
-  border-left: 4px solid #95a5a6;
+  padding-left: 35px;
+  border-left: 4px none #a912ca;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #62676d;
+  font-size: 13px;
 }
 
 .static-page-content-link-block {
@@ -12614,10 +12981,10 @@ h4 {
   margin-right: 15px;
   padding: 1px 4px 0px;
   float: right;
-  border: 1px solid #637280;
+  border: 1px solid #060606;
   border-radius: 4px;
   background-color: #fff;
-  color: #637280;
+  color: #060606;
   font-size: 10px;
   text-align: center;
 }
@@ -12637,9 +13004,12 @@ h4 {
   margin-top: 0px;
   margin-left: 5px;
   padding: 3px 7px 2px;
-  border: 1px solid #2fbb8a;
+  border-style: solid;
+  border-width: 1px;
+  border-color: rgba(47, 187, 138, .18);
   border-radius: 16px;
-  background-color: rgba(248, 250, 252, .7);
+  background-color: rgba(62, 202, 153, .17);
+  font-family: 'Akkurat bold', sans-serif;
   color: #2fbb8a;
   font-size: 10px;
 }
@@ -12651,23 +13021,30 @@ h4 {
 
 .relay-id.leads.unverified {
   right: 0px;
-  border-color: #e04e50;
-  background-color: rgba(224, 78, 80, .03);
+  border-color: rgba(224, 78, 80, .01);
+  background-color: rgba(224, 78, 80, .12);
   color: #e04e50;
 }
 
 .relay-id.leads.unverified.customer-dash {
   position: relative;
   right: 40px;
+  border-color: rgba(224, 78, 80, .13);
+  background-color: rgba(224, 78, 80, .12);
+  font-family: 'Akkurat bold', sans-serif;
+  font-size: 10px;
 }
 
 .relay-id.leads.no-id {
-  border-color: rgba(141, 162, 183, .5);
-  color: rgba(141, 162, 183, .5);
+  border-color: rgba(98, 103, 109, .15);
+  background-color: rgba(98, 103, 109, .15);
+  color: #62676d;
 }
 
 .relay-id.leads.customer-dash-verified {
   right: 40px;
+  background-color: rgba(62, 202, 153, .17);
+  font-family: 'Akkurat bold', sans-serif;
 }
 
 .descriptive-div {
@@ -12735,7 +13112,7 @@ h4 {
   border-bottom: 1px solid #e6e5e5;
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
-  background-color: #f8f9fb;
+  background-color: #e5edfb;
 }
 
 .phone-wrapper {
@@ -12747,7 +13124,7 @@ h4 {
   padding-top: 0px;
   border-style: solid solid none;
   border-width: 1px;
-  border-color: #1f8cec;
+  border-color: #0f55eb;
   border-top-left-radius: 10%;
   border-top-right-radius: 10%;
   background-color: #fff;
@@ -12764,7 +13141,7 @@ h4 {
   margin-left: 20px;
   border-style: solid solid none;
   border-width: 1px;
-  border-color: #1f8cec;
+  border-color: #0f55eb;
 }
 
 .speaker {
@@ -12800,7 +13177,7 @@ h4 {
 .phone-header {
   height: 60px;
   margin-bottom: 0px;
-  border-bottom: 1px solid #1f8cec;
+  border-bottom: 1px solid #0f55eb;
 }
 
 .phone-text-placeholder {
@@ -12815,7 +13192,7 @@ h4 {
 .phone-text-placeholder.alt-blue {
   width: 170px;
   margin-top: 0px;
-  background-color: #1f8cec;
+  background-color: #0f55eb;
 }
 
 .phone-text-placeholder.alt-blue.merchant.light-grey {
@@ -12880,7 +13257,7 @@ h4 {
   width: 50%;
   margin-left: 38px;
   float: none;
-  background-color: rgba(31, 140, 236, .53);
+  background-color: #ffc000;
 }
 
 .phone-text-placeholder.position {
@@ -12924,7 +13301,7 @@ h4 {
 .placeholder-content-text.heading {
   margin-top: 15px;
   border-right-style: none;
-  color: #8da2b7;
+  color: #62676d;
 }
 
 .placeholder-content-text.phone-name {
@@ -12936,7 +13313,7 @@ h4 {
   margin-left: 0px;
   float: none;
   border-right-style: none;
-  color: #1f8cec;
+  color: #0f55eb;
   text-align: center;
 }
 
@@ -12947,7 +13324,7 @@ h4 {
   margin-left: 0px;
   float: none;
   border-right-style: none;
-  color: #1f8cec;
+  color: #0f55eb;
 }
 
 .placeholder-content-text.customer-name.id-wrapper {
@@ -13108,9 +13485,12 @@ h4 {
   width: 30%;
   margin-right: auto;
   margin-left: auto;
-  border: 1px solid #2fbb8a;
+  border-style: solid;
+  border-width: 1px;
+  border-color: rgba(47, 187, 138, .17);
   border-radius: 16%;
-  background-color: rgba(62, 202, 153, .1);
+  background-color: rgba(62, 202, 153, .17);
+  font-family: 'Akkurat bold', sans-serif;
   color: #2fbb8a;
   font-size: 11px;
 }
@@ -13286,8 +13666,8 @@ h4 {
 .password-reset-instructions {
   margin-right: 20%;
   margin-left: 20%;
-  font-family: 'Akkurat regular', sans-serif;
-  color: #495b70;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #62676d;
 }
 
 .saved-replies-alt-wrapper {
@@ -13388,7 +13768,7 @@ h4 {
   float: right;
   border-top-right-radius: 3px;
   border-bottom-right-radius: 3px;
-  background-color: #1f8cec;
+  background-color: #0f55eb;
   -webkit-transition: background-color 250ms ease;
   transition: background-color 250ms ease;
   font-family: 'Fontawesome webfont', sans-serif;
@@ -13396,7 +13776,7 @@ h4 {
 }
 
 .split-dropdown:hover {
-  background-color: #1271c4;
+  background-color: #0f55eb;
 }
 
 .split-icon {
@@ -13471,7 +13851,7 @@ h4 {
 }
 
 .reminder-count {
-  font-family: 'Akkurat regular', sans-serif;
+  font-family: 'Maisonneue book', sans-serif;
   color: rgba(99, 114, 128, .8);
   font-size: 12px;
 }
@@ -13494,7 +13874,7 @@ h4 {
   -webkit-transition: background-color 250ms ease;
   transition: background-color 250ms ease;
   font-family: 'Fontawesome webfont', sans-serif;
-  color: #1f8cec;
+  color: #0f55eb;
   text-decoration: none;
 }
 
@@ -13537,7 +13917,7 @@ h4 {
   margin-right: auto;
   margin-left: auto;
   float: none;
-  border-radius: 5px;
+  border-radius: 3px;
 }
 
 .no-image-found-placeholder.chat-wwindow.agent {
@@ -13573,7 +13953,8 @@ h4 {
 }
 
 .sub-nav-sub-text {
-  font-family: 'Akkurat light regular', sans-serif;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #62676d;
   font-size: 13px;
 }
 
@@ -13612,14 +13993,13 @@ h4 {
 
 .toasters {
   display: block;
-  width: 500px;
+  width: 400px;
   height: auto;
   min-height: 50px;
-  margin: 30px 30px 30px auto;
-  padding-top: 15px;
-  padding-bottom: 15px;
+  margin: 30px 20px 30px auto;
+  padding: 15px 20px;
   border: 1px solid #1f8cec;
-  border-radius: 6px;
+  border-radius: 3px;
   background-color: #e8f4fe;
   box-shadow: 2px 2px 3px 1px rgba(0, 0, 0, .16);
 }
@@ -13629,15 +14009,23 @@ h4 {
   top: 0px;
   right: 0px;
   bottom: 0px;
+  width: 400px;
   height: auto;
   min-height: 50px;
-  margin-right: 30px;
-  padding-top: 15px;
-  padding-bottom: 15px;
+  min-width: 300px;
+  margin-top: 20px;
+  margin-right: 20px;
+  padding: 15px 20px;
   float: none;
   border-color: #e04e50;
+  border-radius: 3px;
   background-color: #fae1e1;
   box-shadow: 2px 2px 3px 1px rgba(0, 0, 0, .16);
+}
+
+.toasters.default {
+  width: 300px;
+  background-color: #fff;
 }
 
 .toaster-row {
@@ -13677,6 +14065,11 @@ h4 {
   font-weight: 400;
 }
 
+.toaster-text.shrink-text.word-wrap.break-word {
+  font-family: 'Akkurat regular', sans-serif;
+  color: #0f55eb;
+}
+
 .toaster-text.failure {
   margin-top: 0px;
   color: #e04e50;
@@ -13687,10 +14080,14 @@ h4 {
   margin-top: 0px;
 }
 
+.toaster-text.failure.word-wrap.break-word {
+  font-family: 'Akkurat regular', sans-serif;
+}
+
 .toaster-action {
   -webkit-transition: color 250ms ease;
   transition: color 250ms ease;
-  color: #1f8cec;
+  color: #0f55eb;
   text-decoration: none;
 }
 
@@ -13746,9 +14143,9 @@ h4 {
   height: auto;
   min-height: 100px;
   padding-top: 18px;
-  border-top-left-radius: 6px;
-  border-bottom-left-radius: 6px;
-  background-color: #1f8cec;
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
+  background-color: #0f55eb;
 }
 
 .browser-notification-row-column-1.payment-notification {
@@ -13757,13 +14154,13 @@ h4 {
 }
 
 .browser-notification-row-column-2 {
-  height: 100px;
+  height: auto;
   min-height: 100px;
-  padding: 10px 30px;
+  padding: 10px 25px;
   border-left: 1px solid #e6e5e5;
   border-top-right-radius: 6px;
   border-bottom-right-radius: 6px;
-  background-color: #fff;
+  background-color: rgba(15, 85, 235, .1);
 }
 
 .browser-notification-preview {
@@ -13773,6 +14170,9 @@ h4 {
 }
 
 .browser-notification-preview.word-wrap.break-word {
+  font-family: 'Maisonneue book', sans-serif;
+  color: #62676d;
+  font-size: 13px;
   font-weight: 400;
 }
 
@@ -13781,11 +14181,9 @@ h4 {
   width: 320px;
   height: auto;
   min-height: 100px;
-  margin-top: 30px;
-  margin-right: 30px;
-  margin-left: auto;
+  margin: 20px 20px 20px auto;
   border: 1px solid #1f8cec;
-  border-radius: 6px;
+  border-radius: 3px;
   box-shadow: 2px 2px 3px 1px rgba(0, 0, 0, .16);
   -webkit-transform: scale(1);
   -ms-transform: scale(1);
@@ -13796,9 +14194,9 @@ h4 {
 }
 
 .browser-notification-link-block:hover {
-  -webkit-transform: scale(0.9);
-  -ms-transform: scale(0.9);
-  transform: scale(0.9);
+  -webkit-transform: none;
+  -ms-transform: none;
+  transform: none;
 }
 
 .browser-notification-link-block.sms-browser-notification {
@@ -13829,7 +14227,8 @@ h4 {
 }
 
 .customer-name-browser-notification {
-  color: #637280;
+  font-family: 'Akkurat regular', sans-serif;
+  color: #060606;
 }
 
 .payment-notification-amount {
@@ -13862,7 +14261,7 @@ h4 {
   margin-bottom: 5px;
   margin-left: 20px;
   font-family: 'Akkurat regular', sans-serif;
-  color: #1f8cec;
+  color: #0f55eb;
   font-size: 12px;
   text-align: left;
 }
@@ -13870,13 +14269,16 @@ h4 {
 .recipient-count-browser {
   position: absolute;
   top: 55px;
-  right: 42px;
+  right: 33px;
   display: inline-block;
   width: 40px;
   height: 40px;
-  border: 1px solid #1f8cec;
-  border-radius: 50%;
-  background-color: #1f8cec;
+  margin-left: 2px;
+  padding-right: 3px;
+  padding-left: 3px;
+  border: 1px solid #0f55eb;
+  border-radius: 6%;
+  background-color: #0f55eb;
 }
 
 .number-of-recipient {
@@ -13890,7 +14292,7 @@ h4 {
   padding-top: 5px;
   padding-right: 5px;
   border-bottom: 1px solid rgba(141, 162, 183, .28);
-  background-color: #f8fafb;
+  background-color: #fff;
 }
 
 .conversation-list-menu.logo-area {
@@ -13907,10 +14309,13 @@ h4 {
   margin-top: 5px;
   margin-right: 5%;
   margin-left: 5%;
-  border: 1px solid #1f8cec;
-  border-radius: 5px;
+  border: 1px solid #0f55eb;
+  border-radius: 3px;
   background-color: rgba(221, 229, 237, .4);
   box-shadow: inset 1px 1px 3px 0 rgba(0, 0, 0, .16);
+  font-family: 'Maisonneue book', sans-serif;
+  color: #060606;
+  font-size: 13px;
 }
 
 .open-conversation-text {
@@ -13920,7 +14325,9 @@ h4 {
   margin-right: 20px;
   margin-bottom: 0px;
   margin-left: 20px;
-  color: #495b70;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #060606;
+  font-size: 13px;
   text-align: right;
 }
 
@@ -13936,6 +14343,11 @@ h4 {
   font-family: 'Akkurat regular', sans-serif;
   color: #8da2b7;
   font-size: 12px;
+}
+
+.editor-file-name.shrink-text {
+  font-family: 'Maisonneue book', sans-serif;
+  color: #62676d;
 }
 
 .create-coupon-form-wrapper {
@@ -13957,36 +14369,39 @@ h4 {
 
 .number-copied-text {
   display: block;
-  margin-top: 24px;
+  margin-top: 0px;
   margin-right: auto;
   margin-left: auto;
   font-family: 'Akkurat regular', sans-serif;
   color: #fff;
   font-size: 16px;
+  text-decoration: none;
 }
 
 .business-name-settings-dropdown {
   margin-bottom: 4px;
   font-family: 'Akkurat regular', sans-serif;
+  color: #0f55eb;
   font-size: 16px;
 }
 
 .account-owner-email-settings-dropdown {
   margin-top: 3px;
-  font-family: 'Akkurat light regular', sans-serif;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #62676d;
 }
 
 .settings-header-tab-text {
-  color: #455a64;
+  color: #060606;
   font-weight: 400;
 }
 
 .settings-header-tab-text:hover {
-  color: #1f8cec;
+  color: #0f55eb;
 }
 
 .settings-header-tab-text:focus {
-  color: #1f8cec;
+  color: #0f55eb;
 }
 
 .notifications-navbar-dropdown {
@@ -14041,7 +14456,7 @@ h4 {
   margin-top: 3px;
   margin-right: auto;
   margin-left: auto;
-  border-radius: 50%;
+  border-radius: 6%;
 }
 
 .notifier-time {
@@ -14055,9 +14470,9 @@ h4 {
   padding: 5px 10px;
   float: right;
   border-radius: 10px;
-  background-color: #f0f6fb;
-  font-family: 'Akkurat light regular', sans-serif;
-  color: #000;
+  background-color: rgba(15, 85, 235, .1);
+  font-family: 'Akkurat regular', sans-serif;
+  color: #0f55eb;
   font-size: 12px;
 }
 
@@ -14069,7 +14484,7 @@ h4 {
   margin-top: 3px;
   margin-right: auto;
   margin-left: auto;
-  border-radius: 50%;
+  border-radius: 6%;
   background-color: #e04e50;
 }
 
@@ -14079,10 +14494,12 @@ h4 {
 }
 
 .notification-counter {
-  padding: 5px 6px 3px;
+  padding: 5px 6px;
   border-radius: 16px;
-  background-color: #e04e50;
-  color: #fff;
+  background-color: rgba(224, 78, 80, .12);
+  font-family: 'Akkurat bold', sans-serif;
+  color: #e04e50;
+  font-size: 14px;
   font-weight: 400;
 }
 
@@ -14130,7 +14547,7 @@ h4 {
   padding-top: 11px;
   padding-bottom: 14px;
   font-family: 'Akkurat light regular', sans-serif;
-  color: #1f8cec;
+  color: #0f55eb;
   font-size: 35px;
   text-align: center;
 }
@@ -14140,7 +14557,7 @@ h4 {
 }
 
 .message-input-box-button-text:focus {
-  background-color: #1f8cec;
+  background-color: #0f55eb;
 }
 
 .message-input-box-dropdown {
@@ -14162,8 +14579,8 @@ h4 {
 }
 
 .message-input-box-dropdown-toggle:hover {
-  border-color: #1f8cec;
-  background-color: #1f8cec;
+  border-color: #0f55eb;
+  background-color: #0f55eb;
   font-family: 'Fontawesome webfont', sans-serif;
   color: #fff;
 }
@@ -14248,7 +14665,7 @@ h4 {
   height: 35px;
   border-top: 1px solid #e6e5e5;
   border-right: 1px none #e6e5e5;
-  background-color: #f8f9fb;
+  background-color: #e5edfb;
 }
 
 .placeholder-customer-profile-picture-wrapper {
@@ -14261,7 +14678,7 @@ h4 {
   margin-top: 30px;
   margin-left: 6%;
   padding: 14px;
-  border: 1px solid #1f8cec;
+  border: 1px solid #0f55eb;
   border-radius: 6px;
   background-color: rgba(240, 246, 251, .3);
 }
@@ -14285,14 +14702,14 @@ h4 {
   left: 157px;
   margin-right: 10px;
   float: right;
-  color: rgba(141, 162, 183, .75);
+  color: #62676d;
   font-size: 11px;
 }
 
 .conversation-bubble-placeholder-text {
   margin-bottom: 0px;
-  font-family: 'Akkurat regular', sans-serif;
-  color: #8da2b7;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #62676d;
   text-align: left;
 }
 
@@ -14483,7 +14900,7 @@ h4 {
   margin-right: 18px;
   float: left;
   font-family: 'Fontawesome webfont', sans-serif;
-  color: #1f8cec;
+  color: #0f55eb;
   font-size: 20px;
   text-align: left;
   text-decoration: none;
@@ -14508,9 +14925,9 @@ h4 {
 .customer-count-text {
   margin-top: 30px;
   margin-bottom: 20px;
-  font-family: 'Akkurat regular', sans-serif;
-  color: #2e2e7f;
-  font-size: 19px;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #060606;
+  font-size: 20px;
 }
 
 .customer-count-terms {
@@ -14518,7 +14935,8 @@ h4 {
 }
 
 .customer-count-text-alt {
-  font-family: 'Akkurat light regular', sans-serif;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #060606;
 }
 
 .html-email-wrapper {
@@ -14840,11 +15258,11 @@ h4 {
   height: 38px;
   padding-right: 100px;
   padding-left: 100px;
-  border: 1px solid #1f8cec;
+  border: 1px solid #0f55eb;
   border-radius: 3px;
   background-color: transparent;
   font-family: 'Fontawesome webfont', sans-serif;
-  color: #1f8cec;
+  color: #0f55eb;
 }
 
 .load-more-rows-button:hover {
@@ -14862,11 +15280,11 @@ h4 {
 .save-auto-reload {
   margin-top: 15px;
   margin-left: 4%;
-  border: 1px solid #1f8cec;
+  border: 1px solid #0f55eb;
   border-radius: 3px;
   background-color: transparent;
   font-family: 'Fontawesome webfont', sans-serif;
-  color: #1f8cec;
+  color: #0f55eb;
   font-size: 12px;
 }
 
@@ -14903,8 +15321,8 @@ h4 {
 }
 
 .empty-view-short-paragraph {
-  font-family: 'Akkurat regular', sans-serif;
-  color: rgba(141, 162, 183, .65);
+  font-family: 'Maisonneue book', sans-serif;
+  color: #62676d;
 }
 
 .empty-view-short-paragraph.no-recent-transactions {
@@ -14929,12 +15347,13 @@ h4 {
 
 .no-profile-data-text {
   padding: 10px;
-  color: rgba(141, 162, 183, .6);
+  font-family: 'Maisonneue book', sans-serif;
+  color: #62676d;
 }
 
 .no-profile-data-text.profile-conversations {
   margin-top: 30px;
-  color: #8da2b7;
+  color: #62676d;
   font-size: 12px;
   text-align: center;
 }
@@ -14949,7 +15368,7 @@ h4 {
   padding: 70px 40px 30px;
   border: 1px solid #1f8cec;
   border-radius: 4px;
-  background-color: #fff;
+  background-color: #f0f6fb;
   box-shadow: 1px 1px 3px 0 #e6e5e5;
   text-align: center;
 }
@@ -14960,7 +15379,8 @@ h4 {
   margin-top: 60px;
   margin-right: auto;
   margin-left: auto;
-  color: #637280;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #060606;
   font-size: 16px;
 }
 
@@ -15020,14 +15440,14 @@ h4 {
 }
 
 .message-volume-count._7-days {
-  font-family: 'Akkurat light regular', sans-serif;
-  color: #000;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #060606;
   font-weight: 200;
 }
 
 .message-volume-count._30-days {
-  font-family: 'Akkurat light regular', sans-serif;
-  color: #495b70;
+  font-family: 'Maisonneue book', sans-serif;
+  color: rgba(6, 6, 6, .57);
   font-weight: 300;
 }
 
@@ -15039,7 +15459,8 @@ h4 {
   margin-top: 8px;
   margin-left: 30px;
   padding-right: 30px;
-  color: #8da2b7;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #62676d;
   font-weight: 700;
   text-align: left;
   letter-spacing: 2px;
@@ -15047,7 +15468,7 @@ h4 {
 }
 
 .message-days-text.alt {
-  color: #8da2b7;
+  color: #62676d;
 }
 
 .total-messages-to-date {
@@ -15070,16 +15491,16 @@ h4 {
 }
 
 .conversation-to-date-text {
-  font-family: 'Akkurat regular', sans-serif;
-  color: #1f8cec;
-  font-size: 12px;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #0f55eb;
+  font-size: 14px;
   text-align: right;
 }
 
 .message-graph-header-text {
-  font-family: 'Akkurat regular', sans-serif;
-  color: #000;
-  font-size: 12px;
+  font-family: 'Maisonneue book', sans-serif;
+  color: #060606;
+  font-size: 14px;
 }
 
 .important-text {
@@ -15309,7 +15730,7 @@ h4 {
   margin-bottom: 15px;
   padding-top: 20px;
   padding-bottom: 15px;
-  border-radius: 5px;
+  border-radius: 3px;
   background-color: #3eca99;
 }
 
@@ -15330,6 +15751,7 @@ h4 {
 }
 
 .important-text-11 {
+  font-family: 'Akkurat regular', sans-serif;
   font-weight: 400;
 }
 
@@ -15342,10 +15764,13 @@ h4 {
 }
 
 .important-text-14 {
+  color: #0f55eb;
   font-weight: 400;
 }
 
 .important-text-15 {
+  color: #060606;
+  font-size: 14px;
   font-weight: 400;
 }
 
@@ -15671,6 +16096,28 @@ h4 {
 
 .important-text-96 {
   font-weight: 400;
+}
+
+.div-block {
+  overflow: visible;
+}
+
+.field-label {
+  font-family: 'Maisonneue book', sans-serif;
+  color: #060606;
+  font-size: 15px;
+}
+
+.important-text-97 {
+  color: #060606;
+}
+
+.important-text-98 {
+  font-weight: 400;
+}
+
+.icon {
+  color: #141d67;
 }
 
 html.w-mod-js *[data-ix="display-none-on-load"] {
@@ -16675,8 +17122,56 @@ html.w-mod-js *[data-ix="fixed-nav-display-none"] {
 
 @font-face {
   font-family: 'Fontawesome webfont';
-  src: url('../fonts/fontawesome-webfont.woff2') format('undefined'), url('../fonts/fontawesome-webfont.eot') format('embedded-opentype'), url('../fonts/fontawesome-webfont.woff') format('woff'), url('../fonts/fontawesome-webfont.ttf') format('truetype'), url('../fonts/FontAwesome.otf') format('opentype'), url('../fonts/fontawesome-webfont.svg') format('svg');
+  src: url('../fonts/fontawesome-webfont.woff2') format('woff2'), url('../fonts/fontawesome-webfont.eot') format('embedded-opentype'), url('../fonts/fontawesome-webfont.woff') format('woff'), url('../fonts/fontawesome-webfont.ttf') format('truetype'), url('../fonts/FontAwesome.otf') format('opentype'), url('../fonts/fontawesome-webfont.svg') format('svg');
   font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Maisonneue book';
+  src: url('../fonts/MaisonNeue-Book.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Maisonneue book';
+  src: url('../fonts/MaisonNeue-Book.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Atlas grotesk web';
+  src: url('../fonts/Atlas-Grotesk-Web-Black.eot') format('embedded-opentype'), url('../fonts/Atlas-Grotesk-Web-Black.woff') format('woff'), url('../fonts/Atlas-Grotesk-Web-Black.ttf') format('truetype');
+  font-weight: 900;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Atlas grotesk web';
+  src: url('../fonts/Atlas-Grotesk-Web-Bold.eot') format('embedded-opentype'), url('../fonts/Atlas-Grotesk-Web-Bold.woff') format('woff'), url('../fonts/Atlas-Grotesk-Web-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Atlas grotesk web';
+  src: url('../fonts/Atlas-Grotesk-Web-Regular.eot') format('embedded-opentype'), url('../fonts/Atlas-Grotesk-Web-Regular.woff') format('woff'), url('../fonts/Atlas-Grotesk-Web-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Atlas grotesk web';
+  src: url('../fonts/Atlas-Grotesk-Web-Regular.eot') format('embedded-opentype'), url('../fonts/Atlas-Grotesk-Web-Regular.woff') format('woff'), url('../fonts/Atlas-Grotesk-Web-Regular.ttf') format('truetype');
+  font-weight: 100;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Maisonneue book';
+  src: url('../fonts/MaisonNeue-Book.woff') format('woff');
+  font-weight: 600;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Maisonneue book';
+  src: url('../fonts/MaisonNeue-Book.woff') format('woff');
+  font-weight: 300;
   font-style: normal;
 }
 @font-face {
