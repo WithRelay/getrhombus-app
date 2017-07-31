@@ -65,7 +65,7 @@ class Transaction < ActiveRecord::Base
         update_transaction_data
         [true, "Charge created"]
       else
-        # true if it is a card decline...we text only customers. Merchant might not have textable number on file.
+        # if it is a card decline...we text only customers. Merchant might not have textable number on file.
         # send_card_error_text if @stripe_res_ary[3] && user.is_customer?
         # send_payment_failure_email(@stripe_res_ary[1], @stripe_res_ary[3])
         [false, @stripe_res_ary[2]]
@@ -102,7 +102,7 @@ class Transaction < ActiveRecord::Base
   end
 
   def self.big_decimal_2dp(amt)
-    return 0 if amt.nil? || amt == 0
+    return 0 if (amt.blank? || amt == 0)
     Toolbox::Decimal.to_int_or_2dp(amt)
   end
 
@@ -135,8 +135,8 @@ class Transaction < ActiveRecord::Base
     # if @capture
 
     EmailingService.charge_failure_notification(to: @merchant.email, customer_email: @user.email, customer_phone: @user.phone_number, card_name: @user.card_name,
-                                                  last4: @user.last4, text: @msg.text, org_phone: @merchant.org_phone, rhombus_number: @merchant.rhombus_number,
-                                                  dump: err, to_merchant: to_merchant)
+                                                last4: @user.last4, text: @msg.text, org_phone: @merchant.org_phone, rhombus_number: @merchant.rhombus_number,
+                                                dump: err, to_merchant: to_merchant)
   end
 
   def process_dashboard_txn(amt, merchant, user, msg, hashtag_id, capture=true, channel="Message")

@@ -4,7 +4,7 @@ $(document).on('ready page:load', function() {
     var selected_objects = getSelectedObjectIds();
 
     if (selected_objects.length < 1) {
-      setFlashForList('Select a list to Delete', 'error');
+      setFlashForList('Select a list to delete', 'error');
     } else if (selected_objects.length > 1) {
       setFlashForList('Only 1 list can be deleted at a time', 'error');
     } else {

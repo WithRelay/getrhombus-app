@@ -24,7 +24,7 @@
             </span>
           </p>
         <%else%>
-          <%= link_to "Connect Facebook", user_facebook_omniauth_authorize_path, class: "button integrate-button w-button", data: {disable_with: 'Please wait...'} %>
+          <%= link_to "Connect Facebook", user_facebook_omniauth_authorize_path, class: "button integrate-button w-button", data: { disable_with: 'Please wait...'} %>
         <%end%>
       </div>
     </div>
@@ -39,7 +39,7 @@
       </div>
       <div class="w-clearfix w-col w-col-3">
         <% if current_user.twitter_cred.present? %>
-          <%= link_to "Disconnect Twitter", user_remove_twitter_integration_path(current_user), id: 'remove_twitter_integration', class: "button integrate-button w-button", data: {disable_with: 'Please wait...'} %>
+          <%= link_to "Disconnect Twitter", user_remove_twitter_integration_path(current_user), id: 'remove_twitter_integration', class: "button integrate-button w-button", data: { disable_with: 'Please wait...'} %>
         <%else%>
           <%= link_to "Connect Twitter", user_twitter_omniauth_authorize_path, class: "button integrate-button w-button", data: {disable_with: 'Please wait...'} %>
         <%end%>
@@ -57,13 +57,13 @@
         </div>
         <div class="w-clearfix w-col w-col-3">
           <% if stripe_standalone_cred.present? %>
-            <%= link_to "Disconnect Stripe", user_remove_stripe_integration_path(current_user), id:'remove_stripe_integration', class: "button integrate-button w-button", data: {disable_with: 'Please wait...'} %>
+            <%= link_to "Disconnect Stripe", user_remove_stripe_integration_path(current_user), id:'remove_stripe_integration', class: "button integrate-button w-button", data: { disable_with: 'Please wait...'} %>
              <p class="integration-text">Connected to:
               <span>
                 <b><%= stripe_standalone_cred.email %><b>
               </span>
             </p>
-          <%else%>
+          <% else %>
             <%= link_to "Connect Stripe", user_stripe_connect_omniauth_authorize_path, class: "button integrate-button w-button", data: {disable_with: 'Please wait...'} %>
           <%end%>
         </div>
