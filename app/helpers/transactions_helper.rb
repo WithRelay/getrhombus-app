@@ -29,7 +29,7 @@ module TransactionsHelper
 
   def transactions_total_amount
     @tday_txns_amount = 0
-    @all_transactions[0].each{|arr| @tday_txns_amount += arr[0] }
+    @all_transactions[0].each{|arr| @tday_txns_amount += arr[0].to_f }
     @tday_txns_amount
   end
 
@@ -42,7 +42,7 @@ module TransactionsHelper
 
   def transactions_net_sales
     @tday_net_sale = 0
-    @all_transactions[0].each{|arr| @tday_net_sale +=   (arr[0] - (arr[1].to_f + arr[2].to_f))}
+    @all_transactions[0].each{|arr| @tday_net_sale +=   (arr[0].to_f - (arr[1].to_f + arr[2].to_f))}
     @tday_net_sale
   end
 
