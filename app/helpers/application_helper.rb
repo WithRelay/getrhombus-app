@@ -49,6 +49,7 @@ module ApplicationHelper
   end
 
   def render_header_partial
+    return render 'shared/settings_header' if setting_pages
     return render 'shared/docs_header' if relay_docs_pages || privacy_and_terms_pages
     return render 'shared/unauthenticate_header' if unauthenticate_controller && !restrict_static_pages
     return render 'shared/authenticated_header' unless authenticated_pages || campaign_restrict_params
