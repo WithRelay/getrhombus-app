@@ -16,7 +16,6 @@ class MerchantContact < ActiveRecord::Base
   def page_specific_id_valid?(team = nil)
     (team = self.merchant unless team) || return
     (team_page_id = team.fb_pages.subscribed.last.try(:id)) || return
-    team_page_id == FbPage.find_by(page_specific_id: self.uid).try(:fb_page_id)
+    team_page_id == FbCred.find_by(page_specific_id: self.uid).try(:fb_page_id)
   end
-
 end
