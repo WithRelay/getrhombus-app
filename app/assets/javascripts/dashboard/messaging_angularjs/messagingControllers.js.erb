@@ -486,8 +486,11 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
         var text = BindConversationPlugins.get_emoji_box()[0].emojioneArea.getText().trim() + " " + text_to_insert.trim();
         BindConversationPlugins.get_emoji_box()[0].emojioneArea.setText(text);
         $('.update-close-modals').click();
+        UtilFunctions.placeCaretAtEnd($('.emojionearea-editor').get(0));
       };
     };
+
+    
 
     // End Modals
 
