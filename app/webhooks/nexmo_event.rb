@@ -15,7 +15,7 @@ class NexmoEvent
 
         user = get_user
         @message_id = @params[:messageId]
-        @message = Message.create(
+        @message = Message.create!(
           to: @params[:to],
           from: @params[:msisdn],
           user_id: user.nil? ? nil : user.id,

@@ -39,7 +39,7 @@ class TwilioEvent
         user = get_user
         @message_id = @params[:MessageSid]
 
-        @message = Message.create(
+        @message = Message.create!(
           to: @params[:To].gsub('+', ''),
           from: @phone_number,
           status: @params[:SmsStatus],

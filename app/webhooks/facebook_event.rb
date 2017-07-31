@@ -76,7 +76,7 @@
 
     def get_user_relation
       if (@current_page.page_id == @message_from)
-        @user_id =  @merchant_id
+        @user_id = @merchant_id
         @user_id_to = @uid unless @uid == @fb_cred.page_specific_id
       else
         @user_id = @uid unless @uid == @fb_cred.page_specific_id
