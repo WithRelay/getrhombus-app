@@ -3,46 +3,55 @@
 #---
 # encoding: utf-8
 
-
-
-KnowledgeBaseCategory.create(name: 'Getting Started & Setup', image_name: '014_118.png') do |kbc|
-  KnowledgeBase.create(
-                title: 'Create a Relay account for your business',
-                author: 'Edwin',
-                author_url: '',
-                raw_content: 'Thank you for choosing Relay! To signup as a business please follow this link. All Relay plans come with a 14-day trial, including SMS credits to help you get started quickly.
-                              If you’re not ready to choose a subscription plan, you can also sign-up for a limited free account that includes two-way messaging and payments from 25 contacts and/or customers, via SMS or Facebook Messenger.
-                              Why collect payment information for a free account?
-                              The free account is absolutely free — this means no monthly subscription! However, you will need to purchase SMS credits to message your customers, or connect your Facebook Messenger account.
-                              Still have questions? We’ll be happy to walk you through Relay features relevant to your business use case, and answer all your questions. Schedule a demo here. You can also text us here [relay_dashboard_number] 😃 ',
-                knowledge_base_category_id: kbc.id)
-
-  KnowledgeBase.create(
-                title: 'Create a Relay customer account',
-                author: 'Edwin',
-                author_url: '',
-                raw_content: 'Thank you for choosing Relay! To signup as a business please follow this link. All Relay plans come with a 14-day trial, including SMS credits to help you get started quickly.
-                              If you’re not ready to choose a subscription plan, you can also sign-up for a limited free account that includes two-way messaging and payments from 25 contacts and/or customers, via SMS or Facebook Messenger.
-                              Why collect payment information for a free account?
-                              The free account is absolutely free — this means no monthly subscription! However, you will need to purchase SMS credits to message your customers, or connect your Facebook Messenger account.
-                              Still have questions? We’ll be happy to walk you through Relay features relevant to your business use case, and answer all your questions. Schedule a demo here. You can also text us here [relay_dashboard_number] 😃 ',
-                knowledge_base_category_id: kbc.id)
+3.times do
+Transaction.create!(
+	referenced_user_id: [3, 5, 7, 9, 11, 13, 15, 17, 19 ].sample,
+	user_id: [3, 5, 7, 9, 11, 13, 15, 17, 19 ].sample,
+	team_id: 2,
+	description: ["Baggles purchase", 'abcd', 'Pre order'].sample,
+	amount: [ 20, 22, 33 ,40].sample
+)
 end
 
-KnowledgeBaseCategory.create(name: 'Features Explained', image_name:'017_228.png')
-KnowledgeBaseCategory.create(name: 'Phone Number', image_name:'017_015.png')
-KnowledgeBaseCategory.create(name: 'Payments & Transactions', image_name:'014_014.png')
-KnowledgeBaseCategory.create(name: 'Pricing', image_name:'014_124.png')
-KnowledgeBaseCategory.create(name: 'My Account', image_name:'011_001.png')
-KnowledgeBaseCategory.create(name: 'Use Cases', image_name:'004_010.png')
-KnowledgeBaseCategory.create(name: 'API', image_name:'007_052.png')
-KnowledgeBaseCategory.create(name: 'Privacy & Terms', image_name:'013_008.png')
+#
+# KnowledgeBaseCategory.create(name: 'Getting Started & Setup', image_name: '014_118.png') do |kbc|
+#   KnowledgeBase.create(
+#                 title: 'Create a Relay account for your business',
+#                 author: 'Edwin',
+#                 author_url: '',
+#                 raw_content: 'Thank you for choosing Relay! To signup as a business please follow this link. All Relay plans come with a 14-day trial, including SMS credits to help you get started quickly.
+#                               If you’re not ready to choose a subscription plan, you can also sign-up for a limited free account that includes two-way messaging and payments from 25 contacts and/or customers, via SMS or Facebook Messenger.
+#                               Why collect payment information for a free account?
+#                               The free account is absolutely free — this means no monthly subscription! However, you will need to purchase SMS credits to message your customers, or connect your Facebook Messenger account.
+#                               Still have questions? We’ll be happy to walk you through Relay features relevant to your business use case, and answer all your questions. Schedule a demo here. You can also text us here [relay_dashboard_number] 😃 ',
+#                 knowledge_base_category_id: kbc.id)
+#
+#   KnowledgeBase.create(
+#                 title: 'Create a Relay customer account',
+#                 author: 'Edwin',
+#                 author_url: '',
+#                 raw_content: 'Thank you for choosing Relay! To signup as a business please follow this link. All Relay plans come with a 14-day trial, including SMS credits to help you get started quickly.
+#                               If you’re not ready to choose a subscription plan, you can also sign-up for a limited free account that includes two-way messaging and payments from 25 contacts and/or customers, via SMS or Facebook Messenger.
+#                               Why collect payment information for a free account?
+#                               The free account is absolutely free — this means no monthly subscription! However, you will need to purchase SMS credits to message your customers, or connect your Facebook Messenger account.
+#                               Still have questions? We’ll be happy to walk you through Relay features relevant to your business use case, and answer all your questions. Schedule a demo here. You can also text us here [relay_dashboard_number] 😃 ',
+#                 knowledge_base_category_id: kbc.id)
+# end
+#
+# KnowledgeBaseCategory.create(name: 'Features Explained', image_name:'017_228.png')
+# KnowledgeBaseCategory.create(name: 'Phone Number', image_name:'017_015.png')
+# KnowledgeBaseCategory.create(name: 'Payments & Transactions', image_name:'014_014.png')
+# KnowledgeBaseCategory.create(name: 'Pricing', image_name:'014_124.png')
+# KnowledgeBaseCategory.create(name: 'My Account', image_name:'011_001.png')
+# KnowledgeBaseCategory.create(name: 'Use Cases', image_name:'004_010.png')
+# KnowledgeBaseCategory.create(name: 'API', image_name:'007_052.png')
+# KnowledgeBaseCategory.create(name: 'Privacy & Terms', image_name:'013_008.png')
 
 
 # Seeds for users
-# User.delete_all
 
 #Plan.delete_all
+# User.delete_all
 platform_acct_id = User.get_platform_acct_obj.id
 # Plan.create([
 # 	{ id: 1, status: 1, amount: 0, currency: 'usd', interval: 'month', interval_count: 1, stripe_livemode: 0, name: 'A - 0 - 100', statement_descriptor: 'Relay', trial_period_days: 0, merchant_id: platform_acct_id },
