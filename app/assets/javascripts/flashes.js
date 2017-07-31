@@ -215,7 +215,4 @@ var FlashHandler = new function() {
       return value;
     }
   };
-
-
-
 }
