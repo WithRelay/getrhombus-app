@@ -20,7 +20,7 @@ class FbMessage < ActiveRecord::Base
 
   # For sending and saving all outbound text message
   # from = merchant page_access_token, to = recipient_id
-  def send_and_save_message(merchant, user, from, recipient_id, message, media_url)
+  def send_and_save_message(merchant, user, from, to, message, media_url)
     begin
       # save message before sending
       user = (user.present?) ? user.id : nil
