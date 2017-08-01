@@ -53,12 +53,13 @@
       </div>
     </div>
   </div>
-  <div class="customer-dash sub-nav-bar">
-    <div class="sub-nav-options-wrapper w-clearfix">
-      <%= link_to new_user_campaign_path(current_user), class: "add sub-nav-button w-button" do%>
+
+<div class="customer-dash sub-nav-bar">
+  <div class="sub-nav-options-wrapper w-clearfix">
+    <%= link_to new_user_campaign_path(current_user), class: "add sub-nav-button w-button" do %>
       <strong>New Campaign</strong>
-      <%end%>
-      <a class="sub-nav-button w-button" href="#"><strong>&nbsp; Deactivate</strong></a>
-      <a class="sub-nav-button w-button" data-ix="create-list" href="#"><strong>&nbsp;Delete</strong></a>
-    </div>
+    <% end %>
+    <a class="sub-nav-button w-button deactivate-resource" id="activate-deactivate-campaign" href="#"><strong>Deactivate</strong></a>
+    <a class="sub-nav-button w-button delete-resource" href="#"><strong>Delete</strong></a>
   </div>
+</div>
