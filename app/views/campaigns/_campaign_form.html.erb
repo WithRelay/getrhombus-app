@@ -1,19 +1,5 @@
 <style>
-  .selectize-dropdown-content {
-    margin-left: -33px !important;
-    width: 80%;
-    position: absolute;
-    margin-top: 2px !important;
-  }
-  .name{
-    width: 100% !important;
-    border-bottom: none !important;
-    height: 16px !important;
-    background: #1b9dec !important;
-  }
-  .has-error .trumbowyg-editor{
-    border: red solid 1px;
-  }
+  /*dashboard-nav is from the parent page*/
   .dashboard-nav{
     left: 20%;
     width: 80%;
@@ -30,7 +16,9 @@
 
     <div class='form-group col-xs-6'>
       <label class="editor-options form-label" for="List"> &nbsp; List</label>
+    <div id = 'choose-a-list'>
       <%= f.text_field :list_id, id: 'campaign-list', 'data-list-data' => "#{@lists.to_json}", placeholder: "Choose a list", class: 'form-control editor text-field w-input' %>
+    </div>
       <div class="errorMessageContainer"></div>
     </div>
 
