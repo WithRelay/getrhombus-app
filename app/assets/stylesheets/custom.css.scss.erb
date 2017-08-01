@@ -296,10 +296,108 @@ textarea { resize: none;}
   padding-bottom: 13px;
 }
 
-#messaging-page-textarea .emojionearea .emojionearea-editor {
-  min-height: 0em;
-  padding: 0px 10px 0px 0px;
-  color: #455a64;
+#messaging-page-textarea {
+  .emojionearea .emojionearea-editor {
+    min-height: 0em;
+    padding: 0px 10px 0px 0px;
+    color: #455a64;
+  }
+
+  .message-input-box-option-buttons {
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  $color-toggle-on: #0F55EB;
+  $color-toggle-off: #28CA40;
+  $transition: 200ms;
+  $toggle-height: 6px;
+  $toggle-radius: 2rem;
+  $toggle-width: 56px;
+  $toggle-border: -10px;
+
+  .toggle-component {
+    padding-left: 28px;
+    padding-bottom: 16px;
+    padding-top: 16px;
+  }
+  // *** start here ***
+  .disappear-from-screen {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+  }
+
+  .toggle {
+    // Do not visually style this, style the inner div instead
+    display: table;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    input {
+      @extend .disappear-from-screen;
+      &:focus + div{
+        text-decoration: underline;    
+      }
+    }
+    > div {
+      // Style this
+      cursor: pointer;
+      border-radius: $toggle-radius;
+      width: $toggle-width;
+      height: $toggle-height;
+      background: $color-toggle-off;
+      border: none;
+      user-select: none;
+      position: relative;
+      transition: $transition ease-out;
+      font-size: 0;
+      &:before {
+        will-change: translate;
+        display: block;
+        position: absolute;
+        top: calc(50% - 12px);
+        /*left: .5rem; */
+        content: '';
+        width: 20px;
+        height: 20px;
+        border: 1px solid $color-toggle-off;
+        background: white;
+        border-radius: 50%;
+        transition: $transition;
+      }
+      &:after {
+        font-size: 13px;
+        position: absolute;
+        left: 67px;
+        top: 50%;
+        transform: translateY(-50%);
+        content: attr(data-off);
+        pointer-events: none;
+      }
+    }
+    
+    input:checked + div {
+      background: $color-toggle-on;
+      border-color: $color-toggle-on;
+      &:before {
+        color: $color-toggle-on;
+        transform: translateX(280%); // IE11 fallback
+        transform: translateX(calc(2.5*100% + #{$toggle-border*2}));
+        background: white;
+        border: 1px solid $color-toggle-on;
+      }
+      &:after {
+        content: attr(data-on);
+        font-family: 'Fontawesome webfont', sans-serif;
+      }
+    }
+  }
+  
 }
 
 #conversations-list {
@@ -327,13 +425,7 @@ textarea { resize: none;}
 #messages-box .chat-text {
   word-wrap: break-word;
 }
-
-#messaging-page-textarea .message-input-box-option-buttons {
-  &:hover {
-    cursor: pointer;
-  }
-}
-
+  
 /* End For messaging page */
 
 /* for rhombus number */

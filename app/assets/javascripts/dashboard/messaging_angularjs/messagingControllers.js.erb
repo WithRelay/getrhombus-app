@@ -22,33 +22,33 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
 
     // Message
     var text_to_send = '';
-    $scope.mms = {};
-    $scope.mms.text = "";
+    $scope.mms = { text: '' };
+    $scope.send_mms_btn = "Send";
+    $scope.new_message = { channel: false };
     $scope.is_sending = false;
+    $scope.mms_btn_disabled = false;
     $scope.retrieving_messages_for_scroll = false;
 
-    // Marked As Done
-    $scope.marked_as_done = { reason: 'account_reactivation', notes: '' };
+    $scope.disable_secondary_btns = false;
 
-    // buttons
-    $scope.send_msg_btn = "Reply";
-    $scope.send_msg_fb_btn = "Send via Facebook";
-    $scope.send_mms_btn = "Send";
-    $scope.send_mms_fb_btn = "Send via Facebook";
-    $scope.send_btns_disabled = false;
-    $scope.charge_btn = "Charge Customer";
+    // Marked As Done
+    $scope.close_conversation_btn = "Mark conversation as done";
+    $scope.marked_as_done = { reason: 'account_reactivation', notes: '' };
 
     // Transactions
     $scope.charge_data = {};
     $scope.customer_transactions = [];
+    $scope.charge_btn = "Charge Customer";
 
     // Lists
     $scope.merchant_lists = [];
+    $scope.add_member_to_list_btn = 'Add member to list';
     $scope.no_list_message = 'See the lists each customer is subscribed to right here. Use lists to send group messages.';
     $scope.lists_dropdown = { list: null };
     $scope.customer_lists = [];
 
     // Scheduled Messages
+    $scope.schedule_notification_btn = "Schedule notification";
     $scope.customer_channel_list = [ { id: "0", title: 'SMS' }, { id: '2', title: 'Facebook Messenger'} ];
     $scope.scheduled_message = { frequency_type: "1", text: '', repeat_days: '3', channel: $scope.customer_channel_list[0] };
 
@@ -147,10 +147,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
     });
 
     $scope.selectConversation = function(data) {
-      console.log(data)
-      console.log('yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy')
       if (data.select_conversation !== undefined) {
-        console.log('yooooooooooooooooo')
         if ($scope.filteredConversations.length) data.select_conversation.last_message_ts = $scope.filteredConversations[0].last_message_ts + 1;
         $scope.conversations[data.select_conversation.id] = data.select_conversation;
         $timeout(function() { $scope.clickFirstConversation(); });
@@ -198,6 +195,8 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
 
     $scope.closeConversation = function(data) {
       if ($scope.is_conversation_selected() && $scope.online()) {
+        $scope.disable_secondary_btns = true;
+        $scope.close_conversation_btn = "Closing...";
         var hash = { conversation_resolution: { notes: $scope.marked_as_done.notes, resolution: $scope.marked_as_done.reason } };
         conversationService.closeConversation($scope.selected_conversation.id, hash)
         .then(function(data) {
@@ -209,7 +208,11 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
         }, function(data) {
           FlashHandler.setFlashMessage('Unable to close conversation :(','error');
         })
-        .finally(function() { $('#mark-as-done-div').trigger('close'); });
+        .finally(function() { 
+          $('#mark-as-done-div').trigger('close'); 
+          $scope.close_conversation_btn = "Mark conversation as done";
+          $scope.disable_secondary_btns = false;
+        });
       };
     };
 
@@ -238,16 +241,17 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
 
     $scope.canSendFbMessage = function(from_conversations_list, conversation) {
       BindConversationPlugins.get_emoji_box()[0].emojioneArea.enable();
-      $scope.send_btns_disabled = false;
+      $scope.mms_btn_disabled = false;
+      $scope.new_message.channel = false;
       if (from_conversations_list && conversation.uid_type == "fb_page") {
         if (!$scope.merchant.has_messenger) {
           FlashHandler.setFlashMessage("You don't have a facebook page connected :(", 'error');
-          $scope.send_btns_disabled = true;
+          $scope.mms_btn_disabled = true;
           BindConversationPlugins.get_emoji_box()[0].emojioneArea.disable();
         } else if (!conversation.has_messenger) {
           FlashHandler.setFlashMessage("Contact messaged you from a different facebook page :(", 'error');
           BindConversationPlugins.get_emoji_box()[0].emojioneArea.disable();
-          $scope.send_btns_disabled = true;
+          $scope.mms_btn_disabled = true;
         };
       };
     };
@@ -283,7 +287,10 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
                 };
                 //$scope.status.loaded = ($scope.selected_conversation_messages.length > 0);  // might not need this line
                 $scope.status.loading = false;
-                console.log(data.messages)
+                if (from_conversations_list && conversation.uid_type == 'user' && conversation.has_messenger) {
+                  var message = _.last($scope.selected_conversation_messages);
+                  $scope.new_message.channel = (!message || message.channel == 'Message') ? false : true;
+                };                
                 deferred.resolve();
               } else {
                 $scope.rejectPromise(false, 'no messages', deferred);
@@ -322,42 +329,29 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
     $scope.bindEnterToMessagingArea = function() {
       BindConversationPlugins.get_emoji_box()[0].emojioneArea
       .on("keydown", function(btn, e) { if (e.keyCode == 13) e.preventDefault(); })
-      .on("keyup", function(btn, e) { 
-        if (e.keyCode == 13) {
-          var channel;
-          if ($scope.selected_conversation.uid_type == 'user') {
-            channel = _.last($scope.selected_conversation_messages);
-            if (channel) {
-              channel = channel.channel;
-            } else {
-              channel = 'Message';
-            }
-          } else {
-            channel = $scope.selected_conversation.uid_type == 'fb_page' ? 'FbMessage' : 'Message';
-          };
-          $scope.sendConversationMessage(channel); 
-        }
-      });
+      .on("keyup", function(btn, e) { if (e.keyCode == 13) { $scope.sendConversationMessage(channel); } });
     };
 
-    $scope.sendConversationMessage = function(channel) {
+    $scope.getSendChannel = function() {
+      var channel;
+      if ($scope.selected_conversation.uid_type == 'user') {
+        channel = $scope.new_message.channel ? 'FbMessage' : 'Message';
+      } else {
+        channel = $scope.selected_conversation.uid_type == 'fb_page' ? 'FbMessage' : 'Message';
+      };
+      return channel;
+    };
+
+    $scope.sendConversationMessage = function() {
       if ($scope.is_conversation_selected() && !$scope.is_sending && $scope.online()) {
-        if (channel == 'FbMessage' && $scope.selected_conversation.uid_type == 'user' && !$scope.selected_conversation.has_messenger) {
-          FlashHandler.setFlashMessage("Customer hasn't messaged you on your current Facebook page :(", 'error');
-          return;
-        };        
-
         $scope.is_sending = true;
-        var btn = (channel == 'Message') ? 'send_msg_btn' : 'send_msg_fb_btn';
-        $scope[btn] = "Sending...";
-
         text_to_send = BindConversationPlugins.get_emoji_box()[0].emojioneArea.getText().trim();
+
         if ((text_to_send == '') || (text_to_send.length > $scope.merchant.num_of_chars)) {
           FlashHandler.setFlashMessage('Enter up to ' + $scope.merchant.num_of_chars + ' characters.', 'error');
-          $scope.enable_msg_btn(btn, channel);
         } else {
           var conversation_id = $scope.selected_conversation.id;
-          conversationService.sendConversationMessage(conversation_id, text_to_send, channel)
+          conversationService.sendConversationMessage(conversation_id, text_to_send, $scope.getSendChannel())
           .then(function(data) {
             // ensure we still have the right conversation
             if ($scope.selected_conversation.id == conversation_id) {
@@ -374,7 +368,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
             console.log(data)
           })
           .finally(function() {
-            $scope.enable_msg_btn(btn, channel);
+            $scope.is_sending = false;
           });
         };
       };
@@ -384,11 +378,6 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
       var state = $scope.conversation_selected;
       if (!state && !show_alert) FlashHandler.setFlashMessage(msg || 'Select a conversation', 'error');
       return state;
-    }
-
-    $scope.enable_msg_btn = function(btn, channel) {
-      $scope[btn] = (channel == 'Message') ? 'Send' : 'Send via Facebook';
-      $scope.is_sending = false;
     };
 
     // MMS
@@ -415,13 +404,13 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
     };
 
 
-    $scope.sendMMS = function(channel) {
-      if ($scope.is_conversation_selected() && !$scope.is_sending && $scope.online()) {
-        $scope.is_sending = true;
-        var btn = (channel == 'Message') ? 'send_mms_btn' : 'send_mms_fb_btn';
-        $scope[btn] = "Sending...";
+    $scope.sendMMS = function() {
+      if ($scope.is_conversation_selected() && $scope.online()) {
+        $scope.disable_secondary_btns = true;
+        $scope['send_mms_btn'] = "Sending...";
         var conversation_id = $scope.selected_conversation.id;
-        conversationService.sendConversationMMS(conversation_id, $scope.mms.file, $scope.mms.text, channel)
+
+        conversationService.sendConversationMMS(conversation_id, $scope.mms.file, $scope.mms.text, $scope.getSendChannel())
         .then(function (data) {
           if ($scope.selected_conversation.id == conversation_id) {
             $scope.selected_conversation_messages.push(data.data);
@@ -432,8 +421,9 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
         })
         .finally(function() {
           $scope.mms.file = '';
-          $scope.enable_msg_btn(btn, channel);
+          $scope['send_mms_btn'] = "Send";
           $('#mms-file-preview-div').trigger('close');
+          $scope.disable_secondary_btns = false;
         });
       }
     };
@@ -584,14 +574,14 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
 
     // Transactions
     $scope.disableChargeButton = function(chargeForm) {
-      //return !$scope.is_conversation_selected('', true) || $scope.selected_conversation.uid_type != 'user' || chargeForm.$invalid || $scope.is_sending;
-      return  chargeForm.$invalid || $scope.is_sending;
+      //return !$scope.is_conversation_selected('', true) || $scope.selected_conversation.uid_type != 'user' || chargeForm.$invalid || $scope.disable_secondary_btns;
+      return  chargeForm.$invalid;
     };
 
     // function to submit the form after all validation has occurred
     $scope.submitChargeForm = function(isValid) {
       if (isValid && $scope.online()) {
-        //$scope.is_sending = true;
+        //$scope.disable_secondary_btns = true;
         $scope.charge_btn = "Please wait...";
         $scope.charge_data.user_id = $scope.selected_conversation.uid;
         $scope.charge_data.hashtag_id = $scope.charge.hashtag_id;
@@ -608,7 +598,7 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
           FlashHandler.setFlashMessage(response.error, 'error');
         })
         .finally(function() {
-          $scope.is_sending = false;
+          $scope.disable_secondary_btns = false;
           $scope.charge_btn = "Charge Customer";
         });*/
       }
@@ -655,6 +645,8 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
         if (!$scope.lists_dropdown.list) {
           FlashHandler.setFlashMessage('Select a list', 'error');
         } else {
+          $scope.disable_secondary_btns = true;
+          $scope.add_member_to_list_btn = 'Adding...';
           var list = $scope.lists_dropdown.list;
           var hash = { user_list: { list_id: list.id, customer_contact_id: $scope.selected_conversation.mc_id, customer_contact_type: $scope.selected_conversation.mc_type } };
 
@@ -665,7 +657,11 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
           }, function(data) {
             FlashHandler.setFlashMessage(data.message, 'error');
           })
-          .finally(function() { $('#Add-to-list-dropdown').trigger('close'); });
+          .finally(function() { 
+            $('#Add-to-list-dropdown').trigger('close'); 
+            $scope.add_member_to_list_btn = 'Add member to list';
+            $scope.disable_secondary_btns = false;
+          });
         };
       };
     };
@@ -709,6 +705,8 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
         if ($scope.scheduled_message.text == "") {
           FlashHandler.setFlashMessage('Please enter a message', 'error');
         } else {
+          $scope.disable_secondary_btns = true;
+          $scope.schedule_notification_btn = "Scheduling...";
           var hash = angular.copy($scope.scheduled_message);
           hash.channel = hash.channel.id;
           hash.mc_id = $scope.selected_conversation.mc_id + "-" + $scope.selected_conversation.mc_type;
@@ -722,6 +720,11 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
           }, function(data) {
             console.log(data)
             FlashHandler.setFlashMessage(data.error, 'error');
+          })
+          .finally(function() { 
+            $('#Add-to-list-dropdown').trigger('close'); 
+            $scope.schedule_notification_btn = "Schedule notification";
+            $scope.disable_secondary_btns = false;
           });
           //*/
         };
