@@ -25,10 +25,10 @@ messagingApp.directive('whenScrolledUp', ['$timeout', function($timeout) {
         var sh = raw.scrollHeight;
         scope.$apply(attr.whenScrolledUp).then(function() {
           $timeout(function() {
-            $('.dashboard-body').perfectScrollbar('update');
             raw.scrollTop = raw.scrollHeight - sh;
             scope.retrieving_messages_for_scroll = false;
-            console.log('complete');
+            $('.dashboard-body').perfectScrollbar('update');
+            console.log('scroll complete');
           });
         });
       }
@@ -91,8 +91,10 @@ messagingApp.directive('onFinishRender', function ($timeout) {
       if (scope.$last === true) {
         if (hasScrollReachedBottom(raw.parentElement)) {
           $timeout(function() {
-            $('.dashboard-body').perfectScrollbar('update');
+            console.log(raw.parentElement)
+            console.log(raw.parentElement.scrollHeight)
             raw.parentElement.scrollTop = raw.parentElement.scrollHeight;
+            $('.dashboard-body').perfectScrollbar('update');
           });
         }
       }
