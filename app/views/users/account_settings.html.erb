@@ -1,11 +1,7 @@
 <!-- Title for header -->
 <% provide(:title, 'Rhombus - Merchant Profile') %>
 <!-- the css is page specific because some pages have different ui for phone number field -->
-<div class="settings sub-nav-bar w-clearfix">
-  <%= link_to user_path(current_user) , class: 'dashboard-return sub-nav-button w-button' do %>
-    Return to dashboard
-  <% end %>
-</div>
+<%= render 'shared/return_to_dashboard' %>
 <div class="dashboard-body settings w-clearfix">
   <div class="dash-content-container settings w-clearfix" id="account-settings">
     <h4 class="form-header">Account Information</h4>
