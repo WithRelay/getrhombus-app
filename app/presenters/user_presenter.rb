@@ -7,7 +7,7 @@ class UserPresenter < BasePresenter
   # http://blog.nhocki.com/2012/05/08/mixing-presenters-and-helpers/
 
   def page_count
-    @model.fb_pages.count > 0
+    @model.fb_pages.active.count > 0
   end
 
 end

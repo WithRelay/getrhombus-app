@@ -16,6 +16,8 @@
     </div>
     <div id='objlists' data-object-type='fb_page'>
       <div class="integration-settings-div">
+
+        <% if present(current_user).page_count %>
         <div class="w-row">
           <div class="w-col w-col-6">
             <h4 class="authentication-column-header">Authentication</h4>
@@ -24,7 +26,6 @@
             <div class="authentication-column-text name-tag">Connected to Facebook as <%= @fb_cred.name %></div>
           </div>
         </div>
-        <% if present(current_user).page_count %>
         <div class="w-row">
           <div class="w-col w-col-6">
             <p class="authentication-column-paragraph">Choose the Facebook page that you will use to receive messages</p>
@@ -38,7 +39,7 @@
                   <% if subscribed_page.present? %>
                     <span> <%= subscribed_page %> </span>
                   <% else %>
-                    <b class='authentication-column-text description-tag'>No page is subscribed yet</b>
+                    <span class='authentication-column-text description-tag'>No page is subscribed yet</span>
                   <% end %>
                 </p>
                 <div class="w-col w-col6 pull-right">
@@ -50,7 +51,7 @@
           </div>
         </div>
         <% else %>
-          <p class='authentication-column-text name-tag'>Please make a facebook page to proceed.</p>
+          <p class='authentication-column-text'>Please make a facebook page to proceed.</p>
         <%end%>
         <div>
           <%= link_to user_fb_pages_remove_integration_path, id: 'delete_integration', class: 'pull-right button integrate-button w-button remove_fb_integration' do%>
