@@ -28,7 +28,6 @@ class MerchantCustomersController < ApplicationController
                                 .exclude_subscriptions()
                                 .where(user_id: @merchant_customer.customer_id).order(created_at: :desc)
                                 .paginate(:page => params[:page], :per_page => PAGINATION_PER_PAGE)
-
     @conversation_refs = ConversationRef.get_last_customer_msg_from_all_merchant_convs(current_user.id, @merchant_customer.customer_id, 'user')
     @recent_activity = recent_activity
     render_requested_format(@transactions)
