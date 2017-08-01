@@ -10,8 +10,7 @@ class FbPage < ActiveRecord::Base
     page_array = FacebookMessengerService.get_page(original_fb_cred.auth_token)
     page_array.each do |page|
       begin
-        where(page_id: page['id']).first_or_initialize.tap do |row|
-          row.user_id = current_user.id
+        where(page_id: page['id'], user_id: current_user.id).first_or_initialize.tap do |row|
           row.category = page['category']
           row.page_access_token = page['access_token']
           row.page_name = page['name']
