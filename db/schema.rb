@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170715024009) do
+ActiveRecord::Schema.define(version: 20170731231726) do
 
   create_table "account_reloads", force: :cascade do |t|
     t.integer  "user_id",        limit: 4
@@ -268,6 +268,7 @@ ActiveRecord::Schema.define(version: 20170715024009) do
     t.datetime "updated_at",                                      null: false
     t.string   "page_name",           limit: 191
     t.boolean  "subscription_status", limit: 1,   default: false
+    t.boolean  "active",              limit: 1,   default: true
   end
 
   add_index "fb_pages", ["user_id"], name: "index_fb_pages_on_user_id", using: :btree

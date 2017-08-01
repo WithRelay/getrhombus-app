@@ -3,17 +3,19 @@ class FbPage < ActiveRecord::Base
   has_many :fb_messages, dependent: :destroy
   validates_presence_of :page_access_token
   scope :subscribed, -> { where(subscription_status: true) }
+  scope :active, -> { where(active: true) }
 
   def self.store_page(current_user)
     original_fb_cred = current_user.fb_creds.original_cred.first
     page_array = FacebookMessengerService.get_page(original_fb_cred.auth_token)
     page_array.each do |page|
       begin
-        where(page_id: page["id"]).first_or_initialize.tap do |row|
+        where(page_id: page['id']).first_or_initialize.tap do |row|
           row.user_id = current_user.id
-          row.category = page["category"]
-          row.page_access_token = page["access_token"]
-          row.page_name = page["name"]
+          row.category = page['category']
+          row.page_access_token = page['access_token']
+          row.page_name = page['name']
+          row.active = true
           row.save
         end
       rescue StandardError => err
@@ -22,4 +24,23 @@ class FbPage < ActiveRecord::Base
     end
   end
 
+  def subscribe
+    response = FacebookMessengerService.subscribe(page_access_token)
+    return false unless response && response['success']
+    update_attributes(subscription_status: true)
+  end
+
+  def unsubscribe
+    response = FacebookMessengerService.unsubscribe(page_access_token)
+    return false unless response && response['success']
+    update_attributes(subscription_status: false)
+  end
+
+  def remove_or_inactivate_page
+    if fb_messages.present?
+      update_attributes(active: false)
+    else
+      destroy
+    end
+  end
 end
