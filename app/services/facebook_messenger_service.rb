@@ -54,7 +54,7 @@ class FacebookMessengerService
 
     def get_page_scope_id(account_linking_token, page_access_token)
       begin
-        url = "https://graph.facebook.com/v2.6/me?access_token=#{page_access_token}\
+        url = "https://graph.facebook.com/v2.7/me?access_token=#{page_access_token}\
               &fields=recipient\
               &account_linking_token=#{account_linking_token}"
         HTTParty.get(url)
