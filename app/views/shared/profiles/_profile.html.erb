@@ -1,3 +1,44 @@
+<%= render 'shared/loading' %>
+<div class="customer-profile dashboard-nav w-clearfix">
+  <% if params[:controller] == 'merchant_customers' && params[:action] == 'show' %>
+    <div class="dashboard-logo-wrapper">
+      <%= link_to user_path(current_user) do %>
+        <%= image_tag('Relay-Transparent.png', width: 50, class: 'dashboard-logo') %>
+      <% end %>
+    </div>
+  <% end %>
+  <div class="dashboard-nav w-clearfix">
+    <div class="dashboard-nav-links-wrapper">
+      <a class="w-clearfix w-inline-block" href="#">
+        <% unless params[:controller] == 'users' %>
+          <%= link_to user_path(current_user) do %>
+            <div class="dash-header-links"><strong class="important-text-69">Dashboard</strong></div>
+              <% end %>
+            <%if params[:controller] == 'merchant_customers' && params[:action] == 'show' %>
+            <%= link_to user_merchant_customers_path(current_user) do %>
+              <div class="dash-header-links new-link"><strong class="important-text-70">All &nbsp;customers</strong></div>
+            <%end%>
+            <%= link_to user_transactions_path(current_user) do%>
+              <div class="dash-header-links new-link"><strong class="important-text-71">Transactions</strong></div>
+            <%end%>
+            <%= link_to user_lists_path(current_user) do%>
+              <div class="dash-header-links new-link"><strong class="important-text-72">List</strong></div>
+            <%end%>
+            <%= link_to user_conversations_path(current_user) do%>
+              <div class="dash-header-links new-link"><strong class="important-text-73">Conversations</strong></div>
+            <%end%>
+            <%end%>
+        <% end %>
+        <%= render "shared/rhombus_number" %>
+      </a>
+    </div>
+    <div class="dashboard-nav-links-wrapper new-tab right-nav settings-dropdown">
+      <div class="dropdown-wrapper w-dropdown" data-delay="0">
+        <%= render 'shared/settings_dropdown' %>
+      </div>
+    </div>
+  </div>
+</div>
 <div class="customer-profile sub-nav-bar w-clearfix">
   <a class="add sub-nav-button w-button modal-loader" href="#" modal-target= "charge-customer-modal"><strong>Charge</strong></a>
   <div class='modal-background w-hidden modal-body charge-customer-modal'>

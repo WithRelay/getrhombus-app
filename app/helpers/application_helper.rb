@@ -49,6 +49,7 @@ module ApplicationHelper
   end
 
   def render_header_partial
+    return if params[:controller] == 'merchant_customers' && params[:action] == 'show'
     return render 'shared/settings_header' if setting_pages
     return render 'shared/docs_header' if relay_docs_pages || privacy_and_terms_pages
     return render 'shared/unauthenticate_header' if unauthenticate_controller && !restrict_static_pages
@@ -71,6 +72,7 @@ module ApplicationHelper
   end
 
   def render_sidebar_partial
+    return if params[:controller] == 'merchant_customers' && params[:action] == 'show'
     return render 'shared/leads_sidebar' if ['merchant_contacts-index'].include?(params_controller_action)
     return render 'shared/customer_sidebar' if customer_index
     concat(render 'shared/dashboard_sidebar') unless authenticated_pages || setting_pages || messaging_dashboard || restrict_other_params
