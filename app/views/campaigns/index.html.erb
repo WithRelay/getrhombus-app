@@ -1,8 +1,9 @@
+
 <div class="customer-dash sub-nav-bar">
   <div class="sub-nav-options-wrapper w-clearfix">
-    <%= link_to '<strong>New campaign</strong>'.html_safe, new_user_campaign_path(current_user), class: 'add sub-nav-button w-button' %>
-    <a class="import sub-nav-button w-button" href="#"> <strong>Deactivate</strong></a>
-    <a class="sub-nav-button w-button" href="#"><strong>Delete</strong></a>
+    <%= link_to '&nbsp;New campaign'.html_safe, new_user_campaign_path(current_user), class: 'add sub-nav-button w-button' %>
+    <a class="import sub-nav-button w-button deactivate-resource" id="activate-deactivate-campaign" href="#">&nbsp; Deactivate</a>
+    <a class="import sub-nav-button w-button delete-resource" href="#">&nbsp;Delete</a>
   </div>
 </div>
 <div class="dashboard-body">
@@ -60,10 +61,20 @@
       </div>
     </div>
   </div>
-<div class="customer-dash sub-nav-bar">
+  <div class="customer-dash sub-nav-bar">
+    <div class="sub-nav-options-wrapper w-clearfix">
+      <%= link_to new_user_campaign_path(current_user), class: "add sub-nav-button w-button" do%>
+      <strong>New Campaign</strong>
+      <%end%>
+      <a class="sub-nav-button w-button" href="#"><strong>&nbsp; Deactivate</strong></a>
+      <a class="sub-nav-button w-button" data-ix="create-list" href="#"><strong>&nbsp;Delete</strong></a>
+    </div>
+  </div>
+
+<!-- <div class="customer-dash sub-nav-bar">
   <div class="sub-nav-options-wrapper w-clearfix">
-    <%= link_to '&nbsp;New campaign'.html_safe, new_user_campaign_path(current_user), class: 'add sub-nav-button w-button' %>
+    <%#= link_to '&nbsp;New campaign'.html_safe, new_user_campaign_path(current_user), class: 'add sub-nav-button w-button' %>
     <a class="import sub-nav-button w-button deactivate-resource" id="activate-deactivate-campaign" href="#">&nbsp; Deactivate</a>
     <a class="import sub-nav-button w-button delete-resource" href="#">&nbsp;Delete</a>
   </div>
-</div>
+</div> -->
