@@ -1,6 +1,9 @@
 <%#= link_to 'Active', filter_campaign_user_campaigns_path(current_user, status: 'active') %>
 <%#= link_to 'Inactive', filter_campaign_user_campaigns_path(current_user, status: 'inactive') %>
 <%#= link_to 'Sent', filter_campaign_user_campaigns_path(current_user, status: 'sent') %>
+
+<%= render 'shared/loading' %>
+
 <div class="dashboard-nav w-clearfix">
   <div class="dashboard-nav-links-wrapper">
     <a class="w-clearfix w-inline-block" href="#">

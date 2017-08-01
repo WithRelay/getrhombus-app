@@ -12,7 +12,6 @@ class HashtagsController < ApplicationController
   def new
     @hashtag = Hashtag.new
     respond_with(@hashtag)
-    authorize! :new, @hashtag
   end
 
   def edit
@@ -33,7 +32,6 @@ class HashtagsController < ApplicationController
       flash[:error] = @hashtag.errors.messages.present? ? @hashtag.errors.full_messages : "We couldn't create the hashtag"
       respond_with(@hashtag)
     end
-    authorize! :create, @hashtag
   end
 
   def update
