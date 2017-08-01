@@ -31,6 +31,7 @@ class MerchantCustomersController < ApplicationController
 
     @conversation_refs = ConversationRef.get_last_customer_msg_from_all_merchant_convs(current_user.id, @merchant_customer.customer_id, 'user')
     @recent_activity = recent_activity
+    render_requested_format(@transactions)
   end
 
   private
