@@ -23,7 +23,7 @@ $(document).ready(function () {
      },
       weekStart: 0,
       opens: "right",
-      drops: 'down'
+      drops: 'up'
     })
     .on('apply.daterangepicker', function(ev, picker) {
       $(this).val(picker.startDate.format(RAILS_DATE_FORMAT));
