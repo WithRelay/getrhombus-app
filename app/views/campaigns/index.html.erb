@@ -6,11 +6,11 @@
     <%= will_paginate %>
   </div>
 
-  <%# if @campaigns.next_page %>
+  <% if @campaigns.next_page %>
     <div id="load_more_campaigns" class="show_more load-more-wrapper" data-loading-text="Loding more campaigns" >
       <a class="load-more-rows-button w-button campaign" href="#">&nbsp;&nbsp;&nbsp;Load more</a>
     </div>
-  <%# end %>
+  <% end %>
 </div>
 
 <div class="sub-nav-bar table-header">
