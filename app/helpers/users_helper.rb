@@ -70,7 +70,7 @@ module UsersHelper
 
   def message_graph
     Chartkick.options = {
-      colors: ["rgba(74, 144, 226, .3)", "rgb(74, 144, 226)"]
+      colors: ["rgba(74, 144, 226, .3)", 'rgb(7, 46, 91)']
     }
     if @dashboard_messages_data[:msg_30_days][:chart_data].empty?
       htm = '<div class= "no-chart-data">
@@ -106,7 +106,7 @@ module UsersHelper
           tooltips: {
             backgroundColor: 'rgb(243, 243, 243, .8)',
             displayColors: true,
-            bodyFontColor: 'green',
+            bodyFontColor: '#28CA40',
             titleMarginBottom: 6,
             titleFontStyle: 'bold',
             titleFontColor: 'rgb(7, 46, 91)',
