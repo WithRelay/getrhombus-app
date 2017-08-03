@@ -78,6 +78,7 @@ var FlashHandler = new function() {
       </div>\
     </a>')
     toastrAnimation('.browser-notification-link-block')
+    playNotificationChime();
     close_browser_toastr();
   };
 
@@ -101,6 +102,7 @@ var FlashHandler = new function() {
       </div>\
     </a>')
     toastrAnimation('.browser-notification-link-block')
+    playNotificationChime();
     close_browser_toastr();
   };
 
@@ -116,6 +118,7 @@ var FlashHandler = new function() {
       <div class="payment-sender-name">'+customer_name+'.</div>\
     </a>')
     toastrAnimation('.browser-notification-link-block')
+    playNotificationChime();
     close_browser_toastr();
   };
 
@@ -135,6 +138,7 @@ var FlashHandler = new function() {
       },
       5000);
     toastrAnimation('.default.toasters')
+    playNotificationChime();
     close_browser_toastr();
   }
 
@@ -160,6 +164,8 @@ var FlashHandler = new function() {
         closeToastrAnimation('.browser-notification-link-block')
       },
       5000);
+    toastrAnimation('.browser-notification-link-block.scheduled-jobs')
+    playNotificationChime();
   }
 
   function toastrAnimation(class_name) {
@@ -178,6 +184,11 @@ var FlashHandler = new function() {
 
   function closeToastrAnimation(class_name) {
     $(class_name).animate({bottom: -500}, 2000);
+  }
+
+  function playNotificationChime() {
+    $('<audio id="chimeAudio"><source src="<%= audio_path("chime_notification_relay.mp3") %>" type="audio/mpeg"></audio>').appendTo('body');
+    $('#chimeAudio')[0].play();
   }
 
   // Confirmation Dialog for event
