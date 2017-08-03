@@ -31,7 +31,7 @@ class MessageParser
 
       if !@amt_ary[0] && @amt_ary[1].present?  #tested
         puts 'invalid payment intent'
-        send_response('We noticed you tried to send a payment. Please resend it in this format. Ex. +5 #CheeseBurgers') 
+        send_response('We noticed you tried to send a payment. Please resend it in this format: +Amount followed by item name. Ex. +5 Pizza.') 
         return
       end
 
@@ -56,7 +56,11 @@ class MessageParser
         return if @amt_ary.blank?          # No further action needed.
         
         # test for active accounts, they are now active by default.
-        if !@merchant.active?
+        if @merchant.fraudulent?
+          # "This Relay account cannot receive payments."
+        elsif @merchant.inactive?
+          # "This Relay phone number is currently unavailable. Please contact us via this email address #{@merchant.email}."
+          # EmailingService.email_merchant_the_message
           # send_response
           puts 'merchant isnt active'
         elsif true #merchant_supports_payment?
@@ -64,7 +68,7 @@ class MessageParser
           #process_payment
         end
        
-        send_deprecation_warning if is_old_format
+        #send_deprecation_warning if is_old_format
 
       elsif @customer.blank?            # checked
         is_signup = is_signup?
@@ -198,11 +202,14 @@ class MessageParser
       if !re.first                            #tested
         # notify user and send to merchant dashboard
         # send_response notify and send sign in link with payment capture
+        # 'Sorry we couldn't process your payment because: xyz. Please follow this link xyz.com to add a card to your profile.'
         # payment capture notice if cant ovveride_tag_amt
+        # #hello will charge $2. If you'd like to complete this payment, please resend just the hashtag.
         puts 'no card on file or card has expired'
       elsif @amt_ary[1] == "cant_override_tag_amt"            # tested
         # notify user and send to merchant dashboard
-        #send_response notify of cant_override_tag_amt 
+        # send_response notify of cant_override_tag_amt 
+        # #hello will charge $2. If you'd like to complete this payment, please resend just the hashtag.
         puts 'user but cant override_tag_amt'
       else                                                 # tested
         puts 'has card and is present'
@@ -211,10 +218,13 @@ class MessageParser
     else      
       # payment based messages
       if @amt_ary[1] == "cant_override_tag_amt"             # tested
-        #send_sign_up_link with ovveride message    
+        #send_sign_up_link with ovveride message   
+        # 'Sorry we couldn't process your payment. Please follow this link xyz.com to create an account and add a card to your profile.' 
+        # #hello will charge $2. If you'd like to complete this payment, please resend just the hashtag.
         puts 'no user and cant_override_tag_amt'
       else                                                    # tested
         #send_sign_up_link without ovveride message
+        # 'Sorry we couldn't process your payment. Please follow this link xyz.com to create an account and add a card to your profile.' 
         puts 'no user and can override_tag_amt or charge tag default'
       end
     end
@@ -229,17 +239,16 @@ class MessageParser
 
   def send_deprecation_warning
     puts 'send deprecation warning'
-    send_response("We're improving your payment experience on Relay by replacing the $ sign with a + tag. Ex. You can now text +10 instead of $10.")
-    send_response('With the + tag, you can now place the amount anywhere in the message. Ex. "cheese burgers +8 yay!", instead of "$8 cheese burgers')
-    send_response("Btw, hashtags are awesome! You can now use hashtags to specify the item you're paying for or the campaign you're donating towards. Ex. +5 #CheeseBurgers")
-    send_response("This helps your local business know exactly what you are paying for!")
+    send_response("Relay tips: We've improved your payment experience with Relay by replacing the $ sign with a + tag. You can now text +10 instead of $10 to make a payment to a local business or non-profit.")
+    send_response('Relay tips: With the + tag, you can now place the amount anywhere in the message. Ex. "pizza & broccoli +8 yay!" instead of "$8 pizza & broccoli')
+    send_response("Relay tips: Hashtags are awesome! You can now use hashtags to specify the item you're paying for or the campaign you're donating towards. Ex. +5 #pizza or +20 #ReliefFund. This helps the organization know exactly what you are paying for.")
   end
 
   def merchant_supports_payment?
     return true if @merchant.can_accept_payments?
     # notify user and send to merchant dashboard
-    # send_response("Thank you for sending a payment with Rhombus, but the merchant hasn't completed the account to receive payments.")
-    # notify merchant via Email?    
+    # send_response(""Sorry we currently can't accept payments via SMS. A member of our team will contact you shortly to assist you.")
+    # send_email_here
     # false
   end
 

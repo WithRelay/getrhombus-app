@@ -122,7 +122,7 @@ class User < ActiveRecord::Base
 
   after_commit :do_signup_stuff, on: :create
 
-  enum status: { inactive: 0, active: 1 }
+  enum status: { inactive: 0, active: 1, fraudulent: 2 }
 
   def is_merchant?
     user_level == 1 || is_platform?
