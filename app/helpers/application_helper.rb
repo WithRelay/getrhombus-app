@@ -168,8 +168,4 @@ module ApplicationHelper
   def index_footer
     return %Q{<div style="height: 50px"></div>}.html_safe
   end
-
-  def audio_path(source, options = {})
-    path_to_asset(source, { type: :audio }.merge!(options))
-  end
 end

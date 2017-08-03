@@ -1,7 +1,7 @@
 // flash success for all types of flash messages
 // the first parameter is message and second parameter is type eg: success
 var FlashHandler = new function() {
-  var focused = true;
+  var focused = true, toasters_chime = new Audio("<%= asset_path 'chime_notification_relay.mp3' %>");
 
   window.onfocus = window.onblur = function(e) {
     focused = (e || event).type === "focus";
@@ -157,13 +157,10 @@ var FlashHandler = new function() {
       <div class="recipient-count-browser">\
         <div class="number-of-recipient">+'+no_of_recipient+'</div>\
       </div>\
-    </a>')
-    setTimeout(
-      function()
-      {
-        closeToastrAnimation('.browser-notification-link-block')
-      },
-      5000);
+    </a>');
+    setTimeout(function() {
+      closeToastrAnimation('.browser-notification-link-block')
+    }, 5000);
     toastrAnimation('.browser-notification-link-block.scheduled-jobs')
     playNotificationChime();
   }
@@ -179,7 +176,7 @@ var FlashHandler = new function() {
     $('.browser-notification-close').on('click', function (e) {
       e.preventDefault();
       closeToastrAnimation('.browser-notification-link-block', 'slow')
-    } );
+    });
   }
 
   function closeToastrAnimation(class_name) {
@@ -187,8 +184,7 @@ var FlashHandler = new function() {
   }
 
   function playNotificationChime() {
-    $('<audio id="chimeAudio"><source src="<%= audio_path("chime_notification_relay.mp3") %>" type="audio/mpeg"></audio>').appendTo('body');
-    $('#chimeAudio')[0].play();
+    toasters_chime.play();
   }
 
   // Confirmation Dialog for event
