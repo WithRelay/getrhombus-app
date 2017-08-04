@@ -14,16 +14,27 @@ var FlashHandler = new function() {
     }
   }
 
-  function browserNotification(title, message){
-    var chck = Notification.permission;
-    if( chck === 'granted' ){
-      var notification = new Notification( title, {
-        body: message
-      });
-      notification.onclick = function () {
-        notification.close();
-        window.focus();
-      };
+  function browserNotification(notification_title, notification_message, notification_url){
+    if (!Notification) {
+      alert('Desktop notifications not available in your browser. Try Chrome.');
+      return;
+    }
+
+    if (Notification.permission !== 'granted')
+      Notification.requestPermission();
+    else {
+      function createNotif () {
+        var notification = new Notification(notification_title, {
+          icon: "<%= asset_path 'Relay-Transparent-500x300.png' %>",
+          body: notification_message,
+        });
+
+        notification.onclick = function () {
+          window.open(notification_url); // url for notification listing or page
+        };
+      }
+
+      createNotif()
     }
   }
 
