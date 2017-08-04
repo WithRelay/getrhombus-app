@@ -1,5 +1,5 @@
 $(document).on('ready page:load', function() {
-  
+
   // checked
   var htmlContent = '<option value="0">SMS</option> <option value="1">MMS</option> <option value="3">Email</option>';
   var dropDownOption = { 'sms': [ '0', 'SMS'], 'messenger': ['2', 'Facebook Messenger'], 'email': ['3', 'Email'] };
@@ -71,9 +71,9 @@ $(document).on('ready page:load', function() {
 
       // if campaign is already saved and has email channel, query for only customer-based list. contacts dont have emails
       // you could possibly restrict the list based on the channel of the existing campaign for sms/messenger too
-      if (is_campaign_saved() && current_campaign_channel_is_email()) 
+      if (is_campaign_saved() && current_campaign_channel_is_email())
         ajax_data.list_type = current_campaign_list_type();
-      
+
       $.ajax({
         url: window.location.protocol + "//" + window.location.host + "/v1/lists.json",
         data: ajax_data,
@@ -81,13 +81,17 @@ $(document).on('ready page:load', function() {
         error: function() {
           FlashHandler.setFlashMessage('Something went wrong...Unable to find your lists', 'error');
           callback();
-        }        
+        }
       });
     }
   })
   .on('change', function(e) {
     $('#campaignForm').formValidation('resetField', 'campaign[list_id]');
   });
+
+  $('#campaign-list-selectized').on('focus', function(){
+    $('#campaignForm').formValidation('resetField', 'campaign[list_id]');
+  })
 
   // checked
   function createDynamicDropdown(list_obj) {
@@ -112,5 +116,5 @@ $(document).on('ready page:load', function() {
     lists_selectize[0].selectize.addItem(val['id']);
   });
 
-  
+
 });
