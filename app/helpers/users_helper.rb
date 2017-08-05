@@ -73,7 +73,7 @@ module UsersHelper
       colors: ["rgba(74, 144, 226, .3)", 'rgb(7, 46, 91)']
     }
     if @dashboard_messages_data[:msg_30_days][:chart_data].empty?
-      htm = '<div class= "no-chart-data">
+      htm = '<div class= "no-chart-data graph">
       <p class="empty-view-short-paragraph">No data. '
       htm += link_to('Send your first message', user_conversations_path(current_user), class: 'links' ).to_s
       htm += ' to view chart activity</p></div>'
@@ -124,7 +124,7 @@ module UsersHelper
       htm += '&nbsp;to view chart activity</p></div>'
       htm.html_safe
     elsif @dashboard_transactions[:tranc_chart_data].empty?
-      htm = '<div class="no-chart-data transactions"><p class="empty-view-short-paragraph">No data. '
+      htm = '<div class="no-chart-data transactions graph"><p class="empty-view-short-paragraph">No data. '
       htm += link_to('Charge a customer', user_transactions_path(current_user), class: "links").to_s
       htm += '&nbsp;to view chart activity</p></div>'
       htm.html_safe
