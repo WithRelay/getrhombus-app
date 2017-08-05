@@ -93,7 +93,7 @@ module UsersHelper
                 unit: 'day',
                 displayFormats: {
                   maxRotation: 60,
-                  'day': 'MMM D'
+                  day: 'MMM D'
                 },
               }
             }],
