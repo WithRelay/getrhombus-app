@@ -18,9 +18,7 @@ class MessageParser
       # tested
       @received_msg.text = @received_msg.text.strip
       @amt_ary = check_for_payment
-      is_old_format = (@amt_ary[0] && @amt_ary[1] == "$")
-      puts 'is old format '
-      puts is_old_format
+      #is_old_format = (@amt_ary[0] && @amt_ary[1] == "$")
 
       # scenarios
       # 1. invalid payment intent -> invalid amount and valid sign
@@ -74,16 +72,30 @@ class MessageParser
         is_signup = is_signup?
         if is_signup
           merchant_name = @merchant.org_name.present? ? @merchant.org_name : "Relay"
+          merchant_name_prompt = merchant.business_name ? "to " + merchant.business_name : "through Rhombus"
           url = Rails.application.secrets.url["info"]
           short_link = 'test' #UrlShortenerService.shorten_link("#{url}/signup?num=#{@received_msg.from}&referrer_uid=#{@merchant.relay_uid}&referrer=#{merchant_name}")
-          send_response("To chat with us or send a payment, sign up here: #{short_link}")
+          # from prod short_link = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?num=#{params[:msisdn]}&referrer_num=#{params[:to]}&referrer=#{merchant_name}")
+          send_response("Hi there! You're really close to sending a payment #{merchant_name_prompt} via text. Follow the link to get set up: #{short_link}")
         elsif @channel == 'Message' && get_conversation_refs_count < 2 && !is_signup
           first_name = @merchant.full_name.split.first
           first_name = (first_name.present?) ? "my name is #{first_name}, " : ''
-          custom_welcome = "Hi there, " + first_name + "how can I assist you today? If you're looking to send a payment, simply reply with the amount. Ex. +10 #donut"
+          custom_welcome = "Hi there, " + first_name + "how can I assist you today? If you're looking to send a payment, simply reply with the amount. Ex. +10 #pizza"
           custom_welcome = @merchant.custom_welcome unless @merchant.custom_welcome.blank?
           send_response(custom_welcome)
-        end      
+        end 
+      elsif @customer.present? && is_signup?
+        re = @customer.has_valid_card?
+        if re[:valid]
+          send_response("You are all set up, just text the amount and description to complete your payment. Ex: $20 for #pizza.")
+        else
+          # change url
+          if re[:type] == 'no_source'
+            send_response("To complete your payment by text, please sign in here to add your card information: https://www.getrhombus.com/signin")
+          elsif re[:type] == 'expired_source'
+            send_response("You are all set up but your payment card has expired. Please sign in here to update your card information: https://www.withrelay.com/signin")
+          end
+        end     
       else # tested
         puts 'just chatter'
       end
@@ -100,7 +112,7 @@ class MessageParser
     uid = (@customer.present?) ? @customer.id : @received_msg.from
     uid_type = (@customer.present?) ? 'user' : (@channel == 'Message') ? 'phone_number' : 'fb_page'
     conv = Conversation.find_by(merchant_id: @merchant.id, uid_type: uid_type, uid: uid)
-    conv.present? ? conv.conversation_refs.count : 0
+    conv.present? ? ConversationRef.where(conversation_id: conv.id, source: ConversationRef.sources[:customer]).count : 0
   end
 
   # check if text is a payment
@@ -199,10 +211,10 @@ class MessageParser
   def parse_user
     if @customer.present?  
       re = @customer.has_valid_card?
-      if !re.first                            #tested
+      if !re.[:valid]                            #tested
         # notify user and send to merchant dashboard
         # send_response notify and send sign in link with payment capture
-        # 'Sorry we couldn't process your payment because: xyz. Please follow this link xyz.com to add a card to your profile.'
+        # 'Sorry we couldn't process your payment because: #{re[:text]}. Please follow this link xyz.com to add a card to your profile.'
         # payment capture notice if cant ovveride_tag_amt
         # #hello will charge $2. If you'd like to complete this payment, please resend just the hashtag.
         puts 'no card on file or card has expired'
@@ -232,7 +244,7 @@ class MessageParser
   end
 
   def is_signup?
-    words = ['signup', 'sign-up', 'give', 'pay', 'buy', 'donate']
+    words = ['signup', 'sign-up', 'give', 'pay', 'buy', 'donate', '"give"', '"pay"', "'pay'", "'give'", "'donate'", '"donate"', 'checkout']
     return true if words.include? @received_msg.text.downcase.gsub(/\s+/, "")
     return false
   end
@@ -247,7 +259,7 @@ class MessageParser
   def merchant_supports_payment?
     return true if @merchant.can_accept_payments?
     # notify user and send to merchant dashboard
-    # send_response(""Sorry we currently can't accept payments via SMS. A member of our team will contact you shortly to assist you.")
+    # send_response(""Sorry we currently can't accept payments via text. A member of our team will contact you shortly to assist you.")
     # send_email_here
     # false
   end
@@ -259,6 +271,7 @@ class MessageParser
         res = handle_subscription_through_text
         if res.first
           # send response
+          # "Thanks #{@customer.first_name}, a payment of #{amount} for your #{weekly} subscription to #{@merchant.business_name} has been recieved."
         else
           # send response  # note the 3rd index in array
         end
@@ -275,18 +288,13 @@ class MessageParser
 #=end
   end
 
+  # move this back???
   def send_payment_responses
     first_name = (@customer.full_name.present?) ? " " + @customer.full_name.split.first : ''
-    msg_to_send = "Thanks" + first_name + ". A payment of #{amt_in_decimal(@stripe_res.amount)} (#{@stripe_res.currency}) "
+    msg_to_send = "Thanks" + first_name + ". A payment of #{@new_txn.amt_in_decimal} (#{@new_txn.currency}) "
+    msg_to_send += "for #{@tag.tag} " if @tag.present?
     msg_to_send = msg_to_send + (@merchant.tax_percent == "0" ? "was sent to #{@merchant.org_name}." : "plus taxes and fees set by #{@merchant.org_name} was sent.")
-    
-    #if @tag.present?
-     # msg = "sdasdsa"
-    #else
-     # msg = "dsadsadas"
-    #end
-
-    @new_txn.send_text_receipt(msg_to_send)
+    #@new_txn.send_text_receipt(msg_to_send)
     #@new_txn.send_email_receipt
   end
     
@@ -343,9 +351,11 @@ class MessageParser
         end
       else
         [false, "Unable to subscribe, plan no longer exists."]
+        "Hi #{@customer.first_name}, #{@tag.tag} is no longer available for subscription." 
       end
     rescue StandardError => e
       [false, "Unable to create subscription"]
+      "Hi #{@customer.first_name}, we were unable to set up your subscription for #{@tag.tag}. A member of our team will get back to you." 
     end
   end
 
@@ -360,6 +370,8 @@ class MessageParser
         else
           subscription.destroy
           return [false, "", res.third] if res.second == 'card_error' 
+          # generic issue "Hi #{@customer.first_name}, we were unable to set up your subscription for #{@tag.tag}. A member of our team will get back to you." 
+          # "Hi #{@customer.first_name}, You subscription to #{@tag.tag} failed because: #{res.third}. Please sign in here to update your card information: https://www.withrelay.com/signin" 
         end
       else
         # email team
@@ -367,6 +379,7 @@ class MessageParser
     rescue StandardError => e
     end     
     [false, "Unable to create subscription"]
+    "Hi #{@customer.first_name}, we were unable to set up your subscription for #{@tag.tag}. A member of our team will get back to you." 
   end
 
 

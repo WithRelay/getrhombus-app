@@ -58,7 +58,7 @@ class Api::V1::TransactionsController < Api::V1::BaseController
     def setup_charge_data
       @customer = User.find_by(id: params[:user_id])
       has_valid_card = @customer.has_valid_card?
-      return has_valid_card unless has_valid_card.first
+      return has_valid_card unless has_valid_card[:valid]
       params[:amount] = params[:amount].round(2)
       @hashtag = Hashtag.find_by(id: params[:hashtag_id], user_id: current_user.id)
       @amount = Toolbox::Decimal.to_cents(params[:amount])

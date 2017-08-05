@@ -4,7 +4,7 @@ class Api::V1::SubscriptionsController < Api::V1::BaseController
     begin
       status = 500
       check_customer_card = customer_has_valid_card?
-      if check_customer_card.first
+      if check_customer_card[:valid]
         @subscription = Subscription.new(subscription_params)
         res = @subscription.create_subscription({ team: current_user })
         if res.first
@@ -19,7 +19,7 @@ class Api::V1::SubscriptionsController < Api::V1::BaseController
           @subscription.destroy
         end
       else
-        response = check_customer_card.second
+        response = check_customer_card[:text]
       end
     rescue StandardError => e
       response = 'Something went wrong on our end.'

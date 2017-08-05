@@ -66,12 +66,13 @@ class Transaction < ActiveRecord::Base
         [true, "Charge created"]
       else
         # if it is a card decline...we text only customers. Merchant might not have textable number on file.
+        # this shouldnt be running cos ecah use case handles it ... except for texting... so pass in param to run this
         # send_card_error_text if @stripe_res_ary[3] && user.is_customer?
-        # send_payment_failure_email(@stripe_res_ary[1], @stripe_res_ary[3])
+        # send_payment_failure_email(@stripe_res_ary[1], @stripe_res_ary[3]) # should go out only for text payments
         [false, @stripe_res_ary[2]]
       end
     rescue StandardError => err
-      #send_payment_failure_email(err, false)
+      #send_payment_failure_email(err, false)  # should go out only for text payments
       [false, "Something went wrong"]
     end
   end
@@ -98,6 +99,7 @@ class Transaction < ActiveRecord::Base
   end
 
   def amt_in_decimal(amt)
+    amt ||= self.amount_with_taxes
     Transaction.big_decimal_2dp(amt.to_f/100)
   end
 
@@ -106,9 +108,10 @@ class Transaction < ActiveRecord::Base
     Toolbox::Decimal.to_int_or_2dp(amt)
   end
 
+  # remove this and just just the method below
   def send_card_error_text
     if @capture
-      msg_to_send = "Your payment to #{@merchant.org_name} failed because: #{@stripe_res_ary[2]}"
+      msg_to_send = "Your payment to #{@merchant.org_name} failed because: #{@stripe_res_ary.third}"
     else
       msg_to_send = ''
     end
@@ -131,9 +134,6 @@ class Transaction < ActiveRecord::Base
   end
 
   def send_payment_failure_email(err, to_merchant)
-    # change text based on capture or not
-    # if @capture
-
     EmailingService.charge_failure_notification(to: @merchant.email, customer_email: @user.email, customer_phone: @user.phone_number, card_name: @user.card_name,
                                                 last4: @user.last4, text: @msg.text, org_phone: @merchant.org_phone, rhombus_number: @merchant.rhombus_number,
                                                 dump: err, to_merchant: to_merchant)
@@ -148,19 +148,22 @@ class Transaction < ActiveRecord::Base
     begin
       if @stripe_res
         send_text_receipt
+        "Hi name, a payment of xyz was charged to your account by merchant_name"
         send_email_receipt
-        # notify platform...should we email merchant too? could be a security measure.
+        # merchant also get their email
         [true, "Payment successful"]
       else
         if @stripe_res_ary[3]
-          [false, 'Unable to complete transaction because: ' + @stripe_res_ary[2]]
+          [false, 'Sorry, we were unable to complete this transaction because: ' + @stripe_res_ary.third]
+          "Hi name, a charge of xyz by merchant_name failed because: #{@stripe_res_ary.third}"
         else
-          [false, 'Stripe is unable to complete this transaction.']
+          [false, 'Sorry, we were unable to complete this transaction. Please try again later.']
         end
+        # notify platform...
       end
     rescue StandardError => err
-      # notify platform...should we email merchant too? could be a security measure.
-      [false, "Something went wrong"]
+      # notify platform...
+      [false, "Sorry, we were unable to complete this transaction. Please try again later."]
     end
   end
 
@@ -168,20 +171,20 @@ class Transaction < ActiveRecord::Base
     begin
       if @stripe_res
         send_text_receipt
-        send_email_receipt
-        # notify platform...should we email merchant too? could be a security measure.
+        "Hi name, amount has been preauthorized by merchant_name for item_name"
         [true, 'Transaction is authorized']
       else
         if @stripe_res_ary[3]
-          [false, 'Unable to authorize transaction because: ' + @stripe_res_ary[2]]
+          [false, 'Sorry, we were unable to authorize transaction because: ' + @stripe_res_ary.third]
+          "Hi name, we're unable to preauthorize a charge of xyz by merchant_name because: #{@stripe_res_ary.third}"
         else
-          # notify platform...should we email merchant too? could be a security measure.
-          [false, "Unable to authorize transaction"]        
-        end        
+          [false, "Sorry we were unable to authorize transaction. Please try again later."]        
+        end 
+        # notify platform...       
       end
     rescue StandardError => err
-      # notify platform...should we email merchant too? could be a security measure.
-      [false, "Something went wrong"]
+      # notify platform...
+      [false, "We were unable to authorize transaction. Please try again later."]
     end
   end
 
@@ -195,16 +198,22 @@ class Transaction < ActiveRecord::Base
         ###### will capture change transaction status and date???
         self.update(captured: true)
         send_text_receipt("adasdsa")
+        "Hi name, the preauthorized transaction of xyz has been charged to your account by merchant_name"
         send_email_receipt
-        [true, "Payment processed"]
+        # merchant gets email too
+        [true, "The preauthorized charge of xyz has been processed."]
       else
-        # notify platform only. Merchants don't need an email for this.
-        # payment_ary[1]
-        [false, payment_ary[2]]
+        if @stripe_res_ary[3]
+          [false, 'Sorry, we were unable to complete this transaction because: ' + @stripe_res_ary.third]
+          "Hi name, a charge of xyz by merchant_name failed because: #{@stripe_res_ary.third}"
+        else
+          [false, 'Sorry, we were unable to complete this transaction. Please try again later.']
+        end
+        # notify platform only.
       end
     rescue StandardError => err
-      # notify platform only. Merchants don't need an email for this.
-      [false, "Something went wrong"]
+      # notify platform only.
+      [false, "Sorry, we were unable to complete this transaction. Please try again later."]
     end
   end
 
