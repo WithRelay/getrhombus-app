@@ -10,9 +10,11 @@
 
   <div class="messaging side-bar" id='conversations-list'>
     <div class="conversation-list-menu logo-area w-clearfix">
-      <div class="dashboard-logo-wrapper">
-        <%= image_tag('Relay-Transparent.png', width: 50, class: 'dashboard-logo') %>
-      </div>
+      <a ng-href="/users/{{$scope.merchant.id}}">
+        <div class="dashboard-logo-wrapper">
+          <%= image_tag('Relay-Transparent.png', width: 50, class: 'dashboard-logo') %>
+        </div>
+      </a>
     </div>
     <div class="conversation-list-menu">
       <div>
@@ -100,7 +102,7 @@
                   <a class="message-input-box-option-buttons w-inline-block" ng-click='openSavedRepliesDiv()'>
                     <div class="message-input-options-text"> &nbsp; &nbsp;Saved reply</div>
                   </a>
-                  
+
                   <div class="toggle-component" ng-if="merchant.has_messenger && selected_conversation.uid_type == 'user' && selected_conversation.has_messenger">
                     <label class="toggle">
                       <input type="checkbox" ng-model="new_message.channel" />
