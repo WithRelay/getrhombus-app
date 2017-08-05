@@ -278,7 +278,7 @@ $(document).on('ready page:load', function() {
   });
 
   var labelFieldSelectize = getListType() == 'contact' ? 'title' : ['email', 'description', 'card_name']
-  $('.add-to-list-field').selectize({
+  $('#lists_member_id').selectize({
     maxItems: 1,
     valueField: 'id',
     searchField: labelFieldSelectize,
