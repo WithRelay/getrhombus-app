@@ -606,14 +606,15 @@ textarea { resize: none;}
 }
 
 .browser-notification-link-block {
-  position: absolute;
-  right: -500px;
-  margin: 5% auto !important;
+  position: fixed !important;
   z-index: 10000 !important;
+  bottom: 0px;
+  margin-right: 20px;
+  margin-bottom: 20px;
+  right: 0px;
 }
 
 .browser-notification-link-block.copied {
-  top: 0 !important;
   margin-right: 0 !important;
 }
 
@@ -854,4 +855,20 @@ textarea { resize: none;}
 
 .table-wrapper {
   margin-bottom: 20px;
+}
+
+.customer-profile-picture.browser-notification {
+  margin-left: 0 !important;
+}
+
+.customer-profile-picture.browser-notification.pic {
+  margin-left: 25px !important;
+}
+
+.browser-notification-link-block {
+  background-color: white;
+}
+
+.browser-notification-row-column-2 {
+  background-color: rgba(15, 85, 235, .2);
 }

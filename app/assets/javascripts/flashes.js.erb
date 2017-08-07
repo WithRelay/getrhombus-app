@@ -43,12 +43,7 @@ var FlashHandler = new function() {
   this.setFlashMessage = function(msg, type){
     var messageToSet = typeObj[type] || 'Attention';
     showToastr(messageToSet, arrayToString(msg))
-    setTimeout(
-      function()
-      {
-        closeToastrAnimation('.toasters')
-      }, 6000);
-
+    setCloseTimeout(6000, '.toasters');
   };
 
   function showToastr(type, message) {
@@ -71,23 +66,24 @@ var FlashHandler = new function() {
 
   this.incoming_facebook_message = function(profile_pic, customer_name, message) {
     hideToastr();
-    if (focused === false) {
+    ifvisible.on("blur", function() {
       browserNotification('New Message', message);
-    }
+    });
+
     $('body').append('<a class="browser-notification-link-block w-inline-block" href="#">\
       <div class="browser-notification-row w-row">\
         <div class="browser-notification-row-column-1 w-clearfix w-col w-col-4">\
-          <img class="browser-notification customer-profile-picture" height="40" src="'+profile_pic+'" width="40">\
+          <img class="browser-notification customer-profile-picture pic" height="40" src="'+profile_pic+'" width="40">\
         </div>\
         <div class="browser-notification-row-column-2 w-clearfix w-col w-col-8">\
           <div class="browser-notification customer-name-text">\
             <strong class="customer-name-browser-notification">'+customer_name+'</strong>\
           </div>\
           <div class="break-word browser-notification-preview word-wrap">'+message+'</div>\
-          <div class="browser-notification-close toaster-font-awesome"></div>\
         </div>\
       </div>\
     </a>')
+    setCloseTimeout(5000, '.browser-notification-link-block');
     toastrAnimation('.browser-notification-link-block')
     playNotificationChime();
     close_browser_toastr();
@@ -95,9 +91,9 @@ var FlashHandler = new function() {
 
   this.incoming_sms = function(profile_pic, customer_name, message) {
     hideToastr();
-    if (focused === false) {
+    ifvisible.on("blur", function() {
       browserNotification('New Message', message);
-    }
+    });
     $('body').append('<a class="browser-notification-link-block sms-browser-notification w-inline-block" href="#">\
       <div class="browser-notification-row w-row">\
         <div class="browser-notification-row-column-1 payment-notification w-clearfix w-col w-col-4">\
@@ -108,10 +104,10 @@ var FlashHandler = new function() {
             <strong class="customer-name-browser-notification">'+customer_name+'</strong>\
           </div>\
           <div class="break-word browser-notification-preview word-wrap">'+message+'</div>\
-          <div class="browser-notification-close sms toaster-font-awesome"></div>\
         </div>\
       </div>\
     </a>')
+    setCloseTimeout(5000, '.browser-notification-link-block');
     toastrAnimation('.browser-notification-link-block')
     playNotificationChime();
     close_browser_toastr();
@@ -119,15 +115,15 @@ var FlashHandler = new function() {
 
   this.payment_notification = function(profile_pic, amount, customer_name) {
     hideToastr();
-    if (focused === false) {
+    ifvisible.on("blur", function() {
       browserNotification('New payment', amount);
-    }
+    });
     $('body').append('<a class="browser-notification-link-block payment w-clearfix w-inline-block" href="#">\
-      <img class="browser-notification customer-profile-picture" height="40" src="'+profile_pic+'" width="40">\
+      <img class="browser-notification customer-profile-picture pic" height="40" src="'+profile_pic+'" width="40">\
       <div class="payment-notification-amount">$'+amount+'</div>\
-      <div class="browser-notification-close payment toaster-font-awesome"></div>\
-      <div class="payment-sender-name">'+customer_name+'.</div>\
+      <div class="payment-sender-name shrink-text">'+customer_name+'.</div>\
     </a>')
+    setCloseTimeout(5000, '.browser-notification-link-block');
     toastrAnimation('.browser-notification-link-block')
     playNotificationChime();
     close_browser_toastr();
@@ -142,12 +138,7 @@ var FlashHandler = new function() {
         </div>\
       </div>'
     )
-    setTimeout(
-      function()
-      {
-        closeToastrAnimation('.toasters.default')
-      },
-      5000);
+    setCloseTimeout(5000, '.default.toasters');
     toastrAnimation('.default.toasters')
     playNotificationChime();
     close_browser_toastr();
@@ -155,24 +146,24 @@ var FlashHandler = new function() {
 
   this.schedule_jobs = function(message, no_of_recipient) {
     hideToastr();
-    if (focused === false) {
+    ifvisible.on("blur", function() {
       browserNotification('New Campaign sent', message);
-    }
-    $('body').append('<a class="browser-notification-link-block scheduled-jobs w-inline-block" href="#" style="right: 0;">\
+    });
+
+    $('body').append('<a class="browser-notification-link-block scheduled-jobs w-inline-block" href="#">\
       <div class="scheduled-jobs-notification-description">'+message+'</div>\
-      <img class="browser-notification customer-profile-picture scheduled-jobs" height="40" src="http://uploads.webflow.com/58977e002a25945021983468/58977e002a2594502198356c_81.jpg" width="40">\
-      <img class="browser-notification customer-profile-picture next-recipient scheduled-jobs" height="40" src="http://uploads.webflow.com/58977e002a25945021983468/58977e002a25945021983515_Ovo.jpg" width="40">\
-      <img class="browser-notification customer-profile-picture next-recipient scheduled-jobs" height="40" src="http://uploads.webflow.com/58977e002a25945021983468/58977e002a25945021983540_31.jpg" width="40">\
-      <img class="browser-notification customer-profile-picture next-recipient scheduled-jobs" height="40" src="http://uploads.webflow.com/58977e002a25945021983468/58977e002a2594502198351f_49%20(1).jpg" width="40">\
-      <img class="browser-notification customer-profile-picture next-recipient scheduled-jobs" height="40" src="http://uploads.webflow.com/58977e002a25945021983468/58977e002a2594502198357c_49%20(2).jpg" width="40">\
+      <img class="browser-notification customer-profile-picture scheduled-jobs" height="40" src="<%= asset_path '81.jpg' %>" width="40">\
+      <img class="browser-notification customer-profile-picture next-recipient scheduled-jobs" height="40" src="<%= asset_path 'Ovo.jpg' %>" width="40">\
+      <img class="browser-notification customer-profile-picture next-recipient scheduled-jobs" height="40" src="<%= asset_path '31.jpg' %>" width="40">\
+      <img class="browser-notification customer-profile-picture next-recipient scheduled-jobs" height="40" src="<%= asset_path '49-1.jpg' %>" width="40">\
+      <img class="browser-notification customer-profile-picture next-recipient scheduled-jobs" height="40" src="<%= asset_path '49-2.jpg' %>" width="40">\
       <div class="recipient-count-browser">\
-        <div class="number-of-recipient">+'+no_of_recipient+'</div>\
+        <div class="number-of-recipient shrink-text">+'+no_of_recipient+'</div>\
       </div>\
     </a>');
-    setTimeout(function() {
-      closeToastrAnimation('.browser-notification-link-block')
-    }, 5000);
+    setCloseTimeout(5000, '.browser-notification-link-block');
     toastrAnimation('.browser-notification-link-block.scheduled-jobs')
+    playNotificationChime();
     playNotificationChime();
   }
 
@@ -181,6 +172,12 @@ var FlashHandler = new function() {
     $(class_name).animate({
       bottom: 20
     }, 1000)
+  }
+
+  function setCloseTimeout(time, selector) {
+    setTimeout(function() {
+      closeToastrAnimation(selector)
+    }, time);
   }
 
   function close_browser_toastr() {
