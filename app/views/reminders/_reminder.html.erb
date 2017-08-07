@@ -57,7 +57,7 @@
     <div class="column column-6 new-row">
       <%= form_for(reminder, url: change_status_user_reminder_path(current_user, reminder), html: { class: 'reminder-change-status' }) do |f| %>
         <%= f.hidden_field :id %>
-        <%= f.submit (reminder.active? ? 'Pause' : 'Activate'), class: 'actions-button cancel' %>
+        <%= f.submit (reminder.active? ? 'Pause' : 'Activate'), class: 'reminder actions-button cancel' %>
       <% end %>
     </div>
   </div>
