@@ -3,9 +3,13 @@
 var FlashHandler = new function() {
   var focused = true, toasters_chime = new Audio("<%= asset_path 'chime_notification_relay.mp3' %>");
 
-  window.onfocus = window.onblur = function(e) {
-    focused = (e || event).type === "focus";
-  }
+  ifvisible.on("blur", function(){
+    focused = false
+  });
+
+  ifvisible.on("focus", function(){
+    focused = true
+  });
 
   // ask for the enable browser notification permission
   this.notificationPermission = function () {
@@ -14,7 +18,7 @@ var FlashHandler = new function() {
     }
   }
 
-  function browserNotification(notification_title, notification_message, notification_url){
+  function browserNotification(notification_title, notification_message, notification_icon){
     if (!Notification) {
       alert('Desktop notifications not available in your browser. Try Chrome.');
       return;
@@ -25,12 +29,12 @@ var FlashHandler = new function() {
     else {
       function createNotif () {
         var notification = new Notification(notification_title, {
-          icon: "<%= asset_path 'Relay-Transparent-500x300.png' %>",
+          icon: notification_icon,
           body: notification_message,
         });
 
         notification.onclick = function () {
-          window.open(notification_url); // url for notification listing or page
+          window.focus();
         };
       }
 
@@ -66,67 +70,69 @@ var FlashHandler = new function() {
 
   this.incoming_facebook_message = function(profile_pic, customer_name, message) {
     hideToastr();
-    ifvisible.on("blur", function() {
-      browserNotification('New Message', message);
-    });
-
-    $('body').append('<a class="browser-notification-link-block w-inline-block" href="#">\
-      <div class="browser-notification-row w-row">\
-        <div class="browser-notification-row-column-1 w-clearfix w-col w-col-4">\
-          <img class="browser-notification customer-profile-picture pic" height="40" src="'+profile_pic+'" width="40">\
-        </div>\
-        <div class="browser-notification-row-column-2 w-clearfix w-col w-col-8">\
-          <div class="browser-notification customer-name-text">\
-            <strong class="customer-name-browser-notification">'+customer_name+'</strong>\
+    if (focused !== true) {
+      browserNotification('New Message', message, profile_pic);
+    } else {
+      $('body').append('<a class="browser-notification-link-block w-inline-block" href="#">\
+        <div class="browser-notification-row w-row">\
+          <div class="browser-notification-row-column-1 w-clearfix w-col w-col-4">\
+            <img class="browser-notification customer-profile-picture pic" height="40" src="'+profile_pic+'" width="40">\
           </div>\
-          <div class="break-word browser-notification-preview word-wrap">'+message+'</div>\
+          <div class="browser-notification-row-column-2 w-clearfix w-col w-col-8">\
+            <div class="browser-notification customer-name-text">\
+              <strong class="customer-name-browser-notification">'+customer_name+'</strong>\
+            </div>\
+            <div class="break-word browser-notification-preview word-wrap">'+message+'</div>\
+          </div>\
         </div>\
-      </div>\
-    </a>')
-    setCloseTimeout(5000, '.browser-notification-link-block');
-    toastrAnimation('.browser-notification-link-block')
+      </a>')
+      setCloseTimeout(5000, '.browser-notification-link-block');
+      toastrAnimation('.browser-notification-link-block')
+      close_browser_toastr();
+    }
     playNotificationChime();
-    close_browser_toastr();
   };
 
   this.incoming_sms = function(profile_pic, customer_name, message) {
     hideToastr();
-    ifvisible.on("blur", function() {
-      browserNotification('New Message', message);
-    });
-    $('body').append('<a class="browser-notification-link-block sms-browser-notification w-inline-block" href="#">\
-      <div class="browser-notification-row w-row">\
-        <div class="browser-notification-row-column-1 payment-notification w-clearfix w-col w-col-4">\
-          <img class="browser-notification customer-profile-picture" height="40" src="'+profile_pic+'" width="40">\
-        </div>\
-        <div class="browser-notification-row-column-2 w-clearfix w-col w-col-8">\
-          <div class="browser-notification customer-name-text">\
-            <strong class="customer-name-browser-notification">'+customer_name+'</strong>\
+    if (focused !== true) {
+      browserNotification('New Message', message, profile_pic);
+    } else {
+      $('body').append('<a class="browser-notification-link-block sms-browser-notification w-inline-block" href="#">\
+        <div class="browser-notification-row w-row">\
+          <div class="browser-notification-row-column-1 payment-notification w-clearfix w-col w-col-4">\
+            <img class="browser-notification customer-profile-picture" height="40" src="'+profile_pic+'" width="40">\
           </div>\
-          <div class="break-word browser-notification-preview word-wrap">'+message+'</div>\
+          <div class="browser-notification-row-column-2 w-clearfix w-col w-col-8">\
+            <div class="browser-notification customer-name-text">\
+              <strong class="customer-name-browser-notification">'+customer_name+'</strong>\
+            </div>\
+            <div class="break-word browser-notification-preview word-wrap">'+message+'</div>\
+          </div>\
         </div>\
-      </div>\
-    </a>')
-    setCloseTimeout(5000, '.browser-notification-link-block');
-    toastrAnimation('.browser-notification-link-block')
+      </a>')
+      setCloseTimeout(5000, '.browser-notification-link-block');
+      toastrAnimation('.browser-notification-link-block')
+      close_browser_toastr();
+    }
     playNotificationChime();
-    close_browser_toastr();
   };
 
   this.payment_notification = function(profile_pic, amount, customer_name) {
     hideToastr();
-    ifvisible.on("blur", function() {
-      browserNotification('New payment', amount);
-    });
-    $('body').append('<a class="browser-notification-link-block payment w-clearfix w-inline-block" href="#">\
-      <img class="browser-notification customer-profile-picture pic" height="40" src="'+profile_pic+'" width="40">\
-      <div class="payment-notification-amount">$'+amount+'</div>\
-      <div class="payment-sender-name shrink-text">'+customer_name+'.</div>\
-    </a>')
-    setCloseTimeout(5000, '.browser-notification-link-block');
-    toastrAnimation('.browser-notification-link-block')
+    if (focused !== true) {
+      browserNotification('New payment', amount, profile_pic);
+    } else {
+      $('body').append('<a class="browser-notification-link-block payment w-clearfix w-inline-block" href="#">\
+        <img class="browser-notification customer-profile-picture pic" height="40" src="'+profile_pic+'" width="40">\
+        <div class="payment-notification-amount">$'+amount+'</div>\
+        <div class="payment-sender-name shrink-text">'+customer_name+'.</div>\
+      </a>')
+      setCloseTimeout(5000, '.browser-notification-link-block');
+      toastrAnimation('.browser-notification-link-block')
+      close_browser_toastr();
+    }
     playNotificationChime();
-    close_browser_toastr();
   };
 
   this.copied_no = function() {
@@ -146,24 +152,23 @@ var FlashHandler = new function() {
 
   this.schedule_jobs = function(message, no_of_recipient) {
     hideToastr();
-    ifvisible.on("blur", function() {
-      browserNotification('New Campaign sent', message);
-    });
-
-    $('body').append('<a class="browser-notification-link-block scheduled-jobs w-inline-block" href="#">\
-      <div class="scheduled-jobs-notification-description">'+message+'</div>\
-      <img class="browser-notification customer-profile-picture scheduled-jobs" height="40" src="<%= asset_path '81.jpg' %>" width="40">\
-      <img class="browser-notification customer-profile-picture next-recipient scheduled-jobs" height="40" src="<%= asset_path 'Ovo.jpg' %>" width="40">\
-      <img class="browser-notification customer-profile-picture next-recipient scheduled-jobs" height="40" src="<%= asset_path '31.jpg' %>" width="40">\
-      <img class="browser-notification customer-profile-picture next-recipient scheduled-jobs" height="40" src="<%= asset_path '49-1.jpg' %>" width="40">\
-      <img class="browser-notification customer-profile-picture next-recipient scheduled-jobs" height="40" src="<%= asset_path '49-2.jpg' %>" width="40">\
-      <div class="recipient-count-browser">\
-        <div class="number-of-recipient shrink-text">+'+no_of_recipient+'</div>\
-      </div>\
-    </a>');
-    setCloseTimeout(5000, '.browser-notification-link-block');
-    toastrAnimation('.browser-notification-link-block.scheduled-jobs')
-    playNotificationChime();
+    if (focused !== true) {
+      browserNotification('New Campaign sent', message, "<%= asset_path 'Relay-Transparent-500x300.png' %>");
+    } else {
+      $('body').append('<a class="browser-notification-link-block scheduled-jobs w-inline-block" href="#">\
+        <div class="scheduled-jobs-notification-description">'+message+'</div>\
+        <img class="browser-notification customer-profile-picture scheduled-jobs" height="40" src="<%= asset_path '81.jpg' %>" width="40">\
+        <img class="browser-notification customer-profile-picture next-recipient scheduled-jobs" height="40" src="<%= asset_path 'Ovo.jpg' %>" width="40">\
+        <img class="browser-notification customer-profile-picture next-recipient scheduled-jobs" height="40" src="<%= asset_path '31.jpg' %>" width="40">\
+        <img class="browser-notification customer-profile-picture next-recipient scheduled-jobs" height="40" src="<%= asset_path '49-1.jpg' %>" width="40">\
+        <img class="browser-notification customer-profile-picture next-recipient scheduled-jobs" height="40" src="<%= asset_path '49-2.jpg' %>" width="40">\
+        <div class="recipient-count-browser">\
+          <div class="number-of-recipient shrink-text">+'+no_of_recipient+'</div>\
+        </div>\
+      </a>');
+      setCloseTimeout(5000, '.browser-notification-link-block');
+      toastrAnimation('.browser-notification-link-block.scheduled-jobs')
+    }
     playNotificationChime();
   }
 

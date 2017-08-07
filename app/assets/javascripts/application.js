@@ -29,6 +29,7 @@
 //= require notifications
 
 // We need to place these js before jquery ujs for workable confirmation dialog box
+//= require ifvisible.min.js
 //= require flashes
 //= require get_started
 //= require hashtags_plans_coupons_alerts
@@ -108,6 +109,5 @@
 //= require perfect-scrollbar
 //= require capture
 //= require visibility_changed
-//= require ifvisible.min.js
 // DO NOT REQUIRE TREE AS IT DOESNT GUARANTEE THE DEPENDENCY ORDER OF THESE FILES
 // require_tree .
