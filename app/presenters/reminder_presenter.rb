@@ -6,7 +6,7 @@ class ReminderPresenter < BasePresenter
       text,
       change_status_user_reminder_path(@user, @model),
       method: :put,
-      class: 'actions-button cancel'
+      class: 'reminder actions-button cancel'
     )
   end
 
