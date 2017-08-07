@@ -13,7 +13,8 @@ class HostedSmsJob
         h.status_events[:loa_sent_at] = Time.now
         h.save
       elsif h.status.casecmp('completed').zero? && !h.status_events[:completed_notice_sent]
-        break unless TextingService.release_number(h.user.rhombus_number) || h.user.rhombus_number.nil?
+        break if h.user.rhombus_number.nil?
+        break unless TextingService.release_number(h.user.rhombus_number)
         EmailingService.send_completed_notice(h.user)
         h.user.update_rhombus_number(h.phone_number)
         h.status_events[:completed_notice_sent] = true
