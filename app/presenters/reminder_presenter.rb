@@ -1,14 +1,18 @@
 class ReminderPresenter < BasePresenter
-  
   def reminder_change_status_link
     return 'Inactive' if @model.inactive?
     text = @model.paused? ? 'Unpause' : 'Pause'
-    h.link_to(text, change_status_user_reminder_path(@user, @model), method: :put, class: 'actions-button cancel')
+    h.link_to(
+      text,
+      change_status_user_reminder_path(@user, @model),
+      method: :put,
+      class: 'actions-button cancel'
+    )
   end
 
   def get_channel
-  	channel_hash = { "facebook_messenger" => "Messenger", "sms" => "SMS" }
-  	channel_hash[@model.channel] 
+    channel_hash = { facebook_messenger: 'Messenger', sms: 'SMS' }
+    channel_hash[@model.channel]
   end
 
   def customer_contact
@@ -17,7 +21,7 @@ class ReminderPresenter < BasePresenter
 
   def format_last_visit
     mc = customer_contact
-    mc && mc.updated_at ? mc.updated_at.strftime("%d/%m/%y") : '-'
+    mc && mc.updated_at ? mc.updated_at.strftime('%d/%m/%y') : '-'
   end
 
   def get_display_name_and_number_and_recipient_hash
@@ -32,10 +36,16 @@ class ReminderPresenter < BasePresenter
       description = mc.uid_type == 'phone_number' ? 'SMS Contact' : 'Messenger Contact'
     end
 
-    { 
-      name: User.get_conversation_display_name(uid, uid_type, user), 
-      number: number, 
-      recipient: { uid_type: uid_type, uid: uid, unique_identifier: "#{mc.id}-#{mc.class}", title: title, description: description }
+    {
+      name: User.get_conversation_display_name(uid, uid_type, user),
+      number: number,
+      recipient: {
+        uid_type: uid_type,
+        uid: uid,
+        unique_identifier: "#{mc.id}-#{mc.class}",
+        title: title,
+        description: description
+      }
     }
   end
 
@@ -43,5 +53,4 @@ class ReminderPresenter < BasePresenter
     mc = customer_contact
     "#{mc.class == MerchantCustomer ? 'customers' : 'contacts'}/#{mc.id}"
   end
-
 end
