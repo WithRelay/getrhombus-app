@@ -34,7 +34,9 @@
     </div>
 
     <% if @lists.next_page %>
-      <div id="load_more_segments" class="show_more button w-button" data-loading-text="Loding more segments" title="Click here to load more segments">Show More</div>
+      <div id="load_more_segments" class="show_more load-more-wrapper" data-loading-text="Loding more segments" >
+        <a class="load-more-rows-button w-button" href="#">&nbsp;&nbsp;&nbsp;Show more</a>
+      </div>
     <% end %>
   </div>
 </div>
