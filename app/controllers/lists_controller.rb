@@ -1,3 +1,4 @@
+# Controller ctions for customer/contacts list and segments
 class ListsController < ApplicationController
   include DashboardNotification
 
@@ -11,8 +12,20 @@ class ListsController < ApplicationController
 
   # segment type list index action
   def segments
-    @lists = current_user.segments.campaign.paginate(per_page: PAGINATION_PER_PAGE, page: params[:page]).order(created_at: :desc)
-    @lists.present? ? render_requested_format(@lists) : render(:no_lists)
+    @list_segments = current_user.segments.campaign
+                                 .paginate(
+                                   per_page: PAGINATION_PER_PAGE,
+                                   page: params[:page]
+                                 )
+                                 .order(created_at: :desc)
+    if @list_segments.present?
+      respond_to do |format|
+        format.js { render partial: 'list_segments.js.erb', locals: { obj: @list_segments } }
+        format.html
+      end
+    else
+      render(:no_lists)
+    end
   end
 
   def show
@@ -34,7 +47,7 @@ class ListsController < ApplicationController
     else
       respond_to do |format|
         format.js { render partial: 'list_members.js.erb', locals: { obj: @list_members } }
-        format.html { render template: render_show_controller_action }
+        format.html
       end
     end
   end
