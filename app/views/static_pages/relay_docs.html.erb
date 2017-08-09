@@ -1,13 +1,13 @@
 <%= render 'shared/relay_docs_search' %>
 
-<div class="static-page-def-section">
+<div class="alt faq static-page-def-section">
 
 <div id='kb-search-title'></div>
 <div id='kb-search-results'></div>
 <div id="kb-content">
   <div class="static-page-def-section">
     <h1 class="sub-hero-header">Choose a category or browse FAQs below</h1>
-    
+
     <div class="customer-interactions-table no-icon-row w-row">
       <% KnowledgeBaseCategory.first(3).each do |category| %>
         <div class="w-col w-col-4">
@@ -22,7 +22,7 @@
         </div>
       <%end%>
     </div>
-    
+
     <div class="customer-interactions-table no-icon-row w-row">
       <% KnowledgeBaseCategory.offset(3).limit(3).each do |category| %>
         <div class="w-col w-col-4">
