@@ -36,7 +36,6 @@
 
       <%= f.select :repeat_days, repeat_days_options, {}, selected: reminder.repeat_days, class: "dropdown frequency-dropdown w-select", id: 'newReminderRepeatDays' %>
 
-      <!-- <a class="button schedule-notification w-button" href="#" id='submitReminderForm'>Schedule notification</a> -->
       <%= f.submit 'Schedule Notification', id: 'submitReminderForm', class: 'button schedule-notification w-button' %>
 
       <div id="new-reminder-div">
