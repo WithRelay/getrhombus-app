@@ -4,7 +4,7 @@ class Api::V1::ListsController < Api::V1::BaseController
     begin
       if params[:query]
         list_type = params[:list_type].present? ? " and list_type = #{List.list_types[params[:list_type]]} " : ""
-        
+
         list_mode = ""
         if params[:list_mode] == "list"
           list_mode = " and segment is null "
@@ -37,7 +37,7 @@ class Api::V1::ListsController < Api::V1::BaseController
 
         selected_mc_ids = list_params[:selected_users].split(",")
         mc_type = list_params[:list_type] == 'contact' ? 'MerchantContact' : 'MerchantCustomer'
-        
+
         selected_mc_ids.each do |mc_id|
           list.user_lists.build(customer_contact_id: mc_id, customer_contact_type: mc_type)
         end
@@ -67,14 +67,14 @@ class Api::V1::ListsController < Api::V1::BaseController
     list = current_user.lists.find_by(id: params[:id])
     text = list.is_segment? ? 'Segment' : 'List'
     if list.present? && list.update_attributes(name: params[:list][:name])
-      msg = { notice: "#{text} was successfully updated" }
+      msg = { name: params[:list][:name], notice: "#{text} was successfully updated" }
     else
       msg = { error: list.nil? ? "#{text} does not exists" : list.errors.full_messages }
       status = 500
     end
 
     if list.is_segment?
-      render json: msg, status: status || 200
+      render json: msg.merge(status: status || 200)
     else
       redirect_to user_lists_path(current_user), flash: msg
     end
@@ -89,7 +89,7 @@ class Api::V1::ListsController < Api::V1::BaseController
     def save_list
       @filter_params = segment_params
       List.create(name: @filter_params[:segment_name], list_type: @filter_params[:list_type], origin: List.origins[:merchant],
-                  channel: @filter_params[:list_channel], user_id: current_user.id, segment: get_segment_data_hash, 
+                  channel: @filter_params[:list_channel], user_id: current_user.id, segment: get_segment_data_hash,
                   campaign_type: List.campaign_types[:campaign])
     end
 
@@ -100,7 +100,7 @@ class Api::V1::ListsController < Api::V1::BaseController
     end
 
     def segment_params
-      params.require(:lists).permit(:list_type, :segment_name, :segment_filter, :segment_type, :segment_num_days, 
+      params.require(:lists).permit(:list_type, :segment_name, :segment_filter, :segment_type, :segment_num_days,
                                     :list_channel, :additional_segment_type, :amt_filter, :amt_1, :amt_2).tap do |p|
         p[:list_channel] = p[:list_channel].present? ? p[:list_channel] : nil
         unless p[:amt_1].present?
@@ -111,7 +111,7 @@ class Api::V1::ListsController < Api::V1::BaseController
     end
 
     def get_segment_data_hash
-      { 
+      {
         base_query: @filter_params[:segment_type], base_filter: @filter_params[:segment_filter], base_val: @filter_params[:segment_num_days],
         additional_query: @filter_params[:additional_segment_type], addition_filter: @filter_params[:amt_filter],
         addition_val: @filter_params[:amt_1]

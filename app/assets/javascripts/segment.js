@@ -99,9 +99,9 @@ $(document).on('ready page:load', function() {
   function updateItem(element){
     var textField = element.data('segment-id');
     $.ajax({
-      method: 'patch', 
+      method: 'patch',
       url: '/v1/lists/' + textField,
-      dataType: 'json', 
+      dataType: 'json',
       data: { list: { name: element.val() } }
     })
     .done(function(msg) {
