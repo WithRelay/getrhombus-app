@@ -48,8 +48,8 @@ class Transaction < ActiveRecord::Base
       
       # fees
       fees = calculate_fees_schedule
-      @stripe_fee = ((@amt_with_taxes * fees[0]) - fees[1]).round  
-      @app_fee = merchant.is_platform? ? 0 : ((@amt_with_taxes * fees[2]) - fees[3]).round 
+      @stripe_fee = ((@amt_with_taxes * fees[0]) - fees[1]).round
+      @app_fee = merchant.is_platform? ? 0 : ((@amt_with_taxes * fees[2]) - fees[3]).round
       amount_less_fees = (@amount_with_taxes - @stripe_fee - @app_fee).round
 
       #puts 'got here so far'

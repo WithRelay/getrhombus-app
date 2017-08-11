@@ -3,12 +3,12 @@
 var FlashHandler = new function() {
   var focused = true, toasters_chime = new Audio("<%= asset_path 'chime_notification_relay.mp3' %>");
 
-  ifvisible.on("blur", function(){
-    focused = false
+  ifvisible.on("blur", function() {
+    focused = false;
   });
 
-  ifvisible.on("focus", function(){
-    focused = true
+  ifvisible.on("focus", function() {
+    focused = true;
   });
 
   // ask for the enable browser notification permission
