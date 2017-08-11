@@ -1,10 +1,9 @@
+# Subscription
 class Subscription < ActiveRecord::Base
-
   belongs_to :plan
   belongs_to :coupon
   belongs_to :merchant_customer, inverse_of: :subscriptions
   has_many :invoices
-  has_many :notification_logs, as: :notifiable, dependent: :destroy
 
   validates_presence_of :plan_id, :merchant_customer_id, :quantity
   validates_numericality_of :quantity, greater_than: 0, only_integer: true
@@ -32,11 +31,11 @@ class Subscription < ActiveRecord::Base
 
         merchant_customer = MerchantCustomer.find self.merchant_customer_id
 
-        # Need to check that customer has been added to merchant account on stripe. 
+        # Need to check that customer has been added to merchant account on stripe.
         # Platform not needed since they are added when they add a card.
         unless is_platform
           if merchant_customer.managed_stripe_customer_id.blank?
-            token_res = team.add_token_for_merchant_customer_from_platform_customer(merchant_customer) 
+            token_res = team.add_token_for_merchant_customer_from_platform_customer(merchant_customer)
             # can return a adding card error here in token_res.third...so you bubble up this specific error
             return token_res unless token_res.first
           end
@@ -52,7 +51,7 @@ class Subscription < ActiveRecord::Base
         hash.delete(:team)
 
         res = PaymentService.create_subscription(hash, cred[:cred], is_platform)
-        
+
         if res.first
           self.update(
             stripe_subscription_id: res.second.id,
@@ -135,19 +134,18 @@ class Subscription < ActiveRecord::Base
     end
 
     # amount after coupon discount
-    plan_amt = plan_amt - coupon_amt
+    plan_amt -= coupon_amt
 
     # calculate number of days from subscription start to subscription end
     # stripe most likely stores time in UTC
-    start_date = DateTime.strptime(self.current_period_start.to_s,'%s')
-    end_date = DateTime.strptime(self.current_period_end.to_s,'%s')
-    total_days = (end_date - start_date).to_i + 1  # +1 to include the start day
+    start_date = DateTime.strptime(self.current_period_start.to_s, '%s')
+    end_date = DateTime.strptime(self.current_period_end.to_s, '%s')
+    total_days = (end_date - start_date).to_i + 1 # +1 to include the start day
 
     days_remaining = (end_date - DateTime.now.utc).to_i + 1
-    days_remaining = (days_remaining > 0) ? days_remaining : 0
-
-    plan_amt = (plan_amt.to_f / total_days).round(2)            # plan amount per day
-    ((plan_amt * days_remaining)).round                 # unspent amount (prorated per day)
+    days_remaining = days_remaining > 0 ? days_remaining : 0
+    # plan amount per day
+    plan_amt = (plan_amt.to_f / total_days).round(2)
+    ((plan_amt * days_remaining)).round # unspent amount (prorated per day)
   end
-
 end

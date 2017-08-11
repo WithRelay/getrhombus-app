@@ -1,24 +1,23 @@
+# Transaction
 class Transaction < ActiveRecord::Base
-
   include Transactionable
   include CSVHandler
   include PrettyDate
 
   has_one :message
   has_one :refund
-  has_many :notification_logs, as: :notifiable, dependent: :destroy
 
   belongs_to :hashtag
   belongs_to :user
-  belongs_to :team, class_name: "User"
+  belongs_to :team, class_name: 'User'
   belongs_to :transaction_fee
-  
+
   # Exclude refunded transactions, include subscriptions since these queries are read only
   # and include only captured transactions and reloads are included by default..right
   scope :exclude_refunded_transactions, -> () { self.joins('LEFT JOIN refunds on transactions.id = refunds.transaction_id')
                                                           .where("refunds.transaction_id is null") }
 
-  # add this in queries for transactions that may be refunded. subscriptions arent easily refunded                                                        
+  # add this in queries for transactions that may be refunded. subscriptions arent easily refunded
   scope :exclude_subscriptions, -> () { self.where(subscription_id: nil) }
 
   scope :only_captured_transactions, -> () { self.where(captured: true) }
@@ -30,26 +29,25 @@ class Transaction < ActiveRecord::Base
 
   scope :get_merchant_todays_txn_count, -> (team_id, date) { self.exclude_refunded_transactions().only_captured_transactions()
                                                                   .where("transactions.created_at >= ? and team_id = ?", date, team_id).count }
-  
+
   scope :user_average_transaction_with_merchant, -> (user_id, team_id) { big_decimal_2dp(self.exclude_refunded_transactions().only_captured_transactions
                                                                                             .where(user_id: user_id, team_id: team_id).average(:amount)) }
 
   scope :user_total_transaction_with_merchant, -> (user_id, team_id) { big_decimal_2dp(self.exclude_refunded_transactions().only_captured_transactions()
                                                                                           .where(user_id: user_id, team_id: team_id).sum(:amount)) }
 
-
   def process_payment(amt, merchant, user, msg, hashtag_id, channel, capture=true)
     begin
       method(__method__).parameters.each { |_,arg| instance_variable_set("@#{arg}", binding.local_variable_get(arg)) }
 
       # taxes
-      tax_multiplier = (((@merchant.tax_percent.to_f) / 100) + 1)                 
-      @amt_with_taxes = (@amt.to_f * tax_multiplier).round                        
-      
+      tax_multiplier = (((@merchant.tax_percent.to_f) / 100) + 1)
+      @amt_with_taxes = (@amt.to_f * tax_multiplier).round
+
       # fees
       fees = calculate_fees_schedule
-      @stripe_fee = ((@amt_with_taxes * fees[0]) - fees[1]).round  
-      @app_fee = merchant.is_platform? ? 0 : ((@amt_with_taxes * fees[2]) - fees[3]).round 
+      @stripe_fee = ((@amt_with_taxes * fees[0]) - fees[1]).round
+      @app_fee = merchant.is_platform? ? 0 : ((@amt_with_taxes * fees[2]) - fees[3]).round
       amount_less_fees = (@amount_with_taxes - @stripe_fee - @app_fee).round
 
       #puts 'got here so far'
@@ -120,23 +118,33 @@ class Transaction < ActiveRecord::Base
 
   def send_text_receipt(msg_to_send)
     msg_id = Conversation.find_or_create_conversation_for_message_and_send_publish(@merchant, @customer, 'user', @customer.id, msg_to_send, @channel)
-    # Log receipt notification
-    self.notification_logs.create(notify_type: 'new_transaction', reason: 'receipt', channel: @channel, channel_id: msg_id) if msg_id
   end
 
   def send_email_receipt
     # Also need to email merchant here too
-    EmailingService.send_receipt(merchant_email: @merchant.email, to: @user.email, merchant_name: @merchant.org_name, transaction_number: self.txn_number,
-                                  text: self.notes, transaction_date: self.created_at, amount: Transaction.big_decimal_2dp(self.amount),
-                                  amt_with_taxes: Transaction.big_decimal_2dp(self.amount_with_taxes), org_phone: @merchant.org_phone, currency: @stripe_res.currency)
-    # Log email notification
-    self.notification_logs.create(notify_type: 'new_transaction', reason: 'receipt', channel: 'Email')
+    EmailingService.send_receipt(
+      merchant_email: @merchant.email, to: @user.email,
+      merchant_name: @merchant.org_name,
+      transaction_number: self.txn_number,
+      text: self.notes, transaction_date: self.created_at,
+      amount: Transaction.big_decimal_2dp(self.amount),
+      amt_with_taxes: Transaction.big_decimal_2dp(self.amount_with_taxes),
+      org_phone: @merchant.org_phone,
+      currency: @stripe_res.currency
+    )
   end
 
   def send_payment_failure_email(err, to_merchant)
-    EmailingService.charge_failure_notification(to: @merchant.email, customer_email: @user.email, customer_phone: @user.phone_number, card_name: @user.card_name,
-                                                last4: @user.last4, text: @msg.text, org_phone: @merchant.org_phone, rhombus_number: @merchant.rhombus_number,
-                                                dump: err, to_merchant: to_merchant)
+    EmailingService.charge_failure_notification(
+      to: @merchant.email,
+      customer_email: @user.email,
+      customer_phone: @user.phone_number,
+      card_name: @user.card_name,
+      last4: @user.last4, text: @msg.text,
+      org_phone: @merchant.org_phone,
+      rhombus_number: @merchant.rhombus_number,
+      dump: err, to_merchant: to_merchant
+    )
   end
 
   def process_dashboard_txn(amt, merchant, user, msg, hashtag_id, capture=true, channel="Message")
@@ -178,9 +186,9 @@ class Transaction < ActiveRecord::Base
           [false, 'Sorry, we were unable to authorize transaction because: ' + @stripe_res_ary.third]
           "Hi name, we're unable to preauthorize a charge of xyz by merchant_name because: #{@stripe_res_ary.third}"
         else
-          [false, "Sorry we were unable to authorize transaction. Please try again later."]        
-        end 
-        # notify platform...       
+          [false, "Sorry we were unable to authorize transaction. Please try again later."]
+        end
+        # notify platform...
       end
     rescue StandardError => err
       # notify platform...
@@ -241,5 +249,4 @@ class Transaction < ActiveRecord::Base
   def relative_time
     time_in_relative_form(self.created_at, 'short_format')
   end
-
 end

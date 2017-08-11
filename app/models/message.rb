@@ -3,7 +3,7 @@ class Message < ActiveRecord::Base
   # for conversation
   has_many :conversation_refs, as: :textable, dependent: :destroy
   has_many :conversations, through: :conversation_refs
-  
+
   belongs_to :txn, :foreign_key => :transaction_id, :class_name => :Transaction
   belongs_to :hashtag
 
@@ -11,7 +11,6 @@ class Message < ActiveRecord::Base
   has_many :image_refs, as: :imageable, dependent: :destroy
   has_many :images, through: :image_refs
 
-  has_one :notification_log, class_name: 'NotificationLog', foreign_key: 'channel_id'
   validates :message_id, uniqueness: true, allow_nil: true
 
   belongs_to :user
@@ -28,9 +27,9 @@ class Message < ActiveRecord::Base
           num_segments = response.num_segments.to_i
           price = (media_ary.blank?) ? (SMS_PRICE_SENT * num_segments) : MMS_PRICE_SENT
           merchant.update_account_balance(price)
-          self.update_attributes(status: response.status, message_id: response.sid, 
+          self.update_attributes(status: response.status, message_id: response.sid,
                                   message_timestamp: response.date_updated, message_price: response.price,
-                                  error_code: response.error_code, error_text: response.error_message, 
+                                  error_code: response.error_code, error_text: response.error_message,
                                   price_unit: response.price_unit, num_segments: num_segments,
                                   num_media: response.num_media, relay_price: price)
         else

@@ -14,24 +14,17 @@ class StripeEvent
 
     # So we can notify merchant of time left to active subscription
     def subscription_trial_will_end
-      # if @data = Subscription.includes(:notification_log).includes(:team)
-      if @data = Subscription.includes(:notification_logs)
-                        .where(stripe_subscription_id: @hash[:id]).first
-                        # .where("stripe_subscription_id = ? and notify_type = ?", @hash[:id], 'subscription_trial_will_end').first
-        # set_time_zone(@data.merchant_customer.merchant.time_zone)
-        update_subscription_data
-
-        # Email merchant of time left(merchant)
-        # Notify us too (admin)
-        @data.notification_logs << NotificationLog.create(notify_type: 'subscription_trial_will_end', channel: 'email', reason: 'Subscription trial is about to end.')
-      end
+      @data = Subscription.where(stripe_subscription_id: @hash[:id]).first
+                          # .where("stripe_subscription_id = ? and notify_type = ?", @hash[:id], 'subscription_trial_will_end').first
+      return unless @data
+      # set_time_zone(@data.merchant_customer.merchant.time_zone)
+      update_subscription_data
     end
 
     # Add if deleted and merchant canceled account, return twilio number
     def customer_subscription_deleted
-      if @data = Subscription.includes(:notification_logs)
-                      .where(stripe_subscription_id: @hash[:id]).first
-                      # .where("stripe_subscription_id = ? and notify_type = ?", @hash[:id], 'subscription_deleted').first
+      if @data = Subscription.where(stripe_subscription_id: @hash[:id]).first
+                             # .where("stripe_subscription_id = ? and notify_type = ?", @hash[:id], 'subscription_deleted').first
 
         # set_time_zone(@data.merchant_customer.merchant.time_zone)
         update_subscription_data if @data
@@ -39,30 +32,18 @@ class StripeEvent
         # LEAVE THIS FOR LATER
         # subscribe merchant (rhombus platform saas customer) to next plan if present
         # subscribe_merchant_to_downgraded_plan if @data.merchant_customer.customer.is_merchant?
-
-        # Email about cancellation
-        # Notify us too (admin)
-        @data.notification_logs << NotificationLog.create(notify_type: 'subscription_deleted', channel: 'email', reason: 'Subscription has been deleted.')
       end
     end
-
 
     # At the moment, Subscription only changes if a coupon is added.
     # Else to change a subscription, cancel and create a new one
     # It also notifies us of changes from trial to active
     # You generally don't want to notify merchants or users in this method
     def customer_subscription_updated
-      if @data = Subscription.includes(:notification_logs)
-                      .where(stripe_subscription_id: @hash[:id]).first
-
-        update_subscription_data if @data
-
-        # Email about update
-        # Notify us too (admin)
-        @data.notification_logs << NotificationLog.create(notify_type: 'subscription_updated', channel: 'email', reason: 'Subscription has been updated.')
-      end
+      @data = Subscription.where(stripe_subscription_id: @hash[:id]).first
+      return unless @data
+      update_subscription_data if @data
     end
-
 
     # Most fields aren't important but we can resave data
     def update_subscription_data
@@ -148,7 +129,7 @@ class StripeEvent
       charge = PaymentService.retrieve_charge(@hash[:charge]) if @hash[:charge]
       # a transaction should not already exist but we need to check if it does so we don't send out emails again
       # A tranasaction has only one log unlike subscriptions
-      txn = Transaction.includes(:notification_logs).where(txn_uri: charge.id).first_or_initialize if charge.try(:first)
+      txn = Transaction.where(txn_uri: charge.id).first_or_initialize if charge.try(:first)
 
       # if we havent notified customer before
       # for now, we have only one line for each invoice - the subscription
@@ -188,16 +169,8 @@ class StripeEvent
 
             # set transaction_id
             @data.update_attribute(:transaction_id, txn.id)
-            # Notify customer and/or merchant
-            # Notify (admin)
-
-            txn.notification_logs << NotificationLog.create(notify_type: 'new_transaction', reason: 'receipt', channel: 'email')
           end
         end
-      end
-      # save invoice_payment_succeeded event responce to notification_log
-      if @data
-        @data.notification_log = NotificationLog.create(notify_type: 'invoice_payment_succeeded', channel: 'email', reason: 'Invoice payment has been succeeded.')
       end
     end
 
@@ -207,13 +180,9 @@ class StripeEvent
 
     def invoice_payment_failed
       # find invoice and update
-      @data = Invoice.includes(:notification_log).where(stripe_invoice_id: @hash[:id]).first_or_initialize #Invoice should already exist but if it doesn't, create a new one
+      @data = Invoice.where(stripe_invoice_id: @hash[:id]).first_or_initialize
+      # Invoice should already exist but if it doesn't, create a new one
       update_invoice_data
-      # find customer and admin
-      # Notify them (admin) (customer)
-      if @data
-        @data.notification_log =  NotificationLog.create(notify_type: 'invoice_payment_failed', channel: 'email', reason: 'Invoice payment has been failed.')
-      end
     end
 
     # customer_source_updated webhook will fire if your customers’ info/customer's card info changes
@@ -285,7 +254,7 @@ class StripeEvent
         address_attributes: { street_address: address_params[:street], city: address_params[:city],
                               state_province: address_params[:state],
                               country: address_params[:country], postal_code: address_params[:zip] },
-        stripe_creds_attributes: { 
+        stripe_creds_attributes: {
                                     charges_enabled: @hash[:charges_enabled],
                                     transfers_enabled: @hash[:payouts_enabled],
                                     account_verification: account.verification,
