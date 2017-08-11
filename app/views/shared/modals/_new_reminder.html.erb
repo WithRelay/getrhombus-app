@@ -1,11 +1,5 @@
-<style>
-  #submitReminderForm {
-    margin-top: 60px;
-  }
-</style>
-
 <div class="schedule-notification-form-wrapper" id="form-reminder-div">
-  
+
   <div class="content-sub-wrapper modal w-clearfix">
     <h4 class="modal-header welcome-dash-content-container-header">Schedule Message</h4>
       <a class="close-modal update-close-modals" data-parent='form-reminder-div' ></a>
@@ -42,7 +36,6 @@
 
       <%= f.select :repeat_days, repeat_days_options, {}, selected: reminder.repeat_days, class: "dropdown frequency-dropdown w-select", id: 'newReminderRepeatDays' %>
 
-      <!-- <a class="button schedule-notification w-button" href="#" id='submitReminderForm'>Schedule notification</a> -->
       <%= f.submit 'Schedule Notification', id: 'submitReminderForm', class: 'button schedule-notification w-button' %>
 
       <div id="new-reminder-div">

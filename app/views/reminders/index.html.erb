@@ -12,7 +12,7 @@
 
   <a class="sub-nav-button w-button" data-ix="create-list" id= 'edit-reminder' href="#" modal-target="edit-reminder-modal"> &nbsp;<strong>Edit</strong></a>
 
-  <a class="sub-nav-button w-button" data-ix="create-list"  id = 'delete-reminder' href="#"> &nbsp;<strong>Delete</strong></a>
+  <a class="sub-nav-button w-button" data-ix="create-list"  id = 'delete-reminder' href="#"><strong>Delete</strong></a>
 </div>
 
 <div class="dashboard-body">
@@ -43,7 +43,7 @@
           </div>
           <div class="ts w-clearfix w-col w-col-1">
             <div class="column column-5 header ts w-clearfix">
-              <div class="heading r table-text total-spend-text shrink-text"> &nbsp;Frequency</div>
+              <div class="headings total-spend-header frequency-text shrink-text"> &nbsp; Frequency</div>
             </div>
           </div>
           <div class="table-actions w-clearfix w-col w-col-3">
@@ -57,7 +57,7 @@
         </div>
       </div>
 
-    <div class="reminder-dates" style="margin-top: 36px;">Today <span class="reminder-count">(<%= @reminders_today.count %>)</span>
+    <div class="reminder-dates today" >Today <span class="reminder-count">(<%= @reminders_today.count %>)</span>
     </div>
     <div class="reminders-by-date row-wrapper">
       <div>

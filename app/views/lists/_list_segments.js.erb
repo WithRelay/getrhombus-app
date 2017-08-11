@@ -1,0 +1,6 @@
+$('#objlists').append('<%= j render partial: "segment", collection: @list_segments %>');
+<% if @list_segments.next_page %>
+  $('.pagination').replaceWith('<%= j will_paginate(@list_segments) %>');
+<% else %>
+  $('.pagination, .show_more').remove();
+<% end %>

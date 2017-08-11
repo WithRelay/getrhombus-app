@@ -27,14 +27,16 @@
       </div>
     </div>
     <div id="objlists" data-object-type='segment'>
-      <%= render partial: "segment", collection: @lists %>
+      <%= render partial: "segment", collection: @list_segments %>
     </div>
     <div id="with-button" class="hide">
-      <%= will_paginate %>
+      <%= will_paginate(@list_segments) %>
     </div>
 
-    <% if @lists.next_page %>
-      <div id="load_more_segments" class="show_more button w-button" data-loading-text="Loding more segments" title="Click here to load more segments">Show More</div>
+    <% if @list_segments.next_page %>
+      <div id="load_more_segments" class="show_more load-more-wrapper" data-loading-text="Loding more segments" >
+        <a class="load-more-rows-button w-button" href="#">&nbsp;&nbsp;&nbsp;Show more</a>
+      </div>
     <% end %>
   </div>
 </div>

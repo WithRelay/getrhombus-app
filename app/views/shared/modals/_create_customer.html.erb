@@ -1,22 +1,4 @@
-<style>
-  .selectize-input span.name {
-    float: none;
-    border-bottom: none;
-    background-color: transparent !important;
-  }
-
-  .underline-div.form {
-    margin: 42px 10% 30px !important;
-  }
-  .intl-tel-input{
-    margin-bottom: 15px;
-  }
-  .help-block{
-    margin-top: -5px;
-    margin-left: 5%;
-  }
-</style>
-<div class="create-customer-form-wrapper  w-clearfix modal-background" id="new-customer-div">
+<div class="create-customer-form-wrapper w-clearfix modal-background" id="new-customer-div">
 <%# removed all webflow data attributes %>
 
   <div class="modal-form-wrapper">
@@ -47,7 +29,7 @@
         </div>
         <%= f.hidden_field :phone_number, :id => "phone_number" %>
 
-        <div class="form-group col-xs-6" style="margin-top: 3%;">
+        <div class="form-group col-xs-6 field_margin">
           <%= f.fields_for @new_customer.user_lists.build do |ul|%>
             <%= ul.select :list_id, [], { prompt: 'Add user to list' }, class: 'dropdown w-select' %>
           <% end %>
@@ -84,7 +66,7 @@
             <div class="messageContainer w-col-12"></div>
           </div>
 
-          <div class= "row" style="margin-top: -50px;"></div>
+          <div class= "row margin_top_50"></div>
             <div class="form-group col-xs-6">
               <input id="cc-exp" type="text" class="form-control month-year text-field w-input" placeholder="MM / YYYY" value="" x-autocompletetype="off" autocompletetype="off" autocorrect="off" spellcheck="off" autocapitalize="off">
               <!-- <div class="messageContainer w-col-4"></div> -->

@@ -1,6 +1,6 @@
 class StaticPagesController < ApplicationController
 
-  [:home, :about, :privacy, :customers, :pricing, :faqs, :terms, :to_404, :request_demo, :features].each do |method_name|
+  [:home, :about, :privacy, :pricing, :faqs, :terms, :to_404, :request_demo, :features].each do |method_name|
     send :define_method, method_name do
       # do nothing
     end
