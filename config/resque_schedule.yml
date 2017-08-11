@@ -12,14 +12,6 @@ weekly_activity_summary:
   description: "This job send weekly activity summary."
   queue: <%= Rails.env %>_weekly_activity_summary
 
-# alert_emails:
-#   #every: 15m
-#   every: 15s
-#   class: "MessageAlertJob"
-#   args:
-#   description: "This job alerts merchants of unread messages."
-#   queue: <%= Rails.env %>_alert_emails
-
 # card_expired_emails:
 #   cron: "0 12 * * * America/New_York"
 #   every: 15s
