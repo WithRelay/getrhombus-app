@@ -127,7 +127,7 @@ class StripeEvent
     # Handles connect and platform payments. Parameters are basically the same. So nothing special.
     def invoice_payment_succeeded
       # Invoice should already exist but if it doesn't, create a new one
-      @data = Invoice.includes(:notification_log).where(stripe_invoice_id: @hash[:id]).first_or_initialize
+      @data = Invoice.where(stripe_invoice_id: @hash[:id]).first_or_initialize
       # update_invoice_data
       update_invoice_data
 
