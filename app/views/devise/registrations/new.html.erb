@@ -28,7 +28,7 @@
             <%= f.hidden_field :tag_id, id: "tag_id", value: params[:user] ? params[:user][:tag_id] : '' %>
 
             <div class="form-group col-xs-5">
-              <%= f.select :user_level, "<option value='' disabled selected class='hide'>Account Type</option> <option value='1'>Business Account</option><option value='0'>Customer Account</option>".html_safe, {}, class: 'form-control dropdown w-select', id: 'field-2' %>
+              <%= f.select :user_level, "<option value='' disabled selected class='hide'>Account Type</option> <option value='1'>Business Account</option><option value='0'>Customer Account</option>".html_safe, {}, class: 'form-control dropdown w-select margin-15', id: 'field-2' %>
             </div>
 
             <div class="form-group col-xs-5">
