@@ -196,13 +196,6 @@ class User < ActiveRecord::Base
     update_account_balance(NUMBER_PRICE)
   end
 
-  def update_rhombus_number(phone)
-    self.update(
-      rhombus_number: phone,# save "+<redacted_phone_number>"
-      rn_friendly_name: helper.number_to_phone(phone, area_code: true)# save "+1<redacted_phone_number>"
-    )
-  end
-
   def has_valid_card?
     return { valid: false, text: 'No valid card on file', type: 'no_source' } if card_id.blank? && (exp_year.blank? || exp_month.blank?)
     return { valid: true } if exp_year.to_i >= Time.current.year && exp_month.to_i >= Time.current.month

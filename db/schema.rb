@@ -565,7 +565,6 @@ ActiveRecord::Schema.define(version: 20170811000245) do
     t.string   "business_name",  limit: 191
   end
 
-  add_index "people", ["stripe_file_id"], name: "index_people_on_stripe_file_id", using: :btree
   add_index "people", ["user_id"], name: "index_people_on_user_id", using: :btree
 
   create_table "plans", force: :cascade do |t|

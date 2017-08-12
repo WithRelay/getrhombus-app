@@ -17,6 +17,8 @@ class StripeEvent
       @data = Subscription.where(stripe_subscription_id: @hash[:id]).first
                           # .where("stripe_subscription_id = ? and notify_type = ?", @hash[:id], 'subscription_trial_will_end').first
       return unless @data
+      # Email merchant of time left(merchant)
+      # Notify us too (admin)
       # set_time_zone(@data.merchant_customer.merchant.time_zone)
       update_subscription_data
     end
@@ -32,6 +34,9 @@ class StripeEvent
         # LEAVE THIS FOR LATER
         # subscribe merchant (rhombus platform saas customer) to next plan if present
         # subscribe_merchant_to_downgraded_plan if @data.merchant_customer.customer.is_merchant?
+
+        # Email about cancellation
+        # Notify us too (admin)
       end
     end
 
@@ -43,6 +48,8 @@ class StripeEvent
       @data = Subscription.where(stripe_subscription_id: @hash[:id]).first
       return unless @data
       update_subscription_data if @data
+      # Email about update
+      # Notify us too (admin)
     end
 
     # Most fields aren't important but we can resave data
@@ -169,6 +176,8 @@ class StripeEvent
 
             # set transaction_id
             @data.update_attribute(:transaction_id, txn.id)
+            # Notify customer and/or merchant
+            # Notify (admin)
           end
         end
       end
@@ -183,6 +192,8 @@ class StripeEvent
       @data = Invoice.where(stripe_invoice_id: @hash[:id]).first_or_initialize
       # Invoice should already exist but if it doesn't, create a new one
       update_invoice_data
+       # find customer and admin
+      # Notify them (admin) (customer)
     end
 
     # customer_source_updated webhook will fire if your customers’ info/customer's card info changes

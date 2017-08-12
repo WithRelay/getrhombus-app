@@ -1,4 +1,7 @@
 # Transaction
+
+# I need to Add receipt_sent_at back
+
 class Transaction < ActiveRecord::Base
   include Transactionable
   include CSVHandler
