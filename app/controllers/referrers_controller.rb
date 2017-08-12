@@ -1,5 +1,6 @@
+# Referrers Controller
 class ReferrersController < ApplicationController
-  before_action :set_referrer, only: [:show, :edit, :update, :destroy]
+  before_action :set_referrer, only: %i[show edit update destroy]
 
   respond_to :html, :json
 
@@ -17,8 +18,7 @@ class ReferrersController < ApplicationController
     respond_with(@referrer)
   end
 
-  def edit
-  end
+  def edit; end
 
   def create
     @referrer = Referrer.new(referrer_params)
@@ -43,12 +43,21 @@ class ReferrersController < ApplicationController
   end
 
   private
-    def set_referrer
-      @referrer = Referrer.find(params[:id])
-    end
 
-    def referrer_params
-      params.require(:referrer).permit(:referrer_email, :email, :phone_number, :country, :referrer_name, :org_name,
-                                        :ip, :city, :region, :postal, :referrer_uid)
-    end
+  def set_referrer
+    @referrer = Referrer.find(params[:id])
+  end
+
+  def referrer_params
+    params.require(:referrer).permit(
+      :referrer_email,
+      :email,
+      :phone_number,
+      :country,
+      :referrer_name,
+      :org_name,
+      :ip, :city, :region, :postal,
+      :referrer_uid
+    )
+  end
 end
