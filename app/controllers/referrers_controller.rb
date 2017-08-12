@@ -24,7 +24,6 @@ class ReferrersController < ApplicationController
     @referrer = Referrer.new(referrer_params)
     @referrer.save
     ##### send email to referrer and referree here..
-    #@referrer.notification_log = NotificationLog.create(notify_type: 'user_referral_from_form', channel: 'email', reason: 'Refer a new user.')
     respond_with(@referrer)
   end
 

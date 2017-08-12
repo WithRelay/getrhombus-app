@@ -33,9 +33,6 @@ Taiwo (review)
 	- customers can create subscriptions over messaging...not dashboard, but can cancel subscription
 - final review of updating subscriptions, coupons, plans...do we update subscriptions esp platform??
 
-Review
-- notification_log used for transaction, referrer and alert notifications logging
-
 
 - let parse_text return cents i guess and just divide by 100 to show
 

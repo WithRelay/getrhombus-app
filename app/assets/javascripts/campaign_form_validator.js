@@ -85,9 +85,6 @@ $(document).on('ready page:load', function() {
       });
     }
   })
-  .on('change', function(e) {
-    $('#campaignForm').formValidation('resetField', 'campaign[list_id]');
-  });
 
   $('#campaign-list-selectized').on('focus', function(){
     $('#campaignForm').formValidation('resetField', 'campaign[list_id]');
