@@ -1,6 +1,6 @@
+# Hosted Sms Job
 class HostedSmsJob
-
-  @queue = Rails.env + "_hosted_sms"
+  @queue = Rails.env + '_hosted_sms'
 
   def self.perform
     ActiveRecord::Base.clear_active_connections!
@@ -12,12 +12,12 @@ class HostedSmsJob
         h.status_events[:loa_sent] = true
         h.status_events[:loa_sent_at] = Time.now
       elsif h.status.casecmp('completed').zero? && !h.status_events[:completed_notice_sent]
-        #break if h.user.rhombus_number.nil? remove this
-        #break unless TextingService.release_number(h.user.rhombus_number) remove this
         TextingService.release_number(h.user.rhombus_number) if h.user.rhombus_number.present?
         EmailingService.send_completed_notice(h.user)
-        # h.user.update_rhombus_number(h.phone_number)  remove this
-        h.user.update_columns(rhombus_number: h.phone_number, rn_friendly_name: h.friendly_name)
+        h.user.update_columns(
+          rhombus_number: h.phone_number,
+          rn_friendly_name: h.friendly_name
+        )
         h.status_events[:completed_notice_sent] = true
         h.status_events[:completed_notice_sent_at] = Time.now
       elsif h.status.casecmp('action-required').zero? && !h.status_events[:action_required_notice_sent]
