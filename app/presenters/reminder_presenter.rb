@@ -11,7 +11,6 @@ class ReminderPresenter < BasePresenter
   end
 
   def get_channel
-    #channel_hash = { facebook_messenger: 'Messenger', sms: 'SMS' }  remove this
     { "facebook_messenger" => "Messenger", "sms" => "SMS" }[@model.channel]
   end
 
