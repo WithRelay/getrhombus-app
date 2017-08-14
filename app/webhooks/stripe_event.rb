@@ -3,7 +3,6 @@ class StripeEvent
   class << self
     # Methods sending emails out to merchant/customers must be idempotent except for invoice failed
     def process_event(hash, type)
-      binding.pry
       @hash = hash[:data][:object] if hash[:data]
       @stripe_event_for = type
       # send works like message passing to class hierarchy until method reacts
