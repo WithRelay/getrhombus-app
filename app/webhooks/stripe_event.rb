@@ -3,6 +3,7 @@ class StripeEvent
   class << self
     # Methods sending emails out to merchant/customers must be idempotent except for invoice failed
     def process_event(hash, type)
+      binding.pry
       @hash = hash[:data][:object] if hash[:data]
       @stripe_event_for = type
       # send works like message passing to class hierarchy until method reacts
@@ -18,8 +19,19 @@ class StripeEvent
       return unless @data
       # Email merchant of time left(merchant)
       # Notify us too (admin)
-      # set_time_zone(@data.merchant_customer.merchant.time_zone)
+      send_trial_will_end_email(@data.merchant_customer.customer)
       update_subscription_data
+    end
+
+    def send_trial_will_end_email(user)
+      # Free Trial Expiration Notice (11 days after sign-up)
+      free_trial_expiration_notice(user) if trial_days == 3
+      # Free Trial Expiration (14 days after sign-up)
+      free_trial_expiration(user) if trial_days == 1
+    end
+
+    def trial_days
+       (@hash[:trial_end] - @hash[:trial_start]).to_i/1.day
     end
 
     # Add if deleted and merchant canceled account, return twilio number
@@ -27,7 +39,6 @@ class StripeEvent
       @data = Subscription.find_by(stripe_subscription_id: @hash[:id])
                           # .where("stripe_subscription_id = ? and notify_type = ?", @hash[:id], 'subscription_deleted').first
       return unless @data
-      # set_time_zone(@data.merchant_customer.merchant.time_zone)
       update_subscription_data if @data
 
       # LEAVE THIS FOR LATER
@@ -173,10 +184,6 @@ class StripeEvent
           end
         end
       end
-    end
-
-    def set_time_zone(zone)
-      Time.use_zone(zone)
     end
 
     def invoice_payment_failed
