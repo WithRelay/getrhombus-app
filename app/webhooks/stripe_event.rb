@@ -1,8 +1,7 @@
+# Handle all stripe events
 class StripeEvent
-
   class << self
     # Methods sending emails out to merchant/customers must be idempotent except for invoice failed
-
     def process_event(hash, type)
       @hash = hash[:data][:object] if hash[:data]
       @stripe_event_for = type
@@ -14,7 +13,7 @@ class StripeEvent
 
     # So we can notify merchant of time left to active subscription
     def subscription_trial_will_end
-      @data = Subscription.where(stripe_subscription_id: @hash[:id]).first
+      @data = Subscription.find_by(stripe_subscription_id: @hash[:id])
                           # .where("stripe_subscription_id = ? and notify_type = ?", @hash[:id], 'subscription_trial_will_end').first
       return unless @data
       # Email merchant of time left(merchant)
@@ -25,19 +24,18 @@ class StripeEvent
 
     # Add if deleted and merchant canceled account, return twilio number
     def customer_subscription_deleted
-      if @data = Subscription.where(stripe_subscription_id: @hash[:id]).first
-                             # .where("stripe_subscription_id = ? and notify_type = ?", @hash[:id], 'subscription_deleted').first
+      @data = Subscription.find_by(stripe_subscription_id: @hash[:id])
+                          # .where("stripe_subscription_id = ? and notify_type = ?", @hash[:id], 'subscription_deleted').first
+      return unless @data
+      # set_time_zone(@data.merchant_customer.merchant.time_zone)
+      update_subscription_data if @data
 
-        # set_time_zone(@data.merchant_customer.merchant.time_zone)
-        update_subscription_data if @data
+      # LEAVE THIS FOR LATER
+      # subscribe merchant (rhombus platform saas customer) to next plan if present
+      # subscribe_merchant_to_downgraded_plan if @data.merchant_customer.customer.is_merchant?
 
-        # LEAVE THIS FOR LATER
-        # subscribe merchant (rhombus platform saas customer) to next plan if present
-        # subscribe_merchant_to_downgraded_plan if @data.merchant_customer.customer.is_merchant?
-
-        # Email about cancellation
-        # Notify us too (admin)
-      end
+      # Email about cancellation
+      # Notify us too (admin)
     end
 
     # At the moment, Subscription only changes if a coupon is added.
@@ -45,7 +43,7 @@ class StripeEvent
     # It also notifies us of changes from trial to active
     # You generally don't want to notify merchants or users in this method
     def customer_subscription_updated
-      @data = Subscription.where(stripe_subscription_id: @hash[:id]).first
+      @data = Subscription.find_by(stripe_subscription_id: @hash[:id])
       return unless @data
       update_subscription_data if @data
       # Email about update
@@ -56,7 +54,6 @@ class StripeEvent
     def update_subscription_data
       # plan_id, user_id, team_id, coupon_id do not need to be set since they are immutable
       @data.application_fee_percent = @hash[:application_fee_percent]
-      @data.source = @hash[:source]
       @data.quantity = @hash[:quantity]
       @data.tax_percent = @hash[:tax_percent]
       @data.current_period_start = @hash[:current_period_start]
@@ -74,8 +71,6 @@ class StripeEvent
     def update_invoice_data
       # user_id, team_id, coupon_id, subscription_id do not need to be set since they are immutable
       @data.date = @hash[:date]
-      @data.stripe_invoice_id = @hash[:id]
-
       @data.total = @hash[:total]
       @data.subtotal = @hash[:subtotal]
       @data.tax = @hash[:tax]
@@ -83,13 +78,11 @@ class StripeEvent
       @data.application_fee = @hash[:application_fee] || 0
       @data.amount_due = @hash[:amount_due]
       @data.currency = @hash[:currency]
-
       @data.starting_balance = @hash[:starting_balance]
       @data.ending_balance = @hash[:ending_balance]
       @data.period_start = @hash[:period_start]
       @data.period_end = @hash[:period_end]
       @data.statement_descriptor = @hash[:statement_descriptor]
-
       @data.paid = @hash[:paid]
       @data.closed = @hash[:closed]
       @data.attempted = @hash[:attempted]
@@ -97,7 +90,6 @@ class StripeEvent
       @data.next_payment_attempt = @hash[:next_payment_attempt]
       @data.forgiven = @hash[:forgiven]
       @data.livemode = @hash[:livemode]
-
       @data.save
     end
 
