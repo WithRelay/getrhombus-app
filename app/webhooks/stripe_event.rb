@@ -30,7 +30,7 @@ class StripeEvent
     end
 
     def trial_days_left
-      ((@hash[:trial_end] - Time.current.utc.to_i)/ 86400.0).round
+      ((@hash[:trial_end] - Time.current.utc.to_f)/ 1.days).round
     end
 
     # Add if deleted and merchant canceled account, return twilio number
