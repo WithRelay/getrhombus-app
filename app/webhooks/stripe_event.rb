@@ -18,7 +18,7 @@ class StripeEvent
       return unless @data
       # Email merchant of time left(merchant)
       # Notify us too (admin)
-      send_trial_will_end_email(@data.merchant_customer.customer)
+      send_trial_will_end_email(@data.merchant_customer.merchant)
       update_subscription_data
     end
 
