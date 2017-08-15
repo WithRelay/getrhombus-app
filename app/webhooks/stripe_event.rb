@@ -14,23 +14,21 @@ class StripeEvent
     # So we can notify merchant of time left to active subscription
     def subscription_trial_will_end
       @data = Subscription.find_by(stripe_subscription_id: @hash[:id])
-                          # .where("stripe_subscription_id = ? and notify_type = ?", @hash[:id], 'subscription_trial_will_end').first
       return unless @data
       # Email merchant of time left(merchant)
+      send_trial_will_end_email(@data.merchant_customer.customer)
       # Notify us too (admin)
-      send_trial_will_end_email(@data.merchant_customer.merchant)
       update_subscription_data
     end
 
     def send_trial_will_end_email(user)
-      # Free Trial Expiration Notice (11 days after sign-up)
-      EmailingService.free_trial_expiration_notice(user) if trial_days_left == 3
-      # Free Trial Expiration (14 days after sign-up)
-      EmailingService.free_trial_expiration(user) if trial_days_left == 1
-    end
+      trial_days_left = ((@hash[:trial_end] - Time.current.utc.to_i) / 1.days.to_f).ceil
 
-    def trial_days_left
-      ((@hash[:trial_end] - Time.current.utc.to_f)/ 1.days).round
+      if trial_days_left == 3
+        EmailingService.free_trial_expiration_notice(user)        # Free Trial Expiration Notice (11 days after sign-up)
+      elsif trial_days_left == 1
+        EmailingService.free_trial_expiration(user)               # Free Trial Expiration (14 days after sign-up)
+      end
     end
 
     # Add if deleted and merchant canceled account, return twilio number
