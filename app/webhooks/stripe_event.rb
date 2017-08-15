@@ -24,13 +24,13 @@ class StripeEvent
 
     def send_trial_will_end_email(user)
       # Free Trial Expiration Notice (11 days after sign-up)
-      EmailingService.free_trial_expiration_notice(user) if trial_days == 3
+      EmailingService.free_trial_expiration_notice(user) if trial_days_left == 3
       # Free Trial Expiration (14 days after sign-up)
-      EmailingService.free_trial_expiration(user) if trial_days == 1
+      EmailingService.free_trial_expiration(user) if trial_days_left == 1
     end
 
-    def trial_days
-       (@hash[:trial_end] - @hash[:trial_start]).to_i/1.day
+    def trial_days_left
+      ((@hash[:trial_end] - Time.current.utc.to_i)/ 86400.0).round
     end
 
     # Add if deleted and merchant canceled account, return twilio number
