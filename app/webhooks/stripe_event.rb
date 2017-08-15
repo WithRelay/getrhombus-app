@@ -24,9 +24,9 @@ class StripeEvent
 
     def send_trial_will_end_email(user)
       # Free Trial Expiration Notice (11 days after sign-up)
-      free_trial_expiration_notice(user) if trial_days == 3
+      EmailingService.free_trial_expiration_notice(user) if trial_days == 3
       # Free Trial Expiration (14 days after sign-up)
-      free_trial_expiration(user) if trial_days == 1
+      EmailingService.free_trial_expiration(user) if trial_days == 1
     end
 
     def trial_days
