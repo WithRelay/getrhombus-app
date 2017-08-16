@@ -15,43 +15,31 @@ class StripeEvent
     def subscription_trial_will_end
       @data = Subscription.find_by(stripe_subscription_id: @hash[:id])
       return unless @data
+
       # Email merchant of time left
-      send_trial_will_end_email(@data.merchant_customer.customer)
-      # Notify us too (admin)
+      user = @data.merchant_customer.customer
+      trial_days_left = ((@hash[:trial_end] - Time.current.utc.to_i) / 1.days.to_f).ceil
+
+      # Free Trial Expiration Notice (11 days after sign-up), Free Trial Expiration (14 days after sign-up)
+      EmailingService.free_trial_expiration_notice(user) if trial_days_left == 3
+      EmailingService.free_trial_expiration(user) if trial_days_left == 1
       update_subscription_data
     end
 
-    def send_trial_will_end_email(user)
-      trial_days_left = ((@hash[:trial_end] - Time.current.utc.to_i) / 1.days.to_f).ceil
-
-      if trial_days_left == 3
-        EmailingService.free_trial_expiration_notice(user)        # Free Trial Expiration Notice (11 days after sign-up)
-      elsif trial_days_left == 1
-        EmailingService.free_trial_expiration(user)               # Free Trial Expiration (14 days after sign-up)
-      end
-    end
-
-    # Add if deleted and merchant canceled account, return twilio number
     def customer_subscription_deleted
       @data = Subscription.find_by(stripe_subscription_id: @hash[:id])
-                          # .where("stripe_subscription_id = ? and notify_type = ?", @hash[:id], 'subscription_deleted').first
       return unless @data
-      user = subscription.merchant_customer.customer
-      release_rhombus_number(user) if user.is_merchant?
-      update_subscription_data if @data
+      
+      user = @data.merchant_customer.customer
+      TextingService.release_number(user.rhombus_number) if user.is_merchant? && !user.active? && user.rhombus_number.present?
+      update_subscription_data
+      
+      # Email about cancellation
+      EmailingService.customer_subscription_deleted(user)
 
       # LEAVE THIS FOR LATER
       # subscribe merchant (rhombus platform saas customer) to next plan if present
       # subscribe_merchant_to_downgraded_plan if @data.merchant_customer.customer.is_merchant?
-
-      # Email about cancellation
-      # Notify us too (admin)
-      EmailingService.customer_subscription_deleted(subscription.merchant_customer.customer)
-    end
-
-    def release_rhombus_number(user)
-      return if user.active? || user.rhombus_number.blank?
-      TextingService.release_number(user.rhombus_number)
     end
 
     # At the moment, Subscription only changes if a coupon is added.

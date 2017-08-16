@@ -21,14 +21,9 @@ class DripCampaignJob
       # Connect Facebook Messenger (9 days after sign-up)
       elsif diff_in_days == 9
         EmailingService.connect_facebook_messenger(user)
-      # Free Trial Expiration Notice (11 days after sign-up)
-      elsif diff_in_days == 11
-        EmailingService.free_trial_expiration_notice(user)
       # Add Bank Account (12 days after sign-up)
       elsif diff_in_days == 12
         EmailingService.add_bank_account(user)
-      elsif diff_in_days == 14
-        EmailingService.free_trial_expiration(user)
       # Lists (18 days after sign-up)
       elsif diff_in_days == 18
         EmailingService.lists(user)

@@ -132,12 +132,6 @@ class User < ActiveRecord::Base
     user_level == 0
   end
 
-  %w[inactive active fraudulent].each do |stat|
-    define_method "#{stat}?" do
-      self.status == stat
-    end
-  end
-
   def full_name
     if is_customer?
       return "#{card_name}" if card_name.present?
