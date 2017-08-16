@@ -874,4 +874,27 @@ class EmailingService
       rescue StandardError => e
       end
     end
+
+    def customer_subscription_updated(merchant, plan_name, subscription_id)
+      begin
+        template_name = 'customer-subscription-updated'
+        template_content = []
+        message = { "subject" => "Subscription updated",
+          "global_merge_vars"=> [{ "name" => "first_name", "content" => merchant.first_name || 'there' },
+            { "name" => "plan_name", "content" => plan_name },
+            { "name" => "subscription_id", "content" => subscription_id },
+          ],
+          "merge_language" => "handlebars",
+          "to"=> [ { "email" => merchant.email } ],
+          "bcc_address"=> User.platform_email,
+          "from_name" => "Edwin from Relay",
+          "from_email" => FROM_EMAIL[:edwin]
+        }
+        async = true
+        result = MANDRILL.messages.send_template template_name, template_content, message, async
+      rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
+        puts "A mandrill error occurred: #{e.class} - #{e.message}"
+      rescue StandardError => e
+      end
+    end
 end
