@@ -15,7 +15,7 @@ class StripeEvent
     def subscription_trial_will_end
       @data = Subscription.find_by(stripe_subscription_id: @hash[:id])
       return unless @data
-      # Email merchant of time left(merchant)
+      # Email merchant of time left
       send_trial_will_end_email(@data.merchant_customer.customer)
       # Notify us too (admin)
       update_subscription_data
