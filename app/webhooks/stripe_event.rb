@@ -36,6 +36,8 @@ class StripeEvent
       @data = Subscription.find_by(stripe_subscription_id: @hash[:id])
                           # .where("stripe_subscription_id = ? and notify_type = ?", @hash[:id], 'subscription_deleted').first
       return unless @data
+      user = subscription.merchant_customer.customer
+      release_rhombus_number(user) if user.is_merchant?
       update_subscription_data if @data
 
       # LEAVE THIS FOR LATER
@@ -44,6 +46,12 @@ class StripeEvent
 
       # Email about cancellation
       # Notify us too (admin)
+      EmailingService.customer_subscription_deleted(subscription.merchant_customer.customer)
+    end
+
+    def release_rhombus_number(user)
+      return if user.active? || user.rhombus_number.blank?
+      TextingService.release_number(user.rhombus_number)
     end
 
     # At the moment, Subscription only changes if a coupon is added.

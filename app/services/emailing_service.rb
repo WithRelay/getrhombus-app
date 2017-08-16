@@ -855,4 +855,23 @@ class EmailingService
       end
     end
 
+    def customer_subscription_deleted(user)
+      begin
+        template_name = 'customer-subscription-deleted'
+        template_content = []
+        message = { "subject" => "Subscription deleted",
+         "global_merge_vars"=> [    { "name" => "first_name", "content" => user.first_name || 'there' } ],
+         "merge_language" => "handlebars",
+         "to"=> [ { "email" => user.email } ],
+         "bcc_address"=> User.platform_email,
+         "from_name" => "Edwin from Relay",
+         "from_email" => FROM_EMAIL[:edwin]
+        }
+        async = true
+        result = MANDRILL.messages.send_template template_name, template_content, message, async
+      rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
+        puts "A mandrill error occurred: #{e.class} - #{e.message}"
+      rescue StandardError => e
+      end
+    end
 end
