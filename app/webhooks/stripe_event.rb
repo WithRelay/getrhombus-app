@@ -1,17 +1,14 @@
 # Handle all stripe events
 class StripeEvent
   class << self
+    
     # Methods sending emails out to merchant/customers must be idempotent except for invoice failed
     def process_event(hash, type)
       @hash = hash[:data][:object] if hash[:data]
       @stripe_event_for = type
-      # send works like message passing to class hierarchy until method reacts
-      # it accepts a parameter that need to be pass in symbol or string which calls method.
-      # if we pass string it will internally converts to symbol.
       self.send(string_method_name[hash[:type]]) if string_method_name[hash[:type]].present?
     end
 
-    # So we can notify merchant of time left to active subscription
     def subscription_trial_will_end
       @data = Subscription.find_by(stripe_subscription_id: @hash[:id])
       return unless @data
@@ -49,7 +46,7 @@ class StripeEvent
     def customer_subscription_updated
       @data = Subscription.find_by(stripe_subscription_id: @hash[:id])
       return unless @data
-      update_subscription_data if @data
+      update_subscription_data
       # Email about update
       # Notify us too (admin)
     end
@@ -102,7 +99,7 @@ class StripeEvent
       @data = Invoice.where(stripe_invoice_id: @hash[:id]).first_or_initialize
 
       # Ensure all these exists else it isnt ours. They should.
-      key = (@stripe_event_for == 'platform') ? :platform_stripe_customer_id : :merchant_stripe_customer_id
+      key = (@stripe_event_for == 'platform') ? :platform_stripe_customer_id : :managed_stripe_customer_id
       merchant_customer = MerchantCustomer.find_by(key => @hash[:customer])
 
       if merchant_customer
@@ -117,6 +114,7 @@ class StripeEvent
         # update invoice data
         update_invoice_data
       end
+
       # notify admin
     end
 
