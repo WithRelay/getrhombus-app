@@ -119,6 +119,7 @@ class StripeEvent
         update_invoice_data
       end
       # notify admin
+      EmailingService.invoice_created(merchant_customer.customer ,@data)
     end
 
     # Handles connect and platform payments. Parameters are basically the same. So nothing special.
