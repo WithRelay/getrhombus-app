@@ -47,8 +47,7 @@ class StripeEvent
       @data = Subscription.find_by(stripe_subscription_id: @hash[:id])
       return unless @data
       update_subscription_data
-      # Email about update
-      # Notify us too (admin)
+      # Email admin about update
       EmailingService.customer_subscription_updated(@data.merchant_customer.merchant, @data.plan.name, @data.id)
     end
 
@@ -109,10 +108,11 @@ class StripeEvent
         @data.customer_id = merchant_customer.customer_id
 
         # update coupon_id
-        if @hash[:discount].present? && coupon = Coupon.find_by(stripe_coupon_id: @hash[:discount][:coupon][:id])
-          @data.coupon_id = coupon.id
+        if @hash[:discount].present?
+          coupon = Coupon.find_by(stripe_coupon_id: @hash[:discount][:coupon][:id])
+          @data.coupon_id = coupon.id if coupon
         end
-        # update invoice data
+        
         update_invoice_data
       end
 
