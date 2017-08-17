@@ -26,11 +26,11 @@ class StripeEvent
     def customer_subscription_deleted
       @data = Subscription.find_by(stripe_subscription_id: @hash[:id])
       return unless @data
-      
+
       user = @data.merchant_customer.customer
       TextingService.release_number(user.rhombus_number) if user.is_merchant? && !user.active? && user.rhombus_number.present?
       update_subscription_data
-      
+
       # Email about cancellation
       EmailingService.customer_subscription_deleted(user)
 
@@ -49,6 +49,7 @@ class StripeEvent
       update_subscription_data
       # Email about update
       # Notify us too (admin)
+      EmailingService.customer_subscription_updated(@data.merchant_customer.merchant, @data.plan.name, @data.id)
     end
 
     # Most fields aren't important but we can resave data
@@ -116,6 +117,7 @@ class StripeEvent
       end
 
       # notify admin
+      EmailingService.invoice_created(merchant_customer.customer ,@data)
     end
 
     # Handles connect and platform payments. Parameters are basically the same. So nothing special.

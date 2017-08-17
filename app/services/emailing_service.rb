@@ -299,8 +299,7 @@ class EmailingService
     end
 
     #Features Tutorials
-    def features_tutorials(user)
-    end
+    def features_tutorials(user); end
 
     # Free Trial Expiration (14 days after sign-up)
     def free_trial_expiration(user)
@@ -471,47 +470,33 @@ class EmailingService
       end
     end
 
-    def customer_import_campaigns(user)
-    end
+    def customer_import_campaigns(user); end
 
-    def connect_facebook_messenger(user)
-    end
+    def connect_facebook_messenger(user); end
 
-    def add_bank_account(user)
-    end
+    def add_bank_account(user); end
 
-    def lists(user)
-    end
+    def lists(user); end
 
-    def customer_segmentation(user)
-    end
+    def customer_segmentation(user); end
 
-    def in_chat_payments(user)
-    end
+    def in_chat_payments(user); end
 
-    def pre_authorize_transactions(user)
-    end
+    def pre_authorize_transactions(user); end
 
-    def plans_and_subscriptions(user)
-    end
+    def plans_and_subscriptions(user); end
 
-    def saved_replies(user)
-    end
+    def saved_replies(user); end
 
-    def message_reason(user)
-    end
+    def message_reason(user); end
 
-    def campaign_templates(user)
-    end
+    def campaign_templates(user); end
 
-    def set_customer_notifications(user)
-    end
+    def set_customer_notifications(user); end
 
-    def hashtag_keywords(user)
-    end
+    def hashtag_keywords(user); end
 
-    def first_time_message_auto_response(user)
-    end
+    def first_time_message_auto_response(user); end
 
     def account_balance_alert(user)
       begin
@@ -814,6 +799,71 @@ class EmailingService
       end
     end
 
+    def customer_subscription_deleted(user)
+      begin
+        template_name = 'customer-subscription-deleted'
+        template_content = []
+        message = { "subject" => "Subscription deleted",
+          "global_merge_vars"=> [    { "name" => "first_name", "content" => user.first_name || 'there' } ],
+          "merge_language" => "handlebars",
+          "to"=> [ { "email" => user.email } ],
+          "bcc_address"=> User.platform_email,
+          "from_name" => "Edwin from Relay",
+          "from_email" => FROM_EMAIL[:edwin]
+        }
+        async = true
+        result = MANDRILL.messages.send_template template_name, template_content, message, async
+      rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
+        puts "A mandrill error occurred: #{e.class} - #{e.message}"
+      rescue StandardError => e
+      end
+    end
+
+    def customer_subscription_updated(merchant, plan_name, subscription_id)
+      begin
+        template_name = 'customer-subscription-updated'
+        template_content = []
+        message = { "subject" => "Subscription updated",
+          "global_merge_vars"=> [{ "name" => "first_name", "content" => merchant.first_name || 'there' },
+            { "name" => "plan_name", "content" => plan_name },
+            { "name" => "subscription_id", "content" => subscription_id }
+          ],
+          "merge_language" => "handlebars",
+          "to"=> [ { "email" => merchant.email } ],
+          "bcc_address"=> User.platform_email,
+          "from_name" => "Edwin from Relay",
+          "from_email" => FROM_EMAIL[:edwin]
+        }
+        async = true
+        result = MANDRILL.messages.send_template template_name, template_content, message, async
+      rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
+        puts "A mandrill error occurred: #{e.class} - #{e.message}"
+      rescue StandardError => e
+      end
+    end
+
+     def invoice_created(invoice)
+      begin
+        template_name = 'invoice-created'
+        template_content = []
+        message = { "subject" => "Invoice",
+          "global_merge_vars"=> [{ "name" => "first_name", "content" => 'Team' },
+            { "invoice_id" => "plan_name", "content" => invoice.id },
+            # other invoice data will be here according to email template
+          ],
+          "merge_language" => "handlebars",
+          "to"=> [ { "email" => User.platform_email } ],
+          "from_name" => "Edwin from Relay",
+          "from_email" => FROM_EMAIL[:edwin]
+        }
+        async = true
+        result = MANDRILL.messages.send_template template_name, template_content, message, async
+      rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
+        puts "A mandrill error occurred: #{e.class} - #{e.message}"
+      rescue StandardError => e
+      end
+    end
+
     def send_weekly_mail(options = {})
       template_name = "weekly-summary-template"
       remaining_people_count = options[:new_people_count] > 5 ? "+#{options[:new_people_count] - 5} more" : ""
@@ -854,24 +904,4 @@ class EmailingService
       rescue StandardError => e
       end
     end
-
-    def customer_subscription_deleted(user)
-      begin
-        template_name = 'customer-subscription-deleted'
-        template_content = []
-        message = { "subject" => "Subscription deleted",
-         "global_merge_vars"=> [    { "name" => "first_name", "content" => user.first_name || 'there' } ],
-         "merge_language" => "handlebars",
-         "to"=> [ { "email" => user.email } ],
-         "bcc_address"=> User.platform_email,
-         "from_name" => "Edwin from Relay",
-         "from_email" => FROM_EMAIL[:edwin]
-        }
-        async = true
-        result = MANDRILL.messages.send_template template_name, template_content, message, async
-      rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
-        puts "A mandrill error occurred: #{e.class} - #{e.message}"
-      rescue StandardError => e
-      end
-    end
-end
+  end
