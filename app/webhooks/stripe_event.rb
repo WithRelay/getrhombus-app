@@ -112,7 +112,7 @@ class StripeEvent
           coupon = Coupon.find_by(stripe_coupon_id: @hash[:discount][:coupon][:id])
           @data.coupon_id = coupon.id if coupon
         end
-        
+
         update_invoice_data
       end
 
@@ -140,6 +140,7 @@ class StripeEvent
         if l[:type] == 'subscription'
           # find subscription
           sbtn = Subscription.includes(:plan).where(stripe_subscription_id: l[:id]).first
+          
           # update subscription_id
           if sbtn
             @data.update(subscription_id: sbtn.id)
@@ -149,21 +150,21 @@ class StripeEvent
 
           if txn
             # just in case transaction actually exists but not log
-            amount_less_fees = txn.amount_less_fees ? txn.amount_less_fees : 'calculate here'
-            amount_with_taxes = txn.amount_with_taxes ? txn.amount_with_taxes : 'calculate here'
+            stripe_fee = 2.3 #txn.stripe_fee ? txn.stripe_fee : 'calculate here'
+            amount_with_taxes = 2.5 #txn.amount_with_taxes ? txn.amount_with_taxes : 'calculate here'
             txn_number = txn.txn_number ? txn.txn_number : txn.generate_txn_number
             description = description ? txn.description : "generate here"
 
             # team@ should handle all transactions going forward
             # dashboard@ is only admin controls
 
-            txn.update( amount: l[:amount], currency: l[:currency], description: description,
-              application_fee: l[:application_fee],
+            txn.update(app_fee: l[:application_fee], stripe_fee: stripe_fee,
+              amount: l[:amount], amount_with_taxes: amount_with_taxes, txn_number: txn_number,
+              currency: l[:currency], description: description,
               merchant_customer_id: @data.merchant_customer_id,
               hashtag_id: hashtag_id, txn_available_at: @hash[:date],
               # At the moment, charge will only contain 1 line item, what if there are a couple line items?
-              txn_uri: @hash[:charge], tax_percent: @hash[:tax_percent], amount_less_fees: amount_less_fees,
-              amount_with_taxes: amount_with_taxes, txn_number: txn_number,
+              txn_uri: @hash[:charge], tax_percent: @hash[:tax_percent],
               status: 1, last4: charge.source.last4,
               exp_month: charge.source.exp_month, exp_year: charge.source.exp_year,
               card_type: charge.source.brand, card_name: charge.source.name,
@@ -242,7 +243,7 @@ class StripeEvent
 =end
 
     def account_updated
-      user_params = response_user_params.merge(bank_accont_details)
+      user_params = response_user_params.merge(bank_account_details)
       managed_account_user.update(user_params)
     rescue => e
     end
@@ -274,7 +275,7 @@ class StripeEvent
       @hash[:address]
     end
 
-    def bank_accont_details
+    def bank_account_details
       bank_account = BankAccount.find_by_stripe_bank_account_id(bank_account_params[:id])
       bank_account_details = {}
       bank_account_details[:bank_accounts_attributes] = { country: bank_account_params[:country],
