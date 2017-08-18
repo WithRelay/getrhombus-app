@@ -1,7 +1,7 @@
 # Handle all stripe events
 class StripeEvent
   class << self
-    
+
     # Methods sending emails out to merchant/customers must be idempotent except for invoice failed
     def process_event(hash, type)
       @hash = hash[:data][:object] if hash[:data]
@@ -112,7 +112,7 @@ class StripeEvent
           coupon = Coupon.find_by(stripe_coupon_id: @hash[:discount][:coupon][:id])
           @data.coupon_id = coupon.id if coupon
         end
-        
+
         update_invoice_data
       end
 
@@ -184,8 +184,10 @@ class StripeEvent
       @data = Invoice.where(stripe_invoice_id: @hash[:id]).first_or_initialize
       # Invoice should already exist but if it doesn't, create a new one
       update_invoice_data
-       # find customer and admin
+      # find customer and admin
       # Notify them (admin) (customer)
+      merchant_customer = MerchantCustomer.find_by(platform_stripe_customer_id: @hash[:customer])
+      EmailingService.invoice_payment_failed(merchant_customer.customer, merchant_customer.merchant)
     end
 
     # customer_source_updated webhook will fire if your customers’ info/customer's card info changes

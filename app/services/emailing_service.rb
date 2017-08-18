@@ -846,15 +846,39 @@ class EmailingService
       begin
         template_name = 'invoice-created'
         template_content = []
-        message = { "subject" => "Invoice",
+        message = { 'subject' => 'Invoice',
           "global_merge_vars"=> [{ "name" => "first_name", "content" => 'Team' },
-            { "invoice_id" => "plan_name", "content" => invoice.id },
+            { 'name' => 'id', 'content' => invoice.id },
+            { 'name' => 'subscription_id', 'content' => invoice.subscription_id },
             # other invoice data will be here according to email template
           ],
-          "merge_language" => "handlebars",
-          "to"=> [ { "email" => User.platform_email } ],
-          "from_name" => "Edwin from Relay",
-          "from_email" => FROM_EMAIL[:edwin]
+          'merge_language' => 'handlebars',
+          'to'=> [ { 'email' => User.platform_email } ],
+          'from_name' => 'Edwin from Relay',
+          'from_email' => FROM_EMAIL[:edwin]
+        }
+        async = true
+        result = MANDRILL.messages.send_template template_name, template_content, message, async
+      rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
+        puts "A mandrill error occurred: #{e.class} - #{e.message}"
+      rescue StandardError => e
+      end
+    end
+
+    def invoice_payment_failed(customer, merchant)
+      begin
+        template_name = 'invoice-payment-failed'
+        template_content = []
+        message = { 'subject' => 'Invoice Payment Failed',
+          'global_merge_vars'=> [{ 'name' => 'first_name', 'content' => customer.first_name || 'there' },
+            { 'name' => 'id', 'content' => invoice.id },
+            { 'name' => 'subscription_id', 'content' => invoice.subscription_id },            # other invoice data will be here according to email template
+          ],
+          'merge_language' => 'handlebars',
+          'to'=> [ { 'email' => customer.email } ],
+          "bcc_address"=> merchant.email,
+          'from_name' => 'Edwin from Relay',
+          'from_email' => FROM_EMAIL[:edwin]
         }
         async = true
         result = MANDRILL.messages.send_template template_name, template_content, message, async
