@@ -139,7 +139,7 @@ class StripeEvent
         if l[:type] == 'subscription'
           # find subscription
           sbtn = Subscription.includes(:plan).where(stripe_subscription_id: l[:id]).first
-          
+
           # update subscription_id
           if sbtn
             @data.update(subscription_id: sbtn.id)
@@ -176,6 +176,9 @@ class StripeEvent
             # Notify (admin)
           end
         end
+        key = (@stripe_event_for == 'platform') ? :platform_stripe_customer_id : :managed_stripe_customer_id
+        merchant_customer = MerchantCustomer.find_by(key => @hash[:customer])
+        EmailingService.invoice_payment_succeeded(merchant_customer.customer)
       end
     end
 

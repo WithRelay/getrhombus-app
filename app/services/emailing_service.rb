@@ -888,6 +888,29 @@ class EmailingService
       end
     end
 
+    def invoice_payment_succeeded(customer)
+      begin
+        template_name = 'invoice-payment-succeed'
+        template_content = []
+        message = { 'subject' => 'Invoice Payment Succeed',
+          'global_merge_vars'=> [{ 'name' => 'first_name', 'content' => customer.first_name || 'there' },
+            { 'name' => 'id', 'content' => invoice.id },
+            { 'name' => 'subscription_id', 'content' => invoice.subscription_id },            # other invoice data will be here according to email template
+          ],
+          'merge_language' => 'handlebars',
+          'to'=> [ { 'email' => customer.email } ],
+          "bcc_address"=> User.platform_email,
+          'from_name' => 'Edwin from Relay',
+          'from_email' => FROM_EMAIL[:edwin]
+        }
+        async = true
+        result = MANDRILL.messages.send_template template_name, template_content, message, async
+      rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
+        puts "A mandrill error occurred: #{e.class} - #{e.message}"
+      rescue StandardError => e
+      end
+    end
+
     def send_weekly_mail(options = {})
       template_name = "weekly-summary-template"
       remaining_people_count = options[:new_people_count] > 5 ? "+#{options[:new_people_count] - 5} more" : ""
