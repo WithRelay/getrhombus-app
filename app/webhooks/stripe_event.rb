@@ -96,15 +96,19 @@ class StripeEvent
     def invoice_created
       # invoice should not already exist but just in case stripe sends this multiple times
       @data = Invoice.where(stripe_invoice_id: @hash[:id]).first_or_initialize
+      setup_invoice_data
+      # notify admin
+      EmailingService.invoice_created(@merchant_customer.customer, @data) if @merchant_customer
+    end
 
+    def setup_invoice_data
       # Ensure all these exists else it isnt ours. They should.
       key = (@stripe_event_for == 'platform') ? :platform_stripe_customer_id : :managed_stripe_customer_id
-      merchant_customer = MerchantCustomer.find_by(key => @hash[:customer])
+      @merchant_customer = MerchantCustomer.find_by(key => @hash[:customer])
 
-      if merchant_customer
-        # update merchant_customer
-        @data.team_id = merchant_customer.merchant_id
-        @data.customer_id = merchant_customer.customer_id
+      if @merchant_customer
+        @data.team_id = @merchant_customer.merchant_id
+        @data.customer_id = @merchant_customer.customer_id
 
         # update coupon_id
         if @hash[:discount].present?
@@ -114,17 +118,13 @@ class StripeEvent
 
         update_invoice_data
       end
-
-      # notify admin
-      EmailingService.invoice_created(merchant_customer.customer ,@data)
     end
 
     # Handles connect and platform payments. Parameters are basically the same. So nothing special.
     def invoice_payment_succeeded
       # Invoice should already exist but if it doesn't, create a new one
       @data = Invoice.where(stripe_invoice_id: @hash[:id]).first_or_initialize
-      # update_invoice_data
-      update_invoice_data
+      setup_invoice_data
 
       # retrieve charge details
       # test that charge is true
@@ -172,26 +172,19 @@ class StripeEvent
 
             # set transaction_id
             @data.update_attribute(:transaction_id, txn.id)
-            # Notify customer and/or merchant
-            # Notify (admin)
+            # Notify customer (could be merchant)
+            EmailingService.invoice_payment_succeeded(@merchant_customer.customer)
           end
         end
-        key = (@stripe_event_for == 'platform') ? :platform_stripe_customer_id : :managed_stripe_customer_id
-        merchant_customer = MerchantCustomer.find_by(key => @hash[:customer])
-        EmailingService.invoice_payment_succeeded(merchant_customer.customer)
       end
     end
 
     def invoice_payment_failed
-      # find invoice and update
+      # find invoice and update...invoice should already exist but if it doesn't, create a new one
       @data = Invoice.where(stripe_invoice_id: @hash[:id]).first_or_initialize
-      # Invoice should already exist but if it doesn't, create a new one
-      update_invoice_data
-      # find customer and admin
-      # Notify them (admin) (customer)
-      key = (@stripe_event_for == 'platform') ? :platform_stripe_customer_id : :managed_stripe_customer_id
-      merchant_customer = MerchantCustomer.find_by(key => @hash[:customer])
-      EmailingService.invoice_payment_failed(merchant_customer.customer, merchant_customer.merchant)
+      setup_invoice_data      
+      # notify customer
+      EmailingService.invoice_payment_failed(@merchant_customer.customer, @merchant_customer.merchant) if @merchant_customer
     end
 
     # customer_source_updated webhook will fire if your customers’ info/customer's card info changes
@@ -208,7 +201,6 @@ class StripeEvent
         update_customer_source
         # find customer and admin
         # Notify them (admin) (customer)
-        # update notification log if we need it
       end
     end
 
