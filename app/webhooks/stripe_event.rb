@@ -201,6 +201,8 @@ class StripeEvent
         update_customer_source
         # find customer and admin
         # Notify them (admin) (customer)
+        # update notification log if we need it
+        EmailingService.customer_source_updated(mc.customer, mc.merchant)
       end
     end
 

@@ -911,6 +911,26 @@ class EmailingService
       end
     end
 
+    def customer_source_updated(customer, merchant)
+      begin
+        template_name = 'customer-source-updated'
+        template_content = []
+        message = { 'subject' => 'Customer Source Updated',
+          'global_merge_vars'=> [{ 'name' => 'first_name', 'content' => customer.first_name || 'there' }],
+          'merge_language' => 'handlebars',
+          'to'=> [ { 'email' => customer.email } ],
+          "bcc_address"=> merchant.email,
+          'from_name' => 'Edwin from Relay',
+          'from_email' => FROM_EMAIL[:edwin]
+        }
+        async = true
+        result = MANDRILL.messages.send_template template_name, template_content, message, async
+      rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
+        puts "A mandrill error occurred: #{e.class} - #{e.message}"
+      rescue StandardError => e
+      end
+    end
+
     def send_weekly_mail(options = {})
       template_name = "weekly-summary-template"
       remaining_people_count = options[:new_people_count] > 5 ? "+#{options[:new_people_count] - 5} more" : ""
