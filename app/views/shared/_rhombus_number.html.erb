@@ -1,1 +1,3 @@
-<div class="dash-header-links new-link relay-nav-number-display" id='rhombus-number' data-clipboard-text='<%= current_user.rhombus_number %>'><%= current_user.rn_friendly_name || current_user.rhombus_number %></div>
+<% if current_user.rn_friendly_name || current_user.rhombus_number %>
+  <div class="dash-header-links new-link relay-nav-number-display" id='rhombus-number' data-clipboard-text='<%= current_user.rhombus_number %>'><%= current_user.rn_friendly_name || current_user.rhombus_number %></div>
+<% end %>
