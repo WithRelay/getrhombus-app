@@ -6,7 +6,7 @@ window.Offline.options = {
 
 var delay = 15000;
 setTimeout(function retry() {
-  if (Offline.state == "up") Offline.check();
+  //if (Offline.state == "up") Offline.check();
   setTimeout(retry, delay);
 }, delay);
 

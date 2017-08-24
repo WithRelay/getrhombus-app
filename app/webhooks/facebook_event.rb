@@ -111,7 +111,7 @@
       invalid_file = valid_file = false
       @attachments.each do |a|
         url = a['payload']['url']
-        file_extension = File.extname(URI.parse(url).path).downcase
+        file_extension = File.extname(URI.parse(url).path).downcasef
         if %w{.jpg .png .jpeg .gif .bmp}.include?(file_extension)
           image = @fb_message.images.new
           image.avatar_from_remote_url(url)

@@ -199,7 +199,7 @@ class User < ActiveRecord::Base
   def has_valid_card?
     return { valid: false, text: 'No valid card on file', type: 'no_source' } if card_id.blank? && (exp_year.blank? || exp_month.blank?)
     return { valid: true } if exp_year.to_i >= Time.current.year && exp_month.to_i >= Time.current.month
-    return { valid: false, text: 'Card has expired.', type: 'expired_source' }
+    return { valid: false, text: 'Default card has expired', type: 'expired_source' }
   end
 
   def get_saas_subscription

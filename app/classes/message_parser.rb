@@ -7,7 +7,7 @@ class MessageParser
   # Message/FbMessage object must exist when calling this method
   # from can be user fb cred or phone number
   # customer can be nil
-  def process_message(merchant, customer, received_msg, channel)
+  def process_message(merchant, customer, uid, uid_type, received_msg, channel)
     #begin
       return if received_msg.text.blank?
 
@@ -18,7 +18,7 @@ class MessageParser
       # tested
       @received_msg.text = @received_msg.text.strip
       @amt_ary = check_for_payment
-      #is_old_format = (@amt_ary[0] && @amt_ary[1] == "$")
+      # is_old_format = (@amt_ary[0] && @amt_ary[1] == "$")
 
       # scenarios
       # 1. invalid payment intent -> invalid amount and valid sign
@@ -35,12 +35,11 @@ class MessageParser
 
       @is_valid_payment_intent = @amt_ary[0] && @amt_ary[1].present?
       if @is_valid_payment_intent && !is_amount_under_limit?    #tested
-        puts 'above limits'
       elsif @is_valid_payment_intent || @tag.present?            # tested
 
         @tag = Hashtag.where('user_id = ? and lower(tag) = ? and status = 1', @merchant.id, @tag.downcase).first if @tag.present?
         puts "putting tag if any"
-        puts @tag
+        puts @tag.inspect
         
         @amt_ary = parse_amount_and_tag
         puts 'from parse amount and tag'
@@ -52,28 +51,26 @@ class MessageParser
         puts @amt_ary.inspect
        
         return if @amt_ary.blank?          # No further action needed.
-        
+
         # test for active accounts, they are now active by default.
-        if @merchant.fraudulent?
-          # "This Relay account cannot receive payments."
-        elsif @merchant.inactive?
-          # "This Relay phone number is currently unavailable. Please contact us via this email address #{@merchant.email}."
-          # EmailingService.email_merchant_the_message
-          # send_response
+        if @merchant.fraudulent?                     # tested
+          send_response("This #{Rails.application.secrets.app['url']} account cannot receive payments.")
+        elsif @merchant.inactive?                    # tested
           puts 'merchant isnt active'
-        elsif true #merchant_supports_payment?
+          # EmailingService.email_merchant_the_message
+          send_response("This #{Rails.application.secrets.app['url']} phone number is currently unavailable. Please contact us via this email address #{@merchant.email}.")
+        elsif merchant_supports_payment?
           puts 'merchant supports payment'
           #process_payment
         end
        
         #send_deprecation_warning if is_old_format
-
-      elsif @customer.blank?            # checked
+      elsif @customer.blank?            
         is_signup = is_signup?
-        if is_signup
-          merchant_name = @merchant.org_name.present? ? @merchant.org_name : "Relay"
-          merchant_name_prompt = merchant.business_name ? "to " + merchant.business_name : "through Rhombus"
-          url = Rails.application.secrets.url["info"]
+        if is_signup                # tested
+          merchant_name = @merchant.org_name.present? ? @merchant.org_name : Rails.application.secrets.app['name']
+          merchant_name_prompt = merchant.org_name.present? ? "to " + merchant.org_name : "through #{Rails.application.secrets.app['name']}"
+          url = Rails.application.secrets.app["url"]
           short_link = 'test' #UrlShortenerService.shorten_link("#{url}/signup?num=#{@received_msg.from}&referrer_uid=#{@merchant.relay_uid}&referrer=#{merchant_name}")
           # from prod short_link = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?num=#{params[:msisdn]}&referrer_num=#{params[:to]}&referrer=#{merchant_name}")
           send_response("Hi there! You're really close to sending a payment #{merchant_name_prompt} via text. Follow the link to get set up: #{short_link}")
@@ -109,12 +106,11 @@ class MessageParser
   private
 
   def get_conversation_refs_count
-    uid = (@customer.present?) ? @customer.id : @received_msg.from
-    uid_type = (@customer.present?) ? 'user' : (@channel == 'Message') ? 'phone_number' : 'fb_page'
-    conv = Conversation.find_by(merchant_id: @merchant.id, uid_type: uid_type, uid: uid)
+    conv = Conversation.find_by(merchant_id: @merchant.id, uid_type: @uid_type, uid: @uid)
     conv.present? ? ConversationRef.where(conversation_id: conv.id, source: ConversationRef.sources[:customer]).count : 0
   end
 
+  # tested
   # check if text is a payment
   # two forms of payments are currently supported. Ex: $20 fee. Ex. fee +20.
   def check_for_payment
@@ -151,6 +147,10 @@ class MessageParser
     Toolbox::Decimal.to_cents(var)
   end
 
+  def to_int_or_2dp(var)
+    Toolbox::Decimal.to_int_or_2dp(var)
+  end
+
   # tested
   # scan for hashtag and + sign and amt.
   # amt could be invalid, so still track if + was present so user can be notified of payment format.
@@ -172,15 +172,15 @@ class MessageParser
     return amt, plus_present
   end
 
-  #tested
+  # tested
   def is_amount_under_limit?              
     return true if @amt_ary[0] >= 100 && @amt_ary[0] <= 1500000
-    # notify user and send to merchant dashboard
+    puts 'above limits'
     send_response("Please send an amount between 1 dollar and 15,000 dollars. Thanks!")
-    # notify merchant via Email?
     false
   end
 
+  # tested
   def parse_amount_and_tag
     if @tag.blank?                                                      # tested
       # if valid payment, charge amt user texted
@@ -191,7 +191,7 @@ class MessageParser
         puts 'not payment tag'
         @is_valid_payment_intent ? [@amt_ary[0], "no_tag_amt"] : []
       elsif
-        @tag_amt = to_cents(@tag.amount)    # this is a string though
+        @tag_amt = to_cents(@tag.amount)
         puts 'this is tag amount'
         puts @tag_amt 
         if @is_valid_payment_intent               # tested
@@ -208,21 +208,22 @@ class MessageParser
     end
   end
 
+  # tested
   def parse_user
     if @customer.present?  
       re = @customer.has_valid_card?
-      if !re.[:valid]                            #tested
-        # notify user and send to merchant dashboard
-        # send_response notify and send sign in link with payment capture
-        # 'Sorry we couldn't process your payment because: #{re[:text]}. Please follow this link xyz.com to add a card to your profile.'
-        # payment capture notice if cant ovveride_tag_amt
-        # #hello will charge $2. If you'd like to complete this payment, please resend just the hashtag.
+      puts 'has valid card object'
+      puts re.inspect
+      if !re[:valid]                            #tested
         puts 'no card on file or card has expired'
+        # notify user and send sign in link with payment capture
+        send_response("Sorry we couldn't process your payment because: #{re[:text]}. Please follow this link xyz.com to add a card to your profile.")
+        # payment capture notice if cant ovveride_tag_amt
+        # #hello will charge $2. If you'd like to complete this payment, please resend just the hashtag. ???????????
       elsif @amt_ary[1] == "cant_override_tag_amt"            # tested
-        # notify user and send to merchant dashboard
-        # send_response notify of cant_override_tag_amt 
-        # #hello will charge $2. If you'd like to complete this payment, please resend just the hashtag.
+        # notify user of cant_override_tag_amt 
         puts 'user but cant override_tag_amt'
+        send_response("#{@tag.tag} will charge $#{to_int_or_2dp(@tag.amount)}. If you'd like to complete this payment, please resend just the hashtag.")
       else                                                 # tested
         puts 'has card and is present'
         return @amt_ary
@@ -230,38 +231,37 @@ class MessageParser
     else      
       # payment based messages
       if @amt_ary[1] == "cant_override_tag_amt"             # tested
-        #send_sign_up_link with ovveride message   
-        # 'Sorry we couldn't process your payment. Please follow this link xyz.com to create an account and add a card to your profile.' 
-        # #hello will charge $2. If you'd like to complete this payment, please resend just the hashtag.
         puts 'no user and cant_override_tag_amt'
+        # send_sign_up_link with ovveride message 
+        send_response("Sorry we couldn't process your payment. Please follow this link xyz.com to create an account and add a card to your profile.")  
+        ##hello will charge $2. If you'd like to complete this payment, please resend just the hashtag. ???????
       else                                                    # tested
-        #send_sign_up_link without ovveride message
-        # 'Sorry we couldn't process your payment. Please follow this link xyz.com to create an account and add a card to your profile.' 
         puts 'no user and can override_tag_amt or charge tag default'
+        send_response("Sorry we couldn't process your payment. Please follow this link xyz.com to create an account and add a card to your profile.")          
       end
     end
     []
   end
 
+  # tested
   def is_signup?
     words = ['signup', 'sign-up', 'give', 'pay', 'buy', 'donate', '"give"', '"pay"', "'pay'", "'give'", "'donate'", '"donate"', 'checkout']
     return true if words.include? @received_msg.text.downcase.gsub(/\s+/, "")
     return false
   end
 
-  def send_deprecation_warning
-    puts 'send deprecation warning'
-    send_response("Relay tips: We've improved your payment experience with Relay by replacing the $ sign with a + tag. You can now text +10 instead of $10 to make a payment to a local business or non-profit.")
-    send_response('Relay tips: With the + tag, you can now place the amount anywhere in the message. Ex. "pizza & broccoli +8 yay!" instead of "$8 pizza & broccoli')
-    send_response("Relay tips: Hashtags are awesome! You can now use hashtags to specify the item you're paying for or the campaign you're donating towards. Ex. +5 #pizza or +20 #ReliefFund. This helps the organization know exactly what you are paying for.")
-  end
+  #def send_deprecation_warning
+    #send_response("Relay tips: We've improved your payment experience with Relay by replacing the $ sign with a + tag. You can now text +10 instead of $10 to make a payment to a local business or non-profit.")
+    #send_response('Relay tips: With the + tag, you can now place the amount anywhere in the message. Ex. "pizza & broccoli +8 yay!" instead of "$8 pizza & broccoli')
+    #send_response("Relay tips: Hashtags are awesome! You can now use hashtags to specify the item you're paying for or the campaign you're donating towards. Ex. +5 #pizza or +20 #ReliefFund. This helps the organization know exactly what you are paying for.")
+  #end
 
+  # tested
   def merchant_supports_payment?
     return true if @merchant.can_accept_payments?
-    # notify user and send to merchant dashboard
-    # send_response(""Sorry we currently can't accept payments via text. A member of our team will contact you shortly to assist you.")
-    # send_email_here
-    # false
+    send_response("Sorry we currently can't accept payments via text. A member of our team will contact you shortly to assist you.")
+    # EmailingService.xyz
+    false
   end
 
   def process_payment
@@ -271,7 +271,7 @@ class MessageParser
         res = handle_subscription_through_text
         if res.first
           # send response
-          # "Thanks #{@customer.first_name}, a payment of #{amount} for your #{weekly} subscription to #{@merchant.business_name} has been recieved."
+          # "Thanks #{@customer.first_name}, a payment of #{amount} for your #{weekly} subscription to #{@merchant.org_name} has been recieved."
         else
           # send response  # note the 3rd index in array
         end
@@ -312,21 +312,11 @@ class MessageParser
     short_link = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?amt=#{amt_ary[0]}&num=#{@received_msg.from}
                                       &referrer_uid=#{@merchant.relay_uid}&referrer=#{@merchant.org_name}&msg_id=#{@received_msg.id}")
     send_response("Hi there, thanks for reaching out...to send a payment, sign up here. Thanks! => #{short_link}")
-  end
+  end  
 
-  def send_response(msg)   
-=begin 
-    if @channel == 'Message'
-      message = Message.new
-      message.send_and_save_message(@merchant.rhombus_number, @received_msg.from, msg)
-    elsif @channel == "FbMessage"
-
-    end
-
-    # needs to handle messenger here
-    # Send to merchant's messaging channel
-    RealtimeStreamService.send_message_via_number(@received_msg.from, @merchant.rhombus_number, msg, message.created_at, true) if message
-=end 
+  # tested
+  def send_response(msg)
+    Conversation.find_or_create_conversation_for_message_and_send_publish(@merchant, @customer, @uid_type, @uid, msg, @channel)
   end
 
   def handle_subscription_through_text

@@ -40,7 +40,7 @@ class NexmoEvent
         Conversation.find_or_create_conversation_for_message_and_publish(@merchant, user, uid_type, uid, @message, true)
         @merchant.away_message.check_office_hours(@merchant, user, uid_type, uid, "Message")
         @merchant.update_account_balance(SMS_PRICE_RECEIVED * num_segments)
-        MessageParser.new.process_message(@merchant, user, @message, 'Message')
+        MessageParser.new.process_message(@merchant, user, uid, uid_type, @message, 'Message')
 
       rescue ActiveRecord::RecordNotUnique
       rescue StandardError => e
