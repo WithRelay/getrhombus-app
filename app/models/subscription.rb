@@ -8,6 +8,8 @@ class Subscription < ActiveRecord::Base
   validates_presence_of :plan_id, :merchant_customer_id, :quantity
   validates_numericality_of :quantity, greater_than: 0, only_integer: true
 
+  delegate :name, :interval, :amount, to: :plan, prefix: :plan, allow_nil: true
+
   def create_subscription(hash)
     begin
       return [false] unless self.save

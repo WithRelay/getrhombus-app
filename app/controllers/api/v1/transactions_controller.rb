@@ -6,63 +6,56 @@ class Api::V1::TransactionsController < Api::V1::BaseController
     # you can't refund subscriptions easily.
     # and include only captured transactions 
     # account reload txns are included by default..right
-    @transactions = Transaction.exclude_refunded_transactions().exclude_subscriptions()
+    @transactions = Transaction.exclude_refunded_transactions().exclude_subscriptions().select([:amount_with_taxes, :created_at, :txn_number, :notes])
                                 .only_captured_transactions()
                                 .where(user_id: params[:customer_id], team_id: current_user.id)
                                 .order(created_at: :desc).limit(10)
-                                .select([:amount, :created_at, :txn_number, :notes])
+                                .select([:created_at, :txn_number, :notes])
 
-    render json: @transactions.as_json(methods: :relative_time)
+    render json: @transactions.as_json(methods: [:relative_time, :txn_amount])
   end
 
   def refund
-    begin
-      render(json: { response: 'all done' }, status: 500) and return
-      if params[:type] == "card"  # Because Stripe supports different types
-        re = Refund.refund_card_txn(current_user.id, params, current_user.is_platform?)
+    #begin
+      if params[:type] == "card"    # Because Stripe supports different types
+        re = Refund.new.refund_card_txn(current_user, params)
         render json: { response: re.second }, status: (re.first ? 200 : 500)
       else
-        render json: { response: "Cannot Perform this action." }, status: 500	
+        render json: { response: "Cannot Perform this action." }, status: 500
       end
-    rescue StandardError => e
-      render json: { response: "Something went wrong on our end." }, status: 500
-    end
+    #rescue StandardError => e
+     # render json: { response: "Something went wrong on our end." }, status: 500
+    #end
   end
 
   def create
-    begin
-      render(json: { response: 'asdasdsa' }, status: 200) and return
-      re = setup_charge_data
-      if re.first
-        re = Transaction.new.process_dashboard_txn(@amount, current_user, @customer, params[:notes], @hashtag, params[:capture])
+    #begin
+      customer = User.find_by(id: params[:transaction][:customer_id])
+      re = customer.has_valid_card?
+      if re[:valid]
+        txn = Transaction.new
+        tag = Hashtag.find_by(id: params[:transaction][:hashtag_id])
+        amount = Toolbox::Decimal.to_cents(params[:transaction][:amount])
+        capture = ['1', 'true', true].include?(params[:transaction][:capture]) ? true : false
+        re = txn.process_dashboard_txn(amount, current_user, customer, params[:transaction][:notes], tag, capture)
         if re.first
-          render json: { response: "Charge created" }, status: 200
+          render json: { response: "Charge created", transaction: txn.as_json(only: [:created_at, :txn_number, :notes], methods: [:relative_time, :txn_amount]) }
         else
           render json: { response: re.second }, status: 500
         end
       else
-        render json: { response: re.second }, status: 500
+        render json: { response: re[:text] }, status: 500
       end
-    rescue StandardError => e
-      render json: { response: "Something went wrong on our end." }, status: 500
-    end
+    #rescue StandardError => e
+     # render json: { response: "Something went wrong on our end." }, status: 500
+    #end
   end
 
   private
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def transaction_params
-      params.require(:transaction).permit(:amount, :notes, :capture, :customer_id, :hashtag_id, :item_name)
-    end
-
-    def setup_charge_data
-      @customer = User.find_by(id: params[:user_id])
-      has_valid_card = @customer.has_valid_card?
-      return has_valid_card unless has_valid_card[:valid]
-      params[:amount] = params[:amount].round(2)
-      @hashtag = Hashtag.find_by(id: params[:hashtag_id], user_id: current_user.id)
-      @amount = Toolbox::Decimal.to_cents(params[:amount])
-      [true]
+      params.require(:transaction).permit(:amount, :notes, :capture, :customer_id, :hashtag_id)
     end
 
 end

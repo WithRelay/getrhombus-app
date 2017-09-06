@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170811000245) do
+ActiveRecord::Schema.define(version: 20170826221030) do
 
   create_table "account_reloads", force: :cascade do |t|
     t.integer  "user_id",        limit: 4
@@ -707,6 +707,7 @@ ActiveRecord::Schema.define(version: 20170811000245) do
     t.string   "platform_percent",     limit: 191, default: "0"
     t.integer  "platform_cents",       limit: 4,   default: 0
     t.string   "subscription_percent", limit: 191, default: "0"
+    t.integer  "fee_type",             limit: 4,   default: 1
     t.datetime "created_at",                                       null: false
     t.datetime "updated_at",                                       null: false
   end
@@ -735,7 +736,6 @@ ActiveRecord::Schema.define(version: 20170811000245) do
     t.string   "destination",                        limit: 191
     t.integer  "referenced_user_id",                 limit: 4
     t.string   "referenced_customer_transaction_id", limit: 191
-    t.string   "receipt_sent_at",                    limit: 191
     t.integer  "user_id",                            limit: 4
     t.text     "notes",                              limit: 65535
     t.integer  "referenced_merchant_transaction_id", limit: 4

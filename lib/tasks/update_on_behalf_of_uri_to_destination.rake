@@ -6,5 +6,6 @@ task :update_on_behalf_of_uri_to_destination_account => :environment do
 
  
  # also update all status from 1 to succeeded
+ # also update txn_available_at
 
 end

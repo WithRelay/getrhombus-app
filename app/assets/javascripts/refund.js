@@ -6,7 +6,6 @@
   // transactions page checkbox
   $('.transaction-checkbox').click(function() {
     if ($(this).is(':checked')) {
-      $("#refund-charge").removeClass('hide');
       
       is_conv_page = false;
       
@@ -17,9 +16,7 @@
       
       $('#tran-amount').text(amount);
       $('#last_four').text(last4);      
-    } else {
-      $("#refund-charge").addClass('hide');
-    }
+    };
   });
 
   // customer profile page refund
@@ -54,6 +51,11 @@
 
   $(document).on('click', '#refund-submit', function(e) {
     e.preventDefault();
+
+    if (!CheckedItem.get()) {
+      FlashHandler.setFlashMessage('Please select a transaction to refund.', 'error');
+      return;
+    }
 
     if (txn_num.length) {
       var refund_btn = this;

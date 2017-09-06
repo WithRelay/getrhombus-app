@@ -25,7 +25,7 @@
       </div>
 
       <div class="form-check-box w-checkbox">
-        <%= f.check_box :captured, class: 'w-checkbox-input' %>
+        <input class="w-checkbox-input" type="checkbox" id="transaction_capture">
         <label class="w-form-label" for="checkbox-4">Authorize only</label>
       </div>
       <%= f.submit 'Charge Customer', class: 'button charge-modal-button w-button', id: 'charge-customer' %>

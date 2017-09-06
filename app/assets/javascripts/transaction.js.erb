@@ -4,7 +4,7 @@ $(document).ready(function () {
     $('#transaction-customer-id')
       .selectize({
         maxItems: 1,
-        valueField: 'id',
+        valueField: 'customer_id',
         searchField: ['email', 'card_name', 'phone_number'],
         plugins: ['remove_button'],
         create: false,
@@ -32,13 +32,13 @@ $(document).ready(function () {
               callback();
             },
             success: function(res) {
-              callback(res['customers']);
+              callback(res.data);
             }
           });
         }
       })
       .on('change', function(e) {
-        $('#chargeForm').formValidation('resetField', 'transaction[user_id]');
+        $('#chargeForm').formValidation('resetField', 'transaction[customer_id]');
       })
   }
 
@@ -91,16 +91,12 @@ $(document).ready(function () {
         live: 'disabled',
         // List of fields and their validation rules
         fields: {
-          'transaction[user_id]':{
+          'transaction[customer_id]':{
             validators: {
-              notEmpty: {
-                message: 'Customer is required'
-              },
               callback: {
                 message: 'Please select a customer',
                 callback: function(value, validator, $field) {
-                  var user_id = validator.getFieldElements('transaction[user_id]').val();
-                  return (user_id !== '');
+                  return (value !== '');
                 }
               }
             }
@@ -114,14 +110,10 @@ $(document).ready(function () {
           },
           'transaction[hashtag_id]':{
             validators: {
-                notEmpty: {
-                  message: 'Please select a item'
-                },
                 callback: {
                   message: 'Please select a item',
                   callback: function(value, validator, $field) {
-                    var hashtag_id = validator.getFieldElements('transaction[hashtag_id]').val();
-                    return (hashtag_id !== '');
+                    return (value !== '');
                   }
                 }
               }
@@ -145,7 +137,8 @@ $(document).ready(function () {
         xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
       },
       type: "POST",
-      data: $('#chargeForm').serialize(),
+      data: { transaction: { customer_id: $("#transaction-customer-id").val(), hashtag_id: $("#search-hashtag").val(), 
+              amount: $("#charge-amount").val(), notes: $("#item-description").val(), capture: !$("#transaction_capture")[0].checked } },
       dataType: "json"
     })
     .done(function(data, textStatus, jqXHR) {
@@ -159,5 +152,14 @@ $(document).ready(function () {
       $('#charge-customer').removeAttr('disabled').val("Charge Customer");
     });
   };
+
+  $('#capture-charge').click(function() {
+    if (!CheckedItem.get()) {
+      FlashHandler.setFlashMessage('Select a transaction to charge', 'error');
+    } else {
+      FlashHandler.setConfirmationDialog('#capture-charge', 'Are you sure you want to charge this transaction?', 'Charge');
+    };
+    return false;
+  });
 
 })

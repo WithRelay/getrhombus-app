@@ -87,7 +87,6 @@ class PaymentService
         # the platform always has a platform stripe_customer_id for a user making payment 
         merchant_customer = MerchantCustomer.find_by(merchant_id: User.get_platform_acct_obj.id, customer_id: customer.id)
 
-        puts merchant.inspect
         puts "putting stripe cred"
         puts stripe_cred
 
@@ -95,37 +94,42 @@ class PaymentService
         # 2. platform account is identified as a standalone account. For charging merchants or regular customers. 
         # 3. managed accounts
 
-        if stripe_cred #stripe_cred[:type] == 'standalone'     
-          unless true #merchant.is_platform?
-
+        if stripe_cred[:type] == 'standalone'     
+          unless merchant.is_platform?
             # token creation raises error if it fails
             token = Stripe::Token.create({ customer: merchant_customer.platform_stripe_customer_id },
                                          { stripe_account: stripe_cred[:cred].account_id } )
 
             re = Stripe::Charge.create({
-              amount: amount_with_taxes, currency: currency,
-              metadata: { "message" => msg },
               source: token.id,
+              currency: currency,
+              amount: amount_with_taxes, 
+              metadata: { "message" => msg },              
               description: "Payment from #{customer.email}. Card name: #{customer.card_name}. Last four: #{customer.last4}.",
             }, { stripe_account: stripe_cred[:cred].account_id })
           else
             re = Stripe::Charge.create({
-              amount: amount_with_taxes, currency: currency,
-              customer: merchant_customer.platform_stripe_customer_id, 
+              capture: capture,
+              currency: currency,
+              amount: amount_with_taxes, 
               metadata: { "message" => msg },
+              customer: merchant_customer.platform_stripe_customer_id,
               description: "Payment from #{customer.email}. Card name: #{customer.card_name}. Last four: #{customer.last4}.",
    ########!! statement_descriptor: '', # should already be on our stripe account, can still set this here...get from Edwin
             })
           end
         elsif stripe_cred[:type] == 'managed'         
           re = Stripe::Charge.create({
-            customer: merchant_customer.platform_stripe_customer_id,
-            capture: capture, currency: currency, amount: amount_with_taxes,             
-            description: "Payment from #{customer.email}. Card name: #{customer.card_name}. Last four: #{customer.last4}.",      
-            destination: {
-              amount: amt_less_fees, account: stripe_cred[:cred].account_id,
-            }, 
+            capture: capture,
+            currency: currency, 
+            amount: amount_with_taxes,
             metadata: { "message" => msg },
+            customer: merchant_customer.platform_stripe_customer_id,
+            destination: {
+              amount: amt_less_fees, 
+              account: stripe_cred[:cred].account_id,
+            }, 
+            description: "Payment from #{customer.email}. Card name: #{customer.card_name}. Last four: #{customer.last4}.",
  ########!! statement_descriptor: '', # we will set this here...get from Edwin
           })
         end
@@ -133,6 +137,7 @@ class PaymentService
         [re]
       #rescue Stripe::CardError => e               # Since it's a decline, Stripe::CardError will be caught
        # [false, e, e.json_body[:error][:message], true]
+      # Stripe::InvalidRequestError (Amount must convert to at least 50 cents. 2.08 kr converts to approximately $0.26.)
       #rescue Stripe::StripeError => e
        # [false, e.json_body[:error], "Stripe error"]
       #rescue StandardError => e
@@ -141,11 +146,11 @@ class PaymentService
     end
 
     # return array with txn status, error object, notify customer/merchant
-    def process_captured_charge(charge_id)
+    def capture_charge(charge_id, cred, is_platform)
       begin
-        charge_ary = retrieve_charge(charge_id)       
-        return charge_ary unless charge_ary[0]
-        [charge_ary[1].capture]
+        charge_ary = retrieve_charge(charge_id, cred, is_platform)  
+        return charge_ary unless charge_ary.first
+        [charge_ary.first.capture]
       rescue Stripe::StripeError => e
         [false, e.json_body[:error], "Stripe is unable to process charge. Note that authorized txns over 7 days can no longer be processed."]
       rescue StandardError => e
@@ -154,13 +159,18 @@ class PaymentService
     end
 
     # returns array with refund status, error object
-    def refund_charge(hash)
+    def refund_charge(hash, cred, is_platform)
       begin
-        ch = Stripe::Charge.retrieve(hash[:charge_id])
-        re = ch.refunds.create(reason: hash[:reason], reverse_transfer: true)
-        [true, re]
+        if is_platform
+          re = Stripe::Refund.create(charge: hash[:charge_id], reason: hash[:reason])
+        else
+          re = Stripe::Refund.create({ charge: hash[:charge_id], reason: hash[:reason], 
+                                       refund_application_fee: true, reverse_transfer: true }, 
+                                       { stripe_account: cred.account_id })
+        end
+        [re]
       rescue Stripe::StripeError => e
-        # might need to specify that this is a stripe error
+        # Display a very generic error to the user, and maybe send yourself an email
         [false, e.json_body[:error]]
       rescue StandardError => e
         [false, e]
@@ -327,9 +337,13 @@ class PaymentService
       end
     end
     
-    def retrieve_charge(charge_id)
+    def retrieve_charge(charge_id, cred, is_platform)
       begin
-        re = Stripe::Charge.retrieve(charge_id)
+        if is_platform
+          re = Stripe::Charge.retrieve(charge_id)
+        else
+          re = Stripe::Charge.retrieve(charge_id, { stripe_account: cred.account_id })
+        end
         [re]
       rescue Stripe::StripeError => e
         # Display a very generic error to the user, and maybe send yourself an email

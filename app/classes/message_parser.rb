@@ -61,7 +61,7 @@ class MessageParser
           send_response("This #{Rails.application.secrets.app['url']} phone number is currently unavailable. Please contact us via this email address #{@merchant.email}.")
         elsif merchant_supports_payment?
           puts 'merchant supports payment'
-          #process_payment
+          process_payment
         end
        
         #send_deprecation_warning if is_old_format
@@ -74,14 +74,13 @@ class MessageParser
           short_link = 'test' #UrlShortenerService.shorten_link("#{url}/signup?num=#{@received_msg.from}&referrer_uid=#{@merchant.relay_uid}&referrer=#{merchant_name}")
           # from prod short_link = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?num=#{params[:msisdn]}&referrer_num=#{params[:to]}&referrer=#{merchant_name}")
           send_response("Hi there! You're really close to sending a payment #{merchant_name_prompt} via text. Follow the link to get set up: #{short_link}")
-        elsif @channel == 'Message' && get_conversation_refs_count < 2 && !is_signup
-          first_name = @merchant.full_name.split.first
-          first_name = (first_name.present?) ? "my name is #{first_name}, " : ''
-          custom_welcome = "Hi there, " + first_name + "how can I assist you today? If you're looking to send a payment, simply reply with the amount. Ex. +10 #pizza"
+        elsif @channel == 'Message' && get_conversation_refs_count < 2 && !is_signup  # tested
+          first_name_str = (@merchant.first_name.present?) ? "my name is #{@merchant.first_name}, " : ''
+          custom_welcome = "Hi there, " + first_name_str + "how can I assist you today? If you're looking to send a payment, simply reply with the amount. Ex. +10 #pizza"
           custom_welcome = @merchant.custom_welcome unless @merchant.custom_welcome.blank?
           send_response(custom_welcome)
         end 
-      elsif @customer.present? && is_signup?
+      elsif @customer.present? && is_signup?                     # tested
         re = @customer.has_valid_card?
         if re[:valid]
           send_response("You are all set up, just text the amount and description to complete your payment. Ex: $20 for #pizza.")
@@ -105,6 +104,7 @@ class MessageParser
 
   private
 
+  # tested
   def get_conversation_refs_count
     conv = Conversation.find_by(merchant_id: @merchant.id, uid_type: @uid_type, uid: @uid)
     conv.present? ? ConversationRef.where(conversation_id: conv.id, source: ConversationRef.sources[:customer]).count : 0
@@ -147,6 +147,7 @@ class MessageParser
     Toolbox::Decimal.to_cents(var)
   end
 
+  # tested
   def to_int_or_2dp(var)
     Toolbox::Decimal.to_int_or_2dp(var)
   end
@@ -266,7 +267,7 @@ class MessageParser
 
   def process_payment
 #=begin
-    if not_repeating_payment?
+    #if not_repeating_payment?
       if @tag.present? && @tag.recurring_payment_tag?
         res = handle_subscription_through_text
         if res.first
@@ -275,33 +276,35 @@ class MessageParser
         else
           # send response  # note the 3rd index in array
         end
-      else        
+      else     # tested   
         @new_txn = Transaction.new
-        @new_txn.process_payment(@amt_ary[0], @merchant, @customer, @received_msg.text, (@tag ? @tag.id : nil), @channel, true)
+        @new_txn.process_payment(@amt_ary[0], @merchant, @customer, @received_msg.text, @tag, @channel, true)
         if @new_txn.id.present?
-          @received_msg.update(transaction_id: @new_txn.id)
-          send_payment_responses        
-          puts 'payment went thourhgadsdasdasdasdasds'
+          @received_msg.update_column(:transaction_id, @new_txn.id)
+          send_payment_responses
         end
       end
-    end
+    #end
 #=end
   end
 
-  # move this back???
+  def get_first_name
+    first_name = @customer.first_name.present? ? " " + @customer.first_name : ''
+  end
+
+  # tested
   def send_payment_responses
-    first_name = (@customer.full_name.present?) ? " " + @customer.full_name.split.first : ''
-    msg_to_send = "Thanks" + first_name + ". A payment of #{@new_txn.amt_in_decimal} (#{@new_txn.currency}) "
+    msg_to_send = "Thanks" + get_first_name + ". A payment of #{@new_txn.txn_amount} (#{@new_txn.currency}) "
     msg_to_send += "for #{@tag.tag} " if @tag.present?
     msg_to_send = msg_to_send + (@merchant.tax_percent == "0" ? "was sent to #{@merchant.org_name}." : "plus taxes and fees set by #{@merchant.org_name} was sent.")
-    #@new_txn.send_text_receipt(msg_to_send)
-    #@new_txn.send_email_receipt
+    @new_txn.send_payment_responses(msg_to_send)
   end
-    
+  
+  # tested  
   def not_repeating_payment?
     # if necessary, you could modify the query to return a text sent to a specific merchant..so add user_id_to
     # the last message contains the current message, so remove from results
-    last_messages = @channel.constantize.where("user_id = ? and created_at >= ?", @customer.id, Time.current.utc - 5.minutes).order(created_at: :desc)[1..-1]
+    last_messages = @channel.constantize.where("user_id = ? and created_at >= ?", @customer.id, Time.current - 5.minutes).order(created_at: :desc)[1..-1]
     return true if last_messages.nil?
     
     last_messages.each { |m| return false if m.text.strip == @received_msg.text }

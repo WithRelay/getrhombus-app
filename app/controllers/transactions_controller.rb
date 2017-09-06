@@ -3,8 +3,8 @@ class TransactionsController < ApplicationController
   include DashboardNotification
   include AdditionalUserActions
 
-  before_action :set_notifications, except: [:download_csv]
-  before_action :set_transaction, only: [:show]
+  before_action :set_notifications, except: [:capture, :download_csv]
+  before_action :set_transaction, only: [:capture]
   respond_to :html
 
   load_and_authorize_resource  
@@ -12,7 +12,7 @@ class TransactionsController < ApplicationController
   def index
     if current_user.is_merchant?
       if params[:captured] == "false"
-        @transactions = Transaction.includes(:user).where(team_id: current_user.id).only_uncaptured_transactions()
+        @transactions = Transaction.includes(:user, :hashtag).where(team_id: current_user.id).only_uncaptured_transactions()
                                  .where("created_at >= ?", Time.zone.at(7.days.ago))
                                  .exclude_subscriptions()
                                  .paginate(page: params[:page], per_page: PAGINATION_PER_PAGE)
@@ -21,7 +21,7 @@ class TransactionsController < ApplicationController
         # Exclude refunded transactions, Exclude subscriptions since these queries are not read only
         # query is for refundable transactions. You can't refund subscriptions easily.
         # and include only captured transactions. Account reload txns are included by default.right
-        @transactions = Transaction.includes(:user).exclude_subscriptions().only_captured_transactions()
+        @transactions = Transaction.includes(:user, :hashtag).exclude_subscriptions().only_captured_transactions()
                                     .exclude_refunded_transactions().where(team_id: current_user.id)
                                     .paginate(page: params[:page], per_page: PAGINATION_PER_PAGE)
                                     .order(created_at: :desc)
@@ -31,7 +31,15 @@ class TransactionsController < ApplicationController
       delete_captured_payment_session
       @transactions = []
     end
+
+    @authorized_txns = params[:captured] == "false" ? true : false 
     @transactions.present? ? render_requested_format(@transactions) : render(:empty_transaction)
+  end
+
+  def capture
+    re = @transaction.capture_uncaptured_txn
+    flash[ re.first ? :notice : :error ] = re.second
+    redirect_to user_transactions_path(captured: 'false')
   end
 
   # generate user csv data

@@ -5,34 +5,36 @@ class Refund < ActiveRecord::Base
 
   # Only managed account txns can be refunded. 
   # We aren't refunding Standalone acct txns going forward once we move to managed accounts.
-  def self.refund_card_txn(merchant_id, params, is_admin)
-    begin     
-      txn = Transaction.where(txn_number: params[:txn_number]).first 
-      
+  def refund_card_txn(merchant, params)
+    #begin     
+      txn = Transaction.includes(:refund).where(txn_number: params[:txn_number]).first 
+      is_platform = merchant.is_platform?
+
       if txn.nil?
-        [false, "Transaction doesnt exists."]
-      elsif txn.refund.nil?
+        [false, "Transaction doesn't exists."]
+      elsif txn.refund.present?
         [false, "Transaction has already been refunded."]
-      # temp option for admin refunds
-      elsif !is_admin && txn.team_id != merchant_id
+      elsif !is_platform && txn.team_id != merchant.id            # For admin refunds.
         [false, "Transaction wasn't created by you."]
       else
-        refund_reason = params[:reason]
+        params[:charge_id] = txn.txn_uri
         params[:reason] = 'requested_by_customer' unless STRIPE_REFUND_REASONS.include? params[:reason]
 
-        re = PaymentService.refund_charge(params)
+        re = PaymentService.refund_charge(params, merchant.get_stripe_cred[:cred], is_platform)
+        puts re.inspect
+
         if re.first
-          Refund.create(uri: re.second.id, time: re.second.created, reason: refund_reason, transaction_id: txn.id)
+          self.update(uri: re.first.id, time: re.first.created, reason: params[:reason], transaction_id: txn.id)
           send_refund_notification
           [true, "Payment has been refunded."]
         else 
           [false, "We're unable to refund this transaction. Please try again later."]
         end
       end     
-    rescue StandardError => err
+    #rescue StandardError => err
       # notify team of error
-      [false, "We're unable to refund this transaction. Please try again later."]
-    end 
+     # [false, "We're unable to refund this transaction. Please try again later."]
+    #end 
   end
 
   # Refund notification

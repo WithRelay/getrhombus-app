@@ -28,7 +28,7 @@ class PlansController < ApplicationController
         redirect_to user_plans_path, flash: { error: "We couldn't delete the plan" }
       end
     else
-      redirect_to user_plans_path, flash: { warning: "You can't delete plan with subscription..." }
+      redirect_to user_plans_path, flash: { warning: "You can't delete a plan with subscription..." }
     end
   end
 

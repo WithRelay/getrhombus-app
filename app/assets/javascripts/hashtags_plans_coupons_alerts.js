@@ -68,8 +68,7 @@ $(document).ready(function () {
 
   // deactivate hashtag button 
   $('#deactivate-hashtag').click(function() {
-    var selectedElement = CheckedItem.get();
-    if (selectedElement == false) {
+    if (!CheckedItem.get()) {
       FlashHandler.setFlashMessage('Select a hashtag to change status', 'error');
     } else {
       FlashHandler.setConfirmationDialog('#deactivate-hashtag', 'Are you sure you want to change hashtag status?', 'Change');

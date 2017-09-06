@@ -47,7 +47,7 @@ class StripeEvent
       return unless @data
       update_subscription_data
       # Email admin about update
-      EmailingService.customer_subscription_updated(@data.merchant_customer.merchant, @data.plan.name, @data.id)
+      EmailingService.customer_subscription_updated(@data.merchant_customer.merchant, @data.plan_name, @data.id)
     end
 
     # Most fields aren't important but we can resave data

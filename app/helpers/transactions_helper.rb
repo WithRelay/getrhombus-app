@@ -20,22 +20,18 @@ module TransactionsHelper
   end
 
   def transactions_change
-    transactions
-    tday_txns_count = @all_transactions[0].count
-    yday_txns_count = @all_transactions[1].count
+    tday_txns_count = @all_transactions[0].length
+    yday_txns_count = @all_transactions[1].length
     percent_change = (tday_txns_count - yday_txns_count).to_f/yday_txns_count * 100 if yday_txns_count > 0
     display_change(percent_change.round) if percent_change.present?
   end
 
   def transactions_total_amount
-    @send_btns_disabled = 0
-    @all_transactions[0].each{ |arr| @todays_txns_amount += arr[0].to_f }
-    @todays_txns_amount
+    @yday_txns_amount = @all_transactions[1].inject(0) { |sum, x| sum + x[0] }
+    @todays_txns_amount = @all_transactions[0].inject(0) { |sum, x| sum + x[0] }
   end
 
   def transactions_total_amount_change
-    @yday_txns_amount = 0
-    @all_transactions[1].each{ |arr| @yday_txns_amount += arr[0] }
     percent_change = (@todays_txns_amount - @yday_txns_amount).to_f/@yday_txns_amount * 100 if @yday_txns_amount > 0
     display_change(percent_change.round) if percent_change.present?
   end
@@ -54,10 +50,10 @@ module TransactionsHelper
   end
 
   def transaction_customer_field(f)
-    if (controller.action_name == 'show' && controller.controller_name == 'merchant_customers')
-      f.hidden_field :user_id, value: @merchant_customer.customer_id
+    if controller.action_name == 'show' && controller.controller_name == 'merchant_customers'
+      f.hidden_field :customer_id, value: @merchant_customer.customer_id
      else
-      f.text_field :user_id, class: 'form-control subscriber-name text-field w-input', id: 'transaction-customer-id', placeholder: 'Enter customer\'s name or phone no.'
+      f.text_field :customer_id, class: 'form-control subscriber-name text-field w-input', id: 'transaction-customer-id', placeholder: 'Enter customer\'s name or phone no.'
     end
   end
 

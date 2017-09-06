@@ -11,9 +11,5 @@ class ChangeStripeFeeDefaultsInTransactionFee < ActiveRecord::Migration
 
       t.timestamps null: false
     end
-
-    TransactionFee.create(provider: 'stripe');
-    TransactionFee.create(provider: 'stripe', provider_percent: '0.028', provider_cents: 30);
-
   end
 end

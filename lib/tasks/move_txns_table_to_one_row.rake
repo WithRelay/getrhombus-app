@@ -83,3 +83,5 @@ end
 
 # 4.215 - 4.22 (round up/down)  45.525
 # .815 - .81 (round down)   32.775
+
+# create seeds for transaction fees for platform and merchant defaults

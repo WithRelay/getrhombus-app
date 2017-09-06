@@ -17,10 +17,8 @@ class MoveRatePercentToStripeCred < ActiveRecord::Migration
       t.timestamps null: false
     end
 
-    TransactionFee.create({ id: 1, provider: 'stripe' });
-
     add_column :stripe_creds, :transaction_fee_id, :integer, index: true
-    add_column :transactions, :transaction_fee_id, :integer, { index: true, after: :amount_less_fees, default: 1 }
+    add_column :transactions, :transaction_fee_id, :integer, { index: true, after: :amount_less_fees }
 
   end
 end

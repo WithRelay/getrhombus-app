@@ -205,11 +205,11 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
           $scope.selected_conversation = {};
           $scope.conversation_selected = false;
           $scope.open_conversations_count -= 1;
+          $('.update-close-modals').click();
         }, function(data) {
           FlashHandler.setFlashMessage('Unable to close conversation :(','error');
         })
         .finally(function() { 
-          $('#mark-as-done-div').trigger('close'); 
           $scope.close_conversation_btn = "Mark conversation as done";
           $scope.disable_secondary_btns = false;
         });
@@ -416,13 +416,13 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
             $scope.selected_conversation_messages.push(data.data);
             $scope.mms.text = '';
           }
+          $('.update-close-modals').click();
         }, function (response) {
           FlashHandler.setFlashMessage('Sorry, unable to send mms :(', 'error');
         })
         .finally(function() {
           $scope.mms.file = '';
           $scope['send_mms_btn'] = "Send";
-          $('#mms-file-preview-div').trigger('close');
           $scope.disable_secondary_btns = false;
         });
       }
@@ -581,26 +581,29 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
     // function to submit the form after all validation has occurred
     $scope.submitChargeForm = function(isValid) {
       if (isValid && $scope.online()) {
-        //$scope.disable_secondary_btns = true;
+        $scope.disable_secondary_btns = true;
         $scope.charge_btn = "Please wait...";
-        $scope.charge_data.user_id = $scope.selected_conversation.uid;
+        $scope.charge_data.customer_id = $scope.selected_conversation.uid;
         $scope.charge_data.hashtag_id = $scope.charge.hashtag_id;
-        /*$scope.charge_data.amount = $scope.charge.amount;
+        //*
+        $scope.charge_data.amount = $scope.charge.amount;
         $scope.charge_data.notes = ($scope.charge.notes) ? $scope.charge.notes : '';
-        $scope.charge_data.capture = ($scope.charge.authorize) ? $scope.charge.authorize : false;
+        $scope.charge_data.capture = !$scope.charge.authorize;
 
         transactionService.createCharge($scope.charge_data)
         .then(function (data) {
-          console.log('charge complete');
-          console.log(data)
-        }, function (response) {
-          console.log(response);
-          FlashHandler.setFlashMessage(response.error, 'error');
+          $('.update-close-modals').click();
+          FlashHandler.setFlashMessage(data.response, 'notice');
+          $scope.customer_transactions.unshift(data.transaction);
+        }, function (data) {
+          console.log(data);
+          FlashHandler.setFlashMessage(data.response, 'error');
         })
         .finally(function() {
           $scope.disable_secondary_btns = false;
           $scope.charge_btn = "Charge Customer";
-        });*/
+        });
+        //*/
       }
     };
 
@@ -654,11 +657,11 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
           .then(function(data) {
             $scope.customer_lists.push({ id: list.id, name: list.name, user_added: data.user_added });
             FlashHandler.setFlashMessage(data.message, 'notice');
+            $('.update-close-modals').click();
           }, function(data) {
             FlashHandler.setFlashMessage(data.message, 'error');
           })
           .finally(function() { 
-            $('#Add-to-list-dropdown').trigger('close'); 
             $scope.add_member_to_list_btn = 'Add member to list';
             $scope.disable_secondary_btns = false;
           });
@@ -722,7 +725,6 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
             FlashHandler.setFlashMessage(data.error, 'error');
           })
           .finally(function() { 
-            $('#Add-to-list-dropdown').trigger('close'); 
             $scope.schedule_notification_btn = "Schedule notification";
             $scope.disable_secondary_btns = false;
           });

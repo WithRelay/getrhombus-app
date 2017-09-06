@@ -15,7 +15,7 @@ class Api::V1::PlansController < Api::V1::BaseController
       end
       render json: { "plans" => res }, status: 200
     rescue StandardError => e
-      render json: { error: "Unable to find your Plans" }, status: 500
+      render json: { error: "Unable to find your plans" }, status: 500
     end
   end
 

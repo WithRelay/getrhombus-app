@@ -24,7 +24,7 @@ var CheckedItem = new function() {
       var msg = yes_button.parent().find('p').text(),
       resource = new Resource(getCampaignActionUrl(selectedElement, msg));
       resource.updateOrDelete();
-    } else if (obj_type == 'hashtag' && confirmBtnText.toLowerCase().indexOf('change') > -1) {
+    } else if ((obj_type == 'hashtag' && confirmBtnText.toLowerCase().indexOf('change') > -1) || obj_type == 'transaction') {
       selectedElement.parents('.edit_' + obj_type).submit();
     } else {
       if (isConfirm) $(selector).attr(isConfirm, true);

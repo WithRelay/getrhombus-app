@@ -13,7 +13,7 @@ module SubscriptionsHelper
   end
 
   def saas_plan_name
-    saas_sub.plan.name if saas_sub.present?
+    saas_sub.plan_name if saas_sub.present?
   end
 
   def saas_customers_contacts_count
@@ -40,7 +40,7 @@ module SubscriptionsHelper
   end
 
   def subscription_plan_interval
-    @saas_sub ? @saas_sub.plan.interval : ''
+    @saas_sub ? @saas_sub.plan_interval : ''
   end
 
   def subscription_plan_amount

@@ -67,6 +67,9 @@ Rails.application.routes.draw  do
       resources :hashtags, except: [:show] do
         patch 'change_status', on: :member
       end
+      resources :transactions, only: [] do
+        patch 'capture', on: :member
+      end
       resources :subscriptions do
         get 'download' => 'subscriptions#download_csv', constraints: { format: 'csv' }, on: :collection
       end

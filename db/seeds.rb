@@ -3,6 +3,12 @@
 #---
 # encoding: utf-8
 
+## Transaction Fee Seed
+#TransactionFee.create(provider: 'stripe', fee_type: 0);
+#TransactionFee.create(provider: 'stripe');
+#TransactionFee.create(provider: 'stripe', provider_percent: '2.8', provider_cents: 30);
+
+
 3.times do
 Transaction.create!(
 	referenced_user_id: [3, 5, 7, 9, 11, 13, 15, 17, 19 ].sample,

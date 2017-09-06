@@ -12,12 +12,12 @@ $(document).ready(function () {
         validators: {
           callback: {
             callback:function(value, validator, $field){
-              if($('#send-alert').is(':checked') && value == ''){
+              if ($('#send-alert').is(':checked') && value == '') {
                 return {
                   valid: false,
                   message: 'Add at least one valid email'
                 }
-              }else{
+              } else {
                 return {
                   valid: true
                 }
@@ -31,12 +31,12 @@ $(document).ready(function () {
         validators: {
           callback: {
             callback:function(value, validator, $field){
-              if($('#send-alert').is(':checked') && $('#alert-include-sms').is(':checked') && value == ''){
+              if ($('#send-alert').is(':checked') && $('#alert-include-sms').is(':checked') && value == '') {
                 return {
                   valid: false,
                   message: 'Add at least one valid number'
                 }
-              }else{
+              } else {
                 return {
                   valid: true
                 }
