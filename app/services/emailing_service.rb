@@ -846,7 +846,7 @@ class EmailingService
       begin
         template_name = 'invoice-created'
         template_content = []
-        message = { 'subject' => 'Invoice',
+        message = { 'subject' => 'Invoice Created',
           "global_merge_vars"=> [{ "name" => "first_name", "content" => 'Team' },
             { 'name' => 'id', 'content' => invoice.id },
             { 'name' => 'subscription_id', 'content' => invoice.subscription_id },

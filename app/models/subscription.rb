@@ -57,8 +57,8 @@ class Subscription < ActiveRecord::Base
         if res.first
           self.update(
             stripe_subscription_id: res.second.id,
-            transaction_fee_id: fee_schedule ? fee_schedule.id : nil,
-            application_fee_percent: hash[:application_fee_percent],
+            transaction_fee_id: fee_schedule.try(:id),
+            tax_percent: hash[:tax_percent],
             status: res.second.status,
             stripe_livemode: res.second.livemode,
             trial_end: res.second.trial_end,

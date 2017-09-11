@@ -158,7 +158,7 @@ $(document).ready(function () {
               callback();
             },
             success: function(res) {
-              callback(res['customers']);
+              callback(res.data);
             }
           });
         }

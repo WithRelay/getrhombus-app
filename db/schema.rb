@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170826221030) do
+ActiveRecord::Schema.define(version: 20170907013234) do
 
   create_table "account_reloads", force: :cascade do |t|
     t.integer  "user_id",        limit: 4
@@ -671,27 +671,26 @@ ActiveRecord::Schema.define(version: 20170826221030) do
   add_index "stripe_creds", ["user_id"], name: "index_stripe_creds_on_user_id", using: :btree
 
   create_table "subscriptions", force: :cascade do |t|
-    t.integer  "merchant_customer_id",    limit: 4
-    t.string   "stripe_subscription_id",  limit: 191
-    t.integer  "plan_id",                 limit: 4
-    t.integer  "coupon_id",               limit: 4
-    t.integer  "transaction_fee_id",      limit: 4
-    t.decimal  "application_fee_percent",             precision: 8, scale: 2
-    t.integer  "quantity",                limit: 4,                           default: 1
-    t.string   "tax_percent",             limit: 191
-    t.integer  "start",                   limit: 4
-    t.integer  "current_period_start",    limit: 4
-    t.integer  "current_period_end",      limit: 4
-    t.integer  "canceled_at",             limit: 4
-    t.boolean  "cancel_at_period_end",    limit: 1
-    t.integer  "ended_at",                limit: 4
-    t.integer  "trial_start",             limit: 4
-    t.integer  "trial_end",               limit: 4
-    t.string   "status",                  limit: 191
-    t.boolean  "stripe_livemode",         limit: 1
-    t.integer  "created",                 limit: 4
-    t.datetime "created_at",                                                              null: false
-    t.datetime "updated_at",                                                              null: false
+    t.integer  "merchant_customer_id",   limit: 4
+    t.string   "stripe_subscription_id", limit: 191
+    t.integer  "plan_id",                limit: 4
+    t.integer  "coupon_id",              limit: 4
+    t.integer  "transaction_fee_id",     limit: 4
+    t.integer  "quantity",               limit: 4,   default: 1
+    t.string   "tax_percent",            limit: 191
+    t.integer  "start",                  limit: 4
+    t.integer  "current_period_start",   limit: 4
+    t.integer  "current_period_end",     limit: 4
+    t.integer  "canceled_at",            limit: 4
+    t.boolean  "cancel_at_period_end",   limit: 1
+    t.integer  "ended_at",               limit: 4
+    t.integer  "trial_start",            limit: 4
+    t.integer  "trial_end",              limit: 4
+    t.string   "status",                 limit: 191
+    t.boolean  "stripe_livemode",        limit: 1
+    t.integer  "created",                limit: 4
+    t.datetime "created_at",                                     null: false
+    t.datetime "updated_at",                                     null: false
   end
 
   add_index "subscriptions", ["coupon_id"], name: "fk_rails_56c77d859b", using: :btree

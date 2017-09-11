@@ -53,7 +53,6 @@ class StripeEvent
     # Most fields aren't important but we can resave data
     def update_subscription_data
       # plan_id, user_id, team_id, coupon_id do not need to be set since they are immutable
-      @data.application_fee_percent = @hash[:application_fee_percent]
       @data.quantity = @hash[:quantity]
       @data.tax_percent = @hash[:tax_percent]
       @data.current_period_start = @hash[:current_period_start]
@@ -98,17 +97,18 @@ class StripeEvent
       @data = Invoice.where(stripe_invoice_id: @hash[:id]).first_or_initialize
       setup_invoice_data
       # notify admin
-      EmailingService.invoice_created(@merchant_customer.customer, @data) if @merchant_customer
+      EmailingService.invoice_created(@data) if @merchant_customer
     end
 
     def setup_invoice_data
       # Ensure all these exists else it isnt ours. They should.
       key = (@stripe_event_for == 'platform') ? :platform_stripe_customer_id : :managed_stripe_customer_id
-      @merchant_customer = MerchantCustomer.find_by(key => @hash[:customer])
+      @merchant_customer = MerchantCustomer.includes(:merchant).find_by(key => @hash[:customer])
 
       if @merchant_customer
         @data.team_id = @merchant_customer.merchant_id
         @data.customer_id = @merchant_customer.customer_id
+        @team = @merchant_customer.merchant
 
         # update coupon_id
         if @hash[:discount].present?
@@ -128,10 +128,10 @@ class StripeEvent
 
       # retrieve charge details
       # test that charge is true
-      charge = PaymentService.retrieve_charge(@hash[:charge]) if @hash[:charge]
+      charge = PaymentService.retrieve_charge(@hash[:charge], @team.get_stripe_cred[:cred], @team.is_platform?) if @hash[:charge]
       # a transaction should not already exist but we need to check if it does so we don't send out emails again
       # A tranasaction has only one log unlike subscriptions
-      txn = Transaction.where(txn_uri: charge.id).first_or_initialize if charge.try(:first)
+      txn = Transaction.where(txn_uri: charge.first.id).first_or_initialize if charge.try(:first)
 
       # if we havent notified customer before
       # for now, we have only one line for each invoice - the subscription
