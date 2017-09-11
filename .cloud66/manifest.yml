@@ -5,3 +5,8 @@ production:
     load_balancer:
         configuration:
             balance: leastconn
+development:
+    mysql:
+        configuration:
+            version: 5.6.33
+  
