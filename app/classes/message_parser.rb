@@ -261,7 +261,7 @@ class MessageParser
   def merchant_supports_payment?
     return true if @merchant.can_accept_payments?
     send_response("Sorry we currently can't accept payments via text. A member of our team will contact you shortly to assist you.")
-    # EmailingService.xyz
+    # EmailingService.missed_payment
     false
   end
 
