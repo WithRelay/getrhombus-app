@@ -8,5 +8,5 @@ production:
 development:
     mysql:
         configuration:
-            version: 5.6.33
-  
+            version: 5.6
+            engine: percona
