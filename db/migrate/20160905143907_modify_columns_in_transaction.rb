@@ -1,8 +1,8 @@
 class ModifyColumnsInTransaction < ActiveRecord::Migration
   def change
-    rename_column :transactions, :expiration_month, :exp_month
-    rename_column :transactions, :expiration_year, :exp_year
-    rename_column :transactions, :transaction_uri, :txn_uri
+    #rename_column :transactions, :expiration_month, :exp_month
+    #rename_column :transactions, :expiration_year, :exp_year
+    #rename_column :transactions, :transaction_uri, :txn_uri
     rename_index :transactions, 'index_transactions_on_transaction_number', 'index_transactions_on_txn_number'
     rename_column :transactions, :transaction_number, :txn_number
     rename_column :transactions, :transaction_available_at, :txn_available_at
