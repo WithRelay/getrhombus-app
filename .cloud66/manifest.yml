@@ -1,12 +1,11 @@
 production:
-    ruby:
-        configuration:
-            version: 2.2.3
+  ruby:
+    configuration:
+      version: 2.2.3
     load_balancer:
-        configuration:
-            balance: leastconn
+      configuration:
+        balance: leastconn
 development:
-    mysql:
-        configuration:
-            version: 5.6
-            engine: percona
+  mysql:
+    configuration:
+      version: 5.6
