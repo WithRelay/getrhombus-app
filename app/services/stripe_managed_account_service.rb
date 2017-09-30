@@ -12,10 +12,6 @@ class StripeManagedAccountService < Struct.new( :user, :params )
   # since we are not accessing contant outside of a class so making private all constants
   private_constant :ROUTING_COUNTRIES, :BANK_CODE_COUNTRIES, :COMMON_COUNTRIES
 
-  # sets api version for connect account it needs recent 2014-12-17 plus version
-  # see https://stripe.com/docs/connect/managed-accounts for details
-  Stripe.api_version = '<redacted_phone_number>'
-
   # creates stripe managed and individual account
   def create_account
     begin

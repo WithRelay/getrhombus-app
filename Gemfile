@@ -16,7 +16,7 @@ gem 'resque-scheduler', :require => "resque/scheduler/server"
 gem 'ar_after_transaction'
 
 # For Authorization
-gem 'cancancan', '~> 1.10'
+gem 'cancancan', '~> 2.0'
 
 #perfect scrollbar
 gem 'perfect-scrollbar-rails', '~> 0.6.10'
@@ -25,10 +25,8 @@ gem 'exception_notification'
 gem 'slack-notifier'
 
 #gem 'cocoon'
-# bread & butter
 gem "stripe"
 gem 'omniauth-stripe-connect'
-
 
 gem 'paperclip', :git=> 'https://github.com/thoughtbot/paperclip', :ref => '523bd46c768226893f23889079a7aa9c73b57d68'
 gem 'aws-sdk'
@@ -58,15 +56,10 @@ gem 'newrelic_rpm'
 gem 'will_paginate', '~> 3.0.6'
 #gem 'bootstrap-will_paginate'
 
-# For contact us form
-gem "mail_form"
-
 gem 'responders', '~> 2.0'
 
 #OmniAuth Facebook
 gem 'omniauth-facebook'
-
-gem "messenger_platform_rails"
 
 # Accessing Facebook Graph API
 gem "koala"
@@ -76,9 +69,6 @@ gem 'friendly_id', '~> 5.1.0'
 group :production do
   gem "passenger"
 end
-
-# Rails flash integration with PNotify
-gem 'pnotify-rails'
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
@@ -110,7 +100,7 @@ gem 'angular-rails-templates', '~> 1.0', '>= 1.0.2'
 gem 'pubnub', '~> 4.0.22'
 
 #Twilio
-gem 'twilio-ruby', '~> 5.0.0.rc21'
+gem 'twilio-ruby', '~> 5.3.0'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.1.7'
