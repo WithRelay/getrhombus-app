@@ -1,5 +1,7 @@
 # Referrers Controller
 class ReferrersController < ApplicationController
+  include DashboardNotification
+  before_action :set_notifications, only: [:new]
   before_action :set_referrer, only: %i[show edit update destroy]
 
   respond_to :html, :json
@@ -18,13 +20,15 @@ class ReferrersController < ApplicationController
     respond_with(@referrer)
   end
 
-  def edit; end
-
-  def create
+  def create    
     @referrer = Referrer.new(referrer_params)
-    @referrer.save
+    if @referrer.save
+      flash[:notice] = 'Referral was successful'
+    else
+      flash[:error] = 'Referral failed'
+    end
     ##### send email to referrer and referree here..
-    respond_with(@referrer)
+    redirect_to user_refer_business_path
   end
 
   def update
@@ -49,15 +53,10 @@ class ReferrersController < ApplicationController
   end
 
   def referrer_params
-    params.require(:referrer).permit(
-      :referrer_email,
-      :email,
-      :phone_number,
-      :country,
-      :referrer_name,
-      :org_name,
-      :ip, :city, :region, :postal,
-      :referrer_uid
-    )
+    params.require(:referrer).permit(:referrer_email, :email, :phone_number, :country, :referrer_name, :org_name,
+                                        :ip, :city, :region, :postal, :referrer_uid).tap do |r|
+      r[:referrer_uid] = current_user.relay_uid if action_name == 'create'
+    end
   end
+
 end

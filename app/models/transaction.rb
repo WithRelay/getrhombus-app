@@ -61,7 +61,8 @@ class Transaction < ActiveRecord::Base
       # handle response
       if @stripe_res # tested
         update_transaction_data
-        [true, "Charge created"]
+        puts '0sssssssssssssssssssssss'
+        return [true, "Charge created"]
       else
         # This should only run for text based payments. Dashboard payments is handled differently.
         if @source == 'text'
@@ -80,6 +81,7 @@ class Transaction < ActiveRecord::Base
   # tested
   def get_fees_schedule
     #@fee_schedule = @merchant.is_platform? ? TransactionFee.platform.first : @merchant.get_stripe_cred[:cred].transaction_fee
+    # use this
     @fee_schedule = @merchant.get_stripe_cred[:cred].transaction_fee
     percent1, cents1 = @fee_schedule.provider_percent.to_f, @fee_schedule.provider_cents.to_f
     percent2, cents2 = @fee_schedule.platform_percent.to_f, @fee_schedule.platform_cents.to_f
@@ -218,7 +220,7 @@ class Transaction < ActiveRecord::Base
     #end
   end
 
-   # tested
+  # tested
   def amt_in_decimal(amt)
     Transaction.big_decimal_2dp(amt.to_f/100)
   end

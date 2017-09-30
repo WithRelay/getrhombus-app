@@ -66,7 +66,9 @@ Rails.application.routes.draw  do
       patch 'update_fb_page' => 'fb_pages#update_user_fb_page'
       resources :hashtags, except: [:show] do
         patch 'change_status', on: :member
-      end
+      end      
+      get 'refer_business' => 'referrers#new'
+      resources :referrers, only: [:create]
       resources :transactions, only: [] do
         patch 'capture', on: :member
       end
@@ -91,7 +93,6 @@ Rails.application.routes.draw  do
       get 'update-managed-acct' => 'users#managed_acct'
       patch 'managed-accounts' => "users#create_managed_acct"
       patch 'update-managed-acct' => 'users#update_managed_acct'
-      match 'refer_business' => 'users#refer_business', via: [:get, :post]
     end
   end
 

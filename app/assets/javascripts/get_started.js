@@ -10,7 +10,8 @@ $(document).ready(function () {
   } else if (url.pathname.indexOf("/add-card-info") != -1) {
     var captured_amt = validate_captured_amt(global_page_params['captured_amt']);
     if (captured_amt) {
-      $('#captured_amt').val(captured_amt);
+      $('#msg_id').val(global_page_params['msg_id']);
+      $('#channel').val(global_page_params['channel']);
       $("#cc-submit").val('Pay $' + UtilFunctions.to_int_or_2dp(captured_amt/100) + " & Continue");
     };
   } else if (url.pathname == '/users') {

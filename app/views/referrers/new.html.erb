@@ -1,5 +1,10 @@
-<h1>New Referrer</h1>
-
-<%#= render 'form' %>
-
-<%= link_to 'Back', referrers_path %>
+<%= render 'shared/return_to_dashboard'%>
+<div class="dashboard-body settings w-clearfix">
+  <div class="dash-content-container settings">
+    <h4 class="form-header">Refer Businesses</h4>
+    <div class="flex-underline form-header-underline"></div>
+    <div class="account-settings-form-wrapper">
+      <%= render 'shared/referrer_form' %>
+    </div>
+  </div>
+</div>

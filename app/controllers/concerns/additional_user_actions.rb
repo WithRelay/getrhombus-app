@@ -58,23 +58,6 @@ module AdditionalUserActions
     end
   end
 
-  # using this to hold data till we get to transactions page for customer
-  # could rebuild the link but we don't want users refreshing the page and trigerring more payments
-  # since i will delete this session data the first time
-  def set_captured_payment_session
-    session[:msg_id] = params[:user][:msg_id]
-    session[:tag_id] = params[:user][:tag_id]
-    session[:captured_amt] = params[:user][:captured_amt]
-    session[:referrer_uid] = params[:user][:referrer_uid]    
-  end
-
-  def delete_captured_payment_session
-    session.delete(:tag_id)
-    session.delete(:msg_id)
-    session.delete(:captured_amt)
-    session.delete(:referrer_uid)    
-  end
-
   def add_to_merchant_customer_and_referrer_and_fb_cred
     # do this first so that in merchant customer, it can find a user's page specific id
     if params[:user][:page_specific_id].present?
@@ -101,25 +84,6 @@ module AdditionalUserActions
     else
       # use 500 page after it is built
       render :template => "static_pages/to_404.html"
-    end
-  end
-
-  def refer_business
-    if params[:referrer].present?
-      @referrer = Referrer.new(referrer_params)
-      if @referrer.save
-        flash[:notice] = 'Referral was successful'
-      else
-        flash[:error] = 'Referral failed'
-      end
-      redirect_to user_refer_business_path
-    end
-  end
-
-  def referrer_params
-    params.require(:referrer).permit(:referrer_email, :email, :phone_number, :country, :referrer_name, :org_name,
-                                        :ip, :city, :region, :postal).tap do |r|
-      r[:referrer_uid] = current_user.relay_uid
     end
   end
 

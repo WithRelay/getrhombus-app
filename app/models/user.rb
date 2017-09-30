@@ -7,7 +7,7 @@ class User < ActiveRecord::Base
   include SegmentQueries
 
   attr_accessor :phone, :msg_id, :captured_amt, :referrer
-  attr_accessor :tag_id, :referrer_uid, :tos_acceptance, :customer_source
+  attr_accessor :channel, :referrer_uid, :tos_acceptance, :customer_source
   attr_accessor :area_code, :card_token, :page_specific_id
 
   # validation rules for user attributes
@@ -200,7 +200,7 @@ class User < ActiveRecord::Base
   end
 
   def has_valid_card?
-    return { valid: false, text: 'No valid card on file', type: 'no_source' } if card_id.blank? && (exp_year.blank? || exp_month.blank?)
+    return { valid: false, text: 'No valid card on file', type: 'no_source' } if card_id.blank?
     return { valid: true } if exp_year.to_i >= Time.current.year && exp_month.to_i >= Time.current.month
     return { valid: false, text: 'Default card has expired', type: 'expired_source' }
   end

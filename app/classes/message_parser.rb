@@ -217,14 +217,15 @@ class MessageParser
       puts re.inspect
       if !re[:valid]                            #tested
         puts 'no card on file or card has expired'
-        # notify user and send sign in link with payment capture
-        send_response("Sorry we couldn't process your payment because: #{re[:text]}. Please follow this link xyz.com to add a card to your profile.")
-        # payment capture notice if cant ovveride_tag_amt
-        # #hello will charge $2. If you'd like to complete this payment, please resend just the hashtag. ???????????
+        if @amt_ary[1] == "cant_override_tag_amt"
+          cant_override_tag_amt_message
+        else
+          # notify user and send sign in link with payment capture
+          send_response("Sorry we couldn't process your payment because: #{re[:text]}. Please follow this link xyz.com to add a card to your profile.")
+        end
       elsif @amt_ary[1] == "cant_override_tag_amt"            # tested
-        # notify user of cant_override_tag_amt 
         puts 'user but cant override_tag_amt'
-        send_response("#{@tag.tag} will charge $#{to_int_or_2dp(@tag.amount)}. If you'd like to complete this payment, please resend just the hashtag.")
+        cant_override_tag_amt_message
       else                                                 # tested
         puts 'has card and is present'
         return @amt_ary
@@ -233,15 +234,18 @@ class MessageParser
       # payment based messages
       if @amt_ary[1] == "cant_override_tag_amt"             # tested
         puts 'no user and cant_override_tag_amt'
-        # send_sign_up_link with ovveride message 
-        send_response("Sorry we couldn't process your payment. Please follow this link xyz.com to create an account and add a card to your profile.")  
-        ##hello will charge $2. If you'd like to complete this payment, please resend just the hashtag. ???????
+        cant_override_tag_amt_message
       else                                                    # tested
         puts 'no user and can override_tag_amt or charge tag default'
         send_response("Sorry we couldn't process your payment. Please follow this link xyz.com to create an account and add a card to your profile.")          
       end
     end
     []
+  end
+
+  # notify user of cant_override_tag_amt 
+  def cant_override_tag_amt_message
+    send_response("#{@tag.tag} will charge $#{to_int_or_2dp(@tag.amount)}. If you'd like to complete this payment, please resend only the hashtag.")    
   end
 
   # tested
@@ -304,6 +308,7 @@ class MessageParser
     if @tag.present?
       @new_txn.send_payment_responses(@tag.response, get_tag_images)
     else
+      puts '00-9asdddddddddddddd0d9a-09'
       msg_to_send = "Thanks#{get_first_name}. A payment of #{@new_txn.txn_amount} (#{@new_txn.currency}) "
       msg_to_send += (@merchant.tax_percent.to_f == 0.0 ? "was sent to #{@merchant.org_name}." : "plus taxes and fees set by #{@merchant.org_name} was sent.")
       @new_txn.send_payment_responses(msg_to_send)

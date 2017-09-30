@@ -3,8 +3,9 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
   before_action :configure_permitted_parameters, if: :devise_controller?
-  before_action :prepare_exception_notifier#, :check_current_user_and_path, if: :ping_controller_actions? 
-  around_action :set_time_zone, if: :ping_controller_actions? && :current_user
+  before_action :prepare_exception_notifier, if: :not_ping_controller_actions?
+  #before_action :check_current_user_and_path
+  around_action :set_time_zone, if: :not_ping_controller_actions? && :current_user
 
   include CheckUserProfile
 
@@ -48,19 +49,21 @@ class ApplicationController < ActionController::Base
   end
   
   # for pinging states. Should avoid loading current_user
-  def ping_controller_actions?
+  def not_ping_controller_actions?
     ['offline_check', 'update_merchant_status'].exclude?(action_name)
   end
 
   def check_current_user_and_path
-    # Avoid js or api json requests, forms, static pages and guest user
-    if request.format.html? && request.get? && ['static_pages', 'knowledge_base_categories', 'knowledge_bases'].exclude?(controller_name) && current_user.present?
-      # target only pages users actually see.
-      if params[:user_id].present? && current_user.id != params[:user_id].to_i
-        redirect_to_404('Forbidden. That simple.')
-      else
-        redirect_path = check_user_redirect(false)
-        redirect_to redirect_path if redirect_path.present?
+    if not_ping_controller_actions? && !devise_controller?
+      # Avoid js or api json requests, forms, static pages and guest user
+      if request.format.html? && request.get? && ['static_pages', 'knowledge_base_categories', 'knowledge_bases'].exclude?(controller_name) && current_user.present?
+        # target only pages users actually see.
+        if params[:user_id].present? && current_user.id != params[:user_id].to_i
+          redirect_to_404('Forbidden. That simple.')
+        else
+          redirect_path = check_user_redirect(false)
+          redirect_to redirect_path if redirect_path.present?
+        end
       end
     end
   end

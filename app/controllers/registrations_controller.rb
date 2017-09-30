@@ -10,11 +10,11 @@ class RegistrationsController < Devise::RegistrationsController
     message = check_params_with_update
     email_changed = set_update_flash_messages[:account_settings] && params[:user][:email] != current_user.email
     url = request.referrer if setting_pages_present?
-
+    set_flash_message = set_update_flash_messages(message)
+    
     yield resource if block_given?
-    if message.blank? && update_resource(resource, account_update_params)
 
-      set_flash_message = set_update_flash_messages(message)
+    if message.blank? && update_resource(resource, account_update_params)
       update_stripe_email if email_changed
 
       # flash_key = update_needs_confirmation?(resource, prev_unconfirmed_email) ? :update_needs_confirmation : :updated
@@ -24,12 +24,11 @@ class RegistrationsController < Devise::RegistrationsController
 
       redirect_to url || after_update_path_for(resource)
     else
-      set_flash_message = set_update_flash_messages(message)
       flash[:error] = message.is_a?(Stripe::InvalidRequestError) ? set_flash_message[:error].message : set_flash_message[:error]
 
       clean_up_passwords resource
       set_minimum_password_length
-      redirect_to previous_url ###### will this throw and error for notifcations????????
+      redirect_to previous_url
     end
   end
 
@@ -55,19 +54,27 @@ class RegistrationsController < Devise::RegistrationsController
 
   def check_params_with_update
     msg = nil
-    if set_update_flash_messages[:subscription] && current_user.is_merchant?
-      subscription = create_saas_subscription
-      msg = (subscription.third ? subscription.third : "We are unable to start a subscription for you") unless subscription.first
-    elsif set_update_flash_messages[:rhombus_number] && current_user.is_merchant?
-      unless current_user.buy_number(params['user'])
-        msg = 'Something went wrong. We were unable to provision a number for you. A member of our support team will contact you shortly.'
+    #begin
+      if set_update_flash_messages[:subscription] && current_user.is_merchant?
+        subscription = create_saas_subscription
+        msg = (subscription.third ? subscription.third : "We are unable to start a subscription for you") unless subscription.first
+      elsif set_update_flash_messages[:rhombus_number] && current_user.is_merchant?
+        unless current_user.buy_number(params['user'])
+          msg = 'Something went wrong. We were unable to provision a number for you. A member of our support team will contact you shortly.'
+        end
+      elsif set_update_flash_messages[:card_info] || set_update_flash_messages[:billing_info]
+        if current_user.is_customer? && set_update_flash_messages[:card_info]
+          session[:msg_id] = params[:user][:msg_id]
+          session[:channel] = params[:user][:channel]
+        end
+        add_token = current_user.add_token_for_user(params[:user][:card_token])
+        msg = (add_token.third ? add_token.third : "We are unable to add your card to your profile.") unless add_token.first
       end
-    elsif set_update_flash_messages[:card_info] || set_update_flash_messages[:billing_info]
-      set_captured_payment_session if current_user.is_customer? && set_update_flash_messages[:card_info]
-      add_token = current_user.add_token_for_user(params[:user][:card_token])
-      msg = (add_token.third ? add_token.third : "We are unable to add your card to your profile.") unless add_token.first
-    end
-    msg
+    #rescue StandardError => error
+      #msg = "Something went wrong"
+    #end
+    
+    return msg
   end
 
   def auto_recharge
@@ -116,7 +123,11 @@ class RegistrationsController < Devise::RegistrationsController
     Plan.find_by(id: params[:plan][:id], status: 1).try(:id)
   end
 
-  def after_sign_up_path_for(resource) # after_update_path_for(resource)
+  def after_sign_up_path_for(resource)
+    check_user_redirect || root_path
+  end
+
+  def after_update_path_for(resource)
     check_user_redirect || root_path
   end
 

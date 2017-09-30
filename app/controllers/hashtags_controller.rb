@@ -84,6 +84,7 @@ class HashtagsController < ApplicationController
     def hashtag_params
       params.require(:hashtag).permit(:amount, :status, :name, :response, :tag, :charge_amount, :tag_type, :interval,
         :enable_tweet, :description, images_attributes: [:avatar]).tap do |h|
+          h[:tag].prepend('#') if h[:tag].present? && h[:tag].chr != "#"
           h[:charge_amount] = h[:charge_amount].to_i
           h[:tag_type] = h[:tag_type].to_i
           h[:status] = h[:status] || 1

@@ -28,7 +28,7 @@ module ApplicationHelper
                           'lists-segments'=> 'Manage Segment',
                           'coupons-manage_coupons' => 'Manage Coupons',
                           'coupons-index' => 'Coupons',
-                          'users-refer_business' => 'Refer Business',
+                          'referrers-new' => 'Refer Business',
                           'fb_pages-index' => 'FB Integrations',
                           'lists-show' => @list.try(:name),
                           'campaigns-index' => 'Campaigns',
@@ -133,7 +133,7 @@ module ApplicationHelper
     settings_action = ['users-billing_information', 'users-account_settings',
                        'alerts-edit', 'plans-index','users-business_settings',
                        'users-integrations', 'users-managed_acct', 'users-sms_usage', 'lists-segments',
-                       'coupons-manage_coupons', 'users-refer_business', 'fb_pages-index',
+                       'coupons-manage_coupons', 'referrers-new', 'fb_pages-index',
                        'away_messages-show']
     settings_action.include?(params_controller_action)
   end

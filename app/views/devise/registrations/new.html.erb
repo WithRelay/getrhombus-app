@@ -23,7 +23,7 @@
             </div>
 
             <%= f.hidden_field :msg_id, id: "msg_id", value: params[:user] ? params[:user][:msg_id] : '' %>
-            <%= f.hidden_field :tag_id, id: "tag_id", value: params[:user] ? params[:user][:tag_id] : '' %>
+            <%= f.hidden_field :channel, id: "channel", value: params[:user] ? params[:user][:channel] : '' %>
             <%= f.hidden_field :referrer, id: "referrer", value: params[:user] ? params[:user][:referrer] : '' %>
             <%= f.hidden_field :captured_amt, id: "captured_amt", value: params[:user] ? params[:user][:captured_amt] : '' %>
             <%= f.hidden_field :referrer_uid, id: "referrer_uid", value: params[:user] ? params[:user][:referrer_uid] : '' %>            

@@ -27,13 +27,28 @@ class TransactionsController < ApplicationController
                                     .order(created_at: :desc)
       end
     elsif current_user.is_customer?
-      # Transaction.process_captured_payment(@user, params) if session[:captured_amt].present?
-      delete_captured_payment_session
+      process_captured_payment 
+
+      #@transactions = Transaction.includes(:team, :hashtag).where(user_id: current_user.id)
+       #                          .only_uncaptured_transactions().exclude_subscriptions().exclude_refunded_transactions()
+        #                         .paginate(page: params[:page], per_page: PAGINATION_PER_PAGE)
+         #                        .order(created_at: :desc)
       @transactions = []
     end
 
     @authorized_txns = params[:captured] == "false" ? true : false 
     @transactions.present? ? render_requested_format(@transactions) : render(:empty_transaction)
+  end
+
+  def process_captured_payment
+    channel = session.delete(:channel); message = session.delete(:msg_id)    
+    if channel.present? && message.present? && ["Message", "FbMessage"].include?(channel)
+      message = channel.constantize.find_by(id: message)
+      merchant = User.find_by(id: message.try(:user_id_to))
+      if message && message.transaction_id.blank? && merchant 
+        MessageParser.new.process_message(merchant, current_user, current_user.id, 'User', message, channel)
+      end      
+    end
   end
 
   def capture

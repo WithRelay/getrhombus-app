@@ -14,7 +14,7 @@ class Hashtag < ActiveRecord::Base
   has_many :image_refs, as: :imageable, dependent: :destroy
 
 	# validations
-	validates :tag, presence: true, uniqueness: { case_sensitive: false, scope: :user_id }
+	validates :tag, presence: true, uniqueness: { case_sensitive: false, scope: :user_id }, length: { maximum: 30 }
   validates :name, presence: true, uniqueness: { case_sensitive: false, scope: :user_id }
 	validates :amount, presence: true, numericality: true, unless: lambda { self.non_payment_tag? }
   validates :response, length: { maximum: 320 }

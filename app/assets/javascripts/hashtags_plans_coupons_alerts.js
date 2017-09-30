@@ -28,7 +28,8 @@ $(document).ready(function () {
   };
 
   // no spaces
-  $('#hashtag_tag, #coupon-name').on('input', function(){ this.value = this.value.replace(/\s+/g, ''); });
+  $('#coupon-name').on('input', function() { this.value = this.value.replace(/\s+/g, ''); });
+  $('#hashtag_tag').on('input', function() { $(this).val('#'+ this.value.replace(/[^a-z0-9]/gi,'')); });
 
   // Positive integer only
   $('#duration-in-months, #max-redemptions, #subscription_quantity').on('input', function(){
@@ -117,7 +118,7 @@ $(document).ready(function () {
         threshold: 2,
         validators: {
           notEmpty: {
-            message: 'Name  is required'
+            message: 'Name is required'
            },
           remote: {
             message: 'Hashtag name is already taken.',
@@ -130,7 +131,26 @@ $(document).ready(function () {
       'hashtag[tag]': {
         validators: {
           notEmpty: {
-            message: 'tag  is required'
+            message: 'Tag  is required'
+          },
+          stringLength: {
+            message: "Tag should be less than 30 characters",
+            max: 30
+          },
+          callback: {
+            callback: function (value, validator, $field) {
+              if (/#(?![0-9]+\b)([a-zA-Z0-9]{1,30})/.test(value)) {
+                return {
+                  valid: true,
+                  //message: ''
+                }
+              } else {
+                return {
+                  valid: false,
+                  message: "Invalid tag format"
+                }
+              }
+            }
           }
         },
       },
