@@ -6,7 +6,7 @@ class User < ActiveRecord::Base
   include Transactionable
   include SegmentQueries
 
-  attr_accessor :phone, :msg_id, :captured_amt
+  attr_accessor :phone, :msg_id, :captured_amt, :referrer
   attr_accessor :tag_id, :referrer_uid, :tos_acceptance, :customer_source
   attr_accessor :area_code, :card_token, :page_specific_id
 
@@ -81,7 +81,9 @@ class User < ActiveRecord::Base
   has_many :merchant_plans, class_name: 'Plan', foreign_key: 'merchant_id'
   has_many :merchant_only_plans, -> { where customer_id: nil }, class_name: 'Plan', foreign_key: 'merchant_id'
   has_many :customer_plans, class_name: 'Plan', foreign_key: 'customer_id'
+  
   has_many :coupons
+  has_many :saas_invoices, -> { where team_id: User.get_platform_acct_obj.id }, class_name: :Invoice, foreign_key: :customer_id
   # LEAVE THIS FOR LATER
   #has_many :next_plans
 
@@ -184,6 +186,7 @@ class User < ActiveRecord::Base
 
   def self.get_platform_acct_obj
     User.find_by(email: User.platform_email)
+    User.find 23
   end
 
   def buy_number(params)
@@ -280,6 +283,6 @@ class User < ActiveRecord::Base
   # This is the link merchants can share...also dashboard link
   def generate_uid_and_referrer_link
     self.relay_uid = generate_uid
-    self.short_url = "dasd" #UrlShorternerService.shorten_link("https://www.withrelay.com/signup?referrer_uid=#{self.relay_uid}")
+    self.short_url = "dasd" #UrlShorternerService.shorten_link("#{Rails.application.secrets.app["url"]}?referrer_uid=#{self.relay_uid}")
   end
 end

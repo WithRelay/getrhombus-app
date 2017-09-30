@@ -3,18 +3,11 @@ class AccountBalanceAlertJob
 
 	def self.perform
 		ActiveRecord::Base.clear_active_connections!
-		User.where(user_level: 1).each do |user|
-			if user.account_balance < 5
-				recharge(user.auto_reload_amt) if user.auto_reload
-				EmailingService.account_balance_alert(user)
+		User.where(id: 127).each do |u|
+			if u.account_balance.to_f < 5.0
+				u.auto_reload? ? AccountReload.new.reload(u.auto_reload_amt, u) : EmailingService.account_balance_alert(u)
 			end
 		end
-	end
-
-	private
-
-	def recharge(amt)
-		# recharge logic
 	end
 
 end

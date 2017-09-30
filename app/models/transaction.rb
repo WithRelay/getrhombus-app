@@ -12,6 +12,8 @@ class Transaction < ActiveRecord::Base
   belongs_to :transaction_fee
 
   delegate :name, to: :hashtag, prefix: :item, allow_nil: true
+  delegate :email, to: :user, prefix: :customer
+  delegate :email, :name, to: :team, prefix: :business
 
   # Exclude refunded transactions, include subscriptions since these queries are read only
   # and include only captured transactions and reloads are included by default..right
@@ -37,14 +39,13 @@ class Transaction < ActiveRecord::Base
   scope :user_total_transaction_with_merchant, -> (user_id, team_id) { big_decimal_2dp(self.exclude_refunded_transactions().only_captured_transactions()
                                                                                           .where(user_id: user_id, team_id: team_id).sum(:amount)) }
 
-  def process_payment(amt, merchant, customer, msg, hashtag, channel, capture = true, source = 'text')
+  def process_payment(amt, merchant, customer, msg, hashtag, channel, source = 'text', capture = true)
     #begin
-      method(__method__).parameters.each { |_,arg| instance_variable_set("@#{arg}", binding.local_variable_get(arg)) unless [:source, :capture].include?(arg) }
+      method(__method__).parameters.each { |_,arg| instance_variable_set("@#{arg}", binding.local_variable_get(arg)) unless [:capture].include?(arg) }
 
       # taxes # tested
-      tax_multiplier = (@merchant.tax_percent.to_f/100) + 1
-      @amt_with_taxes = (@amt.to_f * tax_multiplier).round
-
+      @amt_with_taxes = TransactionFee.amount_with_taxes(@amt, @merchant.tax_percent)
+  
       # fees   # tested
       fees = get_fees_schedule
       @stripe_fee = ((@amt_with_taxes * (fees[0]/100)) + fees[1]).round
@@ -52,6 +53,7 @@ class Transaction < ActiveRecord::Base
       amount_less_fees = (@amt_with_taxes - @stripe_fee - @app_fee).round
 
       # charge # tested
+      # is this right for managed account?
       @stripe_res_ary = PaymentService.charge(@amt_with_taxes, amount_less_fees, merchant, customer, @msg, capture)
       @stripe_res = @stripe_res_ary.first
       puts @stripe_res_ary.inspect
@@ -61,12 +63,13 @@ class Transaction < ActiveRecord::Base
         update_transaction_data
         [true, "Charge created"]
       else
-        if source == 'text'   # This should only run for text based payments. Dashboard payments is handled differently.
+        # This should only run for text based payments. Dashboard payments is handled differently.
+        if @source == 'text'
           # if it is a card decline, we text only customers. Merchant might not have textable number on file.
           send_response("Your payment to #{merchant.org_name} failed because: #{@stripe_res_ary[2]}") if @stripe_res_ary[3] && customer.is_customer?
-          # send_payment_failure_email(@stripe_res_ary[1], @stripe_res_ary[3]) 
-          [false, @stripe_res_ary[2]]
+          # send_payment_failure_email(@stripe_res_ary[1], @stripe_res_ary[3])
         end
+        [false, @stripe_res_ary[2]]
       end
     #rescue StandardError => err
       #send_payment_failure_email(err, false)  # should go out only for text payments
@@ -76,7 +79,8 @@ class Transaction < ActiveRecord::Base
 
   # tested
   def get_fees_schedule
-    @fee_schedule = @merchant.is_platform? ? TransactionFee.platform.first : @merchant.get_stripe_cred[:cred].transaction_fee
+    #@fee_schedule = @merchant.is_platform? ? TransactionFee.platform.first : @merchant.get_stripe_cred[:cred].transaction_fee
+    @fee_schedule = @merchant.get_stripe_cred[:cred].transaction_fee
     percent1, cents1 = @fee_schedule.provider_percent.to_f, @fee_schedule.provider_cents.to_f
     percent2, cents2 = @fee_schedule.platform_percent.to_f, @fee_schedule.platform_cents.to_f
     return percent1, cents1, percent2, cents2
@@ -97,26 +101,15 @@ class Transaction < ActiveRecord::Base
   end
 
   # tested
-  def amt_in_decimal(amt)
-    Transaction.big_decimal_2dp(amt.to_f/100)
-  end
-
-  # tested
-  def self.big_decimal_2dp(amt)
-    return 0 if (amt.blank? || amt == 0)
-    Toolbox::Decimal.to_int_or_2dp(amt)
-  end
-
-  # tested
-  def send_payment_responses(msg_to_send)
-    send_response(msg_to_send)
+  def send_payment_responses(msg_to_send, media = [])
+    send_response(msg_to_send, media)
     send_email_receipt
     #send_merchant_receipt
   end
 
   # tested
-  def send_response(msg_to_send)
-    Conversation.find_or_create_conversation_for_message_and_send_publish(@merchant, @customer, 'user', @customer.id, msg_to_send, @channel)
+  def send_response(msg_to_send, media = [])
+    Conversation.find_or_create_conversation_for_message_and_send_publish(@merchant, @customer, 'user', @customer.id, msg_to_send, @channel, media)
   end
 
   # tested
@@ -148,19 +141,23 @@ class Transaction < ActiveRecord::Base
     )
   end
 
-  def process_dashboard_txn(amt, merchant, user, msg, hashtag, capture=true, channel="Message")
-    process_payment(amt, merchant, user, msg, hashtag, channel, capture, 'dashboard')
+  def process_dashboard_txn(amt, merchant, user, msg, hashtag=nil, capture=true, channel="Message", source='account-reload')
+    process_payment(amt, merchant, user, msg, hashtag, channel, source, capture)
     capture ? handle_captured_txn : handle_uncaptured_txn
   end
 
   def handle_captured_txn
     #begin
       if @stripe_res
-        send_payment_responses("Hi" + customer_first_name + ", a payment of #{txn_amount} (#{self.currency}) was charged to your account by #{@merchant.org_name}.")
+        if @source == 'dashboard-txn'
+          send_payment_responses("Hi" + customer_first_name + ", a payment of #{txn_amount} (#{self.currency}) was charged to your account by #{@merchant.org_name}.")
+        end
         [true, "Payment successful"]
       else
         if @stripe_res_ary[3]
-          send_response("Hi" + customer_first_name + ", a charge of #{txn_amount} (#{self.currency}) by #{@merchant.org_name} failed because: #{@stripe_res_ary.third}")
+          if @source == 'dashboard-txn'
+            send_response("Hi" + customer_first_name + ", a charge of #{txn_amount} (#{self.currency}) by #{@merchant.org_name} failed because: #{@stripe_res_ary.third}")
+          end
           [false, 'Sorry, we were unable to complete this transaction because: ' + @stripe_res_ary.third]          
         else
           [false, 'Sorry, we were unable to complete this transaction. Please try again later.']
@@ -221,20 +218,19 @@ class Transaction < ActiveRecord::Base
     #end
   end
 
+   # tested
+  def amt_in_decimal(amt)
+    Transaction.big_decimal_2dp(amt.to_f/100)
+  end
+
+  # tested
+  def self.big_decimal_2dp(amt)
+    return 0 if (amt.blank? || amt == 0)
+    Toolbox::Decimal.to_int_or_2dp(amt)
+  end
+
   def customer_first_name
-    first_name = @customer.first_name.present? ? " " + @customer.first_name : ''
-  end
-
-  def customer_email
-    "#{self.user.email}"
-  end
-
-  def business_name
-    "#{self.team.org_name}"
-  end
-
-  def business_email
-    "#{self.team.email}"
+    @customer.first_name.present? ? " " + @customer.first_name : ''
   end
 
   def txn_amount

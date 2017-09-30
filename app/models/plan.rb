@@ -14,7 +14,7 @@ class Plan < ActiveRecord::Base
   enum status: { inactive: 0, active: 1 }
 
   def create_plan(hash)
-    begin
+    #begin
       res = []
       team = hash[:team]
       is_platform = team.is_platform?
@@ -57,12 +57,12 @@ class Plan < ActiveRecord::Base
         errors[:base] << "Your account doesn't support creating plans."
         false
       end
-    rescue StandardError => e
+    #rescue StandardError => e
       # if StandardError happens here after Stripe was called, delete plan on Stripe
-      self.delete_plan(team) if res.length > 0
+     # self.delete_plan(team) if res.length > 0
       # notify team via email
-      false
-    end
+     # false
+   # end
   end
 
   def update_plan(hash, team)
@@ -106,7 +106,7 @@ class Plan < ActiveRecord::Base
   end
 
   def has_subscription?
-    Subscription.exists?(plan_id: self.id)
+    self.subscriptions.exists?
   end
 
   private
@@ -114,7 +114,7 @@ class Plan < ActiveRecord::Base
   # This is called after a new plan is created.
   def create_plan_segment
     List.create(name:self.name, user_id: self.merchant_id, segment: plan_segment_data(self.id), 
-                origin: List.origins[:system], list_type: List.origins[:customer], campaign_type: List.campaign_types[:campaign])
+                origin: List.origins[:system], list_type: List.list_types[:customer], campaign_type: List.campaign_types[:campaign])
   end
 
   def update_plan_segment

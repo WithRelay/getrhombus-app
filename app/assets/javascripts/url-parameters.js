@@ -1,6 +1,6 @@
 var PageParameter = new function() {
   // http://www.phpied.com/3-ways-to-define-a-javascript-class/
-  var page_params = { num: '', amt: '' };
+  var page_params = { num: '', captured_amt: '' };
   parse_page_params();
 
   function parse_page_params() {

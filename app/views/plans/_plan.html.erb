@@ -1,6 +1,6 @@
 <div class="manage-plans-row w-row">
   <div class="w-clearfix w-col w-col-4">
-    <span class='editable-field-text settings-row-text plan-name'><%= plan.name %></span>
+    <span class='editable-field-text settings-row-text plan-name'><%= present(plan).format_plan_name %></span>
     <span class="plan-name-edit-span">
       <a class="plan-name-edit-icon edit-field save-editable-field" href="#"></a>
     </span>
@@ -16,10 +16,11 @@
     <div class="settings-row-text"><%= plan.interval %></div>
   </div>
   <div class="w-col w-col-2">
-    <div class="settings-row-text"><%= subscribed_customer_count(plan) %></div>
+    <% subscriber_count = plan.subscriptions.length %>
+    <div class="settings-row-text"><%= subscriber_count %></div>
   </div>
   <div class="w-col w-col-2">
-    <% if plan.subscription_id.blank? %>
+    <% if subscriber_count == 0 %>
       <%= link_to 'Delete Plan', user_plan_path(current_user, plan), method: :delete, class: "button settings-table-row w-button delete-plan plan#{plan.id}" %>
     <% end %>
   </div>

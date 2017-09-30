@@ -351,27 +351,27 @@ $(document).ready(function() {
 
   $('#display-and-hide-left-nav').on('click', function(){
     show_hide_fields('.messaging-hidden-menu');
-  })
+  });
 
   $('#display-and-hide-transaction-tab').on('click', function(){
     show_hide_fields('.transactions-hidden-nav');
-  })
+  });
 
-  function show_hide_fields(selector){
+  function show_hide_fields(selector) {
     if ($(selector).hasClass('hide')) {
       $(selector).removeClass('hide');
     } else {
       $(selector).addClass('hide');
     }
-
-  }
+  };
 
   function set_hidden_fields() {
-    if (global_page_params['page_specific_id']) document.getElementById('page_specific_id').value = global_page_params['page_specific_id'];
-    if (global_page_params['captured_amt']) document.getElementById('captured_amt').value = global_page_params['captured_amt'];
-    if (global_page_params['referrer_uid']) document.getElementById('referrer_uid').value = global_page_params['referrer_uid'];
-    if (global_page_params['msg_id']) document.getElementById('msg_id').value = global_page_params['msg_id'];
-    if (global_page_params['tag_id']) document.getElementById('tag_id').value = global_page_params['tag_id'];
-  }
+    if (global_page_params['msg_id']) $('#msg_id').val(global_page_params['msg_id']);
+    if (global_page_params['tag_id']) $('#tag_id').val(global_page_params['tag_id']);
+    if (global_page_params['referrer']) $('#referrer').val(global_page_params['referrer']);
+    if (global_page_params['captured_amt']) $('#captured_amt').val(global_page_params['captured_amt']);    
+    if (global_page_params['referrer_uid']) $('#referrer_uid').val(global_page_params['referrer_uid']);
+    if (global_page_params['page_specific_id']) $('#page_specific_id').val(global_page_params['page_specific_id']);
+  };
 
 });

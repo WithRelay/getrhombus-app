@@ -3,16 +3,15 @@ class Hashtag < ActiveRecord::Base
   include Transactionable
 
 	belongs_to :user
-
-  # test this again
-  has_many :image_refs, as: :imageable, dependent: :destroy
-  has_many :images, through: :image_refs
-  
-  has_many :messages
   belongs_to :txn, class_name: :Transaction
+
+  # test this again  
   has_many :plans
+  has_many :messages
   # merchant can't change plan attached to hashtag
-  has_one :merchant_plan, -> { where customer_id: nil }
+  has_one :merchant_plan, -> { where customer_id: nil }, class_name: :Plan
+  has_many :images, through: :image_refs
+  has_many :image_refs, as: :imageable, dependent: :destroy
 
 	# validations
 	validates :tag, presence: true, uniqueness: { case_sensitive: false, scope: :user_id }
@@ -29,17 +28,16 @@ class Hashtag < ActiveRecord::Base
 
   # You need a new plan if this is a recurring hashtag
   def create_plan_for_recurring_tag(merchant)
-    return true
-    #return true if !self.recurring_payment_tag?
-    #plan = Plan.new({ interval: self.interval, interval_count: self.interval_count, hashtag_id: self.id,
-    #                  amount: Toolbox::Decimal.to_cents(self.amount), name: generate_resource_name("Plan") })   
-    #plan.create_plan({ team: merchant })
+    return true if !self.recurring_payment_tag?
+    plan = Plan.new({ interval: self.interval, interval_count: self.interval_count, hashtag_id: self.id,
+                      amount: Toolbox::Decimal.to_cents(self.amount), name: generate_resource_name("Plan") })   
+    plan.create_plan({ team: merchant })
   end
 
   # caching needed for this
   def mentions_count
     # because hashtag_id will exist in a transaction that was created by a text message. so avoid duplicates
-    # and some hashtad transactions wont have messages
+    # and some hashtag transactions wont have messages
     
     in_txns_not_in_msg_count = Hashtag.find_by_sql(["SELECT count(*) as count FROM transactions t LEFT JOIN messages m
                                           on m.transaction_id = t.id

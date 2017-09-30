@@ -103,7 +103,8 @@
       <% end %>
     </div>
 
-    <div class="check-box editor w-checkbox w-clearfix">
+    <div class="flex-underline form-section-divider"></div>
+    <div class="check-box editor w-checkbox w-clearfix" id="managed-acct-tos">
       <% if f.object.stripe_creds.first.try(:new_record?) %>
         <div class="form-group col-xs-6">
           <label class= "w-form-label form-label manage-acc-term-condition form-control">

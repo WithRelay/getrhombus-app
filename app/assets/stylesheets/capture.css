@@ -1,5 +1,5 @@
-@import url('https://fonts.googleapis.com/css?family=Open+Sans:400,700');
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
 .webcam-modal-content {
   display: block;
   width: 600px;
@@ -19,10 +19,10 @@
 }
 
 #webcam-capture {
-  width: 8.5%;
+  /*width: 8.5%;
   margin-right: 65%;
   color: #8da2b7;
-  background-color: transparent;
+  background-color: transparent;*/
 }
 
 .webcam-icon {

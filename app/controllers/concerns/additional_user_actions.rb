@@ -62,17 +62,17 @@ module AdditionalUserActions
   # could rebuild the link but we don't want users refreshing the page and trigerring more payments
   # since i will delete this session data the first time
   def set_captured_payment_session
-    session[:captured_amt] = params[:user][:captured_amt]
     session[:msg_id] = params[:user][:msg_id]
-    session[:referrer_uid] = params[:user][:referrer_uid]
     session[:tag_id] = params[:user][:tag_id]
+    session[:captured_amt] = params[:user][:captured_amt]
+    session[:referrer_uid] = params[:user][:referrer_uid]    
   end
 
   def delete_captured_payment_session
-    session.delete(:captured_amt)
-    session.delete(:referrer_uid)
     session.delete(:tag_id)
     session.delete(:msg_id)
+    session.delete(:captured_amt)
+    session.delete(:referrer_uid)    
   end
 
   def add_to_merchant_customer_and_referrer_and_fb_cred

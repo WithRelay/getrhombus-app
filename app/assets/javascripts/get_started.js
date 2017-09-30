@@ -1,42 +1,30 @@
 $(document).ready(function () {
-  var url = window.location,
-    global_page_params = PageParameter.get_params();
-
-  // help change user controller to handle captured payments for signin
-  // help add tag_id to captured payments in signin and signup and in the forms
+  var url = window.location, global_page_params = PageParameter.get_params();
   
-  //*
   // to prefill signup form or handle captured payments
   // signin is included for when user texts payment and is prompted to sign in to complete account
   // can use form presence instead
-  if (["/users/sign_in", "/users/sign_up", '/users', "/profile"].indexOf(url.pathname) != -1) {
-      var amt = validate_captured_amt(global_page_params['amt']);
-      if (url.pathname == "/users/sign_up") {
-        $('#email').val(global_page_params['user[email]']);
-        $('#phone_number').val(global_page_params['user[phone_number]']);
-      } else if (url.pathname == "/users/sign_up") {
-        $('#phone').val(global_page_params['num']);
-        hide_account_type(global_page_params['referrer']);
-      } else if (url.pathname == "/profile" && amt) {
-        cc_submit.prop('value', 'Save & Pay ' + (amt/100));   // on profile page show the amt in button
-      } else if (url.pathname == '/users') {
-        var referrer = document.getElementById('referrer');
-        if (referrer) hide_account_type(referrer.value);
-      }
-
-      if (amt) document.getElementById('captured_amt').value = amt;
-  }
+  if (url.pathname == "/users/sign_up") {
+    $('#phone_number').val(global_page_params['num']);
+    hide_account_type(global_page_params['referrer']);
+  } else if (url.pathname.indexOf("/add-card-info") != -1) {
+    var captured_amt = validate_captured_amt(global_page_params['captured_amt']);
+    if (captured_amt) {
+      $('#captured_amt').val(captured_amt);
+      $("#cc-submit").val('Pay $' + UtilFunctions.to_int_or_2dp(captured_amt/100) + " & Continue");
+    };
+  } else if (url.pathname == '/users') {
+    hide_account_type($('#referrer').val());
+  }; 
   // to prefill signup form or handle captured payments
 
   function hide_account_type(referrer) {
     if (referrer) {
-      $('#signupForm .selectpicker').val('0');
-      $('#signupForm .accountTypegroup').hide();
-      $("#signup_logo").replaceWith("<h2 class='referrer'>" + referrer + "</h2>");
-      $("#rhombusPower").removeClass('hide');
-    } else
-      $("#rhombusPower").addClass('hide');
-  }
+      $("#signup-logo, #user-level").addClass('hide');
+      $('#user-level option[value="0"]').prop("selected", true);
+      $("#signup-referrer-name").html(referrer).removeClass('hide');
+    };
+  };
 
   function validate_captured_amt(str) {
     if (str.match(/^\d+$/)) {
@@ -44,10 +32,7 @@ $(document).ready(function () {
       if (str < 1500000) return str;
     }
     return false;
-  }
-  //*/
-
-
+  };
   
   $('#get-started-form').formValidation({
       // I am validating Bootstrap form

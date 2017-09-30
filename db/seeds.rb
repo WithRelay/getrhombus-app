@@ -8,15 +8,14 @@
 #TransactionFee.create(provider: 'stripe');
 #TransactionFee.create(provider: 'stripe', provider_percent: '2.8', provider_cents: 30);
 
-
 3.times do
-Transaction.create!(
-	referenced_user_id: [3, 5, 7, 9, 11, 13, 15, 17, 19 ].sample,
-	user_id: [3, 5, 7, 9, 11, 13, 15, 17, 19 ].sample,
-	team_id: 2,
-	description: ["Baggles purchase", 'abcd', 'Pre order'].sample,
-	amount: [ 20, 22, 33 ,40].sample
-)
+	Transaction.create!(
+		referenced_user_id: [3, 5, 7, 9, 11, 13, 15, 17, 19 ].sample,
+		user_id: [3, 5, 7, 9, 11, 13, 15, 17, 19 ].sample,
+		team_id: 2,
+		description: ["Baggles purchase", 'abcd', 'Pre order'].sample,
+		amount: [ 20, 22, 33 ,40].sample
+	)
 end
 
 #

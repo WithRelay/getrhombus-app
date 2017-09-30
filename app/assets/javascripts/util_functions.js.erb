@@ -55,6 +55,12 @@ var UtilFunctions = new function() {
     };
   };
 
+  this.to_int_or_2dp = function(amt) {
+    amt = parseFloat(amt || 0).toFixed(2);
+    if (amt.indexOf('.00') != -1) amt = amt.split('.')[0];
+    return amt;
+  };
+
 };
 
 

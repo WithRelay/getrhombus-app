@@ -82,13 +82,6 @@ class RegistrationsController < Devise::RegistrationsController
     redirect_to user_sms_usage_path
   end
 
-  def add_funds
-    current_user.account_balance += params['user']['recharge_amount'].to_f
-    current_user.save
-    flash[:notice] = "Account balance updated. Your total balance is $#{Toolbox::Decimal.to_int_or_2dp(current_user.account_balance)}"
-    redirect_to user_sms_usage_path
-  end
-
   def deactivate
     saas_sub = current_user.get_saas_subscription
     if saas_sub && saas_sub.cancel_subscription(current_user) || saas_sub.nil?

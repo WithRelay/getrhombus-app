@@ -66,7 +66,7 @@
             </div>
           </div>
         </div>
-        <% invoices.each do |invoice| %>
+        <% current_user.saas_invoices.each do |invoice| %>
           <div class="settings-table w-row">
             <div class="settings-table-cell-wrapper w-col w-col-3">
               <div class="id settings-table-cell-div">
@@ -85,7 +85,7 @@
               </div>
               <div class="settings-table-cell-wrapper w-col w-col-3">
                 <div class="last-cell settings-table-cell-div">
-                  <div class="content settings-table-text status-text">Paid</div>
+                  <div class="content settings-table-text status-text"><%= invoice.paid? ? "Paid" : "Outstanding" %></div>
                 </div>
               </div>
             </div>

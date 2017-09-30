@@ -1,6 +1,8 @@
 # Handle all stripe events
 class StripeEvent
+
   class << self
+
     # Methods sending emails out to merchant/customers must be idempotent except for invoice failed
     def process_event(hash, type)
       @hash = hash[:data][:object] if hash[:data]
@@ -108,8 +110,7 @@ class StripeEvent
       if @merchant_customer
         @data.team_id = @merchant_customer.merchant_id
         @data.customer_id = @merchant_customer.customer_id
-        @team = @merchant_customer.merchant
-
+        
         # update coupon_id
         if @hash[:discount].present?
           coupon = Coupon.find_by(stripe_coupon_id: @hash[:discount][:coupon][:id])
@@ -125,55 +126,54 @@ class StripeEvent
       # Invoice should already exist but if it doesn't, create a new one
       @data = Invoice.where(stripe_invoice_id: @hash[:id]).first_or_initialize
       setup_invoice_data
+      team = @merchant_customer.merchant
 
-      # retrieve charge details
-      # test that charge is true
-      charge = PaymentService.retrieve_charge(@hash[:charge], @team.get_stripe_cred[:cred], @team.is_platform?) if @hash[:charge]
-      # a transaction should not already exist but we need to check if it does so we don't send out emails again
-      # A tranasaction has only one log unlike subscriptions
-      txn = Transaction.where(txn_uri: charge.first.id).first_or_initialize if charge.try(:first)
+      if team
+        # retrieve charge details
+        # test that charge is true
+        charge = PaymentService.retrieve_charge(@hash[:charge], team.get_stripe_cred[:cred], team.is_platform?) if @hash[:charge]
+        charge = charge.try(:first)
+        
+        # a transaction should not already exist but we need to check if it does so we don't send out emails again
+        txn = Transaction.where(txn_uri: charge.id).first_or_initialize if charge
 
-      # if we havent notified customer before
-      # for now, we have only one line for each invoice - the subscription
-      @hash[:lines][:data].each do |l|
-        if l[:type] == 'subscription'
-          # find subscription
-          sbtn = Subscription.includes(:plan).where(stripe_subscription_id: l[:id]).first
+        # for now, we have only one line for each invoice - the subscription
+        @hash[:lines][:data].each do |l|
+          if l[:type] == 'subscription'
+            # find subscription
+            sbtn = Subscription.includes(:plan).where(stripe_subscription_id: l[:id]).first
 
-          # update subscription_id
-          if sbtn
-            @data.update(subscription_id: sbtn.id)
-            hashtag_id = sbtn.plan.hashtag_id
-            sbtn_id = sbtn.id
-          end
+            # update subscription_id
+            if sbtn && txn
+              sbtn_fees = sbtn.get_fees            
+              app_fee = txn.app_fee.present? ? txn.app_fee : sbtn_fees[:app_fee]
+              stripe_fee = txn.stripe_fee.present? ? txn.stripe_fee : sbtn_fees[:stripe_fee]
+              description = txn.description.present? ? txn.description : sbtn.description
 
-          if txn
-            # just in case transaction actually exists but not log
-            stripe_fee = 2.3 #txn.stripe_fee ? txn.stripe_fee : 'calculate here'
-            amount_with_taxes = 2.5 #txn.amount_with_taxes ? txn.amount_with_taxes : 'calculate here'
-            txn_number = txn.txn_number ? txn.txn_number : txn.generate_txn_number
-            description = description ? txn.description : "generate here"
+              # team@ should handle all transactions going forward
+              # dashboard@ is only admin controls
 
-            # team@ should handle all transactions going forward
-            # dashboard@ is only admin controls
+              txn.update(
+                amount: txn.amt_in_decimal(l[:amount]), 
+                app_fee: app_fee, stripe_fee: stripe_fee,
+                amount_with_taxes: txn.amt_in_decimal(@hash[:total]), 
+                txn_number: txn.txn_number || txn.generate_txn_number,
+                description: description,              
+                team_id: @data.team_id, user_id: @data.customer_id,
+                hashtag_id: sbtn.plan.hashtag_id, txn_available_at: @hash[:date],
+                tax_percent: @hash[:tax_percent],
+                # At the moment, charge will only contain 1 line item, what if there are a couple line items?
+                txn_uri: charge.id, currency: charge.currency,
+                status: charge.status, last4: charge.source.last4,
+                exp_month: charge.source.exp_month, exp_year: charge.source.exp_year,
+                card_type: charge.source.brand, card_name: charge.source.name,
+                subscription_id: sbtn.id, destination: charge.destination, captured: charge.captured
+              )
 
-            txn.update(app_fee: l[:application_fee], stripe_fee: stripe_fee,
-              amount: l[:amount], amount_with_taxes: amount_with_taxes, txn_number: txn_number,
-              currency: l[:currency], description: description,
-              merchant_customer_id: @data.merchant_customer_id,
-              hashtag_id: hashtag_id, txn_available_at: @hash[:date],
-              # At the moment, charge will only contain 1 line item, what if there are a couple line items?
-              txn_uri: @hash[:charge], tax_percent: @hash[:tax_percent],
-              status: 1, last4: charge.source.last4,
-              exp_month: charge.source.exp_month, exp_year: charge.source.exp_year,
-              card_type: charge.source.brand, card_name: charge.source.name,
-              subscription_id: sbtn_id, destination: charge.destination, captured: charge.captured
-            )
-
-            # set transaction_id
-            @data.update_attribute(:transaction_id, txn.id)
-            # Notify customer (could be merchant)
-            EmailingService.invoice_payment_succeeded(@merchant_customer.customer)
+              @data.update(transaction_id: txn.id, subscription_id: sbtn.id)
+              # Notify customer (could be merchant)
+              #EmailingService.invoice_payment_succeeded(@merchant_customer.customer)            
+            end
           end
         end
       end
@@ -201,7 +201,6 @@ class StripeEvent
         update_customer_source
         # find customer and admin
         # Notify them (admin) (customer)
-        # update notification log if we need it
         EmailingService.customer_source_updated(mc.customer, mc.merchant)
       end
     end
@@ -309,5 +308,7 @@ class StripeEvent
     # legal_entity.additional_owners legal_entity.verification.document
     # legal_entity.additional_owners.#.verification.document (where # can be 0, 1, 2, or 3).
     # external_account
+  
   end
+
 end

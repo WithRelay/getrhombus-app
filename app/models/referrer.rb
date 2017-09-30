@@ -17,11 +17,10 @@ class Referrer < ActiveRecord::Base
       referrer_name: 'Stripe',
       uid: generate_uid
     )
+
+    url = Rails.application.secrets.app["url"]
     ref.update_attribute(
-      :link, "https://www.getrhombus.com?referrer_uid=#{ref.uid}"
+      :link, "#{url}?referrer_uid=#{ref.uid}"
     )
-    # ref.update_attribute(
-    #   :link, "https://www.relay.com?referrer_uid=#{ref.uid}"
-    # )
   end
 end

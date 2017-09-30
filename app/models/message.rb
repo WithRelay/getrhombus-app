@@ -23,7 +23,9 @@ class Message < ActiveRecord::Base
       self.update_attributes(user_id: merchant.id, user_id_to: user, from: from, to: to, text: message)
 
       if true #merchant.rn_type.present?      # this is twilio
-        if response = TextingService.send_sms(from, to, message, media_ary)
+        response = TextingService.send_sms(from, to, message, media_ary)
+        if response.first
+          response = response.second
           num_segments = response.num_segments.to_i
           price = (media_ary.blank?) ? (SMS_PRICE_SENT * num_segments) : MMS_PRICE_SENT
           merchant.update_account_balance(price)
@@ -33,12 +35,13 @@ class Message < ActiveRecord::Base
                                   price_unit: response.price_unit, num_segments: num_segments,
                                   num_media: response.num_media, relay_price: price)
         else
-          Notification.text_failure_notification(response, from, to, message).deliver_now                         # Notify team of failure
+          Notification.text_failure_notification(response.second, from, to, message).deliver_now                         # Notify team of failure
           false
         end
       else
         response = TextingService.send_sms_nexmo(from, to, message, self.id)
-        if response && response.code == 200 && response["messages"].first["status"] == "0"
+        if response.first && response.second.code == 200 && response.second["messages"].first["status"] == "0"
+          response = response.second
           num_segments = response['message-count'].to_i
           merchant.update_account_balance(SMS_PRICE_SENT * num_segments)
           self.update_attributes(status: response['messages'].first['status'], num_segments: num_segments,
@@ -46,13 +49,12 @@ class Message < ActiveRecord::Base
                                   message_price: response['messages'].first['message-price'],
                                   error_text: response["error-text"], relay_price: SMS_PRICE_SENT)
         else
-          Notification.text_failure_notification(response["messages"].first, from, to, message).deliver_now               # Notify team of failure
+          Notification.text_failure_notification(response.second, from, to, message).deliver_now               # Notify team of failure
           false
         end
       end
     rescue StandardError => err
       puts err.inspect
-
       puts 'eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeerrrrrrrrrrrrrrrrrrrrrrrrrr'
       false
     end

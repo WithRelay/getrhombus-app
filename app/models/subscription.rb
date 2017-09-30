@@ -3,15 +3,17 @@ class Subscription < ActiveRecord::Base
   belongs_to :plan
   belongs_to :coupon
   belongs_to :merchant_customer, inverse_of: :subscriptions
+
   has_many :invoices
 
   validates_presence_of :plan_id, :merchant_customer_id, :quantity
   validates_numericality_of :quantity, greater_than: 0, only_integer: true
 
   delegate :name, :interval, :amount, to: :plan, prefix: :plan, allow_nil: true
+  delegate :merchant_email, :org_name, :rhombus_number, :merchant, to: :merchant_customer
 
   def create_subscription(hash)
-    begin
+    #begin
       return [false] unless self.save
 
       res = []
@@ -21,11 +23,9 @@ class Subscription < ActiveRecord::Base
 
       if is_platform || (team.is_merchant? && cred[:cred][:type] == 'managed')
 
-        unless is_platform
-          fee_schedule = cred[:cred].transaction_fee
-          hash[:application_fee_percent] = fee_schedule.subscription_percent.to_f.round(2)
-        end
-
+        fee_schedule = cred[:cred].transaction_fee
+        hash[:application_fee_percent] = fee_schedule.subscription_percent.to_f.round(2)
+        
         if self.coupon_id.present?
           coupon = Coupon.find_by self.coupon_id
           hash[:coupon] = coupon.stripe_coupon_id if coupon
@@ -57,7 +57,7 @@ class Subscription < ActiveRecord::Base
         if res.first
           self.update(
             stripe_subscription_id: res.second.id,
-            transaction_fee_id: fee_schedule.try(:id),
+            transaction_fee_id: @fee_schedule.try(:id),
             tax_percent: hash[:tax_percent],
             status: res.second.status,
             stripe_livemode: res.second.livemode,
@@ -81,12 +81,12 @@ class Subscription < ActiveRecord::Base
         errors[:base] << "Your account doesn't support creating subscriptions."
         [false]
       end
-    rescue StandardError => e
+    #rescue StandardError => e
       # if StandardError happened after Stripe was called, delete subscription on Stripe
-      self.cancel_subscription(team, false) if res.length > 0
+     # self.cancel_subscription(team, false) if res.length > 0
       # notify team via email
-      [false]
-    end
+      #[false]
+    #end
   end
 
   def cancel_subscription(team, at_period_end = false)
@@ -120,6 +120,36 @@ class Subscription < ActiveRecord::Base
     end
   end
 
+  def total_amount
+    self.plan_amount * self.quantity
+  end
+
+  def amount_with_taxes
+    TransactionFee.amount_with_taxes(total_amount, self.tax_percent)
+  end
+
+  def description
+    "Subscription payment to #{merchant_email}. #{org_name}. Rhombus number: #{rhombus_number}"
+  end
+
+  # we charge only a percent... and is it on the total amount? or no tax... stripe dont add tax
+  ### should we charge on total?? or how does stripe charge then?
+  def get_fees
+    sbtn_merchant = merchant
+    fees = get_fees_schedule(sbtn_merchant)
+    { 
+      stripe_fee: ((total_amount * (fees[0]/100)) + fees[1]).round, 
+      app_fee: sbtn_merchant.is_platform? ? 0 : (total_amount * (fees[2]/100)).round 
+    }
+  end
+
+  def get_fees_schedule(merchant)
+    #@fee_schedule = merchant.is_platform? ? TransactionFee.platform.first : merchant.get_stripe_cred[:cred].transaction_fee
+    fee_schedule = merchant.get_stripe_cred[:cred].transaction_fee
+    [fee_schedule.provider_percent.to_f, fee_schedule.provider_cents.to_f, fee_schedule.subscription_percent.to_f]
+  end
+
+=begin
   def unused_amount
     plan = self.plan
     plan_amt = plan.amount
@@ -150,4 +180,5 @@ class Subscription < ActiveRecord::Base
     plan_amt = (plan_amt.to_f / total_days).round(2)
     ((plan_amt * days_remaining)).round # unspent amount (prorated per day)
   end
+=end
 end

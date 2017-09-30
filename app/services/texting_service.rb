@@ -22,9 +22,9 @@ class TextingService
         # encode the nexmo uri
         uri = URI.encode_www_form([["api_key", NEXMO_API_KEY], ["api_secret", NEXMO_API_SECRET], ["from", from], ["to", to], ["text", message], ['client-ref', client_ref]])
         # ["status-report-req", 1]
-        response = HTTParty.post('https://rest.nexmo.com/sms/json?'+ uri, :headers => {"Content-Type" => "application/x-www-form-urlencoded"} )
+        [true, HTTParty.post('https://rest.nexmo.com/sms/json?'+ uri, :headers => {"Content-Type" => "application/x-www-form-urlencoded"})]
       rescue StandardError => err
-        return err
+        [false, err]
       end
     end
 
@@ -38,9 +38,9 @@ class TextingService
         # 5MB max size, 10 images max
         data[:media_url] = media_ary if media_ary.present?
         # https://www.twilio.com/docs/api/rest/message
-        message = client.api.messages.create(data)
+        [true, client.api.messages.create(data)]
       rescue StandardError => err
-        return err
+        [false, err]
       end
     end
 

@@ -37,7 +37,7 @@ class Api::V1::TransactionsController < Api::V1::BaseController
         tag = Hashtag.find_by(id: params[:transaction][:hashtag_id])
         amount = Toolbox::Decimal.to_cents(params[:transaction][:amount])
         capture = ['1', 'true', true].include?(params[:transaction][:capture]) ? true : false
-        re = txn.process_dashboard_txn(amount, current_user, customer, params[:transaction][:notes], tag, capture)
+        re = txn.process_dashboard_txn(amount, current_user, customer, params[:transaction][:notes], tag, capture, 'dashboard-txn')
         if re.first
           render json: { response: "Charge created", transaction: txn.as_json(only: [:created_at, :txn_number, :notes], methods: [:relative_time, :txn_amount]) }
         else

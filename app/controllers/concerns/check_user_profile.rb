@@ -26,7 +26,7 @@ module CheckUserProfile
     # referrer_uid is the merchant the payment is going to
     path = user_add_card_info_path(current_user)
     if params[:user][:captured_amt].present?
-      path = user_add_card_info_path(current_user, amt: params[:user][:captured_amt], referrer_uid: params[:user][:referrer_uid],
+      path = user_add_card_info_path(current_user, captured_amt: params[:user][:captured_amt], referrer_uid: params[:user][:referrer_uid],
                                      msg_id: params[:user][:msg_id], tag_id: params[:user][:tag_id])
     end
     path

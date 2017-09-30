@@ -3,9 +3,9 @@
       <div class="onboarding-form-section">
         <div class="choose-plan onboarding-form-div sign-in signup">
           <%= link_to root_url do %>
-            <%= image_tag('Relay-Transparent-500x300.png', class: 'slider-placeholder', width: 50) %>
+            <%= image_tag('Relay-Transparent-500x300.png', class: 'slider-placeholder add-card-info-logo', width: 50) %>
           <% end %>
-          <h4 class="card-info form-header">Payment Information</h4>
+          <h4 class="card-info form-header payment-info-text">Payment Information</h4>
           <div class="flex-underline form-header-underline"></div>
           <div class="customer-card-info display-credit-card-wrapper">
             <div class="get-started-2 log-in-form">
@@ -43,7 +43,7 @@
                   <input id="cc-csc" type="tel" class="form-control cvv text-field w-input" placeholder="CVV" value="" autocorrect="off" spellcheck="off" autocapitalize="off" autocomplete="off" maxlength="4">
                 </div>
 
-                <%= f.submit "Submit", class: "button log-in w-button", id: 'cc-submit' %>
+                <%= f.submit "Continue", class: "button log-in w-button", id: 'cc-submit' %>
 
               <% end %>
 

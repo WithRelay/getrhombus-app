@@ -72,7 +72,6 @@ class MessageParser
           merchant_name_prompt = merchant.org_name.present? ? "to " + merchant.org_name : "through #{Rails.application.secrets.app['name']}"
           url = Rails.application.secrets.app["url"]
           short_link = 'test' #UrlShortenerService.shorten_link("#{url}/signup?num=#{@received_msg.from}&referrer_uid=#{@merchant.relay_uid}&referrer=#{merchant_name}")
-          # from prod short_link = UrlShortenerService.shorten_link("https://www.getrhombus.com/signup?num=#{params[:msisdn]}&referrer_num=#{params[:to]}&referrer=#{merchant_name}")
           send_response("Hi there! You're really close to sending a payment #{merchant_name_prompt} via text. Follow the link to get set up: #{short_link}")
         elsif @channel == 'Message' && get_conversation_refs_count < 2 && !is_signup  # tested
           first_name_str = (@merchant.first_name.present?) ? "my name is #{@merchant.first_name}, " : ''
@@ -203,6 +202,7 @@ class MessageParser
           @tag.always_charge_amount? && @tag_amt == @original_amt ? [@tag_amt, "charge_tag_default"] : [@tag_amt, "cant_override_tag_amt"] 
         else                                      # tested
           puts 'last resort'
+          @original_amt = @tag_amt
           [@tag_amt, "charge_tag_default"]  # no amt specified, charge tag amount
         end
       end
@@ -271,15 +271,14 @@ class MessageParser
       if @tag.present? && @tag.recurring_payment_tag?
         res = handle_subscription_through_text
         if res.first
-          # send response
-          # "Thanks #{@customer.first_name}, a payment of #{amount} for your #{weekly} subscription to #{@merchant.org_name} has been recieved."
+          send_response(@tag.response, get_tag_images)
+          # send email here or through subscription instance
         else
-          # send response  # note the 3rd index in array
+          send_response(res.second || subscription_error_text)
         end
       else     # tested   
-        @new_txn = Transaction.new
-        @new_txn.process_payment(@amt_ary[0], @merchant, @customer, @received_msg.text, @tag, @channel, true)
-        if @new_txn.id.present?
+        @new_txn = Transaction.new        
+        if @new_txn.process_payment(@amt_ary[0], @merchant, @customer, @received_msg.text, @tag, @channel, true).first
           @received_msg.update_column(:transaction_id, @new_txn.id)
           send_payment_responses
         end
@@ -289,15 +288,26 @@ class MessageParser
   end
 
   def get_first_name
-    first_name = @customer.first_name.present? ? " " + @customer.first_name : ''
+    @customer.first_name.present? ? " " + @customer.first_name : ''
+  end
+
+  def subscription_error_text
+    "Hi#{get_first_name}, we were unable to set up your subscription for #{@tag.tag}. A member of our team will get back to you." 
+  end
+
+  def get_tag_images
+    @tag.images.map { |i| i.avatar.url }
   end
 
   # tested
   def send_payment_responses
-    msg_to_send = "Thanks" + get_first_name + ". A payment of #{@new_txn.txn_amount} (#{@new_txn.currency}) "
-    msg_to_send += "for #{@tag.tag} " if @tag.present?
-    msg_to_send = msg_to_send + (@merchant.tax_percent == "0" ? "was sent to #{@merchant.org_name}." : "plus taxes and fees set by #{@merchant.org_name} was sent.")
-    @new_txn.send_payment_responses(msg_to_send)
+    if @tag.present?
+      @new_txn.send_payment_responses(@tag.response, get_tag_images)
+    else
+      msg_to_send = "Thanks#{get_first_name}. A payment of #{@new_txn.txn_amount} (#{@new_txn.currency}) "
+      msg_to_send += (@merchant.tax_percent.to_f == 0.0 ? "was sent to #{@merchant.org_name}." : "plus taxes and fees set by #{@merchant.org_name} was sent.")
+      @new_txn.send_payment_responses(msg_to_send)
+    end    
   end
   
   # tested  
@@ -318,12 +328,12 @@ class MessageParser
   end  
 
   # tested
-  def send_response(msg)
-    Conversation.find_or_create_conversation_for_message_and_send_publish(@merchant, @customer, @uid_type, @uid, msg, @channel)
+  def send_response(msg, media = [])
+    Conversation.find_or_create_conversation_for_message_and_send_publish(@merchant, @customer, @uid_type, @uid, msg, @channel, media)
   end
 
   def handle_subscription_through_text
-    begin
+    #begin
       merchant_plan = @tag.merchant_plan
       if merchant_plan.present?                                 
         # if can override amount and amt isnt the same, create plan and create subscription
@@ -336,44 +346,40 @@ class MessageParser
             create_text_subscription(customer_plan.id)
           else
             customer_plan.destroy                             # revoke created plan on error
-            [false, "Unable to create subscription"]
+            [false]
           end  
-        # else find the existing plan for tag and create subscription
-        else                                                      
+        else   # else find the existing plan for tag and create subscription                                                   
           create_text_subscription(merchant_plan.id)
         end
       else
-        [false, "Unable to subscribe, plan no longer exists."]
-        "Hi #{@customer.first_name}, #{@tag.tag} is no longer available for subscription." 
+        [false, "Hi#{get_first_name}, #{@tag.tag} is no longer available for subscription."]        
       end
-    rescue StandardError => e
-      [false, "Unable to create subscription"]
-      "Hi #{@customer.first_name}, we were unable to set up your subscription for #{@tag.tag}. A member of our team will get back to you." 
-    end
+    #rescue StandardError => e
+     # [false]
+    #end
   end
 
   def create_text_subscription(plan_id)
-    begin
+    #begin
       merchant_customer = MerchantCustomer.find_by(merchant_id: @merchant.id, customer_id: @customer.id)
       if merchant_customer.present?
         subscription = Subscription.new(plan_id: plan_id, merchant_customer_id: merchant_customer.id, quantity: 1)
-        res = subscription.create_subscription({ team: current_user })
+        res = subscription.create_subscription({ team: @merchant })
         if res.first
-          return [true, 'Subscription created successfully']
+          [true]
         else
-          subscription.destroy
-          return [false, "", res.third] if res.second == 'card_error' 
-          # generic issue "Hi #{@customer.first_name}, we were unable to set up your subscription for #{@tag.tag}. A member of our team will get back to you." 
-          # "Hi #{@customer.first_name}, You subscription to #{@tag.tag} failed because: #{res.third}. Please sign in here to update your card information: https://www.withrelay.com/signin" 
+          subscription.destroy          
+          if res.second == 'card_error' 
+            res_text = "Hi#{get_first_name}, your subscription to #{@tag.tag} failed because: #{res.third}. Please sign in here to update your card information: https://www.withrelay.com/signin"
+          end
+          [false, res_text] 
         end
       else
         # email team
       end
-    rescue StandardError => e
-    end     
-    [false, "Unable to create subscription"]
-    "Hi #{@customer.first_name}, we were unable to set up your subscription for #{@tag.tag}. A member of our team will get back to you." 
+    #rescue StandardError => e
+      #[false]
+    #end
   end
-
 
 end

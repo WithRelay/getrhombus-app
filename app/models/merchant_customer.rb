@@ -2,11 +2,16 @@ class MerchantCustomer < ActiveRecord::Base
 
   # platform_stripe_customer_id is the shared id between the platform and merchant standalone account
   # managed_stripe_customer_id is for the merchant managed account
+  
+  enum is_platform: { platform: 0, managed: 1 }
 
   belongs_to :merchant, class_name: "User"
   belongs_to :customer, class_name: "User"
-  enum is_platform: { platform: 0, managed: 1 }
+  
   has_many :subscriptions, inverse_of: :merchant_customer  
+
+  delegate :email, to: :merchant, prefix: :merchant
+  delegate :org_name, :rhombus_number, to: :merchant
 
   # has_many :invoices
 

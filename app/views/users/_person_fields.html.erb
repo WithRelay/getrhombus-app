@@ -76,8 +76,13 @@
   <div class="flex-underline form-section-divider"></div>
   <label class="field-headers form-label settings" for="name-2">Upload Profile Picture (you)</label>
 
-  <a class="attach-image" href="#" id='select-images-button'></a>
-  <a class="button w-button modal-loader" href="#" id='webcam-capture' modal-target= 'new-webcam-modal'><i class="material-icons webcam-icon">photo_camera</i></a>
+  <div id="managed-acct-picture-div">
+    <%#<a class="attach-image" href="#" id='select-images-button'></a>%>
+    <button type="button" id='select-images-button'>Attach ID</button> or 
+    <button type="button" class="modal-loader" id='webcam-capture' modal-target='new-webcam-modal'>Take picture of ID</button>
+    <%#<a class="button w-button modal-loader" href="#" ><i class="material-icons webcam-icon">photo_camera</i></a>%>
+  </div>
+
   <%= f.file_field :avatar, type: :file, id: "select-images", class: 'w-hidden', accept: "image/*" %>
 
   <div class='modal-background w-hidden modal-body new-webcam-modal'>

@@ -34,7 +34,7 @@
           <%= f.submit "Save changes", class: "save-auto-reload w-button" %>
         </div>
       <% end %>
-      <%= form_for('user', url: user_add_funds_path, method: :post, html: { id: "add_user_funds", class:'w-clearfix' } ) do |f| %>
+      <%= form_for('user', url: user_account_reloads_path, method: :post, html: { id: "add_user_funds", class:'w-clearfix' } ) do |f| %>
         <div class="flex-underline form-section-divider"></div>
         <label class="field-headers form-label settings" for="Add-Funds">add funds</label>
         <div class="form-group col-xs-12">
