@@ -16,7 +16,7 @@ $(document).on('ready page:load', function() {
 
   $('.delete-segment-link').click(function(e) {
     e.preventDefault();
-    var id = $(this).parent().children()[0].id;
+    var id = "#" + $(this).parent().children()[0].id;
     FlashHandler.setConfirmationDialog(id, 'Are you sure you want to delete this segment?', 'Delete', 'isDestroy');
   });
 
