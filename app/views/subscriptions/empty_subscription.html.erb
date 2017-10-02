@@ -6,8 +6,6 @@
     <h1 class="empty-state-dash hero-h1 home-header">Your bank account is connected. <br> Create a plan & add subscribers</h1>
     <a class="button error-page-button w-button modal-loader" href="#" modal-target="new-plan-modal"> <strong>Create plan</strong></a>
   <% else %>
-    <h1 class="empty-state-dash hero-h1 home-header">Your bank account is connected. <br> Create a plan & add subscribers</h1>
-    <a class="button error-page-button w-button modal-loader" href="#" modal-target="new-plan-modal"> <strong>Create plan</strong></a>
     <h1 class="empty-state-dash hero-h1 home-header">You have no bank account. <br> Connect your bank account to get started</h1>
     <%= link_to 'Connect bank account', user_managed_accounts_path(current_user), class: 'button error-page-button w-button' %>
   <% end %>  

@@ -18,15 +18,15 @@ $(document).ready(function(){
   // used by campaign index
   $('.deactivate-resource').click(function(e) {
     var statusName = campaignStatusName();
-    var text = { paused: 'Activate', active: 'Pause' };
+    var text = { paused: 'Activate', active: 'Pause', inactive: 'Activate' };
 
     if (!statusName) {
       showUncheckError();
-    } else if (statusName != "inactive") {
+    } else { //if (statusName != "inactive") {
       FlashHandler.setConfirmationDialog('.deactivate-resource','Are you sure you want to ' + text[statusName].toLowerCase() + ' this campaign?', text[statusName]);
-    } else if (statusName) {
+    } /*else if (statusName) {
       FlashHandler.setFlashMessage('You need to edit an inactive campaign settings to activate it', 'error' );
-    };
+    };*/
   });
 
   function showUncheckError() {

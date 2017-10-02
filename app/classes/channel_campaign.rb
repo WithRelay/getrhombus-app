@@ -9,6 +9,8 @@ module ChannelCampaign
     def send_channel_campaign
       channel_class = channel_string_class.constantize
       @recipients = get_recipients
+
+      puts @recipients.inspect
       
       if @recipients.present?
         @results = channel_class.new(@campaign, @recipients).send_campaign

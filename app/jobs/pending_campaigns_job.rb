@@ -20,17 +20,18 @@ class PendingCampaignsJob
 
       # date typecast can be improved
       campaigns = Campaign.active
-                          .where("(frequency_type = ? and next_send_at is not null and next_send_at >= ?) OR 
+                          .where("(frequency_type = ? and next_send_at is not null and next_send_at >= ? and next_send_at < ?) OR 
                                   (frequency_type = ? and deliver_now = false and date_time is not null and date(date_time) > date(created_at) 
-                                    and date_time >= ?)",                                 
-                                  Campaign.frequency_types['recurring'], now,
-                                  Campaign.frequency_types['one_time'], now)
-                          #.where("(frequency_type = ? and next_send_at is not null and next_send_at >= ? and next_send_at < ?) OR 
+                                    and date_time >= ? and date_time < ?)",                                 
+                                  Campaign.frequency_types['recurring'], now, tomorrow,
+                                  Campaign.frequency_types['one_time'], now, tomorrow)
+                          #.where("(frequency_type = ? and next_send_at is not null and next_send_at >= ?) OR 
                            #       (frequency_type = ? and deliver_now = false and date_time is not null and date(date_time) > date(created_at) 
-                            #        and date_time >= ? and date_time < ?)",                                 
-                             #     Campaign.frequency_types['recurring'], now, tomorrow,
-                              #    Campaign.frequency_types['one_time'], now, tomorrow)
+                            #        and date_time >= ?)",                                 
+                             #     Campaign.frequency_types['recurring'], now,
+                              #    Campaign.frequency_types['one_time'], now)
 
+      puts "in PendingCampaignsJob"
       puts campaigns.inspect
       puts '----'
       #return                  
@@ -40,9 +41,8 @@ class PendingCampaignsJob
           Resque.enqueue_at_with_queue(campaign.pending_queue, campaign_time_utc, PendingCampaignsHandlerJob, campaign.id) 
         end
       end
-    rescue StandardError => e
-      puts e.inspect
-      # email team
+    rescue StandardError => exception
+      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In PendingCampaignsJob perform" })
     end
   end 
 

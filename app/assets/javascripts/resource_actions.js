@@ -76,13 +76,13 @@ var CheckedItem = new function() {
 
 // used by several index pages
 $(document).on("click", ".checkboxes", function() {
-  if ($(this).is(':checked')){
+  if ($(this).is(':checked')) {
     $('.checkboxes').attr('disabled', true);
 
     // campaign, hashtag index pages specific
     if ($('#activate-deactivate-campaign').length > 0) {
       var statusName = $(this).parent().find('.resource-status').text();
-      var status = { paused: ' Activate', active: ' Pause' };
+      var status = { paused: ' Activate', active: ' Pause', inactive: ' Activate' };
       $('#activate-deactivate-campaign').text(status[statusName]);
     } else if ($('#deactivate-hashtag').length) {
       var statusName = $(this).parent().find('.resource-status').val();
