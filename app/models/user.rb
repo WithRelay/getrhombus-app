@@ -133,13 +133,8 @@ class User < ActiveRecord::Base
   end
 
   def full_name
-    if is_customer?
-      return "#{card_name}" if card_name.present?
-      _person = self.people[0]
-    else
-      _person = self.people.representative[0]
-    end
-    _person.present? ? _person.full_name : ''
+    return "#{card_name}" if is_customer? && card_name.present?
+    self.people[0].try(:full_name) || ''
   end
 
   def first_name
