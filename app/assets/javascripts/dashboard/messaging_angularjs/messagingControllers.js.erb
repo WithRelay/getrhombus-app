@@ -134,9 +134,11 @@ messagingControllers.controller('messagingMainCtrl', ['$scope', '$rootScope', '$
       if ($scope.online()) {
         userService.getSnapshot({ uid: $scope.selected_conversation.uid, uid_type: $scope.selected_conversation.uid_type })
         .then(function(data) {
+          console.log(data)
           $scope.no_social_data = false;
           $scope.snapshot = data;
         }, function(data) {
+          console.log(data)
           $scope.no_social_data = true;
         });
       }

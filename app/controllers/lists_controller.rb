@@ -38,7 +38,7 @@ class ListsController < ApplicationController
         @selected_segment_id = @list.id
         @list_type = @list.list_type
         if @list.contact?
-          @uid_type = @segment.sms? ? 'phone_number' : 'fb_page'
+          @uid_type = @list.sms? ? 'phone_number' : 'fb_page'
           @channel = @uid_type == 'phone_number' ? 'sms' : 'messenger'
         end
       end

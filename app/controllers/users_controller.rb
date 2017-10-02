@@ -36,6 +36,8 @@ private
   def full_user_params
     nested_user_params = user_params
     tos_params = { ip: request.remote_ip, user_agent: request.user_agent, tos_date: Time.current }
+    puts nested_user_params.inspect
+    puts 'asddadadasdasds'
     nested_user_params[:stripe_creds_attributes]["0"].merge!(tos_params)
     nested_user_params
   end

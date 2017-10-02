@@ -11,6 +11,8 @@ module ManagedAccountActions
   end
 
   def create_managed_acct
+    # update company rep first
+
     if save_identity_doc
       check_user_validation = user_valid_to_update
       if check_user_validation.present?
@@ -41,6 +43,8 @@ module ManagedAccountActions
   end
 
   def save_identity_doc
+    puts @user.inspect
+=begin
     if image_params[:avatar].present?
       stripe_managed = StripeManagedAccountService.new(current_user, image_params)
       file_upload = stripe_managed.upload_file
@@ -52,6 +56,8 @@ module ManagedAccountActions
     end
 
     return true
+=end
+    false
   end
 
   def user_valid_to_update
@@ -111,6 +117,10 @@ module ManagedAccountActions
 
   def image_params
     { avatar: params[:user][:people_attributes]['0'][:avatar] }
+  end
+
+  def representative_params
+    params[:user][:people_attributes]['0']
   end
 
 end

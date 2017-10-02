@@ -108,7 +108,7 @@
       <% if f.object.stripe_creds.first.try(:new_record?) %>
         <div class="form-group col-xs-6">
           <label class= "w-form-label form-label manage-acc-term-condition form-control">
-            <%= f.check_box :tos_acceptance, class: "w-checkbox-input"%>
+            <input class="w-checkbox-input" type="checkbox" value="1" name="user[tos_acceptance]" id="user_tos_acceptance" data-fv-field="user[tos_acceptance]">
             Accept Terms and Service
           </label>
           <div class="messageContainer w-col-12"></div>

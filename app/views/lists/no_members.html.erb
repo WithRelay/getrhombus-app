@@ -1,13 +1,10 @@
-<%= render 'sub_nav_bar' %>
+<%= render "add_member" %>
 
 <div class="dashboard-body">
   <div class="blank-page-container w-container">
     <%= image_tag('011_162.png', class: 'blank-page-icon') %>
     <h1 class="empty-state-dash hero-h1 home-header">
-      Return to the customer <br> dashboard to create a list or segment
+      This <%= @list.is_segment? ? 'segment' : 'list' %> is currently empty.
     </h1>
-      <%= link_to user_merchant_customers_path(current_user), class: "button error-page-button w-button" do %>
-        <strong> Customer dashboard</strong>
-      <% end %>
   </div>
 </div>

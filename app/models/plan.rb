@@ -14,11 +14,10 @@ class Plan < ActiveRecord::Base
   enum status: { inactive: 0, active: 1 }
 
   def create_plan(hash)
-    #begin
+    begin
       res = []
       team = hash[:team]
       is_platform = team.is_platform?
-      # account_id = '<redacted_stripe_account_id>' #use this for testing
       cred = team.get_stripe_cred
 
       if is_platform || (team.is_merchant? && cred[:type] == 'managed')
@@ -57,12 +56,12 @@ class Plan < ActiveRecord::Base
         errors[:base] << "Your account doesn't support creating plans."
         false
       end
-    #rescue StandardError => e
+    rescue StandardError => exception
+      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "From create_plan in plan.rb"})
       # if StandardError happens here after Stripe was called, delete plan on Stripe
-     # self.delete_plan(team) if res.length > 0
-      # notify team via email
-     # false
-   # end
+      self.delete_plan(team) if res.length > 0
+      false
+    end
   end
 
   def update_plan(hash, team)
@@ -87,8 +86,8 @@ class Plan < ActiveRecord::Base
       end
 
       res.first
-    rescue StandardError => e
-      # notify team via email
+    rescue StandardError => exception
+      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "From update_plan in plan.rb"})
       self.update(name: old_name, statement_descriptor: old_descriptor)
       false
     end
@@ -99,8 +98,8 @@ class Plan < ActiveRecord::Base
       res = PaymentService.delete_plan(self.id, team.get_stripe_cred[:cred], team.is_platform?).first
       delete_plan_segment if res
       res
-    rescue StandardError => e
-      # notify team via email
+    rescue StandardError => exception
+      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "From delete_plan in plan.rb"})
       false
     end
   end

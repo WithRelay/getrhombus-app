@@ -73,6 +73,7 @@ class Transaction < ActiveRecord::Base
         [false, @stripe_res_ary[2]]
       end
     #rescue StandardError => err
+      #ExceptionNotifier.notify_exception(err, env: Rails.env, data: { message: "From process_payment in transaction.rb"})
       #send_payment_failure_email(err, false)  # should go out only for text payments
       [false, "Something went wrong"]
     #end
@@ -165,7 +166,7 @@ class Transaction < ActiveRecord::Base
         # notify platform...
       end
     #rescue StandardError => err
-      # notify platform...
+      #ExceptionNotifier.notify_exception(err, env: Rails.env, data: { message: "From handled_captured_txn in transaction.rb"})
      # [false, "Sorry, we were unable to complete this transaction. Please try again later."]
     #end
   end
@@ -185,7 +186,7 @@ class Transaction < ActiveRecord::Base
         # notify platform...
       end
     #rescue StandardError => err
-      # notify platform...
+      #ExceptionNotifier.notify_exception(err, env: Rails.env, data: { message: "From handle_uncaptured_txn in transaction.rb"})
      # [false, "We were unable to authorize transaction. Please try again later."]
     #end
   end
@@ -213,7 +214,7 @@ class Transaction < ActiveRecord::Base
         # notify platform only.
       end
     #rescue StandardError => err
-      # notify platform only.
+      #ExceptionNotifier.notify_exception(err, env: Rails.env, data: { message: "From capture_uncaptured_txn in transaction.rb"})
      # [false, "Sorry, we were unable to complete this transaction. Please try again later."]
     #end
   end

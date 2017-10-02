@@ -8,7 +8,7 @@ class MessageParser
   # from can be user fb cred or phone number
   # customer can be nil
   def process_message(merchant, customer, uid, uid_type, received_msg, channel)
-    #begin
+    begin
       return if received_msg.text.blank?
 
       # tested
@@ -95,10 +95,9 @@ class MessageParser
         puts 'just chatter'
       end
 
-    #rescue StandardError => e
-      # notify team
-    #  puts e.message
-    #end
+    rescue StandardError => exception
+      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In process_message" })
+    end
   end
 
   private
@@ -338,7 +337,7 @@ class MessageParser
   end
 
   def handle_subscription_through_text
-    #begin
+    begin
       merchant_plan = @tag.merchant_plan
       if merchant_plan.present?                                 
         # if can override amount and amt isnt the same, create plan and create subscription
@@ -359,13 +358,14 @@ class MessageParser
       else
         [false, "Hi#{get_first_name}, #{@tag.tag} is no longer available for subscription."]        
       end
-    #rescue StandardError => e
-     # [false]
-    #end
+    rescue StandardError => exception
+      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In handle_subscription_through_text" })
+      [false]
+    end
   end
 
   def create_text_subscription(plan_id)
-    #begin
+    begin
       merchant_customer = MerchantCustomer.find_by(merchant_id: @merchant.id, customer_id: @customer.id)
       if merchant_customer.present?
         subscription = Subscription.new(plan_id: plan_id, merchant_customer_id: merchant_customer.id, quantity: 1)
@@ -382,9 +382,10 @@ class MessageParser
       else
         # email team
       end
-    #rescue StandardError => e
-      #[false]
-    #end
+    rescue StandardError => exception
+      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In create_text_subscription" })
+      [false]
+    end
   end
 
 end

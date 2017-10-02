@@ -51,20 +51,7 @@
   </div>
 </div>
 
-<div class="customer-dash sub-nav-bar">
-  <div class="list-members sub-nav-options-wrapper w-clearfix">
-
-    <div class="customer-count shrink-text"><%= @list_members.total_entries %> <span class="sub-nav-sub-text">in <%= @list.name %> list</span>
-    </div>
-    <div class="default-sub_header-field-form-div list-members">
-      <%= form_for 'lists', url: add_member_user_list_path(current_user, @list), html: { class: 'add-to-list-form w-clearfix' } do |f| %>
-        <%= f.text_field :member_id, class: "add-to-list-field w-input", placeholder: "Add more members to list" %>
-        <%= f.text_field :list_type, class: "w-hidden", value: @list.list_type %>
-        <%= f.submit 'Update List'.html_safe, class: 'sub-nav-button w-button' %>
-      <% end %>
-    </div>
-  </div>
-</div>
+<%= render "add_member" %>
 
 <div class="dashboard-body" >
   <div id="list-data" data-list-type="<%= @list.list_type %>" data-list-id="<%= @list.id %>" data-list-channel="<%= @list.channel %>"><%= @list.list_type %></div>

@@ -16,7 +16,6 @@ class MobileCampaign
       end
     end
 
-    puts ({ recipients: @recipients, retry_list: @failure_recipients }.inspect)
     { recipients: @recipients, retry_list: @failure_recipients }
   end
 
@@ -28,10 +27,6 @@ class MobileCampaign
   end
 
   def send_by_mobile(customer, uid_type, uid)
-    puts customer.inspect
-    puts uid_type
-    puts uid.inspect
-    puts 'this is uid'
     Conversation.find_or_create_conversation_for_message_and_send_publish(@campaign.user, customer, uid_type, uid, @campaign.text, @channel, media_urls_ary, 'campaign')
   end
 

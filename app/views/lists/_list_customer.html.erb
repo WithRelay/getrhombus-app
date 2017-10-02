@@ -45,8 +45,10 @@
             <div class="frequency shrink-text table-text"><%= present(merchant_customer).get_customer_location %></div>
           </div>
           <div class="column column-6 new-row">
-            <%= link_to '', remove_member_user_user_lists_path(current_user, member_id: merchant_customer.id, list_type: @list.list_type, list_id: @list.id), id: "list-member-delete-#{merchant_customer.id}", class: 'w-hidden', method: :delete %>
-            <%= link_to 'Remove', '#', class: "actions-button notification list-member-delete" %>
+            <% unless @list.is_segment? %>
+              <%= link_to '', remove_member_user_user_lists_path(current_user, member_id: merchant_customer.id, list_type: @list.list_type, list_id: @list.id), id: "list-member-delete-#{merchant_customer.id}", class: 'w-hidden', method: :delete %>
+              <%= link_to 'Remove', '#', class: "actions-button notification list-member-delete" %>
+            <% end %>
           </div>
         </div>
       </div>
