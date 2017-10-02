@@ -58,10 +58,12 @@ module TransactionsHelper
   end
 
   def empty_transaction_text
-    if params[:captured] == 'false'
+    if !current_user.can_accept_payments?
+      "You have no transactions. <br>Connect your bank account to get started".html_safe
+    elsif params[:captured] == 'false'
       "You have no pre-authorized transactions.".html_safe
     else
-      "You have no transactions. <br>Connect your bank account to get started".html_safe
+      "Your bank account is connected. Charge your customer.".html_safe
     end
   end
 
