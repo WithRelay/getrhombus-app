@@ -11,5 +11,11 @@
     <% else %>
       <%= link_to 'Connect bank account', user_managed_accounts_path(current_user), class: 'button error-page-button w-button' %>
     <% end %>    
+
+    <% if !current_user.can_accept_payments? %>
+      <a class="button error-page-button w-button modal-loader" href="#" modal-target= "charge-customer-modal"><strong>Charge customer</strong></a>    
+    <% else %>
+      <%= link_to 'Connect bank account', user_managed_accounts_path(current_user), class: 'button error-page-button w-button' %>
+    <% end %>    
   </div>
 </div>
