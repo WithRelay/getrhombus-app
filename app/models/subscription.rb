@@ -13,7 +13,7 @@ class Subscription < ActiveRecord::Base
   delegate :merchant_email, :org_name, :rhombus_number, :merchant, to: :merchant_customer
 
   def create_subscription(hash)
-    #begin
+    begin
       return [false] unless self.save
 
       res = []
@@ -23,9 +23,11 @@ class Subscription < ActiveRecord::Base
 
       if is_platform || (team.is_merchant? && cred[:cred][:type] == 'managed')
 
-        fee_schedule = cred[:cred].transaction_fee
-        hash[:application_fee_percent] = fee_schedule.subscription_percent.to_f.round(2)
-        
+        unless is_platform
+          fee_schedule = cred[:cred].transaction_fee
+          hash[:application_fee_percent] = fee_schedule.subscription_percent.to_f.round(2)
+        end
+                
         if self.coupon_id.present?
           coupon = Coupon.find_by self.coupon_id
           hash[:coupon] = coupon.stripe_coupon_id if coupon
@@ -57,7 +59,7 @@ class Subscription < ActiveRecord::Base
         if res.first
           self.update(
             stripe_subscription_id: res.second.id,
-            transaction_fee_id: @fee_schedule.try(:id),
+            transaction_fee_id: fee_schedule.try(:id),
             tax_percent: hash[:tax_percent],
             status: res.second.status,
             stripe_livemode: res.second.livemode,
@@ -72,7 +74,7 @@ class Subscription < ActiveRecord::Base
             start: res.second.start
           )
         else
-          # notify team via email
+          ExceptionNotifier.notify_exception(res, env: Rails.env, data: { message: "From create_subscription in stripe"})
           # in case something went wrong after we created a subscription
           self.cancel_subscription(team, false)
         end
@@ -81,12 +83,12 @@ class Subscription < ActiveRecord::Base
         errors[:base] << "Your account doesn't support creating subscriptions."
         [false]
       end
-    #rescue StandardError => e
+    rescue StandardError => exception
       # if StandardError happened after Stripe was called, delete subscription on Stripe
-     # self.cancel_subscription(team, false) if res.length > 0
-      # notify team via email
-      #[false]
-    #end
+      self.cancel_subscription(team, false) if res.length > 0
+      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "From create_subscription"})
+      [false]
+    end
   end
 
   def cancel_subscription(team, at_period_end = false)
@@ -99,7 +101,7 @@ class Subscription < ActiveRecord::Base
         false
       end
     rescue StandardError => e
-      # notify team via email
+      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "From cancel_subscription"})
       false
     end
   end
@@ -112,7 +114,7 @@ class Subscription < ActiveRecord::Base
          self.update(coupon_id: coupon.id, status: res.status, cancel_at_period_end: res.cancel_at_period_end)
         true
       else
-        # notify team via email
+        ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "From update_subscription"})
         false
       end
     rescue StandardError => e
@@ -144,8 +146,7 @@ class Subscription < ActiveRecord::Base
   end
 
   def get_fees_schedule(merchant)
-    #@fee_schedule = merchant.is_platform? ? TransactionFee.platform.first : merchant.get_stripe_cred[:cred].transaction_fee
-    fee_schedule = merchant.get_stripe_cred[:cred].transaction_fee
+    fee_schedule = merchant.is_platform? ? TransactionFee.platform.first : merchant.get_stripe_cred[:cred].transaction_fee
     [fee_schedule.provider_percent.to_f, fee_schedule.provider_cents.to_f, fee_schedule.subscription_percent.to_f]
   end
 

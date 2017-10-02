@@ -9,7 +9,7 @@ module UsersHelper
   end
 
   def business_type_list
-    { 'Organization' => 'Company', 'Individual' => 'Individual' }
+    { 'Business' => 'Company', 'Individual' => 'Individual' }
   end
 
   def business_categories

@@ -25,12 +25,12 @@ class FullContactData < ActiveRecord::Base
 
       d = person.photos
       if d
-        row.photo_url = d[0].present? ? d[0].type_id : nil
-        row.photo_type_id = d[0].present? ? d[0].url : nil
+        row.photo_url = d[0].present? ? d[0].url : nil
+        row.photo_type_id = d[0].present? ? d[0].type_id : nil
         d.each do |p|
           if p.is_primary == true
-            row.photo_url = p.type_id
-            row.photo_type_id = p.url
+            row.photo_url = p.url
+            row.photo_type_id = p.type_id
             break
           end
         end

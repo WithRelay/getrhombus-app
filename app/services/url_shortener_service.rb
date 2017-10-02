@@ -18,7 +18,7 @@ class UrlShortenerService
         link
       end    
     end
-
+    
   end  
 end
 

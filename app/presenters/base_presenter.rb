@@ -32,9 +32,10 @@ class BasePresenter < SimpleDelegator
     user = find_user
 
     profile_pic = User.check_profile_picture(user)
+    puts profile_pic.inspect
     if profile_pic[:type] == "image"
-      html = h.image_tag(profile_pic[:value], class: 'table-profile-picture', width: 24)
-      html = h.image_tag(profile_pic[:value], class: 'campaigns table-profile-picture', width: 24) if need_campaign_class?
+      html = h.image_tag(profile_pic[:value], class: 'table-profile-picture', width: 24, alt: '')
+      html = h.image_tag(profile_pic[:value], class: 'campaigns table-profile-picture', width: 24, alt: '') if need_campaign_class?
     elsif profile_pic[:type] == "color"
       class_name_value = "table-profile-picture radius-color-#{profile_pic[:value]}"
       class_name = ['Transaction'].include?(@model.class.to_s) ? class_name_value : "campaigns #{class_name_value}"

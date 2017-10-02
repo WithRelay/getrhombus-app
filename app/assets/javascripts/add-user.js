@@ -44,6 +44,7 @@ $(document).ready(function() {
     live: 'disabled',
     err: {
       container: function($field, validator) {
+        /*
         if($field.attr("id") == "cc-exp" ){
           return '#cardDate';
         }
@@ -51,9 +52,10 @@ $(document).ready(function() {
         if($field.attr("id") == "cc-csc"){
           return '#cardCvv';
         }
+        */
 
         if($field.attr('id') == "phone"){
-            return $field.parent().parent().find('.errorPhone').show();
+          return $field.parent().parent().find('.errorPhone').show();
         }
 
         return $field.parent().find('.messageContainer').show();
@@ -171,8 +173,8 @@ $(document).ready(function() {
                 }
               } else {
                 return {
-                  valid: false,    // or false
-                  message: 'Enter a valid date'
+                  valid: false,   
+                  message: '' //Enter a valid date'
                 }
               }
             }
@@ -191,8 +193,8 @@ $(document).ready(function() {
                 }
               } else {
                 return {
-                  valid: false,    // or false
-                  message: 'Enter a valid csc'
+                  valid: false,    
+                  message: ''      //Enter a valid csc'
                 }
               }
             }

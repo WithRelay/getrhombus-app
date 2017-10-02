@@ -5,7 +5,7 @@ module AddTokenToUser
   # a customer user who is a customer of the platform and/or merchant(s) standalone and managed account
   # for merchant standalone account, it is a shared customer with the platform
   def add_token_for_user(card_token, send_decline_msg = true)
-    #begin
+    begin
       
       # platform acct shouldn't really be doing this
       return [true] if self.is_platform?
@@ -49,10 +49,10 @@ module AddTokenToUser
 
       send_decline_text(res.third) if self.is_customer? && send_decline_msg && res.third
       res
-    #rescue StandardError => e
-      # notify team
-     # [false]
-    #end
+    rescue StandardError => exception
+      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In add_token_for_user" })
+      [false]
+    end
   end
 
   # on platform only...also merchant not known 

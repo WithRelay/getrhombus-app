@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170907013234) do
+ActiveRecord::Schema.define(version: 20171001011054) do
 
   create_table "account_reloads", force: :cascade do |t|
     t.integer  "user_id",        limit: 4
@@ -870,12 +870,4 @@ ActiveRecord::Schema.define(version: 20170907013234) do
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   add_index "users", ["rhombus_number"], name: "index_users_on_rhombus_number", unique: true, using: :btree
 
-  add_foreign_key "coupons", "users"
-  add_foreign_key "hashtags", "users"
-  add_foreign_key "lists", "users"
-  add_foreign_key "message_resolutions", "users"
-  add_foreign_key "messages", "hashtags"
-  add_foreign_key "refunds", "transactions"
-  add_foreign_key "transactions", "hashtags"
-  add_foreign_key "transactions", "subscriptions"
 end

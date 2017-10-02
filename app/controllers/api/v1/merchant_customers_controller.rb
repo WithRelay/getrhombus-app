@@ -31,7 +31,7 @@ class Api::V1::MerchantCustomersController < Api::V1::BaseController
             params[:user][:password] = Toolbox::StringGen.generate_random_string(8)
             params[:user][:user_level] = 0
             @customer = User.new(api_v1_user_params)
-            @customer.customer_source = { id: current_user.id, method: 'added' }
+            @customer.customer_source = { id: current_user.id, method: 'added', temp_password: params[:user][:password] }
             @customer.save!
             raise StandardError unless add_to_merchant_customer_and_referrer
             @customer.user_lists.create!(@user_list_params) if api_v1_user_list_params[:list_id].present?
@@ -61,7 +61,8 @@ class Api::V1::MerchantCustomersController < Api::V1::BaseController
       msg = e.original_exception.message
       response = "Customer's phone number is already in use." if msg.include?('index_users_on_phone_number')
       response = "Customer's email is already in use." if msg.include?('index_users_on_email')
-    rescue StandardError => e
+    rescue StandardError => exception
+      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In v1 merchant_customers create" })
       status = 500
       customer_errors = @customer.errors.full_messages
       response = customer_errors.present? ? customer_errors : (error || 'Something went wrong on our end.')

@@ -87,8 +87,6 @@ class User < ActiveRecord::Base
   # LEAVE THIS FOR LATER
   #has_many :next_plans
 
-  #<redacted_phone_number>
-
   has_one :twitter_cred
   has_many :fb_creds
 
@@ -180,23 +178,24 @@ class User < ActiveRecord::Base
   end
 
   def self.platform_email
-    #Rails.application.secrets.dashboard_email
     Rails.application.secrets.team_email
   end
 
   def self.get_platform_acct_obj
     User.find_by(email: User.platform_email)
-    User.find 23
   end
 
   def buy_number(params)
     number = TextingService.buy_number({ query: params["area_code"] || "", country: params["rn_country"], type: params["rn_type"] })
     EmailingService.hosted_sms_progress_notice(self, number.try(:second)) if self.hosted_sms.present?
     return false unless number
-    rhombus_number = number[0]
-    rn_friendly_name = number[1]
-    generate_uid_and_referrer_link
-    update_account_balance(NUMBER_PRICE)
+    self.relay_uid = generate_uid
+    self.rhombus_number = number[0]
+    self.rn_friendly_name = number[1]
+    if self.relay_uid.present?
+      self.short_url = UrlShortenerService.shorten_link("#{Rails.application.secrets.app["url"]}?referrer_uid=#{self.relay_uid}")
+    end
+    deduct_from_account_balance(NUMBER_PRICE)
   end
 
   def has_valid_card?
@@ -220,11 +219,11 @@ class User < ActiveRecord::Base
     self.fb_creds.where(fb_page_id: page.id).last.try(:page_specific_id)
   end
 
-  def update_account_balance(amt)
-    self.update(account_balance: (self.account_balance - amt.to_f).round(6))
+  def deduct_from_account_balance(amt)
+    user.decrement!(:account_balance, amt.to_f)
   end
 
-  #private
+  private
 
   # Some users sign up with Rhombus numbers
   def phone_number_cannot_be_rhombus_number
@@ -248,31 +247,33 @@ class User < ActiveRecord::Base
   end
 
   def do_signup_stuff
-#=begin
-    user_id = self.id
-    if self.is_merchant?
-      Alert.find_or_create_by(user_id: user_id) { |alert| alert.emails = [self.email] }
-      response = "We're away at the moment and will get back to you when we return :)."
-      AwayMessage.find_or_create_by(user_id: user_id, response: response)
-      GetIntelligenceDataJob.perform_later(self.org_phone, 'OpenCNAM')
-      origin = List.origins[:system]
-      campaign_type = List.campaign_types[:campaign]
-      self.lists.create([
-        { name: 'New Customers', segment: new_customers_default_segment_data, origin: origin, list_type: List.list_types[:customer], campaign_type: campaign_type },
-        { name: 'New Contacts', segment: new_contacts_default_segment_data, origin: origin, list_type: List.list_types[:contact], campaign_type: campaign_type },
-        { name: 'Active Customers', segment: active_customers_default_segment_data, origin: origin, list_type: List.list_types[:customer], campaign_type: campaign_type },
-        { name: 'Active Contacts', segment: active_contacts_default_segment_data, origin: origin, list_type: List.list_types[:contact], campaign_type: campaign_type },
-        { name: 'Inactive Customers', segment: inactive_customers_default_segment_data, origin: origin, list_type: List.list_types[:customer], campaign_type: campaign_type },
-        { name: 'Inactive Contacts', segment: inactive_contacts_default_segment_data, origin: origin, list_type: List.list_types[:contact], campaign_type: campaign_type }
-      ])
-    end
+    begin
+      if self.is_merchant?
+        Alert.find_or_create_by(user_id: self.id) { |alert| alert.emails = [self.email] }
+        response = "We're away at the moment and will get back to you when we return :)."
+        AwayMessage.find_or_create_by(user_id: self.id, response: response)
+        GetIntelligenceDataJob.perform_later(self.org_phone, 'OpenCNAM')
+        origin = List.origins[:system]
+        campaign_type = List.campaign_types[:campaign]
+        self.lists.create([
+          { name: 'New Customers', segment: new_customers_default_segment_data, origin: origin, list_type: List.list_types[:customer], campaign_type: campaign_type },
+          { name: 'New Contacts', segment: new_contacts_default_segment_data, origin: origin, list_type: List.list_types[:contact], campaign_type: campaign_type },
+          { name: 'Active Customers', segment: active_customers_default_segment_data, origin: origin, list_type: List.list_types[:customer], campaign_type: campaign_type },
+          { name: 'Active Contacts', segment: active_contacts_default_segment_data, origin: origin, list_type: List.list_types[:contact], campaign_type: campaign_type },
+          { name: 'Inactive Customers', segment: inactive_customers_default_segment_data, origin: origin, list_type: List.list_types[:customer], campaign_type: campaign_type },
+          { name: 'Inactive Contacts', segment: inactive_contacts_default_segment_data, origin: origin, list_type: List.list_types[:contact], campaign_type: campaign_type }
+        ])
+      end
 
-    MerchantCustomer.add_or_update_merchant_customer(User.get_platform_acct_obj, self, true)
-    #WelcomeEmailJob.set(wait: SIGNUP_EMAIL_DELAY.minutes).perform_later(self, self.customer_source)
-    WelcomeEmailJob.set(wait: 10.seconds).perform_later(self, self.customer_source)
-    GetIntelligenceDataJob.perform_later(self.email, 'FullContact')
-    GetIntelligenceDataJob.perform_later(self.phone_number, 'OpenCNAM') if self.is_customer?
-#=end
+      unless is_platform?
+        MerchantCustomer.add_or_update_merchant_customer(User.get_platform_acct_obj, self, true) 
+        WelcomeEmailJob.set(wait: SIGNUP_EMAIL_DELAY.minutes).perform_later(self, self.customer_source)
+      end
+      GetIntelligenceDataJob.perform_later(self.email, 'FullContact')
+      GetIntelligenceDataJob.perform_later(self.phone_number, 'OpenCNAM') if self.is_customer?
+    rescue StandardError => exception
+      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "From do_signup_stuff"})
+    end
   end
 
   #def validates_person_full_message
@@ -280,9 +281,4 @@ class User < ActiveRecord::Base
     #errors.add(:full_name, 'is required') if self.people[0].try(:full_name).present?
   #end
 
-  # This is the link merchants can share...also dashboard link
-  def generate_uid_and_referrer_link
-    self.relay_uid = generate_uid
-    self.short_url = "dasd" #UrlShorternerService.shorten_link("#{Rails.application.secrets.app["url"]}?referrer_uid=#{self.relay_uid}")
-  end
 end

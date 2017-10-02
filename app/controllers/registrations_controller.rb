@@ -54,7 +54,8 @@ class RegistrationsController < Devise::RegistrationsController
 
   def check_params_with_update
     msg = nil
-    #begin
+
+    begin
       if set_update_flash_messages[:subscription] && current_user.is_merchant?
         subscription = create_saas_subscription
         msg = (subscription.third ? subscription.third : "We are unable to start a subscription for you") unless subscription.first
@@ -70,9 +71,10 @@ class RegistrationsController < Devise::RegistrationsController
         add_token = current_user.add_token_for_user(params[:user][:card_token])
         msg = (add_token.third ? add_token.third : "We are unable to add your card to your profile.") unless add_token.first
       end
-    #rescue StandardError => error
-      #msg = "Something went wrong"
-    #end
+    rescue StandardError => exception
+      ExceptionNotifier.notify_exception(exception, env: request.env, data: { message: "In check_params_with_update" })
+      msg = "Something went wrong"
+    end
     
     return msg
   end
@@ -108,13 +110,15 @@ class RegistrationsController < Devise::RegistrationsController
       # or you can check if the selected plan is the free plan
       token_res = params[:user][:card_token].present? ? current_user.add_token_for_user(params[:user][:card_token]) : [true]
       if token_res.first
+        current_user.save # update resource changes so far
         @platform_acct = User.get_platform_acct_obj
         merchant_customer = MerchantCustomer.find_by(customer_id: current_user.id, merchant_id: @platform_acct.id)
         saas_sub = Subscription.new(plan_id: get_plan_id, merchant_customer_id:  merchant_customer.id)
         return saas_sub.create_subscription({ team: @platform_acct })
       end
       token_res
-    rescue StandardError => e
+    rescue StandardError => exception
+      ExceptionNotifier.notify_exception(exception, env: request.env, data: { message: "In create_saas_subscription" })
       [false]
     end
   end
@@ -133,7 +137,7 @@ class RegistrationsController < Devise::RegistrationsController
 
   def set_update_flash_messages(msg = '')
     page_params = { add_profile_info: {
-                                        success: 'profile updated',
+                                        success: 'Profile created',
                                         error: resource.errors.full_messages,
                                         profile_info: true
                                       },
@@ -143,7 +147,7 @@ class RegistrationsController < Devise::RegistrationsController
                                         subscription: true
                                       },
                     add_rhombus_number: {
-                                          success: 'Rhombus number added',
+                                          success: 'Relay number added',
                                           error: 'Something went wrong. We were unable to provision a number for you. A member of our support team will contact you shortly.',
                                           rhombus_number: true
                                         },
@@ -153,17 +157,17 @@ class RegistrationsController < Devise::RegistrationsController
                                     card_info: true
                                    },
                     update_billing_info: {
-                                          success: 'Billing Info updated',
+                                          success: 'Billing info updated',
                                           error: msg,
                                           billing_info: true
                                         },
                     account_settings: {
-                                        success: 'account updated',
+                                        success: 'Account updated',
                                         error: resource.errors.full_messages,
                                         account_settings: true
                                       },
                     business_settings: {
-                                        success: 'account updated',
+                                        success: 'Account updated',
                                         error: resource.errors.full_messages,
                                         business_settings: true,
                                        }
@@ -181,6 +185,7 @@ class RegistrationsController < Devise::RegistrationsController
 
   def save_resource
     begin
+      set_referrer_source
       resource.save
     rescue ActiveRecord::RecordNotUnique
       resource.errors.add(:phone_number, "is already in use") if $!.message.include?('index_users_on_phone_number')
@@ -197,6 +202,13 @@ class RegistrationsController < Devise::RegistrationsController
     rescue ActiveRecord::RecordNotUnique
       resource.errors.add(:phone_number, "is already in use") if $!.message.include?('index_users_on_phone_number')
       false
+    end
+  end
+
+  def set_referrer_source
+    if params[:user][:referrer_uid].present?
+      merchant = User.find_by(relay_uid: params[:user][:referrer_uid])        
+      self.resource.customer_source = { id: merchant.id, method: 'referred' } if merchant
     end
   end
 

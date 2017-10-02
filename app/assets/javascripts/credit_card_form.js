@@ -11,6 +11,8 @@ $(document).ready(function () {
     live: 'disabled',
     err: {
       container: function($field, validator) {
+        
+        /*
         if($field.attr("id") == "cc-exp" ){
           return '#cardDate';
         }
@@ -18,6 +20,8 @@ $(document).ready(function () {
         if($field.attr("id") == "cc-csc"){
           return '#cardCvv';
         }
+        */
+
         return $field.parent().find('.messageContainer').show();
       }
     },
@@ -26,7 +30,7 @@ $(document).ready(function () {
         selector: '#cc-name',
         validators: {
           notEmpty: {
-            message: 'Your card name is required'
+            message: 'Card name is required'
           }
         }
       },
@@ -63,8 +67,8 @@ $(document).ready(function () {
                 }
               } else {
                 return {
-                  valid: false,    // or false
-                  message: 'Enter a valid date'
+                  valid: false,    
+                  message: ''      // Enter a valid date'
                 }
               }
             }
@@ -83,8 +87,8 @@ $(document).ready(function () {
                 }
               } else {
                 return {
-                  valid: false,    // or false
-                  message: 'Enter a valid csc'
+                  valid: false,    
+                  message: ''      // Enter a valid csc'
                 }
               }
             }

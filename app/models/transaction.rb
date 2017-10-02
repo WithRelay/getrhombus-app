@@ -80,9 +80,7 @@ class Transaction < ActiveRecord::Base
 
   # tested
   def get_fees_schedule
-    #@fee_schedule = @merchant.is_platform? ? TransactionFee.platform.first : @merchant.get_stripe_cred[:cred].transaction_fee
-    # use this
-    @fee_schedule = @merchant.get_stripe_cred[:cred].transaction_fee
+    @fee_schedule = @merchant.is_platform? ? TransactionFee.platform.first : @merchant.get_stripe_cred[:cred].transaction_fee
     percent1, cents1 = @fee_schedule.provider_percent.to_f, @fee_schedule.provider_cents.to_f
     percent2, cents2 = @fee_schedule.platform_percent.to_f, @fee_schedule.platform_cents.to_f
     return percent1, cents1, percent2, cents2

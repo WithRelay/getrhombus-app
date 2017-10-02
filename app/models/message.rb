@@ -28,7 +28,7 @@ class Message < ActiveRecord::Base
           response = response.second
           num_segments = response.num_segments.to_i
           price = (media_ary.blank?) ? (SMS_PRICE_SENT * num_segments) : MMS_PRICE_SENT
-          merchant.update_account_balance(price)
+          merchant.deduct_from_account_balance(price)
           self.update_attributes(status: response.status, message_id: response.sid,
                                   message_timestamp: response.date_updated, message_price: response.price,
                                   error_code: response.error_code, error_text: response.error_message,
@@ -43,7 +43,7 @@ class Message < ActiveRecord::Base
         if response.first && response.second.code == 200 && response.second["messages"].first["status"] == "0"
           response = response.second
           num_segments = response['message-count'].to_i
-          merchant.update_account_balance(SMS_PRICE_SENT * num_segments)
+          merchant.deduct_from_account_balance(SMS_PRICE_SENT * num_segments)
           self.update_attributes(status: response['messages'].first['status'], num_segments: num_segments,
                                   message_id: response['messages'].first['message-id'],
                                   message_price: response['messages'].first['message-price'],

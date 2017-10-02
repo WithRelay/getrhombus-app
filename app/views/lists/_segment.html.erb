@@ -17,7 +17,7 @@
     <div class="settings-row-text"><%= segment.created_at.strftime('%Y/%m/%d') %></div>
   </div>
   <div class="w-col w-col-2">
-    <% unless segment.merchant? %>
+    <% if segment.merchant? %>
       <%= link_to '', user_list_path(current_user, segment), id: "list-delete-#{segment.id}", class: 'w-hidden', method: :delete %>
       <%= link_to 'Delete', "#", class: 'button settings-table-row w-button delete-segment-link' %>
     <% end %>

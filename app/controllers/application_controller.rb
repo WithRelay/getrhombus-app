@@ -1,10 +1,12 @@
 class ApplicationController < ActionController::Base
+  
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
+  
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :prepare_exception_notifier, if: :not_ping_controller_actions?
-  #before_action :check_current_user_and_path
+  before_action :check_current_user_and_path
   around_action :set_time_zone, if: :not_ping_controller_actions? && :current_user
 
   include CheckUserProfile
@@ -14,7 +16,7 @@ class ApplicationController < ActionController::Base
   end
 
   rescue_from CanCan::AccessDenied do |exception|
-    #ExceptionNotifier.notify_exception(exception, env: request.env, data: { message: "was doing something wrong"})
+    ExceptionNotifier.notify_exception(exception, env: request.env, data: { message: "CanCan AccessDenied" })
     redirect_to_404(exception.message)
   end
 
@@ -37,7 +39,7 @@ class ApplicationController < ActionController::Base
     devise_parameter_sanitizer.permit(:account_update) { |u| u.permit(:email, :current_password, :password,
       :password_confirmation, :last4, :exp_month,  :exp_year, :card_name, :card_type, :rhombus_number, :team_size,
       :use_rhombus_for, :rn_type, :rn_country, :phone_number, :card_id, :org_name, :org_category, :org_phone, :currency,
-      :tax_percent, :url, :custom_welcome, :livemode, :time_zone, :org_type, people_attributes: [:id, :full_name],
+      :tax_percent, :url, :custom_welcome, :livemode, :time_zone, :org_type, people_attributes: [:id, :full_name, :role],
       address_attributes: [:street_address, :suite, :id, :city, :state_province, :postal_code, :country]
     )}
   end
@@ -77,7 +79,6 @@ class ApplicationController < ActionController::Base
       current_user: current_user
     }
   end
-
  
 
 end

@@ -35,8 +35,6 @@ class List < ActiveRecord::Base
                 .select("#{class_name.table_name}.*").where("user_lists.list_id = #{self.id}")
                 .paginate(page: page, per_page: PAGINATION_PER_PAGE)
     end
-
-    #[MerchantCustomer.find(32)]
   end
 
 end

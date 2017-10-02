@@ -34,21 +34,22 @@ module Rhombus
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
 
-    #added
+    # added
     config.active_job.queue_name_prefix = Rails.env
 
-    #added
-    unless Rails.env == 'development'
-      Rails.application.config.middleware.use ExceptionNotification::Rack,
-      ignore_cascade_pass: false,
-      email: {
-        sender_address: %{"Exception Notifier" <<redacted_email>>},
-        exception_recipients: %w{<redacted_email>}
-      },
-      slack: {
-        webhook_url: '<redacted_webhook_url>'
-      }
-    end
+    # added
+      # unless Rails.env == 'development'
+        Rails.application.config.middleware.use ExceptionNotification::Rack,
+        ignore_cascade_pass: false,
+        email: {
+          sender_address: %{"Exception Notifier" <<redacted_email>>},
+          exception_recipients: %w{<redacted_email>}
+        },
+        slack: {
+          webhook_url: '<redacted_webhook_url>'
+        }
+    # end
+    
     # added
     I18n.enforce_available_locales = true
 

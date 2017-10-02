@@ -6,13 +6,21 @@ module CheckUserProfile
     req_url = url_for controller: controller_name, action: action_name, only_path: true
     
     if current_user.is_customer?
-      path = build_user_link unless current_user.has_valid_card?[:valid]
-      path = user_transactions_path(current_user) if signin_signup
+      unless current_user.has_valid_card?[:valid]
+        path = build_user_link 
+      else 
+        path = user_transactions_path(current_user) if signin_signup
+      end
     else
-      path = user_add_profile_info_path(current_user) if current_user.org_name.blank?      
-      path = user_add_subscription_path(current_user) if current_user.get_saas_subscription.blank?
-      path = user_add_rhombus_number_path(current_user) if current_user.rhombus_number.blank?
-      path = user_conversations_path(current_user) if signin_signup
+      if current_user.org_name.blank?      
+        path = user_add_profile_info_path(current_user) 
+      elsif current_user.get_saas_subscription.blank? && !current_user.is_platform?
+        path = user_add_subscription_path(current_user) 
+      elsif current_user.rhombus_number.blank? && !current_user.is_platform?
+        path = user_add_rhombus_number_path(current_user)
+      else
+        path = user_conversations_path(current_user) if signin_signup
+      end
     end
 
     return nil if path.blank?

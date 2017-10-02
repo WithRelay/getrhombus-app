@@ -177,10 +177,11 @@ class PaymentService
       end
     end
 
-    # must check that customer has a card on file first
+    # note you should check that customer has card on file before calling this method
     def create_subscription(hash, cred, platform=false)
-      # using only customer_uri only since we support only 1 card and this
+      # using only customer_uri since we support only 1 card and this
       # way if a customer changes the card on file we don't need to change the subscription source
+
       begin
         if platform
           re = Stripe::Subscription.create(hash)
@@ -193,12 +194,15 @@ class PaymentService
         end
 
         [true, re]
-      rescue Stripe::CardError => e
+      rescue Stripe::CardError => exception
+        ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "From create_subscription"})
         # Since it's a decline, Stripe::CardError will be caught
         [false, e, e.json_body[:error][:message]]
-      rescue Stripe::StripeError => e
+      rescue Stripe::StripeError => exception
+        ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "From create_subscription"})
         [false, e]
-      rescue StandardError => e
+      rescue StandardError => exception
+        ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "From create_subscription"})
         [false, e]
       end
     end
