@@ -50,11 +50,12 @@ class Api::V1::ListsController < Api::V1::BaseController
           render json: { error: list.errors.full_messages.to_json }, status: 500
         end
       else
-        @list = save_list
-        if @list.errors.full_messages.blank?
-          render json: { notice: "Segment saved" }, status: 200
+        list = save_list
+        if list.errors.full_messages.blank?
+          str = list.is_segment? ? 'segments' : 'lists'
+          render json: { notice: "Segment saved", redirect_url: "/users/#{current_user.id}/#{str}/#{list.id}" }, status: 200
         else
-          render json: { error: @list.errors.full_messages }, status: 500
+          render json: { error: list.errors.full_messages }, status: 500
         end
       end
     rescue StandardError => e

@@ -190,6 +190,7 @@ $(document).on('ready page:load', function() {
         data: data,
         dataType: 'json'
       }).done(function(data) {
+        console.log(data)
         $('.update-close-modals').click();
         setFlashForList('Segment created successfully', 'notice');
         window.location = window.location.origin + data.redirect_url;
