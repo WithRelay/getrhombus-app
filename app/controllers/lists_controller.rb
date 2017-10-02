@@ -14,8 +14,8 @@ class ListsController < ApplicationController
   def segments
     @list_segments = current_user.segments.campaign
                                  .paginate(
-                                   per_page: PAGINATION_PER_PAGE,
-                                   page: params[:page]
+                                    per_page: PAGINATION_PER_PAGE,
+                                    page: params[:page]
                                  )
                                  .order(created_at: :desc)
     if @list_segments.present?
@@ -35,7 +35,7 @@ class ListsController < ApplicationController
       # segment
       if @list.is_segment?
         @new_customer = User.new
-        @selected_segment = @list.segment['base_query']
+        @selected_segment_id = @list.id
         @list_type = @list.list_type
         if @list.contact?
           @uid_type = @segment.sms? ? 'phone_number' : 'fb_page'
