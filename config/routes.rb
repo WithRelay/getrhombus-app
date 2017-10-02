@@ -2,8 +2,8 @@ Rails.application.routes.draw  do
 
   root 'static_pages#home'
   get "homepage_referrer" => 'referrers#homepage_referrer'
-  get "relay-docs/:slug" => "knowledge_bases#show"
-  get "relay-docs-categories/:slug" => "knowledge_base_categories#show"
+  #get "relay-docs/:slug" => "knowledge_bases#show"
+  #get "relay-docs-categories/:slug" => "knowledge_base_categories#show"
   StaticPagesController.action_methods.each { |action| get action.split('_').join('-') => "static_pages##{action}" }
 
   devise_for :users, controllers: { registrations: "registrations", omniauth_callbacks: "omniauth_callbacks", sessions: 'sessions' }
@@ -36,7 +36,7 @@ Rails.application.routes.draw  do
 
   authenticate :user, -> (user) { user.is_platform? } do
     resources :users, only: [] do
-      resources :knowledge_base_categories, param: :slug, only: [:index, :edit, :update, :new, :create]
+      #resources :knowledge_base_categories, param: :slug, only: [:index, :edit, :update, :new, :create]
       resources :coupons, only: [:index, :destroy]
       get 'manage-coupons' => 'coupons#manage_coupons'
       mount Resque::Server.new, :at => "/resque"
@@ -57,7 +57,7 @@ Rails.application.routes.draw  do
       get 'add-profile-info'
       get "business-settings"
       get 'integrations'
-      get 'customer_template'
+      get 'customer_csv_template'
       get 'remove_stripe_integration'
       get 'remove_twitter_integration'
       get 'fb_pages/remove_integration'
@@ -163,9 +163,9 @@ Rails.application.routes.draw  do
         post 'close'
       end
     end
-    resources :knowledge_bases, param: :url, only: [:index] do
-      get 'rating', on: :member
-    end
+    #resources :knowledge_bases, param: :url, only: [:index] do
+      #get 'rating', on: :member
+    #end
   end
 
   ## catch all other to 404

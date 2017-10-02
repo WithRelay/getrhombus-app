@@ -64,7 +64,7 @@ gem 'omniauth-facebook'
 # Accessing Facebook Graph API
 gem "koala"
 
-gem 'friendly_id', '~> 5.1.0'
+#gem 'friendly_id', '~> 5.1.0'
 
 group :production do
   gem "passenger"

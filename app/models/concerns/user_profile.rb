@@ -79,7 +79,7 @@ module UserProfile
       
       x = FullContactData.find_by(email: data[:email])
       x = x.full_contact_social_datas.find_by(type_id: 'twitter') if x.present?
-      data[:twitter] = x.present? && x.username.present? ? x.username : '-'
+      data[:twitter] = x.present? && x.username.present? ? "#{ '@' unless x.username.chr == '@' }#{x.username}" : '-'
 
     elsif uid_type == 'phone_number'
       
@@ -113,7 +113,7 @@ module UserProfile
         x = x.full_contact_social_datas.find_by(type_id: 'twitter') if x.present?
       end
 
-      data[:twitter] = data[:email] != "-" && x.present? && x.username.present? ? x.username : '-'
+      data[:twitter] = data[:email] != "-" && x.present? && x.username.present? ? "#{ '@' unless x.username.chr == '@' }#{x.username}" : '-'
       
     end
 

@@ -29,16 +29,18 @@ class ListsController < ApplicationController
   end
 
   def show
-    @list_members = @list.get_mcs(params[:page])
+    if @list
+      @list_members = @list.get_mcs(params[:page])
 
-    # segment
-    if @list.is_segment?
-      @new_customer = User.new
-      @selected_segment = @list.segment['base_query']
-      @list_type = @list.list_type
-      if @list.contact?
-        @uid_type = @segment.sms? ? 'phone_number' : 'fb_page'
-        @channel = @uid_type == 'phone_number' ? 'sms' : 'messenger'
+      # segment
+      if @list.is_segment?
+        @new_customer = User.new
+        @selected_segment = @list.segment['base_query']
+        @list_type = @list.list_type
+        if @list.contact?
+          @uid_type = @segment.sms? ? 'phone_number' : 'fb_page'
+          @channel = @uid_type == 'phone_number' ? 'sms' : 'messenger'
+        end
       end
     end
 

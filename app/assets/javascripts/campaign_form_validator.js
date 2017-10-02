@@ -8,8 +8,8 @@ $(document).on('ready page:load', function() {
 
   // checked
   $( '#sendTestCampaign' ).click(function(e) {
+    $(this).attr('active', 'true').attr('disabled', 'true');
     e.preventDefault();
-    $(this).attr('active', 'true');
     $( 'form#campaignForm' ).submit();
   });
 
