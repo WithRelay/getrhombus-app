@@ -4,6 +4,7 @@ Rails.application.routes.draw  do
   get "homepage_referrer" => 'referrers#homepage_referrer'
   get "relay-docs/:slug" => "knowledge_bases#show"
   get "relay-docs-categories/:slug" => "knowledge_base_categories#show"
+  get 'verify-hosted-sms-order' => 'users#verify_hosted_sms_order'
   StaticPagesController.action_methods.each { |action| get action.split('_').join('-') => "static_pages##{action}" }
 
   devise_for :users, controllers: { registrations: "registrations", omniauth_callbacks: "omniauth_callbacks", sessions: 'sessions' }
@@ -51,7 +52,6 @@ Rails.application.routes.draw  do
       end
       get 'sms-usage'
       get 'add-rhombus-number'
-      get 'verify-hosted-sms-order'
       post 'verify_hosted_sms'
       get 'add-subscription'
       get 'add-profile-info'
@@ -66,7 +66,7 @@ Rails.application.routes.draw  do
       patch 'update_fb_page' => 'fb_pages#update_user_fb_page'
       resources :hashtags, except: [:show] do
         patch 'change_status', on: :member
-      end      
+      end
       get 'refer_business' => 'referrers#new'
       resources :referrers, only: [:create]
       resources :transactions, only: [] do
