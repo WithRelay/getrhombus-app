@@ -8,8 +8,7 @@ namespace :platform do
                     phone_number: '<redacted_phone_number>', rhombus_number: '<redacted_phone_number>',
                     account_balance: 1000000, org_name: 'Relay', org_type: 'Company',
                     org_category: 'Other', currency: 'USD', 
-                    custom_welcome: '')
-    #relay_uid
+                    custom_welcome: '', relay_uid: 'ewqr12wer')
     user.save(validate: false)
   end
 

@@ -220,7 +220,7 @@ class User < ActiveRecord::Base
   end
 
   def deduct_from_account_balance(amt)
-    user.decrement!(:account_balance, amt.to_f)
+    self.decrement!(:account_balance, amt.to_f)
   end
 
   private
