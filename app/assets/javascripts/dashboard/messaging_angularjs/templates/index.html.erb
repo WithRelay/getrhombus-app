@@ -178,7 +178,7 @@
             <div class="no-data-right-side-bar">
               <p class="empty-view-short-paragraph">Connect your bank account to view recent transactions &amp; issue refunds right here.</p>
             </div>
-            <a class="button right-nav-add-to-list w-button" href="#">&nbsp;&nbsp;&nbsp;&nbsp;Connect bank account</a>
+            <a class="button right-nav-add-to-list w-button" ng-href="/users/{{merchant.id}}/managed-accounts">&nbsp;&nbsp;&nbsp;&nbsp;Connect bank account</a>
           </div>
 
           <div ng-if="merchant.can_accept_payments && !conversation_selected" class="alt no-data-right-side-bar">
