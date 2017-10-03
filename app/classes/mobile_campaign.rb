@@ -27,10 +27,10 @@ class MobileCampaign
   end
 
   def send_by_mobile(customer, uid_type, uid)
-    Conversation.find_or_create_conversation_for_message_and_send_publish(@campaign.user, customer, uid_type, uid, @campaign.text, @channel, media_urls_ary, 'campaign')
+    Conversation.find_or_create_conversation_for_message_and_send_publish(@campaign.user, customer, uid_type, uid, @campaign.text, @channel, media_ary, 'campaign')
   end
 
-  def media_urls_ary
-    @campaign.images.attachment.map { |image| image.avatar.url }
+  def media_ary
+    @campaign.images.attachment
   end
 end

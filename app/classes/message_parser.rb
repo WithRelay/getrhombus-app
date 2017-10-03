@@ -306,7 +306,7 @@ class MessageParser
   end
 
   def get_tag_images
-    @tag.images.map { |i| i.avatar.url }
+    @tag.images
   end
 
   # tested
