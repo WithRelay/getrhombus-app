@@ -63,8 +63,9 @@ var CheckedItem = new function() {
         FlashHandler.setFlashMessage(data.notice, 'notice');
         location.reload();
       })
-      .fail(function(msg){
-        FlashHandler.setFlashMessage('Unable to complete request', 'error');
+      .fail(function(msg) {
+        var error_text = (msg.responseJSON.error.length) ? msg.responseJSON.error : 'Unable to complete request'
+        FlashHandler.setFlashMessage(error_text, 'error');
         $('.cancel-no').click();
       });
     } else {
