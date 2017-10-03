@@ -41,7 +41,7 @@ class MessageParser
       if @is_valid_payment_intent && !is_amount_under_limit?    #tested
       elsif @is_valid_payment_intent || @tag                    # tested
 
-        if @tag && @tag.non_payment_tag && !@is_valid_payment_intent
+        if @tag && @tag.non_payment_tag? && !@is_valid_payment_intent
           send_response(@tag.response, get_tag_images)
           return
         end
