@@ -118,9 +118,8 @@ class Conversation < ActiveRecord::Base
       else
         false
       end
-    rescue StandardError => e
-      puts e.inspect
-      # notify team
+    rescue StandardError => exception
+      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In conversations.rb send_message" })
       false
     end
   end
