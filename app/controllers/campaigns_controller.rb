@@ -24,7 +24,7 @@ class CampaignsController < ApplicationController
   def create
     @campaign = current_user.campaigns.build(campaign_params, image_params)
     if @campaign.save
-      #@campaign.enqueue_jobs
+      @campaign.enqueue_jobs
       flash[:notice] = 'Campaign saved successfully'
       redirect_to user_campaigns_path(current_user)
     else
