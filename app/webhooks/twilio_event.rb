@@ -73,9 +73,10 @@ class TwilioEvent
         end
 
         Conversation.find_or_create_conversation_for_message_and_publish(@merchant, user, uid_type, uid, @message, true)
+        MessageParser.new.process_message(@merchant, user, uid, uid_type, @message, 'Message')
         @merchant.away_message.check_office_hours(@merchant, user, uid_type, uid, "Message")
         @merchant.deduct_from_account_balance(price_multiplier)
-        MessageParser.new.process_message(@merchant, user, uid, uid_type, @message, 'Message')
+        #MessageParser.new.process_message(@merchant, user, uid, uid_type, @message, 'Message')
         puts 'sdhasjhdgashdgashdgjasgdjhagsjdgsajgdhsgdhagsjh'
 
       rescue ActiveRecord::RecordNotUnique
