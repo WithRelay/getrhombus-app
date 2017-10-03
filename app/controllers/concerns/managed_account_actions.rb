@@ -6,45 +6,55 @@ module ManagedAccountActions
     @user.bank_accounts.present? || @user.bank_accounts.build
     @user.stripe_creds.present? || @user.stripe_creds.build
     @user.people.present? || @user.people.build
-    @user.people.each_with_index { |p,i| @user.people[i].address || @user.people[i].build_address }
+    #@user.people.each_with_index { |p,i| @user.people[i].address || @user.people[i].build_address }
     @image = @user.people.representative.try(:first).try(:image)
   end
 
-  def create_managed_acct
-    # update company rep first
+  def save_representative
+    # person will always exists for an account especially merchant accounts
+    person = Person.find_by(id: representative_params["id"])
+    person.update(representative_params)
+  end
 
-    if save_identity_doc
-      check_user_validation = user_valid_to_update
-      if check_user_validation.present?
-        flash[:error] = check_user_validation
+  def create_managed_acct
+    if save_representative
+      if save_identity_doc
+        check_user_validation = user_valid_to_update
+        if check_user_validation.present?
+          flash[:error] = check_user_validation
+        else
+          flash[:notice] = 'Account connected successfully'
+        end
       else
-        flash[:notice] = 'Account connected successfully'
+        flash[:error] = "Unable to upload your verification document"
       end
     else
-      flash[:error] = "Unable to upload your verification document"
+      flash[:error] = "Unable to save your representative info"
     end
 
-    render :managed_acct
+    redirect_to user_managed_accounts_path
   end
 
   def update_managed_acct
-    if save_identity_doc
-      check_user_validation = user_valid_to_update
-      if check_user_validation.present?
-        flash[:error] = check_user_validation
+    if save_representative
+      if save_identity_doc
+        check_user_validation = user_valid_to_update
+        if check_user_validation.present?
+          flash[:error] = check_user_validation
+        else
+          flash[:notice] = 'Account updated'
+        end
       else
-        flash[:notice] = 'Account updated'
+        flash[:error] = "Unable to upload your verification document"
       end
     else
-      flash[:error] = "Unable to upload your verification document"
+      flash[:error] = "Unable to save your representative info"
     end
 
-    render :managed_acct
+    redirect_to user_managed_accounts_path
   end
 
   def save_identity_doc
-    puts @user.inspect
-=begin
     if image_params[:avatar].present?
       stripe_managed = StripeManagedAccountService.new(current_user, image_params)
       file_upload = stripe_managed.upload_file
@@ -55,9 +65,7 @@ module ManagedAccountActions
       person.update_column(:stripe_file_id, file_upload.id)
     end
 
-    return true
-=end
-    false
+    true
   end
 
   def user_valid_to_update
@@ -84,6 +92,8 @@ module ManagedAccountActions
   end
 
   def save_managed_connect_acccount(account, bank_account)
+    puts account.inspect
+    puts bank_account.inspect
     save_params = params_with_stripe(account, bank_account)
     unless params[:action] == 'update_managed_acct'
       account_keys = account.keys
@@ -98,12 +108,12 @@ module ManagedAccountActions
     account_verification = account.verification
     stripe_params = full_user_params
     stripe_params[:stripe_creds_attributes]['0'].merge!({
-                                                          account_verification: account.verification,
-                                                          legal_entity_verification: account.legal_entity.verification,
+                                                          account_verification: account.verification.to_hash,
+                                                          legal_entity_verification: account.legal_entity.verification.to_hash,
                                                           account_id: account.id,
                                                           livemode: Rails.env.production?,
                                                           charges_enabled: account.charges_enabled,
-                                                          transfers_enabled: account.transfers_enabled
+                                                          payouts_enabled: account.payouts_enabled
                                                         })
     unless bank_account.methods.include?(:message)
       stripe_params[:bank_accounts_attributes]['0'].merge!({ stripe_bank_account_id: bank_account.id,
@@ -120,7 +130,9 @@ module ManagedAccountActions
   end
 
   def representative_params
-    params[:user][:people_attributes]['0']
+    params.require(:user).permit(people_attributes: [:id, :gender, :business_name, :full_name, :dob, :last4, :role, :_destroy, 
+      #address_attributes: [:street_address, :suite, :id, :city, :state_province, :postal_code, :country]
+      ])[:people_attributes]["0"]
   end
 
 end

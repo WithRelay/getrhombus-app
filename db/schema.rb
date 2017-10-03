@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171001011054) do
+ActiveRecord::Schema.define(version: 20171002212924) do
 
   create_table "account_reloads", force: :cascade do |t|
     t.integer  "user_id",        limit: 4
@@ -660,7 +660,7 @@ ActiveRecord::Schema.define(version: 20171001011054) do
     t.integer  "tos_date",                  limit: 4
     t.string   "user_agent",                limit: 191
     t.boolean  "charges_enabled",           limit: 1
-    t.boolean  "transfers_enabled",         limit: 1
+    t.boolean  "payouts_enabled",           limit: 1
     t.text     "account_verification",      limit: 65535
     t.text     "legal_entity_verification", limit: 65535
     t.datetime "created_at",                              null: false

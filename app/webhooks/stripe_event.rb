@@ -241,39 +241,39 @@ class StripeEvent
 =end
 
     def account_updated
-      user_params = response_user_params.merge(bank_account_details)
-      managed_account_user.update(user_params)
-    rescue => e
+      begin
+        user_params = response_user_params.merge(bank_account_details)
+        managed_account_user.update(user_params)
+      rescue => exception
+        ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In StripeEvent account_updated", 
+                                                                              merchant: managed_account_user, data: @hash })
+      end
     end
 
-    def managed_account_user; StripeCred.find_by_account_id(@hash[:id]).user end
+    def managed_account_user; @stripe_cred.user end
 
     def response_user_params
-      account = Stripe::Account.retrieve(@hash[:id])
+      @account = Stripe::Account.retrieve(@hash[:id])
+      @stripe_cred = StripeCred.includes(:user).find_by_account_id(@hash[:id])
       {
         org_name: @hash[:business_name], url: @hash[:business_url],
-        org_type: bank_account_params[:account_holder_type],
-        address_attributes: { street_address: address_params[:street], city: address_params[:city],
-                              state_province: address_params[:state],
-                              country: address_params[:country], postal_code: address_params[:zip] },
+        org_type: @hash[:legal_entity][:type].try(:capitalize),
         stripe_creds_attributes: {
-                                    charges_enabled: @hash[:charges_enabled],
-                                    transfers_enabled: @hash[:payouts_enabled],
-                                    account_verification: account.verification,
-                                    legal_entity_verification: account.legal_entity.verification
+                                    charges_enabled: @account[:charges_enabled],
+                                    payouts_enabled: @account[:payouts_enabled],
+                                    account_verification: @account.verification.to_hash,
+                                    legal_entity_verification: @account.legal_entity.verification.to_hash,
+                                    id: @stripe_cred.id
                                  }
       }
     end
 
-    def bank_account_params
-      @hash[:external_accounts][:data][0]
-    end
-
     def address_params
-      @hash[:address]
+      @hash[:legal_entity][:address]
     end
 
     def bank_account_details
+      bank_account_params = @account.external_accounts.data.first
       bank_account = BankAccount.find_by_stripe_bank_account_id(bank_account_params[:id])
       bank_account_details = {}
       bank_account_details[:bank_accounts_attributes] = { country: bank_account_params[:country],
@@ -299,7 +299,7 @@ class StripeEvent
         'invoice.payment_succeeded'=> :invoice_payment_succeeded,
         'invoice.created'=> :invoice_created,
         # 'invoice.updated'=> :invoice_updated,
-        # when managed account information like external bank_account get updated
+        # when custom account information like external bank_account get updated
         'account.updated'=> :account_updated
       }
     end

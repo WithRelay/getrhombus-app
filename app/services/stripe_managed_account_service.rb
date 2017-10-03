@@ -21,12 +21,12 @@ class StripeManagedAccountService < Struct.new( :user, :params )
       account = Stripe::Account.create(send(string_method_name))
       puts account.inspect
       account
-    rescue Stripe::StripeError => e
-      puts e.inspect
-      e
-    rescue StandardError => e # returns error object to retrieve error message is e.message. handle stripe create account error
-      puts e.inspect
-      e
+    rescue Stripe::StripeError => exception
+      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In StripeManagedAccountService create_account" })
+      exception
+    rescue StandardError => exception # returns error object to retrieve error message is e.message. handle stripe create account error
+      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In StripeManagedAccountService create_account" })
+      exception
     end
   end
 
@@ -34,16 +34,14 @@ class StripeManagedAccountService < Struct.new( :user, :params )
     begin
       Stripe::FileUpload.create(
         :purpose => 'identity_document',
-        :file => image
+        :file => File.new(image.path)
       )
-    rescue Stripe::StripeError => e
-      puts e.inspect
-      # email team
-      e
-    rescue StandardError => e
-      puts e.inspect
-      # email team
-      e
+    rescue Stripe::StripeError => exception
+      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In StripeManagedAccountService upload_file" })
+      exception
+    rescue StandardError => exception
+      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In StripeManagedAccountService upload_file" })
+      exception
     end
   end
 
@@ -56,10 +54,12 @@ class StripeManagedAccountService < Struct.new( :user, :params )
       bank_account = account.external_accounts.create(send(external_string_method_name))
       puts bank_account
       bank_account
-    rescue Stripe::StripeError => e
-     e
-    rescue StandardError => e
-     e # error object contains message attribute
+    rescue Stripe::StripeError => exception
+      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In StripeManagedAccountService create_external_account" })
+      exception
+    rescue StandardError => exception
+      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In StripeManagedAccountService create_external_account" })
+      exception # error object contains message attribute
     end
   end
 
@@ -69,8 +69,12 @@ class StripeManagedAccountService < Struct.new( :user, :params )
     puts 'adasdasdasdas'
     puts account
     account.save
-  rescue Stripe::StripeError => e; e
-  rescue StandardError => e; e
+  rescue Stripe::StripeError => exception
+    ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In StripeManagedAccountService update_account_email" })
+    exception
+  rescue StandardError => exception
+    ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In StripeManagedAccountService update_account_email" })
+    exception
   end
 
   def update_account
@@ -82,22 +86,32 @@ class StripeManagedAccountService < Struct.new( :user, :params )
     puts 'adasdasdasdas'
     puts account
     account.save
-  rescue Stripe::StripeError => e; e
-  rescue StandardError => e; e
+  rescue Stripe::StripeError => exception
+    ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In StripeManagedAccountService update_account" })
+    exception
+  rescue StandardError => exception
+    ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In StripeManagedAccountService update_account" })
+    exception
   end
 
+  # bank_accounts metadata are only editable other bank_details are not editable by design
+  # https://stripe.com/docs/api#account_update_bank_account
   def check_update_or_create(account)
-    if user.bank_accounts.find(bank_account[:id]).stripe_bank_account_id.present?
-      update_external_accounts(account)
-    else
+    # Sadly we are not storing multiple bank accounts even though the relationship exists. We need to support this fully in 
+    # future releases
+    
+    user_ba = user.bank_accounts.find(bank_account[:id])
+    if user_ba.try(:account_number) != bank_account[:account_number] || user_ba.try(:routing_number) != bank_account[:routing_number]
       create_external_account(account)
+    else
+      account.external_accounts.retrieve(user_ba.stripe_bank_account_id)
     end
   end
 
   # private functions
   private
-  # bank_accounts metadata are only editable other bank_details are not editable by design
-  # https://stripe.com/docs/api#account_update_bank_account
+
+=begin 
   def update_external_accounts(account)
     bank_account = account.external_accounts.retrieve(user.bank_accounts[0].stripe_bank_account_id)
     bank_account.update_attributes(send(external_string_method_name))
@@ -105,10 +119,14 @@ class StripeManagedAccountService < Struct.new( :user, :params )
     puts bank_account
     bank_account.save
     bank_account
-  rescue Stripe::StripeError => e; e
-  rescue StandardError => e; e
+  rescue Stripe::StripeError => exception
+    ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In StripeManagedAccountService update_external_accounts" })
+    exception
+  rescue StandardError => exception
+    ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In StripeManagedAccountService update_external_accounts" })
+    exception
   end
-
+=end
 
   def retrieve_account; Stripe::Account.retrieve(user.stripe_creds[0].account_id) end
 
@@ -128,7 +146,7 @@ class StripeManagedAccountService < Struct.new( :user, :params )
   def bank_account; params[:bank_accounts_attributes]['0'] end
 
   # returns people hash
-  def people_address; params[:people_attributes]['0']['address_attributes'] end
+  #def people_address; params[:people_attributes]['0']['address_attributes'] end
 
   # country with bank code are countries in constant BANK_CODE_COUNTRIES
   def country_with_bank_code_individual_account; common_individual_account end
@@ -199,9 +217,10 @@ class StripeManagedAccountService < Struct.new( :user, :params )
   end
 
   def update_company_managed_account
-    update_company = managed_company_account
-    update_company.except!(:managed, :country, :product_description)
-    update_company
+    company_account = managed_company_account.except!(:type, :country, :product_description)
+    company_account[:legal_entity].except!(:personal_id_number)
+    company_account[:legal_entity][:verification].except!(:document) if image.blank?
+    company_account
   end
 
   # return hash for creating external_bank_account for managed individual and company account
@@ -245,21 +264,29 @@ class StripeManagedAccountService < Struct.new( :user, :params )
   def managed_company_account
     dob = people[:dob].present? ? people[:dob].split('-') : []
     full_name = people[:full_name].present? ? people[:full_name].split(' ', 2) : []
-    { email: user.email, business_url: params[:url],
-      business_name: params[:org_name], managed: true, country: address[:country],
+    { email: user.email, 
+      type: 'custom',
+      business_url: params[:url],
+      business_name: params[:org_name], 
+      country: address[:country],
       product_description: params[:description],
       tos_acceptance: { ip: stripe_cred[:ip], date: stripe_cred[:tos_date].to_i, user_agent: stripe_cred[:user_agent] },
       support_phone: user.org_phone[1..10],
       decline_charge_on: { cvc_failure: true, avs_failure: false },
-      legal_entity: { business_name: params[:org_name], type: params_org_type,
+      legal_entity: { business_name: params[:org_name], 
+                      type: params_org_type,
                       first_name: full_name[0], last_name: full_name[1],
                       #gender: people[:gender], # not needed for U.S, Canada
                       phone_number: user.org_phone[1..10],
-                      business_tax_id: params[:org_tax_id], personal_id_number: people[:last4],
-                      personal_address: { city: people_address[:city], country: people_address[:country],
-                                          postal_code: people_address[:postal_code], state: people_address[:state_province],
-                                          line1: people_address[:street_address]
-                                        },
+                      business_tax_id: params[:org_tax_id], 
+                      personal_id_number: people[:last4],
+                      personal_address: {}, 
+                      #                   { city: people_address[:city], country: people_address[:country],
+                      #                    postal_code: people_address[:postal_code], state: people_address[:state_province],
+                      #                    line1: people_address[:street_address]
+                      #                  },
+
+                      # must be over 13
                       dob: { day: dob[2], month: dob[1], year: dob[0] },
                       address: { state: address[:state_province], postal_code: address[:postal_code],
                                  city: address[:city], line1: address[:street_address]

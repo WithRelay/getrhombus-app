@@ -32,8 +32,6 @@
       <%= f.radio_button :gender, 'female', class: 'gender-input'  %>
     </div>
   </fieldset>
-<%
-=end %>
 
   <%= f.fields_for :address do |a| %>
     <div class="col-xs-5">
@@ -72,6 +70,9 @@
       </div>
     </div>
   <% end %>
+
+<%
+=end %>
 
   <div class="flex-underline form-section-divider"></div>
   <label class="field-headers form-label settings" for="name-2">Upload Profile Picture (you)</label>

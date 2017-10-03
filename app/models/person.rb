@@ -2,6 +2,7 @@ class Person < ActiveRecord::Base
 
   belongs_to :user  
   before_validation :the_titleizer
+  before_create :set_representative
   has_one :image, through: :image_ref
   has_one :image_ref, as: :imageable, dependent: :destroy
   has_one :address, as: :addressable, dependent: :destroy
@@ -24,6 +25,11 @@ class Person < ActiveRecord::Base
     def the_titleizer       #remove leading and trailing whitespaces
       self.first_name = self.first_name.strip.titleize unless self.first_name.blank?
       self.last_name = self.last_name.strip.titleize unless self.last_name.blank?
+    end
+
+    # this should go away in v2. But for now an account has only one person and that person is a rep
+    def set_representative
+      self.representative = '0' 
     end
 
 
