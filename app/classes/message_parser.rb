@@ -12,7 +12,7 @@ class MessageParser
       return if received_msg.text.blank?
 
       # tested
-      puts 'in function'
+      Rails.logger.debug "DEBUG: in function"
       method(__method__).parameters.each { |_,arg| instance_variable_set("@#{arg}", binding.local_variable_get(arg)) }
       
       # tested
