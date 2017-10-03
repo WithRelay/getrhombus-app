@@ -262,7 +262,7 @@ class User < ActiveRecord::Base
 
       unless is_platform?
         MerchantCustomer.add_or_update_merchant_customer(User.get_platform_acct_obj, self, true) 
-        WelcomeEmailJob.set(wait: SIGNUP_EMAIL_DELAY.minutes).perform_later(self, self.customer_source)
+        WelcomeEmailJob.set(wait: SIGNUP_EMAIL_DELAY.seconds).perform_later(self, self.customer_source)
       end
       GetIntelligenceDataJob.perform_later(self.email, 'FullContact')
       GetIntelligenceDataJob.perform_later(self.phone_number, 'OpenCNAM') if self.is_customer?

@@ -17,7 +17,7 @@ COLORS = [
 PAGINATION_PER_PAGE = 5
 
 # in minutes, must be integer
-SIGNUP_EMAIL_DELAY = 2
+SIGNUP_EMAIL_DELAY = 15
 
 # All in dollars. 04/01/17
 SMS_PRICE_SENT = 0.015
