@@ -12,7 +12,7 @@ class MessageParser
       return if received_msg.text.blank?
 
       # tested
-      logger.info('in function')
+      puts 'in function'
       method(__method__).parameters.each { |_,arg| instance_variable_set("@#{arg}", binding.local_variable_get(arg)) }
       
       # tested
