@@ -101,16 +101,18 @@ class Conversation < ActiveRecord::Base
       msg_instance = channel.constantize.new
 
       # Relate message to files
+      media_urls = []
       if media.present?
         media_ids = []
-        media.map! do |m|
+        media_urls = []
+        media.each do |m|
           media_ids.push(m.id)
-          m.avatar.url
+          media_urls.push(m.avatar.url)
         end
         msg_instance.image_ids = media_ids
       end
 
-      if msg_instance.send_and_save_message(team, customer, from, to, msg, media)
+      if msg_instance.send_and_save_message(team, customer, from, to, msg, media_urls)
         re = find_or_create_conversation_for_message(team.id, conv.uid_type, conv.uid, msg_instance, false, source)
         msg_hash = message_hash(re[0], msg_instance, re[1])
         [msg_hash, msg_instance, re.second]    # message hash, instance and message conv ref are needed
