@@ -35,15 +35,15 @@ class MessageParser
       end
 
       @tag = Hashtag.where('user_id = ? and lower(tag) = ? and status = 1', @merchant.id, @tag.downcase).first if @tag.present?
-      puts "putting tag if any"
-      puts @tag.inspect
+      Rails.logger.debug "DEBUG putting tag if any"
+      Rails.logger.debug @tag.inspect
 
       @is_valid_payment_intent = @amt_ary[0] && @amt_ary[1].present?
       if @is_valid_payment_intent && !is_amount_under_limit?    #tested
       elsif @is_valid_payment_intent || @tag                    # tested
 
         if @tag && @tag.non_payment_tag? && !@is_valid_payment_intent
-          puts 'in just tag sent'
+          Rails.logger.debug 'DEBUG in just tag sent'
           send_response(@tag.response, get_tag_images)
           return
         end

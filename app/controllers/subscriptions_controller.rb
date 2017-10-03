@@ -6,6 +6,7 @@ class SubscriptionsController < ApplicationController
   respond_to :html, :js
 
   def index
+    Rails.logger.debug "DEBUG: yesssssssss"# if Rails.logger.debug?
     @plan = Plan.new
     @subscriptions = Subscription.includes(merchant_customer: [:customer]).includes(:plan, :coupon)
                                   .where.not(status: 'canceled')
