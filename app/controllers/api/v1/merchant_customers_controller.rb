@@ -58,7 +58,7 @@ class Api::V1::MerchantCustomersController < Api::V1::BaseController
       puts response
     rescue ActiveRecord::RecordNotUnique => exception
       status = 500
-      msg = e.original_exception.message
+      msg = exception.original_exception.message
       response = "Customer's phone number is already in use." if msg.include?('index_users_on_phone_number')
       response = "Customer's email is already in use." if msg.include?('index_users_on_email')
     rescue StandardError => exception
