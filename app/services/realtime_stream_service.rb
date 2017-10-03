@@ -23,6 +23,7 @@ class RealtimeStreamService
                       message: { type: 'new-message',
                                  message: Conversation.message_hash(conversation, msg, conv_ref),
                                  conversation: conversation.conversation_hash })
+      Rails.logger.debug "DEBUG: and we are in ------------------------------------"
     end
 
     def update_conversation_properties(conversation_id, customer, merchant_id, old_selectize_val)
