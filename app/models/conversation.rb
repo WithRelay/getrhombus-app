@@ -117,7 +117,7 @@ class Conversation < ActiveRecord::Base
       else
         false
       end
-      puts 'we got this far at lesat'
+      logger.info('we got this far at lesat')
     rescue StandardError => exception
       ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In conversations.rb send_message" })
       false

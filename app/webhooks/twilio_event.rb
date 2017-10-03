@@ -76,7 +76,7 @@ class TwilioEvent
         @merchant.away_message.check_office_hours(@merchant, user, uid_type, uid, "Message")
         @merchant.deduct_from_account_balance(price_multiplier)
         MessageParser.new.process_message(@merchant, user, uid, uid_type, @message, 'Message')
-        puts 'sdhasjhdgashdgashdgjasgdjhagsjdgsajgdhsgdhagsjh'
+        logger.info('sdhasjhdgashdgashdgjasgdjhagsjdgsajgdhsgdhagsjh')
 
       rescue ActiveRecord::RecordNotUnique
       rescue StandardError => exception

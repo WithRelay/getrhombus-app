@@ -5,7 +5,7 @@ class RealtimeStreamService
     # might need to redo how conv_ref is sent
     # Sends a message to the given merchant's channel, provided user and merchant numbers
     def messages(conversation, conv_ref, customer, msg)
-      puts 'and we are in messagesasdsad'
+      logger.info('and we are in messagesasdsad')
       merchant_id = conversation.merchant_id.to_s
       if $redis_merchant_status.get(merchant_id) != 'online'
         puts 'merchant offline'
