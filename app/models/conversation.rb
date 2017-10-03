@@ -84,16 +84,15 @@ class Conversation < ActiveRecord::Base
   # uid can be user id, phone number or messenger id
   def self.send_message(conv, team, msg, channel, source, media = [])
     begin
-      @conv = conv
       from = (channel == "FbMessage") ? team.get_page_access_token : team.rhombus_number
 
-      if @conv.uid_type == "user"
-        customer = @conv.user
+      if conv.uid_type == "user"
+        customer = conv.user
         to = (channel == "FbMessage") ? customer.get_customer_page_specific_id(from) : customer.phone_number
       else
-        to = @conv.uid
+        to = conv.uid
         if channel == "FbMessage"
-          mc = MerchantContact.find_by(merchant_id: @conv.merchant_id, uid: @conv.uid, uid_type: @conv.uid_type)
+          mc = MerchantContact.find_by(merchant_id: conv.merchant_id, uid: conv.uid, uid_type: conv.uid_type)
           to = nil unless mc.page_specific_id_valid?(team)
         end
       end
@@ -112,7 +111,7 @@ class Conversation < ActiveRecord::Base
       end
 
       if msg_instance.send_and_save_message(team, customer, from, to, msg, media)
-        re = find_or_create_conversation_for_message(team.id, @conv.uid_type, @conv.uid, msg_instance, false, source)
+        re = find_or_create_conversation_for_message(team.id, conv.uid_type, conv.uid, msg_instance, false, source)
         msg_hash = message_hash(re[0], msg_instance, re[1])
         [msg_hash, msg_instance, re.second]    # message hash, instance and message conv ref are needed
       else
