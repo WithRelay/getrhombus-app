@@ -42,6 +42,7 @@ class MessageParser
       elsif @is_valid_payment_intent || @tag                    # tested
 
         if @tag && @tag.non_payment_tag? && !@is_valid_payment_intent
+          puts 'in just tag sent'
           send_response(@tag.response, get_tag_images)
           return
         end
