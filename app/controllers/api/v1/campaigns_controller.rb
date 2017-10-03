@@ -8,7 +8,7 @@ class Api::V1::CampaignsController < Api::V1::BaseController
 
   def delete_campaign
     campaign = current_user.campaigns.find_by_id(params[:id])
-    if !campaign.present?
+    if campaign.present?
       if campaign.campaign_recipients.exists?
         render json: { error: "You can only delete a campaign that hasn't run" }, status: 500
       else
