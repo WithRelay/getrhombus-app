@@ -18,6 +18,7 @@ class MessageParser
       # tested
       @received_msg.text = @received_msg.text.strip
       @amt_ary = check_for_payment
+      puts @amt_ary.inspect
       # is_old_format = (@amt_ary[0] && @amt_ary[1] == "$")
 
       # scenarios

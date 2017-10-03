@@ -29,7 +29,7 @@ class Person < ActiveRecord::Base
 
     # this should go away in v2. But for now an account has only one person and that person is a rep
     def set_representative
-      self.representative = '0' 
+      self.role = '0' 
     end
 
 
