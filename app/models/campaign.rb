@@ -9,7 +9,7 @@ class Campaign < ActiveRecord::Base
   has_many :campaign_lists, dependent: :destroy
   has_many :campaign_recipients, dependent: :destroy
   has_many :image_refs, as: :imageable, dependent: :destroy
-  has_many :images, through: :image_refs, dependent: :destroy
+  has_many :images, through: :image_refs
 
   # enums for campaign's class attributes channel, status, frequency_type and delivery_type
   enum frequency_type: { one_time: 0, recurring: 1 }

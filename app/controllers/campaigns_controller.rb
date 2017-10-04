@@ -39,6 +39,7 @@ class CampaignsController < ApplicationController
     @lists = @campaign.lists
   end
 
+  # active campaign with past date can exist but ok though for recurring you know
   # note : update_attributes method is being overridden. see campaign model
   def update
     if @campaign.update_attributes(campaign_params, image_params)
