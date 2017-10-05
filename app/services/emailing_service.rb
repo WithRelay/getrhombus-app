@@ -663,7 +663,7 @@ class EmailingService
       end
     end
 
-    def unread_message_reminders(user)
+    def unread_message_notification(user)
       begin
         template_name = 'unread-messages-template'
         template_content = []

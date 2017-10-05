@@ -9,8 +9,6 @@ Taiwo
   - add a customer - done, sign up - done, referrer link (include messenger) - done, csv - done
 - workflow for sign in, sign up and places like payment/subscription, contact and customer
 
-- emails
-- stripe events
 
 - app fee for subscriptions - platform fee
   - what of when user sends text for subscriptions...check for managed account

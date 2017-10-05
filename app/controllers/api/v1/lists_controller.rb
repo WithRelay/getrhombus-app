@@ -45,7 +45,7 @@ class Api::V1::ListsController < Api::V1::BaseController
         # list also save associated record
         if list.save
           str = list.is_segment? ? 'segments' : 'lists'
-          render json: { notice: 'List saved successfully', redirect_url: "/users/#{current_user.id}/#{str}/#{list.id}" }
+          render json: { notice: 'List saved successfully', redirect_url: "/users/#{current_user.id}/#{str}" }
         else
           render json: { error: list.errors.full_messages.to_json }, status: 500
         end

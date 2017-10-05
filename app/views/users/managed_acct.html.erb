@@ -62,15 +62,15 @@
 
       <label class="field-headers form-label settings" for="Website">other INFORMATION</label>
       <div class="form-group col-xs-6">
-        <%= f.text_field :url, class: 'settings short-field text-field w-input form-control', id: 'Website', placeholder: 'Website' %>
+        <%= f.text_field :url, class: 'settings short-field text-field w-input form-control', id: 'Website', placeholder: 'Website Ex. www.hello.com' %>
         <div class="messageContainer w-col-12"></div>
       </div>
 
       <div class="flex-underline form-section-divider"></div>
       <label class="field-headers form-label settings" for="Website-2">BANK DETAILS</label>
       <label class="form-label paragraph" for="Currency">Currencies without a bank account will be converted and sent to your default bank account.</label>
-        <%= f.fields_for :bank_accounts do |bank| %>
-          <%= render "bank_fields", b: bank %>
+      <%= f.fields_for :bank_accounts do |bank| %>
+        <%= render "bank_fields", b: bank %>
       <% end %>
 
 

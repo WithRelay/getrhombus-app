@@ -575,7 +575,7 @@ $(document).on('ready page:load', function() {
       'user[address_attributes][postal_code]': {
         validators: {
           notEmpty: {
-            message: 'Valid Postal code is required'
+            message: 'Valid postal code is required'
           }
         }
       },
@@ -607,7 +607,7 @@ $(document).on('ready page:load', function() {
       'user[bank_accounts_attributes][0][routing_number]': {
         validators: {
           callback: {
-            message: 'Enter a valid Routing number',
+            message: 'Enter a valid routing number',
             callback: function(value, validator, $field){
               var selectedCountry = $('#managed-acct-country').val();
               return Stripe.bankAccount.validateRoutingNumber(value, selectedCountry)
@@ -637,7 +637,7 @@ $(document).on('ready page:load', function() {
       'user[bank_accounts_attributes][0][account_number]': {
         validators: {
           callback: {
-            message: "Enter a valid Account number",
+            message: "Enter a valid account number",
             callback: function(value, validator, $field){
               var selectedCountry = $('#managed-acct-country').val();
               return Stripe.bankAccount.validateAccountNumber(value, selectedCountry);
@@ -653,11 +653,11 @@ $(document).on('ready page:load', function() {
       'user[bank_accounts_attributes][0][account_number_confirmation]': {
         validators: {
           notEmpty: {
-            message: 'Confirm Account Number'
+            message: 'Confirm account number'
           },
           identical: {
               field: 'account_number',
-              message: 'The Account number and its confirmation are not the same'
+              message: 'The account number and its confirmation are not the same'
           }
         }
       },
@@ -676,7 +676,7 @@ $(document).on('ready page:load', function() {
             message: 'Date of Birth is required'
           },
           callback: {
-            message: "Date of Birth is at least 15 years old",
+            message: "Date of Birth must be over 15 years",
             callback: function(value, validator, $field){
               var dob = $('#Date-of-birth').val();
               var age = getAge(dob);
@@ -692,25 +692,25 @@ $(document).on('ready page:load', function() {
             message: 'SSN is required'
           },
           digitNine: {
-            message: 'SSN shoud be a 9-digit number'
+            message: 'SSN should be a 9-digit number'
           }
         }
       }
     }
   })
-  .on('err.validator.fv', function(e, data) {
-    // $(e.target)    --> The field element
-    // data.fv        --> The FormValidation instance
-    // data.field     --> The field name
-    // data.element   --> The field element
-    // data.validator --> The current validator name
+    .on('err.validator.fv', function(e, data) {
+        // $(e.target)    --> The field element
+        // data.fv        --> The FormValidation instance
+        // data.field     --> The field name
+        // data.element   --> The field element
+        // data.validator --> The current validator name
 
-    data.element
-      .data('fv.messages')
-      // Hide all the messages
-      .find('.help-block[data-fv-for="' + data.field + '"]').hide()
-      // Show only message associated with current validator
-      .filter('[data-fv-validator="' + data.validator + '"]').show();
+        data.element
+          .data('fv.messages')
+          // Hide all the messages
+          .find('.help-block[data-fv-for="' + data.field + '"]').hide()
+          // Show only message associated with current validator
+          .filter('[data-fv-validator="' + data.validator + '"]').show();
   });
 //
 

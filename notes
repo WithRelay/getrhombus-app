@@ -22,12 +22,9 @@ Bhishma
 	- review FbCred.find_by_page_specific_id in facebook_event
 	- review remove_integration
 	- when switching managed page, add that any messenger campaign will now use this page
-- subscriptions controller needs check for card error
-- in stripe event, #### needs better error handling
 
 Taiwo (review)
 - review upgrading/downgrading subscription 
-- review stripe_events
 - subscription (see other fields like tax_percent...save first...compare to plan.rb), subscription controller and stripe customer creation places
 - on subscription - check if user already belongs to merchant??? is this when they text?
 	- customers can create subscriptions over messaging...not dashboard, but can cancel subscription
