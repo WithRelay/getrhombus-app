@@ -11,7 +11,7 @@
 
       <div id='company-state-div'>
         <div class="form-group col-xs-6">
-          <%= a.text_field :state_province, id: 'company-state', class: 'settings street-name text-field w-input form-control', placeholder: 'State/Province' %>
+          <%= a.select :state_province, options_for_select(states_list(a.object.country), selected: a.object.state_province), {}, class: 'rhombusFocus dropdown w-select settings street-name text-field w-input form-control', id: 'company-state' %>
           <!-- <div class="messageContainer street-name"></div> -->
         </div>
       </div>
