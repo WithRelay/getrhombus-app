@@ -260,10 +260,10 @@ GEM
       method_source (~> 0.8.1)
       slop (~> 3.4)
     public_suffix (2.0.5)
-    pubnub (4.0.25)
+    pubnub (4.0.22)
       celluloid (~> 0.17)
       dry-validation (~> 0.10)
-      httpclient (~> 2.8, >= 2.8.3)
+      httpclient (~> 2.8)
       json (>= 1.8, < 3)
     rack (1.6.8)
     rack-protection (1.5.3)
@@ -434,7 +434,7 @@ DEPENDENCIES
   passenger
   perfect-scrollbar-rails (~> 0.6.10)
   pry
-  pubnub (~> 4.0.22)
+  pubnub (= 4.0.22)
   rails (= 4.2.0)
   responders (~> 2.0)
   resque

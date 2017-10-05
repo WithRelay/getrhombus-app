@@ -104,7 +104,6 @@ class Conversation < ActiveRecord::Base
       media_urls = []
       if media.present?
         media_ids = []
-        media_urls = []
         media.each do |m|
           media_ids.push(m.id)
           media_urls.push(m.avatar.url)
