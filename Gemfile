@@ -97,7 +97,7 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'angular-rails-templates', '~> 1.0', '>= 1.0.2'
 
 # Pubnub
-gem 'pubnub', '=4.0.22'
+gem 'pubnub', '= 4.0.23'
 
 #Twilio
 gem 'twilio-ruby', '~> 5.3.0'
