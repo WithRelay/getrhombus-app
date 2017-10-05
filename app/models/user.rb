@@ -45,6 +45,7 @@ class User < ActiveRecord::Base
   has_many :merchant_customers, class_name: 'MerchantCustomer', foreign_key: 'merchant_id'
 
   has_one :hosted_sms
+  has_one :api_cred
   has_many :reminders, -> { where campaign_type: Campaign.campaign_types[:reminder_campaign] }
 
   # this block is for customizing build method for user.campaign which allow also to save list
@@ -81,7 +82,7 @@ class User < ActiveRecord::Base
   has_many :merchant_plans, class_name: 'Plan', foreign_key: 'merchant_id'
   has_many :merchant_only_plans, -> { where customer_id: nil }, class_name: 'Plan', foreign_key: 'merchant_id'
   has_many :customer_plans, class_name: 'Plan', foreign_key: 'customer_id'
-  
+
   has_many :coupons
   has_many :saas_invoices, -> { where team_id: User.get_platform_acct_obj.id }, class_name: :Invoice, foreign_key: :customer_id
   # LEAVE THIS FOR LATER
@@ -261,7 +262,7 @@ class User < ActiveRecord::Base
       end
 
       unless is_platform?
-        MerchantCustomer.add_or_update_merchant_customer(User.get_platform_acct_obj, self, true) 
+        MerchantCustomer.add_or_update_merchant_customer(User.get_platform_acct_obj, self, true)
         WelcomeEmailJob.set(wait: SIGNUP_EMAIL_DELAY.seconds).perform_later(self, self.customer_source)
       end
       GetIntelligenceDataJob.perform_later(self.email, 'FullContact')
