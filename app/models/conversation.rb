@@ -114,10 +114,10 @@ class Conversation < ActiveRecord::Base
       if msg_instance.send_and_save_message(team, customer, from, to, msg, media_urls)
         re = find_or_create_conversation_for_message(team.id, conv.uid_type, conv.uid, msg_instance, false, source)
         msg_hash = message_hash(re[0], msg_instance, re[1])
-        Rails.logger.debug "DEBUG: we got this far at lesat success"
+        #Rails.logger.debug "DEBUG: we got this far at lesat success"
         [msg_hash, msg_instance, re.second]    # message hash, instance and message conv ref are needed
       else
-        Rails.logger.debug "DEBUG: we got this far at lesat fail"
+        #Rails.logger.debug "DEBUG: we got this far at lesat fail"
         false
       end
     rescue StandardError => exception

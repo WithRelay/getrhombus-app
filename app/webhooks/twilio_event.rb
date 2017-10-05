@@ -77,8 +77,6 @@ class TwilioEvent
         @merchant.deduct_from_account_balance(price_multiplier)
         MessageParser.new.process_message(@merchant, user, uid, uid_type, @message, 'Message')
       
-        Rails.logger.debug "DEBUG: sdhasjhdgashdgashdgjasgdjhagsjdgsajgdhsgdhagsjh"
-
       rescue ActiveRecord::RecordNotUnique
       rescue StandardError => exception
         ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In save_received_message" })
