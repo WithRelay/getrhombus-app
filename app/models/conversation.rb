@@ -163,7 +163,7 @@ class Conversation < ActiveRecord::Base
 
 	# find the conversation or create one
   def self.find_or_create_conversation(team_id, uid_type, uid)
-    Conversation.find_or_create_by(merchant_id: team_id, uid_type: uid_type, uid: uid)
+    Conversation.includes(:merchant).find_or_create_by(merchant_id: team_id, uid_type: uid_type, uid: uid)
   end
 
   # get the total number of unread messages for a merchant on or after a date

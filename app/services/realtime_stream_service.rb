@@ -5,15 +5,12 @@ class RealtimeStreamService
     # might need to redo how conv_ref is sent
     # Sends a message to the given merchant's channel, provided user and merchant numbers
     def messages(conversation, conv_ref, customer, msg)
-      Rails.logger.debug "DEBUG: and we are in messagesasdsad"
       merchant_id = conversation.merchant_id.to_s
       if $redis_merchant_status.get(merchant_id) != 'online'
-        puts 'merchant offline'
-        # EmailingService.send_unread_message_alert({
-        #   pluralize_msg: '',
-        #   unread_count: 1,
-        #   customer_first_name: customer.first_name      ########## remove thiss??????????? ask edwin
-        # })
+        customer = customer.full_name if customer.present?        
+        (customer = (conversation.uid_type == 'fb_page') ? 'Messenger' : msg.from) if customer.blank?
+        time = msg.created_at.strftime("%A, %l:%M%P")
+        EmailingService.unread_message_notification(conversation.merchant, customer, time)
       end
 
       # will not subscribing and publishing cause all the messages to be republish upon subscribe in view???
@@ -23,7 +20,7 @@ class RealtimeStreamService
                       message: { type: 'new-message',
                                  message: Conversation.message_hash(conversation, msg, conv_ref),
                                  conversation: conversation.conversation_hash })
-      Rails.logger.debug "DEBUG: and we are in ------------------------------------"
+      #Rails.logger.debug "DEBUG: and we are in RealtimeStreamService messages method"
     end
 
     def update_conversation_properties(conversation_id, customer, merchant_id, old_selectize_val)

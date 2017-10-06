@@ -448,6 +448,7 @@ class EmailingService
       end
     end
 
+    # prior to v1.5. Remove after v1.5 launch
     def send_unread_message_alert(options = {})
       begin
         template_name = 'unread-messages'
@@ -663,12 +664,13 @@ class EmailingService
       end
     end
 
-    def unread_message_notification(user)
+    def unread_message_notification(user, customer_name, time)
       begin
-        template_name = 'unread-messages-template'
+        template_name = 'new-unread-message-notification'
         template_content = []
-        message = { "subject" => "You have unread messages",
-         "global_merge_vars"=> [  { "name" => "first_name", "content" => user.first_name || 'there' }
+        message = { "subject" => "You have a new unread message",
+         "global_merge_vars"=> [  { "name" => "name", "content" => customer_name },
+                                  { "name" => "time", "content" => time }
                                ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
