@@ -1,9 +1,12 @@
 # Api credentials table
 class ApiCred < ActiveRecord::Base
   belongs_to :users
+  after_create :generate_key_secret
   # Assign an API key and secret on create
 
-  private
+  def generate_key_secret
+    update(api_key: generate_api_key, api_secret: generate_api_secret)
+  end
 
   # Generate a unique API key
   def generate_api_key
