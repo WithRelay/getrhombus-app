@@ -664,7 +664,7 @@ class EmailingService
       end
     end
 
-    def unread_message_notification(user, customer_name, time)
+    def unread_message_notification(to, customer_name, time)
       begin
         template_name = 'new-unread-message-notification'
         template_content = []
@@ -673,7 +673,7 @@ class EmailingService
                                   { "name" => "time", "content" => time }
                                ],
          "merge_language" => "handlebars",
-         "to"=> [ { "email" => user.email } ],
+         "to"=> to,
          "bcc_address"=> User.platform_email,
          "from_name" => "Edwin from Relay",
          "from_email" => FROM_EMAIL[:edwin]

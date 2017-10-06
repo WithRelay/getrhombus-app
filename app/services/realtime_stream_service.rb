@@ -4,13 +4,33 @@ class RealtimeStreamService
 
     # might need to redo how conv_ref is sent
     # Sends a message to the given merchant's channel, provided user and merchant numbers
-    def messages(conversation, conv_ref, customer, msg)
+    def messages(conversation, conv_ref, customer, msg, send_alert = false)
       merchant_id = conversation.merchant_id.to_s
-      if $redis_merchant_status.get(merchant_id) != 'online'
-        customer = customer.full_name if customer.present?        
-        (customer = (conversation.uid_type == 'fb_page') ? 'Messenger' : msg.from) if customer.blank?
-        time = msg.created_at.strftime("%A, %l:%M%P")
-        EmailingService.unread_message_notification(conversation.merchant, customer, time)
+
+      if send_alert && $redis_merchant_status.get(merchant_id) != 'online'
+        alert_obj = conversation.merchant.alert
+        if alert_obj.try(:send_alert)
+
+          # email alerts
+          customer = customer.full_name if customer.present?        
+          (customer = (conversation.uid_type == 'fb_page') ? 'Messenger' : msg.from) if customer.blank?
+          time = msg.created_at.strftime("%A, %l:%M%P")
+          to = alert_obj.emails.map { |e| { "email" => e } }
+          EmailingService.unread_message_notification(to, customer, time)
+
+          # sms alerts
+          to = alert_obj.sms_numbers
+          if to.present?
+            team = User.get_platform_acct_obj
+            msg_to_send = "You have a new unread message from #{customer} on your #{Rails.application.secrets.app['name']} dashboard."
+            to.each do |pn|
+              customer = User.find_by(phone_number: pn)
+              uid_type = customer ? 'user' : 'phone_number'
+              uid = customer.try(:id) || pn
+              Conversation.find_or_create_conversation_for_message_and_send_publish(team, customer, uid_type, uid, msg_to_send)          
+            end
+          end
+        end
       end
 
       # will not subscribing and publishing cause all the messages to be republish upon subscribe in view???
