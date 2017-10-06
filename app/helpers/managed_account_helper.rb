@@ -28,11 +28,19 @@ module ManagedAccountHelper
     selected_country[0].present? ? selected_country : country_list
   end
 
+  def states_list(country)
+    if country == 'US'
+      StatesList::US_STATES
+    elsif country == 'CA'
+      StatesList::CANADA_STATES
+    end
+  end
+
   def managed_account_status(account)
     html_content = ''
     html_content += "<h5 class='account-status-text'>Charges Enabled: #{ yes_or_no account.charges_enabled }</h5>" if check_boolean_exist account.charges_enabled
     html_content += "<h5 class='account-status-text'>Transfers Enabled: #{ yes_or_no account.payouts_enabled }</h5>" if check_boolean_exist account.payouts_enabled
-    
+
     if account.account_verification[:disabled_reason].present? || account.account_verification[:due_by].present? || account.account_verification[:fields_needed].present?
       html_content += "<h5 class='account-status-text'><strong>Account Status</strong></h5>"
       html_content += "<h5 class='account-status-text'>Disabled Reason: #{ humanize(account.account_verification[:disabled_reason]) }</h5>" if account.account_verification[:disabled_reason].present?
