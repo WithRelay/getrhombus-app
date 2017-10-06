@@ -24,6 +24,7 @@ class RealtimeStreamService
             team = User.get_platform_acct_obj
             msg_to_send = "You have a new unread message from #{customer} on your #{Rails.application.secrets.app['name']} dashboard."
             to.each do |pn|
+              pn = pn.gsub('+', '')
               customer = User.find_by(phone_number: pn)
               uid_type = customer ? 'user' : 'phone_number'
               uid = customer.try(:id) || pn
