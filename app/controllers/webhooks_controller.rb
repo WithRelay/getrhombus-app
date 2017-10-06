@@ -53,7 +53,7 @@ class WebhooksController < ApplicationController
         @merchant = User.find_by(rhombus_number: params[:to])
       end
 
-      ((render json: {}, status: 200) and return) if @merchant.blank? && params['hub.mode'].nil?
+      ((render nothing: true) and return) if @merchant.blank? && params['hub.mode'].nil?
       params['hub.mode'].present? ? Time.use_zone(Rails.application.config.time_zone, &block) : Time.use_zone(@merchant.time_zone, &block)
     end
 

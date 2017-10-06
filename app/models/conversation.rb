@@ -126,8 +126,8 @@ class Conversation < ActiveRecord::Base
     end
   end
 
-  # when sending by platform on behalf of merchant like automated messages, campaigns (excludes sending from dashboard)
-  def self.find_or_create_conversation_for_message_and_send_publish(team, customer, uid_type, uid, msg_to_send, channel, media = [], source = 'platform')
+  # when sending by platform on behalf of platform or merchant like automated messages, campaigns (excludes sending from dashboard)
+  def self.find_or_create_conversation_for_message_and_send_publish(team, customer, uid_type, uid, msg_to_send, channel = 'Message', media = [], source = 'platform')
     re = find_or_create_conversation(team.id, uid_type, uid)
     msg_ary = send_message(re, team, msg_to_send, channel, source, media)
     if msg_ary
@@ -141,7 +141,7 @@ class Conversation < ActiveRecord::Base
   # when receiving
   def self.find_or_create_conversation_for_message_and_publish(team, customer, uid_type, uid, msg_instance, unread)
     re = find_or_create_conversation_for_message(team.id, uid_type, uid, msg_instance, unread, 'customer')
-    RealtimeStreamService.messages(re[0], re[1], customer, msg_instance)
+    RealtimeStreamService.messages(re[0], re[1], customer, msg_instance, true)
   end
 
   # find or create conversation and attach new message
@@ -163,7 +163,7 @@ class Conversation < ActiveRecord::Base
 
 	# find the conversation or create one
   def self.find_or_create_conversation(team_id, uid_type, uid)
-    Conversation.find_or_create_by(merchant_id: team_id, uid_type: uid_type, uid: uid)
+    Conversation.includes(:merchant).find_or_create_by(merchant_id: team_id, uid_type: uid_type, uid: uid)
   end
 
   # get the total number of unread messages for a merchant on or after a date

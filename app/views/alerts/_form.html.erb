@@ -12,9 +12,10 @@
         <label class="field-headers form-label settings" for="Business-Name">ALERTS</label>
         <div class="form-check-box w-checkbox">
           <%= f.check_box :send_alert, class: 'w-checkbox-input', id: 'send-alert' %>
-          <label class="w-form-label" >SEND ALERT</label>
+          <label class="w-form-label" >Notify me of a new unread message</label>
         </div>
 
+        <%#
         <label class="form-label paragraph" for="field">Send me unread message notifications by email every:</label>
           <%= f.select :interval, options_for_select({ "15 minutes" => "15", "30 minutes" => '30', "1 hour" => "60" }, selected: @alert.interval), {}, class: 'alerts-dropdown w-select' %>
 
@@ -34,7 +35,7 @@
 
         <div class="form-check-box w-checkbox sms-alert-checkbox">
           <%= f.check_box :include_sms, class: 'w-checkbox-input checkbox', id: 'alert-include-sms' %>
-          <label class="w-form-label" for="checkbox">Include SMS alerts for unread messages</label>
+          <label class="w-form-label" for="checkbox">Include SMS alerts</label>
         </div>
 
         <div id='alert-sms-number'>

@@ -35,7 +35,7 @@ class WelcomeEmailJob < ApplicationJob
           EmailingService.customer_sign_up(user)
         end
 
-        Conversation.find_or_create_conversation_for_message_and_send_publish(sender, user, 'user', user.id, text, 'Message')
+        Conversation.find_or_create_conversation_for_message_and_send_publish(sender, user, 'user', user.id, text)
         merchant, customer = sender, user
       end
     rescue StandardError => exception
