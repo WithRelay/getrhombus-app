@@ -1,4 +1,6 @@
 Rails.application.routes.draw  do
+  default_url_options host: Rails.application.secrets.app["url"]
+
   root 'static_pages#home'
   get "homepage_referrer" => 'referrers#homepage_referrer'
   #get "relay-docs/:slug" => "knowledge_bases#show"

@@ -1,12 +1,13 @@
-# Email service
 class EmailingService
-  require 'mandrill' # it is need to run QUEUE=* rake resque:work
+  require 'mandrill' # it is needed to run QUEUE=* rake resque:work
   MANDRILL = Mandrill::API.new Rails.application.secrets.mandrill['key']
 
   # Note there are a number of global settings for these emails in the mandrill account
   FROM_EMAIL = { edwin: '<redacted_email>', taiwo: '<redacted_email>' }
 
   class << self
+    delegate :url_helpers, to: 'Rails.application.routes' 
+
     def send_completed_notice(user)
       begin
         template_name = 'hosted-sms-activated'
@@ -670,7 +671,8 @@ class EmailingService
         template_content = []
         message = { "subject" => "You have a new unread message",
          "global_merge_vars"=> [  { "name" => "name", "content" => customer_name },
-                                  { "name" => "time", "content" => time }
+                                  { "name" => "time", "content" => time },
+                                  { "name" => "sign_in_url", "content" => url_helpers.new_user_session_url }
                                ],
          "merge_language" => "handlebars",
          "to"=> to,
@@ -682,7 +684,9 @@ class EmailingService
         result = MANDRILL.messages.send_template template_name, template_content, message, async
       rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
         puts "A mandrill error occurred: #{e.class} - #{e.message}"
+        puts e.inspect
       rescue StandardError => e
+        puts e.inspect
       end
     end
 
@@ -844,7 +848,7 @@ class EmailingService
       end
     end
 
-     def invoice_created(invoice)
+    def invoice_created(invoice)
       begin
         template_name = 'invoice-created'
         template_content = []
