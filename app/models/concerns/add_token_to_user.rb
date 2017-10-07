@@ -36,7 +36,6 @@ module AddTokenToUser
           
           # we don't create customers on standalone accounts since we share platform customer with those
           if (is_platform && mc.platform_stripe_customer_id.blank?) || (!is_platform && cred[:type] == 'managed' && mc.managed_stripe_customer_id.blank?)
-            puts 'asdasdas2222222222222222222222222222222'
             res = add_token_for_customer_without_payment_info(mc, hash, is_platform, cred, merchant_customers, platform_customer.platform_stripe_customer_id)
           elsif (is_platform && mc.platform_stripe_customer_id.present?) || (!is_platform && cred[:type] == 'managed' && mc.managed_stripe_customer_id.present?)
             res = update_token_for_existing_customer(mc, hash, is_platform, cred, platform_customer.platform_stripe_customer_id)

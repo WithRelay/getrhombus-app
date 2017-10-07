@@ -219,7 +219,7 @@ class User < ActiveRecord::Base
     self.decrement!(:account_balance, amt.to_f)
   end
 
-  private
+  #private
 
   # Some users sign up with Rhombus numbers
   def phone_number_cannot_be_rhombus_number
@@ -244,7 +244,9 @@ class User < ActiveRecord::Base
 
   def do_signup_stuff
     begin
-      MerchantCustomer.add_or_update_merchant_customer(User.get_platform_acct_obj, self) unless self.is_platform?
+      if !self.is_platform? && self.customer_source.try(:[], :method) != "added"
+        MerchantCustomer.add_or_update_merchant_customer(User.get_platform_acct_obj, self) 
+      end
       
       if self.is_merchant?
         Alert.find_or_create_by(user_id: self.id) { |alert| alert.emails = [self.email] }
@@ -262,9 +264,9 @@ class User < ActiveRecord::Base
         ])
       end
       
-      WelcomeEmailJob.set(wait: SIGNUP_EMAIL_DELAY.seconds).perform_later(self, self.customer_source)
-      GetIntelligenceDataJob.perform_later(self.email, 'FullContact')
-      GetIntelligenceDataJob.perform_later(self.phone_number, 'OpenCNAM') if self.is_customer?
+      #WelcomeEmailJob.set(wait: SIGNUP_EMAIL_DELAY.seconds).perform_later(self, self.customer_source)
+      #GetIntelligenceDataJob.perform_later(self.email, 'FullContact')
+      #GetIntelligenceDataJob.perform_later(self.phone_number, 'OpenCNAM') if self.is_customer?
     rescue StandardError => exception
       ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "From do_signup_stuff"})
     end

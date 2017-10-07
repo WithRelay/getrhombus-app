@@ -35,7 +35,7 @@ class Api::V1::MerchantCustomersController < Api::V1::BaseController
             @customer = User.new(api_v1_user_params)
             @customer.customer_source = { id: current_user.id, method: 'added', temp_password: params[:user][:password] }
             @customer.save!
-            
+
             raise StandardError unless merchant_customer = add_to_merchant_customer_and_referrer
             merchant_customer.user_lists.create!(api_v1_user_list_params) if api_v1_user_list_params[:list_id].present?
 
@@ -43,23 +43,16 @@ class Api::V1::MerchantCustomersController < Api::V1::BaseController
             @customer.people.create!(@person_params) if api_v1_person_params[:full_name].present?              
             if @user_params[:card_token].present?
               re = @customer.add_token_for_user(@user_params[:card_token], false) 
-              puts '<redacted_phone_number>'
-              puts re
-              puts 'need to test that this is bubbled outside'
+              puts 'add_token_for_user in merchant_customer controller'
               unless re.first
-                error = "Customer has been added but we are unable to add the customer's card"
+                error = "Unable to add customer"
                 error += re.third ? ' because: ' + re.third : '.'
                 raise StandardError
               end
             end
-            puts 'qqqqqqqqqqqqqqqqqqqqqq'
-            puts @customer.inspect
           end
         end
       end
-
-      puts '<redacted_phone_number>'
-      puts response
     rescue ActiveRecord::RecordNotUnique => exception
       status = 500
       msg = exception.original_exception.message
@@ -117,6 +110,7 @@ class Api::V1::MerchantCustomersController < Api::V1::BaseController
 
     def add_to_merchant_customer_and_referrer(with_referrer=true)
       Referrer.save_referrer_with_uid(current_user.relay_uid, @customer.id) if with_referrer
+      return false unless MerchantCustomer.add_or_update_merchant_customer(User.get_platform_acct_obj, @customer)
       # the status from this method is important
       MerchantCustomer.add_or_update_merchant_customer(current_user, @customer)
     end
