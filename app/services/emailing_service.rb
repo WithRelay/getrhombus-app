@@ -242,7 +242,7 @@ class EmailingService
         template_content = []
         message = { "subject" => "Welcome to Relay",
          "merge_language" => "handlebars",
-         "global_merge_vars"=> [    { "name" => "first_name", "content" => user.first_name || 'there' } ],
+         "global_merge_vars"=> [ { "name" => "first_name", "content" => user.first_name || 'there' } ],
          "bcc_address"=> User.platform_email,
          "to"=> [ { "email" => user.email } ],
          "from_name" => "Edwin from Relay",
@@ -262,7 +262,7 @@ class EmailingService
         template_name = "proactive-support-email"
         template_content = []
         message = { "subject" => "Get the most out of Relay",
-         "global_merge_vars"=> [    { "name" => "first_name", "content" => user.first_name || 'there' } ],
+         "global_merge_vars"=> [ { "name" => "first_name", "content" => user.first_name || 'there' } ],
          "merge_language" => "handlebars",
          "bcc_address"=> User.platform_email,
          "to"=> [ { "email" => user.email } ],
@@ -283,7 +283,7 @@ class EmailingService
         template_name = 'schedule-demo-email'
         template_content = []
         message = { "subject" => "Schedule a live walk-through of Relay",
-         "global_merge_vars"=> [    { "name" => "first_name", "content" => user.first_name || 'there' } ],
+         "global_merge_vars"=> [ { "name" => "first_name", "content" => user.first_name || 'there' } ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
          "bcc_address"=> User.platform_email,
@@ -349,7 +349,7 @@ class EmailingService
         template_name = 'weekly-activity-summary'
         template_content = []
         message = { "subject" => "Relay: Weekly activity summary",
-         "global_merge_vars"=> [    { "name" => "first_name", "content" => user.first_name || 'there' } ],
+         "global_merge_vars"=> [ { "name" => "first_name", "content" => user.first_name || 'there' } ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
          "bcc_address"=> User.platform_email,
@@ -371,7 +371,7 @@ class EmailingService
         template_content = []
         message = { "subject" => "It’s been a month",
          "merge_language" => "handlebars",
-         "global_merge_vars"=> [    { "name" => "first_name", "content" => user.first_name || 'there' } ],
+         "global_merge_vars"=> [ { "name" => "first_name", "content" => user.first_name || 'there' } ],
          "to"=> [ { "email" => user.email } ],
          "bcc_address"=> User.platform_email,
          "from_name" => "Edwin from Relay",
@@ -536,7 +536,7 @@ class EmailingService
                                   { "name" => "status", "content" => options[:status] },
                                   { "name" => "payment_method", "content" => "Visa **** **** **** #{options[:last4]} (Expiry #{options[:exp_month]}/#{options[:exp_year]})" },
                                   { "name" => "amount", "content" => options[:amount] },
-                                  { "name" => "discription", "content" => options[:discription]},
+                                  { "name" => "description", "content" => options[:description]},
                                   { "name" => "taxes_and_fees", "content" => options[:taxes_and_fees] },
                                   { "name" => "total", "content" => options[:amount] },
                                   { "name" => "relay_number", "content" => options[:rhombus_number] },
