@@ -1,5 +1,4 @@
 Rails.application.routes.draw  do
-
   root 'static_pages#home'
   get "homepage_referrer" => 'referrers#homepage_referrer'
   #get "relay-docs/:slug" => "knowledge_bases#show"
@@ -32,6 +31,9 @@ Rails.application.routes.draw  do
       end
       resources :transactions, only: [:index] do
         get 'download' => 'transactions#download_csv', constraints: { format: 'csv' }, on: :collection
+      end
+      resources :subscriptions, only: [:index] do
+        get 'download' => 'subscriptions#download_csv', constraints: { format: 'csv' }, on: :collection
       end
     end
   end
@@ -73,9 +75,6 @@ Rails.application.routes.draw  do
       resources :transactions, only: [] do
         patch 'capture', on: :member
       end
-      resources :subscriptions do
-        get 'download' => 'subscriptions#download_csv', constraints: { format: 'csv' }, on: :collection
-      end
       resources :conversations, only: [:index]
       resources :campaigns, except: [:show] { collection { get 'filter_campaign' } }
       resources :reminders, only: [:index, :destroy] { member { patch 'change_status' } }
@@ -94,6 +93,7 @@ Rails.application.routes.draw  do
       get 'update-managed-acct' => 'users#managed_acct'
       patch 'managed-accounts' => "users#create_managed_acct"
       patch 'update-managed-acct' => 'users#update_managed_acct'
+      get 'generate-key' => 'api_cred#generate_key'
     end
   end
 
@@ -111,6 +111,7 @@ Rails.application.routes.draw  do
       get 'snapshot', on: :collection
       post 'check_password', on: :collection
       get 'update_merchant_status', on: :member
+      get 'generate-key' => 'api_cred#generate_key'
     end
 
     resources :lists, only: [:create, :index, :update] do
@@ -166,7 +167,7 @@ Rails.application.routes.draw  do
     end
     #resources :knowledge_bases, param: :url, only: [:index] do
       #get 'rating', on: :member
-    #end
+    #end'
   end
 
   ## catch all other to 404
