@@ -1,5 +1,4 @@
-
-<%= provide(:title, "Relay - Businesses") %>
+<%= provide(:title, "Relay - Organizations") %>
 <div class="customer-dashboard-header sub-nav-bar table-header">
   <div class="table-header">
     <div class="table-header">
@@ -41,7 +40,7 @@
           <div class="cn w-clearfix w-col w-col-3">
             <div class="name w-clearfix subs-card-name"><%= present(business).profile_image %>
               <div class="shrink-text table-text">
-                <%= link_to "#{present(business).format_merchant_name}", "customers/#{business.id}", class: 'non-underline-link', action: "show" %>
+                <%= business.org_name %>
               </div>
             </div>
           </div>

@@ -1,7 +1,7 @@
 <div class="customer-dash sub-nav-bar">
   <div class="list-members sub-nav-options-wrapper w-clearfix">
 
-    <div class="customer-count shrink-text"><%= @list_members.total_entries %> <span class="sub-nav-sub-text">in <%= @list.name %> list</span>
+    <div class="customer-count shrink-text"><%= @list_members.total_entries %> <span class="sub-nav-sub-text">in <%= @list.name %> <%= @list.is_segment? ? 'Segment' : 'List' %></span>
     </div>
     <% unless @list.is_segment? %>
       <div class="default-sub_header-field-form-div list-members">

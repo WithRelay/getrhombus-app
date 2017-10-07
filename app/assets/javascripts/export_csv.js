@@ -25,6 +25,7 @@ $(document).ready(function () {
     $('#txn_history_form').submit();
   });
 
+
   $('#Subscription-Date-Range-Picker').daterangepicker({
     cancelClass: 'hide',
     linkedCalendars: true,

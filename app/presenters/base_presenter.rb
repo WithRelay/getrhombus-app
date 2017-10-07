@@ -68,10 +68,6 @@ class BasePresenter < SimpleDelegator
     User.get_conversation_display_name(@model.customer_id, 'user')
   end
 
-  def format_merchant_name
-    User.get_conversation_display_name(@model.merchant_id , 'user')
-  end
-
   def customer_first_visit_formatted
     time_in_relative_form(@model.created_at, 'long_format')
   end

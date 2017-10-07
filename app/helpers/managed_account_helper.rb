@@ -22,9 +22,9 @@ module ManagedAccountHelper
     business_type_list
   end
 
-  def connect_country(user)
+  def connect_country(address)
     country_list = PaymentService.stripe_country_list.collect{ |k,v| [v[0], k]}
-    selected_country = country_list.select{ |country| country.include?(user.country.to_sym) if user.country.present? }
+    selected_country = country_list.select{ |country| country.include?(address.country.to_sym) if address.country.present? }
     selected_country[0].present? ? selected_country : country_list
   end
 

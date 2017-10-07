@@ -14,4 +14,5 @@
     </nav>
   </div>
 </div>
-<%= render 'shared/notifications' %>
+
+<%= render 'shared/notifications' unless current_user.is_customer? %>

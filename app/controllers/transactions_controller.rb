@@ -3,7 +3,7 @@ class TransactionsController < ApplicationController
   include DashboardNotification
   include AdditionalUserActions
 
-  before_action :set_notifications, except: [:capture, :download_csv]
+  before_action :set_notifications, except: [:index, :capture, :download_csv]
   before_action :set_transaction, only: [:capture]
   respond_to :html
 
@@ -11,29 +11,28 @@ class TransactionsController < ApplicationController
 
   def index
     if current_user.is_merchant?
-      if params[:captured] == "false"
-        @transactions = Transaction.includes(:user, :hashtag).where(team_id: current_user.id).only_uncaptured_transactions()
-                                 .where("created_at >= ?", Time.zone.at(7.days.ago))
-                                 .exclude_subscriptions()
-                                 .paginate(page: params[:page], per_page: PAGINATION_PER_PAGE)
-                                 .order(created_at: :desc)
-      else
-        # Exclude refunded transactions, Exclude subscriptions since these queries are not read only
-        # query is for refundable transactions. You can't refund subscriptions easily.
-        # and include only captured transactions. Account reload txns are included by default.right
-        @transactions = Transaction.includes(:user, :hashtag).exclude_subscriptions().only_captured_transactions()
-                                    .exclude_refunded_transactions().where(team_id: current_user.id)
-                                    .paginate(page: params[:page], per_page: PAGINATION_PER_PAGE)
-                                    .order(created_at: :desc)
-      end
-    elsif current_user.is_customer?
+      set_notifications
+      where_str = "team_id = #{current_user.id}"
+    else
       process_captured_payment 
-
-      #@transactions = Transaction.includes(:team, :hashtag).where(user_id: current_user.id)
-       #                          .only_uncaptured_transactions().exclude_subscriptions().exclude_refunded_transactions()
-        #                         .paginate(page: params[:page], per_page: PAGINATION_PER_PAGE)
-         #                        .order(created_at: :desc)
-      @transactions = []
+      where_str = "user_id = #{current_user.id}"
+    end
+    
+    if params[:captured] == "false"
+      @transactions = Transaction.includes(:user, :hashtag).where(where_str).only_uncaptured_transactions()
+                               .where("created_at >= ?", Time.zone.at(7.days.ago))
+                               .exclude_subscriptions()
+                               .paginate(page: params[:page], per_page: PAGINATION_PER_PAGE)
+                               .order(created_at: :desc)
+    else
+      # Exclude refunded transactions, Exclude subscriptions since these queries are not read only
+      # query is for refundable transactions. You can't refund subscriptions easily.
+      # and include only captured transactions. Account reload txns are included by default.right
+      @transactions = Transaction.includes(:user, :hashtag).where(where_str).only_captured_transactions()
+                                  .exclude_refunded_transactions()
+                                  .exclude_subscriptions()
+                                  .paginate(page: params[:page], per_page: PAGINATION_PER_PAGE)
+                                  .order(created_at: :desc)
     end
 
     @authorized_txns = params[:captured] == "false" ? true : false 

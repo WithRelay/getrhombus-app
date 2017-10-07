@@ -18,6 +18,8 @@ module CheckUserProfile
         path = user_add_subscription_path(current_user) 
       elsif current_user.rhombus_number.blank? && !current_user.is_platform?
         path = user_add_rhombus_number_path(current_user)
+      elsif restricted_routes.include? req_url && !current_user.is_platform?
+        path = user_conversations_path(current_user)
       else
         path = user_conversations_path(current_user) if signin_signup
       end
@@ -27,6 +29,10 @@ module CheckUserProfile
     parsed = URI::parse(path)
     parsed.fragment = parsed.query = nil
     req_url == parsed.to_s ? '' : path
+  end
+
+  def restricted_routes
+    [user_add_rhombus_number_path(current_user), user_add_subscription_path(current_user), user_add_rhombus_number_path(current_user)]
   end
 
   def build_user_link

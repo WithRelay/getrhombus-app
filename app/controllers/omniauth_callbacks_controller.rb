@@ -18,7 +18,7 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
   def twitter
     if current_user.is_merchant?
-      if TwitterCred.from_omniauth(request.env["omniauth.auth"], current_user.id) == true
+      if TwitterCred.from_omniauth(request.env["omniauth.auth"], current_user.id)
         redirect_to user_integrations_path(current_user)
         set_flash_message(:notice, :success, :kind => "Twitter") if is_navigational_format?
         return
@@ -31,12 +31,12 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
   def facebook
     if current_user && current_user.is_merchant?
-      if FbCred.from_omniauth(request.env["omniauth.auth"], current_user.id) == true
+      if FbCred.from_omniauth(request.env["omniauth.auth"], current_user.id)
         FbPage.store_page(current_user)
-        redirect_to user_fb_pages_path(current_user), flash: { notice: "You have connected Messenger to Rhombus" }
+        redirect_to user_fb_pages_path(current_user), flash: { notice: "You have connected Messenger to Relay" }
         return
       end
-      redirect_to user_integrations_path(current_user), flash: { error: "We were unable to connect your account to Facebook account. Please try again" }
+      redirect_to user_integrations_path(current_user), flash: { error: "We were unable to connect your account to Facebook. Please try again" }
     else
       redirect_to user_integrations_path(current_user), flash: { error: "You cannot connect your Facebook account." }
     end

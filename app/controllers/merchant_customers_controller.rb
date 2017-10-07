@@ -2,7 +2,7 @@ class MerchantCustomersController < ApplicationController
 
   include DashboardNotification
   include UserProfile
-  before_action :set_notifications
+  before_action :set_notifications, except: [:business]
 
   def index
     @list_type = 'customer'

@@ -14,20 +14,20 @@
           <%= link_to user_path(current_user) do %>
             <div class="dash-header-links"><strong class="important-text-69">Dashboard</strong></div>
               <% end %>
-            <%if params[:controller] == 'merchant_customers' && params[:action] == 'show' %>
-            <%= link_to user_merchant_customers_path(current_user) do %>
-              <div class="dash-header-links new-link"><strong class="important-text-70">All &nbsp;customers</strong></div>
-            <%end%>
-            <%= link_to user_transactions_path(current_user) do%>
-              <div class="dash-header-links new-link"><strong class="important-text-71">Transactions</strong></div>
-            <%end%>
-            <%= link_to user_lists_path(current_user) do%>
-              <div class="dash-header-links new-link"><strong class="important-text-72">List</strong></div>
-            <%end%>
-            <%= link_to user_conversations_path(current_user) do%>
-              <div class="dash-header-links new-link"><strong class="important-text-73">Conversations</strong></div>
-            <%end%>
-            <%end%>
+            <% if params[:controller] == 'merchant_customers' && params[:action] == 'show' %>
+              <%= link_to user_merchant_customers_path(current_user) do %>
+                <div class="dash-header-links new-link"><strong class="important-text-70">All &nbsp;customers</strong></div>
+              <% end %>
+              <%= link_to user_transactions_path(current_user) do%>
+                <div class="dash-header-links new-link"><strong class="important-text-71">Transactions</strong></div>
+              <% end %>
+              <%= link_to user_lists_path(current_user) do%>
+                <div class="dash-header-links new-link"><strong class="important-text-72">List</strong></div>
+              <% end %>
+              <%= link_to user_conversations_path(current_user) do%>
+                <div class="dash-header-links new-link"><strong class="important-text-73">Conversations</strong></div>
+              <% end %>
+            <% end %>
         <% end %>
         <%= render "shared/rhombus_number" %>
       </a>
