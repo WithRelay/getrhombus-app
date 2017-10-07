@@ -10,9 +10,8 @@ var CheckedItem = new function() {
 
   this.process = function(confirmBtnText, selector, isConfirm) {
     var yes_button = $('.cancel-yes').html('Please wait...'), obj_type = CheckedItem.obj_type();
-    console.log(selector)
-    debugger
-    if (['plan', 'coupon', 'fb_page', 'list-members', 'segment', 'stripe', 'twitter'].indexOf(obj_type) > -1) {
+    
+    if (['plan', 'coupon', 'fb_page', 'list-members', 'segment', 'integrations'].indexOf(obj_type) > -1) {
       if (isConfirm) $(selector).attr(isConfirm, true);
       $(selector)[0].click();
       return;
