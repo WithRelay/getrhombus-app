@@ -72,8 +72,8 @@
 
 
   <% if current_user.is_customer? %>
-    <%= link_to user_business_path(current_user), class: "left-nav-tab-wrapper w-inline-block" do %>
-      <div class="left-nav-tab">Business</div>
+    <%= link_to user_organizations_path(current_user), class: "left-nav-tab-wrapper w-inline-block" do %>
+      <div class="left-nav-tab">Organizations</div>
     <% end %>
   <% end %>
 

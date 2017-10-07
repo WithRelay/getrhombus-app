@@ -52,6 +52,12 @@
       <div class="left-nav-tab">Away messages</div>
     <% end %>
 
+    <h5 class="left-nav rhom-number signup-box-subheading">RHOMBUS NUMBER</h5>
+    <div class="left-nav-underline"></div>
+    <a class="left-nav-tab-wrapper w-inline-block" href="#">
+      <div class="left-nav-tab"><%= current_user.rn_friendly_name || current_user.rhombus_number %></div>
+    </a>
+
   <% elsif current_user.is_customer? %>
 
     <%= link_to user_account_settings_path(current_user), class: 'left-nav-tab-wrapper w-inline-block' do %>
@@ -64,11 +70,6 @@
 
   <% end %>
 
-  <h5 class="left-nav rhom-number signup-box-subheading">RHOMBUS NUMBER</h5>
-  <div class="left-nav-underline"></div>
-  <a class="left-nav-tab-wrapper w-inline-block" href="#">
-    <div class="left-nav-tab"><%= current_user.rn_friendly_name || current_user.rhombus_number %></div>
-  </a>
   <h5 class="left-nav rhom-number signup-box-subheading">OTHER</h5>
   <div class="left-nav-underline"></div>
   <a class="left-nav-tab-wrapper w-inline-block" href="/relay-docs">

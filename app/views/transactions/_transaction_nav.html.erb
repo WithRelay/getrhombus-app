@@ -1,29 +1,34 @@
 <div class="customer-dash sub-nav-bar w-clearfix">
   <div class="sub-nav-options-wrapper transactions w-clearfix">
     
-    <a class="add sub-nav-button w-button modal-loader" href="#" modal-target= "charge-customer-modal"><strong>Charge customer</strong></a>
-    
-    <div class='modal-background w-hidden modal-body charge-customer-modal'>
-      <%= render 'shared/modals/charge_customer' %>
-    </div>
-    
-    <% unless @authorized_txns %>
-      <a class="import sub-nav-button w-button modal-loader" href="#" modal-target='refund_customer_modal' id="refund-charge"><strong>Refund</strong></a>
-    <% else %>
-      <a class="import sub-nav-button w-button" href="#" id="capture-charge"><strong>Charge</strong></a>
-    <% end %>
+    <% if current_user.is_merchant? %>
+      <a class="add sub-nav-button w-button modal-loader" href="#" modal-target= "charge-customer-modal"><strong>Charge customer</strong></a>
+      
+      <div class='modal-background w-hidden modal-body charge-customer-modal'>
+        <%= render 'shared/modals/charge_customer' %>
+      </div>
+      
+      <% unless @authorized_txns %>
+        <a class="import sub-nav-button w-button modal-loader" href="#" modal-target='refund_customer_modal' id="refund-charge"><strong>Refund</strong></a>
+      <% else %>
+        <a class="import sub-nav-button w-button" href="#" id="capture-charge"><strong>Charge</strong></a>
+      <% end %>
 
-    <div class='modal-background w-hidden modal-body refund_customer_modal'>
-      <%= render 'shared/modals/refund_customer' %>
-    </div>
-    
-    <% if transactions.present? %>
-      <div class="date-range-wrapper w-clearfix">
-        <form class="date-picker-form w-clearfix" id="email-form-3" name="email-form-3">
-          <input class="date-picker-field w-input" id="Transaction-Date-Range-Picker" maxlength="256" placeholder="Date Picker " type="text">
-        </form>
+      <div class='modal-background w-hidden modal-body refund_customer_modal'>
+        <%= render 'shared/modals/refund_customer' %>
       </div>
     <% end %>
+    
+    <div class="date-range-wrapper w-clearfix <%= 'customer-transaction-picker' if current_user.is_customer? %>">
+      <form class="date-picker-form w-clearfix" id="email-form-3" name="email-form-3">
+        <input class="date-picker-field w-input" id="Transaction-Date-Range-Picker" maxlength="256" placeholder="Date Picker " type="text">
+      </form>
+    </div>
 
   </div>
 </div>
+
+<form id="txn_history_form" method="get" action="transactions/download.csv">
+  <input type="hidden" id="txn_start_date" name="txn_start_date" />
+  <input type="hidden" id="txn_end_date" name="txn_end_date" />
+</form>

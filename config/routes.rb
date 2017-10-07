@@ -87,7 +87,7 @@ Rails.application.routes.draw  do
       resources :merchant_contacts, path: :contacts, only: [:index, :show]
       resources :merchant_customers, path: :customers, only: [:index, :show]
       get 'segments' => 'lists#segments'
-      get 'segments/:id' => 'lists#show'
+      get 'segments/:id' => 'lists#show', as: :segment
       resources :user_lists, only: [] { collection { delete 'remove_member' } }
       resources :lists, only: [:index, :show, :destroy] { member { post 'add_member' } }
       get 'managed-accounts' => 'users#managed_acct'
@@ -100,7 +100,7 @@ Rails.application.routes.draw  do
   authenticate :user, -> (user) { user.is_customer? } do
     resources :users, only: [] do
       get 'add-card-info'
-      get 'business' => 'merchant_customers#business'
+      get 'organizations' => 'merchant_customers#business'
     end
   end
 

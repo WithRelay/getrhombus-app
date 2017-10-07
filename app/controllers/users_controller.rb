@@ -8,14 +8,19 @@ class UsersController < ApplicationController
   include ManagedAccountActions
   include DashboardData
 
-  before_action :set_notifications, except: [:customer_csv_template, :remove_twitter_integration, :remove_stripe_integration]
+  before_action :set_notifications, except: [:show, :customer_csv_template, :remove_twitter_integration, :remove_stripe_integration]
 
   def show
-    #all the methods are in concerns/dashboard_data
-    @dashboard_overall_section = dashboard_customers_and_transactions
-    @dashboard_msg_perform = dashboard_analytics_section
-    @dashboard_transactions = dashboard_transactions
-    @dashboard_messages_data = dashboard_messages_data
+    if current_user.is_merchant?
+      set_notifications
+      # all the methods are in concerns/dashboard_data
+      @dashboard_overall_section = dashboard_customers_and_transactions
+      @dashboard_msg_perform = dashboard_analytics_section
+      @dashboard_transactions = dashboard_transactions
+      @dashboard_messages_data = dashboard_messages_data
+    else 
+      redirect_to user_transactions_path
+    end
   end
 
   # DELETE /users/1
