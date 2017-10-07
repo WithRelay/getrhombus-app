@@ -714,6 +714,28 @@ $(document).on('ready page:load', function() {
   });
 //
 
+  $('#generate-key-secret').on('click', function(e){
+    e.preventDefault();
+    // customData
+    $.ajax({
+      url: $('#generate-key-secret').attr('href'),
+      beforeSend: function(xhr) {
+        xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
+      },
+      type: "GET",
+      data: $('#custom-data-form').serialize(),
+      dataType: "json"
+    })
+    .done(function(data, textStatus, jqXHR) {
+      FlashHandler.setFlashMessage('Successfully regenerate tokens', 'notice');
+      $('span.api-key').text(data['key'])
+      $('span.api-secret').text(data['secret']);
+    })
+    .fail(function(data, textStatus, errorThrown) {
+      FlashHandler.setFlashMessage(JSON.parse(data.responseText).response, 'error');
+    })
+  })
+
 })
 
 function getAge(dateString) {

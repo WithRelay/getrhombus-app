@@ -7,30 +7,6 @@
   <% end %>
 
   <div class="w-col w-col-6">
-    <button class='btn-rhombus button w-button' id='generate-key-secret'>Generate Api Key/Secret</button>
+    <button class='btn-rhombus button w-button' id='generate-key-secret' href='<%= v1_user_generate_key_path(current_user) %>' >Generate Api Key/Secret</button>
   </div>
 </div>
-
-<script type="text/javascript">
-  $('#generate-key-secret').on('click', function(e){
-    e.preventDefault();
-    // customData
-    $.ajax({
-      url: '<%= v1_user_generate_key_path(current_user) %>',
-      beforeSend: function(xhr) {
-        xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
-      },
-      type: "GET",
-      data: $('#custom-data-form').serialize(),
-      dataType: "json"
-    })
-    .done(function(data, textStatus, jqXHR) {
-      FlashHandler.setFlashMessage('Successfully regenerate tokens', 'notice');
-      $('span.api-key').text(data['key'])
-      $('span.api-secret').text(data['secret']);
-    })
-    .fail(function(data, textStatus, errorThrown) {
-      FlashHandler.setFlashMessage(JSON.parse(data.responseText).response, 'error');
-    })
-  })
-</script>
