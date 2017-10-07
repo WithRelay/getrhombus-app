@@ -36,7 +36,7 @@ class FbMessage < ActiveRecord::Base
         if media_url.present?
           # now we only support image file attachment
           attachment_type = 'image'
-          FacebookMessengerService.send_attachment(from, to, attachment_type, media_url)
+          media_url.each{ |url| FacebookMessengerService.send_attachment(from, to, attachment_type, url) }
         end
         true
       else
