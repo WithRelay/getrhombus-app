@@ -7,6 +7,7 @@ class MerchantCustomer < ActiveRecord::Base
 
   belongs_to :merchant, class_name: "User"
   belongs_to :customer, class_name: "User"
+  has_many :user_lists, as: :customer_contact
   
   has_many :subscriptions, inverse_of: :merchant_customer  
 
@@ -33,13 +34,8 @@ class MerchantCustomer < ActiveRecord::Base
           # add as customer if necessary
           platform = merchant.is_platform? ? 0 : 1
           mc = find_by(merchant_id: merchant.id, customer_id: customer.id, is_platform: platform)
-          if !mc
-            create!(merchant_id: merchant.id, customer_id: customer.id, is_platform: platform)
-          else
-            mc.touch
-          end
-
-          return true
+          mc ? mc.touch : create!(merchant_id: merchant.id, customer_id: customer.id, is_platform: platform)
+          return mc
         end
       end
     rescue StandardError => exception

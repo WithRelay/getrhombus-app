@@ -25,16 +25,21 @@ class Api::V1::MerchantCustomersController < Api::V1::BaseController
       elsif params[:format] == 'json'
         ActiveRecord::Base.transaction do
           @customer = User.find_by(email: params[:user][:email])
+
           if @customer.present?
             raise StandardError unless add_to_merchant_customer_and_referrer(false)
           else
             params[:user][:password] = Toolbox::StringGen.generate_random_string(8)
             params[:user][:user_level] = 0
+
             @customer = User.new(api_v1_user_params)
             @customer.customer_source = { id: current_user.id, method: 'added', temp_password: params[:user][:password] }
             @customer.save!
-            raise StandardError unless add_to_merchant_customer_and_referrer
-            @customer.user_lists.create!(@user_list_params) if api_v1_user_list_params[:list_id].present?
+
+            merchant_customer = add_to_merchant_customer_and_referrer
+            raise StandardError unless merchant_customer            
+            merchant_customer.user_lists.create!(api_v1_user_list_params) if api_v1_user_list_params[:list_id].present?
+            
             @customer.create_address!(@address_params) if any_address_params_present?
             @customer.people.create!(@person_params) if api_v1_person_params[:full_name].present?              
             if @user_params[:card_token].present?
