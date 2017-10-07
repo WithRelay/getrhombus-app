@@ -25,7 +25,7 @@
       </div>
     </div>
     <div class="flex-underline form-header-underline"></div>
-    <div class="integrations-row w-row">
+    <div class="integrations-row w-row" id='objlists' data-object-type='twitter'>
       <div class="w-clearfix w-col w-col-9">
         <img class="integration-partner-icon" src="/assets/twitter-logo.png" width="50">
         <h4 class="integration-partner-name">Twitter</h4>
@@ -43,7 +43,7 @@
     </div>
     <div class="flex-underline form-header-underline"></div>
     <% if current_user.is_platform? %>
-      <div class="integrations-row w-row">
+      <div class="integrations-row w-row" id='objlists' data-object-type='stripe'>
         <div class="w-clearfix w-col w-col-9">
           <img class="integration-partner-icon" src="/assets/stripe.png" width="50">
           <h4 class="integration-partner-name">Stripe</h4>

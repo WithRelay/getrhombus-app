@@ -11,8 +11,8 @@ var CheckedItem = new function() {
   this.process = function(confirmBtnText, selector, isConfirm) {
     var yes_button = $('.cancel-yes').html('Please wait...'), obj_type = CheckedItem.obj_type();
     console.log(selector)
-
-    if (['plan', 'coupon', 'fb_page', 'list-members', 'segment'].indexOf(obj_type) > -1) {
+    debugger
+    if (['plan', 'coupon', 'fb_page', 'list-members', 'segment', 'stripe', 'twitter'].indexOf(obj_type) > -1) {
       if (isConfirm) $(selector).attr(isConfirm, true);
       $(selector)[0].click();
       return;
@@ -20,7 +20,7 @@ var CheckedItem = new function() {
 
     var selectedElement = CheckedItem.get();
     if (!selectedElement) return false;
-      
+
     if (obj_type == 'campaign') {
       var msg = yes_button.parent().find('p').text(),
       resource = new Resource(getCampaignActionUrl(selectedElement, msg));

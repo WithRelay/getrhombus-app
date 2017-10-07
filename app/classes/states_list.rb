@@ -60,7 +60,7 @@ class StatesList
                 ['Wyoming', 'WY']
               ]
 
-  CANADA_STATES = [['Alberta' 'AB'],
+  CANADA_STATES = [['Alberta', 'AB'],
                     ['British Columbia', 'BC'],
                     ['Manitoba', 'MB'],
                     ['New Brunswick', 'NB'],

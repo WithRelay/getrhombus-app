@@ -734,6 +734,25 @@ $(document).on('ready page:load', function() {
     })
   })
 
+  $('#managed-acct-country').on('change', function(){
+    var html_content = '';
+    if ($('#managed-acct-country').val() == 'CA') {
+      canada_states = <%= StatesList::CANADA_STATES %>
+      $.each(canada_states, function( index, value ) {
+        html_content += "<option value='" + value[1]+ "'>" + value[0] + "</option>"
+      });
+    } else if ($('#managed-acct-country').val() == 'US') {
+      us_states = <%= StatesList::US_STATES %>
+      $.each(us_states, function( index, value ) {
+        html_content += "<option value='" + value[1]+ "'>" + value[0] + "</option>"
+      });
+    } else {
+      html_content = "<option value=''>State/Province</option>"
+    }
+    $('#company-state').html(html_content);
+
+  })
+
 })
 
 function getAge(dateString) {
