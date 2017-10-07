@@ -684,9 +684,7 @@ class EmailingService
         result = MANDRILL.messages.send_template template_name, template_content, message, async
       rescue Mandrill::Error => e   # Mandrill errors are thrown as exceptions
         puts "A mandrill error occurred: #{e.class} - #{e.message}"
-        puts e.inspect
       rescue StandardError => e
-        puts e.inspect
       end
     end
 

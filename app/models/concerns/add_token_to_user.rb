@@ -13,7 +13,7 @@ module AddTokenToUser
       hash = { email: self.email, card_token: card_token, new_customer: true, platform_customer: true } 
       
       # order so platform is first
-      merchant_customers = MerchantCustomer.includes(:merchant).where(customer_id: self.id).order(is_platform: :desc)
+      merchant_customers = MerchantCustomer.includes(:merchant).where(customer_id: self.id).order(is_platform: :asc)
 
       # This step doesn't really happen anymore since merchant customer between platform and customer happens at sign up
       if merchant_customers.blank?            
@@ -31,7 +31,7 @@ module AddTokenToUser
           else
             platform_customer.reload if is_platform         # do it once
             is_platform = false
-            hash[:card_token] = nil       # create new tokens for managed account since the js token is for platform
+            hash[:card_token] = nil       # create new tokens for managed account since the js token from view is for platform
           end
           
           # we don't create customers on standalone accounts since we share platform customer with those

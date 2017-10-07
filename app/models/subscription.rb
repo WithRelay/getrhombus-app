@@ -40,7 +40,7 @@ class Subscription < ActiveRecord::Base
         unless is_platform
           if merchant_customer.managed_stripe_customer_id.blank?
             token_res = team.add_token_for_merchant_customer_from_platform_customer(merchant_customer)
-            # can return a adding card error here in token_res.third...so you bubble up this specific error
+            # can return an adding card error here in token_res.third...so you bubble up this specific error
             return token_res unless token_res.first
           end
         end

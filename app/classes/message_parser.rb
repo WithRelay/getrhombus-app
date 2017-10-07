@@ -12,13 +12,12 @@ class MessageParser
       return if received_msg.text.blank?
 
       # tested
-      Rails.logger.debug "DEBUG: in function"
       method(__method__).parameters.each { |_,arg| instance_variable_set("@#{arg}", binding.local_variable_get(arg)) }
       
       # tested
       @received_msg.text = @received_msg.text.strip
       @amt_ary = check_for_payment
-      puts @amt_ary.inspect
+      # puts @amt_ary.inspect
       # is_old_format = (@amt_ary[0] && @amt_ary[1] == "$")
 
       # scenarios
@@ -29,14 +28,12 @@ class MessageParser
       # 5. otherwise just a regular text from a registered user
 
       if !@amt_ary[0] && @amt_ary[1].present?  #tested
-        puts 'invalid payment intent'
+        # puts 'invalid payment intent'
         send_response('We noticed you tried to send a payment. Please resend it in this format: +Amount followed by item name. Ex. +5 Pizza.') 
         return
       end
 
       @tag = Hashtag.where('user_id = ? and lower(tag) = ? and status = 1', @merchant.id, @tag.downcase).first if @tag.present?
-      Rails.logger.debug "DEBUG putting tag if any"
-      Rails.logger.debug @tag.inspect
 
       @is_valid_payment_intent = @amt_ary[0] && @amt_ary[1].present?
       if @is_valid_payment_intent && !is_amount_under_limit?    #tested

@@ -126,11 +126,11 @@ class User < ActiveRecord::Base
   enum status: { inactive: 0, active: 1, fraudulent: 2 }
 
   def is_merchant?
-    user_level == 1 || is_platform?
+    self.user_level == 1 || is_platform?
   end
 
   def is_customer?
-    user_level == 0
+    self.user_level == 0
   end
 
   def full_name
@@ -144,7 +144,7 @@ class User < ActiveRecord::Base
   end
 
   def is_platform?
-    email == User.platform_email
+    self.email == User.platform_email
   end
 
   def user_title
@@ -157,7 +157,7 @@ class User < ActiveRecord::Base
     # merchants could have a standalone account (prior to v1.5) and a managed account
     # managed account takes priority
 
-     return { type: 'standalone', cred: {} } if is_platform?
+     return { type: 'standalone', cred: {} } if self.is_platform?
      cred = self.stripe_creds   # check for managed account first, we support just one account for now
      return { type: 'managed', cred: cred.first } if cred.present?
      cred = self.standalone_stripe_cred  # check for standalone ... this is legacy
@@ -244,10 +244,11 @@ class User < ActiveRecord::Base
 
   def do_signup_stuff
     begin
+      MerchantCustomer.add_or_update_merchant_customer(User.get_platform_acct_obj, self) unless self.is_platform?
+      
       if self.is_merchant?
         Alert.find_or_create_by(user_id: self.id) { |alert| alert.emails = [self.email] }
-        response = "We're away at the moment and will get back to you when we return :)."
-        AwayMessage.find_or_create_by(user_id: self.id, response: response)
+        AwayMessage.find_or_create_by(user_id: self.id, response: "We're away at the moment and will get back to you when we return :).")
         GetIntelligenceDataJob.perform_later(self.org_phone, 'OpenCNAM')
         origin = List.origins[:system]
         campaign_type = List.campaign_types[:campaign]
@@ -260,11 +261,8 @@ class User < ActiveRecord::Base
           { name: 'Inactive Contacts', segment: inactive_contacts_default_segment_data, origin: origin, list_type: List.list_types[:contact], campaign_type: campaign_type }
         ])
       end
-
-      unless is_platform?
-        MerchantCustomer.add_or_update_merchant_customer(User.get_platform_acct_obj, self, true)
-        WelcomeEmailJob.set(wait: SIGNUP_EMAIL_DELAY.seconds).perform_later(self, self.customer_source)
-      end
+      
+      WelcomeEmailJob.set(wait: SIGNUP_EMAIL_DELAY.seconds).perform_later(self, self.customer_source)
       GetIntelligenceDataJob.perform_later(self.email, 'FullContact')
       GetIntelligenceDataJob.perform_later(self.phone_number, 'OpenCNAM') if self.is_customer?
     rescue StandardError => exception

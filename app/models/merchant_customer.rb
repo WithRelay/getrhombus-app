@@ -16,28 +16,28 @@ class MerchantCustomer < ActiveRecord::Base
 
   # has_many :invoices
 
-  def self.add_or_update_merchant_customer(merchant, customer, platform_create = false)
+  def self.add_or_update_merchant_customer(merch, cus)
     begin
-      return true if merchant.is_platform? && platform_create
+      return true if cus.is_platform?
 
-      if merchant.try(:id)
+      if merch.try(:id)
         # check for number and set is_customer
-        if customer.try(:phone_number).present?
-          merchant.merchant_contacts.where(uid_type: 'phone_number', uid: customer.phone_number).update_all(is_customer: 1)
+        if cus.try(:phone_number).present?
+          merch.merchant_contacts.where(uid_type: 'phone_number', uid: cus.phone_number).update_all(is_customer: 1)
         end
         
-        if customer.try(:id)
+        if cus.try(:id)
           # check for page_specific_ids and set is_customer
-          creds = FbCred.where(user_id: customer.id).pluck(:page_specific_id)
-          merchant.merchant_contacts.where(uid_type: 'fb_page', uid: creds).update_all(is_customer: 1) if creds.present?
+          creds = FbCred.where(user_id: cus.id).pluck(:page_specific_id)
+          merch.merchant_contacts.where(uid_type: 'fb_page', uid: creds).update_all(is_customer: 1) if creds.present?
 
           # add as customer if necessary
-          platform = merchant.is_platform? ? 0 : 1
-          mc = find_by(merchant_id: merchant.id, customer_id: customer.id, is_platform: platform)
+          platform = merch.is_platform? ? 0 : 1
+          mc = find_by(merchant_id: merch.id, customer_id: cus.id, is_platform: platform)
           if mc 
             mc.touch 
           else 
-            mc = create!(merchant_id: merchant.id, customer_id: customer.id, is_platform: platform)
+            mc = create!(merchant_id: merch.id, customer_id: cus.id, is_platform: platform)
           end
 
           return mc
@@ -45,7 +45,7 @@ class MerchantCustomer < ActiveRecord::Base
       end
     rescue StandardError => exception
       ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In add_or_update_merchant_customer", 
-                                                                            customer: customer })
+                                                                            customer: cus })
     end
 
     false
