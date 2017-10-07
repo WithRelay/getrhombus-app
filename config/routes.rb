@@ -93,7 +93,7 @@ Rails.application.routes.draw  do
       get 'update-managed-acct' => 'users#managed_acct'
       patch 'managed-accounts' => "users#create_managed_acct"
       patch 'update-managed-acct' => 'users#update_managed_acct'
-      get 'generate-key' => 'api_cred#generate_key'
+      get 'api-cred' => 'api_creds#show'
     end
   end
 
@@ -111,19 +111,21 @@ Rails.application.routes.draw  do
       get 'snapshot', on: :collection
       post 'check_password', on: :collection
       get 'update_merchant_status', on: :member
-      get 'generate-key' => 'api_cred#generate_key'
     end
+
+    resources :api_creds, only: [:create]
+    resources :user_lists, only: [:index, :create]
+    resources :saved_replies, only: [:index, :create]
 
     resources :lists, only: [:create, :index, :update] do
       get 'check_list_name', on: :collection
     end
-    resources :user_lists, only: [:index, :create]
+    
     resources :hashtags, only: [:index] do
       get 'check_hashtag_name', on: :collection
       delete 'images/:image_id' => "hashtags#image_delete", on: :member
     end
-
-    resources :saved_replies, only: [:index, :create]
+    
     resources :campaigns, only: [] do
       member do
         patch 'change_status'

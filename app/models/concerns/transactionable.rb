@@ -29,4 +29,24 @@ module Transactionable
     end
     random_token
   end
+
+   # Generate a unique API key
+  def generate_api_key
+    token = nil
+    loop do
+      token = SecureRandom.base64.tr('+/=', 'Qrt')
+      break unless ApiCred.unscoped.exists?(key: token)
+    end
+    token
+  end
+
+  # Generate a unique API secret
+  def generate_api_secret
+    token = nil
+    loop do
+      token = SecureRandom.base64.tr('+/=', 'Qrt')
+      break unless ApiCred.unscoped.exists?(secret: token)
+    end
+    token
+  end
 end

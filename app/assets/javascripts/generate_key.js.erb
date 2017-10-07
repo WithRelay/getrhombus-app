@@ -1,0 +1,25 @@
+$(document).ready(function () {
+
+  $('#generate-key-secret').on('click', function(e) {
+    e.preventDefault();
+    
+    $.ajax({
+      url: "/v1/api_creds",
+      beforeSend: function(xhr) {
+        xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
+      },
+      type: "POST",
+      dataType: "json"
+    })
+    .done(function(data, textStatus, jqXHR) {
+      FlashHandler.setFlashMessage('Successfully generated tokens', 'notice');
+      $('span.api-key').text(data.response.key);
+      $('span.api-secret').text(data.response.secret);
+    })
+    .fail(function(data, textStatus, errorThrown) {
+      FlashHandler.setFlashMessage(data.responseJSON.response, 'error');
+    })
+  });
+
+});
+

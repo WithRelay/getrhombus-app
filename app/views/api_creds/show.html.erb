@@ -1,0 +1,11 @@
+
+<div class="dashboard-body settings">
+  <div class="settings-info-div tokens">
+    <h5 class='account-status-text'>API KEY: <span class="api-key"><%= @api_cred ? @api_cred.key : '-' %></span></h5>
+    <h5 class='account-status-text'>API SECRET: <span class="api-secret"><%= @api_cred ? @api_cred.secret : '-' %></span></h5>
+  </div>
+  
+  <div class="w-col w-col-6">
+    <button class='btn-rhombus button w-button' id='generate-key-secret'>Generate New Api Key/Secret</button>
+  </div>
+</div>

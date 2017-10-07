@@ -109,5 +109,6 @@
 //= require perfect-scrollbar
 //= require capture
 //= require visibility_changed
+//= require generate_key
 // DO NOT REQUIRE TREE AS IT DOESNT GUARANTEE THE DEPENDENCY ORDER OF THESE FILES
 // require_tree .

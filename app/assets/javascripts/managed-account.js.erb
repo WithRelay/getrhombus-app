@@ -314,6 +314,7 @@ $(document).on('ready page:load', function() {
       $('#company-city').attr('placeholder', hash.city_label);
       $('#company-postal-code').attr('placeholder', hash.postcode_label);
 
+      /*
       // Format reps and/or owners
       hash = rep_formatter[this.value];
       // owners requirement
@@ -326,7 +327,6 @@ $(document).on('ready page:load', function() {
 
       // rep/owners address
       var address_details = ['street', 'suite', 'city', 'state', 'postal', 'country'];
-
       // hide all address fields
       if (hash.without_address) {
         $.each(address_details, function( index, value ) {
@@ -337,13 +337,32 @@ $(document).on('ready page:load', function() {
         $.each(address_details, function( index, value ) {
           $('.person-' + value + '-div').show();
         });
-      }
+      };
+      */
 
       // org type
       $('#user_org_type').trigger('change');
 
       build_currency_details(this.value);
+    };
+
+    // build state/province dropdown
+    var html_content = '';
+    if ($('#managed-acct-country').val() == 'CA') {
+      var canada_states = <%= StatesList::CANADA_STATES %>;
+      $.each(canada_states, function( index, value ) {
+        html_content += "<option value='" + value[1]+ "'>" + value[0] + "</option>"
+      });
+    } else if ($('#managed-acct-country').val() == 'US') {
+      var us_states = <%= StatesList::US_STATES %>;
+      $.each(us_states, function( index, value ) {
+        html_content += "<option value='" + value[1]+ "'>" + value[0] + "</option>"
+      });
+    } else {
+      html_content = "<option value=''>State/Province</option>"
     }
+    $('#company-state').html(html_content);
+
   }).change();
 
   function build_country_options(hash) {
@@ -696,72 +715,32 @@ $(document).on('ready page:load', function() {
       }
     }
   })
-    .on('err.validator.fv', function(e, data) {
-        // $(e.target)    --> The field element
-        // data.fv        --> The FormValidation instance
-        // data.field     --> The field name
-        // data.element   --> The field element
-        // data.validator --> The current validator name
+  .on('err.validator.fv', function(e, data) {
+      // $(e.target)    --> The field element
+      // data.fv        --> The FormValidation instance
+      // data.field     --> The field name
+      // data.element   --> The field element
+      // data.validator --> The current validator name
 
-        data.element
-          .data('fv.messages')
-          // Hide all the messages
-          .find('.help-block[data-fv-for="' + data.field + '"]').hide()
-          // Show only message associated with current validator
-          .filter('[data-fv-validator="' + data.validator + '"]').show();
+      data.element
+        .data('fv.messages')
+        // Hide all the messages
+        .find('.help-block[data-fv-for="' + data.field + '"]').hide()
+        // Show only message associated with current validator
+        .filter('[data-fv-validator="' + data.validator + '"]').show();
   });
-    //
+  //
 
-  $('#generate-key-secret').on('click', function(e){
-    e.preventDefault();
-    // customData
-    $.ajax({
-      url: $('#generate-key-secret').attr('href'),
-      beforeSend: function(xhr) {
-        xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
-      },
-      type: "GET",
-      data: $('#custom-data-form').serialize(),
-      dataType: "json"
-    })
-    .done(function(data, textStatus, jqXHR) {
-      FlashHandler.setFlashMessage('Successfully regenerate tokens', 'notice');
-      $('span.api-key').text(data['key'])
-      $('span.api-secret').text(data['secret']);
-    })
-    .fail(function(data, textStatus, errorThrown) {
-      FlashHandler.setFlashMessage(JSON.parse(data.responseText).response, 'error');
-    })
-  })
-
-  $('#managed-acct-country').on('change', function(){
-    var html_content = '';
-    if ($('#managed-acct-country').val() == 'CA') {
-      canada_states = <%= StatesList::CANADA_STATES %>
-      $.each(canada_states, function( index, value ) {
-        html_content += "<option value='" + value[1]+ "'>" + value[0] + "</option>"
-      });
-    } else if ($('#managed-acct-country').val() == 'US') {
-      us_states = <%= StatesList::US_STATES %>
-      $.each(us_states, function( index, value ) {
-        html_content += "<option value='" + value[1]+ "'>" + value[0] + "</option>"
-      });
-    } else {
-      html_content = "<option value=''>State/Province</option>"
+  function getAge(dateString) {
+    var today = new Date();
+    var birthDate = new Date(dateString);
+    var age = today.getFullYear() - birthDate.getFullYear();
+    var m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
     }
-    $('#company-state').html(html_content);
+    return age;
+  };
 
-  })
+});
 
-})
-
-function getAge(dateString) {
-  var today = new Date();
-  var birthDate = new Date(dateString);
-  var age = today.getFullYear() - birthDate.getFullYear();
-  var m = today.getMonth() - birthDate.getMonth();
-  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-    age--;
-  }
-  return age;
-}

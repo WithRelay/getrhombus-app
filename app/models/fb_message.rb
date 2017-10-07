@@ -18,7 +18,7 @@ class FbMessage < ActiveRecord::Base
 
   # For sending and saving all outbound text message
   # from = merchant page_access_token, to = recipient_id
-  def send_and_save_message(merchant, user, from, to, message, media_url = [])
+  def send_and_save_message(merchant, user, from, to, message, media_urls = [])
     begin
       # save message before sending
       user = user.present? ? user.id : nil
@@ -33,10 +33,10 @@ class FbMessage < ActiveRecord::Base
       if response = FacebookMessengerService.send_text_message(from, to, message)
         self.update_attributes(message_id: JSON.parse(response)['message_id'])
 
-        if media_url.present?
+        if media_urls.present?
           # now we only support image file attachment
           attachment_type = 'image'
-          media_url.each{ |url| FacebookMessengerService.send_attachment(from, to, attachment_type, url) }
+          media_urls.each{ |url| FacebookMessengerService.send_attachment(from, to, attachment_type, url) }
         end
         true
       else

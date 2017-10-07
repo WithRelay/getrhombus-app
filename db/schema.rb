@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171005022225) do
+ActiveRecord::Schema.define(version: 20171007132336) do
 
   create_table "account_reloads", force: :cascade do |t|
     t.integer  "user_id",        limit: 4
@@ -51,13 +51,14 @@ ActiveRecord::Schema.define(version: 20171005022225) do
   add_index "alerts", ["user_id"], name: "index_alerts_on_user_id", using: :btree
 
   create_table "api_creds", force: :cascade do |t|
-    t.string  "api_key",    limit: 191
-    t.string  "api_secret", limit: 191
-    t.integer "user_id",    limit: 4
+    t.string  "key",     limit: 191
+    t.string  "secret",  limit: 191
+    t.integer "user_id", limit: 4
   end
 
-  add_index "api_creds", ["api_key"], name: "index_api_creds_on_api_key", using: :btree
-  add_index "api_creds", ["api_secret"], name: "index_api_creds_on_api_secret", using: :btree
+  add_index "api_creds", ["key", "secret"], name: "index_api_creds_on_key_and_secret", using: :btree
+  add_index "api_creds", ["key"], name: "index_api_creds_on_key", unique: true, using: :btree
+  add_index "api_creds", ["secret"], name: "index_api_creds_on_secret", unique: true, using: :btree
 
   create_table "away_messages", force: :cascade do |t|
     t.integer  "user_id",    limit: 4

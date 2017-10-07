@@ -34,7 +34,12 @@ class MerchantCustomer < ActiveRecord::Base
           # add as customer if necessary
           platform = merchant.is_platform? ? 0 : 1
           mc = find_by(merchant_id: merchant.id, customer_id: customer.id, is_platform: platform)
-          mc ? mc.touch : create!(merchant_id: merchant.id, customer_id: customer.id, is_platform: platform)
+          if mc 
+            mc.touch 
+          else 
+            mc = create!(merchant_id: merchant.id, customer_id: customer.id, is_platform: platform)
+          end
+
           return mc
         end
       end
