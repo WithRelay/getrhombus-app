@@ -33,6 +33,8 @@ module ManagedAccountHelper
       StatesList::US_STATES
     elsif country == 'CA'
       StatesList::CANADA_STATES
+    else
+      ['State/Province', '']
     end
   end
 
