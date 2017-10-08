@@ -1,9 +1,10 @@
 class MessageParser
 
+  include Transactionable
   delegate :url_helpers, to: 'Rails.application.routes' 
 
   # Message/FbMessage object must exist when calling this method
-  # from can be user fb cred or phone number
+  # from can be user, fb cred or phone number
   # customer can be nil
   def process_message(merchant, customer, uid, uid_type, received_msg, channel)
     begin
@@ -342,7 +343,7 @@ class MessageParser
           customer_plan = merchant_plan.dup
           customer_plan.amount = @original_amt
           customer_plan.customer_id = @customer.id
-          customer_plan.name = Transactionable::generate_resource_name("Plan")
+          customer_plan.name = generate_resource_name("Plan")
           if customer_plan.create_plan({ team: @merchant })
             create_text_subscription(customer_plan.id)
           else

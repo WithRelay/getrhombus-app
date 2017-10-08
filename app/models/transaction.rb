@@ -1,6 +1,7 @@
 class Transaction < ActiveRecord::Base
   include CSVHandler
   include PrettyDate
+  include Transactionable
 
   has_one :message
   has_one :refund
@@ -91,7 +92,7 @@ class Transaction < ActiveRecord::Base
     # app_fee, stripe_fee are integers
     self.update(app_fee: @app_fee, stripe_fee: @stripe_fee,
                 amount: amt_in_decimal(@amt), amount_with_taxes: amt_in_decimal(@stripe_res.amount),
-                currency: @stripe_res.currency, txn_uri: @stripe_res.id, txn_number: Transactionable::generate_txn_number,
+                currency: @stripe_res.currency, txn_uri: @stripe_res.id, txn_number: generate_txn_number,
                 status: @stripe_res.status, txn_available_at: @stripe_res.created, last4: @stripe_res.source.last4,
                 card_name: @stripe_res.source.name, tax_percent: @merchant.tax_percent, destination: @stripe_res.destination,
                 team_id: @merchant.id, user_id: @customer.id, notes: @msg, hashtag_id: @hashtag.try(:id), captured: @stripe_res.captured,

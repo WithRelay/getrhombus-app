@@ -46,7 +46,8 @@ namespace :platform do
   # we use this on Stripe's website or anywhere else necessary
   desc "Stripe referrer info"
   task :setup_stripe_referrer => :environment do
-    uid = Transactionable::generate_uid
+    include Transactionable
+    uid = generate_uid
     ref = Referrer.create(
       referrer_email: '<redacted_email>',
       referrer_name: 'Stripe',

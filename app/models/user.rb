@@ -4,6 +4,7 @@ class User < ActiveRecord::Base
   include CSVHandler
   include AddTokenToUser
   include SegmentQueries
+  include Transactionable
 
   attr_accessor :phone, :msg_id, :captured_amt, :referrer
   attr_accessor :channel, :referrer_uid, :tos_acceptance, :customer_source
@@ -194,7 +195,7 @@ class User < ActiveRecord::Base
     number = TextingService.buy_number({ query: params["area_code"] || "", country: params["rn_country"], type: params["rn_type"] })
     EmailingService.hosted_sms_progress_notice(self, number.try(:second)) if self.hosted_sms.present?
     return false unless number
-    self.relay_uid = Transactionable::generate_uid
+    self.relay_uid = generate_uid
     self.rhombus_number = number[0]
     self.rn_friendly_name = number[1]
     if self.relay_uid.present?

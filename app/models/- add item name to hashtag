@@ -10,7 +10,6 @@ Taiwo
 
 
 
-- review where merchant customer, contacts, referrers are created
 - see create_subscription/transaction 
   - should i check when they send a message and are a user...no cos it leaves out dashboard charges
       but dashboard charges means the person is already your customer...so no point doing merchant customer when payment is done. it should be merchant_customer or merchant_contact when message is received.
