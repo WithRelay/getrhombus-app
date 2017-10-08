@@ -13,7 +13,11 @@ class EmailingService
         template_name = 'hosted-sms-activated'
         template_content = []
         message = { "subject" => "Your phone number is activated",
-         "global_merge_vars"=> [  { "name" => "first_name", "content" => user.first_name || 'there' }
+         "global_merge_vars"=> [ { "name" => "first_name", "content" => user.first_name || 'there' },
+                                  { 'name' => 'signin_link', 'content' => url_helpers.new_user_session_url },
+                                  { 'name' => 'howto_add_customers_link', 'content' => url_helpers.root_url },
+                                  { 'name' => 'howto_accepts_payment_link', 'content' => url_helpers.root_url },
+                                  { 'name' => 'howto_send_group_messages_link', 'content' => url_helpers.root_url }
                                ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => user.email } ],
