@@ -315,14 +315,10 @@ class MessageParser
 
   # tested
   def send_payment_responses
-    if @tag.present?
-      @new_txn.send_payment_responses(@tag.response, get_tag_images)
-    else
-      puts '00-9asdddddddddddddd0d9a-09'
-      msg_to_send = "Thanks#{get_first_name}. A payment of #{@new_txn.txn_amount} (#{@new_txn.currency}) "
-      msg_to_send += (@merchant.tax_percent.to_f == 0.0 ? "was sent to #{@merchant.org_name}." : "plus taxes and fees set by #{@merchant.org_name} was sent.")
-      @new_txn.send_payment_responses(msg_to_send)
-    end    
+    msg_to_send = "Thanks#{get_first_name}. A payment of #{@new_txn.txn_amount} (#{@new_txn.currency}) "
+    msg_to_send += (@merchant.tax_percent.to_f == 0.0 ? "was sent to #{@merchant.org_name}." : "plus taxes and fees set by #{@merchant.org_name} was sent.")
+    @new_txn.send_payment_responses(msg_to_send)
+    send_response(@tag.response, get_tag_images) if @tag.present?
   end
   
   # tested  

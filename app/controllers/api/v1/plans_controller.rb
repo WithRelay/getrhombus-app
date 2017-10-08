@@ -14,7 +14,8 @@ class Api::V1::PlansController < Api::V1::BaseController
         res = current_user.merchant_only_plans
       end
       render json: { "plans" => res }, status: 200
-    rescue StandardError => e
+    rescue StandardError => err
+      ExceptionNotifier.notify_exception(err, env: Rails.env, data: { message: "From v1 PlansController index"})
       render json: { error: "Unable to find your plans" }, status: 500
     end
   end
@@ -31,7 +32,8 @@ class Api::V1::PlansController < Api::V1::BaseController
         response = @plan.errors.messages.present? ? @plan.errors.full_messages : 'Something went wrong'
         @plan.destroy     # revoke created plan on error
       end
-    rescue StandardError => e
+    rescue StandardError => err
+      ExceptionNotifier.notify_exception(err, env: Rails.env, data: { message: "From v1 PlansController create"})
       response = 'Something went wrong on our end.'
     end
     render json: { response: response }, status: status
@@ -46,7 +48,8 @@ class Api::V1::PlansController < Api::V1::BaseController
       else
         response = @plan.errors.messages.present? ? @plan.errors.full_messages : "We couldn't update the plan name"
       end
-    rescue StandardError => e
+    rescue StandardError => err
+      ExceptionNotifier.notify_exception(err, env: Rails.env, data: { message: "From v1 PlansController update"})
       response = 'Something went wrong on our end.'
     end
     render json: { response: response }, status: status
