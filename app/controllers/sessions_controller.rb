@@ -8,7 +8,7 @@ class SessionsController < Devise::SessionsController
   end
 
   def destroy
-    $redis_merchant_status.set(current_user.id.to_s, 'offline')
+    $redis_merchant_status.set(current_user.id.to_s, 'offline') if current_user.is_merchant?
     super
   end
 

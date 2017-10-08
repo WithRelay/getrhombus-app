@@ -22,12 +22,12 @@
               <%= f.hidden_field :phone_number, :id => "phone_number" %>
             </div>
 
-            <%= f.hidden_field :msg_id, id: "msg_id", value: params[:user] ? params[:user][:msg_id] : '' %>
-            <%= f.hidden_field :channel, id: "channel", value: params[:user] ? params[:user][:channel] : '' %>
             <%= f.hidden_field :referrer, id: "referrer", value: params[:user] ? params[:user][:referrer] : '' %>
             <%= f.hidden_field :captured_amt, id: "captured_amt", value: params[:user] ? params[:user][:captured_amt] : '' %>
             <%= f.hidden_field :referrer_uid, id: "referrer_uid", value: params[:user] ? params[:user][:referrer_uid] : '' %>            
             <%= f.hidden_field :page_specific_id, id: "page_specific_id", value: params[:user] ? params[:user][:page_specific_id] : '' %>
+            <%= f.hidden_field :msg_id, id: "msg_id", value: params[:user] ? params[:user][:msg_id] : '' %>
+            <%= f.hidden_field :channel, id: "channel", value: params[:user] ? params[:user][:channel] : '' %>
 
             <div class="form-group col-xs-5">
               <%= f.select :user_level, "<option value='' disabled selected class='hide'>Account Type</option> <option value='1'>Business Account</option><option value='0'>Customer Account</option>".html_safe, {}, class: 'form-control dropdown w-select margin-15', id: 'user-level' %>

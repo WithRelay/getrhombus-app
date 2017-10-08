@@ -72,7 +72,7 @@ class Api::V1::MerchantCustomersController < Api::V1::BaseController
 
     def api_v1_user_params
       @user_params = params.require(:user)
-                           .permit(:email, :password, :phone_number, :user_level, :card_name, :last4, :exp_month, :exp_year, :card_token, :card_type)
+                           .permit(:email, :password, :phone_number, :user_level, :livemode, :card_id, :card_name, :last4, :exp_month, :exp_year, :card_token, :card_type)
                            .tap do |u|
                               u[:card_name] = u[:card_name].present? ? u[:card_name] : nil
                               u[:last4] = u[:last4].present? ? u[:last4] : nil

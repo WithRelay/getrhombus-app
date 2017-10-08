@@ -18,7 +18,7 @@ class NexmoEvent
         @message = Message.create!(
           to: @params[:to],
           from: @params[:msisdn],
-          user_id: user.nil? ? nil : user.id,
+          user_id: user.try(:id),
           user_id_to: @merchant.id,
           message_id: @message_id,
           text: @params[:text].strip,

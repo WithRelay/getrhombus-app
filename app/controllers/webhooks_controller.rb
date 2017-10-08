@@ -3,17 +3,16 @@ class WebhooksController < ApplicationController
   around_action :set_time_zone
 
   def stripe_events
-    # should we return 500 if something goes wrong?
-    #begin
+    begin
       # Verify the event by fetching it from Stripe
-      #event = Stripe::Event.retrieve(params[:id])
-      #if params[:id] == event[:id]
+      event = Stripe::Event.retrieve(params[:id])
+      if params[:id] == event[:id]
         type = (request.original_fullpath.include? 'platform') ? 'platform' : 'connect'
         StripeEvent.process_event(params, type)
-      #end
-    #rescue StandardError => e
-      # email platform
-    #end
+      end
+    rescue StandardError => exception
+      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In webhooks controller stripe_events" })
+    end
     render nothing: true
   end
 
@@ -30,13 +29,11 @@ class WebhooksController < ApplicationController
 
   def facebook_events
     res = {}
-
     begin
       res = FacebookEvent.process_event(params, current_page, @merchant)
-    rescue StandardError => e
-      # email platform
+    rescue StandardError => exception
+      ExceptionNotifier.notify_exception(exception, env: Rails.env, data: { message: "In webhooks controller facebook_events" })
     end
-
     render json: res
   end
 

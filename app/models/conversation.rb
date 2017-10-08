@@ -47,7 +47,7 @@ class Conversation < ActiveRecord::Base
       uid: self.uid,
       uid_type: self.uid_type,
       has_messenger: has_messenger,
-      mc_id: mc ? mc.id.to_s : nil,
+      mc_id: mc.try(:id).try(:to_s),
       mc_type: mc ? mc.class.name : nil,
       profile_image: User.check_profile_picture(user),
       last_message: last_message ? last_message.text : '',
@@ -88,7 +88,9 @@ class Conversation < ActiveRecord::Base
 
       if conv.uid_type == "user"
         customer = conv.user
+        # supports merchant dashboard chat
         to = (channel == "FbMessage") ? customer.get_customer_page_specific_id(from) : customer.phone_number
+        #to = (channel == "FbMessage") ? customer.get_customer_page_specific_id(from) : (customer.is_merchant? ? customer.rhombus_number : customer.phone_number)
       else
         to = conv.uid
         if channel == "FbMessage"

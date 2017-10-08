@@ -191,6 +191,9 @@ class User < ActiveRecord::Base
     if self.relay_uid.present?
       self.short_url = UrlShortenerService.shorten_link("#{Rails.application.secrets.app["url"]}?referrer_uid=#{self.relay_uid}")
     end
+    
+    #welcome_text = "Howdy! Wondering how to get started? Add or import your customers and contacts to start messaging them immediately. If you have any questions, message us here and a member of our team will be happy to help."
+    #Conversation.find_or_create_conversation_for_message_and_send_publish(User.get_platform_acct_obj, self, 'user', self.id, welcome_text)
     deduct_from_account_balance(NUMBER_PRICE)
   end
 
@@ -219,7 +222,7 @@ class User < ActiveRecord::Base
     self.decrement!(:account_balance, amt.to_f)
   end
 
-  #private
+  private
 
   # Some users sign up with Rhombus numbers
   def phone_number_cannot_be_rhombus_number
@@ -262,6 +265,7 @@ class User < ActiveRecord::Base
           { name: 'Inactive Customers', segment: inactive_customers_default_segment_data, origin: origin, list_type: List.list_types[:customer], campaign_type: campaign_type },
           { name: 'Inactive Contacts', segment: inactive_contacts_default_segment_data, origin: origin, list_type: List.list_types[:contact], campaign_type: campaign_type }
         ])
+        GetIntelligenceDataJob.perform_later(self.org_phone, 'OpenCNAM')
       end
       
       WelcomeEmailJob.set(wait: SIGNUP_EMAIL_DELAY.seconds).perform_later(self, self.customer_source)

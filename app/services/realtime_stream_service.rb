@@ -20,7 +20,7 @@ class RealtimeStreamService
 
           # sms alerts
           to = alert_obj.sms_numbers
-          if to.present?
+          if alert_obj.include_sms && to.present?
             team = User.get_platform_acct_obj
             msg_to_send = "You have a new unread message from #{customer} on your #{Rails.application.secrets.app['name']} dashboard."
             to.each do |pn|

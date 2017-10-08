@@ -43,7 +43,7 @@ class TwilioEvent
           to: @params[:To].gsub('+', ''),
           from: @phone_number,
           status: @params[:SmsStatus],
-          user_id: user.nil? ? nil : user.id,
+          user_id: user.try(:id),
           user_id_to: @merchant.id,
           message_id: @message_id,
           text: @params[:Body].strip,
@@ -65,7 +65,7 @@ class TwilioEvent
         # create or add to existing conversation, send to real time service
         if user.present?
           uid, uid_type = user.id, 'user'
-          MerchantCustomer.add_or_update_merchant_customer(@merchant, user)
+          MerchantCustomer.add_or_update_merchant_customer(@merchant, user) #unless user.is_platform?
         else
           uid, uid_type = @phone_number, 'phone_number'
           MerchantContact.add_or_update_merchant_contact(@merchant.id, uid, uid_type)

@@ -50,8 +50,9 @@ class AlertsController < ApplicationController
 
     def alert_params
       params.require(:alert).permit(:send_alert, :interval, :include_sms, :sms_numbers, :emails, :custom_welcome).tap do |p|
-        p[:sms_numbers] = p[:sms_numbers].try(:split, ',')
         p[:emails] = p[:emails].try(:split, ',')
+        p[:sms_numbers] = p[:sms_numbers].try(:split, ',')        
+        p[:sms_numbers].delete_if { |pn| User.unscoped.exists?(rhombus_number: pn.gsub('+', '')) } if p[:sms_numbers].present?
       end
     end
 end

@@ -6,6 +6,7 @@ module UserProfile
   def get_conversation_display_name(uid, uid_type, uid_obj=nil)
     if uid_type == "user"
       cus = uid_obj || User.find_by(id: uid)
+      #return cus.org_name if cus.is_merchant? # for platform - merchant dashboard chat
       cus ? cus.full_name.present? ? cus.full_name : cus.email : "Relay User"
     else
       if uid_type == "fb_page"
