@@ -15,7 +15,7 @@
           <div class="_7-days message-volume-count"><%= @dashboard_messages_data[:msg_7_days][:msg_count][:total]%></div>
           <div class="message-days-text">7 DAYS</div>
         </div>
-        <h4 class="date-time shrink-text welcome-dash-content-container-header">Thursday, 11 Aug 2016, 9:30 AM</h4>
+        <h4 class="date-time shrink-text welcome-dash-content-container-header"><%= todays_date %></h4>
       </div>
       <div class="graph-header-row w-row">
         <div class="w-col w-col-6">
@@ -125,9 +125,3 @@
       </div>
     </div>
   </div>
-
-<script type="text/javascript">
-  $("#customer-csv-template-link").click(function(){
-    $('#customer-csv-template').submit();
-  });
-</script>
