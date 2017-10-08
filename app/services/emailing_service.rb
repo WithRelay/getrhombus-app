@@ -6,7 +6,7 @@ class EmailingService
   FROM_EMAIL = { edwin: '<redacted_email>', taiwo: '<redacted_email>' }
 
   class << self
-    delegate :url_helpers, to: 'Rails.application.routes' 
+    delegate :url_helpers, to: 'Rails.application.routes'
 
     def send_completed_notice(user)
       begin
@@ -431,7 +431,7 @@ class EmailingService
     # Exit Survey (IF Account is Cancelled)
     def exit_survey(user)
       begin
-        template_name = 'free-trial-expiration'
+        template_name = 'exit-survey'
         template_content = []
         message = { "subject" => "Cancellation",
          "global_merge_vars"=> [    { "name" => "first_name", "content" => user.first_name || 'there' } ],
@@ -544,8 +544,8 @@ class EmailingService
                                   { "name" => "merchant_email", "content" => options[:merchant_email] },
                                   { "name" => "currency", "content" => options[:currency] },
                                   { "name" => "currency_symbol", "content" => options[:currency_symbol] },
-                                  { "name" => "transaction_link", "content" => "https://www.withrelay.com/transaction_history_link"},
-                                  { "name" => "relay_link", "content" => "https://www.withrelay.com/use_relay_link"}
+                                  { "name" => "transaction_link", "content" => url_helpers.user_transactions_url(options[:user]) },
+                                  { "name" => "relay_link", "content" => url_helpers.new_user_registration_url }
                                ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => options[:user_email] } ],
