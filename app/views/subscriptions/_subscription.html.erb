@@ -32,7 +32,7 @@
       </div>
       <div class="transaction-column w-col w-col-2">
         <div class="transaction-cell w-clearfix">
-          <div class="table-text tran-amount">$<%= present(subscription).get_amount %></div>
+          <div class="table-text tran-amount"><%= number_to_currency(present(subscription).get_amount) %></div>
         </div>
       </div>
       <div class="transaction-column w-col w-col-2">
