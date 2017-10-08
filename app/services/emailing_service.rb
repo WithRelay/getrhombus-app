@@ -526,6 +526,7 @@ class EmailingService
     end
 
     def customer_receipt(options = {})
+      binding.pry
       begin
         template_name = 'customer-receipt-template'
         template_content = []
@@ -544,8 +545,8 @@ class EmailingService
                                   { "name" => "merchant_email", "content" => options[:merchant_email] },
                                   { "name" => "currency", "content" => options[:currency] },
                                   { "name" => "currency_symbol", "content" => options[:currency_symbol] },
-                                  { "name" => "transaction_link", "content" => "https://www.withrelay.com/transaction_history_link"},
-                                  { "name" => "relay_link", "content" => "https://www.withrelay.com/use_relay_link"}
+                                  { "name" => "transaction_link", "content" => url_helpers.user_transactions_url(options[:user]),
+                                  { "name" => "relay_link", "content" => url_helpers.new_user_registration_url }
                                ],
          "merge_language" => "handlebars",
          "to"=> [ { "email" => options[:user_email] } ],
