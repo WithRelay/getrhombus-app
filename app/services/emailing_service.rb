@@ -526,7 +526,6 @@ class EmailingService
     end
 
     def customer_receipt(options = {})
-      binding.pry
       begin
         template_name = 'customer-receipt-template'
         template_content = []
